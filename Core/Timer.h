@@ -6,6 +6,7 @@
 typedef struct{
 	ui64 TotalGametime;
 	ui64 TimeLastTick;
+	ui64 Elapsed;
 } OPTimer;
 
 /* function definitions */

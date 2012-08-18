@@ -15,6 +15,9 @@ typedef unsigned char  ui8;  //byte type
 // pointer
 typedef unsigned int iptr;
 
+// cross platform
+typedef int OPint;
+
 // floating point types
 typedef float  f32; //float type
 typedef double d64; //double type
