@@ -1,14 +1,15 @@
 #pragma once
 
 #include "Core\Types.h"
-#include "Renderer.h"
+#include "ApiRenderer.h"
 
 namespace OPifex{
-	class GLESRenderer : public Renderer
+	class GLESRenderer : public ApiRenderer
 	{
 	public:
 		GLESRenderer();
-
-		void clear_color(f32 r);
+		~GLESRenderer() {
+		}
+		void clear_color();
 	};
 }
