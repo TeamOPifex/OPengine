@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 
-add_source_group(\\ "${PROJECT_SOURCE_DIR}/Human" HUMAN_SRC)
+find_package(OpenGL REQUIRED)
 
+
+add_subdirectory (external)
 
 include_directories(
 	external/glfw-2.7.2/include/
@@ -23,6 +25,8 @@ add_definitions(
 	-DGLEW_STATIC
 	-D_CRT_SECURE_NO_WARNINGS
 )
+
+add_source_group(\\ "${PROJECT_SOURCE_DIR}/Human" HUMAN_SRC)
 
 add_library(3_Human STATIC ${HUMAN_SRC})
 target_link_libraries(3_Human
