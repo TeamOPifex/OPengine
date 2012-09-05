@@ -2,7 +2,11 @@
 #include <GL/glew.h>
 #include <GL/glfw.h>
 #include <glm/glm.hpp>
+
+#include "Human\GLESRenderer.h"
+
 using namespace glm;
+using namespace OPifex;
 
 int main(){
 	printf("Program Started.");
@@ -49,11 +53,10 @@ int main(){
 		glfwSwapBuffers();
 	}
 	while( glfwGetKey( GLFW_KEY_ESC ) != GLFW_PRESS &&
-		   glfwGetWindowParam( GLFW_OPENED ) );
+			glfwGetWindowParam( GLFW_OPENED ) );
 
 	glfwTerminate();
-
-
+	
 	printf("Program Ended.");
 	return 0;
 }
