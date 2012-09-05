@@ -8,9 +8,10 @@ int main(){
 	printf("Program Started.");
 
 	Renderer::Initialize();
-		
+	
 	do{
-		Renderer::clear_color(1.0f, 0.0f, 0.0f);
+		Renderer::ClearColor(1.0f, 0.0f, 0.0f);
+		Renderer::Present();
 	}
 	while(Renderer::escape());
 		

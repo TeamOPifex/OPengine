@@ -10,6 +10,9 @@ namespace OPifex{
 		GLESRenderer();
 		~GLESRenderer() {
 		}
-		void clear_color();
+		int initialize();
+		void clear_color(f32 r, f32 g, f32 b);
+		void swap_buffer();
+		void shutdown();
 	};
 }

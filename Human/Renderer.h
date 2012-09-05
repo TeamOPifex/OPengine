@@ -9,9 +9,13 @@ namespace OPifex{
 		Renderer(){}
 		virtual ~Renderer() { }
 		static int Initialize();
-		static void clear_color(f32 r, f32 g, f32 b);
+		static void ClearColor(f32 r, f32 g, f32 b);
+		static void Present();
+
+		 // This will be removed, and is gross
 		static bool escape();
-		static void shutdown();
+
+		static void Shutdown();
 	private:
 		static ApiRenderer* m_api_renderer;
 	};
