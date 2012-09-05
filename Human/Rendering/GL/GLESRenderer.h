@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core\Types.h"
-#include "ApiRenderer.h"
+#include "../ApiRenderer.h"
 
 namespace OPifex{
 	class GLESRenderer : public ApiRenderer

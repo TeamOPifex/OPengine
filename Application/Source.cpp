@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "Human\Renderer.h"
+#include "Human\Rendering\Renderer.h"
 
 using namespace OPifex;
 
