@@ -28,6 +28,7 @@ add_definitions(
 add_source_group(\\ "${PROJECT_SOURCE_DIR}/Human" HUMAN_SRC)
 add_source_group(Rendering "${PROJECT_SOURCE_DIR}/Human/Rendering" HUMAN_SRC)
 add_source_group(Rendering/GL "${PROJECT_SOURCE_DIR}/Human/Rendering/GL" HUMAN_SRC)
+add_source_group(Rendering/GL/ES "${PROJECT_SOURCE_DIR}/Human/Rendering/GL/ES" HUMAN_SRC)
 
 add_library(3_Human STATIC ${HUMAN_SRC})
 target_link_libraries(3_Human
