@@ -4,7 +4,6 @@
 #include "Renderer.h"
 #include "RendererTypes.h"
 
-namespace OPifex{
 	class RenderSystem{
 	public:
 		RenderSystem(){}
@@ -24,4 +23,3 @@ namespace OPifex{
 	private:
 		static Renderer* m_renderer;
 	};
-}

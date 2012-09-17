@@ -2,7 +2,6 @@
 
 #include "Data\Resources\Buffer\Buffer.h"
 
-namespace OPifex{
 	class GLBuffer : public Buffer{
 	public:
 		GLBuffer(){ }
@@ -13,4 +12,3 @@ namespace OPifex{
 	private:
 		ui32 m_vertex_handle;
 	};
-}

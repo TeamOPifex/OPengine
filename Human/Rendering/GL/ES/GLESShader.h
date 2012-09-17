@@ -3,7 +3,6 @@
 #include "Data\Resources\Material\Shader\Shader.h"
 #include "Data\Resources\Material\Shader\ShaderTypes.h"
 
-namespace OPifex{
 	class GLESShader : public Shader{
 	public:
 		GLESShader();
@@ -11,4 +10,3 @@ namespace OPifex{
 		~GLESShader();
 		void load(ShaderType shaderType, const char* file);
 	};
-}

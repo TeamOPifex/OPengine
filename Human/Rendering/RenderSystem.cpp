@@ -2,8 +2,6 @@
 #include "GL/GLRenderer.h"
 #include "GL/ES/GLESRenderer.h"
 
-using namespace OPifex;
-
 Renderer* RenderSystem::m_renderer = 0;
 
 int RenderSystem::Initialize(RendererType renderer){

@@ -2,7 +2,6 @@
 
 #include "Shader\Shader.h"
 
-namespace OPifex{
 	class Material{
 	public:
 		Material() { }
@@ -15,4 +14,3 @@ namespace OPifex{
 		ui32 m_handle;
 	};
 	typedef Material* MaterialPtr;
-}

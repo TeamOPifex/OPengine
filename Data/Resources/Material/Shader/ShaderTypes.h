@@ -1,6 +1,5 @@
 #pragma once
 
-namespace OPifex{
 	namespace ShaderTypes{
 		enum ShaderType{
 			Vertex,
@@ -8,4 +7,3 @@ namespace OPifex{
 		};
 	}
 	typedef ShaderTypes::ShaderType ShaderType;
-}

@@ -2,7 +2,6 @@
 #include <GLES2/gl2ext.h>
 #include "GLESRenderer.h"
 
-using namespace OPifex;
 
 GLESRenderer::GLESRenderer(){
 }

@@ -3,8 +3,6 @@
 #include "GLESShader.h"
 #include "GLESTypes.h"
 
-using namespace OPifex;
-
 GLESShader::GLESShader(){
 }
 
@@ -18,8 +16,8 @@ GLESShader::~GLESShader(){
 	}
 }
 
-void GLESShader::load(OPifex::ShaderTypes::ShaderType shaderType, const char* file){
-	ptr = glCreateShader(OPifex::ShaderTypes::gl_shader_type(shaderType));
+void GLESShader::load(ShaderTypes::ShaderType shaderType, const char* file){
+	ptr = glCreateShader(ShaderTypes::gl_shader_type(shaderType));
 	if(ptr){
 		glShaderSource(ptr, 1, &file, 0);
 		glCompileShader(ptr);

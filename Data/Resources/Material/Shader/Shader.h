@@ -3,7 +3,6 @@
 #include "Core/Types.h"
 #include "ShaderTypes.h"
 
-namespace OPifex{
 	class Shader {
 	public:
 		virtual void load(ShaderType shaderType, const char* file) = 0;
@@ -12,4 +11,3 @@ namespace OPifex{
 		ui32 ptr;
 	};
 	typedef Shader* ShaderPtr;
-}

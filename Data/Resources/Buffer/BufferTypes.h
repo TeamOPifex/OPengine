@@ -1,6 +1,5 @@
 #pragma once
 
-namespace OPifex{
 	namespace BufferTypes{
 		enum BufferType{
 			Index,
@@ -8,4 +7,3 @@ namespace OPifex{
 		};
 	}
 	typedef BufferTypes::BufferType BufferType;
-}

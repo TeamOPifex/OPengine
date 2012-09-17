@@ -3,7 +3,6 @@
 #include "Core/Types.h"
 #include "BufferTypes.h"
 
-namespace OPifex{
 	class Buffer {
 	public:
 		virtual void load(BufferType shaderType, ui32 size, const f32* data) = 0;
@@ -12,4 +11,3 @@ namespace OPifex{
 		ui32 m_handle;
 	};
 	typedef Buffer* BufferPtr;
-}

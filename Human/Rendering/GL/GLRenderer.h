@@ -3,7 +3,6 @@
 #include "Core\Types.h"
 #include "../Renderer.h"
 
-namespace OPifex{
 	class GLRenderer : public Renderer
 	{
 	public:
@@ -19,4 +18,3 @@ namespace OPifex{
 		void swap_buffer();
 		void shutdown();
 	};
-}

@@ -2,7 +2,6 @@
 
 #include "Data\Resources\Material\Material.h"
 
-namespace OPifex{
 	class GLESMaterial : public Material{
 	public:
 		GLESMaterial() { }
@@ -13,4 +12,3 @@ namespace OPifex{
 		void enable_attrib(ui32 attribute);
 		void disable_attrib(ui32 attribute);
 	};
-}

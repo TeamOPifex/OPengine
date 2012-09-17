@@ -3,7 +3,6 @@
 #include <glm/glm.hpp>
 #include "GLRenderer.h"
 
-using namespace OPifex;
 using namespace glm;
 
 GLRenderer::GLRenderer(){

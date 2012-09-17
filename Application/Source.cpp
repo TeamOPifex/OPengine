@@ -5,8 +5,6 @@
 #include "Human\Rendering\GL\GLMaterial.h"
 #include "Human\Rendering\GL\GLBuffer.h"
 
-using namespace OPifex;
-
 static const char gVertexShader[] = 
     "attribute vec4 vPosition;\n"
     "void main() {\n"
@@ -32,8 +30,8 @@ int main(){
 	
 	// Load up the Vertex and Fragent Shaders
 	// Then create a material (OpenGL Program) with the shaders
-	ShaderPtr vertex = new GLShader(OPifex::ShaderTypes::Vertex, gVertexShader);
-	ShaderPtr pixel = new GLShader(OPifex::ShaderTypes::Fragment, gFragmentShader);
+	ShaderPtr vertex = new GLShader(ShaderTypes::Vertex, gVertexShader);
+	ShaderPtr pixel = new GLShader(ShaderTypes::Fragment, gFragmentShader);
 	MaterialPtr material = new GLMaterial(vertex, pixel);
 
 	// Create a Vertex Buffer with the triangle data
