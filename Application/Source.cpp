@@ -30,12 +30,12 @@ int main(){
 	
 	// Load up the Vertex and Fragent Shaders
 	// Then create a material (OpenGL Program) with the shaders
-	ShaderPtr vertex = new GLShader(ShaderTypes::Vertex, gVertexShader);
-	ShaderPtr pixel = new GLShader(ShaderTypes::Fragment, gFragmentShader);
+	ShaderPtr vertex = new GLShader(Vertex, gVertexShader);
+	ShaderPtr pixel = new GLShader(Fragment, gFragmentShader);
 	MaterialPtr material = new GLMaterial(vertex, pixel);
 
 	// Create a Vertex Buffer with the triangle data
-	BufferPtr buffer = new GLBuffer(BufferType::Vertex, sizeof(g_vertex_buffer_data), g_vertex_buffer_data);
+	BufferPtr buffer = new GLBuffer(BufferType::VertexBuffer, sizeof(g_vertex_buffer_data), g_vertex_buffer_data);
 
 	do{
 		// Clear the back buffer
