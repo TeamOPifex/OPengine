@@ -8,6 +8,7 @@ include_directories(
 	external/glfw-2.7.2/include/
 	external/glm-0.9.1/
 	external/glew-1.5.8/include/
+	external/GLES2/
 	.
 	../
 )

@@ -19,41 +19,53 @@ static const char gFragmentShader[] =
     "  gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);\n"
     "}\n";
 
-int main(){
-	printf("Program Started.");
-
-	RenderSystem::Initialize();
-	
-	ShaderPtr vertex = new GLShader(OPifex::ShaderTypes::Vertex, gVertexShader);
-	ShaderPtr pixel = new GLShader(OPifex::ShaderTypes::Fragment, gFragmentShader);
-	GLMaterial program;
-	program.load(vertex, pixel);
-	ui32 position = program.attribute_location("vPosition");
-
-	//RenderSystem::SetViewport(0, 0, 640, 480);
-	
 	static const f32 g_vertex_buffer_data[] = { 
 		-1.0f, -1.0f, 0.0f,
 		 1.0f, -1.0f, 0.0f,
 		 0.0f,  1.0f, 0.0f,
 	};
 
-	GLBuffer buff;
-	buff.load(BufferType::Vertex, sizeof(g_vertex_buffer_data), g_vertex_buffer_data);
+int main(){
+	printf("Program Started.");
+
+	RenderSystem::Initialize(RendererType::OpenGL_3_3);
+	
+	// Load up the Vertex and Fragent Shaders
+	// Then create a material (OpenGL Program) with the shaders
+	ShaderPtr vertex = new GLShader(OPifex::ShaderTypes::Vertex, gVertexShader);
+	ShaderPtr pixel = new GLShader(OPifex::ShaderTypes::Fragment, gFragmentShader);
+	MaterialPtr material = new GLMaterial(vertex, pixel);
+
+	// Create a Vertex Buffer with the triangle data
+	BufferPtr buffer = new GLBuffer(BufferType::Vertex, sizeof(g_vertex_buffer_data), g_vertex_buffer_data);
 
 	do{
+		// Clear the back buffer
 		RenderSystem::ClearColor(1.0f, 0.0f, 0.0f);
-		RenderSystem::UseMaterial(&program);
-		program.enable_attrib(0);
-		RenderSystem::SetBuffer(buff.handle());
-		program.set_data(0, 3, false, 0, (void*)0);
+
+		// Set the material data to use
+		RenderSystem::UseMaterial(material);
+		material->enable_attrib(0);
+		RenderSystem::SetBuffer(buffer->handle());
+		material->set_data(0, 3, false, 0, (void*)0);
+
+		// Draw the triangle
 		RenderSystem::RenderTriangles(0, 3);
-		program.disable_attrib(0);
+
+		// Clean up
+		material->disable_attrib(0);
+
+		// Swap the back buffer
 		RenderSystem::Present();
 	}
 	while(RenderSystem::escape());
 	
 	printf("Program Ended.");
+	
+	delete buffer;
+	delete material;
+	delete vertex;
+	delete pixel;
 
 	return 0;
 }

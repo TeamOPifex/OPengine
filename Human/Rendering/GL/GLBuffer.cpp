@@ -10,11 +10,3 @@ void OPifex::GLBuffer::load(BufferType shaderType, ui32 size, const f32* data){
 	glGenVertexArrays(1, &m_vertex_handle);
 	glBindVertexArray(m_vertex_handle);
 }
-
-void GLBuffer::enable_attribute(ui32 attribute){
-	glEnableVertexAttribArray(attribute);
-}
-
-void GLBuffer::disable_attribute(ui32 attribute){
-	glDisableVertexAttribArray(attribute);
-}

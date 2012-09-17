@@ -2,13 +2,14 @@
 
 #include "Core\Types.h"
 #include "Renderer.h"
+#include "RendererTypes.h"
 
 namespace OPifex{
 	class RenderSystem{
 	public:
 		RenderSystem(){}
 		virtual ~RenderSystem() { }
-		static int Initialize();
+		static int Initialize(RendererType renderer);
 		static void ClearColor(f32 r, f32 g, f32 b);
 		static void UseMaterial(MaterialPtr material);
 		static void SetViewport(ui32 x, ui32 y, ui32 width, ui32 height);

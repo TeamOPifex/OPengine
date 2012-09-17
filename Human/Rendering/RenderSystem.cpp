@@ -1,16 +1,18 @@
 #include "RenderSystem.h"
 #include "GL/GLRenderer.h"
-#include <GL/glew.h>
-#include <GL/glfw.h>
-#include <glm/glm.hpp>
+#include "GL/ES/GLESRenderer.h"
 
 using namespace OPifex;
-using namespace glm;
 
 Renderer* RenderSystem::m_renderer = 0;
 
-int RenderSystem::Initialize(){
-	m_renderer = new GLRenderer();
+int RenderSystem::Initialize(RendererType renderer){
+	switch(renderer){
+	case OpenGL_3_3: m_renderer = new GLRenderer();
+	case OpenGL_ES_2_0: m_renderer = new GLESRenderer();
+	default: m_renderer = new GLRenderer();
+	}
+	
 	return m_renderer->initialize();
 }
 
@@ -39,8 +41,7 @@ void RenderSystem::Present(){
 }
 
 bool RenderSystem::escape(){
-	return glfwGetKey( GLFW_KEY_ESC ) != GLFW_PRESS &&
-			glfwGetWindowParam( GLFW_OPENED );
+	return true;// glfwGetKey( GLFW_KEY_ESC ) != GLFW_PRESS && glfwGetWindowParam( GLFW_OPENED );
 }
 
 void RenderSystem::Shutdown(){
