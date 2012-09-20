@@ -1,16 +1,26 @@
 #include "RenderSystem.h"
-#include "GL/GLRenderer.h"
-#include "GL/ES/GLESRenderer.h"
+
+#ifdef OPIFEX_ANDROID
+	#include "GL/ES/GLESRenderer.h"
+#else
+	#include "GL/GLRenderer.h"
+#endif
 
 Renderer* RenderSystem::m_renderer = 0;
 
 int RenderSystem::Initialize(RendererType renderer){
-	switch(renderer){
-	case OpenGL_3_3: m_renderer = new GLRenderer();
-	case OpenGL_ES_2_0: m_renderer = new GLESRenderer();
-	default: m_renderer = new GLRenderer();
-	}
-	
+
+#ifdef OPIFEX_ANDROID
+	m_renderer = new GLESRenderer();
+#else
+	//switch(renderer){
+	//case OpenGL_3_3: m_renderer = new GLRenderer();
+	//case OpenGL_ES_2_0: m_renderer = new GLESRenderer();
+	//default: 
+	m_renderer = new GLRenderer();
+	//}
+#endif
+
 	return m_renderer->initialize();
 }
 

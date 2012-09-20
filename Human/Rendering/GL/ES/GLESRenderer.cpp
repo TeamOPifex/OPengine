@@ -17,7 +17,7 @@ void GLESRenderer::clear_color(f32 r, f32 g, f32 b){
 }
 
 void GLESRenderer::use_material(MaterialPtr material){
-	//glUseProgram(material->handle());
+	glUseProgram(material->handle());
 }
 
 void GLESRenderer::set_viewport(ui32 x, ui32 y, ui32 width, ui32 height){

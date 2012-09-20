@@ -14,7 +14,7 @@ static const char gVertexShader[] =
 static const char gFragmentShader[] = 
     "precision mediump float;\n"
     "void main() {\n"
-    "  gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);\n"
+    "  gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
     "}\n";
 
 	static const f32 g_vertex_buffer_data[] = { 
@@ -22,6 +22,9 @@ static const char gFragmentShader[] =
 		 1.0f, -1.0f, 0.0f,
 		 0.0f,  1.0f, 0.0f,
 	};
+
+static const f32 gTriangleVertices[] = { 0.0f, 0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f };
 
 int main(){
 	printf("Program Started.");
@@ -35,17 +38,17 @@ int main(){
 	MaterialPtr material = new GLMaterial(vertex, pixel);
 
 	// Create a Vertex Buffer with the triangle data
-	BufferPtr buffer = new GLBuffer(BufferType::VertexBuffer, sizeof(g_vertex_buffer_data), g_vertex_buffer_data);
+	BufferPtr buffer = new GLBuffer(BufferType::VertexBuffer, sizeof(g_vertex_buffer_data), gTriangleVertices);
 
 	do{
 		// Clear the back buffer
-		RenderSystem::ClearColor(1.0f, 0.0f, 0.0f);
+		RenderSystem::ClearColor(0.0f, 0.0f, 1.0f);
 
 		// Set the material data to use
 		RenderSystem::UseMaterial(material);
 		material->enable_attrib(0);
 		RenderSystem::SetBuffer(buffer->handle());
-		material->set_data(0, 3, false, 0, (void*)0);
+		material->set_data(0, 2, false, 0, (void*)0);
 
 		// Draw the triangle
 		RenderSystem::RenderTriangles(0, 3);
