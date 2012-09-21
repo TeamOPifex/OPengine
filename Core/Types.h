@@ -1,5 +1,6 @@
 #ifndef OPEngine_Core_Types
 #define OPEngine_Core_Types
+
 // define mathematical types
 
 // integer types
@@ -27,5 +28,17 @@ typedef struct{
 	ui8* Data;
 	ui32 Length;
 } OPstring;
+
+#if defined(OPIFEX_ANDROID) || defined(OPIFEX_WIN32) || defined(OPIFEX_LINUX32)
+typedef i32 sint;
+typedef ui32 uint;
+#elif defined(OPIFEX_WIN64) || defined(OPIFEX_LINUX64)
+typedef i64 sint;
+typedef ui64 uint;
+#else
+// default to building 32 bit binaries
+typedef i32 sint;
+typedef ui32 uint; 
+#endif
 
 #endif

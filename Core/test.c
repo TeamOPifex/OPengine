@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include "Core.h"
 
-int main(){	
-	i32* i = (i32*)OPalloc(sizeof(i32));
+sint main(){	
+	sint* i = (sint*)OPalloc(sizeof(sint));
 	*i = 1337;
 
-	printf("Int32: %d\n", *i);
+	printf("Int: %d Size: %d\n", *i, sizeof(sint));
 	//printf("%f, %f, %f\n", v.x,v.y,v.z); 
 	OPfree(i);
 
