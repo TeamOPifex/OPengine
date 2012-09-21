@@ -12,10 +12,11 @@
 #endif
 
 #include "Types.h"
+#include "MathHelpers.h"
 #include "Timer.h"
 #include "GameCycle.h"
 
-void* OPalloc(uint bytes);
+void* OPalloc(OPuint bytes);
 void  OPfree(void* ptr);
 
 #endif
