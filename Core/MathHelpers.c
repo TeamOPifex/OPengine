@@ -28,6 +28,7 @@ OPfloat OPabsf(OPfloat f){
 
 	#endif
 }
+OPint _isRand = 0;
 
 OPfloat OPabs(OPfloat f){
 	return f > 0 ? f : -f;
@@ -141,7 +142,8 @@ OPfloat OPln(OPfloat f){
 
 OPfloat OPrandom(){
 	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)	// linux implementation
-		return random() / (OPfloat)RAND_MAX;
+		if(!_isRand){ srand(time(NULL)); _isRand = 1; }
+		return rand() / (OPfloat)RAND_MAX;
 	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
 
 	#elif defined(OPIFEX_ANDROID)	// android implementation

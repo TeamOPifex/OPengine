@@ -3,6 +3,7 @@
 #define OPEngine_Core_MathHelpers
 
 #include "Target.h"
+#include "Types.h"
 
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)	// linux math libs
 #include <math.h>
@@ -12,8 +13,6 @@
 #elif defined(OPIFEX_ANDROID)	// android math libs
 
 #endif
-
-#include "Types.h"
 
 #define OPpi 3.14159265359
 #define OPe  2.71828182846

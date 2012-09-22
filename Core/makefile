@@ -25,12 +25,12 @@ LINUX64:
 LINUX:
 	#build the static lib
 	for file in $(LIBSRC); do \
-		gcc -std=c99 -c $$file.c -L. -lm -lc -o $$file.o;\
+		gcc -c $$file.c -o $$file.o -lm -lc;\
 	done
 	ar rcs lib$(OUT).a $(LIBOBJ)
 test:
 	#gcc -std=c99 -static $(TESTSRC).c -L -l$(OUT) -o $(TESTOUT)
-	gcc -std=c99 -lm -lc $(TESTSRC).c lib$(OUT).a -o $(TESTOUT) 
+	gcc -static $(TESTSRC).c lib$(OUT).a -o $(TESTOUT) -lm -lc
 clean:
 	rm -rf $(LIBOBJ) lib$(OUT).a
 
