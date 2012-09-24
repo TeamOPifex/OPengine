@@ -1,4 +1,4 @@
-#include "Data/Resources/Material/Shader/ShaderTypes.h"
+#include "Human/Resources/Material/Shader/ShaderTypes.h"
 #include <GL/glew.h>
 
 GLenum gl_shader_type(ShaderType shaderType);

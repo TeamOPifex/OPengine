@@ -8,6 +8,7 @@ OPint OPceil(OPfloat f){
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 
 	#endif
+	return 0;
 }
 OPint OPfloor(OPfloat f){
 	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)	// linux implementation
@@ -17,6 +18,7 @@ OPint OPfloor(OPfloat f){
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 
 	#endif
+	return 0;
 }
 
 OPfloat OPabsf(OPfloat f){
@@ -27,6 +29,7 @@ OPfloat OPabsf(OPfloat f){
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 
 	#endif
+	return 0;
 }
 OPint _isRand = 0;
 
@@ -42,6 +45,7 @@ OPint	OPabsi(OPint i){
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 
 	#endif
+	return 0;
 }
 
 OPfloat OPsin(OPfloat f){
@@ -52,6 +56,7 @@ OPfloat OPsin(OPfloat f){
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 
 	#endif
+	return 0;
 }
 OPfloat OPcos(OPfloat f){
 	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)	// linux implementation
@@ -61,6 +66,7 @@ OPfloat OPcos(OPfloat f){
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 
 	#endif
+	return 0;
 }
 OPfloat OPtan(OPfloat f){
 	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)	// linux implementation
@@ -70,6 +76,7 @@ OPfloat OPtan(OPfloat f){
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 
 	#endif
+	return 0;
 }
 
 OPfloat OPasin(OPfloat f){
@@ -80,6 +87,7 @@ OPfloat OPasin(OPfloat f){
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 
 	#endif
+	return 0;
 }
 OPfloat OPacos(OPfloat f){
 	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)	// linux implementation
@@ -89,6 +97,7 @@ OPfloat OPacos(OPfloat f){
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 
 	#endif
+	return 0;
 }
 OPfloat OPatan(OPfloat f){
 	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)	// linux implementation
@@ -98,6 +107,7 @@ OPfloat OPatan(OPfloat f){
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 
 	#endif
+	return 0;
 }
 
 OPfloat OPpow(OPfloat b, OPfloat exp){
@@ -108,6 +118,7 @@ OPfloat OPpow(OPfloat b, OPfloat exp){
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 
 	#endif
+	return 0;
 }
 OPfloat OPsqrt(OPfloat f){
 	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)	// linux implementation
@@ -117,6 +128,7 @@ OPfloat OPsqrt(OPfloat f){
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 
 	#endif
+	return 0;
 }
 OPfloat OPlog10(OPfloat f){
 	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)	// linux implementation
@@ -126,6 +138,7 @@ OPfloat OPlog10(OPfloat f){
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 
 	#endif
+	return 0;
 }
 OPfloat OPlog2(OPfloat f){
 	return OPlog10(f) / OPlog10(2);
@@ -138,6 +151,7 @@ OPfloat OPln(OPfloat f){
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 
 	#endif
+	return 0;
 }
 
 OPfloat OPrandom(){
@@ -149,6 +163,7 @@ OPfloat OPrandom(){
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 
 	#endif
+	return 0;
 }
 OPfloat OPrandRange(OPfloat min, OPfloat max){
 	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)	// linux implementation
@@ -159,4 +174,5 @@ OPfloat OPrandRange(OPfloat min, OPfloat max){
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 
 	#endif
+	return 0;
 }

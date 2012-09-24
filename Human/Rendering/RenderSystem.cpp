@@ -13,12 +13,7 @@ int RenderSystem::Initialize(RendererType renderer){
 #ifdef OPIFEX_ANDROID
 	m_renderer = new GLESRenderer();
 #else
-	//switch(renderer){
-	//case OpenGL_3_3: m_renderer = new GLRenderer();
-	//case OpenGL_ES_2_0: m_renderer = new GLESRenderer();
-	//default: 
 	m_renderer = new GLRenderer();
-	//}
 #endif
 
 	return m_renderer->initialize();
@@ -49,7 +44,7 @@ void RenderSystem::Present(){
 }
 
 bool RenderSystem::escape(){
-	return true;// glfwGetKey( GLFW_KEY_ESC ) != GLFW_PRESS && glfwGetWindowParam( GLFW_OPENED );
+	return true;
 }
 
 void RenderSystem::Shutdown(){

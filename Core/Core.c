@@ -15,6 +15,7 @@ void* OPalloc(OPuint bytes){
 	#elif defined(OPIFEX_ANDROID)
 	// android specific for malloc
 	#endif
+	return 0;
 }
 
 /* OPfree(..) - Platform independent means do deallocate dynamically

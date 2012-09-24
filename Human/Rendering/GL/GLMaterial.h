@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Data\Resources\Material\Material.h"
+#include "Human\Resources\Material\Material.h"
 
 	class GLMaterial : public Material{
 	public:
