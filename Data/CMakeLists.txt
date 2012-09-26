@@ -6,12 +6,6 @@ include_directories(
 )
 
 add_source_group(\\ "${PROJECT_SOURCE_DIR}/Data" DATA_SRC)
-add_source_group(Resources "${PROJECT_SOURCE_DIR}/Data/Resources" DATA_SRC)
-add_source_group(Resources/Material "${PROJECT_SOURCE_DIR}/Data/Resources/Material" DATA_SRC)
-add_source_group(Resources/Material/Shader "${PROJECT_SOURCE_DIR}/Data/Resources/Material/Shader" DATA_SRC)
-add_source_group(Resources/Material/State "${PROJECT_SOURCE_DIR}/Data/Resources/Material/State" DATA_SRC)
-add_source_group(Resources/Sound "${PROJECT_SOURCE_DIR}/Data/Resources/Sound" DATA_SRC)
-add_source_group(Resources/Texture "${PROJECT_SOURCE_DIR}/Data/Resources/Texture" DATA_SRC)
 
 
 set(ALL_LIBS

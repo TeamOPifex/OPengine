@@ -8,6 +8,7 @@ include_directories(
 	external/glfw-2.7.2/include/
 	external/glm-0.9.1/
 	external/glew-1.5.8/include/
+	external/GLES2/
 	.
 	../
 )
@@ -28,6 +29,15 @@ add_definitions(
 add_source_group(\\ "${PROJECT_SOURCE_DIR}/Human" HUMAN_SRC)
 add_source_group(Rendering "${PROJECT_SOURCE_DIR}/Human/Rendering" HUMAN_SRC)
 add_source_group(Rendering/GL "${PROJECT_SOURCE_DIR}/Human/Rendering/GL" HUMAN_SRC)
+add_source_group(Rendering/GL/ES "${PROJECT_SOURCE_DIR}/Human/Rendering/GL/ES" HUMAN_SRC)
+
+add_source_group(Resources "${PROJECT_SOURCE_DIR}/Human/Resources" HUMAN_SRC)
+add_source_group(Resources/Buffer "${PROJECT_SOURCE_DIR}/Human/Resources/Buffer" HUMAN_SRC)
+add_source_group(Resources/Material "${PROJECT_SOURCE_DIR}/Human/Resources/Material" HUMAN_SRC)
+add_source_group(Resources/Material/Shader "${PROJECT_SOURCE_DIR}/Human/Resources/Material/Shader" HUMAN_SRC)
+add_source_group(Resources/Material/State "${PROJECT_SOURCE_DIR}/Human/Resources/Material/State" HUMAN_SRC)
+add_source_group(Resources/Sound "${PROJECT_SOURCE_DIR}/Human/Resources/Sound" HUMAN_SRC)
+add_source_group(Resources/Texture "${PROJECT_SOURCE_DIR}/Human/Resources/Texture" HUMAN_SRC)
 
 add_library(3_Human STATIC ${HUMAN_SRC})
 target_link_libraries(3_Human

@@ -1,21 +1,22 @@
-#include <GL/glew.h>
-#include "GLShader.h"
-#include "GLTypes.h"
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#include "GLESShader.h"
+#include "GLESTypes.h"
 
-GLShader::GLShader(){
+GLESShader::GLESShader(){
 }
 
-GLShader::GLShader(ShaderType shaderType, const char* file){
+GLESShader::GLESShader(ShaderType shaderType, const char* file){
 	load(shaderType, file);
 }
 
-GLShader::~GLShader(){
+GLESShader::~GLESShader(){
 	if(ptr != 0){
 		glDeleteShader(ptr);
 	}
 }
 
-void GLShader::load(ShaderType shaderType, const char* file){
+void GLESShader::load(ShaderType shaderType, const char* file){
 	ptr = glCreateShader(gl_shader_type(shaderType));
 	if(ptr){
 		glShaderSource(ptr, 1, &file, 0);
@@ -25,6 +26,7 @@ void GLShader::load(ShaderType shaderType, const char* file){
 		if(!compiled){
 			// Throw Error			
 			glDeleteShader(ptr);
+			ptr = 0;
 		}
 	}
 }
