@@ -4,7 +4,7 @@
 ## Date 9-21-2012                 ##
 ####################################
 
-LIBSRC = Core MathHelpers
+LIBSRC = MathHelpers Timer DynamicMemory Core
 LIBOBJ = $(addsuffix .o,$(LIBSRC))
 OUT = OPengine_Core
 
@@ -16,7 +16,7 @@ all:
 
 LINUX32:
 	rm -rf Target.h
-	echo "#ifndef OPIFEX_LINUX32\n#define OPIFEX_LINUX32\n#endif" >> Target.h
+	echo "#ifndef OPIFEX_LINUX32\n#define OPIFEX_LINUX32\n#endif" >> include/Target.h
 	make LINUX
 LINUX64:
 	rm -rf Target.h
@@ -25,12 +25,12 @@ LINUX64:
 LINUX:
 	#build the static lib
 	for file in $(LIBSRC); do \
-		gcc -c $$file.c -o $$file.o -lm -lc;\
+		gcc -c src/$$file.c -o $$file.o -lm -lc -lrt;\
 	done
-	ar rcs lib$(OUT).a $(LIBOBJ)
+	ar rcs lib/lib$(OUT).a $(LIBOBJ)
 test:
 	#gcc -std=c99 -static $(TESTSRC).c -L -l$(OUT) -o $(TESTOUT)
-	gcc -static $(TESTSRC).c lib$(OUT).a -o $(TESTOUT) -lm -lc
+	gcc -static src/$(TESTSRC).c lib/lib$(OUT).a -o $(TESTOUT) -lm -lc -lrt
 clean:
-	rm -rf $(LIBOBJ) lib$(OUT).a
+	rm -rf $(LIBOBJ) lib/lib$(OUT).a
 
