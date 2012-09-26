@@ -32,5 +32,5 @@ test:
 	#gcc -std=c99 -static $(TESTSRC).c -L -l$(OUT) -o $(TESTOUT)
 	gcc -static src/$(TESTSRC).c lib/lib$(OUT).a -o $(TESTOUT) -lm -lc -lrt
 clean:
-	rm -rf $(LIBOBJ) lib/lib$(OUT).a
+	rm -rf $(LIBOBJ) lib/lib$(OUT).a $(TESTOUT) include/Target.h
 
