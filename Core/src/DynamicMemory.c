@@ -9,11 +9,11 @@
 void* OPalloc(OPuint bytes){
 	// allocate memory (for each platform)
 	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+	#elif defined(OPIFEX_ANDROID)
+	// android specific for malloc
 	return malloc(bytes);
 	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 	// Windows specific for malloc
-	#elif defined(OPIFEX_ANDROID)
-	// android specific for malloc
 	#endif
 }
 //----------------------------------------------------------------------------

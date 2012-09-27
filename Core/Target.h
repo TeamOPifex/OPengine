@@ -1,1 +1,1 @@
-#define LINUX32
+#define OPIFEX_ANDROID

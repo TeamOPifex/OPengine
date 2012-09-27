@@ -29,7 +29,7 @@ PROJECT_PATH:= C:/Repos/OPifex Entertainment/OPifex.Hg/OPifex.Engine/
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libopifex-core
 
-CORE_LIST_C := $(wildcard $(PROJECT_PATH)/Core/*.c)
+CORE_LIST_C := $(wildcard $(PROJECT_PATH)/Core/src/*.c)
 
 LOCAL_SRC_FILES := \
 	$(CORE_LIST_C:$(PROJECT_PATH)/%=%)
