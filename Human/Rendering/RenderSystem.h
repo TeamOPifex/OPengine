@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core\Types.h"
+#include "Core\include\Types.h"
 #include "Renderer.h"
 #include "RendererTypes.h"
 

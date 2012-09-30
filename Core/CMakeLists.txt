@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 
-set (OPIFEX_OS LINUX32)
-
 configure_file (
-  "${PROJECT_SOURCE_DIR}/Core/Target.h.in"
-  "${PROJECT_SOURCE_DIR}/Core/Target.h"
+  "${PROJECT_SOURCE_DIR}/Core/include/Target.h.in"
+  "${PROJECT_SOURCE_DIR}/Core/include/Target.h"
 )
 
 add_source_group(\\ "${PROJECT_SOURCE_DIR}/Core" CORE_SRC)
+add_source_group(include/ "${PROJECT_SOURCE_DIR}/Core/include" CORE_SRC)
+add_source_group(src/ "${PROJECT_SOURCE_DIR}/Core/src" CORE_SRC)
 
 
 add_library(1_Core STATIC ${CORE_SRC})
