@@ -9,7 +9,9 @@
 #include <math.h>
 #include <stdlib.h>
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows math libs
-
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 #elif defined(OPIFEX_ANDROID)	// android math libs
 
 #endif
