@@ -1,3 +1,4 @@
+#pragma once
 #ifndef OPEngine_Core_GameCycle
 #define OPEngine_Core_GameCycle
 #include "Timer.h"

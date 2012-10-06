@@ -1,11 +1,11 @@
 #include "./../include/Timer.h"
-#include <stdio.h>
+//#include <stdio.h>
 
 //----------------------------------------------------------------------------
 OPtimer* OPcreateTimer(){
 	OPtimer* timer = (OPtimer*)OPalloc((OPuint)sizeof(OPtimer));
 	
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 	gettimeofday(&(timer->_lastTime), NULL);
 	timer->TotalGametime = 0;
 	timer->TimeLastTick = 0;
@@ -15,9 +15,6 @@ OPtimer* OPcreateTimer(){
 	
 	QueryPerformanceFrequency(&(timer->frequency));
 	QueryPerformanceCounter(&(timer->_lastTime));
-
-#elif defined(OPIFEX_ANDROID)
-// android specific values for time
 #endif
 
 	return timer;
@@ -28,16 +25,16 @@ void OPdestroyTimer(OPtimer* timer){
 }
 //----------------------------------------------------------------------------
 void OPtimerTick(OPtimer* timer){
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 	struct timeval time;
 	ui64 elapsed;
 
 	gettimeofday(&time, NULL);
-	elapsed = (time.tv_sec - timer->_lastTime.tv_sec) * 1000 + 
+	elapsed = (time.tv_sec - timer->_lastTime.tv_sec) * 1000000 + 
 		  (time.tv_usec - timer->_lastTime.tv_usec);
 
 	timer->TotalGametime += elapsed;
-	timer->TimeLastTick = (time.tv_sec * 1000 + time.tv_usec);
+	timer->TimeLastTick = (time.tv_sec * 1000000 + time.tv_usec);
 	timer->Elapsed = elapsed;
 	
 	timer->_lastTime = time;
@@ -51,20 +48,17 @@ void OPtimerTick(OPtimer* timer){
 	timer->TotalGametime += elapsed;	
 	timer->TimeLastTick = timer->_lastTime.QuadPart * 1000.0 / timer->frequency.QuadPart;
 	timer->Elapsed = elapsed;
-#elif defined(OPIFEX_ANDROID)
-// android specific values for time
 #endif	
 }
 OPfloat  OPtimerDelta(OPtimer* timer){
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 	return (OPfloat)(timer->Elapsed / 1000.0);
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 	return (OPfloat)(timer->Elapsed * 1000.0 / timer->frequency.QuadPart);
-#elif defined(OPIFEX_ANDROID)
-// android specific values for time
 #endif	
 }
+//-----------------------------------------------------------------------------
 ui64 OPtimerTotal(OPtimer* timer){
-	return timer->TotalGametime / 1000.0;
+	return timer->TotalGametime / 1000000.0;
 }
 

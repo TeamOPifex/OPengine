@@ -1,10 +1,31 @@
+#pragma once
 #ifndef OPEngine_Core_Types
 #define OPEngine_Core_Types
 
 #include "Target.h"
+#if defined(OPIFEX_ANDROID)
+#include <jni.h>
+#endif
+
 // define mathematical types
 
-// integer types
+#if defined(OPIFEX_ANDROID)
+// android integer types
+typedef jlong          i64;
+typedef unsigned long  ui64;  //long type
+typedef jint           i32;
+typedef unsigned int   ui32; //int type
+typedef jshort         i16;
+typedef jchar          ui16; //short type
+typedef jbyte          i8;
+typedef jboolean       ui8;  //byte type
+
+// android floating point types
+typedef jfloat  f32; //float type
+typedef jdouble d64; //double type
+#else
+
+// PC integer types
 typedef signed long    i64;
 typedef unsigned long  ui64;  //long type
 typedef signed int     i32;
@@ -14,9 +35,11 @@ typedef unsigned short ui16; //short type
 typedef signed char    i8;
 typedef unsigned char  ui8;  //byte type
 
-// floating point types
+// PC floating point types
 typedef float  f32; //float type
 typedef double d64; //double type
+
+#endif
 
 // Define cross platform base types
 #if defined(OPIFEX_ANDROID) || defined(OPIFEX_WIN32) || defined(OPIFEX_LINUX32)

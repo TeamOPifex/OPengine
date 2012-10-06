@@ -19,7 +19,7 @@ OPint OPstart(){
 
 	// game loop has finished, clean up
 	OPdestroy();
-	OPdestroyTimer();
+	OPdestroyTimer(timer);
 }
 //----------------------------------------------------------------------------
 OPint OPend(){
