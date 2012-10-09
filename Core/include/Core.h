@@ -10,8 +10,8 @@
 #include "GameCycle.h"
 
 //---- Function prototypes ---------------------------------------------------
-extern OPint OPstart();
+extern void OPstart();
 //----------------------------------------------------------------------------
-extern OPint OPend();
+extern void OPend();
 
 #endif

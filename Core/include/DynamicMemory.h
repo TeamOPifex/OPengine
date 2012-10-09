@@ -10,6 +10,7 @@
 #include <stdlib.h> // stdlib is valid for linux and unix
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 // Windows specific for malloc
+#include <stdlib.h> 
 #endif
 
 /* function definitions */

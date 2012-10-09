@@ -31,5 +31,6 @@ void OPfree(void* ptr){
 	if(ptr) free(ptr);
 	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 	// Windows specific for malloc
+	if(ptr) free(ptr);
 	#endif
 }

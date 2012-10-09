@@ -42,7 +42,7 @@ typedef double d64; //double type
 #endif
 
 // Define cross platform base types
-#if defined(OPIFEX_ANDROID) || defined(OPIFEX_WIN32) || defined(OPIFEX_LINUX32)
+#if defined(OPIFEX_ANDROID) || defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 typedef i32 OPint;
 typedef ui32 OPuint;
 typedef f32 OPfloat;

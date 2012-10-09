@@ -38,7 +38,7 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID" )
 	  "${PROJECT_SOURCE_DIR}/Core/Target.h"
 	)
 	
-elseif(1)
+endif()
 
 	#########################################
 	# Core - Level 1
@@ -96,4 +96,3 @@ elseif(1)
 	add_subdirectory("${APPLICATION_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Application)
 
 
-endif()

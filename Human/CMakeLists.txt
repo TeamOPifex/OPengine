@@ -8,6 +8,7 @@ include_directories(
 	external/glfw-2.7.2/include/
 	external/glm-0.9.1/
 	external/glew-1.5.8/include/
+	external/Phsyx.3.2.1/include/
 	external/GLES2/
 	.
 	../
@@ -27,6 +28,8 @@ add_definitions(
 )
 
 add_source_group(\\ "${PROJECT_SOURCE_DIR}/Human" HUMAN_SRC)
+add_source_group(Math "${PROJECT_SOURCE_DIR}/Human/Math" HUMAN_SRC)
+add_source_group(Foundation "${PROJECT_SOURCE_DIR}/Human/Foundation" HUMAN_SRC)
 add_source_group(Rendering "${PROJECT_SOURCE_DIR}/Human/Rendering" HUMAN_SRC)
 add_source_group(Rendering/GL "${PROJECT_SOURCE_DIR}/Human/Rendering/GL" HUMAN_SRC)
 add_source_group(Rendering/GL/ES "${PROJECT_SOURCE_DIR}/Human/Rendering/GL/ES" HUMAN_SRC)

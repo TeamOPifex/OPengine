@@ -2,7 +2,7 @@
 
 OPint _OPengineRunning;
 
-OPint OPstart(){
+void OPstart(){
 	// Initialize the engine and game
 	OPtimer* timer = OPcreateTimer();
 	_OPengineRunning = 1;
@@ -22,6 +22,6 @@ OPint OPstart(){
 	OPdestroyTimer(timer);
 }
 //----------------------------------------------------------------------------
-OPint OPend(){
+void OPend(){
 	_OPengineRunning = 0;
 }
