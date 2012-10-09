@@ -29,7 +29,6 @@ add_definitions(
 
 add_source_group(\\ "${PROJECT_SOURCE_DIR}/Human" HUMAN_SRC)
 add_source_group(Math "${PROJECT_SOURCE_DIR}/Human/Math" HUMAN_SRC)
-add_source_group(Foundation "${PROJECT_SOURCE_DIR}/Human/Foundation" HUMAN_SRC)
 add_source_group(Rendering "${PROJECT_SOURCE_DIR}/Human/Rendering" HUMAN_SRC)
 add_source_group(Rendering/GL "${PROJECT_SOURCE_DIR}/Human/Rendering/GL" HUMAN_SRC)
 add_source_group(Rendering/GL/ES "${PROJECT_SOURCE_DIR}/Human/Rendering/GL/ES" HUMAN_SRC)
