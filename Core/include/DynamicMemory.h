@@ -14,7 +14,8 @@
 #endif
 
 /* function definitions */
-extern void* OPalloc(OPuint bytes);//{return malloc(bytes);}
+extern void* OPalloc(OPuint bytes);
+extern void* OPrealloc(void* ptr, OPuint bytes);
 extern void  OPfree(void* ptr);
 
 #endif
