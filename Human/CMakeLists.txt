@@ -1,15 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
 
-find_package(OpenGL REQUIRED)
-
-add_subdirectory (external)
-
 include_directories(
-	external/glfw-2.7.2/include/
-	external/glm-0.9.1/
-	external/glew-1.5.8/include/
-	external/Phsyx.3.2.1/include/
-	external/GLES2/
+	../External/glfw-2.7.2/include/
+	../External/glm-0.9.1/
+	../External/glew-1.5.8/include/
+	../External/Phsyx.3.2.1/include/
+	../External/GLES2/
 	.
 	../
 )
