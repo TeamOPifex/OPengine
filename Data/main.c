@@ -2,10 +2,7 @@
 #include <stdio.h>
 
 int main(){
-	OPstream* stream = (OPstream*)OPalloc(sizeof(OPstream));
-	stream->Data = (ui8*)OPalloc(sizeof(OPint) * 10);
-	stream->Length = 10 * sizeof(OPint);
-	stream->_pointer = 0;
+	OPstream* stream = OPstreamCreate(sizeof(int) * 4);
 
 	// write some shit in
 	{
@@ -30,5 +27,7 @@ int main(){
 			} printf("\n");
 		}
 	}
+
+	OPstreamDestroy(stream);
 	return 0;
 }

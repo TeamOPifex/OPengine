@@ -10,6 +10,22 @@ typedef struct{
 	ui8* Data;
 } OPstream;
 //-----------------------------------------------------------------------------
+OPstream* OPstreamCreate(OPuint size){
+	OPstream* s = (OPstream*)OPalloc(sizeof(OPstream));
+	s->Data = (ui8*)OPalloc(size);
+	s->Length = size;
+	s->_pointer = 0;
+
+	return s;
+}
+//-----------------------------------------------------------------------------
+OPuint OPstreamDestroy(OPstream* stream){
+	if(!OPfree(stream->Data)) return 0;
+	if(!OPfree(stream)) return 0;
+
+	return 1;
+}
+//-----------------------------------------------------------------------------
 OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 	OPuint len, ptr, i;
 	ui8 *D, *d = (ui8*)data;
@@ -53,7 +69,7 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 ui8* OPread(OPstream* stream, OPuint size){
 	// retrieve data and pointer
 	OPuint ptr = stream->_pointer;
-	ui8* data = stream->Data[ptr];
+	ui8* data = stream->Data + ptr;
 
 	stream->_pointer += size; // update pointer location
 	return data;
