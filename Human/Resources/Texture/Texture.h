@@ -105,15 +105,21 @@ public:
 		height = texture->Height();
 		ui8* buffer = texture->Buffer();
 
-		for(ui32 level = 0; level < texture->MipMapCount() && (texture->Width() || texture->Height()); ++level)
+		for(ui32 level = 0; level < texture->MipMapCount() && (width || height); ++level)
 		{
-			ui32 size = ((texture->Width() + 3) / 4) * ((texture->Height() + 3) / 4) * texture->Blocksize();
+			ui32 size = ((width + 3) / 4) * ((height + 3) / 4) * texture->Blocksize();
 			glCompressedTexImage2D(GL_TEXTURE_2D, level, texture->Format(), width, height, 0, size, buffer + offset);
 
 			offset += size;
 			width /= 2;
 			height /= 2;
 		}
+	}
+
+	void bind(ui32 loc){
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, _textureID);
+		glUniform1i(loc, 0);
 	}
 
 	ui32 textureID() { return _textureID; }

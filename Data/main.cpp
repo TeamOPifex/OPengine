@@ -52,7 +52,7 @@ int main(){
 	}
 	OPBatch* batch = new OPBatch(100, sizeof(OPint));
 
-	for(int i = 0; i < 100; i++) batch[i] = i;
+	//for(int i = 0; i < 100; i++) batch[i] = i;
 
 	delete batch;
 

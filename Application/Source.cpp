@@ -24,18 +24,90 @@ static const char gFragmentShader[] =
 	"in vec2 UV; \n"
 	"out vec3 color; \n"
 	"uniform sampler2D myTextureSampler; \n"
-    "void main() {\n"
-	"  color = texture2D( myTextureSampler, UV ).rgb \n"
-    "}\n";
+    "void main() { \n"
+	"  color = texture2D( myTextureSampler, UV ).rgb; \n"
+    "} \n";
 
-static const f32 gTriangleVertices[] = { -0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f };
+	// Our vertices. Tree consecutive floats give a 3D vertex; Three consecutive vertices give a triangle.
+	// A cube has 6 faces with 2 triangles each, so this makes 6*2=12 triangles, and 12*3 vertices
+	static const f32 gTriangleVertices[] = { 
+		-1.0f,-1.0f,-1.0f,
+		-1.0f,-1.0f, 1.0f,
+		-1.0f, 1.0f, 1.0f,
+		 1.0f, 1.0f,-1.0f,
+		-1.0f,-1.0f,-1.0f,
+		-1.0f, 1.0f,-1.0f,
+		 1.0f,-1.0f, 1.0f,
+		-1.0f,-1.0f,-1.0f,
+		 1.0f,-1.0f,-1.0f,
+		 1.0f, 1.0f,-1.0f,
+		 1.0f,-1.0f,-1.0f,
+		-1.0f,-1.0f,-1.0f,
+		-1.0f,-1.0f,-1.0f,
+		-1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f,-1.0f,
+		 1.0f,-1.0f, 1.0f,
+		-1.0f,-1.0f, 1.0f,
+		-1.0f,-1.0f,-1.0f,
+		-1.0f, 1.0f, 1.0f,
+		-1.0f,-1.0f, 1.0f,
+		 1.0f,-1.0f, 1.0f,
+		 1.0f, 1.0f, 1.0f,
+		 1.0f,-1.0f,-1.0f,
+		 1.0f, 1.0f,-1.0f,
+		 1.0f,-1.0f,-1.0f,
+		 1.0f, 1.0f, 1.0f,
+		 1.0f,-1.0f, 1.0f,
+		 1.0f, 1.0f, 1.0f,
+		 1.0f, 1.0f,-1.0f,
+		-1.0f, 1.0f,-1.0f,
+		 1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f,-1.0f,
+		-1.0f, 1.0f, 1.0f,
+		 1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f, 1.0f,
+		 1.0f,-1.0f, 1.0f
+	};
 
-static const f32 g_uv_buffer_data[] = { 
-	0.000059f, 1.0f, 
-	0.000103f, 1.0f-0.336048f, 
-	0.335973f, 1.0f-0.335903f, 
-};
-
+	// Two UV coordinatesfor each vertex. They were created withe Blender.
+	static const f32 g_uv_buffer_data[] = { 
+		0.000059f, 1.0f-0.000004f, 
+		0.000103f, 1.0f-0.336048f, 
+		0.335973f, 1.0f-0.335903f, 
+		1.000023f, 1.0f-0.000013f, 
+		0.667979f, 1.0f-0.335851f, 
+		0.999958f, 1.0f-0.336064f, 
+		0.667979f, 1.0f-0.335851f, 
+		0.336024f, 1.0f-0.671877f, 
+		0.667969f, 1.0f-0.671889f, 
+		1.000023f, 1.0f-0.000013f, 
+		0.668104f, 1.0f-0.000013f, 
+		0.667979f, 1.0f-0.335851f, 
+		0.000059f, 1.0f-0.000004f, 
+		0.335973f, 1.0f-0.335903f, 
+		0.336098f, 1.0f-0.000071f, 
+		0.667979f, 1.0f-0.335851f, 
+		0.335973f, 1.0f-0.335903f, 
+		0.336024f, 1.0f-0.671877f, 
+		1.000004f, 1.0f-0.671847f, 
+		0.999958f, 1.0f-0.336064f, 
+		0.667979f, 1.0f-0.335851f, 
+		0.668104f, 1.0f-0.000013f, 
+		0.335973f, 1.0f-0.335903f, 
+		0.667979f, 1.0f-0.335851f, 
+		0.335973f, 1.0f-0.335903f, 
+		0.668104f, 1.0f-0.000013f, 
+		0.336098f, 1.0f-0.000071f, 
+		0.000103f, 1.0f-0.336048f, 
+		0.000004f, 1.0f-0.671870f, 
+		0.336024f, 1.0f-0.671877f, 
+		0.000103f, 1.0f-0.336048f, 
+		0.336024f, 1.0f-0.671877f, 
+		0.335973f, 1.0f-0.335903f, 
+		0.667969f, 1.0f-0.671889f, 
+		1.000004f, 1.0f-0.671847f, 
+		0.667979f, 1.0f-0.335851f
+	};
 int main(){
 	printf("Program Started.");
 
@@ -66,27 +138,27 @@ int main(){
 	GLTexture tex = GLTexture(dds);
 	delete(dds);
 
-	//ui32 textureLoc = material->uniform_location("texSampler");
-	
-
 	do{
 		// Clear the back buffer
 		RenderSystem::ClearColor(0.0f, 0.0f, 1.0f);
 
 		// Set the material data to use
 		RenderSystem::UseMaterial(material);
-		material->set_matrix(mvpLoc, &m[0][0]);
 		
+		material->set_matrix(mvpLoc, &m[0][0]);
+
+		tex.bind(sampLoc);
+
 		material->enable_attrib(0);
 		RenderSystem::SetBuffer(buffer->handle());
-		material->set_data(mvpLoc, 3, false, 0, (void*)0);
+		material->set_data(0, 3, false, 0, (void*)0);
 		
 		material->enable_attrib(1);
 		RenderSystem::SetBuffer(uv->handle());
 		material->set_data(1, 2, false, 0, (void*)0);
-
+		
 		// Draw the triangle
-		RenderSystem::RenderTriangles(0, 3);
+		RenderSystem::RenderTriangles(0, 12*3);
 
 		// Clean up
 		material->disable_attrib(0);
