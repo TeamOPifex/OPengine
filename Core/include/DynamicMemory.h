@@ -14,8 +14,15 @@
 #endif
 
 /* function definitions */
-extern void* OPalloc(OPuint bytes);
-extern void* OPrealloc(void* ptr, OPuint bytes);
-extern void  OPfree(void* ptr);
+// prevent name mangling if compiling with c++
+#ifdef __cplusplus
+extern "C" {
+#endif
+void* OPalloc(OPuint bytes);
+void* OPrealloc(void* ptr, OPuint bytes);
+void  OPfree(void* ptr);
+#ifdef __cplusplus
+}
+#endif
 
 #endif

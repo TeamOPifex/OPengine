@@ -3,8 +3,10 @@
 #include "include/OPfile.h"
 #include <stdio.h>
 
+using namespace OPEngine::Data;
+
 int main(){
-	OPstream* stream = OPstreamCreate(sizeof(int) * 4);
+	OPStream* stream = new OPStream(sizeof(int) * 4);//OPstreamCreate(sizeof(int) * 4);
 
 	// write some shit in
 	{
@@ -12,17 +14,17 @@ int main(){
 		int i = 0;
 
 		for(i = 0; i < 30; i ++)
-			OPwrite(stream, &data, sizeof(OPint) * 3);
+			stream->Write(&data, sizeof(OPint) * 3);
 	}
 
-	OPseek(stream, 0);
+	stream->Seek(0);
 
 	// read some shit!
 	{
 		int i, *j, k;
 
 		for(i = 0; i < 30; i++){
-			j = (int*)OPread(stream, sizeof(int) * 3);
+			j = (int*)stream->Read(sizeof(int) * 3);
 
 			for(k = 0; k < 3; k++){
 				printf("%d ", j[k]);
@@ -31,19 +33,21 @@ int main(){
 	}
 
 	// destroy the stream
-	OPstreamDestroy(stream);
+	delete stream;
 
 	{
 		int i = 0;
 		ui8 c = '\n';
-		stream = (OPstream*)OPreadFile("./main.c");
+		stream = OPFile::Read("./main.c");
 
-		printf("Size: %d\n", stream->Length);
+		if(stream){
+			printf("Size: %d\n", stream->Length());
 
-		printf("%s\n", stream->Data);
+			printf("%s\n", stream->Data());
 
-		OPstreamDestroy(stream);
-		printf("Stream has been destroyed\n");
+			delete stream;
+			printf("Stream has been destroyed\n");
+		}
 	}
 	return 0;
 }

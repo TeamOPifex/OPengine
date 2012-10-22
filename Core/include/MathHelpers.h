@@ -8,6 +8,9 @@
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)	// linux math libs
 #include <math.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/time.h> // link with -lrt
+#include <time.h>
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows math libs
 #include <math.h>
 #include <stdio.h>
@@ -17,27 +20,34 @@
 #define OPpi 3.14159265359
 #define OPe  2.71828182846
 
-extern OPint OPceil(OPfloat f);
-extern OPint OPfloor(OPfloat f);
+// prevent name mangling if compiling with c++
+#ifdef __cplusplus
+extern "C" {
+#endif
+OPint OPceil(OPfloat f);
+OPint OPfloor(OPfloat f);
 
-extern OPfloat OPabsf(OPfloat f);
-extern OPfloat OPabs(OPfloat f);
-extern OPint	OPabsi(OPint i);
+OPfloat OPabsf(OPfloat f);
+OPfloat OPabs(OPfloat f);
+OPint	OPabsi(OPint i);
 
-extern OPfloat OPsin(OPfloat f);
-extern OPfloat OPcos(OPfloat f);
-extern OPfloat OPtan(OPfloat f);
+OPfloat OPsin(OPfloat f);
+OPfloat OPcos(OPfloat f);
+OPfloat OPtan(OPfloat f);
 
-extern OPfloat OPasin(OPfloat f);
-extern OPfloat OPacos(OPfloat f);
-extern OPfloat OPatan(OPfloat f);
+OPfloat OPasin(OPfloat f);
+OPfloat OPacos(OPfloat f);
+OPfloat OPatan(OPfloat f);
 
-extern OPfloat OPpow(OPfloat b, OPfloat exp);
-extern OPfloat OPsqrt(OPfloat f);
-extern OPfloat OPlog10(OPfloat f);
-extern OPfloat OPlog2(OPfloat f);
-extern OPfloat OPln(OPfloat f);
+OPfloat OPpow(OPfloat b, OPfloat exp);
+OPfloat OPsqrt(OPfloat f);
+OPfloat OPlog10(OPfloat f);
+OPfloat OPlog2(OPfloat f);
+OPfloat OPln(OPfloat f);
 
-extern OPfloat OPrandom();
-extern OPfloat OPrandRange(OPfloat min, OPfloat max);
+OPfloat OPrandom();
+OPfloat OPrandRange(OPfloat min, OPfloat max);
+#ifdef __cplusplus
+}
+#endif
 #endif

@@ -3,9 +3,16 @@
 #define OPEngine_Core_GameCycle
 #include "Timer.h"
 
-void (*OPinitialize)();
+// prevent name mangling if compiling with c++
+#ifdef __cplusplus
+extern "C" {
+#endif
+extern void (*OPinitialize)();
 //----------------------------------------------------------------------------
-void (*OPupdate)(OPtimer*);
+extern void (*OPupdate)(OPtimer*);
 //----------------------------------------------------------------------------
-void (*OPdestroy)();
+extern void (*OPdestroy)();
+#ifdef __cplusplus
+}
+#endif
 #endif

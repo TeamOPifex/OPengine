@@ -1,3 +1,9 @@
+// prevent name mangling if compiling with c++
+#ifdef __cplusplus
+using namespace std;
+
+extern "C" {
+#endif
 #include <stdio.h>
 #include "./../include/Core.h"
 
@@ -45,3 +51,8 @@ OPint main(){
 
 	return 0;
 }
+
+// prevent name mangling if compiling with c++
+#ifdef __cplusplus
+}
+#endif

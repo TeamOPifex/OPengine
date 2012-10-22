@@ -30,14 +30,21 @@ typedef struct{
 } OPtimer;
 
 /* function definitions */
-extern OPtimer* OPcreateTimer();
-//----------------------------------------------------------------------------
-extern void OPdestroyTimer(OPtimer* timer);
-//----------------------------------------------------------------------------
-extern void OPtimerTick(OPtimer* timer);
-//----------------------------------------------------------------------------
-extern OPfloat  OPtimerDelta(OPtimer* timer);
-//----------------------------------------------------------------------------
-extern ui64 OPtimerTotal(OPtimer* timer);
 
+// prevent name mangling if compiling with c++
+#ifdef __cplusplus
+extern "C" {
+#endif
+OPtimer* OPcreateTimer();
+//----------------------------------------------------------------------------
+void OPdestroyTimer(OPtimer* timer);
+//----------------------------------------------------------------------------
+void OPtimerTick(OPtimer* timer);
+//----------------------------------------------------------------------------
+OPfloat  OPtimerDelta(OPtimer* timer);
+//----------------------------------------------------------------------------
+ui64 OPtimerTotal(OPtimer* timer);
+#ifdef __cplusplus
+}
+#endif
 #endif

@@ -2,6 +2,10 @@
 #ifndef OPEngine_Core
 #define OPEngine_Core
 
+// prevent name mangling if compiling with c++
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include "Target.h" // defines the current build target
 #include "Types.h"
 #include "DynamicMemory.h"
@@ -10,8 +14,10 @@
 #include "GameCycle.h"
 
 //---- Function prototypes ---------------------------------------------------
-extern void OPstart();
+void OPstart();
 //----------------------------------------------------------------------------
-extern void OPend();
-
+void OPend();
+#ifdef __cplusplus
+}
+#endif
 #endif
