@@ -1,6 +1,7 @@
 #include "./../Core/include/Core.h"
 #include "include/OPstream.h"
 #include "include/OPfile.h"
+#include "include/OPbatch.h"
 #include <stdio.h>
 
 using namespace OPEngine::Data;
@@ -49,5 +50,11 @@ int main(){
 			printf("Stream has been destroyed\n");
 		}
 	}
+	OPBatch* batch = new OPBatch(100, sizeof(OPint));
+
+	for(int i = 0; i < 100; i++) batch[i] = i;
+
+	delete batch;
+
 	return 0;
 }

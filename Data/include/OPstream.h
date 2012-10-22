@@ -2,7 +2,6 @@
 #ifndef OPEngine_Data_Stream
 #define OPEngine_Data_Stream
 #include "./../../Core/include/Core.h"
-#include <stdio.h>
 
 typedef struct{
 	OPuint Length;   // bytes in this stream
@@ -26,10 +25,8 @@ ui8* OPread(OPstream* stream, OPuint size);
 OPuint OPseek(OPstream* stream, OPuint byte);
 #ifdef __cplusplus
 }
-#endif
 //-----------------------------------------------------------------------------
 //- C++ Definitions -----------------------------------------------------------
-#ifdef __cplusplus // compile the C++ class
 namespace OPEngine{
 namespace Data{
 	class OPStream{

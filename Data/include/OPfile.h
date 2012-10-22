@@ -29,10 +29,8 @@ OPint OPdeleteFile(const char* path);
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 }
-#endif
 //-----------------------------------------------------------------------------
 //- C++ Definitions -----------------------------------------------------------
-#ifdef __cplusplus // use the C++ file object
 namespace OPEngine{
 namespace Data{
 	class OPFile{
