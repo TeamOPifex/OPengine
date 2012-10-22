@@ -1,1 +1,0 @@
-#define OPIFEX_ANDROID

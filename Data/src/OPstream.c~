@@ -1,14 +1,5 @@
-#pragma once
-#ifndef OPEngine_Data_Stream
-#define OPEngine_Data_Stream
-#include "../../Core/include/Core.h"
-#include <stdio.h>
+#include "./../include/OPstream.h"
 
-typedef struct{
-	OPuint Length;   // bytes in this stream
-	OPuint _pointer; // current location to write to
-	ui8* Data;
-} OPstream;
 //-----------------------------------------------------------------------------
 OPstream* OPstreamCreate(OPuint size){
 	OPstream* s = (OPstream*)OPalloc(sizeof(OPstream));
@@ -20,8 +11,8 @@ OPstream* OPstreamCreate(OPuint size){
 }
 //-----------------------------------------------------------------------------
 OPuint OPstreamDestroy(OPstream* stream){
-	if(!OPfree(stream->Data)) return 0;
-	if(!OPfree(stream)) return 0;
+	OPfree(stream->Data);
+	OPfree(stream);
 
 	return 1;
 }
@@ -36,15 +27,9 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 	ptr = stream->_pointer;
 	D   = stream->Data;
 
-	/*OPint* in = (OPint*)data;
-	for(i = 0; i < size / sizeof(OPint); i++){
-		printf("%d ", in[i]);
-	}*/
-
 	// if we are out of space for this new element
 	// double the size of the array
 	if(ptr + size > len){
-		//printf("Resizing from %d to %d\n", len, len * 2);
 		ui8* nd = (ui8*)OPrealloc(
 			D,
 			sizeof(ui8) * len * 2
@@ -60,7 +45,7 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 	}
 
 	// copy new data into the stream
-	for(i = 0; i < size; D[ptr + i] = d[i++]);// printf("%c,", d[i-1]); printf("\n");
+	for(i = 0; i < size; D[ptr + i] = d[i++]);
 	stream->_pointer += size;
 
 	return 1;
@@ -81,5 +66,29 @@ OPuint OPseek(OPstream* stream, OPuint byte){
 		return 1;
 	}
 	return 0;
+}
+//-----------------------------------------------------------------------------
+//- C++ Definitions -----------------------------------------------------------
+#ifdef __cplusplus // compile the C++ class
+using namespace OPEngine::Data;
+
+OPStream::OPStream(OPuint size){
+	this->_stream = OPstreamCreate(size);
+}
+
+OPStream::~OPStream(){
+	OPstreamDestroy(this->_stream);
+}
+
+OPuint OPStream::Seek(OPuint byte){
+	OPseek(this->_stream, byte);
+}
+
+OPuint OPStream::Write(void* data, OPuint size){
+	OPwrite(this->_stream, data, size);
+}
+
+ui8*   OPStream::Read(OPuint size){
+	OPread(this->_stream, size);
 }
 #endif
