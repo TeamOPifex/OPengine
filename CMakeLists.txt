@@ -40,6 +40,11 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID" )
 	
 endif()
 
+
+find_package(OpenGL REQUIRED)
+
+add_subdirectory (external)
+
 	#########################################
 	# Core - Level 1
 	#########################################
