@@ -1,6 +1,7 @@
 #include "./../Core/include/Core.h"
 #include "include/OPstream.h"
 #include "include/OPfile.h"
+#include "include/OPbatch.h"
 #include <stdio.h>
 
 int main(){
@@ -44,6 +45,20 @@ int main(){
 
 		OPstreamDestroy(stream);
 		printf("Stream has been destroyed\n");
+	}
+
+	{
+		OPbatch* batch = OPbatchCreate(100, sizeof(OPint));
+		OPint i;
+
+		for(i = 0; i < 100; i++){
+			OPbatchSet(batch, i, &i);
+		}
+
+		for(i = 0; i < 100; i++){
+			OPint* I = (OPint*)OPbatchGet(batch, i);
+			printf("%d ", *I);
+		}
 	}
 	return 0;
 }

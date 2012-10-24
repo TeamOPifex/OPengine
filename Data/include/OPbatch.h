@@ -1,6 +1,7 @@
 #pragma once
 #ifndef OPEngine_Data_Batch
 #define OPEngine_Data_Batch
+#include <stdio.h>
 #include "./../../Core/include/Core.h"
 
 typedef struct{
@@ -19,6 +20,8 @@ OPbatch* OPbatchCreate(OPuint elements, OPuint elementSize);
 //-----------------------------------------------------------------------------
 void* OPbatchGet(OPbatch* batch, OPuint index);
 //-----------------------------------------------------------------------------
+void OPbatchSet(OPbatch* batch, OPuint index, void* element);
+//-----------------------------------------------------------------------------
 OPint OPbatchDestroy(OPbatch* batch);
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
@@ -30,11 +33,9 @@ namespace Data{
 		public:
 			OPBatch(OPuint elements, OPuint elementSize);
 			~OPBatch();
-			void* operator[](OPuint index){
-				ui8* D = (ui8*)this->_batch->Data;
-				OPuint eleSize = this->_batch->ElementSize;
-				return (void*)(D + (index * eleSize));
-			}
+			ui8* operator[](OPuint index);
+			void Set(OPuint index, void* element);
+			void* Get(OPuint index);
 		private:
 			OPbatch* _batch;
 	};

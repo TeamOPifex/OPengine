@@ -52,7 +52,19 @@ int main(){
 	}
 	OPBatch* batch = new OPBatch(100, sizeof(OPint));
 
-	for(int i = 0; i < 100; i++) batch[i] = i;
+	printf("Setting...\n");
+	for(OPint i = 0; i < 100; i++){
+		OPint d[1] = { i };
+		printf("%d", i);
+		batch->Set(i, d);
+	}
+	printf("\n\n");
+
+	for(OPint i = 0; i < 100; i++){
+		OPint* I = (OPint*)batch->Get(i);
+		printf("%d ", *I);
+	}
+	printf("\n");
 
 	delete batch;
 
