@@ -7,6 +7,7 @@
 #include "Human\Math\Matrix4.h"
 
 #include "Human\Resources\Texture\Texture.h"
+#include "Human\Input\Controller.h"
 
 static const char gVertexShader[] = 
 	"#version 330 core\n"
@@ -110,6 +111,10 @@ static const char gFragmentShader[] =
 	};
 int main(){
 	printf("Program Started.");
+
+	GamePadXbox pad = GamePadXbox(GamePadIndex_One);
+	bool connected = pad.is_connected();
+	
 
 	RenderSystem::Initialize(RendererType::OpenGL_3_3);
 
