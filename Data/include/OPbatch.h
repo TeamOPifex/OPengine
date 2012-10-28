@@ -29,15 +29,36 @@ OPint OPbatchDestroy(OPbatch* batch);
 
 namespace OPEngine{
 namespace Data{
+	class OPBatchElement{
+		public:
+			OPBatchElement(void* data, OPuint size){
+				_size = size;
+				Data = data;
+			}
+			OPBatchElement& operator=(void* element){
+				ui8* D = (ui8*)Data;
+				ui8* E = (ui8*)element;
+				
+				for(OPint i = 0; i < _size; D[i] = E[i++]);
+
+				return *this;
+			}
+			void* Data;
+		private:
+			OPuint _size;
+	};
+
 	class OPBatch{
 		public:
 			OPBatch(OPuint elements, OPuint elementSize);
 			~OPBatch();
-			ui8* operator[](OPuint index);
+			OPBatchElement operator[](OPuint index);
+			OPBatch& operator=(void* element);
 			void Set(OPuint index, void* element);
-			void* Get(OPuint index);
+			OPBatchElement Get(OPuint index);
 		private:
 			OPbatch* _batch;
+			OPuint _lastIndex;
 	};
 }
 }

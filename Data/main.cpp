@@ -50,23 +50,23 @@ int main(){
 			printf("Stream has been destroyed\n");
 		}
 	}
-	OPBatch* batch = new OPBatch(100, sizeof(OPint));
+	OPBatch batch = OPBatch(100, sizeof(OPint));
 
 	printf("Setting...\n");
 	for(OPint i = 0; i < 100; i++){
 		OPint d[1] = { i };
-		printf("%d", i);
-		batch->Set(i, d);
+		printf("%d ", i);
+		//batch.Set(i, d);
+		batch[i] = d;
 	}
 	printf("\n\n");
 
 	for(OPint i = 0; i < 100; i++){
-		OPint* I = (OPint*)batch->Get(i);
+		OPint* I = (OPint*)batch[i].Data;
 		printf("%d ", *I);
 	}
 	printf("\n");
 
-	delete batch;
 
 	return 0;
 }
