@@ -53,22 +53,28 @@ OPint OPbatchDestroy(OPbatch* batch){
 using namespace OPEngine::Data;
 
 OPBatch::OPBatch(OPuint elements, OPuint elementSize){
-	this->_batch = OPbatchCreate(elements, elementSize);
+	_batch = OPbatchCreate(elements, elementSize);
 }
 OPBatch::~OPBatch(){
-	OPbatchDestroy(this->_batch);
+	OPbatchDestroy(_batch);
 }
 void OPBatch::Set(OPuint index, void* element){
-	OPbatchSet(this->_batch, index, element);
+	OPbatchSet(_batch, index, element);
 }
 
-void* OPBatch::Get(OPuint index){
-	OPbatch* b = this->_batch;
-	return OPbatchGet(b, index);
+OPBatchElement OPBatch::Get(OPuint index){
+	OPbatch* b = _batch;
+	return OPBatchElement(OPbatchGet(b, index), _batch->ElementSize);
 }
 
-ui8* OPBatch::operator[](OPuint index){
-	return (ui8*)this->Get(index);
+OPBatchElement OPBatch::operator[](OPuint index){
+	_lastIndex = index;
+	return Get(index);
+}
+
+OPBatch& OPBatch::operator=(void* element){
+	Set(_lastIndex, element);
+	return *this;
 }
 
 #endif
