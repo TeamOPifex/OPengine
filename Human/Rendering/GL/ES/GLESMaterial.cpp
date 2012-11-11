@@ -31,3 +31,7 @@ void GLESMaterial::enable_attrib(ui32 attribute){
 void GLESMaterial::disable_attrib(ui32 attribute){
 	glDisableVertexAttribArray(attribute);
 }
+
+void GLESMaterial::set_matrix(ui32 attribute, f32* matrix){
+	glUniformMatrix4fv(attribute, 1, GL_FALSE, matrix);
+}
