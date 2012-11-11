@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 include_directories(
-	../External/glfw-2.7.2/include/
+	../External/glfw-2.7.6/include/
 	../External/glm-0.9.1/
 	../External/glew-1.5.8/include/
 	../External/Phsyx.3.2.1/include/
@@ -12,7 +12,7 @@ include_directories(
 
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
-	GLFW_272
+	GLFW_276
 	GLEW_158
 	1_Core
 	2_Data
