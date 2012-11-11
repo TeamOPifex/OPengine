@@ -82,6 +82,6 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libsmrf
 LOCAL_LDLIBS    := -llog -lGLESv2
-LOCAL_SRC_FILES := application.cpp
+LOCAL_SRC_FILES := $(subst jni/, , $(PROJECT_PATH)/Android/application.cpp)
 LOCAL_STATIC_LIBRARIES := libopifex-human
 include $(BUILD_SHARED_LIBRARY)

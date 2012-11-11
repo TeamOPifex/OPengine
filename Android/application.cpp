@@ -43,7 +43,7 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj)
 {
-	RenderSystem::ClearColor(0.0f, 0.0f, 1.0f);
+	RenderSystem::ClearColor(1.0f, 0.0f, 0.0f);
 	RenderSystem::UseMaterial(material);
 	material->set_data(0, 2, false, 0, gTriangleVertices);
 	material->enable_attrib(0);
