@@ -4,7 +4,7 @@
 ## Date 9-21-2012                 ##
 ####################################
 
-LIBSRC = MathHelpers Timer DynamicMemory Core
+LIBSRC = MathHelpers Timer DynamicMemory Core GameCycle
 LIBOBJ = $(addsuffix .o,$(LIBSRC))
 OUT = OPengine_Core
 
@@ -15,7 +15,7 @@ all:
 	make LINUX32
 
 LINUX32:
-	rm -rf Target.h
+	rm -rf include/Target.h
 	echo "#ifndef OPIFEX_LINUX32\n#define OPIFEX_LINUX32\n#endif" >> include/Target.h
 	make LINUX
 LINUX64:

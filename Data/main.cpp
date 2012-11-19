@@ -46,6 +46,12 @@ int main(){
 
 			printf("%s\n", stream->Data());
 
+			if(OPFile::Write("./out.txt", stream)){
+				printf("Written to out.txt successfully\n");
+			}
+			else
+				printf("Writting to out.txt failed...\n");
+
 			delete stream;
 			printf("Stream has been destroyed\n");
 		}
@@ -66,7 +72,6 @@ int main(){
 		printf("%d ", *I);
 	}
 	printf("\n");
-
 
 	return 0;
 }

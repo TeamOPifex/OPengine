@@ -1,7 +1,3 @@
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 #include "./../include/Core.h"
 
 OPint _OPengineRunning;
@@ -29,7 +25,3 @@ void OPstart(){
 void OPend(){
 	_OPengineRunning = 0;
 }
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-}
-#endif

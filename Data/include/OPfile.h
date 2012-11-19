@@ -1,7 +1,6 @@
 #pragma once
 #ifndef OPEngine_Data_File
 #define OPEngine_Data_File
-
 #include "OPstream.h"
 
 #if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
@@ -28,7 +27,7 @@ OPint OPfileExists(const char* path);
 OPint OPdeleteFile(const char* path);
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
-}
+};
 //-----------------------------------------------------------------------------
 //- C++ Definitions -----------------------------------------------------------
 namespace OPEngine{
@@ -36,7 +35,7 @@ namespace Data{
 	class OPFile{
 		public:
 			static OPStream* Read(const char* path);
-			static OPint Write(const char* path, OPstream* stream);
+			static OPint Write(const char* path, OPStream* stream);
 			static OPint Exists(const char* path);
 			static OPint Delete(const char* path);
 	};

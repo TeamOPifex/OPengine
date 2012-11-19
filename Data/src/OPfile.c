@@ -115,16 +115,20 @@ OPint OPdeleteFile(const char* path){
 		}
 	}
 
-	OPint OPFile::Write(const char* path, OPstream* stream){
+	OPint OPFile::Write(const char* path, OPStream* stream){
 	#if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 		OPint fd = 0;
-	
+		OPstream* s = stream->GetStream();	
+
 		// be sure that the file could be opened successfully
-		if((fd = open(path, O_CREAT|O_WRONLY|O_TRUNC)) > 0){
+		if((fd = open(path, O_CREAT|O_WRONLY|O_TRUNC, 0666)) >= 0){
+			stream->Seek(0);
 			// write the entire stream in one go.
-			write(fd, stream->Data, stream->_pointer);
+			printf("Writing to %d @ %d with %d bytes\n", fd, s->_pointer, s->Length);
+			write(fd, s->Data, s->Length);
 			// finally close the file, we are done writing
 			close(fd); 
+			return 1;
 		}
 		else{
 			return -1;

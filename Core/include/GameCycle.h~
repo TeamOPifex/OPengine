@@ -5,14 +5,14 @@
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
-void (*OPinitialize)();
+extern void (*OPinitialize)();
 //----------------------------------------------------------------------------
-void (*OPupdate)(OPtimer*);
+extern void (*OPupdate)(OPtimer*);
 //----------------------------------------------------------------------------
-void (*OPdestroy)();
+extern void (*OPdestroy)();
 #ifdef __cplusplus
-}
+//};
 #endif
 #endif

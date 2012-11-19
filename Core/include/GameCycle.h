@@ -13,6 +13,6 @@ extern void (*OPupdate)(OPtimer*);
 //----------------------------------------------------------------------------
 extern void (*OPdestroy)();
 #ifdef __cplusplus
-}
+};
 #endif
 #endif

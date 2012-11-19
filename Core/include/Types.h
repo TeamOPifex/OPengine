@@ -26,13 +26,13 @@ typedef jdouble d64; //double type
 #else
 
 // PC integer types
-typedef long    i64;
+typedef signed long    i64;
 typedef unsigned long  ui64;  //long type
-typedef int     i32;
+typedef signed int     i32;
 typedef unsigned int   ui32; //int type
-typedef short   i16;
+typedef signed short   i16;
 typedef unsigned short ui16; //short type
-typedef char    i8;
+typedef signed char    i8;
 typedef unsigned char  ui8;  //byte type
 
 // PC floating point types
@@ -42,7 +42,12 @@ typedef double d64; //double type
 #endif
 
 // Define cross platform base types
-#if defined(OPIFEX_ANDROID) || defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+#if defined(OPIFEX_ANDROID)
+typedef ui16 OPchar;
+#elif defined(OPIFEX_WIN32) || defined(OPIFEX_LINUX32)
+typedef i8  OPchar;
+#endif
+#if defined(OPIFEX_ANDROID) || defined(OPIFEX_WIN32) || defined(OPIFEX_LINUX32)
 typedef i32 OPint;
 typedef ui32 OPuint;
 typedef f32 OPfloat;

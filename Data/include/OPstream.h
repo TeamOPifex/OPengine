@@ -1,7 +1,14 @@
 #pragma once
 #ifndef OPEngine_Data_Stream
 #define OPEngine_Data_Stream
+
+#if defined(OPIFEX_ANDROID) && defined(__cplusplus)
+#include "./../../Core/include/Target.h"
+#include "./../../Core/include/Types.h"
+#include "./../../Core/include/DynamicMemory.h"
+#else
 #include "./../../Core/include/Core.h"
+#endif
 
 typedef struct{
 	OPuint Length;   // bytes in this stream
@@ -24,7 +31,7 @@ ui8* OPread(OPstream* stream, OPuint size);
 //-----------------------------------------------------------------------------
 OPuint OPseek(OPstream* stream, OPuint byte);
 #ifdef __cplusplus
-}
+};
 //-----------------------------------------------------------------------------
 //- C++ Definitions -----------------------------------------------------------
 namespace OPEngine{
@@ -38,6 +45,7 @@ namespace Data{
 			ui8*   Read(OPuint size);
 			ui8*   Data(){ return this->_stream->Data; }
 			OPuint Length(){ return this->_stream->Length; }
+			OPstream* GetStream(){ return _stream; }
 		private:
 			OPstream* _stream;
 	};
