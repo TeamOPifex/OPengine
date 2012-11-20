@@ -16,12 +16,24 @@
 /* function definitions */
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
-extern "C"
+extern "C" {
 #endif
-{
+/**
+ * OPalloc - Platform independent means to dynamically allocate memory.
+ * @param bytes Number of consecutive bytes to be allocated.
+ * @return Address of allocated memory.
+ */
 void* OPalloc(OPuint bytes);
+//-----------------------------------------------------------------------------
+/* OPrealloc - Platform independent means to dynamically reallocate memory.
+ * @param ptr Existing segment of allocated memory
+ * @param bytes Number of consecutive bytes to be allocated.
+ * @return Address of allocated memory.
+ */
 void* OPrealloc(void* ptr, OPuint bytes);
 void  OPfree(void* ptr);
+#ifdef __cplusplus
 }
+#endif
 
 #endif

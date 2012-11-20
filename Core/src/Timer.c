@@ -5,6 +5,8 @@
 OPtimer* OPcreateTimer(){
 	OPtimer* timer = (OPtimer*)OPalloc((OPuint)sizeof(OPtimer));
 	
+	// if allocation failed then return a null pointer
+	if(!timer) return NULL;
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 	gettimeofday(&(timer->_lastTime), NULL);
 	timer->TotalGametime = 0;
@@ -50,6 +52,7 @@ void OPtimerTick(OPtimer* timer){
 	timer->Elapsed = elapsed;
 #endif	
 }
+//----------------------------------------------------------------------------
 OPfloat  OPtimerDelta(OPtimer* timer){
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 	return (OPfloat)(timer->Elapsed / 1000.0);
