@@ -14,10 +14,10 @@ OPbatch* OPbatchCreate(OPuint elements, OPuint elementSize){
 			OPfree(batch);
 			batch = NULL;
 		}
+		return batch;
 	}
 	else
-		batch = NULL;
-	return batch;
+		return NULL;
 }
 //-----------------------------------------------------------------------------
 void* OPbatchGet(OPbatch* batch, OPuint index){

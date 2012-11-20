@@ -17,7 +17,7 @@
 
 /* Struct definitions */
 /**
- *Time measurment object.
+ * Time measurment object.
  *	The OPtimer struct is responsible for keeping track of
  *	time elapsed between ticks, and total time over all updates.
  */
@@ -49,7 +49,7 @@ extern "C" {
 OPtimer* OPcreateTimer();
 //----------------------------------------------------------------------------
 /**
- * OPdestroyTimer - creates an OPtimer instance
+ * OPdestroyTimer - destroys an OPtimer instance
  *	Frees memory occupied by an OPtimer instance. Does nothing if a null
  *	pointer is passed.
  * @param timer Pointer to an OPtimer instance which will be destroyed.
