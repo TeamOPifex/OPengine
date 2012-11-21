@@ -28,7 +28,7 @@ OPint OPwriteFile(const char* path, OPstream* data);
 //-----------------------------------------------------------------------------
 /**
  * OPreadFile - Reads a file into a byte stream.
- *	@param path Location in the file system where the data will be written.
+ *	@param path Location where the data will be read from.
  *	@return pointer to the data stream, NULL on failure
  */
 OPstream* OPreadFile(const char* path);
