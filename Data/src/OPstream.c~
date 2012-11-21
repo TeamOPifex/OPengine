@@ -30,6 +30,13 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 	// if we are out of space for this new element
 	// double the size of the array
 	if(ptr + size > len){
+		// if the size of this element is greater
+		// than the length, then modify the 'len' which it
+		// will be resized to so that it will beable to contain
+		// the element
+		len = len > size ? len : size;
+		
+		// reallocate
 		ui8* nd = (ui8*)OPrealloc(
 			D,
 			sizeof(ui8) * len * 2
@@ -41,7 +48,7 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 			stream->Length = len * 2;
 		}
 		else
-			return -1;
+			return 0;
 	}
 
 	// copy new data into the stream

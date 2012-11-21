@@ -10,10 +10,11 @@ OPint OPwriteFile(const char* path, OPstream* stream){
 		// write the entire stream in one go.
 		write(fd, stream->Data, stream->_pointer);
 		// finally close the file, we are done writing
-		close(fd); 
+		close(fd);
+		return 1;
 	}
 	else{
-		return -1;
+		return 0;
 	}
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 	// windows implementation
@@ -58,7 +59,7 @@ OPstream* OPreadFile(const char* path){
 //-----------------------------------------------------------------------------
 OPint OPfileExists(const char* path){
 #if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
-	return access(path, F_OK);
+	return access(path, F_OK) + 1;
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 
 #endif
@@ -67,13 +68,13 @@ OPint OPfileExists(const char* path){
 OPint OPdeleteFile(const char* path){
 	if(OPfileExists(path)){
 #if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
-		return unlink(path);
+		return unlink(path) + 1;
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 
 #endif
 	}
 	else{
-		return -1;
+		return 0;
 	}
 }
 //-----------------------------------------------------------------------------
@@ -115,7 +116,7 @@ OPint OPdeleteFile(const char* path){
 		}
 	}
 
-	OPint OPFile::Write(const char* path, OPStream* stream){
+	OPuint OPFile::Write(const char* path, OPStream* stream){
 	#if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 		OPint fd = 0;
 		OPstream* s = stream->GetStream();	
@@ -131,7 +132,7 @@ OPint OPdeleteFile(const char* path){
 			return 1;
 		}
 		else{
-			return -1;
+			return 0;
 		}
 	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 		// windows implementation

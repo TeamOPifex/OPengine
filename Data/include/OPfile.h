@@ -18,12 +18,33 @@
 extern "C" {
 #endif
 //-----------------------------------------------------------------------------
+/**
+ * OPwriteFile - Writes a byte stream to a file.
+ *	@param path Location in the file system where the data will be written.
+ *	@param data OPstream instance which will be written
+ *	@return 1 on success, 0 on failure
+ */
 OPint OPwriteFile(const char* path, OPstream* data);
 //-----------------------------------------------------------------------------
+/**
+ * OPreadFile - Reads a file into a byte stream.
+ *	@param path Location in the file system where the data will be written.
+ *	@return pointer to the data stream, NULL on failure
+ */
 OPstream* OPreadFile(const char* path);
 //-----------------------------------------------------------------------------
+/**
+ * OPfileExists - Checks for the existance of a file.
+ *	@param path Location in the file system where we will look for a file.
+ *	@return 1 on success, 0 on failure
+ */
 OPint OPfileExists(const char* path);
 //-----------------------------------------------------------------------------
+/**
+ * OPdeleteFile - Deletes a file from the filesystem.
+ *	@param path Location in the file system where we will look for a file.
+ *	@return 1 on success, 0 on failure
+ */
 OPint OPdeleteFile(const char* path);
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus

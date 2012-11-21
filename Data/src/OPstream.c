@@ -11,6 +11,7 @@ OPstream* OPstreamCreate(OPuint size){
 }
 //-----------------------------------------------------------------------------
 OPuint OPstreamDestroy(OPstream* stream){
+	if(!stream) return 0;
 	OPfree(stream->Data);
 	OPfree(stream);
 
@@ -48,7 +49,7 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 			stream->Length = len * 2;
 		}
 		else
-			return -1;
+			return 0;
 	}
 
 	// copy new data into the stream
