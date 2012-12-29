@@ -15,6 +15,7 @@
  */
 package com.opifex.smrf;
 
+import android.content.res.AssetManager;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,7 +25,8 @@ public class SMRF extends Activity {
 	GL2JNIView mView;
 	@Override protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		mView = new GL2JNIView(getApplication());
+		AssetManager assetManager = getAssets();
+		mView = new GL2JNIView(getApplication(), assetManager);
 		setContentView(mView);
 	}
 	

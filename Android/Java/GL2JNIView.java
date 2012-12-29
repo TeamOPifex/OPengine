@@ -32,6 +32,7 @@ package com.opifex.smrf;
  */
 
 
+import android.content.res.AssetManager;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
@@ -67,14 +68,17 @@ import javax.microedition.khronos.opengles.GL10;
 class GL2JNIView extends GLSurfaceView {
     private static String TAG = "GL2JNIView";
     private static final boolean DEBUG = false;
-
-    public GL2JNIView(Context context) {
+	private static AssetManager _assetManager;
+	
+    public GL2JNIView(Context context, AssetManager assetManager) {
         super(context);
+		_assetManager = assetManager;
         init(false, 0, 0);
     }
 
-    public GL2JNIView(Context context, boolean translucent, int depth, int stencil) {
+    public GL2JNIView(Context context, boolean translucent, int depth, int stencil, AssetManager assetManager) {
         super(context);
+		_assetManager = assetManager;
         init(translucent, depth, stencil);
     }
 
@@ -104,7 +108,7 @@ class GL2JNIView extends GLSurfaceView {
                              new ConfigChooser(5, 6, 5, 0, depth, stencil) );
 
         /* Set the renderer responsible for frame rendering */
-        setRenderer(new Renderer());
+        setRenderer(new Renderer(_assetManager));
     }
 
     private static class ContextFactory implements GLSurfaceView.EGLContextFactory {
@@ -324,12 +328,17 @@ class GL2JNIView extends GLSurfaceView {
     }
 
     private static class Renderer implements GLSurfaceView.Renderer {
+		static AssetManager _assetManager;
+		public Renderer(AssetManager assetManager){
+			_assetManager = assetManager;
+		}
+		
         public void onDrawFrame(GL10 gl) {
             GL2JNILib.step();
         }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
-            GL2JNILib.init(width, height);
+            GL2JNILib.init(width, height, _assetManager);
         }
 
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {

@@ -1,1 +1,1 @@
-#define OPIFEX_WIN32
+#define OPIFEX_ANDROID

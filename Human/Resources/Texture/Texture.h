@@ -1,8 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <GL/glew.h>
-#include <GL/glfw.h>
+#if defined(OPIFEX_ANDROID)
+	#include <GLES2/gl2.h>
+	#include <GLES2/gl2ext.h>
+#else
+	//#include <GL/glew.h>
+	//#include <GL/glfw.h>
+#endif
 #include "Core\include\Types.h"
 
 #define FOURCC_DXT1 0x31545844 // Equivalent to "DXT1" in ASCII
@@ -43,6 +48,51 @@ public:
 		FILE *fp;
 
 		fp = fopen(path, "rb");
+		if(fp == NULL)
+			return;
+
+		char filecode[4];
+		fread(filecode, 1, 4, fp);
+		if(strncmp(filecode, "DDS ", 4) != 0){
+			fclose(fp);
+			return;
+		}
+
+		fread(&header, 124, 1, fp);
+		
+		_height      = *(ui32*)&(header[8 ]);
+		_width	     = *(ui32*)&(header[12]);
+		_linearSize	 = *(ui32*)&(header[16]);
+		_mipMapCount = *(ui32*)&(header[24]);
+		_fourCC      = *(ui32*)&(header[80]);
+
+
+		bufsize = _mipMapCount > 1 ? _linearSize * 2 : _linearSize;
+		_buffer = (ui8*)malloc(bufsize * sizeof(ui8));
+		tmp = _buffer;
+		fread(_buffer, 1, bufsize, fp);
+		fclose(fp);
+
+		ui32 components = (_fourCC == FOURCC_DXT1) ? 3 : 4;
+		switch(_fourCC){
+		case FOURCC_DXT1:
+			_format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+			break;
+		case FOURCC_DXT3:
+			_format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+			break;
+		case FOURCC_DXT5:
+			_format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+			break;
+		default:
+			free(_buffer);
+			return;
+		}
+
+		_blocksize = (_format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16;
+	}
+	TextureDDS(FILE *fp){
+		unsigned char header[124];
 		if(fp == NULL)
 			return;
 

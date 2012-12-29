@@ -5,10 +5,10 @@
 	class GLBuffer : public Buffer{
 	public:
 		GLBuffer(){ }
-		GLBuffer(BufferType shaderType, ui32 size, const f32* data){
+		GLBuffer(int shaderType, ui32 size, const f32* data){
 			load(shaderType, size, data);
 		}
-		void load(BufferType shaderType, ui32 size, const f32* data);
+		void load(int shaderType, ui32 size, const f32* data);
 	private:
 		ui32 m_vertex_handle;
 	};
