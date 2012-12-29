@@ -2,8 +2,6 @@
 
 #include "Shader\Shader.h"
 #include "Human\Math\Matrix4.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 class Material{
 public:

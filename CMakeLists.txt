@@ -31,7 +31,6 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID" )
 	
 	configure_file(		${PROJECT_SOURCE_DIR}/Android/Make/Android.mk		${PROJECT_BINARY_DIR}/jni/Android.mk	)
 	configure_file(		${PROJECT_SOURCE_DIR}/Android/Make/strings.xml		${PROJECT_BINARY_DIR}/res/values/strings.xml	)
-	configure_file(		${PROJECT_SOURCE_DIR}/Android/application.cpp		${PROJECT_BINARY_DIR}/jni/application.cpp	)
 		
 	configure_file (
 	  "${PROJECT_SOURCE_DIR}/Core/Target.h.in"

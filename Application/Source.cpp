@@ -113,6 +113,10 @@ int main(){
 
 	RenderSystem::Initialize(RendererType::OpenGL_3_3);
 
+	//GLMaterial* arr = new GLMaterial[10];
+	GLMaterial arr[10];
+
+
 	Matrix4 v, p, m;
 	m.SetIdentity();
 	m.SetIdentity();
@@ -134,12 +138,12 @@ int main(){
 
 	BufferPtr uv = new GLBuffer(BufferType::VertexBuffer, sizeof(g_uv_buffer_data), g_uv_buffer_data);
 
-	TextureDDS* dds = new TextureDDS("C:\\Repos\\OPifex Entertainment\\OPifex.Hg\\Engine\\Application\\Debug\\uvtemplate.DDS");
+	TextureDDS* dds = new TextureDDS("E:\\bricks.DDS");
 	GLTexture tex = GLTexture(dds);
 	delete(dds);
 
 	do{
-		// Clear the back buffer
+	//	// Clear the back buffer
 		RenderSystem::ClearColor(0.0f, 0.0f, 1.0f);
 
 		// Set the material data to use
@@ -164,17 +168,17 @@ int main(){
 		material->disable_attrib(0);
 		material->disable_attrib(1);
 
-		// Swap the back buffer
+	//	// Swap the back buffer
 		RenderSystem::Present();
 	}
 	while(RenderSystem::escape());
 	
 	printf("Program Ended.");
 	
-	delete buffer;
-	delete material;
-	delete vertex;
-	delete pixel;
+	//delete buffer;
+	//delete material;
+	//delete vertex;
+	//delete pixel;
 
 	return 0;
 }
