@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-add_source_group(\\ "${PROJECT_SOURCE_DIR}/Communication" COMMUNICATION_SRC)
+#add_source_group(\\ "${PROJECT_SOURCE_DIR}/Communication" COMMUNICATION_SRC)
 
 add_library(5_Communication STATIC ${COMMUNICATION_SRC})
 SET_TARGET_PROPERTIES(5_Communication PROPERTIES LINKER_LANGUAGE CXX)

@@ -17,19 +17,12 @@
 typedef struct sockaddr_in SockAddr;
 typedef struct sockaddr sockaddr;
 typedef struct hostent HostEnt;
-#endif
 
 typedef struct{
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 	OPint _socket;
 	SockAddr _sin;
-#endif
 } OPconnection;
 
-typedef enum{
-	UDP,
-	TCP
-} OPprotocol;
 
 OPconnection* OPhost(OPint port, OPprotocol protocol, int maxIncomming);
 OPconnection* OPconnect(OPchar* address, OPint port, OPprotocol protocol);
@@ -38,5 +31,12 @@ OPint OPreceive(OPconnection* con, void* data, OPuint size);
 OPint OPsend(OPconnection* con, void* data, OPuint size);
 
 OPuint OPdisconnect(OPconnection* connection);
+#endif
+
+
+typedef enum{
+	UDP,
+	TCP
+} OPprotocol;
 
 #endif
