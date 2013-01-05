@@ -4,16 +4,19 @@
 #include "Human/Resources/Texture/Texture.h"
 #include "Human\Rendering\GL\ES\GLESShader.h"
 #include "Human\Rendering\GL\ES\GLESMaterial.h"
-#include "Human\Rendering\GL\GLBuffer.h"
+#include "Human\Rendering\GL\ES\GLESBuffer.h"
 #include <jni.h>
 
 #include <sys/types.h>
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
-#include <android/log.h>
+
+#include "Core\include\Log.h"
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+
 
 static const char gVertexShader[] = 
 	"#version 330 core\n"
@@ -112,14 +115,15 @@ f32 gTriangleVertices[] = {
 		-1.0f, 1.0f, 1.0f,
 		 1.0f,-1.0f, 1.0f
 	};
-extern "C" {
-    JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager);
-    JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj);
-};
 
 MaterialPtr material;
 GLTexture* tex;
 ui32 sampLoc;
+
+extern "C" {
+    JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager);
+    JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj);
+};
 
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager)
 {
@@ -132,31 +136,31 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 
 	AAssetManager* mgr = AAssetManager_fromJava(env, assetManager);
 	if(mgr == NULL)
-		__android_log_write(ANDROID_LOG_ERROR, "OPIFEX", "Asset manager not created.");
+		OPLog("Asset manager not created.");
 
 	AAsset* asset = AAssetManager_open(mgr, "bricks.dds.mp3", AASSET_MODE_UNKNOWN);
 	if(asset == NULL)
-		__android_log_write(ANDROID_LOG_ERROR, "OPIFEX", "Asset not loaded.");
+		OPLog("Asset not loaded.");
 
 	off_t start, length;
     int fd = AAsset_openFileDescriptor(asset, &start, &length);
-    FILE* myFile = fdopen(fd, "rb"); 
+    FILE* myFile = fdopen(dup(fd), "rb"); 
 	if(!myFile){
-		__android_log_write(ANDROID_LOG_ERROR, "OPIFEX", "File not loaded.");
+		OPLog("File not loaded.");
 	}
-
+	fseek(myFile, start, SEEK_SET);
 	TextureDDS* dds = new TextureDDS(myFile);
 
 	if(!dds){
-		__android_log_write(ANDROID_LOG_ERROR, "OPIFEX", "Texture not loaded.");
+		OPLog("Texture not loaded.");
 	}
 	
 	tex = new GLTexture(dds);
 	delete(dds);
 
-	BufferPtr buffer = new GLBuffer(0, sizeof(gTriangleVertices), gTriangleVertices);
+	BufferPtr buffer = new GLESBuffer(0, sizeof(gTriangleVertices), gTriangleVertices);
 
-	BufferPtr uv = new GLBuffer(0, sizeof(g_uv_buffer_data), g_uv_buffer_data);
+	BufferPtr uv = new GLESBuffer(0, sizeof(g_uv_buffer_data), g_uv_buffer_data);
 }
 
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj)

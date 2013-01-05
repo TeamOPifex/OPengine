@@ -29,6 +29,7 @@ PROJECT_PATH:= $(LOCAL_PATH)/../../OPifex.Engine/
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libopifex-core
 
+LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 CORE_LIST_C := $(wildcard $(PROJECT_PATH)/Core/src/*.c)
 
 LOCAL_SRC_FILES := \
@@ -45,6 +46,7 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libopifex-data
 
+LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 DATA_LIST := $(wildcard $(PROJECT_PATH)/Data/*.cpp)
 DATA_LIST_C := $(wildcard $(PROJECT_PATH)/Data/*.c)
 
@@ -66,6 +68,7 @@ LOCAL_MODULE    := libopifex-human
 LOCAL_LDLIBS    := -llog -lGLESv2
 LOCAL_CFLAGS    := -Werror
 
+LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/Rendering/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Rendering/GL/ES/*.cpp)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
@@ -82,6 +85,8 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libsmrf
 LOCAL_LDLIBS    := -llog -lGLESv2 -landroid
+
+LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 LOCAL_SRC_FILES := $(subst jni/, , $(PROJECT_PATH)/Android/application.cpp)
 LOCAL_STATIC_LIBRARIES := libopifex-human
 include $(BUILD_SHARED_LIBRARY)
