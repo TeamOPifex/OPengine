@@ -25,7 +25,7 @@ void GLESRenderer::set_viewport(ui32 x, ui32 y, ui32 width, ui32 height){
 }
 
 void GLESRenderer::set_buffer(ui32 buffer){
-	//glBindBuffer(GL_ARRAY_BUFFER, buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, buffer);
 }
 
 void GLESRenderer::render_triangles(ui32 offset, ui32 count){

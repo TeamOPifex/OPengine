@@ -5,6 +5,7 @@
 #include "Human\Rendering\GL\ES\GLESShader.h"
 #include "Human\Rendering\GL\ES\GLESMaterial.h"
 #include "Human\Rendering\GL\ES\GLESBuffer.h"
+#include "Human\Math\Matrix4.h"
 #include <jni.h>
 
 #include <sys/types.h>
@@ -119,6 +120,10 @@ f32 gTriangleVertices[] = {
 MaterialPtr material;
 GLTexture* tex;
 ui32 sampLoc;
+BufferPtr buffer;
+BufferPtr uv;
+ui32 mvpLoc;
+Matrix4 m;
 
 extern "C" {
     JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager);
@@ -128,10 +133,18 @@ extern "C" {
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager)
 {
 	RenderSystem::Initialize(OpenGL_ES_2_0);
-	
+
+	Matrix4 v, p;
+	m.SetIdentity();
+	p = Matrix4::CreatePerspective(45.0f, 4.0f / 3.0f, 1.0f, 100.0f);
+	v = Matrix4::CreateLook(Vector3(4,3,3), Vector3(0), Vector3(0,1,0));
+	m = m * v * p;
+
 	ShaderPtr vertex = new GLESShader(Vertex, gVertexShader);
 	ShaderPtr pixel = new GLESShader(Fragment, gFragmentShader);
+
 	material = new GLESMaterial(vertex, pixel);	
+	mvpLoc = material->uniform_location("MVP");
 	sampLoc = material->uniform_location("myTextureSampler");
 
 	AAssetManager* mgr = AAssetManager_fromJava(env, assetManager);
@@ -158,19 +171,64 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	tex = new GLTexture(dds);
 	delete(dds);
 
-	BufferPtr buffer = new GLESBuffer(0, sizeof(gTriangleVertices), gTriangleVertices);
+	buffer = new GLESBuffer(0, sizeof(gTriangleVertices), gTriangleVertices);
 
-	BufferPtr uv = new GLESBuffer(0, sizeof(g_uv_buffer_data), g_uv_buffer_data);
+	uv = new GLESBuffer(0, sizeof(g_uv_buffer_data), g_uv_buffer_data);
+
+	OPLog("Vertices");
+	for(int i = 0; i < 20; i++){
+		OPLogFloat(gTriangleVertices[i]);
+	}	
+
+	OPLog("UVs");
+	for(int i = 0; i < 20; i++){
+		OPLogFloat(g_uv_buffer_data[i]);
+	}
+
+	OPLog("Initialized Successfully");
 }
+
+bool firstRun = true;
 
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj)
 {
+	OPLog("RENDER");
+
 	RenderSystem::ClearColor(1.0f, 0.0f, 0.0f);
+
 	RenderSystem::UseMaterial(material);
-	material->set_data(0, 2, false, 0, gTriangleVertices);
+	
+	material->set_matrix(mvpLoc, &m[0][0]);
+
 	tex->bind(sampLoc);
-	material->enable_attrib(0);
-	RenderSystem::RenderTriangles(0, 3);
+
+
+	if(firstRun){ 
+		OPLog("Set Texture");
+		OPLogNum(mvpLoc);
+		OPLogNum(sampLoc);
+		OPLogNum(buffer->handle());
+		OPLogNum(uv->handle());
+	}
+
+		RenderSystem::SetBuffer(buffer->handle());
+		material->set_data(0, 3, false, 0, (void*)0);
+		material->enable_attrib(0);
+		if(firstRun) OPLog("Set Vertex Buffer");
+			
+		RenderSystem::SetBuffer(uv->handle());
+		material->set_data(1, 2, false, 0, (void*)0);
+		material->enable_attrib(1);
+		if(firstRun) OPLog("Set UV Buffer");
+
+	RenderSystem::RenderTriangles(0, 12*3);
+	if(firstRun) OPLog("Rendered Triangles");
+
 	material->disable_attrib(0);
+	material->disable_attrib(1);
+
 	RenderSystem::Present();
+	if(firstRun) OPLog("Presented");
+
+	firstRun = false;
 }

@@ -70,8 +70,8 @@ public:
 		_mipMapCount = *(ui32*)&(header[24]);
 		_fourCC      = *(ui32*)&(header[80]);
 		
-		OPLog(_height);
-		OPLog(_width);
+		OPLogNum(_height);
+		OPLogNum(_width);
 
 		bufsize = _mipMapCount > 1 ? _linearSize * 2 : _linearSize;
 		_buffer = (ui8*)malloc(bufsize * sizeof(ui8));

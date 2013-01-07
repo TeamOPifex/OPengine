@@ -1,14 +1,45 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #include "GLESMaterial.h"
-
+#include "Core\include\Log.h"
 
 void GLESMaterial::load(ShaderPtr vertex, ShaderPtr fragment){
 	m_handle = glCreateProgram();
+	OPLog("Create Material >");
+	OPLogNum(m_handle);
+	
+	GLenum err;	
+	err = glGetError();
+	if(err != GL_NO_ERROR){
+		OPLog("GLESMaterial::1 - ERROR!");
+		return;
+	}
+
 	if(m_handle){
-		glAttachShader(m_handle, (GLuint)vertex->handle());
-		glAttachShader(m_handle, (GLuint)fragment->handle());
+
+		glAttachShader(m_handle, (GLuint)vertex->handle());	
+		err = glGetError();
+		if(err != GL_NO_ERROR){
+			OPLog("GLESMaterial::2 - ERROR!");
+			OPLogNum(vertex->handle());
+			return;
+		}
+
+		glAttachShader(m_handle, (GLuint)fragment->handle());	
+		err = glGetError();
+		if(err != GL_NO_ERROR){
+			OPLog("GLESMaterial::3 - ERROR!");
+			OPLogNum(fragment->handle());
+			return;
+		}
+
 		glLinkProgram(m_handle);
+		err = glGetError();
+		if(err != GL_NO_ERROR){
+			OPLog("GLESMaterial::4 - ERROR!");
+			return;
+		}
+
 	}
 }
 

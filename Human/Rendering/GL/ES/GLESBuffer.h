@@ -6,7 +6,7 @@
 	public:
 		GLESBuffer(){ }
 		GLESBuffer(int shaderType, ui32 size, const f32* data){
-			//load(shaderType, size, data);
+			load(shaderType, size, data);
 		}
 		void load(int shaderType, ui32 size, const f32* data);
 	private:

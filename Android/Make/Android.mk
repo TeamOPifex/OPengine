@@ -30,10 +30,13 @@ include $(CLEAR_VARS)
 LOCAL_MODULE    := libopifex-core
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
-CORE_LIST_C := $(wildcard $(PROJECT_PATH)/Core/src/*.c)
+#CORE_LIST_C := $(wildcard $(PROJECT_PATH)/Core/src/*.c)
 
-LOCAL_SRC_FILES := \
-	$(CORE_LIST_C:$(PROJECT_PATH)/%=%)
+MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Core/src/*.c)
+LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
+
+#LOCAL_SRC_FILES := \
+#	$(CORE_LIST_C:$(PROJECT_PATH)/%=%)
 	
 include $(BUILD_STATIC_LIBRARY)
 
@@ -47,14 +50,12 @@ include $(CLEAR_VARS)
 LOCAL_MODULE    := libopifex-data
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
-DATA_LIST := $(wildcard $(PROJECT_PATH)/Data/*.cpp)
-DATA_LIST_C := $(wildcard $(PROJECT_PATH)/Data/*.c)
 
-LOCAL_SRC_FILES := \
-	$(DATA_LIST:$(PROJECT_PATH)/%=%) \
-	$(DATA_LIST_C:$(PROJECT_PATH)/%=%)
-	
-LOCAL_STATIC_LIBRARIES := libsmrf-core
+LOCAL_C_INCLUDES :=$(PROJECT_PATH)
+MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Data/*.cpp)
+LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
+
+LOCAL_STATIC_LIBRARIES := libopifex-core
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -69,11 +70,12 @@ LOCAL_LDLIBS    := -llog -lGLESv2
 LOCAL_CFLAGS    := -Werror
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
-MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/Rendering/*.cpp)
+MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/Math/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Rendering/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Rendering/GL/ES/*.cpp)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
-LOCAL_STATIC_LIBRARIES := libsmrf-data
+LOCAL_STATIC_LIBRARIES := libopifex-data
 include $(BUILD_STATIC_LIBRARY)
 
 

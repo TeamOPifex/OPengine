@@ -20,6 +20,7 @@ public:
 	static Vector3& normalize(Vector3& source);	
 	void cross(Vector3& rhs);
 	static Vector3 cross(Vector3& left, Vector3& right);
+	static Vector3 sub(Vector3& left, Vector3& right);
 	
 	// Operator Overloads
 	Vector3& operator-(const Vector3 &rhs);

@@ -34,13 +34,21 @@ Vector3 Vector3::cross(Vector3& left, Vector3& right){
 	return returnValue;
 }
 
-Vector3& Vector3::operator-(const Vector3 &rhs) {
-	return Vector3(_x - rhs._x, _y - rhs._y, _z - rhs._z);
+Vector3 Vector3::sub(Vector3& left, Vector3& right){
+	Vector3 returnValue;
+	returnValue._x = left._x - right._x;
+	returnValue._y = left._y - right._y;
+	returnValue._z = left._z - right._z;
+	return returnValue;
 }
 
-Vector3& Vector3::operator+(const Vector3 &rhs) {
-	return Vector3(_x + rhs._x, _y + rhs._y, _z + rhs._z);
-}
+//Vector3& Vector3::operator-(const Vector3 &rhs) {
+//	return Vector3(this->_x - rhs._x, this->_y - rhs._y, this->_z - rhs._z);
+//}
+//
+//Vector3& Vector3::operator+(const Vector3 &rhs) {
+//	return Vector3(_x + rhs._x, _y + rhs._y, _z + rhs._z);
+//}
 		
 OPfloat& Vector3::operator[](int idx){		
 	switch(idx){

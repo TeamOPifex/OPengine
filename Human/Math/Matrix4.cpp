@@ -52,7 +52,7 @@ Matrix4 Matrix4::CreatePerspective(float fovy, float aspect, float near, float f
 }
 
 Matrix4 Matrix4::CreateLook(Vector3 campos, Vector3 look, Vector3 up){
-	Vector3 f = (look - campos); f.normalize();
+	Vector3 f = Vector3::sub(look, campos); f.normalize();
 	up.normalize();
 	Vector3 s = Vector3::cross(f, up);
 	s.normalize();
