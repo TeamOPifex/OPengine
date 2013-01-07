@@ -109,10 +109,28 @@ private:
 	ui32 _textureID;
 public:
 	GLTexture(Texture* texture){
-		glGenTextures(1, &_textureID);
+		GLenum err;
+
+		glGenTextures(1, &_textureID);		
+		err = glGetError();
+		if(err != GL_NO_ERROR){
+			OPLog("GLTexture::1 - ERROR!");
+			return;
+		}
 
 		glBindTexture(GL_TEXTURE_2D, _textureID);
+		err = glGetError();
+		if(err != GL_NO_ERROR){
+			OPLog("GLTexture::2 - ERROR!");
+			return;
+		}
+
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		err = glGetError();
+		if(err != GL_NO_ERROR){
+			OPLog("GLTexture::3 - ERROR!");
+			return;
+		}
 
 		ui32 offset = 0;
 
@@ -125,6 +143,17 @@ public:
 		{
 			ui32 size = ((width + 3) / 4) * ((height + 3) / 4) * texture->Blocksize();
 			glCompressedTexImage2D(GL_TEXTURE_2D, level, texture->Format(), width, height, 0, size, buffer + offset);
+			err = glGetError();
+			if(err != GL_NO_ERROR){
+				OPLog("GLTexture::4 - ERROR!");
+				OPLogNum(texture->Format());
+				OPLogNum((int)GL_COMPRESSED_RGBA_S3TC_DXT1_EXT);
+				OPLogNum((int)err);
+				OPLogNum(offset);
+				OPLogNum(width);
+				OPLogNum(height);
+				return;
+			}
 
 			offset += size;
 			width /= 2;
