@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Shader\Shader.h"
-#include "Human\Math\Matrix4.h"
+#include "./Shader/Shader.h"
+#include "./Human/Math/Matrix4.h"
 
 class Material{
 public:

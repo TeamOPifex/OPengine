@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Human\Resources\Buffer\Buffer.h"
+#include "./Human/Resources/Buffer/Buffer.h"
 
 class GLBuffer : public Buffer{
 public:

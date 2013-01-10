@@ -16,7 +16,7 @@ void initialize(){
 	printf("PI = %f\n", OPpi); 
 
 
-	printf("i = %d\n", (OPint)i);
+	//printf("i = %d\n", (OPint)i);
 
 	OPfloat pi = -21;//OPpi;
 	printf("-pi = %f\nabs(-pi) = %f\nsin(-pi) = %f\nceil(-pi) = %d\n", pi, (OPfloat)OPabs(pi), (OPfloat)OPsin(pi), (OPint)OPceil(pi));

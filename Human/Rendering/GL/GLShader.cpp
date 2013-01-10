@@ -1,6 +1,6 @@
 #include "GLShader.h"
 #include "GLTypes.h"
-#include "Human\Rendering\GL\GLUtility.h"
+#include "./Human/Rendering/GL/GLUtility.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
 #include <GLES2/gl2.h>

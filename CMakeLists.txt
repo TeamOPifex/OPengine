@@ -15,7 +15,7 @@ macro(add_source_group FILTER_NAME SOURCE_PATH TARGET_LIST)
 
 endmacro(add_source_group)
 
-set(OPIFEX_OS "OPIFEX_ANDROID" CACHE STRING
+set(OPIFEX_OS "OPIFEX_LINUX32" CACHE STRING
   "Operating system to build for.")
 
 set_property(CACHE OPIFEX_OS PROPERTY STRINGS OPIFEX_WIN32 OPIFEX_WIN64 OPIFEX_LINUX32 OPIFEX_LINUX64 OPIFEX_IOS OPIFEX_ANDROID)
@@ -42,7 +42,7 @@ endif()
 
 find_package(OpenGL REQUIRED)
 
-add_subdirectory (external)
+add_subdirectory (External)
 
 	#########################################
 	# Core - Level 1

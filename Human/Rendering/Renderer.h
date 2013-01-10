@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core\include\Types.h"
-#include "Human\Resources\Material\Material.h"
+#include "./Core/include/Types.h"
+#include "./Human/Resources/Material/Material.h"
 
 class Renderer{
 public:

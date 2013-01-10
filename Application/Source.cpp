@@ -1,13 +1,13 @@
 #include <stdio.h>
 
-#include "Human\Rendering\RenderSystem.h"
-#include "Human\Rendering\GL\GLShader.h"
-#include "Human\Rendering\GL\GLMaterial.h"
-#include "Human\Rendering\GL\GLBuffer.h"
-#include "Human\Rendering\GL\GLTexture.h"
-#include "Human\Math\Matrix4.h"
+#include "./Human/Rendering/RenderSystem.h"
+#include "./Human/Rendering/GL/GLShader.h"
+#include "./Human/Rendering/GL/GLMaterial.h"
+#include "./Human/Rendering/GL/GLBuffer.h"
+#include "./Human/Rendering/GL/GLTexture.h"
+#include "./Human/Math/Matrix4.h"
 
-#include "Human\Resources\Texture\TextureDDS.h"
+#include "./Human/Resources/Texture/TextureDDS.h"
 
 static const char gVertexShader[] = 
 	"#version 330 core\n"
@@ -135,9 +135,9 @@ int main(){
 	ui32 sampLoc = material->uniform_location("myTextureSampler");
 	
 	// Create a Vertex Buffer with the triangle data
-	BufferPtr buffer = new GLBuffer(BufferType::VertexBuffer, sizeof(gTriangleVertices), gTriangleVertices);
+	BufferPtr buffer = new GLBuffer(0, sizeof(gTriangleVertices), gTriangleVertices);
 
-	BufferPtr uv = new GLBuffer(BufferType::VertexBuffer, sizeof(g_uv_buffer_data), g_uv_buffer_data);
+	BufferPtr uv = new GLBuffer(0, sizeof(g_uv_buffer_data), g_uv_buffer_data);
 
 	TextureDDS* dds = new TextureDDS(fopen("E:\\bricks.DDS", "rb"));
 	GLTexture tex = GLTexture(dds);

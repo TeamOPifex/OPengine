@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Human\Resources\Material\Shader\Shader.h"
-#include "Human\Resources\Material\Shader\ShaderTypes.h"
+#include "./Human/Resources/Material/Shader/Shader.h"
+#include "./Human/Resources/Material/Shader/ShaderTypes.h"
 
 	class GLShader : public Shader{
 	public:

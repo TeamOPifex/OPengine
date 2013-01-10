@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core\include\Types.h"
+#include "./Core/include/Types.h"
 #include "../Renderer.h"
 
 class GLRenderer : public Renderer

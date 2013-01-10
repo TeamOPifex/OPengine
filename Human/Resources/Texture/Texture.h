@@ -1,6 +1,6 @@
 #pragma once
 #include <stdlib.h>
-#include "Core\include\Types.h"
+#include "./Core/include/Types.h"
 
 class Texture {
 public:

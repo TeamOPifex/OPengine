@@ -1,5 +1,5 @@
 #include "Vector4.h"
-#include "Core\include\MathHelpers.h"
+#include "./Core/include/MathHelpers.h"
 
 void Vector4::normalize(){
 		OPfloat length = sqrt((_x * _x) + (_y * _y) + (_z * _z) + (_w * _w));
