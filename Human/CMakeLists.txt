@@ -38,11 +38,11 @@ add_source_group(Resources/Material/State "${PROJECT_SOURCE_DIR}/Human/Resources
 add_source_group(Resources/Sound "${PROJECT_SOURCE_DIR}/Human/Resources/Sound" HUMAN_SRC)
 add_source_group(Resources/Texture "${PROJECT_SOURCE_DIR}/Human/Resources/Texture" HUMAN_SRC)
 
-add_library(3_Human STATIC ${HUMAN_SRC})
-target_link_libraries(3_Human
+add_library(4_Human STATIC ${HUMAN_SRC})
+target_link_libraries(4_Human
 	${ALL_LIBS}
 )
-SET_TARGET_PROPERTIES(3_Human PROPERTIES LINKER_LANGUAGE CXX)
-set_target_properties(3_Human PROPERTIES 
+SET_TARGET_PROPERTIES(4_Human PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(4_Human PROPERTIES 
 	OUTPUT_NAME "Human"
 )

@@ -59,22 +59,22 @@ add_subdirectory (external)
 	set(DATA_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Data")
 	add_subdirectory("${DATA_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Data)
 
-
+	
 	#########################################
-	# Human - Level 3
-	#########################################
-
-	set(HUMAN_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Human")
-	add_subdirectory("${HUMAN_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Human)
-
-
-	#########################################
-	# Performance - Level 4
+	# Performance - Level 3
 	#########################################
 
 	set(PERFORMANCE_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Performance")
 	add_subdirectory("${PERFORMANCE_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Performance)
+	
 
+	#########################################
+	# Human - Level 4
+	#########################################
+
+	set(HUMAN_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Human")
+	add_subdirectory("${HUMAN_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Human)
+	
 
 	#########################################
 	# Communication - Level 5

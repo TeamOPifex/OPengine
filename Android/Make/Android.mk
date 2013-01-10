@@ -61,7 +61,7 @@ include $(BUILD_STATIC_LIBRARY)
 
 
 ##############
-# 3_HUMAN
+# 4_HUMAN
 # human lib, which will be built statically
 ##############
 include $(CLEAR_VARS)
