@@ -12,5 +12,7 @@ bool GLUtility::CheckError(const char* message){
 	err = glGetError();
 	if(err != 0){
 		OPLog(message);
+		return true;
 	}
+	return false;
 }

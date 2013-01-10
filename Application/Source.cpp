@@ -4,9 +4,10 @@
 #include "Human\Rendering\GL\GLShader.h"
 #include "Human\Rendering\GL\GLMaterial.h"
 #include "Human\Rendering\GL\GLBuffer.h"
+#include "Human\Rendering\GL\GLTexture.h"
 #include "Human\Math\Matrix4.h"
 
-#include "Human\Resources\Texture\Texture.h"
+#include "Human\Resources\Texture\TextureDDS.h"
 
 static const char gVertexShader[] = 
 	"#version 330 core\n"
@@ -111,7 +112,7 @@ static const char gFragmentShader[] =
 int main(){
 	printf("Program Started.");
 
-	RenderSystem::Initialize(RendererType::OpenGL_3_3);
+	RenderSystem::Initialize();
 
 	//GLMaterial* arr = new GLMaterial[10];
 	GLMaterial arr[10];
@@ -138,7 +139,7 @@ int main(){
 
 	BufferPtr uv = new GLBuffer(BufferType::VertexBuffer, sizeof(g_uv_buffer_data), g_uv_buffer_data);
 
-	TextureDDS* dds = new TextureDDS("E:\\bricks.DDS");
+	TextureDDS* dds = new TextureDDS(fopen("E:\\bricks.DDS", "rb"));
 	GLTexture tex = GLTexture(dds);
 	delete(dds);
 

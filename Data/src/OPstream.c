@@ -21,6 +21,7 @@ OPuint OPstreamDestroy(OPstream* stream){
 OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 	OPuint len, ptr, i;
 	ui8 *D, *d = (ui8*)data;
+	ui8* nd;
 
 	if(!stream || !data) return 0;
 
@@ -38,7 +39,7 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 		len = len > size ? len : size;
 		
 		// reallocate
-		ui8* nd = (ui8*)OPrealloc(
+		nd = (ui8*)OPrealloc(
 			D,
 			sizeof(ui8) * len * 2
 		);

@@ -11,7 +11,9 @@ void OPLog(const char* message);
 void OPLog_i32(i32 number);
 void OPLog_f32(f32 number);
 #else
-
+void OPLog(const char* message);
+void OPLog_i32(i32 number);
+void OPLog_f32(f32 number);
 #endif
 	
 #ifdef __cplusplus

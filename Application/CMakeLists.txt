@@ -13,7 +13,7 @@ include_directories(
 set(ALL_LIBS
 	1_Core
 	2_Data
-	3_Human
+	4_Human
 )
 
 
