@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <android/log.h>
 
+#include "Data\include\OPfile.h"
 
 static const char gVertexShader[] = 
     "attribute vec3 vPosition; \n"
@@ -132,6 +133,11 @@ extern "C" {
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager)
 {
 	//__android_log_print(ANDROID_LOG_ERROR, "OPIFEX", (const char*)glGetString(GL_EXTENSIONS));
+	
+	AAssetManager* mgr = AAssetManager_fromJava(env, assetManager);
+	if(mgr == NULL)
+		OPLog("Asset manager not created.");
+	OPfileInit(mgr);
 
 	RenderSystem::Initialize();
 
@@ -148,10 +154,14 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	mvpLoc = material->uniform_location("MVP");
 	sampLoc = material->uniform_location("Texture");
 
-	AAssetManager* mgr = AAssetManager_fromJava(env, assetManager);
-	if(mgr == NULL)
-		OPLog("Asset manager not created.");
 
+	// This is how it should work eventually
+	//OPstream* file = OPreadFile("bricks.dds.mp3");
+
+
+	//####
+	//#### Below should be removed in favor of OPreadFile
+	//####
 	AAsset* asset = AAssetManager_open(mgr, "bricks.dds.mp3", AASSET_MODE_UNKNOWN);
 	if(asset == NULL)
 		OPLog("Asset not loaded.");
@@ -164,64 +174,52 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 		OPLog("File not loaded.");
 		return;
 	}
-
 	fseek(myFile, start, SEEK_SET);
-	Texture* dds = new TextureDDS(myFile);
-	if(!dds){
-		OPLog("Texture not loaded.");
-		return;
-	}
-	
+	//####
+	//#### Above should be removed in favor of OPreadFile
+	//####
+
+
+	// TextureDDS Should take a stream
+	Texture* dds = new TextureDDS(myFile);	
 	tex = new GLTexture(dds);
 	delete(dds);
 
 	buffer = new GLBuffer(0, sizeof(gTriangleVertices), gTriangleVertices);
-
 	uv = new GLBuffer(0, sizeof(g_uv_buffer_data), g_uv_buffer_data);
 	
 	OPLog("Initialized Successfully");
 }
 
-bool firstRun = true;
-
-JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj)
-{
+JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj){
 	RenderSystem::ClearColor(1.0f, 0.0f, 0.0f);
 
+	// Set material to use
 	RenderSystem::UseMaterial(material);
 	
+	// Set MVP Matrix
 	material->set_matrix(mvpLoc, &m[0][0]);
 	
+	// Set Texture
 	material->enable_attrib(sampLoc);
 	tex->bind(sampLoc);
-
-	if(firstRun){ 
-		OPLog("Set Texture");
-		OPLog_i32(mvpLoc);
-		OPLog_i32(sampLoc);
-		OPLog_i32(buffer->handle());
-		OPLog_i32(uv->handle());
-	}
 	
+	// Set Vertex Buffer
 	material->enable_attrib(0);
 	RenderSystem::SetBuffer(buffer->handle());
 	material->set_data(0, 3, false, 0, (void*)0);
-	if(firstRun) OPLog("Set Vertex Buffer");
 			
+	// Set UV Buffer
 	material->enable_attrib(1);
 	RenderSystem::SetBuffer(uv->handle());
 	material->set_data(1, 2, false, 0, (void*)0);
-	if(firstRun) OPLog("Set UV Buffer");
 
-	RenderSystem::RenderTriangles(0, 12*3);
-	if(firstRun) OPLog("Rendered Triangles");
+	// Render the scene
+	RenderSystem::RenderTriangles(0, 12*3);	
+	RenderSystem::Present();
 
+	// Clean up
 	material->disable_attrib(0);
 	material->disable_attrib(1);
 	material->disable_attrib(sampLoc);
-
-	RenderSystem::Present();
-	if(firstRun) OPLog("Presented");
-
-	firstRun = false;
 }

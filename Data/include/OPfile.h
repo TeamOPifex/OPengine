@@ -17,6 +17,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+void OPfileInit(void* manager);
+
 //-----------------------------------------------------------------------------
 /**
  * OPwriteFile - Writes a byte stream to a file.
@@ -55,6 +58,7 @@ namespace OPEngine{
 namespace Data{
 	class OPFile{
 		public:
+			static void OPfileInit(void* manager);
 			static OPStream* Read(const char* path);
 			static OPint Write(const char* path, OPStream* stream);
 			static OPint Exists(const char* path);

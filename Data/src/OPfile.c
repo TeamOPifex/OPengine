@@ -1,5 +1,18 @@
 #include "./../include/OPfile.h"
 
+#ifdef OPIFEX_ANDROID
+#include <android/asset_manager.h>
+#include <android/asset_manager_jni.h>
+#include <unistd.h>
+AAssetManager* _mgr;
+#endif
+
+void OPfileInit(void* manager){
+#ifdef OPIFEX_ANDROID
+	_mgr = (AAssetManager*)manager;
+#endif
+}
+
 //-----------------------------------------------------------------------------
 OPint OPwriteFile(const char* path, OPstream* stream){
 #if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
@@ -20,12 +33,36 @@ OPint OPwriteFile(const char* path, OPstream* stream){
 	// windows implementation
 #endif
 }
+
 //-----------------------------------------------------------------------------
 OPstream* OPreadFile(const char* path){
+#ifdef OPIFEX_ANDROID
+	AAsset* asset = AAssetManager_open(_mgr, path, AASSET_MODE_UNKNOWN);
+	if(asset == NULL)
+		return 0;	
+
+	off_t start, length;
+    int fd = AAsset_openFileDescriptor(asset, &start, &length);
+	
+    FILE* myFile = fdopen(dup(fd), "rb"); 
+	fseek(myFile, start, SEEK_SET);
+
+	OPstream* str = OPstreamCreate(length);
+	// write the entire file into a stream
+	ui8* byte = OPalloc(sizeof(ui8) * length);
+	while(fread(&byte, sizeof(ui8), length, myFile)){
+		OPwrite(str, &byte, length);
+	}
+	fclose(myFile); 
+	OPseek(str, 0);
+	
+	return str;
+
+#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 	// check to see if the file exists
 	if(OPfileExists(path) >= 0){
 		printf("%s exists\n", path);
-#if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+
 		OPint fd = 0, i;
  
 		// be sure that the file could be opened successfully
@@ -47,15 +84,16 @@ OPstream* OPreadFile(const char* path){
 			// finally return the stream
 			return str;
 		}
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
-	// windows implementation
-#endif
 	}
 	else{
 		printf("%s does not exist\n", path);
 		return NULL;
 	}	
+#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+	// windows implementation
+#endif
 }
+
 //-----------------------------------------------------------------------------
 OPint OPfileExists(const char* path){
 #if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
@@ -64,6 +102,7 @@ OPint OPfileExists(const char* path){
 
 #endif
 }
+
 //-----------------------------------------------------------------------------
 OPint OPdeleteFile(const char* path){
 	if(OPfileExists(path)){
@@ -77,6 +116,7 @@ OPint OPdeleteFile(const char* path){
 		return 0;
 	}
 }
+
 //-----------------------------------------------------------------------------
 //- C++ Definitions -----------------------------------------------------------
 #ifdef __cplusplus // use the C++ file object

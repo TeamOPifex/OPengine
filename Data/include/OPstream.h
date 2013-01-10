@@ -1,3 +1,5 @@
+// TODO: Have option to use a FILE* to read from disk rather than memory
+
 #pragma once
 #ifndef OPEngine_Data_Stream
 #define OPEngine_Data_Stream

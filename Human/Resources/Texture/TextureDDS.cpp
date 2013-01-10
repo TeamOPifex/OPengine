@@ -1,6 +1,5 @@
 #include "TextureDDS.h"
 
-#include <stdio.h>
 #include <string.h>
 #include "Core\include\Log.h"
 

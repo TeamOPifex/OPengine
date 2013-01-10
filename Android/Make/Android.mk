@@ -51,8 +51,8 @@ LOCAL_MODULE    := libopifex-data
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 
-LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Data/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Data/src/*.c)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 LOCAL_STATIC_LIBRARIES := libopifex-core
