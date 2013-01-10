@@ -72,7 +72,8 @@ LOCAL_CFLAGS    := -Werror
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/Math/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Rendering/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Rendering/GL/ES/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Rendering/GL/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/Texture/*.cpp)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 LOCAL_STATIC_LIBRARIES := libopifex-data

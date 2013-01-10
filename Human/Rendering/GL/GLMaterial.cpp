@@ -1,12 +1,26 @@
 #include "GLMaterial.h"
+#include "Human\Rendering\GL\GLUtility.h"
+
+#ifdef OPIFEX_OPENGL_ES_2
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#else
 #include <GL/glew.h>
+#endif
 
 void GLMaterial::load(ShaderPtr vertex, ShaderPtr fragment){
 	m_handle = glCreateProgram();
+	GLUtility::CheckError("GLMaterial::Error 1");
+
 	if(m_handle){
 		glAttachShader(m_handle, (GLuint)vertex->handle());
+		GLUtility::CheckError("GLMaterial::Error 2");
+
 		glAttachShader(m_handle, (GLuint)fragment->handle());
+		GLUtility::CheckError("GLMaterial::Error 3");
+
 		glLinkProgram(m_handle);
+		GLUtility::CheckError("GLMaterial::Error 4");
 	}
 }
 

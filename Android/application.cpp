@@ -1,10 +1,11 @@
 #define OPIFEX_ANDROID
 
 #include "Human/Rendering/RenderSystem.h"
-#include "Human/Resources/Texture/Texture.h"
-#include "Human\Rendering\GL\ES\GLESShader.h"
-#include "Human\Rendering\GL\ES\GLESMaterial.h"
-#include "Human\Rendering\GL\ES\GLESBuffer.h"
+#include "Human/Resources/Texture/TextureDDS.h"
+#include "Human\Rendering\GL\GLTexture.h"
+#include "Human\Rendering\GL\GLShader.h"
+#include "Human\Rendering\GL\GLMaterial.h"
+#include "Human\Rendering\GL\GLBuffer.h"
 #include "Human\Math\Matrix4.h"
 #include <jni.h>
 
@@ -19,18 +20,6 @@
 #include <unistd.h>
 #include <android/log.h>
 
-//static const char gVertexShader[] = 
-//    "attribute vec4 vPosition;\n"
-//    "uniform vec4 MVP; \n"
-//    "void main() {\n"
-//    "  gl_Position = MVP * vPosition;\n"
-//    "}\n";
-//
-//static const char gFragmentShader[] = 
-//    "precision mediump float;\n"
-//    "void main() {\n"
-//    "  gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
-//    "}\n";
 
 static const char gVertexShader[] = 
     "attribute vec3 vPosition; \n"
@@ -48,24 +37,6 @@ static const char gFragmentShader[] =
     "void main() {\n"
 	"  gl_FragColor = texture2D(Texture, TexCoordOut) + vec4(0, TexCoordOut.r, TexCoordOut.g, 1);\n"
     "}\n";
-
-//static const char gVertexShader[] = 
-//    "layout(location = 0) in vec3 vertexPosition_modelspace; \n"
-//	"layout(location = 1) in vec2 vertexUV;"
-//	"out vec2 UV;\n"
-//	"uniform mat4 MVP;\n"
-//	"void main(){\n"
-//    "gl_Position = MVP * vec4(vertexPosition_modelspace,1);\n"
-//	"UV = vertexUV;\n"
-//	"}";
-//
-//static const char gFragmentShader[] = 
-//	"in vec2 UV; \n"
-//	"out vec3 color; \n"
-//	"uniform sampler2D myTextureSampler; \n"
-//    "void main() { \n"
-//	"  color = texture2D( myTextureSampler, UV ).rgb; \n"
-//    "} \n";
 
 static const f32 g_uv_buffer_data[] = { 
 		0.000059f, 1.0f-0.000004f, 
@@ -153,38 +124,6 @@ BufferPtr uv;
 ui32 mvpLoc;
 Matrix4 m;
 
-int gltIsExtSupported(const char *extension)
-	{
-        GLubyte *extensions = NULL;
-        const GLubyte *start;
-        GLubyte *where, *terminator;
-        
-        where = (GLubyte *) strchr(extension, ' ');
-        if (where || *extension == '\0')
-            return 0;
-        
-        extensions = (GLubyte *)glGetString(GL_EXTENSIONS);
-        
-        start = extensions;
-        for (;;) 
-		{
-            where = (GLubyte *) strstr((const char *) start, extension);
-            
-            if (!where)
-                break;
-            
-            terminator = where + strlen(extension);
-            
-            if (where == start || *(where - 1) == ' ') 
-			{
-                if (*terminator == ' ' || *terminator == '\0') 
-                    return 1;
-			}
-            start = terminator;
-		}
-		return 0;
-	}
-
 extern "C" {
     JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager);
     JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj);
@@ -192,12 +131,9 @@ extern "C" {
 
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager)
 {
-	OPLog("Is Texture format supported?");
-	OPLogNum(gltIsExtSupported("GL_COLOR_EXT"));
+	//__android_log_print(ANDROID_LOG_ERROR, "OPIFEX", (const char*)glGetString(GL_EXTENSIONS));
 
-	__android_log_print(ANDROID_LOG_ERROR, "OPIFEX", (const char*)glGetString(GL_EXTENSIONS));
-
-	RenderSystem::Initialize(OpenGL_ES_2_0);
+	RenderSystem::Initialize();
 
 	Matrix4 v, p;
 	m.SetIdentity();
@@ -205,10 +141,10 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	v = Matrix4::CreateLook(Vector3(4,3,3), Vector3(0), Vector3(0,1,0));
 	m = m * v * p;
 
-	ShaderPtr vertex = new GLESShader(Vertex, gVertexShader);
-	ShaderPtr pixel = new GLESShader(Fragment, gFragmentShader);
+	ShaderPtr vertex = new GLShader(Vertex, gVertexShader);
+	ShaderPtr pixel = new GLShader(Fragment, gFragmentShader);
 
-	material = new GLESMaterial(vertex, pixel);	
+	material = new GLMaterial(vertex, pixel);	
 	mvpLoc = material->uniform_location("MVP");
 	sampLoc = material->uniform_location("Texture");
 
@@ -230,7 +166,7 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	}
 
 	fseek(myFile, start, SEEK_SET);
-	TextureDDS* dds = new TextureDDS(myFile);
+	Texture* dds = new TextureDDS(myFile);
 	if(!dds){
 		OPLog("Texture not loaded.");
 		return;
@@ -239,9 +175,9 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	tex = new GLTexture(dds);
 	delete(dds);
 
-	buffer = new GLESBuffer(0, sizeof(gTriangleVertices), gTriangleVertices);
+	buffer = new GLBuffer(0, sizeof(gTriangleVertices), gTriangleVertices);
 
-	uv = new GLESBuffer(0, sizeof(g_uv_buffer_data), g_uv_buffer_data);
+	uv = new GLBuffer(0, sizeof(g_uv_buffer_data), g_uv_buffer_data);
 	
 	OPLog("Initialized Successfully");
 }
@@ -261,10 +197,10 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject
 
 	if(firstRun){ 
 		OPLog("Set Texture");
-		OPLogNum(mvpLoc);
-		OPLogNum(sampLoc);
-		OPLogNum(buffer->handle());
-		OPLogNum(uv->handle());
+		OPLog_i32(mvpLoc);
+		OPLog_i32(sampLoc);
+		OPLog_i32(buffer->handle());
+		OPLog_i32(uv->handle());
 	}
 	
 	material->enable_attrib(0);

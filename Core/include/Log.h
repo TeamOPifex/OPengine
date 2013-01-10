@@ -8,8 +8,8 @@ extern "C" {
 
 #ifdef OPIFEX_ANDROID
 void OPLog(const char* message);
-void OPLogNum(i32 number);
-void OPLogFloat(f32 number);
+void OPLog_i32(i32 number);
+void OPLog_f32(f32 number);
 #else
 
 #endif

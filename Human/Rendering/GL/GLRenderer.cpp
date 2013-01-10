@@ -1,23 +1,27 @@
+#include "GLRenderer.h"
+#ifdef OPIFEX_OPENGL_ES_2
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#else
 #include <GL/glew.h>
 #include <GL/glfw.h>
 #include <glm/glm.hpp>
-#include "GLRenderer.h"
 
 using namespace glm;
+#endif
+
 
 GLRenderer::GLRenderer(){
 }
 
 int GLRenderer::initialize(){
-
+#ifdef OPIFEX_OPENGL_ES_2
+	// Android doesn't need to create a window
+	return 0;
+#else
 	// Most of the below will be moved to a Windowing System
-
-	if( !glfwInit() )
-	{
-		//fprintf( stderr, "Failed to initialize GLFW\n" );
-		return -1;
-	}
-		
+	if( !glfwInit() ) return -1;
+	
 	glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 4);
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
@@ -26,20 +30,17 @@ int GLRenderer::initialize(){
 	// Open a window and create its OpenGL context
 	if( !glfwOpenWindow( 1280, 720, 0,0,0,0, 32,0, GLFW_WINDOW ) )
 	{
-		//fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
 		glfwTerminate();
 		return -1;
 	}
 
-	if (glewInit() != GLEW_OK) {
-		//fprintf(stderr, "Failed to initialize GLEW\n");
-		return -1;
-	}
+	if (glewInit() != GLEW_OK) return -1;	
 
 	glfwSetWindowTitle( "OPifex Engine" );
 	glfwEnable( GLFW_STICKY_KEYS );	
 
 	return 0;
+#endif
 }
 
 void GLRenderer::clear_color(f32 r, f32 g, f32 b){	
@@ -63,10 +64,16 @@ void GLRenderer::render_triangles(ui32 offset, ui32 count){
 	glDrawArrays(GL_TRIANGLES, offset, count);
 }
 
-void GLRenderer::swap_buffer(){
+void GLRenderer::swap_buffer(){	
+#ifdef OPIFEX_OPENGL_ES_2
+#else
 	glfwSwapBuffers();	
+#endif
 }
 
 void GLRenderer::shutdown(){	
+#ifdef OPIFEX_OPENGL_ES_2
+#else
 	glfwTerminate();
+#endif
 }

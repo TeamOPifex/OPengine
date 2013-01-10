@@ -29,7 +29,6 @@ add_source_group(Math "${PROJECT_SOURCE_DIR}/Human/Math" HUMAN_SRC)
 add_source_group(Input "${PROJECT_SOURCE_DIR}/Human/Input" HUMAN_SRC)
 add_source_group(Rendering "${PROJECT_SOURCE_DIR}/Human/Rendering" HUMAN_SRC)
 add_source_group(Rendering/GL "${PROJECT_SOURCE_DIR}/Human/Rendering/GL" HUMAN_SRC)
-add_source_group(Rendering/GL/ES "${PROJECT_SOURCE_DIR}/Human/Rendering/GL/ES" HUMAN_SRC)
 
 add_source_group(Resources "${PROJECT_SOURCE_DIR}/Human/Resources" HUMAN_SRC)
 add_source_group(Resources/Buffer "${PROJECT_SOURCE_DIR}/Human/Resources/Buffer" HUMAN_SRC)

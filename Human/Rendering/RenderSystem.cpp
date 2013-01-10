@@ -1,21 +1,10 @@
 #include "RenderSystem.h"
-
-#ifdef OPIFEX_ANDROID
-	#include "GL/ES/GLESRenderer.h"
-#else
-	#include "GL/GLRenderer.h"
-#endif
+#include "GL/GLRenderer.h"
 
 Renderer* RenderSystem::m_renderer = 0;
 
-int RenderSystem::Initialize(RendererType renderer){
-
-#ifdef OPIFEX_ANDROID
-	m_renderer = new GLESRenderer();
-#else
+int RenderSystem::Initialize(){
 	m_renderer = new GLRenderer();
-#endif
-
 	return m_renderer->initialize();
 }
 
