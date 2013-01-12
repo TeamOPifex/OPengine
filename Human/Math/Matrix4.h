@@ -19,6 +19,9 @@ public:
 	static Matrix4 RotateX(f32 x);
 	static Matrix4 RotateY(f32 x);
 	static Matrix4 RotateZ(f32 x);
+	static Matrix4 Translate(f32 x, f32 y, f32 z);
+	static Matrix4 Scale(f32 x);
+	static Matrix4 Scale(f32 x, f32 y, f32 z);
 	static Matrix4 CreatePerspective(float fovy, float aspect, float near, float far);
 	static Matrix4 CreateLook(Vector3 campos, Vector3 look, Vector3 up);
 	void transpose();

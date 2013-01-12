@@ -155,14 +155,8 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	v = Matrix4::CreateLook(Vector3(4,3,3), Vector3(0), Vector3(0,1,0));
 	Matrix4 r1 = Matrix4::RotateY(-0.025f);
 	Matrix4 r2 = Matrix4::RotateX(-0.025f);
-	t1 = Matrix4(1,0,0,0,
-		0,1,0,0,
-		0,0,1,0,
-		0.01f,0,0,1);
-	t2 = Matrix4(1,0,0,0,
-		0,1,0,0,
-		0,0,1,0,
-		-0.01f,0,0,1);
+	t1 = Matrix4::Translate(0.01f, 0, 0);
+	t2 = Matrix4::Translate(-0.01f, 0, 0);
 	rotate = t1;
 
 	//rotate.SetIdentity();
