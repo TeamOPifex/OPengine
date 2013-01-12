@@ -109,6 +109,9 @@ static const char gFragmentShader[] =
 		1.000004f, 1.0f-0.671847f, 
 		0.667979f, 1.0f-0.335851f
 	};
+
+	Matrix4 v, p, m, r, result;
+
 int main(){
 	printf("Program Started.");
 
@@ -118,12 +121,10 @@ int main(){
 	GLMaterial arr[10];
 
 
-	Matrix4 v, p, m;
-	m.SetIdentity();
 	m.SetIdentity();
 	p = Matrix4::CreatePerspective(45.0f, 4.0f / 3.0f, 1.0f, 100.0f);
 	v = Matrix4::CreateLook(Vector3(4,3,3), Vector3(0), Vector3(0,1,0));
-	m = m * v * p;
+	r = Matrix4::RotateY(0.025f);
 
 	// Load up the Vertex and Fragment Shaders
 	// Then create a material (OpenGL Program) with the shaders
@@ -149,8 +150,9 @@ int main(){
 
 		// Set the material data to use
 		RenderSystem::UseMaterial(material);
-		
-		material->set_matrix(mvpLoc, &m[0][0]);
+		m = m * r;
+		result = m * v * p;
+		material->set_matrix(mvpLoc, &result[0][0]);
 
 		tex.bind(sampLoc);
 

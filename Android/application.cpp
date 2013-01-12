@@ -127,6 +127,7 @@ Matrix4 m;
 ui32 bufferLoc;
 ui32 uvLoc;
 Matrix4 rotate;
+Matrix4 v, p;
 
 extern "C" {
     JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager);
@@ -144,13 +145,11 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 
 	RenderSystem::Initialize();
 
-	Matrix4 v, p;
 	m.SetIdentity();
 	p = Matrix4::CreatePerspective(45.0f, 1280.0f / 800.0f, 1.0f, 100.0f);
 	v = Matrix4::CreateLook(Vector3(4,3,3), Vector3(0), Vector3(0,1,0));
-	m = m * v * p;
 
-	rotate = Matrix4::RotateY(0.05f);
+	rotate = Matrix4::RotateY(0.025f);
 
 	//rotate.SetIdentity();
 	
@@ -206,6 +205,7 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	OPLog("Initialized Successfully");
 }
 bool firstRun = false;
+Matrix4 result;
 
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj){
 	RenderSystem::ClearColor(0.0f, 0.0f, 1.0f);
@@ -215,7 +215,8 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject
 	
 	// Set MVP Matrix
 	m = m * rotate;
-	material->set_matrix(mvpLoc, &m[0][0]);
+	result = m * v * p;
+	material->set_matrix(mvpLoc, &result[0][0]);
 	
 	// Set Texture
 	material->enable_attrib(sampLoc);

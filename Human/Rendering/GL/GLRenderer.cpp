@@ -17,6 +17,9 @@ GLRenderer::GLRenderer(){
 int GLRenderer::initialize(){
 #ifdef OPIFEX_OPENGL_ES_2
 	// Android doesn't need to create a window
+	glEnable(GL_DEPTH_TEST);
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
 	return 0;
 #else
 	// Most of the below will be moved to a Windowing System
@@ -39,13 +42,17 @@ int GLRenderer::initialize(){
 	glfwSetWindowTitle( "OPifex Engine" );
 	glfwEnable( GLFW_STICKY_KEYS );	
 
+	glEnable(GL_DEPTH_TEST);
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+
 	return 0;
 #endif
 }
 
 void GLRenderer::clear_color(f32 r, f32 g, f32 b){	
 	glClearColor(r, g, b, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void GLRenderer::use_material(MaterialPtr material){
