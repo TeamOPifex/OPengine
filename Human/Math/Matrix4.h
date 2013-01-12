@@ -16,6 +16,9 @@ public:
 
 	// Helper methods
 	void SetIdentity();
+	static Matrix4 RotateX(f32 x);
+	static Matrix4 RotateY(f32 x);
+	static Matrix4 RotateZ(f32 x);
 	static Matrix4 CreatePerspective(float fovy, float aspect, float near, float far);
 	static Matrix4 CreateLook(Vector3 campos, Vector3 look, Vector3 up);
 	void transpose();

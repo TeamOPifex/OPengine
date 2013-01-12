@@ -66,6 +66,7 @@ void GLRenderer::render_triangles(ui32 offset, ui32 count){
 
 void GLRenderer::swap_buffer(){	
 #ifdef OPIFEX_OPENGL_ES_2
+	
 #else
 	glfwSwapBuffers();	
 #endif

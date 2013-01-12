@@ -1,5 +1,6 @@
 #include "Matrix4.h"
 #include "Core/include/MathHelpers.h"
+#include "./Core/include/Log.h"
 
 Matrix4::Matrix4(
 	Vector4& col0,
@@ -23,6 +24,38 @@ Matrix4::Matrix4(
 		cols[3][0] = c30; cols[3][1] = c31; cols[3][2] = c32; cols[3][3] = c33;
 }
 
+Matrix4 Matrix4::RotateX(f32 x){
+	OPfloat t1 = OPcos(x);
+	OPfloat t2 = OPsin(x);
+	return Matrix4(
+		1,0,0,0,
+		0, t1, t2, 0,
+		0, -t2, t1, 0,
+		0,0,0,1
+		);
+}
+
+Matrix4 Matrix4::RotateY(f32 x){
+	OPfloat t1 = OPcos(x);
+	OPfloat t2 = OPsin(x);
+	return Matrix4(
+		t1,0,-t2,0,
+		0, 1, 0, 0,
+		t2, 0, t1, 0,
+		0,0,0,1
+		);
+}
+
+Matrix4 Matrix4::RotateZ(f32 x){
+	OPfloat t1 = OPcos(x);
+	OPfloat t2 = OPsin(x);
+	return Matrix4(
+		t1, t2, 0, 0,
+		-t2, t1, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1
+		);
+}
 
 void Matrix4::SetIdentity(){
 	cols[0] = Vector4(1,0,0,0);
@@ -153,7 +186,7 @@ Matrix4 Matrix4::operator*=(Matrix4& right)
 			c.cols[i][j] = sum;
 		}
 	}
-		
+	
 	for(int i = 0; i < 4; i++){
 		for(int j = 0; j < 4; j++){
 			cols[i][j] = c[i][j];

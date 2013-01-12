@@ -36,7 +36,7 @@ static const char gFragmentShader[] =
 	"varying lowp vec2 TexCoordOut; \n"
 	"uniform sampler2D Texture; \n"
     "void main() {\n"
-	"  gl_FragColor = texture2D(Texture, TexCoordOut) + vec4(0, TexCoordOut.r, TexCoordOut.g, 1);\n"
+	"  gl_FragColor = texture2D(Texture, TexCoordOut);\n"
     "}\n";
 
 static const f32 g_uv_buffer_data[] = { 
@@ -124,6 +124,9 @@ BufferPtr buffer;
 BufferPtr uv;
 ui32 mvpLoc;
 Matrix4 m;
+ui32 bufferLoc;
+ui32 uvLoc;
+Matrix4 rotate;
 
 extern "C" {
     JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager);
@@ -143,9 +146,18 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 
 	Matrix4 v, p;
 	m.SetIdentity();
-	p = Matrix4::CreatePerspective(45.0f, 480.0f / 800.0f, 1.0f, 100.0f);
+	p = Matrix4::CreatePerspective(45.0f, 1280.0f / 800.0f, 1.0f, 100.0f);
 	v = Matrix4::CreateLook(Vector3(4,3,3), Vector3(0), Vector3(0,1,0));
 	m = m * v * p;
+
+	rotate = Matrix4::RotateY(0.05f);
+
+	//rotate.SetIdentity();
+	
+	//rotate[1][1] = 0.99875026039f;
+	//rotate[2][1] = -0.04997916927f;
+	//rotate[1][2] = 0.04997916927f;
+	//rotate[2][2] = 0.99875026039f;
 
 	ShaderPtr vertex = new GLShader(Vertex, gVertexShader);
 	ShaderPtr pixel = new GLShader(Fragment, gFragmentShader);
@@ -153,6 +165,9 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	material = new GLMaterial(vertex, pixel);	
 	mvpLoc = material->uniform_location("MVP");
 	sampLoc = material->uniform_location("Texture");
+
+	bufferLoc = material->attribute_location("vPosition");
+	uvLoc = material->attribute_location("TexCoordIn");
 
 
 	// This is how it should work eventually
@@ -185,19 +200,21 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	tex = new GLTexture(dds);
 	delete(dds);
 
-	buffer = new GLBuffer(0, sizeof(gTriangleVertices), gTriangleVertices);
-	uv = new GLBuffer(0, sizeof(g_uv_buffer_data), g_uv_buffer_data);
+	buffer = new GLBuffer(0, sizeof(f32) * 108, gTriangleVertices);
+	uv = new GLBuffer(0, sizeof(f32) * 72, g_uv_buffer_data);
 	
 	OPLog("Initialized Successfully");
 }
+bool firstRun = false;
 
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj){
-	RenderSystem::ClearColor(1.0f, 0.0f, 0.0f);
+	RenderSystem::ClearColor(0.0f, 0.0f, 1.0f);
 
 	// Set material to use
 	RenderSystem::UseMaterial(material);
 	
 	// Set MVP Matrix
+	m = m * rotate;
 	material->set_matrix(mvpLoc, &m[0][0]);
 	
 	// Set Texture
@@ -205,21 +222,28 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject
 	tex->bind(sampLoc);
 	
 	// Set Vertex Buffer
-	material->enable_attrib(0);
+	material->enable_attrib(bufferLoc);
 	RenderSystem::SetBuffer(buffer->handle());
-	material->set_data(0, 3, false, 0, (void*)0);
+	material->set_data(bufferLoc, 3, false, 0, (void*)0);
 			
 	// Set UV Buffer
-	material->enable_attrib(1);
+	material->enable_attrib(uvLoc);
 	RenderSystem::SetBuffer(uv->handle());
-	material->set_data(1, 2, false, 0, (void*)0);
+	material->set_data(uvLoc, 2, false, 0, (void*)0);
+
+	if(!firstRun){
+		OPLog_i32(buffer->handle());
+		OPLog_i32(uv->handle());
+	}
 
 	// Render the scene
 	RenderSystem::RenderTriangles(0, 12*3);	
 	RenderSystem::Present();
 
 	// Clean up
-	material->disable_attrib(0);
-	material->disable_attrib(1);
+	material->disable_attrib(bufferLoc);
+	material->disable_attrib(uvLoc);
 	material->disable_attrib(sampLoc);
+
+	firstRun = true;
 }

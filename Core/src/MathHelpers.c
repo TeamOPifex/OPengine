@@ -53,7 +53,7 @@ OPfloat OPsin(OPfloat f){
 	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
 		return sin(f);
 	#elif defined(OPIFEX_ANDROID)	// android implementation
-
+		return sin(f);
 	#endif
 }
 //----------------------------------------------------------------------------
@@ -63,7 +63,7 @@ OPfloat OPcos(OPfloat f){
 	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
 		return cos(f);
 	#elif defined(OPIFEX_ANDROID)	// android implementation
-
+		return cos(f);
 	#endif
 }
 //----------------------------------------------------------------------------
@@ -73,7 +73,7 @@ OPfloat OPtan(OPfloat f){
 	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
 		return tan(f);
 	#elif defined(OPIFEX_ANDROID)	// android implementation
-
+		return tan(f);
 	#endif
 }
 //----------------------------------------------------------------------------
