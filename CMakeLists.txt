@@ -29,6 +29,11 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID" )
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Java/GL2JNIView.java DESTINATION ${PROJECT_BINARY_DIR}/src/com/opifex/SMRF/)
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Java/SMRF.java DESTINATION ${PROJECT_BINARY_DIR}/src/com/opifex/SMRF/)
 	
+	file(COPY ${PROJECT_SOURCE_DIR}/Android/Assets/bricks.dds.mp3 DESTINATION ${PROJECT_BINARY_DIR}/assets/bricks.dds.mp3)
+	file(COPY ${PROJECT_SOURCE_DIR}/Android/Assets/AMemoryAway.ogg.mp3 DESTINATION ${PROJECT_BINARY_DIR}/assets/AMemoryAway.ogg.mp3)
+	
+	file(COPY ${PROJECT_SOURCE_DIR}/Android/Libs/ouya-sdk.jar DESTINATION ${PROJECT_BINARY_DIR}/libs/ouya-sdk.jar)
+	
 	configure_file(		${PROJECT_SOURCE_DIR}/Android/Make/Android.mk		${PROJECT_BINARY_DIR}/jni/Android.mk	)
 	configure_file(		${PROJECT_SOURCE_DIR}/Android/Make/strings.xml		${PROJECT_BINARY_DIR}/res/values/strings.xml	)
 		

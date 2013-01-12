@@ -31,5 +31,5 @@ public class GL2JNILib {
      * @param height the current view height
      */
      public static native void init(int width, int height, AssetManager assetManager);
-     public static native void step();
+     public static native void step(int button);
 }

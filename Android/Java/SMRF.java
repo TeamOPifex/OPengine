@@ -20,9 +20,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
+import android.view.*;
+import android.nfc.Tag;
 
 public class SMRF extends Activity {
 	GL2JNIView mView;
+	
 	@Override protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		AssetManager assetManager = getAssets();
@@ -39,4 +42,23 @@ public class SMRF extends Activity {
 		super.onResume();
 		mView.onResume();
 	}
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return mView.onKeyDown(keyCode,  event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        return mView.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    public boolean onGenericMotionEvent(MotionEvent event) {
+        if((event.getSource() & InputDevice.SOURCE_CLASS_JOYSTICK) == 0){
+            //Not a joystick movement, so ignore it.
+            return false;
+        }
+        return mView.onGenericMotionEvent(event);
+    }
 }

@@ -40,12 +40,15 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.View;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.opengles.GL10;
+
+import tv.ouya.console.api.OuyaController;
 
 /**
  * A simple GLSurfaceView sub-class that demonstrate how to perform
@@ -69,6 +72,9 @@ class GL2JNIView extends GLSurfaceView {
     private static String TAG = "GL2JNIView";
     private static final boolean DEBUG = false;
 	private static AssetManager _assetManager;
+	private static boolean lIgnore;
+	private static boolean rIgnore;
+	private static Renderer rend;
 	
     public GL2JNIView(Context context, AssetManager assetManager) {
         super(context);
@@ -81,7 +87,119 @@ class GL2JNIView extends GLSurfaceView {
 		_assetManager = assetManager;
         init(translucent, depth, stencil);
     }
+	
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == OuyaController.BUTTON_O) {
+			rend.setButton(1);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_U) {
+			rend.setButton(2);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_Y) {
+			rend.setButton(3);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_A) {
+			rend.setButton(4);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_DPAD_DOWN) {
+			rend.setButton(1);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_DPAD_LEFT) {
+			rend.setButton(2);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_DPAD_UP) {
+			rend.setButton(3);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_DPAD_RIGHT) {
+			rend.setButton(4);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_R1) {
+			rend.setButton(1);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_L1) {
+			rend.setButton(2);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_R2) {
+			rend.setButton(3);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_L2) {
+			rend.setButton(4);
+            return true;
+        } else if (keyCode == OuyaController.BUTTON_R3) {
+			//rend.setState(true);
+            return true;
+        } else if (findViewById(keyCode) != null && keyCode != OuyaController.BUTTON_L2 && keyCode != OuyaController.BUTTON_R2) {
+			//rend.setState(true);
+            return true;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
 
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+	
+		if(keyCode == OuyaController.BUTTON_O || keyCode == OuyaController.BUTTON_U || keyCode == OuyaController.BUTTON_Y || keyCode == OuyaController.BUTTON_A ||
+		keyCode == OuyaController.BUTTON_DPAD_DOWN || keyCode == OuyaController.BUTTON_DPAD_LEFT || keyCode == OuyaController.BUTTON_DPAD_UP || keyCode == OuyaController.BUTTON_DPAD_RIGHT ||
+		keyCode == OuyaController.BUTTON_R1 || keyCode == OuyaController.BUTTON_L1 || keyCode == OuyaController.BUTTON_R2 || keyCode == OuyaController.BUTTON_L2) {
+			//rend.setButton(0);
+            return true;
+        }
+        else if (keyCode == OuyaController.BUTTON_R3) {
+		
+            return true;
+        } else if (findViewById(keyCode) != null && keyCode != OuyaController.BUTTON_L2 && keyCode != OuyaController.BUTTON_R2) {
+		
+            return true;
+        } else {
+            return super.onKeyUp(keyCode, event);
+        }
+    }@Override
+    public boolean onGenericMotionEvent(MotionEvent event) {
+        //lstickView.setTranslationX(event.getAxisValue(OuyaController.AXIS_LS_X) * 5f);
+        //lstickView.setTranslationY(event.getAxisValue(OuyaController.AXIS_LS_Y) * 5f);
+        //rstickView.setTranslationX(event.getAxisValue(OuyaController.AXIS_RS_X) * 5f);
+        //rstickView.setTranslationY(event.getAxisValue(OuyaController.AXIS_RS_Y) * 5f);
+
+        float ltrigger = event.getAxisValue(OuyaController.AXIS_L2);
+        if(ltrigger != 0.0f) {
+			
+            lIgnore = false;
+        } else if(!lIgnore){
+            lIgnore = true;
+			
+        }
+
+        float rtrigger = event.getAxisValue(OuyaController.AXIS_R2);
+        if(rtrigger != 0.0f) {
+            rIgnore = false;
+        } else if(!rIgnore){
+            rIgnore = true;
+			
+        }
+
+        onKeyUp(OuyaController.BUTTON_DPAD_LEFT, new KeyEvent(OuyaController.BUTTON_DPAD_LEFT, KeyEvent.ACTION_UP));
+        onKeyUp(OuyaController.BUTTON_DPAD_RIGHT, new KeyEvent(OuyaController.BUTTON_DPAD_RIGHT, KeyEvent.ACTION_UP));
+        if(event.getAxisValue(MotionEvent.AXIS_HAT_X) == -1) {
+            onKeyDown(OuyaController.BUTTON_DPAD_LEFT, new KeyEvent(OuyaController.BUTTON_DPAD_LEFT, KeyEvent.ACTION_DOWN));
+        }
+        if(event.getAxisValue(MotionEvent.AXIS_HAT_X) == 1) {
+            onKeyDown(OuyaController.BUTTON_DPAD_RIGHT, new KeyEvent(OuyaController.BUTTON_DPAD_RIGHT, KeyEvent.ACTION_DOWN));
+        }
+
+        onKeyUp(OuyaController.BUTTON_DPAD_DOWN, new KeyEvent(OuyaController.BUTTON_DPAD_DOWN, KeyEvent.ACTION_UP));
+        onKeyUp(OuyaController.BUTTON_DPAD_UP, new KeyEvent(OuyaController.BUTTON_DPAD_UP, KeyEvent.ACTION_UP));
+        if(event.getAxisValue(MotionEvent.AXIS_HAT_Y) == -1) {
+            onKeyDown(OuyaController.BUTTON_DPAD_UP, new KeyEvent(OuyaController.BUTTON_DPAD_UP, KeyEvent.ACTION_DOWN));
+        }
+        if(event.getAxisValue(MotionEvent.AXIS_HAT_Y) == 1) {
+            onKeyDown(OuyaController.BUTTON_DPAD_DOWN, new KeyEvent(OuyaController.BUTTON_DPAD_DOWN, KeyEvent.ACTION_DOWN));
+        }
+
+        return true;
+    }
+	
     private void init(boolean translucent, int depth, int stencil) {
 
         /* By default, GLSurfaceView() creates a RGB_565 opaque surface.
@@ -108,7 +226,8 @@ class GL2JNIView extends GLSurfaceView {
                              new ConfigChooser(5, 6, 5, 0, depth, stencil) );
 
         /* Set the renderer responsible for frame rendering */
-        setRenderer(new Renderer(_assetManager));
+		rend = new Renderer(_assetManager);
+        setRenderer(rend);
     }
 
     private static class ContextFactory implements GLSurfaceView.EGLContextFactory {
@@ -329,12 +448,18 @@ class GL2JNIView extends GLSurfaceView {
 
     private static class Renderer implements GLSurfaceView.Renderer {
 		static AssetManager _assetManager;
+		int button = 0;
+		
 		public Renderer(AssetManager assetManager){
 			_assetManager = assetManager;
 		}
 		
+        public void setButton(int state) {
+			button = state;
+		}
+		
         public void onDrawFrame(GL10 gl) {
-            GL2JNILib.step();
+            GL2JNILib.step(button);
         }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
