@@ -87,7 +87,7 @@ include $(BUILD_STATIC_LIBRARY)
 ##############
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libsmrf
-LOCAL_LDLIBS    := -llog -lGLESv2 -landroid
+LOCAL_LDLIBS    := -llog -lGLESv2 -landroid -lOpenSLES
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 LOCAL_SRC_FILES := $(subst jni/, , $(PROJECT_PATH)/Android/application.cpp)

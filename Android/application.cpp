@@ -22,6 +22,8 @@
 
 #include "Data\include\OPfile.h"
 
+#include "Human\Resources\Sound\Sound.h"
+
 static const char gVertexShader[] = 
     "attribute vec3 vPosition; \n"
     "attribute vec2 TexCoordIn; \n"
@@ -148,8 +150,10 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	m.SetIdentity();
 	p = Matrix4::CreatePerspective(45.0f, 1280.0f / 800.0f, 1.0f, 100.0f);
 	v = Matrix4::CreateLook(Vector3(4,3,3), Vector3(0), Vector3(0,1,0));
+	Matrix4 r1 = Matrix4::RotateY(-0.025f);
+	Matrix4 r2 = Matrix4::RotateX(-0.025f);
 
-	rotate = Matrix4::RotateY(0.025f);
+	rotate = r1 * r2;
 
 	//rotate.SetIdentity();
 	
@@ -201,6 +205,14 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 
 	buffer = new GLBuffer(0, sizeof(f32) * 108, gTriangleVertices);
 	uv = new GLBuffer(0, sizeof(f32) * 72, g_uv_buffer_data);
+
+
+	AAsset* asset2 = AAssetManager_open(mgr, "background.mp3", AASSET_MODE_UNKNOWN);
+	if(asset2 == NULL)
+		OPLog("Asset not loaded.");
+
+    int fd2 = AAsset_openFileDescriptor(asset2, &start, &length);
+	Sound* snd = new Sound(fd2, start, length);
 	
 	OPLog("Initialized Successfully");
 }
