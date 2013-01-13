@@ -88,57 +88,55 @@ class GL2JNIView extends GLSurfaceView {
         init(translucent, depth, stencil);
     }
 	
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public boolean onKeyDown(int keyCode, int player, KeyEvent event) {
         if(keyCode == OuyaController.BUTTON_O) {
-			rend.setButton(1);
+			rend.setButton(player, 1, 1);
             return true;
         } else if(keyCode == OuyaController.BUTTON_U) {
-			rend.setButton(2);
+			rend.setButton(player, 2, 1);
             return true;
         } else if(keyCode == OuyaController.BUTTON_Y) {
-			rend.setButton(3);
+			rend.setButton(player, 3, 1);
             return true;
         } else if(keyCode == OuyaController.BUTTON_A) {
-			rend.setButton(4);
+			rend.setButton(player, 4, 1);
             return true;
         } else if(keyCode == OuyaController.BUTTON_DPAD_DOWN) {
-			rend.setButton(1);
+			rend.setButton(player, 5, 1);
             return true;
         } else if(keyCode == OuyaController.BUTTON_DPAD_LEFT) {
-			rend.setButton(2);
+			rend.setButton(player, 6, 1);
             return true;
         } else if(keyCode == OuyaController.BUTTON_DPAD_UP) {
-			rend.setButton(3);
+			rend.setButton(player, 7, 1);
             return true;
         } else if(keyCode == OuyaController.BUTTON_DPAD_RIGHT) {
-			rend.setButton(4);
+			rend.setButton(player, 8, 1);
             return true;
         } else if(keyCode == OuyaController.BUTTON_R1) {
-			rend.setButton(1);
+			rend.setButton(player, 9, 1);
             return true;
         } else if(keyCode == OuyaController.BUTTON_L1) {
-			rend.setButton(2);
+			rend.setButton(player, 10, 1);
             return true;
         } else if(keyCode == OuyaController.BUTTON_R2) {
-			rend.setButton(3);
+			rend.setButton(player, 11, 1);
             return true;
         } else if(keyCode == OuyaController.BUTTON_L2) {
-			rend.setButton(4);
+			rend.setButton(player, 12, 1);
             return true;
         } else if (keyCode == OuyaController.BUTTON_R3) {
-			//rend.setState(true);
+			rend.setButton(player, 13, 1);
             return true;
-        } else if (findViewById(keyCode) != null && keyCode != OuyaController.BUTTON_L2 && keyCode != OuyaController.BUTTON_R2) {
-			//rend.setState(true);
+        } else if (keyCode == OuyaController.BUTTON_L3) {
+			rend.setButton(player, 14, 1);
             return true;
-        } else {
-            return super.onKeyDown(keyCode, event);
         }
+		
+        return super.onKeyDown(keyCode, event);        
     }
 
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
+    public boolean onKeyUp(int keyCode, int player, KeyEvent event) {
 	
 		if(keyCode == OuyaController.BUTTON_O || keyCode == OuyaController.BUTTON_U || keyCode == OuyaController.BUTTON_Y || keyCode == OuyaController.BUTTON_A ||
 		keyCode == OuyaController.BUTTON_DPAD_DOWN || keyCode == OuyaController.BUTTON_DPAD_LEFT || keyCode == OuyaController.BUTTON_DPAD_UP || keyCode == OuyaController.BUTTON_DPAD_RIGHT ||
@@ -146,57 +144,17 @@ class GL2JNIView extends GLSurfaceView {
 			//rend.setButton(0);
             return true;
         }
-        else if (keyCode == OuyaController.BUTTON_R3) {
 		
-            return true;
-        } else if (findViewById(keyCode) != null && keyCode != OuyaController.BUTTON_L2 && keyCode != OuyaController.BUTTON_R2) {
-		
-            return true;
-        } else {
-            return super.onKeyUp(keyCode, event);
-        }
-    }@Override
-    public boolean onGenericMotionEvent(MotionEvent event) {
-        //lstickView.setTranslationX(event.getAxisValue(OuyaController.AXIS_LS_X) * 5f);
-        //lstickView.setTranslationY(event.getAxisValue(OuyaController.AXIS_LS_Y) * 5f);
-        //rstickView.setTranslationX(event.getAxisValue(OuyaController.AXIS_RS_X) * 5f);
-        //rstickView.setTranslationY(event.getAxisValue(OuyaController.AXIS_RS_Y) * 5f);
-
-        float ltrigger = event.getAxisValue(OuyaController.AXIS_L2);
-        if(ltrigger != 0.0f) {
-			
-            lIgnore = false;
-        } else if(!lIgnore){
-            lIgnore = true;
-			
-        }
-
-        float rtrigger = event.getAxisValue(OuyaController.AXIS_R2);
-        if(rtrigger != 0.0f) {
-            rIgnore = false;
-        } else if(!rIgnore){
-            rIgnore = true;
-			
-        }
-
-        onKeyUp(OuyaController.BUTTON_DPAD_LEFT, new KeyEvent(OuyaController.BUTTON_DPAD_LEFT, KeyEvent.ACTION_UP));
-        onKeyUp(OuyaController.BUTTON_DPAD_RIGHT, new KeyEvent(OuyaController.BUTTON_DPAD_RIGHT, KeyEvent.ACTION_UP));
-        if(event.getAxisValue(MotionEvent.AXIS_HAT_X) == -1) {
-            onKeyDown(OuyaController.BUTTON_DPAD_LEFT, new KeyEvent(OuyaController.BUTTON_DPAD_LEFT, KeyEvent.ACTION_DOWN));
-        }
-        if(event.getAxisValue(MotionEvent.AXIS_HAT_X) == 1) {
-            onKeyDown(OuyaController.BUTTON_DPAD_RIGHT, new KeyEvent(OuyaController.BUTTON_DPAD_RIGHT, KeyEvent.ACTION_DOWN));
-        }
-
-        onKeyUp(OuyaController.BUTTON_DPAD_DOWN, new KeyEvent(OuyaController.BUTTON_DPAD_DOWN, KeyEvent.ACTION_UP));
-        onKeyUp(OuyaController.BUTTON_DPAD_UP, new KeyEvent(OuyaController.BUTTON_DPAD_UP, KeyEvent.ACTION_UP));
-        if(event.getAxisValue(MotionEvent.AXIS_HAT_Y) == -1) {
-            onKeyDown(OuyaController.BUTTON_DPAD_UP, new KeyEvent(OuyaController.BUTTON_DPAD_UP, KeyEvent.ACTION_DOWN));
-        }
-        if(event.getAxisValue(MotionEvent.AXIS_HAT_Y) == 1) {
-            onKeyDown(OuyaController.BUTTON_DPAD_DOWN, new KeyEvent(OuyaController.BUTTON_DPAD_DOWN, KeyEvent.ACTION_DOWN));
-        }
-
+        return super.onKeyUp(keyCode, event);        
+    }
+	
+    public boolean onGenericMotionEvent(int player, MotionEvent event) {
+		rend.setAxes(player, 1, event.getAxisValue(OuyaController.AXIS_LS_X) * 5f);
+		rend.setAxes(player, 2, event.getAxisValue(OuyaController.AXIS_LS_Y) * 5f);
+		rend.setAxes(player, 3, event.getAxisValue(OuyaController.AXIS_RS_X));
+		rend.setAxes(player, 4, event.getAxisValue(OuyaController.AXIS_RS_Y));
+		rend.setAxes(player, 5, event.getAxisValue(OuyaController.AXIS_L2));
+		rend.setAxes(player, 6, event.getAxisValue(OuyaController.AXIS_R2));
         return true;
     }
 	
@@ -448,18 +406,22 @@ class GL2JNIView extends GLSurfaceView {
 
     private static class Renderer implements GLSurfaceView.Renderer {
 		static AssetManager _assetManager;
-		int button = 0;
 		
 		public Renderer(AssetManager assetManager){
 			_assetManager = assetManager;
+			GL2JNILib.setControllerButton(1, 0, 0);
 		}
 		
-        public void setButton(int state) {
-			button = state;
+        public void setButton(int player, int button, int state) {
+			GL2JNILib.setControllerButton(player, button, state);
+		}
+		
+        public void setAxes(int player, int axes, float position) {
+			GL2JNILib.setControllerAxes(player, axes, position);
 		}
 		
         public void onDrawFrame(GL10 gl) {
-            GL2JNILib.step(button);
+            GL2JNILib.step();
         }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {

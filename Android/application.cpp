@@ -135,8 +135,10 @@ bool updown;
 int changes;
 
 extern "C" {
-    JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager);
-    JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj, int button);
+	JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager);
+	JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerButton(JNIEnv * env, jobject obj,  jint player,  jint button,  jint state);
+    JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerAxes(JNIEnv * env, jobject obj,  jint player,  jint axes,  jfloat position);
+    JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj);
 };
 
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager)
@@ -184,7 +186,7 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	//####
 	//#### Below should be removed in favor of OPreadFile
 	//####
-	AAsset* asset = AAssetManager_open(mgr, "bricks.dds.mp3", AASSET_MODE_UNKNOWN);
+	AAsset* asset = AAssetManager_open(mgr, "bricks.dds", AASSET_MODE_UNKNOWN);
 	if(asset == NULL)
 		OPLog("Asset not loaded.");
 
@@ -210,7 +212,7 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	buffer = new GLBuffer(0, sizeof(f32) * 108, gTriangleVertices);
 	uv = new GLBuffer(0, sizeof(f32) * 72, g_uv_buffer_data);
 	
-	AAsset* asset2 = AAssetManager_open(mgr, "AMemoryAway.ogg.mp3", AASSET_MODE_UNKNOWN);
+	AAsset* asset2 = AAssetManager_open(mgr, "AMemoryAway.ogg", AASSET_MODE_UNKNOWN);
 	if(asset2 == NULL)
 		OPLog("Asset not loaded.");
 
@@ -219,41 +221,57 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	
 	OPLog("Initialized Successfully");
 }
+
+int get_int_by_JavaObj(JNIEnv* env, jobject java_obj, const char* field_name) {
+	jclass clazz = env->GetObjectClass(java_obj);
+	jfieldID int_fid = env->GetFieldID(clazz, field_name, "I");
+	return env->GetIntField(java_obj, int_fid);
+
+} 
+
+JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerButton(JNIEnv * env, jobject obj,  jint player,  jint button,  jint state){
+	OPLog("Controller Button: ");
+	OPLog_i32(player);
+	OPLog_i32(button);
+	OPLog_i32(state);
+}
+
+f32 r;
+f32 g;
+f32 b;
+f32 translateX;
+f32 translateZ;
+
+JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerAxes(JNIEnv * env, jobject obj,  jint player,  jint axes,  jfloat position){
+	OPLog("Controller Axes: ");
+	//OPLog_i32(player);
+	//OPLog_i32(axes);
+	//OPLog_f32(position);
+	if(player == 1 && axes == 1){
+		r = position;
+	} else if(player == 1 && axes == 2){
+		g = position;
+	} else if(player == 1 && axes == 3){
+		b = position;
+	} else if(player == 2 && axes == 1){
+		translateX = position;
+	} else if(player == 2 && axes == 2){
+		translateZ = position;
+	}
+}
+
 bool firstRun = false;
 Matrix4 result;
 
-JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj, int button){
-	if(button == 0)
-		RenderSystem::ClearColor(0.0f, 0.0f, 0.0f);
-	else if(button == 1)
-		RenderSystem::ClearColor(0.0f, 0.0f, 1.0f);
-	else if(button == 2)
-		RenderSystem::ClearColor(1.0f, 0.0f, 0.0f);
-	else if(button == 3)
-		RenderSystem::ClearColor(0.0f, 1.0f, 0.0f);
-	else if(button == 4)
-		RenderSystem::ClearColor(0.0f, 1.0f, 1.0f);
+JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj){
+	RenderSystem::ClearColor(r, g, b);
 
 	// Set material to use
 	RenderSystem::UseMaterial(material);
 	
-	// Set MVP Matrix
-	if(updown)
-		changes++;
-	else
-		changes--;
-	if(updown && changes > 100)
-	{
-		rotate = t1;
-		updown = false;
-	}
-	else if(!updown && changes < -100)
-	{
-		rotate = t2;
-		updown = true;
-	}
+	// Set MVP Matrix	
 	
-	m = m * rotate;
+	m = Matrix4::Translate(translateX, 0, translateZ);
 	result = m * v * p;
 	material->set_matrix(mvpLoc, &result[0][0]);
 	

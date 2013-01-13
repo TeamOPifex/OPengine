@@ -19,7 +19,6 @@ package com.opifex.smrf;
 
 import android.content.res.AssetManager;
 // Wrapper for native library
-
 public class GL2JNILib {
 
      static {
@@ -31,5 +30,7 @@ public class GL2JNILib {
      * @param height the current view height
      */
      public static native void init(int width, int height, AssetManager assetManager);
-     public static native void step(int button);
+     public static native void step();
+     public static native void setControllerButton(int player, int button, int state);
+     public static native void setControllerAxes(int player, int axes, float position);
 }

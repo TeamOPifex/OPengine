@@ -57,31 +57,30 @@ Matrix4 Matrix4::RotateZ(f32 x){
 		);
 }
 
-	Matrix4 Matrix4::Translate(f32 x, f32 y, f32 z){
-		return Matrix4(
-			1, 0, 0, 0,
-			0, 1, 0, 0,
-			0, 0, 1, 0,
-			x, y, z, 1
-			);
-	}
-	Matrix4 Matrix4::Scale(f32 x){
-		return Matrix4(
-			x, 0, 0, 0,
-			0, x, 0, 0,
-			0, 0, x, 0,
-			0, 0, 0, 1
-			);
-	}
-	Matrix4 Matrix4::Scale(f32 x, f32 y, f32 z){
-		return Matrix4(
-			x, 0, 0, 0,
-			0, y, 0, 0,
-			0, 0, z, 0,
-			0, 0, 0, 1
-			);
-	}
-
+Matrix4 Matrix4::Translate(f32 x, f32 y, f32 z){
+	return Matrix4(
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		x, y, z, 1
+		);
+}
+Matrix4 Matrix4::Scale(f32 x){
+	return Matrix4(
+		x, 0, 0, 0,
+		0, x, 0, 0,
+		0, 0, x, 0,
+		0, 0, 0, 1
+		);
+}
+Matrix4 Matrix4::Scale(f32 x, f32 y, f32 z){
+	return Matrix4(
+		x, 0, 0, 0,
+		0, y, 0, 0,
+		0, 0, z, 0,
+		0, 0, 0, 1
+		);
+}
 
 void Matrix4::SetIdentity(){
 	cols[0] = Vector4(1,0,0,0);
@@ -110,7 +109,7 @@ Matrix4 Matrix4::CreatePerspective(float fovy, float aspect, float near, float f
     return m;
 }
 
-Matrix4 Matrix4::CreateLook(Vector3 campos, Vector3 look, Vector3 up){
+Matrix4 Matrix4::CreateLook(Vector3 campos, Vector3 look, Vector3 up) {
 	Vector3 f = Vector3::sub(look, campos); f.normalize();
 	up.normalize();
 	Vector3 s = Vector3::cross(f, up);

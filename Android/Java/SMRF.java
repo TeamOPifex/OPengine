@@ -26,6 +26,11 @@ import android.nfc.Tag;
 public class SMRF extends Activity {
 	GL2JNIView mView;
 	
+	int playerOne = -1;
+	int playerTwo = -1;
+	int playerThree = -1;
+	int playerFour = -1;
+	
 	@Override protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		AssetManager assetManager = getAssets();
@@ -45,12 +50,12 @@ public class SMRF extends Activity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return mView.onKeyDown(keyCode,  event);
+        return mView.onKeyDown(keyCode, getPlayerIndex(event), event);
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        return mView.onKeyUp(keyCode, event);
+        return mView.onKeyUp(keyCode, getPlayerIndex(event), event);
     }
 
     @Override
@@ -59,6 +64,40 @@ public class SMRF extends Activity {
             //Not a joystick movement, so ignore it.
             return false;
         }
-        return mView.onGenericMotionEvent(event);
+        return mView.onGenericMotionEvent(getPlayerIndex(event), event);
     }
+	
+	public int getPlayerIndex(InputEvent event){
+		final int deviceId = event.getDeviceId();
+		
+		if(playerOne < 0) {
+			playerOne = deviceId;
+		}
+		if(playerOne == deviceId) {
+			return 1;
+		}
+		
+		if(playerTwo < 0) {
+			playerTwo = deviceId;
+		}
+		if(playerTwo == deviceId) {
+			return 2;
+		}
+				
+		if(playerThree < 0) {
+			playerThree = deviceId;
+		}
+		if(playerThree == deviceId) {
+			return 3;
+		}
+				
+		if(playerFour < 0) {
+			playerFour = deviceId;
+		}
+		if(playerFour == deviceId) {
+			return 4;
+		}
+		
+		return -1;
+	}
 }
