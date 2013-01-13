@@ -131,6 +131,9 @@ class GL2JNIView extends GLSurfaceView {
         } else if (keyCode == OuyaController.BUTTON_L3) {
 			rend.setButton(player, 14, 1);
             return true;
+        } else if (keyCode == OuyaController.BUTTON_SYSTEM) {
+			rend.setButton(player, 15, 1);
+            return true;
         }
 		
         return super.onKeyDown(keyCode, event);        
@@ -138,10 +141,50 @@ class GL2JNIView extends GLSurfaceView {
 
     public boolean onKeyUp(int keyCode, int player, KeyEvent event) {
 	
-		if(keyCode == OuyaController.BUTTON_O || keyCode == OuyaController.BUTTON_U || keyCode == OuyaController.BUTTON_Y || keyCode == OuyaController.BUTTON_A ||
-		keyCode == OuyaController.BUTTON_DPAD_DOWN || keyCode == OuyaController.BUTTON_DPAD_LEFT || keyCode == OuyaController.BUTTON_DPAD_UP || keyCode == OuyaController.BUTTON_DPAD_RIGHT ||
-		keyCode == OuyaController.BUTTON_R1 || keyCode == OuyaController.BUTTON_L1 || keyCode == OuyaController.BUTTON_R2 || keyCode == OuyaController.BUTTON_L2) {
-			//rend.setButton(0);
+		if(keyCode == OuyaController.BUTTON_O) {
+			rend.setButton(player, 1, 0);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_U) {
+			rend.setButton(player, 2, 0);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_Y) {
+			rend.setButton(player, 3, 0);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_A) {
+			rend.setButton(player, 4, 0);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_DPAD_DOWN) {
+			rend.setButton(player, 5, 0);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_DPAD_LEFT) {
+			rend.setButton(player, 6, 0);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_DPAD_UP) {
+			rend.setButton(player, 7, 0);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_DPAD_RIGHT) {
+			rend.setButton(player, 8, 0);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_R1) {
+			rend.setButton(player, 9, 0);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_L1) {
+			rend.setButton(player, 10, 0);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_R2) {
+			rend.setButton(player, 11, 0);
+            return true;
+        } else if(keyCode == OuyaController.BUTTON_L2) {
+			rend.setButton(player, 12, 0);
+            return true;
+        } else if (keyCode == OuyaController.BUTTON_R3) {
+			rend.setButton(player, 13, 0);
+            return true;
+        } else if (keyCode == OuyaController.BUTTON_L3) {
+			rend.setButton(player, 14, 0);
+            return true;
+        } else if (keyCode == OuyaController.BUTTON_SYSTEM) {
+			rend.setButton(player, 15, 0);
             return true;
         }
 		

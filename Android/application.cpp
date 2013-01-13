@@ -24,6 +24,8 @@
 
 #include "Human\Resources\Sound\Sound.h"
 
+#include "Human\Rendering\OBJLoader.h"
+
 static const char gVertexShader[] = 
     "attribute vec3 vPosition; \n"
     "attribute vec2 TexCoordIn; \n"
@@ -218,6 +220,24 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 
     int fd2 = AAsset_openFileDescriptor(asset2, &start, &length);
 	Sound* snd = new Sound(fd2, start, length);
+
+
+
+	asset = AAssetManager_open(mgr, "steamPlane.obj", AASSET_MODE_UNKNOWN);
+	if(asset == NULL)
+		OPLog("Asset not loaded.");
+
+    fd = AAsset_openFileDescriptor(asset, &start, &length);
+
+    myFile = fdopen(dup(fd), "rb"); 
+	if(!myFile){
+		OPLog("File not loaded.");
+		return;
+	}
+	fseek(myFile, start, SEEK_SET);
+	OBJMesh* mesh = LoadOBJ(myFile, start, length);
+
+	OPLog_i32(mesh->primitiveCount);
 	
 	OPLog("Initialized Successfully");
 }
@@ -243,10 +263,6 @@ f32 translateX;
 f32 translateZ;
 
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerAxes(JNIEnv * env, jobject obj,  jint player,  jint axes,  jfloat position){
-	OPLog("Controller Axes: ");
-	//OPLog_i32(player);
-	//OPLog_i32(axes);
-	//OPLog_f32(position);
 	if(player == 1 && axes == 1){
 		r = position;
 	} else if(player == 1 && axes == 2){

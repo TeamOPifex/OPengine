@@ -114,6 +114,7 @@
                 <res path="${resource.absolute.dir}" />
                 <!-- <nocompress /> forces no compression on any files in assets or res/raw -->
                 <nocompress extension="dds" />
+                <nocompress extension="obj" />
             </aapt>
         </do-only-if-not-library>
     </target>

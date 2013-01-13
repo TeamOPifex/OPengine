@@ -15,14 +15,11 @@ void OPLog_f32(f32 number) {
 #include <stdio.h>
 void OPLog(const char* message) {
 	printf(message);
-	printf("\n");
 }
 void OPLog_i32(i32 number) {
 	printf("%d", number);
-	printf("\n");
 }
 void OPLog_f32(f32 number) {
 	printf("%f", number);
-	printf("\n");
 }
 #endif
