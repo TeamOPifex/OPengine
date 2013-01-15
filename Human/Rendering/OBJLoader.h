@@ -6,24 +6,7 @@
 #include ".\Human\Math\Vector3.h"
 
 #include ".\Core\include\DynamicMemory.h"
-// FacePoint contains 3 int's being holding points for
-// the index's for each array.
-struct FacePoint
-{
-	int VertexIndex;
-	int TextureIndex;
-	int NormalIndex;
-};
-// Face contains either 3 or 4 FacePoints, 
-// tri is marked as true if it's a triangle
-struct Face
-{
-	FacePoint one;
-	FacePoint two;
-	FacePoint three;
-	FacePoint four;
-	bool tri;
-};
+
 
 class MeshVertex
 {
