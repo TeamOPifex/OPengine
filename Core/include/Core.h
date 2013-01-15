@@ -11,8 +11,23 @@
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
-extern "C" {
-#endif
+namespace OPEngine{
+namespace Core{
+class OPCore{
+	public: 
+		OPCore(){}
+		void Start();
+		void End();
+	private:
+		OPint _OPengineRunning;
+		
+		virtual void Initialize() = 0;
+		virtual void Update(OPtimer* timer) = 0;
+		virtual void Destroy() = 0;
+};
+}
+}
+#else
 //---- Function prototypes ---------------------------------------------------
 /**
  * OPstart - Begins the game cycle.
@@ -33,7 +48,5 @@ void OPstart();
  *	data. 
  */
 void OPend();
-#ifdef __cplusplus
-};
 #endif
 #endif

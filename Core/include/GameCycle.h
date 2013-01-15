@@ -5,8 +5,8 @@
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
-extern "C" {
-#endif
+// do nothing....
+#else
 /**
  * OPinitialize - Game engine initialization.
  *	This function pointer points to a user function which is responsible
@@ -34,7 +34,5 @@ extern void (*OPupdate)(OPtimer*);
  *	network connections.
  */
 extern void (*OPdestroy)();
-#ifdef __cplusplus
-};
 #endif
 #endif
