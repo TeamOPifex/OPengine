@@ -1,6 +1,26 @@
 #include "OBJLoader.h"
 #include ".\Core\include\Log.h"
 
+// FacePoint contains 3 int's being holding points for
+// the index's for each array.
+struct FacePoint
+{
+	int VertexIndex;
+	int TextureIndex;
+	int NormalIndex;
+};
+
+// Face contains either 3 or 4 FacePoints, 
+// tri is marked as true if it's a triangle
+struct Face
+{
+	FacePoint one;
+	FacePoint two;
+	FacePoint three;
+	FacePoint four;
+	bool tri;
+};
+
 int readLine(char* buffer, FILE* file){
 	int length = 0;
 	char ch;
@@ -9,8 +29,6 @@ int readLine(char* buffer, FILE* file){
 		buffer[length] = ch;
 		length++;
 	}
-	//OPLog("readLine");
-	//OPLog(buffer);
 	return length;
 }
 
@@ -54,11 +72,6 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 		fseek(file, offset, start);
 	}
 
-	OPLog("Loading OBJ");
-	OPLog_i32(total_verts);
-	OPLog_i32(total_texs);
-	OPLog_i32(total_norms);
-	OPLog_i32(total_faces);
 
 	int c_verts = 0;
 	int c_texs = 0;
@@ -79,7 +92,6 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 		
 	unsigned int ind1, ind2, ind3, ind4, ind5, ind6, ind7, ind8;
 
-	OPLog("Reading file");
 	offset += readLine(buffer, file);
 	fseek(file, offset, start);
 	int t1;
@@ -192,14 +204,6 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 
 	for(i = 0; i < count; i++)
 	{
-		////Face Point One
-		//MeshVertex p;
-		//p.vertice = vertexes[faces[i].one.VertexIndex - 1];
-		//p.tex = texes[faces[i].one.TextureIndex - 1];
-		////p.normal = normals[faces[i].one.NormalIndex - 1];
-		//mesh->points[currPoint++] = p;
-
-		
 		mesh->points[currPoint].vertice._x = vertexes[faces[i].one.VertexIndex - 1]._x;
 		mesh->points[currPoint].vertice._y = vertexes[faces[i].one.VertexIndex - 1]._y;
 		mesh->points[currPoint].vertice._z = vertexes[faces[i].one.VertexIndex - 1]._z;
@@ -221,20 +225,6 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 		mesh->points[currPoint].tex._y = texes[faces[i].three.TextureIndex - 1]._y;
 		currPoint++;
 
-		////Face Point Two
-		//MeshVertex p2;
-		//p2.vertice = vertexes[faces[i].two.VertexIndex - 1];
-		//p2.tex = texes[faces[i].two.TextureIndex - 1];
-		////p2.normal = normals[faces[i].two.NormalIndex - 1];
-		//mesh->points[currPoint++] = p2;
-
-		////Face Point Three
-		//MeshVertex p3;
-		//p3.vertice = vertexes[faces[i].three.VertexIndex - 1];
-		//p3.tex = texes[faces[i].three.TextureIndex - 1];
-		////p3.normal = normals[faces[i].three.NormalIndex - 1];
-		//mesh->points[currPoint++] = p3;
-
 		//Face Point Four
 		//Only used if it's a quad, and not a triangle
 		if(!faces[i].tri)
@@ -245,12 +235,6 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 			mesh->points[currPoint].tex._x = texes[faces[i].four.TextureIndex - 1]._x;
 			mesh->points[currPoint].tex._y = texes[faces[i].four.TextureIndex - 1]._y;
 			currPoint++;
-
-			//MeshVertex p4;
-			//p4.vertice = vertexes[faces[i].four.VertexIndex - 1];
-			//p4.tex = texes[faces[i].four.TextureIndex - 1];
-			////p4.normal = normals[faces[i].four.NormalIndex - 1];
-			//mesh->points[currPoint++] = p4;
 		}
 
 		//Push indices into the indices list. .obj file
@@ -273,12 +257,7 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 	delete[] texes;
 	delete[] normals;
 	OPfree(buffer);
-	
-	OPLog("Indices");
-	OPLog_i32(currIndex);
-	OPLog_i32(totalIndices);
-	OPLog_i32(count);
-	OPLog_i32(totalPoints);
+
 	//Primitive Count
 	mesh->vertexCount = totalPoints;
 	mesh->primitiveCount = totalIndices / 3;
