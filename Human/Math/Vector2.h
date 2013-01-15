@@ -12,7 +12,7 @@ public:
 	Vector2(OPfloat x, OPfloat y){
 		_x = x;		_y = y;
 	}
-private:
+//private:
 	// Data Structure 2 floats
 	//		32 bit = 2 * 32 = 64 bits or 8 bytes
 	//		64 bit = 2 * 64 = 128 bits or 16 bytes

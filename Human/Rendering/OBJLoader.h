@@ -25,26 +25,31 @@ struct Face
 	bool tri;
 };
 
-struct OBJMeshPoint
-{
-	Vector3 vertice;
-	Vector2 tex;
-	Vector3 normal;
-};
-
-class OBJMesh
+class MeshVertex
 {
 public:
-	~OBJMesh(){
+	//union 
+	//{
+	//	struct{Vector3 vertice; Vector2 tex;};
+	//};
+	Vector3 vertice;
+	Vector2 tex;
+	//Vector3 normal;
+};
+
+class Mesh
+{
+public:
+	~Mesh(){
 		OPfree(points);
 		OPfree(indices);
 	}
-	OBJMeshPoint* points;
-	int* indices;
+	MeshVertex* points;
+	unsigned int* indices;
 	int primitiveCount;
+	int indicesCount;
 	int vertexCount;
-	Vector3 position;
 };
 
-OBJMesh* LoadOBJ(FILE* file, int start, int length);
+Mesh* LoadOBJ(FILE* file, int start, int length);
 int lineType(char* word);

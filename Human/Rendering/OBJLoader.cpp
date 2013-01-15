@@ -14,10 +14,10 @@ int readLine(char* buffer, FILE* file){
 	return length;
 }
 
-OBJMesh* LoadOBJ(FILE* file, int start, int length)
+Mesh* LoadOBJ(FILE* file, int start, int length)
 {
 	//ObjectMesh to fill
-	OBJMesh* mesh = new OBJMesh();
+	Mesh* mesh = new Mesh();
 
 	//Open File for reading
 	char* buffer = (char*)OPalloc(sizeof(char) * 4096);
@@ -48,7 +48,7 @@ OBJMesh* LoadOBJ(FILE* file, int start, int length)
 			case 3:
 				total_faces++;
 			case 4:
-				total_faces++;
+				break;
 		}
 		offset += readLine(buffer, file);
 		fseek(file, offset, start);
@@ -66,6 +66,8 @@ OBJMesh* LoadOBJ(FILE* file, int start, int length)
 	int c_faces = 0;
 
 	Vector3* vertexes = new Vector3[total_verts];
+	for(int j = 0; j < total_verts; j++)
+		vertexes[j] = 0;
 	Vector2* texes = new Vector2[total_texs];
 	Vector3* normals = new Vector3[total_norms];
 	Face* faces = new Face[total_faces];
@@ -73,8 +75,9 @@ OBJMesh* LoadOBJ(FILE* file, int start, int length)
 	offset = 0;
 	fseek(file, start, SEEK_SET);
 	
-	int x, y, z, w;
-	int x2, y2, z2, w2;
+	float x, y, z;
+		
+	unsigned int ind1, ind2, ind3, ind4, ind5, ind6, ind7, ind8;
 
 	OPLog("Reading file");
 	offset += readLine(buffer, file);
@@ -96,7 +99,7 @@ OBJMesh* LoadOBJ(FILE* file, int start, int length)
 				break;
 			case 1: //vt	Texture Coordinate
 				if(sscanf(buffer, "vt %f %f", &x, &y) == 2){
-					texes[c_texs] = Vector2(x, y);
+					texes[c_texs] = Vector2(x, -y + 1);
 					c_texs++;
 				}
 				break;
@@ -120,16 +123,16 @@ OBJMesh* LoadOBJ(FILE* file, int start, int length)
 
 				if (cnt == 3)
 				{
-					if (sscanf(buffer, "f %u/%u %u/%u %u/%u", &x, &y, &z, &x2, &y2, &z2) == 6)
+					if (sscanf(buffer, "f %u/%u %u/%u %u/%u", &ind1, &ind2, &ind3, &ind4, &ind5, &ind6) == 6)
 					{
-						faces[c_faces].one.VertexIndex = x;
-						faces[c_faces].one.TextureIndex = y;
+						faces[c_faces].one.VertexIndex = ind1;
+						faces[c_faces].one.TextureIndex = ind2;
 						
-						faces[c_faces].two.VertexIndex = z;
-						faces[c_faces].two.TextureIndex = x2;
+						faces[c_faces].two.VertexIndex = ind3;
+						faces[c_faces].two.TextureIndex = ind4;
 
-						faces[c_faces].three.VertexIndex = y2;
-						faces[c_faces].three.TextureIndex = z2;
+						faces[c_faces].three.VertexIndex = ind5;
+						faces[c_faces].three.TextureIndex = ind6;
 
 						faces[c_faces].tri = true;
 						c_faces++;
@@ -137,19 +140,19 @@ OBJMesh* LoadOBJ(FILE* file, int start, int length)
 				}
 				else if (cnt == 4)
 				{
-					if (sscanf(buffer, "f %u/%u %u/%u %u/%u %u/%u", &x, &y, &z, &w, &x2, &y2, &z2, &w2) == 8)
+					if (sscanf(buffer, "f %u/%u %u/%u %u/%u %u/%u", &ind1, &ind2, &ind3, &ind4, &ind5, &ind6, &ind7, &ind8) == 8)
 					{
-						faces[c_faces].one.VertexIndex = x;
-						faces[c_faces].one.TextureIndex = y;
+						faces[c_faces].one.VertexIndex = ind1;
+						faces[c_faces].one.TextureIndex = ind2;
 						
-						faces[c_faces].two.VertexIndex = z;
-						faces[c_faces].two.TextureIndex = w;
-						
-						faces[c_faces].three.VertexIndex = x2;
-						faces[c_faces].three.TextureIndex = y2;
+						faces[c_faces].two.VertexIndex = ind3;
+						faces[c_faces].two.TextureIndex = ind4;
 
-						faces[c_faces].four.VertexIndex = z2;
-						faces[c_faces].four.TextureIndex = w2;
+						faces[c_faces].three.VertexIndex = ind5;
+						faces[c_faces].three.TextureIndex = ind6;
+
+						faces[c_faces].four.VertexIndex = ind7;
+						faces[c_faces].four.TextureIndex = ind8;
 
 						faces[c_faces].tri = false;
 						c_faces++;
@@ -182,44 +185,72 @@ OBJMesh* LoadOBJ(FILE* file, int start, int length)
 	}
 	
 	mesh->vertexCount = totalPoints;
-	mesh->points = (OBJMeshPoint*)OPalloc(sizeof(OBJMeshPoint) * totalPoints);
-	mesh->indices = (int*)OPalloc(sizeof(int) * totalIndices);
+	mesh->points = (MeshVertex*)OPalloc(sizeof(MeshVertex) * totalPoints);
+	mesh->indices = (unsigned int*)OPalloc(sizeof(unsigned int) * totalIndices);
 	int currPoint = 0;
 	int currIndex = 0;
 
 	for(i = 0; i < count; i++)
 	{
-		//Face Point One
-		OBJMeshPoint p;
-		p.vertice = vertexes[faces[i].one.VertexIndex - 1];
-		p.tex = texes[faces[i].one.TextureIndex - 1];
-		p.normal = normals[faces[i].one.NormalIndex - 1];
-		mesh->points[currPoint++] = p;
+		////Face Point One
+		//MeshVertex p;
+		//p.vertice = vertexes[faces[i].one.VertexIndex - 1];
+		//p.tex = texes[faces[i].one.TextureIndex - 1];
+		////p.normal = normals[faces[i].one.NormalIndex - 1];
+		//mesh->points[currPoint++] = p;
 
+		
+		mesh->points[currPoint].vertice._x = vertexes[faces[i].one.VertexIndex - 1]._x;
+		mesh->points[currPoint].vertice._y = vertexes[faces[i].one.VertexIndex - 1]._y;
+		mesh->points[currPoint].vertice._z = vertexes[faces[i].one.VertexIndex - 1]._z;
+		mesh->points[currPoint].tex._x = texes[faces[i].one.TextureIndex - 1]._x;
+		mesh->points[currPoint].tex._y = texes[faces[i].one.TextureIndex - 1]._y;
+		currPoint++;		
+		
+		mesh->points[currPoint].vertice._x = vertexes[faces[i].two.VertexIndex - 1]._x;
+		mesh->points[currPoint].vertice._y = vertexes[faces[i].two.VertexIndex - 1]._y;
+		mesh->points[currPoint].vertice._z = vertexes[faces[i].two.VertexIndex - 1]._z;
+		mesh->points[currPoint].tex._x = texes[faces[i].two.TextureIndex - 1]._x;
+		mesh->points[currPoint].tex._y = texes[faces[i].two.TextureIndex - 1]._y;
+		currPoint++;		
+		
+		mesh->points[currPoint].vertice._x = vertexes[faces[i].three.VertexIndex - 1]._x;
+		mesh->points[currPoint].vertice._y = vertexes[faces[i].three.VertexIndex - 1]._y;
+		mesh->points[currPoint].vertice._z = vertexes[faces[i].three.VertexIndex - 1]._z;
+		mesh->points[currPoint].tex._x = texes[faces[i].three.TextureIndex - 1]._x;
+		mesh->points[currPoint].tex._y = texes[faces[i].three.TextureIndex - 1]._y;
+		currPoint++;
 
-		//Face Point Two
-		OBJMeshPoint p2;
-		p2.vertice = vertexes[faces[i].two.VertexIndex - 1];
-		p2.tex = texes[faces[i].two.TextureIndex - 1];
-		p2.normal = normals[faces[i].two.NormalIndex - 1];
-		mesh->points[currPoint++] = p2;
+		////Face Point Two
+		//MeshVertex p2;
+		//p2.vertice = vertexes[faces[i].two.VertexIndex - 1];
+		//p2.tex = texes[faces[i].two.TextureIndex - 1];
+		////p2.normal = normals[faces[i].two.NormalIndex - 1];
+		//mesh->points[currPoint++] = p2;
 
-		//Face Point Three
-		OBJMeshPoint p3;
-		p3.vertice = vertexes[faces[i].three.VertexIndex - 1];
-		p3.tex = texes[faces[i].three.TextureIndex - 1];
-		p3.normal = normals[faces[i].three.NormalIndex - 1];
-		mesh->points[currPoint++] = p3;
+		////Face Point Three
+		//MeshVertex p3;
+		//p3.vertice = vertexes[faces[i].three.VertexIndex - 1];
+		//p3.tex = texes[faces[i].three.TextureIndex - 1];
+		////p3.normal = normals[faces[i].three.NormalIndex - 1];
+		//mesh->points[currPoint++] = p3;
 
 		//Face Point Four
 		//Only used if it's a quad, and not a triangle
 		if(!faces[i].tri)
-		{
-			OBJMeshPoint p4;
-			p4.vertice = vertexes[faces[i].four.VertexIndex - 1];
-			p4.tex = texes[faces[i].four.TextureIndex - 1];
-			p4.normal = normals[faces[i].four.NormalIndex - 1];
-			mesh->points[currPoint++] = p4;
+		{		
+			mesh->points[currPoint].vertice._x = vertexes[faces[i].four.VertexIndex - 1]._x;
+			mesh->points[currPoint].vertice._y = vertexes[faces[i].four.VertexIndex - 1]._y;
+			mesh->points[currPoint].vertice._z = vertexes[faces[i].four.VertexIndex - 1]._z;
+			mesh->points[currPoint].tex._x = texes[faces[i].four.TextureIndex - 1]._x;
+			mesh->points[currPoint].tex._y = texes[faces[i].four.TextureIndex - 1]._y;
+			currPoint++;
+
+			//MeshVertex p4;
+			//p4.vertice = vertexes[faces[i].four.VertexIndex - 1];
+			//p4.tex = texes[faces[i].four.TextureIndex - 1];
+			////p4.normal = normals[faces[i].four.NormalIndex - 1];
+			//mesh->points[currPoint++] = p4;
 		}
 
 		//Push indices into the indices list. .obj file
@@ -242,10 +273,16 @@ OBJMesh* LoadOBJ(FILE* file, int start, int length)
 	delete[] texes;
 	delete[] normals;
 	OPfree(buffer);
-
+	
+	OPLog("Indices");
+	OPLog_i32(currIndex);
+	OPLog_i32(totalIndices);
+	OPLog_i32(count);
+	OPLog_i32(totalPoints);
 	//Primitive Count
+	mesh->vertexCount = totalPoints;
 	mesh->primitiveCount = totalIndices / 3;
-	mesh->position = Vector3(0,0,0);
+	mesh->indicesCount = totalIndices;
 
 	return mesh;
 }
@@ -267,27 +304,3 @@ int lineType(char* word)
 		return 4;
 	return -1; //(comment '#')
 }
-//
-//void FillFacePoint(FacePoint* point, string line)
-//{
-//	int offset = line.find_first_of('/',0);
-//	int offset2 = line.find_first_of('/',offset + 1);
-//	string num1 = line.substr(0, offset);
-//	string num2 = line.substr(offset + 1, offset2 - offset - 1);
-//	string num3 = line.substr(offset2 + 1, line.length() - offset2);
-//	point->VertexIndex = atoi(num1.c_str());
-//	point->TextureIndex = atoi(num2.c_str());
-//	point->NormalIndex = atoi(num3.c_str());
-//}
-
-//std::wstring s2ws(const std::string& s)
-//{
-//    int len;
-//    int slength = (int)s.length() + 1;
-//    len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0); 
-//    wchar_t* buf = new wchar_t[len];
-//    MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, buf, len);
-//    std::wstring r(buf);
-//    delete[] buf;
-//    return r;
-//}

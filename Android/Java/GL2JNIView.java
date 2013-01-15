@@ -79,7 +79,7 @@ class GL2JNIView extends GLSurfaceView {
     public GL2JNIView(Context context, AssetManager assetManager) {
         super(context);
 		_assetManager = assetManager;
-        init(false, 0, 0);
+        init(false, 1, 0);
     }
 
     public GL2JNIView(Context context, boolean translucent, int depth, int stencil, AssetManager assetManager) {

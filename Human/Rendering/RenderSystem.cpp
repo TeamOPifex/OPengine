@@ -20,12 +20,16 @@ void RenderSystem::SetViewport(ui32 x, ui32 y, ui32 width, ui32 height){
 	m_renderer->set_viewport(x, y, width, height);
 }
 
-void RenderSystem::SetBuffer(ui32 buffer){
-	m_renderer->set_buffer(buffer);
+void RenderSystem::SetBuffer(int bufferType, ui32 buffer){
+	m_renderer->set_buffer(bufferType, buffer);
 }
 
 void RenderSystem::RenderTriangles(ui32 offset, ui32 count){
 	m_renderer->render_triangles(offset, count);
+}
+
+void RenderSystem::RenderTriangles(ui32 numIndices){
+	m_renderer->render_triangles(numIndices);
 }
 
 void RenderSystem::Present(){

@@ -26,7 +26,7 @@ public:
 	Vector3& operator-(const Vector3 &rhs);
 	Vector3& operator+(const Vector3 &rhs);	
 	OPfloat& operator[](int idx);
-private:
+//private:
 	// Data Structure 3 floats
 	//		32 bit = 3 * 32 = 96 bits or 12 bytes
 	//		64 bit = 3 * 64 = 192 bits or 24 bytes

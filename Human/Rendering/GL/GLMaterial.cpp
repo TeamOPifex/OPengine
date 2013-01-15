@@ -24,6 +24,10 @@ void GLMaterial::load(ShaderPtr vertex, ShaderPtr fragment){
 	}
 }
 
+void GLMaterial::bind_attribute(i32 pos, char* variable){
+	glBindAttribLocation(m_handle, pos, variable);
+}
+
 ui32 GLMaterial::attribute_location(const char* attribute){
 	return glGetAttribLocation(m_handle, attribute);
 }

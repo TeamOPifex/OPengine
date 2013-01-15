@@ -32,6 +32,7 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID" )
 	
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Assets/steamPlane.obj DESTINATION ${PROJECT_BINARY_DIR}/assets/)
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Assets/bricks.dds DESTINATION ${PROJECT_BINARY_DIR}/assets/)
+	file(COPY ${PROJECT_SOURCE_DIR}/Android/Assets/steamPlaneSkin.dds DESTINATION ${PROJECT_BINARY_DIR}/assets/)
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Assets/AMemoryAway.ogg DESTINATION ${PROJECT_BINARY_DIR}/assets/)
 	
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Libs/ouya-sdk.jar DESTINATION ${PROJECT_BINARY_DIR}/libs/)

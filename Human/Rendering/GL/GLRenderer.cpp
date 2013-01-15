@@ -18,8 +18,9 @@ int GLRenderer::initialize(){
 #ifdef OPIFEX_OPENGL_ES_2
 	// Android doesn't need to create a window
 	glEnable(GL_DEPTH_TEST);
-	glCullFace(GL_BACK);
-	glEnable(GL_CULL_FACE);
+	glDepthFunc(GL_LESS); 
+	//glCullFace(GL_FRONT);
+	//glEnable(GL_CULL_FACE);
 	return 0;
 #else
 	// Most of the below will be moved to a Windowing System
@@ -63,12 +64,19 @@ void GLRenderer::set_viewport(ui32 x, ui32 y, ui32 width, ui32 height){
 	glViewport(x, y, width, height);
 }
 
-void GLRenderer::set_buffer(ui32 buffer){
-	glBindBuffer(GL_ARRAY_BUFFER, buffer);
+void GLRenderer::set_buffer(int bufferType, ui32 buffer){
+	if(bufferType == 1)
+		glBindBuffer(GL_ARRAY_BUFFER, buffer);
+	else if(bufferType == 2)
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
 }
 
 void GLRenderer::render_triangles(ui32 offset, ui32 count){
 	glDrawArrays(GL_TRIANGLES, offset, count);
+}
+
+void GLRenderer::render_triangles(ui32 numIndices){
+	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, 0);
 }
 
 void GLRenderer::swap_buffer(){	

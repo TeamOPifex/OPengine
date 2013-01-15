@@ -8,27 +8,26 @@
 	#include <GL/glew.h>
 #endif
 
-void GLBuffer::load(int shaderType, ui32 size, const f32* data){	
+void GLBuffer::load(int shaderType, ui32 size, const void* data){	
 	
-#ifdef OPIFEX_ANDROID
 	glGenBuffers(1, &m_handle);
 	GLUtility::CheckError("GLBuffer::1 - ERROR!");
+		
+	if(shaderType == 1)
+		glBindBuffer(GL_ARRAY_BUFFER, m_handle);
+	else if(shaderType == 2)
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_handle);
+	GLUtility::CheckError("GLBuffer::2 - ERROR!");
 	
-	glBindBuffer(GL_ARRAY_BUFFER, m_handle);
-	GLUtility::CheckError("GLBuffer::2 - ERROR!");
-
-	glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+	if(shaderType == 1)
+		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+	else if(shaderType == 2)
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 	GLUtility::CheckError("GLBuffer::3 - ERROR!");
+
+#ifdef OPIFEX_ANDROID
+
 #else
-	glGenBuffers(1, &m_handle);	
-	GLUtility::CheckError("GLBuffer::1 - ERROR!");
-
-	glBindBuffer(GL_ARRAY_BUFFER, m_handle);
-	GLUtility::CheckError("GLBuffer::2 - ERROR!");
-
-	glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
-	GLUtility::CheckError("GLBuffer::3 - ERROR!");
-
 	glGenVertexArrays(1, &m_vertex_handle);
 	GLUtility::CheckError("GLBuffer::4 - ERROR!");
 
