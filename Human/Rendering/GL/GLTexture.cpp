@@ -40,8 +40,8 @@ GLTexture::GLTexture(Texture* texture){
 	}
 }
 
-void GLTexture::bind(ui32 loc){
-	glActiveTexture(GL_TEXTURE0);
+void GLTexture::bind(ui32 loc, int texture){
+	glActiveTexture(GL_TEXTURE0 + texture);
 	glBindTexture(GL_TEXTURE_2D, _textureID);
-	glUniform1i(loc, 0);
+	glUniform1i(loc, texture);
 }

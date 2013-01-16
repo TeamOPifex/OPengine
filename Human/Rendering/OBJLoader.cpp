@@ -32,6 +32,32 @@ int readLine(char* buffer, FILE* file){
 	return length;
 }
 
+void GenerateTangent(Vector3* tangent, MeshVertex* v1, MeshVertex* v2){
+	f32 dx = v1->vertice._x - v2->vertice._x;
+	f32 dy = v1->vertice._y - v2->vertice._y;
+	f32 dz = v1->vertice._z - v2->vertice._z;
+
+	Vector3 diff(dx, dy, dz);
+	Vector3 tan = Vector3::cross(v1->normal, diff);
+	tan.normalize();
+	tangent->_x = tan._x;
+	tangent->_y = tan._y;
+	tangent->_z = tan._z;
+}
+
+void SetFaceData(MeshVertex* vertex, FacePoint* facePoint, Vector3* vertexes, Vector2* texes, Vector3* normals){
+	vertex->vertice._x = vertexes[facePoint->VertexIndex - 1]._x;
+	vertex->vertice._y = vertexes[facePoint->VertexIndex - 1]._y;
+	vertex->vertice._z = vertexes[facePoint->VertexIndex - 1]._z;
+
+	vertex->tex._x = texes[facePoint->TextureIndex - 1]._x;
+	vertex->tex._y = texes[facePoint->TextureIndex - 1]._y;
+
+	vertex->normal._x = normals[facePoint->NormalIndex - 1]._x;
+	vertex->normal._y = normals[facePoint->NormalIndex - 1]._y;
+	vertex->normal._z = normals[facePoint->NormalIndex - 1]._z;
+}
+
 Mesh* LoadOBJ(FILE* file, int start, int length)
 {
 	//ObjectMesh to fill
@@ -90,7 +116,7 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 	
 	float x, y, z;
 		
-	unsigned int ind1, ind2, ind3, ind4, ind5, ind6, ind7, ind8;
+	unsigned int ind1, ind2, ind3, ind4, ind5, ind6, ind7, ind8, ind9, ind10, ind11, ind12, ind13, ind14;
 
 	offset += readLine(buffer, file);
 	fseek(file, offset, start);
@@ -135,16 +161,19 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 
 				if (cnt == 3)
 				{
-					if (sscanf(buffer, "f %u/%u %u/%u %u/%u", &ind1, &ind2, &ind3, &ind4, &ind5, &ind6) == 6)
+					if (sscanf(buffer, "f %u/%u/%u %u/%u/%u %u/%u/%u", &ind1, &ind2, &ind3, &ind4, &ind5, &ind6, &ind7, &ind8, &ind9) == 9)
 					{
 						faces[c_faces].one.VertexIndex = ind1;
 						faces[c_faces].one.TextureIndex = ind2;
+						faces[c_faces].one.NormalIndex = ind3;
 						
-						faces[c_faces].two.VertexIndex = ind3;
-						faces[c_faces].two.TextureIndex = ind4;
+						faces[c_faces].two.VertexIndex = ind4;
+						faces[c_faces].two.TextureIndex = ind5;
+						faces[c_faces].two.NormalIndex = ind6;
 
-						faces[c_faces].three.VertexIndex = ind5;
-						faces[c_faces].three.TextureIndex = ind6;
+						faces[c_faces].three.VertexIndex = ind7;
+						faces[c_faces].three.TextureIndex = ind8;
+						faces[c_faces].three.NormalIndex = ind9;
 
 						faces[c_faces].tri = true;
 						c_faces++;
@@ -152,19 +181,23 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 				}
 				else if (cnt == 4)
 				{
-					if (sscanf(buffer, "f %u/%u %u/%u %u/%u %u/%u", &ind1, &ind2, &ind3, &ind4, &ind5, &ind6, &ind7, &ind8) == 8)
+					if (sscanf(buffer, "f %u/%u/%u %u/%u/%u %u/%u/%u %u/%u/%u", &ind1, &ind2, &ind3, &ind4, &ind5, &ind6, &ind7, &ind8, &ind9, &ind10, &ind11, &ind12) == 12)
 					{
 						faces[c_faces].one.VertexIndex = ind1;
 						faces[c_faces].one.TextureIndex = ind2;
+						faces[c_faces].one.NormalIndex = ind3;
 						
-						faces[c_faces].two.VertexIndex = ind3;
-						faces[c_faces].two.TextureIndex = ind4;
+						faces[c_faces].two.VertexIndex = ind4;
+						faces[c_faces].two.TextureIndex = ind5;
+						faces[c_faces].two.NormalIndex = ind6;
 
-						faces[c_faces].three.VertexIndex = ind5;
-						faces[c_faces].three.TextureIndex = ind6;
+						faces[c_faces].three.VertexIndex = ind7;
+						faces[c_faces].three.TextureIndex = ind8;
+						faces[c_faces].three.NormalIndex = ind9;
 
-						faces[c_faces].four.VertexIndex = ind7;
-						faces[c_faces].four.TextureIndex = ind8;
+						faces[c_faces].four.VertexIndex = ind10;
+						faces[c_faces].four.TextureIndex = ind11;
+						faces[c_faces].four.NormalIndex = ind12;
 
 						faces[c_faces].tri = false;
 						c_faces++;
@@ -204,37 +237,21 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 
 	for(i = 0; i < count; i++)
 	{
-		mesh->points[currPoint].vertice._x = vertexes[faces[i].one.VertexIndex - 1]._x;
-		mesh->points[currPoint].vertice._y = vertexes[faces[i].one.VertexIndex - 1]._y;
-		mesh->points[currPoint].vertice._z = vertexes[faces[i].one.VertexIndex - 1]._z;
-		mesh->points[currPoint].tex._x = texes[faces[i].one.TextureIndex - 1]._x;
-		mesh->points[currPoint].tex._y = texes[faces[i].one.TextureIndex - 1]._y;
-		currPoint++;		
-		
-		mesh->points[currPoint].vertice._x = vertexes[faces[i].two.VertexIndex - 1]._x;
-		mesh->points[currPoint].vertice._y = vertexes[faces[i].two.VertexIndex - 1]._y;
-		mesh->points[currPoint].vertice._z = vertexes[faces[i].two.VertexIndex - 1]._z;
-		mesh->points[currPoint].tex._x = texes[faces[i].two.TextureIndex - 1]._x;
-		mesh->points[currPoint].tex._y = texes[faces[i].two.TextureIndex - 1]._y;
-		currPoint++;		
-		
-		mesh->points[currPoint].vertice._x = vertexes[faces[i].three.VertexIndex - 1]._x;
-		mesh->points[currPoint].vertice._y = vertexes[faces[i].three.VertexIndex - 1]._y;
-		mesh->points[currPoint].vertice._z = vertexes[faces[i].three.VertexIndex - 1]._z;
-		mesh->points[currPoint].tex._x = texes[faces[i].three.TextureIndex - 1]._x;
-		mesh->points[currPoint].tex._y = texes[faces[i].three.TextureIndex - 1]._y;
-		currPoint++;
+		SetFaceData( &mesh->points[currPoint], &faces[i].one, vertexes, texes, normals);
+		currPoint++;	
+
+		SetFaceData( &mesh->points[currPoint], &faces[i].two, vertexes, texes, normals);
+		currPoint++;	
+
+		SetFaceData( &mesh->points[currPoint], &faces[i].three, vertexes, texes, normals);
+		currPoint++;	
 
 		//Face Point Four
 		//Only used if it's a quad, and not a triangle
 		if(!faces[i].tri)
 		{		
-			mesh->points[currPoint].vertice._x = vertexes[faces[i].four.VertexIndex - 1]._x;
-			mesh->points[currPoint].vertice._y = vertexes[faces[i].four.VertexIndex - 1]._y;
-			mesh->points[currPoint].vertice._z = vertexes[faces[i].four.VertexIndex - 1]._z;
-			mesh->points[currPoint].tex._x = texes[faces[i].four.TextureIndex - 1]._x;
-			mesh->points[currPoint].tex._y = texes[faces[i].four.TextureIndex - 1]._y;
-			currPoint++;
+			SetFaceData( &mesh->points[currPoint], &faces[i].four, vertexes, texes, normals);
+			currPoint++;	
 		}
 
 		//Push indices into the indices list. .obj file
@@ -251,6 +268,23 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 			place++;
 		}
 		place += 3;
+	}
+
+	MeshVertex* vert_one;
+	MeshVertex* vert_two;
+	Vector3* tangent;
+	for(i = 0; i < currIndex; i+=3){
+		vert_one = &mesh->points[mesh->indices[i] + 0];
+		vert_two = &mesh->points[mesh->indices[i] + 1];
+		GenerateTangent(&vert_one->tangent, vert_one, vert_two);
+		
+		vert_one = &mesh->points[mesh->indices[i] + 1];
+		vert_two = &mesh->points[mesh->indices[i] + 2];
+		GenerateTangent(&vert_one->tangent, vert_one, vert_two);
+		
+		vert_one = &mesh->points[mesh->indices[i] + 2];
+		vert_two = &mesh->points[mesh->indices[i] + 0];
+		GenerateTangent(&vert_one->tangent, vert_one, vert_two);
 	}
 
 	delete[] vertexes;

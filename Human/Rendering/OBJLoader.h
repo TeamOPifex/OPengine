@@ -17,7 +17,8 @@ public:
 	//};
 	Vector3 vertice;
 	Vector2 tex;
-	//Vector3 normal;
+	Vector3 normal;
+	Vector3 tangent;
 };
 
 class Mesh
