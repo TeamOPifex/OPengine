@@ -6,6 +6,6 @@ private:
 	ui32 _textureID;
 public:
 	GLTexture(Texture* texture);
-	void bind(ui32 loc);
+	void bind(ui32 loc, int texture);
 	ui32 textureID() { return _textureID; }
 };
