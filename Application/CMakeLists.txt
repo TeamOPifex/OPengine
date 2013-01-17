@@ -17,11 +17,11 @@ set(ALL_LIBS
 )
 
 
-if( "${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID" )
-add_source_group(\\ "${PROJECT_SOURCE_DIR}/Android" APPLICATION_SRC)
-elseif(1)
+#if( "${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID" )
+#add_source_group(\\ "${PROJECT_SOURCE_DIR}/Android" APPLICATION_SRC)
+#elseif(1)
 add_source_group(\\ "${PROJECT_SOURCE_DIR}/Application" APPLICATION_SRC)
-endif()
+#endif()
 
 add_executable(7_Application ${APPLICATION_SRC})
 

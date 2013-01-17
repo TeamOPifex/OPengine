@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <direct.h>
 
 #include "./Core/include/Log.h"
 #include "./Data/include/OPfile.h"
@@ -27,8 +26,16 @@
 
 #include <unistd.h>
 
+#else
+
+#include <direct.h>
+
 #endif
 
+
+#ifdef OPIFEX_ANDROID
+// BELOW - Still working on Windows File Reading support. Android works.
+#else
 static const char gVertexShader[] = 
 	"#version 330 core\n"
     "in vec3 vPosition; \n"
@@ -71,6 +78,7 @@ static const char gFragmentShader[] =
 	"	vec4 specular = texture2D(SpecularTexture, TexCoordOut) * pow(dot(halfVec, normal), 64.0);\n"
 	"  gl_FragColor = vec4((color.xyz * diffuse.xyz) + specular.xyz, 1); \n"
     "} \n";
+#endif
 
 // Global Variables
 
@@ -136,6 +144,14 @@ public:
 };
 
 #ifdef OPIFEX_ANDROID
+
+extern "C" {
+	JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager);
+	JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerButton(JNIEnv * env, jobject obj,  jint player,  jint button,  jint state);
+    JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerAxes(JNIEnv * env, jobject obj,  jint player,  jint axes,  jfloat position);
+    JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj);
+};
+
 FileInformation* readFile(char* filename){
 	AAsset* asset = AAssetManager_open(mgr, filename, AASSET_MODE_UNKNOWN);
 	if(asset == NULL)
@@ -166,15 +182,16 @@ FileInformation* readFile(char* filename){
 }
 #endif
 
-int main(){	
 
 #ifdef OPIFEX_ANDROID
+JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager){
 	mgr = AAssetManager_fromJava(env, assetManager);
 
 	if(mgr == NULL)
 		OPLog("Asset manager not created.");
 	OPfileInit(mgr);
 #else
+int main(){	
    _chdir("Assets\\");
 	//char* buffer;
 
@@ -207,6 +224,25 @@ int main(){
 	rotate = t1;
 
 	
+#ifdef OPIFEX_ANDROID
+	FileInformation* fileInfo = readFile("vertex.fx");
+	char* gVertexShader = (char*)OPalloc(sizeof(char) * fileInfo->length);
+	fread(gVertexShader, 1, fileInfo->length, fileInfo->file);
+	gVertexShader[fileInfo->length - 1] = '\0';
+	ShaderPtr vertex = new GLShader(Vertex, gVertexShader);
+	OPfree(gVertexShader);
+	OPfree(fileInfo);
+
+	
+	fileInfo = readFile("fragment.fx");
+	char* gFragmentShader = (char*)OPalloc(fileInfo->length);
+	fread(gFragmentShader, 1, fileInfo->length, fileInfo->file);
+	gFragmentShader[fileInfo->length - 1] = '\0';
+	OPLog(gFragmentShader);
+	ShaderPtr pixel = new GLShader(Fragment, gFragmentShader);
+	OPfree(gFragmentShader);
+	OPfree(fileInfo);
+#else
 	FileInformation* fileInfo;// = readFile("vertex.fx");
 	//char* gVertexShader = (char*)OPalloc(sizeof(char) * fileInfo->length);
 	//fread(gVertexShader, 1, fileInfo->length, fileInfo->file);
@@ -224,6 +260,7 @@ int main(){
 	ShaderPtr pixel = new GLShader(Fragment, gFragmentShader);
 	//OPfree(gFragmentShader);
 	//OPfree(fileInfo);
+#endif
 	
 	material = new GLWorldMaterial(vertex, pixel);
 
@@ -287,7 +324,7 @@ int main(){
 	OPfree(fileInfo);
 
 #ifdef OPIFEX_ANDROID
-	fileInfo = readFile(mgr, "AMemoryAway.ogg");
+	fileInfo = readFile("AMemoryAway.ogg");
 	Sound* snd = new Sound(fileInfo->fileDescriptor, fileInfo->start, fileInfo->length);
 	OPfree(fileInfo);
 #else
@@ -323,8 +360,38 @@ int main(){
 	rotateAmnt2 = 0;
 
 	OPLog("Initialized Successfully");
+#ifdef OPIFEX_ANDROID
+	}
+	
 
+JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerButton(JNIEnv * env, jobject obj,  jint player,  jint button,  jint state){
+	OPLog("Controller Button: ");
+	OPLog_i32(player);
+	OPLog_i32(button);
+	OPLog_i32(state);
+}
+
+
+JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerAxes(JNIEnv * env, jobject obj,  jint player,  jint axes,  jfloat position){
+	if(position < 0.05f && position > -0.05f)
+		position = 0.0f;
+		
+	if(player == 1 && axes == 1){
+		r_move = position * 0.01f;
+	} else if(player == 1 && axes == 2){
+		r_move2 = position * 0.01f;
+	} else if(player == 1 && axes == 3){
+		x_move = position;
+	} else if(player == 1 && axes == 4){
+		z_move = position;
+	}
+}
+
+
+JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj){
+#else
 	do{
+#endif
 		RenderSystem::ClearColor(r, g, b);
 
 		translateX += x_move;
@@ -343,10 +410,14 @@ int main(){
 		RenderSystem::RenderModel(model);
 
 		RenderSystem::Present();
+#ifdef OPIFEX_ANDROID
+
+#else
 	}
 	while(RenderSystem::escape());
 	
 	printf("Program Ended.");
 
 	return 0;
+#endif
 }

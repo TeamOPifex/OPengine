@@ -34,7 +34,6 @@ void RenderSystem::RenderTriangles(ui32 numIndices){
 }
 
 void RenderSystem::RenderModel(Model* model){
-	OPLog("Render Model");
 	UseMaterial(model->ModelMaterial);
 	model->ModelMaterial->SetWorldMatrix(&((*model->WorldMatrix)[0][0]));
 	SetBuffer(1, model->ModelMesh->VertexBuffer->handle());

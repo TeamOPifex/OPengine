@@ -90,6 +90,6 @@ LOCAL_MODULE    := libsmrf
 LOCAL_LDLIBS    := -llog -lGLESv2 -landroid -lOpenSLES
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
-LOCAL_SRC_FILES := $(subst jni/, , $(PROJECT_PATH)/Android/application.cpp)
+LOCAL_SRC_FILES := $(subst jni/, , $(PROJECT_PATH)/Application/source.cpp)
 LOCAL_STATIC_LIBRARIES := libopifex-human
 include $(BUILD_SHARED_LIBRARY)
