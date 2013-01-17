@@ -3,6 +3,7 @@
 #include "./Core/include/Types.h"
 #include "Renderer.h"
 #include "RendererTypes.h"
+#include "Model.h"
 
 	class RenderSystem{
 	public:
@@ -15,6 +16,7 @@
 		static void SetBuffer(int bufferType, ui32 buffer);
 		static void RenderTriangles(ui32 offset, ui32 count);
 		static void RenderTriangles(ui32 numIndices);
+		static void RenderModel(Model* model);
 		static void Present();
 
 		 // This will be removed, and is gross

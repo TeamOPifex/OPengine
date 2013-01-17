@@ -25,59 +25,11 @@
 #include "Human\Resources\Sound\Sound.h"
 
 #include "Human\Rendering\OBJLoader.h"
-
-// Shaders
-static const char gVertexShader[] = 
-    "attribute vec3 vPosition; \n"
-    "attribute vec3 vNormal; \n"
-    "attribute vec3 vTangent; \n"
-    "attribute vec2 TexCoordIn; \n"
-	
-    "uniform mat4 Model; \n"
-    "uniform mat4 ViewProjection; \n"
-	
-    "varying vec2 TexCoordOut; \n"
-    "varying vec3 TangentOut; \n"
-    "varying vec3 NormalOut; \n"
-
-    "void main() {\n"
-	" mat3 rotScl = mat3(Model[0].xyz, Model[1].xyz, Model[2].xyz); \n"
-	"	vec4 worldPos = Model * vec4(vPosition,1);\n"
-	"  gl_Position = ViewProjection * worldPos; \n"
-    "  TexCoordOut = TexCoordIn; \n"
-	"  NormalOut = normalize(rotScl * vNormal); \n"
-	"  TangentOut = normalize(rotScl * vTangent); \n"
-    "}\n";
-
-static const char gFragmentShader[] = 
-	"varying highp vec2 TexCoordOut; \n"
-	"varying highp vec3 NormalOut; \n"
-	"varying lowp vec3 TangentOut; \n"
-
-	"uniform sampler2D Texture; \n"
-	"uniform sampler2D SpecularTexture; \n"
-	"uniform sampler2D NormalTexture; \n"
-
-    "void main() {\n"
-	"	mediump vec3 lightPos = vec3(1, -1, -2);\n"
-	"	lowp vec3 lightDir = normalize(-lightPos);\n"
-
-	"	lowp vec3 halfVec = normalize(vec3(0, 0, 1) + lightDir);\n"
-	
-	"	lowp vec3 biNormal = normalize(cross(NormalOut, TangentOut));\n"
-	"	lowp mat3 tanSpace = mat3(TangentOut, biNormal, NormalOut);\n"
-	"	lowp vec3 normal = normalize(tanSpace * (texture2D(NormalTexture, TexCoordOut) * 2.0 - 1.0).xyz);\n"
-	
-	"	lowp vec4 color = texture2D(Texture, TexCoordOut);\n"
-	"	lowp vec4 diffuse = vec4(vec3(dot(lightDir, normal)), 1);\n"
-	"	lowp vec4 specular = texture2D(SpecularTexture, TexCoordOut) * pow(dot(halfVec, normal), 64.0);\n"
-
-	"   gl_FragColor = vec4((color.xyz * diffuse.xyz) + specular.xyz, 1);\n"
-    "}\n";
+#include <string.h>
 
 // Global Variables
 
-MaterialPtr material;
+GLWorldMaterial* material;
 GLTexture* tex;
 GLTexture* texSpec;
 GLTexture* texNorm;
@@ -96,23 +48,28 @@ Matrix4 v, p;
 Matrix4 t1, t2;
 bool updown;
 int changes;
-
 f32 r;
 f32 g;
 f32 b;
 f32 translateX;
 f32 translateZ;
-
 bool firstRun = false;
 Matrix4 result;
 int offset;
-
 GLBuffer* vertices;
 GLBuffer* indices;
 Mesh* mesh;
-
+Model* model;
 f32 rotateAmnt;
 f32 rotateAmnt2;
+f32 x_move;
+f32 z_move;
+f32 r_move;
+f32 r_move2;
+Matrix4 rotating;
+Matrix4 rotating2;
+Matrix4 modelMatrix;
+Matrix4 translateMatrix;
 
 extern "C" {
 	JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager);
@@ -156,6 +113,7 @@ Matrix4 t3, t4, t5, t6;
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager)
 {	
 	AAssetManager* mgr = AAssetManager_fromJava(env, assetManager);
+
 	if(mgr == NULL)
 		OPLog("Asset manager not created.");
 	OPfileInit(mgr);
@@ -177,11 +135,29 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	t6 = Matrix4::Translate(0, 0, offset);
 	rotate = t1;
 
+	
+	FileInformation* fileInfo = readFile(mgr, "vertex.fx");
+	char* gVertexShader = (char*)OPalloc(sizeof(char) * fileInfo->length);
+	fread(gVertexShader, 1, fileInfo->length, fileInfo->file);
+	gVertexShader[fileInfo->length - 1] = '\0';
 	ShaderPtr vertex = new GLShader(Vertex, gVertexShader);
-	ShaderPtr pixel = new GLShader(Fragment, gFragmentShader);
+	OPfree(gVertexShader);
+	OPfree(fileInfo);
 
-	material = new GLMaterial(vertex, pixel);	
-	mLoc = material->uniform_location("Model");
+	
+	fileInfo = readFile(mgr, "fragment.fx");
+	char* gFragmentShader = (char*)OPalloc(fileInfo->length);
+	fread(gFragmentShader, 1, fileInfo->length, fileInfo->file);
+	gFragmentShader[fileInfo->length - 1] = '\0';
+	ShaderPtr pixel = new GLShader(Fragment, gFragmentShader);
+	OPfree(gFragmentShader);
+	OPfree(fileInfo);
+	
+	material = new GLWorldMaterial(vertex, pixel);
+
+
+	//material = new GLMaterial(vertex, pixel);	
+	//mLoc = material->uniform_location("Model");
 	vpLoc = material->uniform_location("ViewProjection");
 
 	sampLoc = material->uniform_location("Texture");
@@ -194,11 +170,13 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	uvLoc = material->attribute_location("TexCoordIn");
 	
 
-	FileInformation* fileInfo = readFile(mgr, "steamPlane.obj");
+	fileInfo = readFile(mgr, "steamPlane.obj");
 	mesh = LoadOBJ(fileInfo->file, fileInfo->start, fileInfo->length);
+	
+	model = new Model(mesh, material, &m);
 
-	vertices = new GLBuffer(1, sizeof(MeshVertex) * mesh->vertexCount, mesh->points);
-	indices = new GLBuffer(2, sizeof(int) * mesh->indicesCount, mesh->indices);
+	//vertices = new GLBuffer(1, sizeof(MeshVertex) * mesh->vertexCount, mesh->points);
+	//indices = new GLBuffer(2, sizeof(int) * mesh->indicesCount, mesh->indices);
 	
 	void* offsetBuffer = 0;
 	material->set_data(bufferLoc, 3, false, sizeof(MeshVertex), offsetBuffer);
@@ -215,20 +193,24 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	Texture* dds = new TextureDDS(fileInfo->file);	
 	tex = new GLTexture(dds);
 	delete(dds);
+	OPfree(fileInfo);
 
 	
 	fileInfo = readFile(mgr, "steamPlaneSpec.dds");
 	Texture* dds2 = new TextureDDS(fileInfo->file);	
 	texSpec = new GLTexture(dds2);
 	delete(dds2);
+	OPfree(fileInfo);
 
 	fileInfo = readFile(mgr, "normalMap.dds");
 	Texture* dds3 = new TextureDDS(fileInfo->file);	
 	texNorm = new GLTexture(dds3);
 	delete(dds3);
+	OPfree(fileInfo);
 
 	fileInfo = readFile(mgr, "AMemoryAway.ogg");
 	Sound* snd = new Sound(fileInfo->fileDescriptor, fileInfo->start, fileInfo->length);
+	OPfree(fileInfo);
 	
 	RenderSystem::UseMaterial(material);
 	translateX = 0;
@@ -242,7 +224,7 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	material->enable_attrib(mLoc);
 	material->enable_attrib(vpLoc);
 	material->enable_attrib(sampLoc);
-	tex->bind(sampLoc, 0);	
+	tex->bind(sampLoc, 0);
 	
 	material->enable_attrib(specLoc);
 	texSpec->bind(specLoc, 1);
@@ -273,10 +255,7 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerButton(JNIEnv
 	OPLog_i32(button);
 	OPLog_i32(state);
 }
-f32 x_move;
-f32 z_move;
-f32 r_move;
-f32 r_move2;
+
 
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerAxes(JNIEnv * env, jobject obj,  jint player,  jint axes,  jfloat position){
 	if(position < 0.05f && position > -0.05f)
@@ -292,80 +271,25 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerAxes(JNIEnv *
 		z_move = position;
 	}
 }
-Matrix4 rotating;
-Matrix4 rotating2;
-Matrix4 modelMatrix;
-Matrix4 translateMatrix;
 
 
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj){
 	RenderSystem::ClearColor(r, g, b);
 
-	// Set material to use
-	RenderSystem::UseMaterial(material);
-		
-	// Render the scene
-	RenderSystem::SetBuffer(2, indices->handle());
-	
 	translateX += x_move;
 	translateZ += z_move;
 	rotateAmnt += r_move;
 	rotateAmnt2 += r_move2;
 	
-	rotating = Matrix4::RotateY(rotateAmnt); 
-	rotating2 = Matrix4::RotateX(rotateAmnt2); 
-	//m = Matrix4::Translate(translateX, 0, translateZ);
+	rotating = Matrix4::RotateY(rotateAmnt);
+	rotating2 = Matrix4::RotateX(rotateAmnt2);
 	m = rotating * rotating2;
+	model->WorldMatrix = &m;
 
-	//tex->bind(sampLoc, 0);	
-	//texSpec->bind(specLoc, 1);
-
-	// Set MVP Matrix	
 	result = v * p;
 	material->set_matrix(vpLoc, &result[0][0]);
-
-	modelMatrix = m;
-	material->set_matrix(mLoc, &modelMatrix[0][0]);
-	RenderSystem::RenderTriangles(mesh->indicesCount);	
 	
-	modelMatrix = t3 * m;
-	material->set_matrix(mLoc, &modelMatrix[0][0]);
-	RenderSystem::RenderTriangles(mesh->indicesCount);	
-
-	modelMatrix = t4 * m;
-	material->set_matrix(mLoc, &modelMatrix[0][0]);
-	RenderSystem::RenderTriangles(mesh->indicesCount);	
-
-	modelMatrix = t5 * m;
-	material->set_matrix(mLoc, &modelMatrix[0][0]);
-	RenderSystem::RenderTriangles(mesh->indicesCount);
-
-	modelMatrix = t6 * m;
-	material->set_matrix(mLoc, &modelMatrix[0][0]);
-	RenderSystem::RenderTriangles(mesh->indicesCount);	
-
-	
-	
-	modelMatrix = t6 * t4 * m;
-	material->set_matrix(mLoc, &modelMatrix[0][0]);
-	RenderSystem::RenderTriangles(mesh->indicesCount);	
-
-	modelMatrix = t4 * t5 * m;
-	material->set_matrix(mLoc, &modelMatrix[0][0]);
-	RenderSystem::RenderTriangles(mesh->indicesCount);	
-
-	modelMatrix = t5 * t3 * m;
-	material->set_matrix(mLoc, &modelMatrix[0][0]);
-	RenderSystem::RenderTriangles(mesh->indicesCount);
-
-	modelMatrix = t6 * t3 * m;
-	material->set_matrix(mLoc, &modelMatrix[0][0]);
-	RenderSystem::RenderTriangles(mesh->indicesCount);	
+	RenderSystem::RenderModel(model);
 
 	RenderSystem::Present();
-
-	// Clean up
-	//material->disable_attrib(bufferLoc);
-	//material->disable_attrib(uvLoc);
-	//material->disable_attrib(sampLoc);
 }

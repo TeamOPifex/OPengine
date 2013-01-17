@@ -1,5 +1,6 @@
 #include "RenderSystem.h"
 #include "GL/GLRenderer.h"
+#include "./Core/include/Log.h"
 
 Renderer* RenderSystem::m_renderer = 0;
 
@@ -30,6 +31,19 @@ void RenderSystem::RenderTriangles(ui32 offset, ui32 count){
 
 void RenderSystem::RenderTriangles(ui32 numIndices){
 	m_renderer->render_triangles(numIndices);
+}
+
+void RenderSystem::RenderModel(Model* model){
+	OPLog("Set Material");
+	UseMaterial(model->ModelMaterial);
+	OPLog("Set World Matrix");
+	model->ModelMaterial->SetWorldMatrix(&((*model->WorldMatrix)[0][0]));
+	OPLog("Set Vertex Buffer");
+	SetBuffer(1, model->ModelMesh->VertexBuffer->handle());
+	OPLog("Set Index Buffer");
+	SetBuffer(2, model->ModelMesh->IndexBuffer->handle());
+	OPLog("Draw Triangles");
+	RenderTriangles(model->ModelMesh->IndexCount);
 }
 
 void RenderSystem::Present(){

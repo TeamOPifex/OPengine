@@ -115,6 +115,7 @@
                 <!-- <nocompress /> forces no compression on any files in assets or res/raw -->
                 <nocompress extension="dds" />
                 <nocompress extension="obj" />
+                <nocompress extension="fx" />
             </aapt>
         </do-only-if-not-library>
     </target>

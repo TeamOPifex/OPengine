@@ -6,6 +6,7 @@
 #include ".\Human\Math\Vector3.h"
 
 #include ".\Core\include\DynamicMemory.h"
+#include "Mesh.h"
 
 
 class MeshVertex
@@ -21,19 +22,19 @@ public:
 	Vector3 tangent;
 };
 
-class Mesh
-{
-public:
-	~Mesh(){
-		OPfree(points);
-		OPfree(indices);
-	}
-	MeshVertex* points;
-	unsigned int* indices;
-	int primitiveCount;
-	int indicesCount;
-	int vertexCount;
-};
+//class Mesh
+//{
+//public:
+//	~Mesh(){
+//		OPfree(points);
+//		OPfree(indices);
+//	}
+//	MeshVertex* points;
+//	unsigned int* indices;
+//	int primitiveCount;
+//	int indicesCount;
+//	int vertexCount;
+//};
 
 Mesh* LoadOBJ(FILE* file, int start, int length);
 int lineType(char* word);

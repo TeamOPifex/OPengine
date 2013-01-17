@@ -1,5 +1,6 @@
 #include "OBJLoader.h"
 #include ".\Core\include\Log.h"
+#include "./Human/Rendering/GL/GLBuffer.h"
 
 // FacePoint contains 3 int's being holding points for
 // the index's for each array.
@@ -60,9 +61,6 @@ void SetFaceData(MeshVertex* vertex, FacePoint* facePoint, Vector3* vertexes, Ve
 
 Mesh* LoadOBJ(FILE* file, int start, int length)
 {
-	//ObjectMesh to fill
-	Mesh* mesh = new Mesh();
-
 	//Open File for reading
 	char* buffer = (char*)OPalloc(sizeof(char) * 4096);
 
@@ -229,42 +227,42 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 		}
 	}
 	
-	mesh->vertexCount = totalPoints;
-	mesh->points = (MeshVertex*)OPalloc(sizeof(MeshVertex) * totalPoints);
-	mesh->indices = (unsigned int*)OPalloc(sizeof(unsigned int) * totalIndices);
+	
+	MeshVertex* points = (MeshVertex*)OPalloc(sizeof(MeshVertex) * totalPoints);
+	unsigned int* indices = (unsigned int*)OPalloc(sizeof(unsigned int) * totalIndices);
 	int currPoint = 0;
 	int currIndex = 0;
 
 	for(i = 0; i < count; i++)
 	{
-		SetFaceData( &mesh->points[currPoint], &faces[i].one, vertexes, texes, normals);
+		SetFaceData( &points[currPoint], &faces[i].one, vertexes, texes, normals);
 		currPoint++;	
 
-		SetFaceData( &mesh->points[currPoint], &faces[i].two, vertexes, texes, normals);
+		SetFaceData( &points[currPoint], &faces[i].two, vertexes, texes, normals);
 		currPoint++;	
 
-		SetFaceData( &mesh->points[currPoint], &faces[i].three, vertexes, texes, normals);
+		SetFaceData( &points[currPoint], &faces[i].three, vertexes, texes, normals);
 		currPoint++;	
 
 		//Face Point Four
 		//Only used if it's a quad, and not a triangle
 		if(!faces[i].tri)
 		{		
-			SetFaceData( &mesh->points[currPoint], &faces[i].four, vertexes, texes, normals);
+			SetFaceData( &points[currPoint], &faces[i].four, vertexes, texes, normals);
 			currPoint++;	
 		}
 
 		//Push indices into the indices list. .obj file
 		//creates triangles by (p1,p2,p3) for triangles
 		//and (p1,p2,p3) (p1,p3,p4) for quads.
-		mesh->indices[currIndex++] = place;
-		mesh->indices[currIndex++] = place + 1;
-		mesh->indices[currIndex++] = place + 2;
+		indices[currIndex++] = place;
+		indices[currIndex++] = place + 1;
+		indices[currIndex++] = place + 2;
 		if(!faces[i].tri)
 		{
-			mesh->indices[currIndex++] = place;
-			mesh->indices[currIndex++] = place + 2;
-			mesh->indices[currIndex++] = place + 3;
+			indices[currIndex++] = place;
+			indices[currIndex++] = place + 2;
+			indices[currIndex++] = place + 3;
 			place++;
 		}
 		place += 3;
@@ -274,16 +272,16 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 	MeshVertex* vert_two;
 	Vector3* tangent;
 	for(i = 0; i < currIndex; i+=3){
-		vert_one = &mesh->points[mesh->indices[i] + 0];
-		vert_two = &mesh->points[mesh->indices[i] + 1];
+		vert_one = &points[indices[i] + 0];
+		vert_two = &points[indices[i] + 1];
 		GenerateTangent(&vert_one->tangent, vert_one, vert_two);
 		
-		vert_one = &mesh->points[mesh->indices[i] + 1];
-		vert_two = &mesh->points[mesh->indices[i] + 2];
+		vert_one = &points[indices[i] + 1];
+		vert_two = &points[indices[i] + 2];
 		GenerateTangent(&vert_one->tangent, vert_one, vert_two);
 		
-		vert_one = &mesh->points[mesh->indices[i] + 2];
-		vert_two = &mesh->points[mesh->indices[i] + 0];
+		vert_one = &points[indices[i] + 2];
+		vert_two = &points[indices[i] + 0];
 		GenerateTangent(&vert_one->tangent, vert_one, vert_two);
 	}
 
@@ -292,12 +290,10 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 	delete[] normals;
 	OPfree(buffer);
 
-	//Primitive Count
-	mesh->vertexCount = totalPoints;
-	mesh->primitiveCount = totalIndices / 3;
-	mesh->indicesCount = totalIndices;
-
-	return mesh;
+	BufferPtr vertexBuffer = new GLBuffer(1, sizeof(MeshVertex) * totalPoints, points);
+	BufferPtr indexBuffer = new GLBuffer(2, sizeof(int) * totalIndices, indices);
+	
+	return new Mesh(vertexBuffer, indexBuffer, totalIndices);
 }
 
 int lineType(char* word)

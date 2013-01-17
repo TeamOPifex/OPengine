@@ -30,6 +30,8 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID" )
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Java/GL2JNIView.java DESTINATION ${PROJECT_BINARY_DIR}/src/com/opifex/SMRF/)
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Java/SMRF.java DESTINATION ${PROJECT_BINARY_DIR}/src/com/opifex/SMRF/)
 	
+	file(COPY ${PROJECT_SOURCE_DIR}/Android/Assets/vertex.fx DESTINATION ${PROJECT_BINARY_DIR}/assets/)
+	file(COPY ${PROJECT_SOURCE_DIR}/Android/Assets/fragment.fx DESTINATION ${PROJECT_BINARY_DIR}/assets/)
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Assets/steamPlane.obj DESTINATION ${PROJECT_BINARY_DIR}/assets/)
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Assets/bricks.dds DESTINATION ${PROJECT_BINARY_DIR}/assets/)
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Assets/steamPlaneSkin.dds DESTINATION ${PROJECT_BINARY_DIR}/assets/)
