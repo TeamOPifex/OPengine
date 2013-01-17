@@ -29,7 +29,7 @@ void initialize(){
 void update(OPtimer* timer){
 	if(*i){
 		printf("Seconds: %f\n", OPtimerDelta(timer));
-		OPend();
+		//OPend();
 	}
 
 	*i = (OPint)getchar();
@@ -42,12 +42,12 @@ void destroy(){
 OPint main(){
 	// use custom functions for
 	// the game's duration
-	OPinitialize = initialize;
-	OPupdate = update;
-	OPdestroy = destroy;
+	//OPinitialize = initialize;
+	//OPupdate = update;
+	//OPdestroy = destroy;
 	
 	// start the game cycle
-	OPstart();
+	//OPstart();
 
 	return 0;
 }

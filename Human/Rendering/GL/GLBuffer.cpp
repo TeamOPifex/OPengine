@@ -30,11 +30,11 @@ void GLBuffer::load(int bufferType, ui32 size, const void* data){
 #ifdef OPIFEX_ANDROID
 
 #else
-	glGenVertexArrays(1, &m_vertex_handle);
-	GLUtility::CheckError("GLBuffer::4 - ERROR!");
+	//glGenVertexArrays(1, &m_vertex_handle);
+	//GLUtility::CheckError("GLBuffer::4 - ERROR!");
 
-	glBindVertexArray(m_vertex_handle);
-	GLUtility::CheckError("GLBuffer::5 - ERROR!");
+	//glBindVertexArray(m_vertex_handle);
+	//GLUtility::CheckError("GLBuffer::5 - ERROR!");
 #endif
 
 }

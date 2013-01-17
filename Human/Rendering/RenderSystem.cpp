@@ -34,15 +34,11 @@ void RenderSystem::RenderTriangles(ui32 numIndices){
 }
 
 void RenderSystem::RenderModel(Model* model){
-	OPLog("Set Material");
+	OPLog("Render Model");
 	UseMaterial(model->ModelMaterial);
-	OPLog("Set World Matrix");
 	model->ModelMaterial->SetWorldMatrix(&((*model->WorldMatrix)[0][0]));
-	OPLog("Set Vertex Buffer");
 	SetBuffer(1, model->ModelMesh->VertexBuffer->handle());
-	OPLog("Set Index Buffer");
 	SetBuffer(2, model->ModelMesh->IndexBuffer->handle());
-	OPLog("Draw Triangles");
 	RenderTriangles(model->ModelMesh->IndexCount);
 }
 

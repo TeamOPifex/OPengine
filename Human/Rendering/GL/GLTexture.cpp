@@ -10,6 +10,8 @@
 #endif
 
 GLTexture::GLTexture(Texture* texture){
+	GLUtility::CheckError("GLTexture::Clear Errors");
+
 	glGenTextures(1, &_textureID);
 	GLUtility::CheckError("GLTexture::Error 1");
 

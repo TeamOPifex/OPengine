@@ -24,7 +24,7 @@ struct Face
 
 int readLine(char* buffer, FILE* file){
 	int length = 0;
-	char ch;
+	char ch = ' ';
 	while(ch != '\n'){
 		fread(&ch,1, 1, file);
 		buffer[length] = ch;

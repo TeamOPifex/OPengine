@@ -44,6 +44,7 @@ int GLRenderer::initialize(){
 	glfwEnable( GLFW_STICKY_KEYS );	
 
 	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS); 
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
 

@@ -38,6 +38,7 @@ ui32 GLMaterial::uniform_location(const char* attribute){
 
 void GLMaterial::set_data(ui32 attribute, ui32 size, bool normalize, ui32 stride, void* arrayData){
 	glVertexAttribPointer((GLuint)attribute, size, GL_FLOAT, normalize, stride, arrayData);
+	GLUtility::CheckError("GLMaterial::set_data");
 }
 
 void GLMaterial::enable_attrib(ui32 attribute){
