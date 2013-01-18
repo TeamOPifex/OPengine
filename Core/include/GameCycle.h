@@ -5,15 +5,15 @@
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
-// do nothing....
-#else
+extern "C" {
+#endif
 /**
  * OPinitialize - Game engine initialization.
  *	This function pointer points to a user function which is responsible
  *	for performing any essential initialization, data allocation and setup
  *	which is needed to begin the primary game loop.
  */
-extern void (*OPinitialize)();
+void (*OPinitialize)();
 //----------------------------------------------------------------------------
 /**
  * OPupdate - Game engine update.
@@ -24,7 +24,7 @@ extern void (*OPinitialize)();
  *	and scene rendering.
  * @param timer OPtimer object representing current time measurments
  */
-extern void (*OPupdate)(OPtimer*);
+void (*OPupdate)(OPtimer*);
 //----------------------------------------------------------------------------
 /**
  * OPdestroy - Game engine termination.
@@ -33,6 +33,8 @@ extern void (*OPupdate)(OPtimer*);
  *	data, deallocating memory, releasing OS resources and closing
  *	network connections.
  */
-extern void (*OPdestroy)();
+void (*OPdestroy)();
+#ifdef __cplusplus
+};
 #endif
 #endif

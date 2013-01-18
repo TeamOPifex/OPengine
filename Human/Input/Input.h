@@ -1,3 +1,6 @@
+#pragma once
+// THIS CURRENTLY ONLY WORKS IN WINDOWS
+
 #include <GL/glfw.h>
 
 class InputSystem {

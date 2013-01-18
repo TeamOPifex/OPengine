@@ -15,6 +15,8 @@
 #include "./Human/Rendering/OBJLoader.h"
 #include "./Human/Rendering/GL/GLUtility.h"
 
+#include "./Human/Input/GamePadSystem.h"
+
 #ifdef OPIFEX_ANDROID
 
 #include <jni.h>
@@ -365,26 +367,12 @@ int main(){
 	
 
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerButton(JNIEnv * env, jobject obj,  jint player,  jint button,  jint state){
-	OPLog("Controller Button: ");
-	OPLog_i32(player);
-	OPLog_i32(button);
-	OPLog_i32(state);
+	GamePadSystem::Controller((GamePadIndex)player)->SetButton((GamePadButton)button, state == 1);
 }
 
 
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerAxes(JNIEnv * env, jobject obj,  jint player,  jint axes,  jfloat position){
-	if(position < 0.05f && position > -0.05f)
-		position = 0.0f;
-		
-	if(player == 1 && axes == 1){
-		r_move = position * 0.01f;
-	} else if(player == 1 && axes == 2){
-		r_move2 = position * 0.01f;
-	} else if(player == 1 && axes == 3){
-		x_move = position;
-	} else if(player == 1 && axes == 4){
-		z_move = position;
-	}
+	GamePadSystem::Controller((GamePadIndex)(player))->SetAxis((GamePadAxes)axes, position);
 }
 
 

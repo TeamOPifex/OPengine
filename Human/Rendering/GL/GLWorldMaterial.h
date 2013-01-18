@@ -14,3 +14,13 @@ public:
 private:
 	ui32 _worldMatrix;
 };
+
+
+class GLTexturedSpecularMaterial : public GLWorldMaterial {
+public:
+	GLTexturedSpecularMaterial() { }
+	GLTexturedSpecularMaterial(ShaderPtr vertex, ShaderPtr fragment) : GLWorldMaterial(vertex, fragment) {
+
+	}
+private:
+};

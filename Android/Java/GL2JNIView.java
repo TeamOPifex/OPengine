@@ -68,6 +68,7 @@ import tv.ouya.console.api.OuyaController;
  *   that matches it exactly (with regards to red/green/blue/alpha channels
  *   bit depths). Failure to do so would result in an EGL_BAD_MATCH error.
  */
+
 class GL2JNIView extends GLSurfaceView {
     private static String TAG = "GL2JNIView";
     private static final boolean DEBUG = false;
@@ -75,6 +76,7 @@ class GL2JNIView extends GLSurfaceView {
 	private static boolean lIgnore;
 	private static boolean rIgnore;
 	private static Renderer rend;
+	
 	
     public GL2JNIView(Context context, AssetManager assetManager) {
         super(context);
@@ -90,49 +92,43 @@ class GL2JNIView extends GLSurfaceView {
 	
     public boolean onKeyDown(int keyCode, int player, KeyEvent event) {
         if(keyCode == OuyaController.BUTTON_O) {
-			rend.setButton(player, 1, 1);
+			rend.setButton(player, GamePadButtons.A, GamePadButtonState.DOWN);
             return true;
         } else if(keyCode == OuyaController.BUTTON_U) {
-			rend.setButton(player, 2, 1);
+			rend.setButton(player, GamePadButtons.X, GamePadButtonState.DOWN);
             return true;
         } else if(keyCode == OuyaController.BUTTON_Y) {
-			rend.setButton(player, 3, 1);
+			rend.setButton(player, GamePadButtons.Y, GamePadButtonState.DOWN);
             return true;
         } else if(keyCode == OuyaController.BUTTON_A) {
-			rend.setButton(player, 4, 1);
+			rend.setButton(player, GamePadButtons.B, GamePadButtonState.DOWN);
             return true;
         } else if(keyCode == OuyaController.BUTTON_DPAD_DOWN) {
-			rend.setButton(player, 5, 1);
+			rend.setButton(player, GamePadButtons.DPAD_DOWN, GamePadButtonState.DOWN);
             return true;
         } else if(keyCode == OuyaController.BUTTON_DPAD_LEFT) {
-			rend.setButton(player, 6, 1);
+			rend.setButton(player, GamePadButtons.DPAD_LEFT, GamePadButtonState.DOWN);
             return true;
         } else if(keyCode == OuyaController.BUTTON_DPAD_UP) {
-			rend.setButton(player, 7, 1);
+			rend.setButton(player, GamePadButtons.DPAD_UP, GamePadButtonState.DOWN);
             return true;
         } else if(keyCode == OuyaController.BUTTON_DPAD_RIGHT) {
-			rend.setButton(player, 8, 1);
+			rend.setButton(player, GamePadButtons.DPAD_RIGHT, GamePadButtonState.DOWN);
             return true;
         } else if(keyCode == OuyaController.BUTTON_R1) {
-			rend.setButton(player, 9, 1);
+			rend.setButton(player, GamePadButtons.RIGHT_SHOULDER, GamePadButtonState.DOWN);
             return true;
         } else if(keyCode == OuyaController.BUTTON_L1) {
-			rend.setButton(player, 10, 1);
-            return true;
-        } else if(keyCode == OuyaController.BUTTON_R2) {
-			rend.setButton(player, 11, 1);
-            return true;
-        } else if(keyCode == OuyaController.BUTTON_L2) {
-			rend.setButton(player, 12, 1);
+			rend.setButton(player, GamePadButtons.LEFT_SHOULDER, GamePadButtonState.DOWN);
             return true;
         } else if (keyCode == OuyaController.BUTTON_R3) {
-			rend.setButton(player, 13, 1);
+			rend.setButton(player, GamePadButtons.RIGHT_THUMB, GamePadButtonState.DOWN);
             return true;
         } else if (keyCode == OuyaController.BUTTON_L3) {
-			rend.setButton(player, 14, 1);
+			rend.setButton(player, GamePadButtons.LEFT_THUMB, GamePadButtonState.DOWN);
             return true;
         } else if (keyCode == OuyaController.BUTTON_SYSTEM) {
-			rend.setButton(player, 15, 1);
+			rend.setButton(player, GamePadButtons.START, GamePadButtonState.DOWN);
             return true;
         }
 		
@@ -142,49 +138,43 @@ class GL2JNIView extends GLSurfaceView {
     public boolean onKeyUp(int keyCode, int player, KeyEvent event) {
 	
 		if(keyCode == OuyaController.BUTTON_O) {
-			rend.setButton(player, 1, 0);
+			rend.setButton(player, GamePadButtons.A, GamePadButtonState.UP);
             return true;
         } else if(keyCode == OuyaController.BUTTON_U) {
-			rend.setButton(player, 2, 0);
+			rend.setButton(player, GamePadButtons.X, GamePadButtonState.UP);
             return true;
         } else if(keyCode == OuyaController.BUTTON_Y) {
-			rend.setButton(player, 3, 0);
+			rend.setButton(player, GamePadButtons.Y, GamePadButtonState.UP);
             return true;
         } else if(keyCode == OuyaController.BUTTON_A) {
-			rend.setButton(player, 4, 0);
+			rend.setButton(player, GamePadButtons.B, GamePadButtonState.UP);
             return true;
         } else if(keyCode == OuyaController.BUTTON_DPAD_DOWN) {
-			rend.setButton(player, 5, 0);
+			rend.setButton(player, GamePadButtons.DPAD_DOWN, GamePadButtonState.UP);
             return true;
         } else if(keyCode == OuyaController.BUTTON_DPAD_LEFT) {
-			rend.setButton(player, 6, 0);
+			rend.setButton(player, GamePadButtons.DPAD_LEFT, GamePadButtonState.UP);
             return true;
         } else if(keyCode == OuyaController.BUTTON_DPAD_UP) {
-			rend.setButton(player, 7, 0);
+			rend.setButton(player, GamePadButtons.DPAD_UP, GamePadButtonState.UP);
             return true;
         } else if(keyCode == OuyaController.BUTTON_DPAD_RIGHT) {
-			rend.setButton(player, 8, 0);
+			rend.setButton(player, GamePadButtons.DPAD_RIGHT, GamePadButtonState.UP);
             return true;
         } else if(keyCode == OuyaController.BUTTON_R1) {
-			rend.setButton(player, 9, 0);
+			rend.setButton(player, GamePadButtons.RIGHT_SHOULDER, GamePadButtonState.UP);
             return true;
         } else if(keyCode == OuyaController.BUTTON_L1) {
-			rend.setButton(player, 10, 0);
+			rend.setButton(player, GamePadButtons.LEFT_SHOULDER, GamePadButtonState.UP);
             return true;
-        } else if(keyCode == OuyaController.BUTTON_R2) {
-			rend.setButton(player, 11, 0);
-            return true;
-        } else if(keyCode == OuyaController.BUTTON_L2) {
-			rend.setButton(player, 12, 0);
-            return true;
-        } else if (keyCode == OuyaController.BUTTON_R3) {
-			rend.setButton(player, 13, 0);
+		} else if (keyCode == OuyaController.BUTTON_R3) {
+			rend.setButton(player, GamePadButtons.RIGHT_THUMB, GamePadButtonState.UP);
             return true;
         } else if (keyCode == OuyaController.BUTTON_L3) {
-			rend.setButton(player, 14, 0);
+			rend.setButton(player, GamePadButtons.LEFT_THUMB, GamePadButtonState.UP);
             return true;
         } else if (keyCode == OuyaController.BUTTON_SYSTEM) {
-			rend.setButton(player, 15, 0);
+			rend.setButton(player, GamePadButtons.START, GamePadButtonState.UP);
             return true;
         }
 		
@@ -192,12 +182,12 @@ class GL2JNIView extends GLSurfaceView {
     }
 	
     public boolean onGenericMotionEvent(int player, MotionEvent event) {
-		rend.setAxes(player, 1, event.getAxisValue(OuyaController.AXIS_LS_X) * 5f);
-		rend.setAxes(player, 2, event.getAxisValue(OuyaController.AXIS_LS_Y) * 5f);
-		rend.setAxes(player, 3, event.getAxisValue(OuyaController.AXIS_RS_X));
-		rend.setAxes(player, 4, event.getAxisValue(OuyaController.AXIS_RS_Y));
-		rend.setAxes(player, 5, event.getAxisValue(OuyaController.AXIS_L2));
-		rend.setAxes(player, 6, event.getAxisValue(OuyaController.AXIS_R2));
+		rend.setAxes(player, GamePadAxes.LS_X, event.getAxisValue(OuyaController.AXIS_LS_X));
+		rend.setAxes(player, GamePadAxes.LS_Y, event.getAxisValue(OuyaController.AXIS_LS_Y));
+		rend.setAxes(player, GamePadAxes.RS_X, event.getAxisValue(OuyaController.AXIS_RS_X));
+		rend.setAxes(player, GamePadAxes.RS_Y, event.getAxisValue(OuyaController.AXIS_RS_Y));
+		rend.setAxes(player, GamePadAxes.L2, event.getAxisValue(OuyaController.AXIS_L2));
+		rend.setAxes(player, GamePadAxes.R2, event.getAxisValue(OuyaController.AXIS_R2));
         return true;
     }
 	
@@ -452,15 +442,15 @@ class GL2JNIView extends GLSurfaceView {
 		
 		public Renderer(AssetManager assetManager){
 			_assetManager = assetManager;
-			GL2JNILib.setControllerButton(1, 0, 0);
+			//GL2JNILib.setControllerButton(1, 0, 0);
 		}
 		
-        public void setButton(int player, int button, int state) {
-			GL2JNILib.setControllerButton(player, button, state);
+        public void setButton(int player, GamePadButtons button, GamePadButtonState state) {
+			GL2JNILib.setControllerButton(player, button.getCode(), state.getCode());
 		}
 		
-        public void setAxes(int player, int axes, float position) {
-			GL2JNILib.setControllerAxes(player, axes, position);
+        public void setAxes(int player, GamePadAxes axes, float position) {
+			GL2JNILib.setControllerAxes(player, axes.getCode(), position);
 		}
 		
         public void onDrawFrame(GL10 gl) {
