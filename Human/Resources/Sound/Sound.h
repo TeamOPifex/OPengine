@@ -28,7 +28,7 @@ public:
 	Sound(int fd, long start, long length){
 		
 #ifdef OPIFEX_ANDROID
-		SLresult result;
+	SLresult result;
 	SLObjectItf outputMixObject = NULL;
 	SLObjectItf engineObject = NULL;
 	SLEngineItf engineEngine = NULL;

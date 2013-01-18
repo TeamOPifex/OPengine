@@ -27,4 +27,4 @@ public enum GamePadButtons {
 	public int getCode() {
 		return code;
 	}
-}	
+}
