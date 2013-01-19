@@ -5,6 +5,27 @@
 #include <android/asset_manager_jni.h>
 #include <unistd.h>
 AAssetManager* _mgr;
+
+FileInformation OPreadFile_Android(const char* path){
+	FileInformation file;
+	AAsset* asset = AAssetManager_open(_mgr, path, AASSET_MODE_UNKNOWN);
+	if(asset == NULL)
+		return file;
+
+	off_t _start, _length;
+    int fd = AAsset_openFileDescriptor(asset, &_start, &_length);
+
+    FILE* myFile = fdopen(dup(fd), "rb"); 
+	if(!myFile){
+		OPLog("File not loaded.");
+	}
+	fseek(myFile, _start, SEEK_SET);
+	file.file = myFile;
+	file.start = _start;
+	file.length = _length;
+	file.fileDescriptor = fd;
+	return file;
+}
 #endif
 
 void OPfileInit(void* manager){

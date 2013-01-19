@@ -34,10 +34,18 @@ public:
 	void SetLeftTrigger(f32 val);
 	void SetRightTrigger(f32 val);
 
-	void update();
-	void reset();
+	bool IsConnected();
+	void SetConnected(bool connected);
+
+	void SetDeadzone(f32 deadzone);
+
+	void Update();
+	void Reset();
+
 private:
 	bool		_buttons[GamePadButton_Max];
 	bool		_prevButtons[GamePadButton_Max];
 	f32			_axes[GamePadAxes_Max];
+	bool		_connected;
+	f32			_deadzone;
 };

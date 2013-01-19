@@ -70,7 +70,8 @@ LOCAL_LDLIBS    := -llog -lGLESv2
 LOCAL_CFLAGS    := -Werror
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
-MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/Input/*.cpp)
+MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/Audio/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Input/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Math/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Rendering/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Rendering/GL/*.cpp)

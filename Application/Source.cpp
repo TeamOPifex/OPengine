@@ -16,6 +16,7 @@
 #include "./Human/Rendering/GL/GLUtility.h"
 
 #include "./Human/Input/GamePadSystem.h"
+#include "./Human/Audio/Jukebox.h"
 
 #ifdef OPIFEX_ANDROID
 
@@ -126,24 +127,25 @@ Matrix4 rotating2;
 Matrix4 modelMatrix;
 Matrix4 translateMatrix;
 Matrix4 t3, t4, t5, t6;
+Audio* audio;
 
 #ifdef OPIFEX_ANDROID
 AAssetManager* mgr;
 #endif
-
-class FileInformation {
-public:
-	FileInformation(FILE* _file, ui32 _start, ui32 _length, int fd) {
-		file = _file;
-		start = _start;
-		length = _length;
-		fileDescriptor = fd;
-	}
-	FILE* file;
-	ui32 start;
-	ui32 length;
-	int fileDescriptor;
-};
+//
+//class FileInformation {
+//public:
+//	FileInformation(FILE* _file, ui32 _start, ui32 _length, int fd) {
+//		file = _file;
+//		start = _start;
+//		length = _length;
+//		fileDescriptor = fd;
+//	}
+//	FILE* file;
+//	ui32 start;
+//	ui32 length;
+//	int fileDescriptor;
+//};
 
 #ifdef OPIFEX_ANDROID
 
@@ -154,34 +156,34 @@ extern "C" {
     JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj);
 };
 
-FileInformation* readFile(char* filename){
-	AAsset* asset = AAssetManager_open(mgr, filename, AASSET_MODE_UNKNOWN);
-	if(asset == NULL)
-		OPLog("Asset not loaded.");
-
-	off_t _start, _length;
-    int fd = AAsset_openFileDescriptor(asset, &_start, &_length);
-
-    FILE* myFile = fdopen(dup(fd), "rb"); 
-	if(!myFile){
-		OPLog("File not loaded.");
-	}
-	fseek(myFile, _start, SEEK_SET);
-
-	return new FileInformation(myFile, _start, _length, fd);
-}
+//FileInformation* readFile(char* filename){
+//	AAsset* asset = AAssetManager_open(mgr, filename, AASSET_MODE_UNKNOWN);
+//	if(asset == NULL)
+//		OPLog("Asset not loaded.");
+//
+//	off_t _start, _length;
+//    int fd = AAsset_openFileDescriptor(asset, &_start, &_length);
+//
+//    FILE* myFile = fdopen(dup(fd), "rb"); 
+//	if(!myFile){
+//		OPLog("File not loaded.");
+//	}
+//	fseek(myFile, _start, SEEK_SET);
+//
+//	return new FileInformation(myFile, _start, _length, fd);
+//}
 #else
-FileInformation* readFile(char* filename){
-    FILE* myFile = fopen(filename, "rb"); 
-	if(!myFile){
-		OPLog("File not loaded.");
-	}
-	fseek(myFile, 0, SEEK_END );
-	int Size = ftell( myFile );
-	fseek(myFile, 0, SEEK_SET);
-
-	return new FileInformation(myFile, 0, Size, 0);
-}
+//FileInformation* readFile(char* filename){
+//    FILE* myFile = fopen(filename, "rb"); 
+//	if(!myFile){
+//		OPLog("File not loaded.");
+//	}
+//	fseek(myFile, 0, SEEK_END );
+//	int Size = ftell( myFile );
+//	fseek(myFile, 0, SEEK_SET);
+//
+//	return new FileInformation(myFile, 0, Size, 0);
+//}
 #endif
 
 
@@ -210,6 +212,11 @@ int main(){
 
 	RenderSystem::Initialize();
 
+	if(Jukebox::Initialize()){
+		audio = Jukebox::Load("AMemoryAway.ogg", false);
+		Jukebox::Play(audio);
+	}
+
 	m.SetIdentity();
 	p = Matrix4::CreatePerspective(45.0f, 1280.0f / 800.0f, 1.0f, 1000.0f);
 	v = Matrix4::CreateLook(Vector3(-16,3,12), Vector3(0), Vector3(0,1,0));
@@ -227,23 +234,23 @@ int main(){
 
 	
 #ifdef OPIFEX_ANDROID
-	FileInformation* fileInfo = readFile("vertex.fx");
-	char* gVertexShader = (char*)OPalloc(sizeof(char) * fileInfo->length);
-	fread(gVertexShader, 1, fileInfo->length, fileInfo->file);
-	gVertexShader[fileInfo->length - 1] = '\0';
+	FileInformation fileInfo = OPreadFile_Android("vertex.fx");
+	char* gVertexShader = (char*)OPalloc(sizeof(char) * fileInfo.length);
+	fread(gVertexShader, 1, fileInfo.length, fileInfo.file);
+	gVertexShader[fileInfo.length - 1] = '\0';
 	ShaderPtr vertex = new GLShader(Vertex, gVertexShader);
 	OPfree(gVertexShader);
-	OPfree(fileInfo);
+	OPfree(&fileInfo);
 
 	
-	fileInfo = readFile("fragment.fx");
-	char* gFragmentShader = (char*)OPalloc(fileInfo->length);
-	fread(gFragmentShader, 1, fileInfo->length, fileInfo->file);
-	gFragmentShader[fileInfo->length - 1] = '\0';
+	fileInfo = OPreadFile_Android("fragment.fx");
+	char* gFragmentShader = (char*)OPalloc(fileInfo.length);
+	fread(gFragmentShader, 1, fileInfo.length, fileInfo.file);
+	gFragmentShader[fileInfo.length - 1] = '\0';
 	OPLog(gFragmentShader);
 	ShaderPtr pixel = new GLShader(Fragment, gFragmentShader);
 	OPfree(gFragmentShader);
-	OPfree(fileInfo);
+	OPfree(&fileInfo);
 #else
 	FileInformation* fileInfo;// = readFile("vertex.fx");
 	//char* gVertexShader = (char*)OPalloc(sizeof(char) * fileInfo->length);
@@ -283,8 +290,8 @@ int main(){
 	uvLoc = material->attribute_location("TexCoordIn");
 	
 
-	fileInfo = readFile("steamPlane.obj");
-	mesh = LoadOBJ(fileInfo->file, fileInfo->start, fileInfo->length);
+	fileInfo = OPreadFile_Android("steamPlane.obj");
+	mesh = LoadOBJ(fileInfo.file, fileInfo.start, fileInfo.length);
 	
 	model = new Model(mesh, material, &m);
 
@@ -306,29 +313,29 @@ int main(){
 
 
 	// TextureDDS Should take a stream
-	fileInfo = readFile("steamPlaneSkin.dds");
-	Texture* dds = new TextureDDS(fileInfo->file);	
+	fileInfo = OPreadFile_Android("steamPlaneSkin.dds");
+	Texture* dds = new TextureDDS(fileInfo.file);	
 	tex = new GLTexture(dds);
 	delete(dds);
-	OPfree(fileInfo);
+	OPfree(&fileInfo);
 
 	
-	fileInfo = readFile("steamPlaneSpec.dds");
-	Texture* dds2 = new TextureDDS(fileInfo->file);	
+	fileInfo = OPreadFile_Android("steamPlaneSpec.dds");
+	Texture* dds2 = new TextureDDS(fileInfo.file);	
 	texSpec = new GLTexture(dds2);
 	delete(dds2);
-	OPfree(fileInfo);
+	OPfree(&fileInfo);
 
-	fileInfo = readFile("normalMap.dds");
-	Texture* dds3 = new TextureDDS(fileInfo->file);	
+	fileInfo = OPreadFile_Android("normalMap.dds");
+	Texture* dds3 = new TextureDDS(fileInfo.file);	
 	texNorm = new GLTexture(dds3);
 	delete(dds3);
-	OPfree(fileInfo);
+	OPfree(&fileInfo);
 
 #ifdef OPIFEX_ANDROID
-	fileInfo = readFile("AMemoryAway.ogg");
-	Sound* snd = new Sound(fileInfo->fileDescriptor, fileInfo->start, fileInfo->length);
-	OPfree(fileInfo);
+	//fileInfo = OPreadFile_Android("AMemoryAway.ogg");
+	//Sound* snd = new Sound(fileInfo.fileDescriptor, fileInfo.start, fileInfo.length);
+	//OPfree(&fileInfo);
 #else
 	// Windows/Linux sound not implemented yet
 #endif
@@ -377,6 +384,7 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerAxes(JNIEnv *
 
 
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj){
+	GamePadSystem::Update();
 #else
 	do{
 #endif

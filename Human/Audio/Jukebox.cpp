@@ -1,5 +1,9 @@
 #include "Jukebox.h"
 
+#include <stdlib.h>
+
+#include "./Core/include/Log.h"
+
 #ifdef OPIFEX_ANDROID
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
@@ -21,33 +25,77 @@ bool Jukebox::Initialize() {
 	SLresult result;
 	
     // create engine
-	result = slCreateEngine(&engineObject, 0, NULL, 0, NULL, NULL);
-    if(SL_RESULT_SUCCESS != result) return false;
+	result = slCreateEngine(&_engineObject, 0, NULL, 0, NULL, NULL);
+    if(SL_RESULT_SUCCESS != result) {
+		OPLog("Jukebox::Error 1");
+		return false;
+	}
 	
     // realize the engine
-	result = (*engineObject)->Realize(engineObject, SL_BOOLEAN_FALSE);
-    if(SL_RESULT_SUCCESS != result) return false;
+	result = (*_engineObject)->Realize(_engineObject, SL_BOOLEAN_FALSE);
+    if(SL_RESULT_SUCCESS != result) {
+		OPLog("Jukebox::Error 2");
+		return false;
+	}
 	
     // get the engine interface, which is needed in order to create other objects
-    result = (*engineObject)->GetInterface(engineObject, SL_IID_ENGINE, &engineEngine);
-    if(SL_RESULT_SUCCESS != result) return false;
+    result = (*_engineObject)->GetInterface(_engineObject, SL_IID_ENGINE, &_engineEngine);
+    if(SL_RESULT_SUCCESS != result) {
+		OPLog("Jukebox::Error 3");
+		return false;
+	}
 
+	// create output mix, with environmental reverb specified as a non-required interface    
 	const SLInterfaceID ids[1] = {SL_IID_ENVIRONMENTALREVERB};
     const SLboolean req[1] = {SL_BOOLEAN_FALSE};
-    result = (*engineEngine)->CreateOutputMix(engineEngine, &outputMixObject, 1, ids, req);
-    if(SL_RESULT_SUCCESS != result) return false;
+    result = (*_engineEngine)->CreateOutputMix(_engineEngine, &_outputMixObject, 1, ids, req);
+    if(SL_RESULT_SUCCESS != result) {
+		OPLog("Jukebox::Error 4");
+		//return false;
+	}
 		
-    result = (*outputMixObject)->Realize(outputMixObject, SL_BOOLEAN_FALSE);
-    if(SL_RESULT_SUCCESS != result) return false;
+    // realize the output mix
+    result = (*_outputMixObject)->Realize(_outputMixObject, SL_BOOLEAN_FALSE);
+    if(SL_RESULT_SUCCESS != result) {
+		OPLog("Jukebox::Error 5");
+		return false;
+	}
+	
+	OPLog("Jukebox::Initialized");
 #endif
 
 	return true;
 }
 
-void* Jukebox::Mixer(){
+SLObjectItf Jukebox::Mixer(){
 #ifdef OPIFEX_ANDROID
-	return &_outputMixObject;
+	return _outputMixObject;
 #else
 	return 0;
 #endif
+}
+
+SLEngineItf Jukebox::Engine(){
+#ifdef OPIFEX_ANDROID
+	return _engineEngine;
+#else
+	return 0;
+#endif
+}
+
+Audio* Jukebox::Load(char* filename, bool loop)
+{
+	return new Audio(filename, loop);
+}
+
+void Jukebox::Stop(Audio* audio){
+	audio->Stop();
+}
+
+void Jukebox::Pause(Audio* audio){
+	audio->Pause();
+}
+
+void Jukebox::Play(Audio* audio){
+	audio->Play();
 }

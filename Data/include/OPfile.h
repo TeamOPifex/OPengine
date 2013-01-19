@@ -9,6 +9,14 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+
+typedef struct {
+	FILE* file;
+	ui32 start;
+	ui32 length;
+	int fileDescriptor;
+} FileInformation;
+
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 	
 #endif
@@ -16,6 +24,10 @@
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
 extern "C" {
+#endif
+	
+#if defined(OPIFEX_ANDROID)
+	FileInformation OPreadFile_Android(const char* path);
 #endif
 
 void OPfileInit(void* manager);

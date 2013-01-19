@@ -6,11 +6,12 @@ class Jukebox {
 public:
 	Jukebox();
 	static bool Initialize();
-	static Audio* Play(char* filename, bool loop);
+	static Audio* Load(char* filename, bool loop);
 	static void Stop(Audio* audio);
 	static void Pause(Audio* audio);
 	static void Play(Audio* audio);
-	static void* Mixer();
+	static SLObjectItf Mixer();
+	static SLEngineItf Engine();
 
 	// Once vector is implemented
 	//void StopAll();

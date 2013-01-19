@@ -8,5 +8,5 @@ GamePadState* GamePadSystem::Controller(GamePadIndex index){
 
 void GamePadSystem::Update(){
 		for(int i = 0; i < CONTROLLERS; i++)
-			_gamePadStates[i].update();
+			_gamePadStates[i].Update();
 }
