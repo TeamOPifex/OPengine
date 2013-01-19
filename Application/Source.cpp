@@ -128,6 +128,7 @@ Matrix4 modelMatrix;
 Matrix4 translateMatrix;
 Matrix4 t3, t4, t5, t6;
 Audio* audio;
+Audio* audio2;
 
 #ifdef OPIFEX_ANDROID
 AAssetManager* mgr;
@@ -215,6 +216,10 @@ int main(){
 	if(Jukebox::Initialize()){
 		audio = Jukebox::Load("AMemoryAway.ogg", false);
 		Jukebox::Play(audio);
+		audio->SetVolume(-2000);
+		audio2 = Jukebox::Load("Plane_Normal_Throttle.ogg", true);
+		Jukebox::Play(audio2);
+		audio2->SetVolume(-800);
 	}
 
 	m.SetIdentity();

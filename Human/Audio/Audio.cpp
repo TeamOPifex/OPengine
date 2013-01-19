@@ -57,15 +57,23 @@ Audio::Audio(char* filename, bool loop){
 	}
 	OPLog("Audio::_fdPlayerObject");
 
-	//if(_looping){
-	//	// get the seek interface
-	//	if(SL_RESULT_SUCCESS == (*_fdPlayerObject)->GetInterface(_fdPlayerObject, SL_IID_SEEK, &_fdPlayerSeek))
-	//	{
-	//		(*_fdPlayerSeek)->SetLoop(_fdPlayerSeek, SL_BOOLEAN_TRUE, 0, SL_TIME_UNKNOWN);
-	//	} else {
-	//		OPLog("Audio::Error 5");
-	//	}
-	//}
+	
+	// get the volume interface
+	result = (*_fdPlayerObject)->GetInterface(_fdPlayerObject, SL_IID_VOLUME, &_fdPlayerVolume);
+		if(SL_RESULT_SUCCESS != result) {
+		OPLog("Audio::Error 4");
+		return;
+	}
+
+	if(_looping){
+		// get the seek interface
+		if(SL_RESULT_SUCCESS == (*_fdPlayerObject)->GetInterface(_fdPlayerObject, SL_IID_SEEK, &_fdPlayerSeek))
+		{
+			(*_fdPlayerSeek)->SetLoop(_fdPlayerSeek, SL_BOOLEAN_TRUE, 0, SL_TIME_UNKNOWN);
+		} else {
+			OPLog("Audio::Error 5");
+		}
+	}
 		
 	OPLog("Audio::Created");
 #else
@@ -92,6 +100,15 @@ bool Audio::Stop(){
 bool Audio::Play(){
 #ifdef OPIFEX_ANDROID
 	if(SL_RESULT_SUCCESS != (*_fdPlayerPlay)->SetPlayState(_fdPlayerPlay, SL_PLAYSTATE_PLAYING))
+		return false;
+#endif
+	return true;
+}
+
+bool Audio::SetVolume(i32 level){
+#ifdef OPIFEX_ANDROID
+	SLmillibel vol = level;
+	if(SL_RESULT_SUCCESS != (*_fdPlayerVolume)->SetVolumeLevel(_fdPlayerVolume, vol))
 		return false;
 #endif
 	return true;
