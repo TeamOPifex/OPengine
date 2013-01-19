@@ -4,12 +4,9 @@
 
 class Mesh {
 public:
-	Mesh(BufferPtr vb, BufferPtr ib, ui32 count){
-		VertexBuffer = vb;
-		IndexBuffer = ib;
-		IndexCount = count;
-	}
+	Mesh(BufferPtr vb, BufferPtr ib, ui32 count, ui32 stride);
 	BufferPtr VertexBuffer;
 	BufferPtr IndexBuffer;
 	ui32 IndexCount;
+	ui32 Stride;
 };

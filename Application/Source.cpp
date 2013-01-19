@@ -14,9 +14,11 @@
 #include "./Human/Resources/Sound/Sound.h"
 #include "./Human/Rendering/OBJLoader.h"
 #include "./Human/Rendering/GL/GLUtility.h"
+#include "./Human/Rendering/GL/GLWorldTexturedSpecularMaterial.h"
 
 #include "./Human/Input/GamePadSystem.h"
 #include "./Human/Audio/Jukebox.h"
+#include "./Human/Rendering/Quad.h"
 
 #ifdef OPIFEX_ANDROID
 
@@ -85,7 +87,7 @@ static const char gFragmentShader[] =
 
 // Global Variables
 
-GLWorldMaterial* material;
+GLWorldTexturedSpecularMaterial* material;
 GLTexture* tex;
 GLTexture* texSpec;
 GLTexture* texNorm;
@@ -276,45 +278,48 @@ int main(){
 	//OPfree(fileInfo);
 #endif
 	
-	material = new GLWorldMaterial(vertex, pixel);
+	material = new GLWorldTexturedSpecularMaterial(vertex, pixel);
 
+	//vpLoc = material->uniform_location("ViewProjection");
 
-	vpLoc = material->uniform_location("ViewProjection");
-
-	sampLoc = material->uniform_location("Texture");
-	specLoc = material->uniform_location("SpecularTexture");
-	normLoc = material->uniform_location("NormalTexture");
+	//sampLoc = material->uniform_location("Texture");
+	//specLoc = material->uniform_location("SpecularTexture");
+	//normLoc = material->uniform_location("NormalTexture");
 	
-	OPLog_i32(sampLoc);
-	OPLog_i32(specLoc);
-	OPLog_i32(normLoc);
+	//OPLog_i32(sampLoc);
+	//OPLog_i32(specLoc);
+	//OPLog_i32(normLoc);
 	
-	bufferLoc = material->attribute_location("vPosition");
-	normalLoc = material->attribute_location("vNormal");
-	tangentLoc = material->attribute_location("vTangent");
-	uvLoc = material->attribute_location("TexCoordIn");
+	//bufferLoc = material->attribute_location("vPosition");
+	//normalLoc = material->attribute_location("vNormal");
+	//tangentLoc = material->attribute_location("vTangent");
+	//uvLoc = material->attribute_location("TexCoordIn");
 	
 
 	fileInfo = OPreadFile_Android("steamPlane.obj");
 	mesh = LoadOBJ(fileInfo.file, fileInfo.start, fileInfo.length);
 	
-	model = new Model(mesh, material, &m);
+	model = new Model(mesh, material);
+
+	//model = new Quad(material);
 
 	GLUtility::CheckError("Application::Clear Errors");
 
-	material->enable_attrib(bufferLoc);
-	material->enable_attrib(normalLoc);
-	material->enable_attrib(tangentLoc);
-	material->enable_attrib(uvLoc);
-	RenderSystem::SetBuffer(1, mesh->VertexBuffer->handle());
-	//ui32 offsetBuffer = 0;
-	material->set_data(bufferLoc, 3, false, sizeof(MeshVertex), (void*)0);
-	//offsetBuffer += (3 * sizeof(f32));
-	material->set_data(uvLoc, 2, false, sizeof(MeshVertex), (void*)12);
-	//offsetBuffer += 2 * sizeof(f32);
-	material->set_data(normalLoc, 3, false, sizeof(MeshVertex), (void*)20);
-	//offsetBuffer += 3 * sizeof(f32);
-	material->set_data(tangentLoc, 3, false, sizeof(MeshVertex), (void*)32);
+	//material->enable_attrib(bufferLoc);
+	//material->enable_attrib(normalLoc);
+	//material->enable_attrib(tangentLoc);
+	//material->enable_attrib(uvLoc);
+	
+	//RenderSystem::SetBuffer(1, model->ModelMesh->VertexBuffer->handle());
+	//
+	////ui32 offsetBuffer = 0;
+	//material->set_data(bufferLoc, 3, false, sizeof(MeshVertexTextured), (void*)0);
+	////offsetBuffer += (3 * sizeof(f32));
+	//material->set_data(uvLoc, 2, false, sizeof(MeshVertexTextured), (void*)12);
+	////offsetBuffer += 2 * sizeof(f32);
+	//material->set_data(normalLoc, 3, false, sizeof(MeshVertexTextured), (void*)20);
+	////offsetBuffer += 3 * sizeof(f32);
+	//material->set_data(tangentLoc, 3, false, sizeof(MeshVertexTextured), (void*)32);
 
 
 	// TextureDDS Should take a stream
@@ -346,29 +351,36 @@ int main(){
 #endif
 	
 	RenderSystem::UseMaterial(material);
+
 	translateX = 0;
 	translateZ = 0;
 	m = Matrix4::Translate(translateX, 0, translateZ);
 	result = v * p;
-	material->set_matrix(mLoc, &m[0][0]);
-	material->set_matrix(vpLoc, &result[0][0]);
+	//material->set_matrix(mLoc, &m[0][0]);
+	//material->set_matrix(vpLoc, &result[0][0]);
 	
-	// Set Texture
-	material->enable_attrib(mLoc);
-	material->enable_attrib(vpLoc);
-	material->enable_attrib(sampLoc);
-	tex->bind(sampLoc, 0);
-	
-	material->enable_attrib(specLoc);
-	texSpec->bind(specLoc, 1);
+	material->EnableAttributes();
+	material->SetWorldMatrix(&m[0][0]);
+	material->SetViewProjectionMatrix(&result[0][0]);
+	material->SetTexture(tex, 0);
+	material->SetTextureSpecular(texSpec, 1);
+	material->SetTextureNormal(texNorm, 2);
 
-	material->enable_attrib(normLoc);
-	texNorm->bind(normLoc, 2);
+	//material->enable_attrib(mLoc);
+	//material->enable_attrib(vpLoc);
+	//material->enable_attrib(sampLoc);
+	//tex->bind(sampLoc, 0);
 	
-	material->enable_attrib(bufferLoc);
-	material->enable_attrib(normalLoc);
-	material->enable_attrib(tangentLoc);
-	material->enable_attrib(uvLoc);
+	//material->enable_attrib(specLoc);
+	//texSpec->bind(specLoc, 1);
+
+	//material->enable_attrib(normLoc);
+	//texNorm->bind(normLoc, 2);
+	//
+	//material->enable_attrib(bufferLoc);
+	//material->enable_attrib(normalLoc);
+	//material->enable_attrib(tangentLoc);
+	//material->enable_attrib(uvLoc);
 	
 	rotateAmnt = 0;
 	rotateAmnt2 = 0;
@@ -406,8 +418,8 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject
 		m = rotating * rotating2;
 		model->WorldMatrix = &m;
 
-		result = v * p;
-		material->set_matrix(vpLoc, &result[0][0]);
+		//result = v * p;
+		//material->set_matrix(vpLoc, &result[0][0]);
 	
 		RenderSystem::RenderModel(model);
 

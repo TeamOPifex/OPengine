@@ -293,7 +293,10 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 	BufferPtr vertexBuffer = new GLBuffer(1, sizeof(MeshVertex) * totalPoints, points);
 	BufferPtr indexBuffer = new GLBuffer(2, sizeof(int) * totalIndices, indices);
 	
-	return new Mesh(vertexBuffer, indexBuffer, totalIndices);
+	OPfree(points);
+	OPfree(indices);
+
+	return new Mesh(vertexBuffer, indexBuffer, totalIndices, sizeof(MeshVertex));
 }
 
 int lineType(char* word)

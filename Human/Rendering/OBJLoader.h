@@ -12,10 +12,6 @@
 class MeshVertex
 {
 public:
-	//union 
-	//{
-	//	struct{Vector3 vertice; Vector2 tex;};
-	//};
 	Vector3 vertice;
 	Vector2 tex;
 	Vector3 normal;

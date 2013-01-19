@@ -2,16 +2,13 @@
 #include "./Core/include/Types.h"
 #include "Mesh.h"
 #include "./Human/Math/Matrix4.h"
-#include "./Human/Rendering/GL/GLWorldMaterial.h"
+#include "./Human/Rendering/GL/GLWorldTexturedSpecularMaterial.h"
 
 class Model{
 public:
-	Model(Mesh* mesh, GLWorldMaterial* material, Matrix4* world){
-		ModelMesh = mesh;
-		ModelMaterial = material;
-		WorldMatrix = world;
-	}
+	Model(Mesh* mesh, GLWorldTexturedSpecularMaterial* material);
+	~Model();
 	Mesh* ModelMesh;
-	GLWorldMaterial* ModelMaterial;
+	GLWorldTexturedSpecularMaterial* ModelMaterial;
 	Matrix4* WorldMatrix;
 };
