@@ -6,9 +6,9 @@
 
 class Model{
 public:
-	Model(Mesh* mesh, GLWorldTexturedSpecularMaterial* material);
+	Model(Mesh* mesh, GLWorldMaterial* material);
 	~Model();
 	Mesh* ModelMesh;
-	GLWorldTexturedSpecularMaterial* ModelMaterial;
+	GLWorldMaterial* ModelMaterial;
 	Matrix4* WorldMatrix;
 };

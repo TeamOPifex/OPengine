@@ -1,4 +1,5 @@
 #include "GLWorldMaterial.h"
+#include "./Core/include/Log.h"
 
 GLWorldMaterial::GLWorldMaterial(){
 }
@@ -23,4 +24,9 @@ void GLWorldMaterial::SetViewProjectionMatrix(f32* world)
 void GLWorldMaterial::SetPositionData(ui32 stride, void* data)
 {
 	set_data(_positionLoc, 3, false, stride, data);
+}
+
+void GLWorldMaterial::SetData(Mesh* mesh){
+	SetPositionData(mesh->Stride, (void*)0);
+	OPLog("GLWorldMaterial::SetData");
 }

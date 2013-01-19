@@ -1,0 +1,1 @@
+﻿attribute vec3 vPosition; attribute vec2 TexCoordIn; uniform mat4 Model; uniform mat4 ViewProjection; varying vec2 TexCoordOut; void main() {	vec4 worldPos = Model * vec4(vPosition,1);	gl_Position = ViewProjection * worldPos; 	TexCoordOut = TexCoordIn; 	}

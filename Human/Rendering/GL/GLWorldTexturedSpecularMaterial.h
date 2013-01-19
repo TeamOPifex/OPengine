@@ -15,6 +15,7 @@ public:
 	void SetUVData(ui32 stride, void* data);
 	void SetNormalData(ui32 stride, void* data);
 	void SetTangentData(ui32 stride, void* data);
+	virtual void SetData(Mesh* mesh);
 
 	ui32 SetTexture(GLTexture* texture, ui32 slot);
 	ui32 SetTextureNormal(GLTexture* texture, ui32 slot);

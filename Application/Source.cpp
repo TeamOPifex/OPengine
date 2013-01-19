@@ -14,6 +14,7 @@
 #include "./Human/Resources/Sound/Sound.h"
 #include "./Human/Rendering/OBJLoader.h"
 #include "./Human/Rendering/GL/GLUtility.h"
+#include "./Human/Rendering/GL/GLWorldTexturedMaterial.h"
 #include "./Human/Rendering/GL/GLWorldTexturedSpecularMaterial.h"
 
 #include "./Human/Input/GamePadSystem.h"
@@ -88,6 +89,7 @@ static const char gFragmentShader[] =
 // Global Variables
 
 GLWorldTexturedSpecularMaterial* material;
+GLWorldTexturedMaterial* material2;
 GLTexture* tex;
 GLTexture* texSpec;
 GLTexture* texNorm;
@@ -241,7 +243,8 @@ int main(){
 
 	
 #ifdef OPIFEX_ANDROID
-	FileInformation fileInfo = OPreadFile_Android("vertex.fx");
+	//FileInformation fileInfo = OPreadFile_Android("vertex.fx");
+	FileInformation fileInfo = OPreadFile_Android("vertex2.fx");
 	char* gVertexShader = (char*)OPalloc(sizeof(char) * fileInfo.length);
 	fread(gVertexShader, 1, fileInfo.length, fileInfo.file);
 	gVertexShader[fileInfo.length - 1] = '\0';
@@ -250,7 +253,8 @@ int main(){
 	OPfree(&fileInfo);
 
 	
-	fileInfo = OPreadFile_Android("fragment.fx");
+	//fileInfo = OPreadFile_Android("fragment.fx");
+	fileInfo = OPreadFile_Android("fragment2.fx");
 	char* gFragmentShader = (char*)OPalloc(fileInfo.length);
 	fread(gFragmentShader, 1, fileInfo.length, fileInfo.file);
 	gFragmentShader[fileInfo.length - 1] = '\0';
@@ -278,7 +282,8 @@ int main(){
 	//OPfree(fileInfo);
 #endif
 	
-	material = new GLWorldTexturedSpecularMaterial(vertex, pixel);
+	//material = new GLWorldTexturedSpecularMaterial(vertex, pixel);
+	material2 = new GLWorldTexturedMaterial(vertex, pixel);
 
 	//vpLoc = material->uniform_location("ViewProjection");
 
@@ -296,12 +301,11 @@ int main(){
 	//uvLoc = material->attribute_location("TexCoordIn");
 	
 
-	fileInfo = OPreadFile_Android("steamPlane.obj");
-	mesh = LoadOBJ(fileInfo.file, fileInfo.start, fileInfo.length);
-	
-	model = new Model(mesh, material);
+	//fileInfo = OPreadFile_Android("steamPlane.obj");
+	//mesh = LoadOBJ(fileInfo.file, fileInfo.start, fileInfo.length);	
+	//model = new Model(mesh, material);
 
-	//model = new Quad(material);
+	model = new Quad(material2);
 
 	GLUtility::CheckError("Application::Clear Errors");
 
@@ -330,17 +334,17 @@ int main(){
 	OPfree(&fileInfo);
 
 	
-	fileInfo = OPreadFile_Android("steamPlaneSpec.dds");
-	Texture* dds2 = new TextureDDS(fileInfo.file);	
-	texSpec = new GLTexture(dds2);
-	delete(dds2);
-	OPfree(&fileInfo);
+	//fileInfo = OPreadFile_Android("steamPlaneSpec.dds");
+	//Texture* dds2 = new TextureDDS(fileInfo.file);	
+	//texSpec = new GLTexture(dds2);
+	//delete(dds2);
+	//OPfree(&fileInfo);
 
-	fileInfo = OPreadFile_Android("normalMap.dds");
-	Texture* dds3 = new TextureDDS(fileInfo.file);	
-	texNorm = new GLTexture(dds3);
-	delete(dds3);
-	OPfree(&fileInfo);
+	//fileInfo = OPreadFile_Android("normalMap.dds");
+	//Texture* dds3 = new TextureDDS(fileInfo.file);	
+	//texNorm = new GLTexture(dds3);
+	//delete(dds3);
+	//OPfree(&fileInfo);
 
 #ifdef OPIFEX_ANDROID
 	//fileInfo = OPreadFile_Android("AMemoryAway.ogg");
@@ -349,8 +353,8 @@ int main(){
 #else
 	// Windows/Linux sound not implemented yet
 #endif
-	
-	RenderSystem::UseMaterial(material);
+	//RenderSystem::UseMaterial(material);	
+	RenderSystem::UseMaterial(material2);
 
 	translateX = 0;
 	translateZ = 0;
@@ -358,13 +362,18 @@ int main(){
 	result = v * p;
 	//material->set_matrix(mLoc, &m[0][0]);
 	//material->set_matrix(vpLoc, &result[0][0]);
-	
-	material->EnableAttributes();
-	material->SetWorldMatrix(&m[0][0]);
-	material->SetViewProjectionMatrix(&result[0][0]);
-	material->SetTexture(tex, 0);
-	material->SetTextureSpecular(texSpec, 1);
-	material->SetTextureNormal(texNorm, 2);
+		
+	material2->EnableAttributes();
+	material2->SetWorldMatrix(&m[0][0]);
+	material2->SetViewProjectionMatrix(&result[0][0]);
+	material2->SetTexture(tex, 0);
+
+	//material->EnableAttributes();
+	//material->SetWorldMatrix(&m[0][0]);
+	//material->SetViewProjectionMatrix(&result[0][0]);
+	//material->SetTexture(tex, 0);
+	//material->SetTextureSpecular(texSpec, 1);
+	//material->SetTextureNormal(texNorm, 2);
 
 	//material->enable_attrib(mLoc);
 	//material->enable_attrib(vpLoc);
@@ -414,7 +423,7 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject
 		rotateAmnt2 += r_move2;
 	
 		rotating = Matrix4::RotateY(rotateAmnt);
-		rotating2 = Matrix4::RotateX(rotateAmnt2);
+		rotating2 = Matrix4::Scale(5.0f);
 		m = rotating * rotating2;
 		model->WorldMatrix = &m;
 

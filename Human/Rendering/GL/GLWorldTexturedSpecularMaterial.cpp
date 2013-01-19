@@ -1,4 +1,5 @@
 #include "GLWorldTexturedSpecularMaterial.h"
+#include "./Core/include/Log.h"
 
 GLWorldTexturedSpecularMaterial::GLWorldTexturedSpecularMaterial(){
 }
@@ -66,4 +67,12 @@ void GLWorldTexturedSpecularMaterial::SetNormalData(ui32 stride, void* data){
 
 void GLWorldTexturedSpecularMaterial::SetTangentData(ui32 stride, void* data){
 	set_data(_tangentLoc, 3, false, stride, data);
+}
+
+void GLWorldTexturedSpecularMaterial::SetData(Mesh* mesh){
+	SetPositionData(mesh->Stride, (void*)0);
+	SetUVData(mesh->Stride, (void*)12);
+	SetNormalData(mesh->Stride, (void*)20);
+	SetTangentData(mesh->Stride, (void*)32);
+	OPLog("GLWorldTexturedSpecularMaterial::SetData");
 }

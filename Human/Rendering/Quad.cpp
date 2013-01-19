@@ -4,12 +4,9 @@
 #include "./Core/include/Log.h"
 #include "./Human/Rendering/RenderSystem.h"
 
-Quad::Quad(GLWorldTexturedSpecularMaterial* material) : Model(GenMesh(), material){
+Quad::Quad(GLWorldTexturedMaterial* material) : Model(GenMesh(), material){
 	RenderSystem::SetBuffer(1, ModelMesh->VertexBuffer->handle());
-	material->SetPositionData(sizeof(MeshVertexTextured), (void*)0);
-	material->SetUVData(sizeof(MeshVertexTextured), (void*)12);
-	material->SetNormalData(sizeof(MeshVertexTextured), (void*)20);
-	material->SetTangentData(sizeof(MeshVertexTextured), (void*)32);
+	material->SetData(ModelMesh);
 	OPLog("Quad::Initialized");
 }
 
@@ -66,48 +63,24 @@ Mesh* Quad::GenMesh(){
 	points[0].vertice._z = 0.0f;
 	points[0].tex._x = 0.0f;
 	points[0].tex._y = 0.0f;
-	points[0].normal._x = 0.0f;
-	points[0].normal._y = 0.0f;
-	points[0].normal._z = 0.0f;
-	points[0].tangent._x = 0.0f;
-	points[0].tangent._y = 0.0f;
-	points[0].tangent._z = 0.0f;
 		
 	points[1].vertice._x = 0.5f;
 	points[1].vertice._y = 0.5f;
 	points[1].vertice._z = 0.0f;
 	points[1].tex._x = 1.0f;
 	points[1].tex._y = 0.0f;
-	points[1].normal._x = 0.0f;
-	points[1].normal._y = 0.0f;
-	points[1].normal._z = 0.0f;
-	points[1].tangent._x = 0.0f;
-	points[1].tangent._y = 0.0f;
-	points[1].tangent._z = 0.0f;
 
 	points[2].vertice._x = 0.5f;
 	points[2].vertice._y = -0.5f;
 	points[2].vertice._z = 0.0f;
 	points[2].tex._x = 1.0f;
 	points[2].tex._y = 1.0f;
-	points[2].normal._x = 0.0f;
-	points[2].normal._y = 0.0f;
-	points[2].normal._z = 0.0f;
-	points[2].tangent._x = 0.0f;
-	points[2].tangent._y = 0.0f;
-	points[2].tangent._z = 0.0f;
 
 	points[3].vertice._x = -0.5f;
 	points[3].vertice._y = -0.5f;
 	points[3].vertice._z = 0.0f;
 	points[3].tex._x = 0.0f;
 	points[3].tex._y = 1.0f;
-	points[3].normal._x = 0.0f;
-	points[3].normal._y = 0.0f;
-	points[3].normal._z = 0.0f;
-	points[3].tangent._x = 0.0f;
-	points[3].tangent._y = 0.0f;
-	points[3].tangent._z = 0.0f;
 		
 	indices[0] = 0;
 	indices[1] = 1;
@@ -134,4 +107,5 @@ void Quad::UpdateWorld(){
 	Matrix4 scale = Matrix4::Scale(_rotation._x, _rotation._y, _rotation._z);
 	Matrix4 translate = Matrix4::Translate(_position._x, _position._y, _position._z);
 	(*WorldMatrix) =  rotate * scale * translate;
+	OPLog("Quad::World Matrix Updated");
 }

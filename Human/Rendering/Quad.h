@@ -8,11 +8,11 @@
 
 #include "./Human/Rendering/GL/GLBuffer.h"
 
-#include "./Human/Rendering/GL/GLWorldTexturedSpecularMaterial.h"
+#include "./Human/Rendering/GL/GLWorldTexturedMaterial.h"
 
 class Quad : public Model {
 public:
-	Quad(GLWorldTexturedSpecularMaterial* material);
+	Quad(GLWorldTexturedMaterial* material);
 	~Quad();
 
 	void SetPosition(Vector3* position);
