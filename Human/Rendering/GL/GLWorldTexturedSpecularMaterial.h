@@ -17,9 +17,9 @@ public:
 	void SetTangentData(ui32 stride, void* data);
 	virtual void SetData(Mesh* mesh);
 
-	ui32 SetTexture(GLTexture* texture, ui32 slot);
-	ui32 SetTextureNormal(GLTexture* texture, ui32 slot);
-	ui32 SetTextureSpecular(GLTexture* texture, ui32 slot);
+	void SetTexture(GLTexture* texture, ui32 slot);
+	void SetTextureNormal(GLTexture* texture, ui32 slot);
+	void SetTextureSpecular(GLTexture* texture, ui32 slot);
 	
 	void EnableAttributes();
 	void DisableAttributes();

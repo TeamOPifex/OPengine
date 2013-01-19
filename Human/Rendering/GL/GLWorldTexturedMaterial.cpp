@@ -13,7 +13,7 @@ ui32 GLWorldTexturedMaterial::GetTextureLocation(){
 	return _textureLoc;
 }
 
-ui32 GLWorldTexturedMaterial::SetTexture(GLTexture* texture, ui32 slot){
+void GLWorldTexturedMaterial::SetTexture(GLTexture* texture, ui32 slot){
 	texture->bind(_textureLoc, slot);
 }
 

@@ -423,7 +423,7 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject
 		rotateAmnt2 += r_move2;
 	
 		rotating = Matrix4::RotateY(rotateAmnt);
-		rotating2 = Matrix4::Scale(5.0f);
+		rotating2 = Matrix4::RotateX(rotateAmnt2);
 		m = rotating * rotating2;
 		model->WorldMatrix = &m;
 

@@ -25,15 +25,15 @@ ui32 GLWorldTexturedSpecularMaterial::GetTextureSpecularLocation(){
 	return _textureSpecularLoc;
 }
 
-ui32 GLWorldTexturedSpecularMaterial::SetTexture(GLTexture* texture, ui32 slot){
+void GLWorldTexturedSpecularMaterial::SetTexture(GLTexture* texture, ui32 slot){
 	texture->bind(_textureLoc, slot);
 }
 
-ui32 GLWorldTexturedSpecularMaterial::SetTextureNormal(GLTexture* texture, ui32 slot){
+void GLWorldTexturedSpecularMaterial::SetTextureNormal(GLTexture* texture, ui32 slot){
 	texture->bind(_textureNormalLoc, slot);
 }
 
-ui32 GLWorldTexturedSpecularMaterial::SetTextureSpecular(GLTexture* texture, ui32 slot){
+void GLWorldTexturedSpecularMaterial::SetTextureSpecular(GLTexture* texture, ui32 slot){
 	texture->bind(_textureSpecularLoc, slot);
 }
 
