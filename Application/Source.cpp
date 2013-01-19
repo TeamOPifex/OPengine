@@ -390,6 +390,7 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerAxes(JNIEnv *
 
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj){
 	GamePadSystem::Update();
+
 #else
 	do{
 #endif

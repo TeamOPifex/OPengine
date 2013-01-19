@@ -16,6 +16,7 @@ public:
 	bool Stop();
 	bool Play();
 	bool SetVolume(i32 level);
+	//bool SetPitch(i32 level);
 	bool Looping();
 	ui32 Loops();
 	bool Done();
@@ -27,5 +28,6 @@ private:
 	SLPlayItf _fdPlayerPlay;
 	SLSeekItf _fdPlayerSeek;
 	SLVolumeItf _fdPlayerVolume;
+	//SLPitchItf _fdPlayerPitch;
 #endif
 };
