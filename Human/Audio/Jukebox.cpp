@@ -67,21 +67,17 @@ bool Jukebox::Initialize() {
 	return true;
 }
 
+#ifdef OPIFEX_ANDROID
 SLObjectItf Jukebox::Mixer(){
-#ifdef OPIFEX_ANDROID
 	return _outputMixObject;
-#else
-	return 0;
-#endif
 }
+#endif
 
-SLEngineItf Jukebox::Engine(){
 #ifdef OPIFEX_ANDROID
+SLEngineItf Jukebox::Engine(){
 	return _engineEngine;
-#else
-	return 0;
-#endif
 }
+#endif
 
 Audio* Jukebox::Load(char* filename, bool loop)
 {

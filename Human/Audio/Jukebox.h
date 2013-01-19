@@ -10,8 +10,10 @@ public:
 	static void Stop(Audio* audio);
 	static void Pause(Audio* audio);
 	static void Play(Audio* audio);
+#ifdef OPIFEX_ANDROID
 	static SLObjectItf Mixer();
 	static SLEngineItf Engine();
+#endif
 
 	// Once vector is implemented
 	//void StopAll();
