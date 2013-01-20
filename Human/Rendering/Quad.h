@@ -8,11 +8,13 @@
 
 #include "./Human/Rendering/GL/GLBuffer.h"
 
-#include "./Human/Rendering/GL/GLWorldTexturedMaterial.h"
+#include "./Human/Rendering/GL/GLWorldMaterial.h"
 
-class Quad : public Model {
+#include "./Human/Rendering/ModelWorld.h"
+
+class Quad : public ModelWorld {
 public:
-	Quad(GLWorldTexturedMaterial* material);
+	Quad(GLWorldMaterial* material);
 	~Quad();
 
 	void SetPosition(Vector3* position);
@@ -23,6 +25,8 @@ public:
 	Vector3* GetPosition();
 	Vector3* GetRotation();
 	Vector3* GetScale();
+
+	virtual void SetMaterialData();
 	
 private:
 	Mesh* GenMesh();

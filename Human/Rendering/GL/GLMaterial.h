@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./Human/Resources/Material/Material.h"
+#include "./Human/Rendering/Mesh.h"
 
 class GLMaterial : public Material{
 public:
@@ -14,4 +15,6 @@ public:
 	void enable_attrib(ui32 attribute);
 	void set_matrix(ui32 attribute,  f32* matrix);
 	void disable_attrib(ui32 attribute);
+
+	virtual void SetData(Mesh* mesh);
 };

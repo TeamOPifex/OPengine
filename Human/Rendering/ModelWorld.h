@@ -1,15 +1,16 @@
 #pragma once
 #include "./Core/include/Types.h"
 #include "Mesh.h"
+#include "Model.h"
 #include "./Human/Math/Matrix4.h"
 #include "./Human/Rendering/GL/GLWorldTexturedSpecularMaterial.h"
 
-class Model{
+class ModelWorld : public Model {
 public:
-	Model(Mesh* mesh, GLMaterial* material);
-	~Model();
+	ModelWorld(Mesh* mesh, GLWorldMaterial* material);
+	~ModelWorld();
+
 	virtual void SetMaterialData();
 
-	Mesh* ModelMesh;
-	GLMaterial* ModelMaterial;
+	Matrix4* WorldMatrix;
 };

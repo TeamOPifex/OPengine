@@ -4,7 +4,7 @@
 GLWorldTexturedMaterial::GLWorldTexturedMaterial(){
 }
 
-GLWorldTexturedMaterial::GLWorldTexturedMaterial(ShaderPtr vertex, ShaderPtr fragment) : GLWorldMaterial(vertex, fragment){
+GLWorldTexturedMaterial::GLWorldTexturedMaterial(ShaderPtr vertex, ShaderPtr fragment) : GLWorldProjMaterial(vertex, fragment){
 	_uvLoc = attribute_location("TexCoordIn");
 	_textureLoc = uniform_location("Texture");
 }

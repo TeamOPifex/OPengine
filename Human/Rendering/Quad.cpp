@@ -4,10 +4,8 @@
 #include "./Core/include/Log.h"
 #include "./Human/Rendering/RenderSystem.h"
 
-Quad::Quad(GLWorldTexturedMaterial* material) : Model(GenMesh(), material){
-	RenderSystem::SetBuffer(1, ModelMesh->VertexBuffer->handle());
-	material->SetData(ModelMesh);
-	OPLog("Quad::Initialized");
+Quad::Quad(GLWorldMaterial* material) : ModelWorld(GenMesh(), material){
+
 }
 
 Quad::~Quad(){
@@ -19,7 +17,7 @@ void Quad::SetPosition(Vector3* position){
 	_position._y = position->_y;
 	_position._z = position->_z;
 	UpdateWorld();
-}	
+}
 
 void Quad::SetRotation(Vector3* rotation){
 	_rotation._x = rotation->_x;
@@ -108,4 +106,8 @@ void Quad::UpdateWorld(){
 	Matrix4 translate = Matrix4::Translate(_position._x, _position._y, _position._z);
 	(*WorldMatrix) =  rotate * scale * translate;
 	OPLog("Quad::World Matrix Updated");
+}
+
+void Quad::SetMaterialData(){
+	((GLWorldMaterial*)ModelMaterial)->SetWorldMatrix(&((*WorldMatrix)[0][0]));
 }

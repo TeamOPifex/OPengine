@@ -4,7 +4,7 @@
 GLWorldTexturedSpecularMaterial::GLWorldTexturedSpecularMaterial(){
 }
 
-GLWorldTexturedSpecularMaterial::GLWorldTexturedSpecularMaterial(ShaderPtr vertex, ShaderPtr fragment) : GLWorldMaterial(vertex, fragment){
+GLWorldTexturedSpecularMaterial::GLWorldTexturedSpecularMaterial(ShaderPtr vertex, ShaderPtr fragment) : GLWorldProjMaterial(vertex, fragment){
 	_normalLoc = attribute_location("vNormal");
 	_tangentLoc = attribute_location("vTangent");
 	_uvLoc = attribute_location("TexCoordIn");

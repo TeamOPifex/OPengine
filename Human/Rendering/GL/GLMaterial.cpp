@@ -52,3 +52,7 @@ void GLMaterial::disable_attrib(ui32 attribute){
 void GLMaterial::set_matrix(ui32 attribute, f32* matrix){
 	glUniformMatrix4fv(attribute, 1, GL_FALSE, matrix);
 }
+
+void GLMaterial::SetData(Mesh* mesh){
+	OPLog("GLMaterial::SetData");
+}

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "GLWorldMaterial.h"
+#include "GLWorldProjMaterial.h"
 #include "./Human/Rendering/GL/GLTexture.h"
 
-class GLWorldTexturedSpecularMaterial : public GLWorldMaterial {
+class GLWorldTexturedSpecularMaterial : public GLWorldProjMaterial {
 public:
 	GLWorldTexturedSpecularMaterial();
 	GLWorldTexturedSpecularMaterial(ShaderPtr vertex, ShaderPtr fragment);
