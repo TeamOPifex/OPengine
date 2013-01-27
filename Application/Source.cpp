@@ -266,7 +266,7 @@ int main(){
 	OPfree(gFragmentShader);
 	OPfree(&fileInfo);
 #else
-	FileInformation* fileInfo;// = readFile("vertex.fx");
+	//FileInformation* fileInfo;// = readFile("vertex.fx");
 	//char* gVertexShader = (char*)OPalloc(sizeof(char) * fileInfo->length);
 	//fread(gVertexShader, 1, fileInfo->length, fileInfo->file);
 	//gVertexShader[fileInfo->length - 1] = '\0';
