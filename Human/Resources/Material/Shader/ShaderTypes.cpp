@@ -1,4 +1,5 @@
-#include "GLTypes.h"
+#include "ShaderTypes.h"
+
 #ifdef OPIFEX_OPENGL_ES_2
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
@@ -6,7 +7,7 @@
 #include <GL/glew.h>
 #endif
 
-ui32 gl_shader_type(ShaderType shaderType){
+ui32 GetShaderType(ShaderType shaderType){
 #ifdef OPIFEX_OPENGL_ES_2
 	switch(shaderType){
 		case Vertex: return GL_VERTEX_SHADER;
@@ -26,7 +27,7 @@ ui32 gl_shader_type(ShaderType shaderType){
 #endif
 }
 
-ShaderType to_shader_type(ui32 shaderType){
+ShaderType GetShaderType(ui32 shaderType){
 #ifdef OPIFEX_OPENGL_ES_2
 	switch(shaderType){
 		case GL_VERTEX_SHADER: return Vertex;

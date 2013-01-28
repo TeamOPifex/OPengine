@@ -1,13 +1,12 @@
 #pragma once
 
+#include "./Human/Resources/Resource.h"
 #include "Core/include/Types.h"
 #include "ShaderTypes.h"
 
-class Shader {
+class Shader : public Resource {
 public:
-	virtual void load(ShaderType shaderType, const char* file) = 0;
-	ui32 handle(){ return ptr; }
-protected:
-	ui32 ptr;
+	Shader(ShaderType shaderType, const char* file);
 };
+
 typedef Shader* ShaderPtr;

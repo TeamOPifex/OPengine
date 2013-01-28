@@ -6,15 +6,12 @@
 extern "C" {
 #endif
 
-#ifdef OPIFEX_ANDROID
 void OPLog(const char* message);
 void OPLog_i32(i32 number);
+void OPLog_ui32(ui32 number);
+void OPLog_i64(i64 number);
+void OPLog_ui64(ui64 number);
 void OPLog_f32(f32 number);
-#else
-void OPLog(const char* message);
-void OPLog_i32(i32 number);
-void OPLog_f32(f32 number);
-#endif
 	
 #ifdef __cplusplus
 };

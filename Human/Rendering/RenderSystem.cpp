@@ -1,12 +1,12 @@
 #include "RenderSystem.h"
-#include "GL/GLRenderer.h"
+#include "./Human/Rendering/GL/GLRenderer.h"
 #include "./Core/include/Log.h"
 
 Renderer* RenderSystem::m_renderer = 0;
 
-int RenderSystem::Initialize(){
+int RenderSystem::Initialize(ui32 width, ui32 height){
 	m_renderer = new GLRenderer();
-	return m_renderer->initialize();
+	return m_renderer->initialize(width, height);
 }
 
 void RenderSystem::ClearColor(f32 r, f32 g, f32 b){
@@ -35,11 +35,8 @@ void RenderSystem::RenderTriangles(ui32 numIndices){
 
 void RenderSystem::RenderModel(Model* model){
 	UseMaterial(model->ModelMaterial);
-	OPLog("RenderSystem::RenderModel - UseMaterial");
-	model->SetMaterialData();
-	OPLog("RenderSystem::RenderModel - SetMaterialData");
-	SetBuffer(1, model->ModelMesh->VertexBuffer->handle());
-	SetBuffer(2, model->ModelMesh->IndexBuffer->handle());
+	SetBuffer(1, model->ModelMesh->VertexBuffer->Handle());
+	SetBuffer(2, model->ModelMesh->IndexBuffer->Handle());
 	RenderTriangles(model->ModelMesh->IndexCount);
 }
 
@@ -53,4 +50,8 @@ bool RenderSystem::escape(){
 
 void RenderSystem::Shutdown(){
 	m_renderer->shutdown();
+}
+
+void RenderSystem::DepthTest(bool state){
+	m_renderer->depth_test(state);
 }

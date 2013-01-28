@@ -7,7 +7,7 @@ class Renderer{
 public:
 	Renderer(){}
 	virtual ~Renderer() { }
-	virtual int initialize() = 0;
+	virtual int initialize(ui32 width, ui32 height) = 0;
 	virtual void clear_color(f32 r, f32 g, f32 b) = 0;
 	virtual void use_material(MaterialPtr material) = 0;
 	virtual void set_viewport(ui32 x, ui32 y, ui32 width, ui32 height) = 0;
@@ -16,4 +16,5 @@ public:
 	virtual void render_triangles(ui32 numIndices) = 0;
 	virtual void swap_buffer() = 0;
 	virtual void shutdown() = 0;
+	virtual void depth_test(bool state) = 0;
 };

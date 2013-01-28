@@ -1,6 +1,7 @@
 #include "OBJLoader.h"
 #include ".\Core\include\Log.h"
-#include "./Human/Rendering/GL/GLBuffer.h"
+#include "./Human/Resources/Buffer/Buffer.h"
+#include "./Human/Resources/Model/Mesh.h"
 
 // FacePoint contains 3 int's being holding points for
 // the index's for each array.
@@ -59,7 +60,11 @@ void SetFaceData(MeshVertex* vertex, FacePoint* facePoint, Vector3* vertexes, Ve
 	vertex->normal._z = normals[facePoint->NormalIndex - 1]._z;
 }
 
-Mesh* LoadOBJ(FILE* file, int start, int length)
+Mesh* LoadOBJ(FILE* file, int start, int length){
+	return LoadOBJ(file, start, length, false);
+}
+
+Mesh* LoadOBJ(FILE* file, int start, int length, ui8 keepPositions)
 {
 	//Open File for reading
 	char* buffer = (char*)OPalloc(sizeof(char) * 4096);
@@ -108,7 +113,7 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 	Vector2* texes = new Vector2[total_texs];
 	Vector3* normals = new Vector3[total_norms];
 	Face* faces = new Face[total_faces];
-	
+
 	offset = 0;
 	fseek(file, start, SEEK_SET);
 	
@@ -130,6 +135,9 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 			case 0: //v		Vertex
 				if(sscanf(buffer, "v %f %f %f", &x, &y, &z) == 3){
 					vertexes[c_verts] = Vector3(x, y, z);
+
+
+
 					c_verts++;
 				}
 				break;
@@ -285,18 +293,25 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 		GenerateTangent(&vert_one->tangent, vert_one, vert_two);
 	}
 
+	if(!keepPositions)
 	delete[] vertexes;
 	delete[] texes;
 	delete[] normals;
-	OPfree(buffer);
+	OPfree(buffer); // TODO any reason you're using OPfree here, but new and delete everywhere else?
 
-	BufferPtr vertexBuffer = new GLBuffer(1, sizeof(MeshVertex) * totalPoints, points);
-	BufferPtr indexBuffer = new GLBuffer(2, sizeof(int) * totalIndices, indices);
+	BufferPtr vertexBuffer = new Buffer(VertexBuffer, sizeof(MeshVertex) * totalPoints, points);
+	BufferPtr indexBuffer = new Buffer(IndexBuffer, sizeof(int) * totalIndices, indices);
 	
+	Mesh* out = new Mesh(vertexBuffer, indexBuffer, totalIndices, sizeof(MeshVertex));
+	if(keepPositions){
+		out->Positions = vertexes; // keep the positions
+		out->PositionCount = total_verts;
+	}
+
 	OPfree(points);
 	OPfree(indices);
 
-	return new Mesh(vertexBuffer, indexBuffer, totalIndices, sizeof(MeshVertex));
+	return out;
 }
 
 int lineType(char* word)

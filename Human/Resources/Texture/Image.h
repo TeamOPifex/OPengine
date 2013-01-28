@@ -1,10 +1,10 @@
 #pragma once
 #include <stdlib.h>
-#include "./Core/include/Types.h"
+#include "./Human/Resources/Resource.h"
 
-class Texture {
+class Image : public Resource {
 public:
-	~Texture() {
+	~Image() {
 		free(_buffer);
 	}
 	ui32 Width() { return _width; }
@@ -26,3 +26,5 @@ protected:
 	ui8* _buffer;
 	ui32 bufsize;
 };
+
+typedef Image* ImagePtr;

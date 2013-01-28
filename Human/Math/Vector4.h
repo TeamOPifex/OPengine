@@ -22,7 +22,7 @@ public:
 	// Operator overloads
 	OPfloat& operator[](int idx);	
 	Vector4 & operator*=(const Vector4 &rhs);
-private:
+
 	union 
 	{
 		struct{OPfloat _x, _y, _z, _w;};

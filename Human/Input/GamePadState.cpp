@@ -1,4 +1,5 @@
 #include "GamePadState.h"
+#include "./Core/include/Log.h"
 
 bool GamePadState::IsDown(GamePadButton button){
 	return _buttons[button];
@@ -9,11 +10,11 @@ bool GamePadState::IsUp(GamePadButton button){
 }
 	
 bool GamePadState::WasPressed(GamePadButton button){
-	return !_buttons[button] && _prevButtons[button];
+	return _buttons[button] && !_prevButtons[button];
 }
 
 bool GamePadState::WasReleased(GamePadButton button){
-	return _buttons[button] && !_prevButtons[button];
+	return !_buttons[button] && _prevButtons[button];
 }
 	
 Vector2 GamePadState::LeftThumb() { return Vector2(_axes[LS_X], _axes[LS_Y]); }
@@ -29,8 +30,13 @@ void GamePadState::SetButton(GamePadButton button, bool down){
 }
 
 void GamePadState::SetAxis(GamePadAxes axis, f32 val){
-	if(val < _deadzone) 
+	if(val < 0 && val > _deadzone){
 		val = 0;
+	}	
+	else if(val > 0 && val < _deadzone){
+		val = 0;
+	}
+
 	_axes[axis] = val;
 }
 

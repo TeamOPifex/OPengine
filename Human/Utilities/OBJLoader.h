@@ -6,7 +6,7 @@
 #include ".\Human\Math\Vector3.h"
 
 #include ".\Core\include\DynamicMemory.h"
-#include "Mesh.h"
+#include "./Human/Resources/Model/Mesh.h"
 
 
 class MeshVertex
@@ -33,4 +33,5 @@ public:
 //};
 
 Mesh* LoadOBJ(FILE* file, int start, int length);
+Mesh* LoadOBJ(FILE* file, int start, int length, ui8 keepPositions);
 int lineType(char* word);

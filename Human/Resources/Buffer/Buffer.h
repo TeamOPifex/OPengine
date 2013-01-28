@@ -1,13 +1,11 @@
 #pragma once
 
-#include "Core/include/Types.h"
+#include "./Human/Resources/Resource.h"
 #include "BufferTypes.h"
 
-class Buffer {
+class Buffer : public Resource {
 public:
-	virtual void load(int shaderType, ui32 size, const void* data) = 0;
-	ui32 handle(){ return m_handle; }
-protected:
-	ui32 m_handle;
+	Buffer(BufferType shaderType, ui32 size, const void* data);
 };
+
 typedef Buffer* BufferPtr;

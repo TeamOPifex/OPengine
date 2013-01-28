@@ -1,13 +1,16 @@
 #include "./../include/OPfile.h"
+#include "./Core/include/Log.h"
 
 #ifdef OPIFEX_ANDROID
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
 #include <unistd.h>
 AAssetManager* _mgr;
+#endif
 
-FileInformation OPreadFile_Android(const char* path){
+FileInformation OPreadFileInformation(const char* path){
 	FileInformation file;
+#ifdef OPIFEX_ANDROID
 	AAsset* asset = AAssetManager_open(_mgr, path, AASSET_MODE_UNKNOWN);
 	if(asset == NULL)
 		return file;
@@ -24,9 +27,20 @@ FileInformation OPreadFile_Android(const char* path){
 	file.start = _start;
 	file.length = _length;
 	file.fileDescriptor = fd;
+#else
+	FILE* myFile = fopen(path, "rb"); 
+	if(!myFile){
+		OPLog("File not loaded.");
+	}
+	fseek(myFile, 0, SEEK_END );	
+	file.length = ftell( myFile );
+	fseek(myFile, 0, SEEK_SET);
+	file.file = myFile;
+	file.fileDescriptor = 0;
+	file.start = 0;
+#endif
 	return file;
 }
-#endif
 
 void OPfileInit(void* manager){
 #ifdef OPIFEX_ANDROID
