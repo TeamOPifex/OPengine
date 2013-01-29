@@ -5,7 +5,7 @@
 #include "./Human/Math/Vector2.h"
 #include "./Human/Math/Matrix4.h"
 
-class Material : public Resource{
+class Material : public Resource {
 public:
 	Material(ShaderPtr vertex, ShaderPtr fragment);
 	ui32 GetAttribute(const char* attribute);

@@ -99,10 +99,12 @@ void Destroy()
 	return;
 }
 
+#include "./Human/Resources/Material/Shader/Shader.h"
 #ifdef OPIFEX_ANDROID
 #else
 int main()
 {
+	TexturedMaterial* ptr = new TexturedMaterial();
 	OPinitialize = Init;
 	OPupdate = Update;
 	OPdestroy = Destroy;
