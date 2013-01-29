@@ -33,11 +33,14 @@ add_source_group(Rendering/GL "${PROJECT_SOURCE_DIR}/Human/Rendering/GL" HUMAN_S
 
 add_source_group(Resources "${PROJECT_SOURCE_DIR}/Human/Resources" HUMAN_SRC)
 add_source_group(Resources/Buffer "${PROJECT_SOURCE_DIR}/Human/Resources/Buffer" HUMAN_SRC)
+add_source_group(Resources/Model "${PROJECT_SOURCE_DIR}/Human/Resources/Model" HUMAN_SRC)
 add_source_group(Resources/Material "${PROJECT_SOURCE_DIR}/Human/Resources/Material" HUMAN_SRC)
 add_source_group(Resources/Material/Shader "${PROJECT_SOURCE_DIR}/Human/Resources/Material/Shader" HUMAN_SRC)
 add_source_group(Resources/Material/State "${PROJECT_SOURCE_DIR}/Human/Resources/Material/State" HUMAN_SRC)
 add_source_group(Resources/Sound "${PROJECT_SOURCE_DIR}/Human/Resources/Sound" HUMAN_SRC)
 add_source_group(Resources/Texture "${PROJECT_SOURCE_DIR}/Human/Resources/Texture" HUMAN_SRC)
+
+add_source_group(Utilities "${PROJECT_SOURCE_DIR}/Human/Utilities" HUMAN_SRC)
 
 add_library(4_Human STATIC ${HUMAN_SRC})
 target_link_libraries(4_Human

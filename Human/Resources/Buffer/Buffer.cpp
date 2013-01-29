@@ -1,5 +1,5 @@
-#include "GLBuffer.h"
-#include "./Human/Rendering/GL/GLUtility.h"
+#include "Buffer.h"
+#include "./Human/Utilities/Errors.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
 	#include <GLES2/gl2.h>
@@ -8,24 +8,21 @@
 	#include <GL/glew.h>
 #endif
 
-void GLBuffer::load(int bufferType, ui32 size, const void* data){	
-	
-	GLUtility::CheckError("GLBuffer::Clearing Errors");
-
+Buffer::Buffer(BufferType shaderType, ui32 size, const void* data){	
 	glGenBuffers(1, &m_handle);
-	GLUtility::CheckError("GLBuffer::1 - ERROR!");
+	CheckError("Buffer::1 - ERROR!");
 		
-	if(bufferType == 1)
+	if(shaderType == VertexBuffer)
 		glBindBuffer(GL_ARRAY_BUFFER, m_handle);
-	else if(bufferType == 2)
+	else if(shaderType == IndexBuffer)
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_handle);
-	GLUtility::CheckError("GLBuffer::2 - ERROR!");
+	CheckError("Buffer::2 - ERROR!");
 	
-	if(bufferType == 1)
+	if(shaderType == VertexBuffer)
 		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
-	else if(bufferType == 2)
+	else if(shaderType == IndexBuffer)
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
-	GLUtility::CheckError("GLBuffer::3 - ERROR!");
+	CheckError("Buffer::3 - ERROR!");
 
 #ifdef OPIFEX_ANDROID
 
@@ -36,5 +33,4 @@ void GLBuffer::load(int bufferType, ui32 size, const void* data){
 	//glBindVertexArray(m_vertex_handle);
 	//GLUtility::CheckError("GLBuffer::5 - ERROR!");
 #endif
-
 }

@@ -1,20 +1,13 @@
 #pragma once
 
-#include "Model.h"
+#include "./Human/Resources/Model/Model.h"
 
 #include ".\Core\include\DynamicMemory.h"
 #include "./Human/Math/Vector3.h"
-#include "./Human/Math/Vector2.h"
 
-#include "./Human/Rendering/GL/GLBuffer.h"
-
-#include "./Human/Rendering/GL/GLWorldMaterial.h"
-
-#include "./Human/Rendering/ModelWorld.h"
-
-class Quad : public ModelWorld {
+class Quad : public Model {
 public:
-	Quad(GLWorldMaterial* material);
+	Quad(MaterialPtr material);
 	~Quad();
 
 	void SetPosition(Vector3* position);
@@ -25,8 +18,6 @@ public:
 	Vector3* GetPosition();
 	Vector3* GetRotation();
 	Vector3* GetScale();
-
-	virtual void SetMaterialData();
 	
 private:
 	Mesh* GenMesh();

@@ -1,6 +1,7 @@
 #pragma once
 #include "./Core/include/Types.h"
 #include "./Human/Resources/Buffer/Buffer.h"
+#include "./Human/Math/Vector3.h"
 
 class Mesh {
 public:
@@ -9,4 +10,8 @@ public:
 	BufferPtr IndexBuffer;
 	ui32 IndexCount;
 	ui32 Stride;
+	Vector3* Positions;
+	ui32 PositionCount;
 };
+
+typedef Mesh* MeshPtr;

@@ -1,5 +1,5 @@
 #pragma once
-#include "Core\include\Types.h"
+#include "Core/include/Types.h"
 
 class Vector2{
 public:
@@ -12,6 +12,11 @@ public:
 	Vector2(OPfloat x, OPfloat y){
 		_x = x;		_y = y;
 	}
+
+	//Vector2& operator-(const Vector2 &rhs);
+	//Vector2& operator+(const Vector2 &rhs);	
+	OPfloat& operator[](int idx);
+
 //private:
 	// Data Structure 2 floats
 	//		32 bit = 2 * 32 = 64 bits or 8 bytes

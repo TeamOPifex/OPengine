@@ -24,6 +24,27 @@ Matrix4::Matrix4(
 		cols[3][0] = c30; cols[3][1] = c31; cols[3][2] = c32; cols[3][3] = c33;
 }
 
+Matrix4 Matrix4::Multiply(Matrix4 m){
+	Matrix4 c = m;
+	OPfloat sum;
+	for(int i = 0; i < 4; i++){
+		for(int j = 0; j < 4; j++){
+			sum = 0;
+			for(int k = 0; k < 4; k++){
+				sum += m.cols[i][k] * cols[k][j];
+			}
+			c.cols[i][j] = sum;
+		}
+	}
+	
+	for(int i = 0; i < 4; i++){
+		for(int j = 0; j < 4; j++){
+			cols[i][j] = c[i][j];
+		}
+	}
+	return c;
+}
+
 Matrix4 Matrix4::RotateX(f32 x){
 	OPfloat t1 = OPcos(x);
 	OPfloat t2 = OPsin(x);
@@ -137,6 +158,22 @@ Matrix4 Matrix4::CreateLook(Vector3 campos, Vector3 look, Vector3 up) {
 
 	result *= trans;
     return result;
+}
+
+Matrix4 Matrix4::CreateOrthographic( const OPfloat left, const OPfloat right,
+	    const OPfloat bottom, const OPfloat top,
+	    const OPfloat zNear, const OPfloat zFar )
+{
+    Matrix4 c;
+    c[0][0] = 2.0/(right - left);
+    c[1][1] = -2.0/(top - bottom);
+    c[2][2] = 2.0/(zNear - zFar);
+    c[3][3] = 1.0;
+    c[3][0] = -(right + left)/(right - left);
+    c[3][1] = -(top + bottom)/(top - bottom);
+    c[3][2] = -(zFar + zNear)/(zFar - zNear);
+	//c.transpose();
+    return c;
 }
 
 void Matrix4::transpose(){

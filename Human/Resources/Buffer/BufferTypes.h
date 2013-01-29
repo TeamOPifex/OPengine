@@ -1,6 +1,6 @@
 #pragma once
 
-enum BufferType{
-	IndexBuffer,
-	VertexBuffer
+enum BufferType {
+	VertexBuffer = 1,
+	IndexBuffer = 2
 };

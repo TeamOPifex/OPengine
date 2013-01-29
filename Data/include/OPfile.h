@@ -3,12 +3,17 @@
 #define OPEngine_Data_File
 #include "OPstream.h"
 
+
 #if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+
+#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+	#include <stdio.h>
+#endif
 
 typedef struct {
 	FILE* file;
@@ -17,18 +22,14 @@ typedef struct {
 	int fileDescriptor;
 } FileInformation;
 
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
-	
-#endif
-
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
 extern "C" {
 #endif
 	
-#if defined(OPIFEX_ANDROID)
-	FileInformation OPreadFile_Android(const char* path);
-#endif
+
+FileInformation OPreadFileInformation(const char* path);
+
 
 void OPfileInit(void* manager);
 

@@ -1,5 +1,5 @@
-#include "GLTexture.h"
-#include "GLUtility.h"
+#include "Texture2D.h"
+#include "./Human/Utilities/Errors.h"
 
 #if defined(OPIFEX_ANDROID)
 	#include <GLES2/gl2.h>
@@ -9,17 +9,15 @@
 	#include <GL/glfw.h>
 #endif
 
-GLTexture::GLTexture(Texture* texture){
-	GLUtility::CheckError("GLTexture::Clear Errors");
+Texture2D::Texture2D(ImagePtr texture){
+	glGenTextures(1, &m_handle);
+	CheckError("Texture2D::Error 1");
 
-	glGenTextures(1, &_textureID);
-	GLUtility::CheckError("GLTexture::Error 1");
-
-	glBindTexture(GL_TEXTURE_2D, _textureID);
-	GLUtility::CheckError("GLTexture::Error 2");
+	glBindTexture(GL_TEXTURE_2D, m_handle);
+	CheckError("Texture2D::Error 2");
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	GLUtility::CheckError("GLTexture::Error 3");
+	CheckError("Texture2D::Error 3");
 
 	ui32 offset = 0;
 
@@ -33,7 +31,7 @@ GLTexture::GLTexture(Texture* texture){
 		ui32 size = ((width + 3) / 4) * ((height + 3) / 4) * texture->Blocksize();
 		glCompressedTexImage2D(GL_TEXTURE_2D, level, texture->Format(), width, height, 0, size, buffer + offset);
 			
-		if(GLUtility::CheckError("GLTexture::Error 1"))
+		if(CheckError("Texture2D::Error 4"))
 			return;
 
 		offset += size;
@@ -42,8 +40,8 @@ GLTexture::GLTexture(Texture* texture){
 	}
 }
 
-void GLTexture::bind(ui32 loc, int slot){
+void Texture2D::Bind(ui32 loc, int slot){
 	glActiveTexture(GL_TEXTURE0 + slot);
-	glBindTexture(GL_TEXTURE_2D, _textureID);
+	glBindTexture(GL_TEXTURE_2D, m_handle);
 	glUniform1i(loc, slot);
 }

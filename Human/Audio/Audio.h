@@ -12,6 +12,7 @@
 class Audio {
 public:
 	Audio(char* filename, bool loop);
+	~Audio();
 	bool Pause();
 	bool Stop();
 	bool Play();

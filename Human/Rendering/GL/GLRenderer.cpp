@@ -14,7 +14,10 @@ using namespace glm;
 GLRenderer::GLRenderer(){
 }
 
-int GLRenderer::initialize(){
+int GLRenderer::initialize(ui32 width, ui32 height){
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 #ifdef OPIFEX_OPENGL_ES_2
 	// Android doesn't need to create a window
 	glEnable(GL_DEPTH_TEST);
@@ -32,7 +35,7 @@ int GLRenderer::initialize(){
 	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		
 	// Open a window and create its OpenGL context
-	if( !glfwOpenWindow( 1280, 720, 0,0,0,0, 32,0, GLFW_WINDOW ) )
+	if( !glfwOpenWindow( width, height, 0,0,0,0, 32,0, GLFW_WINDOW ) )
 	{
 		glfwTerminate();
 		return -1;
@@ -58,7 +61,7 @@ void GLRenderer::clear_color(f32 r, f32 g, f32 b){
 }
 
 void GLRenderer::use_material(MaterialPtr material){
-	glUseProgram(material->handle());
+	glUseProgram(material->Handle());
 }
 
 void GLRenderer::set_viewport(ui32 x, ui32 y, ui32 width, ui32 height){
@@ -93,4 +96,11 @@ void GLRenderer::shutdown(){
 #else
 	glfwTerminate();
 #endif
+}
+
+void GLRenderer::depth_test(bool state){
+	if(state)
+		glEnable(GL_DEPTH_TEST);
+	else
+		glDisable(GL_DEPTH_TEST);
 }

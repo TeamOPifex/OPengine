@@ -4,7 +4,7 @@
 #include "./Core/include/Log.h"
 #include "./Human/Rendering/RenderSystem.h"
 
-Quad::Quad(GLWorldMaterial* material) : ModelWorld(GenMesh(), material){
+Quad::Quad(MaterialPtr material) : Model(GenMesh(), material){
 
 }
 
@@ -88,14 +88,11 @@ Mesh* Quad::GenMesh(){
 	indices[4] = 2;
 	indices[5] = 3;
 
-	BufferPtr vertexBuffer = new GLBuffer(1, sizeof(MeshVertexTextured) * 4, points);
-	BufferPtr indexBuffer = new GLBuffer(2, sizeof(int) * 6, indices);
+	BufferPtr vertexBuffer = new Buffer(VertexBuffer, sizeof(MeshVertexTextured) * 4, points);
+	BufferPtr indexBuffer = new Buffer(IndexBuffer, sizeof(int) * 6, indices);
 	
-	OPLog("Quad Generated");
 	OPfree(points);
 	OPfree(indices);
-
-	OPLog("Returning Mesh");
 
 	return new Mesh(vertexBuffer, indexBuffer, 6, sizeof(MeshVertexTextured));
 }
@@ -105,9 +102,4 @@ void Quad::UpdateWorld(){
 	Matrix4 scale = Matrix4::Scale(_rotation._x, _rotation._y, _rotation._z);
 	Matrix4 translate = Matrix4::Translate(_position._x, _position._y, _position._z);
 	(*WorldMatrix) =  rotate * scale * translate;
-	OPLog("Quad::World Matrix Updated");
-}
-
-void Quad::SetMaterialData(){
-	((GLWorldMaterial*)ModelMaterial)->SetWorldMatrix(&((*WorldMatrix)[0][0]));
 }

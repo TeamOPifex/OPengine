@@ -16,15 +16,22 @@ public:
 	OPfloat* ptr(){	return &_x;	}
 
 	// Helpers
+	float Length();
 	void normalize();
-	static Vector3& normalize(Vector3& source);	
+	static Vector3 normalize(Vector3 source);	
 	void cross(Vector3& rhs);
-	static Vector3 cross(Vector3& left, Vector3& right);
-	static Vector3 sub(Vector3& left, Vector3& right);
-	
+	static Vector3 cross(Vector3 left, Vector3 right);
+	//static Vector3 sub(Vector3& left, Vector3& right);
+	static Vector3 sub(Vector3 left, Vector3 right);
+	//static Vector3 add(Vector3& left, Vector3& right);
+	static Vector3 add(Vector3 left, Vector3 right);
+	static Vector3 multiply(Vector3 vec, OPfloat scaler);
+	static OPfloat Distance(Vector3& left, Vector3& right);
+	static OPfloat Dot(Vector3 left, Vector3 right);
+
 	// Operator Overloads
-	Vector3& operator-(const Vector3 &rhs);
-	Vector3& operator+(const Vector3 &rhs);	
+	//Vector3& operator-(const Vector3 &rhs);
+	//Vector3& operator+(const Vector3 &rhs);	
 	OPfloat& operator[](int idx);
 //private:
 	// Data Structure 3 floats

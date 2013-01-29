@@ -1,19 +1,25 @@
 #include "Vector3.h"
 #include "./Core/include/MathHelpers.h"
 
+float Vector3::Length(){
+	return sqrt(_x * _x + _y * _y + _z * _z);
+}
+
 void Vector3::normalize(){
-		OPfloat length = sqrt((_x * _x) + (_y * _y) + (_z * _z));
+	OPfloat length = Length();
 		_x /= length;
 		_y /= length;
 		_z /= length;
 	}
 
-Vector3& Vector3::normalize(Vector3& source){
-	OPfloat length = sqrt((source._x * source._x) + (source._y * source._y) + (source._z * source._z));
-	source._x /= length;
-	source._y /= length;
-	source._z /= length;
-	return source;
+Vector3 Vector3::normalize(Vector3 source){
+	OPfloat length = source.Length();
+
+	return Vector3(
+		source._x / length,
+		source._y / length,
+		source._z / length
+	);
 }
 
 void Vector3::cross(Vector3& rhs){
@@ -26,7 +32,7 @@ void Vector3::cross(Vector3& rhs){
 		_z = tmp._z;
 	}
 
-Vector3 Vector3::cross(Vector3& left, Vector3& right){
+Vector3 Vector3::cross(Vector3 left, Vector3 right){
 	Vector3 returnValue;
 	returnValue._x = left._y * right._z - left._z * right._y;
 	returnValue._y = left._z * right._x - left._x * right._z;
@@ -34,12 +40,56 @@ Vector3 Vector3::cross(Vector3& left, Vector3& right){
 	return returnValue;
 }
 
-Vector3 Vector3::sub(Vector3& left, Vector3& right){
+//Vector3 Vector3::sub(Vector3& left, Vector3& right){
+//	Vector3 returnValue;
+//	returnValue._x = left._x - right._x;
+//	returnValue._y = left._y - right._y;
+//	returnValue._z = left._z - right._z;
+//	return returnValue;
+//}
+
+Vector3 Vector3::sub(Vector3 left, Vector3 right){
 	Vector3 returnValue;
 	returnValue._x = left._x - right._x;
 	returnValue._y = left._y - right._y;
 	returnValue._z = left._z - right._z;
 	return returnValue;
+}
+
+//Vector3 Vector3::add(Vector3& left, Vector3& right){
+//	Vector3 returnValue;
+//	returnValue._x = left._x + right._x;
+//	returnValue._y = left._y + right._y;
+//	returnValue._z = left._z + right._z;
+//	return returnValue;
+//}
+
+Vector3 Vector3::add(Vector3 left, Vector3 right){
+	Vector3 returnValue;
+	returnValue._x = left._x + right._x;
+	returnValue._y = left._y + right._y;
+	returnValue._z = left._z + right._z;
+	return returnValue;
+}
+
+Vector3 Vector3::multiply(Vector3 vec, OPfloat scaler)
+{
+	Vector3 newVec;
+
+	newVec._x = vec._x * scaler;
+	newVec._y = vec._y * scaler;
+	newVec._z = vec._z * scaler;
+
+	return newVec;
+}
+
+OPfloat Vector3::Distance(Vector3& left, Vector3& right){
+	Vector3 diff = Vector3::sub(left, right);
+	return diff.Length();
+}
+
+OPfloat Vector3::Dot(Vector3 left, Vector3 right){
+	return left._x * right._x + left._y * right._y + left._z * right._z;
 }
 
 //Vector3& Vector3::operator-(const Vector3 &rhs) {
