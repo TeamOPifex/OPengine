@@ -27,6 +27,7 @@ void OPend(){
 	_OPengineRunning = 0;
 }
 #else
+/*
 using namespace OPEngine::Core;
 
 void OPCore::Start(){
@@ -51,5 +52,5 @@ void OPCore::Start(){
 
 void OPCore::End(){
 	_OPengineRunning = 0;
-}
+}*/
 #endif

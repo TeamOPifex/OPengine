@@ -1,21 +1,22 @@
 // TODO: Have option to use a FILE* to read from disk rather than memory
 
 #pragma once
-#include "./../../Core/include/Types.h"
-#include "./../../Core/include/Target.h"
-
 #ifndef OPEngine_Data_LinkedList
 #define OPEngine_Data_LinkedList
+
+#include "./../../Core/include/Types.h"
+#include "./../../Core/include/Target.h"
+#include "./../../Core/include/DynamicMemory.h"
 
 #if defined(OPIFEX_ANDROID) && defined(__cplusplus)
 #include "./../../Core/include/DynamicMemory.h"
 #else
-#include "./../../Core/include/Core.h"
+//#include "./../../Core/include/Core.h"
 #endif
 
 typedef struct{
-	struct OPllNode *Prev;
-	struct OPllNode *Next;
+	void *Prev;
+	void *Next;
 	ui8* Data;
 } OPllNode;
 

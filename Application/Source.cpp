@@ -3,6 +3,8 @@
 #include <string.h>
 
 #include "./Core/include/Log.h"
+#include "./Data/include/OPlinkedList.h"
+#include "./Data/include/OPheap.h"
 #include "./Data/include/OPfile.h"
 #include "./Human/Rendering/RenderSystem.h"
 #include "./Human/Resources/Texture/TextureDDS.h"
@@ -314,6 +316,27 @@ int main(){
 
 	GLUtility::CheckError("Application::Clear Errors");
 
+	OPlinkedList* ll = OPllCreate();
+
+	printf("Inserting ");
+	for(OPint i = 10; i--;){
+		OPint* j = (OPint*)OPalloc(sizeof(OPint));
+		*j = i;
+		OPllInsertLast(ll, (ui8*)j);
+		printf("%d ", *j);
+	}
+	printf("\n");
+	
+	printf("Reading: ");
+	OPllNode* node = ll->First;
+	while (node)
+	{
+		printf("%d ", *(OPint*)(node->Data));
+		//node = node->Next;
+	}
+	printf("\n");
+	
+
 	//material->enable_attrib(bufferLoc);
 	//material->enable_attrib(normalLoc);
 	//material->enable_attrib(tangentLoc);
@@ -332,12 +355,12 @@ int main(){
 
 
 	// TextureDDS Should take a stream
-	fileInfo = OPreadFile_Android("steamPlaneSkin.dds");
+	/*fileInfo = OPreadFile_Android("steamPlaneSkin.dds");
 	Texture* dds = new TextureDDS(fileInfo.file);	
 	tex = new GLTexture(dds);
 	delete(dds);
 	OPfree(&fileInfo);
-
+	*/
 	
 	//fileInfo = OPreadFile_Android("steamPlaneSpec.dds");
 	//Texture* dds2 = new TextureDDS(fileInfo.file);	
@@ -376,7 +399,7 @@ int main(){
 	
 	material3->EnableAttributes();
 	material3->SetWorldMatrix(&m[0][0]);
-	material3->SetTexture(tex, 0);
+	//material3->SetTexture(tex, 0);
 
 	//material->EnableAttributes();
 	//material->SetWorldMatrix(&m[0][0]);
@@ -440,7 +463,7 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject
 		//result = v * p;
 		//material->set_matrix(vpLoc, &result[0][0]);
 	
-		RenderSystem::RenderModel(model);
+		//RenderSystem::RenderModel(model);
 
 		RenderSystem::Present();
 #ifdef OPIFEX_ANDROID

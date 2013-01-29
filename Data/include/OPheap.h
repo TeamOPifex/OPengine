@@ -10,7 +10,7 @@
 #if defined(OPIFEX_ANDROID) && defined(__cplusplus)
 #include "./../../Core/include/DynamicMemory.h"
 #else
-#include "./../../Core/include/Core.h"
+//#include "./../../Core/include/Core.h"
 #endif
 
 typedef struct{
