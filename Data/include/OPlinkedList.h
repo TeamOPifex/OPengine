@@ -14,11 +14,18 @@
 //#include "./../../Core/include/Core.h"
 #endif
 
-typedef struct{
-	void *Prev;
-	void *Next;
+// prevent name mangling if compiling with c++
+#ifdef __cplusplus
+extern "C" {
+#endif
+struct OPllNode_def;
+typedef struct OPllNode_def OPllNode;
+
+struct OPllNode_def {	
+	OPllNode *Prev;
+	OPllNode *Next;
 	ui8* Data;
-} OPllNode;
+};
 
 typedef struct{
 	OPint _size;
@@ -26,10 +33,6 @@ typedef struct{
 	OPllNode* Last;
 } OPlinkedList;
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 	OPlinkedList* OPllCreate();
 	OPint OPllDestroy(OPlinkedList* list);
 	OPllNode* OPllInsertFirst(OPlinkedList* list, ui8* data);

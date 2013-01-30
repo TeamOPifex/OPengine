@@ -10,6 +10,9 @@
 #include "./Core/include/Log.h"
 #include "./Human/Audio/Jukebox.h"
 
+#include "Data\include\OPlinkedList.h"
+#include "Data\include\OPheap.h"
+
 #ifdef OPIFEX_ANDROID
 #include <jni.h>
 #include <android/asset_manager.h>
@@ -63,6 +66,31 @@ void Init(){
 	i32 width = 1280;
 	i32 height = 720;
 #endif
+	OPlinkedList* ll = OPllCreate();
+	OPminHeap* heap = OPminHeapCreate(10);
+
+	printf("Inserting ");
+	for(OPint i = 10; i--;){
+		OPint* j = (OPint*)OPalloc(sizeof(OPint));
+		*j = i;
+		OPllInsertLast(ll, (ui8*)j);
+		OPminHeapPush(heap, i);
+		printf("%d ", *j);
+	}
+	printf("\n");
+	printf("Reading: ");
+	OPllNode* node = ll->First;
+	while (node)
+	{
+		printf("%d ", *(OPint*)(node->Data));
+		node = node->Next;
+	}
+	printf("\n");
+
+	printf("Popping sorted: ");
+	while(OPminHeapSize(heap) > 0){
+		printf("%d ", OPminHeapPop(heap));
+	}
 
 	GM = new GameManager(width, height);
 	return;

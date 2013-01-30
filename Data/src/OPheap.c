@@ -4,7 +4,10 @@
 OPminHeap* OPminHeapCreate(OPint capacity){
 	OPminHeap* heap = (OPminHeap*)OPalloc(sizeof(OPminHeap));
 	heap->_indices = (OPint*)OPalloc(sizeof(OPint) * capacity);
-	heap->_size = 0;
+	for(OPint i = 0; i < capacity; i++){
+		heap->_indices[i] = 0;
+	}
+	heap->_size = 1;
 	heap->_capacity = capacity;
 }
 //-----------------------------------------------------------------------------
@@ -14,12 +17,31 @@ OPint OPminHeapDestroy(OPminHeap* heap){
 	return 1;
 }
 //-----------------------------------------------------------------------------
-OPint OPminHeapPush(OPminHeap* heap, OPint value);
-OPint OPminHeapPop(OPminHeap* heap);
+OPint OPminHeapPush(OPminHeap* heap, OPint value){
+	if(heap->_size < heap->_capacity){
+		heap->_indices[heap->_size++] = value;
+		_bubbleUp(heap->_indices, value);
+		return 1;
+	}
+	else return 0;
+}
+//-----------------------------------------------------------------------------
+OPint OPminHeapPop(OPminHeap* heap){
+	OPint* arr = heap->_indices;
+	OPint out = arr[1];
+
+	if(heap->_size == 1) return 0;
+
+	_swap(&arr[1], &arr[heap->_size - 1]);
+	heap->_size--;
+	_bubbleDown(heap, 1);
+
+	return 1;
+}
+//-----------------------------------------------------------------------------
 OPint OPminHeapPeek(OPminHeap* heap){
-	OPint size = heap->_size;
-	if(size == 0) return 0;
-	return heap->_indices[size - 1];
+	if(heap->_size == 1) return 0;
+	return heap->_indices[1];
 }
 //-----------------------------------------------------------------------------
 void _bubbleDown(OPminHeap* heap, OPint i){
@@ -53,6 +75,31 @@ void _bubbleUp(OPint* arr, OPint i){
 			_bubbleUp(arr, p);
 		}
 	}
+}
+//-----------------------------------------------------------------------------
+OPint OPminHeapSize(OPminHeap* heap){
+	return heap->_size - 1;
+}
+//-----------------------------------------------------------------------------
+OPint _parent(OPint i){
+    OPint r = i % 2;
+
+    if (r == 0) return i / 2;
+    return (i - 1) / 2;
+}
+//-----------------------------------------------------------------------------
+OPint _leftChild(OPint i){
+    return i * 2;
+}
+//-----------------------------------------------------------------------------
+OPint _rightChild(OPint i){
+    return (i * 2) + 1;
+}
+//-----------------------------------------------------------------------------
+void _swap(OPint* a, OPint* b){
+	OPint temp = *a;
+	*a = *b;
+	*b = temp;
 }
 //-----------------------------------------------------------------------------
 //- C++ Definitions -----------------------------------------------------------
