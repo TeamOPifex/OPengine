@@ -67,10 +67,10 @@ void Init(){
 	i32 height = 720;
 #endif
 	OPlinkedList* ll = OPllCreate();
-	OPminHeap* heap = OPminHeapCreate(10);
+	OPminHeap* heap = OPminHeapCreate(20);
 
 	printf("Inserting ");
-	for(OPint i = 10; i--;){
+	for(OPint i = 20; i--;){
 		OPint* j = (OPint*)OPalloc(sizeof(OPint));
 		*j = i;
 		OPllInsertLast(ll, (ui8*)j);
@@ -87,7 +87,11 @@ void Init(){
 	}
 	printf("\n");
 
-	printf("Popping sorted: ");
+	for(OPint i = 20; i--;){
+		printf("%d ", heap->_indices[i]);
+	}
+
+	printf("\nPopping sorted: ");
 	while(OPminHeapSize(heap) > 0){
 		printf("%d ", OPminHeapPop(heap));
 	}

@@ -3,12 +3,17 @@
 //-----------------------------------------------------------------------------
 OPminHeap* OPminHeapCreate(OPint capacity){
 	OPminHeap* heap = (OPminHeap*)OPalloc(sizeof(OPminHeap));
-	heap->_indices = (OPint*)OPalloc(sizeof(OPint) * capacity);
-	for(OPint i = 0; i < capacity; i++){
+	OPint i = 0;
+	heap->_indices = (OPint*)OPalloc(sizeof(OPint) * (capacity + 1));
+	
+	for(i = 0; i < capacity + 1; i++){
 		heap->_indices[i] = 0;
 	}
+
 	heap->_size = 1;
-	heap->_capacity = capacity;
+	heap->_capacity = capacity + 1;
+
+	return heap;
 }
 //-----------------------------------------------------------------------------
 OPint OPminHeapDestroy(OPminHeap* heap){
@@ -19,8 +24,10 @@ OPint OPminHeapDestroy(OPminHeap* heap){
 //-----------------------------------------------------------------------------
 OPint OPminHeapPush(OPminHeap* heap, OPint value){
 	if(heap->_size < heap->_capacity){
-		heap->_indices[heap->_size++] = value;
-		_bubbleUp(heap->_indices, value);
+		OPint i = heap->_size;
+		heap->_indices[i] = value;
+		_bubbleUp(heap->_indices, i);
+		heap->_size++;
 		return 1;
 	}
 	else return 0;
@@ -30,13 +37,13 @@ OPint OPminHeapPop(OPminHeap* heap){
 	OPint* arr = heap->_indices;
 	OPint out = arr[1];
 
-	if(heap->_size == 1) return 0;
+	if(heap->_size <= 1) return 0;
 
 	_swap(&arr[1], &arr[heap->_size - 1]);
 	heap->_size--;
 	_bubbleDown(heap, 1);
 
-	return 1;
+	return out;
 }
 //-----------------------------------------------------------------------------
 OPint OPminHeapPeek(OPminHeap* heap){
@@ -53,7 +60,7 @@ void _bubbleDown(OPminHeap* heap, OPint i){
 	if(l < index && r <index){
 		if(arr[r] <= arr[l]){
 			if(arr[r] <= arr[i]){
-				_swap(&arr[r], &arr[l]);
+				_swap(&arr[r], &arr[i]);
 				_bubbleDown(heap, r);
 			}
 		}

@@ -7,18 +7,18 @@
 #include "./Data/include/OPheap.h"
 #include "./Data/include/OPfile.h"
 #include "./Human/Rendering/RenderSystem.h"
-#include "./Human/Resources/Texture/TextureDDS.h"
-#include "./Human/Rendering/GL/GLTexture.h"
-#include "./Human/Rendering/GL/GLShader.h"
-#include "./Human/Rendering/GL/GLMaterial.h"
-#include "./Human/Rendering/GL/GLBuffer.h"
+//#include "./Human/Resources/Texture/TextureDDS.h"
+//#include "./Human/Rendering/GL/GLTexture.h"
+//#include "./Human/Rendering/GL/GLShader.h"
+//#include "./Human/Rendering/GL/GLMaterial.h"
+//#include "./Human/Rendering/GL/GLBuffer.h"
 #include "./Human/Math/Matrix4.h"
 #include "./Human/Resources/Sound/Sound.h"
-#include "./Human/Rendering/OBJLoader.h"
-#include "./Human/Rendering/GL/GLUtility.h"
-#include "./Human/Rendering/GL/GLTexturedMaterial.h"
-#include "./Human/Rendering/GL/GLWorldTexturedMaterial.h"
-#include "./Human/Rendering/GL/GLWorldTexturedSpecularMaterial.h"
+//#include "./Human/Rendering/OBJLoader.h"
+//#include "./Human/Rendering/GL/GLUtility.h"
+//#include "./Human/Rendering/GL/GLTexturedMaterial.h"
+//#include "./Human/Rendering/GL/GLWorldTexturedMaterial.h"
+//#include "./Human/Rendering/GL/GLWorldTexturedSpecularMaterial.h"
 
 #include "./Human/Input/GamePadSystem.h"
 #include "./Human/Audio/Jukebox.h"
@@ -91,12 +91,12 @@ static const char gFragmentShader[] =
 
 // Global Variables
 
-GLWorldTexturedSpecularMaterial* material;
-GLWorldTexturedMaterial* material2;
-GLTexturedMaterial* material3;
-GLTexture* tex;
-GLTexture* texSpec;
-GLTexture* texNorm;
+//GLWorldTexturedSpecularMaterial* material;
+//GLWorldTexturedMaterial* material2;
+//GLTexturedMaterial* material3;
+//GLTexture* tex;
+//GLTexture* texSpec;
+//GLTexture* texNorm;
 ui32 sampLoc;
 ui32 specLoc;
 ui32 normLoc;
@@ -120,10 +120,10 @@ f32 translateZ;
 bool firstRun = false;
 Matrix4 result;
 int offset;
-GLBuffer* vertices;
-GLBuffer* indices;
+//GLBuffer* vertices;
+//GLBuffer* indices;
 Mesh* mesh;
-ModelWorld* model;
+//ModelWorld* model;
 f32 rotateAmnt;
 f32 rotateAmnt2;
 f32 x_move;
@@ -219,7 +219,7 @@ int main(){
 
 #endif
 
-	RenderSystem::Initialize();
+	//RenderSystem::Initialize();
 
 	if(Jukebox::Initialize()){
 		audio = Jukebox::Load("AMemoryAway.ogg", false);
@@ -268,53 +268,53 @@ int main(){
 	OPfree(gFragmentShader);
 	OPfree(&fileInfo);
 #else
-	//FileInformation* fileInfo;// = readFile("vertex.fx");
-	//char* gVertexShader = (char*)OPalloc(sizeof(char) * fileInfo->length);
-	//fread(gVertexShader, 1, fileInfo->length, fileInfo->file);
-	//gVertexShader[fileInfo->length - 1] = '\0';
-	ShaderPtr vertex = new GLShader(Vertex, gVertexShader);
-	//OPfree(gVertexShader);
-	//OPfree(fileInfo);
+	////FileInformation* fileInfo;// = readFile("vertex.fx");
+	////char* gVertexShader = (char*)OPalloc(sizeof(char) * fileInfo->length);
+	////fread(gVertexShader, 1, fileInfo->length, fileInfo->file);
+	////gVertexShader[fileInfo->length - 1] = '\0';
+	//ShaderPtr vertex = new GLShader(Vertex, gVertexShader);
+	////OPfree(gVertexShader);
+	////OPfree(fileInfo);
 
 	
-	//fileInfo = readFile("fragment.fx");
-	//char* gFragmentShader = (char*)OPalloc(fileInfo->length);
-	//fread(gFragmentShader, 1, fileInfo->length, fileInfo->file);
-	//gFragmentShader[fileInfo->length - 1] = '\0';
-	//OPLog(gFragmentShader);
-	ShaderPtr pixel = new GLShader(Fragment, gFragmentShader);
-	//OPfree(gFragmentShader);
-	//OPfree(fileInfo);
+	////fileInfo = readFile("fragment.fx");
+	////char* gFragmentShader = (char*)OPalloc(fileInfo->length);
+	////fread(gFragmentShader, 1, fileInfo->length, fileInfo->file);
+	////gFragmentShader[fileInfo->length - 1] = '\0';
+	////OPLog(gFragmentShader);
+	//ShaderPtr pixel = new GLShader(Fragment, gFragmentShader);
+	////OPfree(gFragmentShader);
+	////OPfree(fileInfo);
 #endif
 	
-	//material = new GLWorldTexturedSpecularMaterial(vertex, pixel);
-	//material2 = new GLWorldTexturedMaterial(vertex, pixel);
-	material3 = new GLTexturedMaterial(vertex, pixel);
+	////material = new GLWorldTexturedSpecularMaterial(vertex, pixel);
+	////material2 = new GLWorldTexturedMaterial(vertex, pixel);
+	//material3 = new GLTexturedMaterial(vertex, pixel);
 
-	//vpLoc = material->uniform_location("ViewProjection");
+	////vpLoc = material->uniform_location("ViewProjection");
 
-	//sampLoc = material->uniform_location("Texture");
-	//specLoc = material->uniform_location("SpecularTexture");
-	//normLoc = material->uniform_location("NormalTexture");
-	
-	//OPLog_i32(sampLoc);
-	//OPLog_i32(specLoc);
-	//OPLog_i32(normLoc);
-	
-	//bufferLoc = material->attribute_location("vPosition");
-	//normalLoc = material->attribute_location("vNormal");
-	//tangentLoc = material->attribute_location("vTangent");
-	//uvLoc = material->attribute_location("TexCoordIn");
-	
+	////sampLoc = material->uniform_location("Texture");
+	////specLoc = material->uniform_location("SpecularTexture");
+	////normLoc = material->uniform_location("NormalTexture");
+	//
+	////OPLog_i32(sampLoc);
+	////OPLog_i32(specLoc);
+	////OPLog_i32(normLoc);
+	//
+	////bufferLoc = material->attribute_location("vPosition");
+	////normalLoc = material->attribute_location("vNormal");
+	////tangentLoc = material->attribute_location("vTangent");
+	////uvLoc = material->attribute_location("TexCoordIn");
+	//
 
-	//fileInfo = OPreadFile_Android("steamPlane.obj");
-	//mesh = LoadOBJ(fileInfo.file, fileInfo.start, fileInfo.length);	
-	//model = new Model(mesh, material);
-	
-	//model = new Quad(material2);
-	model = new Quad(material3);
+	////fileInfo = OPreadFile_Android("steamPlane.obj");
+	////mesh = LoadOBJ(fileInfo.file, fileInfo.start, fileInfo.length);	
+	////model = new Model(mesh, material);
+	//
+	////model = new Quad(material2);
+	//model = new Quad(material3);
 
-	GLUtility::CheckError("Application::Clear Errors");
+	//GLUtility::CheckError("Application::Clear Errors");
 
 	OPlinkedList* ll = OPllCreate();
 
@@ -381,48 +381,48 @@ int main(){
 #else
 	// Windows/Linux sound not implemented yet
 #endif
-	//RenderSystem::UseMaterial(material);	
-	//RenderSystem::UseMaterial(material2);
-	RenderSystem::UseMaterial(material3);
-
-	translateX = 0;
-	translateZ = 0;
-	m = Matrix4::Translate(translateX, 0, translateZ);
-	result = v * p;
-	//material->set_matrix(mLoc, &m[0][0]);
-	//material->set_matrix(vpLoc, &result[0][0]);
-		
-/*	material2->EnableAttributes();
-	material2->SetWorldMatrix(&m[0][0]);
-	material2->SetViewProjectionMatrix(&result[0][0]);
-	material2->SetTexture(tex, 0);*/	
-	
-	material3->EnableAttributes();
-	material3->SetWorldMatrix(&m[0][0]);
-	//material3->SetTexture(tex, 0);
-
-	//material->EnableAttributes();
-	//material->SetWorldMatrix(&m[0][0]);
-	//material->SetViewProjectionMatrix(&result[0][0]);
-	//material->SetTexture(tex, 0);
-	//material->SetTextureSpecular(texSpec, 1);
-	//material->SetTextureNormal(texNorm, 2);
-
-	//material->enable_attrib(mLoc);
-	//material->enable_attrib(vpLoc);
-	//material->enable_attrib(sampLoc);
-	//tex->bind(sampLoc, 0);
-	
-	//material->enable_attrib(specLoc);
-	//texSpec->bind(specLoc, 1);
-
-	//material->enable_attrib(normLoc);
-	//texNorm->bind(normLoc, 2);
-	//
-	//material->enable_attrib(bufferLoc);
-	//material->enable_attrib(normalLoc);
-	//material->enable_attrib(tangentLoc);
-	//material->enable_attrib(uvLoc);
+//	//RenderSystem::UseMaterial(material);	
+//	//RenderSystem::UseMaterial(material2);
+//	RenderSystem::UseMaterial(material3);
+//
+//	translateX = 0;
+//	translateZ = 0;
+//	m = Matrix4::Translate(translateX, 0, translateZ);
+//	result = v * p;
+//	//material->set_matrix(mLoc, &m[0][0]);
+//	//material->set_matrix(vpLoc, &result[0][0]);
+//		
+///*	material2->EnableAttributes();
+//	material2->SetWorldMatrix(&m[0][0]);
+//	material2->SetViewProjectionMatrix(&result[0][0]);
+//	material2->SetTexture(tex, 0);*/	
+//	
+//	material3->EnableAttributes();
+//	material3->SetWorldMatrix(&m[0][0]);
+//	//material3->SetTexture(tex, 0);
+//
+//	//material->EnableAttributes();
+//	//material->SetWorldMatrix(&m[0][0]);
+//	//material->SetViewProjectionMatrix(&result[0][0]);
+//	//material->SetTexture(tex, 0);
+//	//material->SetTextureSpecular(texSpec, 1);
+//	//material->SetTextureNormal(texNorm, 2);
+//
+//	//material->enable_attrib(mLoc);
+//	//material->enable_attrib(vpLoc);
+//	//material->enable_attrib(sampLoc);
+//	//tex->bind(sampLoc, 0);
+//	
+//	//material->enable_attrib(specLoc);
+//	//texSpec->bind(specLoc, 1);
+//
+//	//material->enable_attrib(normLoc);
+//	//texNorm->bind(normLoc, 2);
+//	//
+//	//material->enable_attrib(bufferLoc);
+//	//material->enable_attrib(normalLoc);
+//	//material->enable_attrib(tangentLoc);
+//	//material->enable_attrib(uvLoc);
 	
 	rotateAmnt = 0;
 	rotateAmnt2 = 0;
@@ -458,7 +458,7 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject
 		rotating = Matrix4::RotateY(rotateAmnt);
 		rotating2 = Matrix4::Scale(2.0f);
 		m = rotating * rotating2;
-		model->WorldMatrix = &m;
+		//model->WorldMatrix = &m;
 
 		//result = v * p;
 		//material->set_matrix(vpLoc, &result[0][0]);
