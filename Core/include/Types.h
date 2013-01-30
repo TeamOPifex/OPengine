@@ -32,7 +32,7 @@ typedef signed int     i32;
 typedef unsigned int   ui32; //int type
 typedef signed short   i16;
 typedef unsigned short ui16; //short type
-typedef signed char    i8;
+typedef char    i8;
 typedef unsigned char  ui8;  //byte type
 
 // PC floating point types
