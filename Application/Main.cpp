@@ -99,7 +99,7 @@ void Destroy()
 	return;
 }
 
-#include "./Human/Resources/Material/Shader/Shader.h"
+#include "./Human/Resources/Material/TexturedMaterial.h"
 #ifdef OPIFEX_ANDROID
 #else
 int main()
