@@ -12,6 +12,7 @@
 
 #include "Data\include\OPlinkedList.h"
 #include "Data\include\OPheap.h"
+#include "Data\include\OPlist.h"
 
 #ifdef OPIFEX_ANDROID
 #include <jni.h>
@@ -68,6 +69,7 @@ void Init(){
 #endif
 	OPlinkedList* ll = OPllCreate();
 	OPminHeap* heap = OPminHeapCreate(20);
+	OPlist* list = OPlistCreate(5, sizeof(OPint));
 
 	printf("Inserting ");
 	for(OPint i = 20; i--;){
@@ -75,6 +77,7 @@ void Init(){
 		*j = i;
 		OPllInsertLast(ll, (ui8*)j);
 		OPminHeapPush(heap, i);
+		OPlistPush(list, (ui8*)&i);
 		printf("%d ", *j);
 	}
 	printf("\n");
@@ -85,8 +88,13 @@ void Init(){
 		printf("%d ", *(OPint*)(node->Data));
 		node = node->Next;
 	}
-	printf("\n");
+	printf("\nList: ");
 
+	for(OPint i = 20; i--;){
+		OPint j = *((OPint*)OPlistGet(list, i));
+		printf("%d ", j);
+	}
+		printf("\nHeap: ");
 	for(OPint i = 20; i--;){
 		printf("%d ", heap->_indices[i]);
 	}
