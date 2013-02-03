@@ -139,10 +139,21 @@ void Destroy()
 	return;
 }
 
+#include "./Data/include/OPhashMap.h"
+
 #ifdef OPIFEX_ANDROID
 #else
 int main()
 {
+	HashMap* map = OPhashMapCreate(1);
+	i32 val = 32;
+	OPhashMapPut(map, "value", &val);
+
+	i32* dump;
+	OPhashMapGet(map, "value", (void**)&dump);
+	i32 output = *dump;
+	OPLog_i32(output);
+
 	OPinitialize = Init;
 	OPupdate = Update;
 	OPdestroy = Destroy;

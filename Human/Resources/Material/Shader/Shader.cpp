@@ -1,6 +1,8 @@
 #include "Shader.h"
 #include "./Human/Utilities/Errors.h"
 #include "./Human/Resources/Material/Shader/ShaderTypes.h"
+#include "./Core/include/DynamicMemory.h"
+#include "./Data/include/OPfile.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
 #include <GLES2/gl2.h>
@@ -9,11 +11,11 @@
 #include <GL/glew.h>
 #endif
 
-Shader::Shader(ShaderType shaderType, const char* file){
+Shader::Shader(ShaderType shaderType, const char* source){
 	m_handle = glCreateShader(GetShaderType(shaderType));
 	CheckError("GLShader::Error 1");
 	if(m_handle){
-		glShaderSource(m_handle, 1, &file, 0);
+		glShaderSource(m_handle, 1, &source, 0);
 		CheckError("GLShader::Error 2");
 		glCompileShader(m_handle);
 		CheckError("GLShader::Error 3");
@@ -25,4 +27,14 @@ Shader::Shader(ShaderType shaderType, const char* file){
 			glDeleteShader(m_handle);
 		}
 	}
+}
+
+ShaderPtr Shader::FromFile(ShaderType shaderType, const char* file){
+	FileInformation fileInfo = OPreadFileInformation(file);
+	char* shaderCode = (char*)OPalloc(sizeof(char) * fileInfo.length);
+	fgets(shaderCode, fileInfo.length, fileInfo.file);
+	shaderCode[fileInfo.length - 1] = '\0';
+	ShaderPtr glshader = new Shader(shaderType, shaderCode);
+	OPfree(shaderCode);
+	return glshader;
 }
