@@ -42,11 +42,36 @@ ui8* OPlistPop(OPlist* list){
 }
 //-----------------------------------------------------------------------------
 OPint OPlistInsert(OPlist* list, ui8* value, OPuint index){
-	return 0; // TODO
+	OPint eleSize = list->_elementSize;
+	OPint i;
+
+	// expand the array if needed
+	if(_oplNextExceedsCap(list)){
+		list->_capacity *= 2;
+		list->_indices = (ui8*)OPrealloc(list->_indices, eleSize * list->_capacity);
+	}
+	list->_size++;
+
+	// shift elements to the right one
+	for(i = list->_size; i > index; i--){
+		OPlistSet(list, i, OPlistGet(list, i - 1));
+	}
+
+	// set the value
+	OPlistSet(list, index, value);
+
+	return 1;
 }
 //-----------------------------------------------------------------------------
-ui8* OPlistRemoveAt(OPlist* list, OPuint index){
-	return NULL; // TODO
+OPint OPlistRemoveAt(OPlist* list, OPuint index){
+	OPint i;
+	list->_size--;
+
+	// shift all the elements to the left copying over the value at index
+	for(i = index; i < list->_size; i++){
+		OPlistSet(list, i, OPlistGet(list, i+1));
+	}
+	return 1;
 }
 //-----------------------------------------------------------------------------
 ui8* OPlistGet(OPlist* list, OPuint index){
@@ -61,6 +86,10 @@ ui8* OPlistSet(OPlist* list, OPuint index, ui8* value){
 		list->_indices[index * eleSize + i] = value[i];
 
 	return list->_indices + (index * list->_elementSize);
+}
+//-----------------------------------------------------------------------------
+OPint OPlistSize(OPlist* list){
+	return list->_size;
 }
 //-----------------------------------------------------------------------------
 OPint _oplNextExceedsCap(OPlist* list){

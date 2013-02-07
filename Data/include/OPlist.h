@@ -30,7 +30,7 @@ extern "C" {
 	OPint OPlistPush(OPlist* list, ui8* value);
 	ui8* OPlistPop(OPlist* list);
 	OPint OPlistInsert(OPlist* list, ui8* value, OPuint index);
-	ui8* OPlistRemoveAt(OPlist* list, OPuint index);
+	OPint OPlistRemoveAt(OPlist* list, OPuint index);
 
 	ui8* OPlistGet(OPlist* list, OPuint index);
 	ui8* OPlistSet(OPlist* list, OPuint index, ui8* value);
