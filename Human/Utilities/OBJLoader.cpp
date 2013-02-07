@@ -300,7 +300,7 @@ Mesh* LoadOBJ(FILE* file, int start, int length, ui8 keepPositions)
 	OPfree(buffer); // TODO any reason you're using OPfree here, but new and delete everywhere else?
 
 	BufferPtr vertexBuffer = new Buffer(VertexBuffer, sizeof(MeshVertex) * totalPoints, points);
-	BufferPtr indexBuffer = new Buffer(IndexBuffer, sizeof(int) * totalIndices, indices);
+	BufferPtr indexBuffer = new Buffer(IndexBuffer, sizeof(short) * totalIndices, indices);
 	
 	Mesh* out = new Mesh(vertexBuffer, indexBuffer, totalIndices, sizeof(MeshVertex));
 	if(keepPositions){

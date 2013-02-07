@@ -9,6 +9,7 @@
 	#include <GL/glfw.h>
 #endif
 
+
 Texture2D::Texture2D(ImagePtr texture){
 	glGenTextures(1, &m_handle);
 	CheckError("Texture2D::Error 1");

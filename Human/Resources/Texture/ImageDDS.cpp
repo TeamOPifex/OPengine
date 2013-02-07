@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include "./Core/include/Log.h"
+#include "./Data/include/OPfile.h"
 
 #define FOURCC_DXT1 0x31545844 // Equivalent to "DXT1" in ASCII
 #define FOURCC_DXT3 0x33545844 // Equivalent to "DXT3" in ASCII
@@ -74,4 +75,10 @@ ImageDDS::ImageDDS(FILE* fp){
 		}
 
 		_blocksize = (_format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16;
+}
+
+ImageDDS* ImageDDS::FromFile(const char* file) {
+	FileInformation fileInfo = OPreadFileInformation(file);
+	ImageDDS* tex = new ImageDDS(fileInfo.file);
+	return tex;
 }

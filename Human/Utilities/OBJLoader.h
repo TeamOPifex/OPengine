@@ -13,8 +13,8 @@ class MeshVertex
 {
 public:
 	Vector3 vertice;
-	Vector2 tex;
 	Vector3 normal;
+	Vector2 tex;
 	Vector3 tangent;
 };
 

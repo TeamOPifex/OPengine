@@ -36,6 +36,8 @@ add_source_group(Resources/Buffer "${PROJECT_SOURCE_DIR}/Human/Resources/Buffer"
 add_source_group(Resources/Model "${PROJECT_SOURCE_DIR}/Human/Resources/Model" HUMAN_SRC)
 add_source_group(Resources/Material "${PROJECT_SOURCE_DIR}/Human/Resources/Material" HUMAN_SRC)
 add_source_group(Resources/Material/Shader "${PROJECT_SOURCE_DIR}/Human/Resources/Material/Shader" HUMAN_SRC)
+add_source_group(Resources/Material/Shader/Params "${PROJECT_SOURCE_DIR}/Human/Resources/Material/Shader/Params" HUMAN_SRC)
+add_source_group(Resources/Material/Shader/Attributes "${PROJECT_SOURCE_DIR}/Human/Resources/Material/Shader/Attributes" HUMAN_SRC)
 add_source_group(Resources/Material/State "${PROJECT_SOURCE_DIR}/Human/Resources/Material/State" HUMAN_SRC)
 add_source_group(Resources/Sound "${PROJECT_SOURCE_DIR}/Human/Resources/Sound" HUMAN_SRC)
 add_source_group(Resources/Texture "${PROJECT_SOURCE_DIR}/Human/Resources/Texture" HUMAN_SRC)

@@ -35,9 +35,10 @@ void RenderSystem::RenderTriangles(ui32 numIndices){
 
 void RenderSystem::RenderModel(Model* model){
 	UseMaterial(model->ModelMaterial);
-	SetBuffer(1, model->ModelMesh->VertexBuffer->Handle());
-	SetBuffer(2, model->ModelMesh->IndexBuffer->Handle());
+	model->ModelMaterial->EnableAttributes();
+	model->SetMeshData();
 	RenderTriangles(model->ModelMesh->IndexCount);
+	model->ModelMaterial->DisableAttributes();
 }
 
 void RenderSystem::Present(){
