@@ -42,13 +42,13 @@ ui32 Material::GetUniform(const char* attribute){
 void Material::LoadAttribute(const char* attribute){
 	OPint* pos = (OPint*)OPalloc(sizeof(OPint));
 	*pos = glGetAttribLocation(m_handle, attribute);
-	OPhashMapPut(hashMap, attribute, pos);
+	OPhashMapPut(hashMap, (OPchar*)attribute, pos);
 }
 
 void Material::LoadUniform(const char* attribute){
 	OPint* pos = (OPint*)OPalloc(sizeof(OPint));
 	*pos = glGetUniformLocation(m_handle, attribute);
-	OPhashMapPut(hashMap, attribute, pos);
+	OPhashMapPut(hashMap, (OPchar*)attribute, pos);
 }
 
 void Material::BindAttribute(i32 pos, char* variable){
@@ -87,35 +87,35 @@ void Material::SetMatrix(ui32 attribute, Matrix4* value){
 	glUniformMatrix4fv(attribute, 1, GL_FALSE, &(*value)[0][0]);
 }
 
-void Material::SetFloat(const char* attribute, f32 value){
+void Material::SetFloat(const OPchar* attribute, f32 value){
 	OPint* val;
 	if(OPhashMapGet(hashMap, attribute, (void**)&val)){
 		glUniform1f(*val, value);
 	}
 }
 
-void Material::SetVector2(const char* attribute, Vector2* value){	
+void Material::SetVector2(const OPchar* attribute, Vector2* value){	
 	OPint* val;
 	if(OPhashMapGet(hashMap, attribute, (void**)&val)){
 		glUniform1fv(*val, 2, &(*value)[0]);
 	}
 }
 
-void Material::SetVector3(const char* attribute, Vector3* value){
+void Material::SetVector3(const OPchar* attribute, Vector3* value){
 	OPint* val;
 	if(OPhashMapGet(hashMap, attribute, (void**)&val)){
 		glUniform1fv(*val, 3, &(*value)[0]);
 	}
 }
 
-void Material::SetVector4(const char* attribute, Vector4* value){
+void Material::SetVector4(const OPchar* attribute, Vector4* value){
 	OPint* val;
 	if(OPhashMapGet(hashMap, attribute, (void**)&val)){
 		glUniform1fv(*val, 4, &(*value)[0]);
 	}
 }
 
-void Material::SetMatrix(const char* attribute, Matrix4* value){
+void Material::SetMatrix(const OPchar* attribute, Matrix4* value){
 	OPint* val;
 	if(OPhashMapGet(hashMap, attribute, (void**)&val)){
 		glUniformMatrix4fv(*val, 1, GL_FALSE, &(*value)[0][0]);

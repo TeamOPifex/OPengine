@@ -8,6 +8,7 @@ class Model{
 public:
 	Model(MeshPtr mesh, MaterialPtr material);
 	~Model();
+	void SetMeshData();
 
 	MeshPtr ModelMesh;
 	MaterialPtr ModelMaterial;

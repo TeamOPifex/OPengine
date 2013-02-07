@@ -75,7 +75,16 @@ MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Input/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Math/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Rendering/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Rendering/GL/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/Buffer/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/Material/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/Material/Shader/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/Material/Shader/Params/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/Material/State/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/Model/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/Sound/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/Texture/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Utilities/*.cpp)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 LOCAL_STATIC_LIBRARIES := libopifex-data
@@ -92,6 +101,7 @@ LOCAL_MODULE    := libsmrf
 LOCAL_LDLIBS    := -llog -lGLESv2 -landroid -lOpenSLES
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
-LOCAL_SRC_FILES := $(subst jni/, , $(PROJECT_PATH)/Application/source.cpp)
+MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Application/*.cpp)
+LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 LOCAL_STATIC_LIBRARIES := libopifex-human
 include $(BUILD_SHARED_LIBRARY)

@@ -5,6 +5,7 @@
 #include "./Human/Math/Vector2.h"
 #include "./Human/Math/Matrix4.h"
 #include "./Data/include/OPhashMap.h"
+#include "./Human/Resources/Model/Mesh.h"
 
 class Material : public Resource {
 public:
@@ -30,13 +31,16 @@ public:
 	void SetVector4(ui32 attribute, Vector4* value);
 	void SetMatrix(ui32 attribute, Matrix4* value);
 	
-	void SetFloat(const char* attribute, f32 value);
-	void SetVector2(const char* attribute, Vector2* value);
-	void SetVector3(const char* attribute, Vector3* value);
-	void SetVector4(const char* attribute, Vector4* value);
-	void SetMatrix(const char* attribute, Matrix4* value);
+	void SetFloat(const OPchar* attribute, f32 value);
+	void SetVector2(const OPchar* attribute, Vector2* value);
+	void SetVector3(const OPchar* attribute, Vector3* value);
+	void SetVector4(const OPchar* attribute, Vector4* value);
+	void SetMatrix(const OPchar* attribute, Matrix4* value);
 
-
+	
+	virtual void SetMeshData(Mesh* mesh) { }
+	virtual void EnableAttributes() { }
+	virtual void DisableAttributes() { }
 private:
 	HashMap* hashMap;
 };

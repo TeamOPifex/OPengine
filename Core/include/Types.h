@@ -26,11 +26,11 @@ typedef jdouble d64; //double type
 #else
 
 // PC integer types
-typedef signed long    i64;
+typedef long    i64;
 typedef unsigned long  ui64;  //long type
-typedef signed int     i32;
+typedef int     i32;
 typedef unsigned int   ui32; //int type
-typedef signed short   i16;
+typedef short   i16;
 typedef unsigned short ui16; //short type
 typedef char    i8;
 typedef unsigned char  ui8;  //byte type

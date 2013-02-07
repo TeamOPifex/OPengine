@@ -3,8 +3,5 @@
 
 class ShaderParamColorTexture : public ShaderParamTexture2D {
 public:
-	ShaderParamColorTexture(Material* material) : ShaderParamTexture2D(material,"tColor") { }
-	void SetColorTexture(Texture2D* texture){
-		ShaderParamTexture2D::SetTexture(texture);
-	}
+	ShaderParamColorTexture(Material* material) : ShaderParamTexture2D(material,"uColorTexture") { }
 };

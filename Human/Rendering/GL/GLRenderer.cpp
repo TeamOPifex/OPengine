@@ -10,6 +10,7 @@
 using namespace glm;
 #endif
 
+#include "./Core/include/Log.h"
 
 GLRenderer::GLRenderer(){
 }
@@ -36,11 +37,13 @@ int GLRenderer::initialize(ui32 width, ui32 height){
 		
 	// Open a window and create its OpenGL context
 	if( !glfwOpenWindow( width, height, 0,0,0,0, 32,0, GLFW_WINDOW ) )
-	{
+	{		
+		OPLog("Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible.\n" );
 		glfwTerminate();
 		return -1;
 	}
 
+	//glewExperimental = true;
 	if (glewInit() != GLEW_OK) return -1;	
 
 	glfwSetWindowTitle( "OPifex Engine" );
@@ -50,6 +53,11 @@ int GLRenderer::initialize(ui32 width, ui32 height){
 	glDepthFunc(GL_LESS); 
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
+	
+	// TODO: Determine how to optimize with this
+	GLuint VertexArrayID;
+	glGenVertexArrays(1, &VertexArrayID);
+	glBindVertexArray(VertexArrayID);
 
 	return 0;
 #endif
@@ -80,7 +88,7 @@ void GLRenderer::render_triangles(ui32 offset, ui32 count){
 }
 
 void GLRenderer::render_triangles(ui32 numIndices){
-	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0);
 }
 
 void GLRenderer::swap_buffer(){	
@@ -93,6 +101,7 @@ void GLRenderer::swap_buffer(){
 
 void GLRenderer::shutdown(){	
 #ifdef OPIFEX_OPENGL_ES_2
+
 #else
 	glfwTerminate();
 #endif

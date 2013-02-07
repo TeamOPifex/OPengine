@@ -3,6 +3,7 @@
 #include "./Human/Resources/Material/Shader/ShaderTypes.h"
 #include "./Core/include/DynamicMemory.h"
 #include "./Data/include/OPfile.h"
+#include "./Core/include/Log.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
 #include <GLES2/gl2.h>
@@ -23,6 +24,13 @@ Shader::Shader(ShaderType shaderType, const char* source){
 		glGetShaderiv(m_handle, GL_COMPILE_STATUS, &compiled);
 		CheckError("GLShader::Error 4");
 		if(!compiled){
+			OPLog("GLShader::Failed to compile Shader");
+
+			char msg[4096];
+			i32 length = 0;
+			glGetShaderInfoLog(m_handle, 4096, &length, msg);
+			OPLog(msg);
+
 			CheckError("GLShader::Error 5");
 			glDeleteShader(m_handle);
 		}
