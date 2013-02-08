@@ -25,6 +25,8 @@ void GamePadSystem::Update(){
 
 			// check to see if the controller is connected
 			if(result == ERROR_SUCCESS){
+				// if it's connected, get the state
+
 				gps->SetConnected(true);
 
 				// check other states
@@ -112,7 +114,7 @@ void GamePadSystem::Update(){
 
 			}
 			else
-				_gamePadStates[i].SetConnected(true);
+				_gamePadStates[i].SetConnected(false);
 			
 #endif
 		}

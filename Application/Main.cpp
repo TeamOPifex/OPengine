@@ -138,7 +138,7 @@ void Update( OPtimer* timer){
 	}
 	else
 		RenderSystem::ClearColor(0,0,0);
-	//GM->Draw();
+	GM->Draw();
 	RenderSystem::Present();
 	
 #ifdef OPIFEX_ANDROID
