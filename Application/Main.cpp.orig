@@ -81,6 +81,11 @@ void Init(){
 		printf("%d ", *j);
 	}
 	printf("\n");
+
+	OPint j = 1337;
+	OPlistRemoveAt(list, 9);
+	OPlistInsert(list, (ui8*)&j, 9);
+
 	printf("Reading: ");
 	OPllNode* node = ll->First;
 	while (node)
@@ -90,7 +95,7 @@ void Init(){
 	}
 	printf("\nList: ");
 
-	for(OPint i = 20; i--;){
+	for(OPint i = OPlistSize(list); i--;){
 		OPint j = *((OPint*)OPlistGet(list, i));
 		printf("%d ", j);
 	}
