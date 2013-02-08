@@ -20,7 +20,7 @@
 
 LOCAL_PATH:= $(call my-dir)
 
-PROJECT_PATH:= $(LOCAL_PATH)/../../OPifex.Engine/
+PROJECT_PATH:= $(LOCAL_PATH)/../@OPIFEX_REPOSITORY@
 
 ##############
 # 1_CORE
