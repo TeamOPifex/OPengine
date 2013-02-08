@@ -14,6 +14,8 @@
 #include "Data\include\OPheap.h"
 #include "Data\include\OPlist.h"
 
+#include "Human\Input\Controller.h"
+
 #ifdef OPIFEX_ANDROID
 #include <jni.h>
 #include <android/asset_manager.h>
@@ -24,6 +26,7 @@
 #endif
 
 GameManager* GM;
+GamePadSystem* GPS;
 
 #ifdef OPIFEX_ANDROID
 	OPtimer* timer;
@@ -70,6 +73,8 @@ void Init(){
 	OPlinkedList* ll = OPllCreate();
 	OPminHeap* heap = OPminHeapCreate(20);
 	OPlist* list = OPlistCreate(5, sizeof(OPint));
+
+	GPS = new GamePadSystem();
 
 	printf("Inserting ");
 	for(OPint i = 20; i--;){
@@ -123,8 +128,17 @@ void Update( OPtimer* timer){
 #endif
 
 	bool result = GM->Update( timer );
-	RenderSystem::ClearColor(0,0,0);
-	GM->Draw();
+	GPS->Update();
+	GamePadState* gps = GPS->Controller(GamePadIndex_One);
+	if(gps->IsConnected()){
+		OPfloat r = gps->IsDown(GamePad_Button_A) ? 1.0f : 0.0f;
+		OPfloat g = gps->LeftThumbX() / 2.0f + 0.5f;
+		OPfloat b = gps->LeftTrigger();
+		RenderSystem::ClearColor(r, g, b);
+	}
+	else
+		RenderSystem::ClearColor(0,0,0);
+	//GM->Draw();
 	RenderSystem::Present();
 	
 #ifdef OPIFEX_ANDROID

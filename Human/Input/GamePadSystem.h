@@ -1,5 +1,8 @@
 #pragma once
 
+#include <Windows.h>
+#include <Xinput.h>
+#pragma comment(lib, "XInput.lib")
 #include "GamePadState.h"
 
 #define CONTROLLERS 4
