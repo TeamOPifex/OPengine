@@ -100,3 +100,74 @@ private:
 	ShaderAttributeTangent* _Tangent;
 
 };
+
+
+class TexturedScreenMaterial : public Material{
+public:
+	TexturedScreenMaterial() : Material(Shader::FromFile(Vertex, "Shaders/TexturedScreen.vert"), Shader::FromFile(Fragment, "Shaders/Textured.frag"))
+	{
+		World = new ShaderParamWorld(this);
+		ColorTexture = new ShaderParamColorTexture(this);
+		
+		_Position = new ShaderAttributePosition(this);
+		_UV = new ShaderAttributeUV(this);
+	}
+
+	~TexturedScreenMaterial(){
+		delete World;
+		delete ColorTexture;
+		delete _Position;
+		delete _UV;
+	}
+
+	void EnableAttributes(){
+		_Position->Enable();
+		_UV->Enable();
+	}
+
+	void DisableAttributes(){
+		_Position->Disable();
+		_UV->Disable();
+	}
+
+	void SetMeshData(Mesh* mesh){
+		Material::SetData(_Position->Handle(), 3, false, mesh->Stride, (void*)0);
+		Material::SetData(_UV->Handle(), 2, false, mesh->Stride, (void*)12);
+	}
+	
+	ShaderParamWorld* World;
+	ShaderParamColorTexture* ColorTexture;
+private:
+	ShaderAttributePosition* _Position;
+	ShaderAttributeUV* _UV;
+};
+
+class BlueScreenMaterial : public Material{
+public:
+	BlueScreenMaterial() : Material(Shader::FromFile(Vertex, "Shaders/Screen.vert"), Shader::FromFile(Fragment, "Shaders/Blue.frag"))
+	{
+		World = new ShaderParamWorld(this);		
+		_Position = new ShaderAttributePosition(this);
+	}
+
+	~BlueScreenMaterial(){
+		delete World;
+		delete _Position;
+	}
+
+	void EnableAttributes(){
+		_Position->Enable();
+	}
+
+	void DisableAttributes(){
+		_Position->Disable();
+	}
+
+	void SetMeshData(Mesh* mesh){
+		Material::SetData(_Position->Handle(), 3, false, mesh->Stride, (void*)0);
+	}
+	
+	ShaderParamWorld* World;
+private:
+	ShaderAttributePosition* _Position;
+};

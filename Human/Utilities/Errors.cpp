@@ -12,6 +12,7 @@ bool CheckError(const char* message){
 	GLenum err = glGetError();
 	if(err != 0){
 		OPLog(message);
+		OPLog_i32(err);
 		return true;
 	}
 	return false;

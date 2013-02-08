@@ -13,7 +13,7 @@ Model::~Model(){
 }
 
 void Model::SetMeshData() {
-	RenderSystem::SetBuffer(1, ModelMesh->VertexBuffer->Handle());
-	RenderSystem::SetBuffer(2, ModelMesh->IndexBuffer->Handle());
+	RenderSystem::SetBuffer(VertexBuffer, ModelMesh->VertexBuffer->Handle());
+	RenderSystem::SetBuffer(IndexBuffer, ModelMesh->IndexBuffer->Handle());
 	ModelMaterial->SetMeshData(ModelMesh);
 }

@@ -3,6 +3,7 @@
 #include "./Human/Utilities/OBJLoader.h"
 #include "./Data/include/OPfile.h"
 #include "./Human/Resources/Texture/ImageDDS.h"
+#include "./Human/Utilities/Errors.h"
 
 GameManager::GameManager(int width, int height) 
 {	
@@ -21,18 +22,28 @@ GameManager::GameManager(int width, int height)
 	delete normalDDS;
 	delete specularDDS;
 	
+	CheckError("GameManager::Error 0");
+	
+	RenderSystem::UseMaterial(_material);
 	_material->ColorTexture->SetTexture(_colorTexture, 0);
 	_material->NormalTexture->SetTexture(_normalTexture, 1);
 	_material->SpecularTexture->SetTexture(_specularTexture, 2);
+	
+	CheckError("GameManager::Error 0");
 
 	_model = new Model(mesh, _material);
 	_material->World->SetMatrix(_model->WorldMatrix);
 	
 	Matrix4 v = Camera::GameCamera.GetView();
 	Matrix4 p = Camera::GameCamera.GetProj();
+
+	CheckError("GameManager::Error 0");
 	
 	_material->View->SetMatrix(&v);
 	_material->Projection->SetMatrix(&p);
+
+	(*_model->WorldMatrix) = Matrix4::Scale(3.0f);
+
 }
 
 bool GameManager::Update( OPtimer* coreTimer )
@@ -53,5 +64,7 @@ void GameManager::Draw(){
 	_material->NormalTexture->SetTexture(_normalTexture, 1);
 	_material->SpecularTexture->SetTexture(_specularTexture, 2);
 	
+	_material->World->SetMatrix(_model->WorldMatrix);
+
 	RenderSystem::RenderModel(_model);
 }

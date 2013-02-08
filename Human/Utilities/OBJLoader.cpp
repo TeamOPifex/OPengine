@@ -237,7 +237,7 @@ Mesh* LoadOBJ(FILE* file, int start, int length, ui8 keepPositions)
 	
 	
 	MeshVertex* points = (MeshVertex*)OPalloc(sizeof(MeshVertex) * totalPoints);
-	unsigned int* indices = (unsigned int*)OPalloc(sizeof(unsigned int) * totalIndices);
+	unsigned short* indices = (unsigned short*)OPalloc(sizeof(unsigned short) * totalIndices);
 	int currPoint = 0;
 	int currIndex = 0;
 
@@ -300,7 +300,7 @@ Mesh* LoadOBJ(FILE* file, int start, int length, ui8 keepPositions)
 	OPfree(buffer); // TODO any reason you're using OPfree here, but new and delete everywhere else?
 
 	BufferPtr vertexBuffer = new Buffer(VertexBuffer, sizeof(MeshVertex) * totalPoints, points);
-	BufferPtr indexBuffer = new Buffer(IndexBuffer, sizeof(short) * totalIndices, indices);
+	BufferPtr indexBuffer = new Buffer(IndexBuffer, sizeof(unsigned short) * totalIndices, indices);
 	
 	Mesh* out = new Mesh(vertexBuffer, indexBuffer, totalIndices, sizeof(MeshVertex));
 	if(keepPositions){
