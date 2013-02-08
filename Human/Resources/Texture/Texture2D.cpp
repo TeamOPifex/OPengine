@@ -43,6 +43,11 @@ Texture2D::Texture2D(ImagePtr texture){
 
 void Texture2D::Bind(ui32 loc, int slot){
 	glActiveTexture(GL_TEXTURE0 + slot);
+	CheckError("Texture2D::Error 5 - Failed to bind texture");
 	glBindTexture(GL_TEXTURE_2D, m_handle);
+	CheckError("Texture2D::Error 6 - Failed to bind texture");
 	glUniform1i(loc, slot);
+	if(CheckError("Texture2D::Error 7 - Failed to bind texture")){
+		
+	}
 }

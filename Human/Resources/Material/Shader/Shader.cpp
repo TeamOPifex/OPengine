@@ -13,6 +13,8 @@
 #endif
 
 Shader::Shader(ShaderType shaderType, const char* source){
+	
+	
 	m_handle = glCreateShader(GetShaderType(shaderType));
 	CheckError("GLShader::Error 1");
 	if(m_handle){

@@ -54,7 +54,7 @@ Vector3* Quad::GetScale(){
 
 Mesh* Quad::GenMesh(){
 	MeshVertexTextured* points = (MeshVertexTextured*)OPalloc(sizeof(MeshVertexTextured) * 4);
-	unsigned int* indices = (unsigned int*)OPalloc(sizeof(unsigned int) * 6);
+	unsigned short* indices = (unsigned short*)OPalloc(sizeof(unsigned short) * 6);
 		
 	points[0].vertice._x = -0.5f;
 	points[0].vertice._y = 0.5f;
@@ -89,7 +89,7 @@ Mesh* Quad::GenMesh(){
 	indices[5] = 3;
 
 	BufferPtr vertexBuffer = new Buffer(VertexBuffer, sizeof(MeshVertexTextured) * 4, points);
-	BufferPtr indexBuffer = new Buffer(IndexBuffer, sizeof(int) * 6, indices);
+	BufferPtr indexBuffer = new Buffer(IndexBuffer, sizeof(unsigned short) * 6, indices);
 	
 	OPfree(points);
 	OPfree(indices);

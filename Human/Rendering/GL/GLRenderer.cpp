@@ -16,8 +16,6 @@ GLRenderer::GLRenderer(){
 }
 
 int GLRenderer::initialize(ui32 width, ui32 height){
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 #ifdef OPIFEX_OPENGL_ES_2
 	// Android doesn't need to create a window
@@ -49,15 +47,21 @@ int GLRenderer::initialize(ui32 width, ui32 height){
 	glfwSetWindowTitle( "OPifex Engine" );
 	glfwEnable( GLFW_STICKY_KEYS );	
 
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS); 
-	glCullFace(GL_BACK);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_DEPTH_TEST);
+	//glDepthFunc(GL_LESS); 
+	//glCullFace(GL_BACK);
+	//glEnable(GL_CULL_FACE);
+
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
 	
 	// TODO: Determine how to optimize with this
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
+	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	return 0;
 #endif

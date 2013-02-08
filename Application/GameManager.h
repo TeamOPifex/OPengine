@@ -5,6 +5,7 @@
 #include "./Human/Resources/Model/Model.h"
 #include "./Human/Rendering/Camera.h"
 #include "./Human/Resources/Material/TexturedMaterial.h"
+#include "./Human/Rendering/Quad.h"
 
 class GameManager
 {
@@ -18,6 +19,9 @@ private:
 	Texture2D* _colorTexture;
 	Texture2D* _normalTexture;
 	Texture2D* _specularTexture;
+
+	TexturedScreenMaterial* _screenMaterial;
+	Quad* _quad;
 };
 
 #endif
