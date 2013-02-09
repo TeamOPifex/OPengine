@@ -24,6 +24,8 @@ endmacro(copy_source_group)
 
 set(OPIFEX_OS "OPIFEX_LINUX32" CACHE STRING
   "Operating system to build for.")
+set(OPIFEX_REPOSITORY "../OPifex.Engine" CACHE STRING
+  "Directory to Repository from Output Folder")
 
 set_property(CACHE OPIFEX_OS PROPERTY STRINGS OPIFEX_WIN32 OPIFEX_WIN64 OPIFEX_LINUX32 OPIFEX_LINUX64 OPIFEX_IOS OPIFEX_ANDROID)
  
