@@ -1,7 +1,7 @@
 //////////////////////////////// OPEngine MAIN ////////////////////////////////
 
 #include "../Core/include/Core.h"
-
+#include "../Data/include/OPgameStates.h"
 
 #include "./GameManager.h"
 #include "./Human/Rendering/RenderSystem.h"
@@ -156,13 +156,19 @@ void Destroy()
 	return;
 }
 
+void UpdateState(OPtimer* timer){
+	ActiveState->Update(timer);
+}
+
 #ifdef OPIFEX_ANDROID
 #else
 int main()
 {
 	OPinitialize = Init;
-	OPupdate = Update;
+	OPupdate = UpdateState;
 	OPdestroy = Destroy;
+
+	ActiveState = OPgameStateCreate(NULL, Update, NULL);
 
 	OPstart();
 	OPend();
