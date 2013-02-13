@@ -14,8 +14,6 @@
 #include "Data\include\OPheap.h"
 #include "Data\include\OPlist.h"
 
-#include "Human\Input\Controller.h"
-
 #ifdef OPIFEX_ANDROID
 #include <jni.h>
 #include <android/asset_manager.h>

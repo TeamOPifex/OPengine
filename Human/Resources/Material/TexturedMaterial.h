@@ -6,6 +6,7 @@
 #include "./Human/Resources/Material/Shader/Params/ShaderParamColorTexture.h"
 #include "./Human/Resources/Material/Shader/Params/ShaderParamNormalTexture.h"
 #include "./Human/Resources/Material/Shader/Params/ShaderParamSpecularTexture.h"
+#include "./Human/Resources/Material/Shader/Params/ShaderParamAlpha.h"
 #include "./Human/Resources/Material/Shader/Attributes/ShaderAttributePosition.h"
 #include "./Human/Resources/Material/Shader/Attributes/ShaderAttributeNormal.h"
 #include "./Human/Resources/Material/Shader/Attributes/ShaderAttributeUV.h"
@@ -108,6 +109,7 @@ public:
 	{
 		World = new ShaderParamWorld(this);
 		ColorTexture = new ShaderParamColorTexture(this);
+		Alpha = new ShaderParamAlpha(this);
 		
 		_Position = new ShaderAttributePosition(this);
 		_UV = new ShaderAttributeUV(this);
@@ -116,6 +118,7 @@ public:
 	~TexturedScreenMaterial(){
 		delete World;
 		delete ColorTexture;
+		delete Alpha;
 		delete _Position;
 		delete _UV;
 	}
@@ -137,6 +140,7 @@ public:
 	
 	ShaderParamWorld* World;
 	ShaderParamColorTexture* ColorTexture;
+	ShaderParamAlpha* Alpha;
 private:
 	ShaderAttributePosition* _Position;
 	ShaderAttributeUV* _UV;
