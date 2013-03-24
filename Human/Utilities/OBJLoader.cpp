@@ -1,5 +1,5 @@
 #include "OBJLoader.h"
-#include ".\Core\include\Log.h"
+#include "./Core/include/Log.h"
 #include "./Human/Resources/Buffer/Buffer.h"
 #include "./Human/Resources/Model/Mesh.h"
 

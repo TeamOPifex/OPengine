@@ -2,7 +2,7 @@
 
 #include "./Human/Resources/Model/Model.h"
 
-#include ".\Core\include\DynamicMemory.h"
+#include "./Core/include/DynamicMemory.h"
 #include "./Human/Math/Vector3.h"
 
 class Quad : public Model {

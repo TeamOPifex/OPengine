@@ -30,7 +30,9 @@ FileInformation OPreadFileInformation(const char* path){
 #else
 	FILE* myFile = fopen(path, "rb"); 
 	if(!myFile){
-		OPLog("File not loaded.");
+		char buff[256];
+		sprintf(buff, "OPreadFileInformation(): %s not loaded\n", path);
+		OPLog(buff);
 	}
 	fseek(myFile, 0, SEEK_END );	
 	file.length = ftell( myFile );

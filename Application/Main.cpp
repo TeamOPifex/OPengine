@@ -1,4 +1,5 @@
 //////////////////////////////// OPEngine MAIN ////////////////////////////////
+#include <stdio.h>
 
 #include "../Core/include/Core.h"
 #include "../Data/include/OPgameStates.h"
@@ -10,18 +11,19 @@
 #include "./Core/include/Log.h"
 #include "./Human/Audio/Jukebox.h"
 
-#include "Data\include\OPlinkedList.h"
-#include "Data\include\OPheap.h"
-#include "Data\include\OPlist.h"
+#include "Data/include/OPlinkedList.h"
+#include "Data/include/OPheap.h"
+#include "Data/include/OPlist.h"
 
-#ifdef OPIFEX_ANDROID
+#if defined(OPIFEX_ANDROID)
 #include <jni.h>
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
-#include "./Data/include/OPfile.h"
-#else
+#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 #include <direct.h>
+#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 #endif
+#include "./Data/include/OPfile.h"
 
 GameManager* GM;
 GamePadSystem* GPS;
@@ -64,7 +66,17 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	Jukebox::Initialize();
 #else
 void Init(){
-	_chdir("Assets\\");
+
+	#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+	_chdir("assets\\");
+	#else
+	if(chdir("./assets")){
+		OPLog("Directory changed!\n");
+	}
+	else
+		OPLog("Directory change failed!\n");
+	#endif
+
 	i32 width = 1280;
 	i32 height = 720;
 #endif
