@@ -52,6 +52,9 @@ add_source_group(Utilities "${PROJECT_SOURCE_DIR}/Human/Utilities" HUMAN_SRC)
 add_library(4_Human STATIC ${HUMAN_SRC})
 target_link_libraries(4_Human
 	${ALL_LIBS}
+	${OGG_LIBRARY}
+	${VORBIS_LIBRARY}
+	${VORBISFILE_LIBRARY}
 )
 SET_TARGET_PROPERTIES(4_Human PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(4_Human PROPERTIES 

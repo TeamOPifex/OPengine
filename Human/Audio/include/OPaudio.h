@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/include/Target.h"
+#include "Core/include/DynamicMemory.h"
 
 #if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 #include "stdafx.h"
@@ -9,11 +10,13 @@
 #include "alc.h"
 #include <WTypes.h>
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
-#include "vorbisfile.h"
 #include <string.h>
 #include <AL/al.h>
 #include <AL/alc.h>
 #endif
+
+#include "External/Ogg/include/ogg.h"
+#include "External/Ogg/include/vorbisfile.h"
 
 extern "C"{
 	static ALCdevice* _OPaudioDevice;
@@ -36,26 +39,6 @@ extern "C"{
 	static LPOVCOMMENT         fn_ov_comment;
 	static LPOVOPENCALLBACKS   fn_ov_open_callbacks;
 };
-
-size_t ov_read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
-{
-	return fread(ptr, size, nmemb, (FILE*)datasource);
-}
-
-int ov_seek_func(void *datasource, ogg_int64_t offset, int whence)
-{
-	return fseek((FILE*)datasource, (long)offset, whence);
-}
-
-int ov_close_func(void *datasource)
-{
-   return fclose((FILE*)datasource);
-}
-
-long ov_tell_func(void *datasource)
-{
-	return ftell((FILE*)datasource);
-}
 
 struct OPsound{
 	ALuint SampleRate;

@@ -1,4 +1,4 @@
-#include "../include/OPSoundEmitter.h"
+#include "../include/OPsoundEmitter.h"
 
 OPSoundEmitter::OPSoundEmitter(OPsound* sound, int bytesPerBuffer){
 	_sound = sound;

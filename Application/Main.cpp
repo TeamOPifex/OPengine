@@ -24,9 +24,12 @@
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 #endif
 #include "./Data/include/OPfile.h"
+#include "./Human/Audio/include/OPaudio.h"
+#include "./Human/Audio/include/OPsoundEmitter.h"
 
 GameManager* GM;
 GamePadSystem* GPS;
+OPsound sound;
 
 #ifdef OPIFEX_ANDROID
 	OPtimer* timer;
@@ -85,6 +88,8 @@ void Init(){
 	OPlist* list = OPlistCreate(5, sizeof(OPint));
 
 	GPS = new GamePadSystem();
+
+	OPAudio::Init();
 
 	printf("Inserting ");
 	for(OPint i = 20; i--;){

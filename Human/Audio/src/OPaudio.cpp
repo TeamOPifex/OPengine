@@ -6,6 +6,26 @@
 	s2 = sTemp;\
 }\
 
+size_t ov_read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
+{
+	return fread(ptr, size, nmemb, (FILE*)datasource);
+}
+
+int ov_seek_func(void *datasource, ogg_int64_t offset, int whence)
+{
+	return fseek((FILE*)datasource, (long)offset, whence);
+}
+
+int ov_close_func(void *datasource)
+{
+   return fclose((FILE*)datasource);
+}
+
+long ov_tell_func(void *datasource)
+{
+	return ftell((FILE*)datasource);
+}
+
 int OPAudio::Init(){
 	// setup the device and stuff
 	_OPaudioDevice = alcOpenDevice(NULL);
@@ -92,7 +112,7 @@ OPsound OPAudio::ReadWave(const char* filename){
 
 		fread(&dataSize, sizeof(long), 1, fp);
 
-		unsigned char* data = (unsigned char*)malloc(sizeof(unsigned char) * dataSize);
+		unsigned char* data = (unsigned char*)OPalloc(sizeof(unsigned char) * dataSize);
 		fread(data, dataSize, 1, fp);
 
 		fclose(fp);
