@@ -6,12 +6,14 @@ include_directories(
 	../External/glew-1.5.8/include/
 	../External/Phsyx.3.2.1/include/
 	../External/GLES2/
+	../External/Ogg/include/
 	.
 	../
 )
 
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
+	${OPENAL_LIBRARY}
 	GLFW_276
 	GLEW_158
 	1_Core
@@ -25,6 +27,8 @@ add_definitions(
 
 add_source_group(\\ "${PROJECT_SOURCE_DIR}/Human" HUMAN_SRC)
 add_source_group(Audio "${PROJECT_SOURCE_DIR}/Human/Audio" HUMAN_SRC)
+add_source_group(include/ "${PROJECT_SOURCE_DIR}/Human/Audio/include" HUMAN_SRC)
+add_source_group(src/ "${PROJECT_SOURCE_DIR}/Human/Audio/src" HUMAN_SRC)
 add_source_group(Input "${PROJECT_SOURCE_DIR}/Human/Input" HUMAN_SRC)
 add_source_group(Math "${PROJECT_SOURCE_DIR}/Human/Math" HUMAN_SRC)
 add_source_group(Input "${PROJECT_SOURCE_DIR}/Human/Input" HUMAN_SRC)
