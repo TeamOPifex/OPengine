@@ -6,7 +6,7 @@
 	s2 = sTemp;\
 }\
 
-static int OPAudio::Init(){
+int OPAudio::Init(){
 	// setup the device and stuff
 	_OPaudioDevice = alcOpenDevice(NULL);
 	if(!_OPaudioDevice) return 0;

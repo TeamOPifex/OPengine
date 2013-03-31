@@ -1,8 +1,8 @@
 #include "GamePadSystem.h"
 
 #if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
-//#include <Windows.h>
-//#include <Xinput.h>
+#include <Windows.h>
+#include <Xinput.h>
 #endif
 
 GamePadState GamePadSystem::_gamePadStates[CONTROLLERS];

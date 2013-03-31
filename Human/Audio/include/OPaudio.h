@@ -1,12 +1,15 @@
 #pragma once
 
+#include "Core/include/Target.h"
+
 #if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 #include "stdafx.h"
-#include "Vorbis/vorbisfile.h"
-#include "../include/al.h"
-#include "../include/alc.h"
+#include "vorbisfile.h"
+#include "al.h"
+#include "alc.h"
+#include <WTypes.h>
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
-#include "Vorbis/vorbisfile.h"
+#include "vorbisfile.h"
 #include <string.h>
 #include <AL/al.h>
 #include <AL/alc.h>
