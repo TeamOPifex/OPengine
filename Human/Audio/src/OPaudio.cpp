@@ -1,7 +1,7 @@
 #include "../include/OPaudio.h"
 
 #define OPAUDIO_SWAP(s1, s2){\
-	short sTemp = s1;\
+	i16 sTemp = s1;\
 	s1 = s2;\
 	s2 = sTemp;\
 }\
@@ -26,7 +26,7 @@ long ov_tell_func(void *datasource)
 	return ftell((FILE*)datasource);
 }
 
-int OPAudio::Init(){
+OPint OPAudio::Init(){
 	// setup the device and stuff
 	_OPaudioDevice = alcOpenDevice(NULL);
 	if(!_OPaudioDevice) return 0;
@@ -64,55 +64,55 @@ int OPAudio::Init(){
 	return 1;
 }
 /*---------------------------------------------------------------------------*/
-OPsound OPAudio::ReadWave(const char* filename){
+OPsound OPAudio::ReadWave(const i8* filename){
 	FILE* fp = NULL;
 	OPsound ERR = {0};
 	fp = fopen(filename, "rb");
 
 	if(!fp) printf("Error: couldn't open '%s'\n", filename);
 	else{
-		char type[4];
-		long size, chunkSize;
-		short formatType, channels;
-		long sampleRate, avgBytesPerSec;
-		short bytesPerSample, bitsPerSample;
-		long dataSize;
+		i8 type[4];
+		i64 size, chunkSize;
+		i16 formatType, channels;
+		i64 sampleRate, avgBytesPerSec;
+		i16 bytesPerSample, bitsPerSample;
+		i64 dataSize;
 
-		fread(type, sizeof(char), 4, fp);
+		fread(type, sizeof(i8), 4, fp);
 		if(memcmp(type, "RIFF", 4) != 0){
 			printf("No RIFF\n");
 		}
 
-		fread(&size, sizeof(long), 1, fp);
-		fread(type, sizeof(char), 4, fp);
+		fread(&size, sizeof(i64), 1, fp);
+		fread(type, sizeof(i8), 4, fp);
 		if(memcmp(type, "WAVE", 4) != 0){
 			printf("Not WAVE\n");
 		}
 
-		fread(type, sizeof(char), 4, fp);
+		fread(type, sizeof(i8), 4, fp);
 		if(memcmp(type, "fmt ", 4) != 0){
 			printf("Not fmt\n");
 		}
 
-		fread(&chunkSize, sizeof(long), 1, fp);
-		fread(&formatType, sizeof(short), 1, fp);
-		fread(&channels, sizeof(short), 1, fp);
-		fread(&sampleRate, sizeof(long), 1, fp);
-		fread(&avgBytesPerSec, sizeof(long), 1, fp);
-		fread(&bytesPerSample, sizeof(short), 1, fp);
-		fread(&bitsPerSample, sizeof(short), 1, fp);
+		fread(&chunkSize, sizeof(i64), 1, fp);
+		fread(&formatType, sizeof(i16), 1, fp);
+		fread(&channels, sizeof(i16), 1, fp);
+		fread(&sampleRate, sizeof(i64), 1, fp);
+		fread(&avgBytesPerSec, sizeof(i64), 1, fp);
+		fread(&bytesPerSample, sizeof(i16), 1, fp);
+		fread(&bitsPerSample, sizeof(i16), 1, fp);
 
 		printf("Chunk Size: %d\nChannels: %d\nSample Rate: %d\nBytes/Sec: %d\n",
-			(int)chunkSize, (int)channels, (int)sampleRate, (int)avgBytesPerSec);
+			(OPint)chunkSize, (OPint)channels, (OPint)sampleRate, (OPint)avgBytesPerSec);
 
-		fread(type, sizeof(char), 4, fp);
+		fread(type, sizeof(i8), 4, fp);
 		if(memcmp(type, "data", 4) != 0){
 			printf("Missing data\n");
 		}
 
-		fread(&dataSize, sizeof(long), 1, fp);
+		fread(&dataSize, sizeof(i64), 1, fp);
 
-		unsigned char* data = (unsigned char*)OPalloc(sizeof(unsigned char) * dataSize);
+		ui8* data = (ui8*)OPalloc(sizeof(ui8) * dataSize);
 		fread(data, dataSize, 1, fp);
 
 		fclose(fp);
@@ -149,13 +149,13 @@ OPsound OPAudio::ReadWave(const char* filename){
 	return ERR;
 }
 /*---------------------------------------------------------------------------*/
-static unsigned long DecodeOggVorbis(OggVorbis_File *psOggVorbisFile, char *pDecodeBuffer, unsigned long ulBufferSize, unsigned long ulChannels){
-	int current_section;
-	long lDecodeSize;
-	unsigned long ulSamples;
-	short *pSamples;
+static ui64 DecodeOggVorbis(OggVorbis_File *psOggVorbisFile, i8 *pDecodeBuffer, ui64 ulBufferSize, ui64 ulChannels){
+	OPint current_section;
+	i64 lDecodeSize;
+	ui64 ulSamples;
+	i16 *pSamples;
 
-	unsigned long ulBytesDone = 0;
+	ui64 ulBytesDone = 0;
 	while (1)
 	{
 		lDecodeSize = fn_ov_read(psOggVorbisFile, pDecodeBuffer + ulBytesDone, ulBufferSize - ulBytesDone, 0, 2, 1, &current_section);
@@ -175,7 +175,7 @@ static unsigned long DecodeOggVorbis(OggVorbis_File *psOggVorbisFile, char *pDec
 	// Mono, Stereo and 4-Channel files decode into the same channel order as WAVEFORMATEXTENSIBLE,
 	// however 6-Channels files need to be re-ordered
 	if (ulChannels == 6){		
-		pSamples = (short*)pDecodeBuffer;
+		pSamples = (i16*)pDecodeBuffer;
 		for (ulSamples = 0; ulSamples < (ulBufferSize>>1); ulSamples+=6){
 			// WAVEFORMATEXTENSIBLE Order : FL, FR, FC, LFE, RL, RR
 			// OggVorbis Order            : FL, FC, FR,  RL, RR, LFE
@@ -188,18 +188,18 @@ static unsigned long DecodeOggVorbis(OggVorbis_File *psOggVorbisFile, char *pDec
 	return ulBytesDone;
 }
 /*---------------------------------------------------------------------------*/
-static int fetchOggData(OPsound* sound, long pos, long len){
+static OPint fetchOggData(OPsound* sound, i64 pos, i64 len){
 	OggVorbis_File* ogg = (OggVorbis_File*)sound->dataSource;
 
-	long length = DecodeOggVorbis(ogg, (char*)sound->Data, sound->DataSize, sound->Channels);
+	i64 length = DecodeOggVorbis(ogg, (i8*)sound->Data, sound->DataSize, sound->Channels);
 	//printf("Song length: %l\n", length);
 
-	printf("Fetched %d\n", (int)length);
+	printf("Fetched %d\n", (OPint)length);
 
 	return length;
 }
 /*---------------------------------------------------------------------------*/
-OPsound OPAudio::ReadOgg(const char* filename){
+OPsound OPAudio::ReadOgg(const i8* filename){
 	// Open Ogg Stream
 	ov_callbacks	sCallbacks;
 	OggVorbis_File	*sOggVorbisFile = new OggVorbis_File();
@@ -216,8 +216,8 @@ OPsound OPAudio::ReadOgg(const char* filename){
 		printf("Song loaded!\n");
 		// Create an OggVorbis file stream
 		if (fn_ov_open_callbacks(song, sOggVorbisFile, NULL, 0, sCallbacks) == 0){
-			long ulFrequency = 0, ulBufferSize = 0;
-			int ulChannels = 0, ulFormat = 0, bitsPerSample = 0;
+			i64 ulFrequency = 0, ulBufferSize = 0;
+			OPint ulChannels = 0, ulFormat = 0, bitsPerSample = 0;
 
 
 			// Get some information about the file (Channels, Format, and Frequency)
@@ -263,14 +263,14 @@ OPsound OPAudio::ReadOgg(const char* filename){
 					ulBufferSize -= (ulBufferSize % 12);
 				}
 
-				printf("Buffer size: %d Channels: %d\n", (long)ulBufferSize, ulChannels);
+				printf("Buffer size: %d Channels: %d\n", (i64)ulBufferSize, ulChannels);
 
-				long length = fn_ov_pcm_total(sOggVorbisFile, -1);
+				i64 length = fn_ov_pcm_total(sOggVorbisFile, -1);
 				printf("Song length: %d\n", length);
 
 				//length = ulFrequency * 2;
-				unsigned char* buff = new unsigned char[length];
-				DecodeOggVorbis(sOggVorbisFile, (char*)buff, length, ulChannels);
+				ui8* buff = new ui8[length];
+				DecodeOggVorbis(sOggVorbisFile, (i8*)buff, length, ulChannels);
 
 				OPsound song = {
 					ulFrequency,

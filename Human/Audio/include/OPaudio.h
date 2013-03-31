@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Core/include/Target.h"
+#include "Core/include/Types.h"
 #include "Core/include/DynamicMemory.h"
+#include "Human/Math/Vector3.h"
 
 #if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 #include "stdafx.h"
@@ -46,25 +48,25 @@ struct OPsound{
 	ALuint Channels;
 	ALenum Format;
 	void* dataSource;
-	int (*FillCallback)(OPsound* sound, long position, long length);
-	long DataSize;
-	unsigned char* Data;
+	OPint (*FillCallback)(OPsound* sound, long position, long length);
+	i64 DataSize;
+	ui8* Data;
 };
 
 class OPAudio{
 	public:
-		static int Init();
+		static OPint Init();
 
-		static void SetEarPosition(ALfloat* pos){
-			alListenerfv(AL_POSITION, pos);
+		static void SetEarPosition(Vector3 pos){
+			alListenerfv(AL_POSITION, pos.ptr());
 		}
 
-		static void SetEarVelocity(ALfloat* velo){
-			alListenerfv(AL_VELOCITY, velo);
+		static void SetEarVelocity(Vector3 velo){
+			alListenerfv(AL_VELOCITY, velo.ptr());
 		}
 
-		static void SetEarForward(ALfloat* forward){
-			alListenerfv(AL_ORIENTATION, forward);
+		static void SetEarForward(Vector3 forward){
+			alListenerfv(AL_ORIENTATION, forward.ptr());
 		}
 
 		static OPsound ReadWave(const char* filename);

@@ -1,18 +1,18 @@
 #include "../include/OPsoundEmitter.h"
 
-OPSoundEmitter::OPSoundEmitter(OPsound* sound, int sections){
-	int bytesPerBuffer = (sound->SampleRate * sound->BitsPerSample) /  sections;
+OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
+	OPint bytesPerBuffer = (sound->SampleRate * sound->BitsPerSample) /  sections;
 	_sound = sound;
 
 	_intermediateBuffer = new unsigned char[_bufferSize = bytesPerBuffer];
-	for(int i = bytesPerBuffer; i--; _intermediateBuffer[i] = 0);
+	for(OPint i = bytesPerBuffer; i--; _intermediateBuffer[i] = 0);
 
 	alGenBuffers(BUFFERS, _buffers); // backbuffer and forebuffer
 	alGenSources(1, &_alSrc);
 	alSourcei(_alSrc, AL_LOOPING, AL_FALSE);
 
 	// fill all buffers with silence
-	for(int i = BUFFERS; i--;)
+	for(OPint i = BUFFERS; i--;)
 	alBufferData(
 		_buffers[i],
 		_sound->Format,
@@ -109,7 +109,7 @@ void OPSoundEmitter::Update(){
 void OPSoundEmitter::SetSound(OPsound* sound){
 	_sound = sound;
 
-	for(int i = BUFFERS; i--;)
+	for(OPint i = BUFFERS; i--;)
 	alBufferData(
 		_buffers[i],
 		_sound->Format,
@@ -119,15 +119,15 @@ void OPSoundEmitter::SetSound(OPsound* sound){
 	);
 }
 /*---------------------------------------------------------------------------*/
-int OPSoundEmitter::process(){
-		int toProcess = _sound->DataSize - (_queued + _bytesInBuffer); // # of bytes that need to be queued
-		int offset = _chunksProcessed++ * _chunkSize;                  // offset in bytes for current chunk
+OPint OPSoundEmitter::process(){
+		OPint toProcess = _sound->DataSize - (_queued + _bytesInBuffer); // # of bytes that need to be queued
+		OPint offset = _chunksProcessed++ * _chunkSize;                  // offset in bytes for current chunk
 		toProcess = toProcess > _chunkSize ? _chunkSize : toProcess;   // don't process more than a chunk's worth
 
 		if(!toProcess) return 0; // no more data! we are done
 
 		// this is where processing would happen, for now just simply copy
-		for(int i = toProcess; i--;){
+		for(OPint i = toProcess; i--;){
 			_intermediateBuffer[offset + i] = (_sound->Data + _queued)[offset + i];
 		}
 

@@ -19,28 +19,28 @@ enum OPsoundEmitterState{
 
 class OPSoundEmitter{
 	public:
-		bool Looping;
+		OPint Looping;
 
-		OPSoundEmitter(OPsound* sound, int sections);
+		OPSoundEmitter(OPsound* sound, OPint sections);
 		~OPSoundEmitter();
 /*---------------------------------------------------------------------------*/
-		long Length(){ return _sound->DataSize; }
+		i64 Length(){ return _sound->DataSize; }
 		void Play();
 		void Pause();
 		void Stop();
 		void Update();
 		void SetSound(OPsound* sound);
 /*---------------------------------------------------------------------------*/
-		void SetPosition(ALfloat position[]){
-			alSourcefv(_alSrc, AL_POSITION, position);
+		void SetPosition(Vector3 position){
+			alSourcefv(_alSrc, AL_POSITION, position.ptr());
 		}
-		void SetVelocity(ALfloat velocity[]){
-			alSourcefv(_alSrc, AL_VELOCITY, velocity);
+		void SetVelocity(Vector3 velocity){
+			alSourcefv(_alSrc, AL_VELOCITY, velocity.ptr());
 		}
-		void SetVolume(float gain){
+		void SetVolume(OPfloat gain){
 			alSourcef(_alSrc, AL_GAIN, gain);
 		}
-		void SetPitch(float pitch){
+		void SetPitch(OPfloat pitch){
 			alSourcef(_alSrc, AL_PITCH, pitch);
 		}
 #pragma endregion
@@ -48,14 +48,14 @@ class OPSoundEmitter{
 	private:
 		OPsound* _sound;
 		ALuint _buffers[BUFFERS], _alSrc;
-		unsigned char* _intermediateBuffer;
+		ui8* _intermediateBuffer;
 
-		int _activeBuffer, _freeBuffers;
-		int _queued, _chunksProcessed, _oldBuffsPlayed;
-		int _bufferSize, _chunkSize;
-		int _bytesInBuffer, _bytesPlayed, _oldBytesPlayed;
+		OPint _activeBuffer, _freeBuffers;
+		OPint _queued, _chunksProcessed, _oldBuffsPlayed;
+		OPint _bufferSize, _chunkSize;
+		OPint _bytesInBuffer, _bytesPlayed, _oldBytesPlayed;
 		OPsoundEmitterState _state;
 
-		int process();
+		OPint process();
 
 };
