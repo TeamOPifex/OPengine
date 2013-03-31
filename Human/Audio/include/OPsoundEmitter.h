@@ -21,7 +21,7 @@ class OPSoundEmitter{
 	public:
 		bool Looping;
 
-		OPSoundEmitter(OPsound* sound, int bytesPerBuffer);
+		OPSoundEmitter(OPsound* sound, int sections);
 		~OPSoundEmitter();
 /*---------------------------------------------------------------------------*/
 		long Length(){ return _sound->DataSize; }
@@ -37,7 +37,7 @@ class OPSoundEmitter{
 		void SetVelocity(ALfloat velocity[]){
 			alSourcefv(_alSrc, AL_VELOCITY, velocity);
 		}
-		void SetGain(float gain){
+		void SetVolume(float gain){
 			alSourcef(_alSrc, AL_GAIN, gain);
 		}
 		void SetPitch(float pitch){

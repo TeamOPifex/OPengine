@@ -67,6 +67,6 @@ class OPAudio{
 			alListenerfv(AL_ORIENTATION, forward);
 		}
 
-		OPsound ReadWave(const char* filename);
-		OPsound ReadOgg(const char* filename);
+		static OPsound ReadWave(const char* filename);
+		static OPsound ReadOgg(const char* filename);
 };

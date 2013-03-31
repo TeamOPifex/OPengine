@@ -29,7 +29,8 @@
 
 GameManager* GM;
 GamePadSystem* GPS;
-OPsound sound;
+OPsound Song;
+OPSoundEmitter* Emitter;
 
 #ifdef OPIFEX_ANDROID
 	OPtimer* timer;
@@ -130,6 +131,12 @@ void Init(){
 	}
 
 	GM = new GameManager(width, height);
+
+	OPAudio::Init();
+	Song = OPAudio::ReadOgg("Audio/background.ogg");
+	Emitter = new OPSoundEmitter(&Song, 8);
+	Emitter->SetVolume(0.15f);
+	Emitter->Play();
 	return;
 }
 
@@ -153,6 +160,8 @@ void Update( OPtimer* timer){
 	}
 	else
 		RenderSystem::ClearColor(0,0,0);
+
+	Emitter->Update();
 	GM->Draw();
 	RenderSystem::Present();
 	

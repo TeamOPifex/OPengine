@@ -149,7 +149,7 @@ OPsound OPAudio::ReadWave(const char* filename){
 	return ERR;
 }
 /*---------------------------------------------------------------------------*/
-unsigned long DecodeOggVorbis(OggVorbis_File *psOggVorbisFile, char *pDecodeBuffer, unsigned long ulBufferSize, unsigned long ulChannels){
+static unsigned long DecodeOggVorbis(OggVorbis_File *psOggVorbisFile, char *pDecodeBuffer, unsigned long ulBufferSize, unsigned long ulChannels){
 	int current_section;
 	long lDecodeSize;
 	unsigned long ulSamples;
@@ -188,7 +188,7 @@ unsigned long DecodeOggVorbis(OggVorbis_File *psOggVorbisFile, char *pDecodeBuff
 	return ulBytesDone;
 }
 /*---------------------------------------------------------------------------*/
-int fetchOggData(OPsound* sound, long pos, long len){
+static int fetchOggData(OPsound* sound, long pos, long len){
 	OggVorbis_File* ogg = (OggVorbis_File*)sound->dataSource;
 
 	long length = DecodeOggVorbis(ogg, (char*)sound->Data, sound->DataSize, sound->Channels);

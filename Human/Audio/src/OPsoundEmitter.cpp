@@ -1,6 +1,7 @@
 #include "../include/OPsoundEmitter.h"
 
-OPSoundEmitter::OPSoundEmitter(OPsound* sound, int bytesPerBuffer){
+OPSoundEmitter::OPSoundEmitter(OPsound* sound, int sections){
+	int bytesPerBuffer = (sound->SampleRate * sound->BitsPerSample) /  sections;
 	_sound = sound;
 
 	_intermediateBuffer = new unsigned char[_bufferSize = bytesPerBuffer];
