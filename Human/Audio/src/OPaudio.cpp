@@ -27,6 +27,8 @@ long ov_tell_func(void *datasource)
 }
 
 OPint OPAudio::Init(){
+
+#ifndef OPIFEX_ANDROID
 	// setup the device and stuff
 	_OPaudioDevice = alcOpenDevice(NULL);
 	if(!_OPaudioDevice) return 0;
@@ -35,6 +37,47 @@ OPint OPAudio::Init(){
 	if(!_OPaudioContext) return -1;
 
 	alDistanceModel(AL_LINEAR_DISTANCE);
+	SLresult result;
+#else
+    // create engine
+	result = slCreateEngine(&_engineObject, 0, NULL, 0, NULL, NULL);
+    if(SL_RESULT_SUCCESS != result) {
+		OPLog("Jukebox::Error 1");
+		return false;
+	}
+	
+    // realize the engine
+	result = (*_engineObject)->Realize(_engineObject, SL_BOOLEAN_FALSE);
+    if(SL_RESULT_SUCCESS != result) {
+		OPLog("Jukebox::Error 2");
+		return false;
+	}
+	
+    // get the engine interface, which is needed in order to create other objects
+    result = (*_engineObject)->GetInterface(_engineObject, SL_IID_ENGINE, &_engineEngine);
+    if(SL_RESULT_SUCCESS != result) {
+		OPLog("Jukebox::Error 3");
+		return false;
+	}
+
+	// create output mix, with environmental reverb specified as a non-required interface    
+	const SLInterfaceID ids[1] = {SL_IID_ENVIRONMENTALREVERB};
+    const SLboolean req[1] = {SL_BOOLEAN_FALSE};
+    result = (*_engineEngine)->CreateOutputMix(_engineEngine, &_outputMixObject, 1, ids, req);
+    if(SL_RESULT_SUCCESS != result) {
+		OPLog("Jukebox::Error 4");
+		//return false;
+	}
+		
+    // realize the output mix
+    result = (*_outputMixObject)->Realize(_outputMixObject, SL_BOOLEAN_FALSE);
+    if(SL_RESULT_SUCCESS != result) {
+		OPLog("Jukebox::Error 5");
+		return false;
+	}
+	
+	OPLog("Jukebox::Initialized");
+#endif
 
 #if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 	HINSTANCE _hVorbisFileDLL = LoadLibrary(L"vorbisfile.dll");

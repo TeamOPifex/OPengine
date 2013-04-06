@@ -21,9 +21,14 @@
 #include "External/Ogg/include/vorbisfile.h"
 
 extern "C"{
+#ifndef OPIFEX_ANDROID
 	static ALCdevice* _OPaudioDevice;
 	static ALCcontext* _OPaudioContext;
-
+#else
+	static SLObjectItf _engineObject;
+	static SLEngineItf _engineEngine;
+	static SLObjectItf _outputMixObject;
+#endif
 	// Function pointers
 	typedef int (*LPOVCLEAR)(OggVorbis_File *vf);
 	typedef long (*LPOVREAD)(OggVorbis_File *vf,char *buffer,int length,int bigendianp,int word,int sgned,int *bitstream);
@@ -43,9 +48,13 @@ extern "C"{
 };
 
 struct OPsound{
+#ifndef OPIFEX_ANDROID
 	ALuint SampleRate;
 	ALuint BitsPerSample;
 	ALuint Channels;
+#else
+
+#endif
 	ALenum Format;
 	void* dataSource;
 	OPint (*FillCallback)(OPsound* sound, long position, long length);
@@ -58,15 +67,24 @@ class OPAudio{
 		static OPint Init();
 
 		static void SetEarPosition(Vector3 pos){
+#ifndef OPIFEX_ANDROID
 			alListenerfv(AL_POSITION, pos.ptr());
+#else
+#endif
 		}
 
 		static void SetEarVelocity(Vector3 velo){
+#ifndef OPIFEX_ANDROID
 			alListenerfv(AL_VELOCITY, velo.ptr());
+#else
+#endif
 		}
 
 		static void SetEarForward(Vector3 forward){
+#ifndef OPIFEX_ANDROID
 			alListenerfv(AL_ORIENTATION, forward.ptr());
+#else
+#endif
 		}
 
 		static OPsound ReadWave(const char* filename);
