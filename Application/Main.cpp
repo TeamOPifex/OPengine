@@ -90,7 +90,7 @@ void Init(){
 
 	GPS = new GamePadSystem();
 
-	OPAudio::Init();
+	//OPAudio::Init();
 
 	printf("Inserting ");
 	for(OPint i = 20; i--;){

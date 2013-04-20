@@ -7,6 +7,7 @@ include_directories(
 	../External/Phsyx.3.2.1/include/
 	../External/GLES2/
 	../External/Ogg/include/
+	../External/Vorbis/include/
 	../External/OpenAL/
 	.
 	../

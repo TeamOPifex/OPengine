@@ -37,7 +37,7 @@ OPint OPAudio::Init(){
 	if(!_OPaudioContext) return -1;
 
 	alDistanceModel(AL_LINEAR_DISTANCE);
-	SLresult result;
+	//SLresult result;
 #else
     // create engine
 	result = slCreateEngine(&_engineObject, 0, NULL, 0, NULL, NULL);
@@ -80,7 +80,7 @@ OPint OPAudio::Init(){
 #endif
 
 #if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
-	HINSTANCE _hVorbisFileDLL = LoadLibrary(L"vorbisfile.dll");
+	HINSTANCE _hVorbisFileDLL = LoadLibrary("vorbisfile.dll");
 	if(_hVorbisFileDLL){
 		fn_ov_clear = (LPOVCLEAR)GetProcAddress(_hVorbisFileDLL, "ov_clear");
 		fn_ov_read = (LPOVREAD)GetProcAddress(_hVorbisFileDLL, "ov_read");

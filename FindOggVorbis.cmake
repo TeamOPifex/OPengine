@@ -8,7 +8,6 @@
 #  OGG_LIBRARY         - The Ogg library
 #  VORBIS_LIBRARY      - The Vorbis library
 #  VORBISFILE_LIBRARY  - The VorbisFile library
-#  VORBISENC_LIBRARY   - The VorbisEnc library
 
 # Copyright (c) 2006, Richard Laerkaeng, <richard@goteborg.utfors.se>
 #
@@ -18,22 +17,46 @@
 
 include (CheckLibraryExists)
 
-find_path(VORBIS_INCLUDE_DIR vorbis/vorbisfile.h)
-find_path(OGG_INCLUDE_DIR ogg/ogg.h)
+find_path(VORBIS_INCLUDE_DIR vorbis/vorbisfile.h 
+   PATHS 
+   "${PROJECT_SOURCE_DIR}/External/Vorbis/include"
+)
 
-find_library(OGG_LIBRARY NAMES ogg)
-find_library(VORBIS_LIBRARY NAMES vorbis)
-find_library(VORBISFILE_LIBRARY NAMES vorbisfile)
-find_library(VORBISENC_LIBRARY NAMES vorbisenc)
+find_path(OGG_INCLUDE_DIR ogg/ogg.h
+   PATHS
+   "${PROJECT_SOURCE_DIR}/External/Ogg/include"
+)
+
+message(STATUS "Looking in: ${PROJECT_SOURCE_DIR}")
+message(STATUS "Vorbis Include: ${VORBIS_INCLUDE_DIR}")
+message(STATUS "Ogg Include: ${OGG_INCLUDE_DIR}")
+
+find_library(OGG_LIBRARY 
+   NAMES ogg libogg
+   PATHS
+   "${PROJECT_SOURCE_DIR}/External/Ogg/lib/win32"
+)
+find_library(VORBIS_LIBRARY 
+   NAMES vorbis libvorbis
+   PATHS
+   "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32"
+)
+find_library(VORBISFILE_LIBRARY 
+   NAMES vorbisfile libvorbisfile
+   PATHS
+   "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32"
+)
+
+message(STATUS "Ogg: ${OGG_LIBRARY}")
 
 mark_as_advanced(VORBIS_INCLUDE_DIR OGG_INCLUDE_DIR
-                 OGG_LIBRARY VORBIS_LIBRARY VORBISFILE_LIBRARY VORBISENC_LIBRARY)
+                 OGG_LIBRARY VORBIS_LIBRARY VORBISFILE_LIBRARY)
 
 
-if (VORBIS_INCLUDE_DIR AND VORBIS_LIBRARY AND VORBISFILE_LIBRARY AND VORBISENC_LIBRARY)
+if (VORBIS_INCLUDE_DIR AND VORBIS_LIBRARY AND VORBISFILE_LIBRARY)
    set(OGGVORBIS_FOUND TRUE)
 
-   set(OGGVORBIS_LIBRARIES ${OGG_LIBRARY} ${VORBIS_LIBRARY} ${VORBISFILE_LIBRARY} ${VORBISENC_LIBRARY})
+   set(OGGVORBIS_LIBRARIES ${OGG_LIBRARY} ${VORBIS_LIBRARY} ${VORBISFILE_LIBRARY})
 
    set(_CMAKE_REQUIRED_LIBRARIES_TMP ${CMAKE_REQUIRED_LIBRARIES})
    set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${OGGVORBIS_LIBRARIES})
@@ -46,10 +69,10 @@ if (VORBIS_INCLUDE_DIR AND VORBIS_LIBRARY AND VORBISFILE_LIBRARY AND VORBISENC_L
       set (OGGVORBIS_VERSION 1)
    endif (HAVE_LIBVORBISENC2)
 
-else (VORBIS_INCLUDE_DIR AND VORBIS_LIBRARY AND VORBISFILE_LIBRARY AND VORBISENC_LIBRARY)
+else (VORBIS_INCLUDE_DIR AND VORBIS_LIBRARY AND VORBISFILE_LIBRARY)
    set (OGGVORBIS_VERSION)
    set(OGGVORBIS_FOUND FALSE)
-endif (VORBIS_INCLUDE_DIR AND VORBIS_LIBRARY AND VORBISFILE_LIBRARY AND VORBISENC_LIBRARY)
+endif (VORBIS_INCLUDE_DIR AND VORBIS_LIBRARY AND VORBISFILE_LIBRARY)
 
 
 if (OGGVORBIS_FOUND)
@@ -64,28 +87,3 @@ else (OGGVORBIS_FOUND)
       message(STATUS "Could NOT find OggVorbis libraries")
    endif (NOT OggVorbis_FIND_QUITELY)
 endif (OGGVORBIS_FOUND)
-
-#check_include_files(vorbis/vorbisfile.h HAVE_VORBISFILE_H)
-#check_library_exists(ogg ogg_page_version "" HAVE_LIBOGG)
-#check_library_exists(vorbis vorbis_info_init "" HAVE_LIBVORBIS)
-#check_library_exists(vorbisfile ov_open "" HAVE_LIBVORBISFILE)
-#check_library_exists(vorbisenc vorbis_info_clear "" HAVE_LIBVORBISENC)
-#check_library_exists(vorbis vorbis_bitrate_addblock "" HAVE_LIBVORBISENC2)
-
-#if (HAVE_LIBOGG AND HAVE_VORBISFILE_H AND HAVE_LIBVORBIS AND HAVE_LIBVORBISFILE AND HAVE_LIBVORBISENC)
-#    message(STATUS "Ogg/Vorbis found")
-#    set (VORBIS_LIBS "-lvorbis")
-#    set (OGG_LIBS "-logg")
-#    set (VORBISFILE_LIBS "-lvorbisfile")
-#    set (VORBISENC_LIBS "-lvorbisenc")
-#    set (OGGVORBIS_FOUND TRUE)
-#    if (HAVE_LIBVORBISENC2)
-#        set (HAVE_VORBIS 2)
-#    else (HAVE_LIBVORBISENC2)
-#        set (HAVE_VORBIS 1)
-#    endif (HAVE_LIBVORBISENC2)
-#else (HAVE_LIBOGG AND HAVE_VORBISFILE_H AND HAVE_LIBVORBIS AND HAVE_LIBVORBISFILE AND HAVE_LIBVORBISENC)
-#    message(STATUS "Ogg/Vorbis not found")
-#endif (HAVE_LIBOGG AND HAVE_VORBISFILE_H AND HAVE_LIBVORBIS AND HAVE_LIBVORBISFILE AND HAVE_LIBVORBISENC)
-
-

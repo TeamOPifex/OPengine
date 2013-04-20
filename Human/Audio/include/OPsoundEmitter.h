@@ -1,7 +1,7 @@
 #pragma once
 #if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
-#include "../include/al.h"
-#include "../include/alc.h"
+#include <AL/al.h>
+#include <AL/alc.h>
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 #include <AL/al.h>
 #include <AL/alc.h>

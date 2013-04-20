@@ -6,6 +6,9 @@ include_directories(
 	../External/glew-1.5.8/include/
 	../External/Phsyx.3.2.1/include/
 	../External/GLES2/
+	../External/Ogg/include/
+	../External/Vorbis/include/
+	../External/OpenAL/
 	.
 	../
 )
@@ -27,6 +30,9 @@ add_executable(7_Application ${APPLICATION_SRC})
 
 target_link_libraries(7_Application
 	${ALL_LIBS}
+	${OGG_LIBRARY}
+	${VORBIS_LIBRARY}
+	${VORBISFILE_LIBRARY}
 )
 
 SET_TARGET_PROPERTIES(7_Application PROPERTIES LINKER_LANGUAGE CXX)

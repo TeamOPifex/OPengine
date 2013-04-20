@@ -7,9 +7,8 @@
 
 #if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 #include "stdafx.h"
-#include "vorbisfile.h"
-#include "al.h"
-#include "alc.h"
+#include <AL/al.h>
+#include <AL/alc.h>
 #include <WTypes.h>
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 #include <string.h>
@@ -17,8 +16,8 @@
 #include <AL/alc.h>
 #endif
 
-#include "External/Ogg/include/ogg.h"
-#include "External/Ogg/include/vorbisfile.h"
+#include <ogg/ogg.h>
+#include <vorbis/vorbisfile.h>
 
 extern "C"{
 #ifndef OPIFEX_ANDROID
