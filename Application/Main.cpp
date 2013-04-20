@@ -24,9 +24,13 @@
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 #endif
 #include "./Data/include/OPfile.h"
+#include "./Human/Audio/include/OPaudio.h"
+#include "./Human/Audio/include/OPsoundEmitter.h"
 
 GameManager* GM;
 GamePadSystem* GPS;
+OPsound Song;
+OPSoundEmitter* Emitter;
 
 #ifdef OPIFEX_ANDROID
 	OPtimer* timer;
@@ -86,6 +90,8 @@ void Init(){
 
 	GPS = new GamePadSystem();
 
+	//OPAudio::Init();
+
 	printf("Inserting ");
 	for(OPint i = 20; i--;){
 		OPint* j = (OPint*)OPalloc(sizeof(OPint));
@@ -125,6 +131,12 @@ void Init(){
 	}
 
 	GM = new GameManager(width, height);
+
+	OPAudio::Init();
+	Song = OPAudio::ReadOgg("Audio/background.ogg");
+	Emitter = new OPSoundEmitter(&Song, 8);
+	Emitter->SetVolume(0.15f);
+	Emitter->Play();
 	return;
 }
 
@@ -148,6 +160,8 @@ void Update( OPtimer* timer){
 	}
 	else
 		RenderSystem::ClearColor(0,0,0);
+
+	Emitter->Update();
 	GM->Draw();
 	RenderSystem::Present();
 	
