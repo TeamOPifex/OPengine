@@ -12,9 +12,14 @@
 #include <GL/glew.h>
 #endif
 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
 Shader::Shader(ShaderType shaderType, const char* source){
-	
-	
+
 	m_handle = glCreateShader(GetShaderType(shaderType));
 	CheckError("GLShader::Error 1");
 	if(m_handle){
@@ -40,9 +45,15 @@ Shader::Shader(ShaderType shaderType, const char* source){
 }
 
 ShaderPtr Shader::FromFile(ShaderType shaderType, const char* file){
+
 	FileInformation fileInfo = OPreadFileInformation(file);
 	char* shaderCode = (char*)OPalloc(sizeof(char) * fileInfo.length);
-	fgets(shaderCode, fileInfo.length, fileInfo.file);
+	
+	int pos = 0;
+	int c;
+	while ((c = fgetc(fileInfo.file)) != EOF)	
+		shaderCode[pos++] = c;
+	
 	shaderCode[fileInfo.length - 1] = '\0';
 	ShaderPtr glshader = new Shader(shaderType, shaderCode);
 	OPfree(shaderCode);
