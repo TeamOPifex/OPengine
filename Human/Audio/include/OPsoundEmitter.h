@@ -50,7 +50,11 @@ class OPSoundEmitter{
 
 	private:
 		OPsound* _sound;
+#ifdef OPIFEX_ANDROID // openSL ES for android
+
+#else // openAL for desktops
 		ALuint _buffers[BUFFERS], _alSrc;
+#endif
 		ui8* _intermediateBuffer;
 
 		OPint _activeBuffer, _freeBuffers;

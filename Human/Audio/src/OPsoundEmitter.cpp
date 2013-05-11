@@ -7,6 +7,19 @@ OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
 	_intermediateBuffer = new unsigned char[_bufferSize = bytesPerBuffer];
 	for(OPint i = bytesPerBuffer; i--; _intermediateBuffer[i] = 0);
 
+#ifdef OPIFEX_ANDROID
+	FileInformation fileInfo = OPreadFileInformation(filename);
+	OPint _fd = fileInfo.fileDescriptor;
+
+	// TODO assumes that _fd will be negative on error
+	if(_fd){
+
+	}
+
+	// data locator
+	SLDataLocator_AndroidFD loc_fd = {SL_DATALOCATOR_ANDROIDFD, fileInfo.fileDescriptor, fileInfo.start, fileInfo.length};
+	
+#else // OPENAL FOR DESKTOPS
 	alGenBuffers(BUFFERS, _buffers); // backbuffer and forebuffer
 	alGenSources(1, &_alSrc);
 	alSourcei(_alSrc, AL_LOOPING, AL_FALSE);
@@ -20,6 +33,7 @@ OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
 		bytesPerBuffer,
 		_sound->SampleRate
 	);
+#endif
 
 	Looping = false;
 	_activeBuffer = 0; // start with the forebuffer

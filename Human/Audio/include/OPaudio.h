@@ -57,10 +57,10 @@ struct OPsound{
 	ALuint SampleRate;
 	ALuint BitsPerSample;
 	ALuint Channels;
-#else
-
-#endif
 	ALenum Format;
+#else
+	ui8 SLdataFormat[32];
+#endif
 	void* dataSource;
 	OPint (*FillCallback)(OPsound* sound, long position, long length);
 	i64 DataSize;
