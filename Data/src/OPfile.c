@@ -128,6 +128,33 @@ OPstream* OPreadFile(const char* path){
 	}	
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 	// windows implementation
+	OPint fd = 0, i;
+	// check to see if the file exists
+	if(OPfileExists(path) >= 0){
+		printf("%s exists\n", path);
+ 
+		// be sure that the file could be opened successfully
+	 	if(!_sopen_s(&fd, path, _O_BINARY|_O_RDONLY, _SH_DENYWR, _S_IREAD)){
+			ui8 byte = 0;
+			OPstream* str = OPstreamCreate(4);
+
+			printf("File opened successfully\n");
+
+			// write the entire file into a stream
+			while(read(fd, &byte, sizeof(ui8))){
+				//char ch = (char)byte;
+				//printf("%c", ch);
+				OPwrite(str, &byte, sizeof(ui8));
+			}
+			close(fd); 
+			OPseek(str, 0);
+
+			// finally return the stream
+			return str;
+		}
+	}
+	else
+		printf("%s does not exist\n", path);
 #endif
 }
 
@@ -213,6 +240,22 @@ OPint OPdeleteFile(const char* path){
 		}
 	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 		// windows implementation
+		OPint fd = 0;
+		OPstream* s = stream->GetStream();	
+
+		// be sure that the file could be opened successfully
+		if((fd = open(path, O_CREAT|O_WRONLY|O_TRUNC, 0666)) >= 0){
+			stream->Seek(0);
+			// write the entire stream in one go.
+			printf("Writing to %d @ %d with %d bytes\n", fd, s->_pointer, s->Length);
+			write(fd, s->Data, s->Length);
+			// finally close the file, we are done writing
+			close(fd); 
+			return 1;
+		}
+		else{
+			return 0;
+		}
 	#endif
 	}
 

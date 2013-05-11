@@ -12,7 +12,12 @@
 #include <fcntl.h>
 
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
-	#include <stdio.h>
+#include <share.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <io.h>
 #endif
 
 
