@@ -1,5 +1,8 @@
 #pragma once
-#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#ifdef OPIFEX_ANDROID
+#include <SLES/OpenSLES.h>
+#include <SLES/OpenSLES_Android.h>
+#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 #include <AL/al.h>
 #include <AL/alc.h>
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)

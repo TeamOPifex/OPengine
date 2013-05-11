@@ -15,6 +15,16 @@
 	#include <stdio.h>
 #endif
 
+
+// Define platform independent aliases for reading/writing from sockets
+#define OPREAD(fd, buff, count, readSuccessfully){\
+	readSuccessfully = read(fd, buff, count);\
+}\
+
+#define OPWRITE(fd, buff, count, writtenSuccesfully){\
+	writtenSuccesfully = write(fd, buff, count);\
+}\
+
 typedef struct {
 	FILE* file;
 	ui32 start;

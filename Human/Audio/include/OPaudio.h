@@ -3,9 +3,15 @@
 #include "Core/include/Target.h"
 #include "Core/include/Types.h"
 #include "Core/include/DynamicMemory.h"
+#include "Data/include/OPfile.h"
 #include "Human/Math/Vector3.h"
 
-#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#include "./Core/include/Log.h"
+
+#ifdef OPIFEX_ANDROID
+#include <SLES/OpenSLES.h>
+#include <SLES/OpenSLES_Android.h>
+#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 #include "stdafx.h"
 #include <AL/al.h>
 #include <AL/alc.h>

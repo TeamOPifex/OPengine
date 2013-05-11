@@ -74,7 +74,7 @@ void OPSoundEmitter::Update(){
 		}
 
 		if(_queued + playPos >= _sound->DataSize){
-			printf("Played: %d\n", _bytesPlayed);
+			//printf("Played: %d @ %d\n", _bytesPlayed, _sound->DataSize);
 			if(Looping){
 				_queued = _bytesPlayed = _bytesInBuffer = _chunksProcessed = 0;
 				_activeBuffer = 0;
@@ -90,8 +90,11 @@ void OPSoundEmitter::Update(){
 						Stop();
 
 				}
-				else
-					Stop();
+				else{
+					// TODO
+					//_queued = _bytesPlayed = _bytesInBuffer = _chunksProcessed = 0;
+					//_activeBuffer = 0;
+				}
 			}
 		}
 
@@ -127,9 +130,10 @@ OPint OPSoundEmitter::process(){
 		if(!toProcess) return 0; // no more data! we are done
 
 		// this is where processing would happen, for now just simply copy
-		for(OPint i = toProcess; i--;){
+		/*for(OPint i = toProcess; i--;){
 			_intermediateBuffer[offset + i] = (_sound->Data + _queued)[offset + i];
-		}
+		}*/
+		OPmemcpy((&_intermediateBuffer[offset]), (&(_sound->Data + _queued)[offset]), toProcess);
 
 
 		_bytesInBuffer += toProcess;

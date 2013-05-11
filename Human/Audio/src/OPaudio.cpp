@@ -28,18 +28,9 @@ long ov_tell_func(void *datasource)
 
 OPint OPAudio::Init(){
 
-#ifndef OPIFEX_ANDROID
-	// setup the device and stuff
-	_OPaudioDevice = alcOpenDevice(NULL);
-	if(!_OPaudioDevice) return 0;
-	_OPaudioContext = alcCreateContext(_OPaudioDevice, NULL);
-	alcMakeContextCurrent(_OPaudioContext);
-	if(!_OPaudioContext) return -1;
-
-	alDistanceModel(AL_LINEAR_DISTANCE);
-	//SLresult result;
-#else
+#ifdef OPIFEX_ANDROID // USE OpenSL ES for sound
     // create engine
+	SLresult result;
 	result = slCreateEngine(&_engineObject, 0, NULL, 0, NULL, NULL);
     if(SL_RESULT_SUCCESS != result) {
 		OPLog("Jukebox::Error 1");
@@ -77,8 +68,20 @@ OPint OPAudio::Init(){
 	}
 	
 	OPLog("Jukebox::Initialized");
+
+#else // USE OpenAL FOR SOUND
+	// setup the device and stuff
+	_OPaudioDevice = alcOpenDevice(NULL);
+	if(!_OPaudioDevice) return 0;
+	_OPaudioContext = alcCreateContext(_OPaudioDevice, NULL);
+	alcMakeContextCurrent(_OPaudioContext);
+	if(!_OPaudioContext) return -1;
+
+	alDistanceModel(AL_LINEAR_DISTANCE);
+	//SLresult result;
 #endif
 
+// USE OGG VORBIS FOR DESKTOP PLATFORMS
 #if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 	HINSTANCE _hVorbisFileDLL = LoadLibrary("vorbisfile.dll");
 	if(_hVorbisFileDLL){
@@ -108,88 +111,112 @@ OPint OPAudio::Init(){
 }
 /*---------------------------------------------------------------------------*/
 OPsound OPAudio::ReadWave(const i8* filename){
-	FILE* fp = NULL;
-	OPsound ERR = {0};
-	fp = fopen(filename, "rb");
 
-	if(!fp) printf("Error: couldn't open '%s'\n", filename);
-	else{
-		i8 type[4];
-		i64 size, chunkSize;
-		i16 formatType, channels;
-		i64 sampleRate, avgBytesPerSec;
-		i16 bytesPerSample, bitsPerSample;
-		i64 dataSize;
+#ifdef OPIFEX_ANDROID // openSL ES
+	{
+		FileInformation fileInfo = OPreadFileInformation(filename);
+		OPint _fd = fileInfo.fileDescriptor;
+	
+		// TODO assumes that _fd will be negative on error
+		if(_fd){
 
-		fread(type, sizeof(i8), 4, fp);
-		if(memcmp(type, "RIFF", 4) != 0){
-			printf("No RIFF\n");
 		}
 
-		fread(&size, sizeof(i64), 1, fp);
-		fread(type, sizeof(i8), 4, fp);
-		if(memcmp(type, "WAVE", 4) != 0){
-			printf("Not WAVE\n");
-		}
-
-		fread(type, sizeof(i8), 4, fp);
-		if(memcmp(type, "fmt ", 4) != 0){
-			printf("Not fmt\n");
-		}
-
-		fread(&chunkSize, sizeof(i64), 1, fp);
-		fread(&formatType, sizeof(i16), 1, fp);
-		fread(&channels, sizeof(i16), 1, fp);
-		fread(&sampleRate, sizeof(i64), 1, fp);
-		fread(&avgBytesPerSec, sizeof(i64), 1, fp);
-		fread(&bytesPerSample, sizeof(i16), 1, fp);
-		fread(&bitsPerSample, sizeof(i16), 1, fp);
-
-		printf("Chunk Size: %d\nChannels: %d\nSample Rate: %d\nBytes/Sec: %d\n",
-			(OPint)chunkSize, (OPint)channels, (OPint)sampleRate, (OPint)avgBytesPerSec);
-
-		fread(type, sizeof(i8), 4, fp);
-		if(memcmp(type, "data", 4) != 0){
-			printf("Missing data\n");
-		}
-
-		fread(&dataSize, sizeof(i64), 1, fp);
-
-		ui8* data = (ui8*)OPalloc(sizeof(ui8) * dataSize);
-		fread(data, dataSize, 1, fp);
-
-		fclose(fp);
-
-		ALenum format = 0;
-
-		switch (bitsPerSample)
-		{
-			case 8:
-				format = (channels == 2 ? AL_FORMAT_STEREO8 : AL_FORMAT_MONO8);
-				break;
-			case 16:
-				format = (channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16);
-				break;
-			default:
-				break;
-		}
-
-		OPsound out = {
-			sampleRate,
-			bitsPerSample,
-			channels,
-			format,
-			NULL,
-			NULL,
-			dataSize,
-			data
-		};
-
-		return out;
+		// data locator
+		SLDataLocator_AndroidFD loc_fd = {SL_DATALOCATOR_ANDROIDFD, fileInfo.fileDescriptor, fileInfo.start, fileInfo.length};
+		SLDataFormat_PCM_EX 
 	}
+#else // normal openAL
+	{
+		//FILE* fp = NULL;
+		OPsound ERR = {0};
+		//fp = fopen(filename, "rb");
+		OPstream* str = OPreadFile(filename);
+
+		if(!str) printf("Error: couldn't open '%s'\n", filename);
+		else{
+			ui8* type;
+			i64 size = 0, chunkSize = 0;
+			i16 formatType = 0, channels = 0;
+			i64 sampleRate = 0, avgBytesPerSec = 0;
+			i16 bytesPerSample = 0, bitsPerSample = 0;
+			i64 dataSize = 0;
+
+			type = OPread(str, sizeof(i8) * 4);
+			if(memcmp(type, "RIFF", 4) != 0){
+				printf("No RIFF\n");
+			}
+
+			OPmemcpy(&size, OPread(str, sizeof(i64)), sizeof(i64));
+			type = OPread(str, sizeof(i8) * 4);
+			if(memcmp(type, "WAVE", 4) != 0){
+				printf("Not WAVE\n");
+			}
+
+			type = OPread(str, sizeof(i8) * 4);
+			if(memcmp(type, "fmt ", 4) != 0){
+				printf("Not fmt\n");
+			}
+
+			OPmemcpy(&chunkSize, OPread(str, sizeof(i64)), sizeof(i64));
+			OPmemcpy(&formatType, OPread(str, sizeof(i16)), sizeof(i16));
+			OPmemcpy(&channels, OPread(str, sizeof(i16)), sizeof(i16));
+			OPmemcpy(&sampleRate, OPread(str, sizeof(i64)), sizeof(i64));
+			OPmemcpy(&avgBytesPerSec, OPread(str, sizeof(i64)), sizeof(i64));
+			OPmemcpy(&bytesPerSample, OPread(str, sizeof(i16)), sizeof(i16));
+			OPmemcpy(&bitsPerSample, OPread(str, sizeof(i16)), sizeof(i16));
+
+			printf("Chunk Size: %d\nChannels: %d\nSample Rate: %d\nBytes/Sec: %d\n",
+				(OPint)chunkSize, (OPint)channels, (OPint)sampleRate, (OPint)avgBytesPerSec);
+
+			type = OPread(str, sizeof(i8) * 4);
+			if(memcmp(type, "data", 4) != 0){
+				printf("Missing data\n");
+			}
+
+			OPmemcpy(&dataSize, OPread(str, sizeof(i64)), sizeof(i64));
+
+			ui8* data = (ui8*)OPalloc(sizeof(ui8) * dataSize);
+			OPmemcpy(data, OPread(str, dataSize), dataSize);
+
+			OPstreamDestroy(str);
+
+			ALenum format = 0;
+
+			switch (bitsPerSample)
+			{
+				case 8:
+					format = (channels == 2 ? AL_FORMAT_STEREO8 : AL_FORMAT_MONO8);
+					break;
+				case 16:
+					format = (channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16);
+					break;
+				default:
+					break;
+			}
+
+			OPsound out = {
+				sampleRate,
+				bitsPerSample,
+				channels,
+				format,
+				NULL,
+				NULL,
+				dataSize,
+				data
+			};
+
+			return out;
+		}
 
 
-	return ERR;
+		return ERR;
+	}
+#endif
+}
+/*---------------------------------------------------------------------------*/
+static OPint fetchWaveData(OPsound* sound, i64 pos, i64 len){
+
 }
 /*---------------------------------------------------------------------------*/
 static ui64 DecodeOggVorbis(OggVorbis_File *psOggVorbisFile, i8 *pDecodeBuffer, ui64 ulBufferSize, ui64 ulChannels){
