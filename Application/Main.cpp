@@ -26,6 +26,8 @@
 #include "./Data/include/OPfile.h"
 #include "./Human/Audio/include/OPaudio.h"
 #include "./Human/Audio/include/OPsoundEmitter.h"
+#include "./Data/include/OPfile.h"
+
 
 GameManager* GM;
 GamePadSystem* GPS;

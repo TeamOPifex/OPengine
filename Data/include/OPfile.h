@@ -27,12 +27,47 @@ typedef struct {
 extern "C" {
 #endif
 	
-
+//-----------------------------------------------------------------------------
+/**
+ * OPread_ui16 - Reads the next 2 bytes from the file and converts to ui16
+ *	@param file FILE* to the file stream
+ *	@return ui16
+ */
+ui16 OPread_ui16(FILE* file);
+//-----------------------------------------------------------------------------
+/**
+ * OPread_ui32 - Reads the next 4 bytes from the file and converts to ui32
+ *	@param file FILE* to the file stream
+ *	@return ui32
+ */
+ui32 OPread_ui32(FILE* file);
+//-----------------------------------------------------------------------------
+/**
+ * OPread_i32 - Reads the next 4 bytes from the file and converts to i32
+ *	@param file FILE* to the file stream
+ *	@return i32
+ */
+i32 OPread_i32(FILE* file);
+//-----------------------------------------------------------------------------
+/**
+ * OPread_f32 - Reads the next 4 bytes from the file and converts to f32
+ *	@param file FILE* to the file stream
+ *	@return f32
+ */
+f32 OPread_f32(FILE* file);
+//-----------------------------------------------------------------------------
+/**
+ * OPreadFileInformation - Reads file information, getting start and length
+ *	@param path Location in the file system where the data will be written.
+ *	@return FileInformation
+ */
 FileInformation OPreadFileInformation(const char* path);
-
-
+//-----------------------------------------------------------------------------
+/**
+ * OPfileInit - Initiates the file system.
+ *	@param manager Location in the file system where the data will be written.
+ */
 void OPfileInit(void* manager);
-
 //-----------------------------------------------------------------------------
 /**
  * OPwriteFile - Writes a byte stream to a file.

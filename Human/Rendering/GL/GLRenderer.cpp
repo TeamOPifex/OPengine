@@ -47,12 +47,12 @@ int GLRenderer::initialize(ui32 width, ui32 height){
 	glfwSetWindowTitle( "OPifex Engine" );
 	glfwEnable( GLFW_STICKY_KEYS );	
 
-	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 	//glDepthFunc(GL_LESS); 
 	//glCullFace(GL_BACK);
 	//glEnable(GL_CULL_FACE);
 
-	glDisable(GL_DEPTH_TEST);
+	//glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	
 	// TODO: Determine how to optimize with this

@@ -8,6 +8,30 @@
 AAssetManager* _mgr;
 #endif
 
+ui16 OPread_ui16(FILE* file) {
+	char tmp[2];
+	fread(tmp, 1, 2, file);
+	return *((unsigned short*)tmp);
+}
+
+ui32 OPread_ui32(FILE* file) {
+	char tmp[4];
+	fread(&tmp, 1, 4, file);
+	return *((unsigned int*)tmp);
+}
+
+i32 OPread_i32(FILE* file) {
+	char tmp[4];
+	fread(&tmp, 1, 4, file);
+	return *((int*)tmp);
+}
+
+f32 OPread_f32(FILE* file) {
+	char tmp[4];
+	fread(&tmp, 1, 4, file);
+	return *((float*)tmp); 
+}
+
 FileInformation OPreadFileInformation(const char* path){
 	FileInformation file;
 #ifdef OPIFEX_ANDROID

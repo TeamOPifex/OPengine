@@ -22,6 +22,9 @@ private:
 
 	TexturedScreenMaterial* _screenMaterial;
 	Quad* _quad;
+
+	Matrix4 rotate;
+	f32 rotateAmnt;
 };
 
 #endif

@@ -6,8 +6,8 @@ Camera Camera::GameCamera = Camera(
 	Vector3(0, 0, 5), // position at origin
 	Vector3(0, 0, 0), // looking down the Z-axis
 	Vector3(0, 1, 0), // up
-	1.0f,
-	1000.0f,
+	-100.0f,
+	10000.0f,
 	-150.0f,
 	150.0f,
 	75.0f,
