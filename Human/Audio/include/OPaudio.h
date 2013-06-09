@@ -2,6 +2,7 @@
 
 #include "Core/include/Target.h"
 #include "Core/include/Types.h"
+#include "Core/include/MathHelpers.h"
 #include "Core/include/DynamicMemory.h"
 #include "Data/include/OPfile.h"
 #include "Human/Math/Vector3.h"
@@ -26,15 +27,19 @@
 #include <vorbis/vorbisfile.h>
 
 extern "C"{
-#ifndef OPIFEX_ANDROID
-	static ALCdevice* _OPaudioDevice;
-	static ALCcontext* _OPaudioContext;
-#else
+#ifdef OPIFEX_ANDROID
+	#define AL_FORMAT_MONO16 0
+	#define AL_FORMAT_STEREO16 1
+
 	static SLObjectItf _engineObject;
 	static SLEngineItf _engineEngine;
 	static SLObjectItf _outputMixObject;
+#else
+	static ALCdevice* _OPaudioDevice;
+	static ALCcontext* _OPaudioContext;
 #endif
-	// Function pointers
+
+	// Function pointers for OGG
 	typedef int (*LPOVCLEAR)(OggVorbis_File *vf);
 	typedef long (*LPOVREAD)(OggVorbis_File *vf,char *buffer,int length,int bigendianp,int word,int sgned,int *bitstream);
 	typedef ogg_int64_t (*LPOVPCMTOTAL)(OggVorbis_File *vf,int i);
@@ -42,8 +47,7 @@ extern "C"{
 	typedef vorbis_comment * (*LPOVCOMMENT)(OggVorbis_File *vf,int link);
 	typedef int (*LPOVOPENCALLBACKS)(void *datasource, OggVorbis_File *vf,char *initial, long ibytes, ov_callbacks callbacks);
 
-
-	// Variables
+	// Variables for OGG
 	static LPOVCLEAR           fn_ov_clear;
 	static LPOVREAD            fn_ov_read;
 	static LPOVPCMTOTAL        fn_ov_pcm_total;
@@ -59,10 +63,14 @@ struct OPsound{
 	ALuint Channels;
 	ALenum Format;
 #else
+	SLuint32 SampleRate;
+	SLuint32 BitsPerSample;
+	SLuint32 Channels;
+	//ALenum Format;
 	ui8 SLdataFormat[32];
 #endif
 	void* dataSource;
-	OPint (*FillCallback)(OPsound* sound, long position, long length);
+	OPint (*FillCallback)(OPsound* sound, i64 position, i64 length);
 	i64 DataSize;
 	ui8* Data;
 };
@@ -72,26 +80,26 @@ class OPAudio{
 		static OPint Init();
 
 		static void SetEarPosition(Vector3 pos){
-#ifndef OPIFEX_ANDROID
-			alListenerfv(AL_POSITION, pos.ptr());
+#ifdef OPIFEX_ANDROID
 #else
+			alListenerfv(AL_POSITION, pos.ptr());
 #endif
 		}
 
 		static void SetEarVelocity(Vector3 velo){
-#ifndef OPIFEX_ANDROID
-			alListenerfv(AL_VELOCITY, velo.ptr());
+#ifdef OPIFEX_ANDROID
 #else
+			alListenerfv(AL_VELOCITY, velo.ptr());
 #endif
 		}
 
 		static void SetEarForward(Vector3 forward){
-#ifndef OPIFEX_ANDROID
-			alListenerfv(AL_ORIENTATION, forward.ptr());
+#ifdef OPIFEX_ANDROID
 #else
+			alListenerfv(AL_ORIENTATION, forward.ptr());
 #endif
 		}
 
-		static OPsound ReadWave(const char* filename);
-		static OPsound ReadOgg(const char* filename);
+		static OPsound ReadWave(const OPchar* filename);
+		static OPsound ReadOgg(const OPchar* filename);
 };

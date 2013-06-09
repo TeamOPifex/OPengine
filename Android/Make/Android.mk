@@ -23,6 +23,35 @@ LOCAL_PATH:= $(call my-dir)
 PROJECT_PATH:= $(LOCAL_PATH)/../@OPIFEX_REPOSITORY@
 
 ##############
+# LIBOGG
+##############
+include $(CLEAR_VARS)
+
+LOCAL_MODULE := libfuckit
+#LOCAL_CFLAGS += -I$(PROJECT_PATH)/External/Ogg/include -ffast-math -fsigned-char
+#LOCAL_CFLAGS += -march=armv6 -marm -mfloat-abi=softfp -mfpu=vfp
+#LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/External/Ogg/src/*.c)
+   LOCAL_SRC_FILES := Ogg/lib/android/libogg.so
+   include $(PREBUILT_SHARED_LIBRARY)
+
+#include $(BUILD_STATIC_LIBRARY)
+
+##############
+# LIBVORBIS
+##############
+include $(CLEAR_VARS)
+
+LOCAL_MODULE := libvorbis
+#LOCAL_CFLAGS += -I$(PROJECT_PATH)/External/Vorbis/include -ffast-math -fsigned-char
+#LOCAL_CFLAGS += -march=armv6 -marm -mfloat-abi=softfp -mfpu=vfp
+LOCAL_SHARED_LIBRARIES := libogg
+#LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/External/Vorbis/*.c)
+   LOCAL_SRC_FILES := Vorbis/lib/android/libvorbis.so
+   include $(PREBUILT_SHARED_LIBRARY)
+
+#include $(BUILD_STATIC_LIBRARY)
+
+##############
 # 1_CORE
 # core lib, which will be built statically
 ##############
@@ -36,8 +65,8 @@ MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Core/src/*.c)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 #LOCAL_SRC_FILES := \
-#	$(CORE_LIST_C:$(PROJECT_PATH)/%=%)
-	
+#       $(CORE_LIST_C:$(PROJECT_PATH)/%=%)
+        
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -70,6 +99,9 @@ LOCAL_LDLIBS    := -llog -lGLESv2
 LOCAL_CFLAGS    := -Werror
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
+LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Ogg/include
+LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Vorbis/include
+
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/Audio/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Input/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Math/*.cpp)
@@ -101,6 +133,9 @@ LOCAL_MODULE    := libsmrf
 LOCAL_LDLIBS    := -llog -lGLESv2 -landroid -lOpenSLES
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
+LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Ogg/include
+LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Vorbis/include
+
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Application/*.cpp)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 LOCAL_STATIC_LIBRARIES := libopifex-human

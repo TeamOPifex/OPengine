@@ -8,24 +8,45 @@ OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
 	for(OPint i = bytesPerBuffer; i--; _intermediateBuffer[i] = 0);
 
 #ifdef OPIFEX_ANDROID
-	FileInformation fileInfo = OPreadFileInformation(filename);
-	OPint _fd = fileInfo.fileDescriptor;
+    // configure audio source
+    SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, 2};
+    SLDataFormat_PCM format_pcm = {
+    	SL_DATAFORMAT_PCM,
+    	1,
+    	SL_SAMPLINGRATE_8,
+        SL_PCMSAMPLEFORMAT_FIXED_16,
+        SL_PCMSAMPLEFORMAT_FIXED_16,
+        SL_SPEAKER_FRONT_CENTER,
+        SL_BYTEORDER_LITTLEENDIAN
+    };
 
-	// TODO assumes that _fd will be negative on error
-	if(_fd){
+    SLDataSource audioSrc = {&loc_bufq, &format_pcm};
 
-	}
-
-	// data locator
-	SLDataLocator_AndroidFD loc_fd = {SL_DATALOCATOR_ANDROIDFD, fileInfo.fileDescriptor, fileInfo.start, fileInfo.length};
+    // configure audio sink
+    SLDataLocator_OutputMix loc_outmix = {SL_DATALOCATOR_OUTPUTMIX, _outputMixObject};
+    SLDataSink audioSnk = {&loc_outmix, NULL};
 	
+    const SLInterfaceID ids[3] = {SL_IID_BUFFERQUEUE, SL_IID_EFFECTSEND,
+            /*SL_IID_MUTESOLO,*/ SL_IID_VOLUME};
+    const SLboolean req[3] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE,
+            /*SL_BOOLEAN_TRUE,*/ SL_BOOLEAN_TRUE};
+    (*_engineEngine)->CreateAudioPlayer(_engineEngine, &_playerObject, &audioSrc, &audioSnk,
+            3, ids, req);
+	(*_playerObject)->Realize(_playerObject, SL_BOOLEAN_FALSE);
+
+    // get the play interface
+    (*_playerObject)->GetInterface(_playerObject, SL_IID_PLAY, &_playerPlay);
 #else // OPENAL FOR DESKTOPS
 	alGenBuffers(BUFFERS, _buffers); // backbuffer and forebuffer
 	alGenSources(1, &_alSrc);
 	alSourcei(_alSrc, AL_LOOPING, AL_FALSE);
+#endif
 
 	// fill all buffers with silence
 	for(OPint i = BUFFERS; i--;)
+#ifdef OPIFEX_ANDROID
+	_playingBuffers[i] = 0x00;
+#else
 	alBufferData(
 		_buffers[i],
 		_sound->Format,
@@ -47,40 +68,63 @@ OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
 }
 /*---------------------------------------------------------------------------*/
 OPSoundEmitter::~OPSoundEmitter(){
+#ifdef OPIFEX_ANDROID
+
+#else
 	alDeleteBuffers(BUFFERS, _buffers);
 	alDeleteSources(1, &_alSrc);
+#endif
 }
 /*---------------------------------------------------------------------------*/
 void OPSoundEmitter::Play(){
+#ifdef OPIFEX_ANDROID
+	(*_playerPlay)->SetPlayState(_playerPlay, SL_PLAYSTATE_PLAYING);
+#else
 	while(_freeBuffers &&  process());
 	alSourcePlay(_alSrc);
 	_state = Playing;
+#endif
 }
 /*---------------------------------------------------------------------------*/
 void OPSoundEmitter::Pause(){
+#ifdef OPIFEX_ANDROID
+
+#else
 	alSourcePause(_alSrc);
 	_state = Paused;
+#endif
 }
 /*---------------------------------------------------------------------------*/
 void OPSoundEmitter::Stop(){
+#ifdef OPIFEX_ANDROID
+
+#else
 	alSourceStop(_alSrc);
 	_state = Stopped;
+#endif
 }
 /*---------------------------------------------------------------------------*/
 void OPSoundEmitter::Update(){
 
 	if(_state == Playing){
-		ALint buffsPlayed = 0, buffsQueued = 0, state = 0, playPos = 0;
+		OPint buffsPlayed = 0, buffsQueued = 0, state = 0, playPos = 0;
 
+#ifdef OPIFEX_ANDROID
+
+#else
 		alGetSourcei(_alSrc, AL_BUFFERS_PROCESSED, &buffsPlayed);
 		alGetSourcei(_alSrc, AL_BUFFERS_QUEUED, &buffsQueued);
 		alGetSourcei(_alSrc, AL_BYTE_OFFSET, &playPos);
+#endif
 
 		if(buffsPlayed != _oldBuffsPlayed){
 
 			if(buffsQueued){
-				ALuint playedBuff = 0;
+				OPint playedBuff = 0;
+#ifdef OPIFEX_ANDROID
+#else
 				alSourceUnqueueBuffers(_alSrc, buffsPlayed, &playedBuff);
+#endif
 				_bytesPlayed += _bufferSize;
 				_freeBuffers += buffsPlayed;
 			}
@@ -106,8 +150,7 @@ void OPSoundEmitter::Update(){
 				}
 				else{
 					// TODO
-					//_queued = _bytesPlayed = _bytesInBuffer = _chunksProcessed = 0;
-					//_activeBuffer = 0;
+					// ^ what? I don't know...
 				}
 			}
 		}
@@ -116,10 +159,14 @@ void OPSoundEmitter::Update(){
 		if(_freeBuffers) process();
 
 		// can we continue playing after we've run out of data?
+#ifdef OPIFEX_ANDROID
+
+#else
 		alGetSourcei(_alSrc, AL_SOURCE_STATE, &state);
 		if(state == AL_STOPPED && _freeBuffers != BUFFERS){
 			alSourcePlay(_alSrc);
 		}
+#endif
 	}
 }
 /*---------------------------------------------------------------------------*/
@@ -127,6 +174,9 @@ void OPSoundEmitter::SetSound(OPsound* sound){
 	_sound = sound;
 
 	for(OPint i = BUFFERS; i--;)
+#ifdef OPIFEX_ANDROID
+	{/*TODO*/}
+#else
 	alBufferData(
 		_buffers[i],
 		_sound->Format,
@@ -134,6 +184,7 @@ void OPSoundEmitter::SetSound(OPsound* sound){
 		_bufferSize,
 		_sound->SampleRate
 	);
+#endif
 }
 /*---------------------------------------------------------------------------*/
 OPint OPSoundEmitter::process(){
@@ -144,9 +195,6 @@ OPint OPSoundEmitter::process(){
 		if(!toProcess) return 0; // no more data! we are done
 
 		// this is where processing would happen, for now just simply copy
-		/*for(OPint i = toProcess; i--;){
-			_intermediateBuffer[offset + i] = (_sound->Data + _queued)[offset + i];
-		}*/
 		OPmemcpy((&_intermediateBuffer[offset]), (&(_sound->Data + _queued)[offset]), toProcess);
 
 
@@ -155,6 +203,15 @@ OPint OPSoundEmitter::process(){
 		// have all the chunks of this buffer been processed?
 		if(_chunksProcessed == CHUNKS){
 			// push processed data to the buffer
+
+#ifdef OPIFEX_ANDROID
+			OPmemcpy(_playingBuffers[_activeBuffer], _intermediateBuffer, _bytesInBuffer);
+			(*_bqPlayerBufferQueue)->Enqueue(
+				_bqPlayerBufferQueue,
+				_intermediateBuffer,
+				_bytesInBuffer
+			);
+#else
 			alBufferData(
 				_buffers[_activeBuffer],
 				_sound->Format,
@@ -162,12 +219,10 @@ OPint OPSoundEmitter::process(){
 				_bytesInBuffer,
 				_sound->SampleRate
 			);
-
-			
 			alSourceQueueBuffers(_alSrc, 1, &_buffers[_activeBuffer]); // queue this buffer to be played
-			++_activeBuffer %= BUFFERS;                                // swap to the next buffer
 
-
+#endif
+			++_activeBuffer %= BUFFERS;            // swap to the next buffer
 			_queued += _bytesInBuffer;             // increment the total number of bytes that have been queued
 			_bytesInBuffer = _chunksProcessed = 0; // clear for next buffer
 			_freeBuffers--;                        // indicate that one less buffer is free

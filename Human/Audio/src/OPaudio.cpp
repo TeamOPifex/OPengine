@@ -6,6 +6,8 @@
 	s2 = sTemp;\
 }\
 
+#ifdef OPIFEX_ANDROID
+#else
 size_t ov_read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
 {
 	return fread(ptr, size, nmemb, (FILE*)datasource);
@@ -25,6 +27,7 @@ long ov_tell_func(void *datasource)
 {
 	return ftell((FILE*)datasource);
 }
+#endif
 
 OPint OPAudio::Init(){
 
@@ -110,7 +113,7 @@ OPint OPAudio::Init(){
 	return 1;
 }
 /*---------------------------------------------------------------------------*/
-OPsound OPAudio::ReadWave(const i8* filename){
+OPsound OPAudio::ReadWave(const OPchar* filename){
 	//FILE* fp = NULL;
 	OPsound ERR = {0};
 	//fp = fopen(filename, "rb");
@@ -164,6 +167,31 @@ OPsound OPAudio::ReadWave(const i8* filename){
 
 		OPstreamDestroy(str);
 
+#ifdef OPIFEX_ANDROID
+		OPsound out = {
+			(SLuint32)channels,   
+			(SLuint32)sampleRate,
+			(SLuint32)bitsPerSample,
+			{0},
+			NULL,
+			NULL,
+			dataSize,
+			data
+		};
+
+		SLDataFormat_PCM slFormat = {
+			SL_DATAFORMAT_PCM, // specifies the format
+			(SLuint32)channels,   
+			(SLuint32)sampleRate,
+			(SLuint32)bitsPerSample,
+			OPceil(bitsPerSample / 32) * 32,
+			SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT,
+			SL_BYTEORDER_LITTLEENDIAN
+		};
+
+		// keep the SL data format in the OPsound
+		*((SLDataFormat_PCM*)out.SLdataFormat) = slFormat;
+#else
 		ALenum format = 0;
 
 		switch (bitsPerSample)
@@ -178,29 +206,6 @@ OPsound OPAudio::ReadWave(const i8* filename){
 				break;
 		}
 
-#ifdef OPIFEX_ANDROID
-		OPsound out = {
-			{0},
-			NULL,
-			NULL,
-			dataSize,
-			data
-		};
-
-		SLDataFormat_PCM_EX slFormat = {
-			SL_DATAFORMAT_PCM_EX, // specifies the format
-			(SLuint32)channels,   
-			(SLuint32)sampleRate,
-			(SLuint32)bitsPerSample,
-			ceil(bitsPerSample / 32) * 32,
-			SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT,
-			SL_BYTEORDER_LITTLEENDIAN,
-			SL_PCM_REPRESENTATION_UNSIGNED_INT
-		};
-
-		// keep the SL data format in the OPsound
-		*((SLDataFormat_PCM_EX*)out->SLdataFormat) = slFormat;
-#else
 		OPsound out = {
 			sampleRate,
 			bitsPerSample,
@@ -220,7 +225,7 @@ OPsound OPAudio::ReadWave(const i8* filename){
 	return ERR;
 }
 /*---------------------------------------------------------------------------*/
-static ui64 DecodeOggVorbis(OggVorbis_File *psOggVorbisFile, i8 *pDecodeBuffer, ui64 ulBufferSize, ui64 ulChannels){
+static ui64 DecodeOggVorbis(OggVorbis_File *psOggVorbisFile, OPchar *pDecodeBuffer, ui64 ulBufferSize, ui64 ulChannels){
 	OPint current_section;
 	i64 lDecodeSize;
 	ui64 ulSamples;
@@ -261,25 +266,31 @@ static ui64 DecodeOggVorbis(OggVorbis_File *psOggVorbisFile, i8 *pDecodeBuffer, 
 /*---------------------------------------------------------------------------*/
 static OPint fetchOggData(OPsound* sound, i64 pos, i64 len){
 	OggVorbis_File* ogg = (OggVorbis_File*)sound->dataSource;
+	i64 length = 0;
 
-	i64 length = DecodeOggVorbis(ogg, (i8*)sound->Data, sound->DataSize, sound->Channels);
-	//printf("Song length: %l\n", length);
+#ifdef OPIFEX_ANDROID
+#else
+	length = DecodeOggVorbis(ogg, (i8*)sound->Data, sound->DataSize, sound->Channels);
+#endif
 
 	printf("Fetched %d\n", (OPint)length);
 
 	return length;
 }
 /*---------------------------------------------------------------------------*/
-OPsound OPAudio::ReadOgg(const i8* filename){
+OPsound OPAudio::ReadOgg(const OPchar* filename){
 	// Open Ogg Stream
 	ov_callbacks	sCallbacks;
 	OggVorbis_File	*sOggVorbisFile = new OggVorbis_File();
 	vorbis_info		*psVorbisInfo;
 
+#ifdef OPIFEX_ANDROID
+#else
 	sCallbacks.read_func = ov_read_func;
 	sCallbacks.seek_func = ov_seek_func;
 	sCallbacks.close_func = ov_close_func;
 	sCallbacks.tell_func = ov_tell_func;
+#endif
 
 	FILE* song = fopen(filename, "rb");
 
@@ -319,7 +330,11 @@ OPsound OPAudio::ReadOgg(const i8* filename){
 				}
 				else if (psVorbisInfo->channels == 4)
 				{
+					#ifdef OPIFEX_ANDROID
+					ulFormat = 1;
+					#else
 					ulFormat = alGetEnumValue("AL_FORMAT_QUAD16");
+					#endif
 					// Set BufferSize to 250ms (Frequency * 8 (16bit 4-channel) divided by 4 (quarter of a second))
 					ulBufferSize = ulFrequency * 2;
 					// IMPORTANT : The Buffer Size must be an exact multiple of the BlockAlignment ...
@@ -327,7 +342,12 @@ OPsound OPAudio::ReadOgg(const i8* filename){
 				}
 				else if (psVorbisInfo->channels == 6)
 				{
+					#ifdef OPIFEX_ANDROID
+					ulFormat = 2;
+					#else
 					ulFormat = alGetEnumValue("AL_FORMAT_51CHN16");
+					#endif
+
 					// Set BufferSize to 250ms (Frequency * 12 (16bit 6-channel) divided by 4 (quarter of a second))
 					ulBufferSize = ulFrequency * 3;
 					// IMPORTANT : The Buffer Size must be an exact multiple of the BlockAlignment ...
@@ -340,19 +360,30 @@ OPsound OPAudio::ReadOgg(const i8* filename){
 				printf("Song length: %d\n", (OPint)length);
 
 				//length = ulFrequency * 2;
-				ui8* buff = new ui8[length];
-				DecodeOggVorbis(sOggVorbisFile, (i8*)buff, length, ulChannels);
+				ui8* buff = (ui8*)OPalloc(sizeof(ui8) * length);
+				DecodeOggVorbis(sOggVorbisFile, (OPchar*)buff, length, ulChannels);
 
 				OPsound song = {
+					#ifndef OPIFEX_ANDROID
 					ulFrequency,
 					bitsPerSample,
 					ulChannels,
 					ulFormat,
+					#else
+					(SLuint32)ulChannels,   
+					(SLuint32)ulFrequency,
+					(SLuint32)bitsPerSample,
+					{0},
+					#endif
 					(void*)sOggVorbisFile,
 					fetchOggData,
 					length,
 					buff
 				};
+
+				#ifdef OPIFEX_ANDROID
+				bzero(song.SLdataFormat, sizeof(ui8) * 32);
+				#endif
 
 				return song;
 			}

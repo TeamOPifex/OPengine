@@ -1,8 +1,8 @@
 //////////////////////////////// OPEngine MAIN ////////////////////////////////
 #include <stdio.h>
 
-#include "../Core/include/Core.h"
-#include "../Data/include/OPgameStates.h"
+#include "./Core/include/Core.h"
+#include "./Data/include/OPgameStates.h"
 
 #include "./GameManager.h"
 #include "./Human/Rendering/RenderSystem.h"
@@ -11,9 +11,9 @@
 #include "./Core/include/Log.h"
 #include "./Human/Audio/Jukebox.h"
 
-#include "Data/include/OPlinkedList.h"
-#include "Data/include/OPheap.h"
-#include "Data/include/OPlist.h"
+#include "./Data/include/OPlinkedList.h"
+#include "./Data/include/OPheap.h"
+#include "./Data/include/OPlist.h"
 
 #if defined(OPIFEX_ANDROID)
 #include <jni.h>
@@ -133,7 +133,8 @@ void Init(){
 	GM = new GameManager(width, height);
 
 	OPAudio::Init();
-	Song = OPAudio::ReadOgg("Audio/background.ogg");
+	OPchar songPath[] = {"Audio/background.ogg"};
+	Song = OPAudio::ReadOgg(songPath);
 	Sound = OPAudio::ReadWave("Audio/testing.wav");
 
 	Emitter = new OPSoundEmitter(&Song, 8);

@@ -34,6 +34,21 @@ class OPSoundEmitter{
 		void Update();
 		void SetSound(OPsound* sound);
 /*---------------------------------------------------------------------------*/
+
+#ifdef OPIFEX_ANDROID
+		void SetPosition(Vector3 position){
+
+		}
+		void SetVelocity(Vector3 velocity){
+
+		}
+		void SetVolume(OPfloat gain){
+
+		}
+		void SetPitch(OPfloat pitch){
+
+		}
+#else
 		void SetPosition(Vector3 position){
 			alSourcefv(_alSrc, AL_POSITION, position.ptr());
 		}
@@ -46,12 +61,23 @@ class OPSoundEmitter{
 		void SetPitch(OPfloat pitch){
 			alSourcef(_alSrc, AL_PITCH, pitch);
 		}
+#endif
+
 #pragma endregion
 
 	private:
 		OPsound* _sound;
 #ifdef OPIFEX_ANDROID // openSL ES for android
+		SLObjectItf _outputMixObject;
+		SLObjectItf _playerObject;
 
+		SLAndroidSimpleBufferQueueItf _bqPlayerBufferQueue;
+
+		SLPlayItf _playerPlay;
+		SLSeekItf _playerSeek;
+		SLMuteSoloItf _playerMuteSolo;
+		SLVolumeItf _playerVolume;
+		ui8* _playingBuffers[BUFFERS];
 #else // openAL for desktops
 		ALuint _buffers[BUFFERS], _alSrc;
 #endif
