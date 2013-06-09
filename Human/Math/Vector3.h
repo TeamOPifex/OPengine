@@ -17,21 +17,25 @@ public:
 
 	// Helpers
 	float Length();
-	void normalize();
-	static Vector3 normalize(Vector3 source);	
-	void cross(Vector3& rhs);
-	static Vector3 cross(Vector3 left, Vector3 right);
-	//static Vector3 sub(Vector3& left, Vector3& right);
-	static Vector3 sub(Vector3 left, Vector3 right);
-	//static Vector3 add(Vector3& left, Vector3& right);
-	static Vector3 add(Vector3 left, Vector3 right);
-	static Vector3 multiply(Vector3 vec, OPfloat scaler);
+	Vector3* Normalize();
+	Vector3* Cross(Vector3 right);
+	Vector3* Subtract(Vector3 right);
+	Vector3* Add(Vector3 right);
+	Vector3* Multiply(OPfloat scaler);
+	
+	static Vector3 Normalize(Vector3 left);
+	static Vector3 Cross(Vector3 left, Vector3 right);
+	static Vector3 Subtract(Vector3 left, Vector3 right);
+	static Vector3 Add(Vector3 left, Vector3 right);
+	static Vector3 Multiply(Vector3 left, OPfloat scaler);
+	static Vector3 Multiply(Vector3 left, Vector3 right);
+
 	static OPfloat Distance(Vector3& left, Vector3& right);
 	static OPfloat Dot(Vector3 left, Vector3 right);
 
 	// Operator Overloads
-	//Vector3& operator-(const Vector3 &rhs);
-	//Vector3& operator+(const Vector3 &rhs);	
+	Vector3* operator-=(Vector3 &rhs);
+	Vector3* operator+=(Vector3 &rhs);	
 	OPfloat& operator[](int idx);
 //private:
 	// Data Structure 3 floats

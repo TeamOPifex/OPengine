@@ -98,8 +98,8 @@ Mesh* Quad::GenMesh(){
 }
 
 void Quad::UpdateWorld(){
-	Matrix4 rotate = Matrix4::RotateZ(_rotation._z);
-	Matrix4 scale = Matrix4::Scale(_rotation._x, _rotation._y, _rotation._z);
-	Matrix4 translate = Matrix4::Translate(_position._x, _position._y, _position._z);
+	Matrix4 rotate = Matrix4::BuildRotateZ(_rotation._z);
+	Matrix4 scale = Matrix4::BuildScale(_rotation._x, _rotation._y, _rotation._z);
+	Matrix4 translate = Matrix4::BuildTranslate(_position._x, _position._y, _position._z);
 	(*WorldMatrix) =  rotate * scale * translate;
 }

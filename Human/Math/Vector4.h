@@ -16,12 +16,12 @@ public:
 	OPfloat* ptr(){	return &_x;	}
 	
 	// Helpers
-	void normalize();
+	Vector4* normalize();
 	static Vector4& normalize(Vector4& source);	
 
 	// Operator overloads
-	OPfloat& operator[](int idx);	
-	Vector4 & operator*=(const Vector4 &rhs);
+	OPfloat& operator[](int idx);
+	Vector4* operator*=(const Vector4 &rhs);
 
 	union 
 	{

@@ -13,20 +13,30 @@ public:
 			OPfloat c30,OPfloat c31,OPfloat c32,OPfloat c33);
 	
 	OPfloat* ptr(){	return cols[0].ptr(); }
-	Matrix4 Multiply(Matrix4 m);
+	Matrix4* Multiply(Matrix4 m);
 
 	// Helper methods
-	void SetIdentity();
-	static Matrix4 RotateX(f32 x);
-	static Matrix4 RotateY(f32 x);
-	static Matrix4 RotateZ(f32 x);
-	static Matrix4 Translate(f32 x, f32 y, f32 z);
-	static Matrix4 Scale(f32 x);
-	static Matrix4 Scale(f32 x, f32 y, f32 z);
+	Matrix4* SetIdentity();
+	
+	Matrix4* RotateX(f32 x);
+	Matrix4* RotateY(f32 x);
+	Matrix4* RotateZ(f32 x);
+	Matrix4* Translate(f32 x, f32 y, f32 z);
+	Matrix4* Scale(f32 x);
+	Matrix4* Scale(f32 x, f32 y, f32 z);
+
+	static Matrix4 BuildRotateX(f32 x);
+	static Matrix4 BuildRotateY(f32 x);
+	static Matrix4 BuildRotateZ(f32 x);
+	static Matrix4 BuildTranslate(f32 x, f32 y, f32 z);
+	static Matrix4 BuildScale(f32 x);
+	static Matrix4 BuildScale(f32 x, f32 y, f32 z);
+
 	static Matrix4 CreatePerspective(float fovy, float aspect, float near, float far);
 	static Matrix4 CreateOrthographic( const OPfloat left, const OPfloat right,
 		const OPfloat bottom, const OPfloat top,
 	    const OPfloat zNear, const OPfloat zFar );
+
 	static Matrix4 CreateLook(Vector3 campos, Vector3 look, Vector3 up);
 	void transpose();
 	

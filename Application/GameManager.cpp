@@ -14,7 +14,6 @@ GameManager::GameManager(int width, int height)
 	FileInformation t_file = OPreadFileInformation("C:\\_Repos\\BiPlane.opm");
 	MeshPtr mesh = LoadOPM(t_file.file);
 	
-	//_colorTexture = ImageDDS::TextureFromFile("Textures/modelColor.dds");
 	_colorTexture = ImagePNG::TextureFromFile("Textures/test.png");
 	_normalTexture = ImageDDS::TextureFromFile("Textures/modelNormal.dds");
 	_specularTexture = ImageDDS::TextureFromFile("Textures/modelSpecular.dds");
@@ -24,6 +23,7 @@ GameManager::GameManager(int width, int height)
 	_material->SetTextures(_colorTexture, _normalTexture, _specularTexture);
 
 	_model = new Model(mesh, _material);
+	_model->WorldMatrix->SetIdentity()->Scale(3.0f);
 
 	rotateAmnt = 0;
 }
@@ -40,8 +40,9 @@ void GameManager::Draw(){
 
 	_material->View->SetMatrix(&Camera::GameCamera.GetView());
 	_material->Projection->SetMatrix(&Camera::GameCamera.GetProj());
+
+	_model->WorldMatrix->RotateY(0.001f)->RotateX(0.003f);
 	
-	(*_model->WorldMatrix) = Matrix4::RotateY(rotateAmnt).Multiply(Matrix4::Scale(5.0f));
 	_material->World->SetMatrix(_model->WorldMatrix);
 
 	RenderSystem::RenderModel(_model);

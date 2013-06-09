@@ -24,7 +24,7 @@ Matrix4::Matrix4(
 		cols[3][0] = c30; cols[3][1] = c31; cols[3][2] = c32; cols[3][3] = c33;
 }
 
-Matrix4 Matrix4::Multiply(Matrix4 m){
+Matrix4* Matrix4::Multiply(Matrix4 m){
 	Matrix4 c = m;
 	OPfloat sum;
 	for(int i = 0; i < 4; i++){
@@ -42,10 +42,47 @@ Matrix4 Matrix4::Multiply(Matrix4 m){
 			cols[i][j] = c[i][j];
 		}
 	}
-	return c;
+
+	return this;
 }
 
-Matrix4 Matrix4::RotateX(f32 x){
+Matrix4* Matrix4::RotateX(f32 x) {
+	Matrix4 rotate = BuildRotateX(x);
+	Multiply(rotate);
+	return this;
+}
+
+Matrix4* Matrix4::RotateY(f32 y) {
+	Matrix4 rotate = BuildRotateY(y);
+	Multiply(rotate);
+	return this;
+}
+
+Matrix4* Matrix4::RotateZ(f32 z) {
+	Matrix4 rotate = BuildRotateZ(z);
+	Multiply(rotate);
+	return this;
+}
+
+Matrix4* Matrix4::Translate(f32 x, f32 y, f32 z) {
+	Matrix4 translate = BuildTranslate(x, y, z);
+	Multiply(translate);
+	return this;
+}
+
+Matrix4* Matrix4::Scale(f32 x) {
+	Scale(x, x, x);
+	return this;
+}
+
+Matrix4* Matrix4::Scale(f32 x, f32 y, f32 z) {
+	Matrix4 scale = BuildScale(x, y, z);
+	Multiply(scale);
+	return this;
+}
+
+
+Matrix4 Matrix4::BuildRotateX(f32 x){
 	OPfloat t1 = OPcos(x);
 	OPfloat t2 = OPsin(x);
 	return Matrix4(
@@ -56,7 +93,7 @@ Matrix4 Matrix4::RotateX(f32 x){
 		);
 }
 
-Matrix4 Matrix4::RotateY(f32 x){
+Matrix4 Matrix4::BuildRotateY(f32 x){
 	OPfloat t1 = OPcos(x);
 	OPfloat t2 = OPsin(x);
 	return Matrix4(
@@ -67,7 +104,7 @@ Matrix4 Matrix4::RotateY(f32 x){
 		);
 }
 
-Matrix4 Matrix4::RotateZ(f32 x){
+Matrix4 Matrix4::BuildRotateZ(f32 x){
 	OPfloat t1 = OPcos(x);
 	OPfloat t2 = OPsin(x);
 	return Matrix4(
@@ -78,7 +115,7 @@ Matrix4 Matrix4::RotateZ(f32 x){
 		);
 }
 
-Matrix4 Matrix4::Translate(f32 x, f32 y, f32 z){
+Matrix4 Matrix4::BuildTranslate(f32 x, f32 y, f32 z){
 	return Matrix4(
 		1, 0, 0, 0,
 		0, 1, 0, 0,
@@ -86,7 +123,8 @@ Matrix4 Matrix4::Translate(f32 x, f32 y, f32 z){
 		x, y, z, 1
 		);
 }
-Matrix4 Matrix4::Scale(f32 x){
+
+Matrix4 Matrix4::BuildScale(f32 x){
 	return Matrix4(
 		x, 0, 0, 0,
 		0, x, 0, 0,
@@ -94,7 +132,8 @@ Matrix4 Matrix4::Scale(f32 x){
 		0, 0, 0, 1
 		);
 }
-Matrix4 Matrix4::Scale(f32 x, f32 y, f32 z){
+
+Matrix4 Matrix4::BuildScale(f32 x, f32 y, f32 z){
 	return Matrix4(
 		x, 0, 0, 0,
 		0, y, 0, 0,
@@ -103,11 +142,12 @@ Matrix4 Matrix4::Scale(f32 x, f32 y, f32 z){
 		);
 }
 
-void Matrix4::SetIdentity(){
+Matrix4* Matrix4::SetIdentity(){
 	cols[0] = Vector4(1,0,0,0);
 	cols[1] = Vector4(0,1,0,0);
 	cols[2] = Vector4(0,0,1,0);
 	cols[3] = Vector4(0,0,0,1);
+	return this;
 }
 
 
@@ -131,11 +171,11 @@ Matrix4 Matrix4::CreatePerspective(float fovy, float aspect, float near, float f
 }
 
 Matrix4 Matrix4::CreateLook(Vector3 campos, Vector3 look, Vector3 up) {
-	Vector3 f = Vector3::sub(look, campos); f.normalize();
-	up.normalize();
-	Vector3 s = Vector3::cross(f, up);
-	s.normalize();
-	Vector3 u = Vector3::cross(s, f);
+	Vector3 f = Vector3::Subtract(look, campos); f.Normalize();
+	up.Normalize();
+	Vector3 s = Vector3::Cross(f, up);
+	s.Normalize();
+	Vector3 u = Vector3::Cross(s, f);
 
 	Matrix4 result;
 	result.SetIdentity();

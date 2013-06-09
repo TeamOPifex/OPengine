@@ -25,8 +25,8 @@ void _generateTangent(Vector3* tangent, MeshVertex* v1, MeshVertex* v2){
 	f32 dz = v1->vertice._z - v2->vertice._z;
 
 	Vector3 diff(dx, dy, dz);
-	Vector3 tan = Vector3::cross(v1->normal, diff);
-	tan.normalize();
+	Vector3 tan = Vector3::Cross(v1->normal, diff);
+	tan.Normalize();
 	tangent->_x = tan._x;
 	tangent->_y = tan._y;
 	tangent->_z = tan._z;

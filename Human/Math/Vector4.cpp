@@ -1,12 +1,13 @@
 #include "Vector4.h"
 #include "./Core/include/MathHelpers.h"
 
-void Vector4::normalize(){
+Vector4* Vector4::normalize(){
 		OPfloat length = sqrt((_x * _x) + (_y * _y) + (_z * _z) + (_w * _w));
 		_x /= length;
 		_y /= length;
 		_z /= length;
 		_w /= length;
+		return this;
 	}
 
 Vector4& Vector4::normalize(Vector4& source){
@@ -36,10 +37,10 @@ OPfloat& Vector4::operator[](int idx){
 }
 
 
-Vector4 & Vector4::operator*=(const Vector4 &rhs) {
+Vector4* Vector4::operator*=(const Vector4 &rhs) {
 	_x *= rhs._x;
 	_y *= rhs._y;
 	_z *= rhs._z;
 	_w *= rhs._w;
-	return *this;
+	return this;
 }

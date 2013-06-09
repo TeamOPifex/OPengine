@@ -5,100 +5,109 @@ float Vector3::Length(){
 	return sqrt(_x * _x + _y * _y + _z * _z);
 }
 
-void Vector3::normalize(){
+Vector3* Vector3::Normalize(){
 	OPfloat length = Length();
-		_x /= length;
-		_y /= length;
-		_z /= length;
-	}
-
-Vector3 Vector3::normalize(Vector3 source){
-	OPfloat length = source.Length();
-
-	return Vector3(
-		source._x / length,
-		source._y / length,
-		source._z / length
-	);
+	_x /= length;
+	_y /= length;
+	_z /= length;
+	return this;
 }
 
-void Vector3::cross(Vector3& rhs){
-		Vector3 tmp;
-		tmp._x = _y * rhs._z - _z * rhs._y;
-		tmp._y = _z * rhs._x - _x * rhs._z;
-		tmp._z = _x * rhs._y - _y * rhs._x;
-		_x = tmp._x;
-		_y = tmp._y;
-		_z = tmp._z;
-	}
-
-Vector3 Vector3::cross(Vector3 left, Vector3 right){
-	Vector3 returnValue;
-	returnValue._x = left._y * right._z - left._z * right._y;
-	returnValue._y = left._z * right._x - left._x * right._z;
-	returnValue._z = left._x * right._y - left._y * right._x;
-	return returnValue;
+Vector3* Vector3::Cross(Vector3 right){
+	_x = _y * right._z - _z * right._y;
+	_y = _z * right._x - _x * right._z;
+	_z = _x * right._y - _y * right._x;
+	return this;
 }
 
-//Vector3 Vector3::sub(Vector3& left, Vector3& right){
-//	Vector3 returnValue;
-//	returnValue._x = left._x - right._x;
-//	returnValue._y = left._y - right._y;
-//	returnValue._z = left._z - right._z;
-//	return returnValue;
-//}
-
-Vector3 Vector3::sub(Vector3 left, Vector3 right){
-	Vector3 returnValue;
-	returnValue._x = left._x - right._x;
-	returnValue._y = left._y - right._y;
-	returnValue._z = left._z - right._z;
-	return returnValue;
+Vector3* Vector3::Subtract(Vector3 right){
+	_x = _x - right._x;
+	_y = _y - right._y;
+	_z = _z - right._z;
+	return this;
 }
 
-//Vector3 Vector3::add(Vector3& left, Vector3& right){
-//	Vector3 returnValue;
-//	returnValue._x = left._x + right._x;
-//	returnValue._y = left._y + right._y;
-//	returnValue._z = left._z + right._z;
-//	return returnValue;
-//}
-
-Vector3 Vector3::add(Vector3 left, Vector3 right){
-	Vector3 returnValue;
-	returnValue._x = left._x + right._x;
-	returnValue._y = left._y + right._y;
-	returnValue._z = left._z + right._z;
-	return returnValue;
+Vector3* Vector3::Add(Vector3 right){
+	_x = _x + right._x;
+	_y = _y + right._y;
+	_z = _z + right._z;
+	return this;
 }
 
-Vector3 Vector3::multiply(Vector3 vec, OPfloat scaler)
+Vector3* Vector3::Multiply(OPfloat scaler)
 {
-	Vector3 newVec;
+	_x = _x * scaler;
+	_y = _y * scaler;
+	_z = _z * scaler;
 
-	newVec._x = vec._x * scaler;
-	newVec._y = vec._y * scaler;
-	newVec._z = vec._z * scaler;
+	return this;
+}
 
-	return newVec;
+
+Vector3 Vector3::Normalize(Vector3 left){
+	OPfloat length = left.Length();
+	return Vector3(left._x / length, left._y / length, left._z / length);
+}
+
+Vector3 Vector3::Cross(Vector3 left, Vector3 right){
+	return Vector3(
+		left._y * right._z - left._z * right._y,
+		left._z * right._x - left._x * right._z,
+		left._x * right._y - left._y * right._x
+		);
+}
+
+Vector3 Vector3::Subtract(Vector3 left, Vector3 right){
+	return Vector3(
+		left._x - right._x,
+		left._y - right._y,
+		left._z - right._z
+		);
+}
+
+Vector3 Vector3::Add(Vector3 left, Vector3 right){
+	return Vector3(
+		left._x + right._x,
+		left._y + right._y,
+		left._z + right._z
+		);
+}
+
+Vector3 Vector3::Multiply(Vector3 left, OPfloat scaler)
+{
+	return Vector3(
+		left._x * scaler,
+		left._y * scaler,
+		left._z * scaler
+		);
+}
+
+Vector3 Vector3::Multiply(Vector3 left, Vector3 right)
+{
+	return Vector3(
+		left._x * right._x,
+		left._y * right._y,
+		left._z * right._z
+		);
 }
 
 OPfloat Vector3::Distance(Vector3& left, Vector3& right){
-	Vector3 diff = Vector3::sub(left, right);
-	return diff.Length();
+	return Vector3(left._x - right._x, left._y - right._y, left._z - right._z).Length();
 }
 
 OPfloat Vector3::Dot(Vector3 left, Vector3 right){
 	return left._x * right._x + left._y * right._y + left._z * right._z;
 }
 
-//Vector3& Vector3::operator-(const Vector3 &rhs) {
-//	return Vector3(this->_x - rhs._x, this->_y - rhs._y, this->_z - rhs._z);
-//}
-//
-//Vector3& Vector3::operator+(const Vector3 &rhs) {
-//	return Vector3(_x + rhs._x, _y + rhs._y, _z + rhs._z);
-//}
+Vector3* Vector3::operator-=(Vector3 &rhs) {
+	Subtract(rhs);
+	return this;
+}
+
+Vector3* Vector3::operator+=(Vector3 &rhs) {
+	Add(rhs);
+	return this;
+}
 		
 OPfloat& Vector3::operator[](int idx){		
 	switch(idx){
