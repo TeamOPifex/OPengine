@@ -6179,6 +6179,12 @@ unsigned decode(std::vector<unsigned char>& out, unsigned& w, unsigned& h, const
   load_file(buffer, filename);
   return decode(out, w, h, buffer, colortype, bitdepth);
 }
+
+unsigned decodeBuffer(std::vector<unsigned char>& out, unsigned& w, unsigned& h, std::vector<unsigned char> buffer,
+                LodePNGColorType colortype, unsigned bitdepth)
+{
+  return decode(out, w, h, buffer, colortype, bitdepth);
+}
 #endif //LODEPNG_COMPILE_DECODER
 #endif //LODEPNG_COMPILE_DISK
 

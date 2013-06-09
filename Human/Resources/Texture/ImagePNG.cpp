@@ -17,11 +17,14 @@
 	#include <GL/glfw.h>
 #endif
 
-ImagePNG::ImagePNG(const char* file)
+ImagePNG::ImagePNG(FILE* fp, ui32 start, ui32 length)
 {
 	std::vector<ui8> image;
 	ui32 width, height;
-	unsigned error = lodepng::decode(image, width, height, file);
+	std::vector<ui8> buffer;
+	buffer.resize(length);
+	fread(&buffer[0], 1, length, fp);
+	unsigned error = lodepng::decode(image, width, height, buffer);
 
 	// Ensure power of 2
 	size_t u2 = 1; while(u2 < width) u2 *= 2;
@@ -44,8 +47,8 @@ ImagePNG::ImagePNG(const char* file)
 }
 
 ImagePNG* ImagePNG::FromFile(const char* file) {
-	//FileInformation fileInfo = OPreadFileInformation(file);
-	return new ImagePNG(file);
+	FileInformation fileInfo = OPreadFileInformation(file);
+	return new ImagePNG(fileInfo.file, fileInfo.start, fileInfo.length);
 }
 
 Texture2D* ImagePNG::TextureFromFile(const char* file) {

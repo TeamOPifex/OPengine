@@ -5,7 +5,7 @@
 
 class ImagePNG : public Image {
 public:
-	ImagePNG(const char* file);
+	ImagePNG(FILE* fp, ui32 start, ui32 length);
 	static ImagePNG* FromFile(const char* file);
 	static Texture2D* TextureFromFile(const char* file);
 protected:
