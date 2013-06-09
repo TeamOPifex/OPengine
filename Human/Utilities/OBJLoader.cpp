@@ -2,6 +2,7 @@
 #include "./Core/include/Log.h"
 #include "./Human/Resources/Buffer/Buffer.h"
 #include "./Human/Resources/Model/Mesh.h"
+#include "./Human/Rendering/MeshVertex.h"
 
 // FacePoint contains 3 int's being holding points for
 // the index's for each array.
@@ -60,11 +61,7 @@ void SetFaceData(MeshVertex* vertex, FacePoint* facePoint, Vector3* vertexes, Ve
 	vertex->normal._z = normals[facePoint->NormalIndex - 1]._z;
 }
 
-Mesh* LoadOBJ(FILE* file, int start, int length){
-	return LoadOBJ(file, start, length, false);
-}
-
-Mesh* LoadOBJ(FILE* file, int start, int length, ui8 keepPositions)
+Mesh* LoadOBJ(FILE* file, int start, int length)
 {
 	//Open File for reading
 	char* buffer = (char*)OPalloc(sizeof(char) * 4096);
@@ -293,7 +290,6 @@ Mesh* LoadOBJ(FILE* file, int start, int length, ui8 keepPositions)
 		GenerateTangent(&vert_one->tangent, vert_one, vert_two);
 	}
 
-	if(!keepPositions)
 	delete[] vertexes;
 	delete[] texes;
 	delete[] normals;
@@ -303,10 +299,6 @@ Mesh* LoadOBJ(FILE* file, int start, int length, ui8 keepPositions)
 	BufferPtr indexBuffer = new Buffer(IndexBuffer, sizeof(unsigned short) * totalIndices, indices);
 	
 	Mesh* out = new Mesh(vertexBuffer, indexBuffer, totalIndices, sizeof(MeshVertex));
-	if(keepPositions){
-		out->Positions = vertexes; // keep the positions
-		out->PositionCount = total_verts;
-	}
 
 	OPfree(points);
 	OPfree(indices);

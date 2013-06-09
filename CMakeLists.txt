@@ -71,6 +71,12 @@ endif()
 find_package(OpenGL REQUIRED)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
 
+set(ZLIB_LIBRARY "../External/" CACHE STRING
+  "ZLIB library for libpng")
+  
+set(LIBPNG_LIBRARY "../External/" CACHE STRING
+  "ZLIB library for libpng")
+  
 find_package(OpenAL REQUIRED)
 find_package(OggVorbis REQUIRED)
 

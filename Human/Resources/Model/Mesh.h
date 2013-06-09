@@ -10,8 +10,6 @@ public:
 	BufferPtr IndexBuffer;
 	ui32 IndexCount;
 	ui32 Stride;
-	Vector3* Positions;
-	ui32 PositionCount;
 };
 
 typedef Mesh* MeshPtr;

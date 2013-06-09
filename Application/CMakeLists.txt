@@ -6,6 +6,7 @@ include_directories(
 	../External/glew-1.5.8/include/
 	../External/Phsyx.3.2.1/include/
 	../External/GLES2/
+	../External/libpng/include/
 	../External/Ogg/include/
 	../External/Vorbis/include/
 	../External/OpenAL/
@@ -43,12 +44,22 @@ add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E c
 add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 	"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/libvorbis.dll"
 	${PROJECT_BINARY_DIR}/Application/Debug)
+	
+add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	"${PROJECT_SOURCE_DIR}/External/libpng/lib/win32/libpng15d.dll"
+	${PROJECT_BINARY_DIR}/Application/Debug)
+	
+add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	"${PROJECT_SOURCE_DIR}/External/zlib/lib/win32/zlibd.dll"
+	${PROJECT_BINARY_DIR}/Application/Debug)
 
 target_link_libraries(7_Application
 	${ALL_LIBS}
 	${OGG_LIBRARY}
 	${VORBIS_LIBRARY}
 	${VORBISFILE_LIBRARY}
+	${ZLIB_LIBRARY}
+	${LIBPNG_LIBRARY}
 )
 
 SET_TARGET_PROPERTIES(7_Application PROPERTIES LINKER_LANGUAGE CXX)

@@ -16,9 +16,11 @@ Texture2D::Texture2D(ImagePtr texture){
 
 	glBindTexture(GL_TEXTURE_2D, m_handle);
 	CheckError("Texture2D::Error 2");
-
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	CheckError("Texture2D::Error 3");
+	
+	if(texture->Compressed()) {
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		CheckError("Texture2D::Error 3");
+	}
 
 	ui32 offset = 0;
 
@@ -30,11 +32,15 @@ Texture2D::Texture2D(ImagePtr texture){
 	for(ui32 level = 0; level < texture->MipMapCount() && (width || height); ++level)
 	{
 		ui32 size = ((width + 3) / 4) * ((height + 3) / 4) * texture->Blocksize();
-		glCompressedTexImage2D(GL_TEXTURE_2D, level, texture->Format(), width, height, 0, size, buffer + offset);
-			
+
+		if(texture->Compressed()) {
+			glCompressedTexImage2D(GL_TEXTURE_2D, level, texture->Format(), width, height, 0, size, buffer + offset);
+		} else {
+			glTexImage2D(GL_TEXTURE_2D, level, texture->Format(), width, height, 0, texture->Format(), GL_UNSIGNED_BYTE, buffer + offset);
+		}
 		if(CheckError("Texture2D::Error 4"))
 			return;
-
+		
 		offset += size;
 		width /= 2;
 		height /= 2;

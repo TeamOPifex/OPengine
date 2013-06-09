@@ -57,6 +57,7 @@ FileInformation OPreadFileInformation(const char* path){
 		char buff[256];
 		sprintf(buff, "OPreadFileInformation(): %s not loaded\n", path);
 		OPLog(buff);
+		return file;
 	}
 	fseek(myFile, 0, SEEK_END );	
 	file.length = ftell( myFile );

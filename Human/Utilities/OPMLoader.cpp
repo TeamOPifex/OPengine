@@ -2,6 +2,7 @@
 #include "./Core/include/DynamicMemory.h"
 #include "./Core/include/Log.h"
 #include "./Data/include/OPfile.h"
+#include "./Human/Rendering/MeshVertex.h"
 
 enum Features {
 	Position	=	0x01,
@@ -14,24 +15,8 @@ enum Features {
 	Animations	=	0x80
 };
 
-bool _hasPositions(ui32 features) {
-	return features & Features::Position;
-}
-
-bool _hasNormals(ui32 features) {
-	return features & Features::Normal;
-}
-
-bool _hasUVs(ui32 features) {
-	return features & Features::UV;
-}
-
-bool _hasTangents(ui32 features) {
-	return features & Features::Tangent;
-}
-
-bool _hasIndices(ui32 features) {
-	return features & Features::Index;
+bool _has(ui32 features, ui32 feature) {
+	return features & feature;
 }
 
 void _generateTangent(Vector3* tangent, MeshVertex* v1, MeshVertex* v2){
@@ -47,8 +32,8 @@ void _generateTangent(Vector3* tangent, MeshVertex* v1, MeshVertex* v2){
 	tangent->_z = tan._z;
 }
 
-Mesh* LoadOPM(FILE* file, int start, int length) {
-	OPLog("Reading File");
+Mesh* LoadOPM(FILE* file) {
+
 	char* buffer = (char*)OPalloc(sizeof(char) * 4096);
 	
 	ui16 version = OPread_ui16(file);
@@ -61,7 +46,7 @@ Mesh* LoadOPM(FILE* file, int start, int length) {
 	for(ui32 i = 0; i < verticeCount; i++) {
 		
 		// Read Position
-		if(_hasPositions(features)) {
+		if(_has(features, Features::Position)) {
 			x = OPread_f32(file);
 			y = OPread_f32(file);
 			z = OPread_f32(file);
@@ -71,7 +56,7 @@ Mesh* LoadOPM(FILE* file, int start, int length) {
 		}
 
 		// Read Normal
-		if(_hasNormals(features)) {
+		if(_has(features, Features::Normal)) {
 			x = OPread_f32(file);
 			y = OPread_f32(file);
 			z = OPread_f32(file);
@@ -81,7 +66,7 @@ Mesh* LoadOPM(FILE* file, int start, int length) {
 		}
 
 		// Read UV
-		if(_hasUVs(features)) {
+		if(_has(features, Features::UV)) {
 			x = OPread_f32(file);
 			y = OPread_f32(file);
 			vertices[i].tex._x = x;
@@ -89,7 +74,7 @@ Mesh* LoadOPM(FILE* file, int start, int length) {
 		}
 
 		// Read Tangent
-		if(_hasTangents(features)) {
+		if(_has(features, Features::Tangent)) {
 			x = OPread_f32(file);
 			y = OPread_f32(file);
 			z = OPread_f32(file);
@@ -108,7 +93,7 @@ Mesh* LoadOPM(FILE* file, int start, int length) {
 	}
 
 	// If there were no tangents provided, build them
-	if(!_hasTangents) {
+	if(!_has(features, Features::Tangent)) {
 		MeshVertex* vert_one;
 		MeshVertex* vert_two;
 		Vector3* tangent;

@@ -4,7 +4,8 @@
 #include "./Core/include/Timer.h"
 #include "./Human/Resources/Model/Model.h"
 #include "./Human/Rendering/Camera.h"
-#include "./Human/Resources/Material/TexturedMaterial.h"
+#include "./Human/Resources/Material/SpecularTexturedMaterial.h"
+#include "./Human/Resources/Material/TexturedScreenMaterial.h"
 #include "./Human/Rendering/Quad.h"
 
 class GameManager
@@ -20,10 +21,6 @@ private:
 	Texture2D* _normalTexture;
 	Texture2D* _specularTexture;
 
-	TexturedScreenMaterial* _screenMaterial;
-	Quad* _quad;
-
-	Matrix4 rotate;
 	f32 rotateAmnt;
 };
 

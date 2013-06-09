@@ -44,6 +44,7 @@ ImageDDS::ImageDDS(FILE* fp){
 		_linearSize	 = *(ui32*)&(header[16]);
 		_mipMapCount = *(ui32*)&(header[24]);
 		_fourCC      = *(ui32*)&(header[80]);
+		_compressed = true;
 		
 		bufsize = _mipMapCount > 1 ? _linearSize * 2 : _linearSize;
 		_buffer = (ui8*)malloc(bufsize * sizeof(ui8));
@@ -81,4 +82,11 @@ ImageDDS* ImageDDS::FromFile(const char* file) {
 	FileInformation fileInfo = OPreadFileInformation(file);
 	ImageDDS* tex = new ImageDDS(fileInfo.file);
 	return tex;
+}
+
+Texture2D* ImageDDS::TextureFromFile(const char* file) {
+	ImageDDS* imageData = ImageDDS::FromFile(file);
+	Texture2D* texture = new Texture2D(imageData);
+	delete imageData;
+	return texture;
 }

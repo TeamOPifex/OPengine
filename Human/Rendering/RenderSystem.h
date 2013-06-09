@@ -20,9 +20,6 @@ public:
 	static void Present();
 	static void DepthTest(bool state);
 
-	// This will be removed, and is gross
-	static bool escape();
-
 	static void Shutdown();
 private:
 	static Renderer* m_renderer;

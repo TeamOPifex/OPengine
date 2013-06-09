@@ -16,7 +16,7 @@ bool GamePadState::WasPressed(GamePadButton button){
 bool GamePadState::WasReleased(GamePadButton button){
 	return !_buttons[button] && _prevButtons[button];
 }
-	
+
 Vector2 GamePadState::LeftThumb() { return Vector2(_axes[LS_X], _axes[LS_Y]); }
 f32 GamePadState::LeftThumbX() { return _axes[LS_X]; }
 f32 GamePadState::LeftThumbY() { return _axes[LS_Y]; }

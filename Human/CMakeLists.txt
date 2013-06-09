@@ -6,6 +6,7 @@ include_directories(
 	../External/glew-1.5.8/include/
 	../External/Phsyx.3.2.1/include/
 	../External/GLES2/
+	../External/libpng/include/
 	../External/Ogg/include/
 	../External/Vorbis/include/
 	../External/OpenAL/

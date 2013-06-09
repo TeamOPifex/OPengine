@@ -3,10 +3,10 @@
 #include "Texture2D.h"
 #include <stdio.h>
 
-class ImageDDS : public Image {
+class ImagePNG : public Image {
 public:
-	ImageDDS(FILE* fp);
-	static ImageDDS* FromFile(const char* file);
+	ImagePNG(FILE* fp);
+	static ImagePNG* FromFile(const char* file);
 	static Texture2D* TextureFromFile(const char* file);
 protected:
 	ui8* tmp;

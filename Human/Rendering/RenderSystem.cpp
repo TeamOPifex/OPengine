@@ -47,10 +47,6 @@ void RenderSystem::Present(){
 	m_renderer->swap_buffer();
 }
 
-bool RenderSystem::escape(){
-	return true;
-}
-
 void RenderSystem::Shutdown(){
 	m_renderer->shutdown();
 }
