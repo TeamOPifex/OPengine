@@ -78,7 +78,7 @@ void Camera::SetFov(OPfloat fov){
 	_fov = fov;
 }
 
-Matrix4 Camera::GetProj(){
+Matrix4* Camera::GetProj(){
 	// if anything has changed, recalculate the projection matrix
 	if(_projStale){
 		_proj = Matrix4::CreatePerspective(
@@ -90,10 +90,10 @@ Matrix4 Camera::GetProj(){
 		_projStale = false;
 	}
 	
-	return _proj;
+	return &_proj;
 }
 
-Matrix4 Camera::GetView(){
+Matrix4* Camera::GetView(){
 	if(_viewStale){
 		_view = Matrix4::CreateLook(
 			_pos,
@@ -103,5 +103,5 @@ Matrix4 Camera::GetView(){
 		_viewStale = false;
 	}
 	
-	return _view;
+	return &_view;
 }

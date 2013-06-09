@@ -18,8 +18,8 @@ public:
 	void SetFov(OPfloat fov);
 	OPfloat GetFov(){ return _fov; }
 
-	Matrix4 GetProj();
-	Matrix4 GetView();
+	Matrix4* GetProj();
+	Matrix4* GetView();
 
 	static Camera GameCamera;
 private:

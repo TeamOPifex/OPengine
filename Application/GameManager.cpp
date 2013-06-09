@@ -38,8 +38,8 @@ void GameManager::Draw(){
 	RenderSystem::ClearColor(1,0,0);
 	RenderSystem::UseMaterial(_material);
 
-	_material->View->SetMatrix(&Camera::GameCamera.GetView());
-	_material->Projection->SetMatrix(&Camera::GameCamera.GetProj());
+	_material->View->SetMatrix(Camera::GameCamera.GetView());
+	_material->Projection->SetMatrix(Camera::GameCamera.GetProj());
 
 	_model->WorldMatrix->RotateY(0.001f)->RotateX(0.003f);
 	

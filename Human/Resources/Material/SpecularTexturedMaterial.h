@@ -82,8 +82,8 @@ public:
 	}
 
 	void SetViewProjection() {
-		View->SetMatrix(&Camera::GameCamera.GetView());
-		Projection->SetMatrix(&Camera::GameCamera.GetProj());
+		View->SetMatrix(Camera::GameCamera.GetView());
+		Projection->SetMatrix(Camera::GameCamera.GetProj());
 	}
 	
 	ShaderParamWorld* World;
