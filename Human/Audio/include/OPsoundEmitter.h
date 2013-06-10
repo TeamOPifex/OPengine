@@ -48,6 +48,8 @@ class OPSoundEmitter{
 		void SetPitch(OPfloat pitch){
 
 		}
+
+		void enqueueBuffer(SLAndroidSimpleBufferQueueItf bq, void *context);
 #else
 		void SetPosition(Vector3 position){
 			alSourcefv(_alSrc, AL_POSITION, position.ptr());

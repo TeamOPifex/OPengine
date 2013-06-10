@@ -1,6 +1,7 @@
 #include "../include/OPsoundEmitter.h"
 
 OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
+	OPLog("OPsoundEmitter: -1");
 	OPint bytesPerBuffer = (sound->SampleRate * sound->BitsPerSample) /  sections;
 	_sound = sound;
 
@@ -8,6 +9,8 @@ OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
 	for(OPint i = bytesPerBuffer; i--; _intermediateBuffer[i] = 0);
 
 #ifdef OPIFEX_ANDROID
+	_playerObject = NULL;
+	OPLog("OPsoundEmitter: 0");
     // configure audio source
     SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, 2};
     SLDataFormat_PCM format_pcm = {
@@ -23,19 +26,40 @@ OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
     SLDataSource audioSrc = {&loc_bufq, &format_pcm};
 
     // configure audio sink
-    SLDataLocator_OutputMix loc_outmix = {SL_DATALOCATOR_OUTPUTMIX, _outputMixObject};
+    SLDataLocator_OutputMix loc_outmix = {SL_DATALOCATOR_OUTPUTMIX, OPAudio::OutputMixObject};
     SLDataSink audioSnk = {&loc_outmix, NULL};
 	
     const SLInterfaceID ids[3] = {SL_IID_BUFFERQUEUE, SL_IID_EFFECTSEND,
             /*SL_IID_MUTESOLO,*/ SL_IID_VOLUME};
     const SLboolean req[3] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE,
             /*SL_BOOLEAN_TRUE,*/ SL_BOOLEAN_TRUE};
-    (*_engineEngine)->CreateAudioPlayer(_engineEngine, &_playerObject, &audioSrc, &audioSnk,
+    OPLog("OPsoundEmitter: 1");
+
+    OPLog_ui32((OPint)OPAudio::EngineEngine);
+
+    (*OPAudio::EngineEngine)->CreateAudioPlayer(OPAudio::EngineEngine, &_playerObject, &audioSrc, &audioSnk,
             3, ids, req);
+
+	OPLog_ui32((OPint)_playerObject);    
+    OPLog("OPsoundEmitter: 2");
+
+	(*_playerObject)->GetInterface(_playerObject, SL_IID_BUFFERQUEUE,
+	            &_bqPlayerBufferQueue);
+
 	(*_playerObject)->Realize(_playerObject, SL_BOOLEAN_FALSE);
+
+    OPLog("OPsoundEmitter: 3");
 
     // get the play interface
     (*_playerObject)->GetInterface(_playerObject, SL_IID_PLAY, &_playerPlay);
+
+	(*_bqPlayerBufferQueue)->RegisterCallback(
+		_bqPlayerBufferQueue,
+		enqueueBuffer,
+		NULL
+	);
+
+    OPLog("OPsoundEmitter: 4");
 #else // OPENAL FOR DESKTOPS
 	alGenBuffers(BUFFERS, _buffers); // backbuffer and forebuffer
 	alGenSources(1, &_alSrc);
@@ -78,6 +102,7 @@ OPSoundEmitter::~OPSoundEmitter(){
 /*---------------------------------------------------------------------------*/
 void OPSoundEmitter::Play(){
 #ifdef OPIFEX_ANDROID
+	while(!_queued) process();
 	(*_playerPlay)->SetPlayState(_playerPlay, SL_PLAYSTATE_PLAYING);
 #else
 	while(_freeBuffers &&  process());
@@ -198,6 +223,9 @@ OPint OPSoundEmitter::process(){
 		OPmemcpy((&_intermediateBuffer[offset]), (&(_sound->Data + _queued)[offset]), toProcess);
 
 
+		OPLog("To process VVV");
+		OPLog_i32(toProcess);
+		OPLog_i32(_bytesInBuffer);
 		_bytesInBuffer += toProcess;
 
 		// have all the chunks of this buffer been processed?
@@ -206,11 +234,6 @@ OPint OPSoundEmitter::process(){
 
 #ifdef OPIFEX_ANDROID
 			OPmemcpy(_playingBuffers[_activeBuffer], _intermediateBuffer, _bytesInBuffer);
-			(*_bqPlayerBufferQueue)->Enqueue(
-				_bqPlayerBufferQueue,
-				_intermediateBuffer,
-				_bytesInBuffer
-			);
 #else
 			alBufferData(
 				_buffers[_activeBuffer],
@@ -230,3 +253,13 @@ OPint OPSoundEmitter::process(){
 
 		return toProcess;
 }
+
+#ifdef OPIFEX_ANDROID
+void OPSoundEmitter::enqueueBuffer(SLAndroidSimpleBufferQueueItf bq, void *context){
+	(*bq)->Enqueue(
+		bq,
+		_intermediateBuffer,
+		_bytesInBuffer
+	);
+}
+#endif

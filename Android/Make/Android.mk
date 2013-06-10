@@ -103,6 +103,7 @@ LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Ogg/include
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Vorbis/include
 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/Audio/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Audio/src/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Input/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Math/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Rendering/*.cpp)

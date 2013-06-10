@@ -79,6 +79,10 @@ class OPAudio{
 	public:
 		static OPint Init();
 
+		static SLEngineItf EngineEngine;
+		static SLObjectItf EngineObject;
+		static SLObjectItf OutputMixObject;
+
 		static void SetEarPosition(Vector3 pos){
 #ifdef OPIFEX_ANDROID
 #else

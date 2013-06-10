@@ -7,6 +7,9 @@
 }\
 
 #ifdef OPIFEX_ANDROID
+SLEngineItf OPAudio::EngineEngine = NULL;
+SLObjectItf OPAudio::EngineObject = NULL;
+SLObjectItf OPAudio::OutputMixObject = NULL;
 #else
 size_t ov_read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
 {
@@ -30,48 +33,50 @@ long ov_tell_func(void *datasource)
 #endif
 
 OPint OPAudio::Init(){
-
+	OPLog("Initializing OP audio...\n");
 #ifdef OPIFEX_ANDROID // USE OpenSL ES for sound
     // create engine
 	SLresult result;
-	result = slCreateEngine(&_engineObject, 0, NULL, 0, NULL, NULL);
+	result = slCreateEngine(&OPAudio::EngineObject, 0, NULL, 0, NULL, NULL);
     if(SL_RESULT_SUCCESS != result) {
 		OPLog("Jukebox::Error 1");
 		return false;
 	}
 	
     // realize the engine
-	result = (*_engineObject)->Realize(_engineObject, SL_BOOLEAN_FALSE);
+	result = (*OPAudio::EngineObject)->Realize(OPAudio::EngineObject, SL_BOOLEAN_FALSE);
     if(SL_RESULT_SUCCESS != result) {
 		OPLog("Jukebox::Error 2");
 		return false;
 	}
 	
     // get the engine interface, which is needed in order to create other objects
-    result = (*_engineObject)->GetInterface(_engineObject, SL_IID_ENGINE, &_engineEngine);
+    result = (*OPAudio::EngineObject)->GetInterface(OPAudio::EngineObject, SL_IID_ENGINE, &OPAudio::EngineEngine);
     if(SL_RESULT_SUCCESS != result) {
 		OPLog("Jukebox::Error 3");
 		return false;
 	}
 
+	OPLog("OPaudio: engineEngine VVV");
+	OPLog_i32((OPint)OPAudio::EngineEngine);
+
 	// create output mix, with environmental reverb specified as a non-required interface    
 	const SLInterfaceID ids[1] = {SL_IID_ENVIRONMENTALREVERB};
     const SLboolean req[1] = {SL_BOOLEAN_FALSE};
-    result = (*_engineEngine)->CreateOutputMix(_engineEngine, &_outputMixObject, 1, ids, req);
+    result = (*OPAudio::EngineEngine)->CreateOutputMix(OPAudio::EngineEngine, &OPAudio::OutputMixObject, 1, ids, req);
     if(SL_RESULT_SUCCESS != result) {
 		OPLog("Jukebox::Error 4");
 		//return false;
 	}
 		
     // realize the output mix
-    result = (*_outputMixObject)->Realize(_outputMixObject, SL_BOOLEAN_FALSE);
+    result = (*OPAudio::OutputMixObject)->Realize(OPAudio::OutputMixObject, SL_BOOLEAN_FALSE);
     if(SL_RESULT_SUCCESS != result) {
 		OPLog("Jukebox::Error 5");
 		return false;
 	}
 	
-	OPLog("Jukebox::Initialized");
-
+	OPLog("OPaudio::Initialized");
 #else // USE OpenAL FOR SOUND
 	// setup the device and stuff
 	_OPaudioDevice = alcOpenDevice(NULL);
@@ -110,6 +115,8 @@ OPint OPAudio::Init(){
 	fn_ov_comment = (LPOVCOMMENT)ov_comment;
 	fn_ov_open_callbacks = (LPOVOPENCALLBACKS)ov_open_callbacks;
 #endif
+
+	OPLog("OP audio Initialized!!!");
 	return 1;
 }
 /*---------------------------------------------------------------------------*/
@@ -130,18 +137,19 @@ OPsound OPAudio::ReadWave(const OPchar* filename){
 
 		type = OPread(str, sizeof(i8) * 4);
 		if(memcmp(type, "RIFF", 4) != 0){
-			printf("No RIFF\n");
+			OPLog("No RIFF\n");
 		}
 
-		OPmemcpy(&size, OPread(str, sizeof(i64)), sizeof(i64));
+		OPmemcpy(&size, OPread(str, sizeof(i32)), sizeof(i32));
 		type = OPread(str, sizeof(i8) * 4);
 		if(memcmp(type, "WAVE", 4) != 0){
-			printf("Not WAVE\n");
+			OPLog((char const*)type);
+			OPLog("Not WAVE\n");
 		}
 
 		type = OPread(str, sizeof(i8) * 4);
 		if(memcmp(type, "fmt ", 4) != 0){
-			printf("Not fmt\n");
+			OPLog("Not fmt\n");
 		}
 
 		OPmemcpy(&chunkSize, OPread(str, sizeof(i64)), sizeof(i64));
@@ -157,7 +165,7 @@ OPsound OPAudio::ReadWave(const OPchar* filename){
 
 		type = OPread(str, sizeof(i8) * 4);
 		if(memcmp(type, "data", 4) != 0){
-			printf("Missing data\n");
+			OPLog("Missing data\n");
 		}
 
 		OPmemcpy(&dataSize, OPread(str, sizeof(i64)), sizeof(i64));
@@ -178,6 +186,10 @@ OPsound OPAudio::ReadWave(const OPchar* filename){
 			dataSize,
 			data
 		};
+
+		OPLog("Channels:"); OPLog_i32(channels);
+		OPLog("sampleRate:"); OPLog_i32(sampleRate);
+		OPLog("bps:"); OPLog_i32(bitsPerSample);
 
 		SLDataFormat_PCM slFormat = {
 			SL_DATAFORMAT_PCM, // specifies the format

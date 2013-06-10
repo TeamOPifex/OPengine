@@ -67,7 +67,7 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setConnected(JNIEnv * env,
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager){
 	timer = OPcreateTimer();
 	OPfileInit( AAssetManager_fromJava(env, assetManager));
-	Jukebox::Initialize();
+	//Jukebox::Initialize();
 #else
 void Init(){
 
@@ -133,18 +133,24 @@ void Init(){
 	GM = new GameManager(width, height);
 
 	OPAudio::Init();
+	OPLog("Main: EngineEngine VVV");
+	OPLog_i32((OPint)OPAudio::EngineEngine);
+	/*
 	OPchar songPath[] = {"Audio/background.ogg"};
-	Song = OPAudio::ReadOgg(songPath);
+	Song = OPAudio::ReadOgg(songPath);*/
 	Sound = OPAudio::ReadWave("Audio/testing.wav");
-
-	Emitter = new OPSoundEmitter(&Song, 8);
-	Emitter->SetVolume(0.05f);
-	Emitter->Play();
 	
+	/*Emitter = new OPSoundEmitter(&Song, 8);
+	Emitter->SetVolume(0.05f);
+	Emitter->Play();*/
+	
+	OPLog("Main: 1");
 	SoundEmitter = new OPSoundEmitter(&Sound, 8);
 	//SoundEmitter->SetVolume(0.15f);
+	OPLog("Main: 2");
 	SoundEmitter->Looping = true;
 	SoundEmitter->Play();
+	OPLog("Main: 3");
 	return;
 }
 
@@ -169,7 +175,7 @@ void Update( OPtimer* timer){
 	else
 		RenderSystem::ClearColor(0,0,0);
 
-	Emitter->Update();
+	//Emitter->Update();
 	SoundEmitter->Update();
 	GM->Draw();
 	RenderSystem::Present();
