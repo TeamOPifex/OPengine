@@ -75,7 +75,6 @@ OPint OPAudio::Init(){
 		OPLog("Jukebox::Error 5");
 		return false;
 	}
-	
 	OPLog("OPaudio::Initialized");
 #else // USE OpenAL FOR SOUND
 	// setup the device and stuff

@@ -133,8 +133,6 @@ void Init(){
 	GM = new GameManager(width, height);
 
 	OPAudio::Init();
-	OPLog("Main: EngineEngine VVV");
-	OPLog_i32((OPint)OPAudio::EngineEngine);
 	/*
 	OPchar songPath[] = {"Audio/background.ogg"};
 	Song = OPAudio::ReadOgg(songPath);*/

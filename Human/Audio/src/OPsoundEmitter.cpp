@@ -1,5 +1,19 @@
 #include "../include/OPsoundEmitter.h"
 
+#ifdef OPIFEX_ANDROID
+void OPSoundEmitter::ENQUEUE_BUFFER(SLAndroidSimpleBufferQueueItf bq, void *context){
+	OPLog("OPSoundEmitter: Callback entered...");
+
+	OPSoundEmitter* emitter = (OPSoundEmitter*)context;
+	(*bq)->Enqueue(
+		bq,
+		emitter->_intermediateBuffer,
+		emitter->_bytesInBuffer
+	);
+	OPLog("OPSoundEmitter: Callback exited.");
+}
+#endif
+
 OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
 	OPLog("OPsoundEmitter: -1");
 	OPint bytesPerBuffer = (sound->SampleRate * sound->BitsPerSample) /  sections;
@@ -10,6 +24,8 @@ OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
 
 #ifdef OPIFEX_ANDROID
 	_playerObject = NULL;
+	_bqPlayerBufferQueue = NULL;
+
 	OPLog("OPsoundEmitter: 0");
     // configure audio source
     SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, 2};
@@ -25,6 +41,9 @@ OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
 
     SLDataSource audioSrc = {&loc_bufq, &format_pcm};
 
+    OPLog("OPSoundEmitter: 0.5");
+	OPLog_i32((OPint)OPAudio::OutputMixObject);
+
     // configure audio sink
     SLDataLocator_OutputMix loc_outmix = {SL_DATALOCATOR_OUTPUTMIX, OPAudio::OutputMixObject};
     SLDataSink audioSnk = {&loc_outmix, NULL};
@@ -37,8 +56,27 @@ OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
 
     OPLog_ui32((OPint)OPAudio::EngineEngine);
 
-    (*OPAudio::EngineEngine)->CreateAudioPlayer(OPAudio::EngineEngine, &_playerObject, &audioSrc, &audioSnk,
-            3, ids, req);
+    (*OPAudio::EngineEngine)->CreateAudioPlayer(
+    	OPAudio::EngineEngine, 
+    	&_playerObject,
+    	&audioSrc,
+    	&audioSnk,
+        3, ids, req
+    );
+
+    OPLog("OPsoundEmitter: 1.25");
+    OPLog_ui32((OPint)_playerObject);
+
+	(*_playerObject)->Realize(_playerObject, SL_BOOLEAN_FALSE);
+
+    OPLog("OPsoundEmitter: 1.75");
+    OPLog_ui32((OPint)_playerObject);
+
+    OPLog("OPsoundEmitter: 3");
+
+    // get the play interface
+    (*_playerObject)->GetInterface(_playerObject, SL_IID_PLAY, &_playerPlay);
+
 
 	OPLog_ui32((OPint)_playerObject);    
     OPLog("OPsoundEmitter: 2");
@@ -46,17 +84,15 @@ OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
 	(*_playerObject)->GetInterface(_playerObject, SL_IID_BUFFERQUEUE,
 	            &_bqPlayerBufferQueue);
 
-	(*_playerObject)->Realize(_playerObject, SL_BOOLEAN_FALSE);
 
-    OPLog("OPsoundEmitter: 3");
-
-    // get the play interface
-    (*_playerObject)->GetInterface(_playerObject, SL_IID_PLAY, &_playerPlay);
+    OPLog("OPsoundEmitter: 3.5");
+    OPLog("OPSoundEmitter: _bqPlayerBufferQueue VVV");
+    OPLog_i32((OPint)_bqPlayerBufferQueue);
 
 	(*_bqPlayerBufferQueue)->RegisterCallback(
 		_bqPlayerBufferQueue,
-		enqueueBuffer,
-		NULL
+		ENQUEUE_BUFFER,
+		this
 	);
 
     OPLog("OPsoundEmitter: 4");
@@ -102,10 +138,15 @@ OPSoundEmitter::~OPSoundEmitter(){
 /*---------------------------------------------------------------------------*/
 void OPSoundEmitter::Play(){
 #ifdef OPIFEX_ANDROID
-	while(!_queued) process();
+	OPLog("OPSoundEmitter: Play start...");
+	while(_freeBuffers && process());
+	OPLog_i32(_freeBuffers);
+	OPLog("OPSoundEmitter: Invoking play...");
 	(*_playerPlay)->SetPlayState(_playerPlay, SL_PLAYSTATE_PLAYING);
+	_state = Playing;
+	OPLog("OPSoundEmitter: \"playing\"");
 #else
-	while(_freeBuffers &&  process());
+	while(_freeBuffers && process());
 	alSourcePlay(_alSrc);
 	_state = Playing;
 #endif
@@ -148,7 +189,7 @@ void OPSoundEmitter::Update(){
 				OPint playedBuff = 0;
 #ifdef OPIFEX_ANDROID
 #else
-				alSourceUnqueueBuffers(_alSrc, buffsPlayed, &playedBuff);
+				alSourceUnqueueBuffers(_alSrc, buffsPlayed, (ALuint*)(&playedBuff));
 #endif
 				_bytesPlayed += _bufferSize;
 				_freeBuffers += buffsPlayed;
@@ -253,13 +294,3 @@ OPint OPSoundEmitter::process(){
 
 		return toProcess;
 }
-
-#ifdef OPIFEX_ANDROID
-void OPSoundEmitter::enqueueBuffer(SLAndroidSimpleBufferQueueItf bq, void *context){
-	(*bq)->Enqueue(
-		bq,
-		_intermediateBuffer,
-		_bytesInBuffer
-	);
-}
-#endif
