@@ -80,6 +80,9 @@ class OPSoundEmitter{
 		SLMuteSoloItf _playerMuteSolo;
 		SLVolumeItf _playerVolume;
 		ui8* _playingBuffers[BUFFERS];
+
+		OPint _buffersQueued;
+		OPint _buffersProcessed;
 #else // openAL for desktops
 		ALuint _buffers[BUFFERS], _alSrc;
 #endif

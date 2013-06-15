@@ -5,18 +5,22 @@ void OPSoundEmitter::ENQUEUE_BUFFER(SLAndroidSimpleBufferQueueItf bq, void *cont
 	OPLog("OPSoundEmitter: Callback entered...");
 
 	OPSoundEmitter* emitter = (OPSoundEmitter*)context;
-	(*bq)->Enqueue(
+	/*(*bq)->Enqueue(
 		bq,
-		emitter->_intermediateBuffer,
-		emitter->_bytesInBuffer
+		emitter->_playingBuffers[emitter->_activeBuffer],
+		emitter->_bufferSize
 	);
+	++emitter->_activeBuffer %= BUFFERS;*/
+	emitter->_buffersProcessed++;
+	emitter->_freeBuffers++;
+	OPLog_i32(emitter->_activeBuffer);
 	OPLog("OPSoundEmitter: Callback exited.");
 }
 #endif
 
 OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
 	OPLog("OPsoundEmitter: -1");
-	OPint bytesPerBuffer = (sound->SampleRate * sound->BitsPerSample) /  sections;
+	OPint bytesPerBuffer = (sound->SampleRate * sound->BitsPerSample) / sections;
 	_sound = sound;
 
 	_intermediateBuffer = new unsigned char[_bufferSize = bytesPerBuffer];
@@ -26,13 +30,15 @@ OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
 	_playerObject = NULL;
 	_bqPlayerBufferQueue = NULL;
 
+	_buffersQueued = _buffersProcessed = 0;
+
 	OPLog("OPsoundEmitter: 0");
     // configure audio source
     SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, 2};
     SLDataFormat_PCM format_pcm = {
     	SL_DATAFORMAT_PCM,
     	1,
-    	SL_SAMPLINGRATE_8,
+    	SL_SAMPLINGRATE_44_1,
         SL_PCMSAMPLEFORMAT_FIXED_16,
         SL_PCMSAMPLEFORMAT_FIXED_16,
         SL_SPEAKER_FRONT_CENTER,
@@ -105,7 +111,12 @@ OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
 	// fill all buffers with silence
 	for(OPint i = BUFFERS; i--;)
 #ifdef OPIFEX_ANDROID
-	_playingBuffers[i] = 0x00;
+	{
+		_playingBuffers[i] = (ui8*)OPalloc(sizeof(ui8) * _bufferSize);
+
+		for(OPint j = _bufferSize; j--;)
+			_playingBuffers[i][j] = 0x00;
+	}
 #else
 	alBufferData(
 		_buffers[i],
@@ -176,35 +187,53 @@ void OPSoundEmitter::Update(){
 		OPint buffsPlayed = 0, buffsQueued = 0, state = 0, playPos = 0;
 
 #ifdef OPIFEX_ANDROID
-
+		SLmillisecond slPosition;
+		buffsQueued = _buffersQueued;
+		buffsPlayed = _buffersProcessed;
+		(*_playerPlay)->GetPosition(_playerPlay, &slPosition);
+		playPos = (OPint)((slPosition / 1000.0f) * (_sound->SampleRate) * (_sound->BitsPerSample >> 3));
+		//playPos = _buffersProcessed * _bufferSize;
 #else
 		alGetSourcei(_alSrc, AL_BUFFERS_PROCESSED, &buffsPlayed);
 		alGetSourcei(_alSrc, AL_BUFFERS_QUEUED, &buffsQueued);
 		alGetSourcei(_alSrc, AL_BYTE_OFFSET, &playPos);
 #endif
+		OPLog("Update: playPos"); OPLog_i32(playPos);
 
 		if(buffsPlayed != _oldBuffsPlayed){
 
+			OPLog("OPSoundEmitter::UPDATE NEXT BUFFER");
 			if(buffsQueued){
 				OPint playedBuff = 0;
 #ifdef OPIFEX_ANDROID
+				//OPLog("Process: _freeBuffers"); OPLog_i32(_freeBuffers);
 #else
 				alSourceUnqueueBuffers(_alSrc, buffsPlayed, (ALuint*)(&playedBuff));
+				_freeBuffers += buffsPlayed;
 #endif
 				_bytesPlayed += _bufferSize;
-				_freeBuffers += buffsPlayed;
+
 			}
 			_oldBuffsPlayed = buffsPlayed;
 		}
 
 		if(_queued + playPos >= _sound->DataSize){
+			OPLog("OPSoundEmitter::END OF DATA");
+			OPLog_i32(_queued);
+			OPLog_i32(playPos);
+			OPLog_i32(_sound->DataSize);
 			//printf("Played: %d @ %d\n", _bytesPlayed, _sound->DataSize);
 			if(Looping){
+				OPLog("OPSoundEmitter::LOOPING");
 				_queued = _bytesPlayed = _bytesInBuffer = _chunksProcessed = 0;
 				_activeBuffer = 0;
 				_freeBuffers = BUFFERS;
+#ifdef OPIFEX_ANDROID
+				_buffersQueued = _buffersProcessed = 0;
+#endif
 			}
 			else{
+				OPLog("OPSoundEmitter::NOT LOOPING");
 				if(_sound->FillCallback){
 					if(_sound->FillCallback(_sound, 0, 0) > 0){
 						_queued = _bytesPlayed = _bytesInBuffer = _chunksProcessed = 0;
@@ -226,7 +255,12 @@ void OPSoundEmitter::Update(){
 
 		// can we continue playing after we've run out of data?
 #ifdef OPIFEX_ANDROID
-
+		SLuint32 slState;
+		(*_playerPlay)->GetPlayState(_playerPlay, &slState);
+		if(slState == SL_PLAYSTATE_STOPPED && _freeBuffers != BUFFERS){
+			(*_playerPlay)->SetPlayState(_playerPlay, SL_PLAYSTATE_PLAYING);
+			_state = Playing;
+		}
 #else
 		alGetSourcei(_alSrc, AL_SOURCE_STATE, &state);
 		if(state == AL_STOPPED && _freeBuffers != BUFFERS){
@@ -257,24 +291,28 @@ OPint OPSoundEmitter::process(){
 		OPint toProcess = _sound->DataSize - (_queued + _bytesInBuffer); // # of bytes that need to be queued
 		OPint offset = _chunksProcessed++ * _chunkSize;                  // offset in bytes for current chunk
 		toProcess = toProcess > _chunkSize ? _chunkSize : toProcess;   // don't process more than a chunk's worth
-
+		OPLog("\tprocess: Entered");
+		OPLog_i32(_sound->DataSize);
+		OPLog_i32(_chunksProcessed);
+		OPLog_i32(_queued);
+		OPLog_i32(_bytesInBuffer);
+		OPLog_i32(toProcess);
 		if(!toProcess) return 0; // no more data! we are done
 
 		// this is where processing would happen, for now just simply copy
 		OPmemcpy((&_intermediateBuffer[offset]), (&(_sound->Data + _queued)[offset]), toProcess);
 
-
-		OPLog("To process VVV");
-		OPLog_i32(toProcess);
-		OPLog_i32(_bytesInBuffer);
 		_bytesInBuffer += toProcess;
-
+		OPLog("\tprocess: Mem copied");
 		// have all the chunks of this buffer been processed?
 		if(_chunksProcessed == CHUNKS){
 			// push processed data to the buffer
-
+			OPLog("\tprocess: Chunks processed");
 #ifdef OPIFEX_ANDROID
 			OPmemcpy(_playingBuffers[_activeBuffer], _intermediateBuffer, _bytesInBuffer);
+			OPLog("\tProcess: Queuing buffer"); OPLog_i32(_buffersQueued);
+			(*_bqPlayerBufferQueue)->Enqueue(_bqPlayerBufferQueue, _playingBuffers[_activeBuffer], _bytesInBuffer);
+			++_buffersQueued;
 #else
 			alBufferData(
 				_buffers[_activeBuffer],

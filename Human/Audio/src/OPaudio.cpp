@@ -128,11 +128,11 @@ OPsound OPAudio::ReadWave(const OPchar* filename){
 	if(!str) printf("Error: couldn't open '%s'\n", filename);
 	else{
 		ui8* type;
-		i64 size = 0, chunkSize = 0;
+		i32 size = 0, chunkSize = 0;
 		i16 formatType = 0, channels = 0;
-		i64 sampleRate = 0, avgBytesPerSec = 0;
+		i32 sampleRate = 0, avgBytesPerSec = 0;
 		i16 bytesPerSample = 0, bitsPerSample = 0;
-		i64 dataSize = 0;
+		i32 dataSize = 0;
 
 		type = OPread(str, sizeof(i8) * 4);
 		if(memcmp(type, "RIFF", 4) != 0){
@@ -151,11 +151,11 @@ OPsound OPAudio::ReadWave(const OPchar* filename){
 			OPLog("Not fmt\n");
 		}
 
-		OPmemcpy(&chunkSize, OPread(str, sizeof(i64)), sizeof(i64));
+		OPmemcpy(&chunkSize, OPread(str, sizeof(i32)), sizeof(i32));
 		OPmemcpy(&formatType, OPread(str, sizeof(i16)), sizeof(i16));
 		OPmemcpy(&channels, OPread(str, sizeof(i16)), sizeof(i16));
-		OPmemcpy(&sampleRate, OPread(str, sizeof(i64)), sizeof(i64));
-		OPmemcpy(&avgBytesPerSec, OPread(str, sizeof(i64)), sizeof(i64));
+		OPmemcpy(&sampleRate, OPread(str, sizeof(i32)), sizeof(i32));
+		OPmemcpy(&avgBytesPerSec, OPread(str, sizeof(i32)), sizeof(i32));
 		OPmemcpy(&bytesPerSample, OPread(str, sizeof(i16)), sizeof(i16));
 		OPmemcpy(&bitsPerSample, OPread(str, sizeof(i16)), sizeof(i16));
 
@@ -167,7 +167,7 @@ OPsound OPAudio::ReadWave(const OPchar* filename){
 			OPLog("Missing data\n");
 		}
 
-		OPmemcpy(&dataSize, OPread(str, sizeof(i64)), sizeof(i64));
+		OPmemcpy(&dataSize, OPread(str, sizeof(i32)), sizeof(i32));
 
 		ui8* data = (ui8*)OPalloc(sizeof(ui8) * dataSize);
 		OPmemcpy(data, OPread(str, dataSize), dataSize);
@@ -175,10 +175,10 @@ OPsound OPAudio::ReadWave(const OPchar* filename){
 		OPstreamDestroy(str);
 
 #ifdef OPIFEX_ANDROID
-		OPsound out = {
-			(SLuint32)channels,   
+		OPsound out = {  
 			(SLuint32)sampleRate,
 			(SLuint32)bitsPerSample,
+			(SLuint32)channels, 
 			{0},
 			NULL,
 			NULL,
@@ -188,7 +188,7 @@ OPsound OPAudio::ReadWave(const OPchar* filename){
 
 		OPLog("Channels:"); OPLog_i32(channels);
 		OPLog("sampleRate:"); OPLog_i32(sampleRate);
-		OPLog("bps:"); OPLog_i32(bitsPerSample);
+		OPLog("bps:"); OPLog_i32(avgBytesPerSec);
 
 		SLDataFormat_PCM slFormat = {
 			SL_DATAFORMAT_PCM, // specifies the format
