@@ -93,6 +93,7 @@ class OPSoundEmitter{
 		OPint _bufferSize, _chunkSize;
 		OPint _bytesInBuffer, _bytesPlayed, _oldBytesPlayed;
 		OPsoundEmitterState _state;
+		OPint _oldPlayPos;
 
 		OPint process();
 

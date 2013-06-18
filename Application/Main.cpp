@@ -144,7 +144,7 @@ void Init(){
 	
 	OPLog("Main: 1");
 	SoundEmitter = new OPSoundEmitter(&Sound, 8);
-	//SoundEmitter->SetVolume(0.15f);
+	SoundEmitter->SetVolume(0.95f);
 	OPLog("Main: 2");
 	SoundEmitter->Looping = true;
 	SoundEmitter->Play();
@@ -161,7 +161,7 @@ JNIEXPORT int JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject 
 void Update( OPtimer* timer){
 #endif
 
-	bool result = GM->Update( timer );
+	//bool result = GM->Update( timer );
 	GPS->Update();
 	GamePadState* gps = GPS->Controller(GamePadIndex_One);
 	if(gps->IsConnected()){
@@ -175,16 +175,16 @@ void Update( OPtimer* timer){
 
 	//Emitter->Update();
 	SoundEmitter->Update();
-	GM->Draw();
-	RenderSystem::Present();
+	//GM->Draw();
+	//RenderSystem::Present();
 	
 #ifdef OPIFEX_ANDROID
 	if(!result)
 		return 1;
 	return 0;
 #else
-	if(!result)
-		exit(0);
+	//if(!result)
+	//	exit(0);
 	return;
 #endif
 }
