@@ -12,7 +12,7 @@
 #include "OPaudio.h"
 
 #define CHUNKS 10
-#define BUFFERS 5
+#define BUFFERS 2
 
 enum OPsoundEmitterState{
 	Playing = 0,
