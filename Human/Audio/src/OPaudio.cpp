@@ -183,6 +183,7 @@ OPsound OPAudio::ReadWave(const OPchar* filename){
 			{0},
 			NULL,
 			NULL,
+			NULL,
 			dataSize,
 			data
 		};
@@ -404,7 +405,7 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 				};
 
 				#ifdef OPIFEX_ANDROID
-				bzero(song.SLdataFormat, sizeof(ui8) * 32);
+				//bzero(song.SLdataFormat, sizeof(ui8) * 32);
 				#endif
 				
 				return songResult;

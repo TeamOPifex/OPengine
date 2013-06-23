@@ -183,8 +183,8 @@ void Update( OPtimer* timer){
 	RenderSystem::Present();
 	
 #ifdef OPIFEX_ANDROID
-	if(!result)
-		return 1;
+	//if(!result)
+		//return 1;
 	return 0;
 #else
 	//if(!result)
