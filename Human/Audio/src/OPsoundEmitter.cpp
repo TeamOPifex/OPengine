@@ -34,7 +34,7 @@ OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
 
 	OPLog("OPsoundEmitter: 0");
     // configure audio source
-    SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, 2};
+    SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, BUFFERS};
     SLDataFormat_PCM format_pcm = {
     	SL_DATAFORMAT_PCM,
     	1,
