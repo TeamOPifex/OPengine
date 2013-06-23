@@ -133,21 +133,22 @@ void Init(){
 	GM = new GameManager(width, height);
 
 	OPAudio::Init();
-	/*
-	OPchar songPath[] = {"Audio/background.ogg"};
-	Song = OPAudio::ReadOgg(songPath);*/
-	Sound = OPAudio::ReadWave("Audio/testing.wav");
 	
-	/*Emitter = new OPSoundEmitter(&Song, 8);
+	OPchar songPath[] = {"Audio/background.ogg"};
+	Song = OPAudio::ReadOgg(songPath);
+	//Sound = OPAudio::ReadWave("Audio/testing.wav");
+	
+	Emitter = new OPSoundEmitter(&Song, 8);
 	Emitter->SetVolume(0.05f);
-	Emitter->Play();*/
+	Emitter->Looping = true;
+	Emitter->Play();
 	
 	OPLog("Main: 1");
-	SoundEmitter = new OPSoundEmitter(&Sound, 8);
-	SoundEmitter->SetVolume(0.95f);
+	//SoundEmitter = new OPSoundEmitter(&Sound, 8);
+	//SoundEmitter->SetVolume(0.95f);
 	OPLog("Main: 2");
-	SoundEmitter->Looping = true;
-	SoundEmitter->Play();
+	//SoundEmitter->Looping = true;
+	//SoundEmitter->Play();
 	OPLog("Main: 3");
 	return;
 }
@@ -162,7 +163,7 @@ void Update( OPtimer* timer){
 #endif
 
 	//bool result = GM->Update( timer );
-	GPS->Update();
+	//GPS->Update();
 	GamePadState* gps = GPS->Controller(GamePadIndex_One);
 	if(gps->IsConnected()){
 		OPfloat r = gps->IsDown(GamePad_Button_A) ? 1.0f : 0.0f;
@@ -173,10 +174,10 @@ void Update( OPtimer* timer){
 	else
 		RenderSystem::ClearColor(0,0,0);
 
-	//Emitter->Update();
-	SoundEmitter->Update();
+	Emitter->Update();
+	//SoundEmitter->Update();
 	//GM->Draw();
-	//RenderSystem::Present();
+	RenderSystem::Present();
 	
 #ifdef OPIFEX_ANDROID
 	if(!result)

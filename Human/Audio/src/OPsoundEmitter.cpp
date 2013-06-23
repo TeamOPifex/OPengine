@@ -214,21 +214,31 @@ void OPSoundEmitter::Update(){
 		}
 
 		if(_queued + playPos >= _sound->DataSize){
-			if(!Looping){
-				//OPLog("OPSoundEmitter::NOT LOOPING");
-				if(_sound->FillCallback){
-					if(_sound->FillCallback(_sound, 0, 0) > 0){
-						_queued = _bytesPlayed = _bytesInBuffer = _chunksProcessed = 0;
-						_activeBuffer = 0;
-					}
-					else
+			if(_sound->FillCallback){
+				if(_sound->FillCallback(_sound, 0, 0) > 0)
+				{
+					_queued = 0;
+				}
+				else 
+				{
+					if(!Looping){
 						Stop();
+					} else {
+						_queued = 0;
+						Stop();
+						_oldBuffsPlayed = _queued = 0;
+						_bytesPlayed = _oldBytesPlayed = 0; // bytes played
+						_freeBuffers = BUFFERS;
 
+						_chunksProcessed = 0;
+						_bytesInBuffer = 0;
+						Play();
+					}
 				}
-				else{
-					// TODO
-					// ^ what? I don't know...
-				}
+			}
+			else{
+				// TODO
+				// ^ what? I don't know...
 			}
 		}
 
