@@ -10,8 +10,7 @@
 SLEngineItf OPAudio::EngineEngine = NULL;
 SLObjectItf OPAudio::EngineObject = NULL;
 SLObjectItf OPAudio::OutputMixObject = NULL;
-//#else
-#endif
+
 size_t ov_read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
 {
 	return fread(ptr, size, nmemb, (FILE*)datasource);
@@ -105,7 +104,7 @@ OPint OPAudio::Init(){
 			return -2;
 		}
 	}
-#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 	// copy the function pointers directly from
 	// the linked SO file.
 	fn_ov_clear = (LPOVCLEAR)ov_clear;
@@ -225,6 +224,7 @@ OPsound OPAudio::ReadWave(const OPchar* filename){
 			format,
 			NULL,
 			NULL,
+			NULL,
 			dataSize,
 			data
 		};
@@ -285,10 +285,14 @@ static OPint fetchOggData(OPsound* sound, i64 pos, i64 len){
 #else
 	length = DecodeOggVorbis(ogg, (i8*)sound->Data, sound->DataSize, sound->Channels);
 #endif
-
 	printf("Fetched %d\n", (OPint)length);
 
 	return length;
+}
+
+static void resetOggData(OPsound* sound){
+	OPLog("OPAudio::Reset");
+	ov_raw_seek((OggVorbis_File*)sound->dataSource, 0);
 }
 /*---------------------------------------------------------------------------*/
 OPsound OPAudio::ReadOgg(const OPchar* filename){
@@ -310,7 +314,6 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 #endif
 
 	FILE* song = fopen(filename, "rb");
-
 	if(song){
 		printf("Song loaded!\n");
 		// Create an OggVorbis file stream
@@ -378,9 +381,9 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 
 				//length = ulFrequency * 2;
 				ui8* buff = (ui8*)OPalloc(sizeof(ui8) * length);
-				DecodeOggVorbis(sOggVorbisFile, (ui8*)buff, length, ulChannels);
+				DecodeOggVorbis(sOggVorbisFile, (OPchar*)buff, length, ulChannels);
 
-				OPsound song = {
+				OPsound songResult = {
 					#ifndef OPIFEX_ANDROID
 					ulFrequency,
 					bitsPerSample,
@@ -394,6 +397,7 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 					#endif
 					(void*)sOggVorbisFile,
 					fetchOggData,
+					resetOggData,
 					length,
 					buff
 				};
@@ -401,10 +405,9 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 				#ifdef OPIFEX_ANDROID
 				bzero(song.SLdataFormat, sizeof(ui8) * 32);
 				#endif
-
-				return song;
+				
+				return songResult;
 			}
 		}
 	}
 }
-

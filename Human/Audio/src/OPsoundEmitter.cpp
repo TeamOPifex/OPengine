@@ -205,7 +205,6 @@ void OPSoundEmitter::Update(){
 
 		if(buffsPlayed != _oldBuffsPlayed){
 
-			OPLog("OPSoundEmitter::UPDATE NEXT BUFFER");
 			if(buffsQueued){
 				OPint playedBuff = 0;
 #ifdef OPIFEX_ANDROID
@@ -221,35 +220,30 @@ void OPSoundEmitter::Update(){
 		}
 
 		if(_queued + playPos >= _sound->DataSize){
-			OPLog("OPSoundEmitter::END OF DATA");
-			OPLog_i32(_queued);
-			OPLog_i32(playPos);
-			OPLog_i32(_sound->DataSize);
-			//printf("Played: %d @ %d\n", _bytesPlayed, _sound->DataSize);
-			if(Looping){
-				OPLog("OPSoundEmitter::LOOPING");
-				_queued = _bytesPlayed = _bytesInBuffer = _chunksProcessed = 0;
-				_activeBuffer = 0;
-				_freeBuffers = BUFFERS;
-#ifdef OPIFEX_ANDROID
-				_buffersQueued = _buffersProcessed = 0;
-#endif
+			if(_sound->FillCallback){
+				if(_sound->FillCallback(_sound, 0, 0) > 0)
+				{
+					_queued = 0;
+				}
+				else 
+				{
+					if(!Looping){
+						Stop();
+					} else {
+						_queued = 0;
+						Stop();
+						if(_sound->Reset){
+							_sound->Reset(_sound);
+							Play();
+							_sound->FillCallback(_sound, 0, 0);
+							_queued = 0;
+						}
+					}
+				}
 			}
 			else{
-				OPLog("OPSoundEmitter::NOT LOOPING");
-				if(_sound->FillCallback){
-					if(_sound->FillCallback(_sound, 0, 0) > 0){
-						_queued = _bytesPlayed = _bytesInBuffer = _chunksProcessed = 0;
-						_activeBuffer = 0;
-					}
-					else
-						Stop();
-
-				}
-				else{
-					// TODO
-					// ^ what? I don't know...
-				}
+				// TODO
+				// ^ what? I don't know...
 			}
 		}
 
