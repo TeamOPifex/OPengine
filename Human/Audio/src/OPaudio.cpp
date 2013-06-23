@@ -284,7 +284,7 @@ static OPint fetchOggData(OPsound* sound, i64 pos, i64 len){
 #ifdef OPIFEX_ANDROID
 	length = DecodeOggVorbis(ogg, (ui8*)sound->Data, sound->DataSize, sound->Channels);
 #else
-	length = DecodeOggVorbis(ogg, (i8*)sound->Data, sound->DataSize, sound->Channels);
+	length = DecodeOggVorbis(ogg, (ui8*)sound->Data, sound->DataSize, sound->Channels);
 #endif
 	printf("Fetched %d\n", (OPint)length);
 
