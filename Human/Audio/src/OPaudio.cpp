@@ -244,6 +244,7 @@ OPsound OPAudio::ReadWave(const OPchar* filename){
 			format,
 			NULL,
 			NULL,
+			NULL,
 			dataSize,
 			data
 		};
@@ -307,6 +308,11 @@ static OPint fetchOggData(OPsound* sound, i64 pos, i64 len){
 
 	return length;
 }
+
+static void resetOggData(OPsound* sound){
+	OPLog("OPAudio::Reset");
+	ov_raw_seek((OggVorbis_File*)sound->dataSource, 0);
+}
 /*---------------------------------------------------------------------------*/
 OPsound OPAudio::ReadOgg(const OPchar* filename){
 	// Open Ogg Stream
@@ -327,7 +333,6 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 #endif
 
 	FILE* song = fopen(filename, "rb");
-
 	if(song){
 		printf("Song loaded!\n");
 		// Create an OggVorbis file stream
@@ -397,7 +402,7 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 				ui8* buff = (ui8*)OPalloc(sizeof(ui8) * length);
 				DecodeOggVorbis(sOggVorbisFile, (OPchar*)buff, length, ulChannels);
 
-				OPsound song = {
+				OPsound songResult = {
 					#ifndef OPIFEX_ANDROID
 					ulFrequency,
 					bitsPerSample,
@@ -411,6 +416,7 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 					#endif
 					(void*)sOggVorbisFile,
 					fetchOggData,
+					resetOggData,
 					length,
 					buff
 				};
@@ -418,10 +424,9 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 				#ifdef OPIFEX_ANDROID
 				bzero(song.SLdataFormat, sizeof(ui8) * 32);
 				#endif
-
-				return song;
+				
+				return songResult;
 			}
 		}
 	}
 }
-

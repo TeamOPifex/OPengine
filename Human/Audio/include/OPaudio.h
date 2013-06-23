@@ -71,6 +71,7 @@ struct OPsound{
 #endif
 	void* dataSource;
 	OPint (*FillCallback)(OPsound* sound, i64 position, i64 length);
+	void (*Reset)(OPsound* sound);
 	i64 DataSize;
 	ui8* Data;
 };
@@ -108,4 +109,6 @@ class OPAudio{
 
 		static OPsound ReadWave(const OPchar* filename);
 		static OPsound ReadOgg(const OPchar* filename);
+
+		static void Reset(OPsound* sound);
 };

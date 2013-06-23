@@ -199,7 +199,6 @@ void OPSoundEmitter::Update(){
 
 		if(buffsPlayed != _oldBuffsPlayed){
 
-			OPLog("OPSoundEmitter::UPDATE NEXT BUFFER");
 			if(buffsQueued){
 				OPint playedBuff = 0;
 #ifdef OPIFEX_ANDROID
@@ -226,13 +225,12 @@ void OPSoundEmitter::Update(){
 					} else {
 						_queued = 0;
 						Stop();
-						_oldBuffsPlayed = _queued = 0;
-						_bytesPlayed = _oldBytesPlayed = 0; // bytes played
-						_freeBuffers = BUFFERS;
-
-						_chunksProcessed = 0;
-						_bytesInBuffer = 0;
-						Play();
+						if(_sound->Reset){
+							_sound->Reset(_sound);
+							Play();
+							_sound->FillCallback(_sound, 0, 0);
+							_queued = 0;
+						}
 					}
 				}
 			}
