@@ -20,6 +20,11 @@ void OPLog_ui64(ui64 number) {
 void OPLog_f32(f32 number) {
 	__android_log_print(ANDROID_LOG_ERROR, "OPIFEX", "%f", number);
 }
+
+void OPLog_str_i32(const char* message, i32 number){
+	__android_log_print(ANDROID_LOG_ERROR, "OPIFEX", "%s%d", message, number);
+}
+
 #else
 #include <stdio.h>
 void OPLog(const char* message) {
@@ -45,5 +50,8 @@ void OPLog_ui64(ui64 number) {
 void OPLog_f32(f32 number) {
 	printf("%f", number);
 	printf("\n");
+}
+void OPLog_str_i32(const char* message, i32 number){
+	printf("%s%d\n", message, number);
 }
 #endif

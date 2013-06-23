@@ -11,6 +11,6 @@ public:
 	}
 	void SetMatrix(Matrix4* value) {
 		_material->SetMatrix(_handle, value);
-		CheckError("ShaderParamMatrix::Error 1 - Failed to set matrix");
+		//CheckError("ShaderParamMatrix::Error 1 - Failed to set matrix");
 	}
 };
