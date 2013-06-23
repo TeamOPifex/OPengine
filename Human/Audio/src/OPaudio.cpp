@@ -10,6 +10,7 @@
 SLEngineItf OPAudio::EngineEngine = NULL;
 SLObjectItf OPAudio::EngineObject = NULL;
 SLObjectItf OPAudio::OutputMixObject = NULL;
+#endif
 
 size_t ov_read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
 {
@@ -283,7 +284,7 @@ static OPint fetchOggData(OPsound* sound, i64 pos, i64 len){
 #ifdef OPIFEX_ANDROID
 	length = DecodeOggVorbis(ogg, (ui8*)sound->Data, sound->DataSize, sound->Channels);
 #else
-	length = DecodeOggVorbis(ogg, (i8*)sound->Data, sound->DataSize, sound->Channels);
+	length = DecodeOggVorbis(ogg, (ui8*)sound->Data, sound->DataSize, sound->Channels);
 #endif
 	printf("Fetched %d\n", (OPint)length);
 
@@ -381,7 +382,7 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 
 				//length = ulFrequency * 2;
 				ui8* buff = (ui8*)OPalloc(sizeof(ui8) * length);
-				DecodeOggVorbis(sOggVorbisFile, (OPchar*)buff, length, ulChannels);
+				DecodeOggVorbis(sOggVorbisFile, (ui8*)buff, length, ulChannels);
 
 				OPsound songResult = {
 					#ifndef OPIFEX_ANDROID
