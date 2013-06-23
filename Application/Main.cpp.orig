@@ -1,7 +1,8 @@
 //////////////////////////////// OPEngine MAIN ////////////////////////////////
+#include <stdio.h>
 
-#include "../Core/include/Core.h"
-
+#include "./Core/include/Core.h"
+#include "./Data/include/OPgameStates.h"
 
 #include "./GameManager.h"
 #include "./Human/Rendering/RenderSystem.h"
@@ -10,21 +11,26 @@
 #include "./Core/include/Log.h"
 #include "./Human/Audio/Jukebox.h"
 
-#include "Data\include\OPlinkedList.h"
-#include "Data\include\OPheap.h"
-#include "Data\include\OPlist.h"
+#include "./Data/include/OPlinkedList.h"
+#include "./Data/include/OPheap.h"
+#include "./Data/include/OPlist.h"
 
-#ifdef OPIFEX_ANDROID
+#if defined(OPIFEX_ANDROID)
 #include <jni.h>
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
-#include "./Data/include/OPfile.h"
-#else
+#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 #include <direct.h>
+#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 #endif
+#include "./Data/include/OPfile.h"
+#include "./Human/Audio/include/OPaudio.h"
+#include "./Human/Audio/include/OPsoundEmitter.h"
 
 GameManager* GM;
 GamePadSystem* GPS;
+OPsound Song, Sound;
+OPSoundEmitter* Emitter, *SoundEmitter;
 
 #ifdef OPIFEX_ANDROID
 	OPtimer* timer;
@@ -61,10 +67,20 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setConnected(JNIEnv * env,
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager){
 	timer = OPcreateTimer();
 	OPfileInit( AAssetManager_fromJava(env, assetManager));
-	Jukebox::Initialize();
+	//Jukebox::Initialize();
 #else
 void Init(){
-	_chdir("Assets\\");
+
+	#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+	_chdir("assets\\");
+	#else
+	if(chdir("./assets")){
+		OPLog("Directory changed!\n");
+	}
+	else
+		OPLog("Directory change failed!\n");
+	#endif
+
 	i32 width = 1280;
 	i32 height = 720;
 #endif
@@ -73,6 +89,8 @@ void Init(){
 	OPlist* list = OPlistCreate(5, sizeof(OPint));
 
 	GPS = new GamePadSystem();
+
+	//OPAudio::Init();
 
 	printf("Inserting ");
 	for(OPint i = 20; i--;){
@@ -113,6 +131,27 @@ void Init(){
 	}
 
 	GM = new GameManager(width, height);
+
+	OPAudio::Init();
+	
+	OPLog("Main: Song loading...");
+	OPchar songPath[] = {"Audio/background.ogg"};
+	Song = OPAudio::ReadOgg(songPath);
+	OPLog("Main: Song loaded");
+
+	//Sound = OPAudio::ReadWave("Audio/testing.wav");
+	
+	Emitter = new OPSoundEmitter(&Song, 8);
+	Emitter->SetVolume(0.05f);
+	Emitter->Play();
+	
+	OPLog("Main: 1");
+	SoundEmitter = new OPSoundEmitter(&Sound, 8);
+	//SoundEmitter->SetVolume(0.15f);
+	OPLog("Main: 2");
+	//SoundEmitter->Looping = true;
+	//SoundEmitter->Play();
+	OPLog("Main: 3");
 	return;
 }
 
@@ -136,6 +175,9 @@ void Update( OPtimer* timer){
 	}
 	else
 		RenderSystem::ClearColor(0,0,0);
+
+	Emitter->Update();
+	//SoundEmitter->Update();
 	GM->Draw();
 	RenderSystem::Present();
 	
@@ -156,13 +198,19 @@ void Destroy()
 	return;
 }
 
+void UpdateState(OPtimer* timer){
+	ActiveState->Update(timer);
+}
+
 #ifdef OPIFEX_ANDROID
 #else
 int main()
 {
 	OPinitialize = Init;
-	OPupdate = Update;
+	OPupdate = UpdateState;
 	OPdestroy = Destroy;
+
+	ActiveState = OPgameStateCreate(NULL, Update, NULL);
 
 	OPstart();
 	OPend();
