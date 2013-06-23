@@ -31,7 +31,8 @@ LOCAL_MODULE := libogg
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 
-MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/Utilities/Ogg/*.c)
+LOCAL_CFLAGS := -I $(PROJECT_PATH)/Human/Utilities/
+MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/Utilities/ogg/*.c)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 include $(BUILD_STATIC_LIBRARY)
@@ -44,43 +45,11 @@ LOCAL_MODULE := libtremor
 
 LOCAL_STATIC_LIBRARIES := libogg
 
-#LOCAL_C_INCLUDES :=$(PROJECT_PATH)/Human/Utilities/include-all
 LOCAL_CFLAGS := -I $(PROJECT_PATH)/Human/Utilities/
-
- 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/Utilities/Tremor/*.c)
-#LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
+LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 include $(BUILD_STATIC_LIBRARY)
-
-##############
-# LIBOGG
-##############
-include $(CLEAR_VARS)
-
-LOCAL_MODULE := libfuckit
-#LOCAL_CFLAGS += -I$(PROJECT_PATH)/External/Ogg/include -ffast-math -fsigned-char
-#LOCAL_CFLAGS += -march=armv6 -marm -mfloat-abi=softfp -mfpu=vfp
-#LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/External/Ogg/src/*.c)
-   LOCAL_SRC_FILES := Ogg/lib/android/libogg.so
-   include $(PREBUILT_SHARED_LIBRARY)
-
-#include $(BUILD_STATIC_LIBRARY)
-
-##############
-# LIBVORBIS
-##############
-include $(CLEAR_VARS)
-
-LOCAL_MODULE := libvorbis
-#LOCAL_CFLAGS += -I$(PROJECT_PATH)/External/Vorbis/include -ffast-math -fsigned-char
-#LOCAL_CFLAGS += -march=armv6 -marm -mfloat-abi=softfp -mfpu=vfp
-LOCAL_SHARED_LIBRARIES := libogg
-#LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/External/Vorbis/*.c)
-   LOCAL_SRC_FILES := Vorbis/lib/android/libvorbis.so
-   include $(PREBUILT_SHARED_LIBRARY)
-
-#include $(BUILD_STATIC_LIBRARY)
 
 ##############
 # 1_CORE

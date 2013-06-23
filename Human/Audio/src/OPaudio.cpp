@@ -315,15 +315,17 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 	sCallbacks.tell_func = ov_tell_func;
 #endif
 
-	FILE* song = fopen(filename, "rb");
+	FILE* song = OPreadFileInformation(filename).file;
+
 	if(song){
-		printf("Song loaded!\n");
+		OPLog("Song loaded!\n");
 		// Create an OggVorbis file stream
 		if (fn_ov_open_callbacks(song, sOggVorbisFile, NULL, 0, sCallbacks) == 0){
 			i64 ulFrequency = 0, ulBufferSize = 0;
 			OPint ulChannels = 0, ulFormat = 0, bitsPerSample = 0;
 
 
+			OPLog("Getting song info\n");
 			// Get some information about the file (Channels, Format, and Frequency)
 			psVorbisInfo = fn_ov_info(sOggVorbisFile, -1);
 			if (psVorbisInfo)
@@ -333,9 +335,9 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 				if (psVorbisInfo->channels == 1)
 				{
 					ulFormat = AL_FORMAT_MONO16;
-					printf("Format AL_FORMAT_MONO16\n");
+					OPLog("Format AL_FORMAT_MONO16\n");
 					// Set BufferSize to 250ms (Frequency * 2 (16bit) divided by 4 (quarter of a second))
-					ulBufferSize = ulFrequency >> 1;
+					ulBufferSize = ulFrequency;
 					// IMPORTANT : The Buffer Size must be an exact multiple of the BlockAlignment ...
 					ulBufferSize -= (ulBufferSize % 2);
 					bitsPerSample = 16;
@@ -343,12 +345,12 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 				else if (psVorbisInfo->channels == 2)
 				{
 					ulFormat = AL_FORMAT_STEREO16;
-					printf("Format AL_FORMAT_STEREO16\n");
+					OPLog("Format AL_FORMAT_STEREO16\n");
 					// Set BufferSize to 250ms (Frequency * 4 (16bit stereo) divided by 4 (quarter of a second))
 					ulBufferSize = ulFrequency;
 					// IMPORTANT : The Buffer Size must be an exact multiple of the BlockAlignment ...
 					ulBufferSize -= (ulBufferSize % 4);
-					bitsPerSample = 32;
+					bitsPerSample = 16;
 				}
 				else if (psVorbisInfo->channels == 4)
 				{
@@ -376,10 +378,11 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 					ulBufferSize -= (ulBufferSize % 12);
 				}
 
-				printf("Buffer size: %d Channels: %d\n", (OPint)ulBufferSize, (OPint)ulChannels);
+				OPLog_str_i32("BufferSize: ", ulBufferSize);
+				OPLog_str_i32("Channels: ", ulChannels);
 
 				i64 length = fn_ov_pcm_total(sOggVorbisFile, -1);
-				printf("Song length: %d\n", (OPint)length);
+				OPLog_str_i32("Song length: ", (OPint)length);
 
 				//length = ulFrequency * 2;
 				ui8* buff = (ui8*)OPalloc(sizeof(ui8) * length);
