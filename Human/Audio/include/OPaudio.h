@@ -7,7 +7,7 @@
 #include "Data/include/OPfile.h"
 #include "Human/Math/Vector3.h"
 
-#include "./Core/include/Log.h"5
+#include "./Core/include/Log.h"
 
 #ifdef OPIFEX_ANDROID
 #include <SLES/OpenSLES.h>

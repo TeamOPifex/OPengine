@@ -10,8 +10,7 @@
 SLEngineItf OPAudio::EngineEngine = NULL;
 SLObjectItf OPAudio::EngineObject = NULL;
 SLObjectItf OPAudio::OutputMixObject = NULL;
-//#else
-#endif
+
 size_t ov_read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
 {
 	return fread(ptr, size, nmemb, (FILE*)datasource);
@@ -31,7 +30,27 @@ long ov_tell_func(void *datasource)
 {
 	return ftell((FILE*)datasource);
 }
-//#endif
+#else
+size_t ov_read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
+{
+	return fread(ptr, size, nmemb, (FILE*)datasource);
+}
+
+int ov_seek_func(void *datasource, ogg_int64_t offset, int whence)
+{
+	return fseek((FILE*)datasource, (long)offset, whence);
+}
+
+int ov_close_func(void *datasource)
+{
+   return fclose((FILE*)datasource);
+}
+
+long ov_tell_func(void *datasource)
+{
+	return ftell((FILE*)datasource);
+}
+#endif
 
 OPint OPAudio::Init(){
 	OPLog("Initializing OP audio...\n");
@@ -105,7 +124,7 @@ OPint OPAudio::Init(){
 			return -2;
 		}
 	}
-#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 	// copy the function pointers directly from
 	// the linked SO file.
 	fn_ov_clear = (LPOVCLEAR)ov_clear;
@@ -387,9 +406,9 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 					ulChannels,
 					ulFormat,
 					#else
+					(SLuint32)ulChannels,   
 					(SLuint32)ulFrequency,
 					(SLuint32)bitsPerSample,
-					(SLuint32)ulChannels,   
 					{0},
 					#endif
 					(void*)sOggVorbisFile,

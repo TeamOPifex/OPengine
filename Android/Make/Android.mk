@@ -47,7 +47,7 @@ LOCAL_STATIC_LIBRARIES := libogg
 #LOCAL_C_INCLUDES :=$(PROJECT_PATH)/Human/Utilities/include-all
 LOCAL_CFLAGS := -I $(PROJECT_PATH)/Human/Utilities/
 
-
+ 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/Utilities/Tremor/*.c)
 #LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 

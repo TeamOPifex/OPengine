@@ -134,7 +134,6 @@ void Init(){
 
 	OPAudio::Init();
 	
-	OPLog("Main: Song loading...");
 	OPchar songPath[] = {"Audio/background.ogg"};
 	Song = OPAudio::ReadOgg(songPath);
 	OPLog("Main: Song loaded");
@@ -143,6 +142,7 @@ void Init(){
 	
 	Emitter = new OPSoundEmitter(&Song, 8);
 	Emitter->SetVolume(0.05f);
+	Emitter->Looping = true;
 	Emitter->Play();
 	
 	OPLog("Main: 1");
