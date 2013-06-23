@@ -211,6 +211,9 @@ int main()
 	OPupdate = UpdateState;
 	OPdestroy = Destroy;
 
+	OPint a = 0;
+	OPLog("Test %d %d %d", a, a, a);
+
 	ActiveState = OPgameStateCreate(NULL, Update, NULL);
 
 	OPstart();
