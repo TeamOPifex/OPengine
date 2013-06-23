@@ -10,7 +10,8 @@
 SLEngineItf OPAudio::EngineEngine = NULL;
 SLObjectItf OPAudio::EngineObject = NULL;
 SLObjectItf OPAudio::OutputMixObject = NULL;
-#else
+//#else
+#endif
 size_t ov_read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
 {
 	return fread(ptr, size, nmemb, (FILE*)datasource);
@@ -30,7 +31,7 @@ long ov_tell_func(void *datasource)
 {
 	return ftell((FILE*)datasource);
 }
-#endif
+//#endif
 
 OPint OPAudio::Init(){
 	OPLog("Initializing OP audio...\n");
@@ -236,7 +237,7 @@ OPsound OPAudio::ReadWave(const OPchar* filename){
 	return ERR;
 }
 /*---------------------------------------------------------------------------*/
-static ui64 DecodeOggVorbis(OggVorbis_File *psOggVorbisFile, OPchar *pDecodeBuffer, ui64 ulBufferSize, ui64 ulChannels){
+static ui64 DecodeOggVorbis(OggVorbis_File *psOggVorbisFile, ui8 *pDecodeBuffer, ui64 ulBufferSize, ui64 ulChannels){
 	OPint current_section;
 	i64 lDecodeSize;
 	ui64 ulSamples;
@@ -245,7 +246,7 @@ static ui64 DecodeOggVorbis(OggVorbis_File *psOggVorbisFile, OPchar *pDecodeBuff
 	ui64 ulBytesDone = 0;
 	while (1)
 	{
-		lDecodeSize = fn_ov_read(psOggVorbisFile, pDecodeBuffer + ulBytesDone, ulBufferSize - ulBytesDone, 0, 2, 1, &current_section);
+		lDecodeSize = fn_ov_read(psOggVorbisFile, (char*)(pDecodeBuffer + ulBytesDone), ulBufferSize - ulBytesDone, 0, 2, 1, &current_section);
 		if (lDecodeSize > 0)
 		{
 			ulBytesDone += lDecodeSize;
@@ -280,6 +281,7 @@ static OPint fetchOggData(OPsound* sound, i64 pos, i64 len){
 	i64 length = 0;
 
 #ifdef OPIFEX_ANDROID
+	length = DecodeOggVorbis(ogg, (ui8*)sound->Data, sound->DataSize, sound->Channels);
 #else
 	length = DecodeOggVorbis(ogg, (i8*)sound->Data, sound->DataSize, sound->Channels);
 #endif
@@ -296,6 +298,10 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 	vorbis_info		*psVorbisInfo;
 
 #ifdef OPIFEX_ANDROID
+	sCallbacks.read_func = ov_read_func;
+	sCallbacks.seek_func = ov_seek_func;
+	sCallbacks.close_func = ov_close_func;
+	sCallbacks.tell_func = ov_tell_func;
 #else
 	sCallbacks.read_func = ov_read_func;
 	sCallbacks.seek_func = ov_seek_func;
@@ -372,7 +378,7 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 
 				//length = ulFrequency * 2;
 				ui8* buff = (ui8*)OPalloc(sizeof(ui8) * length);
-				DecodeOggVorbis(sOggVorbisFile, (OPchar*)buff, length, ulChannels);
+				DecodeOggVorbis(sOggVorbisFile, (ui8*)buff, length, ulChannels);
 
 				OPsound song = {
 					#ifndef OPIFEX_ANDROID
@@ -381,9 +387,9 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 					ulChannels,
 					ulFormat,
 					#else
-					(SLuint32)ulChannels,   
 					(SLuint32)ulFrequency,
 					(SLuint32)bitsPerSample,
+					(SLuint32)ulChannels,   
 					{0},
 					#endif
 					(void*)sOggVorbisFile,

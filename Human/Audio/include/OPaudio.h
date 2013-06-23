@@ -24,7 +24,11 @@
 #endif
 
 #include <ogg/ogg.h>
+#ifdef OPIFEX_ANDROID
+#include "Human/Utilities/Tremor/ivorbisfile.h"
+#else
 #include <vorbis/vorbisfile.h>
+#endif
 
 extern "C"{
 #ifdef OPIFEX_ANDROID

@@ -133,21 +133,24 @@ void Init(){
 	GM = new GameManager(width, height);
 
 	OPAudio::Init();
-	/*
-	OPchar songPath[] = {"Audio/background.ogg"};
-	Song = OPAudio::ReadOgg(songPath);*/
-	Sound = OPAudio::ReadWave("Audio/testing.wav");
 	
-	/*Emitter = new OPSoundEmitter(&Song, 8);
+	OPLog("Main: Song loading...");
+	OPchar songPath[] = {"Audio/background.ogg"};
+	Song = OPAudio::ReadOgg(songPath);
+	OPLog("Main: Song loaded");
+
+	//Sound = OPAudio::ReadWave("Audio/testing.wav");
+	
+	Emitter = new OPSoundEmitter(&Song, 8);
 	Emitter->SetVolume(0.05f);
-	Emitter->Play();*/
+	Emitter->Play();
 	
 	OPLog("Main: 1");
 	SoundEmitter = new OPSoundEmitter(&Sound, 8);
 	//SoundEmitter->SetVolume(0.15f);
 	OPLog("Main: 2");
-	SoundEmitter->Looping = true;
-	SoundEmitter->Play();
+	//SoundEmitter->Looping = true;
+	//SoundEmitter->Play();
 	OPLog("Main: 3");
 	return;
 }
@@ -173,8 +176,8 @@ void Update( OPtimer* timer){
 	else
 		RenderSystem::ClearColor(0,0,0);
 
-	//Emitter->Update();
-	SoundEmitter->Update();
+	Emitter->Update();
+	//SoundEmitter->Update();
 	GM->Draw();
 	RenderSystem::Present();
 	

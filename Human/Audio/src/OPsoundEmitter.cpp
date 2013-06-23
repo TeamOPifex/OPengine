@@ -108,6 +108,8 @@ OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
 	alSourcei(_alSrc, AL_LOOPING, AL_FALSE);
 #endif
 
+	OPLog("Buffer size: ");
+	OPLog_i32(_bufferSize);
 	// fill all buffers with silence
 	for(OPint i = BUFFERS; i--;)
 #ifdef OPIFEX_ANDROID
@@ -136,6 +138,7 @@ OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
 	_chunkSize = bytesPerBuffer / CHUNKS;
 	_chunksProcessed = 0;
 	_bytesInBuffer = 0;
+    OPLog("OPsoundEmitter: 5");
 }
 /*---------------------------------------------------------------------------*/
 OPSoundEmitter::~OPSoundEmitter(){
