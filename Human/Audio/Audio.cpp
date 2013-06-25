@@ -14,8 +14,12 @@ Audio::Audio(char* filename, bool loop){
 	_fd = fileInfo.fileDescriptor;
 	
 	// configure audio source
+
+	// data locator
 	SLDataLocator_AndroidFD loc_fd = {SL_DATALOCATOR_ANDROIDFD, fileInfo.fileDescriptor, fileInfo.start, fileInfo.length};
 	SLDataFormat_MIME format_mime = {SL_DATAFORMAT_MIME, NULL, SL_CONTAINERTYPE_UNSPECIFIED};
+
+	// combines the data locator and the format types
 	SLDataSource audioSrc = {&loc_fd, &format_mime};
 		
 	SLObjectItf outputMixer = Jukebox::Mixer();	

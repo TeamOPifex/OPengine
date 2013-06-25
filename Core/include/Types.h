@@ -11,14 +11,14 @@
 
 #if defined(OPIFEX_ANDROID)
 // android integer types
-typedef jlong          i64;
-typedef unsigned long  ui64;  //long type
-typedef jint           i32;
-typedef unsigned int   ui32; //int type
-typedef jshort         i16;
-typedef jchar          ui16; //short type
-typedef jbyte          i8;
-typedef jboolean       ui8;  //byte type
+typedef long                i64;
+typedef unsigned long       ui64;  //long type
+typedef int                 i32;
+typedef unsigned int        ui32; //int type
+typedef jshort              i16;
+typedef jchar               ui16; //short type
+typedef jbyte               i8;
+typedef jboolean            ui8;  //byte type
 
 // android floating point types
 typedef jfloat  f32; //float type
@@ -26,10 +26,18 @@ typedef jdouble d64; //double type
 #else
 
 // PC integer types
+#if defined(OPIFEX_WIN64) || defined(OPIFEX_LINUX64)
 typedef long    i64;
 typedef unsigned long  ui64;  //long type
 typedef int     i32;
 typedef unsigned int   ui32; //int type
+#elif defined(OPIFEX_WIN32) || defined(OPIFEX_LINUX32)
+typedef long    i64;
+typedef unsigned long  ui64;  //long type
+typedef int     i32;
+typedef unsigned int   ui32; //int type
+#endif
+
 typedef short   i16;
 typedef unsigned short ui16; //short type
 typedef char    i8;
@@ -43,9 +51,9 @@ typedef double d64; //double type
 
 // Define cross platform base types
 #if defined(OPIFEX_ANDROID)
-typedef ui16 OPchar;
+typedef char OPchar;
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_LINUX32)
-typedef i8  OPchar;
+typedef char OPchar;
 #endif
 #if defined(OPIFEX_ANDROID) || defined(OPIFEX_WIN32) || defined(OPIFEX_LINUX32)
 typedef i32 OPint;

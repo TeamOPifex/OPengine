@@ -39,6 +39,7 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 		len = len > size ? len : size;
 		
 		// reallocate
+		printf("OPstream - resizing to %u\n", sizeof(ui8) * len * 2);
 		nd = (ui8*)OPrealloc(
 			D,
 			sizeof(ui8) * len * 2
@@ -46,7 +47,7 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 
 		// check to see if reallocation is successful
 		if(nd){
-			D = nd;
+			stream->Data = nd;
 			stream->Length = len * 2;
 		}
 		else
@@ -54,7 +55,8 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 	}
 
 	// copy new data into the stream
-	for(i = 0; i < size; D[ptr + i] = d[i++]);
+	//for(i = 0; i < size; D[ptr + i] = d[i++]);
+	OPmemcpy(&(stream->Data[ptr]), d, size);
 	stream->_pointer += size;
 
 	return 1;

@@ -99,25 +99,36 @@ OPint OPwriteFile(const char* path, OPstream* stream){
 //-----------------------------------------------------------------------------
 OPstream* OPreadFile(const char* path){
 #ifdef OPIFEX_ANDROID
+	OPLog("OPreadFile: Creating Asset man.\n");
 	AAsset* asset = AAssetManager_open(_mgr, path, AASSET_MODE_UNKNOWN);
-	if(asset == NULL)
+	if(asset == NULL){
+		OPLog("OPreadFile: Asset man creation failed.\n");
 		return 0;	
+	} OPLog("OPreadFile: Asset man created!!!\nOPreadFile: Now opening fd...\n");
 
 	off_t start, length;
     int fd = AAsset_openFileDescriptor(asset, &start, &length);
 	
+	OPLog("OPreadFile: FD opened!!!\n");
+
     FILE* myFile = fdopen(dup(fd), "rb"); 
 	fseek(myFile, start, SEEK_SET);
 
+	OPLog("OPreadFile: File ptr duplicated.\n");
+
 	OPstream* str = OPstreamCreate(length);
+
+	OPLog("OPreadFile: 5");
 	// write the entire file into a stream
 	ui8* byte = OPalloc(sizeof(ui8) * length);
-	while(fread(&byte, sizeof(ui8), length, myFile)){
-		OPwrite(str, &byte, length);
+	OPLog("OPreadFile: 6");OPLog_i32(length);OPLog_i32(sizeof(ui8));
+	while(fread(byte, sizeof(ui8), length, myFile)){
+		OPwrite(str, byte, length);
 	}
+	OPLog("OPreadFile: 7");
 	fclose(myFile); 
 	OPseek(str, 0);
-	
+	OPLog("OPreadFile: 8");
 	return str;
 
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
@@ -153,6 +164,33 @@ OPstream* OPreadFile(const char* path){
 	}	
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 	// windows implementation
+	OPint fd = 0, i;
+	// check to see if the file exists
+	if(OPfileExists(path) >= 0){
+		printf("%s exists\n", path);
+ 
+		// be sure that the file could be opened successfully
+	 	if(!_sopen_s(&fd, path, _O_BINARY|_O_RDONLY, _SH_DENYWR, _S_IREAD)){
+			ui8 byte = 0;
+			OPstream* str = OPstreamCreate(4);
+
+			printf("File opened successfully\n");
+
+			// write the entire file into a stream
+			while(read(fd, &byte, sizeof(ui8))){
+				//char ch = (char)byte;
+				//printf("%c", ch);
+				OPwrite(str, &byte, sizeof(ui8));
+			}
+			close(fd); 
+			OPseek(str, 0);
+
+			// finally return the stream
+			return str;
+		}
+	}
+	else
+		printf("%s does not exist\n", path);
 #endif
 }
 
@@ -238,6 +276,22 @@ OPint OPdeleteFile(const char* path){
 		}
 	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 		// windows implementation
+		OPint fd = 0;
+		OPstream* s = stream->GetStream();	
+
+		// be sure that the file could be opened successfully
+		if((fd = open(path, O_CREAT|O_WRONLY|O_TRUNC, 0666)) >= 0){
+			stream->Seek(0);
+			// write the entire stream in one go.
+			printf("Writing to %d @ %d with %d bytes\n", fd, s->_pointer, s->Length);
+			write(fd, s->Data, s->Length);
+			// finally close the file, we are done writing
+			close(fd); 
+			return 1;
+		}
+		else{
+			return 0;
+		}
 	#endif
 	}
 

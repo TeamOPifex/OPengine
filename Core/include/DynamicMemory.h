@@ -13,6 +13,11 @@
 #include <stdlib.h> 
 #endif
 
+// Define preprocessor macros
+#define OPmemcpy(dest, src, size){\
+	memcpy(dest, src, size);\
+}\
+
 /* function definitions */
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

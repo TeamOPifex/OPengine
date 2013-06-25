@@ -7,11 +7,11 @@
 #ifndef OPEngine_Data_Stream
 #define OPEngine_Data_Stream
 
-#if defined(OPIFEX_ANDROID) && defined(__cplusplus)
+//#if defined(OPIFEX_ANDROID) && defined(__cplusplus)
 #include "./../../Core/include/DynamicMemory.h"
-#else
+//#else
 //#include "./../../Core/include/Core.h"
-#endif
+//#endif
 
 typedef struct{
 	OPuint Length;   // bytes in this stream

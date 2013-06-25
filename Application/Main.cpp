@@ -1,8 +1,8 @@
 //////////////////////////////// OPEngine MAIN ////////////////////////////////
 #include <stdio.h>
 
-#include "../Core/include/Core.h"
-#include "../Data/include/OPgameStates.h"
+#include "./Core/include/Core.h"
+#include "./Data/include/OPgameStates.h"
 
 #include "./GameManager.h"
 #include "./Human/Rendering/RenderSystem.h"
@@ -11,9 +11,9 @@
 #include "./Core/include/Log.h"
 #include "./Human/Audio/Jukebox.h"
 
-#include "Data/include/OPlinkedList.h"
-#include "Data/include/OPheap.h"
-#include "Data/include/OPlist.h"
+#include "./Data/include/OPlinkedList.h"
+#include "./Data/include/OPheap.h"
+#include "./Data/include/OPlist.h"
 
 #if defined(OPIFEX_ANDROID)
 #include <jni.h>
@@ -31,8 +31,8 @@
 
 GameManager* GM;
 GamePadSystem* GPS;
-OPsound Song;
-OPSoundEmitter* Emitter;
+OPsound Song, Sound;
+OPSoundEmitter* Emitter, *SoundEmitter;
 
 #ifdef OPIFEX_ANDROID
 	OPtimer* timer;
@@ -69,7 +69,7 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setConnected(JNIEnv * env,
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager){
 	timer = OPcreateTimer();
 	OPfileInit( AAssetManager_fromJava(env, assetManager));
-	Jukebox::Initialize();
+	//Jukebox::Initialize();
 #else
 void Init(){
 
@@ -135,10 +135,26 @@ void Init(){
 	GM = new GameManager(width, height);
 
 	OPAudio::Init();
-	Song = OPAudio::ReadOgg("Audio/background.ogg");
+	
+	OPLog("Main: Song loading...");
+	OPchar songPath[] = {"Audio/background.ogg"};
+	Song = OPAudio::ReadOgg(songPath);
+	OPLog("Main: Song loaded");
+
+	//Sound = OPAudio::ReadWave("Audio/testing.wav");
+	
 	Emitter = new OPSoundEmitter(&Song, 8);
-	Emitter->SetVolume(0.15f);
+	Emitter->SetVolume(0.05f);
+	Emitter->Looping = true;
 	Emitter->Play();
+	
+	OPLog("Main: 1");
+	//SoundEmitter = new OPSoundEmitter(&Sound, 8);
+	//SoundEmitter->SetVolume(0.95f);
+	OPLog("Main: 2");
+	//SoundEmitter->Looping = true;
+	//SoundEmitter->Play();
+	OPLog("Main: 3");
 	return;
 }
 
@@ -151,8 +167,8 @@ JNIEXPORT int JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject 
 void Update( OPtimer* timer){
 #endif
 
-	bool result = GM->Update( timer );
-	GPS->Update();
+	//bool result = GM->Update( timer );
+	//GPS->Update();
 	GamePadState* gps = GPS->Controller(GamePadIndex_One);
 	if(gps->IsConnected()){
 		OPfloat r = gps->IsDown(GamePad_Button_A) ? 1.0f : 0.0f;
@@ -164,16 +180,17 @@ void Update( OPtimer* timer){
 		RenderSystem::ClearColor(0,0,0);
 
 	Emitter->Update();
-	GM->Draw();
+	//SoundEmitter->Update();
+	//GM->Draw();
 	RenderSystem::Present();
 	
 #ifdef OPIFEX_ANDROID
-	if(!result)
-		return 1;
+	//if(!result)
+		//return 1;
 	return 0;
 #else
-	if(!result)
-		exit(0);
+	//if(!result)
+	//	exit(0);
 	return;
 #endif
 }
@@ -195,6 +212,9 @@ int main()
 	OPinitialize = Init;
 	OPupdate = UpdateState;
 	OPdestroy = Destroy;
+
+	OPint a = 0;
+	OPLog("Test %d %d %d", a, a, a);
 
 	ActiveState = OPgameStateCreate(NULL, Update, NULL);
 

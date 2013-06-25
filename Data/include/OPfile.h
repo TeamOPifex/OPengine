@@ -12,8 +12,23 @@
 #include <fcntl.h>
 
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
-	#include <stdio.h>
+#include <share.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <io.h>
 #endif
+
+
+// Define platform independent aliases for reading/writing from sockets
+#define OPREAD(fd, buff, count, readSuccessfully){\
+	readSuccessfully = read(fd, buff, count);\
+}\
+
+#define OPWRITE(fd, buff, count, writtenSuccesfully){\
+	writtenSuccesfully = write(fd, buff, count);\
+}\
 
 typedef struct {
 	FILE* file;
