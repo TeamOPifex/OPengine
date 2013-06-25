@@ -37,11 +37,11 @@ OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
     SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, BUFFERS};
     SLDataFormat_PCM format_pcm = {
     	SL_DATAFORMAT_PCM,
-    	1,
+    	sound->Channels,
     	SL_SAMPLINGRATE_44_1,
         SL_PCMSAMPLEFORMAT_FIXED_16,
         SL_PCMSAMPLEFORMAT_FIXED_16,
-        SL_SPEAKER_FRONT_CENTER,
+        sound->Channels == 1 ? SL_SPEAKER_FRONT_CENTER : SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT,
         SL_BYTEORDER_LITTLEENDIAN
     };
 
@@ -201,7 +201,6 @@ void OPSoundEmitter::Update(){
 		alGetSourcei(_alSrc, AL_BUFFERS_QUEUED, &buffsQueued);
 		alGetSourcei(_alSrc, AL_BYTE_OFFSET, &playPos);
 #endif
-		OPLog("Update: playPos"); OPLog_i32(playPos);
 
 		if(buffsPlayed != _oldBuffsPlayed){
 
