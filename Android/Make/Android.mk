@@ -46,7 +46,8 @@ LOCAL_MODULE := libtremor
 LOCAL_STATIC_LIBRARIES := libogg
 
 LOCAL_CFLAGS := -I $(PROJECT_PATH)/Human/Utilities/
-MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/Utilities/Tremor/*.c)
+LOCAL_CFLAGS += -I $(PROJECT_PATH)/Human/Utilities/vorbis
+MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/Utilities/vorbis/*.c)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 include $(BUILD_STATIC_LIBRARY)
