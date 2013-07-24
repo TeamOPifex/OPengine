@@ -282,12 +282,13 @@ static OPint fetchOggData(OPsound* sound, i64 pos, i64 len){
 	OggVorbis_File* ogg = (OggVorbis_File*)sound->dataSource;
 	i64 length = 0;
 
+	OPLog("Beginning decode...");
 #ifdef OPIFEX_ANDROID
 	length = DecodeOggVorbis(ogg, (ui8*)sound->Data, sound->DataSize, sound->Channels);
 #else
 	length = DecodeOggVorbis(ogg, (ui8*)sound->Data, sound->DataSize, sound->Channels);
 #endif
-	printf("Fetched %d\n", (OPint)length);
+	OPLog_str_i32("Fetched %d\n", (OPint)length);
 
 	return length;
 }
@@ -378,6 +379,8 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 					ulBufferSize -= (ulBufferSize % 12);
 				}
 
+				ulBufferSize <<= 2;
+
 				OPLog_str_i32("BufferSize: ", ulBufferSize);
 				OPLog_str_i32("Channels: ", ulChannels);
 
@@ -385,8 +388,8 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 				OPLog_str_i32("Song length: ", (OPint)length);
 
 				//length = ulFrequency * 2;
-				ui8* buff = (ui8*)OPalloc(sizeof(ui8) * length);
-				DecodeOggVorbis(sOggVorbisFile, (ui8*)buff, length, ulChannels);
+				ui8* buff = (ui8*)OPalloc(sizeof(ui8) * ulBufferSize);
+				DecodeOggVorbis(sOggVorbisFile, (ui8*)buff, ulBufferSize, ulChannels);
 
 				OPsound songResult = {
 					#ifndef OPIFEX_ANDROID
@@ -403,7 +406,7 @@ OPsound OPAudio::ReadOgg(const OPchar* filename){
 					(void*)sOggVorbisFile,
 					fetchOggData,
 					resetOggData,
-					length,
+					ulBufferSize,
 					buff
 				};
 

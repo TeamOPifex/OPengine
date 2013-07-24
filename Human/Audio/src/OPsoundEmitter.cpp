@@ -5,16 +5,10 @@ void OPSoundEmitter::ENQUEUE_BUFFER(SLAndroidSimpleBufferQueueItf bq, void *cont
 	OPLog("OPSoundEmitter: Callback entered...");
 
 	OPSoundEmitter* emitter = (OPSoundEmitter*)context;
-	/*(*bq)->Enqueue(
-		bq,
-		emitter->_playingBuffers[emitter->_activeBuffer],
-		emitter->_bufferSize
-	);
-	++emitter->_activeBuffer %= BUFFERS;*/
 	emitter->_buffersProcessed++;
 	emitter->_freeBuffers++;
-	OPLog_i32(emitter->_activeBuffer);
-	OPLog("OPSoundEmitter: Callback exited.");
+	//OPLog_i32(emitter->_activeBuffer);
+	//OPLog("OPSoundEmitter: Callback exited.");
 }
 #endif
 
@@ -37,11 +31,11 @@ OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
     SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, BUFFERS};
     SLDataFormat_PCM format_pcm = {
     	SL_DATAFORMAT_PCM,
-    	sound->Channels,
+    	1,
     	SL_SAMPLINGRATE_44_1,
         SL_PCMSAMPLEFORMAT_FIXED_16,
         SL_PCMSAMPLEFORMAT_FIXED_16,
-        sound->Channels == 1 ? SL_SPEAKER_FRONT_CENTER : SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT,
+        SL_SPEAKER_FRONT_CENTER,
         SL_BYTEORDER_LITTLEENDIAN
     };
 
@@ -138,7 +132,7 @@ OPSoundEmitter::OPSoundEmitter(OPsound* sound, OPint sections){
 	_chunkSize = bytesPerBuffer / CHUNKS;
 	_chunksProcessed = 0;
 	_bytesInBuffer = 0;
-    OPLog("OPsoundEmitter: 5");
+	_queued = 0;
 }
 /*---------------------------------------------------------------------------*/
 OPSoundEmitter::~OPSoundEmitter(){
@@ -194,8 +188,11 @@ void OPSoundEmitter::Update(){
 		buffsQueued = _buffersQueued;
 		buffsPlayed = _buffersProcessed;
 		(*_playerPlay)->GetPosition(_playerPlay, &slPosition);
-		playPos = (OPint)((slPosition / 1000.0f) * (_sound->SampleRate) * (_sound->BitsPerSample >> 3));
-		//playPos = _buffersProcessed * _bufferSize;
+
+		slPosition -= _oldPlayPos;
+
+		//playPos = (OPint)((slPosition / 1000.0f) * (_sound->SampleRate / 2) * (_sound->BitsPerSample >> 3));
+		playPos = (_buffersQueued * _bufferSize);
 #else
 		alGetSourcei(_alSrc, AL_BUFFERS_PROCESSED, &buffsPlayed);
 		alGetSourcei(_alSrc, AL_BUFFERS_QUEUED, &buffsQueued);
@@ -207,7 +204,6 @@ void OPSoundEmitter::Update(){
 			if(buffsQueued){
 				OPint playedBuff = 0;
 #ifdef OPIFEX_ANDROID
-				//OPLog("Process: _freeBuffers"); OPLog_i32(_freeBuffers);
 #else
 				alSourceUnqueueBuffers(_alSrc, buffsPlayed, (ALuint*)(&playedBuff));
 				_freeBuffers += buffsPlayed;
@@ -287,26 +283,24 @@ OPint OPSoundEmitter::process(){
 		OPint toProcess = _sound->DataSize - (_queued + _bytesInBuffer); // # of bytes that need to be queued
 		OPint offset = _chunksProcessed++ * _chunkSize;                  // offset in bytes for current chunk
 		toProcess = toProcess > _chunkSize ? _chunkSize : toProcess;   // don't process more than a chunk's worth
-		OPLog("\tprocess: Entered");
-		OPLog_i32(_sound->DataSize);
-		OPLog_i32(_chunksProcessed);
-		OPLog_i32(_queued);
-		OPLog_i32(_bytesInBuffer);
-		OPLog_i32(toProcess);
-		if(!toProcess) return 0; // no more data! we are done
+
+		if(!Looping && !toProcess) {
+			 // no more data! we are done
+				return 0;
+		}
 
 		// this is where processing would happen, for now just simply copy
 		OPmemcpy((&_intermediateBuffer[offset]), (&(_sound->Data + _queued)[offset]), toProcess);
 
+
 		_bytesInBuffer += toProcess;
-		OPLog("\tprocess: Mem copied");
+		//OPLog("\tprocess: Mem copied");
 		// have all the chunks of this buffer been processed?
 		if(_chunksProcessed == CHUNKS){
 			// push processed data to the buffer
-			OPLog("\tprocess: Chunks processed");
 #ifdef OPIFEX_ANDROID
 			OPmemcpy(_playingBuffers[_activeBuffer], _intermediateBuffer, _bytesInBuffer);
-			OPLog("\tProcess: Queuing buffer"); OPLog_i32(_buffersQueued);
+			OPLog("\tProcess: Queuing buffer"); OPLog_i32(_activeBuffer);
 			(*_bqPlayerBufferQueue)->Enqueue(_bqPlayerBufferQueue, _playingBuffers[_activeBuffer], _bytesInBuffer);
 			++_buffersQueued;
 #else
@@ -324,6 +318,10 @@ OPint OPSoundEmitter::process(){
 			_queued += _bytesInBuffer;             // increment the total number of bytes that have been queued
 			_bytesInBuffer = _chunksProcessed = 0; // clear for next buffer
 			_freeBuffers--;                        // indicate that one less buffer is free
+			
+			if(Looping && toProcess < _chunkSize){
+				_queued = 0;
+			}
 		}
 
 		return toProcess;

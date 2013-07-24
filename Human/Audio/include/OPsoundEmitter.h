@@ -9,7 +9,8 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 #endif
-#include "OPaudio.h"
+
+#include "OPaudio2.h"
 
 #define CHUNKS 10
 #define BUFFERS 2
