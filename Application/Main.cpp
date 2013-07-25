@@ -5,11 +5,11 @@
 #include "./Data/include/OPgameStates.h"
 
 #include "./GameManager.h"
-#include "./Human/Rendering/RenderSystem.h"
-#include "./Human/Input/GamePadSystem.h"
+#include "./Human/include/Rendering/RenderSystem.h"
+#include "./Human/include/Input/GamePadSystem.h"
 
 #include "./Core/include/Log.h"
-#include "./Human/Audio/Jukebox.h"
+#include "./Human/include/Audio/Jukebox.h"
 
 #include "./Data/include/OPlinkedList.h"
 #include "./Data/include/OPheap.h"
@@ -24,8 +24,8 @@
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 #endif
 #include "./Data/include/OPfile.h"
-#include "./Human/Audio/include/OPaudio.h"
-#include "./Human/Audio/include/OPsoundEmitter.h"
+#include "./Human/include/Audio/OPaudio.h"
+#include "./Human/include/Audio/OPsoundEmitter.h"
 #include "./Data/include/OPfile.h"
 
 
@@ -167,30 +167,31 @@ JNIEXPORT int JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject 
 void Update( OPtimer* timer){
 #endif
 
-	//bool result = GM->Update( timer );
-	//GPS->Update();
+	bool result = GM->Update( timer );
+	GPS->Update();
 	GamePadState* gps = GPS->Controller(GamePadIndex_One);
-	if(gps->IsConnected()){
+	if(gps->IsConnected()) {
 		OPfloat r = gps->IsDown(GamePad_Button_A) ? 1.0f : 0.0f;
 		OPfloat g = gps->LeftThumbX() / 2.0f + 0.5f;
 		OPfloat b = gps->LeftTrigger();
 		RenderSystem::ClearColor(r, g, b);
 	}
-	else
+	else {
 		RenderSystem::ClearColor(0,0,0);
+	}
 
 	Emitter->Update();
 	//SoundEmitter->Update();
-	//GM->Draw();
+	GM->Draw();
 	RenderSystem::Present();
 	
 #ifdef OPIFEX_ANDROID
-	//if(!result)
-		//return 1;
+	if(!result)
+		return 1;
 	return 0;
 #else
-	//if(!result)
-	//	exit(0);
+	if(!result)
+		exit(0);
 	return;
 #endif
 }

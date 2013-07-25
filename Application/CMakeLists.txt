@@ -46,13 +46,18 @@ add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E c
 	${PROJECT_BINARY_DIR}/Application/Debug)
 	
 add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/libvorbisfile.dll"
+	${PROJECT_BINARY_DIR}/Application/Debug)
+	
+add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 	"${PROJECT_SOURCE_DIR}/External/libpng/lib/win32/libpng15d.dll"
 	${PROJECT_BINARY_DIR}/Application/Debug)
 	
 add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 	"${PROJECT_SOURCE_DIR}/External/zlib/lib/win32/zlibd.dll"
 	${PROJECT_BINARY_DIR}/Application/Debug)
-
+	
+			
 target_link_libraries(7_Application
 	${ALL_LIBS}
 	${OGG_LIBRARY}

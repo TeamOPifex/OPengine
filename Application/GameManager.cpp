@@ -1,11 +1,11 @@
 #include "GameManager.h"
-#include "./Human/Rendering/RenderSystem.h"
-#include "./Human/Utilities/OBJLoader.h"
+#include "./Human/include/Rendering/RenderSystem.h"
+#include "./Human/include/Utilities/OBJLoader.h"
 #include "./Data/include/OPfile.h"
-#include "./Human/Resources/Texture/ImageDDS.h"
-#include "./Human/Resources/Texture/ImagePNG.h"
-#include "./Human/Utilities/Errors.h"
-#include "./Human/Utilities/OPMLoader.h"
+#include "./Human/include/Resources/Texture/ImageDDS.h"
+#include "./Human/include/Resources/Texture/ImagePNG.h"
+#include "./Human/include/Utilities/Errors.h"
+#include "./Human/include/Utilities/OPMLoader.h"
 
 GameManager::GameManager(int width, int height) 
 {

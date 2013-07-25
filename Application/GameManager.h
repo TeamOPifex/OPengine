@@ -2,11 +2,11 @@
 #define GAMEMANAGER_H
 
 #include "./Core/include/Timer.h"
-#include "./Human/Resources/Model/Model.h"
-#include "./Human/Rendering/Camera.h"
-#include "./Human/Resources/Material/SpecularTexturedMaterial.h"
-#include "./Human/Resources/Material/TexturedScreenMaterial.h"
-#include "./Human/Rendering/Quad.h"
+#include "./Human/include/Resources/Model/Model.h"
+#include "./Human/include/Rendering/Camera.h"
+#include "./Human/include/Resources/Material/SpecularTexturedMaterial.h"
+#include "./Human/include/Resources/Material/TexturedScreenMaterial.h"
+#include "./Human/include/Rendering/Quad.h"
 
 class GameManager
 {
