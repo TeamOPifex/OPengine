@@ -2,10 +2,9 @@
 #include "Core/include/Types.h"
 #include "Core/include/MathHelpers.h"
 #include "Core/include/DynamicMemory.h"
+#include "Core/include/Log.h"
 #include "Data/include/OPfile.h"
 #include "Human/Math/Vector3.h"
-
-#include "./Core/include/Log.h"
 
 #ifdef OPIFEX_ANDROID
 #include <SLES/OpenSLES.h>

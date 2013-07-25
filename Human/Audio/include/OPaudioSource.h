@@ -13,6 +13,7 @@ extern "C" {
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 typedef struct{
+	ui32  length;
 	OPint SamplesPerSecond;
 	OPint BitsPerSample;
 	OPint Channels;
