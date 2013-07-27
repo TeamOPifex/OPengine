@@ -1,3 +1,5 @@
+#ifndef OPAUD_SOURCE
+#define OPAUD_SOURCE
 #include "OPaudio2.h"
 
 // prevent name mangling if compiling with c++
@@ -12,27 +14,30 @@ extern "C" {
 //  \___ \| __| '__| | | |/ __| __/ __|
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
+
 typedef struct{
-	ui32  length;
+	ui32  Length;
 	OPint SamplesPerSecond;
 	OPint BitsPerSample;
 	OPint Channels;
-	ui32  Format;
+	ui16  Format;
 }OPaudioDescription;
 
-typedef struct{
+struct sOPaudioSource;
+struct sOPaudioSource{
 	// Reads the next 'len' bytes from the data source and advances
 	// position by that number of bytes. Fills dest with bytes read.
-	OPint (*Read)(OPaudioSource* src, ui8* dest, ui32 len);
+	OPint (*Read)(struct sOPaudioSource* src, ui8* dest, ui32 len);
 
 	// Sets position to 'pos' makes appropriate changes for data source
-	OPint (*Seek)(OPaudioSource* src, ui64 pos);
+	OPint (*Seek)(struct sOPaudioSource* src, ui64 pos);
 
 	ui64               Position;
 	OPaudioDescription Description;
 
 	void* DataSource;
-}OPaudioSource;
+};
+typedef struct sOPaudioSource OPaudioSource;
 //-----------------------------------------------------------------------------
 
 
@@ -97,4 +102,5 @@ OPint OPaudSeekOgg (OPaudioSource* src, ui64 pos);
 
 #ifdef __cplusplus
 };
+#endif
 #endif

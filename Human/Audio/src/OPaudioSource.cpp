@@ -1,3 +1,4 @@
+#include "../include/OPaudioSource.h"
 
 //-----------------------------------------------------------------------------
 //   ____                   _               ______                      
@@ -10,26 +11,25 @@
 //        |_|                       |___/                               
 OPaudioSource OPaudOpenWave(const OPchar* filename){
 	// TODO all of this VVVVVVVVVVVVVVV
-	//FILE* fp = NULL;
-	OPsound ERR = {0};
-	//fp = fopen(filename, "rb");
 	OPstream* str = OPreadFile(filename);
 
 	if(!str) printf("Error: couldn't open '%s'\n", filename);
 	else{
 		ui8* type;
-		i32 size = 0, chunkSize = 0;
+		/*i32 size = 0, chunkSize = 0;
 		i16 formatType = 0, channels = 0;
 		i32 sampleRate = 0, avgBytesPerSec = 0;
 		i16 bytesPerSample = 0, bitsPerSample = 0;
-		i32 dataSize = 0;
+		i32 dataSize = 0;*/
+		OPaudioDescription desc = { 0 };
+
 
 		type = OPread(str, sizeof(i8) * 4);
 		if(memcmp(type, "RIFF", 4) != 0){
 			OPLog("No RIFF\n");
 		}
 
-		OPmemcpy(&size, OPread(str, sizeof(i32)), sizeof(i32));
+		OPmemcpy(&desc.Length, OPread(str, sizeof(i32)), sizeof(i32));
 		type = OPread(str, sizeof(i8) * 4);
 		if(memcmp(type, "WAVE", 4) != 0){
 			OPLog((char const*)type);
@@ -41,94 +41,86 @@ OPaudioSource OPaudOpenWave(const OPchar* filename){
 			OPLog("Not fmt\n");
 		}
 
-		OPmemcpy(&chunkSize, OPread(str, sizeof(i32)), sizeof(i32));
-		OPmemcpy(&formatType, OPread(str, sizeof(i16)), sizeof(i16));
-		OPmemcpy(&channels, OPread(str, sizeof(i16)), sizeof(i16));
-		OPmemcpy(&sampleRate, OPread(str, sizeof(i32)), sizeof(i32));
-		OPmemcpy(&avgBytesPerSec, OPread(str, sizeof(i32)), sizeof(i32));
-		OPmemcpy(&bytesPerSample, OPread(str, sizeof(i16)), sizeof(i16));
-		OPmemcpy(&bitsPerSample, OPread(str, sizeof(i16)), sizeof(i16));
+		OPread(str, sizeof(i32)); // throw away chunksize //OPmemcpy(&chunkSize, ), sizeof(i32));
+		OPmemcpy(&desc.Format, OPread(str, sizeof(i16)), sizeof(i16));
+		OPmemcpy(&desc.Channels, OPread(str, sizeof(i16)), sizeof(i16));
+		OPmemcpy(&desc.SamplesPerSecond, OPread(str, sizeof(i32)), sizeof(i32));
+		OPread(str, sizeof(i32)); // throw away avg Bytes/sec , sizeof(i32));
+		OPread(str, sizeof(i16)); // throw away bytes/sample
+		OPmemcpy(&desc.BitsPerSample, OPread(str, sizeof(i16)), sizeof(i16));
 
-		printf("Chunk Size: %d\nChannels: %d\nSample Rate: %d\nBytes/Sec: %d\n",
-			(OPint)chunkSize, (OPint)channels, (OPint)sampleRate, (OPint)avgBytesPerSec);
+		printf(
+			"Channels: %d\nSample Rate: %d\n\n",
+			(OPint)desc.Channels, (OPint)desc.SamplesPerSecond
+		);
 
 		type = OPread(str, sizeof(i8) * 4);
 		if(memcmp(type, "data", 4) != 0){
 			OPLog("Missing data\n");
 		}
 
-		OPmemcpy(&dataSize, OPread(str, sizeof(i32)), sizeof(i32));
+		OPmemcpy(&desc.Length, OPread(str, sizeof(i32)), sizeof(i32));
 
-		ui8* data = (ui8*)OPalloc(sizeof(ui8) * dataSize);
-		OPmemcpy(data, OPread(str, dataSize), dataSize);
+		ui8* data = (ui8*)OPalloc(sizeof(ui8) * desc.Length);
+		OPmemcpy(data, OPread(str, desc.Length), desc.Length);
 
 		OPstreamDestroy(str);
 
-#ifdef OPIFEX_ANDROID
-		OPsound out = {  
-			(SLuint32)sampleRate,
-			(SLuint32)bitsPerSample,
-			(SLuint32)channels, 
-			{0},
-			NULL,
-			NULL,
-			NULL,
-			dataSize,
-			data
+		OPaudioSource source = {
+			OPaudReadWave,
+			OPaudSeekWave,
+			0,   // position,
+			desc
 		};
 
-		OPLog("Channels:"); OPLog_i32(channels);
-		OPLog("sampleRate:"); OPLog_i32(sampleRate);
-		OPLog("bps:"); OPLog_i32(avgBytesPerSec);
+// #ifdef OPIFEX_ANDROID
+// 		// OPLog("Channels:"); OPLog_i32(channels);
+// 		// OPLog("sampleRate:"); OPLog_i32(sampleRate);
+// 		// OPLog("bps:"); OPLog_i32(avgBytesPerSec);
 
-		SLDataFormat_PCM slFormat = {
-			SL_DATAFORMAT_PCM, // specifies the format
-			(SLuint32)channels,   
-			(SLuint32)sampleRate,
-			(SLuint32)bitsPerSample,
-			OPceil(bitsPerSample / 32) * 32,
-			SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT,
-			SL_BYTEORDER_LITTLEENDIAN
-		};
+// 		SLDataFormat_PCM slFormat = {
+// 			SL_DATAFORMAT_PCM, // specifies the format
+// 			(SLuint32)channels,   
+// 			(SLuint32)sampleRate,
+// 			(SLuint32)bitsPerSample,
+// 			OPceil(bitsPerSample / 32) * 32,
+// 			SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT,
+// 			SL_BYTEORDER_LITTLEENDIAN
+// 		};
 
-		// keep the SL data format in the OPsound
-		*((SLDataFormat_PCM*)out.SLdataFormat) = slFormat;
-#else
-		ALenum format = 0;
+// 		// keep the SL data format in the OPsound
+// 		*((SLDataFormat_PCM*)out.SLdataFormat) = slFormat;
+// #else
+// 		ALenum format = 0;
 
-		switch (bitsPerSample)
-		{
-			case 8:
-				format = (channels == 2 ? AL_FORMAT_STEREO8 : AL_FORMAT_MONO8);
-				break;
-			case 16:
-				format = (channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16);
-				break;
-			default:
-				break;
-		}
+// 		switch (bitsPerSample)
+// 		{
+// 			case 8:
+// 				format = (channels == 2 ? AL_FORMAT_STEREO8 : AL_FORMAT_MONO8);
+// 				break;
+// 			case 16:
+// 				format = (channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16);
+// 				break;
+// 			default:
+// 				break;
+// 		}
+// #endif
 
-		OPsound out = {
-			sampleRate,
-			bitsPerSample,
-			channels,
-			format,
-			NULL,
-			NULL,
-			NULL,
-			dataSize,
-			data
-		};
-#endif
-
-		return out;
+		return source;
 	}
 
+	OPaudioSource err = {
+		NULL,
+		NULL,
+		0,   // position,
+		{0}
+	};
 
-	return ERR;
+	return err;
 }
-OPaudioSource OPaudOpenOgg (const OPchar* filename){
 
+OPaudioSource OPaudOpenOgg (const OPchar* filename){
+	return {0};
 }
 //-----------------------------------------------------------------------------
 
@@ -144,10 +136,10 @@ OPaudioSource OPaudOpenOgg (const OPchar* filename){
 //                              __/ |                              
 //                             |___/                               
 OPint OPaudCloseWave(OPaudioSource* src){
-
+	return 0;
 }
 OPint OPaudCloseOgg (OPaudioSource* src){
-
+	return 0;
 }
 //-----------------------------------------------------------------------------
 
@@ -163,10 +155,10 @@ OPint OPaudCloseOgg (OPaudioSource* src){
 //                                  __/ |                                              
 //                                 |___/                                               
 OPint OPaudReadWave(OPaudioSource* src, ui8* dest, ui32 len){
-
+	return 0;
 }
 OPint OPaudReadOgg (OPaudioSource* src, ui8* dest, ui32 len){
-
+	return 0;
 }
 //-----------------------------------------------------------------------------
 
@@ -182,9 +174,9 @@ OPint OPaudReadOgg (OPaudioSource* src, ui8* dest, ui32 len){
 //                                 __/ |                                              
 //                                |___/                                               
 OPint OPaudSeekWave(OPaudioSource* src, ui64 pos){
-
+	return 0;
 }
 OPint OPaudSeekOgg (OPaudioSource* src, ui64 pos){
-
+	return 0;
 }
 //-----------------------------------------------------------------------------
