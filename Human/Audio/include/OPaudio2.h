@@ -1,3 +1,6 @@
+#ifndef OPAUD_AUDIO
+#define OPAUD_AUDIO
+
 #include "Core/include/Target.h"
 #include "Core/include/Types.h"
 #include "Core/include/MathHelpers.h"
@@ -96,4 +99,5 @@ Vector3 OPaudEarForward(Vector3 pos);
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 };
+#endif
 #endif

@@ -24,13 +24,13 @@
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 #endif
 #include "./Data/include/OPfile.h"
-#include "./Human/Audio/include/OPaudio.h"
-#include "./Human/Audio/include/OPsoundEmitter.h"
+//#include "./Human/Audio/include/OPaudio.h"
+//#include "./Human/Audio/include/OPsoundEmitter.h"
 
 GameManager* GM;
 GamePadSystem* GPS;
-OPsound Song, Sound;
-OPSoundEmitter* Emitter, *SoundEmitter;
+//OPsound Song, Sound;
+//OPSoundEmitter* Emitter, *SoundEmitter;
 
 #ifdef OPIFEX_ANDROID
 	OPtimer* timer;
@@ -132,19 +132,19 @@ void Init(){
 
 	GM = new GameManager(width, height);
 
-	OPAudio::Init();
+	//OPAudio::Init();
 	
 	OPLog("Main: Song loading...");
 	OPchar songPath[] = {"Audio/background.ogg"};
-	Song = OPAudio::ReadOgg(songPath);
+	//Song = OPAudio::ReadOgg(songPath);
 	OPLog("Main: Song loaded");
 
 	//Sound = OPAudio::ReadWave("Audio/testing.wav");
 	
-	Emitter = new OPSoundEmitter(&Song, 8);
-	Emitter->SetVolume(0.05f);
-	Emitter->Looping = true;
-	Emitter->Play();
+	// Emitter = new OPSoundEmitter(&Song, 8);
+	// Emitter->SetVolume(0.05f);
+	// Emitter->Looping = true;
+	// Emitter->Play();
 	
 	OPLog("Main: 1");
 	//SoundEmitter = new OPSoundEmitter(&Sound, 8);
@@ -177,7 +177,7 @@ void Update( OPtimer* timer){
 	else
 		RenderSystem::ClearColor(0,0,0);
 
-	Emitter->Update();
+	//Emitter->Update();
 	//SoundEmitter->Update();
 	//GM->Draw();
 	RenderSystem::Present();

@@ -32,7 +32,6 @@ struct sOPaudioSource{
 	// Sets position to 'pos' makes appropriate changes for data source
 	OPint (*Seek)(struct sOPaudioSource* src, ui64 pos);
 
-	ui64               Position;
 	OPaudioDescription Description;
 
 	void* DataSource;
