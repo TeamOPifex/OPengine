@@ -37,6 +37,7 @@ typedef struct{
 	OPint				Looping;              // indicates weather the sounds restarts when finished or not
 	OPaudioEmitterState State;                // current play state of the sound
 	OPaudioSource*      Source;               // data source for the sound
+	ui8                 Temp[512];            // 512 byte temp buffer for processing
 	void*               Processor;            // Pointer to data for audio processing
 
 #ifdef OPIFEX_ANDROID 
@@ -98,9 +99,9 @@ void  OPaudEnqueueBuffer(ui8* buffer, OPint length);
 void OPaudPlay ();
 void OPaudPause();
 void OPaudStop ();
-OPint OPaudUpdate();
+OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit));
 
-OPint OPaudProc(OPaudioEmitter* emitter, void(*Proc)(OPaudioEmitter* emit));
+OPint OPaudProc(OPaudioEmitter* emitter, void(*Proc)(OPaudioEmitter* emit, OPint length));
 
 Vector3 OPaudSetPosition(OPaudioEmitter* emitter, Vector3 position);
 Vector3 OPaudSetVelocity(Vector3 velocity);
