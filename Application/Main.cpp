@@ -149,6 +149,10 @@ void Init(){
 	Sound = OPaudOpenWave("Audio/testing.wav");
 	Emitter = OPaudCreateEmitter(&Sound, 1);
 
+	OPaudSetEmitter(&Emitter);
+	OPaudUpdate(OPaudProcess);
+	OPaudPlay();
+
 	// Emitter = new OPSoundEmitter(&Song, 8);
 	// Emitter->SetVolume(0.05f);
 	// Emitter->Looping = true;
@@ -185,9 +189,9 @@ void Update( OPtimer* timer){
 	else
 		RenderSystem::ClearColor(0,0,0);
 
-	//Emitter->Update();
+	OPaudUpdate(OPaudProcess);
 	//SoundEmitter->Update();
-	//GM->Draw();
+	GM->Draw();
 	RenderSystem::Present();
 	
 #ifdef OPIFEX_ANDROID

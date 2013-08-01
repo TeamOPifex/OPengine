@@ -99,7 +99,7 @@ void  OPaudEnqueueBuffer(ui8* buffer, OPint length);
 void OPaudPlay ();
 void OPaudPause();
 void OPaudStop ();
-OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit));
+OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length));
 
 OPint OPaudProc(OPaudioEmitter* emitter, void(*Proc)(OPaudioEmitter* emit, OPint length));
 
@@ -108,6 +108,9 @@ Vector3 OPaudSetVelocity(Vector3 velocity);
 OPfloat OPaudSetVolume  (OPfloat gain);
 OPfloat OPaudSetPitch   (OPfloat pitch);
 //-----------------------------------------------------------------------------
+void OPaudProcess(OPaudioEmitter* emit, OPint length);
+//-----------------------------------------------------------------------------
+
 #ifdef __cplusplus
 };
 #endif
