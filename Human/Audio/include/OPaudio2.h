@@ -1,3 +1,4 @@
+#pragma once
 #ifndef OPAUD_AUDIO
 #define OPAUD_AUDIO
 
@@ -47,12 +48,12 @@ extern "C" {
 #define AL_FORMAT_MONO16 0
 #define AL_FORMAT_STEREO16 1
 
-SLObjectItf SLES_engineObject;
-SLEngineItf SLES_engineEngine;
-SLObjectItf SLES_outputMixObject;
+extern SLObjectItf SLES_engineObject;
+extern SLEngineItf SLES_engineEngine;
+extern SLObjectItf SLES_outputMixObject;
 #else
-ALCdevice*  AL_OPaudioDevice;
-ALCcontext* AL_OPaudioContext;
+extern ALCdevice*  AL_OPaudioDevice;
+extern ALCcontext* AL_OPaudioContext;
 #endif
 //-----------------------------------------------------------------------------
 
@@ -74,12 +75,12 @@ typedef vorbis_info * (*LPOVINFO)(OggVorbis_File *vf,int link);
 typedef vorbis_comment * (*LPOVCOMMENT)(OggVorbis_File *vf,int link);
 typedef int (*LPOVOPENCALLBACKS)(void *datasource, OggVorbis_File *vf,char *initial, long ibytes, ov_callbacks callbacks);
 
-LPOVCLEAR           fn_ov_clear;
-LPOVREAD            fn_ov_read;
-LPOVPCMTOTAL        fn_ov_pcm_total;
-LPOVINFO            fn_ov_info;
-LPOVCOMMENT         fn_ov_comment;
-LPOVOPENCALLBACKS   fn_ov_open_callbacks;
+extern LPOVCLEAR           fn_ov_clear;
+extern LPOVREAD            fn_ov_read;
+extern LPOVPCMTOTAL        fn_ov_pcm_total;
+extern LPOVINFO            fn_ov_info;
+extern LPOVCOMMENT         fn_ov_comment;
+extern LPOVOPENCALLBACKS   fn_ov_open_callbacks;
 //-----------------------------------------------------------------------------
 
 

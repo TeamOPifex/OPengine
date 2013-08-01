@@ -61,16 +61,17 @@ OPaudioSource OPaudOpenWave(const OPchar* filename){
 
 		OPmemcpy(&desc.Length, OPread(str, sizeof(i32)), sizeof(i32));
 
-		ui8* data = (ui8*)OPalloc(sizeof(ui8) * desc.Length);
-		OPmemcpy(data, OPread(str, desc.Length), desc.Length);
+		// ui8* data = (ui8*)OPalloc(sizeof(ui8) * desc.Length);
+		// OPmemcpy(data, OPread(str, desc.Length), desc.Length);
 
-		OPstreamDestroy(str);
+		// OPstreamDestroy(str);
 
 		OPaudioSource source = {
 			OPaudReadWave,
 			OPaudSeekWave,
 			0,   // position,
-			desc
+			desc,
+			str
 		};
 
 // #ifdef OPIFEX_ANDROID
@@ -113,7 +114,8 @@ OPaudioSource OPaudOpenWave(const OPchar* filename){
 		NULL,
 		NULL,
 		0,   // position,
-		{0}
+		{0},
+		NULL
 	};
 
 	return err;
@@ -136,7 +138,7 @@ OPaudioSource OPaudOpenOgg (const OPchar* filename){
 //                              __/ |                              
 //                             |___/                               
 OPint OPaudCloseWave(OPaudioSource* src){
-	return 0;
+	return OPstreamDestroy((OPstream*)src->DataSource);
 }
 OPint OPaudCloseOgg (OPaudioSource* src){
 	return 0;
@@ -155,7 +157,17 @@ OPint OPaudCloseOgg (OPaudioSource* src){
 //                                  __/ |                                              
 //                                 |___/                                               
 OPint OPaudReadWave(OPaudioSource* src, ui8* dest, ui32 len){
-	return 0;
+	ui64 pos = src->Progress, srcLen = src->Description.Length;
+
+	// clip length to read if we are at / near the end
+	len = pos + len >= srcLen ? srcLen - pos : len;
+
+	OPstream* str = (OPstream*)src->DataSource;
+	OPmemcpy(dest, OPreadAt(str, pos, len), len);
+
+	src->Progress += len;
+
+	return len;
 }
 OPint OPaudReadOgg (OPaudioSource* src, ui8* dest, ui32 len){
 	return 0;
@@ -174,7 +186,11 @@ OPint OPaudReadOgg (OPaudioSource* src, ui8* dest, ui32 len){
 //                                 __/ |                                              
 //                                |___/                                               
 OPint OPaudSeekWave(OPaudioSource* src, ui64 pos){
-	return 0;
+	// make sure it is not negative / out of bounds
+	if(pos >= src->Description.Length) return -1;
+
+	src->Progress = pos;
+	return 1;
 }
 OPint OPaudSeekOgg (OPaudioSource* src, ui64 pos){
 	return 0;

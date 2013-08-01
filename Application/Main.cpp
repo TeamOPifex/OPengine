@@ -11,6 +11,7 @@
 #include "./Core/include/Log.h"
 #include "./Human/Audio/Jukebox.h"
 
+
 #include "./Data/include/OPlinkedList.h"
 #include "./Data/include/OPheap.h"
 #include "./Data/include/OPlist.h"
@@ -24,11 +25,15 @@
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 #endif
 #include "./Data/include/OPfile.h"
+#include "./Human/Audio/include/OPaudio2.h"
 //#include "./Human/Audio/include/OPaudio.h"
-//#include "./Human/Audio/include/OPsoundEmitter.h"
+#include "./Human/Audio/include/OPaudioSource.h"
+#include "./Human/Audio/include/OPaudioEmitter.h"
 
 GameManager* GM;
 GamePadSystem* GPS;
+OPaudioSource Sound;
+OPaudioEmitter Emitter;
 //OPsound Song, Sound;
 //OPSoundEmitter* Emitter, *SoundEmitter;
 
@@ -137,10 +142,13 @@ void Init(){
 	OPLog("Main: Song loading...");
 	OPchar songPath[] = {"Audio/background.ogg"};
 	//Song = OPAudio::ReadOgg(songPath);
+	OPaudInit();
+
 	OPLog("Main: Song loaded");
 
-	//Sound = OPAudio::ReadWave("Audio/testing.wav");
-	
+	Sound = OPaudOpenWave("Audio/testing.wav");
+	Emitter = OPaudCreateEmitter(&Sound, 1);
+
 	// Emitter = new OPSoundEmitter(&Song, 8);
 	// Emitter->SetVolume(0.05f);
 	// Emitter->Looping = true;

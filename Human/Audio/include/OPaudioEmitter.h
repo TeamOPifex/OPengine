@@ -66,7 +66,7 @@ typedef struct{
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
-OPaudioEmitter* OPAUD_CURR_EMITTER;
+extern OPaudioEmitter* OPAUD_CURR_EMITTER;
 //-----------------------------------------------------------------------------
 
 
@@ -92,7 +92,7 @@ OPaudioEmitter* OPAUD_CURR_EMITTER;
 //   / /\ \| | | |/ _` | |/ _ \|  __| | '_ ` _ \| | __| __/ _ \ '__| |  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //  / ____ \ |_| | (_| | | (_) | |____| | | | | | | |_| ||  __/ |    | |  | |_| | | | | (__| |_| | (_) | | | \__ \
 // /_/    \_\__,_|\__,_|_|\___/|______|_| |_| |_|_|\__|\__\___|_|    |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src);
+OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, OPint looping);
 
 void  OPaudEnqueueBuffer(ui8* buffer, OPint length);
 

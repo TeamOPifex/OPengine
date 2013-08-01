@@ -16,7 +16,7 @@ extern "C" {
 // |_____/ \__|_|   \__,_|\___|\__|___/
 
 typedef struct{
-	ui32  Length;
+	ui64  Length;
 	OPint SamplesPerSecond;
 	OPint BitsPerSample;
 	OPint Channels;
@@ -32,8 +32,9 @@ struct sOPaudioSource{
 	// Sets position to 'pos' makes appropriate changes for data source
 	OPint (*Seek)(struct sOPaudioSource* src, ui64 pos);
 
-	OPaudioDescription Description;
+	ui64 Progress;
 
+	OPaudioDescription Description;
 	void* DataSource;
 };
 typedef struct sOPaudioSource OPaudioSource;
