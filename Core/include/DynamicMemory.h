@@ -18,6 +18,18 @@
 	memcpy(dest, src, size);\
 }\
 
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
+#define OPbzero(dest, size){\
+	bzero(dest, size);\
+}\
+
+#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#define OPbzero(dest, size){\
+	memset(dest, 0, size);\
+}\
+
+#endif
+
 /* function definitions */
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

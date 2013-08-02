@@ -52,7 +52,7 @@ OPint OPaudInit(){
 			return -2;
 		}
 	}
-#elsey
+#else
 	// copy the function pointers directly from
 	// the linked SO file.
 	fn_ov_clear = (LPOVCLEAR)ov_clear;
@@ -134,34 +134,6 @@ OPint OPaudInit(){
 
 	alDistanceModel(AL_LINEAR_DISTANCE);
 #endif
-
-// USE OGG VORBIS FOR DESKTOP PLATFORMS
-#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
-	HINSTANCE _hVorbisFileDLL = LoadLibrary("vorbisfile.dll");
-	if(_hVorbisFileDLL){
-		fn_ov_clear = (LPOVCLEAR)GetProcAddress(_hVorbisFileDLL, "ov_clear");
-		fn_ov_read = (LPOVREAD)GetProcAddress(_hVorbisFileDLL, "ov_read");
-		fn_ov_pcm_total = (LPOVPCMTOTAL)GetProcAddress(_hVorbisFileDLL, "ov_pcm_total");
-		fn_ov_info = (LPOVINFO)GetProcAddress(_hVorbisFileDLL, "ov_info");
-		fn_ov_comment = (LPOVCOMMENT)GetProcAddress(_hVorbisFileDLL, "ov_comment");
-		fn_ov_open_callbacks = (LPOVOPENCALLBACKS)GetProcAddress(_hVorbisFileDLL, "ov_open_callbacks");
-
-		if (!(fn_ov_clear && fn_ov_read && fn_ov_pcm_total && fn_ov_info &&
-			fn_ov_comment && fn_ov_open_callbacks)){
-			return -2;
-		}
-	}
-#else
-	// copy the function pointers directly from
-	// the linked SO file.
-	fn_ov_clear = (LPOVCLEAR)ov_clear;
-	fn_ov_read = (LPOVREAD)ov_read;
-	fn_ov_pcm_total = (LPOVPCMTOTAL)ov_pcm_total;
-	fn_ov_info = (LPOVINFO)ov_info;
-	fn_ov_comment = (LPOVCOMMENT)ov_comment;
-	fn_ov_open_callbacks = (LPOVOPENCALLBACKS)ov_open_callbacks;
-#endif
-
 	OPLog("OP audio Initialized!!!");
 	return 1;
 }

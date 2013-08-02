@@ -158,7 +158,10 @@ OPaudioSource OPaudOpenOgg (const OPchar* filename){
 				return src;
 			}
 		}
-	return {0};
+
+	OPaudioSource err;
+	OPbzero(&err, sizeof(OPaudioSource));
+	return err;
 }
 //-----------------------------------------------------------------------------
 
