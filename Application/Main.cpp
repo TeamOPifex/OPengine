@@ -34,7 +34,7 @@ GameManager* GM;
 GamePadSystem* GPS;
 OPaudioSource Sound, Sound1;
 OPaudioEmitter Emitter, Emitter1;
-OPfloat vol = 1.0f;
+OPfloat vol = 0.05f;
 //OPsound Song, Sound;
 //OPSoundEmitter* Emitter, *SoundEmitter;
 
@@ -147,7 +147,7 @@ void Init(){
 
 	OPLog("Main: Song loaded");
 
-	Sound = OPaudOpenWave("Audio/testing2.wav");
+	Sound = OPaudOpenOgg("Audio/background.ogg");
 	Sound1 = OPaudOpenWave("Audio/testing.wav");
 	printf("Reading done!\n");
 	Emitter = OPaudCreateEmitter(&Sound, 1);
@@ -160,7 +160,7 @@ void Init(){
 	OPaudUpdate(OPaudProcess);
 	printf("Emitter proc'd\n");
 	OPaudPlay();
-
+vol = 1.0f;
 	OPaudSetEmitter(&Emitter1);
 	OPaudVolume(&vol);
 	printf("Emitter set\n");
