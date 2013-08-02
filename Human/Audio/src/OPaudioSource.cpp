@@ -1,5 +1,15 @@
 #include "../include/OPaudioSource.h"
 
+
+size_t ov_read_func(void *ptr, size_t size, size_t nmemb, void *datasource){
+	return fread(ptr, size, nmemb, (FILE*)datasource);
+}
+int ov_seek_func(void *datasource, ogg_int64_t offset, int whence) {
+	return fseek((FILE*)datasource, (long)offset, whence);
+}
+int ov_close_func(void *datasource){ return fclose((FILE*)datasource); }
+long ov_tell_func(void *datasource){ return ftell((FILE*)datasource); }
+
 //-----------------------------------------------------------------------------
 //   ____                   _               ______                      
 //  / __ \                 (_)             |  ____|                     
@@ -10,17 +20,11 @@
 //        | |                        __/ |                              
 //        |_|                       |___/                               
 OPaudioSource OPaudOpenWave(const OPchar* filename){
-	// TODO all of this VVVVVVVVVVVVVVV
 	OPstream* str = OPreadFile(filename);
 
 	if(!str) printf("Error: couldn't open '%s'\n", filename);
 	else{
 		ui8* type;
-		/*i32 size = 0, chunkSize = 0;
-		i16 formatType = 0, channels = 0;
-		i32 sampleRate = 0, avgBytesPerSec = 0;
-		i16 bytesPerSample = 0, bitsPerSample = 0;
-		i32 dataSize = 0;*/
 		OPaudioDescription desc = { 0 };
 
 
@@ -49,6 +53,9 @@ OPaudioSource OPaudOpenWave(const OPchar* filename){
 		OPread(str, sizeof(i16)); // throw away bytes/sample
 		OPmemcpy(&desc.BitsPerSample, OPread(str, sizeof(i16)), sizeof(i16));
 
+#ifdef OPIFEX_ANDROID
+
+#else
 		switch (desc.BitsPerSample)
 		{
 			case 8:
@@ -60,6 +67,7 @@ OPaudioSource OPaudOpenWave(const OPchar* filename){
 			default:
 				break;
 		}
+#endif
 
 		type = OPread(str, sizeof(i8) * 4);
 		if(memcmp(type, "data", 4) != 0){
@@ -68,11 +76,6 @@ OPaudioSource OPaudOpenWave(const OPchar* filename){
 
 		OPmemcpy(&desc.Length, OPread(str, sizeof(i32)), sizeof(i32));
 
-		// ui8* data = (ui8*)OPalloc(sizeof(ui8) * desc.Length);
-		// OPmemcpy(data, OPread(str, desc.Length), desc.Length);
-
-		// OPstreamDestroy(str);
-
 		OPaudioSource source = {
 			OPaudReadWave,
 			OPaudSeekWave,
@@ -80,39 +83,6 @@ OPaudioSource OPaudOpenWave(const OPchar* filename){
 			desc,
 			str
 		};
-
-// #ifdef OPIFEX_ANDROID
-// 		// OPLog("Channels:"); OPLog_i32(channels);
-// 		// OPLog("sampleRate:"); OPLog_i32(sampleRate);
-// 		// OPLog("bps:"); OPLog_i32(avgBytesPerSec);
-
-// 		SLDataFormat_PCM slFormat = {
-// 			SL_DATAFORMAT_PCM, // specifies the format
-// 			(SLuint32)channels,   
-// 			(SLuint32)sampleRate,
-// 			(SLuint32)bitsPerSample,
-// 			OPceil(bitsPerSample / 32) * 32,
-// 			SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT,
-// 			SL_BYTEORDER_LITTLEENDIAN
-// 		};
-
-// 		// keep the SL data format in the OPsound
-// 		*((SLDataFormat_PCM*)out.SLdataFormat) = slFormat;
-// #else
-// 		ALenum format = 0;
-
-// 		switch (bitsPerSample)
-// 		{
-// 			case 8:
-// 				format = (channels == 2 ? AL_FORMAT_STEREO8 : AL_FORMAT_MONO8);
-// 				break;
-// 			case 16:
-// 				format = (channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16);
-// 				break;
-// 			default:
-// 				break;
-// 		}
-// #endif
 
 		return source;
 	}
@@ -129,7 +99,59 @@ OPaudioSource OPaudOpenWave(const OPchar* filename){
 }
 
 OPaudioSource OPaudOpenOgg (const OPchar* filename){
-	return {0};
+	// Open Ogg Stream
+	ov_callbacks	sCallbacks;
+	OggVorbis_File	*sOggVorbisFile = new OggVorbis_File();
+	vorbis_info		*psVorbisInfo;
+
+	sCallbacks.read_func = ov_read_func;
+	sCallbacks.seek_func = ov_seek_func;
+	sCallbacks.close_func = ov_close_func;
+	sCallbacks.tell_func = ov_tell_func;
+
+	FILE* song = fopen(filename, "rb");
+
+	if (fn_ov_open_callbacks(song, sOggVorbisFile, NULL, 0, sCallbacks) == 0)
+			if(psVorbisInfo){
+				OPaudioDescription desc = {
+					fn_ov_pcm_total(sOggVorbisFile, -1),
+					psVorbisInfo->rate,
+					0,                      // bits / sample
+					psVorbisInfo->channels,
+					0                       // format
+				};
+				OPaudioSource src = {
+					OPaudReadOgg,
+					OPaudSeekOgg,
+					0,
+					{0},
+					NULL
+				};
+#ifdef OPIFEX_ANDROID
+
+#else
+			switch(psVorbisInfo->channels){
+				case 1:
+					desc.Format = AL_FORMAT_MONO16;
+					desc.BitsPerSample = 16;
+					break;
+				case 2:
+					desc.Format = AL_FORMAT_STEREO16;
+					desc.BitsPerSample = 32;
+					break;
+				case 4:
+					desc.Format = alGetEnumValue("AL_FORMAT_QUAD16");
+					desc.BitsPerSample = 64;
+					break;
+				case 6:
+					desc.Format = alGetEnumValue("AL_FORMAT_51CHN16");
+					desc.BitsPerSample = 96;
+					break;
+			}
+#endif
+			src.Description = desc;
+			src.DataSource  = sOggVorbisFile;
+		}
 }
 //-----------------------------------------------------------------------------
 
@@ -147,6 +169,7 @@ OPaudioSource OPaudOpenOgg (const OPchar* filename){
 OPint OPaudCloseWave(OPaudioSource* src){
 	return OPstreamDestroy((OPstream*)src->DataSource);
 }
+
 OPint OPaudCloseOgg (OPaudioSource* src){
 	return 0;
 }
@@ -176,8 +199,37 @@ OPint OPaudReadWave(OPaudioSource* src, ui8* dest, ui32 len){
 
 	return len;
 }
+
 OPint OPaudReadOgg (OPaudioSource* src, ui8* dest, ui32 len){
-	return 0;
+	OPint current_section;
+	i64 lDecodeSize;
+	ui64 ulSamples;
+	i16 *pSamples;
+	OggVorbis_File* sOggVorbisFile = (OggVorbis_File*)src->DataSource;
+
+	src->Progress += (len = fn_ov_read(
+		sOggVorbisFile,
+		dest,
+		len,
+		0,
+		2,
+		1,
+		&current_section
+	));
+
+	// Mono, Stereo and 4-Channel files decode into the same channel order as WAVEFORMATEXTENSIBLE,
+	// however 6-Channels files need to be re-ordered
+	// if (ulChannels == 6){		
+	// 	pSamples = (i16*)pDecodeBuffer;
+	// 	for (ulSamples = 0; ulSamples < (ulBufferSize>>1); ulSamples+=6){
+	// 		// WAVEFORMATEXTENSIBLE Order : FL, FR, FC, LFE, RL, RR
+	// 		// OggVorbis Order            : FL, FC, FR,  RL, RR, LFE
+	// 		OPAUDIO_SWAP(pSamples[ulSamples+1], pSamples[ulSamples+2]);
+	// 		OPAUDIO_SWAP(pSamples[ulSamples+3], pSamples[ulSamples+5]);
+	// 		OPAUDIO_SWAP(pSamples[ulSamples+4], pSamples[ulSamples+5]);
+	// 	}
+	// }
+	return len;
 }
 //-----------------------------------------------------------------------------
 
@@ -201,7 +253,11 @@ OPint OPaudSeekWave(OPaudioSource* src, ui64 pos){
 	src->Progress = pos;
 	return 1;
 }
+
 OPint OPaudSeekOgg (OPaudioSource* src, ui64 pos){
+	OggVorbis_File* sOggVorbisFile = (OggVorbis_File*)src->DataSource;
+	
+
 	return 0;
 }
 //-----------------------------------------------------------------------------
