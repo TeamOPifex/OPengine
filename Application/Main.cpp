@@ -32,8 +32,9 @@
 
 GameManager* GM;
 GamePadSystem* GPS;
-OPaudioSource Sound;
-OPaudioEmitter Emitter;
+OPaudioSource Sound, Sound1;
+OPaudioEmitter Emitter, Emitter1;
+OPfloat vol = 1.0f;
 //OPsound Song, Sound;
 //OPSoundEmitter* Emitter, *SoundEmitter;
 
@@ -146,11 +147,25 @@ void Init(){
 
 	OPLog("Main: Song loaded");
 
-	Sound = OPaudOpenWave("Audio/testing.wav");
+	Sound = OPaudOpenWave("Audio/testing2.wav");
+	Sound1 = OPaudOpenWave("Audio/testing.wav");
+	printf("Reading done!\n");
 	Emitter = OPaudCreateEmitter(&Sound, 1);
+	Emitter1 = OPaudCreateEmitter(&Sound1, 1);
+	printf("Emitter created\n");
 
 	OPaudSetEmitter(&Emitter);
+	OPaudVolume(&vol);
+	printf("Emitter set\n");
 	OPaudUpdate(OPaudProcess);
+	printf("Emitter proc'd\n");
+	OPaudPlay();
+
+	OPaudSetEmitter(&Emitter1);
+	OPaudVolume(&vol);
+	printf("Emitter set\n");
+	OPaudUpdate(OPaudProcess);
+	printf("Emitter proc'd\n");
 	OPaudPlay();
 
 	// Emitter = new OPSoundEmitter(&Song, 8);
@@ -189,8 +204,11 @@ void Update( OPtimer* timer){
 	else
 		RenderSystem::ClearColor(0,0,0);
 
+	OPaudSetEmitter(&Emitter1);
 	OPaudUpdate(OPaudProcess);
-	//SoundEmitter->Update();
+
+	OPaudSetEmitter(&Emitter);
+	OPaudUpdate(OPaudProcess);
 	GM->Draw();
 	RenderSystem::Present();
 	

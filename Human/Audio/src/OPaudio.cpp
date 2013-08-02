@@ -171,7 +171,7 @@ OPsound OPAudio::ReadWave(const OPchar* filename){
 		OPmemcpy(&dataSize, OPread(str, sizeof(i32)), sizeof(i32));
 
 		ui8* data = (ui8*)OPalloc(sizeof(ui8) * dataSize);
-		OPmemcpy(data, OPread(str, dataSize), dataSize);
+		//OPmemcpy(data, OPread(str, dataSize), dataSize);
 
 		OPstreamDestroy(str);
 

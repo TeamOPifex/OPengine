@@ -49,10 +49,17 @@ OPaudioSource OPaudOpenWave(const OPchar* filename){
 		OPread(str, sizeof(i16)); // throw away bytes/sample
 		OPmemcpy(&desc.BitsPerSample, OPread(str, sizeof(i16)), sizeof(i16));
 
-		printf(
-			"Channels: %d\nSample Rate: %d\n\n",
-			(OPint)desc.Channels, (OPint)desc.SamplesPerSecond
-		);
+		switch (desc.BitsPerSample)
+		{
+			case 8:
+				desc.Format = (desc.Channels == 2 ? AL_FORMAT_STEREO8 : AL_FORMAT_MONO8);
+				break;
+			case 16:
+				desc.Format = (desc.Channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16);
+				break;
+			default:
+				break;
+		}
 
 		type = OPread(str, sizeof(i8) * 4);
 		if(memcmp(type, "data", 4) != 0){
@@ -163,7 +170,7 @@ OPint OPaudReadWave(OPaudioSource* src, ui8* dest, ui32 len){
 	len = pos + len >= srcLen ? srcLen - pos : len;
 
 	OPstream* str = (OPstream*)src->DataSource;
-	OPmemcpy(dest, OPreadAt(str, pos, len), len);
+	OPmemcpy(dest, OPreadAt(str, pos + WAVE_HEADER, len), len);
 
 	src->Progress += len;
 
@@ -186,6 +193,8 @@ OPint OPaudReadOgg (OPaudioSource* src, ui8* dest, ui32 len){
 //                                 __/ |                                              
 //                                |___/                                               
 OPint OPaudSeekWave(OPaudioSource* src, ui64 pos){
+	pos += WAVE_HEADER;
+
 	// make sure it is not negative / out of bounds
 	if(pos >= src->Description.Length) return -1;
 

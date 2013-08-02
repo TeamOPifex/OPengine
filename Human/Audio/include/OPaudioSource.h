@@ -7,6 +7,7 @@
 extern "C" {
 #endif
 
+#define WAVE_HEADER 44
 //-----------------------------------------------------------------------------
 //   _____ _                   _       
 //  / ____| |                 | |      
@@ -16,10 +17,10 @@ extern "C" {
 // |_____/ \__|_|   \__,_|\___|\__|___/
 
 typedef struct{
-	ui64  Length;
-	OPint SamplesPerSecond;
-	OPint BitsPerSample;
-	OPint Channels;
+	ui32  Length;
+	ui32 SamplesPerSecond;
+	ui16 BitsPerSample;
+	ui16 Channels;
 	ui16  Format;
 }OPaudioDescription;
 
