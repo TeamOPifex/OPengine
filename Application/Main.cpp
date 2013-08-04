@@ -157,16 +157,14 @@ void Init(){
 	OPaudSetEmitter(&Emitter);
 	OPaudVolume(&vol);
 	printf("Emitter set\n");
-	OPaudUpdate(OPaudProcess);
 	printf("Emitter proc'd\n");
 	OPaudPlay();
 vol = 1.0f;
 	OPaudSetEmitter(&Emitter1);
 	OPaudVolume(&vol);
 	printf("Emitter set\n");
-	OPaudUpdate(OPaudProcess);
 	printf("Emitter proc'd\n");
-	OPaudPlay();
+	//OPaudPlay();
 
 	// Emitter = new OPSoundEmitter(&Song, 8);
 	// Emitter->SetVolume(0.05f);

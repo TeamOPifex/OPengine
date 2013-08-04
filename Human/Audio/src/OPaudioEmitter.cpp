@@ -146,7 +146,7 @@ void OPaudEnqueueBuffer(ui8* buffer, OPint length){
 #endif
 
 OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
-	OPint len = 0;
+	OPint len = 0, queued = 0;
 	OPaudioSource* src = OPAUD_CURR_EMITTER->Source;
 	OPaudioDescription des = src->Description;
 	OPint bps = (des.BitsPerSample >> 3) * des.SamplesPerSecond; // bytes/second
@@ -155,7 +155,6 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 #ifdef OPIFEX_ANDROID
 
 #else
-	ALint queued = 0;
 	ALint processed = 0;
 	ALuint unqueued[BUFFER_COUNT];
 	OPint active = OPAUD_CURR_EMITTER->CurrBuffer + 1;
@@ -179,7 +178,7 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 #endif
 
 	// read sample rate >> bytes/sec pcm bytes
-	if(len = src->Read(src, OPAUD_CURR_EMITTER->Temp, bps >> shift)){ //)
+	if(len = src->Read(src, OPAUD_CURR_EMITTER->Temp, bps >> shift)){//bps >> shift)){ //)
 		Proc(OPAUD_CURR_EMITTER, len);
 		OPaudEnqueueBuffer(OPAUD_CURR_EMITTER->Temp, len);
 		return len;

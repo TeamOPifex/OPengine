@@ -211,35 +211,28 @@ OPint OPaudReadWave(OPaudioSource* src, ui8* dest, ui32 len){
 }
 
 OPint OPaudReadOgg (OPaudioSource* src, ui8* dest, ui32 len){
+	ui32 origLen = len, decoded = 0;
 	OPint current_section;
-	i64 lDecodeSize;
-	ui64 ulSamples;
-	i16 *pSamples;
 	OggVorbis_File* sOggVorbisFile = (OggVorbis_File*)src->DataSource;
 
-	src->Progress += (len = ov_read(
-		sOggVorbisFile,
-		(char*)dest,
-		len,
-		0,
-		2,
-		1,
-		&current_section
-	));
+	while(decoded <= 2048){
+		src->Progress += (len = ov_read(
+			sOggVorbisFile,
+			(char*)(dest + decoded),
+			len,
+			0,
+			2,
+			1,
+			&current_section
+		));
+		if(!len) break;
+		printf("Len %u\n", len);
+		decoded += len;
+	}
 
-	// Mono, Stereo and 4-Channel files decode into the same channel order as WAVEFORMATEXTENSIBLE,
-	// however 6-Channels files need to be re-ordered
-	// if (ulChannels == 6){		
-	// 	pSamples = (i16*)pDecodeBuffer;
-	// 	for (ulSamples = 0; ulSamples < (ulBufferSize>>1); ulSamples+=6){
-	// 		// WAVEFORMATEXTENSIBLE Order : FL, FR, FC, LFE, RL, RR
-	// 		// OggVorbis Order            : FL, FC, FR,  RL, RR, LFE
-	// 		OPAUDIO_SWAP(pSamples[ulSamples+1], pSamples[ulSamples+2]);
-	// 		OPAUDIO_SWAP(pSamples[ulSamples+3], pSamples[ulSamples+5]);
-	// 		OPAUDIO_SWAP(pSamples[ulSamples+4], pSamples[ulSamples+5]);
-	// 	}
-	// }
-	return len;
+	printf("\n");
+
+	return decoded;
 }
 //-----------------------------------------------------------------------------
 
@@ -267,6 +260,7 @@ OPint OPaudSeekWave(OPaudioSource* src, ui64 pos){
 OPint OPaudSeekOgg (OPaudioSource* src, ui64 pos){
 	OggVorbis_File* sOggVorbisFile = (OggVorbis_File*)src->DataSource;
 
+	src->Progress = pos;
 	return ov_raw_seek(
 		sOggVorbisFile,
 		pos
