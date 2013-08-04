@@ -2,6 +2,13 @@
 
 OPaudioEmitter* OPAUD_CURR_EMITTER;
 
+#ifdef OPIFEX_ANDROID
+	void SL_DequeueCallback(SLAndroidSimpleBufferQueueItf bq, void *context){
+		OPSoundEmitter* emitter = (OPSoundEmitter*)context;
+		emitter->_queued--;
+	}
+#endif
+
 //-----------------------------------------------------------------------------
 //                    _ _       ______           _ _   _              ______                _   _                 
 //     /\            | (_)     |  ____|         (_) | | |            |  ____|              | | (_)                
@@ -66,8 +73,8 @@ OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, /*void* processor,*/ OPint
 
 	(*src->_bqPlayerBufferQueue)->RegisterCallback(
 		src->_bqPlayerBufferQueue,
-		OPaudEnqueueBuffer,
-		src
+		SL_DequeueCallback,
+		OPAUD_CURR_EMITTER
 	);
 
     OPLog("OPsoundEmitter: 4");
@@ -153,11 +160,25 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 	OPint shift = bps >= 1024 ? 5 : 0;
 
 #ifdef OPIFEX_ANDROID
+	OPint queued = OPAUD_CURR_EMITTER->_queued;
 
+	if(queued > 0){
+        SLuint32 slState;
+		SLPlayItf pp = OPAUD_CURR_EMITTER->_playerPlay;
+        (*pp)->GetPlayState(pp, &slState);
+
+        if(slState == SL_PLAYSTATE_STOPPED){
+			(*pp)->SetPlayState(pp, SL_PLAYSTATE_PLAYING);
+        }
+
+		// all buffers are in use, wait for one to process
+        if(queued == BUFFER_COUNT){
+        	return 0;
+        }
+	}
 #else
 	ALint processed = 0;
 	ALuint unqueued[BUFFER_COUNT];
-	OPint active = OPAUD_CURR_EMITTER->CurrBuffer + 1;
 
 	alGetSourcei(OPAUD_CURR_EMITTER->al_src, AL_BUFFERS_QUEUED, &queued);
 	alGetSourcei(OPAUD_CURR_EMITTER->al_src, AL_BUFFERS_PROCESSED, &processed);
