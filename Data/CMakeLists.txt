@@ -16,10 +16,6 @@ set(ALL_LIBS
 	
 add_library(2_Data STATIC ${DATA_SRC})
 
-add_custom_command(TARGET 2_Data POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-	"${PROJECT_BINARY_DIR}/Data/Debug/Data.lib"
-	${PROJECT_BINARY_DIR}/Binaries)
-
 target_link_libraries(2_Data
 	${ALL_LIBS}
 )
