@@ -6,9 +6,10 @@ Group: 'Export'
 Tooltip: 'OPMeshBinary Export'
 """
 
-# import OPmeshBinary2
+# import OPmeshBinary
 # from imp import reload
-# reload(OPmeshBinary2)
+# reload(OPmeshBinary)
+# OPmeshBinary.Export('[LOCATION_FILENAME_WITHOUT_EXTENSION]')
 
 import bpy
 import os
