@@ -24,15 +24,16 @@
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 #endif
 #include "./Data/include/OPfile.h"
-#include "./Human/include/Audio/OPaudio.h"
-#include "./Human/include/Audio/OPsoundEmitter.h"
+#include "./Human/include/Audio/OPaudio2.h"
+#include "./Human/include/Audio/OPaudioEmitter.h"
 #include "./Data/include/OPfile.h"
 
 
 GameManager* GM;
 GamePadSystem* GPS;
-OPsound Song, Sound;
-OPSoundEmitter* Emitter, *SoundEmitter;
+OPaudioSource Sound, Sound1;
+OPaudioEmitter Emitter, Emitter1;
+OPfloat vol = 0.05f;
 
 #ifdef OPIFEX_ANDROID
 	OPtimer* timer;
@@ -133,20 +134,32 @@ void Init(){
 	}
 
 	GM = new GameManager(width, height);
-
-	OPAudio::Init();
 	
-	OPLog("Main: Song loading...");
-	OPchar songPath[] = {"Audio/background.ogg"};
-	Song = OPAudio::ReadOgg(songPath);
-	OPLog("Main: Song loaded");
+        OPLog("Main: Song loading...");
+        OPchar songPath[] = {"Audio/background.ogg"};
+        //Song = OPAudio::ReadOgg(songPath);
+        OPaudInit();
 
-	//Sound = OPAudio::ReadWave("Audio/testing.wav");
-	
-	Emitter = new OPSoundEmitter(&Song, 8);
-	Emitter->SetVolume(0.05f);
-	Emitter->Looping = true;
-	Emitter->Play();
+        OPLog("Main: Song loaded");
+
+        Sound = OPaudOpenOgg("Audio/background.ogg");
+        Sound1 = OPaudOpenWave("Audio/testing.wav");
+        printf("Reading done!\n");
+        Emitter = OPaudCreateEmitter(&Sound, 1);
+        Emitter1 = OPaudCreateEmitter(&Sound1, 1);
+        printf("Emitter created\n");
+
+        OPaudSetEmitter(&Emitter);
+        OPaudVolume(&vol);
+        printf("Emitter set\n");
+        printf("Emitter proc'd\n");
+        OPaudPlay();
+vol = 1.0f;
+        OPaudSetEmitter(&Emitter1);
+        OPaudVolume(&vol);
+        OPaudPlay();
+        printf("Emitter set\n");
+        printf("Emitter proc'd\n");
 	
 	OPLog("Main: 1");
 	//SoundEmitter = new OPSoundEmitter(&Sound, 8);
@@ -180,7 +193,11 @@ void Update( OPtimer* timer){
 		RenderSystem::ClearColor(0,0,0);
 	}
 
-	Emitter->Update();
+    OPaudSetEmitter(&Emitter1);
+    OPaudUpdate(OPaudProcess);
+
+    OPaudSetEmitter(&Emitter);
+    OPaudUpdate(OPaudProcess);
 	//SoundEmitter->Update();
 	GM->Draw();
 	RenderSystem::Present();

@@ -4,7 +4,8 @@
 #include "./Data/include/OPfile.h"
 #include "./Human/include/Rendering/MeshVertex.h"
 
-enum Features {
+namespace Features{
+enum OPMFeatures {
 	Position	=	0x01,
 	Normal		=	0x02,
 	UV			=	0x04,
@@ -14,6 +15,7 @@ enum Features {
 	Skinning	=	0x40,
 	Animations	=	0x80
 };
+}
 
 bool _has(ui32 features, ui32 feature) {
 	return features & feature;

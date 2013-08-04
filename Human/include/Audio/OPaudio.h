@@ -5,7 +5,7 @@
 #include "Core/include/MathHelpers.h"
 #include "Core/include/DynamicMemory.h"
 #include "Data/include/OPfile.h"
-#include "Human/Math/Vector3.h"
+#include "Human/include/Math/Vector3.h"
 
 #include "./Core/include/Log.h"
 
