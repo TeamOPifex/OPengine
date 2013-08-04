@@ -11,7 +11,7 @@ GameManager::GameManager(int width, int height)
 {
 	RenderSystem::Initialize(width, height);
 	
-	FileInformation t_file = OPreadFileInformation("C:\\_Repos\\BiPlane.opm");
+	FileInformation t_file = OPreadFileInformation("Models/BiPlane.opm");
 	MeshPtr mesh = LoadOPM(t_file.file);
 	
 	_colorTexture = ImagePNG::TextureFromFile("Textures/test.png");
