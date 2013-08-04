@@ -8,7 +8,7 @@
 #include "Core/include/DynamicMemory.h"
 #include "Core/include/Log.h"
 #include "Data/include/OPfile.h"
-#include "Human/Math/Vector3.h"
+#include "./Human/include/Math/Vector3.h"
 
 #ifdef OPIFEX_ANDROID
 #include <SLES/OpenSLES.h>

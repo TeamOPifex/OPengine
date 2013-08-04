@@ -1,4 +1,4 @@
-#include "../include/OPaudio2.h"
+#include "./Human/include/Audio/OPaudio2.h"
 
 #define OPAUDIO_SWAP(s1, s2){\
 	i16 sTemp = s1;\
