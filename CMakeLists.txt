@@ -71,8 +71,6 @@ endif()
 find_package(OpenGL REQUIRED)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
-find_package(ZLib REQUIRED)
-find_package(LibPNG REQUIRED)
 find_package(OpenAL REQUIRED)
 find_package(OggVorbis REQUIRED)
 

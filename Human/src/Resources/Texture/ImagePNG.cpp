@@ -3,7 +3,6 @@
 #include <string.h>
 #include "./Core/include/Log.h"
 #include "./Data/include/OPfile.h"
- #include <png.h>
  #include <cstdio>
  #include <string>
 #include "./Core/include/DynamicMemory.h"
