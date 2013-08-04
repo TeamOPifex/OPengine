@@ -71,6 +71,10 @@ ui8* OPread(OPstream* stream, OPuint size){
 	return data;
 }
 //-----------------------------------------------------------------------------
+ui8* OPreadAt(OPstream* stream, OPuint pos, OPuint size){
+	return stream->Data + pos;
+}
+//-----------------------------------------------------------------------------
 OPuint OPseek(OPstream* stream, OPuint byte){
 	if(byte < stream->Length){	
 		stream->_pointer = byte;

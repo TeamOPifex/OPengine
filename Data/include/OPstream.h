@@ -51,9 +51,20 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size);
  * OPread - Reads data and advances the pointer.
  *	@param stream Pointer to the stream to read from
  *	@param size Number of bytes to be read
- *	@return Pointer to a set of bytes
+ *	@return Pointer to a set of bytes existing in the stream
+ *          no allocation performed.
  */
 ui8* OPread(OPstream* stream, OPuint size);
+//-----------------------------------------------------------------------------
+/**
+ * OPreadAt - Reads data at a specific location.
+ *	@param stream Pointer to the stream to read from
+ *  @param pos Index from which to start reading
+ *	@param size Number of bytes to be read
+ *	@return Pointer to a set of bytes existing in the stream
+ *          no allocation performed.
+ */
+ui8* OPreadAt(OPstream* stream, OPuint pos, OPuint size);
 //-----------------------------------------------------------------------------
 /**
  * OPseek - Skip to a specific byte location in the stream.
