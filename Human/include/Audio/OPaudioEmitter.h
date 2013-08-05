@@ -49,6 +49,8 @@ typedef struct{
 	SLMuteSoloItf _playerMuteSolo;
 	SLVolumeItf _playerVolume;
 
+	OPint _queued;
+
 	ui8* Buffers[BUFFER_COUNT];// Buffers of processed data
 #else // All other targets...
 	ALuint al_src;
