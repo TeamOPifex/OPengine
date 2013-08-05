@@ -53,6 +53,8 @@ OPaudioSource OPaudOpenWave(const OPchar* filename){
 		OPread(str, sizeof(i16)); // throw away bytes/sample
 		OPmemcpy(&desc.BitsPerSample, OPread(str, sizeof(i16)), sizeof(i16));
 
+		printf("Format: %d\nChannels: %d\nSamples/Sec: %d\n", desc.Format, desc.Channels, desc.SamplesPerSecond);
+
 #ifdef OPIFEX_ANDROID
 
 #else
@@ -226,7 +228,6 @@ OPint OPaudReadOgg (OPaudioSource* src, ui8* dest, ui32 len){
 			&current_section
 		));
 		if(!len) break;
-		printf("Len %u\n", len);
 		decoded += len;
 	}
 

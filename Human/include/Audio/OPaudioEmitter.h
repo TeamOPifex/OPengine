@@ -80,9 +80,7 @@ extern OPaudioEmitter* OPAUD_CURR_EMITTER;
 // |  ___| '__/ _ \ |______| |  ___| '__/ _ \ / __| | |  | | | '__/ _ \/ __| __| \ \ / / _ / __|
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/                                                                            
-#define OPaudSetEmitter(emitter){\
-	OPAUD_CURR_EMITTER = emitter;\
-}\
+#define OPaudSetEmitter(emitter){OPAUD_CURR_EMITTER = emitter;};\
 //-----------------------------------------------------------------------------
 
 

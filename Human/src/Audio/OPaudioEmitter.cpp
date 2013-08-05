@@ -186,7 +186,7 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 	if(queued > 0){
 		ALint state;
 		alGetSourcei(OPAUD_CURR_EMITTER->al_src, AL_SOURCE_STATE, &state);
-		if(state == AL_STOPPED) alSourcePlay(OPAUD_CURR_EMITTER->al_src);
+		if(state == AL_STOPPED || state == AL_INITIAL) alSourcePlay(OPAUD_CURR_EMITTER->al_src);
 
 		// all buffers are in use, wait for one to process
 		if(queued == BUFFER_COUNT && processed == 0){

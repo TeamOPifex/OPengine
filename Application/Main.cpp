@@ -142,20 +142,21 @@ void Init(){
 
         OPLog("Main: Song loaded");
 
-        //Sound = OPaudOpenOgg("Audio/background.ogg");
+        Sound = OPaudOpenOgg("Audio/background.ogg");
         Sound1 = OPaudOpenWave("Audio/testing.wav");
         printf("Reading done!\n");
-        //Emitter = OPaudCreateEmitter(&Sound, 1);
+        Emitter = OPaudCreateEmitter(&Sound, 1);
         Emitter1 = OPaudCreateEmitter(&Sound1, 1);
         printf("Emitter created\n");
 
-        //OPaudSetEmitter(&Emitter);
-        //OPaudVolume(&vol);
+		OPaudSetEmitter(&Emitter);
+        OPaudVolume(&vol);
         printf("Emitter set\n");
         printf("Emitter proc'd\n");
-        //OPaudPlay();
+        OPaudPlay();
 vol = 1.0f;
-        OPaudSetEmitter(&Emitter1);
+        //OPaudSetEmitter(&Emitter1);
+		OPaudSetEmitter(&Emitter1);
         OPaudVolume(&vol);
         OPaudPlay();
         printf("Emitter set\n");
@@ -194,10 +195,9 @@ void Update( OPtimer* timer){
 	}
 
     OPaudSetEmitter(&Emitter1);
+	OPaudUpdate(OPaudProcess);
+    OPaudSetEmitter(&Emitter);
     OPaudUpdate(OPaudProcess);
-
-    //OPaudSetEmitter(&Emitter);
-    //OPaudUpdate(OPaudProcess);
 	//SoundEmitter->Update();
 	GM->Draw();
 	RenderSystem::Present();
