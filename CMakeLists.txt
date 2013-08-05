@@ -77,8 +77,8 @@ find_package(OggVorbis REQUIRED)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/win32)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/win64)
-file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/lin32)
-file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/lin64)
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/linux32)
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/linux64)
 
 add_subdirectory (External)
 
