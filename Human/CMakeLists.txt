@@ -65,8 +65,35 @@ add_source_group(src/Resources/Sound "${PROJECT_SOURCE_DIR}/Human/src/Resources/
 add_source_group(src/Resources/Texture "${PROJECT_SOURCE_DIR}/Human/src/Resources/Texture" HUMAN_SRC)
 add_source_group(src/Utilities "${PROJECT_SOURCE_DIR}/Human/src/Utilities" HUMAN_SRC)
 
-	
 add_library(4_Human STATIC ${HUMAN_SRC})
+	
+if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
+
+	add_custom_command(TARGET 4_Human POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		"${PROJECT_SOURCE_DIR}/External/Ogg/lib/win32/ogg.dll"
+		${PROJECT_BINARY_DIR}/Binaries/win32/)
+
+	add_custom_command(TARGET 4_Human POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		"${PROJECT_SOURCE_DIR}/External/Ogg/lib/win32/libogg.dll"
+		${PROJECT_BINARY_DIR}/Binaries/win32/)
+
+	add_custom_command(TARGET 4_Human POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/vorbisfile.dll"
+		${PROJECT_BINARY_DIR}/Binaries/win32/)
+
+	add_custom_command(TARGET 4_Human POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/libvorbis.dll"
+		${PROJECT_BINARY_DIR}/Binaries/win32/)
+		
+	add_custom_command(TARGET 4_Human POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/libvorbisfile.dll"
+		${PROJECT_BINARY_DIR}/Binaries/win32/)
+		
+	add_custom_command(TARGET 4_Human POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		"${PROJECT_BINARY_DIR}/Human/Debug/Human.lib"
+		${PROJECT_BINARY_DIR}/Binaries/win32/)
+	
+endif()
 	
 target_link_libraries(4_Human
 	${ALL_LIBS}
