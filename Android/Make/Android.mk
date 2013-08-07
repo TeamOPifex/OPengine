@@ -45,9 +45,9 @@ LOCAL_MODULE := libtremor
 
 LOCAL_STATIC_LIBRARIES := libogg
 
-LOCAL_CFLAGS := -I $(PROJECT_PATH)/Human/Utilities/
-LOCAL_CFLAGS += -I $(PROJECT_PATH)/Human/Utilities/vorbis
-MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/Utilities/vorbis/*.c)
+LOCAL_CFLAGS := -I $(PROJECT_PATH)/Human/include/Utilities/
+LOCAL_CFLAGS += -I $(PROJECT_PATH)/Human/include/Utilities/vorbis
+MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/include/Utilities/vorbis/*.c)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 include $(BUILD_STATIC_LIBRARY)
@@ -103,22 +103,22 @@ LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Ogg/include
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Vorbis/include
 
-MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/Audio/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Audio/src/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Input/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Math/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Rendering/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Rendering/GL/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/Buffer/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/Material/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/Material/Shader/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/Material/Shader/Params/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/Material/State/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/Model/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/Sound/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Resources/Texture/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/Utilities/*.cpp)
+MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/src/Audio/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Audio/src/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Input/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Math/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Rendering/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Rendering/GL/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Buffer/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Material/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Material/Shader/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Material/Shader/Params/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Material/State/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Model/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Sound/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Texture/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Utilities/*.cpp)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 LOCAL_STATIC_LIBRARIES := libopifex-data libtremor

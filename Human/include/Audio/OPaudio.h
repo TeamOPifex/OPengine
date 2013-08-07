@@ -25,7 +25,7 @@
 
 #include <ogg/ogg.h>
 #ifdef OPIFEX_ANDROID
-#include "Human/Utilities/vorbis/vorbisfile.h"
+#include "./Human/include/Utilities/vorbis/vorbisfile.h"
 #else
 #include <vorbis/vorbisfile.h>
 #endif
