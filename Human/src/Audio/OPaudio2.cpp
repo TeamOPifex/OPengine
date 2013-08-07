@@ -95,22 +95,20 @@ OPint OPaudInit(){
 	}
 
 	OPLog("OPaudio: engineEngine VVV");
-	OPLog_i32(SLES_engineEngine);
+	//OPLog_i32(SLES_engineEngine);
 
 	// create output mix, with environmental reverb specified as a non-required interface    
 	const SLInterfaceID ids[1] = {SL_IID_ENVIRONMENTALREVERB};
     const SLboolean req[1] = {SL_BOOLEAN_FALSE};
 
-    if(SL_RESULT_SUCCESS != (*SLES_engineObject)->CreateOutputMix(
-    	SLES_engineEngine, &SLES_outputMixObject, 1, ids, req)){
+    if(SL_RESULT_SUCCESS != (*SLES_engineEngine)->CreateOutputMix(SLES_engineEngine, &SLES_outputMixObject, 1, ids, req)){
 
 		OPLog("Jukebox::Error 4");
 	}
 		
     // realize the output mix
-    result = 
-    if(SL_RESULT_SUCCESS != (*SLES_outputMixObject)->Realize(
-    	SLES_outputMixObject, SL_BOOLEAN_FALSE)) {
+    result = (*SLES_outputMixObject)->Realize(SLES_outputMixObject, SL_BOOLEAN_FALSE);
+    if(SL_RESULT_SUCCESS != result) {
 
 		OPLog("Jukebox::Error 5");
 		return false;
@@ -139,29 +137,44 @@ OPint OPaudInit(){
 }
 //-----------------------------------------------------------------------------
 Vector3 OPaudEarPosition(Vector3* pos){
+#ifdef OPIFEX_ANDROID	
+	Vector3 out;
+	return out;
+#else
 	if(pos) alListenerfv(AL_POSITION, &(pos->_x));
 
 	// return the stored value
 	Vector3 out;
 	alGetListenerfv(AL_POSITION, &(pos->_x));
 	return out;
+#endif
 }
 //-----------------------------------------------------------------------------
 Vector3 OPaudEarVelocity(Vector3* pos){
+#ifdef OPIFEX_ANDROID	
+	Vector3 out;
+	return out;
+#else
 	if(pos) alListenerfv(AL_VELOCITY, &(pos->_x));
 
 	// return the stored value
 	Vector3 out;
 	alGetListenerfv(AL_VELOCITY, &(pos->_x));
 	return out;
+#endif
 }
 //-----------------------------------------------------------------------------
 Vector3 OPaudEarForward(Vector3* pos){
+#ifdef OPIFEX_ANDROID	
+	Vector3 out;
+	return out;
+#else
 	if(pos) alListenerfv(AL_ORIENTATION, &(pos->_x));
 
 	// return the stored value
 	Vector3 out;
 	alGetListenerfv(AL_ORIENTATION, &(pos->_x));
 	return out;
+#endif
 }
 //-----------------------------------------------------------------------------

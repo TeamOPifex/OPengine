@@ -230,6 +230,10 @@ OPint OPaudProc(void(*Proc)(OPaudioEmitter* emit)){
 //                                                       | |        
 //                                                       |_|        
 Vector3 OPaudPosition(Vector3* position){
+#ifdef OPIFEX_ANDROID	
+	Vector3 out;
+	return out;
+#else
 	if(position){
 		alSourcefv(OPAUD_CURR_EMITTER->al_src, AL_POSITION, position->ptr());
 		return *position;
@@ -238,9 +242,14 @@ Vector3 OPaudPosition(Vector3* position){
 	Vector3 curr;
 	alGetSourcefv(OPAUD_CURR_EMITTER->al_src, AL_POSITION, &(curr._x));
 	return curr;
+#endif
 }
 
 Vector3 OPaudVelocity(Vector3* velocity){
+#ifdef OPIFEX_ANDROID	
+	Vector3 out;
+	return out;
+#else
 	if(velocity){
 		alSourcefv(OPAUD_CURR_EMITTER->al_src, AL_VELOCITY, velocity->ptr());
 		return *velocity;
@@ -249,9 +258,13 @@ Vector3 OPaudVelocity(Vector3* velocity){
 	Vector3 curr;
 	alGetSourcefv(OPAUD_CURR_EMITTER->al_src, AL_VELOCITY, &(curr._x));
 	return curr;
+#endif
 }
 
 OPfloat OPaudVolume  (OPfloat* gain){
+#ifdef OPIFEX_ANDROID	
+	return 0;
+#else
 	if(gain){
 		alSourcef(OPAUD_CURR_EMITTER->al_src, AL_GAIN, *gain);
 		return *gain;
@@ -260,9 +273,13 @@ OPfloat OPaudVolume  (OPfloat* gain){
 	OPfloat curr;
 	alGetSourcefv(OPAUD_CURR_EMITTER->al_src, AL_GAIN, &curr);
 	return curr;
+#endif
 }
 
 OPfloat OPaudPitch   (OPfloat* pitch){
+#ifdef OPIFEX_ANDROID	
+	return 0;
+#else
 	if(pitch){
 		alSourcef(OPAUD_CURR_EMITTER->al_src, AL_PITCH, *pitch);
 		return *pitch;
@@ -271,6 +288,7 @@ OPfloat OPaudPitch   (OPfloat* pitch){
 	OPfloat curr;
 	alGetSourcefv(OPAUD_CURR_EMITTER->al_src, AL_PITCH, &curr);
 	return curr;
+#endif
 }
 //-----------------------------------------------------------------------------
 void OPaudProcess(OPaudioEmitter* emit, OPint length){
