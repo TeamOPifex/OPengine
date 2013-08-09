@@ -4,7 +4,7 @@ OPaudioEmitter* OPAUD_CURR_EMITTER;
 
 #ifdef OPIFEX_ANDROID
 	void SL_DequeueCallback(SLAndroidSimpleBufferQueueItf bq, void *context){
-		OPSoundEmitter* emitter = (OPSoundEmitter*)context;
+		OPaudioEmitter* emitter = (OPaudioEmitter*)context;
 		emitter->_queued--;
 	}
 #endif
@@ -31,8 +31,8 @@ OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, /*void* processor,*/ OPint
     SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, BUFFER_COUNT};
     SLDataFormat_PCM format_pcm = {
     	SL_DATAFORMAT_PCM,
-    	src->Source->Channels,
-    	src->Source->SamplesPerSecond,
+    	src->Description.Channels,
+    	src->Description.SamplesPerSecond,
         SL_PCMSAMPLEFORMAT_FIXED_16,
         SL_PCMSAMPLEFORMAT_FIXED_16,
         SL_SPEAKER_FRONT_CENTER,
@@ -65,14 +65,14 @@ OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, /*void* processor,*/ OPint
     );
 
     // get the play interface
-    (*src->_playerObject)->GetInterface(src->_playerObject, SL_IID_PLAY, &src->_playerPlay);
+    (*emitter._playerObject)->GetInterface(emitter._playerObject, SL_IID_PLAY, &emitter._playerPlay);
 
     // get the buffer queue
-	(*src->_playerObject)->GetInterface(src->_playerObject, SL_IID_BUFFERQUEUE,
-	            &src->_bqPlayerBufferQueue);
+	(*emitter._playerObject)->GetInterface(emitter._playerObject, SL_IID_BUFFERQUEUE,
+	            &emitter._bqPlayerBufferQueue);
 
-	(*src->_bqPlayerBufferQueue)->RegisterCallback(
-		src->_bqPlayerBufferQueue,
+	(*emitter._bqPlayerBufferQueue)->RegisterCallback(
+		emitter._bqPlayerBufferQueue,
 		SL_DequeueCallback,
 		OPAUD_CURR_EMITTER
 	);
@@ -124,7 +124,7 @@ void OPaudEnqueueBuffer(ui8* buffer, OPint length){
 			OPAUD_CURR_EMITTER->_playerPlay,
 			SL_PLAYSTATE_PLAYING
 		);
-		_state = Playing;
+		OPAUD_CURR_EMITTER->State = Playing;
 		OPLog("OPSoundEmitter: \"playing\"");
 	}
 
@@ -160,8 +160,6 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 	OPint shift = bps >= 1024 ? 5 : 0;
 
 #ifdef OPIFEX_ANDROID
-	OPint queued = OPAUD_CURR_EMITTER->_queued;
-
 	if(queued > 0){
         SLuint32 slState;
 		SLPlayItf pp = OPAUD_CURR_EMITTER->_playerPlay;

@@ -37,20 +37,6 @@ LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 include $(BUILD_STATIC_LIBRARY)
 
-##############
-# LIBTREMOR
-##############
-include $(CLEAR_VARS)
-LOCAL_MODULE := libtremor
-
-LOCAL_STATIC_LIBRARIES := libogg
-
-LOCAL_CFLAGS := -I $(PROJECT_PATH)/Human/include/Utilities/
-LOCAL_CFLAGS += -I $(PROJECT_PATH)/Human/include/Utilities/vorbis
-MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/include/Utilities/vorbis/*.c)
-LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
-
-include $(BUILD_STATIC_LIBRARY)
 
 ##############
 # 1_CORE
@@ -121,7 +107,7 @@ MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Texture/*.c
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Utilities/*.cpp)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
-LOCAL_STATIC_LIBRARIES := libopifex-data libtremor
+LOCAL_STATIC_LIBRARIES := libopifex-data
 include $(BUILD_STATIC_LIBRARY)
 
 
