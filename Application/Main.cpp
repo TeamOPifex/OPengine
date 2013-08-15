@@ -112,8 +112,7 @@ void Init(){
 
 	printf("Reading: ");
 	OPllNode* node = ll->First;
-	while (node)
-	{
+	while (node){
 		printf("%d ", *(OPint*)(node->Data));
 		node = node->Next;
 	}
