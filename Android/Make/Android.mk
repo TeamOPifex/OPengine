@@ -87,7 +87,8 @@ LOCAL_CFLAGS    := -Werror
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Ogg/include
-LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Vorbis/include
+LOCAL_C_INCLUDES +=$(PROJECT_PATH)/Human/include/Utilities/
+LOCAL_C_INCLUDES +=$(PROJECT_PATH)/Human/include/Utilities/Vorbis/
 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/src/Audio/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Audio/src/*.cpp)
@@ -105,6 +106,7 @@ MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Model/*.cpp
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Sound/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Texture/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Utilities/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/include/Utilities/Vorbis/*.c)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 LOCAL_STATIC_LIBRARIES := libopifex-data
