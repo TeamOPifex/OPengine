@@ -35,6 +35,7 @@ f32 OPread_f32(FILE* file) {
 FileInformation OPreadFileInformation(const char* path){
 	FileInformation file;
 #ifdef OPIFEX_ANDROID
+	OPLog("OPreadFileInformation(): manager = %d\n", _mgr);
 	AAsset* asset = AAssetManager_open(_mgr, path, AASSET_MODE_UNKNOWN);
 	if(asset == NULL)
 		return file;
@@ -42,9 +43,10 @@ FileInformation OPreadFileInformation(const char* path){
 	off_t _start, _length;
     int fd = AAsset_openFileDescriptor(asset, &_start, &_length);
 
+    OPLog("OPreadFileInformation(): fd = %d\n", fd);
     FILE* myFile = fdopen(dup(fd), "rb"); 
 	if(!myFile){
-		OPLog("File not loaded.");
+		OPLog("File not loaded: %s\n", path);
 	}
 	fseek(myFile, _start, SEEK_SET);
 	file.file = myFile;
@@ -72,6 +74,7 @@ FileInformation OPreadFileInformation(const char* path){
 void OPfileInit(void* manager){
 #ifdef OPIFEX_ANDROID
 	_mgr = (AAssetManager*)manager;
+	OPLog("OPfileInit(): manager = %d\n", _mgr);
 #endif
 }
 

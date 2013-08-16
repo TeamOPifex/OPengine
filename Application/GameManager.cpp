@@ -10,11 +10,11 @@
 GameManager::GameManager(int width, int height) 
 {
 	RenderSystem::Initialize(width, height);
-	
+
+	_colorTexture = ImagePNG::TextureFromFile("Textures/test.png");	
 	FileInformation t_file = OPreadFileInformation("Models/BiPlane.opm");
 	MeshPtr mesh = LoadOPM(t_file.file);
-	
-	_colorTexture = ImagePNG::TextureFromFile("Textures/test.png");
+
 	_normalTexture = ImageDDS::TextureFromFile("Textures/modelNormal.dds");
 	_specularTexture = ImageDDS::TextureFromFile("Textures/modelSpecular.dds");
 	
