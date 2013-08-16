@@ -31,12 +31,27 @@ LOCAL_MODULE := libogg
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 
-LOCAL_CFLAGS := -I $(PROJECT_PATH)/Human/Utilities/
-MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/Utilities/ogg/*.c)
+LOCAL_CFLAGS := -I $(PROJECT_PATH)/Human/include/Utilities/
+MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/src/Utilities/*.c)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Utilities/ogg/*.c)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 include $(BUILD_STATIC_LIBRARY)
 
+##############
+# LIBVORBIS
+##############
+include $(CLEAR_VARS)
+LOCAL_MODULE := libvorbis
+
+LOCAL_STATIC_LIBRARIES := libogg
+
+LOCAL_CFLAGS := -I $(PROJECT_PATH)/Human/include/Utilities/
+LOCAL_CFLAGS += -I $(PROJECT_PATH)/Human/include/Utilities/vorbis/
+MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/include/Utilities/vorbis/*.c)
+LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
+
+include $(BUILD_STATIC_LIBRARY)
 
 ##############
 # 1_CORE
@@ -107,14 +122,10 @@ MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Model/*.cpp
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Sound/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Texture/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Utilities/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/include/Utilities/ogg/*.c)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/include/Utilities/vorbis/*.c)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/include/Utilities/vorbis/modes/*.c)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/include/Utilities/vorbis/books/*.c)
 
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
-LOCAL_STATIC_LIBRARIES := libopifex-data
+LOCAL_STATIC_LIBRARIES := libopifex-data libvorbis
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -130,10 +141,7 @@ LOCAL_LDLIBS    := -llog -lGLESv2 -landroid -lOpenSLES
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := false
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
-LOCAL_C_INCLUDES +=$(PROJECT_PATH)/Human/include/Utilities/
-LOCAL_C_INCLUDES +=$(PROJECT_PATH)/Human/include/Utilities/vorbis/
-LOCAL_C_INCLUDES +=$(PROJECT_PATH)/Human/include/Utilities/vorbis/modes
-LOCAL_C_INCLUDES +=$(PROJECT_PATH)/Human/include/Utilities/vorbis/books
+
 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Application/*.cpp)
 
