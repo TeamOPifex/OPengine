@@ -141,7 +141,8 @@ LOCAL_LDLIBS    := -llog -lGLESv2 -landroid -lOpenSLES
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := false
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
-
+LOCAL_CFLAGS := -I $(PROJECT_PATH)/Human/include/Utilities/
+LOCAL_CFLAGS += -I $(PROJECT_PATH)/Human/include/Utilities/vorbis/
 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Application/*.cpp)
 
