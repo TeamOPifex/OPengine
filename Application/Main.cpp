@@ -110,26 +110,26 @@ void Init(){
 	OPlistRemoveAt(list, 9);
 	OPlistInsert(list, (ui8*)&j, 9);
 
-	printf("Reading: ");
+	OPLog("Reading: ");
 	OPllNode* node = ll->First;
 	while (node){
-		printf("%d ", *(OPint*)(node->Data));
+		OPLog("%d ", *(OPint*)(node->Data));
 		node = node->Next;
 	}
-	printf("\nList: ");
+	OPLog("\nList: ");
 
 	for(OPint i = OPlistSize(list); i--;){
 		OPint j = *((OPint*)OPlistGet(list, i));
-		printf("%d ", j);
+		OPLog("%d ", j);
 	}
-		printf("\nHeap: ");
+		OPLog("\nHeap: ");
 	for(OPint i = 20; i--;){
-		printf("%d ", heap->_indices[i]);
+		OPLog("%d ", heap->_indices[i]);
 	}
 
-	printf("\nPopping sorted: ");
+	OPLog("\nPopping sorted: ");
 	while(OPminHeapSize(heap) > 0){
-		printf("%d ", OPminHeapPop(heap));
+		OPLog("%d ", OPminHeapPop(heap));
 	}
 
 	GM = new GameManager(width, height);
@@ -143,15 +143,15 @@ void Init(){
 
         Sound = OPaudOpenOgg("Audio/background.ogg");
         Sound1 = OPaudOpenWave("Audio/testing.wav");
-        printf("Reading done!\n");
+        OPLog("Reading done!\n");
         Emitter = OPaudCreateEmitter(&Sound, 1);
         Emitter1 = OPaudCreateEmitter(&Sound1, 1);
-        printf("Emitter created\n");
+        OPLog("Emitter created\n");
 
 		OPaudSetEmitter(&Emitter);
         OPaudVolume(&vol);
-        printf("Emitter set\n");
-        printf("Emitter proc'd\n");
+        OPLog("Emitter set\n");
+        OPLog("Emitter proc'd\n");
         OPaudPlay();
 vol = 1.0f;
         //OPaudSetEmitter(&Emitter1);

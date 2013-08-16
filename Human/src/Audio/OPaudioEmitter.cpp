@@ -58,19 +58,22 @@ OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, /*void* processor,*/ OPint
 
     (*SLES_engineEngine)->CreateAudioPlayer(
     	SLES_engineEngine, 
-    	&SLES_outputMixObject,
+    	&emitter._playerObject,
     	&audioSrc,
     	&audioSnk,
         3, ids, req
     );
+    (*emitter._playerObject)->Realize(emitter._playerObject, SL_BOOLEAN_FALSE);
+
+    OPLog("OPaudioEmitter: 2");
 
     // get the play interface
     (*emitter._playerObject)->GetInterface(emitter._playerObject, SL_IID_PLAY, &emitter._playerPlay);
-
+OPLog("OPaudioEmitter: 3");
     // get the buffer queue
 	(*emitter._playerObject)->GetInterface(emitter._playerObject, SL_IID_BUFFERQUEUE,
 	            &emitter._bqPlayerBufferQueue);
-
+OPLog("OPaudioEmitter: 3.5");
 	(*emitter._bqPlayerBufferQueue)->RegisterCallback(
 		emitter._bqPlayerBufferQueue,
 		SL_DequeueCallback,
