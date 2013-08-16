@@ -46,6 +46,15 @@ Shader::Shader(ShaderType shaderType, const char* source){
 
 ShaderPtr Shader::FromFile(ShaderType shaderType, const char* file){
 
+#ifdef OPIFEX_ANDROID
+		FileInformation fileInfo = OPreadFileInformation(file);
+	char* shaderCode = (char*)OPalloc(sizeof(char) * fileInfo.length);
+	fgets(shaderCode, fileInfo.length, fileInfo.file);
+	shaderCode[fileInfo.length - 1] = '\0';
+	ShaderPtr glshader = new Shader(shaderType, shaderCode);
+	OPfree(shaderCode);
+	return glshader;
+#else
 	FileInformation fileInfo = OPreadFileInformation(file);
 	char* shaderCode = (char*)OPalloc(sizeof(char) * fileInfo.length);
 	
@@ -58,4 +67,5 @@ ShaderPtr Shader::FromFile(ShaderType shaderType, const char* file){
 	ShaderPtr glshader = new Shader(shaderType, shaderCode);
 	OPfree(shaderCode);
 	return glshader;
+#endif
 }
