@@ -144,8 +144,8 @@ void Init(){
         Sound = OPaudOpenOgg("Audio/background.ogg");
         Sound1 = OPaudOpenWave("Audio/testing.wav");
         OPLog("Reading done!\n");
-        Emitter = OPaudCreateEmitter(&Sound, 1);
         Emitter1 = OPaudCreateEmitter(&Sound1, 1);
+        Emitter = OPaudCreateEmitter(&Sound, 1);
         OPLog("Emitter created\n");
 
 		OPaudSetEmitter(&Emitter);
@@ -174,8 +174,11 @@ vol = 1.0f;
 // Step
 #ifdef OPIFEX_ANDROID
 JNIEXPORT int JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj){	
+	OPLog("Step 1");
 	OPtimerTick(timer);
+	OPLog("Step 2");
 	GamePadSystem::Update();
+	OPLog("Step 3");
 #else
 void Update( OPtimer* timer){
 #endif

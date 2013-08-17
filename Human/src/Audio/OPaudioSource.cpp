@@ -22,7 +22,7 @@ long ov_tell_func(void *datasource){ return ftell((FILE*)datasource); }
 OPaudioSource OPaudOpenWave(const OPchar* filename){
 	OPstream* str = OPreadFile(filename);
 
-	if(!str) printf("Error: couldn't open '%s'\n", filename);
+	if(!str) OPLog("Error: couldn't open '%s'\n", filename);
 	else{
 		ui8* type;
 		OPaudioDescription desc = { 0 };
@@ -53,10 +53,10 @@ OPaudioSource OPaudOpenWave(const OPchar* filename){
 		OPread(str, sizeof(i16)); // throw away bytes/sample
 		OPmemcpy(&desc.BitsPerSample, OPread(str, sizeof(i16)), sizeof(i16));
 
-		printf("Format: %d\nChannels: %d\nSamples/Sec: %d\n", desc.Format, desc.Channels, desc.SamplesPerSecond);
+		OPLog("Format: %d\nChannels: %d\nSamples/Sec: %d\n", desc.Format, desc.Channels, desc.SamplesPerSecond);
 
 #ifdef OPIFEX_ANDROID
-
+		desc.SamplesPerSecond *= 1000;
 #else
 		switch (desc.BitsPerSample)
 		{
@@ -111,7 +111,7 @@ OPaudioSource OPaudOpenOgg (const OPchar* filename){
 	sCallbacks.close_func = ov_close_func;
 	sCallbacks.tell_func = ov_tell_func;
 
-	FILE* song = fopen(filename, "rb");
+	FILE* song = OPreadFileInformation(filename).file;
 
 	if (ov_open_callbacks(song, sOggVorbisFile, NULL, 0, sCallbacks) == 0){
 			psVorbisInfo = fn_ov_info(sOggVorbisFile, -1);
@@ -131,7 +131,7 @@ OPaudioSource OPaudOpenOgg (const OPchar* filename){
 					NULL
 				};
 #ifdef OPIFEX_ANDROID
-
+				desc.SamplesPerSecond *= 1000;
 #else
 				switch(psVorbisInfo->channels){
 					case 1:
