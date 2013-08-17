@@ -154,7 +154,7 @@ void Init(){
         OPLog("Emitter proc'd\n");
         OPaudPlay();
 vol = 1.0f;
-        //OPaudSetEmitter(&Emitter1);
+        OPaudSetEmitter(&Emitter1);
 		OPaudSetEmitter(&Emitter1);
         OPaudVolume(&vol);
         OPaudPlay();
@@ -201,8 +201,8 @@ void Update( OPtimer* timer){
     OPaudSetEmitter(&Emitter1);
 	OPaudUpdate(OPaudProcess);
 	OPLog("Step 7");
-    //OPaudSetEmitter(&Emitter);
-    //OPaudUpdate(OPaudProcess);
+    OPaudSetEmitter(&Emitter);
+    OPaudUpdate(OPaudProcess);
 	//SoundEmitter->Update();
 	GM->Draw();
 	RenderSystem::Present();
