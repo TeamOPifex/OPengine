@@ -56,7 +56,7 @@ OPaudioSource OPaudOpenWave(const OPchar* filename){
 		OPLog("Format: %d\nChannels: %d\nSamples/Sec: %d\n", desc.Format, desc.Channels, desc.SamplesPerSecond);
 
 #ifdef OPIFEX_ANDROID
-		desc.SamplesPerSecond *= 1000;
+
 #else
 		switch (desc.BitsPerSample)
 		{
@@ -131,7 +131,20 @@ OPaudioSource OPaudOpenOgg (const OPchar* filename){
 					NULL
 				};
 #ifdef OPIFEX_ANDROID
-				desc.SamplesPerSecond *= 1000;
+				switch(psVorbisInfo->channels){
+					case 1:
+						desc.BitsPerSample = 16;
+						break;
+					case 2:
+						desc.BitsPerSample = 32;
+						break;
+					case 4:
+						desc.BitsPerSample = 64;
+						break;
+					case 6:
+						desc.BitsPerSample = 96;
+						break;
+				}
 #else
 				switch(psVorbisInfo->channels){
 					case 1:
@@ -199,14 +212,17 @@ OPint OPaudCloseOgg (OPaudioSource* src){
 //                                  __/ |                                              
 //                                 |___/                                               
 OPint OPaudReadWave(OPaudioSource* src, ui8* dest, ui32 len){
+	OPLog("OPaudReadWave: 1 src=%d", src);
 	ui64 pos = src->Progress, srcLen = src->Description.Length;
 
 	// clip length to read if we are at / near the end
 	len = pos + len >= srcLen ? srcLen - pos : len;
 
 	OPstream* str = (OPstream*)src->DataSource;
-	OPmemcpy(dest, OPreadAt(str, pos + WAVE_HEADER, len), len);
+	OPLog("OPaudReadWave: 2 len=%d", len);
 
+	OPmemcpy(dest, OPreadAt(str, pos + WAVE_HEADER, len), len);
+	OPLog("OPaudReadWave: 3");
 	src->Progress += len;
 
 	return len;

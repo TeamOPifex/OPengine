@@ -33,7 +33,7 @@ OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, /*void* processor,*/ OPint
     SLDataFormat_PCM format_pcm = {
     	SL_DATAFORMAT_PCM,
     	src->Description.Channels,
-    	src->Description.SamplesPerSecond,
+    	src->Description.SamplesPerSecond * 1000,
         SL_PCMSAMPLEFORMAT_FIXED_16,
         SL_PCMSAMPLEFORMAT_FIXED_16,
         src->Description.Channels == 1 ? SL_SPEAKER_FRONT_CENTER : SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT,
@@ -163,14 +163,19 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 	OPint bps = (des.BitsPerSample >> 3) * des.SamplesPerSecond; // bytes/second
 	OPint shift = bps >= 1024 ? 5 : 0;
 
+	OPLog("OPaudUpdate: 1\n");
+
 #ifdef OPIFEX_ANDROID
 	if(queued > 0){
         SLuint32 slState;
 		SLPlayItf pp = OPAUD_CURR_EMITTER->_playerPlay;
+		OPLog("OPaudUpdate: 2\n");
         (*pp)->GetPlayState(pp, &slState);
-
+        OPLog("OPaudUpdate: 3\n");
         if(slState == SL_PLAYSTATE_STOPPED){
+	        OPLog("OPaudUpdate: 4\n");
 			(*pp)->SetPlayState(pp, SL_PLAYSTATE_PLAYING);
+			OPLog("OPaudUpdate: 5\n");
         }
 
 		// all buffers are in use, wait for one to process
@@ -178,6 +183,7 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
         	return 0;
         }
 	}
+	OPLog("OPaudUpdate: 6\n");
 #else
 	ALint processed = 0;
 	ALuint unqueued[BUFFER_COUNT];
@@ -202,17 +208,24 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 
 	// read sample rate >> bytes/sec pcm bytes
 	if(len = src->Read(src, OPAUD_CURR_EMITTER->Temp, bps >> shift)){//bps >> shift)){ //)
+		OPLog("OPaudUpdate: 7 len=%d\n", len);
 		Proc(OPAUD_CURR_EMITTER, len);
+
 		OPaudEnqueueBuffer(OPAUD_CURR_EMITTER->Temp, len);
+		OPLog("OPaudUpdate: 8\n");
 		return len;
 	}
 	else if(OPAUD_CURR_EMITTER->Looping){
 		// reset the sound!
+		OPLog("OPaudUpdate: 9\n");
 		src->Seek(src, 0);
+		OPLog("OPaudUpdate: 11\n");
 		return 0;
 	}
 	else if(queued == 0){
+		OPLog("OPaudUpdate: 10\n");
 		OPaudStop();
+		OPLog("OPaudUpdate: 12\n");
 	}
 
 	return -1;

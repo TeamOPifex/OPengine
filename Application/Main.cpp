@@ -184,7 +184,9 @@ void Update( OPtimer* timer){
 #endif
 
 	bool result = GM->Update( timer );
+	OPLog("Step 4");
 	GPS->Update();
+	OPLog("Step 5");
 	GamePadState* gps = GPS->Controller(GamePadIndex_One);
 	if(gps->IsConnected()) {
 		OPfloat r = gps->IsDown(GamePad_Button_A) ? 1.0f : 0.0f;
@@ -195,11 +197,12 @@ void Update( OPtimer* timer){
 	else {
 		RenderSystem::ClearColor(0,0,0);
 	}
-
+	OPLog("Step 6");
     OPaudSetEmitter(&Emitter1);
 	OPaudUpdate(OPaudProcess);
-    OPaudSetEmitter(&Emitter);
-    OPaudUpdate(OPaudProcess);
+	OPLog("Step 7");
+    //OPaudSetEmitter(&Emitter);
+    //OPaudUpdate(OPaudProcess);
 	//SoundEmitter->Update();
 	GM->Draw();
 	RenderSystem::Present();
