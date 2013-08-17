@@ -75,12 +75,9 @@ OPLog("OPaudioEmitter: 3");
 	(*emitter._playerObject)->GetInterface(emitter._playerObject, SL_IID_BUFFERQUEUE,
 	            &emitter._bqPlayerBufferQueue);
 OPLog("OPaudioEmitter: 3.5");
-	(*emitter._bqPlayerBufferQueue)->RegisterCallback(
-		emitter._bqPlayerBufferQueue,
-		SL_DequeueCallback,
-		OPAUD_CURR_EMITTER
-	);
+	emitter._queued = -1;
 
+	for(OPint i = BUFFER_COUNT; i--;) emitter.Buffers[i] = (ui8*)OPalloc(BUFFER_SIZE);
     OPLog("OPsoundEmitter: 4");
 #else
 	alGenBuffers(BUFFER_COUNT, emitter.Buffers);
@@ -96,9 +93,11 @@ void OPaudEnqueueBuffer(ui8* buffer, OPint length){
 #ifdef OPIFEX_ANDROID
 	(*OPAUD_CURR_EMITTER->_bqPlayerBufferQueue)->Enqueue(
 		OPAUD_CURR_EMITTER->_bqPlayerBufferQueue,
-		OPAUD_CURR_EMITTER->Buffers[active],
+		OPAUD_CURR_EMITTER->Buffers[active++],
 		length
 	);
+
+	++OPAUD_CURR_EMITTER->_queued;
 #else
 	alBufferData(
 		OPAUD_CURR_EMITTER->Buffers[active],
@@ -161,11 +160,24 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 	OPaudioSource* src = OPAUD_CURR_EMITTER->Source;
 	OPaudioDescription des = src->Description;
 	OPint bps = (des.BitsPerSample >> 3) * des.SamplesPerSecond; // bytes/second
+
+	OPLog("bits/samp: %d samp/sec: %d bytes/sec: %d", des.BitsPerSample, des.SamplesPerSecond, bps);
+
 	OPint shift = bps >= 1024 ? 5 : 0;
 
 	OPLog("OPaudUpdate: 1\n");
 
 #ifdef OPIFEX_ANDROID
+	queued = OPAUD_CURR_EMITTER->_queued;
+	if(queued < 0){
+		(*OPAUD_CURR_EMITTER->_bqPlayerBufferQueue)->RegisterCallback(
+			OPAUD_CURR_EMITTER->_bqPlayerBufferQueue,
+			SL_DequeueCallback,
+			OPAUD_CURR_EMITTER
+		);
+		queued = 0;
+	}
+
 	if(queued > 0){
         SLuint32 slState;
 		SLPlayItf pp = OPAUD_CURR_EMITTER->_playerPlay;
@@ -206,12 +218,18 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 	alSourceUnqueueBuffers(OPAUD_CURR_EMITTER->al_src, processed, unqueued);
 #endif
 
+#ifdef OPIFEX_ANDROID
+	ui8* buff = OPAUD_CURR_EMITTER->Buffers[OPAUD_CURR_EMITTER->CurrBuffer];
+#else
+	ui8* buff = OPAUD_CURR_EMITTER->Temp;
+#endif
+
 	// read sample rate >> bytes/sec pcm bytes
-	if(len = src->Read(src, OPAUD_CURR_EMITTER->Temp, bps >> shift)){//bps >> shift)){ //)
+	if(len = src->Read(src, buff, bps >> shift)){//bps >> shift)){ //)
 		OPLog("OPaudUpdate: 7 len=%d\n", len);
 		Proc(OPAUD_CURR_EMITTER, len);
 
-		OPaudEnqueueBuffer(OPAUD_CURR_EMITTER->Temp, len);
+		OPaudEnqueueBuffer(buff, len);
 		OPLog("OPaudUpdate: 8\n");
 		return len;
 	}

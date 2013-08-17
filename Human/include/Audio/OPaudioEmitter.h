@@ -9,6 +9,7 @@ extern "C" {
 #endif
 
 #define BUFFER_COUNT 10
+#define BUFFER_SIZE 4096
 //-----------------------------------------------------------------------------
 // ______                           
 // |  ____|                          
@@ -37,7 +38,7 @@ typedef struct{
 	OPint				Looping;              // indicates weather the sounds restarts when finished or not
 	OPaudioEmitterState State;                // current play state of the sound
 	OPaudioSource*      Source;               // data source for the sound
-	ui8                 Temp[4096];           // 4096 byte temp buffer for processing
+	ui8                 Temp[BUFFER_SIZE];    // BUFFER_SIZE byte temp buffer for processing
 	void*               Processor;            // Pointer to data for audio processing
 
 #ifdef OPIFEX_ANDROID 
