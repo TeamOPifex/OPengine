@@ -1,4 +1,4 @@
-#define OPIFEX_ANDROID
+#define OPIFEX_LINUX32
 
 #ifdef OPIFEX_ANDROID
 #define OPIFEX_OPENGL_ES

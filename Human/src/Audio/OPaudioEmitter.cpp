@@ -6,8 +6,6 @@ OPaudioEmitter* OPAUD_CURR_EMITTER;
 	void SL_DequeueCallback(SLAndroidSimpleBufferQueueItf bq, void *context){
 		OPaudioEmitter* emitter = (OPaudioEmitter*)context;
 		emitter->_queued--;
-
-		//OPLog("SL_DequeueCallback: _queued=%d", emitter->_queued);
 	}
 #endif
 
@@ -28,8 +26,8 @@ OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, /*void* processor,*/ OPint
 
 
 #ifdef OPIFEX_ANDROID
-	//OPLog("OPsoundEmitter: 0");
-	//OPLog("OPaudioEmitter: Chann=%d, Samp/Sec=%d\n", src->Description.Channels, src->Description.SamplesPerSecond);
+	OPLog("OPsoundEmitter: 0");
+	OPLog("OPaudioEmitter: Chann=%d, Samp/Sec=%d\n", src->Description.Channels, src->Description.SamplesPerSecond);
     // configure audio source
     SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, BUFFER_COUNT};
     SLDataFormat_PCM format_pcm = {
@@ -44,7 +42,7 @@ OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, /*void* processor,*/ OPint
 
     SLDataSource audioSrc = {&loc_bufq, &format_pcm};
 
-    //OPLog("OPSoundEmitter: 0.5");
+    OPLog("OPSoundEmitter: 0.5");
 	OPLog_i32((OPint)SLES_outputMixObject);
 
     // configure audio sink
@@ -55,7 +53,7 @@ OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, /*void* processor,*/ OPint
             /*SL_IID_MUTESOLO,*/ SL_IID_VOLUME};
     const SLboolean req[3] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE,
             /*SL_BOOLEAN_TRUE,*/ SL_BOOLEAN_TRUE};
-    //OPLog("OPsoundEmitter: 1");
+    OPLog("OPsoundEmitter: 1");
 
     OPLog_ui32((OPint)SLES_engineEngine);
 
@@ -68,21 +66,19 @@ OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, /*void* processor,*/ OPint
     );
     (*emitter._playerObject)->Realize(emitter._playerObject, SL_BOOLEAN_FALSE);
 
-    //OPLog("OPaudioEmitter: 2");
+    OPLog("OPaudioEmitter: 2");
 
     // get the play interface
     (*emitter._playerObject)->GetInterface(emitter._playerObject, SL_IID_PLAY, &emitter._playerPlay);
-
-    (*emitter._playerObject)->GetInterface(emitter._playerObject, SL_IID_VOLUME, &emitter._playerVolume);
-//OPLog("OPaudioEmitter: 3");
+OPLog("OPaudioEmitter: 3");
     // get the buffer queue
 	(*emitter._playerObject)->GetInterface(emitter._playerObject, SL_IID_BUFFERQUEUE,
 	            &emitter._bqPlayerBufferQueue);
-//OPLog("OPaudioEmitter: 3.5");
+OPLog("OPaudioEmitter: 3.5");
 	emitter._queued = -1;
 
 	for(OPint i = BUFFER_COUNT; i--;) emitter.Buffers[i] = (ui8*)OPalloc(BUFFER_SIZE);
-    //OPLog("OPsoundEmitter: 4");
+    OPLog("OPsoundEmitter: 4");
 #else
 	alGenBuffers(BUFFER_COUNT, emitter.Buffers);
 	alGenSources(1, &emitter.al_src);
@@ -125,22 +121,32 @@ void OPaudEnqueueBuffer(ui8* buffer, OPint length){
 
 #ifdef OPIFEX_ANDROID
 	void OPaudPlay(){
-		//OPLog("OPSoundEmitter: Play start...");
-		//OPLog("OPSoundEmitter: Invoking play...");
+		OPLog("OPSoundEmitter: Play start...");
+		OPLog("OPSoundEmitter: Invoking play...");
 		(*OPAUD_CURR_EMITTER->_playerPlay)->SetPlayState(
 			OPAUD_CURR_EMITTER->_playerPlay,
 			SL_PLAYSTATE_PLAYING
 		);
 		OPAUD_CURR_EMITTER->State = Playing;
-		//OPLog("OPSoundEmitter: \"playing\"");
+		OPLog("OPSoundEmitter: \"playing\"");
+		OPAUD_CURR_EMITTER->State = Playing;
 	}
 
 	void OPaudPause(){
-
+		(*OPAUD_CURR_EMITTER->_playerPlay)->SetPlayState(
+			OPAUD_CURR_EMITTER->_playerPlay,
+			SL_PLAYSTATE_PAUSED
+		);
+		OPAUD_CURR_EMITTER->State = Paused;
 	}
 
 	void OPaudStop(){
-
+		(*OPAUD_CURR_EMITTER->_playerPlay)->SetPlayState(
+			OPAUD_CURR_EMITTER->_playerPlay,
+			SL_PLAYSTATE_STOPPED
+		);
+		OPAUD_CURR_EMITTER->State = Stopped;
+		OPAUD_CURR_EMITTER->Source->Progress = 0;
 	}
 #else
 	void OPaudPlay(){
@@ -156,25 +162,27 @@ void OPaudEnqueueBuffer(ui8* buffer, OPint length){
 	void OPaudStop(){
 		alSourceStop(OPAUD_CURR_EMITTER->al_src);
 		OPAUD_CURR_EMITTER->State = Stopped;
+		OPAUD_CURR_EMITTER->Source->Progress = 0;
 	}
 #endif
 
 OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
+	if(OPAUD_CURR_EMITTER->State != Playing) return 0;
+
 	OPint len = 0, queued = 0;
 	OPaudioSource* src = OPAUD_CURR_EMITTER->Source;
 	OPaudioDescription des = src->Description;
 	OPint bps = (des.BitsPerSample >> 3) * des.SamplesPerSecond; // bytes/second
 
-	//OPLog("bits/samp: %d samp/sec: %d bytes/sec: %d", des.BitsPerSample, des.SamplesPerSecond, bps);
+	OPLog("bits/samp: %d samp/sec: %d bytes/sec: %d", des.BitsPerSample, des.SamplesPerSecond, bps);
 
 	OPint shift = bps >= 1024 ? 5 : 0;
 
-	//OPLog("OPaudUpdate: 1\n");
+	OPLog("OPaudUpdate: 1\n");
 
 #ifdef OPIFEX_ANDROID
 	queued = OPAUD_CURR_EMITTER->_queued;
 	if(queued < 0){
-		//OPLog("OPaudUpdate: 1.5\n");
 		(*OPAUD_CURR_EMITTER->_playerPlay)->SetPlayState(
 			OPAUD_CURR_EMITTER->_playerPlay,
 			SL_PLAYSTATE_STOPPED
@@ -184,23 +192,19 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 			SL_DequeueCallback,
 			OPAUD_CURR_EMITTER
 		);
-		(*OPAUD_CURR_EMITTER->_playerPlay)->SetPlayState(
-			OPAUD_CURR_EMITTER->_playerPlay,
-			SL_PLAYSTATE_PLAYING
-		);
 		queued = 0;
 	}
 
 	if(queued > 0){
         SLuint32 slState;
 		SLPlayItf pp = OPAUD_CURR_EMITTER->_playerPlay;
-		//OPLog("OPaudUpdate: 2\n");
+		OPLog("OPaudUpdate: 2\n");
         (*pp)->GetPlayState(pp, &slState);
-        //OPLog("OPaudUpdate: 3 %d\n", slState);
+        OPLog("OPaudUpdate: 3\n");
         if(slState == SL_PLAYSTATE_STOPPED){
-	        //OPLog("OPaudUpdate: 4\n");
+	        OPLog("OPaudUpdate: 4\n");
 			(*pp)->SetPlayState(pp, SL_PLAYSTATE_PLAYING);
-			//OPLog("OPaudUpdate: 5\n");
+			OPLog("OPaudUpdate: 5\n");
         }
 
 		// all buffers are in use, wait for one to process
@@ -208,7 +212,7 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
         	return 0;
         }
 	}
-	//OPLog("OPaudUpdate: 6\n");
+	OPLog("OPaudUpdate: 6\n");
 #else
 	ALint processed = 0;
 	ALuint unqueued[BUFFER_COUNT];
@@ -239,24 +243,24 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 
 	// read sample rate >> bytes/sec pcm bytes
 	if(len = src->Read(src, buff, bps >> shift)){//bps >> shift)){ //)
-		//OPLog("OPaudUpdate: 7 len=%d\n", len);
+		OPLog("OPaudUpdate: 7 len=%d\n", len);
 		Proc(OPAUD_CURR_EMITTER, len);
 
 		OPaudEnqueueBuffer(buff, len);
-		//OPLog("OPaudUpdate: 8\n");
+		OPLog("OPaudUpdate: 8\n");
 		return len;
 	}
 	else if(OPAUD_CURR_EMITTER->Looping){
 		// reset the sound!
-		//OPLog("OPaudUpdate: 9\n");
+		OPLog("OPaudUpdate: 9\n");
 		src->Seek(src, 0);
-		//OPLog("OPaudUpdate: 11\n");
+		OPLog("OPaudUpdate: 11\n");
 		return 0;
 	}
 	else if(queued == 0){
-		//OPLog("OPaudUpdate: 10\n");
+		OPLog("OPaudUpdate: 10\n");
 		OPaudStop();
-		//OPLog("OPaudUpdate: 12\n");
+		OPLog("OPaudUpdate: 12\n");
 	}
 
 	return -1;
@@ -275,66 +279,36 @@ OPint OPaudProc(void(*Proc)(OPaudioEmitter* emit)){
 // |______|_| |_| |_|_|\__|\__\___|_|    |_|   |_|  \___/| .__/|___/
 //                                                       | |        
 //                                                       |_|        
-Vector3 OPaudPosition(Vector3* position){
+void OPaudPosition(Vector3* position){
+#ifdef OPIFEX_ANDROID	
+	Vector3 out;
+#else
+	alSourcefv(OPAUD_CURR_EMITTER->al_src, AL_POSITION, position->ptr());
+#endif
+}
+
+void OPaudVelocity(Vector3* velocity){
 #ifdef OPIFEX_ANDROID	
 	Vector3 out;
 	return out;
 #else
-	if(position){
-		alSourcefv(OPAUD_CURR_EMITTER->al_src, AL_POSITION, position->ptr());
-		return *position;
-	}
-
-	Vector3 curr;
-	alGetSourcefv(OPAUD_CURR_EMITTER->al_src, AL_POSITION, &(curr._x));
-	return curr;
+	alSourcefv(OPAUD_CURR_EMITTER->al_src, AL_VELOCITY, velocity->ptr());
 #endif
 }
 
-Vector3 OPaudVelocity(Vector3* velocity){
-#ifdef OPIFEX_ANDROID	
-	Vector3 out;
-	return out;
-#else
-	if(velocity){
-		alSourcefv(OPAUD_CURR_EMITTER->al_src, AL_VELOCITY, velocity->ptr());
-		return *velocity;
-	}
-
-	Vector3 curr;
-	alGetSourcefv(OPAUD_CURR_EMITTER->al_src, AL_VELOCITY, &(curr._x));
-	return curr;
-#endif
-}
-
-OPfloat OPaudVolume  (OPfloat* gain){
-#ifdef OPIFEX_ANDROID
-	(*OPAUD_CURR_EMITTER->_playerVolume)->SetVolumeLevel(OPAUD_CURR_EMITTER->_playerVolume, *gain);	
-	return 0;
-#else
-	if(gain){
-		alSourcef(OPAUD_CURR_EMITTER->al_src, AL_GAIN, *gain);
-		return *gain;
-	}
-
-	OPfloat curr;
-	alGetSourcefv(OPAUD_CURR_EMITTER->al_src, AL_GAIN, &curr);
-	return curr;
-#endif
-}
-
-OPfloat OPaudPitch   (OPfloat* pitch){
+void OPaudVolume  (OPfloat gain){
 #ifdef OPIFEX_ANDROID	
 	return 0;
 #else
-	if(pitch){
-		alSourcef(OPAUD_CURR_EMITTER->al_src, AL_PITCH, *pitch);
-		return *pitch;
-	}
+	alSourcef(OPAUD_CURR_EMITTER->al_src, AL_GAIN, gain);
+#endif
+}
 
-	OPfloat curr;
-	alGetSourcefv(OPAUD_CURR_EMITTER->al_src, AL_PITCH, &curr);
-	return curr;
+void OPaudPitch   (OPfloat pitch){
+#ifdef OPIFEX_ANDROID	
+	return 0;
+#else
+	alSourcef(OPAUD_CURR_EMITTER->al_src, AL_PITCH, pitch);
 #endif
 }
 //-----------------------------------------------------------------------------

@@ -22,17 +22,23 @@
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 #include <direct.h>
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+
 #endif
 #include "./Data/include/OPfile.h"
 #include "./Human/include/Audio/OPaudio2.h"
 #include "./Human/include/Audio/OPaudioEmitter.h"
+#include "./Human/include/Audio/OPaudioPlayer.h"
 #include "./Data/include/OPfile.h"
 
+#include <GL/glew.h>
+#include <GL/glfw.h>
+#include <glm/glm.hpp>
 
 GameManager* GM;
 GamePadSystem* GPS;
 OPaudioSource Sound, Sound1;
 OPaudioEmitter Emitter, Emitter1;
+OPaudioPlayer player;
 OPfloat vol = 0.05f;
 
 #ifdef OPIFEX_ANDROID
@@ -65,6 +71,11 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setConnected(JNIEnv * env,
 }
 #endif
 
+void KeyDown(int key, int action){
+	OPaudSetPlayer(&player);
+	OPaudPlayerPlay();
+}
+
 // Initialize
 #ifdef OPIFEX_ANDROID
 JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager){
@@ -73,7 +84,7 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	//Jukebox::Initialize();
 #else
 void Init(){
-
+  	glfwSetKeyCallback(KeyDown);
 	#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 	_chdir("assets\\");
 	#else
@@ -145,22 +156,25 @@ void Init(){
         Sound1 = OPaudOpenWave("Audio/testing.wav");
         OPLog("Reading done!\n");
         Emitter1 = OPaudCreateEmitter(&Sound1, 1);
+        player = OPaudPlayerCreate(&Sound1, 10, 0);
         Emitter = OPaudCreateEmitter(&Sound, 1);
         OPLog("Emitter created\n");
 
 		OPaudSetEmitter(&Emitter);
-        OPaudVolume(&vol);
+        OPaudVolume(0.05f);
         OPLog("Emitter set\n");
         OPLog("Emitter proc'd\n");
         OPaudPlay();
-vol = 1.0f;
         OPaudSetEmitter(&Emitter1);
 		OPaudSetEmitter(&Emitter1);
-        OPaudVolume(&vol);
+        OPaudVolume(1.0f);
         OPaudPlay();
         printf("Emitter set\n");
         printf("Emitter proc'd\n");
 	
+	OPaudSetPlayer(&player);
+	OPaudPlayerPlay();
+
 	OPLog("Main: 1");
 	//SoundEmitter = new OPSoundEmitter(&Sound, 8);
 	//SoundEmitter->SetVolume(0.95f);
@@ -198,8 +212,9 @@ void Update( OPtimer* timer){
 		RenderSystem::ClearColor(0,0,0);
 	}
 	OPLog("Step 6");
-    OPaudSetEmitter(&Emitter1);
-	OPaudUpdate(OPaudProcess);
+	OPaudSetPlayer(&player);
+	OPaudPlayerUpdate(OPaudProcess);
+
 	OPLog("Step 7");
     OPaudSetEmitter(&Emitter);
     OPaudUpdate(OPaudProcess);
@@ -207,6 +222,8 @@ void Update( OPtimer* timer){
 	GM->Draw();
 	RenderSystem::Present();
 	
+
+
 #ifdef OPIFEX_ANDROID
 	if(!result)
 		return 1;
