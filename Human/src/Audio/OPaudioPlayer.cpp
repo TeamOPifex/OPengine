@@ -9,11 +9,14 @@ OPaudioPlayer OPaudPlayerCreate(OPaudioSource* src, OPint sounds, OPint looping)
 		0
 	};
 
+	OPLog("Sounds: %d\n", sounds);
 	player.Emitters = (OPaudioEmitter*)OPalloc(sizeof(OPaudioEmitter) * sounds);
 
 	for(OPint i = sounds; i--;){
 		player.Emitters[i] = OPaudCreateEmitter(src, looping);
 	}
+
+	return player;
 }
 
 void OPaudPlayerDestroy(OPaudioPlayer* player){
@@ -46,9 +49,7 @@ void OPaudPlayerPause(){
 
 void OPaudPlayerUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 	for(OPint i = OPAUD_CURR_PLAYER->Count; i--;){
-		if(OPAUD_CURR_PLAYER->Emitters[i].State != Stopped){
-			OPaudSetEmitter(&OPAUD_CURR_PLAYER->Emitters[i]);
-			OPaudUpdate(Proc);
-		}
+		OPaudSetEmitter(&OPAUD_CURR_PLAYER->Emitters[i]);
+		OPaudUpdate(Proc);
 	}
 }

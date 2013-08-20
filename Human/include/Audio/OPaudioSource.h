@@ -28,12 +28,10 @@ struct sOPaudioSource;
 struct sOPaudioSource{
 	// Reads the next 'len' bytes from the data source and advances
 	// position by that number of bytes. Fills dest with bytes read.
-	OPint (*Read)(struct sOPaudioSource* src, ui8* dest, ui32 len);
+	OPint (*Read)(struct sOPaudioSource* src, ui64* position, ui8* dest, ui32 len);
 
 	// Sets position to 'pos' makes appropriate changes for data source
-	OPint (*Seek)(struct sOPaudioSource* src, ui64 pos);
-
-	ui64 Progress;
+	OPint (*Seek)(struct sOPaudioSource* src, ui64* pos);
 
 	OPaudioDescription Description;
 	void* DataSource;
@@ -82,8 +80,8 @@ OPint OPaudCloseOgg (OPaudioSource* src);
 // |_|  \_\___|\__,_|\__,_|_|_| |_|\__, | |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                  __/ |                                              
 //                                 |___/                                               
-OPint OPaudReadWave(OPaudioSource* src, ui8* dest, ui32 len);
-OPint OPaudReadOgg (OPaudioSource* src, ui8* dest, ui32 len);
+OPint OPaudReadWave(OPaudioSource* src, ui64* position, ui8* dest, ui32 len);
+OPint OPaudReadOgg (OPaudioSource* src, ui64* position, ui8* dest, ui32 len);
 //-----------------------------------------------------------------------------
 
 
@@ -97,8 +95,8 @@ OPint OPaudReadOgg (OPaudioSource* src, ui8* dest, ui32 len);
 // |_____/ \___|\___|_|\_\_|_| |_|\__, | |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                 __/ |                                              
 //                                |___/                                               
-OPint OPaudSeekWave(OPaudioSource* src, ui64 pos);
-OPint OPaudSeekOgg (OPaudioSource* src, ui64 pos);
+OPint OPaudSeekWave(OPaudioSource* src, ui64* pos);
+OPint OPaudSeekOgg (OPaudioSource* src, ui64* pos);
 //-----------------------------------------------------------------------------
 
 #ifdef __cplusplus

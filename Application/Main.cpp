@@ -22,17 +22,15 @@
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 #include <direct.h>
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
-
+#include <GL/glew.h>
+#include <GL/glfw.h>
+#include <glm/glm.hpp>
 #endif
 #include "./Data/include/OPfile.h"
 #include "./Human/include/Audio/OPaudio2.h"
 #include "./Human/include/Audio/OPaudioEmitter.h"
 #include "./Human/include/Audio/OPaudioPlayer.h"
 #include "./Data/include/OPfile.h"
-
-#include <GL/glew.h>
-#include <GL/glfw.h>
-#include <glm/glm.hpp>
 
 GameManager* GM;
 GamePadSystem* GPS;
@@ -72,6 +70,7 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setConnected(JNIEnv * env,
 #endif
 
 void KeyDown(int key, int action){
+	OPLog("Pizza");
 	OPaudSetPlayer(&player);
 	OPaudPlayerPlay();
 }
@@ -84,7 +83,6 @@ JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject
 	//Jukebox::Initialize();
 #else
 void Init(){
-  	glfwSetKeyCallback(KeyDown);
 	#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 	_chdir("assets\\");
 	#else
@@ -144,7 +142,11 @@ void Init(){
 	}
 
 	GM = new GameManager(width, height);
-	
+
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+	  	glfwSetKeyCallback(KeyDown);
+#endif
+
         OPLog("Main: Song loading...");
         OPchar songPath[] = {"Audio/background.ogg"};
         //Song = OPAudio::ReadOgg(songPath);
@@ -153,27 +155,21 @@ void Init(){
         OPLog("Main: Song loaded");
 
         Sound = OPaudOpenOgg("Audio/background.ogg");
-        Sound1 = OPaudOpenWave("Audio/testing.wav");
+        Sound1 = OPaudOpenWave("Audio/pew.wav");
         OPLog("Reading done!\n");
-        Emitter1 = OPaudCreateEmitter(&Sound1, 1);
-        player = OPaudPlayerCreate(&Sound1, 10, 0);
+        Emitter1 = OPaudCreateEmitter(&Sound1, 0);
+        player = OPaudPlayerCreate(&Sound1, 5, 0);
         Emitter = OPaudCreateEmitter(&Sound, 1);
         OPLog("Emitter created\n");
 
 		OPaudSetEmitter(&Emitter);
-        OPaudVolume(0.05f);
+        OPaudVolume(0.00f);
         OPLog("Emitter set\n");
         OPLog("Emitter proc'd\n");
         OPaudPlay();
-        OPaudSetEmitter(&Emitter1);
-		OPaudSetEmitter(&Emitter1);
-        OPaudVolume(1.0f);
-        OPaudPlay();
-        printf("Emitter set\n");
-        printf("Emitter proc'd\n");
 	
-	OPaudSetPlayer(&player);
-	OPaudPlayerPlay();
+	//OPaudSetPlayer(&player);
+	//OPaudPlayerPlay();
 
 	OPLog("Main: 1");
 	//SoundEmitter = new OPSoundEmitter(&Sound, 8);
@@ -198,24 +194,28 @@ void Update( OPtimer* timer){
 #endif
 
 	bool result = GM->Update( timer );
-	OPLog("Step 4");
 	GPS->Update();
-	OPLog("Step 5");
 	GamePadState* gps = GPS->Controller(GamePadIndex_One);
 	if(gps->IsConnected()) {
 		OPfloat r = gps->IsDown(GamePad_Button_A) ? 1.0f : 0.0f;
 		OPfloat g = gps->LeftThumbX() / 2.0f + 0.5f;
 		OPfloat b = gps->LeftTrigger();
 		RenderSystem::ClearColor(r, g, b);
+
+		#ifdef OPIFEX_ANDROID
+	  	if(gps->IsDown(GamePad_Button_A)){
+	  		OPaudSetPlayer(&player);
+	  		OPaudPlayerPlay();
+	  	}
+		#endif
 	}
 	else {
 		RenderSystem::ClearColor(0,0,0);
 	}
-	OPLog("Step 6");
+
 	OPaudSetPlayer(&player);
 	OPaudPlayerUpdate(OPaudProcess);
 
-	OPLog("Step 7");
     OPaudSetEmitter(&Emitter);
     OPaudUpdate(OPaudProcess);
 	//SoundEmitter->Update();

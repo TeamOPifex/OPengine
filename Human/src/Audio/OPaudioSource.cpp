@@ -75,13 +75,11 @@ OPaudioSource OPaudOpenWave(const OPchar* filename){
 		if(memcmp(type, "data", 4) != 0){
 			OPLog("Missing data\n");
 		}
-
-		OPmemcpy(&desc.Length, OPread(str, sizeof(i32)), sizeof(i32));
+		OPmemcpy(&desc.Length, OPread(str, sizeof(ui32)), sizeof(ui32));
 
 		OPaudioSource source = {
 			OPaudReadWave,
 			OPaudSeekWave,
-			0,   // position,
 			desc,
 			str
 		};
@@ -92,7 +90,6 @@ OPaudioSource OPaudOpenWave(const OPchar* filename){
 	OPaudioSource err = {
 		NULL,
 		NULL,
-		0,   // position,
 		{0},
 		NULL
 	};
@@ -126,7 +123,6 @@ OPaudioSource OPaudOpenOgg (const OPchar* filename){
 				OPaudioSource src = {
 					OPaudReadOgg,
 					OPaudSeekOgg,
-					0,
 					{0},
 					NULL
 				};
@@ -211,30 +207,25 @@ OPint OPaudCloseOgg (OPaudioSource* src){
 // |_|  \_\___|\__,_|\__,_|_|_| |_|\__, | |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                  __/ |                                              
 //                                 |___/                                               
-OPint OPaudReadWave(OPaudioSource* src, ui8* dest, ui32 len){
-	OPLog("OPaudReadWave: 1 src=%d", src);
-	ui64 pos = src->Progress, srcLen = src->Description.Length;
+OPint OPaudReadWave(OPaudioSource* src, ui64* position, ui8* dest, ui32 len){
+	ui64 pos = *position, srcLen = src->Description.Length, leng = (ui64)len;
 
 	// clip length to read if we are at / near the end
-	len = pos + len >= srcLen ? srcLen - pos : len;
-
+	leng = pos + leng >= srcLen ? srcLen - pos : leng;
 	OPstream* str = (OPstream*)src->DataSource;
-	OPLog("OPaudReadWave: 2 len=%d", len);
+	OPmemcpy(dest, OPreadAt(str, pos + WAVE_HEADER, leng), leng);
+	*position += leng;
 
-	OPmemcpy(dest, OPreadAt(str, pos + WAVE_HEADER, len), len);
-	OPLog("OPaudReadWave: 3");
-	src->Progress += len;
-
-	return len;
+	return leng;
 }
 
-OPint OPaudReadOgg (OPaudioSource* src, ui8* dest, ui32 len){
+OPint OPaudReadOgg (OPaudioSource* src, ui64* position, ui8* dest, ui32 len){
 	ui32 origLen = len, decoded = 0;
 	OPint current_section;
 	OggVorbis_File* sOggVorbisFile = (OggVorbis_File*)src->DataSource;
 
 	while(decoded <= 2048){
-		src->Progress += (len = ov_read(
+		(*position) += (len = ov_read(
 			sOggVorbisFile,
 			(char*)(dest + decoded),
 			len,
@@ -264,23 +255,21 @@ OPint OPaudReadOgg (OPaudioSource* src, ui8* dest, ui32 len){
 // |_____/ \___|\___|_|\_\_|_| |_|\__, | |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                 __/ |                                              
 //                                |___/                                               
-OPint OPaudSeekWave(OPaudioSource* src, ui64 pos){
-	pos += WAVE_HEADER;
+OPint OPaudSeekWave(OPaudioSource* src, ui64* pos){
+
+	//*pos += WAVE_HEADER;
 
 	// make sure it is not negative / out of bounds
-	if(pos >= src->Description.Length) return -1;
-
-	src->Progress = pos;
+	if(*pos >= src->Description.Length) return -1;
 	return 1;
 }
 
-OPint OPaudSeekOgg (OPaudioSource* src, ui64 pos){
+OPint OPaudSeekOgg (OPaudioSource* src, ui64* pos){
 	OggVorbis_File* sOggVorbisFile = (OggVorbis_File*)src->DataSource;
 
-	src->Progress = pos;
 	return ov_raw_seek(
 		sOggVorbisFile,
-		pos
+		*pos
 	);
 }
 //-----------------------------------------------------------------------------

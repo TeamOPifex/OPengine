@@ -13,7 +13,7 @@
 #include "./Human/include/Audio/OPaudio2.h"
 #include "./Human/include/Audio/OPaudioEmitter.h"
 
-typedef struct OPaudioPlayer{
+struct OPaudioPlayer{
 	OPaudioEmitter* Emitters;
 	OPint Count;
 	OPint Current;
