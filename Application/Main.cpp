@@ -173,7 +173,34 @@ vol = 1.0f;
 
 // Step
 #ifdef OPIFEX_ANDROID
+void Purchase( JNIEnv * env, const char* item ) {
+
+	jstring jstr = env->NewStringUTF(item);
+    jclass clazz = env->FindClass( "com/opifex/smrf/GL2JNILib" );
+
+	jmethodID midCallBackStatic = env->GetStaticMethodID(clazz, "Purchase", "(Ljava/lang/String;)Ljava/lang/String;");
+   	if (NULL != midCallBackStatic) {
+   		jobject resultJNIStr = env->CallStaticObjectMethod(clazz, midCallBackStatic, jstr);
+   		jstring str = (jstring)resultJNIStr;
+   		jboolean isCopy;
+   		const char *resultCStr = env->GetStringUTFChars(str, &isCopy);
+   		if (NULL != resultCStr) {
+		   OPLog("In C, the returned string is %s\n", resultCStr);
+		   if(isCopy != JNI_FALSE) {
+			   env->ReleaseStringUTFChars(str, resultCStr);
+			}
+   		} else {
+   			OPLog("Purchase: Failed to get Result");
+   		}
+   	} else {
+   		OPLog("Purchase:Failed to find method");
+   	}
+}
+
 JNIEXPORT int JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj){	
+
+	Purchase(env, "This comes from jni.");
+
 	OPLog("Step 1");
 	OPtimerTick(timer);
 	OPLog("Step 2");
