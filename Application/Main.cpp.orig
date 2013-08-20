@@ -24,15 +24,16 @@
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 #endif
 #include "./Data/include/OPfile.h"
-#include "./Human/include/Audio/OPaudio.h"
-#include "./Human/include/Audio/OPsoundEmitter.h"
+#include "./Human/include/Audio/OPaudio2.h"
+#include "./Human/include/Audio/OPaudioEmitter.h"
 #include "./Data/include/OPfile.h"
 
 
 GameManager* GM;
 GamePadSystem* GPS;
-OPsound Song, Sound;
-OPSoundEmitter* Emitter, *SoundEmitter;
+OPaudioSource Sound, Sound1;
+OPaudioEmitter Emitter, Emitter1;
+OPfloat vol = 0.05f;
 
 #ifdef OPIFEX_ANDROID
 	OPtimer* timer;
@@ -109,44 +110,56 @@ void Init(){
 	OPlistRemoveAt(list, 9);
 	OPlistInsert(list, (ui8*)&j, 9);
 
-	printf("Reading: ");
+	OPLog("Reading: ");
 	OPllNode* node = ll->First;
-	while (node)
-	{
-		printf("%d ", *(OPint*)(node->Data));
+	while (node){
+		OPLog("%d ", *(OPint*)(node->Data));
 		node = node->Next;
 	}
-	printf("\nList: ");
+	OPLog("\nList: ");
 
 	for(OPint i = OPlistSize(list); i--;){
 		OPint j = *((OPint*)OPlistGet(list, i));
-		printf("%d ", j);
+		OPLog("%d ", j);
 	}
-		printf("\nHeap: ");
+		OPLog("\nHeap: ");
 	for(OPint i = 20; i--;){
-		printf("%d ", heap->_indices[i]);
+		OPLog("%d ", heap->_indices[i]);
 	}
 
-	printf("\nPopping sorted: ");
+	OPLog("\nPopping sorted: ");
 	while(OPminHeapSize(heap) > 0){
-		printf("%d ", OPminHeapPop(heap));
+		OPLog("%d ", OPminHeapPop(heap));
 	}
 
 	GM = new GameManager(width, height);
-
-	OPAudio::Init();
 	
-	OPLog("Main: Song loading...");
-	OPchar songPath[] = {"Audio/background.ogg"};
-	Song = OPAudio::ReadOgg(songPath);
-	OPLog("Main: Song loaded");
+        OPLog("Main: Song loading...");
+        OPchar songPath[] = {"Audio/background.ogg"};
+        //Song = OPAudio::ReadOgg(songPath);
+        OPaudInit();
 
-	//Sound = OPAudio::ReadWave("Audio/testing.wav");
-	
-	Emitter = new OPSoundEmitter(&Song, 8);
-	Emitter->SetVolume(0.05f);
-	Emitter->Looping = true;
-	Emitter->Play();
+        OPLog("Main: Song loaded");
+
+        Sound = OPaudOpenOgg("Audio/background.ogg");
+        Sound1 = OPaudOpenWave("Audio/testing.wav");
+        OPLog("Reading done!\n");
+        Emitter1 = OPaudCreateEmitter(&Sound1, 1);
+        Emitter = OPaudCreateEmitter(&Sound, 1);
+        OPLog("Emitter created\n");
+
+		OPaudSetEmitter(&Emitter);
+        OPaudVolume(&vol);
+        OPLog("Emitter set\n");
+        OPLog("Emitter proc'd\n");
+        OPaudPlay();
+vol = 1.0f;
+        OPaudSetEmitter(&Emitter1);
+		OPaudSetEmitter(&Emitter1);
+        OPaudVolume(&vol);
+        OPaudPlay();
+        printf("Emitter set\n");
+        printf("Emitter proc'd\n");
 	
 	OPLog("Main: 1");
 	//SoundEmitter = new OPSoundEmitter(&Sound, 8);
@@ -160,15 +173,47 @@ void Init(){
 
 // Step
 #ifdef OPIFEX_ANDROID
+void Purchase( JNIEnv * env, const char* item ) {
+
+	jstring jstr = env->NewStringUTF(item);
+    jclass clazz = env->FindClass( "com/opifex/smrf/GL2JNILib" );
+
+	jmethodID midCallBackStatic = env->GetStaticMethodID(clazz, "Purchase", "(Ljava/lang/String;)Ljava/lang/String;");
+   	if (NULL != midCallBackStatic) {
+   		jobject resultJNIStr = env->CallStaticObjectMethod(clazz, midCallBackStatic, jstr);
+   		jstring str = (jstring)resultJNIStr;
+   		jboolean isCopy;
+   		const char *resultCStr = env->GetStringUTFChars(str, &isCopy);
+   		if (NULL != resultCStr) {
+		   OPLog("In C, the returned string is %s\n", resultCStr);
+		   if(isCopy != JNI_FALSE) {
+			   env->ReleaseStringUTFChars(str, resultCStr);
+			}
+   		} else {
+   			OPLog("Purchase: Failed to get Result");
+   		}
+   	} else {
+   		OPLog("Purchase:Failed to find method");
+   	}
+}
+
 JNIEXPORT int JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj){	
+
+	Purchase(env, "This comes from jni.");
+
+	OPLog("Step 1");
 	OPtimerTick(timer);
+	OPLog("Step 2");
 	GamePadSystem::Update();
+	OPLog("Step 3");
 #else
 void Update( OPtimer* timer){
 #endif
 
 	bool result = GM->Update( timer );
+	OPLog("Step 4");
 	GPS->Update();
+	OPLog("Step 5");
 	GamePadState* gps = GPS->Controller(GamePadIndex_One);
 	if(gps->IsConnected()) {
 		OPfloat r = gps->IsDown(GamePad_Button_A) ? 1.0f : 0.0f;
@@ -179,8 +224,12 @@ void Update( OPtimer* timer){
 	else {
 		RenderSystem::ClearColor(0,0,0);
 	}
-
-	Emitter->Update();
+	OPLog("Step 6");
+    OPaudSetEmitter(&Emitter1);
+	OPaudUpdate(OPaudProcess);
+	OPLog("Step 7");
+    OPaudSetEmitter(&Emitter);
+    OPaudUpdate(OPaudProcess);
 	//SoundEmitter->Update();
 	GM->Draw();
 	RenderSystem::Present();

@@ -37,6 +37,7 @@ typedef struct{
 	OPint               CurrBuffer;           // index of the buffer currently being filled
 	OPint				Looping;              // indicates weather the sounds restarts when finished or not
 	OPaudioEmitterState State;                // current play state of the sound
+	ui64                Progress;             // Current play position
 	OPaudioSource*      Source;               // data source for the sound
 	ui8                 Temp[BUFFER_SIZE];    // BUFFER_SIZE byte temp buffer for processing
 	void*               Processor;            // Pointer to data for audio processing
@@ -104,10 +105,10 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length));
 
 OPint OPaudProc(OPaudioEmitter* emitter, void(*Proc)(OPaudioEmitter* emit, OPint length));
 
-Vector3 OPaudPosition(OPaudioEmitter* emitter, Vector3 position);
-Vector3 OPaudVelocity(Vector3* velocity);
-OPfloat OPaudVolume  (OPfloat* gain);
-OPfloat OPaudPitch   (OPfloat* pitch);
+void OPaudPosition(Vector3* position);
+void OPaudVelocity(Vector3* velocity);
+void OPaudVolume  (OPfloat gain);
+void OPaudPitch   (OPfloat pitch);
 //-----------------------------------------------------------------------------
 void OPaudProcess(OPaudioEmitter* emit, OPint length);
 //-----------------------------------------------------------------------------
