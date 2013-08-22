@@ -45,7 +45,7 @@ bool GameManager::Update( OPtimer* coreTimer )
 }
 
 void GameManager::Draw(){
-	RenderSystem::ClearColor(1,0,0);
+	//RenderSystem::ClearColor(1,0,0);
 	RenderSystem::UseMaterial(_material);
 
 	_material->View->SetMatrix(Camera::GameCamera.GetView());

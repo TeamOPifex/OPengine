@@ -18,6 +18,7 @@ package com.opifex.smrf;
 
 
 import android.content.res.AssetManager;
+import tv.ouya.console.api.OuyaController;
 import tv.ouya.console.api.OuyaFacade;
 
 // Wrapper for native library
@@ -36,14 +37,24 @@ public class GL2JNILib {
      public static native void setControllerButton(int player, int button, int state);
      public static native void setControllerAxes(int player, int axes, float position);
 
-    public static final String DEVELOPER_ID = "8e0c74ec-c52c-4de4-89f0-3944b7145489";
+    //public static final String DEVELOPER_ID = "8e0c74ec-c52c-4de4-89f0-3944b7145489";
+
+     public static GL2JNIView Instance;
 
      public static String Purchase(String text) {
-        OuyaFacade ouyaFacade = OuyaFacade.getInstance();
-        //ouyaFacade.init(this, DEVELOPER_ID);
-        if(ouyaFacade.isRunningOnOUYAHardware()) {
-            return "OUYA";
+        
+        if(Instance.IsOuya()) {
+           return "OUYA";
         }
          return  "Not OUYA";
+     }
+
+     public static int IsButton(){
+        return Instance.ButtonState();
+        // OuyaController c = OuyaController.getControllerByPlayer(0);
+        // if(c == null){
+        //     return -1;
+        // }
+        // return c.getButton(OuyaController.BUTTON_O) ? 1 : 0;
      }
 }

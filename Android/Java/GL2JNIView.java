@@ -49,6 +49,7 @@ import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.opengles.GL10;
 
 import tv.ouya.console.api.OuyaController;
+import tv.ouya.console.api.OuyaFacade;
 
 /**
  * A simple GLSurfaceView sub-class that demonstrate how to perform
@@ -76,12 +77,29 @@ class GL2JNIView extends GLSurfaceView {
 	private static boolean lIgnore;
 	private static boolean rIgnore;
 	private static Renderer rend;
+    private static OuyaFacade facade;
 	
 	
-    public GL2JNIView(Context context, AssetManager assetManager) {
+    public GL2JNIView(Context context, AssetManager assetManager, OuyaFacade instance) {
         super(context);
 		_assetManager = assetManager;
         init(false, 1, 0);
+        GL2JNILib.Instance = this;
+        OuyaController.init(context);
+
+        facade = instance;
+    }
+
+    public int ButtonState(){
+        OuyaController c = OuyaController.getControllerByPlayer(0);
+        if(c == null){
+            return -1;
+        }
+        return c.getButton(OuyaController.BUTTON_O) ? 1 : 0;
+    }
+
+    public boolean IsOuya() {
+        return facade.isRunningOnOUYAHardware();
     }
 
     public GL2JNIView(Context context, boolean translucent, int depth, int stencil, AssetManager assetManager) {
@@ -127,7 +145,7 @@ class GL2JNIView extends GLSurfaceView {
         } else if (keyCode == OuyaController.BUTTON_L3) {
 			rend.setButton(player, GamePadButtons.LEFT_THUMB, GamePadButtonState.DOWN);
             return true;
-        } else if (keyCode == OuyaController.BUTTON_SYSTEM) {
+        } else if (keyCode == OuyaController.BUTTON_MENU) {
 			rend.setButton(player, GamePadButtons.START, GamePadButtonState.DOWN);
             return true;
         }
@@ -173,7 +191,7 @@ class GL2JNIView extends GLSurfaceView {
         } else if (keyCode == OuyaController.BUTTON_L3) {
 			rend.setButton(player, GamePadButtons.LEFT_THUMB, GamePadButtonState.UP);
             return true;
-        } else if (keyCode == OuyaController.BUTTON_SYSTEM) {
+        } else if (keyCode == OuyaController.BUTTON_MENU) {
 			rend.setButton(player, GamePadButtons.START, GamePadButtonState.UP);
             return true;
         }

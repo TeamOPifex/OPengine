@@ -183,6 +183,8 @@ void Init(){
 
 // Step
 #ifdef OPIFEX_ANDROID
+
+
 void Purchase( JNIEnv * env, const char* item ) {
 
 	jstring jstr = env->NewStringUTF(item);
@@ -207,30 +209,38 @@ void Purchase( JNIEnv * env, const char* item ) {
    	}
 }
 
+
 JNIEXPORT int JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj){	
 
 	Purchase(env, "This comes from jni.");
 
-	OPLog("Step 1");
 	OPtimerTick(timer);
-	OPLog("Step 2");
-	GamePadSystem::Update();
-	OPLog("Step 3");
+	//GamePadSystem::Update(env);
+	GPS->Update(env);
+
 #else
 void Update( OPtimer* timer){
+	GPS->Update();
 #endif
 
 	bool result = GM->Update( timer );
-	GPS->Update();
+
+
 	GamePadState* gps = GPS->Controller(GamePadIndex_One);
 	if(gps->IsConnected()) {
+
 		OPfloat r = gps->IsDown(GamePad_Button_A) ? 1.0f : 0.0f;
 		OPfloat g = gps->LeftThumbX() / 2.0f + 0.5f;
 		OPfloat b = gps->LeftTrigger();
+
+		if(gps->WasPressed(GamePad_Button_A)){
+			r = g = b = 1.0f;
+		}
+
 		RenderSystem::ClearColor(r, g, b);
 
 		#ifdef OPIFEX_ANDROID
-	  	if(gps->IsDown(GamePad_Button_A)){
+	  	if(gps->WasPressed(GamePad_Button_A)){
 	  		OPaudSetPlayer(&player);
 	  		OPaudPlayerPlay();
 	  	}
@@ -239,6 +249,7 @@ void Update( OPtimer* timer){
 	else {
 		RenderSystem::ClearColor(0,0,0);
 	}
+
 
 	OPaudSetPlayer(&player);
 	OPaudPlayerUpdate(OPaudProcess);

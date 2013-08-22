@@ -23,6 +23,9 @@ import android.view.WindowManager;
 import android.view.*;
 import android.nfc.Tag;
 
+import tv.ouya.console.api.OuyaFacade;
+import tv.ouya.console.api.OuyaController;
+
 public class SMRF extends Activity {
 	GL2JNIView mView;
 	
@@ -31,10 +34,15 @@ public class SMRF extends Activity {
 	int playerThree = -1;
 	int playerFour = -1;
 	
+	public static final String DEVELOPER_ID = "8e0c74ec-c52c-4de4-89f0-3944b7145489";
+
 	@Override protected void onCreate(Bundle icicle) {
+		OuyaFacade instance = OuyaFacade.getInstance();
+		instance.init(this, DEVELOPER_ID);
+
 		super.onCreate(icicle);
 		AssetManager assetManager = getAssets();
-		mView = new GL2JNIView(getApplication(), assetManager);
+		mView = new GL2JNIView(getApplication(), assetManager, instance);
 		setContentView(mView);
 	}
 	
@@ -50,21 +58,28 @@ public class SMRF extends Activity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return mView.onKeyDown(keyCode, getPlayerIndex(event), event);
+    	boolean handled = OuyaController.onKeyDown(keyCode, event);
+    	return handled || super.onKeyDown(keyCode, event);
+        //return mView.onKeyDown(keyCode, getPlayerIndex(event), event);
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        return mView.onKeyUp(keyCode, getPlayerIndex(event), event);
+	    boolean handled = OuyaController.onKeyUp(keyCode, event);
+	    return handled || super.onKeyUp(keyCode, event);
+        //return mView.onKeyUp(keyCode, getPlayerIndex(event), event);
     }
 
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
-        if((event.getSource() & InputDevice.SOURCE_CLASS_JOYSTICK) == 0){
-            //Not a joystick movement, so ignore it.
-            return false;
-        }
-        return mView.onGenericMotionEvent(getPlayerIndex(event), event);
+	    boolean handled = OuyaController.onGenericMotionEvent(event);
+	    return handled || super.onGenericMotionEvent(event);
+
+        // if((event.getSource() & InputDevice.SOURCE_CLASS_JOYSTICK) == 0){
+        //     //Not a joystick movement, so ignore it.
+        //     return false;
+        // }
+        // return mView.onGenericMotionEvent(getPlayerIndex(event), event);
     }
 	
 	public int getPlayerIndex(InputEvent event){
