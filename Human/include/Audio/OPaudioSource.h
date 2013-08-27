@@ -50,8 +50,8 @@ typedef struct sOPaudioSource OPaudioSource;
 //  \____/| .__/ \___|_| |_|_|_| |_|\__, | |_|   \__,_|_| |_|\___|___(_)
 //        | |                        __/ |                              
 //        |_|                       |___/                               
-OPaudioSource OPaudOpenWave(const OPchar* filename);
-OPaudioSource OPaudOpenOgg (const OPchar* filename);
+OPint OPaudOpenWave(const OPchar* filename, OPaudioSource* source);
+OPint OPaudOpenOgg (const OPchar* filename, OPaudioSource* source);
 //-----------------------------------------------------------------------------
 
 

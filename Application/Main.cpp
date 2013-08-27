@@ -106,7 +106,7 @@ void Init(){
 			".wav",
 			"/assets/Audio/",
 			sizeof(OPaudioSource),
-			NULL,
+			(OPint (*)(const OPchar*, void*))OPaudOpenWave,
 			(OPint (*)(void*))OPaudCloseWave
 		}
 	};
@@ -167,8 +167,8 @@ void Init(){
 
         OPLog("Main: Song loaded");
 
-        Sound = OPaudOpenOgg("Audio/background.ogg");
-        Sound1 = OPaudOpenWave("Audio/pew.wav");
+        //Sound = OPaudOpenOgg("Audio/background.ogg");
+        //Sound1 = OPaudOpenWave("Audio/pew.wav");
         OPLog("Reading done!\n");
         Emitter1 = OPaudCreateEmitter(&Sound1, 0);
         player = OPaudPlayerCreate(&Sound1, 5, 0);

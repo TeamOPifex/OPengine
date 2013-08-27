@@ -19,7 +19,7 @@ long ov_tell_func(void *datasource){ return ftell((FILE*)datasource); }
 //  \____/| .__/ \___|_| |_|_|_| |_|\__, | |_|   \__,_|_| |_|\___|___(_)
 //        | |                        __/ |                              
 //        |_|                       |___/                               
-OPaudioSource OPaudOpenWave(const OPchar* filename){
+OPint OPaudOpenWave(const OPchar* filename, OPaudioSource* source){
 	OPstream* str = OPreadFile(filename);
 
 	if(!str) OPLog("Error: couldn't open '%s'\n", filename);
@@ -77,27 +77,22 @@ OPaudioSource OPaudOpenWave(const OPchar* filename){
 		}
 		OPmemcpy(&desc.Length, OPread(str, sizeof(ui32)), sizeof(ui32));
 
-		OPaudioSource source = {
+		OPaudioSource src = {
 			OPaudReadWave,
 			OPaudSeekWave,
 			desc,
 			str
 		};
 
-		return source;
+		OPmemcpy(source, &src, sizeof(OPaudioSource));
+		return 1;
 	}
 
-	OPaudioSource err = {
-		NULL,
-		NULL,
-		{0},
-		NULL
-	};
-
-	return err;
+	source = NULL;
+	return 0;
 }
 
-OPaudioSource OPaudOpenOgg (const OPchar* filename){
+OPint OPaudOpenOgg(const OPchar* filename, OPaudioSource* source){
 	// Open Ogg Stream
 	ov_callbacks	sCallbacks;
 	OggVorbis_File	*sOggVorbisFile = new OggVorbis_File();
@@ -166,13 +161,15 @@ OPaudioSource OPaudOpenOgg (const OPchar* filename){
 
 				printf("Len: %u\nSampleRate: %u\nChann: %u\n", desc.Length, desc.SamplesPerSecond, desc.Channels);
 
-				return src;
+				OPaudioSource* out = (OPaudioSource*)OPalloc(sizeof(OPaudioSource));
+				OPmemcpy(out, &src, sizeof(OPaudioSource));
+
+				return 1;
 			}
 		}
 
-	OPaudioSource err;
-	OPbzero(&err, sizeof(OPaudioSource));
-	return err;
+	source = NULL;
+	return 0;
 }
 //-----------------------------------------------------------------------------
 
