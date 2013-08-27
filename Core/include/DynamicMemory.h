@@ -18,9 +18,7 @@
 	memcpy(dest, src, size);\
 }\
 
-#define OPmemcmp(dest, src, size){\
-	memcmp(dest, src, size);\
-}\
+#define OPmemcmp(dest, src, size) memcmp(dest, src, size)
 
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 #define OPbzero(dest, size){\

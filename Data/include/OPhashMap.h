@@ -12,7 +12,19 @@ extern "C"
 #include <string.h>
 #include "./Core/include/Types.h"
 
-typedef struct HashMap HashMap;
+typedef struct{
+	OPchar* key;
+	void* value;
+} KeyValuePair;
+
+typedef struct{
+	OPuint count;
+	KeyValuePair *pairs;
+} Bucket;
+typedef struct{
+	OPuint count;
+	Bucket *buckets;
+} HashMap;
 
 HashMap* OPhashMapCreate(OPuint capacity);
 void OPhashMapDestroy(HashMap* map);

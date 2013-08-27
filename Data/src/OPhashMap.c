@@ -1,22 +1,6 @@
 #include "./Data/include/OPhashMap.h"
 #include "./Core/include/DynamicMemory.h"
 
-typedef struct KeyValuePair KeyValuePair;
-typedef struct Bucket Bucket;
-
-struct KeyValuePair {
-	OPchar* key;
-	void* value;
-};
-struct Bucket {
-	OPuint count;
-	KeyValuePair *pairs;
-};
-struct HashMap {
-	OPuint count;
-	Bucket *buckets;
-};
-
 static KeyValuePair* get_pair(Bucket *bucket, const OPchar *key);
 static ui64 hash(const OPchar* str);
 

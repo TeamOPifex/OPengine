@@ -9,9 +9,19 @@ extern "C"
 #endif
 #include "./Core/include/Types.h"
 #include "./Core/include/DynamicMemory.h"
-#include "OPhashMap.h"
+#include "./Data/include/OPhashMap.h"
 
 #define OP_CMAN_CAP 10000
+
+#define OP_CMAN_KEY_EXISTS           -1
+#define OP_CMAN_NO_MATCHING_UPLOADER -2
+#define OP_CMAN_EXT_NOT_MATCHED      -3
+#define OP_CMAN_PATH_ALLOC_FAILED    -4
+#define OP_CMAN_ASSET_LOAD_FAILED    -5
+#define OP_CMAN_BUCKET_ALLOC_FAILED  -6
+#define OP_CMAN_INSERTION_FAILED     -7
+#define OP_CMAN_RETRIEVE_FAILED      -8
+#define OP_CMAN_KEY_NOT_FOUND        -9
 
 //  _____ _                   _       
 // / ____| |                 | |      
@@ -20,18 +30,18 @@ extern "C"
 // ____) | |_| |  | |_| | (__| |_\__ \
 //|_____/ \__|_|   \__,_|\___|\__|___/
 //                                                                      
-typedef struct OPassetLoader{
+typedef struct{
 	OPchar Extension[8];
 	OPchar* AssetTypePath;
 	OPint AssetSize;
 	OPint (*Load)(const OPchar* path, void* assetOut);
 	OPint (*Unload)(void* assetIn);
-};
+} OPassetLoader;
 
-typedef struct OPasset{
+typedef struct{
 	void* Asset;
 	OPint (*Unload)(void* assetIn);
-};
+} OPasset;
 
 //  _____ _       _           _     
 // / ____| |     | |         | |    
