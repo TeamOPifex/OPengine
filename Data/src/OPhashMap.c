@@ -4,6 +4,13 @@
 static KeyValuePair* get_pair(Bucket *bucket, const OPchar *key);
 static ui64 hash(const OPchar* str);
 
+// ______                _   _                 
+//|  ____|              | | (_)                
+//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+//|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
+//| |  | |_| | | | | (__| |_| | (_) | | | \__ \
+//|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+//                                                                                    
 HashMap* OPhashMapCreate(OPuint capacity)
 {
 	HashMap* hashMap;	
@@ -174,6 +181,14 @@ OPint OPhashMapCount(const HashMap *map)
 	return count;
 }
 
+//    _____      _            _         ______                _   _                 
+//   |  __ \    (_)          | |       |  ____|              | | (_)                
+//   | |__) | __ ___   ____ _| |_ ___  | |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+//   |  ___/ '__| \ \ / / _` | __/ _ \ |  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
+//   | |   | |  | |\ V / (_| | ||  __/ | |  | |_| | | | | (__| |_| | (_) | | | \__ \
+//   |_|   |_|  |_| \_/ \__,_|\__\___| |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+//                                                                                  
+//                                                                                  
 static KeyValuePair * get_pair(Bucket *bucket, const OPchar *key)
 {
 	OPuint i, n;
