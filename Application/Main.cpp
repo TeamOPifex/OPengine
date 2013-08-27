@@ -31,6 +31,7 @@
 #include "./Human/include/Audio/OPaudioEmitter.h"
 #include "./Human/include/Audio/OPaudioPlayer.h"
 #include "./Data/include/OPfile.h"
+#include "./Data/include/OPcontentManager.h"
 
 GameManager* GM;
 GamePadSystem* GPS;
@@ -99,6 +100,18 @@ void Init(){
 	OPlinkedList* ll = OPllCreate();
 	OPminHeap* heap = OPminHeapCreate(20);
 	OPlist* list = OPlistCreate(5, sizeof(OPint));
+
+	OPassetLoader loaders[] ={
+		{
+			".wav",
+			"/assets/Audio/",
+			sizeof(OPaudioSource),
+			NULL,
+			(OPint (*)(void*))OPaudCloseWave
+		}
+	};
+
+	OPcmanInit(loaders, 1);
 
 	GPS = new GamePadSystem();
 
