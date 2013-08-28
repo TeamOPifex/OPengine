@@ -50,28 +50,8 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
 		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/libvorbisfile.dll"
 		${PROJECT_BINARY_DIR}/Application/Debug)
 		
-else()
+elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX32")
 
-	add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${PROJECT_SOURCE_DIR}/External/Ogg/lib/linux32/ogg.a"
-		${PROJECT_BINARY_DIR}/Application/Debug)
-
-	add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${PROJECT_SOURCE_DIR}/External/Ogg/lib/linux32/libogg.a"
-		${PROJECT_BINARY_DIR}/Application/Debug)
-
-	add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/linux32/vorbisfile.a"
-		${PROJECT_BINARY_DIR}/Application/Debug)
-
-	add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/linux32/libvorbis.a"
-		${PROJECT_BINARY_DIR}/Application/Debug)
-		
-	add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/linux32/libvorbisfile.a"
-		${PROJECT_BINARY_DIR}/Application/Debug)
-		
 endif()
 				
 target_link_libraries(7_Application

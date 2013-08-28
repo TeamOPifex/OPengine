@@ -19,6 +19,12 @@ add_custom_command(TARGET 1_Core POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_
 	"${PROJECT_BINARY_DIR}/Core/Debug/Core.lib"
 	${PROJECT_BINARY_DIR}/Binaries/win32/)
 	
+elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX32")
+
+add_custom_command(TARGET 1_Core POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	"${PROJECT_BINARY_DIR}/Core/Debug/libCore.a"
+	${PROJECT_BINARY_DIR}/Binaries/linux32/)
+
 	endif()
 	
 set_source_files_properties(src/test.c PROPERTIES LANGUAGE CXX )
