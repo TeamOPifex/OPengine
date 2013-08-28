@@ -10,6 +10,7 @@ extern "C"
 #include "./Core/include/Types.h"
 #include "./Core/include/DynamicMemory.h"
 #include "./Data/include/OPhashMap.h"
+#include "./Data/include/OPlinkedList.h"
 
 #define OP_CMAN_CAP 10000
 
@@ -41,6 +42,7 @@ typedef struct{
 typedef struct{
 	void* Asset;
 	OPint (*Unload)(void* assetIn);
+	OPint Dirty;
 } OPasset;
 
 //  _____ _       _           _     
@@ -54,6 +56,8 @@ extern HashMap OP_CMAN_HASHMAP;
 extern OPassetLoader* OP_CMAN_ASSETLOADERS;
 extern OPint OP_CMAN_ASSET_LOADER_COUNT;
 
+extern OPlinkedList OP_CMAN_PURGE;
+
 // ______                _   _                 
 //|  ____|              | | (_)                
 //| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
@@ -63,6 +67,7 @@ extern OPint OP_CMAN_ASSET_LOADER_COUNT;
 //                                                                                    
 // Specifies how assets will be loaded for each file type
 OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount);
+OPint OPcmanPurge();
 
 // checks to see if an asset is loaded, triggers the load or unload.
 OPint OPcmanIsLoaded(const OPchar* key);
@@ -71,6 +76,7 @@ OPint OPcmanUnload(const OPchar* key);
 
 // Returns a pointer to the asset requested by file name
 void* OPcmanGet(const OPchar* key);
+OPint OPcmanDelete(const OPchar* key);
 
 #ifdef __cplusplus
 }

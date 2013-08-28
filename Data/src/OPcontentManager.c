@@ -11,6 +11,8 @@ HashMap OP_CMAN_HASHMAP;
 OPassetLoader* OP_CMAN_ASSETLOADERS;
 OPint OP_CMAN_ASSET_LOADER_COUNT;
 
+OPlinkedList OP_CMAN_PURGE;
+
 // ______                _   _                 
 //|  ____|              | | (_)                
 //| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
@@ -26,6 +28,9 @@ OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount){
 	// create and copy the hashmap
 	OPmemcpy(&OP_CMAN_HASHMAP, OPhashMapCreate(OP_CMAN_CAP), sizeof(HashMap));
 
+	// create and copy the purge list
+	OPmemcpy(&OP_CMAN_PURGE, OPllCreate(), sizeof(OPlinkedList));
+
 	return 1;
 }
 
@@ -37,6 +42,9 @@ OPint OPcmanIsLoaded(const OPchar* key){
 OPint OPcmanLoad(const OPchar* key){
 	const OPchar* ext = NULL;
 	if(OPhashMapExists(&OP_CMAN_HASHMAP, key)){
+		OPasset* existing = NULL;
+		OPhashMapGet(&OP_CMAN_HASHMAP, key, (void**)&existing);
+		existing->Dirty = 0;
 		return OP_CMAN_KEY_EXISTS;
 	}
 
@@ -74,7 +82,8 @@ OPint OPcmanLoad(const OPchar* key){
 					return OP_CMAN_BUCKET_ALLOC_FAILED;
 				assetBucket->Asset = asset;
 				assetBucket->Unload = loader.Unload;
-
+				assetBucket->Dirty = 0;
+				
 				// finally insert into the hashmap
 				if(OPhashMapPut(&OP_CMAN_HASHMAP, key, assetBucket))
 					return 1;
@@ -110,4 +119,26 @@ void* OPcmanGet(const OPchar* key){
 	OPasset* bucket = NULL;
 	OPhashMapGet(&OP_CMAN_HASHMAP, key, (void**)&bucket);
 	return bucket->Asset;
+}
+
+OPint OPcmanDelete(const OPchar* key){
+	OPasset* bucket = NULL;
+	OPhashMapGet(&OP_CMAN_HASHMAP, key, (void**)&bucket);
+	OPllInsertLast(&OP_CMAN_PURGE, bucket);
+	return bucket->Dirty = 1;
+}
+
+OPint OPcmanPurge(){
+	OPllNode* n = OP_CMAN_PURGE.First;
+	while (n){
+		OPasset* bucket = (OPasset*)n->Data;
+		OPllNode* next = n->Next;
+		if(bucket->Dirty){
+			if(!bucket->Unload(bucket->Asset))
+				return 0;
+			OPfree(bucket);
+		}
+		OPllRemove(&OP_CMAN_PURGE, n);
+		n = next;
+	}
 }

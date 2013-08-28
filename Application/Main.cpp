@@ -182,6 +182,11 @@ void Init(){
 
 		Sound1 = (OPaudioSource*)OPcmanGet("pew.wav");
 		Sound = (OPaudioSource*)OPcmanGet("background.ogg");
+
+		//OPcmanDelete("pew.wav");
+		//OPcmanDelete("background.ogg");
+		//OPcmanPurge();
+
         OPLog("Reading done!\n");
         Emitter1 = OPaudCreateEmitter(Sound1, 0);
         player = OPaudPlayerCreate(Sound1, 5, 0);

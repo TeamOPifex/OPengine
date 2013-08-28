@@ -19,7 +19,7 @@ OPint OPllDestroy(OPlinkedList* list){
 	return 1;
 }
 //-----------------------------------------------------------------------------
-OPllNode* OPllInsertFirst(OPlinkedList* list, ui8* data){
+OPllNode* OPllInsertFirst(OPlinkedList* list, void* data){
 	OPllNode* node = (OPllNode*)OPalloc(sizeof(OPllNode));
 	node->Data = data;
 	node->Next = node->Prev = NULL;
@@ -37,7 +37,7 @@ OPllNode* OPllInsertFirst(OPlinkedList* list, ui8* data){
 	return node;
 }
 //-----------------------------------------------------------------------------
-OPllNode* OPllInsertLast(OPlinkedList* list, ui8* data){
+OPllNode* OPllInsertLast(OPlinkedList* list, void* data){
 	OPllNode* node = (OPllNode*)OPalloc(sizeof(OPllNode));
 	node->Data = data;
 	node->Prev = node->Next = NULL;
@@ -55,10 +55,10 @@ OPllNode* OPllInsertLast(OPlinkedList* list, ui8* data){
 	return node;
 }
 //-----------------------------------------------------------------------------
-ui8* OPllRemove(OPlinkedList* list, OPllNode* toRemove){
+void* OPllRemove(OPlinkedList* list, OPllNode* toRemove){
 
 	OPllNode *next = toRemove->Next, *prev = toRemove->Prev;
-	ui8* data = toRemove->Data;
+	void* data = toRemove->Data;
 
 	if(prev) prev->Next = next;
 	if(next) next->Prev = prev;

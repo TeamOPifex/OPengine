@@ -24,7 +24,7 @@ typedef struct OPllNode_def OPllNode;
 struct OPllNode_def {	
 	OPllNode *Prev;
 	OPllNode *Next;
-	ui8* Data;
+	void* Data;
 };
 
 typedef struct{
@@ -35,9 +35,9 @@ typedef struct{
 
 	OPlinkedList* OPllCreate();
 	OPint OPllDestroy(OPlinkedList* list);
-	OPllNode* OPllInsertFirst(OPlinkedList* list, ui8* data);
-	OPllNode* OPllInsertLast(OPlinkedList* list, ui8* data);
-	ui8* OPllRemove(OPlinkedList* list, OPllNode* toRemove);
+	OPllNode* OPllInsertFirst(OPlinkedList* list, void* data);
+	OPllNode* OPllInsertLast(OPlinkedList* list, void* data);
+	void* OPllRemove(OPlinkedList* list, OPllNode* toRemove);
 	OPint OPllGetSize(OPlinkedList* list);
 #ifdef __cplusplus
 };
