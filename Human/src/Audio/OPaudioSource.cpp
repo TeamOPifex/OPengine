@@ -19,7 +19,7 @@ long ov_tell_func(void *datasource){ return ftell((FILE*)datasource); }
 //  \____/| .__/ \___|_| |_|_|_| |_|\__, | |_|   \__,_|_| |_|\___|___(_)
 //        | |                        __/ |                              
 //        |_|                       |___/                               
-OPint OPaudOpenWave(const OPchar* filename, OPaudioSource* source){
+OPint OPaudOpenWave(const OPchar* filename, OPaudioSource** source){
 	OPstream* str = OPreadFile(filename);
 
 	if(!str) OPLog("Error: couldn't open '%s'\n", filename);
@@ -84,7 +84,9 @@ OPint OPaudOpenWave(const OPchar* filename, OPaudioSource* source){
 			str
 		};
 
-		OPmemcpy(source, &src, sizeof(OPaudioSource));
+		// allocate space for the source to be returned
+		*source = (OPaudioSource*)OPalloc(sizeof(OPaudioSource));
+		OPmemcpy(*source, &src, sizeof(OPaudioSource));
 		return 1;
 	}
 
@@ -92,7 +94,7 @@ OPint OPaudOpenWave(const OPchar* filename, OPaudioSource* source){
 	return 0;
 }
 
-OPint OPaudOpenOgg(const OPchar* filename, OPaudioSource* source){
+OPint OPaudOpenOgg(const OPchar* filename, OPaudioSource** source){
 	// Open Ogg Stream
 	ov_callbacks	sCallbacks;
 	OggVorbis_File	*sOggVorbisFile = new OggVorbis_File();
@@ -161,8 +163,8 @@ OPint OPaudOpenOgg(const OPchar* filename, OPaudioSource* source){
 
 				printf("Len: %u\nSampleRate: %u\nChann: %u\n", desc.Length, desc.SamplesPerSecond, desc.Channels);
 
-				OPaudioSource* out = (OPaudioSource*)OPalloc(sizeof(OPaudioSource));
-				OPmemcpy(out, &src, sizeof(OPaudioSource));
+				*source = (OPaudioSource*)OPalloc(sizeof(OPaudioSource));
+				OPmemcpy(*source, &src, sizeof(OPaudioSource));
 
 				return 1;
 			}
@@ -185,10 +187,18 @@ OPint OPaudOpenOgg(const OPchar* filename, OPaudioSource* source){
 //                              __/ |                              
 //                             |___/                               
 OPint OPaudCloseWave(OPaudioSource* src){
-	return OPstreamDestroy((OPstream*)src->DataSource);
+	if(OPstreamDestroy((OPstream*)src->DataSource)){
+		OPfree(src);
+		return 1;
+	}
+	return 0;
 }
 
 OPint OPaudCloseOgg (OPaudioSource* src){
+	if(!ov_clear((OggVorbis_File*)src->DataSource)){
+		OPfree(src);
+		return 1;
+	}
 	return 0;
 }
 //-----------------------------------------------------------------------------

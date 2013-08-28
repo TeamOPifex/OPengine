@@ -34,7 +34,7 @@ typedef struct{
 	OPchar Extension[8];
 	OPchar* AssetTypePath;
 	OPint AssetSize;
-	OPint (*Load)(const OPchar* path, void* assetOut);
+	OPint (*Load)(const OPchar* path, void** assetOut);
 	OPint (*Unload)(void* assetIn);
 } OPassetLoader;
 

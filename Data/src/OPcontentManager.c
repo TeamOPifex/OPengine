@@ -24,7 +24,7 @@ OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount){
 	OP_CMAN_ASSET_LOADER_COUNT = loaderCount;
 	
 	// create and copy the hashmap
-	OPmemcpy(OPhashMapCreate(OP_CMAN_CAP), &OP_CMAN_HASHMAP, sizeof(HashMap));
+	OPmemcpy(&OP_CMAN_HASHMAP, OPhashMapCreate(OP_CMAN_CAP), sizeof(HashMap));
 
 	return 1;
 }
@@ -57,13 +57,14 @@ OPint OPcmanLoad(const OPchar* key){
 				// build the path string
 				len = strlen(loader.AssetTypePath) + strlen(key);
 				fullPath = (OPchar*)OPalloc(sizeof(OPchar) * len + 1);
+				OPbzero(fullPath, len);
 				if(!fullPath) return OP_CMAN_PATH_ALLOC_FAILED;
 				fullPath = strcat(fullPath, loader.AssetTypePath);
 				fullPath = strcat(fullPath, key);
 
 				// load the asset
 				asset = NULL;
-				if(!loader.Load(fullPath, asset)) return OP_CMAN_ASSET_LOAD_FAILED;
+				if(!loader.Load(fullPath, &asset)) return OP_CMAN_ASSET_LOAD_FAILED;
 
 				// clean up the string
 				OPfree(fullPath);
@@ -106,7 +107,7 @@ OPint OPcmanUnload(const OPchar* key){
 
 // Returns a pointer to the asset requested by file name
 void* OPcmanGet(const OPchar* key){
-	void* out = NULL;
-	OPhashMapGet(&OP_CMAN_HASHMAP, key, &out);
-	return out;
+	OPasset* bucket = NULL;
+	OPhashMapGet(&OP_CMAN_HASHMAP, key, (void**)&bucket);
+	return bucket->Asset;
 }

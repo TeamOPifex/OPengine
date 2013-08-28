@@ -21,6 +21,9 @@
 #include <android/asset_manager_jni.h>
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 #include <direct.h>
+#include <GL/glew.h>
+#include <GL/glfw.h>
+#include <glm/glm.hpp>
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 #include <GL/glew.h>
 #include <GL/glfw.h>
@@ -35,7 +38,7 @@
 
 GameManager* GM;
 GamePadSystem* GPS;
-OPaudioSource Sound, Sound1;
+OPaudioSource *Sound, *Sound1;
 OPaudioEmitter Emitter, Emitter1;
 OPaudioPlayer player;
 OPfloat vol = 0.05f;
@@ -104,14 +107,21 @@ void Init(){
 	OPassetLoader loaders[] ={
 		{
 			".wav",
-			"/assets/Audio/",
+			"Audio/",
 			sizeof(OPaudioSource),
-			(OPint (*)(const OPchar*, void*))OPaudOpenWave,
+			(OPint (*)(const OPchar*, void**))OPaudOpenWave,
 			(OPint (*)(void*))OPaudCloseWave
+		},
+		{
+			".ogg",
+			"Audio/",
+			sizeof(OPaudioSource),
+			(OPint (*)(const OPchar*, void**))OPaudOpenOgg,
+			(OPint (*)(void*))OPaudCloseOgg
 		}
 	};
 
-	OPcmanInit(loaders, 1);
+	OPcmanInit(loaders, 2);
 
 	GPS = new GamePadSystem();
 
@@ -156,7 +166,7 @@ void Init(){
 
 	GM = new GameManager(width, height);
 
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+#ifndef OPIFEX_ANDROID//defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 	  	glfwSetKeyCallback(KeyDown);
 #endif
 
@@ -168,15 +178,18 @@ void Init(){
         OPLog("Main: Song loaded");
 
         //Sound = OPaudOpenOgg("Audio/background.ogg");
-        //Sound1 = OPaudOpenWave("Audio/pew.wav");
+		OPcmanLoad("pew.wav"); OPcmanLoad("background.ogg");
+
+		Sound1 = (OPaudioSource*)OPcmanGet("pew.wav");
+		Sound = (OPaudioSource*)OPcmanGet("background.ogg");
         OPLog("Reading done!\n");
-        Emitter1 = OPaudCreateEmitter(&Sound1, 0);
-        player = OPaudPlayerCreate(&Sound1, 5, 0);
-        Emitter = OPaudCreateEmitter(&Sound, 1);
+        Emitter1 = OPaudCreateEmitter(Sound1, 0);
+        player = OPaudPlayerCreate(Sound1, 5, 0);
+        Emitter = OPaudCreateEmitter(Sound, 1);
         OPLog("Emitter created\n");
 
 		OPaudSetEmitter(&Emitter);
-        OPaudVolume(0.00f);
+        OPaudVolume(0.05f);
         OPLog("Emitter set\n");
         OPLog("Emitter proc'd\n");
         OPaudPlay();
