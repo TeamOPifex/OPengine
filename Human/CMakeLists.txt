@@ -93,6 +93,32 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
 		"${PROJECT_BINARY_DIR}/Human/Debug/Human.lib"
 		${PROJECT_BINARY_DIR}/Binaries/win32/)
 	
+else()
+
+	add_custom_command(TARGET 4_Human POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		"${PROJECT_SOURCE_DIR}/External/Ogg/lib/win32/ogg.dll"
+		${PROJECT_BINARY_DIR}/Binaries/linux32/)
+
+	add_custom_command(TARGET 4_Human POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		"${PROJECT_SOURCE_DIR}/External/Ogg/lib/win32/libogg.dll"
+		${PROJECT_BINARY_DIR}/Binaries/linux32/)
+
+	add_custom_command(TARGET 4_Human POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/vorbisfile.dll"
+		${PROJECT_BINARY_DIR}/Binaries/linux32/)
+
+	add_custom_command(TARGET 4_Human POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/libvorbis.dll"
+		${PROJECT_BINARY_DIR}/Binaries/linux32/)
+		
+	add_custom_command(TARGET 4_Human POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/libvorbisfile.dll"
+		${PROJECT_BINARY_DIR}/Binaries/linux32/)
+		
+	add_custom_command(TARGET 4_Human POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		"${PROJECT_BINARY_DIR}/Human/Debug/Human.lib"
+		${PROJECT_BINARY_DIR}/Binaries/linux32/)
+
 endif()
 	
 target_link_libraries(4_Human
