@@ -158,6 +158,20 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
 	file(COPY ${PROJECT_SOURCE_DIR}/External/Ogg/lib/win32/libogg.lib DESTINATION ${PROJECT_BINARY_DIR}/Binaries/win32/)
 	file(COPY ${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/libvorbis.lib DESTINATION ${PROJECT_BINARY_DIR}/Binaries/win32/)
 	file(COPY ${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/libvorbisfile.lib DESTINATION ${PROJECT_BINARY_DIR}/Binaries/win32/)
+	
+elseif( "${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX32" )
+
+	add_custom_command(TARGET GLFW_276 POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		"${PROJECT_BINARY_DIR}/External/libGLFW_276.a"
+		${PROJECT_BINARY_DIR}/Binaries/linux32/)
+
+	add_custom_command(TARGET GLEW_158 POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		"${PROJECT_BINARY_DIR}/External/libGLEW_158.a"
+		${PROJECT_BINARY_DIR}/Binaries/linux32/)
+		
+	file(COPY ${PROJECT_SOURCE_DIR}/External/Ogg/lib/linux32/libogg.a DESTINATION ${PROJECT_BINARY_DIR}/Binaries/linux32/)
+	file(COPY ${PROJECT_SOURCE_DIR}/External/Vorbis/lib/linux32/libvorbis.a DESTINATION ${PROJECT_BINARY_DIR}/Binaries/linux32/)
+	file(COPY ${PROJECT_SOURCE_DIR}/External/Vorbis/lib/linux32/libvorbisfile.a DESTINATION ${PROJECT_BINARY_DIR}/Binaries/linux32/)
 		
 endif()
 
