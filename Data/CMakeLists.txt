@@ -25,7 +25,7 @@ add_custom_command(TARGET 2_Data POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_
 elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX32")
 
 add_custom_command(TARGET 2_Data POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-	"${PROJECT_BINARY_DIR}/Data/Debug/libData.a"
+	"${PROJECT_BINARY_DIR}/Data/libData.a"
 	${PROJECT_BINARY_DIR}/Binaries/linux32/)
 	
 endif()

@@ -116,7 +116,7 @@ elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX32")
 		${PROJECT_BINARY_DIR}/Binaries/linux32/)
 		
 	add_custom_command(TARGET 4_Human POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${PROJECT_BINARY_DIR}/Human/Debug/libHuman.a"
+		"${PROJECT_BINARY_DIR}/Human/libHuman.a"
 		${PROJECT_BINARY_DIR}/Binaries/linux32/)
 
 endif()
