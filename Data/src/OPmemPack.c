@@ -7,29 +7,30 @@
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 void* OPmemPackAlloc(OPmemDesc* segments, OPint segCount, OPint n){
-	OPuint size = 0, offset = 0;
+	OPuint size = 0, offset = 0, i = 0;
+	void* Data = NULL;
 
-	for(OPint i = segCount; i--;){
-		size += segments[i]->Size(n);
+	for(i = segCount; i--;){
+		size += segments[i].Size(n);
 	}
 
-	void* Data = OPalloc(size);
+	Data = OPalloc(size);
 
-	for(OPint i = 0; i < segCount; i++){
-		segments[i]->Alloc((void*)(Data + off), n);
-		off += segments[i]->Size(n);
+	for(i = 0; i < segCount; i++){
+		segments[i].Alloc(((ui8*)Data + offset), n);
+		offset += segments[i].Size(n);
 	}
 
 	return Data;
 }
 
 OPint OPmemPackDealloc(void* Data, OPmemDesc* segments, OPint segCount, OPint n){
-	OPint off = 0;
+	OPint off = 0, i = 0;
 
 	// perform any clean up needed
-	for(OPint i = 0; i < segCount; i++){
-		segments[i]->Dealloc((void*)(Data + off), n);
-		off += segments[i]->Size(n);
+	for(; i < segCount; i++){
+		segments[i].Dealloc(((ui8*)Data + off));
+		off += segments[i].Size(n);
 	}
 
 	OPfree(Data);
