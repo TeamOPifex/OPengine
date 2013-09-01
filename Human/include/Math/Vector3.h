@@ -1,19 +1,66 @@
 #pragma once
 #include "./Core/include/Types.h"
 
+#define vec3add(dst, a, b){\
+	dst.x = a.x + b.x;\
+	dst.y = a.y + b.y;\
+	dst.z = a.z + b.z;\
+}\
+
+#define vec3sub(dst, a, b){\
+	dst.x = a.x - b.x;\
+	dst.y = a.y - b.y;\
+	dst.z = a.z - b.z;\
+}\
+
+#define vec3mul(dst, a, b){\
+	dst.x = a.x * b.x;\
+	dst.y = a.y * b.y;\
+	dst.z = a.z * b.z;\
+}\
+
+#define vec3scl(dst, s){\
+	dst.x *= s;\
+	dst.y *= s;\
+	dst.z *= s;\
+}\
+
+#define vec3div(dst, a, b){\
+	dst.x = a.x / b.x;\
+	dst.y = a.y / b.y;\
+	dst.z = a.z / b.z;\
+}\
+
+#define vec3dot(dst, a, b){\
+	dst = a.x * b.x + a.y * b.y + a.z * b.z;\
+}\
+
+#define vec2norm(dst, a){\
+	OPfloat l = sqrt(a.x * a.x + a.y * a.y);\
+	dst.x = a.x / l;\
+	dst.y = a.y / l;\
+	dst.z = a.z / l;\
+}\
+
+// TODO
+#define vec3cross(dst, a, b){\
+	dst.x = a.y;\
+	dst.y = a.x;\
+}\
+
 class Vector3{
 public:
 	Vector3(){
-		_x = 0;		_y = 0;		_z = 0;
+		x = 0;		y = 0;		z = 0;
 	}
 	Vector3(OPfloat s){
-		_x = s;		_y = s;		_z = s;
+		x = s;		y = s;		z = s;
 	}
 	Vector3(OPfloat x, OPfloat y, OPfloat z){
-		_x = x;		_y = y;		_z = z;
+		x = x;		y = y;		z = z;
 	}
 	
-	OPfloat* ptr(){	return &_x;	}
+	OPfloat* ptr(){	return &x;	}
 
 	// Helpers
 	float Length();
@@ -43,6 +90,6 @@ public:
 	//		64 bit = 3 * 64 = 192 bits or 24 bytes
 	union 
 	{
-		struct{OPfloat _x, _y, _z;};
+		struct{OPfloat x, y, z;};
 	};
 };

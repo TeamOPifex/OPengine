@@ -4,31 +4,26 @@
 #define vec2add(dst, a, b){\
 	dst.x = a.x + b.x;\
 	dst.y = a.y + b.y;\
-	dst.z = a.z + b.z;\
 }\
 
 #define vec2sub(dst, a, b){\
 	dst.x = a.x - b.x;\
 	dst.y = a.y - b.y;\
-	dst.z = a.z - b.z;\
 }\
 
 #define vec2mul(dst, a, b){\
 	dst.x = a.x * b.x;\
 	dst.y = a.y * b.y;\
-	dst.z = a.z * b.z;\
 }\
 
 #define vec2scl(dst, s){\
 	dst.x *= s;\
 	dst.y *= s;\
-	dst.z *= s;\
 }\
 
 #define vec2div(dst, a, b){\
 	dst.x = a.x / b.x;\
 	dst.y = a.y / b.y;\
-	dst.z = a.z / b.z;\
 }\
 
 #define vec2dot(dst, a, b){\
@@ -39,7 +34,6 @@
 	OPfloat l = sqrt(a.x * a.x + a.y * a.y);\
 	dst.x = a.x / l;\
 	dst.y = a.y / l;\
-	dst.z = a.z / l;\
 }\
 
 #define vec2perp(dst, a){\
@@ -50,13 +44,13 @@
 class Vector2{
 public:
 	Vector2(){
-		_x = 0;		_y = 0;
+		x = 0;		y = 0;
 	}
 	Vector2(OPfloat s){
-		_x = s;		_y = s;
+		x = s;		y = s;
 	}
 	Vector2(OPfloat x, OPfloat y){
-		_x = x;		_y = y;
+		x = x;		y = y;
 	}
 
 	//Vector2& operator-(const Vector2 &rhs);
@@ -69,6 +63,6 @@ public:
 	//		64 bit = 2 * 64 = 128 bits or 16 bytes
 	union 
 	{
-		struct{OPfloat _x, _y; };
+		struct{OPfloat x, y; };
 	};
 };

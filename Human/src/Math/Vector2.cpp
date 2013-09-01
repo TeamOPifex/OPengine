@@ -3,10 +3,10 @@
 OPfloat& Vector2::operator[](int idx){		
 	switch(idx){
 	case 0:
-		return _x;
+		return x;
 		break;
 	case 1:
-		return _y;
+		return y;
 		break;
 	}
 }

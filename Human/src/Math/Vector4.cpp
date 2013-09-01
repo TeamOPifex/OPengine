@@ -2,45 +2,45 @@
 #include "./Core/include/MathHelpers.h"
 
 Vector4* Vector4::normalize(){
-		OPfloat length = sqrt((_x * _x) + (_y * _y) + (_z * _z) + (_w * _w));
-		_x /= length;
-		_y /= length;
-		_z /= length;
-		_w /= length;
+		OPfloat length = sqrt((x * x) + (y * y) + (z * z) + (w * w));
+		x /= length;
+		y /= length;
+		z /= length;
+		w /= length;
 		return this;
 	}
 
 Vector4& Vector4::normalize(Vector4& source){
-	OPfloat length = sqrt((source._x * source._x) + (source._y * source._y) + (source._z * source._z) + (source._w * source._w));
-	source._x /= length;
-	source._y /= length;
-	source._z /= length;
-	source._w /= length;
+	OPfloat length = sqrt((source.x * source.x) + (source.y * source.y) + (source.z * source.z) + (source.w * source.w));
+	source.x /= length;
+	source.y /= length;
+	source.z /= length;
+	source.w /= length;
 	return source;
 }
 
 OPfloat& Vector4::operator[](int idx){
 	switch(idx){
 	case 0:
-		return _x;
+		return x;
 		break;
 	case 1:
-		return _y;
+		return y;
 		break;
 	case 2:
-		return _z;
+		return z;
 		break;
 	default:
-		return _w;
+		return w;
 		break;
 	}
 }
 
 
 Vector4* Vector4::operator*=(const Vector4 &rhs) {
-	_x *= rhs._x;
-	_y *= rhs._y;
-	_z *= rhs._z;
-	_w *= rhs._w;
+	x *= rhs.x;
+	y *= rhs.y;
+	z *= rhs.z;
+	w *= rhs.w;
 	return this;
 }

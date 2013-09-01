@@ -22,16 +22,16 @@ bool _has(ui32 features, ui32 feature) {
 }
 
 void _generateTangent(Vector3* tangent, MeshVertex* v1, MeshVertex* v2){
-	f32 dx = v1->vertice._x - v2->vertice._x;
-	f32 dy = v1->vertice._y - v2->vertice._y;
-	f32 dz = v1->vertice._z - v2->vertice._z;
+	f32 dx = v1->vertice.x - v2->vertice.x;
+	f32 dy = v1->vertice.y - v2->vertice.y;
+	f32 dz = v1->vertice.z - v2->vertice.z;
 
 	Vector3 diff(dx, dy, dz);
 	Vector3 tan = Vector3::Cross(v1->normal, diff);
 	tan.Normalize();
-	tangent->_x = tan._x;
-	tangent->_y = tan._y;
-	tangent->_z = tan._z;
+	tangent->x = tan.x;
+	tangent->y = tan.y;
+	tangent->z = tan.z;
 }
 
 typedef struct {
@@ -60,9 +60,9 @@ LoadedData LoadOPMData(FILE* file) {
 			x = OPread_f32(file);
 			y = OPread_f32(file);
 			z = OPread_f32(file);
-			vertices[i].vertice._x = x;
-			vertices[i].vertice._y = y;
-			vertices[i].vertice._z = z;
+			vertices[i].vertice.x = x;
+			vertices[i].vertice.y = y;
+			vertices[i].vertice.z = z;
 		}
 
 		// Read Normal
@@ -70,17 +70,17 @@ LoadedData LoadOPMData(FILE* file) {
 			x = OPread_f32(file);
 			y = OPread_f32(file);
 			z = OPread_f32(file);
-			vertices[i].normal._x = x;
-			vertices[i].normal._y = y;
-			vertices[i].normal._z = z;
+			vertices[i].normal.x = x;
+			vertices[i].normal.y = y;
+			vertices[i].normal.z = z;
 		}
 
 		// Read UV
 		if(_has(features, Features::UV)) {
 			x = OPread_f32(file);
 			y = OPread_f32(file);
-			vertices[i].tex._x = x;
-			vertices[i].tex._y = y;
+			vertices[i].tex.x = x;
+			vertices[i].tex.y = y;
 		}
 
 		// Read Tangent
@@ -88,9 +88,9 @@ LoadedData LoadOPMData(FILE* file) {
 			x = OPread_f32(file);
 			y = OPread_f32(file);
 			z = OPread_f32(file);
-			vertices[i].tangent._x = x;
-			vertices[i].tangent._y = y;
-			vertices[i].tangent._z = z;
+			vertices[i].tangent.x = x;
+			vertices[i].tangent.y = y;
+			vertices[i].tangent.z = z;
 		}
 	}
 

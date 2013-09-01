@@ -141,11 +141,11 @@ Vector3 OPaudEarPosition(Vector3* pos){
 	Vector3 out;
 	return out;
 #else
-	if(pos) alListenerfv(AL_POSITION, &(pos->_x));
+	if(pos) alListenerfv(AL_POSITION, &(pos->x));
 
 	// return the stored value
 	Vector3 out;
-	alGetListenerfv(AL_POSITION, &(pos->_x));
+	alGetListenerfv(AL_POSITION, &(pos->x));
 	return out;
 #endif
 }
@@ -155,11 +155,11 @@ Vector3 OPaudEarVelocity(Vector3* pos){
 	Vector3 out;
 	return out;
 #else
-	if(pos) alListenerfv(AL_VELOCITY, &(pos->_x));
+	if(pos) alListenerfv(AL_VELOCITY, &(pos->x));
 
 	// return the stored value
 	Vector3 out;
-	alGetListenerfv(AL_VELOCITY, &(pos->_x));
+	alGetListenerfv(AL_VELOCITY, &(pos->x));
 	return out;
 #endif
 }
@@ -169,11 +169,11 @@ Vector3 OPaudEarForward(Vector3* pos){
 	Vector3 out;
 	return out;
 #else
-	if(pos) alListenerfv(AL_ORIENTATION, &(pos->_x));
+	if(pos) alListenerfv(AL_ORIENTATION, &(pos->x));
 
 	// return the stored value
 	Vector3 out;
-	alGetListenerfv(AL_ORIENTATION, &(pos->_x));
+	alGetListenerfv(AL_ORIENTATION, &(pos->x));
 	return out;
 #endif
 }

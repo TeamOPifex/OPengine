@@ -40,11 +40,11 @@ void GamePadState::SetAxis(GamePadAxes axis, f32 val){
 	_axes[axis] = val;
 }
 
-void GamePadState::SetLeftThumb(Vector2* val) { SetLeftThumb(val->_x, val->_y); }
+void GamePadState::SetLeftThumb(Vector2* val) { SetLeftThumb(val->x, val->y); }
 void GamePadState::SetLeftThumb(f32 x, f32 y) { SetLeftThumbX(x); SetRightThumbY(y); }
 void GamePadState::SetLeftThumbX(f32 val) { SetAxis(LS_X, val); }
 void GamePadState::SetLeftThumbY(f32 val) { SetAxis(LS_Y, val); }
-void GamePadState::SetRightThumb(Vector2* val) { SetRightThumb(val->_x, val->_y); }
+void GamePadState::SetRightThumb(Vector2* val) { SetRightThumb(val->x, val->y); }
 void GamePadState::SetRightThumb(f32 x, f32 y) { SetRightThumbX(x); SetRightThumbY(y);}
 void GamePadState::SetRightThumbX(f32 val) { SetAxis(RS_X, val); }
 void GamePadState::SetRightThumbY(f32 val) { SetAxis(RS_Y, val); }

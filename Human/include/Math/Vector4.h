@@ -4,16 +4,16 @@
 class Vector4{
 public:
 	Vector4(){
-		_x = 0;		_y = 0;		_z = 0;		_w = 0;
+		x = 0;		y = 0;		z = 0;		w = 0;
 	}
 	Vector4(OPfloat s){
-		_x = s;		_y = s;		_z = s;		_w = s;
+		x = s;		y = s;		z = s;		w = s;
 	}
 	Vector4(OPfloat x, OPfloat y, OPfloat z, OPfloat w){
-		_x = x;		_y = y;		_z = z;		_w = w;
+		x = x;		y = y;		z = z;		w = w;
 	}
 
-	OPfloat* ptr(){	return &_x;	}
+	OPfloat* ptr(){	return &x;	}
 	
 	// Helpers
 	Vector4* normalize();
@@ -25,6 +25,6 @@ public:
 
 	union 
 	{
-		struct{OPfloat _x, _y, _z, _w;};
+		struct{OPfloat x, y, z, w;};
 	};
 };

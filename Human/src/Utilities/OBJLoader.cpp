@@ -36,29 +36,29 @@ int readLine(char* buffer, FILE* file){
 }
 
 void GenerateTangent(Vector3* tangent, MeshVertex* v1, MeshVertex* v2){
-	f32 dx = v1->vertice._x - v2->vertice._x;
-	f32 dy = v1->vertice._y - v2->vertice._y;
-	f32 dz = v1->vertice._z - v2->vertice._z;
+	f32 dx = v1->vertice.x - v2->vertice.x;
+	f32 dy = v1->vertice.y - v2->vertice.y;
+	f32 dz = v1->vertice.z - v2->vertice.z;
 
 	Vector3 diff(dx, dy, dz);
 	Vector3 tan = Vector3::Cross(v1->normal, diff);
 	tan.Normalize();
-	tangent->_x = tan._x;
-	tangent->_y = tan._y;
-	tangent->_z = tan._z;
+	tangent->x = tan.x;
+	tangent->y = tan.y;
+	tangent->z = tan.z;
 }
 
 void SetFaceData(MeshVertex* vertex, FacePoint* facePoint, Vector3* vertexes, Vector2* texes, Vector3* normals){
-	vertex->vertice._x = vertexes[facePoint->VertexIndex - 1]._x;
-	vertex->vertice._y = vertexes[facePoint->VertexIndex - 1]._y;
-	vertex->vertice._z = vertexes[facePoint->VertexIndex - 1]._z;
+	vertex->vertice.x = vertexes[facePoint->VertexIndex - 1].x;
+	vertex->vertice.y = vertexes[facePoint->VertexIndex - 1].y;
+	vertex->vertice.z = vertexes[facePoint->VertexIndex - 1].z;
 
-	vertex->tex._x = texes[facePoint->TextureIndex - 1]._x;
-	vertex->tex._y = texes[facePoint->TextureIndex - 1]._y;
+	vertex->tex.x = texes[facePoint->TextureIndex - 1].x;
+	vertex->tex.y = texes[facePoint->TextureIndex - 1].y;
 
-	vertex->normal._x = normals[facePoint->NormalIndex - 1]._x;
-	vertex->normal._y = normals[facePoint->NormalIndex - 1]._y;
-	vertex->normal._z = normals[facePoint->NormalIndex - 1]._z;
+	vertex->normal.x = normals[facePoint->NormalIndex - 1].x;
+	vertex->normal.y = normals[facePoint->NormalIndex - 1].y;
+	vertex->normal.z = normals[facePoint->NormalIndex - 1].z;
 }
 
 Mesh* LoadOBJ(FILE* file, int start, int length)

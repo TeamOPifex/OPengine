@@ -13,30 +13,30 @@ Quad::~Quad(){
 }
 
 void Quad::SetPosition(Vector3* position){
-	_position._x = position->_x;
-	_position._y = position->_y;
-	_position._z = position->_z;
+	_position.x = position->x;
+	_position.y = position->y;
+	_position.z = position->z;
 	UpdateWorld();
 }
 
 void Quad::SetRotation(Vector3* rotation){
-	_rotation._x = rotation->_x;
-	_rotation._y = rotation->_y;
-	_rotation._z = rotation->_z;
+	_rotation.x = rotation->x;
+	_rotation.y = rotation->y;
+	_rotation.z = rotation->z;
 	UpdateWorld();
 }
 
 void Quad::SetScale(Vector3* scale){
-	_scale._x = scale->_x;
-	_scale._y = scale->_y;
-	_scale._z = scale->_z;
+	_scale.x = scale->x;
+	_scale.y = scale->y;
+	_scale.z = scale->z;
 	UpdateWorld();
 }
 
 void Quad::SetScale(f32 scale){
-	_scale._x = scale;
-	_scale._y = scale;
-	_scale._z = scale;
+	_scale.x = scale;
+	_scale.y = scale;
+	_scale.z = scale;
 	UpdateWorld();
 }
 
@@ -56,29 +56,29 @@ Mesh* Quad::GenMesh(){
 	MeshVertexTextured* points = (MeshVertexTextured*)OPalloc(sizeof(MeshVertexTextured) * 4);
 	unsigned short* indices = (unsigned short*)OPalloc(sizeof(unsigned short) * 6);
 		
-	points[0].vertice._x = -0.5f;
-	points[0].vertice._y = 0.5f;
-	points[0].vertice._z = 0.0f;
-	points[0].tex._x = 0.0f;
-	points[0].tex._y = 0.0f;
+	points[0].vertice.x = -0.5f;
+	points[0].vertice.y = 0.5f;
+	points[0].vertice.z = 0.0f;
+	points[0].tex.x = 0.0f;
+	points[0].tex.y = 0.0f;
 		
-	points[1].vertice._x = 0.5f;
-	points[1].vertice._y = 0.5f;
-	points[1].vertice._z = 0.0f;
-	points[1].tex._x = 1.0f;
-	points[1].tex._y = 0.0f;
+	points[1].vertice.x = 0.5f;
+	points[1].vertice.y = 0.5f;
+	points[1].vertice.z = 0.0f;
+	points[1].tex.x = 1.0f;
+	points[1].tex.y = 0.0f;
 
-	points[2].vertice._x = 0.5f;
-	points[2].vertice._y = -0.5f;
-	points[2].vertice._z = 0.0f;
-	points[2].tex._x = 1.0f;
-	points[2].tex._y = 1.0f;
+	points[2].vertice.x = 0.5f;
+	points[2].vertice.y = -0.5f;
+	points[2].vertice.z = 0.0f;
+	points[2].tex.x = 1.0f;
+	points[2].tex.y = 1.0f;
 
-	points[3].vertice._x = -0.5f;
-	points[3].vertice._y = -0.5f;
-	points[3].vertice._z = 0.0f;
-	points[3].tex._x = 0.0f;
-	points[3].tex._y = 1.0f;
+	points[3].vertice.x = -0.5f;
+	points[3].vertice.y = -0.5f;
+	points[3].vertice.z = 0.0f;
+	points[3].tex.x = 0.0f;
+	points[3].tex.y = 1.0f;
 		
 	indices[0] = 0;
 	indices[1] = 1;
@@ -98,8 +98,8 @@ Mesh* Quad::GenMesh(){
 }
 
 void Quad::UpdateWorld(){
-	Matrix4 rotate = Matrix4::BuildRotateZ(_rotation._z);
-	Matrix4 scale = Matrix4::BuildScale(_rotation._x, _rotation._y, _rotation._z);
-	Matrix4 translate = Matrix4::BuildTranslate(_position._x, _position._y, _position._z);
+	Matrix4 rotate = Matrix4::BuildRotateZ(_rotation.z);
+	Matrix4 scale = Matrix4::BuildScale(_rotation.x, _rotation.y, _rotation.z);
+	Matrix4 translate = Matrix4::BuildTranslate(_position.x, _position.y, _position.z);
 	(*WorldMatrix) =  rotate * scale * translate;
 }
