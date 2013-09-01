@@ -38,7 +38,7 @@ public:
 	void SetMatrix(const OPchar* attribute, Matrix4* value);
 
 	
-	virtual void SetMeshData(Mesh* mesh) { }
+	virtual void SetMeshData(BaseMeshPtr mesh) { }
 	virtual void EnableAttributes() { }
 	virtual void DisableAttributes() { }
 private:

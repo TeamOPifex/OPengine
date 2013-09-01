@@ -34,19 +34,27 @@ void _generateTangent(Vector3* tangent, MeshVertex* v1, MeshVertex* v2){
 	tangent->_z = tan._z;
 }
 
-Mesh* LoadOPM(FILE* file) {
+typedef struct {
+	void* vertices;
+	ui32 vertexCount;
+	ui32 vertexSize;
+	void* indices;
+	ui32 indexCount;
+	ui32 indexSize;
 
-	char* buffer = (char*)OPalloc(sizeof(char) * 4096);
+} LoadedData;
+
+LoadedData LoadOPMData(FILE* file) {
 	
 	ui16 version = OPread_ui16(file);
 	ui32 features = OPread_ui32(file);
 	ui32 verticeCount = OPread_ui32(file);
-	
+
 	MeshVertex* vertices = (MeshVertex*)OPalloc(sizeof(MeshVertex) * verticeCount);
 
 	f32 x, y, z;
 	for(ui32 i = 0; i < verticeCount; i++) {
-		
+
 		// Read Position
 		if(_has(features, Features::Position)) {
 			x = OPread_f32(file);
@@ -85,7 +93,7 @@ Mesh* LoadOPM(FILE* file) {
 			vertices[i].tangent._z = z;
 		}
 	}
-	
+
 	ui32 indicesCount = OPread_ui32(file);
 	ui16* indices = (ui16*)OPalloc(sizeof(ui16) * (indicesCount * 3));
 	for(int i = 0; i < indicesCount; i++){
@@ -103,27 +111,51 @@ Mesh* LoadOPM(FILE* file) {
 			vert_one = &vertices[indices[i] + 0];
 			vert_two = &vertices[indices[i] + 1];
 			_generateTangent(&vert_one->tangent, vert_one, vert_two);
-		
+
 			vert_one = &vertices[indices[i] + 1];
 			vert_two = &vertices[indices[i] + 2];
 			_generateTangent(&vert_one->tangent, vert_one, vert_two);
-		
+
 			vert_one = &vertices[indices[i] + 2];
 			vert_two = &vertices[indices[i] + 0];
 			_generateTangent(&vert_one->tangent, vert_one, vert_two);
 		}
 	}
 
-	// Create Vertex & Index Buffers for Mesh
-	BufferPtr vertexBuffer = new Buffer(VertexBuffer, sizeof(MeshVertex) * verticeCount, vertices);
-	BufferPtr indexBuffer = new Buffer(IndexBuffer, sizeof(ui16) * indicesCount * 3, indices);
+	LoadedData data;
+	data.indices = indices;
+	data.indexCount = indicesCount * 3;
+	data.indexSize = sizeof(ui16);
+	data.vertices = vertices;
+	data.vertexCount = verticeCount;
+	data.vertexSize = sizeof(MeshVertex);
+	return data;
+}
 
-	Mesh* out = new Mesh(vertexBuffer, indexBuffer, indicesCount * 3, sizeof(MeshVertex));
+Mesh* LoadOPM(FILE* file) {
+
+	LoadedData data = LoadOPMData(file);
+
+	// Create Vertex & Index Buffers for Mesh
+	BufferPtr vertexBuffer = new Buffer(VertexBuffer, data.vertexSize * data.vertexCount, data.vertices);
+	BufferPtr indexBuffer = new Buffer(IndexBuffer, data.indexSize * data.indexCount * 3, data.indices);
+
+	Mesh* out = new Mesh(vertexBuffer, indexBuffer,  data.indexCount * 3, data.vertexSize);
 
 	// Dispose of allocated buffers
-	OPfree(buffer);
-	OPfree(vertices);
-	OPfree(indices);
+	OPfree(data.vertices);
+	OPfree(data.indices);
 
 	return out;
+}
+
+
+PackedMesh* LoadOPM(FILE* file, MeshPacker* meshPacker) {
+
+	LoadedData data = LoadOPMData(file);
+
+	ui32 vertexPosition = meshPacker->AddVertexBuffer(data.vertexSize, data.vertices, data.vertexCount);
+	ui32 indexPosition = meshPacker->AddIndexBuffer(data.indexSize, data.indices, data.indexCount);
+	
+	return new PackedMesh(meshPacker, vertexPosition, indexPosition, data.indexCount * 3, data.vertexSize);
 }

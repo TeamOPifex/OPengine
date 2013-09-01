@@ -7,6 +7,8 @@
 #include "./Human/include/Resources/Material/SpecularTexturedMaterial.h"
 #include "./Human/include/Resources/Material/TexturedScreenMaterial.h"
 #include "./Human/include/Rendering/Quad.h"
+#include "./Human/include/Resources/Model/MeshPacker.h"
+#include "./Human/include/Resources/Model/PackedModel.h"
 
 class GameManager
 {
@@ -15,7 +17,8 @@ public:
 	bool Update( OPtimer* coreTimer );
 	void Draw();
 private:
-	ModelPtr _model;
+	MeshPacker* meshPacker;
+	PackedModelPtr _model;
 	SpecularTexturedMaterial* _material;
 	Texture2D* _colorTexture;
 	Texture2D* _normalTexture;

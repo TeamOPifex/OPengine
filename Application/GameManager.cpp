@@ -14,8 +14,11 @@ GameManager::GameManager(int width, int height)
 
 	_colorTexture = ImagePNG::TextureFromFile("Textures/test.png");	
 	FileInformation t_file = OPreadFileInformation("Models/BiPlane.opm");
-	MeshPtr mesh = LoadOPM(t_file.file);
 
+	meshPacker = new MeshPacker();
+	PackedMesh* mesh = LoadOPM(t_file.file, meshPacker);
+	meshPacker->Build();
+	
 	_normalTexture = ImageDDS::TextureFromFile("Textures/modelNormal.dds");
 	_specularTexture = ImageDDS::TextureFromFile("Textures/modelSpecular.dds");
 
@@ -28,7 +31,6 @@ GameManager::GameManager(int width, int height)
 	_material->SetTextures(_colorTexture, _normalTexture, _specularTexture);
 	OPLog("GameManager:Textures Set");
 
-	_model = new Model(mesh, _material);
 	OPLog("GameManager:Model Created");
 	_model->WorldMatrix->SetIdentity()->Scale(3.0f);
 	OPLog("GameManager:Identity Set");

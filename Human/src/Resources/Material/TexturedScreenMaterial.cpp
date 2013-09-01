@@ -28,7 +28,7 @@ void TexturedScreenMaterial::DisableAttributes(){
 	_UV->Disable();
 }
 
-void TexturedScreenMaterial::SetMeshData(Mesh* mesh){
+void TexturedScreenMaterial::SetMeshData(BaseMeshPtr mesh){
 	Material::SetData(_Position->Handle(), 3, false, mesh->Stride, (void*)0);
 	Material::SetData(_UV->Handle(), 2, false, mesh->Stride, (void*)12);
 }

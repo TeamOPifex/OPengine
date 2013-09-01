@@ -37,8 +37,14 @@ void RenderSystem::RenderModel(Model* model){
 	UseMaterial(model->ModelMaterial);
 	model->ModelMaterial->EnableAttributes();
 	model->SetMeshData();
-	//SetBuffer(VertexBuffer, model->ModelMesh->VertexBuffer->Handle());
-	//RenderTriangles(0, 6);
+	RenderTriangles(model->ModelMesh->IndexCount);
+	model->ModelMaterial->DisableAttributes();
+}
+
+void RenderSystem::RenderModel(PackedModel* model){
+	UseMaterial(model->ModelMaterial);
+	model->ModelMaterial->EnableAttributes();
+	model->SetMeshData();
 	RenderTriangles(model->ModelMesh->IndexCount);
 	model->ModelMaterial->DisableAttributes();
 }

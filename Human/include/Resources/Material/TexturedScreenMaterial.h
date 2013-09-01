@@ -13,7 +13,7 @@ public:
 
 	void EnableAttributes();
 	void DisableAttributes();
-	void SetMeshData(Mesh* mesh);
+	void SetMeshData(BaseMeshPtr mesh);
 	
 	ShaderParamWorld* World;
 	ShaderParamColorTexture* ColorTexture;

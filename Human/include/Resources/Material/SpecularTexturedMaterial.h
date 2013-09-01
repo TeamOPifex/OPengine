@@ -20,7 +20,7 @@ public:
 	void EnableAttributes();
 	void DisableAttributes();
 
-	void SetMeshData(Mesh* mesh);	
+	void SetMeshData(BaseMeshPtr mesh);	
 	void SetColorTexture(Texture2D* tex);
 	void SetNormalTexture(Texture2D* tex);
 	void SetSpecularTexture(Texture2D* tex);

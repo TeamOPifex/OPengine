@@ -42,7 +42,7 @@ void SpecularTexturedMaterial::DisableAttributes(){
 	_Tangent->Disable();
 }
 
-void SpecularTexturedMaterial::SetMeshData(Mesh* mesh){
+void SpecularTexturedMaterial::SetMeshData(BaseMeshPtr mesh){
 	Material::SetData(_Position->Handle(), 3, false, mesh->Stride, (void*)0);
 	Material::SetData(_Normal->Handle(), 3, false, mesh->Stride, (void*)12);
 	Material::SetData(_UV->Handle(), 2, false, mesh->Stride, (void*)24);
