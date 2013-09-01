@@ -35,12 +35,16 @@
 #include "./Human/include/Audio/OPaudioPlayer.h"
 #include "./Data/include/OPfile.h"
 #include "./Data/include/OPcontentManager.h"
+#include "./Data/include/OPentHeap.h"
 
 GameManager* GM;
 GamePadSystem* GPS;
 OPaudioSource *Sound, *Sound1;
 OPaudioEmitter Emitter, Emitter1;
 OPaudioPlayer player;
+OPentHeap* ents;
+void* entData;
+
 OPfloat vol = 0.05f;
 
 #ifdef OPIFEX_ANDROID
@@ -94,15 +98,34 @@ void Init(){
 		OPLog("Directory changed!\n");
 	}
 	else
-		OPLog("Directory change failed!\n");
+		OPLog("Directory change failed!!!\n");
 	#endif
+
 
 	i32 width = 1280;
 	i32 height = 720;
 #endif
+	OPLog("Allocating");
 	OPlinkedList* ll = OPllCreate();
 	OPminHeap* heap = OPminHeapCreate(20);
 	OPlist* list = OPlistCreate(5, sizeof(OPint));
+
+	write(1, "Creating EntHeap...\n", 21);
+	entData = OPalloc(OPentHeapSize(sizeof(OPint), 100));
+	ents = OPentHeapCreate(entData, sizeof(OPint), 100);
+OPLog("Created EntHeap!");
+	OPint* ints = (OPint*)ents->Entities;
+	for(OPint i = 100; i--;){
+		OPint ind = 0;
+		OPentHeapActivate(ents, &ind);
+		OPLog("ind: %d", ind);
+		ints[ind] = i;
+	}
+
+	OPLog("Max: %d\n", ents->MaxIndex);
+	for(OPint i = 0; i < ents->MaxIndex; i++){
+		OPLog_i32(ints[i]);
+	}
 
 	OPassetLoader loaders[] ={
 		{

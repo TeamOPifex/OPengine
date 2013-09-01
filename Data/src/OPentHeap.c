@@ -1,0 +1,42 @@
+#include "./Data/include/OPentHeap.h"
+OPuint OPentHeapSize(OPint entsize, OPint count){
+	OPuint size = sizeof(OPentHeap);
+
+	// account for entities and indicies
+	size += (sizeof(OPint) + entsize) * (count + 1);
+
+	return size;
+}
+//-----------------------------------------------------------------------------
+OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
+	OPint off = 0, i = count + 1;
+	OPminHeap free = {
+		NULL,
+		count + 1,
+		1
+	};
+	OPentHeap heap = {
+		NULL,
+		0,
+		1,
+		free
+	};
+
+	// leave space for entity data
+	off += entSize * (count + 1);
+
+	// create the heap
+	heap.Free._indices = (ui8*)(segPtr + off);
+	off += sizeof(OPint) * (count + 1); // account for indices
+	for(;i--;){
+		OPminHeapPush(&heap.Free, i-1);
+	}
+
+	// create the ent heap
+	heap.Entities = segPtr;
+
+	// copy the heap into the memory segment
+	OPmemcpy((ui8*)(segPtr + off), &heap, sizeof(OPentHeap));
+
+	return (OPentHeap*)(segPtr + off);
+}
