@@ -19,14 +19,15 @@ OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
 		NULL,
 		0,
 		1,
-		free
+		{0}
 	};
+	heap.Free = free;
 
 	// leave space for entity data
 	off += entSize * (count + 1);
 
 	// create the heap
-	heap.Free._indices = (ui8*)(segPtr + off);
+	heap.Free._indices = (OPint*)((ui8*)segPtr + off);
 	off += sizeof(OPint) * (count + 1); // account for indices
 	for(;i--;){
 		OPminHeapPush(&heap.Free, i-1);
@@ -36,7 +37,7 @@ OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
 	heap.Entities = segPtr;
 
 	// copy the heap into the memory segment
-	OPmemcpy((ui8*)(segPtr + off), &heap, sizeof(OPentHeap));
+	OPmemcpy((OPint*)((ui8*)segPtr + off), &heap, sizeof(OPentHeap));
 
-	return (OPentHeap*)(segPtr + off);
+	return (OPentHeap*)((ui8*)segPtr + off);
 }

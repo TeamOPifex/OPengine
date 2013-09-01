@@ -25,6 +25,7 @@ GameManager::GameManager(int width, int height)
 	OPLog("GameManager:Files Loaded");
 	
 	_material = new SpecularTexturedMaterial();
+
 	OPLog("GameManager:Specular");
 	RenderSystem::UseMaterial(_material);
 	OPLog("GameManager:Material Used");
@@ -32,6 +33,7 @@ GameManager::GameManager(int width, int height)
 	OPLog("GameManager:Textures Set");
 
 	OPLog("GameManager:Model Created");
+	_model = new PackedModel(mesh, _material);
 	_model->WorldMatrix->SetIdentity()->Scale(3.0f);
 	OPLog("GameManager:Identity Set");
 
