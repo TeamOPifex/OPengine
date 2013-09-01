@@ -26,7 +26,6 @@ OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, /*void* processor,*/ OPint
 
 
 #ifdef OPIFEX_ANDROID
-	OPLog("OPsoundEmitter: 0");
 	OPLog("OPaudioEmitter: Chann=%d, Samp/Sec=%d\n", src->Description.Channels, src->Description.SamplesPerSecond);
     // configure audio source
     SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, BUFFER_COUNT};
@@ -42,9 +41,6 @@ OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, /*void* processor,*/ OPint
 
     SLDataSource audioSrc = {&loc_bufq, &format_pcm};
 
-    OPLog("OPSoundEmitter: 0.5");
-	OPLog_i32((OPint)SLES_outputMixObject);
-
     // configure audio sink
     SLDataLocator_OutputMix loc_outmix = {SL_DATALOCATOR_OUTPUTMIX, SLES_outputMixObject};
     SLDataSink audioSnk = {&loc_outmix, NULL};
@@ -53,9 +49,6 @@ OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, /*void* processor,*/ OPint
             /*SL_IID_MUTESOLO,*/ SL_IID_VOLUME};
     const SLboolean req[3] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE,
             /*SL_BOOLEAN_TRUE,*/ SL_BOOLEAN_TRUE};
-    OPLog("OPsoundEmitter: 1");
-
-    OPLog_ui32((OPint)SLES_engineEngine);
 
     (*SLES_engineEngine)->CreateAudioPlayer(
     	SLES_engineEngine, 
@@ -66,19 +59,14 @@ OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, /*void* processor,*/ OPint
     );
     (*emitter._playerObject)->Realize(emitter._playerObject, SL_BOOLEAN_FALSE);
 
-    OPLog("OPaudioEmitter: 2");
-
     // get the play interface
     (*emitter._playerObject)->GetInterface(emitter._playerObject, SL_IID_PLAY, &emitter._playerPlay);
-OPLog("OPaudioEmitter: 3");
     // get the buffer queue
 	(*emitter._playerObject)->GetInterface(emitter._playerObject, SL_IID_BUFFERQUEUE,
 	            &emitter._bqPlayerBufferQueue);
-OPLog("OPaudioEmitter: 3.5");
 	emitter._queued = -1;
 
 	for(OPint i = BUFFER_COUNT; i--;) emitter.Buffers[i] = (ui8*)OPalloc(BUFFER_SIZE);
-    OPLog("OPsoundEmitter: 4");
 #else
 	alGenBuffers(BUFFER_COUNT, emitter.Buffers);
 	alGenSources(1, &emitter.al_src);
@@ -121,14 +109,11 @@ void OPaudEnqueueBuffer(ui8* buffer, OPint length){
 
 #ifdef OPIFEX_ANDROID
 	void OPaudPlay(){
-		OPLog("OPSoundEmitter: Play start...");
-		OPLog("OPSoundEmitter: Invoking play...");
 		(*OPAUD_CURR_EMITTER->_playerPlay)->SetPlayState(
 			OPAUD_CURR_EMITTER->_playerPlay,
 			SL_PLAYSTATE_PLAYING
 		);
 		OPAUD_CURR_EMITTER->State = Playing;
-		OPLog("OPSoundEmitter: \"playing\"");
 		OPAUD_CURR_EMITTER->State = Playing;
 	}
 
@@ -194,13 +179,9 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 	if(queued > 0){
         SLuint32 slState;
 		SLPlayItf pp = OPAUD_CURR_EMITTER->_playerPlay;
-		OPLog("OPaudUpdate: 2\n");
         (*pp)->GetPlayState(pp, &slState);
-        OPLog("OPaudUpdate: 3\n");
         if(slState == SL_PLAYSTATE_STOPPED){
-	        OPLog("OPaudUpdate: 4\n");
 			(*pp)->SetPlayState(pp, SL_PLAYSTATE_PLAYING);
-			OPLog("OPaudUpdate: 5\n");
         }
 
 		// all buffers are in use, wait for one to process
@@ -208,14 +189,12 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
         	return 0;
         }
 	}
-	OPLog("OPaudUpdate: 6\n");
 #else
 	ALint processed = 0;
 	ALuint unqueued[BUFFER_COUNT];
 
 	alGetSourcei(OPAUD_CURR_EMITTER->al_src, AL_BUFFERS_QUEUED, &queued);
 	alGetSourcei(OPAUD_CURR_EMITTER->al_src, AL_BUFFERS_PROCESSED, &processed);
-	OPLog("Queued: %d Proc: %d", queued, processed);
 
 	if(queued > 0){
 		ALint state;
@@ -241,21 +220,17 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 
 	// read sample rate >> bytes/sec pcm bytes
 	if(len = src->Read(src, &OPAUD_CURR_EMITTER->Progress, buff, bps >> shift)){//bps >> shift)){ //)
-		OPLog("pos %d len %d", OPAUD_CURR_EMITTER->Progress, src->Description.Length);
 		Proc(OPAUD_CURR_EMITTER, len);
 		OPaudEnqueueBuffer(buff, len);
 		return len;
 	}
 	else if(OPAUD_CURR_EMITTER->Looping){
 		// reset the sound!
-		OPLog("Looping");
 		src->Seek(src, &(OPAUD_CURR_EMITTER->Progress = 0));
 		return 0;
 	}
 	else if(queued <= 0){
-		OPLog("OPaudUpdate: 10\n");
 		OPaudStop();
-		OPLog("OPaudUpdate: 12\n");
 	}
 
 	return -1;

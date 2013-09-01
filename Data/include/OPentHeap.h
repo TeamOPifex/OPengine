@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef OPEngine_Data_MemPack
-#define OPEngine_Data_MemPack
+#ifndef OPEngine_Data_EntHeap
+#define OPEngine_Data_EntHeap
 
 #ifdef __cplusplus
 extern "C"
@@ -9,6 +9,8 @@ extern "C"
 #endif
 #include "./Core/include/Types.h"
 #include "./Core/include/DynamicMemory.h"
+#include "./Data/include/OPheap.h"
+#include <stdio.h>
 
 //  _____ _                   _       
 // / ____| |                 | |      
@@ -18,11 +20,11 @@ extern "C"
 //|_____/ \__|_|   \__,_|\___|\__|___/
 //                                                                      
 typedef struct{
-	void (*Alloc)(void* segmentPtr, OPuint count);
-	void (*Dealloc)(void* data);
-	OPuint (*Size)(OPuint count);
-	void* Data;
-} OPmemDesc;
+	void* Entities;
+	OPint MaxIndex;
+	OPint MaxStale;
+	OPminHeap Free;
+} OPentHeap;
 
 // ______                _   _                 
 //|  ____|              | | (_)                
@@ -30,8 +32,24 @@ typedef struct{
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-void* OPmemPackAlloc(OPmemDesc* segments, OPint segCount, OPint n);
-OPint OPmemPackDealloc(void* Data, OPmemDesc* segments, OPint segCount, OPint n);
+
+#define OPentHeapActivate(heap, i){\
+	if((*i = OPminHeapPop(&heap->Free)) >= 0){\
+		if(*i > heap->MaxIndex - 1){\
+			heap->MaxIndex = *i + 1;\
+			heap->MaxStale = 0;\
+		}\
+	}\
+}\
+
+#define OPentHeapKill(heap, i){\
+	OPminHeapPush(&heap->Free, i);\
+	if(i == heap) heap->MaxStale = 1;\
+}\
+
+OPuint     OPentHeapSize(OPint entsize, OPint count);
+OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count);
+
 #ifdef __cplusplus
 }
 #endif

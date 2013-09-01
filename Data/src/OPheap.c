@@ -37,7 +37,7 @@ OPint OPminHeapPop(OPminHeap* heap){
 	OPint* arr = heap->_indices;
 	OPint out = arr[1];
 
-	if(heap->_size <= 1) return 0;
+	if(heap->_size <= 1) return -1;
 
 	_swap(&arr[1], &arr[heap->_size - 1]);
 	heap->_size--;
@@ -47,7 +47,7 @@ OPint OPminHeapPop(OPminHeap* heap){
 }
 //-----------------------------------------------------------------------------
 OPint OPminHeapPeek(OPminHeap* heap){
-	if(heap->_size == 1) return 0;
+	if(heap->_size == 1) return -1;
 	return heap->_indices[1];
 }
 //-----------------------------------------------------------------------------
