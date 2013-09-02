@@ -159,3 +159,11 @@ PackedMesh* LoadOPM(FILE* file, MeshPacker* meshPacker) {
 	
 	return new PackedMesh(meshPacker, vertexPosition, indexPosition, data.indexCount * 3, data.vertexSize);
 }
+
+OPint OPMLoad(const OPchar* filename, Mesh** image){
+	return 1;
+}
+
+OPint OPMUnload(void* image){
+	return 1;
+}

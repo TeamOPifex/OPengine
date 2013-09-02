@@ -33,6 +33,7 @@
 #include "./Human/include/Audio/OPaudio2.h"
 #include "./Human/include/Audio/OPaudioEmitter.h"
 #include "./Human/include/Audio/OPaudioPlayer.h"
+#include "./Human/include/Resources/Texture/ImagePNG.h"
 #include "./Data/include/OPfile.h"
 #include "./Data/include/OPcontentManager.h"
 #include "./Data/include/OPentHeap.h"
@@ -141,10 +142,17 @@ OPLog("Created EntHeap!");
 			sizeof(OPaudioSource),
 			(OPint (*)(const OPchar*, void**))OPaudOpenOgg,
 			(OPint (*)(void*))OPaudCloseOgg
+		},
+		{
+			".png",
+			"Textures/",
+			sizeof(Texture2D),
+			(OPint (*)(const OPchar*, void**))OPimagePNGLoad,
+			(OPint (*)(void*))OPimagePNGUnload
 		}
 	};
 
-	OPcmanInit(loaders, 2);
+	OPcmanInit(loaders, 3);
 
 	GPS = new GamePadSystem();
 
@@ -187,7 +195,16 @@ OPLog("Created EntHeap!");
 		OPLog("%d ", OPminHeapPop(heap));
 	}
 
+	OPaudInit();
+	//Sound = OPaudOpenOgg("Audio/background.ogg");
+	RenderSystem::Initialize(width, height);
+
+	OPcmanLoad("pew.wav");
+	OPcmanLoad("background.ogg");
+	OPcmanLoad("test.png");
+
 	GM = new GameManager(width, height);
+
 
 #ifndef OPIFEX_ANDROID//defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 	  	glfwSetKeyCallback(KeyDown);
@@ -196,12 +213,8 @@ OPLog("Created EntHeap!");
         OPLog("Main: Song loading...");
         OPchar songPath[] = {"Audio/background.ogg"};
         //Song = OPAudio::ReadOgg(songPath);
-        OPaudInit();
 
         OPLog("Main: Song loaded");
-
-        //Sound = OPaudOpenOgg("Audio/background.ogg");
-		OPcmanLoad("pew.wav"); OPcmanLoad("background.ogg");
 
 		Sound1 = (OPaudioSource*)OPcmanGet("pew.wav");
 		Sound = (OPaudioSource*)OPcmanGet("background.ogg");

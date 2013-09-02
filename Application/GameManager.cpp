@@ -2,6 +2,7 @@
 #include "./Human/include/Rendering/RenderSystem.h"
 #include "./Human/include/Utilities/OBJLoader.h"
 #include "./Data/include/OPfile.h"
+#include "./Data/include/OPcontentManager.h"
 #include "./Human/include/Resources/Texture/ImageDDS.h"
 #include "./Human/include/Resources/Texture/ImagePNG.h"
 #include "./Human/include/Utilities/Errors.h"
@@ -10,9 +11,7 @@
 
 GameManager::GameManager(int width, int height) 
 {
-	RenderSystem::Initialize(width, height);
-
-	_colorTexture = ImagePNG::TextureFromFile("Textures/test.png");	
+	_colorTexture = (Texture2D*)OPcmanGet("test.png");//ImagePNG::TextureFromFile("Textures/test.png");//
 	FileInformation t_file = OPreadFileInformation("Models/BiPlane.opm");
 
 	meshPacker = new MeshPacker();

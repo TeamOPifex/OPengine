@@ -16,6 +16,16 @@
 	#include <GL/glfw.h>
 #endif
 
+OPint OPimagePNGLoad(const OPchar* filename, Texture2D** image){
+	*image = ImagePNG::TextureFromFile(filename);
+	return 1;
+}
+
+OPint OPimagePNGUnload(void* image){
+	// TODO
+	return 1;
+}
+
 ImagePNG::ImagePNG(FILE* fp, ui32 start, ui32 length)
 {
 	std::vector<ui8> image;
