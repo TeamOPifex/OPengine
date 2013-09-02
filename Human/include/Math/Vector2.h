@@ -50,7 +50,7 @@ public:
 		x = s;		y = s;
 	}
 	Vector2(OPfloat x, OPfloat y){
-		x = x;		y = y;
+		this->x = x;		this->y = y;
 	}
 
 	//Vector2& operator-(const Vector2 &rhs);

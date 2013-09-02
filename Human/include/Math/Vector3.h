@@ -57,7 +57,7 @@ public:
 		x = s;		y = s;		z = s;
 	}
 	Vector3(OPfloat x, OPfloat y, OPfloat z){
-		x = x;		y = y;		z = z;
+		this->x = x;		this->y = y;		this->z = z;
 	}
 	
 	OPfloat* ptr(){	return &x;	}

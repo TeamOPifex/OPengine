@@ -10,7 +10,7 @@ public:
 		x = s;		y = s;		z = s;		w = s;
 	}
 	Vector4(OPfloat x, OPfloat y, OPfloat z, OPfloat w){
-		x = x;		y = y;		z = z;		w = w;
+		this->x = x;		this->y = y;		this->z = z;		this->w = w;
 	}
 
 	OPfloat* ptr(){	return &x;	}
