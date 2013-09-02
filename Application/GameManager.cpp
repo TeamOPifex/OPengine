@@ -12,10 +12,10 @@
 GameManager::GameManager(int width, int height) 
 {
 	_colorTexture = (Texture2D*)OPcmanGet("test.png");//ImagePNG::TextureFromFile("Textures/test.png");//
-	FileInformation t_file = OPreadFileInformation("Models/BiPlane.opm");
+	//FileInformation t_file = OPreadFileInformation("Models/BiPlane.opm");
 
 	meshPacker = new MeshPacker();
-	PackedMesh* mesh = LoadOPM(t_file.file, meshPacker);
+	PackedMesh* mesh = LoadOPM("Models/BiPlane.opm", meshPacker);
 	meshPacker->Build();
 	
 	_normalTexture = ImageDDS::TextureFromFile("Textures/modelNormal.dds");

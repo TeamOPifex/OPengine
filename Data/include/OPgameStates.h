@@ -1,7 +1,8 @@
 #pragma once
 #ifndef OPEngine_Data_GameStates
 #define OPEngine_Data_GameStates
-#include "./../../Core/include/Core.h"
+#include "./../../Core/include/Timer.h"
+#include "./../../Core/include/Types.h"
 #include "OPlist.h"
 
 #ifdef __cplusplus
@@ -16,7 +17,7 @@ typedef struct OPgameState_def{
 	void (*OnExit)(OPgameState*);
 };
 
-OPgameState* ActiveState;
+extern OPgameState* ActiveState;
 
 void OPgameStateSwap(OPgameState* targetState); 
 OPgameState* OPgameStateCreate(void (*entrance)(OPgameState*), void (*update)(OPtimer*), void (*exit)(OPgameState*));

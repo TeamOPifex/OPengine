@@ -132,8 +132,14 @@ LoadedData LoadOPMData(FILE* file) {
 	return data;
 }
 
-Mesh* LoadOPM(FILE* file) {
-
+Mesh* LoadOPM(const OPchar* filename) {
+	// TODO
+	// I thoroughly dissaprove of using OPreadFileInformation,
+	// retrieving a file pointer then reading from that... We need
+	// more consistancy. We should change this so a OPstream, thus using only
+	// what we've built previously. That way it's limited to a single point
+	// of failure and is more maintainable.
+	FILE* file = OPreadFileInformation(filename).file;  
 	LoadedData data = LoadOPMData(file);
 
 	// Create Vertex & Index Buffers for Mesh
@@ -146,16 +152,20 @@ Mesh* LoadOPM(FILE* file) {
 	OPfree(data.vertices);
 	OPfree(data.indices);
 
+	fclose(file);
+
 	return out;
 }
 
 
-PackedMesh* LoadOPM(FILE* file, MeshPacker* meshPacker) {
-
+PackedMesh* LoadOPM(const OPchar* filename, MeshPacker* meshPacker) {
+	FILE* file = OPreadFileInformation(filename).file;  
 	LoadedData data = LoadOPMData(file);
 
 	ui32 vertexPosition = meshPacker->AddVertexBuffer(data.vertexSize, data.vertices, data.vertexCount);
 	ui32 indexPosition = meshPacker->AddIndexBuffer(data.indexSize, data.indices, data.indexCount);
+	
+	fclose(file);
 	
 	return new PackedMesh(meshPacker, vertexPosition, indexPosition, data.indexCount * 3, data.vertexSize);
 }
