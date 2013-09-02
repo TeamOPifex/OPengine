@@ -43,8 +43,8 @@ typedef struct{
 }\
 
 #define OPentHeapKill(heap, i){\
-	OPminHeapPush(&heap->Free, i);\
-	if(i == heap) heap->MaxStale = 1;\
+	OPminHeapPush(&heap.Free, i);\
+	if(i == heap.MaxIndex) heap.MaxStale = 1;\
 }\
 
 OPuint     OPentHeapSize(OPint entsize, OPint count);
