@@ -20,3 +20,7 @@ public:
 };
 
 typedef Shader* ShaderPtr;
+
+OPint OPfragShaderLoad(const OPchar* filename, Shader** shader);
+OPint OPvertShaderLoad(const OPchar* filename, Shader** shader);
+OPint OPshaderUnload(Shader* shader);

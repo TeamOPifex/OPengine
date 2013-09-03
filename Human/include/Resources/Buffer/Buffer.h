@@ -5,6 +5,7 @@
 
 class Buffer : public Resource {
 public:
+	Buffer();
 	Buffer(BufferType shaderType, ui32 size, const void* data);
 };
 

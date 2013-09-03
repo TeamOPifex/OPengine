@@ -19,7 +19,7 @@ typedef struct OPgameState_def{
 
 extern OPgameState* ActiveState;
 
-void OPgameStateSwap(OPgameState* targetState); 
+void OPgameStateChange(OPgameState* targetState); 
 OPgameState* OPgameStateCreate(void (*entrance)(OPgameState*), void (*update)(OPtimer*), void (*exit)(OPgameState*));
 OPint OPgameStateDestroy(OPgameState* state);
 

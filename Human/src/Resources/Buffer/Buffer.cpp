@@ -8,6 +8,10 @@
 	#include <GL/glew.h>
 #endif
 
+Buffer::Buffer(){
+
+}
+
 Buffer::Buffer(BufferType shaderType, ui32 size, const void* data){	
 	glGenBuffers(1, &m_handle);
 	CheckError("Buffer::1 - ERROR!");

@@ -9,6 +9,7 @@
 
 class Material : public Resource {
 public:
+	Material(){}
 	Material(ShaderPtr vertex, ShaderPtr fragment);
 	~Material();
 
