@@ -9,8 +9,13 @@ TexturedMaterial::TexturedMaterial() : Material(Shader::FromFile(Vertex, ""), Sh
 }
 
 TexturedMaterial::~TexturedMaterial(){
+	Destroy();
+}
+
+void TexturedMaterial::Destroy(){
 	delete World;
 	delete View;
 	delete Projection;
 	delete ColorTexture;
+	Material::Destroy();
 }

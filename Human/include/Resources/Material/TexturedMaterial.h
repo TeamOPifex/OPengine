@@ -8,8 +8,9 @@
 class TexturedMaterial : public Material{
 public:
 	TexturedMaterial();
-
 	~TexturedMaterial();
+
+	void Destroy();
 
 	ShaderParamWorld* World;
 	ShaderParamView* View;

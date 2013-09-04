@@ -10,6 +10,7 @@ class TexturedScreenMaterial : public Material{
 public:
 	TexturedScreenMaterial();
 	~TexturedScreenMaterial();
+	void Destroy();
 
 	void EnableAttributes();
 	void DisableAttributes();
