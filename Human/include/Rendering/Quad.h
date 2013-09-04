@@ -7,6 +7,7 @@
 
 class Quad : public Model {
 public:
+	Quad();
 	Quad(MaterialPtr material);
 	~Quad();
 

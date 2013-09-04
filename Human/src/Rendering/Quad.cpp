@@ -4,6 +4,9 @@
 #include "./Core/include/Log.h"
 #include "./Human/include/Rendering/RenderSystem.h"
 
+Quad::Quad() : Model(){
+}
+
 Quad::Quad(MaterialPtr material) : Model(GenMesh(), material){
 
 }

@@ -1,6 +1,12 @@
 #include "./Human/include/Resources/Model/Model.h"
 #include "./Human/include/Rendering/RenderSystem.h"
 
+Model::Model(){
+	ModelMesh = NULL;
+	ModelMaterial = NULL;
+	WorldMatrix = NULL;
+}
+
 Model::Model(Mesh* mesh, Material* material){
 	ModelMesh = mesh;
 	ModelMaterial = material;

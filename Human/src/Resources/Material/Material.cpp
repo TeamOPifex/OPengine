@@ -9,6 +9,10 @@
 #include <GL/glew.h>
 #endif
 
+Material::Material(){
+	this->hashMap = NULL;
+}
+
 Material::Material(ShaderPtr vertex, ShaderPtr fragment){ 
 	hashMap = OPhashMapCreate(8);
 
@@ -28,6 +32,7 @@ Material::Material(ShaderPtr vertex, ShaderPtr fragment){
 }
 
 Material::~Material(){
+	if(!hashMap) return;
 	Destroy();
 }
 
