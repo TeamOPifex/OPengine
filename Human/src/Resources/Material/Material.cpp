@@ -16,10 +16,10 @@ Material::Material(ShaderPtr vertex, ShaderPtr fragment){
 	CheckError("GLMaterial::Error 1");
 
 	if(m_handle){
-		glAttachShader(m_handle, (GLuint)vertex->Handle());
+		glAttachShader(m_handle, (GLuint)vertex->m_handle);
 		CheckError("GLMaterial::Error 2");
 
-		glAttachShader(m_handle, (GLuint)fragment->Handle());
+		glAttachShader(m_handle, (GLuint)fragment->m_handle);
 		CheckError("GLMaterial::Error 3");
 
 		glLinkProgram(m_handle);

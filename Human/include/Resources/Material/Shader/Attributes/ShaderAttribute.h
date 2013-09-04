@@ -4,6 +4,7 @@
 
 class ShaderAttribute {
 public:
+	ShaderAttribute(){}
 	ShaderAttribute(MaterialPtr material, const char* attribute) 
 	{ 
 		_material = material; 
