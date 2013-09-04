@@ -28,6 +28,10 @@ Material::Material(ShaderPtr vertex, ShaderPtr fragment){
 }
 
 Material::~Material(){
+	Destroy();
+}
+
+void Material::Destroy() {
 	OPhashMapDestroy(hashMap);
 }
 

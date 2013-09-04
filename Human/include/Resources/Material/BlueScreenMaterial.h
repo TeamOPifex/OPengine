@@ -12,8 +12,12 @@ public:
 	}
 
 	~BlueScreenMaterial(){
+	}
+
+	void Destroy() {
 		delete World;
 		delete _Position;
+		Material::Destroy();
 	}
 
 	void EnableAttributes(){

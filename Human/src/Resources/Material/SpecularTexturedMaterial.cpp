@@ -16,6 +16,10 @@ SpecularTexturedMaterial::SpecularTexturedMaterial() : Material(Shader::FromFile
 }
 
 SpecularTexturedMaterial::~SpecularTexturedMaterial(){
+	Destroy();
+}
+
+void SpecularTexturedMaterial::Destroy(){
 	delete World;
 	delete View;
 	delete Projection;
@@ -26,6 +30,7 @@ SpecularTexturedMaterial::~SpecularTexturedMaterial(){
 	delete _Normal;
 	delete _UV;
 	delete _Tangent;
+	Material::Destroy();
 }
 
 void SpecularTexturedMaterial::EnableAttributes(){
@@ -46,7 +51,7 @@ void SpecularTexturedMaterial::SetMeshData(BaseMeshPtr mesh){
 	Material::SetData(_Position->Handle(), 3, false, mesh->Stride, (void*)0);
 	Material::SetData(_Normal->Handle(), 3, false, mesh->Stride, (void*)12);
 	Material::SetData(_UV->Handle(), 2, false, mesh->Stride, (void*)24);
-	Material::SetData(_Tangent->Handle(), 3, false, mesh->Stride, (void*)32);		
+	Material::SetData(_Tangent->Handle(), 3, false, mesh->Stride, (void*)32);
 }
 	
 void SpecularTexturedMaterial::SetColorTexture(Texture2D* tex) {

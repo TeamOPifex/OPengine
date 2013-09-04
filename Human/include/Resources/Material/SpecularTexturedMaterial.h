@@ -17,6 +17,8 @@ public:
 	SpecularTexturedMaterial();
 	~SpecularTexturedMaterial();
 
+	void Destroy();
+
 	void EnableAttributes();
 	void DisableAttributes();
 

@@ -11,11 +11,16 @@ TexturedScreenMaterial::TexturedScreenMaterial() : Material(Shader::FromFile(Ver
 }
 
 TexturedScreenMaterial::~TexturedScreenMaterial(){
+	Destroy();
+}
+
+void TexturedScreenMaterial::Destroy() {
 	delete World;
 	delete ColorTexture;
 	delete Alpha;
 	delete _Position;
 	delete _UV;
+	Material::Destroy();
 }
 
 void TexturedScreenMaterial::EnableAttributes(){
