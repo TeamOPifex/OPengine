@@ -3,5 +3,9 @@
 
 class ShaderParamNormalTexture : public ShaderParamTexture2D {
 public:
-	ShaderParamNormalTexture(Material* material) : ShaderParamTexture2D(material,"uNormalTexture") { }
+	ShaderParamNormalTexture(){}
+	ShaderParamNormalTexture(Material* material) : ShaderParamTexture2D() { Init(material); }
+	void Init(Material* material) {
+		ShaderParamTexture2D::Init(material,"uNormalTexture");
+	}
 };

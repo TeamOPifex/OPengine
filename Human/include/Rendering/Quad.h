@@ -7,7 +7,9 @@
 
 class Quad : public Model {
 public:
+	Quad() {}
 	Quad(MaterialPtr material);
+	void Init(MaterialPtr material);
 	~Quad();
 
 	void SetPosition(Vector3* position);

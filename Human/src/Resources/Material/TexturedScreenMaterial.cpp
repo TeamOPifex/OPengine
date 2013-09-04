@@ -1,13 +1,18 @@
 #include "./Human/include/Resources/Material/TexturedScreenMaterial.h"
 
-TexturedScreenMaterial::TexturedScreenMaterial() : Material(Shader::FromFile(Vertex, "Shaders/TexturedScreen.vert"), Shader::FromFile(Fragment, "Shaders/Textured.frag"))
+TexturedScreenMaterial::TexturedScreenMaterial(bool init) : Material()
 {
+	if(init) Init();
+}
+
+void TexturedScreenMaterial::Init() {
 	World = new ShaderParamWorld(this);
 	ColorTexture = new ShaderParamColorTexture(this);
 	Alpha = new ShaderParamAlpha(this);
-		
+
 	_Position = new ShaderAttributePosition(this);
 	_UV = new ShaderAttributeUV(this);
+	Material::Init(Shader::FromFile(Vertex, "Shaders/TexturedScreen.vert"), Shader::FromFile(Fragment, "Shaders/Textured.frag"));
 }
 
 TexturedScreenMaterial::~TexturedScreenMaterial(){

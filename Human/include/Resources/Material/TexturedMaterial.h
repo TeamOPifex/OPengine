@@ -7,7 +7,9 @@
 
 class TexturedMaterial : public Material{
 public:
-	TexturedMaterial();
+	TexturedMaterial() {}
+	TexturedMaterial(bool init);
+	void Init();
 	~TexturedMaterial();
 
 	void Destroy();

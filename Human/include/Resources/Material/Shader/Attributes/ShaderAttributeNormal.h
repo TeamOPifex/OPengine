@@ -4,5 +4,13 @@
 
 class ShaderAttributeNormal : public ShaderAttribute {
 public:
-	ShaderAttributeNormal(MaterialPtr material) : ShaderAttribute(material, "aNormal"){	}
+	ShaderAttributeNormal() {}
+	ShaderAttributeNormal(MaterialPtr material) : ShaderAttribute() 
+	{
+		Init(material);
+	}
+
+	void Init(MaterialPtr material) {
+		ShaderAttribute::Init(material, "aNormal");
+	}
 };

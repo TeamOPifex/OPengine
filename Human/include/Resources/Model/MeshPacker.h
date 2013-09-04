@@ -5,7 +5,9 @@
 
 class MeshPacker {
 public:
-	MeshPacker();
+	MeshPacker() {}
+	MeshPacker(bool init);
+	void Init();
 	~MeshPacker();
 
 	ui32 AddVertexBuffer(ui32 vertexSize, void* verticesData, ui32 vertexCount);

@@ -3,5 +3,9 @@
 
 class ShaderParamAlpha : public ShaderParamFloat {
 public:
-	ShaderParamAlpha(Material* material) : ShaderParamFloat(material,"uAlpha") { }
+	ShaderParamAlpha(){}
+	ShaderParamAlpha(Material* material) : ShaderParamFloat() { Init(material); }
+	void Init(Material* material) {
+		ShaderParamFloat::Init(material, "uAlpha");
+	}
 };

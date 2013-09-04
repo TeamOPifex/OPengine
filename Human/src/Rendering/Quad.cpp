@@ -4,8 +4,12 @@
 #include "./Core/include/Log.h"
 #include "./Human/include/Rendering/RenderSystem.h"
 
-Quad::Quad(MaterialPtr material) : Model(GenMesh(), material){
+Quad::Quad(MaterialPtr material) : Model(){
+	Init(material);
+}
 
+void Quad::Init(MaterialPtr material) {
+	Model::Init(GenMesh(), material);
 }
 
 Quad::~Quad(){

@@ -16,6 +16,7 @@
 class Shader : public Resource {
 public:
 	Shader(ShaderType shaderType, const char* source);
+	void Init(ShaderType shaderType, const char* source);
 	static Shader* FromFile(ShaderType shaderType, const char* file);
 };
 

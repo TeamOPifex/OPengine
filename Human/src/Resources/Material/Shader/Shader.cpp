@@ -19,6 +19,10 @@
 using namespace std;
 
 Shader::Shader(ShaderType shaderType, const char* source){
+	Init(shaderType, source);
+}
+
+void Shader::Init(ShaderType shaderType, const char* source){
 
 	m_handle = glCreateShader(GetShaderType(shaderType));
 	CheckError("GLShader::Error 1");
@@ -43,6 +47,7 @@ Shader::Shader(ShaderType shaderType, const char* source){
 		}
 	}
 }
+
 
 ShaderPtr Shader::FromFile(ShaderType shaderType, const char* file){
 

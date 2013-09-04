@@ -4,5 +4,13 @@
 
 class ShaderAttributeUV : public ShaderAttribute {
 public:
-	ShaderAttributeUV(MaterialPtr material) : ShaderAttribute(material, "aUV"){	}
+	ShaderAttributeUV(){}
+	ShaderAttributeUV(MaterialPtr material): ShaderAttribute() 
+	{
+		Init(material);
+	}
+
+	void Init(MaterialPtr material){
+		ShaderAttribute::Init(material, "aUV");
+	}
 };

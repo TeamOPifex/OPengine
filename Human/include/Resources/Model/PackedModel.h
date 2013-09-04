@@ -6,7 +6,9 @@
 
 class PackedModel{
 public:
+	PackedModel();
 	PackedModel(PackedMeshPtr mesh, MaterialPtr material);
+	void Init(PackedMeshPtr mesh, MaterialPtr material);
 	~PackedModel();
 	void SetMeshData();
 

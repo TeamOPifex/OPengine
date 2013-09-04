@@ -11,6 +11,7 @@ class Material : public Resource {
 public:
 	Material(){}
 	Material(ShaderPtr vertex, ShaderPtr fragment);
+	void Init(ShaderPtr vertex, ShaderPtr fragment);
 	~Material();
 
 	ui32 GetAttribute(const char* attribute);

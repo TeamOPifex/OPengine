@@ -6,8 +6,13 @@
 
 class ShaderParamMatrix : public ShaderParam {
 public:
-	ShaderParamMatrix(Material* material, const char* variable) : ShaderParam(material) {
+	ShaderParamMatrix(){}
+	ShaderParamMatrix(Material* material, const char* variable) : ShaderParam() {
+		Init(material, variable);
+	}
+	void Init(Material* material, const char* variable) {
 		_handle = material->GetUniform(variable);
+		ShaderParam::Init(material);
 	}
 	void SetMatrix(Matrix4* value) {
 		_material->SetMatrix(_handle, value);

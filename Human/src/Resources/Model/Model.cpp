@@ -2,6 +2,10 @@
 #include "./Human/include/Rendering/RenderSystem.h"
 
 Model::Model(Mesh* mesh, Material* material){
+	Init(mesh, material);
+}
+
+void Model::Init(Mesh* mesh, Material* material){
 	ModelMesh = mesh;
 	ModelMaterial = material;
 	WorldMatrix = new Matrix4();

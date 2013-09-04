@@ -7,6 +7,7 @@ class Buffer : public Resource {
 public:
 	Buffer();
 	Buffer(BufferType shaderType, ui32 size, const void* data);
+	void Init(BufferType shaderType, ui32 size, const void* data);
 };
 
 typedef Buffer* BufferPtr;

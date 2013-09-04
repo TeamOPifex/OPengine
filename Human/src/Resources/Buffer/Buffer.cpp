@@ -13,15 +13,19 @@ Buffer::Buffer(){
 }
 
 Buffer::Buffer(BufferType shaderType, ui32 size, const void* data){	
+	Init(shaderType, size, data);
+}
+
+void Buffer::Init(BufferType shaderType, ui32 size, const void* data){	
 	glGenBuffers(1, &m_handle);
 	CheckError("Buffer::1 - ERROR!");
-		
+
 	if(shaderType == VertexBuffer)
 		glBindBuffer(GL_ARRAY_BUFFER, m_handle);
 	else if(shaderType == IndexBuffer)
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_handle);
 	CheckError("Buffer::2 - ERROR!");
-	
+
 	if(shaderType == VertexBuffer)
 		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 	else if(shaderType == IndexBuffer)

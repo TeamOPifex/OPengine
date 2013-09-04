@@ -3,5 +3,9 @@
 
 class ShaderParamWorld : public ShaderParamMatrix {
 public:
-	ShaderParamWorld(Material* material) : ShaderParamMatrix(material, "uWorld") { }
+	ShaderParamWorld(){}
+	ShaderParamWorld(Material* material) : ShaderParamMatrix() { Init(material); }
+	void Init(Material* material) {
+		ShaderParamMatrix::Init(material, "uWorld");
+	}
 };

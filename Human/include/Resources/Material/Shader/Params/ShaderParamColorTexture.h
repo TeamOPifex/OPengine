@@ -3,5 +3,9 @@
 
 class ShaderParamColorTexture : public ShaderParamTexture2D {
 public:
-	ShaderParamColorTexture(Material* material) : ShaderParamTexture2D(material,"uColorTexture") { }
+	ShaderParamColorTexture(){}
+	ShaderParamColorTexture(Material* material) : ShaderParamTexture2D() { Init(material); }
+	void Init(Material* material) {
+		ShaderParamTexture2D::Init(material,"uColorTexture");
+	}
 };

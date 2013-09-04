@@ -3,7 +3,11 @@
 
 class ShaderParam {	
 public:
-	ShaderParam(MaterialPtr material) { _material = material; }
+	ShaderParam(){}
+	ShaderParam(MaterialPtr material) { Init(material);  }
+	void Init(MaterialPtr material) {
+		_material = material;
+	}
 protected:
 	ui32 _handle;
 	MaterialPtr _material;

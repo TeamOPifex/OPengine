@@ -4,5 +4,13 @@
 
 class ShaderAttributeTangent : public ShaderAttribute {
 public:
-	ShaderAttributeTangent(MaterialPtr material) : ShaderAttribute(material, "aTangent"){	}
+	ShaderAttributeTangent(){}
+	ShaderAttributeTangent(MaterialPtr material): ShaderAttribute() 
+	{
+		Init(material);
+	}
+
+	void Init(MaterialPtr material){
+		ShaderAttribute::Init(material, "aTangent");
+	}
 };

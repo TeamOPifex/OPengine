@@ -8,7 +8,9 @@
 
 class TexturedScreenMaterial : public Material{
 public:
-	TexturedScreenMaterial();
+	TexturedScreenMaterial() {}
+	TexturedScreenMaterial(bool init);
+	void Init();
 	~TexturedScreenMaterial();
 	void Destroy();
 

@@ -4,5 +4,13 @@
 
 class ShaderAttributePosition : public ShaderAttribute {
 public:
-	ShaderAttributePosition(MaterialPtr material) : ShaderAttribute(material, "aPosition"){	}
+	ShaderAttributePosition(){}
+	ShaderAttributePosition(MaterialPtr material) : ShaderAttribute() 
+	{
+		Init(material);
+	}
+
+	void Init(MaterialPtr material){
+		ShaderAttribute::Init(material, "aPosition");
+	}
 };

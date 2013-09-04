@@ -3,5 +3,9 @@
 
 class ShaderParamView : public ShaderParamMatrix {
 public:
-	ShaderParamView(Material* material) : ShaderParamMatrix(material,"uView") { }
+	ShaderParamView(){}
+	ShaderParamView(Material* material) : ShaderParamMatrix() { Init(material); }
+	void Init(Material* material) {
+		ShaderParamMatrix::Init(material,"uView");
+	}
 };

@@ -1,6 +1,10 @@
 #include "./Human/include/Resources/Model/MeshPacker.h"
 
-MeshPacker::MeshPacker(){
+MeshPacker::MeshPacker(bool init){
+	if(init) Init();
+}
+
+void MeshPacker::Init(){
 	vertexOffset = 0;
 	indexOffset = 0;
 

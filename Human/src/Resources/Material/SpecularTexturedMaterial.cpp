@@ -1,18 +1,23 @@
 #include "./Human/include/Resources/Material/SpecularTexturedMaterial.h"
 
-SpecularTexturedMaterial::SpecularTexturedMaterial() : Material(Shader::FromFile(Vertex, "Shaders/TexturedSpecular.vert"), Shader::FromFile(Fragment, "Shaders/TexturedSpecular.frag"))
+SpecularTexturedMaterial::SpecularTexturedMaterial(bool init) : Material()
 {
+	if(init) Init();
+}
+
+void SpecularTexturedMaterial::Init(){
 	World = new ShaderParamWorld(this);
 	View = new ShaderParamView(this);
 	Projection = new ShaderParamProjection(this);
 	ColorTexture = new ShaderParamColorTexture(this);
 	NormalTexture = new ShaderParamNormalTexture(this);
 	SpecularTexture = new ShaderParamSpecularTexture(this);
-		
+
 	_Position = new ShaderAttributePosition(this);
 	_Normal = new ShaderAttributeNormal(this);
 	_UV = new ShaderAttributeUV(this);
 	_Tangent = new ShaderAttributeTangent(this);
+	Material::Init(Shader::FromFile(Vertex, "Shaders/TexturedSpecular.vert"), Shader::FromFile(Fragment, "Shaders/TexturedSpecular.frag"));
 }
 
 SpecularTexturedMaterial::~SpecularTexturedMaterial(){

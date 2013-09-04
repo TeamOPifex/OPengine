@@ -5,9 +5,20 @@ PackedMesh::PackedMesh(
 	ui32 vertexPosition, 
 	ui32 indexPosition, 
 	ui32 count, 
-	ui32 stride) : BaseMesh(count, stride){
+	ui32 stride) : BaseMesh(){
 
-	MeshPackerPtr = meshPacker;
-	VertexPosition = vertexPosition;
-	IndexPosition = indexPosition;
+		Init(meshPacker, vertexPosition, indexPosition, count, stride);
+}
+
+void PackedMesh::Init(
+	MeshPacker* meshPacker, 
+	ui32 vertexPosition, 
+	ui32 indexPosition, 
+	ui32 count, 
+	ui32 stride) {
+
+		MeshPackerPtr = meshPacker;
+		VertexPosition = vertexPosition;
+		IndexPosition = indexPosition;
+		BaseMesh::Init(count, stride);
 }

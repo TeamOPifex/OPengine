@@ -3,5 +3,9 @@
 
 class ShaderParamProjection : public ShaderParamMatrix {
 public:
-	ShaderParamProjection(Material* material) : ShaderParamMatrix(material,"uProjection") { }
+	ShaderParamProjection(){}
+	ShaderParamProjection(Material* material) : ShaderParamMatrix() { Init(material); }
+	void Init(Material* material) {
+		ShaderParamMatrix::Init(material,"uProjection");
+	}
 };

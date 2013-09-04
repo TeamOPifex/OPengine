@@ -5,7 +5,12 @@
 
 class ShaderParamTexture2D : public ShaderParam {
 public:
-	ShaderParamTexture2D(Material* material, const char* variable) : ShaderParam(material) { 		
+	ShaderParamTexture2D(){}
+	ShaderParamTexture2D(Material* material, const char* variable) : ShaderParam() { 		
+		Init(material, variable);
+	}
+	void Init(Material* material, const char* variable) { 		
+		ShaderParam::Init(material);
 		_handle = material->GetUniform(variable);
 	}
 	void SetTexture(Texture2D* value, int slot) {

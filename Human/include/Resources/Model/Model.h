@@ -6,7 +6,9 @@
 
 class Model{
 public:
+	Model() {}
 	Model(MeshPtr mesh, MaterialPtr material);
+	void Init(MeshPtr mesh, MaterialPtr material);
 	~Model();
 	void SetMeshData();
 

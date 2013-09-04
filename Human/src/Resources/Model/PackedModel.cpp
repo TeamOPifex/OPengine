@@ -2,6 +2,10 @@
 #include "./Human/include/Rendering/RenderSystem.h"
 
 PackedModel::PackedModel(PackedMesh* mesh, Material* material){
+	Init(mesh, material);
+}
+
+void PackedModel::Init(PackedMesh* mesh, Material* material){
 	ModelMesh = mesh;
 	ModelMaterial = material;
 	WorldMatrix = new Matrix4();

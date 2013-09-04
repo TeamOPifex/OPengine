@@ -3,5 +3,9 @@
 
 class ShaderParamSpecularTexture : public ShaderParamTexture2D {
 public:
-	ShaderParamSpecularTexture(Material* material) : ShaderParamTexture2D(material,"uSpecularTexture") { }
+	ShaderParamSpecularTexture(){}
+	ShaderParamSpecularTexture(Material* material) : ShaderParamTexture2D() { Init(material); }
+	void Init(Material* material) {
+		ShaderParamTexture2D::Init(material,"uSpecularTexture");
+	}
 };

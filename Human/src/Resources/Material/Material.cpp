@@ -10,6 +10,10 @@
 #endif
 
 Material::Material(ShaderPtr vertex, ShaderPtr fragment){ 
+	Init(vertex, fragment);
+}
+
+void Material::Init(ShaderPtr vertex, ShaderPtr fragment){ 
 	hashMap = OPhashMapCreate(8);
 
 	m_handle = glCreateProgram();

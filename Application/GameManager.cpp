@@ -14,7 +14,7 @@ GameManager::GameManager(int width, int height)
 	_colorTexture = (Texture2D*)OPcmanGet("test.png");//ImagePNG::TextureFromFile("Textures/test.png");//
 	//FileInformation t_file = OPreadFileInformation("Models/BiPlane.opm");
 
-	meshPacker = new MeshPacker();
+	meshPacker = new MeshPacker(true);	
 	PackedMesh* mesh = LoadOPM("Models/BiPlane.opm", meshPacker);
 	meshPacker->Build();
 	
@@ -23,7 +23,7 @@ GameManager::GameManager(int width, int height)
 
 	OPLog("GameManager:Files Loaded");
 	
-	_material = new SpecularTexturedMaterial();
+	_material = new SpecularTexturedMaterial(true);
 
 	OPLog("GameManager:Specular");
 	RenderSystem::UseMaterial(_material);

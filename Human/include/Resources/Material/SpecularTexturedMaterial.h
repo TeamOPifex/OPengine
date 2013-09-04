@@ -14,7 +14,9 @@
 
 class SpecularTexturedMaterial : public Material{
 public:
-	SpecularTexturedMaterial();
+	SpecularTexturedMaterial() {}
+	SpecularTexturedMaterial(bool init);
+	void Init();
 	~SpecularTexturedMaterial();
 
 	void Destroy();

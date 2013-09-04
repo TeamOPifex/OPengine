@@ -5,10 +5,15 @@
 
 class BlueScreenMaterial : public Material{
 public:
-	BlueScreenMaterial() : Material(Shader::FromFile(Vertex, "Shaders/Screen.vert"), Shader::FromFile(Fragment, "Shaders/Blue.frag"))
+	BlueScreenMaterial() : Material()
 	{
+		Init();
+	}
+
+	void Init(){
 		World = new ShaderParamWorld(this);		
 		_Position = new ShaderAttributePosition(this);
+		Material::Init(Shader::FromFile(Vertex, "Shaders/Screen.vert"), Shader::FromFile(Fragment, "Shaders/Blue.frag"));
 	}
 
 	~BlueScreenMaterial(){
