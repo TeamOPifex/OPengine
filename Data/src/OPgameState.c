@@ -1,11 +1,11 @@
 #include "./../include/OPgameStates.h"
 
-OPgameState* ActiveState;
+OPgameState* ActiveState = NULL;
 
-void OPchangeGameState(OPgameState* targetState){
+void OPgameStateChange(OPgameState* targetState){
 	OPgameState* lastState = ActiveState;
 	
-	if(ActiveState->OnExit != NULL) ActiveState->OnExit(targetState);
+	if(ActiveState && ActiveState->OnExit != NULL) ActiveState->OnExit(targetState);
 	ActiveState = targetState;
 	if(ActiveState->OnEntrance != NULL) ActiveState->OnEntrance(lastState);
 }

@@ -69,3 +69,26 @@ ShaderPtr Shader::FromFile(ShaderType shaderType, const char* file){
 	return glshader;
 #endif
 }
+
+OPint OPfragShaderLoad(const OPchar* filename, Shader** shader){
+	*shader = Shader::FromFile(Fragment, filename);
+	if(*shader){
+		return 1;
+	}
+	return 0;
+}
+
+OPint OPvertShaderLoad(const OPchar* filename, Shader** shader){
+	*shader = Shader::FromFile(Vertex, filename);
+	if(*shader){
+		return 1;
+	}
+	return 0;
+}
+
+OPint OPshaderUnload(Shader* shader){
+	// TODO
+	// needs to make sure the any GL assets get released too
+	OPfree(shader);
+	return 1;
+}

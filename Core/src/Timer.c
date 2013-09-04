@@ -46,6 +46,7 @@ void OPtimerTick(OPtimer* timer){
 	double elapsed;
 	QueryPerformanceCounter(&t2);
 	elapsed = (t2.QuadPart - timer->_lastTime.QuadPart) * 1000.0 / timer->frequency.QuadPart;
+	timer->_lastTime = t2;
 
 	timer->TotalGametime += elapsed;	
 	timer->TimeLastTick = timer->_lastTime.QuadPart * 1000.0 / timer->frequency.QuadPart;
