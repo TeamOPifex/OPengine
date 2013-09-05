@@ -22,7 +22,13 @@ public:
 	static void Present();
 	static void DepthTest(bool state);
 
+	static i32 ScreenWidth();
+	static i32 ScreenHeight();
+	static OPfloat AspectRatio();
+
 	static void Shutdown();
 private:
 	static Renderer* m_renderer;
+	static i32 _width;
+	static i32 _height;
 };

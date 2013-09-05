@@ -3,9 +3,13 @@
 #include "./Core/include/Log.h"
 
 Renderer* RenderSystem::m_renderer = 0;
+i32 RenderSystem::_width = 0;
+i32 RenderSystem::_height = 0;
 
 int RenderSystem::Initialize(ui32 width, ui32 height){
 	m_renderer = new GLRenderer();
+	_width = width;
+	_height = height;
 	return m_renderer->initialize(width, height);
 }
 
@@ -60,3 +64,17 @@ void RenderSystem::Shutdown(){
 void RenderSystem::DepthTest(bool state){
 	m_renderer->depth_test(state);
 }
+
+i32 RenderSystem::ScreenWidth(){
+	return _width;
+}
+
+i32 RenderSystem::ScreenHeight(){
+	return _height;
+}
+
+OPfloat RenderSystem::AspectRatio(){
+	if(_width <= 0) return 0;
+	return _height / _width;
+}
+
