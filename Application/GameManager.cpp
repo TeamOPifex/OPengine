@@ -11,13 +11,14 @@
 
 GameManager::GameManager(int width, int height) 
 {
-	_colorTexture = (Texture2D*)OPcmanGet("test.png");//ImagePNG::TextureFromFile("Textures/test.png");//
+	//_colorTexture = ImagePNG::TextureFromFile("Textures/test.png");//
 	//FileInformation t_file = OPreadFileInformation("Models/BiPlane.opm");
-
+	
 	meshPacker = new MeshPacker(true);	
 	PackedMesh* mesh = LoadOPM("Models/BiPlane.opm", meshPacker);
 	meshPacker->Build();
-	
+
+	_colorTexture = ImageDDS::TextureFromFile("Textures/modelNormal.dds");
 	_normalTexture = ImageDDS::TextureFromFile("Textures/modelNormal.dds");
 	_specularTexture = ImageDDS::TextureFromFile("Textures/modelSpecular.dds");
 
@@ -48,7 +49,7 @@ bool GameManager::Update( OPtimer* coreTimer )
 }
 
 void GameManager::Draw(){
-	//RenderSystem::ClearColor(1,0,0);
+
 	RenderSystem::UseMaterial(_material);
 
 	_material->View->SetMatrix(Camera::GameCamera.GetView());

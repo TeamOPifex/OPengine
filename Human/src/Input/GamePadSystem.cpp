@@ -17,12 +17,12 @@ GamePadState* GamePadSystem::Controller(GamePadIndex index){
 
 #define CONTROLLER_CLASS_NAME "tv/ouya/console/api/OuyaController"
 
-jobject GamePadSystem::getControllerByPlayer( JNIEnv* env, int playerNum) {
+jobject GamePadSystem::getControllerByPlayer( int playerNum) {
 	OPLog("Get Player");
     JniMethodInfo methodInfo;
     if (!getStaticMethodInfo(methodInfo,
             CONTROLLER_CLASS_NAME, "getControllerByPlayer",
-            "(I)Ltv/ouya/console/api/OuyaController;", env)) {
+            "(I)Ltv/ouya/console/api/OuyaController;")) {
         return 0;
     }
     return methodInfo.env->CallStaticObjectMethod(methodInfo.classID,
@@ -30,20 +30,20 @@ jobject GamePadSystem::getControllerByPlayer( JNIEnv* env, int playerNum) {
 }
 
 
-bool GamePadSystem::getControllerButton(JNIEnv* env, jobject controller, int button) {
+bool GamePadSystem::getControllerButton(jobject controller, int button) {
 
 	JniMethodInfo methodInfo2;
     if (!getMethodInfo(methodInfo2,
-            CONTROLLER_CLASS_NAME, "getButton", "(I)Z", env)) {
+            CONTROLLER_CLASS_NAME, "getButton", "(I)Z")) {
     	OPLog("Class method not found");
         return false;
     }
 
     OPLog("Class Method was Found");
-    env->DeleteLocalRef(methodInfo2.classID);
+    JNIEnvironment()->DeleteLocalRef(methodInfo2.classID);
     OPLog("Local Reference Deleted");
 
-    bool result = env->CallBooleanMethod(controller, methodInfo2.methodID, button);
+    bool result = JNIEnvironment()->CallBooleanMethod(controller, methodInfo2.methodID, button);
 
     if(result) {
     	OPLog("Button Pressed");
@@ -54,12 +54,12 @@ bool GamePadSystem::getControllerButton(JNIEnv* env, jobject controller, int but
     return result;
 }
 
-float GamePadSystem::getAxisValue( JNIEnv* env, jobject controller, int ouyaAxis ) {
+float GamePadSystem::getAxisValue( jobject controller, int ouyaAxis ) {
     
     JniMethodInfo methodInfo;
 
     if (!getMethodInfo(methodInfo,
-            CONTROLLER_CLASS_NAME, "getAxisValue", "(I)F", env)) {
+            CONTROLLER_CLASS_NAME, "getAxisValue", "(I)F")) {
         return 0;
     }
 
@@ -72,13 +72,7 @@ float GamePadSystem::getAxisValue( JNIEnv* env, jobject controller, int ouyaAxis
 
 #endif
 
-#ifdef OPIFEX_ANDROID
-void GamePadSystem::Update(JNIEnv* env){
-#else
 void GamePadSystem::Update(){
-#endif
-
-
 		for(int i = 0; i < CONTROLLERS; i++){
 			GamePadState* gps = &_gamePadStates[i];
 			if(gps->IsConnected()) {
@@ -86,7 +80,7 @@ void GamePadSystem::Update(){
 			}
 
 #ifdef OPIFEX_ANDROID
-			jobject controller = getControllerByPlayer(env, i);
+			jobject controller = getControllerByPlayer(i);
 			if(controller == 0) {
 				return;
 			}
@@ -94,49 +88,49 @@ void GamePadSystem::Update(){
 			gps->SetConnected(true);
 
 			gps->SetButton(GamePad_Button_A,
-					getControllerButton(env, controller, OUYA_BUTTON_O));
+					getControllerButton(controller, OUYA_BUTTON_O));
 			gps->SetButton(GamePad_Button_X,
-					getControllerButton(env, controller, OUYA_BUTTON_U));
+					getControllerButton(controller, OUYA_BUTTON_U));
 			gps->SetButton(GamePad_Button_B,
-					getControllerButton(env, controller, OUYA_BUTTON_A));
+					getControllerButton(controller, OUYA_BUTTON_A));
 			gps->SetButton(GamePad_Button_Y,
-					getControllerButton(env, controller, OUYA_BUTTON_Y));
+					getControllerButton(controller, OUYA_BUTTON_Y));
 
 
 			gps->SetButton(GamePad_Button_LEFT_SHOULDER,
-					getControllerButton(env, controller, OUYA_BUTTON_L1));
+					getControllerButton(controller, OUYA_BUTTON_L1));
 			gps->SetButton(GamePad_Button_RIGHT_SHOULDER,
-					getControllerButton(env, controller, OUYA_BUTTON_R1));
+					getControllerButton(controller, OUYA_BUTTON_R1));
 
 			gps->SetButton(GamePad_Button_LEFT_THUMB,
-					getControllerButton(env, controller, OUYA_BUTTON_L3));
+					getControllerButton(controller, OUYA_BUTTON_L3));
 			gps->SetButton(GamePad_Button_RIGHT_THUMB,
-					getControllerButton(env, controller, OUYA_BUTTON_R3));
+					getControllerButton(controller, OUYA_BUTTON_R3));
 
 			gps->SetButton(GamePad_Button_DPAD_UP,
-					getControllerButton(env, controller, OUYA_BUTTON_DPAD_UP));
+					getControllerButton(controller, OUYA_BUTTON_DPAD_UP));
 			gps->SetButton(GamePad_Button_DPAD_DOWN,
-					getControllerButton(env, controller, OUYA_BUTTON_DPAD_DOWN));
+					getControllerButton(controller, OUYA_BUTTON_DPAD_DOWN));
 			gps->SetButton(GamePad_Button_DPAD_LEFT,
-					getControllerButton(env, controller, OUYA_BUTTON_DPAD_LEFT));
+					getControllerButton(controller, OUYA_BUTTON_DPAD_LEFT));
 			gps->SetButton(GamePad_Button_DPAD_RIGHT,
-					getControllerButton(env, controller, OUYA_BUTTON_DPAD_RIGHT));
+					getControllerButton(controller, OUYA_BUTTON_DPAD_RIGHT));
 
 			gps->SetButton(GamePad_Button_START,
-					getControllerButton(env, controller, OUYA_BUTTON_MENU));
+					getControllerButton(controller, OUYA_BUTTON_MENU));
 
 
-			gps->SetLeftTrigger(getAxisValue(env, controller, OUYA_AXIS_L2));
-			gps->SetRightTrigger(getAxisValue(env, controller, OUYA_AXIS_R2));
+			gps->SetLeftTrigger(getAxisValue(controller, OUYA_AXIS_L2));
+			gps->SetRightTrigger(getAxisValue(controller, OUYA_AXIS_R2));
 
 			gps->SetLeftThumb(
-				getAxisValue(env, controller, OUYA_AXIS_LS_X),
-				getAxisValue(env, controller, OUYA_AXIS_LS_Y)
+				getAxisValue(controller, OUYA_AXIS_LS_X),
+				getAxisValue(controller, OUYA_AXIS_LS_Y)
 			);
 
 			gps->SetRightThumb(
-				getAxisValue(env, controller, OUYA_AXIS_RS_X),
-				getAxisValue(env, controller, OUYA_AXIS_RS_Y)
+				getAxisValue(controller, OUYA_AXIS_RS_X),
+				getAxisValue(controller, OUYA_AXIS_RS_Y)
 			);  
 #endif
 #ifdef OPIFEX_WIN32

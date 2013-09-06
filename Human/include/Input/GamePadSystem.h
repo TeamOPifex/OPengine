@@ -8,7 +8,7 @@
 #pragma comment(lib, "XInput.lib")
 
 #elif defined(OPIFEX_ANDROID)
-#include <jni.h>
+	#include <jni.h>
 #endif
 
 #include "GamePadState.h"
@@ -17,17 +17,13 @@
 
 class GamePadSystem {
 public:
-	#ifdef OPIFEX_ANDROID
-	static void Update(JNIEnv* env);
-	#else
 	static void Update();
-	#endif
 	static GamePadState* Controller(GamePadIndex index);
 private:
 	#ifdef OPIFEX_ANDROID
-	static jobject getControllerByPlayer( JNIEnv* env, int playerNum );
-	static bool getControllerButton( JNIEnv* env, jobject controller, int button );
-	static float getAxisValue( JNIEnv* env, jobject controller, int ouyaAxis);
+		static jobject getControllerByPlayer( int playerNum );
+		static bool getControllerButton( jobject controller, int button );
+		static float getAxisValue( jobject controller, int ouyaAxis);
 	#endif
 	static GamePadState _gamePadStates[CONTROLLERS];
 };

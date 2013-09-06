@@ -48,36 +48,6 @@ void* entData;
 
 OPfloat vol = 0.05f;
 
-#ifdef OPIFEX_ANDROID
-	OPtimer* timer;
-extern "C" {
-	JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager);
-	JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerButton(JNIEnv * env, jobject obj,  jint player,  jint button,  jint state);
-    JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerAxes(JNIEnv * env, jobject obj,  jint player,  jint axes,  jfloat position);
-    JNIEXPORT int JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj);
-	JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setConnected(JNIEnv * env, jobject obj,  jint player,  jint state);
-};
-
-// Set Controller Buttons
-JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerButton(JNIEnv * env, jobject obj,  jint player,  jint button,  jint state){
-	OPLog("Player Pushed:");
-	OPLog_i32(button);
-	GamePadSystem::Controller((GamePadIndex)(player-1))->SetButton((GamePadButton)button, state == 1);
-}
-
-// Set
-JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setControllerAxes(JNIEnv * env, jobject obj,  jint player,  jint axes,  jfloat position){
-	GamePadSystem::Controller((GamePadIndex)(player-1))->SetAxis((GamePadAxes)axes, position);
-}
-
-// Set Connected
-JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_setConnected(JNIEnv * env, jobject obj,  jint player,  jint state){
-	OPLog("Player Connected:");
-	OPLog_i32(player);
-	GamePadSystem::Controller((GamePadIndex)(player - 1))->SetConnected(state == 1);
-}
-#endif
-
 void KeyDown(int key, int action){
 	OPLog("Pizza");
 	OPaudSetPlayer(&player);
@@ -85,27 +55,28 @@ void KeyDown(int key, int action){
 }
 
 // Initialize
-#ifdef OPIFEX_ANDROID
-JNIEXPORT void JNICALL Java_com_opifex_smrf_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager){
-	timer = OPcreateTimer();
-	OPfileInit( AAssetManager_fromJava(env, assetManager));
-	//Jukebox::Initialize();
-#else
 void Init(){
+
+#ifdef OPIFEX_ANDROID
+	OPfileInit( AAssetManager_fromJava(JNIEnvironment(), JNIAssetManager()));
+	i32 width = JNIWidth();
+	i32 height = JNIHeight();
+#else
 	#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
-	_chdir("assets\\");
+		_chdir("assets\\");
 	#else
-	if(chdir("./assets")){
-		OPLog("Directory changed!\n");
-	}
-	else
-		OPLog("Directory change failed!!!\n");
+		if(chdir("./assets")){
+			OPLog("Directory changed!\n");
+		}
+		else
+			OPLog("Directory change failed!!!\n");
 	#endif
 
-
-	i32 width = 1280;
-	i32 height = 720;
+		i32 width = 1280;
+		i32 height = 720;
 #endif
+
+
 	OPLog("Allocating");
 	OPlinkedList* ll = OPllCreate();
 	OPminHeap* heap = OPminHeapCreate(20);
@@ -249,46 +220,12 @@ OPLog("Created EntHeap!");
 }
 
 // Step
-#ifdef OPIFEX_ANDROID
 
 
-void Purchase( JNIEnv * env, const char* item ) {
-
-	jstring jstr = env->NewStringUTF(item);
-    jclass clazz = env->FindClass( "com/opifex/smrf/GL2JNILib" );
-
-	jmethodID midCallBackStatic = env->GetStaticMethodID(clazz, "Purchase", "(Ljava/lang/String;)Ljava/lang/String;");
-   	if (NULL != midCallBackStatic) {
-   		jobject resultJNIStr = env->CallStaticObjectMethod(clazz, midCallBackStatic, jstr);
-   		jstring str = (jstring)resultJNIStr;
-   		jboolean isCopy;
-   		const char *resultCStr = env->GetStringUTFChars(str, &isCopy);
-   		if (NULL != resultCStr) {
-		   OPLog("In C, the returned string is %s\n", resultCStr);
-		   if(isCopy != JNI_FALSE) {
-			   env->ReleaseStringUTFChars(str, resultCStr);
-			}
-   		} else {
-   			OPLog("Purchase: Failed to get Result");
-   		}
-   	} else {
-   		OPLog("Purchase:Failed to find method");
-   	}
-}
 
 
-JNIEXPORT int JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj){	
-
-	Purchase(env, "This comes from jni.");
-
-	OPtimerTick(timer);
-	//GamePadSystem::Update(env);
-	GPS->Update(env);
-
-#else
 void Update( OPtimer* timer){
 	GPS->Update();
-#endif
 
 	bool result = GM->Update( timer );
 
@@ -306,12 +243,10 @@ void Update( OPtimer* timer){
 
 		RenderSystem::ClearColor(r, g, b);
 
-		#ifdef OPIFEX_ANDROID
-	  	if(gps->WasPressed(GamePad_Button_A)){
+		if(gps->WasPressed(GamePad_Button_A)){
 	  		OPaudSetPlayer(&player);
 	  		OPaudPlayerPlay();
 	  	}
-		#endif
 	}
 	else {
 		RenderSystem::ClearColor(0,0,0);
@@ -327,17 +262,9 @@ void Update( OPtimer* timer){
 	GM->Draw();
 	RenderSystem::Present();
 	
-
-
-#ifdef OPIFEX_ANDROID
-	if(!result)
-		return 1;
-	return 0;
-#else
 	if(!result)
 		exit(0);
 	return;
-#endif
 }
 
 void Destroy()
@@ -351,6 +278,17 @@ void UpdateState(OPtimer* timer){
 }
 
 #ifdef OPIFEX_ANDROID
+
+extern "C" {
+	JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_main(JNIEnv * env, jobject obj);
+};
+
+JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_main(JNIEnv * env, jobject obj){
+	OPinitialize = Init;
+	OPupdate = UpdateState;
+	OPdestroy = Destroy;
+	ActiveState = OPgameStateCreate(NULL, Update, NULL);
+}
 #else
 int main()
 {
@@ -362,7 +300,6 @@ int main()
 	OPLog("Test %d %d %d", a, a, a);
 
 	ActiveState = OPgameStateCreate(NULL, Update, NULL);
-
 	OPstart();
 	OPend();
 	return 0;

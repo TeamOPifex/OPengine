@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-package com.opifex.smrf;
-
+package com.opifex;
 
 import android.content.res.AssetManager;
 import tv.ouya.console.api.OuyaController;
@@ -25,17 +24,16 @@ import tv.ouya.console.api.OuyaFacade;
 public class GL2JNILib {
 
      static {
-         System.loadLibrary("smrf");
+         System.loadLibrary("opengine");
      }
 
     /**
      * @param width the current view width
      * @param height the current view height
      */
+     public static native void main();
      public static native void init(int width, int height, AssetManager assetManager);
      public static native void step();
-     public static native void setControllerButton(int player, int button, int state);
-     public static native void setControllerAxes(int player, int axes, float position);
 
     //public static final String DEVELOPER_ID = "8e0c74ec-c52c-4de4-89f0-3944b7145489";
 

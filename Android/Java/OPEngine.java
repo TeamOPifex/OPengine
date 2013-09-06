@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opifex.smrf;
+package com.opifex;
 
 import android.content.res.AssetManager;
 import android.app.Activity;
@@ -26,7 +26,7 @@ import android.nfc.Tag;
 import tv.ouya.console.api.OuyaFacade;
 import tv.ouya.console.api.OuyaController;
 
-public class SMRF extends Activity {
+public class OPEngine extends Activity {
 	GL2JNIView mView;
 	
 	int playerOne = -1;

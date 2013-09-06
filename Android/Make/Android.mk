@@ -135,7 +135,7 @@ include $(BUILD_STATIC_LIBRARY)
 # second lib, which will depend on and include the first one
 ##############
 include $(CLEAR_VARS)
-LOCAL_MODULE    := libsmrf
+LOCAL_MODULE    := libopengine
 LOCAL_LDLIBS    := -llog -lGLESv2 -landroid -lOpenSLES
 
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := false

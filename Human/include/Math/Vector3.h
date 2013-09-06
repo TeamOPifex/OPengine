@@ -35,7 +35,7 @@
 	dst = a.x * b.x + a.y * b.y + a.z * b.z;\
 }\
 
-#define vec2norm(dst, a){\
+#define vec3norm(dst, a){\
 	OPfloat l = sqrt(a.x * a.x + a.y * a.y);\
 	dst.x = a.x / l;\
 	dst.y = a.y / l;\
