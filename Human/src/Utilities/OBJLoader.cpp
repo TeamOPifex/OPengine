@@ -2,27 +2,27 @@
 #include "./Core/include/Log.h"
 #include "./Human/include/Resources/Buffer/Buffer.h"
 #include "./Human/include/Resources/Model/Mesh.h"
-#include "./Human/include/Rendering/MeshVertex.h"
+#include "./Human/include/Rendering/OPMvertex.h"
 
 // FacePoint contains 3 int's being holding points for
 // the index's for each array.
-struct FacePoint
+typedef struct
 {
 	int VertexIndex;
 	int TextureIndex;
 	int NormalIndex;
-};
+} FacePoint;
 
 // Face contains either 3 or 4 FacePoints, 
 // tri is marked as true if it's a triangle
-struct Face
+typedef struct
 {
 	FacePoint one;
 	FacePoint two;
 	FacePoint three;
 	FacePoint four;
 	bool tri;
-};
+} Face;
 
 int readLine(char* buffer, FILE* file){
 	int length = 0;
@@ -35,20 +35,24 @@ int readLine(char* buffer, FILE* file){
 	return length;
 }
 
-void GenerateTangent(Vector3* tangent, MeshVertex* v1, MeshVertex* v2){
+void GenerateTangent(OPvec3* tangent, OPMvertex* v1, OPMvertex* v2){
 	f32 dx = v1->vertice.x - v2->vertice.x;
 	f32 dy = v1->vertice.y - v2->vertice.y;
 	f32 dz = v1->vertice.z - v2->vertice.z;
 
-	Vector3 diff(dx, dy, dz);
-	Vector3 tan = Vector3::Cross(v1->normal, diff);
-	tan.Normalize();
+	OPvec3 diff;
+	diff.x = dx;
+	diff.y = dy;
+	diff.z = dz;
+	OPvec3 tan;
+	OPvec3cross(tan, v1->normal, diff);
+	OPvec3norm(tan, tan);
 	tangent->x = tan.x;
 	tangent->y = tan.y;
 	tangent->z = tan.z;
 }
 
-void SetFaceData(MeshVertex* vertex, FacePoint* facePoint, Vector3* vertexes, Vector2* texes, Vector3* normals){
+void SetFaceData(OPMvertex* vertex, FacePoint* facePoint, OPvec3* vertexes, OPvec2* texes, OPvec3* normals){
 	vertex->vertice.x = vertexes[facePoint->VertexIndex - 1].x;
 	vertex->vertice.y = vertexes[facePoint->VertexIndex - 1].y;
 	vertex->vertice.z = vertexes[facePoint->VertexIndex - 1].z;
@@ -104,11 +108,11 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 	int c_norms = 0;
 	int c_faces = 0;
 
-	Vector3* vertexes = new Vector3[total_verts];
-	for(int j = 0; j < total_verts; j++)
-		vertexes[j] = 0;
-	Vector2* texes = new Vector2[total_texs];
-	Vector3* normals = new Vector3[total_norms];
+	OPvec3* vertexes = new OPvec3[total_verts];
+	OPbzero(vertexes, sizeof(OPvec3) * total_verts);
+
+	OPvec2* texes = new OPvec2[total_texs];
+	OPvec3* normals = new OPvec3[total_norms];
 	Face* faces = new Face[total_faces];
 
 	offset = 0;
@@ -131,22 +135,25 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 				break;
 			case 0: //v		Vertex
 				if(sscanf(buffer, "v %f %f %f", &x, &y, &z) == 3){
-					vertexes[c_verts] = Vector3(x, y, z);
-
-
+					vertexes[c_verts].x = x;
+					vertexes[c_verts].y = y;
+					vertexes[c_verts].z = z;
 
 					c_verts++;
 				}
 				break;
 			case 1: //vt	Texture Coordinate
 				if(sscanf(buffer, "vt %f %f", &x, &y) == 2){
-					texes[c_texs] = Vector2(x, -y + 1);
+					texes[c_texs].x = x;
+					texes[c_texs].y = -y + 1;
 					c_texs++;
 				}
 				break;
 			case 2: //vn	Normal
 				if(sscanf(buffer, "vn %f %f %f", &x, &y, &z) == 3){
-					normals[c_norms] = Vector3(x, y, z);
+					normals[c_norms].x = x;
+					normals[c_norms].y = y;
+					normals[c_norms].z = z;
 					c_norms++;
 				}
 				break;
@@ -233,7 +240,7 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 	}
 	
 	
-	MeshVertex* points = (MeshVertex*)OPalloc(sizeof(MeshVertex) * totalPoints);
+	OPMvertex* points = (OPMvertex*)OPalloc(sizeof(OPMvertex) * totalPoints);
 	unsigned short* indices = (unsigned short*)OPalloc(sizeof(unsigned short) * totalIndices);
 	int currPoint = 0;
 	int currIndex = 0;
@@ -273,9 +280,9 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 		place += 3;
 	}
 
-	MeshVertex* vert_one;
-	MeshVertex* vert_two;
-	Vector3* tangent;
+	OPMvertex* vert_one;
+	OPMvertex* vert_two;
+	OPvec3* tangent;
 	for(i = 0; i < currIndex; i+=3){
 		vert_one = &points[indices[i] + 0];
 		vert_two = &points[indices[i] + 1];
@@ -295,10 +302,10 @@ Mesh* LoadOBJ(FILE* file, int start, int length)
 	delete[] normals;
 	OPfree(buffer); // TODO any reason you're using OPfree here, but new and delete everywhere else?
 
-	BufferPtr vertexBuffer = new Buffer(VertexBuffer, sizeof(MeshVertex) * totalPoints, points);
+	BufferPtr vertexBuffer = new Buffer(VertexBuffer, sizeof(OPMvertex) * totalPoints, points);
 	BufferPtr indexBuffer = new Buffer(IndexBuffer, sizeof(unsigned short) * totalIndices, indices);
 	
-	Mesh* out = new Mesh(vertexBuffer, indexBuffer, totalIndices, sizeof(MeshVertex));
+	Mesh* out = new Mesh(vertexBuffer, indexBuffer, totalIndices, sizeof(OPMvertex));
 
 	OPfree(points);
 	OPfree(indices);

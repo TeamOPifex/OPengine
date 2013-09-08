@@ -19,7 +19,7 @@ OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
 		NULL,
 		0,
 		1,
-		free
+		&free
 	};
 
 	// leave space for entity data

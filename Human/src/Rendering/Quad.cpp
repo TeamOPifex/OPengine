@@ -1,6 +1,6 @@
 #include "./Human/include/Rendering/Quad.h"
 
-#include "./Human/include/Rendering/MeshVertexTextured.h"
+#include "./Human/include/Rendering/OPMvertexTextured.h"
 #include "./Core/include/Log.h"
 #include "./Human/include/Rendering/RenderSystem.h"
 
@@ -15,21 +15,21 @@ Quad::~Quad(){
 	OPfree(ModelMesh);
 }
 
-void Quad::SetPosition(Vector3* position){
+void Quad::SetPosition(OPvec3* position){
 	_position.x = position->x;
 	_position.y = position->y;
 	_position.z = position->z;
 	UpdateWorld();
 }
 
-void Quad::SetRotation(Vector3* rotation){
+void Quad::SetRotation(OPvec3* rotation){
 	_rotation.x = rotation->x;
 	_rotation.y = rotation->y;
 	_rotation.z = rotation->z;
 	UpdateWorld();
 }
 
-void Quad::SetScale(Vector3* scale){
+void Quad::SetScale(OPvec3* scale){
 	_scale.x = scale->x;
 	_scale.y = scale->y;
 	_scale.z = scale->z;
@@ -43,15 +43,15 @@ void Quad::SetScale(f32 scale){
 	UpdateWorld();
 }
 
-Vector3* Quad::GetPosition(){
+OPvec3* Quad::GetPosition(){
 	return &_position;
 }
 
-Vector3* Quad::GetRotation(){
+OPvec3* Quad::GetRotation(){
 	return &_rotation;
 }
 
-Vector3* Quad::GetScale(){
+OPvec3* Quad::GetScale(){
 	return &_scale;
 }
 
@@ -101,8 +101,10 @@ Mesh* Quad::GenMesh(){
 }
 
 void Quad::UpdateWorld(){
-	Matrix4 rotate = Matrix4::BuildRotateZ(_rotation.z);
-	Matrix4 scale = Matrix4::BuildScale(_rotation.x, _rotation.y, _rotation.z);
-	Matrix4 translate = Matrix4::BuildTranslate(_position.x, _position.y, _position.z);
-	(*WorldMatrix) =  rotate * scale * translate;
+	OPmat4 rotate, scale, translate;
+	OPmat4buildRotZ(rotate, _rotation.z); 
+	OPmat4buildScl(scale, _rotation.x, _rotation.y, _rotation.z); 
+	OPmat4buildTranslate(translate, _position.x, _position.y, _position.z);
+	OPmat4mul(rotate, rotate, scale);
+	OPmat4mul(rotate, rotate, translate);
 }

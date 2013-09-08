@@ -1,9 +1,9 @@
 #pragma once
 
-#include "./Human/include/Math/Vector3.h"
-#include "./Human/include/Math/Vector2.h"
+#include "./Math/include/Vector3.h"
+#include "./Math/include/Vector2.h"
 
 typedef struct{
-	Vector3 vertice;
-	Vector2 tex;
+	OPvec3 vertice;
+	OPvec2 tex;
 } OPMvertexTextured;

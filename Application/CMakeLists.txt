@@ -26,27 +26,27 @@ set(ALL_LIBS
 add_source_group(\\ "${PROJECT_SOURCE_DIR}/Application" APPLICATION_SRC)
 #endif()
 
-add_executable(7_Application ${APPLICATION_SRC})
+add_executable(8_Application ${APPLICATION_SRC})
 
 if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
 
-	add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	add_custom_command(TARGET 8_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 		"${PROJECT_SOURCE_DIR}/External/Ogg/lib/win32/ogg.dll"
 		${PROJECT_BINARY_DIR}/Application/Debug)
 
-	add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	add_custom_command(TARGET 8_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 		"${PROJECT_SOURCE_DIR}/External/Ogg/lib/win32/libogg.dll"
 		${PROJECT_BINARY_DIR}/Application/Debug)
 
-	add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	add_custom_command(TARGET 8_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/vorbisfile.dll"
 		${PROJECT_BINARY_DIR}/Application/Debug)
 
-	add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	add_custom_command(TARGET 8_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/libvorbis.dll"
 		${PROJECT_BINARY_DIR}/Application/Debug)
 		
-	add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	add_custom_command(TARGET 8_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/libvorbisfile.dll"
 		${PROJECT_BINARY_DIR}/Application/Debug)
 		
@@ -54,7 +54,7 @@ elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX32")
 
 endif()
 				
-target_link_libraries(7_Application
+target_link_libraries(8_Application
 	${ALL_LIBS}
 	${OGG_LIBRARY}
 	${VORBIS_LIBRARY}
@@ -63,7 +63,7 @@ target_link_libraries(7_Application
 	${LIBPNG_LIBRARY}
 )
 
-SET_TARGET_PROPERTIES(7_Application PROPERTIES LINKER_LANGUAGE CXX)
-set_target_properties(7_Application PROPERTIES 
+SET_TARGET_PROPERTIES(8_Application PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(8_Application PROPERTIES 
 	OUTPUT_NAME "Application"
 )

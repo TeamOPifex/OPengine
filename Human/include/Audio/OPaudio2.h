@@ -8,7 +8,7 @@
 #include "Core/include/DynamicMemory.h"
 #include "Core/include/Log.h"
 #include "Data/include/OPfile.h"
-#include "./Human/include/Math/Vector3.h"
+#include "./Math/include/Vector3.h"
 
 #ifdef OPIFEX_ANDROID
 #include <SLES/OpenSLES.h>
@@ -96,9 +96,9 @@ extern LPOVOPENCALLBACKS   fn_ov_open_callbacks;
 //  \____/|_|   \__,_|\__,_|\__,_|_|\___/  |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPint OPaudInit();
 
-Vector3 OPaudEarPosition(Vector3 pos);
-Vector3 OPaudEarVelocity(Vector3 pos);
-Vector3 OPaudEarForward(Vector3 pos);
+OPvec3 OPaudEarPosition(OPvec3 pos);
+OPvec3 OPaudEarVelocity(OPvec3 pos);
+OPvec3 OPaudEarForward(OPvec3 pos);
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 };

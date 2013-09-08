@@ -249,17 +249,17 @@ OPint OPaudProc(void(*Proc)(OPaudioEmitter* emit)){
 // |______|_| |_| |_|_|\__|\__\___|_|    |_|   |_|  \___/| .__/|___/
 //                                                       | |        
 //                                                       |_|        
-void OPaudPosition(Vector3* position){
+void OPaudPosition(OPvec3* position){
 #ifdef OPIFEX_ANDROID	
 #else
-	alSourcefv(OPAUD_CURR_EMITTER->al_src, AL_POSITION, position->ptr());
+	alSourcefv(OPAUD_CURR_EMITTER->al_src, AL_POSITION, (OPfloat*)position);
 #endif
 }
 
-void OPaudVelocity(Vector3* velocity){
+void OPaudVelocity(OPvec3* velocity){
 #ifdef OPIFEX_ANDROID	
 #else
-	alSourcefv(OPAUD_CURR_EMITTER->al_src, AL_VELOCITY, velocity->ptr());
+	alSourcefv(OPAUD_CURR_EMITTER->al_src, AL_VELOCITY, (OPfloat*)velocity);
 #endif
 }
 

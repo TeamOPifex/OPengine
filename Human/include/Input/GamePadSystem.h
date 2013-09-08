@@ -1,33 +1,41 @@
 #pragma once
 
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+#include "./Core/include/Types.h"
+#include "./Math/include/Vector2.h"
+#include "GamePadEnums.h"
 
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
-#include <Windows.h>
-#include <Xinput.h>
-#pragma comment(lib, "XInput.lib")
-
-#elif defined(OPIFEX_ANDROID)
-#include <jni.h>
-#endif
-
-#include "GamePadState.h"
 
 #define CONTROLLERS 4
 
-class GamePadSystem {
-public:
-	#ifdef OPIFEX_ANDROID
-	static void Update(JNIEnv* env);
-	#else
-	static void Update();
-	#endif
-	static GamePadState* Controller(GamePadIndex index);
-private:
-	#ifdef OPIFEX_ANDROID
-	static jobject getControllerByPlayer( JNIEnv* env, int playerNum );
-	static bool getControllerButton( JNIEnv* env, jobject controller, int button );
-	static float getAxisValue( JNIEnv* env, jobject controller, int ouyaAxis);
-	#endif
-	static GamePadState _gamePadStates[CONTROLLERS];
-};
+
+typedef struct{
+	bool		buttons[GamePadButton_Max];
+	bool		prevButtons[GamePadButton_Max];
+	OPfloat		axes[GamePadAxes_Max];
+	bool		connected;
+	OPfloat		deadzone;
+	OPint		playerIndex;
+} GamePadController;
+
+GamePadController GamePadControllers[CONTROLLERS];
+
+
+GamePadController* OPgamePadController(GamePadIndex index);
+
+void OPgamePadUpdate(GamePadController* controller);
+void OPgamePadReset(GamePadController* controller);
+void OPgamePadSetDeadzone(GamePadController* controller, OPfloat deadzone);
+
+
+bool OPgamePadIsDown(GamePadController* controller, GamePadButton button);
+bool OPgamePadIsUp(GamePadController* controller, GamePadButton button);	
+bool OPgamePadWasPressed(GamePadController* controller, GamePadButton button);
+bool OPgamePadWasReleased(GamePadController* controller, GamePadButton button);
+OPvec2 OPgamePadLeftThumb(GamePadController* controller);
+OPfloat OPgamePadLeftThumbX(GamePadController* controller);
+OPfloat OPgamePadLeftThumbY(GamePadController* controller);
+OPfloat OPgamePadRightThumbX(GamePadController* controller);
+OPfloat OPgamePadRightThumbY(GamePadController* controller);
+OPfloat OPgamePadLeftTrigger(GamePadController* controller);
+OPfloat OPgamePadRightTrigger(GamePadController* controller);
+bool OPgamePadIsConnected(GamePadController* controller);
