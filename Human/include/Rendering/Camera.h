@@ -19,10 +19,10 @@ extern "C" {
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 typedef struct{
-	Vector3 _pos, _targ, _up;
+	OPvec3 _pos, _targ, _up;
 	OPfloat _fov;
 	OPfloat _aspect, _near, _far;
-	Matrix4 _proj, _view;
+	OPmat4 _proj, _view;
 	OPint _projStale, _viewStale;
 } OPcam;
 
@@ -77,8 +77,8 @@ typedef struct{
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPcam OPcamProj (Vector3 position, Vector3 target, Vector3 up, OPfloat near, OPfloat far, OPfloat fov, OPfloat aspect);
-OPcam OPcamOrtho(Vector3 position, Vector3 target, Vector3 up, OPfloat near, OPfloat far, OPfloat left, OPfloat right, OPfloat bottom, OPfloat top);
+OPcam OPcamProj (OPvec3 position, OPvec3 target, OPvec3 up, OPfloat near, OPfloat far, OPfloat fov, OPfloat aspect);
+OPcam OPcamOrtho(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat near, OPfloat far, OPfloat left, OPfloat right, OPfloat bottom, OPfloat top);
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

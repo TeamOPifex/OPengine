@@ -8,10 +8,25 @@
 #include "DynamicMemory.h"
 #include "Timer.h"
 #include "MathHelpers.h"
+#ifdef OPIFEX_ANDROID
+	#include <jni.h>
+#endif
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+
+#ifdef OPIFEX_ANDROID
+	
+	JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager);
+	JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_step(JNIEnv * env, jobject obj);
+	JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_destroy(JNIEnv * env, jobject obj);
+	JNIEnv* JNIEnvironment();
+	jobject JNIAssetManager();
+	jint JNIWidth();
+	jint JNIHeight();
 #endif
 //---- Function prototypes ---------------------------------------------------
 /**
