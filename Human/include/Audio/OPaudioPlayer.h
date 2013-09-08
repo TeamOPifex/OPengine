@@ -46,6 +46,13 @@ extern OPaudioPlayer* OPAUD_CURR_PLAYER;
 //-----------------------------------------------------------------------------
 
 
+//-----------------------------------------------------------------------------
+// ______                _   _                 
+//|  ____|              | | (_)                
+//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+//|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
+//| |  | |_| | | | | (__| |_| | (_) | | | \__ \
+//|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPaudioPlayer OPaudPlayerCreate(OPaudioSource* src, OPint sounds, OPint looping);
 
 void OPaudPlayerDestroy(OPaudioPlayer* player);
@@ -59,7 +66,7 @@ void OPaudPlayerPosition(Vector3* position);
 void OPaudPlayerVelocity(Vector3* velocity);
 void OPaudPlayerVolume  (OPfloat gain);
 void OPaudPlayerPitch   (OPfloat pitch);
-
+//-----------------------------------------------------------------------------
 #ifdef __cplusplus
 };
 #endif
