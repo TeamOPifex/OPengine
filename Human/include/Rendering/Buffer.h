@@ -21,17 +21,31 @@ typedef struct{
 }OPrenderBuffer;
 
 //-----------------------------------------------------------------------------
+//   _____ _       _           _     
+//  / ____| |     | |         | |    
+// | |  __| | ___ | |__   __ _| |___ 
+// | | |_ | |/ _ \| '_ \ / _` | / __|
+// | |__| | | (_) | |_) | (_| | \__ \
+//  \_____|_|\___/|_.__/ \__,_|_|___/
+extern OPrenderBuffer* OPRENDER_CURR_VB;
+extern OPrenderBuffer* OPRENDER_CURR_IB;
+
+//-----------------------------------------------------------------------------
 //  _____                     _____                  _____  _               _   _               
 // |  __ \                   |  __ \                |  __ \(_)             | | (_)              
 // | |__) _ __ ___   ______  | |__) _ __ ___   ___  | |  | |_ _ __ ___  ___| |_ ___   _____ ___ 
 // |  ___| '__/ _ \ |______| |  ___| '__/ _ \ / __| | |  | | | '__/ _ \/ __| __| \ \ / / _ / __|
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/   
-#define OPvertexBuffer GL_ARRAY_BUFFER
-#define OPindexBuffer  GL_ELEMENT_ARRAY_BUFFER
+#define GL_ARRAY_BUFFER         OPvertexBuffer
+#define GL_ELEMENT_ARRAY_BUFFER OPindexBuffer
 
 #define OPrenderBindBuffer(buffer){\
 	glBindbuffer(buffer->Type, buffer->Handle);\
+	if(buffer->Type == OPvertexBuffer)\
+		OPRENDER_CURR_VB = buffer;\
+	else\
+		OPRENDER_CURR_IB = buffer;\
 }\
 
 //-----------------------------------------------------------------------------
@@ -43,6 +57,9 @@ typedef struct{
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPrenderBuffer OPrenderGenBuffer(ui32 type);
 void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, ui32 count, const void* data);
+
+void OPrenderIndexed();
+void OPrender();
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

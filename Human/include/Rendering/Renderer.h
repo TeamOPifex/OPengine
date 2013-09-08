@@ -11,13 +11,7 @@ extern "C" {
 
 OPint OPrenderInit       (ui32 width, ui32 height);
 void  OPrenderClear      (f32 r, f32 g, f32 b);
-void  OPrenderSetMaterial(MaterialPtr material);
 void  OPrenderSetViewport(ui32 x, ui32 y, ui32 width, ui32 height);
-void  OPrenderSetBuffer  (OPint bufferType, ui32 buffer);
-void  OPrenderTriangles  (ui32 offset, ui32 count);
-void  OPrenderTrisIndexed(ui32 numIndices);
-void  OPrenderModel      (Model* model);
-void  OPrenderPackedModel(PackedModel* model);
 void  OPrenderSwapBuffer ();
 void  OPrenderPresent    ();
 void  OPrenderDepth      (OPint state);
