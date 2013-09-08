@@ -20,6 +20,7 @@ set(ALL_LIBS
 	GLEW_158
 	1_Core
 	2_Data
+	3_Math
 )
 
 add_definitions(
