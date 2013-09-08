@@ -1,5 +1,5 @@
 #include "./../include/Core.h"
-#include "./COre/include/Log.h"
+#include "./../include/Log.h"
 
 OPtimer* ApplicationTimer;
 OPint _OPengineRunning;
