@@ -12,7 +12,7 @@ public:
 
 	PackedMeshPtr ModelMesh;
 	MaterialPtr ModelMaterial;
-	Matrix4* WorldMatrix;
+	OPmat4* WorldMatrix;
 };
 
 typedef PackedModel* PackedModelPtr; 

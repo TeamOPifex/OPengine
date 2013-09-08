@@ -80,20 +80,20 @@ void Material::SetFloat(ui32 attribute, f32 value){
 	glUniform1f(attribute, value);
 }
 
-void Material::SetVector2(ui32 attribute, Vector2* value){
-	glUniform1fv(attribute, 2, &(*value)[0]);
+void Material::SetVector2(ui32 attribute, OPvec2* value){
+	glUniform1fv(attribute, 2, &value->x);
 }
 
-void Material::SetVector3(ui32 attribute, Vector3* value){
-	glUniform1fv(attribute, 3, &(*value)[0]);
+void Material::SetVector3(ui32 attribute, OPvec3* value){
+	glUniform1fv(attribute, 3, &value->x));
 }
 
-void Material::SetVector4(ui32 attribute, Vector4* value){
-	glUniform1fv(attribute, 4, &(*value)[0]);
+void Material::SetVector4(ui32 attribute, OPvec4* value){
+	glUniform1fv(attribute, 4, &value->x);
 }
 
-void Material::SetMatrix(ui32 attribute, Matrix4* value){
-	glUniformMatrix4fv(attribute, 1, GL_FALSE, &(*value)[0][0]);
+void Material::SetMatrix(ui32 attribute, OPmat4* value){
+	glUniformMatrix4fv(attribute, 1, GL_FALSE, &value->cols->x);
 }
 
 void Material::SetFloat(const OPchar* attribute, f32 value){
@@ -103,30 +103,30 @@ void Material::SetFloat(const OPchar* attribute, f32 value){
 	}
 }
 
-void Material::SetVector2(const OPchar* attribute, Vector2* value){	
+void Material::SetVector2(const OPchar* attribute, OPvec2* value){	
 	OPint* val;
 	if(OPhashMapGet(hashMap, attribute, (void**)&val)){
-		glUniform1fv(*val, 2, &(*value)[0]);
+		glUniform1fv(*val, 2, &value->x);
 	}
 }
 
-void Material::SetVector3(const OPchar* attribute, Vector3* value){
+void Material::SetVector3(const OPchar* attribute, OPvec3* value){
 	OPint* val;
 	if(OPhashMapGet(hashMap, attribute, (void**)&val)){
-		glUniform1fv(*val, 3, &(*value)[0]);
+		glUniform1fv(*val, 3, &value->x);
 	}
 }
 
-void Material::SetVector4(const OPchar* attribute, Vector4* value){
+void Material::SetVector4(const OPchar* attribute, OPvec4* value){
 	OPint* val;
 	if(OPhashMapGet(hashMap, attribute, (void**)&val)){
-		glUniform1fv(*val, 4, &(*value)[0]);
+		glUniform1fv(*val, 4, &value->x);
 	}
 }
 
-void Material::SetMatrix(const OPchar* attribute, Matrix4* value){
+void Material::SetMatrix(const OPchar* attribute, OPmat4* value){
 	OPint* val;
 	if(OPhashMapGet(hashMap, attribute, (void**)&val)){
-		glUniformMatrix4fv(*val, 1, GL_FALSE, &(*value)[0][0]);
+		glUniformMatrix4fv(*val, 1, GL_FALSE, &value->cols->x);
 	}
 }

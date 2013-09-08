@@ -27,16 +27,16 @@ public:
 	void SetData(ui32 attribute, ui32 size, bool normalize, ui32 stride, void* arrayData);
 
 	void SetFloat(ui32 attribute, f32 value);
-	void SetVector2(ui32 attribute, Vector2* value);
-	void SetVector3(ui32 attribute, Vector3* value);
-	void SetVector4(ui32 attribute, Vector4* value);
-	void SetMatrix(ui32 attribute, Matrix4* value);
+	void SetVector2(ui32 attribute, OPvec2* value);
+	void SetVector3(ui32 attribute, OPvec3* value);
+	void SetVector4(ui32 attribute, OPvec4* value);
+	void SetMatrix(ui32 attribute, OPmat4* value);
 	
 	void SetFloat(const OPchar* attribute, f32 value);
-	void SetVector2(const OPchar* attribute, Vector2* value);
-	void SetVector3(const OPchar* attribute, Vector3* value);
-	void SetVector4(const OPchar* attribute, Vector4* value);
-	void SetMatrix(const OPchar* attribute, Matrix4* value);
+	void SetVector2(const OPchar* attribute, OPvec2* value);
+	void SetVector3(const OPchar* attribute, OPvec3* value);
+	void SetVector4(const OPchar* attribute, OPvec4* value);
+	void SetMatrix(const OPchar* attribute, OPmat4* value);
 
 	
 	virtual void Destroy();

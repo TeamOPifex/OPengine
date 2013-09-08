@@ -2,7 +2,7 @@
 #include "./Core/include/Log.h"
 #include "./Human/include/Resources/Buffer/Buffer.h"
 #include "./Human/include/Resources/Model/Mesh.h"
-#include "./Human/include/Rendering/MeshVertex.h"
+#include "./Human/include/Rendering/OPMvertex.h"
 
 // FacePoint contains 3 int's being holding points for
 // the index's for each array.

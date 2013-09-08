@@ -105,8 +105,8 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length));
 
 OPint OPaudProc(OPaudioEmitter* emitter, void(*Proc)(OPaudioEmitter* emit, OPint length));
 
-void OPaudPosition(Vector3* position);
-void OPaudVelocity(Vector3* velocity);
+void OPaudPosition(OPvec3* position);
+void OPaudVelocity(OPvec3* velocity);
 void OPaudVolume  (OPfloat gain);
 void OPaudPitch   (OPfloat pitch);
 //-----------------------------------------------------------------------------

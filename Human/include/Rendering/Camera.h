@@ -33,17 +33,17 @@ typedef struct{
 // |  ___| '__/ _ \ |______| |  ___| '__/ _ \ / __| | |  | | | '__/ _ \/ __| __| \ \ / / _ / __|
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/   
-#define OPcamSetPosition(cam, pos) cam->_pos = pos;cam->_viewStale=1;\
-#define OPcamGetPosition(cam) cam->_pos\
+#define OPcamSetPosition(cam, pos) cam->_pos = pos;cam->_viewStale=1;
+#define OPcamGetPosition(cam) cam->_pos
 
-#define OPcamSetTarget(cam, targ) cam->_targ = targ;cam->_viewStale=1;\
-#define OPcamGetTarget(cam) cam->_targ\
+#define OPcamSetTarget(cam, targ) cam->_targ = targ;cam->_viewStale=1;
+#define OPcamGetTarget(cam) cam->_targ
 
-#define OPcamSetUp(cam, up) cam->_up = up;cam->_viewStale=1;\
-#define OPcamGetUp(cam) cam->_up\
+#define OPcamSetUp(cam, up) cam->_up = up;cam->_viewStale=1;
+#define OPcamGetUp(cam) cam->_up
 
-#define OPcamSetFOV(cam, fov) cam->_fov = fov;cam->_projStale=1;\
-#define OPcamGetFOV(cam) cam->_fov\
+#define OPcamSetFOV(cam, fov) cam->_fov = fov;cam->_projStale=1;
+#define OPcamGetFOV(cam) cam->_fov
 //-----------------------------------------------------------------------------
 #define OPcamGetProj(cam, proj){\
 	if(cam->_projStale){\
