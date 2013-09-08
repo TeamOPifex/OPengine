@@ -3,7 +3,7 @@
 #include "./Human/include/Resources/Model/Model.h"
 
 #include "./Core/include/DynamicMemory.h"
-#include "./Human/include/Math/Vector3.h"
+#include "./Math/include/Vector3.h"
 
 class Quad : public Model {
 public:

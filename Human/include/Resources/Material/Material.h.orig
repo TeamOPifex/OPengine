@@ -2,14 +2,13 @@
 
 #include "./Human/include/Resources/Resource.h"
 #include "./Shader/Shader.h"
-#include "./Math/include/Vector2.h"
-#include "./Math/include/Matrix4.h"
+#include "./Human/include/Math/Vector2.h"
+#include "./Human/include/Math/Matrix4.h"
 #include "./Data/include/OPhashMap.h"
 #include "./Human/include/Resources/Model/Mesh.h"
 
 class Material : public Resource {
 public:
-	Material();
 	Material(ShaderPtr vertex, ShaderPtr fragment);
 	~Material();
 

@@ -41,28 +41,6 @@
 	dst.y = a.x;\
 }\
 
-class Vector2{
-public:
-	Vector2(){
-		x = 0;		y = 0;
-	}
-	Vector2(OPfloat s){
-		x = s;		y = s;
-	}
-	Vector2(OPfloat x, OPfloat y){
-		this->x = x;		this->y = y;
-	}
-
-	//Vector2& operator-(const Vector2 &rhs);
-	//Vector2& operator+(const Vector2 &rhs);	
-	OPfloat& operator[](int idx);
-
-//private:
-	// Data Structure 2 floats
-	//		32 bit = 2 * 32 = 64 bits or 8 bytes
-	//		64 bit = 2 * 64 = 128 bits or 16 bytes
-	union 
-	{
-		struct{OPfloat x, y; };
-	};
-};
+typedef struct {
+	OPfloat x, y;
+} OPvec2;

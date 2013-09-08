@@ -2,7 +2,7 @@
 
 #include "./Core/include/Types.h"
 #include "GamePadEnums.h"
-#include "./Human/include/Math/Vector2.h"
+#include "./Math/include/Vector2.h"
 
 class GamePadState 
 {

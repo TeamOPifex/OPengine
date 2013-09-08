@@ -3,8 +3,8 @@
 #define OPEngine_Human_Renderer_Camera
 
 #include "./Core/include/MathHelpers.h"
-#include "./Human/include/Math/Vector3.h"
-#include "./Human/include/Math/Matrix4.h"
+#include "./Math/include/Vector3.h"
+#include "./Math/include/Matrix4.h"
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

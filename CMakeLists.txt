@@ -99,7 +99,14 @@ add_subdirectory (External)
 
 	
 	#########################################
-	# Performance - Level 3
+	# Math - Level 3
+	#########################################
+
+	set(MATH_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Math")
+	add_subdirectory("${MATH_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Math)
+	
+	#########################################
+	# Performance - Level 4
 	#########################################
 
 	set(PERFORMANCE_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Performance")
@@ -107,7 +114,7 @@ add_subdirectory (External)
 	
 
 	#########################################
-	# Human - Level 4
+	# Human - Level 5
 	#########################################
 
 	set(HUMAN_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Human")
@@ -115,7 +122,7 @@ add_subdirectory (External)
 	
 
 	#########################################
-	# Communication - Level 5
+	# Communication - Level 6
 	#########################################
 
 	set(COMMUNICATION_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Communication")
@@ -123,7 +130,7 @@ add_subdirectory (External)
 
 
 	#########################################
-	# Scripting - Level 6
+	# Scripting - Level 7
 	#########################################
 
 	set(SCRIPTING_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Scripting")
@@ -131,7 +138,7 @@ add_subdirectory (External)
 
 
 	#########################################
-	# Application - Level 7
+	# Application - Level 8
 	#########################################
 
 	set(APPLICATION_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Application")
