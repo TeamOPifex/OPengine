@@ -2,7 +2,7 @@
 #include "./Core/include/DynamicMemory.h"
 #include "./Core/include/Log.h"
 #include "./Data/include/OPfile.h"
-#include "./Human/include/Rendering/MeshVertex.h"
+#include "./Human/include/Rendering/OPMvertex.h"
 
 namespace Features{
 enum OPMFeatures {
@@ -21,14 +21,19 @@ bool _has(ui32 features, ui32 feature) {
 	return features & feature;
 }
 
-void _generateTangent(Vector3* tangent, MeshVertex* v1, MeshVertex* v2){
+void _generateTangent(OPvec3* tangent, OPMvertex* v1, OPMvertex* v2){
 	f32 dx = v1->vertice.x - v2->vertice.x;
 	f32 dy = v1->vertice.y - v2->vertice.y;
 	f32 dz = v1->vertice.z - v2->vertice.z;
 
-	Vector3 diff(dx, dy, dz);
-	Vector3 tan = Vector3::Cross(v1->normal, diff);
-	tan.Normalize();
+	OPvec3 diff;
+	diff.x = dx;
+	diff.y = dy;
+	diff.z = dz;
+	OPvec3 tan;
+	OPvec3cross(tan, v1->normal, diff);
+	OPvec3norm(tan, tan);
+
 	tangent->x = tan.x;
 	tangent->y = tan.y;
 	tangent->z = tan.z;
@@ -50,7 +55,7 @@ LoadedData LoadOPMData(FILE* file) {
 	ui32 features = OPread_ui32(file);
 	ui32 verticeCount = OPread_ui32(file);
 
-	MeshVertex* vertices = (MeshVertex*)OPalloc(sizeof(MeshVertex) * verticeCount);
+	OPMvertex* vertices = (OPMvertex*)OPalloc(sizeof(OPMvertex) * verticeCount);
 
 	f32 x, y, z;
 	for(ui32 i = 0; i < verticeCount; i++) {
@@ -104,9 +109,9 @@ LoadedData LoadOPMData(FILE* file) {
 
 	// If there were no tangents provided, build them
 	if(!_has(features, Features::Tangent)) {
-		MeshVertex* vert_one;
-		MeshVertex* vert_two;
-		Vector3* tangent;
+		OPMvertex* vert_one;
+		OPMvertex* vert_two;
+		OPvec3* tangent;
 		for(ui32 i = 0; i < indicesCount; i+=3){
 			vert_one = &vertices[indices[i] + 0];
 			vert_two = &vertices[indices[i] + 1];
@@ -128,7 +133,7 @@ LoadedData LoadOPMData(FILE* file) {
 	data.indexSize = sizeof(ui16);
 	data.vertices = vertices;
 	data.vertexCount = verticeCount;
-	data.vertexSize = sizeof(MeshVertex);
+	data.vertexSize = sizeof(OPMvertex);
 	return data;
 }
 
