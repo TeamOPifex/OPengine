@@ -85,7 +85,7 @@ void Material::SetVector2(ui32 attribute, OPvec2* value){
 }
 
 void Material::SetVector3(ui32 attribute, OPvec3* value){
-	glUniform1fv(attribute, 3, &value->x));
+	glUniform1fv(attribute, 3, &value->x);
 }
 
 void Material::SetVector4(ui32 attribute, OPvec4* value){
