@@ -141,6 +141,8 @@ OPint OPrenderBindEffect(OPeffect* effect){
 	}
 
 	OPRENDER_CURR_EFFECT = effect;
+	glUseProgram(OPRENDER_CURR_EFFECT->ProgramHandle);
+	// enable attributes of the new effect
 	OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
 	for(;attrCount--;){
 		ui32 loc = *((ui32*)OPlistGet(&OPRENDER_CURR_EFFECT->Attributes, attrCount));

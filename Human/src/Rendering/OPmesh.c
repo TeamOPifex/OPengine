@@ -29,3 +29,7 @@ OPmesh OPrenderBuildMesh(ui32 vertSize, ui32 indSize,
 
 	return mesh;
 }
+//-----------------------------------------------------------------------------
+void OPrenderMesh(){
+	OPrenderIndexed(0, OPRENDER_CURR_IB->ElementCount);
+}

@@ -9,6 +9,16 @@
 #endif
 
 //-----------------------------------------------------------------------------
+//   _____ _       _           _     
+//  / ____| |     | |         | |    
+// | |  __| | ___ | |__   __ _| |___ 
+// | | |_ | |/ _ \| '_ \ / _` | / __|
+// | |__| | | (_) | |_) | (_| | \__ \
+//  \_____|_|\___/|_.__/ \__,_|_|___/
+OPrenderBuffer* OPRENDER_CURR_VB;
+OPrenderBuffer* OPRENDER_CURR_IB;
+
+//-----------------------------------------------------------------------------
 // ______                _   _                 
 //|  ____|              | | (_)                
 //| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
@@ -35,4 +45,19 @@ void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, ui32 count, c
 	CheckError("OPrenderBindBuffer() - ERROR!");
 	glBufferData(buff->Type, elementSize * count, data, GL_STATIC_DRAW);
 	CheckError("OPrenderSetBufferData() - ERROR!");
+}
+//-----------------------------------------------------------------------------
+void OPrenderIndexed(OPint offset, OPint count){
+	glDrawRangeElements(
+		GL_TRIANGLES,
+		offset,
+		offset + count,
+		count,
+		GL_UNSIGNED_SHORT,
+		0
+	);
+}
+//-----------------------------------------------------------------------------
+void OPrender(OPint offset, OPint count){
+	glDrawArrays(GL_TRIANGLES, offset, count);
 }
