@@ -1,5 +1,6 @@
 #include "./Human/include/Rendering/OPeffect.h"
 
+OPeffect* OPRENDER_CURR_EFFECT = NULL;
 //-----------------------------------------------------------------------------
 // ______                _   _                 
 //|  ____|              | | (_)                
@@ -123,17 +124,66 @@ OPint OPrenderLoadEffect  (const OPchar* filename, OPeffect** effect){
 	return 1;
 }
 //-----------------------------------------------------------------------------
-
 // effect destruction
-OPint OPrenderUnloadEffect(OPeffect* effect);
+OPint OPrenderUnloadEffect(OPeffect* effect){
+	return 1;
+}
 
 // effect managment
-OPint OPrenderBindEffect(OPeffect* effect);
-ui32 OPrenderGetParam(const OPchar* parameterName);
+OPint OPrenderBindEffect(OPeffect* effect){
+	// disable attributes of the last effect
+	if(OPRENDER_CURR_EFFECT){
+		OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
+		for(;attrCount--;){
+			ui32 loc = *((ui32*)OPlistGet(&OPRENDER_CURR_EFFECT->Attributes, attrCount));
+			glDisableVertexAttribArray(loc);
+		}
+	}
+
+	OPRENDER_CURR_EFFECT = effect;
+	OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
+	for(;attrCount--;){
+		ui32 loc = *((ui32*)OPlistGet(&OPRENDER_CURR_EFFECT->Attributes, attrCount));
+		glEnableVertexAttribArray(loc);
+	}
+}
+
+ui32 OPrenderGetParam(const OPchar* parameterName){
+	if(OPhashMapExists(&OPRENDER_CURR_EFFECT->Parameters, parameterName)){
+		ui32* loc;
+		OPhashMapGet(
+			&OPRENDER_CURR_EFFECT->Parameters,
+			parameterName,
+			&loc
+		);
+		return *loc;
+	}
+	else{
+		ui32 loc = glGetUniformLocation(
+			OPRENDER_CURR_EFFECT->ProgramHandle,
+			parameterName
+		);
+
+		ui32* locPtr = OPalloc(sizeof(ui32));
+		*locPtr = loc;
+		OPhasMapPut(&OPRENDER_CURR_EFFECT->Parameters, locPtr);
+		return loc;
+	}
+}
 
 // parameter setting
-void OPrenderParamf(ui32 param, OPfloat f);
-void OPrenderParamfv(ui32 param, OPint count, OPfloat* f);
-void OPrenderParami(ui32 param, OPint i);
-void OPrenderParamiv(ui32 param, OPint count, OPint* i);
-void OPrenderParamMat4v(ui32 param, OPint count, OPmat4* matrices);
+void OPrenderParamf(ui32 param, OPfloat f){
+	glUniform1f(param, f);
+}
+void OPrenderParamfv(ui32 param, OPint count, OPfloat* f){
+	glUniform1fv(param, count, f);
+}
+void OPrenderParami(ui32 param, OPint i){
+	glUniform1i(param, i);
+}
+void OPrenderParamiv(ui32 param, OPint count, OPint* i){
+	glUniform1iv(param, count, i);
+}
+void OPrenderParamMat4v(ui32 param, OPint count, OPmat4* matrices){
+	glUniformMatrix4fv(param, count, GL_FALSE, matrices);
+}
