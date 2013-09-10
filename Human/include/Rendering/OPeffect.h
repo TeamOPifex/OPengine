@@ -1,11 +1,16 @@
 #ifndef OPEngine_Human_Renderer_Effect
 #define OPEngine_Human_Renderer_Effect
-	
+#include "./Core/include/Types.h"
+#include "./Core/include/Log.h"
 #include "./Core/include/DynamicMemory.h"
 #include "./Data/include/OPhashMap.h"
+#include "./Data/include/OPlist.h"
 #include "./Data/include/OPfile.h"
 
+#include "./Math/include/Matrix4.h"
 #include "./Human/include/Rendering/Buffer.h"
+
+#include "./Human/include/Utilities/Errors.h"
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
@@ -19,14 +24,14 @@ extern "C" {
 // |  ___| '__/ _ \ |______| |  ___| '__/ _ \ / __| | |  | | | '__/ _ \/ __| __| \ \ / / _ / __|
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/   
-#define ui32 OPshader
+typedef ui32 OPshader;
 
 #ifdef OPIFEX_OPENGL_ES_2
-#define GL_VERTEX_SHADER   OPvertexShader
-#define GL_FRAGMENT_SHADER OPfragmentShader
+#define OPvertexShader   GL_VERTEX_SHADER
+#define OPfragmentShader GL_FRAGMENT_SHADER
 #else
-#define GL_VERTEX_SHADER_ARB   OPvertexShader
-#define GL_FRAGMENT_SHADER_ARB OPfragmentShader
+#define OPvertexShader   GL_VERTEX_SHADER_ARB
+#define OPfragmentShader GL_FRAGMENT_SHADER_ARB
 #endif
 
 //-----------------------------------------------------------------------------
@@ -40,7 +45,7 @@ typedef struct{
 	OPshader  Vertex;
 	OPshader  Fragment;
 	ui32      ProgramHandle;
-	OPhashMap Parameters;
+	HashMap   Parameters;
 	OPlist    Attributes;
 }OPeffect;
 
@@ -83,6 +88,8 @@ void OPrenderParamfv(ui32 param, OPint count, OPfloat* f);
 void OPrenderParami(ui32 param, OPint i);
 void OPrenderParamiv(ui32 param, OPint count, OPint* i);
 void OPrenderParamMat4v(ui32 param, OPint count, OPmat4* matrices);
+
+void OPrenderUseTexture(ui32 param, ui32 uniform, ui32 slot);
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

@@ -1,6 +1,17 @@
 #ifndef OPEngine_Human_Renderer_Buffer
 #define OPEngine_Human_Renderer_Buffer
 	
+#include "./Core/include/Types.h"
+
+#ifdef OPIFEX_OPENGL_ES_2
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#else
+#include <GL/glew.h>
+#include <GL/glfw.h>
+//#include <glm/glm.hpp>
+#endif
+
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
 extern "C" {
@@ -16,7 +27,7 @@ extern "C" {
 typedef struct{
 	ui32 Type;
 	ui32 ElementSize;
-	ui32 ElementCount
+	ui32 ElementCount;
 	ui32 Handle;
 }OPrenderBuffer;
 
@@ -37,8 +48,8 @@ extern OPrenderBuffer* OPRENDER_CURR_IB;
 // |  ___| '__/ _ \ |______| |  ___| '__/ _ \ / __| | |  | | | '__/ _ \/ __| __| \ \ / / _ / __|
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/   
-#define GL_ARRAY_BUFFER         OPvertexBuffer
-#define GL_ELEMENT_ARRAY_BUFFER OPindexBuffer
+#define OPvertexBuffer GL_ARRAY_BUFFER
+#define OPindexBuffer  GL_ELEMENT_ARRAY_BUFFER
 
 #define OPrenderBindBuffer(buffer){\
 	glBindbuffer(buffer->Type, buffer->Handle);\

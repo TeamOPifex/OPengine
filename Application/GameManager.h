@@ -17,12 +17,12 @@ public:
 	bool Update( OPtimer* coreTimer );
 	void Draw();
 private:
-	MeshPacker* meshPacker;
-	PackedModelPtr _model;
-	SpecularTexturedMaterial* _material;
-	Texture2D* _colorTexture;
-	Texture2D* _normalTexture;
-	Texture2D* _specularTexture;
+	//MeshPacker* meshPacker;
+	//PackedModelPtr _model;
+	//SpecularTexturedMaterial* _material;
+	//Texture2D* _colorTexture;
+	//Texture2D* _normalTexture;
+	//Texture2D* _specularTexture;
 
 	f32 rotateAmnt;
 };

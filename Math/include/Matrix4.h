@@ -8,9 +8,9 @@
 
 #define OPmat4mul(dst, m1, m2) {\
 	OPmat4 result;\
-	OPmemcpy(&result, &m1, sizeof(OPmat4));\
 	OPfloat sum;\
 	i32 i, j, k = 0;\
+	OPmemcpy(&result, &m1, sizeof(OPmat4));\
 	for(i = 0; i < 4; i++){\
 		for(j = 0; j < 4; j++){\
 			sum = 0;\
@@ -74,9 +74,10 @@
 
 #define OPmat4transpose(m){\
 	OPmat4 tmp;\
+	OPint i = 0, j = 0;\
 	OPmemcpy(&tmp, &m, sizeof(OPmat4));\
-	for(int i = 0; i < 4; i++){\
-		for(int j = 0; j < 4; j++){\
+	for(i = 0; i < 4; i++){\
+		for(j = 0; j < 4; j++){\
 			m.cols[i][j] = tmp.cols[i][j];\
 		}\
 	}\
@@ -157,6 +158,7 @@
 	OPvec3 f;\
 	OPvec3 s;\
 	OPvec3 u;\
+	OPint i = 0;\
 	OPvec3sub(f, look, campos);\
 	OPvec3norm(f, f);\
 	OPvec3norm(up, up);\
@@ -164,16 +166,18 @@
 	OPvec3norm(s, s);\
 	OPvec3cross(u, s, f);\
 	OPmat4identity(m);\
-	for(int i = 0; i < 3; i++){\
-		m.cols[i].x = ((OPfloat*)s)[i];\
+	for(i = 0; i < 3; i++){\
+		m.cols[i].x = ((OPfloat*)&s)[i];\
 	}\
-	for(int i = 0; i < 3; i++){\
-		m.cols[i].y = ((OPfloat*)u)[i];\
+	for(i = 0; i < 3; i++){\
+		m.cols[i].y = ((OPfloat*)&u)[i];\
 	}\
-	for(int i = 0; i < 3; i++){\
-		m.cols[i].z = -((OPfloat*)f)[i];\
+	for(i = 0; i < 3; i++){\
+		m.cols[i].z = -((OPfloat*)&f)[i];\
 	}\
-	OPmat4translate(m, -campos.x, -campos.y, -campos.z);\
+	m.cols[3].x += campos.x;\
+	m.cols[3].y += campos.y;\
+	m.cols[3].z += campos.z;\
 } \
 
 

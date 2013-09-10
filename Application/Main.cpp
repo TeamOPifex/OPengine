@@ -5,11 +5,10 @@
 #include "./Data/include/OPgameStates.h"
 
 #include "./GameManager.h"
-#include "./Human/include/Rendering/RenderSystem.h"
+#include "./Human/include/Rendering/Renderer.h"
 #include "./Human/include/Input/GamePadSystem.h"
 
 #include "./Core/include/Log.h"
-#include "./Human/include/Audio/Jukebox.h"
 
 #include "./Data/include/OPlinkedList.h"
 #include "./Data/include/OPheap.h"
@@ -106,27 +105,6 @@ void Init(){
 	i32 width = 1280;
 	i32 height = 720;
 #endif
-	OPLog("Allocating");
-	OPlinkedList* ll = OPllCreate();
-	OPminHeap* heap = OPminHeapCreate(20);
-	OPlist* list = OPlistCreate(5, sizeof(OPint));
-
-	write(1, "Creating EntHeap...\n", 21);
-	entData = OPalloc(OPentHeapSize(sizeof(OPint), 100));
-	ents = OPentHeapCreate(entData, sizeof(OPint), 100);
-OPLog("Created EntHeap!");
-	OPint* ints = (OPint*)ents->Entities;
-	for(OPint i = 100; i--;){
-		OPint ind = 0;
-		OPentHeapActivate(ents, &ind);
-		OPLog("ind: %d", ind);
-		ints[ind] = i;
-	}
-
-	OPLog("Max: %d\n", ents->MaxIndex);
-	for(OPint i = 0; i < ents->MaxIndex; i++){
-		OPLog_i32(ints[i]);
-	}
 
 	OPassetLoader loaders[] ={
 		{
@@ -156,45 +134,6 @@ OPLog("Created EntHeap!");
 
 	GPS = new GamePadSystem();
 
-	//OPAudio::Init();
-
-	printf("Inserting ");
-	for(OPint i = 20; i--;){
-		OPint* j = (OPint*)OPalloc(sizeof(OPint));
-		*j = i;
-		OPllInsertLast(ll, (ui8*)j);
-		OPminHeapPush(heap, i);
-		OPlistPush(list, (ui8*)&i);
-		printf("%d ", *j);
-	}
-	printf("\n");
-
-	OPint j = 1337;
-	OPlistRemoveAt(list, 9);
-	OPlistInsert(list, (ui8*)&j, 9);
-
-	OPLog("Reading: ");
-	OPllNode* node = ll->First;
-	while (node){
-		OPLog("%d ", *(OPint*)(node->Data));
-		node = node->Next;
-	}
-	OPLog("\nList: ");
-
-	for(OPint i = OPlistSize(list); i--;){
-		OPint j = *((OPint*)OPlistGet(list, i));
-		OPLog("%d ", j);
-	}
-		OPLog("\nHeap: ");
-	for(OPint i = 20; i--;){
-		OPLog("%d ", heap->_indices[i]);
-	}
-
-	OPLog("\nPopping sorted: ");
-	while(OPminHeapSize(heap) > 0){
-		OPLog("%d ", OPminHeapPop(heap));
-	}
-
 	OPaudInit();
 	//Sound = OPaudOpenOgg("Audio/background.ogg");
 	RenderSystem::Initialize(width, height);
@@ -218,10 +157,6 @@ OPLog("Created EntHeap!");
 
 		Sound1 = (OPaudioSource*)OPcmanGet("pew.wav");
 		Sound = (OPaudioSource*)OPcmanGet("background.ogg");
-
-		//OPcmanDelete("pew.wav");
-		//OPcmanDelete("background.ogg");
-		//OPcmanPurge();
 
         OPLog("Reading done!\n");
         Emitter1 = OPaudCreateEmitter(Sound1, 0);
@@ -304,7 +239,7 @@ void Update( OPtimer* timer){
 			r = g = b = 1.0f;
 		}
 
-		RenderSystem::ClearColor(r, g, b);
+		OPrenderClear(r, g, b);
 
 		#ifdef OPIFEX_ANDROID
 	  	if(gps->WasPressed(GamePad_Button_A)){
@@ -325,7 +260,7 @@ void Update( OPtimer* timer){
     OPaudUpdate(OPaudProcess);
 	//SoundEmitter->Update();
 	GM->Draw();
-	RenderSystem::Present();
+	OPrenderPresent();
 	
 
 
