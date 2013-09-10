@@ -1,5 +1,4 @@
 #include "GameManager.h"
-#include "./Human/include/Rendering/RenderSystem.h"
 #include "./Human/include/Utilities/OBJLoader.h"
 #include "./Data/include/OPfile.h"
 #include "./Data/include/OPcontentManager.h"

@@ -133,8 +133,7 @@ void Init(){
 	
 	OPaudInit();
 	//Sound = OPaudOpenOgg("Audio/background.ogg");
-	RenderSystem::Initialize(width, height);
-
+	
 	OPcmanLoad("pew.wav");
 	OPcmanLoad("background.ogg");
 	OPcmanLoad("test.png");
@@ -242,7 +241,7 @@ void Update( OPtimer* timer){
 		#endif
 	}
 	else {
-		RenderSystem::ClearColor(0,0,0);
+		//RenderSystem::ClearColor(0,0,0);
 	}
 
 
