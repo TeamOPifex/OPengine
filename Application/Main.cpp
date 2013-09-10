@@ -38,7 +38,6 @@
 #include "./Data/include/OPentHeap.h"
 
 GameManager* GM;
-GamePadSystem* GPS;
 OPaudioSource *Sound, *Sound1;
 OPaudioEmitter Emitter, Emitter1;
 OPaudioPlayer player;
@@ -131,9 +130,7 @@ void Init(){
 	};
 
 	OPcmanInit(loaders, 3);
-
-	GPS = new GamePadSystem();
-
+	
 	OPaudInit();
 	//Sound = OPaudOpenOgg("Audio/background.ogg");
 	RenderSystem::Initialize(width, height);
@@ -213,29 +210,25 @@ void Purchase( JNIEnv * env, const char* item ) {
 
 
 JNIEXPORT int JNICALL Java_com_opifex_smrf_GL2JNILib_step(JNIEnv * env, jobject obj){	
-
-	Purchase(env, "This comes from jni.");
-
+	
 	OPtimerTick(timer);
-	//GamePadSystem::Update(env);
-	GPS->Update(env);
 
 #else
 void Update( OPtimer* timer){
-	GPS->Update();
 #endif
 
 	bool result = GM->Update( timer );
 
+	GamePadController* gamePad = OPgamePadController(GamePadIndex_One);
+	OPgamePadUpdate(gamePad);
 
-	GamePadState* gps = GPS->Controller(GamePadIndex_One);
-	if(gps->IsConnected()) {
+	if(OPgamePadIsConnected(gamePad)) {
 
-		OPfloat r = gps->IsDown(GamePad_Button_A) ? 1.0f : 0.0f;
-		OPfloat g = gps->LeftThumbX() / 2.0f + 0.5f;
-		OPfloat b = gps->LeftTrigger();
-
-		if(gps->WasPressed(GamePad_Button_A)){
+		OPfloat r = OPgamePadIsDown(gamePad, GamePad_Button_A) ? 1.0f : 0.0f;
+		OPfloat g = OPgamePadLeftThumbX(gamePad) / 2.0f + 0.5f;
+		OPfloat b = OPgamePadLeftTrigger(gamePad);
+		
+		if(OPgamePadWasPressed(gamePad, GamePad_Button_A)){
 			r = g = b = 1.0f;
 		}
 
