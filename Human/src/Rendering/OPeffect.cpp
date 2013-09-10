@@ -130,6 +130,8 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPchar** Attributes,
 		);
 		OPlistPush(&effect.Attributes, (ui8*)&loc);
 	}
+
+	return effect;
 }
 //-----------------------------------------------------------------------------
 OPint OPrenderLoadEffect  (const OPchar* filename, OPeffect** effect){
@@ -160,6 +162,8 @@ OPint OPrenderBindEffect(OPeffect* effect){
 		ui32 loc = *((ui32*)OPlistGet(&OPRENDER_CURR_EFFECT->Attributes, attrCount));
 		glEnableVertexAttribArray(loc);
 	}
+
+	return 1;
 }
 
 ui32 OPrenderGetParam(const OPchar* parameterName){

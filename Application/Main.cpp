@@ -22,11 +22,11 @@
 #include <direct.h>
 #include <GL/glew.h>
 #include <GL/glfw.h>
-#include <glm/glm.hpp>
+//#include <glm/glm.hpp>
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 #include <GL/glew.h>
 #include <GL/glfw.h>
-#include <glm/glm.hpp>
+//#include <glm/glm.hpp>
 #endif
 #include "./Data/include/OPfile.h"
 #include "./Human/include/Audio/OPaudio2.h"
