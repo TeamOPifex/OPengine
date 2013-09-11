@@ -1,3 +1,4 @@
+#include "./Core/include/Log.h"
 #include "./Human/include/Rendering/Renderer.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
@@ -18,6 +19,8 @@ OPint OPrenderInit(ui32 width, ui32 height){
 	//glEnable(GL_CULL_FACE);
 	return 0;
 #else
+	GLuint VertexArrayID;
+	
 	// Most of the below will be moved to a Windowing System
 	if( !glfwInit() ) return -1;
 	
@@ -49,7 +52,6 @@ OPint OPrenderInit(ui32 width, ui32 height){
 	glDisable(GL_CULL_FACE);
 	
 	// TODO: Determine how to optimize with this
-	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
 	

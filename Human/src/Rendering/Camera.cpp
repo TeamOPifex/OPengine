@@ -5,11 +5,17 @@
 OPcam OPcamProj(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat near, OPfloat far, OPfloat fov, OPfloat aspect){
 	
 	OPcam cam = {
-		position, target, up,
+		position,
+		target,
+		up,
 		fov,
-		aspect, near, far,
-		{0}, {0},
-		0, 0
+		aspect,
+		near,
+		far,
+		{0},
+		{0},
+		0, 
+		0
 	};
 
 	OPmat4identity(cam._proj);

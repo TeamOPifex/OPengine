@@ -1,5 +1,7 @@
 #include "./Human/include/Rendering/OPmesh.h"
 
+OPmesh* OPRENDER_CURR_MESH;
+
 //-----------------------------------------------------------------------------
 // ______                _   _                 
 //|  ____|              | | (_)                
@@ -30,6 +32,12 @@ OPmesh OPrenderBuildMesh(ui32 vertSize, ui32 indSize,
 	return mesh;
 }
 //-----------------------------------------------------------------------------
+void OPrenderBindMesh(OPmesh* mesh){
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->VertexBuffer.Handle);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->IndexBuffer.Handle);
+	OPRENDER_CURR_MESH = mesh;
+}
+//-----------------------------------------------------------------------------
 void OPrenderMesh(){
-	OPrenderIndexed(0, OPRENDER_CURR_IB->ElementCount);
+	//OPrenderIndexed(0, OPRENDER_CURR_IB->ElementCount);
 }

@@ -9,7 +9,7 @@
 #else
 #include <GL/glew.h>
 #include <GL/glfw.h>
-//#include <glm/glm.hpp>
+#include <glm/glm.hpp>
 #endif
 
 // prevent name mangling if compiling with c++
@@ -51,14 +51,14 @@ extern OPrenderBuffer* OPRENDER_CURR_IB;
 #define OPvertexBuffer GL_ARRAY_BUFFER
 #define OPindexBuffer  GL_ELEMENT_ARRAY_BUFFER
 
-#define OPrenderBindBuffer(buffer){\
-	glBindbuffer(buffer->Type, buffer->Handle);\
-	if(buffer->Type == OPvertexBuffer)\
-		OPRENDER_CURR_VB = buffer;\
-	else\
-		OPRENDER_CURR_IB = buffer;\
-}\
-
+//#define OPrenderBindBuffer(buffer){\
+//	glBindbuffer(buffer->Type, buffer->Handle);\
+//	if(buffer->Type == OPvertexBuffer)\
+//		OPRENDER_CURR_VB = buffer;\
+//	else\
+//		OPRENDER_CURR_IB = buffer;\
+//}\
+//
 //-----------------------------------------------------------------------------
 // ______                _   _                 
 //|  ____|              | | (_)                
@@ -68,6 +68,7 @@ extern OPrenderBuffer* OPRENDER_CURR_IB;
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPrenderBuffer OPrenderGenBuffer(ui32 type);
 void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, ui32 count, const void* data);
+void OPrenderBindBuffer(OPrenderBuffer* buffer);
 
 void OPrenderIndexed();
 void OPrender();

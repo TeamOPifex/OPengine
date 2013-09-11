@@ -47,6 +47,14 @@ void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, ui32 count, c
 	CheckError("OPrenderSetBufferData() - ERROR!");
 }
 //-----------------------------------------------------------------------------
+void OPrenderBindBuffer(OPrenderBuffer* buffer){
+	glBindBuffer(buffer->Type, buffer->Handle);
+	if(buffer->Type == OPvertexBuffer)
+		OPRENDER_CURR_VB = buffer;
+	else
+		OPRENDER_CURR_IB = buffer;
+}
+//-----------------------------------------------------------------------------
 void OPrenderIndexed(OPint offset, OPint count){
 	glDrawRangeElements(
 		GL_TRIANGLES,

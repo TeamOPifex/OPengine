@@ -36,11 +36,7 @@ extern OPmesh* OPRENDER_CURR_MESH;
 // |  ___| '__/ _ \ |______| |  ___| '__/ _ \ / __| | |  | | | '__/ _ \/ __| __| \ \ / / _ / __|
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/   
-#define OPrenderBindMesh(mesh){\	
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->VertexBuffer);\
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->IndexBuffer);\
-	OPRENDER_CURR_MESH = mesh;\
-}\
+
 
 //-----------------------------------------------------------------------------
 // ______                _   _                 
@@ -51,6 +47,7 @@ extern OPmesh* OPRENDER_CURR_MESH;
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPmesh OPrenderCreateMesh(OPrenderBuffer index, OPrenderBuffer vertex);
 OPmesh OPrenderBuildMesh(ui32 vertSize, ui32 indSize, ui32 vertCount, ui32 indCount, void* vertices, void* indices);
+void OPrenderBindMesh(OPmesh* mesh);
 
 void OPrenderMesh();
 

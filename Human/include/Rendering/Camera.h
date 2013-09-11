@@ -19,11 +19,17 @@ extern "C" {
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 typedef struct{
-	OPvec3 _pos, _targ, _up;
+	OPvec3 _pos;
+	OPvec3 _targ;
+	OPvec3 _up;
 	OPfloat _fov;
-	OPfloat _aspect, _near, _far;
-	OPmat4 _proj, _view;
-	OPint _projStale, _viewStale;
+	OPfloat _aspect;
+	OPfloat _near;
+	OPfloat _far;
+	OPmat4 _proj;
+	OPmat4 _view;
+	OPint _projStale;
+	OPint _viewStale;
 } OPcam;
 
 //-----------------------------------------------------------------------------
