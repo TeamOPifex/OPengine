@@ -17,7 +17,7 @@ typedef struct{
 	OPint		playerIndex;
 } GamePadController;
 
-GamePadController GamePadControllers[CONTROLLERS];
+extern GamePadController GamePadControllers[CONTROLLERS];
 
 
 GamePadController* OPgamePadController(GamePadIndex index);

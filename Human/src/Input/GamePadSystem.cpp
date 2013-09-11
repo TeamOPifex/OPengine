@@ -13,6 +13,11 @@
 	#include <jni.h>
 #endif
 
+GamePadController GamePadControllers[CONTROLLERS];
+
+GamePadController* OPgamePadController(GamePadIndex index) {
+	return &GamePadControllers[index];
+}
 
 #ifdef OPIFEX_ANDROID
 
