@@ -211,6 +211,31 @@ void OPgamePadReset(GamePadController* controller){
 }
 
 
+void OPgamePadSystemUpdate()
+{
+	for ( OPint i = CONTROLLERS; i--; )
+	{
+		OPgamePadUpdate( OPgamePadController( (GamePadIndex)i ) );
+	}
+}
+
+void OPgamePadSystemReset()
+{
+	for ( OPint i = CONTROLLERS; i--; )
+	{
+		OPgamePadReset( OPgamePadController( (GamePadIndex)i ) );
+	}
+}
+
+void OPgamePadSetDeadzones(OPfloat deadzone)
+{
+	for ( OPint i = CONTROLLERS; i--; )
+	{
+		OPgamePadSetDeadzone(OPgamePadController((GamePadIndex)i), deadzone);
+	}
+}
+
+
 bool OPgamePadIsDown(GamePadController* controller, GamePadButton button){
 	return controller->buttons[button];
 }
