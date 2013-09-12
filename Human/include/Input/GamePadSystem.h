@@ -19,15 +19,13 @@ typedef struct{
 
 extern GamePadController GamePadControllers[CONTROLLERS];
 
+
 GamePadController* OPgamePadController(GamePadIndex index);
 
 void OPgamePadUpdate(GamePadController* controller);
 void OPgamePadReset(GamePadController* controller);
 void OPgamePadSetDeadzone(GamePadController* controller, OPfloat deadzone);
 
-void OPgamePadSystemUpdate();
-void OPgamePadSystemReset();
-void OPgamePadSetDeadzones(OPfloat deadzone);
 
 bool OPgamePadIsDown(GamePadController* controller, GamePadButton button);
 bool OPgamePadIsUp(GamePadController* controller, GamePadButton button);	
