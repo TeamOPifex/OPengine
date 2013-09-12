@@ -459,6 +459,7 @@ class GL2JNIView extends GLSurfaceView {
 		static AssetManager _assetManager;
 		
 		public Renderer(AssetManager assetManager){
+            GL2JNILib.start();
 			_assetManager = assetManager;
 			//GL2JNILib.setControllerButton(1, 0, 0);
 		}
