@@ -37,6 +37,7 @@ OPint OPrenderInit(ui32 width, ui32 height){
 		return -1;
 	}
 
+	OPrenderSetViewport(0, 0, width, height);
 	//glewExperimental = true;
 	if (glewInit() != GLEW_OK) return -1;	
 

@@ -3,6 +3,7 @@
 
 #include "./Core/include/Timer.h"
 #include "./Human/include/Resources/Model/Model.h"
+#include "./Human/include/Rendering/Renderer.h"
 #include "./Human/include/Rendering/Camera.h"
 #include "./Human/include/Resources/Material/SpecularTexturedMaterial.h"
 #include "./Human/include/Resources/Material/TexturedScreenMaterial.h"

@@ -49,10 +49,12 @@ void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, ui32 count, c
 //-----------------------------------------------------------------------------
 void OPrenderBindBuffer(OPrenderBuffer* buffer){
 	glBindBuffer(buffer->Type, buffer->Handle);
-	if(buffer->Type == OPvertexBuffer)
+	if(buffer->Type == OPvertexBuffer){
 		OPRENDER_CURR_VB = buffer;
-	else
+	}
+	else{
 		OPRENDER_CURR_IB = buffer;
+	}
 }
 //-----------------------------------------------------------------------------
 void OPrenderIndexed(OPint offset, OPint count){
@@ -66,6 +68,7 @@ void OPrenderIndexed(OPint offset, OPint count){
 	);
 }
 //-----------------------------------------------------------------------------
-void OPrender(OPint offset, OPint count){
-	glDrawArrays(GL_TRIANGLES, offset, count);
+void OPrender(){
+		OPLog("VB: %d Elements: %d\n", OPRENDER_CURR_VB->Handle, OPRENDER_CURR_VB->ElementCount);
+	glDrawArrays(GL_TRIANGLES, 0, OPRENDER_CURR_VB->ElementCount);
 }

@@ -33,6 +33,7 @@
 #include "./Human/include/Audio/OPaudioEmitter.h"
 #include "./Human/include/Audio/OPaudioPlayer.h"
 #include "./Human/include/Resources/Texture/ImagePNG.h"
+#include "./Human/include/Rendering/OPeffect.h"
 #include "./Data/include/OPfile.h"
 #include "./Data/include/OPcontentManager.h"
 #include "./Data/include/OPentHeap.h"
@@ -126,10 +127,24 @@ void Init(){
 			sizeof(Texture2D),
 			(OPint (*)(const OPchar*, void**))OPimagePNGLoad,
 			(OPint (*)(void*))OPimagePNGUnload
+		},
+		{
+			".vert",
+			"Shaders/",
+			sizeof(OPshader),
+			(OPint (*)(const OPchar*, void**))OPrenderLoadVertexShader,
+			(OPint (*)(void*))OPrenderUnloadShader
+		},
+		{
+			".frag",
+			"Shaders/",
+			sizeof(OPshader),
+			(OPint (*)(const OPchar*, void**))OPrenderLoadFragmentShader,
+			(OPint (*)(void*))OPrenderUnloadShader
 		}
 	};
 
-	OPcmanInit(loaders, 3);
+	OPcmanInit(loaders, 5);
 	
 	OPaudInit();
 	//Sound = OPaudOpenOgg("Audio/background.ogg");

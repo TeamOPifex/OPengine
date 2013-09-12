@@ -26,8 +26,9 @@ OPint OPrenderLoadVertexShader(const OPchar* filename, OPshader** shader){
 	vertex = glCreateShader(OPvertexShader);
 	CheckError("GLShader::Error 1");
 	if(vertex){
-		const OPchar* src = (const OPchar*)source->Data;
-		glShaderSource(vertex, 1, &src, 0);
+		OPchar* src = (OPchar*)source->Data;
+		OPLog("%s\n", src);
+		glShaderSource(vertex, 1, (const OPchar**)&src, 0);
 		CheckError("GLShader::Error 2");
 		glCompileShader(vertex);
 		CheckError("GLShader::Error 3");
@@ -65,11 +66,12 @@ OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader){
 	OPshader frag = -1;
 	OPstream* source = OPreadFile(filename);
 
-	frag = glCreateShader(OPvertexShader);
+	frag = glCreateShader(OPfragmentShader);
 	CheckError("GLShader::Error 1");
 	if(frag){
-		const OPchar* src = (const OPchar*)source->Data;
-		glShaderSource(frag, 1, &src, 0);
+		OPchar* src = (OPchar*)source->Data;
+		OPLog("%s\n", src);
+		glShaderSource(frag, 1, (const OPchar**)&src, 0);
 		CheckError("GLShader::Error 2");
 		glCompileShader(frag);
 		CheckError("GLShader::Error 3");
@@ -116,19 +118,36 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPchar** Attributes,
 		vert,
 		frag,
 		-1,
-		*OPhashMapCreate(2),
-		*OPlistCreate(AttribCount, sizeof(ui32))
+		{0},
+		{0}
 	};
+
+	OPmemcpy(&effect.Parameters, OPhashMapCreate(2), sizeof(HashMap));
+	OPmemcpy(&effect.Attributes, OPlistCreate(AttribCount, sizeof(ui32)), sizeof(OPlist));
 
 	effect.ProgramHandle = glCreateProgram();
 
+	glAttachShader(effect.ProgramHandle, vert);
+	glAttachShader(effect.ProgramHandle, frag);
+
+	glLinkProgram(effect.ProgramHandle);
+	CheckError("Messed up");
+
+	OPint status;
+	glGetProgramiv(effect.ProgramHandle, GL_LINK_STATUS, &status);
+	OPLog("True: %d Link status: %d, vert %d, frag %d\n", GL_TRUE, status, vert, frag);
+
 	// create, and copy attributes into list
 	for(;AttribCount--;){
-		ui32 loc = glGetAttribLocation(
+		ui32* loc = (ui32*)OPalloc(sizeof(ui32));
+
+		*loc = glGetAttribLocation(
 			effect.ProgramHandle,
 			Attributes[AttribCount]
 		);
-		OPlistPush(&effect.Attributes, (ui8*)&loc);
+
+		OPLog("%s = %d loc %d\n", Attributes[AttribCount], AttribCount, *loc);
+		OPlistPush(&effect.Attributes, (ui8*)loc);
 	}
 
 	return effect;
@@ -155,11 +174,13 @@ OPint OPrenderBindEffect(OPeffect* effect){
 	}
 
 	OPRENDER_CURR_EFFECT = effect;
+	OPLog("ProgramHandle: %d\n", OPRENDER_CURR_EFFECT->ProgramHandle);
 	glUseProgram(OPRENDER_CURR_EFFECT->ProgramHandle);
 	// enable attributes of the new effect
 	OPint attrCount = OPlistSize(&OPRENDER_CURR_EFFECT->Attributes);
 	for(;attrCount--;){
 		ui32 loc = *((ui32*)OPlistGet(&OPRENDER_CURR_EFFECT->Attributes, attrCount));
+		OPLog("Attr %d -> loc %u\n", attrCount, loc);
 		glEnableVertexAttribArray(loc);
 	}
 

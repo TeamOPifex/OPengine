@@ -7,6 +7,9 @@ OPstream* OPstreamCreate(OPuint size){
 	s->Length = size;
 	s->_pointer = 0;
 
+	// no trash allowed
+	OPbzero(s->Data, size);
+
 	return s;
 }
 //-----------------------------------------------------------------------------
@@ -39,7 +42,7 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 		len = len > size ? len : size;
 		
 		// reallocate
-		OPLog("OPstream - resizing to %u\n", sizeof(ui8) * len * 2);
+		OPLog("OPstream - resizing to %u\n", sizeof(ui8) * (len << 1));
 		nd = (ui8*)OPrealloc(
 			D,
 			sizeof(ui8) * len * 2
@@ -48,7 +51,9 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 		// check to see if reallocation is successful
 		if(nd){
 			stream->Data = nd;
-			stream->Length = len * 2;
+			stream->Length = len << 1;
+
+			OPbzero(stream->Data + ptr, ((len << 1) - ptr));
 		}
 		else
 			return 0;
