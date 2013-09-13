@@ -42,9 +42,17 @@ typedef ui32 OPshader;
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 typedef struct{
+	OPchar* Name;
+	ui32    Type;
+	ui32    Elements;
+	void*   Offset;
+}OPshaderAttribute;
+
+typedef struct{
 	OPshader  Vertex;
 	OPshader  Fragment;
 	ui32      ProgramHandle;
+	ui32      Stride;
 	HashMap   Parameters;
 	OPlist    Attributes;
 }OPeffect;
@@ -72,7 +80,7 @@ OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader);
 OPint OPrenderUnloadShader(OPshader* shader);
 
 // effect creation
-OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPchar** Attributes, OPint AttribCount);
+OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* Attributes, OPint AttribCount);
 OPint OPrenderLoadEffect  (const OPchar* filename, OPeffect** effect);
 
 // effect destruction

@@ -113,17 +113,18 @@ OPint OPrenderUnloadShader(OPshader* shader){
 }
 //-----------------------------------------------------------------------------
 // effect creation
-OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPchar** Attributes, OPint AttribCount){
+OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* Attributes, OPint AttribCount){
 	OPeffect effect = {
 		vert,
 		frag,
 		-1,
+		 0,
 		{0},
 		{0}
 	};
 
 	OPmemcpy(&effect.Parameters, OPhashMapCreate(2), sizeof(HashMap));
-	OPmemcpy(&effect.Attributes, OPlistCreate(AttribCount, sizeof(ui32)), sizeof(OPlist));
+	OPmemcpy(&effect.Attributes, OPlistCreate(AttribCount, sizeof(OPshaderAttribute)), sizeof(OPlist));
 
 	effect.ProgramHandle = glCreateProgram();
 
@@ -139,15 +140,27 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPchar** Attributes,
 
 	// create, and copy attributes into list
 	for(;AttribCount--;){
-		ui32* loc = (ui32*)OPalloc(sizeof(ui32));
+		OPshaderAttribute attr = {
+			NULL,
+			Attributes[AttribCount].Type,
+			Attributes[AttribCount].Elements,
+			Attributes[AttribCount].Offset
+		};
 
-		*loc = glGetAttribLocation(
+		attr.Name = (OPchar*)glGetAttribLocation(
 			effect.ProgramHandle,
-			Attributes[AttribCount]
+			Attributes[AttribCount].Name
 		);
 
-		OPLog("%s = %d loc %d\n", Attributes[AttribCount], AttribCount, *loc);
-		OPlistPush(&effect.Attributes, (ui8*)loc);
+		// TODO add more types
+		switch(Attributes[AttribCount].Type){
+			case GL_FLOAT:
+				effect.Stride += (4 * Attributes[AttribCount].Elements);
+				break;
+		}
+
+		//OPLog("%s = %d loc %d\n", Attributes[AttribCount], AttribCount, *loc);
+		OPlistPush(&effect.Attributes, (ui8*)&attr);
 	}
 
 	return effect;
@@ -168,8 +181,8 @@ OPint OPrenderBindEffect(OPeffect* effect){
 	if(OPRENDER_CURR_EFFECT){
 		OPint attrCount = OPlistSize(&OPRENDER_CURR_EFFECT->Attributes);
 		for(;attrCount--;){
-			ui32 loc = *((ui32*)OPlistGet(&OPRENDER_CURR_EFFECT->Attributes, attrCount));
-			glDisableVertexAttribArray(loc);
+			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(&OPRENDER_CURR_EFFECT->Attributes, attrCount);
+			glDisableVertexAttribArray((ui32)attr->Name);
 		}
 	}
 
@@ -179,9 +192,17 @@ OPint OPrenderBindEffect(OPeffect* effect){
 	// enable attributes of the new effect
 	OPint attrCount = OPlistSize(&OPRENDER_CURR_EFFECT->Attributes);
 	for(;attrCount--;){
-		ui32 loc = *((ui32*)OPlistGet(&OPRENDER_CURR_EFFECT->Attributes, attrCount));
-		OPLog("Attr %d -> loc %u\n", attrCount, loc);
-		glEnableVertexAttribArray(loc);
+		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(&OPRENDER_CURR_EFFECT->Attributes, attrCount);
+		OPLog("Attr %d -> loc %u\n", attrCount, (ui32)attr->Name);
+		glEnableVertexAttribArray((ui32)attr->Name);
+		glVertexAttribPointer(
+			(ui32)attr->Name,
+			attr->Elements,
+			attr->Type,
+			GL_FALSE,
+			effect->Stride,
+			attr->Offset
+		);
 	}
 
 	return 1;

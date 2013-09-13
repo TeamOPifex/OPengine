@@ -32,9 +32,9 @@ GameManager::GameManager(int width, int height)
 	verts = OPrenderGenBuffer(OPvertexBuffer);
 	OPrenderSetBufferData(&verts, sizeof(OPfloat) * 6, 3, vertData);
 
-	OPchar* attribs[] = {
-		"aVertexPosition",
-		"aColor"
+	OPshaderAttribute attribs[] = {
+		{"aVertexPosition",GL_FLOAT,3,(void*)0},
+		{"aColor",GL_FLOAT,3,(void*)12}
 	};
 
 	tri = OPrenderCreateEffect(
@@ -59,8 +59,8 @@ void GameManager::Draw(){
 	OPrenderBindBuffer(&verts);
 	OPrenderBindEffect(&tri);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(OPfloat), (void*)0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(OPfloat), (void*)(sizeof(OPfloat) * 3));
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(OPfloat), (void*)0);
+	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(OPfloat), (void*)(sizeof(OPfloat) * 3));
 
 	OPrender();
 }
