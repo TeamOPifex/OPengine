@@ -182,7 +182,12 @@
 	m.cols[3].z += campos.z;\
 } \
 
-
+#define OPmat4Print(m){\
+	OPLog("[ %.6f  %.6f  %.6f  %.6f ]", m.cols[0].x,m.cols[1].x,m.cols[2].x,m.cols[3].x);\
+	OPLog("[ %.6f  %.6f  %.6f  %.6f ]", m.cols[0].y,m.cols[1].y,m.cols[2].y,m.cols[3].y);\
+	OPLog("[ %.6f  %.6f  %.6f  %.6f ]", m.cols[0].z,m.cols[1].z,m.cols[2].z,m.cols[3].z);\
+	OPLog("[ %.6f  %.6f  %.6f  %.6f ]", m.cols[0].w,m.cols[1].w,m.cols[2].w,m.cols[3].w);\
+}\
 
 // Data Structure 4 * 4 = 16 floats
 //		32 bit = 16 * 32 = 512 bits or 64 bytes

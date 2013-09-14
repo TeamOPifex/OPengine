@@ -13,11 +13,11 @@
 #include "./Core/include/Log.h"
 
 OPfloat vertData[] = {
-	   0,  0.5, 0,
+	   0,  0.5, 10,
 	   1,  0,   0,
-	-0.5, -0.5, 0,
+	-0.5, -0.5, 10,
 	   0,  1,   0,
-	 0.5, -0.5, 0,
+	 0.5, -0.5, 10,
 	   0,  0,   1
 };
 OPrenderBuffer verts;
@@ -36,7 +36,7 @@ GameManager::GameManager(int width, int height)
 	OPrenderSetBufferData(&verts, sizeof(OPfloat) * 6, 3, vertData);
 
 	camera = OPcamProj(
-		{0, 0.25f, 0.5f},
+		{0, 0.25f, 50.0f},
 		{0, 0, 0},
 		{0, 1, 0},
 		0.1f,
@@ -78,10 +78,13 @@ void GameManager::Draw(){
 
 	t+=0.01f;
 
-	OPmat4buildRotY(world, t);
+	OPmat4buildRotZ(world, t);
 
 	OPcamGetView(camera, view);
 	OPcamGetProj(camera, proj);
+
+	OPmat4Print(view);
+	OPLog(" ");
 
 	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderParamMat4v("uView", 1, &view);
