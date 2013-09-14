@@ -91,13 +91,20 @@ OPint OPrenderBindEffect(OPeffect* effect);
 ui32 OPrenderGetParam(const OPchar* parameterName);
 
 // parameter setting
-void OPrenderParamf(ui32 param, OPfloat f);
+/*void OPrenderParamf(ui32 param, OPfloat f);
 void OPrenderParamfv(ui32 param, OPint count, OPfloat* f);
 void OPrenderParami(ui32 param, OPint i);
 void OPrenderParamiv(ui32 param, OPint count, OPint* i);
 void OPrenderParamMat4v(ui32 param, OPint count, OPmat4* matrices);
-
 void OPrenderUseTexture(ui32 param, ui32 uniform, ui32 slot);
+*/
+
+void OPrenderParamf(const OPchar* param, OPfloat f);
+void OPrenderParamfv(const OPchar* param, OPint count, OPfloat* f);
+void OPrenderParami(const OPchar* param, OPint i);
+void OPrenderParamiv(const OPchar* param, OPint count, OPint* i);
+void OPrenderParamMat4v(const OPchar* param, OPint count, OPmat4* matrices);
+void OPrenderUseTexture(const OPchar* param, ui32 texture, ui32 slot);
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

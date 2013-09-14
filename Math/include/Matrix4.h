@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef OPMATH_MAT4
+#define OPMATH_MAT4
 #include "./Math/include/Vector3.h"
 #include "./Math/include/Vector4.h"
 #include "./Core/include/DynamicMemory.h"
@@ -83,9 +85,9 @@
 	}\
 }\
 
-#define OPmat4buildRotX(m, x) {\
-	OPfloat t1 = OPcos(x);\
-	OPfloat t2 = OPsin(x);\
+#define OPmat4buildRotX(m, t) {\
+	OPfloat t1 = OPcos(t);\
+	OPfloat t2 = OPsin(t);\
 	OPmat4identity(m);\
 	m.cols[1].y = t1;\
 	m.cols[1].z = t2;\
@@ -93,9 +95,9 @@
 	m.cols[2].z = t1;\
 }\
 
-#define OPmat4buildRotY(m, x) {\
-	OPfloat t1 = OPcos(x);\
-	OPfloat t2 = OPsin(x);\
+#define OPmat4buildRotY(m, t){\
+	OPfloat t1 = OPcos(t);\
+	OPfloat t2 = OPsin(t);\
 	OPmat4identity(m);\
 	m.cols[0].x = t1;\
 	m.cols[0].z = -t2;\
@@ -103,9 +105,9 @@
 	m.cols[2].z = t1;\
 }\
 
-#define OPmat4buildRotZ(m, x) {\
-	OPfloat t1 = OPcos(x);\
-	OPfloat t2 = OPsin(x);\
+#define OPmat4buildRotZ(m, t) {\
+	OPfloat t1 = OPcos(t);\
+	OPfloat t2 = OPsin(t);\
 	OPmat4identity(m);\
 	m.cols[0].x = t1;\
 	m.cols[0].y = t2;\
@@ -128,7 +130,7 @@
 }\
 
 #define OPmat4perspective(m, fovy, aspect, near, far) {\
-	OPfloat fovyD = (fovy/2.0f) * (OPpi / 180);\
+	OPfloat fovyD = (fovy/2.0f) * (OPpi / 180.0f);\
 	OPfloat range = tan(fovyD) * near;\
 	OPfloat left = -range * aspect;\
 	OPfloat right = range * aspect;\
@@ -188,3 +190,5 @@
 typedef struct {
 	OPvec4 cols[4];
 } OPmat4;
+
+#endif

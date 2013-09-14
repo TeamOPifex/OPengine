@@ -139,23 +139,23 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 	OPLog("True: %d Link status: %d, vert %d, frag %d\n", GL_TRUE, status, vert, frag);
 
 	// create, and copy attributes into list
-	for(;AttribCount--;){
+	for(OPint i = 0; i < AttribCount; i++){
 		OPshaderAttribute attr = {
 			NULL,
-			Attributes[AttribCount].Type,
-			Attributes[AttribCount].Elements,
-			Attributes[AttribCount].Offset
+			Attributes[i].Type,
+			Attributes[i].Elements,
+			(void*)effect.Stride
 		};
 
 		attr.Name = (OPchar*)glGetAttribLocation(
 			effect.ProgramHandle,
-			Attributes[AttribCount].Name
+			Attributes[i].Name
 		);
 
-		// TODO add more types
-		switch(Attributes[AttribCount].Type){
+		// TODO add more
+		switch(Attributes[i].Type){
 			case GL_FLOAT:
-				effect.Stride += (4 * Attributes[AttribCount].Elements);
+				effect.Stride += (4 * Attributes[i].Elements);
 				break;
 		}
 
@@ -232,6 +232,7 @@ ui32 OPrenderGetParam(const OPchar* parameterName){
 }
 
 // parameter setting
+/*
 void OPrenderParamf(ui32 param, OPfloat f){
 	glUniform1f(param, f);
 }
@@ -252,6 +253,7 @@ void OPrenderUseTexture(ui32 param, ui32 texture, ui32 slot){
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glUniform1i(param, slot);
 }
+*/
 //-----------------------------------------------------------------------------
 void OPrenderParamf(const OPchar* param, OPfloat f){
 	GLuint loc = glGetUniformLocation(
@@ -286,7 +288,7 @@ void OPrenderParamMat4v(const OPchar* param, OPint count, OPmat4* matrices){
 		OPRENDER_CURR_EFFECT->ProgramHandle,
 		param
 	);
-	glUniformMatrix4fv(loc, count, GL_FALSE, (OPfloat*)matrices);
+	glUniformMatrix4fv(loc, count, GL_TRUE, (OPfloat*)matrices);
 }
 void OPrenderUseTexture(const OPchar* param, ui32 texture, ui32 slot){
 	GLuint loc = glGetUniformLocation(

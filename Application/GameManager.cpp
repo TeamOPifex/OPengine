@@ -2,12 +2,14 @@
 #include "./Human/include/Utilities/OBJLoader.h"
 #include "./Data/include/OPfile.h"
 #include "./Data/include/OPcontentManager.h"
+#include "./Math/include/Matrix4.h"
 #include "./Human/include/Resources/Texture/ImageDDS.h"
 #include "./Human/include/Resources/Texture/ImagePNG.h"
 #include "./Human/include/Utilities/Errors.h"
 #include "./Human/include/Utilities/OPMLoader.h"
 #include "./Human/include/Rendering/Buffer.h"
 #include "./Human/include/Rendering/OPeffect.h"
+#include "./Human/include/Rendering/Camera.h"
 #include "./Core/include/Log.h"
 
 OPfloat vertData[] = {
@@ -20,6 +22,7 @@ OPfloat vertData[] = {
 };
 OPrenderBuffer verts;
 OPeffect tri;
+OPcam camera;
 
 GameManager::GameManager(int width, int height) 
 {
@@ -32,9 +35,19 @@ GameManager::GameManager(int width, int height)
 	verts = OPrenderGenBuffer(OPvertexBuffer);
 	OPrenderSetBufferData(&verts, sizeof(OPfloat) * 6, 3, vertData);
 
+	camera = OPcamProj(
+		{0, 0.25f, 0.5f},
+		{0, 0, 0},
+		{0, 1, 0},
+		0.1f,
+		100.0f,
+		90,
+		(width / (OPfloat)height)
+	);
+
 	OPshaderAttribute attribs[] = {
-		{"aVertexPosition",GL_FLOAT,3,(void*)0},
-		{"aColor",GL_FLOAT,3,(void*)12}
+		{"aVertexPosition",GL_FLOAT,3},
+		{"aColor",GL_FLOAT,3}
 	};
 
 	tri = OPrenderCreateEffect(
@@ -53,14 +66,26 @@ bool GameManager::Update( OPtimer* coreTimer )
 	return true;
 }
 
+
+OPfloat t = 0;
 void GameManager::Draw(){
 	OPrenderClear(0.3f, 0.3f, 0.3f);
 
 	OPrenderBindBuffer(&verts);
 	OPrenderBindEffect(&tri);
 
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(OPfloat), (void*)0);
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(OPfloat), (void*)(sizeof(OPfloat) * 3));
+	OPmat4 world, view, proj;
+
+	t+=0.01f;
+
+	OPmat4buildRotY(world, t);
+
+	OPcamGetView(camera, view);
+	OPcamGetProj(camera, proj);
+
+	OPrenderParamMat4v("uWorld", 1, &world);
+	OPrenderParamMat4v("uView", 1, &view);
+	OPrenderParamMat4v("uProj", 1, &proj);
 
 	OPrender();
 }

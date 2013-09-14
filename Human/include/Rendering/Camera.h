@@ -52,28 +52,30 @@ typedef struct{
 #define OPcamGetFOV(cam) cam->_fov
 //-----------------------------------------------------------------------------
 #define OPcamGetProj(cam, proj){\
-	if(cam->_projStale){\
-		cam->_proj = Matrix4::CreatePerspective(\
-			cam->_fov,\
-			cam->_aspect,\
-			cam->_near,\
-			cam->_far\
+	if(cam._projStale){\
+		OPmat4perspective(\
+			cam._proj,\
+			cam._fov,\
+			cam._aspect,\
+			cam._near,\
+			cam._far\
 		);\
-		cam->_projStale = false;\
+		cam._projStale = false;\
 	}\
-	proj = &cam->_proj;\
+	proj = cam._proj;\
 }\
 //-----------------------------------------------------------------------------
 #define OPcamGetView(cam, view){\
-	if(cam->_viewStale){\
-		cam->_view = Matrix4::CreateLook(\
-			cam->_pos,\
-			cam->_targ,\
-			cam->_up\
+	if(cam._viewStale){\
+		OPmat4look(\
+			cam._view,\
+			cam._pos,\
+			cam._targ,\
+			cam._up\
 		);\
-		cam->_viewStale = false;\
+		cam._viewStale = false;\
 	}\
-	view = &cam->_view;\
+	view = cam._view;\
 }\
 
 //-----------------------------------------------------------------------------
