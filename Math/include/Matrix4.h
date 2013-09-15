@@ -12,17 +12,20 @@
 	OPmat4 result;\
 	OPfloat sum;\
 	i32 i, j, k = 0;\
+	OPfloat* cols1 = (OPfloat*)m1.cols;\
+	OPfloat* cols2 = (OPfloat*)m2.cols;\
+	OPfloat* colsr = (OPfloat*)result.cols;\
 	OPmemcpy(&result, &m1, sizeof(OPmat4));\
 	for(i = 0; i < 4; i++){\
 		for(j = 0; j < 4; j++){\
 			sum = 0;\
 			for(k = 0; k < 4; k++){\
-				sum += m2->cols[k][j] * m1->cols[i][k];\
+				sum += cols2[(k << 2) + j] * cols1[(i << 2) + k];\
 			}\
-			result.cols[i][j] = sum;\
+			colsr[(i << 2) + j] = sum;\
 		}\
 	}\
-	OPmemcpy(&dest, &result, sizeof(OPmat4));\
+	OPmemcpy(&dst, &result, sizeof(OPmat4));\
 }\
 
 #define OPmat4identity(m) {\
@@ -130,19 +133,18 @@
 }\
 
 #define OPmat4perspective(m, fovy, aspect, near, far) {\
-	OPfloat fovyD = (fovy/2.0f) * (OPpi / 180.0f);\
-	OPfloat range = tan(fovyD) * near;\
-	OPfloat left = -range * aspect;\
-	OPfloat right = range * aspect;\
-	OPfloat bottom = -range;\
-	OPfloat top = range;\
+	OPfloat top = OPtan(fovy * OPpi / 360.0f) * near;\
+	OPfloat right = top * aspect;\
+	OPfloat range = far - near;\
 	OPbzero(&m, sizeof(OPmat4));\
-	m.cols[0].x = ( 2 * near ) / ( right - left );\
-	m.cols[1].y = ( 2 * near ) / ( top - bottom );\
-	m.cols[2].z = - ( far + near ) / ( far - near);\
-	m.cols[2].w = - 1;\
-	m.cols[3].z = - (2 * far * near) / ( far - near );\
-	m.cols[3].w = 1;\
+	OPvec4 c0 = {near/right, 0, 0, 0};\
+	OPvec4 c1 = {0, near/top, 0, 0};\
+	OPvec4 c2 = {0, 0, -(far+near)/range, -1};\
+	OPvec4 c3 = {0, 0, -2.0*far*near/range, 1};\
+	m.cols[0] = c0;\
+	m.cols[1] = c1;\
+	m.cols[2] = c2;\
+	m.cols[3] = c3;\
 }\
 
 #define OPmat4ortho(m, left, right, bottom, top, zNear, zFar ){\
@@ -177,9 +179,12 @@
 	for(i = 0; i < 3; i++){\
 		m.cols[i].z = -((OPfloat*)&f)[i];\
 	}\
-	m.cols[3].x += campos.x;\
-	m.cols[3].y += campos.y;\
-	m.cols[3].z += campos.z;\
+	OPmat4 trans;\
+	OPmat4identity(trans);\
+	trans.cols[3].x = -campos.x;\
+	trans.cols[3].y = -campos.y;\
+	trans.cols[3].z = -campos.z;\
+	OPmat4mul(m, m, trans);\
 } \
 
 #define OPmat4Print(m){\

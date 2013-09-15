@@ -9,7 +9,10 @@ uniform mat4 uView;
 uniform mat4 uProj;
 
 void main(void){
-	gl_Position = uProj * uWorld * vec4(aVertexPosition.xyz, 1);
+    vec4 worldPos = uWorld * vec4(aVertexPosition, 1.0);
+    vec4 viewPos = uView * worldPos;
+    vec4 screenPos = uProj * viewPos;
+	gl_Position = screenPos;
 
 	vColor = aColor;
 }

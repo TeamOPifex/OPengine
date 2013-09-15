@@ -288,7 +288,7 @@ void OPrenderParamMat4v(const OPchar* param, OPint count, OPmat4* matrices){
 		OPRENDER_CURR_EFFECT->ProgramHandle,
 		param
 	);
-	glUniformMatrix4fv(loc, count, GL_TRUE, (OPfloat*)matrices);
+	glUniformMatrix4fv(loc, count, GL_FALSE, (OPfloat*)matrices);
 }
 void OPrenderUseTexture(const OPchar* param, ui32 texture, ui32 slot){
 	GLuint loc = glGetUniformLocation(
