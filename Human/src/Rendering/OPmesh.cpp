@@ -33,11 +33,11 @@ OPmesh OPrenderBuildMesh(ui32 vertSize, ui32 indSize,
 }
 //-----------------------------------------------------------------------------
 void OPrenderBindMesh(OPmesh* mesh){
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->VertexBuffer.Handle);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->IndexBuffer.Handle);
+	OPrenderBindBuffer(&mesh->VertexBuffer);
+	OPrenderBindBuffer(&mesh->IndexBuffer);
 	OPRENDER_CURR_MESH = mesh;
 }
 //-----------------------------------------------------------------------------
 void OPrenderMesh(){
-	//OPrenderIndexed(0, OPRENDER_CURR_IB->ElementCount);
+	OPrenderDrawBufferIndexed(0);
 }

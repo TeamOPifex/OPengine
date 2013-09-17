@@ -42,9 +42,7 @@ void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, ui32 count, c
 	buff->ElementSize  = elementSize;
 	buff->ElementCount = count;
 
-	CheckError("OPrenderBindBuffer() - ERROR!");
 	glBufferData(buff->Type, elementSize * count, data, GL_STATIC_DRAW);
-	CheckError("OPrenderSetBufferData() - ERROR!");
 }
 //-----------------------------------------------------------------------------
 void OPrenderBindBuffer(OPrenderBuffer* buffer){
@@ -58,13 +56,10 @@ void OPrenderBindBuffer(OPrenderBuffer* buffer){
 }
 //-----------------------------------------------------------------------------
 void OPrenderDrawBuffer(ui32 offset){
-		OPLog("VB: %d Elements: %d\n", OPRENDER_CURR_VB->Handle, OPRENDER_CURR_VB->ElementCount);
 	glDrawArrays(GL_TRIANGLES, offset, OPRENDER_CURR_VB->ElementCount);
 }
 //-----------------------------------------------------------------------------
 void OPrenderDrawBufferIndexed(ui32 offset){
-		OPLog("VB: %d IB : %d Elements: %d\n", OPRENDER_CURR_VB->Handle, OPRENDER_CURR_IB->Handle, OPRENDER_CURR_IB->ElementCount);
-
 		glDrawRangeElements(
 			GL_TRIANGLES,
 			offset,

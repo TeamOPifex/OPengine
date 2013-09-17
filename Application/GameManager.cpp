@@ -8,6 +8,7 @@
 #include "./Human/include/Utilities/Errors.h"
 #include "./Human/include/Utilities/OPMLoader.h"
 #include "./Human/include/Rendering/Buffer.h"
+#include "./Human/include/Rendering/OPmesh.h"
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Rendering/Camera.h"
 #include "./Core/include/Log.h"
@@ -28,7 +29,7 @@ ui16 indexData[] = {
 	2, 0, 1
 };
 
-OPrenderBuffer verts, indices;
+OPmesh quad;
 OPeffect tri;
 OPcam camera;
 
@@ -40,10 +41,16 @@ GameManager::GameManager(int width, int height)
 	OPcmanLoad("Triangle3D.vert");
 	OPcmanLoad("Triangle.frag");
 
-	verts   = OPrenderGenBuffer(OPvertexBuffer);
-	indices = OPrenderGenBuffer(OPindexBuffer);
-	OPrenderSetBufferData(&verts, sizeof(OPfloat) * 6, 4, vertData);
-	OPrenderSetBufferData(&indices, sizeof(ui16), 6, indexData);
+	quad = OPrenderCreateMesh(
+		OPrenderGenBuffer(OPvertexBuffer),
+		OPrenderGenBuffer(OPindexBuffer)
+	);
+
+	quad = OPrenderBuildMesh(
+		sizeof(OPfloat) * 6, sizeof(ui16),
+		4, 6,
+		vertData, indexData
+	);
 
 	OPvec3 pos = {0, 0.5f, 1.0f};
 	OPvec3 look = {0, 0, 0};
@@ -91,8 +98,7 @@ void GameManager::Draw(){
 	OPcamGetView(camera, view);
 	OPcamGetProj(camera, proj);
 
-	OPrenderBindBuffer(&verts);
-	OPrenderBindBuffer(&indices);
+	OPrenderBindMesh(&quad);
 	OPrenderBindEffect(&tri);
 
 	OPrenderParamMat4v("uWorld", 1, &world);
@@ -100,6 +106,5 @@ void GameManager::Draw(){
 	OPrenderParamMat4v("uView", 1, &view);
 
 
-
-	OPrenderDrawBufferIndexed(2);
+	OPrenderMesh();
 }

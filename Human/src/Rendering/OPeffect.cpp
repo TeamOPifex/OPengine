@@ -130,13 +130,10 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 
 	glAttachShader(effect.ProgramHandle, vert);
 	glAttachShader(effect.ProgramHandle, frag);
-
 	glLinkProgram(effect.ProgramHandle);
-	CheckError("Messed up");
 
 	OPint status;
 	glGetProgramiv(effect.ProgramHandle, GL_LINK_STATUS, &status);
-	OPLog("True: %d Link status: %d, vert %d, frag %d\n", GL_TRUE, status, vert, frag);
 
 	// create, and copy attributes into list
 	for(OPint i = 0; i < AttribCount; i++){
@@ -187,13 +184,13 @@ OPint OPrenderBindEffect(OPeffect* effect){
 	}
 
 	OPRENDER_CURR_EFFECT = effect;
-	OPLog("ProgramHandle: %d\n", OPRENDER_CURR_EFFECT->ProgramHandle);
+
 	glUseProgram(OPRENDER_CURR_EFFECT->ProgramHandle);
 	// enable attributes of the new effect
 	OPint attrCount = OPlistSize(&OPRENDER_CURR_EFFECT->Attributes);
 	for(;attrCount--;){
 		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(&OPRENDER_CURR_EFFECT->Attributes, attrCount);
-		OPLog("Attr %d -> loc %u\n", attrCount, (ui32)attr->Name);
+
 		glEnableVertexAttribArray((ui32)attr->Name);
 		glVertexAttribPointer(
 			(ui32)attr->Name,
