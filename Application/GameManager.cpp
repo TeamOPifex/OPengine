@@ -13,14 +13,22 @@
 #include "./Core/include/Log.h"
 
 OPfloat vertData[] = {
-	   0,  0.5, 0,
+	 0.5,  0.5, 0,
+	   1,  0,   1,
+	-0.5,  0.5, 0,
 	   1,  0,   0,
 	-0.5, -0.5, 0,
 	   0,  1,   0,
 	 0.5, -0.5, 0,
 	   0,  0,   1
 };
-OPrenderBuffer verts;
+
+ui16 indexData[] = {
+	0, 2, 3, 
+	2, 0, 1
+};
+
+OPrenderBuffer verts, indices;
 OPeffect tri;
 OPcam camera;
 
@@ -32,8 +40,10 @@ GameManager::GameManager(int width, int height)
 	OPcmanLoad("Triangle3D.vert");
 	OPcmanLoad("Triangle.frag");
 
-	verts = OPrenderGenBuffer(OPvertexBuffer);
-	OPrenderSetBufferData(&verts, sizeof(OPfloat) * 6, 3, vertData);
+	verts   = OPrenderGenBuffer(OPvertexBuffer);
+	indices = OPrenderGenBuffer(OPindexBuffer);
+	OPrenderSetBufferData(&verts, sizeof(OPfloat) * 6, 4, vertData);
+	OPrenderSetBufferData(&indices, sizeof(ui16), 6, indexData);
 
 	OPvec3 pos = {0, 0.5f, 1.0f};
 	OPvec3 look = {0, 0, 0};
@@ -74,21 +84,16 @@ bool GameManager::Update( OPtimer* coreTimer )
 OPfloat t = 0;
 void GameManager::Draw(){
 	OPrenderClear(0.3f, 0.3f, 0.3f);
-
-	OPrenderBindBuffer(&verts);
-	OPrenderBindEffect(&tri);
-
 	OPmat4 world, view, proj;
-
 	t+=0.01f;
 
 	OPmat4buildRotY(world, t);
-
 	OPcamGetView(camera, view);
 	OPcamGetProj(camera, proj);
 
-	//OPmat4Print(proj);
-	OPLog(" ");
+	OPrenderBindBuffer(&verts);
+	OPrenderBindBuffer(&indices);
+	OPrenderBindEffect(&tri);
 
 	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderParamMat4v("uProj", 1, &proj);
@@ -96,5 +101,5 @@ void GameManager::Draw(){
 
 
 
-	OPrender();
+	OPrenderDrawBufferIndexed(2);
 }

@@ -70,8 +70,8 @@ OPrenderBuffer OPrenderGenBuffer(ui32 type);
 void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, ui32 count, const void* data);
 void OPrenderBindBuffer(OPrenderBuffer* buffer);
 
-void OPrenderIndexed();
-void OPrender();
+void OPrenderDrawBufferIndexed(ui32 offset);
+void OPrenderDrawBuffer(ui32 offset);
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

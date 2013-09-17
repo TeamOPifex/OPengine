@@ -57,18 +57,20 @@ void OPrenderBindBuffer(OPrenderBuffer* buffer){
 	}
 }
 //-----------------------------------------------------------------------------
-void OPrenderIndexed(OPint offset, OPint count){
-	glDrawRangeElements(
-		GL_TRIANGLES,
-		offset,
-		offset + count,
-		count,
-		GL_UNSIGNED_SHORT,
-		0
-	);
+void OPrenderDrawBuffer(ui32 offset){
+		OPLog("VB: %d Elements: %d\n", OPRENDER_CURR_VB->Handle, OPRENDER_CURR_VB->ElementCount);
+	glDrawArrays(GL_TRIANGLES, offset, OPRENDER_CURR_VB->ElementCount);
 }
 //-----------------------------------------------------------------------------
-void OPrender(){
-		OPLog("VB: %d Elements: %d\n", OPRENDER_CURR_VB->Handle, OPRENDER_CURR_VB->ElementCount);
-	glDrawArrays(GL_TRIANGLES, 0, OPRENDER_CURR_VB->ElementCount);
+void OPrenderDrawBufferIndexed(ui32 offset){
+		OPLog("VB: %d IB : %d Elements: %d\n", OPRENDER_CURR_VB->Handle, OPRENDER_CURR_IB->Handle, OPRENDER_CURR_IB->ElementCount);
+
+		glDrawRangeElements(
+			GL_TRIANGLES,
+			offset,
+			offset + OPRENDER_CURR_IB->ElementCount,
+			OPRENDER_CURR_IB->ElementCount,
+			GL_UNSIGNED_SHORT,
+			(void*)0
+		);
 }
