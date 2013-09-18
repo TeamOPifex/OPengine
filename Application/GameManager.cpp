@@ -6,7 +6,7 @@
 #include "./Human/include/Resources/Texture/ImageDDS.h"
 #include "./Human/include/Resources/Texture/ImagePNG.h"
 #include "./Human/include/Utilities/Errors.h"
-#include "./Human/include/Utilities/OPMLoader.h"
+//#include "./Human/include/Utilities/OPMLoader.h"
 #include "./Human/include/Rendering/Buffer.h"
 #include "./Human/include/Rendering/OPmeshPacked.h"
 #include "./Human/include/Rendering/OPmeshPacker.h"
@@ -44,13 +44,14 @@ GameManager::GameManager(int width, int height)
 	OPcmanLoad("Triangle.frag");
 
 	packer = OPmeshPackerCreate();
+
+	OPmeshPackerBind(&packer);
 	quad = OPrenderCreateMeshPacked(
-		&packer,
 		sizeof(OPfloat) * 6, sizeof(ui16),
 		4, 6,
 		vertData, indexData
 	);
-	OPmeshPackerBuild(&packer);
+	OPmeshPackerBuild();
 
 	//OPrenderBindMesh(&quad);
 	//OPrenderBuildMesh(

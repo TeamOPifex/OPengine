@@ -1,6 +1,15 @@
 #include "./Human/include/Rendering/OPmeshPacker.h"
 
 //-----------------------------------------------------------------------------
+//   _____ _       _           _     
+//  / ____| |     | |         | |    
+// | |  __| | ___ | |__   __ _| |___ 
+// | | |_ | |/ _ \| '_ \ / _` | / __|
+// | |__| | | (_) | |_) | (_| | \__ \
+//  \_____|_|\___/|_.__/ \__,_|_|___/
+OPmeshPacker* OPRENDER_CURR_PACKER;
+
+//-----------------------------------------------------------------------------
 // ______                _   _                 
 //|  ____|              | | (_)                
 //| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
@@ -17,13 +26,15 @@ OPmeshPacker OPmeshPackerCreate(){
 	return packer;
 }
 //-----------------------------------------------------------------------------
-OPint OPmeshPackerDestroy(OPmeshPacker* packer){
+OPint OPmeshPackerDestroy(){
+	OPmeshPacker* packer = OPRENDER_CURR_PACKER;
 	OPstreamDestroy(&packer->vertices);
 	OPstreamDestroy(&packer->indices);
 	return 1;
 }
 //-----------------------------------------------------------------------------
-ui32 OPmeshPackerAddVB(OPmeshPacker* packer, ui32 vertexSize, void* verticesData, ui32 vertexCount){
+ui32 OPmeshPackerAddVB(ui32 vertexSize, void* verticesData, ui32 vertexCount){
+	OPmeshPacker* packer = OPRENDER_CURR_PACKER;
 	ui32 dataStartPos = packer->vertexOffset;
 	ui32 vertexBufferSize = vertexSize * vertexCount;
 	OPwrite(&packer->vertices, verticesData, vertexBufferSize );
@@ -31,7 +42,8 @@ ui32 OPmeshPackerAddVB(OPmeshPacker* packer, ui32 vertexSize, void* verticesData
 	return dataStartPos;
 }
 //-----------------------------------------------------------------------------
-ui32 OPmeshPackerAddIB(OPmeshPacker* packer, ui32 indexSize, void* indicesData, ui32 indexCount){
+ui32 OPmeshPackerAddIB(ui32 indexSize, void* indicesData, ui32 indexCount){
+	OPmeshPacker* packer = OPRENDER_CURR_PACKER;
 	ui32 dataStartPos = packer->vertexOffset;
 	ui32 indexBufferSize = indexSize * indexCount;
 	OPwrite(&packer->indices, indicesData, indexSize * indexCount);
@@ -39,7 +51,8 @@ ui32 OPmeshPackerAddIB(OPmeshPacker* packer, ui32 indexSize, void* indicesData, 
 	return dataStartPos;
 }
 //-----------------------------------------------------------------------------
-void OPmeshPackerBuild(OPmeshPacker* packer){
+void OPmeshPackerBuild(){
+	OPmeshPacker* packer = OPRENDER_CURR_PACKER;
 	packer->VertexBuffer = OPrenderGenBuffer(OPvertexBuffer);
 	packer->IndexBuffer = OPrenderGenBuffer(OPindexBuffer);
 
@@ -58,6 +71,7 @@ void OPmeshPackerBuild(OPmeshPacker* packer){
 }
 //-----------------------------------------------------------------------------
 void OPmeshPackerBind(OPmeshPacker* packer){
+	OPRENDER_CURR_PACKER = packer;
 	OPrenderBindBuffer(&packer->VertexBuffer);
 	OPrenderBindBuffer(&packer->IndexBuffer);
 }

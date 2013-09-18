@@ -33,6 +33,7 @@ typedef struct{
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
+extern OPmeshPacker* OPRENDER_CURR_PACKER;
 
 //-----------------------------------------------------------------------------
 //  _____                     _____                  _____  _               _   _               
@@ -53,9 +54,9 @@ typedef struct{
 OPmeshPacker OPmeshPackerCreate();
 OPint OPmeshPackerDestroy(OPmeshPacker* packer);
 
-ui32 OPmeshPackerAddVB(OPmeshPacker* packer, ui32 vertexSize, void* verticesData, ui32 vertexCount);
-ui32 OPmeshPackerAddIB(OPmeshPacker* packer, ui32 indexSize, void* indicesData, ui32 indexCount);
-void OPmeshPackerBuild(OPmeshPacker* packer);
+ui32 OPmeshPackerAddVB(ui32 vertexSize, void* verticesData, ui32 vertexCount);
+ui32 OPmeshPackerAddIB(ui32 indexSize, void* indicesData, ui32 indexCount);
+void OPmeshPackerBuild();
 void OPmeshPackerBind(OPmeshPacker* packer);
 
 // prevent name mangling if compiling with c++
