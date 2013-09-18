@@ -8,28 +8,28 @@
 AAssetManager* _mgr;
 #endif
 
-ui16 OPread_ui16(FILE* file) {
-	char tmp[2];
-	fread(tmp, 1, 2, file);
-	return *((unsigned short*)tmp);
+ui16 OPread_ui16(OPstream* str) {
+	OPchar tmp[2];
+	OPmemcpy(tmp, OPread(str, sizeof(ui16)), sizeof(ui16));
+	return *((ui16*)tmp);
 }
 
-ui32 OPread_ui32(FILE* file) {
-	char tmp[4];
-	fread(&tmp, 1, 4, file);
-	return *((unsigned int*)tmp);
+ui32 OPread_ui32(OPstream* str) {
+	OPchar tmp[4];
+	OPmemcpy(tmp, OPread(str, sizeof(ui32)), sizeof(ui32));
+	return *((ui32*)tmp);
 }
 
-i32 OPread_i32(FILE* file) {
-	char tmp[4];
-	fread(&tmp, 1, 4, file);
-	return *((int*)tmp);
+i32 OPread_i32(OPstream* str) {
+	OPchar tmp[4];
+	OPmemcpy(tmp, OPread(str, sizeof(i32)), sizeof(i32));
+	return *((i32*)tmp);
 }
 
-f32 OPread_f32(FILE* file) {
-	char tmp[4];
-	fread(&tmp, 1, 4, file);
-	return *((float*)tmp); 
+f32 OPread_f32(OPstream* str) {
+	OPchar tmp[4];
+	OPmemcpy(tmp, OPread(str, sizeof(f32)), sizeof(f32));
+	return *((f32*)tmp);
 }
 
 FileInformation OPreadFileInformation(const char* path){

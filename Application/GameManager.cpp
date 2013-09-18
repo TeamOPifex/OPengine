@@ -53,13 +53,6 @@ GameManager::GameManager(int width, int height)
 	);
 	OPmeshPackerBuild();
 
-	//OPrenderBindMesh(&quad);
-	//OPrenderBuildMesh(
-	//	sizeof(OPfloat) * 6, sizeof(ui16),
-	//	4, 6,
-	//	vertData, indexData
-	//);
-
 	OPvec3 pos = {0, 0.5f, 1.0f};
 	OPvec3 look = {0, 0, 0};
 	OPvec3 up = {0, 1, 0};
@@ -112,7 +105,6 @@ void GameManager::Draw(){
 	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderParamMat4v("uProj", 1, &proj);
 	OPrenderParamMat4v("uView", 1, &view);
-
 
 	OPrenderMeshPacked(&quad);
 }

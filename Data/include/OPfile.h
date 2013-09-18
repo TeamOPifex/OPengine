@@ -48,28 +48,28 @@ extern "C" {
  *	@param file FILE* to the file stream
  *	@return ui16
  */
-ui16 OPread_ui16(FILE* file);
+ui16 OPread_ui16(OPstream* str);
 //-----------------------------------------------------------------------------
 /**
  * OPread_ui32 - Reads the next 4 bytes from the file and converts to ui32
  *	@param file FILE* to the file stream
  *	@return ui32
  */
-ui32 OPread_ui32(FILE* file);
+ui32 OPread_ui32(OPstream* str);
 //-----------------------------------------------------------------------------
 /**
  * OPread_i32 - Reads the next 4 bytes from the file and converts to i32
  *	@param file FILE* to the file stream
  *	@return i32
  */
-i32 OPread_i32(FILE* file);
+i32 OPread_i32(OPstream* str);
 //-----------------------------------------------------------------------------
 /**
  * OPread_f32 - Reads the next 4 bytes from the file and converts to f32
  *	@param file FILE* to the file stream
  *	@return f32
  */
-f32 OPread_f32(FILE* file);
+f32 OPread_f32(OPstream* str);
 //-----------------------------------------------------------------------------
 /**
  * OPreadFileInformation - Reads file information, getting start and length
