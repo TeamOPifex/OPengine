@@ -9,27 +9,20 @@ OPmesh* OPRENDER_CURR_MESH;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPmesh OPrenderCreateMesh(OPrenderBuffer index, OPrenderBuffer vertex){
+OPmesh OPrenderCreateMesh(){
 	OPmesh out = {
-		index,
-		vertex
+		OPrenderGenBuffer(OPvertexBuffer),
+		OPrenderGenBuffer(OPindexBuffer)
 	};
 
 	return out;
 }
 //-----------------------------------------------------------------------------
-OPmesh OPrenderBuildMesh(ui32 vertSize, ui32 indSize,
+void OPrenderBuildMesh(ui32 vertSize, ui32 indSize,
 						 ui32 vertCount, ui32 indCount,
 						 void* vertices, void* indices){
-	OPmesh mesh = OPrenderCreateMesh(
-		OPrenderGenBuffer(OPindexBuffer),
-		OPrenderGenBuffer(OPvertexBuffer)
-	);
-
-	OPrenderSetBufferData(&mesh.IndexBuffer, indSize, indCount, indices);
-	OPrenderSetBufferData(&mesh.VertexBuffer, vertSize, vertCount, vertices);
-
-	return mesh;
+	OPrenderSetBufferData(&OPRENDER_CURR_MESH->IndexBuffer, indSize, indCount, indices);
+	OPrenderSetBufferData(&OPRENDER_CURR_MESH->VertexBuffer, vertSize, vertCount, vertices);
 }
 //-----------------------------------------------------------------------------
 void OPrenderBindMesh(OPmesh* mesh){

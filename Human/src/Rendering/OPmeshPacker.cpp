@@ -56,3 +56,8 @@ void OPmeshPackerBuild(OPmeshPacker* packer){
 		packer->indices.Data
 	);
 }
+//-----------------------------------------------------------------------------
+void OPmeshPackerBind(OPmeshPacker* packer){
+	OPrenderBindBuffer(&packer->VertexBuffer);
+	OPrenderBindBuffer(&packer->IndexBuffer);
+}

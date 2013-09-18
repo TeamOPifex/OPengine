@@ -8,7 +8,8 @@
 #include "./Human/include/Utilities/Errors.h"
 #include "./Human/include/Utilities/OPMLoader.h"
 #include "./Human/include/Rendering/Buffer.h"
-#include "./Human/include/Rendering/OPmesh.h"
+#include "./Human/include/Rendering/OPmeshPacked.h"
+#include "./Human/include/Rendering/OPmeshPacker.h"
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Rendering/Camera.h"
 #include "./Core/include/Log.h"
@@ -29,7 +30,8 @@ ui16 indexData[] = {
 	2, 0, 1
 };
 
-OPmesh quad;
+OPmeshPacked quad;
+OPmeshPacker packer;
 OPeffect tri;
 OPcam camera;
 
@@ -41,16 +43,21 @@ GameManager::GameManager(int width, int height)
 	OPcmanLoad("Triangle3D.vert");
 	OPcmanLoad("Triangle.frag");
 
-	quad = OPrenderCreateMesh(
-		OPrenderGenBuffer(OPvertexBuffer),
-		OPrenderGenBuffer(OPindexBuffer)
-	);
-
-	quad = OPrenderBuildMesh(
+	packer = OPmeshPackerCreate();
+	quad = OPrenderCreateMeshPacked(
+		&packer,
 		sizeof(OPfloat) * 6, sizeof(ui16),
 		4, 6,
 		vertData, indexData
 	);
+	OPmeshPackerBuild(&packer);
+
+	//OPrenderBindMesh(&quad);
+	//OPrenderBuildMesh(
+	//	sizeof(OPfloat) * 6, sizeof(ui16),
+	//	4, 6,
+	//	vertData, indexData
+	//);
 
 	OPvec3 pos = {0, 0.5f, 1.0f};
 	OPvec3 look = {0, 0, 0};
@@ -98,7 +105,7 @@ void GameManager::Draw(){
 	OPcamGetView(camera, view);
 	OPcamGetProj(camera, proj);
 
-	OPrenderBindMesh(&quad);
+	OPmeshPackerBind(&packer);
 	OPrenderBindEffect(&tri);
 
 	OPrenderParamMat4v("uWorld", 1, &world);
@@ -106,5 +113,5 @@ void GameManager::Draw(){
 	OPrenderParamMat4v("uView", 1, &view);
 
 
-	OPrenderMesh();
+	OPrenderMeshPacked(&quad);
 }

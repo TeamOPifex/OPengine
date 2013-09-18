@@ -8,8 +8,6 @@
 #include "./Human/include/Resources/Material/SpecularTexturedMaterial.h"
 #include "./Human/include/Resources/Material/TexturedScreenMaterial.h"
 #include "./Human/include/Rendering/Quad.h"
-#include "./Human/include/Resources/Model/MeshPacker.h"
-#include "./Human/include/Resources/Model/PackedModel.h"
 
 class GameManager
 {

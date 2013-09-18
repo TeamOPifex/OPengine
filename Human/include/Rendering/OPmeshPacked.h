@@ -1,8 +1,7 @@
-#ifndef OPEngine_Human_Renderer_Mesh_Packer
-#define OPEngine_Human_Renderer_Mesh_Packer
+#ifndef OPEngine_Human_Renderer_Mesh_Packed
+#define OPEngine_Human_Renderer_Mesh_Packed
 	
-#include "./Core/include/DynamicMemory.h"
-#include "./Data/include/OPstream.h"
+#include "./Human/include/Rendering/OPmeshPacker.h"
 #include "./Human/include/Rendering/Buffer.h"
 
 // prevent name mangling if compiling with c++
@@ -18,21 +17,10 @@ extern "C" {
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 typedef struct{
-	OPrenderBuffer VertexBuffer;
-	OPrenderBuffer IndexBuffer;
-	ui32 vertexOffset;
-	ui32 indexOffset;
-	OPstream vertices;
-	OPstream indices;
-}OPmeshPacker;
-
-//-----------------------------------------------------------------------------
-//   _____ _       _           _     
-//  / ____| |     | |         | |    
-// | |  __| | ___ | |__   __ _| |___ 
-// | | |_ | |/ _ \| '_ \ / _` | / __|
-// | |__| | | (_) | |_) | (_| | \__ \
-//  \_____|_|\___/|_.__/ \__,_|_|___/
+	ui32 offset;
+	ui32 count;
+	ui32 elementCount;
+}OPmeshPacked;
 
 //-----------------------------------------------------------------------------
 //  _____                     _____                  _____  _               _   _               
@@ -50,13 +38,8 @@ typedef struct{
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPmeshPacker OPmeshPackerCreate();
-OPint OPmeshPackerDestroy(OPmeshPacker* packer);
-
-ui32 OPmeshPackerAddVB(OPmeshPacker* packer, ui32 vertexSize, void* verticesData, ui32 vertexCount);
-ui32 OPmeshPackerAddIB(OPmeshPacker* packer, ui32 indexSize, void* indicesData, ui32 indexCount);
-void OPmeshPackerBuild(OPmeshPacker* packer);
-void OPmeshPackerBind(OPmeshPacker* packer);
+OPmeshPacked OPrenderCreateMeshPacked(OPmeshPacker* packer, ui32 vertSize, ui32 indSize, ui32 vertCount, ui32 indCount, void* vertices, void* indices);
+void OPrenderMeshPacked(OPmeshPacked* mesh);
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
