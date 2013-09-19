@@ -15,6 +15,10 @@ typedef struct {
 	OPvec4 cols[4];
 } OPmat4;
 
+inline OPvec4* OPmat4index(OPmat4* m, int idx){
+	return &((OPvec4*)(m))[idx];
+}
+
 inline void OPmat4mul(OPmat4* dst, OPmat4* m1, OPmat4* m2) {
 	OPmat4 result;
 	OPfloat sum;
@@ -84,16 +88,16 @@ inline void OPmat4scl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
 	m->cols[2].z = z;
 }
 
-// inline void OPmat4transpose(OPmat4* m){
-//	OPmat4* tmp;
-//	OPint i = 0, j = 0;
-//	OPmemcpy(&tmp, &m, sizeof(OPmat4*));
-//	for(i = 0; i < 4; i++){
-//		for(j = 0; j < 4; j++){
-//			m->cols[i][j] = tmp.cols[i][j];
-//		}
-//	}
-//}
+ inline void OPmat4transpose(OPmat4* m){
+	OPmat4* tmp;
+	OPint i = 0, j = 0;
+	OPmemcpy(&tmp, &m, sizeof(OPmat4*));
+	for(i = 0; i < 4; i++){
+		for(j = 0; j < 4; j++){
+			(*OPvec4index(OPmat4index(m, i),j)) = (*OPvec4index(OPmat4index(tmp, i),j));
+		}
+	}
+}
 
 inline void OPmat4buildRotX(OPmat4* m, OPfloat t) {
 	OPfloat t1 = OPcos(t);
@@ -200,4 +204,5 @@ inline void OPmat4perspective(OPmat4* m, OPfloat fovy, OPfloat aspect, OPfloat n
 	m->cols[2] = c2;
 	m->cols[3] = c3;
 }
+
 #endif

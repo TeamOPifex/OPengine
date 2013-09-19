@@ -6,6 +6,10 @@ typedef struct {
 	OPfloat x, y;
 } OPvec2;
 
+inline OPfloat* OPvec2index(OPvec2* v, int idx){
+	return &((OPfloat*)(v))[idx];
+}
+
 inline void vec2add(OPvec2* dst, OPvec2* a, OPvec2* b){
 	dst->x = a->x + b->x;
 	dst->y = a->y + b->y;
