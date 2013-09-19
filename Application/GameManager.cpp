@@ -79,13 +79,16 @@ void GameManager::Draw(){
 	OPrenderBindEffect(&tri);
 
 	OPmat4 world, view, proj;
+	world = OPmat4();
+	view = OPmat4();
+	proj = OPmat4();
 
 	t+=0.01f;
 
-	OPmat4buildRotY(world, t);
+	OPmat4buildRotY(&world, t);
 
-	OPcamGetView(camera, view);
-	OPcamGetProj(camera, proj);
+	OPcamGetView(camera, &view);
+	OPcamGetProj(camera, &proj);
 
 	//OPmat4Print(proj);
 	OPLog(" ");
