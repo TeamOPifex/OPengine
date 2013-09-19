@@ -8,6 +8,7 @@
 #include "./Human/include/Utilities/Errors.h"
 //#include "./Human/include/Utilities/OPMLoader.h"
 #include "./Human/include/Rendering/Buffer.h"
+#include "./Human/include/Rendering/OPmesh.h"
 #include "./Human/include/Rendering/OPmeshPacked.h"
 #include "./Human/include/Rendering/OPmeshPacker.h"
 #include "./Human/include/Rendering/OPeffect.h"
@@ -32,6 +33,7 @@ ui16 indexData[] = {
 
 OPmeshPacked quad;
 OPmeshPacker packer;
+OPmesh* plane;
 OPeffect tri;
 OPcam camera;
 
@@ -40,8 +42,9 @@ GameManager::GameManager(int width, int height)
 	rotateAmnt = 0;
 	OPrenderInit(width, height);
 
-	OPcmanLoad("Triangle3D.vert");
-	OPcmanLoad("Triangle.frag");
+	OPcmanLoad("TexturedSpecular.vert");
+	OPcmanLoad("TexturedSpecular.frag");
+	OPcmanLoad("BiPlane.opm");
 
 	packer = OPmeshPackerCreate();
 
@@ -53,7 +56,9 @@ GameManager::GameManager(int width, int height)
 	);
 	OPmeshPackerBuild();
 
-	OPvec3 pos = {0, 0.5f, 1.0f};
+	plane = (OPmesh*)OPcmanGet("BiPlane.opm");
+
+	OPvec3 pos = {0, 5, 15.0f};
 	OPvec3 look = {0, 0, 0};
 	OPvec3 up = {0, 1, 0};
 
@@ -67,16 +72,23 @@ GameManager::GameManager(int width, int height)
 		(width / (OPfloat)height)
 	);
 
+	//OPshaderAttribute attribs[] = {
+	//	{"aVertexPosition",GL_FLOAT,3},
+	//	{"aColor",GL_FLOAT,3}
+	//};
+
 	OPshaderAttribute attribs[] = {
-		{"aVertexPosition",GL_FLOAT,3},
-		{"aColor",GL_FLOAT,3}
+		{"aPosition",GL_FLOAT,3},
+		{"aNormal",GL_FLOAT,3},
+		{"aTangent",GL_FLOAT,3},
+		{"aUV",GL_FLOAT,2}
 	};
 
 	tri = OPrenderCreateEffect(
-		*(OPshader*)OPcmanGet("Triangle3D.vert"),
-		*(OPshader*)OPcmanGet("Triangle.frag"),
+		*(OPshader*)OPcmanGet("TexturedSpecular.vert"),
+		*(OPshader*)OPcmanGet("TexturedSpecular.frag"),
 		attribs,
-		2
+		4
 	);
 
 	OPLog("GameManager:Constructor Finished");
@@ -102,12 +114,13 @@ void GameManager::Draw(){
 	OPcamGetView(camera, &view);
 	OPcamGetProj(camera, &proj);
 
-	OPmeshPackerBind(&packer);
+	//OPmeshPackerBind(&packer);
+	OPrenderBindMesh(plane);
 	OPrenderBindEffect(&tri);
 
 	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderParamMat4v("uProj", 1, &proj);
 	OPrenderParamMat4v("uView", 1, &view);
 
-	OPrenderMeshPacked(&quad);
+	OPrenderMesh();
 }

@@ -2,12 +2,12 @@
 
 in vec3 aPosition;
 in vec3 aNormal;
-in vec2 aUV;
 in vec3 aTangent;
+in vec2 aUV;
 
 uniform mat4 uWorld; 
 uniform mat4 uView;
-uniform mat4 uProjection; 
+uniform mat4 uProj; 
 
 varying out vec2 TexCoordOut; 
 varying out vec3 NormalOut; 
@@ -15,7 +15,7 @@ varying out vec3 TangentOut;
 
 void main() {
 	vec4 worldPos = uWorld * vec4(aPosition,1);
-	gl_Position = (uProjection * uView) * worldPos; 
+	gl_Position = (uProj * uView) * worldPos; 
 	
 	TexCoordOut = aUV; 
 	
