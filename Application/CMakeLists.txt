@@ -16,6 +16,7 @@ include_directories(
 set(ALL_LIBS
 	1_Core
 	2_Data
+	3_Math
 	5_Human
 )
 

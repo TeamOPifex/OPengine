@@ -30,6 +30,7 @@
 #include "./Human/include/Audio/OPaudio2.h"
 #include "./Human/include/Audio/OPaudioEmitter.h"
 #include "./Human/include/Audio/OPaudioPlayer.h"
+#include "./Human/include/Utilities/OPMloader.h"
 #include "./Human/include/Resources/Texture/ImagePNG.h"
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Data/include/OPfile.h"
@@ -104,10 +105,17 @@ void Init(){
 			sizeof(OPshader),
 			(OPint (*)(const OPchar*, void**))OPrenderLoadFragmentShader,
 			(OPint (*)(void*))OPrenderUnloadShader
+		},
+		{
+			".opm",
+			"Models/",
+			sizeof(OPmesh),
+			(OPint (*)(const OPchar*, void**))OPMload,
+			(OPint (*)(void*))OPMUnload
 		}
 	};
 
-	OPcmanInit(loaders, 5);
+	OPcmanInit(loaders, 6);
 	
 	OPaudInit();
 	

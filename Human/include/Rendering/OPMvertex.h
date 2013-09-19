@@ -4,8 +4,8 @@
 #include "./Math/include/Vector3.h"
 
 typedef struct {
-	OPvec3 vertice;
-	OPvec3 normal;
-	OPvec2 tex;
-	OPvec3 tangent;
+	OPvec3 Position;
+	OPvec3 Normal;
+	OPvec3 Tangent;
+	OPvec2 TexCoord;
 } OPMvertex;

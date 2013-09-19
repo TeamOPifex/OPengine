@@ -1,14 +1,19 @@
 #pragma once
 
 #include "Vector3.h"
-
-#define OPmat3identity(dst) {\
-	OPbzero(dst, sizeof(OPmat3));\
-	dst[0][0] = 1;\
-	dst[1][1] = 1;\
-	dst[2][2] = 1;\
-}\
+#include "./Core/include/DynamicMemory.h"
 
 typedef struct {
 	OPvec3 cols[3];
 } OPmat3;
+
+inline OPvec3* OPmat3index(OPmat3* m, int idx){
+	return &((OPvec3*)(m))[idx];
+}
+
+inline void OPmat3identity(OPmat3* dst) {
+	OPbzero(dst, sizeof(OPmat3));
+	dst->cols[0].x = 1;
+	dst->cols[1].y = 1;
+	dst->cols[2].z = 1;
+}
