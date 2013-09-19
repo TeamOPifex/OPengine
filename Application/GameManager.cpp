@@ -93,11 +93,14 @@ OPfloat t = 0;
 void GameManager::Draw(){
 	OPrenderClear(0.3f, 0.3f, 0.3f);
 	OPmat4 world, view, proj;
+	world = OPmat4();
+	view = OPmat4();
+	proj = OPmat4();
 	t+=0.01f;
 
-	OPmat4buildRotY(world, t);
-	OPcamGetView(camera, view);
-	OPcamGetProj(camera, proj);
+	OPmat4buildRotY(&world, t);
+	OPcamGetView(camera, &view);
+	OPcamGetProj(camera, &proj);
 
 	OPmeshPackerBind(&packer);
 	OPrenderBindEffect(&tri);

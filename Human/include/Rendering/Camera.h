@@ -54,7 +54,7 @@ typedef struct{
 #define OPcamGetProj(cam, proj){\
 	if(cam._projStale){\
 		OPmat4perspective(\
-			cam._proj,\
+			&cam._proj,\
 			cam._fov,\
 			cam._aspect,\
 			cam._near,\
@@ -62,20 +62,20 @@ typedef struct{
 		);\
 		cam._projStale = false;\
 	}\
-	proj = cam._proj;\
+	(*proj) = cam._proj;\
 }\
 //-----------------------------------------------------------------------------
 #define OPcamGetView(cam, view){\
 	if(cam._viewStale){\
 		OPmat4look(\
-			cam._view,\
-			cam._pos,\
-			cam._targ,\
-			cam._up\
+			&cam._view,\
+			&cam._pos,\
+			&cam._targ,\
+			&cam._up\
 		);\
 		cam._viewStale = false;\
 	}\
-	view = cam._view;\
+	(*view) = cam._view;\
 }\
 
 //-----------------------------------------------------------------------------
