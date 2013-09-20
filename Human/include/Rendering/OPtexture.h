@@ -14,12 +14,16 @@ extern "C" {
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 typedef struct{
-
+	ui16 Width, Height;
+	ui32 Format, DataType;
+	ui32 MinFilter, MagFilter;
+	ui32 WrapX, WrapY;
 }OPtextureDescription;
 
 
 typedef struct{
-
+	OPtextureDescription Description;
+	ui32 Handle;
 }OPtexture;
 
 //-----------------------------------------------------------------------------
@@ -48,7 +52,9 @@ extern OPtexture* OPRENDER_CURR_TEX;
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPtexture OPtextureCreate(OPtextureDescription desc);
-void OPtextureBind(OPtexture tex);
+void OPtextureDestroy(OPtexture* tex);
+void OPtextureBind(OPtexture* tex, OPint slot);
+void OPtextureSetData(void* data);
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
