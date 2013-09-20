@@ -1,4 +1,4 @@
-#include "./Human/include/Rendering/OPtexture.h"
+#nclude "./Human/include/Rendering/OPtexture.h"
 
 OPtexture* OPRENDER_CURR_TEX;
 
@@ -23,6 +23,11 @@ OPtexture OPtextureCreate(OPtextureDescription desc){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, desc.WrapY);
 
 	return tex;
+}
+
+//-----------------------------------------------------------------------------
+void OPtextureDestroy(OPtexture* tex){
+	glDeleteTextures(1, &tex->Handle);
 }
 //-----------------------------------------------------------------------------
 void OPtextureBind(OPtexture* tex, OPint slot){

@@ -1,7 +1,8 @@
-#ifndef OPEngine_Human_Renderer_Texture
-#define OPEngine_Human_Renderer_Texture
+#ifndef OPEngine_Human_Renderer_FrameBuffer
+#define OPEngine_Human_Renderer_FrameBuffer
 
 #include "./Core/include/Types.h"
+#include "./Human/include/Rendering/OPtexture.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
 #include <GLES2/gl2.h>
@@ -25,17 +26,10 @@ extern "C" {
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 typedef struct{
-	ui16 Width, Height;
-	ui32 Format, DataType;
-	ui32 MinFilter, MagFilter;
-	ui32 WrapX, WrapY;
-}OPtextureDescription;
-
-
-typedef struct{
 	OPtextureDescription Description;
+	OPtexture Texture;
 	ui32 Handle;
-}OPtexture;
+}OPframeBuffer;
 
 //-----------------------------------------------------------------------------
 //   _____ _       _           _     
@@ -44,7 +38,7 @@ typedef struct{
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
-extern OPtexture* OPRENDER_CURR_TEX;
+extern OPframeBuffer* OPRENDER_CURR_FRAMEBUFFER;
 
 //-----------------------------------------------------------------------------
 //  _____                     _____                  _____  _               _   _               
@@ -53,10 +47,6 @@ extern OPtexture* OPRENDER_CURR_TEX;
 // |  ___| '__/ _ \ |______| |  ___| '__/ _ \ / __| | |  | | | '__/ _ \/ __| __| \ \ / / _ / __|
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/   
-#define OPtextureNearest    GL_NEAREST
-#define OPtextureLinear     GL_LINEAR
-#define OPtextureNearestMip GL_NEAREST_MIPMAP_NEAREST
-#define OPtextureLinearMip  GL_LINEAR_MIPMAP_LINEAR
 
 //-----------------------------------------------------------------------------
 // ______                _   _                 
@@ -65,10 +55,11 @@ extern OPtexture* OPRENDER_CURR_TEX;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPtexture OPtextureCreate(OPtextureDescription desc);
-void OPtextureDestroy(OPtexture* tex);
-void OPtextureBind(OPtexture* tex, OPint slot);
-void OPtextureSetData(void* data);
+OPframeBuffer OPframeBufferCreate(OPtextureDescription desc);
+void OPframeBufferDestroy(OPframeBuffer* fb);
+void OPframeBufferBind(OPframeBuffer* fb);
+void OPframeBufferBindTex(OPframeBuffer* fb, OPint slot);
+void OPframeBufferUnbind();
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
