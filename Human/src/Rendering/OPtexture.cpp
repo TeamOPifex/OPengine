@@ -1,4 +1,4 @@
-#nclude "./Human/include/Rendering/OPtexture.h"
+#include "./Human/include/Rendering/OPtexture.h"
 
 OPtexture* OPRENDER_CURR_TEX;
 
@@ -40,12 +40,12 @@ void OPtextureSetData(void* data){
 	glTexImage2D(
 		GL_TEXTURE_2D, 
 		0, 
-		OPRENDER_CURR_TEX->Descripton.Format,
-		OPRENDER_CURR_TEX->Descripton.Width,
-		OPRENDER_CURR_TEX->Descripton.Height,
+		OPRENDER_CURR_TEX->Description.Format,
+		OPRENDER_CURR_TEX->Description.Width,
+		OPRENDER_CURR_TEX->Description.Height,
 		0,
 		GL_RGBA,
-		OPRENDER_CURR_TEX->Descripton.DataType,
+		OPRENDER_CURR_TEX->Description.DataType,
 		data
 	);
 }
