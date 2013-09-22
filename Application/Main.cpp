@@ -121,8 +121,12 @@ void Init(){
 	
 	OPcmanLoad("pew.wav");
 	OPcmanLoad("background.ogg");
-
+	
+#ifndef OPIFEX_ANDROID
 	GM = new GameManager(width, height);
+#else
+	GM = new GameManager(JNIWidth(), JNIHeight());
+#endif
 
 
 #ifndef OPIFEX_ANDROID//defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
@@ -172,7 +176,7 @@ void Update( OPtimer* timer){
 		OPrenderClear(r, g, b);
 
 		#ifdef OPIFEX_ANDROID
-	  	if(gps->WasPressed(GamePad_Button_A)){
+	  	if(OPgamePadWasPressed(gamePad, GamePad_Button_A)){
 	  		OPaudSetPlayer(&player);
 	  		OPaudPlayerPlay();
 	  	}
@@ -192,17 +196,9 @@ void Update( OPtimer* timer){
 	GM->Draw();
 	OPrenderPresent();
 	
-
-
-#ifdef OPIFEX_ANDROID
-	if(!result)
-		return 1;
-	return 0;
-#else
 	if(!result)
 		exit(0);
 	return;
-#endif
 }
 
 void Destroy()
@@ -235,7 +231,11 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 
 	ActiveState = OPgameStateCreate(NULL, Update, NULL);
 
+#ifdef OPIFEX_ANDROID
+	return;
+#else
 	OPstart();
 	OPend();
 	return 0;
+#endif
 }

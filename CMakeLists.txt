@@ -40,7 +40,7 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID" )
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Java/ControllerState.java DESTINATION ${PROJECT_BINARY_DIR}/src/com/opifex/SMRF/)
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Java/GL2JNILib.java DESTINATION ${PROJECT_BINARY_DIR}/src/com/opifex/SMRF/)
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Java/GL2JNIView.java DESTINATION ${PROJECT_BINARY_DIR}/src/com/opifex/SMRF/)
-	file(COPY ${PROJECT_SOURCE_DIR}/Android/Java/SMRF.java DESTINATION ${PROJECT_BINARY_DIR}/src/com/opifex/SMRF/)
+	file(COPY ${PROJECT_SOURCE_DIR}/Android/Java/OPEngine.java DESTINATION ${PROJECT_BINARY_DIR}/src/com/opifex/SMRF/)
 		
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Libs/ouya-sdk.jar DESTINATION ${PROJECT_BINARY_DIR}/libs/)
 	

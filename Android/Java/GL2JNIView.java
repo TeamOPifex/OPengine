@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.opifex.smrf;
+package com.opifex;
 /*
  * Copyright (C) 2008 The Android Open Source Project
  *
@@ -459,17 +459,16 @@ class GL2JNIView extends GLSurfaceView {
 		static AssetManager _assetManager;
 		
 		public Renderer(AssetManager assetManager){
-            GL2JNILib.start();
 			_assetManager = assetManager;
-			//GL2JNILib.setControllerButton(1, 0, 0);
+			GL2JNILib.start();
 		}
 		
         public void setButton(int player, GamePadButtons button, GamePadButtonState state) {
-			GL2JNILib.setControllerButton(player, button.getCode(), state.getCode());
+			//GL2JNILib.setControllerButton(player, button.getCode(), state.getCode());
 		}
 		
         public void setAxes(int player, GamePadAxes axes, float position) {
-			GL2JNILib.setControllerAxes(player, axes.getCode(), position);
+			//GL2JNILib.setControllerAxes(player, axes.getCode(), position);
 		}
 		
         public void onDrawFrame(GL10 gl) {

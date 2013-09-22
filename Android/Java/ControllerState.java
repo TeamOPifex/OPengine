@@ -1,4 +1,4 @@
-package com.opifex.smrf;
+package com.opifex;
 
 // Button States
 // 0 - Not pressed

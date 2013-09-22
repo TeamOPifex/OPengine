@@ -62,9 +62,13 @@ GameManager::GameManager(int width, int height)
 
 	OPLog("GameManager::GameManager - Ready to load model");
 	plane = (OPmesh*)OPcmanGet("BiPlane.opm");
+<<<<<<< local
 	tex  = (OPtexture*)OPcmanGet("steamPlaneSkin.png");
 	spec = (OPtexture*)OPcmanGet("steamPlaneSpec.png");
 	norm = (OPtexture*)OPcmanGet("noneNorm.png");
+=======
+	OPLog("GameManager::GameManager - BiPlane.opm Model loaded");
+>>>>>>> other
 
 	OPvec3 pos = {0, 5, 15.0f};
 	OPvec3 look = {0, 0, 0};
