@@ -26,7 +26,7 @@ import android.nfc.Tag;
 import tv.ouya.console.api.OuyaFacade;
 import tv.ouya.console.api.OuyaController;
 
-public class SMRF extends Activity {
+public class OPEngine extends Activity {
 	GL2JNIView mView;
 	
 	int playerOne = -1;

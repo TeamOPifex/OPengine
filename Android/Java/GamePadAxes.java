@@ -1,5 +1,5 @@
 
-package com.opifex.smrf;
+package com.opifex;
 
 public enum GamePadAxes {
 	LS_X(0),
