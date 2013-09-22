@@ -1,4 +1,4 @@
-#include "./Core/include/GameCycle.h"
+#include "../include/GameCycle.h"
 
 void (*OPinitialize)();
 

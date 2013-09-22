@@ -122,8 +122,12 @@ void Init(){
 	OPcmanLoad("pew.wav");
 	OPcmanLoad("background.ogg");
 	OPcmanLoad("test.png");
-
+	
+#ifndef OPIFEX_ANDROID
+	GM = new GameManager(width, height);
+#else
 	GM = new GameManager(JNIWidth(), JNIHeight());
+#endif
 
 
 #ifndef OPIFEX_ANDROID//defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)

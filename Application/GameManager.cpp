@@ -56,7 +56,9 @@ GameManager::GameManager(int width, int height)
 	);
 	OPmeshPackerBuild();
 
+	OPLog("GameManager::GameManager - Ready to load model");
 	plane = (OPmesh*)OPcmanGet("BiPlane.opm");
+	OPLog("GameManager::GameManager - BiPlane.opm Model loaded");
 
 	OPvec3 pos = {0, 5, 15.0f};
 	OPvec3 look = {0, 0, 0};
@@ -83,7 +85,8 @@ GameManager::GameManager(int width, int height)
 		{"aTangent",GL_FLOAT,3},
 		{"aUV",GL_FLOAT,2}
 	};
-
+	
+	OPLog("GameManager::GameManager - Ready to load shaders");
 	tri = OPrenderCreateEffect(
 		*(OPshader*)OPcmanGet("TexturedSpecular.vert"),
 		*(OPshader*)OPcmanGet("TexturedSpecular.frag"),
