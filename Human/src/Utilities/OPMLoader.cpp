@@ -120,7 +120,7 @@ OPint OPMload(const OPchar* filename, OPmesh** mesh) {
 	OPmesh temp = OPrenderCreateMesh();
 	OPrenderBindMesh(&temp);
 	OPrenderBuildMesh(
-		data.vertexSize, data.indexSize * 3,
+		data.vertexSize, data.indexSize,
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
 	);
@@ -142,7 +142,7 @@ OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh) {
 	OPMData data = OPMloadData(str);
 
 	OPmeshPacked temp = OPrenderCreateMeshPacked(
-		data.vertexSize, data.indexSize * 3,
+		data.vertexSize, data.indexSize,
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
 	);
