@@ -90,9 +90,26 @@ LOCAL_STATIC_LIBRARIES := libopifex-core
 include $(BUILD_STATIC_LIBRARY)
 
 
+##############
+# 3_MATH
+# data lib, which will be built statically
+##############
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libopifex-math
+
+LOCAL_C_INCLUDES :=$(PROJECT_PATH)
+
+MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Math/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Math/src/*.c)
+LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
+
+LOCAL_STATIC_LIBRARIES := libopifex-data
+include $(BUILD_STATIC_LIBRARY)
+
+
 
 ##############
-# 4_HUMAN
+# 5_HUMAN
 # human lib, which will be built statically
 ##############
 include $(CLEAR_VARS)
@@ -125,13 +142,13 @@ MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Utilities/*.cpp)
 
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
-LOCAL_STATIC_LIBRARIES := libopifex-data libvorbis
+LOCAL_STATIC_LIBRARIES := libopifex-math libvorbis
 include $(BUILD_STATIC_LIBRARY)
 
 
 
 ##############
-# 7_APPLICATION
+# 8_APPLICATION
 # second lib, which will depend on and include the first one
 ##############
 include $(CLEAR_VARS)

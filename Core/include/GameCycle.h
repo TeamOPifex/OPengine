@@ -13,7 +13,7 @@ extern "C" {
  *	for performing any essential initialization, data allocation and setup
  *	which is needed to begin the primary game loop.
  */
-void (*OPinitialize)();
+extern void (*OPinitialize)();
 //----------------------------------------------------------------------------
 /**
  * OPupdate - Game engine update.
@@ -24,7 +24,7 @@ void (*OPinitialize)();
  *	and scene rendering.
  * @param timer OPtimer object representing current time measurments
  */
-void (*OPupdate)(OPtimer*);
+extern void (*OPupdate)(OPtimer*);
 //----------------------------------------------------------------------------
 /**
  * OPdestroy - Game engine termination.
@@ -33,7 +33,7 @@ void (*OPupdate)(OPtimer*);
  *	data, deallocating memory, releasing OS resources and closing
  *	network connections.
  */
-void (*OPdestroy)();
+extern void (*OPdestroy)();
 #ifdef __cplusplus
 };
 #endif

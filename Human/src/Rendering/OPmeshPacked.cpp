@@ -27,6 +27,9 @@ OPmeshPacked OPrenderCreateMeshPacked(
 }
 //-----------------------------------------------------------------------------
 void OPrenderMeshPacked(OPmeshPacked* mesh){
+#ifdef OPIFEX_ANDROID
+		glDrawElements(GL_TRIANGLES, OPRENDER_CURR_IB->ElementCount, GL_UNSIGNED_SHORT, (void*)(0 + mesh->offset));
+#else
 	glDrawRangeElements(
 		GL_TRIANGLES,
 		mesh->offset,
@@ -35,4 +38,5 @@ void OPrenderMeshPacked(OPmeshPacked* mesh){
 		GL_UNSIGNED_SHORT,
 		(void*)0
 	);
+#endif
 }

@@ -2,7 +2,6 @@
 #include "./Core/include/DynamicMemory.h"
 #include "./Core/include/Log.h"
 
-
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 	// TODO - Linux GamePad Support
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
@@ -10,7 +9,8 @@
 	#include <Xinput.h>
 	#pragma comment(lib, "XInput.lib")
 #elif defined(OPIFEX_ANDROID)
-	#include <jni.h>
+	#include "./Core/include/Core.h"
+	#include "./Human/include/Utilities/AndroidNDK.h"
 #endif
 
 GamePadController GamePadControllers[CONTROLLERS];
@@ -21,14 +21,12 @@ GamePadController* OPgamePadController(GamePadIndex index) {
 
 #ifdef OPIFEX_ANDROID
 
-	#include "./Human/include/Utilities/AndroidNDK.h"
-
 	#define CONTROLLER_CLASS_NAME "tv/ouya/console/api/OuyaController"
 
-	jobject GamePadSystem::getControllerByPlayer( int playerNum) {
+	jobject OPjniGetControllerByPlayer( int playerNum) {
 		OPLog("Get Player");
-		JniMethodInfo methodInfo;
-		if (!getStaticMethodInfo(methodInfo,
+		OPJniMethodInfo methodInfo;
+		if (!OPjniGetStaticMethodInfo(methodInfo,
 			CONTROLLER_CLASS_NAME, "getControllerByPlayer",
 			"(I)Ltv/ouya/console/api/OuyaController;")) {
 				return 0;
@@ -38,10 +36,10 @@ GamePadController* OPgamePadController(GamePadIndex index) {
 	}
 
 
-	bool GamePadSystem::getControllerButton(jobject controller, int button) {
+	bool OPjniGetControllerButton(jobject controller, int button) {
 
-		JniMethodInfo methodInfo2;
-		if (!getMethodInfo(methodInfo2,
+		OPJniMethodInfo methodInfo2;
+		if (!OPjniGetMethodInfo(methodInfo2,
 			CONTROLLER_CLASS_NAME, "getButton", "(I)Z")) {
 				OPLog("Class method not found");
 				return false;
@@ -62,11 +60,11 @@ GamePadController* OPgamePadController(GamePadIndex index) {
 		return result;
 	}
 
-	float GamePadSystem::getAxisValue( jobject controller, int ouyaAxis ) {
+	float OPjniGetAxisValue( jobject controller, int ouyaAxis ) {
 
-		JniMethodInfo methodInfo;
+		OPJniMethodInfo methodInfo;
 
-		if (!getMethodInfo(methodInfo, CONTROLLER_CLASS_NAME, "getAxisValue", "(I)F")) 
+		if (!OPjniGetMethodInfo(methodInfo, CONTROLLER_CLASS_NAME, "getAxisValue", "(I)F")) 
 		{ 
 			return 0;
 		}
@@ -92,7 +90,7 @@ void OPgamePadUpdate(GamePadController* controller){
 
 #ifdef OPIFEX_ANDROID
 
-	jobject jcontroller = getControllerByPlayer(controller->playerIndex);
+	jobject jcontroller = OPjniGetControllerByPlayer(controller->playerIndex);
 
 	if(jcontroller == 0) {
 		return;
@@ -100,33 +98,33 @@ void OPgamePadUpdate(GamePadController* controller){
 
 	controller->connected = true;
 
-	controller->buttons[GamePad_Button_A, getControllerButton(jcontroller, OUYA_BUTTON_O));
-	controller->buttons[GamePad_Button_X, getControllerButton(jcontroller, OUYA_BUTTON_U));
-	controller->buttons[GamePad_Button_B, getControllerButton(jcontroller, OUYA_BUTTON_A));
-	controller->buttons[GamePad_Button_Y, getControllerButton(jcontroller, OUYA_BUTTON_Y));
+	controller->buttons[GamePad_Button_A] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_O);
+	controller->buttons[GamePad_Button_X] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_U);
+	controller->buttons[GamePad_Button_B] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_A);
+	controller->buttons[GamePad_Button_Y] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_Y);
 
-	controller->buttons[GamePad_Button_LEFT_SHOULDER, getControllerButton(jcontroller, OUYA_BUTTON_L1));
-	controller->buttons[GamePad_Button_RIGHT_SHOULDER, getControllerButton(jcontroller, OUYA_BUTTON_R1));
+	controller->buttons[GamePad_Button_LEFT_SHOULDER] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_L1);
+	controller->buttons[GamePad_Button_RIGHT_SHOULDER] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_R1);
 
-	controller->buttons[GamePad_Button_LEFT_THUMB, getControllerButton(jcontroller, OUYA_BUTTON_L3));
-	controller->buttons[GamePad_Button_RIGHT_THUMB, getControllerButton(jcontroller, OUYA_BUTTON_R3));
+	controller->buttons[GamePad_Button_LEFT_THUMB] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_L3);
+	controller->buttons[GamePad_Button_RIGHT_THUMB] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_R3);
 
 
-	controller->buttons[GamePad_Button_DPAD_UP, getControllerButton(jcontroller, OUYA_BUTTON_DPAD_UP));
-	controller->buttons[GamePad_Button_DPAD_DOWN, getControllerButton(jcontroller, OUYA_BUTTON_DPAD_DOWN));
-	controller->buttons[GamePad_Button_DPAD_LEFT, getControllerButton(jcontroller, OUYA_BUTTON_DPAD_LEFT));
-	controller->buttons[GamePad_Button_DPAD_RIGHT, getControllerButton(jcontroller, OUYA_BUTTON_DPAD_RIGHT));
+	controller->buttons[GamePad_Button_DPAD_UP] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_DPAD_UP);
+	controller->buttons[GamePad_Button_DPAD_DOWN] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_DPAD_DOWN);
+	controller->buttons[GamePad_Button_DPAD_LEFT] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_DPAD_LEFT);
+	controller->buttons[GamePad_Button_DPAD_RIGHT] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_DPAD_RIGHT);
 
-	controller->buttons[GamePad_Button_START, getControllerButton(jcontroller, OUYA_BUTTON_MENU));
+	controller->buttons[GamePad_Button_START] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_MENU);
 
-	controller->axes[L2] = getAxisValue(jcontroller, OUYA_AXIS_L2);
-	controller->axes[R2] = getAxisValue(jcontroller, OUYA_AXIS_R2);
+	controller->axes[L2] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_L2);
+	controller->axes[R2] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_R2);
 
-	controller->axes[LS_X] = getAxisValue(jcontroller, OUYA_AXIS_LS_X);
-	controller->axes[LS_Y] = getAxisValue(jcontroller, OUYA_AXIS_LS_Y);
+	controller->axes[LS_X] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_LS_X);
+	controller->axes[LS_Y] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_LS_Y);
 
-	controller->axes[RS_X] = getAxisValue(jcontroller, OUYA_AXIS_RS_X);
-	controller->axes[RS_Y] = getAxisValue(jcontroller, OUYA_AXIS_RS_Y);
+	controller->axes[RS_X] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_RS_X);
+	controller->axes[RS_Y] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_RS_Y);
 
 #endif
 
