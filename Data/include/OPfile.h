@@ -79,12 +79,6 @@ f32 OPread_f32(OPstream* str);
 FileInformation OPreadFileInformation(const char* path);
 //-----------------------------------------------------------------------------
 /**
- * OPfileInit - Initiates the file system.
- *	@param manager Location in the file system where the data will be written.
- */
-void OPfileInit(void* manager);
-//-----------------------------------------------------------------------------
-/**
  * OPwriteFile - Writes a byte stream to a file.
  *	@param path Location in the file system where the data will be written.
  *	@param data OPstream instance which will be written

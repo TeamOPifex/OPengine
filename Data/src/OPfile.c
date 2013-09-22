@@ -5,7 +5,7 @@
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
 #include <unistd.h>
-AAssetManager* _mgr;
+#include "./Core/include/Core.h"
 #endif
 
 ui16 OPread_ui16(OPstream* str) {
@@ -35,8 +35,9 @@ f32 OPread_f32(OPstream* str) {
 FileInformation OPreadFileInformation(const char* path){
 	FileInformation file;
 #ifdef OPIFEX_ANDROID
-	OPLog("OPreadFileInformation(): manager = %d\n", _mgr);
-	AAsset* asset = AAssetManager_open(_mgr, path, AASSET_MODE_UNKNOWN);
+	OPLog("OPreadFileInformation: Creating Asset man.\n");
+	AAssetManager* mgr = AAssetManager_fromJava(JNIEnvironment(), JNIAssetManager());
+	AAsset* asset = AAssetManager_open(mgr, path, AASSET_MODE_UNKNOWN);
 	if(asset == NULL)
 		return file;
 
@@ -71,13 +72,6 @@ FileInformation OPreadFileInformation(const char* path){
 	return file;
 }
 
-void OPfileInit(void* manager){
-#ifdef OPIFEX_ANDROID
-	_mgr = (AAssetManager*)manager;
-	OPLog("OPfileInit(): manager = %d\n", _mgr);
-#endif
-}
-
 //-----------------------------------------------------------------------------
 OPint OPwriteFile(const char* path, OPstream* stream){
 #if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
@@ -102,8 +96,10 @@ OPint OPwriteFile(const char* path, OPstream* stream){
 //-----------------------------------------------------------------------------
 OPstream* OPreadFile(const char* path){
 #ifdef OPIFEX_ANDROID
-	OPLog("OPreadFile: Creating Asset man.\n");
-	AAsset* asset = AAssetManager_open(_mgr, path, AASSET_MODE_UNKNOWN);
+	OPLog("OPreadFile: Creating Asset man - %s\n", path);
+	AAssetManager* mgr = AAssetManager_fromJava(JNIEnvironment(), JNIAssetManager());
+	OPLog("OPreadFile: Grabbed JNI Asset Manager");
+	AAsset* asset = AAssetManager_open(mgr, path, AASSET_MODE_UNKNOWN);
 	if(asset == NULL){
 		OPLog("OPreadFile: Asset man creation failed.\n");
 		return 0;	

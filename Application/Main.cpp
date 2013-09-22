@@ -228,11 +228,11 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 
 	ActiveState = OPgameStateCreate(NULL, Update, NULL);
 
-	OPstart();
-	OPend();
 #ifdef OPIFEX_ANDROID
 	return;
 #else
+	OPstart();
+	OPend();
 	return 0;
 #endif
 }

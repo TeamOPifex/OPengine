@@ -461,8 +461,6 @@ class GL2JNIView extends GLSurfaceView {
 		public Renderer(AssetManager assetManager){
 			_assetManager = assetManager;
 			GL2JNILib.start();
-			GL2JNILib.init();
-			//GL2JNILib.setControllerButton(1, 0, 0);
 		}
 		
         public void setButton(int player, GamePadButtons button, GamePadButtonState state) {
