@@ -222,15 +222,7 @@ OPMData OPMloadData(OPstream* str) {
 			vertices[i].Normal.z = z;
 			OPvec3norm(&vertices[i].Normal, &vertices[i].Normal);
 		}
-
-		// Read UV
-		if(OPMhasFeature(features, UV)) {
-			x = OPread_f32(str);
-			y = OPread_f32(str);
-			vertices[i].TexCoord.x = x;
-			vertices[i].TexCoord.y = y;
-		}
-
+		
 		// Read Tangent
 		if(OPMhasFeature(features, Tangent)) {
 			x = OPread_f32(str);
@@ -240,6 +232,14 @@ OPMData OPMloadData(OPstream* str) {
 			vertices[i].Tangent.y = y;
 			vertices[i].Tangent.z = z;
 			OPvec3norm(&vertices[i].Tangent, &vertices[i].Tangent);
+		}
+
+		// Read UV
+		if(OPMhasFeature(features, UV)) {
+			x = OPread_f32(str);
+			y = OPread_f32(str);
+			vertices[i].TexCoord.x = x;
+			vertices[i].TexCoord.y = y;
 		}
 	}
 
