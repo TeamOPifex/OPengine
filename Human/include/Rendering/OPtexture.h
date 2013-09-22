@@ -58,6 +58,8 @@ extern OPtexture* OPRENDER_CURR_TEX;
 #define OPtextureNearestMip GL_NEAREST_MIPMAP_NEAREST
 #define OPtextureLinearMip  GL_LINEAR_MIPMAP_LINEAR
 
+#define OPtextureRepeat GL_REPEAT
+
 //-----------------------------------------------------------------------------
 // ______                _   _                 
 //|  ____|              | | (_)                
@@ -76,3 +78,4 @@ void OPtextureSetData(void* data);
 #endif
 
 #endif
+ 

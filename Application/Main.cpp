@@ -121,7 +121,6 @@ void Init(){
 	
 	OPcmanLoad("pew.wav");
 	OPcmanLoad("background.ogg");
-	OPcmanLoad("test.png");
 
 	GM = new GameManager(width, height);
 

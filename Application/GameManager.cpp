@@ -36,6 +36,7 @@ OPmeshPacker packer;
 OPmesh* plane;
 OPeffect tri;
 OPcam camera;
+OPtexture* tex, *spec, *norm;
 
 GameManager::GameManager(int width, int height) 
 {
@@ -45,6 +46,9 @@ GameManager::GameManager(int width, int height)
 	OPcmanLoad("TexturedSpecular.vert");
 	OPcmanLoad("TexturedSpecular.frag");
 	OPcmanLoad("BiPlane.opm");
+	OPcmanLoad("steamPlaneSkin.png");
+	OPcmanLoad("steamPlaneSpec.png");
+	OPcmanLoad("noneNorm.png");
 
 	packer = OPmeshPackerCreate();
 
@@ -57,6 +61,9 @@ GameManager::GameManager(int width, int height)
 	OPmeshPackerBuild();
 
 	plane = (OPmesh*)OPcmanGet("BiPlane.opm");
+	tex  = (OPtexture*)OPcmanGet("steamPlaneSkin.png");
+	spec = (OPtexture*)OPcmanGet("steamPlaneSpec.png");
+	norm = (OPtexture*)OPcmanGet("noneNorm.png");
 
 	OPvec3 pos = {0, 5, 15.0f};
 	OPvec3 look = {0, 0, 0};
@@ -103,7 +110,7 @@ bool GameManager::Update( OPtimer* coreTimer )
 
 OPfloat t = 0;
 void GameManager::Draw(){
-	OPrenderClear(0.3f, 0.3f, 0.3f);
+	OPrenderClear(0.3f, 0.3f, 0.5f);
 	OPmat4 world, view, proj;
 	world = OPmat4();
 	view = OPmat4();
@@ -118,6 +125,12 @@ void GameManager::Draw(){
 	OPrenderBindMesh(plane);
 	OPrenderBindEffect(&tri);
 
+	OPtextureBind(tex, 1);
+	OPrenderParami("uColorTexture", tex->Handle);
+	OPtextureBind(spec, 2);
+	OPrenderParami("uSpecularTexture", spec->Handle);
+	OPtextureBind(norm, 3);
+	OPrenderParami("uNormalTexture", norm->Handle);
 	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderParamMat4v("uProj", 1, &proj);
 	OPrenderParamMat4v("uView", 1, &view);

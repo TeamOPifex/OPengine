@@ -44,7 +44,7 @@ void OPtextureSetData(void* data){
 		OPRENDER_CURR_TEX->Description.Width,
 		OPRENDER_CURR_TEX->Description.Height,
 		0,
-		GL_RGBA,
+		OPRENDER_CURR_TEX->Description.Format,
 		OPRENDER_CURR_TEX->Description.DataType,
 		data
 	);
