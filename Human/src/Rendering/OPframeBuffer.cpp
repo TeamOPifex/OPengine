@@ -17,6 +17,7 @@ OPframeBuffer* OPRENDER_CURR_FRAMEBUFFER;
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
+	ui32 renderBuffer;
 	OPframeBuffer fb = {
 		desc,
 		OPtextureCreate(desc),
@@ -24,8 +25,21 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 	};
 
 	glGenFramebuffers(1, &fb.Handle);
-	OPtextureBind(&fb.Texture, 0);
+	glGenRenderbuffers(1, &renderBuffer);
+
+	OPtextureBind(&fb.Texture, 1);
 	OPtextureSetData(NULL);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	
+	glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, desc.Width, desc.Height);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fb.Texture.Handle, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBuffer);
+			
+	glBindTexture(GL_TEXTURE_2D, NULL);
+	glBindRenderbuffer(GL_RENDERBUFFER, NULL);
+	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
 	return fb;
 }

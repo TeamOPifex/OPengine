@@ -154,6 +154,11 @@ void GameManager::Draw(){
 
 	OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
 	OPtextureBind(&rt.Texture, 1);
+	OPtextureBind(tex, 1);
 	OPrenderParami("uColorTexture", rt.Texture.Handle);
+	OPtextureBind(spec, 2);
+	OPrenderParami("uSpecularTexture", spec->Handle);
+	OPtextureBind(norm, 3);
+	OPrenderParami("uNormalTexture", norm->Handle);
 	OPrenderMesh();
 }
