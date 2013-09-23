@@ -10,6 +10,8 @@
 //#include <glm/glm.hpp>
 #endif
 
+OPint OPrenderWidth, OPrenderHeight;
+
 OPint OPrenderInit(ui32 width, ui32 height){
 #ifdef OPIFEX_OPENGL_ES_2
 	// Android doesn't need to create a window
@@ -58,6 +60,9 @@ OPint OPrenderInit(ui32 width, ui32 height){
 	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	OPrenderWidth = width;
+	OPrenderHeight = height;
 
 	return 0;
 #endif

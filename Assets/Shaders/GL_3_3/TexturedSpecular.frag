@@ -18,5 +18,5 @@ void main() {
 	vec4 color = texture2D(uColorTexture, TexCoordOut);
 	vec4 diffuse = vec4(vec3(dot(lightDir, normal)), 1);
 	vec4 specular = texture2D(uSpecularTexture, TexCoordOut) * pow(dot(halfVec, normal), 64.0);
-	gl_FragColor = vec4((color.xyz * diffuse.xyz) + specular.xyz, 1);
+	gl_FragColor = vec4(((normal / 2.0) + 0.5), 1);//vec4((color.xyz * diffuse.xyz) + specular.xyz, 1);
 }

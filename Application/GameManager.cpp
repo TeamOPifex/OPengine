@@ -11,6 +11,7 @@
 #include "./Human/include/Rendering/OPmesh.h"
 #include "./Human/include/Rendering/OPmeshPacked.h"
 #include "./Human/include/Rendering/OPmeshPacker.h"
+#include "./Human/include/Rendering/OPframeBuffer.h"
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Rendering/Camera.h"
 #include "./Core/include/Log.h"
@@ -37,6 +38,7 @@ OPmesh* plane;
 OPeffect tri;
 OPcam camera;
 OPtexture* tex, *spec, *norm;
+OPframeBuffer rt;
 
 GameManager::GameManager(int width, int height) 
 {
@@ -59,6 +61,15 @@ GameManager::GameManager(int width, int height)
 		vertData, indexData
 	);
 	OPmeshPackerBuild();
+
+	OPtextureDescription desc = {
+		512, 512,
+		GL_RGBA, GL_UNSIGNED_BYTE,
+		OPtextureLinear, OPtextureLinear,
+		OPtextureRepeat, OPtextureRepeat
+	};
+
+	rt = OPframeBufferCreate(desc);
 
 	OPLog("GameManager::GameManager - Ready to load model");
 	plane = (OPmesh*)OPcmanGet("BiPlane.opm");
@@ -137,5 +148,12 @@ void GameManager::Draw(){
 	OPrenderParamMat4v("uProj", 1, &proj);
 	OPrenderParamMat4v("uView", 1, &view);
 
+	OPframeBufferBind(&rt);
+	OPrenderMesh();
+	OPframeBufferUnbind();
+
+	OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
+	OPtextureBind(&rt.Texture, 1);
+	OPrenderParami("uColorTexture", rt.Texture.Handle);
 	OPrenderMesh();
 }
