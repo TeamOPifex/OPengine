@@ -27,7 +27,10 @@ OPint OPrenderLoadVertexShader(const OPchar* filename, OPshader** shader){
 	CheckError("GLShader::Error 1");
 	if(vertex){
 		OPchar* src = (OPchar*)source->Data;
-		OPLog("%s\n", src);
+
+		OPLog("[%s]\n", src);
+
+		OPLog("OPrenderLoadVertexShader::Finished Printing Source");
 		glShaderSource(vertex, 1, (const OPchar**)&src, 0);
 		CheckError("GLShader::Error 2");
 		glCompileShader(vertex);
