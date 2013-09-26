@@ -123,7 +123,9 @@ OPstream* OPreadFile(const char* path){
 	OPLog("OPreadFile: 6");OPLog_i32(length);OPLog_i32(sizeof(ui8));
 	while(fread(byte, sizeof(ui8), length, myFile)){
 		OPwrite(str, byte, length);
-	}
+	}	
+	str->Data[length] = 0;
+
 	OPLog("OPreadFile: 7");
 	fclose(myFile); 
 	OPseek(str, 0);

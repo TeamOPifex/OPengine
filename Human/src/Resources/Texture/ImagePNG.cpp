@@ -22,7 +22,8 @@ OPint OPimagePNGLoad(const OPchar* filename, OPtexture** image){
 	ui32 error;
 	ui8* data;
 	ui32 width, height;
-	error = lodepng_decode32_file(&data, &width, &height, filename);
+	OPstream* str = OPreadFile(filename);
+	error = lodepng_decode32(&data, &width, &height, str->Data, str->Length);
 
 	OPtexture* tex = (OPtexture*)OPalloc(sizeof(OPtexture));
 

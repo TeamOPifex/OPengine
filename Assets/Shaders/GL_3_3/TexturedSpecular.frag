@@ -14,7 +14,7 @@ void main() {
 	vec3 halfVec = normalize(vec3(0, 0, 1) + lightDir);
 	vec3 biNormal = normalize(cross(NormalOut, TangentOut));
 	mat3 tanSpace = mat3(TangentOut, biNormal, NormalOut);
-	vec3 normal = normalize(tanSpace * (texture2D(uNormalTexture, TexCoordOut) * 2.0 - 1.0).xyz);
+	vec3 normal = NormalOut;
 	vec4 color = texture2D(uColorTexture, TexCoordOut);
 	vec4 diffuse = vec4(vec3(dot(lightDir, normal)), 1);
 	vec4 specular = texture2D(uSpecularTexture, TexCoordOut) * pow(dot(halfVec, normal), 64.0);
