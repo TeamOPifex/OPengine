@@ -149,12 +149,15 @@ void GameManager::Draw(){
 	OPrenderParamMat4v("uView", 1, &view);
 
 	OPframeBufferBind(&rt);
+	OPrenderClear(0.3f, 0.3f, 0.5f);
 	OPrenderMesh();
 	OPframeBufferUnbind();
 
 	OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
-	OPtextureBind(&rt.Texture, 1);
-	OPtextureBind(tex, 1);
+	////glBindTexture(rt.Handle, 1);
+	//OPtextureBind(tex, 1);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, rt.Texture.Handle);
 	OPrenderParami("uColorTexture", rt.Texture.Handle);
 	OPtextureBind(spec, 2);
 	OPrenderParami("uSpecularTexture", spec->Handle);

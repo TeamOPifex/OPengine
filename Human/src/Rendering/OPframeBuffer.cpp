@@ -1,4 +1,5 @@
 #include "./Human/include/Rendering/OPframeBuffer.h"
+#include "./Core/include/Log.h"
 
 //-----------------------------------------------------------------------------
 //   _____ _       _           _     
@@ -16,6 +17,31 @@ OPframeBuffer* OPRENDER_CURR_FRAMEBUFFER;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+
+GLuint createDepthTexture(int w, int h) {
+
+	GLuint tex;
+
+	glGenTextures(1, &tex);
+
+	glBindTexture(GL_TEXTURE_2D, tex);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 
+						w,
+						h, 
+						0, GL_DEPTH_COMPONENT, GL_FLOAT,
+						NULL); 
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	return(tex);
+}
+
 OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 	ui32 renderBuffer;
 	OPframeBuffer fb = {
@@ -23,23 +49,47 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 		OPtextureCreate(desc),
 		0
 	};
-
-	glGenFramebuffers(1, &fb.Handle);
-	glGenRenderbuffers(1, &renderBuffer);
-
-	OPtextureBind(&fb.Texture, 1);
+	glBindTexture(GL_TEXTURE_2D, fb.Texture.Handle);
 	OPtextureSetData(NULL);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	
-	glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, desc.Width, desc.Height);
 
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fb.Texture.Handle, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBuffer);
-			
-	glBindTexture(GL_TEXTURE_2D, NULL);
-	glBindRenderbuffer(GL_RENDERBUFFER, NULL);
-	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+	// generate and bind the fbo
+	glGenFramebuffers(1, &fb.Handle);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fb.Handle);
+
+	// attach the color texture
+	glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, fb.Texture.Handle, 0);
+
+	// attach the depth texture
+	ui32 dt = createDepthTexture(desc.Width, desc.Height);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, dt, 0);
+
+	// check fbo creation status
+	GLenum e = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
+	switch (e) {
+		case GL_FRAMEBUFFER_UNDEFINED:
+			OPLog("FBO Undefined\n");
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT :
+			OPLog("FBO Incomplete Attachment\n");
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT :
+			OPLog("FBO Missing Attachment\n");
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER :
+			OPLog("FBO Incomplete Draw Buffer\n");
+			break;
+		case GL_FRAMEBUFFER_UNSUPPORTED :
+			OPLog("FBO Unsupported\n");
+			break;
+		case GL_FRAMEBUFFER_COMPLETE:
+			OPLog("FBO OK\n");
+			break;
+		default:
+			OPLog("FBO Problem?\n");
+	}
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
 	return fb;
 }
@@ -50,8 +100,11 @@ void OPframeBufferDestroy(OPframeBuffer* fb){
 }
 //-----------------------------------------------------------------------------
 void OPframeBufferBind(OPframeBuffer* fb){
+	GLuint attachments[1] = {GL_COLOR_ATTACHMENT0};
 	OPRENDER_CURR_FRAMEBUFFER = fb;
 	glBindFramebuffer(GL_FRAMEBUFFER, fb->Handle);
+	glDrawBuffers(1,  attachments);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	OPrenderSetViewport(0, 0, fb->Description.Width, fb->Description.Height);
 }
 //-----------------------------------------------------------------------------
@@ -62,9 +115,9 @@ void OPframeBufferBindTex(OPframeBuffer* fb, OPint slot){
 void OPframeBufferUnbind(){
 	OPframeBuffer* fb = OPRENDER_CURR_FRAMEBUFFER;
 
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, fb->Texture.Handle);
 	glGenerateMipmap(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, NULL);
-	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
