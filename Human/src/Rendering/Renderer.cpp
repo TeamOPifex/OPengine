@@ -10,7 +10,12 @@
 //#include <glm/glm.hpp>
 #endif
 
+ui32 OPscreenWidth;
+ui32 OPscreenHeight;
+
 OPint OPrenderInit(ui32 width, ui32 height){
+	OPscreenWidth = width;
+	OPscreenHeight = height;
 #ifdef OPIFEX_OPENGL_ES_2
 	// Android doesn't need to create a window
 	glEnable(GL_DEPTH_TEST);
