@@ -20,6 +20,8 @@ void  OPrenderPresent    ();
 void  OPrenderDepth      (OPint state);
 void  OPrenderShutdown   ();
 
+extern ui32 OPscreenWidth;
+extern ui32 OPscreenHeight;
 #ifdef __cplusplus
 };
 #endif
