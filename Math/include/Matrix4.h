@@ -82,7 +82,6 @@ inline void OPmat4translate(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
 }
 
 inline void OPmat4scl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
-	OPmat4identity(m);
 	m->cols[0].x = x;
 	m->cols[1].y = y;
 	m->cols[2].z = z;
