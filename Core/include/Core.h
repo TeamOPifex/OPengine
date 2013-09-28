@@ -1,6 +1,7 @@
 #pragma once
 #ifndef OPEngine_Core
 #define OPEngine_Core
+#define WIN32_LEAN_AND_MEAN 0
 
 #include "Target.h" // defines the current build target
 #include "Types.h"
