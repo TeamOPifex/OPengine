@@ -7,7 +7,6 @@
 #include "./Human/include/Rendering/Camera.h"
 #include "./Human/include/Resources/Material/SpecularTexturedMaterial.h"
 #include "./Human/include/Resources/Material/TexturedScreenMaterial.h"
-#include "./Human/include/Rendering/Quad.h"
 
 class GameManager
 {

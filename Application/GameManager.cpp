@@ -14,6 +14,7 @@
 #include "./Human/include/Rendering/OPframeBuffer.h"
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Rendering/Camera.h"
+#include "./Human/include/Rendering/OPquad.h"
 #include "./Core/include/Log.h"
 
 OPfloat vertData[] = {
@@ -35,7 +36,7 @@ ui16 indexData[] = {
 OPmeshPacked quad;
 OPmeshPacker packer;
 OPmesh* plane;
-OPeffect tri;
+OPeffect tri, post;
 OPcam camera;
 OPtexture* tex, *spec, *norm;
 OPframeBuffer rt;
@@ -47,6 +48,8 @@ GameManager::GameManager(int width, int height)
 
 	OPcmanLoad("TexturedSpecular.vert");
 	OPcmanLoad("TexturedSpecular.frag");
+	OPcmanLoad("TexturedScreen.vert");
+	OPcmanLoad("Textured.frag");
 	OPcmanLoad("BiPlane.opm");
 	OPcmanLoad("steamPlaneSkin.png");
 	OPcmanLoad("steamPlaneSpec.png");
@@ -55,11 +58,7 @@ GameManager::GameManager(int width, int height)
 	packer = OPmeshPackerCreate();
 
 	OPmeshPackerBind(&packer);
-	quad = OPrenderCreateMeshPacked(
-		sizeof(OPfloat) * 6, sizeof(ui16),
-		4, 6,
-		vertData, indexData
-	);
+	quad = OPquadCreatePacked();
 	OPmeshPackerBuild();
 
 	OPtextureDescription desc = {
@@ -96,20 +95,37 @@ GameManager::GameManager(int width, int height)
 	//	{"aColor",GL_FLOAT,3}
 	//};
 
-	OPshaderAttribute attribs[] = {
-		{"aPosition",GL_FLOAT,3},
-		{"aNormal",GL_FLOAT,3},
-		{"aTangent",GL_FLOAT,3},
-		{"aUV",GL_FLOAT,2}
-	};
-	
-	OPLog("GameManager::GameManager - Ready to load shaders");
-	tri = OPrenderCreateEffect(
-		*(OPshader*)OPcmanGet("TexturedSpecular.vert"),
-		*(OPshader*)OPcmanGet("TexturedSpecular.frag"),
-		attribs,
-		4
-	);
+	{
+		OPshaderAttribute attribs[] = {
+			{"aPosition",GL_FLOAT,3},
+			{"aNormal",GL_FLOAT,3},
+			{"aTangent",GL_FLOAT,3},
+			{"aUV",GL_FLOAT,2}
+		};
+		
+		OPLog("GameManager::GameManager - Ready to load shaders");
+		tri = OPrenderCreateEffect(
+			*(OPshader*)OPcmanGet("TexturedSpecular.vert"),
+			*(OPshader*)OPcmanGet("TexturedSpecular.frag"),
+			attribs,
+			4
+		);
+	}
+
+	{
+		OPshaderAttribute attribs[] = {
+			{"aPosition",GL_FLOAT,3},
+			{"aUV",GL_FLOAT,2}
+		};
+		
+		OPLog("GameManager::GameManager - Ready to load shaders");
+		post = OPrenderCreateEffect(
+			*(OPshader*)OPcmanGet("TexturedScreen.vert"),
+			*(OPshader*)OPcmanGet("Textured.frag"),
+			attribs,
+			2
+		);
+	}
 
 	OPLog("GameManager:Constructor Finished");
 }
@@ -117,7 +133,7 @@ GameManager::GameManager(int width, int height)
 OPfloat t = 0;
 bool GameManager::Update( OPtimer* coreTimer )
 {
-	t += 0.000005f * coreTimer->Elapsed;
+	t += 0.005f * coreTimer->Elapsed;
 	return true;
 }
 
@@ -154,15 +170,22 @@ void GameManager::Draw(){
 
 	OPrenderClear(0.3f, 0.3f, 0.5f);
 	OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
-	///glBindTexture(rt.Handle, 1);
+
+	OPmeshPackerBind(&packer);
+	OPrenderBindEffect(&post);
+	OPmat4identity(&world);
+	OPrenderParamMat4v("uWorld", 1, &world);
+
 	OPtextureBind(&rt.Texture);
-	//glActiveTexture(GL_TEXTURE4);
-//	OPLog("FBO Tex : %d", rt.Texture.Handle);
-	//glBindTexture(GL_TEXTURE_2D, rt.Texture.Handle);
-	OPrenderParami("uColorTexture", rt.Texture.Handle);
-	OPtextureBind(spec);
-	OPrenderParami("uSpecularTexture", spec->Handle);
-	OPtextureBind(norm);
-	OPrenderParami("uNormalTexture", norm->Handle);
-	OPrenderMesh();
+	OPrenderParami("uTexture", rt.Texture.Handle);
+
+	OPrenderMeshPacked(&quad);
+
+	//OPtextureBind(&rt.Texture);
+	//OPrenderParami("uColorTexture", rt.Texture.Handle);
+	//OPtextureBind(spec);
+	//OPrenderParami("uSpecularTexture", spec->Handle);
+	//OPtextureBind(norm);
+	//OPrenderParami("uNormalTexture", norm->Handle);
+	//OPrenderMesh();
 }
