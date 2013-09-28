@@ -59,6 +59,7 @@ extern OPtexture* OPRENDER_CURR_TEX;
 #define OPtextureLinearMip  GL_LINEAR_MIPMAP_LINEAR
 
 #define OPtextureRepeat GL_REPEAT
+#define OPtextureClamp  GL_CLAMP_TO_EDGE
 
 //-----------------------------------------------------------------------------
 // ______                _   _                 
@@ -69,7 +70,7 @@ extern OPtexture* OPRENDER_CURR_TEX;
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPtexture OPtextureCreate(OPtextureDescription desc);
 void OPtextureDestroy(OPtexture* tex);
-void OPtextureBind(OPtexture* tex, OPint slot);
+void OPtextureBind(OPtexture* tex);
 void OPtextureSetData(void* data);
 
 // prevent name mangling if compiling with c++

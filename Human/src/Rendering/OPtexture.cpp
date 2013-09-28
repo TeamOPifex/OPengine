@@ -31,9 +31,9 @@ void OPtextureDestroy(OPtexture* tex){
 	glDeleteTextures(1, &tex->Handle);
 }
 //-----------------------------------------------------------------------------
-void OPtextureBind(OPtexture* tex, OPint slot){
+void OPtextureBind(OPtexture* tex){
 	OPRENDER_CURR_TEX = tex;
-	glActiveTexture(GL_TEXTURE0 + slot);
+	glActiveTexture(GL_TEXTURE0 + tex->Handle);
 	glBindTexture(GL_TEXTURE_2D, tex->Handle);
 }
 //-----------------------------------------------------------------------------

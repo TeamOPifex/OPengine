@@ -39,7 +39,7 @@ OPint OPimagePNGLoad(const OPchar* filename, OPtexture** image){
 	};
 
 	*tex = OPtextureCreate(desc);
-	OPtextureBind(tex, 0);
+	OPtextureBind(tex);
 	OPtextureSetData(data);
 
 	*image = tex;

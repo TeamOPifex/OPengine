@@ -59,7 +59,7 @@ extern OPframeBuffer* OPRENDER_CURR_FRAMEBUFFER;
 OPframeBuffer OPframeBufferCreate(OPtextureDescription desc);
 void OPframeBufferDestroy(OPframeBuffer* fb);
 void OPframeBufferBind(OPframeBuffer* fb);
-void OPframeBufferBindTex(OPframeBuffer* fb, OPint slot);
+void OPframeBufferBindTex(OPframeBuffer* fb);
 void OPframeBufferUnbind();
 
 // prevent name mangling if compiling with c++
