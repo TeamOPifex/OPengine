@@ -66,8 +66,8 @@ void Init(){
 
 
 #ifndef OPIFEX_ANDROID
-	i32 width = 512;
-	i32 height = 512;
+	i32 width = 1280;
+	i32 height = 720;
 #endif
 
 	OPassetLoader loaders[] ={

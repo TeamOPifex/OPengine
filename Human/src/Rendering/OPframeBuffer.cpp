@@ -58,7 +58,8 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	fb.Texture.Description = desc;
 */
-	glBindTexture(GL_TEXTURE_2D, fb.Texture.Handle);
+	//glBindTexture(GL_TEXTURE_2D, fb.Texture.Handle);
+	OPtextureBind(&fb.Texture);	
 	OPtextureSetData(NULL);
 
 	// generate and bind the fbo
@@ -113,7 +114,7 @@ void OPframeBufferBind(OPframeBuffer* fb){
 	OPRENDER_CURR_FRAMEBUFFER = fb;
 	glBindFramebuffer(GL_FRAMEBUFFER, fb->Handle);
 	//glDrawBuffers(1,  attachments);
-	//OPrenderSetViewport(0, 0, fb->Description.Width, fb->Description.Height);
+	OPrenderSetViewport(0, 0, fb->Description.Width, fb->Description.Height);
 }
 //-----------------------------------------------------------------------------
 void OPframeBufferBindTex(OPframeBuffer* fb){

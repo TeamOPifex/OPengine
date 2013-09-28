@@ -114,21 +114,20 @@ GameManager::GameManager(int width, int height)
 	OPLog("GameManager:Constructor Finished");
 }
 
+OPfloat t = 0;
 bool GameManager::Update( OPtimer* coreTimer )
 {
-	rotateAmnt += 0.005f * coreTimer->Elapsed;
+	t += 0.000005f * coreTimer->Elapsed;
 	return true;
 }
 
 
-OPfloat t = 0;
 void GameManager::Draw(){
-	OPrenderClear(0.3f, 0.3f, 0.5f);
+	//OPrenderClear(0.3f, 0.3f, 0.5f);
 	OPmat4 world, view, proj;
 	world = OPmat4();
 	view = OPmat4();
 	proj = OPmat4();
-	t+=0.01f;
 
 	OPmat4buildRotY(&world, t);
 	OPcamGetView(camera, &view);
@@ -154,7 +153,7 @@ void GameManager::Draw(){
 	OPframeBufferUnbind();
 
 	OPrenderClear(0.3f, 0.3f, 0.5f);
-	//OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
+	OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
 	///glBindTexture(rt.Handle, 1);
 	OPtextureBind(&rt.Texture);
 	//glActiveTexture(GL_TEXTURE4);
