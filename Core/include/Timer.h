@@ -13,6 +13,7 @@
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 // Windows specific lib
 #include <Windows.h>
+#include <Mmsystem.h>
 #endif
 
 /* Struct definitions */
@@ -29,8 +30,6 @@ typedef struct{
 	struct timeval _lastTime;
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 // Windows specific values for time
-	LARGE_INTEGER frequency;
-	LARGE_INTEGER _lastTime;
 #endif
 } OPtimer;
 

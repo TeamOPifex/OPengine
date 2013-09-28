@@ -1,5 +1,7 @@
 //////////////////////////////// OPEngine MAIN ////////////////////////////////
+#define WIN32_LEAN_AND_MEAN 0
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "./Core/include/Core.h"
 #include "./Data/include/OPgameStates.h"
@@ -14,6 +16,7 @@
 #include "./Data/include/OPheap.h"
 #include "./Data/include/OPlist.h"
 
+
 #if defined(OPIFEX_ANDROID)
 #include <jni.h>
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
@@ -26,6 +29,7 @@
 #include <GL/glfw.h>
 //#include <glm/glm.hpp>
 #endif
+
 #include "./Data/include/OPfile.h"
 #include "./Human/include/Audio/OPaudio2.h"
 #include "./Human/include/Audio/OPaudioEmitter.h"

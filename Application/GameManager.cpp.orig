@@ -11,6 +11,7 @@
 #include "./Human/include/Rendering/OPmesh.h"
 #include "./Human/include/Rendering/OPmeshPacked.h"
 #include "./Human/include/Rendering/OPmeshPacker.h"
+#include "./Human/include/Rendering/OPframeBuffer.h"
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Rendering/Camera.h"
 #include "./Core/include/Log.h"
@@ -37,6 +38,7 @@ OPmesh* plane;
 OPeffect tri;
 OPcam camera;
 OPtexture* tex, *spec, *norm;
+OPframeBuffer rt;
 
 GameManager::GameManager(int width, int height) 
 {
@@ -60,15 +62,20 @@ GameManager::GameManager(int width, int height)
 	);
 	OPmeshPackerBuild();
 
+	OPtextureDescription desc = {
+		512, 512,
+		GL_RGBA, GL_UNSIGNED_BYTE,
+		OPtextureLinear, OPtextureLinear,
+		OPtextureClamp, OPtextureClamp
+	};
+
+	rt = OPframeBufferCreate(desc);
+
 	OPLog("GameManager::GameManager - Ready to load model");
 	plane = (OPmesh*)OPcmanGet("BiPlane.opm");
-<<<<<<< local
 	tex  = (OPtexture*)OPcmanGet("steamPlaneSkin.png");
 	spec = (OPtexture*)OPcmanGet("steamPlaneSpec.png");
 	norm = (OPtexture*)OPcmanGet("noneNorm.png");
-=======
-	OPLog("GameManager::GameManager - BiPlane.opm Model loaded");
->>>>>>> other
 
 	OPvec3 pos = {0, 5, 15.0f};
 	OPvec3 look = {0, 0, 0};
@@ -107,21 +114,20 @@ GameManager::GameManager(int width, int height)
 	OPLog("GameManager:Constructor Finished");
 }
 
+OPfloat t = 0;
 bool GameManager::Update( OPtimer* coreTimer )
 {
-	rotateAmnt += 0.005f * coreTimer->Elapsed;
+	t += 0.000005f * coreTimer->Elapsed;
 	return true;
 }
 
 
-OPfloat t = 0;
 void GameManager::Draw(){
-	OPrenderClear(0.3f, 0.3f, 0.5f);
+	//OPrenderClear(0.3f, 0.3f, 0.5f);
 	OPmat4 world, view, proj;
 	world = OPmat4();
 	view = OPmat4();
 	proj = OPmat4();
-	t+=0.01f;
 
 	OPmat4buildRotY(&world, t);
 	OPcamGetView(camera, &view);
@@ -131,15 +137,32 @@ void GameManager::Draw(){
 	OPrenderBindMesh(plane);
 	OPrenderBindEffect(&tri);
 
-	OPtextureBind(tex, 1);
+	OPtextureBind(tex);
 	OPrenderParami("uColorTexture", tex->Handle);
-	OPtextureBind(spec, 2);
+	OPtextureBind(spec);
 	OPrenderParami("uSpecularTexture", spec->Handle);
-	OPtextureBind(norm, 3);
+	OPtextureBind(norm);
 	OPrenderParami("uNormalTexture", norm->Handle);
 	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderParamMat4v("uProj", 1, &proj);
 	OPrenderParamMat4v("uView", 1, &view);
 
+	OPframeBufferBind(&rt);
+	OPrenderClear(1, 0, 0);
+	OPrenderMesh();
+	OPframeBufferUnbind();
+
+	OPrenderClear(0.3f, 0.3f, 0.5f);
+	OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
+	///glBindTexture(rt.Handle, 1);
+	OPtextureBind(&rt.Texture);
+	//glActiveTexture(GL_TEXTURE4);
+//	OPLog("FBO Tex : %d", rt.Texture.Handle);
+	//glBindTexture(GL_TEXTURE_2D, rt.Texture.Handle);
+	OPrenderParami("uColorTexture", rt.Texture.Handle);
+	OPtextureBind(spec);
+	OPrenderParami("uSpecularTexture", spec->Handle);
+	OPtextureBind(norm);
+	OPrenderParami("uNormalTexture", norm->Handle);
 	OPrenderMesh();
 }
