@@ -21,7 +21,7 @@ OPtexture OPtextureCreate(OPtextureDescription desc){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, desc.MinFilter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, desc.WrapX);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, desc.WrapY);
-	glTexParameteri(GL_TEXTURE_2D, 0x8191, GL_TRUE);
+	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 
 	return tex;
 }

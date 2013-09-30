@@ -101,15 +101,16 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 		case GL_FRAMEBUFFER_COMPLETE:
 			OPLog("FBO OK\n");
 			break;
-		case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
-			OPLog("FBO Incomplete Dimensions OK\n");
-			break;
 #ifndef OPIFEX_ANDROID
 		case GL_FRAMEBUFFER_UNDEFINED:
 			OPLog("FBO Undefined\n");
 			break;
 		case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER :
 			OPLog("FBO Incomplete Draw Buffer\n");
+			break;
+#else
+		case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
+			OPLog("FBO Incomplete Dimensions OK\n");
 			break;
 #endif
 		default:
