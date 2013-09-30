@@ -36,7 +36,7 @@ void OPtimerTick(OPtimer* timer){
 
 	timer->TotalGametime += elapsed;
 	timer->TimeLastTick = (time.tv_sec * 1000000 + time.tv_usec);
-	timer->Elapsed = elapsed;
+	timer->Elapsed = (elapsed / 1000);
 	
 	timer->_lastTime = time;
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)

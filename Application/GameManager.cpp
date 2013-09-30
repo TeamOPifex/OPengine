@@ -133,6 +133,7 @@ GameManager::GameManager(int width, int height)
 OPfloat t = 0;
 bool GameManager::Update( OPtimer* coreTimer )
 {
+	OPLog("dt %u", coreTimer->Elapsed);
 	t += 0.005f * coreTimer->Elapsed;
 	return true;
 }
@@ -149,7 +150,7 @@ void GameManager::Draw(){
 	OPcamGetView(camera, &view);
 	OPcamGetProj(camera, &proj);
 
-	//OPmeshPackerBind(&packer);
+	OPmeshPackerBind(&packer);
 	OPrenderBindMesh(plane);
 	OPrenderBindEffect(&tri);
 
@@ -181,11 +182,11 @@ void GameManager::Draw(){
 
 	OPrenderMeshPacked(&quad);
 
-	//OPtextureBind(&rt.Texture);
-	//OPrenderParami("uColorTexture", rt.Texture.Handle);
-	//OPtextureBind(spec);
-	//OPrenderParami("uSpecularTexture", spec->Handle);
-	//OPtextureBind(norm);
-	//OPrenderParami("uNormalTexture", norm->Handle);
-	//OPrenderMesh();
+	OPtextureBind(&rt.Texture);
+	OPrenderParami("uColorTexture", rt.Texture.Handle);
+	OPtextureBind(spec);
+	OPrenderParami("uSpecularTexture", spec->Handle);
+	OPtextureBind(norm);
+	OPrenderParami("uNormalTexture", norm->Handle);
+	OPrenderMesh();
 }
