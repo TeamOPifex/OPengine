@@ -61,32 +61,39 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 	//glBindTexture(GL_TEXTURE_2D, fb.Texture.Handle);
 	OPtextureBind(&fb.Texture);	
 	OPtextureSetData(NULL);
+	
+
+	// attach the depth texture
+	ui32 dt = createDepthTexture(desc.Width, desc.Height);
 
 	// generate and bind the fbo
 	glGenFramebuffers(1, &fb.Handle);
+#ifndef OPIFEX_ANDROID
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fb.Handle);
 
 	// attach the color texture
 	glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, fb.Texture.Handle, 0);
-
-	// attach the depth texture
-	ui32 dt = createDepthTexture(desc.Width, desc.Height);
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, dt, 0);
+#else
+	glBindFramebuffer(GL_FRAMEBUFFER, fb.Handle);
+
+	// attach the color texture
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fb.Texture.Handle, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, dt, 0);
+#endif
 
 	// check fbo creation status
+#ifndef OPIFEX_ANDROID
 	GLenum e = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
+#else
+	GLenum e = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+#endif
 	switch (e) {
-		case GL_FRAMEBUFFER_UNDEFINED:
-			OPLog("FBO Undefined\n");
-			break;
 		case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT :
 			OPLog("FBO Incomplete Attachment\n");
 			break;
 		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT :
 			OPLog("FBO Missing Attachment\n");
-			break;
-		case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER :
-			OPLog("FBO Incomplete Draw Buffer\n");
 			break;
 		case GL_FRAMEBUFFER_UNSUPPORTED :
 			OPLog("FBO Unsupported\n");
@@ -94,12 +101,27 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 		case GL_FRAMEBUFFER_COMPLETE:
 			OPLog("FBO OK\n");
 			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
+			OPLog("FBO Incomplete Dimensions OK\n");
+			break;
+#ifndef OPIFEX_ANDROID
+		case GL_FRAMEBUFFER_UNDEFINED:
+			OPLog("FBO Undefined\n");
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER :
+			OPLog("FBO Incomplete Draw Buffer\n");
+			break;
+#endif
 		default:
 			OPLog("FBO Problem?\n");
 	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
+#ifndef OPIFEX_ANDROID
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+#else
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+#endif
 
 	return fb;
 }
