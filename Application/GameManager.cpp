@@ -181,12 +181,4 @@ void GameManager::Draw(){
 	OPrenderParami("uTexture", rt.Texture.Handle);
 
 	OPrenderMeshPacked(&quad);
-
-	//OPtextureBind(&rt.Texture);
-	//OPrenderParami("uColorTexture", rt.Texture.Handle);
-	//OPtextureBind(spec);
-	//OPrenderParami("uSpecularTexture", spec->Handle);
-	//OPtextureBind(norm);
-	//OPrenderParami("uNormalTexture", norm->Handle);
-	//OPrenderMesh();
 }

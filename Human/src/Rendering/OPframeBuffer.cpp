@@ -43,22 +43,16 @@ GLuint createDepthTexture(int w, int h) {
 }
 
 OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
-	ui32 renderBuffer;
 	OPframeBuffer fb = {
 		desc,
 		OPtextureCreate(desc),
 		0
 	};
+
+	// generate and bind the fbo
+	glGenFramebuffers(1, &fb.Handle);
 	
-/*	glGenTextures(1, &fb.Texture.Handle);
-	glBindTexture(GL_TEXTURE_2D, fb.Texture.Handle);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	fb.Texture.Description = desc;
-*/
-	//glBindTexture(GL_TEXTURE_2D, fb.Texture.Handle);
+	// setup color texture
 	OPtextureBind(&fb.Texture);	
 	OPtextureSetData(NULL);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -66,20 +60,24 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 	// attach the depth texture
 	ui32 dt = createDepthTexture(desc.Width, desc.Height);
 
-	// generate and bind the fbo
-	glGenFramebuffers(1, &fb.Handle);
 #ifndef OPIFEX_ANDROID
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fb.Handle);
+	glBindRenderbuffer(GL_RENDERBUFFER, dt);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, desc.Width, desc.Height);
+
 
 	// attach the color texture
 	glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, fb.Texture.Handle, 0);
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, dt, 0);
 #else
 	glBindFramebuffer(GL_FRAMEBUFFER, fb.Handle);
+	glBindRenderbuffer(GL_RENDERBUFFER, dt);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, desc.Width, desc.Height);
+
 
 	// attach the color texture
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fb.Texture.Handle, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, dt, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, dt);
 #endif
 
 	// check fbo creation status
