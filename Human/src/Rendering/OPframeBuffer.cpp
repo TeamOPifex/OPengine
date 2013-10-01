@@ -61,7 +61,7 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 	//glBindTexture(GL_TEXTURE_2D, fb.Texture.Handle);
 	OPtextureBind(&fb.Texture);	
 	OPtextureSetData(NULL);
-	
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	// attach the depth texture
 	ui32 dt = createDepthTexture(desc.Width, desc.Height);

@@ -19,6 +19,11 @@ OPint OPrenderInit(ui32 width, ui32 height){
 	glDepthFunc(GL_LESS); 
 	//glCullFace(GL_FRONT);
 	//glEnable(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
+
+	OPrenderWidth = width;
+	OPrenderHeight = height;
+
 	return 0;
 #else
 	GLuint VertexArrayID;
