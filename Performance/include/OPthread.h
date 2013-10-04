@@ -2,6 +2,8 @@
 #define OPPERF_THREAD
 
 #include "Core/include/Types.h"
+#include "Core/include/Log.h"
+#include "Core/include/DynamicMemory.h"
 
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 #include <pthread.h>
@@ -19,6 +21,7 @@
 typedef struct{
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 	pthread_t Thread;
+	void* Return;
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 
 #endif
@@ -31,7 +34,7 @@ typedef struct{
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPthread OPthreadStart(void* (*function) (void*));
+OPthread OPthreadStart(void* (*function) (void*), void* params);
 OPint    OPthreadStop(OPthread* thread);
 OPint    OPthreadJoin(OPthread* thread);
 
