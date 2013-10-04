@@ -17,6 +17,7 @@ set(ALL_LIBS
 	1_Core
 	2_Data
 	3_Math
+	4_Performance
 	5_Human
 )
 
