@@ -12,7 +12,7 @@ OPthread OPthreadStart(void* (*function) (void*), void* params){
 	OPbzero(&out, sizeof(OPthread));
 
 	OPint err = -1;
-	if(err = pthread_create(&out->Thread, NULL, function, params)){
+	if(err = pthread_create(&out.Thread, NULL, function, params)){
 		OPchar* f = "OPthread: Creation failed.";
 		switch(err){
 			case EAGAIN:
@@ -35,7 +35,7 @@ OPint OPthreadStop(void* retval){
 }
 //-----------------------------------------------------------------------------
 OPint OPthreadJoin(OPthread* thread){
-	pthread_join(&thread->Thread, &thread->Return);
+	pthread_join(thread->Thread, &(thread->Return));
 	return 1;
 }
 //-----------------------------------------------------------------------------

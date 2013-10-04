@@ -7,6 +7,9 @@
 
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 #include <pthread.h>
+#include <errno.h>
+#include <sys/time.h>
+#include <sys/resource.h>
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 
 #endif
