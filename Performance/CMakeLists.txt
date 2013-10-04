@@ -25,13 +25,13 @@ add_library(4_Performance STATIC ${PERFORMANCE_SRC})
 if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
 		
 	add_custom_command(TARGET 4_Performance POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${PROJECT_BINARY_DIR}/Math/Debug/Performance.lib"
+		"${PROJECT_BINARY_DIR}/Performance/Debug/Performance.lib"
 		${PROJECT_BINARY_DIR}/Binaries/win32/)
 	
 elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX32")
 
 	add_custom_command(TARGET 4_Performance POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${PROJECT_BINARY_DIR}/Math/libPerformance.a"
+		"${PROJECT_BINARY_DIR}/Performance/libPerformance.a"
 		${PROJECT_BINARY_DIR}/Binaries/linux32/)
 
 endif()
