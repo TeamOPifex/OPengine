@@ -92,7 +92,7 @@ include $(BUILD_STATIC_LIBRARY)
 
 ##############
 # 3_MATH
-# data lib, which will be built statically
+# math lib, which will be built statically
 ##############
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libopifex-math
@@ -104,6 +104,23 @@ MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Math/src/*.c)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 LOCAL_STATIC_LIBRARIES := libopifex-data
+include $(BUILD_STATIC_LIBRARY)
+
+
+##############
+# 4_PERFORMANCE
+# performance lib, which will be built statically
+##############
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libopifex-performance
+
+LOCAL_C_INCLUDES :=$(PROJECT_PATH)
+
+MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Performance/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Performance/src/*.c)
+LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
+
+LOCAL_STATIC_LIBRARIES := libopifex-math
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -142,7 +159,7 @@ MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Utilities/*.cpp)
 
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
-LOCAL_STATIC_LIBRARIES := libopifex-math libvorbis
+LOCAL_STATIC_LIBRARIES := libopifex-performance libvorbis
 include $(BUILD_STATIC_LIBRARY)
 
 
