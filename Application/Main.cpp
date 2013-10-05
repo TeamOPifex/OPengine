@@ -44,7 +44,7 @@
 
 GameManager* GM;
 OPaudioSource *Sound, *Sound1, *Sound2;
-OPaudioEmitter Emitter, Emitter1;
+OPaudioEmitter *Emitter, *Emitter1;
 OPaudioPlayer player, player1;
 OPentHeap* ents;
 void* entData;
@@ -71,12 +71,12 @@ void KeyDown(int key, int action){
 void* AudioUpdate(void*){
 	while(1){
 		OPaudSetPlayer(&player);
-		OPaudPlayerUpdate(OPaudProcess);
+		//OPaudPlayerUpdate(OPaudProcess);
 
-		OPaudSetPlayer(&player1);
-		OPaudPlayerUpdate(OPaudProcess);
+		//OPaudSetPlayer(&player1);
+		//OPaudPlayerUpdate(OPaudProcess);
 
-	    OPaudSafeUpdate(&Emitter, OPaudProcess);
+	    OPaudSafeUpdate(Emitter, OPaudProcess);
 	}
 
     OPthreadStop(NULL);
@@ -146,8 +146,10 @@ void Init(){
 	};
 
 	OPcmanInit(loaders, 6);
-	OPaudInit();
 	
+	OPaudInit();
+	OPaudInitThread(25);
+
 #ifndef OPIFEX_ANDROID
 	GM = new GameManager(width, height);
 #else
@@ -170,13 +172,13 @@ void Init(){
 		Sound = (OPaudioSource*)OPcmanGet("background.ogg");
 
         OPLog("Reading done!\n");
-        Emitter1 = OPaudCreateEmitter(Sound1, 0);
+        Emitter1 = OPaudCreateEmitter(Sound1, 0, NULL);
         player = OPaudPlayerCreate(Sound1, 5, 0);
         player1 = OPaudPlayerCreate(Sound2, 5, 0);
-        Emitter = OPaudCreateEmitter(Sound, 1);
+        Emitter = OPaudCreateEmitter(Sound, 1, NULL);
         OPLog("Emitter created\n");
 
-		OPaudSetEmitter(&Emitter);
+		OPaudSetEmitter(Emitter);
         OPaudVolume(0.05f);
         OPLog("Emitter set\n");
         OPLog("Emitter proc'd\n");

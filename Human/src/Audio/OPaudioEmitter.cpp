@@ -1,6 +1,8 @@
 #include "./Human/include/Audio/OPaudioEmitter.h"
 
 OPaudioEmitter* OPAUD_CURR_EMITTER;
+OPentHeap       OPAUD_REG_EMITTERS;
+OPthread        OPAUD_UPDATE_THREAD;
 
 #ifdef OPIFEX_ANDROID
 	void SL_DequeueCallback(SLAndroidSimpleBufferQueueItf bq, void *context){
@@ -8,6 +10,21 @@ OPaudioEmitter* OPAUD_CURR_EMITTER;
 		emitter->_queued--;
 	}
 #endif
+
+OPuint EMITTER_SIZE(OPuint count){
+	return sizeof(OPaudioEmitter) * count;
+}
+
+void* OPAUD_UPDATE(void* args){
+	OPaudioEmitter* emitters = (OPaudioEmitter*)OPAUD_REG_EMITTERS.Entities;
+
+	// update forever
+	while(1){
+		for(OPint i = OPAUD_REG_EMITTERS.MaxIndex; i--;){
+			OPaudSafeUpdate(&emitters[i], OPaudProcess);
+		}
+	}
+}
 
 //-----------------------------------------------------------------------------
 //                    _ _       ______           _ _   _              ______                _   _                 
@@ -17,7 +34,21 @@ OPaudioEmitter* OPAUD_CURR_EMITTER;
 //  / ____ \ |_| | (_| | | (_) | |____| | | | | | | |_| ||  __/ |    | |  | |_| | | | | (__| |_| | (_) | | | \__ \
 // /_/    \_\__,_|\__,_|_|\___/|______|_| |_| |_|_|\__|\__\___|_|    |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
-OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, /*void* processor,*/ OPint looping){
+
+void OPaudInitThread(OPint maxEmitters){
+
+	// allocate space for all the emitters in an ent heap
+	void* emitters = OPalloc(OPentHeapSize(sizeof(OPaudioEmitter), maxEmitters));
+	OPAUD_REG_EMITTERS = *OPentHeapCreate(
+		emitters,
+		sizeof(OPaudioEmitter),
+		maxEmitters
+	);
+
+	OPAUD_UPDATE_THREAD = OPthreadStart(OPAUD_UPDATE, NULL);
+}
+
+OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint looping, OPint flags){
 	OPaudioEmitter emitter = { 0 };
 	emitter.Looping  = looping;
 	emitter.State    = Stopped;
@@ -73,7 +104,27 @@ OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, /*void* processor,*/ OPint
 	alSourcei(emitter.al_src, AL_LOOPING, AL_FALSE);
 #endif
 
-	return emitter;
+	OPaudioEmitter* out;
+
+	// if this emitter will be threaded
+	if(flags & EMITTER_THREADED){
+		OPint index = -1;
+		OPentHeapActivate((&OPAUD_REG_EMITTERS), &index);
+		if(index){
+			((OPaudioEmitter*)OPAUD_REG_EMITTERS.Entities)[index] = emitter;
+			out = &((OPaudioEmitter*)OPAUD_REG_EMITTERS.Entities)[index]; 
+		}
+	}
+	else{
+		out = (OPaudioEmitter*)OPalloc(sizeof(OPaudioEmitter));
+		*out = emitter;
+	}
+
+	return out;
+}
+
+void OPaudDestroyEmitter(OPaudioEmitter* emitter){
+	// TODO
 }
 
 void OPaudEnqueueBuffer(ui8* buffer, OPint length){

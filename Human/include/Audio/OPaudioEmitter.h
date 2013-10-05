@@ -2,14 +2,18 @@
 #define OPAUD_EMITTER
 
 #include "OPaudioSource.h"
+#include "Data/include/OPentHeap.h"
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#define EMITTER_THREADED 0x0001
+
 #define BUFFER_COUNT 10
 #define BUFFER_SIZE 4096
+#define THREADED_EMITTERS 100
 //-----------------------------------------------------------------------------
 // ______                           
 // |  ____|                          
@@ -73,6 +77,8 @@ typedef struct{
 //  \_____|_|\___/|_.__/ \__,_|_|___/
 extern OPaudioEmitter* OPAUD_CURR_EMITTER;
 extern OPmutex         OPAUD_CURR_MUTEX;
+extern OPentHeap       OPAUD_REG_EMITTERS;
+extern OPthread        OPAUD_UPDATE_THREAD;
 //-----------------------------------------------------------------------------
 
 
@@ -96,7 +102,10 @@ extern OPmutex         OPAUD_CURR_MUTEX;
 //   / /\ \| | | |/ _` | |/ _ \|  __| | '_ ` _ \| | __| __/ _ \ '__| |  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //  / ____ \ |_| | (_| | | (_) | |____| | | | | | | |_| ||  __/ |    | |  | |_| | | | | (__| |_| | (_) | | | \__ \
 // /_/    \_\__,_|\__,_|_|\___/|______|_| |_| |_|_|\__|\__\___|_|    |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, OPint looping);
+void OPaudInitThread(OPint maxEmitters);
+
+OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint looping, OPint flags);
+void OPaudDestroyEmitter(OPaudioEmitter* emitter);
 
 void  OPaudEnqueueBuffer(ui8* buffer, OPint length);
 
