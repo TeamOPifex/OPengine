@@ -116,7 +116,7 @@ LOCAL_MODULE    := libopifex-performance
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 
-MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Performance/*.cpp)
+MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Performance/src/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Performance/src/*.c)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 

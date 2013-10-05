@@ -44,9 +44,9 @@ OPframeBuffer rt;
 OPthread thread;
 
 void* LoadTest(void* args){
-	OPcmanLoad("impact.wav");
-	OPcmanLoad("boom.wav");
-	OPcmanLoad("background.ogg");
+	// OPcmanLoad("impact.wav");
+	// OPcmanLoad("boom.wav");
+	// OPcmanLoad("background.ogg");
 	//OPthreadStop(NULL);
 	return NULL;
 }
@@ -62,6 +62,9 @@ GameManager::GameManager(int width, int height)
 	OPLog("Loading done");
 	OPLog("Loading kicked off");
 
+	OPcmanLoad("impact.wav");
+	OPcmanLoad("boom.wav");
+	OPcmanLoad("background.ogg");
 	OPcmanLoad("TexturedSpecular.vert");
 	OPcmanLoad("TexturedSpecular.frag");
 	OPcmanLoad("TexturedScreen.vert");
