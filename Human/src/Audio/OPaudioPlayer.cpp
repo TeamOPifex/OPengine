@@ -24,16 +24,14 @@ void OPaudPlayerDestroy(OPaudioPlayer* player){
 }
 
 void OPaudPlayerPlay(){
-	OPaudSetEmitter(&OPAUD_CURR_PLAYER->Emitters[OPAUD_CURR_PLAYER->Current++]);
-	OPaudPlay();
+	OPaudSafePlay(&OPAUD_CURR_PLAYER->Emitters[OPAUD_CURR_PLAYER->Current++]);
 	OPAUD_CURR_PLAYER->Current %= OPAUD_CURR_PLAYER->Count;
 }
 
 void OPaudPlayerStop(){
 	for(OPint i = OPAUD_CURR_PLAYER->Count; i--;){
 		if(OPAUD_CURR_PLAYER->Emitters[i].State != Stopped){
-			OPaudSetEmitter(&OPAUD_CURR_PLAYER->Emitters[i]);
-			OPaudStop();
+			OPaudSafeStop(&OPAUD_CURR_PLAYER->Emitters[i]);
 		}
 	}
 }
@@ -41,15 +39,13 @@ void OPaudPlayerStop(){
 void OPaudPlayerPause(){
 	for(OPint i = OPAUD_CURR_PLAYER->Count; i--;){
 		if(OPAUD_CURR_PLAYER->Emitters[i].State != Paused){
-			OPaudSetEmitter(&OPAUD_CURR_PLAYER->Emitters[i]);
-			OPaudPause();
+			OPaudSafePause(&OPAUD_CURR_PLAYER->Emitters[i]);
 		}
 	}
 }
 
 void OPaudPlayerUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 	for(OPint i = OPAUD_CURR_PLAYER->Count; i--;){
-		OPaudSetEmitter(&OPAUD_CURR_PLAYER->Emitters[i]);
-		OPaudUpdate(Proc);
+		OPaudSafeUpdate(&OPAUD_CURR_PLAYER->Emitters[i], Proc);
 	}
 }

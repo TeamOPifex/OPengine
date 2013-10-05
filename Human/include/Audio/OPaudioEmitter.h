@@ -41,6 +41,7 @@ typedef struct{
 	OPaudioSource*      Source;               // data source for the sound
 	ui8                 Temp[BUFFER_SIZE];    // BUFFER_SIZE byte temp buffer for processing
 	void*               Processor;            // Pointer to data for audio processing
+	OPmutex             Lock;                 // Protects the sound from cross thread calls
 
 #ifdef OPIFEX_ANDROID 
 	SLObjectItf _outputMixObject, _playerObject;
@@ -71,6 +72,7 @@ typedef struct{
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
 extern OPaudioEmitter* OPAUD_CURR_EMITTER;
+extern OPmutex         OPAUD_CURR_MUTEX;
 //-----------------------------------------------------------------------------
 
 
@@ -101,7 +103,12 @@ void  OPaudEnqueueBuffer(ui8* buffer, OPint length);
 void OPaudPlay ();
 void OPaudPause();
 void OPaudStop ();
+void OPaudSafePlay (OPaudioEmitter* emitter);
+void OPaudSafePause(OPaudioEmitter* emitter);
+void OPaudSafeStop (OPaudioEmitter* emitter);
+
 OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length));
+OPint OPaudSafeUpdate(OPaudioEmitter* emitter, void(*Proc)(OPaudioEmitter* emit, OPint length));
 
 OPint OPaudProc(OPaudioEmitter* emitter, void(*Proc)(OPaudioEmitter* emit, OPint length));
 

@@ -26,10 +26,15 @@ OPthread OPthreadStart(void* (*function) (void*), void* params){
 				break;
 		}
 	}
+	else{
+		out.Status = OPTHREAD_RUNNING;
+	}
+
 	return out;
 }
 //-----------------------------------------------------------------------------
 OPint OPthreadStop(void* retval){
+	//thread->Status = OPTHREAD_STOPPED;
 	pthread_exit(retval);
 	return 1;
 }
@@ -39,4 +44,34 @@ OPint OPthreadJoin(OPthread* thread){
 	return 1;
 }
 //-----------------------------------------------------------------------------
+OPmutex OPmutexCreate(){
+	OPmutex out;
+	OPbzero(&out, sizeof(OPmutex));
+
+	OPint err = -1;
+	if(err = pthread_mutex_init(&out.Mutex, NULL)){
+		OPchar* f = "OPmutex: Creation failed.";
+		switch(err){
+			case EAGAIN:
+				OPLog("%s process limit of %d may have been reached.", f, RLIMIT_NPROC);
+				break;
+			case ENOMEM:
+				OPLog("%s Insufficient memory exists to initialise the mutex.", f);
+				break;
+			case EPERM:
+				OPLog("%s Insufficent permissions to spawn thread.", f);
+				break;
+		}
+	}
+
+	return out;
+}
+//-----------------------------------------------------------------------------
+OPint OPmutexLock(OPmutex* mutex){
+	pthread_mutex_lock(&mutex->Mutex);
+}
+//-----------------------------------------------------------------------------
+OPint OPmutexUnlock(OPmutex* mutex){
+	pthread_mutex_unlock(&mutex->Mutex);
+}
 

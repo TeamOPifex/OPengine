@@ -16,6 +16,7 @@
 #include "./Human/include/Rendering/Camera.h"
 #include "./Human/include/Rendering/OPquad.h"
 #include "./Core/include/Log.h"
+#include "./Performance/include/OPthread.h"
 
 OPfloat vertData[] = {
 	 0.5,  0.5, 0,
@@ -40,11 +41,26 @@ OPeffect tri, post;
 OPcam camera;
 OPtexture* tex, *spec, *norm;
 OPframeBuffer rt;
+OPthread thread;
+
+void* LoadTest(void* args){
+	OPcmanLoad("impact.wav");
+	OPcmanLoad("boom.wav");
+	OPcmanLoad("background.ogg");
+	//OPthreadStop(NULL);
+	return NULL;
+}
 
 GameManager::GameManager(int width, int height) 
 {
 	rotateAmnt = 0;
 	OPrenderInit(width, height);
+
+	OPLog("Loading started");
+	thread = OPthreadStart(LoadTest, NULL);
+	OPthreadJoin(&thread);
+	OPLog("Loading done");
+	OPLog("Loading kicked off");
 
 	OPcmanLoad("TexturedSpecular.vert");
 	OPcmanLoad("TexturedSpecular.frag");
@@ -133,7 +149,6 @@ GameManager::GameManager(int width, int height)
 OPfloat t = 0;
 bool GameManager::Update( OPtimer* coreTimer )
 {
-	OPLog("dt %u", coreTimer->Elapsed);
 	t += 0.005f * coreTimer->Elapsed;
 	return true;
 }

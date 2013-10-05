@@ -21,9 +21,14 @@ OPeffect* OPRENDER_CURR_EFFECT = NULL;
 // Shader creation
 OPint OPrenderLoadVertexShader(const OPchar* filename, OPshader** shader){
 	OPshader vertex = -1;
-	OPstream* source = OPreadFile(filename);
 
+	OPLog("OPshader BEGINNING load of %s", filename);
+	OPstream* source = OPreadFile(filename);
+	OPLog("OPshader ENDING load of %s", filename);
+
+	OPLog("OPshader shader CREATING");
 	vertex = glCreateShader(OPvertexShader);
+	OPLog("OPshader shader CREATED");
 	CheckError("GLShader::Error 1");
 	if(vertex){
 		OPchar* src = (OPchar*)source->Data;

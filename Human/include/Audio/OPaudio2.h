@@ -8,7 +8,8 @@
 #include "Core/include/DynamicMemory.h"
 #include "Core/include/Log.h"
 #include "Data/include/OPfile.h"
-#include "./Math/include/Vector3.h"
+#include "Math/include/Vector3.h"
+#include "Performance/include/OPthread.h"
 
 #ifdef OPIFEX_ANDROID
 #include <SLES/OpenSLES.h>
@@ -57,6 +58,8 @@ extern SLObjectItf SLES_outputMixObject;
 extern ALCdevice*  AL_OPaudioDevice;
 extern ALCcontext* AL_OPaudioContext;
 #endif
+
+extern OPmutex OPAUD_CURR_MUTEX;
 //-----------------------------------------------------------------------------
 
 

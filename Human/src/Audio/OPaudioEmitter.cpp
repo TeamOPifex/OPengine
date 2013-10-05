@@ -23,7 +23,7 @@ OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, /*void* processor,*/ OPint
 	emitter.State    = Stopped;
 	emitter.Source   = src;
 	emitter.Processor= NULL;//processor;
-
+	emitter.Lock = OPmutexCreate();
 
 #ifdef OPIFEX_ANDROID
 	OPLog("OPaudioEmitter: Chann=%d, Samp/Sec=%d\n", src->Description.Channels, src->Description.SamplesPerSecond);
@@ -107,6 +107,37 @@ void OPaudEnqueueBuffer(ui8* buffer, OPint length){
 	OPAUD_CURR_EMITTER->CurrBuffer = active % BUFFER_COUNT;
 }
 
+void OPaudSafePlay (OPaudioEmitter* emitter){
+	OPmutexLock(&emitter->Lock);
+	OPmutexLock(&OPAUD_CURR_MUTEX);
+
+	OPaudSetEmitter(emitter);
+	OPaudPlay();
+
+	OPmutexUnlock(&OPAUD_CURR_MUTEX);
+	OPmutexUnlock(&emitter->Lock);
+}
+void OPaudSafePause(OPaudioEmitter* emitter){
+	OPmutexLock(&emitter->Lock);
+	OPmutexLock(&OPAUD_CURR_MUTEX);
+
+	OPaudSetEmitter(emitter);
+	OPaudPause();
+
+	OPmutexUnlock(&OPAUD_CURR_MUTEX);
+	OPmutexUnlock(&emitter->Lock);
+}
+void OPaudSafeStop (OPaudioEmitter* emitter){
+	OPmutexLock(&emitter->Lock);
+	OPmutexLock(&OPAUD_CURR_MUTEX);
+
+	OPaudSetEmitter(emitter);
+	OPaudStop();
+
+	OPmutexUnlock(&OPAUD_CURR_MUTEX);
+	OPmutexUnlock(&emitter->Lock);
+}
+
 #ifdef OPIFEX_ANDROID
 	void OPaudPlay(){
 		(*OPAUD_CURR_EMITTER->_playerPlay)->SetPlayState(
@@ -151,6 +182,17 @@ void OPaudEnqueueBuffer(ui8* buffer, OPint length){
 		src->Seek(src, &(OPAUD_CURR_EMITTER->Progress = 0));
 	}
 #endif
+
+OPint OPaudSafeUpdate(OPaudioEmitter* emitter, void(*Proc)(OPaudioEmitter* emit, OPint length)){
+	OPmutexLock(&emitter->Lock);
+	OPmutexLock(&OPAUD_CURR_MUTEX);
+
+	OPaudSetEmitter(emitter);
+	OPaudUpdate(Proc);
+
+	OPmutexUnlock(&OPAUD_CURR_MUTEX);
+	OPmutexUnlock(&emitter->Lock);
+}
 
 OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 	if(OPAUD_CURR_EMITTER->State != Playing) return 0;
@@ -229,7 +271,7 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 		src->Seek(src, &(OPAUD_CURR_EMITTER->Progress = 0));
 		return 0;
 	}
-	else if(queued <= 0){
+	else if(queued <= 1){ // Fixed for short sounds
 		OPaudStop();
 	}
 

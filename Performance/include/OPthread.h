@@ -14,6 +14,9 @@
 
 #endif
 
+#define OPTHREAD_STOPPED 0
+#define OPTHREAD_RUNNING 1
+
 //-----------------------------------------------------------------------------
 //   _____ _                   _       
 //  / ____| |                 | |      
@@ -22,6 +25,7 @@
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 typedef struct{
+	OPint Status;
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 	pthread_t Thread;
 	void* Return;
@@ -29,6 +33,14 @@ typedef struct{
 
 #endif
 } OPthread;
+
+typedef struct{
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
+	pthread_mutex_t Mutex;
+#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+
+#endif
+} OPmutex;
 
 //-----------------------------------------------------------------------------
 // ______                _   _                 
@@ -38,7 +50,10 @@ typedef struct{
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPthread OPthreadStart(void* (*function) (void*), void* params);
-OPint    OPthreadStop(OPthread* thread);
+OPint    OPthreadStop(void* retval);
 OPint    OPthreadJoin(OPthread* thread);
-
+//-----------------------------------------------------------------------------
+OPmutex OPmutexCreate();
+OPint   OPmutexLock(OPmutex* mutex);
+OPint   OPmutexUnlock(OPmutex* mutex);
 #endif

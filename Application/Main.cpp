@@ -16,6 +16,7 @@
 #include "./Data/include/OPheap.h"
 #include "./Data/include/OPlist.h"
 
+#include "./Performance/include/OPthread.h"
 
 #if defined(OPIFEX_ANDROID)
 #include <jni.h>
@@ -42,18 +43,43 @@
 #include "./Data/include/OPentHeap.h"
 
 GameManager* GM;
-OPaudioSource *Sound, *Sound1;
+OPaudioSource *Sound, *Sound1, *Sound2;
 OPaudioEmitter Emitter, Emitter1;
-OPaudioPlayer player;
+OPaudioPlayer player, player1;
 OPentHeap* ents;
 void* entData;
+OPthread AudioThread;
 
 OPfloat vol = 0.05f;
 
 void KeyDown(int key, int action){
-	OPLog("Pizza");
-	OPaudSetPlayer(&player);
-	OPaudPlayerPlay();
+	OPLog("Pizza %d", key);
+
+	switch(key){
+		case 65:
+			OPaudSetPlayer(&player);
+			OPaudPlayerPlay();
+			break;
+		case 83:
+			OPaudSetPlayer(&player1);
+			OPaudPlayerPlay();
+			break;
+	}
+
+}
+
+void* AudioUpdate(void*){
+	while(1){
+		OPaudSetPlayer(&player);
+		OPaudPlayerUpdate(OPaudProcess);
+
+		OPaudSetPlayer(&player1);
+		OPaudPlayerUpdate(OPaudProcess);
+
+	    OPaudSafeUpdate(&Emitter, OPaudProcess);
+	}
+
+    OPthreadStop(NULL);
 }
 
 // Initialize
@@ -120,11 +146,7 @@ void Init(){
 	};
 
 	OPcmanInit(loaders, 6);
-	
 	OPaudInit();
-	
-	OPcmanLoad("pew.wav");
-	OPcmanLoad("background.ogg");
 	
 #ifndef OPIFEX_ANDROID
 	GM = new GameManager(width, height);
@@ -143,12 +165,14 @@ void Init(){
 
         OPLog("Main: Song loaded");
 
-		Sound1 = (OPaudioSource*)OPcmanGet("pew.wav");
+		Sound1 = (OPaudioSource*)OPcmanGet("impact.wav");
+		Sound2 = (OPaudioSource*)OPcmanGet("boom.wav");
 		Sound = (OPaudioSource*)OPcmanGet("background.ogg");
 
         OPLog("Reading done!\n");
         Emitter1 = OPaudCreateEmitter(Sound1, 0);
         player = OPaudPlayerCreate(Sound1, 5, 0);
+        player1 = OPaudPlayerCreate(Sound2, 5, 0);
         Emitter = OPaudCreateEmitter(Sound, 1);
         OPLog("Emitter created\n");
 
@@ -157,10 +181,13 @@ void Init(){
         OPLog("Emitter set\n");
         OPLog("Emitter proc'd\n");
         OPaudPlay();
+
+		AudioThread = OPthreadStart(AudioUpdate, NULL);
 	return;
 }
 
 void Update( OPtimer* timer){
+
 
 	bool result = GM->Update( timer );
 
@@ -189,13 +216,6 @@ void Update( OPtimer* timer){
 	else {
 		//RenderSystem::ClearColor(0,0,0);
 	}
-
-
-	OPaudSetPlayer(&player);
-	OPaudPlayerUpdate(OPaudProcess);
-
-    OPaudSetEmitter(&Emitter);
-    OPaudUpdate(OPaudProcess);
 	//SoundEmitter->Update();
 	GM->Draw();
 	OPrenderPresent();
@@ -203,6 +223,8 @@ void Update( OPtimer* timer){
 	if(!result)
 		exit(0);
 	return;
+
+	//OPthreadJoin(&AudioThread);
 }
 
 void Destroy()
