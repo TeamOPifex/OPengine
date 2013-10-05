@@ -11,7 +11,7 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
-
+#include <windows.h>
 #endif
 
 #define OPTHREAD_STOPPED 0
@@ -30,7 +30,9 @@ typedef struct{
 	pthread_t Thread;
 	void* Return;
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
-
+	HANDLE Thread;
+	DWORD ThreadId;
+	void* Return;
 #endif
 } OPthread;
 
@@ -38,7 +40,7 @@ typedef struct{
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 	pthread_mutex_t Mutex;
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
-
+	HANDLE Mutex;
 #endif
 } OPmutex;
 

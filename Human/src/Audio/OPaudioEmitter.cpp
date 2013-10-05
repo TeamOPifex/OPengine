@@ -243,6 +243,8 @@ OPint OPaudSafeUpdate(OPaudioEmitter* emitter, void(*Proc)(OPaudioEmitter* emit,
 
 	OPmutexUnlock(&OPAUD_CURR_MUTEX);
 	OPmutexUnlock(&emitter->Lock);
+
+	return 0;
 }
 
 OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
