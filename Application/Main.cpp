@@ -133,7 +133,7 @@ void Init(){
 	OPcmanInit(loaders, 6);
 	
 	OPaudInit();
-	OPaudInitThread(25);
+	OPaudInitThread(10);
 
 #ifndef OPIFEX_ANDROID
 	GM = new GameManager(width, height);
@@ -157,8 +157,8 @@ void Init(){
 		Sound = (OPaudioSource*)OPcmanGet("background.ogg");
 
         OPLog("Reading done!\n");
-        player = OPaudPlayerCreate(Sound1, 9, 0);
-        player1 = OPaudPlayerCreate(Sound2, 15, 0);
+        player = OPaudPlayerCreate(Sound1, 5, 0);
+        player1 = OPaudPlayerCreate(Sound2, 4, 0);
 		Emitter = OPaudCreateEmitter(Sound, 1, EMITTER_THREADED);
         OPLog("Emitter created\n");
 
@@ -179,28 +179,12 @@ void Update( OPtimer* timer){
 	GamePadController* gamePad = OPgamePadController(GamePadIndex_One);
 	OPgamePadUpdate(gamePad);
 
-	if(OPgamePadIsConnected(gamePad)) {
-
-		OPfloat r = OPgamePadIsDown(gamePad, GamePad_Button_A) ? 1.0f : 0.0f;
-		OPfloat g = OPgamePadLeftThumbX(gamePad) / 2.0f + 0.5f;
-		OPfloat b = OPgamePadLeftTrigger(gamePad);
-		
-		if(OPgamePadWasPressed(gamePad, GamePad_Button_A)){
-			r = g = b = 1.0f;
-		}
-
-		OPrenderClear(r, g, b);
-
-		#ifdef OPIFEX_ANDROID
-	  	if(OPgamePadWasPressed(gamePad, GamePad_Button_A)){
-	  		OPaudSetPlayer(&player);
-	  		OPaudPlayerPlay();
-	  	}
-		#endif
+	if(OPgamePadIsConnected(gamePad) && OPgamePadWasPressed(gamePad, GamePad_Button_A)){
+		OPLog("Playing Audio");
+	  	OPaudSetPlayer(&player);
+	  	OPaudPlayerPlay();
 	}
-	else {
-		//RenderSystem::ClearColor(0,0,0);
-	}
+
 	//SoundEmitter->Update();
 	GM->Draw();
 	OPrenderPresent();

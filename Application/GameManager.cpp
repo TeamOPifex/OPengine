@@ -17,6 +17,7 @@
 #include "./Human/include/Rendering/OPquad.h"
 #include "./Core/include/Log.h"
 #include "./Performance/include/OPthread.h"
+#include "./Human/include/Input/GamePadSystem.h"
 
 OPfloat vertData[] = {
 	 0.5,  0.5, 0,
@@ -183,11 +184,24 @@ void GameManager::Draw(){
 	OPrenderParamMat4v("uView", 1, &view);
 
 	OPframeBufferBind(&rt);
-	OPrenderClear(1, 0, 0);
+	
+	GamePadController* gamePad = OPgamePadController(GamePadIndex_One);
+	OPgamePadUpdate(gamePad);
+	
+	if(OPgamePadIsConnected(gamePad)) {
+		if(OPgamePadIsDown(gamePad, GamePad_Button_A) || OPgamePadIsDown(gamePad, GamePad_Button_B) || OPgamePadIsDown(gamePad, GamePad_Button_X) || OPgamePadIsDown(gamePad, GamePad_Button_Y)) {
+			OPrenderClear( 0.0f, 0.0f, 1.0f);
+		} else {
+			OPrenderClear( 0.0f, 0.0f, 0.0f);
+		}
+	} else {
+		OPrenderClear(1.0f, 1.0f, 1.0f);
+	}
+
 	OPrenderMesh();
 	OPframeBufferUnbind();
-
-	OPrenderClear(0.3f, 0.3f, 0.5f);
+	
+		OPrenderClear(1.0f, 1.0f, 1.0f);
 	OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
 
 	OPmeshPackerBind(&packer);

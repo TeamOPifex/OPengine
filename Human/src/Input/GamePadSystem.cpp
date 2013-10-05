@@ -24,7 +24,6 @@ GamePadController* OPgamePadController(GamePadIndex index) {
 	#define CONTROLLER_CLASS_NAME "tv/ouya/console/api/OuyaController"
 
 	jobject OPjniGetControllerByPlayer( int playerNum) {
-		OPLog("Get Player");
 		OPJniMethodInfo methodInfo;
 		if (!OPjniGetStaticMethodInfo(methodInfo,
 			CONTROLLER_CLASS_NAME, "getControllerByPlayer",
@@ -44,17 +43,15 @@ GamePadController* OPgamePadController(GamePadIndex index) {
 				OPLog("Class method not found");
 				return false;
 		}
-
-		OPLog("Class Method was Found");
+		
 		JNIEnvironment()->DeleteLocalRef(methodInfo2.classID);
-		OPLog("Local Reference Deleted");
 
 		bool result = JNIEnvironment()->CallBooleanMethod(controller, methodInfo2.methodID, button);
 
 		if(result) {
-			OPLog("Button Pressed");
+			OPLog("Button Pressed: %d", button);
 		} else {
-			OPLog("Not Pressed");
+
 		}
 
 		return result;
