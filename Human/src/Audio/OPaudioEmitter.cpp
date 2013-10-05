@@ -21,6 +21,7 @@ void* OPAUD_UPDATE(void* args){
 	// update forever
 	while(1){
 		for(OPint i = OPAUD_REG_EMITTERS.MaxIndex; i--;){
+			if(emitters[i].Source == NULL || emitters[i].State == Stopped) continue;
 			OPaudSafeUpdate(&emitters[i], OPaudProcess);
 		}
 	}
@@ -110,7 +111,7 @@ OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint looping, OPint flag
 	if(flags & EMITTER_THREADED){
 		OPint index = -1;
 		OPentHeapActivate((&OPAUD_REG_EMITTERS), &index);
-		if(index){
+		if(index >= 0){
 			((OPaudioEmitter*)OPAUD_REG_EMITTERS.Entities)[index] = emitter;
 			out = &((OPaudioEmitter*)OPAUD_REG_EMITTERS.Entities)[index]; 
 		}

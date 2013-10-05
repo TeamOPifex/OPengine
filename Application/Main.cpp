@@ -44,11 +44,10 @@
 
 GameManager* GM;
 OPaudioSource *Sound, *Sound1, *Sound2;
-OPaudioEmitter *Emitter, *Emitter1;
+OPaudioEmitter *Emitter;
 OPaudioPlayer player, player1;
 OPentHeap* ents;
 void* entData;
-OPthread AudioThread;
 
 OPfloat vol = 0.05f;
 
@@ -66,20 +65,6 @@ void KeyDown(int key, int action){
 			break;
 	}
 
-}
-
-void* AudioUpdate(void*){
-	while(1){
-		OPaudSetPlayer(&player);
-		//OPaudPlayerUpdate(OPaudProcess);
-
-		//OPaudSetPlayer(&player1);
-		//OPaudPlayerUpdate(OPaudProcess);
-
-	    OPaudSafeUpdate(Emitter, OPaudProcess);
-	}
-
-    OPthreadStop(NULL);
 }
 
 // Initialize
@@ -172,10 +157,9 @@ void Init(){
 		Sound = (OPaudioSource*)OPcmanGet("background.ogg");
 
         OPLog("Reading done!\n");
-        Emitter1 = OPaudCreateEmitter(Sound1, 0, NULL);
-        player = OPaudPlayerCreate(Sound1, 5, 0);
-        player1 = OPaudPlayerCreate(Sound2, 5, 0);
-        Emitter = OPaudCreateEmitter(Sound, 1, NULL);
+        player = OPaudPlayerCreate(Sound1, 9, 0);
+        player1 = OPaudPlayerCreate(Sound2, 15, 0);
+		Emitter = OPaudCreateEmitter(Sound, 1, EMITTER_THREADED);
         OPLog("Emitter created\n");
 
 		OPaudSetEmitter(Emitter);
@@ -184,7 +168,6 @@ void Init(){
         OPLog("Emitter proc'd\n");
         OPaudPlay();
 
-		AudioThread = OPthreadStart(AudioUpdate, NULL);
 	return;
 }
 
@@ -225,8 +208,6 @@ void Update( OPtimer* timer){
 	if(!result)
 		exit(0);
 	return;
-
-	//OPthreadJoin(&AudioThread);
 }
 
 void Destroy()

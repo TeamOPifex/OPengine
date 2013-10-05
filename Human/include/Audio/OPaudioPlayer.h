@@ -14,7 +14,7 @@
 #include "./Human/include/Audio/OPaudioEmitter.h"
 
 struct OPaudioPlayer{
-	OPaudioEmitter* Emitters;
+	OPaudioEmitter** Emitters;
 	OPint Count;
 	OPint Current;
 };
