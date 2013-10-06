@@ -160,6 +160,8 @@ void Init(){
         player = OPaudPlayerCreate(Sound1, 5, 0);
         player1 = OPaudPlayerCreate(Sound2, 4, 0);
 		Emitter = OPaudCreateEmitter(Sound, EMITTER_THREADED | EMITTER_LOOPING);
+		OPaudRecycleEmitter(Emitter);
+		Emitter = OPaudGetEmitter(Sound, EMITTER_LOOPING);
         OPLog("Emitter created\n");
 
 		OPaudSetEmitter(Emitter);

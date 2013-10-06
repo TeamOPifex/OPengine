@@ -144,6 +144,25 @@ void OPaudDestroyEmitter(OPaudioEmitter* emitter){
 	}
 }
 //-----------------------------------------------------------------------------
+OPaudioEmitter* OPaudGetEmitter(OPaudioSource* src, OPint flags){
+	OPaudioEmitter* out = NULL;
+
+	OPint index = -1;
+	OPentHeapActivate((&OPAUD_REG_EMITTERS), &index);
+	if(index >= 0){
+		out = &((OPaudioEmitter*)OPAUD_REG_EMITTERS.Entities)[index]; 
+		out->Flags = flags;
+		out->Source = src;
+	}
+
+	return out;
+}
+//-----------------------------------------------------------------------------
+void OPaudRecycleEmitter(OPaudioEmitter* emitter){
+	OPuint index = ((OPuint)OPAUD_REG_EMITTERS.Entities - (OPuint)emitter) / sizeof(OPaudioEmitter);
+	OPentHeapKill(OPAUD_REG_EMITTERS, index);
+}
+//-----------------------------------------------------------------------------
 void OPaudEnqueueBuffer(ui8* buffer, OPint length){
 	OPint active = OPAUD_CURR_EMITTER->CurrBuffer;
 #ifdef OPIFEX_ANDROID

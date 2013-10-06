@@ -108,6 +108,9 @@ void OPaudInitThread(OPint maxEmitters);
 OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint flags);
 void OPaudDestroyEmitter(OPaudioEmitter* emitter);
 
+OPaudioEmitter* OPaudGetEmitter(OPaudioSource* src, OPint flags);
+void OPaudRecycleEmitter(OPaudioEmitter* emitter);
+
 void  OPaudEnqueueBuffer(ui8* buffer, OPint length);
 
 void OPaudPlay ();
