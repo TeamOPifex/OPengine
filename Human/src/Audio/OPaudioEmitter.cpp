@@ -136,7 +136,7 @@ void OPaudDestroyEmitter(OPaudioEmitter* emitter){
 	// if this emitter was threaded then it's registered in the audio layer
 	// we need to put it back in the dead heap
 	if(emitter->Flags & EMITTER_THREADED){
-		OPuint index = ((OPuint)OPAUD_REG_EMITTERS.Entities - (OPuint)emitter) / sizeof(OPaudioEmitter);
+		OPuint index = ((OPuint)emitter - (OPuint)OPAUD_REG_EMITTERS.Entities) / sizeof(OPaudioEmitter);
 		OPentHeapKill(OPAUD_REG_EMITTERS, index);
 	}
 	else{
@@ -159,7 +159,7 @@ OPaudioEmitter* OPaudGetEmitter(OPaudioSource* src, OPint flags){
 }
 //-----------------------------------------------------------------------------
 void OPaudRecycleEmitter(OPaudioEmitter* emitter){
-	OPuint index = ((OPuint)OPAUD_REG_EMITTERS.Entities - (OPuint)emitter) / sizeof(OPaudioEmitter);
+	OPuint index = ((OPuint)emitter - (OPuint)OPAUD_REG_EMITTERS.Entities) / sizeof(OPaudioEmitter);
 	OPentHeapKill(OPAUD_REG_EMITTERS, index);
 }
 //-----------------------------------------------------------------------------
