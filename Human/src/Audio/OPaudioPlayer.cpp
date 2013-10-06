@@ -13,8 +13,10 @@ OPaudioPlayer OPaudPlayerCreate(OPaudioSource* src, OPint sounds, OPint looping)
 	player.Emitters = (OPaudioEmitter**)OPalloc(sizeof(OPaudioEmitter*) * sounds);
 
 	for(OPint i = sounds; i--;){
-		player.Emitters[i] = OPaudCreateEmitter(src, looping, EMITTER_THREADED);
-		OPLog(" ");
+		player.Emitters[i] = OPaudCreateEmitter(
+			src,
+			EMITTER_THREADED & (looping ? EMITTER_LOOPING : 0x0)
+		);
 	}
 
 	return player;

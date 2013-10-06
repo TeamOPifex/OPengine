@@ -10,6 +10,7 @@ extern "C" {
 #endif
 
 #define EMITTER_THREADED 0x0001
+#define EMITTER_LOOPING  0x0002
 
 #define BUFFER_COUNT 10
 #define BUFFER_SIZE 4096
@@ -39,7 +40,7 @@ enum OPaudioEmitterState{
 // |_____/ \__|_|   \__,_|\___|\__|___/
 typedef struct{
 	OPint               CurrBuffer;           // index of the buffer currently being filled
-	OPint				Looping;              // indicates weather the sounds restarts when finished or not
+	OPint				Flags;                // Specifies behavior such as looping and threadedness
 	OPaudioEmitterState State;                // current play state of the sound
 	ui64                Progress;             // Current play position
 	OPaudioSource*      Source;               // data source for the sound
@@ -104,7 +105,7 @@ extern OPthread        OPAUD_UPDATE_THREAD;
 // /_/    \_\__,_|\__,_|_|\___/|______|_| |_| |_|_|\__|\__\___|_|    |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 void OPaudInitThread(OPint maxEmitters);
 
-OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint looping, OPint flags);
+OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint flags);
 void OPaudDestroyEmitter(OPaudioEmitter* emitter);
 
 void  OPaudEnqueueBuffer(ui8* buffer, OPint length);

@@ -48,14 +48,14 @@ void OPaudInitThread(OPint maxEmitters){
 
 	OPAUD_UPDATE_THREAD = OPthreadStart(OPAUD_UPDATE, NULL);
 }
-
-OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint looping, OPint flags){
+//-----------------------------------------------------------------------------
+OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint flags){
 	OPaudioEmitter emitter = { 0 };
-	emitter.Looping  = looping;
+	emitter.Flags    = flags;
 	emitter.State    = Stopped;
 	emitter.Source   = src;
 	emitter.Processor= NULL;//processor;
-	emitter.Lock = OPmutexCreate();
+	emitter.Lock     = OPmutexCreate();
 
 #ifdef OPIFEX_ANDROID
 	OPLog("OPaudioEmitter: Chann=%d, Samp/Sec=%d\n", src->Description.Channels, src->Description.SamplesPerSecond);
@@ -123,11 +123,27 @@ OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint looping, OPint flag
 
 	return out;
 }
-
+//-----------------------------------------------------------------------------
 void OPaudDestroyEmitter(OPaudioEmitter* emitter){
-	// TODO
-}
+#ifdef OPIFEX_ANDROID
+	(*emitter->_playerObject)->Destroy(emitter->_playerObject);
+	for(OPint i = BUFFER_COUNT; i--;) OPfree(emitter->Buffers[i]);
+#else
+	alDeleteBuffers(BUFFER_COUNT, emitter->Buffers);
+	alDeleteSources(1, &emitter->al_src);
+#endif
 
+	// if this emitter was threaded then it's registered in the audio layer
+	// we need to put it back in the dead heap
+	if(emitter->Flags & EMITTER_THREADED){
+		OPuint index = ((OPuint)OPAUD_REG_EMITTERS.Entities - (OPuint)emitter) / sizeof(OPaudioEmitter);
+		OPentHeapKill(OPAUD_REG_EMITTERS, index);
+	}
+	else{
+		OPfree(emitter);
+	}
+}
+//-----------------------------------------------------------------------------
 void OPaudEnqueueBuffer(ui8* buffer, OPint length){
 	OPint active = OPAUD_CURR_EMITTER->CurrBuffer;
 #ifdef OPIFEX_ANDROID
@@ -158,7 +174,7 @@ void OPaudEnqueueBuffer(ui8* buffer, OPint length){
 	// set the active index
 	OPAUD_CURR_EMITTER->CurrBuffer = active % BUFFER_COUNT;
 }
-
+//-----------------------------------------------------------------------------
 void OPaudSafePlay (OPaudioEmitter* emitter){
 	OPmutexLock(&emitter->Lock);
 	OPmutexLock(&OPAUD_CURR_MUTEX);
@@ -169,6 +185,7 @@ void OPaudSafePlay (OPaudioEmitter* emitter){
 	OPmutexUnlock(&OPAUD_CURR_MUTEX);
 	OPmutexUnlock(&emitter->Lock);
 }
+//-----------------------------------------------------------------------------
 void OPaudSafePause(OPaudioEmitter* emitter){
 	OPmutexLock(&emitter->Lock);
 	OPmutexLock(&OPAUD_CURR_MUTEX);
@@ -179,6 +196,7 @@ void OPaudSafePause(OPaudioEmitter* emitter){
 	OPmutexUnlock(&OPAUD_CURR_MUTEX);
 	OPmutexUnlock(&emitter->Lock);
 }
+//-----------------------------------------------------------------------------
 void OPaudSafeStop (OPaudioEmitter* emitter){
 	OPmutexLock(&emitter->Lock);
 	OPmutexLock(&OPAUD_CURR_MUTEX);
@@ -189,52 +207,53 @@ void OPaudSafeStop (OPaudioEmitter* emitter){
 	OPmutexUnlock(&OPAUD_CURR_MUTEX);
 	OPmutexUnlock(&emitter->Lock);
 }
-
+//-----------------------------------------------------------------------------
 #ifdef OPIFEX_ANDROID
-	void OPaudPlay(){
-		(*OPAUD_CURR_EMITTER->_playerPlay)->SetPlayState(
-			OPAUD_CURR_EMITTER->_playerPlay,
-			SL_PLAYSTATE_PLAYING
-		);
-		OPAUD_CURR_EMITTER->State = Playing;
-		OPAUD_CURR_EMITTER->State = Playing;
-	}
-
-	void OPaudPause(){
-		(*OPAUD_CURR_EMITTER->_playerPlay)->SetPlayState(
-			OPAUD_CURR_EMITTER->_playerPlay,
-			SL_PLAYSTATE_PAUSED
-		);
-		OPAUD_CURR_EMITTER->State = Paused;
-	}
-
-	void OPaudStop(){
-		(*OPAUD_CURR_EMITTER->_playerPlay)->SetPlayState(
-			OPAUD_CURR_EMITTER->_playerPlay,
-			SL_PLAYSTATE_STOPPED
-		);
-		OPAUD_CURR_EMITTER->State = Stopped;
-		OPAUD_CURR_EMITTER->Progress = 0;
-	}
+void OPaudPlay(){
+	(*OPAUD_CURR_EMITTER->_playerPlay)->SetPlayState(
+		OPAUD_CURR_EMITTER->_playerPlay,
+		SL_PLAYSTATE_PLAYING
+	);
+	OPAUD_CURR_EMITTER->State = Playing;
+	OPAUD_CURR_EMITTER->State = Playing;
+}
+//-----------------------------------------------------------------------------
+void OPaudPause(){
+	(*OPAUD_CURR_EMITTER->_playerPlay)->SetPlayState(
+		OPAUD_CURR_EMITTER->_playerPlay,
+		SL_PLAYSTATE_PAUSED
+	);
+	OPAUD_CURR_EMITTER->State = Paused;
+}
+//-----------------------------------------------------------------------------
+void OPaudStop(){
+	(*OPAUD_CURR_EMITTER->_playerPlay)->SetPlayState(
+		OPAUD_CURR_EMITTER->_playerPlay,
+		SL_PLAYSTATE_STOPPED
+	);
+	OPAUD_CURR_EMITTER->State = Stopped;
+	OPAUD_CURR_EMITTER->Progress = 0;
+}
 #else
-	void OPaudPlay(){
-		alSourcePlay(OPAUD_CURR_EMITTER->al_src);
-		OPAUD_CURR_EMITTER->State = Playing;
-	}
-
-	void OPaudPause(){
-		alSourcePause(OPAUD_CURR_EMITTER->al_src);
-		OPAUD_CURR_EMITTER->State = Paused;
-	}
-
-	void OPaudStop(){
-		alSourceStop(OPAUD_CURR_EMITTER->al_src);
-		OPAUD_CURR_EMITTER->State = Stopped;
-		OPaudioSource* src = OPAUD_CURR_EMITTER->Source;
-		src->Seek(src, &(OPAUD_CURR_EMITTER->Progress = 0));
-	}
+//-----------------------------------------------------------------------------
+void OPaudPlay(){
+	alSourcePlay(OPAUD_CURR_EMITTER->al_src);
+	OPAUD_CURR_EMITTER->State = Playing;
+}
+//-----------------------------------------------------------------------------
+void OPaudPause(){
+	alSourcePause(OPAUD_CURR_EMITTER->al_src);
+	OPAUD_CURR_EMITTER->State = Paused;
+}
+//-----------------------------------------------------------------------------
+void OPaudStop(){
+	alSourceStop(OPAUD_CURR_EMITTER->al_src);
+	OPAUD_CURR_EMITTER->State = Stopped;
+	OPaudioSource* src = OPAUD_CURR_EMITTER->Source;
+	src->Seek(src, &(OPAUD_CURR_EMITTER->Progress = 0));
+}
 #endif
-
+//-----------------------------------------------------------------------------
 OPint OPaudSafeUpdate(OPaudioEmitter* emitter, void(*Proc)(OPaudioEmitter* emit, OPint length)){
 	OPmutexLock(&emitter->Lock);
 	OPmutexLock(&OPAUD_CURR_MUTEX);
@@ -247,7 +266,7 @@ OPint OPaudSafeUpdate(OPaudioEmitter* emitter, void(*Proc)(OPaudioEmitter* emit,
 
 	return 0;
 }
-
+//-----------------------------------------------------------------------------
 OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 	if(OPAUD_CURR_EMITTER->State != Playing) return 0;
 
@@ -320,7 +339,7 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 		OPaudEnqueueBuffer(buff, len);
 		return len;
 	}
-	else if(OPAUD_CURR_EMITTER->Looping){
+	else if(OPAUD_CURR_EMITTER->Flags & EMITTER_LOOPING){
 		// reset the sound!
 		src->Seek(src, &(OPAUD_CURR_EMITTER->Progress = 0));
 		return 0;
@@ -331,7 +350,7 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 
 	return -1;
 }
-
+//-----------------------------------------------------------------------------
 OPint OPaudProc(void(*Proc)(OPaudioEmitter* emit)){
 	return 0;
 }
@@ -351,21 +370,21 @@ void OPaudPosition(OPvec3* position){
 	alSourcefv(OPAUD_CURR_EMITTER->al_src, AL_POSITION, (OPfloat*)position);
 #endif
 }
-
+//-----------------------------------------------------------------------------
 void OPaudVelocity(OPvec3* velocity){
 #ifdef OPIFEX_ANDROID	
 #else
 	alSourcefv(OPAUD_CURR_EMITTER->al_src, AL_VELOCITY, (OPfloat*)velocity);
 #endif
 }
-
+//-----------------------------------------------------------------------------
 void OPaudVolume  (OPfloat gain){
 #ifdef OPIFEX_ANDROID	
 #else
 	alSourcef(OPAUD_CURR_EMITTER->al_src, AL_GAIN, gain);
 #endif
 }
-
+//-----------------------------------------------------------------------------
 void OPaudPitch   (OPfloat pitch){
 #ifdef OPIFEX_ANDROID	
 #else

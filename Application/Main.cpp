@@ -81,8 +81,8 @@ void Init(){
 
 
 #ifndef OPIFEX_ANDROID
-	i32 width = 1280;
-	i32 height = 720;
+	i32 width = 640;
+	i32 height = 480;
 #endif
 
 	OPassetLoader loaders[] ={
@@ -159,7 +159,7 @@ void Init(){
         OPLog("Reading done!\n");
         player = OPaudPlayerCreate(Sound1, 5, 0);
         player1 = OPaudPlayerCreate(Sound2, 4, 0);
-		Emitter = OPaudCreateEmitter(Sound, 1, EMITTER_THREADED);
+		Emitter = OPaudCreateEmitter(Sound, EMITTER_THREADED | EMITTER_LOOPING);
         OPLog("Emitter created\n");
 
 		OPaudSetEmitter(Emitter);
