@@ -15,7 +15,7 @@ OPaudioPlayer OPaudPlayerCreate(OPaudioSource* src, OPint sounds, OPint looping)
 	for(OPint i = sounds; i--;){
 		player.Emitters[i] = OPaudCreateEmitter(
 			src,
-			EMITTER_THREADED & (looping ? EMITTER_LOOPING : 0x0)
+			EMITTER_THREADED | (looping ? EMITTER_LOOPING : 0x0)
 		);
 	}
 

@@ -16,6 +16,7 @@
 #include "./Data/include/OPheap.h"
 #include "./Data/include/OPlist.h"
 
+#include "./Performance/include/OPthread.h"
 
 #if defined(OPIFEX_ANDROID)
 #include <jni.h>
@@ -42,18 +43,28 @@
 #include "./Data/include/OPentHeap.h"
 
 GameManager* GM;
-OPaudioSource *Sound, *Sound1;
-OPaudioEmitter Emitter, Emitter1;
-OPaudioPlayer player;
+OPaudioSource *Sound, *Sound1, *Sound2;
+OPaudioEmitter *Emitter;
+OPaudioPlayer player, player1;
 OPentHeap* ents;
 void* entData;
 
 OPfloat vol = 0.05f;
 
 void KeyDown(int key, int action){
-	OPLog("Pizza");
-	OPaudSetPlayer(&player);
-	OPaudPlayerPlay();
+	OPLog("Pizza %d", key);
+
+	switch(key){
+		case 65:
+			OPaudSetPlayer(&player);
+			OPaudPlayerPlay();
+			break;
+		case 83:
+			OPaudSetPlayer(&player1);
+			OPaudPlayerPlay();
+			break;
+	}
+
 }
 
 // Initialize
@@ -122,10 +133,8 @@ void Init(){
 	OPcmanInit(loaders, 6);
 	
 	OPaudInit();
-	
-	OPcmanLoad("pew.wav");
-	OPcmanLoad("background.ogg");
-	
+	OPaudInitThread(25);
+
 #ifndef OPIFEX_ANDROID
 	GM = new GameManager(width, height);
 #else
@@ -143,24 +152,27 @@ void Init(){
 
         OPLog("Main: Song loaded");
 
-		Sound1 = (OPaudioSource*)OPcmanGet("pew.wav");
+		Sound1 = (OPaudioSource*)OPcmanGet("impact.wav");
+		Sound2 = (OPaudioSource*)OPcmanGet("boom.wav");
 		Sound = (OPaudioSource*)OPcmanGet("background.ogg");
 
         OPLog("Reading done!\n");
-        Emitter1 = OPaudCreateEmitter(Sound1, 0);
-        player = OPaudPlayerCreate(Sound1, 5, 0);
-        Emitter = OPaudCreateEmitter(Sound, 1);
+        player = OPaudPlayerCreate(Sound1, 9, 0);
+        player1 = OPaudPlayerCreate(Sound2, 15, 0);
+		Emitter = OPaudCreateEmitter(Sound, 1, EMITTER_THREADED);
         OPLog("Emitter created\n");
 
-		OPaudSetEmitter(&Emitter);
+		OPaudSetEmitter(Emitter);
         OPaudVolume(0.05f);
         OPLog("Emitter set\n");
         OPLog("Emitter proc'd\n");
         OPaudPlay();
+
 	return;
 }
 
 void Update( OPtimer* timer){
+
 
 	bool result = GM->Update( timer );
 
@@ -181,21 +193,14 @@ void Update( OPtimer* timer){
 
 		#ifdef OPIFEX_ANDROID
 	  	if(OPgamePadWasPressed(gamePad, GamePad_Button_A)){
-	  		OPaudSetPlayer(&player);
-	  		OPaudPlayerPlay();
+			OPaudSetPlayer(&player1);
+			OPaudPlayerPlay();
 	  	}
 		#endif
 	}
 	else {
 		//RenderSystem::ClearColor(0,0,0);
 	}
-
-
-	OPaudSetPlayer(&player);
-	OPaudPlayerUpdate(OPaudProcess);
-
-    OPaudSetEmitter(&Emitter);
-    OPaudUpdate(OPaudProcess);
 	//SoundEmitter->Update();
 	GM->Draw();
 	OPrenderPresent();

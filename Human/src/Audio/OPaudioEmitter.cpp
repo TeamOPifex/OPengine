@@ -345,6 +345,7 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 		return 0;
 	}
 	else if(queued <= 1){ // Fixed for short sounds
+		OPLog("Done playing");
 		OPaudStop();
 	}
 
