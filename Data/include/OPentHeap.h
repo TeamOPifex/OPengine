@@ -21,8 +21,8 @@ extern "C"
 //                                                                      
 typedef struct{
 	void* Entities;
+	OPint* InUse;
 	OPint MaxIndex;
-	OPint MaxStale;
 	OPminHeap Free;
 } OPentHeap;
 
@@ -37,14 +37,22 @@ typedef struct{
 	if((*i = OPminHeapPop(&heap->Free)) >= 0){\
 		if(*i > heap->MaxIndex - 1){\
 			heap->MaxIndex = *i + 1;\
-			heap->MaxStale = 0;\
+			heap->InUse[heap->MaxIndex] = 1;\
 		}\
 	}\
 }\
 
 #define OPentHeapKill(heap, i){\
+	OPint mi = heap.MaxIndex;\
 	OPminHeapPush(&heap.Free, i);\
-	if(i == heap.MaxIndex) heap.MaxStale = 1;\
+	heap.InUse[heap.MaxIndex] = 0;\
+	while(mi){\
+		if(heap.InUse[mi] == 1){\
+			heap.MaxIndex = mi;\
+			break;\
+		}\
+		mi--;\
+	}\
 }\
 
 OPuint     OPentHeapSize(OPint entsize, OPint count);

@@ -5,17 +5,21 @@ OPuint OPentHeapSize(OPint entsize, OPint count){
 	// account for entities and indicies
 	size += (sizeof(OPint) + entsize) * (count + 1);
 
+	// account for list of indices in use
+	size += sizeof(OPint) * count;
+
 	return size;
 }
 //-----------------------------------------------------------------------------
 OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
-	OPuint off = 0, i = count + 1;
+	OPuint off = 0, i = count + 1, j = 0;
 	OPminHeap free = {
 		NULL,
 		count + 1,
 		1
 	};
 	OPentHeap heap = {
+		NULL,
 		NULL,
 		0,
 		1,
@@ -25,6 +29,11 @@ OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
 
 	// leave space for entity data
 	off += entSize * (count + 1);
+
+	// copy 0's into all the indices of the index list
+	OPbzero((OPint*)(segPtr + off), sizeof(OPint) * count);
+	off += sizeof(OPint) * count;
+	heap.InUse = (OPint*)off;
 
 	// create the heap
 	heap.Free._indices = (OPint*)((ui8*)segPtr + off);
