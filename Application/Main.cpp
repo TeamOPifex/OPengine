@@ -6,7 +6,7 @@
 #include "./Core/include/Core.h"
 #include "./Data/include/OPgameStates.h"
 
-#include "./GameManager.h"
+//#include "./GameManager.h"
 #include "./Human/include/Rendering/Renderer.h"
 #include "./Human/include/Input/GamePadSystem.h"
 
@@ -42,7 +42,9 @@
 #include "./Data/include/OPcontentManager.h"
 #include "./Data/include/OPentHeap.h"
 
-GameManager* GM;
+#include "GameStates.h"
+
+//GameManager* GM;
 OPaudioSource *Sound, *Sound1, *Sound2;
 OPaudioEmitter *Emitter;
 OPaudioPlayer player, player1;
@@ -103,7 +105,7 @@ void Init(){
 		{
 			".png",
 			"Textures/",
-			sizeof(Texture2D),
+			sizeof(OPtexture),
 			(OPint (*)(const OPchar*, void**))OPimagePNGLoad,
 			(OPint (*)(void*))OPimagePNGUnload
 		},
@@ -136,9 +138,9 @@ void Init(){
 	OPaudInitThread(10);
 
 #ifndef OPIFEX_ANDROID
-	GM = new GameManager(width, height);
+	OPrenderInit(width, height);
 #else
-	GM = new GameManager(JNIWidth(), JNIHeight());
+	OPrenderInit(JNIWidth(), JNIHeight());
 #endif
 
 
@@ -176,7 +178,7 @@ void Init(){
 void Update( OPtimer* timer){
 
 
-	bool result = GM->Update( timer );
+	//bool result = GM->Update( timer );
 
 	GamePadController* gamePad = OPgamePadController(GamePadIndex_One);
 	OPgamePadUpdate(gamePad);
@@ -188,17 +190,17 @@ void Update( OPtimer* timer){
 	}
 
 	//SoundEmitter->Update();
-	GM->Draw();
+	//GM->Draw();
 	OPrenderPresent();
 	
-	if(!result)
-		exit(0);
+	//if(!result)
+//		exit(0);
 	return;
 }
 
 void Destroy()
 {
-	delete GM;
+	//delete GM;
 	return;
 }
 
@@ -224,7 +226,7 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 	OPint a = 0;
 	OPLog("Test %d %d %d", a, a, a);
 
-	ActiveState = OPgameStateCreate(NULL, Update, NULL);
+	ActiveState = &State0;//OPgameStateCreate(NULL, Update, NULL);
 
 #ifdef OPIFEX_ANDROID
 	return;
