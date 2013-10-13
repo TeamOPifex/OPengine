@@ -472,7 +472,7 @@ class GL2JNIView extends GLSurfaceView {
 		}
 		
         public void onDrawFrame(GL10 gl) {
-            GL2JNILib.step();
+            GL2JNILib.step(_assetManager);
         }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {

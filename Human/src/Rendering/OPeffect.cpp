@@ -126,11 +126,9 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 		vert,
 		frag,
 		-1,
-		 0,
-		{0},
-		{0}
+		 0
 	};
-
+	
 	effect.Parameters = OPhashMapCreate(2);
 	effect.Attributes = OPlistCreate(AttribCount, sizeof(OPshaderAttribute));
 
