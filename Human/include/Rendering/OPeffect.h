@@ -53,8 +53,8 @@ typedef struct{
 	OPshader  Fragment;
 	ui32      ProgramHandle;
 	ui32      Stride;
-	HashMap   Parameters;
-	OPlist    Attributes;
+	HashMap*   Parameters;
+	OPlist*    Attributes;
 }OPeffect;
 
 //-----------------------------------------------------------------------------

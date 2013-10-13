@@ -37,6 +37,10 @@ OPrenderBuffer OPrenderGenBuffer(ui32 type){
 	return out;
 }
 //-----------------------------------------------------------------------------
+void OPrenderDelBuffer(OPrenderBuffer* buff){
+	glDeleteBuffers(1, &buff->Handle);
+}
+//-----------------------------------------------------------------------------
 void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, ui32 count, const void* data){
 	OPrenderBindBuffer(buff);
 	buff->ElementSize  = elementSize;

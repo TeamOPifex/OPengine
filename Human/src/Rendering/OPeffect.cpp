@@ -131,8 +131,8 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 		{0}
 	};
 
-	OPmemcpy(&effect.Parameters, OPhashMapCreate(2), sizeof(HashMap));
-	OPmemcpy(&effect.Attributes, OPlistCreate(AttribCount, sizeof(OPshaderAttribute)), sizeof(OPlist));
+	effect.Parameters = OPhashMapCreate(2);
+	effect.Attributes = OPlistCreate(AttribCount, sizeof(OPshaderAttribute));
 
 	effect.ProgramHandle = glCreateProgram();
 
@@ -165,7 +165,7 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 		}
 
 		//OPLog("%s = %d loc %d\n", Attributes[AttribCount], AttribCount, *loc);
-		OPlistPush(&effect.Attributes, (ui8*)&attr);
+		OPlistPush(effect.Attributes, (ui8*)&attr);
 	}
 
 	return effect;
@@ -177,8 +177,8 @@ OPint OPrenderLoadEffect  (const OPchar* filename, OPeffect** effect){
 //-----------------------------------------------------------------------------
 // effect destruction
 OPint OPrenderUnloadEffect(OPeffect* effect){
-	OPhashMapDestroy(&effect->Parameters);
-	OPlistDestroy(&effect->Attributes);
+	OPhashMapDestroy(effect->Parameters);
+	OPlistDestroy(effect->Attributes);
 	glDeleteProgram(effect->ProgramHandle);
 	
 	return 1;
@@ -188,9 +188,9 @@ OPint OPrenderUnloadEffect(OPeffect* effect){
 OPint OPrenderBindEffect(OPeffect* effect){
 	// disable attributes of the last effect
 	if(OPRENDER_CURR_EFFECT){
-		OPint attrCount = OPlistSize(&OPRENDER_CURR_EFFECT->Attributes);
+		OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
 		for(;attrCount--;){
-			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(&OPRENDER_CURR_EFFECT->Attributes, attrCount);
+			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
 			glDisableVertexAttribArray((ui32)attr->Name);
 		}
 	}
@@ -199,9 +199,9 @@ OPint OPrenderBindEffect(OPeffect* effect){
 
 	glUseProgram(OPRENDER_CURR_EFFECT->ProgramHandle);
 	// enable attributes of the new effect
-	OPint attrCount = OPlistSize(&OPRENDER_CURR_EFFECT->Attributes);
+	OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
 	for(;attrCount--;){
-		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(&OPRENDER_CURR_EFFECT->Attributes, attrCount);
+		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
 
 		glEnableVertexAttribArray((ui32)attr->Name);
 		glVertexAttribPointer(
@@ -218,10 +218,10 @@ OPint OPrenderBindEffect(OPeffect* effect){
 }
 
 ui32 OPrenderGetParam(const OPchar* parameterName){
-	if(OPhashMapExists(&OPRENDER_CURR_EFFECT->Parameters, parameterName)){
+	if(OPhashMapExists(OPRENDER_CURR_EFFECT->Parameters, parameterName)){
 		ui32* loc;
 		OPhashMapGet(
-			&OPRENDER_CURR_EFFECT->Parameters,
+			OPRENDER_CURR_EFFECT->Parameters,
 			parameterName,
 			(void**)&loc
 		);
@@ -235,7 +235,7 @@ ui32 OPrenderGetParam(const OPchar* parameterName){
 
 		ui32* locPtr = (ui32*)OPalloc(sizeof(ui32));
 		*locPtr = loc;
-		OPhashMapPut(&OPRENDER_CURR_EFFECT->Parameters, parameterName, &locPtr);
+		OPhashMapPut(OPRENDER_CURR_EFFECT->Parameters, parameterName, &locPtr);
 		return loc;
 	}
 }

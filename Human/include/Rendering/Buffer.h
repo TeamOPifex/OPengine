@@ -67,6 +67,7 @@ extern OPrenderBuffer* OPRENDER_CURR_IB;
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPrenderBuffer OPrenderGenBuffer(ui32 type);
+void           OPrenderDelBuffer(OPrenderBuffer* buff);
 void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, ui32 count, const void* data);
 void OPrenderBindBuffer(OPrenderBuffer* buffer);
 
