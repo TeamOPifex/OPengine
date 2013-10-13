@@ -29,7 +29,7 @@ void OPtimerTick(OPtimer* timer){
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 	struct timeval time;
 	ui64 elapsed;
-	5
+	
 	gettimeofday(&time, NULL);
 	elapsed = (time.tv_sec - timer->_lastTime.tv_sec) * 1000000 + 
 		  (time.tv_usec - timer->_lastTime.tv_usec);

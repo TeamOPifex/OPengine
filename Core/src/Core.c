@@ -29,7 +29,8 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_init(JNIEnv * env, jobject obj,
 	OPLog("OPInitialized");
 }
 
-JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_step(JNIEnv * env, jobject obj){	
+JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_step(JNIEnv * env, jobject obj, jobject assetManager){	
+	_JNIAssetManager = assetManager;
 	OPtimerTick(ApplicationTimer);
 	OPupdate(ApplicationTimer);
 }

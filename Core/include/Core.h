@@ -22,7 +22,7 @@ extern "C" {
 #ifdef OPIFEX_ANDROID
 	
 	JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager);
-	JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_step(JNIEnv * env, jobject obj);
+	JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_step(JNIEnv * env, jobject obj, jobject assetManager);
 	JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_destroy(JNIEnv * env, jobject obj);
 	JNIEnv* JNIEnvironment();
 	jobject JNIAssetManager();
