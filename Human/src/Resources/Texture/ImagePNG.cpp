@@ -42,12 +42,19 @@ OPint OPimagePNGLoad(const OPchar* filename, OPtexture** image){
 	OPtextureBind(tex);
 	OPtextureSetData(data);
 
+	// clean up
+	OPfree(data);
+	OPstreamDestroy(str);
+
 	*image = tex;
 
 	return 1;
 }
 
 OPint OPimagePNGUnload(void* image){
-	// TODO
+	OPtexture* tex = (OPtexture*)image;
+	OPtextureDestroy(tex);
+	OPfree(image);
+
 	return 1;
 }

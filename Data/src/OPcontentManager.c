@@ -98,17 +98,19 @@ OPint OPcmanLoad(const OPchar* key){
 }
 OPint OPcmanUnload(const OPchar* key){
 	void* value = NULL;
-	OPasset* asset = (OPasset*)value;
+	OPasset* asset = NULL;
 
 	if(!OPhashMapExists(&OP_CMAN_HASHMAP, key))
 		return OP_CMAN_KEY_NOT_FOUND;
 
 	if(!OPhashMapGet(&OP_CMAN_HASHMAP, key, &value))
 		return OP_CMAN_RETRIEVE_FAILED;
+	asset = (OPasset*)value;
 
-	if(!asset) return OP_CMAN_ASSET_LOAD_FAILED;
+	if(!value) return OP_CMAN_ASSET_LOAD_FAILED;
 
 	if(!asset->Unload(asset->Asset)) return 0;
+	OPhashMapPut(&OP_CMAN_HASHMAP, key, NULL);
 	OPfree(asset); asset = NULL;
 
 	return 1;

@@ -53,6 +53,51 @@ void* entData;
 
 OPfloat vol = 0.05f;
 
+OPassetLoader loaders[] ={
+	{
+		".wav",
+		"Audio/",
+		sizeof(OPaudioSource),
+		(OPint (*)(const OPchar*, void**))OPaudOpenWave,
+		(OPint (*)(void*))OPaudCloseWave
+	},
+	{
+		".ogg",
+		"Audio/",
+		sizeof(OPaudioSource),
+		(OPint (*)(const OPchar*, void**))OPaudOpenOgg,
+		(OPint (*)(void*))OPaudCloseOgg
+	},
+	{
+		".png",
+		"Textures/",
+		sizeof(OPtexture),
+		(OPint (*)(const OPchar*, void**))OPimagePNGLoad,
+		(OPint (*)(void*))OPimagePNGUnload
+	},
+	{
+		".vert",
+		"Shaders/",
+		sizeof(OPshader),
+		(OPint (*)(const OPchar*, void**))OPrenderLoadVertexShader,
+		(OPint (*)(void*))OPrenderUnloadShader
+	},
+	{
+		".frag",
+		"Shaders/",
+		sizeof(OPshader),
+		(OPint (*)(const OPchar*, void**))OPrenderLoadFragmentShader,
+		(OPint (*)(void*))OPrenderUnloadShader
+	},
+	{
+		".opm",
+		"Models/",
+		sizeof(OPmesh),
+		(OPint (*)(const OPchar*, void**))OPMload,
+		(OPint (*)(void*))OPMUnload
+	}
+};
+
 void KeyDown(int key, int action){
 	OPLog("Pizza %d", key);
 
@@ -87,53 +132,8 @@ void Init(){
 	i32 height = 480;
 #endif
 
-	OPassetLoader loaders[] ={
-		{
-			".wav",
-			"Audio/",
-			sizeof(OPaudioSource),
-			(OPint (*)(const OPchar*, void**))OPaudOpenWave,
-			(OPint (*)(void*))OPaudCloseWave
-		},
-		{
-			".ogg",
-			"Audio/",
-			sizeof(OPaudioSource),
-			(OPint (*)(const OPchar*, void**))OPaudOpenOgg,
-			(OPint (*)(void*))OPaudCloseOgg
-		},
-		{
-			".png",
-			"Textures/",
-			sizeof(OPtexture),
-			(OPint (*)(const OPchar*, void**))OPimagePNGLoad,
-			(OPint (*)(void*))OPimagePNGUnload
-		},
-		{
-			".vert",
-			"Shaders/",
-			sizeof(OPshader),
-			(OPint (*)(const OPchar*, void**))OPrenderLoadVertexShader,
-			(OPint (*)(void*))OPrenderUnloadShader
-		},
-		{
-			".frag",
-			"Shaders/",
-			sizeof(OPshader),
-			(OPint (*)(const OPchar*, void**))OPrenderLoadFragmentShader,
-			(OPint (*)(void*))OPrenderUnloadShader
-		},
-		{
-			".opm",
-			"Models/",
-			sizeof(OPmesh),
-			(OPint (*)(const OPchar*, void**))OPMload,
-			(OPint (*)(void*))OPMUnload
-		}
-	};
-
 	OPcmanInit(loaders, 6);
-	
+
 	OPaudInit();
 	OPaudInitThread(10);
 
@@ -143,6 +143,7 @@ void Init(){
 	OPrenderInit(JNIWidth(), JNIHeight());
 #endif
 
+	OPgameStateChange(&State0);
 
 #ifndef OPIFEX_ANDROID//defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 	  	glfwSetKeyCallback(KeyDown);
@@ -153,7 +154,7 @@ void Init(){
         //Song = OPAudio::ReadOgg(songPath);
 
         OPLog("Main: Song loaded");
-
+/*
 		Sound1 = (OPaudioSource*)OPcmanGet("impact.wav");
 		Sound2 = (OPaudioSource*)OPcmanGet("boom.wav");
 		Sound = (OPaudioSource*)OPcmanGet("background.ogg");
@@ -171,7 +172,7 @@ void Init(){
         OPLog("Emitter set\n");
         OPLog("Emitter proc'd\n");
         OPaudPlay();
-
+		*/
 	return;
 }
 
@@ -225,8 +226,7 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 
 	OPint a = 0;
 	OPLog("Test %d %d %d", a, a, a);
-
-	ActiveState = &State0;//OPgameStateCreate(NULL, Update, NULL);
+	//ActiveState = &State0;//OPgameStateCreate(NULL, Update, NULL);
 
 #ifdef OPIFEX_ANDROID
 	return;

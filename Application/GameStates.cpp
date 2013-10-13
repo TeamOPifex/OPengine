@@ -40,6 +40,7 @@ OPeffect tri, post;
 OPcam camera;
 OPtexture* tex, *spec, *norm;
 OPframeBuffer rt;
+OPint PackerCreated = 0;
 
 OPgameState State0 = {
 	State0Enter,
@@ -68,20 +69,24 @@ void State0Enter(OPgameState* last){
 
 	OPcmanPurge();
 
-	packer = OPmeshPackerCreate();
+	if(!PackerCreated){
+		packer = OPmeshPackerCreate();
+		OPmeshPackerBind(&packer);
+		quad = OPquadCreatePacked();
+		OPmeshPackerBuild();
+		PackerCreated = 1;
 
-	OPmeshPackerBind(&packer);
-	quad = OPquadCreatePacked();
-	OPmeshPackerBuild();
+		OPtextureDescription desc = {
+			512, 512,
+			GL_RGBA, GL_UNSIGNED_BYTE,
+			OPtextureLinear, OPtextureLinear,
+			OPtextureClamp, OPtextureClamp
+		};
 
-	OPtextureDescription desc = {
-		512, 512,
-		GL_RGBA, GL_UNSIGNED_BYTE,
-		OPtextureLinear, OPtextureLinear,
-		OPtextureClamp, OPtextureClamp
-	};
+		rt = OPframeBufferCreate(desc);
+	}
 
-	rt = OPframeBufferCreate(desc);
+
 
 	OPLog("GameManager::GameManager - Ready to load model");
 	plane = (OPmesh*)OPcmanGet("BiPlane.opm");
@@ -139,6 +144,7 @@ void State0Enter(OPgameState* last){
 }
 
 void State0Update(OPtimer* time){
+	if(time->Elapsed > 1000) return;
 	t += 0.005f * time->Elapsed;
 
 	OPmat4 world, view, proj;
@@ -197,17 +203,47 @@ void State0Update(OPtimer* time){
 
 	if(t > 6)
 		OPgameStateChange(&State1);
+
+	OPrenderPresent();
 }
 
 void State0Exit(OPgameState* next){
-	
+	//OPcmanUnload("impact.wav");
+	//OPcmanUnload("boom.wav");
+	//OPcmanUnload("background.ogg");
+	//OPcmanUnload("TexturedSpecular.vert");
+	//OPcmanUnload("TexturedSpecular.frag");
+	//OPcmanUnload("TexturedScreen.vert");
+	//OPcmanUnload("Textured.frag");
+	//OPcmanUnload("BiPlane.opm");
+	//OPcmanUnload("steamPlaneSkin.png");
+	//OPcmanUnload("steamPlaneSpec.png");
+	//OPcmanUnload("noneNorm.png");	
 }
 //-----------------------------------------------------------------------------
 void State1Enter(OPgameState* last){
+	OPcmanLoad("impact.wav");
+	OPcmanLoad("boom.wav");
+	OPcmanLoad("background.ogg");
+	OPcmanLoad("TexturedSpecular.vert");
+	OPcmanLoad("TexturedSpecular.frag");
+	OPcmanLoad("TexturedScreen.vert");
+	OPcmanLoad("Textured.frag");
+	OPcmanLoad("BiPlane.opm");
+	OPcmanLoad("steamPlaneSkin.png");
+	OPcmanLoad("steamPlaneSpec.png");
+	OPcmanLoad("noneNorm.png");
+
+	OPcmanPurge();
+
 	t = 0;	
 }
 
 void State1Update(OPtimer* time){
+	if(time->Elapsed > 1000) return;
+
+	t += 0.005f * time->Elapsed;
+	
 	OPmat4 world, view, proj;
 	world = OPmat4();
 	view = OPmat4();
@@ -264,8 +300,23 @@ void State1Update(OPtimer* time){
 
 	if(t > 6)
 		OPgameStateChange(&State0);
+
+	OPrenderPresent();
 }
 
 void State1Exit(OPgameState* next){
-	
+	//OPcmanUnload("impact.wav");
+	//OPcmanUnload("boom.wav");
+	//OPcmanUnload("background.ogg");
+	//OPcmanUnload("TexturedSpecular.vert");
+	//OPcmanUnload("TexturedSpecular.frag");
+	//OPcmanUnload("TexturedScreen.vert");
+	//OPcmanUnload("Textured.frag");
+	//OPcmanUnload("BiPlane.opm");
+	//OPcmanUnload("steamPlaneSkin.png");
+	//OPcmanUnload("steamPlaneSpec.png");
+	//OPcmanUnload("noneNorm.png");	
+
+	OPrenderUnloadEffect(&tri);
+	OPrenderUnloadEffect(&post);
 }

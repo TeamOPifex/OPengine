@@ -87,6 +87,7 @@ OPint OPaudOpenWave(const OPchar* filename, OPaudioSource** source){
 		// allocate space for the source to be returned
 		*source = (OPaudioSource*)OPalloc(sizeof(OPaudioSource));
 		OPmemcpy(*source, &src, sizeof(OPaudioSource));
+
 		return 1;
 	}
 

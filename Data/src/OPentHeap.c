@@ -31,7 +31,7 @@ OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
 	off += entSize * (count + 1);
 
 	// copy 0's into all the indices of the index list
-	OPbzero((OPint*)(segPtr + off), sizeof(OPint) * count);
+	OPbzero((OPint*)((ui8*)segPtr + off), sizeof(OPint) * count);
 	off += sizeof(OPint) * count;
 	heap.InUse = (OPint*)off;
 

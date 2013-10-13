@@ -103,8 +103,7 @@ OPint OPhashMapPut(HashMap *map, const OPchar* key, void* value)
 	OPchar* new_key;
 	void* new_value;
 
-	if (map == NULL) return 0;	
-	if (key == NULL || value == NULL) return 0;
+	if (map == NULL || key == NULL) return 0;	
 	
 	key_len = strlen(key);
 
@@ -114,7 +113,7 @@ OPint OPhashMapPut(HashMap *map, const OPchar* key, void* value)
 
 	// Replace the value if the key already exists
 	if ((pair = get_pair(bucket, key)) != NULL) {
-		OPfree(pair->value);
+		//OPfree(pair->value); Hash should not free things inserted into it
 		pair->value = value;
 		return 1;
 	}

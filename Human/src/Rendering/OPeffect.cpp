@@ -177,6 +177,10 @@ OPint OPrenderLoadEffect  (const OPchar* filename, OPeffect** effect){
 //-----------------------------------------------------------------------------
 // effect destruction
 OPint OPrenderUnloadEffect(OPeffect* effect){
+	OPhashMapDestroy(&effect->Parameters);
+	OPlistDestroy(&effect->Attributes);
+	glDeleteProgram(effect->ProgramHandle);
+	
 	return 1;
 }
 
