@@ -29,7 +29,7 @@ void OPMgenerateTangent(OPvec3* tangent, OPMvertex* v1, OPMvertex* v2);
 OPMData OPMloadData(OPstream* str);
 OPint OPMload(const OPchar* filename, OPmesh** mesh);
 OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh);
-OPint OPMUnload(void* image);
+OPint OPMUnload(void* mesh);
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

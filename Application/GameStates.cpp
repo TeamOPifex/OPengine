@@ -208,17 +208,17 @@ void State0Update(OPtimer* time){
 }
 
 void State0Exit(OPgameState* next){
-	//OPcmanUnload("impact.wav");
-	//OPcmanUnload("boom.wav");
-	//OPcmanUnload("background.ogg");
-	//OPcmanUnload("TexturedSpecular.vert");
-	//OPcmanUnload("TexturedSpecular.frag");
-	//OPcmanUnload("TexturedScreen.vert");
-	//OPcmanUnload("Textured.frag");
-	//OPcmanUnload("BiPlane.opm");
-	//OPcmanUnload("steamPlaneSkin.png");
-	//OPcmanUnload("steamPlaneSpec.png");
-	//OPcmanUnload("noneNorm.png");	
+	OPcmanUnload("impact.wav");
+	OPcmanUnload("boom.wav");
+	OPcmanUnload("background.ogg");
+	OPcmanUnload("TexturedSpecular.vert");
+	OPcmanUnload("TexturedSpecular.frag");
+	OPcmanUnload("TexturedScreen.vert");
+	OPcmanUnload("Textured.frag");
+	OPcmanUnload("BiPlane.opm");
+	OPcmanUnload("steamPlaneSkin.png");
+	OPcmanUnload("steamPlaneSpec.png");
+	OPcmanUnload("noneNorm.png");	
 }
 //-----------------------------------------------------------------------------
 void State1Enter(OPgameState* last){
@@ -235,6 +235,11 @@ void State1Enter(OPgameState* last){
 	OPcmanLoad("noneNorm.png");
 
 	OPcmanPurge();
+
+	plane = (OPmesh*)OPcmanGet("BiPlane.opm");
+	tex  = (OPtexture*)OPcmanGet("steamPlaneSkin.png");
+	spec = (OPtexture*)OPcmanGet("steamPlaneSpec.png");
+	norm = (OPtexture*)OPcmanGet("noneNorm.png");
 
 	t = 0;	
 }
@@ -305,17 +310,17 @@ void State1Update(OPtimer* time){
 }
 
 void State1Exit(OPgameState* next){
-	//OPcmanUnload("impact.wav");
-	//OPcmanUnload("boom.wav");
-	//OPcmanUnload("background.ogg");
-	//OPcmanUnload("TexturedSpecular.vert");
-	//OPcmanUnload("TexturedSpecular.frag");
-	//OPcmanUnload("TexturedScreen.vert");
-	//OPcmanUnload("Textured.frag");
-	//OPcmanUnload("BiPlane.opm");
-	//OPcmanUnload("steamPlaneSkin.png");
-	//OPcmanUnload("steamPlaneSpec.png");
-	//OPcmanUnload("noneNorm.png");	
+	OPcmanUnload("impact.wav");
+	OPcmanUnload("boom.wav");
+	OPcmanUnload("background.ogg");
+	OPcmanUnload("TexturedSpecular.vert");
+	OPcmanUnload("TexturedSpecular.frag");
+	OPcmanUnload("TexturedScreen.vert");
+	OPcmanUnload("Textured.frag");
+	OPcmanUnload("BiPlane.opm");
+	OPcmanUnload("steamPlaneSkin.png");
+	OPcmanUnload("steamPlaneSpec.png");
+	OPcmanUnload("noneNorm.png");	
 
 	OPrenderUnloadEffect(&tri);
 	OPrenderUnloadEffect(&post);

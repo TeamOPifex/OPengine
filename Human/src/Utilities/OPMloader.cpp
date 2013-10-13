@@ -330,6 +330,12 @@ OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh) {
 	return 1;
 }
 
-OPint OPMUnload(void* image){
+OPint OPMUnload(void* mesh){
+	OPmesh* m = (OPmesh*)mesh;
+
+	OPrenderDelBuffer(&m->IndexBuffer);
+	OPrenderDelBuffer(&m->VertexBuffer);
+	OPfree(m);
+
 	return 1;
 }
