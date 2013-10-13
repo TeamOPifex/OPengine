@@ -98,8 +98,10 @@ OPint OPaudOpenWave(const OPchar* filename, OPaudioSource** source){
 OPint OPaudOpenOgg(const OPchar* filename, OPaudioSource** source){
 	// Open Ogg Stream
 	ov_callbacks	sCallbacks;
-	OggVorbis_File	*sOggVorbisFile = new OggVorbis_File();
+	OggVorbis_File*	sOggVorbisFile = (OggVorbis_File*)OPalloc(sizeof(OggVorbis_File));
 	vorbis_info		*psVorbisInfo;
+
+	*sOggVorbisFile = OggVorbis_File();
 
 	sCallbacks.read_func = ov_read_func;
 	sCallbacks.seek_func = ov_seek_func;
