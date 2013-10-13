@@ -59,6 +59,7 @@ include $(BUILD_STATIC_LIBRARY)
 ##############
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libopifex-core
+LOCAL_CFLAGS := -D@OPIFEX_OS@
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 #CORE_LIST_C := $(wildcard $(PROJECT_PATH)/Core/src/*.c)
@@ -81,6 +82,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE    := libopifex-data
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
+LOCAL_CFLAGS := -D@OPIFEX_OS@
 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Data/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Data/src/*.c)
@@ -98,6 +100,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE    := libopifex-math
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
+LOCAL_CFLAGS := -D@OPIFEX_OS@
 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Math/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Math/src/*.c)
@@ -113,6 +116,7 @@ include $(BUILD_STATIC_LIBRARY)
 ##############
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libopifex-performance
+LOCAL_CFLAGS := -D@OPIFEX_OS@
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 
@@ -133,6 +137,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE    := libopifex-human
 LOCAL_LDLIBS    := -llog -lGLESv2 -lOpenSLES
 LOCAL_CFLAGS    := -Werror
+LOCAL_CFLAGS 	+= -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/Human/include/Utilities/
@@ -177,6 +182,7 @@ LOCAL_ALLOW_UNDEFINED_SYMBOLS := false
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 LOCAL_CFLAGS := -I $(PROJECT_PATH)/Human/include/Utilities/
 LOCAL_CFLAGS += -I $(PROJECT_PATH)/Human/include/Utilities/vorbis/
+LOCAL_CFLAGS += -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2
 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Application/*.cpp)
 

@@ -36,6 +36,11 @@ elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX32")
 
 endif()
 
+add_definitions(-D${OPIFEX_OS})
+if( "${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID" )
+	add_definitions(-DOPIFEX_OPENGL_ES)
+	add_definitions(-DOPIFEX_OPENGL_ES_2)
+endif()
 
 target_link_libraries(4_Performance
 	${ALL_LIBS}

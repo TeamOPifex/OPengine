@@ -2,7 +2,6 @@
 #ifndef OPAUD_AUDIO
 #define OPAUD_AUDIO
 
-#include "Core/include/Target.h"
 #include "Core/include/Types.h"
 #include "Core/include/MathHelpers.h"
 #include "Core/include/DynamicMemory.h"

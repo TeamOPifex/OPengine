@@ -121,6 +121,7 @@ elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX32")
 
 endif()
 	
+add_definitions(-D${OPIFEX_OS})
 target_link_libraries(5_Human
 	${ALL_LIBS}
 	${OGG_LIBRARY}

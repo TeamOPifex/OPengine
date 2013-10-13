@@ -4,7 +4,6 @@
 #include <stdio.h>
 
 #if defined(OPIFEX_ANDROID) && defined(__cplusplus)
-#include "./../../Core/include/Target.h"
 #include "./../../Core/include/Types.h"
 #include "./../../Core/include/DynamicMemory.h"
 #else
