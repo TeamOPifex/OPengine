@@ -2,7 +2,6 @@
 #ifndef OPEngine_Core_Timer
 #define OPEngine_Core_Timer
 
-#include "Target.h" // defines the current build target
 #include "Types.h"
 #include "DynamicMemory.h"
 

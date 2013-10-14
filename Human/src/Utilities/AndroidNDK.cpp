@@ -1,4 +1,3 @@
-#include "./Core/include/Target.h"
 
 #ifdef OPIFEX_ANDROID
 

@@ -48,13 +48,6 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID" )
 	configure_file(		${PROJECT_SOURCE_DIR}/Android/Make/Application.mk		${PROJECT_BINARY_DIR}/jni/Application.mk	)
 	configure_file(		${PROJECT_SOURCE_DIR}/Android/Make/strings.xml		${PROJECT_BINARY_DIR}/res/values/strings.xml	)
 	
-		
-	configure_file (
-	  "${PROJECT_SOURCE_DIR}/Core/Target.h.in"
-	  "${PROJECT_SOURCE_DIR}/Core/Target.h"
-	)
-	
-	
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Audio" ${PROJECT_BINARY_DIR}/assets/Audio)
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Models" ${PROJECT_BINARY_DIR}/assets/Models)
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Textures" ${PROJECT_BINARY_DIR}/assets/Textures)

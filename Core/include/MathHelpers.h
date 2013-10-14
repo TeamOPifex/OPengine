@@ -2,7 +2,6 @@
 #ifndef OPEngine_Core_MathHelpers
 #define OPEngine_Core_MathHelpers
 
-#include "Target.h"
 #include "Types.h"
 
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)	// linux math libs

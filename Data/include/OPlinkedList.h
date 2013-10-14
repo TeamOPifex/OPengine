@@ -5,7 +5,6 @@
 #define OPEngine_Data_LinkedList
 
 #include "./../../Core/include/Types.h"
-#include "./../../Core/include/Target.h"
 #include "./../../Core/include/DynamicMemory.h"
 
 #if defined(OPIFEX_ANDROID) && defined(__cplusplus)

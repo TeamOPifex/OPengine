@@ -2,7 +2,6 @@
 #ifndef OPEngine_Core_Types
 #define OPEngine_Core_Types
 
-#include "Target.h"
 #if defined(OPIFEX_ANDROID)
 #include <jni.h>
 #endif

@@ -33,6 +33,8 @@ elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX32")
 		${PROJECT_BINARY_DIR}/Binaries/linux32/)
 
 endif()
+
+add_definitions(-D${OPIFEX_OS})
 	
 target_link_libraries(3_Math
 	${ALL_LIBS}

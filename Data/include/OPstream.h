@@ -2,7 +2,6 @@
 
 #pragma once
 #include "./../../Core/include/Types.h"
-#include "./../../Core/include/Target.h"
 
 #ifndef OPEngine_Data_Stream
 #define OPEngine_Data_Stream

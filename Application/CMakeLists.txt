@@ -65,6 +65,8 @@ target_link_libraries(8_Application
 	${LIBPNG_LIBRARY}
 )
 
+add_definitions(-D${OPIFEX_OS})
+
 SET_TARGET_PROPERTIES(8_Application PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(8_Application PROPERTIES 
 	OUTPUT_NAME "Application"

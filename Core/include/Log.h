@@ -1,6 +1,5 @@
 #pragma once
 #include "Types.h"
-#include "Target.h"
 #include <stdarg.h>
 
 #ifdef __cplusplus
