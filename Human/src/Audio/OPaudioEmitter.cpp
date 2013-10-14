@@ -109,8 +109,8 @@ OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint flags){
 
 	// if this emitter will be threaded
 	if(flags & EMITTER_THREADED){
-		OPint index = -1;
-		OPentHeapActivate((&OPAUD_REG_EMITTERS), &index);
+		OPuint index = -1;
+		OPentHeapActivate(&OPAUD_REG_EMITTERS, &index);
 		if(index >= 0){
 			((OPaudioEmitter*)OPAUD_REG_EMITTERS.Entities)[index] = emitter;
 			out = &((OPaudioEmitter*)OPAUD_REG_EMITTERS.Entities)[index]; 
@@ -137,7 +137,7 @@ void OPaudDestroyEmitter(OPaudioEmitter* emitter){
 	// we need to put it back in the dead heap
 	if(emitter->Flags & EMITTER_THREADED){
 		OPuint index = ((OPuint)emitter - (OPuint)OPAUD_REG_EMITTERS.Entities) / sizeof(OPaudioEmitter);
-		OPentHeapKill(OPAUD_REG_EMITTERS, index);
+		OPentHeapKill(&OPAUD_REG_EMITTERS, index);
 	}
 	else{
 		OPfree(emitter);
@@ -147,8 +147,8 @@ void OPaudDestroyEmitter(OPaudioEmitter* emitter){
 OPaudioEmitter* OPaudGetEmitter(OPaudioSource* src, OPint flags){
 	OPaudioEmitter* out = NULL;
 
-	OPint index = -1;
-	OPentHeapActivate((&OPAUD_REG_EMITTERS), &index);
+	OPuint index = -1;
+	OPentHeapActivate(&OPAUD_REG_EMITTERS, &index);
 	if(index >= 0){
 		out = &((OPaudioEmitter*)OPAUD_REG_EMITTERS.Entities)[index]; 
 		out->Flags = flags;
@@ -160,7 +160,7 @@ OPaudioEmitter* OPaudGetEmitter(OPaudioSource* src, OPint flags){
 //-----------------------------------------------------------------------------
 void OPaudRecycleEmitter(OPaudioEmitter* emitter){
 	OPuint index = ((OPuint)emitter - (OPuint)OPAUD_REG_EMITTERS.Entities) / sizeof(OPaudioEmitter);
-	OPentHeapKill(OPAUD_REG_EMITTERS, index);
+	OPentHeapKill(&OPAUD_REG_EMITTERS, index);
 }
 //-----------------------------------------------------------------------------
 void OPaudEnqueueBuffer(ui8* buffer, OPint length){

@@ -18,7 +18,25 @@ OPfloat OPquadVertData[] = {
 	 1,  0,
 
 	 1, -1, 0,
-	 0,  0,   1
+	 0,  0
+};
+
+OPfloat OPquadVertNormData[] = {
+	 1,  1, 0,
+	 0,  0, -1, 
+	 0,  1,
+
+	-1,  1, 0,
+	 0,  0, -1,
+	 1,  1,
+
+	-1, -1, 0,
+	 0,  0, -1,
+	 1,  0,
+
+	 1, -1, 0,
+	 0,  0, -1,
+	 0,  0
 };
 
 ui16 OPquadIndexData[] = {
@@ -37,7 +55,7 @@ OPmesh OPquadCreate(){
 	OPmesh mesh = OPrenderCreateMesh();
 	OPrenderBindMesh(&mesh);
 	OPrenderBuildMesh(
-		sizeof(OPfloat) * 6, sizeof(ui16),
+		sizeof(OPfloat) * 5, sizeof(ui16),
 		4, 6,
 		OPquadVertData, OPquadIndexData
 	);
@@ -46,8 +64,27 @@ OPmesh OPquadCreate(){
 //-----------------------------------------------------------------------------
 OPmeshPacked OPquadCreatePacked(){
 	return OPrenderCreateMeshPacked(
-		sizeof(OPfloat) * 6, sizeof(ui16),
+		sizeof(OPfloat) * 5, sizeof(ui16),
 		4, 6,
 		OPquadVertData, OPquadIndexData
+	);
+}
+//-----------------------------------------------------------------------------
+OPmesh OPquadNormCreate(){
+	OPmesh mesh = OPrenderCreateMesh();
+	OPrenderBindMesh(&mesh);
+	OPrenderBuildMesh(
+		sizeof(OPfloat) * 8, sizeof(ui16),
+		4, 6,
+		OPquadVertNormData, OPquadIndexData
+	);
+	return mesh;
+}
+//-----------------------------------------------------------------------------
+OPmeshPacked OPquadNormCreatePacked(){
+	return OPrenderCreateMeshPacked(
+		sizeof(OPfloat) * 8, sizeof(ui16),
+		4, 6,
+		OPquadVertNormData, OPquadIndexData
 	);
 }

@@ -73,7 +73,7 @@ void OPrenderDrawBufferIndexed(ui32 offset){
 			offset + OPRENDER_CURR_IB->ElementCount,
 			OPRENDER_CURR_IB->ElementCount,
 			GL_UNSIGNED_SHORT,
-			(void*)0
+			(void*)offset
 		);
 #endif
 }
