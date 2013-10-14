@@ -24,7 +24,7 @@ extern void (*OPinitialize)();
  *	and scene rendering.
  * @param timer OPtimer object representing current time measurments
  */
-extern void (*OPupdate)(OPtimer*);
+extern int(*OPupdate)(OPtimer*);
 //----------------------------------------------------------------------------
 /**
  * OPdestroy - Game engine termination.

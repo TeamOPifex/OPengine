@@ -2,6 +2,6 @@
 
 void (*OPinitialize)();
 
-void (*OPupdate)(OPtimer*);
+int(*OPupdate)(OPtimer*);
 
 void (*OPdestroy)();

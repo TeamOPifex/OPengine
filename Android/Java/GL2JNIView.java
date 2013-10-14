@@ -238,6 +238,10 @@ class GL2JNIView extends GLSurfaceView {
 		rend = new Renderer(_assetManager);
         setRenderer(rend);
     }
+	
+	public void onStop(){
+		rend.Destroy();
+	}
 
     private static class ContextFactory implements GLSurfaceView.EGLContextFactory {
         private static int EGL_CONTEXT_CLIENT_VERSION = 0x3098;
@@ -472,7 +476,10 @@ class GL2JNIView extends GLSurfaceView {
 		}
 		
         public void onDrawFrame(GL10 gl) {
-            GL2JNILib.step(_assetManager);
+            if(GL2JNILib.step(_assetManager) > 0) {
+				GL2JNILib.destroy();
+				System.exit(0);
+			}
         }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -482,5 +489,10 @@ class GL2JNIView extends GLSurfaceView {
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             // Do nothing.
         }
+		
+		public void Destroy() {
+			GL2JNILib.destroy();
+			System.exit(0);
+		}
     }
 }
