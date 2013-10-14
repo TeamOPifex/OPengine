@@ -50,7 +50,12 @@ void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, ui32 count, c
 }
 //-----------------------------------------------------------------------------
 void OPrenderBindBuffer(OPrenderBuffer* buffer){
+	
+	CheckError("OPrenderBindBuffer:Error 0");
 	glBindBuffer(buffer->Type, buffer->Handle);
+	if(CheckError("OPrenderBindBuffer:Error 1")) {
+		OPLog("Buffer Failed to Bind - Type (%d) / Handle (%d)", buffer->Type, buffer->Handle);
+	}
 	if(buffer->Type == OPvertexBuffer){
 		OPRENDER_CURR_VB = buffer;
 	}

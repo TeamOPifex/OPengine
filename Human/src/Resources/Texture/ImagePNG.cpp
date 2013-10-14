@@ -19,6 +19,7 @@
 #endif
 
 OPint OPimagePNGLoad(const OPchar* filename, OPtexture** image){
+	CheckError("OPimagePNGLoad:Error 0");
 	ui32 error;
 	ui8* data;
 	ui32 width, height;
@@ -53,6 +54,8 @@ OPint OPimagePNGLoad(const OPchar* filename, OPtexture** image){
 	OPstreamDestroy(str);
 
 	*image = tex;
+
+	CheckError("OPimagePNGLoad:Error 7");
 
 	return 1;
 }

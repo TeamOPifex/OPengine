@@ -68,6 +68,8 @@ OPint OPrenderLoadVertexShader(const OPchar* filename, OPshader** shader){
 	*shader = (OPshader*)OPalloc(sizeof(OPshader));
 	**shader = vertex; // copy the shader handle
 
+	CheckError("GLShader::Error 6");
+
 	return 1;
 }
 //-----------------------------------------------------------------------------
@@ -110,6 +112,7 @@ OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader){
 	// if we made it this far, everything is a-ok
 	*shader = (OPshader*)OPalloc(sizeof(OPshader));
 	**shader = frag; // copy the shader handle
+	CheckError("GLShader::Error 6");
 
 	return 1;
 }
@@ -129,18 +132,30 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 		-1,
 		 0
 	};
-	
+	CheckError("OPrenderCreateEffect:Error 1");
 	effect.Parameters = OPhashMapCreate(2);
 	effect.Attributes = OPlistCreate(AttribCount, sizeof(OPshaderAttribute));
+	CheckError("OPrenderCreateEffect:Error 2");
 
 	effect.ProgramHandle = glCreateProgram();
+	CheckError("OPrenderCreateEffect:Error 3");
 
 	glAttachShader(effect.ProgramHandle, vert);
+	CheckError("OPrenderCreateEffect:Error 4");
 	glAttachShader(effect.ProgramHandle, frag);
+	CheckError("OPrenderCreateEffect:Error 5");
 	glLinkProgram(effect.ProgramHandle);
+	CheckError("OPrenderCreateEffect:Error 6");
 
 	OPint status;
 	glGetProgramiv(effect.ProgramHandle, GL_LINK_STATUS, &status);
+
+	if(status == GL_FALSE) {
+		OPLog("FAILED to link Shader Program");
+	}
+	
+	OPLog("Shader Status: %d", status);
+	CheckError("OPrenderCreateEffect:Error 7");
 
 	// create, and copy attributes into list
 	for(OPint i = 0; i < AttribCount; i++){
@@ -155,6 +170,9 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 			effect.ProgramHandle,
 			Attributes[i].Name
 		);
+		if(CheckError("OPrenderCreateEffect:Error 7.5 - Attrib Could not be found.") > 0) {
+			OPLog("Handle: %d, Attribute: %s", effect.ProgramHandle, Attributes[i].Name);
+		}
 
 		// TODO add more
 		switch(Attributes[i].Type){
@@ -166,7 +184,8 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 		//OPLog("%s = %d loc %d\n", Attributes[AttribCount], AttribCount, *loc);
 		OPlistPush(effect.Attributes, (ui8*)&attr);
 	}
-
+	
+	CheckError("OPrenderCreateEffect:Error 8");
 	return effect;
 }
 //-----------------------------------------------------------------------------
