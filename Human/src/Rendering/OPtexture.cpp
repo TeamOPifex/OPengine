@@ -1,4 +1,5 @@
 #include "./Human/include/Rendering/OPtexture.h"
+#include "./Human/include/Utilities/Errors.h"
 
 OPtexture* OPRENDER_CURR_TEX;
 
@@ -14,18 +15,25 @@ OPtexture OPtextureCreate(OPtextureDescription desc){
 		desc,
 		0
 	};
-
+	CheckError("OPtextureCreate::Error 0");
 	glGenTextures(1, &tex.Handle);
+	CheckError("OPtextureCreate::Error 1");
 	glBindTexture(GL_TEXTURE_2D, tex.Handle);
+	CheckError("OPtextureCreate::Error 2");
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, desc.MagFilter);
+	CheckError("OPtextureCreate::Error 3");
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, desc.MinFilter);
+	CheckError("OPtextureCreate::Error 4");
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, desc.WrapX);
+	CheckError("OPtextureCreate::Error 5");
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, desc.WrapY);
+	CheckError("OPtextureCreate::Error 6");
 #ifndef OPIFEX_ANDROID
 	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 #else
-	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP_HINT, GL_TRUE);
+	//glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP_HINT, GL_TRUE);
 #endif
+	CheckError("OPtextureCreate::Error 7");
 
 	return tex;
 }

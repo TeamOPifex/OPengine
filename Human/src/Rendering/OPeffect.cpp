@@ -25,7 +25,8 @@ OPint OPrenderLoadVertexShader(const OPchar* filename, OPshader** shader){
 	OPLog("OPshader BEGINNING load of %s", filename);
 	OPstream* source = OPreadFile(filename);
 	OPLog("OPshader ENDING load of %s", filename);
-
+	
+	CheckError("GLShader::Error 0");
 	OPLog("OPshader shader CREATING");
 	vertex = glCreateShader(OPvertexShader);
 	OPLog("OPshader shader CREATED");
