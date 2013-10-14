@@ -47,6 +47,8 @@ extern "C" {
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPmesh       OPquadCreate();
 OPmeshPacked OPquadCreatePacked();
+OPmesh       OPquadNormCreate();
+OPmeshPacked OPquadNormCreatePacked();
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

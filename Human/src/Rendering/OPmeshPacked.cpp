@@ -15,7 +15,7 @@ OPmeshPacked OPrenderCreateMeshPacked(
 	OPmeshPacker* packer = OPRENDER_CURR_PACKER;
 
 	OPmeshPacked out = {
-		packer->indexOffset,
+		packer->indexOffset / indSize,
 		indCount,
 		indCount
 	};

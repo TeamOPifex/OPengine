@@ -22,7 +22,6 @@ OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
 		NULL,
 		NULL,
 		0,
-		1,
 		0
 	};
 	heap.Free = free;
@@ -31,9 +30,9 @@ OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
 	off += entSize * (count + 1);
 
 	// copy 0's into all the indices of the index list
-	OPbzero((OPint*)((ui8*)segPtr + off), sizeof(OPint) * count);
+	heap.InUse = (OPint*)((ui8*)segPtr + off);
+	OPbzero(heap.InUse, sizeof(OPint) * count);
 	off += sizeof(OPint) * count;
-	heap.InUse = (OPint*)off;
 
 	// create the heap
 	heap.Free._indices = (OPint*)((ui8*)segPtr + off);
