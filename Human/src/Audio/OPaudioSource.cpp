@@ -247,9 +247,7 @@ OPint OPaudReadOgg (OPaudioSource* src, ui64* position, ui8* dest, ui32 len){
 		if(!len) break;
 		decoded += len;
 	}
-
-	printf("\n");
-
+	
 	return decoded;
 }
 //-----------------------------------------------------------------------------

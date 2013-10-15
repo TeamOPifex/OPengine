@@ -29,7 +29,7 @@ OPtexture OPtextureCreate(OPtextureDescription desc){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, desc.WrapY);
 	CheckError("OPtextureCreate::Error 6");
 #ifndef OPIFEX_ANDROID
-	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+	//glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 #else
 	//glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP_HINT, GL_TRUE);
 #endif

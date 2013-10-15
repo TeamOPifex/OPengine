@@ -46,6 +46,9 @@ inline void OPvec3dot(OPfloat* dst, OPvec3* a, OPvec3* b){
 
 inline void OPvec3norm(OPvec3* dst, OPvec3* a){
 	OPfloat l = sqrt(a->x * a->x + a->y * a->y + a->z * a->z);
+	if(l == 0) {
+		return;
+	}
 	dst->x = a->x / l;
 	dst->y = a->y / l;
 	dst->z = a->z / l;

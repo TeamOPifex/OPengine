@@ -15,106 +15,6 @@ OPint OPMhasFeature(ui32 features, ui32 feature) {
 	return features & feature;
 }
 
-//void OPgenerateTangents(OPMData* data)
-//{
-//	OPvec3 *tan1 = new OPvec3[data->vertexCount];
-//    OPvec3 *tan2 = new OPvec3[data->vertexCount];
-//    
-//	for (ui16 a = 0; a < data->indexCount; a+=3)
-//    {
-//		ui16 i1 = ((ui16*)data->indices)[a + 0];
-//        ui16 i2 = ((ui16*)data->indices)[a + 1];
-//        ui16 i3 = ((ui16*)data->indices)[a + 2];
-//        
-//		OPvec3& v1 = ((OPMvertex*)data->vertices)[i1].Position;
-//        OPvec3& v2 = ((OPMvertex*)data->vertices)[i2].Position;
-//        OPvec3& v3 = ((OPMvertex*)data->vertices)[i3].Position;
-//        
-//		OPvec2& w1 = ((OPMvertex*)data->vertices)[i1].TexCoord;
-//        OPvec2& w2 = ((OPMvertex*)data->vertices)[i2].TexCoord;
-//        OPvec2& w3 = ((OPMvertex*)data->vertices)[i3].TexCoord;
-//        
-//        OPfloat x1 = v2.x - v1.x;
-//        OPfloat x2 = v3.x - v1.x;
-//        OPfloat y1 = v2.y - v1.y;
-//        OPfloat y2 = v3.y - v1.y;
-//        OPfloat z1 = v2.z - v1.z;
-//        OPfloat z2 = v3.z - v1.z;
-//        
-//        OPfloat s1 = w2.x - w1.x;
-//        OPfloat s2 = w3.x - w1.x;
-//        OPfloat t1 = w2.y - w1.y;
-//        OPfloat t2 = w3.y - w1.y;
-//        
-//        OPfloat r = 1.0F / (s1 * t2 - s2 * t1);
-//        OPvec3 sdir;
-//		sdir.x = (t2 * x1 - t1 * x2) * r;
-//		sdir.y = (t2 * y1 - t1 * y2) * r;
-//		sdir.z = (t2 * z1 - t1 * z2) * r;
-//
-//        OPvec3 tdir;
-//		tdir.x = (s1 * x2 - s2 * x1) * r;
-//		tdir.y = (s1 * y2 - s2 * y1) * r;
-//		tdir.z = (s1 * z2 - s2 * z1) * r;
-//        
-//		OPvec3add(&tan1[i1], &tan1[i1], &sdir);
-//		OPvec3add(&tan1[i2], &tan1[i2], &sdir);
-//		OPvec3add(&tan1[i3], &tan1[i3], &sdir);
-//        
-//		OPvec3add(&tan2[i1], &tan2[i1], &tdir);
-//		OPvec3add(&tan2[i2], &tan2[i2], &tdir);
-//		OPvec3add(&tan2[i3], &tan2[i3], &tdir);
-//    }
-//    
-//	for (ui32 a = 0; a < data->vertexCount; a++)
-//    {
-//		OPvec3& n = ((OPMvertex*)data->vertices)[a].Normal;
-//        OPvec3& t = tan1[a];
-//        
-//        // Gram-Schmidt orthogonalize
-//		OPfloat dot;
-//		OPvec3dot(&dot, &n, &t);
-//		OPvec3scl(&n, dot);
-//		OPvec3sub(&((OPMvertex*)data->vertices)[a].Tangent, &t, &n);
-//
-//        OPvec3norm(&((OPMvertex*)data->vertices)[a].Tangent, &((OPMvertex*)data->vertices)[a].Tangent);
-//
-//        // Calculate handedness
-//        //tangent[a].w = (Dot(Cross(n, t), tan2[a]) < 0.0F) ? -1.0F : 1.0F;
-//    }
-//    
-//    delete[] tan1;
-//    delete[] tan2;
-//}
-//
-//void OPCalculateTangentSpace(OPMData* data) {
-//
-//	for (ui16 a = 0; a < data->indexCount; a+=3) {		
-//		ui16 i1 = ((ui16*)data->indices)[a + 0];
-//        ui16 i2 = ((ui16*)data->indices)[a + 1];
-//        ui16 i3 = ((ui16*)data->indices)[a + 2];
-//        
-//		OPMvertex& v1 = ((OPMvertex*)data->vertices)[i1];
-//        OPMvertex& v2 = ((OPMvertex*)data->vertices)[i2];
-//        OPMvertex& v3 = ((OPMvertex*)data->vertices)[i3];
-//
-//		float x1 = v2.Position.x - v1.Position.x;
-//		float y1 = v2.Position.y - v1.Position.y;
-//		float z1 = v2.Position.z - v1.Position.z;	
-//
-//		float u1 = v2.TexCoord.x - v1.TexCoord.x;
-//
-//		OPvec3 tangent;
-//		tangent.x = x1 / u1;
-//		tangent.y = y1 / u1;
-//		tangent.z = z1 / u1;
-//		OPvec3norm(&tangent, &tangent);
-//		
-//		v1.Tangent = tangent;
-//		v2.Tangent = tangent;
-//		v3.Tangent = tangent;
-//	}
-//}
 
 void OPCalculateTangents(OPMData* data) {
 	for (ui16 a = 0; a < data->indexCount; a+=3) {		
@@ -137,7 +37,7 @@ void OPCalculateTangents(OPMData* data) {
 		v3.Tangent.z = 0;
 	}
 
-	for (ui16 a = 0; a < data->indexCount; a+=3) {		
+	for (ui16 a = 0; a < data->indexCount; a+=3) {	
 		ui16 i1 = ((ui16*)data->indices)[a + 0];
         ui16 i2 = ((ui16*)data->indices)[a + 1];
         ui16 i3 = ((ui16*)data->indices)[a + 2];
@@ -163,7 +63,6 @@ void OPCalculateTangents(OPMData* data) {
 		vecTangent.x = c3c1b * v2v1.x - c2c1b * v3v1.x;
 		vecTangent.y = c3c1b * v2v1.y - c2c1b * v3v1.y;
 		vecTangent.z = c3c1b * v2v1.z - c2c1b * v3v1.z;
-		//Vector vecBitangent = Vector(-c3c1t * v2v1.x + c2c1t * v3v1.x, -c3c1t * v2v1.y + c2c1t * v3v1.y, -c3c1t * v2v1.z + c2c1t * v3v1.z);
 
 		OPvec3 vecSmoothBitangent;
 		OPvec3cross(&vecSmoothBitangent, &vecNormal, &vecTangent);
@@ -196,6 +95,7 @@ OPMData OPMloadData(OPstream* str) {
 	ui16 version = OPread_ui16(str);
 	ui32 features = OPread_ui32(str);
 	ui32 verticeCount = OPread_ui32(str);
+
 
 	OPMvertex* vertices = (OPMvertex*)OPalloc(sizeof(OPMvertex) * verticeCount);
 
@@ -250,23 +150,7 @@ OPMData OPMloadData(OPstream* str) {
 		indices[i * 3 + 1] = OPread_ui16(str);
 		indices[i * 3 + 2] = OPread_ui16(str);
 	}
-	//	OPMvertex* vert_one;
-	//	OPMvertex* vert_two;
-	//	OPvec3* tangent;
-	//	for(ui32 i = 0; i < indicesCount; i+=3){
-	//		vert_one = &vertices[indices[i] + 0];
-	//		vert_two = &vertices[indices[i] + 1];
-	//		OPMgenerateTangent(&vert_one->Tangent, vert_one, vert_two);
 
-	//		vert_one = &vertices[indices[i] + 1];
-	//		vert_two = &vertices[indices[i] + 2];
-	//		OPMgenerateTangent(&vert_one->Tangent, vert_one, vert_two);
-
-	//		vert_one = &vertices[indices[i] + 2];
-	//		vert_two = &vertices[indices[i] + 0];
-	//		OPMgenerateTangent(&vert_one->Tangent, vert_one, vert_two);
-	//	}
-	//}
 
 	OPMData data;
 	data.indices = indices;
@@ -285,9 +169,12 @@ OPMData OPMloadData(OPstream* str) {
 }
 
 OPint OPMload(const OPchar* filename, OPmesh** mesh) {
+	OPLog("Reading File Data");
 	OPstream* str = OPreadFile(filename);
+	OPLog("Reading OPMloadData");
 	OPMData data = OPMloadData(str);
 
+	OPLog("Creating vertex and buffers");
 	// Create Vertex & Index Buffers for Mesh
 	OPmesh temp = OPrenderCreateMesh();
 	OPrenderBindMesh(&temp);
@@ -296,6 +183,8 @@ OPint OPMload(const OPchar* filename, OPmesh** mesh) {
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
 	);
+
+	OPLog("Disposing");
 
 	// Dispose of allocated buffers
 	OPfree(data.vertices);
