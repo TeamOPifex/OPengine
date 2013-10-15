@@ -129,7 +129,7 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 		 0
 	};
 	
-	effect.Parameters = OPhashMapCreate(2);
+	effect.Parameters = OPhashMapCreate(32);
 	effect.Attributes = OPlistCreate(AttribCount, sizeof(OPshaderAttribute));
 
 	effect.ProgramHandle = glCreateProgram();
@@ -140,6 +140,7 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 
 	OPint status;
 	glGetProgramiv(effect.ProgramHandle, GL_LINK_STATUS, &status);
+	glUseProgram(effect.ProgramHandle);
 
 	// create, and copy attributes into list
 	for(OPint i = 0; i < AttribCount; i++){
@@ -150,10 +151,14 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 			(void*)effect.Stride
 		};
 
-		attr.Name = (OPchar*)glGetAttribLocation(
+		ui32 loc = glGetAttribLocation(
 			effect.ProgramHandle,
 			Attributes[i].Name
 		);
+		attr.Name = (OPchar*)loc;
+
+		OPLog("Getting attr: %s\n", Attributes[i].Name);
+		CheckError("OPrenderCreateEffect(): Getting attr location.");
 
 		// TODO add more
 		switch(Attributes[i].Type){
@@ -189,7 +194,8 @@ OPint OPrenderBindEffect(OPeffect* effect){
 		OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
 		for(;attrCount--;){
 			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
-			glDisableVertexAttribArray((ui32)attr->Name);
+			ui32 loc = (ui32)attr->Name;
+			glDisableVertexAttribArray(loc);
 		}
 	}
 
@@ -200,10 +206,10 @@ OPint OPrenderBindEffect(OPeffect* effect){
 	OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
 	for(;attrCount--;){
 		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
-
-		glEnableVertexAttribArray((ui32)attr->Name);
+		ui32 loc = (ui32)attr->Name;
+		glEnableVertexAttribArray(loc);
 		glVertexAttribPointer(
-			(ui32)attr->Name,
+			loc,
 			attr->Elements,
 			attr->Type,
 			GL_FALSE,

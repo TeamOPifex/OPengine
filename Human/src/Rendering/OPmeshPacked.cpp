@@ -15,28 +15,27 @@ OPmeshPacked OPrenderCreateMeshPacked(
 	OPmeshPacker* packer = OPRENDER_CURR_PACKER;
 
 	OPmeshPacked out = {
-		packer->indexOffset / indSize,
+		packer->indexOffset,
 		indCount,
 		indCount
 	};
 
 	OPmeshPackerAddVB(vertSize, vertices, vertCount);
 	OPmeshPackerAddIB(indSize, indices, indCount);
-
+	packer->vertexElementOffset += vertCount;
+	
 	return out;
 }
 //-----------------------------------------------------------------------------
 void OPrenderMeshPacked(OPmeshPacked* mesh){
-#ifdef OPIFEX_ANDROID
-		glDrawElements(GL_TRIANGLES, OPRENDER_CURR_IB->ElementCount, GL_UNSIGNED_SHORT, (void*)(0 + mesh->offset));
-#else
-	glDrawRangeElements(
-		GL_TRIANGLES,
-		mesh->offset,
-		mesh->offset + mesh->elementCount,
-		mesh->elementCount,
-		GL_UNSIGNED_SHORT,
-		(void*)0
-	);
-#endif
+		glDrawElements(GL_TRIANGLES, mesh->elementCount, GL_UNSIGNED_SHORT, (void*)(0 + mesh->offset));
+	//glDrawRangeElements(
+	//	GL_TRIANGLES,
+	//	mesh->offset / 2,
+	//	mesh->offset / 2 + mesh->elementCount,
+	//	mesh->elementCount,
+	//	GL_UNSIGNED_SHORT,
+	//	(void*)NULL
+	//);
+
 }

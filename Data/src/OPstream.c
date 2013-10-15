@@ -60,8 +60,9 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 	}
 
 	// copy new data into the stream
-	//for(i = 0; i < size; D[ptr + i] = d[i++]);
-	OPmemcpy(&(stream->Data[ptr]), d, size);
+	for(i = 0; i < size;)
+		stream->Data[ptr + i] = d[i++];
+	//OPmemcpy(&(stream->Data[ptr]), d, size);
 	stream->_pointer += size;
 
 	return 1;

@@ -64,16 +64,5 @@ void OPrenderDrawBuffer(ui32 offset){
 }
 //-----------------------------------------------------------------------------
 void OPrenderDrawBufferIndexed(ui32 offset){
-#ifdef OPIFEX_ANDROID
-		glDrawElements(GL_TRIANGLES, OPRENDER_CURR_IB->ElementCount, GL_UNSIGNED_SHORT, (void*)(0 + offset));
-#else
-		glDrawRangeElements(
-			GL_TRIANGLES,
-			offset,
-			offset + OPRENDER_CURR_IB->ElementCount,
-			OPRENDER_CURR_IB->ElementCount,
-			GL_UNSIGNED_SHORT,
-			(void*)offset
-		);
-#endif
+	glDrawElements(GL_TRIANGLES, OPRENDER_CURR_IB->ElementCount, GL_UNSIGNED_SHORT, (void*)(0 + offset));
 }

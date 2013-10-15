@@ -1,6 +1,6 @@
 #version 330 core
 #define PI 3.14159
-#define SAMP 4.0
+#define SAMP 8.0
 
 varying lowp vec2 vUV; 
 uniform sampler2D uTexture; 

@@ -20,6 +20,7 @@ extern "C" {
 typedef struct{
 	OPrenderBuffer VertexBuffer;
 	OPrenderBuffer IndexBuffer;
+	ui32 vertexElementOffset;
 	ui32 vertexOffset;
 	ui32 indexOffset;
 	OPstream vertices;
