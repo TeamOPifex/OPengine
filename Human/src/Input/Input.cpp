@@ -12,12 +12,12 @@ MouseState Mouse;
 
 
 void OPkeyboardUpdate() {
+#ifndef OPIFEX_ANDROID
 	OPmemcpy(&Keyboard.prevKeys, &Keyboard.keys, sizeof(KeyboardState));
 	for(ui32 i = 0; i < MaxKeyboardKeys; i++) {
-#ifndef OPIFEX_ANDROID
 		Keyboard.keys[(KeyboardKey)i] = glfwGetKey((KeyboardKey)i);
-#endif
 	}
+#endif
 }
 
 bool OPkeyboardIsDown(KeyboardKey key) {
@@ -38,6 +38,7 @@ bool OPkeyboardWasReleased(KeyboardKey key) {
 
 
 void OPmouseUpdate() {
+#ifndef OPIFEX_ANDROID
 	OPmemcpy(&Mouse.prevKeys, &Mouse.keys, sizeof(MouseState));
 	Mouse.prevPositionX = Mouse.positionX;
 	Mouse.prevPositionY = Mouse.positionY;
@@ -45,19 +46,14 @@ void OPmouseUpdate() {
 
 	for(ui32 i = 0; i < MaxMouseKeys; i++) {
 		MouseKey key = static_cast<MouseKey>(i);
-#ifndef OPIFEX_ANDROID
 		Mouse.keys[key] = glfwGetMouseButton(key);
-#endif
 		if(Mouse.keys[i]) {
 			OPLog("Key %d : %d", i, key);
 		}
 	}
-#ifndef OPIFEX_ANDROID
 	glfwGetMousePos(&Mouse.positionX, &Mouse.positionY);
 	Mouse.wheel = glfwGetMouseWheel();
 #endif
-
-
 }
 
 i32 OPmousePositionX() {
