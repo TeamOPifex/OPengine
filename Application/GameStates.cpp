@@ -14,6 +14,7 @@
 #include "./Core/include/Log.h"
 #include "./Performance/include/OPthread.h"
 #include "./Human/include/Input/GamePadSystem.h"
+#include "./Human/include/Input/Input.h"
 
 OPfloat t = 0;
 
@@ -172,6 +173,8 @@ int State0Update(OPtimer* time){
 
 	OPframeBufferBind(&rt);
 	
+	OPkeyboardUpdate();
+	OPmouseUpdate();
 	GamePadController* gamePad = OPgamePadController(GamePadIndex_One);
 	OPgamePadUpdate(gamePad);
 	
@@ -183,6 +186,13 @@ int State0Update(OPtimer* time){
 		}
 	} else {
 		OPrenderClear(1.0f, 1.0f, 1.0f);
+	}
+	
+	if(OPkeyboardIsDown(Key_SPACE)) {
+		OPrenderClear(0.0f, 1.0f, 0.0f);
+	}
+	if(OPmouseIsDown(Key_LBUTTON)) {
+		OPrenderClear(1.0f, 1.0f, 0.0f);
 	}
 
 	OPrenderMesh();

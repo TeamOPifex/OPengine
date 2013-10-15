@@ -1,60 +1,44 @@
 #pragma once
-// THIS CURRENTLY ONLY WORKS IN WINDOWS
 
+#include "InputEnums.h"
+#include "./Math/include/Vector2.h"
 #include <GL/glfw.h>
 
-class InputSystem {
+typedef struct {
+	bool	keys[MaxKeyboardKeys];
+	bool	prevKeys[MaxKeyboardKeys];
+} KeyboardState;
 
-private:
-	int _x;
-	int _y;
-	int _lastX;
-	int _lastY;
-	int _deltaX;
-	int _deltaY;
-	int _wheel;
-	int _centerX;
-	int _centerY;
+typedef struct {
+	bool	keys[MaxMouseKeys];
+	bool	prevKeys[MaxMouseKeys];
+	i32	wheel;
+	i32	prevWheel;
+	i32	positionX;
+	i32	positionY;
+	i32	prevPositionX;
+	i32	prevPositionY;
+} MouseState;
 
-public:
-	InputSystem(int width, int height){
-		_centerX = width;
-		_centerY = height;
-		Update();
-	}
+extern KeyboardState Keyboard;
+extern MouseState Mouse;
 
-	void Update(){
-		_lastX = _x;
-		_lastY = _y;
-		GetMousePos(&_x, &_y);
-		SetMousePos(_centerX, _centerY);
-		_deltaX = _x - _centerX;
-		_deltaY = _y - _centerY;
-		_wheel = GetMouseWheel();
-	}
+void OPkeyboardUpdate();
+bool OPkeyboardIsDown(KeyboardKey key);
+bool OPkeyboardIsUp(KeyboardKey key);
+bool OPkeyboardWasPressed(KeyboardKey key);
+bool OPkeyboardWasReleased(KeyboardKey key);
 
-	void GetMouseDelta(int* x, int* y){
-		(*x) = _deltaX;
-		(*y) = _deltaY;
-	}
-
-	void SetMousePos(int x, int y){	
-		glfwSetMousePos(x, y);
-	}
-
-	void GetMousePos(int* x, int* y){
-		glfwGetMousePos(x, y);
-	}
-
-	int GetMouseWheel(){
-		return glfwGetMouseWheel();
-	}
-
-	int GetMouseState(int button){
-		return glfwGetMouseButton(button);
-	}
-
-	int GetKeyState(int key){
-		return glfwGetKey(key);
-	}
-};
+void OPmouseUpdate();
+i32 OPmousePositionX();
+i32 OPmousePositionY();
+i32 OPmousePositionMovedX();
+i32 OPmousePositionMovedY();
+i32 OPmouseWheel();
+i32 OPmouseWheelMoved();
+bool OPmouseIsDown(MouseKey key);
+bool OPmouseIsUp(MouseKey key);
+bool OPmouseWasPressed(MouseKey key);
+bool OPmouseWasReleased(MouseKey key);
+void OPmouseSetPosition(i32 x, i32 y);
+void OPmouseSetPositionScreenCenter();
