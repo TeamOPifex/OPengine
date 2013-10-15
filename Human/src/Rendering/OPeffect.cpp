@@ -25,7 +25,8 @@ OPint OPrenderLoadVertexShader(const OPchar* filename, OPshader** shader){
 	OPLog("OPshader BEGINNING load of %s", filename);
 	OPstream* source = OPreadFile(filename);
 	OPLog("OPshader ENDING load of %s", filename);
-
+	
+	CheckError("GLShader::Error 0");
 	OPLog("OPshader shader CREATING");
 	vertex = glCreateShader(OPvertexShader);
 	OPLog("OPshader shader CREATED");
@@ -66,6 +67,8 @@ OPint OPrenderLoadVertexShader(const OPchar* filename, OPshader** shader){
 	// if we made it this far, everything is a-ok
 	*shader = (OPshader*)OPalloc(sizeof(OPshader));
 	**shader = vertex; // copy the shader handle
+
+	CheckError("GLShader::Error 6");
 
 	return 1;
 }
@@ -109,6 +112,7 @@ OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader){
 	// if we made it this far, everything is a-ok
 	*shader = (OPshader*)OPalloc(sizeof(OPshader));
 	**shader = frag; // copy the shader handle
+	CheckError("GLShader::Error 6");
 
 	return 1;
 }
@@ -128,19 +132,31 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 		-1,
 		 0
 	};
-	
+	CheckError("OPrenderCreateEffect:Error 1");
 	effect.Parameters = OPhashMapCreate(32);
 	effect.Attributes = OPlistCreate(AttribCount, sizeof(OPshaderAttribute));
+	CheckError("OPrenderCreateEffect:Error 2");
 
 	effect.ProgramHandle = glCreateProgram();
+	CheckError("OPrenderCreateEffect:Error 3");
 
 	glAttachShader(effect.ProgramHandle, vert);
+	CheckError("OPrenderCreateEffect:Error 4");
 	glAttachShader(effect.ProgramHandle, frag);
+	CheckError("OPrenderCreateEffect:Error 5");
 	glLinkProgram(effect.ProgramHandle);
+	CheckError("OPrenderCreateEffect:Error 6");
 
 	OPint status;
 	glGetProgramiv(effect.ProgramHandle, GL_LINK_STATUS, &status);
 	glUseProgram(effect.ProgramHandle);
+
+	if(status == GL_FALSE) {
+		OPLog("FAILED to link Shader Program");
+	}
+	
+	OPLog("Shader Status: %d", status);
+	CheckError("OPrenderCreateEffect:Error 7");
 
 	// create, and copy attributes into list
 	for(OPint i = 0; i < AttribCount; i++){
@@ -151,14 +167,13 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 			(void*)effect.Stride
 		};
 
-		ui32 loc = glGetAttribLocation(
+		attr.Name = (OPchar*)glGetAttribLocation(
 			effect.ProgramHandle,
 			Attributes[i].Name
 		);
-		attr.Name = (OPchar*)loc;
-
-		OPLog("Getting attr: %s\n", Attributes[i].Name);
-		CheckError("OPrenderCreateEffect(): Getting attr location.");
+		if(CheckError("OPrenderCreateEffect:Error 7.5 - Attrib Could not be found.") > 0) {
+			OPLog("Handle: %d, Attribute: %s", effect.ProgramHandle, Attributes[i].Name);
+		}
 
 		// TODO add more
 		switch(Attributes[i].Type){
@@ -170,7 +185,8 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 		//OPLog("%s = %d loc %d\n", Attributes[AttribCount], AttribCount, *loc);
 		OPlistPush(effect.Attributes, (ui8*)&attr);
 	}
-
+	
+	CheckError("OPrenderCreateEffect:Error 8");
 	return effect;
 }
 //-----------------------------------------------------------------------------
@@ -189,33 +205,43 @@ OPint OPrenderUnloadEffect(OPeffect* effect){
 
 // effect managment
 OPint OPrenderBindEffect(OPeffect* effect){
+	CheckError("OPrenderBindEffect:Error 0");
 	// disable attributes of the last effect
 	if(OPRENDER_CURR_EFFECT){
 		OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
 		for(;attrCount--;){
+	CheckError("OPrenderBindEffect:Error 0.2");
 			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
-			ui32 loc = (ui32)attr->Name;
-			glDisableVertexAttribArray(loc);
+	CheckError("OPrenderBindEffect:Error 0.3");
+			glDisableVertexAttribArray((ui32)attr->Name);
+			if(CheckError("OPrenderBindEffect:Error 0.4")) {
+				//OPLog("Failed to bind %s", attr->Name);
+			}
 		}
 	}
+	CheckError("OPrenderBindEffect:Error 1");
 
 	OPRENDER_CURR_EFFECT = effect;
 
 	glUseProgram(OPRENDER_CURR_EFFECT->ProgramHandle);
+	CheckError("OPrenderBindEffect:Error 2");
 	// enable attributes of the new effect
 	OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
 	for(;attrCount--;){
 		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
-		ui32 loc = (ui32)attr->Name;
-		glEnableVertexAttribArray(loc);
+		
+	CheckError("OPrenderBindEffect:Error 3");
+		glEnableVertexAttribArray((ui32)attr->Name);
+	CheckError("OPrenderBindEffect:Error 4");
 		glVertexAttribPointer(
-			loc,
+			(ui32)attr->Name,
 			attr->Elements,
 			attr->Type,
 			GL_FALSE,
 			effect->Stride,
 			attr->Offset
 		);
+	CheckError("OPrenderBindEffect:Error 5");
 	}
 
 	return 1;

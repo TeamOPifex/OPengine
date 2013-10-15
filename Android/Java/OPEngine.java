@@ -55,6 +55,18 @@ public class OPEngine extends Activity {
 		super.onResume();
 		mView.onResume();
 	}
+	
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // The activity is no longer visible (it is now "stopped")
+		mView.onStop();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // The activity is about to be destroyed.
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

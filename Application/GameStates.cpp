@@ -143,8 +143,8 @@ void State0Enter(OPgameState* last){
 	t = 0;
 }
 
-void State0Update(OPtimer* time){
-	if(time->Elapsed > 1000) return;
+int State0Update(OPtimer* time){
+	if(time->Elapsed > 1000) return false;
 	t += 0.005f * time->Elapsed;
 
 	OPmat4 world, view, proj;
@@ -205,6 +205,12 @@ void State0Update(OPtimer* time){
 		OPgameStateChange(&State1);
 
 	OPrenderPresent();
+
+	if(OPgamePadIsConnected(gamePad) && OPgamePadWasPressed(gamePad, GamePad_Button_RIGHT_SHOULDER)){
+		return true;
+	}
+
+	return false;
 }
 
 void State0Exit(OPgameState* next){
@@ -244,8 +250,8 @@ void State1Enter(OPgameState* last){
 	t = 0;	
 }
 
-void State1Update(OPtimer* time){
-	if(time->Elapsed > 1000) return;
+int State1Update(OPtimer* time){
+	if(time->Elapsed > 1000) return false;
 
 	t += 0.005f * time->Elapsed;
 	
@@ -308,7 +314,14 @@ void State1Update(OPtimer* time){
 		//OPgameStateChange(&State0);
 	}
 
+
+	if(OPgamePadIsConnected(gamePad) && OPgamePadWasPressed(gamePad, GamePad_Button_RIGHT_SHOULDER)){
+		return true;
+	}
+
 	OPrenderPresent();
+
+	return false;
 }
 
 void State1Exit(OPgameState* next){

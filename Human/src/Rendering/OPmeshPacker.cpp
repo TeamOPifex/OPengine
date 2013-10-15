@@ -1,5 +1,5 @@
 #include "./Human/include/Rendering/OPmeshPacker.h"
-#include "Core\include\Log.h"
+#include "./Human/include/Utilities/Errors.h"
 
 //-----------------------------------------------------------------------------
 //   _____ _       _           _     
@@ -95,6 +95,9 @@ void OPmeshPackerBuild(){
 //-----------------------------------------------------------------------------
 void OPmeshPackerBind(OPmeshPacker* packer){
 	OPRENDER_CURR_PACKER = packer;
+	CheckError("OPmeshPackerBind:Error 0");
 	OPrenderBindBuffer(&packer->VertexBuffer);
+	CheckError("OPmeshPackerBind:Error 1");
 	OPrenderBindBuffer(&packer->IndexBuffer);
+	CheckError("OPmeshPackerBind:Error 2");
 }

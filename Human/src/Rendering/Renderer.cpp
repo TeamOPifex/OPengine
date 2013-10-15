@@ -20,6 +20,8 @@ OPint OPrenderInit(ui32 width, ui32 height){
 	//glCullFace(GL_FRONT);
 	//glEnable(GL_CULL_FACE);
 	glDisable(GL_CULL_FACE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+	glEnable( GL_BLEND );
 
 	OPrenderWidth = width;
 	OPrenderHeight = height;

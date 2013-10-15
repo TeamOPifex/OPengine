@@ -10,7 +10,7 @@ void OPgameStateChange(OPgameState* targetState){
 	if(ActiveState->OnEntrance != NULL) ActiveState->OnEntrance(lastState);
 }
 
-OPgameState* OPgameStateCreate(void (*entrance)(OPgameState*), void (*update)(OPtimer*), void (*exit)(OPgameState*)){
+OPgameState* OPgameStateCreate(void (*entrance)(OPgameState*), int(*update)(OPtimer*), void (*exit)(OPgameState*)){
 	OPgameState* gs = (OPgameState*)OPalloc(sizeof(OPgameState));
 
 	gs->OnEntrance = entrance;

@@ -176,13 +176,13 @@ void Init(){
 	return;
 }
 
-void Update( OPtimer* timer){
-
-
-	//bool result = GM->Update( timer );
-
+bool Update( OPtimer* timer){
+	
 	GamePadController* gamePad = OPgamePadController(GamePadIndex_One);
 	OPgamePadUpdate(gamePad);
+	if(OPgamePadIsConnected(gamePad) && OPgamePadWasPressed(gamePad, GamePad_Button_START)){
+		return true;
+	}
 
 	if(OPgamePadIsConnected(gamePad) && OPgamePadWasPressed(gamePad, GamePad_Button_A)){
 		OPLog("Playing Audio");
@@ -190,23 +190,19 @@ void Update( OPtimer* timer){
 	  	OPaudPlayerPlay();
 	}
 
-	//SoundEmitter->Update();
-	//GM->Draw();
 	OPrenderPresent();
 	
-	//if(!result)
-//		exit(0);
-	return;
+	return false;
 }
 
 void Destroy()
 {
-	//delete GM;
+	ActiveState->OnExit(ActiveState);
 	return;
 }
 
-void UpdateState(OPtimer* timer){
-	ActiveState->Update(timer);
+int UpdateState(OPtimer* timer){
+	return ActiveState->Update(timer);	
 }
 
 
