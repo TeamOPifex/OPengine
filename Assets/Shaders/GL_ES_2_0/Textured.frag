@@ -10,7 +10,8 @@ void main() {
 
 	lowp float dt = (2.0 * PI) / 9.0; 
 	for(int i = 0; i < 9; i++){
-		lowp vec2 off = vec2(cos(dt * float(i)), sin(dt * float(i)));
+		lowp vec2 off = d * vec2(cos(dt * float(i)), sin(dt * float(i)));
+		
 		color += texture2D(uTexture, vUV + off);
 	}
 	

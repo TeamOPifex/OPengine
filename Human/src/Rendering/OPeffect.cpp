@@ -204,24 +204,34 @@ OPint OPrenderUnloadEffect(OPeffect* effect){
 
 // effect managment
 OPint OPrenderBindEffect(OPeffect* effect){
+	CheckError("OPrenderBindEffect:Error 0");
 	// disable attributes of the last effect
 	if(OPRENDER_CURR_EFFECT){
 		OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
 		for(;attrCount--;){
+	CheckError("OPrenderBindEffect:Error 0.2");
 			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
+	CheckError("OPrenderBindEffect:Error 0.3");
 			glDisableVertexAttribArray((ui32)attr->Name);
+			if(CheckError("OPrenderBindEffect:Error 0.4")) {
+				//OPLog("Failed to bind %s", attr->Name);
+			}
 		}
 	}
+	CheckError("OPrenderBindEffect:Error 1");
 
 	OPRENDER_CURR_EFFECT = effect;
 
 	glUseProgram(OPRENDER_CURR_EFFECT->ProgramHandle);
+	CheckError("OPrenderBindEffect:Error 2");
 	// enable attributes of the new effect
 	OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
 	for(;attrCount--;){
 		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
-
+		
+	CheckError("OPrenderBindEffect:Error 3");
 		glEnableVertexAttribArray((ui32)attr->Name);
+	CheckError("OPrenderBindEffect:Error 4");
 		glVertexAttribPointer(
 			(ui32)attr->Name,
 			attr->Elements,
@@ -230,6 +240,7 @@ OPint OPrenderBindEffect(OPeffect* effect){
 			effect->Stride,
 			attr->Offset
 		);
+	CheckError("OPrenderBindEffect:Error 5");
 	}
 
 	return 1;
