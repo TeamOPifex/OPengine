@@ -9,7 +9,7 @@ OPminHeap* OPminHeapCreate(OPint capacity){
 	for(i = 1; i < capacity + 1; i++){
 		heap->_indices[i] = 0;
 	}
-	heap->_indices[0] = -INT_MAX;
+	heap->_indices[0] = -0xffffffffffffffff;
 
 	heap->_size = 0;
 	heap->_capacity = capacity;

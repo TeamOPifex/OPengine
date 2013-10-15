@@ -2,7 +2,7 @@
 
 #include "InputEnums.h"
 #include "./Math/include/Vector2.h"
-#include <GL/glfw.h>
+
 
 typedef struct {
 	bool	keys[MaxKeyboardKeys];

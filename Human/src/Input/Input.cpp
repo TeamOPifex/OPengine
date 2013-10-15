@@ -2,6 +2,9 @@
 #include "./Core/include/DynamicMemory.h"
 #include "./Human/include/Rendering/Renderer.h"
 #include "./Core/include/Log.h"
+#ifndef OPIFEX_ANDROID
+	#include <GL/glfw.h>
+#endif
 
 KeyboardState Keyboard;
 
@@ -11,7 +14,9 @@ MouseState Mouse;
 void OPkeyboardUpdate() {
 	OPmemcpy(&Keyboard.prevKeys, &Keyboard.keys, sizeof(KeyboardState));
 	for(ui32 i = 0; i < MaxKeyboardKeys; i++) {
+#ifndef OPIFEX_ANDROID
 		Keyboard.keys[(KeyboardKey)i] = glfwGetKey((KeyboardKey)i);
+#endif
 	}
 }
 
@@ -40,13 +45,17 @@ void OPmouseUpdate() {
 
 	for(ui32 i = 0; i < MaxMouseKeys; i++) {
 		MouseKey key = static_cast<MouseKey>(i);
+#ifndef OPIFEX_ANDROID
 		Mouse.keys[key] = glfwGetMouseButton(key);
+#endif
 		if(Mouse.keys[i]) {
 			OPLog("Key %d : %d", i, key);
 		}
 	}
+#ifndef OPIFEX_ANDROID
 	glfwGetMousePos(&Mouse.positionX, &Mouse.positionY);
 	Mouse.wheel = glfwGetMouseWheel();
+#endif
 
 
 }
@@ -85,7 +94,10 @@ bool OPmouseWasReleased(MouseKey key) {
 	return !Mouse.keys[key] && Mouse.prevKeys[key];
 }
 void OPmouseSetPosition(i32 x, i32 y) {
+	
+#ifndef OPIFEX_ANDROID
 	glfwSetMousePos(x, y);
+#endif
 	Mouse.positionX = x;
 	Mouse.positionY = y;
 }
