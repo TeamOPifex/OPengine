@@ -13,7 +13,28 @@
 	#include "./Human/include/Utilities/AndroidNDK.h"
 #endif
 
-GamePadController GamePadControllers[CONTROLLERS];
+GamePadController GamePadControllers[CONTROLLERS] = {
+	{
+		0,
+		false,
+		0.01
+	},
+	{
+		1,
+		false,
+		0.01
+	},
+	{
+		2,
+		false,
+		0.01
+	},
+	{
+		3,
+		false,
+		0.01
+	}
+}; 
 
 GamePadController* OPgamePadController(GamePadIndex index) {
 	return &GamePadControllers[index];
@@ -146,7 +167,12 @@ void OPgamePadUpdate(GamePadController* controller){
 
 		controller->axes[RS_X] = controllerState.Gamepad.sThumbRX / (float)SHRT_MAX;
 		controller->axes[RS_Y] = controllerState.Gamepad.sThumbRY / (float)SHRT_MAX;
-
+		
+		for(ui32 i = 0; i < GamePadAxes_Max; i++) {
+			if(OPabs(controller->axes[i]) < controller->deadzone) {
+				controller->axes[i] = 0;
+			}
+		}
 #pragma endregion
 		
 #pragma region Button states

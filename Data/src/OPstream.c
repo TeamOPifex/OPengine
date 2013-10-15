@@ -42,7 +42,7 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 		len = len > size ? len : size;
 		
 		// reallocate
-		OPLog("OPstream - resizing to %u\n", sizeof(ui8) * (len << 1));
+		//OPLog("OPstream - resizing to %u\n", sizeof(ui8) * (len << 1));
 		nd = (ui8*)OPrealloc(
 			D,
 			sizeof(ui8) * len * 2

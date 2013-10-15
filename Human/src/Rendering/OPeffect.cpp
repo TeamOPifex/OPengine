@@ -126,6 +126,7 @@ OPint OPrenderUnloadShader(OPshader* shader){
 //-----------------------------------------------------------------------------
 // effect creation
 OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* Attributes, OPint AttribCount){
+	OPLog("Creating Shader");
 	OPeffect effect = {
 		vert,
 		frag,

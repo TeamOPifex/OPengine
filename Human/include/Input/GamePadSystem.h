@@ -9,12 +9,12 @@
 
 
 typedef struct{
+	OPint		playerIndex;
+	bool		connected;
+	OPfloat		deadzone;
 	bool		buttons[GamePadButton_Max];
 	bool		prevButtons[GamePadButton_Max];
 	OPfloat		axes[GamePadAxes_Max];
-	bool		connected;
-	OPfloat		deadzone;
-	OPint		playerIndex;
 } GamePadController;
 
 extern GamePadController GamePadControllers[CONTROLLERS];
