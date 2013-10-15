@@ -154,6 +154,51 @@ void Init(){
         //Song = OPAudio::ReadOgg(songPath);
 
         OPLog("Main: Song loaded");
+
+		//		OPminHeap* heap = OPminHeapCreate(10);
+
+		//for(OPint j = 2; j--;){
+		//for(OPint i =10; i--;){
+		//	OPint ind = 0;
+		//	//OPentHeapActivate(heap, &ind);
+		//	OPminHeapPush(heap, i);
+		//	printf("Pushing %d\n", i);
+		//}
+		//printf("\n");
+		//for(OPint i =10; i--;){
+		//	OPint ind = 0;
+		//	//OPentHeapActivate(heap, &ind);
+		//	printf("Freeing %d\n", OPminHeapPop(heap));
+		//}
+		//		printf("\n");
+		//}
+		//printf("Freeing\n");
+
+		void* test = OPalloc(OPentHeapSize(4, 10));
+		OPentHeap* heap = OPentHeapCreate(test, 4, 10);
+
+		//for(OPint i =10; i--;){
+		//	OPint ind = 0;
+		//	OPentHeapActivate(heap, &ind);
+		//	printf("%d @ %d\n", i, ind);
+		//}
+		//printf("\n");
+
+		for(OPint j = 4; j--;){
+			OPint ind = 0;
+			OPentHeapActivate(heap, &ind);
+			while(ind >= 0){
+				printf("Act %d\n", ind);
+				OPentHeapActivate(heap, &ind);
+			}
+			printf(">>>Max %d\n", heap->MaxIndex);
+			for(OPint i =5; i--;){
+				OPuint ind = (OPuint)OPrandRange(0, 10);
+				OPentHeapKill(heap, ind);
+				printf("free @ %d\n", ind);
+			}
+			printf(">>>Max %d\n\n", heap->MaxIndex);
+		}
 /*
 		Sound1 = (OPaudioSource*)OPcmanGet("impact.wav");
 		Sound2 = (OPaudioSource*)OPcmanGet("boom.wav");

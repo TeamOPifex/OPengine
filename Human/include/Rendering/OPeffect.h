@@ -7,6 +7,8 @@
 #include "./Data/include/OPlist.h"
 #include "./Data/include/OPfile.h"
 
+#include "./Math/include/Vector2.h"
+#include "./Math/include/Vector3.h"
 #include "./Math/include/Matrix4.h"
 #include "./Human/include/Rendering/Buffer.h"
 
@@ -99,12 +101,62 @@ void OPrenderParamMat4v(ui32 param, OPint count, OPmat4* matrices);
 void OPrenderUseTexture(ui32 param, ui32 uniform, ui32 slot);
 */
 
-void OPrenderParamf(const OPchar* param, OPfloat f);
-void OPrenderParamfv(const OPchar* param, OPint count, OPfloat* f);
-void OPrenderParami(const OPchar* param, OPint i);
-void OPrenderParamiv(const OPchar* param, OPint count, OPint* i);
-void OPrenderParamMat4v(const OPchar* param, OPint count, OPmat4* matrices);
-void OPrenderUseTexture(const OPchar* param, ui32 texture, ui32 slot);
+inline void OPrenderParamf(const OPchar* param, OPfloat f){
+	GLuint loc = glGetUniformLocation(
+		OPRENDER_CURR_EFFECT->ProgramHandle,
+		param
+	);
+	glUniform1f(loc, f);
+}
+inline void OPrenderParamfv(const OPchar* param, OPint count, OPfloat* f){
+	GLuint loc = glGetUniformLocation(
+		OPRENDER_CURR_EFFECT->ProgramHandle,
+		param
+	);
+	glUniform1fv(loc, count, f);
+}
+inline void OPrenderParamVec2(const OPchar* param, OPint count, OPvec2* f){
+	GLuint loc = glGetUniformLocation(
+		OPRENDER_CURR_EFFECT->ProgramHandle,
+		param
+	);
+	glUniform2fv(loc, count, (OPfloat*)f);
+}
+inline void OPrenderParamVec3(const OPchar* param, OPint count, OPvec3* f){
+	GLuint loc = glGetUniformLocation(
+		OPRENDER_CURR_EFFECT->ProgramHandle,
+		param
+	);
+	glUniform3fv(loc, count, (OPfloat*)f);
+}
+inline void OPrenderParamVec4(const OPchar* param, OPint count, OPvec4* f){
+	GLuint loc = glGetUniformLocation(
+		OPRENDER_CURR_EFFECT->ProgramHandle,
+		param
+	);
+	glUniform4fv(loc, count, (OPfloat*)f);
+}
+inline void OPrenderParami(const OPchar* param, OPint i){
+	GLuint loc = glGetUniformLocation(
+		OPRENDER_CURR_EFFECT->ProgramHandle,
+		param
+	);
+	glUniform1i(loc, i);
+}
+inline void OPrenderParamiv(const OPchar* param, OPint count, OPint* i){
+	GLuint loc = glGetUniformLocation(
+		OPRENDER_CURR_EFFECT->ProgramHandle,
+		param
+	);
+	glUniform1iv(loc, count, i);
+}
+inline void OPrenderParamMat4v(const OPchar* param, OPint count, OPmat4* matrices){
+	GLuint loc = glGetUniformLocation(
+		OPRENDER_CURR_EFFECT->ProgramHandle,
+		param
+	);
+	glUniformMatrix4fv(loc, count, GL_FALSE, (OPfloat*)matrices);
+}
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

@@ -33,25 +33,29 @@ typedef struct{
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
-__inline void OPentHeapActivate(OPentHeap* heap, OPuint* i){
-	if((*i = OPminHeapPop(&heap->Free)) >= 0){
-		if((OPint)*i > heap->MaxIndex - 1){
-			heap->MaxIndex = *i + 1;
+__inline void OPentHeapActivate(OPentHeap* heap, OPint* i){
+	if(heap->Free._size){
+		if((*i = OPminHeapPop(&heap->Free)) >= 0){
 			heap->InUse[*i] = 1;
+			if(*i >= heap->MaxIndex - 1){
+				heap->MaxIndex = *i + 1;
+			}
 		}
 	}
+	else
+		*i = -1;
 }
 
-__inline void OPentHeapKill(OPentHeap* heap, OPuint i){
-	OPint mi = heap->MaxIndex;
-	OPminHeapPush(&heap->Free, i);
-	heap->InUse[heap->MaxIndex] = 0;
-	while(mi){
-		if(heap->InUse[mi] == 1){
-			heap->MaxIndex = mi;
-			break;
+__inline void OPentHeapKill(OPentHeap* heap, OPint i){
+	OPint inUse = heap->InUse[i];
+	if(inUse){
+		OPint mi = heap->MaxIndex - 1;
+		OPminHeapPush(&heap->Free, i);
+		heap->InUse[i] = 0;
+		while(!heap->InUse[mi]){
+			mi--;
 		}
-		mi--;
+		heap->MaxIndex = mi + 1;
 	}
 }
 

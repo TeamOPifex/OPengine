@@ -12,11 +12,11 @@ OPuint OPentHeapSize(OPint entsize, OPint count){
 }
 //-----------------------------------------------------------------------------
 OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
-	OPuint off = 0, i = count + 1, j = 0;
+	OPuint off = 0, i = count, j = 0;
 	OPminHeap free = {
 		NULL,
-		count + 1,
-		1
+		count,
+		0
 	};
 	OPentHeap heap = {
 		NULL,
@@ -39,7 +39,7 @@ OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
 	OPbzero(heap.Free._indices, sizeof(OPint) * (count + 1));
 	off += sizeof(OPint) * (count + 1); // account for indices
 	for(;i--;){
-		OPminHeapPush(&heap.Free, i-1);
+		OPminHeapPush(&heap.Free, i);
 	}
 
 	// create the ent heap

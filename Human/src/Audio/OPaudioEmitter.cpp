@@ -111,7 +111,7 @@ OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint flags){
 
 	// if this emitter will be threaded
 	if(flags & EMITTER_THREADED){
-		OPuint index = -1;
+		OPint index = -1;
 		OPentHeapActivate(&OPAUD_REG_EMITTERS, &index);
 		if(index >= 0){
 			((OPaudioEmitter*)OPAUD_REG_EMITTERS.Entities)[index] = emitter;
@@ -149,7 +149,7 @@ void OPaudDestroyEmitter(OPaudioEmitter* emitter){
 OPaudioEmitter* OPaudGetEmitter(OPaudioSource* src, OPint flags){
 	OPaudioEmitter* out = NULL;
 
-	OPuint index = -1;
+	OPint index = -1;
 	OPentHeapActivate(&OPAUD_REG_EMITTERS, &index);
 	if(index >= 0){
 		out = &((OPaudioEmitter*)OPAUD_REG_EMITTERS.Entities)[index]; 
