@@ -8,7 +8,7 @@ inline OPfloat* OPvec3index(OPvec3* v, int idx);
 inline void OPvec3add(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3sub(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3mul(OPvec3* dst, OPvec3* a, OPvec3* b);
-inline void OPvec3scl(OPvec3* dst, OPfloat s);
+inline void OPvec3scl(OPvec3* dst, OPvec3* a, OPfloat s);
 inline void OPvec3div(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3dot(OPfloat* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3cross(OPvec3* dst, OPvec3* a, OPvec3* b);
@@ -48,6 +48,15 @@ struct OPvec3 {
 		OPvec3mul(this, this, &vhs); 
 		return *this; 
 	}
+	inline OPvec3& operator*(OPfloat& vhs) { 
+		OPvec3 temp;
+		OPvec3scl(&temp, this, vhs); 
+		return temp; 
+	}
+	inline OPvec3& operator*=(OPfloat& vhs) { 
+		OPvec3scl(this, this, vhs); 
+		return *this; 
+	}
 	inline OPvec3& operator/(OPvec3& vhs) { 
 		OPvec3 temp;
 		OPvec3div(&temp, this, &vhs); 
@@ -81,10 +90,10 @@ inline void OPvec3mul(OPvec3* dst, OPvec3* a, OPvec3* b) {
 	dst->z = a->z * b->z;
 }
 
-inline void OPvec3scl(OPvec3* dst, OPfloat s) {
-	dst->x *= s;
-	dst->y *= s;
-	dst->z *= s;
+inline void OPvec3scl(OPvec3* dst, OPvec3* a, OPfloat s) {
+	dst->x = a->x * s;
+	dst->y = a->y *s;
+	dst->z = a->z *s;
 }
 
 inline void OPvec3div(OPvec3* dst, OPvec3* a, OPvec3* b) {
