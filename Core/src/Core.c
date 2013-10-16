@@ -13,8 +13,6 @@ jint _JNIHeight;
 jint _JNIWidth;
 
 
-
-
 JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager){
 	OPLog("Init Engine");
 	_JNIAssetManager = assetManager;
