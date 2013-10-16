@@ -48,12 +48,12 @@ struct OPvec3 {
 		OPvec3mul(this, this, &vhs); 
 		return *this; 
 	}
-	inline OPvec3& operator*(OPfloat& vhs) { 
+	inline OPvec3& operator*(OPfloat vhs) { 
 		OPvec3 temp;
 		OPvec3scl(&temp, this, vhs); 
 		return temp; 
 	}
-	inline OPvec3& operator*=(OPfloat& vhs) { 
+	inline OPvec3& operator*=(OPfloat vhs) { 
 		OPvec3scl(this, this, vhs); 
 		return *this; 
 	}
