@@ -21,8 +21,8 @@ struct OPvec2 {
 	OPvec2& operator=(OPvec2& vhs) { 
 		OPmemcpy(this, &vhs, sizeof(OPvec2)); return *this;
 	}
-	inline OPvec2& operator+(OPvec2& vhs) { 
-		OPvec2 temp;
+	inline OPvec2 operator+(OPvec2& vhs) { 
+		OPvec2 temp = { 0.0, 0.0 };
 		OPvec2add(&temp, this, &vhs); 
 		return temp; 
 	}
@@ -30,8 +30,8 @@ struct OPvec2 {
 		OPvec2add(this, this, &vhs); 
 		return *this; 
 	}
-	inline OPvec2& operator-(OPvec2& vhs) { 
-		OPvec2 temp;
+	inline OPvec2 operator-(OPvec2& vhs) { 
+		OPvec2 temp = { 0.0, 0.0 };
 		OPvec2sub(&temp, this, &vhs); 
 		return temp; 
 	}
@@ -39,13 +39,13 @@ struct OPvec2 {
 		OPvec2sub(this, this, &vhs); 
 		return *this; 
 	}
-	inline OPvec2& operator*(OPvec2& vhs) { 
-		OPvec2 temp;
+	inline OPvec2 operator*(OPvec2& vhs) { 
+		OPvec2 temp = { 0.0, 0.0 };
 		OPvec2mul(&temp, this, &vhs); 
 		return temp; 
 	}
-	inline OPvec2& operator*(OPfloat vhs) { 
-		OPvec2 temp;
+	inline OPvec2 operator*(OPfloat vhs) { 
+		OPvec2 temp = { 0.0, 0.0 };
 		OPvec2scl(&temp, this, vhs); 
 		return temp; 
 	}
@@ -57,13 +57,13 @@ struct OPvec2 {
 		OPvec2scl(this, this, vhs); 
 		return *this; 
 	}
-	inline OPvec2& operator/(OPvec2& vhs) { 
-		OPvec2 temp;
+	inline OPvec2 operator/(OPvec2& vhs) { 
+		OPvec2 temp = { 0.0, 0.0 };
 		OPvec2div(&temp, this, &vhs); 
 		return temp; 
 	}
-	inline OPvec2& operator/(OPfloat vhs) { 
-		OPvec2 temp;
+	inline OPvec2 operator/(OPfloat vhs) { 
+		OPvec2 temp = { 0.0, 0.0 };
 		OPvec2divf(&temp, this, vhs); 
 		return temp; 
 	}
