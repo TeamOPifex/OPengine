@@ -43,6 +43,11 @@ struct OPvec2 {
 		OPvec2mul(&temp, this, &vhs); 
 		return temp; 
 	}
+	inline OPvec2& operator*(OPfloat vhs) { 
+		OPvec2 temp;
+		OPvec2scl(&temp, this, vhs); 
+		return temp; 
+	}
 	inline OPvec2& operator*=(OPvec2& vhs) { 
 		OPvec2mul(this, this, &vhs); 
 		return *this; 
