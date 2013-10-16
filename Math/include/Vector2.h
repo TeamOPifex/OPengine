@@ -134,6 +134,9 @@ inline void OPvec2len(OPfloat* dst, OPvec2* v){
 
 inline void OPvec2norm(OPvec2* dst, OPvec2* a){
 	OPfloat l = sqrt(a->x * a->x + a->y * a->y);
+	if(l == 0) {
+		return;	
+	}
 	dst->x = a->x / l;
 	dst->y = a->y / l;
 }
