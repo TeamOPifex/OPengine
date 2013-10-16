@@ -10,6 +10,7 @@ inline void OPvec2sub(OPvec2* dst, OPvec2* a, OPvec2* b);
 inline void OPvec2mul(OPvec2* dst, OPvec2* a, OPvec2* b);
 inline void OPvec2scl(OPvec2* dst, OPvec2* a, OPfloat s);
 inline void OPvec2div(OPvec2* dst, OPvec2* a, OPvec2* b);
+inline void OPvec2divf(OPvec2* dst, OPvec2* a, OPfloat b);
 inline void OPvec2dot(OPfloat* dst, OPvec2* a, OPvec2* b);
 inline void OPvec2norm(OPvec2* dst, OPvec2* a);
 inline void OPvec2perp(OPvec2* dst, OPvec2* a);
@@ -61,8 +62,17 @@ struct OPvec2 {
 		OPvec2div(&temp, this, &vhs); 
 		return temp; 
 	}
+	inline OPvec2& operator/(OPfloat vhs) { 
+		OPvec2 temp;
+		OPvec2divf(&temp, this, vhs); 
+		return temp; 
+	}
 	inline OPvec2& operator/=(OPvec2& vhs) { 
 		OPvec2div(this, this, &vhs); 
+		return *this; 
+	}
+	inline OPvec2& operator/=(OPfloat vhs) { 
+		OPvec2divf(this, this, vhs); 
 		return *this; 
 	}
 };
@@ -94,6 +104,10 @@ inline void OPvec2scl(OPvec2* dst, OPvec2* a, OPfloat s){
 inline void OPvec2div(OPvec2* dst, OPvec2* a, OPvec2* b){
 	dst->x = a->x / b->x;
 	dst->y = a->y / b->y;
+}
+inline void OPvec2divf(OPvec2* dst, OPvec2* a, OPfloat b){
+	dst->x = a->x / b;
+	dst->y = a->y / b;
 }
 
 inline void OPvec2dot(OPfloat* dst, OPvec2* a, OPvec2* b){

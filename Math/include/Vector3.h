@@ -10,6 +10,7 @@ inline void OPvec3sub(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3mul(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3scl(OPvec3* dst, OPvec3* a, OPfloat s);
 inline void OPvec3div(OPvec3* dst, OPvec3* a, OPvec3* b);
+inline void OPvec3divf(OPvec3* dst, OPvec3* a, OPfloat b);
 inline void OPvec3dot(OPfloat* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3cross(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3len(OPfloat* dst, OPvec3* v);
@@ -62,8 +63,17 @@ struct OPvec3 {
 		OPvec3div(&temp, this, &vhs); 
 		return temp; 
 	}
+	inline OPvec3& operator/(OPfloat vhs) { 
+		OPvec3 temp;
+		OPvec3divf(&temp, this, vhs); 
+		return temp; 
+	}
 	inline OPvec3& operator/=(OPvec3& vhs) { 
 		OPvec3div(this, this, &vhs); 
+		return *this; 
+	}
+	inline OPvec3& operator/=(OPfloat vhs) { 
+		OPvec3divf(this, this, vhs); 
 		return *this; 
 	}
 };
@@ -100,6 +110,12 @@ inline void OPvec3div(OPvec3* dst, OPvec3* a, OPvec3* b) {
 	dst->x = a->x / b->x;
 	dst->y = a->y / b->y;
 	dst->z = a->z / b->z;
+}
+
+inline void OPvec3divf(OPvec3* dst, OPvec3* a, OPfloat b) {
+	dst->x = a->x / b;
+	dst->y = a->y / b;
+	dst->z = a->z / b;
 }
 
 inline void OPvec3dot(OPfloat* dst, OPvec3* a, OPvec3* b) {
