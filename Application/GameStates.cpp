@@ -188,10 +188,10 @@ int State0Update(OPtimer* time){
 		OPrenderClear(1.0f, 1.0f, 1.0f);
 	}
 	
-	if(OPkeyboardIsDown(Key_SPACE)) {
+	if(OPkeyboardIsDown(OPKEY_SPACE)) {
 		OPrenderClear(0.0f, 1.0f, 0.0f);
 	}
-	if(OPmouseIsDown(Key_LBUTTON)) {
+	if(OPmouseIsDown(OPKEY_LBUTTON)) {
 		OPrenderClear(1.0f, 1.0f, 0.0f);
 	}
 

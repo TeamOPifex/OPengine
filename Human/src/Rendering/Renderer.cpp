@@ -22,6 +22,8 @@ OPint OPrenderInit(ui32 width, ui32 height){
 	glDisable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
 	glEnable( GL_BLEND );
+	
+	glfwEnable( GLFW_STICKY_KEYS );
 
 	OPrenderWidth = width;
 	OPrenderHeight = height;
