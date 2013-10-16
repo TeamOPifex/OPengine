@@ -131,6 +131,42 @@ void OPmouseSetPosition(i32 x, i32 y) {
 void OPmouseSetPositionScreenCenter() {
 	OPmouseSetPosition(OPrenderWidth / 2, OPrenderHeight / 2);
 }
+
+
+void OPtouchUpdate() {
+}
+
+f32 OPtouchPositionX() {
+	return Touch.positionX;
+}
+
+f32 OPtouchPositionY() {
+	return 0;
+}
+
+f32 OPtouchPositionMovedX() {
+	return 0;
+}
+
+f32 OPtouchPositionMovedY() {
+	return 0;
+}
+
+bool OPtouchIsDown() {
+	return false;
+}
+
+bool OPtouchIsUp() {
+	return true;
+}
+
+bool OPtouchWasPressed() {
+	return false;
+}
+
+bool OPtouchWasReleased() {
+	return false;
+}
 #else
 void OPmouseUpdate() {
 }
@@ -173,7 +209,6 @@ void OPmouseSetPosition(i32 x, i32 y) {
 void OPmouseSetPositionScreenCenter() {
 
 }
-#endif
 
 JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_touch(JNIEnv * env, jobject obj,  jint evt, jfloat x, jfloat y){
 	Touch.updated = true;
@@ -228,3 +263,4 @@ bool OPtouchWasPressed() {
 bool OPtouchWasReleased() {
 	return !Touch.tapping && Touch.prevTapping;
 }
+#endif

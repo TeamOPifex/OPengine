@@ -3,7 +3,6 @@
 #include "./Core/include/Core.h"
 #include "InputEnums.h"
 #include "./Math/include/Vector2.h"
-#include <jni.h>
 
 
 typedef struct {
