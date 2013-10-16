@@ -12,6 +12,7 @@ inline void OPvec2scl(OPvec2* dst, OPvec2* a, OPfloat s);
 inline void OPvec2div(OPvec2* dst, OPvec2* a, OPvec2* b);
 inline void OPvec2divf(OPvec2* dst, OPvec2* a, OPfloat b);
 inline void OPvec2dot(OPfloat* dst, OPvec2* a, OPvec2* b);
+inline void OPvec2len(OPfloat* dst, OPvec2* v);
 inline void OPvec2norm(OPvec2* dst, OPvec2* a);
 inline void OPvec2perp(OPvec2* dst, OPvec2* a);
 
@@ -125,6 +126,10 @@ inline void OPvec2divf(OPvec2* dst, OPvec2* a, OPfloat b){
 
 inline void OPvec2dot(OPfloat* dst, OPvec2* a, OPvec2* b){
 	(*dst) = a->x * b->x + a->y * b->y;
+}
+
+inline void OPvec2len(OPfloat* dst, OPvec2* v){
+	(*dst) = sqrt(v->x * v->x + v->y * v->y);
 }
 
 inline void OPvec2norm(OPvec2* dst, OPvec2* a){
