@@ -1,10 +1,62 @@
 #pragma once
 #include "Core/include/Types.h"
 #include "./Core/include/MathHelpers.h"
+#include "./Core/include/DynamicMemory.h"
 
-typedef struct {
+struct OPvec2;
+inline OPfloat* OPvec2index(OPvec2* v, int idx);
+inline void OPvec2add(OPvec2* dst, OPvec2* a, OPvec2* b);
+inline void OPvec2sub(OPvec2* dst, OPvec2* a, OPvec2* b);
+inline void OPvec2mul(OPvec2* dst, OPvec2* a, OPvec2* b);
+inline void OPvec2scl(OPvec2* dst, OPfloat s);
+inline void OPvec2div(OPvec2* dst, OPvec2* a, OPvec2* b);
+inline void OPvec2dot(OPfloat* dst, OPvec2* a, OPvec2* b);
+inline void OPvec2norm(OPvec2* dst, OPvec2* a);
+inline void OPvec2perp(OPvec2* dst, OPvec2* a);
+
+struct OPvec2 {
 	OPfloat x, y;
-} OPvec2;
+
+	OPvec2& operator=(OPvec2& vhs) { 
+		OPmemcpy(this, &vhs, sizeof(OPvec2)); return *this;
+	}
+	inline OPvec2& operator+(OPvec2& vhs) { 
+		OPvec2 temp;
+		OPvec2add(&temp, this, &vhs); 
+		return temp; 
+	}
+	inline OPvec2& operator+=(OPvec2& vhs) { 
+		OPvec2add(this, this, &vhs); 
+		return *this; 
+	}
+	inline OPvec2& operator-(OPvec2& vhs) { 
+		OPvec2 temp;
+		OPvec2sub(&temp, this, &vhs); 
+		return temp; 
+	}
+	inline OPvec2& operator-=(OPvec2& vhs) { 
+		OPvec2sub(this, this, &vhs); 
+		return *this; 
+	}
+	inline OPvec2& operator*(OPvec2& vhs) { 
+		OPvec2 temp;
+		OPvec2mul(&temp, this, &vhs); 
+		return temp; 
+	}
+	inline OPvec2& operator*=(OPvec2& vhs) { 
+		OPvec2mul(this, this, &vhs); 
+		return *this; 
+	}
+	inline OPvec2& operator/(OPvec2& vhs) { 
+		OPvec2 temp;
+		OPvec2div(&temp, this, &vhs); 
+		return temp; 
+	}
+	inline OPvec2& operator/=(OPvec2& vhs) { 
+		OPvec2div(this, this, &vhs); 
+		return *this; 
+	}
+};
 
 inline OPfloat* OPvec2index(OPvec2* v, int idx){
 	return &((OPfloat*)(v))[idx];

@@ -1,10 +1,18 @@
 #pragma once
 
 #include "./Core/include/Types.h"
+#include "./Core/include/DynamicMemory.h"
 
-typedef struct {
+struct OPvec4;
+inline OPfloat* OPvec4index(OPvec4* v, int idx);
+inline void OPvec4norm(OPvec4* dst, OPvec4* a);
+
+struct OPvec4 {
 	OPfloat x, y, z, w;
-} OPvec4;
+	OPvec4& operator=(OPvec4& vhs) { 
+		OPmemcpy(this, &vhs, sizeof(OPvec4)); return *this;
+	}
+};
 
 inline OPfloat* OPvec4index(OPvec4* v, int idx){
 	return &((OPfloat*)(v))[idx];

@@ -2,10 +2,18 @@
 
 #include "Vector3.h"
 #include "./Core/include/DynamicMemory.h"
+#include "./Core/include/DynamicMemory.h"
 
-typedef struct {
+struct OPmat3;
+inline OPvec3* OPmat3index(OPmat3* m, int idx);
+inline void OPmat3identity(OPmat3* dst);
+
+struct OPmat3 {
 	OPvec3 cols[3];
-} OPmat3;
+	OPmat3& operator=(OPmat3& vhs) { 
+		OPmemcpy(this, &vhs, sizeof(OPmat3)); return *this;
+	}
+};
 
 inline OPvec3* OPmat3index(OPmat3* m, int idx){
 	return &((OPvec3*)(m))[idx];
