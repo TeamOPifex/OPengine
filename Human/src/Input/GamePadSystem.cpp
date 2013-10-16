@@ -17,22 +17,22 @@ GamePadController GamePadControllers[CONTROLLERS] = {
 	{
 		0,
 		false,
-		0.01
+		0.1f
 	},
 	{
 		1,
 		false,
-		0.01
+		0.1f
 	},
 	{
 		2,
 		false,
-		0.01
+		0.1f
 	},
 	{
 		3,
 		false,
-		0.01
+		0.1f
 	}
 }; 
 
@@ -104,6 +104,10 @@ void OPgamePadUpdate(GamePadController* controller){
 			&controller->prevButtons, 
 			&controller->buttons, 
 			sizeof(bool) * GamePadButton_Max);
+		OPmemcpy(
+			&controller->prevAxes, 
+			&controller->axes, 
+			sizeof(OPfloat) * GamePadAxes_Max);
 	}
 
 #ifdef OPIFEX_ANDROID
@@ -256,59 +260,15 @@ void OPgamePadSetDeadzones(OPfloat deadzone)
 	}
 }
 
-
-bool OPgamePadIsDown(GamePadController* controller, GamePadButton button){
-	return controller->buttons[button];
-}
-
-bool OPgamePadIsUp(GamePadController* controller, GamePadButton button){
-	return !controller->buttons[button];
-}
-
-bool OPgamePadWasPressed(GamePadController* controller, GamePadButton button){
-	return controller->buttons[button] && !controller->prevButtons[button];
-}
-
-bool OPgamePadWasReleased(GamePadController* controller, GamePadButton button){
-	return !controller->buttons[button] && controller->prevButtons[button];
-}
-
-
 OPvec2 OPgamePadLeftThumb(GamePadController* controller) {
 	OPvec2 tmp;
 	tmp.x = controller->axes[LS_X];
 	tmp.y = controller->axes[LS_Y];
 	return tmp;
 }
-
-OPfloat OPgamePadLeftThumbX(GamePadController* controller) {
-	return controller->axes[LS_X];
-}
-
-OPfloat OPgamePadLeftThumbY(GamePadController* controller) {
-	return controller->axes[LS_Y];
-}
-
-OPfloat OPgamePadRightThumbX(GamePadController* controller) {
-	return controller->axes[RS_X];
-}
-
-OPfloat OPgamePadRightThumbY(GamePadController* controller) {
-	return controller->axes[RS_Y];
-}
-
-OPfloat OPgamePadLeftTrigger(GamePadController* controller) {
-	return controller->axes[L2];
-}
-
-OPfloat OPgamePadRightTrigger(GamePadController* controller) {
-	return controller->axes[R2];
-}
-
-bool OPgamePadIsConnected(GamePadController* controller) {
-	return controller->connected;
-}
-
-void OPgamePadSetDeadzone(GamePadController* controller, OPfloat deadzone) {
-	controller->deadzone = deadzone;
+OPvec2 OPgamePadRightThumb(GamePadController* controller) {
+	OPvec2 tmp;
+	tmp.x = controller->axes[RS_X];
+	tmp.y = controller->axes[RS_Y];
+	return tmp;
 }
