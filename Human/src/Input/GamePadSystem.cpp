@@ -98,7 +98,6 @@ GamePadController* OPgamePadController(GamePadIndex index) {
 
 
 void OPgamePadUpdate(GamePadController* controller){
-
 	if(OPgamePadIsConnected(controller)) {
 		OPmemcpy(
 			&controller->prevButtons, 
@@ -182,7 +181,7 @@ void OPgamePadUpdate(GamePadController* controller){
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER;
 
 		controller->buttons[GamePad_Button_A] =
-			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_A;
+			(controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_A);
 
 		controller->buttons[GamePad_Button_B] =
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_B;

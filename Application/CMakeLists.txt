@@ -63,7 +63,7 @@ target_link_libraries(8_Application
 	${VORBISFILE_LIBRARY}
 	${ZLIB_LIBRARY}
 	${LIBPNG_LIBRARY}
-)
+)	
 
 add_definitions(-D${OPIFEX_OS})
 

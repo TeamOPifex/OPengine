@@ -14,7 +14,7 @@ OPtimer* OPcreateTimer(){
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 // Windows specific values for time
 	timer->TotalGametime = 0;
-	timer->TimeLastTick = GetTickCount();
+	timer->TimeLastTick = timeGetTime();
 	timer->Elapsed = 0;
 #endif
 
@@ -40,12 +40,12 @@ void OPtimerTick(OPtimer* timer){
 	
 	timer->_lastTime = time;
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
-// Windows specific values for time
-	DWORD time = GetTickCount();
-
+	// Windows specific values for time
+	DWORD time = timeGetTime();
+	
 	timer->Elapsed = time - timer->TimeLastTick;
-	timer->TotalGametime += timer->Elapsed;
 	timer->TimeLastTick = time;
+	timer->TotalGametime += timer->Elapsed;
 #endif	
 }
 //----------------------------------------------------------------------------

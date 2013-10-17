@@ -23,7 +23,13 @@ add_custom_command(TARGET 1_Core POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_
 	endif()
 	
 add_definitions(-D${OPIFEX_OS})
-
+		
+if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
+target_link_libraries(1_Core
+	Winmm.lib
+)
+endif()
+	
 set_source_files_properties(src/test.c PROPERTIES LANGUAGE CXX )
 SET_TARGET_PROPERTIES(1_Core PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(1_Core PROPERTIES OUTPUT_NAME "Core")
