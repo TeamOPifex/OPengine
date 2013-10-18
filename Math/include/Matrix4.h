@@ -2,6 +2,7 @@
 
 #ifndef OPMATH_MAT4
 #define OPMATH_MAT4
+#include "./Math/include/Vector2.h"
 #include "./Math/include/Vector3.h"
 #include "./Math/include/Vector4.h"
 #include "./Core/include/DynamicMemory.h"
