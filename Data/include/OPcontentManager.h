@@ -56,7 +56,7 @@ extern HashMap OP_CMAN_HASHMAP;
 extern OPassetLoader* OP_CMAN_ASSETLOADERS;
 extern OPint OP_CMAN_ASSET_LOADER_COUNT;
 
-extern OPlinkedList OP_CMAN_PURGE;
+extern OPlinkedList* OP_CMAN_PURGE;
 
 // ______                _   _                 
 //|  ____|              | | (_)                

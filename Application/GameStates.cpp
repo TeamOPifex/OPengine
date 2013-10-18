@@ -43,6 +43,8 @@ OPtexture* tex, *spec, *norm;
 OPframeBuffer rt;
 OPint PackerCreated = 0;
 
+void* garbage;
+
 OPgameState State0 = {
 	State0Enter,
 	State0Update,
@@ -67,6 +69,8 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("steamPlaneSkin.png");
 	OPcmanLoad("steamPlaneSpec.png");
 	OPcmanLoad("noneNorm.png");
+
+	garbage = OPalloc(1024 * 10); // allocate ten megs of crap
 
 	OPcmanPurge();
 
@@ -235,6 +239,8 @@ void State0Exit(OPgameState* next){
 	OPcmanUnload("steamPlaneSkin.png");
 	OPcmanUnload("steamPlaneSpec.png");
 	OPcmanUnload("noneNorm.png");	
+
+	OPfree(garbage);
 }
 //-----------------------------------------------------------------------------
 void State1Enter(OPgameState* last){
@@ -256,6 +262,8 @@ void State1Enter(OPgameState* last){
 	tex  = (OPtexture*)OPcmanGet("steamPlaneSkin.png");
 	spec = (OPtexture*)OPcmanGet("steamPlaneSpec.png");
 	norm = (OPtexture*)OPcmanGet("noneNorm.png");
+
+	garbage = OPalloc(1024 * 10); // allocate ten megs of crap
 
 	t = 0;	
 }
@@ -320,8 +328,8 @@ int State1Update(OPtimer* time){
 	OPrenderMeshPacked(&quad);
 
 	if(t > 6) {
-		exit(0);
-		//OPgameStateChange(&State0);
+		//exit(0);
+		OPgameStateChange(&State0);
 	}
 
 
@@ -349,4 +357,6 @@ void State1Exit(OPgameState* next){
 
 	OPrenderUnloadEffect(&tri);
 	OPrenderUnloadEffect(&post);
+
+	OPfree(garbage);
 }

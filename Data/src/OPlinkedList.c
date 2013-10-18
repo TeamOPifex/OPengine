@@ -23,6 +23,7 @@ OPllNode* OPllInsertFirst(OPlinkedList* list, void* data){
 	OPllNode* node = (OPllNode*)OPalloc(sizeof(OPllNode));
 	node->Data = data;
 	node->Next = node->Prev = NULL;
+	++list->_size;
 
 	if(list->First == NULL){
 		list->Last = node;
@@ -41,6 +42,7 @@ OPllNode* OPllInsertLast(OPlinkedList* list, void* data){
 	OPllNode* node = (OPllNode*)OPalloc(sizeof(OPllNode));
 	node->Data = data;
 	node->Prev = node->Next = NULL;
+	++list->_size;
 
 	if(list->Last == NULL){
 		list->First = node;
@@ -64,7 +66,7 @@ void* OPllRemove(OPlinkedList* list, OPllNode* toRemove){
 	if(next) next->Prev = prev;
 
 	OPfree(toRemove);
-	list->_size--;
+	--list->_size;
 
 	return data;
 }
