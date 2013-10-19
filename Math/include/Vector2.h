@@ -30,72 +30,72 @@ inline OPvec2 OPvec2valPerp(OPvec2* a);
 struct OPvec2 {
 	OPfloat x, y;
 
-	OPvec2& operator=(OPvec2& vhs) { 
+	OPvec2 operator=(OPvec2 vhs) { 
 		OPmemcpy(this, &vhs, sizeof(OPvec2)); return *this;
 	}
-	inline OPvec2& operator+=(OPvec2& vhs) { 
+	inline OPvec2 operator+=(OPvec2 vhs) { 
 		OPvec2add(this, this, &vhs); 
 		return *this; 
 	}
-	inline OPvec2& operator-=(OPvec2& vhs) { 
+	inline OPvec2 operator-=(OPvec2 vhs) { 
 		OPvec2sub(this, this, &vhs); 
 		return *this; 
 	}
-	inline OPvec2& operator*=(OPvec2& vhs) { 
+	inline OPvec2 operator*=(OPvec2 vhs) { 
 		OPvec2mul(this, this, &vhs); 
 		return *this; 
 	}
-	inline OPvec2& operator*=(OPfloat vhs) { 
+	inline OPvec2 operator*=(OPfloat vhs) { 
 		OPvec2scl(this, this, vhs); 
 		return *this; 
 	}
-	inline OPvec2& operator/=(OPvec2& vhs) { 
+	inline OPvec2 operator/=(OPvec2 vhs) { 
 		OPvec2div(this, this, &vhs); 
 		return *this; 
 	}
-	inline OPvec2& operator/=(OPfloat vhs) { 
+	inline OPvec2 operator/=(OPfloat vhs) { 
 		OPvec2divf(this, this, vhs); 
 		return *this; 
 	}
 };
 
-inline OPvec2 operator+(OPvec2& lhs, OPvec2& vhs) { 
+inline OPvec2 operator+(OPvec2 lhs, OPvec2 vhs) { 
 	OPvec2 temp = { 0.0, 0.0 };
 	OPvec2add(&temp, &lhs, &vhs); 
 	return temp; 
 }
-inline OPvec2 operator-(OPvec2& lhs, OPvec2& vhs) { 
+inline OPvec2 operator-(OPvec2 lhs, OPvec2 vhs) { 
 	OPvec2 temp = { 0.0, 0.0 };
 	OPvec2sub(&temp, &lhs, &vhs); 
 	return temp; 
 }
-inline OPvec2 operator*(OPvec2& lhs, OPvec2& vhs) { 
+inline OPvec2 operator*(OPvec2 lhs, OPvec2 vhs) { 
 	OPvec2 temp = { 0.0, 0.0 };
 	OPvec2mul(&temp, &lhs, &vhs); 
 	return temp; 
 }
-inline OPvec2 operator*(OPvec2& lhs, OPfloat vhs) { 
+inline OPvec2 operator*(OPvec2 lhs, OPfloat vhs) { 
 	OPvec2 temp = { 0.0, 0.0 };
 	OPvec2scl(&temp, &lhs, vhs); 
 	return temp; 
 }
-inline OPvec2 operator*(OPfloat lhs, OPvec2& vhs) { 
+inline OPvec2 operator*(OPfloat lhs, OPvec2 vhs) { 
 	OPvec2 temp = { 0.0, 0.0 };
 	OPvec2scl(&temp, &vhs, lhs); 
 	return temp; 
 }
-inline OPvec2 operator/(OPvec2& lhs, OPvec2& vhs) { 
+inline OPvec2 operator/(OPvec2 lhs, OPvec2 vhs) { 
 	OPvec2 temp = { 0.0, 0.0 };
 	OPvec2div(&temp, &lhs, &vhs); 
 	return temp; 
 }
-inline OPvec2 operator/(OPvec2& lhs, OPfloat vhs) { 
+inline OPvec2 operator/(OPvec2 lhs, OPfloat vhs) { 
 	OPvec2 temp = { 0.0, 0.0 };
 	OPvec2divf(&temp, &lhs, vhs); 
 	return temp; 
 }
 
-inline OPvec2 operator/(OPfloat lhs, OPvec2& vhs) { 
+inline OPvec2 operator/(OPfloat lhs, OPvec2 vhs) { 
 	OPvec2 temp = { 0.0, 0.0 };
 	OPvec2divf(&temp, &vhs, lhs); 
 	return temp; 

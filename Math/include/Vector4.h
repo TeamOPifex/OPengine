@@ -9,7 +9,7 @@ inline void OPvec4norm(OPvec4* dst, OPvec4* a);
 
 struct OPvec4 {
 	OPfloat x, y, z, w;
-	OPvec4& operator=(OPvec4& vhs) { 
+	OPvec4 operator=(OPvec4 vhs) { 
 		OPmemcpy(this, &vhs, sizeof(OPvec4)); return *this;
 	}
 };

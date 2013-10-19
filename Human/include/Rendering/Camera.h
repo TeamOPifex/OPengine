@@ -18,7 +18,9 @@ extern "C" {
 //  \___ \| __| '__| | | |/ __| __/ __|
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
-typedef struct{
+struct OPcam;
+
+struct OPcam{
 	OPvec3 _pos;
 	OPvec3 _targ;
 	OPvec3 _up;
@@ -30,7 +32,11 @@ typedef struct{
 	OPmat4 _view;
 	OPint _projStale;
 	OPint _viewStale;
-} OPcam;
+	OPcam operator=(OPcam cam) {
+		OPmemcpy(this, &cam, sizeof(OPcam));
+		return *this;
+	}
+};
 
 //-----------------------------------------------------------------------------
 //  _____                     _____                  _____  _               _   _               

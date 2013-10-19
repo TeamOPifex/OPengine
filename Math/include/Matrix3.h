@@ -10,7 +10,7 @@ inline void OPmat3identity(OPmat3* dst);
 
 struct OPmat3 {
 	OPvec3 cols[3];
-	OPmat3& operator=(OPmat3& vhs) { 
+	OPmat3 operator=(OPmat3 vhs) { 
 		OPmemcpy(this, &vhs, sizeof(OPmat3)); return *this;
 	}
 };
