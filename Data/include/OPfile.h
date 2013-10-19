@@ -94,6 +94,13 @@ OPint OPwriteFile(const char* path, OPstream* data);
 OPstream* OPreadFile(const char* path);
 //-----------------------------------------------------------------------------
 /**
+ * OPreadFile - Reads a file into a byte stream.
+ *	@param path Location where the data will be read from.
+ *	@return pointer to the data stream, NULL on failure
+ */
+OPstream* OPreadFileLarge(const char* path, ui32 expectedCharSize);
+//-----------------------------------------------------------------------------
+/**
  * OPfileExists - Checks for the existance of a file.
  *	@param path Location in the file system where we will look for a file.
  *	@return 1 on success, 0 on failure

@@ -20,7 +20,7 @@ long ov_tell_func(void *datasource){ return ftell((FILE*)datasource); }
 //        | |                        __/ |                              
 //        |_|                       |___/                               
 OPint OPaudOpenWave(const OPchar* filename, OPaudioSource** source){
-	OPstream* str = OPreadFile(filename);
+	OPstream* str = OPreadFileLarge(filename, 1024);
 
 	if(!str) OPLog("Error: couldn't open '%s'\n", filename);
 	else{

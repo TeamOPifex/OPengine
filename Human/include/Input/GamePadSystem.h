@@ -49,43 +49,43 @@ inline bool OPgamePadWasReleased(GamePadController* controller, GamePadButton bu
 	return !controller->buttons[button] && controller->prevButtons[button];
 }
 
-inline bool OPgamePadLeftThumbIsRight(GamePadController* controller) { return controller->axes[LS_X] > 0.0f; }
-inline bool OPgamePadLeftThumbNowRight(GamePadController* controller) { return controller->prevAxes[LS_X] <= 0.0f && controller->axes[LS_X] > 0.0f; }
-inline bool OPgamePadLeftThumbWasRight(GamePadController* controller) { return controller->prevAxes[LS_X] > 0.0f && controller->axes[LS_X] <= 0.0f; }
-inline bool OPgamePadLeftThumbIsLeft(GamePadController* controller) { return controller->axes[LS_X] < 0.0f; }
-inline bool OPgamePadLeftThumbNowLeft(GamePadController* controller) { return controller->prevAxes[LS_X] >= 0.0f && controller->axes[LS_X] < 0.0f; }
-inline bool OPgamePadLeftThumbWasLeft(GamePadController* controller) { return controller->prevAxes[LS_X] < 0.0f && controller->axes[LS_X] >= 0.0f; }
+inline bool OPgamePadLeftThumbIsRight(GamePadController* controller) { return controller->axes[LS_X] > controller->deadzone; }
+inline bool OPgamePadLeftThumbNowRight(GamePadController* controller) { return controller->prevAxes[LS_X] <= controller->deadzone && controller->axes[LS_X] > controller->deadzone; }
+inline bool OPgamePadLeftThumbWasRight(GamePadController* controller) { return controller->prevAxes[LS_X] > controller->deadzone && controller->axes[LS_X] <= controller->deadzone; }
+inline bool OPgamePadLeftThumbIsLeft(GamePadController* controller) { return controller->axes[LS_X] < -controller->deadzone; }
+inline bool OPgamePadLeftThumbNowLeft(GamePadController* controller) { return controller->prevAxes[LS_X] >= -controller->deadzone && controller->axes[LS_X] < -controller->deadzone; }
+inline bool OPgamePadLeftThumbWasLeft(GamePadController* controller) { return controller->prevAxes[LS_X] < -controller->deadzone && controller->axes[LS_X] >= -controller->deadzone; }
 inline OPfloat OPgamePadLeftThumbX(GamePadController* controller) {
 	return controller->axes[LS_X];
 }
 
-inline bool OPgamePadLeftThumbIsUp(GamePadController* controller) { return controller->axes[LS_Y] > 0.0f; }
-inline bool OPgamePadLeftThumbNowUp(GamePadController* controller) { return controller->prevAxes[LS_Y] <= 0.0f && controller->axes[LS_Y] > 0.0f; }
-inline bool OPgamePadLeftThumbWasUp(GamePadController* controller) { return controller->prevAxes[LS_Y] > 0.0f && controller->axes[LS_Y] <= 0.0f; }
-inline bool OPgamePadLeftThumbIsDown(GamePadController* controller) { return controller->axes[LS_Y] < 0.0f; }
-inline bool OPgamePadLeftThumbNowDown(GamePadController* controller) { return controller->prevAxes[LS_Y] >= 0.0f && controller->axes[LS_Y] < 0.0f; }
-inline bool OPgamePadLeftThumbWasDown(GamePadController* controller) { return controller->prevAxes[LS_Y] < 0.0f && controller->axes[LS_Y] >= 0.0f; }
+inline bool OPgamePadLeftThumbIsUp(GamePadController* controller) { return controller->axes[LS_Y] > controller->deadzone; }
+inline bool OPgamePadLeftThumbNowUp(GamePadController* controller) { return controller->prevAxes[LS_Y] <= controller->deadzone && controller->axes[LS_Y] > controller->deadzone; }
+inline bool OPgamePadLeftThumbWasUp(GamePadController* controller) { return controller->prevAxes[LS_Y] > controller->deadzone && controller->axes[LS_Y] <= controller->deadzone; }
+inline bool OPgamePadLeftThumbIsDown(GamePadController* controller) { return controller->axes[LS_Y] < -controller->deadzone; }
+inline bool OPgamePadLeftThumbNowDown(GamePadController* controller) { return controller->prevAxes[LS_Y] >= -controller->deadzone && controller->axes[LS_Y] < -controller->deadzone; }
+inline bool OPgamePadLeftThumbWasDown(GamePadController* controller) { return controller->prevAxes[LS_Y] < -controller->deadzone && controller->axes[LS_Y] >= -controller->deadzone; }
 inline OPfloat OPgamePadLeftThumbY(GamePadController* controller) {
 	return controller->axes[LS_Y];
 }
 
-inline bool OPgamePadRightThumbIsRight(GamePadController* controller) { return controller->axes[RS_X] > 0.0f; }
-inline bool OPgamePadRightThumbNowRight(GamePadController* controller) { return controller->prevAxes[RS_X] <= 0.0f && controller->axes[RS_X] > 0.0f; }
-inline bool OPgamePadRightThumbWasRight(GamePadController* controller) { return controller->prevAxes[RS_X] > 0.0f && controller->axes[RS_X] <= 0.0f; }
-inline bool OPgamePadRightThumbIsLeft(GamePadController* controller) { return controller->axes[RS_X] < 0.0f; }
-inline bool OPgamePadRightThumbNowLeft(GamePadController* controller) { return controller->prevAxes[RS_X] >= 0.0f && controller->axes[RS_X] < 0.0f; }
-inline bool OPgamePadRightThumbWasLeft(GamePadController* controller) { return controller->prevAxes[RS_X] < 0.0f && controller->axes[RS_X] >= 0.0f; }
+inline bool OPgamePadRightThumbIsRight(GamePadController* controller) { return controller->axes[RS_X] > controller->deadzone; }
+inline bool OPgamePadRightThumbNowRight(GamePadController* controller) { return controller->prevAxes[RS_X] <= controller->deadzone && controller->axes[RS_X] > controller->deadzone; }
+inline bool OPgamePadRightThumbWasRight(GamePadController* controller) { return controller->prevAxes[RS_X] > controller->deadzone && controller->axes[RS_X] <= controller->deadzone; }
+inline bool OPgamePadRightThumbIsLeft(GamePadController* controller) { return controller->axes[RS_X] < -controller->deadzone; }
+inline bool OPgamePadRightThumbNowLeft(GamePadController* controller) { return controller->prevAxes[RS_X] >= -controller->deadzone && controller->axes[RS_X] < -controller->deadzone; }
+inline bool OPgamePadRightThumbWasLeft(GamePadController* controller) { return controller->prevAxes[RS_X] < -controller->deadzone && controller->axes[RS_X] >= -controller->deadzone; }
 inline OPfloat OPgamePadRightThumbX(GamePadController* controller) {
 	return controller->axes[RS_X];
 }
 
 
-inline bool OPgamePadRightThumbIsUp(GamePadController* controller) { return controller->axes[RS_Y] > 0.0f; }
-inline bool OPgamePadRightThumbNowUp(GamePadController* controller) { return controller->prevAxes[RS_Y] <= 0.0f && controller->axes[LS_Y] > 0.0f; }
-inline bool OPgamePadRightThumbWasUp(GamePadController* controller) { return controller->prevAxes[RS_Y] > 0.0f && controller->axes[LS_Y] <= 0.0f; }
-inline bool OPgamePadRightThumbIsDown(GamePadController* controller) { return controller->axes[RS_Y] < 0.0f; }
-inline bool OPgamePadRightThumbNowDown(GamePadController* controller) { return controller->prevAxes[RS_Y] >= 0.0f && controller->axes[LS_Y] < 0.0f; }
-inline bool OPgamePadRightThumbWasDown(GamePadController* controller) { return controller->prevAxes[RS_Y] < 0.0f && controller->axes[LS_Y] >= 0.0f; }
+inline bool OPgamePadRightThumbIsUp(GamePadController* controller) { return controller->axes[RS_Y] > controller->deadzone; }
+inline bool OPgamePadRightThumbNowUp(GamePadController* controller) { return controller->prevAxes[RS_Y] <= controller->deadzone && controller->axes[LS_Y] > controller->deadzone; }
+inline bool OPgamePadRightThumbWasUp(GamePadController* controller) { return controller->prevAxes[RS_Y] > controller->deadzone && controller->axes[LS_Y] <= controller->deadzone; }
+inline bool OPgamePadRightThumbIsDown(GamePadController* controller) { return controller->axes[RS_Y] < -controller->deadzone; }
+inline bool OPgamePadRightThumbNowDown(GamePadController* controller) { return controller->prevAxes[RS_Y] >= -controller->deadzone && controller->axes[LS_Y] < -controller->deadzone; }
+inline bool OPgamePadRightThumbWasDown(GamePadController* controller) { return controller->prevAxes[RS_Y] < -controller->deadzone && controller->axes[LS_Y] >= -controller->deadzone; }
 inline OPfloat OPgamePadRightThumbY(GamePadController* controller) {
 	return controller->axes[RS_Y];
 }

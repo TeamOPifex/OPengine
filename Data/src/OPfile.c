@@ -93,8 +93,12 @@ OPint OPwriteFile(const char* path, OPstream* stream){
 #endif
 }
 
+OPstream* OPreadFile(const char* path) {
+	return OPreadFileLarge(path, 1);
+}
+
 //-----------------------------------------------------------------------------
-OPstream* OPreadFile(const char* path){
+OPstream* OPreadFileLarge(const char* path, ui32 expectedCharSize){
 #ifdef OPIFEX_ANDROID
 	OPLog("OPreadFile: Creating Asset man - %s\n", path);
 	AAssetManager* mgr = AAssetManager_fromJava(JNIEnvironment(), JNIAssetManager());
@@ -142,7 +146,7 @@ OPstream* OPreadFile(const char* path){
 		// be sure that the file could be opened successfully
 	 	if(fd = open(path, O_RDONLY)){
 			ui8 byte = 0;
-			OPstream* str = OPstreamCreate(4);
+			OPstream* str = OPstreamCreate(expectedCharSize * 4);
 
 			printf("File opened successfully\n");
 
@@ -173,7 +177,7 @@ OPstream* OPreadFile(const char* path){
 		// be sure that the file could be opened successfully
 	 	if(!_sopen_s(&fd, path, _O_BINARY|_O_RDONLY, _SH_DENYWR, _S_IREAD)){
 			ui8 byte = 0;
-			OPstream* str = OPstreamCreate(4);
+			OPstream* str = OPstreamCreate(expectedCharSize * 4);
 
 			printf("File opened successfully\n");
 
