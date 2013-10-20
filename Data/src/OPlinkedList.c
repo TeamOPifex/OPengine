@@ -63,7 +63,10 @@ void* OPllRemove(OPlinkedList* list, OPllNode* toRemove){
 	void* data = toRemove->Data;
 
 	if(prev) prev->Next = next;
+	else list->First = next;
+
 	if(next) next->Prev = prev;
+	else list->Last = prev;
 
 	OPfree(toRemove);
 	--list->_size;
