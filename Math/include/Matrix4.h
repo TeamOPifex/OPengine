@@ -28,57 +28,70 @@ inline void OPmat4ortho(OPmat4* m, OPfloat left, OPfloat right, OPfloat bottom, 
 inline void OPmat4look(OPmat4* m, OPvec3* campos, OPvec3* look, OPvec3* up);
 inline void OPmat4Print(OPmat4 m);
 inline void OPmat4perspective(OPmat4* m, OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal);
+inline void OPmat4transform(OPvec3* dst, OPvec3* a, OPmat4* b);
 
 // Data Structure 4 * 4 = 16 floats
 //		32 bit = 16 * 32 = 512 bits or 64 bytes
 //		64 bit = 16 * 64 = 1024 bits or 128 bytes
 struct OPmat4 {
 	OPvec4 cols[4];
-	OPmat4 operator=(OPmat4 vhs) { 
+	OPmat4& operator=(OPmat4& vhs) { 
 		OPmemcpy(this, &vhs, sizeof(OPmat4)); return *this;
 	}
-	inline OPmat4 operator*(OPmat4 vhs) { 
+	inline OPmat4& operator*(OPmat4& vhs) { 
 		OPmat4 temp;
 		OPmat4mul(&temp, this, &vhs); 
 		return temp; 
 	}
-	inline OPmat4 operator*=(OPmat4 vhs) { 
+	inline OPmat4& operator*=(OPmat4& vhs) { 
 		OPmat4mul(this, this, &vhs); 
 		return *this; 
 	}
-	inline OPmat4 operator/=(OPvec3& vhs) { 
+	inline OPmat4& operator/=(OPvec3& vhs) { 
 		OPmat4scl(this, vhs.x, vhs.y, vhs.z); 
 		return *this; 
 	}
-	inline OPmat4 operator/=(OPvec4& vhs) { 
+	inline OPmat4& operator/=(OPvec4& vhs) { 
 		OPmat4scl(this, vhs.x, vhs.y, vhs.z); 
 		return *this; 
 	}
-	inline OPmat4 operator+=(OPvec2& vhs) { 
+	inline OPmat4& operator+=(OPvec2& vhs) { 
 		OPmat4translate(this, vhs.x, vhs.y, 0); 
 		return *this; 
 	}
-	inline OPmat4 operator+=(OPvec3& vhs) { 
+	inline OPmat4& operator+=(OPvec3& vhs) { 
 		OPmat4translate(this, vhs.x, vhs.y, vhs.z); 
 		return *this; 
 	}
-	inline OPmat4 operator+=(OPvec4& vhs) { 
+	inline OPmat4& operator+=(OPvec4& vhs) { 
 		OPmat4translate(this, vhs.x, vhs.y, vhs.z); 
 		return *this; 
 	}
-	inline OPmat4 operator-=(OPvec2& vhs) { 
+	inline OPmat4& operator-=(OPvec2& vhs) { 
 		OPmat4translate(this, -vhs.x, -vhs.y, 0); 
 		return *this; 
 	}
-	inline OPmat4 operator-=(OPvec3& vhs) { 
+	inline OPmat4& operator-=(OPvec3& vhs) { 
 		OPmat4translate(this, -vhs.x, -vhs.y, -vhs.z); 
 		return *this; 
 	}
-	inline OPmat4 operator-=(OPvec4& vhs) { 
+	inline OPmat4& operator-=(OPvec4& vhs) { 
 		OPmat4translate(this, -vhs.x, -vhs.y, -vhs.z); 
 		return *this; 
 	}
 };
+
+inline OPvec3 operator*(OPvec3 lhs, OPmat4 rhs) { 
+	OPvec3 temp;
+	OPmat4transform(&temp, &lhs, &rhs);
+	return temp; 
+}
+
+inline OPvec3 operator*(OPmat4 lhs, OPvec3 rhs) { 
+	OPvec3 temp;
+	OPmat4transform(&temp, &rhs, &lhs);
+	return temp; 
+}
 
 inline OPvec4* OPmat4index(OPmat4* m, int idx){
 	return &((OPvec4*)(m))[idx];
@@ -259,6 +272,12 @@ inline void OPmat4perspective(OPmat4* m, OPfloat fovy, OPfloat aspect, OPfloat n
 	m->cols[1] = c1;
 	m->cols[2] = c2;
 	m->cols[3] = c3;
+}
+
+inline void OPmat4transform(OPvec3* dst, OPvec3* a, OPmat4* b) {
+	dst->x = b->cols[0].x * a->x + b->cols[1].x * a->y + b->cols[2].x * a->z;
+	dst->y = b->cols[0].y * a->x + b->cols[1].y * a->y + b->cols[2].y * a->z;
+	dst->z = b->cols[0].z * a->x + b->cols[1].z * a->y + b->cols[2].z * a->z;
 }
 
 #endif

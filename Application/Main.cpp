@@ -261,6 +261,11 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 	int main() {
 #endif
 
+		OPmat4 scl;
+		OPmat4buildScl(&scl, 2.0f, 2.0f, 2.0f);
+		OPvec3 test = { 1.0f, 1.5f, 2.0f };
+		OPvec3 result = scl * test;
+
 		OPvec2 one = { 0.0, 1.5 };
 		OPvec2 two = { 0.5, -0.5 };
 		OPvec2 three = one + two;
