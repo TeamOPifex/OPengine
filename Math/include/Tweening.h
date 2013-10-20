@@ -68,7 +68,7 @@ inline inline OPfloat OPtween_quarticEaseOut(OPfloat p) {
 //		y = -(1/2)((2x-2)^4 - 2) ; [0.5, 1]
 inline inline OPfloat OPtween_quarticEaseInOut(OPfloat p) {
 	if(p < 0.5f) {
-		return 8.0f, * p * p * p * p;
+		return 8.0f * p * p * p * p;
 	}
 	OPfloat f = (p - 1.0f);
 	return -8.0f * f * f * f *f + 1.0f;
