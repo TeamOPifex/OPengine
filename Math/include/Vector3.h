@@ -4,6 +4,8 @@
 #include "./Core/include/DynamicMemory.h"
 
 struct OPvec3;
+struct OPmat4;
+
 inline OPfloat* OPvec3index(OPvec3* v, int idx);
 inline void OPvec3add(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3sub(OPvec3* dst, OPvec3* a, OPvec3* b);
@@ -41,6 +43,7 @@ struct OPvec3 {
 		OPvec3sub(this, this, &vhs); 
 		return *this; 
 	}
+	OPvec3 operator*=(OPmat4 rhs);
 	inline OPvec3 operator*=(OPvec3 vhs) { 
 		OPvec3mul(this, this, &vhs); 
 		return *this; 
