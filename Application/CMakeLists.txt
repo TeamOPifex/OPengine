@@ -55,7 +55,7 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
 elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX32")
 
 endif()
-				
+
 target_link_libraries(8_Application
 	${ALL_LIBS}
 	${OGG_LIBRARY}
@@ -64,6 +64,13 @@ target_link_libraries(8_Application
 	${ZLIB_LIBRARY}
 	${LIBPNG_LIBRARY}
 )	
+
+# Make sure the XInput library is linked correctly (Regardless of which Visual Studio is used)
+if( ${CMAKE_SYSTEM} STREQUAL "Windows-6.1") # Windows 7 - http://en.wikipedia.org/wiki/Windows_NT#Releases
+	target_link_libraries(8_Application
+		Xinput9_1_0.lib
+	)
+endif()
 
 add_definitions(-D${OPIFEX_OS})
 
