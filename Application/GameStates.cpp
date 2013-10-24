@@ -1,6 +1,7 @@
 #include "GameStates.h"
 #include "./Data/include/OPcontentManager.h"
 #include "./Math/include/Matrix4.h"
+#include "./Math/include/Solvers.h"
 #include "./Human/include/Resources/Texture/ImagePNG.h"
 #include "./Human/include/Utilities/Errors.h"
 #include "./Human/include/Rendering/Buffer.h"
@@ -146,6 +147,23 @@ void State0Enter(OPgameState* last){
 	}
 
 	t = 0;
+
+	OPvec2 line1[] = {
+		{-4, 0},
+		{ -2,  2}
+	};
+
+	OPvec2 line2[] = {
+		{ 1, -1},
+		{ -1,  1}
+	};
+
+	OPvec2 inter = {0, 0};
+
+	OPvec2 zero = {0,0};
+
+	OPint result = OPsolveIntersect(&line1[0], &line1[1], &line2[0], &line2[1], &inter);
+	result = OPsolveCircleIntersect(&line2[0], &line2[1], &zero, 1, &inter); 
 }
 
 int State0Update(OPtimer* time){
