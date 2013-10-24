@@ -13,8 +13,6 @@ jint _JNIHeight;
 jint _JNIWidth;
 
 
-
-
 JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager){
 	OPLog("Init Engine");
 	_JNIAssetManager = assetManager;
@@ -29,12 +27,21 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_init(JNIEnv * env, jobject obj,
 	OPLog("OPInitialized");
 }
 
-JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_step(JNIEnv * env, jobject obj){	
+JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_step(JNIEnv * env, jobject obj, jobject assetManager){	
+	if(!_OPengineRunning) return 1;
+
+	_JNIAssetManager = assetManager;
 	OPtimerTick(ApplicationTimer);
-	OPupdate(ApplicationTimer);
+	int val = OPupdate(ApplicationTimer);
+	if(val > 0) {
+		OPLog("Returning %d to Java", val);
+		_OPengineRunning = 0;
+	}
+	return val;
 }
 
-JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_destroy(JNIEnv * env, jobject obj){	
+JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_destroy(JNIEnv * env, jobject obj){
+	OPLog("Destroy");
 	OPdestroy();
 	OPdestroyTimer(ApplicationTimer);
 }
@@ -48,7 +55,7 @@ jint JNIHeight() { return _JNIHeight; }
 
 #ifndef __cplusplus
 void (*OPinitialize)();
-void (*OPupdate)(OPtimer*);
+int(*OPupdate)(OPtimer*);
 void (*OPdestroy)();
 
 void OPstart(){
@@ -63,7 +70,9 @@ void OPstart(){
 		OPtimerTick(ApplicationTimer);
 		
 		// update the game
-		OPupdate(ApplicationTimer);
+		if(OPupdate(ApplicationTimer)) {
+			_OPengineRunning = 0;
+		}
 	}
 
 	// game loop has finished, clean up

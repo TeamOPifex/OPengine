@@ -31,9 +31,10 @@ public class GL2JNILib {
      * @param width the current view width
      * @param height the current view height
      */
-     public static native void main();
+     public static native void start();
      public static native void init(int width, int height, AssetManager assetManager);
-     public static native void step();
+     public static native int step(AssetManager assetManager);
+     public static native void destroy();
 
     //public static final String DEVELOPER_ID = "8e0c74ec-c52c-4de4-89f0-3944b7145489";
 

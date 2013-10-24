@@ -20,7 +20,7 @@ long ov_tell_func(void *datasource){ return ftell((FILE*)datasource); }
 //        | |                        __/ |                              
 //        |_|                       |___/                               
 OPint OPaudOpenWave(const OPchar* filename, OPaudioSource** source){
-	OPstream* str = OPreadFile(filename);
+	OPstream* str = OPreadFileLarge(filename, 1024);
 
 	if(!str) OPLog("Error: couldn't open '%s'\n", filename);
 	else{
@@ -87,6 +87,7 @@ OPint OPaudOpenWave(const OPchar* filename, OPaudioSource** source){
 		// allocate space for the source to be returned
 		*source = (OPaudioSource*)OPalloc(sizeof(OPaudioSource));
 		OPmemcpy(*source, &src, sizeof(OPaudioSource));
+
 		return 1;
 	}
 
@@ -97,8 +98,10 @@ OPint OPaudOpenWave(const OPchar* filename, OPaudioSource** source){
 OPint OPaudOpenOgg(const OPchar* filename, OPaudioSource** source){
 	// Open Ogg Stream
 	ov_callbacks	sCallbacks;
-	OggVorbis_File	*sOggVorbisFile = new OggVorbis_File();
+	OggVorbis_File*	sOggVorbisFile = (OggVorbis_File*)OPalloc(sizeof(OggVorbis_File));
 	vorbis_info		*psVorbisInfo;
+
+	*sOggVorbisFile = OggVorbis_File();
 
 	sCallbacks.read_func = ov_read_func;
 	sCallbacks.seek_func = ov_seek_func;
@@ -244,9 +247,7 @@ OPint OPaudReadOgg (OPaudioSource* src, ui64* position, ui8* dest, ui32 len){
 		if(!len) break;
 		decoded += len;
 	}
-
-	printf("\n");
-
+	
 	return decoded;
 }
 //-----------------------------------------------------------------------------

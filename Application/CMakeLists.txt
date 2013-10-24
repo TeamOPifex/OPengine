@@ -16,7 +16,9 @@ include_directories(
 set(ALL_LIBS
 	1_Core
 	2_Data
-	4_Human
+	3_Math
+	4_Performance
+	5_Human
 )
 
 
@@ -26,44 +28,53 @@ set(ALL_LIBS
 add_source_group(\\ "${PROJECT_SOURCE_DIR}/Application" APPLICATION_SRC)
 #endif()
 
-add_executable(7_Application ${APPLICATION_SRC})
+add_executable(8_Application ${APPLICATION_SRC})
 
 if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
 
-	add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	add_custom_command(TARGET 8_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 		"${PROJECT_SOURCE_DIR}/External/Ogg/lib/win32/ogg.dll"
 		${PROJECT_BINARY_DIR}/Application/Debug)
 
-	add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	add_custom_command(TARGET 8_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 		"${PROJECT_SOURCE_DIR}/External/Ogg/lib/win32/libogg.dll"
 		${PROJECT_BINARY_DIR}/Application/Debug)
 
-	add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	add_custom_command(TARGET 8_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/vorbisfile.dll"
 		${PROJECT_BINARY_DIR}/Application/Debug)
 
-	add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	add_custom_command(TARGET 8_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/libvorbis.dll"
 		${PROJECT_BINARY_DIR}/Application/Debug)
 		
-	add_custom_command(TARGET 7_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	add_custom_command(TARGET 8_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/libvorbisfile.dll"
 		${PROJECT_BINARY_DIR}/Application/Debug)
 		
 elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX32")
 
 endif()
-				
-target_link_libraries(7_Application
+
+target_link_libraries(8_Application
 	${ALL_LIBS}
 	${OGG_LIBRARY}
 	${VORBIS_LIBRARY}
 	${VORBISFILE_LIBRARY}
 	${ZLIB_LIBRARY}
 	${LIBPNG_LIBRARY}
-)
+)	
 
-SET_TARGET_PROPERTIES(7_Application PROPERTIES LINKER_LANGUAGE CXX)
-set_target_properties(7_Application PROPERTIES 
+# Make sure the XInput library is linked correctly (Regardless of which Visual Studio is used)
+if( ${CMAKE_SYSTEM} STREQUAL "Windows-6.1") # Windows 7 - http://en.wikipedia.org/wiki/Windows_NT#Releases
+	target_link_libraries(8_Application
+		Xinput9_1_0.lib
+	)
+endif()
+
+add_definitions(-D${OPIFEX_OS})
+
+SET_TARGET_PROPERTIES(8_Application PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(8_Application PROPERTIES 
 	OUTPUT_NAME "Application"
 )

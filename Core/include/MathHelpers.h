@@ -2,7 +2,6 @@
 #ifndef OPEngine_Core_MathHelpers
 #define OPEngine_Core_MathHelpers
 
-#include "Target.h"
 #include "Types.h"
 
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)	// linux math libs
@@ -174,6 +173,18 @@ OPfloat OPrandom();
  * @return Floating point value with the range(min, max)
  */
 OPfloat OPrandRange(OPfloat min, OPfloat max);
+//-----------------------------------------------------------------------------
+/**
+ * OPnear - math helper
+ *	Determines if a value is within a threashold of another
+ * @param value Value to check
+ * @param target Target which value is checked against
+ * @return True if near is within theshhold of target, otherwise false.
+ */
+__inline OPfloat OPnear(OPfloat value, OPfloat target, OPfloat threshhold){
+	return (OPabs(value - target) < threshhold ? 1 : 0);
+}
+
 #ifdef __cplusplus
 }
 #endif

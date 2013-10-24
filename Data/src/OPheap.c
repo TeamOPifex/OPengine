@@ -6,12 +6,13 @@ OPminHeap* OPminHeapCreate(OPint capacity){
 	OPint i = 0;
 	heap->_indices = (OPint*)OPalloc(sizeof(OPint) * (capacity + 1));
 	
-	for(i = 0; i < capacity + 1; i++){
+	for(i = 1; i < capacity + 1; i++){
 		heap->_indices[i] = 0;
 	}
+	heap->_indices[0] = -0xffffffffffffffff;
 
-	heap->_size = 1;
-	heap->_capacity = capacity + 1;
+	heap->_size = 0;
+	heap->_capacity = capacity;
 
 	return heap;
 }
@@ -24,26 +25,48 @@ OPint OPminHeapDestroy(OPminHeap* heap){
 //-----------------------------------------------------------------------------
 OPint OPminHeapPush(OPminHeap* heap, OPint value){
 	if(heap->_size < heap->_capacity){
-		OPint i = heap->_size;
-		heap->_indices[i] = value;
-		_bubbleUp(heap->_indices, i);
-		heap->_size++;
+		OPint now;
+        heap->_size++;
+		heap->_indices[heap->_size] = value; /*Insert in the last place*/
+        /*Adjust its position*/
+        now = heap->_size;
+        while(heap->_indices[(now >> 1)] > value){
+                heap->_indices[now] = heap->_indices[(now >> 1)];
+                now >>= 1;
+        }
+		heap->_indices[now] = value;
 		return 1;
 	}
 	else return 0;
 }
 //-----------------------------------------------------------------------------
 OPint OPminHeapPop(OPminHeap* heap){
-	OPint* arr = heap->_indices;
-	OPint out = arr[1];
-
-	if(heap->_size <= 1) return -1;
-
-	_swap(&arr[1], &arr[heap->_size - 1]);
-	heap->_size--;
-	_bubbleDown(heap, 1);
-
-	return out;
+    int minElement,lastElement,child,now;
+	minElement = heap->_indices[1];
+	lastElement = heap->_indices[heap->_size--];
+    /* now refers to the index at which we are now */
+    for(now = 1; (now << 1) <= heap->_size ; now = child){
+            /* child is the index of the element which is minimum among both the children */ 
+            /* Indexes of children are i*2 and i*2 + 1*/
+            child = (now << 1);
+            /*child!=heapSize beacuse heap[heapSize+1] does not exist, which means it has only one 
+                child */
+			if(child != heap->_size && heap->_indices[child + 1] < heap->_indices[child] ){
+                    child++;
+            }
+            /* To check if the last element fits ot not it suffices to check if the last element
+                is less than the minimum element among both the children*/
+			if(lastElement > heap->_indices[child])
+            {
+                    heap->_indices[now] = heap->_indices[child];
+            }
+            else /* It fits there */
+            {
+                    break;
+            }
+    }
+    heap->_indices[now] = lastElement;
+    return minElement;
 }
 //-----------------------------------------------------------------------------
 OPint OPminHeapPeek(OPminHeap* heap){
@@ -51,62 +74,8 @@ OPint OPminHeapPeek(OPminHeap* heap){
 	return heap->_indices[1];
 }
 //-----------------------------------------------------------------------------
-void _bubbleDown(OPminHeap* heap, OPint i){
-	OPint r = _leftChild(i);
-	OPint l = _rightChild(i);
-	OPint index = heap->_size;
-	OPint* arr = heap->_indices;
-
-	if(l < index && r <index){
-		if(arr[r] <= arr[l]){
-			if(arr[r] <= arr[i]){
-				_swap(&arr[r], &arr[i]);
-				_bubbleDown(heap, r);
-			}
-		}
-		else{
-			if(arr[l] <= arr[i]){
-				_swap(&arr[l], &arr[i]);
-				_bubbleDown(heap, l);
-			}
-		}
-	}
-}
-//-----------------------------------------------------------------------------
-void _bubbleUp(OPint* arr, OPint i){
-	if(i > 1){
-		OPint p = _parent(i);
-
-		if(arr[p] >= arr[i]){
-			_swap(&arr[p], &arr[i]);
-			_bubbleUp(arr, p);
-		}
-	}
-}
-//-----------------------------------------------------------------------------
 OPint OPminHeapSize(OPminHeap* heap){
 	return heap->_size - 1;
-}
-//-----------------------------------------------------------------------------
-OPint _parent(OPint i){
-    OPint r = i % 2;
-
-    if (r == 0) return i / 2;
-    return (i - 1) / 2;
-}
-//-----------------------------------------------------------------------------
-OPint _leftChild(OPint i){
-    return i * 2;
-}
-//-----------------------------------------------------------------------------
-OPint _rightChild(OPint i){
-    return (i * 2) + 1;
-}
-//-----------------------------------------------------------------------------
-void _swap(OPint* a, OPint* b){
-	OPint temp = *a;
-	*a = *b;
-	*b = temp;
 }
 //-----------------------------------------------------------------------------
 //- C++ Definitions -----------------------------------------------------------

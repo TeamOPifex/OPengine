@@ -28,8 +28,7 @@ OPint OPlistPush(OPlist* list, ui8* value){
 	}
 
 	// copy bytes into the array
-	for(i = eleSize; i--;)
-		list->_indices[list->_size * eleSize + i] = value[i];
+	OPmemcpy((list->_indices + (list->_size * eleSize)), value, eleSize);
 
 	list->_size++;
 

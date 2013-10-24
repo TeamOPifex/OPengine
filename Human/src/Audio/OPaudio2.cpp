@@ -21,6 +21,9 @@ SLObjectItf SLES_outputMixObject;
 ALCdevice*  AL_OPaudioDevice;
 ALCcontext* AL_OPaudioContext;
 #endif
+
+OPmutex OPAUD_CURR_MUTEX;
+
 LPOVCLEAR           fn_ov_clear;
 LPOVREAD            fn_ov_read;
 LPOVPCMTOTAL        fn_ov_pcm_total;
@@ -36,6 +39,9 @@ LPOVOPENCALLBACKS   fn_ov_open_callbacks;
 //  \____/|_|   \__,_|\__,_|\__,_|_|\___/  |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPint OPaudInit(){
 	OPLog("Initializing OP audio...\n");
+
+	OPAUD_CURR_MUTEX = OPmutexCreate();
+
 // USE OGG VORBIS FOR DESKTOP PLATFORMS
 #if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 	HINSTANCE _hVorbisFileDLL = LoadLibrary("vorbisfile.dll");
@@ -136,43 +142,43 @@ OPint OPaudInit(){
 	return 1;
 }
 //-----------------------------------------------------------------------------
-Vector3 OPaudEarPosition(Vector3* pos){
+OPvec3 OPaudEarPosition(OPvec3* pos){
 #ifdef OPIFEX_ANDROID	
-	Vector3 out;
+	OPvec3 out;
 	return out;
 #else
 	if(pos) alListenerfv(AL_POSITION, &(pos->x));
 
 	// return the stored value
-	Vector3 out;
+	OPvec3 out;
 	alGetListenerfv(AL_POSITION, &(pos->x));
 	return out;
 #endif
 }
 //-----------------------------------------------------------------------------
-Vector3 OPaudEarVelocity(Vector3* pos){
+OPvec3 OPaudEarVelocity(OPvec3* pos){
 #ifdef OPIFEX_ANDROID	
-	Vector3 out;
+	OPvec3 out;
 	return out;
 #else
 	if(pos) alListenerfv(AL_VELOCITY, &(pos->x));
 
 	// return the stored value
-	Vector3 out;
+	OPvec3 out;
 	alGetListenerfv(AL_VELOCITY, &(pos->x));
 	return out;
 #endif
 }
 //-----------------------------------------------------------------------------
-Vector3 OPaudEarForward(Vector3* pos){
+OPvec3 OPaudEarForward(OPvec3* pos){
 #ifdef OPIFEX_ANDROID	
-	Vector3 out;
+	OPvec3 out;
 	return out;
 #else
 	if(pos) alListenerfv(AL_ORIENTATION, &(pos->x));
 
 	// return the stored value
-	Vector3 out;
+	OPvec3 out;
 	alGetListenerfv(AL_ORIENTATION, &(pos->x));
 	return out;
 #endif

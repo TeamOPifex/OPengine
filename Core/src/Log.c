@@ -31,6 +31,8 @@ void OPLog(const char* message, ...){
 
 #else
 #include <stdio.h>
+#include <errno.h>
+
 void OPLog_i32(i32 number) {
 	printf("%d", number);
 	printf("\n");
@@ -59,7 +61,13 @@ void OPLog(const char* message, ...){
     va_list args;
 	va_start(args, message);
 	vsnprintf(buffer, sizeof buffer, message, args);
-	perror(buffer);
+	if(errno) {
+		perror(buffer);
+		errno = 0;
+	} else {
+		printf(buffer);
+		printf("\n");
+	}
     va_end(args);
 }
 #endif

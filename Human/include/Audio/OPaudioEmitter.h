@@ -2,14 +2,19 @@
 #define OPAUD_EMITTER
 
 #include "OPaudioSource.h"
+#include "Data/include/OPentHeap.h"
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#define EMITTER_THREADED 0x0001
+#define EMITTER_LOOPING  0x0002
+
 #define BUFFER_COUNT 10
 #define BUFFER_SIZE 4096
+#define THREADED_EMITTERS 100
 //-----------------------------------------------------------------------------
 // ______                           
 // |  ____|                          
@@ -35,12 +40,13 @@ enum OPaudioEmitterState{
 // |_____/ \__|_|   \__,_|\___|\__|___/
 typedef struct{
 	OPint               CurrBuffer;           // index of the buffer currently being filled
-	OPint				Looping;              // indicates weather the sounds restarts when finished or not
+	OPint				Flags;                // Specifies behavior such as looping and threadedness
 	OPaudioEmitterState State;                // current play state of the sound
 	ui64                Progress;             // Current play position
 	OPaudioSource*      Source;               // data source for the sound
 	ui8                 Temp[BUFFER_SIZE];    // BUFFER_SIZE byte temp buffer for processing
 	void*               Processor;            // Pointer to data for audio processing
+	OPmutex             Lock;                 // Protects the sound from cross thread calls
 
 #ifdef OPIFEX_ANDROID 
 	SLObjectItf _outputMixObject, _playerObject;
@@ -71,6 +77,9 @@ typedef struct{
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
 extern OPaudioEmitter* OPAUD_CURR_EMITTER;
+extern OPmutex         OPAUD_CURR_MUTEX;
+extern OPentHeap       OPAUD_REG_EMITTERS;
+extern OPthread        OPAUD_UPDATE_THREAD;
 //-----------------------------------------------------------------------------
 
 
@@ -94,19 +103,30 @@ extern OPaudioEmitter* OPAUD_CURR_EMITTER;
 //   / /\ \| | | |/ _` | |/ _ \|  __| | '_ ` _ \| | __| __/ _ \ '__| |  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //  / ____ \ |_| | (_| | | (_) | |____| | | | | | | |_| ||  __/ |    | |  | |_| | | | | (__| |_| | (_) | | | \__ \
 // /_/    \_\__,_|\__,_|_|\___/|______|_| |_| |_|_|\__|\__\___|_|    |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPaudioEmitter OPaudCreateEmitter(OPaudioSource* src, OPint looping);
+void OPaudInitThread(OPint maxEmitters);
+
+OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint flags);
+void OPaudDestroyEmitter(OPaudioEmitter* emitter);
+
+OPaudioEmitter* OPaudGetEmitter(OPaudioSource* src, OPint flags);
+void OPaudRecycleEmitter(OPaudioEmitter* emitter);
 
 void  OPaudEnqueueBuffer(ui8* buffer, OPint length);
 
 void OPaudPlay ();
 void OPaudPause();
 void OPaudStop ();
+void OPaudSafePlay (OPaudioEmitter* emitter);
+void OPaudSafePause(OPaudioEmitter* emitter);
+void OPaudSafeStop (OPaudioEmitter* emitter);
+
 OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length));
+OPint OPaudSafeUpdate(OPaudioEmitter* emitter, void(*Proc)(OPaudioEmitter* emit, OPint length));
 
 OPint OPaudProc(OPaudioEmitter* emitter, void(*Proc)(OPaudioEmitter* emit, OPint length));
 
-void OPaudPosition(Vector3* position);
-void OPaudVelocity(Vector3* velocity);
+void OPaudPosition(OPvec3* position);
+void OPaudVelocity(OPvec3* velocity);
 void OPaudVolume  (OPfloat gain);
 void OPaudPitch   (OPfloat pitch);
 //-----------------------------------------------------------------------------

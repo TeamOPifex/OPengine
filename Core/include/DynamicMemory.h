@@ -2,8 +2,8 @@
 #ifndef OPEngine_Core_DYNMEM
 #define OPEngine_Core_DYNMEM
 
-#include "Target.h" // defines the current build target
 #include "Types.h"
+#include <string.h>
 
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 // android specific for malloc

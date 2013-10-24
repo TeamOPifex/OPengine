@@ -1,8 +1,8 @@
 #pragma once
 #ifndef OPEngine_Core
 #define OPEngine_Core
+#define WIN32_LEAN_AND_MEAN 0
 
-#include "Target.h" // defines the current build target
 #include "Types.h"
 #include "GameCycle.h"
 #include "DynamicMemory.h"
@@ -19,10 +19,10 @@ extern "C" {
 
 
 #ifdef OPIFEX_ANDROID
-	
+	JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_touch(JNIEnv * env, jobject obj,  jint evt, jfloat x, jfloat y);
 	JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager);
-	JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_step(JNIEnv * env, jobject obj);
-	JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_destroy(JNIEnv * env, jobject obj);
+	JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_step(JNIEnv * env, jobject obj, jobject assetManager);
+	JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_destroy(JNIEnv * env, jobject obj);
 	JNIEnv* JNIEnvironment();
 	jobject JNIAssetManager();
 	jint JNIWidth();

@@ -139,9 +139,9 @@ OPfloat OPrandom(){
 OPfloat OPrandRange(OPfloat min, OPfloat max){
 	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) // linux implementation
 		max -= min;
-		return (OPfloat)(OPrandom() * max);
+		return (OPfloat)(OPrandom() * max) + min;
 	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
 		max -= min;
-		return (OPfloat)(OPrandom() * max);
+		return (OPfloat)(OPrandom() * max) + min;
 	#endif
 }

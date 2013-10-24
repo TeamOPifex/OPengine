@@ -2,11 +2,11 @@
 #include "./Human/include/Utilities/Errors.h"
 
 #if defined(OPIFEX_ANDROID)
-	#include <GLES2/gl2.h>
-	#include <GLES2/gl2ext.h>
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
 #else
-	#include <GL/glew.h>
-	#include <GL/glfw.h>
+#include <GL/glew.h>
+#include <GL/glfw.h>
 #endif
 #include "./Core/include/Log.h"
 
@@ -17,14 +17,14 @@ Texture2D::Texture2D(ImagePtr texture){
 
 	glBindTexture(GL_TEXTURE_2D, m_handle);
 	CheckError("Texture2D::Error 2");
-	
+
 	if(texture->Compressed()) {
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		CheckError("Texture2D::Error 3");
 	}
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //GL_NEAREST = no smoothing
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	ui32 offset = 0;
 
@@ -45,7 +45,7 @@ Texture2D::Texture2D(ImagePtr texture){
 		}
 		if(CheckError("Texture2D::Error 4"))
 			return;
-		
+
 		offset += size;
 		width /= 2;
 		height /= 2;
@@ -60,6 +60,6 @@ void Texture2D::Bind(ui32 loc, int slot){
 	CheckError("Texture2D::Error 6 - Failed to bind texture");
 	glUniform1i(loc, slot);
 	if(CheckError("Texture2D::Error 7 - Failed to bind texture")){
-		
+
 	}
 }

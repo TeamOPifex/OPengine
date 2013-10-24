@@ -4,7 +4,7 @@
 #include "Core/include/Types.h"
 #include "ShaderTypes.h"
 #include "./Human/include/Resources/Texture/Texture2D.h"
-#include "./Human/include/Math/Matrix4.h"
+#include "./Math/include/Matrix4.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
 #include <GLES2/gl2.h>
@@ -16,7 +16,6 @@
 class Shader : public Resource {
 public:
 	Shader(ShaderType shaderType, const char* source);
-	void Init(ShaderType shaderType, const char* source);
 	static Shader* FromFile(ShaderType shaderType, const char* file);
 };
 

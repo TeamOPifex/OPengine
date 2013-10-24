@@ -1,20 +1,29 @@
 #pragma once
+#ifndef OPEngine_Human_Renderer
+#define OPEngine_Human_Renderer
 
 #include "./Core/include/Types.h"
-#include "./Human/include/Resources/Material/Material.h"
 
-class Renderer{
-public:
-	Renderer(){}
-	virtual ~Renderer() { }
-	virtual int initialize(ui32 width, ui32 height) = 0;
-	virtual void clear_color(f32 r, f32 g, f32 b) = 0;
-	virtual void use_material(MaterialPtr material) = 0;
-	virtual void set_viewport(ui32 x, ui32 y, ui32 width, ui32 height) = 0;
-	virtual void set_buffer(int bufferType, ui32 buffer) = 0;
-	virtual void render_triangles(ui32 offset, ui32 count) = 0;
-	virtual void render_triangles(ui32 numIndices) = 0;
-	virtual void swap_buffer() = 0;
-	virtual void shutdown() = 0;
-	virtual void depth_test(bool state) = 0;
+// prevent name mangling if compiling with c++
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern OPint OPrenderWidth;
+extern OPint OPrenderHeight;
+
+OPint OPrenderInit       (ui32 width, ui32 height);
+void  OPrenderClear      (f32 r, f32 g, f32 b);
+void  OPrenderSetViewport(ui32 x, ui32 y, ui32 width, ui32 height);
+void  OPrenderSwapBuffer ();
+void  OPrenderPresent    ();
+void  OPrenderDepth      (OPint state);
+void  OPrenderShutdown   ();
+
+extern ui32 OPscreenWidth;
+extern ui32 OPscreenHeight;
+#ifdef __cplusplus
 };
+#endif
+
+#endif

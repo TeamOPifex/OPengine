@@ -21,8 +21,8 @@ extern "C"
 //                                                                      
 typedef struct{
 	void* Entities;
+	OPint* InUse;
 	OPint MaxIndex;
-	OPint MaxStale;
 	OPminHeap Free;
 } OPentHeap;
 
@@ -33,19 +33,31 @@ typedef struct{
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
-#define OPentHeapActivate(heap, i){\
-	if((*i = OPminHeapPop(&heap->Free)) >= 0){\
-		if(*i > heap->MaxIndex - 1){\
-			heap->MaxIndex = *i + 1;\
-			heap->MaxStale = 0;\
-		}\
-	}\
-}\
+__inline void OPentHeapActivate(OPentHeap* heap, OPint* i){
+	if(heap->Free._size){
+		if((*i = OPminHeapPop(&heap->Free)) >= 0){
+			heap->InUse[*i] = 1;
+			if(*i >= heap->MaxIndex - 1){
+				heap->MaxIndex = *i + 1;
+			}
+		}
+	}
+	else
+		*i = -1;
+}
 
-#define OPentHeapKill(heap, i){\
-	OPminHeapPush(&heap.Free, i);\
-	if(i == heap.MaxIndex) heap.MaxStale = 1;\
-}\
+__inline void OPentHeapKill(OPentHeap* heap, OPint i){
+	OPint inUse = heap->InUse[i];
+	if(inUse){
+		OPint mi = heap->MaxIndex - 1;
+		OPminHeapPush(&heap->Free, i);
+		heap->InUse[i] = 0;
+		while(!heap->InUse[mi]){
+			mi--;
+		}
+		heap->MaxIndex = mi + 1;
+	}
+}
 
 OPuint     OPentHeapSize(OPint entsize, OPint count);
 OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count);

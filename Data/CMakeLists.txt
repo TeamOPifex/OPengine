@@ -30,6 +30,7 @@ add_custom_command(TARGET 2_Data POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_
 	
 endif()
 
+add_definitions(-D${OPIFEX_OS})
 target_link_libraries(2_Data
 	${ALL_LIBS}
 )
