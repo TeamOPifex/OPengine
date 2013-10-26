@@ -1,15 +1,6 @@
 #include "./Core/include/Log.h"
 #include "./Human/include/Rendering/Renderer.h"
 
-#ifdef OPIFEX_OPENGL_ES_2
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#else
-#include <GL/glew.h>
-#include <GL/glfw.h>
-//#include <glm/glm.hpp>
-#endif
-
 OPint OPrenderWidth, OPrenderHeight;
 
 OPint OPrenderInit(ui32 width, ui32 height){
