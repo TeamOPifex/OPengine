@@ -55,29 +55,53 @@ struct OPmat4 {
 		OPmat4scl(this, vhs.x, vhs.y, vhs.z); 
 		return *this; 
 	}
-	inline OPmat4& operator+=(OPvec2& vhs) { 
-		OPmat4translate(this, vhs.x, vhs.y, 0); 
-		return *this; 
+	inline OPmat4& operator+=(OPvec2& vhs) {
+		OPmat4translate(this, vhs.x, vhs.y, 0);
+		return *this;
 	}
-	inline OPmat4& operator+=(OPvec3& vhs) { 
-		OPmat4translate(this, vhs.x, vhs.y, vhs.z); 
-		return *this; 
+	inline OPmat4& operator+=(OPvec2* vhs) {
+		OPmat4translate(this, vhs->x, vhs->y, 0);
+		return *this;
 	}
-	inline OPmat4& operator+=(OPvec4& vhs) { 
-		OPmat4translate(this, vhs.x, vhs.y, vhs.z); 
-		return *this; 
+	inline OPmat4& operator+=(OPvec3& vhs) {
+		OPmat4translate(this, vhs.x, vhs.y, vhs.z);
+		return *this;
 	}
-	inline OPmat4& operator-=(OPvec2& vhs) { 
-		OPmat4translate(this, -vhs.x, -vhs.y, 0); 
-		return *this; 
+	inline OPmat4& operator+=(OPvec3* vhs) {
+		OPmat4translate(this, vhs->x, vhs->y, vhs->z);
+		return *this;
 	}
-	inline OPmat4& operator-=(OPvec3& vhs) { 
-		OPmat4translate(this, -vhs.x, -vhs.y, -vhs.z); 
-		return *this; 
+	inline OPmat4& operator+=(OPvec4& vhs) {
+		OPmat4translate(this, vhs.x, vhs.y, vhs.z);
+		return *this;
 	}
-	inline OPmat4& operator-=(OPvec4& vhs) { 
-		OPmat4translate(this, -vhs.x, -vhs.y, -vhs.z); 
-		return *this; 
+	inline OPmat4& operator+=(OPvec4* vhs) {
+		OPmat4translate(this, vhs->x, vhs->y, vhs->z);
+		return *this;
+	}
+	inline OPmat4& operator-=(OPvec2& vhs) {
+		OPmat4translate(this, -vhs.x, -vhs.y, 0);
+		return *this;
+	}
+	inline OPmat4& operator-=(OPvec2* vhs) {
+		OPmat4translate(this, -vhs->x, -vhs->y, 0);
+		return *this;
+	}
+	inline OPmat4& operator-=(OPvec3& vhs) {
+		OPmat4translate(this, -vhs.x, -vhs.y, -vhs.z);
+		return *this;
+	}
+	inline OPmat4& operator-=(OPvec3* vhs) {
+		OPmat4translate(this, -vhs->x, -vhs->y, -vhs->z);
+		return *this;
+	}
+	inline OPmat4& operator-=(OPvec4& vhs) {
+		OPmat4translate(this, -vhs.x, -vhs.y, -vhs.z);
+		return *this;
+	}
+	inline OPmat4& operator-=(OPvec4* vhs) {
+		OPmat4translate(this, -vhs->x, -vhs->y, -vhs->z);
+		return *this;
 	}
 };
 
