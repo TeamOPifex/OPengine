@@ -93,10 +93,18 @@ inline OPfloat OPgamePadRightThumbY(GamePadController* controller) {
 inline OPfloat OPgamePadLeftTrigger(GamePadController* controller) {
 	return controller->axes[L2];
 }
+inline bool OPgamePadLeftTriggerWasPressed(GamePadController* controller) { return controller->axes[L2] > 0 && controller->prevAxes[L2] <= 0; }
+inline bool OPgamePadLeftTriggerWasReleased(GamePadController* controller) { return controller->axes[L2] <= 0 && controller->prevAxes[L2] > 0; }
+inline bool OPgamePadLeftTriggerIsDown(GamePadController* controller) { return controller->axes[L2] > 0; }
+inline bool OPgamePadLeftTriggerIsUp(GamePadController* controller) { return controller->axes[L2] <= 0; }
 
 inline OPfloat OPgamePadRightTrigger(GamePadController* controller) {
 	return controller->axes[R2];
 }
+inline bool OPgamePadRightTriggerWasPressed(GamePadController* controller) { return controller->axes[R2] > 0 && controller->prevAxes[L2] <= 0; }
+inline bool OPgamePadRightTriggerWasReleased(GamePadController* controller) { return controller->axes[R2] <= 0 && controller->prevAxes[L2] > 0; }
+inline bool OPgamePadRightTriggerIsDown(GamePadController* controller) { return controller->axes[R2] > 0; }
+inline bool OPgamePadRightTriggerIsUp(GamePadController* controller) { return controller->axes[R2] <= 0; }
 
 inline bool OPgamePadIsConnected(GamePadController* controller) {
 	return controller->connected;
