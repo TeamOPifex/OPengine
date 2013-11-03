@@ -113,3 +113,42 @@ inline bool OPgamePadIsConnected(GamePadController* controller) {
 inline void OPgamePadSetDeadzone(GamePadController* controller, OPfloat deadzone) {
 	controller->deadzone = deadzone;
 }
+
+inline bool OPgamePadAnyPrevInputIsDown(GamePadController* controller) {
+	ui32 count = GamePadButton_Max;
+	for (; count > 0; count--) {
+		if (controller->prevButtons[count]) return true;
+	}
+	count = GamePadAxes_Max;
+	for (; count > 0; count--) {
+		if (controller->prevAxes[count]) return true;
+	}
+	return false;
+}
+
+inline bool OPgamePadAnyPrevInputIsUp(GamePadController* controller) {
+	return !OPgamePadAnyPrevInputIsDown(controller);
+}
+
+inline bool OPgamePadAnyInputIsDown(GamePadController* controller) {
+	ui32 count = GamePadButton_Max;
+	for (; count > 0; count--) {
+		if (controller->buttons[count]) return true;
+	}
+	count = GamePadAxes_Max;
+	for (; count > 0; count--) {
+		if (controller->axes[count]) return true;
+	}
+	return false;
+}
+
+inline bool OPgamePadAnyInputIsUp(GamePadController* controller) {
+	return !OPgamePadAnyInputIsDown(controller);
+}
+
+inline bool OPgamePadAnyInputWasPressed(GamePadController* controller) {
+	return OPgamePadAnyInputIsDown(controller) && OPgamePadAnyPrevInputIsUp(controller);
+}
+inline bool OPgamePadAnyInputWasReleased(GamePadController* controller) {
+	return OPgamePadAnyInputIsUp(controller) && OPgamePadAnyPrevInputIsDown(controller);
+}

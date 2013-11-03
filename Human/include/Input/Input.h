@@ -40,6 +40,7 @@ bool OPkeyboardIsDown(OPkeyboardKey key);
 bool OPkeyboardIsUp(OPkeyboardKey key);
 bool OPkeyboardWasPressed(OPkeyboardKey key);
 bool OPkeyboardWasReleased(OPkeyboardKey key);
+bool OPkeyboardAnyInputIsDown();
 
 void OPmouseUpdate();
 i32 OPmousePositionX();
@@ -54,6 +55,7 @@ bool OPmouseWasPressed(OPmouseKey key);
 bool OPmouseWasReleased(OPmouseKey key);
 void OPmouseSetPosition(i32 x, i32 y);
 void OPmouseSetPositionScreenCenter();
+bool OPmouseAnyInputIsDown();
 
 void OPtouchUpdate();
 f32 OPtouchPositionX();
@@ -64,3 +66,4 @@ bool OPtouchIsDown();
 bool OPtouchIsUp();
 bool OPtouchWasPressed();
 bool OPtouchWasReleased();
+bool OPtouchAnyInputIsDown();
