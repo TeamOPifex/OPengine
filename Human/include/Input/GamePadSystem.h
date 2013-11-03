@@ -142,6 +142,14 @@ inline bool OPgamePadAnyInputIsDown(GamePadController* controller) {
 	return false;
 }
 
+inline bool OPgamePadAnyControllerInputIsDown() {
+	ui32 count = 3;
+	for (; count > 0; count--) {
+		if (OPgamePadAnyInputIsDown(OPgamePadController((GamePadIndex)count))) return true;
+	}
+	return false;
+}
+
 inline bool OPgamePadAnyInputIsUp(GamePadController* controller) {
 	return !OPgamePadAnyInputIsDown(controller);
 }
