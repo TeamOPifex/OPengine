@@ -119,10 +119,6 @@ inline bool OPgamePadAnyPrevInputIsDown(GamePadController* controller) {
 	for (; count > 0; count--) {
 		if (controller->prevButtons[count]) return true;
 	}
-	count = GamePadAxes_Max;
-	for (; count > 0; count--) {
-		if (controller->prevAxes[count]) return true;
-	}
 	return false;
 }
 
@@ -134,10 +130,6 @@ inline bool OPgamePadAnyInputIsDown(GamePadController* controller) {
 	ui32 count = GamePadButton_Max;
 	for (; count > 0; count--) {
 		if (controller->buttons[count]) return true;
-	}
-	count = GamePadAxes_Max;
-	for (; count > 0; count--) {
-		if (controller->axes[count]) return true;
 	}
 	return false;
 }

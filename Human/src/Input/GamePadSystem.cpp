@@ -189,6 +189,9 @@ void OPgamePadUpdate(GamePadController* controller){
 		controller->buttons[GamePad_Button_X] =
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_X;
 
+		controller->buttons[GamePad_Button_Y] =
+			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y;
+
 		controller->buttons[GamePad_Button_DPAD_UP] =
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP;
 

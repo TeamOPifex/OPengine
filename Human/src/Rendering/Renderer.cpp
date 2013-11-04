@@ -28,7 +28,7 @@ OPint OPrenderInit(ui32 width, ui32 height){
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
 	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		
+
 	// Open a window and create its OpenGL context
 	if( !glfwOpenWindow( width, height, 0,0,0,0, 32,0, GLFW_WINDOW ) )
 	{		
@@ -37,19 +37,18 @@ OPint OPrenderInit(ui32 width, ui32 height){
 		return -1;
 	}
 
+	GLFWvidmode mode;
+	glfwGetDesktopMode(&mode);
+	glfwSetWindowPos((mode.Width - width) / 2, (mode.Height - height) / 2);
+
 	OPrenderSetViewport(0, 0, width, height);
-	//glewExperimental = true;
 	if (glewInit() != GLEW_OK) return -1;	
 
 	glfwSetWindowTitle( "OPifex Engine" );
 	glfwEnable( GLFW_STICKY_KEYS );	
 
 	glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LESS); 
-	//glCullFace(GL_BACK);
-	//glEnable(GL_CULL_FACE);
 
-	//glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	
 	// TODO: Determine how to optimize with this
