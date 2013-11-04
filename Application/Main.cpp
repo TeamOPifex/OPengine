@@ -138,7 +138,7 @@ void Init(){
 	OPaudInitThread(10);
 
 #ifndef OPIFEX_ANDROID
-	OPrenderInit(width, height);
+	OPrenderInit(width, height, false);
 #else
 	OPrenderInit(JNIWidth(), JNIHeight());
 #endif

@@ -21,7 +21,7 @@ extern "C" {
 extern OPint OPrenderWidth;
 extern OPint OPrenderHeight;
 
-OPint OPrenderInit       (ui32 width, ui32 height);
+OPint OPrenderInit       (ui32 width, ui32 height, bool fullscreen);
 void  OPrenderClear      (f32 r, f32 g, f32 b);
 void  OPrenderSetViewport(ui32 x, ui32 y, ui32 width, ui32 height);
 void  OPrenderSwapBuffer ();

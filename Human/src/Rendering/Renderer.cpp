@@ -3,7 +3,7 @@
 
 OPint OPrenderWidth, OPrenderHeight;
 
-OPint OPrenderInit(ui32 width, ui32 height){
+OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
 #ifdef OPIFEX_OPENGL_ES_2
 	// Android doesn't need to create a window
 	glEnable(GL_DEPTH_TEST);
@@ -30,7 +30,7 @@ OPint OPrenderInit(ui32 width, ui32 height){
 	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
-	if( !glfwOpenWindow( width, height, 0,0,0,0, 32,0, GLFW_WINDOW ) )
+	if( !glfwOpenWindow( width, height, 0,0,0,0, 32,0, fullscreen ? GLFW_FULLSCREEN : GLFW_WINDOW ) )
 	{		
 		OPLog("Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible.\n" );
 		glfwTerminate();
@@ -60,6 +60,8 @@ OPint OPrenderInit(ui32 width, ui32 height){
 
 	OPrenderWidth = width;
 	OPrenderHeight = height;
+
+	
 
 	return 0;
 #endif
