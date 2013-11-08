@@ -217,3 +217,8 @@ inline OPvec2 OPvec2valPerp(OPvec2* a) {
 	OPvec2perp(&temp, a);
 	return temp;
 }
+
+inline OPvec2 OPvec2valReflect(OPvec2* horizon, OPvec2* v){
+	OPfloat ratio = 2 * (OPvec2valDot(v, horizon) / OPvec2valDot(horizon, horizon));
+	return *horizon * ratio - *v;
+}

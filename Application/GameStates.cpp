@@ -246,17 +246,17 @@ int State0Update(OPtimer* time){
 }
 
 void State0Exit(OPgameState* next){
-	OPcmanUnload("impact.wav");
-	OPcmanUnload("boom.wav");
-	OPcmanUnload("background.ogg");
-	OPcmanUnload("TexturedSpecular.vert");
-	OPcmanUnload("TexturedSpecular.frag");
-	OPcmanUnload("TexturedScreen.vert");
-	OPcmanUnload("Textured.frag");
-	OPcmanUnload("BiPlane.opm");
-	OPcmanUnload("steamPlaneSkin.png");
-	OPcmanUnload("steamPlaneSpec.png");
-	OPcmanUnload("noneNorm.png");	
+	OPcmanDelete("impact.wav");
+	OPcmanDelete("boom.wav");
+	OPcmanDelete("background.ogg");
+	OPcmanDelete("TexturedSpecular.vert");
+	OPcmanDelete("TexturedSpecular.frag");
+	OPcmanDelete("TexturedScreen.vert");
+	OPcmanDelete("Textured.frag");
+	OPcmanDelete("BiPlane.opm");
+	OPcmanDelete("steamPlaneSkin.png");
+	OPcmanDelete("steamPlaneSpec.png");
+	OPcmanDelete("noneNorm.png");	
 
 	OPfree(garbage);
 }
@@ -361,17 +361,17 @@ int State1Update(OPtimer* time){
 }
 
 void State1Exit(OPgameState* next){
-	OPcmanUnload("impact.wav");
-	OPcmanUnload("boom.wav");
-	OPcmanUnload("background.ogg");
-	OPcmanUnload("TexturedSpecular.vert");
-	OPcmanUnload("TexturedSpecular.frag");
-	OPcmanUnload("TexturedScreen.vert");
-	OPcmanUnload("Textured.frag");
-	OPcmanUnload("BiPlane.opm");
-	OPcmanUnload("steamPlaneSkin.png");
-	OPcmanUnload("steamPlaneSpec.png");
-	OPcmanUnload("noneNorm.png");	
+	OPcmanDelete("impact.wav");
+	OPcmanDelete("boom.wav");
+	OPcmanDelete("background.ogg");
+	OPcmanDelete("TexturedSpecular.vert");
+	OPcmanDelete("TexturedSpecular.frag");
+	OPcmanDelete("TexturedScreen.vert");
+	OPcmanDelete("Textured.frag");
+	OPcmanDelete("BiPlane.opm");
+	OPcmanDelete("steamPlaneSkin.png");
+	OPcmanDelete("steamPlaneSpec.png");
+	OPcmanDelete("noneNorm.png");	
 
 	OPrenderUnloadEffect(&tri);
 	OPrenderUnloadEffect(&post);
