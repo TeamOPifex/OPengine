@@ -78,17 +78,15 @@ OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader){
 	OPstream* source = OPreadFile(filename);
 
 	frag = glCreateShader(OPfragmentShader);
-	CheckError("GLShader::Error 1");
+
 	if(frag){
 		OPchar* src = (OPchar*)source->Data;
 		OPLog("%s\n", src);
 		glShaderSource(frag, 1, (const OPchar**)&src, 0);
-		CheckError("GLShader::Error 2");
 		glCompileShader(frag);
-		CheckError("GLShader::Error 3");
+
 		GLint compiled = 0;
 		glGetShaderiv(frag, GL_COMPILE_STATUS, &compiled);
-		CheckError("GLShader::Error 4");
 		if(!compiled){
 			OPLog("GLShader::Failed to compile Shader");
 
@@ -97,7 +95,6 @@ OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader){
 			glGetShaderInfoLog(frag, 4096, &length, msg);
 			OPLog(msg);
 
-			CheckError("GLShader::Error 5");
 			glDeleteShader(frag);
 			OPstreamDestroy(source); // clean up stream
 			return 0;
@@ -112,7 +109,6 @@ OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader){
 	// if we made it this far, everything is a-ok
 	*shader = (OPshader*)OPalloc(sizeof(OPshader));
 	**shader = frag; // copy the shader handle
-	CheckError("GLShader::Error 6");
 
 	return 1;
 }
@@ -133,20 +129,14 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 		-1,
 		 0
 	};
-	CheckError("OPrenderCreateEffect:Error 1");
 	effect.Parameters = OPhashMapCreate(32);
 	effect.Attributes = OPlistCreate(AttribCount, sizeof(OPshaderAttribute));
-	CheckError("OPrenderCreateEffect:Error 2");
 
 	effect.ProgramHandle = glCreateProgram();
-	CheckError("OPrenderCreateEffect:Error 3");
 
 	glAttachShader(effect.ProgramHandle, vert);
-	CheckError("OPrenderCreateEffect:Error 4");
 	glAttachShader(effect.ProgramHandle, frag);
-	CheckError("OPrenderCreateEffect:Error 5");
 	glLinkProgram(effect.ProgramHandle);
-	CheckError("OPrenderCreateEffect:Error 6");
 
 	OPint status;
 	glGetProgramiv(effect.ProgramHandle, GL_LINK_STATUS, &status);
@@ -183,11 +173,9 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 				break;
 		}
 
-		//OPLog("%s = %d loc %d\n", Attributes[AttribCount], AttribCount, *loc);
 		OPlistPush(effect.Attributes, (ui8*)&attr);
 	}
 	
-	CheckError("OPrenderCreateEffect:Error 8");
 	return effect;
 }
 //-----------------------------------------------------------------------------
@@ -206,34 +194,31 @@ OPint OPrenderUnloadEffect(OPeffect* effect){
 
 // effect managment
 OPint OPrenderBindEffect(OPeffect* effect){
-	CheckError("OPrenderBindEffect:Error 0");
 	// disable attributes of the last effect
 	if(OPRENDER_CURR_EFFECT){
 		OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
 		for(;attrCount--;){
-	CheckError("OPrenderBindEffect:Error 0.2");
 			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
-	CheckError("OPrenderBindEffect:Error 0.3");
 			glDisableVertexAttribArray((ui32)attr->Name);
-			if(CheckError("OPrenderBindEffect:Error 0.4")) {
-				//OPLog("Failed to bind %s", attr->Name);
+			if(CheckError("OPrenderBindEffect:Error ")) {
+				OPLog("Failed to disable attrib %u", (ui32)attr->Name);
 			}
 		}
 	}
-	CheckError("OPrenderBindEffect:Error 1");
 
 	OPRENDER_CURR_EFFECT = effect;
 
 	glUseProgram(OPRENDER_CURR_EFFECT->ProgramHandle);
-	CheckError("OPrenderBindEffect:Error 2");
+
 	// enable attributes of the new effect
 	OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
 	for(;attrCount--;){
 		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
 		
-	CheckError("OPrenderBindEffect:Error 3");
 		glEnableVertexAttribArray((ui32)attr->Name);
-	CheckError("OPrenderBindEffect:Error 4");
+		if(CheckError("OPrenderBindEffect:Error ")) {
+			OPLog("Failed to enable attrib %u", (ui32)attr->Name);
+		}
 		glVertexAttribPointer(
 			(ui32)attr->Name,
 			attr->Elements,
@@ -242,7 +227,9 @@ OPint OPrenderBindEffect(OPeffect* effect){
 			effect->Stride,
 			attr->Offset
 		);
-	CheckError("OPrenderBindEffect:Error 5");
+		if(CheckError("OPrenderBindEffect:Error ")) {
+			OPLog("Failed to set attrib ptr %u", (ui32)attr->Name);
+		}
 	}
 
 	return 1;
