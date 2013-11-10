@@ -164,7 +164,7 @@ OPint OPaudOpenOgg(const OPchar* filename, OPaudioSource** source){
 				src.Description = desc;
 				src.DataSource  = sOggVorbisFile;
 
-				printf("Len: %u\nSampleRate: %u\nChann: %u\n", desc.Length, desc.SamplesPerSecond, desc.Channels);
+				printf("Len: %lu\nSampleRate: %u\nChann: %u\n", desc.Length, desc.SamplesPerSecond, desc.Channels);
 
 				*source = (OPaudioSource*)OPalloc(sizeof(OPaudioSource));
 				OPmemcpy(*source, &src, sizeof(OPaudioSource));

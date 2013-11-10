@@ -11,7 +11,7 @@ extern "C" {
 struct OPgameState_def;
 typedef struct OPgameState_def OPgameState;
 
-typedef struct OPgameState_def{
+struct OPgameState_def{
 	void (*OnEntrance)(OPgameState*);
 	int(*Update)(OPtimer*);
 	void (*OnExit)(OPgameState*);

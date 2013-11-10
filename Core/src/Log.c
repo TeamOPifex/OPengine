@@ -42,11 +42,11 @@ void OPLog_ui32(ui32 number) {
 	printf("\n");
 }
 void OPLog_i64(i64 number) {
-	printf("%d", number);
+	printf("%ld", number);
 	printf("\n");
 }
 void OPLog_ui64(ui64 number) {
-	printf("%d", number);
+	printf("%lu", number);
 	printf("\n");
 }
 void OPLog_f32(f32 number) {
@@ -65,7 +65,7 @@ void OPLog(const char* message, ...){
 		perror(buffer);
 		errno = 0;
 	} else {
-		printf(buffer);
+		printf("%s", buffer);
 		printf("\n");
 	}
     va_end(args);

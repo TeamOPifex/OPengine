@@ -44,10 +44,10 @@ typedef ui32 OPshader;
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 typedef struct{
-	OPchar* Name;
-	ui32    Type;
-	ui32    Elements;
-	void*   Offset;
+	const OPchar* Name;
+	ui32         Type;
+	ui32         Elements;
+	void*        Offset;
 }OPshaderAttribute;
 
 typedef struct{
