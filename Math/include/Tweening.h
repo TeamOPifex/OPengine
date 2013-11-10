@@ -1,29 +1,30 @@
 #pragma once
-
+#ifndef OPIFEX_MATH_TWEEN
+#define OPIFEX_MATH_TWEEN
 // Based on - https://github.com/warrenm/AHEasing/blob/master/AHEasing/easing.c
 
 #include "./Core/include/Types.h"
 #include "./Core/include/MathHelpers.h"
 
 // Tweening Function : y = x
-inline inline OPfloat OPtween_linear(OPfloat p) {
+inline OPfloat OPtween_linear(OPfloat p) {
 	return p;
 }
 
 // Tweening Function : y = x^2
-inline inline OPfloat OPtween_quadraticEaseIn(OPfloat p) {
+inline OPfloat OPtween_quadraticEaseIn(OPfloat p) {
 	return p * p;
 }
 
 // Tweening Function : y = -x^2 + 2x
-inline inline OPfloat OPtween_quadraticEaseOut(OPfloat p) {
+inline OPfloat OPtween_quadraticEaseOut(OPfloat p) {
 	return -(p * (p - 2.0f));
 }
 
 // Tweening Function : 
 //		y = (1/2)((2x)^2)             ; [0, 0.5)
 //		y = -(1/2)((2x-1)*(2x-3) - 1) ; [0.5, 1]
-inline inline OPfloat OPtween_quadraticEaseInOut(OPfloat p) {
+inline OPfloat OPtween_quadraticEaseInOut(OPfloat p) {
 	if(p < 0.5) {
 		return 2.0f * p * p;
 	}
@@ -31,12 +32,12 @@ inline inline OPfloat OPtween_quadraticEaseInOut(OPfloat p) {
 }
 
 // Tweening Function : y = x^3
-inline inline OPfloat OPtween_cubicEaseIn(OPfloat p) {
+inline OPfloat OPtween_cubicEaseIn(OPfloat p) {
 	return p * p * p;
 }
 
 // Tweening Function : y = (x - 1)^3 + 1
-inline inline OPfloat OPtween_cubicEaseOut(OPfloat p) {
+inline OPfloat OPtween_cubicEaseOut(OPfloat p) {
 	OPfloat f = (p - 1.0f);
 	return f * f * f + 1.0f;
 }
@@ -44,7 +45,7 @@ inline inline OPfloat OPtween_cubicEaseOut(OPfloat p) {
 // Tweening Function : 
 //		y = (1/2)((2x)^3)       ; [0, 0.5)
 //		y = (1/2)((2x-2)^3 + 2) ; [0.5, 1]
-inline inline OPfloat OPtween_cubicEaseInOut(OPfloat p) {
+inline OPfloat OPtween_cubicEaseInOut(OPfloat p) {
 	if(p < 0.5f) {
 		return 4.0f * p * p * p;
 	}
@@ -53,12 +54,12 @@ inline inline OPfloat OPtween_cubicEaseInOut(OPfloat p) {
 }
 
 // Tweening Function : y = x^4
-inline inline OPfloat OPtween_quarticEaseIn(OPfloat p) {
+inline OPfloat OPtween_quarticEaseIn(OPfloat p) {
 	return p * p * p * p;
 }
 
 // Tweening Function : y = 1 - (x - 1)^4
-inline inline OPfloat OPtween_quarticEaseOut(OPfloat p) {
+inline OPfloat OPtween_quarticEaseOut(OPfloat p) {
 	OPfloat f = (p - 1.0f);
 	return f * f * f * (1.0f - p) + 1;
 }
@@ -66,7 +67,7 @@ inline inline OPfloat OPtween_quarticEaseOut(OPfloat p) {
 // Tweening Function : 
 //		y = (1/2)((2x)^4)        ; [0, 0.5)
 //		y = -(1/2)((2x-2)^4 - 2) ; [0.5, 1]
-inline inline OPfloat OPtween_quarticEaseInOut(OPfloat p) {
+inline OPfloat OPtween_quarticEaseInOut(OPfloat p) {
 	if(p < 0.5f) {
 		return 8.0f * p * p * p * p;
 	}
@@ -252,3 +253,4 @@ inline OPfloat OPtween_bounceEaseInOut(OPfloat p)
 	}
 	return 0.5f * OPtween_bounceEaseOut(p * 2 - 1) + 0.5;
 }
+#endif

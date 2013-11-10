@@ -35,7 +35,7 @@ inline void OPmat4transform(OPvec3* dst, OPvec3* a, OPmat4* b);
 //		64 bit = 16 * 64 = 1024 bits or 128 bytes
 struct OPmat4 {
 	OPvec4 cols[4];
-	OPmat4& operator=(OPmat4& vhs) { 
+	OPmat4 operator=(OPmat4 vhs) { 
 		OPmemcpy(this, &vhs, sizeof(OPmat4)); return *this;
 	}
 	inline OPmat4& operator*(OPmat4& vhs) { 

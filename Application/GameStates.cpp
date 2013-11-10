@@ -59,6 +59,7 @@ OPgameState State1 = {
 };
 
 void State0Enter(OPgameState* last){
+	OPLog("State0 Entering...");
 	OPcmanLoad("impact.wav");
 	OPcmanLoad("boom.wav");
 	OPcmanLoad("background.ogg");
@@ -70,6 +71,7 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("steamPlaneSkin.png");
 	OPcmanLoad("steamPlaneSpec.png");
 	OPcmanLoad("noneNorm.png");
+	OPLog("State0 Content loaded.");
 
 	garbage = OPalloc(1024 * 10); // allocate ten megs of crap
 
@@ -164,6 +166,8 @@ void State0Enter(OPgameState* last){
 
 	OPint result = OPsolveIntersect(&line1[0], &line1[1], &line2[0], &line2[1], &inter);
 	result = OPsolveCircleIntersect(&line2[0], &line2[1], &zero, 1, &inter); 
+
+	OPLog("State0 Entered!");
 }
 
 int State0Update(OPtimer* time){
@@ -174,6 +178,28 @@ int State0Update(OPtimer* time){
 	world = OPmat4();
 	view = OPmat4();
 	proj = OPmat4();
+
+	OPmat4buildRotY(&world, t);
+	OPcamGetView(camera, &view);
+	OPcamGetProj(camera, &proj);
+
+	OPLog("Binding meshes and effects");
+	OPmeshPackerBind(&packer);
+	OPrenderBindMesh(plane);
+	OPrenderBindEffect(&tri);
+	OPLog("Done binding");
+
+	OPLog("Binding textures...");
+	OPtextureBind(tex);
+	OPrenderParami("uColorTexture", tex->Handle);
+	OPtextureBind(spec);
+	OPrenderParami("uSpecularTexture", spec->Handle);
+	OPtextureBind(norm);
+	OPrenderParami("uNormalTexture", norm->Handle);
+	OPrenderParamMat4v("uWorld", 1, &world);
+	OPrenderParamMat4v("uProj", 1, &proj);
+	OPrenderParamMat4v("uView", 1, &view);
+	OPLog("Done binding");
 
 	OPmat4buildRotY(&world, t);
 	OPcamGetView(camera, &view);
@@ -195,8 +221,6 @@ int State0Update(OPtimer* time){
 
 	OPframeBufferBind(&rt);
 	
-	OPkeyboardUpdate();
-	OPmouseUpdate();
 	GamePadController* gamePad = OPgamePadController(GamePadIndex_One);
 	OPgamePadUpdate(gamePad);
 	
@@ -208,13 +232,6 @@ int State0Update(OPtimer* time){
 		}
 	} else {
 		OPrenderClear(1.0f, 1.0f, 1.0f);
-	}
-	
-	if(OPkeyboardIsDown(OPKEY_SPACE)) {
-		OPrenderClear(0.0f, 1.0f, 0.0f);
-	}
-	if(OPmouseIsDown(OPKEY_LBUTTON)) {
-		OPrenderClear(1.0f, 1.0f, 0.0f);
 	}
 
 	OPrenderMesh();
@@ -233,11 +250,12 @@ int State0Update(OPtimer* time){
 
 	OPrenderMeshPacked(&quad);
 
+
 	if(t > 6)
 		OPgameStateChange(&State1);
-
 	OPrenderPresent();
 
+	OPLog("Update done");
 	if(OPgamePadIsConnected(gamePad) && OPgamePadWasPressed(gamePad, GamePad_Button_RIGHT_SHOULDER)){
 		return true;
 	}
@@ -262,6 +280,7 @@ void State0Exit(OPgameState* next){
 }
 //-----------------------------------------------------------------------------
 void State1Enter(OPgameState* last){
+	OPLog("State1 Entering...");
 	OPcmanLoad("impact.wav");
 	OPcmanLoad("boom.wav");
 	OPcmanLoad("background.ogg");
@@ -272,7 +291,8 @@ void State1Enter(OPgameState* last){
 	OPcmanLoad("BiPlane.opm");
 	OPcmanLoad("steamPlaneSkin.png");
 	OPcmanLoad("steamPlaneSpec.png");
-	OPcmanLoad("noneNorm.png");
+	OPcmanLoad("noneNorm.png");	
+	OPLog("State1 assets loaded!");
 
 	OPcmanPurge();
 
@@ -283,7 +303,9 @@ void State1Enter(OPgameState* last){
 
 	garbage = OPalloc(1024 * 10); // allocate ten megs of crap
 
-	t = 0;	
+	t = 0;
+
+	OPLog("State1 Entered!");
 }
 
 int State1Update(OPtimer* time){
