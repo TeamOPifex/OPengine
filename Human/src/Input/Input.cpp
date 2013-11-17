@@ -286,7 +286,7 @@ bool OPtouchWasReleased() {
 	return !Touch.tapping && Touch.prevTapping;
 }
 bool OPtouchAnyInputIsDown() {
-	return tapping;
+	return Touch.tapping;
 }
 #endif
 

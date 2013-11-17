@@ -32,7 +32,7 @@ inline OPfloat OPvec3valDist(OPvec3* a, OPvec3* b);
 
 struct OPvec3 {
 	OPfloat x, y, z;
-	inline OPvec3 operator=(OPvec3& vhs) { 
+	inline OPvec3 operator=(OPvec3 vhs) { 
 		OPmemcpy(this, (void*)&vhs, sizeof(OPvec3)); return *this;
 	}
 	inline OPvec3 operator+=(OPvec3 vhs) { 

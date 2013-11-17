@@ -38,7 +38,7 @@ struct OPmat4 {
 	OPmat4 operator=(OPmat4 vhs) { 
 		OPmemcpy(this, (void*)&vhs, sizeof(OPmat4)); return *this;
 	}
-	inline OPmat4 operator*(OPmat4& vhs) { 
+	inline OPmat4 operator*(OPmat4 vhs) { 
 		OPmat4 temp = {
 			0, 0, 0, 0,
 			0, 0, 0, 0,
@@ -48,19 +48,19 @@ struct OPmat4 {
 		OPmat4mul(&temp, this, &vhs); 
 		return temp; 
 	}
-	inline OPmat4& operator*=(OPmat4& vhs) { 
+	inline OPmat4& operator*=(OPmat4 vhs) { 
 		OPmat4mul(this, this, &vhs); 
 		return *this; 
 	}
-	inline OPmat4& operator/=(OPvec3& vhs) { 
+	inline OPmat4& operator/=(OPvec3 vhs) { 
 		OPmat4scl(this, vhs.x, vhs.y, vhs.z); 
 		return *this; 
 	}
-	inline OPmat4& operator/=(OPvec4& vhs) { 
+	inline OPmat4& operator/=(OPvec4 vhs) { 
 		OPmat4scl(this, vhs.x, vhs.y, vhs.z); 
 		return *this; 
 	}
-	inline OPmat4& operator+=(OPvec2& vhs) {
+	inline OPmat4& operator+=(OPvec2 vhs) {
 		OPmat4translate(this, vhs.x, vhs.y, 0);
 		return *this;
 	}
@@ -68,7 +68,7 @@ struct OPmat4 {
 		OPmat4translate(this, vhs->x, vhs->y, 0);
 		return *this;
 	}
-	inline OPmat4& operator+=(OPvec3& vhs) {
+	inline OPmat4& operator+=(OPvec3 vhs) {
 		OPmat4translate(this, vhs.x, vhs.y, vhs.z);
 		return *this;
 	}
@@ -76,7 +76,7 @@ struct OPmat4 {
 		OPmat4translate(this, vhs->x, vhs->y, vhs->z);
 		return *this;
 	}
-	inline OPmat4& operator+=(OPvec4& vhs) {
+	inline OPmat4& operator+=(OPvec4 vhs) {
 		OPmat4translate(this, vhs.x, vhs.y, vhs.z);
 		return *this;
 	}
@@ -84,7 +84,7 @@ struct OPmat4 {
 		OPmat4translate(this, vhs->x, vhs->y, vhs->z);
 		return *this;
 	}
-	inline OPmat4& operator-=(OPvec2& vhs) {
+	inline OPmat4& operator-=(OPvec2 vhs) {
 		OPmat4translate(this, -vhs.x, -vhs.y, 0);
 		return *this;
 	}
@@ -92,7 +92,7 @@ struct OPmat4 {
 		OPmat4translate(this, -vhs->x, -vhs->y, 0);
 		return *this;
 	}
-	inline OPmat4& operator-=(OPvec3& vhs) {
+	inline OPmat4& operator-=(OPvec3 vhs) {
 		OPmat4translate(this, -vhs.x, -vhs.y, -vhs.z);
 		return *this;
 	}
@@ -100,7 +100,7 @@ struct OPmat4 {
 		OPmat4translate(this, -vhs->x, -vhs->y, -vhs->z);
 		return *this;
 	}
-	inline OPmat4& operator-=(OPvec4& vhs) {
+	inline OPmat4& operator-=(OPvec4 vhs) {
 		OPmat4translate(this, -vhs.x, -vhs.y, -vhs.z);
 		return *this;
 	}
