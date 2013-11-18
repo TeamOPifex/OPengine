@@ -15,6 +15,7 @@ inline void OPvec2dot(OPfloat* dst, OPvec2* a, OPvec2* b);
 inline void OPvec2len(OPfloat* dst, OPvec2* v);
 inline void OPvec2norm(OPvec2* dst, OPvec2* a);
 inline void OPvec2perp(OPvec2* dst, OPvec2* a);
+inline void OPvec2dist(OPfloat* dst, OPvec2* a, OPvec2* b);
 
 inline OPvec2 OPvec2valAdd(OPvec2* a, OPvec2* b);
 inline OPvec2 OPvec2valSub(OPvec2* a, OPvec2* b);
@@ -26,6 +27,7 @@ inline OPfloat OPvec2valDot(OPvec2* a, OPvec2* b);
 inline OPfloat OPvec2valLen(OPvec2* v);
 inline OPvec2 OPvec2valNorm(OPvec2* a);
 inline OPvec2 OPvec2valPerp(OPvec2* a);
+inline OPfloat OPvec2valDist( OPvec2* a, OPvec2* b);
 
 struct OPvec2 {
 	OPfloat x, y;
@@ -157,6 +159,13 @@ inline void OPvec2perp(OPvec2* dst, OPvec2* a){
 	dst->y = a->x;
 }
 
+inline void OPvec2dist(OPfloat* dst, OPvec2* a, OPvec2* b) {
+	OPvec2 tmp;
+	tmp.x = a->x - b->x;
+	tmp.y = a->y - b->y;
+	OPvec2len(dst, &tmp);
+}
+
 
 inline OPvec2 OPvec2valAdd(OPvec2* a, OPvec2* b) { 
 	OPvec2 temp;
@@ -221,4 +230,10 @@ inline OPvec2 OPvec2valPerp(OPvec2* a) {
 inline OPvec2 OPvec2valReflect(OPvec2* horizon, OPvec2* v){
 	OPfloat ratio = 2 * (OPvec2valDot(v, horizon) / OPvec2valDot(horizon, horizon));
 	return *horizon * ratio - *v;
+}
+
+inline OPfloat OPvec2valDist(OPvec2* a, OPvec2* b) {
+	OPfloat tmp;
+	OPvec2dist(&tmp, a, b);
+	return tmp;
 }
