@@ -22,21 +22,15 @@ OPeffect* OPRENDER_CURR_EFFECT = NULL;
 OPint OPrenderLoadVertexShader(const OPchar* filename, OPshader** shader){
 	OPshader vertex = -1;
 
-	OPLog("OPshader BEGINNING load of %s", filename);
+	OPLog("OPrenderLoadVertexShader: %s", filename);
 	OPstream* source = OPreadFile(filename);
-	OPLog("OPshader ENDING load of %s", filename);
 	
 	CheckError("GLShader::Error 0");
-	OPLog("OPshader shader CREATING");
 	vertex = glCreateShader(OPvertexShader);
-	OPLog("OPshader shader CREATED");
 	CheckError("GLShader::Error 1");
 	if(vertex){
 		OPchar* src = (OPchar*)source->Data;
-
-		OPLog("[%s]\n", src);
-
-		OPLog("OPrenderLoadVertexShader::Finished Printing Source");
+		
 		glShaderSource(vertex, 1, (const OPchar**)&src, 0);
 		CheckError("GLShader::Error 2");
 		glCompileShader(vertex);
@@ -45,12 +39,11 @@ OPint OPrenderLoadVertexShader(const OPchar* filename, OPshader** shader){
 		glGetShaderiv(vertex, GL_COMPILE_STATUS, &compiled);
 		CheckError("GLShader::Error 4");
 		if(!compiled){
-			OPLog("GLShader::Failed to compile Shader");
 
 			char msg[4096];
 			i32 length = 0;
 			glGetShaderInfoLog(vertex, 4096, &length, msg);
-			OPLog(msg);
+			OPLog("GLShader::Failed to compile Vertex Shader::%s", msg);
 
 			CheckError("GLShader::Error 5");
 			glDeleteShader(vertex);
@@ -81,19 +74,18 @@ OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader){
 
 	if(frag){
 		OPchar* src = (OPchar*)source->Data;
-		OPLog("%s\n", src);
 		glShaderSource(frag, 1, (const OPchar**)&src, 0);
 		glCompileShader(frag);
 
 		GLint compiled = 0;
 		glGetShaderiv(frag, GL_COMPILE_STATUS, &compiled);
 		if(!compiled){
-			OPLog("GLShader::Failed to compile Shader");
 
 			char msg[4096];
 			i32 length = 0;
 			glGetShaderInfoLog(frag, 4096, &length, msg);
-			OPLog(msg);
+
+			OPLog("GLShader::Failed to compile Fragment Shader::%s", msg);
 
 			glDeleteShader(frag);
 			OPstreamDestroy(source); // clean up stream
@@ -122,7 +114,6 @@ OPint OPrenderUnloadShader(OPshader* shader){
 //-----------------------------------------------------------------------------
 // effect creation
 OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* Attributes, OPint AttribCount){
-	OPLog("Creating Shader");
 	OPeffect effect = {
 		vert,
 		frag,
@@ -146,7 +137,7 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 		OPLog("FAILED to link Shader Program");
 	}
 	
-	OPLog("Shader Status: %d", status);
+	OPLog("Shader Program Status: %d", status);
 	CheckError("OPrenderCreateEffect:Error 7");
 
 	// create, and copy attributes into list
@@ -257,31 +248,6 @@ ui32 OPrenderGetParam(const OPchar* parameterName){
 		return loc;
 	}
 }
-
-// parameter setting
-/*
-void OPrenderParamf(ui32 param, OPfloat f){
-	glUniform1f(param, f);
-}
-void OPrenderParamfv(ui32 param, OPint count, OPfloat* f){
-	glUniform1fv(param, count, f);
-}
-void OPrenderParami(ui32 param, OPint i){
-	glUniform1i(param, i);
-}
-void OPrenderParamiv(ui32 param, OPint count, OPint* i){
-	glUniform1iv(param, count, i);
-}
-void OPrenderParamMat4v(ui32 param, OPint count, OPmat4* matrices){
-	glUniformMatrix4fv(param, count, GL_FALSE, (OPfloat*)matrices);
-}
-void OPrenderUseTexture(ui32 param, ui32 texture, ui32 slot){
-	glActiveTexture(GL_TEXTURE0 + slot);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glUniform1i(param, slot);
-}
-*/
-//-----------------------------------------------------------------------------
 
 void OPrenderUseTexture(const OPchar* param, ui32 texture, ui32 slot){
 	GLuint loc = glGetUniformLocation(
