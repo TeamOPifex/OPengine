@@ -1,7 +1,10 @@
 #pragma once
+#ifndef OP_MATH_VECTOR4
+#define OP_MATH_VECTOR4
 
 #include "./Core/include/Types.h"
 #include "./Core/include/DynamicMemory.h"
+#include "./Core/include/MathHelpers.h"
 
 struct OPvec4;
 inline OPfloat* OPvec4index(OPvec4* v, int idx);
@@ -14,6 +17,9 @@ struct OPvec4 {
 	}
 };
 
+extern const OPvec4 OPvec4Zero;
+extern const OPvec4 OPvec4One;
+
 inline OPfloat* OPvec4index(OPvec4* v, int idx){
 	return &((OPfloat*)(v))[idx];
 }
@@ -25,3 +31,4 @@ inline void OPvec4norm(OPvec4* dst, OPvec4* a) {
 	dst->z = a->x / l;
 	dst->w = a->x / l;
 }
+#endif

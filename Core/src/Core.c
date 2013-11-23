@@ -1,7 +1,7 @@
 #include "./../include/Core.h"
 #include "./../include/Log.h"
 
-OPtimer* ApplicationTimer;
+OPtimer* OPtime;
 OPint _OPengineRunning;
 
 
@@ -21,7 +21,7 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_init(JNIEnv * env, jobject obj,
 	_JNIHeight = height;
 	_OPengineRunning = 1;
 	OPLog("Create environment");
-	ApplicationTimer = OPcreateTimer();
+	OPtime = OPcreateTimer();
 	OPLog("Timer Created");
 	OPinitialize();
 	OPLog("OPInitialized");
@@ -31,8 +31,8 @@ JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_step(JNIEnv * env, jobject obj, 
 	if(!_OPengineRunning) return 1;
 
 	_JNIAssetManager = assetManager;
-	OPtimerTick(ApplicationTimer);
-	int val = OPupdate(ApplicationTimer);
+	OPtimerTick(OPtime);
+	int val = OPupdate(OPtime);
 	if(val > 0) {
 		OPLog("Returning %d to Java", val);
 		_OPengineRunning = 0;
@@ -43,7 +43,7 @@ JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_step(JNIEnv * env, jobject obj, 
 JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_destroy(JNIEnv * env, jobject obj){
 	OPLog("Destroy");
 	OPdestroy();
-	OPdestroyTimer(ApplicationTimer);
+	OPdestroyTimer(OPtime);
 }
 
 JNIEnv* JNIEnvironment() { return _JNIEnvironment; }
@@ -60,24 +60,24 @@ void (*OPdestroy)();
 
 void OPstart(){
 	// Initialize the engine and game
-	ApplicationTimer = OPcreateTimer();
+	OPtime = OPcreateTimer();
 	_OPengineRunning = 1;
 	OPinitialize();
 
 	// main game loop
 	while(_OPengineRunning){
 		// update the timer
-		OPtimerTick(ApplicationTimer);
+		OPtimerTick(OPtime);
 		
 		// update the game
-		if(OPupdate(ApplicationTimer)) {
+		if(OPupdate(OPtime)) {
 			_OPengineRunning = 0;
 		}
 	}
 
 	// game loop has finished, clean up
 	OPdestroy();
-	OPdestroyTimer(ApplicationTimer);
+	OPdestroyTimer(OPtime);
 }
 //----------------------------------------------------------------------------
 void OPend(){

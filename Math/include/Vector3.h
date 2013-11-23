@@ -1,4 +1,6 @@
 #pragma once
+#ifndef OP_MATH_VECTOR3
+#define OP_MATH_VECTOR3
 #include "./Core/include/Types.h"
 #include "./Core/include/MathHelpers.h"
 #include "./Core/include/DynamicMemory.h"
@@ -61,6 +63,9 @@ struct OPvec3 {
 		return *this; 
 	}
 };
+
+extern const OPvec3 OPvec3Zero;
+extern const OPvec3 OPvec3One;
 
 inline OPvec3 operator+(OPvec3 lhs, OPvec3& vhs) { 
 	OPvec3 temp = { 0, 0, 0};
@@ -238,3 +243,4 @@ inline OPfloat OPvec3valDist(OPvec3* a, OPvec3* b) {
 	OPvec3dist(&temp, a, b);
 	return temp;
 }
+#endif

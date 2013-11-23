@@ -234,7 +234,7 @@ int State0Update(OPtimer* time){
 		OPrenderClear(1.0f, 1.0f, 1.0f);
 	}
 
-	OPrenderMesh();
+	OPrenderDrawBufferIndexed(200);
 	OPframeBufferUnbind();
 	
 		OPrenderClear(1.0f, 1.0f, 1.0f);
