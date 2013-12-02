@@ -197,6 +197,254 @@ OPint OPMload(const OPchar* filename, OPmesh** mesh) {
 	return 1;
 }
 
+HashMap* CreateTriangleTable(OPMData* data){
+	HashMap* triTable = OPhashMapCreate(data->indexCount / 3);
+	OPchar index[10];
+
+	// for each triangle in the mesh
+	for(int i = (data->indexCount / 3); i--;){
+		int* tri = (int*)OPalloc(sizeof(int) * 4);
+		OPMvertex* v = (OPMvertex*)data->vertices + ( i * 3);
+		
+		// copy all the triangle's indices into an array
+		for(int j = 3; j--;){
+			tri[j] = i * 3 + j;
+		tri[3] = 0;
+
+			// store the triangle at this vertex's index
+			sprintf(index, "%d", i * 3 + j);
+			OPhashMapPut(triTable, index, tri);
+		}
+	}
+
+	return triTable;
+}
+
+OPlinkedList* CreateVertexList(OPMData* data){
+	OPlinkedList* vertList = OPllCreate();
+	for(int i = data->vertexCount; i--;)
+		OPllInsertLast(vertList, (void*)i);
+
+	return vertList;
+}
+
+void UpdateBasis(OPvec3* axis, OPvec3* basis, OPvec3* position){
+	OPfloat pa = OPvec3valDot(axis, position);
+	OPfloat ba = OPvec3valDot(axis, basis);
+
+	if(OPabs(pa) > OPabs(ba)){
+		*basis = *position;
+	}
+}
+
+OPvec3 GetCenterOfMass(OPMData* data, OPlinkedList* vertList){
+	OPMvertex* vertices = (OPMvertex*)data->vertices;
+	OPvec3 com = {0};
+	OPllNode* node = vertList->First;
+	int verts = 0;
+
+	while(node){
+		com += vertices[(OPint)node->Data].Position;
+		node = node->Next;
+		++verts;
+	}
+	com /= verts;
+
+	return com;
+}
+
+OPvec3 GetNormal(OPvec3 bX, OPvec3 bY, OPvec3 bZ){
+	OPvec3 out = {0};
+
+	OPfloat mX = OPvec3valLen(&bX);
+	OPfloat mY = OPvec3valLen(&bY);
+	OPfloat mZ = OPvec3valLen(&bZ);
+
+	if(mX > mZ && mY > mZ){
+		out = OPvec3valCross(&bX, &bY);
+	}
+	if(mX > mY && mZ > mY){
+		out = OPvec3valCross(&bX, &bZ);
+	}
+	if(mZ > mX && mY > mX){
+		out = OPvec3valCross(&bY, &bZ);
+	}
+
+	return out;
+}
+
+void ReorderVerts(OPMData* data, OPlinkedList* spaceA, OPlinkedList* spaceB){
+	OPMvertex* vertices = (OPMvertex*)data->vertices;
+	OPint i = 0, j = 0;
+	OPllNode* node = spaceA->First;
+	OPlinkedList* tempA = OPllCreate();
+	OPlinkedList* tempB = OPllCreate();
+
+	// reorder spaceA
+	while(node){
+		OPMvertex temp = vertices[i];
+		vertices[i] = vertices[j = (OPint)node->Data];
+		vertices[j] = temp; // reinsert the displaced vert
+		OPllInsertLast(tempA, (void*)i);
+		++i;
+		node = node->Next;
+	}
+
+	// reorder spaceB
+	node = spaceB->First;
+	while(node){
+		OPMvertex temp = vertices[i];
+		vertices[i] = vertices[j = (OPint)node->Data];
+		vertices[j] = temp; // reinsert the displaced vert
+		OPllInsertLast(tempB, (void*)i);
+		++i;
+		node = node->Next;
+	}
+
+	// destroy the old input lists
+	OPllDestroy(spaceA);
+	OPllDestroy(spaceB);
+
+	// set to the reorderd
+	spaceA = tempA;
+	spaceB = tempB;
+}
+
+OPlinkedList* CreateTriList(OPMData* data, HashMap* triTable, OPlinkedList* vertList){
+	OPlinkedList* triList = OPllCreate();
+	OPllNode* node = vertList->First;
+	OPchar index[10];
+
+	while(node){
+		int* tri = NULL;
+		int  i   = (OPint)node->Data;
+
+		sprintf(index, "%d", i);
+		OPhashMapGet(triTable, index, (void**)&tri);
+
+		// only add indices if this tri hasn't been visited
+		if(!tri[3]){
+			for(OPint i = 3; i--;){
+				OPllInsertLast(triList, (void*)tri[i]);
+			}
+			tri[3] = 1; // mark tri as visited
+		}
+		node = node->Next;
+	}
+
+	return triList;
+}
+
+OPMPartNode CreateOPMPartNode(OPlinkedList* triList){
+	OPllNode* node = triList->First;
+	OPint min = (OPint)node->Data, max = (OPint)node->Data;
+
+	while(node){
+		OPint i = (OPint)node->Data;
+		min = min > i ? i : min;
+		max = max < i ? i : max;
+		node = node->Next;
+	}
+
+	OPMPartNode meshNode = {
+		min,
+		max,
+		0,
+		NULL
+	};
+
+	return meshNode;
+}
+
+OPMPartNode OPMPartition(OPMData* data, HashMap* triTable, OPlinkedList* vertList, OPint depth){
+	OPMvertex* vertices = (OPMvertex*)data->vertices;
+	OPlinkedList* spaceA = OPllCreate();
+	OPlinkedList* spaceB = OPllCreate();
+	OPllNode* node = vertList->First;
+
+	if(depth){
+		OPvec3 com = GetCenterOfMass(data, vertList);
+
+		OPvec3 X = {1, 0, 0};
+		OPvec3 Y = {0, 1, 0};
+		OPvec3 Z = {0, 0, 1};
+
+		// basis vectors
+		OPvec3 bX = {0}, bY = {0}, bZ = {0};
+
+		OPvec3 normal = {0};
+
+		// determine the basis vectors of this vertex ist
+		while(node){
+			OPint i = (OPint)node->Data;
+			UpdateBasis(&X, &bX, &vertices[i].Position);
+			UpdateBasis(&Y, &bY, &vertices[i].Position);
+			UpdateBasis(&Z, &bZ, &vertices[i].Position);
+			node = node->Next;
+		}
+
+		normal = GetNormal(bX, bY, bZ);
+
+		// split vertices
+		node = vertList->First;
+		while(node){
+			OPint i = (OPint)node->Data;
+			OPvec3 diff = vertices[i].Position - com;
+
+			if(OPvec3valDot(&diff, &normal) > 0){
+				OPllInsertLast(spaceA, (void*)i);
+			}
+			else{
+				OPllInsertLast(spaceB, (void*)i);
+			}
+		}
+
+		ReorderVerts(data, spaceA, spaceB);
+
+		// ALL DONE
+		OPlinkedList* trisA = CreateTriList(data, triTable, spaceA);
+		OPlinkedList* trisB = CreateTriList(data, triTable, spaceB);
+
+		// TODO call recusively
+		OPMPartNode* children = (OPMPartNode*)OPalloc(sizeof(OPMPartNode) * 2);
+		OPMPartNode nodeA = children[0] = OPMPartition(data, triTable, spaceA, depth - 1);
+		OPMPartNode nodeB = children[1] = OPMPartition(data, triTable, spaceB, depth - 1);
+
+		// Determine to and from using the two child nodes
+		OPint From = nodeA.From < nodeB.From ? nodeA.From : nodeB.From;
+		OPint To = nodeA.To > nodeB.To ? nodeA.To : nodeB.To;
+
+		OPMPartNode partNode = {
+			From,
+			To,
+			2,
+			children
+		};
+
+		// Free up stuff
+		OPllDestroy(spaceA); OPllDestroy(spaceB);
+		OPllDestroy(trisA); OPllDestroy(trisB);
+
+		return partNode;
+	}
+	else{
+		OPlinkedList* tris = CreateTriList(data, triTable, vertList);
+		OPMPartNode partNode = CreateOPMPartNode(tris);
+		return partNode;
+	}
+}
+
+OPint OPMPartitionedLoad(const OPchar* filename, void** mesh){
+	OPLog("Reading File Data");
+	OPstream* str = OPreadFile(filename);
+	OPLog("Reading OPMloadData");
+	OPMData data = OPMloadData(str);
+
+	HashMap*      triTable = CreateTriangleTable(&data);
+	OPlinkedList* vertList = CreateVertexList(&data);
+
+
+}
 
 OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh) {
 	OPstream* str = OPreadFile(filename);
