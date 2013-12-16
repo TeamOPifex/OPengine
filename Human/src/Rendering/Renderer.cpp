@@ -1,7 +1,8 @@
 #include "./Core/include/Log.h"
 #include "./Human/include/Rendering/Renderer.h"
 
-OPint OPrenderWidth, OPrenderHeight;
+OPint OPrenderWidth;
+OPint OPrenderHeight;
 
 OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
 #ifdef OPIFEX_OPENGL_ES_2
@@ -61,7 +62,7 @@ OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
 	OPrenderWidth = width;
 	OPrenderHeight = height;
 
-	
+	OPLog("INIT w:%d h:%d\n", OPrenderWidth, OPrenderHeight);	
 
 	return 0;
 #endif
@@ -74,6 +75,18 @@ void  OPrenderClear(f32 r, f32 g, f32 b){
 //-----------------------------------------------------------------------------
 void  OPrenderSetViewport(ui32 x, ui32 y, ui32 width, ui32 height){
 	glViewport(x, y, width, height);
+	OPrenderWidth  = width;
+	OPrenderHeight = height;
+}
+//-----------------------------------------------------------------------------
+OPint OPrenderGetWidth(){
+	glfwGetWindowSize(&OPrenderWidth, &OPrenderHeight);
+	return OPrenderWidth;
+}
+//-----------------------------------------------------------------------------
+OPint OPrenderGetHeight(){
+	glfwGetWindowSize(&OPrenderWidth, &OPrenderHeight);
+	return OPrenderHeight;
 }
 //-----------------------------------------------------------------------------
 void  OPrenderSwapBuffer(){

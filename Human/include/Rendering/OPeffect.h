@@ -14,6 +14,8 @@
 
 #include "./Human/include/Utilities/Errors.h"
 
+#define OP_EFFECT_NAME_LEN 16
+
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
 extern "C" {
@@ -55,8 +57,9 @@ typedef struct{
 	OPshader  Fragment;
 	ui32      ProgramHandle;
 	ui32      Stride;
-	HashMap*   Parameters;
-	OPlist*    Attributes;
+	HashMap*  Parameters;
+	OPlist*   Attributes;
+	OPchar    Name[OP_EFFECT_NAME_LEN]; 
 }OPeffect;
 
 //-----------------------------------------------------------------------------
@@ -82,7 +85,11 @@ OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader);
 OPint OPrenderUnloadShader(OPshader* shader);
 
 // effect creation
-OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* Attributes, OPint AttribCount);
+OPeffect OPrenderCreateEffect(
+	OPshader vert, OPshader frag,
+	OPshaderAttribute* Attributes, OPint AttribCount,
+	const OPchar* Name);
+
 OPint OPrenderLoadEffect  (const OPchar* filename, OPeffect** effect);
 
 // effect destruction

@@ -37,6 +37,7 @@ ui16 indexData[] = {
 
 OPmeshPacked quad;
 OPmeshPacker packer;
+OPmesh unPackedQuad;
 OPmesh* plane;
 OPeffect tri, post;
 OPcam camera;
@@ -98,6 +99,7 @@ void State0Enter(OPgameState* last){
 
 	OPLog("GameManager::GameManager - Ready to load model");
 	plane = (OPmesh*)OPcmanGet("BiPlane.opm");
+	unPackedQuad = OPquadCreate();
 	tex  = (OPtexture*)OPcmanGet("steamPlaneSkin.png");
 	spec = (OPtexture*)OPcmanGet("steamPlaneSpec.png");
 	norm = (OPtexture*)OPcmanGet("noneNorm.png");
@@ -129,7 +131,8 @@ void State0Enter(OPgameState* last){
 			*(OPshader*)OPcmanGet("TexturedSpecular.vert"),
 			*(OPshader*)OPcmanGet("TexturedSpecular.frag"),
 			attribs,
-			4
+			4,
+			"ModelEffect"
 		);
 	}
 
@@ -144,7 +147,8 @@ void State0Enter(OPgameState* last){
 			*(OPshader*)OPcmanGet("TexturedScreen.vert"),
 			*(OPshader*)OPcmanGet("Textured.frag"),
 			attribs,
-			2
+			2,
+			"BlurEffect"
 		);
 	}
 
@@ -244,14 +248,14 @@ int State0Update(OPtimer* time){
 	//OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
 
 	//OPmeshPackerBind(&packer);
-	//OPrenderBindEffect(&post);
+	OPrenderBindMesh(&unPackedQuad);
 	//OPmat4identity(&world);
 	//OPrenderParamMat4v("uWorld", 1, &world);
 
 	//OPtextureBind(&rt.Texture);
 	//OPrenderParami("uTexture", rt.Texture.Handle);
 
-	//OPrenderMeshPacked(&quad);
+	OPrenderMesh();
 
 
 	if(t > 6)

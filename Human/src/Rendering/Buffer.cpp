@@ -47,6 +47,7 @@ void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, ui32 count, c
 	buff->ElementCount = count;
 
 	glBufferData(buff->Type, elementSize * count, data, GL_STATIC_DRAW);
+	CheckError("OPrenderSetBufferData() - ERROR!");
 }
 //-----------------------------------------------------------------------------
 void OPrenderBindBuffer(OPrenderBuffer* buffer){

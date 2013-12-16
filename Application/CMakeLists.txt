@@ -63,6 +63,7 @@ target_link_libraries(8_Application
 	${VORBISFILE_LIBRARY}
 	${ZLIB_LIBRARY}
 	${LIBPNG_LIBRARY}
+	${CMAKE_THREAD_LIBS_INIT}
 )	
 
 # Make sure the XInput library is linked correctly (Regardless of which Visual Studio is used)
