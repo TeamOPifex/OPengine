@@ -66,6 +66,7 @@ find_package(OpenGL REQUIRED)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
 find_package(OpenAL REQUIRED)
 find_package(OggVorbis REQUIRED)
+find_package(Threads)
 
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/win32)
