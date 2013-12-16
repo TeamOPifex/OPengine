@@ -200,16 +200,25 @@ OPint OPMload(const OPchar* filename, OPmesh** mesh) {
 HashMap* CreateTriangleTable(OPMData* data){
 	HashMap* triTable = OPhashMapCreate(data->indexCount / 3);
 	OPchar index[10];
+	OPint compCount = 4;
 
 	// for each triangle in the mesh
 	for(int i = (data->indexCount / 3); i--;){
-		int* tri = (int*)OPalloc(sizeof(int) * 4);
-		OPMvertex* v = (OPMvertex*)data->vertices + ( i * 3);
-		
+		int* tri;
+
+
+		sprintf(index, "%d", i * 3);
+		OPhashMapGet(triTable, index, (void**)&tri);
+
+		// if this vertex's tri has been stored, skip it
+		if(tri) continue;
+
+		tri = (int*)OPalloc(sizeof(int) * compCount);
+		tri[3] = 0;
+
 		// copy all the triangle's indices into an array
 		for(int j = 3; j--;){
 			tri[j] = i * 3 + j;
-		tri[3] = 0;
 
 			// store the triangle at this vertex's index
 			sprintf(index, "%d", i * 3 + j);
@@ -273,10 +282,10 @@ OPvec3 GetNormal(OPvec3 bX, OPvec3 bY, OPvec3 bZ){
 	return out;
 }
 
-void ReorderVerts(OPMData* data, OPlinkedList* spaceA, OPlinkedList* spaceB){
+void ReorderVerts(OPMData* data, OPlinkedList** spaceA, OPlinkedList** spaceB){
 	OPMvertex* vertices = (OPMvertex*)data->vertices;
 	OPint i = 0, j = 0;
-	OPllNode* node = spaceA->First;
+	OPllNode* node = (*spaceA)->First;
 	OPlinkedList* tempA = OPllCreate();
 	OPlinkedList* tempB = OPllCreate();
 
@@ -291,7 +300,7 @@ void ReorderVerts(OPMData* data, OPlinkedList* spaceA, OPlinkedList* spaceB){
 	}
 
 	// reorder spaceB
-	node = spaceB->First;
+	node = (*spaceB)->First;
 	while(node){
 		OPMvertex temp = vertices[i];
 		vertices[i] = vertices[j = (OPint)node->Data];
@@ -302,24 +311,23 @@ void ReorderVerts(OPMData* data, OPlinkedList* spaceA, OPlinkedList* spaceB){
 	}
 
 	// destroy the old input lists
-	OPllDestroy(spaceA);
-	OPllDestroy(spaceB);
+	OPllDestroy(*spaceA);
+	OPllDestroy(*spaceB);
 
 	// set to the reorderd
-	spaceA = tempA;
-	spaceB = tempB;
+	*spaceA = tempA;
+	*spaceB = tempB;
 }
 
-OPlinkedList* CreateTriList(OPMData* data, HashMap* triTable, OPlinkedList* vertList){
+OPlinkedList* CreateTriList(OPMData* data, HashMap* triTable, OPlinkedList* vertList, OPint atLeaf){
 	OPlinkedList* triList = OPllCreate();
 	OPllNode* node = vertList->First;
 	OPchar index[10];
 
 	while(node){
-		int* tri = NULL;
-		int  i   = (OPint)node->Data;
+		OPint* tri = NULL;
 
-		sprintf(index, "%d", i);
+		sprintf(index, "%d", (OPint)node->Data);
 		OPhashMapGet(triTable, index, (void**)&tri);
 
 		// only add indices if this tri hasn't been visited
@@ -327,7 +335,7 @@ OPlinkedList* CreateTriList(OPMData* data, HashMap* triTable, OPlinkedList* vert
 			for(OPint i = 3; i--;){
 				OPllInsertLast(triList, (void*)tri[i]);
 			}
-			tri[3] = 1; // mark tri as visited
+			if(atLeaf) tri[3] = 1; // mark tri as visited
 		}
 		node = node->Next;
 	}
@@ -397,18 +405,19 @@ OPMPartNode OPMPartition(OPMData* data, HashMap* triTable, OPlinkedList* vertLis
 			else{
 				OPllInsertLast(spaceB, (void*)i);
 			}
+			node = node->Next;
 		}
 
-		ReorderVerts(data, spaceA, spaceB);
+		ReorderVerts(data, &spaceA, &spaceB);
 
 		// ALL DONE
-		OPlinkedList* trisA = CreateTriList(data, triTable, spaceA);
-		OPlinkedList* trisB = CreateTriList(data, triTable, spaceB);
+		OPlinkedList* trisA = CreateTriList(data, triTable, spaceA, !depth);
+		OPlinkedList* trisB = CreateTriList(data, triTable, spaceB, !depth);
 
 		// TODO call recusively
 		OPMPartNode* children = (OPMPartNode*)OPalloc(sizeof(OPMPartNode) * 2);
-		OPMPartNode nodeA = children[0] = OPMPartition(data, triTable, spaceA, depth - 1);
-		OPMPartNode nodeB = children[1] = OPMPartition(data, triTable, spaceB, depth - 1);
+		OPMPartNode nodeA = children[0] = OPMPartition(data, triTable, trisA, depth - 1);
+		OPMPartNode nodeB = children[1] = OPMPartition(data, triTable, trisB, depth - 1);
 
 		// Determine to and from using the two child nodes
 		OPint From = nodeA.From < nodeB.From ? nodeA.From : nodeB.From;
@@ -428,13 +437,13 @@ OPMPartNode OPMPartition(OPMData* data, HashMap* triTable, OPlinkedList* vertLis
 		return partNode;
 	}
 	else{
-		OPlinkedList* tris = CreateTriList(data, triTable, vertList);
+		OPlinkedList* tris = CreateTriList(data, triTable, vertList, 1);
 		OPMPartNode partNode = CreateOPMPartNode(tris);
 		return partNode;
 	}
 }
 
-OPint OPMPartitionedLoad(const OPchar* filename, void** mesh){
+OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh){
 	OPLog("Reading File Data");
 	OPstream* str = OPreadFile(filename);
 	OPLog("Reading OPMloadData");
@@ -443,7 +452,27 @@ OPint OPMPartitionedLoad(const OPchar* filename, void** mesh){
 	HashMap*      triTable = CreateTriangleTable(&data);
 	OPlinkedList* vertList = CreateVertexList(&data);
 
+	OPMPartition(&data, triTable, vertList, 1);
 
+	OPmesh temp = OPrenderCreateMesh();
+	OPrenderBindMesh(&temp);
+	OPrenderBuildMesh(
+		data.vertexSize, data.indexSize,
+		data.vertexCount, data.indexCount,
+		data.vertices, data.indices
+	);
+
+	OPLog("Disposing");
+
+	// Dispose of allocated buffers
+	OPfree(data.vertices);
+	OPfree(data.indices);
+	OPstreamDestroy(str);
+
+	*mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
+	OPmemcpy(*mesh, &temp, sizeof(OPmesh));
+
+	return 1;
 }
 
 OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh) {

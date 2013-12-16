@@ -93,7 +93,7 @@ OPassetLoader loaders[] ={
 		".opm",
 		"Models/",
 		sizeof(OPmesh),
-		(OPint (*)(const OPchar*, void**))OPMload,
+		(OPint (*)(const OPchar*, void**))OPMPartitionedLoad,
 		(OPint (*)(void*))OPMUnload
 	}
 };
