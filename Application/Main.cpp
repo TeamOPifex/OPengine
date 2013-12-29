@@ -281,6 +281,8 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 		OPmat4buildRotY(&rot2, 1.0f);
 		rot1 *= rot2;
 
+
+
 	OPinitialize = Init;
 	OPupdate = UpdateState;
 	OPdestroy = Destroy;

@@ -443,7 +443,7 @@ OPint OPMPartitionedLoad(const OPchar* filename, void** mesh){
 	HashMap*      triTable = CreateTriangleTable(&data);
 	OPlinkedList* vertList = CreateVertexList(&data);
 
-
+	return 0;
 }
 
 OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh) {

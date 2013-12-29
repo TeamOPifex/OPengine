@@ -33,6 +33,8 @@ freely, subject to the following restrictions:
 #include <string>
 #endif /*__cplusplus*/
 
+#define LODEPNG_COMPILE_ENCODER
+
 /*
 The following #defines are used to create code sections. They can be disabled
 to disable code sections, which can give faster compile time and smaller binary.

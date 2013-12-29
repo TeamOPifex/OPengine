@@ -9,6 +9,7 @@ include_directories(
 	../External/Ogg/include/
 	../External/Vorbis/include/
 	../External/OpenAL/
+	../External/Freetype/win32/
 	.
 	../
 )

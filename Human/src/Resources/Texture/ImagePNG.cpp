@@ -18,6 +18,20 @@
 #include <GL/glfw.h>
 #endif
 
+void OPimagePNGCreate24(ui8* imageData, OPint width, OPint height, i8* filename) {
+	ui8* data;
+	ui32 dataSize;
+	ui32 error = lodepng_encode24(&data, &dataSize, imageData, width, height);
+	lodepng_save_file(data, dataSize, filename);
+}
+
+void OPimagePNGCreate32(ui8* imageData, OPint width, OPint height, i8* filename) {
+	ui8* data;
+	ui32 dataSize;
+	ui32 error = lodepng_encode32(&data, &dataSize, imageData, width, height);
+	lodepng_save_file(data, dataSize, filename);
+}
+
 OPint OPimagePNGLoad(const OPchar* filename, OPtexture** image){
 	CheckError("OPimagePNGLoad:Error 0");
 	ui32 error;
@@ -35,6 +49,7 @@ OPint OPimagePNGLoad(const OPchar* filename, OPtexture** image){
 	OPtextureDescription desc = {
 		width,
 		height,
+		GL_RGBA,
 		GL_RGBA,
 		GL_UNSIGNED_BYTE,
 		OPtextureLinear,

@@ -44,21 +44,26 @@ void OPtextureDestroy(OPtexture* tex){
 }
 //-----------------------------------------------------------------------------
 void OPtextureBind(OPtexture* tex){
+	CheckError("OPtextureBind::Error 0");
 	OPRENDER_CURR_TEX = tex;
 	glActiveTexture(GL_TEXTURE0 + tex->Handle);
+	CheckError("OPtextureBind::Error 1");
 	glBindTexture(GL_TEXTURE_2D, tex->Handle);
+	CheckError("OPtextureBind::Error 2");
 }
 //-----------------------------------------------------------------------------
 void OPtextureSetData(void* data){
+	CheckError("OPtextureSetData::Error 0");
 	glTexImage2D(
 		GL_TEXTURE_2D, 
 		0, 
-		OPRENDER_CURR_TEX->Description.Format,
+		OPRENDER_CURR_TEX->Description.InternalFormat,
 		OPRENDER_CURR_TEX->Description.Width,
 		OPRENDER_CURR_TEX->Description.Height,
 		0,
 		OPRENDER_CURR_TEX->Description.Format,
 		OPRENDER_CURR_TEX->Description.DataType,
 		data
-	);
+		);
+	CheckError("OPtextureSetData::Error 1");
 }
