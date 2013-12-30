@@ -4,7 +4,7 @@
 #include "./Math/include/Vector4.h"
 
 typedef struct {
-	char charcode;
+	i8 charcode;
 	OPint width;
 	OPint height;
 	OPint offsetX;

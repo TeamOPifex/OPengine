@@ -179,8 +179,8 @@ void State0Enter(OPgameState* last){
 	i8* font_cache = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
 	OPfontAtlas* atlas = OPfontAtlasCreate(1024, 1024, 1);
-	OPfont* font = OPfontFromFile(atlas, 72, "C:\\_Repos\\Vera.ttf");
-	OPfontLoadGlyphs(font, font_cache, 97);
+	//OPfont* font = OPfontFromFile(atlas, 72, "C:\\_Repos\\Vera.ttf");
+	//OPfontLoadGlyphs(font, font_cache, 97);
 	OPfontAtlasSavePNG(atlas, "outputFont.png");
 
 	spriteSheet = OPfontAtlasTexture(atlas);
@@ -199,7 +199,7 @@ void State0Enter(OPgameState* last){
 
 	OPvec4 color = { 1, 0, 0, 1 };
 	OPvec2 pos2 = { 0, 0 };
-	fontText = OPfontCreateText(font, "Testing the fonts!", &color, &pos2);
+	//fontText = OPfontCreateText(font, "Testing the fonts!", &color, &pos2);
 
 
 

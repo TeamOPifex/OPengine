@@ -20,6 +20,18 @@ ui32 OPread_ui32(OPstream* str) {
 	return *((ui32*)tmp);
 }
 
+i8 OPread_i8(OPstream* str) {
+	OPchar tmp[1];
+	OPmemcpy(tmp, OPread(str, sizeof(i8)), sizeof(i8));
+	return *((i8*)tmp);
+}
+
+i16 OPread_i16(OPstream* str) {
+	OPchar tmp[2];
+	OPmemcpy(tmp, OPread(str, sizeof(i16)), sizeof(i16));
+	return *((i16*)tmp);
+}
+
 i32 OPread_i32(OPstream* str) {
 	OPchar tmp[4];
 	OPmemcpy(tmp, OPread(str, sizeof(i32)), sizeof(i32));

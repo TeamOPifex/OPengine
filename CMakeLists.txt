@@ -75,6 +75,7 @@ file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/linux32)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/linux64)
 
 add_subdirectory (External)
+add_subdirectory (Tools)
 
 	#########################################
 	# Core - Level 1

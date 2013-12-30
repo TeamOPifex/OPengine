@@ -3,11 +3,12 @@
 #include "./Human/include/Rendering/OPfontAtlas.h"
 #include "./Human/include/Rendering/OPmesh.h"
 #include "./Math/include/Vector2.h"
+#include "./Human/include/Rendering/OPtexture.h"
 
 typedef struct {
 	OPvector* glyphs;
 	OPfontAtlas* atlas;
-	i8 *filename;
+	OPtexture* texture;
 
 	// Font Size
 	OPfloat size;
@@ -43,10 +44,9 @@ typedef struct {
 
 #include "./Human/include/Rendering/OPfontGlyph.h"
 
-OPfont* OPfontFromFile(OPfontAtlas* atlas, OPfloat ptSize, i8* filename);
+//OPfont* OPfontFromFile(OPfontAtlas* atlas, OPfloat ptSize, i8* filename);
 void OPfontDestroy(OPfont* font);
-static OPint OPfontInit(OPfont* font);
-OPint OPfontLoadGlyphs(OPfont* font, i8* charcodes, OPint count);
+//OPint OPfontLoadGlyphs(OPfont* font, i8* charcodes, OPint count);
 OPfontGlyph* OPfontGetGlyph(OPfont* font, i8 charcode);
 OPmesh OPfontCreateText(OPfont* font, i8* text, OPvec4* color, OPvec2* pos);
 

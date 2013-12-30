@@ -7,5 +7,5 @@ typedef struct {
 	OPfloat kerning;
 } OPfontKerning;
 
-#include "./Human/include/Rendering/OPfont.h"
-void OPfontKerningGenerate(OPfont* font);
+//#include "./Human/include/Rendering/OPfont.h"
+//void OPfontKerningGenerate(OPfont* font);

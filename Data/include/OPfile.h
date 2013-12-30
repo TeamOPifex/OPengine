@@ -56,6 +56,11 @@ ui16 OPread_ui16(OPstream* str);
  *	@return ui32
  */
 ui32 OPread_ui32(OPstream* str);
+
+i8 OPread_i8(OPstream* str);
+
+i16 OPread_i16(OPstream* str);
+
 //-----------------------------------------------------------------------------
 /**
  * OPread_i32 - Reads the next 4 bytes from the file and converts to i32
