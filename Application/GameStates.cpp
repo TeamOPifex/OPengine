@@ -41,6 +41,7 @@ OPmesh quadMesh;
 
 OPmeshPacked quad;
 OPmeshPacker packer;
+OPmesh unPackedQuad;
 OPmesh* plane;
 OPeffect tri, post;
 OPcam camera;
@@ -116,6 +117,7 @@ void State0Enter(OPgameState* last){
 	//OPvec3 pos = {0, 5, 15.0f};
 	//OPvec3 look = {0, 0, 0};
 	//OPvec3 up = {0, 1, 0};
+	unPackedQuad = OPquadCreate();
 
 	//camera = OPcamProj(
 	//	pos,
@@ -160,6 +162,7 @@ void State0Enter(OPgameState* last){
 	//}
 
 	//t = 0;
+			"ModelEffect"
 
 	//OPvec2 line1[] = {
 	//	{-4, 0},
@@ -197,6 +200,7 @@ void State0Enter(OPgameState* last){
 		*(OPshader*)OPcmanGet("SpriteSheet.frag"),
 		attribs,
 		2
+			"BlurEffect"
 		);
 	quadMesh = OPquadCreate();
 
@@ -289,6 +293,9 @@ int State0Update(OPtimer* time){
 	//OPrenderParami("uTexture", rt.Texture.Handle);
 
 	//OPrenderMeshPacked(&quad);
+	//
+	//	OPrenderClear(1.0f, 1.0f, 1.0f);
+	//OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
 
 
 	//if(t > 6)
@@ -314,7 +321,6 @@ int State0Update(OPtimer* time){
 	OPfloat scale = OPrenderWidth / 2.0f;
 	OPmat4buildScl(&world, 0.75f / scale, 1.0f / scale, 1.0f / scale);
 	OPmat4translate(&world, -0.9f, 0.8f, 0.0f);
-	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderMesh();
 
 
@@ -411,7 +417,7 @@ int State1Update(OPtimer* time){
 	OPrenderParamMat4v("uProj", 1, &proj);
 	OPrenderParamMat4v("uView", 1, &view);
 
-	OPframeBufferBind(&rt);
+	//OPframeBufferBind(&rt);
 	
 	GamePadController* gamePad = OPgamePadController(GamePadIndex_One);
 	OPgamePadUpdate(gamePad);
@@ -427,20 +433,20 @@ int State1Update(OPtimer* time){
 	}
 
 	OPrenderMesh();
-	OPframeBufferUnbind();
-	
-		OPrenderClear(1.0f, 1.0f, 1.0f);
-	OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
+	//OPframeBufferUnbind();
+	//
+	//	OPrenderClear(1.0f, 1.0f, 1.0f);
+	//OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
 
-	OPmeshPackerBind(&packer);
-	OPrenderBindEffect(&post);
-	OPmat4identity(&world);
-	OPrenderParamMat4v("uWorld", 1, &world);
+	//OPmeshPackerBind(&packer);
+	//OPrenderBindEffect(&post);
+	//OPmat4identity(&world);
+	//OPrenderParamMat4v("uWorld", 1, &world);
 
-	OPtextureBind(&rt.Texture);
-	OPrenderParami("uTexture", rt.Texture.Handle);
+	//OPtextureBind(&rt.Texture);
+	//OPrenderParami("uTexture", rt.Texture.Handle);
 
-	OPrenderMeshPacked(&quad);
+	//OPrenderMeshPacked(&quad);
 
 	if(t > 6) {
 		//exit(0);

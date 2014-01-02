@@ -113,15 +113,30 @@ OPint OPrenderUnloadShader(OPshader* shader){
 }
 //-----------------------------------------------------------------------------
 // effect creation
-OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* Attributes, OPint AttribCount){
+OPeffect OPrenderCreateEffect(
 
 	CheckError("OPrenderCreateEffect:Error 0");
+	OPshader vert,
+	OPshader frag,
+	OPshaderAttribute* Attributes,
+	OPint AttribCount,
+	const OPchar* Name){
+
+	OPint nameLen = strlen(Name) + 1;
 	OPeffect effect = {
 		vert,
 		frag,
 		-1,
 		 0
 	};
+
+	// copy the name into the struct
+	OPmemcpy(
+		effect.Name, 
+		Name, 
+		nameLen > OP_EFFECT_NAME_LEN ? OP_EFFECT_NAME_LEN : nameLen
+	); effect.Name[OP_EFFECT_NAME_LEN - 1] = '\0';
+
 	effect.Parameters = OPhashMapCreate(32);
 	effect.Attributes = OPlistCreate(AttribCount, sizeof(OPshaderAttribute));
 
@@ -156,7 +171,10 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 			Attributes[i].Name
 		);
 		if(CheckError("OPrenderCreateEffect:Error 7.5 - Attrib Could not be found.") > 0) {
-			OPLog("Handle: %d, Attribute: %s", effect.ProgramHandle, Attributes[i].Name);
+			OPLog("Handle: %d, Attribute: %s", (OPint)attr.Name, Attributes[i].Name);
+		}
+		else{
+			OPLog("OK!!! Handle: %d, Attribute: %s", (OPint)attr.Name, Attributes[i].Name);
 		}
 
 		// TODO add more
@@ -194,7 +212,7 @@ OPint OPrenderBindEffect(OPeffect* effect){
 			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
 			glDisableVertexAttribArray((ui32)attr->Name);
 			if(CheckError("OPrenderBindEffect:Error ")) {
-				OPLog("Failed to disable attrib %u", (ui32)attr->Name);
+				OPLog("Effect %s: Failed to disable attrib %u", OPRENDER_CURR_EFFECT->Name, (ui32)attr->Name);
 			}
 		}
 	}
@@ -221,7 +239,7 @@ OPint OPrenderBindEffect(OPeffect* effect){
 			attr->Offset
 		);
 		if(CheckError("OPrenderBindEffect:Error ")) {
-			OPLog("Failed to set attrib ptr %u", (ui32)attr->Name);
+			OPLog("Effect %s: Failed to set attrib ptr %u", effect->Name, (ui32)attr->Name);
 		}
 	}
 

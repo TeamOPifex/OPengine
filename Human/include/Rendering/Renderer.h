@@ -24,6 +24,8 @@ extern OPint OPrenderHeight;
 OPint OPrenderInit       (ui32 width, ui32 height, bool fullscreen);
 void  OPrenderClear      (f32 r, f32 g, f32 b);
 void  OPrenderSetViewport(ui32 x, ui32 y, ui32 width, ui32 height);
+OPint OPrenderGetWidth();
+OPint OPrenderGetHeight();
 void  OPrenderSwapBuffer ();
 void  OPrenderPresent    ();
 void  OPrenderDepth      (OPint state);
@@ -36,9 +38,6 @@ inline void OPrenderBlendAdditive(){
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE); 
 }
 
-
-extern ui32 OPscreenWidth;
-extern ui32 OPscreenHeight;
 #ifdef __cplusplus
 };
 #endif
