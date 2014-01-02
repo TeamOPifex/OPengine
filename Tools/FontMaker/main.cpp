@@ -308,7 +308,7 @@ OPfont* OPfontFromFile(OPfontAtlas* atlas, OPfloat ptSize, i8* filename)
 	self->size = ptSize;
 
 	if (OPfontInit(self, filename)) {
-		OPfontDestroy(self);
+		OPfontUnload(self);
 		return NULL;
 	}
 
@@ -680,6 +680,26 @@ void OPfontSave(OPfont* font, i8* filename) {
 		writeI32(&myFile, glyph->outlineType);
 		writeF32(&myFile, glyph->outlineThickness);
 	}
+
+	ui8* data;
+	ui32 dataSize;
+	if (font->atlas->depth == 1) {
+		ui8* imageData = (ui8*)OPalloc(font->atlas->width * font->atlas->height * 3);
+		for (OPint i = font->atlas->width * font->atlas->height; i--;) {
+			imageData[i * 3] = font->atlas->data[i];
+			imageData[i * 3 + 1] = font->atlas->data[i];
+			imageData[i * 3 + 2] = font->atlas->data[i];
+		}
+		OPimagePNG24WriteStream(imageData, font->atlas->width, font->atlas->height, &data, &dataSize);
+	}
+	else if (font->atlas->depth == 3) {
+		OPimagePNG24WriteStream(font->atlas->data, font->atlas->width, font->atlas->height, &data, &dataSize);
+	}
+	else if (font->atlas->depth == 4){
+		OPimagePNG32WriteStream(font->atlas->data, font->atlas->width, font->atlas->height, &data, &dataSize);
+	}
+
+	write(&myFile, data, dataSize);
 
 	myFile.close();
 }

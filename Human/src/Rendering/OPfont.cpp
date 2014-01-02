@@ -7,14 +7,16 @@
 #include "./Human/include/Rendering/OPMvertex.h"
 #include "./Data/include/OPstream.h"
 #include "./Data/include/OPfile.h"
+#include "./Human/include/Resources/Texture/ImagePNG.h"
 
-OPfont* OPfontLoad(i8* filename) {
+void OPfontLoad(i8* filename, OPfont** data) {
 	OPfont* font = (OPfont*)OPalloc(sizeof(OPfont));
+	*data = font;
 
 	i16 version;
 	OPstream* str = OPreadFile(filename);
 
-	version = OPread_i32(str);
+	version = OPread_i16(str);
 	font->size = OPread_f32(str);
 	font->hinting = OPread_i32(str);
 	font->outlineType = OPread_i32(str);
@@ -38,38 +40,38 @@ OPfont* OPfontLoad(i8* filename) {
 	font->glyphs = OPvectorCreate(sizeof(OPfontGlyph));
 
 	for (i16 i = glyphCount; i--;) {
-		OPfontGlyph glyph;
+		OPfontGlyph* glyph = (OPfontGlyph*)OPalloc(sizeof(OPfontGlyph));
 
-		glyph.charcode = OPread_i8(str);
-		glyph.width = OPread_i32(str);
-		glyph.height = OPread_i32(str);
-		glyph.offsetX = OPread_i32(str);
-		glyph.offsetY = OPread_i32(str);
-		glyph.advanceX = OPread_f32(str);
-		glyph.advanceY = OPread_f32(str);
-		glyph.textureCoordinates.x = OPread_f32(str);
-		glyph.textureCoordinates.y = OPread_f32(str);
-		glyph.textureCoordinates.z = OPread_f32(str);
-		glyph.textureCoordinates.w = OPread_f32(str);
+		glyph->charcode = OPread_i8(str);
+		glyph->width = OPread_i32(str);
+		glyph->height = OPread_i32(str);
+		glyph->offsetX = OPread_i32(str);
+		glyph->offsetY = OPread_i32(str);
+		glyph->advanceX = OPread_f32(str);
+		glyph->advanceY = OPread_f32(str);
+		glyph->textureCoordinates.x = OPread_f32(str);
+		glyph->textureCoordinates.y = OPread_f32(str);
+		glyph->textureCoordinates.z = OPread_f32(str);
+		glyph->textureCoordinates.w = OPread_f32(str);
 
 		i16 kerningCount;
 		kerningCount = OPread_i16(str);
-		glyph.kerning = OPvectorCreate(sizeof(OPfontKerning));
+		glyph->kerning = OPvectorCreate(sizeof(OPfontKerning));
 		for (i16 j = kerningCount; j--;) {
 			OPfontKerning kerning;
 
 			kerning.charcode = OPread_i8(str);
 			kerning.kerning = OPread_f32(str);
-			OPvectorPush(glyph.kerning, (ui8*)&kerning);
+			OPvectorPush(glyph->kerning, (ui8*)&kerning);
 		}
 
-		glyph.outlineType = OPread_i32(str);
-		glyph.outlineThickness = OPread_f32(str);
+		glyph->outlineType = OPread_i32(str);
+		glyph->outlineThickness = OPread_f32(str);
 
 		OPvectorPush(font->glyphs, (ui8*)&glyph);
 	}
 
-	return font;
+	OPimagePNGLoadStream(str, str->_pointer, &font->texture); 
 }
 
 //OPfont* OPfontFromFile(OPfontAtlas* atlas, OPfloat ptSize, i8* filename)
@@ -91,7 +93,7 @@ OPfont* OPfontLoad(i8* filename) {
 //	return self;
 //}
 
-void OPfontDestroy(OPfont* font)
+void OPfontUnload(OPfont* font)
 {
 	OPint i;
 	OPfontGlyph* glyph;
@@ -103,7 +105,8 @@ void OPfontDestroy(OPfont* font)
 	}
 
 	OPvectorDestroy(font->glyphs);
-	free(font);
+	OPimagePNGUnload(font->texture);
+	OPfree(font);
 }
 
 OPfontGlyph* OPfontGetGlyph(OPfont* font, i8 charcode)

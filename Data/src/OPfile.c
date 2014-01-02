@@ -39,7 +39,7 @@ i32 OPread_i32(OPstream* str) {
 }
 
 f32 OPread_f32(OPstream* str) {
-	OPchar tmp[4];
+	OPchar tmp[sizeof(f32)];
 	OPmemcpy(tmp, OPread(str, sizeof(f32)), sizeof(f32));
 	return *((f32*)tmp);
 }

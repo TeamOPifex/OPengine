@@ -48,8 +48,10 @@ OPtexture* tex, *spec, *norm;
 OPframeBuffer rt;
 OPint PackerCreated = 0;
 OPeffect eftTexScreenSpriteSheet;
-OPtexture spriteSheet;
+OPtexture* spriteSheet;
 OPmesh fontText;
+OPfont* font;
+OPtexture* fontTexture;
 
 void* garbage;
 
@@ -79,6 +81,9 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("steamPlaneSkin.png");
 	OPcmanLoad("steamPlaneSpec.png");
 	OPcmanLoad("noneNorm.png");
+	OPcmanLoad("output.opf");
+	OPcmanLoad("output.png");
+
 	//OPLog("State0 Content loaded.");
 
 	//garbage = OPalloc(1024 * 10); // allocate ten megs of crap
@@ -176,14 +181,12 @@ void State0Enter(OPgameState* last){
 
 
 
-	i8* font_cache = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+	//i8* font_cache = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
-	OPfontAtlas* atlas = OPfontAtlasCreate(1024, 1024, 1);
-	//OPfont* font = OPfontFromFile(atlas, 72, "C:\\_Repos\\Vera.ttf");
-	//OPfontLoadGlyphs(font, font_cache, 97);
-	OPfontAtlasSavePNG(atlas, "outputFont.png");
+	font = (OPfont*)OPcmanGet("output.opf");
+	fontTexture = (OPtexture*)OPcmanGet("output.png");
 
-	spriteSheet = OPfontAtlasTexture(atlas);
+	//spriteSheet = OPfontAtlasTexture(font->atlas);
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
 		{ "aUV", GL_FLOAT, 2 }
@@ -199,10 +202,10 @@ void State0Enter(OPgameState* last){
 
 	OPvec4 color = { 1, 0, 0, 1 };
 	OPvec2 pos2 = { 0, 0 };
-	//fontText = OPfontCreateText(font, "Testing the fonts!", &color, &pos2);
+	fontText = OPfontCreateText(font, "Testing the fonts!", &color, &pos2);
 
 
-
+	spriteSheet = (OPtexture*)OPcmanGet("output.png");
 
 	OPLog("State0 Entered!");
 }
@@ -305,12 +308,12 @@ int State0Update(OPtimer* time){
 	OPrenderClear( 0.0f, 0.0f, 0.0f);
 	OPrenderBindMesh(&fontText);
 	OPrenderBindEffect(&eftTexScreenSpriteSheet);
-	OPtextureBind(&spriteSheet);
-	OPrenderParami("uColorTexture", spriteSheet.Handle);
+	OPtextureBind(font->texture);
+	OPrenderParami("uColorTexture", font->texture->Handle);
 	OPmat4 world;
 	OPfloat scale = OPrenderWidth / 2.0f;
 	OPmat4buildScl(&world, 0.75f / scale, 1.0f / scale, 1.0f / scale);
-	OPmat4translate(&world, -1.0f, 0.0f, 0.0f);
+	OPmat4translate(&world, -0.9f, 0.8f, 0.0f);
 	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderMesh();
 

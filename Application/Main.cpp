@@ -41,7 +41,7 @@
 #include "./Data/include/OPfile.h"
 #include "./Data/include/OPcontentManager.h"
 #include "./Data/include/OPentHeap.h"
-
+#include "./Human/include/Rendering/OPfont.h"
 #include "GameStates.h"
 
 //GameManager* GM;
@@ -95,6 +95,13 @@ OPassetLoader loaders[] ={
 		sizeof(OPmesh),
 		(OPint (*)(const OPchar*, void**))OPMload,
 		(OPint (*)(void*))OPMUnload
+	},
+	{
+		".opf",
+		"Fonts/",
+		sizeof(OPfont),
+		(OPint(*)(const OPchar*, void**))OPfontLoad,
+		(OPint(*)(void*))OPfontUnload
 	}
 };
 
@@ -132,7 +139,7 @@ void Init(){
 	i32 height = 480;
 #endif
 
-	OPcmanInit(loaders, 6);
+	OPcmanInit(loaders, 7);
 
 	OPaudInit();
 	OPaudInitThread(10);
