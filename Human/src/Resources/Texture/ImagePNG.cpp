@@ -45,43 +45,7 @@ OPint OPimagePNGLoad(const OPchar* filename, OPtexture** image){
 	ui8* data;
 	ui32 width, height;
 	OPstream* str = OPreadFile(filename);
-	error = lodepng_decode32(&data, &width, &height, str->Data, str->Length);
-	if(error) {
-		OPLog("LodePNG Error %d", error);
-	}
-	CheckError("OPimagePNGLoad:Error 1");
-	OPtexture* tex = (OPtexture*)OPalloc(sizeof(OPtexture));
-	CheckError("OPimagePNGLoad:Error 2");
-
-	OPtextureDescription desc = {
-		width,
-		height,
-		GL_RGBA,
-		GL_RGBA,
-		GL_UNSIGNED_BYTE,
-		OPtextureLinear,
-		OPtextureLinear,
-		OPtextureRepeat,
-		OPtextureRepeat
-	};
-
-	CheckError("OPimagePNGLoad:Error 3");
-	*tex = OPtextureCreate(desc);
-	CheckError("OPimagePNGLoad:Error 4");
-	OPtextureBind(tex);
-	CheckError("OPimagePNGLoad:Error 5");
-	OPtextureSetData(data);
-	CheckError("OPimagePNGLoad:Error 6");
-
-	// clean up
-	OPfree(data);
-	OPstreamDestroy(str);
-
-	*image = tex;
-
-	CheckError("OPimagePNGLoad:Error 7");
-
-	return 1;
+	return OPimagePNGLoadStream(str, 0, image);
 }
 
 OPint OPimagePNGLoadStream(OPstream* str, OPint offset, OPtexture** image) {

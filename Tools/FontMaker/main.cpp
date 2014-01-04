@@ -705,7 +705,7 @@ void OPfontSave(OPfont* font, i8* filename) {
 }
 
 int main(int argc, char **argv) {
-	OPfont* testFont = OPfontLoadFile("output.opf");
+	//OPfont* testFont = OPfontLoadFile("output.opf");
 
 	FILE* test;
 	size_t i, j;
