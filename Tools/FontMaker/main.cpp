@@ -6,7 +6,7 @@
 
 
 static OPint OPfontInit(OPfont* font, i8* filename)
-{
+{	
 	FT_Library library;
 	FT_Face face;
 	FT_Size_Metrics metrics;

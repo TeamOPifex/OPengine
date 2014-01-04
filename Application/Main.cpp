@@ -258,7 +258,7 @@ int UpdateState(OPtimer* timer){
 }
 
 #include "./Math/include/Tweening.h"
-
+#include "./Core/include/Assert.h"
 
 #ifdef OPIFEX_ANDROID
 extern "C" {
@@ -269,6 +269,10 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 #else
 	int main() {
 #endif
+
+		ASSERT(false, "Test!");
+		ASSERT(true, "TEST!");
+
 		OPmat4 scl;
 		OPmat4buildScl(&scl, 2.0f, 2.0f, 2.0f);
 		OPvec3 test = { 1.0f, 1.5f, 2.0f };
