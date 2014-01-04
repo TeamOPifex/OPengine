@@ -48,6 +48,7 @@ OPint OPimagePNGLoad(const OPchar* filename, OPtexture** image){
 	return OPimagePNGLoadStream(str, 0, image);
 }
 
+
 OPint OPimagePNGLoadStream(OPstream* str, OPint offset, OPtexture** image) {
 	CheckError("OPimagePNGLoad:Error 0");
 	ui32 error;

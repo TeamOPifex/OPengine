@@ -83,8 +83,7 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("steamPlaneSkin.png");
 	OPcmanLoad("steamPlaneSpec.png");
 	OPcmanLoad("noneNorm.png");
-	OPcmanLoad("output.opf");
-	OPcmanLoad("output.png");
+	OPcmanLoad("stencil.opf");
 
 	//OPLog("State0 Content loaded.");
 
@@ -187,8 +186,7 @@ void State0Enter(OPgameState* last){
 
 	//i8* font_cache = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
-	font = (OPfont*)OPcmanGet("output.opf");
-	fontTexture = (OPtexture*)OPcmanGet("output.png");
+	font = (OPfont*)OPcmanGet("stencil.opf");
 
 	//spriteSheet = OPfontAtlasTexture(font->atlas);
 	OPshaderAttribute attribs[] = {
@@ -208,10 +206,7 @@ void State0Enter(OPgameState* last){
 	OPvec4 color = { 1, 0, 0, 1 };
 	OPvec2 pos2 = { 0, 0 };
 	fontText = OPfontCreateText(font, "Testing the fonts!", &color, &pos2);
-
-
-	spriteSheet = (OPtexture*)OPcmanGet("output.png");
-
+	
 	OPLog("State0 Entered!");
 }
 
