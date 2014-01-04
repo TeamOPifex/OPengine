@@ -1,5 +1,5 @@
 #pragma once
-#include "Image.h"
+
 #include "./Human/include/Rendering/OPtexture.h"
 #include "./Data/include/OPstream.h"
 #include <stdio.h>

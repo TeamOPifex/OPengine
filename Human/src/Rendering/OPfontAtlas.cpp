@@ -1,7 +1,7 @@
 #pragma once
 
 #include "./Human/include/Rendering/OPfontAtlas.h"
-#include "./Human/include/Resources/Texture/ImagePNG.h"
+#include "./Human/include/Utilities/ImagePNG.h"
 
 OPfontAtlas* OPfontAtlasCreate(OPint width, OPint height, OPint depth) {
 	OPfontAtlas* self = (OPfontAtlas*)OPalloc(sizeof(OPfontAtlas));

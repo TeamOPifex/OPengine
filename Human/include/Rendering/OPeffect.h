@@ -10,7 +10,7 @@
 #include "./Math/include/Vector2.h"
 #include "./Math/include/Vector3.h"
 #include "./Math/include/Matrix4.h"
-#include "./Human/include/Rendering/Buffer.h"
+#include "./Human/include/Rendering/OPbuffer.h"
 
 #include "./Human/include/Utilities/Errors.h"
 

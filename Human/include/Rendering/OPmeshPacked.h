@@ -2,7 +2,7 @@
 #define OPEngine_Human_Renderer_Mesh_Packed
 	
 #include "./Human/include/Rendering/OPmeshPacker.h"
-#include "./Human/include/Rendering/Buffer.h"
+#include "./Human/include/Rendering/OPbuffer.h"
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

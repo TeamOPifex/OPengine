@@ -250,7 +250,7 @@ void OPgamePadSystemReset()
 {
 	for ( OPint i = CONTROLLERS; i--; )
 	{
-		OPgamePadReset( OPgamePadController( (GamePadIndex)i ) );
+		OPgamePadReset( OPgamePadController((GamePadIndex)i));
 	}
 }
 
@@ -258,7 +258,7 @@ void OPgamePadSetDeadzones(OPfloat deadzone)
 {
 	for ( OPint i = CONTROLLERS; i--; )
 	{
-		OPgamePadSetDeadzone(OPgamePadController((GamePadIndex)i), deadzone);
+		OPgamePadSetDeadzone( OPgamePadController((GamePadIndex)i), deadzone);
 	}
 }
 

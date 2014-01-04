@@ -2,7 +2,7 @@
 #define OPEngine_Human_Renderer_Quad
 
 #include "./Core/include/Types.h"
-#include "./Human/include/Rendering/Buffer.h"
+#include "./Human/include/Rendering/OPbuffer.h"
 #include "./Human/include/Rendering/OPmesh.h"
 #include "./Human/include/Rendering/OPmeshPacker.h"
 #include "./Human/include/Rendering/OPmeshPacked.h"

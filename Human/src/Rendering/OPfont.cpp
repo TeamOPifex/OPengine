@@ -7,7 +7,7 @@
 #include "./Human/include/Rendering/OPMvertex.h"
 #include "./Data/include/OPstream.h"
 #include "./Data/include/OPfile.h"
-#include "./Human/include/Resources/Texture/ImagePNG.h"
+#include "./Human/include/Utilities/ImagePNG.h"
 
 void OPfontLoad(i8* filename, OPfont** data) {
 	OPfont* font = (OPfont*)OPalloc(sizeof(OPfont));

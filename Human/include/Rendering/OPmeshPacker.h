@@ -3,7 +3,7 @@
 	
 #include "./Core/include/DynamicMemory.h"
 #include "./Data/include/OPstream.h"
-#include "./Human/include/Rendering/Buffer.h"
+#include "./Human/include/Rendering/OPbuffer.h"
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

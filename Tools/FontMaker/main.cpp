@@ -1,6 +1,6 @@
 #include "FontHelper.h"
 #include "./Core/include/MathHelpers.h"
-#include "./Human/include/Resources/Texture/ImagePNG.h"
+#include "./Human/include/Utilities/ImagePNG.h"
 
 #include "./Human/include/Rendering/OPfontKerning.h"
 

@@ -7,7 +7,7 @@
 #include "./Data/include/OPgameStates.h"
 
 //#include "./GameManager.h"
-#include "./Human/include/Rendering/Renderer.h"
+#include "./Human/include/Rendering/OPrenderer.h"
 #include "./Human/include/Input/GamePadSystem.h"
 
 #include "./Core/include/Log.h"
@@ -36,7 +36,7 @@
 #include "./Human/include/Audio/OPaudioEmitter.h"
 #include "./Human/include/Audio/OPaudioPlayer.h"
 #include "./Human/include/Utilities/OPMloader.h"
-#include "./Human/include/Resources/Texture/ImagePNG.h"
+#include "./Human/include/Utilities/ImagePNG.h"
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Data/include/OPfile.h"
 #include "./Data/include/OPcontentManager.h"

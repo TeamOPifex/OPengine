@@ -1,6 +1,6 @@
 #include "./Human/include/Input/Input.h"
 #include "./Core/include/DynamicMemory.h"
-#include "./Human/include/Rendering/Renderer.h"
+#include "./Human/include/Rendering/OPrenderer.h"
 #include "./Core/include/Log.h"
 #ifndef OPIFEX_ANDROID
 	#include <GL/glfw.h>
