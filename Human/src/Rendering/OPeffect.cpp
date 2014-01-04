@@ -114,13 +114,13 @@ OPint OPrenderUnloadShader(OPshader* shader){
 //-----------------------------------------------------------------------------
 // effect creation
 OPeffect OPrenderCreateEffect(
-
-	CheckError("OPrenderCreateEffect:Error 0");
 	OPshader vert,
 	OPshader frag,
 	OPshaderAttribute* Attributes,
 	OPint AttribCount,
 	const OPchar* Name){
+
+	CheckError("OPrenderCreateEffect:Error 0");
 
 	OPint nameLen = strlen(Name) + 1;
 	OPeffect effect = {

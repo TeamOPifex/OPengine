@@ -72,6 +72,8 @@ void OPrenderDrawBuffer(ui32 offset){
 void OPrenderDrawBufferIndexed(ui32 offset){
 	glDrawElements(GL_TRIANGLES, OPRENDER_CURR_IB->ElementCount, GL_UNSIGNED_SHORT, (void*)(0 + offset));
 	CheckError("OPrenderDrawBufferIndexed:Error 1");
+}
+
 //-----------------------------------------------------------------------------
 void OPrenderDrawIndexed(ui32 offset, ui32 count){
 	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, (void*)(0 + offset));
