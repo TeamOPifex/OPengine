@@ -150,6 +150,6 @@ OPfloat OPround(OPfloat f){
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) // linux implementation
 	return round(f);
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
-	return round(f);
+	return OPfloor( f + 0.5f );
 #endif
 }
