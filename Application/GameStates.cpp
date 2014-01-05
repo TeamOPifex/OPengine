@@ -205,7 +205,7 @@ void State0Enter(OPgameState* last){
 
 	OPvec4 color = { 1, 0, 0, 1 };
 	OPvec2 pos2 = { 0, 0 };
-	fontText = OPfontCreateText(font, "Testing the fonts!", &color, &pos2);
+	fontText = OPfontCreateText(font, "Testing the fonts!", &color, &pos2, 0);
 	
 	OPLog("State0 Entered!");
 }

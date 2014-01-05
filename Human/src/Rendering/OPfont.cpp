@@ -168,7 +168,7 @@ OPfontGlyph* OPfontGetGlyph(OPfont* font, i8 charcode)
 }
 
 
-OPmesh OPfontCreateText(OPfont* font, i8* text, OPvec4* color, OPvec2* pos) {
+OPmesh OPfontCreateText(OPfont* font, i8* text, OPvec4* color, OPvec2* pos, OPint align) {
 	ui32 vertexSize = sizeof(OPvertexColor);
 	ui32 indexSize = sizeof(ui16);
 	OPvector* vertices = OPvectorCreate(vertexSize);
@@ -176,6 +176,7 @@ OPmesh OPfontCreateText(OPfont* font, i8* text, OPvec4* color, OPvec2* pos) {
 
 	size_t i;
 	float r = color->x, g = color->y, b = color->z, a = color->w;
+	OPfloat width = 0;
 	for (i = 0; i< strlen(text); ++i)
 	{
 		OPfontGlyph* glyph = OPfontGetGlyph(font, text[i]);
@@ -187,6 +188,7 @@ OPmesh OPfontCreateText(OPfont* font, i8* text, OPvec4* color, OPvec2* pos) {
 				kerning = OPfontGlyphGetKerning(glyph, text[i - 1]);
 			}
 			pos->x += kerning;
+			width += kerning;
 			int x0 = (int)(pos->x + glyph->offsetX);
 			int y0 = (int)(pos->y + glyph->offsetY);
 			int x1 = (int)(x0 + glyph->width);
@@ -209,6 +211,14 @@ OPmesh OPfontCreateText(OPfont* font, i8* text, OPvec4* color, OPvec2* pos) {
 				OPvectorPush(indices, (ui8*)&inds[i]);
 			
 			pos->x += glyph->advanceX;
+			width += glyph->advanceX;
+		}
+	}
+
+	if (align == 1) {
+		for (ui32 i = 0; i < vertices->_size; i++) {
+			OPvertexColor* vert = (OPvertexColor*)OPvectorGet(vertices, i);
+			vert->Position.x -= width / 2.0f;
 		}
 	}
 

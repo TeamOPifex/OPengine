@@ -49,5 +49,5 @@ void OPfontLoad(i8* filename, OPfont** data);
 void OPfontUnload(OPfont* font);
 //OPint OPfontLoadGlyphs(OPfont* font, i8* charcodes, OPint count);
 OPfontGlyph* OPfontGetGlyph(OPfont* font, i8 charcode);
-OPmesh OPfontCreateText(OPfont* font, i8* text, OPvec4* color, OPvec2* pos);
+OPmesh OPfontCreateText(OPfont* font, i8* text, OPvec4* color, OPvec2* pos, OPint align);
 
