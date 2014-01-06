@@ -189,12 +189,16 @@ void State0Enter(OPgameState* last){
 
 	//i8* font_cache = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
-	font = (OPfont*)OPcmanGet("stencil.opf");
-	fontManager = OPfontManagerCreate(font);
-	OPfontManagerBind(fontManager);
-	OPfontManagerAddText("Pause");
-	OPfontManagerBuild();
-	OPcommonLoadFontEffect();
+	//font = (OPfont*)OPcmanGet("stencil.opf");
+	//fontManager = OPfontManagerCreate(font);
+	//OPfontManagerBind(fontManager);
+	//OPfontManagerAddText("Pause");
+	//OPfontManagerBuild();
+	//OPcommonLoadFontEffect();
+
+	i8** text = (i8**)OPalloc(sizeof(i8) * 1);
+	text[0] = "Pause";
+	fontManager = OPfontManagerSetup("stencil.opf", text, 1);
 
 	//spriteSheet = OPfontAtlasTexture(font->atlas);
 	//OPshaderAttribute attribs[] = {
@@ -316,6 +320,7 @@ int State0Update(OPtimer* time){
 
 	OPrenderClear(0.0f, 0.0f, 0.0f);
 
+	OPrenderTextXY("Pause", 0, 0);
 	OPrenderTextRGBAXYAlign("Pause", 0, 0, 1.0f, 1.0f, 0.0f, 0.0f, OPFONT_ALIGN_CENTER);
 
 	//OPrenderDepth(0);

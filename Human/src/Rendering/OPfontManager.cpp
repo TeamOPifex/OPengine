@@ -1,6 +1,8 @@
 #include "./Human/include/Rendering/OPfontManager.h"
 #include "./Core/include/Assert.h"
 #include "./Human/include/Rendering/OPrenderer.h"
+#include "./Data/include/OPcontentManager.h"
+#include "./Human/include/Rendering/Common.h"
 
 OPfontManager* OPRENDER_CURR_FONT_MANAGER = NULL;
 OPeffect* OPRENDER_CURR_FONT_EFFECT = NULL;
@@ -16,6 +18,18 @@ OPfontManager* OPfontManagerCreate(OPfont* font) {
 	temp->builtNodes = OPhashMapCreate(16);
 	temp->meshPacker = OPmeshPackerCreate();
 	return temp;
+}
+
+OPfontManager* OPfontManagerSetup(i8* font, i8** text, ui16 count) {
+	OPcommonLoadFontEffect();
+	OPfont* _font = (OPfont*)OPcmanGet(font);
+	OPfontManager* manager = OPfontManagerCreate(_font);
+	OPfontManagerBind(manager);
+	for (ui16 i = 0; i < count; i++) {
+		OPfontManagerAddText(text[i]);
+	}
+	OPfontManagerBuild();
+	return manager;
 }
 
 void OPfontManagerBind(OPfontManager* manager) {
