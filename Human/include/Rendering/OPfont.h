@@ -4,6 +4,7 @@
 #include "./Human/include/Rendering/OPmesh.h"
 #include "./Math/include/Vector2.h"
 #include "./Human/include/Rendering/OPtexture.h"
+#include "./Human/include/Rendering/OPmeshPacked.h"
 
 typedef struct {
 	OPvector* glyphs;
@@ -42,6 +43,11 @@ typedef struct {
 	OPfloat underlineThickness;
 } OPfont;
 
+typedef struct {
+	OPmeshPacked* packedMesh;
+	OPfloat Width;
+} OPfontBuiltTextNode;
+
 #include "./Human/include/Rendering/OPfontGlyph.h"
 
 //OPfont* OPfontFromFile(OPfontAtlas* atlas, OPfloat ptSize, i8* filename);
@@ -49,5 +55,6 @@ void OPfontLoad(i8* filename, OPfont** data);
 void OPfontUnload(OPfont* font);
 //OPint OPfontLoadGlyphs(OPfont* font, i8* charcodes, OPint count);
 OPfontGlyph* OPfontGetGlyph(OPfont* font, i8 charcode);
-OPmesh OPfontCreateText(OPfont* font, i8* text, OPvec4* color, OPvec2* pos, OPint align);
+OPmesh OPfontCreateText(OPfont* font, i8* text);
+OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const i8* text);
 

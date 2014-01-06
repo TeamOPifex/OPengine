@@ -18,6 +18,8 @@
 #include "./Human/include/Input/Input.h"
 #include "./Human/include/Rendering/OPfont.h"
 #include "./Human/include/Rendering/OPfontAtlas.h"
+#include "./Human/include/Rendering/Common.h"
+#include "./Human/include/Rendering/OPfontManager.h"
 
 OPfloat t = 0;
 
@@ -53,6 +55,7 @@ OPtexture* spriteSheet;
 OPmesh fontText;
 OPfont* font;
 OPtexture* fontTexture;
+OPfontManager* fontManager;
 
 void* garbage;
 
@@ -187,26 +190,31 @@ void State0Enter(OPgameState* last){
 	//i8* font_cache = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
 	font = (OPfont*)OPcmanGet("stencil.opf");
+	fontManager = OPfontManagerCreate(font);
+	OPfontManagerBind(fontManager);
+	OPfontManagerAddText("Pause");
+	OPfontManagerBuild();
+	OPcommonLoadFontEffect();
 
 	//spriteSheet = OPfontAtlasTexture(font->atlas);
-	OPshaderAttribute attribs[] = {
-		{ "aPosition", GL_FLOAT, 3 },
-		{ "aUV", GL_FLOAT, 2 }
-	};
+	//OPshaderAttribute attribs[] = {
+	//	{ "aPosition", GL_FLOAT, 3 },
+	//	{ "aUV", GL_FLOAT, 2 }
+	//};
 
-	eftTexScreenSpriteSheet = OPrenderCreateEffect(
-		*(OPshader*)OPcmanGet("TexturedScreen.vert"),
-		*(OPshader*)OPcmanGet("Font.frag"),
-		attribs,
-		2,
-			"BlurEffect"
-		);
-	quadMesh = OPquadCreate();
+	//eftTexScreenSpriteSheet = OPrenderCreateEffect(
+	//	*(OPshader*)OPcmanGet("TexturedScreen.vert"),
+	//	*(OPshader*)OPcmanGet("Font.frag"),
+	//	attribs,
+	//	2,
+	//		"BlurEffect"
+	//	);
+	//quadMesh = OPquadCreate();
 
-	OPvec4 color = { 1, 0, 0, 1 };
-	OPvec2 pos2 = { 0, 0 };
-	fontText = OPfontCreateText(font, "Testing the fonts!", &color, &pos2, 0);
-	
+	//OPvec4 color = { 1, 0, 0, 1 };
+	//OPvec2 pos2 = { 0, 0 };
+	//fontText = OPfontCreateText(font, "Testing the fonts!", &color, &pos2, 0);
+	//
 	OPLog("State0 Entered!");
 }
 
@@ -306,20 +314,23 @@ int State0Update(OPtimer* time){
 
 
 
-	OPrenderDepth(0);
-	OPrenderClear( 0.0f, 0.0f, 0.0f);
-	OPrenderBindMesh(&fontText);
-	OPrenderBindEffect(&eftTexScreenSpriteSheet);
-	OPtextureBind(font->texture);
-	OPrenderParami("uColorTexture", font->texture->Handle);
-	OPvec4 color = { 0.0f, 0.0f, 1.0f, 1.0f };
-	OPrenderParamVec4("uColor", 1, &color);
-	OPmat4 world;
-	OPfloat scale = OPrenderWidth / 2.0f;
-	OPmat4buildScl(&world, 0.75f / scale, 1.0f / scale, 1.0f / scale);
-	OPmat4translate(&world, -0.9f, 0.8f, 0.0f);
-	OPrenderParamMat4v("uWorld", 1, &world);
-	OPrenderMesh();
+	OPrenderClear(0.0f, 0.0f, 0.0f);
+
+	OPrenderTextRGBAXYAlign("Pause", 0, 0, 1.0f, 1.0f, 0.0f, 0.0f, OPFONT_ALIGN_CENTER);
+
+	//OPrenderDepth(0);
+	//OPrenderBindMesh(&fontText);
+	//OPrenderBindEffect(&eftTexScreenSpriteSheet);
+	//OPtextureBind(font->texture);
+	//OPrenderParami("uColorTexture", font->texture->Handle);
+	//OPvec4 color = { 0.0f, 0.0f, 1.0f, 1.0f };
+	//OPrenderParamVec4("uColor", 1, &color);
+	//OPmat4 world;
+	//OPfloat scale = OPrenderWidth / 2.0f;
+	//OPmat4buildScl(&world, 0.75f / scale, 1.0f / scale, 1.0f / scale);
+	//OPmat4translate(&world, -0.9f, 0.8f, 0.0f);
+	//OPrenderParamMat4v("uWorld", 1, &world);
+	//OPrenderMesh();
 
 
 

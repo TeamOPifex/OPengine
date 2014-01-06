@@ -1,5 +1,6 @@
 #include "./Core/include/Log.h"
 #include "./Human/include/Rendering/OPrenderer.h"
+#include "./Core/include/Assert.h"
 
 OPint OPrenderWidth;
 OPint OPrenderHeight;
@@ -87,6 +88,12 @@ OPint OPrenderGetWidth(){
 OPint OPrenderGetHeight(){
 	glfwGetWindowSize(&OPrenderWidth, &OPrenderHeight);
 	return OPrenderHeight;
+}
+//-----------------------------------------------------------------------------
+OPfloat OPrenderGetAspectRatio(){
+	glfwGetWindowSize(&OPrenderWidth, &OPrenderHeight);
+	ASSERT(OPrenderHeight > 0, "Height was not greater than 0, there was problem getting width and height");
+	return OPrenderWidth / (OPfloat)OPrenderHeight;
 }
 //-----------------------------------------------------------------------------
 void  OPrenderSwapBuffer(){

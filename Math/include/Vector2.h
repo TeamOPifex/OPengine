@@ -7,6 +7,7 @@
 
 struct OPvec2;
 inline OPfloat* OPvec2index(OPvec2* v, int idx);
+inline OPvec2 OPvec2Create(OPfloat x, OPfloat y);
 inline void OPvec2add(OPvec2* dst, OPvec2* a, OPvec2* b);
 inline void OPvec2sub(OPvec2* dst, OPvec2* a, OPvec2* b);
 inline void OPvec2mul(OPvec2* dst, OPvec2* a, OPvec2* b);
@@ -65,6 +66,11 @@ struct OPvec2 {
 
 extern const OPvec2 OPvec2Zero;
 extern const OPvec2 OPvec2One;
+
+inline OPvec2 OPvec2Create(OPfloat x, OPfloat y) {
+	OPvec2 tmp = { x, y };
+	return tmp;
+}
 
 inline OPvec2 operator+(OPvec2 lhs, OPvec2 vhs) { 
 	OPvec2 temp = { 0.0, 0.0 };

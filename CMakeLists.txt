@@ -53,6 +53,7 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID" )
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Textures" ${PROJECT_BINARY_DIR}/assets/Textures)
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Fonts" ${PROJECT_BINARY_DIR}/assets/Fonts)
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/GL_ES_2_0" ${PROJECT_BINARY_DIR}/assets/Shaders)	
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/GL_ES_2_0/Common" ${PROJECT_BINARY_DIR}/assets/Shaders/Common)	
 
 else()
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Audio" ${PROJECT_BINARY_DIR}/Application/assets/Audio)	
@@ -60,6 +61,7 @@ else()
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Textures" ${PROJECT_BINARY_DIR}/Application/assets/Textures)	
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Fonts" ${PROJECT_BINARY_DIR}/Application/assets/Fonts)	
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/GL_3_3" ${PROJECT_BINARY_DIR}/Application/assets/Shaders)	
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/GL_3_3/Common" ${PROJECT_BINARY_DIR}/Application/assets/Shaders/Common)	
 endif()
 
 

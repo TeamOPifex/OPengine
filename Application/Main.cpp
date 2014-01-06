@@ -270,8 +270,8 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 	int main() {
 #endif
 
-	ASSERT(false, "Test!");
-	ASSERT(true, "TEST!");
+	//ASSERT(false, "Test!");
+	//ASSERT(true, "TEST!");
 
 	OPmat4 scl;
 	OPmat4buildScl(&scl, 2.0f, 2.0f, 2.0f);

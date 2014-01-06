@@ -26,6 +26,7 @@ void  OPrenderClear      (f32 r, f32 g, f32 b);
 void  OPrenderSetViewport(ui32 x, ui32 y, ui32 width, ui32 height);
 OPint OPrenderGetWidth();
 OPint OPrenderGetHeight();
+OPfloat OPrenderGetAspectRatio();
 void  OPrenderSwapBuffer ();
 void  OPrenderPresent    ();
 void  OPrenderDepth      (OPint state);
