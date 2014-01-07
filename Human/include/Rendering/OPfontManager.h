@@ -65,7 +65,11 @@ OPfontManager* OPfontManagerSetup(i8* font, i8** text, ui16 count);
 
 void OPfontManagerBind(OPfontManager* manager);
 void OPfontManagerAddText(const i8* text);
-void OPfontManagerBuild();
+void OPfontManagerBuild(); 
+
+void OPfontManagerSetColor4(OPfontManager* manager, OPvec4 color);
+void OPfontManagerSetRGBA(OPfontManager* manager, f32 r, f32 g, f32 b, f32 a);
+void OPfontManagerSetAlign(OPfontManager* manager, OPfontAlign align);
 
 void OPfontEffectBind(OPeffect* effect);
 

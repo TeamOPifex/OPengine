@@ -1,5 +1,6 @@
 #pragma once
 
+#include "./Human/include/Rendering/OPfontKerning.h"
 #include "./Data/include/OPvector.h"
 #include "./Math/include/Vector4.h"
 
@@ -16,8 +17,6 @@ typedef struct {
 	OPint outlineType;
 	OPfloat outlineThickness;
 } OPfontGlyph;
-
-#include "./Human/include/Rendering/OPfontKerning.h"
 
 OPfontGlyph* OPfontGlyphCreate();
 void OPfontGlyphDestroy(OPfontGlyph* glyph);

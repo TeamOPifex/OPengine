@@ -196,9 +196,15 @@ void State0Enter(OPgameState* last){
 	//OPfontManagerBuild();
 	//OPcommonLoadFontEffect();
 
+	// Required
 	i8** text = (i8**)OPalloc(sizeof(i8) * 1);
-	text[0] = "Pause";
+	text[0] = "All of the text! Woot!";
 	fontManager = OPfontManagerSetup("stencil.opf", text, 1);
+
+	// Optional
+	OPfontManagerSetRGBA(fontManager, 0.0f, 0.0f, 1.0f, 1.0f);
+	OPfontManagerSetAlign(fontManager, OPFONT_ALIGN_CENTER);
+
 
 	//spriteSheet = OPfontAtlasTexture(font->atlas);
 	//OPshaderAttribute attribs[] = {
@@ -320,26 +326,12 @@ int State0Update(OPtimer* time){
 
 	OPrenderClear(0.0f, 0.0f, 0.0f);
 
-	OPrenderTextXY("Pause", 0, 0);
-	OPrenderTextRGBAXYAlign("Pause", 0, 0, 1.0f, 1.0f, 0.0f, 0.0f, OPFONT_ALIGN_CENTER);
+	// Required
+	OPrenderTextXY("All of the text! Woot!", 0, 0);
 
-	//OPrenderDepth(0);
-	//OPrenderBindMesh(&fontText);
-	//OPrenderBindEffect(&eftTexScreenSpriteSheet);
-	//OPtextureBind(font->texture);
-	//OPrenderParami("uColorTexture", font->texture->Handle);
-	//OPvec4 color = { 0.0f, 0.0f, 1.0f, 1.0f };
-	//OPrenderParamVec4("uColor", 1, &color);
-	//OPmat4 world;
-	//OPfloat scale = OPrenderWidth / 2.0f;
-	//OPmat4buildScl(&world, 0.75f / scale, 1.0f / scale, 1.0f / scale);
-	//OPmat4translate(&world, -0.9f, 0.8f, 0.0f);
-	//OPrenderParamMat4v("uWorld", 1, &world);
-	//OPrenderMesh();
-
-
-
-
+	// Optional
+	// OPrenderTextRGBAXYAlign("All of the text! Woot!", 0, 0, 1.0f, 1.0f, 0.0f, 0.0f, OPFONT_ALIGN_CENTER);
+	
 
 
 

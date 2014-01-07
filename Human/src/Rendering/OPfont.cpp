@@ -75,25 +75,6 @@ void OPfontLoad(i8* filename, OPfont** data) {
 	OPimagePNGLoadStream(str, str->_pointer, &font->texture); 
 }
 
-//OPfont* OPfontFromFile(OPfontAtlas* atlas, OPfloat ptSize, i8* filename)
-//{
-//	OPfont* self = (OPfont*)OPalloc(sizeof(OPfont));
-//
-//	if (!self) {
-//		return NULL;
-//	}
-//
-//	self->atlas = atlas;
-//	self->size = ptSize;
-//
-//	if (OPfontInit(self)) {
-//		OPfontDestroy(self);
-//		return NULL;
-//	}
-//
-//	return self;
-//}
-
 void OPfontUnload(OPfont* font)
 {
 	OPint i;
@@ -159,12 +140,6 @@ OPfontGlyph* OPfontGetGlyph(OPfont* font, i8 charcode)
 		return glyph;
 	}
 
-	/* Glyph has not been already loaded */
-	//buffer[0] = charcode;
-	//if (OPfontLoadGlyphs(font, buffer, 1) == 0)
-	//{
-	//	return *(OPfontGlyph **)OPvectorBack(font->glyphs);
-	//}
 	return NULL;
 }
 
@@ -219,6 +194,7 @@ OPmesh OPfontCreateText(OPfont* font, i8* text) {
 	OPrenderBuildMesh(vertexSize, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
 	return mesh;	
 }
+
 OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const i8* text) {
 	ASSERT(OPRENDER_CURR_PACKER != NULL, "No mesh packer bound.");
 

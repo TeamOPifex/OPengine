@@ -92,8 +92,8 @@ OPint OPrenderGetHeight(){
 //-----------------------------------------------------------------------------
 OPfloat OPrenderGetAspectRatio(){
 	glfwGetWindowSize(&OPrenderWidth, &OPrenderHeight);
-	ASSERT(OPrenderHeight > 0, "Height was not greater than 0, there was problem getting width and height");
-	return OPrenderWidth / (OPfloat)OPrenderHeight;
+	ASSERT(OPrenderWidth > 0, "Height was not greater than 0, there was problem getting width and height");
+	return OPrenderHeight / (OPfloat)OPrenderWidth;
 }
 //-----------------------------------------------------------------------------
 void  OPrenderSwapBuffer(){

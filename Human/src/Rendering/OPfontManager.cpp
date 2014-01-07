@@ -32,6 +32,21 @@ OPfontManager* OPfontManagerSetup(i8* font, i8** text, ui16 count) {
 	return manager;
 }
 
+void OPfontManagerSetColor4(OPfontManager* manager, OPvec4 color) {
+	manager->_color = color;
+}
+
+void OPfontManagerSetRGBA(OPfontManager* manager, f32 r, f32 g, f32 b, f32 a) {
+	manager->_color.x = r;
+	manager->_color.y = g;
+	manager->_color.z = b;
+	manager->_color.w = a;
+}
+
+void OPfontManagerSetAlign(OPfontManager* manager, OPfontAlign align) {
+	manager->_align = align;
+}
+
 void OPfontManagerBind(OPfontManager* manager) {
 	OPRENDER_CURR_FONT_MANAGER = manager;
 }
