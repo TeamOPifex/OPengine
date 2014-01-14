@@ -32,7 +32,7 @@ OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
 	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
-	if( !glfwOpenWindow( width, height, 0,0,0,0, 32,0, fullscreen ? GLFW_FULLSCREEN : GLFW_WINDOW ) )
+	if( !glfwOpenWindow( width, height, 8,8,8,8, 32,0, fullscreen ? GLFW_FULLSCREEN : GLFW_WINDOW ) )
 	{		
 		OPLog("Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible.\n" );
 		glfwTerminate();
@@ -95,6 +95,21 @@ OPfloat OPrenderGetAspectRatio(){
 	ASSERT(OPrenderWidth > 0, "Height was not greater than 0, there was problem getting width and height");
 	return OPrenderHeight / (OPfloat)OPrenderWidth;
 }
+
+OPfloat aspect;
+//-----------------------------------------------------------------------------
+OPfloat OPrenderGetWidthAspectRatio(){
+	ASSERT(OPrenderWidth > 0, "Height was not greater than 0, there was problem getting width and height");
+	aspect = OPrenderHeight / (OPfloat)OPrenderWidth;
+	return aspect > 1.0f ? 1.0f : aspect;
+}
+//-----------------------------------------------------------------------------
+OPfloat OPrenderGetHeightAspectRatio(){
+	ASSERT(OPrenderHeight > 0, "Height was not greater than 0, there was problem getting width and height");
+	aspect = OPrenderWidth / (OPfloat)OPrenderHeight;
+	return aspect > 1.0f ? 1.0f : aspect;
+}
+
 //-----------------------------------------------------------------------------
 void  OPrenderSwapBuffer(){
 #ifdef OPIFEX_OPENGL_ES_2

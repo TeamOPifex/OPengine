@@ -22,6 +22,7 @@ OPfontManager* OPfontManagerCreate(OPfont* font) {
 
 OPfontManager* OPfontManagerSetup(i8* font, i8** text, ui16 count) {
 	OPcommonLoadFontEffect();
+	OPcmanLoad(font);
 	OPfont* _font = (OPfont*)OPcmanGet(font);
 	OPfontManager* manager = OPfontManagerCreate(_font);
 	OPfontManagerBind(manager);
@@ -135,6 +136,7 @@ void OPrenderTextColor4Vec2Align(const i8* text, OPvec4 color, OPvec2 pos, OPfon
 	// Don't bother trying to render text with a width of 0
 	if (node->Width == 0) return;
 
+	OPmeshPackerBind(&OPRENDER_CURR_FONT_MANAGER->meshPacker);
 	OPrenderBindEffect(OPRENDER_CURR_FONT_EFFECT);
 	OPtextureBind(OPRENDER_CURR_FONT_MANAGER->_font->texture);
 	OPrenderParami("uColorTexture", OPRENDER_CURR_FONT_MANAGER->_font->texture->Handle);
@@ -154,7 +156,8 @@ void OPrenderTextColor4Vec2Align(const i8* text, OPvec4 color, OPvec2 pos, OPfon
 			OPmat4buildTranslate(&world, -node->Width, 0, 0.0f);
 			break;
 	}
-	OPmat4scl(&world, OPrenderGetAspectRatio() / scale, 1.0f / scale, 1.0f / scale);
+
+	OPmat4scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f / scale);
 	OPmat4translate(&world, pos.x, pos.y, 0.0f);
 	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderMeshPacked(node->packedMesh);

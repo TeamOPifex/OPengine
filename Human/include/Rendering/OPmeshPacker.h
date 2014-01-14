@@ -25,6 +25,7 @@ typedef struct{
 	ui32 indexOffset;
 	OPstream vertices;
 	OPstream indices;
+	bool built;
 }OPmeshPacker;
 
 //-----------------------------------------------------------------------------

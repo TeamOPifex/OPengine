@@ -24,6 +24,7 @@ OPmeshPacker OPmeshPackerCreate(){
 	packer.vertices = *OPstreamCreate(0);
 	packer.indices = *OPstreamCreate(0);
 	packer.vertexElementOffset = 0;
+	packer.built = false;
 
 	return packer;
 }
@@ -49,25 +50,12 @@ ui32 OPmeshPackerAddIB(ui32 indexSize, void* indicesData, ui32 indexCount){
 	OPmeshPacker* packer = OPRENDER_CURR_PACKER;
 	ui32 dataStartPos = packer->vertexOffset;
 	ui32 indexBufferSize = indexSize * indexCount;
-	//ui8  indexBits = indexSize << 3;
-	//ui32 offset = ((dataStartPos / indexSize) << indexBits);
-
-	//ui8* dat = (ui8*)indicesData;
-	//for(OPuint i = 0; i < indexCount; ++i){
-	//	OPuint index = *((OPuint*)dat) + offset;
-	//	dat += indexSize;
-	//	OPwrite(&packer->indices, &index, indexSize);
-
-	//	OPLog("i(%u) %u\n", offset, index >> 16);
-	//}
 
 	ui16* dat = (ui16*)indicesData;
 	ui32 offset = packer->vertexElementOffset;
 	for(OPuint i = 0; i < indexCount; ++i){
 		ui16 index = dat[i] + offset;
 		OPwrite(&packer->indices, &index, indexSize);
-
-		OPLog("i(%u) %u\n", offset, index);
 	}
 
 	packer->indexOffset += indexBufferSize;
@@ -91,10 +79,13 @@ void OPmeshPackerBuild(){
 		packer->indexOffset,
 		packer->indices.Data
 	);
+	OPRENDER_CURR_PACKER->built = true;
 }
 //-----------------------------------------------------------------------------
 void OPmeshPackerBind(OPmeshPacker* packer){
 	OPRENDER_CURR_PACKER = packer;
+	if (!OPRENDER_CURR_PACKER->built) return;
+
 	CheckError("OPmeshPackerBind:Error 0");
 	OPrenderBindBuffer(&packer->VertexBuffer);
 	CheckError("OPmeshPackerBind:Error 1");

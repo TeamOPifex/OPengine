@@ -53,7 +53,7 @@ void* entData;
 
 OPfloat vol = 0.05f;
 
-OPassetLoader loaders[] ={
+OPassetLoader loaders[] = {
 	{
 		".wav",
 		"Audio/",
@@ -135,8 +135,8 @@ void Init(){
 
 
 #ifndef OPIFEX_ANDROID
-	i32 width = 640;
-	i32 height = 480;
+	i32 width = 1280;
+	i32 height = 720;
 #endif
 
 	OPcmanInit(loaders, 7);
