@@ -9,7 +9,8 @@ include_directories(
 	../External/Ogg/include/
 	../External/Vorbis/include/
 	../External/OpenAL/
-	../External/Freetype/win32/
+	../External/Oculus/include/
+	../External/Oculus/Src/
 	.
 	../
 )
@@ -108,6 +109,7 @@ target_link_libraries(5_Human
 	${OGG_LIBRARY}
 	${VORBIS_LIBRARY}
 	${VORBISFILE_LIBRARY}
+	${PROJECT_SOURCE_DIR}/External/Oculus/lib/win32/libovr.lib
 )
 SET_TARGET_PROPERTIES(5_Human PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(5_Human PROPERTIES 
