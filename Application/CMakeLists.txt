@@ -9,6 +9,8 @@ include_directories(
 	../External/Ogg/include/
 	../External/Vorbis/include/
 	../External/OpenAL/
+	../External/Oculus/include/
+	../External/Oculus/Src/
 	.
 	../
 )

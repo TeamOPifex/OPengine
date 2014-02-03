@@ -17,6 +17,7 @@
 #include "./Data/include/OPlist.h"
 
 #include "./Performance/include/OPthread.h"
+#include "./Human/include/Input/Oculus.h"
 
 #if defined(OPIFEX_ANDROID)
 #include <jni.h>
@@ -53,7 +54,7 @@ void* entData;
 
 OPfloat vol = 0.05f;
 
-OPassetLoader loaders[] ={
+OPassetLoader loaders[] = {
 	{
 		".wav",
 		"Audio/",
@@ -121,6 +122,11 @@ void KeyDown(int key, int action){
 
 }
 
+#ifndef OPIFEX_ANDROID
+i32 width = 640;
+i32 height = 480;
+#endif
+
 // Initialize
 void Init(){
 	#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
@@ -132,12 +138,7 @@ void Init(){
 	else
 		OPLog("Directory change failed!!!\n");
 	#endif
-
-
-#ifndef OPIFEX_ANDROID
-	i32 width = 640;
-	i32 height = 480;
-#endif
+	
 
 	OPcmanInit(loaders, 7);
 
@@ -272,6 +273,14 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 
 	//ASSERT(false, "Test!");
 	//ASSERT(true, "TEST!");
+
+	if (OPoculusInitialize()) {
+		OPoculusUpdate();
+		OPvec4 state = OPoculusHmd();
+		OPvec2 screen = OPoculusScreenSize();
+		width = screen.x;
+		height = screen.y;
+	}
 
 	OPmat4 scl;
 	OPmat4buildScl(&scl, 2.0f, 2.0f, 2.0f);
