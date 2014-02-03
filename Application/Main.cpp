@@ -23,7 +23,7 @@
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 #include <direct.h>
 #include <GL/glew.h>
-#include <GL/glfw.h>
+#include <GLFW/glfw3.h>
 //#include <glm/glm.hpp>
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 #include <GL/glew.h>
