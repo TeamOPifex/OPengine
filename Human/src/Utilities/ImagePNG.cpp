@@ -18,28 +18,28 @@
 #include <GLFW/glfw3.h>
 #endif
 
-void OPimagePNG24WriteStream(ui8* imageData, OPint width, OPint height, ui8** data, ui32* dataSize) {
+void OPimagePNG24WriteStream(ui8* imageData, i32 width, i32 height, ui8** data, OPuint* dataSize) {
 	ui32 error = lodepng_encode24(data, dataSize, imageData, width, height);
 }
-void OPimagePNG32WriteStream(ui8* imageData, OPint width, OPint height, ui8** data, ui32* dataSize) {
+void OPimagePNG32WriteStream(ui8* imageData, i32 width, i32 height, ui8** data, OPuint* dataSize) {
 	ui32 error = lodepng_encode32(data, dataSize, imageData, width, height);
 }
 
-void OPimagePNGCreate24(ui8* imageData, OPint width, OPint height, i8* filename) {
-	ui8* data;
-	ui32 dataSize;
+void OPimagePNGCreate24(ui8* imageData, i32 width, i32 height, i8* filename) {
+	ui8*   data;
+	OPuint dataSize;
 	ui32 error = lodepng_encode24(&data, &dataSize, imageData, width, height);
 	lodepng_save_file(data, dataSize, filename);
 }
 
-void OPimagePNGCreate32(ui8* imageData, OPint width, OPint height, i8* filename) {
-	ui8* data;
-	ui32 dataSize;
+void OPimagePNGCreate32(ui8* imageData, i32 width, i32 height, i8* filename) {
+	ui8*   data;
+	OPuint dataSize;
 	ui32 error = lodepng_encode32(&data, &dataSize, imageData, width, height);
 	lodepng_save_file(data, dataSize, filename);
 }
 
-OPint OPimagePNGLoad(const OPchar* filename, OPtexture** image){
+i32 OPimagePNGLoad(const OPchar* filename, OPtexture** image){
 	CheckError("OPimagePNGLoad:Error 0");
 	ui32 error;
 	ui8* data;
@@ -49,7 +49,7 @@ OPint OPimagePNGLoad(const OPchar* filename, OPtexture** image){
 }
 
 
-OPint OPimagePNGLoadStream(OPstream* str, OPint offset, OPtexture** image) {
+i32 OPimagePNGLoadStream(OPstream* str, i32 offset, OPtexture** image) {
 	CheckError("OPimagePNGLoad:Error 0");
 	ui32 error;
 	ui8* data;
@@ -93,7 +93,7 @@ OPint OPimagePNGLoadStream(OPstream* str, OPint offset, OPtexture** image) {
 	return 1;
 }
 
-OPint OPimagePNGUnload(void* image){
+i32 OPimagePNGUnload(void* image){
 	OPtexture* tex = (OPtexture*)image;
 	OPtextureDestroy(tex);
 	OPfree(image);

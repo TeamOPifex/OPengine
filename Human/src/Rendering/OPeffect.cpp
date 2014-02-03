@@ -146,7 +146,7 @@ OPeffect OPrenderCreateEffect(
 	glAttachShader(effect.ProgramHandle, frag);
 	glLinkProgram(effect.ProgramHandle);
 
-	OPint status;
+	i32 status;
 	glGetProgramiv(effect.ProgramHandle, GL_LINK_STATUS, &status);
 	glUseProgram(effect.ProgramHandle);
 
@@ -212,7 +212,7 @@ OPint OPrenderBindEffect(OPeffect* effect){
 			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
 			glDisableVertexAttribArray((uintptr_t)attr->Name);
 			if(CheckError("OPrenderBindEffect:Error ")) {
-				OPLog("Effect %s: Failed to disable attrib %u", OPRENDER_CURR_EFFECT->Name, (ui32)attr->Name);
+				OPLog("Effect %s: Failed to disable attrib %u", OPRENDER_CURR_EFFECT->Name, (OPuint)attr->Name);
 			}
 		}
 	}
@@ -228,7 +228,7 @@ OPint OPrenderBindEffect(OPeffect* effect){
 		
 		glEnableVertexAttribArray((uintptr_t)attr->Name);
 		if(CheckError("OPrenderBindEffect:Error ")) {
-			OPLog("Failed to enable attrib %u", (ui32)attr->Name);
+			OPLog("Failed to enable attrib %u", (OPuint)attr->Name);
 		}
 		glVertexAttribPointer(
 			(uintptr_t)attr->Name,
@@ -239,7 +239,7 @@ OPint OPrenderBindEffect(OPeffect* effect){
 			attr->Offset
 		);
 		if(CheckError("OPrenderBindEffect:Error ")) {
-			OPLog("Effect %s: Failed to set attrib ptr %u", effect->Name, (ui32)attr->Name);
+			OPLog("Effect %s: Failed to set attrib ptr %u", effect->Name, (OPuint)attr->Name);
 		}
 	}
 

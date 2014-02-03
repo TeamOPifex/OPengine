@@ -231,7 +231,7 @@ OPint OPaudReadWave(OPaudioSource* src, ui64* position, ui8* dest, ui32 len){
 
 OPint OPaudReadOgg (OPaudioSource* src, ui64* position, ui8* dest, ui32 len){
 	ui32 origLen = len, decoded = 0;
-	OPint current_section;
+	i32 current_section;
 	OggVorbis_File* sOggVorbisFile = (OggVorbis_File*)src->DataSource;
 
 	while(decoded <= 2048){

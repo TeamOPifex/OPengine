@@ -2,8 +2,8 @@
 #include "./Human/include/Rendering/OPrenderer.h"
 #include "./Core/include/Assert.h"
 
-OPint OPrenderWidth;
-OPint OPrenderHeight;
+i32 OPrenderWidth;
+i32 OPrenderHeight;
 GLFWwindow* window = NULL;
 
 OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){

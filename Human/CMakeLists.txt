@@ -109,7 +109,7 @@ target_link_libraries(5_Human
 	${VORBIS_LIBRARY}
 	${VORBISFILE_LIBRARY}
 	
-	${PROJECT_SOURCE_DIR}/External/Oculus/lib/win32/libovr.lib
+	#${PROJECT_SOURCE_DIR}/External/Oculus/lib/win32/libovr.lib
 	glfw ${GLFW_LIBRARIES}
 )
 SET_TARGET_PROPERTIES(5_Human PROPERTIES LINKER_LANGUAGE CXX)

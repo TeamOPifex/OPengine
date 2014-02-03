@@ -150,7 +150,7 @@ inline void OPrenderParami(const OPchar* param, OPint i){
 	);
 	glUniform1i(loc, i);
 }
-inline void OPrenderParamiv(const OPchar* param, OPint count, OPint* i){
+inline void OPrenderParamiv(const OPchar* param, OPint count, i32* i){
 	GLuint loc = glGetUniformLocation(
 		OPRENDER_CURR_EFFECT->ProgramHandle,
 		param

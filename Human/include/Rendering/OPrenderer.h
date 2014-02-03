@@ -18,8 +18,8 @@
 extern "C" {
 #endif
 
-extern OPint OPrenderWidth;
-extern OPint OPrenderHeight;
+extern i32 OPrenderWidth;
+extern i32 OPrenderHeight;
 extern GLFWwindow* window;
 
 OPint OPrenderInit       (ui32 width, ui32 height, bool fullscreen);

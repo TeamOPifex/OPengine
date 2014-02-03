@@ -291,7 +291,7 @@ OPint OPaudSafeUpdate(OPaudioEmitter* emitter, void(*Proc)(OPaudioEmitter* emit,
 OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 	if(OPAUD_CURR_EMITTER->State != Playing) return 0;
 
-	OPint len = 0, queued = 0;
+	i32 len = 0, queued = 0;
 	OPaudioSource* src = OPAUD_CURR_EMITTER->Source;
 	OPaudioDescription des = src->Description;
 	OPint bps = (des.BitsPerSample >> 3) * des.SamplesPerSecond; // bytes/second

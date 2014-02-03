@@ -49,11 +49,7 @@ typedef double d64; //double type
 #endif
 
 // Define cross platform base types
-#if defined(OPIFEX_ANDROID)
 typedef char OPchar;
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_LINUX32) || defined(OPIFEX_OSX32)
-typedef char OPchar;
-#endif
 #if defined(OPIFEX_ANDROID) || defined(OPIFEX_WIN32) || defined(OPIFEX_LINUX32) || defined(OPIFEX_OSX32)
 typedef i32 OPint;
 typedef ui32 OPuint;
@@ -61,7 +57,7 @@ typedef f32 OPfloat;
 #elif defined(OPIFEX_WIN64) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX64)
 typedef i64 OPint;
 typedef ui64 OPuint;
-typedef d64 OPfloat;
+typedef f32 OPfloat;
 #else
 // default to building 32 bit binaries
 typedef i32 OPint;

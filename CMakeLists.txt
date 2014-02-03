@@ -85,7 +85,10 @@ file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/osx32)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/osx64)
 
 add_subdirectory (External)
-add_subdirectory (Tools)
+
+if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
+	add_subdirectory (Tools)
+endif()
 
 	#########################################
 	# Core - Level 1
