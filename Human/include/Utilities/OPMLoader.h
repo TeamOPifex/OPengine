@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 
-typedef struct {
+typedef struct { 
 	void* vertices;
 	ui32 vertexCount;
 	ui32 vertexSize;
