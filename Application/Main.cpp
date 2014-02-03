@@ -27,7 +27,7 @@
 //#include <glm/glm.hpp>
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 #include <GL/glew.h>
-#include <GL/glfw.h>
+#include <GLFW/glfw3.h>
 //#include <glm/glm.hpp>
 #endif
 
@@ -146,7 +146,7 @@ void Init(){
 	OPgameStateChange(&State0);
 
 #ifndef OPIFEX_ANDROID//defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
-	  	glfwSetKeyCallback(KeyDown);
+	  	//glfwSetKeyCallback(window, KeyDown);
 #endif
 
         OPLog("Main: Song loading...");

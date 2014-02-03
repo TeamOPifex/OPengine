@@ -171,9 +171,9 @@ int State0Update(OPtimer* time){
 	t += 0.005f * time->Elapsed;
 
 	OPmat4 world, view, proj;
-	world = OPmat4();
-	view = OPmat4();
-	proj = OPmat4();
+	//world = OPmat4();
+	//view = OPmat4();
+	//proj = OPmat4();
 
 	OPmat4buildRotY(&world, t);
 	OPcamGetView(camera, &view);
@@ -292,9 +292,9 @@ int State1Update(OPtimer* time){
 	t += 0.005f * time->Elapsed;
 	
 	OPmat4 world, view, proj;
-	world = OPmat4();
-	view = OPmat4();
-	proj = OPmat4();
+	//world = OPmat4();
+	//view = OPmat4();
+	//proj = OPmat4();
 
 	OPmat4buildRotX(&world, t);
 	OPcamGetView(camera, &view);

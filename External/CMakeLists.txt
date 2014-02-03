@@ -1,130 +1,16 @@
+
+
+set(GLFW_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/External/glfw-3.0.4")
+add_subdirectory("${GLFW_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/GLFW)
+
 add_definitions(
 	-DGLEW_STATIC
 	-D_CRT_SECURE_NO_WARNINGS
 )
 
-set(GLFW_SOURCE	
-	glfw-2.7.6/lib/enable.c 
-	glfw-2.7.6/lib/fullscreen.c 
-	glfw-2.7.6/lib/glext.c 
-	glfw-2.7.6/lib/image.c 
-	glfw-2.7.6/lib/init.c 
-	glfw-2.7.6/lib/input.c 
-	glfw-2.7.6/lib/joystick.c 
-	glfw-2.7.6/lib/stream.c 
-	glfw-2.7.6/lib/tga.c 
-	glfw-2.7.6/lib/thread.c 
-	glfw-2.7.6/lib/time.c 
-	glfw-2.7.6/lib/window.c
-)
-
-
-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-set(GLFW_SOURCE	${GLFW_SOURCE}
-	glfw-2.7.6/lib/win32/win32_enable.c 
-	glfw-2.7.6/lib/win32/win32_fullscreen.c 
-	glfw-2.7.6/lib/win32/win32_glext.c 
-	glfw-2.7.6/lib/win32/win32_init.c 
-	glfw-2.7.6/lib/win32/win32_joystick.c 
-	glfw-2.7.6/lib/win32/win32_thread.c 
-	glfw-2.7.6/lib/win32/win32_time.c 
-	glfw-2.7.6/lib/win32/win32_window.c 
-)
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-set(GLFW_SOURCE	${GLFW_SOURCE}
-	glfw-2.7.6/lib/x11/x11_enable.c 
-	glfw-2.7.6/lib/x11/x11_fullscreen.c 
-	glfw-2.7.6/lib/x11/x11_glext.c 
-	glfw-2.7.6/lib/x11/x11_init.c 
-	glfw-2.7.6/lib/x11/x11_joystick.c 
-	glfw-2.7.6/lib/x11/x11_keysym2unicode.c 
-	glfw-2.7.6/lib/x11/x11_thread.c 
-	glfw-2.7.6/lib/x11/x11_time.c 
-	glfw-2.7.6/lib/x11/x11_window.c
-)
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-set(GLFW_SOURCE	${GLFW_SOURCE}
-	glfw-2.7.6/lib/cocoa/cocoa_enable.c 
-	glfw-2.7.6/lib/cocoa/cocoa_fullscreen.c 
-	glfw-2.7.6/lib/cocoa/cocoa_glext.c 
-	glfw-2.7.6/lib/cocoa/cocoa_init.c 
-	glfw-2.7.6/lib/cocoa/cocoa_joystick.c 
-	glfw-2.7.6/lib/cocoa/cocoa_thread.c 
-	glfw-2.7.6/lib/cocoa/cocoa_time.c 
-	glfw-2.7.6/lib/cocoa/cocoa_window.c 
-)
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-
-
-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-set(GLFW_HEADERS
-	glfw-2.7.6/lib/win32/platform.h
-	glfw-2.7.6/lib/internal.h
-)
 include_directories(
-	glfw-2.7.6/lib/win32/
-	glfw-2.7.6/lib/
-	glfw-2.7.6/include/
 	glew-1.5.8/include/
 )
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-set(GLFW_HEADERS
-	glfw-2.7.6/lib/x11/platform.h
-	glfw-2.7.6/lib/internal.h
-)
-include_directories(
-	glfw-2.7.6/lib/x11/
-	glfw-2.7.6/lib/
-	glfw-2.7.6/include/
-	glew-1.5.8/include/
-)
-set(OPENGL_LIBRARY
-	${OPENGL_LIBRARY}
-	-lGL -lGLU -lXext -lX11
-	${CMAKE_DL_LIBS}
-)
-set(OPENAL_LIBRARY
-	${OPENAL_LIBRARY}
-	-lopenal
-	${CMAKE_DL_LIBS}
-)
-set(OGGVORBIS_LIBRARY
-	${OGGVORBIS_LIBRARY}
-	-logg
-	${SOURCE_PATH}/External/Ogg/lib/linux32/libogg.a
-	${SOURCE_PATH}/External/Ogg/lib/linux32/libvorbis.a
-	${SOURCE_PATH}/External/Ogg/lib/linux32/libvorbisfile.a
-	${CMAKE_DL_LIBS}
-)
-#Since there is no easy wat to choose between _GLFW_HAS_GLXGETPROCADDRESS, _GLFW_HAS_GLXGETPROCADDRESSARB, _GLFW_HAS_GLXGETPROCADDRESSEXT and _GLFW_HAS_DLOPEN,
-#I force the latter, which as least should exist (and work?) everywhere.
-add_definitions(
-	-D_GLFW_HAS_DLOPEN
-)
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-set(GLFW_HEADERS
-	glfw-2.7.6/lib/cocoa/platform.h
-	glfw-2.7.6/lib/internal.h
-)
-include_directories(
-	glfw-2.7.6/lib/cocoa/
-	glfw-2.7.6/lib/
-	glfw-2.7.6/include/
-	glew-1.5.8/include/
-)
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-
-
-
-add_library( GLFW_276 STATIC
-	${GLFW_SOURCE}
-	${GLFW_HEADERS}
-)
-
-target_link_libraries(GLFW_276
-	${OPENGL_LIBRARY}
-)
-
 
 set(GLEW_SOURCE
 	glew-1.5.8/src/glew.c
@@ -146,10 +32,6 @@ target_link_libraries(GLEW_158
 
 if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
 
-	add_custom_command(TARGET GLFW_276 POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${PROJECT_BINARY_DIR}/External/debug/GLFW_276.lib"
-		${PROJECT_BINARY_DIR}/Binaries/win32/)
-
 	add_custom_command(TARGET GLEW_158 POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 		"${PROJECT_BINARY_DIR}/External/debug/GLEW_158.lib"
 		${PROJECT_BINARY_DIR}/Binaries/win32/)
@@ -160,10 +42,6 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
 	file(COPY ${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/libvorbisfile.lib DESTINATION ${PROJECT_BINARY_DIR}/Binaries/win32/)
 	
 elseif( "${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX32" )
-
-	add_custom_command(TARGET GLFW_276 POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${PROJECT_BINARY_DIR}/External/libGLFW_276.a"
-		${PROJECT_BINARY_DIR}/Binaries/linux32/)
 
 	add_custom_command(TARGET GLEW_158 POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 		"${PROJECT_BINARY_DIR}/External/libGLEW_158.a"

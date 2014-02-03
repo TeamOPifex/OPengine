@@ -6,7 +6,7 @@ OPtimer* OPcreateTimer(){
 	
 	// if allocation failed then return a null pointer
 	if(!timer) return NULL;
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 	gettimeofday(&(timer->_lastTime), NULL);
 	timer->TotalGametime = 0;
 	timer->TimeLastTick = 0;
@@ -26,7 +26,7 @@ void OPdestroyTimer(OPtimer* timer){
 }
 //----------------------------------------------------------------------------
 void OPtimerTick(OPtimer* timer){
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 	struct timeval time;
 	ui64 elapsed;
 	
@@ -50,7 +50,7 @@ void OPtimerTick(OPtimer* timer){
 }
 //----------------------------------------------------------------------------
 OPfloat  OPtimerDelta(OPtimer* timer){
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 	return (OPfloat)(timer->Elapsed / 1000.0);
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 	return (OPfloat)(timer->Elapsed / 1000.0);

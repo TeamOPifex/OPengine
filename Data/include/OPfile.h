@@ -4,7 +4,7 @@
 #include "OPstream.h"
 
 
-#if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+#if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>

@@ -3,7 +3,7 @@
 #include "./Human/include/Rendering/Renderer.h"
 #include "./Core/include/Log.h"
 #ifndef OPIFEX_ANDROID
-	#include <GL/glfw.h>
+	#include <GLFW/glfw3.h>
 #endif
 
 KeyboardState Keyboard;
@@ -31,7 +31,7 @@ TouchState Touch = {
 void OPkeyboardUpdate() {
 	OPmemcpy(&Keyboard.prevKeys, &Keyboard.keys, sizeof(KeyboardState));
 	for(ui32 i = 0; i < OPKEYBOARD_MAX; i++) {
-		Keyboard.keys[i] = glfwGetKey(OPkeyboardCodes[i]); 
+		Keyboard.keys[i] = glfwGetKey(window, OPkeyboardCodes[i]); 
 		if(Keyboard.keys[i] ) {
 			OPLog("Key %d : %d", i, OPkeyboardCodes[i]);
 		}
@@ -83,13 +83,14 @@ void OPmouseUpdate() {
 	Mouse.prevWheel = Mouse.wheel;
 
 	for(ui32 i = 0; i < OPMOUSE_MAX; i++) {
-		Mouse.keys[i] = glfwGetMouseButton(OPmouseCodes[i]);
+		Mouse.keys[i] = glfwGetMouseButton(window, OPmouseCodes[i]);
 		if(Mouse.keys[i]) {
 			OPLog("Key %d : %d", i, OPmouseCodes[i]);
 		}
 	}
-	glfwGetMousePos(&Mouse.positionX, &Mouse.positionY);
-	Mouse.wheel = glfwGetMouseWheel();
+	// TODO: Fix this with the callback for GLFW3ß
+	//glfwGetCursorPos(window, &Mouse.positionX, &Mouse.positionY);
+	//Mouse.wheel = glfwGetMouseWheel(window);
 }
 
 i32 OPmousePositionX() {
@@ -126,7 +127,7 @@ bool OPmouseWasReleased(OPmouseKey key) {
 	return !Mouse.keys[key] && Mouse.prevKeys[key];
 }
 void OPmouseSetPosition(i32 x, i32 y) {	
-	glfwSetMousePos(x, y);
+	glfwSetCursorPos(window, x, y);
 	Mouse.positionX = x;
 	Mouse.positionY = y;
 }
@@ -286,10 +287,10 @@ ui32 OPkeyboardCodes[OPKEYBOARD_MAX] = {
    GLFW_KEY_ENTER,		//   Key_ENTER,
    GLFW_KEY_PAUSE,		//   Key_PAUSE,
    GLFW_KEY_CAPS_LOCK,	//   Key_CAPSLOCK,
-   GLFW_KEY_ESC,		//   Key_ESCAPE,
+   GLFW_KEY_ESCAPE,		//   Key_ESCAPE,
    GLFW_KEY_SPACE,		//   Key_SPACE,
-   GLFW_KEY_PAGEUP,		//   Key_PAGEUP,
-   GLFW_KEY_PAGEDOWN,	//   Key_PAGEDOWN,
+   GLFW_KEY_PAGE_UP,		//   Key_PAGEUP,
+   GLFW_KEY_PAGE_DOWN,	//   Key_PAGEDOWN,
    GLFW_KEY_END,		//   Key_END,
    GLFW_KEY_HOME,		//   Key_HOME,
    GLFW_KEY_LEFT,		//   Key_LEFT,
@@ -297,7 +298,7 @@ ui32 OPkeyboardCodes[OPKEYBOARD_MAX] = {
    GLFW_KEY_RIGHT,		//   Key_RIGHT,
    GLFW_KEY_DOWN,		//   Key_DOWN,
    GLFW_KEY_INSERT,		//   Key_INSERT,
-   GLFW_KEY_DEL,		//   Key_DELETE,
+   GLFW_KEY_DELETE,		//   Key_DELETE,
    GLFW_KEY_KP_0,		//   Key_0 ,
    GLFW_KEY_KP_1,		//   Key_1 ,
    GLFW_KEY_KP_2,		//   Key_2 ,
@@ -334,8 +335,8 @@ ui32 OPkeyboardCodes[OPKEYBOARD_MAX] = {
    88, 					//   Key_X,
    89, 					//   Key_Y,
    90, 					//   Key_Z,
-   GLFW_KEY_LSUPER,		//   Key_LWIN,
-   GLFW_KEY_RSUPER,		//   Key_RWIN,
+   GLFW_KEY_LEFT_SUPER,		//   Key_LWIN,
+   GLFW_KEY_RIGHT_SUPER,		//   Key_RWIN,
    GLFW_KEY_KP_0,		//   Key_NUMPAD0,
    GLFW_KEY_KP_1,		//   Key_NUMPAD1,
    GLFW_KEY_KP_2,		//   Key_NUMPAD2,
@@ -367,11 +368,11 @@ ui32 OPkeyboardCodes[OPKEYBOARD_MAX] = {
    GLFW_KEY_F14, 		//   Key_F14,
    GLFW_KEY_F15, 		//   Key_F15,
    GLFW_KEY_F16, 		//   Key_F16,
-   GLFW_KEY_KP_NUM_LOCK,//   Key_NUMLOCK,
+   GLFW_KEY_NUM_LOCK,//   Key_NUMLOCK,
    GLFW_KEY_SCROLL_LOCK,//   Key_SCROLL,
-   GLFW_KEY_LSHIFT,		//   Key_LSHIFT,
-   GLFW_KEY_RSHIFT,		//   Key_RSHIFT,
-   GLFW_KEY_LCTRL,		//   Key_LCONTROL,
-   GLFW_KEY_RCTRL		//   Key_RCONTROL
+   GLFW_KEY_LEFT_SHIFT,		//   Key_LSHIFT,
+   GLFW_KEY_RIGHT_SHIFT,		//   Key_RSHIFT,
+   GLFW_KEY_LEFT_CONTROL,		//   Key_LCONTROL,
+   GLFW_KEY_RIGHT_CONTROL		//   Key_RCONTROL
 #endif
 };

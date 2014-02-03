@@ -1,16 +1,9 @@
 #include "./Core/include/Log.h"
 #include "./Human/include/Rendering/Renderer.h"
 
-#ifdef OPIFEX_OPENGL_ES_2
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#else
-#include <GL/glew.h>
-#include <GL/glfw.h>
-//#include <glm/glm.hpp>
-#endif
 
 OPint OPrenderWidth, OPrenderHeight;
+GLFWwindow* window = NULL;
 
 OPint OPrenderInit(ui32 width, ui32 height){
 #ifdef OPIFEX_OPENGL_ES_2
@@ -33,33 +26,34 @@ OPint OPrenderInit(ui32 width, ui32 height){
 	// Most of the below will be moved to a Windowing System
 	if( !glfwInit() ) return -1;
 	
-	glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 4);
-	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
-	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
-	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		
-	// Open a window and create its OpenGL context
-	if( !glfwOpenWindow( width, height, 0,0,0,0, 32,0, GLFW_WINDOW ) )
-	{		
+	window = glfwCreateWindow(width, height, "OPifex Entertainment", NULL, NULL);
+	if(!window) {		
 		OPLog("Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible.\n" );
 		glfwTerminate();
 		return -1;
 	}
 
+	glfwMakeContextCurrent(window);
+
+	// Open a window and create its OpenGL context
+	// if( !glfwOpenWindow( width,	 height, 0,0,0,0, 32,0, GLFW_WINDOW ) )
+	// {		
+	// }
+
 	OPrenderSetViewport(0, 0, width, height);
 	//glewExperimental = true;
 	if (glewInit() != GLEW_OK) return -1;	
 
-	glfwSetWindowTitle( "OPifex Engine" );
-	glfwEnable( GLFW_STICKY_KEYS );	
+	//glfwSetWindowTitle( "OPifex Engine" );
+	glfwSetInputMode(window, GLFW_STICKY_KEYS, true);
+	glfwSetInputMode(window, GL_DEPTH_TEST, true);
+	glfwSetInputMode(window, GL_CULL_FACE, false);
 
-	glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LESS); 
-	//glCullFace(GL_BACK);
-	//glEnable(GL_CULL_FACE);
-
-	//glDisable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
 	
 	// TODO: Determine how to optimize with this
 	glGenVertexArrays(1, &VertexArrayID);
@@ -88,7 +82,7 @@ void  OPrenderSwapBuffer(){
 #ifdef OPIFEX_OPENGL_ES_2
 	
 #else
-	glfwSwapBuffers();	
+	glfwSwapBuffers(window);	
 #endif
 }
 //-----------------------------------------------------------------------------
@@ -96,7 +90,7 @@ void  OPrenderPresent(){
 #ifdef OPIFEX_OPENGL_ES_2
 	
 #else
-	glfwSwapBuffers();	
+	glfwSwapBuffers(window);	
 #endif
 }
 //-----------------------------------------------------------------------------

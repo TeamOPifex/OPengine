@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 include_directories(
-	../External/glfw-2.7.6/include/
+	../External/glfw-3.0.4/include/
 	../External/glm-0.9.1/
 	../External/glew-1.5.8/include/
 	../External/Phsyx.3.2.1/include/
@@ -16,7 +16,6 @@ include_directories(
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
 	${OPENAL_LIBRARY}
-	GLFW_276
 	GLEW_158
 	1_Core
 	2_Data
@@ -127,6 +126,8 @@ target_link_libraries(5_Human
 	${OGG_LIBRARY}
 	${VORBIS_LIBRARY}
 	${VORBISFILE_LIBRARY}
+	
+	glfw ${GLFW_LIBRARIES}
 )
 SET_TARGET_PROPERTIES(5_Human PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(5_Human PROPERTIES 

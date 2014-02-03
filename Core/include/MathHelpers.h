@@ -4,7 +4,7 @@
 
 #include "Types.h"
 
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)	// linux math libs
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)	// linux math libs
 #include <math.h>
 #include <stdlib.h>
 #include <sys/types.h>

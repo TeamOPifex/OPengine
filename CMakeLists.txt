@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(OPifexEngine)
 
+
 macro(add_source_group FILTER_NAME SOURCE_PATH TARGET_LIST)
 
 	file(TO_NATIVE_PATH ${FILTER_NAME} NEW_FILTER_NAME)
@@ -27,7 +28,7 @@ set(OPIFEX_OS "OPIFEX_LINUX32" CACHE STRING
 set(OPIFEX_REPOSITORY "../OPifex.Engine" CACHE STRING
   "Directory to Repository from Output Folder")
 
-set_property(CACHE OPIFEX_OS PROPERTY STRINGS OPIFEX_WIN32 OPIFEX_WIN64 OPIFEX_LINUX32 OPIFEX_LINUX64 OPIFEX_IOS OPIFEX_ANDROID)
+set_property(CACHE OPIFEX_OS PROPERTY STRINGS OPIFEX_WIN32 OPIFEX_WIN64 OPIFEX_LINUX32 OPIFEX_LINUX64 OPIFEX_IOS OPIFEX_ANDROID OPIFEX_OSX32 OPIFEX_OSX64)
  
 if( "${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID" )
 	
@@ -60,18 +61,23 @@ else()
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/GL_3_3" ${PROJECT_BINARY_DIR}/Application/assets/Shaders)	
 endif()
 
-
+INCLUDE(FindOpenGL)
 find_package(OpenGL REQUIRED)
+
+message(STATUS "OpenGL (${OpenGL})")
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
 find_package(OpenAL REQUIRED)
 find_package(OggVorbis REQUIRED)
+find_package(IOKit REQUIRED)
 
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/win32)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/win64)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/linux32)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/linux64)
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/osx32)
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/osx64)
 
 add_subdirectory (External)
 
@@ -118,16 +124,16 @@ add_subdirectory (External)
 	# Communication - Level 6
 	#########################################
 
-	set(COMMUNICATION_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Communication")
-	add_subdirectory("${COMMUNICATION_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Communication)
+	##set(COMMUNICATION_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Communication")
+	##add_subdirectory("${COMMUNICATION_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Communication)
 
 
 	#########################################
 	# Scripting - Level 7
 	#########################################
 
-	set(SCRIPTING_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Scripting")
-	add_subdirectory("${SCRIPTING_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Scripting)
+	##set(SCRIPTING_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Scripting")
+	##add_subdirectory("${SCRIPTING_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Scripting)
 
 
 	#########################################

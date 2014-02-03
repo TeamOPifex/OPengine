@@ -20,6 +20,12 @@ add_custom_command(TARGET 1_Core POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_
 	"${PROJECT_BINARY_DIR}/Core/libCore.a"
 	${PROJECT_BINARY_DIR}/Binaries/linux32/)
 
+elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_OSX32")
+
+add_custom_command(TARGET 1_Core POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	"${PROJECT_BINARY_DIR}/Core/libCore.a"
+	${PROJECT_BINARY_DIR}/Binaries/osx32/)
+
 	endif()
 	
 add_definitions(-D${OPIFEX_OS})

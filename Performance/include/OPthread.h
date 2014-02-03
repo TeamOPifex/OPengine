@@ -5,7 +5,7 @@
 #include "Core/include/Log.h"
 #include "Core/include/DynamicMemory.h"
 
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 #include <pthread.h>
 #include <errno.h>
 #include <sys/time.h>
@@ -26,7 +26,7 @@
 // |_____/ \__|_|   \__,_|\___|\__|___/
 typedef struct{
 	OPint Status;
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 	pthread_t Thread;
 	void* Return;
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
@@ -37,7 +37,7 @@ typedef struct{
 } OPthread;
 
 typedef struct{
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 	pthread_mutex_t Mutex;
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 	HANDLE Mutex;

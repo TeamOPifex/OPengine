@@ -18,7 +18,7 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <WTypes.h>
-#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 #include <string.h>
 #include <AL/al.h>
 #include <AL/alc.h>

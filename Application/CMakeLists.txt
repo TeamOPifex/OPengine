@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 include_directories(
-	../External/glfw-2.7.6/include/
+	../External/glfw-3.0.4/include/
 	../External/glm-0.9.1/
 	../External/glew-1.5.8/include/
 	../External/Phsyx.3.2.1/include/
@@ -14,19 +14,26 @@ include_directories(
 )
 
 set(ALL_LIBS
+	${OPENGL_LIBRARY}
+	${OPENAL_LIBRARY}
 	1_Core
 	2_Data
 	3_Math
 	4_Performance
 	5_Human
+	
 )
 
 
 #if( "${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID" )
-#add_source_group(\\ "${PROJECT_SOURCE_DIR}/Android" APPLICATION_SRC)
+	#add_source_group(\\ "${PROJECT_SOURCE_DIR}/Android" APPLICATION_SRC)
 #elseif(1)
-add_source_group(\\ "${PROJECT_SOURCE_DIR}/Application" APPLICATION_SRC)
+	add_source_group(\\ "${PROJECT_SOURCE_DIR}/Application" APPLICATION_SRC)
 #endif()
+
+if("${OPIFEX_OS}" STREQUAL "OPIFEX_OSX32")
+	message(STATUS "GLFW_LIBRARIES (${GLFW_LIBRARIES})")
+endif()
 
 add_executable(8_Application ${APPLICATION_SRC})
 
@@ -63,7 +70,9 @@ target_link_libraries(8_Application
 	${VORBISFILE_LIBRARY}
 	${ZLIB_LIBRARY}
 	${LIBPNG_LIBRARY}
+	glfw ${GLFW_LIBRARIES}
 )	
+
 
 # Make sure the XInput library is linked correctly (Regardless of which Visual Studio is used)
 if( ${CMAKE_SYSTEM} STREQUAL "Windows-6.1") # Windows 7 - http://en.wikipedia.org/wiki/Windows_NT#Releases
@@ -78,3 +87,5 @@ SET_TARGET_PROPERTIES(8_Application PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(8_Application PROPERTIES 
 	OUTPUT_NAME "Application"
 )
+
+message(STATUS "LINKED THINGS")

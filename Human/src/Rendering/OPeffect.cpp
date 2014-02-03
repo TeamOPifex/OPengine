@@ -5,7 +5,7 @@
 #include <GLES2/gl2ext.h>
 #else
 #include <GL/glew.h>
-#include <GL/glfw.h>
+#include <GLFW/glfw3.h>
 //#include <glm/glm.hpp>
 #endif
 
@@ -214,7 +214,7 @@ OPint OPrenderBindEffect(OPeffect* effect){
 	CheckError("OPrenderBindEffect:Error 0.2");
 			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
 	CheckError("OPrenderBindEffect:Error 0.3");
-			glDisableVertexAttribArray((ui32)attr->Name);
+			glDisableVertexAttribArray((uintptr_t)attr->Name);
 			if(CheckError("OPrenderBindEffect:Error 0.4")) {
 				//OPLog("Failed to bind %s", attr->Name);
 			}
@@ -232,10 +232,10 @@ OPint OPrenderBindEffect(OPeffect* effect){
 		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
 		
 	CheckError("OPrenderBindEffect:Error 3");
-		glEnableVertexAttribArray((ui32)attr->Name);
+		glEnableVertexAttribArray((uintptr_t)attr->Name);
 	CheckError("OPrenderBindEffect:Error 4");
 		glVertexAttribPointer(
-			(ui32)attr->Name,
+			(uintptr_t)attr->Name,
 			attr->Elements,
 			attr->Type,
 			GL_FALSE,

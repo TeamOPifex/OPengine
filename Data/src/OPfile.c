@@ -74,7 +74,7 @@ FileInformation OPreadFileInformation(const char* path){
 
 //-----------------------------------------------------------------------------
 OPint OPwriteFile(const char* path, OPstream* stream){
-#if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+#if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 	OPint fd = 0;
 	
 	// be sure that the file could be opened successfully
@@ -136,7 +136,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedCharSize){
 	OPLog("OPreadFile: 8");
 	return str;
 
-#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 	// check to see if the file exists
 	if(OPfileExists(path) >= 0){
 		printf("%s exists\n", path);
@@ -201,7 +201,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedCharSize){
 
 //-----------------------------------------------------------------------------
 OPint OPfileExists(const char* path){
-#if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+#if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 	return access(path, F_OK) + 1;
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 
@@ -211,7 +211,7 @@ OPint OPfileExists(const char* path){
 //-----------------------------------------------------------------------------
 OPint OPdeleteFile(const char* path){
 	if(OPfileExists(path)){
-#if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+#if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 		return unlink(path) + 1;
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 
@@ -231,7 +231,7 @@ OPint OPdeleteFile(const char* path){
 		// check to see if the file exists
 		if(OPFile::Exists(path) >= 0){
 			printf("%s exists\n", path);
-#if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+#if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 			OPint fd = 0, i;
 	 
 			// be sure that the file could be opened successfully
@@ -262,7 +262,7 @@ OPint OPdeleteFile(const char* path){
 	}
 
 	OPuint OPFile::Write(const char* path, OPStream* stream){
-	#if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+	#if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 		OPint fd = 0;
 		OPstream* s = stream->GetStream();	
 

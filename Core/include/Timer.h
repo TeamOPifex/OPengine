@@ -5,7 +5,7 @@
 #include "Types.h"
 #include "DynamicMemory.h"
 
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 #include <sys/types.h>
 #include <sys/time.h> // link with -lrt
 #include <unistd.h>
@@ -25,7 +25,7 @@ typedef struct{
 	ui64 TotalGametime;
 	ui64 TimeLastTick;
 	ui64 Elapsed;
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 	struct timeval _lastTime;
 #elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 // Windows specific values for time
