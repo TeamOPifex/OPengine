@@ -189,6 +189,9 @@ void OPgamePadUpdate(GamePadController* controller){
 		controller->buttons[GamePad_Button_X] =
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_X;
 
+		controller->buttons[GamePad_Button_Y] =
+			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y;
+
 		controller->buttons[GamePad_Button_DPAD_UP] =
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP;
 
@@ -247,7 +250,7 @@ void OPgamePadSystemReset()
 {
 	for ( OPint i = CONTROLLERS; i--; )
 	{
-		OPgamePadReset( OPgamePadController( (GamePadIndex)i ) );
+		OPgamePadReset( OPgamePadController((GamePadIndex)i));
 	}
 }
 
@@ -255,7 +258,7 @@ void OPgamePadSetDeadzones(OPfloat deadzone)
 {
 	for ( OPint i = CONTROLLERS; i--; )
 	{
-		OPgamePadSetDeadzone(OPgamePadController((GamePadIndex)i), deadzone);
+		OPgamePadSetDeadzone( OPgamePadController((GamePadIndex)i), deadzone);
 	}
 }
 

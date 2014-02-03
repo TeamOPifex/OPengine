@@ -93,10 +93,18 @@ inline OPfloat OPgamePadRightThumbY(GamePadController* controller) {
 inline OPfloat OPgamePadLeftTrigger(GamePadController* controller) {
 	return controller->axes[L2];
 }
+inline bool OPgamePadLeftTriggerWasPressed(GamePadController* controller) { return controller->axes[L2] > 0 && controller->prevAxes[L2] <= 0; }
+inline bool OPgamePadLeftTriggerWasReleased(GamePadController* controller) { return controller->axes[L2] <= 0 && controller->prevAxes[L2] > 0; }
+inline bool OPgamePadLeftTriggerIsDown(GamePadController* controller) { return controller->axes[L2] > 0; }
+inline bool OPgamePadLeftTriggerIsUp(GamePadController* controller) { return controller->axes[L2] <= 0; }
 
 inline OPfloat OPgamePadRightTrigger(GamePadController* controller) {
 	return controller->axes[R2];
 }
+inline bool OPgamePadRightTriggerWasPressed(GamePadController* controller) { return controller->axes[R2] > 0 && controller->prevAxes[L2] <= 0; }
+inline bool OPgamePadRightTriggerWasReleased(GamePadController* controller) { return controller->axes[R2] <= 0 && controller->prevAxes[L2] > 0; }
+inline bool OPgamePadRightTriggerIsDown(GamePadController* controller) { return controller->axes[R2] > 0; }
+inline bool OPgamePadRightTriggerIsUp(GamePadController* controller) { return controller->axes[R2] <= 0; }
 
 inline bool OPgamePadIsConnected(GamePadController* controller) {
 	return controller->connected;
@@ -104,4 +112,43 @@ inline bool OPgamePadIsConnected(GamePadController* controller) {
 
 inline void OPgamePadSetDeadzone(GamePadController* controller, OPfloat deadzone) {
 	controller->deadzone = deadzone;
+}
+
+inline bool OPgamePadAnyPrevInputIsDown(GamePadController* controller) {
+	ui32 count = GamePadButton_Max;
+	for (; count > 0; count--) {
+		if (controller->prevButtons[count]) return true;
+	}
+	return false;
+}
+
+inline bool OPgamePadAnyPrevInputIsUp(GamePadController* controller) {
+	return !OPgamePadAnyPrevInputIsDown(controller);
+}
+
+inline bool OPgamePadAnyInputIsDown(GamePadController* controller) {
+	ui32 count = GamePadButton_Max;
+	for (; count > 0; count--) {
+		if (controller->buttons[count]) return true;
+	}
+	return false;
+}
+
+inline bool OPgamePadAnyControllerInputIsDown() {
+	ui32 count = 3;
+	for (; count > 0; count--) {
+		if (OPgamePadAnyInputIsDown(OPgamePadController((GamePadIndex)count))) return true;
+	}
+	return false;
+}
+
+inline bool OPgamePadAnyInputIsUp(GamePadController* controller) {
+	return !OPgamePadAnyInputIsDown(controller);
+}
+
+inline bool OPgamePadAnyInputWasPressed(GamePadController* controller) {
+	return OPgamePadAnyInputIsDown(controller) && OPgamePadAnyPrevInputIsUp(controller);
+}
+inline bool OPgamePadAnyInputWasReleased(GamePadController* controller) {
+	return OPgamePadAnyInputIsUp(controller) && OPgamePadAnyPrevInputIsDown(controller);
 }

@@ -21,7 +21,7 @@ OPthread OPthreadStart(void* (*function) (void*), void* params){
 #else
 	OPint err = -1;
 	if(err = pthread_create(&out.Thread, NULL, function, params)){
-		OPchar* f = "OPthread: Creation failed.";
+		const OPchar* f = "OPthread: Creation failed.";
 		switch(err){
 			case EAGAIN:
 				OPLog("%s process limit of %d may have been reached.", f, RLIMIT_NPROC);
@@ -74,7 +74,7 @@ OPmutex OPmutexCreate(){
 #else
 	OPint err = -1;
 	if(err = pthread_mutex_init(&out.Mutex, NULL)){
-		OPchar* f = "OPmutex: Creation failed.";
+		const OPchar* f = "OPmutex: Creation failed.";
 		switch(err){
 			case EAGAIN:
 				OPLog("%s process limit of %d may have been reached.", f, RLIMIT_NPROC);

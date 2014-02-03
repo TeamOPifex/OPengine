@@ -22,21 +22,15 @@ OPeffect* OPRENDER_CURR_EFFECT = NULL;
 OPint OPrenderLoadVertexShader(const OPchar* filename, OPshader** shader){
 	OPshader vertex = -1;
 
-	OPLog("OPshader BEGINNING load of %s", filename);
+	OPLog("OPrenderLoadVertexShader: %s", filename);
 	OPstream* source = OPreadFile(filename);
-	OPLog("OPshader ENDING load of %s", filename);
 	
 	CheckError("GLShader::Error 0");
-	OPLog("OPshader shader CREATING");
 	vertex = glCreateShader(OPvertexShader);
-	OPLog("OPshader shader CREATED");
 	CheckError("GLShader::Error 1");
 	if(vertex){
 		OPchar* src = (OPchar*)source->Data;
-
-		OPLog("[%s]\n", src);
-
-		OPLog("OPrenderLoadVertexShader::Finished Printing Source");
+		
 		glShaderSource(vertex, 1, (const OPchar**)&src, 0);
 		CheckError("GLShader::Error 2");
 		glCompileShader(vertex);
@@ -45,12 +39,11 @@ OPint OPrenderLoadVertexShader(const OPchar* filename, OPshader** shader){
 		glGetShaderiv(vertex, GL_COMPILE_STATUS, &compiled);
 		CheckError("GLShader::Error 4");
 		if(!compiled){
-			OPLog("GLShader::Failed to compile Shader");
 
 			char msg[4096];
 			i32 length = 0;
 			glGetShaderInfoLog(vertex, 4096, &length, msg);
-			OPLog(msg);
+			OPLog("GLShader::Failed to compile Vertex Shader::%s", msg);
 
 			CheckError("GLShader::Error 5");
 			glDeleteShader(vertex);
@@ -78,26 +71,22 @@ OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader){
 	OPstream* source = OPreadFile(filename);
 
 	frag = glCreateShader(OPfragmentShader);
-	CheckError("GLShader::Error 1");
+
 	if(frag){
 		OPchar* src = (OPchar*)source->Data;
-		OPLog("%s\n", src);
 		glShaderSource(frag, 1, (const OPchar**)&src, 0);
-		CheckError("GLShader::Error 2");
 		glCompileShader(frag);
-		CheckError("GLShader::Error 3");
+
 		GLint compiled = 0;
 		glGetShaderiv(frag, GL_COMPILE_STATUS, &compiled);
-		CheckError("GLShader::Error 4");
 		if(!compiled){
-			OPLog("GLShader::Failed to compile Shader");
 
 			char msg[4096];
 			i32 length = 0;
 			glGetShaderInfoLog(frag, 4096, &length, msg);
-			OPLog(msg);
 
-			CheckError("GLShader::Error 5");
+			OPLog("GLShader::Failed to compile Fragment Shader::%s", msg);
+
 			glDeleteShader(frag);
 			OPstreamDestroy(source); // clean up stream
 			return 0;
@@ -112,7 +101,6 @@ OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader){
 	// if we made it this far, everything is a-ok
 	*shader = (OPshader*)OPalloc(sizeof(OPshader));
 	**shader = frag; // copy the shader handle
-	CheckError("GLShader::Error 6");
 
 	return 1;
 }
@@ -125,28 +113,38 @@ OPint OPrenderUnloadShader(OPshader* shader){
 }
 //-----------------------------------------------------------------------------
 // effect creation
-OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* Attributes, OPint AttribCount){
-	OPLog("Creating Shader");
+OPeffect OPrenderCreateEffect(
+	OPshader vert,
+	OPshader frag,
+	OPshaderAttribute* Attributes,
+	OPint AttribCount,
+	const OPchar* Name){
+
+	CheckError("OPrenderCreateEffect:Error 0");
+
+	OPint nameLen = strlen(Name) + 1;
 	OPeffect effect = {
 		vert,
 		frag,
 		-1,
 		 0
 	};
-	CheckError("OPrenderCreateEffect:Error 1");
+
+	// copy the name into the struct
+	OPmemcpy(
+		effect.Name, 
+		Name, 
+		nameLen > OP_EFFECT_NAME_LEN ? OP_EFFECT_NAME_LEN : nameLen
+	); effect.Name[OP_EFFECT_NAME_LEN - 1] = '\0';
+
 	effect.Parameters = OPhashMapCreate(32);
 	effect.Attributes = OPlistCreate(AttribCount, sizeof(OPshaderAttribute));
-	CheckError("OPrenderCreateEffect:Error 2");
 
 	effect.ProgramHandle = glCreateProgram();
-	CheckError("OPrenderCreateEffect:Error 3");
 
 	glAttachShader(effect.ProgramHandle, vert);
-	CheckError("OPrenderCreateEffect:Error 4");
 	glAttachShader(effect.ProgramHandle, frag);
-	CheckError("OPrenderCreateEffect:Error 5");
 	glLinkProgram(effect.ProgramHandle);
-	CheckError("OPrenderCreateEffect:Error 6");
 
 	OPint status;
 	glGetProgramiv(effect.ProgramHandle, GL_LINK_STATUS, &status);
@@ -156,7 +154,7 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 		OPLog("FAILED to link Shader Program");
 	}
 	
-	OPLog("Shader Status: %d", status);
+	OPLog("Shader Program Status: %d", status);
 	CheckError("OPrenderCreateEffect:Error 7");
 
 	// create, and copy attributes into list
@@ -173,7 +171,10 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 			Attributes[i].Name
 		);
 		if(CheckError("OPrenderCreateEffect:Error 7.5 - Attrib Could not be found.") > 0) {
-			OPLog("Handle: %d, Attribute: %s", effect.ProgramHandle, Attributes[i].Name);
+			OPLog("Handle: %d, Attribute: %s", (OPint)attr.Name, Attributes[i].Name);
+		}
+		else{
+			OPLog("OK!!! Handle: %d, Attribute: %s", (OPint)attr.Name, Attributes[i].Name);
 		}
 
 		// TODO add more
@@ -183,11 +184,9 @@ OPeffect OPrenderCreateEffect(OPshader vert, OPshader frag, OPshaderAttribute* A
 				break;
 		}
 
-		//OPLog("%s = %d loc %d\n", Attributes[AttribCount], AttribCount, *loc);
 		OPlistPush(effect.Attributes, (ui8*)&attr);
 	}
 	
-	CheckError("OPrenderCreateEffect:Error 8");
 	return effect;
 }
 //-----------------------------------------------------------------------------
@@ -206,34 +205,31 @@ OPint OPrenderUnloadEffect(OPeffect* effect){
 
 // effect managment
 OPint OPrenderBindEffect(OPeffect* effect){
-	CheckError("OPrenderBindEffect:Error 0");
 	// disable attributes of the last effect
 	if(OPRENDER_CURR_EFFECT){
 		OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
 		for(;attrCount--;){
-	CheckError("OPrenderBindEffect:Error 0.2");
 			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
-	CheckError("OPrenderBindEffect:Error 0.3");
 			glDisableVertexAttribArray((uintptr_t)attr->Name);
-			if(CheckError("OPrenderBindEffect:Error 0.4")) {
-				//OPLog("Failed to bind %s", attr->Name);
+			if(CheckError("OPrenderBindEffect:Error ")) {
+				OPLog("Effect %s: Failed to disable attrib %u", OPRENDER_CURR_EFFECT->Name, (ui32)attr->Name);
 			}
 		}
 	}
-	CheckError("OPrenderBindEffect:Error 1");
 
 	OPRENDER_CURR_EFFECT = effect;
 
 	glUseProgram(OPRENDER_CURR_EFFECT->ProgramHandle);
-	CheckError("OPrenderBindEffect:Error 2");
+
 	// enable attributes of the new effect
 	OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
 	for(;attrCount--;){
 		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
 		
-	CheckError("OPrenderBindEffect:Error 3");
 		glEnableVertexAttribArray((uintptr_t)attr->Name);
-	CheckError("OPrenderBindEffect:Error 4");
+		if(CheckError("OPrenderBindEffect:Error ")) {
+			OPLog("Failed to enable attrib %u", (ui32)attr->Name);
+		}
 		glVertexAttribPointer(
 			(uintptr_t)attr->Name,
 			attr->Elements,
@@ -242,7 +238,9 @@ OPint OPrenderBindEffect(OPeffect* effect){
 			effect->Stride,
 			attr->Offset
 		);
-	CheckError("OPrenderBindEffect:Error 5");
+		if(CheckError("OPrenderBindEffect:Error ")) {
+			OPLog("Effect %s: Failed to set attrib ptr %u", effect->Name, (ui32)attr->Name);
+		}
 	}
 
 	return 1;
@@ -270,31 +268,6 @@ ui32 OPrenderGetParam(const OPchar* parameterName){
 		return loc;
 	}
 }
-
-// parameter setting
-/*
-void OPrenderParamf(ui32 param, OPfloat f){
-	glUniform1f(param, f);
-}
-void OPrenderParamfv(ui32 param, OPint count, OPfloat* f){
-	glUniform1fv(param, count, f);
-}
-void OPrenderParami(ui32 param, OPint i){
-	glUniform1i(param, i);
-}
-void OPrenderParamiv(ui32 param, OPint count, OPint* i){
-	glUniform1iv(param, count, i);
-}
-void OPrenderParamMat4v(ui32 param, OPint count, OPmat4* matrices){
-	glUniformMatrix4fv(param, count, GL_FALSE, (OPfloat*)matrices);
-}
-void OPrenderUseTexture(ui32 param, ui32 texture, ui32 slot){
-	glActiveTexture(GL_TEXTURE0 + slot);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glUniform1i(param, slot);
-}
-*/
-//-----------------------------------------------------------------------------
 
 void OPrenderUseTexture(const OPchar* param, ui32 texture, ui32 slot){
 	GLuint loc = glGetUniformLocation(

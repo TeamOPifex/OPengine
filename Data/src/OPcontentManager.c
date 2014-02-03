@@ -44,8 +44,13 @@ OPint OPcmanLoad(const OPchar* key){
 	if(OPhashMapExists(&OP_CMAN_HASHMAP, key)){
 		OPasset* existing = NULL;
 		OPhashMapGet(&OP_CMAN_HASHMAP, key, (void**)&existing);
-		existing->Dirty = 0;
-		return OP_CMAN_KEY_EXISTS;
+
+		// the key may have been added, but see if there
+		// is any valid pointer in the bucket before declaring it exists
+		if(existing){
+			existing->Dirty = 0;
+			return OP_CMAN_KEY_EXISTS;
+		}
 	}
 
 	ext = strrchr(key, '.');
@@ -139,6 +144,7 @@ OPint OPcmanPurge(){
 			if(!bucket->Unload(bucket->Asset))
 				return 0;
 			OPfree(bucket);
+			bucket = NULL;
 		}
 		OPllRemove(OP_CMAN_PURGE, n);
 		n = next;

@@ -9,16 +9,16 @@
 //  \_____|_|\___/|_.__/ \__,_|_|___/
 OPfloat OPquadVertData[] = {
 	 1,  1, 0,
-	 0,  1,
-
-	-1,  1, 0,
 	 1,  1,
 
+	-1,  1, 0,
+	 0,  1,
+
 	-1, -1, 0,
-	 1,  0,
+	 0,  0,
 
 	 1, -1, 0,
-	 0,  0
+	 1,  0
 };
 
 OPfloat OPquadVertNormData[] = {
@@ -61,6 +61,44 @@ OPmesh OPquadCreate(){
 	);
 	return mesh;
 }
+
+struct QuadPoint {
+	OPfloat x, y, z, u, v;
+};
+
+void SetQuadPoint(QuadPoint* point, f32 x, f32 y, f32 z, f32 u, f32 v) {
+	point->x = x;
+	point->y = y;
+	point->z = z;
+	point->u = u;
+	point->v = v;
+}
+
+OPmesh OPquadCreateCustom(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
+	OPmesh mesh = OPrenderCreateMesh();
+	OPrenderBindMesh(&mesh);
+
+		//1, 1,
+		//0, 1,
+		//0, 0,
+		//1, 0
+
+	// 0.5, 0.0
+	// 1.0, 1.0
+	QuadPoint* verts = (QuadPoint*)OPalloc(sizeof(QuadPoint)* 4);
+	SetQuadPoint(&verts[0], offset.x + width, offset.y + height, 0, texcoordEnd.x, texcoordEnd.y);
+	SetQuadPoint(&verts[1], offset.x - width, offset.y + height, 0, texcoordStart.x, texcoordEnd.y);
+	SetQuadPoint(&verts[2], offset.x - width, offset.y - height, 0, texcoordStart.x, texcoordStart.y);
+	SetQuadPoint(&verts[3], offset.x + width, offset.y - height, 0, texcoordEnd.x, texcoordStart.y);
+	
+	OPrenderBuildMesh(
+		sizeof(OPfloat)* 5, sizeof(ui16),
+		4, 6,
+		verts, OPquadIndexData
+		);
+	return mesh;
+}
+
 //-----------------------------------------------------------------------------
 OPmeshPacked OPquadCreatePacked(){
 	return OPrenderCreateMeshPacked(

@@ -7,7 +7,7 @@
 #include "./Data/include/OPgameStates.h"
 
 //#include "./GameManager.h"
-#include "./Human/include/Rendering/Renderer.h"
+#include "./Human/include/Rendering/OPrenderer.h"
 #include "./Human/include/Input/GamePadSystem.h"
 
 #include "./Core/include/Log.h"
@@ -17,6 +17,7 @@
 #include "./Data/include/OPlist.h"
 
 #include "./Performance/include/OPthread.h"
+#include "./Human/include/Input/Oculus.h"
 
 #if defined(OPIFEX_ANDROID)
 #include <jni.h>
@@ -36,12 +37,12 @@
 #include "./Human/include/Audio/OPaudioEmitter.h"
 #include "./Human/include/Audio/OPaudioPlayer.h"
 #include "./Human/include/Utilities/OPMloader.h"
-#include "./Human/include/Resources/Texture/ImagePNG.h"
+#include "./Human/include/Utilities/ImagePNG.h"
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Data/include/OPfile.h"
 #include "./Data/include/OPcontentManager.h"
 #include "./Data/include/OPentHeap.h"
-
+#include "./Human/include/Rendering/OPfont.h"
 #include "GameStates.h"
 
 //GameManager* GM;
@@ -53,7 +54,7 @@ void* entData;
 
 OPfloat vol = 0.05f;
 
-OPassetLoader loaders[] ={
+OPassetLoader loaders[] = {
 	{
 		".wav",
 		"Audio/",
@@ -95,6 +96,13 @@ OPassetLoader loaders[] ={
 		sizeof(OPmesh),
 		(OPint (*)(const OPchar*, void**))OPMload,
 		(OPint (*)(void*))OPMUnload
+	},
+	{
+		".opf",
+		"Fonts/",
+		sizeof(OPfont),
+		(OPint(*)(const OPchar*, void**))OPfontLoad,
+		(OPint(*)(void*))OPfontUnload
 	}
 };
 
@@ -114,6 +122,11 @@ void KeyDown(int key, int action){
 
 }
 
+#ifndef OPIFEX_ANDROID
+i32 width = 640;
+i32 height = 480;
+#endif
+
 // Initialize
 void Init(){
 	#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
@@ -125,20 +138,15 @@ void Init(){
 	else
 		OPLog("Directory change failed!!!\n");
 	#endif
+	
 
-
-#ifndef OPIFEX_ANDROID
-	i32 width = 640;
-	i32 height = 480;
-#endif
-
-	OPcmanInit(loaders, 6);
+	OPcmanInit(loaders, 7);
 
 	OPaudInit();
 	OPaudInitThread(10);
 
 #ifndef OPIFEX_ANDROID
-	OPrenderInit(width, height);
+	OPrenderInit(width, height, false);
 #else
 	OPrenderInit(JNIWidth(), JNIHeight());
 #endif
@@ -251,7 +259,7 @@ int UpdateState(OPtimer* timer){
 }
 
 #include "./Math/include/Tweening.h"
-
+#include "./Core/include/Assert.h"
 
 #ifdef OPIFEX_ANDROID
 extern "C" {
@@ -262,24 +270,38 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 #else
 	int main() {
 #endif
-		OPmat4 scl;
-		OPmat4buildScl(&scl, 2.0f, 2.0f, 2.0f);
-		OPvec3 test = { 1.0f, 1.5f, 2.0f };
-		test *= scl;
 
-		OPvec2 one = { 0.0, 1.5 };
-		OPvec2 two = { 0.5, -0.5 };
-		OPvec2 three = one + two;
-		one = one * 2.0f;
-		one = one * one;
-		one += two;
-		one *= two;
-		one /= two;
+	//ASSERT(false, "Test!");
+	//ASSERT(true, "TEST!");
 
-		OPmat4 rot1, rot2;
-		OPmat4buildRotX(&rot1, 1.0f);
-		OPmat4buildRotY(&rot2, 1.0f);
-		rot1 *= rot2;
+	if (OPoculusInitialize()) {
+		OPoculusUpdate();
+		OPvec4 state = OPoculusHmd();
+		OPvec2 screen = OPoculusScreenSize();
+		width = screen.x;
+		height = screen.y;
+	}
+
+	OPmat4 scl;
+	OPmat4buildScl(&scl, 2.0f, 2.0f, 2.0f);
+	OPvec3 test = { 1.0f, 1.5f, 2.0f };
+	test *= scl;
+
+	OPvec2 one = { 0.0, 1.5 };
+	OPvec2 two = { 0.5, -0.5 };
+	OPvec2 three = one + two;
+	one = one * 2.0f;
+	one = one * one;
+	one += two;
+	one *= two;
+	one /= two;
+
+	OPmat4 rot1, rot2;
+	OPmat4buildRotX(&rot1, 1.0f);
+	OPmat4buildRotY(&rot2, 1.0f);
+	rot1 *= rot2;
+
+
 
 	OPinitialize = Init;
 	OPupdate = UpdateState;

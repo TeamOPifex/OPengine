@@ -173,6 +173,16 @@ OPfloat OPrandom();
  * @return Floating point value with the range(min, max)
  */
 OPfloat OPrandRange(OPfloat min, OPfloat max);
+
+//-----------------------------------------------------------------------------
+/**
+* OPround - math helper
+*	Returns a rounded number to the nearest whole number.
+* @param f Number to round to the nearest whole number
+* @return Floating point value
+*/
+OPfloat OPround(OPfloat f);
+
 //-----------------------------------------------------------------------------
 /**
  * OPnear - math helper

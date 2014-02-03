@@ -26,7 +26,7 @@ extern "C" {
 // |_____/ \__|_|   \__,_|\___|\__|___/
 typedef struct{
 	ui16 Width, Height;
-	ui32 Format, DataType;
+	ui32 InternalFormat, Format, DataType;
 	ui32 MinFilter, MagFilter;
 	ui32 WrapX, WrapY;
 }OPtextureDescription;

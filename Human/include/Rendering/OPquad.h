@@ -2,10 +2,11 @@
 #define OPEngine_Human_Renderer_Quad
 
 #include "./Core/include/Types.h"
-#include "./Human/include/Rendering/Buffer.h"
+#include "./Human/include/Rendering/OPbuffer.h"
 #include "./Human/include/Rendering/OPmesh.h"
 #include "./Human/include/Rendering/OPmeshPacker.h"
 #include "./Human/include/Rendering/OPmeshPacked.h"
+#include "./Math/include/Vector2.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
 #include <GLES2/gl2.h>
@@ -46,6 +47,7 @@ extern "C" {
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPmesh       OPquadCreate();
+OPmesh OPquadCreateCustom(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd);
 OPmeshPacked OPquadCreatePacked();
 OPmesh       OPquadNormCreate();
 OPmeshPacked OPquadNormCreatePacked();

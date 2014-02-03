@@ -1,11 +1,12 @@
 #include "./Core/include/Log.h"
-#include "./Human/include/Rendering/Renderer.h"
+#include "./Human/include/Rendering/OPrenderer.h"
+#include "./Core/include/Assert.h"
 
-
-OPint OPrenderWidth, OPrenderHeight;
+OPint OPrenderWidth;
+OPint OPrenderHeight;
 GLFWwindow* window = NULL;
 
-OPint OPrenderInit(ui32 width, ui32 height){
+OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
 #ifdef OPIFEX_OPENGL_ES_2
 	// Android doesn't need to create a window
 	glEnable(GL_DEPTH_TEST);
@@ -30,7 +31,7 @@ OPint OPrenderInit(ui32 width, ui32 height){
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		
+
 	window = glfwCreateWindow(width, height, "OPifex Entertainment", NULL, NULL);
 	if(!window) {		
 		OPLog("Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible.\n" );
@@ -46,7 +47,6 @@ OPint OPrenderInit(ui32 width, ui32 height){
 	// }
 
 	OPrenderSetViewport(0, 0, width, height);
-	//glewExperimental = true;
 	if (glewInit() != GLEW_OK) return -1;	
 
 	//glfwSetWindowTitle( "OPifex Engine" );
@@ -65,6 +65,8 @@ OPint OPrenderInit(ui32 width, ui32 height){
 	OPrenderWidth = width;
 	OPrenderHeight = height;
 
+	OPLog("INIT w:%d h:%d\n", OPrenderWidth, OPrenderHeight);	
+
 	return 0;
 #endif
 }
@@ -76,7 +78,40 @@ void  OPrenderClear(f32 r, f32 g, f32 b){
 //-----------------------------------------------------------------------------
 void  OPrenderSetViewport(ui32 x, ui32 y, ui32 width, ui32 height){
 	glViewport(x, y, width, height);
+	OPrenderWidth  = width;
+	OPrenderHeight = height;
 }
+//-----------------------------------------------------------------------------
+OPint OPrenderGetWidth(){
+	glfwGetWindowSize(&OPrenderWidth, &OPrenderHeight);
+	return OPrenderWidth;
+}
+//-----------------------------------------------------------------------------
+OPint OPrenderGetHeight(){
+	glfwGetWindowSize(&OPrenderWidth, &OPrenderHeight);
+	return OPrenderHeight;
+}
+//-----------------------------------------------------------------------------
+OPfloat OPrenderGetAspectRatio(){
+	glfwGetWindowSize(&OPrenderWidth, &OPrenderHeight);
+	ASSERT(OPrenderWidth > 0, "Height was not greater than 0, there was problem getting width and height");
+	return OPrenderHeight / (OPfloat)OPrenderWidth;
+}
+
+OPfloat aspect;
+//-----------------------------------------------------------------------------
+OPfloat OPrenderGetWidthAspectRatio(){
+	ASSERT(OPrenderWidth > 0, "Height was not greater than 0, there was problem getting width and height");
+	aspect = OPrenderHeight / (OPfloat)OPrenderWidth;
+	return aspect > 1.0f ? 1.0f : aspect;
+}
+//-----------------------------------------------------------------------------
+OPfloat OPrenderGetHeightAspectRatio(){
+	ASSERT(OPrenderHeight > 0, "Height was not greater than 0, there was problem getting width and height");
+	aspect = OPrenderWidth / (OPfloat)OPrenderHeight;
+	return aspect > 1.0f ? 1.0f : aspect;
+}
+
 //-----------------------------------------------------------------------------
 void  OPrenderSwapBuffer(){
 #ifdef OPIFEX_OPENGL_ES_2

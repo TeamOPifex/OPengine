@@ -20,6 +20,18 @@ ui32 OPread_ui32(OPstream* str) {
 	return *((ui32*)tmp);
 }
 
+i8 OPread_i8(OPstream* str) {
+	OPchar tmp[1];
+	OPmemcpy(tmp, OPread(str, sizeof(i8)), sizeof(i8));
+	return *((i8*)tmp);
+}
+
+i16 OPread_i16(OPstream* str) {
+	OPchar tmp[2];
+	OPmemcpy(tmp, OPread(str, sizeof(i16)), sizeof(i16));
+	return *((i16*)tmp);
+}
+
 i32 OPread_i32(OPstream* str) {
 	OPchar tmp[4];
 	OPmemcpy(tmp, OPread(str, sizeof(i32)), sizeof(i32));
@@ -27,7 +39,7 @@ i32 OPread_i32(OPstream* str) {
 }
 
 f32 OPread_f32(OPstream* str) {
-	OPchar tmp[4];
+	OPchar tmp[sizeof(f32)];
 	OPmemcpy(tmp, OPread(str, sizeof(f32)), sizeof(f32));
 	return *((f32*)tmp);
 }
@@ -100,46 +112,37 @@ OPstream* OPreadFile(const char* path) {
 //-----------------------------------------------------------------------------
 OPstream* OPreadFileLarge(const char* path, ui32 expectedCharSize){
 #ifdef OPIFEX_ANDROID
-	OPLog("OPreadFile: Creating Asset man - %s\n", path);
+	OPLog("OPreadFile: %s\n", path);
 	AAssetManager* mgr = AAssetManager_fromJava(JNIEnvironment(), JNIAssetManager());
-	OPLog("OPreadFile: Grabbed JNI Asset Manager");
 	AAsset* asset = AAssetManager_open(mgr, path, AASSET_MODE_UNKNOWN);
 	if(asset == NULL){
 		OPLog("OPreadFile: Asset man creation failed.\n");
 		return 0;	
-	} OPLog("OPreadFile: Asset man created!!!\nOPreadFile: Now opening fd...\n");
+	}
 
 	off_t start, length;
     int fd = AAsset_openFileDescriptor(asset, &start, &length);
 	
-	OPLog("OPreadFile: FD opened!!!\n");
-
     FILE* myFile = fdopen(dup(fd), "rb"); 
 	fseek(myFile, start, SEEK_SET);
-
-	OPLog("OPreadFile: File ptr duplicated.\n");
-
+	
 	OPstream* str = OPstreamCreate(length);
 
-	OPLog("OPreadFile: 5");
 	// write the entire file into a stream
 	ui8* byte = OPalloc(sizeof(ui8) * length);
-	OPLog("OPreadFile: 6");OPLog_i32(length);OPLog_i32(sizeof(ui8));
 	while(fread(byte, sizeof(ui8), length, myFile)){
 		OPwrite(str, byte, length);
 	}	
 	str->Data[length] = 0;
 
-	OPLog("OPreadFile: 7");
 	fclose(myFile); 
 	OPseek(str, 0);
-	OPLog("OPreadFile: 8");
 	return str;
 
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 	// check to see if the file exists
 	if(OPfileExists(path) >= 0){
-		printf("%s exists\n", path);
+		printf("OPreadFile: %s\n", path);
 
 		OPint fd = 0, i;
  
@@ -147,13 +150,9 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedCharSize){
 	 	if(fd = open(path, O_RDONLY)){
 			ui8 byte = 0;
 			OPstream* str = OPstreamCreate(expectedCharSize * 4);
-
-			printf("File opened successfully\n");
-
+			
 			// write the entire file into a stream
 			while(read(fd, &byte, sizeof(ui8))){
-				//char ch = (char)byte;
-				//printf("%c", ch);
 				OPwrite(str, &byte, sizeof(ui8));
 			}
 			close(fd); 
@@ -172,19 +171,15 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedCharSize){
 	OPint fd = 0, i;
 	// check to see if the file exists
 	if(OPfileExists(path) >= 0){
-		printf("%s exists\n", path);
+		printf("OPreadFile: %s\n", path);
  
 		// be sure that the file could be opened successfully
 	 	if(!_sopen_s(&fd, path, _O_BINARY|_O_RDONLY, _SH_DENYWR, _S_IREAD)){
 			ui8 byte = 0;
 			OPstream* str = OPstreamCreate(expectedCharSize * 4);
-
-			printf("File opened successfully\n");
-
+			
 			// write the entire file into a stream
 			while(read(fd, &byte, sizeof(ui8))){
-				//char ch = (char)byte;
-				//printf("%c", ch);
 				OPwrite(str, &byte, sizeof(ui8));
 			}
 			close(fd); 
@@ -230,7 +225,7 @@ OPint OPdeleteFile(const char* path){
 	OPStream* OPFile::Read(const char* path){
 		// check to see if the file exists
 		if(OPFile::Exists(path) >= 0){
-			printf("%s exists\n", path);
+			printf("OPreadFile: %s\n", path);
 #if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 			OPint fd = 0, i;
 	 
@@ -238,9 +233,7 @@ OPint OPdeleteFile(const char* path){
 		 	if(fd = open(path, O_RDONLY)){
 				ui8 byte = 0;
 				OPStream* str = new OPStream(sizeof(OPint) * 4);
-
-				printf("File opened successfully\n");
-
+				
 				// write the entire file into a stream
 				while(read(fd, &byte, sizeof(ui8)))
 					str->Write(&byte, sizeof(ui8));

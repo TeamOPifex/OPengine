@@ -32,8 +32,8 @@ extern "C"
 //|_____/ \__|_|   \__,_|\___|\__|___/
 //                                                                      
 typedef struct{
-	OPchar Extension[8];
-	OPchar* AssetTypePath;
+	const OPchar Extension[8];
+	const OPchar* AssetTypePath;
 	OPint AssetSize;
 	OPint (*Load)(const OPchar* path, void** assetOut);
 	OPint (*Unload)(void* assetIn);

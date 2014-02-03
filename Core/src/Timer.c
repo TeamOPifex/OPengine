@@ -58,6 +58,6 @@ OPfloat  OPtimerDelta(OPtimer* timer){
 }
 //-----------------------------------------------------------------------------
 ui64 OPtimerTotal(OPtimer* timer){
-	return timer->TotalGametime / 1000000.0;
+	return timer->TotalGametime;// / 1000000.0;
 }
 

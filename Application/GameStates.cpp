@@ -2,20 +2,24 @@
 #include "./Data/include/OPcontentManager.h"
 #include "./Math/include/Matrix4.h"
 #include "./Math/include/Solvers.h"
-#include "./Human/include/Resources/Texture/ImagePNG.h"
+#include "./Human/include/Utilities/ImagePNG.h"
 #include "./Human/include/Utilities/Errors.h"
-#include "./Human/include/Rendering/Buffer.h"
+#include "./Human/include/Rendering/OPbuffer.h"
 #include "./Human/include/Rendering/OPmesh.h"
 #include "./Human/include/Rendering/OPmeshPacked.h"
 #include "./Human/include/Rendering/OPmeshPacker.h"
 #include "./Human/include/Rendering/OPframeBuffer.h"
 #include "./Human/include/Rendering/OPeffect.h"
-#include "./Human/include/Rendering/Camera.h"
+#include "./Human/include/Rendering/OPcamera.h"
 #include "./Human/include/Rendering/OPquad.h"
 #include "./Core/include/Log.h"
 #include "./Performance/include/OPthread.h"
 #include "./Human/include/Input/GamePadSystem.h"
 #include "./Human/include/Input/Input.h"
+#include "./Human/include/Rendering/OPfont.h"
+#include "./Human/include/Rendering/OPfontAtlas.h"
+#include "./Human/include/Rendering/Common.h"
+#include "./Human/include/Rendering/OPfontManager.h"
 
 OPfloat t = 0;
 
@@ -35,14 +39,23 @@ ui16 indexData[] = {
 	2, 0, 1
 };
 
+OPmesh quadMesh;
+
 OPmeshPacked quad;
 OPmeshPacker packer;
+OPmesh unPackedQuad;
 OPmesh* plane;
 OPeffect tri, post;
 OPcam camera;
 OPtexture* tex, *spec, *norm;
 OPframeBuffer rt;
 OPint PackerCreated = 0;
+OPeffect eftTexScreenSpriteSheet;
+OPtexture* spriteSheet;
+OPmesh fontText;
+OPfont* font;
+OPtexture* fontTexture;
+OPfontManager* fontManager;
 
 void* garbage;
 
@@ -59,209 +72,302 @@ OPgameState State1 = {
 };
 
 void State0Enter(OPgameState* last){
+	OPLog("State0 Entering...");
 	OPcmanLoad("impact.wav");
 	OPcmanLoad("boom.wav");
 	OPcmanLoad("background.ogg");
 	OPcmanLoad("TexturedSpecular.vert");
 	OPcmanLoad("TexturedSpecular.frag");
 	OPcmanLoad("TexturedScreen.vert");
+	OPcmanLoad("SpriteSheet.frag");
+	OPcmanLoad("Font.frag");
 	OPcmanLoad("Textured.frag");
 	OPcmanLoad("BiPlane.opm");
 	OPcmanLoad("steamPlaneSkin.png");
 	OPcmanLoad("steamPlaneSpec.png");
 	OPcmanLoad("noneNorm.png");
+	OPcmanLoad("stencil.opf");
 
-	garbage = OPalloc(1024 * 10); // allocate ten megs of crap
+	//OPLog("State0 Content loaded.");
 
-	OPcmanPurge();
+	//garbage = OPalloc(1024 * 10); // allocate ten megs of crap
 
-	if(!PackerCreated){
-		packer = OPmeshPackerCreate();
-		OPmeshPackerBind(&packer);
-		quad = OPquadCreatePacked();
-		OPmeshPackerBuild();
-		PackerCreated = 1;
+	//OPcmanPurge();
 
-		OPtextureDescription desc = {
-			512, 512,
-			GL_RGBA, GL_UNSIGNED_BYTE,
-			OPtextureLinear, OPtextureLinear,
-			OPtextureClamp, OPtextureClamp
-		};
+	//if(!PackerCreated){
+	//	packer = OPmeshPackerCreate();
+	//	OPmeshPackerBind(&packer);
+	//	quad = OPquadCreatePacked();
+	//	OPmeshPackerBuild();
+	//	PackerCreated = 1;
 
-		rt = OPframeBufferCreate(desc);
-	}
+	//	OPtextureDescription desc = {
+	//		512, 512,
+	//		GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE,
+	//		OPtextureLinear, OPtextureLinear,
+	//		OPtextureClamp, OPtextureClamp
+	//	};
+
+	//	rt = OPframeBufferCreate(desc);
+	//}
+
+	//OPLog("GameManager::GameManager - Ready to load model");
+	//plane = (OPmesh*)OPcmanGet("BiPlane.opm");
+	//tex = (OPtexture*)OPcmanGet("steamPlaneSkin.png");
+	//spec = (OPtexture*)OPcmanGet("steamPlaneSpec.png");
+	//norm = (OPtexture*)OPcmanGet("noneNorm.png");
+
+	//OPvec3 pos = {0, 5, 15.0f};
+	//OPvec3 look = {0, 0, 0};
+	//OPvec3 up = {0, 1, 0};
+	unPackedQuad = OPquadCreate();
+
+	//camera = OPcamProj(
+	//	pos,
+	//	look,
+	//	up,
+	//	0.1f,
+	//	100.0f,
+	//	90,
+	//	(OPrenderWidth / (OPfloat)OPrenderHeight)
+	//);
+
+	//{
+	//	OPshaderAttribute attribs[] = {
+	//		{"aPosition",GL_FLOAT,3},
+	//		{"aNormal",GL_FLOAT,3},
+	//		{"aTangent",GL_FLOAT,3},
+	//		{"aUV",GL_FLOAT,2}
+	//	};
+	//	
+	//	OPLog("GameManager::GameManager - Ready to load shaders");
+	//	tri = OPrenderCreateEffect(
+	//		*(OPshader*)OPcmanGet("TexturedSpecular.vert"),
+	//		*(OPshader*)OPcmanGet("TexturedSpecular.frag"),
+	//		attribs,
+	//		4
+	//	);
+	//}
+
+	//{
+	//	OPshaderAttribute attribs[] = {
+	//		{"aPosition",GL_FLOAT,3},
+	//		{"aUV",GL_FLOAT,2}
+	//	};
+	//	
+	//	OPLog("GameManager::GameManager - Ready to load shaders");
+	//	post = OPrenderCreateEffect(
+	//		*(OPshader*)OPcmanGet("TexturedScreen.vert"),
+	//		*(OPshader*)OPcmanGet("Textured.frag"),
+	//		attribs,
+	//		2
+	//	);
+	//}
+
+	//t = 0;
+	//		"ModelEffect"
+
+	//OPvec2 line1[] = {
+	//	{-4, 0},
+	//	{ -2,  2}
+	//};
+
+	//OPvec2 line2[] = {
+	//	{ 1, -1},
+	//	{ -1,  1}
+	//};
+
+	//OPvec2 inter = {0, 0};
+
+	//OPvec2 zero = {0,0};
+
+	//OPint result = OPsolveIntersect(&line1[0], &line1[1], &line2[0], &line2[1], &inter);
+	//result = OPsolveCircleIntersect(&line2[0], &line2[1], &zero, 1, &inter); 
 
 
 
-	OPLog("GameManager::GameManager - Ready to load model");
-	plane = (OPmesh*)OPcmanGet("BiPlane.opm");
-	tex  = (OPtexture*)OPcmanGet("steamPlaneSkin.png");
-	spec = (OPtexture*)OPcmanGet("steamPlaneSpec.png");
-	norm = (OPtexture*)OPcmanGet("noneNorm.png");
 
-	OPvec3 pos = {0, 5, 15.0f};
-	OPvec3 look = {0, 0, 0};
-	OPvec3 up = {0, 1, 0};
+	//i8* font_cache = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
-	camera = OPcamProj(
-		pos,
-		look,
-		up,
-		0.1f,
-		100.0f,
-		90,
-		(OPrenderWidth / (OPfloat)OPrenderHeight)
-	);
+	//font = (OPfont*)OPcmanGet("stencil.opf");
+	//fontManager = OPfontManagerCreate(font);
+	//OPfontManagerBind(fontManager);
+	//OPfontManagerAddText("Pause");
+	//OPfontManagerBuild();
+	//OPcommonLoadFontEffect();
 
-	{
-		OPshaderAttribute attribs[] = {
-			{"aPosition",GL_FLOAT,3},
-			{"aNormal",GL_FLOAT,3},
-			{"aTangent",GL_FLOAT,3},
-			{"aUV",GL_FLOAT,2}
-		};
-		
-		OPLog("GameManager::GameManager - Ready to load shaders");
-		tri = OPrenderCreateEffect(
-			*(OPshader*)OPcmanGet("TexturedSpecular.vert"),
-			*(OPshader*)OPcmanGet("TexturedSpecular.frag"),
-			attribs,
-			4
-		);
-	}
+	// Required
+	i8** text = (i8**)OPalloc(sizeof(i8) * 1);
+	text[0] = "All of the text! Woot!";
+	fontManager = OPfontManagerSetup("stencil.opf", text, 1);
 
-	{
-		OPshaderAttribute attribs[] = {
-			{"aPosition",GL_FLOAT,3},
-			{"aUV",GL_FLOAT,2}
-		};
-		
-		OPLog("GameManager::GameManager - Ready to load shaders");
-		post = OPrenderCreateEffect(
-			*(OPshader*)OPcmanGet("TexturedScreen.vert"),
-			*(OPshader*)OPcmanGet("Textured.frag"),
-			attribs,
-			2
-		);
-	}
+	// Optional
+	OPfontManagerSetRGBA(fontManager, 0.0f, 0.0f, 1.0f, 1.0f);
+	OPfontManagerSetAlign(fontManager, OPFONT_ALIGN_CENTER);
 
-	t = 0;
 
-	OPvec2 line1[] = {
-		{-4, 0},
-		{ -2,  2}
-	};
+	//spriteSheet = OPfontAtlasTexture(font->atlas);
+	//OPshaderAttribute attribs[] = {
+	//	{ "aPosition", GL_FLOAT, 3 },
+	//	{ "aUV", GL_FLOAT, 2 }
+	//};
 
-	OPvec2 line2[] = {
-		{ 1, -1},
-		{ -1,  1}
-	};
+	//eftTexScreenSpriteSheet = OPrenderCreateEffect(
+	//	*(OPshader*)OPcmanGet("TexturedScreen.vert"),
+	//	*(OPshader*)OPcmanGet("Font.frag"),
+	//	attribs,
+	//	2,
+	//		"BlurEffect"
+	//	);
+	//quadMesh = OPquadCreate();
 
-	OPvec2 inter = {0, 0};
-
-	OPvec2 zero = {0,0};
-
-	OPint result = OPsolveIntersect(&line1[0], &line1[1], &line2[0], &line2[1], &inter);
-	result = OPsolveCircleIntersect(&line2[0], &line2[1], &zero, 1, &inter); 
+	//OPvec4 color = { 1, 0, 0, 1 };
+	//OPvec2 pos2 = { 0, 0 };
+	//fontText = OPfontCreateText(font, "Testing the fonts!", &color, &pos2, 0);
+	//
+	OPLog("State0 Entered!");
 }
 
 int State0Update(OPtimer* time){
 	if(time->Elapsed > 1000) return false;
 	t += 0.005f * time->Elapsed;
 
-	OPmat4 world, view, proj;
+	//OPmat4 world, view, proj;
 	//world = OPmat4();
 	//view = OPmat4();
 	//proj = OPmat4();
 
-	OPmat4buildRotY(&world, t);
-	OPcamGetView(camera, &view);
-	OPcamGetProj(camera, &proj);
+	//OPmat4buildRotY(&world, t);
+	//OPcamGetView(camera, &view);
+	//OPcamGetProj(camera, &proj);
 
-	OPmeshPackerBind(&packer);
-	OPrenderBindMesh(plane);
-	OPrenderBindEffect(&tri);
+	//OPLog("Binding meshes and effects");
+	//OPmeshPackerBind(&packer);
+	//OPrenderBindMesh(plane);
+	//OPrenderBindEffect(&tri);
+	//OPLog("Done binding");
 
-	OPtextureBind(tex);
-	OPrenderParami("uColorTexture", tex->Handle);
-	OPtextureBind(spec);
-	OPrenderParami("uSpecularTexture", spec->Handle);
-	OPtextureBind(norm);
-	OPrenderParami("uNormalTexture", norm->Handle);
-	OPrenderParamMat4v("uWorld", 1, &world);
-	OPrenderParamMat4v("uProj", 1, &proj);
-	OPrenderParamMat4v("uView", 1, &view);
+	//OPLog("Binding textures...");
+	//OPtextureBind(tex);
+	//OPrenderParami("uColorTexture", tex->Handle);
+	//OPtextureBind(spec);
+	//OPrenderParami("uSpecularTexture", spec->Handle);
+	//OPtextureBind(norm);
+	//OPrenderParami("uNormalTexture", norm->Handle);
+	//OPrenderParamMat4v("uWorld", 1, &world);
+	//OPrenderParamMat4v("uProj", 1, &proj);
+	//OPrenderParamMat4v("uView", 1, &view);
+	//OPLog("Done binding");
 
-	OPframeBufferBind(&rt);
+	//OPmat4buildRotY(&world, t);
+	//OPcamGetView(camera, &view);
+	//OPcamGetProj(camera, &proj);
+
+	//OPmeshPackerBind(&packer);
+	//OPrenderBindMesh(plane);
+	//OPrenderBindEffect(&tri);
+
+	//OPtextureBind(tex);
+	//OPrenderParami("uColorTexture", tex->Handle);
+	//OPtextureBind(spec);
+	//OPrenderParami("uSpecularTexture", spec->Handle);
+	//OPtextureBind(norm);
+	//OPrenderParami("uNormalTexture", norm->Handle);
+	//OPrenderParamMat4v("uWorld", 1, &world);
+	//OPrenderParamMat4v("uProj", 1, &proj);
+	//OPrenderParamMat4v("uView", 1, &view);
+
+	//OPframeBufferBind(&rt);
+	//
+	//GamePadController* gamePad = OPgamePadController(GamePadIndex_One);
+	//OPgamePadUpdate(gamePad);
+	//
+	//if(OPgamePadIsConnected(gamePad)) {
+	//	if(OPgamePadIsDown(gamePad, GamePad_Button_A) || OPgamePadIsDown(gamePad, GamePad_Button_B) || OPgamePadIsDown(gamePad, GamePad_Button_X) || OPgamePadIsDown(gamePad, GamePad_Button_Y)) {
+	//		OPrenderClear( 0.0f, 0.0f, 1.0f);
+	//	} else {
+	//		OPrenderClear( 0.0f, 0.0f, 0.0f);
+	//	}
+	//} else {
+	//	OPrenderClear(1.0f, 1.0f, 1.0f);
+	//}
+
+	//OPrenderDrawBufferIndexed(200);
+	//OPframeBufferUnbind();
+	//
+	//	OPrenderClear(1.0f, 1.0f, 1.0f);
+	//OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
+
+	//OPmeshPackerBind(&packer);
+	//OPrenderBindEffect(&post);
+	//OPmat4identity(&world);
+	//OPrenderParamMat4v("uWorld", 1, &world);
+
+	//OPtextureBind(&rt.Texture);
+	//OPrenderParami("uTexture", rt.Texture.Handle);
+
+	//OPrenderMeshPacked(&quad);
+	//
+	//	OPrenderClear(1.0f, 1.0f, 1.0f);
+	//OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
+
+
+	//if(t > 6)
+	//	OPgameStateChange(&State1);
+
+
+
+
+
+
+
+
+
+
+	OPrenderClear(0.0f, 0.0f, 0.0f);
+
+	// Required
+	OPrenderTextXY("All of the text! Woot!", 0, 0);
+
+	// Optional
+	// OPrenderTextRGBAXYAlign("All of the text! Woot!", 0, 0, 1.0f, 1.0f, 0.0f, 0.0f, OPFONT_ALIGN_CENTER);
 	
-	OPkeyboardUpdate();
-	OPmouseUpdate();
-	GamePadController* gamePad = OPgamePadController(GamePadIndex_One);
-	OPgamePadUpdate(gamePad);
-	
-	if(OPgamePadIsConnected(gamePad)) {
-		if(OPgamePadIsDown(gamePad, GamePad_Button_A) || OPgamePadIsDown(gamePad, GamePad_Button_B) || OPgamePadIsDown(gamePad, GamePad_Button_X) || OPgamePadIsDown(gamePad, GamePad_Button_Y)) {
-			OPrenderClear( 0.0f, 0.0f, 1.0f);
-		} else {
-			OPrenderClear( 0.0f, 0.0f, 0.0f);
-		}
-	} else {
-		OPrenderClear(1.0f, 1.0f, 1.0f);
-	}
-	
-	if(OPkeyboardIsDown(OPKEY_SPACE)) {
-		OPrenderClear(0.0f, 1.0f, 0.0f);
-	}
-	if(OPmouseIsDown(OPKEY_LBUTTON)) {
-		OPrenderClear(1.0f, 1.0f, 0.0f);
-	}
 
-	OPrenderMesh();
-	OPframeBufferUnbind();
-	
-		OPrenderClear(1.0f, 1.0f, 1.0f);
-	OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
 
-	OPmeshPackerBind(&packer);
-	OPrenderBindEffect(&post);
-	OPmat4identity(&world);
-	OPrenderParamMat4v("uWorld", 1, &world);
 
-	OPtextureBind(&rt.Texture);
-	OPrenderParami("uTexture", rt.Texture.Handle);
 
-	OPrenderMeshPacked(&quad);
 
-	if(t > 6)
-		OPgameStateChange(&State1);
 
 	OPrenderPresent();
 
-	if(OPgamePadIsConnected(gamePad) && OPgamePadWasPressed(gamePad, GamePad_Button_RIGHT_SHOULDER)){
-		return true;
-	}
+	//OPLog("Update done");
+	//if(OPgamePadIsConnected(gamePad) && OPgamePadWasPressed(gamePad, GamePad_Button_RIGHT_SHOULDER)){
+	//	return true;
+	//}
+
+
 
 	return false;
 }
 
 void State0Exit(OPgameState* next){
-	OPcmanUnload("impact.wav");
-	OPcmanUnload("boom.wav");
-	OPcmanUnload("background.ogg");
-	OPcmanUnload("TexturedSpecular.vert");
-	OPcmanUnload("TexturedSpecular.frag");
-	OPcmanUnload("TexturedScreen.vert");
-	OPcmanUnload("Textured.frag");
-	OPcmanUnload("BiPlane.opm");
-	OPcmanUnload("steamPlaneSkin.png");
-	OPcmanUnload("steamPlaneSpec.png");
-	OPcmanUnload("noneNorm.png");	
+	OPcmanDelete("impact.wav");
+	OPcmanDelete("boom.wav");
+	OPcmanDelete("background.ogg");
+	OPcmanDelete("TexturedSpecular.vert");
+	OPcmanDelete("TexturedSpecular.frag");
+	OPcmanDelete("TexturedScreen.vert");
+	OPcmanDelete("Textured.frag");
+	OPcmanDelete("BiPlane.opm");
+	OPcmanDelete("steamPlaneSkin.png");
+	OPcmanDelete("steamPlaneSpec.png");
+	OPcmanDelete("noneNorm.png");	
 
 	OPfree(garbage);
 }
 //-----------------------------------------------------------------------------
 void State1Enter(OPgameState* last){
+	OPLog("State1 Entering...");
 	OPcmanLoad("impact.wav");
 	OPcmanLoad("boom.wav");
 	OPcmanLoad("background.ogg");
@@ -272,7 +378,8 @@ void State1Enter(OPgameState* last){
 	OPcmanLoad("BiPlane.opm");
 	OPcmanLoad("steamPlaneSkin.png");
 	OPcmanLoad("steamPlaneSpec.png");
-	OPcmanLoad("noneNorm.png");
+	OPcmanLoad("noneNorm.png");	
+	OPLog("State1 assets loaded!");
 
 	OPcmanPurge();
 
@@ -283,7 +390,9 @@ void State1Enter(OPgameState* last){
 
 	garbage = OPalloc(1024 * 10); // allocate ten megs of crap
 
-	t = 0;	
+	t = 0;
+
+	OPLog("State1 Entered!");
 }
 
 int State1Update(OPtimer* time){
@@ -314,7 +423,7 @@ int State1Update(OPtimer* time){
 	OPrenderParamMat4v("uProj", 1, &proj);
 	OPrenderParamMat4v("uView", 1, &view);
 
-	OPframeBufferBind(&rt);
+	//OPframeBufferBind(&rt);
 	
 	GamePadController* gamePad = OPgamePadController(GamePadIndex_One);
 	OPgamePadUpdate(gamePad);
@@ -330,20 +439,20 @@ int State1Update(OPtimer* time){
 	}
 
 	OPrenderMesh();
-	OPframeBufferUnbind();
-	
-		OPrenderClear(1.0f, 1.0f, 1.0f);
-	OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
+	//OPframeBufferUnbind();
+	//
+	//	OPrenderClear(1.0f, 1.0f, 1.0f);
+	//OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
 
-	OPmeshPackerBind(&packer);
-	OPrenderBindEffect(&post);
-	OPmat4identity(&world);
-	OPrenderParamMat4v("uWorld", 1, &world);
+	//OPmeshPackerBind(&packer);
+	//OPrenderBindEffect(&post);
+	//OPmat4identity(&world);
+	//OPrenderParamMat4v("uWorld", 1, &world);
 
-	OPtextureBind(&rt.Texture);
-	OPrenderParami("uTexture", rt.Texture.Handle);
+	//OPtextureBind(&rt.Texture);
+	//OPrenderParami("uTexture", rt.Texture.Handle);
 
-	OPrenderMeshPacked(&quad);
+	//OPrenderMeshPacked(&quad);
 
 	if(t > 6) {
 		//exit(0);
@@ -361,17 +470,17 @@ int State1Update(OPtimer* time){
 }
 
 void State1Exit(OPgameState* next){
-	OPcmanUnload("impact.wav");
-	OPcmanUnload("boom.wav");
-	OPcmanUnload("background.ogg");
-	OPcmanUnload("TexturedSpecular.vert");
-	OPcmanUnload("TexturedSpecular.frag");
-	OPcmanUnload("TexturedScreen.vert");
-	OPcmanUnload("Textured.frag");
-	OPcmanUnload("BiPlane.opm");
-	OPcmanUnload("steamPlaneSkin.png");
-	OPcmanUnload("steamPlaneSpec.png");
-	OPcmanUnload("noneNorm.png");	
+	OPcmanDelete("impact.wav");
+	OPcmanDelete("boom.wav");
+	OPcmanDelete("background.ogg");
+	OPcmanDelete("TexturedSpecular.vert");
+	OPcmanDelete("TexturedSpecular.frag");
+	OPcmanDelete("TexturedScreen.vert");
+	OPcmanDelete("Textured.frag");
+	OPcmanDelete("BiPlane.opm");
+	OPcmanDelete("steamPlaneSkin.png");
+	OPcmanDelete("steamPlaneSpec.png");
+	OPcmanDelete("noneNorm.png");	
 
 	OPrenderUnloadEffect(&tri);
 	OPrenderUnloadEffect(&post);

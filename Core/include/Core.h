@@ -7,7 +7,6 @@
 #include "GameCycle.h"
 #include "DynamicMemory.h"
 #include "Timer.h"
-#include "MathHelpers.h"
 #ifdef OPIFEX_ANDROID
 	#include <jni.h>
 #endif
@@ -17,6 +16,7 @@
 extern "C" {
 #endif
 
+extern OPtimer* OPtime;
 
 #ifdef OPIFEX_ANDROID
 	JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_touch(JNIEnv * env, jobject obj,  jint evt, jfloat x, jfloat y);
@@ -48,6 +48,8 @@ void OPstart();
  *	data. 
  */
 void OPend();
+//----------------------------------------------------------------------------
+OPtimer* OPgetTime();
 #ifdef __cplusplus
 };
 #endif

@@ -9,6 +9,8 @@ include_directories(
 	../External/Ogg/include/
 	../External/Vorbis/include/
 	../External/OpenAL/
+	../External/Oculus/include/
+	../External/Oculus/Src/
 	.
 	../
 )
@@ -70,12 +72,15 @@ target_link_libraries(8_Application
 	${VORBISFILE_LIBRARY}
 	${ZLIB_LIBRARY}
 	${LIBPNG_LIBRARY}
+	${CMAKE_THREAD_LIBS_INIT}
 	glfw ${GLFW_LIBRARIES}
 )	
 
 
 # Make sure the XInput library is linked correctly (Regardless of which Visual Studio is used)
-if( ${CMAKE_SYSTEM} STREQUAL "Windows-6.1") # Windows 7 - http://en.wikipedia.org/wiki/Windows_NT#Releases
+# Windows 7 - http://en.wikipedia.org/wiki/Windows_NT#Releases
+# MSVC10 - Visual Studio 2010
+if( ${CMAKE_SYSTEM} STREQUAL "Windows-6.1" AND ${MSVC_VERSION} GREATER 1600 )
 	target_link_libraries(8_Application
 		Xinput9_1_0.lib
 	)

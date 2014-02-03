@@ -1,6 +1,6 @@
 #include "./Human/include/Input/Input.h"
 #include "./Core/include/DynamicMemory.h"
-#include "./Human/include/Rendering/Renderer.h"
+#include "./Human/include/Rendering/OPrenderer.h"
 #include "./Core/include/Log.h"
 #ifndef OPIFEX_ANDROID
 	#include <GLFW/glfw3.h>
@@ -53,6 +53,13 @@ bool OPkeyboardWasPressed(OPkeyboardKey key) {
 bool OPkeyboardWasReleased(OPkeyboardKey key) {
 	return !Keyboard.keys[key] && Keyboard.prevKeys[key];
 }
+
+bool OPkeyboardAnyInputIsDown() {
+	for (ui32 i = 0; i < OPKEYBOARD_MAX; i++) {
+		if (Keyboard.keys[i]) return true;
+	}
+	return false;
+}
 #else
 void OPkeyboardUpdate() {
 
@@ -71,6 +78,9 @@ bool OPkeyboardWasPressed(OPkeyboardKey key) {
 }
 
 bool OPkeyboardWasReleased(OPkeyboardKey key) {
+	return false;
+}
+bool OPkeyboardAnyInputIsDown() {
 	return false;
 }
 #endif
@@ -134,6 +144,12 @@ void OPmouseSetPosition(i32 x, i32 y) {
 void OPmouseSetPositionScreenCenter() {
 	OPmouseSetPosition(OPrenderWidth / 2, OPrenderHeight / 2);
 }
+bool OPmouseAnyInputIsDown() {
+	for (ui32 i = 0; i < OPMOUSE_MAX; i++) {
+		if (Mouse.keys[i]) return true;
+	}
+	return false;
+}
 
 
 void OPtouchUpdate() {
@@ -168,6 +184,10 @@ bool OPtouchWasPressed() {
 }
 
 bool OPtouchWasReleased() {
+	return false;
+}
+
+bool OPtouchAnyInputIsDown() {
 	return false;
 }
 #else
@@ -265,6 +285,9 @@ bool OPtouchWasPressed() {
 
 bool OPtouchWasReleased() {
 	return !Touch.tapping && Touch.prevTapping;
+}
+bool OPtouchAnyInputIsDown() {
+	return Touch.tapping;
 }
 #endif
 

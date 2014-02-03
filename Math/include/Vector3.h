@@ -1,4 +1,6 @@
 #pragma once
+#ifndef OP_MATH_VECTOR3
+#define OP_MATH_VECTOR3
 #include "./Core/include/Types.h"
 #include "./Core/include/MathHelpers.h"
 #include "./Core/include/DynamicMemory.h"
@@ -32,8 +34,8 @@ inline OPfloat OPvec3valDist(OPvec3* a, OPvec3* b);
 
 struct OPvec3 {
 	OPfloat x, y, z;
-	OPvec3& operator=(OPvec3& vhs) { 
-		OPmemcpy(this, &vhs, sizeof(OPvec3)); return *this;
+	inline OPvec3 operator=(OPvec3 vhs) { 
+		OPmemcpy(this, (void*)&vhs, sizeof(OPvec3)); return *this;
 	}
 	inline OPvec3 operator+=(OPvec3 vhs) { 
 		OPvec3add(this, this, &vhs); 
@@ -62,43 +64,46 @@ struct OPvec3 {
 	}
 };
 
+extern const OPvec3 OPvec3Zero;
+extern const OPvec3 OPvec3One;
+
 inline OPvec3 operator+(OPvec3 lhs, OPvec3& vhs) { 
-	OPvec3 temp;
+	OPvec3 temp = { 0, 0, 0};
 	OPvec3add(&temp, &lhs, &vhs); 
 	return temp; 
 }
 inline OPvec3 operator-(OPvec3 lhs, OPvec3& vhs) { 
-	OPvec3 temp;
+	OPvec3 temp = { 0, 0, 0};
 	OPvec3sub(&temp, &lhs, &vhs); 
 	return temp; 
 }
 inline OPvec3 operator*(OPvec3 lhs, OPvec3& vhs) { 
-	OPvec3 temp;
+	OPvec3 temp = { 0, 0, 0};
 	OPvec3mul(&temp, &lhs, &vhs); 
 	return temp; 
 }
 inline OPvec3 operator*(OPvec3 lhs, OPfloat vhs) { 
-	OPvec3 temp;
+	OPvec3 temp = { 0, 0, 0};
 	OPvec3scl(&temp, &lhs, vhs); 
 	return temp; 
 }
 inline OPvec3 operator*(OPfloat lhs, OPvec3 vhs) { 
-	OPvec3 temp;
+	OPvec3 temp = { 0, 0, 0};
 	OPvec3scl(&temp, &vhs, lhs); 
 	return temp; 
 }
 inline OPvec3 operator/(OPvec3 lhs, OPvec3& vhs) { 
-	OPvec3 temp;
+	OPvec3 temp = { 0, 0, 0};
 	OPvec3div(&temp, &lhs, &vhs); 
 	return temp; 
 }
 inline OPvec3 operator/(OPvec3 lhs, OPfloat vhs) { 
-	OPvec3 temp;
+	OPvec3 temp = { 0, 0, 0};
 	OPvec3divf(&temp, &lhs, vhs); 
 	return temp; 
 }
 inline OPvec3 operator/(OPfloat lhs, OPvec3& vhs) { 
-	OPvec3 temp;
+	OPvec3 temp = { 0, 0, 0};
 	OPvec3divf(&temp, &vhs, lhs); 
 	return temp; 
 }
@@ -180,61 +185,62 @@ inline void OPvec3dist(OPfloat* dst, OPvec3* a, OPvec3* b) {
 }
 
 inline OPvec3 OPvec3valAdd(OPvec3* a, OPvec3* b) {
-	OPvec3 temp;
+	OPvec3 temp = { 0, 0, 0};
 	OPvec3add(&temp, a, b);
 	return temp;
 }
 
 inline OPvec3 OPvec3valSub(OPvec3* a, OPvec3* b) {
-	OPvec3 temp;
+	OPvec3 temp = { 0, 0, 0};
 	OPvec3sub(&temp, a, b);
 	return temp;
 }
 
 inline OPvec3 OPvec3valMul(OPvec3* a, OPvec3* b) {
-	OPvec3 temp;
+	OPvec3 temp = { 0, 0, 0};
 	OPvec3mul(&temp, a, b);
 	return temp;
 }
 
 inline OPvec3 OPvec3valScl(OPvec3* a, OPfloat s) {
-	OPvec3 temp;
+	OPvec3 temp = { 0, 0, 0};
 	OPvec3scl(&temp, a, s);
 	return temp;
 }
 
 inline OPvec3 OPvec3valDiv(OPvec3* a, OPvec3* b) {
-	OPvec3 temp;
+	OPvec3 temp = { 0, 0, 0};
 	OPvec3div(&temp, a, b);
 	return temp;
 }
 
 inline OPvec3 OPvec3valDivf(OPvec3* a, OPfloat b) {
-	OPvec3 temp;
+	OPvec3 temp = { 0, 0, 0};
 	OPvec3divf(&temp, a, b);
 	return temp;
 }
 
 inline OPfloat OPvec3valDot(OPvec3* a, OPvec3* b) {
-	OPfloat temp;
+	OPfloat temp = 0;
 	OPvec3dot(&temp, a, b);
 	return temp;
 }
 
 inline OPvec3 OPvec3valCross(OPvec3* a, OPvec3* b) {
-	OPvec3 temp;
+	OPvec3 temp = { 0, 0, 0};
 	OPvec3cross(&temp, a, b);
 	return temp;
 }
 
 inline OPfloat OPvec3valLen(OPvec3* v) {
-	OPfloat temp;
+	OPfloat temp = 0;
 	OPvec3len(&temp, v);
 	return temp;
 }
 
 inline OPfloat OPvec3valDist(OPvec3* a, OPvec3* b) {
-	OPfloat temp;
+	OPfloat temp = 0;
 	OPvec3dist(&temp, a, b);
 	return temp;
 }
+#endif

@@ -52,4 +52,3 @@ elseif( "${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX32" )
 	file(COPY ${PROJECT_SOURCE_DIR}/External/Vorbis/lib/linux32/libvorbisfile.a DESTINATION ${PROJECT_BINARY_DIR}/Binaries/linux32/)
 		
 endif()
-

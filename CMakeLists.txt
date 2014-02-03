@@ -52,13 +52,17 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID" )
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Audio" ${PROJECT_BINARY_DIR}/assets/Audio)
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Models" ${PROJECT_BINARY_DIR}/assets/Models)
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Textures" ${PROJECT_BINARY_DIR}/assets/Textures)
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Fonts" ${PROJECT_BINARY_DIR}/assets/Fonts)
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/GL_ES_2_0" ${PROJECT_BINARY_DIR}/assets/Shaders)	
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/GL_ES_2_0/Common" ${PROJECT_BINARY_DIR}/assets/Shaders/Common)	
 
 else()
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Audio" ${PROJECT_BINARY_DIR}/Application/assets/Audio)	
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Models" ${PROJECT_BINARY_DIR}/Application/assets/Models)	
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Textures" ${PROJECT_BINARY_DIR}/Application/assets/Textures)	
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Fonts" ${PROJECT_BINARY_DIR}/Application/assets/Fonts)	
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/GL_3_3" ${PROJECT_BINARY_DIR}/Application/assets/Shaders)	
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/GL_3_3/Common" ${PROJECT_BINARY_DIR}/Application/assets/Shaders/Common)	
 endif()
 
 INCLUDE(FindOpenGL)
@@ -70,6 +74,7 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
 find_package(OpenAL REQUIRED)
 find_package(OggVorbis REQUIRED)
 find_package(IOKit REQUIRED)
+find_package(Threads)
 
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/win32)
@@ -80,6 +85,7 @@ file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/osx32)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/osx64)
 
 add_subdirectory (External)
+add_subdirectory (Tools)
 
 	#########################################
 	# Core - Level 1

@@ -9,6 +9,8 @@ include_directories(
 	../External/Ogg/include/
 	../External/Vorbis/include/
 	../External/OpenAL/
+	../External/Oculus/include/
+	../External/Oculus/Src/
 	.
 	../
 )
@@ -34,16 +36,6 @@ add_source_group(include/Input "${PROJECT_SOURCE_DIR}/Human/include/Input" HUMAN
 add_source_group(include/Input "${PROJECT_SOURCE_DIR}/Human/include/Input" HUMAN_SRC)
 add_source_group(include/Rendering "${PROJECT_SOURCE_DIR}/Human/include/Rendering" HUMAN_SRC)
 add_source_group(include/Rendering/GL "${PROJECT_SOURCE_DIR}/Human/include/Rendering/GL" HUMAN_SRC)
-add_source_group(include/Resources "${PROJECT_SOURCE_DIR}/Human/include/Resources" HUMAN_SRC)
-add_source_group(include/Resources/Buffer "${PROJECT_SOURCE_DIR}/Human/include/Resources/Buffer" HUMAN_SRC)
-add_source_group(include/Resources/Model "${PROJECT_SOURCE_DIR}/Human/include/Resources/Model" HUMAN_SRC)
-add_source_group(include/Resources/Material "${PROJECT_SOURCE_DIR}/Human/include/Resources/Material" HUMAN_SRC)
-add_source_group(include/Resources/Material/Shader "${PROJECT_SOURCE_DIR}/Human/include/Resources/Material/Shader" HUMAN_SRC)
-add_source_group(include/Resources/Material/Shader/Params "${PROJECT_SOURCE_DIR}/Human/include/Resources/Material/Shader/Params" HUMAN_SRC)
-add_source_group(include/Resources/Material/Shader/Attributes "${PROJECT_SOURCE_DIR}/Human/include/Resources/Material/Shader/Attributes" HUMAN_SRC)
-add_source_group(include/Resources/Material/State "${PROJECT_SOURCE_DIR}/Human/include/Resources/Material/State" HUMAN_SRC)
-add_source_group(include/Resources/Sound "${PROJECT_SOURCE_DIR}/Human/include/Resources/Sound" HUMAN_SRC)
-add_source_group(include/Resources/Texture "${PROJECT_SOURCE_DIR}/Human/include/Resources/Texture" HUMAN_SRC)
 add_source_group(include/Utilities "${PROJECT_SOURCE_DIR}/Human/include/Utilities" HUMAN_SRC)
 
 add_source_group(src/ "${PROJECT_SOURCE_DIR}/Human/src" HUMAN_SRC)
@@ -52,16 +44,6 @@ add_source_group(src/Input "${PROJECT_SOURCE_DIR}/Human/src/Input" HUMAN_SRC)
 add_source_group(src/Input "${PROJECT_SOURCE_DIR}/Human/src/Input" HUMAN_SRC)
 add_source_group(src/Rendering "${PROJECT_SOURCE_DIR}/Human/src/Rendering" HUMAN_SRC)
 add_source_group(src/Rendering/GL "${PROJECT_SOURCE_DIR}/Human/src/Rendering/GL" HUMAN_SRC)
-add_source_group(src/Resources "${PROJECT_SOURCE_DIR}/Human/src/Resources" HUMAN_SRC)
-add_source_group(src/Resources/Buffer "${PROJECT_SOURCE_DIR}/Human/src/Resources/Buffer" HUMAN_SRC)
-add_source_group(src/Resources/Model "${PROJECT_SOURCE_DIR}/Human/src/Resources/Model" HUMAN_SRC)
-add_source_group(src/Resources/Material "${PROJECT_SOURCE_DIR}/Human/src/Resources/Material" HUMAN_SRC)
-add_source_group(src/Resources/Material/Shader "${PROJECT_SOURCE_DIR}/Human/src/Resources/Material/Shader" HUMAN_SRC)
-add_source_group(src/Resources/Material/Shader/Params "${PROJECT_SOURCE_DIR}/Human/src/Resources/Material/Shader/Params" HUMAN_SRC)
-add_source_group(src/Resources/Material/Shader/Attributes "${PROJECT_SOURCE_DIR}/Human/src/Resources/Material/Shader/Attributes" HUMAN_SRC)
-add_source_group(src/Resources/Material/State "${PROJECT_SOURCE_DIR}/Human/src/Resources/Material/State" HUMAN_SRC)
-add_source_group(src/Resources/Sound "${PROJECT_SOURCE_DIR}/Human/src/Resources/Sound" HUMAN_SRC)
-add_source_group(src/Resources/Texture "${PROJECT_SOURCE_DIR}/Human/src/Resources/Texture" HUMAN_SRC)
 add_source_group(src/Utilities "${PROJECT_SOURCE_DIR}/Human/src/Utilities" HUMAN_SRC)
 
 add_library(5_Human STATIC ${HUMAN_SRC})
@@ -127,6 +109,7 @@ target_link_libraries(5_Human
 	${VORBIS_LIBRARY}
 	${VORBISFILE_LIBRARY}
 	
+	${PROJECT_SOURCE_DIR}/External/Oculus/lib/win32/libovr.lib
 	glfw ${GLFW_LIBRARIES}
 )
 SET_TARGET_PROPERTIES(5_Human PROPERTIES LINKER_LANGUAGE CXX)
