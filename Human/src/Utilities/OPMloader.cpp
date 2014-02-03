@@ -13,7 +13,7 @@ enum OPMFeatures {
 
 OPint OPMhasFeature(ui32 features, ui32 feature) {
 	return features & feature;
-} 
+}
 
 
 void OPCalculateTangents(OPMData* data) {
