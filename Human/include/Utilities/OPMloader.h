@@ -16,7 +16,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+ 
 typedef struct {
 	void* vertices;
 	ui32 vertexCount;
