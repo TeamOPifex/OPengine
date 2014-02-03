@@ -4,7 +4,7 @@ SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 
 include_directories(
 	../External/freetype/win32/
-	../External/glfw-2.7.6/include/
+	../External/glfw-3.0.4/include/
 	../External/glm-0.9.1/
 	../External/glew-1.5.8/include/
 	../External/Phsyx.3.2.1/include/

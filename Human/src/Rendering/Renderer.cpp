@@ -83,17 +83,17 @@ void  OPrenderSetViewport(ui32 x, ui32 y, ui32 width, ui32 height){
 }
 //-----------------------------------------------------------------------------
 OPint OPrenderGetWidth(){
-	glfwGetWindowSize(&OPrenderWidth, &OPrenderHeight);
+	glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
 	return OPrenderWidth;
 }
 //-----------------------------------------------------------------------------
 OPint OPrenderGetHeight(){
-	glfwGetWindowSize(&OPrenderWidth, &OPrenderHeight);
+	glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
 	return OPrenderHeight;
 }
 //-----------------------------------------------------------------------------
 OPfloat OPrenderGetAspectRatio(){
-	glfwGetWindowSize(&OPrenderWidth, &OPrenderHeight);
+	glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
 	ASSERT(OPrenderWidth > 0, "Height was not greater than 0, there was problem getting width and height");
 	return OPrenderHeight / (OPfloat)OPrenderWidth;
 }

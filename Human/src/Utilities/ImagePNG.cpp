@@ -15,7 +15,7 @@
 #include <GLES2/gl2ext.h>
 #else
 #include <GL/glew.h>
-#include <GL/glfw.h>
+#include <GLFW/glfw3.h>
 #endif
 
 void OPimagePNG24WriteStream(ui8* imageData, OPint width, OPint height, ui8** data, ui32* dataSize) {

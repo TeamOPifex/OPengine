@@ -9,7 +9,7 @@
 #include <GLES2/gl2ext.h>
 #else
 #include <GL/glew.h>
-#include <GL/glfw.h>
+#include <GLFW/glfw3.h>
 //#include <glm/glm.hpp>
 #endif
 
@@ -20,6 +20,7 @@ extern "C" {
 
 extern OPint OPrenderWidth;
 extern OPint OPrenderHeight;
+extern GLFWwindow* window;
 
 OPint OPrenderInit       (ui32 width, ui32 height, bool fullscreen);
 void  OPrenderClear      (f32 r, f32 g, f32 b);

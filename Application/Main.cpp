@@ -274,13 +274,13 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 	//ASSERT(false, "Test!");
 	//ASSERT(true, "TEST!");
 
-	if (OPoculusInitialize()) {
-		OPoculusUpdate();
-		OPvec4 state = OPoculusHmd();
-		OPvec2 screen = OPoculusScreenSize();
-		width = screen.x;
-		height = screen.y;
-	}
+	//if (OPoculusInitialize()) {
+	//	OPoculusUpdate();
+	//	OPvec4 state = OPoculusHmd();
+	//	OPvec2 screen = OPoculusScreenSize();
+	//	width = screen.x;
+	//	height = screen.y;
+	//}
 
 	OPmat4 scl;
 	OPmat4buildScl(&scl, 2.0f, 2.0f, 2.0f);
