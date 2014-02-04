@@ -171,10 +171,10 @@ OPeffect OPrenderCreateEffect(
 			Attributes[i].Name
 		);
 		if(CheckError("OPrenderCreateEffect:Error 7.5 - Attrib Could not be found.") > 0) {
-			OPLog("Handle: %d, Attribute: %s", (OPint)attr.Name, Attributes[i].Name);
+			OPLog("Handle: %d, Attribute: %s", attr.Name, Attributes[i].Name);
 		}
 		else{
-			OPLog("OK!!! Handle: %d, Attribute: %s", (OPint)attr.Name, Attributes[i].Name);
+			OPLog("OK!!! Handle: %d, Attribute: %s", attr.Name, Attributes[i].Name);
 		}
 
 		// TODO add more
@@ -210,9 +210,9 @@ OPint OPrenderBindEffect(OPeffect* effect){
 		OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
 		for(;attrCount--;){
 			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
-			glDisableVertexAttribArray((uintptr_t)attr->Name);
+			glDisableVertexAttribArray((ui64)attr->Name);
 			if(CheckError("OPrenderBindEffect:Error ")) {
-				OPLog("Effect %s: Failed to disable attrib %u", OPRENDER_CURR_EFFECT->Name, (OPuint)attr->Name);
+				OPLog("Effect %s: Failed to disable attrib %u", OPRENDER_CURR_EFFECT->Name, attr->Name);
 			}
 		}
 	}
@@ -228,7 +228,7 @@ OPint OPrenderBindEffect(OPeffect* effect){
 		
 		glEnableVertexAttribArray((uintptr_t)attr->Name);
 		if(CheckError("OPrenderBindEffect:Error ")) {
-			OPLog("Failed to enable attrib %u", (OPuint)attr->Name);
+			OPLog("Failed to enable attrib %u", attr->Name);
 		}
 		glVertexAttribPointer(
 			(uintptr_t)attr->Name,
@@ -239,7 +239,7 @@ OPint OPrenderBindEffect(OPeffect* effect){
 			attr->Offset
 		);
 		if(CheckError("OPrenderBindEffect:Error ")) {
-			OPLog("Effect %s: Failed to set attrib ptr %u", effect->Name, (OPuint)attr->Name);
+			OPLog("Effect %s: Failed to set attrib ptr %u", effect->Name, attr->Name);
 		}
 	}
 

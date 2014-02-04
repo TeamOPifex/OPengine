@@ -123,20 +123,20 @@ void KeyDown(int key, int action){
 }
 
 #ifndef OPIFEX_ANDROID
-i32 width = 640;
-i32 height = 480;
+i32 width = 1280;
+i32 height = 720;
 #endif
 
 // Initialize
 void Init(){
 	#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 	_chdir("assets\\");
+	#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
+		if(chdir("./assets")) OPLog("Directory changed!\n"); 
+		else OPLog("Directory change failed!!!\n");
 	#else
-	if(chdir("./assets")){
-		OPLog("Directory changed!\n");
-	}
-	else
-		OPLog("Directory change failed!!!\n");
+		if(chdir("./assets") == 0) OPLog("Directory changed!\n"); 
+		else OPLog("Directory change failed!!!\n");
 	#endif
 	
 
@@ -270,6 +270,7 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 #else
 	int main() {
 #endif
+
 
 	//ASSERT(false, "Test!");
 	//ASSERT(true, "TEST!");

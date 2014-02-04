@@ -80,10 +80,12 @@ target_link_libraries(8_Application
 # Make sure the XInput library is linked correctly (Regardless of which Visual Studio is used)
 # Windows 7 - http://en.wikipedia.org/wiki/Windows_NT#Releases
 # MSVC10 - Visual Studio 2010
-if( ${CMAKE_SYSTEM} STREQUAL "Windows-6.1" AND ${MSVC_VERSION} GREATER 1600 )
+if( ${CMAKE_SYSTEM} STREQUAL "Windows-6.1" )
+	if(${MSVC_VERSION} GREATER 1600)
 	target_link_libraries(8_Application
 		Xinput9_1_0.lib
 	)
+endif()
 endif()
 
 add_definitions(-D${OPIFEX_OS})

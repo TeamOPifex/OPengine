@@ -25,7 +25,7 @@ typedef jdouble d64; //double type
 #else
 
 // PC integer types
-#if defined(OPIFEX_WIN64) || defined(OPIFEX_LINUX64)
+#if defined(OPIFEX_WIN64) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX64)
 typedef long    i64;
 typedef unsigned long  ui64;  //long type
 typedef int     i32;
