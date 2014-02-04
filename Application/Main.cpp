@@ -151,14 +151,14 @@ void Init(){
 	OPrenderInit(JNIWidth(), JNIHeight());
 #endif
 
-	OPgameStateChange(&State0);
+	//OPgameStateChange(&State0);
 
 #ifndef OPIFEX_ANDROID//defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 	  	//glfwSetKeyCallback(window, KeyDown);
 #endif
 
-        OPLog("Main: Song loading...");
-        OPchar songPath[] = {"Audio/background.ogg"};
+       // OPLog("Main: Song loading...");
+        //OPchar songPath[] = {"Audio/background.ogg"};
         //Song = OPAudio::ReadOgg(songPath);
 
         OPLog("Main: Song loaded");
@@ -182,8 +182,8 @@ void Init(){
 		//}
 		//printf("Freeing\n");
 
-		void* test = OPalloc(OPentHeapSize(4, 10));
-		OPentHeap* heap = OPentHeapCreate(test, 4, 10);
+		// void* test = OPalloc(OPentHeapSize(4, 10));
+		// OPentHeap* heap = OPentHeapCreate(test, 4, 10);
 
 		//for(OPint i =10; i--;){
 		//	OPint ind = 0;
@@ -192,21 +192,21 @@ void Init(){
 		//}
 		//printf("\n");
 
-		for(OPint j = 4; j--;){
-			OPint ind = 0;
-			OPentHeapActivate(heap, &ind);
-			while(ind >= 0){
-				printf("Act %d\n", ind);
-				OPentHeapActivate(heap, &ind);
-			}
-			printf(">>>Max %d\n", heap->MaxIndex);
-			for(OPint i =5; i--;){
-				OPuint ind = (OPuint)OPrandRange(0, 10);
-				OPentHeapKill(heap, ind);
-				printf("free @ %d\n", ind);
-			}
-			printf(">>>Max %d\n\n", heap->MaxIndex);
-		}
+		// for(OPint j = 4; j--;){
+		// 	OPint ind = 0;
+		// 	OPentHeapActivate(heap, &ind);
+		// 	while(ind >= 0){
+		// 		printf("Act %d\n", ind);
+		// 		OPentHeapActivate(heap, &ind);
+		// 	}
+		// 	printf(">>>Max %d\n", heap->MaxIndex);
+		// 	for(OPint i =5; i--;){
+		// 		OPuint ind = (OPuint)OPrandRange(0, 10);
+		// 		OPentHeapKill(heap, ind);
+		// 		printf("free @ %d\n", ind);
+		// 	}
+		// 	printf(">>>Max %d\n\n", heap->MaxIndex);
+		// }
 /*
 		Sound1 = (OPaudioSource*)OPcmanGet("impact.wav");
 		Sound2 = (OPaudioSource*)OPcmanGet("boom.wav");
@@ -229,23 +229,24 @@ void Init(){
 	return;
 }
 
-bool Update( OPtimer* timer){
+int Update( OPtimer* timer){
 	
-	GamePadController* gamePad = OPgamePadController(GamePadIndex_One);
-	OPgamePadUpdate(gamePad);
-	if(OPgamePadIsConnected(gamePad) && OPgamePadWasPressed(gamePad, GamePad_Button_START)){
-		return true;
-	}
+	// GamePadController* gamePad = OPgamePadController(GamePadIndex_One);
+	// OPgamePadUpdate(gamePad);
+	// if(OPgamePadIsConnected(gamePad) && OPgamePadWasPressed(gamePad, GamePad_Button_START)){
+	// 	return true;
+	// }
 
-	if(OPgamePadIsConnected(gamePad) && OPgamePadWasPressed(gamePad, GamePad_Button_A)){
-		OPLog("Playing Audio");
-	  	OPaudSetPlayer(&player);
-	  	OPaudPlayerPlay();
-	}
+	// if(OPgamePadIsConnected(gamePad) && OPgamePadWasPressed(gamePad, GamePad_Button_A)){
+	// 	OPLog("Playing Audio");
+	//   	OPaudSetPlayer(&player);
+	//   	OPaudPlayerPlay();
+	// }
 
+	OPrenderClear(0.0f, 0.0f, 0.0f);
 	OPrenderPresent();
 	
-	return false;
+	return 0;
 }
 
 void Destroy()
@@ -305,7 +306,7 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 
 
 	OPinitialize = Init;
-	OPupdate = UpdateState;
+	OPupdate = Update;
 	OPdestroy = Destroy;
 
 	OPint a = 0;
