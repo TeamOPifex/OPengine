@@ -5,8 +5,8 @@
 #include "./include/Rendering/OPfontGlyph.h"
 #include "./Core/include/MathHelpers.h"
 #include "./Human/include/Rendering/OPMvertex.h"
-#include "./Data/include/OPstream.h"
-#include "./Data/include/OPfile.h"
+#include "./Data/include/Stream.h"
+#include "./Data/include/File.h"
 #include "./Human/include/Utilities/ImagePNG.h"
 #include "./Core/include/Assert.h"
 
@@ -17,57 +17,57 @@ void OPfontLoad(i8* filename, OPfont** data) {
 	i16 version;
 	OPstream* str = OPreadFile(filename);
 
-	version = OPread_i16(str);
-	font->size = OPread_f32(str);
-	font->hinting = OPread_i32(str);
-	font->outlineType = OPread_i32(str);
-	font->outlineThickness = OPread_f32(str);
-	font->filtering = OPread_i32(str);
-	font->lcdWeights[0] = OPread_i8(str);
-	font->lcdWeights[1] = OPread_i8(str);
-	font->lcdWeights[2] = OPread_i8(str);
-	font->lcdWeights[3] = OPread_i8(str);
-	font->lcdWeights[4] = OPread_i8(str);
-	font->kerning = OPread_i32(str);
-	font->height = OPread_f32(str);
-	font->lineGap = OPread_f32(str);
-	font->ascender = OPread_f32(str);
-	font->descender = OPread_f32(str);
-	font->underlinePosition = OPread_f32(str);
-	font->underlineThickness = OPread_f32(str);
+	version = OPreadi16(str);
+	font->size = OPreadf32(str);
+	font->hinting = OPreadi32(str);
+	font->outlineType = OPreadi32(str);
+	font->outlineThickness = OPreadf32(str);
+	font->filtering = OPreadi32(str);
+	font->lcdWeights[0] = OPreadi8(str);
+	font->lcdWeights[1] = OPreadi8(str);
+	font->lcdWeights[2] = OPreadi8(str);
+	font->lcdWeights[3] = OPreadi8(str);
+	font->lcdWeights[4] = OPreadi8(str);
+	font->kerning = OPreadi32(str);
+	font->height = OPreadf32(str);
+	font->lineGap = OPreadf32(str);
+	font->ascender = OPreadf32(str);
+	font->descender = OPreadf32(str);
+	font->underlinePosition = OPreadf32(str);
+	font->underlineThickness = OPreadf32(str);
 
 	i16 glyphCount;
-	glyphCount = OPread_i16(str);
+	glyphCount = OPreadi16(str);
 	font->glyphs = OPvectorCreate(sizeof(OPfontGlyph));
 
 	for (i16 i = glyphCount; i--;) {
 		OPfontGlyph* glyph = (OPfontGlyph*)OPalloc(sizeof(OPfontGlyph));
 
-		glyph->charcode = OPread_i8(str);
-		glyph->width = OPread_i32(str);
-		glyph->height = OPread_i32(str);
-		glyph->offsetX = OPread_i32(str);
-		glyph->offsetY = OPread_i32(str);
-		glyph->advanceX = OPread_f32(str);
-		glyph->advanceY = OPread_f32(str);
-		glyph->textureCoordinates.x = OPread_f32(str);
-		glyph->textureCoordinates.y = OPread_f32(str);
-		glyph->textureCoordinates.z = OPread_f32(str);
-		glyph->textureCoordinates.w = OPread_f32(str);
+		glyph->charcode = OPreadi8(str);
+		glyph->width = OPreadi32(str);
+		glyph->height = OPreadi32(str);
+		glyph->offsetX = OPreadi32(str);
+		glyph->offsetY = OPreadi32(str);
+		glyph->advanceX = OPreadf32(str);
+		glyph->advanceY = OPreadf32(str);
+		glyph->textureCoordinates.x = OPreadf32(str);
+		glyph->textureCoordinates.y = OPreadf32(str);
+		glyph->textureCoordinates.z = OPreadf32(str);
+		glyph->textureCoordinates.w = OPreadf32(str);
 
 		i16 kerningCount;
-		kerningCount = OPread_i16(str);
+		kerningCount = OPreadi16(str);
 		glyph->kerning = OPvectorCreate(sizeof(OPfontKerning));
 		for (i16 j = kerningCount; j--;) {
 			OPfontKerning kerning;
 
-			kerning.charcode = OPread_i8(str);
-			kerning.kerning = OPread_f32(str);
+			kerning.charcode = OPreadi8(str);
+			kerning.kerning = OPreadf32(str);
 			OPvectorPush(glyph->kerning, (ui8*)&kerning);
 		}
 
-		glyph->outlineType = OPread_i32(str);
-		glyph->outlineThickness = OPread_f32(str);
+		glyph->outlineType = OPreadi32(str);
+		glyph->outlineThickness = OPreadf32(str);
 
 		OPvectorPush(font->glyphs, (ui8*)&glyph);
 	}

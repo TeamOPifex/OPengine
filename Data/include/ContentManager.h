@@ -1,16 +1,13 @@
-#pragma once
-
 #ifndef OPEngine_Data_ContentMan
 #define OPEngine_Data_ContentMan
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 #include "./Core/include/Types.h"
 #include "./Core/include/DynamicMemory.h"
-#include "./Data/include/OPhashMap.h"
-#include "./Data/include/OPlinkedList.h"
+#include "./Data/include/HashMap.h"
+#include "./Data/include/LinkedList.h"
 
 #define OP_CMAN_CAP 10000
 

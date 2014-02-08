@@ -1,9 +1,9 @@
 #pragma once
 #ifndef OPEngine_Data_GameStates
 #define OPEngine_Data_GameStates
-#include "./../../Core/include/Timer.h"
-#include "./../../Core/include/Types.h"
-#include "OPlist.h"
+#include "./Core/include/Timer.h"
+#include "./Core/include/Types.h"
+#include "List.h"
 
 #ifdef __cplusplus
 extern "C" {

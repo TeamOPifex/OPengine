@@ -1,7 +1,7 @@
 #include "./Human/include/Rendering/OPfontManager.h"
 #include "./Core/include/Assert.h"
 #include "./Human/include/Rendering/OPrenderer.h"
-#include "./Data/include/OPcontentManager.h"
+#include "./Data/include/ContentManager.h"
 #include "./Human/include/Rendering/Common.h"
 
 OPfontManager* OPRENDER_CURR_FONT_MANAGER = NULL;

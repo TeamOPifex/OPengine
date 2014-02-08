@@ -2,7 +2,7 @@
 #define OPEngine_Human_Renderer_Mesh_Packer
 	
 #include "./Core/include/DynamicMemory.h"
-#include "./Data/include/OPstream.h"
+#include "./Data/include/Stream.h"
 #include "./Human/include/Rendering/OPbuffer.h"
 
 // prevent name mangling if compiling with c++

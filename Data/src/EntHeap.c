@@ -1,4 +1,5 @@
-#include "./Data/include/OPentHeap.h"
+#include "./Data/include/EntHeap.h"
+
 OPuint OPentHeapSize(OPint entsize, OPint count){
 	OPuint size = sizeof(OPentHeap);
 

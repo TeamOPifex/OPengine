@@ -1,4 +1,4 @@
-#include "./Data/include/OPhashMap.h"
+#include "./Data/include/HashMap.h"
 #include "./Core/include/DynamicMemory.h"
 
 static KeyValuePair* get_pair(Bucket *bucket, const OPchar *key);

@@ -92,9 +92,9 @@ void OPMgenerateTangent(OPvec3* tangent, OPMvertex* v1, OPMvertex* v2){
 }
 
 OPMData OPMloadData(OPstream* str) {
-	ui16 version = OPread_ui16(str);
-	ui32 features = OPread_ui32(str);
-	ui32 verticeCount = OPread_ui32(str);
+	ui16 version = OPreadui16(str);
+	ui32 features = OPreadui32(str);
+	ui32 verticeCount = OPreadui32(str);
 
 
 	OPMvertex* vertices = (OPMvertex*)OPalloc(sizeof(OPMvertex) * verticeCount);
@@ -104,9 +104,9 @@ OPMData OPMloadData(OPstream* str) {
 
 		// Read Position
 		if(OPMhasFeature(features, Position)) {
-			x = OPread_f32(str);
-			y = OPread_f32(str);
-			z = OPread_f32(str);
+			x = OPreadf32(str);
+			y = OPreadf32(str);
+			z = OPreadf32(str);
 			vertices[i].Position.x = x;
 			vertices[i].Position.y = y;
 			vertices[i].Position.z = z;
@@ -114,9 +114,9 @@ OPMData OPMloadData(OPstream* str) {
 
 		// Read Normal
 		if(OPMhasFeature(features, Normal)) {
-			x = OPread_f32(str);
-			y = OPread_f32(str);
-			z = OPread_f32(str);
+			x = OPreadf32(str);
+			y = OPreadf32(str);
+			z = OPreadf32(str);
 			vertices[i].Normal.x = x;
 			vertices[i].Normal.y = y;
 			vertices[i].Normal.z = z;
@@ -125,9 +125,9 @@ OPMData OPMloadData(OPstream* str) {
 		
 		// Read Tangent
 		if(OPMhasFeature(features, Tangent)) {
-			x = OPread_f32(str);
-			y = OPread_f32(str);
-			z = OPread_f32(str);
+			x = OPreadf32(str);
+			y = OPreadf32(str);
+			z = OPreadf32(str);
 			vertices[i].Tangent.x = x;
 			vertices[i].Tangent.y = y;
 			vertices[i].Tangent.z = z;
@@ -136,19 +136,19 @@ OPMData OPMloadData(OPstream* str) {
 
 		// Read UV
 		if(OPMhasFeature(features, UV)) {
-			x = OPread_f32(str);
-			y = OPread_f32(str);
+			x = OPreadf32(str);
+			y = OPreadf32(str);
 			vertices[i].TexCoord.x = x;
 			vertices[i].TexCoord.y = y;
 		}
 	}
 
-	ui32 indicesCount = OPread_ui32(str);
+	ui32 indicesCount = OPreadui32(str);
 	ui16* indices = (ui16*)OPalloc(sizeof(str) * (indicesCount * 3));
 	for(int i = 0; i < indicesCount; i++){
-		indices[i * 3 + 0] = OPread_ui16(str);
-		indices[i * 3 + 1] = OPread_ui16(str);
-		indices[i * 3 + 2] = OPread_ui16(str);
+		indices[i * 3 + 0] = OPreadui16(str);
+		indices[i * 3 + 1] = OPreadui16(str);
+		indices[i * 3 + 2] = OPreadui16(str);
 	}
 
 

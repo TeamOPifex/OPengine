@@ -1,4 +1,4 @@
-#include "./../include/OPvector.h"
+#include "./../include/Vector.h"
 
 OPvector* OPvectorCreate(OPint elementSize) {
 	OPvector* self = (OPvector*)OPalloc(sizeof(OPvector));

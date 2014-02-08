@@ -1,17 +1,11 @@
 // TODO: Have option to use a FILE* to read from disk rather than memory
 
 #pragma once
-#include "./../../Core/include/Types.h"
-#include "./../../Core/include/DynamicMemory.h"
+#include "./Core/include/Types.h"
+#include "./Core/include/DynamicMemory.h"
 
 #ifndef OPEngine_Data_vector
 #define OPEngine_Data_vector
-
-#if defined(OPIFEX_ANDROID) && defined(__cplusplus)
-
-#else
-//#include "./../../Core/include/Core.h"
-#endif
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

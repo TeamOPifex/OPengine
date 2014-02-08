@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef OPEngine_Data_EntHeap
 #define OPEngine_Data_EntHeap
 
@@ -9,7 +7,7 @@ extern "C"
 #endif
 #include "./Core/include/Types.h"
 #include "./Core/include/DynamicMemory.h"
-#include "./Data/include/OPheap.h"
+#include "./Data/include/Heap.h"
 #include <stdio.h>
 
 //  _____ _                   _       

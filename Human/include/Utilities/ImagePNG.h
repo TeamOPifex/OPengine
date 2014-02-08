@@ -1,7 +1,7 @@
 #pragma once
 
 #include "./Human/include/Rendering/OPtexture.h"
-#include "./Data/include/OPstream.h"
+#include "./Data/include/Stream.h"
 #include <stdio.h>
 
 #ifdef __cplusplus

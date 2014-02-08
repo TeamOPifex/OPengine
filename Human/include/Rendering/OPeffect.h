@@ -3,9 +3,9 @@
 #include "./Core/include/Types.h"
 #include "./Core/include/Log.h"
 #include "./Core/include/DynamicMemory.h"
-#include "./Data/include/OPhashMap.h"
-#include "./Data/include/OPlist.h"
-#include "./Data/include/OPfile.h"
+#include "./Data/include/HashMap.h"
+#include "./Data/include/List.h"
+#include "./Data/include/File.h"
 
 #include "./Math/include/Vector2.h"
 #include "./Math/include/Vector3.h"

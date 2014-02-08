@@ -2,7 +2,7 @@
 
 #include "./Human/include/Rendering/OPfont.h"
 #include "./Human/include/Rendering/OPeffect.h"
-#include "./Data/include/OPhashMap.h"
+#include "./Data/include/HashMap.h"
 #include "./Human/include/Rendering/OPmeshPacked.h"
 #include "./Math/include/Vector2.h"
 #include "./Math/include/Vector3.h"

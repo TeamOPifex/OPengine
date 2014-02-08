@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #include "./Core/include/Core.h"
-#include "./Data/include/OPgameStates.h"
+#include "./Data/include/GameStates.h"
 
 //#include "./GameManager.h"
 #include "./Human/include/Rendering/OPrenderer.h"
@@ -12,9 +12,9 @@
 
 #include "./Core/include/Log.h"
 
-#include "./Data/include/OPlinkedList.h"
-#include "./Data/include/OPheap.h"
-#include "./Data/include/OPlist.h"
+#include "./Data/include/LinkedList.h"
+#include "./Data/include/Heap.h"
+#include "./Data/include/List.h"
 
 #include "./Performance/include/OPthread.h"
 #include "./Human/include/Input/Oculus.h"
@@ -32,16 +32,16 @@
 //#include <glm/glm.hpp>
 #endif
 
-#include "./Data/include/OPfile.h"
+#include "./Data/include/File.h"
 #include "./Human/include/Audio/OPaudio2.h"
 #include "./Human/include/Audio/OPaudioEmitter.h"
 #include "./Human/include/Audio/OPaudioPlayer.h"
 #include "./Human/include/Utilities/OPMloader.h"
 #include "./Human/include/Utilities/ImagePNG.h"
 #include "./Human/include/Rendering/OPeffect.h"
-#include "./Data/include/OPfile.h"
-#include "./Data/include/OPcontentManager.h"
-#include "./Data/include/OPentHeap.h"
+#include "./Data/include/File.h"
+#include "./Data/include/ContentManager.h"
+#include "./Data/include/EntHeap.h"
 #include "./Human/include/Rendering/OPfont.h"
 #include "GameStates.h"
 
@@ -269,7 +269,6 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 #else
 	int main() {
 #endif
-
 
 	//ASSERT(false, "Test!");
 	//ASSERT(true, "TEST!");

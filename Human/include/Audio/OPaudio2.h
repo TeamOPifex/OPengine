@@ -2,13 +2,13 @@
 #ifndef OPAUD_AUDIO
 #define OPAUD_AUDIO
 
-#include "Core/include/Types.h"
-#include "Core/include/MathHelpers.h"
-#include "Core/include/DynamicMemory.h"
-#include "Core/include/Log.h"
-#include "Data/include/OPfile.h"
-#include "Math/include/Vector3.h"
-#include "Performance/include/OPthread.h"
+#include "./Core/include/Types.h"
+#include "./Core/include/MathHelpers.h"
+#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/Log.h"
+#include "./Data/include/File.h"
+#include "./Math/include/Vector3.h"
+#include "./Performance/include/OPthread.h"
 
 #ifdef OPIFEX_ANDROID
 #include <SLES/OpenSLES.h>

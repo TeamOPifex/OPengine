@@ -1,4 +1,4 @@
-#include "./../include/OPstream.h"
+#include "./../include/Stream.h"
 #include <errno.h>
 
 //-----------------------------------------------------------------------------

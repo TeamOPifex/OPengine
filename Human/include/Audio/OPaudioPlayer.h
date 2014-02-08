@@ -2,11 +2,11 @@
 #ifndef OPAUD_AUDIOPLAYER
 #define OPAUD_AUDIOPLAYER
 
-#include "Core/include/Types.h"
-#include "Core/include/MathHelpers.h"
-#include "Core/include/DynamicMemory.h"
-#include "Core/include/Log.h"
-#include "Data/include/OPfile.h"
+#include "./Core/include/Types.h"
+#include "./Core/include/MathHelpers.h"
+#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/Log.h"
+#include "./Data/include/File.h"
 #include "./Math/include/Vector3.h"
 
 #include "./Human/include/Audio/OPaudio2.h"

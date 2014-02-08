@@ -1,16 +1,13 @@
 // TODO: Have option to use a FILE* to read from disk rather than memory
 
 #pragma once
-#include "./../../Core/include/Types.h"
+#include "./Core/include/Types.h"
 
 #ifndef OPEngine_Data_Stream
 #define OPEngine_Data_Stream
 
-//#if defined(OPIFEX_ANDROID) && defined(__cplusplus)
-#include "./../../Core/include/DynamicMemory.h"
-//#else
-//#include "./../../Core/include/Core.h"
-//#endif
+#include "./Core/include/DynamicMemory.h"
+
 
 typedef struct{
 	OPuint Length;   // bytes in this stream

@@ -1,4 +1,4 @@
-#include "./../include/OPlinkedList.h"
+#include "./../include/LinkedList.h"
 
 //-----------------------------------------------------------------------------
 OPlinkedList* OPllCreate(){
