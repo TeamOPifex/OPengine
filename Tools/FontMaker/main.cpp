@@ -48,9 +48,9 @@ static OPint OPfontInit(OPfont* font, i8* filename)
 	}
 
 	metrics = face->size->metrics;
-	font->ascender = (metrics.ascender >> 6) / 100.0;
-	font->descender = (metrics.descender >> 6) / 100.0;
-	font->height = (metrics.height >> 6) / 100.0;
+	font->ascender = (metrics.ascender >> 6) / 100.0f;
+	font->descender = (metrics.descender >> 6) / 100.0f;
+	font->height = (metrics.height >> 6) / 100.0f;
 	font->lineGap = font->height - font->ascender + font->descender;
 	FT_Done_Face(face);
 	FT_Done_FreeType(library);
@@ -317,7 +317,8 @@ OPfont* OPfontFromFile(OPfontAtlas* atlas, OPfloat ptSize, i8* filename)
 
 OPint OPfontLoadGlyphs(OPfont* font, i8* filename, i8* charcodes)
 {
-	OPint i, x, y, width, height, depth, w, h;
+	OPuint i;
+	OPint x, y, width, height, depth, w, h;
 	FT_Library library;
 	FT_Error error;
 	FT_Face face;
@@ -707,8 +708,6 @@ void OPfontSave(OPfont* font, i8* filename) {
 int main(int argc, char **argv) {
 	//OPfont* testFont = OPfontLoadFile("output.opf");
 
-	FILE* test;
-	size_t i, j;
 	int arg;
 
 	i8* font_cache = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
@@ -767,7 +766,7 @@ int main(int argc, char **argv) {
 
 			errno = 0;
 
-			font_size = atof(argv[arg]);
+			font_size = (OPfloat)atof(argv[arg]);
 
 			if (errno)
 			{

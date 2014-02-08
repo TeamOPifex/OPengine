@@ -268,10 +268,10 @@ inline void OPmat4rotY(OPmat4* m, OPfloat x) {
 
 inline void OPmat4ortho(OPmat4* m, OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPfloat zNear, OPfloat zFar ){
 	OPbzero(m, sizeof(OPmat4));
-	m->cols[0].x = 2.0/(right - left);
-	m->cols[1].y = -2.0/(top - bottom);
-	m->cols[2].z = 2.0/(zNear - zFar);
-	m->cols[3].w = 1.0;
+	m->cols[0].x = 2.0f/(right - left);
+	m->cols[1].y = -2.0f/(top - bottom);
+	m->cols[2].z = 2.0f/(zNear - zFar);
+	m->cols[3].w = 1.0f;
 	m->cols[3].x = -(right + left)/(right - left);
 	m->cols[3].y = -(top + bottom)/(top - bottom);
 	m->cols[3].z = -(zFar + zNear)/(zFar - zNear);
@@ -321,7 +321,7 @@ inline void OPmat4perspective(OPmat4* m, OPfloat fovy, OPfloat aspect, OPfloat n
 	OPvec4 c0 = {nearVal/right, 0, 0, 0};
 	OPvec4 c1 = {0, nearVal/top, 0, 0};
 	OPvec4 c2 = {0, 0, -(farVal+nearVal)/range, -1};
-	OPvec4 c3 = {0, 0, -2.0*farVal*nearVal/range, 1};
+	OPvec4 c3 = {0, 0, -2.0f*farVal*nearVal/range, 1};
 	m->cols[0] = c0;
 	m->cols[1] = c1;
 	m->cols[2] = c2;

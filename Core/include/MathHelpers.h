@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #endif
 
-#define OPpi 3.14159265359
+#define OPpi 3.14159265359f
 #define OPe  2.71828182846
 
 // prevent name mangling if compiling with c++
@@ -287,7 +287,7 @@ __inline OPfloat OPround(OPfloat f){
 * @return True if near is within theshhold of target, otherwise false.
 */
 __inline OPfloat OPnear(OPfloat value, OPfloat target, OPfloat threshhold){
-	return (OPabs(value - target) < threshhold ? 1 : 0);
+	return (OPabs(value - target) < threshhold ? 1.0f : 0.0f);
 }
 
 

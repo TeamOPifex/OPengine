@@ -98,7 +98,7 @@ inline OPfloat OPtween_quinticEaseInOut(OPfloat p)
 		return 16 * p * p * p * p * p;
     }
     OPfloat f = ((2.0f * p) - 2.0f);
-    return  0.5 * f * f * f * f * f + 1.0f;
+    return  0.5f * f * f * f * f * f + 1.0f;
 }
 
 // Tweening Function : quarter cycle sin(x)
@@ -116,7 +116,7 @@ inline OPfloat OPtween_sineEaseOut(OPfloat p)
 // Tweening Function : half sine(x)
 inline OPfloat OPtween_sineEaseInOut(OPfloat p)
 {
-	return 0.5 * (1.0f - OPcos(p * (OPpi * 2.0f)));
+	return 0.5f * (1.0f - OPcos(p * (OPpi * 2.0f)));
 }
 
 // Tweening Function : shifted quadrant IV of unit circle
@@ -249,8 +249,8 @@ inline OPfloat OPtween_bounceEaseInOut(OPfloat p)
 {
 	if(p < 0.5f)
 	{
-		return 0.5f * OPtween_bounceEaseIn(p*2);
+		return 0.5f * OPtween_bounceEaseIn(p*2.0f);
 	}
-	return 0.5f * OPtween_bounceEaseOut(p * 2 - 1) + 0.5;
+	return 0.5f * OPtween_bounceEaseOut(p * 2.0f - 1) + 0.5f;
 }
 #endif
