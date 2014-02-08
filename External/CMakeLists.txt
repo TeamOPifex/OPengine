@@ -2,6 +2,7 @@
 
 set(GLFW_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/External/glfw-3.0.4")
 add_subdirectory("${GLFW_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/GLFW)
+SET_PROPERTY(TARGET glfw                PROPERTY FOLDER "External")
 
 add_definitions(
 	-DGLEW_STATIC
@@ -28,6 +29,7 @@ add_library( GLEW_158 STATIC
 target_link_libraries(GLEW_158
 	${OPENGL_LIBRARY}
 )
+SET_PROPERTY(TARGET GLEW_158                PROPERTY FOLDER "External")
 
 
 if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
