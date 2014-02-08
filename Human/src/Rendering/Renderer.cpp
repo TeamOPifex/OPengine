@@ -84,14 +84,6 @@ OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
 	OPrenderSetViewport(0, 0, width, height);
 	if (glewInit() != GLEW_OK) return -1;	
 
-	if (glewGetExtension("GL_ARB_fragment_program"))
-	{
-	  /* Looks like ARB_fragment_program is supported. */
-		OPLog("YES: GL_ARB_fragment_program");
-	} else {
-		OPLog("NO: GL_ARB_fragment_program");
-	}
-
 	//glfwSetWindowTitle( "OPifex Engine" );
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, true);
 	//glfwSetInputMode(window, GL_DEPTH_TEST, true);
@@ -168,6 +160,7 @@ void  OPrenderPresent(){
 	
 #else
 	glfwSwapBuffers(window);	
+	glfwPollEvents();
 #endif
 }
 //-----------------------------------------------------------------------------

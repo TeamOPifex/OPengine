@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 include_directories(
 	../External/glfw-3.0.4/include/
 	../External/glm-0.9.1/
-	../External/glew-1.5.8/include/
+	../External/glew-1.9.0/include/
 	../External/Phsyx.3.2.1/include/
 	../External/GLES2/
 	../External/Ogg/include/
