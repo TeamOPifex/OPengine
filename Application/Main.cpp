@@ -21,7 +21,7 @@
 
 #if defined(OPIFEX_ANDROID)
 #include <jni.h>
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#elif defined(OPIFEX_WINDOWS)
 #include <direct.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -129,7 +129,7 @@ i32 height = 720;
 
 // Initialize
 void Init(){
-	#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+	#if defined(OPIFEX_WINDOWS)
 	_chdir("assets\\");
 	#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 		if(chdir("./assets")) OPLog("Directory changed!\n"); 

@@ -4,7 +4,7 @@
 
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
 	// TODO - Linux GamePad Support
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#elif defined(OPIFEX_WINDOWS)
 	#include <Windows.h>
 	#include <Xinput.h>
 	#pragma comment(lib, "XInput.lib")

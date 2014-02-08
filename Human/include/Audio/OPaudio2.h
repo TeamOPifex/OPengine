@@ -13,7 +13,7 @@
 #ifdef OPIFEX_ANDROID
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#elif defined(OPIFEX_WINDOWS)
 #include "stdafx.h"
 #include <AL/al.h>
 #include <AL/alc.h>

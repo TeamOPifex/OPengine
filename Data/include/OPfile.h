@@ -11,7 +11,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#elif defined(OPIFEX_WINDOWS)
 #include <share.h>
 #include <stdio.h>
 #include <sys/types.h>

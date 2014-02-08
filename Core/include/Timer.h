@@ -3,13 +3,12 @@
 #define OPEngine_Core_Timer
 
 #include "Types.h"
-#include "DynamicMemory.h"
 
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
+#if defined(OPIFEX_UNIX)
 #include <sys/types.h>
 #include <sys/time.h> // link with -lrt
 #include <unistd.h>
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#elif defined(OPIFEX_WINDOWS)
 // Windows specific lib
 #include <Windows.h>
 #include <Mmsystem.h>
@@ -25,10 +24,8 @@ typedef struct{
 	ui64 TotalGametime;
 	ui64 TimeLastTick;
 	ui64 Elapsed;
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
+#if defined(OPIFEX_UNIX)
 	struct timeval _lastTime;
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
-// Windows specific values for time
 #endif
 } OPtimer;
 
@@ -42,17 +39,10 @@ extern "C" {
  *	Allocates space and initializes an OPtimer struct, then returns a
  *	pointer to the allocated memory segment. If allocation fails, a NULL
  *	pointer is returned.
- *	@return Pointer to an OPtimer instance.
+ *	@timer Pointer to new instance of OPtimer
+ *	@return Error code on failure
  */
-OPtimer* OPcreateTimer();
-//----------------------------------------------------------------------------
-/**
- * OPdestroyTimer - destroys an OPtimer instance
- *	Frees memory occupied by an OPtimer instance. Does nothing if a null
- *	pointer is passed.
- * @param timer Pointer to an OPtimer instance which will be destroyed.
- */
-void OPdestroyTimer(OPtimer* timer);
+OPint OPcreateTimer(OPtimer* timer);
 //----------------------------------------------------------------------------
 /**
  * OPtimerTick - updates a OPtimer

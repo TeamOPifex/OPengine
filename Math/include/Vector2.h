@@ -1,7 +1,7 @@
 #pragma once
 #ifndef OP_MATH_VECTOR2
 #define OP_MATH_VECTOR2
-#include "Core/include/Types.h"
+#include "./Core/include/Types.h"
 #include "./Core/include/MathHelpers.h"
 #include "./Core/include/DynamicMemory.h"
 

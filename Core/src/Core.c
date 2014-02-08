@@ -60,7 +60,8 @@ void (*OPdestroy)();
 
 void OPstart(){
 	// Initialize the engine and game
-	OPtime = OPcreateTimer();
+	OPtime = (OPtimer*)OPalloc(sizeof(OPtimer));
+	OPcreateTimer(OPtime);
 	_OPengineRunning = 1;
 	OPinitialize();
 
@@ -77,7 +78,6 @@ void OPstart(){
 
 	// game loop has finished, clean up
 	OPdestroy();
-	OPdestroyTimer(OPtime);
 }
 //----------------------------------------------------------------------------
 void OPend(){

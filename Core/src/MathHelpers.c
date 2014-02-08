@@ -3,23 +3,23 @@
 OPint OPceil(OPfloat f){
 	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)  || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)// linux implementation
 		return (OPint)ceil(f);
-	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
+	#elif defined(OPIFEX_WINDOWS) 	// windows implementation
 		return (OPint)ceil(f);	
 	#endif
 }
 //----------------------------------------------------------------------------
 OPint OPfloor(OPfloat f){
-	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) // linux implementation
+	#if defined(OPIFEX_UNIX) // linux implementation
 		return (OPint)floor(f);
-	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
+	#elif defined(OPIFEX_WINDOWS) 	// windows implementation
 		return (OPint)floor(f);
 	#endif
 }
 //----------------------------------------------------------------------------
 OPfloat OPabsf(OPfloat f){
-	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) // linux implementation
+	#if defined(OPIFEX_UNIX) // linux implementation
 		return OPabs(f);
-	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
+	#elif defined(OPIFEX_WINDOWS) 	// windows implementation
 		return OPabs(f);
 	#endif
 }
@@ -30,9 +30,9 @@ OPfloat OPabs(OPfloat f){
 }
 //----------------------------------------------------------------------------
 OPint	OPabsi(OPint i){
-	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) // linux implementation
+	#if defined(OPIFEX_UNIX) // linux implementation
 		return (OPint)OPabs(i);
-	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
+	#elif defined(OPIFEX_WINDOWS) 	// windows implementation
 		return (OPint)OPabs(i);
 	#endif
 }
@@ -40,7 +40,7 @@ OPint	OPabsi(OPint i){
 OPfloat OPsin(OPfloat f){
 	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)	// linux implementation
 		return sin(f);
-	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
+	#elif defined(OPIFEX_WINDOWS) 	// windows implementation
 		return sin(f);
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 		return sin(f);
@@ -50,7 +50,7 @@ OPfloat OPsin(OPfloat f){
 OPfloat OPcos(OPfloat f){
 	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)	// linux implementation
 		return cos(f);
-	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
+	#elif defined(OPIFEX_WINDOWS) 	// windows implementation
 		return cos(f);
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 		return cos(f);
@@ -60,7 +60,7 @@ OPfloat OPcos(OPfloat f){
 OPfloat OPtan(OPfloat f){
 	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)	// linux implementation
 		return tan(f);
-	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
+	#elif defined(OPIFEX_WINDOWS) 	// windows implementation
 		return tan(f);
 	#elif defined(OPIFEX_ANDROID)	// android implementation
 		return tan(f);
@@ -68,49 +68,49 @@ OPfloat OPtan(OPfloat f){
 }
 //----------------------------------------------------------------------------
 OPfloat OPasin(OPfloat f){
-	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) // linux implementation
+	#if defined(OPIFEX_UNIX) // linux implementation
 		return asin(f);
-	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
+	#elif defined(OPIFEX_WINDOWS) 	// windows implementation
 		return asin(f);
 	#endif
 }
 //----------------------------------------------------------------------------
 OPfloat OPacos(OPfloat f){
-	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) // linux implementation
+	#if defined(OPIFEX_UNIX) // linux implementation
 		return acos(f);
-	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
+	#elif defined(OPIFEX_WINDOWS) 	// windows implementation
 		return acos(f);
 	#endif
 }
 //----------------------------------------------------------------------------
 OPfloat OPatan(OPfloat f){
-	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) // linux implementation
+	#if defined(OPIFEX_UNIX) // linux implementation
 		return atan(f);
-	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
+	#elif defined(OPIFEX_WINDOWS) 	// windows implementation
 		return atan(f);
 	#endif
 }
 //----------------------------------------------------------------------------
 OPfloat OPpow(OPfloat b, OPfloat exp){
-	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) // linux implementation
+	#if defined(OPIFEX_UNIX) // linux implementation
 		return pow(b, exp);
-	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
+	#elif defined(OPIFEX_WINDOWS) 	// windows implementation
 		return pow(b, exp);
 	#endif
 }
 //----------------------------------------------------------------------------
 OPfloat OPsqrt(OPfloat f){
-	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) // linux implementation
+	#if defined(OPIFEX_UNIX) // linux implementation
 		return sqrt(f);
-	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
+	#elif defined(OPIFEX_WINDOWS) 	// windows implementation
 		return sqrt(f);
 	#endif
 }
 //----------------------------------------------------------------------------
 OPfloat OPlog10(OPfloat f){
-	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) // linux implementation
+	#if defined(OPIFEX_UNIX) // linux implementation
 		return log10(f);
-	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
+	#elif defined(OPIFEX_WINDOWS) 	// windows implementation
 		return log10(f);
 	#endif
 }
@@ -120,27 +120,27 @@ OPfloat OPlog2(OPfloat f){
 }
 //----------------------------------------------------------------------------
 OPfloat OPln(OPfloat f){
-	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) // linux implementation
+	#if defined(OPIFEX_UNIX) // linux implementation
 		return log(f);
-	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
+	#elif defined(OPIFEX_WINDOWS) 	// windows implementation
 		return log(f);
 	#endif
 }
 //----------------------------------------------------------------------------
 OPfloat OPrandom(){
-	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) // linux implementation
+	#if defined(OPIFEX_UNIX) // linux implementation
 		if(!_isRand){ srand(time(NULL)); _isRand = 1; } // And this is doing??
 		return rand() / (OPfloat)RAND_MAX;
-	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
+	#elif defined(OPIFEX_WINDOWS) 	// windows implementation
 		return rand() / (OPfloat)RAND_MAX;
 	#endif
 }
 //----------------------------------------------------------------------------
 OPfloat OPrandRange(OPfloat min, OPfloat max){
-	#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) // linux implementation
+	#if defined(OPIFEX_UNIX) // linux implementation
 		max -= min;
 		return (OPfloat)(OPrandom() * max) + min;
-	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
+	#elif defined(OPIFEX_WINDOWS) 	// windows implementation
 		max -= min;
 		return (OPfloat)(OPrandom() * max) + min;
 	#endif
@@ -149,7 +149,7 @@ OPfloat OPrandRange(OPfloat min, OPfloat max){
 OPfloat OPround(OPfloat f){
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) // linux implementation
 	return round(f);
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows implementation
+#elif defined(OPIFEX_WINDOWS) 	// windows implementation
 	return OPfloor( f + 0.5f );
 #endif
 }

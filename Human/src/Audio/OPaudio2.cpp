@@ -43,7 +43,7 @@ OPint OPaudInit(){
 	OPAUD_CURR_MUTEX = OPmutexCreate();
 
 // USE OGG VORBIS FOR DESKTOP PLATFORMS
-#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#if defined(OPIFEX_WINDOWS)
 	HINSTANCE _hVorbisFileDLL = LoadLibrary("vorbisfile.dll");
 	if(_hVorbisFileDLL){
 		fn_ov_clear = (LPOVCLEAR)GetProcAddress(_hVorbisFileDLL, "ov_clear");

@@ -1,32 +1,27 @@
 #include "./../include/Timer.h"
+#include "./../include/DynamicMemory.h"
 
 //----------------------------------------------------------------------------
-OPtimer* OPcreateTimer(){
-	OPtimer* timer = (OPtimer*)OPalloc((OPuint)sizeof(OPtimer));
-	
-	// if allocation failed then return a null pointer
-	if(!timer) return NULL;
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
+OPint OPcreateTimer(OPtimer* timer){
+	OPbzero(timer, sizeof(OPtimer));
+	if(!timer) return -1;
+#if defined(OPIFEX_UNIX)
 	gettimeofday(&(timer->_lastTime), NULL);
 	timer->TotalGametime = 0;
 	timer->TimeLastTick = 0;
 	timer->Elapsed = 0;
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#elif defined(OPIFEX_WINDOWS)
 // Windows specific values for time
 	timer->TotalGametime = 0;
 	timer->TimeLastTick = timeGetTime();
 	timer->Elapsed = 0;
 #endif
 
-	return timer;
-}
-//----------------------------------------------------------------------------
-void OPdestroyTimer(OPtimer* timer){
-	if(timer) OPfree(timer);
+	return 0;
 }
 //----------------------------------------------------------------------------
 void OPtimerTick(OPtimer* timer){
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
+#if defined(OPIFEX_UNIX)
 	struct timeval time;
 	ui64 elapsed;
 	
@@ -39,7 +34,7 @@ void OPtimerTick(OPtimer* timer){
 	timer->Elapsed = (elapsed / 1000);
 	
 	timer->_lastTime = time;
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#elif defined(OPIFEX_WINDOWS)
 	// Windows specific values for time
 	DWORD time = timeGetTime();
 	
@@ -50,9 +45,9 @@ void OPtimerTick(OPtimer* timer){
 }
 //----------------------------------------------------------------------------
 OPfloat  OPtimerDelta(OPtimer* timer){
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
+#if defined(OPIFEX_UNIX)
 	return (OPfloat)(timer->Elapsed / 1000.0);
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#elif defined(OPIFEX_WINDOWS)
 	return (OPfloat)(timer->Elapsed / 1000.0);
 #endif	
 }

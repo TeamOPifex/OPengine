@@ -4,13 +4,13 @@
 
 #include "Types.h"
 
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)	// linux math libs
+#if defined(OPIFEX_UNIX)	// linux math libs
 #include <math.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/time.h> // link with -lrt
 #include <time.h>
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64) 	// windows math libs
+#elif defined(OPIFEX_WINDOWS) 	// windows math libs
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -5,10 +5,10 @@
 #include "Types.h"
 #include <string.h>
 
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
+#if defined(OPIFEX_UNIX)
 // android specific for malloc
 #include <stdlib.h> // stdlib is valid for linux and unix
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#elif defined(OPIFEX_WINDOWS)
 // Windows specific for malloc
 #include <stdlib.h> 
 #endif
@@ -24,12 +24,12 @@
 
 #define OPmemcmp(dest, src, size) memcmp(dest, src, size)
 
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
+#if defined(OPIFEX_UNIX)
 #define OPbzero(dest, size){\
 	bzero(dest, size);\
 }\
 
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#elif defined(OPIFEX_WINDOWS)
 #define OPbzero(dest, size){\
 	memset(dest, 0, size);\
 }\

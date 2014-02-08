@@ -11,7 +11,7 @@ OPthread OPthreadStart(void* (*function) (void*), void* params){
 	OPthread out;
 	OPbzero(&out, sizeof(OPthread));
 
-#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#if defined(OPIFEX_WINDOWS)
 	out.Thread = CreateThread( NULL,
 		0,
 		(LPTHREAD_START_ROUTINE)function,
@@ -43,7 +43,7 @@ OPthread OPthreadStart(void* (*function) (void*), void* params){
 }
 //-----------------------------------------------------------------------------
 OPint OPthreadStop(void* retval){
-#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#if defined(OPIFEX_WINDOWS)
 	CloseHandle(NULL);
 #else
 	//thread->Status = OPTHREAD_STOPPED;
@@ -54,7 +54,7 @@ OPint OPthreadStop(void* retval){
 //-----------------------------------------------------------------------------
 OPint OPthreadJoin(OPthread* thread){
 	
-#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#if defined(OPIFEX_WINDOWS)
 	WaitForSingleObject(thread->Thread, INFINITE);
 #else
 	pthread_join(thread->Thread, &(thread->Return));
@@ -66,7 +66,7 @@ OPmutex OPmutexCreate(){
 	OPmutex out;
 	OPbzero(&out, sizeof(OPmutex));
 	
-#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#if defined(OPIFEX_WINDOWS)
 	out.Mutex = CreateMutex(NULL, false, NULL);
 	if(out.Mutex == NULL) {
 		OPLog("Mutex create failed");
@@ -93,7 +93,7 @@ OPmutex OPmutexCreate(){
 }
 //-----------------------------------------------------------------------------
 OPint OPmutexLock(OPmutex* mutex){
-#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#if defined(OPIFEX_WINDOWS)
 	WaitForSingleObject(mutex->Mutex, INFINITE);
 	return 0;
 #else
@@ -102,7 +102,7 @@ OPint OPmutexLock(OPmutex* mutex){
 }
 //-----------------------------------------------------------------------------
 OPint OPmutexUnlock(OPmutex* mutex){
-#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#if defined(OPIFEX_WINDOWS)
 	ReleaseMutex(mutex->Mutex);
 	return 0;
 #else

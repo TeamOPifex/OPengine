@@ -100,7 +100,7 @@ OPint OPwriteFile(const char* path, OPstream* stream){
 	else{
 		return 0;
 	}
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#elif defined(OPIFEX_WINDOWS)
 	// windows implementation
 #endif
 }
@@ -166,7 +166,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedCharSize){
 		OPLog("%s does not exist\n", path);
 		return NULL;
 	}	
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#elif defined(OPIFEX_WINDOWS)
 	// windows implementation
 	OPint fd = 0, i;
 	// check to see if the file exists
@@ -198,7 +198,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedCharSize){
 OPint OPfileExists(const char* path){
 #if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 	return access(path, F_OK) + 1;
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#elif defined(OPIFEX_WINDOWS)
 
 #endif
 }
@@ -208,7 +208,7 @@ OPint OPdeleteFile(const char* path){
 	if(OPfileExists(path)){
 #if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 		return unlink(path) + 1;
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#elif defined(OPIFEX_WINDOWS)
 
 #endif
 	}
@@ -244,7 +244,7 @@ OPint OPdeleteFile(const char* path){
 				// finally return the stream
 				return str;
 			}
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#elif defined(OPIFEX_WINDOWS)
 	// windows implementation
 #endif
 		}
@@ -272,7 +272,7 @@ OPint OPdeleteFile(const char* path){
 		else{
 			return 0;
 		}
-	#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+	#elif defined(OPIFEX_WINDOWS)
 		// windows implementation
 		OPint fd = 0;
 		OPstream* s = stream->GetStream();	
