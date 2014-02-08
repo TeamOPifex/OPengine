@@ -61,7 +61,7 @@ GamePadController* OPgamePadController(GamePadIndex index) {
 		OPJniMethodInfo methodInfo2;
 		if (!OPjniGetMethodInfo(methodInfo2,
 			CONTROLLER_CLASS_NAME, "getButton", "(I)Z")) {
-				OPLog("Class method not found");
+				OPlog("Class method not found");
 				return false;
 		}
 		
@@ -70,7 +70,7 @@ GamePadController* OPgamePadController(GamePadIndex index) {
 		bool result = JNIEnvironment()->CallBooleanMethod(controller, methodInfo2.methodID, button);
 
 		if(result) {
-			OPLog("Button Pressed: %d", button);
+			OPlog("Button Pressed: %d", button);
 		} else {
 
 		}

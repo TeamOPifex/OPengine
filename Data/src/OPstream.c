@@ -43,7 +43,7 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 		len = len > size ? len : size;
 		
 		// reallocate
-		//OPLog("OPstream - resizing to %u\n", sizeof(ui8) * (len << 1));
+		//OPlog("OPstream - resizing to %u\n", sizeof(ui8) * (len << 1));
 		
 		nd = (ui8*)OPrealloc(
 			D,
@@ -51,7 +51,7 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 		);
 
 		if(errno == ENOMEM){
-			OPLog(
+			OPlog(
 				"OPrealloc at %x failed to resize to %u bytes.",
 				(OPuint)D,
 				(sizeof(ui8) * len) << 1

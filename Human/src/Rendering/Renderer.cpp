@@ -7,7 +7,7 @@ i32 OPrenderHeight;
 GLFWwindow* window = NULL;
 
 void glfwErrorCallback(int error, const char* desc){
-	OPLog(desc);
+	OPlog(desc);
 }
 
 OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
@@ -34,10 +34,10 @@ OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
 
 	int result = glfwInit();
 	if( !result ) {
-		OPLog("INIT FAILED %d", result);
+		OPlog("INIT FAILED %d", result);
 		return -1;
 	} else {
-		OPLog("INIT SUCCEEDED %d", result);
+		OPlog("INIT SUCCEEDED %d", result);
 	}
 
 
@@ -54,7 +54,7 @@ OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
 
 	window = glfwCreateWindow(width, height, "OPifex Entertainment", NULL, NULL);
 	if(!window) {		
-		OPLog("Failed to open GLFW window of %dx%d. If you have an Intel GPU, they are not 3.3 compatible.\n", width, height );
+		OPlog("Failed to open GLFW window of %dx%d. If you have an Intel GPU, they are not 3.3 compatible.\n", width, height );
 		glfwTerminate();
 		return -1;
 	}
@@ -64,16 +64,16 @@ OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
 
 	GLFWwindow* tmp = glfwGetCurrentContext();
 	if(!tmp || tmp != window) {
-		OPLog("FAILED to bind context");
+		OPlog("FAILED to bind context");
 	} else {
-		OPLog("SUCCEEDED to bind context");
+		OPlog("SUCCEEDED to bind context");
 	}
 
 	if( !glfwInit() ) {
-		OPLog("INIT FAILED");
+		OPlog("INIT FAILED");
 		return -1;
 	} else {
-		OPLog("INIT SUCCEEDED");
+		OPlog("INIT SUCCEEDED");
 	}
 
 	// Open a window and create its OpenGL context
@@ -99,7 +99,7 @@ OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
 	OPrenderWidth = width;
 	OPrenderHeight = height;
 
-	OPLog("INIT w:%d h:%d\n", OPrenderWidth, OPrenderHeight);	
+	OPlog("INIT w:%d h:%d\n", OPrenderWidth, OPrenderHeight);	
 
 	return 0;
 #endif

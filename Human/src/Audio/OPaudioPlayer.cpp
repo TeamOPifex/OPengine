@@ -9,7 +9,7 @@ OPaudioPlayer OPaudPlayerCreate(OPaudioSource* src, OPint sounds, OPint looping)
 		0
 	};
 
-	OPLog("Sounds: %d\n", sounds);
+	OPlog("Sounds: %d\n", sounds);
 	player.Emitters = (OPaudioEmitter**)OPalloc(sizeof(OPaudioEmitter*) * sounds);
 
 	for(OPint i = sounds; i--;){

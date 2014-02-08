@@ -24,13 +24,13 @@ OPthread OPthreadStart(void* (*function) (void*), void* params){
 		const OPchar* f = "OPthread: Creation failed.";
 		switch(err){
 			case EAGAIN:
-				OPLog("%s process limit of %d may have been reached.", f, RLIMIT_NPROC);
+				OPlog("%s process limit of %d may have been reached.", f, RLIMIT_NPROC);
 				break;
 			case EINVAL:
-				OPLog("%s Invalid attributes set.", f);
+				OPlog("%s Invalid attributes set.", f);
 				break;
 			case EPERM:
-				OPLog("%s Insufficent permissions to spawn thread.", f);
+				OPlog("%s Insufficent permissions to spawn thread.", f);
 				break;
 		}
 	}
@@ -69,7 +69,7 @@ OPmutex OPmutexCreate(){
 #if defined(OPIFEX_WINDOWS)
 	out.Mutex = CreateMutex(NULL, false, NULL);
 	if(out.Mutex == NULL) {
-		OPLog("Mutex create failed");
+		OPlog("Mutex create failed");
 	}
 #else
 	OPint err = -1;
@@ -77,13 +77,13 @@ OPmutex OPmutexCreate(){
 		const OPchar* f = "OPmutex: Creation failed.";
 		switch(err){
 			case EAGAIN:
-				OPLog("%s process limit of %d may have been reached.", f, RLIMIT_NPROC);
+				OPlog("%s process limit of %d may have been reached.", f, RLIMIT_NPROC);
 				break;
 			case ENOMEM:
-				OPLog("%s Insufficient memory exists to initialise the mutex.", f);
+				OPlog("%s Insufficient memory exists to initialise the mutex.", f);
 				break;
 			case EPERM:
-				OPLog("%s Insufficent permissions to spawn thread.", f);
+				OPlog("%s Insufficent permissions to spawn thread.", f);
 				break;
 		}
 	}

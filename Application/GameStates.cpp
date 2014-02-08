@@ -72,7 +72,7 @@ OPgameState State1 = {
 };
 
 void State0Enter(OPgameState* last){
-	OPLog("State0 Entering...");
+	OPlog("State0 Entering...");
 	OPcmanLoad("impact.wav");
 	OPcmanLoad("boom.wav");
 	OPcmanLoad("background.ogg");
@@ -81,7 +81,7 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("TexturedScreen.vert");
 	OPcmanLoad("SpriteSheet.frag");
 	OPcmanLoad("Font.frag");
-	OPLog("Font Frag Loaded");
+	OPlog("Font Frag Loaded");
 	OPcmanLoad("Textured.frag");
 	OPcmanLoad("BiPlane.opm");
 	OPcmanLoad("steamPlaneSkin.png");
@@ -89,7 +89,7 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("noneNorm.png");
 	OPcmanLoad("stencil.opf");
 
-	//OPLog("State0 Content loaded.");
+	//OPlog("State0 Content loaded.");
 
 	//garbage = OPalloc(1024 * 10); // allocate ten megs of crap
 
@@ -112,7 +112,7 @@ void State0Enter(OPgameState* last){
 	//	rt = OPframeBufferCreate(desc);
 	//}
 
-	//OPLog("GameManager::GameManager - Ready to load model");
+	//OPlog("GameManager::GameManager - Ready to load model");
 	//plane = (OPmesh*)OPcmanGet("BiPlane.opm");
 	//tex = (OPtexture*)OPcmanGet("steamPlaneSkin.png");
 	//spec = (OPtexture*)OPcmanGet("steamPlaneSpec.png");
@@ -141,7 +141,7 @@ void State0Enter(OPgameState* last){
 	//		{"aUV",GL_FLOAT,2}
 	//	};
 	//	
-	//	OPLog("GameManager::GameManager - Ready to load shaders");
+	//	OPlog("GameManager::GameManager - Ready to load shaders");
 	//	tri = OPrenderCreateEffect(
 	//		*(OPshader*)OPcmanGet("TexturedSpecular.vert"),
 	//		*(OPshader*)OPcmanGet("TexturedSpecular.frag"),
@@ -156,7 +156,7 @@ void State0Enter(OPgameState* last){
 	//		{"aUV",GL_FLOAT,2}
 	//	};
 	//	
-	//	OPLog("GameManager::GameManager - Ready to load shaders");
+	//	OPlog("GameManager::GameManager - Ready to load shaders");
 	//	post = OPrenderCreateEffect(
 	//		*(OPshader*)OPcmanGet("TexturedScreen.vert"),
 	//		*(OPshader*)OPcmanGet("Textured.frag"),
@@ -226,7 +226,7 @@ void State0Enter(OPgameState* last){
 	//OPvec2 pos2 = { 0, 0 };
 	//fontText = OPfontCreateText(font, "Testing the fonts!", &color, &pos2, 0);
 	//
-	OPLog("State0 Entered!");
+	OPlog("State0 Entered!");
 }
 
 int State0Update(OPtimer* time){
@@ -242,13 +242,13 @@ int State0Update(OPtimer* time){
 	//OPcamGetView(camera, &view);
 	//OPcamGetProj(camera, &proj);
 
-	//OPLog("Binding meshes and effects");
+	//OPlog("Binding meshes and effects");
 	//OPmeshPackerBind(&packer);
 	//OPrenderBindMesh(plane);
 	//OPrenderBindEffect(&tri);
-	//OPLog("Done binding");
+	//OPlog("Done binding");
 
-	//OPLog("Binding textures...");
+	//OPlog("Binding textures...");
 	//OPtextureBind(tex);
 	//OPrenderParami("uColorTexture", tex->Handle);
 	//OPtextureBind(spec);
@@ -258,7 +258,7 @@ int State0Update(OPtimer* time){
 	//OPrenderParamMat4v("uWorld", 1, &world);
 	//OPrenderParamMat4v("uProj", 1, &proj);
 	//OPrenderParamMat4v("uView", 1, &view);
-	//OPLog("Done binding");
+	//OPlog("Done binding");
 
 	//OPmat4buildRotY(&world, t);
 	//OPcamGetView(camera, &view);
@@ -341,7 +341,7 @@ int State0Update(OPtimer* time){
 
 	OPrenderPresent();
 
-	//OPLog("Update done");
+	//OPlog("Update done");
 	//if(OPgamePadIsConnected(gamePad) && OPgamePadWasPressed(gamePad, GamePad_Button_RIGHT_SHOULDER)){
 	//	return true;
 	//}
@@ -368,7 +368,7 @@ void State0Exit(OPgameState* next){
 }
 //-----------------------------------------------------------------------------
 void State1Enter(OPgameState* last){
-	OPLog("State1 Entering...");
+	OPlog("State1 Entering...");
 	OPcmanLoad("impact.wav");
 	OPcmanLoad("boom.wav");
 	OPcmanLoad("background.ogg");
@@ -380,7 +380,7 @@ void State1Enter(OPgameState* last){
 	OPcmanLoad("steamPlaneSkin.png");
 	OPcmanLoad("steamPlaneSpec.png");
 	OPcmanLoad("noneNorm.png");	
-	OPLog("State1 assets loaded!");
+	OPlog("State1 assets loaded!");
 
 	OPcmanPurge();
 
@@ -393,7 +393,7 @@ void State1Enter(OPgameState* last){
 
 	t = 0;
 
-	OPLog("State1 Entered!");
+	OPlog("State1 Entered!");
 }
 
 int State1Update(OPtimer* time){

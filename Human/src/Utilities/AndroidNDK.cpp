@@ -8,7 +8,7 @@
 jclass OPjniGetClassID(const char *className) {
 	jclass ret = JNIEnvironment()->FindClass(className);
 	if (!ret) {
-		OPLog("Failed to find class of %s", className);
+		OPlog("Failed to find class of %s", className);
 	}
 
 	return ret;
@@ -28,7 +28,7 @@ bool OPjniGetMethodInfo(OPJniMethodInfo &methodInfo,
 
 			methodID = JNIEnvironment()->GetMethodID(classID, methodName, paramCode);
 			if (!methodID) {
-				OPLog("Failed to find method id of %s", methodName);
+				OPlog("Failed to find method id of %s", methodName);
 				break;
 			}
 
@@ -57,7 +57,7 @@ bool OPjniGetStaticMethodInfo(OPJniMethodInfo &methodinfo,
 
 			methodID = JNIEnvironment()->GetStaticMethodID(classID, methodName, paramCode);
 			if (!methodID) {
-				OPLog("Failed to find static method id of %s", methodName);
+				OPlog("Failed to find static method id of %s", methodName);
 				break;
 			}
 

@@ -169,12 +169,12 @@ OPMData OPMloadData(OPstream* str) {
 }
 
 OPint OPMload(const OPchar* filename, OPmesh** mesh) {
-	OPLog("Reading File Data");
+	OPlog("Reading File Data");
 	OPstream* str = OPreadFile(filename);
-	OPLog("Reading OPMloadData");
+	OPlog("Reading OPMloadData");
 	OPMData data = OPMloadData(str);
 
-	OPLog("Creating vertex and buffers");
+	OPlog("Creating vertex and buffers");
 	// Create Vertex & Index Buffers for Mesh
 	OPmesh temp = OPrenderCreateMesh();
 	OPrenderBindMesh(&temp);
@@ -184,7 +184,7 @@ OPint OPMload(const OPchar* filename, OPmesh** mesh) {
 		data.vertices, data.indices
 	);
 
-	OPLog("Disposing");
+	OPlog("Disposing");
 
 	// Dispose of allocated buffers
 	OPfree(data.vertices);
@@ -444,9 +444,9 @@ OPMPartNode OPMPartition(OPMData* data, HashMap* triTable, OPlinkedList* vertLis
 }
 
 OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh){
-	OPLog("Reading File Data");
+	OPlog("Reading File Data");
 	OPstream* str = OPreadFile(filename);
-	OPLog("Reading OPMloadData");
+	OPlog("Reading OPMloadData");
 	OPMData data = OPMloadData(str);
 
 	HashMap*      triTable = CreateTriangleTable(&data);
@@ -462,7 +462,7 @@ OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh){
 		data.vertices, data.indices
 	);
 
-	OPLog("Disposing");
+	OPlog("Disposing");
 	// Dispose of allocated buffers
 	OPfree(data.vertices);
 	OPfree(data.indices);

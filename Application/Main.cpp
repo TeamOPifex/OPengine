@@ -107,7 +107,7 @@ OPassetLoader loaders[] = {
 };
 
 void KeyDown(int key, int action){
-	OPLog("Pizza %d", key);
+	OPlog("Pizza %d", key);
 
 	switch(key){
 		case 65:
@@ -132,11 +132,11 @@ void Init(){
 	#if defined(OPIFEX_WINDOWS)
 	_chdir("assets\\");
 	#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
-		if(chdir("./assets")) OPLog("Directory changed!\n"); 
-		else OPLog("Directory change failed!!!\n");
+		if(chdir("./assets")) OPlog("Directory changed!\n"); 
+		else OPlog("Directory change failed!!!\n");
 	#else
-		if(chdir("./assets") == 0) OPLog("Directory changed!\n"); 
-		else OPLog("Directory change failed!!!\n");
+		if(chdir("./assets") == 0) OPlog("Directory changed!\n"); 
+		else OPlog("Directory change failed!!!\n");
 	#endif
 	
 
@@ -157,11 +157,11 @@ void Init(){
 	  	//glfwSetKeyCallback(window, KeyDown);
 #endif
 
-       // OPLog("Main: Song loading...");
+       // OPlog("Main: Song loading...");
         //OPchar songPath[] = {"Audio/background.ogg"};
         //Song = OPAudio::ReadOgg(songPath);
 
-        OPLog("Main: Song loaded");
+        OPlog("Main: Song loaded");
 
 		//		OPminHeap* heap = OPminHeapCreate(10);
 
@@ -212,18 +212,18 @@ void Init(){
 		Sound2 = (OPaudioSource*)OPcmanGet("boom.wav");
 		Sound = (OPaudioSource*)OPcmanGet("background.ogg");
 
-        OPLog("Reading done!\n");
+        OPlog("Reading done!\n");
         player = OPaudPlayerCreate(Sound1, 5, 0);
         player1 = OPaudPlayerCreate(Sound2, 4, 0);
 		Emitter = OPaudCreateEmitter(Sound, EMITTER_THREADED | EMITTER_LOOPING);
 		OPaudRecycleEmitter(Emitter);
 		Emitter = OPaudGetEmitter(Sound, EMITTER_LOOPING);
-        OPLog("Emitter created\n");
+        OPlog("Emitter created\n");
 
 		OPaudSetEmitter(Emitter);
         OPaudVolume(0.05f);
-        OPLog("Emitter set\n");
-        OPLog("Emitter proc'd\n");
+        OPlog("Emitter set\n");
+        OPlog("Emitter proc'd\n");
         OPaudPlay();
 		*/
 	return;
@@ -238,7 +238,7 @@ int Update( OPtimer* timer){
 	// }
 
 	// if(OPgamePadIsConnected(gamePad) && OPgamePadWasPressed(gamePad, GamePad_Button_A)){
-	// 	OPLog("Playing Audio");
+	// 	OPlog("Playing Audio");
 	//   	OPaudSetPlayer(&player);
 	//   	OPaudPlayerPlay();
 	// }
@@ -310,8 +310,8 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
     	OPwrite(str, &i, sizeof(int));
 
     	if(oldSize != str->Length){
-    	OPLog("Stream resized from %d to %d",oldSize,str->Length);
-    	OPLog("@ %x",(OPuint)str->Data);
+    	OPlog("Stream resized from %d to %d",oldSize,str->Length);
+    	OPlog("@ %x",(OPuint)str->Data);
     	}
     }
 
@@ -322,7 +322,7 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 	OPdestroy = Destroy;
 
 	OPint a = 0;
-	OPLog("Test %d %d %d", a, a, a);
+	OPlog("Test %d %d %d", a, a, a);
 	//ActiveState = &State0;//OPgameStateCreate(NULL, Update, NULL);
 
 #ifdef OPIFEX_ANDROID

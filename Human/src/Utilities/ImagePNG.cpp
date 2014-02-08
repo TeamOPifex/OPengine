@@ -56,7 +56,7 @@ i32 OPimagePNGLoadStream(OPstream* str, i32 offset, OPtexture** image) {
 	ui32 width, height;
 	error = lodepng_decode32(&data, &width, &height, str->Data + offset, str->Length - offset);
 	if (error) {
-		OPLog("LodePNG Error %d", error);
+		OPlog("LodePNG Error %d", error);
 	}
 	CheckError("OPimagePNGLoad:Error 1");
 	OPtexture* tex = (OPtexture*)OPalloc(sizeof(OPtexture));

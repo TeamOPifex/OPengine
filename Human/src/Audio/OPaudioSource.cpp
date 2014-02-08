@@ -22,7 +22,7 @@ long ov_tell_func(void *datasource){ return ftell((FILE*)datasource); }
 OPint OPaudOpenWave(const OPchar* filename, OPaudioSource** source){
 	OPstream* str = OPreadFileLarge(filename, 1024);
 
-	if(!str) OPLog("Error: couldn't open '%s'\n", filename);
+	if(!str) OPlog("Error: couldn't open '%s'\n", filename);
 	else{
 		ui8* type;
 		OPaudioDescription desc = { 0 };
@@ -30,19 +30,19 @@ OPint OPaudOpenWave(const OPchar* filename, OPaudioSource** source){
 
 		type = OPread(str, sizeof(i8) * 4);
 		if(memcmp(type, "RIFF", 4) != 0){
-			OPLog("No RIFF\n");
+			OPlog("No RIFF\n");
 		}
 
 		OPmemcpy(&desc.Length, OPread(str, sizeof(i32)), sizeof(i32));
 		type = OPread(str, sizeof(i8) * 4);
 		if(memcmp(type, "WAVE", 4) != 0){
-			OPLog((char const*)type);
-			OPLog("Not WAVE\n");
+			OPlog((char const*)type);
+			OPlog("Not WAVE\n");
 		}
 
 		type = OPread(str, sizeof(i8) * 4);
 		if(memcmp(type, "fmt ", 4) != 0){
-			OPLog("Not fmt\n");
+			OPlog("Not fmt\n");
 		}
 
 		OPread(str, sizeof(i32)); // throw away chunksize //OPmemcpy(&chunkSize, ), sizeof(i32));
@@ -53,7 +53,7 @@ OPint OPaudOpenWave(const OPchar* filename, OPaudioSource** source){
 		OPread(str, sizeof(i16)); // throw away bytes/sample
 		OPmemcpy(&desc.BitsPerSample, OPread(str, sizeof(i16)), sizeof(i16));
 
-		OPLog("Format: %d\nChannels: %d\nSamples/Sec: %d\n", desc.Format, desc.Channels, desc.SamplesPerSecond);
+		OPlog("Format: %d\nChannels: %d\nSamples/Sec: %d\n", desc.Format, desc.Channels, desc.SamplesPerSecond);
 
 #ifdef OPIFEX_ANDROID
 
@@ -73,7 +73,7 @@ OPint OPaudOpenWave(const OPchar* filename, OPaudioSource** source){
 
 		type = OPread(str, sizeof(i8) * 4);
 		if(memcmp(type, "data", 4) != 0){
-			OPLog("Missing data\n");
+			OPlog("Missing data\n");
 		}
 		OPmemcpy(&desc.Length, OPread(str, sizeof(ui32)), sizeof(ui32));
 

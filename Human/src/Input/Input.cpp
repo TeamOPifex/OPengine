@@ -33,7 +33,7 @@ void OPkeyboardUpdate() {
 	for(ui32 i = 0; i < OPKEYBOARD_MAX; i++) {
 		Keyboard.keys[i] = glfwGetKey(window, OPkeyboardCodes[i]); 
 		if(Keyboard.keys[i] ) {
-			OPLog("Key %d : %d", i, OPkeyboardCodes[i]);
+			OPlog("Key %d : %d", i, OPkeyboardCodes[i]);
 		}
 	}
 }
@@ -95,7 +95,7 @@ void OPmouseUpdate() {
 	for(ui32 i = 0; i < OPMOUSE_MAX; i++) {
 		Mouse.keys[i] = glfwGetMouseButton(window, OPmouseCodes[i]);
 		if(Mouse.keys[i]) {
-			OPLog("Key %d : %d", i, OPmouseCodes[i]);
+			OPlog("Key %d : %d", i, OPmouseCodes[i]);
 		}
 	}
 	// TODO: Fix this with the callback for GLFW3ß
@@ -242,7 +242,7 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_touch(JNIEnv * env, jobject obj
 	}
 	Touch.positionX = x;
 	Touch.positionY = y;
-	OPLog("Event! %d %f %f : Prev %f %f : Diff: %f %f", evt, Touch.positionX, Touch.positionY, Touch.prevPositionX, Touch.prevPositionY, OPtouchPositionMovedX(), OPtouchPositionMovedY());
+	OPlog("Event! %d %f %f : Prev %f %f : Diff: %f %f", evt, Touch.positionX, Touch.positionY, Touch.prevPositionX, Touch.prevPositionY, OPtouchPositionMovedX(), OPtouchPositionMovedY());
 }
 
 

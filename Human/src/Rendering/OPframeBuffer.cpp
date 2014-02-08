@@ -88,31 +88,31 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 #endif
 	switch (e) {
 		case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT :
-			OPLog("FBO Incomplete Attachment\n");
+			OPlog("FBO Incomplete Attachment\n");
 			break;
 		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT :
-			OPLog("FBO Missing Attachment\n");
+			OPlog("FBO Missing Attachment\n");
 			break;
 		case GL_FRAMEBUFFER_UNSUPPORTED :
-			OPLog("FBO Unsupported\n");
+			OPlog("FBO Unsupported\n");
 			break;
 		case GL_FRAMEBUFFER_COMPLETE:
-			OPLog("FBO OK\n");
+			OPlog("FBO OK\n");
 			break;
 #ifndef OPIFEX_ANDROID
 		case GL_FRAMEBUFFER_UNDEFINED:
-			OPLog("FBO Undefined\n");
+			OPlog("FBO Undefined\n");
 			break;
 		case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER :
-			OPLog("FBO Incomplete Draw Buffer\n");
+			OPlog("FBO Incomplete Draw Buffer\n");
 			break;
 #else
 		case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
-			OPLog("FBO Incomplete Dimensions OK\n");
+			OPlog("FBO Incomplete Dimensions OK\n");
 			break;
 #endif
 		default:
-			OPLog("FBO Problem?\n");
+			OPlog("FBO Problem?\n");
 	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -149,7 +149,7 @@ void OPframeBufferUnbind(){
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-/*	OPLog("FBO W: %d, H: %d", fb->Description.Width, fb->Description.Height);
+/*	OPlog("FBO W: %d, H: %d", fb->Description.Width, fb->Description.Height);
 
 	glBindTexture(GL_TEXTURE_2D, fb->Texture.Handle);
 	glCopyTexImage2D(

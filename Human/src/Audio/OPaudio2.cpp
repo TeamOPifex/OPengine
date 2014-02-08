@@ -38,7 +38,7 @@ LPOVOPENCALLBACKS   fn_ov_open_callbacks;
 // | |__| | |  | (_| | |_| | (_| | | (_) | | |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //  \____/|_|   \__,_|\__,_|\__,_|_|\___/  |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPint OPaudInit(){
-	OPLog("Initializing OP audio...\n");
+	OPlog("Initializing OP audio...\n");
 
 	OPAUD_CURR_MUTEX = OPmutexCreate();
 
@@ -80,7 +80,7 @@ OPint OPaudInit(){
 	SLresult result;
 	result = slCreateEngine(&SLES_engineObject, 0, NULL, 0, NULL, NULL);
     if(SL_RESULT_SUCCESS != result) {
-		OPLog("Jukebox::Error 1");
+		OPlog("Jukebox::Error 1");
 		return false;
 	}
 	
@@ -88,7 +88,7 @@ OPint OPaudInit(){
     if(SL_RESULT_SUCCESS != (*SLES_engineObject)->Realize(
 		SLES_engineObject, SL_BOOLEAN_FALSE)){
 
-		OPLog("Jukebox::Error 2");
+		OPlog("Jukebox::Error 2");
 		return false;
 	}
 	
@@ -96,12 +96,12 @@ OPint OPaudInit(){
     if(SL_RESULT_SUCCESS != (*SLES_engineObject)->GetInterface(
     	SLES_engineObject, SL_IID_ENGINE, &SLES_engineEngine)){
 
-		OPLog("Jukebox::Error 3");
+		OPlog("Jukebox::Error 3");
 		return false;
 	}
 
-	OPLog("OPaudio: engineEngine VVV");
-	//OPLog_i32(SLES_engineEngine);
+	OPlog("OPaudio: engineEngine VVV");
+	//OPlog_i32(SLES_engineEngine);
 
 	// create output mix, with environmental reverb specified as a non-required interface    
 	const SLInterfaceID ids[1] = {SL_IID_ENVIRONMENTALREVERB};
@@ -109,17 +109,17 @@ OPint OPaudInit(){
 
     if(SL_RESULT_SUCCESS != (*SLES_engineEngine)->CreateOutputMix(SLES_engineEngine, &SLES_outputMixObject, 1, ids, req)){
 
-		OPLog("Jukebox::Error 4");
+		OPlog("Jukebox::Error 4");
 	}
 		
     // realize the output mix
     result = (*SLES_outputMixObject)->Realize(SLES_outputMixObject, SL_BOOLEAN_FALSE);
     if(SL_RESULT_SUCCESS != result) {
 
-		OPLog("Jukebox::Error 5");
+		OPlog("Jukebox::Error 5");
 		return false;
 	}
-	OPLog("OPaudio::Initialized");
+	OPlog("OPaudio::Initialized");
 #else // USE OpenAL FOR SOUND
 	//   ____                            _            
 	//  / __ \                     /\   | |           
@@ -138,7 +138,7 @@ OPint OPaudInit(){
 
 	alDistanceModel(AL_LINEAR_DISTANCE);
 #endif
-	OPLog("OP audio Initialized!!!");
+	OPlog("OP audio Initialized!!!");
 	return 1;
 }
 //-----------------------------------------------------------------------------

@@ -47,7 +47,7 @@ f32 OPread_f32(OPstream* str) {
 FileInformation OPreadFileInformation(const char* path){
 	FileInformation file;
 #ifdef OPIFEX_ANDROID
-	OPLog("OPreadFileInformation: Creating Asset man.\n");
+	OPlog("OPreadFileInformation: Creating Asset man.\n");
 	AAssetManager* mgr = AAssetManager_fromJava(JNIEnvironment(), JNIAssetManager());
 	AAsset* asset = AAssetManager_open(mgr, path, AASSET_MODE_UNKNOWN);
 	if(asset == NULL)
@@ -56,10 +56,10 @@ FileInformation OPreadFileInformation(const char* path){
 	off_t _start, _length;
     int fd = AAsset_openFileDescriptor(asset, &_start, &_length);
 
-    OPLog("OPreadFileInformation(): fd = %d\n", fd);
+    OPlog("OPreadFileInformation(): fd = %d\n", fd);
     FILE* myFile = fdopen(dup(fd), "rb"); 
 	if(!myFile){
-		OPLog("File not loaded: %s\n", path);
+		OPlog("File not loaded: %s\n", path);
 	}
 	fseek(myFile, _start, SEEK_SET);
 	file.file = myFile;
@@ -71,7 +71,7 @@ FileInformation OPreadFileInformation(const char* path){
 	if(!myFile){
 		char buff[256];
 		sprintf(buff, "OPreadFileInformation(): %s not loaded\n", path);
-		OPLog(buff);
+		OPlog(buff);
 		return file;
 	}
 	fseek(myFile, 0, SEEK_END );	
@@ -112,11 +112,11 @@ OPstream* OPreadFile(const char* path) {
 //-----------------------------------------------------------------------------
 OPstream* OPreadFileLarge(const char* path, ui32 expectedCharSize){
 #ifdef OPIFEX_ANDROID
-	OPLog("OPreadFile: %s\n", path);
+	OPlog("OPreadFile: %s\n", path);
 	AAssetManager* mgr = AAssetManager_fromJava(JNIEnvironment(), JNIAssetManager());
 	AAsset* asset = AAssetManager_open(mgr, path, AASSET_MODE_UNKNOWN);
 	if(asset == NULL){
-		OPLog("OPreadFile: Asset man creation failed.\n");
+		OPlog("OPreadFile: Asset man creation failed.\n");
 		return 0;	
 	}
 
@@ -142,7 +142,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedCharSize){
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 	// check to see if the file exists
 	if(OPfileExists(path) >= 0){
-		OPLog("OPreadFile: %s\n", path);
+		OPlog("OPreadFile: %s\n", path);
 
 		OPint fd = 0, i;
  
@@ -163,7 +163,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedCharSize){
 		}
 	}
 	else{
-		OPLog("%s does not exist\n", path);
+		OPlog("%s does not exist\n", path);
 		return NULL;
 	}	
 #elif defined(OPIFEX_WINDOWS)
@@ -171,7 +171,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedCharSize){
 	OPint fd = 0, i;
 	// check to see if the file exists
 	if(OPfileExists(path) >= 0){
-		OPLog("OPreadFile: %s\n", path);
+		OPlog("OPreadFile: %s\n", path);
  
 		// be sure that the file could be opened successfully
 	 	if(!_sopen_s(&fd, path, _O_BINARY|_O_RDONLY, _SH_DENYWR, _S_IREAD)){
@@ -190,7 +190,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedCharSize){
 		}
 	}
 	else
-		OPLog("%s does not exist\n", path);
+		OPlog("%s does not exist\n", path);
 #endif
 }
 
@@ -225,7 +225,7 @@ OPint OPdeleteFile(const char* path){
 	OPStream* OPFile::Read(const char* path){
 		// check to see if the file exists
 		if(OPFile::Exists(path) >= 0){
-			OPLog("OPreadFile: %s\n", path);
+			OPlog("OPreadFile: %s\n", path);
 #if defined(OPIFEX_ANDROID) || defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 			OPint fd = 0, i;
 	 
@@ -249,7 +249,7 @@ OPint OPdeleteFile(const char* path){
 #endif
 		}
 		else{
-			OPLog("%s does not exist\n", path);
+			OPlog("%s does not exist\n", path);
 			return NULL;
 		}
 	}
@@ -263,7 +263,7 @@ OPint OPdeleteFile(const char* path){
 		if((fd = open(path, O_CREAT|O_WRONLY|O_TRUNC, 0666)) >= 0){
 			stream->Seek(0);
 			// write the entire stream in one go.
-			OPLog("Writing to %d @ %d with %d bytes\n", fd, s->_pointer, s->Length);
+			OPlog("Writing to %d @ %d with %d bytes\n", fd, s->_pointer, s->Length);
 			write(fd, s->Data, s->Length);
 			// finally close the file, we are done writing
 			close(fd); 
@@ -281,7 +281,7 @@ OPint OPdeleteFile(const char* path){
 		if((fd = open(path, O_CREAT|O_WRONLY|O_TRUNC, 0666)) >= 0){
 			stream->Seek(0);
 			// write the entire stream in one go.
-			OPLog("Writing to %d @ %d with %d bytes\n", fd, s->_pointer, s->Length);
+			OPlog("Writing to %d @ %d with %d bytes\n", fd, s->_pointer, s->Length);
 			write(fd, s->Data, s->Length);
 			// finally close the file, we are done writing
 			close(fd); 

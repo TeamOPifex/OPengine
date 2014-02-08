@@ -10,26 +10,26 @@
 OPint CheckError(const char* message){
 	GLenum err = glGetError();
 	if(err != 0){
-		OPLog(message);
+		OPlog(message);
 
 		switch(err){
 			case GL_INVALID_ENUM:
-				OPLog("GL_INVALID_ENUM");
+				OPlog("GL_INVALID_ENUM");
 				break;
 			case GL_INVALID_VALUE:
-				OPLog("GL_INVALID_VALUE");
+				OPlog("GL_INVALID_VALUE");
 				break;
 			case GL_INVALID_FRAMEBUFFER_OPERATION:
-				OPLog("GL_INVALID_FRAMEBUFFER_OPERATION");
+				OPlog("GL_INVALID_FRAMEBUFFER_OPERATION");
 				break;
 			case GL_OUT_OF_MEMORY:
-				OPLog("GL_OUT_OF_MEMORY");
+				OPlog("GL_OUT_OF_MEMORY");
 				break;
 			case GL_STACK_UNDERFLOW:
-				OPLog("GL_STACK_UNDERFLOW");
+				OPlog("GL_STACK_UNDERFLOW");
 				break;
 			case GL_STACK_OVERFLOW:
-				OPLog("GL_STACK_OVERFLOW");
+				OPlog("GL_STACK_OVERFLOW");
 				break;
 		}
 

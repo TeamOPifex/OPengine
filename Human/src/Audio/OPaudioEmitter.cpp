@@ -58,7 +58,7 @@ OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint flags){
 	emitter.Lock     = OPmutexCreate();
 
 #ifdef OPIFEX_ANDROID
-	OPLog("OPaudioEmitter: Chann=%d, Samp/Sec=%d\n", src->Description.Channels, src->Description.SamplesPerSecond);
+	OPlog("OPaudioEmitter: Chann=%d, Samp/Sec=%d\n", src->Description.Channels, src->Description.SamplesPerSecond);
     // configure audio source
     SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, BUFFER_COUNT};
     SLDataFormat_PCM format_pcm = {
@@ -105,7 +105,7 @@ OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint flags){
 	alSourcei(emitter.al_src, AL_LOOPING, AL_FALSE);
 #endif
 
-	OPLog("Audio Emitter Created");
+	OPlog("Audio Emitter Created");
 
 	OPaudioEmitter* out;
 
@@ -366,7 +366,7 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 		return 0;
 	}
 	else if(queued <= 1){ // Fixed for short sounds
-		OPLog("Done playing");
+		OPlog("Done playing");
 		OPaudStop();
 	}
 

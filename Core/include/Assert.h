@@ -5,14 +5,14 @@
 	#define ASSERT(condition, message) \
 	do {\
 	if (!(condition)) {\
-		OPLog("ASSERT: %s", message); \
+		OPlog("ASSERT: %s", message); \
 	} \
 	} while (false)
 #elif defined _DEBUG
 	#define ASSERT(condition, message) \
 	do {\
 		if (!(condition)) {\
-			OPLog("ASSERT: %s", message); \
+			OPlog("ASSERT: %s", message); \
 			throw 1;\
 		} \
 	} while (false)
