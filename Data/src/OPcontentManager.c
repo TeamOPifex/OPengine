@@ -1,4 +1,5 @@
 #include "./Data/include/OPcontentManager.h"
+#include "./Core/include/Log.h"
 
 //  _____ _       _           _     
 // / ____| |     | |         | |    
@@ -77,7 +78,11 @@ OPint OPcmanLoad(const OPchar* key){
 
 				// load the asset
 				asset = NULL;
-				if(!loader.Load(fullPath, &asset)) return OP_CMAN_ASSET_LOAD_FAILED;
+				OPLog("&");
+				OPint success = loader.Load(fullPath, &asset);
+				if(success <= 0) return OP_CMAN_ASSET_LOAD_FAILED;
+
+				OPLog("$ %d", success);
 
 				// clean up the string
 				OPfree(fullPath);

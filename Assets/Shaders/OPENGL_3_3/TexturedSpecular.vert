@@ -9,10 +9,10 @@ uniform mat4 uWorld;
 uniform mat4 uView;
 uniform mat4 uProj; 
 
-varying vec2 vUV; 
-varying vec3 vNormal; 
-varying vec3 vTangent; 
-varying vec3 vBullshit;
+out vec2 vUV; 
+out vec3 vNormal; 
+out vec3 vTangent; 
+out vec3 vBullshit;
 
 void main() {
 	vec4 worldPos = uWorld * vec4(aPosition,1);

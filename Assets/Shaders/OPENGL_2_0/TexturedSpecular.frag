@@ -1,4 +1,3 @@
-#version 330 core
 
 varying vec2 vUV; 
 varying vec3 vNormal; 

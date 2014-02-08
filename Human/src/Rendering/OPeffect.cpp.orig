@@ -5,7 +5,7 @@
 #include <GLES2/gl2ext.h>
 #else
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include <GL/glfw.h>
 //#include <glm/glm.hpp>
 #endif
 
@@ -24,15 +24,10 @@ OPint OPrenderLoadVertexShader(const OPchar* filename, OPshader** shader){
 
 	OPLog("OPrenderLoadVertexShader: %s", filename);
 	OPstream* source = OPreadFile(filename);
-	write(1,"DONE*\n",6);
 	
 	CheckError("GLShader::Error 0");
-	write(1,"DONE.\n",6);
 	vertex = glCreateShader(OPvertexShader);
-	OPLog("Vertex Shader: %d", OPvertexShader);
-	write(1,"DONE-\n",6);
 	CheckError("GLShader::Error 1");
-	write(1,"DONE0\n",6);
 	if(vertex){
 		OPchar* src = (OPchar*)source->Data;
 		
@@ -43,11 +38,8 @@ OPint OPrenderLoadVertexShader(const OPchar* filename, OPshader** shader){
 		GLint compiled = 0;
 		glGetShaderiv(vertex, GL_COMPILE_STATUS, &compiled);
 		CheckError("GLShader::Error 4");
-
-write(1,"DONE1\n",6);
-
 		if(!compiled){
-			write(1,"DONE2\n",6);
+
 			char msg[4096];
 			i32 length = 0;
 			glGetShaderInfoLog(vertex, 4096, &length, msg);
@@ -56,13 +48,12 @@ write(1,"DONE1\n",6);
 			CheckError("GLShader::Error 5");
 			glDeleteShader(vertex);
 			OPstreamDestroy(source); // clean up stream
-			return -1;
+			return 0;
 		}
-		write(1,"DONE3\n",6);
 	}
 	else{
 		OPstreamDestroy(source); // clean up stream
-		return -1;
+		return 0;
 	}
 	OPstreamDestroy(source); // clean up stream
 	
@@ -78,23 +69,17 @@ write(1,"DONE1\n",6);
 OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader){
 	OPshader frag = -1;
 	OPstream* source = OPreadFile(filename);
-	write(1,"DONE*\n",6);
 
 	frag = glCreateShader(OPfragmentShader);
-	write(1,"DONE1\n",6);
-	OPLog("Fragment Shader: %d", OPfragmentShader);
 
 	if(frag){
-		write(1,"DONE2\n",6);
 		OPchar* src = (OPchar*)source->Data;
 		glShaderSource(frag, 1, (const OPchar**)&src, 0);
 		glCompileShader(frag);
-	write(1,"DONE3\n",6);
 
 		GLint compiled = 0;
 		glGetShaderiv(frag, GL_COMPILE_STATUS, &compiled);
 		if(!compiled){
-	write(1,"DONE4\n",6);
 
 			char msg[4096];
 			i32 length = 0;
@@ -104,22 +89,19 @@ OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader){
 
 			glDeleteShader(frag);
 			OPstreamDestroy(source); // clean up stream
-	write(1,"DONE5\n",6);
-			return -1;
+			return 0;
 		}
 	}
 	else{
 		OPstreamDestroy(source); // clean up stream
-		return -1;
+		return 0;
 	}
-	write(1,"DONE6\n",6);
 	OPstreamDestroy(source); // clean up stream
 	
 	// if we made it this far, everything is a-ok
 	*shader = (OPshader*)OPalloc(sizeof(OPshader));
 	**shader = frag; // copy the shader handle
 
-	write(1,"DONE7\n",6);
 	return 1;
 }
 //-----------------------------------------------------------------------------
@@ -164,7 +146,7 @@ OPeffect OPrenderCreateEffect(
 	glAttachShader(effect.ProgramHandle, frag);
 	glLinkProgram(effect.ProgramHandle);
 
-	i32 status;
+	OPint status;
 	glGetProgramiv(effect.ProgramHandle, GL_LINK_STATUS, &status);
 	glUseProgram(effect.ProgramHandle);
 
@@ -189,10 +171,10 @@ OPeffect OPrenderCreateEffect(
 			Attributes[i].Name
 		);
 		if(CheckError("OPrenderCreateEffect:Error 7.5 - Attrib Could not be found.") > 0) {
-			OPLog("Handle: %d, Attribute: %s", attr.Name, Attributes[i].Name);
+			OPLog("Handle: %d, Attribute: %s", (OPint)attr.Name, Attributes[i].Name);
 		}
 		else{
-			OPLog("OK!!! Handle: %d, Attribute: %s", attr.Name, Attributes[i].Name);
+			OPLog("OK!!! Handle: %d, Attribute: %s", (OPint)attr.Name, Attributes[i].Name);
 		}
 
 		// TODO add more
@@ -228,9 +210,9 @@ OPint OPrenderBindEffect(OPeffect* effect){
 		OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
 		for(;attrCount--;){
 			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
-			glDisableVertexAttribArray((ui64)attr->Name);
+			glDisableVertexAttribArray((ui32)attr->Name);
 			if(CheckError("OPrenderBindEffect:Error ")) {
-				OPLog("Effect %s: Failed to disable attrib %u", OPRENDER_CURR_EFFECT->Name, attr->Name);
+				OPLog("Effect %s: Failed to disable attrib %u", OPRENDER_CURR_EFFECT->Name, (ui32)attr->Name);
 			}
 		}
 	}
@@ -244,12 +226,12 @@ OPint OPrenderBindEffect(OPeffect* effect){
 	for(;attrCount--;){
 		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
 		
-		glEnableVertexAttribArray((uintptr_t)attr->Name);
+		glEnableVertexAttribArray((ui32)attr->Name);
 		if(CheckError("OPrenderBindEffect:Error ")) {
-			OPLog("Failed to enable attrib %u", attr->Name);
+			OPLog("Failed to enable attrib %u", (ui32)attr->Name);
 		}
 		glVertexAttribPointer(
-			(uintptr_t)attr->Name,
+			(ui32)attr->Name,
 			attr->Elements,
 			attr->Type,
 			GL_FALSE,
@@ -257,7 +239,7 @@ OPint OPrenderBindEffect(OPeffect* effect){
 			attr->Offset
 		);
 		if(CheckError("OPrenderBindEffect:Error ")) {
-			OPLog("Effect %s: Failed to set attrib ptr %u", effect->Name, attr->Name);
+			OPLog("Effect %s: Failed to set attrib ptr %u", effect->Name, (ui32)attr->Name);
 		}
 	}
 

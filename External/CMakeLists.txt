@@ -9,11 +9,11 @@ add_definitions(
 )
 
 include_directories(
-	glew-1.5.8/include/
+	glew-1.9.0/include/
 )
 
 set(GLEW_SOURCE
-	glew-1.5.8/src/glew.c
+	glew-1.9.0/src/glew.c
 )
 
 set(GLEW_HEADERS

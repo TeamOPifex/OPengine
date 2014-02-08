@@ -6,7 +6,13 @@ i32 OPrenderWidth;
 i32 OPrenderHeight;
 GLFWwindow* window = NULL;
 
+void glfwErrorCallback(int error, const char* desc){
+	OPLog(desc);
+}
+
 OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
+
+
 #ifdef OPIFEX_OPENGL_ES_2
 	// Android doesn't need to create a window
 	glEnable(GL_DEPTH_TEST);
@@ -24,16 +30,27 @@ OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
 #else
 	GLuint VertexArrayID;
 	
-	// Most of the below will be moved to a Windowing System
-	if( !glfwInit() ) return -1;
+	glfwSetErrorCallback(glfwErrorCallback);
+
+	int result = glfwInit();
+	if( !result ) {
+		OPLog("INIT FAILED %d", result);
+		return -1;
+	} else {
+		OPLog("INIT SUCCEEDED %d", result);
+	}
+
+
 	
-	glfwWindowHint(GLFW_SAMPLES, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	// Most of the below will be moved to a Windowing System
+	
+	//glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	#if defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+		//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	#endif
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	window = glfwCreateWindow(width, height, "OPifex Entertainment", NULL, NULL);
 	if(!window) {		
@@ -42,7 +59,22 @@ OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
 		return -1;
 	}
 
+	glfwMakeContextCurrent(NULL);
 	glfwMakeContextCurrent(window);
+
+	GLFWwindow* tmp = glfwGetCurrentContext();
+	if(!tmp || tmp != window) {
+		OPLog("FAILED to bind context");
+	} else {
+		OPLog("SUCCEEDED to bind context");
+	}
+
+	if( !glfwInit() ) {
+		OPLog("INIT FAILED");
+		return -1;
+	} else {
+		OPLog("INIT SUCCEEDED");
+	}
 
 	// Open a window and create its OpenGL context
 	// if( !glfwOpenWindow( width,	 height, 0,0,0,0, 32,0, GLFW_WINDOW ) )
@@ -50,12 +82,20 @@ OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
 	// }
 
 	OPrenderSetViewport(0, 0, width, height);
-	//if (glewInit() != GLEW_OK) return -1;	
+	if (glewInit() != GLEW_OK) return -1;	
+
+	if (glewGetExtension("GL_ARB_fragment_program"))
+	{
+	  /* Looks like ARB_fragment_program is supported. */
+		OPLog("YES: GL_ARB_fragment_program");
+	} else {
+		OPLog("NO: GL_ARB_fragment_program");
+	}
 
 	//glfwSetWindowTitle( "OPifex Engine" );
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, true);
-	glfwSetInputMode(window, GL_DEPTH_TEST, true);
-	glfwSetInputMode(window, GL_CULL_FACE, false);
+	//glfwSetInputMode(window, GL_DEPTH_TEST, true);
+	//glfwSetInputMode(window, GL_CULL_FACE, false);
 	
 	// TODO: Determine how to optimize with this
 	//glGenVertexArrays(1, &VertexArrayID);

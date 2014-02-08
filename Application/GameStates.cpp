@@ -81,6 +81,7 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("TexturedScreen.vert");
 	OPcmanLoad("SpriteSheet.frag");
 	OPcmanLoad("Font.frag");
+	OPLog("Font Frag Loaded");
 	OPcmanLoad("Textured.frag");
 	OPcmanLoad("BiPlane.opm");
 	OPcmanLoad("steamPlaneSkin.png");

@@ -1,4 +1,5 @@
 #include "./../include/OPstream.h"
+#include <errno.h>
 
 //-----------------------------------------------------------------------------
 OPstream* OPstreamCreate(OPuint size){
@@ -43,10 +44,20 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 		
 		// reallocate
 		//OPLog("OPstream - resizing to %u\n", sizeof(ui8) * (len << 1));
+		
 		nd = (ui8*)OPrealloc(
 			D,
-			sizeof(ui8) * len * 2
+			(sizeof(ui8) * len) << 1
 		);
+
+		if(errno == ENOMEM){
+			OPLog(
+				"OPrealloc at %x failed to resize to %u bytes.",
+				(OPuint)D,
+				(sizeof(ui8) * len) << 1
+			);
+			return -1;
+		}
 
 		// check to see if reallocation is successful
 		if(nd){
@@ -60,9 +71,11 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 	}
 
 	// copy new data into the stream
-	for(i = 0; i < size;)
-		stream->Data[ptr + i] = d[i++];
-	//OPmemcpy(&(stream->Data[ptr]), d, size);
+	//for(i = 0; i < size;)
+	//	stream->Data[ptr + i] = d[i++];
+	//write(1,".",1);
+	OPmemcpy(&stream->Data[ptr], d, size);
+	//write(1,"+",1);
 	stream->_pointer += size;
 
 	return 1;

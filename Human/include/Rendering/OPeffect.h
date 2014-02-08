@@ -28,14 +28,14 @@ extern "C" {
 // |  ___| '__/ _ \ |______| |  ___| '__/ _ \ / __| | |  | | | '__/ _ \/ __| __| \ \ / / _ / __|
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/   
-typedef ui32 OPshader;
+typedef GLenum OPshader;
 
 #ifdef OPIFEX_OPENGL_ES_2
 #define OPvertexShader   GL_VERTEX_SHADER
 #define OPfragmentShader GL_FRAGMENT_SHADER
 #else
-#define OPvertexShader   GL_VERTEX_SHADER_ARB
-#define OPfragmentShader GL_FRAGMENT_SHADER_ARB
+#define OPvertexShader   GL_VERTEX_SHADER
+#define OPfragmentShader GL_FRAGMENT_SHADER
 #endif
 
 //-----------------------------------------------------------------------------
