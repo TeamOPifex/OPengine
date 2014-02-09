@@ -119,45 +119,99 @@ OPstream* OPreadFile(const char* path) {
 	return OPreadFileLarge(path, 32);
 }
 
+
+
+
+
 //-----------------------------------------------------------------------------
 OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
+#ifdef OPIFEX_ANDROID
+	OPlog("OPreadFile: %s\n", path);
+	AAssetManager* mgr = AAssetManager_fromJava(JNIEnvironment(), JNIAssetManager());
+	AAsset* asset = AAssetManager_open(mgr, path, AASSET_MODE_UNKNOWN);
+	if(asset == NULL){
+		OPlog("OPreadFile: Asset man creation failed.\n");
+		return 0;	
+	}
+
+	off_t start, length;
+    int fd = AAsset_openFileDescriptor(asset, &start, &length);
 	
-	ASSERTC(OPfileExists(path), "File was not found.");
-
-#ifdef defined(OPIFEX_UNIX)
-	OPfileInformation fileInfo = OPreadFileInformation(path);
-
-	OPstream* str = OPstreamCreate(fileInfo.length);
+    FILE* myFile = fdopen(dup(fd), "rb"); 
+	fseek(myFile, start, SEEK_SET);
+	
+	OPstream* str = OPstreamCreate(length);
 
 	// write the entire file into a stream
-	ui8* byte = OPalloc(sizeof(ui8) * fileInfo.length);
-	while(fread(byte, sizeof(ui8), fileInfo.length, myFile)){
-		OPwrite(str, byte, fileInfo.length);
+	ui8* byte = OPalloc(sizeof(ui8) * length);
+	while(fread(byte, sizeof(ui8), length, myFile)){
+		OPwrite(str, byte, length);
 	}	
-	str->Data[fileInfo.length] = 0;
+	str->Data[length] = 0;
 
 	fclose(myFile); 
 	OPseek(str, 0);
 	return str;
 
+#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
+	// check to see if the file exists
+	if(OPfileExists(path) >= 0){
+		OPlog("OPreadFile: %s\n", path);
+
+		OPint fd = 0, i;
+ 
+		// be sure that the file could be opened successfully
+	 	if(fd = open(path, O_RDONLY)){
+
+			OPstream* str = OPstreamCreate(expectedSize);
+
+			ui8* byte = (ui8*)OPalloc(1024);
+			ui32 readBytes = 1;
+			// write the entire file into a stream
+			while(readBytes) {
+				readBytes = read(fd, byte, 1024);
+				OPwrite(str, byte, readBytes);
+			}
+			close(fd); 
+			OPseek(str, 0);
+
+			// finally return the stream
+			return str;
+		}
+	}
+	else{
+		OPlog("%s does not exist\n", path);
+		return NULL;
+	}	
 #elif defined(OPIFEX_WINDOWS)
 	// windows implementation
 	OPint fd = 0, i;
-	// be sure that the file could be opened successfully
- 	if(!_sopen_s(&fd, path, _O_BINARY|_O_RDONLY, _SH_DENYWR, _S_IREAD)){
-		ui8 byte = 0;
-		OPstream* str = OPstreamCreate(expectedSize);
-		
-		// write the entire file into a stream
-		while(read(fd, &byte, sizeof(ui8))){
-			OPwrite(str, &byte, sizeof(ui8));
-		}
-		close(fd); 
-		OPseek(str, 0);
+	// check to see if the file exists
+	if(OPfileExists(path) >= 0) {
+		OPlog("OPreadFile: %s\n", path);
+ 
+		// be sure that the file could be opened successfully
+	 	if(!_sopen_s(&fd, path, _O_BINARY|_O_RDONLY, _SH_DENYWR, _S_IREAD)){
+			ui8 byte = 0;
+			OPstream* str = OPstreamCreate(expectedSize);
+			
+			ui8* byte = (ui8*)OPalloc(1024);
+			ui32 readBytes = 1;
+			// write the entire file into a stream
+			while(readBytes) {
+				readBytes = read(fd, byte, 1024);
+				OPwrite(str, byte, readBytes);
+			}
+			
+			close(fd); 
+			OPseek(str, 0);
 
-		// finally return the stream
-		return str;
+			// finally return the stream
+			return str;
+		}
 	}
+	else
+		OPlog("%s does not exist\n", path);
 #endif
 }
 
