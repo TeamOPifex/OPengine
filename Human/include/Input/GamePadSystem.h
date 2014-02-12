@@ -1,4 +1,5 @@
-#pragma once
+#ifndef OPENGINE_HUMAN_INPUT_GAMEPAD_SYSTEM
+#define OPENGINE_HUMAN_INPUT_GAMEPAD_SYSTEM
 
 #include "./Core/include/Types.h"
 #include "./Math/include/Vector2.h"
@@ -152,3 +153,5 @@ inline bool OPgamePadAnyInputWasPressed(GamePadController* controller) {
 inline bool OPgamePadAnyInputWasReleased(GamePadController* controller) {
 	return OPgamePadAnyInputIsUp(controller) && OPgamePadAnyPrevInputIsDown(controller);
 }
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef OPENGINE_HUMAN_INPUT_GAMEPAD_ENUMS
+#define OPENGINE_HUMAN_INPUT_GAMEPAD_ENUMS
 
 #ifdef OPIFEX_ANDROID
 
@@ -72,3 +73,5 @@ typedef enum
 	GamePadIndex_Three =2,
 	GamePadIndex_Four = 3,
 } GamePadIndex;
+
+#endif

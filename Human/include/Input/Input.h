@@ -1,4 +1,5 @@
-#pragma once
+#ifndef OPENGINE_HUMAN_INPUT
+#define OPENGINE_HUMAN_INPUT
 
 #include "./Core/include/Core.h"
 #include "InputEnums.h"
@@ -67,3 +68,5 @@ bool OPtouchIsUp();
 bool OPtouchWasPressed();
 bool OPtouchWasReleased();
 bool OPtouchAnyInputIsDown();
+
+#endif

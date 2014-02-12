@@ -1,6 +1,5 @@
-#pragma once
-#ifndef OPAUD_AUDIOPLAYER
-#define OPAUD_AUDIOPLAYER
+#ifndef OPENGINE_HUMAN_AUDIO_AUDIOPLAYER
+#define OPENGINE_HUMAN_AUDIO_AUDIOPLAYER
 
 #include "./Core/include/Types.h"
 #include "./Core/include/MathHelpers.h"

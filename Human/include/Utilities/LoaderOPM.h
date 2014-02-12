@@ -1,6 +1,5 @@
-#pragma once
-#ifndef OPEngine_Human_Renderer_OPM
-#define OPEngine_Human_Renderer_OPM
+#ifndef OPENGINE_HUMAN_UTILITIES_LOADER_OPM
+#define OPENGINE_HUMAN_UTILITIES_LOADER_OPM
 
 #include "./Core/include/DynamicMemory.h"
 #include "./Core/include/Log.h"

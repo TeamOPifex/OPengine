@@ -1,5 +1,5 @@
-#ifndef OPAUD_SOURCE
-#define OPAUD_SOURCE
+#ifndef OPENGINE_HUMAN_AUDIO_SOURCE
+#define OPENGINE_HUMAN_AUDIO_SOURCE
 #include "Audio.h"
 
 // prevent name mangling if compiling with c++

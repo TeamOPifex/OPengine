@@ -1,4 +1,5 @@
-#pragma once
+#ifndef OPENGINE_HUMAN_INPUT_OCULUS
+#define OPENGINE_HUMAN_INPUT_OCULUS
 
 #include "./Math/include/Vector2.h"
 #include "./Math/include/Vector4.h"
@@ -25,3 +26,5 @@ void OPoculusUpdate();
 OPvec4 OPoculusHmd();
 OPvec2 OPoculusScreenSize();
 OPfloat OPoculusEyeHeight();
+
+#endif

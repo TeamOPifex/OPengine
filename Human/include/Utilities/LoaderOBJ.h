@@ -1,4 +1,5 @@
-#pragma once
+#ifndef OPENGINE_HUMAN_UTILITIES_LOADER_OBJ
+#define OPENGINE_HUMAN_UTILITIES_LOADER_OBJ
 
 #include <stdio.h>
 
@@ -10,3 +11,5 @@
 
 Mesh* LoadOBJ(FILE* file, int start, int length);
 int lineType(char* word);
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef OPENGINE_HUMAN_INPUT_ENUMS
+#define OPENGINE_HUMAN_INPUT_ENUMS
 // THIS CURRENTLY ONLY WORKS IN WINDOWS
 
 
@@ -110,3 +111,5 @@ typedef enum {
 
 extern ui32 OPmouseCodes[OPMOUSE_MAX];
 extern ui32 OPkeyboardCodes[OPKEYBOARD_MAX];
+
+#endif

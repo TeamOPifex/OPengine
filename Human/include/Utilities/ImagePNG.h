@@ -1,4 +1,5 @@
-#pragma once
+#ifndef OPENGINE_HUMAN_UTILITIES_IMAGE_PNG
+#define OPENGINE_HUMAN_UTILITIES_IMAGE_PNG
 
 #include "./Human/include/Rendering/Texture.h"
 #include "./Data/include/Stream.h"
@@ -16,4 +17,6 @@ extern "C" {
 	i32 OPimagePNGUnload(void* image);
 #ifdef __cplusplus
 }
+#endif
+
 #endif

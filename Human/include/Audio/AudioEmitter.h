@@ -1,5 +1,5 @@
-#ifndef OPAUD_EMITTER
-#define OPAUD_EMITTER
+#ifndef OPENGINE_HUMAN_AUDIO_EMITTER
+#define OPENGINE_HUMAN_AUDIO_EMITTER
 
 #include "AudioSource.h"
 #include "./Data/include/EntHeap.h"
