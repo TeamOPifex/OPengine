@@ -25,8 +25,8 @@ typedef struct {
 	ui8* data;
 } OPfontAtlas;
 
-#include "./Human/include/Rendering/OPfont.h"
-#include "./Human/include/Rendering/OPtexture.h"
+#include "./Human/include/Rendering/Font.h"
+#include "./Human/include/Rendering/Texture.h"
 
 OPfontAtlas* OPfontAtlasCreate(OPint width, OPint height, OPint depth);
 void OPfontAtlasDestroy(OPfontAtlas* atlas);

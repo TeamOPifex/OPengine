@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./Human/include/Rendering/OPfontAtlas.h"
+#include "./Human/include/Rendering/FontAtlas.h"
 #include "./Human/include/Utilities/ImagePNG.h"
 
 OPfontAtlas* OPfontAtlasCreate(OPint width, OPint height, OPint depth) {

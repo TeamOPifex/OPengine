@@ -1,7 +1,7 @@
 #ifndef OPAUD_EMITTER
 #define OPAUD_EMITTER
 
-#include "OPaudioSource.h"
+#include "AudioSource.h"
 #include "./Data/include/EntHeap.h"
 
 // prevent name mangling if compiling with c++

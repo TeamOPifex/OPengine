@@ -165,13 +165,14 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 
 			OPstream* str = OPstreamCreate(expectedSize);
 
-			ui8* byte = (ui8*)OPalloc(1024);
+			ui8* bytes = (ui8*)OPalloc(1024);
 			ui32 readBytes = 1;
 			// write the entire file into a stream
 			while(readBytes) {
-				readBytes = read(fd, byte, 1024);
-				OPwrite(str, byte, readBytes);
+				readBytes = read(fd, bytes, 1024);
+				OPwrite(str, bytes, readBytes);
 			}
+			OPfree(bytes);
 			close(fd); 
 			OPseek(str, 0);
 
@@ -195,14 +196,14 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 			ui8 byte = 0;
 			OPstream* str = OPstreamCreate(expectedSize);
 			
-			ui8* byte = (ui8*)OPalloc(1024);
+			ui8* bytes = (ui8*)OPalloc(1024);
 			ui32 readBytes = 1;
 			// write the entire file into a stream
 			while(readBytes) {
-				readBytes = read(fd, byte, 1024);
-				OPwrite(str, byte, readBytes);
+				readBytes = read(fd, bytes, 1024);
+				OPwrite(str, bytes, readBytes);
 			}
-			
+			OPfree(bytes);
 			close(fd); 
 			OPseek(str, 0);
 

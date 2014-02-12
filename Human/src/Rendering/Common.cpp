@@ -2,8 +2,8 @@
 #include "./Data/include/ContentManager.h"
 #include "./Core/include/Assert.h"
 
-#include "./Human/include/Rendering/OPfontManager.h"
-#include "./Human/include/Rendering/OPeffect.h"
+#include "./Human/include/Rendering/FontManager.h"
+#include "./Human/include/Rendering/Effect.h"
 
 const i8* FontShaderVert = "Common/TexturedScreen.vert";
 const i8* FontShaderFrag = "Common/Font.frag";

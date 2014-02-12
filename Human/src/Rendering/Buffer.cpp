@@ -1,4 +1,4 @@
-#include "./Human/include/Rendering/OPbuffer.h"
+#include "./Human/include/Rendering/Buffer.h"
 #include "./Human/include/Utilities/Errors.h"
 
 #ifdef OPIFEX_OPENGL_ES_2

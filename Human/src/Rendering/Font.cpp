@@ -1,8 +1,8 @@
 #pragma once
 
-#include "./include/Rendering/OPfont.h"
-#include "./include/Rendering/OPfontAtlas.h"
-#include "./include/Rendering/OPfontGlyph.h"
+#include "./include/Rendering/Font.h"
+#include "./include/Rendering/FontAtlas.h"
+#include "./include/Rendering/FontGlyph.h"
 #include "./Core/include/MathHelpers.h"
 #include "./Human/include/Rendering/OPMvertex.h"
 #include "./Data/include/Stream.h"

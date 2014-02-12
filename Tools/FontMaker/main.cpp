@@ -2,7 +2,7 @@
 #include "./Core/include/MathHelpers.h"
 #include "./Human/include/Utilities/ImagePNG.h"
 
-#include "./Human/include/Rendering/OPfontKerning.h"
+#include "./Human/include/Rendering/FontKerning.h"
 
 
 static OPint OPfontInit(OPfont* font, i8* filename)

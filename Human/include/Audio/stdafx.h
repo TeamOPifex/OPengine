@@ -5,15 +5,10 @@
 
 #pragma once
 
-//#include "targetver.h"
-
 #include <stdio.h>
 #include <cstdlib>
 #include <iostream>
-//#include <Windows.h>
-//#include <tchar.h>
 #include<fcntl.h>
-//#include<conio.h>
 
 
 // TODO: reference additional headers your program requires here

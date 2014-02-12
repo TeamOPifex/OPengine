@@ -7,7 +7,7 @@
 #include <string>
 #include "./Core/include/DynamicMemory.h"
 #include "./Human/include/Utilities/LodePNG.h"
-#include "./Human/include/Rendering/OPtexture.h"
+#include "./Human/include/Rendering/Texture.h"
 #include "./Human/include/Utilities/Errors.h"
 
 #if defined(OPIFEX_OPENGL_ES_2)

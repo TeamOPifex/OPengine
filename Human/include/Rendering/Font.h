@@ -1,11 +1,11 @@
 #pragma once
 
-#include "./Human/include/Rendering/OPfontAtlas.h"
-#include "./Human/include/Rendering/OPmesh.h"
+#include "./Human/include/Rendering/FontAtlas.h"
+#include "./Human/include/Rendering/Mesh.h"
 #include "./Math/include/Vector2.h"
-#include "./Human/include/Rendering/OPtexture.h"
-#include "./Human/include/Rendering/OPmeshPacked.h"
-#include "./Human/include/Rendering/OPfontGlyph.h"
+#include "./Human/include/Rendering/Texture.h"
+#include "./Human/include/Rendering/MeshPacked.h"
+#include "./Human/include/Rendering/FontGlyph.h"
 
 typedef struct {
 	OPvector* glyphs;

@@ -1,4 +1,4 @@
-#include "./Human/include/Rendering/OPmeshPacker.h"
+#include "./Human/include/Rendering/MeshPacker.h"
 #include "./Human/include/Utilities/Errors.h"
 
 //-----------------------------------------------------------------------------

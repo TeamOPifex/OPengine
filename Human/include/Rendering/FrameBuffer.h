@@ -1,7 +1,18 @@
-#ifndef OPEngine_Human_Renderer_Mesh
-#define OPEngine_Human_Renderer_Mesh
-	
-#include "./Human/include/Rendering/OPbuffer.h"
+#ifndef OPEngine_Human_Renderer_FrameBuffer
+#define OPEngine_Human_Renderer_FrameBuffer
+
+#include "./Core/include/Types.h"
+#include "./Human/include/Rendering/Texture.h"
+#include "./Human/include/Rendering/Renderer.h"
+
+#ifdef OPIFEX_OPENGL_ES_2
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#else
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#endif
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
@@ -16,9 +27,10 @@ extern "C" {
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 typedef struct{
-	OPrenderBuffer VertexBuffer;
-	OPrenderBuffer IndexBuffer;
-}OPmesh;
+	OPtextureDescription Description;
+	OPtexture Texture;
+	ui32 Handle;
+}OPframeBuffer;
 
 //-----------------------------------------------------------------------------
 //   _____ _       _           _     
@@ -27,7 +39,7 @@ typedef struct{
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
-extern OPmesh* OPRENDER_CURR_MESH;
+extern OPframeBuffer* OPRENDER_CURR_FRAMEBUFFER;
 
 //-----------------------------------------------------------------------------
 //  _____                     _____                  _____  _               _   _               
@@ -37,7 +49,6 @@ extern OPmesh* OPRENDER_CURR_MESH;
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/   
 
-
 //-----------------------------------------------------------------------------
 // ______                _   _                 
 //|  ____|              | | (_)                
@@ -45,11 +56,11 @@ extern OPmesh* OPRENDER_CURR_MESH;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPmesh OPrenderCreateMesh();
-void OPrenderBuildMesh(ui32 vertSize, ui32 indSize, ui32 vertCount, ui32 indCount, void* vertices, void* indices);
-void OPrenderBindMesh(OPmesh* mesh);
-
-void OPrenderMesh();
+OPframeBuffer OPframeBufferCreate(OPtextureDescription desc);
+void OPframeBufferDestroy(OPframeBuffer* fb);
+void OPframeBufferBind(OPframeBuffer* fb);
+void OPframeBufferBindTex(OPframeBuffer* fb);
+void OPframeBufferUnbind();
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

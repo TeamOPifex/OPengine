@@ -7,9 +7,9 @@
 #include "./Data/include/File.h"
 #include "./Data/include/HashMap.h"
 #include "./Data/include/LinkedList.h"
-#include "./Human/include/Rendering/OPmesh.h"
-#include "./Human/include/Rendering/OPmeshPacked.h"
-#include "./Human/include/Rendering/OPmeshPacker.h"
+#include "./Human/include/Rendering/Mesh.h"
+#include "./Human/include/Rendering/MeshPacked.h"
+#include "./Human/include/Rendering/MeshPacker.h"
 #include "./Human/include/Rendering/OPMvertex.h"
 
 // prevent name mangling if compiling with c++

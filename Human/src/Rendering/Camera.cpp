@@ -1,5 +1,5 @@
 // Camera.cpp
-#include "./Human/include/Rendering/OPcamera.h"
+#include "./Human/include/Rendering/Camera.h"
 #include "./Core/include/Log.h"
 
 OPcam OPcamProj(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat near, OPfloat far, OPfloat fov, OPfloat aspect){

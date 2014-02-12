@@ -1,6 +1,6 @@
-#include "./Human/include/Rendering/OPfontManager.h"
+#include "./Human/include/Rendering/FontManager.h"
 #include "./Core/include/Assert.h"
-#include "./Human/include/Rendering/OPrenderer.h"
+#include "./Human/include/Rendering/Renderer.h"
 #include "./Data/include/ContentManager.h"
 #include "./Human/include/Rendering/Common.h"
 

@@ -1,4 +1,4 @@
-#include "./Human/include/Rendering/OPtexture.h"
+#include "./Human/include/Rendering/Texture.h"
 #include "./Human/include/Utilities/Errors.h"
 
 OPtexture* OPRENDER_CURR_TEX;

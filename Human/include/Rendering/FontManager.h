@@ -1,9 +1,9 @@
 #pragma once
 
-#include "./Human/include/Rendering/OPfont.h"
-#include "./Human/include/Rendering/OPeffect.h"
+#include "./Human/include/Rendering/Font.h"
+#include "./Human/include/Rendering/Effect.h"
 #include "./Data/include/HashMap.h"
-#include "./Human/include/Rendering/OPmeshPacked.h"
+#include "./Human/include/Rendering/MeshPacked.h"
 #include "./Math/include/Vector2.h"
 #include "./Math/include/Vector3.h"
 #include "./Math/include/Vector4.h"

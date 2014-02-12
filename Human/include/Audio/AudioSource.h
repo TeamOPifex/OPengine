@@ -1,6 +1,6 @@
 #ifndef OPAUD_SOURCE
 #define OPAUD_SOURCE
-#include "OPaudio2.h"
+#include "Audio.h"
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

@@ -9,8 +9,8 @@
 #include "./Data/include/File.h"
 #include "./Math/include/Vector3.h"
 
-#include "./Human/include/Audio/OPaudio2.h"
-#include "./Human/include/Audio/OPaudioEmitter.h"
+#include "./Human/include/Audio/Audio.h"
+#include "./Human/include/Audio/AudioEmitter.h"
 
 struct OPaudioPlayer{
 	OPaudioEmitter** Emitters;

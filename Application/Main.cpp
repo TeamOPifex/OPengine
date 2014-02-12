@@ -7,7 +7,7 @@
 #include "./Data/include/GameStates.h"
 
 //#include "./GameManager.h"
-#include "./Human/include/Rendering/OPrenderer.h"
+#include "./Human/include/Rendering/Renderer.h"
 #include "./Human/include/Input/GamePadSystem.h"
 
 #include "./Core/include/Log.h"
@@ -33,16 +33,16 @@
 #endif
 
 #include "./Data/include/File.h"
-#include "./Human/include/Audio/OPaudio2.h"
-#include "./Human/include/Audio/OPaudioEmitter.h"
-#include "./Human/include/Audio/OPaudioPlayer.h"
-#include "./Human/include/Utilities/OPMloader.h"
+#include "./Human/include/Audio/Audio.h"
+#include "./Human/include/Audio/AudioEmitter.h"
+#include "./Human/include/Audio/AudioPlayer.h"
+#include "./Human/include/Utilities/LoaderOPM.h"
 #include "./Human/include/Utilities/ImagePNG.h"
-#include "./Human/include/Rendering/OPeffect.h"
+#include "./Human/include/Rendering/Effect.h"
 #include "./Data/include/File.h"
 #include "./Data/include/ContentManager.h"
 #include "./Data/include/EntHeap.h"
-#include "./Human/include/Rendering/OPfont.h"
+#include "./Human/include/Rendering/Font.h"
 #include "GameStates.h"
 
 //GameManager* GM;

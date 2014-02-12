@@ -1,8 +1,21 @@
-#ifndef OPEngine_Human_Renderer_Mesh_Packed
-#define OPEngine_Human_Renderer_Mesh_Packed
-	
-#include "./Human/include/Rendering/OPmeshPacker.h"
-#include "./Human/include/Rendering/OPbuffer.h"
+#ifndef OPEngine_Human_Renderer_Quad
+#define OPEngine_Human_Renderer_Quad
+
+#include "./Core/include/Types.h"
+#include "./Human/include/Rendering/Buffer.h"
+#include "./Human/include/Rendering/Mesh.h"
+#include "./Human/include/Rendering/MeshPacker.h"
+#include "./Human/include/Rendering/MeshPacked.h"
+#include "./Math/include/Vector2.h"
+
+#ifdef OPIFEX_OPENGL_ES_2
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#else
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#endif
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
@@ -16,11 +29,7 @@ extern "C" {
 //  \___ \| __| '__| | | |/ __| __/ __|
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
-typedef struct{
-	ui32 offset;
-	ui32 count;
-	ui32 elementCount;
-}OPmeshPacked;
+
 
 //-----------------------------------------------------------------------------
 //  _____                     _____                  _____  _               _   _               
@@ -30,7 +39,6 @@ typedef struct{
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/   
 
-
 //-----------------------------------------------------------------------------
 // ______                _   _                 
 //|  ____|              | | (_)                
@@ -38,8 +46,11 @@ typedef struct{
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPmeshPacked OPrenderCreateMeshPacked(ui32 vertSize, ui32 indSize, ui32 vertCount, ui32 indCount, void* vertices, void* indices);
-void OPrenderMeshPacked(OPmeshPacked* mesh);
+OPmesh       OPquadCreate();
+OPmesh OPquadCreateCustom(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd);
+OPmeshPacked OPquadCreatePacked();
+OPmesh       OPquadNormCreate();
+OPmeshPacked OPquadNormCreatePacked();
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
@@ -47,3 +58,4 @@ void OPrenderMeshPacked(OPmeshPacked* mesh);
 #endif
 
 #endif
+ 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./Human/include/Rendering/OPtexture.h"
+#include "./Human/include/Rendering/Texture.h"
 #include "./Data/include/Stream.h"
 #include <stdio.h>
 
