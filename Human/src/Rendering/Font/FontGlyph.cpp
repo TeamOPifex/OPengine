@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./include/Rendering/FontGlyph.h"
+#include "./Human/include/Rendering/Font/FontGlyph.h"
 
 OPfontGlyph* OPfontGlyphCreate() {
 	OPfontGlyph* self = (OPfontGlyph*)OPalloc(sizeof(OPfontGlyph));

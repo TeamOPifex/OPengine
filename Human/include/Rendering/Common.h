@@ -1,6 +1,5 @@
-#pragma once
-#ifndef OPEngine_Human_Renderer_Common
-#define OPEngine_Human_Renderer_Common
+#ifndef OPENGINE_HUMAN_RENDERER_COMMON
+#define OPENGINE_HUMAN_RENDERER_COMMON
 
 void OPcommonLoadFontEffect();
 

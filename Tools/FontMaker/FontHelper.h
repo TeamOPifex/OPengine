@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./Human/include/Rendering/Font.h"
+#include "./Human/include/Rendering/Font/Font.h"
 
 #include <ft2build.h>
 #include <freetype.h>

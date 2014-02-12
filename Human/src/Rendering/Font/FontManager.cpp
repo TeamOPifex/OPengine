@@ -1,8 +1,8 @@
-#include "./Human/include/Rendering/FontManager.h"
-#include "./Core/include/Assert.h"
+#include "./Human/include/Rendering/Font/FontManager.h"
 #include "./Human/include/Rendering/Renderer.h"
-#include "./Data/include/ContentManager.h"
 #include "./Human/include/Rendering/Common.h"
+#include "./Data/include/ContentManager.h"
+#include "./Core/include/Assert.h"
 
 OPfontManager* OPRENDER_CURR_FONT_MANAGER = NULL;
 OPeffect* OPRENDER_CURR_FONT_EFFECT = NULL;

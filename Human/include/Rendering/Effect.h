@@ -1,18 +1,16 @@
-#ifndef OPEngine_Human_Renderer_Effect
-#define OPEngine_Human_Renderer_Effect
-#include "./Core/include/Types.h"
-#include "./Core/include/Log.h"
-#include "./Core/include/DynamicMemory.h"
+#ifndef OPENGINE_HUMAN_RENDERER_EFFECT
+#define OPENGINE_HUMAN_RENDERER_EFFECT
+
+#include "./Human/include/Utilities/Errors.h"
+#include "./Human/include/Rendering/Buffer.h"
+#include "./Math/include/Vectors.h"
+#include "./Math/include/Matrix4.h"
 #include "./Data/include/HashMap.h"
 #include "./Data/include/List.h"
 #include "./Data/include/File.h"
-
-#include "./Math/include/Vector2.h"
-#include "./Math/include/Vector3.h"
-#include "./Math/include/Matrix4.h"
-#include "./Human/include/Rendering/Buffer.h"
-
-#include "./Human/include/Utilities/Errors.h"
+#include "./Core/include/Types.h"
+#include "./Core/include/Log.h"
+#include "./Core/include/DynamicMemory.h"
 
 #define OP_EFFECT_NAME_LEN 16
 

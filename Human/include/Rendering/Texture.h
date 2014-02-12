@@ -1,16 +1,8 @@
-#ifndef OPEngine_Human_Renderer_Texture
-#define OPEngine_Human_Renderer_Texture
+#ifndef OPENGINE_HUMAN_RENDERER_TEXTURE
+#define OPENGINE_HUMAN_RENDERER_TEXTURE
 
+#include "./Human/include/Rendering/OpenGL.h"
 #include "./Core/include/Types.h"
-
-#ifdef OPIFEX_OPENGL_ES_2
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#else
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#endif
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

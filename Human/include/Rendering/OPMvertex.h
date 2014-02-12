@@ -1,8 +1,7 @@
-#pragma once
+#ifndef OPENGINE_HUMAN_RENDERER_OPM_VERTEX
+#define OPENGINE_HUMAN_RENDERER_OPM_VERTEX
 
-#include "./Math/include/Vector2.h"
-#include "./Math/include/Vector3.h"
-#include "./Math/include/Vector4.h"
+#include "./Math/include/Vectors.h"
 
 typedef struct {
 	OPvec3 Position;
@@ -15,3 +14,5 @@ typedef struct {
 	OPvec3 Position;
 	OPvec2 TexCoord;
 } OPvertexColor;
+
+#endif

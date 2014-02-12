@@ -1,5 +1,5 @@
-#ifndef OPEngine_Human_Renderer_Mesh_Packed
-#define OPEngine_Human_Renderer_Mesh_Packed
+#ifndef OPENGINE_HUMAN_RENDERER_MESH_PACKED
+#define OPENGINE_HUMAN_RENDERER_MESH_PACKED
 	
 #include "./Human/include/Rendering/MeshPacker.h"
 #include "./Human/include/Rendering/Buffer.h"

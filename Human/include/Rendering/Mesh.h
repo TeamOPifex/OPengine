@@ -1,5 +1,5 @@
-#ifndef OPEngine_Human_Renderer_Mesh
-#define OPEngine_Human_Renderer_Mesh
+#ifndef OPENGINE_HUMAN_RENDERER_MESH
+#define OPENGINE_HUMAN_RENDERER_MESH
 	
 #include "./Human/include/Rendering/Buffer.h"
 

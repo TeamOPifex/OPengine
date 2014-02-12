@@ -1,8 +1,9 @@
-#pragma once
+#ifndef OPENGINE_HUMAN_RENDERER_FONT_GLYPH
+#define OPENGINE_HUMAN_RENDERER_FONT_GLYPH
 
-#include "./Human/include/Rendering/FontKerning.h"
-#include "./Data/include/Vector.h"
+#include "./Human/include/Rendering/Font/FontKerning.h"
 #include "./Math/include/Vector4.h"
+#include "./Data/include/Vector.h"
 
 typedef struct {
 	i8 charcode;
@@ -21,3 +22,5 @@ typedef struct {
 OPfontGlyph* OPfontGlyphCreate();
 void OPfontGlyphDestroy(OPfontGlyph* glyph);
 OPfloat OPfontGlyphGetKerning(OPfontGlyph* glyph, ui8 charcode);
+
+#endif

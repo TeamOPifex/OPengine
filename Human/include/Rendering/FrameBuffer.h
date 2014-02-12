@@ -1,18 +1,9 @@
-#ifndef OPEngine_Human_Renderer_FrameBuffer
-#define OPEngine_Human_Renderer_FrameBuffer
+#ifndef OPENGINE_HUMAN_RENDERER_FRAMEBUFFER
+#define OPENGINE_HUMAN_RENDERER_FRAMEBUFFER
 
-#include "./Core/include/Types.h"
 #include "./Human/include/Rendering/Texture.h"
 #include "./Human/include/Rendering/Renderer.h"
-
-#ifdef OPIFEX_OPENGL_ES_2
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#else
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#endif
+#include "./Core/include/Types.h"
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

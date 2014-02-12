@@ -1,10 +1,9 @@
-#pragma once
-#ifndef OPEngine_Human_Renderer_Camera
-#define OPEngine_Human_Renderer_Camera
+#ifndef OPENGINE_HUMAN_RENDERER_CAMERA
+#define OPENGINE_HUMAN_RENDERER_CAMERA
 
-#include "./Core/include/MathHelpers.h"
 #include "./Math/include/Vector3.h"
 #include "./Math/include/Matrix4.h"
+#include "./Core/include/MathHelpers.h"
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

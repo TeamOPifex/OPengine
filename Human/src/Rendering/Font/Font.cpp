@@ -1,14 +1,14 @@
 #pragma once
 
-#include "./include/Rendering/Font.h"
-#include "./include/Rendering/FontAtlas.h"
-#include "./include/Rendering/FontGlyph.h"
-#include "./Core/include/MathHelpers.h"
+#include "./Human/include/Rendering/Font/Font.h"
+#include "./Human/include/Rendering/Font/FontAtlas.h"
+#include "./Human/include/Rendering/Font/FontGlyph.h"
 #include "./Human/include/Rendering/OPMvertex.h"
+#include "./Human/include/Utilities/ImagePNG.h"
 #include "./Data/include/Stream.h"
 #include "./Data/include/File.h"
-#include "./Human/include/Utilities/ImagePNG.h"
 #include "./Core/include/Assert.h"
+#include "./Core/include/MathHelpers.h"
 
 void OPfontLoad(i8* filename, OPfont** data) {
 	OPfont* font = (OPfont*)OPalloc(sizeof(OPfont));

@@ -1,9 +1,11 @@
-#pragma once
+#ifndef OPENGINE_HUMAN_RENDERER_OPM_VERTEX_TEXTURED
+#define OPENGINE_HUMAN_RENDERER_OPM_VERTEX_TEXTURED
 
-#include "./Math/include/Vector3.h"
-#include "./Math/include/Vector2.h"
+#include "./Math/include/Vectors.h"
 
 typedef struct{
 	OPvec3 vertice;
 	OPvec2 tex;
 } OPMvertexTextured;
+
+#endif

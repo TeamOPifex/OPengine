@@ -1,7 +1,8 @@
-#pragma once
+#ifndef OPENGINE_HUMAN_RENDERER_FONT_ATLAS
+#define OPENGINE_HUMAN_RENDERER_FONT_ATLAS
 
-#include "./Core/include/Types.h"
 #include "./Data/include/Vector.h"
+#include "./Core/include/Types.h"
 
 typedef struct {
 	i32 x;
@@ -25,7 +26,7 @@ typedef struct {
 	ui8* data;
 } OPfontAtlas;
 
-#include "./Human/include/Rendering/Font.h"
+#include "./Human/include/Rendering/Font/Font.h"
 #include "./Human/include/Rendering/Texture.h"
 
 OPfontAtlas* OPfontAtlasCreate(OPint width, OPint height, OPint depth);
@@ -36,3 +37,5 @@ void OPfontAtlasMerge(OPfontAtlas* atlas);
 OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, OPint width, OPint height);
 OPtexture OPfontAtlasTexture(OPfontAtlas* atlas);
 void OPfontAtlasSavePNG(OPfontAtlas* atlas, i8* filename);
+
+#endif

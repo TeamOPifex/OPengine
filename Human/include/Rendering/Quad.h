@@ -1,21 +1,14 @@
-#ifndef OPEngine_Human_Renderer_Quad
-#define OPEngine_Human_Renderer_Quad
+#ifndef OPENGINE_HUMAN_RENDERER_QUAD
+#define OPENGINE_HUMAN_RENDERER_QUAD
 
-#include "./Core/include/Types.h"
 #include "./Human/include/Rendering/Buffer.h"
 #include "./Human/include/Rendering/Mesh.h"
 #include "./Human/include/Rendering/MeshPacker.h"
 #include "./Human/include/Rendering/MeshPacked.h"
 #include "./Math/include/Vector2.h"
+#include "./Core/include/Types.h"
 
-#ifdef OPIFEX_OPENGL_ES_2
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#else
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#endif
+
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

@@ -42,7 +42,7 @@
 #include "./Data/include/File.h"
 #include "./Data/include/ContentManager.h"
 #include "./Data/include/EntHeap.h"
-#include "./Human/include/Rendering/Font.h"
+#include "./Human/include/Rendering/Font/Font.h"
 #include "GameStates.h"
 
 //GameManager* GM;

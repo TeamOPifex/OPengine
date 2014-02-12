@@ -1,11 +1,12 @@
-#pragma once
+#ifndef OPENGINE_HUMAN_RENDERER_FONT
+#define OPENGINE_HUMAN_RENDERER_FONT
 
-#include "./Human/include/Rendering/FontAtlas.h"
+#include "./Human/include/Rendering/Font/FontAtlas.h"
 #include "./Human/include/Rendering/Mesh.h"
-#include "./Math/include/Vector2.h"
 #include "./Human/include/Rendering/Texture.h"
 #include "./Human/include/Rendering/MeshPacked.h"
-#include "./Human/include/Rendering/FontGlyph.h"
+#include "./Human/include/Rendering/Font/FontGlyph.h"
+#include "./Math/include/Vector2.h"
 
 typedef struct {
 	OPvector* glyphs;
@@ -55,3 +56,4 @@ OPfontGlyph* OPfontGetGlyph(OPfont* font, i8 charcode);
 OPmesh OPfontCreateText(OPfont* font, i8* text);
 OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const i8* text);
 
+#endif

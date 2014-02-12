@@ -1,13 +1,11 @@
-#pragma once
+#ifndef OPENGINE_HUMAN_RENDERER_FONT_MANAGER
+#define OPENGINE_HUMAN_RENDERER_FONT_MANAGER
 
-#include "./Human/include/Rendering/Font.h"
+#include "./Human/include/Rendering/Font/Font.h"
 #include "./Human/include/Rendering/Effect.h"
-#include "./Data/include/HashMap.h"
 #include "./Human/include/Rendering/MeshPacked.h"
-#include "./Math/include/Vector2.h"
-#include "./Math/include/Vector3.h"
-#include "./Math/include/Vector4.h"
-
+#include "./Math/include/Vectors.h"
+#include "./Data/include/HashMap.h"
 
 //-----------------------------------------------------------------------------
 //   _____ _                   _       
@@ -85,3 +83,5 @@ void OPrenderTextColor3Vec2(const i8* text, OPvec3 color, OPvec2 pos);
 void OPrenderTextColor3Vec2Align(const i8* text, OPvec3 color, OPvec2 pos, OPfontAlign align);
 void OPrenderTextColor4Vec2(const i8* text, OPvec4 color, OPvec2 pos);
 void OPrenderTextColor4Vec2Align(const i8* text, OPvec4 color, OPvec2 pos, OPfontAlign align);
+
+#endif

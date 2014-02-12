@@ -1,9 +1,9 @@
-#ifndef OPEngine_Human_Renderer_Mesh_Packer
-#define OPEngine_Human_Renderer_Mesh_Packer
+#ifndef OPENGINE_HUMAN_RENDERER_MESH_PACKER
+#define OPENGINE_HUMAN_RENDERER_MESH_PACKER
 	
-#include "./Core/include/DynamicMemory.h"
-#include "./Data/include/Stream.h"
 #include "./Human/include/Rendering/Buffer.h"
+#include "./Data/include/Stream.h"
+#include "./Core/include/DynamicMemory.h"
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
