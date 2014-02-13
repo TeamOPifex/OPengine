@@ -13,7 +13,7 @@
 	#include "./Human/include/Utilities/AndroidNDK.h"
 #endif
 
-GamePadController GamePadControllers[CONTROLLERS] = {
+OPgamePadController GamePadControllers[CONTROLLERS] = {
 	{
 		0,
 		false,
@@ -36,7 +36,7 @@ GamePadController GamePadControllers[CONTROLLERS] = {
 	}
 }; 
 
-GamePadController* OPgamePadController(GamePadIndex index) {
+OPgamePadController* OPgamePad(GamePadIndex index) {
 	return &GamePadControllers[index];
 }
 
@@ -97,7 +97,7 @@ GamePadController* OPgamePadController(GamePadIndex index) {
 #endif
 
 
-void OPgamePadUpdate(GamePadController* controller){
+void OPgamePadUpdate(OPgamePadController* controller){
 	if(OPgamePadIsConnected(controller)) {
 		OPmemcpy(
 			&controller->prevButtons, 
@@ -231,7 +231,7 @@ void OPgamePadUpdate(GamePadController* controller){
 	}
 }
 
-void OPgamePadReset(GamePadController* controller){
+void OPgamePadReset(OPgamePadController* controller){
 	OPbzero(&controller->buttons, sizeof(i32) * GamePadButton_Max);
 	OPbzero(&controller->prevButtons, sizeof(i32) * GamePadButton_Max);
 	OPbzero(&controller->axes, sizeof(OPfloat) * GamePadAxes_Max);
@@ -242,7 +242,7 @@ void OPgamePadSystemUpdate()
 {
 	for ( OPint i = CONTROLLERS; i--; )
 	{
-		OPgamePadUpdate( OPgamePadController( (GamePadIndex)i ) );
+		OPgamePadUpdate( OPgamePad( (GamePadIndex)i ) );
 	}
 }
 
@@ -250,7 +250,7 @@ void OPgamePadSystemReset()
 {
 	for ( OPint i = CONTROLLERS; i--; )
 	{
-		OPgamePadReset( OPgamePadController((GamePadIndex)i));
+		OPgamePadReset( OPgamePad((GamePadIndex)i));
 	}
 }
 
@@ -258,17 +258,17 @@ void OPgamePadSetDeadzones(OPfloat deadzone)
 {
 	for ( OPint i = CONTROLLERS; i--; )
 	{
-		OPgamePadSetDeadzone( OPgamePadController((GamePadIndex)i), deadzone);
+		OPgamePadSetDeadzone( OPgamePad((GamePadIndex)i), deadzone);
 	}
 }
 
-OPvec2 OPgamePadLeftThumb(GamePadController* controller) {
+OPvec2 OPgamePadLeftThumb(OPgamePadController* controller) {
 	OPvec2 tmp;
 	tmp.x = controller->axes[LS_X];
 	tmp.y = controller->axes[LS_Y];
 	return tmp;
 }
-OPvec2 OPgamePadRightThumb(GamePadController* controller) {
+OPvec2 OPgamePadRightThumb(OPgamePadController* controller) {
 	OPvec2 tmp;
 	tmp.x = controller->axes[RS_X];
 	tmp.y = controller->axes[RS_Y];

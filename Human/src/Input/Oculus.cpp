@@ -8,7 +8,7 @@
 #include <Kernel/OVR_Log.h>
 #include <Kernel/OVR_Timer.h>
 
-OPOculus* OculusManager = NULL;
+OPoculus* OculusManager = NULL;
 
 static void getDk1HmdValues(OVR::HMDInfo* hmdInfo) {
 	hmdInfo->HResolution = 1280;
@@ -44,7 +44,7 @@ int OPoculusInitialize() {
 		return 0;
 	}
 
-	OPOculus* oculus = (OPOculus*)OPalloc(sizeof(OPOculus));
+	OPoculus* oculus = (OPoculus*)OPalloc(sizeof(OPoculus));
 	System::Init(Log::ConfigureDefaultLog(LogMask_All));
 
 	oculus->_manager = DeviceManager::Create();

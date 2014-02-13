@@ -15,25 +15,25 @@ OPtexture OPtextureCreate(OPtextureDescription desc){
 		desc,
 		0
 	};
-	CheckError("OPtextureCreate::Error 0");
+	OPglError("OPtextureCreate::Error 0");
 	glGenTextures(1, &tex.Handle);
-	CheckError("OPtextureCreate::Error 1");
+	OPglError("OPtextureCreate::Error 1");
 	glBindTexture(GL_TEXTURE_2D, tex.Handle);
-	CheckError("OPtextureCreate::Error 2");
+	OPglError("OPtextureCreate::Error 2");
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, desc.MagFilter);
-	CheckError("OPtextureCreate::Error 3");
+	OPglError("OPtextureCreate::Error 3");
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, desc.MinFilter);
-	CheckError("OPtextureCreate::Error 4");
+	OPglError("OPtextureCreate::Error 4");
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, desc.WrapX);
-	CheckError("OPtextureCreate::Error 5");
+	OPglError("OPtextureCreate::Error 5");
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, desc.WrapY);
-	CheckError("OPtextureCreate::Error 6");
+	OPglError("OPtextureCreate::Error 6");
 #ifndef OPIFEX_ANDROID
 	//glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 #else
 	//glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP_HINT, GL_TRUE);
 #endif
-	CheckError("OPtextureCreate::Error 7");
+	OPglError("OPtextureCreate::Error 7");
 
 	return tex;
 }
@@ -44,16 +44,16 @@ void OPtextureDestroy(OPtexture* tex){
 }
 //-----------------------------------------------------------------------------
 void OPtextureBind(OPtexture* tex){
-	CheckError("OPtextureBind::Error 0");
+	OPglError("OPtextureBind::Error 0");
 	OPRENDER_CURR_TEX = tex;
 	glActiveTexture(GL_TEXTURE0 + tex->Handle);
-	CheckError("OPtextureBind::Error 1");
+	OPglError("OPtextureBind::Error 1");
 	glBindTexture(GL_TEXTURE_2D, tex->Handle);
-	CheckError("OPtextureBind::Error 2");
+	OPglError("OPtextureBind::Error 2");
 }
 //-----------------------------------------------------------------------------
 void OPtextureSetData(void* data){
-	CheckError("OPtextureSetData::Error 0");
+	OPglError("OPtextureSetData::Error 0");
 	glTexImage2D(
 		GL_TEXTURE_2D, 
 		0, 
@@ -65,5 +65,5 @@ void OPtextureSetData(void* data){
 		OPRENDER_CURR_TEX->Description.DataType,
 		data
 		);
-	CheckError("OPtextureSetData::Error 1");
+	OPglError("OPtextureSetData::Error 1");
 }

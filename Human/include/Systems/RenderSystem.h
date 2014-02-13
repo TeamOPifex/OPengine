@@ -7,5 +7,4 @@
 #include "./Human/include/Rendering/Effect.h"
 #include "./Human/include/Rendering/FrameBuffer.h"
 
-#include "./Human/include/Rendering/Quad.h"
-#include "./Human/include/Rendering/Common.h"
+#include "./Human/include/Rendering/Primitives/Quad.h"

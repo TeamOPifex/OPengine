@@ -1,4 +1,4 @@
-#include "./Human/include/Rendering/Common.h"
+#include "./Human/include/Systems/FontSystem.h"
 #include "./Data/include/ContentManager.h"
 #include "./Core/include/Assert.h"
 
@@ -8,7 +8,7 @@
 const i8* FontShaderVert = "Common/TexturedScreen.vert";
 const i8* FontShaderFrag = "Common/Font.frag";
 
-void OPcommonLoadFontEffect() {
+void OPsystemsLoadFontEffect() {
 
 	ASSERT(OPRENDER_CURR_FONT_EFFECT == NULL, "A Font has already been set");
 
@@ -36,5 +36,5 @@ void OPcommonLoadFontEffect() {
 		attribs,
 		2,
 		"Common Font Effect"
-	);
+		);
 }

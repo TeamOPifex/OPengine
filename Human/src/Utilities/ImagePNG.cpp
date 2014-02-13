@@ -40,7 +40,7 @@ void OPimagePNGCreate32(ui8* imageData, i32 width, i32 height, i8* filename) {
 }
 
 i32 OPimagePNGLoad(const OPchar* filename, OPtexture** image){
-	CheckError("OPimagePNGLoad:Error 0");
+	OPglError("OPimagePNGLoad:Error 0");
 	ui32 error;
 	ui8* data;
 	ui32 width, height;
@@ -50,7 +50,7 @@ i32 OPimagePNGLoad(const OPchar* filename, OPtexture** image){
 
 
 i32 OPimagePNGLoadStream(OPstream* str, i32 offset, OPtexture** image) {
-	CheckError("OPimagePNGLoad:Error 0");
+	OPglError("OPimagePNGLoad:Error 0");
 	ui32 error;
 	ui8* data;
 	ui32 width, height;
@@ -58,9 +58,9 @@ i32 OPimagePNGLoadStream(OPstream* str, i32 offset, OPtexture** image) {
 	if (error) {
 		OPlog("LodePNG Error %d", error);
 	}
-	CheckError("OPimagePNGLoad:Error 1");
+	OPglError("OPimagePNGLoad:Error 1");
 	OPtexture* tex = (OPtexture*)OPalloc(sizeof(OPtexture));
-	CheckError("OPimagePNGLoad:Error 2");
+	OPglError("OPimagePNGLoad:Error 2");
 
 	OPtextureDescription desc = {
 		width,
@@ -74,13 +74,13 @@ i32 OPimagePNGLoadStream(OPstream* str, i32 offset, OPtexture** image) {
 		OPtextureRepeat
 	};
 
-	CheckError("OPimagePNGLoad:Error 3");
+	OPglError("OPimagePNGLoad:Error 3");
 	*tex = OPtextureCreate(desc);
-	CheckError("OPimagePNGLoad:Error 4");
+	OPglError("OPimagePNGLoad:Error 4");
 	OPtextureBind(tex);
-	CheckError("OPimagePNGLoad:Error 5");
+	OPglError("OPimagePNGLoad:Error 5");
 	OPtextureSetData(data);
-	CheckError("OPimagePNGLoad:Error 6");
+	OPglError("OPimagePNGLoad:Error 6");
 
 	// clean up
 	OPfree(data);
@@ -88,7 +88,7 @@ i32 OPimagePNGLoadStream(OPstream* str, i32 offset, OPtexture** image) {
 
 	*image = tex;
 
-	CheckError("OPimagePNGLoad:Error 7");
+	OPglError("OPimagePNGLoad:Error 7");
 
 	return 1;
 }

@@ -1,6 +1,6 @@
 #include "./Human/include/Rendering/Font/FontManager.h"
 #include "./Human/include/Rendering/Renderer.h"
-#include "./Human/include/Rendering/Common.h"
+#include "./Human/include/Systems/FontSystem.h"
 #include "./Data/include/ContentManager.h"
 #include "./Core/include/Assert.h"
 
@@ -21,7 +21,7 @@ OPfontManager* OPfontManagerCreate(OPfont* font) {
 }
 
 OPfontManager* OPfontManagerSetup(i8* font, i8** text, ui16 count) {
-	OPcommonLoadFontEffect();
+	OPsystemsLoadFontEffect();
 	OPcmanLoad(font);
 	OPfont* _font = (OPfont*)OPcmanGet(font);
 	OPfontManager* manager = OPfontManagerCreate(_font);

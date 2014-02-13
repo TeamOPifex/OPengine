@@ -1,14 +1,11 @@
-#ifndef OPENGINE_HUMAN_RENDERER_QUAD
-#define OPENGINE_HUMAN_RENDERER_QUAD
+#ifndef OPENGINE_HUMAN_RENDERER_PRIMITIVES_QUAD
+#define OPENGINE_HUMAN_RENDERER_PRIMITIVES_QUAD
 
 #include "./Human/include/Rendering/Buffer.h"
 #include "./Human/include/Rendering/Mesh.h"
 #include "./Human/include/Rendering/MeshPacker.h"
 #include "./Human/include/Rendering/MeshPacked.h"
 #include "./Math/include/Vector2.h"
-#include "./Core/include/Types.h"
-
-
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

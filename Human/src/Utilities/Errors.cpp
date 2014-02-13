@@ -1,4 +1,5 @@
 #include "./Human/include/Utilities/Errors.h"
+#include "Core/include/Log.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
 	#include <GLES2/gl2.h>
@@ -7,7 +8,7 @@
 	#include <GL/glew.h>
 #endif
 
-OPint CheckError(const char* message){
+OPint OPglError(const char* message){
 	GLenum err = glGetError();
 	if(err != 0){
 		OPlog(message);

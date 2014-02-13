@@ -1,5 +1,6 @@
 #include "./Human/include/Rendering/Buffer.h"
 #include "./Human/include/Utilities/Errors.h"
+#include "./Core/include/Log.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
 	#include <GLES2/gl2.h>
@@ -32,7 +33,7 @@ OPrenderBuffer OPrenderGenBuffer(ui32 type){
 	};
 
 	glGenBuffers(1, &out.Handle);
-	CheckError("OPrenderGenBuffer() - ERROR!");
+	OPglError("OPrenderGenBuffer() - ERROR!");
 
 	return out;
 }
@@ -47,14 +48,14 @@ void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, ui32 count, c
 	buff->ElementCount = count;
 
 	glBufferData(buff->Type, elementSize * count, data, GL_STATIC_DRAW);
-	CheckError("OPrenderSetBufferData() - ERROR!");
+	OPglError("OPrenderSetBufferData() - ERROR!");
 }
 //-----------------------------------------------------------------------------
 void OPrenderBindBuffer(OPrenderBuffer* buffer){
 	
-	CheckError("OPrenderBindBuffer:Error 0");
+	OPglError("OPrenderBindBuffer:Error 0");
 	glBindBuffer(buffer->Type, buffer->Handle);
-	if(CheckError("OPrenderBindBuffer:Error 1")) {
+	if(OPglError("OPrenderBindBuffer:Error 1")) {
 		OPlog("Buffer Failed to Bind - Type (%d) / Handle (%d)", buffer->Type, buffer->Handle);
 	}
 	if(buffer->Type == OPvertexBuffer){
@@ -71,7 +72,7 @@ void OPrenderDrawBuffer(ui32 offset){
 //-----------------------------------------------------------------------------
 void OPrenderDrawBufferIndexed(ui32 offset){
 	glDrawElements(GL_TRIANGLES, OPRENDER_CURR_IB->ElementCount, GL_UNSIGNED_SHORT, (void*)(0 + offset));
-	CheckError("OPrenderDrawBufferIndexed:Error 1");
+	OPglError("OPrenderDrawBufferIndexed:Error 1");
 }
 
 //-----------------------------------------------------------------------------

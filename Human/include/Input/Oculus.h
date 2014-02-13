@@ -15,9 +15,9 @@ typedef struct {
 	HMDInfo* current;
 	SensorFusion* _fusion;
 	Profile* _profile;
-} OPOculus;
+} OPoculus;
 
-extern OPOculus* OculusManager;
+extern OPoculus* OculusManager;
 
 int OPoculusInitialize();
 void OPoculusDestroy();

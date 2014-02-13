@@ -411,11 +411,11 @@ int State1Update(OPtimer* time){
 
 	//OPframeBufferBind(&rt);
 	
-	GamePadController* gamePad = OPgamePadController(GamePadIndex_One);
-	OPgamePadUpdate(gamePad);
+	OPgamePadController* _gamePad = OPgamePad(GamePadIndex_One);
+	OPgamePadUpdate(_gamePad);
 	
-	if(OPgamePadIsConnected(gamePad)) {
-		if(OPgamePadIsDown(gamePad, GamePad_Button_A) || OPgamePadIsDown(gamePad, GamePad_Button_B) || OPgamePadIsDown(gamePad, GamePad_Button_X) || OPgamePadIsDown(gamePad, GamePad_Button_Y)) {
+	if(OPgamePadIsConnected(_gamePad)) {
+		if(OPgamePadIsDown(_gamePad, GamePad_Button_A) || OPgamePadIsDown(_gamePad, GamePad_Button_B) || OPgamePadIsDown(_gamePad, GamePad_Button_X) || OPgamePadIsDown(_gamePad, GamePad_Button_Y)) {
 			OPrenderClear( 0.0f, 0.0f, 1.0f);
 		} else {
 			OPrenderClear( 0.0f, 0.0f, 0.0f);
@@ -446,7 +446,7 @@ int State1Update(OPtimer* time){
 	}
 
 
-	if(OPgamePadIsConnected(gamePad) && OPgamePadWasPressed(gamePad, GamePad_Button_RIGHT_SHOULDER)){
+	if(OPgamePadIsConnected(_gamePad) && OPgamePadWasPressed(_gamePad, GamePad_Button_RIGHT_SHOULDER)){
 		return true;
 	}
 

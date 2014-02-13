@@ -86,9 +86,9 @@ void OPmeshPackerBind(OPmeshPacker* packer){
 	OPRENDER_CURR_PACKER = packer;
 	if (!OPRENDER_CURR_PACKER->built) return;
 
-	CheckError("OPmeshPackerBind:Error 0");
+	OPglError("OPmeshPackerBind:Error 0");
 	OPrenderBindBuffer(&packer->VertexBuffer);
-	CheckError("OPmeshPackerBind:Error 1");
+	OPglError("OPmeshPackerBind:Error 1");
 	OPrenderBindBuffer(&packer->IndexBuffer);
-	CheckError("OPmeshPackerBind:Error 2");
+	OPglError("OPmeshPackerBind:Error 2");
 }
