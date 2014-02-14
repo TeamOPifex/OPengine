@@ -313,7 +313,11 @@ int State0Update(OPtimer* time){
 	OPrenderClear(0.0f, 0.0f, 0.0f);
 
 	// Required
-	OPrenderTextXY("All of the text! Woot!", 0, 0);
+	OPrenderTextXY(
+		"All of the text! Woot!",
+		OPcos(t) * 0.5f,
+		OPsin(t) * 0.5f
+	);
 
 	// Optional
 	// OPrenderTextRGBAXYAlign("All of the text! Woot!", 0, 0, 1.0f, 1.0f, 0.0f, 0.0f, OPFONT_ALIGN_CENTER);

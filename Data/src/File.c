@@ -1,6 +1,6 @@
 #include "./../include/File.h"
 #include "./Core/include/Log.h"
-#include "./Core/include/ASSERT.h"
+#include "./Core/include/Assert.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
