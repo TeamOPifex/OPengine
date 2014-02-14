@@ -65,6 +65,7 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID" )
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/OPENGL_ES_2_0" ${PROJECT_BINARY_DIR}/assets/Shaders)	
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/OPENGL_ES_2_0/Common" ${PROJECT_BINARY_DIR}/assets/Shaders/Common)	
 
+	file(COPY ${PROJECT_SOURCE_DIR}/SetAndroid DESTINATION ${PROJECT_BINARY_DIR}/SetAndroid)
 else()
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Audio" ${PROJECT_BINARY_DIR}/Application/assets/Audio)	
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Models" ${PROJECT_BINARY_DIR}/Application/assets/Models)	
@@ -72,6 +73,10 @@ else()
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Fonts" ${PROJECT_BINARY_DIR}/Application/assets/Fonts)	
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/${OPENGL_DESKTOP_TARGET}" ${PROJECT_BINARY_DIR}/Application/assets/Shaders)	
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/${OPENGL_DESKTOP_TARGET}/Common" ${PROJECT_BINARY_DIR}/Application/assets/Shaders/Common)	
+endif()
+
+if( "${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID" )
+	file(COPY ${PROJECT_SOURCE_DIR}/SetLinux DESTINATION ${PROJECT_BINARY_DIR}/SetLinux)
 endif()
 
 INCLUDE(FindOpenGL)
