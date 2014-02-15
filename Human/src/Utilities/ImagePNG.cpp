@@ -19,7 +19,7 @@
 #endif
 
 void OPimagePNG24WriteStream(ui8* imageData, i32 width, i32 height, ui8** data, OPuint* dataSize) {
-	ui32 error = lodepng_encode24(data, dataSize, imageData, width, height);
+	ui32 error = lodepng_encode24(data, (size_t*)dataSize, imageData, width, height);
 }
 void OPimagePNG32WriteStream(ui8* imageData, i32 width, i32 height, ui8** data, OPuint* dataSize) {
 	ui32 error = lodepng_encode32(data, dataSize, imageData, width, height);

@@ -1,5 +1,12 @@
+#########################################
+# APPLICATION - LAYER 8
+#########################################
 cmake_minimum_required(VERSION 2.8)
 
+
+#########################################
+# Include Directories
+#########################################
 include_directories(
 	../External/glfw-3.0.4/include/
 	../External/glm-0.9.1/
@@ -11,10 +18,26 @@ include_directories(
 	../External/OpenAL/
 	../External/Oculus/include/
 	../External/Oculus/Src/
+	../External/Myo/include/
 	.
 	../
 )
 
+
+#########################################
+# Include Files
+#########################################
+
+
+#########################################
+# Source Files
+#########################################
+add_source_group(\\ "${PROJECT_SOURCE_DIR}/Application" APPLICATION_SRC)
+
+
+#########################################
+# DEPENDENT LIBRARIES
+#########################################
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
 	${OPENAL_LIBRARY}
@@ -23,50 +46,6 @@ set(ALL_LIBS
 	3_Math
 	4_Performance
 	5_Human
-	
-)
-
-
-#if( "${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID" )
-	#add_source_group(\\ "${PROJECT_SOURCE_DIR}/Android" APPLICATION_SRC)
-#elseif(1)
-	add_source_group(\\ "${PROJECT_SOURCE_DIR}/Application" APPLICATION_SRC)
-#endif()
-
-if("${OPIFEX_OS}" STREQUAL "OPIFEX_OSX32")
-	message(STATUS "GLFW_LIBRARIES (${GLFW_LIBRARIES})")
-endif()
-
-add_executable(8_Application ${APPLICATION_SRC})
-
-if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
-
-	add_custom_command(TARGET 8_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${PROJECT_SOURCE_DIR}/External/Ogg/lib/win32/ogg.dll"
-		${PROJECT_BINARY_DIR}/Application/Debug)
-
-	add_custom_command(TARGET 8_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${PROJECT_SOURCE_DIR}/External/Ogg/lib/win32/libogg.dll"
-		${PROJECT_BINARY_DIR}/Application/Debug)
-
-	add_custom_command(TARGET 8_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/vorbisfile.dll"
-		${PROJECT_BINARY_DIR}/Application/Debug)
-
-	add_custom_command(TARGET 8_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/libvorbis.dll"
-		${PROJECT_BINARY_DIR}/Application/Debug)
-		
-	add_custom_command(TARGET 8_Application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/libvorbisfile.dll"
-		${PROJECT_BINARY_DIR}/Application/Debug)
-		
-elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX32")
-
-endif()
-
-target_link_libraries(8_Application
-	${ALL_LIBS}
 	${OGG_LIBRARY}
 	${VORBIS_LIBRARY}
 	${VORBISFILE_LIBRARY}
@@ -74,25 +53,36 @@ target_link_libraries(8_Application
 	${LIBPNG_LIBRARY}
 	${CMAKE_THREAD_LIBS_INIT}
 	glfw ${GLFW_LIBRARIES}
-)	
-
-
-# Make sure the XInput library is linked correctly (Regardless of which Visual Studio is used)
-# Windows 7 - http://en.wikipedia.org/wiki/Windows_NT#Releases
-# MSVC10 - Visual Studio 2010
-if( ${CMAKE_SYSTEM} STREQUAL "Windows-6.1" )
-	if(${MSVC_VERSION} GREATER 1600)
-	target_link_libraries(8_Application
-		Xinput9_1_0.lib
-	)
-endif()
-endif()
-
-add_definitions(-D${OPIFEX_OS})
-
-SET_TARGET_PROPERTIES(8_Application PROPERTIES LINKER_LANGUAGE CXX)
-set_target_properties(8_Application PROPERTIES 
-	OUTPUT_NAME "Application"
+	${PROJECT_SOURCE_DIR}/External/Myo/lib/myo.lib
+	Winmm.lib
 )
 
-message(STATUS "LINKED THINGS")
+
+#########################################
+# BUILD
+#########################################
+add_executable(8_Application ${APPLICATION_SRC})
+add_definitions(-D${OPIFEX_OS})
+
+target_link_libraries(8_Application	${ALL_LIBS})
+
+if( ${OPIFEX_OS_WINDOWS} )
+	target_link_libraries(8_Application	Winmm.lib)
+endif()
+
+if( ${MSVC_WIN7_FIX} )
+	target_link_libraries(8_Application	Xinput9_1_0.lib)
+endif()
+
+set_target_properties(8_Application PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(8_Application PROPERTIES OUTPUT_NAME "Application")
+
+
+#########################################
+# OUTPUT BINARIES
+#########################################
+copy_to_folder(8_Application "/External/Ogg/lib/" "ogg.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+copy_to_folder(8_Application "/External/Ogg/lib/" "libogg.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+copy_to_folder(8_Application "/External/Vorbis/lib/" "vorbisfile.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+copy_to_folder(8_Application "/External/Vorbis/lib/" "libvorbis.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+copy_to_folder(8_Application "/External/Vorbis/lib/" "libvorbisfile.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})

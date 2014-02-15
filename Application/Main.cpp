@@ -44,6 +44,7 @@
 #include "./Data/include/EntHeap.h"
 #include "./Human/include/Rendering/Font/Font.h"
 #include "GameStates.h"
+#include "./Human/include/Input/Myo.h"
 
 //GameManager* GM;
 OPaudioSource *Sound, *Sound1, *Sound2;
@@ -269,7 +270,7 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 #else
 	int main() {
 #endif
-
+	//OPmyoConnect();
 	//ASSERT(false, "Test!");
 	//ASSERT(true, "TEST!");
 

@@ -38,32 +38,60 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
 	   PATHS
 	   "${PROJECT_SOURCE_DIR}/External/Ogg/lib/win32"
 	)
+
 	find_library(VORBIS_LIBRARY 
  	  NAMES vorbis libvorbis
  	  PATHS
  	  "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32"
 	)
+
 	find_library(VORBISFILE_LIBRARY 
 	   NAMES vorbisfile libvorbisfile
  	  PATHS
  	  "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32"
 	)
-else( "${OPIFEX_OS}" STREQUAL "OPIFEX_OSX32" )	
+
+elseif( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64" )
+
+   find_library(OGG_LIBRARY 
+      NAMES ogg libogg
+      PATHS
+      "${PROJECT_SOURCE_DIR}/External/Ogg/lib/win64"
+   )
+   
+   find_library(VORBIS_LIBRARY 
+     NAMES vorbis libvorbis
+     PATHS
+     "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win64"
+   )
+
+   find_library(VORBISFILE_LIBRARY 
+      NAMES vorbisfile libvorbisfile
+     PATHS
+     "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win64"
+   )
+
+
+elseif( "${OPIFEX_OS}" STREQUAL "OPIFEX_OSX32" )	
+
 	find_library(OGG_LIBRARY 
 	   NAMES ogg libogg
 	   PATHS
 	   "${PROJECT_SOURCE_DIR}/External/Ogg/lib/osx32"
 	)
+
 	find_library(VORBIS_LIBRARY 
  	  NAMES vorbis libvorbis
  	  PATHS
  	  "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/osx32"
 	)
+
 	find_library(VORBISFILE_LIBRARY 
 	   NAMES vorbisfile libvorbisfile
  	  PATHS
  	  "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/osx32"
 	)
+
 endif()
 
 message(STATUS "Ogg: ${OGG_LIBRARY}")

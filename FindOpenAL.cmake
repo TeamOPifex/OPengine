@@ -78,7 +78,7 @@ find_path(OPENAL_INCLUDE_DIR al.h
   [HKEY_LOCAL_MACHINE\\SOFTWARE\\Creative\ Labs\\OpenAL\ 1.1\ Software\ Development\ Kit\\1.00.0000;InstallDir]
 )
 
-if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
+if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" OR "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64" )
   find_path(OPENAL_INCLUDE_DIR al.h
   HINTS
     ENV OPENALDIR
@@ -87,6 +87,9 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
     "C:/Program Files (x86)/OpenAL 1.1 SDK"
   )
 endif()
+
+
+if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32"  )
 
 find_library(OPENAL_LIBRARY
   NAMES OpenAL al openal OpenAL32
@@ -103,12 +106,13 @@ find_library(OPENAL_LIBRARY
   [HKEY_LOCAL_MACHINE\\SOFTWARE\\Creative\ Labs\\OpenAL\ 1.1\ Software\ Development\ Kit\\1.00.0000;InstallDir]
 )
 
-if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
+elseif( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64"  )
+  message(STATUS "64 Bit OpenAL")
   find_library(OPENAL_LIBRARY
-    NAMES OpenAL al openal OpenAL32
+    NAMES OpenAL32
     HINTS
       ENV OPENALDIR
-    PATH_SUFFIXES lib64 lib libs64 libs libs/Win32 libs/Win64
+    PATH_SUFFIXES libs/Win64
     PATHS
     "C:/Program Files (x86)/OpenAL 1.1 SDK"
   )
