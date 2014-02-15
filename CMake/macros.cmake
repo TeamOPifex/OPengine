@@ -21,6 +21,14 @@ macro(copy_source_group SOURCE_PATH DESTINATION_TARGET)
 
 endmacro(copy_source_group)
 
+macro(OPIFEX_EVAL name)
+   IF(${ARGN})
+     SET(${name} 1)
+   ELSE(${ARGN})
+     SET(${name} 0)
+   ENDIF(${ARGN})
+endmacro(OPIFEX_EVAL)
+
 macro(populate_binary_directory)
 	if("${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32")
 		SET(BINARY_TARGET_DIRECTORY "win32")
@@ -61,10 +69,10 @@ endmacro(output_library)
 
 macro(output_binary APPLICATION_TARGET RELATIVE_PATH FILE_PATH OPIFEX_MATCH )
 
-	if( OPIFEX_MATCH )
+	if( ${OPIFEX_MATCH} )
 		populate_binary_directory()
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-			"${PROJECT_BINARY_DIR}${RELATIVE_PATH}${BINARY_TARGET_DIRECTORY}/${FILE_PATH}"
+			"${PROJECT_SOURCE_DIR}${RELATIVE_PATH}${BINARY_TARGET_DIRECTORY}/${FILE_PATH}"
 			${PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/)
 	endif()
 
@@ -73,11 +81,13 @@ endmacro(output_binary)
 
 macro(copy_to_folder APPLICATION_TARGET RELATIVE_PATH FILE_PATH OUTPUT_PATH OPIFEX_MATCH )
 
-	if( OPIFEX_MATCH )
+	
+	if( ${OPIFEX_MATCH} )
 		populate_binary_directory()
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-			"${PROJECT_BINARY_DIR}${RELATIVE_PATH}${BINARY_TARGET_DIRECTORY}/${FILE_PATH}"
+			"${PROJECT_SOURCE_DIR}${RELATIVE_PATH}${BINARY_TARGET_DIRECTORY}/${FILE_PATH}"
 			${PROJECT_BINARY_DIR}${OUTPUT_PATH})
+			
 	endif()
 
 endmacro(copy_to_folder)

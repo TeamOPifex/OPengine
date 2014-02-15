@@ -1,3 +1,4 @@
+#ifdef OPIFEX_MYO
 
 #define _USE_MATH_DEFINES
 #include <cmath>
@@ -15,3 +16,5 @@ void OPmyoConnect() {
 		throw std::runtime_error("Unable to find a Myo!");
 	}
 }
+
+#endif
