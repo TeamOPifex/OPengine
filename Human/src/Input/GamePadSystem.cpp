@@ -45,7 +45,7 @@ OPgamePadController* OPgamePad(GamePadIndex index) {
 
 	#define CONTROLLER_CLASS_NAME "tv/ouya/console/api/OuyaController"
 
-	jobject OPjniGetControllerByPlayer( int playerNum) {
+	jobject OPjniGetControllerByPlayer(OPint playerNum) {
 		OPJniMethodInfo methodInfo;
 		if (!OPjniGetStaticMethodInfo(methodInfo,
 			CONTROLLER_CLASS_NAME, "getControllerByPlayer",
@@ -57,7 +57,7 @@ OPgamePadController* OPgamePad(GamePadIndex index) {
 	}
 
 
-	bool OPjniGetControllerButton(jobject controller, int button) {
+	OPint OPjniGetControllerButton(jobject controller, OPint button) {
 
 		OPJniMethodInfo methodInfo2;
 		if (!OPjniGetMethodInfo(methodInfo2,
@@ -68,7 +68,7 @@ OPgamePadController* OPgamePad(GamePadIndex index) {
 		
 		JNIEnvironment()->DeleteLocalRef(methodInfo2.classID);
 
-		bool result = JNIEnvironment()->CallBooleanMethod(controller, methodInfo2.methodID, button);
+		OPint result = JNIEnvironment()->CallBooleanMethod(controller, methodInfo2.methodID, button);
 
 		if(result) {
 			OPlog("Button Pressed: %d", button);
@@ -79,7 +79,7 @@ OPgamePadController* OPgamePad(GamePadIndex index) {
 		return result;
 	}
 
-	float OPjniGetAxisValue( jobject controller, int ouyaAxis ) {
+	OPfloat OPjniGetAxisValue( jobject controller, OPint ouyaAxis ) {
 
 		OPJniMethodInfo methodInfo;
 
@@ -280,7 +280,7 @@ void OPgamePadUpdate(OPgamePadController* controller){
 		OPmemcpy(
 			&controller->prevButtons, 
 			&controller->buttons, 
-			sizeof(bool) * GamePadButton_Max);
+			sizeof(OPint) * GamePadButton_Max);
 		OPmemcpy(
 			&controller->prevAxes, 
 			&controller->axes, 
