@@ -73,115 +73,6 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("steamPlaneSpec.png");
 	OPcmanLoad("noneNorm.png");
 	OPcmanLoad("stencil.opf");
-
-	//OPlog("State0 Content loaded.");
-
-	//garbage = OPalloc(1024 * 10); // allocate ten megs of crap
-
-	//OPcmanPurge();
-
-	//if(!PackerCreated){
-	//	packer = OPmeshPackerCreate();
-	//	OPmeshPackerBind(&packer);
-	//	quad = OPquadCreatePacked();
-	//	OPmeshPackerBuild();
-	//	PackerCreated = 1;
-
-	//	OPtextureDescription desc = {
-	//		512, 512,
-	//		GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE,
-	//		OPtextureLinear, OPtextureLinear,
-	//		OPtextureClamp, OPtextureClamp
-	//	};
-
-	//	rt = OPframeBufferCreate(desc);
-	//}
-
-	//OPlog("GameManager::GameManager - Ready to load model");
-	//plane = (OPmesh*)OPcmanGet("BiPlane.opm");
-	//tex = (OPtexture*)OPcmanGet("steamPlaneSkin.png");
-	//spec = (OPtexture*)OPcmanGet("steamPlaneSpec.png");
-	//norm = (OPtexture*)OPcmanGet("noneNorm.png");
-
-	//OPvec3 pos = {0, 5, 15.0f};
-	//OPvec3 look = {0, 0, 0};
-	//OPvec3 up = {0, 1, 0};
-	unPackedQuad = OPquadCreate();
-
-	//camera = OPcamProj(
-	//	pos,
-	//	look,
-	//	up,
-	//	0.1f,
-	//	100.0f,
-	//	90,
-	//	(OPrenderWidth / (OPfloat)OPrenderHeight)
-	//);
-
-	//{
-	//	OPshaderAttribute attribs[] = {
-	//		{"aPosition",GL_FLOAT,3},
-	//		{"aNormal",GL_FLOAT,3},
-	//		{"aTangent",GL_FLOAT,3},
-	//		{"aUV",GL_FLOAT,2}
-	//	};
-	//	
-	//	OPlog("GameManager::GameManager - Ready to load shaders");
-	//	tri = OPrenderCreateEffect(
-	//		*(OPshader*)OPcmanGet("TexturedSpecular.vert"),
-	//		*(OPshader*)OPcmanGet("TexturedSpecular.frag"),
-	//		attribs,
-	//		4
-	//	);
-	//}
-
-	//{
-	//	OPshaderAttribute attribs[] = {
-	//		{"aPosition",GL_FLOAT,3},
-	//		{"aUV",GL_FLOAT,2}
-	//	};
-	//	
-	//	OPlog("GameManager::GameManager - Ready to load shaders");
-	//	post = OPrenderCreateEffect(
-	//		*(OPshader*)OPcmanGet("TexturedScreen.vert"),
-	//		*(OPshader*)OPcmanGet("Textured.frag"),
-	//		attribs,
-	//		2
-	//	);
-	//}
-
-	//t = 0;
-	//		"ModelEffect"
-
-	//OPvec2 line1[] = {
-	//	{-4, 0},
-	//	{ -2,  2}
-	//};
-
-	//OPvec2 line2[] = {
-	//	{ 1, -1},
-	//	{ -1,  1}
-	//};
-
-	//OPvec2 inter = {0, 0};
-
-	//OPvec2 zero = {0,0};
-
-	//OPint result = OPsolveIntersect(&line1[0], &line1[1], &line2[0], &line2[1], &inter);
-	//result = OPsolveCircleIntersect(&line2[0], &line2[1], &zero, 1, &inter); 
-
-
-
-
-	//i8* font_cache = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
-
-	//font = (OPfont*)OPcmanGet("stencil.opf");
-	//fontManager = OPfontManagerCreate(font);
-	//OPfontManagerBind(fontManager);
-	//OPfontManagerAddText("Pause");
-	//OPfontManagerBuild();
-	//OPcommonLoadFontEffect();
-
 	// Required
 	i8** text = (i8**)OPalloc(sizeof(i8) * 1);
 	text[0] = "All of the text! Woot!";
@@ -191,151 +82,31 @@ void State0Enter(OPgameState* last){
 	OPfontManagerSetRGBA(fontManager, 0.0f, 0.0f, 1.0f, 1.0f);
 	OPfontManagerSetAlign(fontManager, OPFONT_ALIGN_CENTER);
 
-
-	//spriteSheet = OPfontAtlasTexture(font->atlas);
-	//OPshaderAttribute attribs[] = {
-	//	{ "aPosition", GL_FLOAT, 3 },
-	//	{ "aUV", GL_FLOAT, 2 }
-	//};
-
-	//eftTexScreenSpriteSheet = OPrenderCreateEffect(
-	//	*(OPshader*)OPcmanGet("TexturedScreen.vert"),
-	//	*(OPshader*)OPcmanGet("Font.frag"),
-	//	attribs,
-	//	2,
-	//		"BlurEffect"
-	//	);
-	//quadMesh = OPquadCreate();
-
-	//OPvec4 color = { 1, 0, 0, 1 };
-	//OPvec2 pos2 = { 0, 0 };
-	//fontText = OPfontCreateText(font, "Testing the fonts!", &color, &pos2, 0);
-	//
 	OPlog("State0 Entered!");
 }
 
 int State0Update(OPtimer* time){
 	if(time->Elapsed > 1000) return false;
 	t += 0.005f * time->Elapsed;
-
-	//OPmat4 world, view, proj;
-	//world = OPmat4();
-	//view = OPmat4();
-	//proj = OPmat4();
-
-	//OPmat4buildRotY(&world, t);
-	//OPcamGetView(camera, &view);
-	//OPcamGetProj(camera, &proj);
-
-	//OPlog("Binding meshes and effects");
-	//OPmeshPackerBind(&packer);
-	//OPrenderBindMesh(plane);
-	//OPrenderBindEffect(&tri);
-	//OPlog("Done binding");
-
-	//OPlog("Binding textures...");
-	//OPtextureBind(tex);
-	//OPrenderParami("uColorTexture", tex->Handle);
-	//OPtextureBind(spec);
-	//OPrenderParami("uSpecularTexture", spec->Handle);
-	//OPtextureBind(norm);
-	//OPrenderParami("uNormalTexture", norm->Handle);
-	//OPrenderParamMat4v("uWorld", 1, &world);
-	//OPrenderParamMat4v("uProj", 1, &proj);
-	//OPrenderParamMat4v("uView", 1, &view);
-	//OPlog("Done binding");
-
-	//OPmat4buildRotY(&world, t);
-	//OPcamGetView(camera, &view);
-	//OPcamGetProj(camera, &proj);
-
-	//OPmeshPackerBind(&packer);
-	//OPrenderBindMesh(plane);
-	//OPrenderBindEffect(&tri);
-
-	//OPtextureBind(tex);
-	//OPrenderParami("uColorTexture", tex->Handle);
-	//OPtextureBind(spec);
-	//OPrenderParami("uSpecularTexture", spec->Handle);
-	//OPtextureBind(norm);
-	//OPrenderParami("uNormalTexture", norm->Handle);
-	//OPrenderParamMat4v("uWorld", 1, &world);
-	//OPrenderParamMat4v("uProj", 1, &proj);
-	//OPrenderParamMat4v("uView", 1, &view);
-
-	//OPframeBufferBind(&rt);
-	//
-	//GamePadController* gamePad = OPgamePadController(GamePadIndex_One);
-	//OPgamePadUpdate(gamePad);
-	//
-	//if(OPgamePadIsConnected(gamePad)) {
-	//	if(OPgamePadIsDown(gamePad, GamePad_Button_A) || OPgamePadIsDown(gamePad, GamePad_Button_B) || OPgamePadIsDown(gamePad, GamePad_Button_X) || OPgamePadIsDown(gamePad, GamePad_Button_Y)) {
-	//		OPrenderClear( 0.0f, 0.0f, 1.0f);
-	//	} else {
-	//		OPrenderClear( 0.0f, 0.0f, 0.0f);
-	//	}
-	//} else {
-	//	OPrenderClear(1.0f, 1.0f, 1.0f);
-	//}
-
-	//OPrenderDrawBufferIndexed(200);
-	//OPframeBufferUnbind();
-	//
-	//	OPrenderClear(1.0f, 1.0f, 1.0f);
-	//OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
-
-	//OPmeshPackerBind(&packer);
-	//OPrenderBindEffect(&post);
-	//OPmat4identity(&world);
-	//OPrenderParamMat4v("uWorld", 1, &world);
-
-	//OPtextureBind(&rt.Texture);
-	//OPrenderParami("uTexture", rt.Texture.Handle);
-
-	//OPrenderMeshPacked(&quad);
-	//
-	//	OPrenderClear(1.0f, 1.0f, 1.0f);
-	//OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
-
-
-	//if(t > 6)
-	//	OPgameStateChange(&State1);
-
-
-
-
-
-
-
-
-
+	OPgamePadSystemUpdate();
 
 	OPrenderClear(0.0f, 0.0f, 0.0f);
+
+	OPvec2 pos = OPgamePadLeftThumb(OPgamePad(GamePadIndex_One));
+
+	if(OPgamePadIsDown(OPgamePad(GamePadIndex_One), GamePad_Button_BACK)){
+		OPlog("Should end");
+		OPend();
+	}
 
 	// Required
 	OPrenderTextXY(
 		"All of the text! Woot!",
-		OPcos(t) * 0.5f,
-		OPsin(t) * 0.5f
+		OPcos(t) * 0.5f + pos.x,
+		OPsin(t) * 0.5f + pos.y
 	);
 
-	// Optional
-	// OPrenderTextRGBAXYAlign("All of the text! Woot!", 0, 0, 1.0f, 1.0f, 0.0f, 0.0f, OPFONT_ALIGN_CENTER);
-	
-
-
-
-
-
-
 	OPrenderPresent();
-
-	//OPlog("Update done");
-	//if(OPgamePadIsConnected(gamePad) && OPgamePadWasPressed(gamePad, GamePad_Button_RIGHT_SHOULDER)){
-	//	return true;
-	//}
-
-
 
 	return false;
 }

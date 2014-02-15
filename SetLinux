@@ -1,0 +1,1 @@
+cmake -D OPIFEX_OS:string=OPIFEX_LINUX32 ./../OPifex.Engine/

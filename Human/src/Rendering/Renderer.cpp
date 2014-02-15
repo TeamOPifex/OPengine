@@ -91,6 +91,9 @@ OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
 	
 	// TODO: Determine how to optimize with this
 	//glGenVertexArrays(1, &VertexArrayID);
+
+	//glfwSwapInterval(0);
+
 	//glBindVertexArray(VertexArrayID);
 	
 	glEnable(GL_BLEND);
@@ -161,6 +164,9 @@ void  OPrenderPresent(){
 #else
 	glfwSwapBuffers(window);	
 	glfwPollEvents();
+	if(glfwWindowShouldClose(window)){
+		OPend();
+	}
 #endif
 }
 //-----------------------------------------------------------------------------
