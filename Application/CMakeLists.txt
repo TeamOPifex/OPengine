@@ -88,8 +88,10 @@ endif()
 
 if(${OPIFEX_MYO})
 	include_directories(../External/Myo/include/)
-	target_link_libraries(8_Application ${PROJECT_SOURCE_DIR}/External/Myo/lib/myo.lib)
+	target_link_libraries(8_Application ${PROJECT_SOURCE_DIR}/External/Myo/lib/win64/myo.lib)
 	add_definitions(-DOPIFEX_MYO)
+	copy_to_folder(8_Application "/External/Myo/lib/" "myo.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+	copy_to_folder(8_Application "/External/Myo/lib/" "ble.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
 endif()
 
 

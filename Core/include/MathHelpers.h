@@ -193,6 +193,17 @@ __inline OPfloat OPatan(OPfloat f){
 
 //-----------------------------------------------------------------------------
 /**
+* OPatan2 - math helper
+*	Uses the signs of both parameters to determine the quadrant of the return floating point value.
+* @param f Floating point number.
+* @return atan(f)	
+*/
+__inline OPfloat OPatan2(OPfloat x, OPfloat y) {
+	return atan2f(x, y);
+}
+
+//-----------------------------------------------------------------------------
+/**
 * OPpow - math helper
 *	Raises b to a power.
 * @param b base value

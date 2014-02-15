@@ -1,20 +1,19 @@
 #ifdef OPIFEX_MYO
 
-#define _USE_MATH_DEFINES
-#include <cmath>
-#include <iostream>
-#include <iomanip>
-#include <stdexcept>
-#include <string>
-#include <myo.hpp>
-myo::Myo* myoDevice;
+#ifndef OPENGINE_HUMAN_INPUT_OCULUS
+#define OPENGINE_HUMAN_INPUT_OCULUS
 
-void OPmyoConnect() {
-	myo::Hub hub;
-	myoDevice = hub.waitForAnyMyo(10000);
-	if (!myoDevice) {
-		throw std::runtime_error("Unable to find a Myo!");
-	}
-}
+#include "./Core/include/Types.h"
+#include <myo.hpp>
+
+void OPmyoConnect();
+void OPmyoUpdate();
+
+f32 OPmyoRoll();
+f32 OPmyoPitch();
+f32 OPmyoYaw();
+ui32 OPmyoPose();
+
+#endif
 
 #endif

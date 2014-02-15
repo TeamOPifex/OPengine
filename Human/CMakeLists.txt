@@ -94,7 +94,7 @@ endif()
 
 if(${OPIFEX_MYO})
 	include_directories(../External/Myo/include/)
-	target_link_libraries(5_Human ${PROJECT_SOURCE_DIR}/External/Myo/lib/myo.lib)
+	target_link_libraries(5_Human ${PROJECT_SOURCE_DIR}/External/Myo/lib/win64/myo.lib)
 	add_definitions(-DOPIFEX_MYO)
 endif()
 

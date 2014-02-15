@@ -5,6 +5,7 @@
 #include "./Human/include/Systems/InputSystem.h"
 #include "./Data/include/ContentManager.h"
 #include "./Core/include/Log.h"
+#include "./Human/include/Input/Myo.h"
 
 OPfloat t = 0;
 
@@ -85,12 +86,34 @@ void State0Enter(OPgameState* last){
 	OPlog("State0 Entered!");
 }
 
+ui32 backgroundState = 0;
+
 int State0Update(OPtimer* time){
 	if(time->Elapsed > 1000) return false;
 	t += 0.005f * time->Elapsed;
 	OPgamePadSystemUpdate();
+	OPmyoUpdate();
 
-	OPrenderClear(0.0f, 0.0f, 0.0f);
+	if (OPmyoPose() == 2) {
+		backgroundState = 2;
+	}
+
+	if (OPmyoPose() == 3) {
+		backgroundState = 1;
+	}
+
+	if (OPmyoPose() == 4) {
+		backgroundState = 0;
+	}
+
+	if (backgroundState == 2) {
+		OPrenderClear(1.0f, 0.0f, 0.0f);
+	}
+	else if (backgroundState == 1) {
+		OPrenderClear(0.0f, 1.0f, 0.0f);
+	} else {
+		OPrenderClear(0.0f, 0.0f, 0.0f);
+	}
 
 	OPvec2 pos = OPgamePadLeftThumb(OPgamePad(GamePadIndex_One));
 
@@ -99,11 +122,12 @@ int State0Update(OPtimer* time){
 		OPend();
 	}
 
+
 	// Required
 	OPrenderTextXY(
 		"All of the text! Woot!",
-		OPcos(t) * 0.5f + pos.x,
-		OPsin(t) * 0.5f + pos.y
+		-OPmyoYaw(),
+		-OPmyoPitch()
 	);
 
 	OPrenderPresent();
@@ -214,6 +238,7 @@ int State1Update(OPtimer* time){
 	//OPrenderParami("uTexture", rt.Texture.Handle);
 
 	//OPrenderMeshPacked(&quad);
+
 
 	if(t > 6) {
 		//exit(0);
