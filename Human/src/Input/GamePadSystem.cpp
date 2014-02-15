@@ -1,8 +1,8 @@
 #include "./Human/include/Input/GamePadSystem.h"
 #include "./Core/include/DynamicMemory.h"
 #include "./Core/include/Log.h"
-
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
+	
+#if !defined(OPIFEX_ANDROID) && defined(OPIFEX_UNIX)
 	#include <GLFW/glfw3.h>
 #elif defined(OPIFEX_WINDOWS)
 	#include <Windows.h>

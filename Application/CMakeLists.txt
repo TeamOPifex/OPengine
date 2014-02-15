@@ -53,7 +53,6 @@ set(ALL_LIBS
 	${LIBPNG_LIBRARY}
 	${CMAKE_THREAD_LIBS_INIT}
 	glfw ${GLFW_LIBRARIES}
-	Winmm.lib
 )
 
 
