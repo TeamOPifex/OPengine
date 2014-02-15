@@ -39,7 +39,11 @@ typedef jdouble d64; //double type
 // PC integer types
 #if defined(OPIFEX_OS64)
 typedef long long   i64;
+#ifdef OPIFEX_WINDOWS
 typedef unsigned long long  ui64;  //long type
+#elif defined(OPIFEX_UNIX)
+typedef unsigned long  ui64;  //long type
+#endif
 typedef int     i32;
 typedef unsigned int   ui32; //int type
 #elif defined(OPIFEX_OS32)
