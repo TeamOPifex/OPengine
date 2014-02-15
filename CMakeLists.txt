@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project(OPifexEngine)
 
+
 ### CMake Setup
 include(CMake/macros.cmake) 
 ### Build Setup
@@ -10,6 +11,7 @@ include(CMake/assets.cmake)
 include(CMake/global.cmake)
 include(CMake/packages.cmake)
 include(CMake/binaries.cmake)
+
 
 ### Project Setup
 #########################################

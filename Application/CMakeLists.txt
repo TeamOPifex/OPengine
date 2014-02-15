@@ -53,7 +53,6 @@ set(ALL_LIBS
 	${LIBPNG_LIBRARY}
 	${CMAKE_THREAD_LIBS_INIT}
 	glfw ${GLFW_LIBRARIES}
-	${PROJECT_SOURCE_DIR}/External/Myo/lib/myo.lib
 	Winmm.lib
 )
 
@@ -76,6 +75,22 @@ endif()
 
 set_target_properties(8_Application PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(8_Application PROPERTIES OUTPUT_NAME "Application")
+
+
+#########################################
+# ADDITIONAL FEATURES
+#########################################
+if(${OPIFEX_OCULUS})
+	include_directories(../External/Oculus/include/	../External/Oculus/Src/)
+	target_link_libraries(8_Application ${PROJECT_SOURCE_DIR}/External/Oculus/lib/win32/libovr.lib)
+	add_definitions(-DOPIFEX_OCULUS)
+endif()
+
+if(${OPIFEX_MYO})
+	include_directories(../External/Myo/include/)
+	target_link_libraries(8_Application ${PROJECT_SOURCE_DIR}/External/Myo/lib/myo.lib)
+	add_definitions(-DOPIFEX_MYO)
+endif()
 
 
 #########################################

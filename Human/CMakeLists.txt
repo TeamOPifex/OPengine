@@ -16,9 +16,6 @@ include_directories(
 	../External/Ogg/include/
 	../External/Vorbis/include/
 	../External/OpenAL/
-	../External/Oculus/include/
-	../External/Oculus/Src/
-	../External/Myo/include/
 	.
 	../
 )
@@ -67,9 +64,7 @@ set(ALL_LIBS
 	4_Performance
 	${OGG_LIBRARY}
 	${VORBIS_LIBRARY}
-	${VORBISFILE_LIBRARY}	
-	#${PROJECT_SOURCE_DIR}/External/Oculus/lib/win32/libovr.lib
-	${PROJECT_SOURCE_DIR}/External/Myo/lib/myo.lib
+	${VORBISFILE_LIBRARY}
 	glfw 
 	${GLFW_LIBRARIES}
 )
@@ -86,6 +81,22 @@ target_link_libraries(5_Human ${ALL_LIBS})
 
 set_target_properties(5_Human PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(5_Human PROPERTIES OUTPUT_NAME "Human")
+
+
+#########################################
+# ADDITIONAL FEATURES
+#########################################
+if(${OPIFEX_OCULUS})
+	include_directories(../External/Oculus/include/	../External/Oculus/Src/)
+	target_link_libraries(5_Human ${PROJECT_SOURCE_DIR}/External/Oculus/lib/win32/libovr.lib)
+	add_definitions(-DOPIFEX_OCULUS)
+endif()
+
+if(${OPIFEX_MYO})
+	include_directories(../External/Myo/include/)
+	target_link_libraries(5_Human ${PROJECT_SOURCE_DIR}/External/Myo/lib/myo.lib)
+	add_definitions(-DOPIFEX_MYO)
+endif()
 
 
 #########################################

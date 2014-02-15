@@ -1,3 +1,4 @@
+#ifdef OPIFEX_OCULUS
 #include "./Human/include/Input/Oculus.h"
 
 #include "./Core/include/DynamicMemory.h"
@@ -97,3 +98,4 @@ OPfloat OPoculusEyeHeight() {
 		return OculusManager->_profile->GetEyeHeight();
 	}
 }
+#endif
