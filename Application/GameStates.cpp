@@ -112,7 +112,7 @@ int State0Update(OPtimer* time){
 	else if (backgroundState == 1) {
 		OPrenderClear(0.0f, 1.0f, 0.0f);
 	} else {
-		OPrenderClear(0.0f, 0.0f, 0.0f);
+		OPrenderClear(OPmyoRoll(), 0.0f, 0.0f);
 	}
 
 	OPvec2 pos = OPgamePadLeftThumb(OPgamePad(GamePadIndex_One));

@@ -81,3 +81,7 @@ void OPstart(){
 void OPend(){
 	_OPengineRunning = 0;
 }
+
+OPtimer* OPgetTime() {
+	return &OPtime;
+}

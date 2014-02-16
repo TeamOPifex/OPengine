@@ -48,6 +48,7 @@ if (APPLE)
 endif()
 
 add_library(glfw ${glfw_SOURCES} ${glfw_HEADERS})
+output_library_from(glfw "/GLFW/src" "glfw3")
 set_target_properties(glfw PROPERTIES OUTPUT_NAME "${GLFW_LIB_NAME}")
 
 if (BUILD_SHARED_LIBS)
