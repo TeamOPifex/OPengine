@@ -105,6 +105,7 @@ endif()
 output_library(5_Human "Human")
 
 output_binary(5_Human "/External/Ogg/lib/" "ogg.dll" ${OPIFEX_OS_WINDOWS})
+output_binary(5_Human "/External/Ogg/lib/" "libogg.dll" ${OPIFEX_OS_WINDOWS})
 output_binary(5_Human "/External/Vorbis/lib/" "vorbisfile.dll" ${OPIFEX_OS_WINDOWS})
 output_binary(5_Human "/External/Vorbis/lib/" "libvorbis.dll" ${OPIFEX_OS_WINDOWS})
 output_binary(5_Human "/External/Vorbis/lib/" "libvorbisfile.dll" ${OPIFEX_OS_WINDOWS})

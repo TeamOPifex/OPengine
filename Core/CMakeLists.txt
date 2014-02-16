@@ -5,6 +5,16 @@ cmake_minimum_required(VERSION 2.8)
 
 
 #########################################
+# Include Directories
+#########################################
+include_directories(
+	.
+	../
+	./Core/include/
+)
+
+
+#########################################
 # Include Files
 #########################################
 add_source_group(\\ "${PROJECT_SOURCE_DIR}/Core" CORE_SRC)

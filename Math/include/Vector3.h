@@ -1,4 +1,3 @@
-#pragma once
 #ifndef OP_MATH_VECTOR3
 #define OP_MATH_VECTOR3
 #include "./Core/include/Types.h"
@@ -154,7 +153,7 @@ inline void OPvec3dot(OPfloat* dst, OPvec3* a, OPvec3* b) {
 }
 
 inline void OPvec3norm(OPvec3* dst, OPvec3* a) {
-	OPfloat l = sqrt(a->x * a->x + a->y * a->y + a->z * a->z);
+	OPfloat l = OPsqrt(a->x * a->x + a->y * a->y + a->z * a->z);
 	if(l == 0) {
 		return;
 	}
@@ -173,7 +172,7 @@ inline void OPvec3cross(OPvec3* dst, OPvec3* a, OPvec3* b) {
 }
 
 inline void OPvec3len(OPfloat* dst, OPvec3* v) {
-	(*dst) = sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
+	(*dst) = OPsqrt(v->x * v->x + v->y * v->y + v->z * v->z);
 }
 
 inline void OPvec3dist(OPfloat* dst, OPvec3* a, OPvec3* b) {

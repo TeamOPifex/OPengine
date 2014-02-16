@@ -1,56 +1,42 @@
+### GLFW
 
-
-set(GLFW_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/External/glfw-3.0.4")
+SET( GLFW_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/External/glfw-3.0.4" )
 add_subdirectory("${GLFW_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/GLFW)
-SET_PROPERTY(TARGET glfw                PROPERTY FOLDER "External")
+set_property(TARGET glfw PROPERTY FOLDER "External")
+add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS)
 
-add_definitions(
-	-DGLEW_STATIC
-	-D_CRT_SECURE_NO_WARNINGS
-)
+### GLEW
 
-include_directories(
-	glew-1.9.0/include/
-)
-
-set(GLEW_SOURCE
-	glew-1.9.0/src/glew.c
-)
-
-set(GLEW_HEADERS
-)
+#########################################
+# Include Directories
+#########################################
+include_directories(glew-1.9.0/include/)
 
 
+#########################################
+# Source Files
+#########################################
+set(GLEW_SOURCE	glew-1.9.0/src/glew.c)
+
+
+#########################################
+# BUILD
+#########################################
 add_library( GLEW_158 STATIC
 	${GLEW_SOURCE}
 	${GLEW_INCLUDE}
 )
 
-target_link_libraries(GLEW_158
-	${OPENGL_LIBRARY}
-)
-SET_PROPERTY(TARGET GLEW_158                PROPERTY FOLDER "External")
+target_link_libraries(GLEW_158 ${OPENGL_LIBRARY})
+set_property(TARGET GLEW_158 PROPERTY FOLDER "External")
 
+populate_binary_directory()
 
-if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
+output_library_from(GLEW_158 "/External" "GLEW_158")
 
-	add_custom_command(TARGET GLEW_158 POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${PROJECT_BINARY_DIR}/External/debug/GLEW_158.lib"
-		${PROJECT_BINARY_DIR}/Binaries/win32/)
-		
-	file(COPY ${PROJECT_SOURCE_DIR}/External/OpenAL32.lib DESTINATION ${PROJECT_BINARY_DIR}/Binaries/win32/)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/Ogg/lib/win32/libogg.lib DESTINATION ${PROJECT_BINARY_DIR}/Binaries/win32/)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/libvorbis.lib DESTINATION ${PROJECT_BINARY_DIR}/Binaries/win32/)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win32/libvorbisfile.lib DESTINATION ${PROJECT_BINARY_DIR}/Binaries/win32/)
-	
-elseif( "${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX32" )
-
-	add_custom_command(TARGET GLEW_158 POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${PROJECT_BINARY_DIR}/External/libGLEW_158.a"
-		${PROJECT_BINARY_DIR}/Binaries/linux32/)
-		
-	file(COPY ${PROJECT_SOURCE_DIR}/External/Ogg/lib/linux32/libogg.a DESTINATION ${PROJECT_BINARY_DIR}/Binaries/linux32/)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/Vorbis/lib/linux32/libvorbis.a DESTINATION ${PROJECT_BINARY_DIR}/Binaries/linux32/)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/Vorbis/lib/linux32/libvorbisfile.a DESTINATION ${PROJECT_BINARY_DIR}/Binaries/linux32/)
-		
-endif()
+output_binary(GLEW_158 "/External/Ogg/lib/" "libogg.lib" ${OPIFEX_OS_WINDOWS})
+output_binary(GLEW_158 "/External/Ogg/lib/" "libogg.a" ${OPIFEX_OS_UNIX})
+output_binary(GLEW_158 "/External/Vorbis/lib/" "libvorbis.lib" ${OPIFEX_OS_WINDOWS})
+output_binary(GLEW_158 "/External/Vorbis/lib/" "libvorbis.a" ${OPIFEX_OS_UNIX})
+output_binary(GLEW_158 "/External/Vorbis/lib/" "libvorbisfile.lib" ${OPIFEX_OS_WINDOWS})
+output_binary(GLEW_158 "/External/Vorbis/lib/" "libvorbisfile.a" ${OPIFEX_OS_UNIX})
