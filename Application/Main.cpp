@@ -17,7 +17,6 @@
 #include "./Data/include/List.h"
 
 #include "./Performance/include/OPthread.h"
-#include "./Human/include/Input/Oculus.h"
 
 #if defined(OPIFEX_ANDROID)
 #include <jni.h>
@@ -33,18 +32,11 @@
 #endif
 
 #include "./Data/include/File.h"
-#include "./Human/include/Audio/Audio.h"
-#include "./Human/include/Audio/AudioEmitter.h"
-#include "./Human/include/Audio/AudioPlayer.h"
-#include "./Human/include/Utilities/LoaderOPM.h"
-#include "./Human/include/Utilities/ImagePNG.h"
-#include "./Human/include/Rendering/Effect.h"
 #include "./Data/include/File.h"
 #include "./Data/include/ContentManager.h"
 #include "./Data/include/EntHeap.h"
-#include "./Human/include/Rendering/Font/Font.h"
 #include "GameStates.h"
-#include "./Human/include/Input/Myo.h"
+#include "./Human/include/Human.h"
 
 //GameManager* GM;
 OPaudioSource *Sound, *Sound1, *Sound2;
@@ -54,58 +46,6 @@ OPentHeap* ents;
 void* entData;
 
 OPfloat vol = 0.05f;
-
-OPassetLoader loaders[] = {
-	{
-		".wav",
-		"Audio/",
-		sizeof(OPaudioSource),
-		(OPint (*)(const OPchar*, void**))OPaudOpenWave,
-		(OPint (*)(void*))OPaudCloseWave
-	},
-	{
-		".ogg",
-		"Audio/",
-		sizeof(OPaudioSource),
-		(OPint (*)(const OPchar*, void**))OPaudOpenOgg,
-		(OPint (*)(void*))OPaudCloseOgg
-	},
-	{
-		".png",
-		"Textures/",
-		sizeof(OPtexture),
-		(OPint (*)(const OPchar*, void**))OPimagePNGLoad,
-		(OPint (*)(void*))OPimagePNGUnload
-	},
-	{
-		".vert",
-		"Shaders/",
-		sizeof(OPshader),
-		(OPint (*)(const OPchar*, void**))OPrenderLoadVertexShader,
-		(OPint (*)(void*))OPrenderUnloadShader
-	},
-	{
-		".frag",
-		"Shaders/",
-		sizeof(OPshader),
-		(OPint (*)(const OPchar*, void**))OPrenderLoadFragmentShader,
-		(OPint (*)(void*))OPrenderUnloadShader
-	},
-	{
-		".opm",
-		"Models/",
-		sizeof(OPmesh),
-		(OPint (*)(const OPchar*, void**))OPMload,
-		(OPint (*)(void*))OPMUnload
-	},
-	{
-		".opf",
-		"Fonts/",
-		sizeof(OPfont),
-		(OPint(*)(const OPchar*, void**))OPfontLoad,
-		(OPint(*)(void*))OPfontUnload
-	}
-};
 
 void KeyDown(int key, int action){
 	OPlog("Pizza %d", key);
@@ -141,7 +81,7 @@ void Init(){
 	#endif
 	
 
-	OPcmanInit(loaders, 7);
+	OPcmanInit(OP_DEFAULT_LOADERS, 7);
 
 	OPaudInit();
 	OPaudInitThread(10);
