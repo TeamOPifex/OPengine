@@ -51,8 +51,6 @@ void KeyDown(int key, int action){
 	OPlog("Pizza %d", key);
 
 	switch(key){
-		case 65:
-			OPaudSetPlayer(&player);
 			OPaudPlayerPlay();
 			break;
 		case 83:
@@ -70,17 +68,6 @@ i32 height = 720;
 
 // Initialize
 void Init(){
-	#if defined(OPIFEX_WINDOWS)
-	_chdir("assets\\");
-	#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
-		if(chdir("./assets")) OPlog("Directory changed!\n"); 
-		else OPlog("Directory change failed!!!\n");
-	#else
-		if(chdir("./assets") == 0) OPlog("Directory changed!\n"); 
-		else OPlog("Directory change failed!!!\n");
-	#endif
-	
-
 	OPcmanInit(OP_DEFAULT_LOADERS, 7);
 
 	OPaudInit();
