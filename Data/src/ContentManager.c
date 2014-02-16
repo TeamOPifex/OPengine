@@ -25,6 +25,18 @@ OPlinkedList* OP_CMAN_PURGE;
 OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount){
 	OP_CMAN_ASSETLOADERS = loaders;
 	OP_CMAN_ASSET_LOADER_COUNT = loaderCount;
+
+	// Switch to the assets directory
+#if defined(OPIFEX_WINDOWS)
+	_chdir("assets\\");
+#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
+	if(chdir("./assets")) OPlog("Directory changed!\n");
+	else OPlog("Directory change failed!!!\n");
+#else
+	if(chdir("./assets") == 0) OPlog("Directory changed!\n");
+	else OPlog("Directory change failed!!!\n");
+#endif
+
 	
 	// create and copy the hashmap
 	OPmemcpy(&OP_CMAN_HASHMAP, OPhashMapCreate(OP_CMAN_CAP), sizeof(HashMap));
