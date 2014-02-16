@@ -35,8 +35,5 @@ populate_binary_directory()
 output_library_from(GLEW_158 "/External" "GLEW_158")
 
 output_binary(GLEW_158 "/External/Ogg/lib/" "libogg.lib" ${OPIFEX_OS_WINDOWS})
-output_binary(GLEW_158 "/External/Ogg/lib/" "libogg.a" ${OPIFEX_OS_UNIX})
 output_binary(GLEW_158 "/External/Vorbis/lib/" "libvorbis.lib" ${OPIFEX_OS_WINDOWS})
-output_binary(GLEW_158 "/External/Vorbis/lib/" "libvorbis.a" ${OPIFEX_OS_UNIX})
 output_binary(GLEW_158 "/External/Vorbis/lib/" "libvorbisfile.lib" ${OPIFEX_OS_WINDOWS})
-output_binary(GLEW_158 "/External/Vorbis/lib/" "libvorbisfile.a" ${OPIFEX_OS_UNIX})

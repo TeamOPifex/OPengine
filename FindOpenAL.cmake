@@ -47,6 +47,55 @@ elseif( ${OPIFEX_OS_WIN64} )
     PATHS
     "C:/Program Files (x86)/OpenAL 1.1 SDK"
   )
+else()
+
+  if(${OPIFEX_OS_64})
+    FIND_LIBRARY(OPENAL_LIBRARY 
+      NAMES OpenAL al openal OpenAL32
+      PATHS
+      $ENV{OPENALDIR}
+      NO_DEFAULT_PATH
+        PATH_SUFFIXES lib64 libs64
+    )
+
+    FIND_LIBRARY(OPENAL_LIBRARY 
+      NAMES OpenAL al openal OpenAL32
+      PATHS
+      ~/Library/Frameworks
+      /Library/Frameworks
+      /usr/local
+      /usr
+      /sw
+      /opt/local
+      /opt/csw
+      /opt
+      [HKEY_LOCAL_MACHINE\\SOFTWARE\\Creative\ Labs\\OpenAL\ 1.1\ Software\ Development\ Kit\\1.00.0000;InstallDir]
+      PATH_SUFFIXES lib64 libs64
+    )
+  else()
+    FIND_LIBRARY(OPENAL_LIBRARY 
+      NAMES OpenAL al openal OpenAL32
+      PATHS
+      $ENV{OPENALDIR}
+      NO_DEFAULT_PATH
+        PATH_SUFFIXES lib libs
+    )
+
+    FIND_LIBRARY(OPENAL_LIBRARY 
+      NAMES OpenAL al openal OpenAL32
+      PATHS
+      ~/Library/Frameworks
+      /Library/Frameworks
+      /usr/local
+      /usr
+      /sw
+      /opt/local
+      /opt/csw
+      /opt
+      [HKEY_LOCAL_MACHINE\\SOFTWARE\\Creative\ Labs\\OpenAL\ 1.1\ Software\ Development\ Kit\\1.00.0000;InstallDir]
+      PATH_SUFFIXES lib libs
+    )
+  endif()
 endif()
 
 message(STATUS "OpenAL include: ${OPENAL_INCLUDE_DIR}")
