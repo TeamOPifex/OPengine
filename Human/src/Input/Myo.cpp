@@ -1,5 +1,11 @@
 #include "./Human/include/Input/Myo.h"
+
+#ifdef OPIFEX_MYO
+#include <myo.hpp>
 #include "./Core/include/MathHelpers.h"
+#else
+#include "./Core/include/Log.h"
+#endif
 
 f32 roll = 0;
 f32 pitch = 0;
@@ -7,19 +13,21 @@ f32 yaw = 0;
 ui32 pose = 0;
 
 f32 OPmyoRoll() {
-	return roll / 2.0f;
+	return roll;
 }
 f32 OPmyoPitch() {
-	return pitch / 2.0f;
+	return pitch;
 }
 f32 OPmyoYaw() {
-	return yaw / 2.0f;
+	return yaw;
 }
 
 ui32 OPmyoPose() {
 	return pose;
 }
 
+
+#ifdef OPIFEX_MYO
 class DataCollector : public myo::DeviceListener {
 public:
 	DataCollector()
@@ -78,24 +86,31 @@ public:
 
 myo::Hub* hub;
 DataCollector* collector;
+#endif
 
 void OPmyoConnect() {
-	 hub = new myo::Hub();
-	 myo::Myo* myoDevice = hub->waitForAnyMyo(10000);
-	 if (!myoDevice) {
-		 throw std::runtime_error("Unable to find a Myo!");
-	 }
+	#ifdef OPIFEX_MYO
+		 hub = new myo::Hub();
+		 myo::Myo* myoDevice = hub->waitForAnyMyo(10000);
+		 if (!myoDevice) {
+			 throw std::runtime_error("Unable to find a Myo!");
+		 }
 
-	 // Next we construct an instance of our DeviceListener, so that we can register it with the Hub.
-	 collector = new DataCollector();
+		 // Next we construct an instance of our DeviceListener, so that we can register it with the Hub.
+		 collector = new DataCollector();
 
-	 // Hub::addListener() takes the address of any object whose class inherits from DeviceListener, and will cause
-	 // Hub::run() to send events to all registered device listeners.
-	 hub->addListener(collector);
+		 // Hub::addListener() takes the address of any object whose class inherits from DeviceListener, and will cause
+		 // Hub::run() to send events to all registered device listeners.
+		 hub->addListener(collector);
+	#else
+		 OPlog("Myo Feature is not enabled");
+	#endif
  }
 
 void OPmyoUpdate() {
-	if (hub) {
-		hub->run(1);
-	}
+	#ifdef OPIFEX_MYO
+		if (hub) {
+			hub->run(1);
+		}
+	#endif
 }
