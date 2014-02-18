@@ -1,5 +1,6 @@
 #include "./Human/include/Rendering/FrameBuffer.h"
 #include "./Core/include/Log.h"
+#include "./Human/include/Utilities/Errors.h"
 
 //-----------------------------------------------------------------------------
 //   _____ _       _           _     
@@ -20,26 +21,33 @@ OPframeBuffer* OPRENDER_CURR_FRAMEBUFFER;
 
 GLuint createDepthTexture(int w, int h) {
 
+	OPlog("createDepthTexture started");
 	GLuint tex;
 
+	OPlog("createDepthTexture glGenTextures");
 	glGenTextures(1, &tex);
 
+	OPlog("createDepthTexture glBindTexture");
 	glBindTexture(GL_TEXTURE_2D, tex);
 
+	OPlog("createDepthTexture glTexParameteris");
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
+	OPlog("createDepthTexture glTexImage2D");
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 
 						w,
 						h, 
 						0, GL_DEPTH_COMPONENT, GL_FLOAT,
 						NULL); 
 
-	glBindTexture(GL_TEXTURE_2D, 0);
+	OPlog("createDepthTexture glBindTexture");
+	//glBindTexture(GL_TEXTURE_2D, 0);
 
-	return(tex);
+	OPlog("createDepthTexture Finished");
+	return tex;
 }
 
 OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
@@ -49,37 +57,64 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 		0
 	};
 
+	OPlog("OPframeBufferCreate glGenFramebuffers");
 	// generate and bind the fbo
 	glGenFramebuffers(1, &fb.Handle);
 	
+	OPlog("OPframeBufferCreate OPtextureBind");
 	// setup color texture
 	OPtextureBind(&fb.Texture);	
+	OPlog("OPframeBufferCreate OPtextureSetData");
 	OPtextureSetData(NULL);
+	OPlog("OPframeBufferCreate glBindTexture");
 	glBindTexture(GL_TEXTURE_2D, 0);
 
+	OPlog("OPframeBufferCreate createDepthTexture");
 	// attach the depth texture
 	ui32 dt = createDepthTexture(desc.Width, desc.Height);
+	OPlog("OPframeBufferCreate createDepthTexture Created");
 
 #ifndef OPIFEX_ANDROID
+	OPlog("OPframeBufferCreate glBindFramebuffer");
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fb.Handle);
+	OPlog("OPframeBufferCreate glBindRenderbuffer");
 	glBindRenderbuffer(GL_RENDERBUFFER, dt);
+	OPlog("OPframeBufferCreate glRenderbufferStorage");
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, desc.Width, desc.Height);
 
 
+	OPglError("OPframeBufferCreate:Error 1");
 	// attach the color texture
-	glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, fb.Texture.Handle, 0);
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, dt, 0);
+	#if defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
+		OPlog("OPframeBufferCreate glFramebufferTexture2D : FB Handle :%d", fb.Texture.Handle);
+		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fb.Texture.Handle, 0);
+		OPlog("OPframeBufferCreate glFramebufferRenderbuffer");
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, dt, 0);
+	#else
+		OPlog("OPframeBufferCreate glFramebufferTexture2D : FB Handle :%d", fb.Texture.Handle);
+		glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, fb.Texture.Handle, 0);
+		OPlog("OPframeBufferCreate glFramebufferRenderbuffer");
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, dt, 0);
+	#endif
 #else
+	OPlog("OPframeBufferCreate glBindFramebuffer");
 	glBindFramebuffer(GL_FRAMEBUFFER, fb.Handle);
+	OPlog("OPframeBufferCreate glBindRenderbuffer");
 	glBindRenderbuffer(GL_RENDERBUFFER, dt);
+	OPlog("OPframeBufferCreate glRenderbufferStorage");
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, desc.Width, desc.Height);
 
 
+	OPlog("OPframeBufferCreate glFramebufferTexture2D : FB Handle :%d", fb.Texture.Handle);
+	
+	OPglError("OPframeBufferCreate:Error 1");
 	// attach the color texture
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fb.Texture.Handle, 0);
+	OPlog("OPframeBufferCreate glFramebufferRenderbuffer");
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, dt);
 #endif
 
+	OPlog("OPframeBufferCreate framebufferstatus");
 	// check fbo creation status
 #ifndef OPIFEX_ANDROID
 	GLenum e = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
@@ -115,8 +150,10 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 			OPlog("FBO Problem?\n");
 	}
 
+	OPlog("OPframeBufferCreate glBindTexture");
 	glBindTexture(GL_TEXTURE_2D, 0);
 #ifndef OPIFEX_ANDROID
+	OPlog("OPframeBufferCreate glBindFramebuffer");
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 #else
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
