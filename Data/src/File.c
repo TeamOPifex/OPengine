@@ -53,6 +53,16 @@ f32 OPreadf32(OPstream* str) {
 	return *((f32*)tmp);
 }
 
+i8* OPreadstring(OPstream* str) {
+	ui32 length = OPreadui32(str);
+	i8* name = (i8*)OPalloc(length + 1);
+	for(i32 j = 0; j < length; j++){
+		name[j] = OPreadi8(str);
+	}
+	name[length] = NULL;
+	return name;
+}
+
 OPfileInformation OPreadFileInformation(const char* path){
 	OPfileInformation file;
 

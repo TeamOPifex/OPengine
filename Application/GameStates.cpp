@@ -74,6 +74,7 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("steamPlaneSpec.png");
 	OPcmanLoad("noneNorm.png");
 	OPcmanLoad("stencil.opf");
+	OPcmanLoad("mesh.opm");
 	// Required
 	i8** text = (i8**)OPalloc(sizeof(i8) * 1);
 	text[0] = "All of the text! Woot!";
