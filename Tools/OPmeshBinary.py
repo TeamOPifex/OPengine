@@ -213,16 +213,41 @@ def WriteJSON(fp, meshData):
 
 	fp.write(json)
 
-def WriteBoneData(fp, bone, depth):
-	print(str(depth) + ':' + bone.name)
-	mat = bone.matrix
-	for i in range(0,3):
-		fp.write(struct.pack('ffff', mat[i][0], mat[i][1], mat[i][2], mat[i][3]))
-	fp.write(struct.pack('I', len(bone.children)))
-	for child in bone.children:
-		WriteBoneData(fp, child, depth + 1)
+def WriteStringData(fp, val):
+	nameBytes = bytes(val, 'utf-8')
+	fp.write (struct.pack('I%ds' % len(nameBytes), len(nameBytes), nameBytes))
+
+def ReadBoneData():
+	armature, armatureObject = get_armature()
+	hierarchy = []
+	for bone in armature.bones:
+		bonePos = None
+		boneIndex = None
+		if bone.parent is None:
+			bonePos = bone.head_local
+			boneIndex = -1
+		else:
+			bonePos = bone.head_local - bone.parent.head_local
+			boneIndex = i = 0
+			for parent in armature.bones:
+				if parent.name == bone.parent.name:
+					boneIndex = i
+				i += 1
+
+		bonePosWorld = armatureObject.matrix_world * bonePos
+
+		joint = [boneIndex, bone.name, bonePosWorld.x, bonePosWorld.z, -bonePosWorld.y]
+		hierarchy.append(joint)
+	return hierarchy, len(armature.bones)
 
 
+def WriteBoneData(fp):
+	hierarchy, count = ReadBoneData()
+	fp.write(struct.pack('I', count))
+	for joint in hierarchy:
+		fp.write(struct.pack('i', joint[0]))
+		WriteStringData(fp, joint[1])
+		fp.write(struct.pack('fff', joint[2], joint[3], joint[4]))
 
 def ReadSkinData(meshObj):
 	indices = []
@@ -342,9 +367,8 @@ def WriteAnimationData(fp, actionIndex):
 	fp.write (struct.pack('I%ds' % len(nameBytes), len(nameBytes), nameBytes))
 	fp.write(struct.pack('I', len(animation)))
 	for index, keys in animation:
-		fp.write(struct.pack('i', index))
+		fp.write(struct.pack('i', len(keys)))
 		for key in range(len(keys)):
-			fp.write(struct.pack('I', len(keys[key])))
 			features = 7
 			if len(keys[key]) == 4:
 				features = 3
@@ -390,10 +414,7 @@ def WriteBinary(fp, meshData):
 
 
     # Number of Bones
-	boneCount = len(bpy.data.objects[0].pose.bones)
-	print('Bone Count: ' + str(boneCount))
-	fp.write (struct.pack('I', boneCount))
-	WriteBoneData(fp, bpy.data.objects[0].pose.bones[0], 0)
+	WriteBoneData(fp)
 
 
 	WriteSkinData(fp, extract_meshes(bpy.data.objects, bpy.data.scenes[0])[0])
