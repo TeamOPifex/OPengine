@@ -15,6 +15,8 @@ import os
 import itertools
 import math
 import struct
+import mathutils
+import operator
 
 #------------------------------------------------------------------------------
 def r3d(v):
@@ -210,6 +212,148 @@ def WriteJSON(fp, meshData):
 	json += jsonVert + ', ' + jsonNorm + ', ' + jsonTang + ', ' + jsonUVs + '}'
 
 	fp.write(json)
+
+def WriteBoneData(fp, bone, depth):
+	print(str(depth) + ':' + bone.name)
+	mat = bone.matrix
+	for i in range(0,3):
+		fp.write(struct.pack('ffff', mat[i][0], mat[i][1], mat[i][2], mat[i][3]))
+	fp.write(struct.pack('I', len(bone.children)))
+	for child in bone.children:
+		WriteBoneData(fp, child, depth + 1)
+
+
+
+def ReadSkinData(meshObj):
+	indices = []
+	weights = []
+
+	mesh = meshObj[0]
+	object = meshObj[1]
+
+	armature, armatureObject = get_armature()
+	
+	i = 0
+	mesh_index = -1
+	for obj in bpy.data.objects:
+		if obj.name == mesh.name or obj == object:
+			mesh_index = i
+		i += 1
+
+	if mesh_index == -1:
+		print('failed to generate indices')
+		return
+
+	object = bpy.data.objects[mesh_index]
+	for vertex in mesh.vertices:
+		bone_array = []
+		for group in vertex.groups:
+			index = group.group
+			weight = group.weight
+			bone_array.append( (index, weight) )
+		bone_array.sort(key = operator.itemgetter(1), reverse=True)
+
+		for i in range(4):
+			if i < len(bone_array):
+				bone_proxy = bone_array[i]
+				found = 0
+				index = bone_proxy[0]
+				weight = bone_proxy[1]
+
+				for j, bone in enumerate(armature.bones):
+					if object.vertex_groups[index].name == bone.name:
+						indices.append(j)
+						weights.append(weight)
+						found = 1
+						break
+				if found != 1:
+					indices.append(0)
+					weights.append(0)
+			else:
+				indices.append(0)
+				weights.append(0)
+	return indices, weights
+
+def WriteSkinData(fp, meshObj):
+	indices, weights = ReadSkinData(meshObj)
+	fp.write(struct.pack('I', len(indices)))
+	for i in range(len(indices)):
+		fp.write(struct.pack('I', indices[i]))
+	fp.write(struct.pack('I', len(weights)))
+	for i in range(len(weights)):
+		fp.write(struct.pack('f', weights[i]))
+
+def ReadAnimationData(actionIndex):
+	print('animation')
+	action = bpy.data.actions[actionIndex]
+	armature, armatureObject = get_armature()
+	armatureMat = armatureObject.matrix_world
+	l,r,s = armatureMat.decompose()
+	armatureRotMat = r.to_matrix()
+
+	parents = []
+	parent_index = -1
+
+	fps = bpy.data.scenes[0].render.fps
+
+	end_frame = action.frame_range[1]
+	start_frame = action.frame_range[0]
+
+	frame_length = end_frame - start_frame
+
+	for hierarchy in armature.bones:
+		keys = []
+		for frame in range(int(start_frame), int(end_frame) + 1):
+			pos, pchange = position(hierarchy, frame, action, armatureMat)
+			rot, rchange = rotation(hierarchy, frame, action, armatureRotMat)
+
+			px, py, pz = pos.x, pos.y, -pos.y
+			rx, ry, rz, rw = rot.x, rot.z, -rot.y, rot.w
+
+			# The start frame has to have pos, rot and scale
+			if frame == int(start_frame):
+				time = (frame - start_frame) / fps
+				keyframe = [time,px,py,pz,rx,ry,rz,rw]
+				keys.append(keyframe)
+
+			# The end frame has to have pos, rot, scale and animation length
+			elif frame == int(end_frame):
+				time = frame_length / fps
+				keyframe = [time,px,py,pz,rx,ry,rz,rw]
+				keys.append(keyframe)
+
+			# Only need 1 attribute for a frame in the middle
+			elif pchange == True or rchange == True:
+				time  = (frame - start_frame) / fps
+				if(pchange == True and rchange == True):
+					keyframe = [time,px,py,pz,rx,ry,rz,rw]
+				elif pchange == True:
+					keyframe = [time,px,py,pz]
+				elif rchange == True:
+					keyframe = [time,rx,ry,rz,rw]
+				keys.append(keyframe)
+		parents.append((parent_index, keys))
+		parent_index += 1
+	return parents
+
+def WriteAnimationData(fp, actionIndex):
+	animation = ReadAnimationData(actionIndex)
+	nameBytes = bytes(bpy.data.actions[actionIndex].name, 'utf-8')
+	fp.write (struct.pack('I%ds' % len(nameBytes), len(nameBytes), nameBytes))
+	fp.write(struct.pack('I', len(animation)))
+	for index, keys in animation:
+		fp.write(struct.pack('i', index))
+		for key in range(len(keys)):
+			fp.write(struct.pack('I', len(keys[key])))
+			features = 7
+			if len(keys[key]) == 4:
+				features = 3
+			elif len(keys[key]) == 5:
+				features = 5
+			fp.write(struct.pack('I', features))
+			for val in keys[key]:
+				fp.write(struct.pack('f', val))
+
 #------------------------------------------------------------------------------
 def WriteBinary(fp, meshData):
 	# OPM Version
@@ -224,7 +368,7 @@ def WriteBinary(fp, meshData):
 	msh                = meshData.Mesh
 
 	# OPM Features
-	features = 31
+	features = 255
 	fp.write(struct.pack('I', int(features)))
 	print('Features: ' + str(features))
 				
@@ -237,8 +381,177 @@ def WriteBinary(fp, meshData):
 		fp.write (struct.pack('fff', local_tangent_list[j][0], local_tangent_list[j][1], local_tangent_list[j][2]))
 		fp.write (struct.pack('ff', local_uv_list[j][0], local_uv_list[j][1]))
 	
+
 	# Number of Indices
 	fp.write (struct.pack('I', len(local_faces_list)))
 	print('Indices: ' + str(len(local_faces_list)))
 	for j, f in enumerate(local_faces_list):
 		fp.write (struct.pack('HHH', f[0], f[1], f[2]))
+
+
+    # Number of Bones
+	boneCount = len(bpy.data.objects[0].pose.bones)
+	print('Bone Count: ' + str(boneCount))
+	fp.write (struct.pack('I', boneCount))
+	WriteBoneData(fp, bpy.data.objects[0].pose.bones[0], 0)
+
+
+	WriteSkinData(fp, extract_meshes(bpy.data.objects, bpy.data.scenes[0])[0])
+	WriteAnimationData(fp, 0)
+	
+
+# ##############################################################################
+# Model exporter - armature
+# (only the first armature will exported)
+# ##############################################################################
+def get_armature():
+    if len(bpy.data.armatures) == 0:
+        print("Warning: no armatures in the scene")
+        return None, None
+
+    armature = bpy.data.armatures[0]
+
+    # Someone please figure out a proper way to get the armature node
+    for object in bpy.data.objects:
+        if object.type == 'ARMATURE':
+            return armature, object
+
+    print("Warning: no node of type 'ARMATURE' in the scene")
+    return None, None
+
+def handle_position_channel(channel, frame, position):
+
+    change = False
+
+    if channel.array_index in [0, 1, 2]:
+        for keyframe in channel.keyframe_points:
+            if keyframe.co[0] == frame:
+                change = True
+
+        value = channel.evaluate(frame)
+
+        if channel.array_index == 0:
+            position.x = value
+
+        if channel.array_index == 1:
+            position.y = value
+
+        if channel.array_index == 2:
+            position.z = value
+
+    return change
+
+def handle_rotation_channel(channel, frame, rotation):
+
+    change = False
+
+    if channel.array_index in [0, 1, 2, 3]:
+
+        for keyframe in channel.keyframe_points:
+            if keyframe.co[0] == frame:
+                change = True
+
+        value = channel.evaluate(frame)
+
+        if channel.array_index == 1:
+            rotation.x = value
+
+        elif channel.array_index == 2:
+            rotation.y = value
+
+        elif channel.array_index == 3:
+            rotation.z = value
+
+        elif channel.array_index == 0:
+            rotation.w = value
+
+    return change
+
+def position(bone, frame, action, armatureMatrix):
+
+    position = mathutils.Vector((0,0,0))
+    change = False
+
+    bone_label = '"%s"' % bone.name
+
+    for channel in action.fcurves:
+        data_path = channel.data_path
+        if bone_label in data_path and "location" in data_path:
+            hasChanged = handle_position_channel(channel, frame, position)
+            change = change or hasChanged
+
+    position = position * bone.matrix_local.inverted()
+
+    if bone.parent is None:
+
+        position.x += bone.head.x
+        position.y += bone.head.y
+        position.z += bone.head.z
+
+    else:
+
+        parent = bone.parent
+
+        parentInvertedLocalMatrix = parent.matrix_local.inverted()
+        parentHeadTailDiff = parent.tail_local - parent.head_local
+
+        position.x += (bone.head * parentInvertedLocalMatrix).x + parentHeadTailDiff.x
+        position.y += (bone.head * parentInvertedLocalMatrix).y + parentHeadTailDiff.y
+        position.z += (bone.head * parentInvertedLocalMatrix).z + parentHeadTailDiff.z
+
+    return armatureMatrix*position, change
+
+def rotation(bone, frame, action, armatureMatrix):
+
+    # TODO: calculate rotation also from rotation_euler channels
+
+    rotation = mathutils.Vector((0,0,0,1))
+
+    change = False
+
+    bone_label = '"%s"' % bone.name
+
+    for channel in action.fcurves:
+        data_path = channel.data_path
+        if bone_label in data_path and "quaternion" in data_path:
+            hasChanged = handle_rotation_channel(channel, frame, rotation)
+            change = change or hasChanged
+
+    rot3 = rotation.to_3d()
+    rotation.xyz = rot3 * bone.matrix_local.inverted()
+    rotation.xyz = armatureMatrix * rotation.xyz
+
+    return rotation, change
+
+def extract_meshes(objects, scene):
+
+    meshes = []
+
+    for object in objects:
+
+        if object.type == "MESH":
+
+            # collapse modifiers into mesh
+
+            mesh = object.to_mesh(scene, True, 'RENDER')
+
+            if not mesh:
+                raise Exception("Error, could not get mesh data from object [%s]" % object.name)
+
+            # preserve original name
+
+            mesh.name = object.name
+            X_ROT = mathutils.Matrix.Rotation(-math.pi/2, 4, 'X')
+            mesh.transform(X_ROT * object.matrix_world)
+                    
+                    
+            mesh.update(calc_tessface=True)
+
+            mesh.calc_normals()
+            mesh.calc_tessface()
+            meshes.append([mesh, object])
+
+    return meshes
+
+
+
