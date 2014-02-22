@@ -65,7 +65,7 @@ i8* OPreadstring(OPstream* str) {
 }
 
 OPfileInformation OPreadFileInformation(const char* path){
-	OPfileInformation file;
+	OPfileInformation file = { 0 };
 
 #ifdef OPIFEX_ANDROID
 	AAssetManager* mgr = AAssetManager_fromJava(JNIEnvironment(), JNIAssetManager());
@@ -122,7 +122,7 @@ OPint OPwriteFile(const char* path, OPstream* stream){
 		return 0;
 	}
 #elif defined(OPIFEX_WINDOWS)
-	// windows implementation
+	return 0; //TODO: windows implementation
 #endif
 }
 
@@ -197,7 +197,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 	}	
 #elif defined(OPIFEX_WINDOWS)
 	// windows implementation
-	OPint fd = 0, i;
+	OPint fd = 0;
 	// check to see if the file exists
 	if(OPfileExists(path) >= 0) {
 		OPlog("OPreadFile: %s\n", path);
@@ -224,6 +224,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 	}
 	else
 		OPlog("%s does not exist\n", path);
+	return NULL;
 #endif
 }
 
@@ -232,7 +233,7 @@ OPint OPfileExists(const char* path){
 #if defined(OPIFEX_UNIX)
 	return access(path, F_OK) + 1;
 #elif defined(OPIFEX_WINDOWS)
-
+	return 0; //TODO: windows implementation
 #endif
 }
 
@@ -242,7 +243,7 @@ OPint OPdeleteFile(const char* path){
 #if defined(OPIFEX_UNIX)
 		return unlink(path) + 1;
 #elif defined(OPIFEX_WINDOWS)
-
+		return 0; //TODO: windows implementation
 #endif
 	}
 	else{

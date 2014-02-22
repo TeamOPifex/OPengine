@@ -7,8 +7,8 @@
 
 
 typedef struct {
-	bool	keys[OPKEYBOARD_MAX];
-	bool	prevKeys[OPKEYBOARD_MAX];
+	OPint	keys[OPKEYBOARD_MAX];
+	OPint	prevKeys[OPKEYBOARD_MAX];
 } KeyboardState;
 
 typedef struct {
@@ -18,14 +18,14 @@ typedef struct {
 	i32	positionY;
 	i32	prevPositionX;
 	i32	prevPositionY;
-	bool	keys[OPMOUSE_MAX];
-	bool	prevKeys[OPMOUSE_MAX];
+	OPint	keys[OPMOUSE_MAX];
+	OPint	prevKeys[OPMOUSE_MAX];
 } MouseState;
 
 typedef struct {
-	bool tapping;
-	bool prevTapping;
-	bool updated;
+	OPint tapping;
+	OPint prevTapping;
+	OPint updated;
 	f32	positionX;
 	f32	positionY;
 	f32	prevPositionX;
@@ -37,11 +37,11 @@ extern MouseState Mouse;
 extern TouchState Touch;
 
 void OPkeyboardUpdate();
-bool OPkeyboardIsDown(OPkeyboardKey key);
-bool OPkeyboardIsUp(OPkeyboardKey key);
-bool OPkeyboardWasPressed(OPkeyboardKey key);
-bool OPkeyboardWasReleased(OPkeyboardKey key);
-bool OPkeyboardAnyInputIsDown();
+OPint OPkeyboardIsDown(OPkeyboardKey key);
+OPint OPkeyboardIsUp(OPkeyboardKey key);
+OPint OPkeyboardWasPressed(OPkeyboardKey key);
+OPint OPkeyboardWasReleased(OPkeyboardKey key);
+OPint OPkeyboardAnyInputIsDown();
 
 void OPmouseUpdate();
 i32 OPmousePositionX();
@@ -50,23 +50,23 @@ i32 OPmousePositionMovedX();
 i32 OPmousePositionMovedY();
 i32 OPmouseWheel();
 i32 OPmouseWheelMoved();
-bool OPmouseIsDown(OPmouseKey key);
-bool OPmouseIsUp(OPmouseKey key);
-bool OPmouseWasPressed(OPmouseKey key);
-bool OPmouseWasReleased(OPmouseKey key);
+OPint OPmouseIsDown(OPmouseKey key);
+OPint OPmouseIsUp(OPmouseKey key);
+OPint OPmouseWasPressed(OPmouseKey key);
+OPint OPmouseWasReleased(OPmouseKey key);
 void OPmouseSetPosition(i32 x, i32 y);
 void OPmouseSetPositionScreenCenter();
-bool OPmouseAnyInputIsDown();
+OPint OPmouseAnyInputIsDown();
 
 void OPtouchUpdate();
 f32 OPtouchPositionX();
 f32 OPtouchPositionY();
 f32 OPtouchPositionMovedX();
 f32 OPtouchPositionMovedY();
-bool OPtouchIsDown();
-bool OPtouchIsUp();
-bool OPtouchWasPressed();
-bool OPtouchWasReleased();
-bool OPtouchAnyInputIsDown();
+OPint OPtouchIsDown();
+OPint OPtouchIsUp();
+OPint OPtouchWasPressed();
+OPint OPtouchWasReleased();
+OPint OPtouchAnyInputIsDown();
 
 #endif

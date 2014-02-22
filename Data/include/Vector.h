@@ -13,13 +13,13 @@ extern "C" {
 #endif
 	typedef struct{
 		void* items;
-		OPint _capacity;
-		OPint _size;
-		OPint _elementSize;
+		OPuint _capacity;
+		OPuint _size;
+		OPuint _elementSize;
 	} OPvector;
 
 	OPvector* OPvectorCreate(OPint elementSize);
-	OPint OPvectorDestroy(OPvector* vector);
+	void OPvectorDestroy(OPvector* vector);
 
 	ui8* OPvectorGet(OPvector* vector, OPuint index);
 
@@ -33,15 +33,15 @@ extern "C" {
 	OPint OPvectorCapacity(OPvector* vector);
 
 	void OPvectorClear(OPvector* vector);
-	void OPvectorSet(OPvector* vector, OPint index, ui8* item);
-	void OPvectorErase(OPvector* vector, OPint index);
-	void OPvectorEraseRange(OPvector* vector, OPint indexFirst, OPint indexLast);
+	void OPvectorSet(OPvector* vector, OPuint index, ui8* item);
+	void OPvectorErase(OPvector* vector, OPuint index);
+	void OPvectorEraseRange(OPvector* vector, OPuint indexFirst, OPuint indexLast);
 
 	void OPvectorPush(OPvector* vector, ui8* item);
 	void OPvectorPop(OPvector* vector, ui8* item);
-	void OPvectorInsert(OPvector* vector, OPint index, ui8* item);
+	void OPvectorInsert(OPvector* vector, OPuint index, ui8* item);
 
-	void OPvectorReserve(OPvector* vector, OPint size);
+	void OPvectorReserve(OPvector* vector, OPuint size);
 #ifdef __cplusplus
 };
 //-----------------------------------------------------------------------------

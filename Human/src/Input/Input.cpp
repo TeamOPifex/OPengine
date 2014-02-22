@@ -38,23 +38,23 @@ void OPkeyboardUpdate() {
 	}
 }
 
-bool OPkeyboardIsDown(OPkeyboardKey key) {
+OPint OPkeyboardIsDown(OPkeyboardKey key) {
 	return Keyboard.keys[key];
 }
 
-bool OPkeyboardIsUp(OPkeyboardKey key) {
+OPint OPkeyboardIsUp(OPkeyboardKey key) {
 	return !Keyboard.keys[key];
 }
 
-bool OPkeyboardWasPressed(OPkeyboardKey key) {
+OPint OPkeyboardWasPressed(OPkeyboardKey key) {
 	return Keyboard.keys[key] && !Keyboard.prevKeys[key];
 }
 
-bool OPkeyboardWasReleased(OPkeyboardKey key) {
+OPint OPkeyboardWasReleased(OPkeyboardKey key) {
 	return !Keyboard.keys[key] && Keyboard.prevKeys[key];
 }
 
-bool OPkeyboardAnyInputIsDown() {
+OPint OPkeyboardAnyInputIsDown() {
 	for (ui32 i = 0; i < OPKEYBOARD_MAX; i++) {
 		if (Keyboard.keys[i]) return true;
 	}
@@ -65,22 +65,22 @@ void OPkeyboardUpdate() {
 
 }
 
-bool OPkeyboardIsDown(OPkeyboardKey key) {
+OPint OPkeyboardIsDown(OPkeyboardKey key) {
 	return false;
 }
 
-bool OPkeyboardIsUp(OPkeyboardKey key) {
+OPint OPkeyboardIsUp(OPkeyboardKey key) {
 	return true;
 }
 
-bool OPkeyboardWasPressed(OPkeyboardKey key) {
+OPint OPkeyboardWasPressed(OPkeyboardKey key) {
 	return false;
 }
 
-bool OPkeyboardWasReleased(OPkeyboardKey key) {
+OPint OPkeyboardWasReleased(OPkeyboardKey key) {
 	return false;
 }
-bool OPkeyboardAnyInputIsDown() {
+OPint OPkeyboardAnyInputIsDown() {
 	return false;
 }
 #endif
@@ -124,16 +124,16 @@ i32 OPmouseWheelMoved() {
 	return Mouse.prevWheel - Mouse.wheel;
 }
 
-bool OPmouseIsDown(OPmouseKey key) {
+OPint OPmouseIsDown(OPmouseKey key) {
 	return Mouse.keys[key];
 }
-bool OPmouseIsUp(OPmouseKey key) {
+OPint OPmouseIsUp(OPmouseKey key) {
 	return !Mouse.keys[key];
 }
-bool OPmouseWasPressed(OPmouseKey key) {
+OPint OPmouseWasPressed(OPmouseKey key) {
 	return Mouse.keys[key] && !Mouse.prevKeys[key];
 }
-bool OPmouseWasReleased(OPmouseKey key) {
+OPint OPmouseWasReleased(OPmouseKey key) {
 	return !Mouse.keys[key] && Mouse.prevKeys[key];
 }
 void OPmouseSetPosition(i32 x, i32 y) {	
@@ -144,7 +144,7 @@ void OPmouseSetPosition(i32 x, i32 y) {
 void OPmouseSetPositionScreenCenter() {
 	OPmouseSetPosition(OPrenderWidth / 2, OPrenderHeight / 2);
 }
-bool OPmouseAnyInputIsDown() {
+OPint OPmouseAnyInputIsDown() {
 	for (ui32 i = 0; i < OPMOUSE_MAX; i++) {
 		if (Mouse.keys[i]) return true;
 	}
@@ -171,23 +171,23 @@ f32 OPtouchPositionMovedY() {
 	return 0;
 }
 
-bool OPtouchIsDown() {
+OPint OPtouchIsDown() {
 	return false;
 }
 
-bool OPtouchIsUp() {
+OPint OPtouchIsUp() {
 	return true;
 }
 
-bool OPtouchWasPressed() {
+OPint OPtouchWasPressed() {
 	return false;
 }
 
-bool OPtouchWasReleased() {
+OPint OPtouchWasReleased() {
 	return false;
 }
 
-bool OPtouchAnyInputIsDown() {
+OPint OPtouchAnyInputIsDown() {
 	return false;
 }
 #else
@@ -215,16 +215,16 @@ i32 OPmouseWheelMoved() {
 	return 0;
 }
 
-bool OPmouseIsDown(OPmouseKey key) {
+OPint OPmouseIsDown(OPmouseKey key) {
 	return false;
 }
-bool OPmouseIsUp(OPmouseKey key) {
+OPint OPmouseIsUp(OPmouseKey key) {
 	return true;
 }
-bool OPmouseWasPressed(OPmouseKey key) {
+OPint OPmouseWasPressed(OPmouseKey key) {
 	return false;
 }
-bool OPmouseWasReleased(OPmouseKey key) {
+OPint OPmouseWasReleased(OPmouseKey key) {
 	return false;
 }
 void OPmouseSetPosition(i32 x, i32 y) {	
@@ -271,22 +271,22 @@ f32 OPtouchPositionMovedY() {
 	return Touch.prevPositionY - Touch.positionY;
 }
 
-bool OPtouchIsDown() {
+OPint OPtouchIsDown() {
 	return Touch.tapping;
 }
 
-bool OPtouchIsUp() {
+OPint OPtouchIsUp() {
 	return !Touch.tapping;
 }
 
-bool OPtouchWasPressed() {
+OPint OPtouchWasPressed() {
 	return Touch.tapping && !Touch.prevTapping;
 }
 
-bool OPtouchWasReleased() {
+OPint OPtouchWasReleased() {
 	return !Touch.tapping && Touch.prevTapping;
 }
-bool OPtouchAnyInputIsDown() {
+OPint OPtouchAnyInputIsDown() {
 	return Touch.tapping;
 }
 #endif

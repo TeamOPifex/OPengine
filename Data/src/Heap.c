@@ -1,15 +1,15 @@
 #include "./../include/Heap.h"
 
 //-----------------------------------------------------------------------------
-OPminHeap* OPminHeapCreate(OPint capacity){
+OPminHeap* OPminHeapCreate(OPuint capacity){
 	OPminHeap* heap = (OPminHeap*)OPalloc(sizeof(OPminHeap));
-	OPint i = 0;
-	heap->_indices = (OPint*)OPalloc(sizeof(OPint) * (capacity + 1));
+	OPuint i = 0;
+	heap->_indices = (OPuint*)OPalloc(sizeof(OPuint) * (capacity + 1));
 	
 	for(i = 1; i < capacity + 1; i++){
 		heap->_indices[i] = 0;
 	}
-	heap->_indices[0] = -0xffffffffffffffff;
+	heap->_indices[0] = 0xffffffffffffffff;
 
 	heap->_size = 0;
 	heap->_capacity = capacity;
@@ -25,12 +25,12 @@ OPint OPminHeapDestroy(OPminHeap* heap){
 //-----------------------------------------------------------------------------
 OPint OPminHeapPush(OPminHeap* heap, OPint value){
 	if(heap->_size < heap->_capacity){
-		OPint now;
+		OPuint now;
         heap->_size++;
 		heap->_indices[heap->_size] = value; /*Insert in the last place*/
         /*Adjust its position*/
         now = heap->_size;
-        while(heap->_indices[(now >> 1)] > value){
+        while((int)(heap->_indices[(now >> 1)]) > value){
                 heap->_indices[now] = heap->_indices[(now >> 1)];
                 now >>= 1;
         }
@@ -41,7 +41,7 @@ OPint OPminHeapPush(OPminHeap* heap, OPint value){
 }
 //-----------------------------------------------------------------------------
 OPint OPminHeapPop(OPminHeap* heap){
-    int minElement,lastElement,child,now;
+    OPuint minElement,lastElement,child,now;
 	minElement = heap->_indices[1];
 	lastElement = heap->_indices[heap->_size--];
     /* now refers to the index at which we are now */

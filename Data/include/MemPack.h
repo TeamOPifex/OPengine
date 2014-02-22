@@ -30,8 +30,8 @@ typedef struct{
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-void* OPmemPackAlloc(OPmemDesc* segments, OPint segCount, OPint n);
-OPint OPmemPackDealloc(void* Data, OPmemDesc* segments, OPint segCount, OPint n);
+void* OPmemPackAlloc(OPmemDesc* segments, OPuint segCount, OPint n);
+void OPmemPackDealloc(void* Data, OPmemDesc* segments, OPint segCount, OPint n);
 #ifdef __cplusplus
 }
 #endif
