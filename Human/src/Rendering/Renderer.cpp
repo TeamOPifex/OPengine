@@ -4,7 +4,10 @@
 
 i32 OPrenderWidth;
 i32 OPrenderHeight;
+
+#ifndef OPIFEX_ANDROID
 GLFWwindow* window = NULL;
+#endif
 
 void glfwErrorCallback(int error, const char* desc){
 	OPlog(desc);
@@ -118,17 +121,23 @@ void  OPrenderSetViewport(ui32 x, ui32 y, ui32 width, ui32 height){
 }
 //-----------------------------------------------------------------------------
 OPint OPrenderGetWidth(){
+	#ifndef OPIFEX_ANDROID
 	glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
+	#endif
 	return OPrenderWidth;
 }
 //-----------------------------------------------------------------------------
 OPint OPrenderGetHeight(){
+	#ifndef OPIFEX_ANDROID
 	glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
+	#endif
 	return OPrenderHeight;
 }
 //-----------------------------------------------------------------------------
 OPfloat OPrenderGetAspectRatio(){
+	#ifndef OPIFEX_ANDROID
 	glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
+	#endif
 	ASSERT(OPrenderWidth > 0, "Height was not greater than 0, there was problem getting width and height");
 	return OPrenderHeight / (OPfloat)OPrenderWidth;
 }

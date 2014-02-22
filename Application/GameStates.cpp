@@ -75,7 +75,8 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("noneNorm.png");
 	OPcmanLoad("stencil.opf");
 	// Required
-	i8** text = (i8**)OPalloc(sizeof(i8) * 1);
+
+	OPchar** text = (OPchar**)OPalloc(sizeof(i8) * 1);
 	text[0] = "All of the text! Woot!";
 	fontManager = OPfontManagerSetup("stencil.opf", text, 1);
 

@@ -1,5 +1,3 @@
-#pragma once
-
 #include "./Human/include/Rendering/Font/Font.h"
 #include "./Human/include/Rendering/Font/FontAtlas.h"
 #include "./Human/include/Rendering/Font/FontGlyph.h"
@@ -10,7 +8,7 @@
 #include "./Core/include/Assert.h"
 #include "./Core/include/MathHelpers.h"
 
-void OPfontLoad(i8* filename, OPfont** data) {
+void OPfontLoad(OPchar* filename, OPfont** data) {
 	OPfont* font = (OPfont*)OPalloc(sizeof(OPfont));
 	*data = font;
 
@@ -91,10 +89,10 @@ void OPfontUnload(OPfont* font)
 	OPfree(font);
 }
 
-OPfontGlyph* OPfontGetGlyph(OPfont* font, i8 charcode)
+OPfontGlyph* OPfontGetGlyph(OPfont* font, OPchar charcode)
 {
 	size_t i;
-	i8 buffer[2] = { 0, 0 };
+	OPchar buffer[2] = { 0, 0 };
 	OPfontGlyph* glyph;
 
 	/* Check if charcode has been already loaded */
@@ -114,7 +112,7 @@ OPfontGlyph* OPfontGetGlyph(OPfont* font, i8 charcode)
 	/* charcode -1 is special : it is used for line drawing (overline,
 	* underline, strikethrough) and background.
 	*/
-	if (charcode == (i8)(-1))
+	if (charcode == (OPchar)(-1))
 	{
 		size_t width = font->atlas->width;
 		size_t height = font->atlas->height;
@@ -131,7 +129,7 @@ OPfontGlyph* OPfontGetGlyph(OPfont* font, i8 charcode)
 		}
 		
 		OPfontAtlasSetRegion(font->atlas, region.x, region.y, 4, 4, data, 0);
-		glyph->charcode = (i8)(-1);
+		glyph->charcode = (OPchar)(-1);
 		glyph->textureCoordinates.x = (region.x + 2) / (float)width;
 		glyph->textureCoordinates.y = (region.y + 2) / (float)height;
 		glyph->textureCoordinates.z = (region.x + 3) / (float)width;
@@ -144,7 +142,7 @@ OPfontGlyph* OPfontGetGlyph(OPfont* font, i8 charcode)
 }
 
 
-OPmesh OPfontCreateText(OPfont* font, i8* text) {
+OPmesh OPfontCreateText(OPfont* font, OPchar* text) {
 	ui32 vertexSize = sizeof(OPvertexColor);
 	ui32 indexSize = sizeof(ui16);
 	OPvector* vertices = OPvectorCreate(vertexSize);
@@ -195,7 +193,7 @@ OPmesh OPfontCreateText(OPfont* font, i8* text) {
 	return mesh;	
 }
 
-OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const i8* text) {
+OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text) {
 	ASSERT(OPRENDER_CURR_PACKER != NULL, "No mesh packer bound.");
 
 	ui32 vertexSize = sizeof(OPvertexColor);

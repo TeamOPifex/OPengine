@@ -1,5 +1,3 @@
-#pragma once
-
 #include "./Human/include/Rendering/Font/FontGlyph.h"
 
 OPfontGlyph* OPfontGlyphCreate() {
@@ -14,7 +12,7 @@ void OPfontGlyphDestroy(OPfontGlyph* glyph) {
 	OPfree(glyph);
 }
 
-OPfloat OPfontGlyphGetKerning(OPfontGlyph* glyph, ui8 charcode){
+OPfloat OPfontGlyphGetKerning(OPfontGlyph* glyph, OPchar charcode){
 	OPint i;
 	for (i = 0; i < OPvectorSize(glyph->kerning); ++i){
 		OPfontKerning* kerning = (OPfontKerning*)OPvectorGet(glyph->kerning, i);

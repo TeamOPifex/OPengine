@@ -11,6 +11,12 @@ enum OPMFeatures {
 	Animations	=	0x80
 };
 
+enum OPMKeyFeatures {
+	Key_Time	=	0x01,
+	Key_Position=	0x02,
+	Key_Rotation=	0x04
+};
+
 OPint OPMhasFeature(ui32 features, ui32 feature) {
 	return features & feature;
 }
@@ -164,6 +170,78 @@ OPMData OPMloadData(OPstream* str) {
 	if(!OPMhasFeature(features, Tangent)) {
 		OPCalculateTangents(&data);
 	}
+
+	// Read Bones
+	if(OPMhasFeature(features, Bones)){
+		ui32 boneCount = OPreadui32(str);
+		// OPskeleton* skeleton = (OPskeleton*)OPalloc(sizeof(OPskeleton));
+		// skeleton->hierarchy = (ui16*)OPalloc(sizeof(ui16) * boneCount);
+		// skeleton->localPoses = (OPmat4*)OPalloc(sizeof(OPmat4) * boneCount);
+		// skeleton->globalPoses = (OPmat4*)OPalloc(sizeof(OPmat4) * boneCount);
+
+		for(i32 i = 0; i < boneCount; i++) {
+			i32 boneIndex = OPreadi32(str);
+			i8* name = OPreadstring(str);
+			f32 x = OPreadf32(str);
+			f32 y = OPreadf32(str);
+			f32 z = OPreadf32(str);
+			OPlog("Joint: %d %s", boneIndex, name);
+			OPfree(name);
+			//OPmat4Translate(&skeleton->localPoses[i], x, y, z);			
+		}
+	}
+
+	// Read Skinning
+	if(OPMhasFeature(features, Skinning)){
+		ui32 indexCount = OPreadui32(str);
+		for(i32 i = 0; i < indexCount; i++){
+			OPreadui32(str);
+		}
+		ui32 weightCount = OPreadui32(str);
+		for(i32 i = 0; i < weightCount; i++) {
+			OPreadf32(str);
+		}
+	}
+
+	// Read Animation
+	if(OPMhasFeature(features, Animations)){
+		i8* name = OPreadstring(str);
+		OPlog("Animation: %s", name);
+		ui32 keyframes = OPreadui32(str);
+		OPlog("Keyframes %d", keyframes);
+		for(i32 i = 0; i < keyframes; i++) {
+			OPlog("Keyframe %d", i);
+			i32 index = OPreadi32(str);
+			OPlog("Bone %d", index);
+			ui32 keys = OPreadui32(str);
+			for(i32 j = 0; j < keys; j++) {
+				ui32 keyFeatures = OPreadui32(str);
+				OPlog("Keyframe Features: %d", keyFeatures);
+				if(keyFeatures && Key_Time) {
+					f32 time = OPreadf32(str);
+					OPlog("Keyframe Time: %f", time);
+				}
+
+				if(keyFeatures && Key_Position) {
+					f32 x = OPreadf32(str);
+					f32 y = OPreadf32(str);
+					f32 z = OPreadf32(str);
+					OPlog("Position: %f, %f, %f", x, y, z);
+				}
+
+				if(keyFeatures && Key_Rotation) {
+					f32 x = OPreadf32(str);
+					f32 y = OPreadf32(str);
+					f32 z = OPreadf32(str);
+					f32 w = OPreadf32(str);
+					OPlog("Rotation: %f, %f, %f, %f", x, y, z, w);
+				}
+			}
+		}
+		OPfree(name);
+	}
+
+
 
 	return data;
 }

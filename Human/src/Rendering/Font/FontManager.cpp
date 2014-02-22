@@ -20,7 +20,7 @@ OPfontManager* OPfontManagerCreate(OPfont* font) {
 	return temp;
 }
 
-OPfontManager* OPfontManagerSetup(i8* font, i8** text, ui16 count) {
+OPfontManager* OPfontManagerSetup(OPchar* font, OPchar** text, ui16 count) {
 	OPsystemsLoadFontEffect();
 	OPcmanLoad(font);
 	OPfont* _font = (OPfont*)OPcmanGet(font);
@@ -52,7 +52,7 @@ void OPfontManagerBind(OPfontManager* manager) {
 	OPRENDER_CURR_FONT_MANAGER = manager;
 }
 
-void OPfontManagerAddText(const i8* text) {
+void OPfontManagerAddText(const OPchar* text) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
 	OPmeshPackerBind(&OPRENDER_CURR_FONT_MANAGER->meshPacker);
 	OPfontBuiltTextNode* node = (OPfontBuiltTextNode*)OPalloc(sizeof(OPfontBuiltTextNode));
@@ -71,53 +71,53 @@ void OPfontEffectBind(OPeffect* effect) {
 	OPRENDER_CURR_FONT_EFFECT = effect;
 }
 
-void OPrenderTextRGBAXYAlign(const i8* text, f32 r, f32 g, f32 b, f32 a, f32 x, f32 y, OPfontAlign align) {
+void OPrenderTextRGBAXYAlign(const OPchar* text, f32 r, f32 g, f32 b, f32 a, f32 x, f32 y, OPfontAlign align) {
 	OPrenderTextColor4Vec2Align(text, OPvec4Create(r, g, b, a), OPvec2Create(x, y), align);
 }
 
-void OPrenderTextXY(const i8* text, f32 x, f32 y) {
+void OPrenderTextXY(const OPchar* text, f32 x, f32 y) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
 	OPrenderTextColor4Vec2Align(text, OPRENDER_CURR_FONT_MANAGER->_color, OPvec2Create(x, y), OPRENDER_CURR_FONT_MANAGER->_align);
 }
 
-void OPrenderTextXYAlign(const i8* text, f32 x, f32 y, OPfontAlign align) {
+void OPrenderTextXYAlign(const OPchar* text, f32 x, f32 y, OPfontAlign align) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
 	OPrenderTextColor4Vec2Align(text, OPRENDER_CURR_FONT_MANAGER->_color, OPvec2Create(x, y), align);
 }
 
-void OPrenderTextRGBXY(const i8* text, f32 r, f32 g, f32 b, f32 x, f32 y) {
+void OPrenderTextRGBXY(const OPchar* text, f32 r, f32 g, f32 b, f32 x, f32 y) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
 	OPrenderTextColor4Vec2Align(text, OPvec4Create(r, g, b, 1.0f), OPvec2Create(x, y), OPRENDER_CURR_FONT_MANAGER->_align);
 }
 
-void OPrenderTextRGBAXY(const i8* text, f32 r, f32 g, f32 b, f32 a, f32 x, f32 y) {
+void OPrenderTextRGBAXY(const OPchar* text, f32 r, f32 g, f32 b, f32 a, f32 x, f32 y) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
 	OPrenderTextColor4Vec2Align(text, OPvec4Create(r,g,b,a), OPvec2Create(x,y), OPRENDER_CURR_FONT_MANAGER->_align);
 }
-void OPrenderTextVec2(const i8* text, OPvec2 pos) {
+void OPrenderTextVec2(const OPchar* text, OPvec2 pos) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
 	OPrenderTextColor4Vec2Align(text, OPRENDER_CURR_FONT_MANAGER->_color, pos, OPRENDER_CURR_FONT_MANAGER->_align);
 }
 
-void OPrenderTextVec2Align(const i8* text, OPvec2 pos, OPfontAlign align) {
+void OPrenderTextVec2Align(const OPchar* text, OPvec2 pos, OPfontAlign align) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
 	OPrenderTextColor4Vec2Align(text, OPRENDER_CURR_FONT_MANAGER->_color, pos, align);
 }
 
-void OPrenderTextColor3Vec2(const i8* text, OPvec3 color, OPvec2 pos) {
+void OPrenderTextColor3Vec2(const OPchar* text, OPvec3 color, OPvec2 pos) {
 	OPrenderTextColor4Vec2Align(text, OPvec4CreateFromVec3(color, 1.0f), pos, OPRENDER_CURR_FONT_MANAGER->_align);
 }
 
-void OPrenderTextColor3Vec2Align(const i8* text, OPvec3 color, OPvec2 pos, OPfontAlign align) {
+void OPrenderTextColor3Vec2Align(const OPchar* text, OPvec3 color, OPvec2 pos, OPfontAlign align) {
 	OPrenderTextColor4Vec2Align(text, OPvec4CreateFromVec3(color, 1.0f), pos, align);
 }
 
-void OPrenderTextColor4Vec2(const i8* text, OPvec4 color, OPvec2 pos) {
+void OPrenderTextColor4Vec2(const OPchar* text, OPvec4 color, OPvec2 pos) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
 	OPrenderTextColor4Vec2Align(text, color, pos, OPRENDER_CURR_FONT_MANAGER->_align);
 }
 
-void OPrenderTextColor4Vec2Align(const i8* text, OPvec4 color, OPvec2 pos, OPfontAlign align) {
+void OPrenderTextColor4Vec2Align(const OPchar* text, OPvec4 color, OPvec2 pos, OPfontAlign align) {
 
 	ASSERT(OPRENDER_CURR_FONT_EFFECT != NULL, "A Font Effect has not been bound yet");
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
