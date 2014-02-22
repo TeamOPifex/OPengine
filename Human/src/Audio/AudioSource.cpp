@@ -114,7 +114,7 @@ OPint OPaudOpenOgg(const OPchar* filename, OPaudioSource** source){
 			psVorbisInfo = fn_ov_info(sOggVorbisFile, -1);
 			if(psVorbisInfo){
 				OPaudioDescription desc = {
-					fn_ov_pcm_total(sOggVorbisFile, -1),
+					(ui64)fn_ov_pcm_total(sOggVorbisFile, -1),
 					(ui32)psVorbisInfo->rate,
 					0,                      // bits / sample
 					(ui16)psVorbisInfo->channels,

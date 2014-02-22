@@ -20,7 +20,6 @@ OPint OPlistDestroy(OPlist* list){
 //-----------------------------------------------------------------------------
 OPint OPlistPush(OPlist* list, ui8* value){
 	OPint eleSize = list->_elementSize;
-	OPint i;
 
 	if(_oplNextExceedsCap(list)){
 		list->_capacity *= 2;
@@ -41,8 +40,8 @@ ui8* OPlistPop(OPlist* list){
 }
 //-----------------------------------------------------------------------------
 OPint OPlistInsert(OPlist* list, ui8* value, OPuint index){
-	OPint eleSize = list->_elementSize;
-	OPint i;
+	OPuint eleSize = list->_elementSize;
+	OPuint i;
 
 	// expand the array if needed
 	if(_oplNextExceedsCap(list)){
@@ -63,7 +62,7 @@ OPint OPlistInsert(OPlist* list, ui8* value, OPuint index){
 }
 //-----------------------------------------------------------------------------
 OPint OPlistRemoveAt(OPlist* list, OPuint index){
-	OPint i;
+	OPuint i;
 	list->_size--;
 
 	// shift all the elements to the left copying over the value at index

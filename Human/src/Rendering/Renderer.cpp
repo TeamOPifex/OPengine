@@ -27,9 +27,7 @@ OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
 	OPrenderHeight = height;
 
 	return 0;
-#else
-	GLuint VertexArrayID;
-	
+#else	
 	glfwSetErrorCallback(glfwErrorCallback);
 
 	int result = glfwInit();

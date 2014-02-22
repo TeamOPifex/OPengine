@@ -19,12 +19,12 @@ OPint OPMhasFeature(ui32 features, ui32 feature) {
 void OPCalculateTangents(OPMData* data) {
 	for (ui16 a = 0; a < data->indexCount; a+=3) {		
 		ui16 i1 = ((ui16*)data->indices)[a + 0];
-        ui16 i2 = ((ui16*)data->indices)[a + 1];
-        ui16 i3 = ((ui16*)data->indices)[a + 2];
+		ui16 i2 = ((ui16*)data->indices)[a + 1];
+		ui16 i3 = ((ui16*)data->indices)[a + 2];
 
 		OPMvertex& v1 = ((OPMvertex*)data->vertices)[i1];
-        OPMvertex& v2 = ((OPMvertex*)data->vertices)[i2];
-        OPMvertex& v3 = ((OPMvertex*)data->vertices)[i3];
+		OPMvertex& v2 = ((OPMvertex*)data->vertices)[i2];
+		OPMvertex& v3 = ((OPMvertex*)data->vertices)[i3];
 		
 		v1.Tangent.x = 0;
 		v1.Tangent.y = 0;
@@ -39,12 +39,12 @@ void OPCalculateTangents(OPMData* data) {
 
 	for (ui16 a = 0; a < data->indexCount; a+=3) {	
 		ui16 i1 = ((ui16*)data->indices)[a + 0];
-        ui16 i2 = ((ui16*)data->indices)[a + 1];
-        ui16 i3 = ((ui16*)data->indices)[a + 2];
-        
+		ui16 i2 = ((ui16*)data->indices)[a + 1];
+		ui16 i3 = ((ui16*)data->indices)[a + 2];
+		
 		OPMvertex& v1 = ((OPMvertex*)data->vertices)[i1];
-        OPMvertex& v2 = ((OPMvertex*)data->vertices)[i2];
-        OPMvertex& v3 = ((OPMvertex*)data->vertices)[i3];
+		OPMvertex& v2 = ((OPMvertex*)data->vertices)[i2];
+		OPMvertex& v3 = ((OPMvertex*)data->vertices)[i3];
 
 		OPvec3 v2v1;
 		OPvec3sub(&v2v1, &v2.Position, &v1.Position);
@@ -145,7 +145,7 @@ OPMData OPMloadData(OPstream* str) {
 
 	ui32 indicesCount = OPreadui32(str);
 	ui16* indices = (ui16*)OPalloc(sizeof(str) * (indicesCount * 3));
-	for(int i = 0; i < indicesCount; i++){
+	for(OPuint i = 0; i < indicesCount; i++){
 		indices[i * 3 + 0] = OPreadui16(str);
 		indices[i * 3 + 1] = OPreadui16(str);
 		indices[i * 3 + 2] = OPreadui16(str);
@@ -257,7 +257,7 @@ OPvec3 GetCenterOfMass(OPMData* data, OPlinkedList* vertList){
 		node = node->Next;
 		++verts;
 	}
-	com /= verts;
+	com /= (OPfloat)verts;
 
 	return com;
 }

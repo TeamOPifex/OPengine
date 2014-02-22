@@ -63,7 +63,7 @@ static OPint OPfontInit(OPfont* font, i8* filename)
 
 
 void OPfontKerningGenerate(OPfont* font, i8* filename){
-	OPint i, j;
+	OPuint i, j;
 	FT_Library library;
 	FT_Face face;
 	FT_UInt glyphIndex, prevIndex;

@@ -54,6 +54,7 @@ OPint OPcmanIsLoaded(const OPchar* key){
 
 OPint OPcmanLoad(const OPchar* key){
 	const OPchar* ext = NULL;
+	OPint success = 0;
 	if(OPhashMapExists(&OP_CMAN_HASHMAP, key)){
 		OPasset* existing = NULL;
 		OPhashMapGet(&OP_CMAN_HASHMAP, key, (void**)&existing);
@@ -91,7 +92,7 @@ OPint OPcmanLoad(const OPchar* key){
 				// load the asset
 				asset = NULL;
 				OPlog("&");
-				OPint success = loader.Load(fullPath, &asset);
+				success = loader.Load(fullPath, &asset);
 				if(success <= 0) return OP_CMAN_ASSET_LOAD_FAILED;
 
 				OPlog("$ %d", success);
@@ -166,4 +167,5 @@ OPint OPcmanPurge(){
 		OPllRemove(OP_CMAN_PURGE, n);
 		n = next;
 	}
+	return 1;
 }

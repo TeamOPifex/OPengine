@@ -6,7 +6,7 @@
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-void* OPmemPackAlloc(OPmemDesc* segments, OPint segCount, OPint n){
+void* OPmemPackAlloc(OPmemDesc* segments, OPuint segCount, OPint n){
 	OPuint size = 0, offset = 0, i = 0;
 	void* Data = NULL;
 
@@ -24,7 +24,7 @@ void* OPmemPackAlloc(OPmemDesc* segments, OPint segCount, OPint n){
 	return Data;
 }
 
-OPint OPmemPackDealloc(void* Data, OPmemDesc* segments, OPint segCount, OPint n){
+void OPmemPackDealloc(void* Data, OPmemDesc* segments, OPint segCount, OPint n){
 	OPint off = 0, i = 0;
 
 	// perform any clean up needed

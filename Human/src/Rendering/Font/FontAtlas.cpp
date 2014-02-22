@@ -71,7 +71,7 @@ void OPfontAtlasMerge(OPfontAtlas* atlas)
 	OPfontAtlasNode *node, *next;
 	OPint i;
 	
-	for (i = 0; i< atlas->nodes->_size - 1; ++i)
+	for (i = 0; i < (int)(atlas->nodes->_size) - 1; ++i)
 	{
 		node = (OPfontAtlasNode*)(OPvectorGet(atlas->nodes, i));
 		next = (OPfontAtlasNode*)(OPvectorGet(atlas->nodes, i + 1));
@@ -89,13 +89,13 @@ OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, OPint width, OPint he
 	OPint y, best_height, best_width, best_index;
 	OPfontAtlasNode *node, *prev;
 	OPfontAtlasRegion region = { 0, 0, width, height };
-	OPint i;
+	OPuint i;
 
 	best_height = INT_MAX;
 	best_index = -1;
 	best_width = INT_MAX;
 
-	for (i = 0; i<atlas->nodes->_size; ++i)
+	for (i = 0; i < atlas->nodes->_size; ++i)
 	{
 		y = OPfontAtlasFit(atlas, i, width, height);
 		if (y >= 0)

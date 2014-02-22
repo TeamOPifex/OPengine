@@ -158,7 +158,7 @@ OPmesh OPfontCreateText(OPfont* font, i8* text) {
 		OPfontGlyph* glyph = OPfontGetGlyph(font, text[i]);
 		if (glyph != NULL)
 		{
-			OPint kerning = 0;
+			OPfloat kerning = 0;
 			if (i > 0)
 			{
 				kerning = OPfontGlyphGetKerning(glyph, text[i - 1]);
@@ -175,10 +175,10 @@ OPmesh OPfontCreateText(OPfont* font, i8* text) {
 
 			OPint offset = vertices->_size;
 			ui16 inds[6] = { 0 + offset, 1 + offset, 2 + offset, 0 + offset, 2 + offset, 3 + offset };
-			OPvertexColor verts[4] = { { x0, y0, 0, s0, t0 },
-			{ x0, y1, 0, s0, t1 },
-			{ x1, y1, 0, s1, t1 },
-			{ x1, y0, 0, s1, t0 } };
+			OPvertexColor verts[4] = { { (OPfloat)x0, (OPfloat)y0, 0.0f, s0, t0 },
+			{ (OPfloat)x0, (OPfloat)y1, 0.0f, s0, t1 },
+			{ (OPfloat)x1, (OPfloat)y1, 0.0f, s1, t1 },
+			{ (OPfloat)x1, (OPfloat)y0, 0.0f, s1, t0 } };
 
 			for (OPint i = 0; i < 4; i++)
 				OPvectorPush(vertices, (ui8*)&verts[i]);
@@ -211,7 +211,7 @@ OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const i8* text) {
 		OPfontGlyph* glyph = OPfontGetGlyph(font, text[i]);
 		if (glyph != NULL)
 		{
-			OPint kerning = 0;
+			OPfloat kerning = 0;
 			if (i > 0)
 			{
 				kerning = OPfontGlyphGetKerning(glyph, text[i - 1]);
@@ -228,10 +228,10 @@ OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const i8* text) {
 
 			OPint offset = vertices->_size;
 			ui16 inds[6] = { 0 + offset, 1 + offset, 2 + offset, 0 + offset, 2 + offset, 3 + offset };
-			OPvertexColor verts[4] = { { x0, y0, 0, s0, t0 },
-			{ x0, y1, 0, s0, t1 },
-			{ x1, y1, 0, s1, t1 },
-			{ x1, y0, 0, s1, t0 } };
+			OPvertexColor verts[4] = { { (OPfloat)x0, (OPfloat)y0, 0.0f, s0, t0 },
+			{ (OPfloat)x0, (OPfloat)y1, 0.0f, s0, t1 },
+			{ (OPfloat)x1, (OPfloat)y1, 0.0f, s1, t1 },
+			{ (OPfloat)x1, (OPfloat)y0, 0.0f, s1, t0 } };
 
 			for (OPint i = 0; i < 4; i++)
 				OPvectorPush(vertices, (ui8*)&verts[i]);
