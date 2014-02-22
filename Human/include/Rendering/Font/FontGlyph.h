@@ -6,7 +6,7 @@
 #include "./Data/include/Vector.h"
 
 typedef struct {
-	i8 charcode;
+	OPchar charcode;
 	OPint width;
 	OPint height;
 	OPint offsetX;
@@ -21,6 +21,6 @@ typedef struct {
 
 OPfontGlyph* OPfontGlyphCreate();
 void OPfontGlyphDestroy(OPfontGlyph* glyph);
-OPfloat OPfontGlyphGetKerning(OPfontGlyph* glyph, ui8 charcode);
+OPfloat OPfontGlyphGetKerning(OPfontGlyph* glyph, OPchar charcode);
 
 #endif

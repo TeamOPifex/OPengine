@@ -1,5 +1,3 @@
-#pragma once
-
 #include "./Human/include/Rendering/Font/FontAtlas.h"
 #include "./Human/include/Utilities/ImagePNG.h"
 
@@ -168,8 +166,13 @@ OPtexture OPfontAtlasTexture(OPfontAtlas* atlas) {
 	OPtextureDescription desc = { 
 		(ui16)atlas->width,
 		(ui16)atlas->height,
+		#ifndef OPIFEX_ANDROID
 		GL_RED,
 		GL_RED,
+		#else
+		GL_RGB,
+		GL_RGB,
+		#endif
 		GL_UNSIGNED_BYTE,
 		GL_LINEAR, 
 		GL_LINEAR, 
@@ -192,7 +195,7 @@ OPtexture OPfontAtlasTexture(OPfontAtlas* atlas) {
 	return texture;
 }
 
-void OPfontAtlasSavePNG(OPfontAtlas* atlas, i8* filename) {
+void OPfontAtlasSavePNG(OPfontAtlas* atlas, OPchar* filename) {
 	if (atlas->depth == 1) {
 		ui8* data = (ui8*)OPalloc(atlas->width * atlas->height * 3);
 		for (OPint i = atlas->width * atlas->height; i--;) {

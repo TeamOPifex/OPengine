@@ -21,7 +21,7 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_init(JNIEnv * env, jobject obj,
 	_JNIHeight = height;
 	_OPengineRunning = 1;
 	OPlog("Create environment");
-	OPtime = OPcreateTimer();
+	OPcreateTimer(&OPtime);
 	OPlog("Timer Created");
 	OPinitialize();
 	OPlog("OPInitialized");
@@ -31,8 +31,8 @@ JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_step(JNIEnv * env, jobject obj, 
 	if(!_OPengineRunning) return 1;
 
 	_JNIAssetManager = assetManager;
-	OPtimerTick(OPtime);
-	int val = OPupdate(OPtime);
+	OPtimerTick(&OPtime);
+	int val = OPupdate(&OPtime);
 	if(val > 0) {
 		OPlog("Returning %d to Java", val);
 		_OPengineRunning = 0;
@@ -43,7 +43,6 @@ JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_step(JNIEnv * env, jobject obj, 
 JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_destroy(JNIEnv * env, jobject obj){
 	OPlog("Destroy");
 	OPdestroy();
-	OPdestroyTimer(OPtime);
 }
 
 JNIEnv* JNIEnvironment() { return _JNIEnvironment; }

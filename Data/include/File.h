@@ -80,6 +80,14 @@ f32 OPreadf32(OPstream* str);
 
 //-----------------------------------------------------------------------------
 /**
+ * OPreadstring - Reads the next string from the file
+ *	@param file FILE* to the file stream
+ *	@return i8*
+ */
+i8* OPreadstring(OPstream* str);
+
+//-----------------------------------------------------------------------------
+/**
  * OPreadFileInformation - Reads file information, getting start and length
  *	@param path Location in the file system where the data will be written.
  *	@return FileInformation

@@ -25,14 +25,14 @@ void OPimagePNG32WriteStream(ui8* imageData, i32 width, i32 height, ui8** data, 
 	ui32 error = lodepng_encode32(data, dataSize, imageData, width, height);
 }
 
-void OPimagePNGCreate24(ui8* imageData, i32 width, i32 height, i8* filename) {
+void OPimagePNGCreate24(ui8* imageData, i32 width, i32 height, OPchar* filename) {
 	ui8*   data;
 	OPuint dataSize;
 	ui32 error = lodepng_encode24(&data, &dataSize, imageData, width, height);
 	lodepng_save_file(data, dataSize, filename);
 }
 
-void OPimagePNGCreate32(ui8* imageData, i32 width, i32 height, i8* filename) {
+void OPimagePNGCreate32(ui8* imageData, i32 width, i32 height, OPchar* filename) {
 	ui8*   data;
 	OPuint dataSize;
 	ui32 error = lodepng_encode32(&data, &dataSize, imageData, width, height);

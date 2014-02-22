@@ -5,8 +5,8 @@
 #include "./Human/include/Rendering/Font/FontManager.h"
 #include "./Human/include/Rendering/Effect.h"
 
-const i8* FontShaderVert = "Common/TexturedScreen.vert";
-const i8* FontShaderFrag = "Common/Font.frag";
+const OPchar* FontShaderVert = "Common/TexturedScreen.vert";
+const OPchar* FontShaderFrag = "Common/Font.frag";
 
 void OPsystemsLoadFontEffect() {
 
