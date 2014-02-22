@@ -127,8 +127,8 @@ int State0Update(OPtimer* time){
 	// Required
 	OPrenderTextXY(
 		"All of the text! Woot!",
-		-OPmyoYaw(),
-		-OPmyoPitch()
+		pos.x,
+		pos.y
 	);
 
 	OPrenderPresent();
