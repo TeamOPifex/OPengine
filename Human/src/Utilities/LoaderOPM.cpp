@@ -195,15 +195,15 @@ OPMData OPMloadData(OPstream* str) {
 	if(OPMhasFeature(features, Skinning)){
 		ui32 indexCount = OPreadui32(str);
 		ui32* indices = (ui32*)OPalloc(sizeof(ui32)* indexCount);
-		for(i32 i = 0; i < indexCount; i++){
+		for(ui32 i = 0; i < indexCount; i++){
 			indices[i] = OPreadui32(str);
 		}
 		ui32 weightCount = OPreadui32(str);
 		f32* weights = (f32*)OPalloc(sizeof(f32)* weightCount);
-		for(i32 i = 0; i < weightCount; i++) {
+		for(ui32 i = 0; i < weightCount; i++) {
 			weights[i] = OPreadf32(str);
 		}
-		for (i32 i = 0; i < indexCount; i++) {
+		for (ui32 i = 0; i < indexCount; i++) {
 			i32 index = indices[i];
 			f32 weight = weights[i];
 		}
