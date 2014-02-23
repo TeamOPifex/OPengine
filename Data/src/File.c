@@ -53,14 +53,14 @@ f32 OPreadf32(OPstream* str) {
 	return *((f32*)tmp);
 }
 
-i8* OPreadstring(OPstream* str) {
+i8* OPreadstring(OPstream* str) { //TODO: dangerous!!!
 	ui32 length = OPreadui32(str);
 	i8* name = (i8*)OPalloc(length + 1);
-	i32 j = 0;
+	ui32 j = 0;
 	for(; j < length; j++){
 		name[j] = OPreadi8(str);
 	}
-	name[length] = NULL;
+	name[length] = (i8)NULL;
 	return name;
 }
 
@@ -74,13 +74,13 @@ OPfileInformation OPreadFileInformation(const char* path){
 		return file;
 
 	off_t _start, _length;
-    int fd = AAsset_openFileDescriptor(asset, &_start, &_length);
+	int fd = AAsset_openFileDescriptor(asset, &_start, &_length);
 
-    FILE* myFile = fdopen(dup(fd), "rb"); 
+	FILE* myFile = fdopen(dup(fd), "rb"); 
 	if(!myFile){
 		OPlog("File not loaded: %s\n", path);
 	}
-    ASSERT(myFile, "File not loaded");
+	ASSERT(myFile, "File not loaded");
 	fseek(myFile, _start, SEEK_SET);
 	file.file = myFile;
 	file.start = _start;
@@ -88,7 +88,7 @@ OPfileInformation OPreadFileInformation(const char* path){
 	file.fileDescriptor = fd;
 #else
 	FILE* myFile = fopen(path, "rb"); 
-    ASSERTC(myFile, "File not loaded");
+	ASSERTC(myFile, "File not loaded");
 	if(!myFile){
 		char buff[256];
 		OPlog(buff);
@@ -146,9 +146,9 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 	}
 
 	off_t start, length;
-    int fd = AAsset_openFileDescriptor(asset, &start, &length);
+	int fd = AAsset_openFileDescriptor(asset, &start, &length);
 	
-    FILE* myFile = fdopen(dup(fd), "rb"); 
+	FILE* myFile = fdopen(dup(fd), "rb"); 
 	fseek(myFile, start, SEEK_SET);
 	
 	OPstream* str = OPstreamCreate(length);
@@ -172,7 +172,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 		OPint fd = 0, i;
  
 		// be sure that the file could be opened successfully
-	 	if(fd = open(path, O_RDONLY)){
+		if(fd = open(path, O_RDONLY)){
 
 			OPstream* str = OPstreamCreate(expectedSize);
 
@@ -203,7 +203,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 		OPlog("OPreadFile: %s\n", path);
  
 		// be sure that the file could be opened successfully
-	 	if(!_sopen_s(&fd, path, _O_BINARY|_O_RDONLY, _SH_DENYWR, _S_IREAD)){
+		if(!_sopen_s(&fd, path, _O_BINARY|_O_RDONLY, _SH_DENYWR, _S_IREAD)){
 			ui8 byte = 0;
 			OPstream* str = OPstreamCreate(expectedSize);
 			

@@ -16,7 +16,7 @@ extern i32 OPrenderHeight;
 extern GLFWwindow* window;
 #endif
 
-OPint OPrenderInit       (ui32 width, ui32 height, bool fullscreen);
+OPint OPrenderInit       (ui32 width, ui32 height, OPint fullscreen);
 void  OPrenderClear      (f32 r, f32 g, f32 b);
 void  OPrenderSetViewport(ui32 x, ui32 y, ui32 width, ui32 height);
 OPint OPrenderGetWidth();

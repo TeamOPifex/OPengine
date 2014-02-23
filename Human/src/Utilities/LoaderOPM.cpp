@@ -179,7 +179,7 @@ OPMData OPMloadData(OPstream* str) {
 		// skeleton->localPoses = (OPmat4*)OPalloc(sizeof(OPmat4) * boneCount);
 		// skeleton->globalPoses = (OPmat4*)OPalloc(sizeof(OPmat4) * boneCount);
 
-		for(i32 i = 0; i < boneCount; i++) {
+		for(ui32 i = 0; i < boneCount; i++) {
 			i32 boneIndex = OPreadi32(str);
 			i8* name = OPreadstring(str);
 			f32 x = OPreadf32(str);
@@ -194,11 +194,11 @@ OPMData OPMloadData(OPstream* str) {
 	// Read Skinning
 	if(OPMhasFeature(features, Skinning)){
 		ui32 indexCount = OPreadui32(str);
-		for(i32 i = 0; i < indexCount; i++){
+		for(ui32 i = 0; i < indexCount; i++){
 			OPreadui32(str);
 		}
 		ui32 weightCount = OPreadui32(str);
-		for(i32 i = 0; i < weightCount; i++) {
+		for(ui32 i = 0; i < weightCount; i++) {
 			OPreadf32(str);
 		}
 	}
@@ -209,12 +209,12 @@ OPMData OPMloadData(OPstream* str) {
 		OPlog("Animation: %s", name);
 		ui32 keyframes = OPreadui32(str);
 		OPlog("Keyframes %d", keyframes);
-		for(i32 i = 0; i < keyframes; i++) {
+		for(ui32 i = 0; i < keyframes; i++) {
 			OPlog("Keyframe %d", i);
 			i32 index = OPreadi32(str);
 			OPlog("Bone %d", index);
 			ui32 keys = OPreadui32(str);
-			for(i32 j = 0; j < keys; j++) {
+			for(ui32 j = 0; j < keys; j++) {
 				ui32 keyFeatures = OPreadui32(str);
 				OPlog("Keyframe Features: %d", keyFeatures);
 				if(keyFeatures && Key_Time) {
