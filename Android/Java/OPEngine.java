@@ -37,6 +37,7 @@ public class OPEngine extends Activity {
 	public static final String DEVELOPER_ID = "8e0c74ec-c52c-4de4-89f0-3944b7145489";
 
 	@Override protected void onCreate(Bundle icicle) {
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		OuyaFacade instance = OuyaFacade.getInstance();
 		instance.init(this, DEVELOPER_ID);
 
@@ -44,6 +45,9 @@ public class OPEngine extends Activity {
 		AssetManager assetManager = getAssets();
 		mView = new GL2JNIView(getApplication(), assetManager, instance);
 		setContentView(mView);
+		
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+                                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	}
 	
 	@Override protected void onPause(){
