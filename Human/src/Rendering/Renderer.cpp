@@ -2,8 +2,10 @@
 #include "./Human/include/Rendering/Renderer.h"
 #include "./Core/include/Assert.h"
 
-i32 OPrenderWidth;
-i32 OPrenderHeight;
+OPuint OPrenderWidth;
+OPuint OPrenderHeight;
+OPuint OPscreenWidth;
+OPuint OPscreenHeight;
 
 #ifndef OPIFEX_ANDROID
 GLFWwindow* window = NULL;
@@ -13,7 +15,7 @@ void glfwErrorCallback(int error, const char* desc){
 	OPlog(desc);
 }
 
-OPint OPrenderInit(ui32 width, ui32 height, OPint fullscreen){
+OPint OPrenderInit(OPuint width, OPuint height, OPint fullscreen){
 
 
 #ifdef OPIFEX_OPENGL_ES_2
@@ -28,8 +30,8 @@ OPint OPrenderInit(ui32 width, ui32 height, OPint fullscreen){
 	
 	OPrenderWidth = width;
 	OPrenderHeight = height;
-
-	return 0;
+	OPscreenWidth = width;
+	OPscreenHeight = height;
 #else	
 	glfwSetErrorCallback(glfwErrorCallback);
 
@@ -94,11 +96,13 @@ OPint OPrenderInit(ui32 width, ui32 height, OPint fullscreen){
 
 	OPrenderWidth = width;
 	OPrenderHeight = height;
+	OPscreenWidth = width;
+	OPscreenHeight = height;
+#endif
 
-	OPlog("OpenGL Context Created W:%d H:%d", OPrenderWidth, OPrenderHeight);	
+	OPlog("OpenGL Context Created W:%d H:%d", OPrenderWidth, OPrenderHeight);
 
 	return 0;
-#endif
 }
 //-----------------------------------------------------------------------------
 void  OPrenderClear(f32 r, f32 g, f32 b){
@@ -106,30 +110,26 @@ void  OPrenderClear(f32 r, f32 g, f32 b){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 //-----------------------------------------------------------------------------
-void  OPrenderSetViewport(ui32 x, ui32 y, ui32 width, ui32 height){
+void  OPrenderSetViewport(OPuint x, OPuint y, OPuint width, OPuint height){
 	glViewport(x, y, width, height);
 	OPrenderWidth  = width;
 	OPrenderHeight = height;
 }
+
+void OPrenderResetViewport() {
+	OPrenderSetViewport(0, 0, OPscreenWidth, OPscreenHeight);
+}
+
 //-----------------------------------------------------------------------------
 OPint OPrenderGetWidth(){
-	#ifndef OPIFEX_ANDROID
-	glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
-	#endif
 	return OPrenderWidth;
 }
 //-----------------------------------------------------------------------------
 OPint OPrenderGetHeight(){
-	#ifndef OPIFEX_ANDROID
-	glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
-	#endif
 	return OPrenderHeight;
 }
 //-----------------------------------------------------------------------------
 OPfloat OPrenderGetAspectRatio(){
-	#ifndef OPIFEX_ANDROID
-	glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
-	#endif
 	ASSERT(OPrenderWidth > 0, "Height was not greater than 0, there was problem getting width and height");
 	return OPrenderHeight / (OPfloat)OPrenderWidth;
 }

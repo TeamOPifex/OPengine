@@ -138,8 +138,9 @@ void OPrenderTextColor4Vec2Align(const OPchar* text, OPvec4 color, OPvec2 pos, O
 
 	OPmeshPackerBind(&OPRENDER_CURR_FONT_MANAGER->meshPacker);
 	OPrenderBindEffect(OPRENDER_CURR_FONT_EFFECT);
-	OPtextureBind(OPRENDER_CURR_FONT_MANAGER->_font->texture);
-	OPrenderParami("uColorTexture", OPRENDER_CURR_FONT_MANAGER->_font->texture->Handle);
+	OPtextureClearActive();
+	ui32 textureHandle = OPtextureBind(OPRENDER_CURR_FONT_MANAGER->_font->texture);
+	OPrenderParami("uColorTexture", textureHandle);
 	OPrenderParamVec4("uColor", 1, &color);
 
 	OPmat4 world;

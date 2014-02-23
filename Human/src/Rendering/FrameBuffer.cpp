@@ -46,9 +46,9 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 	// generate and bind the fbo
 	glGenFramebuffers(1, &fb.Handle);
 	// setup color texture
-	OPtextureBind(&fb.Texture);	
+	ui32 handle = OPtextureBind(&fb.Texture);	
 	OPtextureSetData(NULL);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindTexture(GL_TEXTURE_2D, handle);
 	// attach the depth texture
 	ui32 dt = createDepthTexture(desc.Width, desc.Height);
 
@@ -72,10 +72,12 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, dt, 0);
 	#endif
 #else
+	OPglError("OPframeBufferCreate:Error 1:%d");
 	glBindFramebuffer(GL_FRAMEBUFFER, fb.Handle);
-	glBindRenderbuffer(GL_RENDERBUFFER, dt);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, desc.Width, desc.Height);
-	OPglError("OPframeBufferCreate:Error 1");
+	OPglError("OPframeBufferCreate:Error 2:%d");
+	//glBindRenderbuffer(GL_RENDERBUFFER, dt);
+	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, desc.Width, desc.Height);
+	OPglError("OPframeBufferCreate:Error 3");
 	// attach the color texture
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fb.Texture.Handle, 0);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, dt);

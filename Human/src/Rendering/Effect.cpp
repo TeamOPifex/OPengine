@@ -1,5 +1,6 @@
 #include "./Human/include/Rendering/Effect.h"
 #include "./Human/include/Rendering/OpenGL.h"
+#include "./Core/include/Assert.h"
 
 OPeffect* OPRENDER_CURR_EFFECT = NULL;
 //-----------------------------------------------------------------------------
@@ -138,50 +139,52 @@ OPeffect createEffect(OPshader vert,
 	i32 status;
 	glGetProgramiv(effect.ProgramHandle, GL_LINK_STATUS, &status);
 	glUseProgram(effect.ProgramHandle);
+	ASSERT(status == GL_TRUE, "Failed to Link Shader Program");
 
 	if (status == GL_FALSE) {
-		OPlog("FAILED to link Shader Program");
+		OPlog("FAILED to link Shader Program: %s", Name);
 	}
+	else {
+		OPglError("OPrenderCreateEffect:Error 7");
 
-	OPglError("OPrenderCreateEffect:Error 7");
+		i32 result;
+		ui32 nameLength;
+		// create, and copy attributes into list
+		for (OPint i = 0; i < AttribCount; i++){
+			OPshaderAttribute attr = {
+				NULL,
+				Attributes[i].Type,
+				Attributes[i].Elements,
+				(void*)effect.Stride,
+				0
+			};
 
-	i32 result;
-	ui32 nameLength;
-	// create, and copy attributes into list
-	for (OPint i = 0; i < AttribCount; i++){
-		OPshaderAttribute attr = {
-			NULL,
-			Attributes[i].Type,
-			Attributes[i].Elements,
-			(void*)effect.Stride,
-			0
-		};
+			// TODO add more
+			switch (Attributes[i].Type){
+			case GL_FLOAT:
+				effect.Stride += (4 * Attributes[i].Elements);
+				break;
+			}
+			nameLength = strlen(Attributes[i].Name);
+			attr.Name = (OPchar*)OPalloc(sizeof(OPchar)* nameLength + 1);
+			OPmemcpy((void*)attr.Name, (void*)Attributes[i].Name, nameLength + 1);
 
-		// TODO add more
-		switch (Attributes[i].Type){
-		case GL_FLOAT:
-			effect.Stride += (4 * Attributes[i].Elements);
-			break;
+			result = glGetAttribLocation(
+				effect.ProgramHandle,
+				Attributes[i].Name
+				);
+			attr.Handle = (OPuint)result;
+
+			if (result < 0) {
+				OPlog("FAILED to find attribute: '%s' in effect '%s'", Attributes[i].Name, effect.Name);
+			}
+			else {
+				OPlistPush(effect.Attributes, (ui8*)&attr);
+			}
 		}
-		nameLength = strlen(Attributes[i].Name);
-		attr.Name = (OPchar*)OPalloc(sizeof(OPchar)* nameLength + 1);
-		OPmemcpy((void*)attr.Name, (void*)Attributes[i].Name, nameLength + 1);
 
-		result = glGetAttribLocation(
-			effect.ProgramHandle,
-			Attributes[i].Name
-			);
-		attr.Handle = (OPuint)result;
-
-		if (result < 0) {
-			OPlog("FAILED to find attribute: '%s' in effect '%s'", Attributes[i].Name, effect.Name);
-		}
-		else {
-			OPlistPush(effect.Attributes, (ui8*)&attr);
-		}
+		effect.Stride = stride;
 	}
-
-	effect.Stride = stride;
 	
 	return effect;
 }
@@ -234,6 +237,7 @@ OPint OPrenderUnloadEffect(OPeffect* effect){
 
 // effect managment
 OPint OPrenderBindEffect(OPeffect* effect){
+	OPglError("OPrenderBindEffect:Clear Errors");
 	// disable attributes of the last effect
 	if(OPRENDER_CURR_EFFECT){
 		OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
@@ -249,6 +253,9 @@ OPint OPrenderBindEffect(OPeffect* effect){
 	OPRENDER_CURR_EFFECT = effect;
 
 	glUseProgram(OPRENDER_CURR_EFFECT->ProgramHandle);
+	if (OPglError("OPrenderBindEffect:Failed to use Program")) {
+		OPlog("For Shader: %s", OPRENDER_CURR_EFFECT->Name);
+	}
 
 	// enable attributes of the new effect
 	OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
@@ -270,6 +277,8 @@ OPint OPrenderBindEffect(OPeffect* effect){
 			OPlog("Effect %s: Failed to set attrib ptr %s", effect->Name, attr->Name);
 		}
 	}
+
+	OPglError("OPrenderBindEffect:Errors Occured");
 
 	return 1;
 }

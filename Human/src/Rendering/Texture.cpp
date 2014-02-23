@@ -1,7 +1,10 @@
 #include "./Human/include/Rendering/Texture.h"
 #include "./Human/include/Utilities/Errors.h"
+#include "./Core/include/Log.h"
+#include "./Core/include/Assert.h"
 
 OPtexture* OPRENDER_CURR_TEX;
+ui32 ActiveTexture = 0;
 
 //-----------------------------------------------------------------------------
 // ______                _   _                 
@@ -43,14 +46,24 @@ void OPtextureDestroy(OPtexture* tex){
 	glDeleteTextures(1, &tex->Handle);
 }
 //-----------------------------------------------------------------------------
-void OPtextureBind(OPtexture* tex){
+ui32 OPtextureBind(OPtexture* tex){
+	ASSERT(ActiveTexture < 16, "Exceeded Active Texture Slots");
 	OPglError("OPtextureBind::Error 0");
 	OPRENDER_CURR_TEX = tex;
-	glActiveTexture(GL_TEXTURE0 + tex->Handle);
-	OPglError("OPtextureBind::Error 1");
+	glActiveTexture(GL_TEXTURE0 + ActiveTexture);
+	if (OPglError("OPtextureBind::Error 1")) {
+		OPlog("FAILED to make active texture: %d", tex->Handle);
+	}
 	glBindTexture(GL_TEXTURE_2D, tex->Handle);
 	OPglError("OPtextureBind::Error 2");
+
+	return ActiveTexture++;
 }
+
+void OPtextureClearActive() {
+	ActiveTexture = 0;
+}
+
 //-----------------------------------------------------------------------------
 void OPtextureSetData(void* data){
 	OPglError("OPtextureSetData::Error 0");

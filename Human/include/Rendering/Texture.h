@@ -62,7 +62,8 @@ extern OPtexture* OPRENDER_CURR_TEX;
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPtexture OPtextureCreate(OPtextureDescription desc);
 void OPtextureDestroy(OPtexture* tex);
-void OPtextureBind(OPtexture* tex);
+ui32 OPtextureBind(OPtexture* tex);
+void OPtextureClearActive();
 void OPtextureSetData(void* data);
 
 // prevent name mangling if compiling with c++
