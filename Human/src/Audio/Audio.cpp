@@ -38,8 +38,6 @@ LPOVOPENCALLBACKS   fn_ov_open_callbacks;
 // | |__| | |  | (_| | |_| | (_| | | (_) | | |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //  \____/|_|   \__,_|\__,_|\__,_|_|\___/  |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPint OPaudInit(){
-	OPlog("Initializing OP audio...\n");
-
 	OPAUD_CURR_MUTEX = OPmutexCreate();
 
 // USE OGG VORBIS FOR DESKTOP PLATFORMS
@@ -100,7 +98,6 @@ OPint OPaudInit(){
 		return false;
 	}
 
-	OPlog("OPaudio: engineEngine VVV");
 	//OPlog_i32(SLES_engineEngine);
 
 	// create output mix, with environmental reverb specified as a non-required interface    
@@ -119,7 +116,7 @@ OPint OPaudInit(){
 		OPlog("Jukebox::Error 5");
 		return false;
 	}
-	OPlog("OPaudio::Initialized");
+	OPlog("Audio Initialized");
 #else // USE OpenAL FOR SOUND
 	//   ____                            _            
 	//  / __ \                     /\   | |           
@@ -138,7 +135,7 @@ OPint OPaudInit(){
 
 	alDistanceModel(AL_LINEAR_DISTANCE);
 #endif
-	OPlog("OP audio Initialized!!!");
+	OPlog("Audio Initialized");
 	return 1;
 }
 //-----------------------------------------------------------------------------

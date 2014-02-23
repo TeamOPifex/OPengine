@@ -253,12 +253,9 @@ OPMData OPMloadData(OPstream* str) {
 }
 
 OPint OPMload(const OPchar* filename, OPmesh** mesh) {
-	OPlog("Reading File Data");
 	OPstream* str = OPreadFile(filename);
-	OPlog("Reading OPMloadData");
 	OPMData data = OPMloadData(str);
 
-	OPlog("Creating vertex and buffers");
 	// Create Vertex & Index Buffers for Mesh
 	OPmesh temp = OPrenderCreateMesh();
 	OPrenderBindMesh(&temp);
@@ -267,8 +264,6 @@ OPint OPMload(const OPchar* filename, OPmesh** mesh) {
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
 	);
-
-	OPlog("Disposing");
 
 	// Dispose of allocated buffers
 	OPfree(data.vertices);

@@ -53,7 +53,7 @@ OPint OPaudOpenWave(const OPchar* filename, OPaudioSource** source){
 		OPread(str, sizeof(i16)); // throw away bytes/sample
 		OPmemcpy(&desc.BitsPerSample, OPread(str, sizeof(i16)), sizeof(i16));
 
-		OPlog("Format: %d\nChannels: %d\nSamples/Sec: %d\n", desc.Format, desc.Channels, desc.SamplesPerSecond);
+		//OPlog("Format: %d\nChannels: %d\nSamples/Sec: %d\n", desc.Format, desc.Channels, desc.SamplesPerSecond);
 
 #ifdef OPIFEX_ANDROID
 
@@ -164,7 +164,7 @@ OPint OPaudOpenOgg(const OPchar* filename, OPaudioSource** source){
 				src.Description = desc;
 				src.DataSource  = sOggVorbisFile;
 
-				printf("Len: %lu\nSampleRate: %u\nChann: %u\n", desc.Length, desc.SamplesPerSecond, desc.Channels);
+				//printf("Len: %lu\nSampleRate: %u\nChann: %u\n", desc.Length, desc.SamplesPerSecond, desc.Channels);
 
 				*source = (OPaudioSource*)OPalloc(sizeof(OPaudioSource));
 				OPmemcpy(*source, &src, sizeof(OPaudioSource));

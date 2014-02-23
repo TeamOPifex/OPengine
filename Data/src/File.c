@@ -200,7 +200,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 	OPint fd = 0;
 	// check to see if the file exists
 	if(OPfileExists(path) >= 0) {
-		OPlog("OPreadFile: %s\n", path);
+		OPlog("OPreadFile: %s", path);
  
 		// be sure that the file could be opened successfully
 	 	if(!_sopen_s(&fd, path, _O_BINARY|_O_RDONLY, _SH_DENYWR, _S_IREAD)){
