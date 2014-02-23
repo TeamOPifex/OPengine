@@ -32,9 +32,9 @@ void OPkeyboardUpdate() {
 	OPmemcpy(&Keyboard.prevKeys, &Keyboard.keys, sizeof(KeyboardState));
 	for(ui32 i = 0; i < OPKEYBOARD_MAX; i++) {
 		Keyboard.keys[i] = glfwGetKey(window, OPkeyboardCodes[i]); 
-		if(Keyboard.keys[i] ) {
-			OPlog("Key %d : %d", i, OPkeyboardCodes[i]);
-		}
+		//if(Keyboard.keys[i] ) {
+		//	OPlog("Key %d : %d", i, OPkeyboardCodes[i]);
+		//}
 	}
 }
 

@@ -101,14 +101,13 @@ OPint OPrenderUnloadShader(OPshader* shader){
 	OPfree(shader); // free up the integer
 	return 1;
 }
-//-----------------------------------------------------------------------------
-// effect creation
-OPeffect OPrenderCreateEffect(
-	OPshader vert,
+
+OPeffect createEffect(OPshader vert,
 	OPshader frag,
 	OPshaderAttribute* Attributes,
 	OPint AttribCount,
-	const OPchar* Name){
+	const OPchar* Name,
+	ui32 stride) {
 
 	OPglError("OPrenderCreateEffect:Error 0");
 
@@ -117,15 +116,15 @@ OPeffect OPrenderCreateEffect(
 		vert,
 		frag,
 		-1,
-		 0
+		0
 	};
 
 	// copy the name into the struct
 	OPmemcpy(
-		effect.Name, 
-		Name, 
+		effect.Name,
+		Name,
 		nameLen > OP_EFFECT_NAME_LEN ? OP_EFFECT_NAME_LEN : nameLen
-	); effect.Name[OP_EFFECT_NAME_LEN - 1] = '\0';
+		); effect.Name[OP_EFFECT_NAME_LEN - 1] = '\0';
 
 	effect.Parameters = OPhashMapCreate(32);
 	effect.Attributes = OPlistCreate(AttribCount, sizeof(OPshaderAttribute));
@@ -140,40 +139,84 @@ OPeffect OPrenderCreateEffect(
 	glGetProgramiv(effect.ProgramHandle, GL_LINK_STATUS, &status);
 	glUseProgram(effect.ProgramHandle);
 
-	if(status == GL_FALSE) {
+	if (status == GL_FALSE) {
 		OPlog("FAILED to link Shader Program");
 	}
-	
+
 	OPglError("OPrenderCreateEffect:Error 7");
 
+	i32 result;
+	ui32 nameLength;
 	// create, and copy attributes into list
-	for(OPint i = 0; i < AttribCount; i++){
+	for (OPint i = 0; i < AttribCount; i++){
 		OPshaderAttribute attr = {
 			NULL,
 			Attributes[i].Type,
 			Attributes[i].Elements,
-			(void*)effect.Stride
+			(void*)effect.Stride,
+			0
 		};
 
-		attr.Name = (OPchar*)glGetAttribLocation(
+		// TODO add more
+		switch (Attributes[i].Type){
+		case GL_FLOAT:
+			effect.Stride += (4 * Attributes[i].Elements);
+			break;
+		}
+		nameLength = strlen(Attributes[i].Name);
+		attr.Name = (OPchar*)OPalloc(sizeof(OPchar)* nameLength + 1);
+		OPmemcpy((void*)attr.Name, (void*)Attributes[i].Name, nameLength + 1);
+
+		result = glGetAttribLocation(
 			effect.ProgramHandle,
 			Attributes[i].Name
-		);
-		if(OPglError("OPrenderCreateEffect:Error 7.5 - Attrib Could not be found.") > 0) {
-			OPlog("FAILED to find Handle: %d, Attribute: %s", attr.Name, Attributes[i].Name);
-		}
+			);
+		attr.Handle = (OPuint)result;
 
-		// TODO add more
-		switch(Attributes[i].Type){
-			case GL_FLOAT:
-				effect.Stride += (4 * Attributes[i].Elements);
-				break;
+		if (result < 0) {
+			OPlog("FAILED to find attribute: '%s' in effect '%s'", Attributes[i].Name, effect.Name);
 		}
-
-		OPlistPush(effect.Attributes, (ui8*)&attr);
+		else {
+			OPlistPush(effect.Attributes, (ui8*)&attr);
+		}
 	}
+
+	effect.Stride = stride;
 	
 	return effect;
+}
+
+//-----------------------------------------------------------------------------
+// effect creation
+OPeffect OPrenderCreateEffectStride(
+	OPshader vert,
+	OPshader frag,
+	OPshaderAttribute* Attributes,
+	OPint AttribCount,
+	const OPchar* Name,
+	ui32 stride) {
+	return createEffect(vert, frag, Attributes, AttribCount, Name, stride);
+}
+//-----------------------------------------------------------------------------
+// effect creation
+OPeffect OPrenderCreateEffect(
+	OPshader vert,
+	OPshader frag,
+	OPshaderAttribute* Attributes,
+	OPint AttribCount,
+	const OPchar* Name){
+	
+	ui32 stride = 0;
+
+	for (OPint i = 0; i < AttribCount; i++){
+		// TODO add more
+		switch (Attributes[i].Type){
+			case GL_FLOAT:
+				stride += (4 * Attributes[i].Elements);
+				break;
+		}
+	}
+	return createEffect(vert, frag, Attributes, AttribCount, Name, stride);
 }
 //-----------------------------------------------------------------------------
 OPint OPrenderLoadEffect  (const OPchar* filename, OPeffect** effect){
@@ -196,9 +239,9 @@ OPint OPrenderBindEffect(OPeffect* effect){
 		OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
 		for(;attrCount--;){
 			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
-			glDisableVertexAttribArray((ui64)attr->Name);
-			if(OPglError("OPrenderBindEffect:Error ")) {
-				OPlog("Effect %s: Failed to disable attrib %u", OPRENDER_CURR_EFFECT->Name, attr->Name);
+			glDisableVertexAttribArray((uintptr_t)attr->Handle);
+			if (OPglError("OPrenderBindEffect:Error ")) {
+				OPlog("Effect %s: Failed to disable attrib %s", OPRENDER_CURR_EFFECT->Name, attr->Name);
 			}
 		}
 	}
@@ -211,21 +254,20 @@ OPint OPrenderBindEffect(OPeffect* effect){
 	OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
 	for(;attrCount--;){
 		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
-		
-		glEnableVertexAttribArray((uintptr_t)attr->Name);
-		if(OPglError("OPrenderBindEffect:Error ")) {
-			OPlog("Failed to enable attrib %u", attr->Name);
+		glEnableVertexAttribArray((uintptr_t)attr->Handle);
+		if (OPglError("OPrenderBindEffect:Error ")) {
+			OPlog("Failed to enable attrib %s", attr->Name);
 		}
 		glVertexAttribPointer(
-			(uintptr_t)attr->Name,
+			(uintptr_t)attr->Handle,
 			attr->Elements,
 			attr->Type,
 			GL_FALSE,
 			effect->Stride,
 			attr->Offset
-		);
-		if(OPglError("OPrenderBindEffect:Error ")) {
-			OPlog("Effect %s: Failed to set attrib ptr %u", effect->Name, attr->Name);
+			);
+		if (OPglError("OPrenderBindEffect:Error ")) {
+			OPlog("Effect %s: Failed to set attrib ptr %s", effect->Name, attr->Name);
 		}
 	}
 

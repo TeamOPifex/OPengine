@@ -48,6 +48,7 @@ typedef struct{
 	ui32         Type;
 	ui32         Elements;
 	void*        Offset;
+	OPuint		Handle;
 }OPshaderAttribute;
 
 typedef struct{
@@ -83,6 +84,13 @@ OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader);
 OPint OPrenderUnloadShader(OPshader* shader);
 
 // effect creation
+OPeffect OPrenderCreateEffectStride(
+	OPshader vert,
+	OPshader frag,
+	OPshaderAttribute* Attributes,
+	OPint AttribCount,
+	const OPchar* Name,
+	ui32 stride);
 OPeffect OPrenderCreateEffect(
 	OPshader vert, OPshader frag,
 	OPshaderAttribute* Attributes, OPint AttribCount,

@@ -11,7 +11,7 @@
 OPint OPglError(const char* message){
 	GLenum err = glGetError();
 	if(err != 0){
-		OPlog(message);
+		OPlog(message, err);
 
 		switch(err){
 			case GL_INVALID_ENUM:
