@@ -13,7 +13,7 @@ void glfwErrorCallback(int error, const char* desc){
 	OPlog(desc);
 }
 
-OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
+OPint OPrenderInit(ui32 width, ui32 height, OPint fullscreen){
 
 
 #ifdef OPIFEX_OPENGL_ES_2
