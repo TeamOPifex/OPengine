@@ -30,6 +30,7 @@ void OPskeletonAnimate(OPskeleton* skeleton) {
 		OPvec4 skinnedPosition = matrixPallete[index0] * position;
 		dstVertexData[i] = skinnedPosition;
 	}
+
 	for(ui16 i = 0; i < verticesCount; i++) {
 		ui16 index0 = jointIndices[i * 2 + 0];
 		ui16 index1 = jointIndices[i * 2 + 1];
