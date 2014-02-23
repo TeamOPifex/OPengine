@@ -13,17 +13,11 @@ OPeffect* OPRENDER_CURR_EFFECT = NULL;
 OPint OPrenderLoadVertexShader(const OPchar* filename, OPshader** shader){
 	OPshader vertex = -1;
 
-	OPlog("OPrenderLoadVertexShader: %s", filename);
 	OPstream* source = OPreadFile(filename);
-	write(1,"DONE*\n",6);
 	
 	OPglError("GLShader::Error 0");
-	write(1,"DONE.\n",6);
 	vertex = glCreateShader(OPvertexShader);
-	OPlog("Vertex Shader: %d", OPvertexShader);
-	write(1,"DONE-\n",6);
 	OPglError("GLShader::Error 1");
-	write(1,"DONE0\n",6);
 	if(vertex){
 		OPchar* src = (OPchar*)source->Data;
 		
@@ -35,10 +29,7 @@ OPint OPrenderLoadVertexShader(const OPchar* filename, OPshader** shader){
 		glGetShaderiv(vertex, GL_COMPILE_STATUS, &compiled);
 		OPglError("GLShader::Error 4");
 
-write(1,"DONE1\n",6);
-
 		if(!compiled){
-			write(1,"DONE2\n",6);
 			char msg[4096];
 			i32 length = 0;
 			glGetShaderInfoLog(vertex, 4096, &length, msg);
@@ -49,7 +40,6 @@ write(1,"DONE1\n",6);
 			OPstreamDestroy(source); // clean up stream
 			return -1;
 		}
-		write(1,"DONE3\n",6);
 	}
 	else{
 		OPstreamDestroy(source); // clean up stream
@@ -69,23 +59,17 @@ write(1,"DONE1\n",6);
 OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader){
 	OPshader frag = -1;
 	OPstream* source = OPreadFile(filename);
-	write(1,"DONE*\n",6);
 
 	frag = glCreateShader(OPfragmentShader);
-	write(1,"DONE1\n",6);
-	OPlog("Fragment Shader: %d", OPfragmentShader);
 
 	if(frag){
-		write(1,"DONE2\n",6);
 		OPchar* src = (OPchar*)source->Data;
 		glShaderSource(frag, 1, (const OPchar**)&src, 0);
 		glCompileShader(frag);
-	write(1,"DONE3\n",6);
 
 		GLint compiled = 0;
 		glGetShaderiv(frag, GL_COMPILE_STATUS, &compiled);
 		if(!compiled){
-	write(1,"DONE4\n",6);
 
 			char msg[4096];
 			i32 length = 0;
@@ -95,7 +79,6 @@ OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader){
 
 			glDeleteShader(frag);
 			OPstreamDestroy(source); // clean up stream
-	write(1,"DONE5\n",6);
 			return -1;
 		}
 	}
@@ -103,14 +86,12 @@ OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader){
 		OPstreamDestroy(source); // clean up stream
 		return -1;
 	}
-	write(1,"DONE6\n",6);
 	OPstreamDestroy(source); // clean up stream
 	
 	// if we made it this far, everything is a-ok
 	*shader = (OPshader*)OPalloc(sizeof(OPshader));
 	**shader = frag; // copy the shader handle
 
-	write(1,"DONE7\n",6);
 	return 1;
 }
 //-----------------------------------------------------------------------------
@@ -163,7 +144,6 @@ OPeffect OPrenderCreateEffect(
 		OPlog("FAILED to link Shader Program");
 	}
 	
-	OPlog("Shader Program Status: %d", status);
 	OPglError("OPrenderCreateEffect:Error 7");
 
 	// create, and copy attributes into list
@@ -180,10 +160,7 @@ OPeffect OPrenderCreateEffect(
 			Attributes[i].Name
 		);
 		if(OPglError("OPrenderCreateEffect:Error 7.5 - Attrib Could not be found.") > 0) {
-			OPlog("Handle: %d, Attribute: %s", attr.Name, Attributes[i].Name);
-		}
-		else{
-			OPlog("OK!!! Handle: %d, Attribute: %s", attr.Name, Attributes[i].Name);
+			OPlog("FAILED to find Handle: %d, Attribute: %s", attr.Name, Attributes[i].Name);
 		}
 
 		// TODO add more

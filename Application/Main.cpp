@@ -89,7 +89,7 @@ void Init(){
         //OPchar songPath[] = {"Audio/background.ogg"};
         //Song = OPAudio::ReadOgg(songPath);
 
-        OPlog("Main: Song loaded");
+        //OPlog("Main: Song loaded");
 
 		//		OPminHeap* heap = OPminHeapCreate(10);
 
@@ -248,8 +248,6 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 	OPupdate = UpdateState;
 	OPdestroy = Destroy;
 
-	OPint a = 0;
-	OPlog("Test %d %d %d", a, a, a);
 	//ActiveState = &State0;//OPgameStateCreate(NULL, Update, NULL);
 
 #ifdef OPIFEX_ANDROID

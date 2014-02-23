@@ -8,6 +8,8 @@ typedef struct {
 	OPvec3 Normal;
 	OPvec3 Tangent;
 	OPvec2 TexCoord;
+	OPvec4 Bones;
+	OPvec4 Weights;
 } OPMvertex;
 
 typedef struct {

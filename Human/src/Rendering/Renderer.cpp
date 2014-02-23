@@ -37,11 +37,7 @@ OPint OPrenderInit(ui32 width, ui32 height, OPint fullscreen){
 	if( !result ) {
 		OPlog("INIT FAILED %d", result);
 		return -1;
-	} else {
-		OPlog("INIT SUCCEEDED %d", result);
 	}
-
-
 	
 	// Most of the below will be moved to a Windowing System
 	
@@ -66,15 +62,11 @@ OPint OPrenderInit(ui32 width, ui32 height, OPint fullscreen){
 	GLFWwindow* tmp = glfwGetCurrentContext();
 	if(!tmp || tmp != window) {
 		OPlog("FAILED to bind context");
-	} else {
-		OPlog("SUCCEEDED to bind context");
 	}
 
 	if( !glfwInit() ) {
 		OPlog("INIT FAILED");
 		return -1;
-	} else {
-		OPlog("INIT SUCCEEDED");
 	}
 
 	// Open a window and create its OpenGL context
@@ -103,7 +95,7 @@ OPint OPrenderInit(ui32 width, ui32 height, OPint fullscreen){
 	OPrenderWidth = width;
 	OPrenderHeight = height;
 
-	OPlog("INIT w:%d h:%d\n", OPrenderWidth, OPrenderHeight);	
+	OPlog("OpenGL Context Created W:%d H:%d", OPrenderWidth, OPrenderHeight);	
 
 	return 0;
 #endif

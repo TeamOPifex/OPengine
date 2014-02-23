@@ -194,12 +194,18 @@ OPMData OPMloadData(OPstream* str) {
 	// Read Skinning
 	if(OPMhasFeature(features, Skinning)){
 		ui32 indexCount = OPreadui32(str);
-		for(ui32 i = 0; i < indexCount; i++){
-			OPreadui32(str);
+		ui32* indices = (ui32*)OPalloc(sizeof(ui32)* indexCount);
+		for(i32 i = 0; i < indexCount; i++){
+			indices[i] = OPreadui32(str);
 		}
 		ui32 weightCount = OPreadui32(str);
-		for(ui32 i = 0; i < weightCount; i++) {
-			OPreadf32(str);
+		f32* weights = (f32*)OPalloc(sizeof(f32)* weightCount);
+		for(i32 i = 0; i < weightCount; i++) {
+			weights[i] = OPreadf32(str);
+		}
+		for (i32 i = 0; i < indexCount; i++) {
+			i32 index = indices[i];
+			f32 weight = weights[i];
 		}
 	}
 
@@ -247,12 +253,9 @@ OPMData OPMloadData(OPstream* str) {
 }
 
 OPint OPMload(const OPchar* filename, OPmesh** mesh) {
-	OPlog("Reading File Data");
 	OPstream* str = OPreadFile(filename);
-	OPlog("Reading OPMloadData");
 	OPMData data = OPMloadData(str);
 
-	OPlog("Creating vertex and buffers");
 	// Create Vertex & Index Buffers for Mesh
 	OPmesh temp = OPrenderCreateMesh();
 	OPrenderBindMesh(&temp);
@@ -261,8 +264,6 @@ OPint OPMload(const OPchar* filename, OPmesh** mesh) {
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
 	);
-
-	OPlog("Disposing");
 
 	// Dispose of allocated buffers
 	OPfree(data.vertices);

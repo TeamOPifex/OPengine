@@ -91,11 +91,8 @@ OPint OPcmanLoad(const OPchar* key){
 
 				// load the asset
 				asset = NULL;
-				OPlog("&");
 				success = loader.Load(fullPath, &asset);
 				if(success <= 0) return OP_CMAN_ASSET_LOAD_FAILED;
-
-				OPlog("$ %d", success);
 
 				// clean up the string
 				OPfree(fullPath);
