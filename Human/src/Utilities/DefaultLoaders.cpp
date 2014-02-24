@@ -3,9 +3,10 @@
 #include "./Human/include/Systems/FontSystem.h"
 #include "./Human/include/Utilities/LoaderOPM.h"
 #include "./Human/include/Utilities/ImagePNG.h"
+#include "./Human/include/Utilities/LoaderOPS.h"
 #include "./Human/include/Utilities/DefaultLoaders.h"
 
-OPassetLoader OP_DEFAULT_LOADERS[7] = {
+OPassetLoader OP_DEFAULT_LOADERS[8] = {
         {
                 ".wav",
                 "Audio/",
@@ -54,7 +55,14 @@ OPassetLoader OP_DEFAULT_LOADERS[7] = {
                 sizeof(OPfont),
                 (OPint(*)(const OPchar*, void**))OPfontLoad,
                 (OPint(*)(void*))OPfontUnload
-        }
+        },
+		{
+			".ops",
+			"Scripts/",
+			sizeof(OPscript),
+			(OPint(*)(const OPchar*, void**))OPscriptLoad,
+			(OPint(*)(void*))OPscriptUnload
+		}
 };
 
 

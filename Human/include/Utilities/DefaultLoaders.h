@@ -4,7 +4,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern OPassetLoader OP_DEFAULT_LOADERS[7];
+extern OPassetLoader OP_DEFAULT_LOADERS[8];
 #ifdef __cplusplus
 };
 #endif

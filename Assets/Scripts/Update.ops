@@ -1,0 +1,3 @@
+var update = function(){
+	log('update test');
+}

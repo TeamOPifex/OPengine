@@ -31,6 +31,7 @@ else()
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Models" ${PROJECT_BINARY_DIR}/Application/assets/Models)	
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Textures" ${PROJECT_BINARY_DIR}/Application/assets/Textures)	
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Fonts" ${PROJECT_BINARY_DIR}/Application/assets/Fonts)	
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Scripts" ${PROJECT_BINARY_DIR}/Application/assets/Scripts)	
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/${OPENGL_DESKTOP_TARGET}" ${PROJECT_BINARY_DIR}/Application/assets/Shaders)	
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/${OPENGL_DESKTOP_TARGET}/Common" ${PROJECT_BINARY_DIR}/Application/assets/Shaders/Common)
 

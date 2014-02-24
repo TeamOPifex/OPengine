@@ -1,6 +1,7 @@
 #ifdef OPIFEX_V8
 #include "v8.h"
 #include "./Core/include/Log.h"
+#include "./Scripting/include/Scripting.h"
 
 using namespace v8;
 
@@ -32,12 +33,29 @@ void OPscriptInit() {
 #endif
 }
 
+void OPscriptCompile(OPscript* script) {
+#ifdef OPIFEX_V8
+	HandleScope scope(isolate);
+	Local<Context> local_context = Local<Context>::New(isolate, context);
+	Context::Scope context_scope(local_context);
+
+	// Create a string containing the JavaScript source code.
+	Handle<String> source = String::NewFromUtf8(isolate, script->data);
+
+	// Compile the source code.
+	Handle<Script> compiled = Script::Compile(source);
+
+	// Run the script to get the result.
+	Handle<Value> result = compiled->Run();
+#endif
+}
+
 void OPscriptLog(const char* data) {
 #ifdef OPIFEX_V8
 	HandleScope scope(isolate);
 	Local<Context> local_context = Local<Context>::New(isolate, context);
-
 	Context::Scope context_scope(local_context);
+
 	Handle<v8::Object> global = local_context->Global();
 	Handle<Value> val = String::NewFromUtf8(isolate, "log");
 	Handle<v8::Value> value = global->Get(val);
@@ -46,6 +64,25 @@ void OPscriptLog(const char* data) {
 		Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
 		Handle<Value> args[1];
 		args[0] = v8::String::NewFromUtf8(isolate, data);
+		func->Call(global, 1, args);
+	}
+#endif
+}
+
+void OPscriptRun(const char* func) {
+#ifdef OPIFEX_V8
+	HandleScope scope(isolate);
+	Local<Context> local_context = Local<Context>::New(isolate, context);
+	Context::Scope context_scope(local_context);
+
+	Handle<v8::Object> global = local_context->Global();
+	Handle<Value> val = String::NewFromUtf8(isolate, func);
+	Handle<v8::Value> value = global->Get(val);
+
+	if (value->IsFunction()) {
+		Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);		
+		Handle<Value> args[1];
+		args[0] = v8::String::NewFromUtf8(isolate, "test");
 		func->Call(global, 1, args);
 	}
 #endif

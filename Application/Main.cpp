@@ -38,6 +38,7 @@
 #include "GameStates.h"
 #include "./Human/include/Human.h"
 #include "./Scripting/include/Scripting.h"
+#include "./Human/include/Utilities/LoaderOPS.h"
 
 //GameManager* GM;
 OPaudioSource *Sound, *Sound1, *Sound2;
@@ -69,7 +70,13 @@ i32 height = 720;
 
 // Initialize
 void Init(){
-	OPcmanInit(OP_DEFAULT_LOADERS, 7);
+	OPcmanInit(OP_DEFAULT_LOADERS, 8);
+
+
+	OPcmanLoad("Update.ops");
+	OPscript* script = (OPscript*)OPcmanGet("Update.ops");
+	OPscriptCompile(script);
+	OPscriptRun("update");
 
 	OPaudInit();
 	OPaudInitThread(10);
