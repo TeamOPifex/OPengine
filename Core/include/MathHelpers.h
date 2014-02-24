@@ -91,7 +91,7 @@ __inline OPint	OPabsi(OPint i){
 #if defined(OPIFEX_UNIX) // linux implementation
 	return (OPint)OPabs(i);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
-	return (OPint)OPabs(i);
+	return (OPint)OPabs((OPfloat)i);
 #endif
 }
 
@@ -106,7 +106,7 @@ __inline OPfloat OPsin(OPfloat f){
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)	// linux implementation
 	return sin(f);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
-	return sin(f);
+	return (OPfloat)sin(f);
 #elif defined(OPIFEX_ANDROID)	// android implementation
 	return sin(f);
 #endif
@@ -123,7 +123,7 @@ __inline OPfloat OPcos(OPfloat f){
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)	// linux implementation
 	return cos(f);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
-	return cos(f);
+	return (OPfloat)cos(f);
 #elif defined(OPIFEX_ANDROID)	// android implementation
 	return cos(f);
 #endif
@@ -140,7 +140,7 @@ __inline OPfloat OPtan(OPfloat f){
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)	// linux implementation
 	return tan(f);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
-	return tan(f);
+	return (OPfloat)tan(f);
 #elif defined(OPIFEX_ANDROID)	// android implementation
 	return tan(f);
 #endif
@@ -157,7 +157,7 @@ __inline OPfloat OPasin(OPfloat f){
 #if defined(OPIFEX_UNIX) // linux implementation
 	return asin(f);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
-	return asin(f);
+	return (OPfloat)asin(f);
 #endif
 }
 
@@ -172,7 +172,7 @@ __inline OPfloat OPacos(OPfloat f){
 #if defined(OPIFEX_UNIX) // linux implementation
 	return acos(f);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
-	return acos(f);
+	return (OPfloat)acos(f);
 #endif
 }
 
@@ -187,7 +187,7 @@ __inline OPfloat OPatan(OPfloat f){
 #if defined(OPIFEX_UNIX) // linux implementation
 	return atan(f);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
-	return atan(f);
+	return (OPfloat)atan(f);
 #endif
 }
 
@@ -214,7 +214,7 @@ __inline OPfloat OPpow(OPfloat b, OPfloat exp){
 #if defined(OPIFEX_UNIX) // linux implementation
 	return pow(b, exp);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
-	return pow(b, exp);
+	return (OPfloat)pow(b, exp);
 #endif
 }
 
@@ -229,7 +229,7 @@ __inline OPfloat OPsqrt(OPfloat f){
 #if defined(OPIFEX_UNIX) // linux implementation
 	return sqrt(f);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
-	return sqrt(f);
+	return (OPfloat)sqrt(f);
 #endif
 }
 
@@ -244,7 +244,7 @@ __inline OPfloat OPlog10(OPfloat f){
 #if defined(OPIFEX_UNIX) // linux implementation
 	return log10(f);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
-	return log10(f);
+	return (OPfloat)log10(f);
 #endif
 }
 
@@ -270,7 +270,7 @@ __inline OPfloat OPln(OPfloat f){
 #if defined(OPIFEX_UNIX) // linux implementation
 	return log(f);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
-	return log(f);
+	return (OPfloat)log(f);
 #endif
 }
 
@@ -285,7 +285,7 @@ __inline OPfloat OPround(OPfloat f){
 #if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) // linux implementation
 	return round(f);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
-	return OPfloor(f + 0.5f);
+	return (OPfloat)OPfloor(f + 0.5f);
 #endif
 }
 

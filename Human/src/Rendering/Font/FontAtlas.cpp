@@ -1,5 +1,3 @@
-#pragma once
-
 #include "./Human/include/Rendering/Font/FontAtlas.h"
 #include "./Human/include/Utilities/ImagePNG.h"
 
@@ -71,7 +69,7 @@ void OPfontAtlasMerge(OPfontAtlas* atlas)
 	OPfontAtlasNode *node, *next;
 	OPint i;
 	
-	for (i = 0; i< atlas->nodes->_size - 1; ++i)
+	for (i = 0; i < (int)(atlas->nodes->_size) - 1; ++i)
 	{
 		node = (OPfontAtlasNode*)(OPvectorGet(atlas->nodes, i));
 		next = (OPfontAtlasNode*)(OPvectorGet(atlas->nodes, i + 1));
@@ -89,13 +87,13 @@ OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, OPint width, OPint he
 	OPint y, best_height, best_width, best_index;
 	OPfontAtlasNode *node, *prev;
 	OPfontAtlasRegion region = { 0, 0, width, height };
-	OPint i;
+	OPuint i;
 
 	best_height = INT_MAX;
 	best_index = -1;
 	best_width = INT_MAX;
 
-	for (i = 0; i<atlas->nodes->_size; ++i)
+	for (i = 0; i < atlas->nodes->_size; ++i)
 	{
 		y = OPfontAtlasFit(atlas, i, width, height);
 		if (y >= 0)
@@ -168,8 +166,13 @@ OPtexture OPfontAtlasTexture(OPfontAtlas* atlas) {
 	OPtextureDescription desc = { 
 		(ui16)atlas->width,
 		(ui16)atlas->height,
+		#ifndef OPIFEX_ANDROID
 		GL_RED,
 		GL_RED,
+		#else
+		GL_RGB,
+		GL_RGB,
+		#endif
 		GL_UNSIGNED_BYTE,
 		GL_LINEAR, 
 		GL_LINEAR, 
@@ -192,7 +195,7 @@ OPtexture OPfontAtlasTexture(OPfontAtlas* atlas) {
 	return texture;
 }
 
-void OPfontAtlasSavePNG(OPfontAtlas* atlas, i8* filename) {
+void OPfontAtlasSavePNG(OPfontAtlas* atlas, OPchar* filename) {
 	if (atlas->depth == 1) {
 		ui8* data = (ui8*)OPalloc(atlas->width * atlas->height * 3);
 		for (OPint i = atlas->width * atlas->height; i--;) {

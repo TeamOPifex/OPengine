@@ -15,7 +15,7 @@ OPvector* OPvectorCreate(OPint elementSize) {
 	return self;
 }
 
-OPint OPvectorDestroy(OPvector* vector) {
+void OPvectorDestroy(OPvector* vector) {
 	OPfree(vector->items);
 	OPfree(vector);
 }
@@ -32,7 +32,7 @@ ui8* OPvectorBack(OPvector* vector) {
 }
 
 OPint OPvectorContains(OPvector* vector, ui8* item, OPint(*cmp)(ui8 *, ui8 *)) {
-	OPint i;
+	OPuint i;
 	for (i = 0; i < vector->_size; ++i){
 		if ((*cmp)(item, OPvectorGet(vector, i)) == 0) {
 			return 1;
@@ -54,13 +54,13 @@ OPint OPvectorCapacity(OPvector* vector) {
 void OPvectorClear(OPvector* vector)  {
 	vector->_size = 0;
 }
-void OPvectorSet(OPvector* vector, OPint index, ui8* item) {
+void OPvectorSet(OPvector* vector, OPuint index, ui8* item) {
 	OPmemcpy((ui8*)(vector->items) + index * vector->_elementSize, item, vector->_elementSize);
 }
-void OPvectorErase(OPvector* vector, OPint index) {
+void OPvectorErase(OPvector* vector, OPuint index) {
 	OPvectorEraseRange(vector, index, index + 1);
 }
-void OPvectorEraseRange(OPvector* vector, OPint indexFirst, OPint indexLast) {
+void OPvectorEraseRange(OPvector* vector, OPuint indexFirst, OPuint indexLast) {
 	OPmemmove(
 		(i8*)(vector->items) + indexFirst * vector->_elementSize,
 		(i8*)(vector->items) + indexLast * vector->_elementSize,
@@ -77,7 +77,7 @@ void OPvectorPop(OPvector* vector, ui8* item) {
 	vector->_size--;
 }
 
-void OPvectorInsert(OPvector* vector, OPint index, ui8* item) {
+void OPvectorInsert(OPvector* vector, OPuint index, ui8* item) {
 	if (vector->_capacity <= vector->_size) {
 		OPvectorReserve(vector, 2 * vector->_capacity);
 	}
@@ -91,7 +91,7 @@ void OPvectorInsert(OPvector* vector, OPint index, ui8* item) {
 	vector->_size++;
 	OPvectorSet(vector, index, item);
 }
-void OPvectorReserve(OPvector* vector, OPint size) {
+void OPvectorReserve(OPvector* vector, OPuint size) {
 	if (vector->_capacity < size) {
 		vector->items = OPrealloc(vector->items, size * vector->_elementSize);
 		vector->_capacity = size;

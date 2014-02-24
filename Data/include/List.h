@@ -13,9 +13,9 @@ extern "C" {
 #endif
 	typedef struct{
 		ui8* _indices;
-		OPint _capacity;
-		OPint _size;
-		OPint _elementSize;
+		OPuint _capacity;
+		OPuint _size;
+		OPuint _elementSize;
 	} OPlist;
 
 	OPlist* OPlistCreate(OPint capacity, OPint elementSize);

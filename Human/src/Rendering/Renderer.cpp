@@ -2,15 +2,20 @@
 #include "./Human/include/Rendering/Renderer.h"
 #include "./Core/include/Assert.h"
 
-i32 OPrenderWidth;
-i32 OPrenderHeight;
+OPuint OPrenderWidth;
+OPuint OPrenderHeight;
+OPuint OPscreenWidth;
+OPuint OPscreenHeight;
+
+#ifndef OPIFEX_ANDROID
 GLFWwindow* window = NULL;
+#endif
 
 void glfwErrorCallback(int error, const char* desc){
 	OPlog(desc);
 }
 
-OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
+OPint OPrenderInit(OPuint width, OPuint height, OPint fullscreen){
 
 
 #ifdef OPIFEX_OPENGL_ES_2
@@ -25,22 +30,16 @@ OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
 	
 	OPrenderWidth = width;
 	OPrenderHeight = height;
-
-	return 0;
-#else
-	GLuint VertexArrayID;
-	
+	OPscreenWidth = width;
+	OPscreenHeight = height;
+#else	
 	glfwSetErrorCallback(glfwErrorCallback);
 
 	int result = glfwInit();
 	if( !result ) {
 		OPlog("INIT FAILED %d", result);
 		return -1;
-	} else {
-		OPlog("INIT SUCCEEDED %d", result);
 	}
-
-
 	
 	// Most of the below will be moved to a Windowing System
 	
@@ -65,15 +64,11 @@ OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
 	GLFWwindow* tmp = glfwGetCurrentContext();
 	if(!tmp || tmp != window) {
 		OPlog("FAILED to bind context");
-	} else {
-		OPlog("SUCCEEDED to bind context");
 	}
 
 	if( !glfwInit() ) {
 		OPlog("INIT FAILED");
 		return -1;
-	} else {
-		OPlog("INIT SUCCEEDED");
 	}
 
 	// Open a window and create its OpenGL context
@@ -101,11 +96,13 @@ OPint OPrenderInit(ui32 width, ui32 height, bool fullscreen){
 
 	OPrenderWidth = width;
 	OPrenderHeight = height;
+	OPscreenWidth = width;
+	OPscreenHeight = height;
+#endif
 
-	OPlog("INIT w:%d h:%d\n", OPrenderWidth, OPrenderHeight);	
+	OPlog("OpenGL Context Created W:%d H:%d", OPrenderWidth, OPrenderHeight);
 
 	return 0;
-#endif
 }
 //-----------------------------------------------------------------------------
 void  OPrenderClear(f32 r, f32 g, f32 b){
@@ -113,24 +110,26 @@ void  OPrenderClear(f32 r, f32 g, f32 b){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 //-----------------------------------------------------------------------------
-void  OPrenderSetViewport(ui32 x, ui32 y, ui32 width, ui32 height){
+void  OPrenderSetViewport(OPuint x, OPuint y, OPuint width, OPuint height){
 	glViewport(x, y, width, height);
 	OPrenderWidth  = width;
 	OPrenderHeight = height;
 }
+
+void OPrenderResetViewport() {
+	OPrenderSetViewport(0, 0, OPscreenWidth, OPscreenHeight);
+}
+
 //-----------------------------------------------------------------------------
 OPint OPrenderGetWidth(){
-	glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
 	return OPrenderWidth;
 }
 //-----------------------------------------------------------------------------
 OPint OPrenderGetHeight(){
-	glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
 	return OPrenderHeight;
 }
 //-----------------------------------------------------------------------------
 OPfloat OPrenderGetAspectRatio(){
-	glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
 	ASSERT(OPrenderWidth > 0, "Height was not greater than 0, there was problem getting width and height");
 	return OPrenderHeight / (OPfloat)OPrenderWidth;
 }

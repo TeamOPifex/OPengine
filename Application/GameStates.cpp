@@ -58,7 +58,6 @@ OPgameState State1 = {
 };
 
 void State0Enter(OPgameState* last){
-	OPlog("State0 Entering...");
 	OPcmanLoad("impact.wav");
 	OPcmanLoad("boom.wav");
 	OPcmanLoad("background.ogg");
@@ -67,7 +66,6 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("TexturedScreen.vert");
 	OPcmanLoad("SpriteSheet.frag");
 	OPcmanLoad("Font.frag");
-	OPlog("Font Frag Loaded");
 	OPcmanLoad("Textured.frag");
 	OPcmanLoad("BiPlane.opm");
 	OPcmanLoad("steamPlaneSkin.png");
@@ -75,7 +73,8 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("noneNorm.png");
 	OPcmanLoad("stencil.opf");
 	// Required
-	i8** text = (i8**)OPalloc(sizeof(i8) * 1);
+
+	OPchar** text = (OPchar**)OPalloc(sizeof(i8) * 1);
 	text[0] = "All of the text! Woot!";
 	fontManager = OPfontManagerSetup("stencil.opf", text, 1);
 
@@ -83,7 +82,7 @@ void State0Enter(OPgameState* last){
 	OPfontManagerSetRGBA(fontManager, 0.0f, 0.0f, 1.0f, 1.0f);
 	OPfontManagerSetAlign(fontManager, OPFONT_ALIGN_CENTER);
 
-	OPlog("State0 Entered!");
+	OPlog("Game State 0 Entered");
 }
 
 ui32 backgroundState = 0;
@@ -126,8 +125,8 @@ int State0Update(OPtimer* time){
 	// Required
 	OPrenderTextXY(
 		"All of the text! Woot!",
-		-OPmyoYaw(),
-		-OPmyoPitch()
+		pos.x,
+		pos.y
 	);
 
 	OPrenderPresent();

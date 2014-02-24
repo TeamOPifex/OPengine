@@ -38,8 +38,6 @@ LPOVOPENCALLBACKS   fn_ov_open_callbacks;
 // | |__| | |  | (_| | |_| | (_| | | (_) | | |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //  \____/|_|   \__,_|\__,_|\__,_|_|\___/  |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPint OPaudInit(){
-	OPlog("Initializing OP audio...\n");
-
 	OPAUD_CURR_MUTEX = OPmutexCreate();
 
 // USE OGG VORBIS FOR DESKTOP PLATFORMS
@@ -76,50 +74,49 @@ OPint OPaudInit(){
 	//  \___ \| |    |  __|  \___ \      
 	//  ____) | |____| |____ ____) | _ _ 
 	// |_____/|______|______|_____(_|_|_)                                   
-    // create engine
+	// create engine
 	SLresult result;
 	result = slCreateEngine(&SLES_engineObject, 0, NULL, 0, NULL, NULL);
-    if(SL_RESULT_SUCCESS != result) {
+	if(SL_RESULT_SUCCESS != result) {
 		OPlog("Jukebox::Error 1");
 		return false;
 	}
 	
-    // realize the engine
-    if(SL_RESULT_SUCCESS != (*SLES_engineObject)->Realize(
+	// realize the engine
+	if(SL_RESULT_SUCCESS != (*SLES_engineObject)->Realize(
 		SLES_engineObject, SL_BOOLEAN_FALSE)){
 
 		OPlog("Jukebox::Error 2");
 		return false;
 	}
 	
-    // get the engine interface, which is needed in order to create other objects
-    if(SL_RESULT_SUCCESS != (*SLES_engineObject)->GetInterface(
-    	SLES_engineObject, SL_IID_ENGINE, &SLES_engineEngine)){
+	// get the engine interface, which is needed in order to create other objects
+	if(SL_RESULT_SUCCESS != (*SLES_engineObject)->GetInterface(
+		SLES_engineObject, SL_IID_ENGINE, &SLES_engineEngine)){
 
 		OPlog("Jukebox::Error 3");
 		return false;
 	}
 
-	OPlog("OPaudio: engineEngine VVV");
 	//OPlog_i32(SLES_engineEngine);
 
 	// create output mix, with environmental reverb specified as a non-required interface    
 	const SLInterfaceID ids[1] = {SL_IID_ENVIRONMENTALREVERB};
-    const SLboolean req[1] = {SL_BOOLEAN_FALSE};
+	const SLboolean req[1] = {SL_BOOLEAN_FALSE};
 
-    if(SL_RESULT_SUCCESS != (*SLES_engineEngine)->CreateOutputMix(SLES_engineEngine, &SLES_outputMixObject, 1, ids, req)){
+	if(SL_RESULT_SUCCESS != (*SLES_engineEngine)->CreateOutputMix(SLES_engineEngine, &SLES_outputMixObject, 1, ids, req)){
 
 		OPlog("Jukebox::Error 4");
 	}
 		
-    // realize the output mix
-    result = (*SLES_outputMixObject)->Realize(SLES_outputMixObject, SL_BOOLEAN_FALSE);
-    if(SL_RESULT_SUCCESS != result) {
+	// realize the output mix
+	result = (*SLES_outputMixObject)->Realize(SLES_outputMixObject, SL_BOOLEAN_FALSE);
+	if(SL_RESULT_SUCCESS != result) {
 
 		OPlog("Jukebox::Error 5");
 		return false;
 	}
-	OPlog("OPaudio::Initialized");
+	OPlog("Audio Initialized");
 #else // USE OpenAL FOR SOUND
 	//   ____                            _            
 	//  / __ \                     /\   | |           
@@ -138,7 +135,7 @@ OPint OPaudInit(){
 
 	alDistanceModel(AL_LINEAR_DISTANCE);
 #endif
-	OPlog("OP audio Initialized!!!");
+	OPlog("Audio Initialized");
 	return 1;
 }
 //-----------------------------------------------------------------------------
@@ -151,7 +148,7 @@ OPvec3 OPaudEarPosition(OPvec3* pos){
 
 	// return the stored value
 	OPvec3 out;
-	alGetListenerfv(AL_POSITION, &(pos->x));
+	alGetListenerfv(AL_POSITION, &(out.x));
 	return out;
 #endif
 }
@@ -165,7 +162,7 @@ OPvec3 OPaudEarVelocity(OPvec3* pos){
 
 	// return the stored value
 	OPvec3 out;
-	alGetListenerfv(AL_VELOCITY, &(pos->x));
+	alGetListenerfv(AL_VELOCITY, &(out.x));
 	return out;
 #endif
 }
@@ -179,7 +176,7 @@ OPvec3 OPaudEarForward(OPvec3* pos){
 
 	// return the stored value
 	OPvec3 out;
-	alGetListenerfv(AL_ORIENTATION, &(pos->x));
+	alGetListenerfv(AL_ORIENTATION, &(out.x));
 	return out;
 #endif
 }

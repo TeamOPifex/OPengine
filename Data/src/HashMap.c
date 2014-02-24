@@ -96,12 +96,10 @@ OPint OPhashMapExists(const HashMap *map, const OPchar *key)
 
 OPint OPhashMapPut(HashMap *map, const OPchar* key, void* value)
 {
-	OPuint key_len, value_len, index;
+	OPuint key_len, index;
 	Bucket* bucket;
 	KeyValuePair* tmp_pairs, *pair;
-	OPchar* tmp_value;
 	OPchar* new_key;
-	void* new_value;
 
 	if (map == NULL || key == NULL) return 0;	
 	

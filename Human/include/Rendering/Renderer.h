@@ -9,13 +9,17 @@
 extern "C" {
 #endif
 
-extern i32 OPrenderWidth;
-extern i32 OPrenderHeight;
-extern GLFWwindow* window;
+	extern OPuint OPrenderWidth;
+	extern OPuint OPrenderHeight;
 
-OPint OPrenderInit       (ui32 width, ui32 height, bool fullscreen);
+#ifndef OPIFEX_ANDROID
+extern GLFWwindow* window;
+#endif
+
+OPint OPrenderInit(OPuint width, OPuint height, OPint fullscreen);
 void  OPrenderClear      (f32 r, f32 g, f32 b);
-void  OPrenderSetViewport(ui32 x, ui32 y, ui32 width, ui32 height);
+void  OPrenderSetViewport(OPuint x, OPuint y, OPuint width, OPuint height);
+void OPrenderResetViewport();
 OPint OPrenderGetWidth();
 OPint OPrenderGetHeight();
 OPfloat OPrenderGetAspectRatio(); 

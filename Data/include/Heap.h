@@ -18,20 +18,20 @@
 extern "C" {
 #endif
 	typedef struct{
-		OPint* _indices;
-		OPint _capacity;
-		OPint _size;
+		OPuint* _indices;
+		OPuint _capacity;
+		OPuint _size;
 	} OPminHeap;
 
-	OPminHeap* OPminHeapCreate(OPint capacity);
+	OPminHeap* OPminHeapCreate(OPuint capacity);
 	OPint OPminHeapDestroy(OPminHeap* heap);
 	OPint OPminHeapPush(OPminHeap* heap, OPint value);
 	OPint OPminHeapPop(OPminHeap* heap);
 	OPint OPminHeapPeek(OPminHeap* heap);
 	OPint OPminHeapSize(OPminHeap* heap);
 
-	void _bubbleDown(OPminHeap* heap, OPint i);
-	void _bubbleUp(OPint* arr, OPint i);
+	void _bubbleDown(OPminHeap* heap, OPuint i);
+	void _bubbleUp(OPuint* arr, OPuint i);
 
 	OPint _parent(OPint i);
     OPint _leftChild(OPint i);

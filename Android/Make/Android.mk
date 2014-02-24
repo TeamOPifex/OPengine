@@ -22,6 +22,8 @@ LOCAL_PATH:= $(call my-dir)
 
 PROJECT_PATH:= $(LOCAL_PATH)/../@OPIFEX_REPOSITORY@
 
+NDK_APP_OUT := $(LOCAL_PATH)/../Binaries/android
+
 ##############
 # LIBOGG
 ##############
@@ -104,6 +106,7 @@ LOCAL_CFLAGS := -D@OPIFEX_OS@
 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Math/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Math/src/*.c)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Math/src/*.cpp)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 LOCAL_STATIC_LIBRARIES := libopifex-data
@@ -151,6 +154,8 @@ MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Input/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Math/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Rendering/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Rendering/GL/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Rendering/Font/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Rendering/Primitives/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Buffer/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Material/*.cpp)
@@ -160,11 +165,13 @@ MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Material/St
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Model/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Sound/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Texture/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Systems/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Utilities/*.cpp)
 
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 LOCAL_STATIC_LIBRARIES := libopifex-performance libvorbis
+
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -187,5 +194,11 @@ LOCAL_CFLAGS += -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Application/*.cpp)
 
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
-LOCAL_STATIC_LIBRARIES := libopifex-human
+LOCAL_STATIC_LIBRARIES := libopifex-human 
 include $(BUILD_SHARED_LIBRARY)
+
+
+$(LOCAL_BUILT_MODULE): $(LOCAL_OBJECTS)
+	$(shell copy "$(LOCAL_PATH)/../obj/local/$(TARGET_ARCH_ABI)/libopifex-human.a" "$(LOCAL_PATH)/../Binaries/android")
+
+ALL_STATIC_LIBRARIES += $(LOCAL_BUILT_MODULE)

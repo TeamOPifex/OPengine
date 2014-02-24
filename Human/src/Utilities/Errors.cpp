@@ -11,7 +11,7 @@
 OPint OPglError(const char* message){
 	GLenum err = glGetError();
 	if(err != 0){
-		OPlog(message);
+		OPlog(message, err);
 
 		switch(err){
 			case GL_INVALID_ENUM:
@@ -26,12 +26,14 @@ OPint OPglError(const char* message){
 			case GL_OUT_OF_MEMORY:
 				OPlog("GL_OUT_OF_MEMORY");
 				break;
-			case GL_STACK_UNDERFLOW:
-				OPlog("GL_STACK_UNDERFLOW");
-				break;
-			case GL_STACK_OVERFLOW:
-				OPlog("GL_STACK_OVERFLOW");
-				break;
+			#ifndef OPIFEX_ANDROID
+				case GL_STACK_UNDERFLOW:
+					OPlog("GL_STACK_UNDERFLOW");
+					break;
+				case GL_STACK_OVERFLOW:
+					OPlog("GL_STACK_OVERFLOW");
+					break;
+			#endif
 		}
 
 		return 1;

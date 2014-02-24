@@ -23,7 +23,7 @@ OPuint OPstreamDestroy(OPstream* stream){
 }
 //-----------------------------------------------------------------------------
 OPuint OPwrite(OPstream* stream, void* data, OPuint size){
-	OPuint len, ptr, i;
+	OPuint len, ptr;
 	ui8 *D, *d = (ui8*)data;
 	ui8* nd;
 

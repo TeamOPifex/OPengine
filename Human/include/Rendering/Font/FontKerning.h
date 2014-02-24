@@ -4,7 +4,7 @@
 #include "./Core/include/Types.h"
 
 typedef struct {
-	char charcode;
+	OPchar charcode;
 	OPfloat kerning;
 } OPfontKerning;
 

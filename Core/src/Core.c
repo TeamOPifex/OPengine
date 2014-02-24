@@ -14,25 +14,23 @@ jint _JNIWidth;
 
 
 JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager){
-	OPlog("Init Engine");
 	_JNIAssetManager = assetManager;
 	_JNIEnvironment = env;
 	_JNIWidth = width;
 	_JNIHeight = height;
 	_OPengineRunning = 1;
-	OPlog("Create environment");
-	OPtime = OPcreateTimer();
-	OPlog("Timer Created");
+	OPcreateTimer(&OPtime);
 	OPinitialize();
-	OPlog("OPInitialized");
+	OPlog("Android NDK Bridge Connected");
+	OPlog("Window Size %d, %d", width, height);
 }
 
 JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_step(JNIEnv * env, jobject obj, jobject assetManager){	
 	if(!_OPengineRunning) return 1;
 
 	_JNIAssetManager = assetManager;
-	OPtimerTick(OPtime);
-	int val = OPupdate(OPtime);
+	OPtimerTick(&OPtime);
+	int val = OPupdate(&OPtime);
 	if(val > 0) {
 		OPlog("Returning %d to Java", val);
 		_OPengineRunning = 0;
@@ -43,7 +41,6 @@ JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_step(JNIEnv * env, jobject obj, 
 JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_destroy(JNIEnv * env, jobject obj){
 	OPlog("Destroy");
 	OPdestroy();
-	OPdestroyTimer(OPtime);
 }
 
 JNIEnv* JNIEnvironment() { return _JNIEnvironment; }
