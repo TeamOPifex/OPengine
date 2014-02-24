@@ -19,6 +19,7 @@ include_directories(
 	../External/Oculus/include/
 	../External/Oculus/Src/
 	../External/Myo/include/
+	../External/V8/include/
 	.
 	../
 )
@@ -46,6 +47,7 @@ set(ALL_LIBS
 	3_Math
 	4_Performance
 	5_Human
+	7_Scripting
 	${OGG_LIBRARY}
 	${VORBIS_LIBRARY}
 	${VORBISFILE_LIBRARY}
@@ -88,11 +90,22 @@ endif()
 if(${OPIFEX_MYO})
 	include_directories(../External/Myo/include/)
 	target_link_libraries(8_Application ${PROJECT_SOURCE_DIR}/External/Myo/lib/win64/myo.lib)
-	add_definitions(-DOPIFEX_MYO)
 	copy_to_folder(8_Application "/External/Myo/lib/" "myo.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
 	copy_to_folder(8_Application "/External/Myo/lib/" "ble.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+	add_definitions(-DOPIFEX_MYO)
 endif()
 
+if(${OPIFEX_V8})
+	target_link_libraries(8_Application 
+		${PROJECT_SOURCE_DIR}/External/V8/lib/win64/icui18n.lib
+		${PROJECT_SOURCE_DIR}/External/V8/lib/win64/icuuc.lib
+		${PROJECT_SOURCE_DIR}/External/V8/lib/win64/v8_base.x64.lib
+		${PROJECT_SOURCE_DIR}/External/V8/lib/win64/v8_snapshot.lib
+		ws2_32.lib
+		advapi32.lib
+		winmm.lib)
+	add_definitions(-DOPIFEX_V8)
+endif()
 
 #########################################
 # OUTPUT BINARIES

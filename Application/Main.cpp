@@ -37,6 +37,7 @@
 #include "./Data/include/EntHeap.h"
 #include "GameStates.h"
 #include "./Human/include/Human.h"
+#include "./Scripting/include/Scripting.h"
 
 //GameManager* GM;
 OPaudioSource *Sound, *Sound1, *Sound2;
@@ -188,16 +189,18 @@ int UpdateState(OPtimer* timer){
 #include "./Math/include/Tweening.h"
 #include "./Core/include/Assert.h"
 
+
 #ifdef OPIFEX_ANDROID
 extern "C" {
 	JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj);
 };
-
 JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj) {
 #else
 	int main() {
 #endif
 	OPmyoConnect();
+	OPscriptInit();
+	OPscriptLog("TEST LOGGING!!!");
 	//ASSERT(false, "Test!");
 	//ASSERT(true, "TEST!");
 

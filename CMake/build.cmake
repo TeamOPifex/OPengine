@@ -38,6 +38,7 @@ set_property(CACHE OPENGL_DESKTOP_TARGET PROPERTY STRINGS OPENGL_2_0 OPENGL_3_3)
 
 option(OPIFEX_OCULUS "Build the Oculus library into the engine" OFF)
 option(OPIFEX_MYO "Build the Myo library into the engine" OFF)
+option(OPIFEX_V8 "Build the V8 library into the engine" OFF)
 
 SET(OPIFEX_PROJECT_BINARY_DIR ${PROJECT_BINARY_DIR})
 SET(OPIFEX_PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR})
