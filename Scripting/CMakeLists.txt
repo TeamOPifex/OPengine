@@ -28,6 +28,7 @@ include_directories(
 # Include Files
 #########################################
 add_source_group(include/ "${PROJECT_SOURCE_DIR}/Scripting/include" SCRIPTING_SRC)
+add_source_group(include/wrappers "${PROJECT_SOURCE_DIR}/Scripting/include/wrappers" SCRIPTING_SRC)
 
 
 #########################################
@@ -35,6 +36,7 @@ add_source_group(include/ "${PROJECT_SOURCE_DIR}/Scripting/include" SCRIPTING_SR
 #########################################
 add_source_group(\\ "${PROJECT_SOURCE_DIR}/Scripting" SCRIPTING_SRC)
 add_source_group(src/ "${PROJECT_SOURCE_DIR}/Scripting/src" SCRIPTING_SRC)
+add_source_group(src/wrappers "${PROJECT_SOURCE_DIR}/Scripting/src/wrappers" SCRIPTING_SRC)
 
 
 #########################################

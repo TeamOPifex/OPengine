@@ -73,10 +73,10 @@ void Init(){
 	OPcmanInit(OP_DEFAULT_LOADERS, 8);
 
 
-	OPcmanLoad("Update.ops");
-	OPscript* script = (OPscript*)OPcmanGet("Update.ops");
-	OPscriptCompile(script);
-	OPscriptRun("update");
+	//OPcmanLoad("Update.ops");
+	//OPscript* script = (OPscript*)OPcmanGet("Update.ops");
+	//OPscriptCompile(script);
+	//OPscriptRun("update");
 
 	OPaudInit();
 	OPaudInitThread(10);

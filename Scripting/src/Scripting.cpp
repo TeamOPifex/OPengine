@@ -2,8 +2,7 @@
 #include "./Scripting/include/Scripting.h"
 
 #ifdef OPIFEX_V8
-#include "v8.h"
-using namespace v8;
+#include "./Scripting/include/wrappers/Renderer.h"
 
 static void LogCallback(const v8::FunctionCallbackInfo<v8::Value>& args) {
 	if (args.Length() < 1) return;
@@ -25,11 +24,14 @@ void OPscriptInit() {
 	HandleScope handle_scope(isolate);
 
 	Handle<ObjectTemplate> global = ObjectTemplate::New();
-	global->Set(String::NewFromUtf8(isolate, "log"), FunctionTemplate::New(isolate, LogCallback));
+	Handle<FunctionTemplate> method = FunctionTemplate::New(isolate, LogCallback);
+	global->Set(String::NewFromUtf8(isolate, "log"), method);
+	OPscriptRendererWrapper(isolate, global);
 
 	// Create a new context.
 	Handle<Context> local_context = Context::New(isolate, NULL, global);
 	context.Reset(isolate, local_context);
+
 #endif
 }
 
