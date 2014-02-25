@@ -69,6 +69,8 @@ endif()
 #########################################
 output_library(7_Scripting "Scripting")
 
-output_binary(7_Scripting "/External/V8/lib/" "icui18n.dll" ${OPIFEX_OS_WINDOWS})
-output_binary(7_Scripting "/External/V8/lib/" "icuuc.dll" ${OPIFEX_OS_WINDOWS})
-output_binary(7_Scripting "/External/V8/lib/" "v8.dll" ${OPIFEX_OS_WINDOWS})
+if(${OPIFEX_V8})
+	output_binary(7_Scripting "/External/V8/lib/" "icui18n.dll" ${OPIFEX_OS_WINDOWS})
+	output_binary(7_Scripting "/External/V8/lib/" "icuuc.dll" ${OPIFEX_OS_WINDOWS})
+	output_binary(7_Scripting "/External/V8/lib/" "v8.dll" ${OPIFEX_OS_WINDOWS})
+endif()
