@@ -83,6 +83,9 @@ target_link_libraries(5_Human ${ALL_LIBS})
 set_target_properties(5_Human PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(5_Human PROPERTIES OUTPUT_NAME "Human")
 
+if(1)
+	add_definitions(-D_DEBUG)
+endif()
 
 #########################################
 # ADDITIONAL FEATURES
