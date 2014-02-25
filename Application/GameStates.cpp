@@ -92,6 +92,7 @@ int State0Update(OPtimer* time){
 	t += 0.005f * time->Elapsed;
 	OPgamePadSystemUpdate();
 	OPmyoUpdate();
+	OPkeyboardUpdate();
 
 	if (OPmyoPose() == 2) {
 		backgroundState = 2;
@@ -114,13 +115,14 @@ int State0Update(OPtimer* time){
 		OPrenderClear(OPmyoRoll(), 0.0f, 0.0f);
 	}
 
+	OPlog("Myo poses done");
 	OPvec2 pos = OPgamePadLeftThumb(OPgamePad(GamePadIndex_One));
 
 	if(OPgamePadIsDown(OPgamePad(GamePadIndex_One), GamePad_Button_BACK)){
 		OPlog("Should end");
 		OPend();
 	}
-
+	OPlog("Game pad stuff done");
 
 	// Required
 	OPrenderTextXY(
@@ -129,8 +131,10 @@ int State0Update(OPtimer* time){
 		pos.y
 	);
 
-	OPrenderPresent();
+	OPlog("Drawing done");
 
+	OPrenderPresent();
+	OPlog("Presenting done");
 	return false;
 }
 

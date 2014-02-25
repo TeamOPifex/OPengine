@@ -76,7 +76,15 @@ void OPrenderTextRGBAXYAlign(const OPchar* text, f32 r, f32 g, f32 b, f32 a, f32
 }
 
 void OPrenderTextXY(const OPchar* text, f32 x, f32 y) {
-	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
+	OPlog("Do stuff!!!!");	
+	ASSERT(!OPRENDER_CURR_FONT_MANAGER, "A Font Manager has not been bound yet");
+	OPlog("Asserted stuff %x", OPRENDER_CURR_FONT_MANAGER);
+	OPvec4 col = OPRENDER_CURR_FONT_MANAGER->_color;
+	OPlog("Color ok");
+	OPvec2 pos = OPvec2Create(x, y);
+	OPlog("pos ok");
+	OPfontAlign a = OPRENDER_CURR_FONT_MANAGER->_align;
+	OPlog("Align ok");
 	OPrenderTextColor4Vec2Align(text, OPRENDER_CURR_FONT_MANAGER->_color, OPvec2Create(x, y), OPRENDER_CURR_FONT_MANAGER->_align);
 }
 
@@ -118,7 +126,7 @@ void OPrenderTextColor4Vec2(const OPchar* text, OPvec4 color, OPvec2 pos) {
 }
 
 void OPrenderTextColor4Vec2Align(const OPchar* text, OPvec4 color, OPvec2 pos, OPfontAlign align) {
-
+	OPlog("Entered OPrenderTextColor bla bla bla");
 	ASSERT(OPRENDER_CURR_FONT_EFFECT != NULL, "A Font Effect has not been bound yet");
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
 	ASSERT(OPRENDER_CURR_FONT_MANAGER->isBuilt, "The bound Font Manager has not been built yet");
@@ -163,4 +171,5 @@ void OPrenderTextColor4Vec2Align(const OPchar* text, OPvec4 color, OPvec2 pos, O
 	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderMeshPacked(node->packedMesh);
 
+	OPlog("Exiting OPrenderTextColor bla bla bla");
 }
