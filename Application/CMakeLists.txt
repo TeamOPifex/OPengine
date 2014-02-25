@@ -97,14 +97,15 @@ endif()
 
 if(${OPIFEX_V8})
 	target_link_libraries(8_Application 
-		${PROJECT_SOURCE_DIR}/External/V8/lib/win64/icui18n.lib
-		${PROJECT_SOURCE_DIR}/External/V8/lib/win64/icuuc.lib
-		${PROJECT_SOURCE_DIR}/External/V8/lib/win64/v8_base.x64.lib
-		${PROJECT_SOURCE_DIR}/External/V8/lib/win64/v8_snapshot.lib
+		${PROJECT_SOURCE_DIR}/External/V8/lib/win64/v8.lib
 		ws2_32.lib
 		advapi32.lib
 		winmm.lib)
 	add_definitions(-DOPIFEX_V8)
+endif()
+
+if(1)
+	add_definitions(-D_DEBUG)
 endif()
 
 #########################################
@@ -115,3 +116,6 @@ copy_to_folder(8_Application "/External/Ogg/lib/" "libogg.dll" "/Application/Deb
 copy_to_folder(8_Application "/External/Vorbis/lib/" "vorbisfile.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
 copy_to_folder(8_Application "/External/Vorbis/lib/" "libvorbis.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
 copy_to_folder(8_Application "/External/Vorbis/lib/" "libvorbisfile.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+copy_to_folder(8_Application "/External/V8/lib/" "icui18n.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+copy_to_folder(8_Application "/External/V8/lib/" "icuuc.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+copy_to_folder(8_Application "/External/V8/lib/" "v8.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})

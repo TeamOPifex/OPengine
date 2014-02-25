@@ -51,12 +51,18 @@ set_target_properties(7_Scripting PROPERTIES OUTPUT_NAME "Scripting")
 
 if( ${OPIFEX_V8} )
 	target_link_libraries(7_Scripting 
-		${PROJECT_SOURCE_DIR}/External/V8/lib/win64/icui18n.lib
-		${PROJECT_SOURCE_DIR}/External/V8/lib/win64/icuuc.lib
-		${PROJECT_SOURCE_DIR}/External/V8/lib/win64/v8_base.x64.lib
-		${PROJECT_SOURCE_DIR}/External/V8/lib/win64/v8_snapshot.lib
+		${PROJECT_SOURCE_DIR}/External/V8/lib/win64/v8.lib
 		ws2_32.lib
 		advapi32.lib
 		winmm.lib)
 	add_definitions(-DOPIFEX_V8)
 endif()
+
+#########################################
+# OUTPUT BINARIES
+#########################################
+output_library(7_Scripting "Scripting")
+
+output_binary(7_Scripting "/External/V8/lib/" "icui18n.dll" ${OPIFEX_OS_WINDOWS})
+output_binary(7_Scripting "/External/V8/lib/" "icuuc.dll" ${OPIFEX_OS_WINDOWS})
+output_binary(7_Scripting "/External/V8/lib/" "v8.dll" ${OPIFEX_OS_WINDOWS})

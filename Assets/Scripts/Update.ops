@@ -1,3 +1,4 @@
 var update = function(){
-	log('update test');
+	log('update test' + '123');
+	log('update test' + '123');
 }
