@@ -49,12 +49,18 @@ add_library(7_Scripting STATIC ${SCRIPTING_SRC})
 set_target_properties(7_Scripting PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(7_Scripting PROPERTIES OUTPUT_NAME "Scripting")
 
-if( ${OPIFEX_V8} )
-	target_link_libraries(7_Scripting 
-		${PROJECT_SOURCE_DIR}/External/V8/lib/win64/v8.lib
-		ws2_32.lib
-		advapi32.lib
-		winmm.lib)
+if(${OPIFEX_V8})
+	if(${OPIFEX_OS_WINDOWS})
+		target_link_libraries(7_Scripting 
+			ws2_32.lib
+			advapi32.lib
+			winmm.lib)
+		if(${OPIFEX_OS_64})
+			target_link_libraries(7_Scripting ${PROJECT_SOURCE_DIR}/External/V8/lib/win64/v8.lib)
+		else()
+			target_link_libraries(7_Scripting ${PROJECT_SOURCE_DIR}/External/V8/lib/win32/v8.lib)
+		endif()
+	endif()
 	add_definitions(-DOPIFEX_V8)
 endif()
 

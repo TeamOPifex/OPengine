@@ -96,11 +96,17 @@ if(${OPIFEX_MYO})
 endif()
 
 if(${OPIFEX_V8})
-	target_link_libraries(8_Application 
-		${PROJECT_SOURCE_DIR}/External/V8/lib/win64/v8.lib
-		ws2_32.lib
-		advapi32.lib
-		winmm.lib)
+	if(${OPIFEX_OS_WINDOWS})
+		target_link_libraries(8_Application 
+			ws2_32.lib
+			advapi32.lib
+			winmm.lib)
+		if(${OPIFEX_OS_64})
+			target_link_libraries(8_Application ${PROJECT_SOURCE_DIR}/External/V8/lib/win64/v8.lib)
+		else()
+			target_link_libraries(8_Application ${PROJECT_SOURCE_DIR}/External/V8/lib/win32/v8.lib)
+		endif()
+	endif()
 	add_definitions(-DOPIFEX_V8)
 endif()
 
