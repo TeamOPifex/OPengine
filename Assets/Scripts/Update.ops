@@ -1,4 +1,7 @@
+var r = 0;
+var up = false;
 var update = function(){
-	log('update test' + '123');
-	log('update test' + '123');
+	r += up ? 0.01 : -0.01;
+	if(r < 0 || r > 1) up = !up;
+	OPrenderClear(r * 255,0,0);
 }

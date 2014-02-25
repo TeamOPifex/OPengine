@@ -6,6 +6,8 @@
 #include "./Data/include/ContentManager.h"
 #include "./Core/include/Log.h"
 #include "./Human/include/Input/Myo.h"
+#include "./Scripting/include/Scripting.h"
+#include "./Human/include/Utilities/LoaderOPS.h"
 
 OPfloat t = 0;
 
@@ -82,6 +84,10 @@ void State0Enter(OPgameState* last){
 	OPfontManagerSetRGBA(fontManager, 0.0f, 0.0f, 1.0f, 1.0f);
 	OPfontManagerSetAlign(fontManager, OPFONT_ALIGN_CENTER);
 
+	OPcmanLoad("Update.ops");
+	OPscript* script = (OPscript*)OPcmanGet("Update.ops");
+	OPscriptCompile(script);
+
 	OPlog("Game State 0 Entered");
 }
 
@@ -127,7 +133,9 @@ int State0Update(OPtimer* time){
 		"All of the text! Woot!",
 		pos.x,
 		pos.y
-	);
+		);
+
+	OPscriptRun("update");
 
 	OPrenderPresent();
 	return false;
