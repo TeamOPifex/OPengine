@@ -106,7 +106,7 @@ typedef enum {
 	OPKEY_RSHIFT,
 	OPKEY_LCONTROL,
 	OPKEY_RCONTROL,
-	OPKEYBOARD_MAX = 92
+	OPKEYBOARD_MAX = 349
 } OPkeyboardKey;
 
 extern ui32 OPmouseCodes[OPMOUSE_MAX];

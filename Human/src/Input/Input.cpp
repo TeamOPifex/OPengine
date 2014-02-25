@@ -29,13 +29,17 @@ TouchState Touch = {
 
 #ifndef OPIFEX_ANDROID
 void OPkeyboardUpdate() {
+	OPlog("OPkeyboardUpdate() - entered");
 	OPmemcpy(&Keyboard.prevKeys, &Keyboard.keys, sizeof(KeyboardState));
+	OPlog("OPkeyboardUpdate() - keys copied");
 	for(ui32 i = 0; i < OPKEYBOARD_MAX; i++) {
-		Keyboard.keys[i] = glfwGetKey(window, OPkeyboardCodes[i]); 
+		Keyboard.keys[i] = glfwGetKey(window, OPkeyboardCodes[i]);
 		//if(Keyboard.keys[i] ) {
 		//	OPlog("Key %d : %d", i, OPkeyboardCodes[i]);
 		//}
 	}
+
+	OPlog("OPkeyboardUpdate() - done");
 }
 
 OPint OPkeyboardIsDown(OPkeyboardKey key) {

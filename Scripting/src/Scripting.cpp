@@ -1,8 +1,8 @@
-#ifdef OPIFEX_V8
-#include "v8.h"
 #include "./Core/include/Log.h"
 #include "./Scripting/include/Scripting.h"
 
+#ifdef OPIFEX_V8
+#include "v8.h"
 using namespace v8;
 
 static void LogCallback(const v8::FunctionCallbackInfo<v8::Value>& args) {
