@@ -40,7 +40,22 @@ add_source_group(src/ "${PROJECT_SOURCE_DIR}/Pipeline/src" PIPELINE_SRC)
 #########################################
 # DEPENDENT LIBRARIES
 #########################################
-
+set(ALL_LIBS
+	${OPENGL_LIBRARY}
+	${OPENAL_LIBRARY}
+	GLEW_158
+	1_Core
+	2_Data
+	3_Math
+	4_Performance
+	5_Human
+	7_Scripting
+	${OGG_LIBRARY}
+	${VORBIS_LIBRARY}
+	${VORBISFILE_LIBRARY}
+	glfw 
+	${GLFW_LIBRARIES}
+)
 
 #########################################
 # BUILD
@@ -48,6 +63,9 @@ add_source_group(src/ "${PROJECT_SOURCE_DIR}/Pipeline/src" PIPELINE_SRC)
 add_library(8_Pipeline STATIC ${PIPELINE_SRC})
 set_target_properties(8_Pipeline PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(8_Pipeline PROPERTIES OUTPUT_NAME "Pipeline")
+add_definitions(-D${OPIFEX_OS})
+
+target_link_libraries(8_Pipeline ${ALL_LIBS})
 
 if(${OPIFEX_V8})
 	if(${OPIFEX_OS_WINDOWS})

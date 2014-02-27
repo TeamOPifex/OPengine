@@ -50,6 +50,7 @@ add_source_group(src/wrappers "${PROJECT_SOURCE_DIR}/Scripting/src/wrappers" SCR
 add_library(7_Scripting STATIC ${SCRIPTING_SRC})
 set_target_properties(7_Scripting PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(7_Scripting PROPERTIES OUTPUT_NAME "Scripting")
+add_definitions(-D${OPIFEX_OS})
 
 if(${OPIFEX_V8})
 	if(${OPIFEX_OS_WINDOWS})
