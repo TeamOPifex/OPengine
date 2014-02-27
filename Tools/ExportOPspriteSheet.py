@@ -123,9 +123,8 @@ def export_spritesheet(img, drw):
 
 	meta = build_meta(img)
 
-	file = open(filename + '.bin', 'wb')
+	file = open(filename + '.opss', 'wb')
 	binify_and_write_meta(meta, file)
-	file.close()
 
 	# save the png file
 	dup = img.duplicate()
@@ -133,7 +132,7 @@ def export_spritesheet(img, drw):
 	pdb.file_png_save2(
 		dup,
 		dup.layers[0],
-		filename,
+		filename + '.temp',
 		filename,
 		1,
 		9,
@@ -145,6 +144,18 @@ def export_spritesheet(img, drw):
 		0,
 		1
 		)
+
+	# open the temp file (image) and
+	# append it to the opss file
+	src = open(filename + '.temp', 'rb')
+	file.write(src.read())
+	
+	# close all files
+	file.close()
+	src.close()
+
+	# remove the temporary file
+	os.remove(filename + '.temp')
 
 	print filename
 	return
