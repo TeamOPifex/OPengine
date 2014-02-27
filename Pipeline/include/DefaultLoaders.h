@@ -1,5 +1,5 @@
-#ifndef OPENGINE_HUMAN_DEFAULTS
-#define OPENGINE_HUMAN_DEFAULTS
+#ifndef OPENGINE_PIPELINE_DEFAULTS
+#define OPENGINE_PIPELINE_DEFAULTS
 #include "./Data/include/ContentManager.h"
 #ifdef __cplusplus
 extern "C" {

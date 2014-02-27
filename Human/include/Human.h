@@ -4,5 +4,4 @@
 #include "./Systems/FontSystem.h"
 #include "./Systems/InputSystem.h"
 #include "./Systems/RenderSystem.h"
-#include "./Utilities/DefaultLoaders.h"
 #endif

@@ -85,7 +85,14 @@ add_subdirectory("${SCRIPTING_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Scripting)
 
 
 #########################################
-# Application - Level 8
+# Pipeline - Level 8
+#########################################
+
+set(PIPELINE_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Pipeline")
+add_subdirectory("${PIPELINE_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Pipeline)
+
+#########################################
+# Application - Level 9
 #########################################
 
 set(APPLICATION_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Application")

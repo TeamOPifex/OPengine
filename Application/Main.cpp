@@ -38,7 +38,7 @@
 #include "GameStates.h"
 #include "./Human/include/Human.h"
 #include "./Scripting/include/Scripting.h"
-#include "./Human/include/Utilities/LoaderOPS.h"
+#include "./Pipeline/include/DefaultLoaders.h"
 
 //GameManager* GM;
 OPaudioSource *Sound, *Sound1, *Sound2;
