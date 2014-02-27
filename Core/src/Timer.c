@@ -26,12 +26,12 @@ void OPtimerTick(OPtimer* timer){
 	ui64 elapsed;
 	
 	gettimeofday(&time, NULL);
-	elapsed = (time.tv_sec - timer->_lastTime.tv_sec) * 1000000 + 
-		  (time.tv_usec - timer->_lastTime.tv_usec);
+	elapsed = ((time.tv_sec - timer->_lastTime.tv_sec) * 1000000 + 
+		  (time.tv_usec - timer->_lastTime.tv_usec)) / 1000;
 
 	timer->TotalGametime += elapsed;
 	timer->TimeLastTick = (time.tv_sec * 1000000 + time.tv_usec);
-	timer->Elapsed = (elapsed / 1000);
+	timer->Elapsed = elapsed;
 	
 	timer->_lastTime = time;
 #elif defined(OPIFEX_WINDOWS)
@@ -41,7 +41,7 @@ void OPtimerTick(OPtimer* timer){
 	timer->Elapsed = time - timer->TimeLastTick;
 	timer->TimeLastTick = time;
 	timer->TotalGametime += timer->Elapsed;
-#endif	
+#endif
 }
 //----------------------------------------------------------------------------
 OPfloat  OPtimerDelta(OPtimer* timer){
