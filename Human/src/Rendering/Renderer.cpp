@@ -51,7 +51,10 @@ OPint OPrenderInit(OPuint width, OPuint height, OPint fullscreen){
 	#endif
 	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow(width, height, "OPifex Entertainment", NULL, NULL);
+	if (fullscreen)
+		window = glfwCreateWindow(width, height, "OPifex Entertainment", glfwGetPrimaryMonitor(), NULL);
+	else
+		window = glfwCreateWindow(width, height, "OPifex Entertainment", NULL, NULL);
 	if(!window) {		
 		OPlog("Failed to open GLFW window of %dx%d. If you have an Intel GPU, they are not 3.3 compatible.\n", width, height );
 		glfwTerminate();

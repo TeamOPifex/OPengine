@@ -6,9 +6,9 @@
 #include <cstdio>
 #include <string>
 #include "./Core/include/DynamicMemory.h"
-#include "./Human/include/Utilities/LodePNG.h"
 #include "./Human/include/Rendering/Texture.h"
 #include "./Human/include/Utilities/Errors.h"
+#include "./External/LodePNG/include/LodePNG.h"
 
 #if defined(OPIFEX_OPENGL_ES_2)
 #include <GLES2/gl2.h>
