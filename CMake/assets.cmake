@@ -25,6 +25,9 @@ if( ${OPIFEX_OS_ANDROID} )
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/OPENGL_ES_2_0" ${PROJECT_BINARY_DIR}/assets/Shaders)	
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/OPENGL_ES_2_0/Common" ${PROJECT_BINARY_DIR}/assets/Shaders/Common)	
 
+	file(COPY ${PROJECT_SOURCE_DIR}/External/Ogg/lib/android/libogg.a DESTINATION ${PROJECT_BINARY_DIR}/Binaries/android)
+	file(COPY ${PROJECT_SOURCE_DIR}/External/Vorbis/lib/android/libvorbis.a DESTINATION ${PROJECT_BINARY_DIR}/Binaries/android)
+
 else()
 
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Audio" ${PROJECT_BINARY_DIR}/Application/assets/Audio)	

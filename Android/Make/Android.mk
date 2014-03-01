@@ -24,37 +24,25 @@ PROJECT_PATH:= $(LOCAL_PATH)/../@OPIFEX_REPOSITORY@
 
 NDK_APP_OUT := $(LOCAL_PATH)/../Binaries/android
 
+
 ##############
 # LIBOGG
 ##############
 include $(CLEAR_VARS)
-
-LOCAL_MODULE := libogg
-
-LOCAL_C_INCLUDES :=$(PROJECT_PATH)
-
-LOCAL_CFLAGS := -I $(PROJECT_PATH)/External/Ogg/include/
-MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/External/Ogg/src/*.c)
-LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
-
-include $(BUILD_STATIC_LIBRARY)
+LOCAL_MODULE    := libogg
+LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libogg.a
+include $(PREBUILT_STATIC_LIBRARY)
 
 
 ##############
 # LIBVORBIS
 ##############
 include $(CLEAR_VARS)
-LOCAL_MODULE := libvorbis
-
+LOCAL_MODULE    := libvorbis
+LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libvorbis.a
 LOCAL_STATIC_LIBRARIES := libogg
 
-LOCAL_CFLAGS := -I $(PROJECT_PATH)/External/Vorbis/include/
-LOCAL_CFLAGS += -I $(PROJECT_PATH)/External/Ogg/include/
-LOCAL_CFLAGS += -I $(PROJECT_PATH)/External/Vorbis/src/
-MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/External/Vorbis/src/*.c)
-LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
-
-include $(BUILD_STATIC_LIBRARY)
+include $(PREBUILT_STATIC_LIBRARY)
 
 
 ##############
