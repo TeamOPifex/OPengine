@@ -31,7 +31,8 @@ void OPscriptInit() {
 	// Create a new context.
 	Handle<Context> local_context = Context::New(isolate, NULL, global);
 	context.Reset(isolate, local_context);
-
+#else
+	OPlog("V8 Engine Feature not enabled.");
 #endif
 }
 
