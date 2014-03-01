@@ -58,19 +58,19 @@ OPassetLoader OP_DEFAULT_LOADERS[9] = {
 				(OPint(*)(void*))OPfontUnload
 		},
 		{
-			".ops",
-			"Scripts/",
-			sizeof(OPscript),
-			(OPint(*)(const OPchar*, void**))OPscriptLoad,
-			(OPint(*)(void*))OPscriptUnload
-		},
-		{
 			".opss",
 			"Sprites/",
 			sizeof(OPspriteSheet),
 			(OPint(*)(const OPchar*, void**))OPspriteSheetLoad,
 			(OPint(*)(void*))OPspriteSheetUnload
-		}
+		},
+		{
+			".ops",
+				"Scripts/",
+				sizeof(OPscript),
+				(OPint(*)(const OPchar*, void**))OPscriptLoad,
+				(OPint(*)(void*))OPscriptUnload
+		},
 };
 
 
