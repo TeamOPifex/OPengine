@@ -94,6 +94,26 @@ ui8* OPreadAt(OPstream* stream, OPuint pos, OPuint size){
 	return stream->Data + pos;
 }
 //-----------------------------------------------------------------------------
+OPuint OPcopy(OPstream* stream, void* dest, OPuint size){
+	OPuint ptr = stream->_pointer;
+	OPuint oldSize = size;
+	
+	// truncate the number of bytes that will be returned
+	// in the event that we are near the end of th stream
+	if(stream->Length <= ptr + size){
+		size = (stream->Length - ptr) - 1;
+	}
+
+	// ensure the size did not underflow
+	if(size <= oldSize) return -1;
+
+	// copy the data, and update the pointer location
+	OPmemcpy(dest, stream->Data + ptr, size);
+	stream->_pointer += size;
+ 
+	return size;
+}
+//-----------------------------------------------------------------------------
 OPuint OPseek(OPstream* stream, OPuint byte){
 	if(byte < stream->Length){	
 		stream->_pointer = byte;

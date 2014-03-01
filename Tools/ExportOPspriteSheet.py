@@ -38,6 +38,16 @@ def show_save_dialog(img):
 	
 	return filename
 #------------------------------------------------------------------------------
+def get_frame_count(meta):
+	frames = 0
+	for sprite in meta:
+		if(type(sprite) is list):
+			for frame in sprite:
+				frames += 1
+		else:
+			frames += 1
+	return frames
+#------------------------------------------------------------------------------
 def pck_str(s):
 	return pack("I%ds" % (len(s),), len(s), s)
 #------------------------------------------------------------------------------
@@ -48,7 +58,15 @@ def write_sprite_frame(file, sprite_def):
         file.write(pack('%si' % len(def_ints), *def_ints))
 #------------------------------------------------------------------------------
 def binify_and_write_meta(meta, file):
-        file.write(pack('i', len(meta)))
+        file.write(pack('ii', meta['__width'], meta['__height']))
+
+	# don't try saving width and height as sprites
+	del meta['__width']
+	del meta['__height']
+
+	# save the number of sprites, and the number of total frames
+	file.write(pack('i', len(meta)))
+	file.write(pack('i', get_frame_count(meta)))
 
         for sprite_name in meta:
                 sprite = meta[sprite_name]
@@ -73,7 +91,10 @@ def binify_and_write_meta(meta, file):
                         write_sprite_frame(file, sprite)		
 #------------------------------------------------------------------------------
 def build_meta(img):
-	sprite_dic = {}
+	sprite_dic = {
+		'__width':  img.width,
+		'__height': img.height
+	}
 
 	for layer in img.layers:
 		base_name = re.sub(r'_[0-9]+$', '', layer.name)

@@ -63,6 +63,15 @@ ui8* OPread(OPstream* stream, OPuint size);
 ui8* OPreadAt(OPstream* stream, OPuint pos, OPuint size);
 //-----------------------------------------------------------------------------
 /**
+ * OPcopy - Reads data, and copies it into a provided buffer
+ *      @param stream Pointer to the stream to copy from
+ *      @param dest Pointer to the buffer to which data will be copied
+ *      @param size Number of bytes to copy from stream, to dest
+ *      @return Greater than 0 on success, less than or equal to on failure
+ */
+OPuint OPcopy(OPstream* stream, void* dest, OPuint size);
+//-----------------------------------------------------------------------------
+/**
  * OPseek - Skip to a specific byte location in the stream.
  *	@param stream Pointer to the stream to seek
  *	@param byte Byte index to skip to.
