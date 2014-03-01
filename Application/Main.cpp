@@ -70,7 +70,7 @@ i32 height = 720;
 
 // Initialize
 void Init(){
-	OPcmanInit(OP_DEFAULT_LOADERS, 8);
+	OPcmanInit(OP_DEFAULT_LOADERS, 9);
 
 
 	//OPcmanLoad("Update.ops");
