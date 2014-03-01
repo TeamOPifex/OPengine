@@ -2,6 +2,7 @@
 #define OPENGINE_HUMAN_SPRITESHEET
 
 #include "./Core/include/Types.h"
+#include "./Data/include/File.h"
 #include "./Math/include/Vector2.h"
 #include "./Human/include/Rendering/Texture.h"
 
@@ -17,6 +18,8 @@
 // Used to maintain and clean up sprites that
 // have been stored in the manager
 typedef struct{
+	OPint      Width;
+	OPint      Height;
 	OPint      Sprites;
 	OPchar**   Names;
 	OPtexture* Sheet;
@@ -35,6 +38,7 @@ typedef struct{
 	OPspriteFrame* Frames;  // pointer to animation's frames
 	OPint          Frame;   // index of the current frame
 	OPfloat        Elapsed; // time since last frame change
+	OPtexture*     Sheet;   // texture that this sprite will use
 }OPsprite;
 
 //-----------------------------------------------------------------------------
