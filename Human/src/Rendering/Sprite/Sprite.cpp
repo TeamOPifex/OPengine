@@ -121,5 +121,5 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 }
 
 OPint OPspriteSheetUnload(void* ss){
-
+	return 1;
 }
