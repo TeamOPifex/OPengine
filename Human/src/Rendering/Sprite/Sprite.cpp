@@ -5,9 +5,10 @@
 #include "./Human/include/Rendering/Sprite/SpriteSheet.h"
 
 OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
+	OPlog("OPspriteSheetLoad() - entered");
 	OPstream* str = OPreadFileLarge(filename, 1024);
-	OPint width, height;
-	OPint sprites, frames;
+	i32 width, height;
+	i32 sprites, frames;
 	OPspriteFrame* frameData;
 	OPtexture *sheet, *temp;
 
@@ -21,12 +22,16 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 	sheet = (OPtexture*)OPalloc(sizeof(OPtexture));
 
 	// read the dimensions of the image
-	OPcopy(str, &width,  sizeof(ui32));
-	OPcopy(str, &height, sizeof(ui32));
+	width  = OPreadi32(str);
+	height = OPreadi32(str);
+
+	OPlog("Sprite sheet %dx%d", width, height);
 
 	// read the sprite, and frame counts
-	OPcopy(str, &sprites, sizeof(ui32));
-	OPcopy(str, &frames,  sizeof(ui32));
+	sprites = OPreadi32(str);
+	frames  = OPreadi32(str);
+
+	OPlog("Sprites: %d, Frames: %d", sprites, frames);
 
 	// allocate memory for the sprite sheet struct
 	*ss = (OPspriteSheet*)OPalloc(sizeof(OPspriteSheet));
@@ -45,14 +50,18 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 			ui32 spriteFrames = 1;			
 			OPspriteFrame* spriteFrameData = frameData + frameNum;
 			OPsprite* sprite = (OPsprite*)OPalloc(sizeof(OPsprite));
+
+			OPlog("Sprite '%s' @ %x", name, sprite);
 			
 			// zero the sprite structure out
-			OPbzero(&sprite, sizeof(OPsprite));
+			OPbzero(sprite, sizeof(OPsprite));
 
 			if(flags){
 				// this sprite has animation frames	
 				spriteFrames = OPreadi32(str);
 			}
+
+			OPlog("\tLoading...");			
 
 			// Load all the frames
 			for(OPint j = 0; j < spriteFrames; j++){
@@ -73,6 +82,12 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 					size,
 					1 // TODO
 				};
+
+				OPlog("\t(%f,%f) (%f,%f)",
+					offset.x, offset.y,
+					size.x, size.y
+				); 
+
 				spriteFrameData[j] = frame;
 			}
 
@@ -91,12 +106,16 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 	}
 
 	// load the png image data
-	OPimagePNGLoadStream(str, 0, &temp);
+	OPimagePNGLoadStream(str, str->_pointer, &temp);
+	OPlog("Loaded PNG!");
 	
 	// copy the texture's data into the pre allocated texture
 	// then clean up the temp texture object
 	OPmemcpy(sheet, temp, sizeof(OPtexture));
 	OPfree(temp);
+
+	OPlog("Done!");
+	scanf("%s");
 
 	return 1;
 }

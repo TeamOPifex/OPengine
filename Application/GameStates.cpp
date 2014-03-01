@@ -74,8 +74,10 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("steamPlaneSpec.png");
 	OPcmanLoad("noneNorm.png");
 	OPcmanLoad("stencil.opf");
-	// Required
+	//OPcmanLoad("test.opss");
 
+	// Required
+	
 	OPchar** text = (OPchar**)OPalloc(sizeof(i8) * 1);
 	text[0] = "All of the text! Woot!";
 	fontManager = OPfontManagerSetup("stencil.opf", text, 1);

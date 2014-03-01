@@ -1,12 +1,13 @@
 #include "./Human/include/Systems/AudioSystem.h"
 #include "./Human/include/Systems/RenderSystem.h"
 #include "./Human/include/Systems/FontSystem.h"
+#include "./Human/include/Rendering/Sprite/SpriteSheet.h"
 #include "./Human/include/Utilities/LoaderOPM.h"
 #include "./Human/include/Utilities/ImagePNG.h"
 #include "./Human/include/Utilities/LoaderOPS.h"
 #include "./Pipeline/include/DefaultLoaders.h"
 
-OPassetLoader OP_DEFAULT_LOADERS[8] = {
+OPassetLoader OP_DEFAULT_LOADERS[9] = {
 		{
 				".wav",
 				"Audio/",
@@ -62,6 +63,13 @@ OPassetLoader OP_DEFAULT_LOADERS[8] = {
 			sizeof(OPscript),
 			(OPint(*)(const OPchar*, void**))OPscriptLoad,
 			(OPint(*)(void*))OPscriptUnload
+		},
+		{
+			".opss",
+			"Sprites/",
+			sizeof(OPspriteSheet),
+			(OPint(*)(const OPchar*, void**))OPspriteSheetLoad,
+			(OPint(*)(void*))OPspriteSheetUnload
 		}
 };
 
