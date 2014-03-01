@@ -24,36 +24,44 @@ PROJECT_PATH:= $(LOCAL_PATH)/../@OPIFEX_REPOSITORY@
 
 NDK_APP_OUT := $(LOCAL_PATH)/../Binaries/android
 
+
 ##############
 # LIBOGG
 ##############
 include $(CLEAR_VARS)
+LOCAL_MODULE    := libogg
+LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libogg.a
+include $(PREBUILT_STATIC_LIBRARY)
 
-LOCAL_MODULE := libogg
-
-LOCAL_C_INCLUDES :=$(PROJECT_PATH)
-
-LOCAL_CFLAGS := -I $(PROJECT_PATH)/Human/include/Utilities/
-MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/src/Utilities/*.c)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Utilities/ogg/*.c)
-LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
-
-include $(BUILD_STATIC_LIBRARY)
 
 ##############
 # LIBVORBIS
 ##############
 include $(CLEAR_VARS)
-LOCAL_MODULE := libvorbis
-
+LOCAL_MODULE    := libvorbis
+LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libvorbis.a
 LOCAL_STATIC_LIBRARIES := libogg
 
-LOCAL_CFLAGS := -I $(PROJECT_PATH)/Human/include/Utilities/
-LOCAL_CFLAGS += -I $(PROJECT_PATH)/Human/include/Utilities/vorbis/
-MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/include/Utilities/vorbis/*.c)
+include $(PREBUILT_STATIC_LIBRARY)
+
+
+##############
+# LODEPNG
+##############
+include $(CLEAR_VARS)
+
+LOCAL_MODULE := lodepng
+
+LOCAL_C_INCLUDES :=$(PROJECT_PATH)
+
+MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/External/LodePNG/src/*.cpp)
+
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
+LOCAL_LDLIBS := -lstdc++
+
 include $(BUILD_STATIC_LIBRARY)
+
 
 ##############
 # 1_CORE
@@ -143,10 +151,8 @@ LOCAL_CFLAGS    := -Werror
 LOCAL_CFLAGS 	+= -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
-LOCAL_C_INCLUDES +=$(PROJECT_PATH)/Human/include/Utilities/
-LOCAL_C_INCLUDES +=$(PROJECT_PATH)/Human/include/Utilities/vorbis/
-LOCAL_C_INCLUDES +=$(PROJECT_PATH)/Human/include/Utilities/vorbis/modes/
-LOCAL_C_INCLUDES +=$(PROJECT_PATH)/Human/include/Utilities/vorbis/books/
+LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Ogg/include
+LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Vorbis/include
 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Human/src/Audio/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Audio/src/*.cpp)
@@ -170,14 +176,55 @@ MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Utilities/*.cpp)
 
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
-LOCAL_STATIC_LIBRARIES := libopifex-performance libvorbis
+LOCAL_STATIC_LIBRARIES := libopifex-performance libvorbis -lstdc++ lodepng
 
 include $(BUILD_STATIC_LIBRARY)
 
 
+##############
+# 7_SCRIPTING
+# scripting lib, which will be built statically
+##############
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libopifex-scripting
+LOCAL_LDLIBS    := -llog -lGLESv2 -lOpenSLES
+LOCAL_CFLAGS    := -Werror
+LOCAL_CFLAGS 	+= -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2
+
+LOCAL_C_INCLUDES :=$(PROJECT_PATH)
+LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Ogg/include
+LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Vorbis/include
+
+MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Scripting/src/*.cpp)
+LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
+
+LOCAL_STATIC_LIBRARIES := libopifex-human
+
+include $(BUILD_STATIC_LIBRARY)
+
 
 ##############
-# 8_APPLICATION
+# 8_PIPELINE
+# pipeline lib, which will be built statically
+##############
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libopifex-pipeline
+LOCAL_CFLAGS 	:= -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2
+
+LOCAL_C_INCLUDES :=$(PROJECT_PATH)
+LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Ogg/include
+LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Vorbis/include
+
+MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Pipeline/src/*.cpp)
+LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
+
+LOCAL_STATIC_LIBRARIES := libopifex-scripting
+
+include $(BUILD_STATIC_LIBRARY)
+
+
+##############
+# 9_APPLICATION
 # second lib, which will depend on and include the first one
 ##############
 include $(CLEAR_VARS)
@@ -187,18 +234,13 @@ LOCAL_LDLIBS    := -llog -lGLESv2 -landroid -lOpenSLES
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := false
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
-LOCAL_CFLAGS := -I $(PROJECT_PATH)/Human/include/Utilities/
-LOCAL_CFLAGS += -I $(PROJECT_PATH)/Human/include/Utilities/vorbis/
+LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Ogg/include
+LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Vorbis/include
+
 LOCAL_CFLAGS += -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2
 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Application/*.cpp)
 
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
-LOCAL_STATIC_LIBRARIES := libopifex-human 
+LOCAL_STATIC_LIBRARIES := libopifex-pipeline
 include $(BUILD_SHARED_LIBRARY)
-
-
-$(LOCAL_BUILT_MODULE): $(LOCAL_OBJECTS)
-	$(shell copy "$(LOCAL_PATH)/../obj/local/$(TARGET_ARCH_ABI)/libopifex-human.a" "$(LOCAL_PATH)/../Binaries/android")
-
-ALL_STATIC_LIBRARIES += $(LOCAL_BUILT_MODULE)
