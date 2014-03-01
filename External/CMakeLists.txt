@@ -37,3 +37,29 @@ output_library_from(GLEW_158 "/External" "GLEW_158")
 output_binary(GLEW_158 "/External/Ogg/lib/" "libogg.lib" ${OPIFEX_OS_WINDOWS})
 output_binary(GLEW_158 "/External/Vorbis/lib/" "libvorbis.lib" ${OPIFEX_OS_WINDOWS})
 output_binary(GLEW_158 "/External/Vorbis/lib/" "libvorbisfile.lib" ${OPIFEX_OS_WINDOWS})
+
+
+### LodePNG
+
+#########################################
+# Include Files
+#########################################
+add_source_group(include/ "${PROJECT_SOURCE_DIR}/External/LodePNG/include" LODEPNG_SRC)
+
+#########################################
+# Source Files
+#########################################
+add_source_group(src/ "${PROJECT_SOURCE_DIR}/External/LodePNG/src" LODEPNG_SRC)
+
+
+#########################################
+# BUILD
+#########################################
+add_library( LODEPNG STATIC	${LODEPNG_SRC})
+
+set_property(TARGET LODEPNG PROPERTY FOLDER "External")
+set_target_properties(LODEPNG PROPERTIES OUTPUT_NAME "LodePNG")
+
+populate_binary_directory()
+
+output_library_from(LODEPNG "/External" "LodePNG")
