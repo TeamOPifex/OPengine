@@ -45,6 +45,7 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 		for(OPint i = sprites; i--;){
 			// read the name, and the sprite flags
 			// setup a proxy var for frame data
+			OPasset* assetBucket = NULL;
 			char* name = (*ss)->Names[i] = OPreadstring(str);
 			ui32 flags = OPreadi32(str);
 			ui32 spriteFrames = 1;			
@@ -76,6 +77,9 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 					OPreadi32(str) / (OPfloat)height
 				};
 
+				offset.y = 1 - (offset.y - size.y);
+				size.y *= -1.0f;
+
 				// setup frame structure, copy into the frame buffer
 				OPspriteFrame frame = {
 					offset,
@@ -83,12 +87,12 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 					1 // TODO
 				};
 
-				OPlog("\t(%f,%f) (%f,%f)",
-					offset.x, offset.y,
-					size.x, size.y
-				); 
-
 				spriteFrameData[j] = frame;
+			
+				OPlog("\t(%f,%f) (%f,%f)",
+					spriteFrameData[j].Offset.x, spriteFrameData[j].Offset.y,
+					spriteFrameData[j].Size.x, spriteFrameData[j].Size.y
+				); 
 			}
 
 			// set the frame count, and the pointer to
@@ -101,7 +105,15 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 			frameNum += spriteFrames;
 	                
 			// Insert the sprite into the content manager's hashmap
-        	        OPhashMapPut(&OP_CMAN_HASHMAP, name, (void*)sprite);
+        	        OPlog("Inserting sprite '%s'", name);
+
+			// create the asset to insert into the hashmap
+			if(!(assetBucket = (OPasset*)OPalloc(sizeof(OPasset))))
+				return OP_CMAN_BUCKET_ALLOC_FAILED;
+			assetBucket->Asset = (void*)sprite;
+			assetBucket->Unload = NULL;
+			assetBucket->Dirty = 0;
+			OPhashMapPut(&OP_CMAN_HASHMAP, name, assetBucket);
 		}
 	}
 
@@ -115,7 +127,6 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 	OPfree(temp);
 
 	OPlog("Done!");
-	scanf("%s");
 
 	return 1;
 }

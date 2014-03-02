@@ -1,8 +1,10 @@
 #include "GameStates.h"
+#include "./Core/include/Assert.h"
 #include "./Human/include/Utilities/ImagePNG.h"
 #include "./Human/include/Systems/RenderSystem.h"
 #include "./Human/include/Systems/FontSystem.h"
 #include "./Human/include/Systems/InputSystem.h"
+#include "./Human/include/Rendering/Sprite/SpriteSheet.h"
 #include "./Data/include/ContentManager.h"
 #include "./Core/include/Log.h"
 #include "./Human/include/Input/Myo.h"
@@ -33,7 +35,7 @@ OPmeshPacked quad;
 OPmeshPacker packer;
 OPmesh unPackedQuad;
 OPmesh* plane;
-OPeffect tri, post;
+OPeffect tri, post, OPss;
 OPcam camera;
 OPtexture* tex, *spec, *norm;
 OPframeBuffer rt;
@@ -60,12 +62,18 @@ OPgameState State1 = {
 };
 
 void State0Enter(OPgameState* last){
+	OPshaderAttribute attribs[] = {
+		{ "aPosition", GL_FLOAT, 3 },
+		{ "aUV", GL_FLOAT, 2 }
+	};
+
 	OPcmanLoad("impact.wav");
 	OPcmanLoad("boom.wav");
 	OPcmanLoad("background.ogg");
 	OPcmanLoad("TexturedSpecular.vert");
 	OPcmanLoad("TexturedSpecular.frag");
 	OPcmanLoad("TexturedScreen.vert");
+	OPcmanLoad("OPspriteSheet.frag");
 	OPcmanLoad("SpriteSheet.frag");
 	OPcmanLoad("Font.frag");
 	OPcmanLoad("Textured.frag");
@@ -74,7 +82,15 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("steamPlaneSpec.png");
 	OPcmanLoad("noneNorm.png");
 	OPcmanLoad("stencil.opf");
-	//OPcmanLoad("test.opss");
+	OPcmanLoad("test.opss");
+
+	OPss = OPrenderCreateEffect(
+		*(OPshader*)OPcmanGet("TexturedScreen.vert"),
+		*(OPshader*)OPcmanGet("OPspriteSheet.frag"),
+		attribs,
+		2,
+		"Sprite sheet effect"
+	);
 
 	// Required
 	
@@ -90,12 +106,16 @@ void State0Enter(OPgameState* last){
 	OPscript* script = (OPscript*)OPcmanGet("Update.ops");
 	OPscriptCompile(script);
 
+	quadMesh = OPquadCreate();
+
 	OPlog("Game State 0 Entered");
 }
 
 ui32 backgroundState = 0;
 
 int State0Update(OPtimer* time){
+	OPsprite* bg = (OPsprite*)OPcmanGet("Small");
+	
 	if(time->Elapsed > 1000) return false;
 	t += 0.005f * time->Elapsed;
 	OPgamePadSystemUpdate();
@@ -120,7 +140,7 @@ int State0Update(OPtimer* time){
 	else if (backgroundState == 1) {
 		OPrenderClear(0.0f, 1.0f, 0.0f);
 	} else {
-		OPrenderClear(OPmyoRoll(), 0.0f, 0.0f);
+		OPrenderClear(1.0f, 0.0f, 0.0f);
 	}
 
 	OPvec2 pos = OPgamePadLeftThumb(OPgamePad(GamePadIndex_One));
@@ -129,6 +149,18 @@ int State0Update(OPtimer* time){
 		OPlog("Should end");
 		OPend();
 	}
+	OPmat4 world;
+	OPmat4identity(&world);
+	OPrenderDepth(0);
+	OPrenderBindMesh(&quadMesh);
+	OPrenderBindEffect(&OPss);
+	OPtextureClearActive();
+	ui32 textureHandle = OPtextureBind(bg->Sheet);
+	OPrenderParamMat4v("uWorld", 1, &world);
+	OPrenderParami("uColorTexture", textureHandle);
+	OPrenderParamVec2("uOffset", 1, &bg->Frames[1].Offset);
+	OPrenderParamVec2("uSize", 1, &bg->Frames[1].Size);
+	OPrenderMesh();
 
 	// Required
 	OPrenderTextXY(
