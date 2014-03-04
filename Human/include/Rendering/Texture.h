@@ -65,6 +65,8 @@ void OPtextureDestroy(OPtexture* tex);
 ui32 OPtextureBind(OPtexture* tex);
 void OPtextureClearActive();
 void OPtextureSetData(void* data);
+void OPtexturePixelate();
+void OPtextureSmooth();
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

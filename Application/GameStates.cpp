@@ -156,6 +156,7 @@ int State0Update(OPtimer* time){
 	OPrenderBindEffect(&OPss);
 	OPtextureClearActive();
 	ui32 textureHandle = OPtextureBind(bg->Sheet);
+	OPtexturePixelate();
 	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderParami("uColorTexture", textureHandle);
 	OPrenderParamVec2("uOffset", 1, &bg->Frames[1].Offset);
