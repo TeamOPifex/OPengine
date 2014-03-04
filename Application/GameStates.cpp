@@ -10,6 +10,7 @@
 #include "./Human/include/Input/Myo.h"
 #include "./Scripting/include/Scripting.h"
 #include "./Human/include/Utilities/LoaderOPS.h"
+#include "./Human/include/Rendering/Sprite/Sprite2D.h"
 
 OPfloat t = 0;
 
@@ -46,6 +47,7 @@ OPmesh fontText;
 OPfont* font;
 OPtexture* fontTexture;
 OPfontManager* fontManager;
+OPsprite2D* sprite;
 
 void* garbage;
 
@@ -106,7 +108,10 @@ void State0Enter(OPgameState* last){
 	OPscript* script = (OPscript*)OPcmanGet("Update.ops");
 	OPscriptCompile(script);
 
-	quadMesh = OPquadCreate();
+	quadMesh = OPquadCreate(); 
+
+	OPsprite2DInit();
+	sprite = OPsprite2DCreate((OPsprite*)OPcmanGet("Small"));
 
 	OPlog("Game State 0 Entered");
 }
@@ -114,8 +119,7 @@ void State0Enter(OPgameState* last){
 ui32 backgroundState = 0;
 
 int State0Update(OPtimer* time){
-	OPsprite* bg = (OPsprite*)OPcmanGet("Small");
-	
+
 	if(time->Elapsed > 1000) return false;
 	t += 0.005f * time->Elapsed;
 	OPgamePadSystemUpdate();
@@ -149,19 +153,16 @@ int State0Update(OPtimer* time){
 		OPlog("Should end");
 		OPend();
 	}
-	OPmat4 world;
-	OPmat4identity(&world);
-	OPrenderDepth(0);
-	OPrenderBindMesh(&quadMesh);
-	OPrenderBindEffect(&OPss);
-	OPtextureClearActive();
-	ui32 textureHandle = OPtextureBind(bg->Sheet);
-	OPtexturePixelate();
-	OPrenderParamMat4v("uWorld", 1, &world);
-	OPrenderParami("uColorTexture", textureHandle);
-	OPrenderParamVec2("uOffset", 1, &bg->Frames[1].Offset);
-	OPrenderParamVec2("uSize", 1, &bg->Frames[1].Size);
-	OPrenderMesh();
+
+	OPsprite2DBind(sprite);
+
+	sprite->Position = pos;
+	OPsprite2DRotate(OPgamePadRightThumb(OPgamePad(GamePadIndex_One)).x / 10.0f);
+	sprite->Scale.x = OPrenderGetAspectRatio();
+	sprite->Scale.y = 1.0f;
+	sprite->Scale *= OPgamePadLeftTrigger(OPgamePad(GamePadIndex_One));
+
+	OPsprite2DRenderEffect(&OPss);
 
 	// Required
 	OPrenderTextXY(
@@ -170,7 +171,7 @@ int State0Update(OPtimer* time){
 		pos.y
 		);
 
-	OPscriptRun("update");
+	//OPscriptRun("update");
 
 	OPrenderPresent();
 	return false;
