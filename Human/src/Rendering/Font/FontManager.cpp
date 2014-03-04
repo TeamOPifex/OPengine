@@ -123,32 +123,63 @@ void OPrenderTextColor4Vec2(const OPchar* text, OPvec4 color, OPvec2 pos) {
 void OPrenderTextColor4Vec2Align(const OPchar* text, OPvec4 color, OPvec2 pos, OPfontAlign align) {
 	ASSERT(OPRENDER_CURR_FONT_EFFECT != NULL, "A Font Effect has not been bound yet");
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	ASSERT(OPRENDER_CURR_FONT_MANAGER->isBuilt, "The bound Font Manager has not been built yet");
 	ASSERT(OPRENDER_CURR_FONT_MANAGER->builtNodes != NULL, "The bound Font Manager Hashmap hasn't been created yet");
 
-	ASSERT(OPhashMapExists(OPRENDER_CURR_FONT_MANAGER->builtNodes, text), "No node exists for text in this Font Manager");
-
 	OPrenderDepth(0);
+
+	int tryHashMap = OPRENDER_CURR_FONT_MANAGER->isBuilt;
 	OPfontBuiltTextNode* node = NULL;
-	OPhashMapGet(OPRENDER_CURR_FONT_MANAGER->builtNodes, text, (void**)&node);
+	if (tryHashMap) {
+		//ASSERT(OPhashMapExists(OPRENDER_CURR_FONT_MANAGER->builtNodes, text), "No node exists for text in this Font Manager");
+		OPhashMapGet(OPRENDER_CURR_FONT_MANAGER->builtNodes, text, (void**)&node);
+	}
 
-	ASSERT(node != NULL, "No built node could be found");
-	ASSERT(node->packedMesh != NULL, "The Packed Mesh is invalid");
-
-	// Don't bother trying to render text with a width of 0
-	if (node->Width == 0) return;
-
-	OPmeshPackerBind(&OPRENDER_CURR_FONT_MANAGER->meshPacker);
 	OPrenderBindEffect(OPRENDER_CURR_FONT_EFFECT);
 	OPtextureClearActive();
 	ui32 textureHandle = OPtextureBind(OPRENDER_CURR_FONT_MANAGER->_font->texture);
 	OPrenderParami("uColorTexture", textureHandle);
 	OPrenderParamVec4("uColor", 1, &color);
-
 	OPmat4 world;
-	// Scale it down to half the screen width to get it into pixel values
 	OPfloat scale = OPrenderWidth / 2.0f;
-	switch (align) {
+
+	OPmat4scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f / scale);
+	OPmat4translate(&world, pos.x, pos.y, 0.0f);
+	OPrenderParamMat4v("uWorld", 1, &world);
+
+	if (node == NULL || !OPRENDER_CURR_FONT_MANAGER->isBuilt) {
+
+		OPfontUserTextNode* node = OPfontCreateUserText(OPRENDER_CURR_FONT_MANAGER->_font, text);
+		glEnableClientState(GL_VERTEX_ARRAY);
+
+		OPrenderBindEffect(OPRENDER_CURR_FONT_EFFECT);
+		glClientActiveTextureARB(GL_TEXTURE0);
+		glActiveTextureARB(GL_TEXTURE0);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glBindTexture(GL_TEXTURE_2D, OPRENDER_CURR_FONT_MANAGER->_font->texture->Handle);
+		glTexCoordPointer(2, GL_FLOAT, sizeof(OPvec2), node->textureCoords);
+		glEnable(GL_TEXTURE_2D);
+
+		glVertexPointer(3, GL_FLOAT, sizeof(OPvec3), node->vertices);
+		glDrawElements(GL_TRIANGLES, node->indexCount, GL_UNSIGNED_SHORT, node->indices);
+
+		glDisableClientState(GL_VERTEX_ARRAY);
+		OPfree(node->vertices);
+		OPfree(node->indices);
+		OPfree(node);
+	}
+	else 
+	{
+		ASSERT(OPRENDER_CURR_FONT_MANAGER->isBuilt, "The bound Font Manager has not been built yet");
+		ASSERT(node->packedMesh != NULL, "The Packed Mesh is invalid");
+
+		// Don't bother trying to render text with a width of 0
+		if (node->Width == 0) return;
+
+		OPmeshPackerBind(&OPRENDER_CURR_FONT_MANAGER->meshPacker);
+
+
+		// Scale it down to half the screen width to get it into pixel values
+		switch (align) {
 		case OPFONT_ALIGN_LEFT:
 			OPmat4identity(&world);
 			break;
@@ -158,10 +189,12 @@ void OPrenderTextColor4Vec2Align(const OPchar* text, OPvec4 color, OPvec2 pos, O
 		case OPFONT_ALIGN_RIGHT:
 			OPmat4buildTranslate(&world, -node->Width, 0, 0.0f);
 			break;
-	}
+		}
 
-	OPmat4scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f / scale);
-	OPmat4translate(&world, pos.x, pos.y, 0.0f);
-	OPrenderParamMat4v("uWorld", 1, &world);
-	OPrenderMeshPacked(node->packedMesh);
+		OPmat4scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f / scale);
+		OPmat4translate(&world, pos.x, pos.y, 0.0f);
+		OPrenderParamMat4v("uWorld", 1, &world);
+
+		OPrenderMeshPacked(node->packedMesh);
+	}
 }

@@ -7,6 +7,7 @@
 #include "./Human/include/Rendering/MeshPacked.h"
 #include "./Human/include/Rendering/Font/FontGlyph.h"
 #include "./Math/include/Vector2.h"
+#include "./Human/include/Rendering/OPMvertex.h"
 
 typedef struct {
 	OPvector* glyphs;
@@ -50,10 +51,20 @@ typedef struct {
 	OPfloat Width;
 } OPfontBuiltTextNode;
 
+typedef struct {
+	OPvec3* vertices;
+	OPvec2* textureCoords;
+	ui16* indices;
+	OPint vertexCount;
+	OPint indexCount;
+	OPfloat Width;
+} OPfontUserTextNode;
+
 void OPfontLoad(OPchar* filename, OPfont** data);
 void OPfontUnload(OPfont* font);
 OPfontGlyph* OPfontGetGlyph(OPfont* font, OPchar charcode);
 OPmesh OPfontCreateText(OPfont* font, OPchar* text);
 OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text);
+OPfontUserTextNode* OPfontCreateUserText(OPfont* font, const OPchar* text);
 
 #endif

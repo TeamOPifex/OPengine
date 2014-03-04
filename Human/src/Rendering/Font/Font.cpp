@@ -244,6 +244,78 @@ OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text) {
 	node.Width = width;
 	node.packedMesh = (OPmeshPacked*)OPalloc(sizeof(OPmeshPacked));
 	*node.packedMesh = OPrenderCreateMeshPacked(vertexSize, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
-	
+
+	return node;
+}
+
+
+OPfontUserTextNode* OPfontCreateUserText(OPfont* font, const OPchar* text) {
+
+	ui32 vertexSize = sizeof(OPvec3);
+	ui32 texcoordsSize = sizeof(OPvec2);
+	ui32 indexSize = sizeof(ui16);
+	OPvector* vertices = OPvectorCreate(vertexSize);
+	OPvector* texcoords = OPvectorCreate(texcoordsSize);
+	OPvector* indices = OPvectorCreate(indexSize);
+
+	size_t i;
+
+	OPfloat width = 0;
+	for (i = 0; i< strlen(text); ++i)
+	{
+		OPfontGlyph* glyph = OPfontGetGlyph(font, text[i]);
+		if (glyph != NULL)
+		{
+			OPfloat kerning = 0;
+			if (i > 0)
+			{
+				kerning = OPfontGlyphGetKerning(glyph, text[i - 1]);
+			}
+			width += kerning;
+			int x0 = (int)(width + glyph->offsetX);
+			int y0 = (int)(glyph->offsetY);
+			int x1 = (int)(x0 + glyph->width);
+			int y1 = (int)(y0 - glyph->height);
+			float s0 = glyph->textureCoordinates.x;
+			float t0 = glyph->textureCoordinates.y;
+			float s1 = glyph->textureCoordinates.z;
+			float t1 = glyph->textureCoordinates.w;
+
+			OPint offset = vertices->_size;
+			ui16 inds[6] = { 0 + offset, 1 + offset, 2 + offset, 0 + offset, 2 + offset, 3 + offset };
+			OPvec3 verts[4] = { { (OPfloat)x0, (OPfloat)y0, 0.0f },
+			{ (OPfloat)x0, (OPfloat)y1, 0.0f },
+			{ (OPfloat)x1, (OPfloat)y1, 0.0f },
+			{ (OPfloat)x1, (OPfloat)y0, 0.0f } };
+
+			OPvec2 texs[4] = { { s0, t0 }, { s0, t1 }, { s1, t1 }, { s1, t0 } };
+
+			for (OPint i = 0; i < 4; i++){
+				OPvectorPush(vertices, (ui8*)&verts[i]);
+				OPvectorPush(texcoords, (ui8*)&texs[i]);
+			}
+			for (OPint i = 0; i < 6; i++)
+				OPvectorPush(indices, (ui8*)&inds[i]);
+
+			width += glyph->advanceX;
+		}
+	}
+
+	OPfontUserTextNode* node = (OPfontUserTextNode*)OPalloc(sizeof(OPfontUserTextNode));
+	node->Width = width;
+	node->vertices = (OPvec3*)OPalloc(sizeof(OPvec3)* vertices->_size);
+	node->textureCoords = (OPvec2*)OPalloc(sizeof(OPvec2)* texcoords->_size);
+	node->indices = (ui16*)OPalloc(sizeof(ui16) * indices->_size);
+	node->vertexCount = vertices->_size;
+	node->indexCount = indices->_size;
+
+	OPmemcpy(node->vertices, vertices->items, sizeof(OPvec3)* vertices->_size);
+	OPmemcpy(node->textureCoords, vertices->items, sizeof(OPvec2)* texcoords->_size);
+	OPmemcpy(node->indices, indices->items, sizeof(ui16)* indices->_size);
+		
+	OPvectorDestroy(vertices);
+	OPvectorDestroy(texcoords);
+	OPvectorDestroy(indices);
+
 	return node;
 }
