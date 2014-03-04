@@ -52,6 +52,22 @@ struct OPmat4 {
 		OPmat4mul(this, this, &vhs); 
 		return *this; 
 	}
+	inline OPmat4& operator*=(OPvec2 vhs) {
+		OPmat4scl(this, vhs.x, vhs.y, 1);
+		return *this;
+	}
+	inline OPmat4& operator*=(OPvec3 vhs) {
+		OPmat4scl(this, vhs.x, vhs.y, vhs.z);
+		return *this;
+	}
+	inline OPmat4& operator*=(OPvec4 vhs) {
+		OPmat4scl(this, vhs.x, vhs.y, vhs.z);
+		return *this;
+	}
+	inline OPmat4& operator/=(OPvec2 vhs) {
+		OPmat4scl(this, vhs.x, vhs.y, 1);
+		return *this;
+	}
 	inline OPmat4& operator/=(OPvec3 vhs) { 
 		OPmat4scl(this, vhs.x, vhs.y, vhs.z); 
 		return *this; 
