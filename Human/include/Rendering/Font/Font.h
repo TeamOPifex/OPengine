@@ -52,11 +52,7 @@ typedef struct {
 } OPfontBuiltTextNode;
 
 typedef struct {
-	OPvec3* vertices;
-	OPvec2* textureCoords;
-	ui16* indices;
-	OPint vertexCount;
-	OPint indexCount;
+	OPmesh mesh;
 	OPfloat Width;
 } OPfontUserTextNode;
 
@@ -65,6 +61,6 @@ void OPfontUnload(OPfont* font);
 OPfontGlyph* OPfontGetGlyph(OPfont* font, OPchar charcode);
 OPmesh OPfontCreateText(OPfont* font, OPchar* text);
 OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text);
-OPfontUserTextNode* OPfontCreateUserText(OPfont* font, const OPchar* text);
+OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text);
 
 #endif

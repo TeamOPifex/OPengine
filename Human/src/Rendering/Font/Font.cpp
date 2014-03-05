@@ -249,13 +249,12 @@ OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text) {
 }
 
 
-OPfontUserTextNode* OPfontCreateUserText(OPfont* font, const OPchar* text) {
+OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text) {
 
-	ui32 vertexSize = sizeof(OPvec3);
+	ui32 vertexSize = sizeof(OPvertexColor);
 	ui32 texcoordsSize = sizeof(OPvec2);
 	ui32 indexSize = sizeof(ui16);
 	OPvector* vertices = OPvectorCreate(vertexSize);
-	OPvector* texcoords = OPvectorCreate(texcoordsSize);
 	OPvector* indices = OPvectorCreate(indexSize);
 
 	size_t i;
@@ -283,17 +282,13 @@ OPfontUserTextNode* OPfontCreateUserText(OPfont* font, const OPchar* text) {
 
 			OPint offset = vertices->_size;
 			ui16 inds[6] = { 0 + offset, 1 + offset, 2 + offset, 0 + offset, 2 + offset, 3 + offset };
-			OPvec3 verts[4] = { { (OPfloat)x0, (OPfloat)y0, 0.0f },
-			{ (OPfloat)x0, (OPfloat)y1, 0.0f },
-			{ (OPfloat)x1, (OPfloat)y1, 0.0f },
-			{ (OPfloat)x1, (OPfloat)y0, 0.0f } };
+			OPvertexColor verts[4] = { { (OPfloat)x0, (OPfloat)y0, 0.0f, s0, t0 },
+			{ (OPfloat)x0, (OPfloat)y1, 0.0f, s0, t1 },
+			{ (OPfloat)x1, (OPfloat)y1, 0.0f, s1, t1 },
+			{ (OPfloat)x1, (OPfloat)y0, 0.0f, s1, t0 } };
 
-			OPvec2 texs[4] = { { s0, t0 }, { s0, t1 }, { s1, t1 }, { s1, t0 } };
-
-			for (OPint i = 0; i < 4; i++){
+			for (OPint i = 0; i < 4; i++)
 				OPvectorPush(vertices, (ui8*)&verts[i]);
-				OPvectorPush(texcoords, (ui8*)&texs[i]);
-			}
 			for (OPint i = 0; i < 6; i++)
 				OPvectorPush(indices, (ui8*)&inds[i]);
 
@@ -301,20 +296,13 @@ OPfontUserTextNode* OPfontCreateUserText(OPfont* font, const OPchar* text) {
 		}
 	}
 
-	OPfontUserTextNode* node = (OPfontUserTextNode*)OPalloc(sizeof(OPfontUserTextNode));
-	node->Width = width;
-	node->vertices = (OPvec3*)OPalloc(sizeof(OPvec3)* vertices->_size);
-	node->textureCoords = (OPvec2*)OPalloc(sizeof(OPvec2)* texcoords->_size);
-	node->indices = (ui16*)OPalloc(sizeof(ui16) * indices->_size);
-	node->vertexCount = vertices->_size;
-	node->indexCount = indices->_size;
+	OPfontUserTextNode node;
+	node.Width = width;
+	node.mesh = OPrenderCreateMesh();
+	OPrenderBindMesh(&node.mesh);
+	OPrenderBuildMesh(sizeof(OPvertexColor), sizeof(ui16), vertices->_size, indices->_size, vertices->items, indices->items);
 
-	OPmemcpy(node->vertices, vertices->items, sizeof(OPvec3)* vertices->_size);
-	OPmemcpy(node->textureCoords, vertices->items, sizeof(OPvec2)* texcoords->_size);
-	OPmemcpy(node->indices, indices->items, sizeof(ui16)* indices->_size);
-		
 	OPvectorDestroy(vertices);
-	OPvectorDestroy(texcoords);
 	OPvectorDestroy(indices);
 
 	return node;
