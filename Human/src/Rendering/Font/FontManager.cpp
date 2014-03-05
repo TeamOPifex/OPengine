@@ -148,24 +148,28 @@ void OPrenderTextColor4Vec2Align(const OPchar* text, OPvec4 color, OPvec2 pos, O
 
 	if (node == NULL || !OPRENDER_CURR_FONT_MANAGER->isBuilt) {
 
-		OPfontUserTextNode* node = OPfontCreateUserText(OPRENDER_CURR_FONT_MANAGER->_font, text);
-		glEnableClientState(GL_VERTEX_ARRAY);
-
+		OPfontUserTextNode node = OPfontCreateUserText(OPRENDER_CURR_FONT_MANAGER->_font, text);
+		OPrenderBindMesh(&node.mesh);
 		OPrenderBindEffect(OPRENDER_CURR_FONT_EFFECT);
-		glClientActiveTextureARB(GL_TEXTURE0);
-		glActiveTextureARB(GL_TEXTURE0);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glBindTexture(GL_TEXTURE_2D, OPRENDER_CURR_FONT_MANAGER->_font->texture->Handle);
-		glTexCoordPointer(2, GL_FLOAT, sizeof(OPvec2), node->textureCoords);
-		glEnable(GL_TEXTURE_2D);
 
-		glVertexPointer(3, GL_FLOAT, sizeof(OPvec3), node->vertices);
-		glDrawElements(GL_TRIANGLES, node->indexCount, GL_UNSIGNED_SHORT, node->indices);
+		// Scale it down to half the screen width to get it into pixel values
+		switch (align) {
+		case OPFONT_ALIGN_LEFT:
+			OPmat4identity(&world);
+			break;
+		case OPFONT_ALIGN_CENTER:
+			OPmat4buildTranslate(&world, -(node.Width / 2.0f), 0, 0.0f);
+			break;
+		case OPFONT_ALIGN_RIGHT:
+			OPmat4buildTranslate(&world, -node.Width, 0, 0.0f);
+			break;
+		}
 
-		glDisableClientState(GL_VERTEX_ARRAY);
-		OPfree(node->vertices);
-		OPfree(node->indices);
-		OPfree(node);
+		OPmat4scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f / scale);
+		OPmat4translate(&world, pos.x, pos.y, 0.0f);
+		OPrenderParamMat4v("uWorld", 1, &world);
+
+		OPrenderMesh();
 	}
 	else 
 	{
