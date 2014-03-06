@@ -83,5 +83,7 @@ void OPrenderTextColor3Vec2(const OPchar* text, OPvec3 color, OPvec2 pos);
 void OPrenderTextColor3Vec2Align(const OPchar* text, OPvec3 color, OPvec2 pos, OPfontAlign align);
 void OPrenderTextColor4Vec2(const OPchar* text, OPvec4 color, OPvec2 pos);
 void OPrenderTextColor4Vec2Align(const OPchar* text, OPvec4 color, OPvec2 pos, OPfontAlign align);
+void OPrenderTextMat4(const OPchar* text, OPmat4* world);
+void OPrenderTextColor4Mat4(const OPchar* text, OPvec4 color, OPmat4* world);
 
 #endif
