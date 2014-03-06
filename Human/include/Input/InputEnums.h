@@ -10,7 +10,9 @@ typedef enum {
 	OPKEY_MBUTTON,
 	OPKEY_XBUTTON1,
 	OPKEY_XBUTTON2,
-	OPMOUSE_MAX = 6
+	OPKEY_XBUTTON3,
+	OPKEY_XBUTTON4,
+	OPMOUSE_MAX = 8
 } OPmouseKey;
 
 typedef enum {

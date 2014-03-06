@@ -14,6 +14,8 @@ MouseState Mouse = {
 	0,
 	0,
 	0,
+	0,
+	0,
 	0
 };
 
@@ -87,7 +89,7 @@ OPint OPkeyboardAnyInputIsDown() {
 
 #ifndef OPIFEX_ANDROID
 void OPmouseUpdate() {
-	OPmemcpy(&Mouse.prevKeys, &Mouse.keys, sizeof(MouseState));
+	OPmemcpy(&Mouse.prevKeys, &Mouse.keys, sizeof(OPint)* OPMOUSE_MAX);
 	Mouse.prevPositionX = Mouse.positionX;
 	Mouse.prevPositionY = Mouse.positionY;
 	Mouse.prevWheel = Mouse.wheel;
