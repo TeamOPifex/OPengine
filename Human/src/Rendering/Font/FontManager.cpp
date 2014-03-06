@@ -170,6 +170,8 @@ void OPrenderTextColor4Vec2Align(const OPchar* text, OPvec4 color, OPvec2 pos, O
 		OPrenderParamMat4v("uWorld", 1, &world);
 
 		OPrenderMesh();
+
+		OPrenderDestroyMesh(&node.mesh);
 	}
 	else 
 	{
@@ -180,6 +182,7 @@ void OPrenderTextColor4Vec2Align(const OPchar* text, OPvec4 color, OPvec2 pos, O
 		if (node->Width == 0) return;
 
 		OPmeshPackerBind(&OPRENDER_CURR_FONT_MANAGER->meshPacker);
+		OPrenderBindEffect(OPRENDER_CURR_FONT_EFFECT);
 
 
 		// Scale it down to half the screen width to get it into pixel values

@@ -17,6 +17,7 @@ OPmesh OPrenderCreateMesh(){
 
 	return out;
 }
+
 //-----------------------------------------------------------------------------
 void OPrenderBuildMesh(ui32 vertSize, ui32 indSize,
 						 ui32 vertCount, ui32 indCount,
@@ -24,13 +25,20 @@ void OPrenderBuildMesh(ui32 vertSize, ui32 indSize,
 	OPrenderSetBufferData(&OPRENDER_CURR_MESH->IndexBuffer, indSize, indCount, indices);
 	OPrenderSetBufferData(&OPRENDER_CURR_MESH->VertexBuffer, vertSize, vertCount, vertices);
 }
+
 //-----------------------------------------------------------------------------
 void OPrenderBindMesh(OPmesh* mesh){
 	OPrenderBindBuffer(&mesh->VertexBuffer);
 	OPrenderBindBuffer(&mesh->IndexBuffer);
 	OPRENDER_CURR_MESH = mesh;
 }
+
 //-----------------------------------------------------------------------------
 void OPrenderMesh(){
 	OPrenderDrawBufferIndexed(0);
+}
+
+void OPrenderDestroyMesh(OPmesh* mesh) {
+	OPrenderDelBuffer(&mesh->VertexBuffer);
+	OPrenderDelBuffer(&mesh->IndexBuffer);
 }
