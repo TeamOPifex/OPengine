@@ -80,8 +80,8 @@ void OPsprite2DRender() {
 	OPtexturePixelate();
 	OPrenderParami("uColorTexture", OPtextureBind(CURR_SPRITE_2D->Sprite.Sheet));
 	OPrenderParamMat4v("uWorld", 1, &world);
-	OPrenderParamVec2("uOffset", 1, &CURR_SPRITE_2D->Sprite.Frames[1].Offset);
-	OPrenderParamVec2("uSize", 1, &CURR_SPRITE_2D->Sprite.Frames[1].Size);
+	OPrenderParamVec2("uOffset", 1, &CURR_SPRITE_2D->Sprite.Frames[CURR_SPRITE_2D->Sprite.Frame].Offset);
+	OPrenderParamVec2("uSize", 1, &CURR_SPRITE_2D->Sprite.Frames[CURR_SPRITE_2D->Sprite.Frame].Size);
 	OPrenderMesh();
 }
 
