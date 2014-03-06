@@ -2,8 +2,8 @@
 #include "./Human/include/Rendering/Renderer.h"
 #include "./Core/include/Assert.h"
 
-OPuint OPrenderWidth;
-OPuint OPrenderHeight;
+i32 OPrenderWidth;
+i32 OPrenderHeight;
 OPuint OPscreenWidth;
 OPuint OPscreenHeight;
 
@@ -125,16 +125,18 @@ void OPrenderResetViewport() {
 
 //-----------------------------------------------------------------------------
 OPint OPrenderGetWidth(){
+	glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
 	return OPrenderWidth;
 }
 //-----------------------------------------------------------------------------
 OPint OPrenderGetHeight(){
+	glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
 	return OPrenderHeight;
 }
 //-----------------------------------------------------------------------------
 OPfloat OPrenderGetAspectRatio(){
 	ASSERT(OPrenderWidth > 0, "Height was not greater than 0, there was problem getting width and height");
-	return OPrenderHeight / (OPfloat)OPrenderWidth;
+	return OPrenderGetHeight() / (OPfloat)OPrenderGetWidth();
 }
 
 OPfloat aspect;

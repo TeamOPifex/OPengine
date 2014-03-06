@@ -66,19 +66,24 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 
 			// Load all the frames
 			for(OPint j = 0; j < spriteFrames; j++){
+				i32 x, y, w, h;
 				// read the sprite dimensions, scale them
 				// to fit within UV space
 				OPvec2 offset = {
-					OPreadi32(str) / (OPfloat)width,
-					OPreadi32(str) / (OPfloat)height
+					(x = OPreadi32(str)) / (OPfloat)width,
+					(y = OPreadi32(str)) / (OPfloat)height
 				};
 				OPvec2 size = {
-					OPreadi32(str) / (OPfloat)width,
-					OPreadi32(str) / (OPfloat)height
+					(w = OPreadi32(str)) / (OPfloat)width,
+					(h = OPreadi32(str)) / (OPfloat)height
 				};
 
-				offset.y = 1 - (offset.y - size.y);
-				size.y *= -1.0f;
+				OPlog("Y offset %f", y / (OPfloat)height);
+				OPlog("Height %f", h / (OPfloat)height);
+				OPlog("(1 - %f) - %f = %f", offset.y, size.y, (1-offset.y)-size.y);
+
+				//offset.y = (1 - offset.y) - size.y;
+				//size.y *= -1.0f;
 
 				// setup frame structure, copy into the frame buffer
 				OPspriteFrame frame = {
@@ -88,9 +93,13 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 				};
 
 				spriteFrameData[j] = frame;
-			
+				OPlog("\t(%d,%d) (%d,%d)",
+					x, y,
+					w, h
+				); 		
 				OPlog("\t(%f,%f) (%f,%f)",
-					spriteFrameData[j].Offset.x, spriteFrameData[j].Offset.y,
+					offset.x, offset.y, 
+					/*spriteFrameData[j].Offset.x, spriteFrameData[j].Offset.y,*/
 					spriteFrameData[j].Size.x, spriteFrameData[j].Size.y
 				); 
 			}

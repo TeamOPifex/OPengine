@@ -82,7 +82,7 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("steamPlaneSpec.png");
 	OPcmanLoad("noneNorm.png");
 	OPcmanLoad("stencil.opf");
-	OPcmanLoad("test.opss");
+	OPcmanLoad("MainMenu.opss");
 
 	OPss = OPrenderCreateEffect(
 		*(OPshader*)OPcmanGet("TexturedScreen.vert"),
@@ -114,7 +114,7 @@ void State0Enter(OPgameState* last){
 ui32 backgroundState = 0;
 
 int State0Update(OPtimer* time){
-	OPsprite* bg = (OPsprite*)OPcmanGet("Small");
+	OPsprite* bg = (OPsprite*)OPcmanGet("Insignia");
 	
 	if(time->Elapsed > 1000) return false;
 	t += 0.005f * time->Elapsed;
