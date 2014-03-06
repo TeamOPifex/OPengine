@@ -164,11 +164,19 @@ int State0Update(OPtimer* time){
 
 	OPsprite2DRenderEffect(&OPss);
 
-	// Required
+
+	// Pre-Built Text
 	OPrenderTextXY(
 		"All of the text! Woot!",
 		pos.x,
 		pos.y
+		);
+
+	// Non-Built Text
+	OPrenderTextXY(
+		"Test",
+		pos.x,
+		pos.y + 0.25f
 		);
 
 	//OPscriptRun("update");

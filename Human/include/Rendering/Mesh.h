@@ -46,6 +46,7 @@ extern OPmesh* OPRENDER_CURR_MESH;
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPmesh OPrenderCreateMesh();
+void OPrenderDestroyMesh(OPmesh* mesh);
 void OPrenderBuildMesh(ui32 vertSize, ui32 indSize, ui32 vertCount, ui32 indCount, void* vertices, void* indices);
 void OPrenderBindMesh(OPmesh* mesh);
 
