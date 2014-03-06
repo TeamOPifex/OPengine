@@ -1,3 +1,4 @@
+#include "./Data/include/ContentManager.h"
 #include "./Human/include/Rendering/Sprite/Sprite2D.h"
 #include "./Human/include/Rendering/Primitives/Quad.h"
 #include "./Human/include/Rendering/Renderer.h"
@@ -6,10 +7,42 @@
 int SPRITE_2D_INITIALIZED = 0;
 OPmesh SPRITE_2D_QUAD_MESH;
 OPsprite2D* CURR_SPRITE_2D = NULL;
+OPeffect* EFFECT_SPRITE_2D;
 
-void OPsprite2DInit() {
+void OPsprite2DInit(OPeffect* effect) {
 	SPRITE_2D_QUAD_MESH = OPquadCreate();
-	SPRITE_2D_INITIALIZED = 1;
+
+	OPshaderAttribute attribs[] = {
+		{ "aPosition", GL_FLOAT, 3 },
+		{ "aUV", GL_FLOAT, 2 }
+	};
+
+	if (effect == NULL) {
+		EFFECT_SPRITE_2D = (OPeffect*)OPalloc(sizeof(OPeffect));
+
+		if (!OPcmanIsLoaded("Common/TexturedScreen.vert")) OPcmanLoad("Common/TexturedScreen.vert");
+		if (!OPcmanIsLoaded("Common/OPspriteSheet.frag")) OPcmanLoad("Common/OPspriteSheet.frag");
+
+		*EFFECT_SPRITE_2D = OPrenderCreateEffect(
+			*(OPshader*)OPcmanGet("Common/TexturedScreen.vert"),
+			*(OPshader*)OPcmanGet("Common/OPspriteSheet.frag"),
+			attribs,
+			2,
+			"Sprite sheet effect"
+			);
+		SPRITE_2D_INITIALIZED = 2;
+	}
+	else {
+		EFFECT_SPRITE_2D = effect;
+		SPRITE_2D_INITIALIZED = 1;
+	}
+}
+
+void OPsprite2DShutdown() {
+	if (SPRITE_2D_INITIALIZED == 2) {
+		OPfree(EFFECT_SPRITE_2D);
+	}
+	SPRITE_2D_INITIALIZED = 0;
 }
 
 OPsprite2D* OPsprite2DCreate(OPsprite* sprite) {
@@ -28,11 +61,13 @@ void OPsprite2DBind(OPsprite2D* sprite) {
 	ASSERT(SPRITE_2D_INITIALIZED, "Sprite2D system has not been initialized");
 
 	CURR_SPRITE_2D = sprite;
-	OPrenderBindMesh(&SPRITE_2D_QUAD_MESH);
 }
 
 void OPsprite2DRender() {
 	ASSERT(CURR_SPRITE_2D != NULL, "Sprite2D has not been bound");
+
+	OPrenderBindMesh(&SPRITE_2D_QUAD_MESH);
+	OPrenderBindEffect(EFFECT_SPRITE_2D);
 
 	OPrenderDepth(0);
 
@@ -48,11 +83,6 @@ void OPsprite2DRender() {
 	OPrenderParamVec2("uOffset", 1, &CURR_SPRITE_2D->Sprite.Frames[1].Offset);
 	OPrenderParamVec2("uSize", 1, &CURR_SPRITE_2D->Sprite.Frames[1].Size);
 	OPrenderMesh();
-}
-
-void OPsprite2DRenderEffect(OPeffect* effect) {
-	OPrenderBindEffect(effect);
-	OPsprite2DRender();
 }
 
 

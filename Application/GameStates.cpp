@@ -36,7 +36,7 @@ OPmeshPacked quad;
 OPmeshPacker packer;
 OPmesh unPackedQuad;
 OPmesh* plane;
-OPeffect tri, post, OPss;
+OPeffect tri, post;
 OPcam camera;
 OPtexture* tex, *spec, *norm;
 OPframeBuffer rt;
@@ -64,10 +64,6 @@ OPgameState State1 = {
 };
 
 void State0Enter(OPgameState* last){
-	OPshaderAttribute attribs[] = {
-		{ "aPosition", GL_FLOAT, 3 },
-		{ "aUV", GL_FLOAT, 2 }
-	};
 
 	OPcmanLoad("impact.wav");
 	OPcmanLoad("boom.wav");
@@ -86,14 +82,6 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("stencil.opf");
 	OPcmanLoad("test.opss");
 
-	OPss = OPrenderCreateEffect(
-		*(OPshader*)OPcmanGet("TexturedScreen.vert"),
-		*(OPshader*)OPcmanGet("OPspriteSheet.frag"),
-		attribs,
-		2,
-		"Sprite sheet effect"
-	);
-
 	// Required
 	
 	OPchar** text = (OPchar**)OPalloc(sizeof(i8) * 1);
@@ -110,7 +98,7 @@ void State0Enter(OPgameState* last){
 
 	quadMesh = OPquadCreate(); 
 
-	OPsprite2DInit();
+	OPsprite2DInit(NULL);
 	sprite = OPsprite2DCreate((OPsprite*)OPcmanGet("Small"));
 
 	OPlog("Game State 0 Entered");
@@ -162,7 +150,7 @@ int State0Update(OPtimer* time){
 	sprite->Scale.y = 1.0f;
 	sprite->Scale *= OPgamePadLeftTrigger(OPgamePad(GamePadIndex_One));
 
-	OPsprite2DRenderEffect(&OPss);
+	OPsprite2DRender();
 
 
 	// Pre-Built Text
