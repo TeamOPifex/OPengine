@@ -9,8 +9,8 @@
 extern "C" {
 #endif
 
-	extern OPuint OPrenderWidth;
-	extern OPuint OPrenderHeight;
+	extern i32 OPrenderWidth;
+	extern i32 OPrenderHeight;
 
 #ifndef OPIFEX_ANDROID
 extern GLFWwindow* window;
