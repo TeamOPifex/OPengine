@@ -31,12 +31,12 @@ typedef struct{
 //   |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                                
 //                               
-void OPsprite2DInit();
+void OPsprite2DInit(OPeffect* effect); 
+void OPsprite2DShutdown();
 OPsprite2D* OPsprite2DCreate(OPsprite* sprite);
 void OPsprite2DDestroy(OPsprite2D* sprite);
 void OPsprite2DBind(OPsprite2D* sprite);
 void OPsprite2DRender();
-void OPsprite2DRenderEffect(OPeffect* effect);
 
 void OPsprite2DMove(OPvec2 xy);
 void OPsprite2DMoveX(OPfloat x);
