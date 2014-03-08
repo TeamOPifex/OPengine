@@ -157,5 +157,24 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 }
 
 OPint OPspriteSheetUnload(void* ss){
+	OPspriteSheet* sheet = (OPspriteSheet*)ss;
+	OPint i = sheet->Sprites;
+
+	// delete all frames for this sheet
+	OPfree(((OPsprite*)OPcmanGet(sheet->Names[i-1]))->Frames);
+
+	// free all the sprites
+	for(;i--;){
+		OPsprite* s = (OPsprite*)OPcmanGet(sheet->Names[i]);
+		OPfree(s);
+	}
+
+	// free the names list
+	OPfree(sheet->Names);
+
+	// clean up the texture and sprite sheet object
+	OPtextureDestroy(sheet->Sheet);
+	OPfree(ss);
+
 	return 1;
 }
