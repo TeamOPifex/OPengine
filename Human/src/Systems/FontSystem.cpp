@@ -10,7 +10,7 @@ const OPchar* FontShaderFrag = "Common/Font.frag";
 
 void OPsystemsLoadFontEffect() {
 
-	ASSERT(OPRENDER_CURR_FONT_EFFECT == NULL, "A Font has already been set");
+	if (OPRENDER_CURR_FONT_EFFECT != NULL) return;
 
 	OPint error;
 
@@ -37,4 +37,5 @@ void OPsystemsLoadFontEffect() {
 		2,
 		"Common Font Effect"
 		);
+
 }
