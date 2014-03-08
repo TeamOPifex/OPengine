@@ -74,6 +74,7 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("TexturedSpecular.frag");
 	OPcmanLoad("TexturedScreen.vert");
 	OPcmanLoad("OPspriteSheet.frag");
+	OPcmanLoad("OPspriteSheet.vert");
 	OPcmanLoad("SpriteSheet.frag");
 	OPcmanLoad("Font.frag");
 	OPcmanLoad("Textured.frag");
@@ -85,7 +86,7 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("MainMenu.opss");
 
 	OPss = OPrenderCreateEffect(
-		*(OPshader*)OPcmanGet("TexturedScreen.vert"),
+		*(OPshader*)OPcmanGet("OPspriteSheet.vert"),
 		*(OPshader*)OPcmanGet("OPspriteSheet.frag"),
 		attribs,
 		2,
@@ -159,8 +160,9 @@ int State0Update(OPtimer* time){
 	OPtexturePixelate();
 	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderParami("uColorTexture", textureHandle);
-	OPrenderParamVec2("uOffset", 1, &bg->Frames[1].Offset);
-	OPrenderParamVec2("uSize", 1, &bg->Frames[1].Size);
+	//OPlog("X: %f, Y: %f", bg->Frames[0].Offset.x, bg->Frames[0].Offset.y);
+	OPrenderParamVec2("uOffset", 1, &bg->Frames[0].Offset);
+	OPrenderParamVec2("uSize", 1, &bg->Frames[0].Size);
 	OPrenderMesh();
 
 	// Required
