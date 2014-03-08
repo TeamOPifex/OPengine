@@ -327,6 +327,8 @@ def ReadAnimationData(actionIndex):
 	frame_length = end_frame - start_frame
 
 	for hierarchy in armature.bones:
+		parent_index += 1
+		print('Bone: ' + str(parent_index))
 		keys = []
 		for frame in range(int(start_frame), int(end_frame) + 1):
 			pos, pchange = position(hierarchy, frame, action, armatureMat)
@@ -338,18 +340,21 @@ def ReadAnimationData(actionIndex):
 			# The start frame has to have pos, rot and scale
 			if frame == int(start_frame):
 				time = (frame - start_frame) / fps
+				print('START FRAME ' + str(frame) + ' : ' + str(time))
 				keyframe = [time,px,py,pz,rx,ry,rz,rw]
 				keys.append(keyframe)
 
 			# The end frame has to have pos, rot, scale and animation length
 			elif frame == int(end_frame):
 				time = frame_length / fps
+				print('END FRAME ' + str(frame) + ' : ' + str(time))
 				keyframe = [time,px,py,pz,rx,ry,rz,rw]
 				keys.append(keyframe)
 
 			# Only need 1 attribute for a frame in the middle
 			elif pchange == True or rchange == True:
 				time  = (frame - start_frame) / fps
+				print('MIDDLE FRAME ' + str(frame) + ' : ' + str(time))
 				if(pchange == True and rchange == True):
 					keyframe = [time,px,py,pz,rx,ry,rz,rw]
 				elif pchange == True:
@@ -357,8 +362,7 @@ def ReadAnimationData(actionIndex):
 				elif rchange == True:
 					keyframe = [time,rx,ry,rz,rw]
 				keys.append(keyframe)
-		parents.append((parent_index, keys))
-		parent_index += 1
+		parents.append([parent_index, keys])
 	return parents
 
 def WriteAnimationData(fp, actionIndex):
@@ -366,17 +370,24 @@ def WriteAnimationData(fp, actionIndex):
 	nameBytes = bytes(bpy.data.actions[actionIndex].name, 'utf-8')
 	fp.write (struct.pack('I%ds' % len(nameBytes), len(nameBytes), nameBytes))
 	fp.write(struct.pack('I', len(animation)))
-	for index, keys in animation:
-		fp.write(struct.pack('i', len(keys)))
+	for anim in range(len(animation)):
+		parent_index = animation[anim][0]
+		keys = animation[anim][1]
+		fp.write(struct.pack('i', parent_index))
+		fp.write(struct.pack('I', len(keys)))
 		for key in range(len(keys)):
 			features = 7
 			if len(keys[key]) == 4:
 				features = 3
+				fp.write(struct.pack('I', features))
+				fp.write(struct.pack('ffff', keys[key][0], keys[key][1], keys[key][2], keys[key][3]))
 			elif len(keys[key]) == 5:
 				features = 5
-			fp.write(struct.pack('I', features))
-			for val in keys[key]:
-				fp.write(struct.pack('f', val))
+				fp.write(struct.pack('I', features))
+				fp.write(struct.pack('fffff', keys[key][0], keys[key][1], keys[key][2], keys[key][3], keys[key][4]))
+			else:
+				fp.write(struct.pack('I', features))
+				fp.write(struct.pack('ffffffff', keys[key][0], keys[key][1], keys[key][2], keys[key][3], keys[key][4], keys[key][5], keys[key][6], keys[key][7]))
 
 #------------------------------------------------------------------------------
 def WriteBinary(fp, meshData):
