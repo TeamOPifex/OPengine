@@ -220,6 +220,9 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 			// finally return the stream
 			return str;
 		}
+		else {
+			ASSERTC(0, "Failed to read file");
+		}
 	}
 	else
 		OPlog("%s does not exist\n", path);

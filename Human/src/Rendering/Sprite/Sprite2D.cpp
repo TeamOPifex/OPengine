@@ -20,11 +20,11 @@ void OPsprite2DInit(OPeffect* effect) {
 	if (effect == NULL) {
 		EFFECT_SPRITE_2D = (OPeffect*)OPalloc(sizeof(OPeffect));
 
-		if (!OPcmanIsLoaded("Common/TexturedScreen.vert")) OPcmanLoad("Common/TexturedScreen.vert");
+		if (!OPcmanIsLoaded("Common/OPspriteSheet.vert")) OPcmanLoad("Common/OPspriteSheet.vert");
 		if (!OPcmanIsLoaded("Common/OPspriteSheet.frag")) OPcmanLoad("Common/OPspriteSheet.frag");
 
 		*EFFECT_SPRITE_2D = OPrenderCreateEffect(
-			*(OPshader*)OPcmanGet("Common/TexturedScreen.vert"),
+			*(OPshader*)OPcmanGet("Common/OPspriteSheet.vert"),
 			*(OPshader*)OPcmanGet("Common/OPspriteSheet.frag"),
 			attribs,
 			2,
@@ -74,6 +74,7 @@ void OPsprite2DRender() {
 	OPmat4 world;
 	OPmat4buildRotZ(&world, CURR_SPRITE_2D->Rotation);
 	world *= CURR_SPRITE_2D->Scale;
+	world *= OPvec2Create(1.0, OPrenderGetAspectRatio());
 	world += CURR_SPRITE_2D->Position;
 	
 	OPtextureClearActive();
