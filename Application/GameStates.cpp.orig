@@ -71,7 +71,12 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("TexturedSpecular.vert");
 	OPcmanLoad("TexturedSpecular.frag");
 	OPcmanLoad("TexturedScreen.vert");
+<<<<<<< local
 	//OPcmanLoad("OPspriteSheet.frag");
+=======
+	OPcmanLoad("OPspriteSheet.frag");
+	OPcmanLoad("OPspriteSheet.vert");
+>>>>>>> other
 	OPcmanLoad("SpriteSheet.frag");
 	OPcmanLoad("Font.frag");
 	OPcmanLoad("Textured.frag");
@@ -80,12 +85,20 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("steamPlaneSpec.png");
 	OPcmanLoad("noneNorm.png");
 	OPcmanLoad("stencil.opf");
-<<<<<<< mine
+<<<<<<< local
 	OPcmanLoad("test.opss");
-
 =======
-	OPcmanLoad("mesh.opm");
->>>>>>> theirs
+	OPcmanLoad("MainMenu.opss");
+
+	OPss = OPrenderCreateEffect(
+		*(OPshader*)OPcmanGet("OPspriteSheet.vert"),
+		*(OPshader*)OPcmanGet("OPspriteSheet.frag"),
+		attribs,
+		2,
+		"Sprite sheet effect"
+	);
+>>>>>>> other
+
 	// Required
 	
 	OPchar** text = (OPchar**)OPalloc(sizeof(i8) * 1);
@@ -145,6 +158,23 @@ int State0Update(OPtimer* time){
 		OPlog("Should end");
 		OPend();
 	}
+<<<<<<< local
+=======
+	OPmat4 world;
+	OPmat4identity(&world);
+	OPrenderDepth(0);
+	OPrenderBindMesh(&quadMesh);
+	OPrenderBindEffect(&OPss);
+	OPtextureClearActive();
+	ui32 textureHandle = OPtextureBind(bg->Sheet);
+	OPtexturePixelate();
+	OPrenderParamMat4v("uWorld", 1, &world);
+	OPrenderParami("uColorTexture", textureHandle);
+	//OPlog("X: %f, Y: %f", bg->Frames[0].Offset.x, bg->Frames[0].Offset.y);
+	OPrenderParamVec2("uOffset", 1, &bg->Frames[0].Offset);
+	OPrenderParamVec2("uSize", 1, &bg->Frames[0].Size);
+	OPrenderMesh();
+>>>>>>> other
 
 	OPsprite2DBind(sprite);
 

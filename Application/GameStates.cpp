@@ -10,7 +10,6 @@
 #include "./Human/include/Input/Myo.h"
 #include "./Scripting/include/Scripting.h"
 #include "./Human/include/Utilities/LoaderOPS.h"
-#include "./Human/include/Rendering/Sprite/Sprite2D.h"
 
 OPfloat t = 0;
 
@@ -36,7 +35,7 @@ OPmeshPacked quad;
 OPmeshPacker packer;
 OPmesh unPackedQuad;
 OPmesh* plane;
-OPeffect tri, post;
+OPeffect tri, post, OPss;
 OPcam camera;
 OPtexture* tex, *spec, *norm;
 OPframeBuffer rt;
@@ -47,7 +46,6 @@ OPmesh fontText;
 OPfont* font;
 OPtexture* fontTexture;
 OPfontManager* fontManager;
-OPsprite2D* sprite;
 
 void* garbage;
 
@@ -64,6 +62,10 @@ OPgameState State1 = {
 };
 
 void State0Enter(OPgameState* last){
+	OPshaderAttribute attribs[] = {
+		{ "aPosition", GL_FLOAT, 3 },
+		{ "aUV", GL_FLOAT, 2 }
+	};
 
 	OPcmanLoad("impact.wav");
 	OPcmanLoad("boom.wav");
@@ -71,7 +73,8 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("TexturedSpecular.vert");
 	OPcmanLoad("TexturedSpecular.frag");
 	OPcmanLoad("TexturedScreen.vert");
-	//OPcmanLoad("OPspriteSheet.frag");
+	OPcmanLoad("OPspriteSheet.frag");
+	OPcmanLoad("OPspriteSheet.vert");
 	OPcmanLoad("SpriteSheet.frag");
 	OPcmanLoad("Font.frag");
 	OPcmanLoad("Textured.frag");
@@ -80,7 +83,15 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("steamPlaneSpec.png");
 	OPcmanLoad("noneNorm.png");
 	OPcmanLoad("stencil.opf");
-	OPcmanLoad("test.opss");
+	OPcmanLoad("MainMenu.opss");
+
+	OPss = OPrenderCreateEffect(
+		*(OPshader*)OPcmanGet("OPspriteSheet.vert"),
+		*(OPshader*)OPcmanGet("OPspriteSheet.frag"),
+		attribs,
+		2,
+		"Sprite sheet effect"
+	);
 
 	// Required
 	
@@ -96,10 +107,7 @@ void State0Enter(OPgameState* last){
 	OPscript* script = (OPscript*)OPcmanGet("Update.ops");
 	OPscriptCompile(script);
 
-	quadMesh = OPquadCreate(); 
-
-	OPsprite2DInit(NULL);
-	sprite = OPsprite2DCreate((OPsprite*)OPcmanGet("Small"));
+	quadMesh = OPquadCreate();
 
 	OPlog("Game State 0 Entered");
 }
@@ -107,7 +115,8 @@ void State0Enter(OPgameState* last){
 ui32 backgroundState = 0;
 
 int State0Update(OPtimer* time){
-
+	OPsprite* bg = (OPsprite*)OPcmanGet("Insignia");
+	
 	if(time->Elapsed > 1000) return false;
 	t += 0.005f * time->Elapsed;
 	OPgamePadSystemUpdate();
@@ -141,33 +150,29 @@ int State0Update(OPtimer* time){
 		OPlog("Should end");
 		OPend();
 	}
+	OPmat4 world;
+	OPmat4identity(&world);
+	OPrenderDepth(0);
+	OPrenderBindMesh(&quadMesh);
+	OPrenderBindEffect(&OPss);
+	OPtextureClearActive();
+	ui32 textureHandle = OPtextureBind(bg->Sheet);
+	OPtexturePixelate();
+	OPrenderParamMat4v("uWorld", 1, &world);
+	OPrenderParami("uColorTexture", textureHandle);
+	//OPlog("X: %f, Y: %f", bg->Frames[0].Offset.x, bg->Frames[0].Offset.y);
+	OPrenderParamVec2("uOffset", 1, &bg->Frames[0].Offset);
+	OPrenderParamVec2("uSize", 1, &bg->Frames[0].Size);
+	OPrenderMesh();
 
-	OPsprite2DBind(sprite);
-
-	sprite->Position = pos;
-	OPsprite2DRotate(OPgamePadRightThumb(OPgamePad(GamePadIndex_One)).x / 10.0f);
-	sprite->Scale.x = OPrenderGetAspectRatio();
-	sprite->Scale.y = 1.0f;
-	sprite->Scale *= OPgamePadLeftTrigger(OPgamePad(GamePadIndex_One));
-
-	OPsprite2DRender();
-
-
-	// Pre-Built Text
+	// Required
 	OPrenderTextXY(
 		"All of the text! Woot!",
 		pos.x,
 		pos.y
 		);
 
-	// Non-Built Text
-	OPrenderTextXY(
-		"Test",
-		pos.x,
-		pos.y + 0.25f
-		);
-
-	//OPscriptRun("update");
+	OPscriptRun("update");
 
 	OPrenderPresent();
 	return false;
