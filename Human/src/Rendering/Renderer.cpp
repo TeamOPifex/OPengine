@@ -135,8 +135,8 @@ OPint OPrenderGetHeight(){
 }
 //-----------------------------------------------------------------------------
 OPfloat OPrenderGetAspectRatio(){
-	ASSERT(OPrenderWidth > 0, "Height was not greater than 0, there was problem getting width and height");
-	return OPrenderGetHeight() / (OPfloat)OPrenderGetWidth();
+	ASSERT(OPrenderGetHeight() > 0, "Height was not greater than 0, there was problem getting width and height");
+	return OPrenderGetWidth() / (OPfloat)OPrenderGetHeight();
 }
 
 OPfloat aspect;
