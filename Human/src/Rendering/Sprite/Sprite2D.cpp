@@ -74,7 +74,8 @@ void OPsprite2DRender() {
 	OPmat4 world;
 	OPmat4buildRotZ(&world, CURR_SPRITE_2D->Rotation);
 	world *= CURR_SPRITE_2D->Scale;
-	world *= OPvec2Create(1.0, OPrenderGetAspectRatio());
+	world *= CURR_SPRITE_2D->Sprite.Frames[0].Size;
+	//world *= OPvec2Create(OPrenderGetAspectRatio(), 1.0);
 	world += CURR_SPRITE_2D->Position;
 	
 	OPtextureClearActive();
