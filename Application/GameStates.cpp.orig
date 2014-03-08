@@ -71,7 +71,7 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("TexturedSpecular.vert");
 	OPcmanLoad("TexturedSpecular.frag");
 	OPcmanLoad("TexturedScreen.vert");
-	OPcmanLoad("OPspriteSheet.frag");
+	//OPcmanLoad("OPspriteSheet.frag");
 	OPcmanLoad("SpriteSheet.frag");
 	OPcmanLoad("Font.frag");
 	OPcmanLoad("Textured.frag");
@@ -80,8 +80,12 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("steamPlaneSpec.png");
 	OPcmanLoad("noneNorm.png");
 	OPcmanLoad("stencil.opf");
+<<<<<<< mine
 	OPcmanLoad("test.opss");
 
+=======
+	OPcmanLoad("mesh.opm");
+>>>>>>> theirs
 	// Required
 	
 	OPchar** text = (OPchar**)OPalloc(sizeof(i8) * 1);
