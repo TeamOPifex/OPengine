@@ -54,9 +54,9 @@ f32 OPreadf32(OPstream* str) {
 }
 
 i8* OPreadstring(OPstream* str) {
-	ui32 length = OPreadui32(str);
+	ui32 j = 0, length = OPreadui32(str);
 	i8* name = (i8*)OPalloc(length + 1);
-	for(i32 j = 0; j < length; j++){
+	for(; j < length; j++){
 		name[j] = OPreadi8(str);
 	}
 	name[length] = NULL;

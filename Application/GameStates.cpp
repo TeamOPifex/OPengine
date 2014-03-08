@@ -115,7 +115,7 @@ void State0Enter(OPgameState* last){
 ui32 backgroundState = 0;
 
 int State0Update(OPtimer* time){
-	OPsprite* bg = (OPsprite*)OPcmanGet("Insignia");
+	OPsprite* bg = (OPsprite*)OPcmanGet("Logo");
 	
 	if(time->Elapsed > 1000) return false;
 	t += 0.005f * time->Elapsed;
