@@ -7,5 +7,5 @@ uniform vec2 uSize;
 
 void main(){
 	vec2 uv = vUV * uSize;
-	gl_FragColor = texture(uColorTexture, uOffset +  uv);
+	gl_FragColor = texture2D(uColorTexture, uOffset +  uv);
 }

@@ -71,7 +71,7 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("TexturedSpecular.vert");
 	OPcmanLoad("TexturedSpecular.frag");
 	OPcmanLoad("TexturedScreen.vert");
-	OPcmanLoad("OPspriteSheet.frag");
+	//OPcmanLoad("OPspriteSheet.frag");
 	OPcmanLoad("SpriteSheet.frag");
 	OPcmanLoad("Font.frag");
 	OPcmanLoad("Textured.frag");
