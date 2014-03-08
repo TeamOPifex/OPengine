@@ -4,6 +4,27 @@
 #include "./Human/include/Utilities/ImagePNG.h"
 #include "./Human/include/Rendering/Sprite/SpriteSheet.h"
 
+void __opSpriteScaleFrames(OPtexture* tex, OPspriteSheet* ss){
+	ASSERT(tex, "__opSpriteScaleFrames() - texture null");
+	ASSERT(tex, "__opSpriteScaleFrames() - spritesheet null");
+	OPint i = 0;
+	OPvec2 size = { tex->Description.Width, tex->Description.Height };
+
+	OPlog("Image (%dx%d)\nSprites %d", tex->Description.Width, tex->Description.Height, ss->Sprites);
+
+	for(i = ss->Sprites; i--;){
+		OPsprite* s = (OPsprite*)OPcmanGet(ss->Names[i]);
+		OPint j = s->FrameCount;
+
+		OPlog("Resizing %s", ss->Names[i]);
+
+		for(;j--;){
+			s->Frames[j].Offset /= size;
+			s->Frames[j].Size /= size;
+		}
+	}
+}
+
 OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 	OPlog("OPspriteSheetLoad() - entered");
 	OPstream* str = OPreadFileLarge(filename, 1024);
@@ -36,6 +57,7 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 	// allocate memory for the sprite sheet struct
 	*ss = (OPspriteSheet*)OPalloc(sizeof(OPspriteSheet));
 	(*ss)->Names = (OPchar**)OPalloc(sizeof(OPchar*) * sprites);
+	(*ss)->Sprites = sprites;
 
 	// allocate contiguious frame memory segment
 	frameData = (OPspriteFrame*)OPalloc(sizeof(OPspriteSheet) * frames);
@@ -70,20 +92,13 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 				// read the sprite dimensions, scale them
 				// to fit within UV space
 				OPvec2 offset = {
-					(x = OPreadi32(str)) / (OPfloat)width,
-					(y = OPreadi32(str)) / (OPfloat)height
+					(x = OPreadi32(str)),
+					(y = OPreadi32(str))
 				};
 				OPvec2 size = {
-					(w = OPreadi32(str)) / (OPfloat)width,
-					(h = OPreadi32(str)) / (OPfloat)height
+					(w = OPreadi32(str)),
+					(h = OPreadi32(str))
 				};
-
-				OPlog("Y offset %f", y / (OPfloat)height);
-				OPlog("Height %f", h / (OPfloat)height);
-				OPlog("(1 - %f) - %f = %f", offset.y, size.y, (1-offset.y)-size.y);
-
-				//offset.y = (1 - offset.y) - size.y;
-				//size.y *= -1.0f;
 
 				// setup frame structure, copy into the frame buffer
 				OPspriteFrame frame = {
@@ -98,8 +113,7 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 					w, h
 				); 		
 				OPlog("\t(%f,%f) (%f,%f)",
-					offset.x, offset.y, 
-					/*spriteFrameData[j].Offset.x, spriteFrameData[j].Offset.y,*/
+					spriteFrameData[j].Offset.x, spriteFrameData[j].Offset.y,
 					spriteFrameData[j].Size.x, spriteFrameData[j].Size.y
 				); 
 			}
@@ -134,6 +148,8 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 	// then clean up the temp texture object
 	OPmemcpy(sheet, temp, sizeof(OPtexture));
 	OPfree(temp);
+
+	__opSpriteScaleFrames(sheet, *ss);
 
 	OPlog("Done!");
 
