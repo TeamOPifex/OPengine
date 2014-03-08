@@ -25,12 +25,12 @@ OPint OPMhasFeature(ui32 features, ui32 feature) {
 void OPCalculateTangents(OPMData* data) {
 	for (ui16 a = 0; a < data->indexCount; a+=3) {		
 		ui16 i1 = ((ui16*)data->indices)[a + 0];
-		ui16 i2 = ((ui16*)data->indices)[a + 1];
-		ui16 i3 = ((ui16*)data->indices)[a + 2];
+        ui16 i2 = ((ui16*)data->indices)[a + 1];
+        ui16 i3 = ((ui16*)data->indices)[a + 2];
 
 		OPMvertex& v1 = ((OPMvertex*)data->vertices)[i1];
-		OPMvertex& v2 = ((OPMvertex*)data->vertices)[i2];
-		OPMvertex& v3 = ((OPMvertex*)data->vertices)[i3];
+        OPMvertex& v2 = ((OPMvertex*)data->vertices)[i2];
+        OPMvertex& v3 = ((OPMvertex*)data->vertices)[i3];
 		
 		v1.Tangent.x = 0;
 		v1.Tangent.y = 0;
@@ -45,12 +45,12 @@ void OPCalculateTangents(OPMData* data) {
 
 	for (ui16 a = 0; a < data->indexCount; a+=3) {	
 		ui16 i1 = ((ui16*)data->indices)[a + 0];
-		ui16 i2 = ((ui16*)data->indices)[a + 1];
-		ui16 i3 = ((ui16*)data->indices)[a + 2];
-		
+        ui16 i2 = ((ui16*)data->indices)[a + 1];
+        ui16 i3 = ((ui16*)data->indices)[a + 2];
+        
 		OPMvertex& v1 = ((OPMvertex*)data->vertices)[i1];
-		OPMvertex& v2 = ((OPMvertex*)data->vertices)[i2];
-		OPMvertex& v3 = ((OPMvertex*)data->vertices)[i3];
+        OPMvertex& v2 = ((OPMvertex*)data->vertices)[i2];
+        OPMvertex& v3 = ((OPMvertex*)data->vertices)[i3];
 
 		OPvec3 v2v1;
 		OPvec3sub(&v2v1, &v2.Position, &v1.Position);
@@ -151,7 +151,7 @@ OPMData OPMloadData(OPstream* str) {
 
 	ui32 indicesCount = OPreadui32(str);
 	ui16* indices = (ui16*)OPalloc(sizeof(str) * (indicesCount * 3));
-	for(OPuint i = 0; i < indicesCount; i++){
+	for(int i = 0; i < indicesCount; i++){
 		indices[i * 3 + 0] = OPreadui16(str);
 		indices[i * 3 + 1] = OPreadui16(str);
 		indices[i * 3 + 2] = OPreadui16(str);
@@ -174,38 +174,26 @@ OPMData OPMloadData(OPstream* str) {
 	// Read Bones
 	if(OPMhasFeature(features, Bones)){
 		ui32 boneCount = OPreadui32(str);
-		// OPskeleton* skeleton = (OPskeleton*)OPalloc(sizeof(OPskeleton));
-		// skeleton->hierarchy = (ui16*)OPalloc(sizeof(ui16) * boneCount);
-		// skeleton->localPoses = (OPmat4*)OPalloc(sizeof(OPmat4) * boneCount);
-		// skeleton->globalPoses = (OPmat4*)OPalloc(sizeof(OPmat4) * boneCount);
-
-		for(ui32 i = 0; i < boneCount; i++) {
+		for(i32 i = 0; i < boneCount; i++) {
 			i32 boneIndex = OPreadi32(str);
 			i8* name = OPreadstring(str);
-			f32 x = OPreadf32(str);
-			f32 y = OPreadf32(str);
-			f32 z = OPreadf32(str);
+			OPreadf32(str);
+			OPreadf32(str);
+			OPreadf32(str);
 			OPlog("Joint: %d %s", boneIndex, name);
 			OPfree(name);
-			//OPmat4Translate(&skeleton->localPoses[i], x, y, z);			
 		}
 	}
 
 	// Read Skinning
 	if(OPMhasFeature(features, Skinning)){
 		ui32 indexCount = OPreadui32(str);
-		ui32* indices = (ui32*)OPalloc(sizeof(ui32)* indexCount);
-		for(ui32 i = 0; i < indexCount; i++){
-			indices[i] = OPreadui32(str);
+		for(i32 i = 0; i < indexCount; i++){
+			OPreadui32(str);
 		}
 		ui32 weightCount = OPreadui32(str);
-		f32* weights = (f32*)OPalloc(sizeof(f32)* weightCount);
-		for(ui32 i = 0; i < weightCount; i++) {
-			weights[i] = OPreadf32(str);
-		}
-		for (ui32 i = 0; i < indexCount; i++) {
-			i32 index = indices[i];
-			f32 weight = weights[i];
+		for(i32 i = 0; i < weightCount; i++) {
+			OPreadf32(str);
 		}
 	}
 
@@ -215,12 +203,12 @@ OPMData OPMloadData(OPstream* str) {
 		OPlog("Animation: %s", name);
 		ui32 keyframes = OPreadui32(str);
 		OPlog("Keyframes %d", keyframes);
-		for(ui32 i = 0; i < keyframes; i++) {
+		for(i32 i = 0; i < keyframes; i++) {
 			OPlog("Keyframe %d", i);
 			i32 index = OPreadi32(str);
 			OPlog("Bone %d", index);
 			ui32 keys = OPreadui32(str);
-			for(ui32 j = 0; j < keys; j++) {
+			for(i32 j = 0; j < keys; j++) {
 				ui32 keyFeatures = OPreadui32(str);
 				OPlog("Keyframe Features: %d", keyFeatures);
 				if(keyFeatures && Key_Time) {
@@ -253,9 +241,12 @@ OPMData OPMloadData(OPstream* str) {
 }
 
 OPint OPMload(const OPchar* filename, OPmesh** mesh) {
+	OPlog("Reading File Data");
 	OPstream* str = OPreadFile(filename);
+	OPlog("Reading OPMloadData");
 	OPMData data = OPMloadData(str);
 
+	OPlog("Creating vertex and buffers");
 	// Create Vertex & Index Buffers for Mesh
 	OPmesh temp = OPrenderCreateMesh();
 	OPrenderBindMesh(&temp);
@@ -264,6 +255,8 @@ OPint OPMload(const OPchar* filename, OPmesh** mesh) {
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
 	);
+
+	OPlog("Disposing");
 
 	// Dispose of allocated buffers
 	OPfree(data.vertices);
@@ -336,7 +329,7 @@ OPvec3 GetCenterOfMass(OPMData* data, OPlinkedList* vertList){
 		node = node->Next;
 		++verts;
 	}
-	com /= (OPfloat)verts;
+	com /= verts;
 
 	return com;
 }
