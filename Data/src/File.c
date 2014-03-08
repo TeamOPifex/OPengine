@@ -53,19 +53,18 @@ f32 OPreadf32(OPstream* str) {
 	return *((f32*)tmp);
 }
 
-i8* OPreadstring(OPstream* str) { //TODO: dangerous!!!
+i8* OPreadstring(OPstream* str) {
 	ui32 length = OPreadui32(str);
 	i8* name = (i8*)OPalloc(length + 1);
-	ui32 j = 0;
-	for(; j < length; j++){
+	for(i32 j = 0; j < length; j++){
 		name[j] = OPreadi8(str);
 	}
-	name[length] = (i8)NULL;
+	name[length] = NULL;
 	return name;
 }
 
 OPfileInformation OPreadFileInformation(const char* path){
-	OPfileInformation file = { 0 };
+	OPfileInformation file;
 
 #ifdef OPIFEX_ANDROID
 	AAssetManager* mgr = AAssetManager_fromJava(JNIEnvironment(), JNIAssetManager());
@@ -74,13 +73,13 @@ OPfileInformation OPreadFileInformation(const char* path){
 		return file;
 
 	off_t _start, _length;
-	int fd = AAsset_openFileDescriptor(asset, &_start, &_length);
+    int fd = AAsset_openFileDescriptor(asset, &_start, &_length);
 
-	FILE* myFile = fdopen(dup(fd), "rb"); 
+    FILE* myFile = fdopen(dup(fd), "rb"); 
 	if(!myFile){
 		OPlog("File not loaded: %s\n", path);
 	}
-	ASSERT(myFile, "File not loaded");
+    ASSERT(myFile, "File not loaded");
 	fseek(myFile, _start, SEEK_SET);
 	file.file = myFile;
 	file.start = _start;
@@ -88,7 +87,7 @@ OPfileInformation OPreadFileInformation(const char* path){
 	file.fileDescriptor = fd;
 #else
 	FILE* myFile = fopen(path, "rb"); 
-	ASSERTC(myFile, "File not loaded");
+    ASSERTC(myFile, "File not loaded");
 	if(!myFile){
 		char buff[256];
 		OPlog(buff);
@@ -122,7 +121,7 @@ OPint OPwriteFile(const char* path, OPstream* stream){
 		return 0;
 	}
 #elif defined(OPIFEX_WINDOWS)
-	return 0; //TODO: windows implementation
+	// windows implementation
 #endif
 }
 
@@ -146,9 +145,9 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 	}
 
 	off_t start, length;
-	int fd = AAsset_openFileDescriptor(asset, &start, &length);
+    int fd = AAsset_openFileDescriptor(asset, &start, &length);
 	
-	FILE* myFile = fdopen(dup(fd), "rb"); 
+    FILE* myFile = fdopen(dup(fd), "rb"); 
 	fseek(myFile, start, SEEK_SET);
 	
 	OPstream* str = OPstreamCreate(length);
@@ -172,7 +171,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 		OPint fd = 0, i;
  
 		// be sure that the file could be opened successfully
-		if(fd = open(path, O_RDONLY)){
+	 	if(fd = open(path, O_RDONLY)){
 
 			OPstream* str = OPstreamCreate(expectedSize);
 
@@ -197,13 +196,13 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 	}	
 #elif defined(OPIFEX_WINDOWS)
 	// windows implementation
-	OPint fd = 0;
+	OPint fd = 0, i;
 	// check to see if the file exists
 	if(OPfileExists(path) >= 0) {
-		OPlog("OPreadFile: %s", path);
+		OPlog("OPreadFile: %s\n", path);
  
 		// be sure that the file could be opened successfully
-		if(!_sopen_s(&fd, path, _O_BINARY|_O_RDONLY, _SH_DENYWR, _S_IREAD)){
+	 	if(!_sopen_s(&fd, path, _O_BINARY|_O_RDONLY, _SH_DENYWR, _S_IREAD)){
 			ui8 byte = 0;
 			OPstream* str = OPstreamCreate(expectedSize);
 			
@@ -224,7 +223,6 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 	}
 	else
 		OPlog("%s does not exist\n", path);
-	return NULL;
 #endif
 }
 
@@ -233,7 +231,7 @@ OPint OPfileExists(const char* path){
 #if defined(OPIFEX_UNIX)
 	return access(path, F_OK) + 1;
 #elif defined(OPIFEX_WINDOWS)
-	return 0; //TODO: windows implementation
+
 #endif
 }
 
@@ -243,7 +241,7 @@ OPint OPdeleteFile(const char* path){
 #if defined(OPIFEX_UNIX)
 		return unlink(path) + 1;
 #elif defined(OPIFEX_WINDOWS)
-		return 0; //TODO: windows implementation
+
 #endif
 	}
 	else{
