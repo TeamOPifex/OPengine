@@ -258,6 +258,7 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 	OPupdate = UpdateState;
 	OPdestroy = Destroy;
 
+
 	//ActiveState = &State0;//OPgameStateCreate(NULL, Update, NULL);
 
 #ifdef OPIFEX_ANDROID

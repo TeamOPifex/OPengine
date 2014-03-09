@@ -23,7 +23,7 @@ add_subdirectory (External)
 #########################################
 # Tools
 #########################################
-if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
+if( ${OPIFEX_OS_WINDOWS} )
 	add_subdirectory (Tools)
 endif()
 

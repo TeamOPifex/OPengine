@@ -61,6 +61,13 @@ typedef struct{
 	OPchar    Name[OP_EFFECT_NAME_LEN]; 
 }OPeffect;
 
+
+enum OPattribute {
+	OPATTR_POSITION = 1,
+	OPATTR_UV = 2,
+	OPATTR_NORMAL = 4
+};
+
 //-----------------------------------------------------------------------------
 //   _____ _       _           _     
 //  / ____| |     | |         | |    
@@ -104,6 +111,12 @@ OPint OPrenderUnloadEffect(OPeffect* effect);
 // effect managment
 OPint OPrenderBindEffect(OPeffect* effect);
 ui32 OPrenderGetParam(const OPchar* parameterName);
+
+OPeffect OPrenderLoadProgram(
+	OPchar* vert,
+	OPchar* frag,
+	ui32 attrs,
+	const OPchar* Name);
 
 // parameter setting
 /*void OPrenderParamf(ui32 param, OPfloat f);

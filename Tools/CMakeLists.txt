@@ -36,7 +36,17 @@ add_definitions(-D${OPIFEX_OS})
 
 SET_PROPERTY(TARGET Tools_FontMaker                PROPERTY FOLDER "Tools")
 
-SET_TARGET_PROPERTIES(Tools_FontMaker PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(Tools_FontMaker PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(Tools_FontMaker PROPERTIES 
 	OUTPUT_NAME "FontMaker"
+)
+
+
+add_source_group(\\ "${PROJECT_SOURCE_DIR}/Tools/SpriteSheetMaker" SPRITESHEETMAKER_SRC)
+add_executable(Tools_SpriteSheetMaker ${SPRITESHEETMAKER_SRC})
+target_link_libraries(Tools_SpriteSheetMaker ${ALL_LIBS})	
+SET_PROPERTY(TARGET Tools_SpriteSheetMaker                PROPERTY FOLDER "Tools")
+set_target_properties(Tools_SpriteSheetMaker PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(Tools_SpriteSheetMaker PROPERTIES 
+	OUTPUT_NAME "SpriteSheetMaker"
 )

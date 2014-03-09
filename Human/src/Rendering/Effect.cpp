@@ -1,6 +1,8 @@
 #include "./Human/include/Rendering/Effect.h"
 #include "./Human/include/Rendering/OpenGL.h"
 #include "./Core/include/Assert.h"
+#include "./Data/include/Vector.h"
+#include "./Data/include/ContentManager.h"
 
 OPeffect* OPRENDER_CURR_EFFECT = NULL;
 //-----------------------------------------------------------------------------
@@ -314,4 +316,53 @@ void OPrenderUseTexture(const OPchar* param, ui32 texture, ui32 slot){
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glUniform1i(loc, slot);
+}
+
+//-----------------------------------------------------------------------------
+// effect creation
+OPeffect OPrenderLoadProgram(
+	OPchar* vert,
+	OPchar* frag,
+	ui32 attrs,
+	const OPchar* Name) {
+
+	OPvector* vector = OPvectorCreate(sizeof(OPshaderAttribute));
+
+
+	if (attrs & OPATTR_POSITION) {
+		OPshaderAttribute attr = { "aPosition", GL_FLOAT, 3 };
+		OPvectorPush(vector, (ui8*)&attr);
+	}
+
+	if (attrs & OPATTR_NORMAL) {
+		OPshaderAttribute attr = { "aNormal", GL_FLOAT, 3 };
+		OPvectorPush(vector, (ui8*)&attr);
+	}
+
+	if (attrs & OPATTR_UV) {
+		OPshaderAttribute attr = { "aUV", GL_FLOAT, 2 };
+		OPvectorPush(vector, (ui8*)&attr);
+	}
+
+	ui32 AttribCount = vector->_size;
+	OPshaderAttribute* Attributes = (OPshaderAttribute*)OPalloc(sizeof(OPshaderAttribute)* vector->_size);
+	OPmemcpy(Attributes, vector->items, sizeof(OPshaderAttribute)* vector->_size);
+	OPvectorDestroy(vector);
+
+	ui32 stride = 0;
+	for (OPint i = 0; i < AttribCount; i++){
+		// TODO add more
+		switch (Attributes[i].Type){
+		case GL_FLOAT:
+			stride += (4 * Attributes[i].Elements);
+			break;
+		}
+	}
+
+	if (!OPcmanIsLoaded(vert)) OPcmanLoad(vert);
+	OPshader* vertShader = (OPshader*)OPcmanGet(vert);
+	if (!OPcmanIsLoaded(frag)) OPcmanLoad(frag);
+	OPshader* fragShader = (OPshader*)OPcmanGet(frag);
+
+	return createEffect(*vertShader, *fragShader, Attributes, AttribCount, Name, stride);
 }
