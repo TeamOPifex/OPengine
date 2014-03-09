@@ -10,23 +10,29 @@ void __opSpriteScaleFrames(OPtexture* tex, OPspriteSheet* ss){
 	OPint i = 0;
 	OPvec2 size = { tex->Description.Width, tex->Description.Height };
 
-	OPlog("Image (%dx%d)\nSprites %d", tex->Description.Width, tex->Description.Height, ss->Sprites);
-
 	for (i = ss->Sprites; i--;){
 		OPsprite* s = (OPsprite*)OPcmanGet(ss->Names[i]);
 		OPint j = s->FrameCount;
 
+#ifdef _DEBUG
 		OPlog("Resizing %s", ss->Names[i]);
+#endif
 
 		for (; j--;){
 			s->Frames[j].Offset /= size;
 			s->Frames[j].Size /= size;
+
+#ifdef _DEBUG
+			OPlog("\t(%f,%f) (%f,%f)",
+				s->Frames[j].Offset.x, s->Frames[j].Offset.y,
+				s->Frames[j].Size.x, s->Frames[j].Size.y
+			);
+#endif
 		}
 	}
 }
 
 OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
-	OPlog("OPspriteSheetLoad() - entered");
 	OPstream* str = OPreadFileLarge(filename, 1024);
 	i32 width, height;
 	i32 sprites, frames;
@@ -46,13 +52,17 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 	width = OPreadi32(str);
 	height = OPreadi32(str);
 
+#ifdef _DEBUG
 	OPlog("Sprite sheet %dx%d", width, height);
+#endif
 
 	// read the sprite, and frame counts
 	sprites = OPreadi32(str);
 	frames = OPreadi32(str);
 
+#ifdef _DEBUG
 	OPlog("Sprites: %d, Frames: %d", sprites, frames);
+#endif
 
 	// allocate memory for the sprite sheet struct
 	*ss = (OPspriteSheet*)OPalloc(sizeof(OPspriteSheet));
@@ -74,7 +84,9 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 			OPspriteFrame* spriteFrameData = frameData + frameNum;
 			OPsprite* sprite = (OPsprite*)OPalloc(sizeof(OPsprite));
 
+#ifdef _DEBUG
 			OPlog("Sprite '%s' @ %x", name, sprite);
+#endif
 
 			// zero the sprite structure out
 			OPbzero(sprite, sizeof(OPsprite));
@@ -84,7 +96,9 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 				spriteFrames = OPreadi32(str);
 			}
 
+#ifdef _DEBUG
 			OPlog("\tLoading...");
+#endif
 
 			// Load all the frames
 			for (OPint j = 0; j < spriteFrames; j++){
@@ -108,14 +122,12 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 				};
 
 				spriteFrameData[j] = frame;
-				OPlog("\t(%d,%d) (%d,%d)",
-					x, y,
-					w, h
-					);
+#ifdef _DEBUG
 				OPlog("\t(%f,%f) (%f,%f)",
 					spriteFrameData[j].Offset.x, spriteFrameData[j].Offset.y,
 					spriteFrameData[j].Size.x, spriteFrameData[j].Size.y
 					);
+#endif
 			}
 
 			// set the frame count, and the pointer to
@@ -128,7 +140,9 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 			frameNum += spriteFrames;
 
 			// Insert the sprite into the content manager's hashmap
+#ifdef _DEBUG
 			OPlog("Inserting sprite '%s'", name);
+#endif
 
 			// create the asset to insert into the hashmap
 			if (!(assetBucket = (OPasset*)OPalloc(sizeof(OPasset))))
@@ -142,7 +156,9 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 
 	// load the png image data
 	OPimagePNGLoadStream(str, str->_pointer, &temp);
+#ifdef _DEBUG
 	OPlog("Loaded PNG!");
+#endif
 
 	// copy the texture's data into the pre allocated texture
 	// then clean up the temp texture object
@@ -151,8 +167,9 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 
 	__opSpriteScaleFrames(sheet, *ss);
 
+#ifdef _DEBUG
 	OPlog("Done!");
-
+#endif
 	return 1;
 }
 
