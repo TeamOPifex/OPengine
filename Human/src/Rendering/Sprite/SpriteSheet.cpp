@@ -173,7 +173,8 @@ OPint OPspriteSheetUnload(void* ss){
 	OPfree(sheet->Names);
 
 	// clean up the texture and sprite sheet object
-	OPtextureDestroy(sheet->Sheet);
+	//OPtextureDestroy(sheet->Sheet);
+
 	OPfree(ss);
 
 	return 1;

@@ -21,7 +21,7 @@ def show_save_dialog(img):
 	save_dir = os.path.join(os.path.expanduser('~'), 'Desktop')
 			
 	chooser.set_current_folder(save_dir)
-	chooser.set_current_name(re.sub(r'\..*', '', img.name) + ".opss")
+	chooser.set_current_name(re.sub(r'\..*', '', img.name))
 	chooser.set_do_overwrite_confirmation(True)
 		
 	filter = gtk.FileFilter()
