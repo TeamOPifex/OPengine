@@ -40,7 +40,10 @@ def show_save_dialog(img):
 #------------------------------------------------------------------------------
 def get_frame_count(meta):
 	frames = 0
-	for sprite in meta:
+	for key in meta:
+		sprite = meta[key]
+		if(type(sprite) is int):
+			continue
 		if(type(sprite) is list):
 			for frame in sprite:
 				frames += 1
@@ -149,7 +152,8 @@ def export_spritesheet(img, drw):
 
 	# save the png file
 	dup = img.duplicate()
-	pdb.gimp_image_merge_visible_layers(dup, 0) 
+	pdb.gimp_image_merge_visible_layers(dup, 0)
+	dup.layers[0].resize_to_image_size()
 	pdb.file_png_save2(
 		dup,
 		dup.layers[0],
