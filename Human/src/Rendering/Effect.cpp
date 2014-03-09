@@ -320,7 +320,7 @@ void OPrenderUseTexture(const OPchar* param, ui32 texture, ui32 slot){
 
 //-----------------------------------------------------------------------------
 // effect creation
-OPeffect OPrenderLoadProgram(
+OPeffect OPrenderBuildEffect(
 	OPchar* vert,
 	OPchar* frag,
 	ui32 attrs,
@@ -336,6 +336,11 @@ OPeffect OPrenderLoadProgram(
 
 	if (attrs & OPATTR_NORMAL) {
 		OPshaderAttribute attr = { "aNormal", GL_FLOAT, 3 };
+		OPvectorPush(vector, (ui8*)&attr);
+	}
+
+	if (attrs & OPATTR_TANGENT) {
+		OPshaderAttribute attr = { "aTangent", GL_FLOAT, 3 };
 		OPvectorPush(vector, (ui8*)&attr);
 	}
 

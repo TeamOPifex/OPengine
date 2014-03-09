@@ -65,7 +65,8 @@ typedef struct{
 enum OPattribute {
 	OPATTR_POSITION = 1,
 	OPATTR_UV = 2,
-	OPATTR_NORMAL = 4
+	OPATTR_TANGENT = 4,
+	OPATTR_NORMAL = 8
 };
 
 //-----------------------------------------------------------------------------
@@ -112,7 +113,7 @@ OPint OPrenderUnloadEffect(OPeffect* effect);
 OPint OPrenderBindEffect(OPeffect* effect);
 ui32 OPrenderGetParam(const OPchar* parameterName);
 
-OPeffect OPrenderLoadProgram(
+OPeffect OPrenderBuildEffect(
 	OPchar* vert,
 	OPchar* frag,
 	ui32 attrs,
