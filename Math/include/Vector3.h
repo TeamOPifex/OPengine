@@ -8,6 +8,7 @@ struct OPvec3;
 struct OPmat4;
 
 inline OPfloat* OPvec3index(OPvec3* v, int idx);
+inline OPvec3 OPvec3Create(OPfloat x, OPfloat y, OPfloat z);
 inline void OPvec3add(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3sub(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3mul(OPvec3* dst, OPvec3* a, OPvec3* b);
@@ -65,6 +66,11 @@ struct OPvec3 {
 
 extern const OPvec3 OPvec3Zero;
 extern const OPvec3 OPvec3One;
+
+inline OPvec3 OPvec3Create(OPfloat x, OPfloat y, OPfloat z) {
+	OPvec3 tmp = { x, y, z };
+	return tmp;
+}
 
 inline OPvec3 operator+(OPvec3 lhs, OPvec3& vhs) { 
 	OPvec3 temp = { 0, 0, 0};
