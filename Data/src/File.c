@@ -135,6 +135,7 @@ OPstream* OPreadFile(const char* path) {
 
 //-----------------------------------------------------------------------------
 OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
+	OPlog("Reading Large File");
 #ifdef OPIFEX_ANDROID
 	OPlog("OPreadFile: %s\n", path);
 	AAssetManager* mgr = AAssetManager_fromJava(JNIEnvironment(), JNIAssetManager());
@@ -173,19 +174,25 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 		// be sure that the file could be opened successfully
 	 	if(fd = open(path, O_RDONLY)){
 
+		OPlog("File Opened");
+
 			OPstream* str = OPstreamCreate(expectedSize);
+		OPlog("Stream Created");
 
 			ui8* bytes = (ui8*)OPalloc(1024);
 			ui32 readBytes = 1;
 			// write the entire file into a stream
 			while(readBytes) {
+				write(1, ".", 1);
 				readBytes = read(fd, bytes, 1024);
 				OPwrite(str, bytes, readBytes);
 			}
+			OPlog("All bytes have been read");
 			OPfree(bytes);
 			close(fd); 
 			OPseek(str, 0);
 
+			OPlog("Finished Read");
 			// finally return the stream
 			return str;
 		}
