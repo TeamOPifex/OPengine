@@ -103,5 +103,8 @@ add_subdirectory("${APPLICATION_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Application
 ### Logging
 message(STATUS "OPIFEX_OS: ${OPIFEX_OS}")
 message(STATUS "OPENGL_DESKTOP_TARGET: ${OPENGL_DESKTOP_TARGET}")
+message(STATUS "Ogg Library: ${OGG_LIBRARY}")
+message(STATUS "Vorbis Library: ${VORBIS_LIBRARY}")
+message(STATUS "VorbisFile Library: ${VORBISFILE_LIBRARY}")
 message(STATUS "OpenGL (${OpenGL})")
 message(STATUS "GLFW_LIBRARIES (${GLFW_LIBRARIES})")

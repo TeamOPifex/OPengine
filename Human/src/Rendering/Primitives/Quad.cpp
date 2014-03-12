@@ -78,10 +78,10 @@ OPmesh OPquadCreateCustom(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 t
 	OPmesh mesh = OPrenderCreateMesh();
 	OPrenderBindMesh(&mesh);
 
-		//1, 1,
-		//0, 1,
-		//0, 0,
-		//1, 0
+	// 1, 1,
+	// 0, 1,
+	// 0, 0,
+	// 1, 0
 
 	// 0.5, 0.0
 	// 1.0, 1.0
