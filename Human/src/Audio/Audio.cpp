@@ -1,4 +1,5 @@
 #include "./Human/include/Audio/Audio.h"
+#include "./Core/include/Assert.h"
 
 #define OPAUDIO_SWAP(s1, s2){\
 	i16 sTemp = s1;\
@@ -24,12 +25,12 @@ ALCcontext* AL_OPaudioContext;
 
 OPmutex OPAUD_CURR_MUTEX;
 
-LPOVCLEAR           fn_ov_clear;
-LPOVREAD            fn_ov_read;
-LPOVPCMTOTAL        fn_ov_pcm_total;
-LPOVINFO            fn_ov_info;
-LPOVCOMMENT         fn_ov_comment;
-LPOVOPENCALLBACKS   fn_ov_open_callbacks;
+LPOVCLEAR           fn_ov_clear     = NULL;
+LPOVREAD            fn_ov_read      = NULL;
+LPOVPCMTOTAL        fn_ov_pcm_total = NULL;
+LPOVINFO            fn_ov_info      = NULL;
+LPOVCOMMENT         fn_ov_comment   = NULL;
+LPOVOPENCALLBACKS   fn_ov_open_callbacks = NULL;
 //-----------------------------------------------------------------------------
 //   ____  _____                _ _         ______                _   _                 
 //  / __ \|  __ \              | (_)       |  ____|              | | (_)                
@@ -65,6 +66,12 @@ OPint OPaudInit(){
 	fn_ov_info = (LPOVINFO)ov_info;
 	fn_ov_comment = (LPOVCOMMENT)ov_comment;
 	fn_ov_open_callbacks = (LPOVOPENCALLBACKS)ov_open_callbacks;
+#endif
+
+#ifndef OPIFEX_ANDROID
+	ASSERT(fn_ov_clear && fn_ov_read && fn_ov_pcm_total &&
+	       fn_ov_info && fn_ov_comment && fn_ov_open_callbacks,
+	       "OPaudInit() - One or more of the fn_ov_xx functions were null!");
 #endif
 
 #ifdef OPIFEX_ANDROID // USE OpenSL ES for sound
@@ -130,8 +137,8 @@ OPint OPaudInit(){
 	AL_OPaudioDevice = alcOpenDevice(NULL);
 	if(!AL_OPaudioDevice) return 0;
 	AL_OPaudioContext = alcCreateContext(AL_OPaudioDevice, NULL);
-	alcMakeContextCurrent(AL_OPaudioContext);
 	if(!AL_OPaudioContext) return -1;
+	alcMakeContextCurrent(AL_OPaudioContext);
 
 	alDistanceModel(AL_LINEAR_DISTANCE);
 #endif
