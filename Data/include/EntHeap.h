@@ -20,6 +20,7 @@ extern "C"
 typedef struct{
 	void* Entities;
 	OPint* InUse;
+	OPint EntSize;
 	OPint MaxIndex;
 	OPminHeap Free;
 } OPentHeap;
@@ -42,6 +43,10 @@ __inline void OPentHeapActivate(OPentHeap* heap, OPint* i){
 	}
 	else
 		*i = -1;
+}
+
+__inline void* OPentHeapGet(OPentHeap* heap, OPint i){
+	return ((ui8*)heap->Entities) + i;
 }
 
 __inline void OPentHeapKill(OPentHeap* heap, OPint i){

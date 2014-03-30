@@ -4,12 +4,16 @@
 OPminHeap* OPminHeapCreate(OPuint capacity){
 	OPminHeap* heap = (OPminHeap*)OPalloc(sizeof(OPminHeap));
 	OPuint i = 0;
-	heap->_indices = (OPuint*)OPalloc(sizeof(OPuint) * (capacity + 1));
+	heap->_indices = (OPint*)OPalloc(sizeof(OPint) * (capacity + 1));
 	
 	for(i = 1; i < capacity + 1; i++){
 		heap->_indices[i] = 0;
 	}
-	heap->_indices[0] = 0xffffffffffffffff;
+
+	// Make index 0 the most negative integer possible
+	for(i = sizeof(OPint); i--;){
+		heap->_indices[0] |= 0xFF << (i * 8);
+	}
 
 	heap->_size = 0;
 	heap->_capacity = capacity;
@@ -26,22 +30,22 @@ OPint OPminHeapDestroy(OPminHeap* heap){
 OPint OPminHeapPush(OPminHeap* heap, OPint value){
 	if(heap->_size < heap->_capacity){
 		OPuint now;
-        heap->_size++;
+		heap->_size++;
 		heap->_indices[heap->_size] = value; /*Insert in the last place*/
-        /*Adjust its position*/
-        now = heap->_size;
-        while((int)(heap->_indices[(now >> 1)]) > value){
-                heap->_indices[now] = heap->_indices[(now >> 1)];
-                now >>= 1;
-        }
+        	/*Adjust its position*/
+        	now = heap->_size;
+        	while((heap->_indices[(now >> 1)]) > value){
+                	heap->_indices[now] = heap->_indices[(now >> 1)];
+                	now >>= 1;
+        	}
 		heap->_indices[now] = value;
 		return 1;
 	}
-	else return 0;
+	return 0;
 }
 //-----------------------------------------------------------------------------
 OPint OPminHeapPop(OPminHeap* heap){
-    OPuint minElement,lastElement,child,now;
+	OPint minElement,lastElement,child,now;
 	minElement = heap->_indices[1];
 	lastElement = heap->_indices[heap->_size--];
     /* now refers to the index at which we are now */
@@ -75,7 +79,7 @@ OPint OPminHeapPeek(OPminHeap* heap){
 }
 //-----------------------------------------------------------------------------
 OPint OPminHeapSize(OPminHeap* heap){
-	return heap->_size - 1;
+	return heap->_size;
 }
 //-----------------------------------------------------------------------------
 //- C++ Definitions -----------------------------------------------------------
