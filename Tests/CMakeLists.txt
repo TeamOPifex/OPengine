@@ -1,4 +1,4 @@
-#########################################
+########################################
 # TESTS - LAYER
 #########################################
 cmake_minimum_required(VERSION 2.8)
@@ -24,6 +24,7 @@ set(ALL_LIBS
 	8_Pipeline
 )
 
+
 # If necessary, use the RELATIVE flag, otherwise each source file may be listed 
 # with full pathname. RELATIVE may makes it easier to extract an executable name
 # automatically.
@@ -36,5 +37,6 @@ foreach( testSourceFile ${TEST_SOURCES} )
 	string( REGEX REPLACE "/.*/" "" testName ${testName} )
 	add_executable( ${testName} ${testSourceFile} )
 	# Make sure the engine is linked to each test
-	target_link_libraries( ${testName} ${ALL_LIBS})
+	target_link_libraries( ${testName} ${ALL_LIBS} )
+	SET(CMAKE_EXE_LINKER_FLAGS, "-lm")
 endforeach( testSourceFile ${TEST_SOURCES} )

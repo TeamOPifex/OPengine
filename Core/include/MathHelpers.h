@@ -17,7 +17,7 @@
 #endif
 
 #define OPpi 3.14159265359f
-#define OPe  2.71828182846
+#define OPe  2.71828182846f
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
@@ -199,7 +199,7 @@ __inline OPfloat OPatan(OPfloat f){
 * @return atan(f)	
 */
 __inline OPfloat OPatan2(OPfloat x, OPfloat y) {
-	return atan2f(x, y);
+	return 0;//atan2(x, y);
 }
 
 //-----------------------------------------------------------------------------

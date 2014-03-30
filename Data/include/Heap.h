@@ -18,7 +18,7 @@
 extern "C" {
 #endif
 	typedef struct{
-		OPuint* _indices;
+		OPint* _indices;
 		OPuint _capacity;
 		OPuint _size;
 	} OPminHeap;
@@ -34,8 +34,8 @@ extern "C" {
 	void _bubbleUp(OPuint* arr, OPuint i);
 
 	OPint _parent(OPint i);
-    OPint _leftChild(OPint i);
-    OPint _rightChild(OPint i);
+	OPint _leftChild(OPint i);
+	OPint _rightChild(OPint i);
 	void _swap(OPint* a, OPint* b);
 #ifdef __cplusplus
 };
