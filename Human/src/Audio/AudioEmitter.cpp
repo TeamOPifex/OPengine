@@ -1,4 +1,5 @@
 #include "./Human/include/Audio/AudioEmitter.h"
+#include "./Core/include/Assert.h"
 
 OPaudioEmitter* OPAUD_CURR_EMITTER;
 OPentHeap       OPAUD_REG_EMITTERS;
@@ -160,7 +161,10 @@ OPaudioEmitter* OPaudGetEmitter(OPaudioSource* src, OPint flags){
 //-----------------------------------------------------------------------------
 void OPaudRecycleEmitter(OPaudioEmitter* emitter){
 	OPuint index = ((uintptr_t)emitter - (uintptr_t)OPAUD_REG_EMITTERS.Entities) / sizeof(OPaudioEmitter);
+	OPlog("Recycling emitter");
+	ASSERT(((OPint)index) >= 0, "OPaudRecycleEmitter() - calculated index was less than 0!"); 	
 	OPentHeapKill(&OPAUD_REG_EMITTERS, index);
+	OPlog("Recycling emitter done %d", index);
 }
 //-----------------------------------------------------------------------------
 void OPaudEnqueueBuffer(ui8* buffer, OPint length){
