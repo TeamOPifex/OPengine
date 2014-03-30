@@ -11,6 +11,7 @@ void OPlog(const char* message, ...){
 }
 
 #else
+#include <string.h>
 #include <stdio.h>
 #include <errno.h>
 
@@ -23,8 +24,8 @@ void OPlog(const char* message, ...){
 		perror(buffer);
 		errno = 0;
 	} else {
-		printf("%s", buffer);
-		printf("\n");
+		write(1, buffer, strlen(buffer));
+		write(1, "\n", 1);
 	}
     va_end(args);
 }

@@ -98,7 +98,11 @@ add_subdirectory("${PIPELINE_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Pipeline)
 set(APPLICATION_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Application")
 add_subdirectory("${APPLICATION_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Application)
 
-
+#########################################
+# Tests - Level
+#########################################
+set(TESTS_PATH "${PROJECT_SOURCE_DIR}/Tests")
+add_subdirectory("${TESTS_PATH}" ${PROJECT_BINARY_DIR}/Tests)
 
 ### Logging
 message(STATUS "OPIFEX_OS: ${OPIFEX_OS}")
