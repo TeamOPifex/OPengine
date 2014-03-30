@@ -164,7 +164,9 @@ void OPcharacter3DRender(OPcharacter3D* character, OPcam* camera) {
 	scl.y = (character->CurrentSprite->Frames[character->CurrentSprite->Frame].Size.y * h);
 	scl.z = 1.0f;
 	world *= scl;
-	world += character->Position;
+	OPvec3 position = character->Position;
+	position.x -= (w / 32.0f / 4.0f);
+	world += position;
 	world += OPvec3Create(0, -(scl.y / 64.0f), 0);
 
 	OPtextureClearActive();
