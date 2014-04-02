@@ -27,10 +27,11 @@ OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
 		0,
 		0
 	};
+	
 	heap.Free = free;
 
 	// leave space for entity data
-	off += entSize * (count + 1);
+	off += entSize * count;
 
 	// copy 0's into all the indices of the index list
 	heap.InUse = (OPint*)((ui8*)segPtr + off);

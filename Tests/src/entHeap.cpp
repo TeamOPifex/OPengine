@@ -24,8 +24,9 @@ OPint shouldCreateHeapWithCapacity(void* args){
 	OP_RTMSG("Creating a heap with capacity of %d", size);
 	heap = OPentHeapCreate(mem, sizeof(Dummy), size);
 	OP_RTMSG("heap.EntSize %x", heap->EntSize);
-	OP_RTMSG("%x._capacity %x", heap, heap->Free._capacity);
 	OP_RTMSG("Free._indices %x", heap->Free._indices);
+	OP_RTMSG("Free._capacity %x", heap->Free._capacity);
+	OP_RTMSG("Free._size %x", heap->Free._size);
 	if(!heap){
 		OP_RTMSG("Heap was null!");
 		return -1;
