@@ -23,8 +23,17 @@ OPint shouldCreateHeapWithCapacity(void* args){
 
 	OP_RTMSG("Creating a heap with capacity of %d", size);
 	heap = OPentHeapCreate(mem, sizeof(Dummy), size);
-	OP_RTMSG("heap.EntSize %x", heap->EntSize);
+	OP_RTMSG("OPint Size: %d", sizeof(OPint));
+	OP_RTMSG("HEAP %x", heap);
+	OP_RTMSG("Entities: %x", &heap->Entities);
+	OP_RTMSG("InUse: %x", &heap->InUse);
+	OP_RTMSG("EntSize: %x", &heap->EntSize);
+	OP_RTMSG("MaxIndex: %x", &heap->MaxIndex);
+	OP_RTMSG("Free: %x", heap->Free);
+
+
 	OP_RTMSG("Free._indices %x", heap->Free._indices);
+	OP_RTMSG("heap.EntSize %x", heap->EntSize);
 	OP_RTMSG("Free._capacity %x", heap->Free._capacity);
 	OP_RTMSG("Free._size %x", heap->Free._size);
 	if(!heap){
@@ -76,12 +85,12 @@ OPint pushAndPopShouldReturnSorted(void* args){
 //      | |/ _ \/ __| __| |  _  / | | | '_ \| '_ \ / _ \ '__|
 //      | |  __/\__ \ |_  | | \ \ |_| | | | | | | |  __/ |   
 //      |_|\___||___/\__| |_|  \_\__,_|_| |_|_| |_|\___|_|   
-OPint main(void){
+int main(void){
 	OPint result = 0;
 
 	// Run sequence of test function invocations here
 	result |= OP_TEST(shouldCreateHeapWithCapacity, "Creation test", NULL);
 	result |= OP_TEST(pushAndPopShouldReturnSorted, "Push / Pop test", NULL);
 
-	return result; // value to be read by test script
+	return (int)result; // value to be read by test script
 }

@@ -36,6 +36,7 @@ foreach( testSourceFile ${TEST_SOURCES} )
 	string( REPLACE ".cpp" "" testName ${testSourceFile} )
 	string( REGEX REPLACE "/.*/" "" testName ${testName} )
 	add_executable( ${testName} ${testSourceFile} )
+	add_definitions(-D${OPIFEX_OS})
 	# Make sure the engine is linked to each test
 	target_link_libraries( ${testName} ${ALL_LIBS} )
 	SET(CMAKE_EXE_LINKER_FLAGS, "-lm")

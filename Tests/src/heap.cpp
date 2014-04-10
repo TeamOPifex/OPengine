@@ -83,12 +83,12 @@ OPint pushAndPopShouldReturnSorted(void* args){
 //      | |/ _ \/ __| __| |  _  / | | | '_ \| '_ \ / _ \ '__|
 //      | |  __/\__ \ |_  | | \ \ |_| | | | | | | |  __/ |   
 //      |_|\___||___/\__| |_|  \_\__,_|_| |_|_| |_|\___|_|   
-OPint main(void){
+int main(void){
 	OPint result = 0;
 
 	// Run sequence of test function invocations here
 	result |= OP_TEST(shouldCreateHeapWithCapacity, "Creation test", NULL);
 	result |= OP_TEST(pushAndPopShouldReturnSorted, "Push / Pop test", NULL);
 
-	return result; // value to be read by test script
+	return (int)result; // value to be read by test script
 }
