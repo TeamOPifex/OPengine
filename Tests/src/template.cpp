@@ -25,8 +25,8 @@ OPint failingTest(void* args){
 //      | |/ _ \/ __| __| |  _  / | | | '_ \| '_ \ / _ \ '__|
 //      | |  __/\__ \ |_  | | \ \ |_| | | | | | | |  __/ |   
 //      |_|\___||___/\__| |_|  \_\__,_|_| |_|_| |_|\___|_|   
-OPint main(void){
-	OPint result = 0;
+int main(void){
+	int result = 0;
 	OPint leet = 1337;
 
 	// Run sequence of test function invocations here

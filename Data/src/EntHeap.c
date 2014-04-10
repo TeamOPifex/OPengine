@@ -25,9 +25,9 @@ OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
 		NULL,
 		entSize,
 		0,
-		0
+		{0}
 	};
-	
+
 	heap.Free = free;
 
 	// leave space for entity data
@@ -52,9 +52,16 @@ OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
 	OPbzero(heap.Entities, entSize * count);
 	// copy the heap into the memory segment
 	OPmemcpy(heapPtr, &heap, sizeof(OPentHeap));
+	OPlog("Free._indices %x", heapPtr->Free._indices);
 	OPlog("%x->Free._indices %x", heapPtr, heapPtr->Free._indices);
 
-	OPlog("Entities: %x", heap.Entities);
+	OPlog("OPint Size: %d", sizeof(OPint));
+	OPlog("HEAP: %x", heapPtr);
+	OPlog("Entities: %x", &heapPtr->Entities);
+	OPlog("InUse: %x", &heapPtr->InUse);
+	OPlog("EntSize: %x", &heapPtr->EntSize);
+	OPlog("MaxIndex: %x", &heapPtr->MaxIndex);
+	OPlog("Free: %x", heapPtr->Free);
 
 	return heapPtr;
 }
