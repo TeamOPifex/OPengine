@@ -3,7 +3,7 @@
 #ifndef MYO_DEVICELISTENER_HPP
 #define MYO_DEVICELISTENER_HPP
 
-#include <cstdint>
+#include <stdint.h>
 
 #include "Pose.hpp"
 
@@ -39,6 +39,12 @@ public:
     /// Called when a paired Myo has provided new accelerometer data in units of g.
     virtual void onAccelerometerData(Myo* myo, uint64_t timestamp, const Vector3<float>& accel) {}
 
+    /// Called when a paired Myo has provided new gyroscope data in units of deg/s.
+    virtual void onGyroscopeData(Myo* myo, uint64_t timestamp, const Vector3<float>& gyro) {}
+
+    /// Called when a paired Myo has provided a new RSSI value.
+    /// @see Myo::requestRssi() to request an RSSI value from the Myo.
+    virtual void onRssi(Myo* myo, uint64_t timestamp, int8_t rssi) {}
 };
 
 } // namespace myo

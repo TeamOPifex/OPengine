@@ -16,6 +16,7 @@ include_directories(
 	../External/Ogg/include/
 	../External/Vorbis/include/
 	../External/OpenAL/
+	../External/VP8/include/
 	.
 	../
 )
@@ -69,6 +70,7 @@ set(ALL_LIBS
 	${OGG_LIBRARY}
 	${VORBIS_LIBRARY}
 	${VORBISFILE_LIBRARY}
+	${VP8_LIBRARY}
 	glfw 
 	${GLFW_LIBRARIES}
 )
@@ -101,8 +103,18 @@ endif()
 
 if(${OPIFEX_MYO})
 	include_directories(../External/Myo/include/)
-	target_link_libraries(5_Human ${PROJECT_SOURCE_DIR}/External/Myo/lib/win64/myo.lib)
 	add_definitions(-DOPIFEX_MYO)
+	if(${OPIFEX_WIN64})
+		target_link_libraries(5_Human ${PROJECT_SOURCE_DIR}/External/Myo/lib/win64/myo64.lib)
+		output_binary(5_Human "/External/Myo/lib/" "myo64.dll" ${OPIFEX_OS_WINDOWS})
+		output_binary(5_Human "/External/Myo/lib/" "ble64.dll" ${OPIFEX_OS_WINDOWS})
+		output_binary(5_Human "/External/Myo/lib/" "myo64.lib" ${OPIFEX_OS_WINDOWS})
+	else()
+		target_link_libraries(5_Human ${PROJECT_SOURCE_DIR}/External/Myo/lib/win32/myo32.lib)
+		output_binary(5_Human "/External/Myo/lib/" "myo32.dll" ${OPIFEX_OS_WINDOWS})
+		output_binary(5_Human "/External/Myo/lib/" "ble32.dll" ${OPIFEX_OS_WINDOWS})
+		output_binary(5_Human "/External/Myo/lib/" "myo32.lib" ${OPIFEX_OS_WINDOWS})
+	endif()
 endif()
 
 

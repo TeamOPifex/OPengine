@@ -10,4 +10,5 @@ elseif(UNIX)
 
 else()
 	find_package(OggVorbis REQUIRED)
+	find_package(VP8 REQUIRED)
 endif()

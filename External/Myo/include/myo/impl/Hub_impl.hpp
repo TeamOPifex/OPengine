@@ -2,7 +2,9 @@
 // Confidential and not for redistribution. See LICENSE.txt.
 #include "../Hub.hpp"
 
+#include <algorithm>
 #include <exception>
+
 #include "../DeviceListener.hpp"
 #include "../Myo.hpp"
 #include "../Pose.hpp"
@@ -14,21 +16,8 @@ namespace myo {
 
 inline
 Hub::Hub()
-: _withoutTrainingProfile(false)
-, _hub(0)
-, _myo(0)
-, _connected(false)
-, _listeners()
-{
-    libmyo_init_hub(&_hub, ThrowOnError());
-}
-
-inline
-Hub::Hub(Hub::without_training_profile_t)
-: _withoutTrainingProfile(true)
-, _hub(0)
-, _myo(0)
-, _connected(false)
+: _hub(0)
+, _myos()
 , _listeners()
 {
     libmyo_init_hub(&_hub, ThrowOnError());
@@ -37,58 +26,46 @@ Hub::Hub(Hub::without_training_profile_t)
 inline
 Hub::~Hub()
 {
-    delete _myo;
-    libmyo_shutdown_hub(_hub, nullptr);
+    for (std::vector<Myo*>::iterator I = _myos.begin(), IE = _myos.end(); I != IE; ++I) {
+        delete *I;
+    }
+    libmyo_shutdown_hub(_hub, 0);
 }
 
 inline
 Myo* Hub::waitForAnyMyo(unsigned int timeout_ms)
 {
-    if (_myo) {
-        throw std::runtime_error("Already paired with a Myo");
-    }
+    return waitForMyo(false, timeout_ms);
+}
 
-    pairWithAnyMyo();
-    struct local {
-        static libmyo_handler_result_t handler(void* user_data, libmyo_event_t event) {
-            Hub* hub = static_cast<Hub*>(user_data);
-
-            libmyo_myo_t opaque_myo = libmyo_event_get_myo(event);
-
-            if (hub->_myo && hub->_myo->libmyoObject() != opaque_myo) {
-                return libmyo_handler_continue;
-            }
-
-            switch (libmyo_event_get_type(event)) {
-            case libmyo_event_paired:
-                hub->_myo = new Myo(opaque_myo, hub->_withoutTrainingProfile);
-                break;
-            case libmyo_event_connected:
-                hub->_connected = true;
-                return libmyo_handler_stop;
-            default:
-                break;
-            }
-
-            return libmyo_handler_continue;
-        }
-    };
-
-    do {
-        libmyo_run(_hub, timeout_ms ? timeout_ms : 1000, &local::handler, this, ThrowOnError());
-    } while (!timeout_ms);
-
-    if (!_connected) {
-        return 0;
-    }
-
-    return _myo;
+inline
+Myo* Hub::waitForAdjacentMyo(unsigned int timeout_ms)
+{
+    return waitForMyo(true, timeout_ms);
 }
 
 inline
 void Hub::pairWithAnyMyo()
 {
-    libmyo_pair_any(_hub, 1, ThrowOnError());
+    pairWithAnyMyos(1);
+}
+
+inline
+void Hub::pairWithAnyMyos(unsigned int count)
+{
+    libmyo_pair_any(_hub, count, ThrowOnError());
+}
+
+inline
+void Hub::pairWithAdjacentMyo()
+{
+    pairWithAdjacentMyos(1);
+}
+
+inline
+void Hub::pairWithAdjacentMyos(unsigned int count)
+{
+    libmyo_pair_adjacent(_hub, count, ThrowOnError());
 }
 
 inline
@@ -122,18 +99,19 @@ void Hub::removeListener(DeviceListener* listener)
 inline
 void Hub::onDeviceEvent(libmyo_event_t event)
 {
-    libmyo_myo_t myo_opq = libmyo_event_get_myo(event);
+    libmyo_myo_t opaqueMyo = libmyo_event_get_myo(event);
 
-    if (!_myo) {
-        // Still pairing.
-        if (libmyo_event_get_type(event) == libmyo_event_paired) {
-            _myo = new Myo(myo_opq, _withoutTrainingProfile);
+    Myo* myo = 0;
+
+    if (libmyo_event_get_type(event) == libmyo_event_paired) {
+        myo = new Myo(opaqueMyo);
+        _myos.push_back(myo);
+    } else {
+        myo = lookupMyo(opaqueMyo);
+        if (!myo) {
+            // Ignore events for Myos we don't know about.
+            return;
         }
-    }
-
-    if (_myo->libmyoObject() != myo_opq) {
-        // Ignore events not coming from the Myo we know about.
-        return;
     }
 
     for (std::vector<DeviceListener*>::iterator I = _listeners.begin(), IE = _listeners.end(); I != IE; ++I) {
@@ -143,27 +121,36 @@ void Hub::onDeviceEvent(libmyo_event_t event)
 
         switch (libmyo_event_get_type(event)) {
         case libmyo_event_paired:
-            listener->onPair(_myo, time);
+            listener->onPair(myo, time);
             break;
         case libmyo_event_connected:
-            listener->onConnect(_myo, time);
+            listener->onConnect(myo, time);
             break;
         case libmyo_event_disconnected:
-            listener->onDisconnect(_myo, time);
+            listener->onDisconnect(myo, time);
             break;
         case libmyo_event_orientation:
-            listener->onOrientationData(_myo, time,
+            listener->onOrientationData(myo, time,
                                         Quaternion<float>(libmyo_event_get_orientation(event, libmyo_orientation_x),
                                                           libmyo_event_get_orientation(event, libmyo_orientation_y),
                                                           libmyo_event_get_orientation(event, libmyo_orientation_z),
                                                           libmyo_event_get_orientation(event, libmyo_orientation_w)));
-            listener->onAccelerometerData(_myo, time,
+            listener->onAccelerometerData(myo, time,
                                           Vector3<float>(libmyo_event_get_accelerometer(event, 0),
                                                          libmyo_event_get_accelerometer(event, 1),
                                                          libmyo_event_get_accelerometer(event, 2)));
+
+            listener->onGyroscopeData(myo, time,
+                                      Vector3<float>(libmyo_event_get_gyroscope(event, 0),
+                                                     libmyo_event_get_gyroscope(event, 1),
+                                                     libmyo_event_get_gyroscope(event, 2)));
+
             break;
         case libmyo_event_pose:
-            listener->onPose(_myo, time, Pose(static_cast<Pose::Type>(libmyo_event_get_pose(event))));
+            listener->onPose(myo, time, Pose(static_cast<Pose::Type>(libmyo_event_get_pose(event))));
+            break;
+        case libmyo_event_rssi:
+            listener->onRssi(myo, time, libmyo_event_get_rssi(event));
             break;
         }
     }
@@ -206,15 +193,64 @@ libmyo_hub_t Hub::libmyoObject()
 }
 
 inline
-Myo* Hub::onlyMyo()
-{
-    return _myo;
-}
-
-inline
 uint64_t Hub::now()
 {
     return libmyo_now();
+}
+
+inline
+Myo* Hub::lookupMyo(libmyo_myo_t opaqueMyo) const
+{
+    Myo* myo = 0;
+    for (std::vector<Myo*>::const_iterator I = _myos.begin(), IE = _myos.end(); I != IE; ++I) {
+        if ((*I)->libmyoObject() == opaqueMyo) {
+            myo = *I;
+            break;
+        }
+    }
+
+    return myo;
+}
+
+inline
+Myo* Hub::waitForMyo(bool adjacent, unsigned int timeout_ms)
+{
+    if (!_myos.empty()) {
+        throw std::runtime_error("Already paired with a Myo");
+    }
+
+    if (adjacent) {
+        pairWithAdjacentMyo();
+    } else {
+        pairWithAnyMyo();
+    }
+    struct local {
+        static libmyo_handler_result_t handler(void* user_data, libmyo_event_t event) {
+            Hub* hub = static_cast<Hub*>(user_data);
+
+            libmyo_myo_t opaque_myo = libmyo_event_get_myo(event);
+
+            switch (libmyo_event_get_type(event)) {
+            case libmyo_event_paired:
+                hub->_myos.push_back(new Myo(opaque_myo));
+                return libmyo_handler_stop;
+            default:
+                break;
+            }
+
+            return libmyo_handler_continue;
+        }
+    };
+
+    do {
+        libmyo_run(_hub, timeout_ms ? timeout_ms : 1000, &local::handler, this, ThrowOnError());
+    } while (!timeout_ms && _myos.empty());
+
+    if (_myos.empty()) {
+        return 0;
+    }
+
+    return _myos.front();
 }
 
 } // namespace myo

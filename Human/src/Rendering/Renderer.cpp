@@ -43,7 +43,7 @@ OPint OPrenderInit(OPuint width, OPuint height, OPint fullscreen){
 	
 	// Most of the below will be moved to a Windowing System
 	
-	//glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	#if defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
@@ -63,6 +63,15 @@ OPint OPrenderInit(OPuint width, OPuint height, OPint fullscreen){
 
 	glfwMakeContextCurrent(NULL);
 	glfwMakeContextCurrent(window);
+
+	if (glfwExtensionSupported("GL_ARB_multisample")) {
+		OPlog("Multisampling is supported");
+	}
+
+	glfwWindowHint(GLFW_SAMPLES, 4);
+	i32 samples = glfwGetWindowAttrib(window, GLFW_SAMPLES);
+	OPlog("Samples: %d", samples);
+	
 
 	GLFWwindow* tmp = glfwGetCurrentContext();
 	if(!tmp || tmp != window) {
@@ -93,9 +102,11 @@ OPint OPrenderInit(OPuint width, OPuint height, OPint fullscreen){
 	//glfwSwapInterval(0);
 
 	//glBindVertexArray(VertexArrayID);
-	
+
+	glEnable(GL_MULTISAMPLE_ARB);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
 	OPrenderWidth = width;
 	OPrenderHeight = height;

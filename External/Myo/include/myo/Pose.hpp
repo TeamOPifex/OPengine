@@ -20,6 +20,7 @@ public:
         wave_in = libmyo_pose_wave_in,
         wave_out = libmyo_pose_wave_out,
         fingers_spread = libmyo_pose_fingers_spread,
+        twist_in = libmyo_pose_twist_in
     };
 
     /// Construct a pose of type Pose::none.

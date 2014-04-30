@@ -77,6 +77,8 @@ std::string Pose::toString() const
         return "wave_out";
     case Pose::fingers_spread:
         return "fingers_spread";
+    case Pose::twist_in:
+        return "twist_in";
     }
 
     return "<invalid>";

@@ -12,7 +12,7 @@ namespace myo {
 template<typename T>
 class Vector3 {
   public:
-    /// Constructs a vector of all zeroes.
+    /// Construct a vector of all zeroes.
     Vector3()
     {
         _data[0] = 0;
@@ -20,7 +20,7 @@ class Vector3 {
         _data[2] = 0;
     }
 
-    /// Constructs a vector with the three provided components
+    /// Construct a vector with the three provided components.
     Vector3(T x, T y, T z)
     {
         _data[0] = x;
@@ -28,13 +28,13 @@ class Vector3 {
         _data[2] = z;
     }
 
-    /// Constructs a vector with the same components as \a other.
+    /// Construct a vector with the same components as \a other.
     Vector3(const Vector3& other)
     {
         *this = other;
     }
 
-    /// Sets the components of this vector to be the same as \a other.
+    /// Set the components of this vector to be the same as \a other.
     Vector3& operator=(const Vector3& other)
     {
         _data[0] = other._data[0];
@@ -44,19 +44,19 @@ class Vector3 {
         return *this;
     }
 
-    /// Returns a copy of the component of this vector at \a index, which should be 0, 1, or 2.
+    /// Return a copy of the component of this vector at \a index, which should be 0, 1, or 2.
     T operator[](unsigned int index) const
     {
         return _data[index];
     }
 
-    /// Returns the x-component of this vector.
+    /// Return the x-component of this vector.
     T x() const { return _data[0]; }
 
-    /// Returns the y-component of this vector.
+    /// Return the y-component of this vector.
     T y() const { return _data[1]; }
 
-    /// Returns the z-component of this vector.
+    /// Return the z-component of this vector.
     T z() const { return _data[2]; }
 
   private:

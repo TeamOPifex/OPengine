@@ -62,19 +62,28 @@ void OPcharacter2DRender(OPcharacter2D* character) {
 	OPrenderBindMesh(&CHARACTER_2D_QUAD_MESH);
 	OPrenderBindEffect(EFFECT_CHARACTER_2D);
 
+
+	OPvec2 frameSize = OPspriteCurrentFrameSize(character->CurrentSprite);
+	OPfloat widthScale = frameSize.x / frameSize.y;
+	OPfloat heightScale = 1.0f;
+	if (widthScale > 1.0f) {
+		widthScale = 1.0f;
+		heightScale = frameSize.y / frameSize.x;
+	}
+
 	OPrenderDepth(0);
 
 	OPmat4 world;
-	OPmat4buildRotZ(&world, character->Rotation);
-	OPvec2 scl = character->Scale;
-	scl.x = scl.x * character->Direction;
+	OPmat4identity(&world);
+	OPmat4rotZ(&world, character->Rotation);
+	OPvec2 scl = character->Scale / 2.0;
+	scl.x *= character->Direction * widthScale * OPrenderGetWidthAspectRatio();
+	scl.y *= heightScale;
 	world *= scl;
-	world *= character->CurrentSprite->Frames[character->CurrentSprite->Frame].Size;
-	world *= OPvec2Create(OPrenderGetAspectRatio(), 1.0);
 	world += character->Position;
 
 	OPtextureClearActive();
-	OPtexturePixelate();
+	OPtextureSmooth();
 	OPrenderParami("uColorTexture", OPtextureBind(character->CurrentSprite->Sheet));
 	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderParamVec2("uOffset", 1, &character->CurrentSprite->Frames[character->CurrentSprite->Frame].Offset);
@@ -121,6 +130,7 @@ OPcharacter3D* OPcharacter3DCreate(OPsprite** sprites) {
 	character->Sprites = sprites;
 	character->CurrentSprite = sprites[0];
 	character->Direction = 1;
+	character->FrameRate = 24.0f;
 	return character;
 }
 
@@ -130,7 +140,7 @@ void OPcharacter3DDestroy(OPcharacter3D* character) {
 
 void OPcharacter3DUpdate(OPcharacter3D* character, OPtimer* timer) {
 	character->CurrentSprite->Elapsed += timer->Elapsed;
-	if (character->CurrentSprite->Elapsed > 1000 / 24.0) {
+	if (character->CurrentSprite->Elapsed > 1000 / character->FrameRate) {
 		character->CurrentSprite->Elapsed = 0;
 		character->CurrentSprite->Frame++;
 		if (character->CurrentSprite->Frame >= character->CurrentSprite->FrameCount) {
@@ -147,8 +157,14 @@ void OPcharacter3DSetSprite(OPcharacter3D* character, i32 sprite) {
 
 OPmat4 world, view, proj;
 void OPcharacter3DRender(OPcharacter3D* character, OPcam* camera) {
-	OPint w = character->CurrentSprite->Sheet->Description.Width;
-	OPint h = character->CurrentSprite->Sheet->Description.Height;
+	OPvec2 frameSize = OPspriteCurrentFrameSize(character->CurrentSprite);
+	OPfloat widthScale = frameSize.x / frameSize.y;
+	OPfloat heightScale = 1.0f;
+	if (widthScale > 1.0f) {
+		widthScale = 1.0f;
+		heightScale = frameSize.y / frameSize.x;
+	}
+
 	OPrenderBindMesh(&CHARACTER_3D_QUAD_MESH);
 	OPrenderBindEffect(EFFECT_CHARACTER_3D);
 
@@ -156,21 +172,17 @@ void OPcharacter3DRender(OPcharacter3D* character, OPcam* camera) {
 
 	OPcamGetView((*camera), &view);
 	OPcamGetProj((*camera), &proj);
-	OPmat4buildRotZ(&world, character->Rotation.z);
-	OPvec3 scl = character->Scale;
-	scl.x = scl.x * character->Direction;
+	OPmat4identity(&world);
+	OPmat4rotZ(&world, character->Rotation.z);
+	OPvec3 scl = character->Scale / 2.0f;
+	scl.x *= character->Direction;
+	scl.x *= widthScale;
+	scl.y *= heightScale;
 	world *= scl;
-	scl.x = (character->CurrentSprite->Frames[character->CurrentSprite->Frame].Size.x * w);
-	scl.y = (character->CurrentSprite->Frames[character->CurrentSprite->Frame].Size.y * h);
-	scl.z = 1.0f;
-	world *= scl;
-	OPvec3 position = character->Position;
-	position.x -= (w / 32.0f / 4.0f);
-	world += position;
-	world += OPvec3Create(0, -(scl.y / 64.0f), 0);
+	world += character->Position;
 
 	OPtextureClearActive();
-	OPtexturePixelate();
+	OPtextureSmooth();
 	OPrenderParami("uColorTexture", OPtextureBind(character->CurrentSprite->Sheet));
 	OPrenderParamf("uAlpha", 1.0f);
 	OPrenderParamMat4v("uWorld", 1, &world);
@@ -179,4 +191,20 @@ void OPcharacter3DRender(OPcharacter3D* character, OPcam* camera) {
 	OPrenderParamVec2("uOffset", 1, &character->CurrentSprite->Frames[character->CurrentSprite->Frame].Offset);
 	OPrenderParamVec2("uSize", 1, &character->CurrentSprite->Frames[character->CurrentSprite->Frame].Size);
 	OPrenderMesh();
+}
+
+
+OPvec2 OPcharacter3DSize(OPcharacter3D* character) {
+	OPvec2 frameSize = OPspriteCurrentFrameSize(character->CurrentSprite);
+
+	OPfloat widthScale = frameSize.x / frameSize.y;
+	OPfloat heightScale = 1.0f;
+	if (widthScale > 1.0f) {
+		widthScale = 1.0f;
+		heightScale = frameSize.y / frameSize.x;
+	}
+
+	f32 width = character->Scale.x * widthScale;
+	f32 height = character->Scale.y * heightScale;
+	return OPvec2Create(width, height);
 }

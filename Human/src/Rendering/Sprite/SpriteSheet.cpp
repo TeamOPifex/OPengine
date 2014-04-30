@@ -4,7 +4,7 @@
 #include "./Human/include/Utilities/ImagePNG.h"
 #include "./Human/include/Rendering/Sprite/SpriteSheet.h"
 
-void __opSpriteScaleFrames(OPtexture* tex, OPspriteSheet* ss){
+void __opSpriteScaleFrames(OPtexture* tex, OPspriteSheet* ss) {
 	ASSERT(tex, "__opSpriteScaleFrames() - texture null");
 	ASSERT(tex, "__opSpriteScaleFrames() - spritesheet null");
 	OPint i = 0;
@@ -195,4 +195,12 @@ OPint OPspriteSheetUnload(void* ss){
 	OPfree(ss);
 
 	return 1;
+}
+
+OPvec2 OPspriteCurrentFrameSize(OPsprite* sprite) {
+	f32 sheetWidth = sprite->Sheet->Description.Width;
+	f32 sheetHeight = sprite->Sheet->Description.Height;
+	f32 frameWidth = (sprite->Frames[sprite->Frame].Size.x * sheetWidth);
+	f32 frameHeight = (sprite->Frames[sprite->Frame].Size.y * sheetHeight);
+	return OPvec2Create(frameWidth, frameHeight);
 }

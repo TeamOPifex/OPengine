@@ -147,6 +147,7 @@ void OPrenderTextColor4Mat4BuiltNode(OPfontBuiltTextNode* node, OPvec4 color, OP
 void OPrenderTextAlign(OPmat4* world, OPfloat width, OPfontAlign align){
 	switch (align) {
 		case OPFONT_ALIGN_LEFT:
+			OPmat4buildTranslate(world, 0, 0, 0.0f);
 			break;
 		case OPFONT_ALIGN_CENTER:
 			OPmat4buildTranslate(world, -(width / 2.0f), 0, 0.0f);
@@ -171,8 +172,8 @@ void OPrenderTextColor4Vec2Align(const OPchar* text, OPvec4 color, OPvec2 pos, O
 	OPmat4 world;
 	OPfloat scale = OPrenderWidth / 2.0f;
 
-	OPmat4scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f / scale);
-	OPmat4translate(&world, pos.x, pos.y, 0.0f);
+	//OPmat4scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f / scale);
+	//OPmat4translate(&world, pos.x, pos.y, 0.0f);
 
 	if (node == NULL || !OPRENDER_CURR_FONT_MANAGER->isBuilt) {
 		OPfontUserTextNode textNode = OPfontCreateUserText(OPRENDER_CURR_FONT_MANAGER->_font, text);
@@ -201,12 +202,24 @@ void OPrenderTextColor4Mat4(const OPchar* text, OPvec4 color, OPmat4* world) {
 		OPhashMapGet(OPRENDER_CURR_FONT_MANAGER->builtNodes, text, (void**)&node);
 	}
 
+	OPmat4 scaled;
+	OPfloat scale = OPrenderWidth / 2.0f;
+
 	if (node == NULL || !OPRENDER_CURR_FONT_MANAGER->isBuilt) {
 		OPfontUserTextNode textNode = OPfontCreateUserText(OPRENDER_CURR_FONT_MANAGER->_font, text);
+
+		OPrenderTextAlign(&scaled, textNode.Width, OPRENDER_CURR_FONT_MANAGER->_align);
+		OPmat4scl(&scaled, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f / scale);
+		OPmat4mul(world, &scaled, world);
+
 		OPrenderTextColor4Mat4TextNode(&textNode, color, world);
 		OPrenderDestroyMesh(&textNode.mesh);
 	}
 	else {
+		OPrenderTextAlign(&scaled, node->Width, OPRENDER_CURR_FONT_MANAGER->_align);
+		OPmat4scl(&scaled, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f / scale);
+		OPmat4mul(world, &scaled, world);
+
 		OPrenderTextColor4Mat4BuiltNode(node, color, world);
 	}
 }

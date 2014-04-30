@@ -52,5 +52,6 @@ typedef struct{
 //                                                
 OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss);
 OPint OPspriteSheetUnload(void* ss);
+OPvec2 OPspriteCurrentFrameSize(OPsprite* sprite);
 
 #endif
