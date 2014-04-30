@@ -321,7 +321,35 @@ inline void OPmat4look(OPmat4* m, OPvec3* campos, OPvec3* look, OPvec3* up) {
 	trans.cols[3].z = -campos->z;
 	OPmat4mul(m, m, &trans);
 } 
-
+//inline void OPmat4look(OPmat4* m, OPvec3* eye, OPvec3* at, OPvec3* up) {
+//	OPvec3 zaxis;
+//	OPvec3 xaxis;
+//	OPvec3 yaxis;
+//	OPint i = 0;
+//	OPvec3sub(&zaxis, at, eye);
+//	OPvec3cross(&xaxis, up, &zaxis);
+//	OPvec3norm(&xaxis, &xaxis);
+//	OPvec3cross(&yaxis, &zaxis, &xaxis);
+//
+//	OPmat4identity(m);
+//	m->cols[0].x = xaxis.x;
+//	m->cols[1].x = yaxis.x;
+//	m->cols[2].x = zaxis.x;
+//	m->cols[0].y = xaxis.y;
+//	m->cols[1].y = yaxis.y;
+//	m->cols[2].y = zaxis.y;
+//	m->cols[0].z = xaxis.z;
+//	m->cols[1].z = yaxis.z;
+//	m->cols[2].z = zaxis.z;
+//	m->cols[3].w = 1;
+//
+//	OPmat4 trans;
+//	OPmat4identity(&trans);
+//	trans.cols[3].x = -eye->x;
+//	trans.cols[3].y = -eye->y;
+//	trans.cols[3].z = -eye->z;
+//	OPmat4mul(m, m, &trans);
+//}
 inline void OPmat4Print(OPmat4 m){
 	OPlog("[ %.6f  %.6f  %.6f  %.6f ]", m.cols[0].x,m.cols[1].x,m.cols[2].x,m.cols[3].x);
 	OPlog("[ %.6f  %.6f  %.6f  %.6f ]", m.cols[0].y,m.cols[1].y,m.cols[2].y,m.cols[3].y);

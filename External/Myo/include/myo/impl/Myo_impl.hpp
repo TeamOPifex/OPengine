@@ -14,9 +14,19 @@ uint64_t Myo::macAddress() const
 }
 
 inline
-libmyo_myo_t Myo::libmyoObject() const
+std::string Myo::macAddressAsString() const
 {
-    return _myo;
+    libmyo_string_t libmyoStr = libmyo_mac_address_to_string(macAddress());
+    std::string mac(libmyo_string_c_str(libmyoStr));
+    libmyo_string_free(libmyoStr);
+
+    return mac;
+}
+
+inline
+bool Myo::isTrained() const
+{
+    return _isTrained;
 }
 
 inline
@@ -26,18 +36,27 @@ void Myo::vibrate(VibrationType type)
 }
 
 inline
-Myo::Myo(libmyo_myo_t myo, bool withoutTrainingProfile)
+void Myo::requestRssi() const
+{
+    libmyo_request_rssi(_myo, ThrowOnError());
+}
+
+inline
+libmyo_myo_t Myo::libmyoObject() const
+{
+    return _myo;
+}
+
+inline
+Myo::Myo(libmyo_myo_t myo)
 : _myo(myo)
+, _isTrained(false)
 {
     if (!_myo) {
         throw std::invalid_argument("Cannot construct Myo instance with null pointer");
     }
 
-    if (!withoutTrainingProfile) {
-        if (libmyo_training_load_profile(_myo, nullptr, ThrowOnError()) != libmyo_success) {
-            std::cerr << "Warning: No training profile found. Please run the training application.";
-        }
-    }
+    _isTrained = libmyo_training_load_profile(_myo, 0, 0) == libmyo_success;
 }
 
 inline

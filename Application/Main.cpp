@@ -195,7 +195,7 @@ int UpdateState(OPtimer* timer){
 
 #include "./Math/include/Tweening.h"
 #include "./Core/include/Assert.h"
-
+#include "./Human/include/Rendering/Video.h"
 
 #ifdef OPIFEX_ANDROID
 extern "C" {
@@ -208,6 +208,10 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
  	OPmyoConnect();
 	OPscriptInit();
 	OPscriptLog("TEST LOGGING!!!");
+
+	//Vpxdata videoData;
+	//playvpx_init(&videoData, "test.webm");
+
 	//ASSERT(false, "Test!");
 	//ASSERT(true, "TEST!");
 

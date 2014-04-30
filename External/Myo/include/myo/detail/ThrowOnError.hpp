@@ -32,6 +32,7 @@ public:
         {
             switch (libmyo_error_kind(_error)) {
             case libmyo_error:
+            case libmyo_error_runtime:
             {
                 std::runtime_error exception(libmyo_error_cstring(_error));
                 libmyo_free_error_details(_error);

@@ -21,7 +21,8 @@ typedef void* libmyo_hub_t;
 typedef enum {
     libmyo_success,
     libmyo_error,
-    libmyo_error_invalid_argument
+    libmyo_error_invalid_argument,
+    libmyo_error_runtime
 } libmyo_result_t;
 
 /// Opaque handle to detailed error information.
@@ -41,8 +42,24 @@ void libmyo_free_error_details(libmyo_error_details_t);
 
 /// @}
 
+/// \defgroup libmyo_string Strings
+/// @{
+
+// Opaque string.
+typedef void* libmyo_string_t;
+
+// Return a null-terminated string from the opaque string.
+LIBMYO_EXPORT
+const char* libmyo_string_c_str(libmyo_string_t);
+
+// Free the resources allocated by the string object.
+LIBMYO_EXPORT
+void libmyo_string_free(libmyo_string_t);
+
+/// @}
+
 /// Initialize a hub.
-/// Can be called concurrently with other calls to libmyo_init_hub() and libmyo_shutdown_hub().
+/// Not safe to call concurrently with other calls to libmyo_init_hub() and libmyo_shutdown_hub().
 /// Only one hub can exist at a time.
 /// @returns libmyo_success if init is successful, otherwise:
 ///  - libmyo_error_invalid_argument if \a out_hub is NULL
@@ -51,7 +68,7 @@ LIBMYO_EXPORT
 libmyo_result_t libmyo_init_hub(libmyo_hub_t* out_hub, libmyo_error_details_t* out_error);
 
 /// Free the resources allocated to a hub.
-/// Can be called concurrently with other calls to libmyo_init_hub() and libmyo_shutdown_hub().
+/// Not safe to call concurrently with other calls to libmyo_init_hub() and libmyo_shutdown_hub().
 /// @returns libmyo_success if shutdown is successful, otherwise:
 ///  - libmyo_error_invalid_argument if \a hub is NULL
 ///  - libmyo_error if \a hub is not a valid \a hub
@@ -66,6 +83,16 @@ typedef void* libmyo_myo_t;
 LIBMYO_EXPORT
 uint64_t libmyo_get_mac_address(libmyo_myo_t myo);
 
+/// Retrieve the string representation of a MAC address in hex.
+/// Returns a string in the format of 00-00-00-00-00-00.
+LIBMYO_EXPORT
+libmyo_string_t libmyo_mac_address_to_string(uint64_t);
+
+/// Retrieve the MAC address from a null-terminated string in the format of 00-00-00-00-00-00.
+/// Returns 0 if the string does not match the format.
+LIBMYO_EXPORT
+uint64_t libmyo_string_to_mac_address(const char*);
+
 /// Types of vibration
 typedef enum {
     libmyo_vibration_short,
@@ -73,12 +100,19 @@ typedef enum {
     libmyo_vibration_long
 } libmyo_vibration_type_t;
 
-/// Vibrate the given myo
-/// Can be called when a Myo is paired
+/// Vibrate the given myo.
+/// Can be called when a Myo is paired.
 /// @returns libmyo_success if the Myo successfully vibrated, otherwise
 ///  - libmyo_error_invalid_argument if \a myo is NULL
 LIBMYO_EXPORT
 libmyo_result_t libmyo_vibrate(libmyo_myo_t myo, libmyo_vibration_type_t type, libmyo_error_details_t* out_error);
+
+/// Request the RSSI for a given myo.
+/// Can be called when a Myo is paired. A libmyo_event_rssi event will likely be generated with the value of the RSSI.
+/// @returns libmyo_success if the Myo successfully got the RSSI, otherwise
+///  - libmyo_error_invalid_argument if \a myo is NULL
+LIBMYO_EXPORT
+libmyo_result_t libmyo_request_rssi(libmyo_myo_t myo, libmyo_error_details_t* out_error);
 
 /// @defgroup libmyo_pairing Pairing
 /// Pairing with a Myo means we have discovered a nearby Myo device and will attempt to maintain a connection with it.
@@ -88,23 +122,35 @@ libmyo_result_t libmyo_vibrate(libmyo_myo_t myo, libmyo_vibration_type_t type, l
 /// @{
 
 /// Initiate pairing with \a count Myos.
-/// Currently only one Myo is supported.
+///
+/// The \a hub will attempt to pair with Myos until \a count Myos have successfully connected.
+///
+/// When the `MYO_PAIR_WITH_MAC` environment variable is set to a comma-separated list of MAC addresses, the hub will
+/// ignore any Myos with MAC addresses not listed in the variable.
 ///
 /// @returns libmyo_success if pairing initiated successfully, otherwise
 ///  - libmyo_error_invalid_argument if \a hub is NULL
-///  - libmyo_error if count is 0
-///  - libmyo_error if count is greater than 1
-///  - libmyo_error if pairing has already been initiated
+///  - libmyo_error_invalid_argument if count is 0
+///  - libmyo_error_runtime if pairing has already been initiated
+///  - libmyo_error_runtime if the Bluetooth controller is unable to pair with multiple devices reliably
 LIBMYO_EXPORT
 libmyo_result_t libmyo_pair_any(libmyo_hub_t hub, unsigned int count, libmyo_error_details_t* out_error);
 
 /// Initiate pairing with the device with MAC address \a mac_address.
 /// @returns libmyo_success if pairing initiated successfully, otherwise
-///  - libmyo_error if mac_address is invalid (e.g. is zero or takes up more than the low 48 bits)
-///  - libmyo_error if pairing has already been initiated
 ///  - libmyo_error_invalid_argument if \a hub is NULL
+///  - libmyo_error_invalid_argument if mac_address is invalid (e.g. is zero or takes up more than the low 48 bits)
+///  - libmyo_error_runtime if pairing has already been initiated
 LIBMYO_EXPORT
 libmyo_result_t libmyo_pair_by_mac_address(libmyo_hub_t hub, uint64_t mac_address, libmyo_error_details_t* out_errors);
+
+/// Initiate pairing with \a count Myos that are very close (likely touching) the host controller.
+/// @returns libmyo_success if pairing initiated successfully, otherwise
+///  - libmyo_error_invalid_argument if \a hub is NULL
+///  - libmyo_error_invalid_argument if count is 0
+///  - libmyo_error_runtime if pairing has already been initiated
+LIBMYO_EXPORT
+libmyo_result_t libmyo_pair_adjacent(libmyo_hub_t hub, unsigned int count, libmyo_error_details_t* out_error);
 
 /// @}
 
@@ -118,6 +164,7 @@ typedef enum {
     libmyo_pose_wave_in,        ///< User has an open palm rotated towards the posterior of their wrist.
     libmyo_pose_wave_out,       ///< User has an open palm rotated towards the anterior of their wrist.
     libmyo_pose_fingers_spread, ///< User has an open palm with their fingers spread away from each other.
+    libmyo_pose_twist_in,       ///< User is twisting their wrist inward (CCW for right hand, CW for left hand).
 
     libmyo_num_poses,           ///< Number of poses supported; not a valid pose.
 } libmyo_pose_t;
@@ -181,7 +228,7 @@ libmyo_result_t libmyo_training_load_profile(libmyo_myo_t myo, const char* filen
                                              libmyo_error_details_t* out_error);
 
 /// Store the current training profile using the provided filename.
-/// If filename is NULL, store the profile in the default profile file.
+/// If filename is NULL, store the profile in the default profile file for this myo.
 /// @returns libmyo_success if the profile was stored successfully, otherwise
 ///  - libmyo_error if there is no current training profile
 ///  - libmyo_error if the file could not be written
@@ -222,6 +269,7 @@ typedef enum {
     libmyo_event_disconnected, ///< A Myo has been disconnected.
     libmyo_event_orientation, ///< Orientation data has been received.
     libmyo_event_pose, ///< A change in pose has been detected. @see libmyo_pose_t.
+    libmyo_event_rssi, ///< An RSSI value has been received.
 } libmyo_event_type_t;
 
 /// Information about an event.
@@ -248,8 +296,20 @@ uint64_t libmyo_now();
 LIBMYO_EXPORT
 libmyo_myo_t libmyo_event_get_myo(libmyo_event_t event);
 
+/// Components of version.
+typedef enum {
+    libmyo_version_major, ///< Major version.
+    libmyo_version_minor, ///< Minor version.
+    libmyo_version_patch, ///< Patch version.
+} libmyo_version_component_t;
+
+/// Retrieve the Myo's firmware version from this event.
+/// Valid for libmyo_event_paired and libmyo_event_connected only.
+LIBMYO_EXPORT
+unsigned int libmyo_event_get_firmware_version(libmyo_event_t event, libmyo_version_component_t);
+
 /// Index into orientation data, which is provided as a quaternion.
-/// Orientation data is returned as a quaternion of 16 bit integers, represented as `w + x * i + y * j + z * k`.
+/// Orientation data is returned as a unit quaternion of floats, represented as `w + x * i + y * j + z * k`.
 typedef enum {
     libmyo_orientation_x = 0, ///< First component of the quaternion's vector part
     libmyo_orientation_y = 1, ///< Second component of the quaternion's vector part
@@ -261,7 +321,7 @@ typedef enum {
 /// Valid for libmyo_event_orientation events only.
 /// @see libmyo_orientation_index
 LIBMYO_EXPORT
-int16_t libmyo_event_get_orientation(libmyo_event_t event, libmyo_orientation_index index);
+float libmyo_event_get_orientation(libmyo_event_t event, libmyo_orientation_index index);
 
 /// Retrieve raw accelerometer data associated with an event in units of g.
 /// Valid for libmyo_event_orientation events only.
@@ -279,6 +339,11 @@ float libmyo_event_get_gyroscope(libmyo_event_t event, unsigned int index);
 /// Valid for libmyo_event_pose events only.
 LIBMYO_EXPORT
 libmyo_pose_t libmyo_event_get_pose(libmyo_event_t event);
+
+/// Retreive the RSSI associated with an event.
+/// Valid for libmyo_event_rssi events only.
+LIBMYO_EXPORT
+int8_t libmyo_event_get_rssi(libmyo_event_t event);
 
 /// Return type for event handlers.
 typedef enum {

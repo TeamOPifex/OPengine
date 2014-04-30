@@ -31,6 +31,7 @@ typedef struct {
 	OPint Direction;
 	OPsprite** Sprites;
 	OPsprite* CurrentSprite;
+	OPfloat FrameRate;
 } OPcharacter3D;
 
 void OPcharacter3DInit(OPeffect* effect);
@@ -39,5 +40,6 @@ void OPcharacter3DDestroy(OPcharacter3D* character);
 void OPcharacter3DUpdate(OPcharacter3D* character, OPtimer* timer);
 void OPcharacter3DSetSprite(OPcharacter3D* character, i32 sprite);
 void OPcharacter3DRender(OPcharacter3D* character, OPcam* camera);
+OPvec2 OPcharacter3DSize(OPcharacter3D* character);
 
 #endif

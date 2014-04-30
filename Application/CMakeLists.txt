@@ -20,6 +20,7 @@ include_directories(
 	../External/Oculus/Src/
 	../External/Myo/include/
 	../External/V8/include/
+	../External/VP8/include/
 	.
 	../
 )
@@ -54,6 +55,7 @@ set(ALL_LIBS
 	${VORBISFILE_LIBRARY}
 	${ZLIB_LIBRARY}
 	${LIBPNG_LIBRARY}
+	${VP8_LIBRARY}
 	${CMAKE_THREAD_LIBS_INIT}
 	glfw ${GLFW_LIBRARIES}
 )
@@ -90,10 +92,16 @@ endif()
 
 if(${OPIFEX_MYO})
 	include_directories(../External/Myo/include/)
-	target_link_libraries(9_Application ${PROJECT_SOURCE_DIR}/External/Myo/lib/win64/myo.lib)
-	copy_to_folder(9_Application "/External/Myo/lib/" "myo.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
-	copy_to_folder(9_Application "/External/Myo/lib/" "ble.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
 	add_definitions(-DOPIFEX_MYO)
+	if(${OPIFEX_WIN64})
+		target_link_libraries(9_Application ${PROJECT_SOURCE_DIR}/External/Myo/lib/win64/myo64.lib)
+		copy_to_folder(9_Application "/External/Myo/lib/" "myo64.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+		copy_to_folder(9_Application "/External/Myo/lib/" "ble64.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+	else()
+		target_link_libraries(9_Application ${PROJECT_SOURCE_DIR}/External/Myo/lib/win32/myo32.lib)
+		copy_to_folder(9_Application "/External/Myo/lib/" "myo32.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+		copy_to_folder(9_Application "/External/Myo/lib/" "ble32.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+	endif()
 endif()
 
 if(${OPIFEX_V8})

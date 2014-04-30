@@ -683,7 +683,7 @@ void OPfontSave(OPfont* font, i8* filename) {
 	}
 
 	ui8* data;
-	ui32 dataSize;
+	OPuint dataSize;
 	if (font->atlas->depth == 1) {
 		ui8* imageData = (ui8*)OPalloc(font->atlas->width * font->atlas->height * 3);
 		for (OPint i = font->atlas->width * font->atlas->height; i--;) {
