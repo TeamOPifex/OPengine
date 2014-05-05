@@ -168,10 +168,9 @@ void OPcharacter3DRender(OPcharacter3D* character, OPcam* camera) {
 	OPrenderBindMesh(&CHARACTER_3D_QUAD_MESH);
 	OPrenderBindEffect(EFFECT_CHARACTER_3D);
 
-	OPrenderDepth(0);
-
 	OPcamGetView((*camera), &view);
 	OPcamGetProj((*camera), &proj);
+
 	OPmat4identity(&world);
 	OPmat4rotZ(&world, character->Rotation.z);
 	OPvec3 scl = character->Scale / 2.0f;
