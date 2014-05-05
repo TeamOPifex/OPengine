@@ -45,19 +45,22 @@ void OPtexture3DDestroy(OPtexture3D* tex3d) {
 
 void OPtexture3DPrepRender(OPtexture3D* tex3d, OPcam* camera) {
 	OPrenderBindMesh(TEXTURE_3D_QUAD_MESH);
-	OPrenderBindEffect(DEFAULT_TEXTURE3D_EFFECT);
+	OPrenderBindEffect(tex3d->Effect);
 
 	OPrenderDepth(0);
 
 	OPmat4 world, view, proj;
-	OPmat4buildRotZ(&world, tex3d->Rotation.z);
-	world *= tex3d->Scale;
-	world *= OPvec2Create(OPrenderGetHeightAspectRatio() * tex3d->Texture->Description.Height / tex3d->Texture->Description.Width, 1.0);
-	world += tex3d->Position;
 	OPcamGetView((*camera), &view);
 	OPcamGetProj((*camera), &proj);
 
+
+	OPmat4identity(&world);
+	OPmat4rotZ(&world, tex3d->Rotation.z);
+	world *= tex3d->Scale;
+	world += tex3d->Position;
+
 	OPtextureClearActive();
+	OPtextureSmooth();
 	OPrenderParami("uColorTexture", OPtextureBind(tex3d->Texture));
 	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderParamMat4v("uProj", 1, &proj);

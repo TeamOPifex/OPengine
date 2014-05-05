@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 
 #add_source_group(\\ "${PROJECT_SOURCE_DIR}/Communication" COMMUNICATION_SRC)
+add_source_group(include/ "${PROJECT_SOURCE_DIR}/Communication/include" COMMUNICATION_SRC)
+add_source_group(src/ "${PROJECT_SOURCE_DIR}/Communication/src" COMMUNICATION_SRC)
 
 add_definitions(-D${OPIFEX_OS})
 add_library(6_Communication STATIC ${COMMUNICATION_SRC})
