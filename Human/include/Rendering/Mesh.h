@@ -2,6 +2,7 @@
 #define OPENGINE_HUMAN_RENDERER_MESH
 	
 #include "./Human/include/Rendering/Buffer.h"
+#include "./Math/include/BoundingBox3D.h"
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
@@ -18,7 +19,8 @@ extern "C" {
 typedef struct{
 	OPrenderBuffer VertexBuffer;
 	OPrenderBuffer IndexBuffer;
-}OPmesh;
+	OPboundingBox3D boundingBox;
+} OPmesh;
 
 //-----------------------------------------------------------------------------
 //   _____ _       _           _     

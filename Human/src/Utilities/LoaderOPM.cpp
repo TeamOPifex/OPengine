@@ -102,6 +102,8 @@ OPMData OPMloadData(OPstream* str) {
 	ui32 features = OPreadui32(str);
 	ui32 verticeCount = OPreadui32(str);
 
+	OPvec3 min = OPvec3Zero;
+	OPvec3 max = OPvec3Zero;
 
 	OPMvertex* vertices = (OPMvertex*)OPalloc(sizeof(OPMvertex) * verticeCount);
 
@@ -116,6 +118,12 @@ OPMData OPMloadData(OPstream* str) {
 			vertices[i].Position.x = x;
 			vertices[i].Position.y = y;
 			vertices[i].Position.z = z;
+			if (x < min.x) min.x = x;
+			if (y < min.y) min.y = y;
+			if (z < min.z) min.z = z;
+			if (x > max.x) max.x = x;
+			if (y > max.y) max.y = y;
+			if (z > max.z) max.z = z;
 		}
 
 		// Read Normal
@@ -165,6 +173,7 @@ OPMData OPMloadData(OPstream* str) {
 	data.vertices = vertices;
 	data.vertexCount = verticeCount;
 	data.vertexSize = sizeof(OPMvertex);
+	data.bounds = OPboundingBox3DCreate(min, max);
 	
 	// If there were no tangents provided, build them
 	if(!OPMhasFeature(features, Tangent)) {
@@ -255,6 +264,7 @@ OPint OPMload(const OPchar* filename, OPmesh** mesh) {
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
 	);
+	temp.boundingBox = data.bounds;
 
 	OPlog("Disposing");
 

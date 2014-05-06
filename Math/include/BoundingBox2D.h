@@ -1,7 +1,7 @@
 #ifndef OP_MATH_BOUNDINGBOX2D
 #define OP_MATH_BOUNDINGBOX2D
 
-#include "../include/Vector2.h"
+#include "Vector2.h"
 
 typedef struct {
 	OPvec2 min;

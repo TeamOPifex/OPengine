@@ -23,6 +23,7 @@ typedef struct {
 	void* indices;
 	ui32 indexCount;
 	ui32 indexSize;
+	OPboundingBox3D bounds;
 } OPMData;
 
 struct OPMPartNode_def;
