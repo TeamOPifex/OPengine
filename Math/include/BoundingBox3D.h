@@ -35,4 +35,29 @@ inline OPint OPboundingBox3DContainsBoundingBox3D(OPboundingBox3D* bb, OPboundin
 		bb2->min.z >= bb->min.z && bb2->max.z <= bb->max.z;
 }
 
+enum BoundingBox3DCollision {
+	BoundingBox3DCollision_None = 0,
+	BoundingBox3DCollision_Inside = 1,
+	BoundingBox3DCollision_Partial = 2
+};
+
+inline OPint OPboundingBox3DCollisionBoundingBox3D(OPboundingBox3D modelBounds, OPboundingBox3D playerBounds) {
+	// TODO: AABB testing in 3D
+
+	if (modelBounds.min.x <= playerBounds.min.x && modelBounds.max.x >= playerBounds.max.x &&
+		modelBounds.min.y <= playerBounds.min.y && modelBounds.max.y >= playerBounds.max.y &&
+		modelBounds.min.z <= playerBounds.min.z && modelBounds.max.z >= playerBounds.max.z)
+		return BoundingBox3DCollision_Inside;
+
+	if (modelBounds.max.x > playerBounds.min.x &&
+		modelBounds.min.x < playerBounds.max.x &&
+		modelBounds.max.y > playerBounds.min.y &&
+		modelBounds.min.y < playerBounds.max.y &&
+		modelBounds.max.z > playerBounds.min.z &&
+		modelBounds.min.z < playerBounds.max.z) {
+		return BoundingBox3DCollision_Partial;
+	}
+
+	return BoundingBox3DCollision_None;
+}
 #endif
