@@ -71,6 +71,7 @@ i32 OPimagePNGLoadStream(OPstream* str, i32 offset, OPtexture** image) {
 		OPtextureRepeat
 	};
 
+	OPtextureClearActive();
 	OPglError("OPimagePNGLoad:Error 3");
 	*tex = OPtextureCreate(desc);
 	OPglError("OPimagePNGLoad:Error 4");

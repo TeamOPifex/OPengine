@@ -25,6 +25,8 @@ OPint OPrenderGetHeight();
 OPfloat OPrenderGetAspectRatio(); 
 OPfloat OPrenderGetWidthAspectRatio();
 OPfloat OPrenderGetHeightAspectRatio();
+void OPrenderCull(OPint state);
+void OPrenderCullMode(OPint state);
 void  OPrenderSwapBuffer ();
 void  OPrenderPresent    ();
 void  OPrenderDepth      (OPint state);
