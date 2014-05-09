@@ -104,7 +104,8 @@ OPint OPrenderInit(OPuint width, OPuint height, OPint fullscreen){
 	//glBindVertexArray(VertexArrayID);
 
 	glEnable(GL_MULTISAMPLE_ARB);
-	glEnable(GL_BLEND);
+	glEnable(GL_BLEND); 
+	glEnable(GL_MULTISAMPLE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
@@ -118,6 +119,25 @@ OPint OPrenderInit(OPuint width, OPuint height, OPint fullscreen){
 
 	return 0;
 }
+
+void OPrenderCull(OPint state) {
+	if (state) {
+		glEnable(GL_CULL_FACE);
+	}
+	else {
+		glDisable(GL_CULL_FACE);
+	}
+}
+
+void OPrenderCullMode(OPint state) {
+	if (state) {
+		glEnable(GL_FRONT);
+	}
+	else {
+		glDisable(GL_BACK);
+	}
+}
+
 //-----------------------------------------------------------------------------
 void  OPrenderClear(f32 r, f32 g, f32 b){
 	glClearColor(r, g, b, 1.0f);

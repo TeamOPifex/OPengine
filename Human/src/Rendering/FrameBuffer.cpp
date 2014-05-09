@@ -46,6 +46,7 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 	// generate and bind the fbo
 	glGenFramebuffers(1, &fb.Handle);
 	// setup color texture
+	OPtextureClearActive();
 	ui32 handle = OPtextureBind(&fb.Texture);	
 	OPtextureSetData(NULL);
 	glBindTexture(GL_TEXTURE_2D, handle);

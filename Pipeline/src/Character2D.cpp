@@ -34,6 +34,8 @@ OPcharacter2D* OPcharacter2DCreate(OPsprite** sprites) {
 	character->Sprites = sprites;
 	character->CurrentSprite = sprites[0];
 	character->Direction = 1;
+	character->FrameRate = 24.0f;
+	character->Loop = 1;
 	return character;
 }
 
@@ -43,11 +45,12 @@ void OPcharacter2DDestroy(OPcharacter2D* character) {
 
 void OPcharacter2DUpdate(OPcharacter2D* character, OPtimer* timer) {
 	character->CurrentSprite->Elapsed += timer->Elapsed;
-	if (character->CurrentSprite->Elapsed > 1000 / 24.0) {
+	if (character->CurrentSprite->Elapsed > 1000 / character->FrameRate) {
 		character->CurrentSprite->Elapsed = 0;
 		character->CurrentSprite->Frame++;
 		if (character->CurrentSprite->Frame >= character->CurrentSprite->FrameCount) {
-			character->CurrentSprite->Frame = 0;
+			if (character->Loop) character->CurrentSprite->Frame = 0;
+			else  character->CurrentSprite->Frame--;
 		}
 	}
 }
@@ -131,6 +134,7 @@ OPcharacter3D* OPcharacter3DCreate(OPsprite** sprites) {
 	character->CurrentSprite = sprites[0];
 	character->Direction = 1;
 	character->FrameRate = 24.0f;
+	character->Loop = 1;
 	return character;
 }
 
@@ -144,7 +148,8 @@ void OPcharacter3DUpdate(OPcharacter3D* character, OPtimer* timer) {
 		character->CurrentSprite->Elapsed = 0;
 		character->CurrentSprite->Frame++;
 		if (character->CurrentSprite->Frame >= character->CurrentSprite->FrameCount) {
-			character->CurrentSprite->Frame = 0;
+			if (character->Loop) character->CurrentSprite->Frame = 0;
+			else  character->CurrentSprite->Frame--;
 		}
 	}
 }

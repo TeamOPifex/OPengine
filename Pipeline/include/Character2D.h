@@ -14,6 +14,8 @@ typedef struct {
 	OPint Direction;
 	OPsprite** Sprites;
 	OPsprite* CurrentSprite;
+	OPfloat FrameRate;
+	OPint Loop;
 } OPcharacter2D;
 
 void OPcharacter2DInit(OPeffect* effect);
@@ -32,6 +34,7 @@ typedef struct {
 	OPsprite** Sprites;
 	OPsprite* CurrentSprite;
 	OPfloat FrameRate;
+	OPint Loop;
 } OPcharacter3D;
 
 void OPcharacter3DInit(OPeffect* effect);
