@@ -350,4 +350,11 @@ inline void OPmat4transform(OPvec3* dst, OPvec3* a, OPmat4* b) {
 	dst->z = b->cols[0].z * a->x + b->cols[1].z * a->y + b->cols[2].z * a->z;
 }
 
+inline void OPmat4transformVec4(OPvec4* dst, OPvec4* a, OPmat4* b) {
+	dst->x = b->cols[0].x * a->x + b->cols[1].x * a->y + b->cols[2].x * a->z + b->cols[3].x * a->w;
+	dst->y = b->cols[0].y * a->x + b->cols[1].y * a->y + b->cols[2].y * a->z + b->cols[3].y * a->w;
+	dst->z = b->cols[0].z * a->x + b->cols[1].z * a->y + b->cols[2].z * a->z + b->cols[3].z * a->w;
+	dst->w = b->cols[0].w * a->x + b->cols[1].w * a->y + b->cols[2].w * a->z + b->cols[3].w * a->w;
+}
+
 #endif
