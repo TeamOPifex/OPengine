@@ -326,6 +326,8 @@ OPeffect OPrenderBuildEffect(
 	ui32 attrs,
 	const OPchar* Name) {
 
+	OPlog("Building Effect");
+
 	OPvector* vector = OPvectorCreate(sizeof(OPshaderAttribute));
 
 
@@ -354,6 +356,9 @@ OPeffect OPrenderBuildEffect(
 	OPmemcpy(Attributes, vector->items, sizeof(OPshaderAttribute)* vector->_size);
 	OPvectorDestroy(vector);
 
+
+	OPlog("Finding Effect Stride");
+
 	ui32 stride = 0;
 	for (OPint i = 0; i < AttribCount; i++){
 		// TODO add more
@@ -364,10 +369,17 @@ OPeffect OPrenderBuildEffect(
 		}
 	}
 
+	OPlog("Loading Vert for Effect");
+
 	if (!OPcmanIsLoaded(vert)) OPcmanLoad(vert);
 	OPshader* vertShader = (OPshader*)OPcmanGet(vert);
+
+	OPlog("Loading Frag for Effect");
+
 	if (!OPcmanIsLoaded(frag)) OPcmanLoad(frag);
 	OPshader* fragShader = (OPshader*)OPcmanGet(frag);
+
+	OPlog("Create the Effect");
 
 	return createEffect(*vertShader, *fragShader, Attributes, AttribCount, Name, stride);
 }

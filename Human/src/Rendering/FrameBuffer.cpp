@@ -37,41 +37,58 @@ GLuint createDepthTexture(int w, int h) {
 }
 
 OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
+	OPlog("OPEngine Frame Buffer 1");
 	OPframeBuffer fb = {
 		desc,
 		OPtextureCreate(desc),
 		0
 	};
+	OPlog("OPEngine Frame Buffer 2");
 
 	// generate and bind the fbo
 	glGenFramebuffers(1, &fb.Handle);
+	OPlog("OPEngine Frame Buffer 3");
 	// setup color texture
 	OPtextureClearActive();
 	ui32 handle = OPtextureBind(&fb.Texture);	
 	OPtextureSetData(NULL);
 	glBindTexture(GL_TEXTURE_2D, handle);
+	OPlog("OPEngine Frame Buffer 4");
 	// attach the depth texture
 	ui32 dt = createDepthTexture(desc.Width, desc.Height);
+	OPlog("OPEngine Frame Buffer 5");
 
 #ifndef OPIFEX_ANDROID
 	OPglError("OPframeBufferCreate:Error 1:%d");
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fb.Handle);
+	OPlog("OPEngine Frame Buffer 6");
 	OPglError("OPframeBufferCreate:Error 2:%d");
 	//glBindRenderbuffer(GL_RENDERBUFFER, dt);
 	OPglError("OPframeBufferCreate:Error 3:%d");
 	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, desc.Width, desc.Height);
 	OPglError("OPframeBufferCreate:Error 4:%d");
 
+	OPlog("OPEngine Frame Buffer 6.5");
 	// attach the color texture
-	#if defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
-		OPlog("OPframeBufferCreate glFramebufferTexture2D : FB Handle :%d", fb.Texture.Handle);
-		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fb.Texture.Handle, 0);
-		OPlog("OPframeBufferCreate glFramebufferRenderbuffer");
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, dt, 0);
-	#else
-		glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, fb.Texture.Handle, 0);
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, dt, 0);
-	#endif
+
+	OPlog("OPframeBufferCreate glFramebufferTexture2D : FB Handle :%d", fb.Texture.Handle);
+	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fb.Texture.Handle, 0);
+	OPlog("OPframeBufferCreate glFramebufferRenderbuffer");
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, dt, 0);
+
+	//#if defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
+	//	OPlog("OPframeBufferCreate glFramebufferTexture2D : FB Handle :%d", fb.Texture.Handle);
+	//	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fb.Texture.Handle, 0);
+	//	OPlog("OPframeBufferCreate glFramebufferRenderbuffer");
+	//	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, dt, 0);
+	//#else
+	//glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, fb.Texture.Handle, 0);
+	//OPlog("OPEngine Frame Buffer 7");
+	//OPglError("OPframeBufferCreate:Error 5:%d");
+	//glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, dt, 0);
+	//OPlog("OPEngine Frame Buffer 8");
+	//OPglError("OPframeBufferCreate:Error 6:%d");
+	//#endif
 #else
 	OPglError("OPframeBufferCreate:Error 1:%d");
 	glBindFramebuffer(GL_FRAMEBUFFER, fb.Handle);
@@ -87,6 +104,7 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 	// check fbo creation status
 #ifndef OPIFEX_ANDROID
 	GLenum e = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
+	OPlog("OPEngine Frame Buffer 9");
 #else
 	GLenum e = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 #endif
@@ -101,7 +119,7 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 			OPlog("FBO Unsupported");
 			break;
 		case GL_FRAMEBUFFER_COMPLETE:
-			//OPlog("FBO OK");
+			OPlog("FBO OK");
 			break;
 #ifndef OPIFEX_ANDROID
 		case GL_FRAMEBUFFER_UNDEFINED:
@@ -119,13 +137,20 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 			OPlog("FBO Problem?");
 	}
 
+	OPlog("OPEngine Frame Buffer 10");
 	glBindTexture(GL_TEXTURE_2D, 0);
+	OPlog("OPEngine Frame Buffer 11");
+	OPglError("OPframeBufferCreate:Error 7:%d");
 #ifndef OPIFEX_ANDROID
+	OPlog("OPEngine Frame Buffer 12");
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	OPlog("OPEngine Frame Buffer 13");
+	OPglError("OPframeBufferCreate:Error 8:%d");
 #else
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #endif
 
+	OPlog("OPEngine Frame Buffer 14");
 	return fb;
 }
 //-----------------------------------------------------------------------------
