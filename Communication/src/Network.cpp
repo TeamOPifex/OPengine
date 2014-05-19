@@ -105,6 +105,8 @@ i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPint port) {
 		return 1;
 	}
 
+	OPlog("Client connected to %s on port %d", address, port);
+
 	return 0;
 }
 
@@ -162,30 +164,32 @@ i32 OPnetworkServerStart(OPnetwork* network, OPint port) {
 
 	freeaddrinfo(result);
 
+	OPlog("Server started on port %d", port);
+
 	return 0;
 }
+//
+//OPnetwork* OPnetworkAcceptClient(OPnetwork* network) {
+//	if (network->ConnectionType == OPNETWORK_CLIENT) return NULL;
+//
+//	OPnetwork* client = (OPnetwork*)OPalloc(sizeof(OPnetwork));
+//	client->ConnectSocket = INVALID_SOCKET;
+//	client->ConnectionType = OPNETWORK_CLIENT;
+//
+//	OPlog("Waiting for client...");
+//	client->ConnectSocket = accept(network->ConnectSocket, NULL, NULL);
+//	if (client->ConnectSocket == INVALID_SOCKET) {
+//		OPlog("accept failed: %d\n", WSAGetLastError());
+//		closesocket(client->ConnectSocket);
+//		free(client);
+//		WSACleanup();
+//		return NULL;
+//	}
+//
+//	return client;
+//}
 
-OPnetwork* OPnetworkAcceptClient(OPnetwork* network) {
-	if (network->ConnectionType == OPNETWORK_CLIENT) return NULL;
-
-	OPnetwork* client = (OPnetwork*)OPalloc(sizeof(OPnetwork));
-	client->ConnectSocket = INVALID_SOCKET;
-	client->ConnectionType = OPNETWORK_CLIENT;
-
-	OPlog("Waiting for client...");
-	client->ConnectSocket = accept(network->ConnectSocket, NULL, NULL);
-	if (client->ConnectSocket == INVALID_SOCKET) {
-		OPlog("accept failed: %d\n", WSAGetLastError());
-		closesocket(client->ConnectSocket);
-		free(client);
-		WSACleanup();
-		return NULL;
-	}
-
-	return client;
-}
-
-i32 OPnetworkReceive(OPnetwork* network, void(*receive)(i32, OPchar*)) {
+i32 OPnetworkReceive(OPnetwork* network, void* state, void(*receive)(void*, i32, OPchar*)) {
 
 	OPchar recvbuf[DEFAULT_BUFLEN];
 	i32 recvbuflen = DEFAULT_BUFLEN;
@@ -193,21 +197,25 @@ i32 OPnetworkReceive(OPnetwork* network, void(*receive)(i32, OPchar*)) {
 	sockaddr si_other;
 	i32 si_len = sizeof(si_other);
 
-	while (1) {
-		fflush(stdout);
-		memset(recvbuf, '\0', DEFAULT_BUFLEN);
+	fd_set readfds;
 
-		if ((iResult = recvfrom(network->ConnectSocket, recvbuf, DEFAULT_BUFLEN, 0, &si_other, &si_len)) == SOCKET_ERROR) {
-			return 1;
-		}
 
-		receive(iResult, recvbuf);
+	FD_SET(sd, &readfds);
+
+	fflush(stdout);
+	memset(recvbuf, '\0', DEFAULT_BUFLEN);
+	OPlog("Receiving Message...");
+	select()
+	if ((iResult = recvfrom(network->ConnectSocket, recvbuf, DEFAULT_BUFLEN, 0, &si_other, &si_len)) == SOCKET_ERROR) {
+		return 1;
 	}
+
+	receive(state, iResult, recvbuf);
 
 	return 0;
 }
 
-i32 OPnetworkSend(OPnetwork* network, void* data, i32 size){
+i32 OPnetworkSend(OPnetwork* network, i8* data, i32 size){
 
 	OPchar recvbuf[DEFAULT_BUFLEN];
 	i32 recvbuflen = DEFAULT_BUFLEN;
@@ -229,7 +237,8 @@ i32 OPnetworkSend(OPnetwork* network, void* data, i32 size){
 
 	i32 slen = sizeof(*result->ai_addr);
 
-	if (sendto(network->ConnectSocket, (OPchar*)data, size, 0, result->ai_addr, slen) == SOCKET_ERROR) {
+	OPlog("Sending Message...");
+	if (sendto(network->ConnectSocket, data, size, 0, result->ai_addr, slen) == SOCKET_ERROR) {
 		return 1;
 	}
 
