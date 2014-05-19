@@ -200,15 +200,15 @@ i32 OPnetworkReceive(OPnetwork* network, void* state, void(*receive)(void*, i32,
 	fd_set readfds;
 
 
-	FD_SET(sd, &readfds);
+	//FD_SET(sd, &readfds);
 
 	fflush(stdout);
 	memset(recvbuf, '\0', DEFAULT_BUFLEN);
 	OPlog("Receiving Message...");
-	select()
-	if ((iResult = recvfrom(network->ConnectSocket, recvbuf, DEFAULT_BUFLEN, 0, &si_other, &si_len)) == SOCKET_ERROR) {
-		return 1;
-	}
+	//select()
+	//if ((iResult = recvfrom(network->ConnectSocket, recvbuf, DEFAULT_BUFLEN, 0, &si_other, &si_len)) == SOCKET_ERROR) {
+	//	return 1;
+	//}
 
 	receive(state, iResult, recvbuf);
 
