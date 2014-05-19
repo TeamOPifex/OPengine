@@ -45,8 +45,8 @@ OPnetwork* OPnetworkCreate(OPnetworkType networkType);
 i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPint port);
 i32 OPnetworkServerStart(OPnetwork* network, OPint port);
 OPnetwork* OPnetworkAcceptClient(OPnetwork* network);
-i32 OPnetworkReceive(OPnetwork* network, void(*receive)(i32, OPchar*));
-i32 OPnetworkSend(OPnetwork* network, void* data, i32 size);
+i32 OPnetworkReceive(OPnetwork* network, void* state, void(*receive)(void*, i32, OPchar*));
+i32 OPnetworkSend(OPnetwork* network, i8* data, i32 size);
 i32 OPnetworkShutdown(OPnetwork* network);
 void OPnetworkDestroy(OPnetwork* network);
 
