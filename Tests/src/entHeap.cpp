@@ -9,6 +9,7 @@ typedef struct{
 } Dummy;
 void* mem;
 OPentHeap* heap;
+OPint bytes;
 
 //-----------------------------------------------------------------------------
 //    _______        _     ______                      
@@ -19,7 +20,7 @@ OPentHeap* heap;
 //      |_|\___||___/\__| |_|   \__,_|_| |_|\___|___(_)                                               
 OPint shouldCreateHeapWithCapacity(void* args){
 	OPuint size = (OPuint)OPrandRange(1, 100);
-	mem = OPalloc(OPentHeapBytes(sizeof(Dummy), size));
+	mem = OPalloc(bytes = OPentHeapBytes(sizeof(Dummy), size));
 
 	OP_RTMSG("Creating a heap with capacity of %d", size);
 	heap = OPentHeapCreate(mem, sizeof(Dummy), size);
@@ -54,6 +55,8 @@ OPint shouldCreateHeapWithCapacity(void* args){
 	OP_RTMSG("Size %d=%d", *heap->Size, size);
 	OP_RTMSG("Indicies allocated!");
 
+	OP_HEX_DUMP((void*)heap, bytes);
+
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -61,7 +64,7 @@ OPint pushAndPopShouldReturnSorted(void* args){
 	OPint i = 0, last = 0;
 	OPuint size = *heap->Size;	
 	
-	OP_RTMSG("Size %d", size);
+	OP_RTMSG("Size %d bytes %d", size, bytes);
 
 	// create a list of random numbers
 	for(i = size; i--;){
@@ -84,6 +87,11 @@ OPint pushAndPopShouldReturnSorted(void* args){
 		if(activated != released) return -1;
 	}	
 
+	OP_RTMSG("Size %d", size);
+	OPlog("Size: %x -> %x", heap->Size, &heap->Free._size);
+
+	OP_HEX_DUMP((void*)heap, bytes);
+
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -91,7 +99,8 @@ OPint maxIndexExpected(void* args){
 	OPint i = 0, max = 0;
 	OPuint size = *heap->Size;
 
-	OP_RTMSG("Size %d", size);
+	OP_RTMSG("Size %d bytes %d", size, bytes);
+	OPlog("Size: %x -> %x", heap->Size, &heap->Free._size);
 
 	// clean out existing entities
 	for(i = size; i--;){
@@ -126,6 +135,9 @@ OPint maxIndexExpected(void* args){
 		OP_RTMSG("Max index %d expected %d\n", heap->MaxIndex, max);
 		max = heap->MaxIndex - 1;
 	}
+
+	OP_HEX_DUMP((void*)heap, bytes);
+
 	return 0;
 }
 //-----------------------------------------------------------------------------

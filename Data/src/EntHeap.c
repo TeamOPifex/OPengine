@@ -69,6 +69,7 @@ OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
 	OPlog("EntSize: %x", &heapPtr->EntSize);
 	OPlog("MaxIndex: %x", &heapPtr->MaxIndex);
 	OPlog("Free: %x", heapPtr->Free);
+	OPlog("Size: %x -> %x", heapPtr->Size, &heapPtr->Free._size);
 
 	return heapPtr;
 }
