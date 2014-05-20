@@ -40,7 +40,7 @@ void* OPAUD_UPDATE(void* args){
 void OPaudInitThread(OPint maxEmitters){
 
 	// allocate space for all the emitters in an ent heap
-	void* emitters = OPalloc(OPentHeapSize(sizeof(OPaudioEmitter), maxEmitters));
+	void* emitters = OPalloc(OPentHeapBytes(sizeof(OPaudioEmitter), maxEmitters));
 	OPAUD_REG_EMITTERS = *OPentHeapCreate(
 		emitters,
 		sizeof(OPaudioEmitter),
