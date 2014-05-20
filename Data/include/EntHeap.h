@@ -10,6 +10,7 @@ extern "C"
 #include "./Data/include/Heap.h"
 #include <stdio.h>
 
+//-----------------------------------------------------------------------------
 //  _____ _                   _       
 // / ____| |                 | |      
 //| (___ | |_ _ __ _   _  ___| |_ ___ 
@@ -18,20 +19,24 @@ extern "C"
 //|_____/ \__|_|   \__,_|\___|\__|___/
 //                                                                      
 typedef struct{
-	void* Entities;
-	OPint* InUse;
-	OPint EntSize;
-	OPint MaxIndex;
+	void*   Entities;
+	OPint*  InUse;
+	OPint   EntSize;
+	OPint   MaxIndex;
+	OPuint* Size;
 	OPminHeap Free;
 } OPentHeap;
 
+#define OPentHeapIsLiving(heap, i)\
+if(!heap->InUse[i]) continue;\
+
+//-----------------------------------------------------------------------------
 // ______                _   _                 
 //|  ____|              | | (_)                
 //| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-
 __inline void OPentHeapActivate(OPentHeap* heap, OPint* i){
 	if(heap->Free._size){
 		if((*i = OPminHeapPop(&heap->Free)) >= 0){
@@ -44,11 +49,11 @@ __inline void OPentHeapActivate(OPentHeap* heap, OPint* i){
 	else
 		*i = -1;
 }
-
+//-----------------------------------------------------------------------------
 __inline void* OPentHeapGet(OPentHeap* heap, OPint i){
 	return ((ui8*)heap->Entities) + i;
 }
-
+//-----------------------------------------------------------------------------
 __inline void OPentHeapKill(OPentHeap* heap, OPint i){
 	OPint inUse = heap->InUse[i];
 	if(inUse){
@@ -61,8 +66,8 @@ __inline void OPentHeapKill(OPentHeap* heap, OPint i){
 		heap->MaxIndex = mi + 1;
 	}
 }
-
-OPuint     OPentHeapSize(OPint entsize, OPint count);
+//-----------------------------------------------------------------------------
+OPuint     OPentHeapBytes(OPint entsize, OPint count);
 OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count);
 
 #ifdef __cplusplus

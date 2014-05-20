@@ -7,7 +7,7 @@ OP_TEST_INIT
 typedef struct{
 	OPint id;
 } Dummy;
-
+void* mem;
 OPentHeap* heap;
 
 //-----------------------------------------------------------------------------
@@ -19,7 +19,7 @@ OPentHeap* heap;
 //      |_|\___||___/\__| |_|   \__,_|_| |_|\___|___(_)                                               
 OPint shouldCreateHeapWithCapacity(void* args){
 	OPuint size = (OPuint)OPrandRange(1, 100);
-	void* mem = OPalloc(OPentHeapSize(sizeof(Dummy), size));
+	mem = OPalloc(OPentHeapBytes(sizeof(Dummy), size));
 
 	OP_RTMSG("Creating a heap with capacity of %d", size);
 	heap = OPentHeapCreate(mem, sizeof(Dummy), size);
@@ -46,14 +46,23 @@ OPint shouldCreateHeapWithCapacity(void* args){
 		OP_RTMSG("Indicies not allocated! %x", heap->Free._indices);
 		return -3;
 	}
+
+	if(*heap->Size != size){
+		OP_RTMSG("Size not correct %d", *heap->Size);
+		return -4;
+	}
+	OP_RTMSG("Size %d=%d", *heap->Size, size);
 	OP_RTMSG("Indicies allocated!");
 
 	return 0;
 }
 //-----------------------------------------------------------------------------
 OPint pushAndPopShouldReturnSorted(void* args){
-	OPint i = 0, last = 0, size = OPminHeapSize(&heap->Free);	
+	OPint i = 0, last = 0;
+	OPuint size = *heap->Size;	
 	
+	OP_RTMSG("Size %d", size);
+
 	// create a list of random numbers
 	for(i = size; i--;){
 		OPint index = -1;
@@ -61,23 +70,64 @@ OPint pushAndPopShouldReturnSorted(void* args){
 		OPentHeapActivate(heap, &index);
 		dummy = *((Dummy*)OPentHeapGet(heap, index));
 	}
+
+	// remove one and check for the next available
+	for(i = 10; i--;){
+		OPint activated = -1, released = (OPint)(OPrandom() * size); 
+		OP_RTMSG("Killing index %d...", released);
+		OPentHeapKill(heap, released);
+		OP_RTMSG("Expecting %d as next activated", released);
 	
-	// last = OPminHeapPop(heap);
-	// while(OPminHeapSize(heap) > 0){
-	// 	int popped = OPminHeapPop(heap);
-	// 	OP_RTMSG("%d < %d", last, popped);
-	// 	if(popped < last){
-	// 		OP_RTMSG("Popped value was not in the right order!");
-	// 		return -2;
-	// 	}
-	// 	last = popped;
-	// }
+		OPentHeapActivate(heap, &activated);
+		OP_RTMSG("Activated %d expected %d", activated, released);
+		
+		if(activated != released) return -1;
+	}	
 
 	return 0;
 }
 //-----------------------------------------------------------------------------
+OPint maxIndexExpected(void* args){
+	OPint i = 0, max = 0;
+	OPuint size = *heap->Size;
 
+	OP_RTMSG("Size %d", size);
 
+	// clean out existing entities
+	for(i = size; i--;){
+		OPint index = -1;
+		Dummy dummy = {0};
+		OPentHeapActivate(heap, &index);
+		dummy = *((Dummy*)OPentHeapGet(heap, index));
+	}
+
+	// create a list of random numbers
+	for(i = 10; i--;){
+		OPint activated = -1, released = (OPint)(OPrandom() * size); 
+		OP_RTMSG("Killing index %d...", released);
+		OPentHeapKill(heap, released);
+		OP_RTMSG("Expecting %d as next activated", released);
+	
+		OPentHeapActivate(heap, &activated);
+		OP_RTMSG("Activated %d expected %d", activated, released);
+		
+		if(activated != released) return -1;
+	}	
+
+	while(heap->MaxIndex > 1){
+		OP_RTMSG("Max index before: %d, expected after: %d", heap->MaxIndex, max);
+		OP_RTMSG("MaxIndex %d, now killing...", max);
+		OPentHeapKill(heap, max);
+
+		if(heap->MaxIndex != max){
+			OP_RTMSG("%d does not match expected %d!", heap->MaxIndex, max);
+			return -1;
+		}
+		OP_RTMSG("Max index %d expected %d\n", heap->MaxIndex, max);
+		max = heap->MaxIndex - 1;
+	}
+	return 0;
+}
 //-----------------------------------------------------------------------------
 //    _______        _     _____                             
 //   |__   __|      | |   |  __ \                            
@@ -91,6 +141,7 @@ int main(void){
 	// Run sequence of test function invocations here
 	result |= OP_TEST(shouldCreateHeapWithCapacity, "Creation test", NULL);
 	result |= OP_TEST(pushAndPopShouldReturnSorted, "Push / Pop test", NULL);
+	result |= OP_TEST(maxIndexExpected, "Max index test", NULL);
 
 	return (int)result; // value to be read by test script
 }
