@@ -168,6 +168,7 @@ i32 OPnetworkServerStart(OPnetwork* network, OPint port) {
 
 	return 0;
 }
+
 //
 //OPnetwork* OPnetworkAcceptClient(OPnetwork* network) {
 //	if (network->ConnectionType == OPNETWORK_CLIENT) return NULL;
