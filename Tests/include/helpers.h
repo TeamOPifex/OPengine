@@ -4,6 +4,8 @@
 #include <stdio.h>
 
 #define OP_TEST_INIT OPint OP_TEST_COUNT = 1;
+#define OP_DUMP_D "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVV"
+#define OP_DUMP_U "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
 
 extern OPint OP_TEST_COUNT;
 
@@ -15,21 +17,21 @@ void OP_RTMSG(const OPchar* format, ...){
     vsnprintf(buf, sizeof(buf), format, args);
     va_end(args);
 
-	OPlog("\t%s", buf);
+	OPlogLn("\t%s", buf);
 
     return;
 }
 
 OPint OP_TEST(OPint (*testRoutine)(void*), const OPchar* name, void* args){
 	OPint result = 0;
-	OPlog("#%d %s - Running", OP_TEST_COUNT++, name);
+	OPlogLn("#%d %s - Running", OP_TEST_COUNT++, name);
 	result = testRoutine(args);
 
 	if(result){
-		OPlog("\t%s - \033[1;31mFAILED\033[0m with %d\n", name, result);
+		OPlogLn("\t%s - \033[1;31mFAILED\033[0m with %d\n", name, result);
 	}
 	else{
-		OPlog("\t%s - \033[0;32mPASSED\033[0m with %d\n", name, result);
+		OPlogLn("\t%s - \033[0;32mPASSED\033[0m with %d\n", name, result);
 	}
 
 	return result;
@@ -37,13 +39,18 @@ OPint OP_TEST(OPint (*testRoutine)(void*), const OPchar* name, void* args){
 
 void OP_HEX_DUMP(void *addr, OPint len) {
     OPint i;
-    ui8 buff[17];
+    OPchar buff[17] = {0};
     ui8 *pc = (ui8*)addr;
-	ui8 desc[1024];
+	ui8 desc[1024] = {0};
+
+
+    OPlogLn(OP_DUMP_D);
+    sprintf(buff, "SIZE %d\n", (int)len);
+    write(1, buff, strlen(buff));
 
     // Output description if given.
     if (desc != NULL)
-        printf ("%s:\n", desc);
+        OPlog ("%s:\n", desc);
 
     // Process every byte in the data.
     for (i = 0; i < len; i++) {
@@ -52,14 +59,14 @@ void OP_HEX_DUMP(void *addr, OPint len) {
         if ((i % 16) == 0) {
             // Just don't print ASCII for the zeroth line.
             if (i != 0)
-                printf ("\t%s\n", buff);
+                OPlog ("\t%s\n", buff);
 
             // Output the offset.
-            printf ("  %04x ", i);
+            OPlog ("  %04x ", i);
         }
 
         // Now the hex code for the specific character.
-        printf (" %02x", pc[i]);
+        OPlog (" %02x", pc[i]);
 
         // And store a printable ASCII character for later.
         if ((pc[i] < 0x20) || (pc[i] > 0x7e))
@@ -68,5 +75,7 @@ void OP_HEX_DUMP(void *addr, OPint len) {
             buff[i % 16] = pc[i];
         buff[(i % 16) + 1] = '\0';
     }
+    OPlog("\n");
+    OPlogLn(OP_DUMP_U);
 }
 #endif

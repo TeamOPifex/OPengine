@@ -24,6 +24,7 @@ typedef struct{
 	OPint   EntSize;
 	OPint   MaxIndex;
 	OPuint* Size;
+	OPuint  Capacity;
 	OPminHeap Free;
 } OPentHeap;
 
