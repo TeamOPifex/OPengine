@@ -55,6 +55,11 @@ OPint shouldCreateHeapWithCapacity(void* args){
 	OP_RTMSG("Size %d=%d", *heap->Size, size);
 	OP_RTMSG("Indicies allocated!");
 
+	if(((ui8*)heap->Size) < ((ui8*)heap) || ((ui8*)heap->Size) > ((ui8*)(heap + bytes))){
+		OP_RTMSG("Size pointer outsize of expected bounds %x - %x", heap, heap + bytes);
+		return -5;
+	}
+
 	OP_HEX_DUMP((void*)heap, bytes);
 
 	return 0;
@@ -71,7 +76,7 @@ OPint pushAndPopShouldReturnSorted(void* args){
 		OPint index = -1;
 		Dummy dummy = {0};
 		OPentHeapActivate(heap, &index);
-		dummy = *((Dummy*)OPentHeapGet(heap, index));
+		(*((Dummy*)OPentHeapGet(heap, index))).id = (OPint)(OPrandom() * 1024);
 	}
 
 	// remove one and check for the next available
@@ -88,7 +93,7 @@ OPint pushAndPopShouldReturnSorted(void* args){
 	}	
 
 	OP_RTMSG("Size %d", size);
-	OPlog("Size: %x -> %x", heap->Size, &heap->Free._size);
+	OPlogLn("Size: %x -> %x", heap->Size, &heap->Free._size);
 
 	OP_HEX_DUMP((void*)heap, bytes);
 
@@ -99,28 +104,28 @@ OPint maxIndexExpected(void* args){
 	OPint i = 0, max = 0;
 	OPuint size = *heap->Size;
 
-	OP_RTMSG("Size %d bytes %d", size, bytes);
-	OPlog("Size: %x -> %x", heap->Size, &heap->Free._size);
+	OP_RTMSG("Off to size %x", ((ui8*)heap->Size - (ui8*)heap));
+	OP_RTMSG("Size %d Cap %d bytes %d", size, heap->Capacity, bytes);
+	OPlogLn("Size: %x -> %x", heap->Size, &heap->Free._size);
 
 	// clean out existing entities
-	for(i = size; i--;){
-		OPint index = -1;
-		Dummy dummy = {0};
-		OPentHeapActivate(heap, &index);
-		dummy = *((Dummy*)OPentHeapGet(heap, index));
+	for(i = heap->Capacity; i--;){
+		OPentHeapIsLiving(heap, i)
+
+		OPentHeapKill(heap, i);
+		OPlogLn("Killing at index %d", i);
 	}
 
 	// create a list of random numbers
-	for(i = 10; i--;){
-		OPint activated = -1, released = (OPint)(OPrandom() * size); 
-		OP_RTMSG("Killing index %d...", released);
-		OPentHeapKill(heap, released);
-		OP_RTMSG("Expecting %d as next activated", released);
-	
+	for(i = heap->Capacity; i--;){
+		OPint activated = -1;
+		Dummy dummy = {0};
+
 		OPentHeapActivate(heap, &activated);
-		OP_RTMSG("Activated %d expected %d", activated, released);
-		
-		if(activated != released) return -1;
+		((Dummy*)OPentHeapGet(heap, activated))->id = (OPint)(OPrandom() * 1024);
+		OP_RTMSG("Activated %d", activated);
+	
+		max = activated > max ? activated : max;
 	}	
 
 	while(heap->MaxIndex > 1){
@@ -130,7 +135,8 @@ OPint maxIndexExpected(void* args){
 
 		if(heap->MaxIndex != max){
 			OP_RTMSG("%d does not match expected %d!", heap->MaxIndex, max);
-			return -1;
+			OP_HEX_DUMP((void*)heap, bytes);
+			return -2;
 		}
 		OP_RTMSG("Max index %d expected %d\n", heap->MaxIndex, max);
 		max = heap->MaxIndex - 1;

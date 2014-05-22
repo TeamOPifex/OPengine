@@ -21,12 +21,13 @@ OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
 	};
 	OPentHeap* heapPtr = NULL;
 	OPentHeap heap = {
-		NULL,
-		NULL,
-		entSize,
-		0,
-		NULL,
-		{0}
+		.Entities = NULL,
+		.InUse = NULL,
+		.EntSize = entSize,
+		.MaxIndex = 0,
+		.Size = NULL,
+		.Capacity = count,
+		.Free = {0}
 	};
 
 	heap.Free = free;
@@ -57,19 +58,19 @@ OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
 
 	// redirect the Size pointer so that it maps to the final
 	// resting place of the internal size variable
-	heapPtr->Size = &heapPtr->Free._size;
+	heapPtr->Size = &(heapPtr->Free._size);
 
-	OPlog("Free._indices %x", heapPtr->Free._indices);
-	OPlog("%x->Free._indices %x", heapPtr, heapPtr->Free._indices);
+	OPlogLn("Free._indices %x", heapPtr->Free._indices);
+	OPlogLn("%x->Free._indices %x", heapPtr, heapPtr->Free._indices);
 
-	OPlog("OPint Size: %d", sizeof(OPint));
-	OPlog("HEAP: %x", heapPtr);
-	OPlog("Entities: %x", &heapPtr->Entities);
-	OPlog("InUse: %x", &heapPtr->InUse);
-	OPlog("EntSize: %x", &heapPtr->EntSize);
-	OPlog("MaxIndex: %x", &heapPtr->MaxIndex);
-	OPlog("Free: %x", heapPtr->Free);
-	OPlog("Size: %x -> %x", heapPtr->Size, &heapPtr->Free._size);
+	OPlogLn("OPint Size: %d", sizeof(OPint));
+	OPlogLn("HEAP: %x", heapPtr);
+	OPlogLn("Entities: %x", &heapPtr->Entities);
+	OPlogLn("InUse: %x", &heapPtr->InUse);
+	OPlogLn("EntSize: %x", &heapPtr->EntSize);
+	OPlogLn("MaxIndex: %x", &heapPtr->MaxIndex);
+	OPlogLn("Free: %x", heapPtr->Free);
+	OPlogLn("Size: %x -> %x\n", heapPtr->Size, &heapPtr->Free._size);
 
 	return heapPtr;
 }
