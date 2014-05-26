@@ -25,11 +25,12 @@ void OPlog(const char* message, ...){
 		errno = 0;
 	} else {
 		write(1, buffer, strlen(buffer));
+		write(1, "\n", 1);
 	}
     va_end(args);
 }
 
-void OPlogLn(const char* message, ...){
+void OPlg(const char* message, ...){
 	char buffer[1024];
     va_list args;
 	va_start(args, message);
@@ -39,7 +40,6 @@ void OPlogLn(const char* message, ...){
 		errno = 0;
 	} else {
 		write(1, buffer, strlen(buffer));
-		write(1, "\n", 1);
 	}
     va_end(args);
 }

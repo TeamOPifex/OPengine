@@ -60,17 +60,5 @@ OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
 	// resting place of the internal size variable
 	heapPtr->Size = &(heapPtr->Free._size);
 
-	OPlogLn("Free._indices %x", heapPtr->Free._indices);
-	OPlogLn("%x->Free._indices %x", heapPtr, heapPtr->Free._indices);
-
-	OPlogLn("OPint Size: %d", sizeof(OPint));
-	OPlogLn("HEAP: %x", heapPtr);
-	OPlogLn("Entities: %x", &heapPtr->Entities);
-	OPlogLn("InUse: %x", &heapPtr->InUse);
-	OPlogLn("EntSize: %x", &heapPtr->EntSize);
-	OPlogLn("MaxIndex: %x", &heapPtr->MaxIndex);
-	OPlogLn("Free: %x", heapPtr->Free);
-	OPlogLn("Size: %x -> %x\n", heapPtr->Size, &heapPtr->Free._size);
-
 	return heapPtr;
 }

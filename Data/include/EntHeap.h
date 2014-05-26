@@ -57,11 +57,12 @@ __inline void* OPentHeapGet(OPentHeap* heap, OPint i){
 //-----------------------------------------------------------------------------
 __inline void OPentHeapKill(OPentHeap* heap, OPint i){
 	OPint inUse = heap->InUse[i];
+	
 	if(inUse){
 		OPint mi = heap->MaxIndex - 1;
 		OPminHeapPush(&heap->Free, i);
 		heap->InUse[i] = 0;
-		while(!heap->InUse[mi]){
+		while(!heap->InUse[mi] && mi >= 0){
 			mi--;
 		}
 		heap->MaxIndex = mi + 1;

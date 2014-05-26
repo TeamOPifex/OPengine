@@ -93,7 +93,7 @@ OPint pushAndPopShouldReturnSorted(void* args){
 	}	
 
 	OP_RTMSG("Size %d", size);
-	OPlogLn("Size: %x -> %x", heap->Size, &heap->Free._size);
+	OP_RTMSG("Size: %x -> %x", heap->Size, &heap->Free._size);
 
 	OP_HEX_DUMP((void*)heap, bytes);
 
@@ -106,14 +106,14 @@ OPint maxIndexExpected(void* args){
 
 	OP_RTMSG("Off to size %x", ((ui8*)heap->Size - (ui8*)heap));
 	OP_RTMSG("Size %d Cap %d bytes %d", size, heap->Capacity, bytes);
-	OPlogLn("Size: %x -> %x", heap->Size, &heap->Free._size);
+	OP_RTMSG("Size: %x -> %x", heap->Size, &heap->Free._size);
 
 	// clean out existing entities
 	for(i = heap->Capacity; i--;){
 		OPentHeapIsLiving(heap, i)
 
 		OPentHeapKill(heap, i);
-		OPlogLn("Killing at index %d", i);
+		OP_RTMSG("Killing at index %d", i);
 	}
 
 	// create a list of random numbers

@@ -5,6 +5,7 @@
 #include "./Human/include/Systems/FontSystem.h"
 #include "./Human/include/Systems/InputSystem.h"
 #include "./Human/include/Rendering/Sprite/SpriteSheet.h"
+#include "./Human/include/Systems/AudioSystem.h"
 #include "./Data/include/ContentManager.h"
 #include "./Core/include/Log.h"
 #include "./Human/include/Input/Myo.h"
@@ -46,6 +47,8 @@ OPmesh fontText;
 OPfont* font;
 OPtexture* fontTexture;
 OPfontManager* fontManager;
+OPaudioEmitter* sound;
+OPaudioPlayer player;
 
 void* garbage;
 
@@ -106,6 +109,13 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("Update.ops");
 	OPscript* script = (OPscript*)OPcmanGet("Update.ops");
 	OPscriptCompile(script);
+	
+	if(!OPAUD_CURR_PLAYER){
+		OPaudInit();
+		OPaudInitThread(11);
+		player = OPaudPlayerCreate((OPaudioSource*)OPcmanGet("impact.wav"), 10, 0); 
+		sound  = OPaudCreateEmitter((OPaudioSource*)OPcmanGet("impact.wav"), EMITTER_THREADED);
+	}
 
 	quadMesh = OPquadCreate();
 
@@ -146,6 +156,17 @@ int State0Update(OPtimer* time){
 
 	OPvec2 pos = OPgamePadLeftThumb(OPgamePad(GamePadIndex_One));
 
+	if(OPkeyboardWasPressed(OPKEY_SPACE)){
+		OPlog("Should play");
+		//OPaudSetEmitter(sound);
+
+		OPaudPlayerSet(&player);
+		OPaudPlayerVolume(0.3f);
+		OPaudPlayerPlay();
+		//OPaudPlay();
+		OPlog("Should have played");
+	}
+
 	if(OPgamePadIsDown(OPgamePad(GamePadIndex_One), GamePad_Button_BACK)){
 		OPlog("Should end");
 		OPend();
@@ -170,7 +191,7 @@ int State0Update(OPtimer* time){
 		"All of the text! Woot!",
 		pos.x,
 		pos.y
-		);
+	);
 
 	OPscriptRun("update");
 
