@@ -22,6 +22,8 @@ void* OPAUD_UPDATE(void* args){
 	// update forever
 	while(1){
 		for(OPint i = OPAUD_REG_EMITTERS.MaxIndex; i--;){
+			OPentHeapIsLiving((&OPAUD_REG_EMITTERS), i)
+
 			if(emitters[i].Source == NULL || emitters[i].State == Stopped) continue;
 			OPaudSafeUpdate(&emitters[i], OPaudProcess);
 		}
@@ -112,6 +114,7 @@ OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint flags){
 	if(flags & EMITTER_THREADED){
 		OPint index = -1;
 		OPentHeapActivate(&OPAUD_REG_EMITTERS, &index);
+		OPlog("Created index %d", index);
 		if(index >= 0){
 			((OPaudioEmitter*)OPAUD_REG_EMITTERS.Entities)[index] = emitter;
 			out = &((OPaudioEmitter*)OPAUD_REG_EMITTERS.Entities)[index]; 
@@ -161,7 +164,7 @@ OPaudioEmitter* OPaudGetEmitter(OPaudioSource* src, OPint flags){
 //-----------------------------------------------------------------------------
 void OPaudRecycleEmitter(OPaudioEmitter* emitter){
 	OPuint index = ((uintptr_t)emitter - (uintptr_t)OPAUD_REG_EMITTERS.Entities) / sizeof(OPaudioEmitter);
-	OPlog("Recycling emitter");
+	OPlog("Recycling emitter %d", index);
 	ASSERT(((OPint)index) >= 0, "OPaudRecycleEmitter() - calculated index was less than 0!"); 	
 	OPentHeapKill(&OPAUD_REG_EMITTERS, index);
 	OPlog("Recycling emitter done %d", index);
@@ -202,8 +205,12 @@ void OPaudSafePlay (OPaudioEmitter* emitter){
 	OPmutexLock(&emitter->Lock);
 	OPmutexLock(&OPAUD_CURR_MUTEX);
 
+	OPlog("About to play");
+
 	OPaudSetEmitter(emitter);
 	OPaudPlay();
+
+	OPlog("played!");
 
 	OPmutexUnlock(&OPAUD_CURR_MUTEX);
 	OPmutexUnlock(&emitter->Lock);

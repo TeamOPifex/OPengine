@@ -17,21 +17,21 @@ void OP_RTMSG(const OPchar* format, ...){
     vsnprintf(buf, sizeof(buf), format, args);
     va_end(args);
 
-	OPlogLn("\t%s", buf);
+	OPlog("\t%s", buf);
 
     return;
 }
 
 OPint OP_TEST(OPint (*testRoutine)(void*), const OPchar* name, void* args){
 	OPint result = 0;
-	OPlogLn("#%d %s - Running", OP_TEST_COUNT++, name);
+	OPlog("#%d %s - Running", OP_TEST_COUNT++, name);
 	result = testRoutine(args);
 
 	if(result){
-		OPlogLn("\t%s - \033[1;31mFAILED\033[0m with %d\n", name, result);
+		OPlog("\t%s - \033[1;31mFAILED\033[0m with %d\n", name, result);
 	}
 	else{
-		OPlogLn("\t%s - \033[0;32mPASSED\033[0m with %d\n", name, result);
+		OPlog("\t%s - \033[0;32mPASSED\033[0m with %d\n", name, result);
 	}
 
 	return result;
@@ -44,13 +44,13 @@ void OP_HEX_DUMP(void *addr, OPint len) {
 	ui8 desc[1024] = {0};
 
 
-    OPlogLn(OP_DUMP_D);
+    OPlog(OP_DUMP_D);
     sprintf(buff, "SIZE %d\n", (int)len);
     write(1, buff, strlen(buff));
 
     // Output description if given.
     if (desc != NULL)
-        OPlog ("%s:\n", desc);
+        OPlg("%s:\n", desc);
 
     // Process every byte in the data.
     for (i = 0; i < len; i++) {
@@ -59,14 +59,14 @@ void OP_HEX_DUMP(void *addr, OPint len) {
         if ((i % 16) == 0) {
             // Just don't print ASCII for the zeroth line.
             if (i != 0)
-                OPlog ("\t%s\n", buff);
+                OPlg("\t%s\n", buff);
 
             // Output the offset.
-            OPlog ("  %04x ", i);
+            OPlg("  %04x ", i);
         }
 
         // Now the hex code for the specific character.
-        OPlog (" %02x", pc[i]);
+        OPlg(" %02x", pc[i]);
 
         // And store a printable ASCII character for later.
         if ((pc[i] < 0x20) || (pc[i] > 0x7e))
@@ -75,7 +75,7 @@ void OP_HEX_DUMP(void *addr, OPint len) {
             buff[i % 16] = pc[i];
         buff[(i % 16) + 1] = '\0';
     }
-    OPlog("\n");
-    OPlogLn(OP_DUMP_U);
+    OPlg("\n");
+    OPlog(OP_DUMP_U);
 }
 #endif

@@ -21,16 +21,25 @@ OPaudioPlayer OPaudPlayerCreate(OPaudioSource* src, OPint sounds, OPint looping)
 
 	return player;
 }
-
+//-----------------------------------------------------------------------------
+void OPaudPlayerVolume(OPfloat gain){
+	OPmutexLock(&OPAUD_CURR_MUTEX);
+	for(OPint i = OPAUD_CURR_PLAYER->Count; i--;){
+		OPaudSetEmitter(OPAUD_CURR_PLAYER->Emitters[i]);
+		OPaudVolume(gain);
+	}
+	OPmutexUnlock(&OPAUD_CURR_MUTEX);
+}
+//-----------------------------------------------------------------------------
 void OPaudPlayerDestroy(OPaudioPlayer* player){
 	OPfree(player->Emitters);
 }
-
+//-----------------------------------------------------------------------------
 void OPaudPlayerPlay(){
 	OPaudSafePlay(OPAUD_CURR_PLAYER->Emitters[OPAUD_CURR_PLAYER->Current++]);
 	OPAUD_CURR_PLAYER->Current %= OPAUD_CURR_PLAYER->Count;
 }
-
+//-----------------------------------------------------------------------------
 void OPaudPlayerStop(){
 	for(OPint i = OPAUD_CURR_PLAYER->Count; i--;){
 		if((*OPAUD_CURR_PLAYER->Emitters[i]).State != Stopped){
@@ -38,7 +47,7 @@ void OPaudPlayerStop(){
 		}
 	}
 }
-
+//-----------------------------------------------------------------------------
 void OPaudPlayerPause(){
 	for(OPint i = OPAUD_CURR_PLAYER->Count; i--;){
 		if((*OPAUD_CURR_PLAYER->Emitters[i]).State != Paused){
@@ -46,7 +55,7 @@ void OPaudPlayerPause(){
 		}
 	}
 }
-
+//-----------------------------------------------------------------------------
 void OPaudPlayerUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 	for(OPint i = OPAUD_CURR_PLAYER->Count; i--;){
 		OPaudSafeUpdate(OPAUD_CURR_PLAYER->Emitters[i], Proc);
