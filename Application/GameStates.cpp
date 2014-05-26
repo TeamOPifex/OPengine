@@ -130,20 +130,7 @@ int State0Update(OPtimer* time){
 	if(time->Elapsed > 1000) return false;
 	t += 0.005f * time->Elapsed;
 	OPgamePadSystemUpdate();
-	OPmyoUpdate();
 	OPkeyboardUpdate();
-
-	if (OPmyoPose() == 2) {
-		backgroundState = 2;
-	}
-
-	if (OPmyoPose() == 3) {
-		backgroundState = 1;
-	}
-
-	if (OPmyoPose() == 4) {
-		backgroundState = 0;
-	}
 
 	if (backgroundState == 2) {
 		OPrenderClear(1.0f, 0.0f, 0.0f);

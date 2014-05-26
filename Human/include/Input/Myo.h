@@ -1,5 +1,5 @@
-#ifndef OPENGINE_HUMAN_INPUT_OCULUS
-#define OPENGINE_HUMAN_INPUT_OCULUS
+#ifndef OPENGINE_HUMAN_INPUT_MYO
+#define OPENGINE_HUMAN_INPUT_MYO
 
 #include "./Core/include/Types.h"
 #include "./Core/include/Timer.h"
