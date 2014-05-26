@@ -41,27 +41,10 @@
 #include "./Pipeline/include/DefaultLoaders.h"
 
 //GameManager* GM;
-OPaudioSource *Sound, *Sound1, *Sound2;
-OPaudioEmitter *Emitter;
-OPaudioPlayer player, player1;
 OPentHeap* ents;
 void* entData;
 
 OPfloat vol = 0.05f;
-
-void KeyDown(int key, int action){
-	OPlog("Pizza %d", key);
-
-	switch(key){
-			OPaudPlayerPlay();
-			break;
-		case 83:
-			OPaudSetPlayer(&player1);
-			OPaudPlayerPlay();
-			break;
-	}
-
-}
 
 #ifndef OPIFEX_ANDROID
 i32 width = 1280;

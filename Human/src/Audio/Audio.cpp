@@ -40,6 +40,7 @@ LPOVOPENCALLBACKS   fn_ov_open_callbacks = NULL;
 //  \____/|_|   \__,_|\__,_|\__,_|_|\___/  |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPint OPaudInit(){
 	OPAUD_CURR_MUTEX = OPmutexCreate();
+	OPlog("Initializing audio");
 
 // USE OGG VORBIS FOR DESKTOP PLATFORMS
 #if defined(OPIFEX_WINDOWS)
