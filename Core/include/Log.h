@@ -6,6 +6,7 @@
 extern "C" {
 #endif
 
+void OPlg(const char* message, ...);
 void OPlog(const char* message, ...);
 
 #ifdef __cplusplus

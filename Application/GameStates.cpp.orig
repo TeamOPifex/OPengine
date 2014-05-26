@@ -5,12 +5,14 @@
 #include "./Human/include/Systems/FontSystem.h"
 #include "./Human/include/Systems/InputSystem.h"
 #include "./Human/include/Rendering/Sprite/SpriteSheet.h"
+#include "./Human/include/Systems/AudioSystem.h"
 #include "./Data/include/ContentManager.h"
 #include "./Core/include/Log.h"
 #include "./Human/include/Input/Myo.h"
 #include "./Scripting/include/Scripting.h"
 #include "./Human/include/Utilities/LoaderOPS.h"
-#include "./Human/include/Rendering/Sprite/Sprite2D.h"
+
+#include "./Pipeline/include/Texture3D.h"
 
 OPfloat t = 0;
 
@@ -36,8 +38,8 @@ OPmeshPacked quad;
 OPmeshPacker packer;
 OPmesh unPackedQuad;
 OPmesh* plane;
-OPeffect tri, post;
-OPcam camera;
+OPeffect tri, post, OPss;
+OPcam* camera;
 OPtexture* tex, *spec, *norm;
 OPframeBuffer rt;
 OPint PackerCreated = 0;
@@ -47,7 +49,12 @@ OPmesh fontText;
 OPfont* font;
 OPtexture* fontTexture;
 OPfontManager* fontManager;
-OPsprite2D* sprite;
+<<<<<<< local
+OPtexture3D* tex3d;
+=======
+OPaudioEmitter* sound;
+OPaudioPlayer player;
+>>>>>>> other
 
 void* garbage;
 
@@ -61,9 +68,33 @@ OPgameState State1 = {
 	State1Enter,
 	State1Update,
 	State1Exit
-};
+}; 
+
+OPvec3 Camera_position = { 0.0f, 0.0f, 5.0f };
+OPvec3 Camera_target = { 0.0f, 0.0f, 0.0f };
+OPfloat Camera_width_adjust = 1.0f;
+OPfloat Camera_height_adjust = 1.0f;
+OPcam GetVersusCamera(){
+	OPrenderGetWidth();
+
+	OPfloat widthMod = OPrenderWidth / 1280.0f;
+	OPfloat heightMod = OPrenderHeight / 720.0f;
+
+	OPfloat w = 150 * widthMod * Camera_width_adjust;
+	OPfloat h = 75 * heightMod * Camera_height_adjust;
+
+	OPvec3 up = { 0.0f, 1.0f, 0.0f };
+
+	return OPcamOrtho(Camera_position, Camera_target, up, 1.0f, 1000.0f, -w, w, h, -h);
+}
 
 void State0Enter(OPgameState* last){
+	OPshaderAttribute attribs[] = {
+		{ "aPosition", GL_FLOAT, 3 },
+		{ "aUV", GL_FLOAT, 2 }
+	};
+	OPcmanLoad("tester.opss");
+
 
 	OPcmanLoad("impact.wav");
 	OPcmanLoad("boom.wav");
@@ -71,12 +102,8 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("TexturedSpecular.vert");
 	OPcmanLoad("TexturedSpecular.frag");
 	OPcmanLoad("TexturedScreen.vert");
-<<<<<<< local
-	//OPcmanLoad("OPspriteSheet.frag");
-=======
 	OPcmanLoad("OPspriteSheet.frag");
 	OPcmanLoad("OPspriteSheet.vert");
->>>>>>> other
 	OPcmanLoad("SpriteSheet.frag");
 	OPcmanLoad("Font.frag");
 	OPcmanLoad("Textured.frag");
@@ -85,10 +112,7 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("steamPlaneSpec.png");
 	OPcmanLoad("noneNorm.png");
 	OPcmanLoad("stencil.opf");
-<<<<<<< local
-	OPcmanLoad("test.opss");
-=======
-	OPcmanLoad("MainMenu.opss");
+	OPcmanLoad("gripe.opss");
 
 	OPss = OPrenderCreateEffect(
 		*(OPshader*)OPcmanGet("OPspriteSheet.vert"),
@@ -97,13 +121,13 @@ void State0Enter(OPgameState* last){
 		2,
 		"Sprite sheet effect"
 	);
->>>>>>> other
 
 	// Required
 	
-	OPchar** text = (OPchar**)OPalloc(sizeof(i8) * 1);
+	OPchar** text = (OPchar**)OPalloc(sizeof(i8)* 2);
 	text[0] = "All of the text! Woot!";
-	fontManager = OPfontManagerSetup("stencil.opf", text, 1);
+	text[1] = "Tested"; 
+	fontManager = OPfontManagerSetup("stencil.opf", text, 2);
 
 	// Optional
 	OPfontManagerSetRGBA(fontManager, 0.0f, 0.0f, 1.0f, 1.0f);
@@ -112,19 +136,38 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("Update.ops");
 	OPscript* script = (OPscript*)OPcmanGet("Update.ops");
 	OPscriptCompile(script);
+	
+	if(!OPAUD_CURR_PLAYER){
+		OPaudInit();
+		OPaudInitThread(11);
+		player = OPaudPlayerCreate((OPaudioSource*)OPcmanGet("impact.wav"), 10, 0); 
+		sound  = OPaudCreateEmitter((OPaudioSource*)OPcmanGet("impact.wav"), EMITTER_THREADED);
+	}
 
-	quadMesh = OPquadCreate(); 
+	quadMesh = OPquadCreate();
 
-	OPsprite2DInit(NULL);
-	sprite = OPsprite2DCreate((OPsprite*)OPcmanGet("Small"));
+	tex3d = OPtexture3DCreate((OPtexture*)OPcmanGet("steamPlaneSkin.png"), NULL);
+
+	camera = (OPcam*)OPalloc(sizeof(OPcam));
+	*camera = GetVersusCamera();
+
+	tex3d->Scale = OPvec3One * 10;
 
 	OPlog("Game State 0 Entered");
 }
 
 ui32 backgroundState = 0;
+OPint swap_state = 0;
+OPint frame = 0;
 
+<<<<<<< local
+int State0Update(OPtimer* time) {
+	OPrenderClear(0.0, 0.0, 0.0);
+	OPtexture3DRender(tex3d, camera );
+=======
 int State0Update(OPtimer* time){
-
+	OPsprite* bg = (OPsprite*)OPcmanGet("walk");
+	
 	if(time->Elapsed > 1000) return false;
 	t += 0.005f * time->Elapsed;
 	OPgamePadSystemUpdate();
@@ -154,12 +197,21 @@ int State0Update(OPtimer* time){
 
 	OPvec2 pos = OPgamePadLeftThumb(OPgamePad(GamePadIndex_One));
 
+	if(OPkeyboardWasPressed(OPKEY_SPACE)){
+		OPlog("Should play");
+		//OPaudSetEmitter(sound);
+
+		OPaudPlayerSet(&player);
+		OPaudPlayerVolume(0.3f);
+		OPaudPlayerPlay();
+		//OPaudPlay();
+		OPlog("Should have played");
+	}
+
 	if(OPgamePadIsDown(OPgamePad(GamePadIndex_One), GamePad_Button_BACK)){
 		OPlog("Should end");
 		OPend();
 	}
-<<<<<<< local
-=======
 	OPmat4 world;
 	OPmat4identity(&world);
 	OPrenderDepth(0);
@@ -174,40 +226,22 @@ int State0Update(OPtimer* time){
 	OPrenderParamVec2("uOffset", 1, &bg->Frames[0].Offset);
 	OPrenderParamVec2("uSize", 1, &bg->Frames[0].Size);
 	OPrenderMesh();
->>>>>>> other
 
-	OPsprite2DBind(sprite);
-
-	sprite->Position = pos;
-	OPsprite2DRotate(OPgamePadRightThumb(OPgamePad(GamePadIndex_One)).x / 10.0f);
-	sprite->Scale.x = OPrenderGetAspectRatio();
-	sprite->Scale.y = 1.0f;
-	sprite->Scale *= OPgamePadLeftTrigger(OPgamePad(GamePadIndex_One));
-
-	OPsprite2DRender();
-
-
-	// Pre-Built Text
+	// Required
 	OPrenderTextXY(
 		"All of the text! Woot!",
 		pos.x,
 		pos.y
-		);
+	);
 
-	// Non-Built Text
-	OPrenderTextXY(
-		"Test",
-		pos.x,
-		pos.y + 0.25f
-		);
+	OPscriptRun("update");
 
-	//OPscriptRun("update");
-
+>>>>>>> other
 	OPrenderPresent();
 	return false;
 }
 
-void State0Exit(OPgameState* next){
+void State0Exit(OPgameState* next) {
 	OPcmanDelete("impact.wav");
 	OPcmanDelete("boom.wav");
 	OPcmanDelete("background.ogg");
@@ -254,73 +288,6 @@ void State1Enter(OPgameState* last){
 
 int State1Update(OPtimer* time){
 	if(time->Elapsed > 1000) return false;
-
-	t += 0.005f * time->Elapsed;
-	
-	OPmat4 world, view, proj;
-	//world = OPmat4();
-	//view = OPmat4();
-	//proj = OPmat4();
-
-	OPmat4buildRotX(&world, t);
-	OPcamGetView(camera, &view);
-	OPcamGetProj(camera, &proj);
-
-	OPmeshPackerBind(&packer);
-	OPrenderBindMesh(plane);
-	OPrenderBindEffect(&tri);
-
-	OPtextureBind(tex);
-	OPrenderParami("uColorTexture", tex->Handle);
-	OPtextureBind(spec);
-	OPrenderParami("uSpecularTexture", spec->Handle);
-	OPtextureBind(norm);
-	OPrenderParami("uNormalTexture", norm->Handle);
-	OPrenderParamMat4v("uWorld", 1, &world);
-	OPrenderParamMat4v("uProj", 1, &proj);
-	OPrenderParamMat4v("uView", 1, &view);
-
-	//OPframeBufferBind(&rt);
-	
-	OPgamePadController* _gamePad = OPgamePad(GamePadIndex_One);
-	OPgamePadUpdate(_gamePad);
-	
-	if(OPgamePadIsConnected(_gamePad)) {
-		if(OPgamePadIsDown(_gamePad, GamePad_Button_A) || OPgamePadIsDown(_gamePad, GamePad_Button_B) || OPgamePadIsDown(_gamePad, GamePad_Button_X) || OPgamePadIsDown(_gamePad, GamePad_Button_Y)) {
-			OPrenderClear( 0.0f, 0.0f, 1.0f);
-		} else {
-			OPrenderClear( 0.0f, 0.0f, 0.0f);
-		}
-	} else {
-		OPrenderClear(1.0f, 1.0f, 1.0f);
-	}
-
-	OPrenderMesh();
-	//OPframeBufferUnbind();
-	//
-	//	OPrenderClear(1.0f, 1.0f, 1.0f);
-	//OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
-
-	//OPmeshPackerBind(&packer);
-	//OPrenderBindEffect(&post);
-	//OPmat4identity(&world);
-	//OPrenderParamMat4v("uWorld", 1, &world);
-
-	//OPtextureBind(&rt.Texture);
-	//OPrenderParami("uTexture", rt.Texture.Handle);
-
-	//OPrenderMeshPacked(&quad);
-
-
-	if(t > 6) {
-		//exit(0);
-		OPgameStateChange(&State0);
-	}
-
-
-	if(OPgamePadIsConnected(_gamePad) && OPgamePadWasPressed(_gamePad, GamePad_Button_RIGHT_SHOULDER)){
-		return true;
-	}
 
 	OPrenderPresent();
 

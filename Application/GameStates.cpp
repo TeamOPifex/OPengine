@@ -5,13 +5,12 @@
 #include "./Human/include/Systems/FontSystem.h"
 #include "./Human/include/Systems/InputSystem.h"
 #include "./Human/include/Rendering/Sprite/SpriteSheet.h"
+#include "./Human/include/Systems/AudioSystem.h"
 #include "./Data/include/ContentManager.h"
 #include "./Core/include/Log.h"
 #include "./Human/include/Input/Myo.h"
 #include "./Scripting/include/Scripting.h"
 #include "./Human/include/Utilities/LoaderOPS.h"
-
-#include "./Pipeline/include/Texture3D.h"
 
 OPfloat t = 0;
 
@@ -38,7 +37,7 @@ OPmeshPacker packer;
 OPmesh unPackedQuad;
 OPmesh* plane;
 OPeffect tri, post, OPss;
-OPcam* camera;
+OPcam camera;
 OPtexture* tex, *spec, *norm;
 OPframeBuffer rt;
 OPint PackerCreated = 0;
@@ -48,7 +47,8 @@ OPmesh fontText;
 OPfont* font;
 OPtexture* fontTexture;
 OPfontManager* fontManager;
-OPtexture3D* tex3d;
+OPaudioEmitter* sound;
+OPaudioPlayer player;
 
 void* garbage;
 
@@ -62,33 +62,13 @@ OPgameState State1 = {
 	State1Enter,
 	State1Update,
 	State1Exit
-}; 
-
-OPvec3 Camera_position = { 0.0f, 0.0f, 5.0f };
-OPvec3 Camera_target = { 0.0f, 0.0f, 0.0f };
-OPfloat Camera_width_adjust = 1.0f;
-OPfloat Camera_height_adjust = 1.0f;
-OPcam GetVersusCamera(){
-	OPrenderGetWidth();
-
-	OPfloat widthMod = OPrenderWidth / 1280.0f;
-	OPfloat heightMod = OPrenderHeight / 720.0f;
-
-	OPfloat w = 150 * widthMod * Camera_width_adjust;
-	OPfloat h = 75 * heightMod * Camera_height_adjust;
-
-	OPvec3 up = { 0.0f, 1.0f, 0.0f };
-
-	return OPcamOrtho(Camera_position, Camera_target, up, 1.0f, 1000.0f, -w, w, h, -h);
-}
+};
 
 void State0Enter(OPgameState* last){
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
 		{ "aUV", GL_FLOAT, 2 }
 	};
-	OPcmanLoad("tester.opss");
-
 
 	OPcmanLoad("impact.wav");
 	OPcmanLoad("boom.wav");
@@ -118,10 +98,9 @@ void State0Enter(OPgameState* last){
 
 	// Required
 	
-	OPchar** text = (OPchar**)OPalloc(sizeof(i8)* 2);
+	OPchar** text = (OPchar**)OPalloc(sizeof(i8) * 1);
 	text[0] = "All of the text! Woot!";
-	text[1] = "Tested"; 
-	fontManager = OPfontManagerSetup("stencil.opf", text, 2);
+	fontManager = OPfontManagerSetup("stencil.opf", text, 1);
 
 	// Optional
 	OPfontManagerSetRGBA(fontManager, 0.0f, 0.0f, 1.0f, 1.0f);
@@ -130,31 +109,97 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("Update.ops");
 	OPscript* script = (OPscript*)OPcmanGet("Update.ops");
 	OPscriptCompile(script);
+	
+	if(!OPAUD_CURR_PLAYER){
+		OPaudInit();
+		OPaudInitThread(11);
+		player = OPaudPlayerCreate((OPaudioSource*)OPcmanGet("impact.wav"), 10, 0); 
+		sound  = OPaudCreateEmitter((OPaudioSource*)OPcmanGet("impact.wav"), EMITTER_THREADED);
+	}
 
 	quadMesh = OPquadCreate();
-
-	tex3d = OPtexture3DCreate((OPtexture*)OPcmanGet("steamPlaneSkin.png"), NULL);
-
-	camera = (OPcam*)OPalloc(sizeof(OPcam));
-	*camera = GetVersusCamera();
-
-	tex3d->Scale = OPvec3One * 10;
 
 	OPlog("Game State 0 Entered");
 }
 
 ui32 backgroundState = 0;
-OPint swap_state = 0;
-OPint frame = 0;
 
-int State0Update(OPtimer* time) {
-	OPrenderClear(0.0, 0.0, 0.0);
-	OPtexture3DRender(tex3d, camera );
+int State0Update(OPtimer* time){
+	OPsprite* bg = (OPsprite*)OPcmanGet("walk");
+	
+	if(time->Elapsed > 1000) return false;
+	t += 0.005f * time->Elapsed;
+	OPgamePadSystemUpdate();
+	OPmyoUpdate();
+	OPkeyboardUpdate();
+
+	if (OPmyoPose() == 2) {
+		backgroundState = 2;
+	}
+
+	if (OPmyoPose() == 3) {
+		backgroundState = 1;
+	}
+
+	if (OPmyoPose() == 4) {
+		backgroundState = 0;
+	}
+
+	if (backgroundState == 2) {
+		OPrenderClear(1.0f, 0.0f, 0.0f);
+	}
+	else if (backgroundState == 1) {
+		OPrenderClear(0.0f, 1.0f, 0.0f);
+	} else {
+		OPrenderClear(1.0f, 0.0f, 0.0f);
+	}
+
+	OPvec2 pos = OPgamePadLeftThumb(OPgamePad(GamePadIndex_One));
+
+	if(OPkeyboardWasPressed(OPKEY_SPACE)){
+		OPlog("Should play");
+		//OPaudSetEmitter(sound);
+
+		OPaudPlayerSet(&player);
+		OPaudPlayerVolume(0.3f);
+		OPaudPlayerPlay();
+		//OPaudPlay();
+		OPlog("Should have played");
+	}
+
+	if(OPgamePadIsDown(OPgamePad(GamePadIndex_One), GamePad_Button_BACK)){
+		OPlog("Should end");
+		OPend();
+	}
+	OPmat4 world;
+	OPmat4identity(&world);
+	OPrenderDepth(0);
+	OPrenderBindMesh(&quadMesh);
+	OPrenderBindEffect(&OPss);
+	OPtextureClearActive();
+	ui32 textureHandle = OPtextureBind(bg->Sheet);
+	OPtexturePixelate();
+	OPrenderParamMat4v("uWorld", 1, &world);
+	OPrenderParami("uColorTexture", textureHandle);
+	//OPlog("X: %f, Y: %f", bg->Frames[0].Offset.x, bg->Frames[0].Offset.y);
+	OPrenderParamVec2("uOffset", 1, &bg->Frames[0].Offset);
+	OPrenderParamVec2("uSize", 1, &bg->Frames[0].Size);
+	OPrenderMesh();
+
+	// Required
+	OPrenderTextXY(
+		"All of the text! Woot!",
+		pos.x,
+		pos.y
+	);
+
+	OPscriptRun("update");
+
 	OPrenderPresent();
 	return false;
 }
 
-void State0Exit(OPgameState* next) {
+void State0Exit(OPgameState* next){
 	OPcmanDelete("impact.wav");
 	OPcmanDelete("boom.wav");
 	OPcmanDelete("background.ogg");
@@ -201,6 +246,73 @@ void State1Enter(OPgameState* last){
 
 int State1Update(OPtimer* time){
 	if(time->Elapsed > 1000) return false;
+
+	t += 0.005f * time->Elapsed;
+	
+	OPmat4 world, view, proj;
+	//world = OPmat4();
+	//view = OPmat4();
+	//proj = OPmat4();
+
+	OPmat4buildRotX(&world, t);
+	OPcamGetView(camera, &view);
+	OPcamGetProj(camera, &proj);
+
+	OPmeshPackerBind(&packer);
+	OPrenderBindMesh(plane);
+	OPrenderBindEffect(&tri);
+
+	OPtextureBind(tex);
+	OPrenderParami("uColorTexture", tex->Handle);
+	OPtextureBind(spec);
+	OPrenderParami("uSpecularTexture", spec->Handle);
+	OPtextureBind(norm);
+	OPrenderParami("uNormalTexture", norm->Handle);
+	OPrenderParamMat4v("uWorld", 1, &world);
+	OPrenderParamMat4v("uProj", 1, &proj);
+	OPrenderParamMat4v("uView", 1, &view);
+
+	//OPframeBufferBind(&rt);
+	
+	OPgamePadController* _gamePad = OPgamePad(GamePadIndex_One);
+	OPgamePadUpdate(_gamePad);
+	
+	if(OPgamePadIsConnected(_gamePad)) {
+		if(OPgamePadIsDown(_gamePad, GamePad_Button_A) || OPgamePadIsDown(_gamePad, GamePad_Button_B) || OPgamePadIsDown(_gamePad, GamePad_Button_X) || OPgamePadIsDown(_gamePad, GamePad_Button_Y)) {
+			OPrenderClear( 0.0f, 0.0f, 1.0f);
+		} else {
+			OPrenderClear( 0.0f, 0.0f, 0.0f);
+		}
+	} else {
+		OPrenderClear(1.0f, 1.0f, 1.0f);
+	}
+
+	OPrenderMesh();
+	//OPframeBufferUnbind();
+	//
+	//	OPrenderClear(1.0f, 1.0f, 1.0f);
+	//OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
+
+	//OPmeshPackerBind(&packer);
+	//OPrenderBindEffect(&post);
+	//OPmat4identity(&world);
+	//OPrenderParamMat4v("uWorld", 1, &world);
+
+	//OPtextureBind(&rt.Texture);
+	//OPrenderParami("uTexture", rt.Texture.Handle);
+
+	//OPrenderMeshPacked(&quad);
+
+
+	if(t > 6) {
+		//exit(0);
+		OPgameStateChange(&State0);
+	}
+
+
+	if(OPgamePadIsConnected(_gamePad) && OPgamePadWasPressed(_gamePad, GamePad_Button_RIGHT_SHOULDER)){
+		return true;
+	}
 
 	OPrenderPresent();
 
