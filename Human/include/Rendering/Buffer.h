@@ -53,6 +53,7 @@ extern OPrenderBuffer* OPRENDER_CURR_IB;
 OPrenderBuffer OPrenderGenBuffer(ui32 type);
 void OPrenderDelBuffer(OPrenderBuffer* buff);
 void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, ui32 count, const void* data);
+void OPrenderSetBufferSubData(OPrenderBuffer* buff, ui32 elementSize, ui32 offsetCount, ui32 count, const void* data);
 void OPrenderBindBuffer(OPrenderBuffer* buffer);
 
 void OPrenderDrawBufferIndexed(ui32 offset);
