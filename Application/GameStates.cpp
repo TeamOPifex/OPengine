@@ -11,6 +11,7 @@
 #include "./Human/include/Input/Myo.h"
 #include "./Scripting/include/Scripting.h"
 #include "./Human/include/Utilities/LoaderOPS.h"
+#include "./Pipeline/include/Character2D.h"
 
 OPfloat t = 0;
 
@@ -49,6 +50,7 @@ OPtexture* fontTexture;
 OPfontManager* fontManager;
 OPaudioEmitter* sound;
 OPaudioPlayer player;
+OPcharacter2D* guy;
 
 void* garbage;
 
@@ -86,7 +88,13 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("steamPlaneSpec.png");
 	OPcmanLoad("noneNorm.png");
 	OPcmanLoad("stencil.opf");
-	OPcmanLoad("gripe.opss");
+	OPcmanLoad("pilot.opss");
+
+	OPcharacter2DInit(NULL);
+	OPsprite** sheets = (OPsprite**)OPalloc(sizeof(OPsprite*)* 1);
+	sheets[0] = (OPsprite*)OPcmanGet("run");
+	guy = OPcharacter2DCreate(sheets, NULL);
+	guy->FrameRate = 12;
 
 	OPss = OPrenderCreateEffect(
 		*(OPshader*)OPcmanGet("OPspriteSheet.vert"),
@@ -125,10 +133,10 @@ void State0Enter(OPgameState* last){
 ui32 backgroundState = 0;
 
 int State0Update(OPtimer* time){
-	OPsprite* bg = (OPsprite*)OPcmanGet("walk");
+	OPsprite* bg = (OPsprite*)OPcmanGet("run");
 	
 	if(time->Elapsed > 1000) return false;
-	t += 0.005f * time->Elapsed;
+	t += 0.0075f * time->Elapsed;
 	OPgamePadSystemUpdate();
 	OPkeyboardUpdate();
 
@@ -138,7 +146,7 @@ int State0Update(OPtimer* time){
 	else if (backgroundState == 1) {
 		OPrenderClear(0.0f, 1.0f, 0.0f);
 	} else {
-		OPrenderClear(1.0f, 0.0f, 0.0f);
+		OPrenderClear(0.0f, 1.0f, 0.0f);
 	}
 
 	OPvec2 pos = OPgamePadLeftThumb(OPgamePad(GamePadIndex_One));
@@ -164,14 +172,20 @@ int State0Update(OPtimer* time){
 	OPrenderBindMesh(&quadMesh);
 	OPrenderBindEffect(&OPss);
 	OPtextureClearActive();
-	ui32 textureHandle = OPtextureBind(bg->Sheet);
-	OPtexturePixelate();
-	OPrenderParamMat4v("uWorld", 1, &world);
-	OPrenderParami("uColorTexture", textureHandle);
-	//OPlog("X: %f, Y: %f", bg->Frames[0].Offset.x, bg->Frames[0].Offset.y);
-	OPrenderParamVec2("uOffset", 1, &bg->Frames[0].Offset);
-	OPrenderParamVec2("uSize", 1, &bg->Frames[0].Size);
-	OPrenderMesh();
+
+
+	OPcharacter2DUpdate(guy, time);
+	OPcharacter2DRender(guy);
+
+	// ui32 textureHandle = OPtextureBind(bg->Sheet);
+	// OPint i = (((OPint)(t * 1.25f)) % bg->FrameCount);
+	// OPtexturePixelate();
+	// OPrenderParamMat4v("uWorld", 1, &world);
+	// OPrenderParami("uColorTexture", textureHandle);
+	// OPrenderParamVec2("uOffset", 1, &bg->Frames[i].Offset);
+	// OPrenderParamVec2("uSize", 1, &bg->Frames[i].Size);
+
+	// OPrenderMesh();
 
 	// Required
 	OPrenderTextXY(

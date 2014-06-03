@@ -1,3 +1,4 @@
+/*
 #include "./include/Network.h"
 #include "./Core/include/Log.h"
 #include "./Core/include/DynamicMemory.h"
@@ -263,4 +264,4 @@ i32 OPnetworkShutdown(OPnetwork* network){
 
 void OPnetworkDestroy(OPnetwork* network) {
 	OPfree(network);
-}
+}*/
