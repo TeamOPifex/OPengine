@@ -1,4 +1,4 @@
-#include "./include/SimpleProtocol.h"
+/*#include "./include/SimpleProtocol.h"
 #include "./Core/include/DynamicMemory.h"
 #include "./Core/include/Log.h"
 
@@ -52,4 +52,4 @@ i32 OPnetworkProtocolSimpleSend(OPnetworkProtocolSimple* protocol, OPtimer* time
 void OPnetworkProtocolSimpleDestroy(OPnetworkProtocolSimple* protocol) {
 	OPnetworkDestroy(protocol->Network);
 	OPfree(protocol);
-}
+}*/
