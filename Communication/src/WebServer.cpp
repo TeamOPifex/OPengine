@@ -47,7 +47,7 @@ static int send_reply(struct mg_connection *conn, OPWebServer* server) {
 
 		if (OPhashMapExists(server->WebSocketKeys, key)) {
 			void(*handler)(OPstream*);
-			OPhashMapGet(server->WebSocketKeys, key, (void**)handler);
+			OPhashMapGet(server->WebSocketKeys, key, (void**)&handler);
 			handler(str);
 			mg_websocket_write(conn, 2, conn->content, conn->content_len);
 		}
@@ -125,7 +125,7 @@ OPWebServer* OPwebServerCreate(OPchar* port) {
 }
 
 void OPwebServerSocket(OPWebServer* server, i8* key, void(*handler)(OPstream*)) {
-	OPhashMapPut(server->WebSocketKeys, key, (void*)&handler);
+	OPhashMapPut(server->WebSocketKeys, key, (void*)handler);
 }
 
 void OPwebServerUpdate(OPWebServer* server) {
