@@ -86,9 +86,15 @@ static int send_reply(struct mg_connection *conn, OPWebServer* server) {
 			OPfree(filepath);
 
 			if (OPmemcmp(filepath + size - 3, ".js", 3)) {
-				mg_send_header(conn, "Content-Type", "text/javascript");
+				mg_send_header(conn, "Content-Type", "javascript/javascript");
 			}
-			else {
+			else if (OPmemcmp(filepath + size - 4, ".png", 4)) {
+				mg_send_header(conn, "Content-Type", "image/png");
+			}
+			else if(OPmemcmp(filepath + size - 4, ".css", 3)) {
+				mg_send_header(conn, "Content-Type", "text/css");
+			}
+			else  {
 				mg_send_header(conn, "Content-Type", "text/html");
 			}
 
