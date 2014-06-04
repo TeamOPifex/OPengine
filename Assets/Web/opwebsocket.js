@@ -49,8 +49,9 @@ OPWebSocket.prototype = {
 	},
 	
 	message: function( e ) {
+		var self = this;
 		var reader = new BlobReader( e.data , function() {
-			this.OnMessage && this.OnMessage( reader );
+			self.OnMessage && self.OnMessage( reader );
 		});
 	},
 	
