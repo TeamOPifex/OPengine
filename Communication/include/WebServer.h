@@ -17,13 +17,18 @@ typedef struct {
 } OPWebServer;
 
 typedef struct {
+	void(*handler)(OPstream*, void*);
+	void* param;
+} OPWebServerHandlerContainer;
+
+typedef struct {
 	ui32 messageCount;
 	OPstream** messages;
 } OPWebServerMessagesContainer;
 
 OPWebServer* OPwebServerCreate(OPchar* port);
 void OPwebServerUpdate(OPWebServer* server);
-void OPwebServerSocket(OPWebServer* server, i8* key, void(*handler)(OPstream*));
+void OPwebServerSocket(OPWebServer* server, i8* key, void(*handler)(OPstream*, void*), void* param);
 void OPwebServerQueue(OPWebServer* server, i8* key, i8* data, ui32 datalen);
 void OPwebServerDestroy(OPWebServer* server);
 

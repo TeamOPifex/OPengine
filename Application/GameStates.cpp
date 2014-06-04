@@ -66,32 +66,26 @@ OPgameState State1 = {
 	State1Exit
 };
 
-f32 r = 0, g = 0, b = 0;
+OPvec3 color = OPvec3Zero;
 f32 fontPosX = 0, fontPosY = 0;
 
-void ColorHandler(OPstream* str) {
+void ColorHandler(OPstream* str, void* param) {
+	OPvec3* c = (OPvec3*)param;
 	OPvec3 t = OPvec3str(str);
-	r = t.x;
-	g = t.y;
-	b = t.z;
+	c->x = t.x;
+	c->y = t.y;
+	c->z = t.z;
 }
-void FontHandler(OPstream* str) {
+
+void FontHandler(OPstream* str, void* param) {
 	OPvec2 t = OPvec2str(str);
 	fontPosX = t.x;
 	fontPosY = t.y;
 }
 
-void ColorHandlerR(OPstream* str) {
-	OPlog("Hit the color handler!");
-	r = OPreadi32(str);
-}
-void ColorHandlerG(OPstream* str) {
-	OPlog("Hit the color handler!");
-	g = OPreadi32(str);
-}
-void ColorHandlerB(OPstream* str) {
-	OPlog("Hit the color handler!");
-	b = OPreadi32(str);
+void ColorSingleHandler(OPstream* str, void* param) {
+	f32* p = (f32*)param;
+	*p = OPreadf32(str);
 }
 
 void State0Enter(OPgameState* last){
@@ -118,11 +112,8 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("stencil.opf");
 	OPcmanLoad("gripe.opss");
 
-	OPwebServerSocket(server, "color", ColorHandler);
-	OPwebServerSocket(server, "font", FontHandler);
-	OPwebServerSocket(server, "red", ColorHandlerR);
-	OPwebServerSocket(server, "green", ColorHandlerG);
-	OPwebServerSocket(server, "blue", ColorHandlerB);
+	OPwebServerSocket(server, "color", ColorHandler, &color);
+	OPwebServerSocket(server, "font", FontHandler, NULL);
 
 	OPss = OPrenderCreateEffect(
 		*(OPshader*)OPcmanGet("OPspriteSheet.vert"),
@@ -174,7 +165,7 @@ int State0Update(OPtimer* time){
 	else if (backgroundState == 1) {
 		OPrenderClear(0.0f, 1.0f, 0.0f);
 	} else {
-		OPrenderClear(r, g, b);
+		OPrenderClear(color.x, color.y, color.z);
 	}
 
 	OPvec2 pos = OPgamePadLeftThumb(OPgamePad(GamePadIndex_One));
