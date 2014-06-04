@@ -11,6 +11,7 @@
 #include "./Human/include/Input/Myo.h"
 #include "./Scripting/include/Scripting.h"
 #include "./Human/include/Utilities/LoaderOPS.h"
+#include "./Math/include/Vector2.h"
 #include "GameWebServer.h"
 
 OPfloat t = 0;
@@ -66,12 +67,18 @@ OPgameState State1 = {
 };
 
 f32 r = 0, g = 0, b = 0;
+f32 fontPosX = 0, fontPosY = 0;
 
 void ColorHandler(OPstream* str) {
 	OPvec3 t = OPvec3str(str);
 	r = t.x;
 	g = t.y;
 	b = t.z;
+}
+void FontHandler(OPstream* str) {
+	OPvec2 t = OPvec2str(str);
+	fontPosX = t.x;
+	fontPosY = t.y;
 }
 
 void ColorHandlerR(OPstream* str) {
@@ -112,6 +119,7 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("gripe.opss");
 
 	OPwebServerSocket(server, "color", ColorHandler);
+	OPwebServerSocket(server, "font", FontHandler);
 	OPwebServerSocket(server, "red", ColorHandlerR);
 	OPwebServerSocket(server, "green", ColorHandlerG);
 	OPwebServerSocket(server, "blue", ColorHandlerB);
@@ -204,8 +212,8 @@ int State0Update(OPtimer* time){
 	// Required
 	OPrenderTextXY(
 		"All of the text! Woot!",
-		pos.x,
-		pos.y
+		pos.x + fontPosX,
+		pos.y + fontPosY
 	);
 
 	OPscriptRun("update");

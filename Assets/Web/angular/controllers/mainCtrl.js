@@ -19,4 +19,17 @@ angular.module('opengine')
         $scope.$watch('red', SendColor);
         $scope.$watch('green', SendColor);
         $scope.$watch('blue', SendColor);
+
+
+
+        function SendFont() {
+            var builder = new BlobBuilder('font');
+            builder.vec2($scope.fontx, $scope.fonty);
+            $scope.websocket.Send(builder);
+        };
+
+        $scope.fontx = 0;
+        $scope.fonty = 0;
+        $scope.$watch('fontx', SendFont);
+        $scope.$watch('fonty', SendFont);
     }]);

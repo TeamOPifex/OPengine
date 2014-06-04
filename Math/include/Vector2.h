@@ -3,6 +3,8 @@
 #include "./Core/include/Types.h"
 #include "./Core/include/MathHelpers.h"
 #include "./Core/include/DynamicMemory.h"
+#include "./Data/include/File.h"
+#include "./Data/include/Stream.h"
 
 struct OPvec2;
 inline OPfloat* OPvec2index(OPvec2* v, int idx);
@@ -251,5 +253,17 @@ inline OPfloat OPvec2valDist(OPvec2* a, OPvec2* b) {
 	OPfloat tmp;
 	OPvec2dist(&tmp, a, b);
 	return tmp;
+}
+inline OPvec2 OPvec2str(OPstream* str) {
+	OPvec2 temp = {
+		OPreadf32(str),
+		OPreadf32(str)
+	};
+	return temp;
+}
+
+inline void OPvec2write(OPvec2* v, OPstream* str) {
+	OPwrite(str, &v->x, sizeof(f32));
+	OPwrite(str, &v->y, sizeof(f32));
 }
 #endif
