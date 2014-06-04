@@ -11,6 +11,7 @@
 #include "./Human/include/Input/Myo.h"
 #include "./Scripting/include/Scripting.h"
 #include "./Human/include/Utilities/LoaderOPS.h"
+#include "GameWebServer.h"
 
 OPfloat t = 0;
 
@@ -64,6 +65,21 @@ OPgameState State1 = {
 	State1Exit
 };
 
+i32 r = 0, g = 0, b = 0;
+
+void ColorHandlerR(OPstream* str) {
+	OPlog("Hit the color handler!");
+	r = OPreadi32(str);
+}
+void ColorHandlerG(OPstream* str) {
+	OPlog("Hit the color handler!");
+	g = OPreadi32(str);
+}
+void ColorHandlerB(OPstream* str) {
+	OPlog("Hit the color handler!");
+	b = OPreadi32(str);
+}
+
 void State0Enter(OPgameState* last){
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
@@ -87,6 +103,10 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("noneNorm.png");
 	OPcmanLoad("stencil.opf");
 	OPcmanLoad("gripe.opss");
+
+	OPwebServerSocket(server, "red", ColorHandlerR);
+	OPwebServerSocket(server, "green", ColorHandlerG);
+	OPwebServerSocket(server, "blue", ColorHandlerB);
 
 	OPss = OPrenderCreateEffect(
 		*(OPshader*)OPcmanGet("OPspriteSheet.vert"),
@@ -138,7 +158,7 @@ int State0Update(OPtimer* time){
 	else if (backgroundState == 1) {
 		OPrenderClear(0.0f, 1.0f, 0.0f);
 	} else {
-		OPrenderClear(1.0f, 0.0f, 0.0f);
+		OPrenderClear(r / 255.0f, g / 255.0, b / 255.0);
 	}
 
 	OPvec2 pos = OPgamePadLeftThumb(OPgamePad(GamePadIndex_One));

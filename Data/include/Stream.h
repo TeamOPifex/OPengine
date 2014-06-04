@@ -11,6 +11,7 @@
 
 typedef struct{
 	OPuint Length;   // bytes in this stream
+	OPuint Size;
 	OPuint _pointer; // current location to write to
 	ui8* Data;
 } OPstream;

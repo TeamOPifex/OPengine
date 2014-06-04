@@ -40,7 +40,10 @@
 #include "./Scripting/include/Scripting.h"
 #include "./Pipeline/include/DefaultLoaders.h"
 
-//GameManager* GM;
+#include "GameWebServer.h"
+
+OPWebServer* server = NULL;
+
 OPentHeap* ents;
 void* entData;
 
@@ -51,18 +54,20 @@ i32 width = 1280;
 i32 height = 720;
 #endif
 
+void MsgHandler(OPstream* str) {
+	OPlog("Hit the handler!");
+	OPwebServerQueue(server, "queued", "tested", 6);
+}
+
 // Initialize
 void Init(){
 	OPcmanInit(OP_DEFAULT_LOADERS, 9);
 
-
-	//OPcmanLoad("Update.ops");
-	//OPscript* script = (OPscript*)OPcmanGet("Update.ops");
-	//OPscriptCompile(script);
-	//OPscriptRun("update");
-
 	OPaudInit();
 	OPaudInitThread(10);
+
+	server = OPwebServerCreate("8080");
+	OPwebServerSocket(server, "test", MsgHandler);
 
 #ifndef OPIFEX_ANDROID
 	OPrenderInit(width, height, false);
@@ -72,97 +77,10 @@ void Init(){
 
 	OPgameStateChange(&State0);
 
-#ifndef OPIFEX_ANDROID//defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64)
-	  	//glfwSetKeyCallback(window, KeyDown);
-#endif
-
-       // OPlog("Main: Song loading...");
-        //OPchar songPath[] = {"Audio/background.ogg"};
-        //Song = OPAudio::ReadOgg(songPath);
-
-        //OPlog("Main: Song loaded");
-
-		//		OPminHeap* heap = OPminHeapCreate(10);
-
-		//for(OPint j = 2; j--;){
-		//for(OPint i =10; i--;){
-		//	OPint ind = 0;
-		//	//OPentHeapActivate(heap, &ind);
-		//	OPminHeapPush(heap, i);
-		//	printf("Pushing %d\n", i);
-		//}
-		//printf("\n");
-		//for(OPint i =10; i--;){
-		//	OPint ind = 0;
-		//	//OPentHeapActivate(heap, &ind);
-		//	printf("Freeing %d\n", OPminHeapPop(heap));
-		//}
-		//		printf("\n");
-		//}
-		//printf("Freeing\n");
-
-		// void* test = OPalloc(OPentHeapSize(4, 10));
-		// OPentHeap* heap = OPentHeapCreate(test, 4, 10);
-
-		//for(OPint i =10; i--;){
-		//	OPint ind = 0;
-		//	OPentHeapActivate(heap, &ind);
-		//	printf("%d @ %d\n", i, ind);
-		//}
-		//printf("\n");
-
-		// for(OPint j = 4; j--;){
-		// 	OPint ind = 0;
-		// 	OPentHeapActivate(heap, &ind);
-		// 	while(ind >= 0){
-		// 		printf("Act %d\n", ind);
-		// 		OPentHeapActivate(heap, &ind);
-		// 	}
-		// 	printf(">>>Max %d\n", heap->MaxIndex);
-		// 	for(OPint i =5; i--;){
-		// 		OPuint ind = (OPuint)OPrandRange(0, 10);
-		// 		OPentHeapKill(heap, ind);
-		// 		printf("free @ %d\n", ind);
-		// 	}
-		// 	printf(">>>Max %d\n\n", heap->MaxIndex);
-		// }
-/*
-		Sound1 = (OPaudioSource*)OPcmanGet("impact.wav");
-		Sound2 = (OPaudioSource*)OPcmanGet("boom.wav");
-		Sound = (OPaudioSource*)OPcmanGet("background.ogg");
-
-        OPlog("Reading done!\n");
-        player = OPaudPlayerCreate(Sound1, 5, 0);
-        player1 = OPaudPlayerCreate(Sound2, 4, 0);
-		Emitter = OPaudCreateEmitter(Sound, EMITTER_THREADED | EMITTER_LOOPING);
-		OPaudRecycleEmitter(Emitter);
-		Emitter = OPaudGetEmitter(Sound, EMITTER_LOOPING);
-        OPlog("Emitter created\n");
-
-		OPaudSetEmitter(Emitter);
-        OPaudVolume(0.05f);
-        OPlog("Emitter set\n");
-        OPlog("Emitter proc'd\n");
-        OPaudPlay();
-		*/
 	return;
 }
 
-int Update( OPtimer* timer){
-	
-	// GamePadController* gamePad = OPgamePadController(GamePadIndex_One);
-	// OPgamePadUpdate(gamePad);
-	// if(OPgamePadIsConnected(gamePad) && OPgamePadWasPressed(gamePad, GamePad_Button_START)){
-	// 	return true;
-	// }
-
-	// if(OPgamePadIsConnected(gamePad) && OPgamePadWasPressed(gamePad, GamePad_Button_A)){
-	// 	OPlog("Playing Audio");
-	//   	OPaudSetPlayer(&player);
-	//   	OPaudPlayerPlay();
-	// }
-
-	
+int Update( OPtimer* timer){	
 	return 0;
 }
 
@@ -172,9 +90,18 @@ void Destroy()
 	return;
 }
 
+
 int UpdateState(OPtimer* timer){
+	if (OPkeyboardWasReleased(OPKEY_SPACE)) {
+		OPwebServerQueue(server, "queued", "tested", 6);
+		OPwebServerQueue(server, "another", "tested", 6);
+		OPwebServerQueue(server, "death", "tested", 6);
+	}
+	OPwebServerUpdate(server);
 	return ActiveState->Update(timer);	
 }
+
+
 
 #include "./Math/include/Tweening.h"
 #include "./Core/include/Assert.h"
@@ -192,55 +119,7 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 	OPscriptInit();
 	OPscriptLog("TEST LOGGING!!!");
 
-	//Vpxdata videoData;
-	//playvpx_init(&videoData, "test.webm");
 
-	//ASSERT(false, "Test!");
-	//ASSERT(true, "TEST!");
-
-	//if (OPoculusInitialize()) {
-	//	OPoculusUpdate();
-	//	OPvec4 state = OPoculusHmd();
-	//	OPvec2 screen = OPoculusScreenSize();
-	//	width = screen.x;
-	//	height = screen.y;
-	//}
-
-	//	OPstream* str;
-	// OPmat4 scl;
-	// OPmat4buildScl(&scl, 2.0f, 2.0f, 2.0f);
-	// OPvec3 test = { 1.0f, 1.5f, 2.0f };
-	// test *= scl;
-
-	// OPvec2 one = { 0.0, 1.5 };
-	// OPvec2 two = { 0.5, -0.5 };
-	// OPvec2 three = one + two;
-	// one = one * 2.0f;
-	// one = one * one;
-	// one += two;
-	// one *= two;
-	// one /= two;
-
-	// OPmat4 rot1, rot2;
-	// OPmat4buildRotX(&rot1, 1.0f);
-	// OPmat4buildRotY(&rot2, 1.0f);
-	// rot1 *= rot2;
-
-	/*str = OPstreamCreate(sizeof(int) * 100);
-
-    for(int i = 0; i < 100000; i++){
-    	int oldSize = str->Length;
-
-    	OPwrite(str, &i, sizeof(int));
-
-    	if(oldSize != str->Length){
-    	OPlog("Stream resized from %d to %d",oldSize,str->Length);
-    	OPlog("@ %x",(OPuint)str->Data);
-    	}
-    }
-
-    write(1, "It worked\n", 10);
-	*/
 	OPinitialize = Init;
 	OPupdate = UpdateState;
 	OPdestroy = Destroy;
