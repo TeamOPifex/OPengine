@@ -1,0 +1,38 @@
+<!DOCTYPE html >
+<html  ng-app="opengine">
+	<head>
+		<meta charset="utf-8" />
+		<title>WebSocket Test</title>
+		<link rel="stylesheet" href="Web/css/bootstrap.min.css" type="text/css" />
+		<style>
+			.green {
+				color: green;
+			}
+		</style>
+		<script src="Web/jquery.min.js"></script>
+		<script src="Web/angular.min.js"></script>
+
+		<script src="Web/blob-handler.js"></script>
+		<script src="Web/opwebsocket.js"></script>
+
+		<script src="Web/angular/app.js"></script>
+		<script src="Web/angular/controllers/mainCtrl.js"></script>
+	</head>
+	<body ng-controller="mainCtrl">
+		<h2 ng-class="{ green: websocket.connected }">{{title}}</h2>
+		<div>
+			<div class="input-group">
+			  <span class="input-group-addon">R</span>
+				<input type="range" class="form-control" ng-model="red" min="0" max="255" />		
+			</div>	
+			<div class="input-group">
+			  <span class="input-group-addon">G</span>
+				<input type="range" ng-model="green" min="0" max="255" />		
+			</div>	
+			<div class="input-group">
+			  <span class="input-group-addon">B</span>
+				<input type="range" ng-model="blue" min="0" max="255" />	
+			</div>			
+		</div>
+	</body>
+</html>

@@ -65,7 +65,14 @@ OPgameState State1 = {
 	State1Exit
 };
 
-i32 r = 0, g = 0, b = 0;
+f32 r = 0, g = 0, b = 0;
+
+void ColorHandler(OPstream* str) {
+	OPvec3 t = OPvec3str(str);
+	r = t.x;
+	g = t.y;
+	b = t.z;
+}
 
 void ColorHandlerR(OPstream* str) {
 	OPlog("Hit the color handler!");
@@ -104,6 +111,7 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("stencil.opf");
 	OPcmanLoad("gripe.opss");
 
+	OPwebServerSocket(server, "color", ColorHandler);
 	OPwebServerSocket(server, "red", ColorHandlerR);
 	OPwebServerSocket(server, "green", ColorHandlerG);
 	OPwebServerSocket(server, "blue", ColorHandlerB);
@@ -158,7 +166,7 @@ int State0Update(OPtimer* time){
 	else if (backgroundState == 1) {
 		OPrenderClear(0.0f, 1.0f, 0.0f);
 	} else {
-		OPrenderClear(r / 255.0f, g / 255.0, b / 255.0);
+		OPrenderClear(r, g, b);
 	}
 
 	OPvec2 pos = OPgamePadLeftThumb(OPgamePad(GamePadIndex_One));
