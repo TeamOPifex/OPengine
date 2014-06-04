@@ -54,7 +54,7 @@ i32 width = 1280;
 i32 height = 720;
 #endif
 
-void MsgHandler(OPstream* str) {
+void MsgHandler(OPstream* str, void* param) {
 	OPlog("Hit the handler!");
 	OPwebServerQueue(server, "queued", "tested", 6);
 }
@@ -67,7 +67,7 @@ void Init(){
 	OPaudInitThread(10);
 
 	server = OPwebServerCreate("8080");
-	OPwebServerSocket(server, "test", MsgHandler);
+	OPwebServerSocket(server, "test", MsgHandler, NULL);
 
 #ifndef OPIFEX_ANDROID
 	OPrenderInit(width, height, false);
