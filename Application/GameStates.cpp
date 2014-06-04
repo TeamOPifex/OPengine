@@ -112,8 +112,8 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("stencil.opf");
 	OPcmanLoad("gripe.opss");
 
-	OPwebServerSocket(server, "color", ColorHandler, &color);
-	OPwebServerSocket(server, "font", FontHandler, NULL);
+	OPwebServerOnKey(server, "color", ColorHandler, &color);
+	OPwebServerOnKey(server, "font", FontHandler, NULL);
 
 	OPss = OPrenderCreateEffect(
 		*(OPshader*)OPcmanGet("OPspriteSheet.vert"),
@@ -171,14 +171,20 @@ int State0Update(OPtimer* time){
 	OPvec2 pos = OPgamePadLeftThumb(OPgamePad(GamePadIndex_One));
 
 	if(OPkeyboardWasPressed(OPKEY_SPACE)){
-		OPlog("Should play");
-		//OPaudSetEmitter(sound);
+		//OPlog("Should play");
+		////OPaudSetEmitter(sound);
 
-		OPaudPlayerSet(&player);
-		OPaudPlayerVolume(0.3f);
-		OPaudPlayerPlay();
-		//OPaudPlay();
-		OPlog("Should have played");
+		//OPaudPlayerSet(&player);
+		//OPaudPlayerVolume(0.3f);
+		//OPaudPlayerPlay();
+		////OPaudPlay();
+		//OPlog("Should have played");
+
+		color.x = 0;
+		color.y = 0.5;
+		color.z = 1.0;
+		OPwebServerQueue(server, "color3", (i8*)&color, sizeof(OPvec3));
+		OPlog("Queued Color Message");
 	}
 
 	if(OPgamePadIsDown(OPgamePad(GamePadIndex_One), GamePad_Button_BACK)){

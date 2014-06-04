@@ -13,7 +13,7 @@ static int iterate_callback(struct mg_connection *c, enum mg_event ev, void* ser
 	if (ev == MG_POLL && c->is_websocket) {
 		OPWebServerMessagesContainer* messagesContainer = (OPWebServerMessagesContainer*)c->callback_param;
 		for (i32 i = 0; i < messagesContainer->messageCount; i++) {
-			mg_websocket_write(c, 2, (i8*)messagesContainer->messages[i]->Data, messagesContainer->messages[i]->Length);
+			mg_websocket_write(c, 2, (i8*)messagesContainer->messages[i]->Data, messagesContainer->messages[i]->Size);
 		}
 	}
 
@@ -131,7 +131,7 @@ OPWebServer* OPwebServerCreate(OPchar* port) {
 	return server;
 }
 
-void OPwebServerSocket(OPWebServer* server, i8* key, void(*handler)(OPstream*, void*), void* param) {
+void OPwebServerOnKey(OPWebServer* server, i8* key, void(*handler)(OPstream*, void*), void* param) {
 	OPWebServerHandlerContainer* container = (OPWebServerHandlerContainer*)OPalloc(sizeof(OPWebServerHandlerContainer));
 	container->handler = handler;
 	container->param = param;
@@ -172,6 +172,8 @@ void OPwebServerQueue(OPWebServer* server, i8* key, i8* data, ui32 datalen) {
 }
 
 void OPwebServerDestroy(OPWebServer* server) {
+	OPlistDestroy(server->WebSocketMessages);
+	OPhashMapDestroy(server->WebSocketKeys);
 	mg_destroy_server(&server->Server);
 	OPfree(server);
 }

@@ -67,7 +67,7 @@ void Init(){
 	OPaudInitThread(10);
 
 	server = OPwebServerCreate("8080");
-	OPwebServerSocket(server, "test", MsgHandler, NULL);
+	OPwebServerOnKey(server, "test", MsgHandler, NULL);
 
 #ifndef OPIFEX_ANDROID
 	OPrenderInit(width, height, false);

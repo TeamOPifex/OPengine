@@ -65,15 +65,50 @@ BlobReader.prototype = {
 	position: null,
 	buffer: null,
 	
+	ui8: function() {
+		var arr = new Uint8Array(this.buffer.slice(this.position, this.position + 1));
+		this.position += 1;
+		return arr[0];
+	},
+	i8: function() {
+		var arr = new Int8Array(this.buffer.slice(this.position, this.position + 1));
+		this.position += 1;
+		return arr[0];
+	},
+	ui16: function() {
+		var arr = new Uint16Array(this.buffer.slice(this.position, this.position + 2));
+		this.position += 2;
+		return arr[0];
+	},
+	i16: function() {
+		var arr = new Int16Array(this.buffer.slice(this.position, this.position + 2));
+		this.position += 2;
+		return arr[0];
+	},
 	ui32: function() {
-		var arr = new Uint32Array(this.buffer.slice(this.position, 4));
+		var arr = new Uint32Array(this.buffer.slice(this.position, this.position + 4));
 		this.position += 4;
 		return arr[0];
+	},
+	i32: function() {
+		var arr = new Int32Array(this.buffer.slice(this.position, this.position + 4));
+		this.position += 4;
+		return arr[0];
+	},
+	f32: function() {
+		var arr = new Float32Array(this.buffer.slice(this.position, this.position + 4));
+		this.position += 4;
+		return arr[0];
+	},
+	vec2: function() {
+		return [this.f32(), this.f32()];
+	},
+	vec3: function() {
+		return [this.f32(), this.f32(), this.f32()];
 	},
 	
 	str: function() {
 		var len = this.ui32();
-		console.log('Len:', len, this.position);
 		var res = this.uintToString(new Uint8Array(this.buffer.slice(this.position, this.position + len)));
 		this.position += len;
 		return res;
