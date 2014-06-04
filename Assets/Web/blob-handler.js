@@ -23,6 +23,10 @@ BlobBuilder.prototype = {
 		a[0] = d;
 		this.data.push(a);
 	},
+	vec2: function(a, b) {
+		this.f32(a);
+		this.f32(b);
+	},
 	vec3: function(a, b, c) {
 		this.f32(a);
 		this.f32(b);
