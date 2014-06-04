@@ -6,6 +6,7 @@ OPstream* OPstreamCreate(OPuint size){
 	OPstream* s = (OPstream*)OPalloc(sizeof(OPstream));
 	s->Data = (ui8*)OPalloc(size);
 	s->Length = size;
+	s->Size = 0;
 	s->_pointer = 0;
 
 	// no trash allowed
@@ -77,6 +78,9 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 	OPmemcpy(&stream->Data[ptr], d, size);
 	//write(1,"+",1);
 	stream->_pointer += size;
+
+	if (stream->Size < stream->_pointer)
+		stream->Size = stream->_pointer;
 
 	return 1;
 }

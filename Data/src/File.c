@@ -205,7 +205,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 	// windows implementation
 	OPint fd = 0, i;
 	// check to see if the file exists
-	if(OPfileExists(path) >= 0) {
+	if(OPfileExists(path) > 0) {
 		OPlog("OPreadFile: %s\n", path);
  
 		// be sure that the file could be opened successfully
@@ -231,8 +231,10 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 			ASSERTC(0, "Failed to read file");
 		}
 	}
-	else
+	else {
 		OPlog("%s does not exist\n", path);
+		return NULL;
+	}
 #endif
 }
 
@@ -241,7 +243,13 @@ OPint OPfileExists(const char* path){
 #if defined(OPIFEX_UNIX)
 	return access(path, F_OK) + 1;
 #elif defined(OPIFEX_WINDOWS)
-
+	FILE *istream;
+	if ((istream = fopen(path, "r")) != NULL)
+	{
+		fclose(istream);
+		return 1;
+	}
+	return 0;
 #endif
 }
 

@@ -1,5 +1,3 @@
-// TODO: Have option to use a FILE* to read from disk rather than memory
-
 #pragma once
 #include "./Core/include/Types.h"
 #include "./Core/include/DynamicMemory.h"

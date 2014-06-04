@@ -48,6 +48,7 @@ set(ALL_LIBS
 	3_Math
 	4_Performance
 	5_Human
+	6_Communication
 	7_Scripting
 	8_Pipeline
 	${OGG_LIBRARY}
