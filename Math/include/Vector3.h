@@ -3,6 +3,8 @@
 #include "./Core/include/Types.h"
 #include "./Core/include/MathHelpers.h"
 #include "./Core/include/DynamicMemory.h"
+#include "./Data/include/Stream.h"
+#include "./Data/include/File.h"
 
 struct OPvec3;
 struct OPmat4;
@@ -247,5 +249,19 @@ inline OPfloat OPvec3valDist(OPvec3* a, OPvec3* b) {
 	OPfloat temp = 0;
 	OPvec3dist(&temp, a, b);
 	return temp;
+}
+
+inline OPvec3 OPvec3str(OPstream* str) {
+	OPvec3 temp = {
+		OPreadf32(str),
+		OPreadf32(str),
+		OPreadf32(str)
+	};
+	return temp;
+}
+inline void OPvec3write(OPvec3* v, OPstream* str) {
+	OPwrite(str, &v->x, sizeof(f32));
+	OPwrite(str, &v->y, sizeof(f32));
+	OPwrite(str, &v->z, sizeof(f32));
 }
 #endif
