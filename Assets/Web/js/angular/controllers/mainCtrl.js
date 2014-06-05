@@ -42,29 +42,18 @@ angular.module('opengine')
                     $scope.blue = color[2] * 255;
                     $scope.$digest();
                 break;
+                case 'time':
+                    $scope.time = reader.ui32();
+                break;
             }
         }
 
-        function tilt(x, y) {
-            if(x == null || y == null) return;
-            console.log(x, y);
-            $scope.fontx = y / 100.0;
-            $scope.fonty = x / 100.0;
+        gyro.frequency = 20;
+        gyro.startTracking(function(o) {
+            // o.x, o.y, o.z for accelerometer
+            // o.alpha, o.beta, o.gamma for gyro
+            $scope.fontx = o.alpha / 10.0;
+            $scope.fonty = o.beta / 10.0;
             $scope.$digest();
-        }
-
-        if (window.DeviceOrientationEvent) {
-            window.addEventListener("deviceorientation", function () {
-                tilt(event.beta, event.gamma);
-            }, true);
-        } else if (window.DeviceMotionEvent) {
-            window.addEventListener('devicemotion', function () {
-                tilt(event.acceleration.x * 2, event.acceleration.y * 2);
-            }, true);
-        } else {
-            window.addEventListener("MozOrientation", function () {
-                tilt(orientation.x * 50, orientation.y * 50);
-            }, true);
-        }
-
+        });
     }]);
