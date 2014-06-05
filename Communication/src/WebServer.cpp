@@ -67,8 +67,7 @@ static int send_reply(struct mg_connection *conn, OPWebServer* server) {
 			mg_send_header(conn, "Content-Type", "text/html");
 			mg_send_data(conn, index->Data, index->Length);
 			return MG_TRUE;
-		}
-		else {
+		} else {
 			i8* path = "";
 			i32 urisize = strlen(conn->uri);
 			i32 size = urisize + strlen(path);
@@ -80,6 +79,14 @@ static int send_reply(struct mg_connection *conn, OPWebServer* server) {
 			OPmemcpy(filepath, path, strlen(path));
 			OPmemcpy(filepath + strlen(path), conn->uri + offset, strlen(conn->uri) - offset);
 			filepath[size - offset] = NULL;
+
+
+			if (size == 12 && OPmemcmp(filepath + size - 4, ".ico", 4)) {
+				OPstream* index = OPreadFile("Web/favicon.ico");
+				mg_send_header(conn, "Content-Type", "text/html");
+				mg_send_data(conn, index->Data, index->Length);
+				return MG_TRUE;
+			}
 
 			OPstream* index = OPreadFile(filepath);
 			if (index == NULL) return MG_TRUE;
