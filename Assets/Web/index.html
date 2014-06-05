@@ -11,14 +11,15 @@
 				color: green;
 			}
 		</style>
-		<script src="Web/jquery.min.js"></script>
-		<script src="Web/angular.min.js"></script>
+		<script src="Web/js/jquery.min.js"></script>
+		<script src="Web/js/angular.min.js"></script>
 
-		<script src="Web/blob-handler.js"></script>
-		<script src="Web/opwebsocket.js"></script>
+		<script src="Web/js/blob-handler.js"></script>
+		<script src="Web/js/opwebsocket.js"></script>
+		<script src="Web/js/gyro.min.js"></script>
 
-		<script src="Web/angular/app.js"></script>
-		<script src="Web/angular/controllers/mainCtrl.js"></script>
+		<script src="Web/js/angular/app.js"></script>
+		<script src="Web/js/angular/controllers/mainCtrl.js"></script>
 	</head>
 	<body ng-controller="mainCtrl">
 		<h2 ng-class="{ green: websocket.connected }">{{title}}</h2>
@@ -50,5 +51,7 @@
 				<input type="range" class="form-control" ng-model="fonty" min="-1" max="1" step="0.01" />	<span>{{fonty}}</span>	
 			</div>
 		</div>
+
+		<h4>Elapsed Time: {{time}}</h4>
 	</body>
 </html>

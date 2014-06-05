@@ -153,8 +153,9 @@ ui32 backgroundState = 0;
 
 int State0Update(OPtimer* time){
 	OPsprite* bg = (OPsprite*)OPcmanGet("walk");
-	
-	if(time->Elapsed > 1000) return false;
+
+	ui32 elapsed = time->Elapsed;
+	OPwebServerQueue(server, "time", (i8*)&elapsed, sizeof(ui32));
 	t += 0.005f * time->Elapsed;
 	OPgamePadSystemUpdate();
 	OPkeyboardUpdate();
