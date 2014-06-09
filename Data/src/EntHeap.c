@@ -20,16 +20,13 @@ OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
 		0
 	};
 	OPentHeap* heapPtr = NULL;
-	OPentHeap heap = {
-		.Entities = NULL,
-		.InUse = NULL,
-		.EntSize = entSize,
-		.MaxIndex = 0,
-		.Size = NULL,
-		.Capacity = count,
-		.Free = {0}
-	};
-
+	OPentHeap heap;
+	heap.Entities = NULL;
+	heap.InUse = NULL;
+	heap.EntSize = entSize;
+	heap.MaxIndex = 0;
+	heap.Size = NULL;
+	heap.Capacity = count;
 	heap.Free = free;
 
 	// leave space for entity data
