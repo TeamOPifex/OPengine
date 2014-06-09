@@ -166,10 +166,10 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 	// check to see if the file exists
 	if(OPfileExists(path) >= 0){
+		OPint fd = 0, i;
+
 		OPlog("OPreadFile: %s\n", path);
 
-		OPint fd = 0, i;
- 
 		// be sure that the file could be opened successfully
 	 	if(fd = open(path, O_RDONLY)){
 
