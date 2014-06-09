@@ -91,20 +91,21 @@ static int send_reply(struct mg_connection *conn, OPWebServer* server) {
 			OPstream* index = OPreadFile(filepath);
 			if (index == NULL) return MG_TRUE;
 
-			OPfree(filepath);
 
-			if (OPmemcmp(filepath + size - 3, ".js", 3)) {
-				mg_send_header(conn, "Content-Type", "javascript/javascript");
+			if (OPmemcmp(filepath + size - offset - 3, ".js", 3) == 0) {
+				mg_send_header(conn, "Content-Type", "application/javascript");
 			}
-			else if (OPmemcmp(filepath + size - 4, ".png", 4)) {
+			else if (OPmemcmp(filepath + size - offset - 4, ".png", 4) == 0) {
 				mg_send_header(conn, "Content-Type", "image/png");
 			}
-			else if(OPmemcmp(filepath + size - 4, ".css", 3)) {
+			else if (OPmemcmp(filepath + size - offset - 4, ".css", 3) == 0) {
 				mg_send_header(conn, "Content-Type", "text/css");
 			}
 			else  {
 				mg_send_header(conn, "Content-Type", "text/html");
 			}
+
+			OPfree(filepath);
 
 			mg_send_data(conn, index->Data, index->Size);
 			OPstreamDestroy(index);

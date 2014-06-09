@@ -49,13 +49,13 @@ angular.module('opengine')
         }
 
         gyro.frequency = 20;
-        if(gyro.getFeatures().length > 0) {
+        //if(gyro.getFeatures().length > 0) {
             gyro.startTracking(function(o) {
                 // o.x, o.y, o.z for accelerometer
                 // o.alpha, o.beta, o.gamma for gyro
-                $scope.fontx = o.alpha / 10.0;
-                $scope.fonty = o.beta / 10.0;
+                $scope.fontx = o.x / 10.0;
+                $scope.fonty = o.y / 10.0;
                 $scope.$digest();
             });
-        }
+        //}
     }]);

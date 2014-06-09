@@ -135,7 +135,6 @@ OPstream* OPreadFile(const char* path) {
 
 //-----------------------------------------------------------------------------
 OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
-	OPlog("Reading Large File");
 #ifdef OPIFEX_ANDROID
 	OPlog("OPreadFile: %s\n", path);
 	AAssetManager* mgr = AAssetManager_fromJava(JNIEnvironment(), JNIAssetManager());
@@ -204,6 +203,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 #elif defined(OPIFEX_WINDOWS)
 	// windows implementation
 	OPint fd = 0, i;
+	OPlog("Reading Large File");
 	// check to see if the file exists
 	if(OPfileExists(path) > 0) {
 		OPlog("OPreadFile: %s\n", path);
