@@ -1,6 +1,7 @@
 #include "./../include/Log.h"
 
 #ifdef OPIFEX_ANDROID
+
 #include <android/log.h>
 
 void OPlog(const char* message, ...){
@@ -11,6 +12,7 @@ void OPlog(const char* message, ...){
 }
 
 #else
+
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
@@ -43,4 +45,5 @@ void OPlg(const char* message, ...){
 	}
     va_end(args);
 }
+
 #endif
