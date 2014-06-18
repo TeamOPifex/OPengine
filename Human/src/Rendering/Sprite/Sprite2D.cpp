@@ -79,7 +79,6 @@ void OPsprite2DRender() {
 	world += CURR_SPRITE_2D->Position;
 	
 	OPtextureClearActive();
-	OPtexturePixelate();
 	OPrenderParami("uColorTexture", OPtextureBind(CURR_SPRITE_2D->Sprite.Sheet));
 	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderParamVec2("uOffset", 1, &CURR_SPRITE_2D->Sprite.Frames[CURR_SPRITE_2D->Sprite.Frame].Offset);
