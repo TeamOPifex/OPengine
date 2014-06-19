@@ -3,6 +3,7 @@
 	
 #include "./Human/include/Rendering/Buffer.h"
 #include "./Math/include/BoundingBox3D.h"
+#include "./Human/include/Rendering/Skinning/Animation.h"
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
@@ -20,6 +21,7 @@ typedef struct{
 	OPrenderBuffer VertexBuffer;
 	OPrenderBuffer IndexBuffer;
 	OPboundingBox3D boundingBox;
+	OPskeleton* Skeleton;
 } OPmesh;
 
 //-----------------------------------------------------------------------------

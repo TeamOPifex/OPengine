@@ -6,6 +6,9 @@
 #include "./Core/include/Core.h"
 #include "./Data/include/GameStates.h"
 
+#include "./Examples/ParticleSystem.h"
+#include "./Examples/Skinning.h"
+
 //#include "./GameManager.h"
 #include "./Human/include/Rendering/Renderer.h"
 #include "./Human/include/Input/GamePadSystem.h"
@@ -75,7 +78,7 @@ void Init(){
 	OPrenderInit(JNIWidth(), JNIHeight(), true);
 #endif
 
-	OPgameStateChange(&State0);
+	OPgameStateChange(&GS_EXAMPLE_PARTICLESYSTEM);
 
 	return;
 }
