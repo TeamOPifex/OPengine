@@ -24,6 +24,9 @@ typedef struct {
 	ui32 indexCount;
 	ui32 indexSize;
 	OPboundingBox3D bounds;
+	i16* hierarchy;
+	OPmat4* pose;
+	ui16 hierarchyCount;
 } OPMData;
 
 struct OPMPartNode_def;

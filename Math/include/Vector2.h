@@ -33,6 +33,7 @@ inline OPfloat OPvec2valLen(OPvec2* v);
 inline OPvec2 OPvec2valNorm(OPvec2* a);
 inline OPvec2 OPvec2valPerp(OPvec2* a);
 inline OPfloat OPvec2valDist( OPvec2* a, OPvec2* b);
+inline OPfloat OPvec2valAngle(OPvec2* a, OPvec2* b);
 
 struct OPvec2 {
 	OPfloat x, y;
@@ -254,6 +255,19 @@ inline OPfloat OPvec2valDist(OPvec2* a, OPvec2* b) {
 	OPvec2dist(&tmp, a, b);
 	return tmp;
 }
+
+
+inline OPfloat OPvec2valAngle(OPvec2* a, OPvec2* b) {
+	OPfloat tmp;
+	OPfloat dot;
+	OPvec2dot(&dot, a, b);
+	OPfloat aLen, bLen;
+	OPvec2len(&aLen, a);
+	OPvec2len(&bLen, b);
+	tmp = OPacos(dot / (aLen * bLen));
+	return tmp;
+}
+
 inline OPvec2 OPvec2str(OPstream* str) {
 	OPvec2 temp = {
 		OPreadf32(str),

@@ -105,7 +105,15 @@ OPMData OPMloadData(OPstream* str) {
 	OPvec3 min = OPvec3Zero;
 	OPvec3 max = OPvec3Zero;
 
-	OPMvertex* vertices = (OPMvertex*)OPalloc(sizeof(OPMvertex) * verticeCount);
+
+	OPvec3* positions, *normals, *tangents;
+	OPvec2* uvs;
+
+	positions = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
+	normals = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
+	if (OPMhasFeature(features, Tangent))
+		tangents = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
+	uvs = (OPvec2*)OPalloc(sizeof(OPvec2)* verticeCount);
 
 	f32 x, y, z;
 	for(ui32 i = 0; i < verticeCount; i++) {
@@ -115,9 +123,9 @@ OPMData OPMloadData(OPstream* str) {
 			x = OPreadf32(str);
 			y = OPreadf32(str);
 			z = OPreadf32(str);
-			vertices[i].Position.x = x;
-			vertices[i].Position.y = y;
-			vertices[i].Position.z = z;
+			positions[i].x = x;
+			positions[i].y = y;
+			positions[i].z = z;
 			if (x < min.x) min.x = x;
 			if (y < min.y) min.y = y;
 			if (z < min.z) min.z = z;
@@ -131,10 +139,10 @@ OPMData OPMloadData(OPstream* str) {
 			x = OPreadf32(str);
 			y = OPreadf32(str);
 			z = OPreadf32(str);
-			vertices[i].Normal.x = x;
-			vertices[i].Normal.y = y;
-			vertices[i].Normal.z = z;
-			OPvec3norm(&vertices[i].Normal, &vertices[i].Normal);
+			normals[i].x = x;
+			normals[i].y = y;
+			normals[i].z = z;
+			OPvec3norm(&normals[i], &normals[i]);
 		}
 		
 		// Read Tangent
@@ -142,18 +150,18 @@ OPMData OPMloadData(OPstream* str) {
 			x = OPreadf32(str);
 			y = OPreadf32(str);
 			z = OPreadf32(str);
-			vertices[i].Tangent.x = x;
-			vertices[i].Tangent.y = y;
-			vertices[i].Tangent.z = z;
-			OPvec3norm(&vertices[i].Tangent, &vertices[i].Tangent);
+			tangents[i].x = x;
+			tangents[i].y = y;
+			tangents[i].z = z;
+			OPvec3norm(&tangents[i], &tangents[i]);
 		}
 
 		// Read UV
 		if(OPMhasFeature(features, UV)) {
 			x = OPreadf32(str);
 			y = OPreadf32(str);
-			vertices[i].TexCoord.x = x;
-			vertices[i].TexCoord.y = y;
+			uvs[i].x = x;
+			uvs[i].y = y;
 		}
 	}
 
@@ -165,61 +173,75 @@ OPMData OPMloadData(OPstream* str) {
 		indices[i * 3 + 2] = OPreadui16(str);
 	}
 
-
-	OPMData data;
-	data.indices = indices;
-	data.indexCount = indicesCount * 3;
-	data.indexSize = sizeof(ui16);
-	data.vertices = vertices;
-	data.vertexCount = verticeCount;
-	data.vertexSize = sizeof(OPMvertex);
-	data.bounds = OPboundingBox3DCreate(min, max);
-	
-	// If there were no tangents provided, build them
-	if(!OPMhasFeature(features, Tangent)) {
-		OPCalculateTangents(&data);
-	}
+	i16* hierarchy = NULL;
+	OPmat4* pose = NULL;
+	ui16 hierarchyCount = 0;
 
 	// Read Bones
 	if(OPMhasFeature(features, Bones)) {
 		ui32 boneCount = OPreadui32(str);
+		hierarchyCount = boneCount;
+		hierarchy = (i16*)OPalloc(sizeof(i16)* boneCount);
+		pose = (OPmat4*)OPalloc(sizeof(OPmat4)* boneCount);
+		
 		for(i32 i = 0; i < boneCount; i++) {
 			i32 boneIndex = OPreadi32(str);
+			hierarchy[i] = boneIndex;
 			i8* name = OPreadstring(str);
-			OPreadf32(str);
-			OPreadf32(str);
-			OPreadf32(str);
-			OPlog("Joint: %d %s", boneIndex, name);
+			f32 x = OPreadf32(str);
+			f32 z = OPreadf32(str);
+			f32 y = OPreadf32(str);
+
+			OPmat4buildTranslate(&pose[i], x, y, z);
+			//OPmat4buildTranslate(&pose[i], 0, 0, 0);
+			OPlog("Joint: %d %s : %f, %f, %f", boneIndex, name, x, y, z);
 			OPfree(name);
 		}
 	}
 
+	OPlog("Index Count: %d", indicesCount);
+	OPlog("Vertex Count: %d", verticeCount);
+
+	ui32* boneIndices;
+	f32* boneWeights;
+	ui32* vertBoneIndices;
+
 	// Read Skinning
 	if(OPMhasFeature(features, Skinning)) {
 		ui32 indexCount = OPreadui32(str);
+		OPlog("Index Count: %d", indexCount);
+		boneIndices = (ui32*)OPalloc(sizeof(ui32)* indexCount);
 		for(i32 i = 0; i < indexCount; i++){
-			OPreadui32(str);
+			boneIndices[i] = OPreadui32(str);
 		}
+
 		ui32 weightCount = OPreadui32(str);
-		for(i32 i = 0; i < weightCount; i++) {
-			OPreadf32(str);
+		OPlog("Weight Count: %d", weightCount);
+		boneWeights = (f32*)OPalloc(sizeof(f32)* weightCount);
+		for (i32 i = 0; i < weightCount; i++) {
+			boneWeights[i] = OPreadf32(str);
+		}
+
+		vertBoneIndices = (ui32*)OPalloc(sizeof(ui32)* verticeCount);
+		for (i32 i = 0; i < verticeCount; i++) {
+			vertBoneIndices[i] = OPreadui32(str);
 		}
 	}
 
 	// Read Animation
 	if(OPMhasFeature(features, Animations)) {
 		i8* name = OPreadstring(str);
-		OPlog("Animation: %s", name);
 		ui32 keyframes = OPreadui32(str);
-		OPlog("Keyframes %d", keyframes);
+		OPlog("Animation: %s", name);
+		OPlog("Frame Count %d", keyframes);
 		for(i32 i = 0; i < keyframes; i++) {
-			OPlog("Keyframe %d", i);
 			i32 index = OPreadi32(str);
-			OPlog("Bone %d", index);
 			ui32 keys = OPreadui32(str);
+			OPlog("Keyframe %d", i);
+			OPlog("Bone %d", index);
 			for(i32 j = 0; j < keys; j++) {
 				ui32 keyFeatures = OPreadui32(str);
-				OPlog("Keyframe Features: %d", keyFeatures);
+				OPlog("Key: %d", (j + 1));
 				if(keyFeatures && Key_Time) {
 					f32 time = OPreadf32(str);
 					OPlog("Keyframe Time: %f", time);
@@ -229,7 +251,7 @@ OPMData OPMloadData(OPstream* str) {
 					f32 x = OPreadf32(str);
 					f32 y = OPreadf32(str);
 					f32 z = OPreadf32(str);
-					OPlog("Position: %f, %f, %f", x, y, z);
+					//OPlog("Position: %f, %f, %f", x, y, z);
 				}
 
 				if(keyFeatures && Key_Rotation) {
@@ -245,6 +267,71 @@ OPMData OPMloadData(OPstream* str) {
 	}
 
 
+
+	OPMData data;
+	data.indices = indices;
+	data.indexCount = indicesCount * 3;
+	data.indexSize = sizeof(ui16);
+	data.vertexCount = verticeCount;
+
+	if (OPMhasFeature(features, Skinning)) {
+
+		OPMvertexSkin* vertices = (OPMvertexSkin*)OPalloc(sizeof(OPMvertexSkin)* verticeCount);
+
+		for (i32 i = 0; i < verticeCount; i++) {
+			vertices[i].Position = positions[i];
+			vertices[i].Normal = normals[i];
+			vertices[i].TexCoord = uvs[i];
+			ui32 vertIndex = vertBoneIndices[i];
+			ui32 indexOne = boneIndices[vertIndex * 4 + 0];
+			f32 weightOne = boneWeights[vertIndex * 4 + 0];
+			ui32 indexTwo = boneIndices[vertIndex * 4 + 1];
+			f32 weightTwo = boneWeights[vertIndex * 4 + 1];
+			ui32 indexThree = boneIndices[vertIndex * 4 + 2];
+			f32 weightThree = boneWeights[vertIndex * 4 + 2];
+			ui32 indexFour = boneIndices[vertIndex * 4 + 3];
+			f32 weightFour = boneWeights[vertIndex * 4 + 3];
+
+			vertices[i].Bones = OPvec4Create(indexOne, indexTwo, indexThree, indexFour);
+			vertices[i].BoneWeights = OPvec4Create(weightOne, weightTwo, weightThree, weightFour);
+
+			if (OPMhasFeature(features, Tangent)){
+				vertices[i].Tangent = tangents[i];
+			}
+		}
+
+		// If there were no tangents provided, build them
+		if (!OPMhasFeature(features, Tangent)) {
+			OPCalculateTangents(&data);
+		}
+
+		data.vertices = vertices;
+		data.vertexSize = sizeof(OPMvertexSkin);
+	}
+	else {
+		OPMvertex* vertices = (OPMvertex*)OPalloc(sizeof(OPMvertex)* verticeCount);
+		for (i32 i = 0; i < verticeCount; i++) {
+			vertices[i].Position = positions[i];
+			vertices[i].Normal = normals[i];
+			vertices[i].TexCoord = uvs[i];
+			if (OPMhasFeature(features, Tangent)){
+				vertices[i].Tangent = tangents[i];
+			}
+		}
+
+		// If there were no tangents provided, build them
+		if (!OPMhasFeature(features, Tangent)) {
+			OPCalculateTangents(&data);
+		}
+
+		data.vertices = vertices;
+		data.vertexSize = sizeof(OPMvertex);
+	}
+
+	data.bounds = OPboundingBox3DCreate(min, max);
+	data.hierarchy = hierarchy;
+	data.pose = pose;
+	data.hierarchyCount = hierarchyCount;
 
 	return data;
 }
@@ -265,6 +352,8 @@ OPint OPMload(const OPchar* filename, OPmesh** mesh) {
 		data.vertices, data.indices
 	);
 	temp.boundingBox = data.bounds;
+	if (data.hierarchy != NULL)
+		temp.Skeleton = OPskeletonCreate(data.hierarchy, data.pose, data.hierarchyCount);
 
 	OPlog("Disposing");
 

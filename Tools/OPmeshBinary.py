@@ -141,6 +141,7 @@ def Export(filename):
 	filename = filename + ".opm"
 	fp = open(filename, "wb")
 	
+	# mesh = extract_meshes(bpy.data.objects, bpy.data.scenes[0])[0]
 	WriteData(mesh, fp, WriteBinary)
 	
 	fp.close()
