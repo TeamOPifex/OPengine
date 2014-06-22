@@ -24,6 +24,7 @@ void OPrenderBuildMesh(ui32 vertSize, ui32 indSize,
 						 void* vertices, void* indices){
 	OPrenderSetBufferData(&OPRENDER_CURR_MESH->IndexBuffer, indSize, indCount, indices);
 	OPrenderSetBufferData(&OPRENDER_CURR_MESH->VertexBuffer, vertSize, vertCount, vertices);
+	OPRENDER_CURR_MESH->VertexSize = vertSize;
 }
 
 //-----------------------------------------------------------------------------

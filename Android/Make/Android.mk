@@ -162,6 +162,8 @@ MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Rendering/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Rendering/GL/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Rendering/Font/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Rendering/Primitives/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Rendering/Skinning/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Rendering/Sprite/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Buffer/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Material/*.cpp)
@@ -180,6 +182,24 @@ LOCAL_STATIC_LIBRARIES := libopifex-performance libvorbis -lstdc++ lodepng
 
 include $(BUILD_STATIC_LIBRARY)
 
+##############
+# 6_Communication
+# scripting lib, which will be built statically
+##############
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libopifex-communication
+LOCAL_LDLIBS    := -llog -lGLESv2 -lOpenSLES
+LOCAL_CFLAGS    := -Werror
+LOCAL_CFLAGS 	+= -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2
+
+LOCAL_C_INCLUDES :=$(PROJECT_PATH)
+
+MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Communication/src/*.cpp)
+LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
+
+LOCAL_STATIC_LIBRARIES := libopifex-human
+
+include $(BUILD_STATIC_LIBRARY)
 
 ##############
 # 7_SCRIPTING
@@ -192,13 +212,14 @@ LOCAL_CFLAGS    := -Werror
 LOCAL_CFLAGS 	+= -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
+LOCAL_C_INCLUDES +=$(PROJECT_PATH)/Communication
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Ogg/include
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Vorbis/include
 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Scripting/src/*.cpp)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
-LOCAL_STATIC_LIBRARIES := libopifex-human
+LOCAL_STATIC_LIBRARIES := libopifex-communication
 
 include $(BUILD_STATIC_LIBRARY)
 

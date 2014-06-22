@@ -112,8 +112,8 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("stencil.opf");
 	OPcmanLoad("gripe.opss");
 
-	OPwebServerOnKey(server, "color", ColorHandler, &color);
-	OPwebServerOnKey(server, "font", FontHandler, NULL);
+	//OPwebServerOnKey(server, "color", ColorHandler, &color);
+	//OPwebServerOnKey(server, "font", FontHandler, NULL);
 
 	OPss = OPrenderCreateEffect(
 		*(OPshader*)OPcmanGet("OPspriteSheet.vert"),
@@ -155,7 +155,7 @@ int State0Update(OPtimer* time){
 	OPsprite* bg = (OPsprite*)OPcmanGet("walk");
 
 	ui32 elapsed = time->Elapsed;
-	OPwebServerQueue(server, "time", (i8*)&elapsed, sizeof(ui32));
+	//OPwebServerQueue(server, "time", (i8*)&elapsed, sizeof(ui32));
 	t += 0.005f * time->Elapsed;
 	OPgamePadSystemUpdate();
 	OPkeyboardUpdate();
@@ -184,7 +184,7 @@ int State0Update(OPtimer* time){
 		color.x = 0;
 		color.y = 0.5;
 		color.z = 1.0;
-		OPwebServerQueue(server, "color3", (i8*)&color, sizeof(OPvec3));
+		//OPwebServerQueue(server, "color3", (i8*)&color, sizeof(OPvec3));
 		OPlog("Queued Color Message");
 	}
 

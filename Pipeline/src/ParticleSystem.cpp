@@ -1,4 +1,4 @@
-#include "./include/ParticleSystem.h"
+#include "./Pipeline/include/ParticleSystem.h"
 #include "./Human/include/Rendering/Mesh.h"
 #include "./Math/include/Matrix4.h"
 #include "./Core/include/Assert.h"

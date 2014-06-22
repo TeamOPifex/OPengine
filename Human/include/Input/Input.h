@@ -5,7 +5,6 @@
 #include "InputEnums.h"
 #include "./Math/include/Vector2.h"
 
-
 typedef struct {
 	OPint	keys[OPKEYBOARD_MAX];
 	OPint	prevKeys[OPKEYBOARD_MAX];

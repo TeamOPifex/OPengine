@@ -1,4 +1,7 @@
+
 #include "./Communication/include/WebServer.h"
+
+#ifndef OPIFEX_ANDROID
 #include "./Data/include/File.h"
 #include "./Core/include/Log.h"
 
@@ -128,25 +131,34 @@ static int ev_handler(struct mg_connection *conn, enum mg_event ev, void* server
 	}
 }
 
+#endif
+
 
 OPWebServer* OPwebServerCreate(OPchar* port) {
 	OPWebServer* server = (OPWebServer*)OPalloc(sizeof(OPWebServer));
+#ifndef OPIFEX_ANDROID
 	server->WebSocketKeys = OPhashMapCreate(16);
 	server->WebSocketMessages = OPlistCreate(16, sizeof(OPstream));
+
 	server->Server = mg_create_server(NULL, ev_handler, server);
 	mg_set_option(server->Server, "listening_port", port);
 	printf("Started on port %s\n", mg_get_option(server->Server, "listening_port"));
+#endif
 	return server;
 }
 
-void OPwebServerOnKey(OPWebServer* server, i8* key, void(*handler)(OPstream*, void*), void* param) {
+void OPwebServerOnKey(OPWebServer* server, OPchar* key, void(*handler)(OPstream*, void*), void* param) {
+
+#ifndef OPIFEX_ANDROID
 	OPWebServerHandlerContainer* container = (OPWebServerHandlerContainer*)OPalloc(sizeof(OPWebServerHandlerContainer));
 	container->handler = handler;
 	container->param = param;
 	OPhashMapPut(server->WebSocketKeys, key, (void*)container);
+#endif
 }
 
 void OPwebServerUpdate(OPWebServer* server) {
+#ifndef OPIFEX_ANDROID
 	mg_poll_server(server->Server, 1);
 
 	OPWebServerMessagesContainer* messagesContainer = (OPWebServerMessagesContainer*)OPalloc(sizeof(OPWebServerMessagesContainer));
@@ -165,23 +177,29 @@ void OPwebServerUpdate(OPWebServer* server) {
 
 	OPfree(messagesContainer->messages);
 	OPfree(messagesContainer);
+#endif
 }
 
-void OPwebServerQueue(OPWebServer* server, i8* key, i8* data, ui32 datalen) {
+void OPwebServerQueue(OPWebServer* server, OPchar* key, i8* data, ui32 datalen) {
+#ifndef OPIFEX_ANDROID
 	ui32 size = sizeof(i8) * strlen(key) + datalen;
 	OPstream* d = OPstreamCreate(size);
 	
 	ui32 len = strlen(key);
 	OPwrite(d, (ui8*)&len, sizeof(ui32));
-	OPwrite(d, key, sizeof(i8) * len);
+	OPwrite(d, key, sizeof(OPchar)* len);
 	OPwrite(d, data, datalen);
 	OPseek(d, 0);
 	OPlistPush(server->WebSocketMessages, (ui8*)d);
+#endif
 }
 
 void OPwebServerDestroy(OPWebServer* server) {
+
+#ifndef OPIFEX_ANDROID
 	OPlistDestroy(server->WebSocketMessages);
 	OPhashMapDestroy(server->WebSocketKeys);
 	mg_destroy_server(&server->Server);
+#endif
 	OPfree(server);
 }
