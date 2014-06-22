@@ -78,7 +78,9 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 			// read the name, and the sprite flags
 			// setup a proxy var for frame data
 			OPasset* assetBucket = NULL;
-			char* name = (*ss)->Names[i] = OPreadstring(str);
+			i8* nameData = OPreadstring(str);
+			OPchar* name = (OPchar*)nameData;
+			(*ss)->Names[i] = name;
 			ui32 flags = OPreadi32(str);
 			ui32 spriteFrames = 1;
 			OPspriteFrame* spriteFrameData = frameData + frameNum;

@@ -1,5 +1,5 @@
 
-#include "./include/Sprite3D.h"
+#include "./Pipeline/include/Sprite3D.h"
 #include "./Human/include/Rendering/Primitives/Quad.h"
 
 int SPRITE_3D_INITIALIZED = 0;

@@ -59,7 +59,8 @@ i32 height = 720;
 
 void MsgHandler(OPstream* str, void* param) {
 	OPlog("Hit the handler!");
-	OPwebServerQueue(server, "queued", "tested", 6);
+	//i8* test = "tested";
+	//OPwebServerQueue(server, "queued", test, 6);
 }
 
 // Initialize
@@ -69,8 +70,8 @@ void Init(){
 	OPaudInit();
 	OPaudInitThread(10);
 
-	server = OPwebServerCreate("8080");
-	OPwebServerOnKey(server, "test", MsgHandler, NULL);
+	//server = OPwebServerCreate("8080");
+	//OPwebServerOnKey(server, "test", MsgHandler, NULL);
 
 #ifndef OPIFEX_ANDROID
 	OPrenderInit(width, height, false);
@@ -78,7 +79,7 @@ void Init(){
 	OPrenderInit(JNIWidth(), JNIHeight(), true);
 #endif
 
-	OPgameStateChange(&GS_EXAMPLE_PARTICLESYSTEM);
+	OPgameStateChange(&State0);
 
 	return;
 }
@@ -96,11 +97,15 @@ void Destroy()
 
 int UpdateState(OPtimer* timer){
 	if (OPkeyboardWasReleased(OPKEY_SPACE)) {
-		OPwebServerQueue(server, "queued", "tested", 6);
-		OPwebServerQueue(server, "another", "tested", 6);
-		OPwebServerQueue(server, "death", "tested", 6);
+		//i8* test = "tested";
+		//OPchar* key = "queued";
+		//OPwebServerQueue(server, key, test, 6);
+		//key = "another";
+		//OPwebServerQueue(server, key, test, 6);
+		//key = "death";
+		//OPwebServerQueue(server, key, test, 6);
 	}
-	OPwebServerUpdate(server);
+	//OPwebServerUpdate(server);
 	return ActiveState->Update(timer);	
 }
 

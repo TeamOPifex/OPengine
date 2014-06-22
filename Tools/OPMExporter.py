@@ -1,7 +1,19 @@
+bl_info = {
+	"name": "Export OPifex Mesh (.opm)",
+	"author": "Garrett Hoofman",
+	"version": (1, 0),
+	"blender": (2, 59, 0),
+	"location": "File > Export > OPifex (.opm)",
+	"description": "Export Model to OPifex Mesh",
+	"warning": "",
+	"wiki_url": "",
+	"tracker_url": "",
+	"category": "Import-Export"}
+
 #!BPY
 """
 me: 'OPMeshBinary (.opm)...'
-Blender: 266
+Blender: 269
 Group: 'Export'
 Tooltip: 'OPMeshBinary Export'
 """
@@ -10,13 +22,21 @@ Tooltip: 'OPMeshBinary Export'
 # from imp import reload
 # reload(OPmeshBinary)
 
+# __name__ = "OPM Export" 
+
 import bpy
+from bpy.props import *
 import os
+from os import remove
 import itertools
 import math
 import struct
 import mathutils
 import operator
+import time
+import bpy_extras
+from bpy_extras.io_utils import ExportHelper 
+import shutil
 
 #------------------------------------------------------------------------------
 def r3d(v):
@@ -45,7 +65,7 @@ def dist(x0, y0, z0, x1, y1, z1):
 	dz = z0 - z1
 	return math.sqrt(dx * dx + dy * dy + dz * dz)
 #------------------------------------------------------------------------------
-def WriteData(msh, fp, writeFunc):
+def WriteData(msh, fp, writeFunc, settings):
 	local_dict = {} # local dictionary
 	local_faces_list   = [] # lcoal faces index list
 	local_vertex_list  = [] # local vertex list
@@ -129,12 +149,13 @@ def WriteData(msh, fp, writeFunc):
 		'Mesh'  : msh
 	})
 
-	writeFunc(fp, meshData)
+	writeFunc(fp, meshData, settings)
 #------------------------------------------------------------------------------
-def Export(filename):
+def Export(filename, settings):
 	# first thing's first, set the mode so we can get
 	# the appropriate data	
 	bpy.ops.object.mode_set(mode="OBJECT")
+	print('Normals' + str(settings.Normals))
 
 	scene = bpy.context.scene
 	
@@ -143,11 +164,11 @@ def Export(filename):
 		raise NameError("Cannot export: object %s is not a mesh" % obj)
 	mesh = obj.to_mesh(scene, True, "PREVIEW")
 	
-	filename = filename + ".opm"
+	filename = filename # + ".opm"
 	fp = open(filename, "wb")
 	
 	# mesh = extract_meshes(bpy.data.objects, bpy.data.scenes[0])[0]
-	WriteData(mesh, fp, WriteBinary)
+	WriteData(mesh, fp, WriteBinary, settings)
 	
 	fp.close()
 #------------------------------------------------------------------------------
@@ -163,7 +184,7 @@ def ExportJSON(filename):
 		raise NameError("Cannot export: object %s is not a mesh" % obj)
 	mesh = obj.to_mesh(scene, True, "PREVIEW")
 	
-	filename = filename + ".opm.json"
+	filename = filename + ".json"
 	fp = open(filename, "w")
 	
 	WriteData(mesh, fp, WriteJSON)
@@ -396,7 +417,7 @@ def WriteAnimationData(fp, actionIndex):
 				fp.write(struct.pack('ffffffff', keys[key][0], keys[key][1], keys[key][2], keys[key][3], keys[key][4], keys[key][5], keys[key][6], keys[key][7]))
 
 #------------------------------------------------------------------------------
-def WriteBinary(fp, meshData):
+def WriteBinary(fp, meshData, settings):
 	# OPM Version
 	fp.write(struct.pack('H', 1))
 	print('Version: ' + str(1))
@@ -409,8 +430,27 @@ def WriteBinary(fp, meshData):
 	local_color_list   = meshData.Colors
 	msh                = meshData.Mesh
 
+	enum_position = 1
+	enum_normal = 2
+	enum_uv = 4
+	enum_tangent = 8
+	enum_index = 16
+	enum_bones = 32
+	enum_skinning = 64
+	enum_animations = 128
+	enum_color = 256
+	
 	# OPM Features
-	features = 255
+	features = enum_position
+	if(settings.Normals):
+		features += enum_normal
+	if(settings.Tangents):
+		features += enum_tangent
+	if(settings.UVs):
+		features += enum_uv
+	if(settings.Colors):
+		features += enum_color
+
 	fp.write(struct.pack('I', int(features)))
 	print('Features: ' + str(features))
 				
@@ -419,10 +459,14 @@ def WriteBinary(fp, meshData):
 	print('Vertices: ' + str(len(local_vertex_list)))
 	for j in range(0,len(local_vertex_list)):
 		fp.write (struct.pack('fff', local_vertex_list[j][0], local_vertex_list[j][1], local_vertex_list[j][2]))
-		fp.write (struct.pack('fff', local_normal_list[j][0], local_normal_list[j][1], local_normal_list[j][2]))
-		fp.write (struct.pack('fff', local_tangent_list[j][0], local_tangent_list[j][1], local_tangent_list[j][2]))
-		fp.write (struct.pack('ff', local_uv_list[j][0], local_uv_list[j][1]))
-		fp.write (struct.pack('fff', local_color_list[j][0], local_color_list[j][1], local_color_list[j][2]))
+		if(settings.Normals):
+			fp.write (struct.pack('fff', local_normal_list[j][0], local_normal_list[j][1], local_normal_list[j][2]))
+		if(settings.Tangents):
+			fp.write (struct.pack('fff', local_tangent_list[j][0], local_tangent_list[j][1], local_tangent_list[j][2]))
+		if(settings.UVs):
+			fp.write (struct.pack('ff', local_uv_list[j][0], local_uv_list[j][1]))
+		if(settings.Colors):
+			fp.write (struct.pack('fff', local_color_list[j][0], local_color_list[j][1], local_color_list[j][2]))
 	
 
 	# Number of Indices
@@ -433,11 +477,11 @@ def WriteBinary(fp, meshData):
 
 
     # Number of Bones
-	WriteBoneData(fp)
+	# WriteBoneData(fp)
 
 
-	WriteSkinData(fp, extract_meshes(bpy.data.objects, bpy.data.scenes[0])[0])
-	WriteAnimationData(fp, 0)
+	# WriteSkinData(fp, extract_meshes(bpy.data.objects, bpy.data.scenes[0])[0])
+	# WriteAnimationData(fp, 0)
 	
 
 # ##############################################################################
@@ -594,4 +638,83 @@ def extract_meshes(objects, scene):
     return meshes
 
 
+class Export_opm(bpy.types.Operator, ExportHelper):
+	bl_idname = "export_object.opm"
+	bl_label = "Export OPifex Mesh (.opm)"
+	filename_ext = ".opm"
 
+	json = bpy.props.BoolProperty(name="Export As JSON", default=False)
+	normals = bpy.props.BoolProperty(name="Export Normals", default=True)
+	uvs = bpy.props.BoolProperty(name="Export UVs", default=True)
+	colors = bpy.props.BoolProperty(name="Export Colors", default=False)
+	tangents = bpy.props.BoolProperty(name="Export Tangents", default=False)
+	bones = bpy.props.BoolProperty(name="Export Bones/Skin", default=False)
+	animations = bpy.props.BoolProperty(name="Export Animations", default=False)
+
+	@classmethod
+	def poll(cls, context):
+		return context.active_object.type in ['MESH', 'CURVE', 'SURFACE', 'FONT']
+
+	def execute(self, context):
+		start_time = time.time()
+		print('\n_____START_____')
+		props = self.properties
+		filepath = self.filepath
+		filepath = bpy.path.ensure_ext(filepath, self.filename_ext)
+
+		settings = type('obj', (object,), {
+			'Normals' : self.normals,
+			'UVs' : self.uvs,
+			'Colors'  : self.colors,
+			'Tangents'   : self.tangents,
+			'Bones' : self.bones,
+			'Animations' : self.animations,
+			"JSON" : self.json
+		})
+
+		#context, props, 
+		exported = Export(filepath, settings)
+
+		if exported:
+			print('finished export in %s seconds' %((time.time() - start_time)))
+			print(filepath)
+
+		return {'FINISHED'}
+
+
+	def invoke( self, context, event):
+		wm = context.window_manager
+
+		if True:
+			# File selector
+			wm.fileselect_add(self) # will run self.execute()
+			return {'RUNNING_MODAL'}
+		elif True:
+			# search the enum
+			wm.invoke_search_popup(self)
+			return {'RUNNING_MODAL'}
+		elif False:
+			# Redo popup
+			return wm.invoke_props_popup(self, event) #
+		elif False:
+			return self.execute(context)
+
+
+
+### REGISTER ###
+
+def menu_func(self, context):
+	self.layout.operator(Export_opm.bl_idname, text="OPifex Model (.opm)")
+
+def register():
+	bpy.utils.register_module(__name__)
+
+	bpy.types.INFO_MT_file_export.append(menu_func)
+
+def unregister():
+	bpy.utils.unregister_module(__name__)
+
+	bpy.types.INFO_MT_file_export.remove(menu_func)
+
+if __name__ == "__main__":
+	register()

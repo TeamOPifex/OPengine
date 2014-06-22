@@ -1,4 +1,4 @@
-#include "./include/Texture3D.h"
+#include "./Pipeline/include/Texture3D.h"
 #include "./Human/include/Rendering/Mesh.h"
 #include "./Human/include/Rendering/Renderer.h"
 #include "./Human/include/Rendering/Primitives/Quad.h"

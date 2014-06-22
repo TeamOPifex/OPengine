@@ -1139,7 +1139,9 @@ typedef struct stat file_stat_t;
 typedef pid_t process_id_t;
 #endif                  //////// End of platform-specific defines and includes
 
-#include "./include/Mongoose.h"
+#ifndef OPIFEX_ANDROID
+
+#include "./Communication/include/Mongoose.h"
 
 #define MAX_REQUEST_SIZE 16384
 #define IOBUF_SIZE 8192
@@ -5135,3 +5137,5 @@ struct mg_server *mg_create_server(void *server_data, mg_handler_t handler, void
 	server->server_obj = server_obj;
 	return server;
 }
+
+#endif

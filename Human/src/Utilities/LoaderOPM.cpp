@@ -1,25 +1,5 @@
 #include "./Human/include/Utilities/LoaderOPM.h"
 
-enum OPMFeatures {
-	Position	=	0x01,
-	Normal		=	0x02,
-	UV			=	0x04,
-	Tangent		=	0x08,
-	Index		=	0x10,
-	Bones		=	0x20,
-	Skinning	=	0x40,
-	Animations	=	0x80
-};
-
-enum OPMKeyFeatures {
-	Key_Time	=	0x01,
-	Key_Position=	0x02,
-	Key_Rotation=	0x04
-};
-
-OPint OPMhasFeature(ui32 features, ui32 feature) {
-	return features & feature;
-}
 
 
 void OPCalculateTangents(OPMData* data) {
@@ -106,14 +86,19 @@ OPMData OPMloadData(OPstream* str) {
 	OPvec3 max = OPvec3Zero;
 
 
-	OPvec3* positions, *normals, *tangents;
+	OPvec3* positions, *normals, *tangents, *colors;
 	OPvec2* uvs;
 
-	positions = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
-	normals = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
+	if (OPMhasFeature(features, Position))
+		positions = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
+	if (OPMhasFeature(features, Normal))
+		normals = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
 	if (OPMhasFeature(features, Tangent))
 		tangents = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
-	uvs = (OPvec2*)OPalloc(sizeof(OPvec2)* verticeCount);
+	if (OPMhasFeature(features, UV))
+		uvs = (OPvec2*)OPalloc(sizeof(OPvec2)* verticeCount);
+	if (OPMhasFeature(features, Color))
+		colors = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
 
 	f32 x, y, z;
 	for(ui32 i = 0; i < verticeCount; i++) {
@@ -157,11 +142,21 @@ OPMData OPMloadData(OPstream* str) {
 		}
 
 		// Read UV
-		if(OPMhasFeature(features, UV)) {
+		if (OPMhasFeature(features, UV)) {
 			x = OPreadf32(str);
 			y = OPreadf32(str);
 			uvs[i].x = x;
 			uvs[i].y = y;
+		}
+
+		// Read Color
+		if (OPMhasFeature(features, Color)) {
+			x = OPreadf32(str);
+			y = OPreadf32(str);
+			z = OPreadf32(str);
+			colors[i].x = x;
+			colors[i].y = y;
+			colors[i].z = z;
 		}
 	}
 
@@ -274,59 +269,94 @@ OPMData OPMloadData(OPstream* str) {
 	data.indexSize = sizeof(ui16);
 	data.vertexCount = verticeCount;
 
-	if (OPMhasFeature(features, Skinning)) {
+	OPvertices* vertices = OPverticesCreate(verticeCount, features);
 
-		OPMvertexSkin* vertices = (OPMvertexSkin*)OPalloc(sizeof(OPMvertexSkin)* verticeCount);
+	if (OPMhasFeature(features, Position))
+		OPverticesWriteVec3(vertices, positions, Position);
+	if (OPMhasFeature(features, Normal))
+		OPverticesWriteVec3(vertices, normals, Normal);
+	if (OPMhasFeature(features, Tangent))
+		OPverticesWriteVec3(vertices, tangents, Tangent);
+	if (OPMhasFeature(features, UV))
+		OPverticesWriteVec2(vertices, uvs, UV);
+	if (OPMhasFeature(features, Color))
+		OPverticesWriteVec3(vertices, colors, Color);
 
-		for (i32 i = 0; i < verticeCount; i++) {
-			vertices[i].Position = positions[i];
-			vertices[i].Normal = normals[i];
-			vertices[i].TexCoord = uvs[i];
-			ui32 vertIndex = vertBoneIndices[i];
-			ui32 indexOne = boneIndices[vertIndex * 4 + 0];
-			f32 weightOne = boneWeights[vertIndex * 4 + 0];
-			ui32 indexTwo = boneIndices[vertIndex * 4 + 1];
-			f32 weightTwo = boneWeights[vertIndex * 4 + 1];
-			ui32 indexThree = boneIndices[vertIndex * 4 + 2];
-			f32 weightThree = boneWeights[vertIndex * 4 + 2];
-			ui32 indexFour = boneIndices[vertIndex * 4 + 3];
-			f32 weightFour = boneWeights[vertIndex * 4 + 3];
+	data.vertices = vertices->data;
+	data.vertexSize = vertices->size * sizeof(f32);
 
-			vertices[i].Bones = OPvec4Create(indexOne, indexTwo, indexThree, indexFour);
-			vertices[i].BoneWeights = OPvec4Create(weightOne, weightTwo, weightThree, weightFour);
 
-			if (OPMhasFeature(features, Tangent)){
-				vertices[i].Tangent = tangents[i];
-			}
-		}
+	//if (OPMhasFeature(features, Skinning)) {
 
-		// If there were no tangents provided, build them
-		if (!OPMhasFeature(features, Tangent)) {
-			OPCalculateTangents(&data);
-		}
+	//	OPMvertexSkin* vertices = (OPMvertexSkin*)OPalloc(sizeof(OPMvertexSkin)* verticeCount);
 
-		data.vertices = vertices;
-		data.vertexSize = sizeof(OPMvertexSkin);
-	}
-	else {
-		OPMvertex* vertices = (OPMvertex*)OPalloc(sizeof(OPMvertex)* verticeCount);
-		for (i32 i = 0; i < verticeCount; i++) {
-			vertices[i].Position = positions[i];
-			vertices[i].Normal = normals[i];
-			vertices[i].TexCoord = uvs[i];
-			if (OPMhasFeature(features, Tangent)){
-				vertices[i].Tangent = tangents[i];
-			}
-		}
+	//	for (i32 i = 0; i < verticeCount; i++) {
+	//		vertices[i].Position = positions[i];
+	//		vertices[i].Normal = normals[i];
+	//		vertices[i].TexCoord = uvs[i];
+	//		ui32 vertIndex = vertBoneIndices[i];
+	//		ui32 indexOne = boneIndices[vertIndex * 4 + 0];
+	//		f32 weightOne = boneWeights[vertIndex * 4 + 0];
+	//		ui32 indexTwo = boneIndices[vertIndex * 4 + 1];
+	//		f32 weightTwo = boneWeights[vertIndex * 4 + 1];
+	//		ui32 indexThree = boneIndices[vertIndex * 4 + 2];
+	//		f32 weightThree = boneWeights[vertIndex * 4 + 2];
+	//		ui32 indexFour = boneIndices[vertIndex * 4 + 3];
+	//		f32 weightFour = boneWeights[vertIndex * 4 + 3];
 
-		// If there were no tangents provided, build them
-		if (!OPMhasFeature(features, Tangent)) {
-			OPCalculateTangents(&data);
-		}
+	//		vertices[i].Bones = OPvec4Create(indexOne, indexTwo, indexThree, indexFour);
+	//		vertices[i].BoneWeights = OPvec4Create(weightOne, weightTwo, weightThree, weightFour);
 
-		data.vertices = vertices;
-		data.vertexSize = sizeof(OPMvertex);
-	}
+	//		if (OPMhasFeature(features, Tangent)){
+	//			vertices[i].Tangent = tangents[i];
+	//		}
+	//	}
+
+	//	// If there were no tangents provided, build them
+	//	if (!OPMhasFeature(features, Tangent)) {
+	//		OPCalculateTangents(&data);
+	//	}
+
+	//	data.vertices = vertices;
+	//	data.vertexSize = sizeof(OPMvertexSkin);
+	//}
+	//else if (OPMhasFeature(features, Color)) {
+	//	OPMvertexColor* vertices = (OPMvertexColor*)OPalloc(sizeof(OPMvertexColor)* verticeCount);
+	//	for (i32 i = 0; i < verticeCount; i++) {
+	//		vertices[i].Position = positions[i];
+	//		vertices[i].Normal = normals[i];
+	//		vertices[i].Color = colors[i];
+	//		if (OPMhasFeature(features, Tangent)){
+	//			vertices[i].Tangent = tangents[i];
+	//		}
+	//	}
+
+	//	// If there were no tangents provided, build them
+	//	//if (!OPMhasFeature(features, Tangent)) {
+	//	//	OPCalculateTangents(&data);
+	//	//}
+
+	//	data.vertices = vertices;
+	//	data.vertexSize = sizeof(OPMvertexColor);
+	//} else {
+	//	OPMvertex* vertices = (OPMvertex*)OPalloc(sizeof(OPMvertex)* verticeCount);
+	//	for (i32 i = 0; i < verticeCount; i++) {
+	//		vertices[i].Position = positions[i];
+	//		vertices[i].Normal = normals[i];
+	//		vertices[i].TexCoord = uvs[i];
+	//		if (OPMhasFeature(features, Tangent)){
+	//			vertices[i].Tangent = tangents[i];
+	//		}
+	//	}
+
+	//	// If there were no tangents provided, build them
+	//	if (!OPMhasFeature(features, Tangent)) {
+	//		OPCalculateTangents(&data);
+	//	}
+
+	//	data.vertices = vertices;
+	//	data.vertexSize = sizeof(OPMvertex);
+	//}
 
 	data.bounds = OPboundingBox3DCreate(min, max);
 	data.hierarchy = hierarchy;

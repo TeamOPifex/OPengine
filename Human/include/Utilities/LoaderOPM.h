@@ -39,7 +39,6 @@ struct OPMPartNode_def{
 	OPMPartNode* Children;
 };
 
-OPint OPMhasFeature(ui32 features, ui32 feature);
 void OPMgenerateTangent(OPvec3* tangent, OPMvertex* v1, OPMvertex* v2);
 OPMData OPMloadData(OPstream* str);
 OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh);

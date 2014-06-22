@@ -5,6 +5,7 @@ call copy obj\local\armeabi\libopifex-data.a Binaries\android\
 call copy obj\local\armeabi\libopifex-math.a Binaries\android\
 call copy obj\local\armeabi\libopifex-performance.a Binaries\android\
 call copy obj\local\armeabi\libopifex-human.a Binaries\android\
+call copy obj\local\armeabi\libopifex-communication.a Binaries\android\
 call copy obj\local\armeabi\libopifex-scripting.a Binaries\android\
 call copy obj\local\armeabi\libopifex-pipeline.a Binaries\android\
 call copy obj\local\armeabi\libogg.a Binaries\android\

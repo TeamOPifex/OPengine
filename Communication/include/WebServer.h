@@ -28,8 +28,8 @@ typedef struct {
 
 OPWebServer* OPwebServerCreate(OPchar* port);
 void OPwebServerUpdate(OPWebServer* server);
-void OPwebServerOnKey(OPWebServer* server, i8* key, void(*handler)(OPstream*, void*), void* param);
-void OPwebServerQueue(OPWebServer* server, i8* key, i8* data, ui32 datalen);
+void OPwebServerOnKey(OPWebServer* server, OPchar* key, void(*handler)(OPstream*, void*), void* param);
+void OPwebServerQueue(OPWebServer* server, OPchar* key, i8* data, ui32 datalen);
 void OPwebServerDestroy(OPWebServer* server);
 
 #endif

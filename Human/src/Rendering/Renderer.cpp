@@ -11,6 +11,7 @@ OPuint OPscreenHeight;
 GLFWwindow* window = NULL;
 #endif
 
+
 void glfwErrorCallback(int error, const char* desc){
 	OPlog(desc);
 }
@@ -156,12 +157,16 @@ void OPrenderResetViewport() {
 
 //-----------------------------------------------------------------------------
 OPint OPrenderGetWidth(){
+#ifndef OPIFEX_ANDROID
 	glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
+#endif
 	return OPrenderWidth;
 }
 //-----------------------------------------------------------------------------
 OPint OPrenderGetHeight(){
+#ifndef OPIFEX_ANDROID
 	glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
+#endif
 	return OPrenderHeight;
 }
 //-----------------------------------------------------------------------------
