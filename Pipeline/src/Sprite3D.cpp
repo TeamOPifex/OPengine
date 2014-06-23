@@ -104,12 +104,14 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	world += offset + sprite->Position;
 
 	OPtextureClearActive();
-	OPtextureSmooth();
-	OPrenderParami("uColorTexture", OPtextureBind(sprite->CurrentSprite->Sheet));
-	OPrenderParamf("uAlpha", 1.0f);
+	//OPtextureSmooth();
+	ui32 bind = OPtextureBind(sprite->CurrentSprite->Sheet);
+	//OPlog("SpriteSheet %d @ %x", bind, sprite->CurrentSprite->Sheet);
+	OPrenderParami("uColorTexture", bind);
+	//OPrenderParamf("uAlpha", 1.0f);
 	OPrenderParamMat4v("uWorld", 1, &world);
-	OPrenderParamMat4v("uProj", 1, &proj);
 	OPrenderParamMat4v("uView", 1, &view);
+	OPrenderParamMat4v("uProj", 1, &proj);
 	OPrenderParamVec2("uOffset", 1, &sprite->CurrentSprite->Frames[sprite->CurrentSprite->Frame].Offset);
 	OPrenderParamVec2("uSize", 1, &sprite->CurrentSprite->Frames[sprite->CurrentSprite->Frame].Size);
 }
