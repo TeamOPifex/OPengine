@@ -4,10 +4,13 @@
 #include "./Human/include/Utilities/ImagePNG.h"
 #include "./Human/include/Rendering/Sprite/SpriteSheet.h"
 
+#define _DEBUG
+
 void __opSpriteScaleFrames(OPtexture* tex, OPspriteSheet* ss) {
 	ASSERT(tex, "__opSpriteScaleFrames() - texture null");
 	ASSERT(tex, "__opSpriteScaleFrames() - spritesheet null");
 	OPint i = 0;
+	OPlog("Texture Size: %d, %d", tex->Description.Width, tex->Description.Height);
 	OPvec2 size = { tex->Description.Width, tex->Description.Height };
 
 	for (i = ss->Sprites; i--;){
@@ -18,15 +21,23 @@ void __opSpriteScaleFrames(OPtexture* tex, OPspriteSheet* ss) {
 		OPlog("Resizing %s", ss->Names[i]);
 #endif
 
-		for (; j--;){
-			s->Frames[j].Offset /= size;
-			s->Frames[j].Size /= size;
+			for (; j--;){
 
+#ifdef _DEBUG
+				OPlog("\t(%f,%f) (%f,%f)",
+					s->Frames[j].Offset.x, s->Frames[j].Offset.y,
+					s->Frames[j].Size.x, s->Frames[j].Size.y
+					);
+#endif
+
+				s->Frames[j].Offset.x /= size.x;
+				s->Frames[j].Offset.y /= size.y;
+				s->Frames[j].Size /= size;
 #ifdef _DEBUG
 			OPlog("\t(%f,%f) (%f,%f)",
 				s->Frames[j].Offset.x, s->Frames[j].Offset.y,
 				s->Frames[j].Size.x, s->Frames[j].Size.y
-			);
+				);
 #endif
 		}
 	}

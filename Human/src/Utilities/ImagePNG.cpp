@@ -55,6 +55,11 @@ i32 OPimagePNGLoadStream(OPstream* str, i32 offset, OPtexture** image) {
 	if (error) {
 		OPlog("LodePNG Error %d", error);
 	}
+	OPlog("Width: %d, Height: %d", width, height);
+	//for (i32 i = 0; i < width * height; i++) {
+	//	OPlog("Data: %s", data[i]);
+	//	if (data[i] == 0) break;
+	//}
 	OPglError("OPimagePNGLoad:Error 1");
 	OPtexture* tex = (OPtexture*)OPalloc(sizeof(OPtexture));
 	OPglError("OPimagePNGLoad:Error 2");
