@@ -300,12 +300,26 @@ void OPgamePadUpdate(OPgamePadController* controller){
 	__OPwinUpdateGamePad(controller);
 #endif
 	
-		
-	for(ui32 i = 0; i < GamePadAxes_Max; i++) {
-		if(OPabs(controller->axes[i]) < controller->deadzone) {
-			controller->axes[i] = 0;
-		}
-	}
+	OPvec2 axis;
+	OPfloat len;
+
+	axis.x = controller->axes[0];
+	axis.y = controller->axes[1];
+	OPvec2len(&len, &axis);
+	controller->axes[0] *= len > controller->deadzone;
+	controller->axes[1] *= len > controller->deadzone;
+	
+	axis.x = controller->axes[2];
+	axis.y = controller->axes[3];
+	OPvec2len(&len, &axis);
+	controller->axes[2] *= len > controller->deadzone;
+	controller->axes[3] *= len > controller->deadzone;
+
+	axis.x = controller->axes[4];
+	axis.y = controller->axes[5];
+	OPvec2len(&len, &axis);
+	controller->axes[4] *= len > controller->deadzone;
+	controller->axes[5] *= len > controller->deadzone;
 }
 
 void OPgamePadReset(OPgamePadController* controller){
