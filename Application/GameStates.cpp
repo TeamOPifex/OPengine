@@ -152,7 +152,7 @@ void State0Enter(OPgameState* last){
 ui32 backgroundState = 0;
 
 int State0Update(OPtimer* time){
-	OPsprite* bg = (OPsprite*)OPcmanGet("walk");
+	OPsprite* bg = (OPsprite*)OPcmanGet("gripe/walk");
 
 	ui32 elapsed = time->Elapsed;
 	//OPwebServerQueue(server, "time", (i8*)&elapsed, sizeof(ui32));
