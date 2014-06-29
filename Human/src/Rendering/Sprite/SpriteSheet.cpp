@@ -50,6 +50,11 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 	OPspriteFrame* frameData;
 	OPtexture *sheet, *temp;
 
+	ui32 filenameLength = strlen(filename);
+	ui32 filenameLengthWithoutExtension = filenameLength - 5 - 8;
+	OPchar* filenameWithoutExtension = (OPchar*)OPalloc(sizeof(OPchar)* filenameLengthWithoutExtension);
+	OPmemcpy(filenameWithoutExtension, filename + 8, filenameLengthWithoutExtension * sizeof(OPchar));
+
 	ASSERT(OP_CMAN_ASSETLOADERS,
 		"OPspriteSheetLoad() - OP_CMAN_HASHMAP null, is content man initialized?"
 		);
@@ -89,16 +94,25 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 			// read the name, and the sprite flags
 			// setup a proxy var for frame data
 			OPasset* assetBucket = NULL;
+
 			i8* nameData = OPreadstring(str);
 			OPchar* name = (OPchar*)nameData;
-			(*ss)->Names[i] = name;
+			ui32 nameDataLength = strlen(name);
+			OPchar* finalName = (OPchar*)OPalloc(filenameLengthWithoutExtension + 1 + nameDataLength);
+			OPmemcpy(finalName, filenameWithoutExtension, filenameLengthWithoutExtension);
+			finalName[filenameLengthWithoutExtension] = '/';
+			OPmemcpy(finalName + filenameLengthWithoutExtension + 1, name, nameDataLength);
+			finalName[filenameLengthWithoutExtension + 1 + nameDataLength] = NULL;
+
+			(*ss)->Names[i] = finalName;
+			OPfree(nameData);
 			ui32 flags = OPreadi32(str);
 			ui32 spriteFrames = 1;
 			OPspriteFrame* spriteFrameData = frameData + frameNum;
 			OPsprite* sprite = (OPsprite*)OPalloc(sizeof(OPsprite));
 
 #ifdef _DEBUG
-			OPlog("Sprite '%s' @ %x", name, sprite);
+			OPlog("Sprite '%s' @ %x", finalName, sprite);
 #endif
 
 			// zero the sprite structure out
@@ -154,7 +168,7 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 
 			// Insert the sprite into the content manager's hashmap
 #ifdef _DEBUG
-			OPlog("Inserting sprite '%s'", name);
+			OPlog("Inserting sprite '%s'", finalName);
 #endif
 
 			// create the asset to insert into the hashmap
@@ -163,7 +177,7 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 			assetBucket->Asset = (void*)sprite;
 			assetBucket->Unload = NULL;
 			assetBucket->Dirty = 0;
-			OPhashMapPut(&OP_CMAN_HASHMAP, name, assetBucket);
+			OPhashMapPut(&OP_CMAN_HASHMAP, finalName, assetBucket);
 		}
 	}
 
@@ -183,6 +197,9 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 #ifdef _DEBUG
 	OPlog("Done!");
 #endif
+
+	OPfree(filenameWithoutExtension);
+
 	return 1;
 }
 

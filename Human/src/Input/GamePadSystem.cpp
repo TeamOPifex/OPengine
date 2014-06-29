@@ -290,7 +290,6 @@ void OPgamePadUpdate(OPgamePadController* controller){
 #ifdef OPIFEX_ANDROID
 	__OPandUpdateGamePad(controller);
 #endif
-
 	
 #if !defined(OPIFEX_ANDROID) && defined(OPIFEX_UNIX)
 	__OPlnxUpdateGamePad(controller);	
