@@ -11,6 +11,8 @@ typedef struct {
 	ui16 hierarchyCount;
 	OPmat4* localPoses;
 	OPmat4* globalPoses;
+	OPmat4* localInvPoses;
+	OPmat4* skinned;
 } OPskeleton;
 
 OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* pose, i32 count);

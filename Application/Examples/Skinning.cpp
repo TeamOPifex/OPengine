@@ -68,10 +68,11 @@ int ExampleSkinningUpdate(OPtimer* time) {
 
 	OPkeyboardUpdate();
 	if (OPkeyboardWasPressed(OPKEY_P)) { pos++; }
+	if (OPkeyboardWasPressed(OPKEY_O)) { pos--; }
 
 	//OPmat4translate(&mesh->Skeleton->localPoses[pos], time->Elapsed / 1000.0f, 0, 0);
-	OPmat4rotX(&skinningMesh->Skeleton->localPoses[pos], OPkeyboardIsDown(OPKEY_W) / 100.0f);
-	OPmat4rotX(&skinningMesh->Skeleton->localPoses[pos], OPkeyboardIsDown(OPKEY_S) / -100.0f);
+	OPmat4rotX(&skinningMesh->Skeleton->localPoses[pos], OPkeyboardIsDown(OPKEY_W) / 10.0f);
+	OPmat4rotX(&skinningMesh->Skeleton->localPoses[pos], OPkeyboardIsDown(OPKEY_S) / -10.0f);
 	OPskeletonUpdate(skinningMesh->Skeleton);
 
 	OPrenderBindMesh(skinningMesh);
@@ -88,7 +89,7 @@ int ExampleSkinningUpdate(OPtimer* time) {
 	OPrenderParamMat4v("uProj", 1, &proj);
 	OPrenderParamMat4v("uView", 1, &view);
 
-	OPrenderParamMat4v("uBones", 15, skinningMesh->Skeleton->globalPoses);
+	OPrenderParamMat4v("uBones", skinningMesh->Skeleton->hierarchyCount, skinningMesh->Skeleton->skinned);
 
 	OPvec3 light = OPvec3Create(0, 10, 0);
 	OPrenderParamVec3("uLightPosition", 1, &light);

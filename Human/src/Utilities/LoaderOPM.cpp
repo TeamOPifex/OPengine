@@ -408,9 +408,12 @@ OPMData OPMloadData(OPstream* str) {
 		pose = (OPmat4*)OPalloc(sizeof(OPmat4)* boneCount);
 		
 		for(i32 i = 0; i < boneCount; i++) {
+
 			i32 boneIndex = OPreadi16(str);
 			hierarchy[i] = boneIndex;
+
 			i8* name = OPreadstring(str);
+
 			f32 px = OPreadf32(str);
 			f32 py = OPreadf32(str);
 			f32 pz = OPreadf32(str);
@@ -427,12 +430,14 @@ OPMData OPMloadData(OPstream* str) {
 			OPmat4 tmp;
 
 			OPquat rot = OPquatCreate(rx, ry, rz, rw);
-			OPmat4buildQuat(&tmp, &rot);
-			//OPmat4scl(&pose[i], sx, sy, sz);
-			//OPmat4quat(&tmp, &rot);
+
+			OPmat4identity(&tmp);
+			OPmat4quat(&tmp, &rot);
 			OPmat4translate(&tmp, px, py, pz);
+			pose[i] = tmp;
 			OPmat4Inverse(&pose[i], &tmp);
-			OPlog("Joint: %d %s : %f, %f, %f", boneIndex, name, px, py, pz);
+
+			OPlog("Joint: %d %s : %f, %f, %f, %f, %f, %f", boneIndex, name, px, py, pz, sx, sy, sz);
 			OPfree(name);
 		}
 	}
