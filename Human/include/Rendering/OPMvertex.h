@@ -63,4 +63,5 @@ typedef struct {
 OPvertices* OPverticesCreate(ui32 count, ui32 features);
 void OPverticesWriteVec2(OPvertices* vertices, OPvec2* data, ui32 feature);
 void OPverticesWriteVec3(OPvertices* vertices, OPvec3* data, ui32 feature);
+void OPverticesWriteVec4(OPvertices* vertices, OPvec4* data, ui32 feature);
 #endif
