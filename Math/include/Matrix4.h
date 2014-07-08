@@ -397,6 +397,7 @@ inline void OPmat4Inverse(OPmat4* dst, OPmat4* src) {
 	if (det == 0) {
 		// can't invert matrix, determinant is 0";
 		OPmat4identity(dst);
+		return;
 	}
 
 	OPmat4scl(dst, 1 / det, 1 / det, 1 / det);

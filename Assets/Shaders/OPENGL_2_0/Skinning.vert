@@ -28,24 +28,23 @@ void main() {
 	
 	
 	
-	newPosition = vec4(0,0,0,0);
 	
 	int index = int(aBlendIndices.x);
-	newPosition = (uBones[index] * pos) * aBlendWeights.x + newPosition;
-	//newNormal = (uBones[index] * norm) * blendWeights.x + newPosition;
+	newPosition = (uBones[index] * pos) * 1.0;//aBlendWeights.x;
+	newNormal = (uBones[index] * norm) * 1.0;//blendWeights.x;
 
-	index = int(aBlendIndices.y);
-	newPosition = (uBones[index] * pos) * aBlendWeights.y + newPosition;
+	//index = int(aBlendIndices.y);
+	//newPosition = (uBones[index] * pos) * aBlendWeights.y + newPosition;
 	//newNormal = (uBones[index] * norm) * blendWeights.y + newNormal;
 	
 	
-	index = int(aBlendIndices.z);
-	newPosition = (uBones[index] * pos) * aBlendWeights.z + newPosition;
+	//index = int(aBlendIndices.z);
+	//newPosition = (uBones[index] * pos) * aBlendWeights.z + newPosition;
 	//newNormal = (uBones[index] * norm) * blendWeights.z + newNormal;
 	
 	
-	index = int(aBlendIndices.w);
-	newPosition = (uBones[index] * pos) * aBlendWeights.w + newPosition;
+	//index = int(aBlendIndices.w);
+	//newPosition = (uBones[index] * pos) * aBlendWeights.w + newPosition;
 	//newNormal = (uBones[index] * norm) * blendWeights.w + newNormal;
 
 	
