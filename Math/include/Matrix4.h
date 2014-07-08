@@ -5,6 +5,7 @@
 #include "./Math/include/Vector2.h"
 #include "./Math/include/Vector3.h"
 #include "./Math/include/Vector4.h"
+#include "./Math/include/Quaternion.h"
 #include "./Core/include/DynamicMemory.h"
 #include "./Core/include/MathHelpers.h"
 #include "./Core/include/Log.h"
@@ -30,6 +31,9 @@ inline void OPmat4Print(OPmat4 m);
 inline void OPmat4perspective(OPmat4* m, OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal);
 inline void OPmat4transform(OPvec3* dst, OPvec3* a, OPmat4* b);
 
+extern const OPmat4 OPmat4Zero;
+extern const OPmat4 OPmat4Identity;
+
 // Data Structure 4 * 4 = 16 floats
 //		32 bit = 16 * 32 = 512 bits or 64 bytes
 //		64 bit = 16 * 64 = 1024 bits or 128 bytes
@@ -39,12 +43,7 @@ struct OPmat4 {
 		OPmemcpy(this, (void*)&vhs, sizeof(OPmat4)); return *this;
 	}
 	inline OPmat4 operator*(OPmat4 vhs) { 
-		OPmat4 temp = {
-			0, 0, 0, 0,
-			0, 0, 0, 0,
-			0, 0, 0, 0,
-			0, 0, 0, 0
-		};
+		OPmat4 temp = OPmat4Zero;
 		OPmat4mul(&temp, this, &vhs); 
 		return temp; 
 	}
@@ -228,56 +227,31 @@ inline void OPmat4buildScl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
 
 
 inline void OPmat4rotX(OPmat4* m, OPfloat x) {
-	OPmat4 temp = {
-		0, 0, 0, 0,
-		0, 0, 0, 0,
-		0, 0, 0, 0,
-		0, 0, 0, 0
-	};
+	OPmat4 temp = OPmat4Zero;
 	OPmat4buildRotX(&temp, x);
 	OPmat4mul(m, m, &temp);
 }
 
 inline void OPmat4rotZ(OPmat4* m, OPfloat x) {
-	OPmat4 temp = {
-		0, 0, 0, 0,
-		0, 0, 0, 0,
-		0, 0, 0, 0,
-		0, 0, 0, 0
-	};
+	OPmat4 temp = OPmat4Zero;
 	OPmat4buildRotZ(&temp, x);
 	OPmat4mul(m, m, &temp);
 }
 
 inline void OPmat4translate(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
-	OPmat4 temp = {
-		0, 0, 0, 0,
-		0, 0, 0, 0,
-		0, 0, 0, 0,
-		0, 0, 0, 0
-	};
+	OPmat4 temp = OPmat4Zero;
 	OPmat4buildTranslate(&temp, x, y, z);
 	OPmat4mul(m, m, &temp);
 }
 
 inline void OPmat4scl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
-	OPmat4 temp = {
-		0, 0, 0, 0,
-		0, 0, 0, 0,
-		0, 0, 0, 0,
-		0, 0, 0, 0
-	};
+	OPmat4 temp = OPmat4Zero;
 	OPmat4buildScl(&temp, x, y, z);
 	OPmat4mul(m, m, &temp);
 }
 
 inline void OPmat4rotY(OPmat4* m, OPfloat x) {
-	OPmat4 temp = {
-		0, 0, 0, 0,
-		0, 0, 0, 0,
-		0, 0, 0, 0,
-		0, 0, 0, 0
-	};
+	OPmat4 temp = OPmat4Zero;
 	OPmat4buildRotY(&temp, x);
 	OPmat4mul(m, m, &temp);
 }
@@ -355,6 +329,77 @@ inline void OPmat4transformVec4(OPvec4* dst, OPvec4* a, OPmat4* b) {
 	dst->y = b->cols[0].y * a->x + b->cols[1].y * a->y + b->cols[2].y * a->z + b->cols[3].y * a->w;
 	dst->z = b->cols[0].z * a->x + b->cols[1].z * a->y + b->cols[2].z * a->z + b->cols[3].z * a->w;
 	dst->w = b->cols[0].w * a->x + b->cols[1].w * a->y + b->cols[2].w * a->z + b->cols[3].w * a->w;
+}
+
+inline void OPmat4buildQuat(OPmat4* dst, OPquat* qtr){
+	f32 x = qtr->x;		f32 y = qtr->y;		f32 z = qtr->z;		f32 w = qtr->w;
+	f32 x2 = x + x;		f32 y2 = y + y;		f32 z2 = z + z;
+	f32 xx = x * x2;	f32 xy = x * y2;	f32 xz = x * z2;
+	f32 yy = y * y2;	f32 yz = y * z2;	f32 zz = z * z2;
+	f32 wx = w * x2;	f32 wy = w * y2;	f32 wz = w * z2;
+
+	dst->cols[0].x = 1 - (yy + zz);
+	dst->cols[0].y = xy - wz;
+	dst->cols[0].z = xz + wy;
+
+	dst->cols[1].x = xy + wz;
+	dst->cols[1].y = 1 - (xx + zz);
+	dst->cols[1].z = yz - wx;
+	
+	dst->cols[2].x = xz - wy;
+	dst->cols[2].y = yz + wx;
+	dst->cols[2].z = 1 - (xx + yy);
+
+	dst->cols[3].x = 0;
+	dst->cols[3].y = 0;
+	dst->cols[3].z = 0;
+	
+	dst->cols[0].w = 0;
+	dst->cols[1].w = 0;
+	dst->cols[2].w = 0;
+	dst->cols[3].w = 1;
+}
+
+inline void OPmat4quat(OPmat4* m, OPquat* qtr) {
+	OPmat4 temp = OPmat4Zero;
+	OPmat4buildQuat(&temp, qtr);
+	OPmat4mul(m, m, &temp);
+}
+
+inline void OPmat4Inverse(OPmat4* dst, OPmat4* src) {
+
+	// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
+
+	f32 n11 = src->cols[0].x, n12 = src->cols[0].y, n13 = src->cols[0].z, n14 = src->cols[0].w;
+	f32 n21 = src->cols[1].x, n22 = src->cols[1].y, n23 = src->cols[1].z, n24 = src->cols[1].w;
+	f32 n31 = src->cols[2].x, n32 = src->cols[2].y, n33 = src->cols[2].z, n34 = src->cols[2].w;
+	f32 n41 = src->cols[3].x, n42 = src->cols[3].y, n43 = src->cols[3].z, n44 = src->cols[3].w;
+
+	dst->cols[0].x = n23*n34*n42 - n24*n33*n42 + n24*n32*n43 - n22*n34*n43 - n23*n32*n44 + n22*n33*n44;
+	dst->cols[0].y = n14*n33*n42 - n13*n34*n42 - n14*n32*n43 + n12*n34*n43 + n13*n32*n44 - n12*n33*n44;
+	dst->cols[0].z = n13*n24*n42 - n14*n23*n42 + n14*n22*n43 - n12*n24*n43 - n13*n22*n44 + n12*n23*n44;
+	dst->cols[0].w = n14*n23*n32 - n13*n24*n32 - n14*n22*n33 + n12*n24*n33 + n13*n22*n34 - n12*n23*n34;
+	dst->cols[1].x = n24*n33*n41 - n23*n34*n41 - n24*n31*n43 + n21*n34*n43 + n23*n31*n44 - n21*n33*n44;
+	dst->cols[1].y = n13*n34*n41 - n14*n33*n41 + n14*n31*n43 - n11*n34*n43 - n13*n31*n44 + n11*n33*n44;
+	dst->cols[1].z = n14*n23*n41 - n13*n24*n41 - n14*n21*n43 + n11*n24*n43 + n13*n21*n44 - n11*n23*n44;
+	dst->cols[1].w = n13*n24*n31 - n14*n23*n31 + n14*n21*n33 - n11*n24*n33 - n13*n21*n34 + n11*n23*n34;
+	dst->cols[2].x = n22*n34*n41 - n24*n32*n41 + n24*n31*n42 - n21*n34*n42 - n22*n31*n44 + n21*n32*n44;
+	dst->cols[2].y = n14*n32*n41 - n12*n34*n41 - n14*n31*n42 + n11*n34*n42 + n12*n31*n44 - n11*n32*n44;
+	dst->cols[2].z = n12*n24*n41 - n14*n22*n41 + n14*n21*n42 - n11*n24*n42 - n12*n21*n44 + n11*n22*n44;
+	dst->cols[2].w = n14*n22*n31 - n12*n24*n31 - n14*n21*n32 + n11*n24*n32 + n12*n21*n34 - n11*n22*n34;
+	dst->cols[3].x = n23*n32*n41 - n22*n33*n41 - n23*n31*n42 + n21*n33*n42 + n22*n31*n43 - n21*n32*n43;
+	dst->cols[3].y = n12*n33*n41 - n13*n32*n41 + n13*n31*n42 - n11*n33*n42 - n12*n31*n43 + n11*n32*n43;
+	dst->cols[3].z = n13*n22*n41 - n12*n23*n41 - n13*n21*n42 + n11*n23*n42 + n12*n21*n43 - n11*n22*n43;
+	dst->cols[3].w = n12*n23*n31 - n13*n22*n31 + n13*n21*n32 - n11*n23*n32 - n12*n21*n33 + n11*n22*n33;
+
+	f32 det = n11 * dst->cols[0].x + n21 * dst->cols[0].y + n31 * dst->cols[0].z + n41 * dst->cols[0].w;
+
+	if (det == 0) {
+		// can't invert matrix, determinant is 0";
+		OPmat4identity(dst);
+	}
+
+	OPmat4scl(dst, 1 / det, 1 / det, 1 / det);
 }
 
 #endif
