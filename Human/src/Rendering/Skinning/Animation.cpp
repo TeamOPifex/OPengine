@@ -6,7 +6,7 @@ inline void OPskeletonUpdateGlobalPoses(OPskeleton* skeleton) {
 	for (ui32 i = 1; i < skeleton->hierarchyCount; ++i) {
 		OPmat4mul(&skeleton->globalPoses[i],
 			&skeleton->globalPoses[skeleton->hierarchy[i]],
-			&skeleton->localPoses[i]
+			& skeleton->localPoses[i]
 			);
 	}
 }

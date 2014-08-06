@@ -96,9 +96,9 @@ void OPmouseUpdate() {
 
 	for(ui32 i = 0; i < OPMOUSE_MAX; i++) {
 		Mouse.keys[i] = glfwGetMouseButton(window, OPmouseCodes[i]);
-		if(Mouse.keys[i]) {
-			OPlog("Key %d : %d", i, OPmouseCodes[i]);
-		}
+		//if(Mouse.keys[i]) {
+		//	OPlog("Key %d : %d", i, OPmouseCodes[i]);
+		//}
 	}
 	// TODO: Fix this with the callback for GLFW3ß
 	//glfwGetCursorPos(window, &Mouse.positionX, &Mouse.positionY);

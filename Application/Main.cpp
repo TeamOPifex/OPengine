@@ -6,9 +6,10 @@
 #include "./Core/include/Core.h"
 #include "./Data/include/GameStates.h"
 
-#include "./Examples/Model.h"
-#include "./Examples/ParticleSystem.h"
-#include "./Examples/Skinning.h"
+#include "./Application/Examples/Model.h"
+#include "./Application/Examples/Oculus.h"
+#include "./Application/Examples/ParticleSystem.h"
+#include "./Application/Examples/Skinning.h"
 
 //#include "./GameManager.h"
 #include "./Human/include/Rendering/Renderer.h"
@@ -74,15 +75,18 @@ void Init(){
 	//server = OPwebServerCreate("8080");
 	//OPwebServerOnKey(server, "test", MsgHandler, NULL);
 
+
+	//OPoculusStartup();
+
 #ifndef OPIFEX_ANDROID
 	OPrenderInit(width, height, false);
 #else
 	OPrenderInit(JNIWidth(), JNIHeight(), true);
 #endif
-
-	//OPgameStateChange(&State0);
+	OPgameStateChange(&State0);
 	//OPgameStateChange(&GS_EXAMPLE_MODEL);
-	OPgameStateChange(&GS_EXAMPLE_SKINNING);
+	//OPgameStateChange(&GS_EXAMPLE_SKINNING);
+	//OPgameStateChange(&GS_EXAMPLE_OCULUS);
 
 	return;
 }
@@ -124,25 +128,39 @@ extern "C" {
 };
 JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj) {
 #else
-	int main() {
+	int main(int argc, char** args) {
 #endif
- 	OPmyoConnect();
-	OPscriptInit();
-	OPscriptLog("TEST LOGGING!!!");
+		if (argc > 2) {
+			ui32 arg2len = strlen(args[1]);
+			const i8* p = "-script";
+			ui32 plen = strlen(p);
+			if (arg2len == plen){
+				i32 match = OPmemcmp(args[1], p, arg2len);
+				if (match == 0) {
+					i8* script = args[2];
+					OPscriptInit();
+					OPstream* stream = OPreadFile(script);
+					OPscriptCompileAndRunStream(stream);
+				}
+			}
+		}
+		else {
+ 			OPmyoConnect();
 
+			OPinitialize = Init;
+			OPupdate = UpdateState;
+			OPdestroy = Destroy;
 
-	OPinitialize = Init;
-	OPupdate = UpdateState;
-	OPdestroy = Destroy;
+			ActiveState = &State0;//OPgameStateCreate(NULL, Update, NULL);
 
+		#ifdef OPIFEX_ANDROID
+			return;
+		#else
+			OPstart();
+			OPend();
 
-	//ActiveState = &State0;//OPgameStateCreate(NULL, Update, NULL);
+		}
+		return 0;
 
-#ifdef OPIFEX_ANDROID
-	return;
-#else
-	OPstart();
-	OPend();
-	return 0;
 #endif
 }

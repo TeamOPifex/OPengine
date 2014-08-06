@@ -71,8 +71,8 @@ OPint OPcmanLoad(const OPchar* key){
 	if(ext){
 		OPint i = 0, extLen = strlen(ext);
 		extLen = extLen <= 8 ? extLen : 8;
-
-		for(i = OP_CMAN_ASSET_LOADER_COUNT; i--;){
+		
+		for (i = OP_CMAN_ASSET_LOADER_COUNT; i--;){
 			if(OPmemcmp(OP_CMAN_ASSETLOADERS[i].Extension, ext, extLen) == 0){
 				OPasset* assetBucket = NULL;
 				OPchar* fullPath = NULL;

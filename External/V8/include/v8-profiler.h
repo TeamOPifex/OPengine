@@ -1,29 +1,6 @@
 // Copyright 2010 the V8 project authors. All rights reserved.
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are
-// met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above
-//       copyright notice, this list of conditions and the following
-//       disclaimer in the documentation and/or other materials provided
-//       with the distribution.
-//     * Neither the name of Google Inc. nor the names of its
-//       contributors may be used to endorse or promote products derived
-//       from this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
 
 #ifndef V8_V8_PROFILER_H_
 #define V8_V8_PROFILER_H_
@@ -34,6 +11,9 @@
  * Profiler support for the V8 JavaScript engine.
  */
 namespace v8 {
+
+class HeapGraphNode;
+struct HeapStatsUpdate;
 
 typedef uint32_t SnapshotObjectId;
 
@@ -103,27 +83,35 @@ class V8_EXPORT CpuProfile {
   const CpuProfileNode* GetTopDownRoot() const;
 
   /**
-    * Returns number of samples recorded. The samples are not recorded unless
-    * |record_samples| parameter of CpuProfiler::StartCpuProfiling is true.
-    */
+   * Returns number of samples recorded. The samples are not recorded unless
+   * |record_samples| parameter of CpuProfiler::StartCpuProfiling is true.
+   */
   int GetSamplesCount() const;
 
   /**
-    * Returns profile node corresponding to the top frame the sample at
-    * the given index.
-    */
+   * Returns profile node corresponding to the top frame the sample at
+   * the given index.
+   */
   const CpuProfileNode* GetSample(int index) const;
 
   /**
-    * Returns time when the profile recording started (in microseconds
-    * since the Epoch).
-    */
+   * Returns the timestamp of the sample. The timestamp is the number of
+   * microseconds since some unspecified starting point.
+   * The point is equal to the starting point used by GetStartTime.
+   */
+  int64_t GetSampleTimestamp(int index) const;
+
+  /**
+   * Returns time when the profile recording was started (in microseconds)
+   * since some unspecified starting point.
+   */
   int64_t GetStartTime() const;
 
   /**
-    * Returns time when the profile recording was stopped (in microseconds
-    * since the Epoch).
-    */
+   * Returns time when the profile recording was stopped (in microseconds)
+   * since some unspecified starting point.
+   * The point is equal to the starting point used by GetStartTime.
+   */
   int64_t GetEndTime() const;
 
   /**
@@ -158,13 +146,22 @@ class V8_EXPORT CpuProfiler {
    * |record_samples| parameter controls whether individual samples should
    * be recorded in addition to the aggregated tree.
    */
-  void StartCpuProfiling(Handle<String> title, bool record_samples = false);
+  void StartProfiling(Handle<String> title, bool record_samples = false);
+
+  /** Deprecated. Use StartProfiling instead. */
+  V8_DEPRECATED("Use StartProfiling",
+      void StartCpuProfiling(Handle<String> title,
+                             bool record_samples = false));
 
   /**
    * Stops collecting CPU profile with a given title and returns it.
    * If the title given is empty, finishes the last profile started.
    */
-  const CpuProfile* StopCpuProfiling(Handle<String> title);
+  CpuProfile* StopProfiling(Handle<String> title);
+
+  /** Deprecated. Use StopProfiling instead. */
+  V8_DEPRECATED("Use StopProfiling",
+      const CpuProfile* StopCpuProfiling(Handle<String> title));
 
   /**
    * Tells the profiler whether the embedder is idle.
@@ -177,9 +174,6 @@ class V8_EXPORT CpuProfiler {
   CpuProfiler(const CpuProfiler&);
   CpuProfiler& operator=(const CpuProfiler&);
 };
-
-
-class HeapGraphNode;
 
 
 /**
@@ -225,19 +219,20 @@ class V8_EXPORT HeapGraphEdge {
 class V8_EXPORT HeapGraphNode {
  public:
   enum Type {
-    kHidden = 0,        // Hidden node, may be filtered when shown to user.
-    kArray = 1,         // An array of elements.
-    kString = 2,        // A string.
-    kObject = 3,        // A JS object (except for arrays and strings).
-    kCode = 4,          // Compiled code.
-    kClosure = 5,       // Function closure.
-    kRegExp = 6,        // RegExp.
-    kHeapNumber = 7,    // Number stored in the heap.
-    kNative = 8,        // Native object (not from V8 heap).
-    kSynthetic = 9,     // Synthetic object, usualy used for grouping
-                        // snapshot items together.
-    kConsString = 10,   // Concatenated string. A pair of pointers to strings.
-    kSlicedString = 11  // Sliced string. A fragment of another string.
+    kHidden = 0,         // Hidden node, may be filtered when shown to user.
+    kArray = 1,          // An array of elements.
+    kString = 2,         // A string.
+    kObject = 3,         // A JS object (except for arrays and strings).
+    kCode = 4,           // Compiled code.
+    kClosure = 5,        // Function closure.
+    kRegExp = 6,         // RegExp.
+    kHeapNumber = 7,     // Number stored in the heap.
+    kNative = 8,         // Native object (not from V8 heap).
+    kSynthetic = 9,      // Synthetic object, usualy used for grouping
+                         // snapshot items together.
+    kConsString = 10,    // Concatenated string. A pair of pointers to strings.
+    kSlicedString = 11,  // Sliced string. A fragment of another string.
+    kSymbol = 12         // A Symbol (ES6).
   };
 
   /** Returns node type (see HeapGraphNode::Type). */
@@ -268,6 +263,37 @@ class V8_EXPORT HeapGraphNode {
 
   /** Retrieves a child by index. */
   const HeapGraphEdge* GetChild(int index) const;
+};
+
+
+/**
+ * An interface for exporting data from V8, using "push" model.
+ */
+class V8_EXPORT OutputStream {  // NOLINT
+ public:
+  enum WriteResult {
+    kContinue = 0,
+    kAbort = 1
+  };
+  virtual ~OutputStream() {}
+  /** Notify about the end of stream. */
+  virtual void EndOfStream() = 0;
+  /** Get preferred output chunk size. Called only once. */
+  virtual int GetChunkSize() { return 1024; }
+  /**
+   * Writes the next chunk of snapshot data into the stream. Writing
+   * can be stopped by returning kAbort as function result. EndOfStream
+   * will not be called in case writing was aborted.
+   */
+  virtual WriteResult WriteAsciiChunk(char* data, int size) = 0;
+  /**
+   * Writes the next chunk of heap stats data into the stream. Writing
+   * can be stopped by returning kAbort as function result. EndOfStream
+   * will not be called in case writing was aborted.
+   */
+  virtual WriteResult WriteHeapStatsChunk(HeapStatsUpdate* data, int count) {
+    return kAbort;
+  }
 };
 
 
@@ -338,7 +364,24 @@ class V8_EXPORT HeapSnapshot {
 };
 
 
-class RetainedObjectInfo;
+/**
+ * An interface for reporting progress and controlling long-running
+ * activities.
+ */
+class V8_EXPORT ActivityControl {  // NOLINT
+ public:
+  enum ControlOption {
+    kContinue = 0,
+    kAbort = 1
+  };
+  virtual ~ActivityControl() {}
+  /**
+   * Notify about current progress. The activity can be stopped by
+   * returning kAbort as the callback result.
+   */
+  virtual ControlOption ReportProgressValue(int done, int total) = 0;
+};
+
 
 /**
  * Interface for controlling heap profiling. Instance of the

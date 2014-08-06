@@ -20,6 +20,7 @@ include_directories(
 	../External/Oculus/Src/
 	../External/Myo/include/
 	../External/V8/include/
+	../External/V8/
 	../External/VP8/include/
 	.
 	../
@@ -86,8 +87,7 @@ set_target_properties(9_Application PROPERTIES OUTPUT_NAME "Application")
 # ADDITIONAL FEATURES
 #########################################
 if(${OPIFEX_OCULUS})
-	include_directories(../External/Oculus/include/	../External/Oculus/Src/)
-	target_link_libraries(9_Application ${PROJECT_SOURCE_DIR}/External/Oculus/lib/win32/libovr.lib)
+	include_directories(../External/Oculus/include/	../External/Oculus/include/)
 	add_definitions(-DOPIFEX_OCULUS)
 endif()
 
@@ -115,6 +115,8 @@ if(${OPIFEX_V8})
 			target_link_libraries(9_Application ${PROJECT_SOURCE_DIR}/External/V8/lib/win64/v8.lib)
 		else()
 			target_link_libraries(9_Application ${PROJECT_SOURCE_DIR}/External/V8/lib/win32/v8.lib)
+			target_link_libraries(9_Application ${PROJECT_SOURCE_DIR}/External/V8/lib/win32/v8_libbase.lib)
+			target_link_libraries(9_Application ${PROJECT_SOURCE_DIR}/External/V8/lib/win32/v8_libplatform.lib)
 		endif()
 	endif()
 	add_definitions(-DOPIFEX_V8)

@@ -1,34 +1,40 @@
-#ifdef OPIFEX_OCULUS
+
+
+#define OVR_OS_WIN32
 
 #ifndef OPENGINE_HUMAN_INPUT_OCULUS
 #define OPENGINE_HUMAN_INPUT_OCULUS
 
+#ifdef OPIFEX_OCULUS
 #include "./Math/include/Vector2.h"
 #include "./Math/include/Vector4.h"
 
-#include "OVR.h"
+#include "./Human/include/Rendering/FrameBuffer.h"
 
-using namespace OVR;
+#include "./External/OculusDK2/src/OVR_CAPI.h"
+#include "./External/OculusDK2/src/OVR_CAPI_GL.h"
+#endif
 
 typedef struct {
-	DeviceManager* _manager;
-	HMDDevice* _device;
-	SensorDevice* _sensor;
-	HMDInfo* current;
-	SensorFusion* _fusion;
-	Profile* _profile;
+#ifdef OPIFEX_OCULUS
+	ovrHmd _hmdDevice;
+	OPframeBuffer _frameBuffer;
+	ovrFrameTiming _timing;
+	ovrGLTexture* _ovrTexture;
+	ovrEyeRenderDesc _eyeRenderDesc;
+#endif
 } OPoculus;
 
 extern OPoculus* OculusManager;
 
+int OPoculusStartup();
 int OPoculusInitialize();
 void OPoculusDestroy();
 
 void OPoculusUpdate();
-OPvec4 OPoculusHmd();
-OPvec2 OPoculusScreenSize();
-OPfloat OPoculusEyeHeight();
 
-#endif
+
+void OPoculusBegin();
+void OPoculusEnd();
 
 #endif

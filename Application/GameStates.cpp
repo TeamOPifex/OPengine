@@ -88,6 +88,8 @@ void ColorSingleHandler(OPstream* str, void* param) {
 	*p = OPreadf32(str);
 }
 
+Handle<Script> script;
+
 void State0Enter(OPgameState* last){
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
@@ -112,6 +114,10 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("stencil.opf");
 	OPcmanLoad("gripe.opss");
 
+	OPcmanLoad("Update.ops");
+	OPscript* scriptCode = (OPscript*)OPcmanGet("Update.ops");
+	OPscriptCompileAndRun(scriptCode);
+
 	//OPwebServerOnKey(server, "color", ColorHandler, &color);
 	//OPwebServerOnKey(server, "font", FontHandler, NULL);
 
@@ -133,9 +139,6 @@ void State0Enter(OPgameState* last){
 	OPfontManagerSetRGBA(fontManager, 0.0f, 0.0f, 1.0f, 1.0f);
 	OPfontManagerSetAlign(fontManager, OPFONT_ALIGN_CENTER);
 
-	OPcmanLoad("Update.ops");
-	OPscript* script = (OPscript*)OPcmanGet("Update.ops");
-	OPscriptCompile(script);
 	
 	if(!OPAUD_CURR_PLAYER){
 		OPaudInit();
@@ -214,7 +217,7 @@ int State0Update(OPtimer* time){
 		pos.y + fontPosY
 	);
 
-	OPscriptRun("update");
+	OPscriptRun(script);
 
 	OPrenderPresent();
 	return false;

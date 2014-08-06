@@ -96,8 +96,7 @@ endif()
 # ADDITIONAL FEATURES
 #########################################
 if(${OPIFEX_OCULUS})
-	include_directories(../External/Oculus/include/	../External/Oculus/Src/)
-	target_link_libraries(5_Human ${PROJECT_SOURCE_DIR}/External/Oculus/lib/win32/libovr.lib)
+	include_directories(../External/Oculus/include/	../External/Oculus/include/)
 	add_definitions(-DOPIFEX_OCULUS)
 endif()
 

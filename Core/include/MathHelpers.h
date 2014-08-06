@@ -199,7 +199,8 @@ __inline OPfloat OPatan(OPfloat f){
 * @return atan(f)	
 */
 __inline OPfloat OPatan2(OPfloat x, OPfloat y) {
-	return atan2(x, y);
+	//return atan2(x, y);
+	return 0;
 }
 
 //-----------------------------------------------------------------------------

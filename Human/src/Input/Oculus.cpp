@@ -1,101 +1,168 @@
-#ifdef OPIFEX_OCULUS
 #include "./Human/include/Input/Oculus.h"
 
+#ifdef OPIFEX_OCULUS
 #include "./Core/include/DynamicMemory.h"
 #include "./Core/include/Log.h"
 #include "./Core/include/Assert.h"
 
-#include <Kernel/OVR_SysFile.h>
-#include <Kernel/OVR_Log.h>
-#include <Kernel/OVR_Timer.h>
+//#include "./External/glfw-3.0.4/include/GLFW/glfw3native.h"
 
 OPoculus* OculusManager = NULL;
-
-static void getDk1HmdValues(OVR::HMDInfo* hmdInfo) {
-	hmdInfo->HResolution = 1280;
-	hmdInfo->VResolution = 800;
-	hmdInfo->HScreenSize = 0.14976f;
-	hmdInfo->VScreenSize = 0.09360f;
-	hmdInfo->VScreenCenter = 0.04680f;
-	hmdInfo->EyeToScreenDistance = 0.04100f;
-	hmdInfo->LensSeparationDistance = 0.06350f;
-	hmdInfo->InterpupillaryDistance = 0.06400f;
-	hmdInfo->DistortionK[0] = 1;
-	hmdInfo->DistortionK[1] = 0.22f;
-	hmdInfo->DistortionK[2] = 0.24f;
-	hmdInfo->DistortionK[3] = 0;
-	hmdInfo->DesktopX = 100;
-	hmdInfo->DesktopY = 100;
-	hmdInfo->ChromaAbCorrection[0] = 0.99600f;
-	hmdInfo->ChromaAbCorrection[1] = -0.00400f;
-	hmdInfo->ChromaAbCorrection[2] = 1.01400f;
-	hmdInfo->ChromaAbCorrection[3] = 0;
-}
+#endif
 
 void OPoculusUpdate() {
-	bool result = OculusManager->_device->GetDeviceInfo(OculusManager->current);
-	if (!result) {
-		getDk1HmdValues(OculusManager->current);
+#ifdef OPIFEX_OCULUS
+	ASSERT(OculusManager != NULL, "Oculus hasn't been initialized");
+	ovrHSWDisplayState hswDisplayState;
+	ovrHmd_GetHSWDisplayState(OculusManager->_hmdDevice, &hswDisplayState);
+
+	if (hswDisplayState.Displayed) {
+		ovrHmd_DismissHSWDisplay(OculusManager->_hmdDevice);
 	}
+
+
+	//bool result = OculusManager->_device->GetDeviceInfo(OculusManager->current);
+	//if (!result) {
+		//getDk1HmdValues(OculusManager->current);
+	//}
+
+
+	ovrTrackingState ts = ovrHmd_GetTrackingState(OculusManager->_hmdDevice, ovr_GetTimeInSeconds());
+
+	if (ts.StatusFlags & (ovrStatus_OrientationTracked | ovrStatus_PositionTracked)) {
+		ovrPoseStatef pose = ts.HeadPose;
+	}
+#endif
 }
 
-int OPoculusInitialize() {
+void OPoculusBegin() {
+#ifdef OPIFEX_OCULUS
+	OculusManager->_timing = ovrHmd_BeginFrame(OculusManager->_hmdDevice, 0);
+#endif
+}
+
+void OPoculusEnd() {
+#ifdef OPIFEX_OCULUS
+	ovrPosef headPose[2];
+
+	ovrEyeType eye0 = OculusManager->_hmdDevice->EyeRenderOrder[0];
+	ovrEyeType eye1 = OculusManager->_hmdDevice->EyeRenderOrder[1];
+
+	headPose[0] = ovrHmd_GetEyePose(OculusManager->_hmdDevice, eye0);
+	headPose[1] = ovrHmd_GetEyePose(OculusManager->_hmdDevice, eye1);
+
+	ovrHmd_EndFrame(OculusManager->_hmdDevice, headPose, &OculusManager->_ovrTexture[0].Texture);
+#endif
+}
+
+int OPoculusStartup() {
+#ifdef OPIFEX_OCULUS
 	ASSERT(OculusManager == NULL, "Oculus has already been initialized");
 	if (OculusManager != NULL) {
 		return 0;
 	}
 
-	OPoculus* oculus = (OPoculus*)OPalloc(sizeof(OPoculus));
-	System::Init(Log::ConfigureDefaultLog(LogMask_All));
+	ovrBool success = ovr_Initialize();
+	if (!success) {
+		return 0;
+	}
 
-	oculus->_manager = DeviceManager::Create();
-	if (oculus->_manager == NULL) return -1;
+	OculusManager = (OPoculus*)OPalloc(sizeof(OPoculus));
 
-	oculus->_device = oculus->_manager->EnumerateDevices<HMDDevice>().CreateDevice();
-	if (oculus->_device == NULL) return -1;
+	i32 devices = ovrHmd_Detect();
 
-	oculus->_sensor = oculus->_device->GetSensor();
-	if (oculus->_sensor == NULL) return -1;
+	OculusManager->_hmdDevice = ovrHmd_Create(0);
+	if (!OculusManager->_hmdDevice) {
+		return 0;
+	}
+#endif
+	return 1;
+}
 
-	oculus->_fusion = new SensorFusion();
-	oculus->_fusion->AttachToSensor(oculus->_sensor);
+int OPoculusInitialize() {
+#ifdef OPIFEX_OCULUS
+	ASSERT(OculusManager != NULL, "Oculus has already been initialized");
 
-	oculus->current = new HMDInfo();
+	ovrSizei resolution = OculusManager->_hmdDevice->Resolution;
 
-	oculus->_profile = oculus->_device->GetProfile();
+	ovrHmd_ConfigureTracking(OculusManager->_hmdDevice,
+		ovrTrackingCap_Orientation |
+		ovrTrackingCap_MagYawCorrection |
+		ovrTrackingCap_Position,
+		0
+		);
 
-	OculusManager = oculus;
 
+	ovrSizei tex0Size = ovrHmd_GetFovTextureSize(OculusManager->_hmdDevice, ovrEye_Left, OculusManager->_hmdDevice->DefaultEyeFov[0], 1.0f);
+	ovrSizei tex1Size = ovrHmd_GetFovTextureSize(OculusManager->_hmdDevice, ovrEye_Right, OculusManager->_hmdDevice->DefaultEyeFov[1], 1.0f);
+	ovrSizei renderTargetSize;
+	ui32 w = tex0Size.w + tex1Size.w;
+	ui32 h = tex0Size.h + tex1Size.h;
+	const i32 eyeRenderMultisample = 1;
+
+	OPtextureDescription desc = {
+		w, h,
+		GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE,
+		OPtextureLinear, OPtextureLinear,
+		OPtextureClamp, OPtextureClamp
+	};
+
+
+	renderTargetSize.w = w;
+	renderTargetSize.h = h;
+
+	ovrPosef headPose[2];
+
+	ovrEyeType eye0 = OculusManager->_hmdDevice->EyeRenderOrder[0];
+	ovrEyeType eye1 = OculusManager->_hmdDevice->EyeRenderOrder[1];
+
+	headPose[0] = ovrHmd_GetEyePose(OculusManager->_hmdDevice, eye0);
+	headPose[1] = ovrHmd_GetEyePose(OculusManager->_hmdDevice, eye1);
+
+	ovrRecti frameSize;
+	frameSize.Pos.x = 0;
+	frameSize.Pos.y = 0;
+	frameSize.Size.w = w / 2.0;
+	frameSize.Size.h = h;
+
+	OculusManager->_frameBuffer = OPframeBufferCreate(desc);
+	OculusManager->_ovrTexture = (ovrGLTexture*)OPalloc(sizeof(ovrGLTexture)* 2);
+	OculusManager->_ovrTexture[0].OGL.Header.API = ovrRenderAPI_OpenGL;
+	OculusManager->_ovrTexture[0].OGL.Header.TextureSize = renderTargetSize;
+	OculusManager->_ovrTexture[0].OGL.Header.RenderViewport = frameSize;
+	OculusManager->_ovrTexture[0].OGL.TexId = OculusManager->_frameBuffer.Handle;		
+	frameSize.Pos.x = w / 2.0;
+	OculusManager->_ovrTexture[1].OGL.Header.API = ovrRenderAPI_OpenGL;
+	OculusManager->_ovrTexture[1].OGL.Header.TextureSize = renderTargetSize;
+	OculusManager->_ovrTexture[1].OGL.Header.RenderViewport = frameSize;
+	OculusManager->_ovrTexture[1].OGL.TexId = OculusManager->_frameBuffer.Handle;
+
+	ovrGLConfig cfg;
+	cfg.OGL.Header.API = ovrRenderAPI_OpenGL;
+	cfg.OGL.Header.RTSize = renderTargetSize;
+	cfg.OGL.Header.Multisample = eyeRenderMultisample;
+	//cfg.OGL.Window = glfwGetWin32Window(window);
+	//cfg.OGL.DC = (HDC)glfwGetWGLContext(window);
+		
+	ovrBool result = ovrHmd_ConfigureRendering(OculusManager->_hmdDevice, &cfg.Config,
+		ovrDistortionCap_Chromatic |
+		ovrDistortionCap_TimeWarp |
+		ovrDistortionCap_Overdrive,
+		OculusManager->_hmdDevice->DefaultEyeFov, &OculusManager->_eyeRenderDesc);
+
+	//ovrHmd_AttachToWindow(OculusManager->_hmdDevice, glfwGetWin32Window(window), NULL, NULL);
+
+#endif
 	return 1;
 }
 
 void OPoculusDestroy() {
+#ifdef OPIFEX_OCULUS
 	if (OculusManager == NULL) return;
 
-	delete OculusManager->current;
-	delete OculusManager->_sensor;
+	ovrHmd_Destroy(OculusManager->_hmdDevice);
 	OPfree(OculusManager);
-	OVR::System::Destroy();
-}
 
-OPvec4 OPoculusHmd() {
-	ASSERT(OculusManager != NULL, "Oculus has not been initialized yet");
-	return OPvec4Create(
-		OculusManager->current->DistortionK[0],
-		OculusManager->current->DistortionK[1],
-		OculusManager->current->DistortionK[2],
-		OculusManager->current->DistortionK[3]);
-}
-
-OPvec2 OPoculusScreenSize() {
-	ASSERT(OculusManager != NULL, "Oculus has not been initialized yet");
-	return OPvec2Create(OculusManager->current->HResolution, OculusManager->current->VResolution);
-}
-
-OPfloat OPoculusEyeHeight() {
-	ASSERT(OculusManager != NULL, "Oculus has not been initialized yet");
-	if (OculusManager->_profile) {
-		return OculusManager->_profile->GetEyeHeight();
-	}
-}
+	ovr_Shutdown();
 #endif
+}
