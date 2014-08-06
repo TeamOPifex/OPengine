@@ -63,3 +63,5 @@ set_target_properties(LODEPNG PROPERTIES OUTPUT_NAME "LodePNG")
 populate_binary_directory()
 
 output_library_from(LODEPNG "/External" "LodePNG")
+
+

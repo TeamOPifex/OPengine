@@ -102,7 +102,7 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 			OPmemcpy(finalName, filenameWithoutExtension, filenameLengthWithoutExtension);
 			finalName[filenameLengthWithoutExtension] = '/';
 			OPmemcpy(finalName + filenameLengthWithoutExtension + 1, name, nameDataLength);
-			finalName[filenameLengthWithoutExtension + 1 + nameDataLength] = NULL;
+			finalName[filenameLengthWithoutExtension + 1 + nameDataLength] = '\0';
 
 			(*ss)->Names[i] = finalName;
 			OPfree(nameData);

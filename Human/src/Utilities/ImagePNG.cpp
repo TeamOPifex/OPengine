@@ -40,7 +40,7 @@ void OPimagePNGCreate32(ui8* imageData, i32 width, i32 height, OPchar* filename)
 }
 
 i32 OPimagePNGLoad(const OPchar* filename, OPtexture** image){
-	OPglError("OPimagePNGLoad:Error 0");
+	OPglError("OPimagePNGLoad:Error 0::%d");
 	OPstream* str = OPreadFile(filename);
 	return OPimagePNGLoadStream(str, 0, image);
 }

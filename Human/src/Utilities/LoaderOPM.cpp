@@ -427,15 +427,16 @@ OPMData OPMloadData(OPstream* str) {
 			f32 sy = OPreadf32(str);
 			f32 sz = OPreadf32(str);
 
-			OPmat4 tmp;
+			OPmat4 matRotate;
+			OPmat4 matTranslate;
 
 			OPquat rot = OPquatCreate(rx, ry, rz, rw);
 
-			OPmat4identity(&tmp);
-			OPmat4quat(&tmp, &rot);
-			OPmat4translate(&tmp, px, py, pz);
-			pose[i] = tmp;
-			OPmat4Inverse(&pose[i], &tmp);
+			OPmat4buildQuat(&matRotate, &rot);
+			OPmat4buildTranslate(&matTranslate, px, py, pz);
+			//OPmat4mul(&pose[i], &matTranslate, &matRotate);
+			OPmat4mul(&pose[i], &matRotate, &matTranslate);
+			OPmat4Inverse(&pose[i], &pose[i]);
 
 			OPlog("Joint: %d %s : %f, %f, %f, %f, %f, %f", boneIndex, name, px, py, pz, sx, sy, sz);
 			OPfree(name);

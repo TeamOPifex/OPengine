@@ -20,6 +20,7 @@ include_directories(
 	../External/Oculus/Src/
 	../External/Myo/include/
 	../External/V8/include/
+	../External/V8/
 	.
 	../
 )
@@ -42,26 +43,44 @@ add_source_group(src/wrappers "${PROJECT_SOURCE_DIR}/Scripting/src/wrappers" SCR
 #########################################
 # DEPENDENT LIBRARIES
 #########################################
-
+set(ALL_LIBS
+	${OPENGL_LIBRARY}
+	${OPENAL_LIBRARY}
+	GLEW_158
+	LODEPNG
+	1_Core
+	2_Data
+	3_Math
+	4_Performance
+	5_Human
+	${OGG_LIBRARY}
+	${VORBIS_LIBRARY}
+	${VORBISFILE_LIBRARY}
+	glfw 
+	${GLFW_LIBRARIES}
+	ws2_32.lib
+	advapi32.lib
+	winmm.lib
+)
 
 #########################################
 # BUILD
 #########################################
 add_library(7_Scripting STATIC ${SCRIPTING_SRC})
+target_link_libraries(7_Scripting ${ALL_LIBS})
 set_target_properties(7_Scripting PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(7_Scripting PROPERTIES OUTPUT_NAME "Scripting")
+
 add_definitions(-D${OPIFEX_OS})
 
 if(${OPIFEX_V8})
 	if(${OPIFEX_OS_WINDOWS})
-		target_link_libraries(7_Scripting 
-			ws2_32.lib
-			advapi32.lib
-			winmm.lib)
 		if(${OPIFEX_OS_64})
 			target_link_libraries(7_Scripting ${PROJECT_SOURCE_DIR}/External/V8/lib/win64/v8.lib)
 		else()
 			target_link_libraries(7_Scripting ${PROJECT_SOURCE_DIR}/External/V8/lib/win32/v8.lib)
+			target_link_libraries(7_Scripting ${PROJECT_SOURCE_DIR}/External/V8/lib/win32/v8_libbase.lib)
+			target_link_libraries(7_Scripting ${PROJECT_SOURCE_DIR}/External/V8/lib/win32/v8_libplatform.lib)
 		endif()
 	endif()
 	add_definitions(-DOPIFEX_V8)

@@ -255,6 +255,8 @@ LOCAL_LDLIBS    := -llog -lGLESv2 -landroid -lOpenSLES
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := false
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
+LOCAL_C_INCLUDES +=$(PROJECT_PATH)/Application
+LOCAL_C_INCLUDES +=$(PROJECT_PATH)/Application/Examples
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Ogg/include
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Vorbis/include
 

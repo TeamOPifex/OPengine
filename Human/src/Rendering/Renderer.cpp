@@ -2,6 +2,7 @@
 #include "./Human/include/Rendering/Renderer.h"
 #include "./Core/include/Assert.h"
 
+
 i32 OPrenderWidth;
 i32 OPrenderHeight;
 OPuint OPscreenWidth;
