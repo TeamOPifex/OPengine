@@ -32,7 +32,118 @@ static V8Return _Keyboard(const V8Args& args);
 static V8Return _Mouse(const V8Args& args);
 
 
+
+
+V8ObjectGlobal GetKeyboardMap() {
+	V8ObjectGlobal keyboard = CreateObjectG(isolate);
+
+	i8* keyNames[OPKEYBOARD_MAX] = {
+			"BACKSPACE",
+			"TAB",
+			"ENTER",
+			"PAUSE",
+			"CAPSLOCK",
+			"ESCAPE",
+			"SPACE",
+			"PAGEUP",
+			"PAGEDOWN",
+			"END",
+			"HOME",
+			"LEFT",
+			"UP",
+			"RIGHT",
+			"DOWN",
+			"INSERT",
+			"DELETE",
+			"0",
+			"1",
+			"2",
+			"3",
+			"4",
+			"5",
+			"6",
+			"7",
+			"8",
+			"9",
+			"A",
+			"B",
+			"C",
+			"D",
+			"E",
+			"F",
+			"G",
+			"H",
+			"I",
+			"J",
+			"K",
+			"L",
+			"M",
+			"N",
+			"O",
+			"P",
+			"Q",
+			"R",
+			"S",
+			"T",
+			"U",
+			"V",
+			"W",
+			"X",
+			"Y",
+			"Z",
+			"LWIN",
+			"RWIN",
+			"NUMPAD0",
+			"NUMPAD1",
+			"NUMPAD2",
+			"NUMPAD3",
+			"NUMPAD4",
+			"NUMPAD5",
+			"NUMPAD6",
+			"NUMPAD7",
+			"NUMPAD8",
+			"NUMPAD9",
+			"MULTIPLY",
+			"ADD",
+			"SUBTRACT",
+			"DECIMAL",
+			"DIVIDE",
+			"F1",
+			"F2",
+			"F3",
+			"F4",
+			"F5",
+			"F6",
+			"F7",
+			"F8",
+			"F9",
+			"F10",
+			"F11",
+			"F12",
+			"F13",
+			"F14",
+			"F15",
+			"F16",
+			"NUMLOCK",
+			"SCROLL",
+			"LSHIFT",
+			"RSHIFT",
+			"LCONTROL",
+			"RCONTROL"
+	};
+
+	for (i32 i = 0; i < OPKEY_RCONTROL; i++) {
+		i8* name = keyNames[i];
+		SetValueG(isolate, keyboard, name, GetNumber(isolate, i));
+	}
+
+	return keyboard;
+}
+
+
 void HumanInitializeMethods(V8isolate* isolate, V8ObjectGlobal target) {
+
+	SetObjectG(isolate, target, "KEYS", GetKeyboardMap());
 
 	// OP
 	SetFunctionG(isolate, target, "Clear", _Clear);
@@ -184,35 +295,12 @@ static V8Return _Mouse(const V8Args& args) {
 static V8Return _Keyboard(const V8Args& args) {
 	V8Scope scope;
 
-	V8Object obj = CreateObject(isolate);
-	obj->Set(GetString(isolate, "A"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_A)));
-	obj->Set(GetString(isolate, "B"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_B)));
-	obj->Set(GetString(isolate, "C"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_C)));
-	obj->Set(GetString(isolate, "D"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_D)));
-	obj->Set(GetString(isolate, "E"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_E)));
-	obj->Set(GetString(isolate, "F"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_F)));
-	obj->Set(GetString(isolate, "G"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_G)));
-	obj->Set(GetString(isolate, "H"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_H)));
-	obj->Set(GetString(isolate, "I"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_I)));
-	obj->Set(GetString(isolate, "J"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_J)));
-	obj->Set(GetString(isolate, "K"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_K)));
-	obj->Set(GetString(isolate, "L"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_L)));
-	obj->Set(GetString(isolate, "M"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_M)));
-	obj->Set(GetString(isolate, "N"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_N)));
-	obj->Set(GetString(isolate, "O"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_O)));
-	obj->Set(GetString(isolate, "P"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_P)));
-	obj->Set(GetString(isolate, "Q"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_Q)));
-	obj->Set(GetString(isolate, "R"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_R)));
-	obj->Set(GetString(isolate, "S"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_S)));
-	obj->Set(GetString(isolate, "T"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_T)));
-	obj->Set(GetString(isolate, "U"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_U)));
-	obj->Set(GetString(isolate, "V"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_V)));
-	obj->Set(GetString(isolate, "W"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_W)));
-	obj->Set(GetString(isolate, "X"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_X)));
-	obj->Set(GetString(isolate, "Y"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_Y)));
-	obj->Set(GetString(isolate, "Z"), GetNumber(isolate, OPkeyboardIsDown(OPKEY_Z)));
+	Handle<Array> arr = CreateArray(isolate);
+	for (i32 i = 0; i < OPKEYBOARD_MAX_VALUE; i++) {
+		arr->Set(i, GetNumber(isolate, OPkeyboardIsDown((OPkeyboardKey)i)));
+	}
 
-	return SetReturn(args, &scope, obj);
+	return SetReturn(args, &scope, arr);
 }
 
 static V8Return _DestroyCamera(const V8Args& args) {

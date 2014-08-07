@@ -10,6 +10,7 @@ static V8Return _OPmat4Destroy(const V8Args& args);
 static V8Return _OPmat4RotateX(const V8Args& args);
 static V8Return _OPmat4RotateY(const V8Args& args);
 static V8Return _OPmat4RotateZ(const V8Args& args);
+static V8Return _OPmat4Vec3(const V8Args& args);
 static V8Return _OPmat4SetRotateX(const V8Args& args);
 static V8Return _OPmat4SetRotateY(const V8Args& args);
 static V8Return _OPmat4SetRotateZ(const V8Args& args);
@@ -36,6 +37,7 @@ void MathInitializeMethods(V8isolate* isolate, V8ObjectGlobal target) {
 	SetFunctionG(isolate, mat4, "RotX", _OPmat4RotateX);
 	SetFunctionG(isolate, mat4, "RotY", _OPmat4RotateY);
 	SetFunctionG(isolate, mat4, "RotZ", _OPmat4RotateZ);
+	SetFunctionG(isolate, mat4, "Vec3", _OPmat4Vec3);
 	SetFunctionG(isolate, mat4, "SetRotX", _OPmat4SetRotateX);
 	SetFunctionG(isolate, mat4, "SetRotY", _OPmat4SetRotateY);
 	SetFunctionG(isolate, mat4, "SetRotZ", _OPmat4SetRotateZ);
@@ -204,9 +206,11 @@ static V8Return _OPmat4Create(const V8Args& args) {
 	SetFunction(isolate, obj, "RotX", _OPmat4RotateX);
 	SetFunction(isolate, obj, "RotY", _OPmat4RotateY);
 	SetFunction(isolate, obj, "RotZ", _OPmat4RotateZ);
+	SetFunction(isolate, obj, "Vec3", _OPmat4Vec3);
 	SetFunction(isolate, obj, "SetRotX", _OPmat4SetRotateX);
 	SetFunction(isolate, obj, "SetRotY", _OPmat4SetRotateY);
 	SetFunction(isolate, obj, "SetRotZ", _OPmat4SetRotateZ);
+	SetFunction(isolate, obj, "SetVec3", _OPmat4SetVec3);
 	SetFunction(isolate, obj, "Identity", _OPmat4Identity);
 
 	return SetReturn(args, &scope, obj);
@@ -285,6 +289,17 @@ static V8Return _OPmat4RotateZ(const V8Args& args) {
 	OPmat4* mat = (OPmat4*)GetPointer(args, isolate, &inScope, 2);
 	if (inScope == -1) SetReturn(args, &scope, GetNull(isolate));
 	OPmat4rotZ(mat, args[1 - inScope]->NumberValue());
+
+	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _OPmat4Vec3(const V8Args& args) {
+	V8Scope scope;
+
+	i32 inScope;
+	OPmat4* mat = (OPmat4*)GetPointer(args, isolate, &inScope, 4);
+	if (inScope == -1) SetReturn(args, &scope, GetNull(isolate));
+	OPmat4translate(mat, args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
