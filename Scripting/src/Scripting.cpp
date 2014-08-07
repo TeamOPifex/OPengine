@@ -20,22 +20,12 @@ void OPscriptInit() {
 	v8::Platform* platform = v8::platform::CreateDefaultPlatform();
 	v8::V8::InitializePlatform(platform);
 	isolate = v8::Isolate::New();
-	
-	// Create a stack-allocated handle scope.
-	//HandleScope handle_scope(isolate);
-
-	//Handle<ObjectTemplate> global = ObjectTemplate::New(isolate);
-	//global->Set(String::NewFromUtf8(isolate, "log"), FunctionTemplate::New(isolate, LogCallback));
-	//HumanInitializeMethods(isolate, global);
-
-	// Create a new context.
-	//context.Reset(isolate, local_context);
 #else
 	OPlog("V8 Engine Feature not enabled.");
 #endif
 }
 
-
+#ifdef OPIFEX_V8
 void Print(const v8::FunctionCallbackInfo<v8::Value>& args) {
 	for (int i = 0; i < args.Length(); i++) {
 		if (i != 0) printf(" ");
@@ -46,6 +36,7 @@ void Print(const v8::FunctionCallbackInfo<v8::Value>& args) {
 	}
 	printf("\n");
 }
+#endif
 
 #include "./Scripting/include/wrappers/HumanWrapper.h"
 #include "./Scripting/include/wrappers/DataWrapper.h"

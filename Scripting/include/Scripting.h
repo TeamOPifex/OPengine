@@ -1,6 +1,7 @@
 #ifndef OPIFEX_SCRIPTING
 #define OPIFEX_SCRIPTING
 
+#include "./Scripting/include/wrappers/V8Helper.h"
 #include "./Human/include/Utilities/LoaderOPS.h"
 #include "./Data/include/Stream.h"
 

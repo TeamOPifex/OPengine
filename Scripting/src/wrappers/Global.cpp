@@ -1,21 +1,18 @@
-#include "./Scripting/include/wrappers/Global.h"
+#include "../../include/wrappers/Global.h"
 
 #ifdef OPIFEX_V8
-
-#include <v8.h>
-
-static void _start(const FunctionCallbackInfo<Value>& args);
-
-void GlobalInitializeMethods(Isolate* isolate, Handle<ObjectTemplate> target) {
-
-	target->Set(String::NewFromUtf8(isolate, "Start"), FunctionTemplate::New(isolate, _start));
-
-}
 
 #include "./Core/include/Core.h"
 #include "./Core/include/Log.h"
 #include "./Core/include/Timer.h"
-#include "./Scripting/include/Scripting.h"
+
+static V8Return _start(const V8Args& args);
+
+void GlobalInitializeMethods(V8isolate* isolate, V8ObjectGlobal target) {
+
+	SetFunctionG(isolate, target, "Start", _start);
+
+}
 
 Local<Function> InitializeCallback;
 Local<Function> UpdateCallback;
@@ -23,15 +20,16 @@ Local<Function> DestroyCallback;
 
 void ScriptingInit(){
 	const unsigned argc = 1;
-	Local<Value> argv[argc] = { Boolean::New(isolate, true) };
-
-	InitializeCallback->Call(Boolean::New(isolate, true), argc, argv);
+	Handle<Value> argv[argc] = { GetBool(isolate, true) };
+	Handle<Object> obj = CreateObject(isolate);
+	InitializeCallback->Call(obj, argc, argv);
 }
 
 int ScriptingUpdate(OPtimer* timer){
 	const unsigned argc = 1;
-	Local<Value> argv[argc] = { Number::New(isolate, timer->Elapsed) };
-	Local<Value> result = UpdateCallback->Call(Boolean::New(isolate, true), argc, argv);
+	Handle<Value> argv[argc] = { GetNumberF32(isolate, timer->Elapsed) };
+	Handle<Object> obj = CreateObject(isolate);
+	Local<Value> result = UpdateCallback->Call(obj, argc, argv);
 	if (result->IsNumber())
 		return result->Int32Value();
 
@@ -41,13 +39,14 @@ int ScriptingUpdate(OPtimer* timer){
 void ScriptingDestroy()
 {
 	const unsigned argc = 1;
-	Local<Value> argv[argc] = { Boolean::New(isolate, true) };
-	DestroyCallback->Call(Boolean::New(isolate, true), argc, argv);
+	Handle<Value> argv[argc] = { GetBool(isolate, true) };
+	Handle<Object> obj = CreateObject(isolate);
+	DestroyCallback->Call(obj, argc, argv);
 	return;
 }
 
-static void _start(const FunctionCallbackInfo<Value>& args) {
-	v8::HandleScope scope(args.GetIsolate());
+static V8Return _start(const V8Args& args) {
+	V8Scope scope;
 
 	InitializeCallback = Local<Function>::Cast(args[0]);
 	UpdateCallback = Local<Function>::Cast(args[1]);
@@ -61,6 +60,8 @@ static void _start(const FunctionCallbackInfo<Value>& args) {
 
 	OPstart();
 	OPend();
+
+	return SetReturn(args, &scope, GetNull(isolate));
 }
 
 #endif
