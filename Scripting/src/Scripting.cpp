@@ -67,7 +67,6 @@ void OPscriptCompileAndRun(OPscript* script) {
 #endif
 }
 
-
 void OPscriptCompileAndRunStream(OPstream* stream) {
 #ifdef OPIFEX_V8
 	Isolate::Scope isolate_scope(isolate);
@@ -79,6 +78,7 @@ void OPscriptCompileAndRunStream(OPstream* stream) {
 	HumanInitializeMethods(isolate, OP);
 	MathInitializeMethods(isolate, OP);
 	DataInitializeMethods(isolate, OP);
+
 	global->Set(String::NewFromUtf8(isolate, "print"), FunctionTemplate::New(isolate, Print));
 	global->Set(String::NewFromUtf8(isolate, "OP"), OP);
 	Local<Context> context = Context::New(isolate, NULL, global);

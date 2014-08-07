@@ -157,6 +157,10 @@ inline void SetValue(V8isolate* isolate, V8Object obj, i8* name, Handle<Value> s
 	obj->Set(GetString(isolate, name), set);
 }
 
+inline void SetValueG(V8isolate* isolate, V8ObjectGlobal obj, i8* name, Handle<Value> set) {
+	obj->Set(GetString(isolate, name), set);
+}
+
 inline void SetObject(V8isolate* isolate, V8Object obj, i8* name, V8Object set) {
 	obj->Set(GetString(isolate, name), set);
 }
