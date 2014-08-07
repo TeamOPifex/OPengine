@@ -1,12 +1,14 @@
-#include "./Scripting/include/wrappers/V8Helper.h"
+#include "../../include/wrappers/V8Helper.h"
 
 #ifdef OPIFEX_V8
 
-#include <v8.h>
-#include "./Scripting/include/Scripting.h"
 #include "./Core/include/Log.h"
 
-void LogProperties(Handle<Object> obj) {
+#ifdef OPIFEX_NODEJS
+V8isolate* isolate = NULL;
+#endif
+
+void LogProperties(V8Object obj) {
 	Local<Array> arr = obj->GetPropertyNames();
 	for (i32 i = 0; i < arr->Length(); i++) {
 		Local<String> str = arr->Get(i)->ToString();
@@ -16,15 +18,15 @@ void LogProperties(Handle<Object> obj) {
 
 }
 
-void* GetPointer(const FunctionCallbackInfo<Value>& args, i32* result, i32 expected) {
-	
+void* GetPointer(const V8Args& args, V8isolate* isolate, i32* result, i32 expected) {
+
 	if (args.Length() < expected) {
-		Local<Value> val = args.This()->Get(String::NewFromUtf8(isolate, "Id"));
+		Local<Value> val = args.This()->Get(GetString(isolate, "Id"));
 		*result = 1;
 		return (void*)val->Int32Value();
 	}
 	else if (args.Length() >= expected) {
-		Local<Value> val = args[0]->ToObject()->Get(String::NewFromUtf8(isolate, "Id"));
+		Local<Value> val = args[0]->ToObject()->Get(GetString(isolate, "Id"));
 		*result = 0;
 		return (void*)val->Int32Value();
 	}
