@@ -210,17 +210,18 @@ void OPrenderTextColor4Mat4(const OPchar* text, OPvec4 color, OPmat4* world) {
 
 		OPrenderTextAlign(&scaled, textNode.Width, OPRENDER_CURR_FONT_MANAGER->_align);
 		OPmat4scl(&scaled, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f / scale);
-		OPmat4mul(world, &scaled, world);
+		OPmat4 temp;
+		OPmat4mul(&temp, &scaled, world);
 
-		OPrenderTextColor4Mat4TextNode(&textNode, color, world);
+		OPrenderTextColor4Mat4TextNode(&textNode, color, &temp);
 		OPrenderDestroyMesh(&textNode.mesh);
 	}
 	else {
 		OPrenderTextAlign(&scaled, node->Width, OPRENDER_CURR_FONT_MANAGER->_align);
 		OPmat4scl(&scaled, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f / scale);
-		OPmat4mul(world, &scaled, world);
-
-		OPrenderTextColor4Mat4BuiltNode(node, color, world);
+		OPmat4 temp;
+		OPmat4mul(&temp, &scaled, world);
+		OPrenderTextColor4Mat4BuiltNode(node, color, &temp);
 	}
 }
 

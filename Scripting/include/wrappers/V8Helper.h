@@ -6,6 +6,12 @@
 #include "v8.h"
 using namespace v8;
 
+
+enum OPscriptTypes {
+	OPscript_CAMERA = 0,
+	OPscript_VEC3
+};
+
 #include "./Core/include/Types.h"
 
 #ifdef OPIFEX_NODEJS
@@ -176,8 +182,14 @@ inline void SetObjectG(V8isolate* isolate, V8ObjectGlobal obj, i8* name, V8Objec
 #endif
 
 
-void LogProperties(Handle<Object> obj);
+void LogProperties(Handle<Object> obj); 
+bool IsObject(const V8Args& args, V8isolate* isolate, i32 position, OPscriptTypes type);
+V8Object CreateTypedObject(V8isolate* isolate, void* Id, OPscriptTypes type);
+void* GetFirstPointer(const V8Args& args, V8isolate* isolate, i32* result, OPscriptTypes type);
+void* GetCallingPointer(const V8Args& args, V8isolate* isolate);
+void* GetArgPointer(const V8Args& args, V8isolate* isolate, i32 position);
 void* GetPointer(const V8Args& args, V8isolate* isolate, i32* result, i32 expected);
+bool IsCallingObject(const V8Args& args, V8isolate* isolate, OPscriptTypes type);
 
 const char* ToCString(const v8::String::Utf8Value& value);
 

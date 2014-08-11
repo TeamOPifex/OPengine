@@ -60,8 +60,8 @@ void OPsprite3DDestroy(OPsprite3D* sprite) {
 	OPfree(sprite);
 }
 
-void OPsprite3DUpdate(OPsprite3D* sprite, OPtimer* timer) {
-	sprite->CurrentSprite->Elapsed += timer->Elapsed;
+void OPsprite3DUpdate(OPsprite3D* sprite, ui64 elapsed) {
+	sprite->CurrentSprite->Elapsed += elapsed;
 	if (sprite->CurrentSprite->Elapsed > 1000 / sprite->FrameRate) {
 		sprite->CurrentSprite->Elapsed = 0;
 		sprite->CurrentSprite->Frame++;

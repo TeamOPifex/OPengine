@@ -23,6 +23,17 @@ void DataInitializeMethods(V8isolate* isolate, V8ObjectGlobal target) {
 	SetObjectG(isolate, target, "cman", cman);
 
 }
+void DataInitializeMethodsO(V8isolate* isolate, V8Object target) {
+
+	// OP.cman
+	V8Object cman = CreateObject(isolate);
+	SetFunction(isolate, cman, "Init", _cmanInit);
+	SetFunction(isolate, cman, "Load", _cmanLoad);
+	SetFunction(isolate, cman, "Get", _cmanGet);
+	SetFunction(isolate, cman, "Delete", _cmanDelete);
+	SetObject(isolate, target, "cman", cman);
+
+}
 
 
 static V8Return _cmanInit(const V8Args& args) {
@@ -34,7 +45,7 @@ static V8Return _cmanInit(const V8Args& args) {
 		_chdir(v);
 	}
 
-	OPcmanInit(OP_DEFAULT_LOADERS, 6);
+	OPcmanInit(OP_DEFAULT_LOADERS, 10);
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }

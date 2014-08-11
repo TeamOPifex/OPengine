@@ -145,6 +145,12 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 			}
 		}
 		else {
+
+			OPscriptInit();
+			OPstream* stream = OPreadFile("assets/Scripts/app.js");
+			OPscriptCompileAndRunStream(stream);
+			return 0;
+		
  			OPmyoConnect();
 
 			OPinitialize = Init;

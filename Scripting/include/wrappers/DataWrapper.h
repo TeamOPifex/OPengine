@@ -6,6 +6,7 @@
 #include "./Scripting/include/Scripting.h"
 
 void DataInitializeMethods(V8isolate* isolate, V8ObjectT target);
+void DataInitializeMethodsO(V8isolate* isolate, V8Object target);
 
 #endif
 
