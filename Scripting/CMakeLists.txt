@@ -58,9 +58,6 @@ set(ALL_LIBS
 	${VORBISFILE_LIBRARY}
 	glfw 
 	${GLFW_LIBRARIES}
-	ws2_32.lib
-	advapi32.lib
-	winmm.lib
 )
 
 #########################################
@@ -78,6 +75,10 @@ endif()
 
 if(${OPIFEX_V8})
 	if(${OPIFEX_OS_WINDOWS})
+		target_link_libraries(9_Application 
+			ws2_32.lib
+			advapi32.lib
+			winmm.lib)
 		if(${OPIFEX_RELEASE})
 			if(${OPIFEX_OS_64})
 				target_link_libraries(7_Scripting ${PROJECT_SOURCE_DIR}/External/V8/lib/release/win64/v8.lib)

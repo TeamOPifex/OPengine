@@ -42,6 +42,11 @@ if( ${OPIFEX_OS_ANDROID} )
 
 else()
 
+	if(${OPIFEX_NODEJS})
+		configure_file(		${PROJECT_SOURCE_DIR}/NodeJs/binding.gyp		${PROJECT_BINARY_DIR}/binding.gyp	)
+		file(COPY 			${PROJECT_SOURCE_DIR}/NodeJs/Wrapper.cpp DESTINATION ${PROJECT_BINARY_DIR}/)
+	endif()
+
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Audio" ${PROJECT_BINARY_DIR}/Application/assets/Audio)	
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Models" ${PROJECT_BINARY_DIR}/Application/assets/Models)	
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Textures" ${PROJECT_BINARY_DIR}/Application/assets/Textures)	
