@@ -7,7 +7,7 @@ if(APPLE)
 	find_package(IOKit REQUIRED)
 	find_package(Threads)
 elseif(UNIX)
-
+	find_package(OggVorbis REQUIRED)
 else()
 	find_package(OggVorbis REQUIRED)
 endif()
