@@ -70,7 +70,18 @@ elseif( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64" )
      PATHS
      "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win64"
    )
-   
+else()
+
+	include (CheckLibraryExists)
+
+	find_path(VORBIS_INCLUDE_DIR vorbis/vorbisfile.h)
+	find_path(OGG_INCLUDE_DIR ogg/ogg.h)
+
+	find_library(OGG_LIBRARY NAMES ogg)
+	find_library(VORBIS_LIBRARY NAMES vorbis)
+	find_library(VORBISFILE_LIBRARY NAMES vorbisfile)
+	find_library(VORBISENC_LIBRARY NAMES vorbisenc)
+
 endif()
 
 message(STATUS "Ogg: ${OGG_LIBRARY}")
