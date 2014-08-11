@@ -14,6 +14,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #endif
 
 #define OPpi 3.14159265359f
@@ -301,7 +302,6 @@ __inline OPfloat OPround(OPfloat f){
 __inline OPfloat OPnear(OPfloat value, OPfloat target, OPfloat threshhold){
 	return (OPabs(value - target) < threshhold ? 1.0f : 0.0f);
 }
-
 
 //-----------------------------------------------------------------------------
 /**

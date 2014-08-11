@@ -14,6 +14,12 @@ void GlobalInitializeMethods(V8isolate* isolate, V8ObjectGlobal target) {
 
 }
 
+void GlobalInitializeMethodsO(V8isolate* isolate, V8Object target) {
+
+	SetFunction(isolate, target, "Start", _start);
+
+}
+
 Local<Function> InitializeCallback;
 Local<Function> UpdateCallback;
 Local<Function> DestroyCallback;

@@ -1,6 +1,54 @@
+
+////////
+// MENU
+///////////////////////////
+function MenuState() {
+
+}
+
+MenuState.prototype = {
+	manager: null,
+	assets: {},
+
+	
+	Initialize: function() {
+		OP.cman.Load('comicbook.opf');
+		this.assets['font'] = OP.cman.Get('comicbook.opf');
+		
+		this.manager = OP.font.CreateManager(content['font']);
+		this.manager.SetRGBA(1,0,0,1);
+		this.manager.SetAlign(1);
+		this.manager.Bind();
+		this.manager.Build();
+		//console.log(this.manager);
+	},
+	
+	Update: function(elapsed) {			
+		OP.Clear(0.2,0.2,0.2);
+		OP.Depth(1);
+		
+		//console.log(OP.font.RenderText);
+		OP.font.RenderText('TEST', 0.1, 0.1);
+
+		OP.Present();
+		
+		return 0;
+	},
+	
+	Destroy: function() {
+		
+	}
+};
+
+////////
+// GAME SETUP
+///////////////////////////
+
 var content = {}, camera, world;
 var rotX = 0, rotZ = 0, rotY = 0;
 var posX = 0, posY = 0, posZ = 0;
+
+var state = null;
 
 function Attribute(name, size) { return { Id: name, Size: size }; }
 
@@ -24,64 +72,30 @@ function Initialize() {
 			Attributes: [ Attribute('aPosition', 3), Attribute('aNormal', 3), Attribute('aUV', 2) ] 
 		});
 		
+		OP.font.Init();
+				
 		camera = OP.camera.Create(0,0,5);		
 		world = OP.mat4.Create();
+		
+		state = new MenuState();
+		state.Initialize();
+		
 	});
 }
 
 function Update(elapsed) {
 	OP.input.Update();
-	var keyboard = OP.input.Keyboard();
-	var mouse = OP.input.Mouse();
-	rotX = 0; rotZ = 0; rotY = 0; posX = 0; posY = 0; posZ = 0;
-	if(keyboard.W) rotX -= 0.1;
-	if(keyboard.S) rotX += 0.1;
-	if(keyboard.A) rotZ += 0.1;
-	if(keyboard.D) rotZ -= 0.1;
-	if(keyboard.E) rotY += 0.1;
-	if(keyboard.Q) rotY -= 0.1;
 	
-	if(keyboard.I) posY += 0.1;
-	if(keyboard.K) posY -= 0.1;
-	if(keyboard.J) posX -= 0.1;
-	if(keyboard.L) posX += 0.1;
-	if(keyboard.U) posZ += 0.1;
-	if(keyboard.O) posZ -= 0.1;
-	
-	if(mouse.LButton) { OP.mat4.Identity(world); }
-	if(keyboard.X) return 1;
-	
-	world.Vec3(posX, posY, posZ);
-	world.RotX(rotX);
-	world.RotZ(rotZ);
-	world.RotY(rotY);
-
-	OP.Clear(0.2,0.2,0.2);
-
-	OP.render.BindMesh(content['model']);
-	OP.render.BindEffect(content['effect']);
-	
-	OP.render.ParamMat4v('uWorld', world);
-	
-	OP.render.ClearActiveTextures();
-	OP.render.ParamTexture('uColorTexture', content['image']);
-	
-	OP.render.Mesh(camera);
-
-	OP.Present();
-	
+	if(state) {
+		//console.log('update');
+		return state.Update(elapsed);
+	}
+		
 	return 0;
 }
 
 function Destroy() {
-	if(content['image']) {
-		OP.cman.Delete('PuzzleBlock.opm');
-		OP.cman.Delete('PuzzleBlockGear.png');
-		OP.cman.Delete('TexturedModel.frag');
-		OP.cman.Delete('TexturedModel.vert');
-		OP.mat4.Destroy(world);
-		OP.camera.Destroy(camera);
-	}
+
 }
 
 OP.Start(Initialize, Update, Destroy);

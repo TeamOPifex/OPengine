@@ -6,6 +6,7 @@
 #include "./Scripting/include/Scripting.h"
 
 void GlobalInitializeMethods(V8isolate* isolate, V8ObjectT target);
+void GlobalInitializeMethodsO(V8isolate* isolate, V8Object target);
 
 #endif
 

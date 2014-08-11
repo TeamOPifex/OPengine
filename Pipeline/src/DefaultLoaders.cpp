@@ -7,7 +7,7 @@
 #include "./Human/include/Utilities/LoaderOPS.h"
 #include "./Pipeline/include/DefaultLoaders.h"
 
-OPassetLoader OP_DEFAULT_LOADERS[9] = {
+OPassetLoader OP_DEFAULT_LOADERS[10] = {
 		{
 				".wav",
 				"Audio/",
@@ -65,11 +65,18 @@ OPassetLoader OP_DEFAULT_LOADERS[9] = {
 				(OPint(*)(void*))OPspriteSheetUnload
 		},
 		{
-				".ops",
-				"Scripts/",
-				sizeof(OPscript),
-				(OPint(*)(const OPchar*, void**))OPscriptLoad,
-				(OPint(*)(void*))OPscriptUnload
+			".ops",
+			"Scripts/",
+			sizeof(OPscript),
+			(OPint(*)(const OPchar*, void**))OPscriptLoad,
+			(OPint(*)(void*))OPscriptUnload
+		},
+		{
+			".js",
+			"Scripts/",
+			sizeof(OPscript),
+			(OPint(*)(const OPchar*, void**))OPscriptLoad,
+			(OPint(*)(void*))OPscriptUnload
 		},
 };
 

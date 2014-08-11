@@ -9,6 +9,7 @@
 #include "./Core/include/MathHelpers.h"
 
 void OPfontLoad(OPchar* filename, OPfont** data) {
+	OPlog("Loading Font: %s", filename);
 	OPfont* font = (OPfont*)OPalloc(sizeof(OPfont));
 	*data = font;
 

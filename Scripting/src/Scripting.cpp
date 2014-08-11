@@ -25,6 +25,11 @@ void OPscriptInit() {
 #endif
 }
 
+#include "./Scripting/include/wrappers/HumanWrapper.h"
+#include "./Scripting/include/wrappers/DataWrapper.h"
+#include "./Scripting/include/wrappers/MathWrapper.h"
+#include "./Scripting/include/wrappers/Global.h"
+
 #ifdef OPIFEX_V8
 void Print(const v8::FunctionCallbackInfo<v8::Value>& args) {
 	for (int i = 0; i < args.Length(); i++) {
@@ -36,12 +41,127 @@ void Print(const v8::FunctionCallbackInfo<v8::Value>& args) {
 	}
 	printf("\n");
 }
+#include "./Data/include/ContentManager.h"
+
+bool StartsWith(i8* str, i8* cmp, i32 size) {
+	ui32 lenA = strlen(str);
+	ui32 lenB = strlen(cmp);
+	if (lenA < size || lenB < size) return false;
+	return OPmemcmp(str, cmp, size) == 0;
+}
+
+void RemoveFromStart(i8* str, i32 size) {
+	i32 len = strlen(str);
+	for (i32 i = 0; i < len - size; i++) {
+		str[i] = str[i + size];
+	}
+	str[len - size] = NULL;
+}
+
+i8* GetNonConstant(const i8* str) {
+	i32 len = strlen(str);
+	i8* result = (i8*)OPalloc(sizeof(i8)* ( len));
+	OPmemcpy(result, str, sizeof(i8)* len);
+	result[len] = NULL;
+	return result;
+}
+
+i8* AddToString(i8* str, i8* add) {
+	i32 lenA = strlen(str);
+	i32 lenB = strlen(add);
+	i8* result = (i8*)OPalloc(sizeof(i8)* (lenA + lenB));
+	OPmemcpy(result, str, lenA);
+	OPmemcpy(result + lenA, add, lenB);
+	result[lenA + lenB] = NULL;
+	return result;
+}
+
+i8* PrependToString(i8* str, i8* add) {
+	i32 lenA = strlen(str);
+	i32 lenB = strlen(add);
+	i8* result = (i8*)OPalloc(sizeof(i8)* (lenA + lenB));
+	OPmemcpy(result, add, lenB);
+	OPmemcpy(result + lenB, str, lenA);
+	result[lenA + lenB] = NULL;
+	return result;
+}
+
+#include "./Data/include/File.h"
+
+void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
+
+	if (args.Length() > 0 && args[0]->IsString()) {
+
+		v8::String::Utf8Value utf8(args[0]);
+		const char* p = ToCString(utf8);
+		ui32 len = strlen(p);
+
+		const i8* OPengine = "./node_modules/OPengine/OPengine";
+		if (strlen(OPengine) == len && OPmemcmp(OPengine, p, len) == 0) {
+
+			Handle<Object> OP = Object::New(isolate);
+			GlobalInitializeMethodsO(isolate, OP);
+			HumanInitializeMethodsO(isolate, OP);
+			MathInitializeMethodsO(isolate, OP);
+			DataInitializeMethodsO(isolate, OP);
+			args.GetReturnValue().Set(OP);
+			OPlog("Loaded OP");
+			return;
+		}
+		else {
+			i8* tmp = GetNonConstant(p);
+			i8* loadFile = tmp;
+
+			i8* begin = "./";
+			i8* jsEnd = ".js";
+			i8* opsEnd = ".ops";
+			i8* dir = "assets/Scripts/";
+
+			if (StartsWith(loadFile, begin, 2)) {
+				RemoveFromStart(loadFile, 2);
+			}
+
+			if (!StartsWith(loadFile, jsEnd, 3) || !StartsWith(loadFile, opsEnd, 4)) {
+				loadFile = AddToString(loadFile, jsEnd);
+			}
+
+			loadFile = PrependToString(loadFile, dir);
+
+			OPlog("Require: %s", loadFile);
+
+			OPstream* stream = OPreadFile(loadFile);
+			Handle<String> source = String::NewFromUtf8(isolate, (i8*)stream->Data);
+
+
+			Handle<ObjectTemplate> global = ObjectTemplate::New(isolate);
+			Handle<ObjectTemplate> empty = ObjectTemplate::New(isolate);
+			Handle<ObjectTemplate> module = ObjectTemplate::New(isolate);
+			global->Set(String::NewFromUtf8(isolate, "module"), module);
+			global->Set(String::NewFromUtf8(isolate, "require"), FunctionTemplate::New(isolate, Require));
+			global->Set(String::NewFromUtf8(isolate, "global"), empty);
+			Handle<ObjectTemplate> console = ObjectTemplate::New(isolate);
+			console->Set(String::NewFromUtf8(isolate, "log"), FunctionTemplate::New(isolate, Print));
+			global->Set(String::NewFromUtf8(isolate, "console"), console);
+			Local<Context> context = Context::New(isolate, NULL, global);
+			v8::Context::Scope context_scope(context);
+
+			v8::ScriptOrigin origin(v8::String::NewFromUtf8(context->GetIsolate(), "name"));
+			v8::Handle<v8::Script> compiled = v8::Script::Compile(source, &origin);
+			Local<Value> result = compiled->Run();
+
+			OPlog("Processed: %s", loadFile);
+			Local<Value> exports = context->Global()->Get(String::NewFromUtf8(isolate, "module"))->ToObject()->Get(String::NewFromUtf8(isolate, "exports"));
+
+			args.GetReturnValue().Set(exports);
+
+			//OPfree(loadFile);
+
+
+		}
+	}
+}
 #endif
 
-#include "./Scripting/include/wrappers/HumanWrapper.h"
-#include "./Scripting/include/wrappers/DataWrapper.h"
-#include "./Scripting/include/wrappers/MathWrapper.h"
-#include "./Scripting/include/wrappers/Global.h"
 
 void OPscriptCompileAndRun(OPscript* script) {
 #ifdef OPIFEX_V8
@@ -49,13 +169,16 @@ void OPscriptCompileAndRun(OPscript* script) {
 	HandleScope scope(isolate);
 
 	Handle<ObjectTemplate> global = ObjectTemplate::New(isolate);
+	Handle<ObjectTemplate> empty = ObjectTemplate::New(isolate);
 	Handle<ObjectTemplate> OP = ObjectTemplate::New(isolate);
 	GlobalInitializeMethods(isolate, OP);
 	HumanInitializeMethods(isolate, OP);
 	MathInitializeMethods(isolate, OP);
 	DataInitializeMethods(isolate, OP);
+	global->Set(String::NewFromUtf8(isolate, "require"), FunctionTemplate::New(isolate, Require));
 	global->Set(String::NewFromUtf8(isolate, "print"), FunctionTemplate::New(isolate, Print));
 	global->Set(String::NewFromUtf8(isolate, "OP"), OP);
+	global->Set(String::NewFromUtf8(isolate, "global"), empty);
 	Local<Context> context = Context::New(isolate, NULL, global);
 	v8::Context::Scope context_scope(context);
 
@@ -73,14 +196,21 @@ void OPscriptCompileAndRunStream(OPstream* stream) {
 	HandleScope scope(isolate);
 
 	Handle<ObjectTemplate> global = ObjectTemplate::New(isolate);
+	Handle<ObjectTemplate> empty = ObjectTemplate::New(isolate);
 	Handle<ObjectTemplate> OP = ObjectTemplate::New(isolate);
+	Handle<ObjectTemplate> console = ObjectTemplate::New(isolate);
+	console->Set(String::NewFromUtf8(isolate, "log"), FunctionTemplate::New(isolate, Print));
 	GlobalInitializeMethods(isolate, OP);
 	HumanInitializeMethods(isolate, OP);
 	MathInitializeMethods(isolate, OP);
 	DataInitializeMethods(isolate, OP);
 
+	global->Set(String::NewFromUtf8(isolate, "require"), FunctionTemplate::New(isolate, Require));
 	global->Set(String::NewFromUtf8(isolate, "print"), FunctionTemplate::New(isolate, Print));
 	global->Set(String::NewFromUtf8(isolate, "OP"), OP);
+	global->Set(String::NewFromUtf8(isolate, "global"), empty);
+	global->Set(String::NewFromUtf8(isolate, "console"), console);
+
 	Local<Context> context = Context::New(isolate, NULL, global);
 	v8::Context::Scope context_scope(context);
 

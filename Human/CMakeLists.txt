@@ -91,6 +91,9 @@ set_target_properties(5_Human PROPERTIES OUTPUT_NAME "Human")
 if(1)
 	add_definitions(-D_DEBUG)
 endif()
+if(${OPIFEX_RELEASE})
+	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
+endif()
 
 #########################################
 # ADDITIONAL FEATURES

@@ -6,6 +6,7 @@
 #include "./Scripting/include/Scripting.h"
 
 void MathInitializeMethods(V8isolate* isolate, V8ObjectT target);
+void MathInitializeMethodsO(V8isolate* isolate, V8Object target);
 
 #endif
 
