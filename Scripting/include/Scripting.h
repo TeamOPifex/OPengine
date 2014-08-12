@@ -9,7 +9,7 @@
 #include "./External/V8/include/libplatform/libplatform.h"
 using namespace v8;
 
-extern Isolate* isolate;
+extern V8isolate* isolate;
 
 void OPscriptInit();
 //Handle<Script> OPscriptCompile(OPscript* script);

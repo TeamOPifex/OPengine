@@ -3,16 +3,16 @@
 
 using namespace v8;
 
-#include "include/wrappers/Global.h"
-#include "include/wrappers/MathWrapper.h"
-#include "include/wrappers/DataWrapper.h"
-#include "include/wrappers/HumanWrapper.h"
+#include "./Scripting/include/wrappers/Global.h"
+#include "./Scripting/include/wrappers/MathWrapper.h"
+#include "./Scripting/include/wrappers/DataWrapper.h"
+#include "./Scripting/include/wrappers/HumanWrapper.h"
 
-void InitializeMethods(Handle<Object> target) {
-	GlobalInitializeMethods(NULL, target);
-	MathInitializeMethods(NULL, target);
-	DataInitializeMethods(NULL, target);
-	HumanInitializeMethods(NULL, target);
+void InitializeMethods(V8ObjectGlobal target) {
+	GlobalInitializeMethodsO(NULL, target);
+	MathInitializeMethodsO(NULL, target);
+	DataInitializeMethodsO(NULL, target);
+	HumanInitializeMethodsO(NULL, target);
 }
 
 NODE_MODULE(OPengine, InitializeMethods)
