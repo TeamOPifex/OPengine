@@ -75,7 +75,7 @@ endif()
 
 if(${OPIFEX_V8})
 	if(${OPIFEX_OS_WINDOWS})
-		target_link_libraries(9_Application 
+		target_link_libraries(7_Scripting 
 			ws2_32.lib
 			advapi32.lib
 			winmm.lib)

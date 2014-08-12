@@ -14,7 +14,8 @@
                 "@OPIFEX_REPOSITORY@/",
                 "@OPIFEX_REPOSITORY@/External/glew-1.9.0/include",
                 "@OPIFEX_REPOSITORY@/External/glfw-3.0.4/include",
-                "@OPIFEX_REPOSITORY@/External/glm-0.9.1"
+                "@OPIFEX_REPOSITORY@/External/glm-0.9.1",
+                "@OPIFEX_REPOSITORY@/External/V8/"
             ],
             "cflags!": [
                 "-fno-exceptions"
@@ -71,17 +72,17 @@
                                         "LinkTimeCodeGeneration": 1,
                                         "LinkIncremental": 1,
                                         "AdditionalLibraryDirectories": [
-                                            "Core/Release/",
-                                            "Data/Release/",
-                                            "Math/Release/",
-                                            "Performance/Release/",
-                                            "Human/Release/",
-                                            "Communication/Release/",
-                                            "Pipeline/Release/",
-                                            "GLFW/src/Release/",
-                                            "External/Release/",
-                                            "@OPIFEX_REPOSITORY@/External/Ogg/lib/win32/",
-                                            "@OPIFEX_REPOSITORY@/External/Vorbis/lib/win32/",
+                                            "../Core/Release/",
+                                            "../Data/Release/",
+                                            "../Math/Release/",
+                                            "../Performance/Release/",
+                                            "../Human/Release/",
+                                            "../Communication/Release/",
+                                            "../Pipeline/Release/",
+                                            "../GLFW/src/Release/",
+                                            "../External/Release/",
+                                            "../@OPIFEX_REPOSITORY@/External/Ogg/lib/win32/",
+                                            "../@OPIFEX_REPOSITORY@/External/Vorbis/lib/win32/",
                                             "C:/Program Files (x86)/OpenAL 1.1 SDK/libs/Win32/",
                                         ]
                                     }
