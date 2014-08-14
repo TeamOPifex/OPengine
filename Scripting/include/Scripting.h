@@ -5,16 +5,19 @@
 #include "./Human/include/Utilities/LoaderOPS.h"
 #include "./Data/include/Stream.h"
 
+#ifdef OPIFEX_V8
+
 #include "v8.h"
 #include "./External/V8/include/libplatform/libplatform.h"
 using namespace v8;
 
 extern V8isolate* isolate;
+#endif
 
 void OPscriptInit();
 //Handle<Script> OPscriptCompile(OPscript* script);
 void OPscriptCompileAndRun(OPscript* script);
 void OPscriptCompileAndRunStream(OPstream* stream);
 void OPscriptLog(const char* data); 
-void OPscriptRun(Handle<Script> script);
+//void OPscriptRun(Handle<Script> script);
 #endif

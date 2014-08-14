@@ -88,8 +88,6 @@ void ColorSingleHandler(OPstream* str, void* param) {
 	*p = OPreadf32(str);
 }
 
-Handle<Script> script;
-
 void State0Enter(OPgameState* last){
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
@@ -216,8 +214,6 @@ int State0Update(OPtimer* time){
 		pos.x + fontPosX,
 		pos.y + fontPosY
 	);
-
-	OPscriptRun(script);
 
 	OPrenderPresent();
 	return false;

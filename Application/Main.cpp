@@ -9,6 +9,7 @@
 #include "./Application/Examples/Model.h"
 #include "./Application/Examples/Oculus.h"
 #include "./Application/Examples/ParticleSystem.h"
+#include "./Application/Examples/Physics.h"
 #include "./Application/Examples/Skinning.h"
 
 //#include "./GameManager.h"
@@ -83,8 +84,9 @@ void Init(){
 #else
 	OPrenderInit(JNIWidth(), JNIHeight(), true);
 #endif
-	OPgameStateChange(&State0);
+	//OPgameStateChange(&State0);
 	//OPgameStateChange(&GS_EXAMPLE_MODEL);
+	OPgameStateChange(&GS_EXAMPLE_PHYSICS);
 	//OPgameStateChange(&GS_EXAMPLE_SKINNING);
 	//OPgameStateChange(&GS_EXAMPLE_OCULUS);
 
@@ -146,18 +148,13 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 		}
 		else {
 
-			OPscriptInit();
-			OPstream* stream = OPreadFile("assets/Scripts/app.js");
-			OPscriptCompileAndRunStream(stream);
-			return 0;
-		
  			OPmyoConnect();
 
 			OPinitialize = Init;
 			OPupdate = UpdateState;
 			OPdestroy = Destroy;
 
-			ActiveState = &State0;//OPgameStateCreate(NULL, Update, NULL);
+			ActiveState = OPgameStateCreate(NULL, Update, NULL);
 
 		#ifdef OPIFEX_ANDROID
 			return;

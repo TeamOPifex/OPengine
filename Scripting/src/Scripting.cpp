@@ -25,12 +25,12 @@ void OPscriptInit() {
 #endif
 }
 
+
+#ifdef OPIFEX_V8
 #include "./Scripting/include/wrappers/HumanWrapper.h"
 #include "./Scripting/include/wrappers/DataWrapper.h"
 #include "./Scripting/include/wrappers/MathWrapper.h"
 #include "./Scripting/include/wrappers/Global.h"
-
-#ifdef OPIFEX_V8
 void Print(const v8::FunctionCallbackInfo<v8::Value>& args) {
 	for (int i = 0; i < args.Length(); i++) {
 		if (i != 0) printf(" ");
@@ -240,8 +240,8 @@ void OPscriptLog(const char* data) {
 #endif
 }
 
-void OPscriptRun(Handle<Script> script) {
 #ifdef OPIFEX_V8
+void OPscriptRun(Handle<Script> script) {
 	HandleScope scope(isolate);
 	v8::Handle<v8::Value> result = script->Run();
 
@@ -256,5 +256,5 @@ void OPscriptRun(Handle<Script> script) {
 	//	args[0] = v8::String::NewFromUtf8(isolate, "test");
 	//	func->Call(global, 1, args);
 	//}
-#endif
 }
+#endif

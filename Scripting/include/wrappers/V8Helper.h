@@ -14,18 +14,33 @@ enum OPscriptTypes {
 
 #include "./Core/include/Types.h"
 
+typedef Handle<ObjectTemplate> V8ObjectT;
+typedef Handle<Object> V8Object;
+
 #ifdef OPIFEX_NODEJS
 
 typedef Arguments V8Args;
 typedef Handle<Value> V8Return;
 typedef i8* V8isolate;
-typedef Handle<ObjectTemplate> V8ObjectT;
-typedef Handle<Object> V8Object;
 typedef V8Object V8ObjectGlobal;
 typedef InvocationCallback V8Function;
 typedef HandleScope V8Scope;
 
+#else
+
+
+typedef FunctionCallbackInfo<Value> V8Args;
+typedef void V8Return;
+typedef Isolate V8isolate;
+typedef V8ObjectT V8ObjectGlobal;
+typedef FunctionCallback V8Function;
+typedef i8 V8Scope;
+
+#endif
+
 extern V8isolate* isolate;
+
+#ifdef OPIFEX_NODEJS
 
 inline V8Return SetReturn(const V8Args& args, V8Scope* scope, Handle<Value> val) {
 	return scope->Close(val);
@@ -100,15 +115,6 @@ inline void SetObjectG(V8isolate* isolate, V8ObjectGlobal obj, i8* name, V8Objec
 }
 
 #else
-
-typedef FunctionCallbackInfo<Value> V8Args;
-typedef void V8Return;
-typedef Isolate V8isolate;
-typedef Handle<ObjectTemplate> V8ObjectT;
-typedef Handle<Object> V8Object;
-typedef V8ObjectT V8ObjectGlobal;
-typedef FunctionCallback V8Function;
-typedef i8 V8Scope;
 
 inline V8Return SetReturn(const V8Args& args, V8Scope* scope, Handle<Value> val) {
 	return args.GetReturnValue().Set(val);
