@@ -86,6 +86,15 @@ set_target_properties(9_Application PROPERTIES OUTPUT_NAME "Application")
 #########################################
 # ADDITIONAL FEATURES
 #########################################
+if(${OPIFEX_PHYSICS}) 
+	add_definitions(-DOPIFEX_PHYSICS)
+	include_directories(../External/PhysX/include/)
+	target_link_libraries(9_Application ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/PhysX3CHECKED_x86.lib)
+	target_link_libraries(9_Application ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/PhysX3CommonCHECKED_x86.lib)
+	target_link_libraries(9_Application ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/PhysX3ExtensionsCHECKED.lib)
+	target_link_libraries(9_Application ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/PxTaskCHECKED.lib)
+endif()
+
 if(${OPIFEX_OCULUS})
 	include_directories(../External/Oculus/include/	../External/Oculus/include/)
 	add_definitions(-DOPIFEX_OCULUS)

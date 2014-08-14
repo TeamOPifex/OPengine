@@ -54,4 +54,18 @@ target_link_libraries(4_Performance	${ALL_LIBS})
 
 set_target_properties(4_Performance PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(4_Performance PROPERTIES OUTPUT_NAME "Performance")
+
+
+#########################################
+# ADDITIONAL FEATURES
+#########################################
+if(${OPIFEX_PHYSICS}) 
+	add_definitions(-DOPIFEX_PHYSICS)
+	include_directories(../External/PhysX/include/)
+	target_link_libraries(4_Performance ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/PhysX3DEBUG_x86.lib)
+	target_link_libraries(4_Performance ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/PhysX3CommonDEBUG_x86.lib)
+	target_link_libraries(4_Performance ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/PhysX3ExtensionsDEBUG.lib)
+	target_link_libraries(4_Performance ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/PxTaskDEBUG.lib)
+endif()
+
 output_library(4_Performance "Performance")
