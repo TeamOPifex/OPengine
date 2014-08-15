@@ -41,7 +41,7 @@ void OPphysicsInitialize() {
 	sceneDesc.gravity = PxVec3(0.0f, -9.8f, 0.0f);
 
 	if (!sceneDesc.cpuDispatcher) {
-		PxDefaultCpuDispatcher* mCpuDispatcher = PxDefaultCpuDispatcherCreate(1);
+		PxDefaultCpuDispatcher* mCpuDispatcher = PxDefaultCpuDispatcherCreate(2);
 		sceneDesc.cpuDispatcher = mCpuDispatcher;
 	}
 
@@ -92,14 +92,34 @@ void OPphysicsGetTransform(void* actor, OPmat4* mat)
 	mat->cols[3].w = 1;
 }
 
-void* OPphysicsBoxCreate(){
-	PxTransform cubeTransform(PxVec3(0.0f, 4.0, 0.0f));
+void* OPphysicsBoxCreate(f32 x, f32 y, f32 z){
+	PxTransform cubeTransform(PxVec3(x, y, z));
+
 	PxMaterial* boxMaterial = gPhysicsSDK->createMaterial(0.6f, 0.1f, 0.6f);
+
 	PxRigidDynamic* aSphereActor = gPhysicsSDK->createRigidDynamic(cubeTransform);
-	PxShape* aSphereShape = aSphereActor->createShape(PxSphereGeometry(1), *boxMaterial);
+
+	PxShape* aSphereShape = aSphereActor->createShape(PxBoxGeometry(0.5, 0.5, 0.5), *boxMaterial);
+
 	gScene->addActor(*aSphereActor);
+
 	return aSphereActor;
 }
+
+void* OPphysicsSphereCreate(f32 x, f32 y, f32 z){
+	PxTransform cubeTransform(PxVec3(x, y, z));
+
+	PxMaterial* boxMaterial = gPhysicsSDK->createMaterial(0.6f, 0.1f, 0.6f);
+
+	PxRigidDynamic* aSphereActor = gPhysicsSDK->createRigidDynamic(cubeTransform);
+
+	PxShape* aSphereShape = aSphereActor->createShape(PxSphereGeometry(1), *boxMaterial);
+
+	gScene->addActor(*aSphereActor);
+
+	return aSphereActor;
+}
+
 void* OPphysicsPlaneCreate(){
 
 	PxTransform cubeTransform(PxVec3(0.0f, 4.0, 0.0f));
