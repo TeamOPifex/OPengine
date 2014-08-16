@@ -1,4 +1,14 @@
 ========================================
+== OPifex Entertainment
+========================================
+
+This is a C/C++ based, data-oriented, OpenGL engine.
+
+Garrett Hoofman - garrett@teamopifex.com
+Kirk Roerig - kirk@teamopifex.com
+
+
+========================================
 == Requirements
 ========================================
 
@@ -22,7 +32,15 @@
 * Android NDK
 * Ant
 
+
 ========================================
 == Installation Instructions
 ========================================
 
+
+========================================
+== Release Mode Instructions
+========================================
+
+* CMake - Check OPIFEX_RELEASE
+* Build in Visual Studio under Release Mode
