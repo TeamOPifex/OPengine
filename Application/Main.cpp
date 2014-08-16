@@ -70,8 +70,8 @@ void MsgHandler(OPstream* str, void* param) {
 void Init(){
 	OPcmanInit(OP_DEFAULT_LOADERS, 9);
 
-	OPaudInit();
-	OPaudInitThread(10);
+	//OPaudInit();
+	//OPaudInitThread(10);
 
 	//server = OPwebServerCreate("8080");
 	//OPwebServerOnKey(server, "test", MsgHandler, NULL);
@@ -85,8 +85,8 @@ void Init(){
 	OPrenderInit(JNIWidth(), JNIHeight(), true);
 #endif
 	//OPgameStateChange(&State0);
-	//OPgameStateChange(&GS_EXAMPLE_MODEL);
-	OPgameStateChange(&GS_EXAMPLE_PHYSICS);
+	OPgameStateChange(&GS_EXAMPLE_MODEL);
+	//OPgameStateChange(&GS_EXAMPLE_PHYSICS);
 	//OPgameStateChange(&GS_EXAMPLE_SKINNING);
 	//OPgameStateChange(&GS_EXAMPLE_OCULUS);
 
@@ -130,40 +130,40 @@ extern "C" {
 };
 JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj) {
 #else
-	int main(int argc, char** args) {
-#endif
-		if (argc > 2) {
-			ui32 arg2len = strlen(args[1]);
-			const i8* p = "-script";
-			ui32 plen = strlen(p);
-			if (arg2len == plen){
-				i32 match = OPmemcmp(args[1], p, arg2len);
-				if (match == 0) {
-					i8* script = args[2];
-					OPscriptInit();
-					OPstream* stream = OPreadFile(script);
-					OPscriptCompileAndRunStream(stream);
-				}
+int main(int argc, char** args) {
+	if (argc > 2) {
+		ui32 arg2len = strlen(args[1]);
+		const i8* p = "-script";
+		ui32 plen = strlen(p);
+		if (arg2len == plen){
+			i32 match = OPmemcmp(args[1], p, arg2len);
+			if (match == 0) {
+				i8* script = args[2];
+				OPscriptInit();
+				OPstream* stream = OPreadFile(script);
+				OPscriptCompileAndRunStream(stream);
 			}
 		}
-		else {
+	}
+	else {
+#endif
 
- 			OPmyoConnect();
+		OPmyoConnect();
 
-			OPinitialize = Init;
-			OPupdate = UpdateState;
-			OPdestroy = Destroy;
+		OPinitialize = Init;
+		OPupdate = UpdateState;
+		OPdestroy = Destroy;
 
-			ActiveState = OPgameStateCreate(NULL, Update, NULL);
+		ActiveState = OPgameStateCreate(NULL, Update, NULL);
 
-		#ifdef OPIFEX_ANDROID
-			return;
-		#else
-			OPstart();
-			OPend();
+#ifdef OPIFEX_ANDROID
+		return;
+#else
+		OPstart();
+		OPend();
 
-		}
-		return 0;
+	}
+	return 0;
 
 #endif
 }

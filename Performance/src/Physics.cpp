@@ -2,43 +2,30 @@
 
 #ifdef OPIFEX_PHYSICS
 
-	#include <PxPhysicsAPI.h>
-	#include <extensions\PxExtensionsAPI.h>
-	#include <extensions\PxDefaultErrorCallback.h>
-	#include <extensions\PxDefaultAllocator.h>
-	#include <extensions\PxDefaultSimulationFilterShader.h>
-	#include <extensions\PxDefaultCpuDispatcher.h>
-	#include <extensions\PxShapeExt.h>
-	#include <extensions\PxSimpleFactory.h>
-
-	#include <foundation\PxFoundation.h>
-	#include <foundation\PxMat33.h>
-
-	#pragma comment(lib, "PhysX3CHECKED_x86.lib")
-	#pragma comment(lib, "PhysX3CommonCHECKED_x86.lib")
-	#pragma comment(lib, "PhysX3ExtensionsCHECKED.lib")
-	#pragma comment(lib, "PxTaskCHECKED.lib")
-
-	using namespace physx;
-	using namespace std;
-
 	static PxPhysics* gPhysicsSDK = NULL;
 	static PxDefaultErrorCallback gDefaultErrorCallback;
 	static PxDefaultAllocator gDefaultAllocatorCallback;
 	static PxSimulationFilterShader gDefaultFilterShader = PxDefaultSimulationFilterShader;
-	PxScene* gScene = NULL;
 	PxReal myTimestep = 1.0f / 60.0f;
 
 #endif
 
-void OPphysicsInitialize() {
+void OPphysicsInit() {
 #ifdef OPIFEX_PHYSICS
 	PxFoundation* foundation = PxCreateFoundation(PX_PHYSICS_VERSION, gDefaultAllocatorCallback, gDefaultErrorCallback);
 	gPhysicsSDK = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale());
 	// Might not need these yet
 	PxInitExtensions(*gPhysicsSDK);
+#endif
+}
+
+OPphysicsScene* OPphysicsCreateScene() {
+
+#ifdef OPIFEX_PHYSICS
+	OPphysicsScene* scene = (OPphysicsScene*)OPalloc(sizeof(OPphysicsScene));
+
 	PxSceneDesc sceneDesc(gPhysicsSDK->getTolerancesScale());
-	sceneDesc.gravity = PxVec3(0.0f, -9.8f, 0.0f);
+	sceneDesc.gravity = PxVec3(0.0f, -9.8f * 5.0f, 0.0f);
 
 	if (!sceneDesc.cpuDispatcher) {
 		PxDefaultCpuDispatcher* mCpuDispatcher = PxDefaultCpuDispatcherCreate(2);
@@ -47,27 +34,28 @@ void OPphysicsInitialize() {
 
 	if (!sceneDesc.filterShader) {
 		sceneDesc.filterShader = gDefaultFilterShader;
-		gScene = gPhysicsSDK->createScene(sceneDesc);
+		scene->scene = gPhysicsSDK->createScene(sceneDesc);
 	}
+
+	scene->elapsed = 0;
+	
+	return scene;
+#else
+	return NULL;
 #endif
 }
 
 
-
-void OPphysicsGetTransform(void* actor, OPmat4* mat)
+void OPphysicsGetTransform(OPphysicsActor* actor, OPmat4* mat)
 {
-	PxRigidActor* pActor = (PxRigidActor*)actor;
-	PxU32 n = pActor->getNbShapes();
+#ifdef OPIFEX_PHYSICS
+	PxU32 n = actor->actor->getNbShapes();
 
 	PxShape** shapes = new PxShape*[n];
 
-	pActor->getShapes(shapes, n);
+	actor->actor->getShapes(shapes, n);
 
-
-	
-
-
-	PxTransform pT = PxShapeExt::getGlobalPose(*shapes[0], *pActor);
+	PxTransform pT = PxShapeExt::getGlobalPose(*shapes[0], *actor->actor);
 	
 	PxMat33 m = PxMat33(pT.q);
 
@@ -90,60 +78,152 @@ void OPphysicsGetTransform(void* actor, OPmat4* mat)
 	mat->cols[3].y = pT.p[1];
 	mat->cols[3].z = pT.p[2];
 	mat->cols[3].w = 1;
+#endif
 }
 
-void* OPphysicsBoxCreate(f32 x, f32 y, f32 z){
+
+void OPphysicsAddForce(OPphysicsDynamic* dynamic, f32 x, f32 y, f32 z){
+#ifdef OPIFEX_PHYSICS
+	dynamic->actor->addForce(PxVec3(x, y, z));
+#endif
+}
+void OPphysicsAddTorque(OPphysicsDynamic* dynamic, f32 x, f32 y, f32 z){
+#ifdef OPIFEX_PHYSICS
+	dynamic->actor->addTorque(PxVec3(x, y, z));
+#endif
+}
+
+void OPphysicsSetLinearVelocity(OPphysicsDynamic* dynamic, f32 x, f32 y, f32 z){
+#ifdef OPIFEX_PHYSICS
+	dynamic->actor->setLinearVelocity(PxVec3(x, y, z));
+#endif
+}
+
+void OPphysicsSetAngularVelocity(OPphysicsDynamic* dynamic, f32 x, f32 y, f32 z){
+#ifdef OPIFEX_PHYSICS
+	dynamic->actor->setAngularVelocity(PxVec3(x, y, z));
+#endif
+}
+
+
+OPphysicsDynamic* OPphysicsCreateBoxDynamic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 sx, f32 sy, f32 sz) {
+#ifdef OPIFEX_PHYSICS
 	PxTransform cubeTransform(PxVec3(x, y, z));
 
-	PxMaterial* boxMaterial = gPhysicsSDK->createMaterial(0.6f, 0.1f, 0.6f);
+	PxMaterial* boxMaterial = gPhysicsSDK->createMaterial(0.6f, 0.8f, 0.5f);
 
 	PxRigidDynamic* aSphereActor = gPhysicsSDK->createRigidDynamic(cubeTransform);
 
-	PxShape* aSphereShape = aSphereActor->createShape(PxBoxGeometry(0.5, 0.5, 0.5), *boxMaterial);
+	PxShape* aSphereShape = aSphereActor->createShape(PxBoxGeometry(sx, sy, sz), *boxMaterial);
+	aSphereActor->setMass(sx);
 
-	gScene->addActor(*aSphereActor);
+	((PxScene*)scene->scene)->addActor(*aSphereActor);
 
-	return aSphereActor;
+	OPphysicsDynamic* result = (OPphysicsDynamic*)OPalloc(sizeof(OPphysicsDynamic));
+	result->actor = aSphereActor;
+	return result;
+#else
+	return NULL;
+#endif
 }
 
-void* OPphysicsSphereCreate(f32 x, f32 y, f32 z){
+OPphysicsDynamic* OPphysicsCreateSphereDynamic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 s){
+#ifdef OPIFEX_PHYSICS
 	PxTransform cubeTransform(PxVec3(x, y, z));
 
-	PxMaterial* boxMaterial = gPhysicsSDK->createMaterial(0.6f, 0.1f, 0.6f);
+	PxMaterial* boxMaterial = gPhysicsSDK->createMaterial(0.8f, 0.8f, 0.6f);
 
 	PxRigidDynamic* aSphereActor = gPhysicsSDK->createRigidDynamic(cubeTransform);
 
-	PxShape* aSphereShape = aSphereActor->createShape(PxSphereGeometry(1), *boxMaterial);
+	PxShape* aSphereShape = aSphereActor->createShape(PxSphereGeometry(s), *boxMaterial);
+	aSphereActor->setMass(s);
 
-	gScene->addActor(*aSphereActor);
+	((PxScene*)scene->scene)->addActor(*aSphereActor);
 
-	return aSphereActor;
+	OPphysicsDynamic* result = (OPphysicsDynamic*)OPalloc(sizeof(OPphysicsDynamic));
+	result->actor = aSphereActor;
+	return result;
+#else
+	return NULL;
+#endif
 }
 
-void* OPphysicsPlaneCreate(){
+OPphysicsStatic* OPphysicsCreateBoxStatic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 sx, f32 sy, f32 sz) {
+#ifdef OPIFEX_PHYSICS
+	PxTransform cubeTransform(PxVec3(x, y, z));
+
+	PxMaterial* boxMaterial = gPhysicsSDK->createMaterial(0.6f, 0.8f, 0.5f);
+
+	PxRigidStatic* aSphereActor = gPhysicsSDK->createRigidStatic(cubeTransform);
+
+	PxShape* aSphereShape = aSphereActor->createShape(PxBoxGeometry(sx, sy, sz), *boxMaterial);
+
+	((PxScene*)scene->scene)->addActor(*aSphereActor);
+
+	OPphysicsStatic* result = (OPphysicsStatic*)OPalloc(sizeof(OPphysicsStatic));
+	result->actor = aSphereActor;
+	return result;
+#else
+	return NULL;
+#endif
+}
+
+OPphysicsStatic* OPphysicsCreateSphereStatic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 s){
+#ifdef OPIFEX_PHYSICS
+	PxTransform cubeTransform(PxVec3(x, y, z));
+
+	PxMaterial* boxMaterial = gPhysicsSDK->createMaterial(0.8f, 0.8f, 0.6f);
+
+	PxRigidStatic* aSphereActor = gPhysicsSDK->createRigidStatic(cubeTransform);
+
+	PxShape* aSphereShape = aSphereActor->createShape(PxSphereGeometry(s), *boxMaterial);
+
+	((PxScene*)scene->scene)->addActor(*aSphereActor);
+
+	OPphysicsStatic* result = (OPphysicsStatic*)OPalloc(sizeof(OPphysicsStatic));
+	result->actor = aSphereActor;
+	return result;
+#else
+	return NULL;
+#endif
+}
+
+void* OPphysicsCreatePlane(OPphysicsScene* scene){
+#ifdef OPIFEX_PHYSICS
 
 	PxTransform cubeTransform(PxVec3(0.0f, 4.0, 0.0f));
-	PxMaterial* planeMaterial = gPhysicsSDK->createMaterial(0.9f, 0.1f, 1.0f);
+	PxMaterial* planeMaterial = gPhysicsSDK->createMaterial(0.9f, 0.1f, 0.2f);
 	PxTransform pose = PxTransform(PxVec3(0.0f, 0.0f, 0.0f), PxQuat(PxHalfPi, PxVec3(0.0f, 0.0f, 1.0f)));
 	PxRigidStatic* aPlaneActor = gPhysicsSDK->createRigidStatic(pose);
 	PxShape* aPlaneShape = aPlaneActor->createShape(PxPlaneGeometry(), *planeMaterial);
-	gScene->addActor(*aPlaneActor);
+	((PxScene*)scene->scene)->addActor(*aPlaneActor);
 	return aPlaneActor;
+#else
+	return NULL;
+#endif
 }
 
-void OPphysicsStep() {
+void OPphysicsStep(OPphysicsScene* scene, ui64 elapsed) {
 #ifdef OPIFEX_PHYSICS
-	gScene->simulate(myTimestep);
-
-	gScene->fetchResults(true);
+	scene->elapsed += elapsed;
+	if (scene->elapsed > (1000 * myTimestep)) {
+		scene->elapsed = 0;
+		((PxScene*)scene->scene)->simulate(myTimestep);
+		((PxScene*)scene->scene)->fetchResults(true);
+	}
 
 #endif
 }
 
-void OPphysicsDestroy()
+void OPphysicsDestroy(OPphysicsScene* scene)
 {
 #ifdef OPIFEX_PHYSICS
-	gScene->release();
+	((PxScene*)scene->scene)->release();
+#endif
+}
+
+void OPphysicsShutdown() {
+#ifdef OPIFEX_PHYSICS
 	gPhysicsSDK->release();
 #endif
 }

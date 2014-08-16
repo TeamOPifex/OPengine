@@ -263,6 +263,7 @@ LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Vorbis/include
 LOCAL_CFLAGS += -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2
 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Application/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Application/Examples/*.cpp)
 
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 LOCAL_STATIC_LIBRARIES := libopifex-pipeline

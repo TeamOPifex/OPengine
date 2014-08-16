@@ -53,9 +53,6 @@ set(ALL_LIBS
 	6_Communication
 	7_Scripting
 	8_Pipeline
-	${OGG_LIBRARY}
-	${VORBIS_LIBRARY}
-	${VORBISFILE_LIBRARY}
 	${ZLIB_LIBRARY}
 	${LIBPNG_LIBRARY}
 	${CMAKE_THREAD_LIBS_INIT}
@@ -150,24 +147,15 @@ endif()
 
 if(${OPIFEX_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
+	target_link_libraries(9_Application	libcpmtd0.lib)
+	target_link_libraries(9_Application	${OGG_LIBRARY_RELEASE} ${VORBIS_LIBRARY_RELEASE} ${VORBISFILE_LIBRARY_RELEASE})
+else()	
+	target_link_libraries(9_Application	${OGG_LIBRARY} ${VORBIS_LIBRARY} ${VORBISFILE_LIBRARY})	
 endif()
 
 #########################################
 # OUTPUT BINARIES
 #########################################
-if(${OPIFEX_RELEASE})
-	copy_to_folder(9_Application "/External/Ogg/lib/" "ogg.dll" "/Application/Release" ${OPIFEX_OS_WINDOWS})
-	copy_to_folder(9_Application "/External/Ogg/lib/" "libogg.dll" "/Application/Release" ${OPIFEX_OS_WINDOWS})
-	copy_to_folder(9_Application "/External/Vorbis/lib/" "vorbisfile.dll" "/Application/Release" ${OPIFEX_OS_WINDOWS})
-	copy_to_folder(9_Application "/External/Vorbis/lib/" "libvorbis.dll" "/Application/Release" ${OPIFEX_OS_WINDOWS})
-	copy_to_folder(9_Application "/External/Vorbis/lib/" "libvorbisfile.dll" "/Application/Release" ${OPIFEX_OS_WINDOWS})
-else()	
-	copy_to_folder(9_Application "/External/Ogg/lib/" "ogg.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
-	copy_to_folder(9_Application "/External/Ogg/lib/" "libogg.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
-	copy_to_folder(9_Application "/External/Vorbis/lib/" "vorbisfile.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
-	copy_to_folder(9_Application "/External/Vorbis/lib/" "libvorbis.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
-	copy_to_folder(9_Application "/External/Vorbis/lib/" "libvorbisfile.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
-endif()
 
 if(${OPIFEX_V8})
 	if(${OPIFEX_RELEASE})
