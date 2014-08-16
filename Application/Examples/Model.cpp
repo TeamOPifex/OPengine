@@ -17,11 +17,11 @@ OPcam* modelCamera;
 ui32 modelRotation = 1;
 
 void ExampleModelEnter(OPgameState* last) {
-	OPcmanLoad("untitled.opm");
+	OPcmanLoad("PuzzleBlock.opm");
 	OPcmanLoad("SimpleModel.frag");
 	OPcmanLoad("SimpleModel.vert");
 
-	modelMesh = (OPmesh*)OPcmanGet("untitled.opm");
+	modelMesh = (OPmesh*)OPcmanGet("PuzzleBlock.opm");
 
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },

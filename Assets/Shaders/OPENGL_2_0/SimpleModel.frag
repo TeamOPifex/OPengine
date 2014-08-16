@@ -5,7 +5,7 @@ void main() {
 	vec3 LightColor = vec3(1,1,1);
 	float LightPower = 0.2;
 	
-	vec3 MaterialDiffuseColor =  vec4(1,0,0,1);
+	vec3 MaterialDiffuseColor =  vec3(1,0,0);
 	vec3 MaterialAmbientColor = vec3(0.8,0.8,0.8) * MaterialDiffuseColor;
 	
 	vec3 n = normalize( vNormal );
