@@ -14,19 +14,25 @@ Kirk Roerig - kirk@teamopifex.com
 
 * CMake v2.8
 
---- Linux (Ubuntu 12.04 LTS) ---
+---------------------------------
+--- Linux (Ubuntu)  ---
+---------------------------------
 
 * OpenGL development headers + lib (GL 2.0 capable drivers)
 * OpenAL development headers + lib
 * GCC & G++
 
---- Windows ---
+---------------------------------
+--- Windows 				  ---
+---------------------------------
 
 * OpenAL Redistributable (oalinst)
 * OpenAL SDK (OpenAL11CoreSDK)
 * Visual Studio 2010/2012
 
---- Android ---
+---------------------------------
+--- Android	API 16			  ---
+---------------------------------
 
 * Android SDK
 * Android NDK
@@ -37,7 +43,9 @@ Kirk Roerig - kirk@teamopifex.com
 == Installation Instructions
 ========================================
 
---- Linux (Ubuntu) ---
+---------------------------------
+--- Linux (Ubuntu) 			  ---
+---------------------------------
 
 	* Install Mercurial
 		* sudo apt-get install mercurial
@@ -69,7 +77,38 @@ Kirk Roerig - kirk@teamopifex.com
 				# Name data to appear in commits
 				username = Garrett Hoofman <gambitsunob@gmail.com[ui]
 
+				
+		---------------------------------
+		--- Android on Linux (Ubuntu) ---
+		---------------------------------
 		
+			* Install Ant
+				* sudo apt-get install ant
+			* Download Android SDK
+				* https://developer.android.com/sdk/installing/index.html?pkg=tools
+			* Download Android NDK
+				- Make sure you download the correct Platform Target (32 bit for Ouya)
+				* https://developer.android.com/tools/sdk/ndk/index.html#Installing
+			* Extract Android SDK and Android NDK
+			* Add directories to your PATH
+				* export PATH=$PATH:[/path/to/android-ndk]
+				* export PATH=$PATH:[/path/to/android-sdk]/sdk/tools/
+				* export PATH=$PATH:[/path/to/android-sdk]/sdk/platform-tools/
+			* Install JDK
+				* sudo apt-get install openjdk-7-jre 
+				* sudo apt-get install openjdk-7-jdk
+			* Install 64bit dependencies (not needed for 32 bit)
+				* sudo dpkg --add-architecture i386
+				* sudo apt-get update
+				* sudo apt-get install libncurses5:i386 libstdc++6:i386 zlib1g:i386
+			* Install adb tools
+				* sudo apt-get install android-tools-adb
+			* Run Cmake for Android
+				* cmake -D OPIFEX_OS:string=OPIFEX_ANDROID
+			* android update project --target 1 --subprojects --path .
+			* ndk-build
+			* ant debug
+			* adb install -r bin/OPengine-debug.apk
 		
 ========================================
 == Release Mode Instructions
