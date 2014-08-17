@@ -43,41 +43,41 @@ void Print(const v8::FunctionCallbackInfo<v8::Value>& args) {
 }
 #include "./Data/include/ContentManager.h"
 
-bool StartsWith(i8* str, i8* cmp, i32 size) {
+bool StartsWith(OPchar* str, const OPchar* cmp, i32 size) {
 	ui32 lenA = strlen(str);
 	ui32 lenB = strlen(cmp);
 	if (lenA < size || lenB < size) return false;
 	return OPmemcmp(str, cmp, size) == 0;
 }
 
-void RemoveFromStart(i8* str, i32 size) {
+void RemoveFromStart(OPchar* str, i32 size) {
 	i32 len = strlen(str);
 	for (i32 i = 0; i < len - size; i++) {
 		str[i] = str[i + size];
 	}
-	str[len - size] = NULL;
+	str[len - size] = '\0';
 }
 
-i8* GetNonConstant(const i8* str) {
+OPchar* GetNonConstant(const OPchar* str) {
 	i32 len = strlen(str);
-	i8* result = (i8*)OPalloc(sizeof(i8)* (len + 1));
+	OPchar* result = (OPchar*)OPalloc(sizeof(OPchar)* (len + 1));
 	strcpy(result, str);
 	return result;
 }
 
-i8* AddToString(i8* str, i8* add) {
+OPchar* AddToString(OPchar* str, const OPchar* add) {
 	i32 lenA = strlen(str);
 	i32 lenB = strlen(add);
-	i8* result = (i8*)OPalloc(lenA + lenB + 1);
+	OPchar* result = (OPchar*)OPalloc(lenA + lenB + 1);
 	strcpy(result, str);
 	strcat(result, add);
 	return result;
 }
 
-i8* PrependToString(i8* str, i8* add) {
+OPchar* PrependToString(OPchar* str, const OPchar* add) {
 	i32 lenA = strlen(str);
 	i32 lenB = strlen(add);
-	i8* result = (i8*)OPalloc(sizeof(i8)* (lenA + lenB + 1));
+	OPchar* result = (OPchar*)OPalloc(sizeof(OPchar)* (lenA + lenB + 1));
 	strcpy(result, add);
 	strcat(result, str);
 	return result;
@@ -93,7 +93,7 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		const char* p = ToCString(utf8);
 		ui32 len = strlen(p);
 
-		const i8* OPengine = "./node_modules/OPengine/OPengine";
+		const OPchar* OPengine = "./node_modules/OPengine/OPengine";
 		if (strlen(OPengine) == len && OPmemcmp(OPengine, p, len) == 0) {
 
 			Handle<Object> OP = Object::New(isolate);
@@ -106,14 +106,14 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 			return;
 		}
 		else {
-			i8* tmp = GetNonConstant(p);
-			i8* loadFile = tmp;
+			OPchar* tmp = GetNonConstant(p);
+			OPchar* loadFile = tmp;
 			OPlog("Require: %s", loadFile);
 
-			i8* begin = "./";
-			i8* jsEnd = ".js";
-			i8* opsEnd = ".ops";
-			i8* dir = "assets/Scripts/";
+			const OPchar* begin = "./";
+			const OPchar* jsEnd = ".js";
+			const OPchar* opsEnd = ".ops";
+			const OPchar* dir = "assets/Scripts/";
 
 			if (StartsWith(loadFile, begin, 2)) {
 				OPlog("Starts with %s, removing it", begin);
@@ -122,7 +122,7 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 
 			if (!StartsWith(loadFile, jsEnd, 3) || !StartsWith(loadFile, opsEnd, 4)) {
 				OPlog("Doesn't start with %s or %s, adding .js", jsEnd, opsEnd);
-				i8* res = AddToString(loadFile, jsEnd);
+				OPchar* res = AddToString(loadFile, jsEnd);
 				OPlog("Result %s", res);
 				OPfree(loadFile);
 				OPlog("Old array freed");
@@ -136,7 +136,7 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 			OPlog("Require: %s", loadFile);
 
 			OPstream* stream = OPreadFile(loadFile);
-			Handle<String> source = String::NewFromUtf8(isolate, (i8*)stream->Data);
+			Handle<String> source = String::NewFromUtf8(isolate, (OPchar*)stream->Data);
 
 
 			Handle<ObjectTemplate> global = ObjectTemplate::New(isolate);
@@ -232,7 +232,7 @@ void OPscriptCompileAndRunStream(OPstream* stream) {
 	Local<Context> context = Context::New(isolate, NULL, global);
 	v8::Context::Scope context_scope(context);
 
-	Handle<String> source = String::NewFromUtf8(isolate, (i8*)stream->Data);
+	Handle<String> source = String::NewFromUtf8(isolate, (OPchar*)stream->Data);
 
 	v8::ScriptOrigin origin(v8::String::NewFromUtf8(context->GetIsolate(), "name"));
 	v8::Handle<v8::Script> compiled = v8::Script::Compile(source, &origin);

@@ -8,7 +8,7 @@
 #ifdef OPIFEX_V8
 
 #include "v8.h"
-#include "./External/V8/include/libplatform/libplatform.h"
+#include "./include/libplatform/libplatform.h"
 using namespace v8;
 
 extern V8isolate* isolate;
