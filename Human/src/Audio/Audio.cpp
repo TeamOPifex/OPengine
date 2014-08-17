@@ -44,20 +44,20 @@ OPint OPaudInit(){
 
 // USE OGG VORBIS FOR DESKTOP PLATFORMS
 #if defined(OPIFEX_WINDOWS)
-	HINSTANCE _hVorbisFileDLL = LoadLibrary("vorbisfile.dll");
-	if(_hVorbisFileDLL){
-		fn_ov_clear = (LPOVCLEAR)GetProcAddress(_hVorbisFileDLL, "ov_clear");
-		fn_ov_read = (LPOVREAD)GetProcAddress(_hVorbisFileDLL, "ov_read");
-		fn_ov_pcm_total = (LPOVPCMTOTAL)GetProcAddress(_hVorbisFileDLL, "ov_pcm_total");
-		fn_ov_info = (LPOVINFO)GetProcAddress(_hVorbisFileDLL, "ov_info");
-		fn_ov_comment = (LPOVCOMMENT)GetProcAddress(_hVorbisFileDLL, "ov_comment");
-		fn_ov_open_callbacks = (LPOVOPENCALLBACKS)GetProcAddress(_hVorbisFileDLL, "ov_open_callbacks");
+	//HINSTANCE _hVorbisFileDLL = LoadLibrary("vorbisfile.dll");
+	//if(_hVorbisFileDLL){
+	//	fn_ov_clear = (LPOVCLEAR)GetProcAddress(_hVorbisFileDLL, "ov_clear");
+	//	fn_ov_read = (LPOVREAD)GetProcAddress(_hVorbisFileDLL, "ov_read");
+	//	fn_ov_pcm_total = (LPOVPCMTOTAL)GetProcAddress(_hVorbisFileDLL, "ov_pcm_total");
+	//	fn_ov_info = (LPOVINFO)GetProcAddress(_hVorbisFileDLL, "ov_info");
+	//	fn_ov_comment = (LPOVCOMMENT)GetProcAddress(_hVorbisFileDLL, "ov_comment");
+	//	fn_ov_open_callbacks = (LPOVOPENCALLBACKS)GetProcAddress(_hVorbisFileDLL, "ov_open_callbacks");
 
-		if (!(fn_ov_clear && fn_ov_read && fn_ov_pcm_total && fn_ov_info &&
-			fn_ov_comment && fn_ov_open_callbacks)){
-			return -2;
-		}
-	}
+	//	if (!(fn_ov_clear && fn_ov_read && fn_ov_pcm_total && fn_ov_info &&
+	//		fn_ov_comment && fn_ov_open_callbacks)){
+	//		return -2;
+	//	}
+	//}
 #else
 	// copy the function pointers directly from
 	// the linked SO file.
@@ -70,9 +70,9 @@ OPint OPaudInit(){
 #endif
 
 #ifndef OPIFEX_ANDROID
-	ASSERT(fn_ov_clear && fn_ov_read && fn_ov_pcm_total &&
-	       fn_ov_info && fn_ov_comment && fn_ov_open_callbacks,
-	       "OPaudInit() - One or more of the fn_ov_xx functions were null!");
+	//ASSERT(fn_ov_clear && fn_ov_read && fn_ov_pcm_total &&
+	//       fn_ov_info && fn_ov_comment && fn_ov_open_callbacks,
+	//       "OPaudInit() - One or more of the fn_ov_xx functions were null!");
 #endif
 
 #ifdef OPIFEX_ANDROID // USE OpenSL ES for sound

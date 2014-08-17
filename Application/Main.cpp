@@ -6,6 +6,7 @@
 #include "./Core/include/Core.h"
 #include "./Data/include/GameStates.h"
 
+#include "./Application/Examples/Audio.h"
 #include "./Application/Examples/Model.h"
 #include "./Application/Examples/Oculus.h"
 #include "./Application/Examples/ParticleSystem.h"
@@ -85,11 +86,12 @@ void Init(){
 	OPrenderInit(JNIWidth(), JNIHeight(), true);
 #endif
 	//OPgameStateChange(&State0);
-	OPgameStateChange(&GS_EXAMPLE_MODEL);
+	OPgameStateChange(&GS_EXAMPLE_AUDIO);
+	//OPgameStateChange(&GS_EXAMPLE_MODEL);
 	//OPgameStateChange(&GS_EXAMPLE_PHYSICS);
 	//OPgameStateChange(&GS_EXAMPLE_SKINNING);
 	//OPgameStateChange(&GS_EXAMPLE_OCULUS);
-
+	
 	return;
 }
 

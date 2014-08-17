@@ -97,24 +97,25 @@ OPint OPaudOpenWave(const OPchar* filename, OPaudioSource** source){
 
 OPint OPaudOpenOgg(const OPchar* filename, OPaudioSource** source){
 	// Open Ogg Stream
-	ov_callbacks	sCallbacks;
+	//ov_callbacks	sCallbacks;
 	OggVorbis_File*	sOggVorbisFile = (OggVorbis_File*)OPalloc(sizeof(OggVorbis_File));
 	vorbis_info		*psVorbisInfo;
 
 	*sOggVorbisFile = OggVorbis_File();
 
-	sCallbacks.read_func = ov_read_func;
-	sCallbacks.seek_func = ov_seek_func;
-	sCallbacks.close_func = ov_close_func;
-	sCallbacks.tell_func = ov_tell_func;
+	//sCallbacks.read_func = ov_read_func;
+	//sCallbacks.seek_func = ov_seek_func;
+	//sCallbacks.close_func = ov_close_func;
+	//sCallbacks.tell_func = ov_tell_func;
 
 	FILE* song = OPreadFileInformation(filename).file;
 
-	if (ov_open_callbacks(song, sOggVorbisFile, NULL, 0, sCallbacks) == 0){
-			psVorbisInfo = fn_ov_info(sOggVorbisFile, -1);
+	//if (ov_open_callbacks(song, sOggVorbisFile, NULL, 0, sCallbacks) == 0){
+	ov_open(song, sOggVorbisFile, NULL, 0);
+			psVorbisInfo = ov_info(sOggVorbisFile, -1);
 			if(psVorbisInfo){
 				OPaudioDescription desc = {
-					(ui64)fn_ov_pcm_total(sOggVorbisFile, -1),
+					(ui64)ov_pcm_total(sOggVorbisFile, -1),
 					(ui32)psVorbisInfo->rate,
 					0,                      // bits / sample
 					(ui16)psVorbisInfo->channels,
@@ -171,7 +172,7 @@ OPint OPaudOpenOgg(const OPchar* filename, OPaudioSource** source){
 
 				return 1;
 			}
-		}
+		
 
 	source = NULL;
 	return 0;

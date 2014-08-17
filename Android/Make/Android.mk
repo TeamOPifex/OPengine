@@ -45,32 +45,6 @@ LOCAL_STATIC_LIBRARIES := libogg
 include $(PREBUILT_STATIC_LIBRARY)
 
 
-##############
-# LIBV8
-##############
-include $(CLEAR_VARS)
-LOCAL_MODULE    := libv8
-LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libv8.so
-include $(PREBUILT_SHARED_LIBRARY)
-
-##############
-# LIBV8
-##############
-include $(CLEAR_VARS)
-LOCAL_MODULE    := libicuuc
-LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libicuuc.so
-include $(PREBUILT_SHARED_LIBRARY)
-
-##############
-# LIBV8
-##############
-include $(CLEAR_VARS)
-LOCAL_MODULE    := libicui18n
-LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libicui18n.so
-include $(PREBUILT_SHARED_LIBRARY)
-
-
-
 
 ##############
 # LODEPNG
@@ -236,7 +210,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE    := libopifex-scripting
 LOCAL_LDLIBS    := -llog -lGLESv2 -lOpenSLES
 LOCAL_CFLAGS    := -Werror
-LOCAL_CFLAGS 	+= -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2 -DOPIFEX_V8
+LOCAL_CFLAGS 	+= -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/Communication
@@ -249,8 +223,6 @@ MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Scripting/src/*.cpp)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 LOCAL_STATIC_LIBRARIES := libopifex-communication
-LOCAL_SHARED_LIBRARIES := libv8 libicui18n libicuuc
-
 
 include $(BUILD_STATIC_LIBRARY)
 
@@ -261,7 +233,7 @@ include $(BUILD_STATIC_LIBRARY)
 ##############
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libopifex-pipeline
-LOCAL_CFLAGS 	:= -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2 -DOPIFEX_V8
+LOCAL_CFLAGS 	:= -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Ogg/include
@@ -293,12 +265,11 @@ LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Vorbis/include
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/V8/
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/V8/include
 
-LOCAL_CFLAGS += -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2 -DOPIFEX_V8
+LOCAL_CFLAGS += -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2
 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Application/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Application/Examples/*.cpp)
 
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
-LOCAL_SHARED_LIBRARIES := libv8 libicui18n libicuuc
 LOCAL_STATIC_LIBRARIES := libopifex-pipeline
 include $(BUILD_SHARED_LIBRARY)
