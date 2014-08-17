@@ -60,29 +60,26 @@ void RemoveFromStart(i8* str, i32 size) {
 
 i8* GetNonConstant(const i8* str) {
 	i32 len = strlen(str);
-	i8* result = (i8*)OPalloc(sizeof(i8)* ( len));
-	OPmemcpy(result, str, sizeof(i8)* len);
-	result[len] = NULL;
+	i8* result = (i8*)OPalloc(sizeof(i8)* (len + 1));
+	strcpy(result, str);
 	return result;
 }
 
 i8* AddToString(i8* str, i8* add) {
 	i32 lenA = strlen(str);
 	i32 lenB = strlen(add);
-	i8* result = (i8*)OPalloc(sizeof(i8)* (lenA + lenB));
-	OPmemcpy(result, str, lenA);
-	OPmemcpy(result + lenA, add, lenB);
-	result[lenA + lenB] = NULL;
+	i8* result = (i8*)OPalloc(lenA + lenB + 1);
+	strcpy(result, str);
+	strcat(result, add);
 	return result;
 }
 
 i8* PrependToString(i8* str, i8* add) {
 	i32 lenA = strlen(str);
 	i32 lenB = strlen(add);
-	i8* result = (i8*)OPalloc(sizeof(i8)* (lenA + lenB));
-	OPmemcpy(result, add, lenB);
-	OPmemcpy(result + lenB, str, lenA);
-	result[lenA + lenB] = NULL;
+	i8* result = (i8*)OPalloc(sizeof(i8)* (lenA + lenB + 1));
+	strcpy(result, add);
+	strcat(result, str);
 	return result;
 }
 
@@ -111,6 +108,7 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		else {
 			i8* tmp = GetNonConstant(p);
 			i8* loadFile = tmp;
+			OPlog("Require: %s", loadFile);
 
 			i8* begin = "./";
 			i8* jsEnd = ".js";
@@ -118,12 +116,20 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 			i8* dir = "assets/Scripts/";
 
 			if (StartsWith(loadFile, begin, 2)) {
+				OPlog("Starts with %s, removing it", begin);
 				RemoveFromStart(loadFile, 2);
 			}
 
 			if (!StartsWith(loadFile, jsEnd, 3) || !StartsWith(loadFile, opsEnd, 4)) {
-				loadFile = AddToString(loadFile, jsEnd);
+				OPlog("Doesn't start with %s or %s, adding .js", jsEnd, opsEnd);
+				i8* res = AddToString(loadFile, jsEnd);
+				OPlog("Result %s", res);
+				OPfree(loadFile);
+				OPlog("Old array freed");
+				loadFile = res;
 			}
+
+			OPlog("Prepending String");
 
 			loadFile = PrependToString(loadFile, dir);
 
@@ -147,14 +153,26 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 
 			v8::ScriptOrigin origin(v8::String::NewFromUtf8(context->GetIsolate(), "name"));
 			v8::Handle<v8::Script> compiled = v8::Script::Compile(source, &origin);
+			if (compiled.IsEmpty()) {
+				OPlog("FAILED to Compile: %s", loadFile);
+				return;
+			}
+			OPlog("Compiled: %s", loadFile);
+			TryCatch trycatch;
 			Local<Value> result = compiled->Run();
+			if (result.IsEmpty()) {
+				Local<Value> exception = trycatch.Exception();
+				String::Utf8Value exception_str(exception);
+				OPlog("Exception: %s", *exception_str);
+			}
+			OPlog("Script ran");
 
 			OPlog("Processed: %s", loadFile);
 			Local<Value> exports = context->Global()->Get(String::NewFromUtf8(isolate, "module"))->ToObject()->Get(String::NewFromUtf8(isolate, "exports"));
 
 			args.GetReturnValue().Set(exports);
 
-			//OPfree(loadFile);
+			OPfree(loadFile);
 
 
 		}
