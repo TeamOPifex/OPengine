@@ -37,8 +37,8 @@ if( ${OPIFEX_OS_ANDROID} )
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/filters" ${PROJECT_BINARY_DIR}/assets/Web/angular/filters)	
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/services" ${PROJECT_BINARY_DIR}/assets/Web/angular/services)	
 
-	file(COPY ${PROJECT_SOURCE_DIR}/External/Ogg/lib/android/libogg.a DESTINATION ${PROJECT_BINARY_DIR}/Binaries/android)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/Vorbis/lib/android/libvorbis.a DESTINATION ${PROJECT_BINARY_DIR}/Binaries/android)
+	file(COPY ${PROJECT_SOURCE_DIR}/External/Ogg/lib/debug/android/libogg.a DESTINATION ${PROJECT_BINARY_DIR}/Binaries/android)
+	file(COPY ${PROJECT_SOURCE_DIR}/External/Vorbis/lib/debug/android/libvorbis.a DESTINATION ${PROJECT_BINARY_DIR}/Binaries/android)
 
 else()
 
