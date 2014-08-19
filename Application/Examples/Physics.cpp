@@ -42,6 +42,10 @@ OPphysicsScene* scene;
 
 
 void ExamplePhysicsEnter(OPgameState* last) {
+
+	OPphysicsInit();
+	scene = OPphysicsCreateScene();
+
 	OPcmanLoad("PuzzleBlock.opm");
 	OPcmanLoad("PuzzleSphere.opm");
 	OPcmanLoad("TexturedModel.frag");
@@ -98,10 +102,7 @@ void ExamplePhysicsEnter(OPgameState* last) {
 		OPrenderWidth / (f32)OPrenderHeight
 		);
 
-	OPphysicsInit();
-	scene = OPphysicsCreateScene();
-
-	boxCount = 5;
+	boxCount = 2000;
 	boxes = (Dynamic*)OPalloc(sizeof(Dynamic)* boxCount);
 	for (ui32 i = 0; i < boxCount; i++) {
 		f32 r = OPrandom();

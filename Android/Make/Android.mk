@@ -23,6 +23,7 @@ LOCAL_PATH:= $(call my-dir)
 PROJECT_PATH:= $(LOCAL_PATH)/../@OPIFEX_REPOSITORY@
 
 NDK_APP_OUT := $(LOCAL_PATH)/../Binaries/android
+BINARIES := $(NDK_APP_OUT)
 
 
 ##############
@@ -43,6 +44,98 @@ LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libvorbis.a
 LOCAL_STATIC_LIBRARIES := libogg
 
 include $(PREBUILT_STATIC_LIBRARY)
+
+
+##############
+# LIBVORBIS
+##############
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libLowLevel
+LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libLowLevel.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libLowLevelCloth
+LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libLowLevelCloth.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libPhysX3CharacterKinematic
+LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPhysX3CharacterKinematic.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libPhysX3
+LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPhysX3.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libPhysX3Common
+LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPhysX3Common.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libPhysX3Cooking
+LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPhysX3Cooking.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libPhysX3Extensions
+LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPhysX3Extensions.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libPhysX3Vehicle
+LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPhysX3Vehicle.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libPhysXProfileSDK
+LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPhysXProfileSDK.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libPhysXVisualDebuggerSDK
+LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPhysXVisualDebuggerSDK.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libPvdRuntime
+LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPvdRuntime.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libPxTask
+LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPxTask.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libSceneQuery
+LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libSceneQuery.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libSimulationController
+LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libSimulationController.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+
+##############
+# 9_APPLICATION
+# second lib, which will depend on and include the first one
+##############
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libopphysics
+LOCAL_LDLIBS    := -llog -lGLESv2 -landroid -lOpenSLES
+
+LOCAL_LDFLAGS := -Wl,--start-group \
+	$(BINARIES)/libPhysX3.a \
+	$(BINARIES)/libPxTask.a \
+	$(BINARIES)/libPhysX3Common.a \
+	$(BINARIES)/libPhysX3Extensions.a \
+	-Wl,--end-group
+
+include $(BUILD_SHARED_LIBRARY)
 
 
 
@@ -128,15 +221,17 @@ include $(BUILD_STATIC_LIBRARY)
 ##############
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libopifex-performance
-LOCAL_CFLAGS := -D@OPIFEX_OS@
+LOCAL_CFLAGS := -D@OPIFEX_OS@ -DOPIFEX_PHYSICS
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
+LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/PhysX/IncludeAndroid
 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Performance/src/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Performance/src/*.c)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 LOCAL_STATIC_LIBRARIES := libopifex-math
+
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -255,6 +350,23 @@ include $(CLEAR_VARS)
 LOCAL_MODULE    := libopengine
 LOCAL_LDLIBS    := -llog -lGLESv2 -landroid -lOpenSLES
 
+LOCAL_LDFLAGS := -Wl,--start-group \
+	$(BINARIES)/libPhysX3Common.a \
+	$(BINARIES)/libPvdRuntime.a \
+	$(BINARIES)/libSimulationController.a \
+	$(BINARIES)/libSceneQuery.a \
+	$(BINARIES)/libLowLevel.a \
+	$(BINARIES)/libLowLevelCloth.a \
+	$(BINARIES)/libPhysX3.a \
+	$(BINARIES)/libPhysX3Vehicle.a \
+	$(BINARIES)/libPhysX3Cooking.a \
+	$(BINARIES)/libPhysX3Extensions.a \
+	$(BINARIES)/libPhysX3CharacterKinematic.a \
+	$(BINARIES)/libPhysXProfileSDK.a \
+	$(BINARIES)/libPxTask.a \
+	$(BINARIES)/libPhysXVisualDebuggerSDK.a \
+	-Wl,--end-group
+	
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := false
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
