@@ -149,7 +149,8 @@ int main(int argc, char** args) {
 	}
 	else {
 #endif
-		
+		OPstream* stream = OPreadFile("assets/Scripts/app.js");
+		OPscriptCompileAndRunStream(stream);
 
 		OPmyoConnect();
 
