@@ -17,10 +17,18 @@
 #include <foundation\PxFoundation.h>
 #include <foundation\PxMat33.h>
 
-#pragma comment(lib, "PhysX3CHECKED_x86.lib")
-#pragma comment(lib, "PhysX3CommonCHECKED_x86.lib")
-#pragma comment(lib, "PhysX3ExtensionsCHECKED.lib")
-#pragma comment(lib, "PxTaskCHECKED.lib")
+
+//#ifdef NDEBUG
+//#pragma comment(lib, "PhysX3_x86.lib")
+//#pragma comment(lib, "PhysX3Common_x86.lib")
+//#pragma comment(lib, "PhysX3Extensions.lib")
+//#pragma comment(lib, "PxTask.lib")
+//#else
+//#pragma comment(lib, "PhysX3DEBUG_x86.lib")
+//#pragma comment(lib, "PhysX3CommonDEBUG_x86.lib")
+//#pragma comment(lib, "PhysX3ExtensionsDEBUG.lib")
+//#pragma comment(lib, "PxTaskDEBUG.lib")
+//#endif
 
 using namespace physx;
 using namespace std;

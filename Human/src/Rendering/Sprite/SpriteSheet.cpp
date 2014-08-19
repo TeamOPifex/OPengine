@@ -4,8 +4,6 @@
 #include "./Human/include/Utilities/ImagePNG.h"
 #include "./Human/include/Rendering/Sprite/SpriteSheet.h"
 
-#define _DEBUG
-
 void __opSpriteScaleFrames(OPtexture* tex, OPspriteSheet* ss) {
 	ASSERT(tex, "__opSpriteScaleFrames() - texture null");
 	ASSERT(tex, "__opSpriteScaleFrames() - spritesheet null");
