@@ -23,7 +23,6 @@ LOCAL_PATH:= $(call my-dir)
 PROJECT_PATH:= $(LOCAL_PATH)/../@OPIFEX_REPOSITORY@
 
 NDK_APP_OUT := $(LOCAL_PATH)/../Binaries/android
-BINARIES := $(NDK_APP_OUT)
 
 
 ##############
@@ -47,98 +46,64 @@ include $(PREBUILT_STATIC_LIBRARY)
 
 
 ##############
-# LIBVORBIS
+# LIBV8
 ##############
 include $(CLEAR_VARS)
-LOCAL_MODULE    := libLowLevel
-LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libLowLevel.a
+LOCAL_MODULE    := libv8
+LOCAL_SRC_FILES := libv8_base.a
 include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE    := libLowLevelCloth
-LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libLowLevelCloth.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE    := libPhysX3CharacterKinematic
-LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPhysX3CharacterKinematic.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE    := libPhysX3
-LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPhysX3.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE    := libPhysX3Common
-LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPhysX3Common.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE    := libPhysX3Cooking
-LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPhysX3Cooking.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE    := libPhysX3Extensions
-LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPhysX3Extensions.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE    := libPhysX3Vehicle
-LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPhysX3Vehicle.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE    := libPhysXProfileSDK
-LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPhysXProfileSDK.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE    := libPhysXVisualDebuggerSDK
-LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPhysXVisualDebuggerSDK.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE    := libPvdRuntime
-LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPvdRuntime.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE    := libPxTask
-LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPxTask.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE    := libSceneQuery
-LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libSceneQuery.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE    := libSimulationController
-LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libSimulationController.a
-include $(PREBUILT_STATIC_LIBRARY)
-
 
 ##############
-# 9_APPLICATION
-# second lib, which will depend on and include the first one
+# LIBV8
 ##############
 include $(CLEAR_VARS)
-LOCAL_MODULE    := libopphysics
-LOCAL_LDLIBS    := -llog -lGLESv2 -landroid -lOpenSLES
+LOCAL_MODULE    := libv8base
+LOCAL_SRC_FILES := libv8_libbase.a
+include $(PREBUILT_STATIC_LIBRARY)
 
-LOCAL_LDFLAGS := -Wl,--start-group \
-	$(BINARIES)/libPhysX3.a \
-	$(BINARIES)/libPxTask.a \
-	$(BINARIES)/libPhysX3Common.a \
-	$(BINARIES)/libPhysX3Extensions.a \
-	-Wl,--end-group
+##############
+# LIBV8
+##############
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libv8snapshot
+LOCAL_SRC_FILES := libv8_snapshot.a
+include $(PREBUILT_STATIC_LIBRARY)
 
-include $(BUILD_SHARED_LIBRARY)
+##############
+# LIBV8
+##############
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libicuuc
+LOCAL_SRC_FILES := libicuuc.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+##############
+# LIBV8
+##############
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libicudata
+LOCAL_SRC_FILES := libicudata.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+##############
+# LIBV8
+##############
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libicui18n
+LOCAL_SRC_FILES := libicui18n.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+##############
+# LIBV8
+##############
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libv8_libplatform
+LOCAL_SRC_FILES := libv8_libplatform.a
+include $(PREBUILT_STATIC_LIBRARY)
 
 
 
+ 
 ##############
 # LODEPNG
 ##############
@@ -224,14 +189,12 @@ LOCAL_MODULE    := libopifex-performance
 LOCAL_CFLAGS := -D@OPIFEX_OS@
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
-LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/PhysX/IncludeAndroid
 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Performance/src/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Performance/src/*.c)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 LOCAL_STATIC_LIBRARIES := libopifex-math
-
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -315,10 +278,10 @@ LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/V8/
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/V8/include
 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Scripting/src/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Scripting/src/wrappers/*.cpp)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
-LOCAL_STATIC_LIBRARIES := libopifex-pipeline
+LOCAL_STATIC_LIBRARIES := libopifex-communication libv8 libv8base libv8snapshot libicuuc libicudata libicui18n libv8_libplatform libstlport
+
 
 include $(BUILD_STATIC_LIBRARY)
 
@@ -329,7 +292,7 @@ include $(BUILD_STATIC_LIBRARY)
 ##############
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libopifex-pipeline
-LOCAL_CFLAGS 	:= -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2
+LOCAL_CFLAGS 	:= -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2 -DOPIFEX_V8
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Ogg/include
@@ -338,7 +301,7 @@ LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Vorbis/include
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Pipeline/src/*.cpp)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
-LOCAL_STATIC_LIBRARIES := libopifex-communication
+LOCAL_STATIC_LIBRARIES := libopifex-scripting
 
 include $(BUILD_STATIC_LIBRARY)
 
@@ -351,16 +314,6 @@ include $(CLEAR_VARS)
 LOCAL_MODULE    := libopengine
 LOCAL_LDLIBS    := -llog -lGLESv2 -landroid -lOpenSLES
 
-LOCAL_LDFLAGS := -Wl,--start-group \
-	$(BINARIES)/libicui18n.a \
-	$(BINARIES)/libicuuc.a \
-	$(BINARIES)/libicudata.a \
-	$(BINARIES)/libv8_base.a \
-	$(BINARIES)/libv8_libbase.a \
-	$(BINARIES)/libv8_libplatform.a \
-	$(BINARIES)/libv8_snapshot.a \
-	-Wl,--end-group
-	
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := false
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
@@ -377,5 +330,5 @@ MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Application/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Application/Examples/*.cpp)
 
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
-LOCAL_STATIC_LIBRARIES := libopifex-scripting
+LOCAL_STATIC_LIBRARIES := libopifex-pipeline
 include $(BUILD_SHARED_LIBRARY)
