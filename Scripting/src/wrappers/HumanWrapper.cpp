@@ -589,10 +589,9 @@ static V8Return _CreateEffect(const V8Args& args) {
 		const char* file = ToCString(utf8);
 		i32 nameLength = strlen(file);
 		attribs[i].Name = (char*)OPalloc(sizeof(char)* (nameLength + 1));
-		char* nameTmp = (char*)OPalloc(sizeof(char)* (nameLength + 1));
-		OPmemcpy((void*)nameTmp, (void*)file, sizeof(char)* nameLength);
-		nameTmp[nameLength] = NULL;
-		OPmemcpy((void*)attribs[i].Name, (void*)nameTmp, sizeof(char)* (nameLength + 1));
+		OPchar* nameTmp = (char*)OPalloc(sizeof(char)* (nameLength + 1));
+		strcpy(nameTmp, file);
+		OPmemcpy((void*)attribs[i].Name, (void*)nameTmp, sizeof(OPchar)* (nameLength + 1));
 
 		if (!type.IsEmpty()){
 			i32 typeNumber = type->Int32Value();
@@ -1015,9 +1014,9 @@ static V8Return _RenderParamMat4v(const V8Args& args) {
 	const char* p = ToCString(utf8);
 	ui32 len = strlen(p);
 
-	OPchar* name = (i8*)OPalloc(sizeof(i8)* (len + 1));
-	OPmemcpy(name, p, sizeof(i8)*len);
-	name[len] = NULL;
+	OPchar* name = (OPchar*)OPalloc(sizeof(OPchar)* (len + 1));
+	OPmemcpy(name, p, sizeof(OPchar)*len);
+	name[len] = '\0';
 
 	OPmat4* mat = (OPmat4*)args[1]->ToObject()->Get(GetString(isolate, "Id"))->Int32Value();
 	OPrenderParamMat4v(name, 1, mat);
