@@ -70,12 +70,12 @@ void MsgHandler(OPstream* str, void* param) {
 // Initialize
 void Init(){
 
-	//OPcmanInit(OP_DEFAULT_LOADERS, 10);
-				OPscriptInit();
+	OPcmanInit(OP_DEFAULT_LOADERS, 10);
+				//OPscriptInit();
 				//OPcmanLoad("app.ops");
-		OPstream* stream = OPreadFile("Scripts/app.ops");
-			OPlog("File Read");
-		OPscriptCompileAndRunStream(stream);
+		//OPstream* stream = OPreadFile("Scripts/app.ops");
+		//	OPlog("File Read");
+		//OPscriptCompileAndRunStream(stream);
 
 	//OPaudInit();
 	//OPaudInitThread(10);

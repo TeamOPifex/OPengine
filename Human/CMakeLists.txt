@@ -68,9 +68,6 @@ set(ALL_LIBS
 	2_Data
 	3_Math
 	4_Performance
-	${OGG_LIBRARY}
-	${VORBIS_LIBRARY}
-	${VORBISFILE_LIBRARY}
 	glfw 
 	${GLFW_LIBRARIES}
 )
@@ -88,7 +85,10 @@ target_link_libraries(5_Human ${ALL_LIBS})
 set_target_properties(5_Human PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(5_Human PROPERTIES OUTPUT_NAME "Human")
 
-if(1)
+
+if(${OPIFEX_RELEASE})
+
+else()
 	add_definitions(-D_DEBUG)
 endif()
 if(${OPIFEX_RELEASE})
@@ -124,6 +124,13 @@ endif()
 # OUTPUT BINARIES
 #########################################
 output_library(5_Human "Human")
+
+if(${OPIFEX_RELEASE})
+	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
+	target_link_libraries(5_Human	${OGG_LIBRARY_RELEASE} ${VORBIS_LIBRARY_RELEASE} ${VORBISFILE_LIBRARY_RELEASE})
+else()	
+	target_link_libraries(5_Human	${OGG_LIBRARY} ${VORBIS_LIBRARY} ${VORBISFILE_LIBRARY})	
+endif()
 
 if(${OPIFEX_RELEASE})
 	copy_to_folder(5_Human "/External/Ogg/lib/release/" "ogg.dll" "/Application/Release" ${OPIFEX_OS_WINDOWS})

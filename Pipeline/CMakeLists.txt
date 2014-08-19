@@ -50,9 +50,6 @@ set(ALL_LIBS
 	4_Performance
 	5_Human
 	7_Scripting
-	${OGG_LIBRARY}
-	${VORBIS_LIBRARY}
-	${VORBISFILE_LIBRARY}
 	glfw 
 	${GLFW_LIBRARIES}
 )
