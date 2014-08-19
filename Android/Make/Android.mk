@@ -50,19 +50,48 @@ include $(PREBUILT_STATIC_LIBRARY)
 # LIBVORBIS
 ##############
 include $(CLEAR_VARS)
+<<<<<<< local
+LOCAL_MODULE    := libv8
+LOCAL_SRC_FILES := libv8_base.a
+=======
 LOCAL_MODULE    := libLowLevel
 LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libLowLevel.a
+>>>>>>> other
 include $(PREBUILT_STATIC_LIBRARY)
 
+<<<<<<< local
+##############
+# LIBV8
+##############
+=======
+>>>>>>> other
 include $(CLEAR_VARS)
+<<<<<<< local
+LOCAL_MODULE    := libv8base
+LOCAL_SRC_FILES := libv8_libbase.a
+=======
 LOCAL_MODULE    := libLowLevelCloth
 LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libLowLevelCloth.a
+>>>>>>> other
 include $(PREBUILT_STATIC_LIBRARY)
 
+<<<<<<< local
+##############
+# LIBV8
+##############
+=======
+>>>>>>> other
 include $(CLEAR_VARS)
+<<<<<<< local
+LOCAL_MODULE    := libv8snapshot
+LOCAL_SRC_FILES := libv8_snapshot.a
+=======
 LOCAL_MODULE    := libPhysX3CharacterKinematic
 LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libPhysX3CharacterKinematic.a
+>>>>>>> other
 include $(PREBUILT_STATIC_LIBRARY)
+<<<<<<< local
+=======
 
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libPhysX3
@@ -119,26 +148,62 @@ LOCAL_MODULE    := libSimulationController
 LOCAL_SRC_FILES := ../$(NDK_APP_OUT)/libSimulationController.a
 include $(PREBUILT_STATIC_LIBRARY)
 
+>>>>>>> other
 
 ##############
 # 9_APPLICATION
 # second lib, which will depend on and include the first one
 ##############
 include $(CLEAR_VARS)
+<<<<<<< local
+LOCAL_MODULE    := libicuuc
+LOCAL_SRC_FILES := libicuuc.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+##############
+# LIBV8
+##############
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libicudata
+LOCAL_SRC_FILES := libicudata.a
+include $(PREBUILT_STATIC_LIBRARY)
+=======
 LOCAL_MODULE    := libopphysics
 LOCAL_LDLIBS    := -llog -lGLESv2 -landroid -lOpenSLES
+>>>>>>> other
 
+<<<<<<< local
+##############
+# LIBV8
+##############
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libicui18n
+LOCAL_SRC_FILES := libicui18n.a
+include $(PREBUILT_STATIC_LIBRARY)
+=======
 LOCAL_LDFLAGS := -Wl,--start-group \
 	$(BINARIES)/libPhysX3.a \
 	$(BINARIES)/libPxTask.a \
 	$(BINARIES)/libPhysX3Common.a \
 	$(BINARIES)/libPhysX3Extensions.a \
 	-Wl,--end-group
+>>>>>>> other
 
+<<<<<<< local
+##############
+# LIBV8
+##############
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libv8_libplatform
+LOCAL_SRC_FILES := libv8_libplatform.a
+include $(PREBUILT_STATIC_LIBRARY)
+=======
 include $(BUILD_SHARED_LIBRARY)
+>>>>>>> other
 
 
 
+ 
 ##############
 # LODEPNG
 ##############
@@ -317,7 +382,12 @@ LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/V8/include
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Scripting/src/*.cpp)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
+<<<<<<< local
+LOCAL_STATIC_LIBRARIES := libopifex-communication libv8 libv8base libv8snapshot libicuuc libicudata libicui18n libv8_libplatform libstlport
+
+=======
 LOCAL_STATIC_LIBRARIES := libopifex-communication
+>>>>>>> other
 
 include $(BUILD_STATIC_LIBRARY)
 
