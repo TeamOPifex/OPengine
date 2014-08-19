@@ -119,6 +119,8 @@
                 <nocompress extension="opm" />
                 <nocompress extension="vert" />
                 <nocompress extension="frag" />
+                <nocompress extension="js" />
+                <nocompress extension="ops" />
             </aapt>
         </do-only-if-not-library>
     </target>

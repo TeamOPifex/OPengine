@@ -69,7 +69,13 @@ void MsgHandler(OPstream* str, void* param) {
 
 // Initialize
 void Init(){
-	OPcmanInit(OP_DEFAULT_LOADERS, 9);
+
+	//OPcmanInit(OP_DEFAULT_LOADERS, 10);
+				OPscriptInit();
+				//OPcmanLoad("app.ops");
+		OPstream* stream = OPreadFile("Scripts/app.ops");
+			OPlog("File Read");
+		OPscriptCompileAndRunStream(stream);
 
 	//OPaudInit();
 	//OPaudInitThread(10);
@@ -149,10 +155,6 @@ int main(int argc, char** args) {
 	}
 	else {
 #endif
-		OPstream* stream = OPreadFile("assets/Scripts/app.js");
-		OPscriptCompileAndRunStream(stream);
-
-		OPmyoConnect();
 
 		OPinitialize = Init;
 		OPupdate = UpdateState;
