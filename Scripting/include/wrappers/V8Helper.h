@@ -136,7 +136,7 @@ inline Handle<Array> CreateArray(V8isolate* isolate) {
 	return Array::New(isolate);
 }
 
-inline Handle<String> GetString(V8isolate* isolate, OPchar* name) {
+inline Handle<String> GetString(V8isolate* isolate, const OPchar* name) {
 	return String::NewFromUtf8(isolate, name);
 }
 
@@ -156,36 +156,36 @@ inline Handle<Value> GetNumberF32(V8isolate* isolate, f32 number) {
 	return Number::New(isolate, number);
 }
 
-inline void SetFunction(V8isolate* isolate, V8Object obj, OPchar* name, V8Function function) {
+inline void SetFunction(V8isolate* isolate, V8Object obj, const OPchar* name, V8Function function) {
 	Local<Function> func = Function::New(isolate, function);
 	obj->Set(GetString(isolate, name), func);
 }
 
-inline void SetFunctionT(V8isolate* isolate, V8ObjectT obj, OPchar* name, V8Function function) {
+inline void SetFunctionT(V8isolate* isolate, V8ObjectT obj, const OPchar* name, V8Function function) {
 	obj->Set(GetString(isolate, name), FunctionTemplate::New(isolate, function));
 }
 
-inline void SetFunctionG(V8isolate* isolate, V8ObjectGlobal obj, OPchar* name, V8Function function) {
+inline void SetFunctionG(V8isolate* isolate, V8ObjectGlobal obj, const OPchar* name, V8Function function) {
 	obj->Set(GetString(isolate, name), FunctionTemplate::New(isolate, function));
 }
 
-inline void SetValue(V8isolate* isolate, V8Object obj, OPchar* name, Handle<Value> set) {
+inline void SetValue(V8isolate* isolate, V8Object obj, const OPchar* name, Handle<Value> set) {
 	obj->Set(GetString(isolate, name), set);
 }
 
-inline void SetValueG(V8isolate* isolate, V8ObjectGlobal obj, OPchar* name, Handle<Value> set) {
+inline void SetValueG(V8isolate* isolate, V8ObjectGlobal obj, const OPchar* name, Handle<Value> set) {
 	obj->Set(GetString(isolate, name), set);
 }
 
-inline void SetObject(V8isolate* isolate, V8Object obj, OPchar* name, V8Object set) {
+inline void SetObject(V8isolate* isolate, V8Object obj, const OPchar* name, V8Object set) {
 	obj->Set(GetString(isolate, name), set);
 }
 
-inline void SetObjectT(V8isolate* isolate, V8ObjectT obj, OPchar* name, V8ObjectT set) {
+inline void SetObjectT(V8isolate* isolate, V8ObjectT obj, const OPchar* name, V8ObjectT set) {
 	obj->Set(GetString(isolate, name), set);
 }
 
-inline void SetObjectG(V8isolate* isolate, V8ObjectGlobal obj, OPchar* name, V8ObjectGlobal set) {
+inline void SetObjectG(V8isolate* isolate, V8ObjectGlobal obj, const OPchar* name, V8ObjectGlobal set) {
 	obj->Set(GetString(isolate, name), set);
 }
 
