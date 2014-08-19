@@ -80,7 +80,7 @@ static V8Return _Sprite3DRender(const V8Args& args);
 V8ObjectGlobal GetKeyboardMap() {
 	V8ObjectGlobal keyboard = CreateObjectG(isolate);
 
-	i8* keyNames[OPKEYBOARD_MAX] = {
+	const OPchar* keyNames[OPKEYBOARD_MAX] = {
 		"BACKSPACE",
 		"TAB",
 		"ENTER",
@@ -176,7 +176,7 @@ V8ObjectGlobal GetKeyboardMap() {
 	};
 
 	for (i32 i = 0; i < OPKEY_RCONTROL; i++) {
-		i8* name = keyNames[i];
+		const OPchar* name = keyNames[i];
 		SetValueG(isolate, keyboard, name, GetNumber(isolate, i));
 	}
 
@@ -185,7 +185,7 @@ V8ObjectGlobal GetKeyboardMap() {
 V8Object GetKeyboardMapO() {
 	V8Object keyboard = CreateObject(isolate);
 
-	i8* keyNames[OPKEYBOARD_MAX] = {
+	const OPchar* keyNames[OPKEYBOARD_MAX] = {
 		"BACKSPACE",
 		"TAB",
 		"ENTER",
@@ -281,7 +281,7 @@ V8Object GetKeyboardMapO() {
 	};
 
 	for (i32 i = 0; i < OPKEY_RCONTROL; i++) {
-		i8* name = keyNames[i];
+		const OPchar* name = keyNames[i];
 		SetValue(isolate, keyboard, name, GetNumber(isolate, i));
 	}
 
@@ -291,7 +291,7 @@ V8Object GetKeyboardMapO() {
 V8ObjectGlobal GetButtonMap() {
 	V8ObjectGlobal buttons = CreateObjectG(isolate);
 
-	i8* keyNames[GamePadButton_Max] = {
+	const OPchar* keyNames[GamePadButton_Max] = {
 		"DPAD_UP",
 		"DPAD_DOWN",
 		"DPAD_LEFT",
@@ -309,7 +309,7 @@ V8ObjectGlobal GetButtonMap() {
 	};
 
 	for (i32 i = 0; i < GamePadButton_Max; i++) {
-		i8* name = keyNames[i];
+		const OPchar* name = keyNames[i];
 		SetValueG(isolate, buttons, name, GetNumber(isolate, i));
 	}
 
@@ -319,7 +319,7 @@ V8ObjectGlobal GetButtonMap() {
 V8Object GetButtonMapO() {
 	V8Object buttons = CreateObject(isolate);
 
-	i8* keyNames[GamePadButton_Max] = {
+	const OPchar* keyNames[GamePadButton_Max] = {
 		"DPAD_UP",
 		"DPAD_DOWN",
 		"DPAD_LEFT",
@@ -337,7 +337,7 @@ V8Object GetButtonMapO() {
 	};
 
 	for (i32 i = 0; i < GamePadButton_Max; i++) {
-		i8* name = keyNames[i];
+		const OPchar* name = keyNames[i];
 		SetValue(isolate, buttons, name, GetNumber(isolate, i));
 	}
 
