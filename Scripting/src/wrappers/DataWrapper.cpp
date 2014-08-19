@@ -5,7 +5,10 @@
 #include "./Core/include/Log.h"
 #include "./Data/include/ContentManager.h"
 #include "./Pipeline/include/DefaultLoaders.h"
+
+#ifndef OPIFEX_ANDROID
 #include <direct.h>
+#endif
 
 static V8Return _cmanInit(const V8Args& args);
 static V8Return _cmanLoad(const V8Args& args);
@@ -39,11 +42,13 @@ void DataInitializeMethodsO(V8isolate* isolate, V8Object target) {
 static V8Return _cmanInit(const V8Args& args) {
 	V8Scope scope;
 
+#ifndef OPIFEX_ANDROID
 	if (args.Length() > 0) {
 		v8::String::Utf8Value utf8(args[0]);
 		const char* v = ToCString(utf8);
 		_chdir(v);
 	}
+#endif
 
 	OPcmanInit(OP_DEFAULT_LOADERS, 10);
 
