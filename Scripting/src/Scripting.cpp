@@ -3,6 +3,8 @@
 
 #ifdef OPIFEX_V8
 
+void(*CustomWrapper)(V8isolate* isolate, V8ObjectGlobal target) = NULL;
+
 static void LogCallback(const v8::FunctionCallbackInfo<v8::Value>& args) {
 	if (args.Length() < 1) return;
 	HandleScope scope(args.GetIsolate());
@@ -150,6 +152,10 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 			Handle<ObjectTemplate> console = ObjectTemplate::New(isolate);
 			console->Set(String::NewFromUtf8(isolate, "log"), FunctionTemplate::New(isolate, Print));
 			global->Set(String::NewFromUtf8(isolate, "console"), console);
+
+			if (CustomWrapper != NULL) {
+				CustomWrapper(isolate, global);
+			}
 			Local<Context> context = Context::New(isolate, NULL, global);
 			v8::Context::Scope context_scope(context);
 
@@ -196,6 +202,9 @@ void OPscriptCompileAndRun(OPscript* script) {
 	PerformanceInitializeMethods(isolate, OP);
 	MathInitializeMethods(isolate, OP);
 	DataInitializeMethods(isolate, OP);
+	if (CustomWrapper != NULL) {
+		CustomWrapper(isolate, global);
+	}
 	global->Set(String::NewFromUtf8(isolate, "require"), FunctionTemplate::New(isolate, Require));
 	global->Set(String::NewFromUtf8(isolate, "print"), FunctionTemplate::New(isolate, Print));
 	global->Set(String::NewFromUtf8(isolate, "OP"), OP);
@@ -226,6 +235,9 @@ void OPscriptCompileAndRunStream(OPstream* stream) {
 	PerformanceInitializeMethods(isolate, OP);
 	MathInitializeMethods(isolate, OP);
 	DataInitializeMethods(isolate, OP);
+	if (CustomWrapper != NULL) {
+		CustomWrapper(isolate, global);
+	}
 
 	global->Set(String::NewFromUtf8(isolate, "require"), FunctionTemplate::New(isolate, Require));
 	global->Set(String::NewFromUtf8(isolate, "print"), FunctionTemplate::New(isolate, Print));

@@ -21,6 +21,8 @@ var go = true;
 function Attribute(name, size) { return { Id: name, Size: size }; }
 
 function Initialize() {
+	console.log('TEST: ' + Test);
+	
 	OP.cman.Init('assets/');
 	OP.render.Init(function(result) {
 	
