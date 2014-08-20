@@ -160,10 +160,11 @@ endif()
 if(${OPIFEX_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 	target_link_libraries(9_Application	libcpmtd0.lib)
-	target_link_libraries(9_Application	${OGG_LIBRARY_RELEASE} ${VORBIS_LIBRARY_RELEASE} ${VORBISFILE_LIBRARY_RELEASE})
-else()	
-	target_link_libraries(9_Application	${OGG_LIBRARY} ${VORBIS_LIBRARY} ${VORBISFILE_LIBRARY})	
 endif()
+
+	target_link_libraries(9_Application	${OGG_LIBRARY_RELEASE} ${VORBIS_LIBRARY_RELEASE} ${VORBISFILE_LIBRARY_RELEASE})
+	# target_link_libraries(9_Application	${OGG_LIBRARY} ${VORBIS_LIBRARY} ${VORBISFILE_LIBRARY})	
+
 
 #########################################
 # OUTPUT BINARIES
@@ -187,7 +188,8 @@ if(${OPIFEX_PHYSICS})
 		copy_to_folder(9_Application "/External/PhysX/lib/release/" "PhysX3_x86.dll" "/Application/Release" ${OPIFEX_OS_WINDOWS})
 		copy_to_folder(9_Application "/External/PhysX/lib/release/" "PhysX3Common_x86.dll" "/Application/Release" ${OPIFEX_OS_WINDOWS})
 	else()
-		copy_to_folder(9_Application "/External/PhysX/lib/debug/" "PhysX3_x86.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
-		copy_to_folder(9_Application "/External/PhysX/lib/debug/" "PhysX3Common_x86.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+		copy_to_folder(9_Application "/External/PhysX/lib/debug/" "PhysX3CHECKED_x86.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+		copy_to_folder(9_Application "/External/PhysX/lib/debug/" "PhysX3CommonCHECKED_x86.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+		copy_to_folder(9_Application "/External/PhysX/lib/debug/" "nvToolsExt32_1.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
 	endif()
 endif()

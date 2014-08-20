@@ -13,6 +13,8 @@
 #include "./Human/include/Input/GamePadSystem.h"
 #include "./Human/include/Rendering/Sprite/SpriteSheet.h"
 #include "./Pipeline/include/Sprite3D.h"
+#include "./Human/include/Audio/Audio.h"
+#include "./Human/include/Audio/AudioPlayer.h"
 
 static V8Return _OPrenderInit(const V8Args& args);
 static V8Return _Clear(const V8Args& args);
@@ -75,6 +77,12 @@ static V8Return _Sprite3DCreate(const V8Args& args);
 static V8Return _Sprite3DInit(const V8Args& args);
 static V8Return _Sprite3DUpdate(const V8Args& args);
 static V8Return _Sprite3DRender(const V8Args& args);
+
+static V8Return _AudioInit(const V8Args& args);
+static V8Return _AudioCreate(const V8Args& args);
+static V8Return _AudioBind(const V8Args& args);
+static V8Return _AudioPlay(const V8Args& args);
+static V8Return _AudioVolume(const V8Args& args);
 
 
 V8ObjectGlobal GetKeyboardMap() {
@@ -447,6 +455,15 @@ void HumanInitializeMethods(V8isolate* isolate, V8ObjectGlobal target) {
 	SetFunctionG(isolate, sprite3D, "Render", _Sprite3DRender);
 	SetObjectG(isolate, target, "sprite3D", sprite3D);
 
+	// OP.audio
+	V8ObjectGlobal audio = CreateObjectG(isolate);
+	SetFunctionG(isolate, audio, "Init", _AudioInit);
+	SetFunctionG(isolate, audio, "Create", _AudioCreate);
+	SetFunctionG(isolate, audio, "Bind", _AudioBind);
+	SetFunctionG(isolate, audio, "Play", _AudioPlay);
+	SetFunctionG(isolate, audio, "Volume", _AudioVolume);
+	SetObjectG(isolate, target, "audio", audio);
+
 }
 
 void HumanInitializeMethodsO(V8isolate* isolate, V8Object target) {
@@ -530,6 +547,15 @@ void HumanInitializeMethodsO(V8isolate* isolate, V8Object target) {
 	SetFunction(isolate, sprite3D, "Render", _Sprite3DRender);
 	SetObject(isolate, target, "sprite3D", sprite3D);
 
+
+	// OP.audio
+	V8Object audio = CreateObject(isolate);
+	SetFunction(isolate, audio, "Init", _AudioInit);
+	SetFunction(isolate, audio, "Create", _AudioCreate);
+	SetFunction(isolate, audio, "Bind", _AudioBind);
+	SetFunction(isolate, audio, "Play", _AudioPlay);
+	SetFunction(isolate, audio, "Volume", _AudioVolume);
+	SetObject(isolate, target, "audio", audio);
 }
 
 
@@ -1190,6 +1216,74 @@ static V8Return _Sprite3DRender(const V8Args& args) {
 	OPcam* camera = (OPcam*)GetArgPointer(args, isolate, 1 - inScope);
 	OPsprite3DRender(sprite, camera);
 
+	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+
+static V8Return _AudioInit(const V8Args& args) {
+	V8Scope scope;
+
+	OPaudInit();
+	OPaudInitThread(10);
+
+	OPlog("Audio Initialized");
+
+	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _AudioCreate(const V8Args& args) {
+
+	V8Scope scope;
+
+	OPaudioSource* source = (OPaudioSource*)args[0]->Int32Value();
+	OPlog("Source %d", source);
+	OPaudioEmitter* emitter = OPaudCreateEmitter(source, EMITTER_THREADED);
+
+	V8Object obj = CreateTypedObject(isolate, emitter, OPscript_AUDIO_EMITTER);
+	SetFunction(isolate, obj, "Bind", _AudioBind);
+	SetFunction(isolate, obj, "Play", _AudioPlay);
+	SetFunction(isolate, obj, "Volume", _AudioVolume);
+
+
+	OPlog("Emitter Created: %d", emitter);
+
+	return SetReturn(args, &scope, obj);
+}
+
+static V8Return _AudioBind(const V8Args& args) {
+	V8Scope scope;
+	i32 inScope;
+
+	OPaudioEmitter* emitter = (OPaudioEmitter*)GetFirstPointer(args, isolate, &inScope, OPscript_AUDIO_EMITTER);
+	OPaudSetEmitter(emitter);
+
+	OPlog("Current Emitter: %d", OPAUD_CURR_EMITTER);
+
+	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _AudioPlay(const V8Args& args) {
+	V8Scope scope;
+	i32 inScope;
+	OPaudioEmitter* emitter = (OPaudioEmitter*)GetFirstPointer(args, isolate, &inScope, OPscript_AUDIO_EMITTER);
+
+	OPlog("Current Emitter: %d", OPAUD_CURR_EMITTER);
+
+	//OPaudSafePlay(emitter);
+	OPaudPlay();
+	OPlog("Play audio");
+	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _AudioVolume(const V8Args& args) {
+	V8Scope scope;
+	i32 inScope;
+	OPaudioEmitter* emitter = (OPaudioEmitter*)GetFirstPointer(args, isolate, &inScope, OPscript_AUDIO_EMITTER);
+	//OPaudSetEmitter(emitter);
+	OPlog("Current Emitter: %d", OPAUD_CURR_EMITTER);
+	f32 vol = args[1 - inScope]->NumberValue();
+	OPlog("Volume set to: %f", vol);
+	OPaudVolume(vol);
 	return SetReturn(args, &scope, GetNull(isolate));
 }
 
