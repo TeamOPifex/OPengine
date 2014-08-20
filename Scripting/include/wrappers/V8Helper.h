@@ -9,7 +9,12 @@ using namespace v8;
 
 enum OPscriptTypes {
 	OPscript_CAMERA = 0,
-	OPscript_VEC3
+	OPscript_VEC3,
+	OPscript_PHYSICS_SCENE,
+	OPscript_PHYSICS_ACTOR,
+	OPscript_PHYSICS_STATIC,
+	OPscript_PHYSICS_DYNAMIC,
+	OPscript_AUDIO_EMITTER
 };
 
 #include "./Core/include/Types.h"
@@ -187,6 +192,14 @@ inline void SetObjectT(V8isolate* isolate, V8ObjectT obj, const OPchar* name, V8
 
 inline void SetObjectG(V8isolate* isolate, V8ObjectGlobal obj, const OPchar* name, V8ObjectGlobal set) {
 	obj->Set(GetString(isolate, name), set);
+}
+
+inline f32 GetNumber(V8isolate* isolate, V8Object obj, const OPchar* name, f32 def) {
+	Handle<String> n = GetString(isolate, name);
+	if (obj->HasRealNamedProperty(n)) {
+		return obj->Get(n)->NumberValue();
+	}
+	return def;
 }
 
 #endif

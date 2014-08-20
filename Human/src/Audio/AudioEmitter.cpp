@@ -23,8 +23,7 @@ void* OPAUD_UPDATE(void* args){
 	while(1){
 		for(OPint i = OPAUD_REG_EMITTERS.MaxIndex; i--;){
 			OPentHeapIsLiving((&OPAUD_REG_EMITTERS), i)
-
-			if(emitters[i].Source == NULL || emitters[i].State == Stopped) continue;
+			if (emitters[i].Source == NULL || emitters[i].State == Stopped) continue;
 			OPaudSafeUpdate(&emitters[i], OPaudProcess);
 		}
 	}

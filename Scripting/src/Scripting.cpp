@@ -29,6 +29,7 @@ void OPscriptInit() {
 #ifdef OPIFEX_V8
 #include "./Scripting/include/wrappers/HumanWrapper.h"
 #include "./Scripting/include/wrappers/DataWrapper.h"
+#include "./Scripting/include/wrappers/PerformanceWrapper.h"
 #include "./Scripting/include/wrappers/MathWrapper.h"
 #include "./Scripting/include/wrappers/Global.h"
 void Print(const v8::FunctionCallbackInfo<v8::Value>& args) {
@@ -100,6 +101,7 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 			GlobalInitializeMethodsO(isolate, OP);
 			HumanInitializeMethodsO(isolate, OP);
 			MathInitializeMethodsO(isolate, OP);
+			PerformanceInitializeMethodsO(isolate, OP);
 			DataInitializeMethodsO(isolate, OP);
 			args.GetReturnValue().Set(OP);
 			OPlog("Loaded OP");
@@ -191,6 +193,7 @@ void OPscriptCompileAndRun(OPscript* script) {
 	Handle<ObjectTemplate> OP = ObjectTemplate::New(isolate);
 	GlobalInitializeMethods(isolate, OP);
 	HumanInitializeMethods(isolate, OP);
+	PerformanceInitializeMethods(isolate, OP);
 	MathInitializeMethods(isolate, OP);
 	DataInitializeMethods(isolate, OP);
 	global->Set(String::NewFromUtf8(isolate, "require"), FunctionTemplate::New(isolate, Require));
@@ -220,6 +223,7 @@ void OPscriptCompileAndRunStream(OPstream* stream) {
 	console->Set(String::NewFromUtf8(isolate, "log"), FunctionTemplate::New(isolate, Print));
 	GlobalInitializeMethods(isolate, OP);
 	HumanInitializeMethods(isolate, OP);
+	PerformanceInitializeMethods(isolate, OP);
 	MathInitializeMethods(isolate, OP);
 	DataInitializeMethods(isolate, OP);
 

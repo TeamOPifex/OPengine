@@ -18,6 +18,7 @@ static V8Return _OPmat4SetRotateZ(const V8Args& args);
 static V8Return _OPmat4SetVec3(const V8Args& args);
 static V8Return _OPmat4SetScale(const V8Args& args);
 static V8Return _OPmat4Identity(const V8Args& args);
+static V8Return _OPmat4Multiply(const V8Args& args);
 
 static V8Return _OPvec3Create(const V8Args& args);
 static V8Return _OPvec3CreateFromPointer(const V8Args& args);
@@ -50,6 +51,7 @@ void MathInitializeMethods(V8isolate* isolate, V8ObjectGlobal target) {
 	SetFunctionG(isolate, mat4, "SetRotZ", _OPmat4SetRotateZ);
 	SetFunctionG(isolate, mat4, "SetVec3", _OPmat4SetVec3);
 	SetFunctionG(isolate, mat4, "Identity", _OPmat4Identity);
+	SetFunctionG(isolate, mat4, "Mul", _OPmat4Multiply);
 	SetObjectG(isolate, target, "mat4", mat4);
 
 	// OP.vec3
@@ -87,6 +89,7 @@ void MathInitializeMethodsO(V8isolate* isolate, V8Object target) {
 	SetFunction(isolate, mat4, "SetRotZ", _OPmat4SetRotateZ);
 	SetFunction(isolate, mat4, "SetVec3", _OPmat4SetVec3);
 	SetFunction(isolate, mat4, "Identity", _OPmat4Identity);
+	SetFunction(isolate, mat4, "Mul", _OPmat4Multiply);
 	SetObject(isolate, target, "mat4", mat4);
 
 	// OP.vec3
@@ -420,6 +423,18 @@ static V8Return _OPmat4Identity(const V8Args& args) {
 	OPmat4* mat = (OPmat4*)GetPointer(args, isolate, &inScope, 1);
 	if (inScope == -1) SetReturn(args, &scope, GetNull(isolate));
 	OPmat4identity(mat);
+
+	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _OPmat4Multiply(const V8Args& args) {
+	V8Scope scope;
+
+	OPmat4* dest = (OPmat4*)GetArgPointer(args, isolate, 0);
+	OPmat4* a = (OPmat4*)GetArgPointer(args, isolate, 1);
+	OPmat4* b = (OPmat4*)GetArgPointer(args, isolate, 2);
+
+	OPmat4mul(dest, a, b);
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
