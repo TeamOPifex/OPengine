@@ -12,6 +12,7 @@
 using namespace v8;
 
 extern V8isolate* isolate;
+extern void(*CustomWrapper)(V8isolate* isolate, V8ObjectGlobal target);
 #endif
 
 void OPscriptInit();
