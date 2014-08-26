@@ -9,14 +9,20 @@ OPgameState GS_EXAMPLE_PARTICLESYSTEM = {
 	ExampleParticleSystemExit
 };
 
-OPcam* particleSystemCamera;
-OPparticleSys* particleSystem;
+typedef struct {
+	OPcam* Camera;
+	OPparticleSys* ParticleSystem;
+} ParticleSystemExample;
+
+ParticleSystemExample* particleSystemExample;
 
 void ExampleParticleSystemEnter(OPgameState* last) {
 	OPcmanLoad("particleSheet.png");
 
-	particleSystemCamera = (OPcam*)OPalloc(sizeof(OPcam));
-	*particleSystemCamera = OPcamProj(
+	particleSystemExample = (ParticleSystemExample*)OPalloc(sizeof(ParticleSystemExample));
+
+	particleSystemExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
+	*particleSystemExample->Camera = OPcamProj(
 		OPvec3One * 10.0,
 		OPvec3Zero,
 		OPvec3Create(0, 1, 0),
@@ -27,7 +33,7 @@ void ExampleParticleSystemEnter(OPgameState* last) {
 		);
 
 	OPparticleSysInit(NULL);
-	particleSystem = OPparticleSysCreate((OPtexture*)OPcmanGet("particleSheet.png"), 256, NULL);
+	particleSystemExample->ParticleSystem = OPparticleSysCreate((OPtexture*)OPcmanGet("particleSheet.png"), 256, NULL);
 }
 
 int ExampleParticleSystemUpdate(OPtimer* time) {
@@ -43,14 +49,16 @@ int ExampleParticleSystemUpdate(OPtimer* time) {
 		3000.0f,
 		{ 1.0, 1.0, 1.0f, 1.0f }
 	};
-	OPparticleSysSpawn(particleSystem, p);
-	OPparticleSysUpdate(particleSystem, time);
-	OPparticleSysDraw(particleSystem, particleSystemCamera, NULL);
+	OPparticleSysSpawn(particleSystemExample->ParticleSystem, p);
+	OPparticleSysUpdate(particleSystemExample->ParticleSystem, time);
+	OPparticleSysDraw(particleSystemExample->ParticleSystem, particleSystemExample->Camera, NULL);
 
 	OPrenderPresent();
 	return false;
 }
 
 void ExampleParticleSystemExit(OPgameState* next) {
-	OPfree(particleSystemCamera);
+	OPfree(particleSystemExample->Camera);
+	OPparticleSysDestroy(particleSystemExample->ParticleSystem);
+	OPfree(particleSystemExample);
 }

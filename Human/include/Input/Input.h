@@ -13,10 +13,10 @@ typedef struct {
 typedef struct {
 	i32	wheel;
 	i32	prevWheel;
-	i32	positionX;
-	i32	positionY;
-	i32	prevPositionX;
-	i32	prevPositionY;
+	d64	positionX;
+	d64	positionY;
+	d64	prevPositionX;
+	d64	prevPositionY;
 	OPint	keys[OPMOUSE_MAX];
 	OPint	prevKeys[OPMOUSE_MAX];
 } MouseState;

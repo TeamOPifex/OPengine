@@ -3,6 +3,7 @@
 
 #include "./Human/include/Rendering/OpenGL.h"
 #include "./Core/include/Types.h"
+#include "./Math/include/Vector4.h"
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
@@ -67,6 +68,7 @@ void OPtextureClearActive();
 void OPtextureSetData(void* data);
 void OPtexturePixelate();
 void OPtextureSmooth();
+OPvec4 OPtextureReadPixel(OPtexture* tex, OPint x, OPint y);
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

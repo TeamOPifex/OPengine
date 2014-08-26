@@ -321,6 +321,9 @@ OPfloat OPrandom();
 */
 OPfloat OPrandRange(OPfloat min, OPfloat max);
 
+#define OPMIN(a,b) (((a) < (b)) ? (a) : (b))
+#define OPMAX(a,b) (((a) > (b)) ? (a) : (b))
+
 #ifdef __cplusplus
 }
 #endif

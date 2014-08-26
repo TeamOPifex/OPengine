@@ -12,39 +12,43 @@ OPgameState GS_EXAMPLE_OCULUS = {
 	ExampleOculusExit
 };
 
-OPmesh* oculusMesh;
-OPeffect* oculusEffect = NULL;
-OPcam* oculusCamera;
-ui32 oculusRotation = 1;
+typedef struct {
+	OPmesh* Mesh;
+	OPeffect* Effect;
+	OPcam* Camera;
+	ui32 Rotation;
+} OculusExample;
+
+OculusExample* oculusExample;
 
 void ExampleOculusEnter(OPgameState* last) {
-	OPoculusInitialize();
+	//OPoculusInitialize();
 
 	OPcmanLoad("untitled.opm");
 	OPcmanLoad("SimpleModel.frag");
 	OPcmanLoad("SimpleModel.vert");
 
-	oculusMesh = (OPmesh*)OPcmanGet("untitled.opm");
+	oculusExample->Mesh = (OPmesh*)OPcmanGet("untitled.opm");
 
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
 		{ "aNormal", GL_FLOAT, 3 }
 	};
 
-	oculusEffect = (OPeffect*)OPalloc(sizeof(OPeffect));
+	oculusExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
 	OPshader* vert = (OPshader*)OPcmanGet("SimpleModel.vert");
 	OPshader* frag = (OPshader*)OPcmanGet("SimpleModel.frag");
-	*oculusEffect = OPrenderCreateEffectStride(
+	*oculusExample->Effect = OPrenderCreateEffectStride(
 		*vert,
 		*frag,
 		attribs,
 		2,
 		"Oculus Effect",
-		oculusMesh->VertexSize
+		oculusExample->Mesh->VertexSize
 		);
 
-	oculusCamera = (OPcam*)OPalloc(sizeof(OPcam));
-	*oculusCamera = OPcamProj(
+	oculusExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
+	*oculusExample->Camera = OPcamProj(
 		OPvec3One * 2.0,
 		OPvec3Create(0, 1, 0),
 		OPvec3Create(0, 1, 0),
@@ -70,16 +74,16 @@ int ExampleOculusUpdate(OPtimer* time) {
 	OPrenderClear(0, 0, 0);
 
 	OPkeyboardUpdate();
-	if (OPkeyboardIsDown(OPKEY_P)) { oculusRotation++; }
+	if (OPkeyboardIsDown(OPKEY_P)) { oculusExample->Rotation++; }
 
-	OPrenderBindMesh(oculusMesh);
-	OPrenderBindEffect(oculusEffect);
+	OPrenderBindMesh(oculusExample->Mesh);
+	OPrenderBindEffect(oculusExample->Effect);
 
 	OPmat4 world, view, proj;
-	OPmat4buildRotY(&world, oculusRotation / 100.0);
+	OPmat4buildRotY(&world, oculusExample->Rotation / 100.0);
 
-	OPcamGetView((*oculusCamera), &view);
-	OPcamGetProj((*oculusCamera), &proj);
+	OPcamGetView((*oculusExample->Camera), &view);
+	OPcamGetProj((*oculusExample->Camera), &proj);
 
 	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderParamMat4v("uProj", 1, &proj);
@@ -89,7 +93,7 @@ int ExampleOculusUpdate(OPtimer* time) {
 	OPrenderParamVec3("vLightDirection", 1, &light);
 
 	OPrenderMesh();
-	//OPframeBufferUnbind();
+	OPframeBufferUnbind();
 
 	OPrenderPresent();
 
@@ -98,6 +102,8 @@ int ExampleOculusUpdate(OPtimer* time) {
 }
 
 void ExampleOculusExit(OPgameState* next) {
-	OPfree(oculusEffect);
-	OPfree(oculusCamera);
+	OPfree(oculusExample->Effect);
+	OPfree(oculusExample->Camera);
+
+	OPfree(oculusExample);
 }

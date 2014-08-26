@@ -11,37 +11,43 @@ OPgameState GS_EXAMPLE_MODEL = {
 	ExampleModelExit
 };
 
-OPmesh* modelMesh;
-OPeffect* modelEffect = NULL;
-OPcam* modelCamera;
-ui32 modelRotation = 1;
+typedef struct {
+	OPmesh* Mesh;
+	OPeffect* Effect;
+	OPcam* Camera;
+	ui32 Rotation;
+} ModelExample;
+
+ModelExample* modelExample;
 
 void ExampleModelEnter(OPgameState* last) {
 	OPcmanLoad("PuzzleBlock.opm");
 	OPcmanLoad("SimpleModel.frag");
 	OPcmanLoad("SimpleModel.vert");
 
-	modelMesh = (OPmesh*)OPcmanGet("PuzzleBlock.opm");
+	modelExample = (ModelExample*)OPalloc(sizeof(ModelExample));
+
+	modelExample->Mesh = (OPmesh*)OPcmanGet("PuzzleBlock.opm");
 
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
 		{ "aNormal", GL_FLOAT, 3 }
 	};
 
-	modelEffect = (OPeffect*)OPalloc(sizeof(OPeffect));
+	modelExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
 	OPshader* vert = (OPshader*)OPcmanGet("SimpleModel.vert");
 	OPshader* frag = (OPshader*)OPcmanGet("SimpleModel.frag");
-	*modelEffect = OPrenderCreateEffectStride(
+	*modelExample->Effect = OPrenderCreateEffectStride(
 		*vert,
 		*frag,
 		attribs,
 		2,
 		"Model Effect",
-		modelMesh->VertexSize
+		modelExample->Mesh->VertexSize
 		);
 
-	modelCamera = (OPcam*)OPalloc(sizeof(OPcam));
-	*modelCamera = OPcamProj(
+	modelExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
+	*modelExample->Camera = OPcamProj(
 		OPvec3One * 2.0,
 		OPvec3Create(0, 1, 0),
 		OPvec3Create(0, 1, 0),
@@ -57,16 +63,16 @@ int ExampleModelUpdate(OPtimer* time) {
 	OPrenderClear(0, 0, 0);
 
 	OPkeyboardUpdate();
-	if (OPkeyboardIsDown(OPKEY_P)) { modelRotation++; }
+	if (OPkeyboardIsDown(OPKEY_P)) { modelExample->Rotation++; }
 
-	OPrenderBindMesh(modelMesh);
-	OPrenderBindEffect(modelEffect);
+	OPrenderBindMesh(modelExample->Mesh);
+	OPrenderBindEffect(modelExample->Effect);
 
 	OPmat4 world, view, proj;
-	OPmat4buildRotY(&world, modelRotation / 100.0);
+	OPmat4buildRotY(&world, modelExample->Rotation / 100.0);
 
-	OPcamGetView((*modelCamera), &view);
-	OPcamGetProj((*modelCamera), &proj);
+	OPcamGetView((*modelExample->Camera), &view);
+	OPcamGetProj((*modelExample->Camera), &proj);
 
 	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderParamMat4v("uProj", 1, &proj);
@@ -82,6 +88,8 @@ int ExampleModelUpdate(OPtimer* time) {
 }
 
 void ExampleModelExit(OPgameState* next) {
-	OPfree(modelEffect);
-	OPfree(modelCamera);
+	OPfree(modelExample->Effect);
+	OPfree(modelExample->Camera);
+
+	OPfree(modelExample);
 }

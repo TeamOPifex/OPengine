@@ -91,3 +91,19 @@ void OPtextureSmooth(){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
+OPvec4 OPtextureReadPixel(OPtexture* tex, OPint x, OPint y) {
+	OPvec4 result;
+
+#ifndef OPIFEX_ANDROID
+	glPixelStoref(GL_PACK_ALIGNMENT, 1);
+#endif
+
+	unsigned char pixel[4] = { 0 };
+	glReadPixels(x, y, 1, 1, tex->Description.Format, tex->Description.DataType, &pixel);
+	result.x = pixel[0];
+	result.y = pixel[1];
+	result.z = pixel[2];
+	result.w = pixel[3];
+
+	return result;
+}

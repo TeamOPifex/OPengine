@@ -85,6 +85,7 @@ void Init(){
 
 
 	//OPoculusStartup();
+	//OPoculusInitialize();
 
 #ifndef OPIFEX_ANDROID
 	OPrenderInit(width, height, false);
@@ -92,9 +93,10 @@ void Init(){
 	OPrenderInit(JNIWidth(), JNIHeight(), true);
 #endif
 	//OPgameStateChange(&State0);
-	OPgameStateChange(&GS_EXAMPLE_AUDIO);
+	//OPgameStateChange(&GS_EXAMPLE_AUDIO);
 	//OPgameStateChange(&GS_EXAMPLE_MODEL);
-	//OPgameStateChange(&GS_EXAMPLE_PHYSICS);
+	//OPgameStateChange(&GS_EXAMPLE_PARTICLESYSTEM);
+	OPgameStateChange(&GS_EXAMPLE_PHYSICS);
 	//OPgameStateChange(&GS_EXAMPLE_SKINNING);
 	//OPgameStateChange(&GS_EXAMPLE_OCULUS);
 	

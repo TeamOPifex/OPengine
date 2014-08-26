@@ -13,21 +13,25 @@ OPgameState GS_EXAMPLE_SKINNING = {
 	ExampleSkinningExit
 };
 
+typedef struct {
 
-OPmesh* skinningMesh;
-OPeffect* skinningEffect = NULL;
-OPcam* skinningCamera;
-OPskeleton* skeleton;
+	OPmesh* Mesh;
+	OPeffect* Effect;
+	OPcam* Camera;
+	ui32 pos;
+} SkinningExample;
 
-ui32 pos = 0;
-f32 timeRot = 0;
+SkinningExample* skinningExample;
 
 void ExampleSkinningEnter(OPgameState* last) {
 	OPcmanLoad("untitled.opm");
 	OPcmanLoad("Skinning.frag");
 	OPcmanLoad("Skinning.vert");
 
-	skinningMesh = (OPmesh*)OPcmanGet("untitled.opm");
+	skinningExample = (SkinningExample*)OPalloc(sizeof(SkinningExample));
+
+	skinningExample->pos = 0;
+	skinningExample->Mesh = (OPmesh*)OPcmanGet("untitled.opm");
 
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
@@ -38,20 +42,20 @@ void ExampleSkinningEnter(OPgameState* last) {
 		{ "aBlendWeights", GL_FLOAT, 4 }
 	};
 
-	skinningEffect = (OPeffect*)OPalloc(sizeof(OPeffect));
+	skinningExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
 	OPshader* vert = (OPshader*)OPcmanGet("Skinning.vert");
 	OPshader* frag = (OPshader*)OPcmanGet("Skinning.frag");
-	*skinningEffect = OPrenderCreateEffectStride(
+	*skinningExample->Effect = OPrenderCreateEffectStride(
 		*vert,
 		*frag,
 		attribs,
 		4,
 		"Model Effect",
-		skinningMesh->VertexSize
+		skinningExample->Mesh->VertexSize
 		);
 
-	skinningCamera = (OPcam*)OPalloc(sizeof(OPcam));
-	*skinningCamera = OPcamProj(
+	skinningExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
+	*skinningExample->Camera = OPcamProj(
 		OPvec3One * 2.0,
 		OPvec3Create(0, 1, 0),
 		OPvec3Create(0, 1, 0),
@@ -67,29 +71,29 @@ int ExampleSkinningUpdate(OPtimer* time) {
 	OPrenderClear(0, 0, 0);
 
 	OPkeyboardUpdate();
-	if (OPkeyboardWasPressed(OPKEY_P)) { pos++; }
-	if (OPkeyboardWasPressed(OPKEY_O)) { pos--; }
+	if (OPkeyboardWasPressed(OPKEY_P)) { skinningExample->pos++; }
+	if (OPkeyboardWasPressed(OPKEY_O)) { skinningExample->pos--; }
 
 	//OPmat4translate(&mesh->Skeleton->localPoses[pos], time->Elapsed / 1000.0f, 0, 0);
-	OPmat4rotX(&skinningMesh->Skeleton->localPoses[pos], OPkeyboardIsDown(OPKEY_W) / 10.0f);
-	OPmat4rotX(&skinningMesh->Skeleton->localPoses[pos], OPkeyboardIsDown(OPKEY_S) / -10.0f);
-	OPskeletonUpdate(skinningMesh->Skeleton);
+	OPmat4rotX(&skinningExample->Mesh->Skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_W) / 10.0f);
+	OPmat4rotX(&skinningExample->Mesh->Skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_S) / -10.0f);
+	OPskeletonUpdate(skinningExample->Mesh->Skeleton);
 
-	OPrenderBindMesh(skinningMesh);
-	OPrenderBindEffect(skinningEffect);
+	OPrenderBindMesh(skinningExample->Mesh);
+	OPrenderBindEffect(skinningExample->Effect);
 	
 	OPmat4 world, view, proj;
 	OPmat4identity(&world);
 	//OPmat4buildRotX(&world,- OPpi / 2.0);
 
-	OPcamGetView((*skinningCamera), &view);
-	OPcamGetProj((*skinningCamera), &proj);
+	OPcamGetView((*skinningExample->Camera), &view);
+	OPcamGetProj((*skinningExample->Camera), &proj);
 
 	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderParamMat4v("uProj", 1, &proj);
 	OPrenderParamMat4v("uView", 1, &view);
 
-	OPrenderParamMat4v("uBones", skinningMesh->Skeleton->hierarchyCount, skinningMesh->Skeleton->skinned);
+	OPrenderParamMat4v("uBones", skinningExample->Mesh->Skeleton->hierarchyCount, skinningExample->Mesh->Skeleton->skinned);
 
 	OPvec3 light = OPvec3Create(0, 10, 0);
 	OPrenderParamVec3("uLightPosition", 1, &light);
@@ -101,6 +105,6 @@ int ExampleSkinningUpdate(OPtimer* time) {
 }
 
 void ExampleSkinningExit(OPgameState* next) {
-	OPfree(skinningEffect);
-	OPfree(skinningCamera);
+	OPfree(skinningExample->Effect);
+	OPfree(skinningExample->Camera);
 }

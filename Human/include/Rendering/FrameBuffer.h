@@ -50,6 +50,7 @@ extern OPframeBuffer* OPRENDER_CURR_FRAMEBUFFER;
 OPframeBuffer OPframeBufferCreate(OPtextureDescription desc);
 void OPframeBufferDestroy(OPframeBuffer* fb);
 void OPframeBufferBind(OPframeBuffer* fb);
+void OPframeBufferBindRead(OPframeBuffer* fb);
 void OPframeBufferBindTex(OPframeBuffer* fb);
 void OPframeBufferUnbind();
 
