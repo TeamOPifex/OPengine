@@ -101,8 +101,8 @@ void OPmouseUpdate() {
 		//}
 	}
 	// TODO: Fix this with the callback for GLFW3ß
-	//glfwGetCursorPos(window, &Mouse.positionX, &Mouse.positionY);
-	//Mouse.wheel = glfwGetMouseWheel(window);
+	glfwGetCursorPos(window, &Mouse.positionX, &Mouse.positionY);
+	//Mouse.wheel = glfwGetScroll(window);
 }
 
 i32 OPmousePositionX() {

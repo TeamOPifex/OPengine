@@ -18,6 +18,7 @@ extern GLFWwindow* window;
 
 OPint OPrenderInit(OPuint width, OPuint height, OPint fullscreen);
 void  OPrenderClear      (f32 r, f32 g, f32 b);
+void  OPrenderClearRGBA(f32 r, f32 g, f32 b, f32 a);
 void  OPrenderSetViewport(OPuint x, OPuint y, OPuint width, OPuint height);
 void OPrenderResetViewport();
 OPint OPrenderGetWidth();
@@ -29,6 +30,7 @@ void OPrenderCull(OPint state);
 void OPrenderCullMode(OPint state);
 void  OPrenderSwapBuffer ();
 void  OPrenderPresent    ();
+void OPrenderBlend(OPint state);
 void  OPrenderDepth      (OPint state);
 void  OPrenderShutdown   ();
 

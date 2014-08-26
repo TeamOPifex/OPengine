@@ -105,6 +105,7 @@ endif()
 if(${OPIFEX_OCULUS})
 	include_directories(../External/Oculus/include/	../External/Oculus/include/)
 	add_definitions(-DOPIFEX_OCULUS)
+	target_link_libraries(9_Application ${PROJECT_SOURCE_DIR}/External/OculusDK2/lib/win32/VS2010/libovrd.lib)
 endif()
 
 if(${OPIFEX_MYO})

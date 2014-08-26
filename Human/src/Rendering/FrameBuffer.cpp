@@ -167,6 +167,18 @@ void OPframeBufferBind(OPframeBuffer* fb){
 	OPrenderSetViewport(0, 0, fb->Description.Width, fb->Description.Height);
 }
 //-----------------------------------------------------------------------------
+void OPframeBufferBindRead(OPframeBuffer* fb){
+	//GLuint attachments[1] = {GL_COLOR_ATTACHMENT0};
+	OPRENDER_CURR_FRAMEBUFFER = fb;
+#ifdef OPIFEX_ANDROID
+	glBindFramebuffer(GL_FRAMEBUFFER, fb->Handle);
+#else
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, fb->Handle);
+#endif
+	//glDrawBuffers(1,  attachments);
+	OPrenderSetViewport(0, 0, fb->Description.Width, fb->Description.Height);
+}
+//-----------------------------------------------------------------------------
 void OPframeBufferBindTex(OPframeBuffer* fb){
 	OPtextureBind(&fb->Texture);
 }

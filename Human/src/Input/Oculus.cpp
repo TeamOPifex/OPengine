@@ -8,6 +8,7 @@
 //#include "./External/glfw-3.0.4/include/GLFW/glfw3native.h"
 
 OPoculus* OculusManager = NULL;
+i32 oculusFrameIndex = 0;
 #endif
 
 void OPoculusUpdate() {
@@ -20,13 +21,6 @@ void OPoculusUpdate() {
 		ovrHmd_DismissHSWDisplay(OculusManager->_hmdDevice);
 	}
 
-
-	//bool result = OculusManager->_device->GetDeviceInfo(OculusManager->current);
-	//if (!result) {
-		//getDk1HmdValues(OculusManager->current);
-	//}
-
-
 	ovrTrackingState ts = ovrHmd_GetTrackingState(OculusManager->_hmdDevice, ovr_GetTimeInSeconds());
 
 	if (ts.StatusFlags & (ovrStatus_OrientationTracked | ovrStatus_PositionTracked)) {
@@ -37,17 +31,17 @@ void OPoculusUpdate() {
 
 void OPoculusBegin() {
 #ifdef OPIFEX_OCULUS
-	OculusManager->_timing = ovrHmd_BeginFrame(OculusManager->_hmdDevice, 0);
+	OculusManager->_timing = ovrHmd_BeginFrame(OculusManager->_hmdDevice, oculusFrameIndex++);
 #endif
 }
 
 void OPoculusEnd() {
 #ifdef OPIFEX_OCULUS
-	ovrPosef headPose[2];
 
 	ovrEyeType eye0 = OculusManager->_hmdDevice->EyeRenderOrder[0];
 	ovrEyeType eye1 = OculusManager->_hmdDevice->EyeRenderOrder[1];
 
+	ovrPosef headPose[2];
 	headPose[0] = ovrHmd_GetEyePose(OculusManager->_hmdDevice, eye0);
 	headPose[1] = ovrHmd_GetEyePose(OculusManager->_hmdDevice, eye1);
 
@@ -62,14 +56,16 @@ int OPoculusStartup() {
 		return 0;
 	}
 
-	ovrBool success = ovr_Initialize();
-	if (!success) {
+	if (!ovr_Initialize()) {
 		return 0;
 	}
+
+	OPlog("Oculus Successfully Initialized");
 
 	OculusManager = (OPoculus*)OPalloc(sizeof(OPoculus));
 
 	i32 devices = ovrHmd_Detect();
+	OPlog("HMD Devices Found: %d", devices);
 
 	OculusManager->_hmdDevice = ovrHmd_Create(0);
 	if (!OculusManager->_hmdDevice) {
@@ -111,14 +107,14 @@ int OPoculusInitialize() {
 	renderTargetSize.w = w;
 	renderTargetSize.h = h;
 
-	ovrPosef headPose[2];
+	//ovrPosef headPose[2];
 
 	ovrEyeType eye0 = OculusManager->_hmdDevice->EyeRenderOrder[0];
 	ovrEyeType eye1 = OculusManager->_hmdDevice->EyeRenderOrder[1];
 
-	headPose[0] = ovrHmd_GetEyePose(OculusManager->_hmdDevice, eye0);
-	headPose[1] = ovrHmd_GetEyePose(OculusManager->_hmdDevice, eye1);
-
+	//headPose[0] = ovrHmd_GetEyePose(OculusManager->_hmdDevice, eye0);
+	//headPose[1] = ovrHmd_GetEyePose(OculusManager->_hmdDevice, eye1);
+	
 	ovrRecti frameSize;
 	frameSize.Pos.x = 0;
 	frameSize.Pos.y = 0;

@@ -129,12 +129,12 @@ String GetBaseOVRPath(bool create_dir)
         WCHAR wpath[128];
         OVR::UTF8Util::DecodeString(wpath, path.ToCStr());
 
-        //DWORD attrib = GetFileAttributes(wpath);
-        //bool exists = attrib != INVALID_FILE_ATTRIBUTES && (attrib & FILE_ATTRIBUTE_DIRECTORY);
-        //if (!exists)
-        //{   
-        //    CreateDirectory(wpath, NULL);
-        //}
+        DWORD attrib = GetFileAttributes(wpath);
+        bool exists = attrib != INVALID_FILE_ATTRIBUTES && (attrib & FILE_ATTRIBUTE_DIRECTORY);
+        if (!exists)
+        {   
+            CreateDirectory(wpath, NULL);
+        }
     }
         
 #elif defined(OVR_OS_MAC)
