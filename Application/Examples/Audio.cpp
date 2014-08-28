@@ -35,9 +35,6 @@ void ExampleAudioEnter(OPgameState* last) {
 }
 
 int ExampleAudioUpdate(OPtimer* time) {
-
-	OPkeyboardUpdate();
-	OPgamePadSystemUpdate();
 	
 	if (OPkeyboardWasPressed(OPKEY_P) || OPgamePadWasPressed(OPgamePad(GamePadIndex_One), GamePad_Button_A)) {
 		OPaudSetEmitter(audioExample->Sound);

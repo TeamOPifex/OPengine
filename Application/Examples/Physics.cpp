@@ -148,7 +148,6 @@ void ExamplePhysicsEnter(OPgameState* last) {
 
 int ExamplePhysicsUpdate(OPtimer* time) {
 
-	OPkeyboardUpdate();
 	if (OPkeyboardWasPressed(OPKEY_SPACE)) {
 		OPphysicsAddForce(physicsExample->spheres[0].physics, 0, 1500 * physicsExample->spheres[0].size, 0);
 	}

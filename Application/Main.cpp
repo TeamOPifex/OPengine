@@ -12,6 +12,7 @@
 #include "./Application/Examples/ParticleSystem.h"
 #include "./Application/Examples/Physics.h"
 #include "./Application/Examples/Skinning.h"
+#include "./Application/ExampleSelectorState.h"
 
 //#include "./GameManager.h"
 #include "./Human/include/Rendering/Renderer.h"
@@ -96,9 +97,10 @@ void Init(){
 	//OPgameStateChange(&GS_EXAMPLE_AUDIO);
 	//OPgameStateChange(&GS_EXAMPLE_MODEL);
 	//OPgameStateChange(&GS_EXAMPLE_PARTICLESYSTEM);
-	OPgameStateChange(&GS_EXAMPLE_PHYSICS);
+	//OPgameStateChange(&GS_EXAMPLE_PHYSICS);
 	//OPgameStateChange(&GS_EXAMPLE_SKINNING);
 	//OPgameStateChange(&GS_EXAMPLE_OCULUS);
+	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 	
 	return;
 }
@@ -115,16 +117,16 @@ void Destroy()
 
 
 int UpdateState(OPtimer* timer){
-	if (OPkeyboardWasReleased(OPKEY_SPACE)) {
-		//i8* test = "tested";
-		//OPchar* key = "queued";
-		//OPwebServerQueue(server, key, test, 6);
-		//key = "another";
-		//OPwebServerQueue(server, key, test, 6);
-		//key = "death";
-		//OPwebServerQueue(server, key, test, 6);
+	OPkeyboardUpdate();
+	OPmouseUpdate();
+	OPgamePadSystemUpdate();
+
+	if (OPkeyboardWasReleased(OPKEY_ESCAPE)) {
+		return 1;
 	}
-	//OPwebServerUpdate(server);
+	if (OPkeyboardWasReleased(OPKEY_BACKSPACE)) {
+		OPgameStateChange(&GS_EXAMPLE_SELECTOR);
+	}
 	return ActiveState->Update(timer);	
 }
 
