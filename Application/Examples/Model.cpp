@@ -62,7 +62,6 @@ int ExampleModelUpdate(OPtimer* time) {
 	OPrenderDepth(1);
 	OPrenderClear(0, 0, 0);
 
-	OPkeyboardUpdate();
 	if (OPkeyboardIsDown(OPKEY_P)) { modelExample->Rotation++; }
 
 	OPrenderBindMesh(modelExample->Mesh);

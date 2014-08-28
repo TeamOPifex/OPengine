@@ -73,7 +73,6 @@ int ExampleOculusUpdate(OPtimer* time) {
 	OPrenderDepth(1);
 	OPrenderClear(0, 0, 0);
 
-	OPkeyboardUpdate();
 	if (OPkeyboardIsDown(OPKEY_P)) { oculusExample->Rotation++; }
 
 	OPrenderBindMesh(oculusExample->Mesh);

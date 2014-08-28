@@ -70,7 +70,6 @@ int ExampleSkinningUpdate(OPtimer* time) {
 	OPrenderDepth(1);
 	OPrenderClear(0, 0, 0);
 
-	OPkeyboardUpdate();
 	if (OPkeyboardWasPressed(OPKEY_P)) { skinningExample->pos++; }
 	if (OPkeyboardWasPressed(OPKEY_O)) { skinningExample->pos--; }
 

@@ -27,10 +27,13 @@ set(ALL_LIBS
 
 add_executable(Tools_FontMaker ${FONTMAKER_SRC})
 
-target_link_libraries(Tools_FontMaker
-	${ALL_LIBS}
-	${PROJECT_SOURCE_DIR}/External/freetype/win32/freetype.lib
-)	
+target_link_libraries(Tools_FontMaker ${ALL_LIBS})	
+
+if(${OPIFEX_RELEASE})
+	target_link_libraries( Tools_FontMaker ${PROJECT_SOURCE_DIR}/External/freetype/libs/release/win32/freetype253.lib )	
+else()
+	target_link_libraries( Tools_FontMaker ${PROJECT_SOURCE_DIR}/External/freetype/libs/debug/win32/freetype253_D.lib )	
+endif()
 
 add_definitions(-D${OPIFEX_OS})
 
