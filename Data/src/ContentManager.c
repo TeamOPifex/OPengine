@@ -27,7 +27,9 @@ OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount){
 	OP_CMAN_ASSET_LOADER_COUNT = loaderCount;
 
 	// Switch to the assets directory
-#if defined(OPIFEX_WINDOWS)
+#if defined(OPIFEX_EMCC)
+
+#elif defined(OPIFEX_WINDOWS)
 	_chdir("assets\\");
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 	if(chdir("./assets")) OPlog("Directory changed!\n");
