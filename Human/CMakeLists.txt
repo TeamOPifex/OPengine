@@ -25,6 +25,7 @@ include_directories(
 #########################################
 # Include Files
 #########################################
+message_glob(include/ "${PROJECT_SOURCE_DIR}/Human/include/Audio")
 add_source_group(include/ "${PROJECT_SOURCE_DIR}/Human/include" HUMAN_SRC)
 add_source_group(include/Audio "${PROJECT_SOURCE_DIR}/Human/include/Audio" HUMAN_SRC)
 add_source_group(include/Input "${PROJECT_SOURCE_DIR}/Human/include/Input" HUMAN_SRC)
