@@ -72,11 +72,12 @@ void MsgHandler(OPstream* str, void* param) {
 void Init(){
 
 	OPcmanInit(OP_DEFAULT_LOADERS, 10);
-				//OPscriptInit();
-				//OPcmanLoad("app.ops");
-		//OPstream* stream = OPreadFile("Scripts/app.ops");
-		//	OPlog("File Read");
-		//OPscriptCompileAndRunStream(stream);
+		
+	// OPscriptInit();
+	// OPcmanLoad("physics.js");
+	// OPscript* stream = (OPscript*)OPcmanGet("physics.js");
+	// 	OPlog("File Read");
+	// OPscriptCompileAndRun(stream);
 
 	//OPaudInit();
 	//OPaudInitThread(10);
@@ -136,9 +137,9 @@ int UpdateState(OPtimer* timer){
 #include "./Core/include/Assert.h"
 #include "./Human/include/Rendering/Video.h"
 
-void Wrapper(V8isolate* isolate, V8ObjectGlobal target) {
-	target->Set(isolate, "Test", GetNumberF32(isolate, 1337));
-}
+// void Wrapper(V8isolate* isolate, V8ObjectGlobal target) {
+// 	target->Set(isolate, "Test", GetNumberF32(isolate, 1337));
+// }
 
 #ifdef OPIFEX_ANDROID
 extern "C" {
@@ -155,7 +156,7 @@ int main(int argc, char** args) {
 			i32 match = OPmemcmp(args[1], p, arg2len);
 			if (match == 0) {
 				i8* script = args[2];
-				CustomWrapper = Wrapper;
+				//CustomWrapper = Wrapper;
 
 				OPscriptInit();
 				OPstream* stream = OPreadFile(script);
@@ -165,6 +166,7 @@ int main(int argc, char** args) {
 	}
 	else {
 #endif
+		OPlog("Test");
 
 		OPinitialize = Init;
 		OPupdate = UpdateState;

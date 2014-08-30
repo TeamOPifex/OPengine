@@ -43,8 +43,6 @@ add_source_group(Examples "${PROJECT_SOURCE_DIR}/Application/Examples" APPLICATI
 # DEPENDENT LIBRARIES
 #########################################
 set(ALL_LIBS
-	${OPENGL_LIBRARY}
-	${OPENAL_LIBRARY}
 	1_Core
 	2_Data
 	3_Math
@@ -67,6 +65,14 @@ add_executable(9_Application ${APPLICATION_SRC})
 add_definitions(-D${OPIFEX_OS})
 
 target_link_libraries(9_Application	${ALL_LIBS})
+
+if(EMSCRIPTEN)
+
+else()
+target_link_libraries(5_Human ${OPENGL_LIBRARY})
+target_link_libraries(5_Human ${OPENAL_LIBRARY})
+	
+endif()
 
 if( ${OPIFEX_OS_WINDOWS} )
 	target_link_libraries(9_Application	Winmm.lib)
