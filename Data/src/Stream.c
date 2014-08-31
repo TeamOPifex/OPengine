@@ -1,5 +1,4 @@
 #include "./../include/Stream.h"
-#include "./Core/include/Log.h"
 #include <errno.h>
 
 //-----------------------------------------------------------------------------

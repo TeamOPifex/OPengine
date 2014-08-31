@@ -1,8 +1,3 @@
-
-if(EMSCRIPTEN)
-
-else()
-
 ### GLFW
 
 SET( GLFW_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/External/glfw-3.0.4" )
@@ -74,4 +69,3 @@ populate_binary_directory()
 output_library_from(LODEPNG "/External" "LodePNG")
 
 
-endif()

@@ -45,6 +45,7 @@ add_source_group(src/wrappers "${PROJECT_SOURCE_DIR}/Scripting/src/wrappers" SCR
 #########################################
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
+	${OPENAL_LIBRARY}
 	GLEW_158
 	LODEPNG
 	1_Core

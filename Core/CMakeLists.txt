@@ -33,10 +33,6 @@ add_source_group(src/ "${PROJECT_SOURCE_DIR}/Core/src" CORE_SRC)
 add_library(1_Core STATIC ${CORE_SRC})
 add_definitions(-D${OPIFEX_OS})
 
-if(EMSCRIPTEN)
-	add_definitions(-DOPIFEX_EMCC)
-endif()
-
 if(${OPIFEX_RELEASE})
 
 else()

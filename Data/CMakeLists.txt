@@ -40,9 +40,6 @@ set(ALL_LIBS
 add_library(2_Data STATIC ${DATA_SRC})
 add_definitions(-D${OPIFEX_OS})
 
-if(EMSCRIPTEN)
-	add_definitions(-DOPIFEX_EMCC)
-endif()
 if(${OPIFEX_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 endif()

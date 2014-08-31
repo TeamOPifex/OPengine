@@ -2,19 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 
-    #SET(EMSCRIPTEN_BUILD 1)
-    #SET(CMAKE_C_COMPILER /home/ghoofman/Repos/emsdk_portable/emscripten/1.22.0/emcc)
-	#SET(CMAKE_CXX_COMPILER /home/ghoofman/Repos/emsdk_portable/emscripten/1.22.0/em++)
-	#SET(CMAKE_C_FLAGS "-O0 -g -DDEBUG -DEMSCRIPTEN")
-	#SET(CMAKE_CXX_FLAGS "-O0 -g -DDEBUG -DEMSCRIPTEN -DUSE_VBO")
-
-
 
 project(OPifexEngine)
-
-if (NOT EMSCRIPTEN)
-    message(FATAL_ERROR "EMSCRIPTEN should be defined when cross-compiling!")
-endif()
 
 # c_flag_overrides.cmake
     if(MSVC)
@@ -24,7 +13,7 @@ endif()
         set(CMAKE_CXX_FLAGS_DEBUG "/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1" CACHE STRING "" FORCE)
         set(CMAKE_CXX_FLAGS_RELEASE "/MT /O2 /Ob2 /D NDEBUG" CACHE STRING "" FORCE)
     endif()
-
+	
 
 ### CMake Setup
 include(CMake/macros.cmake) 
@@ -34,6 +23,7 @@ include(CMake/global.cmake)
 include(CMake/packages.cmake)
 include(CMake/assets.cmake)
 include(CMake/binaries.cmake)
+
 
 ### Project Setup
 #########################################

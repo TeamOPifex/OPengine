@@ -117,11 +117,7 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 			const OPchar* begin = "./";
 			const OPchar* jsEnd = ".js";
 			const OPchar* opsEnd = ".ops";
-			#ifdef OPIFEX_ANDROID
-			const OPchar* dir = "Scripts/";
-			#else
 			const OPchar* dir = "assets/Scripts/";
-			#endif
 
 			if (StartsWith(loadFile, begin, 2)) {
 				OPlog("Starts with %s, removing it", begin);
