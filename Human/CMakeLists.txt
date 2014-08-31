@@ -61,6 +61,8 @@ add_source_group(src/Utilities "${PROJECT_SOURCE_DIR}/Human/src/Utilities" HUMAN
 # DEPENDENT LIBRARIES
 #########################################
 set(ALL_LIBS
+	${OPENGL_LIBRARY}
+	${OPENAL_LIBRARY}
 	GLEW_158
 	LODEPNG
 	1_Core
@@ -72,7 +74,6 @@ set(ALL_LIBS
 )
 
 
-
 #########################################
 # BUILD
 #########################################
@@ -81,14 +82,6 @@ add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS)
 add_definitions(-D${OPIFEX_OS})
 
 target_link_libraries(5_Human ${ALL_LIBS})
-
-if(EMSCRIPTEN)
-
-else()
-target_link_libraries(5_Human ${OPENGL_LIBRARY})
-target_link_libraries(5_Human ${OPENAL_LIBRARY})
-	
-endif()
 
 set_target_properties(5_Human PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(5_Human PROPERTIES OUTPUT_NAME "Human")

@@ -2,7 +2,6 @@
 
 #ifndef OPMATH_MAT4
 #define OPMATH_MAT4
-#include "./Core/include/Types.h"
 #include "./Math/include/Vector2.h"
 #include "./Math/include/Vector3.h"
 #include "./Math/include/Vector4.h"
