@@ -8,8 +8,6 @@
 #include <sys/types.h>
 #include <sys/time.h> // link with -lrt
 #include <unistd.h>
-#elif defined(OPIFEX_EMCC)
-
 #elif defined(OPIFEX_WINDOWS)
 // Windows specific lib
 #include <Windows.h>

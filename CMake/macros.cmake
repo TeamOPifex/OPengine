@@ -13,35 +13,6 @@ macro(add_source_group FILTER_NAME SOURCE_PATH TARGET_LIST)
 
 endmacro(add_source_group)
 
-macro(add_source_group_recurse FILTER_NAME SOURCE_PATH TARGET_LIST)
-
-	file(TO_NATIVE_PATH ${FILTER_NAME} NEW_FILTER_NAME)
-	file(GLOB_RECURSE TEMP_SRC
-		"${SOURCE_PATH}/*.h"
-		"${SOURCE_PATH}/*.cpp"
-		"${SOURCE_PATH}/*.c"
-		"${SOURCE_PATH}/*.mm"
-	)
-	source_group("${NEW_FILTER_NAME}" FILES ${TEMP_SRC})
-	list(APPEND ${TARGET_LIST} "${TEMP_SRC}")
-
-endmacro(add_source_group_recurse)
-
-macro(message_glob FILTER_NAME SOURCE_PATH)
-
-	file(TO_NATIVE_PATH ${FILTER_NAME} NEW_FILTER_NAME)
-	file(GLOB TEMP_SRC
-		"${SOURCE_PATH}/*.h"
-		"${SOURCE_PATH}/*.cpp"
-		"${SOURCE_PATH}/*.c"
-		"${SOURCE_PATH}/*.mm"
-	)
-	foreach(f ${TEMP_SRC})
-		MESSAGE(STATUS "Message_glob: ${f}")
-	endforeach()
-
-endmacro(message_glob)
-
 macro(copy_source_group SOURCE_PATH DESTINATION_TARGET)
 
 	message(STATUS "COPY FROM '${SOURCE_PATH}'' to '${DESTINATION_TARGET}'")

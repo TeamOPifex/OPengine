@@ -10,10 +10,6 @@ OPint OPcreateTimer(OPtimer* timer){
 	timer->TotalGametime = 0;
 	timer->TimeLastTick = 0;
 	timer->Elapsed = 0;
-#elif defined(OPIFEX_EMCC)
-	timer->TotalGametime = 0;
-	timer->TimeLastTick = 0;
-	timer->Elapsed = 0;
 #elif defined(OPIFEX_WINDOWS)
 // Windows specific values for time
 	timer->TotalGametime = 0;
@@ -38,13 +34,6 @@ void OPtimerTick(OPtimer* timer){
 	timer->Elapsed = elapsed;
 	
 	timer->_lastTime = time;
-#elif defined(OPIFEX_EMCC)
-	// Windows specific values for time
-	ui64 time = 0;
-	
-	timer->Elapsed = time - timer->TimeLastTick;
-	timer->TimeLastTick = time;
-	timer->TotalGametime += timer->Elapsed;
 #elif defined(OPIFEX_WINDOWS)
 	// Windows specific values for time
 	DWORD time = timeGetTime();

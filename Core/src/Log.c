@@ -16,7 +16,6 @@ void OPlog(const char* message, ...){
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
-#include <stdarg.h>
 
 void OPlog(const char* message, ...){
 	char buffer[1024];
@@ -27,12 +26,8 @@ void OPlog(const char* message, ...){
 		perror(buffer);
 		errno = 0;
 	} else {
-#ifdef OPIFEX_EMCC
-		puts(buffer);
-#else
 		write(1, buffer, strlen(buffer));
 		write(1, "\n", 1);
-#endif
 	}
     va_end(args);
 }
@@ -46,11 +41,7 @@ void OPlg(const char* message, ...){
 		perror(buffer);
 		errno = 0;
 	} else {
-#ifdef OPIFEX_EMCC
-		puts(buffer);
-#else
 		write(1, buffer, strlen(buffer));
-#endif
 	}
     va_end(args);
 }
