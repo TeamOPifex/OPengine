@@ -96,6 +96,19 @@ i32 OPimagePNGLoadStream(OPstream* str, i32 offset, OPtexture** image) {
 	return 1;
 }
 
+i32 OPimagePNGReload(const OPchar* filename, OPtexture** image){
+	OPlog("Reload Image PNG");
+	OPstream* str = OPreadFile(filename);
+	OPtexture* resultTex;
+	OPtexture* tex = (OPtexture*)(*image);
+	OPint result = OPimagePNGLoadStream(str, 0, &resultTex);
+	if (result) {
+		OPmemcpy(*image, resultTex, sizeof(OPtexture));
+		OPfree(resultTex);
+	}
+	return result;
+}
+
 i32 OPimagePNGUnload(void* image){
 	OPtexture* tex = (OPtexture*)image;
 	OPtextureDestroy(tex);

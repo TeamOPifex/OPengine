@@ -31,6 +31,7 @@ void ExampleTexturedEnter(OPgameState* last) {
 
 	texturedExample->Mesh = (OPmesh*)OPcmanGet("PuzzleBlock.opm");
 	texturedExample->Texture = (OPtexture*)OPcmanGet("TetrisBroken.png");
+	texturedExample->Rotation = 0;
 
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
@@ -53,7 +54,7 @@ void ExampleTexturedEnter(OPgameState* last) {
 	texturedExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
 	*texturedExample->Camera = OPcamProj(
 		OPvec3One * 2.0,
-		OPvec3Create(0, 1, 0),
+		OPvec3Create(0, 0, 0),
 		OPvec3Create(0, 1, 0),
 		0.1f,
 		1000.0f,
@@ -65,8 +66,8 @@ void ExampleTexturedEnter(OPgameState* last) {
 int ExampleTexturedUpdate(OPtimer* time) {
 	OPrenderDepth(1);
 	OPrenderClear(0, 0, 0);
-
-	if (OPkeyboardIsDown(OPKEY_P)) { texturedExample->Rotation++; }
+	
+	if (OPkeyboardIsDown(OPKEY_SPACE)) { texturedExample->Rotation++; }
 
 	OPrenderBindMesh(texturedExample->Mesh);
 	OPrenderBindEffect(texturedExample->Effect);
