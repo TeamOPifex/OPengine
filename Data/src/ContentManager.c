@@ -3,6 +3,7 @@
 #include "./Core/include/Types.h"
 #include "./Data/include/Vector.h"
 #include "./Core/include/Timer.h"
+#include "./Data/include/File.h"
 
 //  _____ _       _           _     
 // / ____| |     | |         | |    
@@ -18,7 +19,7 @@ OPchar* OP_CMAN_ASSET_FOLDER;
 
 OPlinkedList* OP_CMAN_PURGE;
 
-#ifdef OPIFEX_WINDOWS
+#ifdef _DEBUG
 #define BUFSIZE MAX_PATH
 #include <windows.h>
 #include "./Data/include/String.h"
@@ -26,30 +27,8 @@ i64 OP_CMAN_LAST_CHECKED = 1000;
 
 #endif
 
-
-#ifdef OPIFEX_WINDOWS
-long getMonitorFileLastChanged(OPchar* file)
-{
-	ULONGLONG rtn;
-	HANDLE hFile = CreateFile(file, GENERIC_READ,
-		FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
-	if (hFile != INVALID_HANDLE_VALUE)
-	{
-		FILETIME ftCreate, ftAccess, ftWrite;
-		// Retrieve the file times for the file.
-		if (!GetFileTime(hFile, &ftCreate, &ftAccess, &ftWrite))
-			return 0;
-		CloseHandle(hFile);
-		rtn = (((ULONGLONG)ftWrite.dwHighDateTime) << 32) +
-			ftWrite.dwLowDateTime;
-		return rtn;
-	}
-	return 0;
-}
-#endif
-
 void OPcmanUpdate(OPtimer* timer) {
-#ifdef OPIFEX_WINDOWS
+#ifdef _DEBUG
 	i32 i, j;
 	long change;
 	Bucket bucket;
@@ -63,9 +42,8 @@ void OPcmanUpdate(OPtimer* timer) {
 			for (j = 0; j < bucket.count; j++) {
 				asset = (OPasset*)bucket.pairs[j].value;
 				if (asset->Reload) { // Only check the file, if there's a reload function
-					change = getMonitorFileLastChanged(asset->AbsolutePath);
+					change = OPfileLastChange(asset->AbsolutePath);
 					if (change != asset->LastChange) {
-						OPlog("File Changed! %s", bucket.pairs[j].key);
 						if (asset->Reload(asset->FullPath, &asset->Asset)) {
 							asset->LastChange = change;
 						}
@@ -87,7 +65,7 @@ void OPcmanUpdate(OPtimer* timer) {
 // Specifies how assets will be loaded for each file type
 OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount, OPchar* dir){
 
-#ifdef OPIFEX_WINDOWS
+#ifdef _DEBUG
 	TCHAR Buffer[BUFSIZE];
 	DWORD dwRet;
 #endif
@@ -118,9 +96,11 @@ OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount, OPchar* dir){
 	}
 
 
+#ifdef _DEBUG
 #ifdef OPIFEX_WINDOWS
 	dwRet = GetCurrentDirectory(BUFSIZE, Buffer);
 	OP_CMAN_ASSET_FOLDER = OPstringCreateMerged(Buffer, "\\");
+#endif
 #endif
 
 	
@@ -196,11 +176,13 @@ OPint OPcmanLoad(const OPchar* key){
 				}
 				assetBucket->Asset = asset;
 				assetBucket->Unload = loader.Unload;
-				assetBucket->Reload = loader.Reload;
 				assetBucket->Dirty = 0;
+#ifdef _DEBUG
+				assetBucket->Reload = loader.Reload;
 				assetBucket->FullPath = fullPath;
 				assetBucket->AbsolutePath = OPstringCreateMerged(OP_CMAN_ASSET_FOLDER, fullPath);
-				assetBucket->LastChange = getMonitorFileLastChanged(assetBucket->AbsolutePath);
+				assetBucket->LastChange = OPfileLastChange(assetBucket->AbsolutePath);
+#endif
 				
 				// finally insert into the hashmap
 				if(OPhashMapPut(&OP_CMAN_HASHMAP, key, assetBucket))

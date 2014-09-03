@@ -135,6 +135,8 @@ OPint OPfileExists(const char* path);
  */
 OPint OPdeleteFile(const char* path);
 
+ui64 OPfileLastChange(const OPchar* path);
+
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 };

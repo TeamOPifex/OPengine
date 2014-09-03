@@ -40,11 +40,13 @@ typedef struct{
 typedef struct{
 	void* Asset;
 	OPint(*Unload)(void* assetIn);
-	OPint(*Reload)(const OPchar* path, void** assetOut);
 	OPint Dirty;
+#ifdef _DEBUG
+	OPint(*Reload)(const OPchar* path, void** assetOut);
 	OPchar* FullPath;
 	OPchar* AbsolutePath;
 	i64 LastChange;
+#endif
 } OPasset;
 
 //  _____ _       _           _     
