@@ -156,6 +156,14 @@ if(${OPIFEX_RELEASE})
 
 else()
 	add_definitions(-D_DEBUG)
+	if(${OPIFEX_OS_WINDOWS})
+		SET(OPIFEX_REPO "../${OPIFEX_REPOSITORY}/Assets/")
+		add_definitions(-DOPIFEX_REPO="${OPIFEX_REPO}")
+	ELSE()
+		SET(OPIFEX_REPO "${OPIFEX_REPOSITORY}/Assets/")
+		add_definitions(-DOPIFEX_REPO="${OPIFEX_REPO}")
+	ENDIF()
+	
 endif()
 
 if(${OPIFEX_RELEASE})

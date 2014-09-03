@@ -160,11 +160,11 @@ inline void OPvec2cross(OPfloat* dst, OPvec2* a, OPvec2* b){
 }
 
 inline void OPvec2len(OPfloat* dst, OPvec2* v){
-	(*dst) = sqrt(v->x * v->x + v->y * v->y);
+	(*dst) = OPsqrt(v->x * v->x + v->y * v->y);
 }
 
 inline void OPvec2norm(OPvec2* dst, OPvec2* a){
-	OPfloat l = sqrt(a->x * a->x + a->y * a->y);
+	OPfloat l = OPsqrt(a->x * a->x + a->y * a->y);
 	if(l == 0) {
 		return;	
 	}

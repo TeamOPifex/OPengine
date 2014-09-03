@@ -70,8 +70,11 @@ void MsgHandler(OPstream* str, void* param) {
 
 // Initialize
 void Init(){
-
-	OPcmanInit(OP_DEFAULT_LOADERS, 10);
+#ifdef OPIFEX_REPO
+	OPcmanInit(OP_DEFAULT_LOADERS, 10, OPIFEX_REPO);
+#else
+	OPcmanInit(OP_DEFAULT_LOADERS, 10, NULL);
+#endif
 				//OPscriptInit();
 				//OPcmanLoad("app.ops");
 		//OPstream* stream = OPreadFile("Scripts/app.ops");
@@ -136,10 +139,6 @@ int UpdateState(OPtimer* timer){
 #include "./Core/include/Assert.h"
 #include "./Human/include/Rendering/Video.h"
 
-void Wrapper(V8isolate* isolate, V8ObjectGlobal target) {
-	target->Set(isolate, "Test", GetNumberF32(isolate, 1337));
-}
-
 #ifdef OPIFEX_ANDROID
 extern "C" {
 	JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj);
@@ -155,7 +154,6 @@ int main(int argc, char** args) {
 			i32 match = OPmemcmp(args[1], p, arg2len);
 			if (match == 0) {
 				i8* script = args[2];
-				CustomWrapper = Wrapper;
 
 				OPscriptInit();
 				OPstream* stream = OPreadFile(script);

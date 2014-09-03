@@ -11,6 +11,7 @@
 #include "./Application/Examples/ParticleSystem.h"
 #include "./Application/Examples/Physics.h"
 #include "./Application/Examples/Skinning.h"
+#include "./Application/Examples/Deferred.h"
 
 OPgameState GS_EXAMPLE_SELECTOR = {
 	ExampleSelectorEnter,
@@ -32,13 +33,14 @@ typedef struct {
 
 ExampleSelector* exampleSelector;
 
-#define ExampleCount 6
+#define ExampleCount 7
 
 void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector = (ExampleSelector*)OPalloc(sizeof(ExampleSelector));
 	exampleSelector->Selected = 0;
 
 	OPcmanLoad("Ubuntu.opf");
+	OPcmanPurge();
 
 	OPsystemsLoadFontEffect();
 
@@ -70,6 +72,10 @@ void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector->Examples[5].name = "Skinning";
 	exampleSelector->Examples[5].state = &GS_EXAMPLE_SKINNING;
 	exampleSelector->Examples[5].available = 1;
+
+	exampleSelector->Examples[6].name = "Deferred";
+	exampleSelector->Examples[6].state = &GS_EXAMPLE_DEFERRED;
+	exampleSelector->Examples[6].available = 1;
 
 	OPlog("Entered Example Selector");
 }
@@ -106,6 +112,8 @@ int ExampleSelectorUpdate(OPtimer* time) {
 }
 
 void ExampleSelectorExit(OPgameState* next) {
+	OPfontManagerDestroy(exampleSelector->FontManager);
+	OPcmanDelete("Ubuntu.opf");
 	OPfree(exampleSelector->Examples);
 	OPfree(exampleSelector);
 }

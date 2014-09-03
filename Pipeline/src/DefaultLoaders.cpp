@@ -31,14 +31,30 @@ OPassetLoader OP_DEFAULT_LOADERS[10] = {
 		},
 		{
 				".vert",
+#ifdef _DEBUG
+#ifdef OPIFEX_ANDROID
+				"Shaders/OpenGL_ES_2_0/",
+#else
+				"Shaders/OpenGL_2_0/",
+#endif
+#else
 				"Shaders/",
+#endif
 				sizeof(OPshader),
 				(OPint (*)(const OPchar*, void**))OPrenderLoadVertexShader,
 				(OPint (*)(void*))OPrenderUnloadShader
 		},
 		{
-				".frag",
-				"Shaders/",
+			".frag",
+#ifdef _DEBUG
+#ifdef OPIFEX_ANDROID
+			"Shaders/OpenGL_ES_2_0/",
+#else
+			"Shaders/OpenGL_2_0/",
+#endif
+#else
+			"Shaders/",
+#endif
 				sizeof(OPshader),
 				(OPint (*)(const OPchar*, void**))OPrenderLoadFragmentShader,
 				(OPint (*)(void*))OPrenderUnloadShader

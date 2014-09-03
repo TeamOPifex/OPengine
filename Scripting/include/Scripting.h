@@ -16,9 +16,7 @@ extern void(*CustomWrapper)(V8isolate* isolate, V8ObjectGlobal target);
 #endif
 
 void OPscriptInit();
-//Handle<Script> OPscriptCompile(OPscript* script);
 void OPscriptCompileAndRun(OPscript* script);
 void OPscriptCompileAndRunStream(OPstream* stream);
 void OPscriptLog(const char* data); 
-//void OPscriptRun(Handle<Script> script);
 #endif

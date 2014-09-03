@@ -64,6 +64,7 @@ OPfontManager* OPfontManagerSetup(OPchar* font, OPchar** text, ui16 count);
 void OPfontManagerBind(OPfontManager* manager);
 void OPfontManagerAddText(const OPchar* text);
 void OPfontManagerBuild(); 
+void OPfontManagerDestroy(OPfontManager* font);
 
 void OPfontManagerSetColor4(OPfontManager* manager, OPvec4 color);
 void OPfontManagerSetRGBA(OPfontManager* manager, f32 r, f32 g, f32 b, f32 a);
