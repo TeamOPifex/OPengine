@@ -12,6 +12,7 @@
 #include "./Application/Examples/Physics.h"
 #include "./Application/Examples/Skinning.h"
 #include "./Application/Examples/Deferred.h"
+#include "./Application/Examples/Textured.h"
 
 OPgameState GS_EXAMPLE_SELECTOR = {
 	ExampleSelectorEnter,
@@ -33,7 +34,7 @@ typedef struct {
 
 ExampleSelector* exampleSelector;
 
-#define ExampleCount 7
+#define ExampleCount 8
 
 void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector = (ExampleSelector*)OPalloc(sizeof(ExampleSelector));
@@ -76,6 +77,10 @@ void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector->Examples[6].name = "Deferred";
 	exampleSelector->Examples[6].state = &GS_EXAMPLE_DEFERRED;
 	exampleSelector->Examples[6].available = 1;
+
+	exampleSelector->Examples[7].name = "Textured";
+	exampleSelector->Examples[7].state = &GS_EXAMPLE_TEXTURED;
+	exampleSelector->Examples[7].available = 1;
 
 	OPlog("Entered Example Selector");
 }
