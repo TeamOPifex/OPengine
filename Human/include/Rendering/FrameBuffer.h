@@ -49,6 +49,7 @@ extern OPframeBuffer* OPRENDER_CURR_FRAMEBUFFER;
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPframeBuffer OPframeBufferCreate(OPtextureDescription desc);
 void OPframeBufferDestroy(OPframeBuffer* fb);
+void OPframeBufferAttach(OPtexture* texture, ui16 pos);
 void OPframeBufferBind(OPframeBuffer* fb);
 void OPframeBufferBindRead(OPframeBuffer* fb);
 void OPframeBufferBindTex(OPframeBuffer* fb);

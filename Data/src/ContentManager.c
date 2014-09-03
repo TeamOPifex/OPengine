@@ -1,5 +1,6 @@
 #include "./Data/include/ContentManager.h"
 #include "./Core/include/Log.h"
+#include "./Core/include/Types.h"
 
 //  _____ _       _           _     
 // / ____| |     | |         | |    
@@ -22,20 +23,33 @@ OPlinkedList* OP_CMAN_PURGE;
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                                                                    
 // Specifies how assets will be loaded for each file type
-OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount){
+OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount, OPchar* dir){
+
+	OPint result = 0;
+	OPchar* assetFolder;
+	assetFolder = "assets\\";
+	if (dir) {
+		assetFolder = dir;
+	}
+
 	OP_CMAN_ASSETLOADERS = loaders;
 	OP_CMAN_ASSET_LOADER_COUNT = loaderCount;
 
 	// Switch to the assets directory
 #if defined(OPIFEX_WINDOWS)
-	_chdir("assets\\");
+	result = _chdir(assetFolder);
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
-	if(chdir("./assets")) OPlog("Directory changed!\n");
-	else OPlog("Directory change failed!!!\n");
+	result = _chdir(assetFolder);
 #else
-	if(chdir("./assets") == 0) OPlog("Directory changed!\n");
-	else OPlog("Directory change failed!!!\n");
+	result = _chdir(assetFolder);
 #endif
+
+	if (result == 0) {
+		OPlog("Directory Changed to: %s", assetFolder);
+	}
+	else {
+		OPlog("!Directory Change Failed: %s", assetFolder);
+	}
 
 	
 	// create and copy the hashmap

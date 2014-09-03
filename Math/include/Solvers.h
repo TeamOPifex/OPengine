@@ -60,7 +60,7 @@ inline OPint OPrayLineInter2(
 	ldlcD = l / lcD;
 	OPvec2cross(&u, &OmA, &ldlcD); 
 	
-	*intersect = l * u + A;
+	//*intersect = l * u + A;
 
 	return 1;
 };
@@ -83,7 +83,7 @@ inline OPint OPlineCircleInter2(
 	OPfloat dist = OPvec2valDot(&dir, &dir);
 	OPfloat p = radSqr / dist;
 
-	*intersect = dir * p + *CirclePos;
+	//*intersect = dir * p + *CirclePos;
 
 	if(OPabs(dist - radSqr) < 0.0001f){
 		return 1;

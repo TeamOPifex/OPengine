@@ -206,3 +206,6 @@ void OPframeBufferUnbind(){
 	glGenerateMipmap(fb->Texture.Handle);*/
 }
 
+void OPframeBufferAttach(OPtexture* texture, ui16 pos) {
+	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + pos, GL_TEXTURE_2D, texture->Handle, 0);
+}

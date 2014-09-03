@@ -63,7 +63,7 @@ extern OPlinkedList* OP_CMAN_PURGE;
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                                                                    
 // Specifies how assets will be loaded for each file type
-OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount);
+OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount, OPchar* dir);
 OPint OPcmanPurge();
 
 // checks to see if an asset is loaded, triggers the load or unload.

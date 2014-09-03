@@ -33,6 +33,13 @@ OPfontManager* OPfontManagerSetup(OPchar* font, OPchar** text, ui16 count) {
 	return manager;
 }
 
+void OPfontManagerDestroy(OPfontManager* font) {
+	OPRENDER_CURR_FONT_MANAGER = NULL;
+	OPvectorDestroy(font->currNodes);
+	OPhashMapDestroy(font->builtNodes);
+	OPfree(font);
+}
+
 void OPfontManagerSetColor4(OPfontManager* manager, OPvec4 color) {
 	manager->_color = color;
 }

@@ -48,8 +48,10 @@ void OPstart();
  *	data. 
  */
 void OPend();
+
 //----------------------------------------------------------------------------
 OPtimer* OPgetTime();
+
 #ifdef __cplusplus
 };
 #endif

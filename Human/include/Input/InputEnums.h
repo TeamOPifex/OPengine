@@ -2,6 +2,7 @@
 #define OPENGINE_HUMAN_INPUT_ENUMS
 // THIS CURRENTLY ONLY WORKS IN WINDOWS
 
+#include "./Core/include/Types.h"
 
 typedef enum {
 	OPKEY_LBUTTON = 0,
