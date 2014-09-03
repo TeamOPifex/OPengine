@@ -88,11 +88,11 @@ void ExampleSelectorEnter(OPgameState* last) {
 int ExampleSelectorUpdate(OPtimer* time) {
 	if (OPkeyboardWasPressed(OPKEY_W) || OPkeyboardWasPressed(OPKEY_UP)) {
 		exampleSelector->Selected--;
-		if (exampleSelector->Selected <= 0) exampleSelector->Selected = 0;
+		if (exampleSelector->Selected <= 0) exampleSelector->Selected = ExampleCount - 1;
 	}
 	if (OPkeyboardWasPressed(OPKEY_S) || OPkeyboardWasPressed(OPKEY_DOWN)) {
 		exampleSelector->Selected++;
-		if (exampleSelector->Selected >= ExampleCount) exampleSelector->Selected = ExampleCount - 1;
+		if (exampleSelector->Selected >= ExampleCount) exampleSelector->Selected = 0;
 	}
 	if (exampleSelector->Examples[exampleSelector->Selected].available && (OPkeyboardWasPressed(OPKEY_SPACE) || OPkeyboardWasPressed(OPKEY_ENTER))) {
 		OPgameStateChange(exampleSelector->Examples[exampleSelector->Selected].state);

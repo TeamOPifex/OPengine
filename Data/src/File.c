@@ -266,3 +266,23 @@ OPint OPdeleteFile(const char* path){
 		return 0;
 	}
 }
+
+ui64 OPfileLastChange(const OPchar* path) {
+#ifdef OPIFEX_WINDOWS	
+	ULONGLONG rtn;
+	HANDLE hFile = CreateFile(path, GENERIC_READ,
+		FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	if (hFile != INVALID_HANDLE_VALUE)
+	{
+		FILETIME ftCreate, ftAccess, ftWrite;
+		// Retrieve the file times for the file.
+		if (!GetFileTime(hFile, &ftCreate, &ftAccess, &ftWrite))
+			return 0;
+		CloseHandle(hFile);
+		rtn = (((ULONGLONG)ftWrite.dwHighDateTime) << 32) +
+			ftWrite.dwLowDateTime;
+		return rtn;
+	}
+#endif
+	return 0;
+}
