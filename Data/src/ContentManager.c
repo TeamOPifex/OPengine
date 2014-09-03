@@ -1,6 +1,8 @@
 #include "./Data/include/ContentManager.h"
 #include "./Core/include/Log.h"
 #include "./Core/include/Types.h"
+#include "./Data/include/Vector.h"
+#include "./Core/include/Timer.h"
 
 //  _____ _       _           _     
 // / ____| |     | |         | |    
@@ -12,8 +14,68 @@
 HashMap OP_CMAN_HASHMAP;
 OPassetLoader* OP_CMAN_ASSETLOADERS;
 OPint OP_CMAN_ASSET_LOADER_COUNT;
+OPchar* OP_CMAN_ASSET_FOLDER;
 
 OPlinkedList* OP_CMAN_PURGE;
+
+#ifdef OPIFEX_WINDOWS
+#define BUFSIZE MAX_PATH
+#include <windows.h>
+#include "./Data/include/String.h"
+i64 OP_CMAN_LAST_CHECKED = 1000;
+
+#endif
+
+
+#ifdef OPIFEX_WINDOWS
+long getMonitorFileLastChanged(OPchar* file)
+{
+	ULONGLONG rtn;
+	HANDLE hFile = CreateFile(file, GENERIC_READ,
+		FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	if (hFile != INVALID_HANDLE_VALUE)
+	{
+		FILETIME ftCreate, ftAccess, ftWrite;
+		// Retrieve the file times for the file.
+		if (!GetFileTime(hFile, &ftCreate, &ftAccess, &ftWrite))
+			return 0;
+		CloseHandle(hFile);
+		rtn = (((ULONGLONG)ftWrite.dwHighDateTime) << 32) +
+			ftWrite.dwLowDateTime;
+		return rtn;
+	}
+	return 0;
+}
+#endif
+
+void OPcmanUpdate(OPtimer* timer) {
+#ifdef OPIFEX_WINDOWS
+	i32 i, j;
+	long change;
+	Bucket bucket;
+	OPasset* asset;
+	OP_CMAN_LAST_CHECKED -= timer->Elapsed;
+	if (OP_CMAN_LAST_CHECKED < 0) {
+		// Only check for file changes once per second
+		OP_CMAN_LAST_CHECKED = 1000;
+		for (i = 0; i < OP_CMAN_HASHMAP.count; i++) {
+			bucket = OP_CMAN_HASHMAP.buckets[i];
+			for (j = 0; j < bucket.count; j++) {
+				asset = (OPasset*)bucket.pairs[j].value;
+				if (asset->Reload) { // Only check the file, if there's a reload function
+					change = getMonitorFileLastChanged(asset->AbsolutePath);
+					if (change != asset->LastChange) {
+						OPlog("File Changed! %s", bucket.pairs[j].key);
+						if (asset->Reload(asset->FullPath, &asset->Asset)) {
+							asset->LastChange = change;
+						}
+					}
+				}
+			}
+		}
+	}
+#endif
+}
 
 // ______                _   _                 
 //|  ____|              | | (_)                
@@ -25,11 +87,15 @@ OPlinkedList* OP_CMAN_PURGE;
 // Specifies how assets will be loaded for each file type
 OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount, OPchar* dir){
 
+#ifdef OPIFEX_WINDOWS
+	TCHAR Buffer[BUFSIZE];
+	DWORD dwRet;
+#endif
+
 	OPint result = 0;
-	OPchar* assetFolder;
-	assetFolder = "assets\\";
+	OP_CMAN_ASSET_FOLDER = "assets\\";
 	if (dir) {
-		assetFolder = dir;
+		OP_CMAN_ASSET_FOLDER = dir;
 	}
 
 	OP_CMAN_ASSETLOADERS = loaders;
@@ -37,19 +103,25 @@ OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount, OPchar* dir){
 
 	// Switch to the assets directory
 #if defined(OPIFEX_WINDOWS)
-	result = _chdir(assetFolder);
+	result = _chdir(OP_CMAN_ASSET_FOLDER);
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
-	result = _chdir(assetFolder);
+	result = _chdir(OP_CMAN_ASSET_FOLDER);
 #else
-	result = _chdir(assetFolder);
+	result = _chdir(OP_CMAN_ASSET_FOLDER);
 #endif
 
 	if (result == 0) {
-		OPlog("Directory Changed to: %s", assetFolder);
+		OPlog("Directory Changed to: %s", OP_CMAN_ASSET_FOLDER);
 	}
 	else {
-		OPlog("!Directory Change Failed: %s", assetFolder);
+		OPlog("!Directory Change Failed: %s", OP_CMAN_ASSET_FOLDER);
 	}
+
+
+#ifdef OPIFEX_WINDOWS
+	dwRet = GetCurrentDirectory(BUFSIZE, Buffer);
+	OP_CMAN_ASSET_FOLDER = OPstringCreateMerged(Buffer, "\\");
+#endif
 
 	
 	// create and copy the hashmap
@@ -67,6 +139,8 @@ OPint OPcmanIsLoaded(const OPchar* key){
 }
 
 OPint OPcmanLoad(const OPchar* key){
+
+
 	const OPchar* ext = NULL;
 	OPint success = 0;
 	if(OPhashMapExists(&OP_CMAN_HASHMAP, key)){
@@ -80,6 +154,8 @@ OPint OPcmanLoad(const OPchar* key){
 			return OP_CMAN_KEY_EXISTS;
 		}
 	}
+
+
 
 	ext = strrchr(key, '.');
 	if(ext){
@@ -108,15 +184,23 @@ OPint OPcmanLoad(const OPchar* key){
 				success = loader.Load(fullPath, &asset);
 				if(success <= 0) return OP_CMAN_ASSET_LOAD_FAILED;
 
-				// clean up the string
-				OPfree(fullPath);
+
 
 				// create the asset to insert into the hashmap
-				if(!(assetBucket = (OPasset*)OPalloc(sizeof(OPasset))))
+				if (!(assetBucket = (OPasset*)OPalloc(sizeof(OPasset)))) {
+
+					// clean up the string
+					OPfree(fullPath);
+
 					return OP_CMAN_BUCKET_ALLOC_FAILED;
+				}
 				assetBucket->Asset = asset;
 				assetBucket->Unload = loader.Unload;
+				assetBucket->Reload = loader.Reload;
 				assetBucket->Dirty = 0;
+				assetBucket->FullPath = fullPath;
+				assetBucket->AbsolutePath = OPstringCreateMerged(OP_CMAN_ASSET_FOLDER, fullPath);
+				assetBucket->LastChange = getMonitorFileLastChanged(assetBucket->AbsolutePath);
 				
 				// finally insert into the hashmap
 				if(OPhashMapPut(&OP_CMAN_HASHMAP, key, assetBucket))

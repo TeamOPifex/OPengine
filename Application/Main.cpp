@@ -120,6 +120,8 @@ void Destroy()
 
 
 int UpdateState(OPtimer* timer){
+	OPcmanUpdate();
+
 	OPkeyboardUpdate();
 	OPmouseUpdate();
 	OPgamePadSystemUpdate();

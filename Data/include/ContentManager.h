@@ -33,13 +33,18 @@ typedef struct{
 	const OPchar* AssetTypePath;
 	OPint AssetSize;
 	OPint (*Load)(const OPchar* path, void** assetOut);
-	OPint (*Unload)(void* assetIn);
+	OPint(*Unload)(void* assetIn);
+	OPint(*Reload)(const OPchar* path, void** assetOut);
 } OPassetLoader;
 
 typedef struct{
 	void* Asset;
-	OPint (*Unload)(void* assetIn);
+	OPint(*Unload)(void* assetIn);
+	OPint(*Reload)(const OPchar* path, void** assetOut);
 	OPint Dirty;
+	OPchar* FullPath;
+	OPchar* AbsolutePath;
+	i64 LastChange;
 } OPasset;
 
 //  _____ _       _           _     
@@ -63,6 +68,7 @@ extern OPlinkedList* OP_CMAN_PURGE;
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                                                                    
 // Specifies how assets will be loaded for each file type
+void OPcmanUpdate();
 OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount, OPchar* dir);
 OPint OPcmanPurge();
 

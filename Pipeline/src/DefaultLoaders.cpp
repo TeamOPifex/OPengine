@@ -13,21 +13,24 @@ OPassetLoader OP_DEFAULT_LOADERS[10] = {
 				"Audio/",
 				sizeof(OPaudioSource),
 				(OPint (*)(const OPchar*, void**))OPaudOpenWave,
-				(OPint (*)(void*))OPaudCloseWave
+				(OPint(*)(void*))OPaudCloseWave,
+				NULL
 		},
 		{
 				".ogg",
 				"Audio/",
 				sizeof(OPaudioSource),
 				(OPint (*)(const OPchar*, void**))OPaudOpenOgg,
-				(OPint (*)(void*))OPaudCloseOgg
+				(OPint (*)(void*))OPaudCloseOgg,
+				NULL
 		},
 		{
 				".png",
 				"Textures/",
 				sizeof(OPtexture),
 				(OPint (*)(const OPchar*, void**))OPimagePNGLoad,
-				(OPint (*)(void*))OPimagePNGUnload
+				(OPint (*)(void*))OPimagePNGUnload,
+				(OPint(*)(const OPchar*, void**))OPimagePNGReload
 		},
 		{
 				".vert",
@@ -42,7 +45,8 @@ OPassetLoader OP_DEFAULT_LOADERS[10] = {
 #endif
 				sizeof(OPshader),
 				(OPint (*)(const OPchar*, void**))OPrenderLoadVertexShader,
-				(OPint (*)(void*))OPrenderUnloadShader
+				(OPint(*)(void*))OPrenderUnloadShader,
+				NULL
 		},
 		{
 			".frag",
@@ -57,42 +61,48 @@ OPassetLoader OP_DEFAULT_LOADERS[10] = {
 #endif
 				sizeof(OPshader),
 				(OPint (*)(const OPchar*, void**))OPrenderLoadFragmentShader,
-				(OPint (*)(void*))OPrenderUnloadShader
+				(OPint(*)(void*))OPrenderUnloadShader,
+				NULL
 		},
 		{
 				".opm",
 				"Models/",
 				sizeof(OPmesh),
 				(OPint (*)(const OPchar*, void**))OPMload,
-				(OPint (*)(void*))OPMUnload
+				(OPint(*)(void*))OPMUnload,
+				NULL
 		},
 		{
 				".opf",
 				"Fonts/",
 				sizeof(OPfont),
 				(OPint(*)(const OPchar*, void**))OPfontLoad,
-				(OPint(*)(void*))OPfontUnload
+				(OPint(*)(void*))OPfontUnload,
+				NULL
 		},
 		{
 				".opss",
 				"Sprites/",
 				sizeof(OPspriteSheet),
 				(OPint(*)(const OPchar*, void**))OPspriteSheetLoad,
-				(OPint(*)(void*))OPspriteSheetUnload
+				(OPint(*)(void*))OPspriteSheetUnload,
+				NULL
 		},
 		{
 			".ops",
 			"Scripts/",
 			sizeof(OPscript),
 			(OPint(*)(const OPchar*, void**))OPscriptLoad,
-			(OPint(*)(void*))OPscriptUnload
+			(OPint(*)(void*))OPscriptUnload,
+			NULL
 		},
 		{
 			".js",
 			"Scripts/",
 			sizeof(OPscript),
 			(OPint(*)(const OPchar*, void**))OPscriptLoad,
-			(OPint(*)(void*))OPscriptUnload
+			(OPint(*)(void*))OPscriptUnload,
+			NULL
 		},
 };
 
