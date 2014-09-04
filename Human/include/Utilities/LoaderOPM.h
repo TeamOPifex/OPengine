@@ -44,6 +44,7 @@ OPMData OPMloadData(OPstream* str);
 OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh);
 OPint OPMload(const OPchar* filename, OPmesh** mesh);
 OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh);
+OPint OPMReload(const OPchar* filename, OPmesh** mesh);
 OPint OPMUnload(void* image);
 
 // prevent name mangling if compiling with c++

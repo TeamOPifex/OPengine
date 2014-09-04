@@ -34,6 +34,10 @@ from bpy_extras.io_utils import ExportHelper
 # Exporter Settings
 # ################################################################
 
+class Struct:
+    def __init__(self, **entries): 
+        self.__dict__.update(entries)
+
 SETTINGS_FILE = "opifex_model_settings.js"
 
 import os
@@ -52,8 +56,7 @@ def get_settings_fullpath():
     return os.path.join(bpy.app.tempdir, SETTINGS_FILE)
 
 def save_opifex_settings(properties):
-    settings = {
-    }
+    settings = properties
 
     fname = get_settings_fullpath()
     f = open(fname, "w")
@@ -67,33 +70,33 @@ def restore_opifex_settings(properties):
         f = open(fname, "r")
         settings = json.load(f)
 
-    properties.option_vertices = settings.get("option_vertices", True)
-    properties.option_vertices_truncate = settings.get("option_vertices_truncate", False)
-    properties.option_faces = settings.get("option_faces", True)
-    properties.option_normals = settings.get("option_normals", True)
+    properties.option_vertices = settings.get("vertices", True)
+    properties.option_vertices_truncate = settings.get("vertices_truncate", False)
+    properties.option_faces = settings.get("faces", True)
+    properties.option_normals = settings.get("normals", True)
 
-    properties.option_colors = settings.get("option_colors", True)
-    properties.option_uv_coords = settings.get("option_uv_coords", True)
-    properties.option_materials = settings.get("option_materials", True)
+    properties.option_colors = settings.get("colors", True)
+    properties.option_uv_coords = settings.get("uv_coords", True)
+    properties.option_materials = settings.get("materials", True)
 
-    properties.option_skinning = settings.get("option_skinning", True)
-    properties.option_bones = settings.get("option_bones", True)
+    properties.option_skinning = settings.get("skinning", True)
+    properties.option_bones = settings.get("bones", True)
 
     properties.align_model = settings.get("align_model", "None")
 
-    properties.option_scale = settings.get("option_scale", 1.0)
-    properties.option_flip_yz = settings.get("option_flip_yz", True)
+    properties.option_scale = settings.get("scale", 1.0)
+    properties.option_flip_yz = settings.get("flip_yz", True)
 
-    properties.option_export_scene = settings.get("option_export_scene", False)
-    properties.option_embed_meshes = settings.get("option_embed_meshes", True)
-    properties.option_copy_textures = settings.get("option_copy_textures", False)
+    properties.option_export_scene = settings.get("export_scene", False)
+    properties.option_embed_meshes = settings.get("embed_meshes", True)
+    properties.option_copy_textures = settings.get("copy_textures", False)
 
-    properties.option_animation_morph = settings.get("option_animation_morph", False)
-    properties.option_animation_skeletal = settings.get("option_animation_skeletal", False)
-    properties.option_frame_index_as_time = settings.get("option_frame_index_as_time", False)
+    properties.option_animation_morph = settings.get("animation_morph", False)
+    properties.option_animation_skeletal = settings.get("animation_skeletal", False)
+    properties.option_frame_index_as_time = settings.get("frame_index_as_time", False)
 
-    properties.option_frame_step = settings.get("option_frame_step", 1)
-    properties.option_all_meshes = settings.get("option_all_meshes", True)
+    properties.option_frame_step = settings.get("frame_step", 1)
+    properties.option_all_meshes = settings.get("all_meshes", True)
     
 
 # ################################################################
@@ -155,12 +158,36 @@ class ExportOPM(bpy.types.Operator, ExportHelper):
         if not self.properties.filepath:
             raise Exception("filename not set")
 
-        save_opifex_settings(self.properties)
+
+        optionsDict = {
+            "vertices": self.option_vertices,
+            "vertices_truncate": self.option_vertices_truncate,
+            "faces": self.option_faces,
+            "normals": self.option_normals,
+            "uv_coords": self.option_uv_coords,
+            "materials": self.option_materials,
+            "colors": self.option_colors,
+            "bones": self.option_bones,
+            "skinning": self.option_skinning,
+            "align_model": self.align_model,
+            "flip_yz": self.option_flip_yz,
+            "scale": self.option_scale,
+            "single_model": True,            # export_single_model
+            "copy_textures": self.option_copy_textures,
+            "animation_morph": self.option_animation_morph,
+            "animation_skeletal": self.option_animation_skeletal,
+            "frame_step": self.option_frame_step,
+            "frame_index_as_time": self.option_frame_index_as_time,
+            "all_meshes": self.option_all_meshes,
+            "export_scene": self.option_export_scene
+        }
+        options = Struct(**optionsDict)
+        save_opifex_settings(optionsDict)
 
         filepath = self.filepath
 
         import io_export_opm.export_opm
-        return io_export_opm.export_opm.save(self, context, **self.properties)
+        return io_export_opm.export_opm.save(self, context, options, filepath)
 
     def draw(self, context):
         layout = self.layout

@@ -70,7 +70,7 @@ OPassetLoader OP_DEFAULT_LOADERS[10] = {
 				sizeof(OPmesh),
 				(OPint (*)(const OPchar*, void**))OPMload,
 				(OPint(*)(void*))OPMUnload,
-				NULL
+				(OPint(*)(const OPchar*, void**))OPMReload
 		},
 		{
 				".opf",

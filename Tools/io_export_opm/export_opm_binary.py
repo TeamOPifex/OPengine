@@ -34,6 +34,8 @@ def String(fp, val):
 	fp.write(struct.pack('I%ds' % len(nameBytes), len(nameBytes), nameBytes))
 def Vec2(fp, vec):
 	fp.write(struct.pack('ff', vec[0], vec[1]))
+def Vec2Tex(fp, vec):
+	fp.write(struct.pack('ff', vec[0], vec[1]))
 def Vec3(fp, vec):
 	fp.write(struct.pack('fff', vec[0], vec[1], vec[2]))
 def Vec4(fp, vec):
