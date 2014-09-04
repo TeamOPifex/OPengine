@@ -5,15 +5,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 project(OPifexEngine)
 
-# c_flag_overrides.cmake
-    if(MSVC)
-        set(CMAKE_C_FLAGS_DEBUG "/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1" CACHE STRING "" FORCE)
-        set(CMAKE_C_FLAGS_RELEASE "/MT /O2 /Ob2 /D NDEBUG" CACHE STRING "" FORCE)
-
-        set(CMAKE_CXX_FLAGS_DEBUG "/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1" CACHE STRING "" FORCE)
-        set(CMAKE_CXX_FLAGS_RELEASE "/MT /O2 /Ob2 /D NDEBUG" CACHE STRING "" FORCE)
-    endif()
-	
+SET(OPIFEX_ENGINE_REPOSITORY ${PROJECT_SOURCE_DIR})
 
 ### CMake Setup
 include(CMake/macros.cmake) 
@@ -23,6 +15,7 @@ include(CMake/global.cmake)
 include(CMake/packages.cmake)
 include(CMake/assets.cmake)
 include(CMake/binaries.cmake)
+
 
 
 ### Project Setup

@@ -49,19 +49,15 @@ endmacro(populate_binary_directory)
 macro(output_library APPLICATION_TARGET LIBRARY_NAME )
 
 	if( "${OPIFEX_OS}" STREQUAL "${OPIFEX_ANDROID}" )
+
 	else()
 		populate_binary_directory()
+		SET(COPY_BINARY_RELATIVE_DIRECTORY "/${LIBRARY_NAME}/")
+		SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.a")
 
 		if("${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" OR "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64")
-			if( ${OPIFEX_RELEASE} )
-				SET(COPY_BINARY_RELATIVE_DIRECTORY "/${LIBRARY_NAME}/Release/")
-			else()
-				SET(COPY_BINARY_RELATIVE_DIRECTORY "/${LIBRARY_NAME}/Debug/")
-			endif()
+			SET(COPY_BINARY_RELATIVE_DIRECTORY "/${LIBRARY_NAME}/Debug/")
 			SET(COPY_BINARY_LIBRARY "${LIBRARY_NAME}.lib")
-		else()
-			SET(COPY_BINARY_RELATIVE_DIRECTORY "/${LIBRARY_NAME}/")
-			SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.a")
 		endif()
 
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -78,17 +74,12 @@ macro(output_library_from APPLICATION_TARGET RELATIVE_PATH LIBRARY_NAME )
 
 	else()
 		populate_binary_directory()
+		SET(COPY_BINARY_RELATIVE_DIRECTORY "${RELATIVE_PATH}/")
+		SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.a")
 
 		if("${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" OR "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64")
-			if( ${OPIFEX_RELEASE} )
-				SET(COPY_BINARY_RELATIVE_DIRECTORY "${RELATIVE_PATH}/Release/")
-			else()
-				SET(COPY_BINARY_RELATIVE_DIRECTORY "${RELATIVE_PATH}/Debug/")
-			endif()
+			SET(COPY_BINARY_RELATIVE_DIRECTORY "${RELATIVE_PATH}/Debug/")
 			SET(COPY_BINARY_LIBRARY "${LIBRARY_NAME}.lib")
-		else()
-			SET(COPY_BINARY_RELATIVE_DIRECTORY "${RELATIVE_PATH}/")
-			SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.a")
 		endif()
 
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -123,3 +114,138 @@ macro(copy_to_folder APPLICATION_TARGET RELATIVE_PATH FILE_PATH OUTPUT_PATH OPIF
 	endif()
 
 endmacro(copy_to_folder)
+
+macro(copy_from_binaries_on_build APPLICATION_TARGET FILE_PATH OPIFEX_MATCH )
+
+	
+	if( ${OPIFEX_MATCH} )
+		populate_binary_directory()
+		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+			"${OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${FILE_PATH}"
+			${PROJECT_BINARY_DIR}/Debug)
+			
+	endif()
+
+endmacro(copy_from_binaries_on_build)
+
+macro(add_opifex_includes)
+	include_directories(
+		${OPIFEX_ENGINE_REPOSITORY}
+		${OPIFEX_ENGINE_REPOSITORY}/External/glfw-3.0.4/include/
+		${OPIFEX_ENGINE_REPOSITORY}/External/glew-1.5.8/include/
+		${OPIFEX_ENGINE_REPOSITORY}/External/OpenAL/
+		${OPIFEX_ENGINE_REPOSITORY}/External/Ogg/include/
+		${OPIFEX_ENGINE_REPOSITORY}/External/Vorbis/include/
+		${OPIFEX_ENGINE_REPOSITORY}/External/glm-0.9.1/
+	)
+endmacro(add_opifex_includes)
+
+macro(add_opifex_debug_definitions APPLICATION_DIR_DEPTH )
+
+	add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS -D${OPIFEX_OS})
+
+	if(${OPIFEX_RELEASE})
+		
+	else()
+		add_definitions(-D_DEBUG)
+		if(${OPIFEX_OS_WINDOWS})
+			SET(OPIFEX_REPO "${APPLICATION_DIR_DEPTH}${OPIFEX_REPOSITORY}/Assets/")
+			add_definitions(-DOPIFEX_REPO="${OPIFEX_REPO}")
+		else()
+			SET(OPIFEX_REPO "${OPIFEX_REPOSITORY}/Assets/")
+			add_definitions(-DOPIFEX_REPO="${OPIFEX_REPO}")
+		endif()
+	endif()
+
+	if(${OPIFEX_MYO})
+		add_definitions(-DOPIFEX_MYO)
+	endif()
+	
+	set_target_properties(8_Application PROPERTIES LINKER_LANGUAGE CXX)
+
+endmacro(add_opifex_debug_definitions)
+
+macro(add_opifex_libraries APPLICATION_TARGET )
+	find_binary(LIBLODEPNG "LodePng")
+	find_binary(LIBCORE "Core")
+	find_binary(LIBDATA "Data")
+	find_binary(LIBMATH "Math")
+	find_binary(LIBPERFORMANCE "Performance")
+	find_binary(LIBSCRIPTING "Scripting")
+	find_binary(LIBPIPELINE "Pipeline")
+	find_binary(LIBHUMAN "Human")
+	find_binary(LIBGLEW_158 "GLEW_158")
+	find_binary(LIBGLFW "glfw3")
+
+	target_link_libraries(${APPLICATION_TARGET}
+		${OPENGL_LIBRARY}
+		${LIBCORE}
+		${LIBDATA}
+		${LIBMATH}
+		${LIBPERFORMANCE}
+		${LIBLODEPNG}
+		${LIBHUMAN}
+		${LIBSCRIPTING}
+		${LIBPIPELINE}
+		${LIBGLEW_158}
+		${LIBGLFW}
+		${OPENAL_LIBRARY}
+		${OpenGL}
+	)
+
+	if( ${OPIFEX_OS_WINDOWS} )
+		find_binary(LIBOGG "libogg")
+		find_binary(LIBVORBIS "libvorbis")
+		find_binary(LIBVORBISFILE "libvorbisfile")
+		target_link_libraries(${APPLICATION_TARGET}	
+			Winmm.lib
+			${LIBOGG}
+			${LIBVORBIS}
+			${LIBVORBISFILE}
+		)
+	endif()
+
+	if( ${MSVC_WIN7_FIX} )
+		target_link_libraries(${APPLICATION_TARGET}	Xinput9_1_0.lib)
+	endif()
+
+	if(${OPIFEX_OS_LINUX32} OR ${OPIFEX_OS_LINUX64})
+		find_package( X11 REQUIRED )
+		find_package( Threads )
+
+		target_link_libraries(${APPLICATION_TARGET}
+			${X11_LIBRARIES}
+			${CMAKE_THREAD_LIBS_INIT}
+			${CMAKE_DL_LIBS}
+			${GLFW_LIBRARIES}
+			${OGG_LIBRARY}
+			${VORBIS_LIBRARY}
+			${VORBISFILE_LIBRARY}
+			-logg
+		)
+		SET(CMAKE_EXE_LINKER_FLAGS, "-ldl")
+	endif()
+
+	if(${OPIFEX_OS_OSX32} OR ${OPIFEX_OS_OSX64})
+		
+		target_link_libraries(${APPLICATION_TARGET}
+			${CMAKE_THREAD_LIBS_INIT}
+			${OGG_LIBRARY}
+			${VORBIS_LIBRARY}
+			${VORBISFILE_LIBRARY}
+			${GLFW_LIBRARIES}
+		)
+		
+	endif()
+	
+	
+	copy_from_binaries_on_build(${APPLICATION_TARGET} "ogg.dll" ${OPIFEX_OS_WINDOWS})
+	copy_from_binaries_on_build(${APPLICATION_TARGET} "libogg.dll" ${OPIFEX_OS_WINDOWS})
+	copy_from_binaries_on_build(${APPLICATION_TARGET} "vorbisfile.dll" ${OPIFEX_OS_WINDOWS})
+	copy_from_binaries_on_build(${APPLICATION_TARGET} "libvorbis.dll" ${OPIFEX_OS_WINDOWS})
+	copy_from_binaries_on_build(${APPLICATION_TARGET} "libvorbisfile.dll" ${OPIFEX_OS_WINDOWS})
+	#copy_from_binaries_on_build(${APPLICATION_TARGET} "myo32.dll" ${OPIFEX_OS_WINDOWS})
+	#copy_from_binaries_on_build(${APPLICATION_TARGET} "ble32.dll" ${OPIFEX_OS_WINDOWS})
+
+endmacro(add_opifex_libraries)
+
