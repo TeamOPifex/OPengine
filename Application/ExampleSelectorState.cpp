@@ -118,6 +118,7 @@ int ExampleSelectorUpdate(OPtimer* time) {
 
 void ExampleSelectorExit(OPgameState* next) {
 	OPfontManagerDestroy(exampleSelector->FontManager);
+	OPrenderBindEffect(NULL);
 	OPcmanDelete("Ubuntu.opf");
 	OPfree(exampleSelector->Examples);
 	OPfree(exampleSelector);

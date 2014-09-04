@@ -87,6 +87,7 @@ int ExampleModelUpdate(OPtimer* time) {
 }
 
 void ExampleModelExit(OPgameState* next) {
+	OPrenderUnloadEffect(modelExample->Effect);
 	OPfree(modelExample->Effect);
 	OPfree(modelExample->Camera);
 

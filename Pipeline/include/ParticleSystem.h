@@ -32,7 +32,8 @@ typedef struct {
 } OPparticle; // 60 bytes
 
 typedef struct {
-	OPentHeap* particles;
+	OPentHeap* heap;
+	OPparticle* particles;
 	OPtexture* texture;
 	OPeffect* effect;
 	OPvec2 uvScale;
@@ -49,9 +50,9 @@ inline void OPparticleUpdate(OPparticle* p, OPtimer* timer){
 
 inline void OPparticleSysSpawn(OPparticleSys* sys, OPparticle particle){
 	OPint ind = -1;
-	OPentHeapActivate(sys->particles, &ind);
+	OPentHeapActivate(sys->heap, &ind);
 	if (ind >= 0){
-		OPparticle* p = &((OPparticle*)sys->particles->Entities)[ind];
+		OPparticle* p = &((OPparticle*)sys->heap->Entities)[ind];
 		OPmemcpy(p, &particle, sizeof(OPparticle));
 	}
 }

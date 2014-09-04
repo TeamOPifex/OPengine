@@ -33,7 +33,8 @@ OPparticleSys* OPparticleSysCreate(OPtexture* texture, ui16 count, OPeffect* eff
 	sys->texture = texture;
 	OPuint entHeapSize = OPentHeapBytes(sizeof(OPparticle), count);
 	OPparticle* particles = (OPparticle*)OPalloc(entHeapSize);
-	sys->particles = OPentHeapCreate(particles, sizeof(OPparticle), count);
+	sys->particles = particles;
+	sys->heap = OPentHeapCreate(particles, sizeof(OPparticle), count);
 	sys->uvScale.x = 0.2f;
 	sys->uvScale.y = 0.2f;
 	ASSERT(effect != NULL || EFFECT_PARTICLE_SYSTEM != NULL, "No effect was provided to the Particle System and a default was not initialized.");
@@ -48,14 +49,14 @@ OPparticleSys* OPparticleSysCreate(OPtexture* texture, ui16 count, OPeffect* eff
 }
 
 void OPparticleSysUpdate(OPparticleSys* sys, OPtimer* timer) {
-	OPint max = 0, i = sys->particles->MaxIndex;
+	OPint max = 0, i = sys->heap->MaxIndex;
 	if (i >= 0)
 	for (; i--;){
 		ASSERT(
 			i >= 0,
 			"Attempted to update a particle that was out of bounds"
 			);
-		OPparticle* p = &((OPparticle*)sys->particles->Entities)[i];
+		OPparticle* p = &((OPparticle*)sys->heap->Entities)[i];
 		if (p->Life <= 0) continue;
 
 		OPparticleUpdate(p, timer);
@@ -63,7 +64,7 @@ void OPparticleSysUpdate(OPparticleSys* sys, OPtimer* timer) {
 		// kill the particle and add it back to the heap
 		// if it has lived it's full life
 		if (p->Life <= 0){
-			OPentHeapKill(sys->particles, i);
+			OPentHeapKill(sys->heap, i);
 		}
 	}
 }
@@ -89,8 +90,8 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 	OPrenderParami("uColorTexture", OPtextureBind(sys->texture));
 
 	if (ParticleTransform == NULL) {
-		for (OPint i = sys->particles->MaxIndex; i--;){
-			OPparticle* p = &((OPparticle*)sys->particles->Entities)[i];
+		for (OPint i = sys->heap->MaxIndex; i--;){
+			OPparticle* p = &((OPparticle*)sys->heap->Entities)[i];
 			if (p->Life <= 0) continue;
 			
 			OPmat4identity(&world);
@@ -104,8 +105,8 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 	}
 	else {
 
-		for (OPint i = sys->particles->MaxIndex; i--;){
-			OPparticle* p = &((OPparticle*)sys->particles->Entities)[i];
+		for (OPint i = sys->heap->MaxIndex; i--;){
+			OPparticle* p = &((OPparticle*)sys->heap->Entities)[i];
 			if (p->Life <= 0) continue;
 			ParticleTransform(p, &world);
 			OPrenderParamMat4v("uWorld", 1, &world);
