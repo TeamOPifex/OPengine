@@ -552,6 +552,9 @@ OPMData OPMloadData(OPstream* str) {
 OPint OPMload(const OPchar* filename, OPmesh** mesh) {
 	OPlog("Reading File Data");
 	OPstream* str = OPreadFile(filename);
+	if (str == NULL) {
+		return 0;
+	}
 	OPlog("Reading OPMloadData");
 	OPMData data = OPMloadData(str);
 
@@ -877,6 +880,20 @@ OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh) {
 	OPmemcpy(*mesh, &temp, sizeof(OPmeshPacked));
 
 	return 1;
+}
+
+OPint OPMReload(const OPchar* filename, OPmesh** mesh){
+	OPlog("Reload Mesh OPM");
+	OPmesh* resultMesh;
+	OPmesh* tex = (OPmesh*)(*mesh);
+	OPint result = OPMload(filename, &resultMesh);
+	if (result) {
+		OPrenderDelBuffer(&tex->IndexBuffer);
+		OPrenderDelBuffer(&tex->VertexBuffer);
+		OPmemcpy(*mesh, resultMesh, sizeof(OPmesh));
+		OPfree(resultMesh);
+	}
+	return result;
 }
 
 OPint OPMUnload(void* mesh){

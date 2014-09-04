@@ -7,6 +7,14 @@
 
 import bpy
 import operator
+import mathutils
+import shutil
+import os
+import os.path
+import math
+import random
+import threading
+import time
 
 import io_export_opm.export_opm_utilities       as OPMutil
 import io_export_opm.export_opm_animation       as OPManim
@@ -94,6 +102,8 @@ def _generate_face(f, faceIndex, normals, uv_layers, colors, mesh, option_normal
 
 
 
+def _generate_uv(uv):
+    return [uv[0], uv[1]]
 
 
 #################################################################
@@ -122,15 +132,14 @@ def GenerateVertexColors(colors, option_colors):
 
 def GenerateUVs(uv_layers, option_uv_coords):
     if not option_uv_coords:
-        return "[]"
+        return []
 
     layers = []
     for uvs in uv_layers:
         chunks = []
         for key, index in sorted(uvs.items(), key=operator.itemgetter(1)):
-            chunks.append(key)
-        layer = ",".join(generate_uv(n) for n in chunks)
-        layers.append(layer)
+            chunks.append(_generate_uv(key))
+        layers.append(chunks)
 
     return layers
 
@@ -319,7 +328,7 @@ def VertexColors(mesh, colors, count):
         face_colors = face_colors.color1, face_colors.color2, face_colors.color3, face_colors.color4
 
         for c in face_colors:
-            key = hexcolor(c)
+            key = OPMutil.HexColor(c)
             if key not in colors:
                 colors[key] = count
                 count += 1
@@ -353,3 +362,69 @@ def UVs(mesh, uv_layers, counts):
         counts[index] = count
 
     return counts
+
+def ExtractMaterials(mesh, scene, options):
+    world = scene.world
+
+    materials = {}
+    result = []
+    for m in mesh.materials:
+        if m:
+            materials[m.name] = {}
+            material = materials[m.name]
+
+            material['name'] = m.name
+
+            material['colorDiffuse'] = [m.diffuse_intensity * m.diffuse_color[0],
+                                        m.diffuse_intensity * m.diffuse_color[1],
+                                        m.diffuse_intensity * m.diffuse_color[2]]
+
+            material['colorSpecular'] = [m.specular_intensity * m.specular_color[0],
+                                         m.specular_intensity * m.specular_color[1],
+                                         m.specular_intensity * m.specular_color[2]]
+
+            material['colorAmbient'] = [m.ambient * material['colorDiffuse'][0],
+                                        m.ambient * material['colorDiffuse'][1],
+                                        m.ambient * material['colorDiffuse'][2]]
+
+            material['colorEmissive'] = [m.emit * material['colorDiffuse'][0],
+                                         m.emit * material['colorDiffuse'][1],
+                                         m.emit * material['colorDiffuse'][2]]
+
+            material['transparency'] = m.alpha
+
+            # not sure about mapping values to Blinn-Phong shader
+            # Blender uses INT from [1, 511] with default 0
+            # http://www.blender.org/documentation/blender_python_api_2_54_0/bpy.types.Material.html#bpy.types.Material.specular_hardness
+
+            material["specularCoef"] = m.specular_hardness
+
+            #textures = guess_material_textures(m)
+
+            #handle_texture('diffuse', textures, material, filepath, option_copy_textures)
+            #handle_texture('light', textures, material, filepath, option_copy_textures)
+            #handle_texture('normal', textures, material, filepath, option_copy_textures)
+            #handle_texture('specular', textures, material, filepath, option_copy_textures)
+            #handle_texture('bump', textures, material, filepath, option_copy_textures)
+
+            #material["vertexColors"] = m.THREE_useVertexColors and option_colors
+
+            # can't really use this reliably to tell apart Phong from Lambert
+            # as Blender defaults to non-zero specular color
+            #if m.specular_intensity > 0.0 and (m.specular_color[0] > 0 or m.specular_color[1] > 0 or m.specular_color[2] > 0):
+            #    material['shading'] = "Phong"
+            #else:
+            #    material['shading'] = "Lambert"
+
+            #if textures['normal']:
+            #    material['shading'] = "Phong"
+            #else:
+            #    material['shading'] = m.THREE_materialType
+
+            #material['blending'] = m.THREE_blendingType
+            #material['depthWrite'] = m.THREE_depthWrite
+            #material['depthTest'] = m.THREE_depthTest
+            material['transparent'] = m.use_transparency
+            result.append(material)
+
+    return result

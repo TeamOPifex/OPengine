@@ -228,7 +228,8 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 			return str;
 		}
 		else {
-			ASSERTC(0, "Failed to read file");
+			OPlog("Failed to read file");
+			return NULL;
 		}
 	}
 	else {

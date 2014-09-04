@@ -58,7 +58,7 @@ def GetColorIndices(face_index, colors, mesh):
     face_colors = color_layer[face_index]
     face_colors = face_colors.color1, face_colors.color2, face_colors.color3, face_colors.color4
     for i in face_colors:
-        c.append( colors[hexcolor(i)] )
+        c.append( colors[HexColor(i)] )
     return c
 
 def GetFaces(obj):
@@ -79,9 +79,13 @@ def GetNormalIndices(v, normals, mesh):
 def GetUVIndices(face_index, uvs, mesh, layer_index):
     uv = []
     uv_layer = mesh.tessface_uv_textures[layer_index].data
+    #uv_layer = mesh.tessface_uv_textures.active.data
     for i in uv_layer[face_index].uv:
         uv.append( uvs[Veckey2d(i)] )
     return uv
+
+def HexColor(c):
+    return ( int(c[0] * 255) << 16  ) + ( int(c[1] * 255) << 8 ) + int(c[2] * 255)
 
 def Print(obj):    
     logging.debug(obj)

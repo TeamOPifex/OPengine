@@ -58,6 +58,8 @@ def _generate_model(meshes, morphs, scene, options):
     nuvs = []
     uv_layers = []
 
+    materials = []
+
     for mesh, object in meshes:
 
         vertexUV = len(mesh.uv_textures) > 0
@@ -91,6 +93,11 @@ def _generate_model(meshes, morphs, scene, options):
         if mesh_extract_uvs:
             nuvs = OPMhelpers.UVs(mesh, uv_layers, nuvs)
 
+        if options.materials:
+            materials = OPMhelpers.ExtractMaterials( mesh, scene, options)
+            for m in range(len(materials)):
+                OPMutil.Print(materials[m])
+
     if options.align_model == 1:
         OPMalign.Center(vertices)
     elif options.align_model == 2:
@@ -113,6 +120,7 @@ def _generate_model(meshes, morphs, scene, options):
         "bones"     : bones,
         "indices"   : indices,
         "weights"   : weights,
+        "materials" : materials
         #"animations" : generate_all_animations(option_animation_skeletal, option_frame_step, flipyz, option_frame_index_as_time)
         }
 
