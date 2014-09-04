@@ -10,7 +10,10 @@ const OPchar* FontShaderFrag = "Common/Font.frag";
 
 void OPsystemsLoadFontEffect() {
 
-	if (OPRENDER_CURR_FONT_EFFECT != NULL) return;
+	if (OPRENDER_CURR_FONT_EFFECT != NULL) { 
+		OPrenderBindEffect(OPRENDER_CURR_FONT_EFFECT);
+		return; 
+	}
 
 	OPint error;
 

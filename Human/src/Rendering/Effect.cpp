@@ -230,6 +230,9 @@ OPint OPrenderLoadEffect  (const OPchar* filename, OPeffect** effect){
 //-----------------------------------------------------------------------------
 // effect destruction
 OPint OPrenderUnloadEffect(OPeffect* effect){
+	if (OPRENDER_CURR_EFFECT == effect) {
+		OPrenderBindEffect(NULL);
+	}
 	OPhashMapDestroy(effect->Parameters);
 	OPlistDestroy(effect->Attributes);
 	glDeleteProgram(effect->ProgramHandle);
@@ -253,6 +256,8 @@ OPint OPrenderBindEffect(OPeffect* effect){
 	}
 
 	OPRENDER_CURR_EFFECT = effect;
+
+	if (OPRENDER_CURR_EFFECT == NULL) return 1;
 
 	glUseProgram(OPRENDER_CURR_EFFECT->ProgramHandle);
 	if (OPglError("OPrenderBindEffect:Failed to use Program")) {

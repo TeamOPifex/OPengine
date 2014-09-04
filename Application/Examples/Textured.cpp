@@ -96,6 +96,7 @@ int ExampleTexturedUpdate(OPtimer* time) {
 }
 
 void ExampleTexturedExit(OPgameState* next) {
+	OPrenderUnloadEffect(texturedExample->Effect);
 	OPfree(texturedExample->Effect);
 	OPfree(texturedExample->Camera);
 
