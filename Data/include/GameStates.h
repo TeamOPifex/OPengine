@@ -11,9 +11,10 @@ struct OPgameState_def;
 typedef struct OPgameState_def OPgameState;
 
 struct OPgameState_def{
-	void (*OnEntrance)(OPgameState*);
+	void (*Init)(OPgameState*);
 	int(*Update)(OPtimer*);
-	void (*OnExit)(OPgameState*);
+	void (*Destroy)(OPgameState*);
+	void* Data;
 };
 
 extern OPgameState* ActiveState;
