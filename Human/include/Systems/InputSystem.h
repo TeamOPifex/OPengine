@@ -1,3 +1,6 @@
+#ifndef OPENGINE_HUMAN_SYSTEM_INPUT
+#define OPENGINE_HUMAN_SYSTEM_INPUT
+
 #include "./Human/include/Input/Input.h"
 #include "./Human/include/Input/GamePadSystem.h"
 #include "./Human/include/Input/Myo.h"
@@ -10,3 +13,5 @@ inline void OPinputSystemUpdate() {
 	OPmouseUpdate();
 	OPgamePadSystemUpdate();
 }
+
+#endif

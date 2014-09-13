@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef OPEngine_Data_HashMap
 #define OPEngine_Data_HashMap
 
