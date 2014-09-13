@@ -1,11 +1,9 @@
 // TODO: Have option to use a FILE* to read from disk rather than memory
-
-#pragma once
-#include "./Core/include/Types.h"
-#include "./Core/include/DynamicMemory.h"
-
 #ifndef OPEngine_Data_list
 #define OPEngine_Data_list
+
+#include "./Core/include/Types.h"
+#include "./Core/include/DynamicMemory.h"
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

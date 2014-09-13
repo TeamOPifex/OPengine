@@ -1,9 +1,4 @@
 #include "./ExampleSelectorState.h"
-#include "./Human/include/Systems/RenderSystem.h"
-
-#include "./Data/include/ContentManager.h"
-#include "./Human/include/Input/Input.h"
-#include "./Human/include/Systems/FontSystem.h"
 
 #include "./Application/Examples/Audio.h"
 #include "./Application/Examples/Model.h"
@@ -37,7 +32,7 @@ ExampleSelector* exampleSelector;
 #define ExampleCount 8
 
 void ExampleSelectorEnter(OPgameState* last) {
-	exampleSelector = (ExampleSelector*)OPalloc(sizeof(ExampleSelector));
+	exampleSelector = (ExampleSelector*)OPallocZero(sizeof(ExampleSelector));
 	exampleSelector->Selected = 0;
 
 	OPcmanLoad("Ubuntu.opf");

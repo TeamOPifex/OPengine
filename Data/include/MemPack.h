@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef OPEngine_Data_MemPack
 #define OPEngine_Data_MemPack
 

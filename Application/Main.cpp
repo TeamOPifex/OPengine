@@ -1,5 +1,4 @@
 #include "ExampleSelectorState.h"
-#include "./Pipeline/Engine.h"
 
 //////////////////////////////////////
 // Application Methods

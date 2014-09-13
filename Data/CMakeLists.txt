@@ -42,7 +42,18 @@ add_definitions(-D${OPIFEX_OS})
 
 if(${OPIFEX_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
+else()
+	add_definitions(-D_DEBUG)
+	if(${OPIFEX_OS_WINDOWS})
+		SET(OPIFEX_REPO "../${OPIFEX_REPOSITORY}/Assets/")
+		add_definitions(-DOPIFEX_REPO="${OPIFEX_REPO}")
+	ELSE()
+		SET(OPIFEX_REPO "${OPIFEX_REPOSITORY}/Assets/")
+		add_definitions(-DOPIFEX_REPO="${OPIFEX_REPO}")
+	ENDIF()
+	
 endif()
+
 target_link_libraries(2_Data ${ALL_LIBS})
 
 set_target_properties(2_Data PROPERTIES LINKER_LANGUAGE CXX)

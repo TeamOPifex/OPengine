@@ -1,4 +1,3 @@
-#pragma once
 #ifndef OPEngine_Data_GameStates
 #define OPEngine_Data_GameStates
 #include "./Core/include/Timer.h"

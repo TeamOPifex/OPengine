@@ -1,9 +1,8 @@
-#pragma once
-#include "./Core/include/Types.h"
-#include "./Core/include/DynamicMemory.h"
-
 #ifndef OPEngine_Data_MinHeap
 #define OPEngine_Data_MinHeap
+
+#include "./Core/include/Types.h"
+#include "./Core/include/DynamicMemory.h"
 
 #if defined(OPIFEX_ANDROID) && defined(__cplusplus)
 
