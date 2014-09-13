@@ -325,11 +325,12 @@ void OPrenderUseTexture(const OPchar* param, ui32 texture, ui32 slot){
 
 //-----------------------------------------------------------------------------
 // effect creation
-OPeffect OPrenderBuildEffect(
+OPeffect OPrenderGenEffect(
 	OPchar* vert,
 	OPchar* frag,
 	ui32 attrs,
-	const OPchar* Name) {
+	const OPchar* Name,
+	ui32 stride) {
 
 	OPlog("Building Effect");
 
@@ -364,13 +365,14 @@ OPeffect OPrenderBuildEffect(
 
 	OPlog("Finding Effect Stride");
 
-	ui32 stride = 0;
-	for (OPint i = 0; i < AttribCount; i++){
-		// TODO add more
-		switch (Attributes[i].Type){
-		case GL_FLOAT:
-			stride += (4 * Attributes[i].Elements);
-			break;
+	if (stride == 0){
+		for (OPint i = 0; i < AttribCount; i++){
+			// TODO add more
+			switch (Attributes[i].Type){
+			case GL_FLOAT:
+				stride += (4 * Attributes[i].Elements);
+				break;
+			}
 		}
 	}
 

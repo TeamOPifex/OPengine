@@ -133,7 +133,7 @@ void OPrenderTextSetParameters(OPvec4 color, OPmat4* world) {
 	OPtextureClearActive();
 	ui32 textureHandle = OPtextureBind(OPRENDER_CURR_FONT_MANAGER->_font->texture);
 	OPrenderParami("uColorTexture", textureHandle);
-	OPrenderParamVec4("uColor", 1, &color);
+	OPrenderParamVec4("uColor", &color);
 	OPrenderParamMat4v("uWorld", 1, world);
 }
 

@@ -201,11 +201,11 @@ int State0Update(OPtimer* time){
 	OPtextureClearActive();
 	ui32 textureHandle = OPtextureBind(bg->Sheet);
 	OPtexturePixelate();
-	OPrenderParamMat4v("uWorld", 1, &world);
+	OPrenderParamMat4("uWorld", &world);
 	OPrenderParami("uColorTexture", textureHandle);
 	//OPlog("X: %f, Y: %f", bg->Frames[0].Offset.x, bg->Frames[0].Offset.y);
-	OPrenderParamVec2("uOffset", 1, &bg->Frames[0].Offset);
-	OPrenderParamVec2("uSize", 1, &bg->Frames[0].Size);
+	OPrenderParamVec2("uOffset", &bg->Frames[0].Offset);
+	OPrenderParamVec2("uSize", &bg->Frames[0].Size);
 	OPrenderMesh();
 
 	// Required

@@ -10,11 +10,12 @@ void LoadDefaultTexture2DEffect() {
 	if (DEFAULT_TEXTURE2D_EFFECT != NULL) return;
 
 	DEFAULT_TEXTURE2D_EFFECT = (OPeffect*)OPalloc(sizeof(OPeffect));
-	*DEFAULT_TEXTURE2D_EFFECT = OPrenderBuildEffect(
+	*DEFAULT_TEXTURE2D_EFFECT = OPrenderGenEffect(
 		"Common/Texture2D.vert",
 		"Common/Texture.frag",
 		OPATTR_POSITION | OPATTR_UV,
-		"Texture2D Effect"
+		"Texture2D Effect",
+		NULL
 		);
 }
 

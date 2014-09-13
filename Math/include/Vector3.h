@@ -68,6 +68,7 @@ struct OPvec3 {
 
 extern const OPvec3 OPvec3Zero;
 extern const OPvec3 OPvec3One;
+extern const OPvec3 OPvec3Up;
 
 inline OPvec3 OPvec3Create(OPfloat x, OPfloat y, OPfloat z) {
 	OPvec3 tmp = { x, y, z };

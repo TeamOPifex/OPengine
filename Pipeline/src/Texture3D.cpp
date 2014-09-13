@@ -10,11 +10,12 @@ void LoadDefaultTexture3DEffect() {
 	if (DEFAULT_TEXTURE3D_EFFECT != NULL) return;
 
 	DEFAULT_TEXTURE3D_EFFECT = (OPeffect*)OPalloc(sizeof(OPeffect));
-	*DEFAULT_TEXTURE3D_EFFECT = OPrenderBuildEffect(
+	*DEFAULT_TEXTURE3D_EFFECT = OPrenderGenEffect(
 		"Common/Texture3D.vert",
 		"Common/Texture.frag",
 		OPATTR_POSITION | OPATTR_UV,
-		"Texture3D Effect"
+		"Texture3D Effect",
+		NULL
 		);
 }
 

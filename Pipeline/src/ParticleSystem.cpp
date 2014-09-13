@@ -13,11 +13,12 @@ void OPparticleSysInit(OPeffect* effect) {
 
 	if (effect == NULL) {
 		EFFECT_PARTICLE_SYSTEM = (OPeffect*)OPalloc(sizeof(OPeffect));
-		*EFFECT_PARTICLE_SYSTEM = OPrenderBuildEffect(
+		*EFFECT_PARTICLE_SYSTEM = OPrenderGenEffect(
 			"Common/OPparticleSystem.vert",
 			"Common/OPparticleSystem.frag",
 			OPATTR_POSITION | OPATTR_UV,
-			"Particle System effect"
+			"Particle System effect",
+			NULL
 			);
 
 		PARTICLE_SYSTEM_INITIALIZED = 2;
@@ -80,11 +81,11 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 	OPrenderBindMesh(&PARTICLE_SYSTEM_QUAD_MESH);
 	OPrenderBindEffect(EFFECT_PARTICLE_SYSTEM);
 
-	OPrenderParamMat4v("uView", 1, &cam->_view);
-	OPrenderParamMat4v("uProj", 1, &cam->_proj);
-	OPrenderParamVec2("uTexCoordScale", 1, &sys->uvScale);
-	OPrenderParamVec2("uSpriteOffset", 1, (OPvec2*)&OPvec2Zero);
-	OPrenderParamVec4("uTint", 1, (OPvec4*)&OPvec4One);
+	OPrenderParamMat4v("uView", 1, &cam->View);
+	OPrenderParamMat4v("uProj", 1, &cam->Proj);
+	OPrenderParamVec2("uTexCoordScale", &sys->uvScale);
+	OPrenderParamVec2("uSpriteOffset", (OPvec2*)&OPvec2Zero);
+	OPrenderParamVec4("uTint", (OPvec4*)&OPvec4One);
 
 	OPtextureClearActive();
 	OPrenderParami("uColorTexture", OPtextureBind(sys->texture));

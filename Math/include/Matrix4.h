@@ -191,6 +191,12 @@ inline void OPmat4buildRotX(OPmat4* m, OPfloat t) {
 	m->cols[2].z = t1;
 }
 
+inline OPmat4 OPmat4createRotX(OPfloat t) {
+	OPmat4 temp;
+	OPmat4buildRotX(&temp, t);
+	return temp;
+}
+
 inline void OPmat4buildRotY(OPmat4* m, OPfloat t){
 	OPfloat t1 = OPcos(t);
 	OPfloat t2 = OPsin(t);
@@ -199,6 +205,12 @@ inline void OPmat4buildRotY(OPmat4* m, OPfloat t){
 	m->cols[0].z = -t2;
 	m->cols[2].x = t2;
 	m->cols[2].z = t1;
+}
+
+inline OPmat4 OPmat4createRotY(OPfloat t) {
+	OPmat4 temp;
+	OPmat4buildRotY(&temp, t);
+	return temp;
 }
 
 inline void OPmat4buildRotZ(OPmat4* m, OPfloat t) {
@@ -211,11 +223,23 @@ inline void OPmat4buildRotZ(OPmat4* m, OPfloat t) {
 	m->cols[1].y = t1;
 }
 
+inline OPmat4 OPmat4createRotZ(OPfloat t) {
+	OPmat4 temp;
+	OPmat4buildRotZ(&temp, t);
+	return temp;
+}
+
 inline void OPmat4buildTranslate(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
 	OPmat4identity(m);
 	m->cols[3].x = x;
 	m->cols[3].y = y;
 	m->cols[3].z = z;
+}
+
+inline OPmat4 OPmat4createTranslate(OPfloat x, OPfloat y, OPfloat z) {
+	OPmat4 temp;
+	OPmat4buildTranslate(&temp, x, y, z);
+	return temp;
 }
 
 inline void OPmat4buildScl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
@@ -224,6 +248,13 @@ inline void OPmat4buildScl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
 	m->cols[1].y = y;
 	m->cols[2].z = z;
 }
+
+inline OPmat4 OPmat4createScl(OPfloat x, OPfloat y, OPfloat z) {
+	OPmat4 temp;
+	OPmat4buildScl(&temp, x, y, z);
+	return temp;
+}
+
 
 
 inline void OPmat4rotX(OPmat4* m, OPfloat x) {
