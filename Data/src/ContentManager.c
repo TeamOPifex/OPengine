@@ -76,6 +76,12 @@ OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount, OPchar* dir){
 		OP_CMAN_ASSET_FOLDER = dir;
 	}
 
+#ifdef OPIFEX_REPO
+	OP_CMAN_ASSET_FOLDER = OPIFEX_REPO;
+#endif
+
+
+
 	OP_CMAN_ASSETLOADERS = loaders;
 	OP_CMAN_ASSET_LOADER_COUNT = loaderCount;
 
