@@ -204,11 +204,11 @@ int ExamplePhysicsUpdate(OPtimer* time) {
 	OPcamGetView((*physicsExample->Camera), &view);
 	OPcamGetProj((*physicsExample->Camera), &proj);
 
-	OPrenderParamMat4v("uProj", 1, &proj);
-	OPrenderParamMat4v("uView", 1, &view);
+	OPrenderParamMat4("uProj", &proj);
+	OPrenderParamMat4("uView", &view);
 
 	OPvec3 light = OPvec3Create(0, 1, 0);
-	OPrenderParamVec3("uLightDirection", 1, &light);
+	OPrenderParamVec3("uLightDirection", &light);
 	OPrenderParami("uColorTexture", tex);
 	OPmat4 scale;
 	OPmat4 scratch;
@@ -216,7 +216,7 @@ int ExamplePhysicsUpdate(OPtimer* time) {
 		OPmat4buildScl(&scale, physicsExample->boxes[i].size * 2, physicsExample->boxes[i].size * 2, physicsExample->boxes[i].size * 2);
 		OPphysicsGetTransform((OPphysicsActor*)physicsExample->boxes[i].physics, &scratch);
 		OPmat4mul(&world, &scale, &scratch);
-		OPrenderParamMat4v("uWorld", 1, &world);
+		OPrenderParamMat4("uWorld", &world);
 		OPrenderMesh();
 	}
 	OPrenderParami("uColorTexture", tex4);
@@ -224,21 +224,21 @@ int ExamplePhysicsUpdate(OPtimer* time) {
 		OPmat4buildScl(&scale, physicsExample->boxesStatic[i].size * 2, physicsExample->boxesStatic[i].size * 2, physicsExample->boxesStatic[i].size * 2);
 		OPphysicsGetTransform((OPphysicsActor*)physicsExample->boxesStatic[i].physics, &scratch);
 		OPmat4mul(&world, &scale, &scratch);
-		OPrenderParamMat4v("uWorld", 1, &world);
+		OPrenderParamMat4("uWorld", &world);
 		OPrenderMesh();
 	}
 
 	OPrenderBindMesh(physicsExample->MeshSphere);
 	OPrenderBindEffect(physicsExample->SphereEffect);
-	OPrenderParamMat4v("uProj", 1, &proj);
-	OPrenderParamMat4v("uView", 1, &view);
-	OPrenderParamVec3("uLightDirection", 1, &light);
+	OPrenderParamMat4("uProj", &proj);
+	OPrenderParamMat4("uView", &view);
+	OPrenderParamVec3("uLightDirection", &light);
 
 	OPrenderParami("uColorTexture", tex2);
 	OPmat4buildScl(&scale, physicsExample->spheres[0].size * 2, physicsExample->spheres[0].size * 2, physicsExample->spheres[0].size * 2);
 	OPphysicsGetTransform((OPphysicsActor*)physicsExample->spheres[0].physics, &scratch);
 	OPmat4mul(&world, &scale, &scratch);
-	OPrenderParamMat4v("uWorld", 1, &world);
+	OPrenderParamMat4("uWorld", &world);
 	OPrenderMesh();
 
 	OPrenderParami("uColorTexture", tex3);

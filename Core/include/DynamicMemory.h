@@ -42,11 +42,18 @@
 extern "C" {
 #endif
 /**
- * OPalloc - Platform independent means to dynamically allocate memory.
- * @param bytes Number of consecutive bytes to be allocated.
- * @return Address of allocated memory.
- */
+* OPalloc - Platform independent means to dynamically allocate memory.
+* @param bytes Number of consecutive bytes to be allocated.
+* @return Address of allocated memory.
+*/
 void* OPalloc(OPuint bytes);
+
+/**
+* OPallocZero - Platform independent means to dynamically allocate memory and zero it out.
+* @param bytes Number of consecutive bytes to be allocated.
+* @return Address of allocated memory.
+*/
+void* OPallocZero(OPuint bytes);
 //-----------------------------------------------------------------------------
 /**
  * OPrealloc - Platform independent means to dynamically reallocate memory.

@@ -12,11 +12,12 @@ void OPsprite2DInit(OPeffect* effect) {
 
 	if (effect == NULL) {
 		EFFECT_SPRITE_2D_PIPELINE = (OPeffect*)OPalloc(sizeof(OPeffect));
-		*EFFECT_SPRITE_2D_PIPELINE = OPrenderBuildEffect(
+		*EFFECT_SPRITE_2D_PIPELINE = OPrenderGenEffect(
 			"Common/OPspriteSheet.vert",
 			"Common/OPspriteSheet.frag",
 			OPATTR_POSITION | OPATTR_UV,
-			"Sprite sheet effect"
+			"Sprite sheet effect",
+			NULL
 			);
 
 		SPRITE_2D_PIPELINE_INITIALIZED = 2;
@@ -92,9 +93,9 @@ void OPsprite2DRender(OPsprite2D* sprite) {
 	OPtextureClearActive();
 	OPtextureSmooth();
 	OPrenderParami("uColorTexture", OPtextureBind(sprite->CurrentSprite->Sheet));
-	OPrenderParamMat4v("uWorld", 1, &world);
-	OPrenderParamVec2("uOffset", 1, &sprite->CurrentSprite->Frames[sprite->CurrentSprite->Frame].Offset);
-	OPrenderParamVec2("uSize", 1, &sprite->CurrentSprite->Frames[sprite->CurrentSprite->Frame].Size);
+	OPrenderParamMat4("uWorld", &world);
+	OPrenderParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentSprite->Frame].Offset);
+	OPrenderParamVec2("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentSprite->Frame].Size);
 	OPrenderMesh();
 }
 

@@ -11,11 +11,12 @@ void OPsprite3DInit(OPeffect* effect) {
 
 	if (effect == NULL) {
 		EFFECT_SPRITE_3D = (OPeffect*)OPalloc(sizeof(OPeffect));
-		*EFFECT_SPRITE_3D = OPrenderBuildEffect(
+		*EFFECT_SPRITE_3D = OPrenderGenEffect(
 			"Common/OPspriteSheet3D.vert",
 			"Common/OPspriteSheet.frag",
 			OPATTR_POSITION | OPATTR_UV,
-			"3D Sprite sheet effect"
+			"3D Sprite sheet effect",
+			NULL
 			);
 
 		SPRITE_3D_INITIALIZED = 2;
@@ -110,11 +111,11 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	//OPlog("SpriteSheet %d @ %x", bind, sprite->CurrentSprite->Sheet);
 	OPrenderParami("uColorTexture", bind);
 	//OPrenderParamf("uAlpha", 1.0f);
-	OPrenderParamMat4v("uWorld", 1, &world);
-	OPrenderParamMat4v("uView", 1, &view);
-	OPrenderParamMat4v("uProj", 1, &proj);
-	OPrenderParamVec2("uOffset", 1, &sprite->CurrentSprite->Frames[sprite->CurrentSprite->Frame].Offset);
-	OPrenderParamVec2("uSize", 1, &sprite->CurrentSprite->Frames[sprite->CurrentSprite->Frame].Size);
+	OPrenderParamMat4("uWorld", &world);
+	OPrenderParamMat4("uView", &view);
+	OPrenderParamMat4("uProj", &proj);
+	OPrenderParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentSprite->Frame].Offset);
+	OPrenderParamVec2("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentSprite->Frame].Size);
 }
 
 void OPsprite3DRender(OPsprite3D* sprite, OPcam* camera) {

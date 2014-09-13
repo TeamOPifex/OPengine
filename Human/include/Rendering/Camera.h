@@ -27,8 +27,8 @@ struct OPcam{
 	OPfloat _aspect;
 	OPfloat _near;
 	OPfloat _far;
-	OPmat4 _proj;
-	OPmat4 _view;
+	OPmat4 Proj;
+	OPmat4 View;
 	OPint _projStale;
 	OPint _viewStale;
 	OPcam operator=(OPcam cam) {
@@ -55,32 +55,44 @@ struct OPcam{
 
 #define OPcamSetFOV(cam, fov) cam->_fov = fov;cam->_projStale=1;
 #define OPcamGetFOV(cam) cam->_fov
+
+//-----------------------------------------------------------------------------
+#define OPcamUpdateProj(cam){\
+	if (cam._projStale){\
+		OPmat4perspective(\
+			&cam.Proj, \
+			cam._fov, \
+			cam._aspect, \
+			cam._near, \
+			cam._far\
+			); \
+		cam._projStale = false; \
+	}\
+}\
+
+//-----------------------------------------------------------------------------
+#define OPcamUpdateView(cam){\
+	if (cam._viewStale){\
+		OPmat4look(\
+		&cam.View, \
+		&cam._pos, \
+		&cam._targ, \
+		&cam._up\
+		); \
+		cam._viewStale = false; \
+	}\
+}\
+
 //-----------------------------------------------------------------------------
 #define OPcamGetProj(cam, proj){\
-	if(cam._projStale){\
-		OPmat4perspective(\
-			&cam._proj,\
-			cam._fov,\
-			cam._aspect,\
-			cam._near,\
-			cam._far\
-		);\
-		cam._projStale = false;\
-	}\
-	(*proj) = cam._proj;\
+	OPcamUpdateProj(cam);\
+	(*proj) = cam.Proj;\
 }\
+
 //-----------------------------------------------------------------------------
 #define OPcamGetView(cam, view){\
-	if(cam._viewStale){\
-		OPmat4look(\
-			&cam._view,\
-			&cam._pos,\
-			&cam._targ,\
-			&cam._up\
-		);\
-		cam._viewStale = false;\
-	}\
-	(*view) = cam._view;\
+	OPcamUpdateView(cam);\
+	(*view) = cam.View;\
 }\
 
 //-----------------------------------------------------------------------------

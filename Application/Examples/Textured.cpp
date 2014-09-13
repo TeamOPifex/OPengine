@@ -82,12 +82,12 @@ int ExampleTexturedUpdate(OPtimer* time) {
 	ui32 tex = OPtextureBind(texturedExample->Texture);
 	OPrenderParami("uColorTexture", tex);
 
-	OPrenderParamMat4v("uWorld", 1, &world);
-	OPrenderParamMat4v("uProj", 1, &proj);
-	OPrenderParamMat4v("uView", 1, &view);
+	OPrenderParamMat4("uWorld", &world);
+	OPrenderParamMat4("uProj", &proj);
+	OPrenderParamMat4("uView", &view);
 
 	OPvec3 light = OPvec3Create(0, 1, 0);
-	OPrenderParamVec3("vLightDirection", 1, &light);
+	OPrenderParamVec3("vLightDirection", &light);
 
 	OPrenderMesh();
 

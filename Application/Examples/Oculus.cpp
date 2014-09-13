@@ -89,7 +89,7 @@ int ExampleOculusUpdate(OPtimer* time) {
 	OPrenderParamMat4v("uView", 1, &view);
 
 	OPvec3 light = OPvec3Create(0, 1, 0);
-	OPrenderParamVec3("vLightDirection", 1, &light);
+	OPrenderParamVec3("vLightDirection", &light);
 
 	OPrenderMesh();
 	OPframeBufferUnbind();

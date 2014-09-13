@@ -88,14 +88,14 @@ int ExampleSkinningUpdate(OPtimer* time) {
 	OPcamGetView((*skinningExample->Camera), &view);
 	OPcamGetProj((*skinningExample->Camera), &proj);
 
-	OPrenderParamMat4v("uWorld", 1, &world);
-	OPrenderParamMat4v("uProj", 1, &proj);
-	OPrenderParamMat4v("uView", 1, &view);
+	OPrenderParamMat4("uWorld", &world);
+	OPrenderParamMat4("uProj", &proj);
+	OPrenderParamMat4("uView", &view);
 
 	OPrenderParamMat4v("uBones", skinningExample->Mesh->Skeleton->hierarchyCount, skinningExample->Mesh->Skeleton->skinned);
 
 	OPvec3 light = OPvec3Create(0, 10, 0);
-	OPrenderParamVec3("uLightPosition", 1, &light);
+	OPrenderParamVec3("uLightPosition", &light);
 
 	OPrenderMesh();
 
@@ -104,6 +104,7 @@ int ExampleSkinningUpdate(OPtimer* time) {
 }
 
 void ExampleSkinningExit(OPgameState* next) {
+	OPrenderUnloadEffect(skinningExample->Effect);
 	OPfree(skinningExample->Effect);
 	OPfree(skinningExample->Camera);
 }

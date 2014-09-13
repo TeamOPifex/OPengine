@@ -1,9 +1,8 @@
 #include "./Examples/Deferred.h"
+#include "./Pipeline/include/Rendering.h"
+#include "./Human/include/Systems/InputSystem.h"
 #include "./Human/include/Systems/RenderSystem.h"
-
 #include "./Data/include/ContentManager.h"
-#include "./Human/include/Rendering/OPMvertex.h"
-#include "./Human/include/Input/Input.h"
 
 OPgameState GS_EXAMPLE_DEFERRED = {
 	ExampleDeferredEnter,
@@ -53,10 +52,11 @@ DeferredGBuffer* DeferredGBufferCreate() {
 
 typedef struct {
 	OPmesh* Mesh;
-	OPeffect* Effect;
-	OPcam* Camera;
+	OPeffect Effect;
+	OPcam Camera;
 	ui32 Rotation;
 	DeferredGBuffer* GBuffer;
+	OPvec3 LightDirection;
 } DeferredExample;
 
 DeferredExample* deferredExample;
@@ -72,25 +72,14 @@ void ExampleDeferredEnter(OPgameState* last) {
 
 	deferredExample->Mesh = (OPmesh*)OPcmanGet("PuzzleBlock.opm");
 
-	OPshaderAttribute attribs[] = {
-		{ "aPosition", GL_FLOAT, 3 },
-		{ "aNormal", GL_FLOAT, 3 }
-	};
+	deferredExample->Effect = OPrenderGenEffect(
+		"SimpleModel.vert",
+		"SimpleModel.frag",
+		OPATTR_POSITION | OPATTR_NORMAL,
+		"Model Effect",
+		deferredExample->Mesh->VertexSize);
 
-	deferredExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	OPshader* vert = (OPshader*)OPcmanGet("SimpleModel.vert");
-	OPshader* frag = (OPshader*)OPcmanGet("SimpleModel.frag");
-	*deferredExample->Effect = OPrenderCreateEffectStride(
-		*vert,
-		*frag,
-		attribs,
-		2,
-		"Deferred Effect",
-		deferredExample->Mesh->VertexSize
-		);
-
-	deferredExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
-	*deferredExample->Camera = OPcamProj(
+	deferredExample->Camera = OPcamProj(
 		OPvec3One * 2.0,
 		OPvec3Create(0, 1, 0),
 		OPvec3Create(0, 1, 0),
@@ -99,39 +88,32 @@ void ExampleDeferredEnter(OPgameState* last) {
 		45.0f,
 		OPrenderWidth / (f32)OPrenderHeight
 		);
+
+	deferredExample->LightDirection = OPvec3Create(0, 1, 0);
+
+	OPrenderDepth(1);
 }
 
 int ExampleDeferredUpdate(OPtimer* time) {
-	OPrenderDepth(1);
-	OPrenderClear(0, 0, 0);
 
+	// Update
 	if (OPkeyboardIsDown(OPKEY_P)) { deferredExample->Rotation++; }
-
-	OPrenderBindMesh(deferredExample->Mesh);
-	OPrenderBindEffect(deferredExample->Effect);
-
-	OPmat4 world, view, proj;
+	OPmat4 world;
 	OPmat4buildRotY(&world, deferredExample->Rotation / 100.0);
 
-	OPcamGetView((*deferredExample->Camera), &view);
-	OPcamGetProj((*deferredExample->Camera), &proj);
+	// Render
+	OPrenderClear(0, 0, 0);
 
-	OPrenderParamMat4v("uWorld", 1, &world);
-	OPrenderParamMat4v("uProj", 1, &proj);
-	OPrenderParamMat4v("uView", 1, &view);
-
-	OPvec3 light = OPvec3Create(0, 1, 0);
-	OPrenderParamVec3("vLightDirection", 1, &light);
-
+	OPbindMeshEffectWorldCam(deferredExample->Mesh, &deferredExample->Effect, &world, &deferredExample->Camera);
+	OPrenderParamVec3("vLightDirection", &deferredExample->LightDirection);
 	OPrenderMesh();
 
 	OPrenderPresent();
+
 	return false;
 }
 
 void ExampleDeferredExit(OPgameState* next) {
-	OPfree(deferredExample->Effect);
-	OPfree(deferredExample->Camera);
-
+	OPrenderUnloadEffect(&deferredExample->Effect);
 	OPfree(deferredExample);
 }

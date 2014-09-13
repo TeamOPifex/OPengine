@@ -103,6 +103,12 @@ OPeffect OPrenderCreateEffect(
 	OPshader vert, OPshader frag,
 	OPshaderAttribute* Attributes, OPint AttribCount,
 	const OPchar* Name);
+OPeffect OPrenderGenEffect(
+	OPchar* vert,
+	OPchar* frag,
+	ui32 attrs,
+	const OPchar* Name,
+	ui32 stride);
 
 OPint OPrenderLoadEffect  (const OPchar* filename, OPeffect** effect);
 
@@ -112,12 +118,6 @@ OPint OPrenderUnloadEffect(OPeffect* effect);
 // effect managment
 OPint OPrenderBindEffect(OPeffect* effect);
 ui32 OPrenderGetParam(const OPchar* parameterName);
-
-OPeffect OPrenderBuildEffect(
-	OPchar* vert,
-	OPchar* frag,
-	ui32 attrs,
-	const OPchar* Name);
 
 // parameter setting
 /*void OPrenderParamf(ui32 param, OPfloat f);
@@ -142,25 +142,46 @@ inline void OPrenderParamfv(const OPchar* param, OPint count, OPfloat* f){
 	);
 	glUniform1fv(loc, count, f);
 }
-inline void OPrenderParamVec2(const OPchar* param, OPint count, OPvec2* f){
+inline void OPrenderParamVec2(const OPchar* param, OPvec2* f){
 	GLuint loc = glGetUniformLocation(
 		OPRENDER_CURR_EFFECT->ProgramHandle,
 		param
-	);
+		);
+	glUniform2fv(loc, 1, (OPfloat*)f);
+}
+inline void OPrenderParamVec3(const OPchar* param, OPvec3* f){
+	GLuint loc = glGetUniformLocation(
+		OPRENDER_CURR_EFFECT->ProgramHandle,
+		param
+		);
+	glUniform3fv(loc, 1, (OPfloat*)f);
+}
+inline void OPrenderParamVec4(const OPchar* param, OPvec4* f){
+	GLuint loc = glGetUniformLocation(
+		OPRENDER_CURR_EFFECT->ProgramHandle,
+		param
+		);
+	glUniform4fv(loc, 1, (OPfloat*)f);
+}
+inline void OPrenderParamVec2v(const OPchar* param, OPint count, OPvec2* f){
+	GLuint loc = glGetUniformLocation(
+		OPRENDER_CURR_EFFECT->ProgramHandle,
+		param
+		);
 	glUniform2fv(loc, count, (OPfloat*)f);
 }
-inline void OPrenderParamVec3(const OPchar* param, OPint count, OPvec3* f){
+inline void OPrenderParamVec3v(const OPchar* param, OPint count, OPvec3* f){
 	GLuint loc = glGetUniformLocation(
 		OPRENDER_CURR_EFFECT->ProgramHandle,
 		param
-	);
+		);
 	glUniform3fv(loc, count, (OPfloat*)f);
 }
-inline void OPrenderParamVec4(const OPchar* param, OPint count, OPvec4* f){
+inline void OPrenderParamVec4v(const OPchar* param, OPint count, OPvec4* f){
 	GLuint loc = glGetUniformLocation(
 		OPRENDER_CURR_EFFECT->ProgramHandle,
 		param
-	);
+		);
 	glUniform4fv(loc, count, (OPfloat*)f);
 }
 inline void OPrenderParami(const OPchar* param, OPint i){
@@ -177,11 +198,18 @@ inline void OPrenderParamiv(const OPchar* param, OPint count, i32* i){
 	);
 	glUniform1iv(loc, count, i);
 }
+inline void OPrenderParamMat4(const OPchar* param, OPmat4* matrices){
+	GLuint loc = glGetUniformLocation(
+		OPRENDER_CURR_EFFECT->ProgramHandle,
+		param
+		);
+	glUniformMatrix4fv(loc, 1, GL_FALSE, (OPfloat*)matrices);
+}
 inline void OPrenderParamMat4v(const OPchar* param, OPint count, OPmat4* matrices){
 	GLuint loc = glGetUniformLocation(
 		OPRENDER_CURR_EFFECT->ProgramHandle,
 		param
-	);
+		);
 	glUniformMatrix4fv(loc, count, GL_FALSE, (OPfloat*)matrices);
 }
 

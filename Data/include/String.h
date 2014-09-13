@@ -4,6 +4,13 @@
 #include "./Core/include/Types.h"
 #include "./Core/include/DynamicMemory.h"
 
+OPint OPstringEquals(const OPchar* str, const OPchar* cmp) {
+	ui32 lenA = strlen(str);
+	ui32 lenB = strlen(cmp);
+	if (lenA != lenB) return 0;
+	return OPmemcmp(str, cmp, lenA) == 0;
+}
+
 OPint OPstringStartsWith(OPchar* str, const OPchar* cmp, i32 size) {
 	ui32 lenA = strlen(str);
 	ui32 lenB = strlen(cmp);
