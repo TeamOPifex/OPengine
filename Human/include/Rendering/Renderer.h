@@ -9,16 +9,20 @@
 extern "C" {
 #endif
 
-	extern i32 OPrenderWidth;
-	extern i32 OPrenderHeight;
+extern OPint OPrenderWidth;
+extern OPint OPrenderHeight;
+extern OPint OPscreenWidth;
+extern OPint OPscreenHeight;
+extern OPint OPrenderFullscreen;
 
 #ifndef OPIFEX_ANDROID
 extern GLFWwindow* window;
 #endif
 
-OPint OPrenderInit(OPuint width, OPuint height, OPint fullscreen);
+OPint OPrenderInit();
 void  OPrenderClear      (f32 r, f32 g, f32 b);
-void  OPrenderClearRGBA(f32 r, f32 g, f32 b, f32 a);
+void  OPrenderClearAlpha(f32 r, f32 g, f32 b, f32 a);
+void  OPrenderSetScreenSize(OPuint width, OPuint height);
 void  OPrenderSetViewport(OPuint x, OPuint y, OPuint width, OPuint height);
 void OPrenderResetViewport();
 OPint OPrenderGetWidth();

@@ -4,3 +4,9 @@
 #ifdef OPIFEX_OCULUS
 #include "./Human/include/Input/Oculus.h"
 #endif
+
+inline void OPinputSystemUpdate() {
+	OPkeyboardUpdate();
+	OPmouseUpdate();
+	OPgamePadSystemUpdate();
+}

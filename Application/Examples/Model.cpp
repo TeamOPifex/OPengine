@@ -40,7 +40,7 @@ void ExampleModelEnter(OPgameState* last) {
 	modelExample->Mesh = (OPmesh*)OPcmanGet("PuzzleBlock.opm");
 
 	// The effect that will be used to render the mesh
-	// The renderBuildEffect is a simplified utility method
+	// The renderGenEffect is a simplified utility method
 	// which requires the attributes are given in a set order
 	// Position (vec3), then Normal (vec3)
 	// For more granular control use OPrenderCreateEffect

@@ -1,12 +1,15 @@
-#include "./Core/include/Log.h"
 #include "./Human/include/Rendering/Renderer.h"
+
+#include "./Core/include/Log.h"
+#include "./Core/include/Core.h"
 #include "./Core/include/Assert.h"
 
 
-i32 OPrenderWidth;
-i32 OPrenderHeight;
-OPuint OPscreenWidth;
-OPuint OPscreenHeight;
+OPint OPrenderWidth;
+OPint OPrenderHeight;
+OPint OPscreenWidth = 1280;
+OPint OPscreenHeight = 720;
+OPint OPrenderFullscreen = false;
 
 #ifndef OPIFEX_ANDROID
 GLFWwindow* window = NULL;
@@ -17,8 +20,12 @@ void glfwErrorCallback(int error, const char* desc){
 	OPlog(desc);
 }
 
-OPint OPrenderInit(OPuint width, OPuint height, OPint fullscreen){
+OPint OPrenderInit(){
 
+#ifdef OPIFEX_ANDROID
+	OPscreenWidth = JNIWidth();
+	OPscreenHeight = JNIHeight();
+#endif
 
 #ifdef OPIFEX_OPENGL_ES_2
 	// Android doesn't need to create a window
@@ -53,12 +60,12 @@ OPint OPrenderInit(OPuint width, OPuint height, OPint fullscreen){
 	#endif
 	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	if (fullscreen)
-		window = glfwCreateWindow(width, height, "OPifex Entertainment", glfwGetPrimaryMonitor(), NULL);
+	if (OPrenderFullscreen)
+		window = glfwCreateWindow(OPscreenWidth, OPscreenHeight, "OPifex Entertainment", glfwGetPrimaryMonitor(), NULL);
 	else
-		window = glfwCreateWindow(width, height, "OPifex Entertainment", NULL, NULL);
+		window = glfwCreateWindow(OPscreenWidth, OPscreenHeight, "OPifex Entertainment", NULL, NULL);
 	if(!window) {		
-		OPlog("Failed to open GLFW window of %dx%d. If you have an Intel GPU, they are not 3.3 compatible.\n", width, height );
+		OPlog("Failed to open GLFW window of %dx%d. If you have an Intel GPU, they are not 3.3 compatible.\n", OPscreenWidth, OPscreenHeight );
 		glfwTerminate();
 		return -1;
 	}
@@ -90,7 +97,7 @@ OPint OPrenderInit(OPuint width, OPuint height, OPint fullscreen){
 	// {		
 	// }
 
-	OPrenderSetViewport(0, 0, width, height);
+	OPrenderSetViewport(0, 0, OPscreenWidth, OPscreenHeight);
 	if (glewInit() != GLEW_OK) return -1;	
 
 	//glfwSetWindowTitle( "OPifex Engine" );
@@ -111,15 +118,18 @@ OPint OPrenderInit(OPuint width, OPuint height, OPint fullscreen){
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
-	OPrenderWidth = width;
-	OPrenderHeight = height;
-	OPscreenWidth = width;
-	OPscreenHeight = height;
+	OPrenderWidth = OPscreenWidth;
+	OPrenderHeight = OPscreenHeight;
 #endif
 
 	OPlog("OpenGL Context Created W:%d H:%d", OPrenderWidth, OPrenderHeight);
 
 	return 0;
+}
+
+void  OPrenderSetScreenSize(OPuint width, OPuint height) {
+	OPscreenWidth = width;
+	OPscreenHeight = height;
 }
 
 void OPrenderCull(OPint state) {
@@ -146,7 +156,7 @@ void  OPrenderClear(f32 r, f32 g, f32 b){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 //-----------------------------------------------------------------------------
-void  OPrenderClearRGBA(f32 r, f32 g, f32 b, f32 a){
+void  OPrenderClearAlpha(f32 r, f32 g, f32 b, f32 a){
 	glClearColor(r, g, b, a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
