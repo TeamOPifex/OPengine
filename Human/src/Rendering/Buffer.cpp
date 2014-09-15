@@ -1,5 +1,6 @@
 #include "./Human/include/Rendering/Buffer.h"
 #include "./Human/include/Utilities/Errors.h"
+#include "./Human/include/Attributes.h"
 #include "./Core/include/Log.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
@@ -84,4 +85,45 @@ void OPrenderDrawBufferIndexed(ui32 offset){
 //-----------------------------------------------------------------------------
 void OPrenderDrawIndexed(ui32 offset, ui32 count){
 	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, (void*)(0 + offset));
+}
+
+void OPrenderDrawUserArray(void* vertices, ui32 attrs, ui32 offset, ui32 count) {
+
+	ui32 off = 0;
+	ui32 stride = 0;
+	if (attrs & OPATTR_POSITION) stride += 3;
+	if (attrs & OPATTR_NORMAL) stride += 3;
+	if (attrs & OPATTR_UV) stride += 2;
+
+	if (attrs & OPATTR_POSITION) {
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glVertexPointer(3, GL_FLOAT, stride, &vertices);
+		off += 3;
+	}
+
+	if (attrs & OPATTR_NORMAL) {
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glNormalPointer(GL_FLOAT, stride, &vertices + off * sizeof(f32));
+		off += 3;
+	}
+
+	if (attrs & OPATTR_UV) {
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glTexCoordPointer(2, GL_FLOAT, stride, &vertices + off * sizeof(f32));
+		off += 2;
+	}
+
+	glDrawArrays(GL_TRIANGLES, offset, count);
+
+	if (attrs & OPATTR_POSITION) {
+		glDisableClientState(GL_VERTEX_ARRAY);
+	}
+
+	if (attrs & OPATTR_NORMAL) {
+		glDisableClientState(GL_VERTEX_ARRAY);
+	}
+
+	if (attrs & OPATTR_UV) {
+		glDisableClientState(GL_VERTEX_ARRAY);
+	}
 }

@@ -59,6 +59,7 @@ void OPrenderBindBuffer(OPrenderBuffer* buffer);
 void OPrenderDrawBufferIndexed(ui32 offset);
 void OPrenderDrawBuffer(ui32 offset);
 void OPrenderDrawIndexed(ui32 offset, ui32 count);
+void OPrenderDrawUserArray(void* vertices, ui32 attrs, ui32 offset, ui32 count);
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

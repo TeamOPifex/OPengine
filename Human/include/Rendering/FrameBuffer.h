@@ -52,8 +52,11 @@ void OPframeBufferDestroy(OPframeBuffer* fb);
 void OPframeBufferAttach(OPtexture* texture, ui16 pos);
 void OPframeBufferBind(OPframeBuffer* fb);
 void OPframeBufferBindRead(OPframeBuffer* fb);
+void OPframeBufferSetReadBuffer(ui16 pos);
+void OPframeBufferSetReadBufferDepth();
 void OPframeBufferBindTex(OPframeBuffer* fb);
 void OPframeBufferUnbind();
+void OPframeBufferAttachDepth(OPtexture* texture);
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

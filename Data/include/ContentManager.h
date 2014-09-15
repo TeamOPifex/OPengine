@@ -4,6 +4,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 #include "./Core/include/Types.h"
 #include "./Core/include/DynamicMemory.h"
 #include "./Data/include/HashMap.h"
@@ -55,11 +56,11 @@ typedef struct{
 //| | |_ | |/ _ \| '_ \ / _` | / __|
 //| |__| | | (_) | |_) | (_| | \__ \
 // \_____|_|\___/|_.__/ \__,_|_|___/
-//                                  
+//                              
+
 extern HashMap OP_CMAN_HASHMAP;
 extern OPassetLoader* OP_CMAN_ASSETLOADERS;
 extern OPint OP_CMAN_ASSET_LOADER_COUNT;
-
 extern OPlinkedList* OP_CMAN_PURGE;
 
 // ______                _   _                 
@@ -70,17 +71,35 @@ extern OPlinkedList* OP_CMAN_PURGE;
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                                                                    
 // Specifies how assets will be loaded for each file type
+
+/*
+ * *Debug Only*
+ * Watches the files of loaded resources for changes
+ * Looks at Last Write Time for each file once every second
+ * When a change happens the Reload method is called
+ */
 void OPcmanUpdate();
+
+// Initializes the Content Manager with an array of Asset Loaders
+// A custom directoy can be provided otherwise it defaults to assets/
 OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount, OPchar* dir);
+
+// Unloads all assets that are no longer needed (marked deleted)
+// Assets that are no longer needed have been deleted with OPcmanDelete
 OPint OPcmanPurge();
 
 // checks to see if an asset is loaded, triggers the load or unload.
 OPint OPcmanIsLoaded(const OPchar* key);
+// Tries to load an asset
 OPint OPcmanLoad(const OPchar* key);
+// Tries to unload an asset
 OPint OPcmanUnload(const OPchar* key);
 
 // Returns a pointer to the asset requested by file name
 void* OPcmanGet(const OPchar* key);
+
+// Marks an asset as ready to delete
+// It will only be removed from memory when OPcmanPurge is called
 OPint OPcmanDelete(const OPchar* key);
 
 #ifdef __cplusplus
