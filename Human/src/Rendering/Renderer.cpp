@@ -15,7 +15,6 @@ OPint OPrenderFullscreen = false;
 GLFWwindow* window = NULL;
 #endif
 
-
 void glfwErrorCallback(int error, const char* desc){
 	OPlog(desc);
 }
@@ -36,7 +35,7 @@ OPint OPrenderInit(){
 	glDisable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
 	glEnable( GL_BLEND );
-	
+
 	OPrenderWidth = width;
 	OPrenderHeight = height;
 	OPscreenWidth = width;
@@ -45,85 +44,56 @@ OPint OPrenderInit(){
 	glfwSetErrorCallback(glfwErrorCallback);
 
 	int result = glfwInit();
-	if( !result ) {
+	if (!result) {
 		OPlog("INIT FAILED %d", result);
 		return -1;
 	}
-	
+
 	// Most of the below will be moved to a Windowing System
-	
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-	#if defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
-		//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	#endif
-	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	if (OPrenderFullscreen)
-		window = glfwCreateWindow(OPscreenWidth, OPscreenHeight, "OPifex Entertainment", glfwGetPrimaryMonitor(), NULL);
-	else
-		window = glfwCreateWindow(OPscreenWidth, OPscreenHeight, "OPifex Entertainment", NULL, NULL);
+	GLFWmonitor* monitor = NULL;
+	if (OPrenderFullscreen){
+		monitor = glfwGetPrimaryMonitor();
+	}
+
+	window = glfwCreateWindow(OPscreenWidth, OPscreenHeight, "OPifex Entertainment", monitor, NULL);
+
 	if(!window) {		
 		OPlog("Failed to open GLFW window of %dx%d. If you have an Intel GPU, they are not 3.3 compatible.\n", OPscreenWidth, OPscreenHeight );
 		glfwTerminate();
 		return -1;
 	}
 
-	glfwMakeContextCurrent(NULL);
 	glfwMakeContextCurrent(window);
 
 	if (glfwExtensionSupported("GL_ARB_multisample")) {
 		OPlog("Multisampling is supported");
 	}
 
-	glfwWindowHint(GLFW_SAMPLES, 4);
-	i32 samples = glfwGetWindowAttrib(window, GLFW_SAMPLES);
-	OPlog("Samples: %d", samples);
-	
-
-	GLFWwindow* tmp = glfwGetCurrentContext();
-	if(!tmp || tmp != window) {
-		OPlog("FAILED to bind context");
-	}
-
-	if( !glfwInit() ) {
-		OPlog("INIT FAILED");
-		return -1;
-	}
-
-	// Open a window and create its OpenGL context
-	// if( !glfwOpenWindow( width,	 height, 0,0,0,0, 32,0, GLFW_WINDOW ) )
-	// {		
-	// }
-
 	OPrenderSetViewport(0, 0, OPscreenWidth, OPscreenHeight);
 	if (glewInit() != GLEW_OK) return -1;	
 
-	//glfwSetWindowTitle( "OPifex Engine" );
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, true);
-	//glfwSetInputMode(window, GL_DEPTH_TEST, true);
-	//glfwSetInputMode(window, GL_CULL_FACE, false);
-	
+
 	// TODO: Determine how to optimize with this
-	//glGenVertexArrays(1, &VertexArrayID);
+	GLuint VertexArrayID;
+	glGenVertexArrays(1, &VertexArrayID);
+	glBindVertexArray(VertexArrayID);
 
-	//glfwSwapInterval(0);
-
-	//glBindVertexArray(VertexArrayID);
 
 	glEnable(GL_MULTISAMPLE_ARB);
 	glEnable(GL_BLEND); 
 	glEnable(GL_MULTISAMPLE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
 	OPrenderWidth = OPscreenWidth;
 	OPrenderHeight = OPscreenHeight;
 #endif
 
 	OPlog("OpenGL Context Created W:%d H:%d", OPrenderWidth, OPrenderHeight);
-
 	return 0;
 }
 

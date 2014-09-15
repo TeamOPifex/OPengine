@@ -1,8 +1,6 @@
 #include "./Examples/Deferred.h"
-#include "./Pipeline/include/Rendering.h"
-#include "./Human/include/Systems/InputSystem.h"
-#include "./Human/include/Systems/RenderSystem.h"
-#include "./Data/include/ContentManager.h"
+#include "./Pipeline/Engine.h"
+#include "./Human/include/Utilities/Geometry.h"
 
 OPgameState GS_EXAMPLE_DEFERRED = {
 	ExampleDeferredEnter,
@@ -11,10 +9,15 @@ OPgameState GS_EXAMPLE_DEFERRED = {
 };
 
 typedef struct {
+	OPframeBuffer FrameBuffer;
 	OPtexture Position;
 	OPtexture Diffuse;
 	OPtexture Normal;
 	OPtexture Depth;
+	OPtexture2D* Position2D;
+	OPtexture2D* Diffuse2D;
+	OPtexture2D* Normal2D;
+	OPtexture2D* Depth2D;
 } DeferredGBuffer;
 
 DeferredGBuffer* DeferredGBufferCreate() {
@@ -26,8 +29,8 @@ DeferredGBuffer* DeferredGBufferCreate() {
 		OPtextureLinear, OPtextureLinear,
 		OPtextureClamp, OPtextureClamp
 	};
-	OPframeBuffer frameBuffer = OPframeBufferCreate(desc);
-	OPframeBufferBind(&frameBuffer);
+	gbuffer->FrameBuffer = OPframeBufferCreate(desc);
+	OPframeBufferBind(&gbuffer->FrameBuffer);
 
 	gbuffer->Position = OPtextureCreate(desc);
 	OPframeBufferAttach(&gbuffer->Position, 0);
@@ -38,14 +41,39 @@ DeferredGBuffer* DeferredGBufferCreate() {
 	desc.InternalFormat = GL_DEPTH_COMPONENT32F;
 	desc.Format = GL_DEPTH_COMPONENT;
 	gbuffer->Depth = OPtextureCreate(desc);
-	OPframeBufferAttach(&gbuffer->Depth, 3);
+	OPframeBufferAttachDepth(&gbuffer->Depth);
 
 	GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0,
 		GL_COLOR_ATTACHMENT1,
 		GL_COLOR_ATTACHMENT2 };
 	glDrawBuffers(3, DrawBuffers);
 
+
+	GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+	if (Status != GL_FRAMEBUFFER_COMPLETE) {
+		OPlog("FB error, status: 0x%x\n", Status);
+		return false;
+	}
+
 	OPframeBufferUnbind();
+
+
+	gbuffer->Position2D = OPtexture2DCreate(&gbuffer->Position, NULL);
+	gbuffer->Position2D->Scale = OPvec2One * 0.25;
+	gbuffer->Position2D->Position = OPvec2Create(-0.75, 0.75);
+
+	gbuffer->Diffuse2D = OPtexture2DCreate(&gbuffer->Diffuse, NULL);
+	gbuffer->Diffuse2D->Scale = OPvec2One * 0.25;
+	gbuffer->Diffuse2D->Position = OPvec2Create(0.75, 0.75);
+
+	gbuffer->Normal2D = OPtexture2DCreate(&gbuffer->Normal, NULL);
+	gbuffer->Normal2D->Scale = OPvec2One * 0.25;
+	gbuffer->Normal2D->Position = OPvec2Create(0.75, -0.75);
+
+	gbuffer->Depth2D = OPtexture2DCreate(&gbuffer->Depth, NULL);
+	gbuffer->Depth2D->Scale = OPvec2One * 0.25;
+	gbuffer->Depth2D->Position = OPvec2Create(-0.75, -0.75);
 
 	return gbuffer;
 }
@@ -53,6 +81,7 @@ DeferredGBuffer* DeferredGBufferCreate() {
 typedef struct {
 	OPmesh* Mesh;
 	OPeffect Effect;
+	OPeffect DeferredEffect;
 	OPcam Camera;
 	ui32 Rotation;
 	DeferredGBuffer* GBuffer;
@@ -66,9 +95,8 @@ void ExampleDeferredEnter(OPgameState* last) {
 	OPcmanLoad("SimpleModel.frag");
 	OPcmanLoad("SimpleModel.vert");
 
-	DeferredGBufferCreate();
-
-	deferredExample = (DeferredExample*)OPalloc(sizeof(DeferredExample));
+	deferredExample = (DeferredExample*)OPallocZero(sizeof(DeferredExample));
+	deferredExample->GBuffer = DeferredGBufferCreate();
 
 	deferredExample->Mesh = (OPmesh*)OPcmanGet("PuzzleBlock.opm");
 
@@ -77,6 +105,13 @@ void ExampleDeferredEnter(OPgameState* last) {
 		"SimpleModel.frag",
 		OPATTR_POSITION | OPATTR_NORMAL,
 		"Model Effect",
+		deferredExample->Mesh->VertexSize);
+
+	deferredExample->DeferredEffect = OPrenderGenEffect(
+		"Common/deferred.vert",
+		"Common/deferred.frag",
+		OPATTR_POSITION | OPATTR_NORMAL,
+		"Deferred Effect",
 		deferredExample->Mesh->VertexSize);
 
 	deferredExample->Camera = OPcamProj(
@@ -91,22 +126,41 @@ void ExampleDeferredEnter(OPgameState* last) {
 
 	deferredExample->LightDirection = OPvec3Create(0, 1, 0);
 
-	OPrenderDepth(1);
+	deferredExample->Mesh = OPgeoCreateSphere(1, 10, 10);
 }
 
 int ExampleDeferredUpdate(OPtimer* time) {
 
 	// Update
-	if (OPkeyboardIsDown(OPKEY_P)) { deferredExample->Rotation++; }
-	OPmat4 world;
-	OPmat4buildRotY(&world, deferredExample->Rotation / 100.0);
+	if (OPkeyboardIsDown(OPKEY_SPACE)) deferredExample->Rotation++;
+	OPmat4 world = OPmat4createRotY(deferredExample->Rotation / 100.0);
 
 	// Render
-	OPrenderClear(0, 0, 0);
+	OPframeBufferBind(&deferredExample->GBuffer->FrameBuffer);
+	OPrenderClearAlpha(0, 0, 0, 0);
+	OPrenderDepth(1);
+
+	OPbindMeshEffectWorldCam(deferredExample->Mesh, &deferredExample->DeferredEffect, &world, &deferredExample->Camera);
+	OPrenderParamVec3("vLightDirection", &deferredExample->LightDirection);
+	OPrenderMesh();
+
+	OPrenderPresent();
+
+	OPframeBufferUnbind();
+
+
+
+	OPrenderDepth(1);
+	OPrenderClear(0, 0, 1);
 
 	OPbindMeshEffectWorldCam(deferredExample->Mesh, &deferredExample->Effect, &world, &deferredExample->Camera);
 	OPrenderParamVec3("vLightDirection", &deferredExample->LightDirection);
 	OPrenderMesh();
+
+	OPtexture2DRender(deferredExample->GBuffer->Position2D);
+	OPtexture2DRender(deferredExample->GBuffer->Diffuse2D);
+	OPtexture2DRender(deferredExample->GBuffer->Normal2D);
+	OPtexture2DRender(deferredExample->GBuffer->Depth2D);
 
 	OPrenderPresent();
 

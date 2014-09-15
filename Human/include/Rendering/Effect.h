@@ -1,6 +1,7 @@
 #ifndef OPENGINE_HUMAN_RENDERER_EFFECT
 #define OPENGINE_HUMAN_RENDERER_EFFECT
 
+#include "./Human/include/Attributes.h"
 #include "./Human/include/Utilities/Errors.h"
 #include "./Human/include/Rendering/Buffer.h"
 #include "./Math/include/Vectors.h"
@@ -61,13 +62,6 @@ typedef struct{
 	OPchar    Name[OP_EFFECT_NAME_LEN]; 
 }OPeffect;
 
-
-enum OPattribute {
-	OPATTR_POSITION = 1,
-	OPATTR_UV = 2,
-	OPATTR_TANGENT = 4,
-	OPATTR_NORMAL = 8
-};
 
 //-----------------------------------------------------------------------------
 //   _____ _       _           _     

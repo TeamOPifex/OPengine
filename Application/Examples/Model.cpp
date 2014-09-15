@@ -29,7 +29,7 @@ void ExampleModelEnter(OPgameState* last) {
 	// Load up the mesh into the Content Manager
 	// If the model was already loaded by a previous Game State
 	// it'll continue on without reloading it
-	OPcmanLoad("PuzzleBlock.opm");
+	OPcmanLoad("cube.opm");
 
 	// Allocating a memory block for this example
 	modelExample = (ModelExample*)OPallocZero(sizeof(ModelExample));
@@ -37,7 +37,7 @@ void ExampleModelEnter(OPgameState* last) {
 	// The OPcmanLoad call ensures that this mesh has been loaded
 	// The OPcmanGet call returns a pointer to the resource (an OPmesh)
 	// that's contained in the Content Manager
-	modelExample->Mesh = (OPmesh*)OPcmanGet("PuzzleBlock.opm");
+	modelExample->Mesh = (OPmesh*)OPcmanGet("cube.opm");
 
 	// The effect that will be used to render the mesh
 	// The renderGenEffect is a simplified utility method

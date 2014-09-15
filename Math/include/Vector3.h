@@ -260,6 +260,11 @@ inline OPvec3 OPvec3str(OPstream* str) {
 	};
 	return temp;
 }
+
+inline OPvec3 OPvec3clone(OPvec3* v) {
+	return OPvec3Create(v->x, v->y, v->z);
+}
+
 inline void OPvec3write(OPvec3* v, OPstream* str) {
 	OPwrite(str, &v->x, sizeof(f32));
 	OPwrite(str, &v->y, sizeof(f32));

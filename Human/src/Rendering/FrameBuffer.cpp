@@ -206,6 +206,26 @@ void OPframeBufferUnbind(){
 	glGenerateMipmap(fb->Texture.Handle);*/
 }
 
+void OPframeBufferSetReadBuffer(ui16 pos) {
+	glReadBuffer(GL_COLOR_ATTACHMENT0 + pos);
+}
+void OPframeBufferSetReadBufferDepth() {
+	glReadBuffer(GL_DEPTH_ATTACHMENT);
+}
+
 void OPframeBufferAttach(OPtexture* texture, ui16 pos) {
+	OPtextureBind(texture);
 	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + pos, GL_TEXTURE_2D, texture->Handle, 0);
 }
+
+void OPframeBufferAttachDepth(OPtexture* texture) {
+	OPtextureBind(texture);
+	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture->Handle, 0);
+}
+
+
+//void OPframeBufferBindTexture(OPtexture* texture, ui32 pos) {
+//	glBindRenderbuffer(GL_RENDERBUFFER, texture->Handle);
+//	glRenderbufferStorage(GL_RENDERBUFFER, texture->Description.Format, texture->Description.Width, texture->Description.Height);
+//	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + pos, GL_RENDERBUFFER, texture->Handle);
+//}
