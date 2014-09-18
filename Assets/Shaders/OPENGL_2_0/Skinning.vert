@@ -30,22 +30,22 @@ void main() {
 	
 	
 	int index = int(aBlendIndices.x);
-	newPosition = (uBones[index] * pos) * 1.0;//aBlendWeights.x;
-	newNormal = (uBones[index] * norm) * 1.0;//blendWeights.x;
+	newPosition = (uBones[index] * pos) * aBlendWeights.x;
+	newNormal = (uBones[index] * norm) * aBlendWeights.x;
 
-	//index = int(aBlendIndices.y);
-	//newPosition = (uBones[index] * pos) * aBlendWeights.y + newPosition;
-	//newNormal = (uBones[index] * norm) * blendWeights.y + newNormal;
+	index = int(aBlendIndices.y);
+	newPosition = (uBones[index] * pos) * aBlendWeights.y + newPosition;
+	newNormal = (uBones[index] * norm) * aBlendWeights.y + newNormal;
 	
 	
-	//index = int(aBlendIndices.z);
-	//newPosition = (uBones[index] * pos) * aBlendWeights.z + newPosition;
-	//newNormal = (uBones[index] * norm) * blendWeights.z + newNormal;
+	index = int(aBlendIndices.z);
+	newPosition = (uBones[index] * pos) * aBlendWeights.z + newPosition;
+	newNormal = (uBones[index] * norm) * aBlendWeights.z + newNormal;
 	
 	
-	//index = int(aBlendIndices.w);
-	//newPosition = (uBones[index] * pos) * aBlendWeights.w + newPosition;
-	//newNormal = (uBones[index] * norm) * blendWeights.w + newNormal;
+	index = int(aBlendIndices.w);
+	newPosition = (uBones[index] * pos) * aBlendWeights.w + newPosition;
+	newNormal = (uBones[index] * norm) * aBlendWeights.w + newNormal;
 
 	
 	
