@@ -24,14 +24,14 @@ typedef struct {
 SkinningExample* skinningExample;
 
 void ExampleSkinningEnter(OPgameState* last) {
-	OPcmanLoad("untitled.opm");
+	OPcmanLoad("cube.opm");
 	OPcmanLoad("Skinning.frag");
 	OPcmanLoad("Skinning.vert");
 
 	skinningExample = (SkinningExample*)OPalloc(sizeof(SkinningExample));
 
 	skinningExample->pos = 0;
-	skinningExample->Mesh = (OPmesh*)OPcmanGet("untitled.opm");
+	skinningExample->Mesh = (OPmesh*)OPcmanGet("cube.opm");
 
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
@@ -56,11 +56,11 @@ void ExampleSkinningEnter(OPgameState* last) {
 
 	skinningExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
 	*skinningExample->Camera = OPcamProj(
-		OPvec3One * 2.0,
+		OPvec3One * 250.0,
 		OPvec3Create(0, 1, 0),
 		OPvec3Create(0, 1, 0),
 		0.1f,
-		1000.0f,
+		5000.0f,
 		45.0f,
 		OPrenderWidth / (f32)OPrenderHeight
 		);
@@ -74,8 +74,8 @@ int ExampleSkinningUpdate(OPtimer* time) {
 	if (OPkeyboardWasPressed(OPKEY_O)) { skinningExample->pos--; }
 
 	//OPmat4translate(&mesh->Skeleton->localPoses[pos], time->Elapsed / 1000.0f, 0, 0);
-	OPmat4rotX(&skinningExample->Mesh->Skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_W) / 10.0f);
-	OPmat4rotX(&skinningExample->Mesh->Skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_S) / -10.0f);
+	OPmat4rotZ(&skinningExample->Mesh->Skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_W) / 10.0f);
+	OPmat4rotZ(&skinningExample->Mesh->Skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_S) / -10.0f);
 	OPskeletonUpdate(skinningExample->Mesh->Skeleton);
 
 	OPrenderBindMesh(skinningExample->Mesh);

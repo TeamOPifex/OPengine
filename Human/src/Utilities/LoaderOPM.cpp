@@ -414,7 +414,15 @@ OPMData OPMloadData(OPstream* str) {
 
 			i8* name = OPreadstring(str);
 
-			f32 px = OPreadf32(str);
+			for (i32 c = 0; c < 4; c++) {
+				pose[i].cols[c].x = OPreadf32(str);
+				pose[i].cols[c].y = OPreadf32(str);
+				pose[i].cols[c].z = OPreadf32(str);
+				pose[i].cols[c].w = OPreadf32(str);
+			}
+
+
+		/*	f32 px = OPreadf32(str);
 			f32 py = OPreadf32(str);
 			f32 pz = OPreadf32(str);
 
@@ -425,20 +433,21 @@ OPMData OPMloadData(OPstream* str) {
 
 			f32 sx = OPreadf32(str);
 			f32 sy = OPreadf32(str);
-			f32 sz = OPreadf32(str);
+			f32 sz = OPreadf32(str);*/
 
-			OPmat4 matRotate;
-			OPmat4 matTranslate;
+			//OPmat4 matRotate;
+			//OPmat4 matTranslate;
 
-			OPquat rot = OPquatCreate(rx, ry, rz, rw);
+			//OPquat rot = OPquatCreate(rx, ry, rz, rw);
 
-			OPmat4buildQuat(&matRotate, &rot);
-			OPmat4buildTranslate(&matTranslate, px, py, pz);
+			//OPmat4buildQuat(&matRotate, &rot);
+			//OPmat4buildTranslate(&matTranslate, px, py, pz);
 			//OPmat4mul(&pose[i], &matTranslate, &matRotate);
-			OPmat4mul(&pose[i], &matRotate, &matTranslate);
-			OPmat4Inverse(&pose[i], &pose[i]);
+			//OPmat4mul(&pose[i], &matRotate, &matTranslate);
+			//OPmat4Inverse(&pose[i], &pose[i]);
 
-			OPlog("Joint: %d %s : %f, %f, %f, %f, %f, %f", boneIndex, name, px, py, pz, sx, sy, sz);
+
+			OPlog("Joint: %d %s", boneIndex, name);
 			OPfree(name);
 		}
 	}
