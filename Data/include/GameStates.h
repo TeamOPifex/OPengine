@@ -13,14 +13,14 @@ typedef struct OPgameState_def OPgameState;
 struct OPgameState_def{
 	void (*Init)(OPgameState*);
 	int(*Update)(OPtimer*);
-	void (*Destroy)(OPgameState*);
+	void (*Exit)(OPgameState*);
 	void* Data;
 };
 
 extern OPgameState* ActiveState;
 
 void OPgameStateChange(OPgameState* targetState); 
-OPgameState* OPgameStateCreate(void (*entrance)(OPgameState*), int(*update)(OPtimer*), void (*exit)(OPgameState*));
+OPgameState* OPgameStateCreate(void (*init)(OPgameState*), int(*update)(OPtimer*), void (*exit)(OPgameState*));
 OPint OPgameStateDestroy(OPgameState* state);
 
 #ifdef __cplusplus
