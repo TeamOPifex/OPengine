@@ -27,7 +27,7 @@ int ApplicationUpdate(OPtimer* timer) {
 }
 
 void ApplicationDestroy() {
-	ActiveState->Destroy(ActiveState);
+	ActiveState->Exit(ActiveState);
 }
 
 void ApplicationSetup() {
