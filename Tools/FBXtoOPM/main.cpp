@@ -512,8 +512,7 @@ void DisplayPose(FbxScene* pScene)
 	}
 }
 
-void PrintNode(FbxNode* pNode) {
-
+void FillNode(FbxNode* pNode) {
 	FbxNodeAttribute::EType lAttributeType;
 	int i;
 	FbxMesh* lMesh;
@@ -523,136 +522,187 @@ void PrintNode(FbxNode* pNode) {
 	if (pNode->GetNodeAttribute() == NULL)
 	{
 		FBXSDK_printf("NULL Node Attribute\n\n");
-		return;
 	}
 	else
 	{
 		lAttributeType = (pNode->GetNodeAttribute()->GetAttributeType());
-
 		switch (lAttributeType)
 		{
-		default:
-			break;
+			default:
+				break;
 
-		case FbxNodeAttribute::eMesh:
-			lMesh = (FbxMesh*)pNode->GetNodeAttribute();
-			OPlog("Mesh Name: %s", (char *)pNode->GetName());
-			DisplayPolygons(pNode);
-			break;
+			case FbxNodeAttribute::eMesh:
+				lMesh = (FbxMesh*)pNode->GetNodeAttribute();
+				OPlog("Mesh Name: %s", (char *)pNode->GetName());
+				DisplayPolygons(pNode);
+				break;
 			
-		case FbxNodeAttribute::eSkeleton:
-			GlobalSkeleton = GetSkeleton(pNode);
-			//lSkeleton = (FbxSkeleton*)pNode->GetNodeAttribute();
-			//DisplayMetaDataConnections(lSkeleton);
-			//OPlog("Skeleton Name: %s", (char *)pNode->GetName());
+			case FbxNodeAttribute::eSkeleton:
+				GlobalSkeleton = GetSkeleton(pNode);
+				break;
+		}
+	}
+}
 
-			//OPlog("    Type: %s", lSkeletonTypes[lSkeleton->GetSkeletonType()]);
+enum ModelFeatures {
+	Model_Positions = 0,
+	Model_Normals,
+	Model_UVs,
+	Model_Colors,
+	Model_Indices,
+	Model_Bones,
+	Model_Skinning,
+	Model_Animations
+};
 
-			//if (lSkeleton->GetSkeletonType() == FbxSkeleton::eLimb)
-			//{
-			//	OPlog("    Limb Length: %f", lSkeleton->LimbLength.Get());
-			//}
-			//else if (lSkeleton->GetSkeletonType() == FbxSkeleton::eLimbNode)
-			//{
-			//	OPlog("    Limb Node Size: %f", lSkeleton->Size.Get());
-			//}
-			//else if (lSkeleton->GetSkeletonType() == FbxSkeleton::eRoot)
-			//{
-			//	OPlog("    Limb Root Size: %f", lSkeleton->Size.Get());
-			//}
+void WriteFile(i8* output, OPint* features) {
 
-			////DisplayColor("    Color: ", lSkeleton->GetLimbNodeColor());
+	ofstream myFile(output, ios::binary);
 
-			//for (i = 0; i < pNode->GetChildCount(); i++) {
-			//	PrintNode(pNode->GetChild(i));
-			//}
-			break;
+	// OPM File Format Version
+	writeU16(&myFile, 1);
+
+	ui32 feature = 0;
+	if (features[Model_Positions]) feature += 1;
+	if (features[Model_Normals]) feature += 2;
+	if (features[Model_UVs]) feature += 4;
+	if (features[Model_Colors]) feature += 256;
+	if (features[Model_Indices]) feature += 16;
+	if (features[Model_Bones]) feature += 32;
+	if (features[Model_Skinning]) feature += 64;
+	if (features[Model_Animations]) feature += 128;
+
+	// OPM File Features
+	writeU32(&myFile, feature);
+
+	// Vertex Count
+	writeU32(&myFile, ModelData.VertexCount);
+
+	for (i32 i = 0; i < ModelData.VertexCount; i++) {
+
+		if (features[Model_Positions]) {
+			OPvec3* pos = (OPvec3*)OPlistGet(ModelData.vertices, i);
+			writeF32(&myFile, pos->x);
+			writeF32(&myFile, pos->y);
+			writeF32(&myFile, pos->z);
+		}
+
+		if (features[Model_Normals]) {
+			OPvec3* norm = (OPvec3*)OPlistGet(ModelData.normals, i);
+			writeF32(&myFile, norm->x);
+			writeF32(&myFile, norm->y);
+			writeF32(&myFile, norm->z);
+		}
+
+		if (features[Model_UVs]) {
+			OPvec2* uv = (OPvec2*)OPlistGet(ModelData.uvs, i);
+			writeF32(&myFile, uv->x);
+			writeF32(&myFile, uv->y);
+		}
+
+		if (features[Model_Skinning]) {
+			ui16* ind1 = (ui16*)OPlistGet(ModelData.boneIndices, i * 4 + 0);
+			ui16* ind2 = (ui16*)OPlistGet(ModelData.boneIndices, i * 4 + 1);
+			ui16* ind3 = (ui16*)OPlistGet(ModelData.boneIndices, i * 4 + 2);
+			ui16* ind4 = (ui16*)OPlistGet(ModelData.boneIndices, i * 4 + 3);
+
+			f32* w1 = (f32*)OPlistGet(ModelData.boneWeights, i * 4 + 0);
+			f32* w2 = (f32*)OPlistGet(ModelData.boneWeights, i * 4 + 1);
+			f32* w3 = (f32*)OPlistGet(ModelData.boneWeights, i * 4 + 2);
+			f32* w4 = (f32*)OPlistGet(ModelData.boneWeights, i * 4 + 3);
+
+			writeU16(&myFile, *ind1);
+			writeU16(&myFile, *ind2);
+			writeU16(&myFile, *ind3);
+			writeU16(&myFile, *ind4);
+
+			writeF32(&myFile, *w1);
+			writeF32(&myFile, *w2);
+			writeF32(&myFile, *w3);
+			writeF32(&myFile, *w4);
 		}
 	}
 
+	if (features[Model_Indices]) {
+		writeU32(&myFile, ModelData.IndexCount / 3);
 
-	//for (int i = 0; i < pNode->GetChildCount(); i++)
-	//	PrintNode(pNode->GetChild(i));
+		for (i32 i = 0; i < ModelData.IndexCount; i++) {
+			ui16* ind = (ui16*)OPlistGet(ModelData.indices, i);
+			writeU16(&myFile, *ind);
+		}
+	}
+
+	if (features[Model_Bones]) {
+		WriteSkeleton(GlobalSkeleton, &myFile);
+	}
+}
+
+OPint IsParam(char** argv, ui16 pos, i8* arg) {
+	return strcmp(arg, argv[pos]) == 0;
+}
+
+i8* GetParameter(char** argv, ui16 argp, i8* arg, i8* shrt) {
+
+	if (0 == strcmp(arg, argv[argp]) || 0 == strcmp(shrt, argv[argp]))
+	{
+		++arg;
+		return argv[argp];
+	}
+
+	return NULL;
 }
 
 int main(int argc, char **argv) {
 	int arg;
 	i8* filename = NULL;
 	i8* output = NULL;
-
-	//int response = menu("OPTIONS", "[*]", "->", 1, 3, 3, 0, 5,
-	//	"PROFILES", "ACTIVITY", "VIDEO", "SOUND", "GAMEPLAY");
-
-	OPint* selected = (OPint*)OPallocZero(sizeof(OPint)* 9);
-	selected[0] = 1;
-	selected[1] = 1;
-	selected[2] = 1;
-	selected[4] = 1;
-	DisplayMenu("Select Options\n------------------------", selected, 9, "POSITION", "NORMAL", "UVS", "COLORS", "INDICES", "TANGENTS", "BONES", "SKIN", "ANIMATIONS");
 	
-	if (argc == 1) {
-		print_help();
-	}
-	else {
+
+	// Fill arguments
+	if (argc > 1) {
 		for (arg = 1; arg < argc; ++arg)
 		{
-			if (0 == strcmp("--help", argv[arg]) || 0 == strcmp("-h", argv[arg]))
+			if (IsParam(argv, arg, "--help") || IsParam(argv, arg, "-h"))
 			{
 				print_help();
 				exit(1);
 			}
 
-			if (0 == strcmp("--font", argv[arg]) || 0 == strcmp("-f", argv[arg]))
+			if (IsParam(argv, arg, "--file") || IsParam(argv, arg, "-f"))
 			{
 				++arg;
-
-				if (filename)
-				{
-					fprintf(stderr, "Multiple --font parameters.\n");
-					print_help();
-					exit(1);
-				}
-
-				if (arg >= argc)
-				{
-					fprintf(stderr, "No font file given.\n");
-					print_help();
-					exit(1);
-				}
-
 				filename = argv[arg];
 				continue;
 			}
 
-			if (0 == strcmp("--output", argv[arg]) || 0 == strcmp("-o", argv[arg]))
+			if (IsParam(argv, arg, "--out") || IsParam(argv, arg, "-o"))
 			{
 				++arg;
-
-				if (output)
-				{
-					fprintf(stderr, "Multiple --font parameters.\n");
-					print_help();
-					exit(1);
-				}
-
-				if (arg >= argc)
-				{
-					fprintf(stderr, "No font file given.\n");
-					print_help();
-					exit(1);
-				}
-
 				output = argv[arg];
 				continue;
 			}
 		}
 	}
 
+	// Quit if no file was provided
 	if (filename == NULL) {
 		print_help();
-		return 0;
+		return -1;
 	}
 
+	OPint* features = (OPint*)OPallocZero(sizeof(OPint)* 9);
+	features[Model_Positions] = 1;
+	features[Model_Normals] = 1;
+	features[Model_UVs] = 1;
+	features[Model_Indices] = 1;
+	MenuOptions(
+		"Select OPM Features to Export\n------------------------",
+		features,
+		9,
+		"POSITION", "NORMAL", "UVS", "COLORS", "INDICES", "TANGENTS", "BONES", "SKIN", "ANIMATIONS"
+		);
+
+	// Initialize ModelData
 	ModelData.VertexCount = 0;
 	ModelData.ColorCount = 0;
 	ModelData.IndexCount = 0;
@@ -667,9 +717,11 @@ int main(int argc, char **argv) {
 	ModelData.boneIndices = OPlistCreate(128, sizeof(i16));
 	ModelData.boneWeights = OPlistCreate(128, sizeof(f32));
 
+	// Setup Autodesk FBX SDK
 	FbxManager* lSdkManager = FbxManager::Create();
 	FbxIOSettings *ios = FbxIOSettings::Create(lSdkManager, IOSROOT);
 	lSdkManager->SetIOSettings(ios);
+
 	FbxImporter* lImporter = FbxImporter::Create(lSdkManager, "");
 	if (!lImporter->Initialize(filename, -1, lSdkManager->GetIOSettings())) {
 		OPlog("Call to FbxImporter::Initialize() failed.\n");
@@ -677,111 +729,29 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 
+	// Get the scene from the FBX file
 	FbxScene* lScene = FbxScene::Create(lSdkManager, "myScene");
 	lImporter->Import(lScene);
 	lImporter->Destroy();
 
-	FbxDocumentInfo* sceneInfo = lScene->GetSceneInfo();    if (sceneInfo)
-	{
-		//FBXSDK_printf("--------------------\nMeta-Data\n--------------------\n");
-		//FBXSDK_printf("    Title: %s\n", sceneInfo->mTitle.Buffer());
-		//FBXSDK_printf("    Subject: %s\n", sceneInfo->mSubject.Buffer());
-		//FBXSDK_printf("    Author: %s\n", sceneInfo->mAuthor.Buffer());
-		//FBXSDK_printf("    Keywords: %s\n", sceneInfo->mKeywords.Buffer());
-		//FBXSDK_printf("    Revision: %s\n", sceneInfo->mRevision.Buffer());
-		//FBXSDK_printf("    Comment: %s\n", sceneInfo->mComment.Buffer());
-
-		FbxNode* lRootNode = lScene->GetRootNode();
-		if (lRootNode) {
-			for (int i = 0; i < lRootNode->GetChildCount(); i++)
-				PrintNode(lRootNode->GetChild(i));
-		}
-
-		GetPoseInformation(lScene, GlobalSkeleton);
-		//DisplayAnimation(lScene);
-		//DisplayPose(lScene);
-
-		if (output != NULL) {
-			ofstream myFile(output, ios::binary);
-			writeU16(&myFile, 1);					// Version
-
-			ui32 features = 0;
-			if (selected[0]) features += 1; // Positions
-			if (selected[1]) features += 2; // Normals
-			if (selected[2]) features += 4; // UVs
-			if (selected[3]) features += 256; // Colors
-			if (selected[4]) features += 16; // Indices
-			if (selected[5]) features += 32; // Bones
-			if (selected[6]) features += 64; // Skinning
-			if (selected[7]) features += 128; // Animations
-
-			writeU32(&myFile, features);		// Features
-
-
-
-			writeU32(&myFile, ModelData.VertexCount);
-
-			for (i32 i = 0; i < ModelData.VertexCount; i++) {
-
-				if (selected[0]) {
-					OPvec3* pos = (OPvec3*)OPlistGet(ModelData.vertices, i);
-					writeF32(&myFile, pos->x);
-					writeF32(&myFile, pos->y);
-					writeF32(&myFile, pos->z);
-				}
-
-				if (selected[1]) {
-					OPvec3* norm = (OPvec3*)OPlistGet(ModelData.normals, i);
-					writeF32(&myFile, norm->x);
-					writeF32(&myFile, norm->y);
-					writeF32(&myFile, norm->z);
-				}
-
-				if (selected[2]) {
-					OPvec2* uv = (OPvec2*)OPlistGet(ModelData.uvs, i);
-					writeF32(&myFile, uv->x);
-					writeF32(&myFile, uv->y);
-				}
-
-				if (selected[6]) {
-					ui16* ind1 = (ui16*)OPlistGet(ModelData.boneIndices, i * 4 + 0);
-					ui16* ind2 = (ui16*)OPlistGet(ModelData.boneIndices, i * 4 + 1);
-					ui16* ind3 = (ui16*)OPlistGet(ModelData.boneIndices, i * 4 + 2);
-					ui16* ind4 = (ui16*)OPlistGet(ModelData.boneIndices, i * 4 + 3);
-
-					f32* w1 = (f32*)OPlistGet(ModelData.boneWeights, i * 4 + 0);
-					f32* w2 = (f32*)OPlistGet(ModelData.boneWeights, i * 4 + 1);
-					f32* w3 = (f32*)OPlistGet(ModelData.boneWeights, i * 4 + 2);
-					f32* w4 = (f32*)OPlistGet(ModelData.boneWeights, i * 4 + 3);
-
-					writeU16(&myFile, *ind1);
-					writeU16(&myFile, *ind2);
-					writeU16(&myFile, *ind3);
-					writeU16(&myFile, *ind4);
-
-					writeF32(&myFile, *w1);
-					writeF32(&myFile, *w2);
-					writeF32(&myFile, *w3);
-					writeF32(&myFile, *w4);
-				}
-			}
-
-			if (selected[4]) {
-				writeU32(&myFile, ModelData.IndexCount / 3);
-
-				for (i32 i = 0; i < ModelData.IndexCount; i++) {
-					ui16* ind = (ui16*)OPlistGet(ModelData.indices, i);
-					writeU16(&myFile, *ind);
-				}
-			}
-
-			if (selected[5]) {
-				WriteSkeleton(GlobalSkeleton, &myFile);
-			}
-
-		}
+	FbxDocumentInfo* sceneInfo = lScene->GetSceneInfo();    
+	if (!sceneInfo) {
+		OPlog("Scene info failed.");
+		return -1;
 	}
 
+	FbxNode* lRootNode = lScene->GetRootNode();
+	if (lRootNode) {
+		for (int i = 0; i < lRootNode->GetChildCount(); i++)
+			FillNode(lRootNode->GetChild(i));
+	}
+
+	GetPoseInformation(lScene, GlobalSkeleton);
+
+	// Write the OPM file
+	if (output != NULL) WriteFile(output, features);
+	else OPlog("No output file given.");
+	
 	lSdkManager->Destroy();
 
 	return 0;

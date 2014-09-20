@@ -56,13 +56,23 @@ macro(output_library APPLICATION_TARGET LIBRARY_NAME )
 		SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.a")
 
 		if("${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" OR "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64")
-			SET(COPY_BINARY_RELATIVE_DIRECTORY "/${LIBRARY_NAME}/Debug/")
+			if(${OPIFEX_RELEASE})
+				SET(COPY_BINARY_RELATIVE_DIRECTORY "/${LIBRARY_NAME}/Release/")
+			else()
+				SET(COPY_BINARY_RELATIVE_DIRECTORY "/${LIBRARY_NAME}/Debug/")
+			endif()
 			SET(COPY_BINARY_LIBRARY "${LIBRARY_NAME}.lib")
+		endif()
+
+		if(${OPIFEX_RELEASE})
+			SET(BINARY_RELEASE_MODE "release")
+		else()
+			SET(BINARY_RELEASE_MODE "debug")
 		endif()
 
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"${OPIFEX_PROJECT_BINARY_DIR}${COPY_BINARY_RELATIVE_DIRECTORY}${COPY_BINARY_LIBRARY}"
-			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/)
+			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}/)
 	endif()
 
 endmacro(output_library)
@@ -78,13 +88,23 @@ macro(output_library_from APPLICATION_TARGET RELATIVE_PATH LIBRARY_NAME )
 		SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.a")
 
 		if("${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" OR "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64")
-			SET(COPY_BINARY_RELATIVE_DIRECTORY "${RELATIVE_PATH}/Debug/")
+			if(${OPIFEX_RELEASE})
+				SET(COPY_BINARY_RELATIVE_DIRECTORY "/${RELATIVE_PATH}/Release/")
+			else()
+				SET(COPY_BINARY_RELATIVE_DIRECTORY "/${RELATIVE_PATH}/Debug/")
+			endif()
 			SET(COPY_BINARY_LIBRARY "${LIBRARY_NAME}.lib")
+		endif()
+
+		if(${OPIFEX_RELEASE})
+			SET(BINARY_RELEASE_MODE "release")
+		else()
+			SET(BINARY_RELEASE_MODE "debug")
 		endif()
 
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"${OPIFEX_PROJECT_BINARY_DIR}${COPY_BINARY_RELATIVE_DIRECTORY}${COPY_BINARY_LIBRARY}"
-			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/)
+			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}/)
 	endif()
 
 endmacro(output_library_from)
@@ -92,11 +112,17 @@ endmacro(output_library_from)
 
 macro(output_binary APPLICATION_TARGET RELATIVE_PATH FILE_PATH OPIFEX_MATCH )
 
+	if(${OPIFEX_RELEASE})
+		SET(BINARY_RELEASE_MODE "release")
+	else()
+		SET(BINARY_RELEASE_MODE "debug")
+	endif()
+
 	if( ${OPIFEX_MATCH} )
 		populate_binary_directory()
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"${OPIFEX_PROJECT_SOURCE_DIR}${RELATIVE_PATH}${BINARY_TARGET_DIRECTORY}/${FILE_PATH}"
-			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/)
+			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}/)
 	endif()
 
 endmacro(output_binary)
@@ -104,7 +130,6 @@ endmacro(output_binary)
 
 macro(copy_to_folder APPLICATION_TARGET RELATIVE_PATH FILE_PATH OUTPUT_PATH OPIFEX_MATCH )
 
-	
 	if( ${OPIFEX_MATCH} )
 		populate_binary_directory()
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -114,6 +139,7 @@ macro(copy_to_folder APPLICATION_TARGET RELATIVE_PATH FILE_PATH OUTPUT_PATH OPIF
 	endif()
 
 endmacro(copy_to_folder)
+
 
 macro(copy_from_binaries_on_build APPLICATION_TARGET FILE_PATH OPIFEX_MATCH )
 
@@ -128,7 +154,8 @@ macro(copy_from_binaries_on_build APPLICATION_TARGET FILE_PATH OPIFEX_MATCH )
 
 endmacro(copy_from_binaries_on_build)
 
-macro(add_opifex_includes)
+
+macro(add_external_opifex_includes)
 	include_directories(
 		${OPIFEX_ENGINE_REPOSITORY}
 		${OPIFEX_ENGINE_REPOSITORY}/External/glfw-3.0.4/include/
@@ -138,9 +165,10 @@ macro(add_opifex_includes)
 		${OPIFEX_ENGINE_REPOSITORY}/External/Vorbis/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/glm-0.9.1/
 	)
-endmacro(add_opifex_includes)
+endmacro(add_external_opifex_includes)
 
-macro(add_opifex_debug_definitions APPLICATION_DIR_DEPTH )
+
+macro(add_opifex_definitions APPLICATION_TARGET APPLICATION_DIR_DEPTH )
 
 	add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS -D${OPIFEX_OS})
 
@@ -163,7 +191,14 @@ macro(add_opifex_debug_definitions APPLICATION_DIR_DEPTH )
 	
 	set_target_properties(8_Application PROPERTIES LINKER_LANGUAGE CXX)
 
-endmacro(add_opifex_debug_definitions)
+
+	if(${OPIFEX_RELEASE})
+		add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
+		target_link_libraries(${APPLICATION_TARGET}	libcpmtd0.lib)
+	endif()
+
+endmacro(add_opifex_definitions)
+
 
 macro(add_opifex_libraries APPLICATION_TARGET )
 	find_binary(LIBLODEPNG "LodePng")
@@ -249,3 +284,56 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 
 endmacro(add_opifex_libraries)
 
+
+
+function(find_binary OPIFEX_LIBRARY OPIFEX_NAME)
+	populate_binary_directory()
+
+	SET(OPIFEX_LIBRARY_NAME "lib${OPIFEX_NAME}.a")
+
+	if(${OPIFEX_OS_WINDOWS})
+		SET(OPIFEX_LIBRARY_NAME "${OPIFEX_NAME}.lib")
+	endif()
+
+	if(${OPIFEX_RELEASE})
+		SET(BINARY_RELEASE_MODE "release")
+	else()
+		SET(BINARY_RELEASE_MODE "debug")
+	endif()
+
+	message(STATUS "Looking for '${OPIFEX_LIBRARY_NAME}' in '${OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}/'")
+	
+	find_library( ${OPIFEX_LIBRARY} NAMES ${OPIFEX_LIBRARY_NAME} PATHS 
+	"${OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}/" PARENT_SCOPE)
+
+endfunction(find_binary)
+
+
+
+
+macro(opifex_status_messages)
+
+	message(STATUS "\n===================================")
+	message(STATUS "==    OPifex CMake Completed     ==")
+	message(STATUS "===================================\n\nCONFIGURED VARIABLES:\n")
+	message(STATUS "  OPIFEX_REPOSITORY: ${OPIFEX_REPOSITORY}")
+	message(STATUS "  OPIFEX_ENGINE_REPOSITORY: ${OPIFEX_ENGINE_REPOSITORY}")
+	message(STATUS "  OPIFEX_BINARIES: ${OPIFEX_BINARIES}")
+	message(STATUS "\n===================================\n")
+
+endmacro(opifex_status_messages)
+
+
+if(${OPIFEX_RELEASE})
+	SET(BINARY_RELEASE_MODE "release")
+else()
+	SET(BINARY_RELEASE_MODE "debug")
+endif()
+
+macro(copy_file_to_binaries FILE_TO_COPY)
+
+		file(COPY 
+			${OPIFEX_ENGINE_REPOSITORY}${FILE_TO_COPY}
+			DESTINATION ${PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}/)
+
+endmacro(copy_file_to_binaries)

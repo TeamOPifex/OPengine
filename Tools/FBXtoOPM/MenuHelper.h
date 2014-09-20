@@ -8,18 +8,7 @@
 #include <windows.h>
 #include <conio.h>
 
-// LXSoft
-// mod: cui/menu_021
-// stdarg.h  -> used for variable list of arguments (va_list, va_start ...)
-// windows.h -> used for Sleep function, for *nix use unistd.h
-
-typedef unsigned short int usint_t;
-// Menu function prototype
-int menu(char* name, char* prefix, char* cursor, usint_t orientation,
-	usint_t padding, usint_t start_pos, usint_t delay,
-	usint_t num_childs, ...);
-
-int DisplayMenu(i8* header, OPint* selections, ui16 children, ...) {
+void MenuOptions(i8* header, OPint* selections, ui16 children, ...) {
 	va_list args;
 	i8 chr = 0x00;
 	i32 tmp;
@@ -30,15 +19,15 @@ int DisplayMenu(i8* header, OPint* selections, ui16 children, ...) {
 		system("cls");
 		OPlog(header);
 
-		if (chr == 0x48 || chr == 0x4B)
+		if (chr == 0x48 || chr == 0x4B || chr == 'w' || chr =='a')
 			(opt>1 && opt != 1) ? opt-- : (opt = children);
-		else if (chr == 0x50 || chr == 0x4D)
+		else if (chr == 0x50 || chr == 0x4D || chr == 's' || chr == 'd')
 			(opt >= 1 && opt != children + 1) ? opt++ : (opt = 1);
 		else if (chr == ' ') {
 			selections[opt - 1] = !selections[opt - 1];
 		}
-		if (opt == (children + 1)) {
-		//	break;
+		if (opt == (children + 1) && chr == ' ') {
+			break;
 		}
 
 		va_start(args, children);
@@ -75,6 +64,4 @@ int DisplayMenu(i8* header, OPint* selections, ui16 children, ...) {
 
 		//Sleep(5);
 	} while ((chr = getch()) != 0x0D);
-
-	return 0;
 }
