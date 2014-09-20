@@ -2,21 +2,12 @@ cmake_minimum_required(VERSION 2.8)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 
-
 project(OPifexEngine)
 
 SET(OPIFEX_ENGINE_REPOSITORY ${PROJECT_SOURCE_DIR})
 
-### CMake Setup
-include(CMake/macros.cmake) 
-### Build Setup
-include(CMake/build.cmake)
-include(CMake/global.cmake)
-include(CMake/packages.cmake)
-include(CMake/assets.cmake)
 include(CMake/binaries.cmake)
-
-
+include(CMake/opifex.cmake)
 
 ### Project Setup
 #########################################

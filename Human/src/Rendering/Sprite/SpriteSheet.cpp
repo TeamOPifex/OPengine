@@ -175,6 +175,13 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 			assetBucket->Asset = (void*)sprite;
 			assetBucket->Unload = NULL;
 			assetBucket->Dirty = 0;
+
+#ifdef _DEBUG
+			assetBucket->Reload = NULL;
+			assetBucket->AbsolutePath = NULL;
+			assetBucket->FullPath = NULL;
+			assetBucket->LastChange = NULL;
+#endif
 			OPhashMapPut(&OP_CMAN_HASHMAP, finalName, assetBucket);
 		}
 	}
