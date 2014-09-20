@@ -4,8 +4,14 @@
 // Application Methods
 //////////////////////////////////////
 
-void ApplicationInit() {	
-	OPcmanInit(OP_DEFAULT_LOADERS, 10, NULL);
+void ApplicationInit() {
+	i8* assetDir = NULL;
+
+#ifdef OPIFEX_REPO
+	assetDir = OPIFEX_REPO;
+#endif
+
+	OPcmanInit(OP_DEFAULT_LOADERS, 10, assetDir);
 	OPrenderInit();
 	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 }

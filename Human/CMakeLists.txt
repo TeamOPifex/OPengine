@@ -146,5 +146,11 @@ else()
 
 	else()
 
+		copy_file_to_binaries(/External/Ogg/lib/debug/win32/ogg.dll)
+		copy_file_to_binaries(/External/Ogg/lib/debug/win32/libogg.dll)
+		copy_file_to_binaries(/External/Vorbis/lib/debug/win32/vorbisfile.dll)
+		copy_file_to_binaries(/External/Vorbis/lib/debug/win32/libvorbis.dll)
+		copy_file_to_binaries(/External/Vorbis/lib/debug/win32/libvorbisfile.dll)
+
 	endif()	
 endif()
