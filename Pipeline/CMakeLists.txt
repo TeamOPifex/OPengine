@@ -68,6 +68,12 @@ endif()
 
 target_link_libraries(8_Pipeline ${ALL_LIBS})
 
+if(${OPIFEX_RELEASE})
+
+else()
+	add_definitions(-D_DEBUG)
+endif()
+
 if(${OPIFEX_V8})
 	if(${OPIFEX_OS_WINDOWS})
 		target_link_libraries(8_Pipeline 

@@ -42,7 +42,7 @@ typedef struct{
 	void* Asset;
 	OPint(*Unload)(void* assetIn);
 	OPint Dirty;
-#ifdef _DEBUG
+#if defined(_DEBUG) && defined(OPIFEX_WINDOWS)
 	OPint(*Reload)(const OPchar* path, void** assetOut);
 	OPchar* FullPath;
 	OPchar* AbsolutePath;
