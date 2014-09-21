@@ -34,10 +34,6 @@ populate_binary_directory()
 
 output_library_from(GLEW_158 "/External" "GLEW_158")
 
-output_binary(GLEW_158 "/External/Ogg/lib/debug/" "libogg.lib" ${OPIFEX_OS_WINDOWS})
-output_binary(GLEW_158 "/External/Vorbis/lib/debug/" "libvorbis.lib" ${OPIFEX_OS_WINDOWS})
-output_binary(GLEW_158 "/External/Vorbis/lib/debug/" "libvorbisfile.lib" ${OPIFEX_OS_WINDOWS})
-
 
 ### LodePNG
 

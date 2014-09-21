@@ -141,6 +141,10 @@ if(${OPIFEX_OS_WIN64})
 		copy_file_to_binaries(/External/Vorbis/lib/release/win64/libvorbis.dll)
 		copy_file_to_binaries(/External/Vorbis/lib/release/win64/libvorbisfile.dll)
 
+		copy_file_to_binaries(/External/Ogg/lib/release/win64/libogg_static.lib)
+		copy_file_to_binaries(/External/Vorbis/lib/release/win64/libvorbis_static.lib)
+		copy_file_to_binaries(/External/Vorbis/lib/release/win64/libvorbisfile_static.lib)
+
 	else()
 
 		message(STATUS "Copying... OggVorbis Win64 Debug")
@@ -149,6 +153,10 @@ if(${OPIFEX_OS_WIN64})
 		copy_file_to_binaries(/External/Vorbis/lib/debug/win64/vorbisfile.dll)
 		copy_file_to_binaries(/External/Vorbis/lib/debug/win64/libvorbis.dll)
 		copy_file_to_binaries(/External/Vorbis/lib/debug/win64/libvorbisfile.dll)
+
+		copy_file_to_binaries(/External/Ogg/lib/debug/win64/libogg.lib)
+		copy_file_to_binaries(/External/Vorbis/lib/debug/win64/libvorbis.lib)
+		copy_file_to_binaries(/External/Vorbis/lib/debug/win64/libvorbisfile.lib)
 
 	endif()	
 else()
@@ -161,6 +169,10 @@ else()
 		copy_file_to_binaries(/External/Vorbis/lib/release/win32/libvorbis.dll)
 		copy_file_to_binaries(/External/Vorbis/lib/release/win32/libvorbisfile.dll)
 
+		copy_file_to_binaries(/External/Ogg/lib/release/win32/libogg_static.lib)
+		copy_file_to_binaries(/External/Vorbis/lib/release/win32/libvorbis_static.lib)
+		copy_file_to_binaries(/External/Vorbis/lib/release/win32/libvorbisfile_static.lib)
+
 	else()
 
 		message(STATUS "Copying... OggVorbis Win32 Debug")
@@ -169,6 +181,10 @@ else()
 		copy_file_to_binaries(/External/Vorbis/lib/debug/win32/vorbisfile.dll)
 		copy_file_to_binaries(/External/Vorbis/lib/debug/win32/libvorbis.dll)
 		copy_file_to_binaries(/External/Vorbis/lib/debug/win32/libvorbisfile.dll)
+
+		copy_file_to_binaries(/External/Ogg/lib/debug/win32/libogg.lib)
+		copy_file_to_binaries(/External/Vorbis/lib/debug/win32/libvorbis.lib)
+		copy_file_to_binaries(/External/Vorbis/lib/debug/win32/libvorbisfile.lib)
 
 	endif()	
 endif()
