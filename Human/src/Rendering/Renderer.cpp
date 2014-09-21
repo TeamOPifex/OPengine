@@ -5,10 +5,10 @@
 #include "./Core/include/Assert.h"
 
 
-OPint OPrenderWidth;
-OPint OPrenderHeight;
-OPint OPscreenWidth = 1280;
-OPint OPscreenHeight = 720;
+i32 OPrenderWidth;
+i32 OPrenderHeight;
+i32 OPscreenWidth = 1280;
+i32 OPscreenHeight = 720;
 OPint OPrenderFullscreen = false;
 
 #ifndef OPIFEX_ANDROID

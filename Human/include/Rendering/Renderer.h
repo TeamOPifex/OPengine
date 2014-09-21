@@ -9,10 +9,10 @@
 extern "C" {
 #endif
 
-extern OPint OPrenderWidth;
-extern OPint OPrenderHeight;
-extern OPint OPscreenWidth;
-extern OPint OPscreenHeight;
+extern i32 OPrenderWidth;
+extern i32 OPrenderHeight;
+extern i32 OPscreenWidth;
+extern i32 OPscreenHeight;
 extern OPint OPrenderFullscreen;
 
 #ifndef OPIFEX_ANDROID

@@ -71,22 +71,40 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
 
 elseif( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64" )
 
+	find_library(OGG_LIBRARY_RELEASE
+	   NAMES ogg libogg libogg_static
+	   PATHS
+	   "${PROJECT_SOURCE_DIR}/External/Ogg/lib/release/win64"
+	)
+
+	find_library(VORBIS_LIBRARY_RELEASE
+	  NAMES vorbis libvorbis libvorbis_static
+	  PATHS
+	  "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/release/win64"
+	)
+
+	find_library(VORBISFILE_LIBRARY_RELEASE
+	   NAMES vorbisfile vorbisfile_static libvorbisfile libvorbisfile_static
+	  PATHS
+	  "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/release/win64"
+	)
+	
    find_library(OGG_LIBRARY 
       NAMES ogg libogg
       PATHS
-      "${PROJECT_SOURCE_DIR}/External/Ogg/lib/win64"
+      "${PROJECT_SOURCE_DIR}/External/Ogg/lib/debug/win64"
    )
    
    find_library(VORBIS_LIBRARY 
      NAMES vorbis libvorbis
      PATHS
-     "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win64"
+     "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/debug/win64"
    )
 
    find_library(VORBISFILE_LIBRARY 
       NAMES vorbisfile libvorbisfile
      PATHS
-     "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/win64"
+     "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/debug/win64"
    )
 else()
 

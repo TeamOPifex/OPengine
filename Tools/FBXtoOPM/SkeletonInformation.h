@@ -77,7 +77,7 @@ i16 GetBonePosition(ModelSkeletonData* skeleton, i8* name) {
 	return pos;
 }
 
-#include "WriteHelper.h"
+#include "Helpers.h"
 
 void WriteBone(ModelSkeletonBone* bone, ofstream* file) {
 	writeI16(file, bone->index);
