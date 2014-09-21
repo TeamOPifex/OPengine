@@ -445,6 +445,7 @@ OPMData OPMloadData(OPstream* str) {
 			//OPmat4mul(&pose[i], &matTranslate, &matRotate);
 			//OPmat4mul(&pose[i], &matRotate, &matTranslate);
 			//OPmat4Inverse(&pose[i], &pose[i]);
+			//OPmat4transpose(&pose[i]);
 
 
 			OPlog("Joint: %d %s", boneIndex, name);

@@ -6,7 +6,6 @@
 
 void ApplicationInit() {
 	i8* assetDir = NULL;
-
 #ifdef OPIFEX_REPO
 	assetDir = OPIFEX_REPO;
 #endif
@@ -35,6 +34,7 @@ void ApplicationSetup() {
 	OPupdate = ApplicationUpdate;
 	OPdestroy = ApplicationDestroy;
 }
+
 
 //////////////////////////////////////
 // Application Entry Point
