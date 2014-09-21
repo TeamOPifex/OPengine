@@ -19,7 +19,7 @@ OPchar* OP_CMAN_ASSET_FOLDER;
 
 OPlinkedList* OP_CMAN_PURGE;
 
-#ifdef _DEBUG
+#if defined(_DEBUG) && defined(OPIFEX_WINDOWS)
 #define BUFSIZE MAX_PATH
 #include <windows.h>
 #include "./Data/include/String.h"
@@ -28,7 +28,7 @@ i64 OP_CMAN_LAST_CHECKED = 1000;
 #endif
 
 void OPcmanUpdate(OPtimer* timer) {
-#ifdef _DEBUG
+#if defined(_DEBUG) && defined(OPIFEX_WINDOWS)
 	i32 i, j;
 	long change;
 	Bucket bucket;
@@ -65,7 +65,7 @@ void OPcmanUpdate(OPtimer* timer) {
 // Specifies how assets will be loaded for each file type
 OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount, OPchar* dir){
 
-#ifdef _DEBUG
+#if defined(_DEBUG) && defined(OPIFEX_WINDOWS)
 	TCHAR Buffer[BUFSIZE];
 	DWORD dwRet;
 #endif
@@ -85,9 +85,9 @@ OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount, OPchar* dir){
 #if defined(OPIFEX_WINDOWS)
 	result = _chdir(OP_CMAN_ASSET_FOLDER);
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
-	result = _chdir(OP_CMAN_ASSET_FOLDER);
+	result = chdir(OP_CMAN_ASSET_FOLDER);
 #else
-	result = _chdir(OP_CMAN_ASSET_FOLDER);
+	result = chdir(OP_CMAN_ASSET_FOLDER);
 #endif
 
 	if (result == 0) {
@@ -179,7 +179,7 @@ OPint OPcmanLoad(const OPchar* key){
 				assetBucket->Asset = asset;
 				assetBucket->Unload = loader.Unload;
 				assetBucket->Dirty = 0;
-#ifdef _DEBUG
+#if defined(_DEBUG) && defined(OPIFEX_WINDOWS)
 				assetBucket->Reload = loader.Reload;
 				assetBucket->FullPath = fullPath;
 				assetBucket->AbsolutePath = OPstringCreateMerged(OP_CMAN_ASSET_FOLDER, fullPath);

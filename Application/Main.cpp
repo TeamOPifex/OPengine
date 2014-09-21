@@ -52,10 +52,11 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj
 
 #else
 
-void main(int argc, char** args) {
+int main(int argc, char** args) {
 	ApplicationSetup();
 	OPstart();
 	OPend();
+	return 0;
 }
 
 #endif

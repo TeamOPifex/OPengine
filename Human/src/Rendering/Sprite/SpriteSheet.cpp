@@ -176,7 +176,7 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 			assetBucket->Unload = NULL;
 			assetBucket->Dirty = 0;
 
-#ifdef _DEBUG
+#if defined(_DEBUG) && defined(OPIFEX_WINDOWS)
 			assetBucket->Reload = NULL;
 			assetBucket->AbsolutePath = NULL;
 			assetBucket->FullPath = NULL;

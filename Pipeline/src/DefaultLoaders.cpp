@@ -36,9 +36,9 @@ OPassetLoader OP_DEFAULT_LOADERS[10] = {
 				".vert",
 #ifdef _DEBUG
 #ifdef OPIFEX_ANDROID
-				"Shaders/OpenGL_ES_2_0/",
+				"Shaders/OPENGL_ES_2_0/",
 #else
-				"Shaders/OpenGL_2_0/",
+				"Shaders/OPENGL_2_0/",
 #endif
 #else
 				"Shaders/",
@@ -52,9 +52,9 @@ OPassetLoader OP_DEFAULT_LOADERS[10] = {
 			".frag",
 #ifdef _DEBUG
 #ifdef OPIFEX_ANDROID
-			"Shaders/OpenGL_ES_2_0/",
+			"Shaders/OPENGL_ES_2_0/",
 #else
-			"Shaders/OpenGL_2_0/",
+			"Shaders/OPENGL_2_0/",
 #endif
 #else
 			"Shaders/",

@@ -109,3 +109,5 @@ message(STATUS "Vorbis Library: ${VORBIS_LIBRARY}")
 message(STATUS "VorbisFile Library: ${VORBISFILE_LIBRARY}")
 message(STATUS "OpenGL (${OpenGL})")
 message(STATUS "GLFW_LIBRARIES (${GLFW_LIBRARIES})")
+
+opifex_status_messages()
