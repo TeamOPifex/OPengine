@@ -15,6 +15,8 @@ typedef struct {
 	OPsprite** Sprites;
 	OPsprite* CurrentSprite;
 	OPfloat FrameRate;
+	OPint CurrentFrame;
+	ui64 CurrentElapsed;
 	OPint Loop;
 	OPeffect* Effect;
 } OPsprite3D;
