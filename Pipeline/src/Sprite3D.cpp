@@ -62,21 +62,25 @@ void OPsprite3DDestroy(OPsprite3D* sprite) {
 }
 
 void OPsprite3DUpdate(OPsprite3D* sprite, ui64 elapsed) {
-	sprite->CurrentSprite->Elapsed += elapsed;
-	if (sprite->CurrentSprite->Elapsed > 1000 / sprite->FrameRate) {
-		sprite->CurrentSprite->Elapsed = 0;
-		sprite->CurrentSprite->Frame++;
-		if (sprite->CurrentSprite->Frame >= sprite->CurrentSprite->FrameCount) {
-			if (sprite->Loop) sprite->CurrentSprite->Frame = 0;
-			else  sprite->CurrentSprite->Frame--;
+	sprite->CurrentElapsed += elapsed;
+	if (sprite->CurrentElapsed > 1000 / sprite->FrameRate) {
+		sprite->CurrentElapsed = 0;
+		sprite->CurrentFrame++;
+		if (sprite->CurrentFrame >= sprite->CurrentSprite->FrameCount) {
+			if (sprite->Loop) {
+				sprite->CurrentFrame = 0;
+			}
+			else  {
+				sprite->CurrentFrame--;
+			}
 		}
 	}
 }
 
 void OPsprite3DSetSprite(OPsprite3D* sprite, i32 index) {
 	sprite->CurrentSprite = sprite->Sprites[index];
-	sprite->CurrentSprite->Frame = 0;
-	sprite->CurrentSprite->Elapsed = 0;
+	sprite->CurrentFrame = 0;
+	sprite->CurrentElapsed = 0;
 }
 
 
@@ -114,8 +118,8 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	OPrenderParamMat4("uWorld", &world);
 	OPrenderParamMat4("uView", &view);
 	OPrenderParamMat4("uProj", &proj);
-	OPrenderParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentSprite->Frame].Offset);
-	OPrenderParamVec2("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentSprite->Frame].Size);
+	OPrenderParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
+	OPrenderParamVec2("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size);
 }
 
 void OPsprite3DRender(OPsprite3D* sprite, OPcam* camera) {
