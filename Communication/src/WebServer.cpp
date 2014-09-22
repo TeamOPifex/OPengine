@@ -84,7 +84,7 @@ static int send_reply(struct mg_connection *conn, OPWebServer* server) {
 			filepath[size - offset] = NULL;
 
 
-			if (size == 12 && OPmemcmp(filepath + size - 4, ".ico", 4)) {
+			if ((size == 12 || size == 11) && OPmemcmp(filepath + size - 4, ".ico", 4)) {
 				OPstream* index = OPreadFile("Web/favicon.ico");
 				mg_send_header(conn, "Content-Type", "text/html");
 				mg_send_data(conn, index->Data, index->Length);
