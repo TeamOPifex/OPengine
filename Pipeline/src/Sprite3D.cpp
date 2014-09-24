@@ -83,6 +83,29 @@ void OPsprite3DSetSprite(OPsprite3D* sprite, i32 index) {
 	sprite->CurrentElapsed = 0;
 }
 
+void OPsprite3DPrepReRender(OPsprite3D* sprite, OPvec3 offset, OPfloat rotation) {
+	OPvec2 frameSize = OPspriteCurrentFrameSize(sprite->CurrentSprite);
+	OPfloat widthScale = frameSize.x / frameSize.y;
+	OPfloat heightScale = 1.0f;
+	if (widthScale > 1.0f) {
+		widthScale = 1.0f;
+		heightScale = frameSize.y / frameSize.x;
+	}
+
+	OPmat4 world;
+	OPmat4identity(&world);
+	world *= OPvec2Create(widthScale, heightScale);
+	OPmat4rotZ(&world, rotation + sprite->Rotation.z);
+	OPmat4rotY(&world, sprite->Rotation.y);
+	OPvec3 scl = sprite->Scale / 2.0f;
+	scl.x *= sprite->Direction;
+	world *= scl;
+	world += offset + sprite->Position;
+
+	OPrenderParamMat4("uWorld", &world);
+	OPrenderParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
+	OPrenderParamVec2("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size);
+}
 
 void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfloat rotation) {
 	OPvec2 frameSize = OPspriteCurrentFrameSize(sprite->CurrentSprite);

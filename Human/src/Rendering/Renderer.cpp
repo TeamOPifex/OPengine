@@ -114,10 +114,10 @@ void OPrenderCull(OPint state) {
 
 void OPrenderCullMode(OPint state) {
 	if (state) {
-		glEnable(GL_FRONT);
+		glCullFace(GL_FRONT);
 	}
 	else {
-		glDisable(GL_BACK);
+		glCullFace(GL_BACK);
 	}
 }
 
@@ -203,6 +203,15 @@ void  OPrenderDepth(OPint state){
 	else
 		glDisable(GL_DEPTH_TEST);
 }
+
+void OPrenderDepthWrite(OPint state) {
+	if (state)
+		glDepthMask(GL_TRUE);
+	else
+		glDepthMask(GL_FALSE);
+}
+
+
 
 void OPrenderBlend(OPint state) {
 	if (state)
