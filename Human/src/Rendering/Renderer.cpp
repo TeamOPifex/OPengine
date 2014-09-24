@@ -50,7 +50,7 @@ OPint OPrenderInit(){
 	}
 
 	// Most of the below will be moved to a Windowing System
-	glfwWindowHint(GLFW_SAMPLES, 4);
+	//glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
@@ -60,6 +60,7 @@ OPint OPrenderInit(){
 	}
 
 	window = glfwCreateWindow(OPscreenWidth, OPscreenHeight, "OPifex Entertainment", monitor, NULL);
+	glfwGetFramebufferSize(window, &OPscreenWidth, &OPscreenHeight);
 
 	if(!window) {		
 		OPlog("Failed to open GLFW window of %dx%d. If you have an Intel GPU, they are not 3.3 compatible.\n", OPscreenWidth, OPscreenHeight );
@@ -72,6 +73,8 @@ OPint OPrenderInit(){
 	if (glfwExtensionSupported("GL_ARB_multisample")) {
 		OPlog("Multisampling is supported");
 	}
+
+	GLint w, h;
 
 	OPrenderSetViewport(0, 0, OPscreenWidth, OPscreenHeight);
 	if (glewInit() != GLEW_OK) return -1;	
