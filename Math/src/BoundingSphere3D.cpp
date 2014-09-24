@@ -7,7 +7,7 @@ OPint OPboundingSphere3DCollision(OPboundingSphere3D* obj1, OPboundingSphere3D* 
 		obj1->pos.y - obj2->pos.y,
 		obj1->pos.z - obj2->pos.z
 		);
-	f32 dist = relPos.x * relPos.x + relPos.y * relPos.y + relPos.z * relPos.z;
-	f32 minDist = obj1->radius + obj2->radius;
+	OPfloat dist = relPos.x * relPos.x + relPos.y * relPos.y + relPos.z * relPos.z;
+	OPfloat minDist = obj1->radius + obj2->radius;
 	return dist <= minDist * minDist;
 }
