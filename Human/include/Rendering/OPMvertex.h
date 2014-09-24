@@ -34,6 +34,12 @@ typedef struct {
 typedef struct {
 	OPvec3 Position;
 	OPvec3 Normal;
+	OPvec2 UV;
+} OPMvertexNormalUV;
+
+typedef struct {
+	OPvec3 Position;
+	OPvec3 Normal;
 	OPvec3 Tangent;
 	OPvec3 Color;
 } OPMvertexColor;
