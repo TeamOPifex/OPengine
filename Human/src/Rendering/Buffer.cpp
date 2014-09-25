@@ -78,13 +78,15 @@ void OPrenderDrawBuffer(ui32 offset){
 //-----------------------------------------------------------------------------
 void OPrenderDrawBufferIndexed(ui32 offset){
 	OPglError("OPrenderDrawBufferIndexed:Error 0");
-	glDrawElements(GL_TRIANGLES, OPRENDER_CURR_IB->ElementCount, GL_UNSIGNED_SHORT, (void*)(0 + offset));
+	GLenum indType = OPRENDER_CURR_IB->ElementSize == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+	glDrawElements(GL_TRIANGLES, OPRENDER_CURR_IB->ElementCount, indType, (void*)(0 + offset));
 	OPglError("OPrenderDrawBufferIndexed:Error 1");
 }
 
 //-----------------------------------------------------------------------------
 void OPrenderDrawIndexed(ui32 offset, ui32 count){
-	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, (void*)(0 + offset));
+	GLenum indType = OPRENDER_CURR_IB->ElementSize == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+	glDrawElements(GL_TRIANGLES, count, indType, (void*)(0 + offset));
 }
 
 void OPrenderDrawUserArray(void* vertices, ui32 attrs, ui32 offset, ui32 count) {
