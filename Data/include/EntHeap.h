@@ -52,7 +52,7 @@ __inline void OPentHeapActivate(OPentHeap* heap, OPint* i){
 }
 //-----------------------------------------------------------------------------
 __inline void* OPentHeapGet(OPentHeap* heap, OPint i){
-	return ((ui8*)heap->Entities) + i;
+	return ((ui8*)heap->Entities) + (i * heap->EntSize);
 }
 //-----------------------------------------------------------------------------
 __inline void OPentHeapKill(OPentHeap* heap, OPint i){
