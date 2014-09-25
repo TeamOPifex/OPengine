@@ -135,6 +135,7 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	OPtextureClearActive();
 	//OPtextureSmooth();
 	ui32 bind = OPtextureBind(sprite->CurrentSprite->Sheet);
+
 	//OPlog("SpriteSheet %d @ %x", bind, sprite->CurrentSprite->Sheet);
 	OPrenderParami("uColorTexture", bind);
 	//OPrenderParamf("uAlpha", 1.0f);
