@@ -14,6 +14,7 @@ extern i32 OPrenderHeight;
 extern i32 OPscreenWidth;
 extern i32 OPscreenHeight;
 extern OPint OPrenderFullscreen;
+extern OPint OPengineHasFocus;
 
 #ifndef OPIFEX_ANDROID
 extern GLFWwindow* window;
