@@ -270,4 +270,16 @@ inline void OPvec3write(OPvec3* v, OPstream* str) {
 	OPwrite(str, &v->y, sizeof(f32));
 	OPwrite(str, &v->z, sizeof(f32));
 }
+
+inline OPvec3 OPvec3RandNorm(){
+	OPvec3 v = {
+		OPrandom() - 0.5f,
+		OPrandom() - 0.5f,
+		OPrandom() - 0.5f
+	};
+
+	OPvec3norm(&v, &v);
+
+	return v;
+}
 #endif
