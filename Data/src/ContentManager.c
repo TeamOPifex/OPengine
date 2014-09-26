@@ -164,12 +164,18 @@ OPint OPcmanLoad(const OPchar* key){
 				// load the asset
 				asset = NULL;
 				success = loader.Load(fullPath, &asset);
-				if(success <= 0) return OP_CMAN_ASSET_LOAD_FAILED;
+				if(success <= 0) {
+					OPlog("Failed to load %s", fullPath);
+					OPfree(fullPath);
+					return OP_CMAN_ASSET_LOAD_FAILED;
+				}
 
 
 
 				// create the asset to insert into the hashmap
 				if (!(assetBucket = (OPasset*)OPalloc(sizeof(OPasset)))) {
+
+					OPlog("Failed to allocate bucket for %s", fullPath);
 
 					// clean up the string
 					OPfree(fullPath);
