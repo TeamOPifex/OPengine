@@ -10,6 +10,7 @@ i32 OPrenderHeight;
 i32 OPscreenWidth = 1280;
 i32 OPscreenHeight = 720;
 OPint OPrenderFullscreen = false;
+OPint OPengineHasFocus = 1;
 
 #ifndef OPIFEX_ANDROID
 GLFWwindow* window = NULL;
@@ -17,6 +18,11 @@ GLFWwindow* window = NULL;
 
 void glfwErrorCallback(int error, const char* desc){
 	OPlog(desc);
+}
+
+void glfwWindowFocusCallback(GLFWwindow* window, int code) {
+	OPlog("Focus Result: %d", code);
+	OPengineHasFocus = code;
 }
 
 OPint OPrenderInit(){
@@ -74,12 +80,16 @@ OPint OPrenderInit(){
 		OPlog("Multisampling is supported");
 	}
 
+	glfwSetWindowFocusCallback(window, glfwWindowFocusCallback);
+
 	GLint w, h;
 
 	OPrenderSetViewport(0, 0, OPscreenWidth, OPscreenHeight);
 	if (glewInit() != GLEW_OK) return -1;	
 
-	glfwSetInputMode(window, GLFW_STICKY_KEYS, true);
+	glfwSetInputMode(window, GLFW_STICKY_KEYS, true); 
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
 
 	// TODO: Determine how to optimize with this
 #if !defined(OPIFEX_OSX32) && !defined(OPIFEX_OSX64)
