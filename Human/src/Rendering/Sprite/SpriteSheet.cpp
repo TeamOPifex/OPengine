@@ -3,6 +3,7 @@
 #include "./Data/include/ContentManager.h"
 #include "./Human/include/Utilities/ImagePNG.h"
 #include "./Human/include/Rendering/Sprite/SpriteSheet.h"
+#include "./Data/include/String.h"
 
 void __opSpriteScaleFrames(OPtexture* tex, OPspriteSheet* ss) {
 	ASSERT(tex, "__opSpriteScaleFrames() - texture null");
@@ -96,11 +97,18 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 			i8* nameData = OPreadstring(str);
 			OPchar* name = (OPchar*)nameData;
 			ui32 nameDataLength = strlen(name);
-			OPchar* finalName = (OPchar*)OPalloc(filenameLengthWithoutExtension + 1 + nameDataLength);
-			OPmemcpy(finalName, filenameWithoutExtension, filenameLengthWithoutExtension);
-			finalName[filenameLengthWithoutExtension] = '/';
-			OPmemcpy(finalName + filenameLengthWithoutExtension + 1, name, nameDataLength);
-			finalName[filenameLengthWithoutExtension + 1 + nameDataLength] = '\0';
+
+			// OPchar* finalName = (OPchar*)OPalloc(filenameLengthWithoutExtension + 1 + nameDataLength);
+			// OPmemcpy(finalName, filenameWithoutExtension, filenameLengthWithoutExtension);
+			// finalName[filenameLengthWithoutExtension] = '/';
+			// OPmemcpy(finalName + filenameLengthWithoutExtension + 1, name, nameDataLength);
+			// finalName[filenameLengthWithoutExtension + 1 + nameDataLength] = NULL;
+
+			OPchar* finalNameSep = OPstringCreateMerged(filenameWithoutExtension, "/");
+			OPchar* finalName = OPstringCreateMerged(finalNameSep, name);
+			OPfree(finalNameSep);
+
+			OPlog("Final Name! %s", finalName);
 
 			(*ss)->Names[i] = finalName;
 			OPfree(nameData);
@@ -172,6 +180,7 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 			// create the asset to insert into the hashmap
 			if (!(assetBucket = (OPasset*)OPalloc(sizeof(OPasset))))
 				return OP_CMAN_BUCKET_ALLOC_FAILED;
+
 			assetBucket->Asset = (void*)sprite;
 			assetBucket->Unload = NULL;
 			assetBucket->Dirty = 0;
@@ -183,7 +192,27 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 			assetBucket->LastChange = NULL;
 #endif
 			OPhashMapPut(&OP_CMAN_HASHMAP, finalName, assetBucket);
+
+#ifdef _DEBUG
+			if(OPcmanIsLoaded(finalName)) {
+				OPlog("OPSS %s loaded", finalName);
+			} else {
+				OPlog("OPSS FAILED TO LOAD %s", finalName);
+			}
+
+			if(OPcmanIsLoaded("Menu/BrotherBlue")) {
+				OPlog("0 OPSS is still loaded : %s loaded", "Menu/BrotherBlue");
+			} else {
+				OPlog("0 No Longer loaded! %s", "Menu/BrotherBlue");
+			}
+#endif
 		}
+	}
+
+	if(OPcmanIsLoaded("Menu/BrotherBlue")) {
+		OPlog("1 OPSS is still loaded : %s loaded", "Menu/BrotherBlue");
+	} else {
+		OPlog("1 No Longer loaded! %s", "Menu/BrotherBlue");
 	}
 
 	// load the png image data
@@ -192,20 +221,44 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 	OPlog("Loaded PNG!");
 #endif
 
+	if(OPcmanIsLoaded("Menu/BrotherBlue")) {
+		OPlog("2 OPSS is still loaded : %s loaded", "Menu/BrotherBlue");
+	} else {
+		OPlog("2 No Longer loaded! %s", "Menu/BrotherBlue");
+	}
+
 	// copy the texture's data into the pre allocated texture
 	// then clean up the temp texture object
 	OPmemcpy(sheet, temp, sizeof(OPtexture));
+#ifdef _DEBUG
+	OPlog("Copied SpriteSheet!");
+#endif
 	OPfree(temp);
 
+#ifdef _DEBUG
+	OPlog("Scale the frames...");
+#endif
 	__opSpriteScaleFrames(sheet, *ss);
 
 #ifdef _DEBUG
 	OPlog("Done!");
 #endif
+	if(OPcmanIsLoaded("Menu/BrotherBlue")) {
+		OPlog("3 OPSS is still loaded : %s loaded", "Menu/BrotherBlue");
+	} else {
+		OPlog("3 No Longer loaded! %s", "Menu/BrotherBlue");
+	}
 
 	OPfree(filenameWithoutExtension);
 
-	return 1;
+	if(OPcmanIsLoaded("Menu/BrotherBlue")) {
+		OPlog("4 OPSS is still loaded : %s loaded", "Menu/BrotherBlue");
+	} else {
+		OPlog("4 No Longer loaded! %s", "Menu/BrotherBlue");
+	}
+
+
+	return 0;
 }
 
 OPint OPspriteSheetUnload(void* ss){

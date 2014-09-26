@@ -1,5 +1,6 @@
 #include "./Data/include/HashMap.h"
 #include "./Core/include/DynamicMemory.h"
+#include "./Data/include/String.h"
 
 static KeyValuePair* get_pair(Bucket *bucket, const OPchar *key);
 static ui64 hash(const OPchar* str);
@@ -141,11 +142,12 @@ OPint OPhashMapPut(HashMap *map, const OPchar* key, void* value)
 	}
 
 	pair = &(bucket->pairs[bucket->count - 1]);
-	pair->key = new_key;
+	pair->key = OPstringCreateMerged(key, "");
 	pair->value = value;
 
 	/* Copy the key into the key-value pair */
-	strcpy(pair->key, key);
+	//strcpy(pair->key, key);
+
 	return 1;
 }
 
