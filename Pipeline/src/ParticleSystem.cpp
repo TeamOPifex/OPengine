@@ -38,6 +38,9 @@ OPparticleSys* OPparticleSysCreate(OPtexture* texture, ui16 count, OPeffect* eff
 	sys->heap = OPentHeapCreate(particles, sizeof(OPparticle), count);
 	sys->uvScale.x = 0.2f;
 	sys->uvScale.y = 0.2f;
+	sys->fps = 0;
+	sys->timeElapsed = 0;
+
 	ASSERT(effect != NULL || EFFECT_PARTICLE_SYSTEM != NULL, "No effect was provided to the Particle System and a default was not initialized.");
 	if (effect != NULL) {
 		sys->effect = effect;
@@ -51,6 +54,7 @@ OPparticleSys* OPparticleSysCreate(OPtexture* texture, ui16 count, OPeffect* eff
 
 void OPparticleSysUpdate(OPparticleSys* sys, OPtimer* timer) {
 	OPint max = 0, i = sys->heap->MaxIndex;
+	OPint dt = timer->Elapsed / 1000.0f;
 	if (i >= 0)
 	for (; i--;){
 		ASSERT(
@@ -68,6 +72,9 @@ void OPparticleSysUpdate(OPparticleSys* sys, OPtimer* timer) {
 			OPentHeapKill(sys->heap, i);
 		}
 	}
+
+	// track the time passed
+	sys->timeElapsed += dt * sys->fps;
 }
 
 void OPparticleSysDestroy(OPparticleSys* sys) {
@@ -77,15 +84,19 @@ void OPparticleSysDestroy(OPparticleSys* sys) {
 
 void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(OPparticle*, OPmat4*)) {
 	OPmat4 world;
+	OPint frameChange = sys->fps && sys->timeElapsed > (1.0f / sys->fps);
 
 	OPrenderBindMesh(&PARTICLE_SYSTEM_QUAD_MESH);
 	OPrenderBindEffect(EFFECT_PARTICLE_SYSTEM);
 
 	OPrenderParamMat4v("uView", 1, &cam->View);
 	OPrenderParamMat4v("uProj", 1, &cam->Proj);
-	OPrenderParamVec2("uTexCoordScale", &sys->uvScale);
-	OPrenderParamVec2("uSpriteOffset", (OPvec2*)&OPvec2Zero);
 	OPrenderParamVec4("uTint", (OPvec4*)&OPvec4One);
+
+	//if(!sys->fps){
+		OPrenderParamVec2("uTexCoordScale", &sys->uvScale);
+		OPrenderParamVec2("uSpriteOffset", (OPvec2*)&OPvec2Zero);
+	//}
 
 	OPtextureClearActive();
 	OPrenderParami("uColorTexture", OPtextureBind(sys->texture));
@@ -93,12 +104,26 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 	if (ParticleTransform == NULL) {
 		for (OPint i = sys->heap->MaxIndex; i--;){
 			OPparticle* p = &((OPparticle*)sys->heap->Entities)[i];
+			ui8 frame = 0;
+
 			if (p->Life <= 0) continue;
 			
+			if(frameChange){
+				// loop the animation
+				frame = p->CurrentFrame = (p->CurrentFrame++) % p->Animation->FrameCount;
+			}
+
 			OPmat4identity(&world);
 			OPmat4scl(&world, 1, 1, 1);
 			OPmat4rotZ(&world, p->Angle);
 			OPmat4translate(&world, p->Position.x, p->Position.y, p->Position.z);
+
+			// if this particle system is animated, set the offset uniforms for each particle
+			// to indicate the current frame of animation
+			if(sys->fps){
+				OPrenderParamVec2("uTexCoordScale", &p->Animation->Frames[frame].Size);
+				OPrenderParamVec2("uSpriteOffset", &p->Animation->Frames[frame].Offset);
+			}
 
 			OPrenderParamMat4v("uWorld", 1, &world);
 			OPrenderMesh();
@@ -113,5 +138,9 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 			OPrenderParamMat4v("uWorld", 1, &world);
 			OPrenderMesh();
 		}
+	}
+
+	if(frameChange){
+		sys->timeElapsed = 0;
 	}
 }
