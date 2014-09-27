@@ -86,8 +86,12 @@ OPfileInformation OPreadFileInformation(const char* path){
 	file.length = _length;
 	file.fileDescriptor = fd;
 #else
-	FILE* myFile = fopen(path, "rb"); 
-    ASSERTC(myFile, "File not loaded");
+
+	FILE* myFile;
+
+	myFile = NULL;
+	myFile = fopen(path, "rb");
+    ASSERTC(myFile != NULL, "File not loaded");
 	if(!myFile){
 		char buff[256];
 		OPlog(buff);
@@ -99,6 +103,7 @@ OPfileInformation OPreadFileInformation(const char* path){
 	file.file = myFile;
 	file.fileDescriptor = 0;
 	file.start = 0;
+
 #endif
 
 	return file;
