@@ -8,7 +8,7 @@ OPfontManager* OPRENDER_CURR_FONT_MANAGER = NULL;
 OPeffect* OPRENDER_CURR_FONT_EFFECT = NULL;
 
 OPfontManager* OPfontManagerCreate(OPfont* font) {
-	OPfontManager* temp = (OPfontManager*)OPalloc(sizeof(OPfontManager));
+	OPfontManager* temp = (OPfontManager*)OPallocZero(sizeof(OPfontManager));
 	temp->_font = font;
 	temp->_color = OPvec4Create(0.0f, 0.0f, 0.0f, 1.0f);
 	temp->_align = OPFONT_ALIGN_LEFT;
@@ -141,6 +141,7 @@ void OPrenderTextColor4Mat4TextNode(OPfontUserTextNode* node, OPvec4 color, OPma
 	OPrenderTextSetParameters(color, world);
 	OPrenderBindMesh(&node->mesh);
 	OPrenderBindEffect(OPRENDER_CURR_FONT_EFFECT);
+	if (OPRENDER_CURR_FONT_MANAGER->pixelated) OPtexturePixelate();
 	OPrenderMesh();
 }
 
@@ -148,6 +149,7 @@ void OPrenderTextColor4Mat4BuiltNode(OPfontBuiltTextNode* node, OPvec4 color, OP
 	OPrenderTextSetParameters(color, world);
 	OPmeshPackerBind(&OPRENDER_CURR_FONT_MANAGER->meshPacker);
 	OPrenderBindEffect(OPRENDER_CURR_FONT_EFFECT);
+	if (OPRENDER_CURR_FONT_MANAGER->pixelated) OPtexturePixelate();
 	OPrenderMeshPacked(node->packedMesh);
 }
 

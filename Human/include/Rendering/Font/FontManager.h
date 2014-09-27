@@ -35,6 +35,7 @@ typedef struct {
 	bool isBuilt;
 	HashMap* builtNodes;
 	OPmeshPacker meshPacker;
+	OPint pixelated;
 } OPfontManager;
 
 

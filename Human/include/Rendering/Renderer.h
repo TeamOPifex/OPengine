@@ -40,6 +40,9 @@ void  OPrenderDepth(OPint state);
 void OPrenderDepthWrite(OPint state);
 void  OPrenderShutdown   ();
 
+ui32 OPgetNativeScreenWidth();
+ui32 OPgetNativeScreenHeight();
+
 inline void OPrenderBlendAlpha(){
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
 }

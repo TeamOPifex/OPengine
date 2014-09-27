@@ -3,6 +3,7 @@
 #include "./Core/include/Log.h"
 #include "./Core/include/Core.h"
 #include "./Core/include/Assert.h"
+#include "./Data/include/File.h"
 
 
 i32 OPrenderWidth;
@@ -11,10 +12,35 @@ i32 OPscreenWidth = 1280;
 i32 OPscreenHeight = 720;
 OPint OPrenderFullscreen = false;
 OPint OPengineHasFocus = 1;
+OPint glfwInitialized = 0;
 
 #ifndef OPIFEX_ANDROID
 GLFWwindow* window = NULL;
 #endif
+
+ui32 OPgetNativeScreenWidth() {
+	if (!glfwInitialized) {
+		int result = glfwInit();
+		if (!result) {
+			OPlog("INIT FAILED %d", result);
+			return -1;
+		}
+		glfwInitialized = 1;
+	}
+	return glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
+}
+
+ui32 OPgetNativeScreenHeight() {
+	if (!glfwInitialized) {
+		int result = glfwInit();
+		if (!result) {
+			OPlog("INIT FAILED %d", result);
+			return -1;
+		}
+		glfwInitialized = 1;
+	}
+	return glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
+}
 
 void glfwErrorCallback(int error, const char* desc){
 	OPlog(desc);
@@ -47,12 +73,25 @@ OPint OPrenderInit(){
 	OPscreenWidth = width;
 	OPscreenHeight = height;
 #else	
+
+	OPstream* str = OPreadFile("../app.config");
+	if (str) {
+		OPrenderFullscreen = OPstreamI32(str);
+		OPscreenWidth = OPstreamI32(str);
+		if (OPscreenWidth == -1) OPscreenWidth = OPgetNativeScreenWidth();
+		OPscreenHeight = OPstreamI32(str);
+		if (OPscreenHeight == -1) OPscreenHeight = OPgetNativeScreenHeight();
+	}
+
 	glfwSetErrorCallback(glfwErrorCallback);
 
-	int result = glfwInit();
-	if (!result) {
-		OPlog("INIT FAILED %d", result);
-		return -1;
+	if (!glfwInitialized) {
+		glfwInitialized = 1;
+		int result = glfwInit();
+		if (!result) {
+			OPlog("INIT FAILED %d", result);
+			return -1;
+		}
 	}
 
 	// Most of the below will be moved to a Windowing System

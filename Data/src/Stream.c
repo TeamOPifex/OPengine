@@ -93,6 +93,46 @@ ui8* OPread(OPstream* stream, OPuint size){
 	stream->_pointer += size; // update pointer location
 	return data;
 }
+
+
+void _fillBuffer(OPstream* stream) {
+	sscanf((i8*)(stream->Data + stream->_pointer), "%s", &stream->Buffer);
+	stream->_pointer += strlen(stream->Buffer) + 2;
+}
+
+i8 OPstreamI8(OPstream* stream) {
+	_fillBuffer(stream);
+	return atoi(stream->Buffer);
+}
+i16 OPstreamI16(OPstream* stream) {
+	_fillBuffer(stream);
+	return atoi(stream->Buffer);
+}
+i32 OPstreamI32(OPstream* stream) {
+	_fillBuffer(stream);
+	return atoi(stream->Buffer);
+}
+ui8 OPstreamUI8(OPstream* stream) {
+	_fillBuffer(stream);
+	return atoi(stream->Buffer);
+}
+ui16 OPstreamUI16(OPstream* stream) {
+	_fillBuffer(stream);
+	return atoi(stream->Buffer);
+}
+ui32 OPstreamUI32(OPstream* stream) {
+	_fillBuffer(stream);
+	return atoi(stream->Buffer);
+}
+f32 OPstreamf32(OPstream* stream) {
+	_fillBuffer(stream);
+	return atof(stream->Buffer);
+}
+i8* OPstreamString(OPstream* stream) {
+	_fillBuffer(stream);
+	return OPstringCreateMerged(stream->Buffer, "");
+}
+
 //-----------------------------------------------------------------------------
 ui8* OPreadAt(OPstream* stream, OPuint pos, OPuint size){
 	return stream->Data + pos;
