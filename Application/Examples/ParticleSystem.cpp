@@ -35,7 +35,7 @@ void ExampleParticleSystemEnter(OPgameState* last) {
 		);
 
 	OPparticleSysInit(NULL);
-	particleSystemExample->ParticleSystem = OPparticleSysCreate((OPtexture*)OPcmanGet("particleSheet.png"), 256, NULL);
+	particleSystemExample->ParticleSystem = OPparticleSysCreate(NULL, 256, NULL);
 	particleSystemExample->ParticleSystem->fps = 10;
 }
 
