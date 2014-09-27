@@ -29,8 +29,7 @@ void OPsprite2DInit(OPeffect* effect) {
 }
 
 OPsprite2D* OPsprite2DCreate(OPsprite** sprites, OPeffect* effect) {
-	OPsprite2D* sprite = (OPsprite2D*)OPalloc(sizeof(OPsprite2D));
-	OPbzero(sprite, sizeof(OPsprite2D));
+	OPsprite2D* sprite = (OPsprite2D*)OPallocZero(sizeof(OPsprite2D));
 	sprite->Scale = OPvec2One;
 	sprite->Sprites = sprites;
 	sprite->CurrentSprite = sprites[0];
@@ -49,28 +48,29 @@ void OPsprite2DDestroy(OPsprite2D* sprite) {
 }
 
 void OPsprite2DUpdate(OPsprite2D* sprite, OPtimer* timer) {
-	sprite->CurrentSprite->Elapsed += timer->Elapsed;
-	if (sprite->CurrentSprite->Elapsed > 1000 / sprite->FrameRate) {
-		sprite->CurrentSprite->Elapsed = 0;
-		sprite->CurrentSprite->Frame++;
-		if (sprite->CurrentSprite->Frame >= sprite->CurrentSprite->FrameCount) {
-			if (sprite->Loop) sprite->CurrentSprite->Frame = 0;
-			else  sprite->CurrentSprite->Frame--;
+	sprite->CurrentElapsed += timer->Elapsed;
+	if (sprite->CurrentElapsed > 1000 / sprite->FrameRate) {
+		sprite->CurrentElapsed = 0;
+		sprite->CurrentFrame++;
+		if (sprite->CurrentFrame >= sprite->CurrentSprite->FrameCount) {
+			if (sprite->Loop) sprite->CurrentFrame = 0;
+			else  sprite->CurrentFrame--;
 		}
 	}
 }
 
 void OPsprite2DSetSprite(OPsprite2D* sprite, i32 index) {
 	sprite->CurrentSprite = sprite->Sprites[index];
-	sprite->CurrentSprite->Frame = 0;
-	sprite->CurrentSprite->Elapsed = 0;
+	sprite->CurrentFrame = 0;
+	sprite->CurrentElapsed = 0;
 }
 
-void OPsprite2DRender(OPsprite2D* sprite) {
+void OPsprite2DPrepRender(OPsprite2D* sprite) {
 	OPrenderBindMesh(&SPRITE_2D_QUAD_MESH_PIPELINE);
 	OPrenderBindEffect(sprite->Effect);
 
 
+	sprite->CurrentSprite->Frame = sprite->CurrentFrame;
 	OPvec2 frameSize = OPspriteCurrentFrameSize(sprite->CurrentSprite);
 	OPfloat widthScale = frameSize.x / frameSize.y;
 	OPfloat heightScale = 1.0f;
@@ -94,10 +94,15 @@ void OPsprite2DRender(OPsprite2D* sprite) {
 	OPtextureSmooth();
 	OPrenderParami("uColorTexture", OPtextureBind(sprite->CurrentSprite->Sheet));
 	OPrenderParamMat4("uWorld", &world);
-	OPrenderParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentSprite->Frame].Offset);
-	OPrenderParamVec2("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentSprite->Frame].Size);
+	OPrenderParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
+	OPrenderParamVec2("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size);
+}
+
+void OPsprite2DRender(OPsprite2D* sprite) {
+	OPsprite2DPrepRender(sprite);
 	OPrenderMesh();
 }
+
 
 
 
