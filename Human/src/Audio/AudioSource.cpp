@@ -108,10 +108,12 @@ OPint OPaudOpenOgg(const OPchar* filename, OPaudioSource** source){
 	//sCallbacks.close_func = ov_close_func;
 	//sCallbacks.tell_func = ov_tell_func;
 
-	FILE* song = OPreadFileInformation(filename).file;
+	//FILE* song = OPreadFileInformation(filename).file;
 
+	
 	//if (ov_open_callbacks(song, sOggVorbisFile, NULL, 0, sCallbacks) == 0){
-	ov_open(song, sOggVorbisFile, NULL, 0);
+	ov_fopen(filename, sOggVorbisFile);
+	//ov_open(song, sOggVorbisFile, NULL, 0);
 			psVorbisInfo = ov_info(sOggVorbisFile, -1);
 			if(psVorbisInfo){
 				OPaudioDescription desc = {
