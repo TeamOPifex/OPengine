@@ -21,7 +21,7 @@ typedef struct {
 AudioExample* audioExample;
 
 void ExampleAudioEnter(OPgameState* last) {
-	OPcmanLoad("impact.wav");
+	OPcmanLoad("Artifice.wav");
 	OPcmanLoad("background.ogg");
 
 	OPaudInit();
@@ -29,7 +29,7 @@ void ExampleAudioEnter(OPgameState* last) {
 
 	audioExample = (AudioExample*)OPalloc(sizeof(AudioExample));
 
-	audioExample->Sound = OPaudCreateEmitter((OPaudioSource*)OPcmanGet("impact.wav"), EMITTER_THREADED);
+	audioExample->Sound = OPaudCreateEmitter((OPaudioSource*)OPcmanGet("Artifice.wav"), EMITTER_THREADED);
 	audioExample->BackgroundSound = OPaudCreateEmitter((OPaudioSource*)OPcmanGet("background.ogg"), EMITTER_THREADED);
 
 }
@@ -54,7 +54,7 @@ int ExampleAudioUpdate(OPtimer* time) {
 
 void ExampleAudioExit(OPgameState* next) {
 	OPaudRecycleEmitter(audioExample->Sound);
-	OPcmanUnload("impact.wav");
+	OPcmanUnload("Artifice.wav");
 
 	OPfree(audioExample);
 }
