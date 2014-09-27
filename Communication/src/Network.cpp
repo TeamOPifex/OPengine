@@ -1,17 +1,36 @@
-/*
 #include "./include/Network.h"
 #include "./Core/include/Log.h"
 #include "./Core/include/DynamicMemory.h"
 
+#ifdef OPIFEX_WINDOWS
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <iphlpapi.h>
 #include <stdio.h>
-
 #pragma comment(lib, "Ws2_32.lib")
+#define WSA_CLEANUP() {WSACleanup();}
+#endif 
 
+#ifdef OPIFEX_UNIX
+#include <arpa/inet.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <unistd.h>
+
+#define WSA_CLEANUP(){ }
+#define INVALID_SOCKET -1
+#define SOCKET_ERROR -1
+#define SD_SEND SHUT_WR
+
+#endif
+
+#include <errno.h>
+#include <stdio.h>
 #include <stdlib.h> 
+
+
 
 ui64 OPnetworkLookupAddress(const OPchar *kpAddress, OPchar** resolved)
 {
@@ -40,7 +59,7 @@ ui64 OPnetworkLookupAddress(const OPchar *kpAddress, OPchar** resolved)
 				OPchar* ad = inet_ntoa(addr);
 				i32 len = strlen(ad);
 				*resolved = (OPchar*)OPalloc(len + 1);
-				memcpy(*resolved, ad, len);
+				OPmemcpy(*resolved, ad, len);
 				(*resolved)[len] = NULL;
 
 				OPlog("IP Address %s\n", ad);
@@ -59,17 +78,19 @@ OPnetwork* OPnetworkCreate(OPnetworkType networkType) {
 }
 
 i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPint port) {
+#ifdef OPIFEX_WINDOWS
 	WSADATA wsaData;
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
 		fprintf(stderr, "WSAStartup failed.\n");
 		return 1;
 	}
+#endif
 
 	struct addrinfo *result = NULL,
 		*ptr = NULL,
 		hints;
 
-	ZeroMemory(&hints, sizeof(hints));
+	OPbzero(&hints, sizeof(hints));
 
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_DGRAM;
@@ -77,10 +98,10 @@ i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPint port) {
 
 	char* strPort = (char*)OPalloc(6);
 	if (port == 0) {
-		memcpy(strPort, DEFAULT_PORT, 6);
+		OPmemcpy(strPort, DEFAULT_PORT, 6);
 	}
 	else {
-		itoa(port, strPort, 10);
+		sscanf(strPort, "%d", &port);
 	}
 
 	OPchar* addr;
@@ -91,7 +112,7 @@ i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPint port) {
 
 	if (iResult != 0) {
 		printf("getaddrinfo failed: %d\n", iResult);
-		WSACleanup();
+		WSA_CLEANUP();
 		return 1;
 	}
 
@@ -100,9 +121,11 @@ i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPint port) {
 	network->ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
 
 	if (network->ConnectSocket == INVALID_SOCKET) {
+#ifdef OPIFEX_WINDOWS
 		printf("Error at socket(): %ld\n", WSAGetLastError());
+#endif
+		WSA_CLEANUP();
 		freeaddrinfo(result);
-		WSACleanup();
 		return 1;
 	}
 
@@ -112,17 +135,17 @@ i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPint port) {
 }
 
 i32 OPnetworkServerStart(OPnetwork* network, OPint port) {
-
+#ifdef OPIFEX_WINDOWS
 	WSADATA wsaData;
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
 		fprintf(stderr, "WSAStartup failed.\n");
 		return 1;
 	}
-
+#endif
 
 	struct addrinfo *result = NULL, *ptr = NULL, hints;
 
-	ZeroMemory(&hints, sizeof (hints));
+	OPbzero(&hints, sizeof (hints));
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_DGRAM;
 	hints.ai_protocol = IPPROTO_UDP;
@@ -130,37 +153,70 @@ i32 OPnetworkServerStart(OPnetwork* network, OPint port) {
 
 	char* strPort = (char*)OPalloc(6);
 	if (port == 0) {
-		memcpy(strPort, DEFAULT_PORT, 6);
+		OPmemcpy(strPort, DEFAULT_PORT, 6);
 	}
 	else {
-
-		itoa(port, strPort, 10);
+		sscanf(strPort, "%d", &port);
 	}
 
 	// Resolve the local address and port to be used by the server
 	i32 iResult = getaddrinfo(NULL, strPort, &hints, &result);
 	if (iResult != 0) {
 		printf("getaddrinfo failed: %d\n", iResult);
-		WSACleanup();
+		WSA_CLEANUP();
 		return 1;
 	}
 
 	network->ConnectSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
 
 	if (network->ConnectSocket == INVALID_SOCKET) {
+#ifdef OPIFEX_WINDOWS
 		printf("Error at socket(): %ld\n", WSAGetLastError());
+#endif
+		WSA_CLEANUP();
 		freeaddrinfo(result);
-		WSACleanup();
 		return 1;
 	}
 
 	iResult = bind(network->ConnectSocket, result->ai_addr, (i32)result->ai_addrlen);
 	if (iResult == SOCKET_ERROR) {
+#ifdef OPIFEX_WINDOWS
 		printf("bind failed with error: %d\n", WSAGetLastError());
+#endif
+		WSA_CLEANUP();
 		freeaddrinfo(result);
+#ifdef OPIFEX_WINDOWS
 		closesocket(network->ConnectSocket);
-		WSACleanup();
+#else
+		close(network->ConnectSocket);
+#endif
 		return 1;
+	}
+	else{
+		if(listen(network->ConnectSocket, 64)){
+			OPchar* errMsg;
+			switch(errno){
+				case EACCES:
+					errMsg = "The current process has insufficient privileges.";
+					break;
+				case EBADF:
+					errMsg = "The argument socket is not a valid file descriptor.";
+					break;
+				case EDESTADDRREQ:
+					errMsg = "The socket is not bound to a local address and the protocol does not support listening on an unbound socket.";
+					break;
+				case EINVAL:
+					errMsg = "socket is already connected.";
+					break;
+				case ENOTSOCK:
+					errMsg = "The argument socket does not reference a socket.";
+					break;
+				case EOPNOTSUPP:
+					errMsg = "The socket is not of a type that supports the operation listen().";
+					break;
+			}
+			OPlog("Error on listen()\n\t- %s");
+		}
 	}
 
 	freeaddrinfo(result);
@@ -169,27 +225,6 @@ i32 OPnetworkServerStart(OPnetwork* network, OPint port) {
 
 	return 0;
 }
-
-//
-//OPnetwork* OPnetworkAcceptClient(OPnetwork* network) {
-//	if (network->ConnectionType == OPNETWORK_CLIENT) return NULL;
-//
-//	OPnetwork* client = (OPnetwork*)OPalloc(sizeof(OPnetwork));
-//	client->ConnectSocket = INVALID_SOCKET;
-//	client->ConnectionType = OPNETWORK_CLIENT;
-//
-//	OPlog("Waiting for client...");
-//	client->ConnectSocket = accept(network->ConnectSocket, NULL, NULL);
-//	if (client->ConnectSocket == INVALID_SOCKET) {
-//		OPlog("accept failed: %d\n", WSAGetLastError());
-//		closesocket(client->ConnectSocket);
-//		free(client);
-//		WSACleanup();
-//		return NULL;
-//	}
-//
-//	return client;
-//}
 
 i32 OPnetworkReceive(OPnetwork* network, void* state, void(*receive)(void*, i32, OPchar*)) {
 
@@ -224,7 +259,7 @@ i32 OPnetworkSend(OPnetwork* network, i8* data, i32 size){
 
 	struct addrinfo *result = NULL, *ptr = NULL, hints;
 
-	ZeroMemory(&hints, sizeof (hints));
+	OPbzero(&hints, sizeof (hints));
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_DGRAM;
 	hints.ai_protocol = IPPROTO_UDP;
@@ -233,7 +268,7 @@ i32 OPnetworkSend(OPnetwork* network, i8* data, i32 size){
 	i32 iResult = getaddrinfo("127.0.0.1", DEFAULT_PORT, &hints, &result);
 	if (iResult != 0) {
 		printf("getaddrinfo failed: %d\n", iResult);
-		WSACleanup();
+		WSA_CLEANUP();
 		return 1;
 	}
 
@@ -250,18 +285,29 @@ i32 OPnetworkSend(OPnetwork* network, i8* data, i32 size){
 i32 OPnetworkShutdown(OPnetwork* network){
 	i32 iResult = shutdown(network->ConnectSocket, SD_SEND);
 	if (iResult == SOCKET_ERROR) {
+#ifdef OPIFEX_WINDOWS
 		printf("shutdown failed: %d\n", WSAGetLastError());
+#endif
+		WSA_CLEANUP();
+#ifdef OPIFEX_WINDOWS
 		closesocket(network->ConnectSocket);
-		WSACleanup();
+#else
+		close(network->ConnectSocket);
+#endif
 		return 1;
 	}
 
-	closesocket(network->ConnectSocket);
-	WSACleanup();
+#ifdef OPIFEX_WINDOWS
+		closesocket(network->ConnectSocket);
+#else
+		close(network->ConnectSocket);
+#endif
+
+	WSA_CLEANUP();
 
 	return 0;
 }
 
 void OPnetworkDestroy(OPnetwork* network) {
 	OPfree(network);
-}*/
+}
