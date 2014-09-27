@@ -84,6 +84,7 @@ void OPsprite3DSetSprite(OPsprite3D* sprite, i32 index) {
 }
 
 void OPsprite3DPrepReRender(OPsprite3D* sprite, OPvec3 offset, OPfloat rotation) {
+	sprite->CurrentSprite->Frame = sprite->CurrentFrame;
 	OPvec2 frameSize = OPspriteCurrentFrameSize(sprite->CurrentSprite);
 	OPfloat widthScale = frameSize.x / frameSize.y;
 	OPfloat heightScale = 1.0f;
