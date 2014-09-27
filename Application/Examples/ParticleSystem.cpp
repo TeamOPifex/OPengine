@@ -1,5 +1,6 @@
 #include "./Examples/ParticleSystem.h"
 #include "./Pipeline/include/ParticleSystem.h"
+#include "./Human/include/Rendering/Sprite/SpriteSheet.h"
 #include "./Human/include/Systems/RenderSystem.h"
 #include "./Data/include/ContentManager.h"
 
@@ -18,6 +19,7 @@ ParticleSystemExample* particleSystemExample;
 
 void ExampleParticleSystemEnter(OPgameState* last) {
 	OPcmanLoad("particleSheet.png");
+	OPcmanLoad("Toys.opss");
 
 	particleSystemExample = (ParticleSystemExample*)OPalloc(sizeof(ParticleSystemExample));
 
@@ -34,9 +36,11 @@ void ExampleParticleSystemEnter(OPgameState* last) {
 
 	OPparticleSysInit(NULL);
 	particleSystemExample->ParticleSystem = OPparticleSysCreate((OPtexture*)OPcmanGet("particleSheet.png"), 256, NULL);
+	particleSystemExample->ParticleSystem->fps = 10;
 }
 
 int ExampleParticleSystemUpdate(OPtimer* time) {
+	OPsprite* sprite = (OPsprite*)OPcmanGet("Toys/Dust");
 	OPrenderDepth(0);
 	OPrenderClear(0, 0, 0);
 	
@@ -47,7 +51,8 @@ int ExampleParticleSystemUpdate(OPtimer* time) {
 		-0.001f,
 		3000.0f,
 		3000.0f,
-		{ 1.0, 1.0, 1.0f, 1.0f }
+		{ 1.0, 1.0, 1.0f, 1.0f },
+		sprite
 	};
 	OPparticleSysSpawn(particleSystemExample->ParticleSystem, p);
 	OPparticleSysUpdate(particleSystemExample->ParticleSystem, time);
