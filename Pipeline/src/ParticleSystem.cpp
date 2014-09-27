@@ -20,7 +20,7 @@ void OPparticleSysInit(OPeffect* effect) {
 			"Particle System effect",
 			NULL
 			);
-
+		OPlog("Particle system initialized with effect '%s'", EFFECT_PARTICLE_SYSTEM->Name);
 		PARTICLE_SYSTEM_INITIALIZED = 2;
 	}
 	else {
@@ -93,15 +93,15 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 	OPrenderParamMat4v("uProj", 1, &cam->Proj);
 	OPrenderParamVec4("uTint", (OPvec4*)&OPvec4One);
 
-	//if(!sys->fps){
+	if(!sys->fps){
 		OPrenderParamVec2("uTexCoordScale", &sys->uvScale);
 		OPrenderParamVec2("uSpriteOffset", (OPvec2*)&OPvec2Zero);
-	//}
+	}
 
 	OPtextureClearActive();
 	OPrenderParami("uColorTexture", OPtextureBind(sys->texture));
 
-	if (ParticleTransform == NULL) {
+	if (!ParticleTransform) {
 		for (OPint i = sys->heap->MaxIndex; i--;){
 			OPparticle* p = &((OPparticle*)sys->heap->Entities)[i];
 			ui8 frame = 0;
@@ -124,6 +124,7 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 				OPrenderParamVec2("uTexCoordScale", &p->Animation->Frames[frame].Size);
 				OPrenderParamVec2("uSpriteOffset", &p->Animation->Frames[frame].Offset);
 			}
+
 
 			OPrenderParamMat4v("uWorld", 1, &world);
 			OPrenderMesh();
