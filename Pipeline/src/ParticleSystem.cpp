@@ -54,7 +54,7 @@ OPparticleSys* OPparticleSysCreate(OPtexture* texture, ui16 count, OPeffect* eff
 
 void OPparticleSysUpdate(OPparticleSys* sys, OPtimer* timer) {
 	OPint max = 0, i = sys->heap->MaxIndex;
-	OPint dt = timer->Elapsed / 1000.0f;
+	OPfloat dt = timer->Elapsed / 1000.0f;
 	if (i >= 0)
 	for (; i--;){
 		ASSERT(
@@ -74,7 +74,7 @@ void OPparticleSysUpdate(OPparticleSys* sys, OPtimer* timer) {
 	}
 
 	// track the time passed
-	sys->timeElapsed += dt * sys->fps;
+	sys->timeElapsed += dt;
 }
 
 void OPparticleSysDestroy(OPparticleSys* sys) {
@@ -96,22 +96,23 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 	if(!sys->fps){
 		OPrenderParamVec2("uTexCoordScale", &sys->uvScale);
 		OPrenderParamVec2("uSpriteOffset", (OPvec2*)&OPvec2Zero);
+		OPtextureClearActive();
+		OPrenderParami("uColorTexture", OPtextureBind(sys->texture));
 	}
 
-	OPtextureClearActive();
-	OPrenderParami("uColorTexture", OPtextureBind(sys->texture));
 
 	if (!ParticleTransform) {
 		for (OPint i = sys->heap->MaxIndex; i--;){
 			OPparticle* p = &((OPparticle*)sys->heap->Entities)[i];
-			ui8 frame = 0;
+			ui8 frame = p->CurrentFrame;
 
 			if (p->Life <= 0) continue;
 			
 			if(frameChange){
 				// loop the animation
-				frame = p->CurrentFrame = (p->CurrentFrame++) % p->Animation->FrameCount;
+				frame = p->CurrentFrame = (++p->CurrentFrame) % p->Animation->FrameCount;
 			}
+				OPlog("Frame  %d", frame);
 
 			OPmat4identity(&world);
 			OPmat4scl(&world, 1, 1, 1);
@@ -123,6 +124,9 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 			if(sys->fps){
 				OPrenderParamVec2("uTexCoordScale", &p->Animation->Frames[frame].Size);
 				OPrenderParamVec2("uSpriteOffset", &p->Animation->Frames[frame].Offset);
+
+				OPtextureClearActive();
+				OPrenderParami("uColorTexture", OPtextureBind(p->Animation->Sheet));
 			}
 
 
