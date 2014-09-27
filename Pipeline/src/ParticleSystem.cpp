@@ -88,7 +88,7 @@ void _OPparticlePrepareFrame(OPparticleSys* sys, OPparticle* p, OPint frameChang
 		// loop the animation
 		frame = p->CurrentFrame = (++p->CurrentFrame) % p->Animation->FrameCount;
 	}
-		OPlog("Frame  %d", frame);
+		//OPlog("Frame  %d", frame);
 
 	// if this particle system is animated, set the offset uniforms for each particle
 	// to indicate the current frame of animation

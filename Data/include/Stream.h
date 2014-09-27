@@ -11,6 +11,7 @@
 typedef struct{
 	OPuint Length;   // bytes in this stream
 	OPuint Size;
+	i8 Buffer[128];
 	OPuint _pointer; // current location to write to
 	ui8* Data;
 } OPstream;
@@ -51,6 +52,16 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size);
  *          no allocation performed.
  */
 ui8* OPread(OPstream* stream, OPuint size);
+
+i8 OPstreamI8(OPstream* stream);
+i16 OPstreamI16(OPstream* stream);
+i32 OPstreamI32(OPstream* stream);
+ui8 OPstreamUI8(OPstream* stream);
+ui16 OPstreamUI16(OPstream* stream);
+ui32 OPstreamUI32(OPstream* stream);
+f32 OPstreamf32(OPstream* stream);
+i8* OPstreamString(OPstream* stream);
+
 //-----------------------------------------------------------------------------
 /**
  * OPreadAt - Reads data at a specific location.
