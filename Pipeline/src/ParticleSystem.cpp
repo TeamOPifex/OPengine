@@ -82,6 +82,24 @@ void OPparticleSysDestroy(OPparticleSys* sys) {
 	OPfree(sys);
 }
 
+void _OPparticlePrepareFrame(OPparticleSys* sys, OPparticle* p, OPint frameChange){
+	ui8 frame = p->CurrentFrame;
+	if(frameChange){
+		// loop the animation
+		frame = p->CurrentFrame = (++p->CurrentFrame) % p->Animation->FrameCount;
+	}
+		OPlog("Frame  %d", frame);
+
+	// if this particle system is animated, set the offset uniforms for each particle
+	// to indicate the current frame of animation
+	OPrenderParamVec2("uTexCoordScale", &p->Animation->Frames[frame].Size);
+	OPrenderParamVec2("uSpriteOffset", &p->Animation->Frames[frame].Offset);
+
+	OPtextureClearActive();
+	OPrenderParami("uColorTexture", OPtextureBind(p->Animation->Sheet));
+
+}
+
 void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(OPparticle*, OPmat4*)) {
 	OPmat4 world;
 	OPint frameChange = sys->fps && sys->timeElapsed > (1.0f / sys->fps);
@@ -104,31 +122,17 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 	if (!ParticleTransform) {
 		for (OPint i = sys->heap->MaxIndex; i--;){
 			OPparticle* p = &((OPparticle*)sys->heap->Entities)[i];
-			ui8 frame = p->CurrentFrame;
 
 			if (p->Life <= 0) continue;
-			
-			if(frameChange){
-				// loop the animation
-				frame = p->CurrentFrame = (++p->CurrentFrame) % p->Animation->FrameCount;
-			}
-				OPlog("Frame  %d", frame);
 
 			OPmat4identity(&world);
 			OPmat4scl(&world, 1, 1, 1);
 			OPmat4rotZ(&world, p->Angle);
 			OPmat4translate(&world, p->Position.x, p->Position.y, p->Position.z);
-
-			// if this particle system is animated, set the offset uniforms for each particle
-			// to indicate the current frame of animation
+			
 			if(sys->fps){
-				OPrenderParamVec2("uTexCoordScale", &p->Animation->Frames[frame].Size);
-				OPrenderParamVec2("uSpriteOffset", &p->Animation->Frames[frame].Offset);
-
-				OPtextureClearActive();
-				OPrenderParami("uColorTexture", OPtextureBind(p->Animation->Sheet));
+				_OPparticlePrepareFrame(sys, p, frameChange);
 			}
-
 
 			OPrenderParamMat4v("uWorld", 1, &world);
 			OPrenderMesh();
@@ -140,6 +144,11 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 			OPparticle* p = &((OPparticle*)sys->heap->Entities)[i];
 			if (p->Life <= 0) continue;
 			ParticleTransform(p, &world);
+
+			if(sys->fps){
+				_OPparticlePrepareFrame(sys, p, frameChange);
+			}
+
 			OPrenderParamMat4v("uWorld", 1, &world);
 			OPrenderMesh();
 		}
