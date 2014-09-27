@@ -4,6 +4,7 @@
 #include "./Human/include/Rendering/Texture.h"
 #include "./Human/include/Rendering/Camera.h"
 #include "./Human/include/Rendering/Effect.h"
+#include "./Human/include/Rendering/Sprite/SpriteSheet.h"
 #include "./Data/include/EntHeap.h"
 #include "./Math/include/Vector4.h"
 #include "./Math/include/Vector3.h"
@@ -22,14 +23,16 @@ extern "C"{
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 typedef struct {
-	OPvec3   Position;   // 12 bytes
-	OPvec3   Velocity;   // 12 bytes
-	OPfloat  Angle;      // 4 bytes
-	OPfloat  AngularVelo;// 4 bytes
-	i32      Life;       // 4 bytes
-	i32      MaxLife;    // 4 bytes
-	OPvec4   Tint;       // 16 bytes
-} OPparticle; // 60 bytes
+	OPvec3    Position;     // 12 bytes
+	OPvec3    Velocity;     // 12 bytes
+	OPfloat   Angle;        // 4 bytes
+	OPfloat   AngularVelo;  // 4 bytes
+	i32       Life;         // 4 bytes
+	i32       MaxLife;      // 4 bytes
+	OPvec4    Tint;         // 16 bytes
+	OPsprite* Animation;    // 4/8 bytes
+	ui8       CurrentFrame; // 1 byte
+} OPparticle;
 
 typedef struct {
 	OPentHeap* heap;
@@ -37,6 +40,8 @@ typedef struct {
 	OPtexture* texture;
 	OPeffect* effect;
 	OPvec2 uvScale;
+	OPfloat fps;
+	OPfloat timeElapsed;
 } OPparticleSys;
 
 inline void OPparticleUpdate(OPparticle* p, OPtimer* timer){
