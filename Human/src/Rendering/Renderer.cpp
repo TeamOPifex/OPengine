@@ -74,14 +74,14 @@ OPint OPrenderInit(){
 	OPscreenHeight = height;
 #else	
 
-	OPstream* str = OPreadFile("../app.config");
-	if (str) {
-		OPrenderFullscreen = OPstreamI32(str);
-		OPscreenWidth = OPstreamI32(str);
-		if (OPscreenWidth == -1) OPscreenWidth = OPgetNativeScreenWidth();
-		OPscreenHeight = OPstreamI32(str);
-		if (OPscreenHeight == -1) OPscreenHeight = OPgetNativeScreenHeight();
-	}
+	// OPstream* str = OPreadFile("../app.config");
+	// if (str) {
+	// 	OPrenderFullscreen = OPstreamI32(str);
+	// 	OPscreenWidth = OPstreamI32(str);
+	// 	if (OPscreenWidth == -1) OPscreenWidth = OPgetNativeScreenWidth();
+	// 	OPscreenHeight = OPstreamI32(str);
+	// 	if (OPscreenHeight == -1) OPscreenHeight = OPgetNativeScreenHeight();
+	// }
 
 	glfwSetErrorCallback(glfwErrorCallback);
 
