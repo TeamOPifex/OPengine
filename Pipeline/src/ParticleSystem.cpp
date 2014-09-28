@@ -109,7 +109,6 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 
 	OPrenderParamMat4v("uView", 1, &cam->View);
 	OPrenderParamMat4v("uProj", 1, &cam->Proj);
-	OPrenderParamVec4("uTint", (OPvec4*)&OPvec4One);
 
 	if(!sys->fps){
 		OPrenderParamVec2("uTexCoordScale", &sys->uvScale);
@@ -134,6 +133,7 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 				_OPparticlePrepareFrame(sys, p, frameChange);
 			}
 
+			OPrenderParamVec4("uTint", (OPvec4*)&p->Tint);
 			OPrenderParamMat4v("uWorld", 1, &world);
 			OPrenderMesh();
 		}
@@ -149,6 +149,7 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 				_OPparticlePrepareFrame(sys, p, frameChange);
 			}
 
+			OPrenderParamVec4("uTint", (OPvec4*)&p->Tint);
 			OPrenderParamMat4v("uWorld", 1, &world);
 			OPrenderMesh();
 		}

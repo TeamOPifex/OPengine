@@ -299,8 +299,8 @@ __inline OPfloat OPround(OPfloat f){
 * @param target Target which value is checked against
 * @return True if near is within theshhold of target, otherwise false.
 */
-__inline OPfloat OPnear(OPfloat value, OPfloat target, OPfloat threshhold){
-	return (OPabs(value - target) < threshhold ? 1.0f : 0.0f);
+__inline OPint OPnear(OPfloat value, OPfloat target, OPfloat threshhold){
+	return (OPabs(value - target) < threshhold ? 1 : 0);
 }
 
 //-----------------------------------------------------------------------------

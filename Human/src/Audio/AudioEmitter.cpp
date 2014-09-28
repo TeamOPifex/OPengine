@@ -204,12 +204,8 @@ void OPaudSafePlay (OPaudioEmitter* emitter){
 	OPmutexLock(&emitter->Lock);
 	OPmutexLock(&OPAUD_CURR_MUTEX);
 
-	OPlog("About to play");
-
 	OPaudSetEmitter(emitter);
 	OPaudPlay();
-
-	OPlog("played!");
 
 	OPmutexUnlock(&OPAUD_CURR_MUTEX);
 	OPmutexUnlock(&emitter->Lock);
@@ -376,7 +372,6 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 		return 0;
 	}
 	else if(queued <= 1){ // Fixed for short sounds
-		OPlog("Done playing");
 		OPaudStop();
 	}
 
@@ -396,31 +391,31 @@ OPint OPaudProc(void(*Proc)(OPaudioEmitter* emit)){
 // |______|_| |_| |_|_|\__|\__\___|_|    |_|   |_|  \___/| .__/|___/
 //                                                       | |        
 //                                                       |_|        
-void OPaudPosition(OPvec3* position){
+void OPaudPosition(OPaudioEmitter* emitter, OPvec3* position){
 #ifdef OPIFEX_ANDROID	
 #else
-	alSourcefv(OPAUD_CURR_EMITTER->al_src, AL_POSITION, (OPfloat*)position);
+	alSourcefv(emitter->al_src, AL_POSITION, (OPfloat*)position);
 #endif
 }
 //-----------------------------------------------------------------------------
-void OPaudVelocity(OPvec3* velocity){
+void OPaudVelocity(OPaudioEmitter* emitter, OPvec3* velocity){
 #ifdef OPIFEX_ANDROID	
 #else
-	alSourcefv(OPAUD_CURR_EMITTER->al_src, AL_VELOCITY, (OPfloat*)velocity);
+	alSourcefv(emitter->al_src, AL_VELOCITY, (OPfloat*)velocity);
 #endif
 }
 //-----------------------------------------------------------------------------
-void OPaudVolume  (OPfloat gain){
+void OPaudVolume  (OPaudioEmitter* emitter, OPfloat gain){
 #ifdef OPIFEX_ANDROID	
 #else
-	alSourcef(OPAUD_CURR_EMITTER->al_src, AL_GAIN, gain);
+	alSourcef(emitter->al_src, AL_GAIN, gain);
 #endif
 }
 //-----------------------------------------------------------------------------
-void OPaudPitch   (OPfloat pitch){
+void OPaudPitch   (OPaudioEmitter* emitter, OPfloat pitch){
 #ifdef OPIFEX_ANDROID	
 #else
-	alSourcef(OPAUD_CURR_EMITTER->al_src, AL_PITCH, pitch);
+	alSourcef(emitter->al_src, AL_PITCH, pitch);
 #endif
 }
 //-----------------------------------------------------------------------------

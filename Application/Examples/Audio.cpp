@@ -21,7 +21,7 @@ typedef struct {
 AudioExample* audioExample;
 
 void ExampleAudioEnter(OPgameState* last) {
-	OPcmanLoad("Artifice.wav");
+	OPcmanLoad("step0.wav");
 	OPcmanLoad("background.ogg");
 
 	OPaudInit();
@@ -29,7 +29,7 @@ void ExampleAudioEnter(OPgameState* last) {
 
 	audioExample = (AudioExample*)OPalloc(sizeof(AudioExample));
 
-	audioExample->Sound = OPaudCreateEmitter((OPaudioSource*)OPcmanGet("Artifice.wav"), EMITTER_THREADED);
+	audioExample->Sound = OPaudCreateEmitter((OPaudioSource*)OPcmanGet("step0.wav"), EMITTER_THREADED);
 	audioExample->BackgroundSound = OPaudCreateEmitter((OPaudioSource*)OPcmanGet("background.ogg"), EMITTER_THREADED);
 
 }
@@ -38,12 +38,12 @@ int ExampleAudioUpdate(OPtimer* time) {
 	
 	if (OPkeyboardWasPressed(OPKEY_P) || OPgamePadWasPressed(OPgamePad(GamePadIndex_One), GamePad_Button_A)) {
 		OPaudSetEmitter(audioExample->Sound);
-		OPaudVolume(1.0f);
+		OPaudVolume(audioExample->Sound, 1.0f);
 		OPaudPlay();
 	}
 	if (OPkeyboardWasPressed(OPKEY_B) || OPgamePadWasPressed(OPgamePad(GamePadIndex_One), GamePad_Button_B)) {
 		OPaudSetEmitter(audioExample->BackgroundSound);
-		OPaudVolume(0.5f);
+		OPaudVolume(audioExample->BackgroundSound, 0.5f);
 		OPaudPlay();
 	}
 
@@ -54,7 +54,7 @@ int ExampleAudioUpdate(OPtimer* time) {
 
 void ExampleAudioExit(OPgameState* next) {
 	OPaudRecycleEmitter(audioExample->Sound);
-	OPcmanUnload("Artifice.wav");
+	OPcmanUnload("step0.wav");
 
 	OPfree(audioExample);
 }

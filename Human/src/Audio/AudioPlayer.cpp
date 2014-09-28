@@ -25,8 +25,7 @@ OPaudioPlayer OPaudPlayerCreate(OPaudioSource* src, OPint sounds, OPint looping)
 void OPaudPlayerVolume(OPfloat gain){
 	OPmutexLock(&OPAUD_CURR_MUTEX);
 	for(OPint i = OPAUD_CURR_PLAYER->Count; i--;){
-		OPaudSetEmitter(OPAUD_CURR_PLAYER->Emitters[i]);
-		OPaudVolume(gain);
+		OPaudVolume(OPAUD_CURR_PLAYER->Emitters[i], gain);
 	}
 	OPmutexUnlock(&OPAUD_CURR_MUTEX);
 }
