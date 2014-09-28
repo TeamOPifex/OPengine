@@ -152,11 +152,15 @@ OPvec3 OPaudEarPosition(OPvec3* pos){
 	OPvec3 out;
 	return out;
 #else
-	if(pos) alListenerfv(AL_POSITION, &(pos->x));
+	OPmutexLock(&OPAUD_CURR_MUTEX);
+
+	if(pos) alListener3f(AL_POSITION, pos->x, pos->y, pos->z);
 
 	// return the stored value
 	OPvec3 out;
 	alGetListenerfv(AL_POSITION, &(out.x));
+
+	OPmutexUnlock(&OPAUD_CURR_MUTEX);
 	return out;
 #endif
 }
@@ -166,25 +170,34 @@ OPvec3 OPaudEarVelocity(OPvec3* pos){
 	OPvec3 out;
 	return out;
 #else
-	if(pos) alListenerfv(AL_VELOCITY, &(pos->x));
+	OPmutexLock(&OPAUD_CURR_MUTEX);
+
+	if(pos) alListener3f(AL_VELOCITY, pos->x, pos->y, pos->z);
 
 	// return the stored value
 	OPvec3 out;
-	alGetListenerfv(AL_VELOCITY, &(out.x));
+	//alGetListenerfv(AL_VELOCITY, &(out.x));
+
+	OPmutexUnlock(&OPAUD_CURR_MUTEX);
+	
 	return out;
 #endif
 }
 //-----------------------------------------------------------------------------
-OPvec3 OPaudEarForward(OPvec3* pos){
+OPvec3 OPaudEarForwardUp(OPfloat* ori){
 #ifdef OPIFEX_ANDROID	
 	OPvec3 out;
 	return out;
 #else
-	if(pos) alListenerfv(AL_ORIENTATION, &(pos->x));
+	OPmutexLock(&OPAUD_CURR_MUTEX);
+
+	if(ori) alListenerfv(AL_ORIENTATION, ori);
 
 	// return the stored value
 	OPvec3 out;
-	alGetListenerfv(AL_ORIENTATION, &(out.x));
+	//alGetListenerfv(AL_ORIENTATION, &(out.x));
+
+	OPmutexUnlock(&OPAUD_CURR_MUTEX);
 	return out;
 #endif
 }
