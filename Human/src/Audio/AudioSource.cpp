@@ -279,11 +279,11 @@ OPint OPaudSeekWave(OPaudioSource* src, ui64* pos){
 
 OPint OPaudSeekOgg (OPaudioSource* src, ui64* pos){
 	OggVorbis_File* sOggVorbisFile = (OggVorbis_File*)src->DataSource;
-	if ((*pos) + sOggVorbisFile->offset >= sOggVorbisFile->end) return -1;
+	if ((*pos) >= sOggVorbisFile->end) return -1;
 
 	return ov_raw_seek(
 		sOggVorbisFile,
-		(*pos) + sOggVorbisFile->offset
+		(*pos)
 	);
 }
 //-----------------------------------------------------------------------------
