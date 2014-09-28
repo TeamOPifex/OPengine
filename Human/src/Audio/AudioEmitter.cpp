@@ -113,7 +113,6 @@ OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint flags){
 	if(flags & EMITTER_THREADED){
 		OPint index = -1;
 		OPentHeapActivate(&OPAUD_REG_EMITTERS, &index);
-		OPlog("Created index %d", index);
 		if(index >= 0){
 			((OPaudioEmitter*)OPAUD_REG_EMITTERS.Entities)[index] = emitter;
 			out = &((OPaudioEmitter*)OPAUD_REG_EMITTERS.Entities)[index]; 
@@ -394,14 +393,14 @@ OPint OPaudProc(void(*Proc)(OPaudioEmitter* emit)){
 void OPaudPosition(OPaudioEmitter* emitter, OPvec3* position){
 #ifdef OPIFEX_ANDROID	
 #else
-	alSourcefv(emitter->al_src, AL_POSITION, (OPfloat*)position);
+	alSource3f(emitter->al_src, AL_POSITION, position->x, position->y, position->z);
 #endif
 }
 //-----------------------------------------------------------------------------
 void OPaudVelocity(OPaudioEmitter* emitter, OPvec3* velocity){
 #ifdef OPIFEX_ANDROID	
 #else
-	alSourcefv(emitter->al_src, AL_VELOCITY, (OPfloat*)velocity);
+	alSource3f(emitter->al_src, AL_VELOCITY, velocity->x, velocity->y, velocity->z);
 #endif
 }
 //-----------------------------------------------------------------------------
