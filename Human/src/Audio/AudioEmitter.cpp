@@ -51,7 +51,7 @@ void OPaudInitThread(OPint maxEmitters){
 	OPAUD_UPDATE_THREAD = OPthreadStart(OPAUD_UPDATE, NULL);
 }
 //-----------------------------------------------------------------------------
-OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint flags){
+OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint flags) {
 	OPaudioEmitter emitter = { 0 };
 	emitter.Flags    = flags;
 	emitter.State    = Stopped;
