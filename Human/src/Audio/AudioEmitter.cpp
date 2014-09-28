@@ -276,10 +276,12 @@ void OPaudPause(){
 }
 //-----------------------------------------------------------------------------
 void OPaudStop(){
+	if (OPAUD_CURR_EMITTER == NULL) return;
 	alSourceStop(OPAUD_CURR_EMITTER->al_src);
 	OPAUD_CURR_EMITTER->State = Stopped;
 	OPaudioSource* src = OPAUD_CURR_EMITTER->Source;
-	src->Seek(src, &(OPAUD_CURR_EMITTER->Progress = 0));
+	ui64 pos = OPAUD_CURR_EMITTER->Progress = 0;
+	src->Seek(src, &pos);
 }
 #endif
 //-----------------------------------------------------------------------------
