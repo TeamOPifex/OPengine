@@ -207,20 +207,37 @@ void OPframeBufferUnbind(){
 }
 
 void OPframeBufferSetReadBuffer(ui16 pos) {
+#ifdef OPIFEX_ANDROID
+	OPlog("OPframeBufferSetReadBuffer NOT SUPPORTED on Android");
+#else
 	glReadBuffer(GL_COLOR_ATTACHMENT0 + pos);
+#endif
 }
+
 void OPframeBufferSetReadBufferDepth() {
+#ifdef OPIFEX_ANDROID
+	OPlog("OPframeBufferSetReadBufferDepth NOT SUPPORTED on Android");
+#else
 	glReadBuffer(GL_DEPTH_ATTACHMENT);
+#endif
 }
 
 void OPframeBufferAttach(OPtexture* texture, ui16 pos) {
+#ifdef OPIFEX_ANDROID
+	OPlog("OPframeBufferAttach NOT SUPPORTED on Android");
+#else
 	OPtextureBind(texture);
 	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + pos, GL_TEXTURE_2D, texture->Handle, 0);
+#endif
 }
 
 void OPframeBufferAttachDepth(OPtexture* texture) {
+#ifdef OPIFEX_ANDROID
+	OPlog("OPframeBufferAttachDepth NOT SUPPORTED on Android");
+#else
 	OPtextureBind(texture);
 	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture->Handle, 0);
+#endif
 }
 
 

@@ -29,7 +29,7 @@ ui32 OPreadui32(OPstream* str) {
 	return *((ui32*)tmp);
 }
 
-i8 OPreadi8(OPstream* str) {
+OPchar OPreadi8(OPstream* str) {
 	OPchar tmp[1];
 	OPmemcpy(tmp, OPread(str, sizeof(i8)), sizeof(i8));
 	return *((i8*)tmp);
@@ -53,9 +53,9 @@ f32 OPreadf32(OPstream* str) {
 	return *((f32*)tmp);
 }
 
-i8* OPreadstring(OPstream* str) {
+OPchar* OPreadstring(OPstream* str) {
 	ui32 j = 0, length = OPreadui32(str);
-	i8* name = (i8*)OPalloc(length + 1);
+	OPchar* name = (OPchar*)OPalloc(length + 1);
 	for(; j < length; j++){
 		name[j] = OPreadi8(str);
 	}

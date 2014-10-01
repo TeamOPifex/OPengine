@@ -52,7 +52,7 @@ ui32 OPreadui32(OPstream* str);
  *	@param file FILE* to the file stream
  *	@return i8
  */
-i8 OPreadi8(OPstream* str);
+OPchar OPreadi8(OPstream* str);
 
 //-----------------------------------------------------------------------------
 /**
@@ -84,7 +84,7 @@ f32 OPreadf32(OPstream* str);
  *	@param file FILE* to the file stream
  *	@return i8*
  */
-i8* OPreadstring(OPstream* str);
+OPchar* OPreadstring(OPstream* str);
 
 //-----------------------------------------------------------------------------
 /**

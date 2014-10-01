@@ -2,7 +2,7 @@
 
 #include "./Data/include/String.h"
 
-OPLevelEntity* OPlevelGetEntity(OPLevel* level, i8* name) {
+OPLevelEntity* OPlevelGetEntity(OPLevel* level, OPchar* name) {
 	for (i32 i = 0; i < level->count; i++) {
 		if (OPstringEquals(name, level->entities[i].name)) {
 			return &level->entities[i];
