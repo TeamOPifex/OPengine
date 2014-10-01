@@ -1,6 +1,8 @@
-#include "./include/Network.h"
+#include "./Communication/include/Network.h"
 #include "./Core/include/Log.h"
 #include "./Core/include/DynamicMemory.h"
+
+#ifndef OPIFEX_ANDROID
 
 #ifdef OPIFEX_WINDOWS
 #include <windows.h>
@@ -311,3 +313,5 @@ i32 OPnetworkShutdown(OPnetwork* network){
 void OPnetworkDestroy(OPnetwork* network) {
 	OPfree(network);
 }
+
+#endif

@@ -563,7 +563,7 @@ void HumanInitializeMethodsO(V8isolate* isolate, V8Object target) {
 static V8Return _OPrenderInit(const V8Args& args) {
 	V8Scope scope;
 
-	OPrenderInit(1280, 720, false);
+	OPrenderInit();
 
 	Local<Function> cb = Local<Function>::Cast(args[0]);
 	const unsigned argc = 1;
@@ -1055,7 +1055,7 @@ static V8Return _RenderParamVec3(const V8Args& args) {
 
 	v8::String::Utf8Value utf8(args[0]);
 	const char* p = ToCString(utf8);
-	OPrenderParamVec3(p, 1, (OPvec3*)args[1]->Int32Value());
+	OPrenderParamVec3(p, (OPvec3*)args[1]->Int32Value());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -1068,7 +1068,7 @@ static V8Return _RenderParamTexture(const V8Args& args) {
 	OPrenderParami(p, OPtextureBind((OPtexture*)args[1]->Int32Value()));
 
 	OPvec3 light = OPvec3Create(0, 1, 0);
-	OPrenderParamVec3("vLightDirection", 1, &light);
+	OPrenderParamVec3("vLightDirection", &light);
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -1283,7 +1283,7 @@ static V8Return _AudioVolume(const V8Args& args) {
 	OPlog("Current Emitter: %d", OPAUD_CURR_EMITTER);
 	f32 vol = args[1 - inScope]->NumberValue();
 	OPlog("Volume set to: %f", vol);
-	OPaudVolume(vol);
+	//OPaudVolume(vol);
 	return SetReturn(args, &scope, GetNull(isolate));
 }
 

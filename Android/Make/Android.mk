@@ -214,7 +214,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE    := libopifex-scripting
 LOCAL_LDLIBS    := -llog -lGLESv2 -lOpenSLES
 LOCAL_CFLAGS    := -Werror
-LOCAL_CFLAGS 	+= -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2 -DOPIFEX_V8
+LOCAL_CFLAGS 	+= -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/Communication
@@ -261,13 +261,6 @@ LOCAL_MODULE    := libopengine
 LOCAL_LDLIBS    := -llog -lGLESv2 -landroid -lOpenSLES
 
 LOCAL_LDFLAGS := -Wl,--start-group \
-	$(BINARIES)/libicui18n.a \
-	$(BINARIES)/libicuuc.a \
-	$(BINARIES)/libicudata.a \
-	$(BINARIES)/libv8_base.a \
-	$(BINARIES)/libv8_libbase.a \
-	$(BINARIES)/libv8_libplatform.a \
-	$(BINARIES)/libv8_snapshot.a \
 	$(BINARIES)/libPhysX3Common.a \
 	$(BINARIES)/libPvdRuntime.a \
 	$(BINARIES)/libSimulationController.a \
@@ -295,7 +288,7 @@ LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/V8/
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/V8/include
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/PhysX/IncludeAndroid
 
-LOCAL_CFLAGS += -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2 -DOPIFEX_V8
+LOCAL_CFLAGS += -D@OPIFEX_OS@ -DOPIFEX_OPENGL_ES -DOPIFEX_OPENGL_ES_2
 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Application/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Application/Examples/*.cpp)

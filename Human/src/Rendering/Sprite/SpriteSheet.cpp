@@ -51,9 +51,10 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 
 	ui32 filenameLength = strlen(filename);
 	ui32 filenameLengthWithoutExtension = filenameLength - 5 - 8 + 1;
+
 	OPchar* filenameWithoutExtension = (OPchar*)OPalloc(sizeof(OPchar)* filenameLengthWithoutExtension);
 	OPmemcpy(filenameWithoutExtension, filename + 8, filenameLengthWithoutExtension * sizeof(OPchar));
-	filenameWithoutExtension[filenameLengthWithoutExtension - 1] = NULL;
+	filenameWithoutExtension[filenameLengthWithoutExtension - 1] = '\0';
 
 	ASSERT(OP_CMAN_ASSETLOADERS,
 		"OPspriteSheetLoad() - OP_CMAN_HASHMAP null, is content man initialized?"
@@ -95,7 +96,7 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 			// setup a proxy var for frame data
 			OPasset* assetBucket = NULL;
 
-			i8* nameData = OPreadstring(str);
+			OPchar* nameData = OPreadstring(str);
 			OPchar* name = (OPchar*)nameData;
 			ui32 nameDataLength = strlen(name);
 

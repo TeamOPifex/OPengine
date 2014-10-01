@@ -50,7 +50,7 @@ static V8Return _cmanInit(const V8Args& args) {
 	}
 #endif
 
-	OPcmanInit(OP_DEFAULT_LOADERS, 10);
+	OPcmanInit(OP_DEFAULT_LOADERS, 10, NULL);
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }

@@ -412,7 +412,7 @@ OPMData OPMloadData(OPstream* str) {
 			i32 boneIndex = OPreadi16(str);
 			hierarchy[i] = boneIndex;
 
-			i8* name = OPreadstring(str);
+			OPchar* name = OPreadstring(str);
 
 			for (i32 c = 0; c < 4; c++) {
 				pose[i].cols[c].x = OPreadf32(str);

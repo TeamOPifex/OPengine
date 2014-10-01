@@ -5,7 +5,7 @@
 //////////////////////////////////////
 
 void ApplicationInit() {
-	i8* assetDir = NULL;
+	OPchar* assetDir = NULL;
 #ifdef OPIFEX_REPO
 	assetDir = OPIFEX_REPO;
 #endif

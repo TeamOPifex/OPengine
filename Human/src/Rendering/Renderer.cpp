@@ -19,6 +19,7 @@ GLFWwindow* window = NULL;
 #endif
 
 ui32 OPgetNativeScreenWidth() {
+#ifndef OPIFEX_ANDROID
 	if (!glfwInitialized) {
 		int result = glfwInit();
 		if (!result) {
@@ -28,9 +29,13 @@ ui32 OPgetNativeScreenWidth() {
 		glfwInitialized = 1;
 	}
 	return glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
+#else
+	return JNIWidth();
+#endif
 }
 
 ui32 OPgetNativeScreenHeight() {
+#ifndef OPIFEX_ANDROID
 	if (!glfwInitialized) {
 		int result = glfwInit();
 		if (!result) {
@@ -40,8 +45,12 @@ ui32 OPgetNativeScreenHeight() {
 		glfwInitialized = 1;
 	}
 	return glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
+#else
+	return JNIHeight();
+#endif
 }
 
+#ifndef OPIFEX_ANDROID
 void glfwErrorCallback(int error, const char* desc){
 	OPlog(desc);
 }
@@ -50,6 +59,7 @@ void glfwWindowFocusCallback(GLFWwindow* window, int code) {
 	OPlog("Focus Result: %d", code);
 	OPengineHasFocus = code;
 }
+#endif
 
 OPint OPrenderInit(){
 
@@ -68,10 +78,10 @@ OPint OPrenderInit(){
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
 	glEnable( GL_BLEND );
 
-	OPrenderWidth = width;
-	OPrenderHeight = height;
-	OPscreenWidth = width;
-	OPscreenHeight = height;
+	OPrenderWidth = JNIWidth();
+	OPrenderHeight = JNIHeight();
+	OPscreenWidth = JNIWidth();
+	OPscreenHeight = JNIHeight();
 #else	
 
 	// OPstream* str = OPreadFile("../app.config");

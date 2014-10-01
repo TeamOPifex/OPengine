@@ -91,6 +91,9 @@ void OPrenderDrawIndexed(ui32 offset, ui32 count){
 
 void OPrenderDrawUserArray(void* vertices, ui32 attrs, ui32 offset, ui32 count) {
 
+#ifdef OPIFEX_ANDROID
+	OPlog("OPrenderDrawUserArray NOT SUPPORTED on Android");
+#else
 	ui32 off = 0;
 	ui32 stride = 0;
 	if (attrs & OPATTR_POSITION) stride += 3;
@@ -128,4 +131,5 @@ void OPrenderDrawUserArray(void* vertices, ui32 attrs, ui32 offset, ui32 count) 
 	if (attrs & OPATTR_UV) {
 		glDisableClientState(GL_VERTEX_ARRAY);
 	}
+#endif
 }

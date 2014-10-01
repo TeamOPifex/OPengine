@@ -9,8 +9,8 @@ extern "C" {
 #endif
 
 typedef struct {
-	i8* name;
-	i8* resource;
+	OPchar* name;
+	OPchar* resource;
 	OPvec3 position;
 	OPvec3 rotation;
 	OPvec3 scale;
@@ -24,7 +24,7 @@ typedef struct {
 	OPLevelEntity* entities;
 } OPLevel;
 
-OPLevelEntity* OPlevelGetEntity(OPLevel* level, i8* name);
+OPLevelEntity* OPlevelGetEntity(OPLevel* level, OPchar* name);
 
 OPint OPlevelload(const OPchar* filename, OPLevel** level);
 OPint OPlevelReload(const OPchar* filename, OPLevel** level);
