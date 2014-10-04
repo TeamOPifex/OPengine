@@ -4,6 +4,7 @@
 #include "./Data/include/Vector.h"
 #include "./Core/include/Timer.h"
 #include "./Data/include/File.h"
+#include "./Data/include/List.h"
 
 //  _____ _       _           _     
 // / ____| |     | |         | |    
@@ -18,6 +19,8 @@ OPint OP_CMAN_ASSET_LOADER_COUNT;
 OPchar* OP_CMAN_ASSET_FOLDER;
 
 OPlinkedList* OP_CMAN_PURGE;
+
+OPlist* _OP_CMAN_ASSETLOADERS = NULL;
 
 #if defined(_DEBUG) && defined(OPIFEX_WINDOWS)
 #define BUFSIZE MAX_PATH
@@ -55,6 +58,13 @@ void OPcmanUpdate(OPtimer* timer) {
 #endif
 }
 
+void OPcmanAddLoader(OPassetLoader* loader) {
+	if (_OP_CMAN_ASSETLOADERS == NULL) {
+		_OP_CMAN_ASSETLOADERS = OPlistCreate(16, sizeof(OPassetLoader));
+	}
+	OPlistPush(_OP_CMAN_ASSETLOADERS, (ui8*)loader);
+}
+
 // ______                _   _                 
 //|  ____|              | | (_)                
 //| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
@@ -63,23 +73,41 @@ void OPcmanUpdate(OPtimer* timer) {
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                                                                    
 // Specifies how assets will be loaded for each file type
-OPint OPcmanInit(OPassetLoader* loaders, OPint loaderCount, OPchar* dir){
+OPint OPcmanInit(OPchar* dir){
 
 #if defined(_DEBUG) && defined(OPIFEX_WINDOWS)
 	TCHAR Buffer[BUFSIZE];
 	DWORD dwRet;
 #endif
 
-	OPint result = 0;
+	OPint result;
+	OPint i;
+	OPassetLoader* loader;
+
+	result = 0; 
+	i = 0;
+
+
+	if (_OP_CMAN_ASSETLOADERS == NULL) {
+		OPlog("NO ASSET LOADERS HAVE BEEN ADDED");
+		_OP_CMAN_ASSETLOADERS = OPlistCreate(16, sizeof(OPassetLoader));
+	}
+
 	OP_CMAN_ASSET_FOLDER = "assets\\";
 	if (dir) {
 		OP_CMAN_ASSET_FOLDER = dir;
 	}
 
+	OP_CMAN_ASSET_LOADER_COUNT = OPlistSize(_OP_CMAN_ASSETLOADERS);
+	OP_CMAN_ASSETLOADERS = (OPassetLoader*)OPalloc(sizeof(OPassetLoader)* OP_CMAN_ASSET_LOADER_COUNT);
 
+	for (i = 0; i < OP_CMAN_ASSET_LOADER_COUNT; i++) {
+		loader = (OPassetLoader*)OPlistGet(_OP_CMAN_ASSETLOADERS, i);
+		OPmemcpy(&OP_CMAN_ASSETLOADERS[i], loader, sizeof(OPassetLoader));
+	}
 
-	OP_CMAN_ASSETLOADERS = loaders;
-	OP_CMAN_ASSET_LOADER_COUNT = loaderCount;
+	OPfree(_OP_CMAN_ASSETLOADERS);
+	_OP_CMAN_ASSETLOADERS = NULL;
 
 	// Switch to the assets directory
 #if defined(OPIFEX_WINDOWS)
