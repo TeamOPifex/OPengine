@@ -10,7 +10,8 @@ void ApplicationInit() {
 	assetDir = OPIFEX_REPO;
 #endif
 
-	OPcmanInit(OP_DEFAULT_LOADERS, 10, assetDir);
+	OPloadersAddDefault();
+	OPcmanInit(assetDir);
 	OPrenderInit();
 	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 }

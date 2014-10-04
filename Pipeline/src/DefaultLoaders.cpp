@@ -107,3 +107,8 @@ OPassetLoader OP_DEFAULT_LOADERS[10] = {
 };
 
 
+void OPloadersAddDefault() {
+	for (i32 i = 0; i < 10; i++) {
+		OPcmanAddLoader(&OP_DEFAULT_LOADERS[i]);
+	}
+}

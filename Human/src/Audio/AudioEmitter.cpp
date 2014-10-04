@@ -107,7 +107,7 @@ OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint flags) {
 	alSourcei(emitter.al_src, AL_LOOPING, AL_FALSE);
 #endif
 
-	OPaudioEmitter* out;
+	OPaudioEmitter* out = NULL;
 
 	// if this emitter will be threaded
 	if(flags & EMITTER_THREADED){

@@ -84,19 +84,21 @@ void OPparticleSysDestroy(OPparticleSys* sys) {
 
 void _OPparticlePrepareFrame(OPparticleSys* sys, OPparticle* p, OPint frameChange){
 	ui8 frame = p->CurrentFrame;
-	if(frameChange){
-		// loop the animation
-		frame = p->CurrentFrame = (++p->CurrentFrame) % p->Animation->FrameCount;
-	}
+	if (p->Animation != NULL) {
+		if(frameChange){
+			// loop the animation
+			frame = p->CurrentFrame = (++p->CurrentFrame) % p->Animation->FrameCount;
+		}
 		//OPlog("Frame  %d", frame);
 
 	// if this particle system is animated, set the offset uniforms for each particle
 	// to indicate the current frame of animation
-	OPrenderParamVec2("uTexCoordScale", &p->Animation->Frames[frame].Size);
-	OPrenderParamVec2("uSpriteOffset", &p->Animation->Frames[frame].Offset);
+		OPrenderParamVec2("uTexCoordScale", &p->Animation->Frames[frame].Size);
+		OPrenderParamVec2("uSpriteOffset", &p->Animation->Frames[frame].Offset);
 
-	OPtextureClearActive();
-	OPrenderParami("uColorTexture", OPtextureBind(p->Animation->Sheet));
+		OPtextureClearActive();
+		OPrenderParami("uColorTexture", OPtextureBind(p->Animation->Sheet));
+	}
 
 }
 

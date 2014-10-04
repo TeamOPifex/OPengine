@@ -100,7 +100,7 @@ inline OPint OPgamePadLeftTriggerIsUp(OPgamePadController* controller) { return 
 inline OPfloat OPgamePadRightTrigger(OPgamePadController* controller) {
 	return controller->axes[R2];
 }
-inline OPint OPgamePadRightTriggerWasPressed(OPgamePadController* controller) { return controller->axes[R2] > 0 && controller->prevAxes[L2] <= 0; }
+inline OPint OPgamePadRightTriggerWasPressed(OPgamePadController* controller) { return controller->axes[R2] > 0 && controller->prevAxes[R2] <= 0; }
 inline OPint OPgamePadRightTriggerWasReleased(OPgamePadController* controller) { return controller->axes[R2] <= 0 && controller->prevAxes[L2] > 0; }
 inline OPint OPgamePadRightTriggerIsDown(OPgamePadController* controller) { return controller->axes[R2] > 0; }
 inline OPint OPgamePadRightTriggerIsUp(OPgamePadController* controller) { return controller->axes[R2] <= 0; }

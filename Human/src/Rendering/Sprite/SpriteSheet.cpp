@@ -107,7 +107,6 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 			// finalName[filenameLengthWithoutExtension + 1 + nameDataLength] = NULL;
 
 			OPchar* finalNameSep = OPstringCreateMerged(filenameWithoutExtension, "/");
-			OPlog("Name with sep: %s", finalNameSep);
 			OPchar* finalName = OPstringCreateMerged(finalNameSep, name);
 			OPfree(finalNameSep);
 			OPlog("Final Name! %s", finalName);
@@ -201,20 +200,8 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 			} else {
 				OPlog("OPSS FAILED TO LOAD %s", finalName);
 			}
-
-			if(OPcmanIsLoaded("Menu/BrotherBlue")) {
-				OPlog("0 OPSS is still loaded : %s loaded", "Menu/BrotherBlue");
-			} else {
-				OPlog("0 No Longer loaded! %s", "Menu/BrotherBlue");
-			}
 #endif
 		}
-	}
-
-	if(OPcmanIsLoaded("Menu/BrotherBlue")) {
-		OPlog("1 OPSS is still loaded : %s loaded", "Menu/BrotherBlue");
-	} else {
-		OPlog("1 No Longer loaded! %s", "Menu/BrotherBlue");
 	}
 
 	// load the png image data
@@ -222,12 +209,6 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 #ifdef _DEBUG
 	OPlog("Loaded PNG!");
 #endif
-
-	if(OPcmanIsLoaded("Menu/BrotherBlue")) {
-		OPlog("2 OPSS is still loaded : %s loaded", "Menu/BrotherBlue");
-	} else {
-		OPlog("2 No Longer loaded! %s", "Menu/BrotherBlue");
-	}
 
 	// copy the texture's data into the pre allocated texture
 	// then clean up the temp texture object
@@ -245,19 +226,8 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 #ifdef _DEBUG
 	OPlog("Done!");
 #endif
-	if(OPcmanIsLoaded("Menu/BrotherBlue")) {
-		OPlog("3 OPSS is still loaded : %s loaded", "Menu/BrotherBlue");
-	} else {
-		OPlog("3 No Longer loaded! %s", "Menu/BrotherBlue");
-	}
 
 	OPfree(filenameWithoutExtension);
-
-	if(OPcmanIsLoaded("Menu/BrotherBlue")) {
-		OPlog("4 OPSS is still loaded : %s loaded", "Menu/BrotherBlue");
-	} else {
-		OPlog("4 No Longer loaded! %s", "Menu/BrotherBlue");
-	}
 
 
 	return 0;
