@@ -92,7 +92,7 @@ void OPrenderDrawIndexed(ui32 offset, ui32 count){
 void OPrenderDrawUserArray(void* vertices, ui32 attrs, ui32 offset, ui32 count) {
 
 #ifdef OPIFEX_ANDROID
-	OPlog("OPrenderDrawUserArray NOT SUPPORTED on Android");
+	OPlog("OPrenderDrawUserArray NOT SUPPORTED yet on Android");
 #else
 	ui32 off = 0;
 	ui32 stride = 0;

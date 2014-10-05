@@ -22,6 +22,7 @@ include_directories(
 	../External/V8/include/
 	../External/V8/
 	../External/VP8/include/
+	../External/Spine/include/
 	.
 	../
 )
@@ -83,6 +84,12 @@ set_target_properties(9_Application PROPERTIES OUTPUT_NAME "Application")
 #########################################
 # ADDITIONAL FEATURES
 #########################################
+
+if(${OPIFEX_SPINE})
+	target_link_libraries(9_Application SPINE)
+	add_definitions(-DOPIFEX_SPINE)
+endif()
+
 if(${OPIFEX_PHYSICS}) 
 	message(STATUS "Link Physics")
 	add_definitions(-DOPIFEX_PHYSICS)
@@ -158,12 +165,9 @@ if(${OPIFEX_RELEASE})
 else()
 	add_definitions(-D_DEBUG)
 	if(${OPIFEX_OS_WINDOWS})
-		SET(OPIFEX_REPO "../${OPIFEX_ENGINE_REPOSITORY}/Assets/")
-		add_definitions(-DOPIFEX_REPO="${OPIFEX_REPO}")
-	ELSE()
 		SET(OPIFEX_REPO "${OPIFEX_ENGINE_REPOSITORY}/Assets/")
 		add_definitions(-DOPIFEX_REPO="${OPIFEX_REPO}")
-	ENDIF()
+	endif()
 	
 endif()
 

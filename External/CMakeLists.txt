@@ -65,3 +65,41 @@ populate_binary_directory()
 output_library_from(LODEPNG "/External" "LodePNG")
 
 
+
+
+
+
+### Spine
+
+if(${OPIFEX_SPINE})
+	include_directories("${PROJECT_SOURCE_DIR}/External/Spine/include")
+
+	#########################################
+	# Include Files
+	#########################################
+	add_source_group(include/ "${PROJECT_SOURCE_DIR}/External/Spine/include/spine" SPINE_SRC)
+
+	#########################################
+	# Source Files
+	#########################################
+	add_source_group(src/ "${PROJECT_SOURCE_DIR}/External/Spine/src/spine" SPINE_SRC)
+
+	#########################################
+	# BUILD
+	#########################################
+	add_library( SPINE STATIC	${SPINE_SRC})
+
+	set_source_files_properties(SPINE_SRC PROPERTIES LANGUAGE CXX)
+
+	set_property(TARGET SPINE PROPERTY FOLDER "External")
+	set_target_properties(SPINE PROPERTIES OUTPUT_NAME "Spine")
+
+	if(${OPIFEX_RELEASE})
+		add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
+	endif()
+
+	populate_binary_directory()
+
+	output_library_from(SPINE "/External" "Spine")
+endif()
+
