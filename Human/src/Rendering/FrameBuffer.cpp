@@ -160,9 +160,14 @@ void OPframeBufferDestroy(OPframeBuffer* fb){
 }
 //-----------------------------------------------------------------------------
 void OPframeBufferBind(OPframeBuffer* fb){
+
+	OPglError("OPframeBufferBind:Error 0:%d");
+
 	//GLuint attachments[1] = {GL_COLOR_ATTACHMENT0};
 	OPRENDER_CURR_FRAMEBUFFER = fb;
 	glBindFramebuffer(GL_FRAMEBUFFER, fb->Handle);
+
+	OPglError("OPframeBufferBind:Error 1:%d");
 	//glDrawBuffers(1,  attachments);
 	OPrenderSetViewport(0, 0, fb->Description.Width, fb->Description.Height);
 }
@@ -186,9 +191,9 @@ void OPframeBufferBindTex(OPframeBuffer* fb){
 void OPframeBufferUnbind(){
 	OPframeBuffer* fb = OPRENDER_CURR_FRAMEBUFFER;
 
-	glBindTexture(GL_TEXTURE_2D, fb->Texture.Handle);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	//glBindTexture(GL_TEXTURE_2D, fb->Texture.Handle);
+	//glGenerateMipmap(GL_TEXTURE_2D);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 /*	OPlog("FBO W: %d, H: %d", fb->Description.Width, fb->Description.Height);
 

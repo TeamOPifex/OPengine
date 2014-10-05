@@ -8,6 +8,7 @@
 #include "./Application/Examples/Skinning.h"
 #include "./Application/Examples/Deferred.h"
 #include "./Application/Examples/Textured.h"
+#include "./Application/Examples/Spine.h"
 
 OPgameState GS_EXAMPLE_SELECTOR = {
 	ExampleSelectorEnter,
@@ -29,7 +30,7 @@ typedef struct {
 
 ExampleSelector* exampleSelector;
 
-#define ExampleCount 8
+#define ExampleCount 9
 
 void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector = (ExampleSelector*)OPallocZero(sizeof(ExampleSelector));
@@ -76,6 +77,12 @@ void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector->Examples[7].name = "Textured";
 	exampleSelector->Examples[7].state = &GS_EXAMPLE_TEXTURED;
 	exampleSelector->Examples[7].available = 1;
+
+	exampleSelector->Examples[8].name = "Spine";
+	exampleSelector->Examples[8].state = &GS_EXAMPLE_SPINE;
+#ifdef OPIFEX_SPINE
+	exampleSelector->Examples[8].available = 1;
+#endif
 
 	OPlog("Entered Example Selector");
 }

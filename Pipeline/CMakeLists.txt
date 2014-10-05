@@ -20,6 +20,7 @@ include_directories(
 	../External/Oculus/Src/
 	../External/Myo/include/
 	../External/V8/include/
+	../External/Spine/include/
 	.
 	../
 )
@@ -72,6 +73,11 @@ if(${OPIFEX_RELEASE})
 
 else()
 	add_definitions(-D_DEBUG)
+endif()
+
+if(${OPIFEX_SPINE})
+	target_link_libraries(8_Pipeline SPINE)
+	add_definitions(-DOPIFEX_SPINE)
 endif()
 
 if(${OPIFEX_V8})

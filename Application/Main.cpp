@@ -1,4 +1,5 @@
 #include "ExampleSelectorState.h"
+#include "./Pipeline/include/SpineLoader.h"
 
 //////////////////////////////////////
 // Application Methods
@@ -11,6 +12,7 @@ void ApplicationInit() {
 #endif
 
 	OPloadersAddDefault();
+	SpineAddLoader();
 	OPcmanInit(assetDir);
 	OPrenderInit();
 	OPgameStateChange(&GS_EXAMPLE_SELECTOR);

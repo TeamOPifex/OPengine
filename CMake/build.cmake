@@ -41,6 +41,7 @@ option(OPIFEX_MYO "Build the Myo library into the engine" OFF)
 option(OPIFEX_V8 "Build the V8 library into the engine" OFF)
 option(OPIFEX_NODEJS "Configure build files for Node.js module" OFF)
 option(OPIFEX_PHYSICS "Build the PhysX library into the engine" OFF)
+option(OPIFEX_SPINE "Build the Spine library into the engine" OFF)
 option(OPIFEX_RELEASE "Build the engine in release mode" OFF)
 
 SET(OPIFEX_PROJECT_BINARY_DIR ${PROJECT_BINARY_DIR})
