@@ -57,20 +57,28 @@ void SpineInitialize() {
 }
 
 void SpineSetMix(Spine* spine, const OPchar* from, const OPchar* to, f32 duration) {
+#ifdef OPIFEX_SPINE
 	spAnimationStateData_setMixByName(spine->stateData, from, to, duration);
+#endif
 }
 
 void SpineSetAnim(Spine* spine, i32 track, const OPchar* anim, OPint loop) {
+#ifdef OPIFEX_SPINE
 	ASSERT(spine->state != NULL, "Spine State has not been created yet.");
 	spAnimationState_setAnimationByName(spine->state, track, anim, loop);
+#endif
 }
 void SpineAddAnim(Spine* spine, i32 track, const OPchar* anim, OPint loop, OPfloat delay) {
+#ifdef OPIFEX_SPINE
 	ASSERT(spine->state != NULL, "Spine State has not been created yet.");
 	spAnimationState_addAnimationByName(spine->state, track, anim, loop, delay);
+#endif
 }
 
 void SpineBuildMixingState(Spine* spine) {
+#ifdef OPIFEX_SPINE
 	spine->state = spAnimationState_create(spine->stateData);
+#endif
 }
 
 i32 SpineLoad(const OPchar* filename, Spine** spine) {
