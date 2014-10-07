@@ -23,8 +23,10 @@ OPtexture OPtextureCreate(OPtextureDescription desc){
 	OPglError("OPtextureCreate::Error 1");
 	glBindTexture(GL_TEXTURE_2D, tex.Handle);
 	OPglError("OPtextureCreate::Error 2");
-	glTexImage2D(GL_TEXTURE_2D, 0, desc.InternalFormat, desc.Width, desc.Height, 0, desc.Format, GL_FLOAT, NULL);
-
+	glTexImage2D(GL_TEXTURE_2D, 0, desc.InternalFormat, desc.Width, desc.Height, 0, desc.Format, desc.DataType, NULL);
+	if (OPglError("OPtextureCreate::Error 2.5")) {
+		OPlog("Desc Used: %d, %d", desc.InternalFormat, desc.Format);
+	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, desc.MagFilter);
 	OPglError("OPtextureCreate::Error 3");
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, desc.MinFilter);

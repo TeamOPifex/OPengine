@@ -77,12 +77,16 @@ void ExampleSpineEnter(OPgameState* last) {
 
 	SpineSetMix(spineExample->spine, "walk", "jump", 0.2f);
 	SpineSetMix(spineExample->spine, "jump", "run", 0.2f);
+	SpineSetMix(spineExample->spine, "run", "walk", 0.2f);
+	SpineSetMix(spineExample->spine, "walk", "shoot", 1.0f);
 	SpineBuildMixingState(spineExample->spine);
 
 
-	SpineSetAnim(spineExample->spine, 0, "walk", true);
+	SpineSetAnim(spineExample->spine, 0, "idle", true);
 	SpineAddAnim(spineExample->spine, 0, "jump", false, 3);
-	SpineAddAnim(spineExample->spine, 0, "run", true, 0);
+	SpineAddAnim(spineExample->spine, 0, "walk", true, 2);
+	SpineAddAnim(spineExample->spine, 1, "shoot", false, 5);
+	SpineAddAnim(spineExample->spine, 0, "death", false, 5);
 
 	spineExample->worldVertices = (f32*)OPalloc(sizeof(f32)* SPINE_MESH_VERTEX_COUNT_MAX);
 
