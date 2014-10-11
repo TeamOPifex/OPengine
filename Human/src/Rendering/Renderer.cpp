@@ -16,6 +16,22 @@ OPint glfwInitialized = 0;
 
 #ifndef OPIFEX_ANDROID
 GLFWwindow* window = NULL;
+#else
+
+#include <EGL/egl.h>
+#include <GLES/gl.h>
+
+#include <android/sensor.h>
+#include <android/log.h>
+#include <android_native_app_glue.h>
+#include <android/native_window.h>
+
+#include "./Human/include/Utilities/Errors.h"
+
+
+EGLSurface surface;
+EGLDisplay display;
+
 #endif
 
 ui32 OPgetNativeScreenWidth() {
@@ -62,26 +78,131 @@ void glfwWindowFocusCallback(GLFWwindow* window, int code) {
 #endif
 
 OPint OPrenderInit(){
+	OPlog("Initializing Renderer");
 
 #ifdef OPIFEX_ANDROID
 	OPscreenWidth = JNIWidth();
 	OPscreenHeight = JNIHeight();
+
+	const EGLint attribs[] = {
+		EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+		EGL_BLUE_SIZE, 8,
+		EGL_GREEN_SIZE, 8,
+		EGL_RED_SIZE, 8,
+		EGL_NONE
+	};
+
+	EGLint attribList[] =
+	{
+		EGL_CONTEXT_CLIENT_VERSION, 2,
+		EGL_NONE
+	};
+
+
+	EGLint w, h, dummy, format;
+	EGLint numConfigs;
+	EGLConfig config;
+	EGLContext context;
+
+	OPlog("Getting Display");
+	display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+
+	OPlog("Binding API");
+	if (eglBindAPI(EGL_OPENGL_ES_API) == GL_FALSE) {
+		OPlog("FAILED TO BIND ES API");
+	}
+
+	OPlog("eglInitialize");
+	eglInitialize(display, 0, 0);
+
+
+	OPlog("eglMakeCurrent");
+	eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+
+	OPlog("eglChooseConfig");
+	/* Here, the application chooses the configuration it desires. In this
+	* sample, we have a very simplified selection process, where we pick
+	* the first EGLConfig that matches our criteria */
+	if (eglChooseConfig(display, attribs, &config, 1, &numConfigs) == EGL_FALSE) {
+		OPlog("Choose Config Failed");
+	}
+
+
+	OPlog("eglGetConfigAttrib");
+	/* EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
+	* guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
+	* As soon as we picked a EGLConfig, we can safely reconfigure the
+	* ANativeWindow buffers to match, using EGL_NATIVE_VISUAL_ID. */
+	eglGetConfigAttrib(display, config, EGL_NATIVE_VISUAL_ID, &format);
+
+
+	OPlog("eglCreateWindowSurface");
+	surface = eglCreateWindowSurface(display, config, OPAndroidState->window, NULL);
+
+
+	OPglError("OPrenderInit:Error 2");
+
+	OPlog("eglCreateContext");
+	context = eglCreateContext(display, config, NULL, attribList);
+
+	OPglError("OPrenderInit:Error 3");
+
+	OPlog("Android State Window %d", OPAndroidState->window);
+	
+
+	OPlog("eglMakeCurrent");
+	if (eglMakeCurrent(display, surface, surface, context) == EGL_FALSE) {
+		OPlog("Unable to eglMakeCurrent");
+		return -1;
+	}
+
+	OPlog("ANativeWindow_setBuffersGeometry");
+	ANativeWindow_setBuffersGeometry(OPAndroidState->window, 0, 0, format);
+
+	OPlog("eglQuerySurface");
+	OPglError("OPrenderInit:Error 4");
+	eglQuerySurface(display, surface, EGL_WIDTH, &w);
+	eglQuerySurface(display, surface, EGL_HEIGHT, &h);
+
+	OPscreenWidth = w;
+	OPscreenHeight = h;
+
+	OPrenderWidth = OPscreenWidth;
+	OPrenderHeight = OPscreenHeight;
+
+	OPglError("OPrenderInit:Error 5");
+	//engine->display = display;
+	//engine->context = context;
+	//engine->surface = surface;
+	//engine->width = w;
+	//engine->height = h;
+	//engine->state.angle = 0;
+
+	glEnable(GL_BLEND);
+	glEnable(GL_MULTISAMPLE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	// Initialize GL state.
+	//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+	//glEnable(GL_CULL_FACE);
+	//glShadeModel(GL_SMOOTH);
+	//glDisable(GL_DEPTH_TEST);
 #endif
 
 #ifdef OPIFEX_OPENGL_ES_2
 	// Android doesn't need to create a window
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS); 
-	//glCullFace(GL_FRONT);
-	//glEnable(GL_CULL_FACE);
-	glDisable(GL_CULL_FACE);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
-	glEnable( GL_BLEND );
+	//glEnable(GL_DEPTH_TEST);
+	//glDepthFunc(GL_LESS); 
+	////glCullFace(GL_FRONT);
+	////glEnable(GL_CULL_FACE);
+	//glDisable(GL_CULL_FACE);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+	//glEnable( GL_BLEND );
 
-	OPrenderWidth = JNIWidth();
-	OPrenderHeight = JNIHeight();
-	OPscreenWidth = JNIWidth();
-	OPscreenHeight = JNIHeight();
+	//OPrenderWidth = JNIWidth();
+	//OPrenderHeight = JNIHeight();
+	//OPscreenWidth = JNIWidth();
+	//OPscreenHeight = JNIHeight();
 #else	
 
 	// OPstream* str = OPreadFile("../app.config");
@@ -241,7 +362,7 @@ OPfloat OPrenderGetHeightAspectRatio(){
 //-----------------------------------------------------------------------------
 void  OPrenderSwapBuffer(){
 #ifdef OPIFEX_OPENGL_ES_2
-	
+	eglSwapBuffers(display, surface);
 #else
 	glfwSwapBuffers(window);	
 #endif
@@ -249,7 +370,7 @@ void  OPrenderSwapBuffer(){
 //-----------------------------------------------------------------------------
 void  OPrenderPresent(){
 #ifdef OPIFEX_OPENGL_ES_2
-	
+	eglSwapBuffers(display, surface);
 #else
 	glfwSwapBuffers(window);	
 	glfwPollEvents();

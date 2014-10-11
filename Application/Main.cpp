@@ -6,6 +6,7 @@
 //////////////////////////////////////
 
 void ApplicationInit() {
+
 	OPchar* assetDir = NULL;
 #ifdef OPIFEX_REPO
 	assetDir = OPIFEX_REPO;
@@ -32,34 +33,14 @@ void ApplicationDestroy() {
 	ActiveState->Exit(ActiveState);
 }
 
-void ApplicationSetup() {
+OP_MAIN {
+	OPlog("Starting up OPifex Engine");
+
 	OPinitialize = ApplicationInit;
 	OPupdate = ApplicationUpdate;
 	OPdestroy = ApplicationDestroy;
+
+	OP_MAIN_START
+	OP_MAIN_END
+	OP_MAIN_SUCCESS
 }
-
-
-//////////////////////////////////////
-// Application Entry Point
-//////////////////////////////////////
-
-#ifdef OPIFEX_ANDROID
-
-#include <jni.h>
-extern "C" {
-	JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj);
-};
-JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj) {
-	ApplicationSetup();
-}
-
-#else
-
-int main(int argc, char** args) {
-	ApplicationSetup();
-	OPstart();
-	OPend();
-	return 0;
-}
-
-#endif

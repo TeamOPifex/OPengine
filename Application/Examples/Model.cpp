@@ -77,6 +77,8 @@ int ExampleModelUpdate(OPtimer* time) {
 	// Update
 	////////////////////////
 
+	OPglError("OpenGL Error");
+
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
@@ -84,12 +86,12 @@ int ExampleModelUpdate(OPtimer* time) {
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
 	OPmat4 world = OPmat4createRotY(modelExample->Rotation / 100.0);
-	OPmat4scl(&world, 0.025f, 0.025f, 0.025f);
+	OPmat4scl(&world, 0.25f, 0.25f, 0.25f);
 
 	////////////////////////
 	// Render
 	////////////////////////
-	OPrenderClear(0, 0, 0);
+	OPrenderClear(0.4, 0.4, 0.4);
 
 	// A helper utility which binds the Mesh, Effect and the World, View and Projection Matrices
 	// For more granular control please take a look at the Textured Example

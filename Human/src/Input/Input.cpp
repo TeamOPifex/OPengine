@@ -235,6 +235,15 @@ void OPmouseSetPositionScreenCenter() {
 
 }
 
+#include <android/sensor.h>
+ASensorManager* sensorManager;
+const ASensor* accelerometerSensor;
+
+void SetupSensorManager() {
+	sensorManager = ASensorManager_getInstance();
+	accelerometerSensor = ASensorManager_getDefaultSensor(sensorManager, ASENSOR_TYPE_ACCELEROMETER);
+}
+
 JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_touch(JNIEnv * env, jobject obj,  jint evt, jfloat x, jfloat y){
 	Touch.updated = true;
 	if(evt == 1) {
