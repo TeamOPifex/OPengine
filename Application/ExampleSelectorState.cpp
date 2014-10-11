@@ -103,7 +103,7 @@ int ExampleSelectorUpdate(OPtimer* time) {
 		return 0;
 	}
 
-	OPrenderClear(1, 0, 0);
+	OPrenderClear(0, 0, 0);
 
 	OPint isInActive = 0, isAvailable = 0;
 	f32 r, g, b;
