@@ -15,120 +15,25 @@
  */
 package com.opifex;
 
-import android.content.res.AssetManager;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.WindowManager;
-import android.view.*;
-import android.nfc.Tag;
 
-import tv.ouya.console.api.OuyaFacade;
 import tv.ouya.console.api.OuyaController;
+import tv.ouya.console.api.OuyaFacade;
+
 
 public class OPEngine extends Activity {
-	GL2JNIView mView;
-	
-	int playerOne = -1;
-	int playerTwo = -1;
-	int playerThree = -1;
-	int playerFour = -1;
-	
+
+	 
 	public static final String DEVELOPER_ID = "8e0c74ec-c52c-4de4-89f0-3944b7145489";
-
-	@Override protected void onCreate(Bundle icicle) {
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		OuyaFacade instance = OuyaFacade.getInstance();
-		instance.init(this, DEVELOPER_ID);
-
-		super.onCreate(icicle);
-		AssetManager assetManager = getAssets();
-		mView = new GL2JNIView(getApplication(), assetManager, instance);
-		setContentView(mView);
-		
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
-                                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-	}
-	
-	@Override protected void onPause(){
-		super.onPause();
-		mView.onPause();
-	}
-	
-	@Override protected void onResume(){
-		super.onResume();
-		mView.onResume();
-	}
 	
     @Override
-    protected void onStop() {
-        super.onStop();
-        // The activity is no longer visible (it is now "stopped")
-		mView.onStop();
-    }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // The activity is about to be destroyed.
-    }
+    protected void onCreate(Bundle savedInstanceState) {
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-    	boolean handled = OuyaController.onKeyDown(keyCode, event);
-    	return handled || super.onKeyDown(keyCode, event);
-        //return mView.onKeyDown(keyCode, getPlayerIndex(event), event);
-    }
+        super.onCreate(savedInstanceState);
 
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-	    boolean handled = OuyaController.onKeyUp(keyCode, event);
-	    return handled || super.onKeyUp(keyCode, event);
-        //return mView.onKeyUp(keyCode, getPlayerIndex(event), event);
+        Intent intent = new Intent(OPEngine.this, android.app.NativeActivity.class);
+        OPEngine.this.startActivity(intent);
     }
-
-    @Override
-    public boolean onGenericMotionEvent(MotionEvent event) {
-	    boolean handled = OuyaController.onGenericMotionEvent(event);
-	    return handled || super.onGenericMotionEvent(event);
-
-        // if((event.getSource() & InputDevice.SOURCE_CLASS_JOYSTICK) == 0){
-        //     //Not a joystick movement, so ignore it.
-        //     return false;
-        // }
-        // return mView.onGenericMotionEvent(getPlayerIndex(event), event);
-    }
-	
-	public int getPlayerIndex(InputEvent event){
-		final int deviceId = event.getDeviceId();
-		
-		if(playerOne < 0) {
-			playerOne = deviceId;
-		}
-		if(playerOne == deviceId) {
-			return 1;
-		}
-		
-		if(playerTwo < 0) {
-			playerTwo = deviceId;
-		}
-		if(playerTwo == deviceId) {
-			return 2;
-		}
-				
-		if(playerThree < 0) {
-			playerThree = deviceId;
-		}
-		if(playerThree == deviceId) {
-			return 3;
-		}
-				
-		if(playerFour < 0) {
-			playerFour = deviceId;
-		}
-		if(playerFour == deviceId) {
-			return 4;
-		}
-		
-		return -1;
-	}
 }

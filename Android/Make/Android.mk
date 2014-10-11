@@ -83,6 +83,7 @@ LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 #LOCAL_SRC_FILES := \
 #       $(CORE_LIST_C:$(PROJECT_PATH)/%=%)
         
+LOCAL_STATIC_LIBRARIES := android_native_app_glue
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -184,6 +185,7 @@ MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Utilities/*.cpp)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 LOCAL_STATIC_LIBRARIES := libopifex-performance libvorbis -lstdc++ lodepng
+LOCAL_STATIC_LIBRARIES += android_native_app_glue
 
 include $(BUILD_STATIC_LIBRARY)
 
@@ -258,7 +260,9 @@ include $(BUILD_STATIC_LIBRARY)
 ##############
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libopengine
-LOCAL_LDLIBS    := -llog -lGLESv2 -landroid -lOpenSLES
+LOCAL_LDLIBS    := -llog -lGLESv2 -landroid -lOpenSLES -lEGL
+
+TARGET_PLATFORM := 16
 
 LOCAL_LDFLAGS := -Wl,--start-group \
 	$(BINARIES)/libPhysX3Common.a \
@@ -294,5 +298,6 @@ MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Application/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Application/Examples/*.cpp)
 
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
-LOCAL_STATIC_LIBRARIES := libopifex-scripting
+LOCAL_STATIC_LIBRARIES := android_native_app_glue libopifex-scripting
 include $(BUILD_SHARED_LIBRARY)
+$(call import-module,android/native_app_glue)
