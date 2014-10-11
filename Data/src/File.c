@@ -67,10 +67,8 @@ OPfileInformation OPreadFileInformation(const char* path){
 	OPfileInformation file;
 
 #ifdef OPIFEX_ANDROID
-	AAssetManager* mgr = AAssetManager_fromJava(JNIEnvironment(), JNIAssetManager());
-	AAsset* asset = AAssetManager_open(mgr, path, AASSET_MODE_UNKNOWN);
-	if(asset == NULL)
-		return file;
+	//AAssetManager* mgr = AAssetManager_fromJava(JNIEnvironment(), JNIAssetManager()); 
+	AAsset* asset = AAssetManager_open(OPAndroidState->activity->assetManager, path, AASSET_MODE_UNKNOWN);
 
 	off_t _start, _length;
     int fd = AAsset_openFileDescriptor(asset, &_start, &_length);
@@ -142,9 +140,8 @@ OPstream* OPreadFile(const char* path) {
 OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 #ifdef OPIFEX_ANDROID
 	OPlog("OPreadFile: %s\n", path);
-	AAssetManager* mgr = AAssetManager_fromJava(JNIEnvironment(), JNIAssetManager());
-	AAsset* asset = AAssetManager_open(mgr, path, AASSET_MODE_UNKNOWN);
-	if(asset == NULL){
+	AAsset* asset = AAssetManager_open(OPAndroidState->activity->assetManager, path, AASSET_MODE_UNKNOWN);
+	if (asset == NULL){
 		OPlog("OPreadFile: Asset man creation failed.\n");
 		return 0;	
 	}
