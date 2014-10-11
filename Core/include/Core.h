@@ -19,6 +19,11 @@ extern "C" {
 #endif
 	
 #ifdef OPIFEX_ANDROID
+	#include <android_native_app_glue.h>
+	#include <android/sensor.h>
+	#include <android/log.h>
+	extern struct android_app *OPAndroidState;
+
 	JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_touch(JNIEnv * env, jobject obj,  jint evt, jfloat x, jfloat y);
 	JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height, jobject assetManager);
 	JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_step(JNIEnv * env, jobject obj, jobject assetManager);
@@ -39,7 +44,11 @@ extern "C" {
  *	called. At which point the OPdestroy() function pointer is called and
  *	and clean up is performed.
  */
-void OPstart();
+#ifdef OPIFEX_ANDROID
+	void OPstart(struct android_app* state);
+#else
+	void OPstart(int argc, char** args);
+#endif
 //----------------------------------------------------------------------------
 /**
  * OPend - Ends the game cycle.
@@ -55,4 +64,18 @@ OPtimer* OPgetTime();
 #ifdef __cplusplus
 };
 #endif
+
+
+#ifdef OPIFEX_ANDROID
+#define OP_MAIN void android_main(struct android_app* state)
+#define OP_MAIN_SUCCESS return;
+#define OP_MAIN_START OPstart(state);
+#define OP_MAIN_END OPend();
+#else
+#define OP_MAIN int main(int argc, char** args)
+#define OP_MAIN_SUCCESS return 0;
+#define OP_MAIN_START OPstart(argc, args);
+#define OP_MAIN_END OPend();
+#endif
+
 #endif

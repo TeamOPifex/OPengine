@@ -45,6 +45,8 @@ void ExampleSelectorEnter(OPgameState* last) {
 	OPfontManagerBind(exampleSelector->FontManager);
 	OPfontManagerSetAlign(exampleSelector->FontManager, OPFONT_ALIGN_LEFT);
 
+	exampleSelector->Selected = 1;
+
 	exampleSelector->Examples = (Example*)OPalloc(sizeof(Example)* ExampleCount);
 	OPbzero(exampleSelector->Examples, sizeof(Example)* ExampleCount);
 	exampleSelector->Examples[0].name = "Audio";
@@ -96,12 +98,12 @@ int ExampleSelectorUpdate(OPtimer* time) {
 		exampleSelector->Selected++;
 		if (exampleSelector->Selected >= ExampleCount) exampleSelector->Selected = 0;
 	}
-	if (exampleSelector->Examples[exampleSelector->Selected].available && (OPkeyboardWasPressed(OPKEY_SPACE) || OPkeyboardWasPressed(OPKEY_ENTER))) {
+	if (exampleSelector->Examples[exampleSelector->Selected].available && (OPkeyboardWasPressed(OPKEY_SPACE) || OPkeyboardWasPressed(OPKEY_ENTER) || OPtouchAnyInputIsDown())) {
 		OPgameStateChange(exampleSelector->Examples[exampleSelector->Selected].state);
 		return 0;
 	}
 
-	OPrenderClear(0, 0, 0);
+	OPrenderClear(1, 0, 0);
 
 	OPint isInActive = 0, isAvailable = 0;
 	f32 r, g, b;
