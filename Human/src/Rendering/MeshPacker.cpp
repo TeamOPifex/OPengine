@@ -67,18 +67,20 @@ void OPmeshPackerBuild(){
 	packer->VertexBuffer = OPrenderGenBuffer(OPvertexBuffer);
 	packer->IndexBuffer = OPrenderGenBuffer(OPindexBuffer);
 
-	 OPrenderSetBufferData(
+	OPrenderSetBufferData(
 		&packer->VertexBuffer,
 		1,
 		packer->vertexOffset,
 		packer->vertices.Data
 	);
+
 	OPrenderSetBufferData(
 		&packer->IndexBuffer,
 		1,
 		packer->indexOffset,
 		packer->indices.Data
 	);
+	
 	OPRENDER_CURR_PACKER->built = true;
 }
 //-----------------------------------------------------------------------------
