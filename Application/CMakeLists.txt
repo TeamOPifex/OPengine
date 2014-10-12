@@ -164,10 +164,10 @@ if(${OPIFEX_RELEASE})
 
 else()
 	add_definitions(-D_DEBUG)
-	if(${OPIFEX_OS_WINDOWS})
-		SET(OPIFEX_REPO "${OPIFEX_ENGINE_REPOSITORY}/Assets/")
-		add_definitions(-DOPIFEX_REPO="${OPIFEX_REPO}")
-	endif()
+	SET(OPIFEX_REPO "${OPIFEX_ENGINE_REPOSITORY}/Assets/")
+	add_definitions(-DOPIFEX_REPO="${OPIFEX_REPO}")
+
+	message(STATUS "ENGINE REPO SET TO: ${OPIFEX_REPO}")
 	
 endif()
 
