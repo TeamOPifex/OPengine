@@ -23,6 +23,8 @@ typedef struct{
 	OPboundingBox3D boundingBox;
 	OPskeleton* Skeleton;
 	ui32 VertexSize;
+	void* Vertices;
+	void* Indicies;
 } OPmesh;
 
 //-----------------------------------------------------------------------------
