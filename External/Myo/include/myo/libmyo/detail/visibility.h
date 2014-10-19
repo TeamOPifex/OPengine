@@ -1,7 +1,7 @@
 // Copyright (C) 2013-2014 Thalmic Labs Inc.
-// Confidential and not for redistribution. See LICENSE.txt.
-#ifndef LIBMYO_DETAIL_VISIBILITY_H
-#define LIBMYO_DETAIL_VISIBILITY_H
+// Distributed under the Myo SDK license agreement. See LICENSE.txt for details.
+#ifndef MYO_LIBMYO_DETAIL_VISIBILITY_H
+#define MYO_LIBMYO_DETAIL_VISIBILITY_H
 
 #if defined(_WIN32) || defined(__CYGWIN__)
   #ifdef myo_EXPORTS
@@ -29,4 +29,4 @@
   #endif
 #endif
 
-#endif // LIBMYO_DETAIL_VISIBILITY_H
+#endif // MYO_LIBMYO_DETAIL_VISIBILITY_H

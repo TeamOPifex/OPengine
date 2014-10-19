@@ -1,12 +1,11 @@
 // Copyright (C) 2013-2014 Thalmic Labs Inc.
-// Confidential and not for redistribution. See LICENSE.txt.
-#ifndef MYO_POSE_HPP
-#define MYO_POSE_HPP
+// Distributed under the Myo SDK license agreement. See LICENSE.txt for details.
+#pragma once
 
 #include <iosfwd>
 #include <string>
 
-#include <libmyo.h>
+#include <myo/libmyo.h>
 
 namespace myo {
 
@@ -15,12 +14,14 @@ class Pose {
 public:
     /// Types of poses supported by the SDK.
     enum Type {
-        none = libmyo_pose_none,
-        fist = libmyo_pose_fist,
-        wave_in = libmyo_pose_wave_in,
-        wave_out = libmyo_pose_wave_out,
-        fingers_spread = libmyo_pose_fingers_spread,
-        twist_in = libmyo_pose_twist_in
+        rest          = libmyo_pose_rest,
+        fist          = libmyo_pose_fist,
+        waveIn        = libmyo_pose_wave_in,
+        waveOut       = libmyo_pose_wave_out,
+        fingersSpread = libmyo_pose_fingers_spread,
+        reserved1     = libmyo_pose_reserved1,
+        thumbToPinky  = libmyo_pose_thumb_to_pinky,
+        unknown       = libmyo_pose_unknown
     };
 
     /// Construct a pose of type Pose::none.
@@ -68,5 +69,3 @@ std::ostream& operator<<(std::ostream& out, const Pose& pose);
 } // namespace myo
 
 #include "impl/Pose_impl.hpp"
-
-#endif // MYO_POSE_HPP
