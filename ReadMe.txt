@@ -44,11 +44,21 @@ Kirk Roerig - kirk@teamopifex.com
 ========================================
 
 ---------------------------------
+--- Windows		 			  ---
+---------------------------------
+
+	* Install OpenAL
+		* http://www.openal.org/creative-installers/
+	* Install Cmake
+		* http://www.cmake.org/download/
+	
+
+---------------------------------
 --- Linux (Ubuntu) 			  ---
 ---------------------------------
 
-	* Install Mercurial
-		* sudo apt-get install mercurial
+	* Install Git
+		* sudo apt-get install git
 	* Install Cmake
 		* sudo apt-get install cmake
 	* Install OpenGL libraries
