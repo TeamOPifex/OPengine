@@ -30,7 +30,7 @@ typedef struct{
 typedef struct{
 	OPuint count;
 	Bucket *buckets;
-} HashMap;
+} OPhashMap;
 
 // ______                _   _                 
 //|  ____|              | | (_)                
@@ -39,12 +39,12 @@ typedef struct{
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                                                                    
-HashMap* OPhashMapCreate(OPuint capacity);
-void OPhashMapDestroy(HashMap* map);
-OPint OPhashMapGet(const HashMap* hashMap, const OPchar* key, void** value);
-OPint OPhashMapExists(const HashMap* map, const OPchar* key);
-OPint OPhashMapPut(HashMap* map, const OPchar* key, void* value);
-OPint OPhashMapCount(const HashMap* map);
+OPhashMap* OPhashMapCreate(OPuint capacity);
+void OPhashMapDestroy(OPhashMap* map);
+OPint OPhashMapGet(const OPhashMap* hashMap, const OPchar* key, void** value);
+OPint OPhashMapExists(const OPhashMap* map, const OPchar* key);
+OPint OPhashMapPut(OPhashMap* map, const OPchar* key, void* value);
+OPint OPhashMapCount(const OPhashMap* map);
 
 #ifdef __cplusplus
 }

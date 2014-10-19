@@ -33,7 +33,7 @@ typedef struct {
 
 	OPvector* currNodes;
 	bool isBuilt;
-	HashMap* builtNodes;
+	OPhashMap* builtNodes;
 	OPmeshPacker meshPacker;
 	OPint pixelated;
 } OPfontManager;

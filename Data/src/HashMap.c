@@ -2,6 +2,14 @@
 #include "./Core/include/DynamicMemory.h"
 #include "./Data/include/String.h"
 
+//  _____ _                   _       
+// / ____| |                 | |      
+//| (___ | |_ _ __ _   _  ___| |_ ___ 
+// \___ \| __| '__| | | |/ __| __/ __|
+// ____) | |_| |  | |_| | (__| |_\__ \
+//|_____/ \__|_|   \__,_|\___|\__|___/
+//                                                                      
+
 static KeyValuePair* get_pair(Bucket *bucket, const OPchar *key);
 static ui64 hash(const OPchar* str);
 
@@ -12,10 +20,10 @@ static ui64 hash(const OPchar* str);
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                                                                    
-HashMap* OPhashMapCreate(OPuint capacity)
+OPhashMap* OPhashMapCreate(OPuint capacity)
 {
-	HashMap* hashMap;	
-	hashMap = (HashMap*)OPalloc(sizeof(HashMap));
+	OPhashMap* hashMap;	
+	hashMap = (OPhashMap*)OPalloc(sizeof(OPhashMap));
 	if (hashMap == NULL) return NULL;
 	
 	hashMap->count = capacity;
@@ -28,7 +36,7 @@ HashMap* OPhashMapCreate(OPuint capacity)
 	return hashMap;
 }
 
-void OPhashMapDestroy(HashMap* hashMap)
+void OPhashMapDestroy(OPhashMap* hashMap)
 {
 	OPuint i, j, n, m;
 	Bucket *bucket;
@@ -57,7 +65,7 @@ void OPhashMapDestroy(HashMap* hashMap)
 	OPfree(hashMap);
 }
 
-OPint OPhashMapGet(const HashMap* hashMap, const OPchar* key, void** dest)
+OPint OPhashMapGet(const OPhashMap* hashMap, const OPchar* key, void** dest)
 {
 	OPuint index;
 	Bucket *bucket;
@@ -77,7 +85,7 @@ OPint OPhashMapGet(const HashMap* hashMap, const OPchar* key, void** dest)
 	return 1;
 }
 
-OPint OPhashMapExists(const HashMap *map, const OPchar *key)
+OPint OPhashMapExists(const OPhashMap *map, const OPchar *key)
 {
 	OPuint index;
 	Bucket* bucket;
@@ -95,7 +103,7 @@ OPint OPhashMapExists(const HashMap *map, const OPchar *key)
 	return 1;
 }
 
-OPint OPhashMapPut(HashMap *map, const OPchar* key, void* value)
+OPint OPhashMapPut(OPhashMap *map, const OPchar* key, void* value)
 {
 	OPuint key_len, index;
 	Bucket* bucket;
@@ -151,7 +159,7 @@ OPint OPhashMapPut(HashMap *map, const OPchar* key, void* value)
 	return 1;
 }
 
-OPint OPhashMapCount(const HashMap *map)
+OPint OPhashMapCount(const OPhashMap *map)
 {
 	unsigned int i, j, n, m;
 	unsigned int count;

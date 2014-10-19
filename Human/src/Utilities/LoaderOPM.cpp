@@ -594,8 +594,8 @@ OPint OPMload(const OPchar* filename, OPmesh** mesh) {
 	return 1;
 }
 
-HashMap* CreateTriangleTable(OPMData* data){
-	HashMap* triTable = OPhashMapCreate(data->indexCount / 3);
+OPhashMap* CreateTriangleTable(OPMData* data){
+	OPhashMap* triTable = OPhashMapCreate(data->indexCount / 3);
 	OPchar index[10];
 	OPint compCount = 4;
 
@@ -716,7 +716,7 @@ void ReorderVerts(OPMData* data, OPlinkedList** spaceA, OPlinkedList** spaceB){
 	*spaceB = tempB;
 }
 
-OPlinkedList* CreateTriList(OPMData* data, HashMap* triTable, OPlinkedList* vertList, OPint atLeaf){
+OPlinkedList* CreateTriList(OPMData* data, OPhashMap* triTable, OPlinkedList* vertList, OPint atLeaf){
 	OPlinkedList* triList = OPllCreate();
 	OPllNode* node = vertList->First;
 	OPchar index[10];
@@ -761,7 +761,7 @@ OPMPartNode CreateOPMPartNode(OPlinkedList* triList){
 	return meshNode;
 }
 
-OPMPartNode OPMPartition(OPMData* data, HashMap* triTable, OPlinkedList* vertList, OPint depth){
+OPMPartNode OPMPartition(OPMData* data, OPhashMap* triTable, OPlinkedList* vertList, OPint depth){
 	OPMvertex* vertices = (OPMvertex*)data->vertices;
 	OPlinkedList* spaceA = OPllCreate();
 	OPlinkedList* spaceB = OPllCreate();
@@ -846,7 +846,7 @@ OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh){
 	OPlog("Reading OPMloadData");
 	OPMData data = OPMloadData(str);
 
-	HashMap*      triTable = CreateTriangleTable(&data);
+	OPhashMap*      triTable = CreateTriangleTable(&data);
 	OPlinkedList* vertList = CreateVertexList(&data);
 
 	OPMPartition(&data, triTable, vertList, 1);

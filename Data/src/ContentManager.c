@@ -13,7 +13,7 @@
 //| |__| | | (_) | |_) | (_| | \__ \
 // \_____|_|\___/|_.__/ \__,_|_|___/
 //                                  
-HashMap OP_CMAN_HASHMAP;
+OPhashMap OP_CMAN_HASHMAP;
 OPassetLoader* OP_CMAN_ASSETLOADERS;
 OPint OP_CMAN_ASSET_LOADER_COUNT;
 OPchar* OP_CMAN_ASSET_FOLDER;
@@ -135,7 +135,7 @@ OPint OPcmanInit(OPchar* dir){
 
 	
 	// create and copy the hashmap
-	OPmemcpy(&OP_CMAN_HASHMAP, OPhashMapCreate(OP_CMAN_CAP), sizeof(HashMap));
+	OPmemcpy(&OP_CMAN_HASHMAP, OPhashMapCreate(OP_CMAN_CAP), sizeof(OPhashMap));
 
 	// create and copy the purge list
 	OP_CMAN_PURGE = OPllCreate();

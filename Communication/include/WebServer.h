@@ -12,7 +12,7 @@ typedef struct {
 	// WebSocket Messages
 	// Key, Data, Data Length
 	void(*Receive)(i8*, i8*, i32);
-	HashMap* WebSocketKeys;
+	OPhashMap* WebSocketKeys;
 	OPlist* WebSocketMessages;
 } OPWebServer;
 
