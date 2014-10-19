@@ -81,5 +81,9 @@ typedef ui32 OPuint;
 typedef f32 OPfloat;
 #endif
 
+typedef struct {
+	OPchar key[255];
+	OPchar value[255];
+}OPkeyValuePair;
 
 #endif

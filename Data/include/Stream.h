@@ -62,6 +62,8 @@ ui32 OPstreamUI32(OPstream* stream);
 f32 OPstreamf32(OPstream* stream);
 i8* OPstreamString(OPstream* stream);
 
+OPint OPstreamReadKeyValuePair(OPstream* stream, OPkeyValuePair* dst);
+
 //-----------------------------------------------------------------------------
 /**
  * OPreadAt - Reads data at a specific location.
