@@ -132,7 +132,28 @@ i8* OPstreamString(OPstream* stream) {
 	_fillBuffer(stream);
 	return OPstringCreateMerged(stream->Buffer, "");
 }
+//-----------------------------------------------------------------------------
+OPint OPstreamReadKeyValuePair(OPstream* str, OPkeyValuePair* dst){
+	OPchar buffer[255];
+	OPchar buffer2[255];
+	OPchar buffer3[255];
 
+	// check to see if we are at the end of the stream or not
+	if(str->_pointer >= str->Length) return 0;
+
+	sscanf((OPchar*)str->Data + str->_pointer, "%255[^\r\n]", buffer);
+	str->_pointer += strlen(buffer) + 2;
+	sscanf(buffer, "%255[^=]=%*[ \t]%255[^\r\n]", &buffer2, &dst->value);
+
+	// Removes any trailing whitespace from t,he values
+	sscanf(buffer2, "%s", &dst->key);
+
+	for (i32 i = 0; i < strlen(dst->key); i++){
+		dst->key[i] = tolower(dst->key[i]);
+	}
+
+	return 1;
+}
 //-----------------------------------------------------------------------------
 ui8* OPreadAt(OPstream* stream, OPuint pos, OPuint size){
 	return stream->Data + pos;
