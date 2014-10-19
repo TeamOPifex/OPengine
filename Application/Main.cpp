@@ -11,6 +11,7 @@ void ApplicationInit() {
 #ifdef OPIFEX_REPO
 	assetDir = OPIFEX_REPO;
 #endif
+	OPlog("Asset Dir: %s", assetDir);
 
 	OPloadersAddDefault();
 	SpineAddLoader();
