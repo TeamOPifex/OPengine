@@ -584,8 +584,8 @@ OPint OPMload(const OPchar* filename, OPmesh** mesh) {
 	OPlog("Disposing");
 
 	// Dispose of allocated buffers
-	OPfree(data.vertices);
-	OPfree(data.indices);
+	//OPfree(data.vertices);
+	//OPfree(data.indices);
 	OPstreamDestroy(str);
 
 	*mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
