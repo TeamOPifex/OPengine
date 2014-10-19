@@ -1,11 +1,11 @@
 // Copyright (C) 2013-2014 Thalmic Labs Inc.
-// Confidential and not for redistribution. See LICENSE.txt.
-#ifndef LIBMYO_THROWONERROR_HPP
-#define LIBMYO_THROWONERROR_HPP
+// Distributed under the Myo SDK license agreement. See LICENSE.txt for details.
+#ifndef MYO_CXX_DETAIL_THROWONERROR_HPP
+#define MYO_CXX_DETAIL_THROWONERROR_HPP
 
 #include <stdexcept>
 
-#include <libmyo.h>
+#include <myo/libmyo.h>
 
 #if defined(_MSC_VER) && _MSC_VER <= 1800
 #define LIBMYO_NOEXCEPT(b)
@@ -67,4 +67,4 @@ private:
 
 } //namespace libmyo
 
-#endif //LIBMYO_THROWONERROR_HPP
+#endif // MYO_CXX_DETAIL_THROWONERROR_HPP

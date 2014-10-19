@@ -1,5 +1,5 @@
 // Copyright (C) 2013-2014 Thalmic Labs Inc.
-// Confidential and not for redistribution. See LICENSE.txt.
+// Distributed under the Myo SDK license agreement. See LICENSE.txt for details.
 #include "../Hub.hpp"
 
 #include <algorithm>
@@ -15,12 +15,12 @@
 namespace myo {
 
 inline
-Hub::Hub()
+Hub::Hub(const std::string& applicationIdentifier)
 : _hub(0)
 , _myos()
 , _listeners()
 {
-    libmyo_init_hub(&_hub, ThrowOnError());
+    libmyo_init_hub(&_hub, applicationIdentifier.c_str(), ThrowOnError());
 }
 
 inline
@@ -33,45 +33,37 @@ Hub::~Hub()
 }
 
 inline
-Myo* Hub::waitForAnyMyo(unsigned int timeout_ms)
+Myo* Hub::waitForMyo(unsigned int timeout_ms)
 {
-    return waitForMyo(false, timeout_ms);
-}
+    std::size_t prevSize = _myos.size();
 
-inline
-Myo* Hub::waitForAdjacentMyo(unsigned int timeout_ms)
-{
-    return waitForMyo(true, timeout_ms);
-}
+    struct local {
+        static libmyo_handler_result_t handler(void* user_data, libmyo_event_t event) {
+            Hub* hub = static_cast<Hub*>(user_data);
 
-inline
-void Hub::pairWithAnyMyo()
-{
-    pairWithAnyMyos(1);
-}
+            libmyo_myo_t opaque_myo = libmyo_event_get_myo(event);
 
-inline
-void Hub::pairWithAnyMyos(unsigned int count)
-{
-    libmyo_pair_any(_hub, count, ThrowOnError());
-}
+            switch (libmyo_event_get_type(event)) {
+            case libmyo_event_paired:
+                hub->addMyo(opaque_myo);
+                return libmyo_handler_stop;
+            default:
+                break;
+            }
 
-inline
-void Hub::pairWithAdjacentMyo()
-{
-    pairWithAdjacentMyos(1);
-}
+            return libmyo_handler_continue;
+        }
+    };
 
-inline
-void Hub::pairWithAdjacentMyos(unsigned int count)
-{
-    libmyo_pair_adjacent(_hub, count, ThrowOnError());
-}
+    do {
+        libmyo_run(_hub, timeout_ms ? timeout_ms : 1000, &local::handler, this, ThrowOnError());
+    } while (!timeout_ms && _myos.size() <= prevSize);
 
-inline
-void Hub::pairByMacAddress(uint64_t mac_address)
-{
-    libmyo_pair_by_mac_address(_hub, mac_address, ThrowOnError());
+    if (_myos.size() <= prevSize) {
+        return 0;
+    }
+
+    return _myos.back();
 }
 
 inline
@@ -101,33 +93,54 @@ void Hub::onDeviceEvent(libmyo_event_t event)
 {
     libmyo_myo_t opaqueMyo = libmyo_event_get_myo(event);
 
-    Myo* myo = 0;
+    Myo* myo = lookupMyo(opaqueMyo);
 
-    if (libmyo_event_get_type(event) == libmyo_event_paired) {
-        myo = new Myo(opaqueMyo);
-        _myos.push_back(myo);
-    } else {
-        myo = lookupMyo(opaqueMyo);
-        if (!myo) {
-            // Ignore events for Myos we don't know about.
-            return;
-        }
+    if (!myo && libmyo_event_get_type(event) == libmyo_event_paired) {
+        myo = addMyo(opaqueMyo);
+    }
+
+    if (!myo) {
+        // Ignore events for Myos we don't know about.
+        return;
     }
 
     for (std::vector<DeviceListener*>::iterator I = _listeners.begin(), IE = _listeners.end(); I != IE; ++I) {
         DeviceListener* listener = *I;
 
+        listener->onOpaqueEvent(event);
+
         uint64_t time = libmyo_event_get_timestamp(event);
 
         switch (libmyo_event_get_type(event)) {
-        case libmyo_event_paired:
-            listener->onPair(myo, time);
+        case libmyo_event_paired: {
+            FirmwareVersion version = {libmyo_event_get_firmware_version(event, libmyo_version_major),
+                                       libmyo_event_get_firmware_version(event, libmyo_version_minor),
+                                       libmyo_event_get_firmware_version(event, libmyo_version_patch),
+                                       libmyo_event_get_firmware_version(event, libmyo_version_hardware_rev)};
+            listener->onPair(myo, time, version);
             break;
-        case libmyo_event_connected:
-            listener->onConnect(myo, time);
+        }
+        case libmyo_event_unpaired:
+            listener->onUnpair(myo, time);
             break;
+        case libmyo_event_connected: {
+            FirmwareVersion version = {libmyo_event_get_firmware_version(event, libmyo_version_major),
+                                       libmyo_event_get_firmware_version(event, libmyo_version_minor),
+                                       libmyo_event_get_firmware_version(event, libmyo_version_patch),
+                                       libmyo_event_get_firmware_version(event, libmyo_version_hardware_rev)};
+            listener->onConnect(myo, time, version);
+            break;
+        }
         case libmyo_event_disconnected:
             listener->onDisconnect(myo, time);
+            break;
+        case libmyo_event_arm_recognized:
+            listener->onArmRecognized(myo, time,
+                                      static_cast<Arm>(libmyo_event_get_arm(event)),
+                                      static_cast<XDirection>(libmyo_event_get_x_direction(event)));
+            break;
+        case libmyo_event_arm_lost:
+            listener->onArmLost(myo, time);
             break;
         case libmyo_event_orientation:
             listener->onOrientationData(myo, time,
@@ -193,12 +206,6 @@ libmyo_hub_t Hub::libmyoObject()
 }
 
 inline
-uint64_t Hub::now()
-{
-    return libmyo_now();
-}
-
-inline
 Myo* Hub::lookupMyo(libmyo_myo_t opaqueMyo) const
 {
     Myo* myo = 0;
@@ -213,44 +220,13 @@ Myo* Hub::lookupMyo(libmyo_myo_t opaqueMyo) const
 }
 
 inline
-Myo* Hub::waitForMyo(bool adjacent, unsigned int timeout_ms)
+Myo* Hub::addMyo(libmyo_myo_t opaqueMyo)
 {
-    if (!_myos.empty()) {
-        throw std::runtime_error("Already paired with a Myo");
-    }
+    Myo* myo = new Myo(opaqueMyo);
 
-    if (adjacent) {
-        pairWithAdjacentMyo();
-    } else {
-        pairWithAnyMyo();
-    }
-    struct local {
-        static libmyo_handler_result_t handler(void* user_data, libmyo_event_t event) {
-            Hub* hub = static_cast<Hub*>(user_data);
+    _myos.push_back(myo);
 
-            libmyo_myo_t opaque_myo = libmyo_event_get_myo(event);
-
-            switch (libmyo_event_get_type(event)) {
-            case libmyo_event_paired:
-                hub->_myos.push_back(new Myo(opaque_myo));
-                return libmyo_handler_stop;
-            default:
-                break;
-            }
-
-            return libmyo_handler_continue;
-        }
-    };
-
-    do {
-        libmyo_run(_hub, timeout_ms ? timeout_ms : 1000, &local::handler, this, ThrowOnError());
-    } while (!timeout_ms && _myos.empty());
-
-    if (_myos.empty()) {
-        return 0;
-    }
-
-    return _myos.front();
+    return myo;
 }
 
 } // namespace myo
