@@ -58,7 +58,7 @@ typedef struct{
 // \_____|_|\___/|_.__/ \__,_|_|___/
 //                              
 
-extern HashMap OP_CMAN_HASHMAP;
+extern OPhashMap OP_CMAN_HASHMAP;
 extern OPassetLoader* OP_CMAN_ASSETLOADERS;
 extern OPint OP_CMAN_ASSET_LOADER_COUNT;
 extern OPlinkedList* OP_CMAN_PURGE;
