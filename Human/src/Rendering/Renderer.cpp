@@ -263,9 +263,9 @@ OPint OPrenderInit(){
 
 	// TODO: Determine how to optimize with this
 #if !defined(OPIFEX_OSX32) && !defined(OPIFEX_OSX64)
-	GLuint VertexArrayID;
-	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
+	//GLuint VertexArrayID;
+	//glGenVertexArrays(1, &VertexArrayID);
+	//glBindVertexArray(VertexArrayID);
 #endif
 
 	glEnable(GL_MULTISAMPLE_ARB);
