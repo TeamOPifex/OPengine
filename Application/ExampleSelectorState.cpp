@@ -2,6 +2,7 @@
 
 #include "./Application/Examples/Audio.h"
 #include "./Application/Examples/Model.h"
+#include "./Application/Examples/Myo.h"
 #include "./Application/Examples/Oculus.h"
 #include "./Application/Examples/ParticleSystem.h"
 #include "./Application/Examples/Physics.h"
@@ -30,7 +31,7 @@ typedef struct {
 
 ExampleSelector* exampleSelector;
 
-#define ExampleCount 9
+#define ExampleCount 10
 
 void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector = (ExampleSelector*)OPallocZero(sizeof(ExampleSelector));
@@ -84,6 +85,12 @@ void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector->Examples[8].state = &GS_EXAMPLE_SPINE;
 #ifdef OPIFEX_SPINE
 	exampleSelector->Examples[8].available = 1;
+#endif
+
+	exampleSelector->Examples[9].name = "Myo";
+	exampleSelector->Examples[9].state = &GS_EXAMPLE_MYO;
+#ifdef OPIFEX_MYO
+	exampleSelector->Examples[9].available = 1;
 #endif
 
 	OPlog("Entered Example Selector");

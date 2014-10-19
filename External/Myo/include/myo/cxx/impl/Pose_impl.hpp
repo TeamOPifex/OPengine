@@ -1,7 +1,7 @@
 // Copyright (C) 2013-2014 Thalmic Labs Inc.
-// Confidential and not for redistribution. See LICENSE.txt.
-#ifndef MYO_IMPL_POSE_IMPL_HPP
-#define MYO_IMPL_POSE_IMPL_HPP
+// Distributed under the Myo SDK license agreement. See LICENSE.txt for details.
+#ifndef MYO_CXX_IMPL_POSE_IMPL_HPP
+#define MYO_CXX_IMPL_POSE_IMPL_HPP
 
 #include "../Pose.hpp"
 
@@ -11,7 +11,7 @@ namespace myo {
 
 inline
 Pose::Pose()
-: _type(none)
+: _type(unknown)
 {
 }
 
@@ -67,18 +67,22 @@ inline
 std::string Pose::toString() const
 {
     switch (type()) {
-    case Pose::none:
-        return "none";
+    case Pose::rest:
+        return "rest";
     case Pose::fist:
         return "fist";
-    case Pose::wave_in:
-        return "wave_in";
-    case Pose::wave_out:
-        return "wave_out";
-    case Pose::fingers_spread:
-        return "fingers_spread";
-    case Pose::twist_in:
-        return "twist_in";
+    case Pose::waveIn:
+        return "waveIn";
+    case Pose::waveOut:
+        return "waveOut";
+    case Pose::fingersSpread:
+        return "fingersSpread";
+    case Pose::reserved1:
+        return "reserved1";
+    case Pose::thumbToPinky:
+        return "thumbToPinky";
+    case Pose::unknown:
+        return "unknown";
     }
 
     return "<invalid>";
@@ -92,4 +96,4 @@ std::ostream& operator<<(std::ostream& out, const Pose& pose)
 
 } // namespace myo
 
-#endif // MYO_IMPL_POSE_IMPL_HPP
+#endif // MYO_CXX_IMPL_POSE_IMPL_HPP
