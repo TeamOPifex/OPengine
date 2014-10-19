@@ -44,6 +44,16 @@ Kirk Roerig - kirk@teamopifex.com
 ========================================
 
 ---------------------------------
+--- Windows		 			  ---
+---------------------------------
+
+	* Install OpenAL
+		* http://www.openal.org/creative-installers/
+	* Install Cmake
+		* http://www.cmake.org/download/
+	
+
+---------------------------------
 --- Linux (Ubuntu) 			  ---
 ---------------------------------
 
