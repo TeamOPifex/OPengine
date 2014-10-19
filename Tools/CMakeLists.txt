@@ -63,6 +63,19 @@ set_target_properties(Tools_SpriteSheetMaker PROPERTIES
 )
 
 
+#################################
+## Project Builder
+#################################
+
+add_source_group(\\ "${PROJECT_SOURCE_DIR}/Tools/ProjectBuilder" PROJECTBUILDER_SRC)
+add_executable(Tools_ProjectBuilder ${PROJECTBUILDER_SRC})
+target_link_libraries(Tools_ProjectBuilder ${ALL_LIBS})	
+SET_PROPERTY(TARGET Tools_ProjectBuilder                PROPERTY FOLDER "Tools")
+set_target_properties(Tools_ProjectBuilder PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(Tools_ProjectBuilder PROPERTIES 
+	OUTPUT_NAME "ProjectBuilder"
+)
+
 
 #################################
 ## FBX to OPM
