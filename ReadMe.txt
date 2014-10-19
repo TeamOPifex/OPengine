@@ -47,8 +47,8 @@ Kirk Roerig - kirk@teamopifex.com
 --- Linux (Ubuntu) 			  ---
 ---------------------------------
 
-	* Install Mercurial
-		* sudo apt-get install mercurial
+	* Install Git
+		* sudo apt-get install git
 	* Install Cmake
 		* sudo apt-get install cmake
 	* Install OpenGL libraries
