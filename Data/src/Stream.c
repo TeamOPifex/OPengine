@@ -142,8 +142,13 @@ OPint OPstreamReadKeyValuePair(OPstream* str, OPkeyValuePair* dst){
 	if(str->_pointer >= str->Length) return 0;
 
 	sscanf((OPchar*)str->Data + str->_pointer, "%255[^\r\n]", buffer);
-	str->_pointer += strlen(buffer) + 2;
+	OPint len = strlen(buffer);
+
+	if(!len) return 0;
+
+	str->_pointer += len + 2;
 	sscanf(buffer, "%255[^=]=%*[ \t]%255[^\r\n]", &buffer2, &dst->value);
+
 
 	// Removes any trailing whitespace from t,he values
 	sscanf(buffer2, "%s", &dst->key);
