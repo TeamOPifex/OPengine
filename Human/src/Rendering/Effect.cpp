@@ -326,8 +326,8 @@ void OPrenderUseTexture(const OPchar* param, ui32 texture, ui32 slot){
 //-----------------------------------------------------------------------------
 // effect creation
 OPeffect OPrenderGenEffect(
-	OPchar* vert,
-	OPchar* frag,
+	const OPchar* vert,
+	const OPchar* frag,
 	ui32 attrs,
 	const OPchar* Name,
 	ui32 stride) {

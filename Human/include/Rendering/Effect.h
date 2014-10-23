@@ -15,10 +15,6 @@
 
 #define OP_EFFECT_NAME_LEN 16
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 //-----------------------------------------------------------------------------
 //  _____                     _____                  _____  _               _   _               
@@ -98,8 +94,8 @@ OPeffect OPrenderCreateEffect(
 	OPshaderAttribute* Attributes, OPint AttribCount,
 	const OPchar* Name);
 OPeffect OPrenderGenEffect(
-	OPchar* vert,
-	OPchar* frag,
+	const OPchar* vert,
+	const OPchar* frag,
 	ui32 attrs,
 	const OPchar* Name,
 	ui32 stride);
@@ -207,9 +203,5 @@ inline void OPrenderParamMat4v(const OPchar* param, OPint count, OPmat4* matrice
 	glUniformMatrix4fv(loc, count, GL_FALSE, (OPfloat*)matrices);
 }
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-};
-#endif
 
 #endif

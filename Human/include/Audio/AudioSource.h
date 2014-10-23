@@ -2,10 +2,6 @@
 #define OPENGINE_HUMAN_AUDIO_SOURCE
 #include "Audio.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #define WAVE_HEADER 44
 //-----------------------------------------------------------------------------
@@ -99,7 +95,4 @@ OPint OPaudSeekWave(OPaudioSource* src, ui64* pos);
 OPint OPaudSeekOgg (OPaudioSource* src, ui64* pos);
 //-----------------------------------------------------------------------------
 
-#ifdef __cplusplus
-};
-#endif
 #endif

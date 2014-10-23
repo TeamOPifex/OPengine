@@ -5,10 +5,6 @@
 #include "./Math/include/BoundingBox3D.h"
 #include "./Human/include/Rendering/Skinning/Animation.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 //-----------------------------------------------------------------------------
 //   _____ _                   _       
@@ -59,9 +55,5 @@ void OPrenderBindMesh(OPmesh* mesh);
 
 void OPrenderMesh();
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-};
-#endif
 
 #endif

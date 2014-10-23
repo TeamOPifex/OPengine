@@ -5,11 +5,6 @@
 #include "./Math/include/Matrix4.h"
 #include "./Core/include/MathHelpers.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 //-----------------------------------------------------------------------------
 //   _____ _                   _       
 //  / ____| |                 | |      
@@ -105,9 +100,5 @@ struct OPcam{
 OPcam OPcamProj (OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPfloat zFar, OPfloat fov, OPfloat aspect);
 OPcam OPcamOrtho(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPfloat zFar, OPfloat left, OPfloat right, OPfloat bottom, OPfloat top);
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-};
-#endif
 
 #endif

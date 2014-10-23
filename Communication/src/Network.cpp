@@ -79,7 +79,7 @@ OPnetwork* OPnetworkCreate(OPnetworkType networkType) {
 	return network;
 }
 
-i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPint port) {
+i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, i32 port) {
 #ifdef OPIFEX_WINDOWS
 	WSADATA wsaData;
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
@@ -136,7 +136,7 @@ i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPint port) {
 	return 0;
 }
 
-i32 OPnetworkServerStart(OPnetwork* network, OPint port) {
+i32 OPnetworkServerStart(OPnetwork* network, i32 port) {
 #ifdef OPIFEX_WINDOWS
 	WSADATA wsaData;
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
@@ -196,7 +196,7 @@ i32 OPnetworkServerStart(OPnetwork* network, OPint port) {
 	}
 	else{
 		if(listen(network->ConnectSocket, 64)){
-			OPchar* errMsg;
+			const OPchar* errMsg;
 			switch(errno){
 				case EACCES:
 					errMsg = "The current process has insufficient privileges.";

@@ -52,8 +52,7 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 		);
 
 		if(errno == ENOMEM){
-			OPlog(
-				"OPrealloc at %x failed to resize to %u bytes.",
+			OPlog("OPrealloc at %x failed to resize to %u bytes.",
 				(OPuint)D,
 				(sizeof(ui8) * len) << 1
 			);
@@ -128,7 +127,7 @@ f32 OPstreamf32(OPstream* stream) {
 	_fillBuffer(stream);
 	return atof(stream->Buffer);
 }
-i8* OPstreamString(OPstream* stream) {
+OPchar* OPstreamString(OPstream* stream) {
 	_fillBuffer(stream);
 	return OPstringCreateMerged(stream->Buffer, "");
 }

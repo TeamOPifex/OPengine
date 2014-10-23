@@ -5,11 +5,6 @@
 #include "./Core/include/Types.h"
 #include "./Math/include/Vector4.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 //-----------------------------------------------------------------------------
 //   _____ _                   _       
 //  / ____| |                 | |      
@@ -70,10 +65,6 @@ void OPtexturePixelate();
 void OPtextureSmooth();
 OPvec4 OPtextureReadPixel(OPtexture* tex, OPint x, OPint y);
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-};
-#endif
 
 #endif
  

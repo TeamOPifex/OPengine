@@ -42,8 +42,8 @@ typedef struct {
 } OPnetwork;
 
 OPnetwork* OPnetworkCreate(OPnetworkType networkType);
-i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPint port);
-i32 OPnetworkServerStart(OPnetwork* network, OPint port);
+i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, i32 port);
+i32 OPnetworkServerStart(OPnetwork* network, i32 port);
 OPnetwork* OPnetworkAcceptClient(OPnetwork* network);
 i32 OPnetworkReceive(OPnetwork* network, void* state, void(*receive)(void*, i32, OPchar*));
 i32 OPnetworkSend(OPnetwork* network, i8* data, i32 size);

@@ -4,10 +4,6 @@
 #include "AudioSource.h"
 #include "./Data/include/EntHeap.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #define EMITTER_THREADED 0x0001
 #define EMITTER_LOOPING  0x0002
@@ -133,7 +129,4 @@ void OPaudPitch   (OPaudioEmitter* emitter, OPfloat pitch);
 void OPaudProcess(OPaudioEmitter* emit, OPint length);
 //-----------------------------------------------------------------------------
 
-#ifdef __cplusplus
-};
-#endif
 #endif
