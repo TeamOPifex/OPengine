@@ -284,7 +284,7 @@ __inline OPfloat OPln(OPfloat f){
 * @return Floating point value
 */
 __inline OPfloat OPround(OPfloat f){
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID) // linux implementation
+#if defined(OPIFEX_UNIX) || defined(OPIFEX_ANDROID) // linux implementation
 	return round(f);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
 	return (OPfloat)OPfloor(f + 0.5f);

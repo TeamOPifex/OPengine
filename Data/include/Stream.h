@@ -60,7 +60,7 @@ ui8 OPstreamUI8(OPstream* stream);
 ui16 OPstreamUI16(OPstream* stream);
 ui32 OPstreamUI32(OPstream* stream);
 f32 OPstreamf32(OPstream* stream);
-i8* OPstreamString(OPstream* stream);
+OPchar* OPstreamString(OPstream* stream);
 
 //-----------------------------------------------------------------------------
 /**

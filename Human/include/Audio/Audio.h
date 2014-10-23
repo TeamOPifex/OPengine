@@ -33,10 +33,6 @@
 #endif
 
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 //-----------------------------------------------------------------------------
 //           _____ _____  __      __        _       _     _           
@@ -100,8 +96,6 @@ OPint OPaudInit();
 OPvec3 OPaudEarPosition(OPvec3* pos);
 OPvec3 OPaudEarVelocity(OPvec3* pos);
 OPvec3 OPaudEarForwardUp(OPfloat* pos);
-//-----------------------------------------------------------------------------
-#ifdef __cplusplus
-};
-#endif
+
+
 #endif

@@ -7,10 +7,6 @@
 #include "./Human/include/Rendering/MeshPacked.h"
 #include "./Math/include/Vector2.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 //-----------------------------------------------------------------------------
 //   _____ _                   _       
@@ -42,10 +38,6 @@ OPmeshPacked OPquadCreatePacked();
 OPmesh       OPquadNormCreate();
 OPmeshPacked OPquadNormCreatePacked();
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-};
-#endif
 
 #endif
  

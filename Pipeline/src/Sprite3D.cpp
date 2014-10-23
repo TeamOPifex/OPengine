@@ -16,7 +16,7 @@ void OPsprite3DInit(OPeffect* effect) {
 			"Common/OPspriteSheet.frag",
 			OPATTR_POSITION | OPATTR_UV,
 			"3D Sprite sheet effect",
-			NULL
+			0
 			);
 
 		SPRITE_3D_INITIALIZED = 2;

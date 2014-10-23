@@ -18,7 +18,7 @@ OPgameState GS_EXAMPLE_SELECTOR = {
 };
 
 typedef struct {
-	OPchar* name;
+	const OPchar* name;
 	OPint available;
 	OPgameState* state;
 } Example;

@@ -20,7 +20,7 @@ OPfontManager* OPfontManagerCreate(OPfont* font) {
 	return temp;
 }
 
-OPfontManager* OPfontManagerSetup(OPchar* font, OPchar** text, ui16 count) {
+OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 count) {
 	OPsystemsLoadFontEffect();
 	OPcmanLoad(font);
 	OPfont* _font = (OPfont*)OPcmanGet(font);

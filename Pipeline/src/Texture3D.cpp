@@ -15,7 +15,7 @@ void LoadDefaultTexture3DEffect() {
 		"Common/Texture.frag",
 		OPATTR_POSITION | OPATTR_UV,
 		"Texture3D Effect",
-		NULL
+		0
 		);
 }
 

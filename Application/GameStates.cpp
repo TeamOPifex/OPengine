@@ -129,7 +129,7 @@ void State0Enter(OPgameState* last){
 
 	// Required
 	
-	OPchar** text = (OPchar**)OPalloc(sizeof(i8) * 1);
+	const OPchar** text = (const OPchar**)OPalloc(sizeof(i8) * 1);
 	text[0] = "All of the text! Woot!";
 	fontManager = OPfontManagerSetup("stencil.opf", text, 1);
 

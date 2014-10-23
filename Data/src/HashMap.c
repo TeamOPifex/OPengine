@@ -213,8 +213,8 @@ static ui64 hash(const OPchar* str)
 {
 	ui64 hash = 5381;
 	OPint c;
-
-	while (c = *str++) {
+	c = *str++;
+	while (c) {
 		hash = ((hash << 5) + hash) + c;
 	}
 	return hash;

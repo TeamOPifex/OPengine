@@ -17,10 +17,6 @@ struct OPaudioPlayer{
 	OPint Current;
 };
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 //-----------------------------------------------------------------------------
 //   _____ _       _           _     
@@ -64,9 +60,6 @@ void OPaudPlayerPosition(OPvec3* position);
 void OPaudPlayerVelocity(OPvec3* velocity);
 void OPaudPlayerVolume  (OPfloat gain);
 void OPaudPlayerPitch   (OPfloat pitch);
-//-----------------------------------------------------------------------------
-#ifdef __cplusplus
-};
-#endif
+
 
 #endif
