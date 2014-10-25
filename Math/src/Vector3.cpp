@@ -11,3 +11,14 @@ OPvec3 OPvec3::operator*=(OPmat4 rhs)
 	OPmat4transform(this, this, &rhs);
 	return *this; 
 }
+
+OPfloat OPvec3angleToTarget(OPvec3 pos, OPvec3 facing, OPvec3 target) {
+	OPvec3 _facing, _toPos;
+	f32 angle, dot;	
+	
+	_toPos = target - pos;
+	OPvec3norm(&_facing, &facing);
+	OPvec3norm(&_toPos, &_toPos);	
+	OPvec3dot(&dot, &_facing, &_toPos);
+	return OPacos(dot);
+}

@@ -216,6 +216,7 @@ static ui64 hash(const OPchar* str)
 	c = *str++;
 	while (c) {
 		hash = ((hash << 5) + hash) + c;
+		c = *str++;
 	}
 	return hash;
 }
