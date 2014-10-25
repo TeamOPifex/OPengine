@@ -17,7 +17,7 @@ inline void OPvec3mul(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3scl(OPvec3* dst, OPvec3* a, OPfloat s);
 inline void OPvec3div(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3divf(OPvec3* dst, OPvec3* a, OPfloat b);
-inline void OPvec3dot(OPfloat* dst, OPvec3* a, OPvec3* b);
+inline void d(OPfloat* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3cross(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3len(OPfloat* dst, OPvec3* v);
 inline void OPvec3dist(OPfloat* dst, OPvec3* a, OPvec3* b);
@@ -32,6 +32,8 @@ inline OPfloat OPvec3valDot(OPvec3* a, OPvec3* b);
 inline OPvec3 OPvec3valCross(OPvec3* a, OPvec3* b);
 inline OPfloat OPvec3valLen(OPvec3* v);
 inline OPfloat OPvec3valDist(OPvec3* a, OPvec3* b);
+
+OPfloat OPvec3angleToTarget(OPvec3 pos, OPvec3 facing, OPvec3 target);
 
 
 struct OPvec3 {

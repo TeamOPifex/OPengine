@@ -376,12 +376,17 @@ OPeffect OPrenderGenEffect(
 		}
 	}
 
-	OPlog("Loading Vert for Effect");
+	OPlog("Loading Vert for Effect: %s", vert);
 
-	if (!OPcmanIsLoaded(vert)) OPcmanLoad(vert);
+	if (!OPcmanIsLoaded(vert)) {
+		OPlog("Wasn't already loaded. Loading it.");
+		OPcmanLoad(vert);
+	} else {
+		OPlog("Already loaded.c");
+	}
 	OPshader* vertShader = (OPshader*)OPcmanGet(vert);
 
-	OPlog("Loading Frag for Effect");
+	OPlog("Loading Frag for Effect: %s", frag);
 
 	if (!OPcmanIsLoaded(frag)) OPcmanLoad(frag);
 	OPshader* fragShader = (OPshader*)OPcmanGet(frag);
