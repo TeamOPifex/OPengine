@@ -5,5 +5,5 @@
 extern OPgameState GS_EXAMPLE_PHYSICS;
 
 void ExamplePhysicsEnter(OPgameState* last);
-int ExamplePhysicsUpdate(OPtimer* time);
+OPint ExamplePhysicsUpdate(OPtimer* time);
 void ExamplePhysicsExit(OPgameState* next);

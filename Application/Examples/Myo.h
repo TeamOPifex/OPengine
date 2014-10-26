@@ -5,5 +5,5 @@
 extern OPgameState GS_EXAMPLE_MYO;
 
 void ExampleMyoEnter(OPgameState* last);
-int ExampleMyoUpdate(OPtimer* time);
+OPint ExampleMyoUpdate(OPtimer* time);
 void ExampleMyoExit(OPgameState* next);

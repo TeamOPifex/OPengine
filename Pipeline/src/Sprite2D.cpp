@@ -91,7 +91,6 @@ void OPsprite2DPrepRender(OPsprite2D* sprite) {
 	world += sprite->Position;
 
 	OPtextureClearActive();
-	OPtextureSmooth();
 	OPrenderParami("uColorTexture", OPtextureBind(sprite->CurrentSprite->Sheet));
 	OPrenderParamMat4("uWorld", &world);
 	OPrenderParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);

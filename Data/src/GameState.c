@@ -10,7 +10,7 @@ void OPgameStateChange(OPgameState* targetState){
 	if (ActiveState->Init != NULL) ActiveState->Init(lastState);
 }
 
-OPgameState* OPgameStateCreate(void (*init)(OPgameState*), int(*update)(OPtimer*), void (*exit)(OPgameState*)){
+OPgameState* OPgameStateCreate(void (*init)(OPgameState*), OPint(*update)(OPtimer*), void (*exit)(OPgameState*)){
 	OPgameState* gs = (OPgameState*)OPalloc(sizeof(OPgameState));
 
 	gs->Init = init;

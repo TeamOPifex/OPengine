@@ -129,7 +129,7 @@ void ExampleDeferredEnter(OPgameState* last) {
 //	deferredExample->Mesh = OPgeoCreateSphere(1, 10, 10);
 }
 
-int ExampleDeferredUpdate(OPtimer* time) {
+OPint ExampleDeferredUpdate(OPtimer* time) {
 
 	// Update
 	//if (OPkeyboardIsDown(OPKEY_SPACE)) deferredExample->Rotation++;

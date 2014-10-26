@@ -152,7 +152,7 @@ void State0Enter(OPgameState* last){
 
 ui32 backgroundState = 0;
 
-int State0Update(OPtimer* time){
+OPint State0Update(OPtimer* time){
 	OPsprite* bg = (OPsprite*)OPcmanGet("gripe/walk");
 
 	ui32 elapsed = time->Elapsed;
@@ -264,7 +264,7 @@ void State1Enter(OPgameState* last){
 	OPlog("State1 Entered!");
 }
 
-int State1Update(OPtimer* time){
+OPint State1Update(OPtimer* time){
 	if(time->Elapsed > 1000) return false;
 
 	t += 0.005f * time->Elapsed;

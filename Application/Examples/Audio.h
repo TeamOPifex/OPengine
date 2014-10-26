@@ -5,5 +5,5 @@
 extern OPgameState GS_EXAMPLE_AUDIO;
 
 void ExampleAudioEnter(OPgameState* last);
-int ExampleAudioUpdate(OPtimer* time);
+OPint ExampleAudioUpdate(OPtimer* time);
 void ExampleAudioExit(OPgameState* next);

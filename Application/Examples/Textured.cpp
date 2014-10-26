@@ -63,7 +63,7 @@ void ExampleTexturedEnter(OPgameState* last) {
 		);
 }
 
-int ExampleTexturedUpdate(OPtimer* time) {
+OPint ExampleTexturedUpdate(OPtimer* time) {
 	OPrenderDepth(1);
 	OPrenderClear(0, 0, 0);
 	
