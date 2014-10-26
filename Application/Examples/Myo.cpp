@@ -73,7 +73,7 @@ void ExampleMyoEnter(OPgameState* last) {
 	OPmyoConnect();
 }
 
-int ExampleMyoUpdate(OPtimer* time) {
+OPint ExampleMyoUpdate(OPtimer* time) {
 
 	////////////////////////
 	// Update

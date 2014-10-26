@@ -71,7 +71,7 @@ void ExampleModelEnter(OPgameState* last) {
 	OPrenderDepth(1);
 }
 
-int ExampleModelUpdate(OPtimer* time) {
+OPint ExampleModelUpdate(OPtimer* time) {
 
 	////////////////////////
 	// Update
