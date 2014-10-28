@@ -254,6 +254,17 @@ inline OPfloat OPvec3valDist(OPvec3* a, OPvec3* b) {
 	return temp;
 }
 
+inline OPfloat OPvec3valAngle(OPvec3* a, OPvec3* b) {
+	OPfloat temp = 0;
+
+	OPfloat top = a->x * b->x + a->y * b->y + a->z * b->z;
+	OPfloat bottom = OPsqrt(a->x * a->x + a->y * a->y + a->z * a->z) * 
+					 OPsqrt(b->x * b->x + b->y * b->y + b->z * b->z);
+	OPfloat cosTheta = top / bottom;
+	temp = OPacos(cosTheta);
+	return temp;
+}
+
 inline OPvec3 OPvec3str(OPstream* str) {
 	OPvec3 temp = {
 		OPreadf32(str),
