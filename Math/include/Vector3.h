@@ -260,6 +260,8 @@ inline OPfloat OPvec3valAngle(OPvec3* a, OPvec3* b) {
 	OPfloat top = a->x * b->x + a->y * b->y + a->z * b->z;
 	OPfloat bottom = OPsqrt(a->x * a->x + a->y * a->y + a->z * a->z) * 
 					 OPsqrt(b->x * b->x + b->y * b->y + b->z * b->z);
+	if(bottom == 0) return 0;
+	
 	OPfloat cosTheta = top / bottom;
 	temp = OPacos(cosTheta);
 	return temp;
@@ -294,5 +296,9 @@ inline OPvec3 OPvec3RandNorm(){
 	OPvec3norm(&v, &v);
 
 	return v;
+}
+
+inline void OPlogVec3(const OPchar* m, OPvec3* v) {
+	OPlog("%s: [%f, %f, %f]", m, v->x, v->y, v->z);
 }
 #endif
