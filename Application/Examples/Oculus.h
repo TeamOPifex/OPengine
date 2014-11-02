@@ -5,5 +5,5 @@
 extern OPgameState GS_EXAMPLE_OCULUS;
 
 void ExampleOculusEnter(OPgameState* last);
-int ExampleOculusUpdate(OPtimer* time);
+OPint ExampleOculusUpdate(OPtimer* time);
 void ExampleOculusExit(OPgameState* next);

@@ -20,7 +20,8 @@ OPthread OPthreadStart(void* (*function) (void*), void* params){
 		&out.ThreadId);
 #else
 	OPint err = -1;
-	if(err = pthread_create(&out.Thread, NULL, function, params)){
+	err = pthread_create(&out.Thread, NULL, function, params);
+	if(err){
 		const OPchar* f = "OPthread: Creation failed.";
 		switch(err){
 			case EAGAIN:
@@ -73,7 +74,8 @@ OPmutex OPmutexCreate(){
 	}
 #else
 	OPint err = -1;
-	if(err = pthread_mutex_init(&out.Mutex, NULL)){
+	err = pthread_mutex_init(&out.Mutex, NULL);
+	if(err){
 		const OPchar* f = "OPmutex: Creation failed.";
 		switch(err){
 			case EAGAIN:
@@ -98,6 +100,7 @@ OPint OPmutexLock(OPmutex* mutex){
 	return 0;
 #else
 	pthread_mutex_lock(&mutex->Mutex);
+	return 0;
 #endif
 }
 //-----------------------------------------------------------------------------
@@ -107,6 +110,7 @@ OPint OPmutexUnlock(OPmutex* mutex){
 	return 0;
 #else
 	pthread_mutex_unlock(&mutex->Mutex);
+	return 0;
 #endif
 }
 

@@ -19,9 +19,7 @@ add_subdirectory (External)
 #########################################
 # Tools
 #########################################
-if( ${OPIFEX_OS_WINDOWS} )
-	add_subdirectory (Tools)
-endif()
+add_subdirectory (Tools)
 
 
 #########################################

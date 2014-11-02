@@ -66,7 +66,7 @@ void ExampleSkinningEnter(OPgameState* last) {
 		);
 }
 
-int ExampleSkinningUpdate(OPtimer* time) {
+OPint ExampleSkinningUpdate(OPtimer* time) {
 	OPrenderDepth(1);
 	OPrenderClear(0, 0, 0);
 

@@ -40,7 +40,7 @@ static int send_reply(struct mg_connection *conn, OPWebServer* server) {
 		}
 
 		
-		conn->content[conn->content_len] = NULL;
+		conn->content[conn->content_len] = '\0';
 
 		OPstream* str = OPstreamCreate(conn->content_len);
 		OPmemcpy(str->Data, conn->content, conn->content_len);
@@ -71,7 +71,7 @@ static int send_reply(struct mg_connection *conn, OPWebServer* server) {
 			mg_send_data(conn, index->Data, index->Length);
 			return MG_TRUE;
 		} else {
-			i8* path = "";
+			const OPchar* path = "";
 			i32 urisize = strlen(conn->uri);
 			i32 size = urisize + strlen(path);
 
@@ -81,7 +81,7 @@ static int send_reply(struct mg_connection *conn, OPWebServer* server) {
 
 			OPmemcpy(filepath, path, strlen(path));
 			OPmemcpy(filepath + strlen(path), conn->uri + offset, strlen(conn->uri) - offset);
-			filepath[size - offset] = NULL;
+			filepath[size - offset] = '\0';
 
 
 			if ((size == 12 || size == 11) && OPmemcmp(filepath + size - 4, ".ico", 4)) {

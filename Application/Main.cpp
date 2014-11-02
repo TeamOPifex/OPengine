@@ -7,10 +7,12 @@
 
 void ApplicationInit() {
 
-	OPchar* assetDir = NULL;
 #ifdef OPIFEX_REPO
-	assetDir = OPIFEX_REPO;
+	const OPchar* assetDir = OPIFEX_REPO;
+#else
+	const OPchar* assetDir = NULL;
 #endif
+	
 	OPlog("Asset Dir: %s", assetDir);
 
 	OPloadersAddDefault();

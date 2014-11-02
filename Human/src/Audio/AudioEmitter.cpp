@@ -360,7 +360,8 @@ OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length)){
 #endif
 
 	// read sample rate >> bytes/sec pcm bytes
-	if(len = src->Read(src, &OPAUD_CURR_EMITTER->Progress, buff, bps >> shift)){//bps >> shift)){ //)
+	len = src->Read(src, &OPAUD_CURR_EMITTER->Progress, buff, bps >> shift);
+	if(len){//bps >> shift)){ //)
 		Proc(OPAUD_CURR_EMITTER, len);
 		OPaudEnqueueBuffer(buff, len);
 		return len;

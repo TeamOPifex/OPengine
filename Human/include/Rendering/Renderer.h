@@ -4,15 +4,12 @@
 #include "./Human/include/Rendering/OpenGL.h"
 #include "./Core/include/Types.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern i32 OPrenderWidth;
 extern i32 OPrenderHeight;
 extern i32 OPscreenWidth;
 extern i32 OPscreenHeight;
+extern f32 OPscreenWidthScale;
+extern f32 OPscreenHeightScale;
 extern OPint OPrenderFullscreen;
 extern OPint OPengineHasFocus;
 
@@ -49,9 +46,5 @@ inline void OPrenderBlendAlpha(){
 inline void OPrenderBlendAdditive(){
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE); 
 }
-
-#ifdef __cplusplus
-};
-#endif
 
 #endif

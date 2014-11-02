@@ -73,7 +73,7 @@ void OPcmanAddLoader(OPassetLoader* loader) {
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                                                                    
 // Specifies how assets will be loaded for each file type
-OPint OPcmanInit(OPchar* dir){
+OPint OPcmanInit(const OPchar* dir){
 
 #if defined(_DEBUG) && defined(OPIFEX_WINDOWS)
 	TCHAR Buffer[BUFSIZE];

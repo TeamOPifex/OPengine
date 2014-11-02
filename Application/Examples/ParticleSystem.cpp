@@ -39,7 +39,7 @@ void ExampleParticleSystemEnter(OPgameState* last) {
 	particleSystemExample->ParticleSystem->fps = 10;
 }
 
-int ExampleParticleSystemUpdate(OPtimer* time) {
+OPint ExampleParticleSystemUpdate(OPtimer* time) {
 	OPsprite* sprite = (OPsprite*)OPcmanGet("Toys/Dust");
 	OPrenderDepth(0);
 	OPrenderClear(0, 0, 0);

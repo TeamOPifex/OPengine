@@ -5,5 +5,5 @@
 extern OPgameState GS_EXAMPLE_SPINE;
 
 void ExampleSpineEnter(OPgameState* last);
-int ExampleSpineUpdate(OPtimer* time);
+OPint ExampleSpineUpdate(OPtimer* time);
 void ExampleSpineExit(OPgameState* next);

@@ -5,11 +5,6 @@
 #include "./Data/include/Stream.h"
 #include "./Core/include/DynamicMemory.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 //-----------------------------------------------------------------------------
 //   _____ _                   _       
 //  / ____| |                 | |      
@@ -61,9 +56,5 @@ ui32 OPmeshPackerAddIB(ui32 indexSize, void* indicesData, ui32 indexCount);
 void OPmeshPackerBuild();
 void OPmeshPackerBind(OPmeshPacker* packer);
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-};
-#endif
 
 #endif

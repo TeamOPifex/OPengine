@@ -4,11 +4,6 @@
 #include "./Human/include/Rendering/MeshPacker.h"
 #include "./Human/include/Rendering/Buffer.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 //-----------------------------------------------------------------------------
 //   _____ _                   _       
 //  / ____| |                 | |      
@@ -41,9 +36,5 @@ typedef struct{
 OPmeshPacked OPrenderCreateMeshPacked(ui32 vertSize, ui32 indSize, ui32 vertCount, ui32 indCount, void* vertices, void* indices);
 void OPrenderMeshPacked(OPmeshPacked* mesh);
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-};
-#endif
 
 #endif

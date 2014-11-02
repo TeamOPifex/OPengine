@@ -107,7 +107,7 @@ void ExampleSpineEnter(OPgameState* last) {
 	SpineInitialize();
 }
 
-int ExampleSpineUpdate(OPtimer* time) {
+OPint ExampleSpineUpdate(OPtimer* time) {
 
 	////////////////////////
 	// Update

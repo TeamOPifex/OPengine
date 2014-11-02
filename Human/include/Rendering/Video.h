@@ -4,11 +4,6 @@
 #include "./Human/include/Rendering/OpenGL.h"
 #include "./Core/include/Types.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 
 //#define VPX_CODEC_DISABLE_COMPAT 1
 //#include "vpx_decoder.h"
@@ -47,10 +42,6 @@ extern "C" {
 //
 //void playvpx_deinit(Vpxdata *data);
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-};
-#endif
 
 #endif
  

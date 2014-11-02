@@ -15,7 +15,7 @@ void LoadDefaultTexture3DEffect() {
 		"Common/Texture.frag",
 		OPATTR_POSITION | OPATTR_UV,
 		"Texture3D Effect",
-		NULL
+		0
 		);
 }
 
@@ -61,7 +61,6 @@ void OPtexture3DPrepRender(OPtexture3D* tex3d, OPcam* camera) {
 	world += tex3d->Position;
 
 	OPtextureClearActive();
-	OPtextureSmooth();
 	OPrenderParami("uColorTexture", OPtextureBind(tex3d->Texture));
 	OPrenderParamMat4v("uWorld", 1, &world);
 	OPrenderParamMat4v("uProj", 1, &proj);

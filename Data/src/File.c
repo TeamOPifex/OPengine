@@ -59,7 +59,7 @@ OPchar* OPreadstring(OPstream* str) {
 	for(; j < length; j++){
 		name[j] = OPreadi8(str);
 	}
-	name[length] = NULL;
+	name[length] = '\0';
 	return name;
 }
 
@@ -171,9 +171,9 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 		OPint fd = 0, i;
 
 		OPlog("OPreadFile: %s\n", path);
-
+		fd = open(path, O_RDONLY);
 		// be sure that the file could be opened successfully
-	 	if(fd = open(path, O_RDONLY)){
+	 	if(fd){
 
 		OPlog("File Opened");
 
@@ -236,9 +236,9 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 	}
 	else {
 		OPlog("%s does not exist\n", path);
-		return NULL;
 	}
 #endif
+		return NULL;
 }
 
 //-----------------------------------------------------------------------------
