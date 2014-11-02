@@ -8,6 +8,8 @@ extern i32 OPrenderWidth;
 extern i32 OPrenderHeight;
 extern i32 OPscreenWidth;
 extern i32 OPscreenHeight;
+extern f32 OPscreenWidthScale;
+extern f32 OPscreenHeightScale;
 extern OPint OPrenderFullscreen;
 extern OPint OPengineHasFocus;
 
