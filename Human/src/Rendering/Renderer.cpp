@@ -10,6 +10,8 @@ i32 OPrenderWidth;
 i32 OPrenderHeight;
 i32 OPscreenWidth = 1280;
 i32 OPscreenHeight = 720;
+f32 OPscreenWidthScale = 1;
+f32 OPscreenHeightScale = 1;
 OPint OPrenderFullscreen = false;
 OPint OPengineHasFocus = 1;
 OPint glfwInitialized = 0;
@@ -235,8 +237,16 @@ OPint OPrenderInit(){
 		monitor = glfwGetPrimaryMonitor();
 	}
 
-	window = glfwCreateWindow(OPscreenWidth, OPscreenHeight, "OPifex Entertainment", monitor, NULL);
+	OPint _screenWidth = OPscreenWidth;
+	OPint _screenHeight = OPscreenHeight;
+
+	window = glfwCreateWindow(_screenWidth, _screenHeight, "OPifex Entertainment", monitor, NULL);
+	OPlog("Created window of size: %d x %d", _screenWidth, _screenHeight);
 	glfwGetFramebufferSize(window, &OPscreenWidth, &OPscreenHeight);
+	OPscreenWidthScale = _screenWidth / (f32)OPscreenWidth;
+	OPscreenHeightScale = _screenHeight / (f32)OPscreenHeight;
+	OPlog("Frame Buffer size: %d x %d", OPscreenWidth, OPscreenHeight);
+	OPlog("Scale: %f x %f", OPscreenWidthScale, OPscreenHeightScale);
 
 	if(!window) {		
 		OPlog("Failed to open GLFW window of %dx%d. If you have an Intel GPU, they are not 3.3 compatible.\n", OPscreenWidth, OPscreenHeight );
@@ -263,9 +273,9 @@ OPint OPrenderInit(){
 
 	// TODO: Determine how to optimize with this
 #if !defined(OPIFEX_OSX32) && !defined(OPIFEX_OSX64)
-	GLuint VertexArrayID;
-	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
+	//GLuint VertexArrayID;
+	//glGenVertexArrays(1, &VertexArrayID);
+	//glBindVertexArray(VertexArrayID);
 #endif
 
 	glEnable(GL_MULTISAMPLE_ARB);
@@ -328,14 +338,14 @@ void OPrenderResetViewport() {
 //-----------------------------------------------------------------------------
 OPint OPrenderGetWidth(){
 #ifndef OPIFEX_ANDROID
-	glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
+	//glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
 #endif
 	return OPrenderWidth;
 }
 //-----------------------------------------------------------------------------
 OPint OPrenderGetHeight(){
 #ifndef OPIFEX_ANDROID
-	glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
+	//glfwGetWindowSize(window, &OPrenderWidth, &OPrenderHeight);
 #endif
 	return OPrenderHeight;
 }

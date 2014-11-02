@@ -85,6 +85,7 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 	*ss = (OPspriteSheet*)OPalloc(sizeof(OPspriteSheet));
 	(*ss)->Names = (OPchar**)OPalloc(sizeof(OPchar*)* sprites);
 	(*ss)->Sprites = sprites;
+	(*ss)->Sheet = sheet;
 
 	// allocate contiguious frame memory segment
 	frameData = (OPspriteFrame*)OPalloc(sizeof(OPspriteSheet)* frames);
@@ -230,7 +231,7 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 	OPfree(filenameWithoutExtension);
 
 
-	return 0;
+	return 1;
 }
 
 OPint OPspriteSheetUnload(void* ss){

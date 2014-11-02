@@ -628,7 +628,7 @@ OPhashMap* CreateTriangleTable(OPMData* data){
 
 OPlinkedList* CreateVertexList(OPMData* data){
 	OPlinkedList* vertList = OPllCreate();
-	for(int i = data->vertexCount; i--;)
+	for(i32 i = data->vertexCount; i--;)
 		OPllInsertLast(vertList, (void*)i);
 
 	return vertList;
@@ -724,7 +724,7 @@ OPlinkedList* CreateTriList(OPMData* data, OPhashMap* triTable, OPlinkedList* ve
 	while(node){
 		OPint* tri = NULL;
 
-		sprintf(index, "%d", (OPint)node->Data);
+		sprintf(index, "%d", (i32*)node->Data);
 		OPhashMapGet(triTable, index, (void**)&tri);
 
 		// only add indices if this tri hasn't been visited

@@ -15,7 +15,7 @@ void LoadDefaultTexture2DEffect() {
 		"Common/Texture.frag",
 		OPATTR_POSITION | OPATTR_UV,
 		"Texture2D Effect",
-		NULL
+		0
 		);
 }
 

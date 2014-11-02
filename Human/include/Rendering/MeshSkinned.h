@@ -6,10 +6,6 @@
 #include "./Math/include/Vector3.h"
 #include "./Math/include/Vector4.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 	typedef struct {
 		OPint Bone;
@@ -52,9 +48,5 @@ extern "C" {
 		}
 	}
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-};
-#endif
 
 #endif

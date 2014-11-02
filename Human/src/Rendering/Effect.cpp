@@ -326,8 +326,8 @@ void OPrenderUseTexture(const OPchar* param, ui32 texture, ui32 slot){
 //-----------------------------------------------------------------------------
 // effect creation
 OPeffect OPrenderGenEffect(
-	OPchar* vert,
-	OPchar* frag,
+	const OPchar* vert,
+	const OPchar* frag,
 	ui32 attrs,
 	const OPchar* Name,
 	ui32 stride) {
@@ -376,12 +376,17 @@ OPeffect OPrenderGenEffect(
 		}
 	}
 
-	OPlog("Loading Vert for Effect");
+	OPlog("Loading Vert for Effect: %s", vert);
 
-	if (!OPcmanIsLoaded(vert)) OPcmanLoad(vert);
+	if (!OPcmanIsLoaded(vert)) {
+		OPlog("Wasn't already loaded. Loading it.");
+		OPcmanLoad(vert);
+	} else {
+		OPlog("Already loaded.c");
+	}
 	OPshader* vertShader = (OPshader*)OPcmanGet(vert);
 
-	OPlog("Loading Frag for Effect");
+	OPlog("Loading Frag for Effect: %s", frag);
 
 	if (!OPcmanIsLoaded(frag)) OPcmanLoad(frag);
 	OPshader* fragShader = (OPshader*)OPcmanGet(frag);

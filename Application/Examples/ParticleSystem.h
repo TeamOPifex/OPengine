@@ -5,5 +5,5 @@
 extern OPgameState GS_EXAMPLE_PARTICLESYSTEM;
 
 void ExampleParticleSystemEnter(OPgameState* last);
-int ExampleParticleSystemUpdate(OPtimer* time);
+OPint ExampleParticleSystemUpdate(OPtimer* time);
 void ExampleParticleSystemExit(OPgameState* next);

@@ -16,7 +16,7 @@ void OPsprite3DInit(OPeffect* effect) {
 			"Common/OPspriteSheet.frag",
 			OPATTR_POSITION | OPATTR_UV,
 			"3D Sprite sheet effect",
-			NULL
+			0
 			);
 
 		SPRITE_3D_INITIALIZED = 2;
@@ -134,7 +134,6 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	world += offset + sprite->Position;
 
 	OPtextureClearActive();
-	//OPtextureSmooth();
 	ui32 bind = OPtextureBind(sprite->CurrentSprite->Sheet);
 
 	//OPlog("SpriteSheet %d @ %x", bind, sprite->CurrentSprite->Sheet);

@@ -17,7 +17,7 @@ void OPsprite2DInit(OPeffect* effect) {
 			"Common/OPspriteSheet.frag",
 			OPATTR_POSITION | OPATTR_UV,
 			"Sprite sheet effect",
-			NULL
+			0
 			);
 
 		SPRITE_2D_PIPELINE_INITIALIZED = 2;
@@ -91,7 +91,6 @@ void OPsprite2DPrepRender(OPsprite2D* sprite) {
 	world += sprite->Position;
 
 	OPtextureClearActive();
-	OPtextureSmooth();
 	OPrenderParami("uColorTexture", OPtextureBind(sprite->CurrentSprite->Sheet));
 	OPrenderParamMat4("uWorld", &world);
 	OPrenderParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);

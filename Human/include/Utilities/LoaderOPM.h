@@ -11,11 +11,7 @@
 #include "./Human/include/Rendering/MeshPacker.h"
 #include "./Human/include/Rendering/OPMvertex.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
- 
+
 typedef struct { 
 	void* vertices;
 	ui32 vertexCount;
@@ -47,8 +43,4 @@ OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh);
 OPint OPMReload(const OPchar* filename, OPmesh** mesh);
 OPint OPMUnload(void* image);
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-};
-#endif
 #endif

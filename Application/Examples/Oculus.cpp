@@ -60,7 +60,7 @@ void ExampleOculusEnter(OPgameState* last) {
 
 }
 
-int ExampleOculusUpdate(OPtimer* time) {
+OPint ExampleOculusUpdate(OPtimer* time) {
 
 
 	OPoculusBegin();

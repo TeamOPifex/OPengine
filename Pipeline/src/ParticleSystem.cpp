@@ -18,7 +18,7 @@ void OPparticleSysInit(OPeffect* effect) {
 			"Common/OPparticleSystem.frag",
 			OPATTR_POSITION | OPATTR_UV,
 			"Particle System effect",
-			NULL
+			0
 			);
 		OPlog("Particle system initialized with effect '%s'", EFFECT_PARTICLE_SYSTEM->Name);
 		PARTICLE_SYSTEM_INITIALIZED = 2;

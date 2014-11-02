@@ -5,5 +5,5 @@
 extern OPgameState GS_EXAMPLE_MODEL;
 
 void ExampleModelEnter(OPgameState* last);
-int ExampleModelUpdate(OPtimer* time);
+OPint ExampleModelUpdate(OPtimer* time);
 void ExampleModelExit(OPgameState* next);

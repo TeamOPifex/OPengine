@@ -84,7 +84,7 @@ void OPcmanAddLoader(OPassetLoader* loader);
 
 // Initializes the Content Manager with an array of Asset Loaders
 // A custom directoy can be provided otherwise it defaults to assets/
-OPint OPcmanInit(OPchar* dir);
+OPint OPcmanInit(const OPchar* dir);
 
 // Unloads all assets that are no longer needed (marked deleted)
 // Assets that are no longer needed have been deleted with OPcmanDelete

@@ -5,5 +5,5 @@
 extern OPgameState GS_EXAMPLE_SELECTOR;
 
 void ExampleSelectorEnter(OPgameState* last);
-int ExampleSelectorUpdate(OPtimer* time);
+OPint ExampleSelectorUpdate(OPtimer* time);
 void ExampleSelectorExit(OPgameState* next);

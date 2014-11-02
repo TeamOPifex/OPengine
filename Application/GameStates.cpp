@@ -129,7 +129,7 @@ void State0Enter(OPgameState* last){
 
 	// Required
 	
-	OPchar** text = (OPchar**)OPalloc(sizeof(i8) * 1);
+	const OPchar** text = (const OPchar**)OPalloc(sizeof(i8) * 1);
 	text[0] = "All of the text! Woot!";
 	fontManager = OPfontManagerSetup("stencil.opf", text, 1);
 
@@ -152,7 +152,7 @@ void State0Enter(OPgameState* last){
 
 ui32 backgroundState = 0;
 
-int State0Update(OPtimer* time){
+OPint State0Update(OPtimer* time){
 	OPsprite* bg = (OPsprite*)OPcmanGet("gripe/walk");
 
 	ui32 elapsed = time->Elapsed;
@@ -264,7 +264,7 @@ void State1Enter(OPgameState* last){
 	OPlog("State1 Entered!");
 }
 
-int State1Update(OPtimer* time){
+OPint State1Update(OPtimer* time){
 	if(time->Elapsed > 1000) return false;
 
 	t += 0.005f * time->Elapsed;

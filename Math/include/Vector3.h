@@ -2,6 +2,7 @@
 #define OP_MATH_VECTOR3
 #include "./Core/include/Types.h"
 #include "./Core/include/MathHelpers.h"
+#include "./Core/include/Log.h"
 #include "./Core/include/DynamicMemory.h"
 #include "./Data/include/Stream.h"
 #include "./Data/include/File.h"
@@ -17,7 +18,7 @@ inline void OPvec3mul(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3scl(OPvec3* dst, OPvec3* a, OPfloat s);
 inline void OPvec3div(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3divf(OPvec3* dst, OPvec3* a, OPfloat b);
-inline void OPvec3dot(OPfloat* dst, OPvec3* a, OPvec3* b);
+inline void d(OPfloat* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3cross(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3len(OPfloat* dst, OPvec3* v);
 inline void OPvec3dist(OPfloat* dst, OPvec3* a, OPvec3* b);
@@ -32,6 +33,8 @@ inline OPfloat OPvec3valDot(OPvec3* a, OPvec3* b);
 inline OPvec3 OPvec3valCross(OPvec3* a, OPvec3* b);
 inline OPfloat OPvec3valLen(OPvec3* v);
 inline OPfloat OPvec3valDist(OPvec3* a, OPvec3* b);
+
+OPfloat OPvec3angleToTarget(OPvec3 pos, OPvec3 facing, OPvec3 target);
 
 
 struct OPvec3 {
@@ -252,6 +255,19 @@ inline OPfloat OPvec3valDist(OPvec3* a, OPvec3* b) {
 	return temp;
 }
 
+inline OPfloat OPvec3valAngle(OPvec3* a, OPvec3* b) {
+	OPfloat temp = 0;
+
+	OPfloat top = a->x * b->x + a->y * b->y + a->z * b->z;
+	OPfloat bottom = OPsqrt(a->x * a->x + a->y * a->y + a->z * a->z) * 
+					 OPsqrt(b->x * b->x + b->y * b->y + b->z * b->z);
+	if(bottom == 0) return 0;
+	
+	OPfloat cosTheta = top / bottom;
+	temp = OPacos(cosTheta);
+	return temp;
+}
+
 inline OPvec3 OPvec3str(OPstream* str) {
 	OPvec3 temp = {
 		OPreadf32(str),
@@ -281,5 +297,9 @@ inline OPvec3 OPvec3RandNorm(){
 	OPvec3norm(&v, &v);
 
 	return v;
+}
+
+inline void OPlogVec3(const OPchar* m, OPvec3* v) {
+	OPlog("%s: [%f, %f, %f]", m, v->x, v->y, v->z);
 }
 #endif

@@ -5,10 +5,6 @@
 #include "./Human/include/Rendering/Renderer.h"
 #include "./Core/include/Types.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 //-----------------------------------------------------------------------------
 //   _____ _                   _       
@@ -57,10 +53,5 @@ void OPframeBufferSetReadBufferDepth();
 void OPframeBufferBindTex(OPframeBuffer* fb);
 void OPframeBufferUnbind();
 void OPframeBufferAttachDepth(OPtexture* texture);
-
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-};
-#endif
 
 #endif

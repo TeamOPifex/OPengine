@@ -60,7 +60,7 @@ extern OPeffect* OPRENDER_CURR_FONT_EFFECT;
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPfontManager* OPfontManagerCreate(OPfont* font);
-OPfontManager* OPfontManagerSetup(OPchar* font, OPchar** text, ui16 count);
+OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 count);
 
 void OPfontManagerBind(OPfontManager* manager);
 void OPfontManagerAddText(const OPchar* text);

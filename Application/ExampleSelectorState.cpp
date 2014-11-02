@@ -18,7 +18,7 @@ OPgameState GS_EXAMPLE_SELECTOR = {
 };
 
 typedef struct {
-	OPchar* name;
+	const OPchar* name;
 	OPint available;
 	OPgameState* state;
 } Example;
@@ -96,7 +96,7 @@ void ExampleSelectorEnter(OPgameState* last) {
 	OPlog("Entered Example Selector");
 }
 
-int ExampleSelectorUpdate(OPtimer* time) {
+OPint ExampleSelectorUpdate(OPtimer* time) {
 	if (OPkeyboardWasPressed(OPKEY_W) || OPkeyboardWasPressed(OPKEY_UP)) {
 		exampleSelector->Selected--;
 		if (exampleSelector->Selected <= 0) exampleSelector->Selected = ExampleCount - 1;
