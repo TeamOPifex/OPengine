@@ -2,6 +2,7 @@
 #define OP_MATH_VECTOR3
 #include "./Core/include/Types.h"
 #include "./Core/include/MathHelpers.h"
+#include "./Core/include/Log.h"
 #include "./Core/include/DynamicMemory.h"
 #include "./Data/include/Stream.h"
 #include "./Data/include/File.h"
