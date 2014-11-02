@@ -140,7 +140,7 @@ OPint OPstreamReadKeyValuePair(OPstream* str, OPkeyValuePair* dst){
 	// check to see if we are at the end of the stream or not
 	if(str->_pointer >= str->Length) return 0;
 
-	sscanf((OPchar*)str->Data + str->_pointer, "%520[^\r\n]", buffer);
+	sscanf((OPchar*)str->Data + str->_pointer, "%520[^\n]", buffer);
 	OPint len = strlen(buffer);
 	OPlog("OPstreamReadKeyValuePair() - buffer: '%s'", buffer);
 
