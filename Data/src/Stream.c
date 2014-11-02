@@ -134,21 +134,23 @@ i8* OPstreamString(OPstream* stream) {
 }
 //-----------------------------------------------------------------------------
 OPint OPstreamReadKeyValuePair(OPstream* str, OPkeyValuePair* dst){
-	OPchar buffer[255];
+	OPchar buffer[520];
 	OPchar buffer2[255];
 	OPchar buffer3[255];
 
 	// check to see if we are at the end of the stream or not
 	if(str->_pointer >= str->Length) return 0;
 
-	sscanf((OPchar*)str->Data + str->_pointer, "%255[^\r\n]", buffer);
+	sscanf((OPchar*)str->Data + str->_pointer, "%520[^\r\n]", buffer);
 	OPint len = strlen(buffer);
+	OPlog("OPstreamReadKeyValuePair() - buffer: '%s'", buffer);
 
 	if(!len) return 0;
 
-	str->_pointer += len + 2;
-	sscanf(buffer, "%255[^=]=%*[ \t]%255[^\r\n]", &buffer2, &dst->value);
+	str->_pointer += len + 1;
+	sscanf(buffer, "%255[^ =]%*[= \t]%255[^\r\n]", &buffer2, &dst->value);
 
+	OPlog("OPstreamReadKeyValuePair() - '%s' = '%s'", buffer2, dst->value);
 
 	// Removes any trailing whitespace from t,he values
 	sscanf(buffer2, "%s", &dst->key);
