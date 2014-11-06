@@ -4,6 +4,7 @@
 #include "./Human/include/Rendering/Buffer.h"
 #include "./Math/include/BoundingBox3D.h"
 #include "./Human/include/Rendering/Skinning/Animation.h"
+#include "./Human/include/Rendering/OPMvertex.h"
 
 
 //-----------------------------------------------------------------------------
@@ -21,6 +22,8 @@ typedef struct{
 	ui32 VertexSize;
 	void* Vertices;
 	void* Indicies;
+	ui16 MetaCount;
+	OPMmeta* Meta;
 } OPmesh;
 
 //-----------------------------------------------------------------------------

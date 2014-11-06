@@ -18,7 +18,10 @@ void ApplicationInit() {
 	OPloadersAddDefault();
 	SpineAddLoader();
 	OPcmanInit(assetDir);
+
 	OPrenderInit();
+
+	OPcmanLoad("untitled.opm");
 	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 }
 
