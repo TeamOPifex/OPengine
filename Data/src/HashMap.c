@@ -217,14 +217,19 @@ static KeyValuePair * get_pair(Bucket *bucket, const OPchar *key)
 	return NULL;
 }
 
+// The key 'str' must have a length longer than 4 characters, or behavior is undefined
 static ui64 hash(const OPchar* str)
 {
-	ui64 hash = 5381;
-	OPint c;
-	c = *str++;
-	while (c) {
-		hash = ((hash << 5) + hash) + c;
-		c = *str++;
-	}
+	ui64 hash = 0xA1F9B450;
+	OPint i = 0;
+	ui8 c = str[0];
+	do{
+		hash = ((c << 5) + hash) + c;
+		c = *(++str);
+		++i;
+	}while (c || i < 4);
+
+	OPlog("hash: %lu", hash);
+
 	return hash;
 }
