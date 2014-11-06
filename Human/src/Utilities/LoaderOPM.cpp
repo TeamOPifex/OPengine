@@ -311,6 +311,7 @@ OPMData OPMloadData(OPstream* str) {
 		colors = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
 	// Read Skinning
 	if (OPMhasFeature(features, Skinning)) {
+		OPlog("Has Skinning");
 		boneIndices = (OPvec4*)OPalloc(sizeof(OPvec4)* verticeCount);
 		boneWeights = (OPvec4*)OPalloc(sizeof(OPvec4)* verticeCount);
 	}
@@ -402,6 +403,7 @@ OPMData OPMloadData(OPstream* str) {
 
 	// Read Bones
 	if(OPMhasFeature(features, Bones)) {
+		OPlog("Has Bones");
 		ui32 boneCount = OPreadui16(str);
 		hierarchyCount = boneCount;
 		hierarchy = (i16*)OPalloc(sizeof(i16)* boneCount);
@@ -556,6 +558,37 @@ OPMData OPMloadData(OPstream* str) {
 	data.pose = pose;
 	data.hierarchyCount = hierarchyCount;
 
+
+
+	if (OPMhasFeature(features, Meta)) {
+		ui16 metaCount = OPreadui16(str);
+		OPlog("Meta Count: %d", metaCount);
+		OPMmeta* meta = (OPMmeta*)OPalloc(sizeof(OPMmeta) * metaCount);
+		for(i32 i = 0; i < metaCount; i++) {
+			OPchar* metaName = OPreadstring(str);
+			OPchar* metaType = OPreadstring(str);
+			OPlog("Meta Name: %s (%s)", metaName, metaType);
+			f32 x = OPreadf32(str);
+			f32 y = OPreadf32(str);
+			f32 z = OPreadf32(str);
+			f32 rx = OPreadf32(str);
+			f32 ry = OPreadf32(str);
+			f32 rz = OPreadf32(str);
+			f32 sx = OPreadf32(str);
+			f32 sy = OPreadf32(str);
+			f32 sz = OPreadf32(str);
+			meta[i].Name = metaName;
+			meta[i].Type = metaType;
+			meta[i].Position = OPvec3Create(x,y,z);
+			meta[i].Rotation = OPvec3Create(rx,ry,rz);
+			meta[i].Scale = OPvec3Create(sx,sy,sz);
+		}
+		data.metaCount = metaCount;
+		data.meta = meta;
+	} else {
+		OPlog("Model has no meta information");
+	}
+
 	return data;
 }
 
@@ -580,6 +613,9 @@ OPint OPMload(const OPchar* filename, OPmesh** mesh) {
 	temp.boundingBox = data.bounds;
 	if (data.hierarchy != NULL)
 		temp.Skeleton = OPskeletonCreate(data.hierarchy, data.pose, data.hierarchyCount);
+
+	temp.MetaCount = data.metaCount;
+	temp.Meta = data.meta;
 
 	OPlog("Disposing");
 

@@ -363,6 +363,33 @@ def UVs(mesh, uv_layers, counts):
 
     return counts
 
+def ExtractMeta(scene, options):
+
+    sceneobjects = scene.objects
+
+    meta = []
+    for obj in sceneobjects:   
+
+        if obj.OPifexMeta:
+            
+            arbitraryType = ""
+            if obj.OPifexType != "":
+                arbitraryType = obj.OPifexType
+
+            OPMutil.Print("Has Type " + str(arbitraryType))
+
+            result = {
+                "name" : obj.name,
+                "type" : arbitraryType,
+                "position" : [obj.location.x, obj.location.y, obj.location.z],
+                "rotation" : [obj.rotation_euler.x, obj.rotation_euler.y, obj.rotation_euler.z],
+                "scale" : [obj.scale.x, obj.scale.y, obj.scale.z]
+            }
+
+            meta.append(result)
+
+    return meta
+
 def ExtractMaterials(mesh, scene, options):
     world = scene.world
 

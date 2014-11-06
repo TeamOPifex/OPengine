@@ -97,6 +97,8 @@ def restore_opifex_settings(properties):
 
     properties.option_frame_step = settings.get("frame_step", 1)
     properties.option_all_meshes = settings.get("all_meshes", True)
+
+    properties.option_meta = settings.get("meta", True)
     
 
 # ################################################################
@@ -142,6 +144,8 @@ class ExportOPM(bpy.types.Operator, ExportHelper):
     option_frame_step = IntProperty(name = "Frame step", description = "Animation frame step", min = 1, max = 1000, soft_min = 1, soft_max = 1000, default = 1)
     option_all_meshes = BoolProperty(name = "All meshes", description = "All meshes (merged)", default = True)
 
+    option_meta = BoolProperty(name = "Meta", description = "Export meta data", default = True)
+
     def invoke(self, context, event):
         restore_opifex_settings(self.properties)
         return ExportHelper.invoke(self, context, event)
@@ -179,6 +183,7 @@ class ExportOPM(bpy.types.Operator, ExportHelper):
             "frame_step": self.option_frame_step,
             "frame_index_as_time": self.option_frame_index_as_time,
             "all_meshes": self.option_all_meshes,
+            "meta": self.option_meta,
             "export_scene": self.option_export_scene
         }
         options = Struct(**optionsDict)
@@ -233,6 +238,9 @@ class ExportOPM(bpy.types.Operator, ExportHelper):
         row.label(text="Settings:")
 
         row = layout.row()
+        row.prop(self.properties, "option_meta")
+        
+        row = layout.row()
         row.prop(self.properties, "align_model")
         row = layout.row()
         row.prop(self.properties, "option_flip_yz")
@@ -269,6 +277,7 @@ class ExportOPM(bpy.types.Operator, ExportHelper):
         row = layout.row()
         row.prop(self.properties, "option_all_meshes")
 
+
         row = layout.row()
         row.prop(self.properties, "option_copy_textures")
 
@@ -279,11 +288,25 @@ class ExportOPM(bpy.types.Operator, ExportHelper):
 # Common
 # ################################################################
 
+class myPanel(bpy.types.Panel):     # panel to display new property
+    bl_label = "OPifex Meta"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+    bl_context = "object"  
+
+    def draw(self, context):
+        # display value of "foo", of the active object
+        self.layout.prop(bpy.context.active_object, "OPifexMeta")
+        self.layout.prop(bpy.context.active_object, "OPifexType")
+
 def menu_func(self, context):
     default_path = bpy.data.filepath.replace(".blend", ".opm")
     self.layout.operator(ExportOPM.bl_idname, text="OPifex Model (.opm)").filepath = default_path
 
 def register():
+    bpy.utils.register_class(myPanel)   # register panel
+    bpy.types.Object.OPifexMeta = bpy.props.BoolProperty(name = "OPifexMeta")
+    bpy.types.Object.OPifexType = bpy.props.StringProperty(name = "OPifexType")
     bpy.utils.register_module(__name__)
     bpy.types.INFO_MT_file_export.append(menu_func)
 

@@ -179,7 +179,7 @@ void OPrenderTextColor4Vec2Align(const OPchar* text, OPvec4 color, OPvec2 pos, O
 	}
 
 	OPmat4 world;
-	OPfloat scale = (OPrenderWidth / 2.0f) / OPscreenWidthScale;
+	OPfloat scale = (OPrenderWidth / 2.0f) * OPscreenWidthScale;
 
 	//OPmat4scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f / scale);
 	//OPmat4translate(&world, pos.x, pos.y, 0.0f);
@@ -212,7 +212,7 @@ void OPrenderTextColor4Mat4(const OPchar* text, OPvec4 color, OPmat4* world) {
 	}
 
 	OPmat4 scaled;
-	OPfloat scale = (OPrenderWidth / 2.0f) / OPscreenWidthScale;
+	OPfloat scale = (OPrenderWidth / 2.0f) * OPscreenWidthScale;
 
 	if (node == NULL || !OPRENDER_CURR_FONT_MANAGER->isBuilt) {
 		OPfontUserTextNode textNode = OPfontCreateUserText(OPRENDER_CURR_FONT_MANAGER->_font, text);
