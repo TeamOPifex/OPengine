@@ -275,23 +275,24 @@ def _getKey( offset, options, vertices, normals, uvs, colors, materials):
 
 
 def _writeBones(fp, model, options):
-	hierarchy = model['model']['bones']
-	OPMbinary.UShort(fp, model['nbone'])
-	for i in range(model['nbone']):
-		OPMbinary.Short(fp, hierarchy[i][0]) # Index
-		OPMbinary.String(fp, hierarchy[i][1]) # Name
-		# Position
-		OPMbinary.Float(fp, hierarchy[i][2])
-		OPMbinary.Float(fp, hierarchy[i][3])
-		OPMbinary.Float(fp, hierarchy[i][4])
-		# Rotation
-		OPMbinary.Float(fp, hierarchy[i][5])
-		OPMbinary.Float(fp, hierarchy[i][6])
-		OPMbinary.Float(fp, hierarchy[i][7])
-		OPMbinary.Float(fp, hierarchy[i][8])
-		# Scale
-		OPMbinary.Float(fp, hierarchy[i][9])
-		OPMbinary.Float(fp, hierarchy[i][10])
+	if options.skinning:
+		hierarchy = model['model']['bones']
+		OPMbinary.UShort(fp, model['nbone'])
+		for i in range(model['nbone']):
+			OPMbinary.Short(fp, hierarchy[i][0]) # Index
+			OPMbinary.String(fp, hierarchy[i][1]) # Name
+			# Position
+			OPMbinary.Float(fp, hierarchy[i][2])
+			OPMbinary.Float(fp, hierarchy[i][3])
+			OPMbinary.Float(fp, hierarchy[i][4])
+			# Rotation
+			OPMbinary.Float(fp, hierarchy[i][5])
+			OPMbinary.Float(fp, hierarchy[i][6])
+			OPMbinary.Float(fp, hierarchy[i][7])
+			OPMbinary.Float(fp, hierarchy[i][8])
+			# Scale
+			OPMbinary.Float(fp, hierarchy[i][9])
+			OPMbinary.Float(fp, hierarchy[i][10])
 		OPMbinary.Float(fp, hierarchy[i][11])
 
 
