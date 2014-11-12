@@ -11,18 +11,23 @@
 #include "./Human/include/Rendering/MeshPacker.h"
 #include "./Human/include/Rendering/OPMvertex.h"
 
-
 typedef struct { 
 	void* vertices;
 	ui32 vertexCount;
 	ui32 vertexSize;
+
 	void* indices;
 	ui32 indexCount;
 	ui32 indexSize;
+
 	OPboundingBox3D bounds;
+
 	i16* hierarchy;
-	OPmat4* pose;
 	ui16 hierarchyCount;
+	OPmat4* pose;
+
+	ui16 metaCount;
+	OPMmeta* meta;
 } OPMData;
 
 struct OPMPartNode_def;

@@ -45,7 +45,8 @@ def _writeFaces(fp, model, options):
 
 	vertexes = []
 
-	OPMutil.Print(model['model']['uvs'][0])
+	if options.uv_coords:
+		OPMutil.Print(model['model']['uvs'][0])
 
 	for face in model['model']['faces']:
 		# OPMutil.Print(face)
@@ -274,31 +275,46 @@ def _getKey( offset, options, vertices, normals, uvs, colors, materials):
 
 
 def _writeBones(fp, model, options):
-	hierarchy = model['model']['bones']
-	OPMbinary.UShort(fp, model['nbone'])
-	for i in range(model['nbone']):
-		OPMbinary.Short(fp, hierarchy[i][0]) # Index
-		OPMbinary.String(fp, hierarchy[i][1]) # Name
-		# Position
-		OPMbinary.Float(fp, hierarchy[i][2])
-		OPMbinary.Float(fp, hierarchy[i][3])
-		OPMbinary.Float(fp, hierarchy[i][4])
-		# Rotation
-		OPMbinary.Float(fp, hierarchy[i][5])
-		OPMbinary.Float(fp, hierarchy[i][6])
-		OPMbinary.Float(fp, hierarchy[i][7])
-		OPMbinary.Float(fp, hierarchy[i][8])
-		# Scale
-		OPMbinary.Float(fp, hierarchy[i][9])
-		OPMbinary.Float(fp, hierarchy[i][10])
+	if options.skinning:
+		hierarchy = model['model']['bones']
+		OPMbinary.UShort(fp, model['nbone'])
+		for i in range(model['nbone']):
+			OPMbinary.Short(fp, hierarchy[i][0]) # Index
+			OPMbinary.String(fp, hierarchy[i][1]) # Name
+			# Position
+			OPMbinary.Float(fp, hierarchy[i][2])
+			OPMbinary.Float(fp, hierarchy[i][3])
+			OPMbinary.Float(fp, hierarchy[i][4])
+			# Rotation
+			OPMbinary.Float(fp, hierarchy[i][5])
+			OPMbinary.Float(fp, hierarchy[i][6])
+			OPMbinary.Float(fp, hierarchy[i][7])
+			OPMbinary.Float(fp, hierarchy[i][8])
+			# Scale
+			OPMbinary.Float(fp, hierarchy[i][9])
+			OPMbinary.Float(fp, hierarchy[i][10])
 		OPMbinary.Float(fp, hierarchy[i][11])
 
+
+def _writeMeta(fp, meta, options):
+	if options.meta:
+		l = len(meta)
+		OPMutil.Print('Writing out meta' + str(l))
+		OPMbinary.UShort(fp, l)
+		for i in range(l):
+			OPMutil.Print('		Name:' + meta[i]['name'])
+			OPMutil.Print('		Type:' + meta[i]['type'])
+			OPMbinary.String(fp, meta[i]['name']) # Name
+			OPMbinary.String(fp, meta[i]['type']) # Name			
+			OPMbinary.Vec3( fp, meta[i]['position'] )	
+			OPMbinary.Vec3( fp, meta[i]['rotation'] )	
+			OPMbinary.Vec3( fp, meta[i]['scale'] )
 
 #################################################################
 ### Public Methods
 #################################################################
 
-def Binary( filepath, model, options ):
+def Binary( filepath, model, meta, options ):
 	OPMutil.Print('Writing to ' + filepath + '...')
 	OPMutil.Print('Vertex Count: ' + str(model['nvertex']))
 	OPMutil.Print('Face Count: ' + str(model['nface']))
@@ -329,6 +345,7 @@ def Binary( filepath, model, options ):
 	enum_skinning = 64
 	enum_animations = 128
 	enum_color = 256
+	enum_meta = 512
 	
 	features = enum_position
 	if(options.normals):
@@ -342,8 +359,11 @@ def Binary( filepath, model, options ):
 	if(options.skinning):
 		features += enum_bones
 		features += enum_skinning
+	if(options.meta):
+		features += enum_meta
 
 	OPMbinary.UInt(fp, features)
 
 	_writeFaces(fp, model, options)
 	_writeBones(fp, model, options)
+	_writeMeta(fp, meta, options)
