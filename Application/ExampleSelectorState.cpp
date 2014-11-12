@@ -2,14 +2,13 @@
 
 #include "./Application/Examples/Audio.h"
 #include "./Application/Examples/Model.h"
-#include "./Application/Examples/Myo.h"
 #include "./Application/Examples/Oculus.h"
 #include "./Application/Examples/ParticleSystem.h"
 #include "./Application/Examples/Physics.h"
 #include "./Application/Examples/Skinning.h"
 #include "./Application/Examples/Deferred.h"
 #include "./Application/Examples/Textured.h"
-#include "./Application/Examples/Spine.h"
+#include "./Application/Examples/Server.h"
 
 OPgameState GS_EXAMPLE_SELECTOR = {
 	ExampleSelectorEnter,
@@ -18,7 +17,7 @@ OPgameState GS_EXAMPLE_SELECTOR = {
 };
 
 typedef struct {
-	const OPchar* name;
+	OPchar* name;
 	OPint available;
 	OPgameState* state;
 } Example;
@@ -31,7 +30,7 @@ typedef struct {
 
 ExampleSelector* exampleSelector;
 
-#define ExampleCount 10
+#define ExampleCount 9
 
 void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector = (ExampleSelector*)OPallocZero(sizeof(ExampleSelector));
@@ -45,8 +44,6 @@ void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector->FontManager = OPfontManagerCreate((OPfont*)OPcmanGet("Ubuntu.opf"));
 	OPfontManagerBind(exampleSelector->FontManager);
 	OPfontManagerSetAlign(exampleSelector->FontManager, OPFONT_ALIGN_LEFT);
-
-	exampleSelector->Selected = 1;
 
 	exampleSelector->Examples = (Example*)OPalloc(sizeof(Example)* ExampleCount);
 	OPbzero(exampleSelector->Examples, sizeof(Example)* ExampleCount);
@@ -81,17 +78,9 @@ void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector->Examples[7].state = &GS_EXAMPLE_TEXTURED;
 	exampleSelector->Examples[7].available = 1;
 
-	exampleSelector->Examples[8].name = "Spine";
-	exampleSelector->Examples[8].state = &GS_EXAMPLE_SPINE;
-#ifdef OPIFEX_SPINE
+	exampleSelector->Examples[8].name = "Network Server";
+	exampleSelector->Examples[8].state = &GS_EXAMPLE_NETWORK_SERVER;
 	exampleSelector->Examples[8].available = 1;
-#endif
-
-	exampleSelector->Examples[9].name = "Myo";
-	exampleSelector->Examples[9].state = &GS_EXAMPLE_MYO;
-#ifdef OPIFEX_MYO
-	exampleSelector->Examples[9].available = 1;
-#endif
 
 	OPlog("Entered Example Selector");
 }
@@ -105,12 +94,12 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 		exampleSelector->Selected++;
 		if (exampleSelector->Selected >= ExampleCount) exampleSelector->Selected = 0;
 	}
-	if (exampleSelector->Examples[exampleSelector->Selected].available && (OPkeyboardWasPressed(OPKEY_SPACE) || OPkeyboardWasPressed(OPKEY_ENTER) || OPtouchAnyInputIsDown())) {
+	if (exampleSelector->Examples[exampleSelector->Selected].available && (OPkeyboardWasPressed(OPKEY_SPACE) || OPkeyboardWasPressed(OPKEY_ENTER))) {
 		OPgameStateChange(exampleSelector->Examples[exampleSelector->Selected].state);
 		return 0;
 	}
 
-	OPrenderClear(1, 0, 0);
+	OPrenderClear(0, 0, 0);
 
 	OPint isInActive = 0, isAvailable = 0;
 	f32 r, g, b;

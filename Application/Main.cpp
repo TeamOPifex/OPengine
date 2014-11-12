@@ -1,22 +1,20 @@
 #include "ExampleSelectorState.h"
-#include "./Pipeline/include/SpineLoader.h"
+
+void InitializeLoaders() {
+	OPloadersAddDefault();
+}
 
 //////////////////////////////////////
 // Application Methods
 //////////////////////////////////////
 
 void ApplicationInit() {
-
+	i8* assetDir = NULL;
 #ifdef OPIFEX_REPO
-	const OPchar* assetDir = OPIFEX_REPO;
-#else
-	const OPchar* assetDir = NULL;
+	assetDir = OPIFEX_REPO;
 #endif
-	
-	OPlog("Asset Dir: %s", assetDir);
 
-	OPloadersAddDefault();
-	SpineAddLoader();
+	InitializeLoaders();
 	OPcmanInit(assetDir);
 	OPrenderInit();
 	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
@@ -36,14 +34,35 @@ void ApplicationDestroy() {
 	ActiveState->Exit(ActiveState);
 }
 
-OP_MAIN {
-	OPlog("Starting up OPifex Engine");
-
+void ApplicationSetup() {
 	OPinitialize = ApplicationInit;
 	OPupdate = ApplicationUpdate;
 	OPdestroy = ApplicationDestroy;
+}
+
+
+//////////////////////////////////////
+// Application Entry Point
+//////////////////////////////////////
+
+#ifdef OPIFEX_ANDROID
+
+#include <jni.h>
+extern "C" {
+	JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj);
+};
+JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj) {
+	ApplicationSetup();
+}
+
+#else
+
+int main(int argc, char** args) {
+	ApplicationSetup();
 
 	OP_MAIN_START
 	OP_MAIN_END
 	OP_MAIN_SUCCESS
 }
+
+#endif
