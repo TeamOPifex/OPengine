@@ -24,8 +24,8 @@ import io_export_opm.export_opm_writer          as OPMwriter
 def _export_mesh(objects, scene, filepath, options):
 
     result = OPMmeshGenerate.Mesh(objects, scene, options)
-
-    OPMwriter.Binary(filepath, result, options)
+    meta = OPMhelpers.ExtractMeta(scene, options)
+    OPMwriter.Binary(filepath, result, meta, options)
 
 
 #################################################################

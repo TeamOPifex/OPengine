@@ -12,7 +12,8 @@ enum OPMFeatures {
 	Bones = 0x20,
 	Skinning = 0x40,
 	Animations = 0x80,
-	Color = 0x100
+	Color = 0x100,
+	Meta = 0x200
 };
 
 enum OPMKeyFeatures {
@@ -23,6 +24,13 @@ enum OPMKeyFeatures {
 
 OPint OPMhasFeature(ui32 features, ui32 feature);
 
+typedef struct {
+	OPchar* Name;
+	OPchar* Type;
+	OPvec3 Position;
+	OPvec3 Rotation;
+	OPvec3 Scale;
+} OPMmeta;
 
 typedef struct {
 	OPvec3 Position;
