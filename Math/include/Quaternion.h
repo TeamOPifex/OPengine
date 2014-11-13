@@ -26,7 +26,9 @@ inline OPquat OPquatMul(OPquat* a, OPquat* b);
 inline OPquat OPquatScl(OPquat* a, OPfloat s);
 inline OPquat OPquatConj(OPquat* a);
 inline OPquat OPquatNorm(OPquat* a);
-
+inline OPfloat OPquatDot(OPquat* a, OPquat* b);
+inline OPquat OPquatCreateRot(OPvec3* axis, OPfloat angle);
+inline OPvec3 OPquatRot(OPquat* q, OPvec3* v);
 
 inline OPquat OPquatAdd(OPquat* a, OPquat* b){
 	OPquat out = {
@@ -92,6 +94,34 @@ inline OPquat OPquatConj(OPquat* a){
 inline OPquat OPquatNorm(OPquat* a){
 	OPquat conj = OPquatConj(a);
 	return OPquatMul(a, &conj);
+}
+
+inline OPfloat OPquatDot(OPquat* a, OPquat* b){
+	return a->x * b->x +
+	       a->y * b->y +
+	       a->z * b->z +
+	       a->w * b->w; 
+}
+
+inline OPvec3 OPquatRot(OPquat* q, OPvec3* p){
+	OPquat qp = { v->x, v->y, v->z, 0 };
+	OPquat conj = OPquatConj(q);
+	return OPquatMul(q, OPquatMul(qp, conj))
+}
+
+inline OPquat OPquatCreateRot(OPvec3* axis, OPfloat angle){
+	OPfloat c = OPcos(0.5f * angle), s = OPsin(0.5f * angle);
+	OPvec3 n;
+
+	OPvec3norm(&n, axis);
+
+	OPvec3 v = OPvec3valScl(v, s);
+	OPquat out = {
+		v->x,
+		v->y,
+		v->z,
+		c
+	}
 }
 
 #endif
