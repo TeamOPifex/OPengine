@@ -35,7 +35,7 @@ inline OPquat OPquatAdd(OPquat* a, OPquat* b){
 		a->x + b->x,
 		a->y + b->y,
 		a->z + b->z,
-		a->w + b->q
+		a->w + b->w
 	};
 	return out;
 }
@@ -45,7 +45,7 @@ inline OPquat OPquatSub(OPquat* a, OPquat* b){
 		a->x - b->x,
 		a->y - b->y,
 		a->z - b->z,
-		a->w - b->q
+		a->w - b->w
 	};
 	return out;
 }
@@ -53,8 +53,8 @@ inline OPquat OPquatSub(OPquat* a, OPquat* b){
 inline OPquat OPquatMul(OPquat* a, OPquat* b){
 	register OPfloat dot = a->x * b->x + a->y * b->y + a->z * b->z;
 	OPvec3 cross;
-	OPvec3 vb = OPvec3valScl(b, a->w);
-	OPvec3 va = OPvec3valScl(a, b->w);
+	OPvec3 vb = OPvec3valScl((OPvec3*)b, a->w);
+	OPvec3 va = OPvec3valScl((OPvec3*)a, b->w);
 	OPvec3 sum = vb + va;
 	OPvec3cross(&cross, (OPvec3*)a, (OPvec3*)b);
 	sum += cross;
@@ -104,9 +104,13 @@ inline OPfloat OPquatDot(OPquat* a, OPquat* b){
 }
 
 inline OPvec3 OPquatRot(OPquat* q, OPvec3* p){
-	OPquat qp = { v->x, v->y, v->z, 0 };
+	OPquat qp = { p->x, p->y, p->z, 0 };
 	OPquat conj = OPquatConj(q);
-	return OPquatMul(q, OPquatMul(qp, conj))
+	conj = OPquatMul(&qp, &conj);
+	OPquat rot = OPquatMul(q, &conj);
+	OPvec3 out = { rot.x, rot.y, rot.z };
+
+	return out;
 }
 
 inline OPquat OPquatCreateRot(OPvec3* axis, OPfloat angle){
@@ -114,14 +118,15 @@ inline OPquat OPquatCreateRot(OPvec3* axis, OPfloat angle){
 	OPvec3 n;
 
 	OPvec3norm(&n, axis);
-
-	OPvec3 v = OPvec3valScl(v, s);
+	OPvec3 v = OPvec3valScl(&n, s);
 	OPquat out = {
-		v->x,
-		v->y,
-		v->z,
+		v.x,
+		v.y,
+		v.z,
 		c
-	}
+	};
+
+	return out;
 }
 
 #endif
