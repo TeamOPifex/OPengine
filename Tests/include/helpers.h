@@ -1,6 +1,7 @@
 #ifndef OP_ENGINE_TEST_HELPERS
 #define OP_ENGINE_TEST_HELPERS
 #include <Core/include/Core.h>
+#include "./Core/include/Log.h"
 #include <stdio.h>
 
 #define OP_TEST_INIT OPint OP_TEST_COUNT = 1;
@@ -46,7 +47,7 @@ void OP_HEX_DUMP(void *addr, OPint len) {
 
     OPlog(OP_DUMP_D);
     sprintf(buff, "SIZE %d\n", (int)len);
-    write(1, buff, strlen(buff));
+    OPlog(buff, strlen(buff));
 
     // Output description if given.
     if (desc != NULL)
