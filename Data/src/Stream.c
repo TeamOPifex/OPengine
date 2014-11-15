@@ -136,12 +136,14 @@ OPint OPstreamReadKeyValuePair(OPstream* str, OPkeyValuePair* dst){
 	OPchar buffer[520];
 	OPchar buffer2[255];
 	OPchar buffer3[255];
+	OPint len;
+	i32 i;
 
 	// check to see if we are at the end of the stream or not
 	if(str->_pointer >= str->Length) return 0;
 
 	sscanf((OPchar*)str->Data + str->_pointer, "%520[^\n]", buffer);
-	OPint len = strlen(buffer);
+	len = strlen(buffer);
 	OPlog("OPstreamReadKeyValuePair() - buffer: '%s'", buffer);
 
 	if(!len) return 0;
@@ -154,7 +156,7 @@ OPint OPstreamReadKeyValuePair(OPstream* str, OPkeyValuePair* dst){
 	// Removes any trailing whitespace from t,he values
 	sscanf(buffer2, "%s", &dst->key);
 
-	for (i32 i = 0; i < strlen(dst->key); i++){
+	for (i = 0; i < strlen(dst->key); i++){
 		dst->key[i] = tolower(dst->key[i]);
 	}
 
