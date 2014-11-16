@@ -1,0 +1,17 @@
+Name = Ball
+Idle = Toys/ballidle
+Move = Toys/ballmove
+Hit = Toys/ballidle
+HitMove = Toys/ballmove
+Block = Toys/ballidle
+HP = 1
+Size = 2
+Mass = 0.75
+Accel = 2
+Decel = 0.3
+Jump = 20
+AttackDmg = 0
+JumpDmg = 20
+AttackRange = 0
+ReloadRate = 500
+MaxSpeed = 10

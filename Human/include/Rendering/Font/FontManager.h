@@ -87,5 +87,11 @@ void OPrenderTextColor4Vec2(const OPchar* text, OPvec4 color, OPvec2 pos);
 void OPrenderTextColor4Vec2Align(const OPchar* text, OPvec4 color, OPvec2 pos, OPfontAlign align);
 void OPrenderTextMat4(const OPchar* text, OPmat4* world);
 void OPrenderTextColor4Mat4(const OPchar* text, OPvec4 color, OPmat4* world);
+inline void OPrenderTextRGBAMat4(const OPchar* text, f32 r, f32 g, f32 b, f32 a, OPmat4* world) {
+	OPrenderTextColor4Mat4(text, OPvec4Create(r, g, b, a), world);
+}
+inline void OPrenderTextRGBMat4(const OPchar* text, f32 r, f32 g, f32 b, OPmat4* world) {
+	OPrenderTextRGBAMat4(text, r, g, b, 1.0, world);
+}
 
 #endif

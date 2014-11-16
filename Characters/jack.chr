@@ -1,0 +1,17 @@
+Name = Jack in the Box
+Idle = Toys/jackidle
+Move = Toys/jackmove
+Hit = Toys/jackhit
+HitMove = Toys/jackhit
+Block = Toys/jackblock
+HP = 3
+Size = 3
+Mass = 1
+Accel = 1.2
+Decel = 0.4
+Jump = 15
+AttackDmg = 1
+JumpDmg = 2
+AttackRange = 1
+ReloadRate = 500
+MaxSpeed = 5
