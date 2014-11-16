@@ -38,6 +38,8 @@ ui64 OPnetworkLookupAddress(const OPchar *kpAddress, OPchar** resolved)
 {
 	ui64 a;
 
+	OPlog("OPnetworkLookupAddress() - Resolving '%s'", kpAddress);
+
 	if ((a = inet_addr(kpAddress)) == INADDR_NONE)
 	{
 		hostent* pHE = gethostbyname(kpAddress);
@@ -269,7 +271,7 @@ i32 OPnetworkSend(OPnetwork* network, i8* data, i32 size){
 
 	i32 iResult = getaddrinfo("127.0.0.1", DEFAULT_PORT, &hints, &result);
 	if (iResult != 0) {
-		printf("getaddrinfo failed: %d\n", iResult);
+		printf("getaddrinfo for loop-back failed: %d\n", iResult);
 		WSA_CLEANUP();
 		return 1;
 	}
