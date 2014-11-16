@@ -1,0 +1,17 @@
+Name = T-Rex
+Idle = Toys/trexidle
+Move = Toys/trexmove
+Hit = Toys/trexhit
+HitMove = Toys/trexhitmove
+Block = Toys/trexblock
+HP = 10
+Size = 3.5
+Mass = 3
+Accel = 1.25
+Decel = 0.5
+Jump = 16
+AttackDmg = 8
+JumpDmg = 1
+AttackRange = 1.5
+ReloadRate = 1000
+MaxSpeed = 4

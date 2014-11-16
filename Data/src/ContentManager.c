@@ -89,7 +89,7 @@ OPint OPcmanInit(const OPchar* dir){
 
 
 	if (_OP_CMAN_ASSETLOADERS == NULL) {
-		OPlog("NO ASSET LOADERS HAVE BEEN ADDED");
+		OPlog("\n\n!!! NO ASSET LOADERS HAVE BEEN ADDED\n\n");
 		_OP_CMAN_ASSETLOADERS = OPlistCreate(16, sizeof(OPassetLoader));
 	}
 
@@ -255,6 +255,10 @@ OPint OPcmanUnload(const OPchar* key){
 // Returns a pointer to the asset requested by file name
 void* OPcmanGet(const OPchar* key){
 	OPasset* bucket = NULL;
+	if(!OPhashMapExists(&OP_CMAN_HASHMAP, key)) {
+		OPlog("Asset has not been loaded. '%s'", key);
+		return NULL;
+	}
 	OPhashMapGet(&OP_CMAN_HASHMAP, key, (void**)&bucket);
 	return bucket->Asset;
 }
