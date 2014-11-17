@@ -34,6 +34,7 @@ typedef struct{
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 /**
  * OPcreateTimer - creates an OPtimer instance
  *	Allocates space and initializes an OPtimer struct, then returns a
@@ -43,6 +44,7 @@ extern "C" {
  *	@return Error code on failure
  */
 OPint OPcreateTimer(OPtimer* timer);
+
 //----------------------------------------------------------------------------
 /**
  * OPtimerTick - updates a OPtimer
@@ -52,6 +54,7 @@ OPint OPcreateTimer(OPtimer* timer);
  * @param timer Pointer to an OPtimer instance which will be updated.
  */
 void OPtimerTick(OPtimer* timer);
+
 //----------------------------------------------------------------------------
 /**
  * OPtimerDelta - returns real time between ticks.
@@ -63,6 +66,7 @@ void OPtimerTick(OPtimer* timer);
  * @return Fractional time in milliseconds since the last tick.
  */
 OPfloat  OPtimerDelta(OPtimer* timer);
+
 //----------------------------------------------------------------------------
 /**
  * OPtimerTotal - milliseconds since the timer's creation
@@ -75,7 +79,9 @@ OPfloat  OPtimerDelta(OPtimer* timer);
  * @return Whole milliseconds from the first tick, to the most recent.
  */
 ui64 OPtimerTotal(OPtimer* timer);
+
 #ifdef __cplusplus
 }
 #endif
+
 #endif

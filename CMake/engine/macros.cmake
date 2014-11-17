@@ -43,6 +43,8 @@ macro(populate_binary_directory)
 		SET(BINARY_TARGET_DIRECTORY "linux32")
 	elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX64")
 		SET(BINARY_TARGET_DIRECTORY "linux64")
+	elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_ANDROID")
+		SET(BINARY_TARGET_DIRECTORY "android")
 	endif()
 endmacro(populate_binary_directory)
 
@@ -56,23 +58,13 @@ macro(output_library APPLICATION_TARGET LIBRARY_NAME )
 		SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.a")
 
 		if("${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" OR "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64")
-			if(${OPIFEX_RELEASE})
-				SET(COPY_BINARY_RELATIVE_DIRECTORY "/${LIBRARY_NAME}/Release/")
-			else()
-				SET(COPY_BINARY_RELATIVE_DIRECTORY "/${LIBRARY_NAME}/Debug/")
-			endif()
+			SET(COPY_BINARY_RELATIVE_DIRECTORY "/${LIBRARY_NAME}/Debug/")
 			SET(COPY_BINARY_LIBRARY "${LIBRARY_NAME}.lib")
-		endif()
-
-		if(${OPIFEX_RELEASE})
-			SET(BINARY_RELEASE_MODE "release")
-		else()
-			SET(BINARY_RELEASE_MODE "debug")
 		endif()
 
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"${OPIFEX_PROJECT_BINARY_DIR}${COPY_BINARY_RELATIVE_DIRECTORY}${COPY_BINARY_LIBRARY}"
-			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}/)
+			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/)
 	endif()
 
 endmacro(output_library)
@@ -88,23 +80,13 @@ macro(output_library_from APPLICATION_TARGET RELATIVE_PATH LIBRARY_NAME )
 		SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.a")
 
 		if("${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" OR "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64")
-			if(${OPIFEX_RELEASE})
-				SET(COPY_BINARY_RELATIVE_DIRECTORY "/${RELATIVE_PATH}/Release/")
-			else()
-				SET(COPY_BINARY_RELATIVE_DIRECTORY "/${RELATIVE_PATH}/Debug/")
-			endif()
+			SET(COPY_BINARY_RELATIVE_DIRECTORY "${RELATIVE_PATH}/Debug/")
 			SET(COPY_BINARY_LIBRARY "${LIBRARY_NAME}.lib")
-		endif()
-
-		if(${OPIFEX_RELEASE})
-			SET(BINARY_RELEASE_MODE "release")
-		else()
-			SET(BINARY_RELEASE_MODE "debug")
 		endif()
 
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"${OPIFEX_PROJECT_BINARY_DIR}${COPY_BINARY_RELATIVE_DIRECTORY}${COPY_BINARY_LIBRARY}"
-			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}/)
+			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/)
 	endif()
 
 endmacro(output_library_from)
@@ -112,17 +94,11 @@ endmacro(output_library_from)
 
 macro(output_binary APPLICATION_TARGET RELATIVE_PATH FILE_PATH OPIFEX_MATCH )
 
-	if(${OPIFEX_RELEASE})
-		SET(BINARY_RELEASE_MODE "release")
-	else()
-		SET(BINARY_RELEASE_MODE "debug")
-	endif()
-
 	if( ${OPIFEX_MATCH} )
 		populate_binary_directory()
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"${OPIFEX_PROJECT_SOURCE_DIR}${RELATIVE_PATH}${BINARY_TARGET_DIRECTORY}/${FILE_PATH}"
-			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}/)
+			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/)
 	endif()
 
 endmacro(output_binary)
@@ -130,6 +106,7 @@ endmacro(output_binary)
 
 macro(copy_to_folder APPLICATION_TARGET RELATIVE_PATH FILE_PATH OUTPUT_PATH OPIFEX_MATCH )
 
+	
 	if( ${OPIFEX_MATCH} )
 		populate_binary_directory()
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -140,33 +117,35 @@ macro(copy_to_folder APPLICATION_TARGET RELATIVE_PATH FILE_PATH OUTPUT_PATH OPIF
 
 endmacro(copy_to_folder)
 
-
 macro(copy_from_binaries_on_build APPLICATION_TARGET FILE_PATH OPIFEX_MATCH )
 
+	if(${OPIFEX_RELEASE})
+		SET(BINARY_RELEASE_MODE "release")
+	else()
+		SET(BINARY_RELEASE_MODE "debug")
+	endif()
 	
 	if( ${OPIFEX_MATCH} )
 		populate_binary_directory()
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-			"${OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${FILE_PATH}"
-			${PROJECT_BINARY_DIR}/Debug)
+			"${OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}/${FILE_PATH}"
+			${PROJECT_BINARY_DIR}/${BINARY_RELEASE_MODE})
 			
 	endif()
 
 endmacro(copy_from_binaries_on_build)
 
-
 macro(add_external_opifex_includes)
 	include_directories(
 		${OPIFEX_ENGINE_REPOSITORY}
 		${OPIFEX_ENGINE_REPOSITORY}/External/glfw-3.0.4/include/
-		${OPIFEX_ENGINE_REPOSITORY}/External/glew-1.5.8/include/
+		${OPIFEX_ENGINE_REPOSITORY}/External/glew-1.9.0/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/OpenAL/
 		${OPIFEX_ENGINE_REPOSITORY}/External/Ogg/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/Vorbis/include/
-		${OPIFEX_ENGINE_REPOSITORY}/External/glm-0.9.1/
+		${OPIFEX_ENGINE_REPOSITORY}/External/glm-0.9.5/
 	)
 endmacro(add_external_opifex_includes)
-
 
 macro(add_opifex_definitions APPLICATION_TARGET APPLICATION_DIR_DEPTH )
 
@@ -199,7 +178,6 @@ macro(add_opifex_definitions APPLICATION_TARGET APPLICATION_DIR_DEPTH )
 
 endmacro(add_opifex_definitions)
 
-
 macro(add_opifex_libraries APPLICATION_TARGET )
 
 	unset(LIBLODEPNG CACHE)
@@ -215,38 +193,58 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	unset(LIBOGG CACHE)
 	unset(LIBVORBIS CACHE)
 	unset(LIBVORBISFILE CACHE)
+	
+	if( ${OPIFEX_OS_ANDROID} )
+		find_binary(LIBLODEPNG "LodePNG")
+		find_binary(LIBCORE "opifex-core")
+		find_binary(LIBDATA "opifex-data")
+		find_binary(LIBMATH "Math")
+		find_binary(LIBPERFORMANCE "Performance")
+		find_binary(LIBSCRIPTING "Scripting")
+		find_binary(LIBPIPELINE "Pipeline")
+		find_binary(LIBHUMAN "Human")
+		find_binary(LIBGLEW_158 "GLEW_158")
+		find_binary(LIBGLFW "glfw3")
+	else()
 
-	find_binary(LIBLODEPNG "LodePng")
-	find_binary(LIBCORE "Core")
-	find_binary(LIBDATA "Data")
-	find_binary(LIBMATH "Math")
-	find_binary(LIBPERFORMANCE "Performance")
-	find_binary(LIBSCRIPTING "Scripting")
-	find_binary(LIBPIPELINE "Pipeline")
-	find_binary(LIBHUMAN "Human")
-	find_binary(LIBGLEW_158 "GLEW_158")
-	find_binary(LIBGLFW "glfw3")
+		find_binary(LIBLODEPNG "LodePNG")
+		find_binary(LIBCORE "Core")
+		find_binary(LIBDATA "Data")
+		find_binary(LIBMATH "Math")
+		find_binary(LIBPERFORMANCE "Performance")
+		find_binary(LIBSCRIPTING "Scripting")
+		find_binary(LIBPIPELINE "Pipeline")
+		find_binary(LIBHUMAN "Human")
+		find_binary(LIBGLEW_158 "GLEW_158")
+		find_binary(LIBGLFW "glfw3")
+	endif()
 
 	target_link_libraries(${APPLICATION_TARGET}
 		${OPENGL_LIBRARY}
+		${LIBLODEPNG}
 		${LIBCORE}
 		${LIBDATA}
 		${LIBMATH}
 		${LIBPERFORMANCE}
-		${LIBLODEPNG}
 		${LIBHUMAN}
 		${LIBSCRIPTING}
 		${LIBPIPELINE}
-		${LIBGLEW_158}
 		${LIBGLFW}
+		${LIBGLEW_158}
 		${OPENAL_LIBRARY}
 		${OpenGL}
 	)
 
 	if( ${OPIFEX_OS_WINDOWS} )
-		find_binary(LIBOGG "libogg")
-		find_binary(LIBVORBIS "libvorbis")
-		find_binary(LIBVORBISFILE "libvorbisfile")
+		if(${OPIFEX_RELEASE})
+			find_binary(LIBOGG "libogg_static")
+			find_binary(LIBVORBIS "libvorbis_static")
+			find_binary(LIBVORBISFILE "libvorbisfile_static")
+		else()
+			find_binary(LIBOGG "libogg")
+			find_binary(LIBVORBIS "libvorbis")
+			find_binary(LIBVORBISFILE "libvorbisfile")
+		endif()
 		target_link_libraries(${APPLICATION_TARGET}	
 			Winmm.lib
 			${LIBOGG}
@@ -263,23 +261,29 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		find_package( X11 REQUIRED )
 		find_package( Threads )
 
+
+		set(GL_LIBRARY GL GLU X11 Xi Xxf86vm Xrandr)
+
 		target_link_libraries(${APPLICATION_TARGET}
 			${X11_LIBRARIES}
 			${CMAKE_THREAD_LIBS_INIT}
 			${CMAKE_DL_LIBS}
-			${GLFW_LIBRARIES}
 			${OGG_LIBRARY}
 			${VORBIS_LIBRARY}
 			${VORBISFILE_LIBRARY}
 			-logg
+			${GL_LIBRARY}
+			${GLFW_LIBRARIES}
 		)
 		SET(CMAKE_EXE_LINKER_FLAGS, "-ldl")
 	endif()
 
 	if(${OPIFEX_OS_OSX32} OR ${OPIFEX_OS_OSX64})
-		
+		SET(GLFW_LIBRARIES "/System/Library/Frameworks/Cocoa.framework;/System/Library/Frameworks/OpenGL.framework;/System/Library/Frameworks/IOKit.framework;/System/Library/Frameworks/CoreFoundation.framework;/System/Library/Frameworks/CoreVideo.framework")
+		SET(OPENAL_LIBRARY "/System/Library/Frameworks/OpenAL.framework")
 		target_link_libraries(${APPLICATION_TARGET}
 			${CMAKE_THREAD_LIBS_INIT}
+			${OPENAL_LIBRARY}
 			${OGG_LIBRARY}
 			${VORBIS_LIBRARY}
 			${VORBISFILE_LIBRARY}
@@ -299,54 +303,85 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 
 endmacro(add_opifex_libraries)
 
-
-
 function(find_binary OPIFEX_LIBRARY OPIFEX_NAME)
 	populate_binary_directory()
 
-	SET(OPIFEX_LIBRARY_NAME "lib${OPIFEX_NAME}.a")
+	if(${OPIFEX_OS_ANDROID})
 
-	if(${OPIFEX_OS_WINDOWS})
-		SET(OPIFEX_LIBRARY_NAME "${OPIFEX_NAME}.lib")
-	endif()
+		SET(OPIFEX_LIBRARY_NAME "lib${OPIFEX_NAME}.a")
+		SET(${OPIFEX_LIBRARY} "${OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${OPIFEX_LIBRARY_NAME}")
 
-	if(${OPIFEX_RELEASE})
-		SET(BINARY_RELEASE_MODE "release")
+		message(STATUS "SETTING '${OPIFEX_LIBRARY}' to '${OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${OPIFEX_LIBRARY_NAME}'")
+
+		message(STATUS "	RESULT '${${OPIFEX_LIBRARY}}'")
+
 	else()
-		SET(BINARY_RELEASE_MODE "debug")
+		SET(OPIFEX_LIBRARY_NAME "lib${OPIFEX_NAME}.a")
+
+		if(${OPIFEX_OS_WINDOWS})
+			SET(OPIFEX_LIBRARY_NAME "${OPIFEX_NAME}.lib")
+		endif()
+
+		if(${OPIFEX_OS_ANDROID})
+			SET(BINARY_RELEASE_MODE "")
+		else()
+			if(${OPIFEX_RELEASE})
+				SET(BINARY_RELEASE_MODE "release/")
+			else()
+				SET(BINARY_RELEASE_MODE "debug/")
+			endif()
+		endif()
+
+
+		find_library( ${OPIFEX_LIBRARY} NAMES ${OPIFEX_LIBRARY_NAME} PATHS 
+		"${OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}" PARENT_SCOPE)
+
+		message(STATUS "Looking for '${OPIFEX_LIBRARY_NAME}' in '${OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}'")
+		message(STATUS "		Found: '${${OPIFEX_LIBRARY}}'")
+
 	endif()
-
-	message(STATUS "Looking for '${OPIFEX_LIBRARY_NAME}' in '${OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}/'")
-	
-	find_library( ${OPIFEX_LIBRARY} NAMES ${OPIFEX_LIBRARY_NAME} PATHS 
-	"${OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}/" PARENT_SCOPE)
-
 endfunction(find_binary)
 
 
+macro(opifex_engine_status_messages)
 
-
-macro(opifex_status_messages)
-
-	message(STATUS "\n===================================")
+	message(STATUS "")
+	message(STATUS "===================================")
 	message(STATUS "==    OPifex CMake Completed     ==")
 	message(STATUS "===================================\n\nCONFIGURED VARIABLES:\n")
-	message(STATUS "  OPIFEX_OS: ${OPIFEX_OS}")
-	message(STATUS "  OPIFEX_RELEASE: ${OPIFEX_RELEASE}")
 	message(STATUS "  OPIFEX_REPOSITORY: ${OPIFEX_REPOSITORY}")
 	message(STATUS "  OPIFEX_ENGINE_REPOSITORY: ${OPIFEX_ENGINE_REPOSITORY}")
 	message(STATUS "  OPIFEX_BINARIES: ${OPIFEX_BINARIES}")
 	message(STATUS "  OPIFEX_REPO: ${OPIFEX_REPO}")
+	message(STATUS "  OPIFEX_OS: ${OPIFEX_OS}")
+	message(STATUS "  PROJECT_BINARY_DIR: ${PROJECT_BINARY_DIR}")
+	message(STATUS "  PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
 	message(STATUS "")
-	message(STATUS "===================================\n\nCONFIGURED BINARIES:\n")
+	message(STATUS "===================================\n\nCONFIGURED:\n")
 	message(STATUS "  OPENAL_LIBRARY: ${OPENAL_LIBRARY}")
 	message(STATUS "  GLFW_LIBRARIES: ${GLFW_LIBRARIES}")
 	message(STATUS "  OGG_LIBRARY: ${OGG_LIBRARY}")
 	message(STATUS "  VORBISFILE_LIBRARY: ${VORBISFILE_LIBRARY}")
 	message(STATUS "  GLFW_LIBRARIES: ${GLFW_LIBRARIES}")
-	message(STATUS "\n===================================\n")
+	message(STATUS "")
+	message(STATUS "===================================\n\nCONFIGURED BINARIES:\n")
+	message(STATUS "  LIBLODEPNG: ${LIBLODEPNG}")
+	message(STATUS "  LIBCORE: ${LIBCORE}")
+	message(STATUS "  LIBDATA: ${LIBDATA}")
+	message(STATUS "  LIBMATH: ${LIBMATH}")
+	message(STATUS "  LIBPERFORMANCE: ${LIBPERFORMANCE}")
+	message(STATUS "  LIBSCRIPTING: ${LIBSCRIPTING}")
+	message(STATUS "  LIBPIPELINE: ${LIBPIPELINE}")
+	message(STATUS "  LIBHUMAN: ${LIBHUMAN}")
+	message(STATUS "  LIBGLEW_158: ${LIBGLEW_158}")
+	message(STATUS "  LIBGLFW: ${LIBGLFW}")
+	message(STATUS "  LIBOGG: ${LIBOGG}")
+	message(STATUS "  LIBVORBIS: ${LIBVORBIS}")
+	message(STATUS "  LIBVORBISFILE: ${LIBVORBISFILE}")
+	message(STATUS "")
+	message(STATUS "===================================\n")
 
-endmacro(opifex_status_messages)
+endmacro(opifex_engine_status_messages)
 
 
 if(${OPIFEX_RELEASE})

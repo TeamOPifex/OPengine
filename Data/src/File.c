@@ -89,7 +89,7 @@ OPfileInformation OPreadFileInformation(const char* path){
 
 	myFile = NULL;
 	myFile = fopen(path, "rb");
-    ASSERTC(myFile != NULL, "File not loaded");
+    ASSERT(myFile != NULL, "File not loaded");
 	if(!myFile){
 		char buff[256];
 		OPlog(buff);
