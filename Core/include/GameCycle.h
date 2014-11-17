@@ -1,4 +1,5 @@
 #pragma once
+
 #ifndef OPEngine_Core_GameCycle
 #define OPEngine_Core_GameCycle
 #include "Timer.h"
@@ -7,6 +8,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 /**
  * OPinitialize - Game engine initialization.
  *	This function pointer points to a user function which is responsible
@@ -14,6 +16,7 @@ extern "C" {
  *	which is needed to begin the primary game loop.
  */
 extern void (*OPinitialize)();
+
 //----------------------------------------------------------------------------
 /**
  * OPupdate - Game engine update.
@@ -25,6 +28,7 @@ extern void (*OPinitialize)();
  * @param timer OPtimer object representing current time measurments
  */
 extern int(*OPupdate)(OPtimer*);
+
 //----------------------------------------------------------------------------
 /**
  * OPdestroy - Game engine termination.
@@ -34,7 +38,9 @@ extern int(*OPupdate)(OPtimer*);
  *	network connections.
  */
 extern void (*OPdestroy)();
+
 #ifdef __cplusplus
 };
 #endif
+
 #endif

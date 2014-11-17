@@ -6,8 +6,7 @@ project(OPifexEngine)
 
 SET(OPIFEX_ENGINE_REPOSITORY ${PROJECT_SOURCE_DIR})
 
-include(CMake/binaries.cmake)
-include(CMake/opifex.cmake)
+include(CMake/application.cmake)
 
 ### Project Setup
 #########################################
@@ -108,4 +107,4 @@ message(STATUS "VorbisFile Library: ${VORBISFILE_LIBRARY}")
 message(STATUS "OpenGL (${OpenGL})")
 message(STATUS "GLFW_LIBRARIES (${GLFW_LIBRARIES})")
 
-opifex_status_messages()
+opifex_engine_status_messages()

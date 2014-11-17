@@ -18,6 +18,7 @@
 extern "C" {
 #endif
 	
+// Android entry points
 #ifdef OPIFEX_ANDROID
 	#include <android_native_app_glue.h>
 	#include <android/sensor.h>
@@ -33,6 +34,7 @@ extern "C" {
 	jint JNIWidth();
 	jint JNIHeight();
 #endif
+
 //---- Function prototypes ---------------------------------------------------
 /**
  * OPstart - Begins the game cycle.
@@ -49,6 +51,7 @@ extern "C" {
 #else
 	void OPstart(int argc, char** args);
 #endif
+
 //----------------------------------------------------------------------------
 /**
  * OPend - Ends the game cycle.
@@ -65,7 +68,7 @@ OPtimer* OPgetTime();
 };
 #endif
 
-
+// Helper methods to create a more cross-platform code structure for the entry point of your main
 #ifdef OPIFEX_ANDROID
 #define OP_MAIN void android_main(struct android_app* state)
 #define OP_MAIN_SUCCESS return;

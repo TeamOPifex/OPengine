@@ -41,6 +41,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 /**
 * OPalloc - Platform independent means to dynamically allocate memory.
 * @param bytes Number of consecutive bytes to be allocated.
@@ -54,6 +55,7 @@ void* OPalloc(OPuint bytes);
 * @return Address of allocated memory.
 */
 void* OPallocZero(OPuint bytes);
+
 //-----------------------------------------------------------------------------
 /**
  * OPrealloc - Platform independent means to dynamically reallocate memory.
@@ -62,6 +64,7 @@ void* OPallocZero(OPuint bytes);
  * @return Address of allocated memory.
  */
 void* OPrealloc(void* ptr, OPuint bytes);
+
 //-----------------------------------------------------------------------------
 /**
  * OPfree - Platform independent means do deallocate dynamically
@@ -70,6 +73,7 @@ void* OPrealloc(void* ptr, OPuint bytes);
  * @param ptr Address to the memory segment to deallocate
  */
 void  OPfree(void* ptr);
+
 #ifdef __cplusplus
 }
 #endif
