@@ -131,6 +131,32 @@ OPchar* OPstreamString(OPstream* stream) {
 	_fillBuffer(stream);
 	return OPstringCreateMerged(stream->Buffer, "");
 }
+
+OPchar* OPstreamReadLine(OPstream* stream) {
+	OPchar buffer[500];
+	i32 len;
+	i32 i;
+
+	OPlog("Read Line...");
+
+	// check to see if we are at the end of the stream or not
+	if(stream->_pointer >= stream->Length) return 0;
+
+	OPlog("Buffer %s | Pointer %d", stream->Data, stream->_pointer);
+	sscanf((OPchar*)stream->Data + stream->_pointer, "%500[^\n]", buffer);
+	len = strlen(buffer);
+	stream->_pointer += len + 1;
+
+	OPlog("Read %s of len %d", buffer, len);
+
+	OPchar* result = OPstringGetNonConstant(buffer);
+	OPlog("Pos: %x", result);
+	OPlog("len: %d", strlen(result));
+	OPlog("Result %s", result);
+
+	return result;
+}
+
 //-----------------------------------------------------------------------------
 OPint OPstreamReadKeyValuePair(OPstream* str, OPkeyValuePair* dst){
 	OPchar buffer[520];
@@ -162,6 +188,7 @@ OPint OPstreamReadKeyValuePair(OPstream* str, OPkeyValuePair* dst){
 
 	return 1;
 }
+
 //-----------------------------------------------------------------------------
 ui8* OPreadAt(OPstream* stream, OPuint pos, OPuint size){
 	return stream->Data + pos;
