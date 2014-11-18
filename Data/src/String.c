@@ -26,8 +26,13 @@ void OPstringRemoveFromStart(OPchar* str, i32 size) {
 
 OPchar* OPstringGetNonConstant(const OPchar* str) {
 	i32 len = strlen(str);
-	OPchar* result = (OPchar*)OPalloc(sizeof(OPchar)* (len + 1));
+	OPlog("%s %d", str, len);
+	OPchar* result = (OPchar*)OPalloc(sizeof(OPchar) * (len + 1));
 	strcpy(result, str);
+	result[len] = NULL;
+	OPlog("Pos: %x", result);
+	OPlog("len: %d", strlen(result));
+	OPlog("hmmm: %s", result);
 	return result;
 }
 

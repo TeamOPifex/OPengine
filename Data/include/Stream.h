@@ -62,6 +62,7 @@ ui32 OPstreamUI32(OPstream* stream);
 f32 OPstreamf32(OPstream* stream);
 OPchar* OPstreamString(OPstream* stream);
 
+OPchar* OPstreamReadLine(OPstream* stream);
 OPint OPstreamReadKeyValuePair(OPstream* stream, OPkeyValuePair* dst);
 
 //-----------------------------------------------------------------------------

@@ -11,6 +11,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+	//This will be replaced by OPlist 
 	typedef struct{
 		void* items;
 		OPuint _capacity;
