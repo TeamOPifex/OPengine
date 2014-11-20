@@ -24,17 +24,38 @@ void OPstringRemoveFromStart(OPchar* str, i32 size) {
 	str[len - size] = '\0';
 }
 
+
+
+
+
 OPchar* OPstringGetNonConstant(const OPchar* str) {
-	i32 len = strlen(str);
+	i32 len;
+	OPchar* result = NULL;
+
+	len = strlen(str);
+
+	// 2. Steps through here fine
 	OPlog("%s %d", str, len);
-	OPchar* result = (OPchar*)OPalloc(sizeof(OPchar) * (len + 1));
+	// 3. Spits out 1 and 1
+	result = (OPchar*)OPalloc(sizeof(OPchar) * (len + 1));
 	strcpy(result, str);
-	result[len] = NULL;
+	//OPmemcpy(result, str, len + 1);
+	// 4. Copies fine
 	OPlog("Pos: %x", result);
 	OPlog("len: %d", strlen(result));
 	OPlog("hmmm: %s", result);
+	// 5. Spits out the pointer
+	//    and len: 1 and hmmm: 1
+	// no problems
+	
+	// 6. returns the pointer.
 	return result;
 }
+
+
+
+
+
 
 OPchar* OPstringCreateMerged(const OPchar* str, const OPchar* add) {
 	i32 lenA = strlen(str);
@@ -44,3 +65,6 @@ OPchar* OPstringCreateMerged(const OPchar* str, const OPchar* add) {
 	strcat(result, add);
 	return result;
 }
+
+
+
