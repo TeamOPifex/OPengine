@@ -8,3 +8,6 @@
 #include "./Human/include/Rendering/FrameBuffer.h"
 
 #include "./Human/include/Rendering/Primitives/Quad.h"
+
+OPeffect OPeffectLoadTextured2D(ui32 vertexStride);
+OPeffect OPeffectLoadTextured3D(ui32 vertexStride);
