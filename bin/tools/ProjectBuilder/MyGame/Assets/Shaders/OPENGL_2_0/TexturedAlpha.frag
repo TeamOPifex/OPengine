@@ -1,0 +1,1 @@
+varying vec2 vUV; uniform sampler2D uColorTexture; uniform float uAlpha; void main() {	gl_FragColor = texture2D(uColorTexture, vec2(1.0) - vUV);	gl_FragColor.a *= uAlpha;	if(gl_FragColor.a <= 0.0)		discard;}
