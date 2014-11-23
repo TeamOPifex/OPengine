@@ -1,0 +1,57 @@
+<!DOCTYPE html >
+<html  ng-app="opengine">
+	<head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>WebSocket Test</title>
+		<link rel="stylesheet" href="Web/css/bootstrap.min.css" type="text/css" />
+		<style>
+			.green {
+				color: green;
+			}
+		</style>
+		<script src="Web/js/jquery.min.js"></script>
+		<script src="Web/js/angular.min.js"></script>
+
+		<script src="Web/js/blob-handler.js"></script>
+		<script src="Web/js/opwebsocket.js"></script>
+		<script src="Web/js/gyro.min.js"></script>
+
+		<script src="Web/js/angular/app.js"></script>
+		<script src="Web/js/angular/controllers/mainCtrl.js"></script>
+	</head>
+	<body ng-controller="mainCtrl">
+		<h2 ng-class="{ green: websocket.connected }">{{title}}</h2>
+
+		<h4>Background Color</h4>
+		<div>
+			<div class="input-group">
+			  <span class="input-group-addon">R</span>
+				<input type="range" class="form-control" ng-model="red" min="0" max="255" />		
+			</div>	
+			<div class="input-group">
+			  <span class="input-group-addon">G</span>
+				<input type="range" class="form-control" ng-model="green" min="0" max="255" />		
+			</div>	
+			<div class="input-group">
+			  <span class="input-group-addon">B</span>
+				<input type="range" class="form-control" ng-model="blue" min="0" max="255" />	
+			</div>			
+		</div>
+
+		<h4>Font Position</h4>
+		<div>
+			<div class="input-group">
+			  <span class="input-group-addon">X</span>
+				<input type="range" class="form-control" ng-model="fontx" min="-1" max="1" step="0.01" />	<span>{{fontx}}</span>
+			</div>	
+			<div class="input-group">
+			  <span class="input-group-addon">Y</span>
+				<input type="range" class="form-control" ng-model="fonty" min="-1" max="1" step="0.01" />	<span>{{fonty}}</span>	
+			</div>
+		</div>
+
+		<h4>Elapsed Time: {{time}}</h4>
+	</body>
+</html>
