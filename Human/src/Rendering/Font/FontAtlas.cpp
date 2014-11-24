@@ -88,11 +88,11 @@ OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, OPint width, OPint he
 	OPfontAtlasNode *node, *prev;
 	OPfontAtlasRegion region = { 0, 0, width, height };
 	OPuint i;
-	OPint INT_MAX = 2147483647;
+	OPint maxInt = 2147483647;
 
-	best_height = INT_MAX;
+	best_height = maxInt;
 	best_index = -1;
-	best_width = INT_MAX;
+	best_width = maxInt;
 
 	for (i = 0; i < atlas->nodes->_size; ++i)
 	{
