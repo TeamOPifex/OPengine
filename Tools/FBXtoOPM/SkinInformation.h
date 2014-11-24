@@ -43,6 +43,7 @@ ModelSkinBlendWeights* GetSkin(FbxNode* inNode, ModelSkeletonData* skeleton) {
 	if (deformerCount == 0) return NULL;
 
 	ModelSkinBlendWeights* result = (ModelSkinBlendWeights*)OPallocZero(sizeof(ModelSkinBlendWeights)* verticeCount);
+	if (skeleton == NULL) return result;
 
 	for (i = 0; i < deformerCount; i++) {
 
