@@ -50,6 +50,12 @@ endmacro(populate_binary_directory)
 
 macro(output_library APPLICATION_TARGET LIBRARY_NAME )
 
+	if(${OPIFEX_RELEASE})
+		SET(BINARY_RELEASE_MODE "release")
+	else()
+		SET(BINARY_RELEASE_MODE "debug")
+	endif()
+
 	if( "${OPIFEX_OS}" STREQUAL "${OPIFEX_ANDROID}" )
 
 	else()
@@ -64,13 +70,19 @@ macro(output_library APPLICATION_TARGET LIBRARY_NAME )
 
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"${OPIFEX_PROJECT_BINARY_DIR}${COPY_BINARY_RELATIVE_DIRECTORY}${COPY_BINARY_LIBRARY}"
-			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/)
+			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE})
 	endif()
 
 endmacro(output_library)
 
 
 macro(output_library_from APPLICATION_TARGET RELATIVE_PATH LIBRARY_NAME )
+
+	if(${OPIFEX_RELEASE})
+		SET(BINARY_RELEASE_MODE "release")
+	else()
+		SET(BINARY_RELEASE_MODE "debug")
+	endif()
 
 	if( "${OPIFEX_OS}" STREQUAL "${OPIFEX_ANDROID}" )
 
@@ -86,7 +98,7 @@ macro(output_library_from APPLICATION_TARGET RELATIVE_PATH LIBRARY_NAME )
 
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"${OPIFEX_PROJECT_BINARY_DIR}${COPY_BINARY_RELATIVE_DIRECTORY}${COPY_BINARY_LIBRARY}"
-			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/)
+			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE})
 	endif()
 
 endmacro(output_library_from)
@@ -94,11 +106,17 @@ endmacro(output_library_from)
 
 macro(output_binary APPLICATION_TARGET RELATIVE_PATH FILE_PATH OPIFEX_MATCH )
 
+	if(${OPIFEX_RELEASE})
+		SET(BINARY_RELEASE_MODE "release")
+	else()
+		SET(BINARY_RELEASE_MODE "debug")
+	endif()
+
 	if( ${OPIFEX_MATCH} )
 		populate_binary_directory()
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"${OPIFEX_PROJECT_SOURCE_DIR}${RELATIVE_PATH}${BINARY_TARGET_DIRECTORY}/${FILE_PATH}"
-			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/)
+			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE})
 	endif()
 
 endmacro(output_binary)

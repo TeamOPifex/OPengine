@@ -96,7 +96,7 @@ ui8* OPread(OPstream* stream, OPuint size){
 
 void _fillBuffer(OPstream* stream) {
 	sscanf((i8*)(stream->Data + stream->_pointer), "%s", &stream->Buffer);
-	stream->_pointer += strlen(stream->Buffer) + 2;
+	stream->_pointer += strlen(stream->Buffer) + 1;
 }
 
 i8 OPstreamI8(OPstream* stream) {
@@ -132,30 +132,47 @@ OPchar* OPstreamString(OPstream* stream) {
 	return OPstringCreateMerged(stream->Buffer, "");
 }
 
+
+
+
+
+
 OPchar* OPstreamReadLine(OPstream* stream) {
-	OPchar buffer[500];
+	OPchar buffer[512];
 	i32 len;
 	i32 i;
+	i32 pos;
+	OPchar* result;
+	OPchar c;
 
-	OPlog("Read Line...");
+	pos = 0;
+	i = 0;
 
-	// check to see if we are at the end of the stream or not
-	if(stream->_pointer >= stream->Length) return 0;
+	// Read until we find a newline \n
+	// Or until we hit 512 chars
+	do {
+		c = ((OPchar*)(stream->Data + stream->_pointer))[i];
+		i++;
+		if(c == '\r') {
+			pos--;
+		} else {
+			if(c != '\n') buffer[pos++] = c;
+			if(pos > 512) break;
+		}
+	} while(c != '\n');
 
-	OPlog("Buffer %s | Pointer %d", stream->Data, stream->_pointer);
-	sscanf((OPchar*)stream->Data + stream->_pointer, "%500[^\n]", buffer);
-	len = strlen(buffer);
-	stream->_pointer += len + 1;
+	result = OPalloc(sizeof(OPchar) * i);
+	OPmemcpy(result, buffer, sizeof(OPchar) * (i - 1));
+	result[i - 1] = NULL;
 
-	OPlog("Read %s of len %d", buffer, len);
-
-	OPchar* result = OPstringGetNonConstant(buffer);
-	OPlog("Pos: %x", result);
-	OPlog("len: %d", strlen(result));
-	OPlog("Result %s", result);
+	stream->_pointer += i;
 
 	return result;
 }
+
+
+
+
 
 //-----------------------------------------------------------------------------
 OPint OPstreamReadKeyValuePair(OPstream* str, OPkeyValuePair* dst){
