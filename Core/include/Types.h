@@ -59,12 +59,17 @@ typedef char    i8;
 typedef unsigned char  ui8;  //byte type
 
 // PC floating point types
+
 typedef float  f32; //float type
 typedef double d64; //double type
 
 #endif
 
 // Define cross platform base types
+
+// Varies between platforms
+// On Android it's of size of 16
+// on Desktop it's of size of 8
 typedef char OPchar;
 #if defined(OPIFEX_OS32)
 typedef i32 OPint;
@@ -76,11 +81,14 @@ typedef ui64 OPuint;
 typedef f32 OPfloat;
 #else
 // default to building 32 bit binaries
+
 typedef i32 OPint;
 typedef ui32 OPuint;
 typedef f32 OPfloat;
 #endif
 
+// A standard Key Value Pair
+// key[255], value[255]
 typedef struct {
 	OPchar key[255];
 	OPchar value[255];
