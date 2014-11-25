@@ -116,11 +116,24 @@ OPint OPcmanLoad(const OPchar* key);
 */
 OPint OPcmanUnload(const OPchar* key);
 
-/* Returns a pointer to the asset requested by file name
+/* Returns a pointer to the resource requested by file name
 * @param key The resource name to load
 * @return Pointer to the resource requested. NULL if it wasn't found.
 */
 void* OPcmanGet(const OPchar* key);
+
+/* Loads a resource and returns a pointer to the resource requested
+* @param key The resource name to load
+* @return Pointer to the resource requested. NULL if it failed to load or wasn't found.
+*/
+inline void* OPcmanLoadGet(const OPchar* key) {
+	OPint result;
+	result = OPcmanLoad(key);
+	if(!result) {
+		return NULL;
+	}
+	return OPcmanGet(key);
+}
 
 /* Marks an asset as ready to delete
 * It will only be removed from memory when OPcmanPurge is called
