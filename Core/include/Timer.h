@@ -40,7 +40,7 @@ extern "C" {
  *	Allocates space and initializes an OPtimer struct, then returns a
  *	pointer to the allocated memory segment. If allocation fails, a NULL
  *	pointer is returned.
- *	@timer Pointer to new instance of OPtimer
+ *	@param timer Pointer to new instance of OPtimer
  *	@return Error code on failure
  */
 OPint OPcreateTimer(OPtimer* timer);

@@ -319,11 +319,13 @@ void  OPrenderClear(f32 r, f32 g, f32 b){
 	glClearColor(r, g, b, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
+
 //-----------------------------------------------------------------------------
 void  OPrenderClearAlpha(f32 r, f32 g, f32 b, f32 a){
 	glClearColor(r, g, b, a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
+
 //-----------------------------------------------------------------------------
 void  OPrenderSetViewport(OPuint x, OPuint y, OPuint width, OPuint height){
 	glViewport(x, y, width, height);

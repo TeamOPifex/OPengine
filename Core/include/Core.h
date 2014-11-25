@@ -37,7 +37,7 @@ extern "C" {
 
 //---- Function prototypes ---------------------------------------------------
 /**
- * OPstart - Begins the game cycle.
+ * Begins the game cycle.
  *	This function is responsible for several actions. It creates an
  *	OPtimer instance, and invokes the function pointer OPinitialize() to
  *	perform user defined initializations. Once initialized, the game loop
@@ -54,7 +54,7 @@ extern "C" {
 
 //----------------------------------------------------------------------------
 /**
- * OPend - Ends the game cycle.
+ * Ends the game cycle.
  *	This function sets an internal flag which will cease the game loop.
  *	and result in the termination and clean up of all user code and 
  *	data. 
@@ -62,6 +62,9 @@ extern "C" {
 void OPend();
 
 //----------------------------------------------------------------------------
+/*
+ * @return A pointer to the current OPtimer being used by the OPengine
+*/
 OPtimer* OPgetTime();
 
 #ifdef __cplusplus
