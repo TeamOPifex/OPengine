@@ -15,14 +15,14 @@ typedef struct {
 
 typedef struct {
 	ModelSkeletonBone* rootBone;
-	HashMap* bones;
+	OPhashMap* bones;
 	ui16 boneCount;
 } ModelSkeletonData;
 
 i16 pos;
 OPint found;
 
-ModelSkeletonBone* GetSkeletonBones(FbxNode* bone, HashMap* bones) {
+ModelSkeletonBone* GetSkeletonBones(FbxNode* bone, OPhashMap* bones) {
 	pos++;
 	int i;
 	ModelSkeletonBone* result = (ModelSkeletonBone*)OPallocZero(sizeof(ModelSkeletonBone));

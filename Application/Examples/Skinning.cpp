@@ -24,14 +24,14 @@ typedef struct {
 SkinningExample* skinningExample;
 
 void ExampleSkinningEnter(OPgameState* last) {
-	OPcmanLoad("cube.opm");
+	OPcmanLoad("skinned.opm");
 	OPcmanLoad("Skinning.frag");
 	OPcmanLoad("Skinning.vert");
 
 	skinningExample = (SkinningExample*)OPalloc(sizeof(SkinningExample));
 
 	skinningExample->pos = 0;
-	skinningExample->Mesh = (OPmesh*)OPcmanGet("cube.opm");
+	skinningExample->Mesh = (OPmesh*)OPcmanGet("skinned.opm");
 
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
