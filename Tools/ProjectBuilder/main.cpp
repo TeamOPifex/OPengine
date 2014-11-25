@@ -1,8 +1,15 @@
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h>
 #include <sys/stat.h>
  #include <sys/types.h>
+
+#define OPIFEX_WINDOWS
+
+#ifdef OPIFEX_WINDOWS
+	#include <direct.h>
+#else
+	#include <unistd.h>
+#endif
 
 #define MINIZ_HEADER_FILE_ONLY
 #include "miniz.c"
@@ -151,7 +158,7 @@ int main(int argc, char **argv) {
 	char projectName[256];
 
 	if(argc > 1) {
-		memcpy(&projectName[0], argv[1], strlen(argv[1]));
+		memcpy(&projectName[0], argv[1], strlen(argv[1]) + 1);
 		printf("Project Name: %s\n", projectName);
 	} else {
 		printf("Enter Project Name: ");
@@ -165,7 +172,7 @@ int main(int argc, char **argv) {
 	char* directory = (char*)malloc(sizeof(char)* 512);
 
 	if(argc > 2) {
-		memcpy(&directory[0], argv[2], strlen(argv[2]));
+		memcpy(&directory[0], argv[2], strlen(argv[2]) + 1);
 		printf("Directory Target: %s\n", directory);
 	} else {
 		printf("Enter directory to create at: ");
@@ -180,6 +187,10 @@ int main(int argc, char **argv) {
 		directory = OPstringCreateMerged(directory, "/");
 	}
 
+
+#ifdef OPIFEX_WINDOWS
+	mkdir(directory);
+#else
 	if (0 != access(directory, F_OK)) {
 	  if (ENOENT == errno) {
 	    // does not exist
@@ -192,6 +203,7 @@ int main(int argc, char **argv) {
 		return EXIT_FAILURE;
 	  }
 	}
+#endif
 
 	// Configure files
 
@@ -236,7 +248,11 @@ int main(int argc, char **argv) {
 
 			char* result = OPstringCreateMerged(directory, filename);
 			//printf("Creating dir: %s\n", result);
- 			mkdir(result, 0777);
+#ifdef OPIFEX_WINDOWS
+			mkdir(result);
+#else
+			mkdir(result, 0777);
+#endif
 		} 
 	}
 
