@@ -1,11 +1,8 @@
-// TODO: Have option to use a FILE* to read from disk rather than memory
-
-#pragma once
-#include "./Core/include/Types.h"
-#include "./Core/include/DynamicMemory.h"
-
 #ifndef OPEngine_Data_vector
 #define OPEngine_Data_vector
+
+#include "./Core/include/Types.h"
+#include "./Core/include/DynamicMemory.h"
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
@@ -44,14 +41,9 @@ extern "C" {
 	void OPvectorInsert(OPvector* vector, OPuint index, ui8* item);
 
 	void OPvectorReserve(OPvector* vector, OPuint size);
+
 #ifdef __cplusplus
 };
-//-----------------------------------------------------------------------------
-//- C++ Definitions -----------------------------------------------------------
-namespace OPEngine{
-namespace Data{
-
-}
-}
 #endif
+
 #endif

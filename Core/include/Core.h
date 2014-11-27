@@ -36,19 +36,22 @@ extern "C" {
 #endif
 
 //---- Function prototypes ---------------------------------------------------
-/**
- * Begins the game cycle.
- *	This function is responsible for several actions. It creates an
- *	OPtimer instance, and invokes the function pointer OPinitialize() to
- *	perform user defined initializations. Once initialized, the game loop
- *	is started. The timer instance is updated on each iteration and passed
- *	to the OPupdate function pointer. The game loop runs until OPend() is
- *	called. At which point the OPdestroy() function pointer is called and
- *	and clean up is performed.
- */
+
 #ifdef OPIFEX_ANDROID
 	void OPstart(struct android_app* state);
 #else
+	/**
+	 * Begins the game cycle.
+	 *	This function is responsible for several actions. It creates an
+	 *	OPtimer instance, and invokes the function pointer OPinitialize() to
+	 *	perform user defined initializations. Once initialized, the game loop
+	 *	is started. The timer instance is updated on each iteration and passed
+	 *	to the OPupdate function pointer. The game loop runs until OPend() is
+	 *	called. At which point the OPdestroy() function pointer is called and
+	 *	and clean up is performed.
+	 * @param argc Number of arguments passed through on start
+	 * @param args Each of the arguments passed into the program at start
+	 */
 	void OPstart(int argc, char** args);
 #endif
 
@@ -62,7 +65,7 @@ extern "C" {
 void OPend();
 
 //----------------------------------------------------------------------------
-/*
+/* Gets the current OPtimer being used by the engine
  * @return A pointer to the current OPtimer being used by the OPengine
 */
 OPtimer* OPgetTime();

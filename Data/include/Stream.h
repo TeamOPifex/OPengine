@@ -20,6 +20,7 @@ typedef struct{
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 //-----------------------------------------------------------------------------
 /**
  * OPstreamCreate - Allocates a byte stream instance.
@@ -27,6 +28,7 @@ extern "C" {
  *	@return Pointer to new stream instance
  */
 OPstream* OPstreamCreate(OPuint size);
+
 //-----------------------------------------------------------------------------
 /**
  * OPstreanDestroy - Deallocates memory used by a stream.
@@ -34,6 +36,7 @@ OPstream* OPstreamCreate(OPuint size);
  *	@return 0 if stream is null. 1 if deallocation is successful.
  */
 OPuint OPstreamDestroy(OPstream* stream);
+
 //-----------------------------------------------------------------------------
 /**
  * OPwrite - Append data to the stream.
@@ -43,6 +46,7 @@ OPuint OPstreamDestroy(OPstream* stream);
  *	@return 1 if successful, 0 if failure
  */
 OPuint OPwrite(OPstream* stream, void* data, OPuint size);
+
 //-----------------------------------------------------------------------------
 /**
  * OPread - Reads data and advances the pointer.
@@ -60,9 +64,30 @@ ui8 OPstreamUI8(OPstream* stream);
 ui16 OPstreamUI16(OPstream* stream);
 ui32 OPstreamUI32(OPstream* stream);
 f32 OPstreamf32(OPstream* stream);
+
+/* Reads the first string it finds in the stream
+ * Defined by a separated space.
+ * Ex: 'Apple Banana Pear' would return Apple
+ * @param stream The OPstream to read from
+ * @return An allocated char* containing the string found (null terminated)
+*/
 OPchar* OPstreamString(OPstream* stream);
 
+/* Reads the next line available in the OPstream
+ * Reads until it finds a \n and will remove all \r
+ * @param stream The OPstream to read from
+ * @return An allocated char* containing the line found (null terminated)
+*/
 OPchar* OPstreamReadLine(OPstream* stream);
+
+/* Reads a text key value pair
+ * Ex: '  Test   = My Value  ' would return a KeyValue of
+ *     Key : Test
+ *     Value : My Value
+ * @param stream The OPstream to read from
+ * @param dst A pointer to a KeyValuePair (it will be filled on success)
+ * @return Success Result
+*/
 OPint OPstreamReadKeyValuePair(OPstream* stream, OPkeyValuePair* dst);
 
 //-----------------------------------------------------------------------------
@@ -75,6 +100,7 @@ OPint OPstreamReadKeyValuePair(OPstream* stream, OPkeyValuePair* dst);
  *          no allocation performed.
  */
 ui8* OPreadAt(OPstream* stream, OPuint pos, OPuint size);
+
 //-----------------------------------------------------------------------------
 /**
  * OPcopy - Reads data, and copies it into a provided buffer
@@ -84,6 +110,7 @@ ui8* OPreadAt(OPstream* stream, OPuint pos, OPuint size);
  *      @return Greater than 0 on success, less than or equal to on failure
  */
 OPuint OPcopy(OPstream* stream, void* dest, OPuint size);
+
 //-----------------------------------------------------------------------------
 /**
  * OPseek - Skip to a specific byte location in the stream.
@@ -92,6 +119,7 @@ OPuint OPcopy(OPstream* stream, void* dest, OPuint size);
  *	@return Returns 0 if not in bounds and 1 if Seeking was successful
  */
 OPuint OPseek(OPstream* stream, OPuint byte);
+
 #ifdef __cplusplus
 };
 //-----------------------------------------------------------------------------
