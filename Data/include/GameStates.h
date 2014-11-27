@@ -24,7 +24,7 @@ extern OPgameState* ActiveState;
 */
 void OPgameStateChange(OPgameState* targetState);
 
-/*
+/* Creates a new OPgameState
 * @param init The Initialize function for the game state
 * @param update The Update function for the game state
 * @param exit The Exit function for the game state
