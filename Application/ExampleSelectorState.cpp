@@ -8,7 +8,7 @@
 #include "./Application/Examples/Skinning.h"
 #include "./Application/Examples/Deferred.h"
 #include "./Application/Examples/Textured.h"
-#include "./Application/Examples/Server.h"
+//#include "./Application/Examples/Server.h"
 
 OPgameState GS_EXAMPLE_SELECTOR = {
 	ExampleSelectorEnter,
@@ -30,7 +30,7 @@ typedef struct {
 
 ExampleSelector* exampleSelector;
 
-#define ExampleCount 9
+#define ExampleCount 8
 
 void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector = (ExampleSelector*)OPallocZero(sizeof(ExampleSelector));
@@ -78,9 +78,9 @@ void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector->Examples[7].state = &GS_EXAMPLE_TEXTURED;
 	exampleSelector->Examples[7].available = 1;
 
-	exampleSelector->Examples[8].name = "Network Server";
-	exampleSelector->Examples[8].state = &GS_EXAMPLE_NETWORK_SERVER;
-	exampleSelector->Examples[8].available = 1;
+	//exampleSelector->Examples[8].name = "Network Server";
+	//exampleSelector->Examples[8].state = &GS_EXAMPLE_NETWORK_SERVER;
+	//exampleSelector->Examples[8].available = 1;
 
 	OPlog("Entered Example Selector");
 }

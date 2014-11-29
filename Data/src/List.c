@@ -1,6 +1,15 @@
 #include "./../include/List.h"
 
 //-----------------------------------------------------------------------------
+OPint _oplNextExceedsCap(OPlist* list){
+	OPint eleSize = list->_elementSize;
+	if((list->_size + 1) * eleSize >= list->_capacity * eleSize)
+		return 1;
+	else
+		return 0;
+}
+
+//-----------------------------------------------------------------------------
 OPlist* OPlistCreate(OPint capacity, OPint elementSize){
 	OPlist* list = (OPlist*)OPalloc(sizeof(OPlist));
 
@@ -89,14 +98,7 @@ ui8* OPlistSet(OPlist* list, OPuint index, ui8* value){
 OPint OPlistSize(OPlist* list){
 	return list->_size;
 }
-//-----------------------------------------------------------------------------
-OPint _oplNextExceedsCap(OPlist* list){
-	OPint eleSize = list->_elementSize;
-	if((list->_size + 1) * eleSize >= list->_capacity * eleSize)
-		return 1;
-	else
-		return 0;
-}
+
 //-----------------------------------------------------------------------------
 //- C++ Definitions -----------------------------------------------------------
 #ifdef __cplusplus // compile the C++ class

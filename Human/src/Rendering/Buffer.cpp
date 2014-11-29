@@ -77,10 +77,10 @@ void OPrenderDrawBuffer(ui32 offset){
 }
 //-----------------------------------------------------------------------------
 void OPrenderDrawBufferIndexed(ui32 offset){
-	OPglError("OPrenderDrawBufferIndexed:Error 0");
+	OPglError("OPrenderDrawBufferIndexed:Error 0:%d");
 	GLenum indType = OPRENDER_CURR_IB->ElementSize == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
 	glDrawElements(GL_TRIANGLES, OPRENDER_CURR_IB->ElementCount, indType, (void*)(offset * sizeof(GLuint)));
-	OPglError("OPrenderDrawBufferIndexed:Error 1");
+	OPglError("OPrenderDrawBufferIndexed:Error 1:%d");
 }
 
 //-----------------------------------------------------------------------------

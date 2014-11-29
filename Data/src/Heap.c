@@ -20,12 +20,14 @@ OPminHeap* OPminHeapCreate(OPuint capacity){
 
 	return heap;
 }
+
 //-----------------------------------------------------------------------------
 OPint OPminHeapDestroy(OPminHeap* heap){
 	OPfree(heap->_indices);
 	OPfree(heap);
 	return 1;
 }
+
 //-----------------------------------------------------------------------------
 OPint OPminHeapPush(OPminHeap* heap, OPint value){
 	if(heap->_size < heap->_capacity){
@@ -43,6 +45,7 @@ OPint OPminHeapPush(OPminHeap* heap, OPint value){
 	}
 	return 0;
 }
+
 //-----------------------------------------------------------------------------
 OPint OPminHeapPop(OPminHeap* heap){
 	OPint minElement,lastElement,child,now;
@@ -72,18 +75,14 @@ OPint OPminHeapPop(OPminHeap* heap){
     heap->_indices[now] = lastElement;
     return minElement;
 }
+
 //-----------------------------------------------------------------------------
 OPint OPminHeapPeek(OPminHeap* heap){
 	if(heap->_size == 1) return -1;
 	return heap->_indices[1];
 }
+
 //-----------------------------------------------------------------------------
 OPint OPminHeapSize(OPminHeap* heap){
 	return heap->_size;
 }
-//-----------------------------------------------------------------------------
-//- C++ Definitions -----------------------------------------------------------
-#ifdef __cplusplus // compile the C++ class
-using namespace OPEngine::Data;
-
-#endif

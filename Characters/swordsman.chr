@@ -1,0 +1,17 @@
+Name = Swordsman
+Idle = Toys/swordsmanidle
+Move = Toys/swordsmanmove
+Hit = Toys/swordsmanhit
+HitMove = Toys/swordsmanhitmove
+Block = Toys/swordsmanblock
+HP = 3
+Size = 2
+Mass = 1
+Accel = 1.2
+Decel = 0.4
+Jump = 12
+AttackDmg = 3
+JumpDmg = 1
+AttackRange = 1
+ReloadRate = 500
+MaxSpeed = 5
