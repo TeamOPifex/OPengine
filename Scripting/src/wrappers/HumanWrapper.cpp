@@ -1137,7 +1137,8 @@ static V8Return _FontManagerSetAlign(const V8Args& args) {
 static V8Return _FontManagerAddText(const V8Args& args) {
 	V8Scope scope;
 
-	OPfontManagerAddText(ToCString(String::Utf8Value(args[0]->ToString())));
+	String::Utf8Value str(args[0]->ToString());
+	OPfontManagerAddText(ToCString(str));
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -1153,15 +1154,18 @@ static V8Return _FontManagerBuild(const V8Args& args) {
 static V8Return _FontRenderText(const V8Args& args) {
 	V8Scope scope;
 
-	OPrenderTextXY(ToCString(String::Utf8Value(args[0]->ToString())), args[1]->NumberValue(), args[2]->NumberValue());
+	String::Utf8Value str(args[0]->ToString());
+	OPrenderTextXY(ToCString(str), args[1]->NumberValue(), args[2]->NumberValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
 
 static V8Return _FontRenderTextMatrix(const V8Args& args) {
-	V8Scope scope;
-
-	OPrenderTextMat4(ToCString(String::Utf8Value(args[0]->ToString())), (OPmat4*)args[1]->ToObject()->Get(GetString(isolate, "Id"))->Int32Value());
+	V8Scope scope; 
+	String::Utf8Value str(args[0]->ToString());
+	OPchar* c = ToCString(str);
+	Handle<String> el = GetString(isolate, "Id");
+	OPrenderTextMat4(c, (OPmat4*)args[1]->ToObject()->Get(el)->Int32Value());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }

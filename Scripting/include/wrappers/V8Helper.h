@@ -214,7 +214,7 @@ void* GetArgPointer(const V8Args& args, V8isolate* isolate, i32 position);
 void* GetPointer(const V8Args& args, V8isolate* isolate, i32* result, i32 expected);
 bool IsCallingObject(const V8Args& args, V8isolate* isolate, OPscriptTypes type);
 
-const char* ToCString(const v8::String::Utf8Value& value);
+OPchar* ToCString(const v8::String::Utf8Value& value);
 
 #endif
 
