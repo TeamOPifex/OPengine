@@ -25,9 +25,14 @@ void OPstringRemoveFromStart(OPchar* str, i32 size) {
 }
 
 OPchar* OPstringGetNonConstant(const OPchar* str) {
-	i32 len = strlen(str);
-	OPchar* result = (OPchar*)OPalloc(sizeof(OPchar)* (len + 1));
+	i32 len;
+	OPchar* result = NULL;
+
+	len = strlen(str);
+
+	result = (OPchar*)OPalloc(sizeof(OPchar) * (len + 1));
 	strcpy(result, str);
+	
 	return result;
 }
 
@@ -39,3 +44,6 @@ OPchar* OPstringCreateMerged(const OPchar* str, const OPchar* add) {
 	strcat(result, add);
 	return result;
 }
+
+
+

@@ -29,6 +29,7 @@ extern "C" {
 // ____) | |_| |  | |_| | (__| |_\__ \
 //|_____/ \__|_|   \__,_|\___|\__|___/
 //                                                                      
+
 typedef struct{
 	const OPchar Extension[8];
 	const OPchar* AssetTypePath;
@@ -69,39 +70,76 @@ extern OPlinkedList* OP_CMAN_PURGE;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-//                                                                                    
-// Specifies how assets will be loaded for each file type
+//                                                         
 
-/*
- * *Debug Only*
+/* *Debug Only*
  * Watches the files of loaded resources for changes
  * Looks at Last Write Time for each file once every second
  * When a change happens the Reload method is called
  */
 void OPcmanUpdate();
 
+/* Adds a loader to be used when OPcmanInit is called
+* @param loader Pointer to a defined asset loader
+*/
 void OPcmanAddLoader(OPassetLoader* loader);
 
-// Initializes the Content Manager with an array of Asset Loaders
-// A custom directoy can be provided otherwise it defaults to assets/
+/* Initializes the Content Manager with an array of Asset Loaders
+* A custom directoy can be provided otherwise it defaults to assets/
+* @param dir Directory to look for assets, if NULL then it will look in the startup directory for a folder named "Assets"
+* @return Success Result
+*/
 OPint OPcmanInit(const OPchar* dir);
 
-// Unloads all assets that are no longer needed (marked deleted)
-// Assets that are no longer needed have been deleted with OPcmanDelete
+/* Unloads all assets that are no longer needed (marked deleted)
+* Assets that are no longer needed have been deleted with OPcmanDelete
+* @return Success Result
+*/
 OPint OPcmanPurge();
 
-// checks to see if an asset is loaded, triggers the load or unload.
+/* checks to see if an asset is loaded, triggers the load or unload.
+* @param key The resource name to find
+* @return Success Result
+*/
 OPint OPcmanIsLoaded(const OPchar* key);
-// Tries to load an asset
+
+/* Attempts to load an asset
+* @param key The resource name to load
+* @return Success Result
+*/
 OPint OPcmanLoad(const OPchar* key);
-// Tries to unload an asset
+
+/*
+* Unloads a resource
+* @param key The resource that's no longer needed
+* @return Success Result
+*/
 OPint OPcmanUnload(const OPchar* key);
 
-// Returns a pointer to the asset requested by file name
+/* Returns a pointer to the resource requested by file name
+* @param key The resource name to load
+* @return Pointer to the resource requested. NULL if it wasn't found.
+*/
 void* OPcmanGet(const OPchar* key);
 
-// Marks an asset as ready to delete
-// It will only be removed from memory when OPcmanPurge is called
+/* Loads a resource and returns a pointer to the resource requested
+* @param key The resource name to load
+* @return Pointer to the resource requested. NULL if it failed to load or wasn't found.
+*/
+inline void* OPcmanLoadGet(const OPchar* key) {
+	OPint result;
+	result = OPcmanLoad(key);
+	if(!result) {
+		return NULL;
+	}
+	return OPcmanGet(key);
+}
+
+/* Marks an asset as ready to delete
+* It will only be removed from memory when OPcmanPurge is called
+* @param key The resource that's no longer needed
+* @return Success Result
+*/
 OPint OPcmanDelete(const OPchar* key);
 
 #ifdef __cplusplus

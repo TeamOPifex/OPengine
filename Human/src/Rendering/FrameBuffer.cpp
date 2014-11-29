@@ -36,6 +36,73 @@ GLuint createDepthTexture(int w, int h) {
 	return tex;
 }
 
+OPframeBuffer OPframeBufferCreateDepth(OPtextureDescription desc) {
+	OPframeBuffer fb = {
+		desc
+	};
+
+	OPlog("OPframeBufferCreateDepth 1");
+	OPglError("OPframeBufferCreateDepth:Error 1:%d");
+
+	glGenFramebuffers(1, &fb.Handle);
+	OPlog("OPframeBufferCreateDepth 2");
+	OPglError("OPframeBufferCreateDepth:Error 2:%d");
+	glBindFramebuffer(GL_FRAMEBUFFER, fb.Handle);
+	OPglError("OPframeBufferCreateDepth:Error 3:%d");
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fb.Handle);
+	OPglError("OPframeBufferCreateDepth:Error 4:%d");
+	//OPframeBufferBind(&fb);
+	OPlog("OPframeBufferCreateDepth 3");
+
+	fb.Texture = OPtextureCreate(desc);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+
+	OPlog("OPframeBufferCreateDepth 4: %d", fb.Texture.Handle);
+	OPglError("OPframeBufferCreateDepth:Error 5:%d");
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, fb.Texture.Handle, 0);
+	OPlog("OPframeBufferCreateDepth 5");
+	OPglError("OPframeBufferCreateDepth:Error 6:%d");
+	glDrawBuffer(GL_NONE);
+	OPlog("OPframeBufferCreateDepth 6");
+	OPglError("OPframeBufferCreateDepth:Error 7:%d");
+	glReadBuffer(GL_NONE);
+	OPglError("OPframeBufferCreateDepth:Error 1:%d");
+	OPglError("OPframeBufferCreateDepth:Error 8:%d");
+	OPlog("OPframeBufferCreateDepth 7");
+
+	GLenum frameBufferStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	OPglError("OPframeBufferCreateDepth:Error 9:%d");
+
+	// Always check that our framebuffer is ok
+	if(frameBufferStatus != GL_FRAMEBUFFER_COMPLETE) {
+		OPlog("!!! FrameBuffer is not ok");
+		switch(frameBufferStatus) {
+			case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+				OPlog("FrameBuffer has an incomplete attachment");
+				break;
+			// case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
+			// 	OPlog("FrameBuffer has incomplete dimensions");
+			// 	break;
+			case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+				OPlog("FrameBuffer has an incomplete read buffer");
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+				OPlog("FrameBuffer has missing attachment");
+				break;
+			case GL_FRAMEBUFFER_UNSUPPORTED:
+				OPlog("FrameBuffer internal formats are unsupported");
+				break;
+			default:
+				OPlog("FrameBuffer unknown: %d", frameBufferStatus);
+				break;
+		}
+	}
+	OPglError("OPframeBufferCreateDepth:Error 10:%d");
+
+	return fb;
+}
+
 OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 	OPlog("OPEngine Frame Buffer 1");
 	OPframeBuffer fb = {
@@ -195,6 +262,8 @@ void OPframeBufferUnbind(){
 	//glGenerateMipmap(GL_TEXTURE_2D);
 	//glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	OPrenderResetViewport();
 /*	OPlog("FBO W: %d, H: %d", fb->Description.Width, fb->Description.Height);
 
 	glBindTexture(GL_TEXTURE_2D, fb->Texture.Handle);

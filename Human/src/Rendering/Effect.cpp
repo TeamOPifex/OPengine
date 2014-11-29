@@ -112,7 +112,7 @@ OPeffect createEffect(OPshader vert,
 	const OPchar* Name,
 	ui32 stride) {
 
-	OPglError("OPrenderCreateEffect:Error 0");
+	OPglError("OPrenderCreateEffect:Error 0: %d");
 
 	OPint nameLen = strlen(Name) + 1;
 	OPeffect effect = {

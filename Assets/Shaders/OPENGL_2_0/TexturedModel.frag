@@ -1,4 +1,4 @@
-//varying vec3 vNormal; 
+varying vec3 vNormal; 
 varying vec2 vUV; 
 varying vec3 vLightDirection;
 

@@ -19,7 +19,6 @@ void ApplicationInit() {
 
 	OPrenderInit();
 
-	OPcmanLoad("untitled.opm");
 	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 }
 

@@ -51,10 +51,13 @@ typedef struct{
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+
 OPthread OPthreadStart(void* (*function) (void*), void* params);
 OPint    OPthreadStop(void* retval);
 OPint    OPthreadJoin(OPthread* thread);
+
 //-----------------------------------------------------------------------------
+
 OPmutex OPmutexCreate();
 OPint   OPmutexLock(OPmutex* mutex);
 OPint   OPmutexUnlock(OPmutex* mutex);

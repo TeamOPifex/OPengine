@@ -1,0 +1,17 @@
+Name = GI Joe
+Idle = Toys/gijoeidle
+Move = Toys/gijoemove
+Hit = Toys/gijoehit
+HitMove = Toys/gijoehitmove
+Block = Toys/gijoeblock
+HP = 3
+Size = 2
+Mass = 1
+Accel = 1.2
+Decel = 0.4
+Jump = 12
+AttackDmg = 1
+JumpDmg = 1
+AttackRange = 15
+ReloadRate = 100
+MaxSpeed = 5

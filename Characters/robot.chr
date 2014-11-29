@@ -1,0 +1,17 @@
+Name = Robot
+Idle = Toys/robotidle
+Move = Toys/robotmove
+Hit = Toys/robothit
+HitMove = Toys/robothitmove
+Block = Toys/robotblock
+HP = 3
+Size = 2
+Mass = 1
+Accel = 2.0
+Decel = 0.4
+Jump = 12
+AttackDmg = 3
+JumpDmg = 1
+AttackRange = 1
+ReloadRate = 500
+MaxSpeed = 5
