@@ -31,6 +31,7 @@ inline void OPmat4Print(OPmat4 m);
 inline void OPmat4perspective(OPmat4* m, OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal);
 inline void OPmat4transform(OPvec3* dst, OPvec3* a, OPmat4* b);
 
+
 extern const OPmat4 OPmat4Zero;
 extern const OPmat4 OPmat4Identity;
 
@@ -41,11 +42,6 @@ struct OPmat4 {
 	OPvec4 cols[4];
 	OPmat4 operator=(OPmat4 vhs) { 
 		OPmemcpy(this, (void*)&vhs, sizeof(OPmat4)); return *this;
-	}
-	inline OPmat4 operator*(OPmat4 vhs) { 
-		OPmat4 temp = OPmat4Zero;
-		OPmat4mul(&temp, this, &vhs); 
-		return temp; 
 	}
 	inline OPmat4& operator*=(OPmat4 vhs) { 
 		OPmat4mul(this, this, &vhs); 
@@ -137,6 +133,38 @@ inline OPvec3 operator*(OPmat4 lhs, OPvec3 rhs) {
 	return temp; 
 }
 
+inline OPmat4 operator*(OPmat4 lhs, OPmat4 rhs) {
+	OPmat4 temp;
+	OPmat4mul(&temp, &lhs, &rhs);
+	return temp;
+}
+
+
+inline OPmat4 OPmat4create(
+	f32 _00, f32 _10, f32 _20, f32 _30,
+	f32 _01, f32 _11, f32 _21, f32 _31,
+	f32 _02, f32 _12, f32 _22, f32 _32,
+	f32 _03, f32 _13, f32 _23, f32 _33) {
+
+	OPmat4 temp = {
+		_00, _10, _20, _30,
+		_01, _11, _21, _31,
+		_02, _12, _22, _32,
+		_03, _13, _23, _33
+	};
+
+	return temp;
+}
+
+inline OPmat4 OPmat4createFromVec4(OPvec4 row0, OPvec4 row1, OPvec4 row2, OPvec4 row3) {
+	return OPmat4create(
+		row0.x, row0.y, row0.z, row0.w,
+		row1.x, row1.y, row1.z, row1.w,
+		row2.x, row2.y, row2.z, row2.w,
+		row3.x, row3.y, row3.z, row3.w
+		);
+}
+
 inline OPvec4* OPmat4index(OPmat4* m, int idx){
 	return &((OPvec4*)(m))[idx];
 }
@@ -148,7 +176,7 @@ inline void OPmat4mul(OPmat4* dst, OPmat4* m1, OPmat4* m2) {
 	OPfloat* cols1 = (OPfloat*)m1->cols;
 	OPfloat* cols2 = (OPfloat*)m2->cols;
 	OPfloat* colsr = (OPfloat*)result.cols;
-	OPmemcpy(&result, m1, sizeof(OPmat4));
+	//OPmemcpy(&result, m1, sizeof(OPmat4));
 	for(i = 0; i < 4; i++){
 		for(j = 0; j < 4; j++){
 			sum = 0;

@@ -88,7 +88,7 @@ static V8Return _AudioVolume(const V8Args& args);
 V8ObjectGlobal GetKeyboardMap() {
 	V8ObjectGlobal keyboard = CreateObjectG(isolate);
 
-	const OPchar* keyNames[OPKEYBOARD_MAX] = {
+	OPchar* keyNames[OPKEYBOARD_MAX] = {
 		"BACKSPACE",
 		"TAB",
 		"ENTER",
@@ -183,8 +183,8 @@ V8ObjectGlobal GetKeyboardMap() {
 		"RCONTROL"
 	};
 
-	for (i32 i = 0; i < OPKEY_RCONTROL; i++) {
-		const OPchar* name = keyNames[i];
+	for (OPint i = 0; i < OPKEY_RCONTROL; i++) {
+		OPchar* name = keyNames[i];
 		SetValueG(isolate, keyboard, name, GetNumber(isolate, i));
 	}
 
@@ -193,7 +193,7 @@ V8ObjectGlobal GetKeyboardMap() {
 V8Object GetKeyboardMapO() {
 	V8Object keyboard = CreateObject(isolate);
 
-	const OPchar* keyNames[OPKEYBOARD_MAX] = {
+	OPchar* keyNames[OPKEYBOARD_MAX] = {
 		"BACKSPACE",
 		"TAB",
 		"ENTER",
@@ -288,8 +288,8 @@ V8Object GetKeyboardMapO() {
 		"RCONTROL"
 	};
 
-	for (i32 i = 0; i < OPKEY_RCONTROL; i++) {
-		const OPchar* name = keyNames[i];
+	for (OPint i = 0; i < OPKEY_RCONTROL; i++) {
+		OPchar* name = keyNames[i];
 		SetValue(isolate, keyboard, name, GetNumber(isolate, i));
 	}
 
@@ -299,7 +299,7 @@ V8Object GetKeyboardMapO() {
 V8ObjectGlobal GetButtonMap() {
 	V8ObjectGlobal buttons = CreateObjectG(isolate);
 
-	const OPchar* keyNames[GamePadButton_Max] = {
+	OPchar* keyNames[GamePadButton_Max] = {
 		"DPAD_UP",
 		"DPAD_DOWN",
 		"DPAD_LEFT",
@@ -316,8 +316,8 @@ V8ObjectGlobal GetButtonMap() {
 		"Y"
 	};
 
-	for (i32 i = 0; i < GamePadButton_Max; i++) {
-		const OPchar* name = keyNames[i];
+	for (OPint i = 0; i < GamePadButton_Max; i++) {
+		OPchar* name = keyNames[i];
 		SetValueG(isolate, buttons, name, GetNumber(isolate, i));
 	}
 
@@ -327,7 +327,7 @@ V8ObjectGlobal GetButtonMap() {
 V8Object GetButtonMapO() {
 	V8Object buttons = CreateObject(isolate);
 
-	const OPchar* keyNames[GamePadButton_Max] = {
+	OPchar* keyNames[GamePadButton_Max] = {
 		"DPAD_UP",
 		"DPAD_DOWN",
 		"DPAD_LEFT",
@@ -344,8 +344,8 @@ V8Object GetButtonMapO() {
 		"Y"
 	};
 
-	for (i32 i = 0; i < GamePadButton_Max; i++) {
-		const OPchar* name = keyNames[i];
+	for (OPint i = 0; i < GamePadButton_Max; i++) {
+		OPchar* name = keyNames[i];
 		SetValue(isolate, buttons, name, GetNumber(isolate, i));
 	}
 
@@ -645,7 +645,7 @@ static V8Return _CreateEffect(const V8Args& args) {
 
 	OPfree(attribs);
 
-	return SetReturn(args, &scope, GetNumber(isolate, (i32)effect));
+	return SetReturn(args, &scope, GetNumber(isolate, (OPint)effect));
 }
 
 static V8Return _InputUpdate(const V8Args& args) {
@@ -963,7 +963,7 @@ static V8Return _CameraSetTarget(const V8Args& args) {
 		OPcamSetTarget(camera, target);
 	}
 
-	return SetReturn(args, &scope, GetNumber(isolate, (i32)camera));
+	return SetReturn(args, &scope, GetNumber(isolate, (OPint)camera));
 }
 
 static V8Return _GetCameraView(const V8Args& args) {
@@ -975,7 +975,7 @@ static V8Return _GetCameraView(const V8Args& args) {
 	OPmat4* view = (OPmat4*)OPalloc(sizeof(OPmat4));
 	OPcamGetView((*camera), view);
 
-	return SetReturn(args, &scope, GetNumber(isolate, (i32)view));
+	return SetReturn(args, &scope, GetNumber(isolate, (OPint)view));
 }
 
 static V8Return _GetCameraProj(const V8Args& args) {
@@ -987,7 +987,7 @@ static V8Return _GetCameraProj(const V8Args& args) {
 	OPmat4* proj = (OPmat4*)OPalloc(sizeof(OPmat4));
 	OPcamGetProj((*camera), proj);
 
-	return SetReturn(args, &scope, GetNumber(isolate, (i32)proj));
+	return SetReturn(args, &scope, GetNumber(isolate, (OPint)proj));
 }
 
 static V8Return _BindMesh(const V8Args& args) {
@@ -1088,7 +1088,7 @@ static V8Return _FontManagerCreate(const V8Args& args) {
 	OPfontManager* manager = OPfontManagerCreate(font);
 
 	V8Object obj = CreateObject(isolate);
-	SetValue(isolate, obj, "Id", GetNumber(isolate, (i32)manager));
+	SetValue(isolate, obj, "Id", GetNumber(isolate, (OPint)manager));
 	SetFunction(isolate, obj, "Bind", _FontManagerBind);
 	SetFunction(isolate, obj, "SetRGBA", _FontManagerSetRGBA);
 	SetFunction(isolate, obj, "SetAlign", _FontManagerSetAlign);
@@ -1189,10 +1189,10 @@ static V8Return _Sprite3DCreate(const V8Args& args) {
 	OPfree(sprites);
 	
 	V8Object obj = CreateObject(isolate);
-	SetValue(isolate, obj, "Id", GetNumber(isolate, (i32)sprite));
+	SetValue(isolate, obj, "Id", GetNumber(isolate, (OPint)sprite));
 	SetFunction(isolate, obj, "Update", _Sprite3DUpdate);
 	SetFunction(isolate, obj, "Render", _Sprite3DRender);
-	SetValue(isolate, obj, "Position", GetNumber(isolate, (i32)&sprite->Position));
+	SetValue(isolate, obj, "Position", GetNumber(isolate, (OPint)&sprite->Position));
 
 	return SetReturn(args, &scope, obj);
 }

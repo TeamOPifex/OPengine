@@ -3,7 +3,7 @@
 #include <sys/stat.h>
  #include <sys/types.h>
 
-#define OPIFEX_WINDOWS
+//#define OPIFEX_WINDOWS
 
 #ifdef OPIFEX_WINDOWS
 	#include <direct.h>
