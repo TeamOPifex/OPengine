@@ -78,17 +78,17 @@ inline OPvec3 OPvec3Create(OPfloat x, OPfloat y, OPfloat z) {
 	return tmp;
 }
 
-inline OPvec3 operator+(OPvec3 lhs, OPvec3& vhs) { 
+inline OPvec3 operator+(OPvec3 lhs, OPvec3 vhs) { 
 	OPvec3 temp = { 0, 0, 0};
 	OPvec3add(&temp, &lhs, &vhs); 
 	return temp; 
 }
-inline OPvec3 operator-(OPvec3 lhs, OPvec3& vhs) { 
+inline OPvec3 operator-(OPvec3 lhs, OPvec3 vhs) { 
 	OPvec3 temp = { 0, 0, 0};
 	OPvec3sub(&temp, &lhs, &vhs); 
 	return temp; 
 }
-inline OPvec3 operator*(OPvec3 lhs, OPvec3& vhs) { 
+inline OPvec3 operator*(OPvec3 lhs, OPvec3 vhs) { 
 	OPvec3 temp = { 0, 0, 0};
 	OPvec3mul(&temp, &lhs, &vhs); 
 	return temp; 
@@ -103,7 +103,7 @@ inline OPvec3 operator*(OPfloat lhs, OPvec3 vhs) {
 	OPvec3scl(&temp, &vhs, lhs); 
 	return temp; 
 }
-inline OPvec3 operator/(OPvec3 lhs, OPvec3& vhs) { 
+inline OPvec3 operator/(OPvec3 lhs, OPvec3 vhs) { 
 	OPvec3 temp = { 0, 0, 0};
 	OPvec3div(&temp, &lhs, &vhs); 
 	return temp; 
@@ -113,7 +113,7 @@ inline OPvec3 operator/(OPvec3 lhs, OPfloat vhs) {
 	OPvec3divf(&temp, &lhs, vhs); 
 	return temp; 
 }
-inline OPvec3 operator/(OPfloat lhs, OPvec3& vhs) { 
+inline OPvec3 operator/(OPfloat lhs, OPvec3 vhs) { 
 	OPvec3 temp = { 0, 0, 0};
 	OPvec3divf(&temp, &vhs, lhs); 
 	return temp; 

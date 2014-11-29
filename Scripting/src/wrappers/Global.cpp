@@ -64,7 +64,7 @@ static V8Return _start(const V8Args& args) {
 
 	OPlog("Engine Initialized");
 
-	OPstart();
+	OPstart(0, NULL);
 	OPend();
 
 	return SetReturn(args, &scope, GetNull(isolate));

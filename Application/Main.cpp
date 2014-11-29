@@ -17,6 +17,12 @@ void ApplicationInit() {
 	InitializeLoaders();
 	OPcmanInit(assetDir);
 
+	OPvec3 a = OPvec3Create(1,1,1);
+	OPvec3 b = OPvec3Create(2,2,2);
+	OPvec3 c = OPvec3Create(3,3,3);
+
+	OPvec3 d = a - b * c;
+
 	OPrenderInit();
 
 	OPgameStateChange(&GS_EXAMPLE_SELECTOR);

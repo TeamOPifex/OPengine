@@ -21,8 +21,8 @@ void LogProperties(V8Object obj) {
 V8Object CreateTypedObject(V8isolate* isolate, void* Id, OPscriptTypes type) {
 
 	V8Object obj = CreateObject(isolate);
-	obj->Set(GetString(isolate, "Id"), GetNumber(isolate, (i32)Id));
-	obj->Set(GetString(isolate, "Type"), GetNumber(isolate, (i32)type));
+	obj->Set(GetString(isolate, "Id"), GetNumber(isolate, (OPint)Id));
+	obj->Set(GetString(isolate, "Type"), GetNumber(isolate, (OPint)type));
 	return obj;
 
 }
