@@ -5,6 +5,7 @@
 #include "./Core/include/Timer.h"
 #include "./Data/include/File.h"
 #include "./Data/include/List.h"
+#include "./Data/include/String.h"
 
 //  _____ _       _           _     
 // / ____| |     | |         | |    
@@ -95,7 +96,7 @@ OPint OPcmanInit(const OPchar* dir){
 
 	OP_CMAN_ASSET_FOLDER = "assets\\";
 	if (dir) {
-		OP_CMAN_ASSET_FOLDER = dir;
+		OP_CMAN_ASSET_FOLDER = OPstringCreateCopy(dir);
 	}
 
 	OP_CMAN_ASSET_LOADER_COUNT = OPlistSize(_OP_CMAN_ASSETLOADERS);

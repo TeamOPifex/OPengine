@@ -1,5 +1,9 @@
 #include "./../include/Stream.h"
+#include "./Core/include/Log.h"
+#include "./Data/include/String.h"
+#include <stdio.h>
 #include <errno.h>
+#include <ctype.h>
 
 //-----------------------------------------------------------------------------
 OPstream* OPstreamCreate(OPuint size){
@@ -95,7 +99,7 @@ ui8* OPread(OPstream* stream, OPuint size){
 
 
 void _fillBuffer(OPstream* stream) {
-	sscanf((i8*)(stream->Data + stream->_pointer), "%s", &stream->Buffer);
+	sscanf((i8*)(stream->Data + stream->_pointer), "%s", stream->Buffer);
 	stream->_pointer += strlen(stream->Buffer) + 1;
 }
 
@@ -129,7 +133,7 @@ f32 OPstreamf32(OPstream* stream) {
 }
 OPchar* OPstreamString(OPstream* stream) {
 	_fillBuffer(stream);
-	return OPstringCreateMerged(stream->Buffer, "");
+	return OPstringCreateCopy(stream->Buffer);
 }
 
 
@@ -163,7 +167,7 @@ OPchar* OPstreamReadLine(OPstream* stream) {
 
 	result = OPalloc(sizeof(OPchar) * i);
 	OPmemcpy(result, buffer, sizeof(OPchar) * (i - 1));
-	result[i - 1] = NULL;
+	result[i - 1] = '\0';
 
 	stream->_pointer += i;
 
@@ -192,12 +196,12 @@ OPint OPstreamReadKeyValuePair(OPstream* str, OPkeyValuePair* dst){
 	if(!len) return 0;
 
 	str->_pointer += len + 1;
-	sscanf(buffer, "%255[^ =]%*[= \t]%255[^\r\n]", &buffer2, &dst->value);
+	sscanf(buffer, "%255[^ =]%*[= \t]%255[^\r\n]", buffer2, dst->value);
 
 	OPlog("OPstreamReadKeyValuePair() - '%s' = '%s'", buffer2, dst->value);
 
 	// Removes any trailing whitespace from t,he values
-	sscanf(buffer2, "%s", &dst->key);
+	sscanf(buffer2, "%s", dst->key);
 
 	for (i = 0; i < strlen(dst->key); i++){
 		dst->key[i] = tolower(dst->key[i]);

@@ -1,6 +1,7 @@
 #include "./Data/include/HashMap.h"
 #include "./Core/include/DynamicMemory.h"
 #include "./Data/include/String.h"
+#include "./Core/include/Log.h"
 
 //  _____ _                   _       
 // / ____| |                 | |      

@@ -3,6 +3,7 @@
 #ifdef OPIFEX_V8
 
 #include "./Human/include/Input/Input.h"
+#include "./Human/include/Rendering/FrameBuffer.h"
 #include "./Human/include/Rendering/Renderer.h"
 #include "./Human/include/Rendering/Effect.h"
 #include "./Human/include/Rendering/Camera.h"
@@ -83,6 +84,10 @@ static V8Return _AudioCreate(const V8Args& args);
 static V8Return _AudioBind(const V8Args& args);
 static V8Return _AudioPlay(const V8Args& args);
 static V8Return _AudioVolume(const V8Args& args);
+
+static V8Return _FrameBufferBind(const V8Args& args);
+static V8Return _FrameBufferUnbind(const V8Args& args);
+static V8Return _FrameBufferCreateDepth(const V8Args& args);
 
 
 V8ObjectGlobal GetKeyboardMap() {
@@ -464,6 +469,12 @@ void HumanInitializeMethods(V8isolate* isolate, V8ObjectGlobal target) {
 	SetFunctionG(isolate, audio, "Volume", _AudioVolume);
 	SetObjectG(isolate, target, "audio", audio);
 
+	// OP.frameBuffer	
+	V8ObjectGlobal frameBuffer = CreateObjectG(isolate);
+	SetFunctionG(isolate, frameBuffer, "Bind", _FrameBufferBind);
+	SetFunctionG(isolate, frameBuffer, "Unbind", _FrameBufferUnbind);
+	SetFunctionG(isolate, frameBuffer, "CreateDepth", _FrameBufferCreateDepth);
+	SetObjectG(isolate, target, "frameBuffer", frameBuffer);
 }
 
 void HumanInitializeMethodsO(V8isolate* isolate, V8Object target) {
@@ -556,6 +567,14 @@ void HumanInitializeMethodsO(V8isolate* isolate, V8Object target) {
 	SetFunction(isolate, audio, "Play", _AudioPlay);
 	SetFunction(isolate, audio, "Volume", _AudioVolume);
 	SetObject(isolate, target, "audio", audio);
+
+
+	// OP.frameBuffer	
+	V8Object frameBuffer = CreateObject(isolate);
+	SetFunction(isolate, frameBuffer, "CreateDepth", _FrameBufferCreateDepth);
+	SetFunction(isolate, frameBuffer, "Bind", _FrameBufferBind);
+	SetFunction(isolate, frameBuffer, "Unbind", _FrameBufferUnbind);
+	SetObject(isolate, target, "frameBuffer", frameBuffer);
 }
 
 
@@ -1285,6 +1304,50 @@ static V8Return _AudioVolume(const V8Args& args) {
 	OPlog("Volume set to: %f", vol);
 	//OPaudVolume(vol);
 	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _FrameBufferBind(const V8Args& args) {
+	V8Scope scope;
+	i32 inScope;
+	OPframeBuffer* fb = (OPframeBuffer*)GetFirstPointer(args, isolate, &inScope, OPscript_FRAME_BUFFER);
+	if(fb == NULL) {
+		OPlog("FB is null...");
+		return SetReturn(args, &scope, GetNull(isolate));
+	}
+	OPlog("FB: %p", fb);
+	OPframeBufferBind(fb);
+	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _FrameBufferUnbind(const V8Args& args) {
+	V8Scope scope;
+	i32 inScope;
+	OPframeBufferUnbind();
+	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _FrameBufferCreateDepth(const V8Args& args) {
+	V8Scope scope;
+	i32 inScope;
+	OPtextureDescription desc = {
+		4096,
+		4096,
+		GL_DEPTH_COMPONENT16,
+		GL_DEPTH_COMPONENT,
+		GL_FLOAT,
+		GL_LINEAR,
+		GL_LINEAR,
+		GL_CLAMP_TO_EDGE,
+		GL_CLAMP_TO_EDGE
+	};
+	OPframeBuffer* fb = (OPframeBuffer*)OPalloc(sizeof(OPframeBuffer));
+	*fb = OPframeBufferCreateDepth(desc);
+
+	OPlog("FB: %p", fb);
+
+	V8Object obj = CreateTypedObject(isolate, fb, OPscript_FRAME_BUFFER);
+
+	return SetReturn(args, &scope, obj);
 }
 
 #endif

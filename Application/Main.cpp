@@ -9,9 +9,9 @@ void InitializeLoaders() {
 //////////////////////////////////////
 
 void ApplicationInit() {
-	i8* assetDir = NULL;
+	OPchar* assetDir = NULL;
 #ifdef OPIFEX_REPO
-	assetDir = OPIFEX_REPO;
+	assetDir = OPstringCreateCopy(OPIFEX_REPO);
 #endif
 
 	InitializeLoaders();
