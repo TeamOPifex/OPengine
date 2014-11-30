@@ -14,7 +14,8 @@ enum OPscriptTypes {
 	OPscript_PHYSICS_ACTOR,
 	OPscript_PHYSICS_STATIC,
 	OPscript_PHYSICS_DYNAMIC,
-	OPscript_AUDIO_EMITTER
+	OPscript_AUDIO_EMITTER,
+	OPscript_FRAME_BUFFER
 };
 
 #include "./Core/include/Types.h"
@@ -75,7 +76,7 @@ inline Handle<Array> CreateArray(V8isolate* isolate) {
 	return Array::New();
 }
 
-inline Handle<Value> GetNumber(V8isolate* isolate, i32 number) {
+inline Handle<Value> GetNumber(V8isolate* isolate, OPint number) {
 	return Number::New(number);
 }
 
@@ -149,7 +150,7 @@ inline Handle<Value> GetNull(V8isolate* isolate) {
 	return Null(isolate);
 }
 
-inline Handle<Value> GetNumber(V8isolate* isolate, i32 number) {
+inline Handle<Value> GetNumber(V8isolate* isolate, OPint number) {
 	return Number::New(isolate, number);
 }
 

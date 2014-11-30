@@ -48,14 +48,14 @@ bool IsCallingObject(const V8Args& args, V8isolate* isolate, OPscriptTypes type)
 
 void* GetCallingPointer(const V8Args& args, V8isolate* isolate) {
 		Local<Value> val = args.This()->ToObject()->Get(GetString(isolate, "Id"));
-		return (void*)val->Int32Value();
+		return (void*)val->IntegerValue();
 }
 
 void* GetArgPointer(const V8Args& args, V8isolate* isolate, i32 position) {
 
 	if (args.Length() > position) {
 		Local<Value> val = args[position]->ToObject()->Get(GetString(isolate, "Id"));
-		return (void*)val->Int32Value();
+		return (void*)val->IntegerValue();
 	}
 
 	return NULL;
@@ -80,12 +80,12 @@ void* GetPointer(const V8Args& args, V8isolate* isolate, i32* result, i32 expect
 	if (args.Length() < expected) {
 		Local<Value> val = args.This()->Get(GetString(isolate, "Id"));
 		*result = 1;
-		return (void*)val->Int32Value();
+		return (void*)val->IntegerValue();
 	}
 	else if (args.Length() >= expected) {
 		Local<Value> val = args[0]->ToObject()->Get(GetString(isolate, "Id"));
 		*result = 0;
-		return (void*)val->Int32Value();
+		return (void*)val->IntegerValue();
 	}
 
 	*result = -1;
