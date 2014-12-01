@@ -89,11 +89,7 @@ static V8Return _FrameBufferBind(const V8Args& args);
 static V8Return _FrameBufferUnbind(const V8Args& args);
 static V8Return _FrameBufferCreateDepth(const V8Args& args);
 
-
-V8ObjectGlobal GetKeyboardMap() {
-	V8ObjectGlobal keyboard = CreateObjectG(isolate);
-
-	OPchar* keyNames[OPKEYBOARD_MAX] = {
+OPchar* keyNames[OPKEYBOARD_MAX] = {
 		"BACKSPACE",
 		"TAB",
 		"ENTER",
@@ -186,7 +182,27 @@ V8ObjectGlobal GetKeyboardMap() {
 		"RSHIFT",
 		"LCONTROL",
 		"RCONTROL"
-	};
+};
+
+OPchar* gamePadNames[GamePadButton_Max] = {
+	"DPAD_UP",
+	"DPAD_DOWN",
+	"DPAD_LEFT",
+	"DPAD_RIGHT",
+	"START",
+	"BACK",
+	"LEFT_THUMB",
+	"RIGHT_THUMB",
+	"LEFT_SHOULDER",
+	"RIGHT_SHOULDER",
+	"A",
+	"B",
+	"X",
+	"Y"
+};
+
+V8ObjectGlobal GetKeyboardMap() {
+	V8ObjectGlobal keyboard = CreateObjectG(isolate);
 
 	for (OPint i = 0; i < OPKEY_RCONTROL; i++) {
 		OPchar* name = keyNames[i];
@@ -195,103 +211,9 @@ V8ObjectGlobal GetKeyboardMap() {
 
 	return keyboard;
 }
+
 V8Object GetKeyboardMapO() {
 	V8Object keyboard = CreateObject(isolate);
-
-	OPchar* keyNames[OPKEYBOARD_MAX] = {
-		"BACKSPACE",
-		"TAB",
-		"ENTER",
-		"PAUSE",
-		"CAPSLOCK",
-		"ESCAPE",
-		"SPACE",
-		"PAGEUP",
-		"PAGEDOWN",
-		"END",
-		"HOME",
-		"LEFT",
-		"UP",
-		"RIGHT",
-		"DOWN",
-		"INSERT",
-		"DELETE",
-		"0",
-		"1",
-		"2",
-		"3",
-		"4",
-		"5",
-		"6",
-		"7",
-		"8",
-		"9",
-		"A",
-		"B",
-		"C",
-		"D",
-		"E",
-		"F",
-		"G",
-		"H",
-		"I",
-		"J",
-		"K",
-		"L",
-		"M",
-		"N",
-		"O",
-		"P",
-		"Q",
-		"R",
-		"S",
-		"T",
-		"U",
-		"V",
-		"W",
-		"X",
-		"Y",
-		"Z",
-		"LWIN",
-		"RWIN",
-		"NUMPAD0",
-		"NUMPAD1",
-		"NUMPAD2",
-		"NUMPAD3",
-		"NUMPAD4",
-		"NUMPAD5",
-		"NUMPAD6",
-		"NUMPAD7",
-		"NUMPAD8",
-		"NUMPAD9",
-		"MULTIPLY",
-		"ADD",
-		"SUBTRACT",
-		"DECIMAL",
-		"DIVIDE",
-		"F1",
-		"F2",
-		"F3",
-		"F4",
-		"F5",
-		"F6",
-		"F7",
-		"F8",
-		"F9",
-		"F10",
-		"F11",
-		"F12",
-		"F13",
-		"F14",
-		"F15",
-		"F16",
-		"NUMLOCK",
-		"SCROLL",
-		"LSHIFT",
-		"RSHIFT",
-		"LCONTROL",
-		"RCONTROL"
-	};
 
 	for (OPint i = 0; i < OPKEY_RCONTROL; i++) {
 		OPchar* name = keyNames[i];
@@ -304,25 +226,9 @@ V8Object GetKeyboardMapO() {
 V8ObjectGlobal GetButtonMap() {
 	V8ObjectGlobal buttons = CreateObjectG(isolate);
 
-	OPchar* keyNames[GamePadButton_Max] = {
-		"DPAD_UP",
-		"DPAD_DOWN",
-		"DPAD_LEFT",
-		"DPAD_RIGHT",
-		"START",
-		"BACK",
-		"LEFT_THUMB",
-		"RIGHT_THUMB",
-		"LEFT_SHOULDER",
-		"RIGHT_SHOULDER",
-		"A",
-		"B",
-		"X",
-		"Y"
-	};
 
 	for (OPint i = 0; i < GamePadButton_Max; i++) {
-		OPchar* name = keyNames[i];
+		OPchar* name = gamePadNames[i];
 		SetValueG(isolate, buttons, name, GetNumber(isolate, i));
 	}
 
@@ -332,25 +238,8 @@ V8ObjectGlobal GetButtonMap() {
 V8Object GetButtonMapO() {
 	V8Object buttons = CreateObject(isolate);
 
-	OPchar* keyNames[GamePadButton_Max] = {
-		"DPAD_UP",
-		"DPAD_DOWN",
-		"DPAD_LEFT",
-		"DPAD_RIGHT",
-		"START",
-		"BACK",
-		"LEFT_THUMB",
-		"RIGHT_THUMB",
-		"LEFT_SHOULDER",
-		"RIGHT_SHOULDER",
-		"A",
-		"B",
-		"X",
-		"Y"
-	};
-
 	for (OPint i = 0; i < GamePadButton_Max; i++) {
-		OPchar* name = keyNames[i];
+		OPchar* name = gamePadNames[i];
 		SetValue(isolate, buttons, name, GetNumber(isolate, i));
 	}
 
@@ -378,6 +267,11 @@ V8Object GetFacingMapO() {
 
 	return facing;
 }
+
+// void _initializeMethods(V8isolate* isolate, void* target, void(*setObject)(V8isolate*, void*, const OPchar*, void*), void(*setFunction)(V8isolate*, void*, const OPchar*, void*)) {
+
+// 	setObject(isolate, target, "KEYS", GetKeyboardMap());
+// }
 
 void HumanInitializeMethods(V8isolate* isolate, V8ObjectGlobal target) {
 
@@ -1182,7 +1076,7 @@ static V8Return _FontRenderText(const V8Args& args) {
 static V8Return _FontRenderTextMatrix(const V8Args& args) {
 	V8Scope scope; 
 	String::Utf8Value str(args[0]->ToString());
-	OPchar* c = ToCString(str);
+	const OPchar* c = ToCString(str);
 	Handle<String> el = GetString(isolate, "Id");
 	OPrenderTextMat4(c, (OPmat4*)args[1]->ToObject()->Get(el)->Int32Value());
 
@@ -1318,7 +1212,6 @@ static V8Return _FrameBufferBind(const V8Args& args) {
 		OPlog("FB is null...");
 		return SetReturn(args, &scope, GetNull(isolate));
 	}
-	OPlog("FB: %p", fb);
 	OPframeBufferBind(fb);
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -1346,8 +1239,6 @@ static V8Return _FrameBufferCreateDepth(const V8Args& args) {
 	};
 	OPframeBuffer* fb = (OPframeBuffer*)OPalloc(sizeof(OPframeBuffer));
 	*fb = OPframeBufferCreateDepth(desc);
-
-	OPlog("FB: %p", fb);
 
 	V8Object obj = CreateTypedObject(isolate, fb, OPscript_FRAME_BUFFER);
 
