@@ -92,7 +92,7 @@ void* GetPointer(const V8Args& args, V8isolate* isolate, i32* result, i32 expect
 	return NULL;
 }
 
-OPchar* ToCString(const v8::String::Utf8Value& value) {
+const OPchar* ToCString(const v8::String::Utf8Value& value) {
 
 	return *value ? *value : "<string conversion failed>";
 }
