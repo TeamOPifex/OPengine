@@ -15,6 +15,8 @@ struct OPquat {
 	}
 };
 
+extern const OPquat OPquatIdentity;
+
 inline OPquat OPquatCreate(OPfloat x, OPfloat y, OPfloat z, OPfloat w) {
 	OPquat tmp = { x, y, z, w };
 	return tmp;
