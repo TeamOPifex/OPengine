@@ -10,6 +10,8 @@ using namespace v8;
 enum OPscriptTypes {
 	OPscript_CAMERA = 0,
 	OPscript_VEC3,
+	OPscript_MAT4,
+	OPscript_MESH,
 	OPscript_PHYSICS_SCENE,
 	OPscript_PHYSICS_ACTOR,
 	OPscript_PHYSICS_STATIC,

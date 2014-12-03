@@ -98,6 +98,7 @@ void MathInitializeMethodsO(V8isolate* isolate, V8Object target) {
 	SetFunction(isolate, vec3, "FromPointer", _OPvec3CreateFromPointer);
 	SetFunction(isolate, vec3, "Destroy", _OPvec3Destroy);
 	SetFunction(isolate, vec3, "Set", _OPvec3Set);
+	SetFunction(isolate, vec3, "Add", _OPvec3Add);
 	SetObject(isolate, target, "vec3", vec3);
 
 
@@ -136,10 +137,10 @@ static V8Return _OPvec3Create(const V8Args& args) {
 	V8Scope scope;
 
 	OPvec3* vec = (OPvec3*)OPalloc(sizeof(OPvec3));
-	if (args.Length() == 0){
+
+	if (args.Length() == 0) {
 		*vec = OPvec3Zero;
-	}
-	else {
+	} else {
 		vec->x = args[0]->NumberValue();
 		vec->y = args[1]->NumberValue();
 		vec->z = args[2]->NumberValue();
@@ -277,8 +278,8 @@ static V8Return _OPmat4Create(const V8Args& args) {
 	OPmat4* mat = (OPmat4*)OPalloc(sizeof(OPmat4));
 	OPmat4identity(mat);
 
-	V8Object obj = CreateObject(isolate);
-	SetValue(isolate, obj, "Id", GetNumber(isolate, (OPint)mat));
+
+	V8Object obj = CreateTypedObject(isolate, mat, OPscript_MAT4);
 	SetFunction(isolate, obj, "RotX", _OPmat4RotateX);
 	SetFunction(isolate, obj, "RotY", _OPmat4RotateY);
 	SetFunction(isolate, obj, "RotZ", _OPmat4RotateZ);
