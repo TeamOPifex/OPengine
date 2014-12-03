@@ -227,21 +227,21 @@ void OPscriptCompileAndRunStream(OPstream* stream) {
 
 	Handle<ObjectTemplate> global = ObjectTemplate::New(isolate);
 	Handle<ObjectTemplate> empty = ObjectTemplate::New(isolate);
-	Handle<ObjectTemplate> OP = ObjectTemplate::New(isolate);
+	//Handle<ObjectTemplate> OP = ObjectTemplate::New(isolate);
 	Handle<ObjectTemplate> console = ObjectTemplate::New(isolate);
 	console->Set(String::NewFromUtf8(isolate, "log"), FunctionTemplate::New(isolate, Print));
-	GlobalInitializeMethods(isolate, OP);
-	HumanInitializeMethods(isolate, OP);
-	PerformanceInitializeMethods(isolate, OP);
-	MathInitializeMethods(isolate, OP);
-	DataInitializeMethods(isolate, OP);
+	// GlobalInitializeMethods(isolate, OP);
+	// HumanInitializeMethods(isolate, OP);
+	// PerformanceInitializeMethods(isolate, OP);
+	// MathInitializeMethods(isolate, OP);
+	// DataInitializeMethods(isolate, OP);
 	if (CustomWrapper != NULL) {
 		CustomWrapper(isolate, global);
 	}
 
 	global->Set(String::NewFromUtf8(isolate, "require"), FunctionTemplate::New(isolate, Require));
 	global->Set(String::NewFromUtf8(isolate, "print"), FunctionTemplate::New(isolate, Print));
-	global->Set(String::NewFromUtf8(isolate, "OP"), OP);
+	//global->Set(String::NewFromUtf8(isolate, "OP"), OP);
 	global->Set(String::NewFromUtf8(isolate, "global"), empty);
 	global->Set(String::NewFromUtf8(isolate, "console"), console);
 

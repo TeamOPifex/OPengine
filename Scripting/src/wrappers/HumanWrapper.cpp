@@ -17,19 +17,29 @@
 #include "./Human/include/Audio/Audio.h"
 #include "./Human/include/Audio/AudioPlayer.h"
 
-static V8Return _OPrenderInit(const V8Args& args);
-static V8Return _Clear(const V8Args& args);
-static V8Return _Depth(const V8Args& args);
-static V8Return _Present(const V8Args& args);
-static V8Return _CreateEffect(const V8Args& args);
-static V8Return _CreateCamera(const V8Args& args);
+// Render
+static V8Return _OP_render_Init(const V8Args& args);
+static V8Return _OP_render_Clear(const V8Args& args);
+static V8Return _OP_render_Blend(const V8Args& args);
+static V8Return _OP_render_BlendAlpha(const V8Args& args);
+static V8Return _OP_render_Depth(const V8Args& args);
+static V8Return _OP_render_Cull(const V8Args& args);
+static V8Return _OP_render_CullMode(const V8Args& args);
+static V8Return _OP_render_Present(const V8Args& args);
+static V8Return _OP_render_CreateMesh(const V8Args& args);
+static V8Return _OP_render_BuildMesh(const V8Args& args);
+
+static V8Return _CreateProj(const V8Args& args);
+static V8Return _CreateOrtho(const V8Args& args);
 static V8Return _CameraSetPos(const V8Args& args);
 static V8Return _CameraSetTarget(const V8Args& args);
 static V8Return _DestroyCamera(const V8Args& args);
 static V8Return _GetCameraView(const V8Args& args);
 static V8Return _GetCameraProj(const V8Args& args);
 
-static V8Return _BindMesh(const V8Args& args);
+static V8Return _OP_effect_Create(const V8Args& args);
+
+static V8Return _OP_render_BindMesh(const V8Args& args);
 static V8Return _BindEffect(const V8Args& args);
 static V8Return _RenderMesh(const V8Args& args);
 
@@ -87,6 +97,7 @@ static V8Return _AudioVolume(const V8Args& args);
 
 static V8Return _FrameBufferBind(const V8Args& args);
 static V8Return _FrameBufferUnbind(const V8Args& args);
+static V8Return _FrameBufferCreate(const V8Args& args);
 static V8Return _FrameBufferCreateDepth(const V8Args& args);
 
 OPchar* keyNames[OPKEYBOARD_MAX] = {
@@ -273,119 +284,27 @@ V8Object GetFacingMapO() {
 // 	setObject(isolate, target, "KEYS", GetKeyboardMap());
 // }
 
-void HumanInitializeMethods(V8isolate* isolate, V8ObjectGlobal target) {
-
-	SetObjectG(isolate, target, "KEYS", GetKeyboardMap());
-	SetObjectG(isolate, target, "BUTTONS", GetButtonMap());
-	SetObjectG(isolate, target, "FACING", GetFacingMap());
-
-	// OP
-	SetFunctionG(isolate, target, "Clear", _Clear);
-	SetFunctionG(isolate, target, "Depth", _Depth);
-	SetFunctionG(isolate, target, "Present", _Present);
-
-	// OP.render
-	V8ObjectGlobal render = CreateObjectG(isolate);
-	SetFunctionG(isolate, render, "Init", _OPrenderInit);
-	SetFunctionG(isolate, render, "BindMesh", _BindMesh);
-	SetFunctionG(isolate, render, "BindEffect", _BindEffect);
-	SetFunctionG(isolate, render, "Mesh", _RenderMesh);
-	SetFunctionG(isolate, render, "ParamMat4v", _RenderParamMat4v);
-	SetFunctionG(isolate, render, "ParamVec3", _RenderParamVec3);
-	SetFunctionG(isolate, render, "ParamTexture", _RenderParamTexture);
-	SetFunctionG(isolate, render, "ClearActiveTextures", _TextureClearActive);
-	SetObjectG(isolate, target, "render", render);
-
-	// OP.camera
-	V8ObjectGlobal camera = CreateObjectG(isolate);
-	SetFunctionG(isolate, camera, "Create", _CreateCamera);
-	SetFunctionG(isolate, camera, "Destroy", _DestroyCamera);
-	SetFunctionG(isolate, camera, "View", _GetCameraView);
-	SetFunctionG(isolate, camera, "Proj", _GetCameraProj);
-	SetFunctionG(isolate, camera, "SetPos", _CameraSetPos);
-	SetFunctionG(isolate, camera, "SetTarget", _CameraSetTarget);
-	SetObjectG(isolate, target, "camera", camera);
-
-	// OP.effect
-	V8ObjectGlobal effect = CreateObjectG(isolate);
-	SetFunctionG(isolate, effect, "Create", _CreateEffect);
-	SetObjectG(isolate, target, "effect", effect);
-
-	// OP.input
-	V8ObjectGlobal input = CreateObjectG(isolate);
-	SetFunctionG(isolate, input, "Update", _InputUpdate);
-	SetFunctionG(isolate, input, "Keyboard", _Keyboard);
-	SetFunctionG(isolate, input, "Mouse", _Mouse);
-	SetFunctionG(isolate, input, "KeyIsDown", _KeyboardIsDown);
-	SetFunctionG(isolate, input, "KeyIsUp", _KeyboardIsUp);
-	SetFunctionG(isolate, input, "KeyWasReleased", _KeyboardWasReleased);
-	SetFunctionG(isolate, input, "KeyWasPressed", _KeyboardWasPressed);
-	SetFunctionG(isolate, input, "GamePadLeftThumbX", _GamePadLeftThumbX);
-	SetFunctionG(isolate, input, "GamePadLeftThumbY", _GamePadLeftThumbY);
-	SetFunctionG(isolate, input, "GamePadLeftThumbIs", _GamePadLeftThumbIs);
-	SetFunctionG(isolate, input, "GamePadLeftThumbNow", _GamePadLeftThumbNow);
-	SetFunctionG(isolate, input, "GamePadLeftThumbWas", _GamePadLeftThumbWas);
-	SetFunctionG(isolate, input, "GamePadRightThumbIs", _GamePadRightThumbIs);
-	SetFunctionG(isolate, input, "GamePadRightThumbNow", _GamePadRightThumbNow);
-	SetFunctionG(isolate, input, "GamePadRightThumbWas", _GamePadRightThumbWas);
-	SetFunctionG(isolate, input, "GamePadRightThumbX", _GamePadRightThumbX);
-	SetFunctionG(isolate, input, "GamePadRightThumbY", _GamePadRightThumbY);
-	SetFunctionG(isolate, input, "GamePadIsDown", _GamePadIsDown);
-	SetFunctionG(isolate, input, "GamePadIsUp", _GamePadIsUp);
-	SetFunctionG(isolate, input, "GamePadWasPressed", _GamePadWasPressed);
-	SetFunctionG(isolate, input, "GamePadWasReleased", _GamePadWasReleased);
-	SetFunctionG(isolate, input, "GamePadIsConnected", _GamePadIsConnected);
-	SetFunctionG(isolate, input, "GamePadSetDeadzone", _GamePadSetDeadzone);
-	SetObjectG(isolate, target, "input", input);
-
-	// OP.font
-	V8ObjectGlobal font = CreateObjectG(isolate);
-	SetFunctionG(isolate, font, "Init", _FontInit);
-	SetFunctionG(isolate, font, "CreateManager", _FontManagerCreate);
-	SetFunctionG(isolate, font, "RenderText", _FontRenderText);
-	SetFunctionG(isolate, font, "RenderTextMat4", _FontRenderTextMatrix);
-	SetObjectG(isolate, target, "font", font);
-
-	// OP.sprite3D
-	V8ObjectGlobal sprite3D = CreateObjectG(isolate);
-	SetFunctionG(isolate, sprite3D, "Init", _Sprite3DInit);
-	SetFunctionG(isolate, sprite3D, "Create", _Sprite3DCreate);
-	SetFunctionG(isolate, sprite3D, "Update", _Sprite3DUpdate);
-	SetFunctionG(isolate, sprite3D, "Render", _Sprite3DRender);
-	SetObjectG(isolate, target, "sprite3D", sprite3D);
-
-	// OP.audio
-	V8ObjectGlobal audio = CreateObjectG(isolate);
-	SetFunctionG(isolate, audio, "Init", _AudioInit);
-	SetFunctionG(isolate, audio, "Create", _AudioCreate);
-	SetFunctionG(isolate, audio, "Bind", _AudioBind);
-	SetFunctionG(isolate, audio, "Play", _AudioPlay);
-	SetFunctionG(isolate, audio, "Volume", _AudioVolume);
-	SetObjectG(isolate, target, "audio", audio);
-
-	// OP.frameBuffer	
-	V8ObjectGlobal frameBuffer = CreateObjectG(isolate);
-	SetFunctionG(isolate, frameBuffer, "Bind", _FrameBufferBind);
-	SetFunctionG(isolate, frameBuffer, "Unbind", _FrameBufferUnbind);
-	SetFunctionG(isolate, frameBuffer, "CreateDepth", _FrameBufferCreateDepth);
-	SetObjectG(isolate, target, "frameBuffer", frameBuffer);
-}
-
 void HumanInitializeMethodsO(V8isolate* isolate, V8Object target) {
 
+
+	// OP
 	SetObject(isolate, target, "KEYS", GetKeyboardMapO());
 	SetObject(isolate, target, "BUTTONS", GetButtonMapO());
 	SetObject(isolate, target, "FACING", GetFacingMapO());
 
-	// OP
-	SetFunction(isolate, target, "Clear", _Clear);
-	SetFunction(isolate, target, "Depth", _Depth);
-	SetFunction(isolate, target, "Present", _Present);
-
 	// OP.render
 	V8Object render = CreateObject(isolate);
-	SetFunction(isolate, render, "Init", _OPrenderInit);
-	SetFunction(isolate, render, "BindMesh", _BindMesh);
+	SetFunction(isolate, render, "Clear", _OP_render_Clear);
+	SetFunction(isolate, render, "Blend", _OP_render_Blend);
+	SetFunction(isolate, render, "BlendAlpha", _OP_render_BlendAlpha);
+	SetFunction(isolate, render, "Depth", _OP_render_Depth);
+	SetFunction(isolate, render, "Cull", _OP_render_Cull);
+	SetFunction(isolate, render, "CullMode", _OP_render_CullMode);
+	SetFunction(isolate, render, "Present", _OP_render_Present);
+	SetFunction(isolate, render, "Init", _OP_render_Init);
+	SetFunction(isolate, render, "CreateMesh", _OP_render_CreateMesh);
+	SetFunction(isolate, render, "BuildMesh", _OP_render_BuildMesh);
+	SetFunction(isolate, render, "BindMesh", _OP_render_BindMesh);
 	SetFunction(isolate, render, "BindEffect", _BindEffect);
 	SetFunction(isolate, render, "Mesh", _RenderMesh);
 	SetFunction(isolate, render, "ParamMat4v", _RenderParamMat4v);
@@ -396,7 +315,8 @@ void HumanInitializeMethodsO(V8isolate* isolate, V8Object target) {
 
 	// OP.camera
 	V8Object camera = CreateObject(isolate);
-	SetFunction(isolate, camera, "Create", _CreateCamera);
+	SetFunction(isolate, camera, "CreateProj", _CreateProj);
+	SetFunction(isolate, camera, "CreateOrtho", _CreateOrtho);
 	SetFunction(isolate, camera, "Destroy", _DestroyCamera);
 	SetFunction(isolate, camera, "View", _GetCameraView);
 	SetFunction(isolate, camera, "Proj", _GetCameraProj);
@@ -406,7 +326,7 @@ void HumanInitializeMethodsO(V8isolate* isolate, V8Object target) {
 
 	// OP.effect
 	V8Object effect = CreateObject(isolate);
-	SetFunction(isolate, effect, "Create", _CreateEffect);
+	SetFunction(isolate, effect, "Create", _OP_effect_Create);
 	SetObject(isolate, target, "effect", effect);
 
 	// OP.input
@@ -465,6 +385,7 @@ void HumanInitializeMethodsO(V8isolate* isolate, V8Object target) {
 
 	// OP.frameBuffer	
 	V8Object frameBuffer = CreateObject(isolate);
+	SetFunction(isolate, frameBuffer, "Create", _FrameBufferCreate);
 	SetFunction(isolate, frameBuffer, "CreateDepth", _FrameBufferCreateDepth);
 	SetFunction(isolate, frameBuffer, "Bind", _FrameBufferBind);
 	SetFunction(isolate, frameBuffer, "Unbind", _FrameBufferUnbind);
@@ -473,7 +394,7 @@ void HumanInitializeMethodsO(V8isolate* isolate, V8Object target) {
 
 
 
-static V8Return _OPrenderInit(const V8Args& args) {
+static V8Return _OP_render_Init(const V8Args& args) {
 	V8Scope scope;
 
 	OPrenderInit();
@@ -487,7 +408,7 @@ static V8Return _OPrenderInit(const V8Args& args) {
 	return SetReturn(args, &scope, GetNull(isolate));
 }
 
-static V8Return _Clear(const V8Args& args) {
+static V8Return _OP_render_Clear(const V8Args& args) {
 	V8Scope scope;
 
 	OPrenderClear(args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue());
@@ -495,7 +416,23 @@ static V8Return _Clear(const V8Args& args) {
 	return SetReturn(args, &scope, GetNull(isolate));
 }
 
-static V8Return _Depth(const V8Args& args) {
+static V8Return _OP_render_Blend(const V8Args& args) {
+	V8Scope scope;
+
+	OPrenderBlend(args[0]->Int32Value());
+
+	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _OP_render_BlendAlpha(const V8Args& args) {
+	V8Scope scope;
+
+	OPrenderBlendAlpha();
+
+	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _OP_render_Depth(const V8Args& args) {
 	V8Scope scope;
 
 	OPrenderDepth(args[0]->Int32Value());
@@ -503,7 +440,23 @@ static V8Return _Depth(const V8Args& args) {
 	return SetReturn(args, &scope, GetNull(isolate));
 }
 
-static V8Return _Present(const V8Args& args) {
+static V8Return _OP_render_Cull(const V8Args& args) {
+	V8Scope scope;
+
+	OPrenderCull(args[0]->Int32Value());
+
+	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _OP_render_CullMode(const V8Args& args) {
+	V8Scope scope;
+
+	OPrenderCullMode(args[0]->Int32Value());
+
+	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _OP_render_Present(const V8Args& args) {
 	V8Scope scope;
 
 	OPrenderPresent();
@@ -511,12 +464,79 @@ static V8Return _Present(const V8Args& args) {
 	return SetReturn(args, &scope, GetNull(isolate));
 }
 
-static V8Return _CreateEffect(const V8Args& args) {
+static V8Return _OP_render_CreateMesh(const V8Args& args) {
+	V8Scope scope;
+
+	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
+	*mesh = OPrenderCreateMesh();
+
+	//V8Object obj = CreateTypedObject(isolate, mesh, OPscript_MESH);
+	
+	return SetReturn(args, &scope, GetNumber(isolate, (OPint)mesh));
+}
+
+static V8Return _OP_render_BindMesh(const V8Args& args) {
+	V8Scope scope;
+
+	i32 inScope;
+	//OPmesh* mesh = (OPmesh*)GetFirstPointer(args, isolate, &inScope, OPscript_MESH);
+	OPmesh* mesh = (OPmesh*)args[0]->IntegerValue();
+
+	OPrenderBindMesh(mesh);
+
+	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _OP_render_BuildMesh(const V8Args& args) {
+	V8Scope scope;
+
+	i32 vertexElementCount = args[0]->Int32Value();
+
+	Local<Object> obj = args[1]->ToObject();
+	Handle<Array> vertDataArray = Handle<Array>::Cast(obj);
+	i32 vertDataCount = vertDataArray->Length();
+
+	obj = args[2]->ToObject();
+	Handle<Array> indexDataArray = Handle<Array>::Cast(obj);
+	i32 indexDataCount = indexDataArray->Length();
+
+	OPfloat* verts = (OPfloat*)OPalloc(sizeof(OPfloat) * vertDataCount * vertexElementCount);
+	ui16* indices = (ui16*)OPalloc(sizeof(ui16) * indexDataCount);
+
+	for(i32 i = 0; i < vertDataCount; i++) {
+		Handle<Array> vert = Handle<Array>::Cast(vertDataArray->Get(i));
+		for(i32 j = 0; j < vertexElementCount; j++) {
+			verts[i * vertexElementCount + j] = vert->Get(j)->NumberValue();
+		}
+	}
+
+	for(i32 i = 0; i < indexDataCount; i++) {
+		indices[i] = indexDataArray->Get(i)->Int32Value();
+	}
+
+	OPrenderBuildMesh(
+		sizeof(OPfloat) * vertexElementCount,
+		sizeof(ui16),
+		vertDataCount,
+		indexDataCount,
+		verts,
+		indices);
+
+	OPfree(verts);
+	OPfree(indices);
+
+	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _OP_effect_Create(const V8Args& args) {
 	V8Scope scope;
 
 	Local<Object> obj = args[0]->ToObject();
 	Handle<Array> attributesArray = Handle<Array>::Cast(obj->Get(GetString(isolate, "Attributes")));
 	i32 attributeCount = attributesArray->Length();
+
+	OPlog("Attributes found: %d", attributeCount);
+
 	OPshaderAttribute* attribs = (OPshaderAttribute*)OPalloc(sizeof(OPshaderAttribute)* attributeCount);
 	for (i32 i = 0; i < attributeCount; i++) {
 		Local<Object> first = attributesArray->Get(i)->ToObject();
@@ -542,8 +562,8 @@ static V8Return _CreateEffect(const V8Args& args) {
 		attribs[i].Elements = size->Uint32Value();
 	}
 
-	OPshader* vert = (OPshader*)obj->Get(GetString(isolate, "Vertex"))->Int32Value();
-	OPshader* frag = (OPshader*)obj->Get(GetString(isolate, "Fragment"))->Int32Value();
+	OPshader* vert = (OPshader*)obj->Get(GetString(isolate, "Vertex"))->IntegerValue();
+	OPshader* frag = (OPshader*)obj->Get(GetString(isolate, "Fragment"))->IntegerValue();
 	const char *effectName = *v8::String::Utf8Value(obj->Get(GetString(isolate, "Name"))->ToString());
 
 	OPeffect* effect = (OPeffect*)OPalloc(sizeof(OPeffect));
@@ -816,7 +836,7 @@ static V8Return _DestroyCamera(const V8Args& args) {
 	return SetReturn(args, &scope, GetNull(isolate));
 }
 
-static V8Return _CreateCamera(const V8Args& args) {
+static V8Return _CreateProj(const V8Args& args) {
 	V8Scope scope;
 
 	OPcam* camera = (OPcam*)OPalloc(sizeof(OPcam));
@@ -830,9 +850,41 @@ static V8Return _CreateCamera(const V8Args& args) {
 		OPrenderWidth / (f32)OPrenderHeight
 		);
 
+	OPlogVec3("Camera Pos", &camera->_pos);
+	OPlogVec3("Camera Target", &camera->_targ);
+	OPlog("Aspect: %f", OPrenderWidth / (f32)OPrenderHeight);
+
 	V8Object obj = CreateTypedObject(isolate, camera, OPscript_CAMERA);
 	SetFunction(isolate, obj, "SetPos", _CameraSetPos);
 	SetFunction(isolate, obj, "SetTarget", _CameraSetTarget);
+	SetFunction(isolate, obj, "View", _GetCameraView);
+	SetFunction(isolate, obj, "Proj", _GetCameraProj);
+	//SetValue(isolate, obj, "Position", (OPint)&camera->_pos);
+	
+	return SetReturn(args, &scope, obj);
+}
+
+static V8Return _CreateOrtho(const V8Args& args) {
+	V8Scope scope;
+
+	OPcam* camera = (OPcam*)OPalloc(sizeof(OPcam));
+	*camera = OPcamOrtho(
+		OPvec3Create(args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue()),
+		OPvec3Create(args[3]->NumberValue(), args[4]->NumberValue(), args[5]->NumberValue()),
+		OPvec3Create(0, 1, 0),
+		0.1f,
+		1000.0f,
+		args[6]->NumberValue(),
+		args[7]->NumberValue(),
+		args[8]->NumberValue(),
+		args[9]->NumberValue()
+		);
+
+	V8Object obj = CreateTypedObject(isolate, camera, OPscript_CAMERA);
+	SetFunction(isolate, obj, "SetPos", _CameraSetPos);
+	SetFunction(isolate, obj, "SetTarget", _CameraSetTarget);
+	SetFunction(isolate, obj, "View", _GetCameraView);
+	SetFunction(isolate, obj, "Proj", _GetCameraProj);
 	
 	return SetReturn(args, &scope, obj);
 }
@@ -885,10 +937,14 @@ static V8Return _GetCameraView(const V8Args& args) {
 	i32 inScope;
 	OPcam* camera = (OPcam*)GetFirstPointer(args, isolate, &inScope, OPscript_CAMERA);
 
-	OPmat4* view = (OPmat4*)OPalloc(sizeof(OPmat4));
-	OPcamGetView((*camera), view);
+	if (IsObject(args, isolate, 1 - inScope, OPscript_MAT4)) {
+		OPmat4* view = (OPmat4*)GetArgPointer(args, isolate, 1 - inScope);
+		OPcamGetView((*camera), view);
+	} else {
+		OPlog("No Matrix provided");
+	}
 
-	return SetReturn(args, &scope, GetNumber(isolate, (OPint)view));
+	return SetReturn(args, &scope, GetNull(isolate));
 }
 
 static V8Return _GetCameraProj(const V8Args& args) {
@@ -897,16 +953,12 @@ static V8Return _GetCameraProj(const V8Args& args) {
 	i32 inScope;
 	OPcam* camera = (OPcam*)GetFirstPointer(args, isolate, &inScope, OPscript_CAMERA);
 
-	OPmat4* proj = (OPmat4*)OPalloc(sizeof(OPmat4));
-	OPcamGetProj((*camera), proj);
-
-	return SetReturn(args, &scope, GetNumber(isolate, (OPint)proj));
-}
-
-static V8Return _BindMesh(const V8Args& args) {
-	V8Scope scope;
-
-	OPrenderBindMesh((OPmesh*)args[0]->Int32Value());
+	if (IsObject(args, isolate, 1 - inScope, OPscript_MAT4)) {
+		OPmat4* proj = (OPmat4*)GetArgPointer(args, isolate, 1 - inScope);
+		OPcamGetProj((*camera), proj);
+	} else {
+		OPlog("No Matrix provided");
+	}
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -914,24 +966,13 @@ static V8Return _BindMesh(const V8Args& args) {
 static V8Return _BindEffect(const V8Args& args) {
 	V8Scope scope;
 
-	OPrenderBindEffect((OPeffect*)args[0]->Int32Value());
+	OPrenderBindEffect((OPeffect*)args[0]->IntegerValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
 
 static V8Return _RenderMesh(const V8Args& args) {
 	V8Scope scope;
-
-	i32 inScope;
-	OPcam* camera = (OPcam*)GetFirstPointer(args, isolate, &inScope, OPscript_CAMERA);
-
-	OPmat4 view, proj;
-
-	OPcamGetView((*camera), &view);
-	OPcamGetProj((*camera), &proj);
-
-	OPrenderParamMat4v("uProj", 1, &proj);
-	OPrenderParamMat4v("uView", 1, &view);
 
 	OPrenderMesh();
 
@@ -957,7 +998,7 @@ static V8Return _RenderParamMat4v(const V8Args& args) {
 	OPmemcpy(name, p, sizeof(OPchar)*len);
 	name[len] = '\0';
 
-	OPmat4* mat = (OPmat4*)args[1]->ToObject()->Get(GetString(isolate, "Id"))->Int32Value();
+	OPmat4* mat = (OPmat4*)args[1]->ToObject()->Get(GetString(isolate, "Id"))->IntegerValue();
 	OPrenderParamMat4v(name, 1, mat);
 
 	return SetReturn(args, &scope, GetNull(isolate));
@@ -968,7 +1009,7 @@ static V8Return _RenderParamVec3(const V8Args& args) {
 
 	v8::String::Utf8Value utf8(args[0]);
 	const char* p = ToCString(utf8);
-	OPrenderParamVec3(p, (OPvec3*)args[1]->Int32Value());
+	OPrenderParamVec3(p, (OPvec3*)args[1]->IntegerValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -978,10 +1019,7 @@ static V8Return _RenderParamTexture(const V8Args& args) {
 
 	v8::String::Utf8Value utf8(args[0]);
 	const char* p = ToCString(utf8);
-	OPrenderParami(p, OPtextureBind((OPtexture*)args[1]->Int32Value()));
-
-	OPvec3 light = OPvec3Create(0, 1, 0);
-	OPrenderParamVec3("vLightDirection", &light);
+	OPrenderParami(p, OPtextureBind((OPtexture*)args[1]->IntegerValue()));
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -997,7 +1035,7 @@ static V8Return _FontInit(const V8Args& args) {
 static V8Return _FontManagerCreate(const V8Args& args) {
 	V8Scope scope;
 
-	OPfont* font = (OPfont*)args[0]->Int32Value();
+	OPfont* font = (OPfont*)args[0]->IntegerValue();
 	OPfontManager* manager = OPfontManagerCreate(font);
 
 	V8Object obj = CreateObject(isolate);
@@ -1078,7 +1116,7 @@ static V8Return _FontRenderTextMatrix(const V8Args& args) {
 	String::Utf8Value str(args[0]->ToString());
 	const OPchar* c = ToCString(str);
 	Handle<String> el = GetString(isolate, "Id");
-	OPrenderTextMat4(c, (OPmat4*)args[1]->ToObject()->Get(el)->Int32Value());
+	OPrenderTextMat4(c, (OPmat4*)args[1]->ToObject()->Get(el)->IntegerValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -1098,7 +1136,7 @@ static V8Return _Sprite3DCreate(const V8Args& args) {
 
 	OPsprite** sprites = (OPsprite**)OPalloc(sizeof(OPsprite*)* spritesArray->Length());
 	for (i32 i = 0; i < spritesArray->Length(); i++){
-		sprites[i] = (OPsprite*)spritesArray->Get(i)->Int32Value();
+		sprites[i] = (OPsprite*)spritesArray->Get(i)->IntegerValue();
 	}
 
 	OPsprite3D* sprite = OPsprite3DCreate(sprites, NULL);
@@ -1152,7 +1190,7 @@ static V8Return _AudioCreate(const V8Args& args) {
 
 	V8Scope scope;
 
-	OPaudioSource* source = (OPaudioSource*)args[0]->Int32Value();
+	OPaudioSource* source = (OPaudioSource*)args[0]->IntegerValue();
 	OPlog("Source %d", source);
 	OPaudioEmitter* emitter = OPaudCreateEmitter(source, EMITTER_THREADED);
 
@@ -1223,6 +1261,29 @@ static V8Return _FrameBufferUnbind(const V8Args& args) {
 	return SetReturn(args, &scope, GetNull(isolate));
 }
 
+static V8Return _FrameBufferCreate(const V8Args& args) {
+	V8Scope scope;
+	i32 inScope;
+	OPtextureDescription desc = {
+		OPrenderWidth,
+		OPrenderHeight,
+		GL_RGBA,
+		GL_RGBA,
+		GL_FLOAT,
+		GL_LINEAR,
+		GL_LINEAR,
+		GL_CLAMP_TO_EDGE,
+		GL_CLAMP_TO_EDGE
+	};
+	OPframeBuffer* fb = (OPframeBuffer*)OPalloc(sizeof(OPframeBuffer));
+	*fb = OPframeBufferCreate(desc);
+
+	V8Object obj = CreateTypedObject(isolate, fb, OPscript_FRAME_BUFFER);
+	SetValue(isolate, obj, "Texture", GetNumber(isolate, (OPint)&fb->Texture));
+
+	return SetReturn(args, &scope, obj);
+}
+
 static V8Return _FrameBufferCreateDepth(const V8Args& args) {
 	V8Scope scope;
 	i32 inScope;
@@ -1241,6 +1302,7 @@ static V8Return _FrameBufferCreateDepth(const V8Args& args) {
 	*fb = OPframeBufferCreateDepth(desc);
 
 	V8Object obj = CreateTypedObject(isolate, fb, OPscript_FRAME_BUFFER);
+	SetValue(isolate, obj, "Texture", GetNumber(isolate, (OPint)&fb->Texture));
 
 	return SetReturn(args, &scope, obj);
 }
