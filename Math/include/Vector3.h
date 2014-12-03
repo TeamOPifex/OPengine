@@ -72,6 +72,8 @@ struct OPvec3 {
 extern const OPvec3 OPvec3Zero;
 extern const OPvec3 OPvec3One;
 extern const OPvec3 OPvec3Up;
+extern const OPvec3 OPvec3Left;
+extern const OPvec3 OPvec3Forward;
 
 inline OPvec3 OPvec3Create(OPfloat x, OPfloat y, OPfloat z) {
 	OPvec3 tmp = { x, y, z };
@@ -165,10 +167,12 @@ inline void OPvec3dot(OPfloat* dst, OPvec3* a, OPvec3* b) {
 }
 
 inline void OPvec3norm(OPvec3* dst, OPvec3* a) {
-	OPfloat l = OPsqrt(a->x * a->x + a->y * a->y + a->z * a->z);
+	OPfloat l = a->x * a->x + a->y * a->y + a->z * a->z;
 	if(l == 0) {
 		return;
 	}
+
+	l = OPsqrt(l);
 	dst->x = a->x / l;
 	dst->y = a->y / l;
 	dst->z = a->z / l;
