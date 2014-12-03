@@ -28,7 +28,15 @@ OPint OPrenderGetHeight();
 OPfloat OPrenderGetAspectRatio(); 
 OPfloat OPrenderGetWidthAspectRatio();
 OPfloat OPrenderGetHeightAspectRatio();
+
+/* Enables or Disables GL_CULL_FACE
+ * @param state 0 for disable or 1 for enable
+*/
 void OPrenderCull(OPint state);
+
+/* Sets the direction of culling
+ * @param state 0 for back or 1 for front
+*/
 void OPrenderCullMode(OPint state);
 void  OPrenderSwapBuffer ();
 void  OPrenderPresent    ();

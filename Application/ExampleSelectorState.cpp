@@ -17,7 +17,7 @@ OPgameState GS_EXAMPLE_SELECTOR = {
 };
 
 typedef struct {
-	OPchar* name;
+	const OPchar* name;
 	OPint available;
 	OPgameState* state;
 } Example;
@@ -45,36 +45,47 @@ void ExampleSelectorEnter(OPgameState* last) {
 	OPfontManagerBind(exampleSelector->FontManager);
 	OPfontManagerSetAlign(exampleSelector->FontManager, OPFONT_ALIGN_LEFT);
 
+	const OPchar* Names[ExampleCount] = {
+		"Audio",
+		"Model",
+		"Oculus",
+		"Particle System",
+		"Physics",
+		"Skinning",
+		"Deferred",
+		"Textured",
+	};
+
 	exampleSelector->Examples = (Example*)OPalloc(sizeof(Example)* ExampleCount);
 	OPbzero(exampleSelector->Examples, sizeof(Example)* ExampleCount);
-	exampleSelector->Examples[0].name = "Audio";
+	exampleSelector->Examples[0].name = Names[0];
 	exampleSelector->Examples[0].state = &GS_EXAMPLE_AUDIO;
 	exampleSelector->Examples[0].available = 1;
-	exampleSelector->Examples[1].name = "Model";
+	exampleSelector->Examples[1].name = Names[1];
 	exampleSelector->Examples[1].state = &GS_EXAMPLE_MODEL;
 	exampleSelector->Examples[1].available = 1;
-	exampleSelector->Examples[2].name = "Oculus";
+	exampleSelector->Examples[2].name = Names[2];
 	exampleSelector->Examples[2].state = &GS_EXAMPLE_OCULUS;
 #ifdef OPIFEX_OCULUS
 	exampleSelector->Examples[2].available = 1;
 #endif
-	exampleSelector->Examples[3].name = "Particle System";
+	exampleSelector->Examples[3].name = Names[3];
 	exampleSelector->Examples[3].state = &GS_EXAMPLE_PARTICLESYSTEM;
 	exampleSelector->Examples[3].available = 1;
-	exampleSelector->Examples[4].name = "Physics";
+	exampleSelector->Examples[4].name = Names[4];
 	exampleSelector->Examples[4].state = &GS_EXAMPLE_PHYSICS;
 #ifdef OPIFEX_PHYSICS
 	exampleSelector->Examples[4].available = 1;
 #endif
-	exampleSelector->Examples[5].name = "Skinning";
+	exampleSelector->Examples[5].name = Names[5];
 	exampleSelector->Examples[5].state = &GS_EXAMPLE_SKINNING;
 	exampleSelector->Examples[5].available = 1;
 
-	exampleSelector->Examples[6].name = "Deferred";
+	exampleSelector->Examples[6].name = Names[6];
 	exampleSelector->Examples[6].state = &GS_EXAMPLE_DEFERRED;
 	exampleSelector->Examples[6].available = 1;
 
-	exampleSelector->Examples[7].name = "Textured";
+	exampleSelector->Examples[7].name = Names[7];
 	exampleSelector->Examples[7].state = &GS_EXAMPLE_TEXTURED;
 	exampleSelector->Examples[7].available = 1;
 

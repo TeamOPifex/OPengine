@@ -3,6 +3,7 @@
 #ifdef OPIFEX_V8
 
 #include "./Human/include/Input/Input.h"
+#include "./Human/include/Rendering/FrameBuffer.h"
 #include "./Human/include/Rendering/Renderer.h"
 #include "./Human/include/Rendering/Effect.h"
 #include "./Human/include/Rendering/Camera.h"
@@ -84,11 +85,11 @@ static V8Return _AudioBind(const V8Args& args);
 static V8Return _AudioPlay(const V8Args& args);
 static V8Return _AudioVolume(const V8Args& args);
 
+static V8Return _FrameBufferBind(const V8Args& args);
+static V8Return _FrameBufferUnbind(const V8Args& args);
+static V8Return _FrameBufferCreateDepth(const V8Args& args);
 
-V8ObjectGlobal GetKeyboardMap() {
-	V8ObjectGlobal keyboard = CreateObjectG(isolate);
-
-	const OPchar* keyNames[OPKEYBOARD_MAX] = {
+OPchar* keyNames[OPKEYBOARD_MAX] = {
 		"BACKSPACE",
 		"TAB",
 		"ENTER",
@@ -181,115 +182,41 @@ V8ObjectGlobal GetKeyboardMap() {
 		"RSHIFT",
 		"LCONTROL",
 		"RCONTROL"
-	};
+};
 
-	for (i32 i = 0; i < OPKEY_RCONTROL; i++) {
-		const OPchar* name = keyNames[i];
+OPchar* gamePadNames[GamePadButton_Max] = {
+	"DPAD_UP",
+	"DPAD_DOWN",
+	"DPAD_LEFT",
+	"DPAD_RIGHT",
+	"START",
+	"BACK",
+	"LEFT_THUMB",
+	"RIGHT_THUMB",
+	"LEFT_SHOULDER",
+	"RIGHT_SHOULDER",
+	"A",
+	"B",
+	"X",
+	"Y"
+};
+
+V8ObjectGlobal GetKeyboardMap() {
+	V8ObjectGlobal keyboard = CreateObjectG(isolate);
+
+	for (OPint i = 0; i < OPKEY_RCONTROL; i++) {
+		OPchar* name = keyNames[i];
 		SetValueG(isolate, keyboard, name, GetNumber(isolate, i));
 	}
 
 	return keyboard;
 }
+
 V8Object GetKeyboardMapO() {
 	V8Object keyboard = CreateObject(isolate);
 
-	const OPchar* keyNames[OPKEYBOARD_MAX] = {
-		"BACKSPACE",
-		"TAB",
-		"ENTER",
-		"PAUSE",
-		"CAPSLOCK",
-		"ESCAPE",
-		"SPACE",
-		"PAGEUP",
-		"PAGEDOWN",
-		"END",
-		"HOME",
-		"LEFT",
-		"UP",
-		"RIGHT",
-		"DOWN",
-		"INSERT",
-		"DELETE",
-		"0",
-		"1",
-		"2",
-		"3",
-		"4",
-		"5",
-		"6",
-		"7",
-		"8",
-		"9",
-		"A",
-		"B",
-		"C",
-		"D",
-		"E",
-		"F",
-		"G",
-		"H",
-		"I",
-		"J",
-		"K",
-		"L",
-		"M",
-		"N",
-		"O",
-		"P",
-		"Q",
-		"R",
-		"S",
-		"T",
-		"U",
-		"V",
-		"W",
-		"X",
-		"Y",
-		"Z",
-		"LWIN",
-		"RWIN",
-		"NUMPAD0",
-		"NUMPAD1",
-		"NUMPAD2",
-		"NUMPAD3",
-		"NUMPAD4",
-		"NUMPAD5",
-		"NUMPAD6",
-		"NUMPAD7",
-		"NUMPAD8",
-		"NUMPAD9",
-		"MULTIPLY",
-		"ADD",
-		"SUBTRACT",
-		"DECIMAL",
-		"DIVIDE",
-		"F1",
-		"F2",
-		"F3",
-		"F4",
-		"F5",
-		"F6",
-		"F7",
-		"F8",
-		"F9",
-		"F10",
-		"F11",
-		"F12",
-		"F13",
-		"F14",
-		"F15",
-		"F16",
-		"NUMLOCK",
-		"SCROLL",
-		"LSHIFT",
-		"RSHIFT",
-		"LCONTROL",
-		"RCONTROL"
-	};
-
-	for (i32 i = 0; i < OPKEY_RCONTROL; i++) {
-		const OPchar* name = keyNames[i];
+	for (OPint i = 0; i < OPKEY_RCONTROL; i++) {
+		OPchar* name = keyNames[i];
 		SetValue(isolate, keyboard, name, GetNumber(isolate, i));
 	}
 
@@ -299,25 +226,9 @@ V8Object GetKeyboardMapO() {
 V8ObjectGlobal GetButtonMap() {
 	V8ObjectGlobal buttons = CreateObjectG(isolate);
 
-	const OPchar* keyNames[GamePadButton_Max] = {
-		"DPAD_UP",
-		"DPAD_DOWN",
-		"DPAD_LEFT",
-		"DPAD_RIGHT",
-		"START",
-		"BACK",
-		"LEFT_THUMB",
-		"RIGHT_THUMB",
-		"LEFT_SHOULDER",
-		"RIGHT_SHOULDER",
-		"A",
-		"B",
-		"X",
-		"Y"
-	};
 
-	for (i32 i = 0; i < GamePadButton_Max; i++) {
-		const OPchar* name = keyNames[i];
+	for (OPint i = 0; i < GamePadButton_Max; i++) {
+		OPchar* name = gamePadNames[i];
 		SetValueG(isolate, buttons, name, GetNumber(isolate, i));
 	}
 
@@ -327,25 +238,8 @@ V8ObjectGlobal GetButtonMap() {
 V8Object GetButtonMapO() {
 	V8Object buttons = CreateObject(isolate);
 
-	const OPchar* keyNames[GamePadButton_Max] = {
-		"DPAD_UP",
-		"DPAD_DOWN",
-		"DPAD_LEFT",
-		"DPAD_RIGHT",
-		"START",
-		"BACK",
-		"LEFT_THUMB",
-		"RIGHT_THUMB",
-		"LEFT_SHOULDER",
-		"RIGHT_SHOULDER",
-		"A",
-		"B",
-		"X",
-		"Y"
-	};
-
-	for (i32 i = 0; i < GamePadButton_Max; i++) {
-		const OPchar* name = keyNames[i];
+	for (OPint i = 0; i < GamePadButton_Max; i++) {
+		OPchar* name = gamePadNames[i];
 		SetValue(isolate, buttons, name, GetNumber(isolate, i));
 	}
 
@@ -373,6 +267,11 @@ V8Object GetFacingMapO() {
 
 	return facing;
 }
+
+// void _initializeMethods(V8isolate* isolate, void* target, void(*setObject)(V8isolate*, void*, const OPchar*, void*), void(*setFunction)(V8isolate*, void*, const OPchar*, void*)) {
+
+// 	setObject(isolate, target, "KEYS", GetKeyboardMap());
+// }
 
 void HumanInitializeMethods(V8isolate* isolate, V8ObjectGlobal target) {
 
@@ -464,6 +363,12 @@ void HumanInitializeMethods(V8isolate* isolate, V8ObjectGlobal target) {
 	SetFunctionG(isolate, audio, "Volume", _AudioVolume);
 	SetObjectG(isolate, target, "audio", audio);
 
+	// OP.frameBuffer	
+	V8ObjectGlobal frameBuffer = CreateObjectG(isolate);
+	SetFunctionG(isolate, frameBuffer, "Bind", _FrameBufferBind);
+	SetFunctionG(isolate, frameBuffer, "Unbind", _FrameBufferUnbind);
+	SetFunctionG(isolate, frameBuffer, "CreateDepth", _FrameBufferCreateDepth);
+	SetObjectG(isolate, target, "frameBuffer", frameBuffer);
 }
 
 void HumanInitializeMethodsO(V8isolate* isolate, V8Object target) {
@@ -556,6 +461,14 @@ void HumanInitializeMethodsO(V8isolate* isolate, V8Object target) {
 	SetFunction(isolate, audio, "Play", _AudioPlay);
 	SetFunction(isolate, audio, "Volume", _AudioVolume);
 	SetObject(isolate, target, "audio", audio);
+
+
+	// OP.frameBuffer	
+	V8Object frameBuffer = CreateObject(isolate);
+	SetFunction(isolate, frameBuffer, "CreateDepth", _FrameBufferCreateDepth);
+	SetFunction(isolate, frameBuffer, "Bind", _FrameBufferBind);
+	SetFunction(isolate, frameBuffer, "Unbind", _FrameBufferUnbind);
+	SetObject(isolate, target, "frameBuffer", frameBuffer);
 }
 
 
@@ -645,7 +558,7 @@ static V8Return _CreateEffect(const V8Args& args) {
 
 	OPfree(attribs);
 
-	return SetReturn(args, &scope, GetNumber(isolate, (i32)effect));
+	return SetReturn(args, &scope, GetNumber(isolate, (OPint)effect));
 }
 
 static V8Return _InputUpdate(const V8Args& args) {
@@ -963,7 +876,7 @@ static V8Return _CameraSetTarget(const V8Args& args) {
 		OPcamSetTarget(camera, target);
 	}
 
-	return SetReturn(args, &scope, GetNumber(isolate, (i32)camera));
+	return SetReturn(args, &scope, GetNumber(isolate, (OPint)camera));
 }
 
 static V8Return _GetCameraView(const V8Args& args) {
@@ -975,7 +888,7 @@ static V8Return _GetCameraView(const V8Args& args) {
 	OPmat4* view = (OPmat4*)OPalloc(sizeof(OPmat4));
 	OPcamGetView((*camera), view);
 
-	return SetReturn(args, &scope, GetNumber(isolate, (i32)view));
+	return SetReturn(args, &scope, GetNumber(isolate, (OPint)view));
 }
 
 static V8Return _GetCameraProj(const V8Args& args) {
@@ -987,7 +900,7 @@ static V8Return _GetCameraProj(const V8Args& args) {
 	OPmat4* proj = (OPmat4*)OPalloc(sizeof(OPmat4));
 	OPcamGetProj((*camera), proj);
 
-	return SetReturn(args, &scope, GetNumber(isolate, (i32)proj));
+	return SetReturn(args, &scope, GetNumber(isolate, (OPint)proj));
 }
 
 static V8Return _BindMesh(const V8Args& args) {
@@ -1088,7 +1001,7 @@ static V8Return _FontManagerCreate(const V8Args& args) {
 	OPfontManager* manager = OPfontManagerCreate(font);
 
 	V8Object obj = CreateObject(isolate);
-	SetValue(isolate, obj, "Id", GetNumber(isolate, (i32)manager));
+	SetValue(isolate, obj, "Id", GetNumber(isolate, (OPint)manager));
 	SetFunction(isolate, obj, "Bind", _FontManagerBind);
 	SetFunction(isolate, obj, "SetRGBA", _FontManagerSetRGBA);
 	SetFunction(isolate, obj, "SetAlign", _FontManagerSetAlign);
@@ -1137,7 +1050,8 @@ static V8Return _FontManagerSetAlign(const V8Args& args) {
 static V8Return _FontManagerAddText(const V8Args& args) {
 	V8Scope scope;
 
-	OPfontManagerAddText(ToCString(String::Utf8Value(args[0]->ToString())));
+	String::Utf8Value str(args[0]->ToString());
+	OPfontManagerAddText(ToCString(str));
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -1153,15 +1067,18 @@ static V8Return _FontManagerBuild(const V8Args& args) {
 static V8Return _FontRenderText(const V8Args& args) {
 	V8Scope scope;
 
-	OPrenderTextXY(ToCString(String::Utf8Value(args[0]->ToString())), args[1]->NumberValue(), args[2]->NumberValue());
+	String::Utf8Value str(args[0]->ToString());
+	OPrenderTextXY(ToCString(str), args[1]->NumberValue(), args[2]->NumberValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
 
 static V8Return _FontRenderTextMatrix(const V8Args& args) {
-	V8Scope scope;
-
-	OPrenderTextMat4(ToCString(String::Utf8Value(args[0]->ToString())), (OPmat4*)args[1]->ToObject()->Get(GetString(isolate, "Id"))->Int32Value());
+	V8Scope scope; 
+	String::Utf8Value str(args[0]->ToString());
+	const OPchar* c = ToCString(str);
+	Handle<String> el = GetString(isolate, "Id");
+	OPrenderTextMat4(c, (OPmat4*)args[1]->ToObject()->Get(el)->Int32Value());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -1189,10 +1106,10 @@ static V8Return _Sprite3DCreate(const V8Args& args) {
 	OPfree(sprites);
 	
 	V8Object obj = CreateObject(isolate);
-	SetValue(isolate, obj, "Id", GetNumber(isolate, (i32)sprite));
+	SetValue(isolate, obj, "Id", GetNumber(isolate, (OPint)sprite));
 	SetFunction(isolate, obj, "Update", _Sprite3DUpdate);
 	SetFunction(isolate, obj, "Render", _Sprite3DRender);
-	SetValue(isolate, obj, "Position", GetNumber(isolate, (i32)&sprite->Position));
+	SetValue(isolate, obj, "Position", GetNumber(isolate, (OPint)&sprite->Position));
 
 	return SetReturn(args, &scope, obj);
 }
@@ -1285,6 +1202,47 @@ static V8Return _AudioVolume(const V8Args& args) {
 	OPlog("Volume set to: %f", vol);
 	//OPaudVolume(vol);
 	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _FrameBufferBind(const V8Args& args) {
+	V8Scope scope;
+	i32 inScope;
+	OPframeBuffer* fb = (OPframeBuffer*)GetFirstPointer(args, isolate, &inScope, OPscript_FRAME_BUFFER);
+	if(fb == NULL) {
+		OPlog("FB is null...");
+		return SetReturn(args, &scope, GetNull(isolate));
+	}
+	OPframeBufferBind(fb);
+	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _FrameBufferUnbind(const V8Args& args) {
+	V8Scope scope;
+	i32 inScope;
+	OPframeBufferUnbind();
+	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _FrameBufferCreateDepth(const V8Args& args) {
+	V8Scope scope;
+	i32 inScope;
+	OPtextureDescription desc = {
+		4096,
+		4096,
+		GL_DEPTH_COMPONENT16,
+		GL_DEPTH_COMPONENT,
+		GL_FLOAT,
+		GL_LINEAR,
+		GL_LINEAR,
+		GL_CLAMP_TO_EDGE,
+		GL_CLAMP_TO_EDGE
+	};
+	OPframeBuffer* fb = (OPframeBuffer*)OPalloc(sizeof(OPframeBuffer));
+	*fb = OPframeBufferCreateDepth(desc);
+
+	V8Object obj = CreateTypedObject(isolate, fb, OPscript_FRAME_BUFFER);
+
+	return SetReturn(args, &scope, obj);
 }
 
 #endif

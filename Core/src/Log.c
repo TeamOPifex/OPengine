@@ -13,6 +13,10 @@ void OPlog(const char* message, ...){
 
 #else
 
+#ifdef OPIFEX_UNIX
+#include <unistd.h>
+#endif
+
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>

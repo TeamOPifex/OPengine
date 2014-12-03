@@ -157,7 +157,7 @@ OPeffect createEffect(OPshader vert,
 				NULL,
 				Attributes[i].Type,
 				Attributes[i].Elements,
-				(void*)effect.Stride,
+				effect.Stride,
 				0
 			};
 
@@ -278,7 +278,7 @@ OPint OPrenderBindEffect(OPeffect* effect){
 			attr->Type,
 			GL_FALSE,
 			effect->Stride,
-			attr->Offset
+			(void*)attr->Offset
 			);
 		if (OPglError("OPrenderBindEffect:Error ")) {
 			OPlog("Effect %s: Failed to set attrib ptr %s", effect->Name, attr->Name);

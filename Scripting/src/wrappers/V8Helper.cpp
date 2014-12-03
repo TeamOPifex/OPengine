@@ -21,8 +21,8 @@ void LogProperties(V8Object obj) {
 V8Object CreateTypedObject(V8isolate* isolate, void* Id, OPscriptTypes type) {
 
 	V8Object obj = CreateObject(isolate);
-	obj->Set(GetString(isolate, "Id"), GetNumber(isolate, (i32)Id));
-	obj->Set(GetString(isolate, "Type"), GetNumber(isolate, (i32)type));
+	obj->Set(GetString(isolate, "Id"), GetNumber(isolate, (OPint)Id));
+	obj->Set(GetString(isolate, "Type"), GetNumber(isolate, (OPint)type));
 	return obj;
 
 }
@@ -48,14 +48,14 @@ bool IsCallingObject(const V8Args& args, V8isolate* isolate, OPscriptTypes type)
 
 void* GetCallingPointer(const V8Args& args, V8isolate* isolate) {
 		Local<Value> val = args.This()->ToObject()->Get(GetString(isolate, "Id"));
-		return (void*)val->Int32Value();
+		return (void*)val->IntegerValue();
 }
 
 void* GetArgPointer(const V8Args& args, V8isolate* isolate, i32 position) {
 
 	if (args.Length() > position) {
 		Local<Value> val = args[position]->ToObject()->Get(GetString(isolate, "Id"));
-		return (void*)val->Int32Value();
+		return (void*)val->IntegerValue();
 	}
 
 	return NULL;
@@ -80,19 +80,20 @@ void* GetPointer(const V8Args& args, V8isolate* isolate, i32* result, i32 expect
 	if (args.Length() < expected) {
 		Local<Value> val = args.This()->Get(GetString(isolate, "Id"));
 		*result = 1;
-		return (void*)val->Int32Value();
+		return (void*)val->IntegerValue();
 	}
 	else if (args.Length() >= expected) {
 		Local<Value> val = args[0]->ToObject()->Get(GetString(isolate, "Id"));
 		*result = 0;
-		return (void*)val->Int32Value();
+		return (void*)val->IntegerValue();
 	}
 
 	*result = -1;
 	return NULL;
 }
 
-const char* ToCString(const v8::String::Utf8Value& value) {
+const OPchar* ToCString(const v8::String::Utf8Value& value) {
+
 	return *value ? *value : "<string conversion failed>";
 }
 
