@@ -36,6 +36,19 @@ OPchar* OPstringGetNonConstant(const OPchar* str) {
 	return result;
 }
 
+OPchar* OPstringCreateCopy(const OPchar* str) {
+	i32 len;
+	OPchar* result = NULL;
+
+	len = strlen(str);
+
+	result = (OPchar*)OPalloc(sizeof(OPchar) * (len + 1));
+	strcpy(result, str);
+	result[len] = '\0';
+	
+	return result;
+}
+
 OPchar* OPstringCreateMerged(const OPchar* str, const OPchar* add) {
 	i32 lenA = strlen(str);
 	i32 lenB = strlen(add);

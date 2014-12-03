@@ -44,7 +44,7 @@ typedef struct{
 	const OPchar* Name;
 	ui32         Type;
 	ui32         Elements;
-	void*        Offset;
+	OPuint        Offset;
 	OPuint		Handle;
 }OPshaderAttribute;
 

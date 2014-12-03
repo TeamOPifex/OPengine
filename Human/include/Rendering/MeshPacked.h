@@ -12,7 +12,7 @@
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 typedef struct{
-	ui32 offset;
+	OPuint offset;
 	ui32 count;
 	ui32 elementCount;
 }OPmeshPacked;

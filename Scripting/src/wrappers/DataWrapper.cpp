@@ -6,7 +6,7 @@
 #include "./Data/include/ContentManager.h"
 #include "./Pipeline/include/DefaultLoaders.h"
 
-#ifndef OPIFEX_ANDROID
+#ifdef OPIFEX_WINDOWS
 #include <direct.h>
 #endif
 
@@ -42,15 +42,18 @@ void DataInitializeMethodsO(V8isolate* isolate, V8Object target) {
 static V8Return _cmanInit(const V8Args& args) {
 	V8Scope scope;
 
+	const char* assetDir = NULL;
+
 #ifndef OPIFEX_ANDROID
 	if (args.Length() > 0) {
 		v8::String::Utf8Value utf8(args[0]);
-		const char* v = ToCString(utf8);
-		_chdir(v);
+		assetDir = ToCString(utf8);
 	}
 #endif
 
-	OPcmanInit(OP_DEFAULT_LOADERS, 10, NULL);
+
+	OPloadersAddDefault();
+	OPcmanInit(assetDir);
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -74,7 +77,7 @@ static V8Return _cmanGet(const V8Args& args) {
 	OPlog("Script Get: %s", file);
 	void* p = OPcmanGet(file);
 
-	return SetReturn(args, &scope, GetNumber(isolate, (i32)p));
+	return SetReturn(args, &scope, GetNumber(isolate, (OPint)p));
 }
 
 static V8Return _cmanDelete(const V8Args& args) {

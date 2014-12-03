@@ -382,7 +382,7 @@ OPint OPaudProc(void(*Proc)(OPaudioEmitter* emit)){
 	return 0;
 }
 
-//-----------------------------------------------------------------------------
+/*-----------------------------------------------------------------------------
 //  ______           _ _   _              _____                     
 // |  ____|         (_) | | |            |  __ \                    
 // | |__   _ __ ___  _| |_| |_ ___ _ __  | |__) | __ ___  _ __  ___ 
@@ -391,6 +391,7 @@ OPint OPaudProc(void(*Proc)(OPaudioEmitter* emit)){
 // |______|_| |_| |_|_|\__|\__\___|_|    |_|   |_|  \___/| .__/|___/
 //                                                       | |        
 //                                                       |_|        
+*/
 void OPaudPosition(OPaudioEmitter* emitter, OPvec3* position){
 #ifdef OPIFEX_ANDROID	
 #else

@@ -28,7 +28,7 @@ OPmeshPacked OPrenderCreateMeshPacked(
 }
 //-----------------------------------------------------------------------------
 void OPrenderMeshPacked(OPmeshPacked* mesh){
-		glDrawElements(GL_TRIANGLES, mesh->elementCount, GL_UNSIGNED_SHORT, (void*)(0 + mesh->offset));
+		glDrawElements(GL_TRIANGLES, mesh->elementCount, GL_UNSIGNED_SHORT, (void*)(mesh->offset));
 	//glDrawRangeElements(
 	//	GL_TRIANGLES,
 	//	mesh->offset / 2,

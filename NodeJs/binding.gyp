@@ -15,7 +15,8 @@
                 "@OPIFEX_REPOSITORY@/External/glew-1.9.0/include",
                 "@OPIFEX_REPOSITORY@/External/glfw-3.0.4/include",
                 "@OPIFEX_REPOSITORY@/External/glm-0.9.1",
-                "@OPIFEX_REPOSITORY@/External/V8/"
+                "@OPIFEX_REPOSITORY@/External/V8/",
+                "@OPIFEX_REPOSITORY@/External/OpenAL/"
             ],
             "cflags!": [
                 "-fno-exceptions"
@@ -26,13 +27,13 @@
             "conditions": [
                 [
                     "OS=='win'",
-					{
-						'defines': [
-						  'OPIFEX_WIN32',
-						  'OPIFEX_V8',
-						  'OPIFEX_NODEJS',
-						  "_ITERATOR_DEBUG_LEVEL=0"
-						],
+                    {
+                        'defines': [
+                          'OPIFEX_WIN32',
+                          'OPIFEX_V8',
+                          'OPIFEX_NODEJS',
+                          "_ITERATOR_DEBUG_LEVEL=0"
+                        ],
                         "link_settings": {
                             "libraries": [
                                 "-lCore.lib",
@@ -45,15 +46,15 @@
                                 "-lglfw3.lib",
                                 "-lGLEW_158.lib",
                                 "-lLodePNG.lib",
-								"-lopengl32.lib",
-								"-lWinmm.lib",
-								"-llibogg.lib",
-								"-llibvorbis.lib",
-								"-llibvorbisfile.lib",
-								"-lOpenAL32.lib"
+                                "-lopengl32.lib",
+                                "-lWinmm.lib",
+                                "-llibogg.lib",
+                                "-llibvorbis.lib",
+                                "-llibvorbisfile.lib",
+                                "-lOpenAL32.lib"
                             ]
                         },
-                        "configurations": {							
+                        "configurations": {                         
                             "Release": {
                                 "msvs_settings": {
                                     "VCCLCompilerTool": {
@@ -68,7 +69,7 @@
                                         ]
                                     },
                                     "VCLinkerTool": {     
-										"IgnoreDefaultLibraryNames": [ 'libcmt.lib', 'libcpmt.lib' ],
+                                        "IgnoreDefaultLibraryNames": [ 'libcmt.lib', 'libcpmt.lib' ],
                                         "LinkTimeCodeGeneration": 1,
                                         "LinkIncremental": 1,
                                         "AdditionalLibraryDirectories": [
@@ -88,6 +89,50 @@
                                     }
                                 }
                             }
+                        }
+                    },
+                ],
+                [
+                    "OS=='mac'",
+                    {
+                        'defines': [
+                          'OPIFEX_OSX64',
+                          'OPIFEX_V8',
+                          'OPIFEX_NODEJS',
+                          "_ITERATOR_DEBUG_LEVEL=0"
+                        ],
+                        "link_settings": {
+                            "libraries": [
+                                "libCore.a",
+                                "libData.a",
+                                "libMath.a",
+                                "libPerformance.a",
+                                "libHuman.a",
+                                "libCommunication.a",
+                                "libPipeline.a",
+                                "libglfw3.a",
+                                "libGLEW_158.a",
+                                "libLodePNG.a",
+                                "/System/Library/Frameworks/Cocoa.framework",
+                                "/System/Library/Frameworks/OpenGL.framework",
+                                "/System/Library/Frameworks/IOKit.framework",
+                                "/System/Library/Frameworks/CoreFoundation.framework",
+                                "/System/Library/Frameworks/CoreVideo.framework",
+                                "/System/Library/Frameworks/OpenAL.framework",
+                                "/usr/local/lib/libogg.dylib",
+                                "/usr/local/lib/libvorbisfile.dylib"
+                            ],
+                            "library_dirs": [
+                                "../Core/",
+                                "../Data/",
+                                "../Math/",
+                                "../Performance/",
+                                "../Human/",
+                                "../Communication/",
+                                "../Pipeline/",
+                                "../GLFW/src/",
+                                "../External/"
+                            ],
                         }
                     }
                 ]

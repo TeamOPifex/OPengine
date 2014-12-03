@@ -278,7 +278,7 @@ static V8Return _OPmat4Create(const V8Args& args) {
 	OPmat4identity(mat);
 
 	V8Object obj = CreateObject(isolate);
-	SetValue(isolate, obj, "Id", GetNumber(isolate, (i32)mat));
+	SetValue(isolate, obj, "Id", GetNumber(isolate, (OPint)mat));
 	SetFunction(isolate, obj, "RotX", _OPmat4RotateX);
 	SetFunction(isolate, obj, "RotY", _OPmat4RotateY);
 	SetFunction(isolate, obj, "RotZ", _OPmat4RotateZ);
