@@ -196,18 +196,18 @@ void OPscriptCompileAndRun(OPscript* script) {
 
 	Handle<ObjectTemplate> global = ObjectTemplate::New(isolate);
 	Handle<ObjectTemplate> empty = ObjectTemplate::New(isolate);
-	Handle<ObjectTemplate> OP = ObjectTemplate::New(isolate);
-	GlobalInitializeMethods(isolate, OP);
-	HumanInitializeMethods(isolate, OP);
-	PerformanceInitializeMethods(isolate, OP);
-	MathInitializeMethods(isolate, OP);
-	DataInitializeMethods(isolate, OP);
+	//Handle<ObjectTemplate> OP = ObjectTemplate::New(isolate);
+	// GlobalInitializeMethods(isolate, OP);
+	// HumanInitializeMethods(isolate, OP);
+	// PerformanceInitializeMethods(isolate, OP);
+	// MathInitializeMethods(isolate, OP);
+	// DataInitializeMethods(isolate, OP);
 	if (CustomWrapper != NULL) {
 		CustomWrapper(isolate, global);
 	}
 	global->Set(String::NewFromUtf8(isolate, "require"), FunctionTemplate::New(isolate, Require));
 	global->Set(String::NewFromUtf8(isolate, "print"), FunctionTemplate::New(isolate, Print));
-	global->Set(String::NewFromUtf8(isolate, "OP"), OP);
+	//global->Set(String::NewFromUtf8(isolate, "OP"), OP);
 	global->Set(String::NewFromUtf8(isolate, "global"), empty);
 	Local<Context> context = Context::New(isolate, NULL, global);
 	v8::Context::Scope context_scope(context);
