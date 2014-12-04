@@ -38,7 +38,12 @@ OPfloat OPvec3angleToTarget(OPvec3 pos, OPvec3 facing, OPvec3 target);
 
 
 struct OPvec3 {
-	OPfloat x, y, z;
+	union{
+		struct {
+			OPfloat x, y, z;
+		};
+		OPfloat row[3];
+	};
 	inline OPvec3 operator=(OPvec3 vhs) { 
 		OPmemcpy(this, (void*)&vhs, sizeof(OPvec3)); return *this;
 	}
@@ -66,6 +71,9 @@ struct OPvec3 {
 	inline OPvec3 operator/=(OPfloat vhs) { 
 		OPvec3divf(this, this, vhs); 
 		return *this; 
+	}
+	inline OPfloat& operator[](i32 i) {
+		return row[i];
 	}
 };
 

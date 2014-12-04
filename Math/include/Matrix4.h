@@ -40,8 +40,12 @@ extern const OPmat4 OPmat4Identity;
 //		64 bit = 16 * 64 = 1024 bits or 128 bytes
 struct OPmat4 {
 	OPvec4 cols[4];
+
 	OPmat4 operator=(OPmat4 vhs) { 
 		OPmemcpy(this, (void*)&vhs, sizeof(OPmat4)); return *this;
+	}
+	inline OPvec4& operator[](const i32 i) {
+		return cols[i];
 	}
 	inline OPmat4& operator*=(OPmat4 vhs) { 
 		OPmat4mul(this, this, &vhs); 
@@ -169,25 +173,29 @@ inline OPvec4* OPmat4index(OPmat4* m, int idx){
 	return &((OPvec4*)(m))[idx];
 }
 
-inline void OPmat4mul(OPmat4* dst, OPmat4* m1, OPmat4* m2) {
+inline void OPmat4mul(OPmat4* dst, OPmat4* mat1, OPmat4* mat2)
+{
 	OPmat4 result;
-	OPfloat sum;
-	i32 i, j, k = 0;
-	OPfloat* cols1 = (OPfloat*)m1->cols;
-	OPfloat* cols2 = (OPfloat*)m2->cols;
-	OPfloat* colsr = (OPfloat*)result.cols;
-	//OPmemcpy(&result, m1, sizeof(OPmat4));
-	for(i = 0; i < 4; i++){
-		for(j = 0; j < 4; j++){
-			sum = 0;
-			for(k = 0; k < 4; k++){
-				sum += cols2[(k << 2) + j] * cols1[(i << 2) + k];
-			}
-			colsr[(i << 2) + j] = sum;
-		}
-	}
+	OPmat4 m1 = *mat1;
+	OPmat4 m2 = *mat2;
+	result[0][0] = m1[0][0] * m2[0][0] + m1[1][0] * m2[0][1] + m1[2][0] * m2[0][2] + m1[3][0] * m2[0][3]; 
+	result[1][0] = m1[0][0] * m2[1][0] + m1[1][0] * m2[1][1] + m1[2][0] * m2[1][2] + m1[3][0] * m2[1][3]; 
+	result[2][0] = m1[0][0] * m2[2][0] + m1[1][0] * m2[2][1] + m1[2][0] * m2[2][2] + m1[3][0] * m2[2][3]; 
+	result[3][0] = m1[0][0] * m2[3][0] + m1[1][0] * m2[3][1] + m1[2][0] * m2[3][2] + m1[3][0] * m2[3][3]; 
+	result[0][1] = m1[0][1] * m2[0][0] + m1[1][1] * m2[0][1] + m1[2][1] * m2[0][2] + m1[3][1] * m2[0][3]; 
+	result[1][1] = m1[0][1] * m2[1][0] + m1[1][1] * m2[1][1] + m1[2][1] * m2[1][2] + m1[3][1] * m2[1][3]; 
+	result[2][1] = m1[0][1] * m2[2][0] + m1[1][1] * m2[2][1] + m1[2][1] * m2[2][2] + m1[3][1] * m2[2][3]; 
+	result[3][1] = m1[0][1] * m2[3][0] + m1[1][1] * m2[3][1] + m1[2][1] * m2[3][2] + m1[3][1] * m2[3][3]; 
+	result[0][2] = m1[0][2] * m2[0][0] + m1[1][2] * m2[0][1] + m1[2][2] * m2[0][2] + m1[3][2] * m2[0][3]; 
+	result[1][2] = m1[0][2] * m2[1][0] + m1[1][2] * m2[1][1] + m1[2][2] * m2[1][2] + m1[3][2] * m2[1][3]; 
+	result[2][2] = m1[0][2] * m2[2][0] + m1[1][2] * m2[2][1] + m1[2][2] * m2[2][2] + m1[3][2] * m2[2][3]; 
+	result[3][2] = m1[0][2] * m2[3][0] + m1[1][2] * m2[3][1] + m1[2][2] * m2[3][2] + m1[3][2] * m2[3][3]; 
+	result[0][3] = m1[0][3] * m2[0][0] + m1[1][3] * m2[0][1] + m1[2][3] * m2[0][2] + m1[3][3] * m2[0][3]; 
+	result[1][3] = m1[0][3] * m2[1][0] + m1[1][3] * m2[1][1] + m1[2][3] * m2[1][2] + m1[3][3] * m2[1][3]; 
+	result[2][3] = m1[0][3] * m2[2][0] + m1[1][3] * m2[2][1] + m1[2][3] * m2[2][2] + m1[3][3] * m2[2][3]; 
+	result[3][3] = m1[0][3] * m2[3][0] + m1[1][3] * m2[3][1] + m1[2][3] * m2[3][2] + m1[3][3] * m2[3][3]; 
 	OPmemcpy(dst, &result, sizeof(OPmat4));
-}
+};
 
 inline void OPmat4identity(OPmat4* m) {
 	OPbzero(m, sizeof(OPmat4));
@@ -460,6 +468,16 @@ inline void OPmat4Inverse(OPmat4* dst, OPmat4* src) {
 	}
 
 	OPmat4scl(dst, 1 / det, 1 / det, 1 / det);
+}
+
+inline void OPmat4Log(const OPchar* msg, OPmat4* mat) {
+	OPmat4 m = *mat;
+	OPlog("%s:\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f",
+		msg, 
+		m[0][0], m[1][0], m[2][0], m[3][0], 
+		m[0][1], m[1][1], m[2][1], m[3][1], 
+		m[0][2], m[1][2], m[2][2], m[3][2], 
+		m[0][3], m[1][3], m[2][3], m[3][3]);
 }
 
 #endif

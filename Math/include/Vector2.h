@@ -36,7 +36,12 @@ inline OPfloat OPvec2valDist( OPvec2* a, OPvec2* b);
 inline OPfloat OPvec2valAngle(OPvec2* a, OPvec2* b);
 
 struct OPvec2 {
-	OPfloat x, y;
+	union{
+		struct {
+			OPfloat x, y;
+		};
+		OPfloat row[2];
+	};
 
 	OPvec2 operator=(OPvec2 vhs) { 
 		OPmemcpy(this, &vhs, sizeof(OPvec2)); return *this;
@@ -64,6 +69,9 @@ struct OPvec2 {
 	inline OPvec2 operator/=(OPfloat vhs) { 
 		OPvec2divf(this, this, vhs); 
 		return *this; 
+	}
+	inline OPfloat& operator[](i32 i) {
+		return row[i];
 	}
 };
 
