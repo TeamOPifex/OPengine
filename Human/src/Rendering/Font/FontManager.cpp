@@ -79,7 +79,7 @@ void OPfontEffectBind(OPeffect* effect) {
 }
 
 void OPrenderTextRGBAXYAlign(const OPchar* text, f32 r, f32 g, f32 b, f32 a, f32 x, f32 y, OPfontAlign align) {
-	OPrenderTextColor4Vec2Align(text, OPvec4create(r, g, b, a), OPvec2Create(x, y), align);
+	OPrenderTextColor4Vec2Align(text, OPvec4create(r, g, b, a), OPvec2create(x, y), align);
 }
 
 void OPrenderTextXY(const OPchar* text, f32 x, f32 y) {
@@ -87,22 +87,22 @@ void OPrenderTextXY(const OPchar* text, f32 x, f32 y) {
 	//OPvec4 col = OPRENDER_CURR_FONT_MANAGER->_color;
 	//OPvec2 pos = OPvec2Create(x, y);
 	//OPfontAlign a = OPRENDER_CURR_FONT_MANAGER->_align;
-	OPrenderTextColor4Vec2Align(text, OPRENDER_CURR_FONT_MANAGER->_color, OPvec2Create(x, y), OPRENDER_CURR_FONT_MANAGER->_align);
+	OPrenderTextColor4Vec2Align(text, OPRENDER_CURR_FONT_MANAGER->_color, OPvec2create(x, y), OPRENDER_CURR_FONT_MANAGER->_align);
 }
 
 void OPrenderTextXYAlign(const OPchar* text, f32 x, f32 y, OPfontAlign align) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	OPrenderTextColor4Vec2Align(text, OPRENDER_CURR_FONT_MANAGER->_color, OPvec2Create(x, y), align);
+	OPrenderTextColor4Vec2Align(text, OPRENDER_CURR_FONT_MANAGER->_color, OPvec2create(x, y), align);
 }
 
 void OPrenderTextRGBXY(const OPchar* text, f32 r, f32 g, f32 b, f32 x, f32 y) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	OPrenderTextColor4Vec2Align(text, OPvec4create(r, g, b, 1.0f), OPvec2Create(x, y), OPRENDER_CURR_FONT_MANAGER->_align);
+	OPrenderTextColor4Vec2Align(text, OPvec4create(r, g, b, 1.0f), OPvec2create(x, y), OPRENDER_CURR_FONT_MANAGER->_align);
 }
 
 void OPrenderTextRGBAXY(const OPchar* text, f32 r, f32 g, f32 b, f32 a, f32 x, f32 y) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	OPrenderTextColor4Vec2Align(text, OPvec4create(r,g,b,a), OPvec2Create(x,y), OPRENDER_CURR_FONT_MANAGER->_align);
+	OPrenderTextColor4Vec2Align(text, OPvec4create(r,g,b,a), OPvec2create(x,y), OPRENDER_CURR_FONT_MANAGER->_align);
 }
 void OPrenderTextVec2(const OPchar* text, OPvec2 pos) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
