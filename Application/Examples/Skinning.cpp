@@ -57,8 +57,8 @@ void ExampleSkinningEnter(OPgameState* last) {
 	skinningExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
 	*skinningExample->Camera = OPcamProj(
 		OPvec3One * 250.0,
-		OPvec3Create(0, 1, 0),
-		OPvec3Create(0, 1, 0),
+		OPvec3create(0, 1, 0),
+		OPvec3create(0, 1, 0),
 		0.1f,
 		5000.0f,
 		45.0f,
@@ -94,7 +94,7 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 
 	OPrenderParamMat4v("uBones", skinningExample->Mesh->Skeleton->hierarchyCount, skinningExample->Mesh->Skeleton->skinned);
 
-	OPvec3 light = OPvec3Create(0, 10, 0);
+	OPvec3 light = OPvec3create(0, 10, 0);
 	OPrenderParamVec3("uLightPosition", &light);
 
 	OPrenderMesh();
