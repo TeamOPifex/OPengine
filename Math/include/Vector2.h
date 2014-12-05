@@ -8,7 +8,7 @@
 
 struct OPvec2;
 inline OPfloat* OPvec2index(OPvec2* v, int idx);
-inline OPvec2 OPvec2Create(OPfloat x, OPfloat y);
+inline OPvec2 OPvec2create(OPfloat x, OPfloat y);
 inline void OPvec2add(OPvec2* dst, OPvec2* a, OPvec2* b);
 inline void OPvec2sub(OPvec2* dst, OPvec2* a, OPvec2* b);
 inline void OPvec2mul(OPvec2* dst, OPvec2* a, OPvec2* b);
@@ -22,18 +22,18 @@ inline void OPvec2norm(OPvec2* dst, OPvec2* a);
 inline void OPvec2perp(OPvec2* dst, OPvec2* a);
 inline void OPvec2dist(OPfloat* dst, OPvec2* a, OPvec2* b);
 
-inline OPvec2 OPvec2valAdd(OPvec2* a, OPvec2* b);
-inline OPvec2 OPvec2valSub(OPvec2* a, OPvec2* b);
-inline OPvec2 OPvec2valMul(OPvec2* a, OPvec2* b);
-inline OPvec2 OPvec2valScl(OPvec2* a, OPfloat s);
-inline OPvec2 OPvec2valDiv(OPvec2* a, OPvec2* b);
-inline OPvec2 OPvec2valDivf(OPvec2* a, OPfloat b);
-inline OPfloat OPvec2valDot(OPvec2* a, OPvec2* b);
-inline OPfloat OPvec2valLen(OPvec2* v);
-inline OPvec2 OPvec2valNorm(OPvec2* a);
-inline OPvec2 OPvec2valPerp(OPvec2* a);
-inline OPfloat OPvec2valDist( OPvec2* a, OPvec2* b);
-inline OPfloat OPvec2valAngle(OPvec2* a, OPvec2* b);
+inline OPvec2 OPvec2add(OPvec2* a, OPvec2* b);
+inline OPvec2 OPvec2sub(OPvec2* a, OPvec2* b);
+inline OPvec2 OPvec2mul(OPvec2* a, OPvec2* b);
+inline OPvec2 OPvec2scl(OPvec2* a, OPfloat s);
+inline OPvec2 OPvec2div(OPvec2* a, OPvec2* b);
+inline OPvec2 OPvec2divf(OPvec2* a, OPfloat b);
+inline OPfloat OPvec2dot(OPvec2* a, OPvec2* b);
+inline OPfloat OPvec2len(OPvec2* v);
+inline OPvec2 OPvec2norm(OPvec2* a);
+inline OPvec2 OPvec2perp(OPvec2* a);
+inline OPfloat OPvec2dist( OPvec2* a, OPvec2* b);
+inline OPfloat OPvec2angle(OPvec2* a, OPvec2* b);
 
 struct OPvec2 {
 	union{
@@ -78,7 +78,7 @@ struct OPvec2 {
 extern const OPvec2 OPvec2Zero;
 extern const OPvec2 OPvec2One;
 
-inline OPvec2 OPvec2Create(OPfloat x, OPfloat y) {
+inline OPvec2 OPvec2create(OPfloat x, OPfloat y) {
 	OPvec2 tmp = { x, y };
 	return tmp;
 }
@@ -193,79 +193,79 @@ inline void OPvec2dist(OPfloat* dst, OPvec2* a, OPvec2* b) {
 }
 
 
-inline OPvec2 OPvec2valAdd(OPvec2* a, OPvec2* b) { 
+inline OPvec2 OPvec2add(OPvec2* a, OPvec2* b) { 
 	OPvec2 temp;
 	OPvec2add(&temp, a, b);
 	return temp;
 }
 
-inline OPvec2 OPvec2valSub(OPvec2* a, OPvec2* b) { 
+inline OPvec2 OPvec2sub(OPvec2* a, OPvec2* b) { 
 	OPvec2 temp;
 	OPvec2add(&temp, a, b);
 	return temp;
 }
 
-inline OPvec2 OPvec2valMul(OPvec2* a, OPvec2* b) { 
+inline OPvec2 OPvec2mul(OPvec2* a, OPvec2* b) { 
 	OPvec2 temp;
 	OPvec2mul(&temp, a, b);
 	return temp;
 }
 
-inline OPvec2 OPvec2valScl(OPvec2* a, OPfloat s) { 
+inline OPvec2 OPvec2scl(OPvec2* a, OPfloat s) { 
 	OPvec2 temp;
 	OPvec2scl(&temp, a, s);
 	return temp;
 }
 
-inline OPvec2 OPvec2valDiv(OPvec2* a, OPvec2* b) { 
+inline OPvec2 OPvec2div(OPvec2* a, OPvec2* b) { 
 	OPvec2 temp;
 	OPvec2div(&temp, a, b);
 	return temp;
 }
 
-inline OPvec2 OPvec2valDivf(OPvec2* a, OPfloat b) { 
+inline OPvec2 OPvec2divf(OPvec2* a, OPfloat b) { 
 	OPvec2 temp;
 	OPvec2divf(&temp, a, b);
 	return temp;
 }
 
-inline OPfloat OPvec2valDot(OPvec2* a, OPvec2* b) { 
+inline OPfloat OPvec2dot(OPvec2* a, OPvec2* b) { 
 	OPfloat temp;
 	OPvec2dot(&temp, a, b);
 	return temp;
 }
 
-inline OPfloat OPvec2valLen(OPvec2* v) { 
+inline OPfloat OPvec2len(OPvec2* v) { 
 	OPfloat temp;
 	OPvec2len(&temp, v);
 	return temp;
 }
 
-inline OPvec2 OPvec2valNorm(OPvec2* a) { 
+inline OPvec2 OPvec2norm(OPvec2* a) { 
 	OPvec2 temp;
 	OPvec2norm(&temp, a);
 	return temp;
 }
 
-inline OPvec2 OPvec2valPerp(OPvec2* a) { 
+inline OPvec2 OPvec2perp(OPvec2* a) { 
 	OPvec2 temp;
 	OPvec2perp(&temp, a);
 	return temp;
 }
 
-inline OPvec2 OPvec2valReflect(OPvec2* horizon, OPvec2* v){
-	OPfloat ratio = 2 * (OPvec2valDot(v, horizon) / OPvec2valDot(horizon, horizon));
+inline OPvec2 OPvec2reflect(OPvec2* horizon, OPvec2* v){
+	OPfloat ratio = 2 * (OPvec2dot(v, horizon) / OPvec2dot(horizon, horizon));
 	return *horizon * ratio - *v;
 }
 
-inline OPfloat OPvec2valDist(OPvec2* a, OPvec2* b) {
+inline OPfloat OPvec2dist(OPvec2* a, OPvec2* b) {
 	OPfloat tmp;
 	OPvec2dist(&tmp, a, b);
 	return tmp;
 }
 
 
-inline OPfloat OPvec2valAngle(OPvec2* a, OPvec2* b) {
+inline OPfloat OPvec2angle(OPvec2* a, OPvec2* b) {
 	OPfloat tmp;
 	OPfloat dot;
 	OPvec2dot(&dot, a, b);
