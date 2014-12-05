@@ -11,7 +11,7 @@ struct OPvec4;
 inline OPfloat* OPvec4index(OPvec4* v, int idx);
 inline void OPvec4norm(OPvec4* dst, OPvec4* a);
 
-inline OPvec4 OPvec4Create(OPfloat x, OPfloat y, OPfloat z, OPfloat w);
+inline OPvec4 OPvec4create(OPfloat x, OPfloat y, OPfloat z, OPfloat w);
 inline void OPvec4add(OPvec4* dst, OPvec4* a, OPvec4* b);
 inline void OPvec4sub(OPvec4* dst, OPvec4* a, OPvec4* b);
 inline void OPvec4mul(OPvec4* dst, OPvec4* a, OPvec4* b);
@@ -22,15 +22,15 @@ inline void d(OPfloat* dst, OPvec4* a, OPvec4* b);
 inline void OPvec4len(OPfloat* dst, OPvec4* v);
 inline void OPvec4dist(OPfloat* dst, OPvec4* a, OPvec4* b);
 
-inline OPvec4 OPvec4valAdd(OPvec4* a, OPvec4* b);
-inline OPvec4 OPvec4valSub(OPvec4* a, OPvec4* b);
-inline OPvec4 OPvec4valMul(OPvec4* a, OPvec4* b);
-inline OPvec4 OPvec4valScl(OPvec4* a, OPfloat s);
-inline OPvec4 OPvec4valDiv(OPvec4* a, OPvec4* b);
-inline OPvec4 OPvec4valDivf(OPvec4* a, OPfloat b);
-inline OPfloat OPvec4valDot(OPvec4* a, OPvec4* b);
-inline OPfloat OPvec4valLen(OPvec4* v);
-inline OPfloat OPvec4valDist(OPvec4* a, OPvec4* b);
+inline OPvec4 OPvec4add(OPvec4* a, OPvec4* b);
+inline OPvec4 OPvec4sub(OPvec4* a, OPvec4* b);
+inline OPvec4 OPvec4mul(OPvec4* a, OPvec4* b);
+inline OPvec4 OPvec4scl(OPvec4* a, OPfloat s);
+inline OPvec4 OPvec4div(OPvec4* a, OPvec4* b);
+inline OPvec4 OPvec4divf(OPvec4* a, OPfloat b);
+inline OPfloat OPvec4dot(OPvec4* a, OPvec4* b);
+inline OPfloat OPvec4len(OPvec4* v);
+inline OPfloat OPvec4dist(OPvec4* a, OPvec4* b);
 
 struct OPvec4 {
 	union{
@@ -118,11 +118,12 @@ inline OPvec4 operator/(OPfloat lhs, OPvec4 vhs) {
 }
 
 
-inline OPvec4 OPvec4Create(OPfloat x, OPfloat y, OPfloat z, OPfloat w) {
+inline OPvec4 OPvec4create(OPfloat x, OPfloat y, OPfloat z, OPfloat w) {
 	OPvec4 tmp = { x, y, z, w };
 	return tmp;
 }
-inline OPvec4 OPvec4CreateFromVec3(OPvec3 xyz, OPfloat w) {
+
+inline OPvec4 OPvec4createFromVec3(OPvec3 xyz, OPfloat w) {
 	OPvec4 tmp = { xyz.x, xyz.y, xyz.z, w };
 	return tmp;
 }
@@ -199,55 +200,55 @@ inline void OPvec4dist(OPfloat* dst, OPvec4* a, OPvec4* b) {
 	OPvec4len(dst, &tmp);
 }
 
-inline OPvec4 OPvec4valAdd(OPvec4* a, OPvec4* b) {
+inline OPvec4 OPvec4add(OPvec4* a, OPvec4* b) {
 	OPvec4 temp = { 0, 0, 0, 0};
 	OPvec4add(&temp, a, b);
 	return temp;
 }
 
-inline OPvec4 OPvec4valSub(OPvec4* a, OPvec4* b) {
+inline OPvec4 OPvec4sub(OPvec4* a, OPvec4* b) {
 	OPvec4 temp = { 0, 0, 0, 0};
 	OPvec4sub(&temp, a, b);
 	return temp;
 }
 
-inline OPvec4 OPvec4valMul(OPvec4* a, OPvec4* b) {
+inline OPvec4 OPvec4mul(OPvec4* a, OPvec4* b) {
 	OPvec4 temp = { 0, 0, 0, 0};
 	OPvec4mul(&temp, a, b);
 	return temp;
 }
 
-inline OPvec4 OPvec4valScl(OPvec4* a, OPfloat s) {
+inline OPvec4 OPvec4scl(OPvec4* a, OPfloat s) {
 	OPvec4 temp = { 0, 0, 0, 0};
 	OPvec4scl(&temp, a, s);
 	return temp;
 }
 
-inline OPvec4 OPvec4valDiv(OPvec4* a, OPvec4* b) {
+inline OPvec4 OPvec4div(OPvec4* a, OPvec4* b) {
 	OPvec4 temp = { 0, 0, 0, 0};
 	OPvec4div(&temp, a, b);
 	return temp;
 }
 
-inline OPvec4 OPvec4valDivf(OPvec4* a, OPfloat b) {
+inline OPvec4 OPvec4divf(OPvec4* a, OPfloat b) {
 	OPvec4 temp = { 0, 0, 0, 0};
 	OPvec4divf(&temp, a, b);
 	return temp;
 }
 
-inline OPfloat OPvec4valDot(OPvec4* a, OPvec4* b) {
+inline OPfloat OPvec4dot(OPvec4* a, OPvec4* b) {
 	OPfloat temp = 0;
 	OPvec4dot(&temp, a, b);
 	return temp;
 }
 
-inline OPfloat OPvec4valLen(OPvec4* v) {
+inline OPfloat OPvec4len(OPvec4* v) {
 	OPfloat temp = 0;
 	OPvec4len(&temp, v);
 	return temp;
 }
 
-inline OPfloat OPvec4valDist(OPvec4* a, OPvec4* b) {
+inline OPfloat OPvec4dist(OPvec4* a, OPvec4* b) {
 	OPfloat temp = 0;
 	OPvec4dist(&temp, a, b);
 	return temp;
@@ -264,7 +265,7 @@ inline OPvec4 OPvec4str(OPstream* str) {
 }
 
 inline OPvec4 OPvec4clone(OPvec4* v) {
-	return OPvec4Create(v->x, v->y, v->z, v->w);
+	return OPvec4create(v->x, v->y, v->z, v->w);
 }
 
 inline void OPvec4write(OPvec4* v, OPstream* str) {
@@ -274,7 +275,7 @@ inline void OPvec4write(OPvec4* v, OPstream* str) {
 	OPwrite(str, &v->w, sizeof(f32));
 }
 
-inline OPvec4 OPvec4RandNorm(){
+inline OPvec4 OPvec4randNorm(){
 	OPvec4 v = {
 		OPrandom() - 0.5f,
 		OPrandom() - 0.5f,

@@ -50,8 +50,8 @@ void ExampleOculusEnter(OPgameState* last) {
 	oculusExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
 	*oculusExample->Camera = OPcamProj(
 		OPvec3One * 2.0,
-		OPvec3Create(0, 1, 0),
-		OPvec3Create(0, 1, 0),
+		OPvec3create(0, 1, 0),
+		OPvec3create(0, 1, 0),
 		0.1f,
 		1000.0f,
 		45.0f,
@@ -88,7 +88,7 @@ OPint ExampleOculusUpdate(OPtimer* time) {
 	OPrenderParamMat4v("uProj", 1, &proj);
 	OPrenderParamMat4v("uView", 1, &view);
 
-	OPvec3 light = OPvec3Create(0, 1, 0);
+	OPvec3 light = OPvec3create(0, 1, 0);
 	OPrenderParamVec3("vLightDirection", &light);
 
 	OPrenderMesh();

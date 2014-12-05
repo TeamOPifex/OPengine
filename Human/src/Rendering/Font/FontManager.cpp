@@ -10,7 +10,7 @@ OPeffect* OPRENDER_CURR_FONT_EFFECT = NULL;
 OPfontManager* OPfontManagerCreate(OPfont* font) {
 	OPfontManager* temp = (OPfontManager*)OPallocZero(sizeof(OPfontManager));
 	temp->_font = font;
-	temp->_color = OPvec4Create(0.0f, 0.0f, 0.0f, 1.0f);
+	temp->_color = OPvec4create(0.0f, 0.0f, 0.0f, 1.0f);
 	temp->_align = OPFONT_ALIGN_LEFT;
 
 	temp->currNodes = OPvectorCreate(sizeof(OPfontTextNode));
@@ -79,7 +79,7 @@ void OPfontEffectBind(OPeffect* effect) {
 }
 
 void OPrenderTextRGBAXYAlign(const OPchar* text, f32 r, f32 g, f32 b, f32 a, f32 x, f32 y, OPfontAlign align) {
-	OPrenderTextColor4Vec2Align(text, OPvec4Create(r, g, b, a), OPvec2Create(x, y), align);
+	OPrenderTextColor4Vec2Align(text, OPvec4create(r, g, b, a), OPvec2Create(x, y), align);
 }
 
 void OPrenderTextXY(const OPchar* text, f32 x, f32 y) {
@@ -97,12 +97,12 @@ void OPrenderTextXYAlign(const OPchar* text, f32 x, f32 y, OPfontAlign align) {
 
 void OPrenderTextRGBXY(const OPchar* text, f32 r, f32 g, f32 b, f32 x, f32 y) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	OPrenderTextColor4Vec2Align(text, OPvec4Create(r, g, b, 1.0f), OPvec2Create(x, y), OPRENDER_CURR_FONT_MANAGER->_align);
+	OPrenderTextColor4Vec2Align(text, OPvec4create(r, g, b, 1.0f), OPvec2Create(x, y), OPRENDER_CURR_FONT_MANAGER->_align);
 }
 
 void OPrenderTextRGBAXY(const OPchar* text, f32 r, f32 g, f32 b, f32 a, f32 x, f32 y) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	OPrenderTextColor4Vec2Align(text, OPvec4Create(r,g,b,a), OPvec2Create(x,y), OPRENDER_CURR_FONT_MANAGER->_align);
+	OPrenderTextColor4Vec2Align(text, OPvec4create(r,g,b,a), OPvec2Create(x,y), OPRENDER_CURR_FONT_MANAGER->_align);
 }
 void OPrenderTextVec2(const OPchar* text, OPvec2 pos) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
@@ -115,11 +115,11 @@ void OPrenderTextVec2Align(const OPchar* text, OPvec2 pos, OPfontAlign align) {
 }
 
 void OPrenderTextColor3Vec2(const OPchar* text, OPvec3 color, OPvec2 pos) {
-	OPrenderTextColor4Vec2Align(text, OPvec4CreateFromVec3(color, 1.0f), pos, OPRENDER_CURR_FONT_MANAGER->_align);
+	OPrenderTextColor4Vec2Align(text, OPvec4createFromVec3(color, 1.0f), pos, OPRENDER_CURR_FONT_MANAGER->_align);
 }
 
 void OPrenderTextColor3Vec2Align(const OPchar* text, OPvec3 color, OPvec2 pos, OPfontAlign align) {
-	OPrenderTextColor4Vec2Align(text, OPvec4CreateFromVec3(color, 1.0f), pos, align);
+	OPrenderTextColor4Vec2Align(text, OPvec4createFromVec3(color, 1.0f), pos, align);
 }
 
 void OPrenderTextColor4Vec2(const OPchar* text, OPvec4 color, OPvec2 pos) {

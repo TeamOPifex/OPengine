@@ -10,7 +10,7 @@ typedef struct {
 } OPboundingSphere3D;
 
 static inline OPint OPboundingSphere3DCollision(OPboundingSphere3D* obj1, OPboundingSphere3D* obj2){
-	OPvec3 relPos = OPvec3Create(
+	OPvec3 relPos = OPvec3create(
 		obj1->pos.x - obj2->pos.x,
 		obj1->pos.y - obj2->pos.y,
 		obj1->pos.z - obj2->pos.z

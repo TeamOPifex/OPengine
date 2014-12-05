@@ -57,8 +57,8 @@ inline OPquat OPquatSub(OPquat* a, OPquat* b){
 inline OPquat OPquatMul(OPquat* a, OPquat* b){
 	register OPfloat dot = a->x * b->x + a->y * b->y + a->z * b->z;
 	OPvec3 cross;
-	OPvec3 vb = OPvec3valScl((OPvec3*)b, a->w);
-	OPvec3 va = OPvec3valScl((OPvec3*)a, b->w);
+	OPvec3 vb = OPvec3scl((OPvec3*)b, a->w);
+	OPvec3 va = OPvec3scl((OPvec3*)a, b->w);
 	OPvec3 sum = vb + va;
 	OPvec3cross(&cross, (OPvec3*)a, (OPvec3*)b);
 	sum += cross;
@@ -127,7 +127,7 @@ inline OPquat OPquatCreateRot(OPvec3* axis, OPfloat angle){
 	OPvec3 n = { 0, 0, 0 };
 
 	OPvec3norm(&n, axis);
-	OPvec3 v = OPvec3valScl(&n, s);
+	OPvec3 v = OPvec3scl(&n, s);
 	OPquat out = {
 		v.x,
 		v.y,

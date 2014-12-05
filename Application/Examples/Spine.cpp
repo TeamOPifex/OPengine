@@ -56,8 +56,8 @@ void ExampleSpineEnter(OPgameState* last) {
 
 	// Sets up the camera as a perpsective camera for rendering
 	spineExample->Camera = OPcamProj(
-		OPvec3Create(0.0f, 0.0f, 45.0f),
-		OPvec3Create(0.0f, 0.0f, 0.0f),
+		OPvec3create(0.0f, 0.0f, 45.0f),
+		OPvec3create(0.0f, 0.0f, 0.0f),
 		OPvec3Up,
 		0.1f,
 		1000.0f,

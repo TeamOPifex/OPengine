@@ -579,9 +579,9 @@ OPMData OPMloadData(OPstream* str) {
 			f32 sz = OPreadf32(str);
 			meta[i].Name = metaName;
 			meta[i].Type = metaType;
-			meta[i].Position = OPvec3Create(x,y,z);
-			meta[i].Rotation = OPvec3Create(rx,ry,rz);
-			meta[i].Scale = OPvec3Create(sx,sy,sz);
+			meta[i].Position = OPvec3create(x,y,z);
+			meta[i].Rotation = OPvec3create(rx,ry,rz);
+			meta[i].Scale = OPvec3create(sx,sy,sz);
 		}
 		data.metaCount = metaCount;
 		data.meta = meta;
@@ -671,8 +671,8 @@ OPlinkedList* CreateVertexList(OPMData* data){
 }
 
 void UpdateBasis(OPvec3* axis, OPvec3* basis, OPvec3* position){
-	OPfloat pa = OPvec3valDot(axis, position);
-	OPfloat ba = OPvec3valDot(axis, basis);
+	OPfloat pa = OPvec3dot(axis, position);
+	OPfloat ba = OPvec3dot(axis, basis);
 
 	if(OPabs(pa) > OPabs(ba)){
 		*basis = *position;
@@ -698,18 +698,18 @@ OPvec3 GetCenterOfMass(OPMData* data, OPlinkedList* vertList){
 OPvec3 GetNormal(OPvec3 bX, OPvec3 bY, OPvec3 bZ){
 	OPvec3 out = {0};
 
-	OPfloat mX = OPvec3valLen(&bX);
-	OPfloat mY = OPvec3valLen(&bY);
-	OPfloat mZ = OPvec3valLen(&bZ);
+	OPfloat mX = OPvec3len(&bX);
+	OPfloat mY = OPvec3len(&bY);
+	OPfloat mZ = OPvec3len(&bZ);
 
 	if(mX > mZ && mY > mZ){
-		out = OPvec3valCross(&bX, &bY);
+		out = OPvec3cross(&bX, &bY);
 	}
 	if(mX > mY && mZ > mY){
-		out = OPvec3valCross(&bX, &bZ);
+		out = OPvec3cross(&bX, &bZ);
 	}
 	if(mZ > mX && mY > mX){
-		out = OPvec3valCross(&bY, &bZ);
+		out = OPvec3cross(&bY, &bZ);
 	}
 
 	return out;
@@ -836,7 +836,7 @@ OPMPartNode OPMPartition(OPMData* data, OPhashMap* triTable, OPlinkedList* vertL
 			OPint i = (OPint)node->Data;
 			OPvec3 diff = vertices[i].Position - com;
 
-			if(OPvec3valDot(&diff, &normal) > 0){
+			if(OPvec3dot(&diff, &normal) > 0){
 				OPllInsertLast(spaceA, (void*)i);
 			}
 			else{
