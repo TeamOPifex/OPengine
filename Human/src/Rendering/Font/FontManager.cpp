@@ -211,16 +211,28 @@ void OPrenderTextColor4Mat4(const OPchar* text, OPvec4 color, OPmat4* world) {
 		OPhashMapGet(OPRENDER_CURR_FONT_MANAGER->builtNodes, text, (void**)&node);
 	}
 
+	OPmat4 aligned;
 	OPmat4 scaled;
 	OPfloat scale = (OPrenderWidth / 2.0f) * OPscreenWidthScale;
+	//OPlog("Scale %f, renderWidth %d, Width Scale %f, aspWidth %f, aspHeight %f", scale, OPrenderWidth, OPscreenWidthScale, OPrenderGetWidthAspectRatio(), OPrenderGetHeightAspectRatio());
 
 	if (node == NULL || !OPRENDER_CURR_FONT_MANAGER->isBuilt) {
 		OPfontUserTextNode textNode = OPfontCreateUserText(OPRENDER_CURR_FONT_MANAGER->_font, text);
 
-		OPrenderTextAlign(&scaled, textNode.Width, OPRENDER_CURR_FONT_MANAGER->_align);
-		OPmat4scl(&scaled, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f);
+		OPrenderTextAlign(&aligned, textNode.Width, OPRENDER_CURR_FONT_MANAGER->_align);
+		//OPmat4Log("Aligned", &aligned);
+
+		OPmat4buildScl(&scaled, 
+			OPrenderGetWidthAspectRatio() / scale, 
+			OPrenderGetHeightAspectRatio() / scale, 
+			1.0f);
+		//OPmat4Log("Scaled", &scaled);
+
 		OPmat4 temp;
-		OPmat4mul(&temp, &scaled, world);
+		OPmat4mul(&temp, &scaled, &aligned);
+		OPmat4mul(&temp, world, &temp);
+		//OPmat4Log("World", world);
+		//OPmat4Log("Temp", &temp);
 
 		OPrenderTextColor4Mat4TextNode(&textNode, color, &temp);
 		OPrenderDestroyMesh(&textNode.mesh);

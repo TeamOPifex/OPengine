@@ -113,6 +113,10 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 	OPrenderClear(0, 0, 0);
 
 	OPint isInActive = 0, isAvailable = 0;
+	OPmat4 w;
+	OPmat4buildScl(&w, 1, 1, 1);
+	OPmat4translate(&w, -0.9, (exampleSelector->Selected) * 0.1, 0);
+
 	f32 r, g, b;
 	for (i32 i = 0; i < ExampleCount; i++) {
 		isInActive = exampleSelector->Selected != i;
@@ -120,7 +124,9 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 		if (!exampleSelector->Examples[i].available) {
 			r = g = b = 0.2 + !isInActive * 0.4;
 		}
-		OPrenderTextRGBAXY(exampleSelector->Examples[i].name, r, g, b, 1, -0.9, (exampleSelector->Selected - i) * 0.1);
+		OPmat4translate(&w, 0, -0.1, 0);
+		OPrenderTextColor4Mat4(exampleSelector->Examples[i].name, OPvec4create(r,g,b,1), &w);
+		//OPrenderTextRGBAXY(exampleSelector->Examples[i].name, r, g, b, 1, -0.9, (exampleSelector->Selected - i) * 0.1);
 	}
 
 	OPrenderPresent();

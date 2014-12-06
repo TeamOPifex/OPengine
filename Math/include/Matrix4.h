@@ -306,9 +306,9 @@ inline void OPmat4rotZ(OPmat4* m, OPfloat x) {
 }
 
 inline void OPmat4translate(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
-	OPmat4 temp = OPmat4Zero;
-	OPmat4buildTranslate(&temp, x, y, z);
-	OPmat4mul(m, m, &temp);
+	(*m)[3][0] += x;
+	(*m)[3][1] += y;
+	(*m)[3][2] += z;
 }
 
 inline void OPmat4scl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {

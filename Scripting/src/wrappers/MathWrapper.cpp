@@ -4,6 +4,7 @@
 
 #include "./Math/include/Vector3.h"
 #include "./Math/include/Matrix4.h"
+#include "./Math/include/Tweening.h"
 
 static V8Return _OPmat4Create(const V8Args& args);
 static V8Return _OPmat4Destroy(const V8Args& args);
@@ -36,43 +37,37 @@ static V8Return _OPrand(const V8Args& args);
 static V8Return _OPfloor(const V8Args& args);
 static V8Return _OPpow(const V8Args& args);
 
-void MathInitializeMethods(V8isolate* isolate, V8ObjectGlobal target) {
-
-	// OP.mat4
-	V8ObjectGlobal mat4 = CreateObjectG(isolate);
-	SetFunctionG(isolate, mat4, "Create", _OPmat4Create);
-	SetFunctionG(isolate, mat4, "Destroy", _OPmat4Destroy);
-	SetFunctionG(isolate, mat4, "RotX", _OPmat4RotateX);
-	SetFunctionG(isolate, mat4, "RotY", _OPmat4RotateY);
-	SetFunctionG(isolate, mat4, "RotZ", _OPmat4RotateZ);
-	SetFunctionG(isolate, mat4, "Vec3", _OPmat4Vec3);
-	SetFunctionG(isolate, mat4, "SetRotX", _OPmat4SetRotateX);
-	SetFunctionG(isolate, mat4, "SetRotY", _OPmat4SetRotateY);
-	SetFunctionG(isolate, mat4, "SetRotZ", _OPmat4SetRotateZ);
-	SetFunctionG(isolate, mat4, "SetVec3", _OPmat4SetVec3);
-	SetFunctionG(isolate, mat4, "Identity", _OPmat4Identity);
-	SetFunctionG(isolate, mat4, "Mul", _OPmat4Multiply);
-	SetObjectG(isolate, target, "mat4", mat4);
-
-	// OP.vec3
-	V8ObjectGlobal vec3 = CreateObjectG(isolate);
-	SetFunctionG(isolate, vec3, "Create", _OPvec3Create);
-	SetFunctionG(isolate, vec3, "FromPointer", _OPvec3CreateFromPointer);
-	SetFunctionG(isolate, vec3, "Destroy", _OPvec3Destroy);
-	SetFunctionG(isolate, vec3, "Set", _OPvec3Set);
-	SetObjectG(isolate, target, "vec3", vec3);
-
-
-	// OP.math
-	V8ObjectGlobal math = CreateObjectG(isolate);
-	SetFunctionG(isolate, math, "Abs", _OPabs);
-	SetFunctionG(isolate, math, "Rand", _OPrand);
-	SetFunctionG(isolate, math, "Floor", _OPfloor);
-	SetFunctionG(isolate, math, "Pow", _OPpow);
-	SetValueG(isolate, math, "PI", GetNumberF32(isolate, OPpi));
-	SetObjectG(isolate, target, "math", math);
-
-}
+static V8Return _OPtweenLinear(const V8Args& args);
+static V8Return _OPtweenQuadraticEaseIn(const V8Args& args);
+static V8Return _OPtweenQuadraticEaseOut(const V8Args& args);
+static V8Return _OPtweenQuadraticEaseInOut(const V8Args& args);
+static V8Return _OPtweenCubicEaseIn(const V8Args& args);
+static V8Return _OPtweenCubicEaseOut(const V8Args& args);
+static V8Return _OPtweenCubicEaseInOut(const V8Args& args);
+static V8Return _OPtweenQuarticEaseIn(const V8Args& args);
+static V8Return _OPtweenQuarticEaseOut(const V8Args& args);
+static V8Return _OPtweenQuarticEaseInOut(const V8Args& args);
+static V8Return _OPtweenQuinticEaseIn(const V8Args& args);
+static V8Return _OPtweenQuinticEaseOut(const V8Args& args);
+static V8Return _OPtweenQuinticEaseInOut(const V8Args& args);
+static V8Return _OPtweenSineEaseIn(const V8Args& args);
+static V8Return _OPtweenSineEaseOut(const V8Args& args);
+static V8Return _OPtweenSineEaseInOut(const V8Args& args);
+static V8Return _OPtweenCircularEaseIn(const V8Args& args);
+static V8Return _OPtweenCircularEaseOut(const V8Args& args);
+static V8Return _OPtweenCircularEaseInOut(const V8Args& args);
+static V8Return _OPtweenExponentialEaseIn(const V8Args& args);
+static V8Return _OPtweenExponentialEaseOut(const V8Args& args);
+static V8Return _OPtweenExponentialEaseInOut(const V8Args& args);
+static V8Return _OPtweenElasticEaseIn(const V8Args& args);
+static V8Return _OPtweenElasticEaseOut(const V8Args& args);
+static V8Return _OPtweenElasticEaseInOut(const V8Args& args);
+static V8Return _OPtweenBackEaseIn(const V8Args& args);
+static V8Return _OPtweenBackEaseOut(const V8Args& args);
+static V8Return _OPtweenBackEaseInOut(const V8Args& args);
+static V8Return _OPtweenBounceEaseOut(const V8Args& args);
+static V8Return _OPtweenBounceEaseIn(const V8Args& args);
+static V8Return _OPtweenBounceEaseInOut(const V8Args& args);
 
 void MathInitializeMethodsO(V8isolate* isolate, V8Object target) {
 
@@ -110,6 +105,42 @@ void MathInitializeMethodsO(V8isolate* isolate, V8Object target) {
 	SetFunction(isolate, math, "Pow", _OPpow);
 	SetValue(isolate, math, "PI", GetNumberF32(isolate, OPpi));
 	SetObject(isolate, target, "math", math);
+
+	// OP.tween
+	V8Object tween = CreateObject(isolate);
+
+	SetFunction(isolate, tween, "Linear", _OPtweenLinear);
+	SetFunction(isolate, tween, "QuadraticEaseIn", _OPtweenQuadraticEaseIn);
+	SetFunction(isolate, tween, "QuadraticEaseOut", _OPtweenQuadraticEaseOut);
+	SetFunction(isolate, tween, "QuadraticEaseInOut", _OPtweenQuadraticEaseInOut);
+	SetFunction(isolate, tween, "CubicEaseIn", _OPtweenCubicEaseIn);
+	SetFunction(isolate, tween, "CubicEaseOut", _OPtweenCubicEaseOut);
+	SetFunction(isolate, tween, "CubicEaseInOut", _OPtweenCubicEaseInOut);
+	SetFunction(isolate, tween, "QuarticEaseIn", _OPtweenQuarticEaseIn);
+	SetFunction(isolate, tween, "QuarticEaseOut", _OPtweenQuarticEaseOut);
+	SetFunction(isolate, tween, "QuarticEaseInOut", _OPtweenQuarticEaseInOut);
+	SetFunction(isolate, tween, "QuinticEaseIn", _OPtweenQuinticEaseIn);
+	SetFunction(isolate, tween, "QuinticEaseOut", _OPtweenQuinticEaseOut);
+	SetFunction(isolate, tween, "QuinticEaseInOut", _OPtweenQuinticEaseInOut);
+	SetFunction(isolate, tween, "SineEaseIn", _OPtweenSineEaseIn);
+	SetFunction(isolate, tween, "SineEaseOut", _OPtweenSineEaseOut);
+	SetFunction(isolate, tween, "SineEaseInOut", _OPtweenSineEaseInOut);
+	SetFunction(isolate, tween, "CircularEaseIn", _OPtweenCircularEaseIn);
+	SetFunction(isolate, tween, "CircularEaseOut", _OPtweenCircularEaseOut);
+	SetFunction(isolate, tween, "CircularEaseInOut", _OPtweenCircularEaseInOut);
+	SetFunction(isolate, tween, "ExponentialEaseIn", _OPtweenExponentialEaseIn);
+	SetFunction(isolate, tween, "ExponentialEaseOut", _OPtweenExponentialEaseOut);
+	SetFunction(isolate, tween, "ExponentialEaseInOut", _OPtweenExponentialEaseInOut);
+	SetFunction(isolate, tween, "ElasticEaseIn", _OPtweenElasticEaseIn);
+	SetFunction(isolate, tween, "ElasticEaseOut", _OPtweenElasticEaseOut);
+	SetFunction(isolate, tween, "ElasticEaseInOut", _OPtweenElasticEaseInOut);
+	SetFunction(isolate, tween, "BackEaseIn", _OPtweenBackEaseIn);
+	SetFunction(isolate, tween, "BackEaseOut", _OPtweenBackEaseOut);
+	SetFunction(isolate, tween, "BackEaseInOut", _OPtweenBackEaseInOut);
+	SetFunction(isolate, tween, "BounceEaseOut", _OPtweenBounceEaseOut);
+	SetFunction(isolate, tween, "BounceEaseIn", _OPtweenBounceEaseIn);
+	SetFunction(isolate, tween, "BounceEaseInOut", _OPtweenBounceEaseInOut);
+	SetObject(isolate, target, "tween", tween);
 
 }
 
@@ -439,5 +470,134 @@ static V8Return _OPmat4Multiply(const V8Args& args) {
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
+
+
+
+static V8Return _OPtweenLinear(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_linear(args[0]->NumberValue())));
+}
+
+static V8Return _OPtweenQuadraticEaseIn(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_quadraticEaseIn(args[0]->NumberValue())));
+}
+static V8Return _OPtweenQuadraticEaseOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_quadraticEaseOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenQuadraticEaseInOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_quadraticEaseInOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenCubicEaseIn(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_cubicEaseIn(args[0]->NumberValue())));
+}
+static V8Return _OPtweenCubicEaseOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_cubicEaseOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenCubicEaseInOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_cubicEaseInOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenQuarticEaseIn(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_quarticEaseIn(args[0]->NumberValue())));
+}
+static V8Return _OPtweenQuarticEaseOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_quarticEaseOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenQuarticEaseInOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_quarticEaseInOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenQuinticEaseIn(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_quinticEaseIn(args[0]->NumberValue())));
+}
+static V8Return _OPtweenQuinticEaseOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_quinticEaseOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenQuinticEaseInOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_quinticEaseInOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenSineEaseIn(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_sineEaseIn(args[0]->NumberValue())));
+}
+static V8Return _OPtweenSineEaseOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_sineEaseOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenSineEaseInOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_sineEaseInOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenCircularEaseIn(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_circularEaseIn(args[0]->NumberValue())));
+}
+static V8Return _OPtweenCircularEaseOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_circularEaseOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenCircularEaseInOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_circularEaseInOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenExponentialEaseIn(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_exponentialEaseIn(args[0]->NumberValue())));
+}
+static V8Return _OPtweenExponentialEaseOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_exponentialEaseOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenExponentialEaseInOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_exponentialEaseInOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenElasticEaseIn(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_elasticEaseIn(args[0]->NumberValue())));
+}
+static V8Return _OPtweenElasticEaseOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_elasticEaseOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenElasticEaseInOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_elasticEaseInOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenBackEaseIn(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_backEaseIn(args[0]->NumberValue())));
+}
+static V8Return _OPtweenBackEaseOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_backEaseOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenBackEaseInOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_backEaseInOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenBounceEaseOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_bounceEaseOut(args[0]->NumberValue())));
+}
+static V8Return _OPtweenBounceEaseIn(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_bounceEaseIn(args[0]->NumberValue())));
+}
+static V8Return _OPtweenBounceEaseInOut(const V8Args& args) {
+	V8Scope scope;	
+	return SetReturn(args, &scope, GetNumber(isolate, OPtween_bounceEaseInOut(args[0]->NumberValue())));
+}
+
 
 #endif
