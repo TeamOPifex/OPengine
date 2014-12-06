@@ -17,11 +17,11 @@ void ApplicationInit() {
 	InitializeLoaders();
 	OPcmanInit(assetDir);
 
-	OPvec3 a = OPvec3create(1,1,1);
-	OPvec3 b = OPvec3create(2,2,2);
-	OPvec3 c = OPvec3create(3,3,3);
-
-	OPvec3 d = a - b * c;
+	OPmat4 a, b, c;
+	OPmat4buildScl(&a, 2, 2, 2);
+	OPmat4buildTranslate(&b, 2, 2, 2);
+	OPmat4mul(&c, &b, &a);
+	OPmat4Log("Test", &c);
 
 	OPrenderInit();
 
