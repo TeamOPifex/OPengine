@@ -28,6 +28,8 @@ static V8Return _OP_render_CullMode(const V8Args& args);
 static V8Return _OP_render_Present(const V8Args& args);
 static V8Return _OP_render_CreateMesh(const V8Args& args);
 static V8Return _OP_render_BuildMesh(const V8Args& args);
+static V8Return _OP_render_FullScreen(const V8Args& args);
+static V8Return _OP_render_ScreenSize(const V8Args& args);
 
 static V8Return _CreateProj(const V8Args& args);
 static V8Return _CreateOrtho(const V8Args& args);
@@ -311,6 +313,8 @@ void HumanInitializeMethodsO(V8isolate* isolate, V8Object target) {
 	SetFunction(isolate, render, "ParamVec3", _RenderParamVec3);
 	SetFunction(isolate, render, "ParamTexture", _RenderParamTexture);
 	SetFunction(isolate, render, "ClearActiveTextures", _TextureClearActive);
+	SetFunction(isolate, render, "FullScreen", _OP_render_FullScreen);
+	SetFunction(isolate, render, "ScreenSize", _OP_render_ScreenSize);
 	SetObject(isolate, target, "render", render);
 
 	// OP.camera
@@ -524,6 +528,23 @@ static V8Return _OP_render_BuildMesh(const V8Args& args) {
 
 	OPfree(verts);
 	OPfree(indices);
+
+	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _OP_render_FullScreen(const V8Args& args) {
+	V8Scope scope;
+
+	OPrenderFullscreen = args[0]->Int32Value();
+
+	return SetReturn(args, &scope, GetNull(isolate));
+}
+
+static V8Return _OP_render_ScreenSize(const V8Args& args) {
+	V8Scope scope;
+
+	OPscreenWidth = args[0]->Int32Value();
+	OPscreenHeight = args[1]->Int32Value();
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
