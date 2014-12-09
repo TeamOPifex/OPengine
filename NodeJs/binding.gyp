@@ -16,7 +16,8 @@
                 "@OPIFEX_REPOSITORY@/External/glfw-3.0.4/include",
                 "@OPIFEX_REPOSITORY@/External/glm-0.9.1",
                 "@OPIFEX_REPOSITORY@/External/V8/",
-                "@OPIFEX_REPOSITORY@/External/OpenAL/"
+                "@OPIFEX_REPOSITORY@/External/OpenAL/",
+                "@OPIFEX_REPOSITORY@/External/Myo/include/"
             ],
             "cflags!": [
                 "-fno-exceptions"
@@ -99,6 +100,7 @@
                           'OPIFEX_OSX64',
                           'OPIFEX_V8',
                           'OPIFEX_NODEJS',
+                          'OPIFEX_MYO',
                           "_ITERATOR_DEBUG_LEVEL=0"
                         ],
                         "link_settings": {
@@ -119,19 +121,12 @@
                                 "/System/Library/Frameworks/CoreFoundation.framework",
                                 "/System/Library/Frameworks/CoreVideo.framework",
                                 "/System/Library/Frameworks/OpenAL.framework",
+                                "/System/Library/Frameworks/myo.framework",
                                 "/usr/local/lib/libogg.dylib",
                                 "/usr/local/lib/libvorbisfile.dylib"
                             ],
                             "library_dirs": [
-                                "../Core/",
-                                "../Data/",
-                                "../Math/",
-                                "../Performance/",
-                                "../Human/",
-                                "../Communication/",
-                                "../Pipeline/",
-                                "../GLFW/src/",
-                                "../External/"
+                                "../Binaries/osx64/debug/"
                             ],
                         }
                     }
