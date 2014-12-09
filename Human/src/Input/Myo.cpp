@@ -140,11 +140,6 @@ public:
 		}
 		else
 
-		if (detectedPose == myo::Pose::thumbToPinky) {
-			poses[Myo_Pose_ThumbToPinky] = 1;
-		}
-		else
-
 		if (detectedPose == myo::Pose::rest) {
 			poses[Myo_Pose_Rest] = 1;
 		}
@@ -204,6 +199,8 @@ void OPmyoConnect() {
 		// Hub::addListener() takes the address of any object whose class inherits from DeviceListener, and will cause
 		// Hub::run() to send events to all registered device listeners.
 		hub->addListener(collector);
+
+		myoDevice->unlock(myo::Myo::unlockHold);
 
 	#else
 		 OPlog("Myo Feature is not enabled");

@@ -7,13 +7,15 @@
 
 typedef enum {
 	Myo_Pose_None,
+	Myo_Pose_Rest,
 	Myo_Pose_Fist,
 	Myo_Pose_Fingers_Spread,
 	Myo_Pose_Wave_In,
 	Myo_Pose_Wave_Out,
+	Myo_Pose_Double_Tap
+	,
 	Myo_Pose_Turn_In,
 	Myo_Pose_Wave,
-	Myo_Pose_Rest,
 	Myo_Pose_ThumbToPinky,
 	Myo_Pose_Max
 } OPmyoPoses;

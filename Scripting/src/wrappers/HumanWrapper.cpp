@@ -16,6 +16,7 @@
 #include "./Pipeline/include/Sprite3D.h"
 #include "./Human/include/Audio/Audio.h"
 #include "./Human/include/Audio/AudioPlayer.h"
+#include "./Human/include/Input/Myo.h"
 
 // Render
 static V8Return _OP_render_Init(const V8Args& args);
@@ -75,6 +76,18 @@ static V8Return _KeyboardIsUp(const V8Args& args);
 static V8Return _KeyboardWasReleased(const V8Args& args);
 static V8Return _KeyboardWasPressed(const V8Args& args);
 
+static V8Return _OP_myo_Connect(const V8Args& args);
+static V8Return _OP_myo_Update(const V8Args& args);
+static V8Return _OP_myo_Roll(const V8Args& args);
+static V8Return _OP_myo_Pitch(const V8Args& args);
+static V8Return _OP_myo_Yaw(const V8Args& args);
+static V8Return _OP_myo_RollChange(const V8Args& args);
+static V8Return _OP_myo_PitchChange(const V8Args& args);
+static V8Return _OP_myo_YawChange(const V8Args& args);
+static V8Return _OP_myo_SetVibration(const V8Args& args);
+static V8Return _OP_myo_PoseNow(const V8Args& args);
+static V8Return _OP_myo_PoseWas(const V8Args& args);
+static V8Return _OP_myo_PoseIs(const V8Args& args);
 
 static V8Return _FontInit(const V8Args& args);
 static V8Return _FontManagerCreate(const V8Args& args);
@@ -359,6 +372,23 @@ void HumanInitializeMethodsO(V8isolate* isolate, V8Object target) {
 	SetFunction(isolate, input, "GamePadIsConnected", _GamePadIsConnected);
 	SetFunction(isolate, input, "GamePadSetDeadzone", _GamePadSetDeadzone);
 	SetObject(isolate, target, "input", input);
+
+	// OP.myo
+
+	V8Object myo = CreateObject(isolate);
+	SetFunction(isolate, myo, "Connect", _OP_myo_Connect);
+	SetFunction(isolate, myo, "Update", _OP_myo_Update);
+	SetFunction(isolate, myo, "Roll", _OP_myo_Roll);
+	SetFunction(isolate, myo, "Pitch", _OP_myo_Pitch);
+	SetFunction(isolate, myo, "Yaw", _OP_myo_Yaw);
+	SetFunction(isolate, myo, "RollChange", _OP_myo_RollChange);
+	SetFunction(isolate, myo, "PitchChange", _OP_myo_PitchChange);
+	SetFunction(isolate, myo, "YawChange", _OP_myo_YawChange);
+	SetFunction(isolate, myo, "SetVibration", _OP_myo_SetVibration);
+	SetFunction(isolate, myo, "PoseNow", _OP_myo_PoseNow);
+	SetFunction(isolate, myo, "PoseWas", _OP_myo_PoseWas);
+	SetFunction(isolate, myo, "PoseIs", _OP_myo_PoseIs);
+	SetObject(isolate, target, "myo", myo);
 
 	// OP.font
 	V8Object font = CreateObject(isolate);
@@ -663,6 +693,65 @@ static V8Return _KeyboardWasPressed(const V8Args& args) {
 	V8Scope scope;
 	bool result = OPkeyboardWasPressed((OPkeyboardKey)args[0]->Int32Value());
 	return SetReturn(args, &scope, GetBool(isolate, result));
+}
+
+
+static V8Return _OP_myo_Connect(const V8Args& args) {
+	V8Scope scope;
+	OPmyoConnect();
+	return SetReturn(args, &scope, GetBool(isolate, true));
+}
+
+static V8Return _OP_myo_Update(const V8Args& args) {
+	V8Scope scope;
+	OPmyoUpdate(OPgetTime());
+	return SetReturn(args, &scope, GetNumberF32(isolate, true));
+}
+
+static V8Return _OP_myo_Roll(const V8Args& args) {
+	V8Scope scope;
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPmyoRoll()));
+}
+static V8Return _OP_myo_Pitch(const V8Args& args) {
+	V8Scope scope;
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPmyoPitch()));
+}
+static V8Return _OP_myo_Yaw(const V8Args& args) {
+	V8Scope scope;
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPmyoYaw()));
+}
+static V8Return _OP_myo_RollChange(const V8Args& args) {
+	V8Scope scope;
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPmyoRollChange()));
+}
+static V8Return _OP_myo_PitchChange(const V8Args& args) {
+	V8Scope scope;
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPmyoPitchChange()));
+}
+static V8Return _OP_myo_YawChange(const V8Args& args) {
+	V8Scope scope;
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPmyoYawChange()));
+}
+static V8Return _OP_myo_SetVibration(const V8Args& args) {
+	V8Scope scope;
+	OPmyoVibrations v = (OPmyoVibrations)(args[0]->IntegerValue());
+	OPmyoSetVibration(v);
+	return SetReturn(args, &scope, GetBool(isolate, true));
+}
+static V8Return _OP_myo_PoseNow(const V8Args& args) {
+	V8Scope scope;
+	OPmyoPoses p = (OPmyoPoses)(args[0]->IntegerValue());
+	return SetReturn(args, &scope, GetNumber(isolate, OPmyoPoseNow(p)));
+}
+static V8Return _OP_myo_PoseWas(const V8Args& args) {
+	V8Scope scope;
+	OPmyoPoses p = (OPmyoPoses)(args[0]->IntegerValue());
+	return SetReturn(args, &scope, GetNumber(isolate, OPmyoPoseWas(p)));
+}
+static V8Return _OP_myo_PoseIs(const V8Args& args) {
+	V8Scope scope;
+	OPmyoPoses p = (OPmyoPoses)(args[0]->IntegerValue());
+	return SetReturn(args, &scope, GetNumber(isolate, OPmyoPoseIs(p)));
 }
 
 static V8Return _GamePadLeftThumbX(const V8Args& args) {
