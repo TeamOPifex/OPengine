@@ -474,129 +474,132 @@ static V8Return _OPmat4Multiply(const V8Args& args) {
 
 
 static V8Return _OPtweenLinear(const V8Args& args) {
-	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_linear(args[0]->NumberValue())));
+	V8Scope scope;
+	OPfloat val = args[0]->NumberValue();
+	OPfloat result = OPtween_linear(val);
+	OPlog("Tween Linear: %f, %f", val, result);
+	return SetReturn(args, &scope, GetNumberF32(isolate, result));
 }
 
 static V8Return _OPtweenQuadraticEaseIn(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_quadraticEaseIn(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_quadraticEaseIn(args[0]->NumberValue())));
 }
 static V8Return _OPtweenQuadraticEaseOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_quadraticEaseOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_quadraticEaseOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenQuadraticEaseInOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_quadraticEaseInOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_quadraticEaseInOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenCubicEaseIn(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_cubicEaseIn(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_cubicEaseIn(args[0]->NumberValue())));
 }
 static V8Return _OPtweenCubicEaseOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_cubicEaseOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_cubicEaseOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenCubicEaseInOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_cubicEaseInOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_cubicEaseInOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenQuarticEaseIn(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_quarticEaseIn(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_quarticEaseIn(args[0]->NumberValue())));
 }
 static V8Return _OPtweenQuarticEaseOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_quarticEaseOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_quarticEaseOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenQuarticEaseInOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_quarticEaseInOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_quarticEaseInOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenQuinticEaseIn(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_quinticEaseIn(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_quinticEaseIn(args[0]->NumberValue())));
 }
 static V8Return _OPtweenQuinticEaseOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_quinticEaseOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_quinticEaseOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenQuinticEaseInOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_quinticEaseInOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_quinticEaseInOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenSineEaseIn(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_sineEaseIn(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_sineEaseIn(args[0]->NumberValue())));
 }
 static V8Return _OPtweenSineEaseOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_sineEaseOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_sineEaseOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenSineEaseInOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_sineEaseInOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_sineEaseInOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenCircularEaseIn(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_circularEaseIn(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_circularEaseIn(args[0]->NumberValue())));
 }
 static V8Return _OPtweenCircularEaseOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_circularEaseOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_circularEaseOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenCircularEaseInOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_circularEaseInOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_circularEaseInOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenExponentialEaseIn(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_exponentialEaseIn(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_exponentialEaseIn(args[0]->NumberValue())));
 }
 static V8Return _OPtweenExponentialEaseOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_exponentialEaseOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_exponentialEaseOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenExponentialEaseInOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_exponentialEaseInOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_exponentialEaseInOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenElasticEaseIn(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_elasticEaseIn(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_elasticEaseIn(args[0]->NumberValue())));
 }
 static V8Return _OPtweenElasticEaseOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_elasticEaseOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_elasticEaseOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenElasticEaseInOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_elasticEaseInOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_elasticEaseInOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenBackEaseIn(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_backEaseIn(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_backEaseIn(args[0]->NumberValue())));
 }
 static V8Return _OPtweenBackEaseOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_backEaseOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_backEaseOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenBackEaseInOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_backEaseInOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_backEaseInOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenBounceEaseOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_bounceEaseOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_bounceEaseOut(args[0]->NumberValue())));
 }
 static V8Return _OPtweenBounceEaseIn(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_bounceEaseIn(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_bounceEaseIn(args[0]->NumberValue())));
 }
 static V8Return _OPtweenBounceEaseInOut(const V8Args& args) {
 	V8Scope scope;	
-	return SetReturn(args, &scope, GetNumber(isolate, OPtween_bounceEaseInOut(args[0]->NumberValue())));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPtween_bounceEaseInOut(args[0]->NumberValue())));
 }
 
 
