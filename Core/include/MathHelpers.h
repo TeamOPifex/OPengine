@@ -63,7 +63,7 @@ __inline OPint OPfloor(OPfloat f){
 * @return absolute value
 */
 __inline OPfloat OPabs(OPfloat f){
-	return f > 0 ? f : -f;
+	return fabs(f);
 }
 
 //-----------------------------------------------------------------------------
