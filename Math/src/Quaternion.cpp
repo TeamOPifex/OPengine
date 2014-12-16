@@ -1,3 +1,3 @@
-#include "./Math/include/Quaternion.h"
+#include "./Math/include/OPquat.h"
 
 const OPquat OPquatIdentity = { 0, 0, 0, 1 };

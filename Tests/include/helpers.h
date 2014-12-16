@@ -1,7 +1,7 @@
 #ifndef OP_ENGINE_TEST_HELPERS
 #define OP_ENGINE_TEST_HELPERS
 #include <Core/include/Core.h>
-#include "./Core/include/Log.h"
+#include "./Core/include/OPlog.h"
 #include <stdio.h>
 
 #define OP_TEST_INIT OPint OP_TEST_COUNT = 1;

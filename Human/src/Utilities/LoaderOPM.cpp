@@ -1,7 +1,7 @@
 #include "./Human/include/Utilities/LoaderOPM.h"
-#include "./Math/include/Quaternion.h"
+#include "./Math/include/OPquat.h"
 
-#include "./Data/include/List.h"
+#include "./Data/include/OPlist.h"
 
 void OPCalculateTangents(OPMData* data) {
 	for (ui16 a = 0; a < data->indexCount; a+=3) {		

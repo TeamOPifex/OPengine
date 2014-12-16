@@ -1,9 +1,9 @@
-#include "./Core/include/Assert.h"
-#include "./Data/include/File.h"
-#include "./Data/include/ContentManager.h"
+#include "./Human/include/Rendering/Sprite/OPspriteSheet.h"
 #include "./Human/include/Utilities/ImagePNG.h"
-#include "./Human/include/Rendering/Sprite/SpriteSheet.h"
-#include "./Data/include/String.h"
+#include "./Data/include/OPfile.h"
+#include "./Data/include/OPcman.h"
+#include "./Data/include/OPstring.h"
+#include "./Core/include/Assert.h"
 
 void __opSpriteScaleFrames(OPtexture* tex, OPspriteSheet* ss) {
 	ASSERT(tex, "__opSpriteScaleFrames() - texture null");

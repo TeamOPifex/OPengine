@@ -1,9 +1,9 @@
 #include "./Examples/Textured.h"
-#include "./Human/include/Systems/RenderSystem.h"
+#include "./Human/include/Systems/OPrenderSystem.h"
 
-#include "./Data/include/ContentManager.h"
+#include "./Data/include/OPcman.h"
 #include "./Human/include/Rendering/OPMvertex.h"
-#include "./Human/include/Input/Input.h"
+#include "./Human/include/Systems/OPinputSystem.h"
 
 OPgameState GS_EXAMPLE_TEXTURED = {
 	ExampleTexturedEnter,

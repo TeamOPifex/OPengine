@@ -2,7 +2,7 @@
 
 #ifndef OPEngine_Core_GameCycle
 #define OPEngine_Core_GameCycle
-#include "Timer.h"
+#include "./Core/include/OPtimer.h"
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./Data/include/GameStates.h"
+#include "./Data/include/OPgameState.h"
 
 extern OPgameState GS_EXAMPLE_PARTICLESYSTEM;
 

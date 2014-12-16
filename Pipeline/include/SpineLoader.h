@@ -2,9 +2,9 @@
 #define OPIFEX_PIPELINE_SPINELOADER
 
 #include "./Core/include/Types.h"
-#include "./Core/include/Timer.h"
-#include "./Human/include/Rendering/Effect.h"
-#include "./Human/include/Rendering/Camera.h"
+#include "./Core/include/OPtimer.h"
+#include "./Human/include/Rendering/OPeffect.h"
+#include "./Human/include/Rendering/OPcam.h"
 
 
 #ifdef OPIFEX_SPINE

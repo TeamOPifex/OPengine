@@ -3,8 +3,8 @@
 
 #include "./Core/include/Types.h"
 #include "./Core/include/MathHelpers.h"
-#include "Vector2.h"
-#include "Vector3.h"
+#include "./Math/include/OPvec2.h"
+#include "./Math/include/OPvec3.h"
 
 /**
  * OPlineLineInter2() - Computes the interesction point of two 2D-line

@@ -2,9 +2,9 @@
 
 // OPifex Engine includes
 #include "./Pipeline/include/Rendering.h"
-#include "./Human/include/Systems/InputSystem.h"
-#include "./Human/include/Systems/RenderSystem.h"
-#include "./Data/include/ContentManager.h"
+#include "./Human/include/Systems/OPinputSystem.h"
+#include "./Human/include/Systems/OPrenderSystem.h"
+#include "./Data/include/OPcman.h"
 
 // This is the Game State for this MyoExample
 // Each entry is a function pointer for Initialize, Update, Destroy

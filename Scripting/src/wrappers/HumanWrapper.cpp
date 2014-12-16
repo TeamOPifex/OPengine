@@ -17,6 +17,7 @@
 #include "./Human/include/Audio/Audio.h"
 #include "./Human/include/Audio/AudioPlayer.h"
 #include "./Human/include/Input/Myo.h"
+#include "./Core/include/Timer.h"
 
 // Render
 static V8Return _OP_render_Init(const V8Args& args);
@@ -31,6 +32,9 @@ static V8Return _OP_render_CreateMesh(const V8Args& args);
 static V8Return _OP_render_BuildMesh(const V8Args& args);
 static V8Return _OP_render_FullScreen(const V8Args& args);
 static V8Return _OP_render_ScreenSize(const V8Args& args);
+
+static V8Return _OP_timer_Create(const V8Args& args);
+static V8Return _OP_timer_Update(const V8Args& args);
 
 static V8Return _CreateProj(const V8Args& args);
 static V8Return _CreateOrtho(const V8Args& args);
@@ -88,6 +92,8 @@ static V8Return _OP_myo_SetVibration(const V8Args& args);
 static V8Return _OP_myo_PoseNow(const V8Args& args);
 static V8Return _OP_myo_PoseWas(const V8Args& args);
 static V8Return _OP_myo_PoseIs(const V8Args& args);
+static V8Return _OP_myo_Lock(const V8Args& args);
+static V8Return _OP_myo_Unlock(const V8Args& args);
 
 static V8Return _FontInit(const V8Args& args);
 static V8Return _FontManagerCreate(const V8Args& args);
@@ -346,6 +352,12 @@ void HumanInitializeMethodsO(V8isolate* isolate, V8Object target) {
 	SetFunction(isolate, effect, "Create", _OP_effect_Create);
 	SetObject(isolate, target, "effect", effect);
 
+	// OP.timer
+	V8Object timer = CreateObject(isolate);
+	SetFunction(isolate, timer, "Create", _OP_timer_Create);
+	SetFunction(isolate, timer, "Update", _OP_timer_Update);
+	SetObject(isolate, target, "timer", timer);
+
 	// OP.input
 	V8Object input = CreateObject(isolate);
 	SetFunction(isolate, input, "Update", _InputUpdate);
@@ -388,6 +400,8 @@ void HumanInitializeMethodsO(V8isolate* isolate, V8Object target) {
 	SetFunction(isolate, myo, "PoseNow", _OP_myo_PoseNow);
 	SetFunction(isolate, myo, "PoseWas", _OP_myo_PoseWas);
 	SetFunction(isolate, myo, "PoseIs", _OP_myo_PoseIs);
+	SetFunction(isolate, myo, "Lock", _OP_myo_Lock);
+	SetFunction(isolate, myo, "Unlock", _OP_myo_Unlock);
 	SetObject(isolate, target, "myo", myo);
 
 	// OP.font
@@ -752,6 +766,16 @@ static V8Return _OP_myo_PoseIs(const V8Args& args) {
 	V8Scope scope;
 	OPmyoPoses p = (OPmyoPoses)(args[0]->IntegerValue());
 	return SetReturn(args, &scope, GetNumber(isolate, OPmyoPoseIs(p)));
+}
+static V8Return _OP_myo_Lock(const V8Args& args) {
+	V8Scope scope;
+	OPmyoLock();
+	return SetReturn(args, &scope, GetBool(isolate, true));
+}
+static V8Return _OP_myo_Unlock(const V8Args& args) {
+	V8Scope scope;
+	OPmyoUnlock(args[0]->IntegerValue());
+	return SetReturn(args, &scope, GetBool(isolate,true));
 }
 
 static V8Return _GamePadLeftThumbX(const V8Args& args) {
@@ -1415,6 +1439,37 @@ static V8Return _FrameBufferCreateDepth(const V8Args& args) {
 	SetValue(isolate, obj, "Texture", GetNumber(isolate, (OPint)&fb->Texture));
 
 	return SetReturn(args, &scope, obj);
+}
+
+
+static V8Return _OP_timer_Elapsed(const V8Args& args) {	
+
+	V8Scope scope;
+	i32 inScope;
+	OPtimer* timer = (OPtimer*)GetFirstPointer(args, isolate, &inScope, OPscript_TIMER);
+
+	return SetReturn(args, &scope, GetNumber(isolate, timer->Elapsed));
+}
+
+static V8Return _OP_timer_Create(const V8Args& args) {
+	V8Scope scope;
+	OPtimer* timer = (OPtimer*)OPalloc(sizeof(OPtimer));
+	OPcreateTimer(timer);
+
+	V8Object obj = CreateTypedObject(isolate, timer, OPscript_TIMER);
+	SetFunction(isolate, obj, "Elapsed", _OP_timer_Elapsed);
+
+	return SetReturn(args, &scope, obj);
+}
+
+static V8Return _OP_timer_Update(const V8Args& args) {
+	V8Scope scope;
+
+	i32 inScope;
+	OPtimer* timer = (OPtimer*)GetFirstPointer(args, isolate, &inScope, OPscript_TIMER);
+	OPtimerTick(timer);
+
+	return SetReturn(args, &scope, GetNull(isolate));
 }
 
 #endif

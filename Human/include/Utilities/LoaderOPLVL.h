@@ -1,7 +1,7 @@
 #ifndef OPENGINE_HUMAN_UTILITIES_LOADER_OPLVL
 #define OPENGINE_HUMAN_UTILITIES_LOADER_OPLVL
 
-#include "./Math/include/Vector3.h"
+#include "./Math/include/OPvec3.h"
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
