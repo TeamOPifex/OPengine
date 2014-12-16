@@ -235,7 +235,7 @@ inline OPvec3 OPvec3div(OPvec3* a, OPvec3* b) {
 	OPvec3 temp = { 0, 0, 0};
 	OPvec3div(&temp, a, b);
 	return temp;
-}
+} 
 
 inline OPvec3 OPvec3divf(OPvec3* a, OPfloat b) {
 	OPvec3 temp = { 0, 0, 0};
@@ -265,6 +265,11 @@ inline OPfloat OPvec3dist(OPvec3* a, OPvec3* b) {
 	OPfloat temp = 0;
 	OPvec3dist(&temp, a, b);
 	return temp;
+}
+
+inline OPfloat OPvec3distSquare(OPvec3* a, OPvec3* b) {
+	OPvec3 temp = *a - *b;
+	return OPvec3dot(&temp, &temp);
 }
 
 inline OPfloat OPvec3angle(OPvec3* a, OPvec3* b) {
@@ -311,7 +316,7 @@ inline OPvec3 OPvec3randNorm(){
 	return v;
 }
 
-inline void OPlogVec3(const OPchar* m, OPvec3* v) {
+inline void OPvec3log(const OPchar* m, OPvec3* v) {
 	OPlog("%s: [%f, %f, %f]", m, v->x, v->y, v->z);
 }
 #endif

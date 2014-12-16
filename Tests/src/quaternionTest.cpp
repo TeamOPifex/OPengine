@@ -20,8 +20,8 @@ OPint quaternionShallRotateVector(void* args){
 	OPvec3 rotated = OPquatRot(&rot90onY, &p);
 	OPvec3 expectedRotation =  { 0, 0, 1 };
 
-	OPlogVec3("\tp = ", &p);
-	OPlogVec3("\tp * q = ", &rotated);
+	OPvec3log("\tp = ", &p);
+	OPvec3log("\tp * q = ", &rotated);
 
 	for(OPint i = 3; i--;){
 		OPfloat r = ((float*)&rotated)[i];
