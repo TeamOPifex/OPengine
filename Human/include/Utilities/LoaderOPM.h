@@ -2,13 +2,13 @@
 #define OPENGINE_HUMAN_UTILITIES_LOADER_OPM
 
 #include "./Core/include/DynamicMemory.h"
-#include "./Core/include/Log.h"
-#include "./Data/include/File.h"
-#include "./Data/include/HashMap.h"
-#include "./Data/include/LinkedList.h"
-#include "./Human/include/Rendering/Mesh.h"
-#include "./Human/include/Rendering/MeshPacked.h"
-#include "./Human/include/Rendering/MeshPacker.h"
+#include "./Core/include/OPlog.h"
+#include "./Data/include/OPfile.h"
+#include "./Data/include/OPhashMap.h"
+#include "./Data/include/OPlinkedList.h"
+#include "./Human/include/Rendering/OPmesh.h"
+#include "./Human/include/Rendering/OPmeshPacked.h"
+#include "./Human/include/Rendering/OPmeshPacker.h"
 #include "./Human/include/Rendering/OPMvertex.h"
 
 typedef struct { 

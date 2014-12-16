@@ -12,6 +12,7 @@ enum OPscriptTypes {
 	OPscript_VEC3,
 	OPscript_MAT4,
 	OPscript_MESH,
+	OPscript_TIMER,
 	OPscript_PHYSICS_SCENE,
 	OPscript_PHYSICS_ACTOR,
 	OPscript_PHYSICS_STATIC,

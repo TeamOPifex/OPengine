@@ -2,9 +2,9 @@
 
 // OPifex Engine includes
 #include "./Pipeline/include/Rendering.h"
-#include "./Human/include/Systems/InputSystem.h"
-#include "./Human/include/Systems/RenderSystem.h"
-#include "./Data/include/ContentManager.h"
+#include "./Human/include/Systems/OPinputSystem.h"
+#include "./Human/include/Systems/OPrenderSystem.h"
+#include "./Data/include/OPcman.h"
 
 #include "./Human/include/Utilities/ImagePNG.h"
 #include "./Human/include/Rendering/OPMvertex.h"

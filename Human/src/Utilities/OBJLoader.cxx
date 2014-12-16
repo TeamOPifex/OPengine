@@ -1,7 +1,7 @@
 #include "./Human/include/Utilities/OBJLoader.h"
-#include "./Core/include/Log.h"
-#include "./Human/include/Resources/Buffer/Buffer.h"
-#include "./Human/include/Resources/Model/Mesh.h"
+#include "./Core/include/OPlog.h"
+#include "./Human/include/Resources/Buffer/OPrenderBuffer.h"
+#include "./Human/include/Resources/Model/OPmesh.h"
 #include "./Human/include/Rendering/OPMvertex.h"
 
 // FacePoint contains 3 int's being holding points for

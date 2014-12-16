@@ -6,9 +6,9 @@
 #include "Types.h"
 #include "GameCycle.h"
 #include "DynamicMemory.h"
-#include "Timer.h"
+#include "OPtimer.h"
 #include "Assert.h"
-#include "Log.h"
+#include "OPlog.h"
 #ifdef OPIFEX_ANDROID
 	#include <jni.h>
 #endif

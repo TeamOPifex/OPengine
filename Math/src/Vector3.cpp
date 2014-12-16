@@ -1,6 +1,5 @@
-#include "./Math/include/Vector3.h"
-
-#include "./Math/include/Matrix4.h"
+#include "./Math/include/OPvec3.h"
+#include "./Math/include/OPmat4.h"
 
 OPvec3 const OPvec3Zero    = { 0, 0, 0 };
 OPvec3 const OPvec3One     = { 1, 1, 1 };

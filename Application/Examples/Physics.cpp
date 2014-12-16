@@ -1,9 +1,9 @@
 #include "./Examples/Physics.h"
-#include "./Human/include/Systems/RenderSystem.h"
-#include "./Performance/include/Physics.h"
-#include "./Human/include/Input/Input.h"
+#include "./Human/include/Systems/OPrenderSystem.h"
+#include "./Performance/include/OPphysics.h"
+#include "./Human/include/Systems/OPinputSystem.h"
 
-#include "./Data/include/ContentManager.h"
+#include "./Data/include/OPcman.h"
 
 OPgameState GS_EXAMPLE_PHYSICS = {
 	ExamplePhysicsEnter,

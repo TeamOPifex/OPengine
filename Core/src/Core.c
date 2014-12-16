@@ -1,5 +1,5 @@
 #include "./../include/Core.h"
-#include "./../include/Log.h"
+#include "./../include/OPlog.h"
 
 OPtimer OPtime;
 OPint _OPengineRunning;
@@ -131,8 +131,6 @@ void OPstart(struct android_app* state) {
 		int events;
 		struct android_poll_source* source;
 
-		OPlog(".");
-
 		while ((ident = ALooper_pollAll(_OPengineRendering ? 0 : -1, NULL, &events, (void**)&source)) > 0) {
 			if (source != NULL) {
 				source->process(state, source);
@@ -169,7 +167,7 @@ void OPstart(struct android_app* state) {
 #else
 void OPstart(int argc, char** args) {
 	// Initialize the engine and game
-	OPcreateTimer(&OPtime);
+	OPtimerCreate(&OPtime);
 	_OPengineRunning = 1;
 	OPinitialize();
 

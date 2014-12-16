@@ -1,10 +1,10 @@
 #include "./Examples/Oculus.h"
-#include "./Human/include/Systems/RenderSystem.h"
+#include "./Human/include/Systems/OPrenderSystem.h"
+#include "./Human/include/Systems/OPinputSystem.h"
 
-#include "./Data/include/ContentManager.h"
+#include "./Data/include/OPcman.h"
 #include "./Human/include/Rendering/OPMvertex.h"
-#include "./Human/include/Input/Input.h"
-#include "./Human/include/Input/Oculus.h"
+#include "./Human/include/Input/OPoculus.h"
 
 OPgameState GS_EXAMPLE_OCULUS = {
 	ExampleOculusEnter,

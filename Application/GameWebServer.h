@@ -1,7 +1,7 @@
 #ifndef OPENGINE_APPLICATION_WEBSERVER
 #define OPENGINE_APPLICATION_WEBSERVER
 
-#include "./Communication/include/WebServer.h"
+#include "./Communication/include/OPwebServer.h"
 
 extern OPWebServer* server;
 

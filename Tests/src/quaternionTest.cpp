@@ -1,6 +1,6 @@
 #include "Tests/include/helpers.h"
 #include "Core/include/MathHelpers.h"
-#include "Math/include/Quaternion.h"
+#include "Math/include/OPquat.h"
 OP_TEST_INIT
 
 //-----------------------------------------------------------------------------

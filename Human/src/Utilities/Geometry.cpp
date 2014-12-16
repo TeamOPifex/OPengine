@@ -1,6 +1,6 @@
 #include "./Human/include/Utilities/Geometry.h"
 #include "./Human/include/Rendering/OPMvertex.h"
-#include "./Data/include/List.h"
+#include "./Data/include/OPlist.h"
 
 OPmesh* OPgeoCreateSphere(f32 radius, ui16 widthSegments, ui16 heightSegments) {
 	f32 phiStart = 0;

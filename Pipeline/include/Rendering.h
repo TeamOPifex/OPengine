@@ -1,9 +1,9 @@
 #ifndef OPENGINE_PIPELINE_RENDERING
 #define OPENGINE_PIPELINE_RENDERING
 
-#include "./Human/include/Rendering/Mesh.h"
-#include "./Human/include/Rendering/Effect.h"
-#include "./Human/include/Rendering/Camera.h"
+#include "./Human/include/Rendering/OPmesh.h"
+#include "./Human/include/Rendering/OPeffect.h"
+#include "./Human/include/Rendering/OPcam.h"
 
 inline void OPrenderBindMeshAndEffect(OPmesh* mesh, OPeffect* effect) {
 	OPrenderBindMesh(mesh);

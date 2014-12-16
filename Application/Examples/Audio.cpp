@@ -1,11 +1,9 @@
 #include "./Examples/Audio.h"
-#include "./Human/include/Systems/RenderSystem.h"
+#include "./Human/include/Systems/OPrenderSystem.h"
+#include "./Human/include/Systems/OPaudioSystem.h"
+#include "./Human/include/Systems/OPinputSystem.h"
 
-#include "./Data/include/ContentManager.h"
-#include "./Human/include/Input/GamePadSystem.h"
-#include "./Human/include/Input/Input.h"
-#include "./Human/include/Audio/Audio.h"
-#include "./Human/include/Audio/AudioPlayer.h"
+#include "./Data/include/OPcman.h"
 
 OPgameState GS_EXAMPLE_AUDIO = {
 	ExampleAudioEnter,

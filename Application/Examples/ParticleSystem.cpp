@@ -1,8 +1,8 @@
 #include "./Examples/ParticleSystem.h"
-#include "./Pipeline/include/ParticleSystem.h"
-#include "./Human/include/Rendering/Sprite/SpriteSheet.h"
-#include "./Human/include/Systems/RenderSystem.h"
-#include "./Data/include/ContentManager.h"
+#include "./Pipeline/include/OPparticleSystem.h"
+#include "./Human/include/Rendering/Sprite/OPspriteSheet.h"
+#include "./Human/include/Systems/OPrenderSystem.h"
+#include "./Data/include/OPcman.h"
 
 OPgameState GS_EXAMPLE_PARTICLESYSTEM = {
 	ExampleParticleSystemEnter,

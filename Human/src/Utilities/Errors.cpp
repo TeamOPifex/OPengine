@@ -1,5 +1,5 @@
 #include "./Human/include/Utilities/Errors.h"
-#include "Core/include/Log.h"
+#include "Core/include/OPlog.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
 	#include <GLES2/gl2.h>

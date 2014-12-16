@@ -1,7 +1,7 @@
 #ifndef OPENGINE_PIPELINE_DEFAULTS
 #define OPENGINE_PIPELINE_DEFAULTS
 
-#include "./Data/include/ContentManager.h"
+#include "./Data/include/OPcman.h"
 
 #ifdef __cplusplus
 extern "C" {
