@@ -1,9 +1,13 @@
-#include "./Examples/Physics.h"
+#include "./ExampleSelectorState.h"
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Performance/include/OPphysics.h"
 #include "./Human/include/Systems/OPinputSystem.h"
 
 #include "./Data/include/OPcman.h"
+
+void ExamplePhysicsEnter(OPgameState* last);
+OPint ExamplePhysicsUpdate(OPtimer* time);
+void ExamplePhysicsExit(OPgameState* next);
 
 OPgameState GS_EXAMPLE_PHYSICS = {
 	ExamplePhysicsEnter,

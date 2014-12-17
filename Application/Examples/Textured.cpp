@@ -1,9 +1,13 @@
-#include "./Examples/Textured.h"
+#include "./ExampleSelectorState.h"
 #include "./Human/include/Systems/OPrenderSystem.h"
 
 #include "./Data/include/OPcman.h"
 #include "./Human/include/Rendering/OPMvertex.h"
 #include "./Human/include/Systems/OPinputSystem.h"
+
+void ExampleTexturedEnter(OPgameState* last);
+OPint ExampleTexturedUpdate(OPtimer* time);
+void ExampleTexturedExit(OPgameState* next);
 
 OPgameState GS_EXAMPLE_TEXTURED = {
 	ExampleTexturedEnter,
