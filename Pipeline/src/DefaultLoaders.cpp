@@ -1,13 +1,12 @@
+#include "./Pipeline/include/Loaders/OPloaderOPM.h"
+#include "./Pipeline/include/DefaultLoaders.h"
 #include "./Human/include/Systems/OPaudioSystem.h"
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Human/include/Systems/OPfontSystem.h"
 #include "./Human/include/Rendering/Sprite/OPspriteSheet.h"
-#include "./Human/include/Utilities/LoaderOPM.h"
 #include "./Human/include/Utilities/ImagePNG.h"
-#include "./Human/include/Utilities/LoaderOPS.h"
-#include "./Pipeline/include/DefaultLoaders.h"
 
-OPassetLoader OP_DEFAULT_LOADERS[10] = {
+OPassetLoader OP_DEFAULT_LOADERS[8] = {
 		{
 				".wav",
 				"Audio/",
@@ -88,27 +87,11 @@ OPassetLoader OP_DEFAULT_LOADERS[10] = {
 				(OPint(*)(void*))OPspriteSheetUnload,
 				NULL
 		},
-		{
-			".ops",
-			"Scripts/",
-			sizeof(OPscript),
-			(OPint(*)(const OPchar*, void**))OPscriptLoad,
-			(OPint(*)(void*))OPscriptUnload,
-			NULL
-		},
-		{
-			".js",
-			"Scripts/",
-			sizeof(OPscript),
-			(OPint(*)(const OPchar*, void**))OPscriptLoad,
-			(OPint(*)(void*))OPscriptUnload,
-			NULL
-		},
 };
 
 
 void OPloadersAddDefault() {
-	for (i32 i = 0; i < 10; i++) {
+	for (i32 i = 0; i < 8; i++) {
 		OPcmanAddLoader(&OP_DEFAULT_LOADERS[i]);
 	}
 }
