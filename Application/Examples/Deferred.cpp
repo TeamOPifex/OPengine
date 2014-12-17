@@ -1,6 +1,10 @@
-#include "./Examples/Deferred.h"
+#include "./ExampleSelectorState.h"
 #include "./Engine.h"
 #include "./Human/include/Utilities/Geometry.h"
+
+void ExampleDeferredEnter(OPgameState* last);
+OPint ExampleDeferredUpdate(OPtimer* time);
+void ExampleDeferredExit(OPgameState* next);
 
 OPgameState GS_EXAMPLE_DEFERRED = {
 	ExampleDeferredEnter,

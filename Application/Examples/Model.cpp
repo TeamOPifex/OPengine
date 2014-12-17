@@ -1,10 +1,14 @@
-#include "./Examples/Model.h"
+#include "./ExampleSelectorState.h"
 
 // OPifex Engine includes
 #include "./Pipeline/include/Rendering.h"
 #include "./Human/include/Systems/OPinputSystem.h"
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Data/include/OPcman.h"
+
+void ExampleModelEnter(OPgameState* last);
+OPint ExampleModelUpdate(OPtimer* time);
+void ExampleModelExit(OPgameState* next);
 
 // This is the Game State for this ModelExample
 // Each entry is a function pointer for Initialize, Update, Destroy

@@ -1,4 +1,4 @@
-#include "./Examples/Spine.h"
+#include "./ExampleSelectorState.h"
 
 // OPifex Engine includes
 #include "./Pipeline/include/Rendering.h"
@@ -10,6 +10,10 @@
 #include "./Human/include/Rendering/OPMvertex.h"
 
 #include "./Pipeline/include/SpineLoader.h"
+
+void ExampleSpineEnter(OPgameState* last);
+OPint ExampleSpineUpdate(OPtimer* time);
+void ExampleSpineExit(OPgameState* next);
 
 // This is the Game State for this ModelExample
 // Each entry is a function pointer for Initialize, Update, Destroy

@@ -1,10 +1,14 @@
-#include "./Examples/Myo.h"
+#include "./ExampleSelectorState.h"
 
 // OPifex Engine includes
 #include "./Pipeline/include/Rendering.h"
 #include "./Human/include/Systems/OPinputSystem.h"
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Data/include/OPcman.h"
+
+void ExampleMyoEnter(OPgameState* last);
+OPint ExampleMyoUpdate(OPtimer* time);
+void ExampleMyoExit(OPgameState* next);
 
 // This is the Game State for this MyoExample
 // Each entry is a function pointer for Initialize, Update, Destroy

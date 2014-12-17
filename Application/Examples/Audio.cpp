@@ -1,9 +1,13 @@
-#include "./Examples/Audio.h"
+#include "./ExampleSelectorState.h"
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Human/include/Systems/OPaudioSystem.h"
 #include "./Human/include/Systems/OPinputSystem.h"
 
 #include "./Data/include/OPcman.h"
+
+void ExampleAudioEnter(OPgameState* last);
+OPint ExampleAudioUpdate(OPtimer* time);
+void ExampleAudioExit(OPgameState* next);
 
 OPgameState GS_EXAMPLE_AUDIO = {
 	ExampleAudioEnter,
@@ -29,7 +33,6 @@ void ExampleAudioEnter(OPgameState* last) {
 
 	audioExample->Sound = OPaudCreateEmitter((OPaudioSource*)OPcmanGet("step0.wav"), EMITTER_THREADED);
 	audioExample->BackgroundSound = OPaudCreateEmitter((OPaudioSource*)OPcmanGet("background.ogg"), EMITTER_THREADED);
-
 }
 
 OPint ExampleAudioUpdate(OPtimer* time) {
