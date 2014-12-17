@@ -1,8 +1,8 @@
 #ifndef OPENGINE_HUMAN_RENDERER_EFFECT
 #define OPENGINE_HUMAN_RENDERER_EFFECT
 
-#include "./Human/include/Attributes.h"
 #include "./Human/include/Utilities/Errors.h"
+#include "./Human/include/Rendering/OPattributes.h"
 #include "./Human/include/Rendering/OPrenderBuffer.h"
 #include "./Math/include/Vectors.h"
 #include "./Math/include/OPmat4.h"
