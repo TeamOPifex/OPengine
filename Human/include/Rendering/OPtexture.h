@@ -2,7 +2,7 @@
 #define OPENGINE_HUMAN_RENDERER_TEXTURE
 
 #include "./Human/include/Rendering/OpenGL.h"
-#include "./Core/include/Types.h"
+#include "./Core/include/OPtypes.h"
 #include "./Math/include/OPvec4.h"
 
 //-----------------------------------------------------------------------------

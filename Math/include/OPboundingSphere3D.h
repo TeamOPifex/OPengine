@@ -1,7 +1,7 @@
 #ifndef OP_MATH_BOUNDINGSPHERE3D
 #define OP_MATH_BOUNDINGSPHERE3D
 
-#include "./Core/include/Types.h"
+#include "./Core/include/OPtypes.h"
 #include "./Math/include/OPvec3.h"
 
 typedef struct {

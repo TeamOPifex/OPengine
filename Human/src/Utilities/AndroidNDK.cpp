@@ -2,8 +2,8 @@
 #ifdef OPIFEX_ANDROID
 
 #include "./Human/include/Utilities/AndroidNDK.h"
-#include "./Core/include/Log.h"
-#include "./Core/include/Core.h"
+#include "./Core/include/OPlog.h"
+#include "./Core/include/OPcore.h"
 
 jclass OPjniGetClassID(const char *className) {
 	jclass ret = JNIEnvironment()->FindClass(className);

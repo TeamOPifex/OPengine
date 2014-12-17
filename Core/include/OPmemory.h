@@ -2,7 +2,7 @@
 #ifndef OPEngine_Core_DYNMEM
 #define OPEngine_Core_DYNMEM
 
-#include "Types.h"
+#include "OPtypes.h"
 #include <string.h>
 
 #if defined(OPIFEX_UNIX)

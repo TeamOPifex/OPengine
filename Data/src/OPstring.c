@@ -1,5 +1,5 @@
 #include "./Data/include/OPstring.h"
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPmemory.h"
 
 OPint OPstringEquals(const OPchar* str, const OPchar* cmp) {
 	ui32 lenA = strlen(str);

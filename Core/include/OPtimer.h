@@ -2,7 +2,7 @@
 #ifndef OPEngine_Core_Timer
 #define OPEngine_Core_Timer
 
-#include "Types.h"
+#include "OPtypes.h"
 
 #if defined(OPIFEX_UNIX)
 #include <sys/types.h>

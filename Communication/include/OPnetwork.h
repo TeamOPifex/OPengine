@@ -1,7 +1,7 @@
 #ifndef OPENGINE_COMMUNICATION_NETWORK
 #define OPENGINE_COMMUNICATION_NETWORK
 
-#include "./Core/include/Types.h"
+#include "./Core/include/OPtypes.h"
 
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN

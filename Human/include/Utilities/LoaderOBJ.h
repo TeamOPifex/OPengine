@@ -6,7 +6,7 @@
 #include "./Math/include/Vector2.h"
 #include "./Math/include/Vector3.h"
 
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPmemory.h"
 #include "./Human/include/Resources/Model/Mesh.h"
 
 Mesh* LoadOBJ(FILE* file, int start, int length);

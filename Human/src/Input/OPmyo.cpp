@@ -2,8 +2,8 @@
 
 #ifdef OPIFEX_MYO
 #include <myo/myo.hpp>
-#include "./Core/include/MathHelpers.h"
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPmath.h"
+#include "./Core/include/OPmemory.h"
 #endif
 #include "./Core/include/OPlog.h"
 

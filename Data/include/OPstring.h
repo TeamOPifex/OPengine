@@ -1,7 +1,7 @@
 #ifndef OPENGINE_DATA_STRING
 #define OPENGINE_DATA_STRING
 
-#include "./Core/include/Types.h"
+#include "./Core/include/OPtypes.h"
 
 #ifdef __cplusplus
 extern "C" {

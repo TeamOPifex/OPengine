@@ -1,5 +1,5 @@
-#include "./../include/Core.h"
-#include "./../include/OPlog.h"
+#include "./Core/include/OPcore.h"
+#include "./Core/include/OPlog.h"
 
 OPtimer OPtime;
 OPint _OPengineRunning;

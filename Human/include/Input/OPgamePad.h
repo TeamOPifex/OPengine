@@ -1,7 +1,7 @@
 #ifndef OPENGINE_HUMAN_INPUT_GAMEPAD_SYSTEM
 #define OPENGINE_HUMAN_INPUT_GAMEPAD_SYSTEM
 
-#include "./Core/include/Types.h"
+#include "./Core/include/OPtypes.h"
 #include "./Math/include/OPvec2.h"
 #include "Enums/OPgamePadAxes.h"
 #include "Enums/OPgamePadButtons.h"

@@ -5,7 +5,7 @@
 #include "./Data/include/OPfile.h"
 #include <cstdio>
 #include <string>
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPmemory.h"
 #include "./Human/include/Rendering/OPtexture.h"
 #include "./Human/include/Utilities/Errors.h"
 #include "./External/LodePNG/include/LodePNG.h"

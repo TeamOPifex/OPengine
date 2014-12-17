@@ -1,6 +1,6 @@
 #include "./Human/include/Input/OPkeyboard.h"
 #include "./Human/include/Rendering/OPrender.h"
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
 
 #ifndef OPIFEX_ANDROID

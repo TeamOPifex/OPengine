@@ -1,5 +1,5 @@
 #include "Tests/include/helpers.h"
-#include "Core/include/MathHelpers.h"
+#include "Core/include/OPmath.h"
 #include "Math/include/OPquat.h"
 OP_TEST_INIT
 

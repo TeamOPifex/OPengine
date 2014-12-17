@@ -4,8 +4,8 @@
 #ifndef OPEngine_Data_Stream
 #define OPEngine_Data_Stream
 
-#include "./Core/include/Types.h"
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPtypes.h"
+#include "./Core/include/OPmemory.h"
 
 
 typedef struct{

@@ -1,8 +1,8 @@
 #ifndef OPEngine_Data_list
 #define OPEngine_Data_list
 
-#include "./Core/include/Types.h"
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPtypes.h"
+#include "./Core/include/OPmemory.h"
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus

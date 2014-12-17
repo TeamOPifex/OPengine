@@ -2,7 +2,7 @@
 #define OPENGINE_HUMAN_RENDERER
 
 #include "./Human/include/Rendering/OpenGL.h"
-#include "./Core/include/Types.h"
+#include "./Core/include/OPtypes.h"
 
 extern i32 OPrenderWidth;
 extern i32 OPrenderHeight;

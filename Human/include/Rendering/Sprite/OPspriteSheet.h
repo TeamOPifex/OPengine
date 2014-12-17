@@ -1,7 +1,7 @@
 #ifndef OPENGINE_HUMAN_SPRITESHEET
 #define OPENGINE_HUMAN_SPRITESHEET
 
-#include "./Core/include/Types.h"
+#include "./Core/include/OPtypes.h"
 #include "./Data/include/OPfile.h"
 #include "./Math/include/OPvec2.h"
 #include "./Human/include/Rendering/OPtexture.h"

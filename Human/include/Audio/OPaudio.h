@@ -1,9 +1,9 @@
 #ifndef OPENGINE_HUMAN_AUDIO
 #define OPENGINE_HUMAN_AUDIO
 
-#include "./Core/include/Types.h"
-#include "./Core/include/MathHelpers.h"
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPtypes.h"
+#include "./Core/include/OPmath.h"
+#include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
 #include "./Data/include/OPfile.h"
 #include "./Math/include/OPvec3.h"

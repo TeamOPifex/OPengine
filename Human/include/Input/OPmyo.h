@@ -1,7 +1,7 @@
 #ifndef OPENGINE_HUMAN_INPUT_MYO
 #define OPENGINE_HUMAN_INPUT_MYO
 
-#include "./Core/include/Types.h"
+#include "./Core/include/OPtypes.h"
 #include "./Core/include/OPtimer.h"
 
 

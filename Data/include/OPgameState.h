@@ -1,7 +1,7 @@
 #ifndef OPEngine_Data_GameStates
 #define OPEngine_Data_GameStates
 #include "./Core/include/OPtimer.h"
-#include "./Core/include/Types.h"
+#include "./Core/include/OPtypes.h"
 #include "./Data/include/OPlist.h"
 
 #ifdef __cplusplus

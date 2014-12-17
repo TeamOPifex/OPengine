@@ -6,8 +6,8 @@ extern "C"
 {
 #endif
 
-#include "./Core/include/Types.h"
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPtypes.h"
+#include "./Core/include/OPmemory.h"
 
 //  _____ _                   _       
 // / ____| |                 | |      

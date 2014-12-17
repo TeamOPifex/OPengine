@@ -1,6 +1,6 @@
 #ifndef OP_ENGINE_TEST_HELPERS
 #define OP_ENGINE_TEST_HELPERS
-#include <Core/include/Core.h>
+#include <Core/include/OPcore.h>
 #include "./Core/include/OPlog.h"
 #include <stdio.h>
 

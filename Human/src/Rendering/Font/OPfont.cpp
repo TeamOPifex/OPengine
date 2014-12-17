@@ -6,7 +6,7 @@
 #include "./Data/include/OPstream.h"
 #include "./Data/include/OPfile.h"
 #include "./Core/include/Assert.h"
-#include "./Core/include/MathHelpers.h"
+#include "./Core/include/OPmath.h"
 
 void OPfontLoad(OPchar* filename, OPfont** data) {
 	OPlog("Loading Font: %s", filename);

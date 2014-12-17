@@ -1,5 +1,5 @@
 #include "./Data/include/OPhashMap.h"
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPmemory.h"
 #include "./Data/include/OPstring.h"
 #include "./Core/include/OPlog.h"
 

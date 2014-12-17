@@ -2,7 +2,7 @@
 #define OPENGINE_HUMAN_RENDERER_BUFFER
 
 #include "./Human/include/Rendering/OpenGL.h"
-#include "./Core/include/Types.h"
+#include "./Core/include/OPtypes.h"
 
 
 //-----------------------------------------------------------------------------

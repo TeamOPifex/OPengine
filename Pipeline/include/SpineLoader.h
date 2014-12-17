@@ -1,7 +1,7 @@
 #ifndef OPIFEX_PIPELINE_SPINELOADER
 #define OPIFEX_PIPELINE_SPINELOADER
 
-#include "./Core/include/Types.h"
+#include "./Core/include/OPtypes.h"
 #include "./Core/include/OPtimer.h"
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Rendering/OPcam.h"

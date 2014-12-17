@@ -9,9 +9,9 @@
 #include "./Data/include/OPhashMap.h"
 #include "./Data/include/OPlist.h"
 #include "./Data/include/OPfile.h"
-#include "./Core/include/Types.h"
+#include "./Core/include/OPtypes.h"
 #include "./Core/include/OPlog.h"
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPmemory.h"
 
 #define OP_EFFECT_NAME_LEN 16
 
