@@ -1,14 +1,8 @@
 #include "./ExampleSelectorState.h"
 
-#include "./Application/Examples/Audio.h"
-#include "./Application/Examples/Model.h"
-#include "./Application/Examples/Oculus.h"
-#include "./Application/Examples/ParticleSystem.h"
-#include "./Application/Examples/Physics.h"
-#include "./Application/Examples/Skinning.h"
-#include "./Application/Examples/Deferred.h"
-#include "./Application/Examples/Textured.h"
-//#include "./Application/Examples/Server.h"
+void ExampleSelectorEnter(OPgameState* last);
+OPint ExampleSelectorUpdate(OPtimer* time);
+void ExampleSelectorExit(OPgameState* next);
 
 OPgameState GS_EXAMPLE_SELECTOR = {
 	ExampleSelectorEnter,

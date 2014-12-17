@@ -1,12 +1,12 @@
 #include "./Human/include/Utilities/ImagePNG.h"
 
 #include <string.h>
-#include "./Core/include/Log.h"
-#include "./Data/include/File.h"
+#include "./Core/include/OPlog.h"
+#include "./Data/include/OPfile.h"
 #include <cstdio>
 #include <string>
-#include "./Core/include/DynamicMemory.h"
-#include "./Human/include/Rendering/Texture.h"
+#include "./Core/include/OPmemory.h"
+#include "./Human/include/Rendering/OPtexture.h"
 #include "./Human/include/Utilities/Errors.h"
 #include "./External/LodePNG/include/LodePNG.h"
 

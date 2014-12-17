@@ -111,10 +111,14 @@ if(${OPIFEX_MYO})
 		target_link_libraries(5_Human ${PROJECT_SOURCE_DIR}/External/Myo/lib/win64/myo64.lib)
 		output_binary(5_Human "/External/Myo/lib/" "myo64.dll" ${OPIFEX_OS_WINDOWS})
 		output_binary(5_Human "/External/Myo/lib/" "ble64.dll" ${OPIFEX_OS_WINDOWS})
-	else()
+	elseif(${OPIFEX_OS_WIN32})
 		target_link_libraries(5_Human ${PROJECT_SOURCE_DIR}/External/Myo/lib/win32/myo32.lib)
 		output_binary(5_Human "/External/Myo/lib/" "myo32.dll" ${OPIFEX_OS_WINDOWS})
 		output_binary(5_Human "/External/Myo/lib/" "ble32.dll" ${OPIFEX_OS_WINDOWS})
+	elseif(${OPIFEX_OS_OSX64})
+
+		target_link_libraries(5_Human ${PROJECT_SOURCE_DIR}/External/Myo/lib/osx64/myo.framework)
+
 	endif()
 endif()
 

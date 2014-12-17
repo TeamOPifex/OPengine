@@ -1,5 +1,5 @@
-#include "./Log.h"
-#include "./Core.h"
+#include "./OPlog.h"
+#include "./OPcore.h"
 
 // A Standard ASSERT call, if it evaluates to true, 
 // If in DEBUG mode it exits the program

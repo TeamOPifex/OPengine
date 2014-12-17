@@ -1,6 +1,6 @@
 #include "./Human/include/Utilities/LoaderOPLVL.h"
 
-#include "./Data/include/String.h"
+#include "./Data/include/OPstring.h"
 
 OPLevelEntity* OPlevelGetEntity(OPLevel* level, OPchar* name) {
 	for (i32 i = 0; i < level->count; i++) {
