@@ -2,7 +2,7 @@
 #define OPIFEX_SCRIPTING
 
 #include "./Scripting/include/wrappers/V8Helper.h"
-#include "./Human/include/Utilities/LoaderOPS.h"
+#include "./Scripting/include/OPloaderOPS.h"
 #include "./Data/include/OPstream.h"
 
 #ifdef OPIFEX_V8
