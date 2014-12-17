@@ -1,6 +1,6 @@
 #include "./Human/include/Rendering/OPrenderBuffer.h"
 #include "./Human/include/Utilities/Errors.h"
-#include "./Human/include/Attributes.h"
+#include "./Human/include/Rendering/OPattributes.h"
 #include "./Core/include/OPlog.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
