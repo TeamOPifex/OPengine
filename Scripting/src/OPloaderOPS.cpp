@@ -1,6 +1,6 @@
 #include "./Scripting/include/OPloaderOPS.h"
 #include "./Data/include/OPfile.h"
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPmemory.h"
 #include "./Data/include/OPcman.h"
 
 void OPscriptAddLoader() {

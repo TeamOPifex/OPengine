@@ -1,9 +1,9 @@
 #ifndef OP_MATH_VECTOR3
 #define OP_MATH_VECTOR3
-#include "./Core/include/Types.h"
-#include "./Core/include/MathHelpers.h"
+#include "./Core/include/OPtypes.h"
+#include "./Core/include/OPmath.h"
 #include "./Core/include/OPlog.h"
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPmemory.h"
 #include "./Data/include/OPstream.h"
 #include "./Data/include/OPfile.h"
 

@@ -20,6 +20,7 @@ include_directories(
 	../External/Oculus/Src/
 	../External/Myo/include/
 	../External/V8/include/
+	../External/Mongoose/include/
 	.
 	../
 )
@@ -54,6 +55,7 @@ set(ALL_LIBS
 	${VORBISFILE_LIBRARY}
 	glfw 
 	${GLFW_LIBRARIES}
+	MONGOOSE
 )
 
 #########################################

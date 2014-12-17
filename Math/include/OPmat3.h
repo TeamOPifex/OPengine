@@ -1,7 +1,7 @@
 #pragma once
 
 #include "./Math/include/OPvec3.h"
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPmemory.h"
 
 struct OPmat3;
 inline OPvec3* OPmat3index(OPmat3* m, int idx);

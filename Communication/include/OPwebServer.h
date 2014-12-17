@@ -1,8 +1,8 @@
 #ifndef OPENGINE_COMMUNICATION_WEBSERVER
 #define OPENGINE_COMMUNICATION_WEBSERVER
 
-#include "./Core/include/Types.h"
-#include "./Communication/include/Mongoose.h"
+#include "./Core/include/OPtypes.h"
+#include "./External/Mongoose/include/Mongoose.h"
 #include "./Data/include/OPstream.h"
 #include "./Data/include/OPhashMap.h"
 #include "./Data/include/OPlist.h"

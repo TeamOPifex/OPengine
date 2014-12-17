@@ -1,5 +1,5 @@
 #include "./Human/include/Input/OPgamePad.h"
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
 	
 #if !defined(OPIFEX_ANDROID) && defined(OPIFEX_UNIX)

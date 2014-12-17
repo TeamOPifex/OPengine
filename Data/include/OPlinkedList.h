@@ -1,8 +1,8 @@
 #ifndef OPEngine_Data_LinkedList
 #define OPEngine_Data_LinkedList
 
-#include "./Core/include/Types.h"
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPtypes.h"
+#include "./Core/include/OPmemory.h"
 
 #if defined(OPIFEX_ANDROID) && defined(__cplusplus)
 	#include "./Core/include/DynamicMemory.h"

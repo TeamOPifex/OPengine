@@ -2,7 +2,7 @@
 #define OPENGINE_HUMAN_RENDERER_FONT_ATLAS
 
 #include "./Data/include/OPvector.h"
-#include "./Core/include/Types.h"
+#include "./Core/include/OPtypes.h"
 
 typedef struct {
 	i32 x;

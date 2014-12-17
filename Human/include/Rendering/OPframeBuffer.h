@@ -3,7 +3,7 @@
 
 #include "./Human/include/Rendering/OPtexture.h"
 #include "./Human/include/Rendering/OPrender.h"
-#include "./Core/include/Types.h"
+#include "./Core/include/OPtypes.h"
 
 
 //-----------------------------------------------------------------------------

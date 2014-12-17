@@ -1,5 +1,5 @@
 #include "Tests/include/helpers.h"
-#include "Core/include/MathHelpers.h"
+#include "Core/include/OPmath.h"
 #include "Data/include/OPentHeap.h"
 
 OP_TEST_INIT

@@ -1,4 +1,4 @@
-#include "./../include/DynamicMemory.h"
+#include "./Core/include/OPmemory.h"
 
 //-----------------------------------------------------------------------------
 /* OPalloc(..) - Platform independent means to dynamically allocate memory.

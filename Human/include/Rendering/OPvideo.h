@@ -2,7 +2,7 @@
 #define OPENGINE_HUMAN_RENDERER_VIDEO
 
 #include "./Human/include/Rendering/OpenGL.h"
-#include "./Core/include/Types.h"
+#include "./Core/include/OPtypes.h"
 
 //#define VPX_CODEC_DISABLE_COMPAT 1
 //#include "vpx_decoder.h"

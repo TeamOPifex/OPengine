@@ -3,7 +3,7 @@
 
 #include "./Math/include/OPvec3.h"
 #include "./Math/include/OPmat4.h"
-#include "./Core/include/MathHelpers.h"
+#include "./Core/include/OPmath.h"
 
 //-----------------------------------------------------------------------------
 //   _____ _                   _       

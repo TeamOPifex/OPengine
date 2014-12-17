@@ -1,6 +1,6 @@
 #include "./Communication/include/OPnetwork.h"
 #include "./Core/include/OPlog.h"
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPmemory.h"
 
 #ifndef OPIFEX_ANDROID
 

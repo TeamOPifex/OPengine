@@ -1,8 +1,8 @@
 #ifndef OPIFEX_MATH_SOLVERS
 #define OPIFEX_MATH_SOLVERS
 
-#include "./Core/include/Types.h"
-#include "./Core/include/MathHelpers.h"
+#include "./Core/include/OPtypes.h"
+#include "./Core/include/OPmath.h"
 #include "./Math/include/OPvec2.h"
 #include "./Math/include/OPvec3.h"
 

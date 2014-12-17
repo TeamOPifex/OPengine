@@ -1,7 +1,7 @@
 #ifndef OPENGINE_HUMAN_UTILITIES_LOADER_OPM
 #define OPENGINE_HUMAN_UTILITIES_LOADER_OPM
 
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
 #include "./Data/include/OPfile.h"
 #include "./Data/include/OPhashMap.h"

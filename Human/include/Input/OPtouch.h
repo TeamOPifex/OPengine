@@ -1,7 +1,7 @@
 #ifndef OPENGINE_HUMAN_INPUT_TOUCH
 #define OPENGINE_HUMAN_INPUT_TOUCH
 
-#include "./Core/include/Types.h"
+#include "./Core/include/OPtypes.h"
 
 typedef struct {
 	OPint tapping;

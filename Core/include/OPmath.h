@@ -2,7 +2,7 @@
 #ifndef OPEngine_Core_MathHelpers
 #define OPEngine_Core_MathHelpers
 
-#include "Types.h"
+#include "OPtypes.h"
 
 #if defined(OPIFEX_UNIX)	// linux math libs
 #include <math.h>

@@ -6,8 +6,8 @@
 #include "./Math/include/OPvec3.h"
 #include "./Math/include/OPvec4.h"
 #include "./Math/include/OPquat.h"
-#include "./Core/include/DynamicMemory.h"
-#include "./Core/include/MathHelpers.h"
+#include "./Core/include/OPmemory.h"
+#include "./Core/include/OPmath.h"
 #include "./Core/include/OPlog.h"
 
 struct OPmat4;

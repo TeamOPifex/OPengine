@@ -1,7 +1,7 @@
 #include "./Human/include/Input/OPoculus.h"
 
 #ifdef OPIFEX_OCULUS
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
 #include "./Core/include/Assert.h"
 

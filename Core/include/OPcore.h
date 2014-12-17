@@ -3,9 +3,9 @@
 #define OPEngine_Core
 #define WIN32_LEAN_AND_MEAN 0
 
-#include "Types.h"
-#include "GameCycle.h"
-#include "DynamicMemory.h"
+#include "OPtypes.h"
+#include "OPgameCycle.h"
+#include "OPmemory.h"
 #include "OPtimer.h"
 #include "Assert.h"
 #include "OPlog.h"

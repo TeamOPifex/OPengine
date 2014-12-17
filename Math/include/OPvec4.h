@@ -2,9 +2,9 @@
 #ifndef OP_MATH_VECTOR4
 #define OP_MATH_VECTOR4
 
-#include "./Core/include/Types.h"
-#include "./Core/include/DynamicMemory.h"
-#include "./Core/include/MathHelpers.h"
+#include "./Core/include/OPtypes.h"
+#include "./Core/include/OPmemory.h"
+#include "./Core/include/OPmath.h"
 #include "./Math/include/OPvec3.h"
 
 struct OPvec4;

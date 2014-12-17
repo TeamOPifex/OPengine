@@ -3,8 +3,8 @@
 #define OPIFEX_MATH_TWEEN
 // Based on - https://github.com/warrenm/AHEasing/blob/master/AHEasing/easing.c
 
-#include "./Core/include/Types.h"
-#include "./Core/include/MathHelpers.h"
+#include "./Core/include/OPtypes.h"
+#include "./Core/include/OPmath.h"
 
 // Tweening Function : y = x
 inline OPfloat OPtween_linear(OPfloat p) {

@@ -1,5 +1,5 @@
-#include "./../include/OPtimer.h"
-#include "./../include/DynamicMemory.h"
+#include "./Core/include/OPtimer.h"
+#include "./Core/include/OPmemory.h"
 
 //----------------------------------------------------------------------------
 OPint OPtimerCreate(OPtimer* timer){

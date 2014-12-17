@@ -1,4 +1,4 @@
-#include "./../include/OPlog.h"
+#include "./Core/include/OPlog.h"
 
 #ifdef OPIFEX_ANDROID
 

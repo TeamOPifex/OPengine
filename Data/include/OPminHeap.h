@@ -1,8 +1,8 @@
 #ifndef OPEngine_Data_MinHeap
 #define OPEngine_Data_MinHeap
 
-#include "./Core/include/Types.h"
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPtypes.h"
+#include "./Core/include/OPmemory.h"
 
 #if defined(OPIFEX_ANDROID) && defined(__cplusplus)
 

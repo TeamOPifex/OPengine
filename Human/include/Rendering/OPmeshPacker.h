@@ -3,7 +3,7 @@
 	
 #include "./Human/include/Rendering/OPrenderBuffer.h"
 #include "./Data/include/OPstream.h"
-#include "./Core/include/DynamicMemory.h"
+#include "./Core/include/OPmemory.h"
 
 //-----------------------------------------------------------------------------
 //   _____ _                   _       

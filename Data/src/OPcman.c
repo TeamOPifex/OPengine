@@ -1,6 +1,5 @@
 #include "./Data/include/OPcman.h"
 #include "./Core/include/OPlog.h"
-#include "./Core/include/Types.h"
 #include "./Data/include/OPvector.h"
 #include "./Core/include/OPtimer.h"
 #include "./Data/include/OPfile.h"
