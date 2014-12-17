@@ -1,9 +1,9 @@
 #ifndef OPPERF_THREAD
 #define OPPERF_THREAD
 
-#include "Core/include/Types.h"
-#include "Core/include/Log.h"
-#include "Core/include/DynamicMemory.h"
+#include "./Core/include/OPtypes.h"
+#include "./Core/include/OPlog.h"
+#include "./Core/include/OPmemory.h"
 
 #if defined(OPIFEX_UNIX)
 #include <pthread.h>

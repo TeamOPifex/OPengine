@@ -5,10 +5,10 @@
 	#include "./Pipeline/include/Rendering.h"
 	#include "./Human/include/Utilities/ImagePNG.h"
 	#include "./Core/include/Log.h"
-	#include "./Data/include/ContentManager.h"
-	#include "./Human/include/Rendering/Mesh.h"
+	#include "./Data/include/OPcman.h"
+	#include "./Human/include/Rendering/OPmesh.h"
 	#include "./Human/include/Rendering/OPMvertex.h"
-	#include "./Human/include/Rendering/Primitives/Quad.h"
+	#include "./Human/include/Rendering/Primitives/OPquad.h"
 	#include "./Core/include/Assert.h"
 
 	void _spAtlasPage_createTexture(spAtlasPage* self, const char* path){

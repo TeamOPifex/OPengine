@@ -1,11 +1,13 @@
-#include "./Examples/Audio.h"
-#include "./Human/include/Systems/RenderSystem.h"
+#include "./ExampleSelectorState.h"
+#include "./Human/include/Systems/OPrenderSystem.h"
+#include "./Human/include/Systems/OPaudioSystem.h"
+#include "./Human/include/Systems/OPinputSystem.h"
 
-#include "./Data/include/ContentManager.h"
-#include "./Human/include/Input/GamePadSystem.h"
-#include "./Human/include/Input/Input.h"
-#include "./Human/include/Audio/Audio.h"
-#include "./Human/include/Audio/AudioPlayer.h"
+#include "./Data/include/OPcman.h"
+
+void ExampleAudioEnter(OPgameState* last);
+OPint ExampleAudioUpdate(OPtimer* time);
+void ExampleAudioExit(OPgameState* next);
 
 OPgameState GS_EXAMPLE_AUDIO = {
 	ExampleAudioEnter,
@@ -31,17 +33,16 @@ void ExampleAudioEnter(OPgameState* last) {
 
 	audioExample->Sound = OPaudCreateEmitter((OPaudioSource*)OPcmanGet("step0.wav"), EMITTER_THREADED);
 	audioExample->BackgroundSound = OPaudCreateEmitter((OPaudioSource*)OPcmanGet("background.ogg"), EMITTER_THREADED);
-
 }
 
 OPint ExampleAudioUpdate(OPtimer* time) {
 	
-	if (OPkeyboardWasPressed(OPKEY_P) || OPgamePadWasPressed(OPgamePad(GamePadIndex_One), GamePad_Button_A)) {
+	if (OPkeyboardWasPressed(OPKEY_P) || OPgamePadWasPressed(OPgamePadIndex(GamePadIndex_One), GamePad_Button_A)) {
 		OPaudSetEmitter(audioExample->Sound);
 		OPaudVolume(audioExample->Sound, 1.0f);
 		OPaudPlay();
 	}
-	if (OPkeyboardWasPressed(OPKEY_B) || OPgamePadWasPressed(OPgamePad(GamePadIndex_One), GamePad_Button_B)) {
+	if (OPkeyboardWasPressed(OPKEY_B) || OPgamePadWasPressed(OPgamePadIndex(GamePadIndex_One), GamePad_Button_B)) {
 		OPaudSetEmitter(audioExample->BackgroundSound);
 		OPaudVolume(audioExample->BackgroundSound, 0.5f);
 		OPaudPlay();

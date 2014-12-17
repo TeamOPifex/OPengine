@@ -17,8 +17,7 @@
                 "@OPIFEX_REPOSITORY@/External/glm-0.9.1",
                 "@OPIFEX_REPOSITORY@/External/V8/",
                 "@OPIFEX_REPOSITORY@/External/OpenAL/",
-                "@OPIFEX_REPOSITORY@/External/Ogg/include/",
-                "@OPIFEX_REPOSITORY@/External/Vorbis/include/"
+                "@OPIFEX_REPOSITORY@/External/Myo/include/"
             ],
             "cflags!": [
                 "-fno-exceptions"
@@ -84,8 +83,8 @@
                                             "../Pipeline/Release/",
                                             "../GLFW/src/Release/",
                                             "../External/Release/",
-                                            "../@OPIFEX_REPOSITORY@/External/Ogg/lib/release/win32/",
-                                            "../@OPIFEX_REPOSITORY@/External/Vorbis/lib/release/win32/",
+                                            "../@OPIFEX_REPOSITORY@/External/Ogg/lib/win32/",
+                                            "../@OPIFEX_REPOSITORY@/External/Vorbis/lib/win32/",
                                             "C:/Program Files (x86)/OpenAL 1.1 SDK/libs/Win32/",
                                         ]
                                     }
@@ -101,6 +100,7 @@
                           'OPIFEX_OSX64',
                           'OPIFEX_V8',
                           'OPIFEX_NODEJS',
+                          'OPIFEX_MYO',
                           "_ITERATOR_DEBUG_LEVEL=0"
                         ],
                         "link_settings": {
@@ -121,19 +121,12 @@
                                 "/System/Library/Frameworks/CoreFoundation.framework",
                                 "/System/Library/Frameworks/CoreVideo.framework",
                                 "/System/Library/Frameworks/OpenAL.framework",
+                                "/System/Library/Frameworks/myo.framework",
                                 "/usr/local/lib/libogg.dylib",
                                 "/usr/local/lib/libvorbisfile.dylib"
                             ],
                             "library_dirs": [
-                                "../Core/",
-                                "../Data/",
-                                "../Math/",
-                                "../Performance/",
-                                "../Human/",
-                                "../Communication/",
-                                "../Pipeline/",
-                                "../GLFW/src/",
-                                "../External/"
+                                "../Binaries/osx64/debug/"
                             ],
                         }
                     }

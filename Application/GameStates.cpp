@@ -1,17 +1,17 @@
 #include "GameStates.h"
 #include "./Core/include/Assert.h"
 #include "./Human/include/Utilities/ImagePNG.h"
-#include "./Human/include/Systems/RenderSystem.h"
-#include "./Human/include/Systems/FontSystem.h"
-#include "./Human/include/Systems/InputSystem.h"
-#include "./Human/include/Rendering/Sprite/SpriteSheet.h"
-#include "./Human/include/Systems/AudioSystem.h"
-#include "./Data/include/ContentManager.h"
-#include "./Core/include/Log.h"
-#include "./Human/include/Input/Myo.h"
-#include "./Scripting/include/Scripting.h"
-#include "./Human/include/Utilities/LoaderOPS.h"
-#include "./Math/include/Vector2.h"
+#include "./Human/include/Systems/OPrenderSystem.h"
+#include "./Human/include/Systems/OPfontSystem.h"
+#include "./Human/include/Systems/OPinputSystem.h"
+#include "./Human/include/Rendering/Sprite/OPspriteSheet.h"
+#include "./Human/include/Systems/OPaudioSystem.h"
+#include "./Data/include/OPcman.h"
+#include "./Core/include/OPlog.h"
+#include "./Human/include/Input/OPmyo.h"
+#include "./Scripting/include/OPscript.h"
+#include "./Scripting/include/OPloaderOPS.h"
+#include "./Math/include/OPvec2.h"
 #include "GameWebServer.h"
 
 OPfloat t = 0;
@@ -170,7 +170,7 @@ OPint State0Update(OPtimer* time){
 		OPrenderClear(color.x, color.y, color.z);
 	}
 
-	OPvec2 pos = OPgamePadLeftThumb(OPgamePad(GamePadIndex_One));
+	OPvec2 pos = OPgamePadLeftThumb(OPgamePadIndex(GamePadIndex_One));
 
 	if(OPkeyboardWasPressed(OPKEY_SPACE)){
 		//OPlog("Should play");
@@ -189,7 +189,7 @@ OPint State0Update(OPtimer* time){
 		OPlog("Queued Color Message");
 	}
 
-	if(OPgamePadIsDown(OPgamePad(GamePadIndex_One), GamePad_Button_BACK)){
+	if(OPgamePadIsDown(OPgamePadIndex(GamePadIndex_One), GamePad_Button_BACK)){
 		OPlog("Should end");
 		OPend();
 	}
@@ -294,7 +294,7 @@ OPint State1Update(OPtimer* time){
 
 	//OPframeBufferBind(&rt);
 	
-	OPgamePadController* _gamePad = OPgamePad(GamePadIndex_One);
+	OPgamePad* _gamePad = OPgamePadIndex(GamePadIndex_One);
 	OPgamePadUpdate(_gamePad);
 	
 	if(OPgamePadIsConnected(_gamePad)) {

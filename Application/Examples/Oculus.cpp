@@ -1,10 +1,14 @@
-#include "./Examples/Oculus.h"
-#include "./Human/include/Systems/RenderSystem.h"
+#include "./ExampleSelectorState.h"
+#include "./Human/include/Systems/OPrenderSystem.h"
+#include "./Human/include/Systems/OPinputSystem.h"
 
-#include "./Data/include/ContentManager.h"
+#include "./Data/include/OPcman.h"
 #include "./Human/include/Rendering/OPMvertex.h"
-#include "./Human/include/Input/Input.h"
-#include "./Human/include/Input/Oculus.h"
+#include "./Human/include/Input/OPoculus.h"
+
+void ExampleOculusEnter(OPgameState* last);
+OPint ExampleOculusUpdate(OPtimer* time);
+void ExampleOculusExit(OPgameState* next);
 
 OPgameState GS_EXAMPLE_OCULUS = {
 	ExampleOculusEnter,

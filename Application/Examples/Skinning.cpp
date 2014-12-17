@@ -1,11 +1,15 @@
-#include "./Examples/Skinning.h"
-#include "./Human/include/Systems/RenderSystem.h"
+#include "./ExampleSelectorState.h"
+#include "./Human/include/Systems/OPrenderSystem.h"
 
-#include "./Data/include/ContentManager.h"
+#include "./Data/include/OPcman.h"
 #include "./Human/include/Rendering/OPMvertex.h"
-#include "./Human/include/Rendering/Skinning/Animation.h"
+#include "./Human/include/Rendering/Skinning/OPskeleton.h"
 
-#include "./Human/include/Input/Input.h"
+#include "./Human/include/Systems/OPinputSystem.h"
+
+void ExampleSkinningEnter(OPgameState* last);
+OPint ExampleSkinningUpdate(OPtimer* time);
+void ExampleSkinningExit(OPgameState* next);
 
 OPgameState GS_EXAMPLE_SKINNING = {
 	ExampleSkinningEnter,

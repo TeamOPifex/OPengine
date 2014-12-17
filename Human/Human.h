@@ -1,9 +1,9 @@
 #ifndef OPENGINE_HUMAN
 #define OPENGINE_HUMAN
 
-#include "./include/Systems/AudioSystem.h"
-#include "./include/Systems/FontSystem.h"
-#include "./include/Systems/InputSystem.h"
-#include "./include/Systems/RenderSystem.h"
+#include "./include/Systems/OPaudioSystem.h"
+#include "./include/Systems/OPfontSystem.h"
+#include "./include/Systems/OPinputSystem.h"
+#include "./include/Systems/OPrenderSystem.h"
 
 #endif

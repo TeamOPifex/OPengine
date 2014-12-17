@@ -1,8 +1,8 @@
 #ifndef OPENGINE_HUMAN_UTILITIES_IMAGE_PNG
 #define OPENGINE_HUMAN_UTILITIES_IMAGE_PNG
 
-#include "./Human/include/Rendering/Texture.h"
-#include "./Data/include/Stream.h"
+#include "./Human/include/Rendering/OPtexture.h"
+#include "./Data/include/OPstream.h"
 #include <stdio.h>
 
 #ifdef __cplusplus
