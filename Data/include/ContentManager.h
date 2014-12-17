@@ -126,14 +126,7 @@ void* OPcmanGet(const OPchar* key);
 * @param key The resource name to load
 * @return Pointer to the resource requested. NULL if it failed to load or wasn't found.
 */
-inline void* OPcmanLoadGet(const OPchar* key) {
-	OPint result;
-	result = OPcmanLoad(key);
-	if(!result) {
-		return NULL;
-	}
-	return OPcmanGet(key);
-}
+void* OPcmanLoadGet(const OPchar* key);
 
 /* Marks an asset as ready to delete
 * It will only be removed from memory when OPcmanPurge is called

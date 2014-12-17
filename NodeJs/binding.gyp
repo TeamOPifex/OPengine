@@ -16,7 +16,9 @@
                 "@OPIFEX_REPOSITORY@/External/glfw-3.0.4/include",
                 "@OPIFEX_REPOSITORY@/External/glm-0.9.1",
                 "@OPIFEX_REPOSITORY@/External/V8/",
-                "@OPIFEX_REPOSITORY@/External/OpenAL/"
+                "@OPIFEX_REPOSITORY@/External/OpenAL/",
+                "@OPIFEX_REPOSITORY@/External/Ogg/include/",
+                "@OPIFEX_REPOSITORY@/External/Vorbis/include/"
             ],
             "cflags!": [
                 "-fno-exceptions"
@@ -82,8 +84,8 @@
                                             "../Pipeline/Release/",
                                             "../GLFW/src/Release/",
                                             "../External/Release/",
-                                            "../@OPIFEX_REPOSITORY@/External/Ogg/lib/win32/",
-                                            "../@OPIFEX_REPOSITORY@/External/Vorbis/lib/win32/",
+                                            "../@OPIFEX_REPOSITORY@/External/Ogg/lib/release/win32/",
+                                            "../@OPIFEX_REPOSITORY@/External/Vorbis/lib/release/win32/",
                                             "C:/Program Files (x86)/OpenAL 1.1 SDK/libs/Win32/",
                                         ]
                                     }

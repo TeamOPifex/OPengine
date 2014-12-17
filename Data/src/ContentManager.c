@@ -287,3 +287,12 @@ OPint OPcmanPurge(){
 	}
 	return 1;
 }
+
+void* OPcmanLoadGet(const OPchar* key) {
+	OPint result;
+	result = OPcmanLoad(key);
+	if (!result) {
+		return NULL;
+	}
+	return OPcmanGet(key);
+}
