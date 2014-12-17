@@ -13,7 +13,7 @@
 	#include "./Human/include/Utilities/AndroidNDK.h"
 #endif
 
-OPgamePadController GamePadControllers[CONTROLLERS] = {
+OPgamePad GamePads[CONTROLLERS] = {
 	{
 		0,
 		false,
@@ -37,8 +37,8 @@ OPgamePadController GamePadControllers[CONTROLLERS] = {
 }; 
 
 //-----------------------------------------------------------------------------
-OPgamePadController* OPgamePad(OPgamePadIndices index) {
-	return &GamePadControllers[index];
+OPgamePad* OPgamePadIndex(OPgamePadIndices index) {
+	return &GamePads[index];
 }
 //-----------------------------------------------------------------------------
 #ifdef OPIFEX_ANDROID
@@ -100,7 +100,7 @@ OPgamePadController* OPgamePad(OPgamePadIndices index) {
 
 //-----------------------------------------------------------------------------
 #ifdef OPIFEX_ANDROID
-void __OPandUpdateGamePad(OPgamePadController* controller){
+void __OPandUpdateGamePad(OPgamePad* controller){
 	jobject jcontroller = OPjniGetControllerByPlayer(controller->playerIndex);
 
 	if(jcontroller == 0) {
@@ -140,7 +140,7 @@ void __OPandUpdateGamePad(OPgamePadController* controller){
 #endif
 //-----------------------------------------------------------------------------
 #if !defined(OPIFEX_ANDROID) && defined(OPIFEX_UNIX)
-void __OPlnxUpdateGamePad(OPgamePadController* c){
+void __OPlnxUpdateGamePad(OPgamePad* c){
 	i32  axes = 0, buttons = 0;
 	const f32* axisData   = NULL;
 	const ui8* buttonData = NULL;
@@ -200,7 +200,7 @@ void __OPlnxUpdateGamePad(OPgamePadController* c){
 #endif
 //-----------------------------------------------------------------------------
 #ifdef OPIFEX_WINDOWS
-void __OPwinUpdateGamePad(OPgamePadController* controller){
+void __OPwinUpdateGamePad(OPgamePad* controller){
 	XINPUT_STATE controllerState;
 	ZeroMemory(&controllerState, sizeof(XINPUT_STATE));
 	DWORD result = XInputGetState(controller->playerIndex, &controllerState);
@@ -275,7 +275,7 @@ void __OPwinUpdateGamePad(OPgamePadController* controller){
 }
 #endif
 
-void OPgamePadUpdate(OPgamePadController* controller){
+void OPgamePadUpdate(OPgamePad* controller){
 	if(OPgamePadIsConnected(controller)) {
 		OPmemcpy(
 			&controller->prevButtons, 
@@ -321,7 +321,7 @@ void OPgamePadUpdate(OPgamePadController* controller){
 	controller->axes[5] *= len > controller->deadzone;
 }
 
-void OPgamePadReset(OPgamePadController* controller){
+void OPgamePadReset(OPgamePad* controller){
 	OPbzero(&controller->buttons, sizeof(i32) * GamePadButton_Max);
 	OPbzero(&controller->prevButtons, sizeof(i32) * GamePadButton_Max);
 	OPbzero(&controller->axes, sizeof(OPfloat) * GamePadAxes_Max);
@@ -332,7 +332,7 @@ void OPgamePadSystemUpdate()
 {
 	for ( OPint i = CONTROLLERS; i--; )
 	{
-		OPgamePadUpdate( OPgamePad( (OPgamePadIndices)i ) );
+		OPgamePadUpdate( OPgamePadIndex( (OPgamePadIndices)i ) );
 	}
 }
 
@@ -340,7 +340,7 @@ void OPgamePadSystemReset()
 {
 	for ( OPint i = CONTROLLERS; i--; )
 	{
-		OPgamePadReset( OPgamePad((OPgamePadIndices)i));
+		OPgamePadReset( OPgamePadIndex((OPgamePadIndices)i));
 	}
 }
 
@@ -348,17 +348,17 @@ void OPgamePadSetDeadzones(OPfloat deadzone)
 {
 	for ( OPint i = CONTROLLERS; i--; )
 	{
-		OPgamePadSetDeadzone( OPgamePad((OPgamePadIndices)i), deadzone);
+		OPgamePadSetDeadzone( OPgamePadIndex((OPgamePadIndices)i), deadzone);
 	}
 }
 
-OPvec2 OPgamePadLeftThumb(OPgamePadController* controller) {
+OPvec2 OPgamePadLeftThumb(OPgamePad* controller) {
 	OPvec2 tmp;
 	tmp.x = controller->axes[LS_X];
 	tmp.y = controller->axes[LS_Y];
 	return tmp;
 }
-OPvec2 OPgamePadRightThumb(OPgamePadController* controller) {
+OPvec2 OPgamePadRightThumb(OPgamePad* controller) {
 	OPvec2 tmp;
 	tmp.x = controller->axes[RS_X];
 	tmp.y = controller->axes[RS_Y];

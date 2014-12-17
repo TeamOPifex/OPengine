@@ -34,12 +34,12 @@ void ExampleAudioEnter(OPgameState* last) {
 
 OPint ExampleAudioUpdate(OPtimer* time) {
 	
-	if (OPkeyboardWasPressed(OPKEY_P) || OPgamePadWasPressed(OPgamePad(GamePadIndex_One), GamePad_Button_A)) {
+	if (OPkeyboardWasPressed(OPKEY_P) || OPgamePadWasPressed(OPgamePadIndex(GamePadIndex_One), GamePad_Button_A)) {
 		OPaudSetEmitter(audioExample->Sound);
 		OPaudVolume(audioExample->Sound, 1.0f);
 		OPaudPlay();
 	}
-	if (OPkeyboardWasPressed(OPKEY_B) || OPgamePadWasPressed(OPgamePad(GamePadIndex_One), GamePad_Button_B)) {
+	if (OPkeyboardWasPressed(OPKEY_B) || OPgamePadWasPressed(OPgamePadIndex(GamePadIndex_One), GamePad_Button_B)) {
 		OPaudSetEmitter(audioExample->BackgroundSound);
 		OPaudVolume(audioExample->BackgroundSound, 0.5f);
 		OPaudPlay();

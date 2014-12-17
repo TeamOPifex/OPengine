@@ -170,7 +170,7 @@ OPint State0Update(OPtimer* time){
 		OPrenderClear(color.x, color.y, color.z);
 	}
 
-	OPvec2 pos = OPgamePadLeftThumb(OPgamePad(GamePadIndex_One));
+	OPvec2 pos = OPgamePadLeftThumb(OPgamePadIndex(GamePadIndex_One));
 
 	if(OPkeyboardWasPressed(OPKEY_SPACE)){
 		//OPlog("Should play");
@@ -189,7 +189,7 @@ OPint State0Update(OPtimer* time){
 		OPlog("Queued Color Message");
 	}
 
-	if(OPgamePadIsDown(OPgamePad(GamePadIndex_One), GamePad_Button_BACK)){
+	if(OPgamePadIsDown(OPgamePadIndex(GamePadIndex_One), GamePad_Button_BACK)){
 		OPlog("Should end");
 		OPend();
 	}
@@ -294,7 +294,7 @@ OPint State1Update(OPtimer* time){
 
 	//OPframeBufferBind(&rt);
 	
-	OPgamePadController* _gamePad = OPgamePad(GamePadIndex_One);
+	OPgamePad* _gamePad = OPgamePadIndex(GamePadIndex_One);
 	OPgamePadUpdate(_gamePad);
 	
 	if(OPgamePadIsConnected(_gamePad)) {
