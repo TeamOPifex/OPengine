@@ -278,6 +278,7 @@ OPint OPmyoLock() {
 	#ifdef OPIFEX_MYO
 		myoDevice->lock();
 	#endif
+	return 0;
 }
 
 OPint OPmyoUnlock(OPint state) {
@@ -290,4 +291,5 @@ OPint OPmyoUnlock(OPint state) {
 		}
 	}
 	#endif
+	return 0;
 }
