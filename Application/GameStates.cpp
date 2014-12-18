@@ -134,7 +134,7 @@ void State0Enter(OPgameState* last){
 	fontManager = OPfontManagerSetup("stencil.opf", text, 1);
 
 	// Optional
-	OPfontManagerSetRGBA(fontManager, 0.0f, 0.0f, 1.0f, 1.0f);
+	OPfontManagerSetColor(fontManager, 0.0f, 0.0f, 1.0f, 1.0f);
 	OPfontManagerSetAlign(fontManager, OPFONT_ALIGN_CENTER);
 
 	
@@ -209,7 +209,7 @@ OPint State0Update(OPtimer* time){
 	OPrenderMesh();
 
 	// Required
-	OPrenderTextXY(
+	OPrenderText(
 		"All of the text! Woot!",
 		pos.x + fontPosX,
 		pos.y + fontPosY

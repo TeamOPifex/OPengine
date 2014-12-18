@@ -1,6 +1,7 @@
 #include "./Human/include/Rendering/Font/OPfontManager.h"
 #include "./Human/include/Rendering/OPrender.h"
 #include "./Human/include/Systems/OPfontSystem.h"
+#include "./Human/include/Rendering/OPmeshPacked.h"
 #include "./Data/include/OPcman.h"
 #include "./Core/include/Assert.h"
 
@@ -40,23 +41,11 @@ void OPfontManagerDestroy(OPfontManager* font) {
 	OPfree(font);
 }
 
-void OPfontManagerSetColor4(OPfontManager* manager, OPvec4 color) {
-	manager->_color = color;
-}
-
-void OPfontManagerSetRGBA(OPfontManager* manager, f32 r, f32 g, f32 b, f32 a) {
+void OPfontManagerSetColor(OPfontManager* manager, f32 r, f32 g, f32 b, f32 a) {
 	manager->_color.x = r;
 	manager->_color.y = g;
 	manager->_color.z = b;
 	manager->_color.w = a;
-}
-
-void OPfontManagerSetAlign(OPfontManager* manager, OPfontAlign align) {
-	manager->_align = align;
-}
-
-void OPfontManagerBind(OPfontManager* manager) {
-	OPRENDER_CURR_FONT_MANAGER = manager;
 }
 
 void OPfontManagerAddText(const OPchar* text) {
@@ -72,180 +61,4 @@ void OPfontManagerBuild() {
 	OPmeshPackerBind(&OPRENDER_CURR_FONT_MANAGER->meshPacker);
 	OPmeshPackerBuild();
 	OPRENDER_CURR_FONT_MANAGER->isBuilt = true;
-}
-
-void OPfontEffectBind(OPeffect* effect) {
-	OPRENDER_CURR_FONT_EFFECT = effect;
-}
-
-void OPrenderTextRGBAXYAlign(const OPchar* text, f32 r, f32 g, f32 b, f32 a, f32 x, f32 y, OPfontAlign align) {
-	OPrenderTextColor4Vec2Align(text, OPvec4create(r, g, b, a), OPvec2create(x, y), align);
-}
-
-void OPrenderTextXY(const OPchar* text, f32 x, f32 y) {
-	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	//OPvec4 col = OPRENDER_CURR_FONT_MANAGER->_color;
-	//OPvec2 pos = OPvec2Create(x, y);
-	//OPfontAlign a = OPRENDER_CURR_FONT_MANAGER->_align;
-	OPrenderTextColor4Vec2Align(text, OPRENDER_CURR_FONT_MANAGER->_color, OPvec2create(x, y), OPRENDER_CURR_FONT_MANAGER->_align);
-}
-
-void OPrenderTextXYAlign(const OPchar* text, f32 x, f32 y, OPfontAlign align) {
-	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	OPrenderTextColor4Vec2Align(text, OPRENDER_CURR_FONT_MANAGER->_color, OPvec2create(x, y), align);
-}
-
-void OPrenderTextRGBXY(const OPchar* text, f32 r, f32 g, f32 b, f32 x, f32 y) {
-	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	OPrenderTextColor4Vec2Align(text, OPvec4create(r, g, b, 1.0f), OPvec2create(x, y), OPRENDER_CURR_FONT_MANAGER->_align);
-}
-
-void OPrenderTextRGBAXY(const OPchar* text, f32 r, f32 g, f32 b, f32 a, f32 x, f32 y) {
-	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	OPrenderTextColor4Vec2Align(text, OPvec4create(r,g,b,a), OPvec2create(x,y), OPRENDER_CURR_FONT_MANAGER->_align);
-}
-void OPrenderTextVec2(const OPchar* text, OPvec2 pos) {
-	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	OPrenderTextColor4Vec2Align(text, OPRENDER_CURR_FONT_MANAGER->_color, pos, OPRENDER_CURR_FONT_MANAGER->_align);
-}
-
-void OPrenderTextVec2Align(const OPchar* text, OPvec2 pos, OPfontAlign align) {
-	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	OPrenderTextColor4Vec2Align(text, OPRENDER_CURR_FONT_MANAGER->_color, pos, align);
-}
-
-void OPrenderTextColor3Vec2(const OPchar* text, OPvec3 color, OPvec2 pos) {
-	OPrenderTextColor4Vec2Align(text, OPvec4createFromVec3(color, 1.0f), pos, OPRENDER_CURR_FONT_MANAGER->_align);
-}
-
-void OPrenderTextColor3Vec2Align(const OPchar* text, OPvec3 color, OPvec2 pos, OPfontAlign align) {
-	OPrenderTextColor4Vec2Align(text, OPvec4createFromVec3(color, 1.0f), pos, align);
-}
-
-void OPrenderTextColor4Vec2(const OPchar* text, OPvec4 color, OPvec2 pos) {
-	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	OPrenderTextColor4Vec2Align(text, color, pos, OPRENDER_CURR_FONT_MANAGER->_align);
-}
-
-void OPrenderTextSetParameters(OPvec4 color, OPmat4* world) {
-	OPrenderDepth(0);
-	OPrenderBindEffect(OPRENDER_CURR_FONT_EFFECT);
-	OPtextureClearActive();
-	ui32 textureHandle = OPtextureBind(OPRENDER_CURR_FONT_MANAGER->_font->texture);
-	OPrenderParami("uColorTexture", textureHandle);
-	OPrenderParamVec4("uColor", &color);
-	OPrenderParamMat4v("uWorld", 1, world);
-}
-
-void OPrenderTextColor4Mat4TextNode(OPfontUserTextNode* node, OPvec4 color, OPmat4* world) {
-	OPrenderTextSetParameters(color, world);
-	OPrenderBindMesh(&node->mesh);
-	OPrenderBindEffect(OPRENDER_CURR_FONT_EFFECT);
-	if (OPRENDER_CURR_FONT_MANAGER->pixelated) OPtexturePixelate();
-	OPrenderMesh();
-}
-
-void OPrenderTextColor4Mat4BuiltNode(OPfontBuiltTextNode* node, OPvec4 color, OPmat4* world) {
-	OPrenderTextSetParameters(color, world);
-	OPmeshPackerBind(&OPRENDER_CURR_FONT_MANAGER->meshPacker);
-	OPrenderBindEffect(OPRENDER_CURR_FONT_EFFECT);
-	if (OPRENDER_CURR_FONT_MANAGER->pixelated) OPtexturePixelate();
-	OPrenderMeshPacked(node->packedMesh);
-}
-
-void OPrenderTextAlign(OPmat4* world, OPfloat width, OPfontAlign align){
-	switch (align) {
-		case OPFONT_ALIGN_LEFT:
-			OPmat4buildTranslate(world, 0, 0, 0.0f);
-			break;
-		case OPFONT_ALIGN_CENTER:
-			OPmat4buildTranslate(world, -(width / 2.0f), 0, 0.0f);
-			break;
-		case OPFONT_ALIGN_RIGHT:
-			OPmat4buildTranslate(world, -width, 0, 0.0f);
-			break;
-	}
-}
-
-void OPrenderTextColor4Vec2Align(const OPchar* text, OPvec4 color, OPvec2 pos, OPfontAlign align) {
-	ASSERT(OPRENDER_CURR_FONT_EFFECT != NULL, "A Font Effect has not been bound yet");
-	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	ASSERT(OPRENDER_CURR_FONT_MANAGER->builtNodes != NULL, "The bound Font Manager Hashmap hasn't been created yet");
-
-	int tryHashMap = OPRENDER_CURR_FONT_MANAGER->isBuilt;
-	OPfontBuiltTextNode* node = NULL;
-	if (tryHashMap) {
-		OPhashMapGet(OPRENDER_CURR_FONT_MANAGER->builtNodes, text, (void**)&node);
-	}
-
-	OPmat4 world;
-	OPfloat scale = (OPrenderWidth / 2.0f) * OPscreenWidthScale;
-
-	//OPmat4scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f / scale);
-	//OPmat4translate(&world, pos.x, pos.y, 0.0f);
-
-	if (node == NULL || !OPRENDER_CURR_FONT_MANAGER->isBuilt) {
-		OPfontUserTextNode textNode = OPfontCreateUserText(OPRENDER_CURR_FONT_MANAGER->_font, text);
-		OPrenderTextAlign(&world, textNode.Width, align);
-		OPmat4scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f);
-		OPmat4translate(&world, pos.x, pos.y, 0.0f);
-		OPrenderTextColor4Mat4TextNode(&textNode, color, &world);
-		OPrenderDestroyMesh(&textNode.mesh);
-	}
-	else {
-		OPrenderTextAlign(&world, node->Width, align);
-		OPmat4scl(&world, OPscreenWidthScale * OPrenderGetWidthAspectRatio() / scale, OPscreenHeightScale * OPrenderGetHeightAspectRatio() / scale, 1.0f);
-		OPmat4translate(&world, pos.x, pos.y, 0.0f);
-		OPrenderTextColor4Mat4BuiltNode(node, color, &world);
-	}
-}
-
-void OPrenderTextColor4Mat4(const OPchar* text, OPvec4 color, OPmat4* world) {
-	ASSERT(OPRENDER_CURR_FONT_EFFECT != NULL, "A Font Effect has not been bound yet");
-	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	ASSERT(OPRENDER_CURR_FONT_MANAGER->builtNodes != NULL, "The bound Font Manager Hashmap hasn't been created yet");
-
-	int tryHashMap = OPRENDER_CURR_FONT_MANAGER->isBuilt;
-	OPfontBuiltTextNode* node = NULL;
-	if (tryHashMap) {
-		OPhashMapGet(OPRENDER_CURR_FONT_MANAGER->builtNodes, text, (void**)&node);
-	}
-
-	OPmat4 aligned;
-	OPmat4 scaled;
-	OPfloat scale = (OPrenderWidth / 2.0f) * OPscreenWidthScale;
-	//OPlog("Scale %f, renderWidth %d, Width Scale %f, aspWidth %f, aspHeight %f", scale, OPrenderWidth, OPscreenWidthScale, OPrenderGetWidthAspectRatio(), OPrenderGetHeightAspectRatio());
-
-	if (node == NULL || !OPRENDER_CURR_FONT_MANAGER->isBuilt) {
-		OPfontUserTextNode textNode = OPfontCreateUserText(OPRENDER_CURR_FONT_MANAGER->_font, text);
-
-		OPrenderTextAlign(&aligned, textNode.Width, OPRENDER_CURR_FONT_MANAGER->_align);
-		//OPmat4Log("Aligned", &aligned);
-
-		OPmat4buildScl(&scaled, 
-			OPrenderGetWidthAspectRatio() / scale, 
-			OPrenderGetHeightAspectRatio() / scale, 
-			1.0f);
-		//OPmat4Log("Scaled", &scaled);
-
-		OPmat4 temp;
-		OPmat4mul(&temp, &scaled, &aligned);
-		OPmat4mul(&temp, world, &temp);
-		//OPmat4Log("World", world);
-		//OPmat4Log("Temp", &temp);
-
-		OPrenderTextColor4Mat4TextNode(&textNode, color, &temp);
-		OPrenderDestroyMesh(&textNode.mesh);
-	}
-	else {
-		OPrenderTextAlign(&scaled, node->Width, OPRENDER_CURR_FONT_MANAGER->_align);
-		OPmat4scl(&scaled, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f);
-		OPmat4 temp;
-		OPmat4mul(&temp, &scaled, world);
-		OPrenderTextColor4Mat4BuiltNode(node, color, &temp);
-	}
-}
-
-void OPrenderTextMat4(const OPchar* text, OPmat4* world) {
-	OPrenderTextColor4Mat4(text, OPRENDER_CURR_FONT_MANAGER->_color, world);
 }
