@@ -119,7 +119,7 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 			r = g = b = 0.2 + !isInActive * 0.4;
 		}
 		OPmat4translate(&w, 0, -0.1, 0);
-		OPrenderTextColor4Mat4(exampleSelector->Examples[i].name, OPvec4create(r,g,b,1), &w);
+		OPrenderText(exampleSelector->Examples[i].name, OPvec4create(r,g,b,1), &w);
 		//OPrenderTextRGBAXY(exampleSelector->Examples[i].name, r, g, b, 1, -0.9, (exampleSelector->Selected - i) * 0.1);
 	}
 

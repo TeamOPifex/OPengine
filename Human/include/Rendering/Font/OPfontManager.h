@@ -3,7 +3,6 @@
 
 #include "./Human/include/Rendering/Font/OPfont.h"
 #include "./Human/include/Rendering/OPeffect.h"
-#include "./Human/include/Rendering/OPmeshPacked.h"
 #include "./Math/include/Vectors.h"
 #include "./Data/include/OPhashMap.h"
 
@@ -62,37 +61,47 @@ extern OPeffect* OPRENDER_CURR_FONT_EFFECT;
 OPfontManager* OPfontManagerCreate(OPfont* font);
 OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 count);
 
-void OPfontManagerBind(OPfontManager* manager);
 void OPfontManagerAddText(const OPchar* text);
 void OPfontManagerBuild(); 
 void OPfontManagerDestroy(OPfontManager* font);
 
-void OPfontManagerSetColor4(OPfontManager* manager, OPvec4 color);
-void OPfontManagerSetRGBA(OPfontManager* manager, f32 r, f32 g, f32 b, f32 a);
-void OPfontManagerSetAlign(OPfontManager* manager, OPfontAlign align);
+void OPfontManagerSetColor(OPfontManager* manager, f32 r, f32 g, f32 b, f32 a);
+void OPfontManagerSetColor(f32 r, f32 g, f32 b, f32 a);
 
-void OPfontEffectBind(OPeffect* effect);
 
-void OPrenderTextXY(const OPchar* text, f32 x, f32 y);
-void OPrenderTextXYAlign(const OPchar* text, f32 x, f32 y, OPfontAlign align);
-void OPrenderTextRGBXY(const OPchar* text, f32 r, f32 g, f32 b, f32 x, f32 y);
-void OPrenderTextRGBXYAlign(const OPchar* text, f32 r, f32 g, f32 b, f32 x, f32 y, OPfontAlign align);
-void OPrenderTextRGBAXY(const OPchar* text, f32 r, f32 g, f32 b, f32 a, f32 x, f32 y);
-void OPrenderTextRGBAXYAlign(const OPchar* text, f32 r, f32 g, f32 b, f32 a, f32 x, f32 y, OPfontAlign align);
-void OPrenderTextVec2(const OPchar* text, OPvec2 pos);
-void OPrenderTextVec2Align(const OPchar* text, OPvec2 pos, OPfontAlign align);
-void OPrenderTextColor3Vec2(const OPchar* text, OPvec3 color, OPvec2 pos);
-void OPrenderTextColor3Vec2Align(const OPchar* text, OPvec3 color, OPvec2 pos, OPfontAlign align);
-void OPrenderTextColor4Vec2(const OPchar* text, OPvec4 color, OPvec2 pos);
-void OPrenderTextColor4Vec2Align(const OPchar* text, OPvec4 color, OPvec2 pos, OPfontAlign align);
-void OPrenderTextMat4(const OPchar* text, OPmat4* world);
-void OPrenderTextColor4Mat4(const OPchar* text, OPvec4 color, OPmat4* world);
-
-inline void OPrenderTextRGBAMat4(const OPchar* text, f32 r, f32 g, f32 b, f32 a, OPmat4* world) {
-	OPrenderTextColor4Mat4(text, OPvec4create(r, g, b, a), world);
+// TODO: Refactor
+inline void OPfontEffectBind(OPeffect* effect) {
+	OPRENDER_CURR_FONT_EFFECT = effect;
 }
-inline void OPrenderTextRGBMat4(const OPchar* text, f32 r, f32 g, f32 b, OPmat4* world) {
-	OPrenderTextRGBAMat4(text, r, g, b, 1.0, world);
+inline void OPfontManagerBind(OPfontManager* manager) {
+	OPRENDER_CURR_FONT_MANAGER = manager;
+}
+inline void OPfontManagerSetAlign(OPfontManager* manager, OPfontAlign align) {
+	manager->_align = align;
+}
+inline void OPfontManagerSetAlign(OPfontAlign align) {
+	OPRENDER_CURR_FONT_MANAGER->_align = align;
+}
+inline void OPfontManagerSetColor(OPfontManager* manager, OPvec3 color) {
+	OPfontManagerSetColor(manager, color.x, color.y, color.z, 1.0);
+}
+inline void OPfontManagerSetColor(OPfontManager* manager, OPvec4 color) {
+	OPfontManagerSetColor(manager, color.x, color.y, color.z, color.w);
+}
+inline void OPfontManagerSetColor(OPfontManager* manager, f32 r, f32 g, f32 b) {
+	OPfontManagerSetColor(manager, r, g, b, 1.0);
+}
+inline void OPfontManagerSetColor(OPvec3 color) {
+	OPfontManagerSetColor(OPRENDER_CURR_FONT_MANAGER, color.x, color.y, color.z, 1.0);
+}
+inline void OPfontManagerSetColor(OPvec4 color) {
+	OPfontManagerSetColor(OPRENDER_CURR_FONT_MANAGER, color.x, color.y, color.z, color.w);
+}
+inline void OPfontManagerSetColor(f32 r, f32 g, f32 b) {
+	OPfontManagerSetColor(OPRENDER_CURR_FONT_MANAGER, r, g, b, 1.0);
+}
+inline void OPfontManagerSetColor(f32 r, f32 g, f32 b, f32 a) {
+	OPfontManagerSetColor(OPRENDER_CURR_FONT_MANAGER, r, g, b, a);
 }
 
 #endif
