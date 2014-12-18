@@ -13,7 +13,6 @@
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
 #elif defined(OPIFEX_WINDOWS)
-#include "stdafx.h"
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <WTypes.h>

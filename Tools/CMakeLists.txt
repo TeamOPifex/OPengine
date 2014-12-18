@@ -15,8 +15,7 @@ if(${OPIFEX_TOOLS_FONTMAKER})
 	include_directories(
 		../External/freetype/win32/
 		../External/glfw-3.0.4/include/
-		../External/glm-0.9.1/
-		../External/glew-1.5.8/include/
+		../External/glew-1.9.0/include/
 		../External/Phsyx.3.2.1/include/
 		../External/GLES2/
 		../External/Ogg/include/
@@ -46,6 +45,9 @@ if(${OPIFEX_TOOLS_FONTMAKER})
 	endif()
 
 	add_definitions(-D${OPIFEX_OS})
+	if(${OPIFEX_RELEASE})
+		add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
+	endif()
 
 	SET_PROPERTY(TARGET Tools_FontMaker                PROPERTY FOLDER "Tools")
 
@@ -53,6 +55,8 @@ if(${OPIFEX_TOOLS_FONTMAKER})
 	set_target_properties(Tools_FontMaker PROPERTIES 
 		OUTPUT_NAME "FontMaker"
 	)
+	
+
 endif()
 
 

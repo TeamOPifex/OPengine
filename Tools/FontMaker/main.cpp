@@ -1,8 +1,8 @@
 #include "FontHelper.h"
-#include "./Core/include/MathHelpers.h"
+#include "./Core/include/OPmath.h"
 #include "./Human/include/Utilities/ImagePNG.h"
 
-#include "./Human/include/Rendering/Font/FontKerning.h"
+#include "./Human/include/Rendering/Font/OPfontKerning.h"
 
 
 static OPint OPfontInit(OPfont* font, i8* filename)
@@ -715,6 +715,7 @@ int main(int argc, char **argv) {
 	OPfloat font_size = 0.0;
 	OPint atlasSize = 0;
 	i8* font_filename = NULL;
+	i8* out_filename = NULL;
 
 	for (arg = 1; arg < argc; ++arg)
 	{
@@ -809,6 +810,28 @@ int main(int argc, char **argv) {
 
 			continue;
 		}
+
+		if (0 == strcmp("--output", argv[arg]) || 0 == strcmp("--out", argv[arg]) || 0 == strcmp("-o", argv[arg]))
+		{
+			++arg;
+
+			if (out_filename)
+			{
+				fprintf(stderr, "Multiple --output parameters.\n");
+				print_help();
+				exit(1);
+			}
+
+			if (arg >= argc)
+			{
+				fprintf(stderr, "No output font file given.\n");
+				print_help();
+				exit(1);
+			}
+
+			out_filename = argv[arg];
+			continue;
+		}
 	}
 
 	if (font_size == 0.0) {
@@ -822,13 +845,15 @@ int main(int argc, char **argv) {
 		print_help();
 		exit(1);
 	}
+	
+	fprintf(stderr, out_filename);
 
 
 	OPfontAtlas* atlas = OPfontAtlasCreate(atlasSize, atlasSize, 1);
 	OPfont* font = OPfontFromFile(atlas, font_size, font_filename);
 	OPfontLoadGlyphs(font, font_filename, font_cache);
 	OPfontAtlasSave(atlas, "output.png");
-	OPfontSave(font, "output.opf");
+	OPfontSave(font, out_filename);
 
 	return 0;
 }

@@ -25,7 +25,7 @@ OPlist* _OP_CMAN_ASSETLOADERS = NULL;
 #if defined(_DEBUG) && defined(OPIFEX_WINDOWS)
 #define BUFSIZE MAX_PATH
 #include <windows.h>
-#include "./Data/include/String.h"
+#include "./Data/include/OPstring.h"
 i64 OP_CMAN_LAST_CHECKED = 1000;
 
 #endif

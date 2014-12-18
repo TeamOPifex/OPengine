@@ -9,7 +9,6 @@ cmake_minimum_required(VERSION 2.8)
 #########################################
 include_directories(
 	../External/glfw-3.0.4/include/
-	../External/glm-0.9.5/
 	../External/glew-1.9.0/include/
 	../External/Phsyx.3.2.1/include/
 	../External/GLES2/
