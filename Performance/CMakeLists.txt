@@ -38,7 +38,12 @@ set(ALL_LIBS
 #########################################
 # BUILD
 #########################################
-add_library(4_Performance STATIC ${PERFORMANCE_SRC})
+if(${OPIFEX_SHARED})
+	add_library(4_Performance SHARED ${PERFORMANCE_SRC})
+else()
+	add_library(4_Performance STATIC ${PERFORMANCE_SRC})
+endif()
+
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 add_definitions(-D${OPIFEX_OS})
 

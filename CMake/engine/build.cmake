@@ -43,6 +43,7 @@ option(OPIFEX_V8 "Build the V8 library into the engine" OFF)
 option(OPIFEX_NODEJS "Configure build files for Node.js module" OFF)
 option(OPIFEX_PHYSICS "Build the PhysX library into the engine" OFF)
 option(OPIFEX_RELEASE "Build the engine in release mode" OFF)
+option(OPIFEX_SHARED "Build the engine as shared libraries" OFF)
 
 SET(OPIFEX_PROJECT_BINARY_DIR ${PROJECT_BINARY_DIR})
 SET(OPIFEX_PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR})

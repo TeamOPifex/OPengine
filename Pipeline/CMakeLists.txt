@@ -60,7 +60,12 @@ set(ALL_LIBS
 #########################################
 # BUILD
 #########################################
-add_library(8_Pipeline STATIC ${PIPELINE_SRC})
+if(${OPIFEX_SHARED})
+	add_library(8_Pipeline SHARED ${PIPELINE_SRC})
+else()
+	add_library(8_Pipeline STATIC ${PIPELINE_SRC})
+endif()
+
 set_target_properties(8_Pipeline PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(8_Pipeline PROPERTIES OUTPUT_NAME "Pipeline")
 add_definitions(-D${OPIFEX_OS})

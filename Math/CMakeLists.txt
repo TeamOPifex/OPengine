@@ -37,7 +37,11 @@ set(ALL_LIBS
 #########################################
 # BUILD
 #########################################
-add_library(3_Math STATIC ${MATH_SRC})
+if(${OPIFEX_SHARED})
+	add_library(3_Math SHARED ${MATH_SRC})
+else()
+	add_library(3_Math STATIC ${MATH_SRC})
+endif()
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 add_definitions(-D${OPIFEX_OS})
 	
