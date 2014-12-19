@@ -301,3 +301,95 @@ ui64 OPfileLastChange(const OPchar* path) {
 #endif
 	return 0;
 }
+
+
+
+OPfile OPfileOpen(const OPchar* path) {
+#if defined(OPIFEX_UNIX)
+	OPint fd = 0;
+	OPfile file = { 0 };
+	
+	// be sure that the file could be opened successfully
+	fd = open(path, O_RDWR | O_CREAT);
+	OPlog("FD : %d", fd);
+	if(fd == 0) return file;
+
+	file._handle = fd;
+
+	return file;
+
+#elif defined(OPIFEX_WINDOWS)
+	// windows implementation
+#endif
+}
+
+OPint OPfileWriteui8(OPfile* file, ui8 data) {
+	write(file->_handle, &data, sizeof(ui8));
+}
+OPint OPfileWriteui16(OPfile* file, ui16 data) {
+	write(file->_handle, &data, sizeof(ui16));
+}
+OPint OPfileWriteui32(OPfile* file, ui32 data) {
+	write(file->_handle, &data, sizeof(ui32));
+}
+OPint OPfileWritei8(OPfile* file, i8 data) {
+	write(file->_handle, &data, sizeof(i8));
+}
+OPint OPfileWritei16(OPfile* file, i16 data) {
+	write(file->_handle, &data, sizeof(i16));
+}
+OPint OPfileWritei32(OPfile* file, i32 data) {
+	write(file->_handle, &data, sizeof(i32));
+}
+OPint OPfileWriteString(OPfile* file, const OPchar* data) {
+	ui32 len = strlen(data);
+	write(file->_handle, len, sizeof(ui32));
+	write(file->_handle, data, sizeof(OPchar) * len);
+}
+
+ui8 OPfileReadui8(OPfile* file) {
+	i8 bytes[sizeof(ui8)];
+	read(file->_handle, bytes, sizeof(ui8));
+	return *((ui8*)bytes);
+}
+
+ui16 OPfileReadui16(OPfile* file) {
+	i8 bytes[sizeof(ui16)];
+	read(file->_handle, bytes, sizeof(ui16));
+	return *((ui16*)bytes);
+}
+
+ui32 OPfileReadui32(OPfile* file) {
+	i8 bytes[sizeof(ui32)];
+	read(file->_handle, bytes, sizeof(ui32));
+	return *((ui32*)bytes);
+}
+
+i8 OPfileReadi8(OPfile* file) {
+	i8 bytes[sizeof(i8)];
+	read(file->_handle, bytes, sizeof(i8));
+	return *((i8*)bytes);
+}
+
+i16 OPfileReadi16(OPfile* file) {
+	i8 bytes[sizeof(i16)];
+	read(file->_handle, bytes, sizeof(i16));
+	return *((i16*)bytes);
+}
+
+i32 OPfileReadi32(OPfile* file) {
+	i8 bytes[sizeof(i32)];
+	read(file->_handle, bytes, sizeof(i32));
+	return *((i32*)bytes);
+}
+
+OPchar* OPfileReadString(OPfile* file) {
+	ui32 len = OPfileReadui32(file);
+	OPchar* str = (OPchar*)OPalloc(sizeof(OPchar) * len);
+	read(file->_handle, str, sizeof(OPchar) * len);
+	return str;
+}
+
+OPint OPfileClose(OPfile* file) {
+	close(file->_handle);
+}

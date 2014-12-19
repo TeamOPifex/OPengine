@@ -20,6 +20,10 @@
 }\
 
 typedef struct {
+	OPint _handle;
+} OPfile;
+
+typedef struct {
 	FILE* file;
 	ui32 start;
 	ui32 length;
@@ -136,6 +140,23 @@ OPint OPfileExists(const char* path);
 OPint OPdeleteFile(const char* path);
 
 ui64 OPfileLastChange(const OPchar* path);
+
+OPfile OPfileOpen(const OPchar* path);
+OPint OPfileWriteui8(OPfile* file, ui8 data);
+OPint OPfileWriteui16(OPfile* file, ui16 data);
+OPint OPfileWriteui32(OPfile* file, ui32 data);
+OPint OPfileWritei8(OPfile* file, i8 data);
+OPint OPfileWritei16(OPfile* file, i16 data);
+OPint OPfileWritei32(OPfile* file, i32 data);
+OPint OPfileWriteString(OPfile* file, const OPchar* data);
+ui8 OPfileReadui8(OPfile* file);
+ui16 OPfileReadui16(OPfile* file);
+ui32 OPfileReadui32(OPfile* file);
+i8 OPfileReadi8(OPfile* file);
+i16 OPfileReadi16(OPfile* file);
+i32 OPfileReadi32(OPfile* file);
+OPchar* OPfileReadString(OPfile* file);
+OPint OPfileClose(OPfile* file);
 
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus

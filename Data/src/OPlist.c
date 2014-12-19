@@ -42,11 +42,18 @@ OPint OPlistPush(OPlist* list, ui8* value){
 
 	return list->_size - 1;
 }
+
 //-----------------------------------------------------------------------------
 ui8* OPlistPop(OPlist* list){
 	list->_size--;
 	return list->_indices + list->_size * list->_elementSize;
 }
+
+//-----------------------------------------------------------------------------
+ui8* OPlistPeek(OPlist* list) {
+	return list->_indices + (list->_size - 1) * list->_elementSize;
+}
+
 //-----------------------------------------------------------------------------
 OPint OPlistInsert(OPlist* list, ui8* value, OPuint index){
 	OPuint eleSize = list->_elementSize;
