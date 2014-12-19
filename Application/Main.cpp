@@ -17,6 +17,28 @@ void ApplicationInit() {
 	InitializeLoaders();
 	OPcmanInit(assetDir);
 
+	//OPfile f;
+	// f = OPfileOpen("/Users/garretthoofman/engine/test.txt");
+	// if(f._handle != 0) {
+	// 	OPfileWritei32(&f, 1337);
+	// 	OPfileClose(&f);
+	// 	OPlog("Finished file");
+	// } else {
+	// 	OPlog("Failed to create file.");
+	// 	return;
+	// }
+
+	// f = OPfileOpen("/Users/garretthoofman/engine/test.txt");
+	// if(f._handle != 0) {
+	// 	i32 number = OPfileReadi32(&f);
+	// 	OPfileClose(&f);
+	// 	OPlog("Read number: %d", number);
+	// 	return;
+	// } else {
+	// 	OPlog("Failed to open file.");
+	// 	return;
+	// }
+
 	OPmat4 a, b, c;
 	OPmat4buildScl(&a, 2, 2, 2);
 	OPmat4buildTranslate(&b, 2, 2, 2);

@@ -46,6 +46,12 @@ extern "C" {
 	*/
 	ui8* OPlistPop(OPlist* list);
 
+	/* Peeks at the last element of the OPlist
+	 * @param list The OPlist to peek
+	 * @return Value of the last element (This will be different on the next OPlistPush)
+	*/
+	ui8* OPlistPeek(OPlist* list);
+
 	/* Inserts an element at an index to an OPlist
 	 * @param list The OPlist to insert into
 	 * @param value The value to insert
