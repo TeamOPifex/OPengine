@@ -61,7 +61,12 @@ set(ALL_LIBS
 #########################################
 # BUILD
 #########################################
-add_library(6_Communication STATIC ${COMMUNICATION_SRC})
+if(${OPIFEX_SHARED})
+	add_library(6_Communication SHARED ${COMMUNICATION_SRC})
+else()
+	add_library(6_Communication STATIC ${COMMUNICATION_SRC})
+endif()
+
 set_target_properties(6_Communication PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(6_Communication PROPERTIES OUTPUT_NAME "Communication")
 add_definitions(-D${OPIFEX_OS})

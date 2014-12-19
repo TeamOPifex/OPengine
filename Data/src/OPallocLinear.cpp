@@ -16,6 +16,7 @@ void OPallocLinearDestroy(OPallocLinear* alloc) {
 	OPfree(alloc->_headerStart);
 }
 
+// TODO: Align Memory into DWORD sized chunks
 void* OPallocLinearAlloc(OPallocLinear* alloc, OPuint sizeInBytes) {
 	//OPallocAlignAdjustment
 	if(alloc->_usedMemory + sizeInBytes > alloc->_size) {

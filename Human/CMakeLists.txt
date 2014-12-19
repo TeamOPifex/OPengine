@@ -76,7 +76,11 @@ set(ALL_LIBS
 #########################################
 # BUILD
 #########################################
-add_library(5_Human STATIC ${HUMAN_SRC})
+if(${OPIFEX_SHARED})
+	add_library(5_Human SHARED ${HUMAN_SRC})
+else()
+	add_library(5_Human STATIC ${HUMAN_SRC})
+endif()
 add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS)
 add_definitions(-D${OPIFEX_OS})
 

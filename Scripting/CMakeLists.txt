@@ -60,7 +60,11 @@ set(ALL_LIBS
 #########################################
 # BUILD
 #########################################
-add_library(7_Scripting STATIC ${SCRIPTING_SRC})
+if(${OPIFEX_SHARED})
+	add_library(7_Scripting SHARED ${SCRIPTING_SRC})
+else()
+	add_library(7_Scripting STATIC ${SCRIPTING_SRC})
+endif()
 target_link_libraries(7_Scripting ${ALL_LIBS})
 set_target_properties(7_Scripting PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(7_Scripting PROPERTIES OUTPUT_NAME "Scripting")
