@@ -10,6 +10,11 @@
 #include <share.h>
 #endif
 
+#ifdef OPIFEX_UNIX
+#include <sys/stat.h> 
+#include <unistd.h>
+#endif
+
 #ifdef OPIFEX_ANDROID
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
@@ -286,6 +291,13 @@ ui64 OPfileLastChange(const OPchar* path) {
 			ftWrite.dwLowDateTime;
 		return rtn;
 	}
+#elif defined(OPIFEX_UNIX)
+	struct stat st;
+	OPint ierr = stat(path, &st);
+	if(ierr != 0) {
+		return 0;
+	}
+	return st.st_mtime;
 #endif
 	return 0;
 }
