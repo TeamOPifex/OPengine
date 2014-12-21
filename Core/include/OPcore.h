@@ -9,6 +9,7 @@
 #include "OPtimer.h"
 #include "Assert.h"
 #include "OPlog.h"
+#include "OPdir.h"
 #ifdef OPIFEX_ANDROID
 	#include <jni.h>
 #endif
@@ -69,6 +70,7 @@ void OPend();
  * @return A pointer to the current OPtimer being used by the OPengine
 */
 OPtimer* OPgetTime();
+OPchar* OPgetStartupDir();
 
 #ifdef __cplusplus
 };

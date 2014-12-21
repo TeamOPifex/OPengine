@@ -8,7 +8,13 @@ void InitializeLoaders() {
 // Application Methods
 //////////////////////////////////////
 
+OPfile logFile;
 void ApplicationInit() {
+	//logFile = OPfileOpen("log.txt");
+	//OPlogSetOutput(logFile._handle);
+
+	OPlogDebug("App starting");
+
 	OPchar* assetDir = NULL;
 #ifdef OPIFEX_REPO
 	assetDir = OPstringCreateCopy(OPIFEX_REPO);

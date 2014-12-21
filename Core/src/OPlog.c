@@ -1,5 +1,7 @@
 #include "./Core/include/OPlog.h"
 
+OPint LogToHandle = 1;
+
 #ifdef OPIFEX_ANDROID
 
 #include <android/log.h>
@@ -13,13 +15,14 @@ void OPlog(const char* message, ...){
 
 #else
 
-#ifdef OPIFEX_UNIX
-#include <unistd.h>
-#endif
 
-#include <string.h>
-#include <stdio.h>
-#include <errno.h>
+
+void OPlogSetOutput(OPint handle) {
+	if(handle > 0) {
+		LogToHandle = handle;
+	}
+}
+
 
 void OPlog(const char* message, ...){
 	char buffer[1024];
@@ -30,8 +33,8 @@ void OPlog(const char* message, ...){
 		perror(buffer);
 		errno = 0;
 	} else {
-		write(1, buffer, strlen(buffer));
-		write(1, "\n", 1);
+		write(LogToHandle, buffer, strlen(buffer));
+		write(LogToHandle, "\n", 1);
 	}
     va_end(args);
 }
@@ -45,9 +48,37 @@ void OPlg(const char* message, ...){
 		perror(buffer);
 		errno = 0;
 	} else {
-		write(1, buffer, strlen(buffer));
+		write(LogToHandle, buffer, strlen(buffer));
 	}
     va_end(args);
+}
+
+void OPlogDebug(const char* message, ...) {
+	#ifndef OPIFEX_RELEASE
+		write(LogToHandle, "DEBUG: ", 7);
+	    va_list args;
+		OPlog(message, args);
+	#endif
+}
+
+void OPlogInfo(const char* message, ...) {
+	#ifndef OPIFEX_RELEASE
+		write(LogToHandle, "INFO: ", 6);
+	    va_list args;
+		OPlog(message, args);
+	#endif
+}
+
+void OPlogWarn(const char* message, ...) {
+	write(LogToHandle, "WARNING: ", 9);
+    va_list args;
+	OPlog(message, args);
+}
+
+void OPlogErr(const char* message, ...) {
+	write(LogToHandle, "ERROR: ", 7);
+    va_list args;
+	OPlog(message, args);
 }
 
 #endif

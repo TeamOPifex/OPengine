@@ -2,6 +2,7 @@
 #include "./Core/include/OPlog.h"
 
 OPtimer OPtime;
+OPchar* _startUpDir = NULL;
 OPint _OPengineRunning;
 
 
@@ -167,6 +168,7 @@ void OPstart(struct android_app* state) {
 #else
 void OPstart(int argc, char** args) {
 	// Initialize the engine and game
+	_startUpDir = OPdirCurrent();
 	OPtimerCreate(&OPtime);
 	_OPengineRunning = 1;
 	OPinitialize();
@@ -184,8 +186,10 @@ void OPstart(int argc, char** args) {
 
 	// game loop has finished, clean up
 	OPdestroy();
+	OPfree(_startUpDir);
 }
 #endif
+
 //----------------------------------------------------------------------------
 void OPend(){
 	_OPengineRunning = 0;
@@ -193,4 +197,8 @@ void OPend(){
 
 OPtimer* OPgetTime() {
 	return &OPtime;
+}
+
+OPchar* OPgetStartupDir() {
+	return _startUpDir;
 }
