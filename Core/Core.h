@@ -3,6 +3,7 @@
 
 #include "./Core/include/Assert.h"
 #include "./Core/include/OPcore.h"
+#include "./Core/include/OPdir.h"
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPgameCycle.h"
 #include "./Core/include/OPlog.h"
