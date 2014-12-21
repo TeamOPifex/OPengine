@@ -310,7 +310,7 @@ OPfile OPfileOpen(const OPchar* path) {
 	OPfile file = { 0 };
 	
 	// be sure that the file could be opened successfully
-	fd = open(path, O_RDWR | O_CREAT);
+	fd = open(path, O_RDWR | O_CREAT | O_TRUNC);
 	OPlog("FD : %d", fd);
 	if(fd == 0) return file;
 
@@ -345,6 +345,12 @@ OPint OPfileWriteString(OPfile* file, const OPchar* data) {
 	ui32 len = strlen(data);
 	write(file->_handle, len, sizeof(ui32));
 	write(file->_handle, data, sizeof(OPchar) * len);
+}
+
+OPint OPfileWriteBytes(OPfile* file, void* data, ui64 bytesToWrite) {
+	OPint bytesWritten = write(file->_handle, data, bytesToWrite);
+	OPlog("Bytes Written: %d / %d", bytesWritten, bytesToWrite);
+	return bytesWritten;
 }
 
 ui8 OPfileReadui8(OPfile* file) {
@@ -388,6 +394,21 @@ OPchar* OPfileReadString(OPfile* file) {
 	OPchar* str = (OPchar*)OPalloc(sizeof(OPchar) * len);
 	read(file->_handle, str, sizeof(OPchar) * len);
 	return str;
+}
+
+void* OPfileReadBytes(OPfile* file, ui64 bytesToRead) {
+	void* bytes = OPalloc(bytesToRead); 
+	OPint bytesRead = read(file->_handle, bytes, bytesToRead);
+	OPlog("Bytes Read: %d / %d", bytesRead, bytesToRead);
+	if(bytesRead != bytesToRead) return NULL;
+	return bytes;
+}
+
+OPint OPfileSeekReset(OPfile* file) {
+	lseek(file->_handle, 0, SEEK_SET);
+}
+OPint OPfileSeek(OPfile* file, OPint pos) {
+	lseek(file->_handle, pos, SEEK_SET);
 }
 
 OPint OPfileClose(OPfile* file) {

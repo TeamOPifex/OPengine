@@ -10,8 +10,8 @@
 #include "./Human/include/Input/OPoculus.h"
 #endif
 
-inline void OPinputSystemUpdate() {
-	OPkeyboardUpdate();
+inline void OPinputSystemUpdate(OPtimer* timer) {
+	OPkeyboardUpdate(timer);
 	OPmouseUpdate();
 	OPgamePadSystemUpdate();
 }
