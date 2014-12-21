@@ -149,6 +149,7 @@ OPint OPfileWritei8(OPfile* file, i8 data);
 OPint OPfileWritei16(OPfile* file, i16 data);
 OPint OPfileWritei32(OPfile* file, i32 data);
 OPint OPfileWriteString(OPfile* file, const OPchar* data);
+OPint OPfileWriteBytes(OPfile* file, void* data, ui64 bytesToWrite);
 ui8 OPfileReadui8(OPfile* file);
 ui16 OPfileReadui16(OPfile* file);
 ui32 OPfileReadui32(OPfile* file);
@@ -156,6 +157,9 @@ i8 OPfileReadi8(OPfile* file);
 i16 OPfileReadi16(OPfile* file);
 i32 OPfileReadi32(OPfile* file);
 OPchar* OPfileReadString(OPfile* file);
+void* OPfileReadBytes(OPfile* file, ui64 bytesToRead);
+OPint OPfileSeekReset(OPfile* file);
+OPint OPfileSeek(OPfile* file, OPint pos);
 OPint OPfileClose(OPfile* file);
 
 //-----------------------------------------------------------------------------

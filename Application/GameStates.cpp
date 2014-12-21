@@ -159,7 +159,7 @@ OPint State0Update(OPtimer* time){
 	//OPwebServerQueue(server, "time", (i8*)&elapsed, sizeof(ui32));
 	t += 0.005f * time->Elapsed;
 	OPgamePadSystemUpdate();
-	OPkeyboardUpdate();
+	OPkeyboardUpdate(time);
 
 	if (backgroundState == 2) {
 		OPrenderClear(1.0f, 0.0f, 0.0f);

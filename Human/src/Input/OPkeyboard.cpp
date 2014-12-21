@@ -1,4 +1,5 @@
 #include "./Human/include/Input/OPkeyboard.h"
+#include "./Human/include/Input/OPinputRecord.h"
 #include "./Human/include/Rendering/OPrender.h"
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
@@ -10,14 +11,15 @@
 OPkeyboardState Keyboard;
 
 #ifndef OPIFEX_ANDROID
-void OPkeyboardUpdate() {
+void OPkeyboardUpdate(OPtimer* timer) {
 	OPmemcpy(&Keyboard.prevKeys, &Keyboard.keys, OPKEYBOARD_MAX * sizeof(OPint));
 	for(ui32 i = 0; i < OPKEYBOARD_MAX; i++) {
 		Keyboard.keys[i] = glfwGetKey(window, OPkeyboardMapping[i]);
-		//if(Keyboard.keys[i] ) {
-		//	OPlog("Key %d : %d", i, OPkeyboardCodes[i]);
-		//}
 	}
+}
+
+void OPkeyboardUpdatePost(OPtimer* timer) {
+   OPinputRecordUpdate(timer);
 }
 
 OPint OPkeyboardIsDown(OPkeyboardKeys key) {

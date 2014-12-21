@@ -1,4 +1,5 @@
 #include "./ExampleSelectorState.h"
+#include "./Human/include/Input/OPinputRecord.h"
 
 void ExampleSelectorEnter(OPgameState* last);
 OPint ExampleSelectorUpdate(OPtimer* time);
@@ -16,15 +17,16 @@ typedef struct {
 	OPgameState* state;
 } Example;
 
+#define ExampleCount 8
+
 typedef struct {
 	OPfontManager* FontManager;
-	Example* Examples;
+	Example Examples[ExampleCount];
 	i32 Selected;
 } ExampleSelector;
 
 ExampleSelector* exampleSelector;
 
-#define ExampleCount 8
 
 void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector = (ExampleSelector*)OPallocZero(sizeof(ExampleSelector));
@@ -50,8 +52,6 @@ void ExampleSelectorEnter(OPgameState* last) {
 		"Textured",
 	};
 
-	exampleSelector->Examples = (Example*)OPalloc(sizeof(Example)* ExampleCount);
-	OPbzero(exampleSelector->Examples, sizeof(Example)* ExampleCount);
 	exampleSelector->Examples[0].name = Names[0];
 	exampleSelector->Examples[0].state = &GS_EXAMPLE_AUDIO;
 	exampleSelector->Examples[0].available = 1;
@@ -90,10 +90,31 @@ void ExampleSelectorEnter(OPgameState* last) {
 	OPlog("Entered Example Selector");
 }
 
+
 OPint ExampleSelectorUpdate(OPtimer* time) {
+
+
+	if(OPinputRecordIsRunning() && OPkeyboardIsDown(OPKEY_K)) {
+		// Stop the Playback & Recording cycle
+		OPinputRecordEnd();
+	} else if(OPkeyboardWasPressed(OPKEY_L)) {
+		if(OPinputRecordIsRecording()) {
+			// Start playing back the input that was recorded
+			OPinputRecordPlayback();
+		} else if(!OPinputRecordIsRunning()) {
+			// Begin the Input Recording process
+			OPinputRecordMemoryBase mem[1];
+			mem[0].Memory = (void**)&exampleSelector;
+			mem[0].MemorySize = sizeof(ExampleSelector);
+			OPinputRecordBegin(time, mem, 1);
+		}
+	}
+	OPkeyboardUpdatePost(time);
+
+
 	if (OPkeyboardWasPressed(OPKEY_W) || OPkeyboardWasPressed(OPKEY_UP)) {
 		exampleSelector->Selected--;
-		if (exampleSelector->Selected <= 0) exampleSelector->Selected = ExampleCount - 1;
+		if (exampleSelector->Selected < 0) exampleSelector->Selected = ExampleCount - 1;
 	}
 	if (OPkeyboardWasPressed(OPKEY_S) || OPkeyboardWasPressed(OPKEY_DOWN)) {
 		exampleSelector->Selected++;
@@ -120,7 +141,6 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 		}
 		OPmat4translate(&w, 0, -0.1, 0);
 		OPrenderText(exampleSelector->Examples[i].name, OPvec4create(r,g,b,1), &w);
-		//OPrenderTextRGBAXY(exampleSelector->Examples[i].name, r, g, b, 1, -0.9, (exampleSelector->Selected - i) * 0.1);
 	}
 
 	OPrenderPresent();

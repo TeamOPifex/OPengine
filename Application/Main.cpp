@@ -47,12 +47,16 @@ void ApplicationInit() {
 
 	OPrenderInit();
 
+
 	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 }
 
+
 int ApplicationUpdate(OPtimer* timer) {
+		
+	OPinputSystemUpdate(timer);
 	OPcmanUpdate();
-	OPinputSystemUpdate();
+
 	if (OPkeyboardWasReleased(OPKEY_ESCAPE)) return 1;	
 	if (OPkeyboardWasReleased(OPKEY_BACKSPACE)) {
 		OPgameStateChange(&GS_EXAMPLE_SELECTOR);
