@@ -41,7 +41,7 @@ ui32 OPgetNativeScreenWidth() {
 	if (!glfwInitialized) {
 		int result = glfwInit();
 		if (!result) {
-			OPlog("INIT FAILED %d", result);
+			OPlogErr("INIT FAILED %d", result);
 			return -1;
 		}
 		glfwInitialized = 1;
@@ -57,7 +57,7 @@ ui32 OPgetNativeScreenHeight() {
 	if (!glfwInitialized) {
 		int result = glfwInit();
 		if (!result) {
-			OPlog("INIT FAILED %d", result);
+			OPlogErr("INIT FAILED %d", result);
 			return -1;
 		}
 		glfwInitialized = 1;
@@ -74,13 +74,13 @@ void glfwErrorCallback(int error, const char* desc){
 }
 
 void glfwWindowFocusCallback(GLFWwindow* window, int code) {
-	OPlog("Focus Result: %d", code);
+	OPlogInfo("Focus Result: %d", code);
 	OPengineHasFocus = code;
 }
 #endif
 
 OPint OPrenderInit(){
-	OPlog("Initializing Renderer");
+	OPlogDebug("Initializing Renderer");
 
 #ifdef OPIFEX_ANDROID
 	OPscreenWidth = JNIWidth();
@@ -106,22 +106,22 @@ OPint OPrenderInit(){
 	EGLConfig config;
 	EGLContext context;
 
-	OPlog("Getting Display");
+	OPlogDebug("Getting Display");
 	display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 
-	OPlog("Binding API");
+	OPlogDebug("Binding API");
 	if (eglBindAPI(EGL_OPENGL_ES_API) == GL_FALSE) {
-		OPlog("FAILED TO BIND ES API");
+		OPlogError("FAILED TO BIND ES API");
 	}
 
-	OPlog("eglInitialize");
+	OPlogDebug("eglInitialize");
 	eglInitialize(display, 0, 0);
 
 
-	OPlog("eglMakeCurrent");
+	OPlogDebug("eglMakeCurrent");
 	eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 
-	OPlog("eglChooseConfig");
+	OPlogDebug("eglChooseConfig");
 	/* Here, the application chooses the configuration it desires. In this
 	* sample, we have a very simplified selection process, where we pick
 	* the first EGLConfig that matches our criteria */
@@ -130,7 +130,7 @@ OPint OPrenderInit(){
 	}
 
 
-	OPlog("eglGetConfigAttrib");
+	OPlogDebug("eglGetConfigAttrib");
 	/* EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
 	* guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
 	* As soon as we picked a EGLConfig, we can safely reconfigure the
@@ -138,13 +138,13 @@ OPint OPrenderInit(){
 	eglGetConfigAttrib(display, config, EGL_NATIVE_VISUAL_ID, &format);
 
 
-	OPlog("eglCreateWindowSurface");
+	OPlogDebug("eglCreateWindowSurface");
 	surface = eglCreateWindowSurface(display, config, OPAndroidState->window, NULL);
 
 
 	OPglError("OPrenderInit:Error 2");
 
-	OPlog("eglCreateContext");
+	OPlogDebug("eglCreateContext");
 	context = eglCreateContext(display, config, NULL, attribList);
 
 	OPglError("OPrenderInit:Error 3");
@@ -222,7 +222,7 @@ OPint OPrenderInit(){
 		glfwInitialized = 1;
 		int result = glfwInit();
 		if (!result) {
-			OPlog("INIT FAILED %d", result);
+			OPlogErr("INIT FAILED %d", result);
 			return -1;
 		}
 	}
@@ -241,15 +241,15 @@ OPint OPrenderInit(){
 	OPint _screenHeight = OPscreenHeight;
 
 	window = glfwCreateWindow(_screenWidth, _screenHeight, "OPifex Entertainment", monitor, NULL);
-	OPlog("Created window of size: %d x %d", _screenWidth, _screenHeight);
+	OPlogInfo("Created window of size: %d x %d", _screenWidth, _screenHeight);
 	glfwGetFramebufferSize(window, &OPscreenWidth, &OPscreenHeight);
 	OPscreenWidthScale = _screenWidth / (f32)OPscreenWidth;
 	OPscreenHeightScale = _screenHeight / (f32)OPscreenHeight;
-	OPlog("Frame Buffer size: %d x %d", OPscreenWidth, OPscreenHeight);
-	OPlog("Scale: %f x %f", OPscreenWidthScale, OPscreenHeightScale);
+	OPlogInfo("Frame Buffer size: %d x %d", OPscreenWidth, OPscreenHeight);
+	OPlogDebug("Scale: %f x %f", OPscreenWidthScale, OPscreenHeightScale);
 
 	if(!window) {		
-		OPlog("Failed to open GLFW window of %dx%d. If you have an Intel GPU, they are not 3.3 compatible.\n", OPscreenWidth, OPscreenHeight );
+		OPlogErr("Failed to open GLFW window of %dx%d. If you have an Intel GPU, they are not 3.3 compatible.\n", OPscreenWidth, OPscreenHeight );
 		glfwTerminate();
 		return -1;
 	}
@@ -257,7 +257,7 @@ OPint OPrenderInit(){
 	glfwMakeContextCurrent(window);
 
 	if (glfwExtensionSupported("GL_ARB_multisample")) {
-		OPlog("Multisampling is supported");
+		OPlogErr("Multisampling is supported");
 	}
 
 	glfwSetWindowFocusCallback(window, glfwWindowFocusCallback);
@@ -287,7 +287,7 @@ OPint OPrenderInit(){
 	OPrenderHeight = OPscreenHeight;
 #endif
 
-	OPlog("OpenGL Context Created W:%d H:%d", OPrenderWidth, OPrenderHeight);
+	OPlogInfo("OpenGL Context Created W:%d H:%d", OPrenderWidth, OPrenderHeight);
 	return 0;
 }
 

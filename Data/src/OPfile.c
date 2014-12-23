@@ -175,30 +175,24 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 	if(OPfileExists(path) >= 0){
 		OPint fd = 0, i;
 
-		OPlog("OPreadFile: %s\n", path);
+		OPlog("OPreadFile: %s", path);
 		fd = open(path, O_RDONLY);
 		// be sure that the file could be opened successfully
 	 	if(fd){
 
-		OPlog("File Opened");
-
 			OPstream* str = OPstreamCreate(expectedSize);
-		OPlog("Stream Created");
 
 			ui8* bytes = (ui8*)OPalloc(1024);
 			ui32 readBytes = 1;
 			// write the entire file into a stream
 			while(readBytes) {
-				write(1, ".", 1);
 				readBytes = read(fd, bytes, 1024);
 				OPwrite(str, bytes, readBytes);
 			}
-			OPlog("All bytes have been read");
 			OPfree(bytes);
 			close(fd); 
 			OPseek(str, 0);
 
-			OPlog("Finished Read");
 			// finally return the stream
 			return str;
 		}
@@ -210,10 +204,9 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 #elif defined(OPIFEX_WINDOWS)
 	// windows implementation
 	OPint fd = 0, i;
-	OPlog("Reading Large File");
 	// check to see if the file exists
 	if(OPfileExists(path) > 0) {
-		OPlog("OPreadFile: %s\n", path);
+		OPlog("OPreadFile: %s", path);
  
 		// be sure that the file could be opened successfully
 	 	if(!_sopen_s(&fd, path, _O_BINARY|_O_RDONLY, _SH_DENYWR, _S_IREAD)){
@@ -311,7 +304,6 @@ OPfile OPfileOpen(const OPchar* path) {
 	
 	// be sure that the file could be opened successfully
 	fd = open(path, O_RDWR | O_CREAT | O_TRUNC);
-	OPlog("FD : %d", fd);
 	if(fd == 0) return file;
 
 	file._handle = fd;
