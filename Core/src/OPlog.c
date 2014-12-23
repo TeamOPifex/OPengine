@@ -55,29 +55,33 @@ void OPlg(const char* message, ...){
 
 void OPlogDebug(const char* message, ...) {
 	#ifndef OPIFEX_RELEASE
+	va_list args;
+	va_start(args, message);
 		write(LogToHandle, "DEBUG: ", 7);
-	    va_list args;
 		OPlog(message, args);
 	#endif
 }
 
 void OPlogInfo(const char* message, ...) {
 	#ifndef OPIFEX_RELEASE
+	va_list args;
+	va_start(args, message);
 		write(LogToHandle, "INFO: ", 6);
-	    va_list args;
 		OPlog(message, args);
 	#endif
 }
 
 void OPlogWarn(const char* message, ...) {
+	va_list args;
+	va_start(args, message);
 	write(LogToHandle, "WARNING: ", 9);
-    va_list args;
 	OPlog(message, args);
 }
 
 void OPlogErr(const char* message, ...) {
+	va_list args;
+	va_start(args, message);
 	write(LogToHandle, "ERROR: ", 7);
-    va_list args;
 	OPlog(message, args);
 }
 
