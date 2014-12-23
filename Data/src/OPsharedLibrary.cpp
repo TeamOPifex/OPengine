@@ -3,11 +3,16 @@
 #include "./Core/include/OPlog.h"
 
 // TODO: abstract out to Windows and Linux
-#include <dlfcn.h>
-#include <sys/stat.h> 
-#include <unistd.h>
+#ifdef OPIFEX_UNIX
+	#include <dlfcn.h>
+	#include <sys/stat.h> 
+	#include <unistd.h>
+#else
+
+#endif
 
 OPsharedLibrary* OPsharedLibraryLoad(const OPchar* path) {
+#ifdef OPIFEX_UNIX
 	void* library = dlopen(path, RTLD_NOW);
 	if(library == NULL) return NULL;
 
@@ -17,10 +22,14 @@ OPsharedLibrary* OPsharedLibraryLoad(const OPchar* path) {
 	sharedLibrary->_symbols = OPlistCreate(4, sizeof(OPsharedLibrarySymbol));
 
 	return sharedLibrary;
+#else
+	return NULL;
+#endif
 }
 
 OPint OPsharedLibraryReload(OPsharedLibrary* sharedLibrary) {
 
+#ifdef OPIFEX_UNIX
 	ui64 lastChange = OPfileLastChange(sharedLibrary->_libraryPath);
 	if(sharedLibrary->_lastModifiedTime == lastChange) return 0;
 
@@ -47,9 +56,13 @@ OPint OPsharedLibraryReload(OPsharedLibrary* sharedLibrary) {
 	}
 
 	return result;
+#else
+	return NULL;
+#endif
 }
 
 OPsharedLibrarySymbol* OPsharedLibraryLoadSymbol(OPsharedLibrary* sharedLibrary, const OPchar* symbolName) {
+#ifdef OPIFEX_UNIX
 	void* symbol = dlsym(sharedLibrary->_library, symbolName);
 	if(symbol == NULL) return NULL;
 
@@ -59,10 +72,17 @@ OPsharedLibrarySymbol* OPsharedLibraryLoadSymbol(OPsharedLibrary* sharedLibrary,
 	};
 	OPlistPush(sharedLibrary->_symbols, (ui8*)&sharedLibrarySymbol);
 	return (OPsharedLibrarySymbol*)OPlistPeek(sharedLibrary->_symbols);
+#else
+	return NULL;
+#endif
 }
 
 OPint OPsharedLibraryClose(OPsharedLibrary* sharedLibrary) {
+#ifdef OPIFEX_UNIX
 	OPint result = dlclose(sharedLibrary->_library);
 	if(result != 0) return -1;
 	return 0;
+#else
+	return NULL;
+#endif
 }
