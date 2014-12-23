@@ -831,7 +831,7 @@ int main(int argc, char **argv) {
 
 			out_filename = argv[arg];
 			continue;
-		}
+		} 
 	}
 
 	if (font_size == 0.0) {
