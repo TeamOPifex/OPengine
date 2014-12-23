@@ -29,13 +29,13 @@ void OPlog(const char* message, ...){
     va_list args;
 	va_start(args, message);
 	vsnprintf(buffer, sizeof buffer, message, args);
+
 	if(errno) {
-		perror(buffer);
+		perror("SYSTEM ERROR");
 		errno = 0;
-	} else {
-		write(LogToHandle, buffer, strlen(buffer));
-		write(LogToHandle, "\n", 1);
 	}
+	write(LogToHandle, buffer, strlen(buffer));
+	write(LogToHandle, "\n", 1);
     va_end(args);
 }
 
@@ -45,11 +45,10 @@ void OPlg(const char* message, ...){
 	va_start(args, message);
 	vsnprintf(buffer, sizeof buffer, message, args);
 	if(errno) {
-		perror(buffer);
+		perror("SYSTEM ERROR");
 		errno = 0;
-	} else {
-		write(LogToHandle, buffer, strlen(buffer));
 	}
+	write(LogToHandle, buffer, strlen(buffer));
     va_end(args);
 }
 

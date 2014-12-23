@@ -230,7 +230,5 @@ static ui64 hash(const OPchar* str)
 		++i;
 	}while (c || i < 4);
 
-	OPlog("hash: %lu", hash);
-
 	return hash;
 }
