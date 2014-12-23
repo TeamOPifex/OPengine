@@ -16,8 +16,8 @@ void ApplicationInit() {
 	OPlogDebug("App starting");
 
 	OPchar* assetDir = NULL;
-#ifdef OPIFEX_REPO
-	assetDir = OPstringCreateCopy(OPIFEX_REPO);
+#ifdef OPIFEX_ASSETS
+	assetDir = OPstringCreateCopy(OPIFEX_ASSETS);
 #endif
 
 	InitializeLoaders();

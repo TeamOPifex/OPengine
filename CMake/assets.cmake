@@ -57,14 +57,14 @@ if( ${OPIFEX_OS_ANDROID} )
 	file(COPY ${PROJECT_SOURCE_DIR}/External/PhysX/Lib/release/android/libPhysXVisualDebuggerSDK.a 	DESTINATION 	${PROJECT_BINARY_DIR}/Binaries/android)
 	
 else()	
-	if(${OPIFEX_NODEJS})
+	if(${OPIFEX_OPTION_NODEJS})
 		configure_file(		${PROJECT_SOURCE_DIR}/NodeJs/binding.gyp		${PROJECT_BINARY_DIR}/binding.gyp	)
 		file(COPY 			${PROJECT_SOURCE_DIR}/NodeJs/Wrapper.cpp DESTINATION ${PROJECT_BINARY_DIR}/)
 	endif()
 
 	# Only copy assets if we're in release mode
 	# It pulls from the Repository otherwise
-	if(${OPIFEX_RELEASE})
+	if(${OPIFEX_OPTION_RELEASE})
 
 		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Audio" ${PROJECT_BINARY_DIR}/Application/assets/Audio)	
 		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Models" ${PROJECT_BINARY_DIR}/Application/assets/Models)	
