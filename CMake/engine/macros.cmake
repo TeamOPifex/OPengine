@@ -171,27 +171,11 @@ endmacro(add_external_opifex_includes)
 
 macro(add_opifex_definitions APPLICATION_TARGET APPLICATION_DIR_DEPTH )
 
+	add_opifex_assets(${APPLICATION_TARGET})
 	add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS -D${OPIFEX_OS})
-
-	if(${OPIFEX_RELEASE})
-		
-	else()
-		add_definitions(-D_DEBUG)
-		if(${OPIFEX_OS_WINDOWS})
-			SET(OPIFEX_REPO "${APPLICATION_DIR_DEPTH}${OPIFEX_REPOSITORY}/Assets/")
-			add_definitions(-DOPIFEX_REPO="${OPIFEX_REPO}")
-		else()
-			SET(OPIFEX_REPO "${OPIFEX_REPOSITORY}/Assets/")
-			add_definitions(-DOPIFEX_REPO="${OPIFEX_REPO}")
-		endif()
-	endif()
-
-	if(${OPIFEX_MYO})
-		add_definitions(-DOPIFEX_MYO)
-	endif()
+	add_opifex_myo(${APPLICATION_TARGET})
 	
 	set_target_properties(${APPLICATION_TARGET} PROPERTIES LINKER_LANGUAGE CXX)
-
 
 	if(${OPIFEX_RELEASE})
 		add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
@@ -376,10 +360,9 @@ macro(opifex_engine_status_messages)
 	message(STATUS "===================================")
 	message(STATUS "==    OPifex CMake Completed     ==")
 	message(STATUS "===================================\n\nCONFIGURED VARIABLES:\n")
-	message(STATUS "  OPIFEX_REPOSITORY: ${OPIFEX_REPOSITORY}")
 	message(STATUS "  OPIFEX_ENGINE_REPOSITORY: ${OPIFEX_ENGINE_REPOSITORY}")
 	message(STATUS "  OPIFEX_BINARIES: ${OPIFEX_BINARIES}")
-	message(STATUS "  OPIFEX_REPO: ${OPIFEX_REPO}")
+	message(STATUS "  OPIFEX_ASSETS: ${OPIFEX_ASSETS}")
 	message(STATUS "  OPIFEX_OS: ${OPIFEX_OS}")
 	message(STATUS "  PROJECT_BINARY_DIR: ${PROJECT_BINARY_DIR}")
 	message(STATUS "  PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")

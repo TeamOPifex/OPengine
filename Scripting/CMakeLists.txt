@@ -74,35 +74,7 @@ if(${OPIFEX_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 endif()
 
-if(${OPIFEX_V8})
-	if(${OPIFEX_OS_WINDOWS})
-		target_link_libraries(7_Scripting 
-			ws2_32.lib
-			advapi32.lib
-			winmm.lib)
-		if(${OPIFEX_RELEASE})
-			if(${OPIFEX_OS_64})
-				target_link_libraries(7_Scripting ${PROJECT_SOURCE_DIR}/External/V8/lib/release/win64/v8.lib)
-			else()
-				target_link_libraries(7_Scripting ${PROJECT_SOURCE_DIR}/External/V8/lib/release/win32/v8.lib)
-				target_link_libraries(7_Scripting ${PROJECT_SOURCE_DIR}/External/V8/lib/release/win32/v8_libbase.lib)
-				target_link_libraries(7_Scripting ${PROJECT_SOURCE_DIR}/External/V8/lib/release/win32/v8_libplatform.lib)
-			endif()
-
-		else()
-		
-			if(${OPIFEX_OS_64})
-				target_link_libraries(7_Scripting ${PROJECT_SOURCE_DIR}/External/V8/lib/debug/win64/v8.lib)
-			else()
-				target_link_libraries(7_Scripting ${PROJECT_SOURCE_DIR}/External/V8/lib/debug/win32/v8.lib)
-				target_link_libraries(7_Scripting ${PROJECT_SOURCE_DIR}/External/V8/lib/debug/win32/v8_libbase.lib)
-				target_link_libraries(7_Scripting ${PROJECT_SOURCE_DIR}/External/V8/lib/debug/win32/v8_libplatform.lib)
-			endif()
-		
-		endif()
-	endif()
-	add_definitions(-DOPIFEX_V8)
-endif()
+add_opifex_v8(7_Scripting)
 
 #########################################
 # OUTPUT BINARIES
