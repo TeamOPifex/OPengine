@@ -76,60 +76,12 @@ endif()
 
 target_link_libraries(8_Pipeline ${ALL_LIBS})
 
-if(${OPIFEX_RELEASE})
 
-else()
-	add_definitions(-D_DEBUG)
-endif()
-
-if(${OPIFEX_SPINE})
-	target_link_libraries(8_Pipeline SPINE)
-	add_definitions(-DOPIFEX_SPINE)
-endif()
-
-if(${OPIFEX_V8})
-	if(${OPIFEX_OS_WINDOWS})
-		target_link_libraries(8_Pipeline 
-			ws2_32.lib
-			advapi32.lib
-			winmm.lib)
-		if(${OPIFEX_RELEASE})
-			if(${OPIFEX_OS_64})
-				target_link_libraries(8_Pipeline ${PROJECT_SOURCE_DIR}/External/V8/lib/release/win64/v8.lib)
-			else()
-				target_link_libraries(8_Pipeline ${PROJECT_SOURCE_DIR}/External/V8/lib/release/win32/v8.lib)
-				target_link_libraries(8_Pipeline ${PROJECT_SOURCE_DIR}/External/V8/lib/release/win32/v8_libbase.lib)
-				target_link_libraries(8_Pipeline ${PROJECT_SOURCE_DIR}/External/V8/lib/release/win32/v8_libplatform.lib)
-			endif()
-
-		else()
-		
-			if(${OPIFEX_OS_64})
-				target_link_libraries(8_Pipeline ${PROJECT_SOURCE_DIR}/External/V8/lib/debug/win64/v8.lib)
-			else()
-				target_link_libraries(8_Pipeline ${PROJECT_SOURCE_DIR}/External/V8/lib/debug/win32/v8.lib)
-				target_link_libraries(8_Pipeline ${PROJECT_SOURCE_DIR}/External/V8/lib/debug/win32/v8_libbase.lib)
-				target_link_libraries(8_Pipeline ${PROJECT_SOURCE_DIR}/External/V8/lib/debug/win32/v8_libplatform.lib)
-			endif()
-		
-		endif()
-	endif()
-	add_definitions(-DOPIFEX_V8)
-endif()
+add_opifex_assets(8_Pipeline)
+add_opifex_spine(8_Pipeline)
+add_opifex_v8(8_Pipeline)
 
 #########################################
 # OUTPUT BINARIES
 #########################################
 output_library(8_Pipeline "Pipeline")
-
-if(${OPIFEX_V8})
-	if(${OPIFEX_RELEASE})
-		output_binary(7_Scripting "/External/V8/lib/release/" "icui18n.dll" ${OPIFEX_OS_WINDOWS})
-		output_binary(7_Scripting "/External/V8/lib/release/" "icuuc.dll" ${OPIFEX_OS_WINDOWS})
-		output_binary(7_Scripting "/External/V8/lib/release/" "v8.dll" ${OPIFEX_OS_WINDOWS})
-	else()	
-		output_binary(7_Scripting "/External/V8/lib/debug/" "icui18n.dll" ${OPIFEX_OS_WINDOWS})
-		output_binary(7_Scripting "/External/V8/lib/debug/" "icuuc.dll" ${OPIFEX_OS_WINDOWS})
-		output_binary(7_Scripting "/External/V8/lib/debug/" "v8.dll" ${OPIFEX_OS_WINDOWS})
-	endif()
-endif()
