@@ -20,12 +20,12 @@ OPmouseState Mouse = {
 
 #ifndef OPIFEX_ANDROID
 void OPmouseUpdate() {
-	OPmemcpy(&Mouse.prevKeys, &Mouse.keys, sizeof(OPint)* OPMOUSE_MAX);
+	OPmemcpy(&Mouse.prevKeys, &Mouse.keys, sizeof(OPint)* _OPMOUSE_MAX);
 	Mouse.prevPositionX = Mouse.positionX;
 	Mouse.prevPositionY = Mouse.positionY;
 	Mouse.prevWheel = Mouse.wheel;
 
-	for(ui32 i = 0; i < OPMOUSE_MAX; i++) {
+	for(ui32 i = 0; i < _OPMOUSE_MAX; i++) {
 		Mouse.keys[i] = glfwGetMouseButton(window, OPmouseMapping[i]);
 		//if(Mouse.keys[i]) {
 		//	OPlog("Key %d : %d", i, OPmouseCodes[i]);
@@ -57,16 +57,16 @@ i32 OPmouseWheelMoved() {
 	return Mouse.prevWheel - Mouse.wheel;
 }
 
-OPint OPmouseIsDown(OPmouseKeys key) {
+OPint OPmouseIsDown(OPmouseKey key) {
 	return Mouse.keys[key];
 }
-OPint OPmouseIsUp(OPmouseKeys key) {
+OPint OPmouseIsUp(OPmouseKey key) {
 	return !Mouse.keys[key];
 }
-OPint OPmouseWasPressed(OPmouseKeys key) {
+OPint OPmouseWasPressed(OPmouseKey key) {
 	return Mouse.keys[key] && !Mouse.prevKeys[key];
 }
-OPint OPmouseWasReleased(OPmouseKeys key) {
+OPint OPmouseWasReleased(OPmouseKey key) {
 	return !Mouse.keys[key] && Mouse.prevKeys[key];
 }
 void OPmouseSetPosition(i32 x, i32 y) {	
@@ -75,10 +75,10 @@ void OPmouseSetPosition(i32 x, i32 y) {
 	Mouse.positionY = y;
 }
 void OPmouseSetPositionScreenCenter() {
-	OPmouseSetPosition(OPrenderWidth / 2, OPrenderHeight / 2);
+	OPmouseSetPosition(OPRENDER_WIDTH / 2, OPRENDER_HEIGHT / 2);
 }
 OPint OPmouseAnyInputIsDown() {
-	for (ui32 i = 0; i < OPMOUSE_MAX; i++) {
+	for (ui32 i = 0; i < _OPMOUSE_MAX; i++) {
 		if (Mouse.keys[i]) return true;
 	}
 	return false;
@@ -110,16 +110,16 @@ i32 OPmouseWheelMoved() {
 	return 0;
 }
 
-OPint OPmouseIsDown(OPmouseKeys key) {
+OPint OPmouseIsDown(OPmouseKey key) {
 	return false;
 }
-OPint OPmouseIsUp(OPmouseKeys key) {
+OPint OPmouseIsUp(OPmouseKey key) {
 	return true;
 }
-OPint OPmouseWasPressed(OPmouseKeys key) {
+OPint OPmouseWasPressed(OPmouseKey key) {
 	return false;
 }
-OPint OPmouseWasReleased(OPmouseKeys key) {
+OPint OPmouseWasReleased(OPmouseKey key) {
 	return false;
 }
 void OPmouseSetPosition(i32 x, i32 y) {	
@@ -130,7 +130,7 @@ void OPmouseSetPositionScreenCenter() {
 
 #endif
 
-ui32 OPmouseMapping[OPMOUSE_MAX] = {
+ui32 OPmouseMapping[_OPMOUSE_MAX] = {
 #ifndef OPIFEX_ANDROID
 	GLFW_MOUSE_BUTTON_1,	//	LBUTTON
 	GLFW_MOUSE_BUTTON_2,	//	RBUTTON

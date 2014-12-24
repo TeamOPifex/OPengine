@@ -170,7 +170,7 @@ OPint State0Update(OPtimer* time){
 		OPrenderClear(color.x, color.y, color.z);
 	}
 
-	OPvec2 pos = OPgamePadLeftThumb(OPgamePadIndex(GamePadIndex_One));
+	OPvec2 pos = OPgamePadLeftThumb(OPgamePadGet(OPGAMEPAD_ONE));
 
 	if(OPkeyboardWasPressed(OPKEY_SPACE)){
 		//OPlog("Should play");
@@ -189,7 +189,7 @@ OPint State0Update(OPtimer* time){
 		OPlog("Queued Color Message");
 	}
 
-	if(OPgamePadIsDown(OPgamePadIndex(GamePadIndex_One), GamePad_Button_BACK)){
+	if(OPgamePadIsDown(OPgamePadGet(OPGAMEPAD_ONE), OPGAMEPADBUTTON_BACK)){
 		OPlog("Should end");
 		OPend();
 	}
@@ -294,11 +294,11 @@ OPint State1Update(OPtimer* time){
 
 	//OPframeBufferBind(&rt);
 	
-	OPgamePad* _gamePad = OPgamePadIndex(GamePadIndex_One);
+	OPgamePad* _gamePad = OPgamePadGet(OPGAMEPAD_ONE);
 	OPgamePadUpdate(_gamePad);
 	
 	if(OPgamePadIsConnected(_gamePad)) {
-		if(OPgamePadIsDown(_gamePad, GamePad_Button_A) || OPgamePadIsDown(_gamePad, GamePad_Button_B) || OPgamePadIsDown(_gamePad, GamePad_Button_X) || OPgamePadIsDown(_gamePad, GamePad_Button_Y)) {
+		if(OPgamePadIsDown(_gamePad, OPGAMEPADBUTTON_A) || OPgamePadIsDown(_gamePad, OPGAMEPADBUTTON_B) || OPgamePadIsDown(_gamePad, OPGAMEPADBUTTON_X) || OPgamePadIsDown(_gamePad, OPGAMEPADBUTTON_Y)) {
 			OPrenderClear( 0.0f, 0.0f, 1.0f);
 		} else {
 			OPrenderClear( 0.0f, 0.0f, 0.0f);
@@ -330,7 +330,7 @@ OPint State1Update(OPtimer* time){
 	}
 
 
-	if(OPgamePadIsConnected(_gamePad) && OPgamePadWasPressed(_gamePad, GamePad_Button_RIGHT_SHOULDER)){
+	if(OPgamePadIsConnected(_gamePad) && OPgamePadWasPressed(_gamePad, OPGAMEPADBUTTON_RIGHT_SHOULDER)){
 		return true;
 	}
 

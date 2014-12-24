@@ -39,9 +39,7 @@ OPfloat OPvec3angleToTarget(OPvec3 pos, OPvec3 facing, OPvec3 target);
 
 struct OPvec3 {
 	union{
-		struct {
-			OPfloat x, y, z;
-		};
+		struct { OPfloat x, y, z; };
 		OPfloat row[3];
 	};
 	inline OPvec3 operator=(OPvec3 vhs) { 

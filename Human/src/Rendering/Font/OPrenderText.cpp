@@ -53,7 +53,7 @@ void OPrenderText(const OPchar* text, OPvec4 color, OPvec2 pos, OPfontAlign alig
 	}
 
 	OPmat4 world;
-	OPfloat scale = (OPrenderWidth / 2.0f) * OPscreenWidthScale;
+	OPfloat scale = (OPRENDER_WIDTH / 2.0f) * OPRENDER_SCREEN_WIDTH_SCALE;
 
 	//OPmat4scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f / scale);
 	//OPmat4translate(&world, pos.x, pos.y, 0.0f);
@@ -68,7 +68,7 @@ void OPrenderText(const OPchar* text, OPvec4 color, OPvec2 pos, OPfontAlign alig
 	}
 	else {
 		OPrenderTextAlign(&world, node->Width, align);
-		OPmat4scl(&world, OPscreenWidthScale * OPrenderGetWidthAspectRatio() / scale, OPscreenHeightScale * OPrenderGetHeightAspectRatio() / scale, 1.0f);
+		OPmat4scl(&world, OPRENDER_SCREEN_WIDTH_SCALE * OPrenderGetWidthAspectRatio() / scale, OPRENDER_SCREEN_HEIGHT_SCALE * OPrenderGetHeightAspectRatio() / scale, 1.0f);
 		OPmat4translate(&world, pos.x, pos.y, 0.0f);
 		OPrenderTextColor4Mat4BuiltNode(node, color, &world);
 	}
@@ -87,7 +87,7 @@ void OPrenderText(const OPchar* text, OPvec4 color, OPmat4* world) {
 
 	OPmat4 aligned;
 	OPmat4 scaled;
-	OPfloat scale = (OPrenderWidth / 2.0f) * OPscreenWidthScale;
+	OPfloat scale = (OPRENDER_WIDTH / 2.0f) * OPRENDER_SCREEN_WIDTH_SCALE;
 	//OPlog("Scale %f, renderWidth %d, Width Scale %f, aspWidth %f, aspHeight %f", scale, OPrenderWidth, OPscreenWidthScale, OPrenderGetWidthAspectRatio(), OPrenderGetHeightAspectRatio());
 
 	if (node == NULL || !OPRENDER_CURR_FONT_MANAGER->isBuilt) {
