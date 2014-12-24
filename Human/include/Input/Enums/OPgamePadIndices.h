@@ -5,12 +5,12 @@
 
 #endif
 
-typedef enum
+enum OPgamePadIndex
 {
-	GamePadIndex_One =  0,
-	GamePadIndex_Two =  1,
-	GamePadIndex_Three =2,
-	GamePadIndex_Four = 3,
-} OPgamePadIndices;
+	OPGAMEPAD_ONE =  0,
+	OPGAMEPAD_TWO =  1,
+	OPGAMEPAD_THREE =2,
+	OPGAMEPAD_FOUR = 3,
+};
 
 #endif

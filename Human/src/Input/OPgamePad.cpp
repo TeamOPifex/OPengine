@@ -37,7 +37,7 @@ OPgamePad GamePads[CONTROLLERS] = {
 }; 
 
 //-----------------------------------------------------------------------------
-OPgamePad* OPgamePadIndex(OPgamePadIndices index) {
+OPgamePad* OPgamePadGet(OPgamePadIndex index) {
 	return &GamePads[index];
 }
 //-----------------------------------------------------------------------------
@@ -109,33 +109,33 @@ void __OPandUpdateGamePad(OPgamePad* controller){
 
 	controller->connected = true;
 
-	controller->buttons[GamePad_Button_A] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_O);
-	controller->buttons[GamePad_Button_X] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_U);
-	controller->buttons[GamePad_Button_B] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_A);
-	controller->buttons[GamePad_Button_Y] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_Y);
+	controller->buttons[OPGAMEPADBUTTON_A] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_O);
+	controller->buttons[OPGAMEPADBUTTON_X] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_U);
+	controller->buttons[OPGAMEPADBUTTON_B] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_A);
+	controller->buttons[OPGAMEPADBUTTON_Y] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_Y);
 
-	controller->buttons[GamePad_Button_LEFT_SHOULDER] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_L1);
-	controller->buttons[GamePad_Button_RIGHT_SHOULDER] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_R1);
+	controller->buttons[OPGAMEPADBUTTON_LEFT_SHOULDER] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_L1);
+	controller->buttons[OPGAMEPADBUTTON_RIGHT_SHOULDER] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_R1);
 
-	controller->buttons[GamePad_Button_LEFT_THUMB] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_L3);
-	controller->buttons[GamePad_Button_RIGHT_THUMB] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_R3);
+	controller->buttons[OPGAMEPADBUTTON_LEFT_THUMB] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_L3);
+	controller->buttons[OPGAMEPADBUTTON_RIGHT_THUMB] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_R3);
 
 
-	controller->buttons[GamePad_Button_DPAD_UP] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_DPAD_UP);
-	controller->buttons[GamePad_Button_DPAD_DOWN] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_DPAD_DOWN);
-	controller->buttons[GamePad_Button_DPAD_LEFT] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_DPAD_LEFT);
-	controller->buttons[GamePad_Button_DPAD_RIGHT] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_DPAD_RIGHT);
+	controller->buttons[OPGAMEPADBUTTON_DPAD_UP] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_DPAD_UP);
+	controller->buttons[OPGAMEPADBUTTON_DPAD_DOWN] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_DPAD_DOWN);
+	controller->buttons[OPGAMEPADBUTTON_DPAD_LEFT] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_DPAD_LEFT);
+	controller->buttons[OPGAMEPADBUTTON_DPAD_RIGHT] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_DPAD_RIGHT);
 
-	controller->buttons[GamePad_Button_START] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_MENU);
+	controller->buttons[OPGAMEPADBUTTON_START] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_MENU);
 
 	controller->axes[L2] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_L2);
 	controller->axes[R2] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_R2);
 
-	controller->axes[LS_X] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_LS_X);
-	controller->axes[LS_Y] = -OPjniGetAxisValue(jcontroller, OUYA_AXIS_LS_Y);
+	controller->axes[OPGAMEPADAXIS_LS_X] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_OPGAMEPADAXIS_LS_X);
+	controller->axes[OPGAMEPADAXIS_LS_Y] = -OPjniGetAxisValue(jcontroller, OUYA_AXIS_OPGAMEPADAXIS_LS_Y);
 
-	controller->axes[RS_X] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_RS_X);
-	controller->axes[RS_Y] = -OPjniGetAxisValue(jcontroller, OUYA_AXIS_RS_Y);
+	controller->axes[OPGAMEPADAXIS_RS_X] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_OPGAMEPADAXIS_RS_X);
+	controller->axes[OPGAMEPADAXIS_RS_Y] = -OPjniGetAxisValue(jcontroller, OUYA_AXIS_OPGAMEPADAXIS_RS_Y);
 }
 #endif
 //-----------------------------------------------------------------------------
@@ -161,20 +161,20 @@ void __OPlnxUpdateGamePad(OPgamePad* c){
 	}
 	
 	// map left stick and trigger
-	c->axes[LS_X] =  axisData[0];
-	c->axes[LS_Y] = -axisData[1];
-	c->axes[L2]   =  (axisData[2] + 1.0f) / 2.0f;
+	c->axes[OPGAMEPADAXIS_LS_X] =  axisData[0];
+	c->axes[OPGAMEPADAXIS_LS_Y] = -axisData[1];
+	c->axes[OPGAMEPADAXIS_L2]   =  (axisData[2] + 1.0f) / 2.0f;
 
 	// map right stick and trigger
-	c->axes[RS_X] =  axisData[3];
-	c->axes[RS_Y] = -axisData[4];
-	c->axes[R2]   =  (axisData[5] + 1.0f) / 2.0f;
+	c->axes[OPGAMEPADAXIS_RS_X] =  axisData[3];
+	c->axes[OPGAMEPADAXIS_RS_Y] = -axisData[4];
+	c->axes[OPGAMEPADAXIS_R2]   =  (axisData[5] + 1.0f) / 2.0f;
 
 	// map the dpad
-	c->buttons[GamePad_Button_DPAD_LEFT]  = axisData[6] == -1.0f;
-	c->buttons[GamePad_Button_DPAD_RIGHT] = axisData[6] ==  1.0f;
-	c->buttons[GamePad_Button_DPAD_UP]    = axisData[7] == -1.0f;
-	c->buttons[GamePad_Button_DPAD_DOWN]  = axisData[7] ==  1.0f;
+	c->buttons[OPGAMEPADBUTTON_DPAD_LEFT]  = axisData[6] == -1.0f;
+	c->buttons[OPGAMEPADBUTTON_DPAD_RIGHT] = axisData[6] ==  1.0f;
+	c->buttons[OPGAMEPADBUTTON_DPAD_UP]    = axisData[7] == -1.0f;
+	c->buttons[OPGAMEPADBUTTON_DPAD_DOWN]  = axisData[7] ==  1.0f;
 
 	// get button data, make sure it's all kosher
 	buttonData = glfwGetJoystickButtons(c->playerIndex, &buttons);
@@ -185,17 +185,17 @@ void __OPlnxUpdateGamePad(OPgamePad* c){
 	}
 
 	// map buttons
-	c->buttons[GamePad_Button_A] = buttonData[0];
-	c->buttons[GamePad_Button_B] = buttonData[1];
-	c->buttons[GamePad_Button_X] = buttonData[2];
-	c->buttons[GamePad_Button_Y] = buttonData[3];
-	c->buttons[GamePad_Button_LEFT_SHOULDER]  = buttonData[4];
-	c->buttons[GamePad_Button_RIGHT_SHOULDER] = buttonData[5];
-	c->buttons[GamePad_Button_BACK]        = buttonData[6];
-	c->buttons[GamePad_Button_START]       = buttonData[7];
-	//c->buttons[GamePad_Button_A]         = buttonData[8];
-	c->buttons[GamePad_Button_LEFT_THUMB]  = buttonData[9];
-	c->buttons[GamePad_Button_RIGHT_THUMB] = buttonData[10];
+	c->buttons[OPGAMEPADBUTTON_A] = buttonData[0];
+	c->buttons[OPGAMEPADBUTTON_B] = buttonData[1];
+	c->buttons[OPGAMEPADBUTTON_X] = buttonData[2];
+	c->buttons[OPGAMEPADBUTTON_Y] = buttonData[3];
+	c->buttons[OPGAMEPADBUTTON_LEFT_SHOULDER]  = buttonData[4];
+	c->buttons[OPGAMEPADBUTTON_RIGHT_SHOULDER] = buttonData[5];
+	c->buttons[OPGAMEPADBUTTON_BACK]        = buttonData[6];
+	c->buttons[OPGAMEPADBUTTON_START]       = buttonData[7];
+	//c->buttons[OPGAMEPADBUTTON_A]         = buttonData[8];
+	c->buttons[OPGAMEPADBUTTON_LEFT_THUMB]  = buttonData[9];
+	c->buttons[OPGAMEPADBUTTON_RIGHT_THUMB] = buttonData[10];
 }
 #endif
 //-----------------------------------------------------------------------------
@@ -213,58 +213,58 @@ void __OPwinUpdateGamePad(OPgamePad* controller){
 		// check other states
 #pragma region Trigger and stick states
 
-		controller->axes[L2] = controllerState.Gamepad.bLeftTrigger / 255.0f;
-		controller->axes[R2] = controllerState.Gamepad.bRightTrigger / 255.0f;
+		controller->axes[OPGAMEPADAXIS_L2] = controllerState.Gamepad.bLeftTrigger / 255.0f;
+		controller->axes[OPGAMEPADAXIS_R2] = controllerState.Gamepad.bRightTrigger / 255.0f;
 
-		controller->axes[LS_X] = controllerState.Gamepad.sThumbLX / (OPfloat)SHRT_MAX;
-		controller->axes[LS_Y] = controllerState.Gamepad.sThumbLY / (OPfloat)SHRT_MAX;
+		controller->axes[OPGAMEPADAXIS_LS_X] = controllerState.Gamepad.sThumbLX / (OPfloat)SHRT_MAX;
+		controller->axes[OPGAMEPADAXIS_LS_Y] = controllerState.Gamepad.sThumbLY / (OPfloat)SHRT_MAX;
 
-		controller->axes[RS_X] = controllerState.Gamepad.sThumbRX / (OPfloat)SHRT_MAX;
-		controller->axes[RS_Y] = controllerState.Gamepad.sThumbRY / (OPfloat)SHRT_MAX;
+		controller->axes[OPGAMEPADAXIS_RS_X] = controllerState.Gamepad.sThumbRX / (OPfloat)SHRT_MAX;
+		controller->axes[OPGAMEPADAXIS_RS_Y] = controllerState.Gamepad.sThumbRY / (OPfloat)SHRT_MAX;
 #pragma endregion
 		
 #pragma region Button states
 
-		controller->buttons[GamePad_Button_LEFT_SHOULDER] =
+		controller->buttons[OPGAMEPADBUTTON_LEFT_SHOULDER] =
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER;
 
-		controller->buttons[GamePad_Button_RIGHT_SHOULDER] =
+		controller->buttons[OPGAMEPADBUTTON_RIGHT_SHOULDER] =
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER;
 
-		controller->buttons[GamePad_Button_A] =
+		controller->buttons[OPGAMEPADBUTTON_A] =
 			(controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_A);
 
-		controller->buttons[GamePad_Button_B] =
+		controller->buttons[OPGAMEPADBUTTON_B] =
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_B;
 
-		controller->buttons[GamePad_Button_X] =
+		controller->buttons[OPGAMEPADBUTTON_X] =
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_X;
 
-		controller->buttons[GamePad_Button_Y] =
+		controller->buttons[OPGAMEPADBUTTON_Y] =
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y;
 
-		controller->buttons[GamePad_Button_DPAD_UP] =
+		controller->buttons[OPGAMEPADBUTTON_DPAD_UP] =
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP;
 
-		controller->buttons[GamePad_Button_DPAD_DOWN] =
+		controller->buttons[OPGAMEPADBUTTON_DPAD_DOWN] =
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN;
 
-		controller->buttons[GamePad_Button_DPAD_LEFT] =
+		controller->buttons[OPGAMEPADBUTTON_DPAD_LEFT] =
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT;
 
-		controller->buttons[GamePad_Button_DPAD_RIGHT] =
+		controller->buttons[OPGAMEPADBUTTON_DPAD_RIGHT] =
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT;
 
-		controller->buttons[GamePad_Button_START] =
+		controller->buttons[OPGAMEPADBUTTON_START] =
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_START;
 
-		controller->buttons[GamePad_Button_BACK] =
+		controller->buttons[OPGAMEPADBUTTON_BACK] =
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_BACK;
 
-		controller->buttons[GamePad_Button_LEFT_THUMB] =
+		controller->buttons[OPGAMEPADBUTTON_LEFT_THUMB] =
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB;
 
-		controller->buttons[GamePad_Button_RIGHT_THUMB] =
+		controller->buttons[OPGAMEPADBUTTON_RIGHT_THUMB] =
 			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB;
 #pragma endregion
 
@@ -280,11 +280,11 @@ void OPgamePadUpdate(OPgamePad* controller){
 		OPmemcpy(
 			&controller->prevButtons, 
 			&controller->buttons, 
-			sizeof(OPint) * GamePadButton_Max);
+			sizeof(OPint) * _OPGAMEPADAXIS_MAX);
 		OPmemcpy(
 			&controller->prevAxes, 
 			&controller->axes, 
-			sizeof(OPfloat) * GamePadAxes_Max);
+			sizeof(OPfloat) * _OPGAMEPADAXIS_MAX);
 	}
 
 #ifdef OPIFEX_ANDROID
@@ -322,9 +322,9 @@ void OPgamePadUpdate(OPgamePad* controller){
 }
 
 void OPgamePadReset(OPgamePad* controller){
-	OPbzero(&controller->buttons, sizeof(i32) * GamePadButton_Max);
-	OPbzero(&controller->prevButtons, sizeof(i32) * GamePadButton_Max);
-	OPbzero(&controller->axes, sizeof(OPfloat) * GamePadAxes_Max);
+	OPbzero(&controller->buttons, sizeof(i32) * _OPGAMEPADBUTTON_MAX);
+	OPbzero(&controller->prevButtons, sizeof(i32) * _OPGAMEPADBUTTON_MAX);
+	OPbzero(&controller->axes, sizeof(OPfloat) * _OPGAMEPADAXIS_MAX);
 }
 
 
@@ -332,7 +332,7 @@ void OPgamePadSystemUpdate()
 {
 	for ( OPint i = CONTROLLERS; i--; )
 	{
-		OPgamePadUpdate( OPgamePadIndex( (OPgamePadIndices)i ) );
+		OPgamePadUpdate( OPgamePadGet( (OPgamePadIndex)i ) );
 	}
 }
 
@@ -340,7 +340,7 @@ void OPgamePadSystemReset()
 {
 	for ( OPint i = CONTROLLERS; i--; )
 	{
-		OPgamePadReset( OPgamePadIndex((OPgamePadIndices)i));
+		OPgamePadReset( OPgamePadGet((OPgamePadIndex)i));
 	}
 }
 
@@ -348,19 +348,19 @@ void OPgamePadSetDeadzones(OPfloat deadzone)
 {
 	for ( OPint i = CONTROLLERS; i--; )
 	{
-		OPgamePadSetDeadzone( OPgamePadIndex((OPgamePadIndices)i), deadzone);
+		OPgamePadSetDeadzone( OPgamePadGet((OPgamePadIndex)i), deadzone);
 	}
 }
 
 OPvec2 OPgamePadLeftThumb(OPgamePad* controller) {
 	OPvec2 tmp;
-	tmp.x = controller->axes[LS_X];
-	tmp.y = controller->axes[LS_Y];
+	tmp.x = controller->axes[OPGAMEPADAXIS_LS_X];
+	tmp.y = controller->axes[OPGAMEPADAXIS_LS_Y];
 	return tmp;
 }
 OPvec2 OPgamePadRightThumb(OPgamePad* controller) {
 	OPvec2 tmp;
-	tmp.x = controller->axes[RS_X];
-	tmp.y = controller->axes[RS_Y];
+	tmp.x = controller->axes[OPGAMEPADAXIS_RS_X];
+	tmp.y = controller->axes[OPGAMEPADAXIS_RS_Y];
 	return tmp;
 }
