@@ -12,8 +12,8 @@ OPkeyboardState Keyboard;
 
 #ifndef OPIFEX_ANDROID
 void OPkeyboardUpdate(OPtimer* timer) {
-	OPmemcpy(&Keyboard.prevKeys, &Keyboard.keys, OPKEYBOARD_MAX * sizeof(OPint));
-	for(ui32 i = 0; i < OPKEYBOARD_MAX; i++) {
+	OPmemcpy(&Keyboard.prevKeys, &Keyboard.keys, _OPKEYBOARD_MAX * sizeof(OPint));
+	for(ui32 i = 0; i < _OPKEYBOARD_MAX; i++) {
 		Keyboard.keys[i] = glfwGetKey(window, OPkeyboardMapping[i]);
 	}
 }
@@ -22,24 +22,24 @@ void OPkeyboardUpdatePost(OPtimer* timer) {
    OPinputRecordUpdate(timer);
 }
 
-OPint OPkeyboardIsDown(OPkeyboardKeys key) {
+OPint OPkeyboardIsDown(OPkeyboardKey key) {
 	return Keyboard.keys[key];
 }
 
-OPint OPkeyboardIsUp(OPkeyboardKeys key) {
+OPint OPkeyboardIsUp(OPkeyboardKey key) {
 	return !Keyboard.keys[key];
 }
 
-OPint OPkeyboardWasPressed(OPkeyboardKeys key) {
+OPint OPkeyboardWasPressed(OPkeyboardKey key) {
 	return Keyboard.keys[key] && !Keyboard.prevKeys[key];
 }
 
-OPint OPkeyboardWasReleased(OPkeyboardKeys key) {
+OPint OPkeyboardWasReleased(OPkeyboardKey key) {
 	return !Keyboard.keys[key] && Keyboard.prevKeys[key];
 }
 
 OPint OPkeyboardAnyInputIsDown() {
-	for (ui32 i = 0; i < OPKEYBOARD_MAX; i++) {
+	for (ui32 i = 0; i < _OPKEYBOARD_MAX; i++) {
 		if (Keyboard.keys[i]) return true;
 	}
 	return false;
@@ -70,7 +70,7 @@ OPint OPkeyboardAnyInputIsDown() {
 #endif
 
 
-ui32 OPkeyboardMapping[OPKEYBOARD_MAX] = {
+ui32 OPkeyboardMapping[_OPKEYBOARD_MAX] = {
 #ifndef OPIFEX_ANDROID
    GLFW_KEY_BACKSPACE,	//   Key_BACKSPACE = 0,
    GLFW_KEY_TAB,		//   Key_TAB,

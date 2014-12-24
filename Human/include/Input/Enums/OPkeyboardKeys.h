@@ -3,7 +3,7 @@
 
 #include "./Core/include/OPtypes.h"
 
-typedef enum {
+enum OPkeyboardKey {
 	OPKEY_BACKSPACE = 0,
 	OPKEY_TAB,
 	OPKEY_ENTER,
@@ -96,10 +96,10 @@ typedef enum {
 	OPKEY_RSHIFT,
 	OPKEY_LCONTROL,
 	OPKEY_RCONTROL,
-	OPKEYBOARD_MAX_VALUE,
-	OPKEYBOARD_MAX = 349
-} OPkeyboardKeys;
+	_OPKEYBOARD_MAX_VALUE,
+	_OPKEYBOARD_MAX = 349
+};
 
-extern ui32 OPkeyboardMapping[OPKEYBOARD_MAX];
+extern ui32 OPkeyboardMapping[_OPKEYBOARD_MAX];
 
 #endif

@@ -24,23 +24,23 @@ typedef enum
 
 #endif
 
-typedef enum
+enum OPgamePadButton
 {
-	GamePad_Button_DPAD_UP          = 0,
-	GamePad_Button_DPAD_DOWN        = 1,
-	GamePad_Button_DPAD_LEFT        = 2,
-	GamePad_Button_DPAD_RIGHT       = 3,
-	GamePad_Button_START            = 4,
-	GamePad_Button_BACK             = 5,
-	GamePad_Button_LEFT_THUMB       = 6,
-	GamePad_Button_RIGHT_THUMB      = 7,
-	GamePad_Button_LEFT_SHOULDER    = 8,
-	GamePad_Button_RIGHT_SHOULDER   = 9,
-	GamePad_Button_A                = 10,
-	GamePad_Button_B                = 11,
-	GamePad_Button_X                = 12,
-	GamePad_Button_Y                = 13,
-	GamePadButton_Max				= 14
-} OPgamePadButtons;
+	OPGAMEPADBUTTON_DPAD_UP          = 0,
+	OPGAMEPADBUTTON_DPAD_DOWN        = 1,
+	OPGAMEPADBUTTON_DPAD_LEFT        = 2,
+	OPGAMEPADBUTTON_DPAD_RIGHT       = 3,
+	OPGAMEPADBUTTON_START            = 4,
+	OPGAMEPADBUTTON_BACK             = 5,
+	OPGAMEPADBUTTON_LEFT_THUMB       = 6,
+	OPGAMEPADBUTTON_RIGHT_THUMB      = 7,
+	OPGAMEPADBUTTON_LEFT_SHOULDER    = 8,
+	OPGAMEPADBUTTON_RIGHT_SHOULDER   = 9,
+	OPGAMEPADBUTTON_A                = 10,
+	OPGAMEPADBUTTON_B                = 11,
+	OPGAMEPADBUTTON_X                = 12,
+	OPGAMEPADBUTTON_Y                = 13,
+	_OPGAMEPADBUTTON_MAX			 = 14
+};
 
 #endif
