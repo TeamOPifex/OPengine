@@ -63,7 +63,7 @@ void ExampleTexturedEnter(OPgameState* last) {
 		0.1f,
 		1000.0f,
 		45.0f,
-		OPrenderWidth / (f32)OPrenderHeight
+		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
 		);
 }
 

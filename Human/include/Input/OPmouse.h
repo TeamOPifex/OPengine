@@ -10,8 +10,8 @@ typedef struct {
 	d64	positionY;
 	d64	prevPositionX;
 	d64	prevPositionY;
-	OPint	keys[OPMOUSE_MAX];
-	OPint	prevKeys[OPMOUSE_MAX];
+	OPint	keys[_OPMOUSE_MAX];
+	OPint	prevKeys[_OPMOUSE_MAX];
 } OPmouseState;
 
 extern OPmouseState Mouse;
@@ -23,10 +23,10 @@ i32 OPmousePositionMovedX();
 i32 OPmousePositionMovedY();
 i32 OPmouseWheel();
 i32 OPmouseWheelMoved();
-OPint OPmouseIsDown(OPmouseKeys key);
-OPint OPmouseIsUp(OPmouseKeys key);
-OPint OPmouseWasPressed(OPmouseKeys key);
-OPint OPmouseWasReleased(OPmouseKeys key);
+OPint OPmouseIsDown(OPmouseKey key);
+OPint OPmouseIsUp(OPmouseKey key);
+OPint OPmouseWasPressed(OPmouseKey key);
+OPint OPmouseWasReleased(OPmouseKey key);
 void OPmouseSetPosition(i32 x, i32 y);
 void OPmouseSetPositionScreenCenter();
 OPint OPmouseAnyInputIsDown();

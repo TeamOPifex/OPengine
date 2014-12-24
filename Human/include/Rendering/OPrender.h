@@ -4,14 +4,14 @@
 #include "./Human/include/Rendering/OpenGL.h"
 #include "./Core/include/OPtypes.h"
 
-extern i32 OPrenderWidth;
-extern i32 OPrenderHeight;
-extern i32 OPscreenWidth;
-extern i32 OPscreenHeight;
-extern f32 OPscreenWidthScale;
-extern f32 OPscreenHeightScale;
-extern OPint OPrenderFullscreen;
-extern OPint OPengineHasFocus;
+extern i32 OPRENDER_WIDTH;
+extern i32 OPRENDER_HEIGHT;
+extern i32 OPRENDER_SCREEN_WIDTH;
+extern i32 OPRENDER_SCREEN_HEIGHT;
+extern f32 OPRENDER_SCREEN_WIDTH_SCALE;
+extern f32 OPRENDER_SCREEN_HEIGHT_SCALE;
+extern OPint OPRENDER_FULLSCREEN;
+extern OPint OPRENDER_HAS_FOCUS;
 
 #ifndef OPIFEX_ANDROID
 extern GLFWwindow* window;

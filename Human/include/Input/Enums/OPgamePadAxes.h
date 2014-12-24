@@ -3,7 +3,7 @@
 
 #ifdef OPIFEX_ANDROID
 
-typedef enum
+enum OUYAGamePadAxes
 {
     OUYA_AXIS_L2 = 17,
     OUYA_AXIS_LS_X = 0,
@@ -11,19 +11,19 @@ typedef enum
     OUYA_AXIS_R2 = 18,
     OUYA_AXIS_RS_X = 11,
     OUYA_AXIS_RS_Y = 14,
-} OUYAGamePadAxes;
+};
 
 #endif
 
-typedef enum
+enum OPgamePadAxis
 {
-	LS_X				= 0,
-	LS_Y				= 1,
-	RS_X				= 2,
-	RS_Y				= 3,
-	L2					= 4,
-	R2					= 5,
-	GamePadAxes_Max		= 6
-} OPgamePadAxes;
+	OPGAMEPADAXIS_LS_X				= 0,
+	OPGAMEPADAXIS_LS_Y				= 1,
+	OPGAMEPADAXIS_RS_X				= 2,
+	OPGAMEPADAXIS_RS_Y				= 3,
+	OPGAMEPADAXIS_L2				= 4,
+	OPGAMEPADAXIS_R2				= 5,
+	_OPGAMEPADAXIS_MAX				= 6
+};
 
 #endif
