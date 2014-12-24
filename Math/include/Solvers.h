@@ -80,7 +80,7 @@ inline OPint OPlineCircleInter2(
 	OPfloat radSqr, OPvec2* intersection)
 {
 	OPvec2 dir = *B - *A;
-	OPfloat dist = OPvec2valDot(&dir, &dir);
+	OPfloat dist = OPvec2dot(&dir, &dir);
 	OPfloat p = radSqr / dist;
 
 	//*intersect = dir * p + *CirclePos;

@@ -23,7 +23,7 @@ OPtexture3D* OPtexture3DCreate(OPtexture* texture, OPeffect* effect) {
 	OPtexture3D* tex3d = (OPtexture3D*)OPalloc(sizeof(OPtexture3D));
 
 	OPbzero(tex3d, sizeof(OPtexture3D));
-	tex3d->Scale = OPvec3One;
+	tex3d->Scale = OPVEC3_ONE;
 	tex3d->Texture = texture;
 	tex3d->Effect = effect;
 

@@ -66,12 +66,12 @@ OPgameState State1 = {
 	State1Exit
 };
 
-OPvec3 color = OPvec3Zero;
+OPvec3 color = OPVEC3_ZERO;
 f32 fontPosX = 0, fontPosY = 0;
 
 void ColorHandler(OPstream* str, void* param) {
 	OPvec3* c = (OPvec3*)param;
-	OPvec3 t = OPvec3str(str);
+	OPvec3 t = OPvec3Read(str);
 	c->x = t.x;
 	c->y = t.y;
 	c->z = t.z;

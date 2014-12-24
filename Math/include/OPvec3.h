@@ -12,30 +12,15 @@ struct OPmat4;
 
 inline OPfloat* OPvec3index(OPvec3* v, int idx);
 inline OPvec3 OPvec3create(OPfloat x, OPfloat y, OPfloat z);
-inline void OPvec3add(OPvec3* dst, OPvec3* a, OPvec3* b);
-inline void OPvec3sub(OPvec3* dst, OPvec3* a, OPvec3* b);
-inline void OPvec3mul(OPvec3* dst, OPvec3* a, OPvec3* b);
-inline void OPvec3scl(OPvec3* dst, OPvec3* a, OPfloat s);
-inline void OPvec3div(OPvec3* dst, OPvec3* a, OPvec3* b);
-inline void OPvec3divf(OPvec3* dst, OPvec3* a, OPfloat b);
-inline void d(OPfloat* dst, OPvec3* a, OPvec3* b);
-inline void OPvec3cross(OPvec3* dst, OPvec3* a, OPvec3* b);
-inline void OPvec3len(OPfloat* dst, OPvec3* v);
-inline void OPvec3dist(OPfloat* dst, OPvec3* a, OPvec3* b);
 
-inline OPvec3 OPvec3add(OPvec3* a, OPvec3* b);
-inline OPvec3 OPvec3sub(OPvec3* a, OPvec3* b);
-inline OPvec3 OPvec3mul(OPvec3* a, OPvec3* b);
-inline OPvec3 OPvec3scl(OPvec3* a, OPfloat s);
-inline OPvec3 OPvec3div(OPvec3* a, OPvec3* b);
-inline OPvec3 OPvec3divf(OPvec3* a, OPfloat b);
-inline OPfloat OPvec3dot(OPvec3* a, OPvec3* b);
-inline OPvec3 OPvec3cross(OPvec3* a, OPvec3* b);
-inline OPfloat OPvec3len(OPvec3* v);
-inline OPfloat OPvec3dist(OPvec3* a, OPvec3* b);
+inline void OPvec3Add(OPvec3* dst, OPvec3* a, OPvec3* b);
+inline void OPvec3Sub(OPvec3* dst, OPvec3* a, OPvec3* b);
+inline void OPvec3Mul(OPvec3* dst, OPvec3* a, OPvec3* b);
+inline void OPvec3Scl(OPvec3* dst, OPvec3* a, OPfloat s);
+inline void OPvec3Div(OPvec3* dst, OPvec3* a, OPvec3* b);
+inline void OPvec3Divf(OPvec3* dst, OPvec3* a, OPfloat b);
 
 OPfloat OPvec3angleToTarget(OPvec3 pos, OPvec3 facing, OPvec3 target);
-
 
 struct OPvec3 {
 	union{
@@ -48,28 +33,28 @@ struct OPvec3 {
 		OPmemcpy(this, (void*)&vhs, sizeof(OPvec3)); return *this;
 	}
 	inline OPvec3 operator+=(OPvec3 vhs) { 
-		OPvec3add(this, this, &vhs); 
+		OPvec3Add(this, this, &vhs); 
 		return *this; 
 	}
 	inline OPvec3 operator-=(OPvec3 vhs) { 
-		OPvec3sub(this, this, &vhs); 
+		OPvec3Sub(this, this, &vhs); 
 		return *this; 
 	}
 	OPvec3 operator*=(OPmat4 rhs);
 	inline OPvec3 operator*=(OPvec3 vhs) { 
-		OPvec3mul(this, this, &vhs); 
+		OPvec3Mul(this, this, &vhs); 
 		return *this; 
 	}
 	inline OPvec3 operator*=(OPfloat vhs) { 
-		OPvec3scl(this, this, vhs); 
+		OPvec3Scl(this, this, vhs); 
 		return *this; 
 	}
 	inline OPvec3 operator/=(OPvec3 vhs) { 
-		OPvec3div(this, this, &vhs); 
+		OPvec3Div(this, this, &vhs); 
 		return *this; 
 	}
 	inline OPvec3 operator/=(OPfloat vhs) { 
-		OPvec3divf(this, this, vhs); 
+		OPvec3Divf(this, this, vhs); 
 		return *this; 
 	}
 	inline OPfloat& operator[](i32 i) {
@@ -77,11 +62,11 @@ struct OPvec3 {
 	}
 };
 
-extern const OPvec3 OPvec3Zero;
-extern const OPvec3 OPvec3One;
-extern const OPvec3 OPvec3Up;
-extern const OPvec3 OPvec3Left;
-extern const OPvec3 OPvec3Forward;
+extern const OPvec3 OPVEC3_ZERO;
+extern const OPvec3 OPVEC3_ONE;
+extern const OPvec3 OPVEC3_UP;
+extern const OPvec3 OPVEC3_LEFT;
+extern const OPvec3 OPVEC3_FORWARD;
 
 inline OPvec3 OPvec3create(OPfloat x, OPfloat y, OPfloat z) {
 	OPvec3 tmp = { x, y, z };
@@ -90,194 +75,125 @@ inline OPvec3 OPvec3create(OPfloat x, OPfloat y, OPfloat z) {
 
 inline OPvec3 operator+(OPvec3 lhs, OPvec3 vhs) { 
 	OPvec3 temp = { 0, 0, 0};
-	OPvec3add(&temp, &lhs, &vhs); 
+	OPvec3Add(&temp, &lhs, &vhs); 
 	return temp; 
 }
 inline OPvec3 operator-(OPvec3 lhs, OPvec3 vhs) { 
 	OPvec3 temp = { 0, 0, 0};
-	OPvec3sub(&temp, &lhs, &vhs); 
+	OPvec3Sub(&temp, &lhs, &vhs); 
 	return temp; 
 }
 inline OPvec3 operator*(OPvec3 lhs, OPvec3 vhs) { 
 	OPvec3 temp = { 0, 0, 0};
-	OPvec3mul(&temp, &lhs, &vhs); 
+	OPvec3Mul(&temp, &lhs, &vhs); 
 	return temp; 
 }
 inline OPvec3 operator*(OPvec3 lhs, OPfloat vhs) { 
 	OPvec3 temp = { 0, 0, 0};
-	OPvec3scl(&temp, &lhs, vhs); 
+	OPvec3Scl(&temp, &lhs, vhs); 
 	return temp; 
 }
 inline OPvec3 operator*(OPfloat lhs, OPvec3 vhs) { 
 	OPvec3 temp = { 0, 0, 0};
-	OPvec3scl(&temp, &vhs, lhs); 
+	OPvec3Scl(&temp, &vhs, lhs); 
 	return temp; 
 }
 inline OPvec3 operator/(OPvec3 lhs, OPvec3 vhs) { 
 	OPvec3 temp = { 0, 0, 0};
-	OPvec3div(&temp, &lhs, &vhs); 
+	OPvec3Div(&temp, &lhs, &vhs); 
 	return temp; 
 }
 inline OPvec3 operator/(OPvec3 lhs, OPfloat vhs) { 
 	OPvec3 temp = { 0, 0, 0};
-	OPvec3divf(&temp, &lhs, vhs); 
+	OPvec3Divf(&temp, &lhs, vhs); 
 	return temp; 
 }
 inline OPvec3 operator/(OPfloat lhs, OPvec3 vhs) { 
 	OPvec3 temp = { 0, 0, 0};
-	OPvec3divf(&temp, &vhs, lhs); 
+	OPvec3Divf(&temp, &vhs, lhs); 
 	return temp; 
 }
 
-
-inline OPfloat* OPvec3index(OPvec3* v, int idx) {
-	return &((OPfloat*)(v))[idx];
-}
-
-inline void OPvec3add(OPvec3* dst, OPvec3* a, OPvec3* b) {
+//    ___            _         _ _        _       _ _   _              _   _    
+//   / __|_  _ _ __ | |__  ___| (_)__    /_\  _ _(_) |_| |_  _ __  ___| |_(_)__ 
+//   \__ \ || | '  \| '_ \/ _ \ | / _|  / _ \| '_| |  _| ' \| '  \/ -_)  _| / _|
+//   |___/\_, |_|_|_|_.__/\___/_|_\__| /_/ \_\_| |_|\__|_||_|_|_|_\___|\__|_\__|
+//        |__/                                                                  
+inline void OPvec3Add(OPvec3* dst, OPvec3* a, OPvec3* b) {
 	dst->x = a->x + b->x;
 	dst->y = a->y + b->y;
 	dst->z = a->z + b->z;
 }
 
-inline void OPvec3sub(OPvec3* dst, OPvec3* a, OPvec3* b) {
+inline void OPvec3Sub(OPvec3* dst, OPvec3* a, OPvec3* b) {
 	dst->x = a->x - b->x;
 	dst->y = a->y - b->y;
 	dst->z = a->z - b->z;
 }
 
-inline void OPvec3mul(OPvec3* dst, OPvec3* a, OPvec3* b) {
+inline void OPvec3Mul(OPvec3* dst, OPvec3* a, OPvec3* b) {
 	dst->x = a->x * b->x;
 	dst->y = a->y * b->y;
 	dst->z = a->z * b->z;
 }
 
-inline void OPvec3scl(OPvec3* dst, OPvec3* a, OPfloat s) {
+inline void OPvec3Scl(OPvec3* dst, OPvec3* a, OPfloat s) {
 	dst->x = a->x * s;
 	dst->y = a->y *s;
 	dst->z = a->z *s;
 }
 
-inline void OPvec3div(OPvec3* dst, OPvec3* a, OPvec3* b) {
+inline void OPvec3Div(OPvec3* dst, OPvec3* a, OPvec3* b) {
 	dst->x = a->x / b->x;
 	dst->y = a->y / b->y;
 	dst->z = a->z / b->z;
 }
 
-inline void OPvec3divf(OPvec3* dst, OPvec3* a, OPfloat b) {
+inline void OPvec3Divf(OPvec3* dst, OPvec3* a, OPfloat b) {
 	dst->x = a->x / b;
 	dst->y = a->y / b;
 	dst->z = a->z / b;
 }
 
-inline void OPvec3dot(OPfloat* dst, OPvec3* a, OPvec3* b) {
-	(*dst) = a->x * b->x + a->y * b->y + a->z * b->z;
+//    ___             _   _               _     _       _ _   _              _   _    
+//   | __|  _ _ _  __| |_(_)___ _ _  __ _| |   /_\  _ _(_) |_| |_  _ __  ___| |_(_)__ 
+//   | _| || | ' \/ _|  _| / _ \ ' \/ _` | |  / _ \| '_| |  _| ' \| '  \/ -_)  _| / _|
+//   |_| \_,_|_||_\__|\__|_\___/_||_\__,_|_| /_/ \_\_| |_|\__|_||_|_|_|_\___|\__|_\__|
+//                                                                                    
+inline OPfloat OPvec3Dot(OPvec3 a, OPvec3 b) {
+	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-inline void OPvec3norm(OPvec3* dst, OPvec3* a) {
-	OPfloat l = a->x * a->x + a->y * a->y + a->z * a->z;
-	if(l == 0) {
-		return;
-	}
+inline OPvec3 OPvec3Cross(OPvec3 a, OPvec3 b) {
+	OPvec3 v = {
+		a.y * b.z - a.z * b.y,
+		a.z * b.x - a.x * b.z,
+		a.x * b.y - a.y * b.x,
+	};
 
-	l = OPsqrt(l);
-	dst->x = a->x / l;
-	dst->y = a->y / l;
-	dst->z = a->z / l;
+	return v;
 }
 
-inline void OPvec3cross(OPvec3* dst, OPvec3* a, OPvec3* b) {
-	OPfloat x = a->y * b->z - a->z * b->y;
-	OPfloat y = a->z * b->x - a->x * b->z;
-	OPfloat z = a->x * b->y - a->y * b->x;
-	dst->x = x;
-	dst->y = y;
-	dst->z = z;
+inline OPfloat OPvec3Len(OPvec3 v) {
+	return OPsqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
-inline void OPvec3len(OPfloat* dst, OPvec3* v) {
-	(*dst) = OPsqrt(v->x * v->x + v->y * v->y + v->z * v->z);
+inline OPfloat OPvec3Dist(OPvec3 a, OPvec3 b) {
+	OPvec3 dif = a - b;
+	return OPvec3Len(dif);
 }
 
-inline void OPvec3dist(OPfloat* dst, OPvec3* a, OPvec3* b) {
-	OPvec3 tmp;
-	tmp.x = a->x - b->x;
-	tmp.y = a->y - b->y;
-	tmp.z = a->z - b->z;
-	OPvec3len(dst, &tmp);
+inline OPfloat OPvec3DistSquare(OPvec3 a, OPvec3 b) {
+	OPvec3 dif = a - b;
+	return OPvec3Dot(dif, dif);
 }
 
-inline OPvec3 OPvec3add(OPvec3* a, OPvec3* b) {
-	OPvec3 temp = { 0, 0, 0};
-	OPvec3add(&temp, a, b);
-	return temp;
-}
-
-inline OPvec3 OPvec3sub(OPvec3* a, OPvec3* b) {
-	OPvec3 temp = { 0, 0, 0};
-	OPvec3sub(&temp, a, b);
-	return temp;
-}
-
-inline OPvec3 OPvec3mul(OPvec3* a, OPvec3* b) {
-	OPvec3 temp = { 0, 0, 0};
-	OPvec3mul(&temp, a, b);
-	return temp;
-}
-
-inline OPvec3 OPvec3scl(OPvec3* a, OPfloat s) {
-	OPvec3 temp = { 0, 0, 0};
-	OPvec3scl(&temp, a, s);
-	return temp;
-}
-
-inline OPvec3 OPvec3div(OPvec3* a, OPvec3* b) {
-	OPvec3 temp = { 0, 0, 0};
-	OPvec3div(&temp, a, b);
-	return temp;
-} 
-
-inline OPvec3 OPvec3divf(OPvec3* a, OPfloat b) {
-	OPvec3 temp = { 0, 0, 0};
-	OPvec3divf(&temp, a, b);
-	return temp;
-}
-
-inline OPfloat OPvec3dot(OPvec3* a, OPvec3* b) {
-	OPfloat temp = 0;
-	OPvec3dot(&temp, a, b);
-	return temp;
-}
-
-inline OPvec3 OPvec3cross(OPvec3* a, OPvec3* b) {
-	OPvec3 temp = { 0, 0, 0};
-	OPvec3cross(&temp, a, b);
-	return temp;
-}
-
-inline OPfloat OPvec3len(OPvec3* v) {
-	OPfloat temp = 0;
-	OPvec3len(&temp, v);
-	return temp;
-}
-
-inline OPfloat OPvec3dist(OPvec3* a, OPvec3* b) {
-	OPfloat temp = 0;
-	OPvec3dist(&temp, a, b);
-	return temp;
-}
-
-inline OPfloat OPvec3distSquare(OPvec3* a, OPvec3* b) {
-	OPvec3 temp = *a - *b;
-	return OPvec3dot(&temp, &temp);
-}
-
-inline OPfloat OPvec3angle(OPvec3* a, OPvec3* b) {
+inline OPfloat OPvec3Angle(OPvec3 a, OPvec3 b) {
 	OPfloat temp = 0;
 
-	OPfloat top = a->x * b->x + a->y * b->y + a->z * b->z;
-	OPfloat bottom = OPsqrt(a->x * a->x + a->y * a->y + a->z * a->z) * 
-					 OPsqrt(b->x * b->x + b->y * b->y + b->z * b->z);
+	OPfloat top = a.x * b.x + a.y * b.y + a.z * b.z;
+	OPfloat bottom = OPsqrt(a.x * a.x + a.y * a.y + a.z * a.z) * 
+					 OPsqrt(b.x * b.x + b.y * b.y + b.z * b.z);
 	if(bottom == 0) return 0;
 	
 	OPfloat cosTheta = top / bottom;
@@ -285,7 +201,11 @@ inline OPfloat OPvec3angle(OPvec3* a, OPvec3* b) {
 	return temp;
 }
 
-inline OPvec3 OPvec3str(OPstream* str) {
+inline OPvec3 OPvec3Norm(OPvec3 v){
+	return v / OPvec3Len(v);
+}
+
+inline OPvec3 OPvec3Read(OPstream* str) {
 	OPvec3 temp = {
 		OPreadf32(str),
 		OPreadf32(str),
@@ -294,29 +214,23 @@ inline OPvec3 OPvec3str(OPstream* str) {
 	return temp;
 }
 
-inline OPvec3 OPvec3clone(OPvec3* v) {
-	return OPvec3create(v->x, v->y, v->z);
-}
-
-inline void OPvec3write(OPvec3* v, OPstream* str) {
+inline void OPvec3Write(OPvec3* v, OPstream* str) {
 	OPwrite(str, &v->x, sizeof(f32));
 	OPwrite(str, &v->y, sizeof(f32));
 	OPwrite(str, &v->z, sizeof(f32));
 }
 
-inline OPvec3 OPvec3randNorm(){
+inline OPvec3 OPvec3RandNorm(){
 	OPvec3 v = {
 		OPrandom() - 0.5f,
 		OPrandom() - 0.5f,
 		OPrandom() - 0.5f
 	};
 
-	OPvec3norm(&v, &v);
-
-	return v;
+	return OPvec3Norm(v);
 }
 
-inline void OPvec3log(const OPchar* m, OPvec3* v) {
-	OPlog("%s: [%f, %f, %f]", m, v->x, v->y, v->z);
+inline void OPvec3Log(const OPchar* m, OPvec3 v) {
+	OPlog("%s: [%f, %f, %f]", m, v.x, v.y, v.z);
 }
 #endif

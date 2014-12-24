@@ -26,9 +26,9 @@ OPint OPlevelload(const OPchar* filename, OPLevel** level) {
 				entities[i].resource = OPreadstring(str);
 			}
 
-			entities[i].position = OPvec3str(str);
-			entities[i].rotation = OPvec3str(str);
-			entities[i].scale = OPvec3str(str);
+			entities[i].position = OPvec3Read(str);
+			entities[i].rotation = OPvec3Read(str);
+			entities[i].scale = OPvec3Read(str);
 
 			entities[i].collision = OPreadui16(str);
 			entities[i].physics = OPreadui16(str);

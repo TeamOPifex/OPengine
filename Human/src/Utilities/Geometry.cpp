@@ -31,8 +31,8 @@ OPmesh* OPgeoCreateSphere(f32 radius, ui16 widthSegments, ui16 heightSegments) {
 			OPvec3 vert = OPvec3create(vx, vy, vz);
 			OPlistPush(vertices, (ui8*)&vert);
 
-			OPvec3 normal = OPvec3create(vx, vy, vz);
-			OPvec3norm(&normal, &normal);
+			OPvec3 normal = OPvec3Norm(OPvec3create(vx, vy, vz));
+
 			OPlistPush(normals, (ui8*)&normal);
 
 			ui16 pos = OPlistSize(vertices) - 1;

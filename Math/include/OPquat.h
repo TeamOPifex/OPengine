@@ -7,6 +7,7 @@
 #include "./Core/include/OPmath.h"
 #include "./Math/include/OPvec3.h"
 
+#define OPQUAT_AXIS(q) *((OPvec3*)(&q))
 
 struct OPquat {
 	OPfloat x, y, z, w;
@@ -22,121 +23,119 @@ inline OPquat OPquatCreate(OPfloat x, OPfloat y, OPfloat z, OPfloat w) {
 	return tmp;
 }
 
-inline OPquat OPquatCreate(OPvec3* axis, OPfloat w) {
-	OPquat tmp = { axis->x, axis->y, axis->z, w };
+inline OPquat OPquatCreate(OPvec3 axis, OPfloat w) {
+	OPquat tmp = { axis.x, axis.y, axis.z, w };
 	return tmp;
 }
 
-inline OPquat OPquatAdd(OPquat* a, OPquat* b);
-inline OPquat OPquatSub(OPquat* a, OPquat* b);
-inline OPquat OPquatMul(OPquat* a, OPquat* b);
-inline OPquat OPquatScl(OPquat* a, OPfloat s);
-inline OPquat OPquatConj(OPquat* a);
-inline OPquat OPquatNorm(OPquat* a);
-inline OPfloat OPquatLen(OPquat* a);
-inline OPfloat OPquatDot(OPquat* a, OPquat* b);
-inline OPfloat OPquatAngularDif(OPquat* a, OPquat* b);
-inline OPquat OPquatCreateRot(OPvec3* axis, OPfloat angle);
-inline OPquat OPquatCreateLookAt(OPvec3* eye, OPvec3* target);
-inline OPvec3 OPquatRot(OPquat* q, OPvec3* v);
+inline OPquat OPquatAdd(OPquat a, OPquat b);
+inline OPquat OPquatSub(OPquat a, OPquat b);
+inline OPquat OPquatMul(OPquat a, OPquat b);
+inline OPquat OPquatScl(OPquat a, OPfloat s);
+inline OPquat OPquatConj(OPquat a);
+inline OPquat OPquatNorm(OPquat a);
+inline OPfloat OPquatLen(OPquat a);
+inline OPfloat OPquatDot(OPquat a, OPquat b);
+inline OPfloat OPquatAngularDif(OPquat a, OPquat b);
+inline OPquat OPquatCreateRot(OPvec3 axis, OPfloat angle);
+inline OPquat OPquatCreateLookAt(OPvec3 eye, OPvec3 target);
+inline OPvec3 OPquatRot(OPquat q, OPvec3 v);
 
-inline OPquat OPquatAdd(OPquat* a, OPquat* b){
+inline OPquat OPquatAdd(OPquat a, OPquat b){
 	OPquat out = {
-		a->x + b->x,
-		a->y + b->y,
-		a->z + b->z,
-		a->w + b->w
+		a.x + b.x,
+		a.y + b.y,
+		a.z + b.z,
+		a.w + b.w
 	};
 	return out;
 }
 
-inline OPquat OPquatSub(OPquat* a, OPquat* b){
+inline OPquat OPquatSub(OPquat a, OPquat b){
 	OPquat out = {
-		a->x - b->x,
-		a->y - b->y,
-		a->z - b->z,
-		a->w - b->w
+		a.x - b.x,
+		a.y - b.y,
+		a.z - b.z,
+		a.w - b.w
 	};
 	return out;
 }
 
-inline OPquat OPquatMul(OPquat* a, OPquat* b){
-	register OPfloat dot = a->x * b->x + a->y * b->y + a->z * b->z;
-	OPvec3 cross;
-	OPvec3 vb = OPvec3scl((OPvec3*)b, a->w);
-	OPvec3 va = OPvec3scl((OPvec3*)a, b->w);
+inline OPquat OPquatMul(OPquat a, OPquat b){
+	register OPfloat dot = a.x * b.x + a.y * b.y + a.z * b.z;
+	OPvec3 vb = OPQUAT_AXIS(b) * a.w;
+	OPvec3 va = OPQUAT_AXIS(a) * b.w;
 	OPvec3 sum = vb + va;
-	OPvec3cross(&cross, (OPvec3*)a, (OPvec3*)b);
+	OPvec3 cross = OPvec3Cross(OPQUAT_AXIS(a), OPQUAT_AXIS(b));
 	sum += cross;
 
 	OPquat out = {
 		sum.x,
 		sum.y,
 		sum.z,
-		a->w * b->w - dot
+		a.w * b.w - dot
 	};
 
 	return out;
 }
 
-inline OPquat OPquatScl(OPquat* a, OPfloat s){
+inline OPquat OPquatScl(OPquat a, OPfloat s){
 	OPquat out = {
-		a->x * s,
-		a->y * s,
-		a->z * s,
-		a->w * s
+		a.x * s,
+		a.y * s,
+		a.z * s,
+		a.w * s
 	};
 
 	return out;
 }
 
-inline OPquat OPquatConj(OPquat* a){
+inline OPquat OPquatConj(OPquat a){
 	OPquat out = {
-		-a->x,
-		-a->y,
-		-a->z,
-		a->w
+		-a.x,
+		-a.y,
+		-a.z,
+		a.w
 	};
 
 	return out;	
 }
 
-inline OPquat OPquatNorm(OPquat* a){
+inline OPquat OPquatNorm(OPquat a){
 	OPquat conj = OPquatConj(a);
-	return OPquatMul(a, &conj);
+	return OPquatMul(a, conj);
 }
 
-inline OPfloat OPquatDot(OPquat* a, OPquat* b){
-	return a->x * b->x +
-	       a->y * b->y +
-	       a->z * b->z +
-	       a->w * b->w; 
+inline OPfloat OPquatDot(OPquat a, OPquat b){
+	return a.x * b.x +
+	       a.y * b.y +
+	       a.z * b.z +
+	       a.w * b.w; 
 }
 
-inline OPvec3 OPquatRot(OPquat* q, OPvec3* p){
-	OPvec3 qp = { q->x, q->y, q->z };
+inline OPvec3 OPquatRot(OPquat q, OPvec3 p){
+	OPvec3 qp = { q.x, q.y, q.z };
 	// OPquat conj = OPquatConj(q);
 	// conj = OPquatMul(&qp, &conj);
 	// OPquat rot = OPquatMul(q, &conj);
 	// OPvec3 out = { rot.x, rot.y, rot.z };
 
-	OPvec3 c1 = OPvec3cross(p, &qp) + q->w * *p;
-	OPvec3 c2 = OPvec3cross(&c1, &qp);
+	OPvec3 c1 = OPvec3Cross(p, qp) + q.w * p;
+	OPvec3 c2 = OPvec3Cross(c1, qp);
 
-	return *p + 2.0 * c2;
+	return p + 2.0 * c2;
 }
 
-inline OPfloat OPquatAngularDif(OPquat* a, OPquat* b){
+inline OPfloat OPquatAngularDif(OPquat a, OPquat b){
 	OPfloat dot = OPquatDot(a, b);
 	return OPacos(dot / OPquatLen(a) * OPquatLen(b)) * 2;
 }
 
-inline OPquat OPquatCreateRot(OPvec3* axis, OPfloat angle){
+inline OPquat OPquatCreateRot(OPvec3 axis, OPfloat angle){
 	OPfloat c = OPcos(0.5f * angle), s = OPsin(0.5f * angle);
-	OPvec3 n = { 0, 0, 0 };
+	OPvec3 n = OPvec3Norm((OPvec3)axis);
+	OPvec3 v = n * s;
 
-	OPvec3norm(&n, (OPvec3*)axis);
-	OPvec3 v = OPvec3scl(&n, s);
 	OPquat out = {
 		v.x,
 		v.y,
@@ -147,36 +146,35 @@ inline OPquat OPquatCreateRot(OPvec3* axis, OPfloat angle){
 	return out;
 }
 
-inline OPquat OPquatCreateLookAt(OPvec3* eye, OPvec3* target){
-	OPvec3 forward = *eye - *target, forwardUnit;
-	OPvec3norm(&forwardUnit, &forward);
+inline OPquat OPquatCreateLookAt(OPvec3 eye, OPvec3 target){
+	OPvec3 forward = eye - target;
+	OPvec3 forwardUnit = OPvec3Norm(forward);
 
-	OPfloat dot = OPvec3dot(&forwardUnit, (OPvec3*)&OPvec3Forward);
+	OPfloat dot = OPvec3Dot(forwardUnit, OPVEC3_FORWARD);
 	
 	if(OPabs(dot + 1.0) < 0.00001){
-		return OPquatCreate((OPvec3*)&OPvec3Up, OPpi);
+		return OPquatCreate(OPVEC3_UP, OPpi);
 	}
 	else if(OPabs(dot - 1.0) < 0.00001){
 		return OPquatIdentity;
 	}
 
 	OPfloat rotAngle = OPacos(dot);
-	OPvec3 rotAxis;
+	
+	OPvec3 rotAxis = OPvec3Cross(forwardUnit, OPVEC3_FORWARD);
+	rotAxis = OPvec3Norm(rotAxis);
 
-	OPvec3cross(&rotAxis, &forwardUnit, (OPvec3*)&OPvec3Forward);
-	OPvec3norm(&rotAxis, &rotAxis);
-
-	return OPquatCreateRot(&rotAxis, rotAngle);
+	return OPquatCreateRot(rotAxis, rotAngle);
 }
 
-inline OPfloat OPquatLen(OPquat* a){
-	return OPsqrt(a->x * a->x + a->y * a->y + a->z * a->z + a->w * a->w);
+inline OPfloat OPquatLen(OPquat a){
+	return OPsqrt(a.x * a.x + a.y * a.y + a.z * a.z + a.w * a.w);
 }
 
-inline OPquat OPquatLerp(OPquat* a, OPquat* b, OPfloat p){
+inline OPquat OPquatLerp(OPquat a, OPquat b, OPfloat p){
 	OPquat as = OPquatScl(a, p);
 	OPquat bs = OPquatScl(b, 1 - p);
-	return OPquatAdd(&as, &bs);
+	return OPquatAdd(as, bs);
 }
 
 #endif

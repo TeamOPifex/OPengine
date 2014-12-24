@@ -47,8 +47,9 @@ typedef struct {
 inline void OPparticleUpdate(OPparticle* p, OPtimer* timer){
 	OPvec3 vel = p->Velocity;
 	OPfloat dr = p->AngularVelo * timer->Elapsed;
-	OPvec3scl(&vel, &vel, (OPfloat)timer->Elapsed);
-	OPvec3add(&p->Position, &p->Position, &vel);
+	vel *= (OPfloat)timer->Elapsed;
+	p->Position += vel;
+	
 	p->Angle += dr;
 	p->Life -= timer->Elapsed;
 }

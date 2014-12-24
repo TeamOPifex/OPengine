@@ -57,9 +57,9 @@ void ExampleModelEnter(OPgameState* last) {
 
 	// Sets up the camera as a perpsective camera for rendering
 	modelExample->Camera = OPcamProj(
-		OPvec3One * 2.0,
-		OPvec3Up,
-		OPvec3Up,
+		OPVEC3_ONE * 2.0,
+		OPVEC3_UP,
+		OPVEC3_UP,
 		0.1f,
 		1000.0f,
 		45.0f,
@@ -67,7 +67,7 @@ void ExampleModelEnter(OPgameState* last) {
 		);
 
 	// A default light direction used in the effect
-	modelExample->LightDirection = OPvec3Up;
+	modelExample->LightDirection = OPVEC3_UP;
 
 	// This can be controlled in the update loop if it varies
 	// Since this is a simple example we'll ensure that it's set

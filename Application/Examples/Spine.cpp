@@ -62,7 +62,7 @@ void ExampleSpineEnter(OPgameState* last) {
 	spineExample->Camera = OPcamProj(
 		OPvec3create(0.0f, 0.0f, 45.0f),
 		OPvec3create(0.0f, 0.0f, 0.0f),
-		OPvec3Up,
+		OPVEC3_UP,
 		0.1f,
 		1000.0f,
 		45.0f,
@@ -70,7 +70,7 @@ void ExampleSpineEnter(OPgameState* last) {
 		);
 
 	// A default light direction used in the effect
-	spineExample->LightDirection = OPvec3Up;
+	spineExample->LightDirection = OPVEC3_UP;
 
 	// This can be controlled in the update loop if it varies
 	// Since this is a simple example we'll ensure that it's set
