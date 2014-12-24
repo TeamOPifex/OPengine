@@ -1,11 +1,11 @@
 #include "./Math/include/OPvec3.h"
 #include "./Math/include/OPmat4.h"
 
-OPvec3 const OPvec3Zero    = { 0, 0, 0 };
-OPvec3 const OPvec3One     = { 1, 1, 1 };
-OPvec3 const OPvec3Up      = { 0, 1, 0 };
-OPvec3 const OPvec3Left    = { 1, 0, 0 };
-OPvec3 const OPvec3Forward = { 0, 0, 1 };
+const OPvec3 OPVEC3_ZERO    = { 0, 0, 0 };
+const OPvec3 OPVEC3_ONE     = { 1, 1, 1 };
+const OPvec3 OPVEC3_UP      = { 0, 1, 0 };
+const OPvec3 OPVEC3_LEFT    = { 1, 0, 0 };
+const OPvec3 OPVEC3_FORWARD = { 0, 0, 1 };
 
 OPvec3 OPvec3::operator*=(OPmat4 rhs) 
 {
@@ -14,12 +14,9 @@ OPvec3 OPvec3::operator*=(OPmat4 rhs)
 }
 
 OPfloat OPvec3angleToTarget(OPvec3 pos, OPvec3 facing, OPvec3 target) {
-	OPvec3 _facing, _toPos;
-	f32 angle, dot;	
+	OPvec3 _toPos = target - pos;
+	OPvec3 _facing = OPvec3Norm(facing);
+	_toPos = OPvec3Norm(_toPos);	
 	
-	_toPos = target - pos;
-	OPvec3norm(&_facing, &facing);
-	OPvec3norm(&_toPos, &_toPos);	
-	OPvec3dot(&dot, &_facing, &_toPos);
-	return OPacos(dot);
+	return OPacos(OPvec3Dot(_facing, _toPos));
 }

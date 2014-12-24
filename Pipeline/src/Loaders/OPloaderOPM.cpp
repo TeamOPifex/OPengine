@@ -33,10 +33,8 @@ void OPCalculateTangents(OPMData* data) {
         OPMvertex& v2 = ((OPMvertex*)data->vertices)[i2];
         OPMvertex& v3 = ((OPMvertex*)data->vertices)[i3];
 
-		OPvec3 v2v1;
-		OPvec3sub(&v2v1, &v2.Position, &v1.Position);
-		OPvec3 v3v1;
-		OPvec3sub(&v3v1, &v3.Position, &v1.Position);
+		OPvec3 v2v1 = v2.Position - v1.Position;
+		OPvec3 v3v1 = v3.Position - v1.Position;
 
 		float c2c1t = v2.TexCoord.x - v1.TexCoord.x;
 		float c2c1b = v2.TexCoord.y - v1.TexCoord.y;
@@ -51,20 +49,19 @@ void OPCalculateTangents(OPMData* data) {
 		vecTangent.y = c3c1b * v2v1.y - c2c1b * v3v1.y;
 		vecTangent.z = c3c1b * v2v1.z - c2c1b * v3v1.z;
 
-		OPvec3 vecSmoothBitangent;
-		OPvec3cross(&vecSmoothBitangent, &vecNormal, &vecTangent);
-		OPvec3norm(&vecSmoothBitangent, &vecSmoothBitangent);
+		OPvec3 vecSmoothBitangent = OPvec3Cross(vecNormal, vecTangent);
+		vecSmoothBitangent = OPvec3Norm(vecSmoothBitangent);
 
 		OPvec3 vecSmoothTangent;
-		OPvec3cross(&vecSmoothTangent, &vecSmoothBitangent, &vecNormal);
-		OPvec3norm(&vecSmoothTangent, &vecSmoothTangent);
+		OPvec3Cross(vecSmoothBitangent, vecNormal);
+		vecSmoothTangent = OPvec3Norm(vecSmoothTangent);
 		
-		OPvec3add(&v1.Tangent, &v1.Tangent, &vecSmoothTangent);
-		OPvec3add(&v2.Tangent, &v2.Tangent, &vecSmoothTangent);
-		OPvec3add(&v3.Tangent, &v3.Tangent, &vecSmoothTangent);
-		OPvec3norm(&v1.Tangent, &v1.Tangent);
-		OPvec3norm(&v2.Tangent, &v2.Tangent);
-		OPvec3norm(&v3.Tangent, &v3.Tangent);
+		v1.Tangent += vecSmoothTangent;
+		v2.Tangent += vecSmoothTangent;
+		v3.Tangent += vecSmoothTangent;
+		v1.Tangent = OPvec3Norm(v1.Tangent);
+		v2.Tangent = OPvec3Norm(v2.Tangent);
+		v3.Tangent = OPvec3Norm(v3.Tangent);
 	}
 }
 
@@ -74,8 +71,8 @@ void OPMgenerateTangent(OPvec3* tangent, OPMvertex* v1, OPMvertex* v2){
 	f32 dz = v1->Position.z - v2->Position.z;
 
 	OPvec3 diff = {dx, dy, dz};
-	OPvec3cross(tangent, &v1->Normal, &diff);
-	OPvec3norm(tangent, tangent);
+	*tangent = OPvec3Cross(v1->Normal, diff);
+	*tangent = OPvec3Norm(*tangent);
 }
 
 enum OPMFaceFeatures {
@@ -96,8 +93,8 @@ OPMData OPMloadData(OPstream* str) {
 	ui32 features = OPreadui32(str);
 	ui32 verticeCount = OPreadui32(str);
 
-	OPvec3 min = OPvec3Zero;
-	OPvec3 max = OPvec3Zero;
+	OPvec3 min = OPVEC3_ZERO;
+	OPvec3 max = OPVEC3_ZERO;
 
 
 	OPvec3* positions, *normals, *tangents, *colors;
@@ -150,7 +147,7 @@ OPMData OPMloadData(OPstream* str) {
 			normals[i].x = x;
 			normals[i].y = y;
 			normals[i].z = z;
-			OPvec3norm(&normals[i], &normals[i]);
+			normals[i] = OPvec3Norm(normals[i]);
 		}
 		
 		// Read Tangent
@@ -161,7 +158,7 @@ OPMData OPMloadData(OPstream* str) {
 			tangents[i].x = x;
 			tangents[i].y = y;
 			tangents[i].z = z;
-			OPvec3norm(&tangents[i], &tangents[i]);
+			tangents[i] = OPvec3Norm(tangents[i]);
 		}
 
 		// Read UV
@@ -477,8 +474,8 @@ OPlinkedList* CreateVertexList(OPMData* data){
 }
 
 void UpdateBasis(OPvec3* axis, OPvec3* basis, OPvec3* position){
-	OPfloat pa = OPvec3dot(axis, position);
-	OPfloat ba = OPvec3dot(axis, basis);
+	OPfloat pa = OPvec3Dot(*axis, *position);
+	OPfloat ba = OPvec3Dot(*axis, *basis);
 
 	if(OPabs(pa) > OPabs(ba)){
 		*basis = *position;
@@ -504,18 +501,18 @@ OPvec3 GetCenterOfMass(OPMData* data, OPlinkedList* vertList){
 OPvec3 GetNormal(OPvec3 bX, OPvec3 bY, OPvec3 bZ){
 	OPvec3 out = {0};
 
-	OPfloat mX = OPvec3len(&bX);
-	OPfloat mY = OPvec3len(&bY);
-	OPfloat mZ = OPvec3len(&bZ);
+	OPfloat mX = OPvec3Len(bX);
+	OPfloat mY = OPvec3Len(bY);
+	OPfloat mZ = OPvec3Len(bZ);
 
 	if(mX > mZ && mY > mZ){
-		out = OPvec3cross(&bX, &bY);
+		out = OPvec3Cross(bX, bY);
 	}
 	if(mX > mY && mZ > mY){
-		out = OPvec3cross(&bX, &bZ);
+		out = OPvec3Cross(bX, bZ);
 	}
 	if(mZ > mX && mY > mX){
-		out = OPvec3cross(&bY, &bZ);
+		out = OPvec3Cross(bY, bZ);
 	}
 
 	return out;
@@ -642,7 +639,7 @@ OPMPartNode OPMPartition(OPMData* data, OPhashMap* triTable, OPlinkedList* vertL
 			OPint i = (OPint)node->Data;
 			OPvec3 diff = vertices[i].Position - com;
 
-			if(OPvec3dot(&diff, &normal) > 0){
+			if(OPvec3Dot(diff, normal) > 0){
 				OPllInsertLast(spaceA, (void*)i);
 			}
 			else{

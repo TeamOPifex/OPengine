@@ -13,15 +13,15 @@ OP_TEST_INIT
 OPint quaternionShallRotateVector(void* args){
 	OPvec3 yAxis = { 0, 1, 0 };
 	OPvec3 p = { 1, 0, 0 };
-	OPquat rot90onY = OPquatCreateRot(&yAxis, -OPpi / 2);
+	OPquat rot90onY = OPquatCreateRot(yAxis, -OPpi / 2);
 
 	OPlog("\tq = (%f, %f, %f, %f)", rot90onY.x, rot90onY.y, rot90onY.z, rot90onY.w);
 
-	OPvec3 rotated = OPquatRot(&rot90onY, &p);
+	OPvec3 rotated = OPquatRot(rot90onY, p);
 	OPvec3 expectedRotation =  { 0, 0, 1 };
 
-	OPvec3log("\tp = ", &p);
-	OPvec3log("\tp * q = ", &rotated);
+	OPvec3Log("\tp = ", p);
+	OPvec3Log("\tp * q = ", rotated);
 
 	for(OPint i = 3; i--;){
 		OPfloat r = ((float*)&rotated)[i];
@@ -48,7 +48,7 @@ OPint quaternionsDotedShouldReturnZero(void* args){
 	OP_RTMSG("q1 = (%f, %f, %f, %f)", q1.x, q1.y, q1.z, q1.w);
 	OP_RTMSG("q2 = (%f, %f, %f, %f)", q2.x, q2.y, q2.z, q2.w);
 
-	OPfloat dot = OPquatDot(&q1, &q2);
+	OPfloat dot = OPquatDot(q1, q2);
 
 	OP_RTMSG("q1 • q2 = %f", dot);
 
@@ -65,13 +65,13 @@ OPint quaternionsDotedShouldReturnZero(void* args){
 OPint quaternionsAngleExpectedPiOver2(void* args){
 	OPvec3 yAxis = { 0, 1, 0 };
 
-	OPquat q1 = OPquatCreateRot(&yAxis, OPpi / 4);
-	OPquat q2 = OPquatCreateRot(&yAxis, OPpi / 2);
+	OPquat q1 = OPquatCreateRot(yAxis, OPpi / 4);
+	OPquat q2 = OPquatCreateRot(yAxis, OPpi / 2);
 
 	OP_RTMSG("q1 = (%f, %f, %f, %f)", q1.x, q1.y, q1.z, q1.w);
 	OP_RTMSG("q2 = (%f, %f, %f, %f)", q2.x, q2.y, q2.z, q2.w);
 
-	OPfloat ang = OPquatAngularDif(&q1, &q2);
+	OPfloat ang = OPquatAngularDif(q1, q2);
 
 	OP_RTMSG("OPquatAngularDif(q1, q2) = %f", ang);
 

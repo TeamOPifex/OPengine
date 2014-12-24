@@ -126,3 +126,7 @@ OPmeshPacked OPquadNormCreatePacked(){
 		OPquadVertNormData, OPquadIndexData
 	);
 }
+//-----------------------------------------------------------------------------
+void OPquadDestroy(OPmesh* quad){
+	
+}

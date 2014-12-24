@@ -29,8 +29,8 @@ void ExampleParticleSystemEnter(OPgameState* last) {
 
 	particleSystemExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
 	*particleSystemExample->Camera = OPcamProj(
-		OPvec3One * 10.0,
-		OPvec3Zero,
+		OPVEC3_ONE * 10.0,
+		OPVEC3_ZERO,
 		OPvec3create(0, 1, 0),
 		0.1f,
 		1000.0f,

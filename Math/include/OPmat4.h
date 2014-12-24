@@ -214,7 +214,7 @@ inline void OPmat4identity(OPmat4* m) {
 	OPmemcpy(&tmp, &m, sizeof(OPmat4*));
 	for(i = 0; i < 4; i++){
 		for(j = 0; j < 4; j++){
-			(*OPvec4index(OPmat4index(m, i),j)) = (*OPvec4index(OPmat4index(tmp, i),j));
+			(*OPmat4index(m, i))[j] = (*OPmat4index(tmp, i))[j];
 		}
 	}
 }
@@ -356,19 +356,16 @@ inline void OPmat4ortho(OPmat4* m, OPfloat left, OPfloat right, OPfloat bottom, 
 }
 
 inline void OPmat4look(OPmat4* m, OPvec3* eye, OPvec3* at, OPvec3* up) {
-	OPvec3  f, u, s;
-	OPvec3 dist;
-	OPvec3sub(&dist, at, eye);
-	OPvec3norm(&f, &dist);
-	OPvec3norm(&u, up);
-	OPvec3cross(&s, &f, &u);
-	OPvec3norm(&s, &s);
-	OPvec3cross(&u, &s, &f);
+	OPvec3 dist = *at - *eye;
+	OPvec3 f = OPvec3Norm(dist);
+	OPvec3 u = OPvec3Norm(*up);
+	OPvec3 s = OPvec3Cross(f, u);
+	s = OPvec3Norm(s);
+	u = OPvec3Cross(s, f);
 
-	OPfloat sDot, uDot, fDot;
-	OPvec3dot(&sDot, &s, eye);
-	OPvec3dot(&uDot, &u, eye);
-	OPvec3dot(&fDot, &f, eye);
+	OPfloat sDot = OPvec3Dot(s, *eye);
+	OPfloat uDot = OPvec3Dot(u, *eye);
+	OPfloat fDot = OPvec3Dot(f, *eye);
 
 	m->cols[0].x = s.x;
 	m->cols[1].x = s.y;

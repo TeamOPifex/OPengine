@@ -57,9 +57,9 @@ void ExampleMyoEnter(OPgameState* last) {
 
 	// Sets up the camera as a perpsective camera for rendering
 	myoExample->Camera = OPcamProj(
-		OPvec3One * 2.0,
-		OPvec3Up,
-		OPvec3Up,
+		OPVEC3_ONE * 2.0,
+		OPVEC3_UP,
+		OPVEC3_UP,
 		0.1f,
 		1000.0f,
 		45.0f,
@@ -67,7 +67,7 @@ void ExampleMyoEnter(OPgameState* last) {
 		);
 
 	// A default light direction used in the effect
-	myoExample->LightDirection = OPvec3Up;
+	myoExample->LightDirection = OPVEC3_UP;
 
 	// This can be controlled in the update loop if it varies
 	// Since this is a simple example we'll ensure that it's set

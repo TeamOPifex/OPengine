@@ -157,7 +157,7 @@ OPvec3 OPaudEarPosition(OPvec3* pos){
 	if(pos) alListener3f(AL_POSITION, pos->x, pos->y, pos->z);
 
 	// return the stored value
-	OPvec3 out = OPvec3Zero;
+	OPvec3 out = OPVEC3_ZERO;
 	alGetListenerfv(AL_POSITION, &(out.x));
 
 	OPmutexUnlock(&OPAUD_CURR_MUTEX);
@@ -175,7 +175,7 @@ OPvec3 OPaudEarVelocity(OPvec3* pos){
 	if(pos) alListener3f(AL_VELOCITY, pos->x, pos->y, pos->z);
 
 	// return the stored value
-	OPvec3 out = OPvec3Zero;
+	OPvec3 out = OPVEC3_ZERO;
 	//alGetListenerfv(AL_VELOCITY, &(out.x));
 
 	OPmutexUnlock(&OPAUD_CURR_MUTEX);
@@ -194,7 +194,7 @@ OPvec3 OPaudEarForwardUp(OPfloat* ori){
 	if(ori) alListenerfv(AL_ORIENTATION, ori);
 
 	// return the stored value
-	OPvec3 out = OPvec3Zero;
+	OPvec3 out = OPVEC3_ZERO;
 	//alGetListenerfv(AL_ORIENTATION, &(out.x));
 
 	OPmutexUnlock(&OPAUD_CURR_MUTEX);

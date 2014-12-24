@@ -30,7 +30,7 @@ void OPsprite3DInit(OPeffect* effect) {
 OPsprite3D* OPsprite3DCreate(OPsprite** sprites, OPeffect* effect) {
 	OPsprite3D* sprite = (OPsprite3D*)OPalloc(sizeof(OPsprite3D));
 	OPbzero(sprite, sizeof(OPsprite3D));
-	sprite->Scale = OPvec3One;
+	sprite->Scale = OPVEC3_ONE;
 	sprite->Sprites = sprites;
 	sprite->CurrentSprite = sprites[0];
 	sprite->Direction = 1;
@@ -45,7 +45,7 @@ OPsprite3D* OPsprite3DCreate(OPsprite** sprites, OPeffect* effect) {
 
 void OPsprite3DCreateFill(OPsprite3D* sprite, OPsprite** sprites, OPeffect* effect) {
 	OPbzero(sprite, sizeof(OPsprite3D));
-	sprite->Scale = OPvec3One;
+	sprite->Scale = OPVEC3_ONE;
 	sprite->Sprites = sprites;
 	sprite->CurrentSprite = sprites[0];
 	sprite->Direction = 1;
@@ -147,7 +147,7 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 }
 
 void OPsprite3DRender(OPsprite3D* sprite, OPcam* camera) {
-	OPsprite3DPrepRender(sprite, camera, OPvec3Zero, 0);
+	OPsprite3DPrepRender(sprite, camera, OPVEC3_ZERO, 0);
 	OPrenderMesh();
 }
 
