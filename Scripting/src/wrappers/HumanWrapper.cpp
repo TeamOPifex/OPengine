@@ -975,9 +975,9 @@ static V8Return _CreateProj(const V8Args& args) {
 
 	OPcam* camera = (OPcam*)OPalloc(sizeof(OPcam));
 	*camera = OPcamProj(
-		OPvec3create(args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue()),
-		OPvec3create(args[3]->NumberValue(), args[4]->NumberValue(), args[5]->NumberValue()),
-		OPvec3create(0, 1, 0),
+		OPvec3Create(args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue()),
+		OPvec3Create(args[3]->NumberValue(), args[4]->NumberValue(), args[5]->NumberValue()),
+		OPvec3Create(0, 1, 0),
 		0.1f,
 		1000.0f,
 		45.0f,
@@ -1003,9 +1003,9 @@ static V8Return _CreateOrtho(const V8Args& args) {
 
 	OPcam* camera = (OPcam*)OPalloc(sizeof(OPcam));
 	*camera = OPcamOrtho(
-		OPvec3create(args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue()),
-		OPvec3create(args[3]->NumberValue(), args[4]->NumberValue(), args[5]->NumberValue()),
-		OPvec3create(0, 1, 0),
+		OPvec3Create(args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue()),
+		OPvec3Create(args[3]->NumberValue(), args[4]->NumberValue(), args[5]->NumberValue()),
+		OPvec3Create(0, 1, 0),
 		0.1f,
 		1000.0f,
 		args[6]->NumberValue(),
@@ -1034,7 +1034,7 @@ static V8Return _CameraSetPos(const V8Args& args) {
 		OPcamSetPosition(camera, (*pos));
 	}
 	else if(args.Length() > 2) {
-		OPvec3 position = OPvec3create(
+		OPvec3 position = OPvec3Create(
 			args[1 - inScope]->NumberValue(),
 			args[2 - inScope]->NumberValue(),
 			args[3 - inScope]->NumberValue());
@@ -1055,7 +1055,7 @@ static V8Return _CameraSetTarget(const V8Args& args) {
 		OPcamSetTarget(camera, (*target));
 	}
 	else {
-		OPvec3 target = OPvec3create(
+		OPvec3 target = OPvec3Create(
 			args[1 - inScope]->NumberValue(), 
 			args[2 - inScope]->NumberValue(), 
 			args[3 - inScope]->NumberValue());

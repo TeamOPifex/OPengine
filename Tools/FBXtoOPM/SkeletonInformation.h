@@ -1,10 +1,10 @@
 #pragma once
 
 #include "FBXHelpers.h"
-#include "./Data/include/HashMap.h"
-#include "./Data/include/List.h"
-#include "./Math/include/Matrix4.h"
-#include "./Data/include/String.h"
+#include "./Data/include/OPhashMap.h"
+#include "./Data/include/OPlist.h"
+#include "./Math/include/OPmat4.h"
+#include "./Data/include/OPstring.h"
 
 typedef struct {
 	i8* name;

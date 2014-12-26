@@ -1,8 +1,8 @@
 #pragma once
 
 #include "FBXHelpers.h"
-#include "./Data/include/HashMap.h"
-#include "./Data/include/List.h"
+#include "./Data/include/OPhashMap.h"
+#include "./Data/include/OPlist.h"
 #include "SkeletonInformation.h"
 
 typedef struct {

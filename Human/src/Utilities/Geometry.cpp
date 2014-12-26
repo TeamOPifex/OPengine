@@ -28,10 +28,10 @@ OPmesh* OPgeoCreateSphere(f32 radius, ui16 widthSegments, ui16 heightSegments) {
 			f32 vy = radius * OPcos(thetaStart + v * thetaLength);
 			f32 vz = radius * OPsin(phiStart + u * phiLength) * OPsin(thetaStart + v * thetaLength);
 
-			OPvec3 vert = OPvec3create(vx, vy, vz);
+			OPvec3 vert = OPvec3Create(vx, vy, vz);
 			OPlistPush(vertices, (ui8*)&vert);
 
-			OPvec3 normal = OPvec3Norm(OPvec3create(vx, vy, vz));
+			OPvec3 normal = OPvec3Norm(OPvec3Create(vx, vy, vz));
 
 			OPlistPush(normals, (ui8*)&normal);
 

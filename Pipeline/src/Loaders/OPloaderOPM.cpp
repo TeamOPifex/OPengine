@@ -383,9 +383,9 @@ OPMData OPMloadData(OPstream* str) {
 			f32 sz = OPreadf32(str);
 			meta[i].Name = metaName;
 			meta[i].Type = metaType;
-			meta[i].Position = OPvec3create(x,y,z);
-			meta[i].Rotation = OPvec3create(rx,ry,rz);
-			meta[i].Scale = OPvec3create(sx,sy,sz);
+			meta[i].Position = OPvec3Create(x,y,z);
+			meta[i].Rotation = OPvec3Create(rx,ry,rz);
+			meta[i].Scale = OPvec3Create(sx,sy,sz);
 		}
 		data.metaCount = metaCount;
 		data.meta = meta;

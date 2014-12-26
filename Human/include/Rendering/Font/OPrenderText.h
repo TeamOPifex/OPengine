@@ -11,23 +11,23 @@ inline void OPrenderText(const OPchar* text, OPmat4* world) {
 	OPrenderText(text, OPRENDER_CURR_FONT_MANAGER->_color, world);
 }
 inline void OPrenderText(const OPchar* text, f32 r, f32 g, f32 b, f32 a, f32 x, f32 y, OPfontAlign align) {
-	OPrenderText(text, OPvec4create(r, g, b, a), OPvec2create(x, y), align);
+	OPrenderText(text, OPvec4create(r, g, b, a), OPvec2Create(x, y), align);
 }
 inline void OPrenderText(const OPchar* text, f32 x, f32 y) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	OPrenderText(text, OPRENDER_CURR_FONT_MANAGER->_color, OPvec2create(x, y), OPRENDER_CURR_FONT_MANAGER->_align);
+	OPrenderText(text, OPRENDER_CURR_FONT_MANAGER->_color, OPvec2Create(x, y), OPRENDER_CURR_FONT_MANAGER->_align);
 }
 inline void OPrenderText(const OPchar* text, f32 x, f32 y, OPfontAlign align) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	OPrenderText(text, OPRENDER_CURR_FONT_MANAGER->_color, OPvec2create(x, y), align);
+	OPrenderText(text, OPRENDER_CURR_FONT_MANAGER->_color, OPvec2Create(x, y), align);
 }
 inline void OPrenderText(const OPchar* text, f32 r, f32 g, f32 b, f32 x, f32 y) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	OPrenderText(text, OPvec4create(r, g, b, 1.0f), OPvec2create(x, y), OPRENDER_CURR_FONT_MANAGER->_align);
+	OPrenderText(text, OPvec4create(r, g, b, 1.0f), OPvec2Create(x, y), OPRENDER_CURR_FONT_MANAGER->_align);
 }
 inline void OPrenderText(const OPchar* text, f32 r, f32 g, f32 b, f32 a, f32 x, f32 y) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	OPrenderText(text, OPvec4create(r,g,b,a), OPvec2create(x,y), OPRENDER_CURR_FONT_MANAGER->_align);
+	OPrenderText(text, OPvec4create(r,g,b,a), OPvec2Create(x,y), OPRENDER_CURR_FONT_MANAGER->_align);
 }
 inline void OPrenderText(const OPchar* text, OPvec2 pos) {
 	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");

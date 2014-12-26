@@ -11,7 +11,7 @@ struct OPvec3;
 struct OPmat4;
 
 inline OPfloat* OPvec3index(OPvec3* v, int idx);
-inline OPvec3 OPvec3create(OPfloat x, OPfloat y, OPfloat z);
+inline OPvec3 OPvec3Create(OPfloat x, OPfloat y, OPfloat z);
 
 inline void OPvec3Add(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3Sub(OPvec3* dst, OPvec3* a, OPvec3* b);
@@ -66,7 +66,7 @@ extern const OPvec3 OPVEC3_UP;
 extern const OPvec3 OPVEC3_LEFT;
 extern const OPvec3 OPVEC3_FORWARD;
 
-inline OPvec3 OPvec3create(OPfloat x, OPfloat y, OPfloat z) {
+inline OPvec3 OPvec3Create(OPfloat x, OPfloat y, OPfloat z) {
 	OPvec3 tmp = { x, y, z };
 	return tmp;
 }
