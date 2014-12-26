@@ -1,10 +1,10 @@
 #pragma once
 
-#include "./Core/include/Types.h"
+#include "./Core/include/OPtypes.h"
 #include "ModelData.h"
-#include "./Math/include/Vector2.h"
-#include "./Math/include/Vector3.h"
-#include "./Data/include/List.h"
+#include "./Math/include/OPvec2.h"
+#include "./Math/include/OPvec3.h"
+#include "./Data/include/OPlist.h"
 
 enum ModelFeatures {
 	Model_Positions = 0,
@@ -70,14 +70,14 @@ void WriteFile(i8* output, OPint* features, OPModelData* ModelData, ModelSkeleto
 	writeU16(&myFile, 1);
 
 	ui32 feature = 0;
-	if (features[Model_Positions]) feature += 1;
-	if (features[Model_Normals]) feature += 2;
-	if (features[Model_UVs]) feature += 4;
-	if (features[Model_Colors]) feature += 256;
-	if (features[Model_Indices]) feature += 16;
-	if (features[Model_Bones]) feature += 32;
-	if (features[Model_Skinning]) feature += 64;
-	if (features[Model_Animations]) feature += 128;
+	if (features[Model_Positions]) feature += 0x01;
+	if (features[Model_Normals]) feature += 0x02;
+	if (features[Model_UVs]) feature += 0x04;
+	if (features[Model_Colors]) feature += 0x100;
+	if (features[Model_Indices]) feature += 0x10;
+	if (features[Model_Bones]) feature += 0x20;
+	if (features[Model_Skinning]) feature += 0x40;
+	if (features[Model_Animations]) feature += 0x80;
 
 	// OPM File Features
 	writeU32(&myFile, feature);

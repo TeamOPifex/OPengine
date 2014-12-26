@@ -1,7 +1,7 @@
 #pragma once
 
 #include "fbxsdk.h"
-#include "./Core/include/Log.h"
+#include "./Core/include/OPlog.h"
 
 void DisplayString(const char* pHeader)
 {

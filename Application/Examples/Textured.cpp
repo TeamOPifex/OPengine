@@ -58,8 +58,8 @@ void ExampleTexturedEnter(OPgameState* last) {
 	texturedExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
 	*texturedExample->Camera = OPcamProj(
 		OPVEC3_ONE * 2.0,
-		OPvec3create(0, 0, 0),
-		OPvec3create(0, 1, 0),
+		OPvec3Create(0, 0, 0),
+		OPvec3Create(0, 1, 0),
 		0.1f,
 		1000.0f,
 		45.0f,
@@ -90,7 +90,7 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 	OPrenderParamMat4("uProj", &proj);
 	OPrenderParamMat4("uView", &view);
 
-	OPvec3 light = OPvec3create(0, 1, 0);
+	OPvec3 light = OPvec3Create(0, 1, 0);
 	OPrenderParamVec3("vLightDirection", &light);
 
 	OPrenderMesh();

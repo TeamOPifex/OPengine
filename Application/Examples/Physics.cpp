@@ -103,9 +103,9 @@ void ExamplePhysicsEnter(OPgameState* last) {
 
 	physicsExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
 	*physicsExample->Camera = OPcamProj(
-		OPvec3create(0, 40, 20),
-		OPvec3create(0, 1, 0),
-		OPvec3create(0, 1, 0),
+		OPvec3Create(0, 40, 20),
+		OPvec3Create(0, 1, 0),
+		OPvec3Create(0, 1, 0),
 		0.1f,
 		1000.0f,
 		45.0f,
@@ -211,7 +211,7 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	OPrenderParamMat4("uProj", &proj);
 	OPrenderParamMat4("uView", &view);
 
-	OPvec3 light = OPvec3create(0, 1, 0);
+	OPvec3 light = OPvec3Create(0, 1, 0);
 	OPrenderParamVec3("uLightDirection", &light);
 	OPrenderParami("uColorTexture", tex);
 	OPmat4 scale;

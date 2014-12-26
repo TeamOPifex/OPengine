@@ -1,8 +1,8 @@
 #pragma once
 
-#include "./Math/include/Vector2.h"
-#include "./Math/include/Vector3.h"
-#include "./Data/include/List.h"
+#include "./Math/include/OPvec2.h"
+#include "./Math/include/OPvec3.h"
+#include "./Data/include/OPlist.h"
 
 typedef struct {
 	OPlist* vertices;

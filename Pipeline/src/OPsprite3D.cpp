@@ -95,7 +95,7 @@ void OPsprite3DPrepReRender(OPsprite3D* sprite, OPvec3 offset, OPfloat rotation)
 
 	OPmat4 world;
 	OPmat4identity(&world);
-	world *= OPvec2create(widthScale, heightScale);
+	world *= OPvec2Create(widthScale, heightScale);
 	OPmat4rotZ(&world, rotation + sprite->Rotation.z);
 	OPmat4rotY(&world, sprite->Rotation.y);
 	OPvec3 scl = sprite->Scale / 2.0f;
@@ -125,7 +125,7 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	OPcamGetProj((*camera), &proj);
 
 	OPmat4identity(&world);
-	world *= OPvec2create(widthScale, heightScale);
+	world *= OPvec2Create(widthScale, heightScale);
 	OPmat4rotZ(&world, rotation + sprite->Rotation.z);
 	OPmat4rotY(&world, sprite->Rotation.y);
 	OPvec3 scl = sprite->Scale / 2.0f;
@@ -169,5 +169,5 @@ OPvec2 OPsprite3DSize(OPsprite3D* sprite) {
 
 	f32 width = sprite->Scale.x * widthScale;
 	f32 height = sprite->Scale.y * heightScale;
-	return OPvec2create(width, height);
+	return OPvec2Create(width, height);
 }

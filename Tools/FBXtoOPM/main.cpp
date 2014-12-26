@@ -6,9 +6,9 @@
 #include "MenuHelper.h"
 #include "ModelData.h"
 
-#include "./Math/include/Vector3.h"
-#include "./Math/include/Vector2.h"
-#include "./Data/include/List.h"
+#include "./Math/include/OPvec3.h"
+#include "./Math/include/OPvec2.h"
+#include "./Data/include/OPlist.h"
 
 OPModelData* ModelData;
 ModelSkeletonData* GlobalSkeleton;
