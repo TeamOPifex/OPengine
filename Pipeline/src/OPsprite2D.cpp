@@ -82,8 +82,8 @@ void OPsprite2DPrepRender(OPsprite2D* sprite) {
 	OPrenderDepth(0);
 
 	OPmat4 world;
-	OPmat4identity(&world);
-	OPmat4rotZ(&world, sprite->Rotation);
+	OPmat4Identity(&world);
+	OPmat4RotZ(&world, sprite->Rotation);
 	OPvec2 scl = sprite->Scale / 2.0;
 	scl.x *= sprite->Direction * widthScale * OPrenderGetWidthAspectRatio();
 	scl.y *= heightScale;

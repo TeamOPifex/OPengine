@@ -18,11 +18,11 @@ OPcam OPcamProj(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat near, OPfloat
 		0
 	};
 
-	OPmat4identity(&cam.Proj);
-	OPmat4identity(&cam.View);
+	OPmat4Identity(&cam.Proj);
+	OPmat4Identity(&cam.View);
 
 	// construct matricies
-	OPmat4perspective(&cam.Proj, fov, aspect, near, far);
+	OPmat4Perspective(&cam.Proj, fov, aspect, near, far);
 	OPmat4look(&cam.View, &position, &target, &up);
 
 	return cam;
@@ -37,11 +37,11 @@ OPcam OPcamOrtho(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPflo
 		0, 0
 	};
 
-	OPmat4identity(&cam.Proj);
-	OPmat4identity(&cam.View);
+	OPmat4Identity(&cam.Proj);
+	OPmat4Identity(&cam.View);
 
 	// construct matricies
-	OPmat4ortho(&cam.Proj, left, right, bottom, top, zNear, zFar);
+	OPmat4Ortho(&cam.Proj, left, right, bottom, top, zNear, zFar);
 	OPmat4look(&cam.View, &position, &target, &up);
 
 	return cam;

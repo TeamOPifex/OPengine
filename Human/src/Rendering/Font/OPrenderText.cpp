@@ -30,13 +30,13 @@ void OPrenderTextColor4Mat4BuiltNode(OPfontBuiltTextNode* node, OPvec4 color, OP
 void OPrenderTextAlign(OPmat4* world, OPfloat width, OPfontAlign align){
 	switch (align) {
 		case OPFONT_ALIGN_LEFT:
-			OPmat4buildTranslate(world, 0, 0, 0.0f);
+			OPmat4BuildTranslate(world, 0, 0, 0.0f);
 			break;
 		case OPFONT_ALIGN_CENTER:
-			OPmat4buildTranslate(world, -(width / 2.0f), 0, 0.0f);
+			OPmat4BuildTranslate(world, -(width / 2.0f), 0, 0.0f);
 			break;
 		case OPFONT_ALIGN_RIGHT:
-			OPmat4buildTranslate(world, -width, 0, 0.0f);
+			OPmat4BuildTranslate(world, -width, 0, 0.0f);
 			break;
 	}
 }
@@ -55,21 +55,21 @@ void OPrenderText(const OPchar* text, OPvec4 color, OPvec2 pos, OPfontAlign alig
 	OPmat4 world;
 	OPfloat scale = (OPRENDER_WIDTH / 2.0f) * OPRENDER_SCREEN_WIDTH_SCALE;
 
-	//OPmat4scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f / scale);
-	//OPmat4translate(&world, pos.x, pos.y, 0.0f);
+	//OPmat4Scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f / scale);
+	//OPmat4Translate(&world, pos.x, pos.y, 0.0f);
 
 	if (node == NULL || !OPRENDER_CURR_FONT_MANAGER->isBuilt) {
 		OPfontUserTextNode textNode = OPfontCreateUserText(OPRENDER_CURR_FONT_MANAGER->_font, text);
 		OPrenderTextAlign(&world, textNode.Width, align);
-		OPmat4scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f);
-		OPmat4translate(&world, pos.x, pos.y, 0.0f);
+		OPmat4Scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f);
+		OPmat4Translate(&world, pos.x, pos.y, 0.0f);
 		OPrenderTextColor4Mat4TextNode(&textNode, color, &world);
 		OPrenderDestroyMesh(&textNode.mesh);
 	}
 	else {
 		OPrenderTextAlign(&world, node->Width, align);
-		OPmat4scl(&world, OPRENDER_SCREEN_WIDTH_SCALE * OPrenderGetWidthAspectRatio() / scale, OPRENDER_SCREEN_HEIGHT_SCALE * OPrenderGetHeightAspectRatio() / scale, 1.0f);
-		OPmat4translate(&world, pos.x, pos.y, 0.0f);
+		OPmat4Scl(&world, OPRENDER_SCREEN_WIDTH_SCALE * OPrenderGetWidthAspectRatio() / scale, OPRENDER_SCREEN_HEIGHT_SCALE * OPrenderGetHeightAspectRatio() / scale, 1.0f);
+		OPmat4Translate(&world, pos.x, pos.y, 0.0f);
 		OPrenderTextColor4Mat4BuiltNode(node, color, &world);
 	}
 }
@@ -96,15 +96,15 @@ void OPrenderText(const OPchar* text, OPvec4 color, OPmat4* world) {
 		OPrenderTextAlign(&aligned, textNode.Width, OPRENDER_CURR_FONT_MANAGER->_align);
 		//OPmat4Log("Aligned", &aligned);
 
-		OPmat4buildScl(&scaled, 
+		OPmat4BuildScl(&scaled, 
 			OPrenderGetWidthAspectRatio() / scale, 
 			OPrenderGetHeightAspectRatio() / scale, 
 			1.0f);
 		//OPmat4Log("Scaled", &scaled);
 
 		OPmat4 temp;
-		OPmat4mul(&temp, &scaled, &aligned);
-		OPmat4mul(&temp, world, &temp);
+		OPmat4Mul(&temp, &scaled, &aligned);
+		OPmat4Mul(&temp, world, &temp);
 		//OPmat4Log("World", world);
 		//OPmat4Log("Temp", &temp);
 
@@ -113,9 +113,9 @@ void OPrenderText(const OPchar* text, OPvec4 color, OPmat4* world) {
 	}
 	else {
 		OPrenderTextAlign(&scaled, node->Width, OPRENDER_CURR_FONT_MANAGER->_align);
-		OPmat4scl(&scaled, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f);
+		OPmat4Scl(&scaled, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f);
 		OPmat4 temp;
-		OPmat4mul(&temp, &scaled, world);
+		OPmat4Mul(&temp, &scaled, world);
 		OPrenderTextColor4Mat4BuiltNode(node, color, &temp);
 	}
 }
