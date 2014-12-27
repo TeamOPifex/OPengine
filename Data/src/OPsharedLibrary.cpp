@@ -41,8 +41,11 @@ OPint OPsharedLibraryDestroy(OPsharedLibrary* sharedLibrary) {
 OPint OPsharedLibraryReload(OPsharedLibrary* sharedLibrary) {
 	ui64 lastChange = OPfileLastChange(sharedLibrary->_libraryPath);
 	if (sharedLibrary->_lastModifiedTime == lastChange) return 0;
+	sharedLibrary->_lastModifiedTime = lastChange;
+	OPlog("Last Change: %d", lastChange);
 
 	if(OPsharedLibraryClose(sharedLibrary) != 0) {
+		OPlog("Failed to close library.");
 		return -1;
 	}
 #ifdef OPIFEX_UNIX
@@ -61,6 +64,8 @@ OPint OPsharedLibraryReload(OPsharedLibrary* sharedLibrary) {
 		if(symbol == NULL) {
 			OPlog("!!!   Failed to reload symbol: %s", sharedLibrarySymbol->_symbolName);
 			result = -3;
+		} else {
+			OPlog("Ssymbol Reloaded: %s", sharedLibrarySymbol->_symbolName);
 		}
 		sharedLibrarySymbol->Symbol = symbol;
 	}
