@@ -22,7 +22,9 @@ FbxAMatrix GetGeometryTransformation(FbxNode* inNode)
 {
 	if (!inNode)
 	{
-		throw std::exception("Null for mesh geometry");
+
+		//throw std::exception("Null for mesh geometry");
+		//exit();
 	}
 
 	const FbxVector4 lT = inNode->GetGeometricTranslation(FbxNode::eSourcePivot);
@@ -58,6 +60,7 @@ ModelSkinBlendWeights* GetSkin(FbxNode* inNode, ModelSkeletonData* skeleton) {
 
 			ModelSkeletonBone* bone;
 			OPhashMapGet(skeleton->bones, boneNode->GetName(), (void**)&bone);
+			OPlog("Bone Cluster: %s", boneNode->GetName());
 
 			FbxAMatrix transformMatrix;
 			FbxAMatrix transformLinkMatrix;
@@ -90,6 +93,8 @@ ModelSkinBlendWeights* GetSkin(FbxNode* inNode, ModelSkeletonData* skeleton) {
 			bone->bindPose.cols[1].w = lRow[1];
 			bone->bindPose.cols[2].w = lRow[2];
 			bone->bindPose.cols[3].w = lRow[3];
+
+			OPmat4Log("Bind Pose", &bone->bindPose);
 
 			if (!boneNode)
 				continue;
