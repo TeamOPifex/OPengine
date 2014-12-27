@@ -119,6 +119,9 @@ OPMData OPMloadData(OPstream* str) {
 		boneIndices = (OPvec4*)OPalloc(sizeof(OPvec4)* verticeCount);
 		boneWeights = (OPvec4*)OPalloc(sizeof(OPvec4)* verticeCount);
 	}
+	if (OPMhasFeature(features, Bones)) {
+		OPlog("Has Bones");
+	}
 
 	f32 x, y, z;
 	for(ui32 i = 0; i < verticeCount; i++) {
@@ -137,6 +140,8 @@ OPMData OPMloadData(OPstream* str) {
 			if (x > max.x) max.x = x;
 			if (y > max.y) max.y = y;
 			if (z > max.z) max.z = z;
+
+			OPlog("Pos: %f %f %f", x, y, z);
 		}
 
 		// Read Normal
@@ -148,6 +153,7 @@ OPMData OPMloadData(OPstream* str) {
 			normals[i].y = y;
 			normals[i].z = z;
 			normals[i] = OPvec3Norm(normals[i]);
+			OPlog("Normal: %f %f %f", x, y, z);
 		}
 		
 		// Read Tangent
@@ -159,6 +165,7 @@ OPMData OPMloadData(OPstream* str) {
 			tangents[i].y = y;
 			tangents[i].z = z;
 			tangents[i] = OPvec3Norm(tangents[i]);
+			OPlog("Tangent: %f %f %f", x, y, z);
 		}
 
 		// Read UV
@@ -167,6 +174,7 @@ OPMData OPMloadData(OPstream* str) {
 			y = OPreadf32(str);
 			uvs[i].x = x;
 			uvs[i].y = y;
+			OPlog("UV: %f %f", x, y);
 		}
 
 		// Read Color
@@ -177,19 +185,30 @@ OPMData OPMloadData(OPstream* str) {
 			colors[i].x = x;
 			colors[i].y = y;
 			colors[i].z = z;
+			OPlog("Color: %f %f %f", x, y, z);
 		}
 
 		// Read Skinning
 		if (OPMhasFeature(features, Skinning)) {
-			boneIndices[i].x = OPreadui16(str);
-			boneIndices[i].y = OPreadui16(str);
-			boneIndices[i].z = OPreadui16(str);
-			boneIndices[i].w = OPreadui16(str);
+			boneIndices[i].x = (f32)OPreadui16(str);
+			boneIndices[i].y = (f32)OPreadui16(str);
+			boneIndices[i].z = (f32)OPreadui16(str);
+			boneIndices[i].w = (f32)OPreadui16(str);
 
 			boneWeights[i].x = OPreadf32(str);
 			boneWeights[i].y = OPreadf32(str);
 			boneWeights[i].z = OPreadf32(str);
 			boneWeights[i].w = OPreadf32(str);
+
+			OPlog("%f %f %f %f %f %f %f %f", 
+				boneIndices[i].x,
+				boneIndices[i].y,
+				boneIndices[i].z,
+				boneIndices[i].w,
+				boneWeights[i].x,
+				boneWeights[i].y,
+				boneWeights[i].z,
+				boneWeights[i].w);
 		}
 	}
 
@@ -211,7 +230,7 @@ OPMData OPMloadData(OPstream* str) {
 		ui32 boneCount = OPreadui16(str);
 		hierarchyCount = boneCount;
 		hierarchy = (i16*)OPalloc(sizeof(i16)* boneCount);
-		pose = (OPmat4*)OPalloc(sizeof(OPmat4)* boneCount);
+		pose = (OPmat4*)OPallocZero(sizeof(OPmat4)* boneCount);
 		
 		for(i32 i = 0; i < boneCount; i++) {
 
@@ -220,41 +239,46 @@ OPMData OPMloadData(OPstream* str) {
 
 			OPchar* name = OPreadstring(str);
 
+			OPmat4* p = &(pose[i]);
+			//OPlog("Mat4 Bone: %x", p);
+
 			for (i32 c = 0; c < 4; c++) {
-				pose[i].cols[c].x = OPreadf32(str);
-				pose[i].cols[c].y = OPreadf32(str);
-				pose[i].cols[c].z = OPreadf32(str);
-				pose[i].cols[c].w = OPreadf32(str);
+				p->cols[c].x = OPreadf32(str);
+				p->cols[c].y = OPreadf32(str);
+				p->cols[c].z = OPreadf32(str);
+				p->cols[c].w = OPreadf32(str);
 			}
 
 
-			f32 px = OPreadf32(str);
-			f32 py = OPreadf32(str);
-			f32 pz = OPreadf32(str);
+			// f32 px = OPreadf32(str);
+			// f32 py = OPreadf32(str);
+			// f32 pz = OPreadf32(str);
 
-			f32 rx = OPreadf32(str);
-			f32 ry = OPreadf32(str);
-			f32 rz = OPreadf32(str);
-			f32 rw = OPreadf32(str);
+			// f32 rx = OPreadf32(str);
+			// f32 ry = OPreadf32(str);
+			// f32 rz = OPreadf32(str);
+			// f32 rw = OPreadf32(str);
 
-			f32 sx = OPreadf32(str);
-			f32 sy = OPreadf32(str);
-			f32 sz = OPreadf32(str);
+			// f32 sx = OPreadf32(str);
+			// f32 sy = OPreadf32(str);
+			// f32 sz = OPreadf32(str);
 
 			OPmat4 matRotate;
 			OPmat4 matTranslate;
 
-			OPquat rot = OPquatCreate(rx, ry, rz, rw);
+			//OPquat rot = OPquatCreate(rx, ry, rz, rw);
 
-			OPmat4buildQuat(&matRotate, &rot);
-			OPmat4buildTranslate(&matTranslate, px, py, pz);
-			OPmat4mul(&pose[i], &matTranslate, &matRotate);
-			OPmat4mul(&pose[i], &matRotate, &matTranslate);
-			OPmat4Inverse(&pose[i], &pose[i]);
-			OPmat4transpose(&pose[i]);
+			//OPmat4buildQuat(&matRotate, &rot);
+			//OPmat4buildTranslate(&matTranslate, px, py, pz);
+			//OPmat4mul(&pose[i], &matTranslate, &matRotate);
+			//OPmat4mul(&pose[i], &matRotate, &matTranslate);
+			//OPmat4Inverse(&pose[i], &pose[i]);
+			//OPmat4transpose(&pose[i]);
+			OPmat4identity(p);
 
 
-			OPlog("Joint: %d %s", boneIndex, name);
+			OPlog("Joint: %d %d %s", i, boneIndex, name);
+			OPmat4Log("Bone", p);
 			OPfree(name);
 		}
 	}

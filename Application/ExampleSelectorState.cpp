@@ -29,7 +29,7 @@ ExampleSelector* exampleSelector;
 
 
 void ExampleSelectorEnter(OPgameState* last) {
-	exampleSelector = (ExampleSelector*)OPalloc(sizeof(ExampleSelector));
+	exampleSelector = (ExampleSelector*)OPallocZero(sizeof(ExampleSelector));
 	
 	exampleSelector->Selected = 0;
 
@@ -63,6 +63,8 @@ void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector->Examples[2].state = &GS_EXAMPLE_OCULUS;
 #ifdef OPIFEX_OCULUS
 	exampleSelector->Examples[2].available = 1;
+#else
+	exampleSelector->Examples[2].available = 0;
 #endif
 	exampleSelector->Examples[3].name = Names[3];
 	exampleSelector->Examples[3].state = &GS_EXAMPLE_PARTICLESYSTEM;

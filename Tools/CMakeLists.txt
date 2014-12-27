@@ -76,6 +76,7 @@ if(${OPIFEX_TOOLS_PROJECTBUILDER})
 endif()
 
 
+
 #################################
 ## FBX to OPM
 #################################
@@ -94,8 +95,16 @@ if(${OPIFEX_TOOLS_FBXTOOPM})
 		../External/OpenAL/
 		.
 		../
-		"C:/Program Files/Autodesk/FBX/FBX SDK/2015.1/include"
+		
 	)
+
+	if(${OPIFEX_OS_WINDOWS})
+		include_directories("C:/Program Files/Autodesk/FBX/FBX SDK/2015.1/include")
+	endif()	
+	if(${OPIFEX_OS_OSX})
+		include_directories("/Applications/Autodesk/FBX SDK/2015.1/include")
+	endif()
+
 
 	add_source_group(\\ "${PROJECT_SOURCE_DIR}/Tools/FBXtoOPM" FBXTOOPM_SRC)
 	set(ALL_LIBS
@@ -104,12 +113,18 @@ if(${OPIFEX_TOOLS_FBXTOOPM})
 		3_Math
 		4_Performance
 		5_Human
-		"C:/Program Files/Autodesk/FBX/FBX SDK/2015.1/lib/vs2013/x86/debug/libfbxsdk-mt.lib"
 	)
 
 	add_executable(Tools_FBXtoOPM ${FBXTOOPM_SRC})
 
 	target_link_libraries(Tools_FBXtoOPM ${ALL_LIBS})	
+
+	if(${OPIFEX_OS_WINDOWS})
+		target_link_libraries(Tools_FBXtoOPM "C:/Program Files/Autodesk/FBX/FBX SDK/2015.1/lib/vs2013/x86/debug/libfbxsdk-mt.lib")
+	endif()	
+	if(${OPIFEX_OS_OSX})
+		target_link_libraries(Tools_FBXtoOPM "/Applications/Autodesk/FBX\ SDK/2015.1/lib/clang/debug/libfbxsdk.a")
+	endif()
 
 	add_definitions(-D${OPIFEX_OS})
 

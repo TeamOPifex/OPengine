@@ -11,6 +11,7 @@ typedef struct {
 	OPlist* children;
 	OPmat4 bindPose;
 	i16 index;
+	i16 parent;
 } ModelSkeletonBone;
 
 typedef struct {
@@ -22,17 +23,20 @@ typedef struct {
 i16 pos;
 OPint found;
 
-ModelSkeletonBone* GetSkeletonBones(FbxNode* bone, OPhashMap* bones) {
+ModelSkeletonBone* GetSkeletonBones(FbxNode* bone, OPhashMap* bones, i16 parent) {
 	pos++;
 	int i;
 	ModelSkeletonBone* result = (ModelSkeletonBone*)OPallocZero(sizeof(ModelSkeletonBone));
 	result->name = OPstringCreateMerged((char *)bone->GetName(), "");
 	result->children = OPlistCreate(1, sizeof(ModelSkeletonBone));
 	result->index = pos;
+	result->parent = parent;
+	OPmat4identity(&result->bindPose);
 	OPhashMapPut(bones, result->name, result);
 	
+
 	for (i = 0; i < bone->GetChildCount(); i++) {
-		ModelSkeletonBone* child = GetSkeletonBones(bone->GetChild(i), bones);
+		ModelSkeletonBone* child = GetSkeletonBones(bone->GetChild(i), bones, result->index);
 		OPlistPush(result->children, (ui8*)child);
 	}
 
@@ -46,7 +50,7 @@ ModelSkeletonData* GetSkeleton(FbxNode* node) {
 
 	result->bones = OPhashMapCreate(128);
 
-	result->rootBone = GetSkeletonBones(node, result->bones);
+	result->rootBone = GetSkeletonBones(node, result->bones, 0);
 
 	ModelSkeletonBone* test;
 	OPhashMapGet(result->bones, "test:head", (void**)&test);
@@ -80,10 +84,13 @@ i16 GetBonePosition(ModelSkeletonData* skeleton, i8* name) {
 #include "Helpers.h"
 
 void WriteBone(ModelSkeletonBone* bone, ofstream* file) {
-	writeI16(file, bone->index);
+	writeI16(file, bone->parent);
 	ui32 len = strlen(bone->name);
 	writeU32(file, len);
 	write(file, bone->name, len);
+
+	OPlog("Bone: %s", bone->name);
+	OPmat4Log("Bind Pose 2", &bone->bindPose);
 
 	for (i32 c = 0; c < 4; c++) {
 		writeF32(file, bone->bindPose.cols[c].x);

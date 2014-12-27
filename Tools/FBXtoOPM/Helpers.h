@@ -5,16 +5,18 @@
 #include "./Math/include/OPvec2.h"
 #include "./Math/include/OPvec3.h"
 #include "./Data/include/OPlist.h"
+#include "./Core/include/OPlog.h"
 
 enum ModelFeatures {
 	Model_Positions = 0,
-	Model_Normals,
-	Model_UVs,
-	Model_Colors,
-	Model_Indices,
-	Model_Bones,
-	Model_Skinning,
-	Model_Animations
+	Model_Normals = 1,
+	Model_UVs = 2,
+	Model_Colors = 3,
+	Model_Indices = 4,
+	Model_Tangents = 5,
+	Model_Bones = 6,
+	Model_Skinning = 7,
+	Model_Animations = 8
 };
 
 
@@ -65,17 +67,22 @@ i8* GetParameter(char** argv, ui16 argp, i8* arg, i8* shrt) {
 void WriteFile(i8* output, OPint* features, OPModelData* ModelData, ModelSkeletonData* skel) {
 
 	ofstream myFile(output, ios::binary);
+	OPlog("Begin writing file...");
 
 	// OPM File Format Version
 	writeU16(&myFile, 1);
 
+	OPlog("Feature[Bones]: %d", features[Model_Bones]);
 	ui32 feature = 0;
 	if (features[Model_Positions]) feature += 0x01;
 	if (features[Model_Normals]) feature += 0x02;
 	if (features[Model_UVs]) feature += 0x04;
 	if (features[Model_Colors]) feature += 0x100;
 	if (features[Model_Indices]) feature += 0x10;
-	if (features[Model_Bones]) feature += 0x20;
+	if (features[Model_Bones]) {
+		OPlog("Features: Bones");
+		feature += 0x20;
+	}
 	if (features[Model_Skinning]) feature += 0x40;
 	if (features[Model_Animations]) feature += 0x80;
 
@@ -108,25 +115,36 @@ void WriteFile(i8* output, OPint* features, OPModelData* ModelData, ModelSkeleto
 		}
 
 		if (features[Model_Skinning]) {
-			ui16* ind1 = (ui16*)OPlistGet(ModelData->boneIndices, i * 4 + 0);
-			ui16* ind2 = (ui16*)OPlistGet(ModelData->boneIndices, i * 4 + 1);
-			ui16* ind3 = (ui16*)OPlistGet(ModelData->boneIndices, i * 4 + 2);
-			ui16* ind4 = (ui16*)OPlistGet(ModelData->boneIndices, i * 4 + 3);
+			ui16 ind1 = *(ui16*)OPlistGet(ModelData->boneIndices, i * 4 + 0);
+			ui16 ind2 = *(ui16*)OPlistGet(ModelData->boneIndices, i * 4 + 1);
+			ui16 ind3 = *(ui16*)OPlistGet(ModelData->boneIndices, i * 4 + 2);
+			ui16 ind4 = *(ui16*)OPlistGet(ModelData->boneIndices, i * 4 + 3);
 
-			f32* w1 = (f32*)OPlistGet(ModelData->boneWeights, i * 4 + 0);
-			f32* w2 = (f32*)OPlistGet(ModelData->boneWeights, i * 4 + 1);
-			f32* w3 = (f32*)OPlistGet(ModelData->boneWeights, i * 4 + 2);
-			f32* w4 = (f32*)OPlistGet(ModelData->boneWeights, i * 4 + 3);
+			f32 w1 = *(f32*)OPlistGet(ModelData->boneWeights, i * 4 + 0);
+			f32 w2 = *(f32*)OPlistGet(ModelData->boneWeights, i * 4 + 1);
+			f32 w3 = *(f32*)OPlistGet(ModelData->boneWeights, i * 4 + 2);
+			f32 w4 = *(f32*)OPlistGet(ModelData->boneWeights, i * 4 + 3);
 
-			writeU16(&myFile, *ind1);
-			writeU16(&myFile, *ind2);
-			writeU16(&myFile, *ind3);
-			writeU16(&myFile, *ind4);
+			writeU16(&myFile, ind1);
+			writeU16(&myFile, ind2);
+			writeU16(&myFile, ind3);
+			writeU16(&myFile, ind4);
 
-			writeF32(&myFile, *w1);
-			writeF32(&myFile, *w2);
-			writeF32(&myFile, *w3);
-			writeF32(&myFile, *w4);
+			writeF32(&myFile, w1);
+			writeF32(&myFile, w2);
+			writeF32(&myFile, w3);
+			writeF32(&myFile, w4);
+
+
+			// OPlog("%d %d %d %d %f %f %f %f", 
+			// 	ind1,
+			// 	ind2,
+			// 	ind3,
+			// 	ind4,
+			// 	w1,
+			// 	w2,
+			// 	w3,
+			// 	w4);
 		}
 	}
 

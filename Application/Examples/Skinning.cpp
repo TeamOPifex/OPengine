@@ -40,8 +40,8 @@ void ExampleSkinningEnter(OPgameState* last) {
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
 		{ "aNormal", GL_FLOAT, 3 },
-		// { "aTangent", GL_FLOAT, 3 },
-		// { "aUV", GL_FLOAT, 2 },
+		//{ "aTangent", GL_FLOAT, 3 },
+		//{ "aUV", GL_FLOAT, 2 },
 		{ "aBlendIndices", GL_FLOAT, 4 },
 		{ "aBlendWeights", GL_FLOAT, 4 }
 	};
@@ -60,7 +60,7 @@ void ExampleSkinningEnter(OPgameState* last) {
 
 	skinningExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
 	*skinningExample->Camera = OPcamProj(
-		OPVEC3_ONE * 250.0,
+		OPVEC3_ONE * 50.0,
 		OPvec3Create(0, 1, 0),
 		OPvec3Create(0, 1, 0),
 		0.1f,
@@ -78,8 +78,8 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	if (OPkeyboardWasPressed(OPKEY_O)) { skinningExample->pos--; }
 
 	//OPmat4translate(&mesh->Skeleton->localPoses[pos], time->Elapsed / 1000.0f, 0, 0);
-	OPmat4rotZ(&skinningExample->Mesh->Skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_W) / 10.0f);
-	OPmat4rotZ(&skinningExample->Mesh->Skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_S) / -10.0f);
+	OPmat4rotX(&skinningExample->Mesh->Skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_W) / 10.0f);
+	OPmat4rotX(&skinningExample->Mesh->Skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_S) / -10.0f);
 	OPskeletonUpdate(skinningExample->Mesh->Skeleton);
 
 	OPrenderBindMesh(skinningExample->Mesh);
@@ -93,8 +93,8 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	OPcamGetProj((*skinningExample->Camera), &proj);
 
 	OPrenderParamMat4("uWorld", &world);
-	OPrenderParamMat4("uProj", &proj);
 	OPrenderParamMat4("uView", &view);
+	OPrenderParamMat4("uProj", &proj);
 
 	OPrenderParamMat4v("uBones", skinningExample->Mesh->Skeleton->hierarchyCount, skinningExample->Mesh->Skeleton->skinned);
 

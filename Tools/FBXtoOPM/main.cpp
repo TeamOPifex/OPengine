@@ -424,6 +424,8 @@ int main(int argc, char **argv) {
 	features[Model_Normals] = 1;
 	features[Model_UVs] = 1;
 	features[Model_Indices] = 1;
+	features[Model_Bones] = 1;
+	features[Model_Skinning] = 1;
 	MenuOptions(
 		"Select OPM Features to Export\n------------------------",
 		features,
