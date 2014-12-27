@@ -7,8 +7,6 @@
 	#include <dlfcn.h>
 	#include <sys/stat.h> 
 	#include <unistd.h>
-#else
-
 #endif
 
 OPsharedLibrary* OPsharedLibraryLoad(const OPchar* path) {
@@ -22,20 +20,32 @@ OPsharedLibrary* OPsharedLibraryLoad(const OPchar* path) {
 	sharedLibrary->_symbols = OPlistCreate(4, sizeof(OPsharedLibrarySymbol));
 
 	return sharedLibrary;
-#else
-	return NULL;
+#elif defined(OPIFEX_WINDOWS)
+	HMODULE library = LoadLibraryA(path);
+
+	OPsharedLibrary* sharedLibrary = (OPsharedLibrary*)OPalloc(sizeof(OPsharedLibrary));
+	sharedLibrary->_library = library;
+	sharedLibrary->_libraryPath = path;
+	sharedLibrary->_symbols = OPlistCreate(4, sizeof(OPsharedLibrarySymbol));
+
+	return sharedLibrary;
 #endif
 }
 
-OPint OPsharedLibraryReload(OPsharedLibrary* sharedLibrary) {
+OPint OPsharedLibraryDestroy(OPsharedLibrary* sharedLibrary) {
+	OPlistDestroy(sharedLibrary->_symbols);
+	OPfree(sharedLibrary);
+	return true;
+}
 
-#ifdef OPIFEX_UNIX
+OPint OPsharedLibraryReload(OPsharedLibrary* sharedLibrary) {
 	ui64 lastChange = OPfileLastChange(sharedLibrary->_libraryPath);
-	if(sharedLibrary->_lastModifiedTime == lastChange) return 0;
+	if (sharedLibrary->_lastModifiedTime == lastChange) return 0;
 
 	if(OPsharedLibraryClose(sharedLibrary) != 0) {
 		return -1;
 	}
+#ifdef OPIFEX_UNIX
 
 	void* library = dlopen(sharedLibrary->_libraryPath, RTLD_NOW);
 	if(library == NULL) return -2;
@@ -56,15 +66,35 @@ OPint OPsharedLibraryReload(OPsharedLibrary* sharedLibrary) {
 	}
 
 	return result;
-#else
-	return NULL;
+#elif defined(OPIFEX_WINDOWS)
+	HMODULE library = LoadLibraryA(sharedLibrary->_libraryPath);
+	if (library == NULL) return -2;
+	sharedLibrary->_library = library;
+
+	OPint elements = OPlistSize(sharedLibrary->_symbols);
+	void* symbol;
+	OPint result = 0;
+	for (OPint i = 0; i < elements; i++) {
+		OPsharedLibrarySymbol* sharedLibrarySymbol = (OPsharedLibrarySymbol*)OPlistGet(sharedLibrary->_symbols, i);
+		symbol = GetProcAddress(sharedLibrary->_library, sharedLibrarySymbol->_symbolName);
+		if (symbol == NULL) {
+			OPlog("!!!   Failed to reload symbol: %s", sharedLibrarySymbol->_symbolName);
+			result = -3;
+		}
+		sharedLibrarySymbol->Symbol = symbol;
+	}
+
+	return result;
 #endif
 }
 
 OPsharedLibrarySymbol* OPsharedLibraryLoadSymbol(OPsharedLibrary* sharedLibrary, const OPchar* symbolName) {
 #ifdef OPIFEX_UNIX
 	void* symbol = dlsym(sharedLibrary->_library, symbolName);
-	if(symbol == NULL) return NULL;
+#elif defined(OPIFEX_WINDOWS)
+	void* symbol = GetProcAddress(sharedLibrary->_library, symbolName);
+#endif
+	if (symbol == NULL) return NULL;
 
 	OPsharedLibrarySymbol sharedLibrarySymbol = {
 		symbol,
@@ -72,17 +102,14 @@ OPsharedLibrarySymbol* OPsharedLibraryLoadSymbol(OPsharedLibrary* sharedLibrary,
 	};
 	OPlistPush(sharedLibrary->_symbols, (ui8*)&sharedLibrarySymbol);
 	return (OPsharedLibrarySymbol*)OPlistPeek(sharedLibrary->_symbols);
-#else
-	return NULL;
-#endif
 }
 
 OPint OPsharedLibraryClose(OPsharedLibrary* sharedLibrary) {
 #ifdef OPIFEX_UNIX
 	OPint result = dlclose(sharedLibrary->_library);
-	if(result != 0) return -1;
-	return 0;
-#else
-	return NULL;
+#elif defined(OPIFEX_WINDOWS)
+	OPint result = FreeLibrary(sharedLibrary->_library);
 #endif
+	if (result != 0) return -1;
+	return 0;
 }
