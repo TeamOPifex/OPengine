@@ -1,6 +1,8 @@
 #include "./Data/include/OPsharedLibrary.h"
 #include "./Data/include/OPfile.h"
+#include "./Data/include/OPstring.h"
 #include "./Core/include/OPlog.h"
+#include "./Core/include/OPCore.h"
 
 // TODO: abstract out to Windows and Linux
 #ifdef OPIFEX_UNIX
@@ -9,20 +11,22 @@
 	#include <unistd.h>
 #endif
 
-OPsharedLibrary* OPsharedLibraryLoad(const OPchar* path) {
+OPsharedLibrary* OPsharedLibraryLoad(const OPchar* libraryName) {
+
 #ifdef OPIFEX_UNIX
+	OPchar* temp = OPstringCreateMerged("lib", path);
+	OPchar* lib = OPstringCreateMerged(temp, ".dylib");
+	OPchar* path = OPstringCreateMerged(OPgetExecutableDir(), lib);
+	OPlog(path);
 	void* library = dlopen(path, RTLD_NOW);
 	if(library == NULL) return NULL;
-
-	OPsharedLibrary* sharedLibrary = (OPsharedLibrary*)OPalloc(sizeof(OPsharedLibrary));
-	sharedLibrary->_library = library;
-	sharedLibrary->_libraryPath = path;
-	sharedLibrary->_symbols = OPlistCreate(4, sizeof(OPsharedLibrarySymbol));
-	sharedLibrary->_lastModifiedTime = OPfileLastChange(sharedLibrary->_libraryPath);
-
-	return sharedLibrary;
 #elif defined(OPIFEX_WINDOWS)
+	OPchar* lib = OPstringCreateMerged(libraryName, ".dll");
+	OPchar* path = OPstringCreateMerged(OPgetExecutableDir(), lib);
+	OPlog(path);
 	HMODULE library = LoadLibraryA(path);
+	if (library == NULL) return NULL;
+#endif
 
 	OPsharedLibrary* sharedLibrary = (OPsharedLibrary*)OPalloc(sizeof(OPsharedLibrary));
 	sharedLibrary->_library = library;
@@ -31,7 +35,6 @@ OPsharedLibrary* OPsharedLibraryLoad(const OPchar* path) {
 	sharedLibrary->_lastModifiedTime = OPfileLastChange(sharedLibrary->_libraryPath);
 
 	return sharedLibrary;
-#endif
 }
 
 OPint OPsharedLibraryDestroy(OPsharedLibrary* sharedLibrary) {
