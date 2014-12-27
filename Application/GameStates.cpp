@@ -194,7 +194,7 @@ OPint State0Update(OPtimer* time){
 		OPend();
 	}
 	OPmat4 world;
-	OPmat4identity(&world);
+	OPmat4Identity(&world);
 	OPrenderDepth(0);
 	OPrenderBindMesh(&quadMesh);
 	OPrenderBindEffect(&OPss);
@@ -274,7 +274,7 @@ OPint State1Update(OPtimer* time){
 	//view = OPmat4();
 	//proj = OPmat4();
 
-	OPmat4buildRotX(&world, t);
+	OPmat4BuildRotX(&world, t);
 	OPcamGetView(camera, &view);
 	OPcamGetProj(camera, &proj);
 
@@ -315,7 +315,7 @@ OPint State1Update(OPtimer* time){
 
 	//OPmeshPackerBind(&packer);
 	//OPrenderBindEffect(&post);
-	//OPmat4identity(&world);
+	//OPmat4Identity(&world);
 	//OPrenderParamMat4v("uWorld", 1, &world);
 
 	//OPtextureBind(&rt.Texture);

@@ -42,7 +42,7 @@
 
 		for (ui16 i = 1; i < skinned->Skeleton->JointCount; ++i)
 		{
-			OPmat4mul(&skinned->Skeleton->GlobalPoses[i], 
+			OPmat4Mul(&skinned->Skeleton->GlobalPoses[i], 
 				&skinned->Skeleton->GlobalPoses[skinned->Skeleton->Heirarchy[i]],
 				&skinned->Skeleton->LocalPoses[i]);
 		}

@@ -90,7 +90,7 @@ OPint ExampleModelUpdate(OPtimer* time) {
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
 	OPmat4 world = OPmat4createRotY(modelExample->Rotation / 100.0);
-	OPmat4scl(&world, 0.25f, 0.25f, 0.25f);
+	OPmat4Scl(&world, 0.25f, 0.25f, 0.25f);
 
 	////////////////////////
 	// Render

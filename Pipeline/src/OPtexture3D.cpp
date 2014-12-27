@@ -55,8 +55,8 @@ void OPtexture3DPrepRender(OPtexture3D* tex3d, OPcam* camera) {
 	OPcamGetProj((*camera), &proj);
 
 
-	OPmat4identity(&world);
-	OPmat4rotZ(&world, tex3d->Rotation.z);
+	OPmat4Identity(&world);
+	OPmat4RotZ(&world, tex3d->Rotation.z);
 	world *= tex3d->Scale;
 	world += tex3d->Position;
 

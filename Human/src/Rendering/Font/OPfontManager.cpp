@@ -11,7 +11,7 @@ OPeffect* OPRENDER_CURR_FONT_EFFECT = NULL;
 OPfontManager* OPfontManagerCreate(OPfont* font) {
 	OPfontManager* temp = (OPfontManager*)OPallocZero(sizeof(OPfontManager));
 	temp->_font = font;
-	temp->_color = OPvec4create(0.0f, 0.0f, 0.0f, 1.0f);
+	temp->_color = OPvec4Create(0.0f, 0.0f, 0.0f, 1.0f);
 	temp->_align = OPFONT_ALIGN_LEFT;
 
 	temp->currNodes = OPvectorCreate(sizeof(OPfontTextNode));

@@ -94,10 +94,10 @@ void OPsprite3DPrepReRender(OPsprite3D* sprite, OPvec3 offset, OPfloat rotation)
 	}
 
 	OPmat4 world;
-	OPmat4identity(&world);
+	OPmat4Identity(&world);
 	world *= OPvec2Create(widthScale, heightScale);
-	OPmat4rotZ(&world, rotation + sprite->Rotation.z);
-	OPmat4rotY(&world, sprite->Rotation.y);
+	OPmat4RotZ(&world, rotation + sprite->Rotation.z);
+	OPmat4RotY(&world, sprite->Rotation.y);
 	OPvec3 scl = sprite->Scale / 2.0f;
 	scl.x *= sprite->Direction;
 	world *= scl;
@@ -124,10 +124,10 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	OPcamGetView((*camera), &view);
 	OPcamGetProj((*camera), &proj);
 
-	OPmat4identity(&world);
+	OPmat4Identity(&world);
 	world *= OPvec2Create(widthScale, heightScale);
-	OPmat4rotZ(&world, rotation + sprite->Rotation.z);
-	OPmat4rotY(&world, sprite->Rotation.y);
+	OPmat4RotZ(&world, rotation + sprite->Rotation.z);
+	OPmat4RotY(&world, sprite->Rotation.y);
 	OPvec3 scl = sprite->Scale / 2.0f;
 	scl.x *= sprite->Direction;
 	world *= scl;

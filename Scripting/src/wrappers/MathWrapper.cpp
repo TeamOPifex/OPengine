@@ -307,7 +307,7 @@ static V8Return _OPmat4Create(const V8Args& args) {
 	V8Scope scope;
 
 	OPmat4* mat = (OPmat4*)OPalloc(sizeof(OPmat4));
-	OPmat4identity(mat);
+	OPmat4Identity(mat);
 
 
 	V8Object obj = CreateTypedObject(isolate, mat, OPscript_MAT4);
@@ -343,7 +343,7 @@ static V8Return _OPmat4SetRotateY(const V8Args& args) {
 	i32 inScope;
 	OPmat4* mat = (OPmat4*)GetPointer(args, isolate, &inScope, 2);
 	if (inScope == -1) SetReturn(args, &scope, GetNull(isolate));
-	OPmat4buildRotY(mat, args[1 - inScope]->NumberValue());
+	OPmat4BuildRotY(mat, args[1 - inScope]->NumberValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -354,7 +354,7 @@ static V8Return _OPmat4SetRotateX(const V8Args& args) {
 	i32 inScope;
 	OPmat4* mat = (OPmat4*)GetPointer(args, isolate, &inScope, 2);
 	if (inScope == -1) SetReturn(args, &scope, GetNull(isolate));
-	OPmat4buildRotX(mat, args[1 - inScope]->NumberValue());
+	OPmat4BuildRotX(mat, args[1 - inScope]->NumberValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -365,7 +365,7 @@ static V8Return _OPmat4SetRotateZ(const V8Args& args) {
 	i32 inScope;
 	OPmat4* mat = (OPmat4*)GetPointer(args, isolate, &inScope, 2);
 	if (inScope == -1)  SetReturn(args, &scope, GetNull(isolate));
-	OPmat4buildRotZ(mat, args[1 - inScope]->NumberValue());
+	OPmat4BuildRotZ(mat, args[1 - inScope]->NumberValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -376,7 +376,7 @@ static V8Return _OPmat4RotateY(const V8Args& args) {
 	i32 inScope;
 	OPmat4* mat = (OPmat4*)GetPointer(args, isolate, &inScope, 2);
 	if (inScope == -1) SetReturn(args, &scope, GetNull(isolate));
-	OPmat4rotY(mat, args[1 - inScope]->NumberValue());
+	OPmat4RotY(mat, args[1 - inScope]->NumberValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -387,7 +387,7 @@ static V8Return _OPmat4RotateX(const V8Args& args) {
 	i32 inScope;
 	OPmat4* mat = (OPmat4*)GetPointer(args, isolate, &inScope, 2);
 	if (inScope == -1) SetReturn(args, &scope, GetNull(isolate));
-	OPmat4rotX(mat, args[1 - inScope]->NumberValue());
+	OPmat4RotX(mat, args[1 - inScope]->NumberValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -398,7 +398,7 @@ static V8Return _OPmat4RotateZ(const V8Args& args) {
 	i32 inScope;
 	OPmat4* mat = (OPmat4*)GetPointer(args, isolate, &inScope, 2);
 	if (inScope == -1) SetReturn(args, &scope, GetNull(isolate));
-	OPmat4rotZ(mat, args[1 - inScope]->NumberValue());
+	OPmat4RotZ(mat, args[1 - inScope]->NumberValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -409,7 +409,7 @@ static V8Return _OPmat4Vec3(const V8Args& args) {
 	i32 inScope;
 	OPmat4* mat = (OPmat4*)GetPointer(args, isolate, &inScope, 4);
 	if (inScope == -1) SetReturn(args, &scope, GetNull(isolate));
-	OPmat4translate(mat, args[1 - inScope]->NumberValue(), args[2 - inScope]->NumberValue(), args[3 - inScope]->NumberValue());
+	OPmat4Translate(mat, args[1 - inScope]->NumberValue(), args[2 - inScope]->NumberValue(), args[3 - inScope]->NumberValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -420,7 +420,7 @@ static V8Return _OPmat4Scale(const V8Args& args) {
 	i32 inScope;
 	OPmat4* mat = (OPmat4*)GetPointer(args, isolate, &inScope, 4);
 	if (inScope == -1) SetReturn(args, &scope, GetNull(isolate));
-	OPmat4scl(mat, args[1 - inScope]->NumberValue(), args[2 - inScope]->NumberValue(), args[3 - inScope]->NumberValue());
+	OPmat4Scl(mat, args[1 - inScope]->NumberValue(), args[2 - inScope]->NumberValue(), args[3 - inScope]->NumberValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -431,7 +431,7 @@ static V8Return _OPmat4SetVec3(const V8Args& args) {
 	i32 inScope;
 	OPmat4* mat = (OPmat4*)GetPointer(args, isolate, &inScope, 4);
 	if (inScope == -1)  SetReturn(args, &scope, GetNull(isolate));
-	OPmat4buildTranslate(mat, args[1 - inScope]->NumberValue(), args[2 - inScope]->NumberValue(), args[3 - inScope]->NumberValue());
+	OPmat4BuildTranslate(mat, args[1 - inScope]->NumberValue(), args[2 - inScope]->NumberValue(), args[3 - inScope]->NumberValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -443,7 +443,7 @@ static V8Return _OPmat4SetScale(const V8Args& args) {
 	OPmat4* mat = (OPmat4*)GetPointer(args, isolate, &inScope, 4);
 	if (inScope == -1)  SetReturn(args, &scope, GetNull(isolate));
 
-	OPmat4buildScl(mat, args[1 - inScope]->NumberValue(), args[2 - inScope]->NumberValue(), args[3 - inScope]->NumberValue());
+	OPmat4BuildScl(mat, args[1 - inScope]->NumberValue(), args[2 - inScope]->NumberValue(), args[3 - inScope]->NumberValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -454,7 +454,7 @@ static V8Return _OPmat4Identity(const V8Args& args) {
 	i32 inScope;
 	OPmat4* mat = (OPmat4*)GetPointer(args, isolate, &inScope, 1);
 	if (inScope == -1) SetReturn(args, &scope, GetNull(isolate));
-	OPmat4identity(mat);
+	OPmat4Identity(mat);
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -466,7 +466,7 @@ static V8Return _OPmat4Multiply(const V8Args& args) {
 	OPmat4* a = (OPmat4*)GetArgPointer(args, isolate, 1);
 	OPmat4* b = (OPmat4*)GetArgPointer(args, isolate, 2);
 
-	OPmat4mul(dest, a, b);
+	OPmat4Mul(dest, a, b);
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }

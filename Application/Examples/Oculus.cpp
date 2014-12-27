@@ -83,7 +83,7 @@ OPint ExampleOculusUpdate(OPtimer* time) {
 	OPrenderBindEffect(oculusExample->Effect);
 
 	OPmat4 world, view, proj;
-	OPmat4buildRotY(&world, oculusExample->Rotation / 100.0);
+	OPmat4BuildRotY(&world, oculusExample->Rotation / 100.0);
 
 	OPcamGetView((*oculusExample->Camera), &view);
 	OPcamGetProj((*oculusExample->Camera), &proj);
