@@ -71,6 +71,7 @@ void OPend();
 */
 OPtimer* OPgetTime();
 OPchar* OPgetStartupDir();
+OPchar* OPgetExecutableDir();
 
 #ifdef __cplusplus
 };
