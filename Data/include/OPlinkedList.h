@@ -5,7 +5,7 @@
 #include "./Core/include/OPmemory.h"
 
 #if defined(OPIFEX_ANDROID) && defined(__cplusplus)
-	#include "./Core/include/DynamicMemory.h"
+	#include "./Core/include/OPmemory.h"
 #endif
 
 // prevent name mangling if compiling with c++
