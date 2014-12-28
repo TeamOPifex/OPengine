@@ -23,7 +23,7 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_init(JNIEnv * env, jobject obj,
 	_JNIWidth = width;
 	_JNIHeight = height;
 	_OPengineRunning = 1;
-	OPcreateTimer(&OPtime);
+	OPtimerCreate(&OPtime);
 	OPinitialize();
 	OPlog("Android NDK Bridge Connected");
 	OPlog("Window Size %d, %d", width, height);
@@ -147,7 +147,7 @@ void OPstart(struct android_app* state) {
 		if (_OPengineInitialize) {
 			_OPengineInitialize = 0;
 			OPlog("Initialize Engine");
-			OPcreateTimer(&OPtime);
+			OPtimerCreate(&OPtime);
 			OPinitialize();
 			_OPengineRendering = 1;
 		}

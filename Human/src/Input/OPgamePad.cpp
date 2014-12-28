@@ -9,7 +9,7 @@
 	#include <Xinput.h>
 	#pragma comment(lib, "XInput.lib")
 #elif defined(OPIFEX_ANDROID)
-	#include "./Core/include/Core.h"
+	#include "./Core/include/OPcore.h"
 	#include "./Human/include/Utilities/AndroidNDK.h"
 #endif
 
@@ -128,14 +128,14 @@ void __OPandUpdateGamePad(OPgamePad* controller){
 
 	controller->buttons[OPGAMEPADBUTTON_START] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_MENU);
 
-	controller->axes[L2] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_L2);
-	controller->axes[R2] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_R2);
+	controller->axes[OPGAMEPADAXIS_L2] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_L2);
+	controller->axes[OPGAMEPADAXIS_R2] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_R2);
 
-	controller->axes[OPGAMEPADAXIS_LS_X] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_OPGAMEPADAXIS_LS_X);
-	controller->axes[OPGAMEPADAXIS_LS_Y] = -OPjniGetAxisValue(jcontroller, OUYA_AXIS_OPGAMEPADAXIS_LS_Y);
+	controller->axes[OPGAMEPADAXIS_LS_X] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_LS_X);
+	controller->axes[OPGAMEPADAXIS_LS_Y] = -OPjniGetAxisValue(jcontroller, OUYA_AXIS_LS_Y);
 
-	controller->axes[OPGAMEPADAXIS_RS_X] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_OPGAMEPADAXIS_RS_X);
-	controller->axes[OPGAMEPADAXIS_RS_Y] = -OPjniGetAxisValue(jcontroller, OUYA_AXIS_OPGAMEPADAXIS_RS_Y);
+	controller->axes[OPGAMEPADAXIS_RS_X] = OPjniGetAxisValue(jcontroller, OUYA_AXIS_RS_X);
+	controller->axes[OPGAMEPADAXIS_RS_Y] = -OPjniGetAxisValue(jcontroller, OUYA_AXIS_RS_Y);
 }
 #endif
 //-----------------------------------------------------------------------------

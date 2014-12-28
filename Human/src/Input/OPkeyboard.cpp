@@ -45,7 +45,11 @@ OPint OPkeyboardAnyInputIsDown() {
 	return false;
 }
 #else
-void OPkeyboardUpdate() {
+void OPkeyboardUpdate(OPtimer* timer) {
+
+}
+
+void OPkeyboardUpdatePost(OPtimer* timer) {
 
 }
 

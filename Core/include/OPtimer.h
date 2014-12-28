@@ -36,7 +36,7 @@ extern "C" {
 #endif
 
 /**
- * OPcreateTimer - creates an OPtimer instance
+ * OPtimerCreate - creates an OPtimer instance
  *	Allocates space and initializes an OPtimer struct, then returns a
  *	pointer to the allocated memory segment. If allocation fails, a NULL
  *	pointer is returned.
