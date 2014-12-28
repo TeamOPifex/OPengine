@@ -2,7 +2,7 @@
 #include "./Data/include/OPfile.h"
 #include "./Data/include/OPstring.h"
 #include "./Core/include/OPlog.h"
-#include "./Core/include/OPCore.h"
+#include "./Core/include/OPcore.h"
 
 // TODO: abstract out to Windows and Linux
 #ifdef OPIFEX_UNIX
