@@ -31,7 +31,7 @@ ModelSkeletonBone* GetSkeletonBones(FbxNode* bone, OPhashMap* bones, i16 parent)
 	result->children = OPlistCreate(1, sizeof(ModelSkeletonBone));
 	result->index = pos;
 	result->parent = parent;
-	OPmat4identity(&result->bindPose);
+	OPmat4Identity(&result->bindPose);
 	
 
 	for (i = 0; i < bone->GetChildCount(); i++) {
@@ -94,7 +94,7 @@ void WriteBone(ModelSkeletonData* skeleton, ModelSkeletonBone* bone, ofstream* f
 
 
 	OPlog("Bone: %s", bone->name);
-	
+
 	ModelSkeletonBone* bonePtr;
 	OPhashMapGet(skeleton->bones, bone->name, (void**)&bonePtr);
 

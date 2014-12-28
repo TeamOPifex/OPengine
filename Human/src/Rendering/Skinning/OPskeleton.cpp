@@ -25,7 +25,7 @@ OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* pose, i32 count) {
 	skeleton->skinned = (OPmat4*)OPalloc(sizeof(OPmat4)* count);
 
 	for (i32 i = 0; i < skeleton->hierarchyCount; i++) {
-		OPmat4identity(&skeleton->localPoses[i]);
+		OPmat4Identity(&skeleton->localPoses[i]);
 	}
 	//OPmemcpy(skeleton->localPoses, pose, sizeof(OPmat4)* count);
 
