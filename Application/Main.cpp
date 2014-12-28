@@ -46,9 +46,9 @@ void ApplicationInit() {
 	// }
 
 	OPmat4 a, b, c;
-	OPmat4buildScl(&a, 2, 2, 2);
-	OPmat4buildTranslate(&b, 2, 2, 2);
-	OPmat4mul(&c, &b, &a);
+	OPmat4BuildScl(&a, 2, 2, 2);
+	OPmat4BuildTranslate(&b, 2, 2, 2);
+	OPmat4Mul(&c, &b, &a);
 	OPmat4Log("Test", &c);
 
 	OPrenderInit();

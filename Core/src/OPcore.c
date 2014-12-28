@@ -3,6 +3,7 @@
 
 OPtimer OPtime;
 OPchar* _startUpDir = NULL;
+OPchar* _execDir = NULL;
 OPint _OPengineRunning;
 
 
@@ -169,6 +170,7 @@ void OPstart(struct android_app* state) {
 void OPstart(int argc, char** args) {
 	// Initialize the engine and game
 	_startUpDir = OPdirCurrent();
+	_execDir = OPdirExecutable();
 	OPtimerCreate(&OPtime);
 	_OPengineRunning = 1;
 	OPinitialize();
@@ -201,4 +203,7 @@ OPtimer* OPgetTime() {
 
 OPchar* OPgetStartupDir() {
 	return _startUpDir;
+}
+OPchar* OPgetExecutableDir() {
+	return _execDir;
 }

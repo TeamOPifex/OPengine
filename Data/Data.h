@@ -13,5 +13,6 @@
 #include "./Data/include/OPstream.h"
 #include "./Data/include/OPstring.h"
 #include "./Data/include/OPvector.h"
+#include "./Data/include/OPsharedLibrary.h"
 
 #endif
