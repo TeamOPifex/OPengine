@@ -6,11 +6,54 @@ OPint LogToHandle = 1;
 
 #include <android/log.h>
 
+
+void OPlogSetOutput(OPint handle) {
+	if (handle > 0) {
+		LogToHandle = handle;
+	}
+}
+
 void OPlog(const char* message, ...){
     va_list arg;
 	va_start(arg, message);
-	__android_log_vprint(ANDROID_LOG_ERROR, "OPIFEX", message, arg);
+	__android_log_vprint(ANDROID_LOG_INFO, "OPIFEX", message, arg);
    va_end(arg);
+}
+
+void OPlg(const char* message, ...){
+	char buffer[1024];
+	va_list args;
+	va_start(args, message);
+	__android_log_vprint(ANDROID_LOG_INFO, "OPIFEX", message, arg);
+	va_end(args);
+}
+
+void OPlogDebug(const char* message, ...) {
+#ifndef OPIFEX_RELEASE
+	va_list args;
+	va_start(args, message);
+	__android_log_vprint(ANDROID_LOG_DEBUG, "OPIFEX", message, arg);
+#endif
+}
+
+void OPlogInfo(const char* message, ...) {
+#ifndef OPIFEX_RELEASE
+	va_list args;
+	va_start(args, message);
+	__android_log_vprint(ANDROID_LOG_INFO, "OPIFEX", message, arg);
+#endif
+}
+
+void OPlogWarn(const char* message, ...) {
+	va_list args;
+	va_start(args, message);
+	__android_log_vprint(ANDROID_LOG_WARN, "OPIFEX", message, arg);
+}
+
+void OPlogErr(const char* message, ...) {
+	va_list args;
+	va_start(args, message);
+	__android_log_vprint(ANDROID_LOG_ERROR, "OPIFEX", message, arg);
 }
 
 #else

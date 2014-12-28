@@ -111,7 +111,7 @@ OPint OPrenderInit(){
 
 	OPlogDebug("Binding API");
 	if (eglBindAPI(EGL_OPENGL_ES_API) == GL_FALSE) {
-		OPlogError("FAILED TO BIND ES API");
+		OPlogErr("FAILED TO BIND ES API");
 	}
 
 	OPlogDebug("eglInitialize");
@@ -166,11 +166,11 @@ OPint OPrenderInit(){
 	eglQuerySurface(display, surface, EGL_WIDTH, &w);
 	eglQuerySurface(display, surface, EGL_HEIGHT, &h);
 
-	OPscreenWidth = w;
-	OPscreenHeight = h;
+	OPRENDER_SCREEN_WIDTH = w;
+	OPRENDER_SCREEN_HEIGHT = h;
 
-	OPrenderWidth = OPscreenWidth;
-	OPrenderHeight = OPscreenHeight;
+	OPRENDER_WIDTH = OPRENDER_SCREEN_WIDTH;
+	OPRENDER_HEIGHT = OPRENDER_SCREEN_HEIGHT;
 
 	OPglError("OPrenderInit:Error 5");
 	//engine->display = display;
