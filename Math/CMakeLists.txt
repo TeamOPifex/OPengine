@@ -37,7 +37,7 @@ set(ALL_LIBS
 #########################################
 # BUILD
 #########################################
-if(${OPIFEX_SHARED})
+if(${OPIFEX_OPTION_SHARED})
 	add_library(3_Math SHARED ${MATH_SRC})
 else()
 	add_library(3_Math STATIC ${MATH_SRC})

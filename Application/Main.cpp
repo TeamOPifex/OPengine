@@ -14,10 +14,11 @@ void ApplicationInit() {
 	//OPlogSetOutput(logFile._handle);
 
 	OPlogDebug("App starting");
+	OPlog(OPIFEX_ASSETS);
 
 	OPchar* assetDir = NULL;
 #ifdef OPIFEX_ASSETS
-	assetDir = OPstringCreateCopy(OPIFEX_ASSETS);
+	assetDir = OPIFEX_ASSETS;
 #endif
 
 	InitializeLoaders();
@@ -44,12 +45,6 @@ void ApplicationInit() {
 	// 	OPlog("Failed to open file.");
 	// 	return;
 	// }
-
-	OPmat4 a, b, c;
-	OPmat4BuildScl(&a, 2, 2, 2);
-	OPmat4BuildTranslate(&b, 2, 2, 2);
-	OPmat4Mul(&c, &b, &a);
-	OPmat4Log("Test", &c);
 
 	OPrenderInit();
 

@@ -31,13 +31,15 @@ ModelSkeletonBone* GetSkeletonBones(FbxNode* bone, OPhashMap* bones, i16 parent)
 	result->children = OPlistCreate(1, sizeof(ModelSkeletonBone));
 	result->index = pos;
 	result->parent = parent;
-	OPmat4identity(&result->bindPose);
-	OPhashMapPut(bones, result->name, result);
+	OPmat4Identity(&result->bindPose);
 	
 
 	for (i = 0; i < bone->GetChildCount(); i++) {
 		ModelSkeletonBone* child = GetSkeletonBones(bone->GetChild(i), bones, result->index);
-		OPlistPush(result->children, (ui8*)child);
+		OPint ind = OPlistPush(result->children, (ui8*)child);
+		ModelSkeletonBone* r = (ModelSkeletonBone*)OPlistGet(result->children, ind);
+		OPlog("Child: %s", r->name);
+		OPhashMapPut(bones, child->name, r);
 	}
 
 	return result;
@@ -51,6 +53,7 @@ ModelSkeletonData* GetSkeleton(FbxNode* node) {
 	result->bones = OPhashMapCreate(128);
 
 	result->rootBone = GetSkeletonBones(node, result->bones, 0);
+	OPhashMapPut(result->bones, result->rootBone->name, result->rootBone);
 
 	ModelSkeletonBone* test;
 	OPhashMapGet(result->bones, "test:head", (void**)&test);
@@ -83,28 +86,34 @@ i16 GetBonePosition(ModelSkeletonData* skeleton, i8* name) {
 
 #include "Helpers.h"
 
-void WriteBone(ModelSkeletonBone* bone, ofstream* file) {
+void WriteBone(ModelSkeletonData* skeleton, ModelSkeletonBone* bone, ofstream* file) {
 	writeI16(file, bone->parent);
 	ui32 len = strlen(bone->name);
 	writeU32(file, len);
 	write(file, bone->name, len);
 
+
 	OPlog("Bone: %s", bone->name);
-	OPmat4Log("Bind Pose 2", &bone->bindPose);
+
+	ModelSkeletonBone* bonePtr;
+	OPhashMapGet(skeleton->bones, bone->name, (void**)&bonePtr);
+
+	OPlog("Bone: %s", bonePtr->name);
+	OPmat4Log("Bind Pose 2", &bonePtr->bindPose);
 
 	for (i32 c = 0; c < 4; c++) {
-		writeF32(file, bone->bindPose.cols[c].x);
-		writeF32(file, bone->bindPose.cols[c].y);
-		writeF32(file, bone->bindPose.cols[c].z);
-		writeF32(file, bone->bindPose.cols[c].w);
+		writeF32(file, bonePtr->bindPose.cols[c].x);
+		writeF32(file, bonePtr->bindPose.cols[c].y);
+		writeF32(file, bonePtr->bindPose.cols[c].z);
+		writeF32(file, bonePtr->bindPose.cols[c].w);
 	}
 
 	for (i32 i = 0; i < OPlistSize(bone->children); i++) {
-		WriteBone((ModelSkeletonBone*)OPlistGet(bone->children, i), file);
+		WriteBone(skeleton, (ModelSkeletonBone*)OPlistGet(bone->children, i), file);
 	}
 }
 
 void WriteSkeleton(ModelSkeletonData* skeleton, ofstream* file) {
 	writeU16(file, skeleton->boneCount);
-	WriteBone(skeleton->rootBone, file);
+	WriteBone(skeleton, skeleton->rootBone, file);
 }

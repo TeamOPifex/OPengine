@@ -61,7 +61,7 @@ set(ALL_LIBS
 #########################################
 # BUILD
 #########################################
-if(${OPIFEX_SHARED})
+if(${OPIFEX_OPTION_SHARED})
 	add_library(6_Communication SHARED ${COMMUNICATION_SRC})
 else()
 	add_library(6_Communication STATIC ${COMMUNICATION_SRC})

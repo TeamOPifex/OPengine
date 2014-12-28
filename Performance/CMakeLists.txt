@@ -38,7 +38,7 @@ set(ALL_LIBS
 #########################################
 # BUILD
 #########################################
-if(${OPIFEX_SHARED})
+if(${OPIFEX_OPTION_SHARED})
 	add_library(4_Performance SHARED ${PERFORMANCE_SRC})
 else()
 	add_library(4_Performance STATIC ${PERFORMANCE_SRC})
