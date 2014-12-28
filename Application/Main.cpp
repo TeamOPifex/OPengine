@@ -14,7 +14,6 @@ void ApplicationInit() {
 	//OPlogSetOutput(logFile._handle);
 
 	OPlogDebug("App starting");
-	OPlog(OPIFEX_ASSETS);
 
 	OPchar* assetDir = NULL;
 #ifdef OPIFEX_ASSETS
@@ -80,24 +79,10 @@ void ApplicationSetup() {
 // Application Entry Point
 //////////////////////////////////////
 
-#ifdef OPIFEX_ANDROID
-
-#include <jni.h>
-extern "C" {
-	JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj);
-};
-JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_start(JNIEnv * env, jobject obj) {
-	ApplicationSetup();
-}
-
-#else
-
-int main(int argc, char** args) {
+OP_MAIN {
 	ApplicationSetup();
 
 	OP_MAIN_START
 	OP_MAIN_END
 	OP_MAIN_SUCCESS
 }
-
-#endif
