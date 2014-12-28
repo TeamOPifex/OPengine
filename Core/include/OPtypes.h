@@ -3,7 +3,17 @@
 
 #if defined(OPIFEX_OSX64) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_LINUX32) || defined(OPIFEX_ANDROID)
 	#define OPIFEX_UNIX
-#elif defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
+#endif
+
+#if defined(OPIFEX_LINUX64) || defined(OPIFEX_LINUX32)
+	#define OPIFEX_LINUX
+#endif
+
+#if defined(OPIFEX_OSX64) || defined(OPIFEX_OSX32)
+	#define OPIFEX_OSX
+#endif
+
+#if defined(OPIFEX_WIN32) || defined(OPIFEX_WIN64)
 	#define OPIFEX_WINDOWS
 #endif
 

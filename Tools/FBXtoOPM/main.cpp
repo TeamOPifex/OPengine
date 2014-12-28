@@ -342,7 +342,7 @@ void FillPolygons(FbxNode* pNode)
 	OPlog("");
 }
 
-void FillNode(FbxNode* pNode) {
+void FillNode(FbxNode* pNode, i8 skeletonOnly) {
 	FbxNodeAttribute::EType lAttributeType;
 	int i;
 	FbxMesh* lMesh;
@@ -362,12 +362,15 @@ void FillNode(FbxNode* pNode) {
 				break;
 
 			case FbxNodeAttribute::eMesh:
-				lMesh = (FbxMesh*)pNode->GetNodeAttribute();
-				OPlog("Mesh Name: %s", (char *)pNode->GetName());
-				FillPolygons(pNode);
+				if(!skeletonOnly) {
+					lMesh = (FbxMesh*)pNode->GetNodeAttribute();
+					OPlog("Mesh Name: %s", (char *)pNode->GetName());
+					FillPolygons(pNode);
+				}
 				break;
 			
 			case FbxNodeAttribute::eSkeleton:
+				OPlog("Get eSkeleton");
 				GlobalSkeleton = GetSkeleton(pNode);
 				break;
 		}
@@ -422,7 +425,7 @@ int main(int argc, char **argv) {
 	OPint* features = (OPint*)OPallocZero(sizeof(OPint)* 9);
 	features[Model_Positions] = 1;
 	features[Model_Normals] = 1;
-	features[Model_UVs] = 1;
+	features[Model_UVs] = 0;
 	features[Model_Indices] = 1;
 	features[Model_Bones] = 1;
 	features[Model_Skinning] = 1;
@@ -471,7 +474,9 @@ int main(int argc, char **argv) {
 	FbxNode* lRootNode = lScene->GetRootNode();
 	if (lRootNode) {
 		for (int i = 0; i < lRootNode->GetChildCount(); i++)
-			FillNode(lRootNode->GetChild(i));
+			FillNode(lRootNode->GetChild(i), 1);
+		for (int i = 0; i < lRootNode->GetChildCount(); i++)
+			FillNode(lRootNode->GetChild(i), 0);
 	}
 	// Get Skinning information for the bind pose
 	GetPoseInformation(lScene, GlobalSkeleton);

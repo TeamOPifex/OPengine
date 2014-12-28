@@ -30,7 +30,7 @@ add_source_group(src/ "${PROJECT_SOURCE_DIR}/Core/src" CORE_SRC)
 #########################################
 # BUILD
 #########################################
-if(${OPIFEX_SHARED})
+if(${OPIFEX_OPTION_SHARED})
 	add_library(1_Core SHARED ${CORE_SRC})
 else()
 	add_library(1_Core STATIC ${CORE_SRC})

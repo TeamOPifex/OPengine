@@ -60,7 +60,7 @@ set(ALL_LIBS
 #########################################
 # BUILD
 #########################################
-if(${OPIFEX_SHARED})
+if(${OPIFEX_OPTION_SHARED})
 	add_library(7_Scripting SHARED ${SCRIPTING_SRC})
 else()
 	add_library(7_Scripting STATIC ${SCRIPTING_SRC})

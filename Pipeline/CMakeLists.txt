@@ -60,7 +60,7 @@ set(ALL_LIBS
 #########################################
 # BUILD
 #########################################
-if(${OPIFEX_SHARED})
+if(${OPIFEX_OPTION_SHARED})
 	add_library(8_Pipeline SHARED ${PIPELINE_SRC})
 else()
 	add_library(8_Pipeline STATIC ${PIPELINE_SRC})
