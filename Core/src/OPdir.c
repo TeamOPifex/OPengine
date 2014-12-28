@@ -10,8 +10,11 @@
 	#include <mach-o/dyld.h>
 #endif
 
-#ifdef OPIFEX_UNIX
+#ifdef OPIFEX_OSX
 	#include <libproc.h>
+#endif
+
+#ifdef OPIFEX_UNIX
 	#include <unistd.h>
 	#define GetCurrentDir getcwd
 #endif
