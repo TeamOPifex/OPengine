@@ -10,9 +10,6 @@
 #include "Assert.h"
 #include "OPlog.h"
 #include "OPdir.h"
-#ifdef OPIFEX_ANDROID
-	#include <jni.h>
-#endif
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
@@ -21,6 +18,7 @@ extern "C" {
 	
 // Android entry points
 #ifdef OPIFEX_ANDROID
+	#include <jni.h>
 	#include <android_native_app_glue.h>
 	#include <android/sensor.h>
 	#include <android/log.h>
@@ -73,10 +71,6 @@ OPtimer* OPgetTime();
 OPchar* OPgetStartupDir();
 OPchar* OPgetExecutableDir();
 
-#ifdef __cplusplus
-};
-#endif
-
 // Helper methods to create a more cross-platform code structure for the entry point of your main
 #ifdef OPIFEX_ANDROID
 #define OP_MAIN void android_main(struct android_app* state)
@@ -88,6 +82,10 @@ OPchar* OPgetExecutableDir();
 #define OP_MAIN_SUCCESS return 0;
 #define OP_MAIN_START OPstart(argc, args);
 #define OP_MAIN_END OPend();
+#endif
+
+#ifdef __cplusplus
+};
 #endif
 
 #endif

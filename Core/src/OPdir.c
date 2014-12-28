@@ -47,7 +47,6 @@ OPchar* OPdirExecutable() {
 	OPchar* result;
 	ui32 len;
 	ui32 res;
-	pid_t pid;
 
 	#ifdef OPIFEX_WINDOWS
 		// Will contain exe path
@@ -71,8 +70,6 @@ OPchar* OPdirExecutable() {
 			return result;
 		}
 	#elif defined(OPIFEX_OSX)
-	   // pid = getpid();
-	    //res = proc_pidpath (pid, ownPth, sizeof(ownPth));
 		len = _NSGetExecutablePath(ownPth, &len);
 		realpath(ownPth, tmpPth);
 
@@ -81,10 +78,6 @@ OPchar* OPdirExecutable() {
 			tmpPth[len] = '/';
 			tmpPth[len + 1] = NULL; 
 		}
-		// char *pos = strrchr(tmpPth, '/') + 1;
-		// if (pos != NULL) {
-		// 	*pos = '\0'; //this will put the null terminator here. you can also copy to another string if you want
-		// }
 		OPlog("The executable directory is \n%s\n%s", ownPth, tmpPth);
 
 		len = strlen(tmpPth);
