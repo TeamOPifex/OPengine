@@ -14,7 +14,7 @@
 OPsharedLibrary* OPsharedLibraryLoad(const OPchar* libraryName) {
 
 #ifdef OPIFEX_UNIX
-	OPchar* temp = OPstringCreateMerged("lib", path);
+	OPchar* temp = OPstringCreateMerged("lib", libraryName);
 	OPchar* lib = OPstringCreateMerged(temp, ".dylib");
 	OPchar* path = OPstringCreateMerged(OPgetExecutableDir(), lib);
 	OPlog(path);
