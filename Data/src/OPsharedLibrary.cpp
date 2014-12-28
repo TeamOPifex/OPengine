@@ -1,6 +1,8 @@
 #include "./Data/include/OPsharedLibrary.h"
 #include "./Data/include/OPfile.h"
+#include "./Data/include/OPstring.h"
 #include "./Core/include/OPlog.h"
+#include "./Core/include/OPCore.h"
 
 // TODO: abstract out to Windows and Linux
 #ifdef OPIFEX_UNIX
@@ -9,27 +11,30 @@
 	#include <unistd.h>
 #endif
 
-OPsharedLibrary* OPsharedLibraryLoad(const OPchar* path) {
+OPsharedLibrary* OPsharedLibraryLoad(const OPchar* libraryName) {
+
 #ifdef OPIFEX_UNIX
+	OPchar* temp = OPstringCreateMerged("lib", path);
+	OPchar* lib = OPstringCreateMerged(temp, ".dylib");
+	OPchar* path = OPstringCreateMerged(OPgetExecutableDir(), lib);
+	OPlog(path);
 	void* library = dlopen(path, RTLD_NOW);
 	if(library == NULL) return NULL;
-
-	OPsharedLibrary* sharedLibrary = (OPsharedLibrary*)OPalloc(sizeof(OPsharedLibrary));
-	sharedLibrary->_library = library;
-	sharedLibrary->_libraryPath = path;
-	sharedLibrary->_symbols = OPlistCreate(4, sizeof(OPsharedLibrarySymbol));
-
-	return sharedLibrary;
 #elif defined(OPIFEX_WINDOWS)
+	OPchar* lib = OPstringCreateMerged(libraryName, ".dll");
+	OPchar* path = OPstringCreateMerged(OPgetExecutableDir(), lib);
+	OPlog(path);
 	HMODULE library = LoadLibraryA(path);
+	if (library == NULL) return NULL;
+#endif
 
 	OPsharedLibrary* sharedLibrary = (OPsharedLibrary*)OPalloc(sizeof(OPsharedLibrary));
 	sharedLibrary->_library = library;
 	sharedLibrary->_libraryPath = path;
 	sharedLibrary->_symbols = OPlistCreate(4, sizeof(OPsharedLibrarySymbol));
+	sharedLibrary->_lastModifiedTime = OPfileLastChange(sharedLibrary->_libraryPath);
 
 	return sharedLibrary;
-#endif
 }
 
 OPint OPsharedLibraryDestroy(OPsharedLibrary* sharedLibrary) {
@@ -81,7 +86,7 @@ OPint OPsharedLibraryReload(OPsharedLibrary* sharedLibrary) {
 	OPint result = 0;
 	for (OPint i = 0; i < elements; i++) {
 		OPsharedLibrarySymbol* sharedLibrarySymbol = (OPsharedLibrarySymbol*)OPlistGet(sharedLibrary->_symbols, i);
-		symbol = GetProcAddress(sharedLibrary->_library, sharedLibrarySymbol->_symbolName);
+		symbol = (void*)GetProcAddress(sharedLibrary->_library, sharedLibrarySymbol->_symbolName);
 		if (symbol == NULL) {
 			OPlog("!!!   Failed to reload symbol: %s", sharedLibrarySymbol->_symbolName);
 			result = -3;
@@ -97,7 +102,7 @@ OPsharedLibrarySymbol* OPsharedLibraryLoadSymbol(OPsharedLibrary* sharedLibrary,
 #ifdef OPIFEX_UNIX
 	void* symbol = dlsym(sharedLibrary->_library, symbolName);
 #elif defined(OPIFEX_WINDOWS)
-	void* symbol = GetProcAddress(sharedLibrary->_library, symbolName);
+	void* symbol = (void*)GetProcAddress(sharedLibrary->_library, symbolName);
 #endif
 	if (symbol == NULL) return NULL;
 

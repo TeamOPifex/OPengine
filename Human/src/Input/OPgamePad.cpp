@@ -304,19 +304,19 @@ void OPgamePadUpdate(OPgamePad* controller){
 
 	axis.x = controller->axes[0];
 	axis.y = controller->axes[1];
-	OPvec2len(&len, &axis);
+	OPvec2Len(&len, &axis);
 	controller->axes[0] *= len > controller->deadzone;
 	controller->axes[1] *= len > controller->deadzone;
 	
 	axis.x = controller->axes[2];
 	axis.y = controller->axes[3];
-	OPvec2len(&len, &axis);
+	OPvec2Len(&len, &axis);
 	controller->axes[2] *= len > controller->deadzone;
 	controller->axes[3] *= len > controller->deadzone;
 
 	axis.x = controller->axes[4];
 	axis.y = controller->axes[5];
-	OPvec2len(&len, &axis);
+	OPvec2Len(&len, &axis);
 	controller->axes[4] *= len > controller->deadzone;
 	controller->axes[5] *= len > controller->deadzone;
 }

@@ -55,7 +55,7 @@ struct OPcam{
 //-----------------------------------------------------------------------------
 #define OPcamUpdateProj(cam){\
 	if (cam._projStale){\
-		OPmat4perspective(\
+		OPmat4Perspective(\
 			&cam.Proj, \
 			cam._fov, \
 			cam._aspect, \

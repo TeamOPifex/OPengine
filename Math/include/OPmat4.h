@@ -11,31 +11,31 @@
 #include "./Core/include/OPlog.h"
 
 struct OPmat4;
-inline OPvec4* OPmat4index(OPmat4* m, int idx);
-inline void OPmat4mul(OPmat4* dst, OPmat4* m1, OPmat4* m2);
-inline void OPmat4identity(OPmat4* m);
-inline void OPmat4transpose(OPmat4* m);
-inline void OPmat4buildRotX(OPmat4* m, OPfloat t);
-inline void OPmat4buildRotY(OPmat4* m, OPfloat t);
-inline void OPmat4buildRotZ(OPmat4* m, OPfloat t);
-inline void OPmat4buildTranslate(OPmat4* m, OPfloat x, OPfloat y, OPfloat z);
-inline void OPmat4buildTranslate(OPmat4* m, OPvec3* v);
-inline void OPmat4buildScl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z);
-inline void OPmat4rotX(OPmat4* m, OPfloat x);
-inline void OPmat4rotY(OPmat4* m, OPfloat x);
-inline void OPmat4rotZ(OPmat4* m, OPfloat x);
-inline void OPmat4translate(OPmat4* m, OPfloat x, OPfloat y, OPfloat z);
-inline void OPmat4translate(OPmat4* m, OPvec3* v);
-inline void OPmat4scl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z);
-inline void OPmat4ortho(OPmat4* m, OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPfloat zNear, OPfloat zFar );
+inline OPvec4* OPmat4Index(OPmat4* m, int idx);
+inline void OPmat4Mul(OPmat4* dst, OPmat4* m1, OPmat4* m2);
+inline void OPmat4Identity(OPmat4* m);
+inline void OPmat4Transpose(OPmat4* m);
+inline void OPmat4BuildRotX(OPmat4* m, OPfloat t);
+inline void OPmat4BuildRotY(OPmat4* m, OPfloat t);
+inline void OPmat4BuildRotZ(OPmat4* m, OPfloat t);
+inline void OPmat4BuildTranslate(OPmat4* m, OPfloat x, OPfloat y, OPfloat z);
+inline void OPmat4BuildTranslate(OPmat4* m, OPvec3* v);
+inline void OPmat4BuildScl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z);
+inline void OPmat4RotX(OPmat4* m, OPfloat x);
+inline void OPmat4RotY(OPmat4* m, OPfloat x);
+inline void OPmat4RotZ(OPmat4* m, OPfloat x);
+inline void OPmat4Translate(OPmat4* m, OPfloat x, OPfloat y, OPfloat z);
+inline void OPmat4Translate(OPmat4* m, OPvec3* v);
+inline void OPmat4Scl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z);
+inline void OPmat4Ortho(OPmat4* m, OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPfloat zNear, OPfloat zFar );
 inline void OPmat4look(OPmat4* m, OPvec3* campos, OPvec3* look, OPvec3* up);
 inline void OPmat4Print(OPmat4 m);
-inline void OPmat4perspective(OPmat4* m, OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal);
-inline void OPmat4transform(OPvec3* dst, OPvec3* a, OPmat4* b);
+inline void OPmat4Perspective(OPmat4* m, OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal);
+inline void OPmat4Transform(OPvec3* dst, OPvec3* a, OPmat4* b);
 
 
-extern const OPmat4 OPmat4Zero;
-extern const OPmat4 OPmat4Identity;
+extern const OPmat4 OPMAT4ZERO;
+extern const OPmat4 OPMAT4IDENTITY;
 
 // Data Structure 4 * 4 = 16 floats
 //		32 bit = 16 * 32 = 512 bits or 64 bytes
@@ -50,98 +50,98 @@ struct OPmat4 {
 		return cols[i];
 	}
 	inline OPmat4& operator*=(OPmat4 vhs) { 
-		OPmat4mul(this, this, &vhs); 
+		OPmat4Mul(this, this, &vhs); 
 		return *this; 
 	}
 	inline OPmat4& operator*=(OPvec2 vhs) {
-		OPmat4scl(this, vhs.x, vhs.y, 1);
+		OPmat4Scl(this, vhs.x, vhs.y, 1);
 		return *this;
 	}
 	inline OPmat4& operator*=(OPvec3 vhs) {
-		OPmat4scl(this, vhs.x, vhs.y, vhs.z);
+		OPmat4Scl(this, vhs.x, vhs.y, vhs.z);
 		return *this;
 	}
 	inline OPmat4& operator*=(OPvec4 vhs) {
-		OPmat4scl(this, vhs.x, vhs.y, vhs.z);
+		OPmat4Scl(this, vhs.x, vhs.y, vhs.z);
 		return *this;
 	}
 	inline OPmat4& operator/=(OPvec2 vhs) {
-		OPmat4scl(this, vhs.x, vhs.y, 1);
+		OPmat4Scl(this, vhs.x, vhs.y, 1);
 		return *this;
 	}
 	inline OPmat4& operator/=(OPvec3 vhs) { 
-		OPmat4scl(this, vhs.x, vhs.y, vhs.z); 
+		OPmat4Scl(this, vhs.x, vhs.y, vhs.z); 
 		return *this; 
 	}
 	inline OPmat4& operator/=(OPvec4 vhs) { 
-		OPmat4scl(this, vhs.x, vhs.y, vhs.z); 
+		OPmat4Scl(this, vhs.x, vhs.y, vhs.z); 
 		return *this; 
 	}
 	inline OPmat4& operator+=(OPvec2 vhs) {
-		OPmat4translate(this, vhs.x, vhs.y, 0);
+		OPmat4Translate(this, vhs.x, vhs.y, 0);
 		return *this;
 	}
 	inline OPmat4& operator+=(OPvec2* vhs) {
-		OPmat4translate(this, vhs->x, vhs->y, 0);
+		OPmat4Translate(this, vhs->x, vhs->y, 0);
 		return *this;
 	}
 	inline OPmat4& operator+=(OPvec3 vhs) {
-		OPmat4translate(this, vhs.x, vhs.y, vhs.z);
+		OPmat4Translate(this, vhs.x, vhs.y, vhs.z);
 		return *this;
 	}
 	inline OPmat4& operator+=(OPvec3* vhs) {
-		OPmat4translate(this, vhs->x, vhs->y, vhs->z);
+		OPmat4Translate(this, vhs->x, vhs->y, vhs->z);
 		return *this;
 	}
 	inline OPmat4& operator+=(OPvec4 vhs) {
-		OPmat4translate(this, vhs.x, vhs.y, vhs.z);
+		OPmat4Translate(this, vhs.x, vhs.y, vhs.z);
 		return *this;
 	}
 	inline OPmat4& operator+=(OPvec4* vhs) {
-		OPmat4translate(this, vhs->x, vhs->y, vhs->z);
+		OPmat4Translate(this, vhs->x, vhs->y, vhs->z);
 		return *this;
 	}
 	inline OPmat4& operator-=(OPvec2 vhs) {
-		OPmat4translate(this, -vhs.x, -vhs.y, 0);
+		OPmat4Translate(this, -vhs.x, -vhs.y, 0);
 		return *this;
 	}
 	inline OPmat4& operator-=(OPvec2* vhs) {
-		OPmat4translate(this, -vhs->x, -vhs->y, 0);
+		OPmat4Translate(this, -vhs->x, -vhs->y, 0);
 		return *this;
 	}
 	inline OPmat4& operator-=(OPvec3 vhs) {
-		OPmat4translate(this, -vhs.x, -vhs.y, -vhs.z);
+		OPmat4Translate(this, -vhs.x, -vhs.y, -vhs.z);
 		return *this;
 	}
 	inline OPmat4& operator-=(OPvec3* vhs) {
-		OPmat4translate(this, -vhs->x, -vhs->y, -vhs->z);
+		OPmat4Translate(this, -vhs->x, -vhs->y, -vhs->z);
 		return *this;
 	}
 	inline OPmat4& operator-=(OPvec4 vhs) {
-		OPmat4translate(this, -vhs.x, -vhs.y, -vhs.z);
+		OPmat4Translate(this, -vhs.x, -vhs.y, -vhs.z);
 		return *this;
 	}
 	inline OPmat4& operator-=(OPvec4* vhs) {
-		OPmat4translate(this, -vhs->x, -vhs->y, -vhs->z);
+		OPmat4Translate(this, -vhs->x, -vhs->y, -vhs->z);
 		return *this;
 	}
 };
 
 inline OPvec3 operator*(OPvec3 lhs, OPmat4 rhs) { 
 	OPvec3 temp = { 0, 0, 0 };
-	OPmat4transform(&temp, &lhs, &rhs);
+	OPmat4Transform(&temp, &lhs, &rhs);
 	return temp; 
 }
 
 inline OPvec3 operator*(OPmat4 lhs, OPvec3 rhs) { 
 	OPvec3 temp = { 0, 0, 0 };
-	OPmat4transform(&temp, &rhs, &lhs);
+	OPmat4Transform(&temp, &rhs, &lhs);
 	return temp; 
 }
 
 inline OPmat4 operator*(OPmat4 lhs, OPmat4 rhs) {
 	OPmat4 temp;
-	OPmat4mul(&temp, &lhs, &rhs);
+	OPmat4Mul(&temp, &lhs, &rhs);
 	return temp;
 }
 
@@ -171,11 +171,11 @@ inline OPmat4 OPmat4createFromVec4(OPvec4 row0, OPvec4 row1, OPvec4 row2, OPvec4
 		);
 }
 
-inline OPvec4* OPmat4index(OPmat4* m, int idx){
+inline OPvec4* OPmat4Index(OPmat4* m, int idx){
 	return &((OPvec4*)(m))[idx];
 }
 
-inline void OPmat4mul(OPmat4* dst, OPmat4* mat1, OPmat4* mat2)
+inline void OPmat4Mul(OPmat4* dst, OPmat4* mat1, OPmat4* mat2)
 {
 	OPmat4 result;
 	OPmat4 m1 = *mat1;
@@ -199,7 +199,7 @@ inline void OPmat4mul(OPmat4* dst, OPmat4* mat1, OPmat4* mat2)
 	OPmemcpy(dst, &result, sizeof(OPmat4));
 };
 
-inline void OPmat4identity(OPmat4* m) {
+inline void OPmat4Identity(OPmat4* m) {
 	OPbzero(m, sizeof(OPmat4));
 	m->cols[0].x = 1;
 	m->cols[1].y = 1;
@@ -208,21 +208,21 @@ inline void OPmat4identity(OPmat4* m) {
 }
 
 
- inline void OPmat4transpose(OPmat4* m){
+ inline void OPmat4Transpose(OPmat4* m){
 	OPmat4* tmp;
 	OPint i = 0, j = 0;
 	OPmemcpy(&tmp, &m, sizeof(OPmat4*));
 	for(i = 0; i < 4; i++){
 		for(j = 0; j < 4; j++){
-			(*OPmat4index(m, i))[j] = (*OPmat4index(tmp, i))[j];
+			(*OPmat4Index(m, i))[j] = (*OPmat4Index(tmp, i))[j];
 		}
 	}
 }
 
-inline void OPmat4buildRotX(OPmat4* m, OPfloat t) {
+inline void OPmat4BuildRotX(OPmat4* m, OPfloat t) {
 	OPfloat t1 = OPcos(t);
 	OPfloat t2 = OPsin(t);
-	OPmat4identity(m);
+	OPmat4Identity(m);
 	m->cols[1].y = t1;
 	m->cols[1].z = t2;
 	m->cols[2].y = -t2;
@@ -231,14 +231,14 @@ inline void OPmat4buildRotX(OPmat4* m, OPfloat t) {
 
 inline OPmat4 OPmat4createRotX(OPfloat t) {
 	OPmat4 temp;
-	OPmat4buildRotX(&temp, t);
+	OPmat4BuildRotX(&temp, t);
 	return temp;
 }
 
-inline void OPmat4buildRotY(OPmat4* m, OPfloat t){
+inline void OPmat4BuildRotY(OPmat4* m, OPfloat t){
 	OPfloat t1 = OPcos(t);
 	OPfloat t2 = OPsin(t);
-	OPmat4identity(m);
+	OPmat4Identity(m);
 	m->cols[0].x = t1;
 	m->cols[0].z = -t2;
 	m->cols[2].x = t2;
@@ -247,14 +247,14 @@ inline void OPmat4buildRotY(OPmat4* m, OPfloat t){
 
 inline OPmat4 OPmat4createRotY(OPfloat t) {
 	OPmat4 temp;
-	OPmat4buildRotY(&temp, t);
+	OPmat4BuildRotY(&temp, t);
 	return temp;
 }
 
-inline void OPmat4buildRotZ(OPmat4* m, OPfloat t) {
+inline void OPmat4BuildRotZ(OPmat4* m, OPfloat t) {
 	OPfloat t1 = OPcos(t);
 	OPfloat t2 = OPsin(t);
-	OPmat4identity(m);
+	OPmat4Identity(m);
 	m->cols[0].x = t1;
 	m->cols[0].y = t2;
 	m->cols[1].x = -t2;
@@ -263,38 +263,38 @@ inline void OPmat4buildRotZ(OPmat4* m, OPfloat t) {
 
 inline OPmat4 OPmat4createRotZ(OPfloat t) {
 	OPmat4 temp;
-	OPmat4buildRotZ(&temp, t);
+	OPmat4BuildRotZ(&temp, t);
 	return temp;
 }
 
-inline void OPmat4buildTranslate(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
-	OPmat4identity(m);
+inline void OPmat4BuildTranslate(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
+	OPmat4Identity(m);
 	m->cols[3].x = x;
 	m->cols[3].y = y;
 	m->cols[3].z = z;
 }
 
-inline void OPmat4buildTranslate(OPmat4* m, OPvec3* v) {
-	OPmat4identity(m);
+inline void OPmat4BuildTranslate(OPmat4* m, OPvec3* v) {
+	OPmat4Identity(m);
 	m->cols[3].x = v->x;
 	m->cols[3].y = v->y;
 	m->cols[3].z = v->z;
 }
 
-inline OPmat4 OPmat4buildTranslate(OPfloat x, OPfloat y, OPfloat z) {
+inline OPmat4 OPmat4BuildTranslate(OPfloat x, OPfloat y, OPfloat z) {
 	OPmat4 temp;
-	OPmat4buildTranslate(&temp, x, y, z);
+	OPmat4BuildTranslate(&temp, x, y, z);
 	return temp;
 }
 
-inline OPmat4 OPmat4buildTranslate(OPvec3* v) {
+inline OPmat4 OPmat4BuildTranslate(OPvec3* v) {
 	OPmat4 temp;
-	OPmat4buildTranslate(&temp, v->x, v->y, v->z);
+	OPmat4BuildTranslate(&temp, v->x, v->y, v->z);
 	return temp;
 }
 
-inline void OPmat4buildScl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
-	OPmat4identity(m);
+inline void OPmat4BuildScl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
+	OPmat4Identity(m);
 	m->cols[0].x = x;
 	m->cols[1].y = y;
 	m->cols[2].z = z;
@@ -302,49 +302,49 @@ inline void OPmat4buildScl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
 
 inline OPmat4 OPmat4createScl(OPfloat x, OPfloat y, OPfloat z) {
 	OPmat4 temp;
-	OPmat4buildScl(&temp, x, y, z);
+	OPmat4BuildScl(&temp, x, y, z);
 	return temp;
 }
 
 
 
-inline void OPmat4rotX(OPmat4* m, OPfloat x) {
-	OPmat4 temp = OPmat4Zero;
-	OPmat4buildRotX(&temp, x);
-	OPmat4mul(m, m, &temp);
+inline void OPmat4RotX(OPmat4* m, OPfloat x) {
+	OPmat4 temp = OPMAT4ZERO;
+	OPmat4BuildRotX(&temp, x);
+	OPmat4Mul(m, m, &temp);
 }
 
-inline void OPmat4rotZ(OPmat4* m, OPfloat x) {
-	OPmat4 temp = OPmat4Zero;
-	OPmat4buildRotZ(&temp, x);
-	OPmat4mul(m, m, &temp);
+inline void OPmat4RotZ(OPmat4* m, OPfloat x) {
+	OPmat4 temp = OPMAT4ZERO;
+	OPmat4BuildRotZ(&temp, x);
+	OPmat4Mul(m, m, &temp);
 }
 
-inline void OPmat4translate(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
+inline void OPmat4Translate(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
 	(*m)[3][0] += x;
 	(*m)[3][1] += y;
 	(*m)[3][2] += z;
 }
 
-inline void OPmat4translate(OPmat4* m, OPvec3* v) {
+inline void OPmat4Translate(OPmat4* m, OPvec3* v) {
 	(*m)[3][0] += v->x;
 	(*m)[3][1] += v->y;
 	(*m)[3][2] += v->z;
 }
 
-inline void OPmat4scl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
-	OPmat4 temp = OPmat4Zero;
-	OPmat4buildScl(&temp, x, y, z);
-	OPmat4mul(m, m, &temp);
+inline void OPmat4Scl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {
+	OPmat4 temp = OPMAT4ZERO;
+	OPmat4BuildScl(&temp, x, y, z);
+	OPmat4Mul(m, m, &temp);
 }
 
-inline void OPmat4rotY(OPmat4* m, OPfloat x) {
-	OPmat4 temp = OPmat4Zero;
-	OPmat4buildRotY(&temp, x);
-	OPmat4mul(m, m, &temp);
+inline void OPmat4RotY(OPmat4* m, OPfloat x) {
+	OPmat4 temp = OPMAT4ZERO;
+	OPmat4BuildRotY(&temp, x);
+	OPmat4Mul(m, m, &temp);
 }
 
-inline void OPmat4ortho(OPmat4* m, OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPfloat zNear, OPfloat zFar ){
+inline void OPmat4Ortho(OPmat4* m, OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPfloat zNear, OPfloat zFar ){
 	OPbzero(m, sizeof(OPmat4));
 	m->cols[0].x = 2.0f/(right - left);
 	m->cols[1].y = -2.0f/(top - bottom);
@@ -388,7 +388,7 @@ inline void OPmat4Print(OPmat4 m){
 	OPlog("[ %.6f  %.6f  %.6f  %.6f ]", m.cols[0].w,m.cols[1].w,m.cols[2].w,m.cols[3].w);
 }
 
-inline void OPmat4perspective(OPmat4* m, OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal) {
+inline void OPmat4Perspective(OPmat4* m, OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal) {
 	OPfloat top = OPtan(fovy * OPpi / 360.0f) * nearVal;
 	OPfloat right = top * aspect;
 	OPfloat range = farVal - nearVal;
@@ -403,20 +403,20 @@ inline void OPmat4perspective(OPmat4* m, OPfloat fovy, OPfloat aspect, OPfloat n
 	m->cols[3] = c3;
 }
 
-inline void OPmat4transform(OPvec3* dst, OPvec3* a, OPmat4* b) {
+inline void OPmat4Transform(OPvec3* dst, OPvec3* a, OPmat4* b) {
 	dst->x = b->cols[0].x * a->x + b->cols[1].x * a->y + b->cols[2].x * a->z;
 	dst->y = b->cols[0].y * a->x + b->cols[1].y * a->y + b->cols[2].y * a->z;
 	dst->z = b->cols[0].z * a->x + b->cols[1].z * a->y + b->cols[2].z * a->z;
 }
 
-inline void OPmat4transformVec4(OPvec4* dst, OPvec4* a, OPmat4* b) {
+inline void OPmat4TransformVec4(OPvec4* dst, OPvec4* a, OPmat4* b) {
 	dst->x = b->cols[0].x * a->x + b->cols[1].x * a->y + b->cols[2].x * a->z + b->cols[3].x * a->w;
 	dst->y = b->cols[0].y * a->x + b->cols[1].y * a->y + b->cols[2].y * a->z + b->cols[3].y * a->w;
 	dst->z = b->cols[0].z * a->x + b->cols[1].z * a->y + b->cols[2].z * a->z + b->cols[3].z * a->w;
 	dst->w = b->cols[0].w * a->x + b->cols[1].w * a->y + b->cols[2].w * a->z + b->cols[3].w * a->w;
 }
 
-inline void OPmat4buildQuat(OPmat4* dst, OPquat* qtr){
+inline void OPmat4BuildQuat(OPmat4* dst, OPquat* qtr){
 	f32 x = qtr->x;		f32 y = qtr->y;		f32 z = qtr->z;		f32 w = qtr->w;
 	f32 x2 = x + x;		f32 y2 = y + y;		f32 z2 = z + z;
 	f32 xx = x * x2;	f32 xy = x * y2;	f32 xz = x * z2;
@@ -446,9 +446,9 @@ inline void OPmat4buildQuat(OPmat4* dst, OPquat* qtr){
 }
 
 inline void OPmat4quat(OPmat4* m, OPquat* qtr) {
-	OPmat4 temp = OPmat4Zero;
-	OPmat4buildQuat(&temp, qtr);
-	OPmat4mul(m, m, &temp);
+	OPmat4 temp = OPMAT4ZERO;
+	OPmat4BuildQuat(&temp, qtr);
+	OPmat4Mul(m, m, &temp);
 }
 
 inline void OPmat4Inverse(OPmat4* dst, OPmat4* src) {
@@ -481,11 +481,11 @@ inline void OPmat4Inverse(OPmat4* dst, OPmat4* src) {
 
 	if (det == 0) {
 		// can't invert matrix, determinant is 0";
-		OPmat4identity(dst);
+		OPmat4Identity(dst);
 		return;
 	}
 
-	OPmat4scl(dst, 1 / det, 1 / det, 1 / det);
+	OPmat4Scl(dst, 1 / det, 1 / det, 1 / det);
 }
 
 inline void OPmat4Log(const OPchar* msg, OPmat4* mat) {

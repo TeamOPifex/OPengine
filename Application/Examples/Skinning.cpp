@@ -77,17 +77,17 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	if (OPkeyboardWasPressed(OPKEY_P)) { skinningExample->pos++; }
 	if (OPkeyboardWasPressed(OPKEY_O)) { skinningExample->pos--; }
 
-	//OPmat4translate(&mesh->Skeleton->localPoses[pos], time->Elapsed / 1000.0f, 0, 0);
-	OPmat4rotX(&skinningExample->Mesh->Skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_W) / 10.0f);
-	OPmat4rotX(&skinningExample->Mesh->Skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_S) / -10.0f);
+	//OPmat4Translate(&mesh->Skeleton->localPoses[pos], time->Elapsed / 1000.0f, 0, 0);
+	OPmat4RotX(&skinningExample->Mesh->Skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_W) / 10.0f);
+	OPmat4RotX(&skinningExample->Mesh->Skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_S) / -10.0f);
 	OPskeletonUpdate(skinningExample->Mesh->Skeleton);
 
 	OPrenderBindMesh(skinningExample->Mesh);
 	OPrenderBindEffect(skinningExample->Effect);
 	
 	OPmat4 world, view, proj;
-	OPmat4identity(&world);
-	//OPmat4buildRotX(&world,- OPpi / 2.0);
+	OPmat4Identity(&world);
+	//OPmat4BuildRotX(&world,- OPpi / 2.0);
 
 	OPcamGetView((*skinningExample->Camera), &view);
 	OPcamGetProj((*skinningExample->Camera), &proj);

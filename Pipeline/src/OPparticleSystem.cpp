@@ -126,10 +126,10 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 
 			if (p->Life <= 0) continue;
 
-			OPmat4identity(&world);
-			OPmat4scl(&world, 1, 1, 1);
-			OPmat4rotZ(&world, p->Angle);
-			OPmat4translate(&world, p->Position.x, p->Position.y, p->Position.z);
+			OPmat4Identity(&world);
+			OPmat4Scl(&world, 1, 1, 1);
+			OPmat4RotZ(&world, p->Angle);
+			OPmat4Translate(&world, p->Position.x, p->Position.y, p->Position.z);
 			
 			if(sys->fps){
 				_OPparticlePrepareFrame(sys, p, frameChange);
