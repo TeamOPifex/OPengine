@@ -76,7 +76,7 @@ set(ALL_LIBS
 #########################################
 # BUILD
 #########################################
-if(${OPIFEX_SHARED})
+if(${OPIFEX_OPTION_SHARED})
 	add_library(5_Human SHARED ${HUMAN_SRC})
 else()
 	add_library(5_Human STATIC ${HUMAN_SRC})
