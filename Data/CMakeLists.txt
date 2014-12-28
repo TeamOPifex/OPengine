@@ -37,7 +37,7 @@ set(ALL_LIBS
 #########################################
 # BUILD
 #########################################
-if(${OPIFEX_SHARED})
+if(${OPIFEX_OPTION_SHARED})
 	add_library(2_Data SHARED ${DATA_SRC})
 else()
 	add_library(2_Data STATIC ${DATA_SRC})

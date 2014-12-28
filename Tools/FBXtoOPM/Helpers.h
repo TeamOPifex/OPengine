@@ -136,15 +136,15 @@ void WriteFile(i8* output, OPint* features, OPModelData* ModelData, ModelSkeleto
 			writeF32(&myFile, w4);
 
 
-			// OPlog("%d %d %d %d %f %f %f %f", 
-			// 	ind1,
-			// 	ind2,
-			// 	ind3,
-			// 	ind4,
-			// 	w1,
-			// 	w2,
-			// 	w3,
-			// 	w4);
+			OPlog("%d %d %d %d %f %f %f %f", 
+				ind1,
+				ind2,
+				ind3,
+				ind4,
+				w1,
+				w2,
+				w3,
+				w4);
 		}
 	}
 
