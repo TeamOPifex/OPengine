@@ -19,7 +19,7 @@
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
 #include <unistd.h>
-#include "./Core/include/Core.h"
+#include "./Core/include/OPcore.h"
 #endif
 
 ui16 OPreadui16(OPstream* str) {

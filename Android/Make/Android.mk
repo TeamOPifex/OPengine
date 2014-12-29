@@ -20,7 +20,7 @@
 
 LOCAL_PATH:= $(call my-dir)
 
-PROJECT_PATH:= $(LOCAL_PATH)/../@OPIFEX_REPOSITORY@
+PROJECT_PATH:= @PROJECT_SOURCE_DIR@
 
 NDK_APP_OUT := $(LOCAL_PATH)/../Binaries/android
 BINARIES := $(NDK_APP_OUT)
@@ -131,7 +131,7 @@ include $(BUILD_STATIC_LIBRARY)
 ##############
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libopifex-performance
-LOCAL_CFLAGS := -D@OPIFEX_OS@ -DOPIFEX_PHYSICS
+LOCAL_CFLAGS := -D@OPIFEX_OS@ #-DOPIFEX_PHYSICS -DNDEBUG
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/PhysX/IncludeAndroid
@@ -170,15 +170,6 @@ MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Rendering/Font/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Rendering/Primitives/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Rendering/Skinning/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Rendering/Sprite/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Buffer/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Material/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Material/Shader/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Material/Shader/Params/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Material/State/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Model/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Sound/*.cpp)
-MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Resources/Texture/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Systems/*.cpp)
 MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Human/src/Utilities/*.cpp)
 
@@ -247,6 +238,7 @@ LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Ogg/include
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/External/Vorbis/include
 
 MY_LOCAL_SRC_FILES := $(wildcard $(PROJECT_PATH)/Pipeline/src/*.cpp)
+MY_LOCAL_SRC_FILES += $(wildcard $(PROJECT_PATH)/Pipeline/src/Loaders/*.cpp)
 LOCAL_SRC_FILES := $(subst jni/, , $(MY_LOCAL_SRC_FILES))
 
 LOCAL_STATIC_LIBRARIES := libopifex-communication
@@ -264,24 +256,24 @@ LOCAL_LDLIBS    := -llog -lGLESv2 -landroid -lOpenSLES -lEGL
 
 TARGET_PLATFORM := 16
 
-LOCAL_LDFLAGS := -Wl,--start-group \
-	$(BINARIES)/libPhysX3Common.a \
-	$(BINARIES)/libPvdRuntime.a \
-	$(BINARIES)/libSimulationController.a \
-	$(BINARIES)/libSceneQuery.a \
-	$(BINARIES)/libLowLevel.a \
-	$(BINARIES)/libLowLevelCloth.a \
-	$(BINARIES)/libPhysX3.a \
-	$(BINARIES)/libPhysX3Vehicle.a \
-	$(BINARIES)/libPhysX3Cooking.a \
-	$(BINARIES)/libPhysX3Extensions.a \
-	$(BINARIES)/libPhysX3CharacterKinematic.a \
-	$(BINARIES)/libPhysXProfileSDK.a \
-	$(BINARIES)/libPxTask.a \
-	$(BINARIES)/libPhysXVisualDebuggerSDK.a \
-	-Wl,--end-group
+#LOCAL_LDFLAGS := -Wl,--start-group \
+#	$(BINARIES)/libPhysX3Common.a \
+#	$(BINARIES)/libPvdRuntime.a \
+#	$(BINARIES)/libSimulationController.a \
+#	$(BINARIES)/libSceneQuery.a \
+#	$(BINARIES)/libLowLevel.a \
+#	$(BINARIES)/libLowLevelCloth.a \
+#	$(BINARIES)/libPhysX3.a \
+#	$(BINARIES)/libPhysX3Vehicle.a \
+#	$(BINARIES)/libPhysX3Cooking.a \
+#	$(BINARIES)/libPhysX3Extensions.a \
+#	$(BINARIES)/libPhysX3CharacterKinematic.a \
+#	$(BINARIES)/libPhysXProfileSDK.a \
+#	$(BINARIES)/libPxTask.a \
+#	$(BINARIES)/libPhysXVisualDebuggerSDK.a \
+#	-Wl,--end-group
 	
-LOCAL_ALLOW_UNDEFINED_SYMBOLS := false
+# LOCAL_ALLOW_UNDEFINED_SYMBOLS := false
 
 LOCAL_C_INCLUDES :=$(PROJECT_PATH)
 LOCAL_C_INCLUDES +=$(PROJECT_PATH)/Application

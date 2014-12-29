@@ -41,6 +41,7 @@ OPframeBuffer OPframeBufferCreateDepth(OPtextureDescription desc) {
 		desc
 	};
 
+#ifndef OPIFEX_ANDROID
 	OPlog("OPframeBufferCreateDepth 1");
 	OPglError("OPframeBufferCreateDepth:Error 1:%d");
 
@@ -99,6 +100,9 @@ OPframeBuffer OPframeBufferCreateDepth(OPtextureDescription desc) {
 		}
 	}
 	OPglError("OPframeBufferCreateDepth:Error 10:%d");
+#else
+	OPlog("TODO: Frame Buffer not completed for Android.");
+#endif
 
 	return fb;
 }
