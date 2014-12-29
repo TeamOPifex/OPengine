@@ -20,6 +20,15 @@ typedef struct {
 } OPfbxSkin;
 
 
+FbxAMatrix _getGeometryTransformation(FbxNode* inNode)
+{
+	const FbxVector4 lT = inNode->GetGeometricTranslation(FbxNode::eSourcePivot);
+	const FbxVector4 lR = inNode->GetGeometricRotation(FbxNode::eSourcePivot);
+	const FbxVector4 lS = inNode->GetGeometricScaling(FbxNode::eSourcePivot);
+
+	return FbxAMatrix(lT, lR, lS);
+}
+
 void _fbxmat4Log(const OPchar* msg, FbxAMatrix* mat) {
 
 	FbxVector4 lRow0 = mat->GetRow(0);
@@ -35,7 +44,7 @@ void _fbxmat4Log(const OPchar* msg, FbxAMatrix* mat) {
 }
 
 OPfbxSkinBlendWeight* _skinBlendWeights(OPfbxMeshData* meshData, OPfbxSkeleton* skeleton) {
-	FbxAMatrix geometryTransform = GetGeometryTransformation(meshData->Node);
+	FbxAMatrix geometryTransform = _getGeometryTransformation(meshData->Node);
 
 
 	int controlPointCount = meshData->Mesh->GetControlPointsCount();

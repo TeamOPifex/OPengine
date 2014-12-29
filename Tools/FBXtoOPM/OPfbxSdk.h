@@ -1,6 +1,6 @@
 #pragma once
 #include "./Engine.h"
-#include "FBXHelpers.h"
+#include "fbxsdk.h"
 
 typedef struct {
 	FbxScene* Scene;

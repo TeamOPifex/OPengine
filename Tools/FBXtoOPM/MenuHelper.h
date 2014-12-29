@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./Core/include/OPmemory.h"
+#include "./Core/include/OPlog.h"
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -37,7 +37,7 @@ OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* pose, i32 count) {
 
 	for (i32 i = 0; i < skeleton->hierarchyCount; i++) {
 		//OPmat4Identity(&skeleton->localInvPoses[i]);
-		OPmat4Identity(&skeleton->skinned[i]);
+		//OPmat4Identity(&skeleton->skinned[i]);
 		//
 		//OPmat4Identity(&skeleton->localInvPoses[i]);
 		//OPlog("H: %d", skeleton->hierarchy[i]);
@@ -51,11 +51,11 @@ void OPskeletonUpdate(OPskeleton* skeleton) {
 	OPskeletonUpdateGlobalPoses(skeleton);
 
 	for (i32 i = 0; i < skeleton->hierarchyCount; i++) {
-		OPmat4Identity(&skeleton->localInvPoses[i]);
+		//OPmat4Identity(&skeleton->localInvPoses[i]);
 		//OPmat4Identity(&skeleton->skinned[i]);
 		OPmat4Mul(
 			&skeleton->skinned[i], 
-			&skeleton->globalPoses[i] , 
-			&skeleton->localInvPoses[i]);
+			&skeleton->localInvPoses[i], 
+			&skeleton->globalPoses[i] );
 	}
 }
