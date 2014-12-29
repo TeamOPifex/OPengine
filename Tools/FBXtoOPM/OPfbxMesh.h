@@ -31,36 +31,25 @@ OPint OPfbxMeshCreate(OPfbxMesh* mesh, const OPchar* filename) {
 
 		OPlog("Step: FBX Scene Loaded");
 
-		OPfbxSkeleton skeleton;
-		OPfbxSkeletonGet(&skeleton, &mesh->SCENE);
+		OPfbxSkeletonGet(&mesh->Skeleton, &mesh->SCENE);
 
 		OPlog("Step: Skeleton");
 
-		OPfbxMeshData meshData;
-		OPfbxMeshDataGet(&meshData, &mesh->SCENE);
+		OPfbxMeshDataGet(&mesh->MeshData, &mesh->SCENE);
 
 		OPlog("Step: MeshData");
 
-		ui32* indices = OPfbxMeshDataGetIndices(&meshData);
+		mesh->Indices = OPfbxMeshDataGetIndices(&mesh->MeshData);
 		OPlog("Step: indices");
-		OPvec3* positions = OPfbxMeshDataGetPositions(&meshData);
+		mesh->Positions = OPfbxMeshDataGetPositions(&mesh->MeshData);
 		OPlog("Step: positions");
-		OPvec2* uvs = OPfbxMeshDataGetUVs(&meshData);
+		mesh->UVs = OPfbxMeshDataGetUVs(&mesh->MeshData);
 		OPlog("Step: uvs");
-		OPvec3* normals = OPfbxMeshDataGetNormals(&meshData);
+		mesh->Normals = OPfbxMeshDataGetNormals(&mesh->MeshData);
 		OPlog("Step: normals");
 
-		OPfbxSkin skin;
-		OPfbxSkinGet(&skin, &meshData, &skeleton);
+		OPfbxSkinGet(&mesh->Skin, &mesh->MeshData, &mesh->Skeleton);
 		OPlog("Step: skin");
-
-		mesh->Skeleton = skeleton;
-		mesh->MeshData = meshData;
-		mesh->Positions = positions;
-		mesh->UVs = uvs;
-		mesh->Normals = normals;
-		mesh->Skin = skin;
-		mesh->Indices = indices;
 
 		OPlog("End FBX SDK");
 		//OPfbxSdkDestroy(&SDK);
@@ -100,14 +89,18 @@ OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* featu
 	if (features[Model_Skinning]) feature += 0x40;
 	if (features[Model_Animations]) feature += 0x80;
 
+
+	OPlog("Feature: %d", feature);
 	// OPM File Features
 	writeU32(&myFile, feature);
 
+	OPlog("Vertex Count: %d", mesh->MeshData.VertexCount);
 	// Vertex Count
 	writeU32(&myFile, mesh->MeshData.VertexCount);
 	for (OPint i = 0; i < mesh->MeshData.VertexCount; i++) {
 
 		if (features[Model_Positions]) {
+			OPlg(".");
 			OPvec3 pos = mesh->Positions[i];
 			writeF32(&myFile, pos.x);
 			writeF32(&myFile, pos.y);
@@ -115,6 +108,7 @@ OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* featu
 		}
 
 		if (features[Model_Normals]) {
+			OPlg("-");
 			OPvec3 norm = mesh->Normals[i];
 			writeF32(&myFile, norm.x);
 			writeF32(&myFile, norm.y);
@@ -122,12 +116,14 @@ OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* featu
 		}
 
 		if (features[Model_UVs]) {
+			OPlg("=");
 			OPvec2 uv = mesh->UVs[i];
 			writeF32(&myFile, uv.x);
 			writeF32(&myFile, uv.y);
 		}
 
 		if (features[Model_Skinning]) {
+			OPlg("+");
 			OPint ind1 = mesh->Skin.BoneIndices[i * 4 + 0];
 			OPint ind2 = mesh->Skin.BoneIndices[i * 4 + 1];
 			OPint ind3 = mesh->Skin.BoneIndices[i * 4 + 2];

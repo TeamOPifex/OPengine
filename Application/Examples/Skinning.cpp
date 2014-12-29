@@ -60,8 +60,8 @@ void ExampleSkinningEnter(OPgameState* last) {
 
 	skinningExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
 	*skinningExample->Camera = OPcamProj(
-		OPVEC3_ONE * 10.0,
-		OPvec3Create(0, 1, 0),
+		OPvec3Create(5, 5, 5),
+		OPvec3Create(0, 0, 0),
 		OPvec3Create(0, 1, 0),
 		0.1f,
 		5000.0f,
@@ -76,6 +76,14 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 
 	if (OPkeyboardWasPressed(OPKEY_P)) { skinningExample->pos++; }
 	if (OPkeyboardWasPressed(OPKEY_O)) { skinningExample->pos--; }
+
+	if (OPkeyboardIsDown(OPKEY_UP)) { skinningExample->Camera->_pos.y += 0.1; }
+	if (OPkeyboardIsDown(OPKEY_DOWN)) { skinningExample->Camera->_pos.y -= 0.1; }
+	if (OPkeyboardIsDown(OPKEY_LEFT)) { skinningExample->Camera->_pos.x -= 0.1; }
+	if (OPkeyboardIsDown(OPKEY_RIGHT)) { skinningExample->Camera->_pos.x += 0.1; }
+
+	skinningExample->Camera->_viewStale = 1;
+	OPcamUpdateView((*skinningExample->Camera));
 
 	//OPmat4Translate(&mesh->Skeleton->localPoses[pos], time->Elapsed / 1000.0f, 0, 0);
 	OPmat4RotZ(&skinningExample->Mesh->Skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_W) / 10.0f);

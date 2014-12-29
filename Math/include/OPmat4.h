@@ -208,15 +208,14 @@ inline void OPmat4Identity(OPmat4* m) {
 }
 
 
- inline void OPmat4Transpose(OPmat4* m){
-	OPmat4* tmp;
-	OPint i = 0, j = 0;
-	OPmemcpy(&tmp, &m, sizeof(OPmat4*));
-	for(i = 0; i < 4; i++){
-		for(j = 0; j < 4; j++){
-			(*OPmat4Index(m, i))[j] = (*OPmat4Index(tmp, i))[j];
+ inline OPmat4 OPmat4Transpose(OPmat4 m){
+	OPmat4 tmp;
+	for(OPint i = 0; i < 4; i++) {
+		for(OPint j = 0; j < 4; j++) {
+			tmp[j][i] = m[i][j];
 		}
 	}
+	return tmp;
 }
 
 inline void OPmat4BuildRotX(OPmat4* m, OPfloat t) {
@@ -451,42 +450,129 @@ inline void OPmat4quat(OPmat4* m, OPquat* qtr) {
 	OPmat4Mul(m, m, &temp);
 }
 
-inline void OPmat4Inverse(OPmat4* dst, OPmat4* src) {
-
-	// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
-
-	f32 n11 = src->cols[0].x, n12 = src->cols[0].y, n13 = src->cols[0].z, n14 = src->cols[0].w;
-	f32 n21 = src->cols[1].x, n22 = src->cols[1].y, n23 = src->cols[1].z, n24 = src->cols[1].w;
-	f32 n31 = src->cols[2].x, n32 = src->cols[2].y, n33 = src->cols[2].z, n34 = src->cols[2].w;
-	f32 n41 = src->cols[3].x, n42 = src->cols[3].y, n43 = src->cols[3].z, n44 = src->cols[3].w;
-
-	dst->cols[0].x = n23*n34*n42 - n24*n33*n42 + n24*n32*n43 - n22*n34*n43 - n23*n32*n44 + n22*n33*n44;
-	dst->cols[0].y = n14*n33*n42 - n13*n34*n42 - n14*n32*n43 + n12*n34*n43 + n13*n32*n44 - n12*n33*n44;
-	dst->cols[0].z = n13*n24*n42 - n14*n23*n42 + n14*n22*n43 - n12*n24*n43 - n13*n22*n44 + n12*n23*n44;
-	dst->cols[0].w = n14*n23*n32 - n13*n24*n32 - n14*n22*n33 + n12*n24*n33 + n13*n22*n34 - n12*n23*n34;
-	dst->cols[1].x = n24*n33*n41 - n23*n34*n41 - n24*n31*n43 + n21*n34*n43 + n23*n31*n44 - n21*n33*n44;
-	dst->cols[1].y = n13*n34*n41 - n14*n33*n41 + n14*n31*n43 - n11*n34*n43 - n13*n31*n44 + n11*n33*n44;
-	dst->cols[1].z = n14*n23*n41 - n13*n24*n41 - n14*n21*n43 + n11*n24*n43 + n13*n21*n44 - n11*n23*n44;
-	dst->cols[1].w = n13*n24*n31 - n14*n23*n31 + n14*n21*n33 - n11*n24*n33 - n13*n21*n34 + n11*n23*n34;
-	dst->cols[2].x = n22*n34*n41 - n24*n32*n41 + n24*n31*n42 - n21*n34*n42 - n22*n31*n44 + n21*n32*n44;
-	dst->cols[2].y = n14*n32*n41 - n12*n34*n41 - n14*n31*n42 + n11*n34*n42 + n12*n31*n44 - n11*n32*n44;
-	dst->cols[2].z = n12*n24*n41 - n14*n22*n41 + n14*n21*n42 - n11*n24*n42 - n12*n21*n44 + n11*n22*n44;
-	dst->cols[2].w = n14*n22*n31 - n12*n24*n31 - n14*n21*n32 + n11*n24*n32 + n12*n21*n34 - n11*n22*n34;
-	dst->cols[3].x = n23*n32*n41 - n22*n33*n41 - n23*n31*n42 + n21*n33*n42 + n22*n31*n43 - n21*n32*n43;
-	dst->cols[3].y = n12*n33*n41 - n13*n32*n41 + n13*n31*n42 - n11*n33*n42 - n12*n31*n43 + n11*n32*n43;
-	dst->cols[3].z = n13*n22*n41 - n12*n23*n41 - n13*n21*n42 + n11*n23*n42 + n12*n21*n43 - n11*n22*n43;
-	dst->cols[3].w = n12*n23*n31 - n13*n22*n31 + n13*n21*n32 - n11*n23*n32 - n12*n21*n33 + n11*n22*n33;
-
-	f32 det = n11 * dst->cols[0].x + n21 * dst->cols[0].y + n31 * dst->cols[0].z + n41 * dst->cols[0].w;
-
-	if (det == 0) {
-		// can't invert matrix, determinant is 0";
-		OPmat4Identity(dst);
-		return;
-	}
-
-	OPmat4Scl(dst, 1 / det, 1 / det, 1 / det);
+inline OPfloat OPmat4GetCofactor(OPfloat m0, OPfloat m1, OPfloat m2,
+	                           OPfloat m3, OPfloat m4, OPfloat m5,
+	                           OPfloat m6, OPfloat m7, OPfloat m8)
+{
+    return m0 * (m4 * m8 - m5 * m7) -
+           m1 * (m3 * m8 - m5 * m6) +
+           m2 * (m3 * m7 - m4 * m6);
 }
+
+inline OPint OPmat4Inverse(OPmat4* dst, OPmat4 a) {
+
+    OPmat4 b = a;
+    OPfloat* m = (OPfloat*)&b;
+
+
+    // get cofactors of minor matrices
+    OPfloat cofactor0 = OPmat4GetCofactor(m[5],m[6],m[7], m[9],m[10],m[11], m[13],m[14],m[15]);
+    OPfloat cofactor1 = OPmat4GetCofactor(m[4],m[6],m[7], m[8],m[10],m[11], m[12],m[14],m[15]);
+    OPfloat cofactor2 = OPmat4GetCofactor(m[4],m[5],m[7], m[8],m[9], m[11], m[12],m[13],m[15]);
+    OPfloat cofactor3 = OPmat4GetCofactor(m[4],m[5],m[6], m[8],m[9], m[10], m[12],m[13],m[14]);
+
+    // get determinant
+    OPfloat determinant = m[0] * cofactor0 - m[1] * cofactor1 + m[2] * cofactor2 - m[3] * cofactor3;
+    if(OPabsf(determinant) <= 0.00001f)
+    {
+    	OPmat4Identity(dst);
+    	return 0;
+    }
+
+    // get rest of cofactors for adj(M)
+    OPfloat cofactor4 = OPmat4GetCofactor(m[1],m[2],m[3], m[9],m[10],m[11], m[13],m[14],m[15]);
+    OPfloat cofactor5 = OPmat4GetCofactor(m[0],m[2],m[3], m[8],m[10],m[11], m[12],m[14],m[15]);
+    OPfloat cofactor6 = OPmat4GetCofactor(m[0],m[1],m[3], m[8],m[9], m[11], m[12],m[13],m[15]);
+    OPfloat cofactor7 = OPmat4GetCofactor(m[0],m[1],m[2], m[8],m[9], m[10], m[12],m[13],m[14]);
+
+    OPfloat cofactor8 = OPmat4GetCofactor(m[1],m[2],m[3], m[5],m[6], m[7],  m[13],m[14],m[15]);
+    OPfloat cofactor9 = OPmat4GetCofactor(m[0],m[2],m[3], m[4],m[6], m[7],  m[12],m[14],m[15]);
+    OPfloat cofactor10= OPmat4GetCofactor(m[0],m[1],m[3], m[4],m[5], m[7],  m[12],m[13],m[15]);
+    OPfloat cofactor11= OPmat4GetCofactor(m[0],m[1],m[2], m[4],m[5], m[6],  m[12],m[13],m[14]);
+
+    OPfloat cofactor12= OPmat4GetCofactor(m[1],m[2],m[3], m[5],m[6], m[7],  m[9], m[10],m[11]);
+    OPfloat cofactor13= OPmat4GetCofactor(m[0],m[2],m[3], m[4],m[6], m[7],  m[8], m[10],m[11]);
+    OPfloat cofactor14= OPmat4GetCofactor(m[0],m[1],m[3], m[4],m[5], m[7],  m[8], m[9], m[11]);
+    OPfloat cofactor15= OPmat4GetCofactor(m[0],m[1],m[2], m[4],m[5], m[6],  m[8], m[9], m[10]);
+
+    // build inverse matrix = adj(M) / det(M)
+    // adjugate of M is the transpose of the cofactor matrix of M
+    OPfloat invDeterminant = 1.0f / determinant;
+    m[0] =  invDeterminant * cofactor0;
+    m[1] = -invDeterminant * cofactor4;
+    m[2] =  invDeterminant * cofactor8;
+    m[3] = -invDeterminant * cofactor12;
+
+    m[4] = -invDeterminant * cofactor1;
+    m[5] =  invDeterminant * cofactor5;
+    m[6] = -invDeterminant * cofactor9;
+    m[7] =  invDeterminant * cofactor13;
+
+    m[8] =  invDeterminant * cofactor2;
+    m[9] = -invDeterminant * cofactor6;
+    m[10]=  invDeterminant * cofactor10;
+    m[11]= -invDeterminant * cofactor14;
+
+    m[12]= -invDeterminant * cofactor3;
+    m[13]=  invDeterminant * cofactor7;
+    m[14]= -invDeterminant * cofactor11;
+    m[15]=  invDeterminant * cofactor15;
+
+    *dst = b;
+
+    return 1;
+}
+
+// inline void OPmat4Inverse(OPmat4* dst, OPmat4 a) {
+
+// 	// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
+
+// 	OPmat4 d;
+// 	d[0][0] = a[1][1]*a[2][2]*a[3][3] + a[1][2]*a[2][3]*a[3][1] - a[1][1]*a[2][3]*a[3][2] - a[1][2]*a[2][1]*a[3][3] - a[1][3]*a[2][2]*a[3][1];
+// 	d[1][0] = a[1][1]*a[2][2]*a[3][3] + a[1][2]*a[2][3]*a[3][1] - a[1][1]*a[2][3]*a[3][2] - a[1][2]*a[2][1]*a[3][3] - a[1][3]*a[2][2]*a[3][1];
+// 	d[2][0] = a[1][1]*a[2][2]*a[3][3] + a[1][2]*a[2][3]*a[3][1] - a[1][1]*a[2][3]*a[3][2] - a[1][2]*a[2][1]*a[3][3] - a[1][3]*a[2][2]*a[3][1];
+// 	d[3][0] = a[1][1]*a[2][2]*a[3][3] + a[1][2]*a[2][3]*a[3][1] - a[1][1]*a[2][3]*a[3][2] - a[1][2]*a[2][1]*a[3][3] - a[1][3]*a[2][2]*a[3][1];
+// 	d[0][1] = a[1][1]*a[2][2]*a[3][3] + a[1][2]*a[2][3]*a[3][1] - a[1][1]*a[2][3]*a[3][2] - a[1][2]*a[2][1]*a[3][3] - a[1][3]*a[2][2]*a[3][1];
+// 	d[1][1] = a[1][1]*a[2][2]*a[3][3] + a[1][2]*a[2][3]*a[3][1] - a[1][1]*a[2][3]*a[3][2] - a[1][2]*a[2][1]*a[3][3] - a[1][3]*a[2][2]*a[3][1];
+// 	d[2][1] = a[1][1]*a[2][2]*a[3][3] + a[1][2]*a[2][3]*a[3][1] - a[1][1]*a[2][3]*a[3][2] - a[1][2]*a[2][1]*a[3][3] - a[1][3]*a[2][2]*a[3][1];
+// 	d[3][1] = a[1][1]*a[2][2]*a[3][3] + a[1][2]*a[2][3]*a[3][1] - a[1][1]*a[2][3]*a[3][2] - a[1][2]*a[2][1]*a[3][3] - a[1][3]*a[2][2]*a[3][1];
+// 	d[0][2] = a[1][1]*a[2][2]*a[3][3] + a[1][2]*a[2][3]*a[3][1] - a[1][1]*a[2][3]*a[3][2] - a[1][2]*a[2][1]*a[3][3] - a[1][3]*a[2][2]*a[3][1];
+// 	d[1][2] = a[1][1]*a[2][2]*a[3][3] + a[1][2]*a[2][3]*a[3][1] - a[1][1]*a[2][3]*a[3][2] - a[1][2]*a[2][1]*a[3][3] - a[1][3]*a[2][2]*a[3][1];
+// 	d[2][2] = a[1][1]*a[2][2]*a[3][3] + a[1][2]*a[2][3]*a[3][1] - a[1][1]*a[2][3]*a[3][2] - a[1][2]*a[2][1]*a[3][3] - a[1][3]*a[2][2]*a[3][1];
+// 	d[3][2] = a[1][1]*a[2][2]*a[3][3] + a[1][2]*a[2][3]*a[3][1] - a[1][1]*a[2][3]*a[3][2] - a[1][2]*a[2][1]*a[3][3] - a[1][3]*a[2][2]*a[3][1];
+// 	d[0][3] = a[1][1]*a[2][2]*a[3][3] + a[1][2]*a[2][3]*a[3][1] - a[1][1]*a[2][3]*a[3][2] - a[1][2]*a[2][1]*a[3][3] - a[1][3]*a[2][2]*a[3][1];
+// 	d[1][3] = a[1][1]*a[2][2]*a[3][3] + a[1][2]*a[2][3]*a[3][1] - a[1][1]*a[2][3]*a[3][2] - a[1][2]*a[2][1]*a[3][3] - a[1][3]*a[2][2]*a[3][1];
+// 	d[2][3] = a[1][1]*a[2][2]*a[3][3] + a[1][2]*a[2][3]*a[3][1] - a[1][1]*a[2][3]*a[3][2] - a[1][2]*a[2][1]*a[3][3] - a[1][3]*a[2][2]*a[3][1];
+// 	d[3][3] = a[1][1]*a[2][2]*a[3][3] + a[1][2]*a[2][3]*a[3][1] - a[1][1]*a[2][3]*a[3][2] - a[1][2]*a[2][1]*a[3][3] - a[1][3]*a[2][2]*a[3][1];
+
+// 	dst->cols[0].x = n23*n34*n42 - n24*n33*n42 + n24*n32*n43 - n22*n34*n43 - n23*n32*n44 + n22*n33*n44;
+// 	dst->cols[0].y = n14*n33*n42 - n13*n34*n42 - n14*n32*n43 + n12*n34*n43 + n13*n32*n44 - n12*n33*n44;
+// 	dst->cols[0].z = n13*n24*n42 - n14*n23*n42 + n14*n22*n43 - n12*n24*n43 - n13*n22*n44 + n12*n23*n44;
+// 	dst->cols[0].w = n14*n23*n32 - n13*n24*n32 - n14*n22*n33 + n12*n24*n33 + n13*n22*n34 - n12*n23*n34;
+// 	dst->cols[1].x = n24*n33*n41 - n23*n34*n41 - n24*n31*n43 + n21*n34*n43 + n23*n31*n44 - n21*n33*n44;
+// 	dst->cols[1].y = n13*n34*n41 - n14*n33*n41 + n14*n31*n43 - n11*n34*n43 - n13*n31*n44 + n11*n33*n44;
+// 	dst->cols[1].z = n14*n23*n41 - n13*n24*n41 - n14*n21*n43 + n11*n24*n43 + n13*n21*n44 - n11*n23*n44;
+// 	dst->cols[1].w = n13*n24*n31 - n14*n23*n31 + n14*n21*n33 - n11*n24*n33 - n13*n21*n34 + n11*n23*n34;
+// 	dst->cols[2].x = n22*n34*n41 - n24*n32*n41 + n24*n31*n42 - n21*n34*n42 - n22*n31*n44 + n21*n32*n44;
+// 	dst->cols[2].y = n14*n32*n41 - n12*n34*n41 - n14*n31*n42 + n11*n34*n42 + n12*n31*n44 - n11*n32*n44;
+// 	dst->cols[2].z = n12*n24*n41 - n14*n22*n41 + n14*n21*n42 - n11*n24*n42 - n12*n21*n44 + n11*n22*n44;
+// 	dst->cols[2].w = n14*n22*n31 - n12*n24*n31 - n14*n21*n32 + n11*n24*n32 + n12*n21*n34 - n11*n22*n34;
+// 	dst->cols[3].x = n23*n32*n41 - n22*n33*n41 - n23*n31*n42 + n21*n33*n42 + n22*n31*n43 - n21*n32*n43;
+// 	dst->cols[3].y = n12*n33*n41 - n13*n32*n41 + n13*n31*n42 - n11*n33*n42 - n12*n31*n43 + n11*n32*n43;
+// 	dst->cols[3].z = n13*n22*n41 - n12*n23*n41 - n13*n21*n42 + n11*n23*n42 + n12*n21*n43 - n11*n22*n43;
+// 	dst->cols[3].w = n12*n23*n31 - n13*n22*n31 + n13*n21*n32 - n11*n23*n32 - n12*n21*n33 + n11*n22*n33;
+
+// 	f32 det = n11 * dst->cols[0].x + n21 * dst->cols[0].y + n31 * dst->cols[0].z + n41 * dst->cols[0].w;
+
+// 	if (det == 0) {
+// 		// can't invert matrix, determinant is 0";
+// 		OPmat4Identity(dst);
+// 		return;
+// 	}
+
+// 	OPmat4Scl(d, 1 / d, 1 / d, 1 / d);
+// 	(*dst) = d;
+// }
 
 inline void OPmat4Log(const OPchar* msg, OPmat4* mat) {
 	OPmat4 m = *mat;

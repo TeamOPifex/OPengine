@@ -81,6 +81,8 @@ ui32* OPfbxMeshDataGetIndices(OPfbxMeshData* meshData) {
 		}
 	}
 
+	OPlog("Pos: %d, Ind Count: %d", pos, meshData->IndexCount);
+
 	return indices;
 }
 
@@ -110,6 +112,7 @@ OPvec3* OPfbxMeshDataGetPositions(OPfbxMeshData* meshData) {
 			pos++;
 		}
 	}
+	OPlog("Pos: %d, Vert Count: %d", pos, meshData->VertexCount);
 
 	return positions;
 }
@@ -156,7 +159,9 @@ OPvec3* OPfbxMeshDataGetNormals(OPfbxMeshData* meshData) {
 
 			vertexInd++;
 		}
+
 	}
+	OPlog("Pos: %d, Norm Count: %d", pos, meshData->NormalCount);
 
 	return normals;
 }
@@ -239,6 +244,8 @@ OPvec2* OPfbxMeshDataGetUVs(OPfbxMeshData* meshData) {
 		}
 	}
 
+	OPlog("Pos: %d, UV Count: %d", pos, meshData->UVCount);
+
 	if(pos != meshData->UVCount) {
 		OPlog("WARNING: Not all UVs were mapped.");
 	}
@@ -263,11 +270,8 @@ OPint OPfbxMeshDataGet(OPfbxMeshData* meshData, OPfbxScene* scene) {
 			meshData->Mesh = node->GetMesh();
 			meshData->Node = node;
 
-			OPint polyCount = meshData->Mesh->GetPolygonCount();
-			meshData->PolyCount = polyCount;
-			OPlog("\tTotal Polys: %d", polyCount);
-
-			FbxVector4* controlPoints = meshData->Mesh->GetControlPoints();
+			meshData->PolyCount = meshData->Mesh->GetPolygonCount();
+			OPlog("\tTotal Polys: %d", meshData->PolyCount);
 
 			OPint vertexCount = _meshVertexCount(meshData->Mesh);
 			OPint indexCount = _meshIndexCount(meshData->Mesh);
