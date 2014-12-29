@@ -3,6 +3,7 @@
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmath.h"
 #include "./Core/include/OPmemory.h"
+#include "./Core/include/OPlog.h"
 #include "./Data/include/OPfile.h"
 #include "./Data/include/OPstream.h"
 
@@ -287,5 +288,9 @@ inline OPvec2 OPvec2str(OPstream* str) {
 inline void OPvec2write(OPvec2* v, OPstream* str) {
 	OPwrite(str, &v->x, sizeof(f32));
 	OPwrite(str, &v->y, sizeof(f32));
+}
+
+inline void OPvec2Log(const OPchar* m, OPvec2 v) {
+	OPlog("%s: [%f, %f]", m, v.x, v.y);
 }
 #endif

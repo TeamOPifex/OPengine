@@ -133,7 +133,7 @@ f32 OPstreamf32(OPstream* stream) {
 }
 OPchar* OPstreamString(OPstream* stream) {
 	_fillBuffer(stream);
-	return OPstringCreateCopy(stream->Buffer);
+	return OPstringCopy(stream->Buffer);
 }
 
 

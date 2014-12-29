@@ -12,7 +12,7 @@ extern "C" {
 	void OPstringRemoveFromStart(OPchar* str, i32 size);
 	OPchar* OPstringGetNonConstant(const OPchar* str);
 	OPchar* OPstringCreateMerged(const OPchar* str, const OPchar* add);
-	OPchar* OPstringCreateCopy(const OPchar* str);
+	OPchar* OPstringCopy(const OPchar* str);
 
 #ifdef __cplusplus
 }

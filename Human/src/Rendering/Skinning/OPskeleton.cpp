@@ -24,10 +24,10 @@ OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* pose, i32 count) {
 	skeleton->localInvPoses = (OPmat4*)OPalloc(sizeof(OPmat4)* count);
 	skeleton->skinned = (OPmat4*)OPalloc(sizeof(OPmat4)* count);
 
-	for (i32 i = 0; i < skeleton->hierarchyCount; i++) {
-		OPmat4Identity(&skeleton->localPoses[i]);
-	}
-	//OPmemcpy(skeleton->localPoses, pose, sizeof(OPmat4)* count);
+	// for (i32 i = 0; i < skeleton->hierarchyCount; i++) {
+	// 	OPmat4Identity(&skeleton->localPoses[i]);
+	// }
+	OPmemcpy(skeleton->localPoses, pose, sizeof(OPmat4)* count);
 
 	// OPmemcpy(skeleton->globalPoses, pose, sizeof(OPmat4)* count);
 	// OPmemcpy(skeleton->localInvPoses, pose, sizeof(OPmat4)* count);
@@ -38,6 +38,8 @@ OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* pose, i32 count) {
 	for (i32 i = 0; i < skeleton->hierarchyCount; i++) {
 		//OPmat4Identity(&skeleton->localInvPoses[i]);
 		OPmat4Identity(&skeleton->skinned[i]);
+		//
+		//OPmat4Identity(&skeleton->localInvPoses[i]);
 		//OPlog("H: %d", skeleton->hierarchy[i]);
 		OPmat4Inverse(&skeleton->localInvPoses[i], &skeleton->globalPoses[i]);
 	}
@@ -50,6 +52,7 @@ void OPskeletonUpdate(OPskeleton* skeleton) {
 
 	for (i32 i = 0; i < skeleton->hierarchyCount; i++) {
 		OPmat4Identity(&skeleton->localInvPoses[i]);
+		//OPmat4Identity(&skeleton->skinned[i]);
 		OPmat4Mul(
 			&skeleton->skinned[i], 
 			&skeleton->globalPoses[i] , 
