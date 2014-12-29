@@ -5,6 +5,11 @@
 #include "PoseInformation.h"
 #include "MenuHelper.h"
 #include "ModelData.h"
+#include "OPfbxSdk.h"
+#include "OPfbxSkeleton.h"
+#include "OPfbxMesh.h"
+#include "OPfbxMeshData.h"
+#include "OPfbxSkin.h"
 
 #include "./Math/include/OPvec3.h"
 #include "./Math/include/OPvec2.h"
@@ -418,6 +423,14 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 
+	//
+	// Quit if no output file was provided
+	//
+	if (output == NULL) {
+		print_help();
+		return -1;
+	}
+
 
 	//
 	// Get Features to Export from the FBX into the OPM
@@ -429,65 +442,58 @@ int main(int argc, char **argv) {
 	features[Model_Indices] = 1;
 	features[Model_Bones] = 1;
 	features[Model_Skinning] = 1;
-	MenuOptions(
-		"Select OPM Features to Export\n------------------------",
-		features,
-		9,
-		"POSITION", "NORMAL", "UVS", "COLORS", "INDICES", "TANGENTS", "BONES", "SKIN", "ANIMATIONS"
-		);
+
+	OPint interactive = 0;
+	if(interactive) {
+		MenuOptions(
+			"Select OPM Features to Export\n------------------------",
+			features,
+			9,
+			"POSITION", "NORMAL", "UVS", "COLORS", "INDICES", "TANGENTS", "BONES", "SKIN", "ANIMATIONS"
+			);
+	}
 
 
 	//
 	// Initialize ModelData
 	//
-	ModelData = ModelDataCreate();
+	//ModelData = ModelDataCreate();
 
+	OPfbxMesh mesh;
+	if(OPfbxMeshCreate(&mesh, filename) == 0) {
+		OPfbxMeshWriteToFile(&mesh, output, features);
+	}
+
+
+		//WriteFile(output, features, ModelData, GlobalSkeleton);
 
 	//
 	// Setup the Autodesk FBX SDK
 	//
-	FbxManager* lSdkManager = FbxManager::Create();
-	FbxIOSettings *ios = FbxIOSettings::Create(lSdkManager, IOSROOT);
-	lSdkManager->SetIOSettings(ios);
+	// FbxManager* lSdkManager = FbxManager::Create();
+	// FbxIOSettings *ios = FbxIOSettings::Create(lSdkManager, IOSROOT);
+	// lSdkManager->SetIOSettings(ios);
 
-	FbxImporter* lImporter = FbxImporter::Create(lSdkManager, "");
-	if (!lImporter->Initialize(filename, -1, lSdkManager->GetIOSettings())) {
-		OPlog("Call to FbxImporter::Initialize() failed.\n");
-		OPlog("Error returned: %s\n\n", lImporter->GetStatus().GetErrorString());
-		return -1;
-	}
+	// FbxImporter* lImporter = FbxImporter::Create(lSdkManager, "");
+	// if (!lImporter->Initialize(filename, -1, lSdkManager->GetIOSettings())) {
+	// 	OPlog("Call to FbxImporter::Initialize() failed.\n");
+	// 	OPlog("Error returned: %s\n\n", lImporter->GetStatus().GetErrorString());
+	// 	return -1;
+	// }
 
 	// Get the scene from the FBX file	
-	FbxScene* lScene = FbxScene::Create(lSdkManager, "myScene");
-	lImporter->Import(lScene);
-	lImporter->Destroy();
+	// FbxScene* lScene = FbxScene::Create(lSdkManager, "myScene");
+	// lImporter->Import(lScene);
+	// lImporter->Destroy();
 
-	FbxDocumentInfo* sceneInfo = lScene->GetSceneInfo();    
-	if (!sceneInfo) {
-		OPlog("Scene info failed.");
-		return -1;
-	}
+	// FbxDocumentInfo* sceneInfo = lScene->GetSceneInfo();    
+	// if (!sceneInfo) {
+	// 	OPlog("Scene info failed.");
+	// 	return -1;
+	// }
 
 	//
 	// Retreive the data from the model
 	//
-	FbxNode* lRootNode = lScene->GetRootNode();
-	if (lRootNode) {
-		for (int i = 0; i < lRootNode->GetChildCount(); i++)
-			FillNode(lRootNode->GetChild(i), 1);
-		for (int i = 0; i < lRootNode->GetChildCount(); i++)
-			FillNode(lRootNode->GetChild(i), 0);
-	}
-	// Get Skinning information for the bind pose
-	GetPoseInformation(lScene, GlobalSkeleton);
-
-	//
-	// Write the OPM file
-	//
-	if (output != NULL) WriteFile(output, features, ModelData, GlobalSkeleton);
-	else OPlog("No output file given.");
-	
-
-	lSdkManager->Destroy();
 	return 0;
 }

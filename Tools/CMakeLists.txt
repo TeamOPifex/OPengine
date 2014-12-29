@@ -87,7 +87,7 @@ if(${OPIFEX_TOOLS_FBXTOOPM})
 		../External/freetype/win32/
 		../External/glfw-3.0.4/include/
 		../External/glm-0.9.1/
-		../External/glew-1.5.8/include/
+		../External/glew-1.9.0/include/
 		../External/Phsyx.3.2.1/include/
 		../External/GLES2/
 		../External/Ogg/include/
@@ -101,12 +101,14 @@ if(${OPIFEX_TOOLS_FBXTOOPM})
 	if(${OPIFEX_OS_WINDOWS})
 		include_directories("C:/Program Files/Autodesk/FBX/FBX SDK/2015.1/include")
 	endif()	
+	
 	if(${OPIFEX_OS_OSX})
 		include_directories("/Applications/Autodesk/FBX SDK/2015.1/include")
 	endif()
 
 
 	add_source_group(\\ "${PROJECT_SOURCE_DIR}/Tools/FBXtoOPM" FBXTOOPM_SRC)
+	
 	set(ALL_LIBS
 		1_Core
 		2_Data
@@ -115,9 +117,12 @@ if(${OPIFEX_TOOLS_FBXTOOPM})
 		5_Human
 	)
 
+
 	add_executable(Tools_FBXtoOPM ${FBXTOOPM_SRC})
 
+
 	target_link_libraries(Tools_FBXtoOPM ${ALL_LIBS})	
+
 
 	if(${OPIFEX_OS_WINDOWS})
 		target_link_libraries(Tools_FBXtoOPM "C:/Program Files/Autodesk/FBX/FBX SDK/2015.1/lib/vs2013/x86/debug/libfbxsdk-mt.lib")
@@ -126,7 +131,9 @@ if(${OPIFEX_TOOLS_FBXTOOPM})
 		target_link_libraries(Tools_FBXtoOPM "/Applications/Autodesk/FBX\ SDK/2015.1/lib/clang/debug/libfbxsdk.a")
 	endif()
 
+
 	add_definitions(-D${OPIFEX_OS})
+
 
 	SET_PROPERTY(TARGET Tools_FBXtoOPM                PROPERTY FOLDER "Tools")
 

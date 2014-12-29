@@ -227,7 +227,7 @@ OPMData OPMloadData(OPstream* str) {
 	// Read Bones
 	if(OPMhasFeature(features, Bones)) {
 		OPlog("Has Bones");
-		ui32 boneCount = OPreadui16(str);
+		i32 boneCount = OPreadi16(str);
 		hierarchyCount = boneCount;
 		hierarchy = (i16*)OPalloc(sizeof(i16)* boneCount);
 		pose = (OPmat4*)OPallocZero(sizeof(OPmat4)* boneCount);

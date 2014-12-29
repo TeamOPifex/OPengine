@@ -95,7 +95,7 @@ OPint OPcmanInit(const OPchar* dir){
 
 	OP_CMAN_ASSET_FOLDER = "assets\\";
 	if (dir) {
-		OP_CMAN_ASSET_FOLDER = OPstringCreateCopy(dir);
+		OP_CMAN_ASSET_FOLDER = OPstringCopy(dir);
 	}
 
 	OP_CMAN_ASSET_LOADER_COUNT = OPlistSize(_OP_CMAN_ASSETLOADERS);

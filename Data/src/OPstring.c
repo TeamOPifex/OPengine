@@ -36,7 +36,7 @@ OPchar* OPstringGetNonConstant(const OPchar* str) {
 	return result;
 }
 
-OPchar* OPstringCreateCopy(const OPchar* str) {
+OPchar* OPstringCopy(const OPchar* str) {
 	i32 len;
 	OPchar* result = NULL;
 
