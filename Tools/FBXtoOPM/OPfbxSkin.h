@@ -4,10 +4,10 @@
 
 typedef struct {
 	i32 c;
-	OPchar* b1;
-	OPchar* b2;
-	OPchar* b3;
-	OPchar* b4;
+	OPchar b1[256];
+	OPchar b2[256];
+	OPchar b3[256];
+	OPchar b4[256];
 	f32 w1;
 	f32 w2;
 	f32 w3;
@@ -74,15 +74,20 @@ OPfbxSkinBlendWeight* _skinBlendWeights(OPfbxMeshData* meshData, OPfbxSkeleton* 
 			OPfbxSkeletonBone* bone = OPfbxSkeletonGet(skeleton, boneNode->GetName());
 			OPlog("\tFound Bone: %s", bone->Name);
 
+			FbxAMatrix transformMatrix;
 			FbxAMatrix transformLinkMatrix;
 			FbxAMatrix transformLinkMatrixInverse;
+			FbxAMatrix globalBindposeInverseMatrix;
 
+			cluster->GetTransformMatrix(transformMatrix);
 			cluster->GetTransformLinkMatrix(transformLinkMatrix);
 			transformLinkMatrixInverse = transformLinkMatrix.Inverse();
+			globalBindposeInverseMatrix = transformLinkMatrixInverse * transformMatrix * geometryTransform;
 
+			_fbxmat4Log("transformMatrix", &transformMatrix);
 			_fbxmat4Log("transformLinkMatrix", &transformLinkMatrix);
 			_fbxmat4Log("transformLinkMatrixInverse", &transformLinkMatrixInverse);
-
+			_fbxmat4Log("globalBindposeInverseMatrix", &globalBindposeInverseMatrix);
 
 			FbxVector4 lRow = transformLinkMatrixInverse.GetRow(0);
 			bone->BindPose[0][0] = lRow[0];
@@ -121,31 +126,34 @@ OPfbxSkinBlendWeight* _skinBlendWeights(OPfbxMeshData* meshData, OPfbxSkeleton* 
 			OPlog("vertexIndexCount: %d", vertexIndexCount);
 			for (int k = 0; k < vertexIndexCount; ++k)
 			{
+				const OPchar* name = boneNode->GetName();
 				int index = cluster->GetControlPointIndices()[k];
-				OPlog("Skin Index: %d", index);
+				OPlog("Skin Index: %d for %s", index, name);
 				double weight = cluster->GetControlPointWeights()[k];
 
 				if (weight == 0.0)
 				{
+					OPlog("w: %f: %s", weight, boneNode->GetName());
 					continue;
 				}
 				if (result[index].c == 0) {
-					result[index].b1 = OPstringCopy(boneNode->GetName());
+
+					OPmemcpy(result[index].b1, name, strlen(name));
 					result[index].w1 = weight;
 					OPlog("w0: %f", weight);
 				}
 				if (result[index].c == 1) {
-					result[index].b2 = OPstringCopy(boneNode->GetName());
+					OPmemcpy(result[index].b2, name, strlen(name));
 					result[index].w2 = weight;
 					OPlog("w1: %f", weight);
 				}
 				if (result[index].c == 2) {
-					result[index].b3 = OPstringCopy(boneNode->GetName());
+					OPmemcpy(result[index].b3, name, strlen(name));
 					result[index].w3 = weight;
 					OPlog("w2: %f", weight);
 				}
 				if (result[index].c == 3) {
-					result[index].b4 = OPstringCopy(boneNode->GetName());
+					OPmemcpy(result[index].b4, name, strlen(name));
 					result[index].w4 = weight;
 					OPlog("w3: %f", weight);
 				}
@@ -165,9 +173,12 @@ OPint OPfbxSkinGet(OPfbxSkin* skin, OPfbxMeshData* meshData, OPfbxSkeleton* skel
 	OPfbxSkinBlendWeight* blendWeights = _skinBlendWeights(meshData, skeleton);
 	OPlog("Step: Blend Weights");
 
-	f32 size = meshData->VertexCount;
+	OPint size = meshData->VertexCount * 4;
+	OPlog("SIZE: %d", size);
 	skin->BoneIndices = (OPint*)OPallocZero(sizeof(OPint) * size);
 	skin->BoneWeights = (f32*)OPallocZero(sizeof(f32) * size);
+
+	OPlog("Created weights & indices array");
 
 	OPint pos = 0;
 	OPint polygonCount = meshData->Mesh->GetPolygonCount();
@@ -179,6 +190,7 @@ OPint OPfbxSkinGet(OPfbxSkin* skin, OPfbxMeshData* meshData, OPfbxSkeleton* skel
 		for (OPint j = 0; j < polygonSize; j++)
 		{
 			OPint controlPointIndex = meshData->Mesh->GetPolygonVertex(i, j);
+			OPlog("CP: %d", controlPointIndex);
 			OPint boneIndex;
 			f32 boneWeight;
 
@@ -218,6 +230,8 @@ OPint OPfbxSkinGet(OPfbxSkin* skin, OPfbxMeshData* meshData, OPfbxSkeleton* skel
 		}
 
 	}
+
+	OPlog("Pos: %d, Size: %d", pos, size);
 
 	OPfree(blendWeights);
 	return 0; // Success
