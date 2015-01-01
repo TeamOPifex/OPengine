@@ -279,7 +279,7 @@ OPMData OPMloadData(OPstream* str) {
 
 
 			OPlog("Joint: %d %d %s", i, boneIndex, name);
-			OPmat4Log("Bone", p);
+			OPmat4Log("Bone", *p);
 			OPfree(name);
 		}
 	}

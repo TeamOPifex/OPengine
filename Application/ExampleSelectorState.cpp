@@ -131,8 +131,7 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 	OPrenderClear(0, 0, 0);
 
 	OPint isInActive = 0, isAvailable = 0;
-	OPmat4 w;
-	OPmat4BuildScl(&w, 1, 1, 1);
+	OPmat4 w = OPmat4Scl(1, 1, 1);
 	OPmat4Translate(&w, -0.9, (exampleSelector->Selected) * 0.1, 0);
 
 	f32 r, g, b;

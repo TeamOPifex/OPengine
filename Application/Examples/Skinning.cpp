@@ -23,6 +23,7 @@ typedef struct {
 	OPeffect* Effect;
 	OPcam* Camera;
 	ui32 pos;
+	OPtexture* texture;
 } SkinningExample;
 
 SkinningExample* skinningExample;
@@ -31,8 +32,11 @@ void ExampleSkinningEnter(OPgameState* last) {
 	OPcmanLoad("skinned2.opm");
 	OPcmanLoad("Skinning.frag");
 	OPcmanLoad("Skinning.vert");
-
+	OPcmanLoad("Knight.png");
 	skinningExample = (SkinningExample*)OPalloc(sizeof(SkinningExample));
+
+
+	skinningExample->texture = (OPtexture*)OPcmanGet("Knight.png");
 
 	skinningExample->pos = 0;
 	skinningExample->Mesh = (OPmesh*)OPcmanGet("skinned2.opm");
@@ -40,7 +44,7 @@ void ExampleSkinningEnter(OPgameState* last) {
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
 		{ "aNormal", GL_FLOAT, 3 },
-		//{ "aTangent", GL_FLOAT, 3 },
+		{ "aTangent", GL_FLOAT, 3 },
 		//{ "aUV", GL_FLOAT, 2 },
 		{ "aBlendIndices", GL_FLOAT, 4 },
 		{ "aBlendWeights", GL_FLOAT, 4 }
@@ -53,14 +57,15 @@ void ExampleSkinningEnter(OPgameState* last) {
 		*vert,
 		*frag,
 		attribs,
-		4,
+		5,
 		"Model Effect",
 		skinningExample->Mesh->VertexSize
 		);
 
 	skinningExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
+	f32 pos = 10;
 	*skinningExample->Camera = OPcamProj(
-		OPvec3Create(5, 5, 5),
+		OPvec3Create(pos, pos, pos),
 		OPvec3Create(0, 0, 0),
 		OPvec3Create(0, 1, 0),
 		0.1f,
@@ -77,10 +82,10 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	if (OPkeyboardWasPressed(OPKEY_P)) { skinningExample->pos++; }
 	if (OPkeyboardWasPressed(OPKEY_O)) { skinningExample->pos--; }
 
-	if (OPkeyboardIsDown(OPKEY_UP)) { skinningExample->Camera->_pos.y += 0.1; }
-	if (OPkeyboardIsDown(OPKEY_DOWN)) { skinningExample->Camera->_pos.y -= 0.1; }
-	if (OPkeyboardIsDown(OPKEY_LEFT)) { skinningExample->Camera->_pos.x -= 0.1; }
-	if (OPkeyboardIsDown(OPKEY_RIGHT)) { skinningExample->Camera->_pos.x += 0.1; }
+	if (OPkeyboardIsDown(OPKEY_UP)) { skinningExample->Camera->_pos.y += 1.1; }
+	if (OPkeyboardIsDown(OPKEY_DOWN)) { skinningExample->Camera->_pos.y -= 1.1; }
+	if (OPkeyboardIsDown(OPKEY_LEFT)) { skinningExample->Camera->_pos.x -= 1.1; }
+	if (OPkeyboardIsDown(OPKEY_RIGHT)) { skinningExample->Camera->_pos.x += 1.1; }
 
 	skinningExample->Camera->_viewStale = 1;
 	OPcamUpdateView((*skinningExample->Camera));
@@ -108,6 +113,9 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 
 	OPvec3 light = OPvec3Create(0, 10, 0);
 	OPrenderParamVec3("uLightPosition", &light);
+
+	OPtextureClearActive();
+	OPrenderParami("uColorTexture", OPtextureBind(skinningExample->texture));
 
 	OPrenderMesh();
 

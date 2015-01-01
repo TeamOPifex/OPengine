@@ -21,10 +21,10 @@ OPint funcShouldInvertMatrix(void* args){
 
 	OPmat4 inverse;
 	OPmat4Inverse(&inverse, temp);
-	OPmat4Log("Inverse: ", &inverse);
+	OPmat4Log("Inverse: ", inverse);
 
 	OPmat4 result = inverse * temp;
-	OPmat4Log("Result: ", &result);
+	OPmat4Log("Result: ", result);
 
 	if(result[0][0] == 1 && result[1][1] == 1 && result[2][2] == 1 && result[3][3] == 1){
 		return 0;
@@ -42,9 +42,9 @@ OPint funcShouldTransposeMatrix(void* args){
 		3, 7, 11, 15,
 		4, 8, 12, 16
 	};
-	OPmat4Log("Orig: ", &temp);
+	OPmat4Log("Orig: ", temp);
 	temp = OPmat4Transpose(temp);
-	OPmat4Log("Res: ", &temp);
+	OPmat4Log("Res: ", temp);
 
 	if(temp[0][3] == 4 && temp[3][0] == 13){
 		return 0;

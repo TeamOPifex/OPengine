@@ -9,11 +9,10 @@ const OPvec3 OPVEC3_FORWARD = { 0, 0, 1 };
 
 OPvec3 OPvec3::operator*=(OPmat4 rhs) 
 {
-	OPmat4Transform(this, this, &rhs);
-	return *this; 
+	return OPmat4Transform(*this, rhs);
 }
 
-OPfloat OPvec3angleToTarget(OPvec3 pos, OPvec3 facing, OPvec3 target) {
+OPfloat OPvec3AngleToTarget(OPvec3 pos, OPvec3 facing, OPvec3 target) {
 	OPvec3 _toPos = target - pos;
 	OPvec3 _facing = OPvec3Norm(facing);
 	_toPos = OPvec3Norm(_toPos);	

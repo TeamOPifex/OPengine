@@ -113,7 +113,7 @@ OPfbxSkinBlendWeight* _skinBlendWeights(OPfbxMeshData* meshData, OPfbxSkeleton* 
 			bone->BindPose[2][3] = lRow[2];
 			bone->BindPose[3][3] = lRow[3];
 
-			OPmat4Log("\tBind Pose", &bone->BindPose);
+			OPmat4Log("\tBind Pose", bone->BindPose);
 
 
 			if(!boneNode) {

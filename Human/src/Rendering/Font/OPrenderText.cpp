@@ -30,13 +30,13 @@ void OPrenderTextColor4Mat4BuiltNode(OPfontBuiltTextNode* node, OPvec4 color, OP
 void OPrenderTextAlign(OPmat4* world, OPfloat width, OPfontAlign align){
 	switch (align) {
 		case OPFONT_ALIGN_LEFT:
-			OPmat4BuildTranslate(world, 0, 0, 0.0f);
+			*world = OPmat4Translate(0, 0, 0.0f);
 			break;
 		case OPFONT_ALIGN_CENTER:
-			OPmat4BuildTranslate(world, -(width / 2.0f), 0, 0.0f);
+			*world = OPmat4Translate(-(width / 2.0f), 0, 0.0f);
 			break;
 		case OPFONT_ALIGN_RIGHT:
-			OPmat4BuildTranslate(world, -width, 0, 0.0f);
+			*world = OPmat4Translate(-width, 0, 0.0f);
 			break;
 	}
 }
@@ -96,15 +96,15 @@ void OPrenderText(const OPchar* text, OPvec4 color, OPmat4* world) {
 		OPrenderTextAlign(&aligned, textNode.Width, OPRENDER_CURR_FONT_MANAGER->_align);
 		//OPmat4Log("Aligned", &aligned);
 
-		OPmat4BuildScl(&scaled, 
+		scaled = OPmat4Scl(
 			OPrenderGetWidthAspectRatio() / scale, 
 			OPrenderGetHeightAspectRatio() / scale, 
 			1.0f);
 		//OPmat4Log("Scaled", &scaled);
 
 		OPmat4 temp;
-		OPmat4Mul(&temp, &scaled, &aligned);
-		OPmat4Mul(&temp, world, &temp);
+		OPmat4Mul(&temp, scaled, aligned);
+		OPmat4Mul(&temp, *world, temp);
 		//OPmat4Log("World", world);
 		//OPmat4Log("Temp", &temp);
 
@@ -115,7 +115,7 @@ void OPrenderText(const OPchar* text, OPvec4 color, OPmat4* world) {
 		OPrenderTextAlign(&scaled, node->Width, OPRENDER_CURR_FONT_MANAGER->_align);
 		OPmat4Scl(&scaled, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f);
 		OPmat4 temp;
-		OPmat4Mul(&temp, &scaled, world);
+		OPmat4Mul(&temp, scaled, *world);
 		OPrenderTextColor4Mat4BuiltNode(node, color, &temp);
 	}
 }

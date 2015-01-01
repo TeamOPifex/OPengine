@@ -193,10 +193,12 @@ OPvec2* OPfbxMeshDataGetUVs(OPfbxMeshData* meshData) {
 						switch (eUV->GetReferenceMode())
 						{
 							case FbxGeometryElement::eDirect: {
+								OPlg("+");
 								uv = eUV->GetDirectArray().GetAt(controlPointIndex);
 								break;
 							}
 							case FbxGeometryElement::eIndexToDirect: {
+								OPlg("-");
 								int id = eUV->GetIndexArray().GetAt(controlPointIndex);
 								uv = eUV->GetDirectArray().GetAt(id);
 								break;
@@ -208,13 +210,15 @@ OPvec2* OPfbxMeshDataGetUVs(OPfbxMeshData* meshData) {
 						}
 					}
 
-					case FbxGeometryElement::eByPolygonVertex: {
-						OPint textureUVIndex = meshData->Mesh->GetTextureUVIndex(i, j);						
+					case FbxGeometryElement::eByPolygonVertex: {					
 						switch (eUV->GetReferenceMode())
 						{
 							case FbxGeometryElement::eDirect:
 							case FbxGeometryElement::eIndexToDirect:
 							{
+								OPint textureUVIndex = meshData->Mesh->GetTextureUVIndex(i, j);	
+								OPlg("*");
+								OPlog("UV Index: %d",textureUVIndex );
 								uv = eUV->GetDirectArray().GetAt(textureUVIndex);
 								break;
 							}
@@ -236,8 +240,8 @@ OPvec2* OPfbxMeshDataGetUVs(OPfbxMeshData* meshData) {
 				}
 
 				uvs[pos] = OPvec2Create( uv[0], uv[1] );
-				pos++;
 				OPvec2Log("UV: ", uvs[pos]);
+				pos++;
 			}
 
 

@@ -1,15 +1,20 @@
 #include "./Human/include/Rendering/Skinning/OPskeleton.h"
 
+// GlobalPost = Absolute Pose
+// Local Pose = Relative Pose
+
 inline void OPskeletonUpdateGlobalPoses(OPskeleton* skeleton) {
 	skeleton->globalPoses[0] = skeleton->localPoses[0];
 
 	for (ui32 i = 1; i < skeleton->hierarchyCount; ++i) {
-		// skeleton->globalPoses[i] = 
-		// 	skeleton->localPoses[i] * 
-		// 	skeleton->globalPoses[skeleton->hierarchy[i]];
 		skeleton->globalPoses[i] = 
-			skeleton->globalPoses[skeleton->hierarchy[i]] * 
-			skeleton->localPoses[i];
+			skeleton->localPoses[i] * 
+			skeleton->globalPoses[skeleton->hierarchy[i]];
+
+		// skeleton->globalPoses[i] = 
+		// 	skeleton->globalPoses[skeleton->hierarchy[i]] * 
+		// 	skeleton->localPoses[i];
+
 		// OPmat4Mul(
 		// 	&skeleton->globalPoses[i],
 		// 	&skeleton->localPoses[i],
@@ -54,7 +59,7 @@ OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* pose, i32 count) {
 		//OPlog("H: %d", skeleton->hierarchy[i]);
 		OPmat4Inverse(&skeleton->localInvPoses[i], skeleton->globalPoses[i]);
 		OPmat4 inv = skeleton->localInvPoses[i] * skeleton->globalPoses[i];
-		OPmat4Log("Ident: ", &inv);
+		OPmat4Log("Ident: ", inv);
 	}
 	
 	return skeleton;
@@ -63,17 +68,21 @@ OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* pose, i32 count) {
 void OPskeletonUpdate(OPskeleton* skeleton) {
 	OPskeletonUpdateGlobalPoses(skeleton);
 
+	// for (i32 i = 0; i < skeleton->hierarchyCount; i++) {
+	// 	OPmat4Inverse(&skeleton->localInvPoses[i], skeleton->globalPoses[i]);
+	// }
+
 	for (i32 i = 0; i < skeleton->hierarchyCount; i++) {
 		//OPmat4Identity(&skeleton->localInvPoses[i]);
 		//OPmat4Identity(&skeleton->skinned[i]);
 
-		// skeleton->skinned[i] = 
-		// 	skeleton->localInvPoses[i] * 
-		// 	skeleton->globalPoses[i];
-
 		skeleton->skinned[i] = 
-			skeleton->globalPoses[i] * 
-			skeleton->localInvPoses[i];
+			skeleton->localInvPoses[i] * 
+			skeleton->globalPoses[i];
+
+		// skeleton->skinned[i] = 
+		// 	skeleton->globalPoses[i] * 
+		// 	skeleton->localInvPoses[i];
 		// OPmat4Mul(
 		// 	&skeleton->skinned[i], 
 		// 	&skeleton->globalPoses[i], 

@@ -77,7 +77,7 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 	OPrenderBindEffect(texturedExample->Effect);
 
 	OPmat4 world, view, proj;
-	OPmat4BuildRotY(&world, texturedExample->Rotation / 100.0);
+	world = OPmat4RotY(texturedExample->Rotation / 100.0);
 
 	OPcamGetView((*texturedExample->Camera), &view);
 	OPcamGetProj((*texturedExample->Camera), &proj);

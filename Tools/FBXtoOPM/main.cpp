@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
 	OPint* features = (OPint*)OPallocZero(sizeof(OPint)* 9);
 	features[Model_Positions] = 1;
 	features[Model_Normals] = 1;
-	features[Model_UVs] = 0;
+	features[Model_UVs] = 1;
 	features[Model_Indices] = 1;
 	features[Model_Bones] = 1;
 	features[Model_Skinning] = 1;
