@@ -50,8 +50,7 @@ void OPtexture2DPrepRender(OPtexture2D* tex2d) {
 
 	OPrenderDepth(0);
 
-	OPmat4 world;
-	OPmat4BuildRotZ(&world, tex2d->Rotation);
+	OPmat4 world = OPmat4RotZ(tex2d->Rotation);
 	world *= tex2d->Scale;
 	world *= OPvec2Create(OPrenderGetWidthAspectRatio() * tex2d->Texture->Description.Width / tex2d->Texture->Description.Height, 1.0);
 	world += tex2d->Position;

@@ -217,17 +217,17 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	OPmat4 scale;
 	OPmat4 scratch;
 	for (ui32 i = 0; i < physicsExample->boxCount; i++) {
-		OPmat4BuildScl(&scale, physicsExample->boxes[i].size * 2, physicsExample->boxes[i].size * 2, physicsExample->boxes[i].size * 2);
+		scale = OPmat4Scl(physicsExample->boxes[i].size * 2, physicsExample->boxes[i].size * 2, physicsExample->boxes[i].size * 2);
 		OPphysicsGetTransform((OPphysicsActor*)physicsExample->boxes[i].physics, &scratch);
-		OPmat4Mul(&world, &scale, &scratch);
+		OPmat4Mul(&world, scale, scratch);
 		OPrenderParamMat4("uWorld", &world);
 		OPrenderMesh();
 	}
 	OPrenderParami("uColorTexture", tex4);
 	for (ui32 i = 0; i < physicsExample->boxStaticCount; i++) {
-		OPmat4BuildScl(&scale, physicsExample->boxesStatic[i].size * 2, physicsExample->boxesStatic[i].size * 2, physicsExample->boxesStatic[i].size * 2);
+		scale = OPmat4Scl(physicsExample->boxesStatic[i].size * 2, physicsExample->boxesStatic[i].size * 2, physicsExample->boxesStatic[i].size * 2);
 		OPphysicsGetTransform((OPphysicsActor*)physicsExample->boxesStatic[i].physics, &scratch);
-		OPmat4Mul(&world, &scale, &scratch);
+		OPmat4Mul(&world, scale, scratch);
 		OPrenderParamMat4("uWorld", &world);
 		OPrenderMesh();
 	}
@@ -239,17 +239,17 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	OPrenderParamVec3("uLightDirection", &light);
 
 	OPrenderParami("uColorTexture", tex2);
-	OPmat4BuildScl(&scale, physicsExample->spheres[0].size * 2, physicsExample->spheres[0].size * 2, physicsExample->spheres[0].size * 2);
+	scale = OPmat4Scl(physicsExample->spheres[0].size * 2, physicsExample->spheres[0].size * 2, physicsExample->spheres[0].size * 2);
 	OPphysicsGetTransform((OPphysicsActor*)physicsExample->spheres[0].physics, &scratch);
-	OPmat4Mul(&world, &scale, &scratch);
+	OPmat4Mul(&world, scale, scratch);
 	OPrenderParamMat4("uWorld", &world);
 	OPrenderMesh();
 
 	OPrenderParami("uColorTexture", tex3);
 	for (ui32 i = 1; i < physicsExample->sphereCount; i++) {
-		OPmat4BuildScl(&scale, physicsExample->spheres[i].size * 2, physicsExample->spheres[i].size * 2, physicsExample->spheres[i].size * 2);
+		scale = OPmat4Scl(physicsExample->spheres[i].size * 2, physicsExample->spheres[i].size * 2, physicsExample->spheres[i].size * 2);
 		OPphysicsGetTransform((OPphysicsActor*)physicsExample->spheres[i].physics, &scratch);
-		OPmat4Mul(&world, &scale, &scratch);
+		OPmat4Mul(&world, scale, scratch);
 		OPrenderParamMat4v("uWorld", 1, &world);
 		OPrenderMesh();
 	}

@@ -10,7 +10,6 @@
 struct OPvec3;
 struct OPmat4;
 
-inline OPfloat* OPvec3index(OPvec3* v, int idx);
 inline OPvec3 OPvec3Create(OPfloat x, OPfloat y, OPfloat z);
 
 inline void OPvec3Add(OPvec3* dst, OPvec3* a, OPvec3* b);
@@ -18,9 +17,9 @@ inline void OPvec3Sub(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3Mul(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3Scl(OPvec3* dst, OPvec3* a, OPfloat s);
 inline void OPvec3Div(OPvec3* dst, OPvec3* a, OPvec3* b);
-inline void OPvec3Divf(OPvec3* dst, OPvec3* a, OPfloat b);
+inline void OPvec3Div(OPvec3* dst, OPvec3* a, OPfloat b);
 
-OPfloat OPvec3angleToTarget(OPvec3 pos, OPvec3 facing, OPvec3 target);
+OPfloat OPvec3AngleToTarget(OPvec3 pos, OPvec3 facing, OPvec3 target);
 
 struct OPvec3 {
 	union{
@@ -52,7 +51,7 @@ struct OPvec3 {
 		return *this; 
 	}
 	inline OPvec3 operator/=(OPfloat vhs) { 
-		OPvec3Divf(this, this, vhs); 
+		OPvec3Div(this, this, vhs); 
 		return *this; 
 	}
 	inline OPfloat& operator[](i32 i) {
@@ -103,12 +102,12 @@ inline OPvec3 operator/(OPvec3 lhs, OPvec3 vhs) {
 }
 inline OPvec3 operator/(OPvec3 lhs, OPfloat vhs) { 
 	OPvec3 temp = { 0, 0, 0};
-	OPvec3Divf(&temp, &lhs, vhs); 
+	OPvec3Div(&temp, &lhs, vhs); 
 	return temp; 
 }
 inline OPvec3 operator/(OPfloat lhs, OPvec3 vhs) { 
 	OPvec3 temp = { 0, 0, 0};
-	OPvec3Divf(&temp, &vhs, lhs); 
+	OPvec3Div(&temp, &vhs, lhs); 
 	return temp; 
 }
 
@@ -147,11 +146,12 @@ inline void OPvec3Div(OPvec3* dst, OPvec3* a, OPvec3* b) {
 	dst->z = a->z / b->z;
 }
 
-inline void OPvec3Divf(OPvec3* dst, OPvec3* a, OPfloat b) {
+inline void OPvec3Div(OPvec3* dst, OPvec3* a, OPfloat b) {
 	dst->x = a->x / b;
 	dst->y = a->y / b;
 	dst->z = a->z / b;
 }
+
 
 //    ___             _   _               _     _       _ _   _              _   _    
 //   | __|  _ _ _  __| |_(_)___ _ _  __ _| |   /_\  _ _(_) |_| |_  _ __  ___| |_(_)__ 
@@ -212,10 +212,10 @@ inline OPvec3 OPvec3Read(OPstream* str) {
 	return temp;
 }
 
-inline void OPvec3Write(OPvec3* v, OPstream* str) {
-	OPwrite(str, &v->x, sizeof(f32));
-	OPwrite(str, &v->y, sizeof(f32));
-	OPwrite(str, &v->z, sizeof(f32));
+inline void OPvec3Write(OPvec3 v, OPstream* str) {
+	OPwrite(str, &v.x, sizeof(f32));
+	OPwrite(str, &v.y, sizeof(f32));
+	OPwrite(str, &v.z, sizeof(f32));
 }
 
 inline OPvec3 OPvec3RandNorm(){

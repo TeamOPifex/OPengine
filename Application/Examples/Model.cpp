@@ -89,7 +89,7 @@ OPint ExampleModelUpdate(OPtimer* time) {
 	if (OPkeyboardIsDown(OPKEY_SPACE)) { modelExample->Rotation++; }
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
-	OPmat4 world = OPmat4createRotY(modelExample->Rotation / 100.0);
+	OPmat4 world = OPmat4RotY(modelExample->Rotation / 100.0);
 	OPmat4Scl(&world, 0.25f, 0.25f, 0.25f);
 
 	////////////////////////

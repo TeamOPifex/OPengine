@@ -19,7 +19,7 @@ void main() {
 	vec3 LightColor = vec3(1,1,1);
 	float LightPower = 0.2;
 	
-	vec3 MaterialAmbientColor = vec3(0.8,0.8,0.8);
+	vec3 MaterialAmbientColor = texture2D(uColorTexture, vTexCoord).rgb + vec3(0.2);
 	
 	vec3 n = normalize( vNormal );
 	vec3 l = normalize( vLightDirection );
