@@ -118,7 +118,7 @@ void ExampleDeferredEnter(OPgameState* last) {
 //		"Deferred Effect",
 //		deferredExample->Mesh->VertexSize);
 //
-//	deferredExample->Camera = OPcamProj(
+//	deferredExample->Camera = OPcamPersp(
 //		OPvec3One * 2.0,
 //		OPvec3Create(0, 1, 0),
 //		OPvec3Create(0, 1, 0),

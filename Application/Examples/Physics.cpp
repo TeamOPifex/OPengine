@@ -102,7 +102,7 @@ void ExamplePhysicsEnter(OPgameState* last) {
 		);
 
 	physicsExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
-	*physicsExample->Camera = OPcamProj(
+	*physicsExample->Camera = OPcamPersp(
 		OPvec3Create(0, 40, 20),
 		OPvec3Create(0, 1, 0),
 		OPvec3Create(0, 1, 0),

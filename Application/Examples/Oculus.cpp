@@ -52,7 +52,7 @@ void ExampleOculusEnter(OPgameState* last) {
 		);
 
 	oculusExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
-	*oculusExample->Camera = OPcamProj(
+	*oculusExample->Camera = OPcamPersp(
 		OPVEC3_ONE * 2.0,
 		OPvec3Create(0, 1, 0),
 		OPvec3Create(0, 1, 0),
