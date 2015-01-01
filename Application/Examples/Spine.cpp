@@ -59,7 +59,7 @@ void ExampleSpineEnter(OPgameState* last) {
 	spineExample->Mesh = (OPmesh*)OPcmanGet("cube.opm");
 
 	// Sets up the camera as a perpsective camera for rendering
-	spineExample->Camera = OPcamProj(
+	spineExample->Camera = OPcamPersp(
 		OPvec3Create(0.0f, 0.0f, 45.0f),
 		OPvec3Create(0.0f, 0.0f, 0.0f),
 		OPVEC3_UP,

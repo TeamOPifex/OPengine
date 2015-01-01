@@ -56,7 +56,7 @@ void ExampleMyoEnter(OPgameState* last) {
 		myoExample->Mesh->VertexSize);
 
 	// Sets up the camera as a perpsective camera for rendering
-	myoExample->Camera = OPcamProj(
+	myoExample->Camera = OPcamPersp(
 		OPVEC3_ONE * 2.0,
 		OPVEC3_UP,
 		OPVEC3_UP,

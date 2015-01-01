@@ -56,7 +56,7 @@ void ExampleTexturedEnter(OPgameState* last) {
 		);
 
 	texturedExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
-	*texturedExample->Camera = OPcamProj(
+	*texturedExample->Camera = OPcamPersp(
 		OPVEC3_ONE * 2.0,
 		OPvec3Create(0, 0, 0),
 		OPvec3Create(0, 1, 0),

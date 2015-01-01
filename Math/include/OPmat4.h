@@ -404,7 +404,7 @@ inline void OPmat4Log(const OPchar* msg, OPmat4 m) {
 }
 
 OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPfloat zNear, OPfloat zFar);
-OPmat4 OPmat4look(OPvec3 eye, OPvec3 at, OPvec3 up);
+OPmat4 OPmat4LookAt(OPvec3 eye, OPvec3 at, OPvec3 up);
 OPmat4 OPmat4Perspective(OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal);
 OPint OPmat4Inverse(OPmat4* dst, OPmat4 a);
 

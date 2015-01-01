@@ -56,7 +56,7 @@ void ExampleModelEnter(OPgameState* last) {
 		modelExample->Mesh->VertexSize);
 
 	// Sets up the camera as a perpsective camera for rendering
-	modelExample->Camera = OPcamProj(
+	modelExample->Camera = OPcamPersp(
 		OPVEC3_ONE * 2.0,
 		OPVEC3_UP,
 		OPVEC3_UP,

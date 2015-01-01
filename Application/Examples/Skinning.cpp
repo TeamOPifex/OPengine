@@ -64,7 +64,7 @@ void ExampleSkinningEnter(OPgameState* last) {
 
 	skinningExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
 	f32 pos = 10;
-	*skinningExample->Camera = OPcamProj(
+	*skinningExample->Camera = OPcamPersp(
 		OPvec3Create(pos, pos, pos),
 		OPvec3Create(0, 0, 0),
 		OPvec3Create(0, 1, 0),

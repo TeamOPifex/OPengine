@@ -26,7 +26,7 @@ OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPf
 	return m;
 }
 
-OPmat4 OPmat4look(OPvec3 eye, OPvec3 at, OPvec3 up) {
+OPmat4 OPmat4LookAt(OPvec3 eye, OPvec3 at, OPvec3 up) {
 	OPmat4 m = OPMAT4IDENTITY;
 	OPvec3 dist = at - eye;
 	OPvec3 f = OPvec3Norm(dist);
