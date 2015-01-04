@@ -69,6 +69,7 @@ OPfbxSkinBlendWeight* _skinBlendWeights(OPfbxMeshData* meshData, OPfbxSkeleton* 
 			FbxCluster* cluster = skinDeformer->GetCluster(j);
 
 			FbxNode* boneNode = cluster->GetLink();
+			FbxAMatrix transformLocalMatrix = boneNode->EvaluateLocalTransform();
 			OPlog("Bone: %s", boneNode->GetName());
 
 			OPfbxSkeletonBone* bone = OPfbxSkeletonGet(skeleton, boneNode->GetName());
@@ -84,30 +85,32 @@ OPfbxSkinBlendWeight* _skinBlendWeights(OPfbxMeshData* meshData, OPfbxSkeleton* 
 			transformLinkMatrixInverse = transformLinkMatrix.Inverse();
 			globalBindposeInverseMatrix = transformLinkMatrixInverse * transformMatrix * geometryTransform;
 
+			_fbxmat4Log("transformLocalMatrix", &transformLocalMatrix);
+			_fbxmat4Log("geometryTransform", &geometryTransform);
 			_fbxmat4Log("transformMatrix", &transformMatrix);
 			_fbxmat4Log("transformLinkMatrix", &transformLinkMatrix);
 			_fbxmat4Log("transformLinkMatrixInverse", &transformLinkMatrixInverse);
 			_fbxmat4Log("globalBindposeInverseMatrix", &globalBindposeInverseMatrix);
 
-			FbxVector4 lRow = transformLinkMatrixInverse.GetRow(0);
+			FbxVector4 lRow = transformLocalMatrix.GetRow(0);
 			bone->BindPose[0][0] = lRow[0];
 			bone->BindPose[1][0] = lRow[1];
 			bone->BindPose[2][0] = lRow[2];
 			bone->BindPose[3][0] = lRow[3];
 
-			lRow = transformLinkMatrixInverse.GetRow(1);
+			lRow = transformLocalMatrix.GetRow(1);
 			bone->BindPose[0][1] = lRow[0];
 			bone->BindPose[1][1] = lRow[1];
 			bone->BindPose[2][1] = lRow[2];
 			bone->BindPose[3][1] = lRow[3];
 
-			lRow = transformLinkMatrixInverse.GetRow(2);
+			lRow = transformLocalMatrix.GetRow(2);
 			bone->BindPose[0][2]= lRow[0];
 			bone->BindPose[1][2] = lRow[1];
 			bone->BindPose[2][2] = lRow[2];
 			bone->BindPose[3][2] = lRow[3];
 
-			lRow = transformLinkMatrixInverse.GetRow(3);
+			lRow = transformLocalMatrix.GetRow(3);
 			bone->BindPose[0][3] = lRow[0];
 			bone->BindPose[1][3] = lRow[1];
 			bone->BindPose[2][3] = lRow[2];

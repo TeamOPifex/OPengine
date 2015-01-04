@@ -9,9 +9,11 @@
 typedef struct {
 	i16* hierarchy;
 	ui16 hierarchyCount;
-	OPmat4* localPoses;
+	OPmat4* bindPoses;
+	OPmat4* invBindPoses;
 	OPmat4* globalPoses;
-	OPmat4* localInvPoses;
+	OPmat4* globalInvPoses;
+	OPmat4* localPoses;
 	OPmat4* skinned;
 } OPskeleton;
 
