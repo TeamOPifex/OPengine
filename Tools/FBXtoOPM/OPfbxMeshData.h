@@ -6,6 +6,7 @@ typedef struct {
 	OPint ControlPointIndex[4];
 	OPvec3 Position[4];
 	OPvec3 Normal[4];
+	OPvec4 Tangent[4];
 	OPvec2 UV[4];
 } OPfbxMeshPoly;
 
@@ -132,6 +133,107 @@ OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData) {
 				polys[i].UV[j] = OPvec2Create(uv[0], uv[1]);
 			}
 
+			FbxVector4 tangent;
+			for (OPint l = 0; l < meshData->Mesh->GetElementTangentCount(); ++l)
+			{
+				FbxGeometryElementTangent* eTangent = meshData->Mesh->GetElementTangent(l);
+
+				if (eTangent->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+				{
+					switch (eTangent->GetReferenceMode())
+					{
+					case FbxGeometryElement::eDirect: {
+						tangent = eTangent->GetDirectArray().GetAt(controlPointIndex);
+						break;
+					}
+					case FbxGeometryElement::eIndexToDirect:
+					{
+						int id = eTangent->GetIndexArray().GetAt(controlPointIndex);
+						tangent = eTangent->GetDirectArray().GetAt(id);
+						break;
+					}
+					default:
+						break; // other reference modes not shown here!
+					}
+				}
+				polys[i].Tangent[j] = OPvec4Create(tangent[0], tangent[1], tangent[2], tangent[3]);
+			}
+
+			// TODO(garrett): BiNormal
+			//for (l = 0; l < pMesh->GetElementBinormalCount(); ++l)
+			//{
+
+			//	FbxGeometryElementBinormal* leBinormal = pMesh->GetElementBinormal(l);
+
+			//	FBXSDK_sprintf(header, 100, "            Binormal: ");
+			//	if (leBinormal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+			//	{
+			//		switch (leBinormal->GetReferenceMode())
+			//		{
+			//		case FbxGeometryElement::eDirect:
+			//			Display3DVector(header, leBinormal->GetDirectArray().GetAt(vertexId));
+			//			break;
+			//		case FbxGeometryElement::eIndexToDirect:
+			//		{
+			//												   int id = leBinormal->GetIndexArray().GetAt(vertexId);
+			//												   Display3DVector(header, leBinormal->GetDirectArray().GetAt(id));
+			//		}
+			//			break;
+			//		default:
+			//			break; // other reference modes not shown here!
+			//		}
+			//	}
+			//}
+
+			// TODO(garrett): COLOR
+			//for (l = 0; l < pMesh->GetElementVertexColorCount(); l++)
+			//{
+			//	FbxGeometryElementVertexColor* leVtxc = pMesh->GetElementVertexColor(l);
+			//	FBXSDK_sprintf(header, 100, "            Color vertex: ");
+			//	switch (leVtxc->GetMappingMode())
+			//	{
+			//	default:
+			//		break;
+			//	case FbxGeometryElement::eByControlPoint:
+			//		switch (leVtxc->GetReferenceMode())
+			//		{
+			//		case FbxGeometryElement::eDirect:
+			//			DisplayColor(header, leVtxc->GetDirectArray().GetAt(lControlPointIndex));
+			//			break;
+			//		case FbxGeometryElement::eIndexToDirect:
+			//		{
+			//			int id = leVtxc->GetIndexArray().GetAt(lControlPointIndex);
+			//			DisplayColor(header, leVtxc->GetDirectArray().GetAt(id));
+			//		}
+			//			break;
+			//		default:
+			//			break; // other reference modes not shown here!
+			//		}
+			//		break;
+			//	case FbxGeometryElement::eByPolygonVertex:
+			//	{
+			//		switch (leVtxc->GetReferenceMode())
+			//		{
+			//		case FbxGeometryElement::eDirect:
+			//			DisplayColor(header, leVtxc->GetDirectArray().GetAt(vertexId));
+			//			break;
+			//		case FbxGeometryElement::eIndexToDirect:
+			//		{
+			//			int id = leVtxc->GetIndexArray().GetAt(vertexId);
+			//			DisplayColor(header, leVtxc->GetDirectArray().GetAt(id));
+			//		}
+			//			break;
+			//		default:
+			//			break; // other reference modes not shown here!
+			//		}
+			//	}
+			//		break;
+			//	case FbxGeometryElement::eByPolygon: // doesn't make much sense for UVs
+			//	case FbxGeometryElement::eAllSame:   // doesn't make much sense for UVs
+			//	case FbxGeometryElement::eNone:       // doesn't make much sense for UVs
+			//		break;
+			//	}
+			//}
 		}
 	}
 
