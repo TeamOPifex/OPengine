@@ -14,12 +14,14 @@ typedef struct {
 	OPfbxSkeleton Skeleton;
 	OPfbxMeshData MeshData;
 
-	ui32* Indices;
-	OPvec3* Positions;
-	OPvec2* UVs;
-	OPvec3* Normals;
+	//ui32* Indices;
+	//OPvec3* Positions;
+	//OPvec2* UVs;
+	//OPvec3* Normals;
+	OPfbxMeshPoly* Polys;
+	OPfbxSkinBlendWeight* BlendWeights;
 
-	OPfbxSkin Skin;
+	//OPfbxSkin Skin;
 
 } OPfbxMesh;
 
@@ -39,16 +41,20 @@ OPint OPfbxMeshCreate(OPfbxMesh* mesh, const OPchar* filename) {
 
 		OPlog("Step: MeshData");
 
-		mesh->Indices = OPfbxMeshDataGetIndices(&mesh->MeshData);
-		OPlog("Step: indices");
-		mesh->Positions = OPfbxMeshDataGetPositions(&mesh->MeshData);
-		OPlog("Step: positions");
-		mesh->UVs = OPfbxMeshDataGetUVs(&mesh->MeshData);
-		OPlog("Step: uvs");
-		mesh->Normals = OPfbxMeshDataGetNormals(&mesh->MeshData);
-		OPlog("Step: normals");
+		mesh->Polys = OPfbxMeshDataGetPolygons(&mesh->MeshData);
 
-		OPfbxSkinGet(&mesh->Skin, &mesh->MeshData, &mesh->Skeleton);
+		//mesh->Indices = OPfbxMeshDataGetIndices(&mesh->MeshData);
+		//OPlog("Step: indices");
+		//mesh->Positions = OPfbxMeshDataGetPositions(&mesh->MeshData);
+		//OPlog("Step: positions");
+		//mesh->UVs = OPfbxMeshDataGetUVs(&mesh->MeshData);
+		//OPlog("Step: uvs");
+		//mesh->Normals = OPfbxMeshDataGetNormals(&mesh->MeshData);
+		//OPlog("Step: normals");
+
+		//OPfbxSkinGet(&mesh->Skin, &mesh->MeshData, &mesh->Skeleton);
+
+		mesh->BlendWeights = _skinBlendWeights(&mesh->MeshData, &mesh->Skeleton);
 		OPlog("Step: skin");
 
 		OPlog("End FBX SDK");
@@ -94,75 +100,113 @@ OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* featu
 	// OPM File Features
 	writeU32(&myFile, feature);
 
-	OPlog("Vertex Count: %d", mesh->MeshData.VertexCount);
-	// Vertex Count
-	writeU32(&myFile, mesh->MeshData.VertexCount);
-	for (OPint i = 0; i < mesh->MeshData.VertexCount; i++) {
-
-		if (features[Model_Positions]) {
-			OPlg(".");
-			OPvec3 pos = mesh->Positions[i];
-			writeF32(&myFile, pos.x);
-			writeF32(&myFile, pos.y);
-			writeF32(&myFile, pos.z);
-		}
-
-		if (features[Model_Normals]) {
-			OPlg("-");
-			OPvec3 norm = mesh->Normals[i];
-			writeF32(&myFile, norm.x);
-			writeF32(&myFile, norm.y);
-			writeF32(&myFile, norm.z);
-		}
-
-		if (features[Model_UVs]) {
-			OPlg("=");
-			OPvec2 uv = mesh->UVs[i];
-			writeF32(&myFile, uv.x);
-			writeF32(&myFile, uv.y);
-		}
-
-		if (features[Model_Skinning]) {
-			OPlg("+");
-			OPint ind1 = mesh->Skin.BoneIndices[i * 4 + 0];
-			OPint ind2 = mesh->Skin.BoneIndices[i * 4 + 1];
-			OPint ind3 = mesh->Skin.BoneIndices[i * 4 + 2];
-			OPint ind4 = mesh->Skin.BoneIndices[i * 4 + 3];
-
-			f32 w1 = mesh->Skin.BoneWeights[i * 4 + 0];
-			f32 w2 = mesh->Skin.BoneWeights[i * 4 + 1];
-			f32 w3 = mesh->Skin.BoneWeights[i * 4 + 2];
-			f32 w4 = mesh->Skin.BoneWeights[i * 4 + 3];
-
-			writeI16(&myFile, ind1);
-			writeI16(&myFile, ind2);
-			writeI16(&myFile, ind3);
-			writeI16(&myFile, ind4);
-
-			writeF32(&myFile, w1);
-			writeF32(&myFile, w2);
-			writeF32(&myFile, w3);
-			writeF32(&myFile, w4);
-
-
-			OPlog("%d: %d %d %d %d %f %f %f %f", i,
-				ind1,
-				ind2,
-				ind3,
-				ind4,
-				w1,
-				w2,
-				w3,
-				w4);
-		}
-
+	OPint verticeCount = 0;
+	OPint indCount = 0;
+	for (OPint i = 0; i < mesh->MeshData.PolyCount; i++) {
+		verticeCount += mesh->Polys[i].Size;
+		indCount += mesh->Polys[i].Size == 3 ? 3 : 6;
 	}
 
-	if (features[Model_Indices]) {
-		writeU32(&myFile, mesh->MeshData.IndexCount / 3);
+	OPlog("Vertex Count: %d", verticeCount);
+	// Vertex Count
+	writeU32(&myFile, verticeCount);
 
-		for (i32 i = 0; i < mesh->MeshData.IndexCount; i++) {
-			writeU16(&myFile, mesh->Indices[i]);
+	for (OPint i = 0; i < mesh->MeshData.PolyCount; i++) {
+		for (OPint j = 0; j < mesh->Polys[i].Size; j++) {
+
+			if (features[Model_Positions]) {
+				OPlg(".");
+				OPvec3 pos = mesh->Polys[i].Position[j];
+				writeF32(&myFile, pos.x);
+				writeF32(&myFile, pos.y);
+				writeF32(&myFile, pos.z);
+			}
+
+			if (features[Model_Normals]) {
+				OPlg("-");
+				OPvec3 norm = mesh->Polys[i].Normal[j];
+				writeF32(&myFile, norm.x);
+				writeF32(&myFile, norm.y);
+				writeF32(&myFile, norm.z);
+			}		
+			
+			if (features[Model_UVs]) {
+				OPlg("=");
+				OPvec2 uv = mesh->Polys[i].UV[j];
+				writeF32(&myFile, uv.x);
+				writeF32(&myFile, uv.y);
+			}
+
+			if (features[Model_Skinning]) {
+				OPlg("+");
+				OPint cp = mesh->Polys[i].ControlPointIndex[j];
+				OPfbxSkinBlendWeight bw = mesh->BlendWeights[cp];
+				OPint boneIndex;
+
+				if (bw.c > 0) {
+					boneIndex = OPfbxSkeletonGetPos(&mesh->Skeleton, mesh->BlendWeights[cp].b1);
+					writeI16(&myFile, boneIndex);
+				}
+				if (bw.c > 1) {
+					boneIndex = OPfbxSkeletonGetPos(&mesh->Skeleton, mesh->BlendWeights[cp].b2);
+					writeI16(&myFile, boneIndex);
+				}
+				if (bw.c > 2) {
+					boneIndex = OPfbxSkeletonGetPos(&mesh->Skeleton, mesh->BlendWeights[cp].b3);
+					writeI16(&myFile, boneIndex);
+				}
+				if (bw.c > 3) {
+					boneIndex = OPfbxSkeletonGetPos(&mesh->Skeleton, mesh->BlendWeights[cp].b4);
+					writeI16(&myFile, boneIndex);
+				}
+
+				for (OPint k = 0; k < 4 - bw.c; k++) {
+					writeI16(&myFile, -1);
+				}
+
+
+				if (bw.c > 0) {
+					writeF32(&myFile, mesh->BlendWeights[cp].w1);
+				}
+				if (bw.c > 1) {
+					writeF32(&myFile, mesh->BlendWeights[cp].w2);
+				}
+				if (bw.c > 2) {
+					writeF32(&myFile, mesh->BlendWeights[cp].w3);
+				}
+				if (bw.c > 3) {
+					writeF32(&myFile, mesh->BlendWeights[cp].w4);
+				}
+
+				for (OPint k = 0; k < 4 - bw.c; k++) {
+					writeF32(&myFile, 0.0f);
+				}
+
+			}
+		}
+	}
+
+	OPint offset = 0;
+	if (features[Model_Indices]) {
+		writeU32(&myFile, indCount / 3);
+
+		for (OPint i = 0; i < mesh->MeshData.PolyCount; i++) {
+			if (mesh->Polys[i].Size == 3) {
+				writeU16(&myFile, offset + 0);
+				writeU16(&myFile, offset + 1);
+				writeU16(&myFile, offset + 2);
+				offset += 3;
+			}
+			else {
+				writeU16(&myFile, offset + 0);
+				writeU16(&myFile, offset + 1);
+				writeU16(&myFile, offset + 2);
+
+				writeU16(&myFile, offset + 0);
+				writeU16(&myFile, offset + 2);
+				writeU16(&myFile, offset + 3);
+				offset += 4;
+			}
 		}
 	}
 
