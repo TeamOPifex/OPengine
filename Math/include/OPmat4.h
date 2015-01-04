@@ -403,6 +403,23 @@ inline void OPmat4Log(const OPchar* msg, OPmat4 m) {
 		m[0][3], m[1][3], m[2][3], m[3][3]);
 }
 
+inline OPmat4 OPmat4Read(OPstream* str) {
+	OPmat4 temp = {
+		OPvec4Read(str),
+		OPvec4Read(str),
+		OPvec4Read(str),
+		OPvec4Read(str)
+	};
+	return temp;
+}
+
+inline void OPmat4Write(OPmat4 v, OPstream* str) {
+	OPvec4Write(v[0], str);
+	OPvec4Write(v[1], str);
+	OPvec4Write(v[2], str);
+	OPvec4Write(v[3], str);
+}
+
 OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPfloat zNear, OPfloat zFar);
 OPmat4 OPmat4LookAt(OPvec3 eye, OPvec3 at, OPvec3 up);
 OPmat4 OPmat4Perspective(OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal);

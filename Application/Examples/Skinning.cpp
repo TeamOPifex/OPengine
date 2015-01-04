@@ -40,7 +40,7 @@ void ExampleSkinningEnter(OPgameState* last) {
 	skinningExample->texture = (OPtexture*)OPcmanLoadGet("Knight.png");
 
 	skinningExample->pos = 0;
-	skinningExample->Mesh = (OPmesh*)OPcmanLoadGet("skinned9.opm");
+	skinningExample->Mesh = (OPmesh*)OPcmanLoadGet("skinned10.opm");
 
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
@@ -83,6 +83,9 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	if (OPkeyboardWasPressed(OPKEY_P)) { skinningExample->pos++; }
 	if (OPkeyboardWasPressed(OPKEY_O)) { skinningExample->pos--; }
 
+	if (OPkeyboardWasPressed(OPKEY_M)) { skinningExample->Mesh->SkeletonAnimation.Frame++; }
+	if (OPkeyboardWasPressed(OPKEY_N)) { skinningExample->Mesh->SkeletonAnimation.Frame--; }
+
 	if (OPkeyboardIsDown(OPKEY_UP)) { skinningExample->Camera->_pos.y += 0.1 * SCALE; }
 	if (OPkeyboardIsDown(OPKEY_DOWN)) { skinningExample->Camera->_pos.y -= 0.1 * SCALE; }
 	if (OPkeyboardIsDown(OPKEY_LEFT)) { skinningExample->Camera->_pos.x -= 0.1 * SCALE; }
@@ -91,6 +94,7 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	skinningExample->Camera->_viewStale = 1;
 	OPcamUpdateView((*skinningExample->Camera));
 
+	OPskeletonAnimationUpdate(&skinningExample->Mesh->SkeletonAnimation, time);
 	//OPmat4Translate(&mesh->Skeleton->localPoses[pos], time->Elapsed / 1000.0f, 0, 0);
 	OPmat4RotZ(&skinningExample->Mesh->Skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_W) / 100.0f);
 	OPmat4RotZ(&skinningExample->Mesh->Skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_S) / -100.0f);
