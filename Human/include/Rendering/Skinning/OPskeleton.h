@@ -1,5 +1,5 @@
-#ifndef OPIFEX_RENDERING_SKINNING_ANIMATION
-#define OPIFEX_RENDERING_SKINNING_ANIMATION
+#ifndef OPIFEX_RENDERING_SKINNING_SKELETON
+#define OPIFEX_RENDERING_SKINNING_SKELETON
 
 #define NUM_JOINTS 4
 
@@ -9,8 +9,6 @@
 typedef struct {
 	i16* hierarchy;
 	ui16 hierarchyCount;
-	OPmat4* bindPoses;
-	OPmat4* invBindPoses;
 	OPmat4* globalPoses;
 	OPmat4* globalInvPoses;
 	OPmat4* localPoses;

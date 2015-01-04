@@ -284,6 +284,36 @@ OPMData OPMloadData(OPstream* str) {
 		}
 	}
 
+	i16 trackCount;
+	OPMdataAnim* tracks = NULL;
+	if (OPMhasFeature(features, Animations) && OPMhasFeature(features, Bones)) {
+		trackCount = OPreadi16(str);
+		tracks = (OPMdataAnim*)OPalloc(sizeof(OPMdataAnim)* trackCount);
+		for (OPint i = 0; i < trackCount; i++) {
+			tracks[i].Name = OPreadstring(str);
+
+			tracks[i].FrameCount = OPreadui32(str);
+
+			OPint totalFrames = tracks[i].FrameCount * hierarchyCount;
+			tracks[i].Frames = (OPmat4*)OPalloc(sizeof(OPmat4)* totalFrames);
+
+			for (OPint j = 0; j < totalFrames; j++) {
+
+				OPmat4* p = &(tracks[i].Frames[j]);
+				//OPlog("Mat4 Bone: %x", p);
+
+				for (i32 c = 0; c < 4; c++) {
+					p->cols[c].x = OPreadf32(str);
+					p->cols[c].y = OPreadf32(str);
+					p->cols[c].z = OPreadf32(str);
+					p->cols[c].w = OPreadf32(str);
+				}
+
+				tracks[i].Frames[j] = OPmat4Transpose(tracks[i].Frames[j]);
+			}
+		}
+	}
+
 	OPlog("Index Count: %d", indicesCount);
 	OPlog("Vertex Count: %d", verticeCount);
 
@@ -386,6 +416,8 @@ OPMData OPMloadData(OPstream* str) {
 	data.hierarchy = hierarchy;
 	data.pose = pose;
 	data.hierarchyCount = hierarchyCount;
+	data.trackCount = trackCount;
+	data.tracks = tracks;
 
 
 
@@ -440,8 +472,13 @@ OPint OPMload(const OPchar* filename, OPmesh** mesh) {
 		data.vertices, data.indices
 	);
 	temp.boundingBox = data.bounds;
-	if (data.hierarchy != NULL)
+
+	if (data.hierarchy != NULL) {
 		temp.Skeleton = OPskeletonCreate(data.hierarchy, data.pose, data.hierarchyCount);
+
+		if (data.tracks != NULL)
+			OPskeletonAnimationInit(&temp.SkeletonAnimation, temp.Skeleton, data.tracks[0].Frames, data.tracks[0].FrameCount);
+	}
 
 	temp.MetaCount = data.metaCount;
 	temp.Meta = data.meta;

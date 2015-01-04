@@ -5,6 +5,7 @@
 #include "OPfbxSkeleton.h"
 #include "OPfbxMeshData.h"
 #include "OPfbxSkin.h"
+#include "OPfbxAnimation.h"
 #include "Helpers.h"
 
 typedef struct {
@@ -20,6 +21,7 @@ typedef struct {
 	//OPvec3* Normals;
 	OPfbxMeshPoly* Polys;
 	OPfbxSkinBlendWeight* BlendWeights;
+	OPfbxAnimation* Animation;
 
 	//OPfbxSkin Skin;
 
@@ -54,8 +56,10 @@ OPint OPfbxMeshCreate(OPfbxMesh* mesh, const OPchar* filename) {
 
 		//OPfbxSkinGet(&mesh->Skin, &mesh->MeshData, &mesh->Skeleton);
 
-		mesh->BlendWeights = _skinBlendWeights(&mesh->MeshData, &mesh->Skeleton);
+		mesh->BlendWeights = _skinBlendWeights(&mesh->MeshData, &mesh->Skeleton, &mesh->SCENE);
 		OPlog("Step: skin");
+
+		mesh->Animation = OPfbxAnimationGet(&mesh->MeshData, &mesh->Skeleton, &mesh->SCENE);
 
 		OPlog("End FBX SDK");
 		//OPfbxSdkDestroy(&SDK);
@@ -226,6 +230,30 @@ OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* featu
 			}
 		}
 		//WriteSkeleton(skel, &myFile);
+	}
+
+	if (features[Model_Animations]) {
+		OPlog("Track Count: %d", mesh->Animation->AnimationTrackCount);
+		writeI16(&myFile, mesh->Animation->AnimationTrackCount);
+		for (OPint i = 0; i < mesh->Animation->AnimationTrackCount; i++) {
+			OPlog("Track Name: %s", mesh->Animation->Animations[i].Name);
+			ui32 len = strlen(mesh->Animation->Animations[i].Name);
+			writeU32(&myFile, len);
+			write(&myFile, mesh->Animation->Animations[i].Name, len);
+
+			writeU32(&myFile, mesh->Animation->Animations[i].TotalFrames);
+			for (OPint j = 0; j < mesh->Animation->Animations[i].TotalFrames * mesh->Skeleton.BoneCount; j++) {
+				OPlg("%d ", j);
+				OPmat4Log("Frame", mesh->Animation->Animations[i].JointTransform[j]);
+				for (i32 c = 0; c < 4; c++) {
+					writeF32(&myFile, mesh->Animation->Animations[i].JointTransform[j][c].x);
+					writeF32(&myFile, mesh->Animation->Animations[i].JointTransform[j][c].y);
+					writeF32(&myFile, mesh->Animation->Animations[i].JointTransform[j][c].z);
+					writeF32(&myFile, mesh->Animation->Animations[i].JointTransform[j][c].w);
+				}
+			}
+
+		}
 	}
 
 	return 0;

@@ -61,6 +61,7 @@ int main(int argc, char **argv) {
 	features[Model_Indices] = 1;
 	features[Model_Bones] = 1;
 	features[Model_Skinning] = 1;
+	features[Model_Animations] = 1;
 
 	OPint interactive = 0;
 	if(interactive) {
