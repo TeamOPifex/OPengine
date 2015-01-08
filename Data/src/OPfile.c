@@ -173,7 +173,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
 	// check to see if the file exists
 	if(OPfileExists(path) >= 0){
-		OPint fd = 0, i;
+		OPint fd = 0;
 
 		OPlog("OPreadFile: %s", path);
 		fd = open(path, O_RDONLY);
@@ -317,26 +317,33 @@ OPfile OPfileOpen(const OPchar* path) {
 
 OPint OPfileWriteui8(OPfile* file, ui8 data) {
 	write(file->_handle, &data, sizeof(ui8));
+    return 1;
 }
 OPint OPfileWriteui16(OPfile* file, ui16 data) {
-	write(file->_handle, &data, sizeof(ui16));
+    write(file->_handle, &data, sizeof(ui16));
+    return 1;
 }
 OPint OPfileWriteui32(OPfile* file, ui32 data) {
-	write(file->_handle, &data, sizeof(ui32));
+    write(file->_handle, &data, sizeof(ui32));
+    return 1;
 }
 OPint OPfileWritei8(OPfile* file, i8 data) {
-	write(file->_handle, &data, sizeof(i8));
+    write(file->_handle, &data, sizeof(i8));
+    return 1;
 }
 OPint OPfileWritei16(OPfile* file, i16 data) {
-	write(file->_handle, &data, sizeof(i16));
+    write(file->_handle, &data, sizeof(i16));
+    return 1;
 }
 OPint OPfileWritei32(OPfile* file, i32 data) {
-	write(file->_handle, &data, sizeof(i32));
+    write(file->_handle, &data, sizeof(i32));
+    return 1;
 }
 OPint OPfileWriteString(OPfile* file, const OPchar* data) {
 	ui32 len = strlen(data);
 	write(file->_handle, len, sizeof(ui32));
-	write(file->_handle, data, sizeof(OPchar) * len);
+    write(file->_handle, data, sizeof(OPchar) * len);
+    return 1;
 }
 
 OPint OPfileWriteBytes(OPfile* file, void* data, ui64 bytesToWrite) {
@@ -397,12 +404,15 @@ void* OPfileReadBytes(OPfile* file, ui64 bytesToRead) {
 }
 
 OPint OPfileSeekReset(OPfile* file) {
-	lseek(file->_handle, 0, SEEK_SET);
+    lseek(file->_handle, 0, SEEK_SET);
+    return 1;
 }
 OPint OPfileSeek(OPfile* file, OPint pos) {
-	lseek(file->_handle, pos, SEEK_SET);
+    lseek(file->_handle, pos, SEEK_SET);
+    return 1;
 }
 
 OPint OPfileClose(OPfile* file) {
-	close(file->_handle);
+    close(file->_handle);
+    return 1;
 }

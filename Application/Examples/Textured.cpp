@@ -27,8 +27,8 @@ TexturedExample* texturedExample;
 
 void ExampleTexturedEnter(OPgameState* last) {
 	OPcmanLoad("PuzzleBlock.opm");
-	OPcmanLoad("TexturedModel.frag");
-	OPcmanLoad("TexturedModel.vert");
+	OPcmanLoad("Common/Texture.frag");
+	OPcmanLoad("Common/Texture3D.vert");
 	OPcmanLoad("TetrisBroken.png");
 
 	texturedExample = (TexturedExample*)OPalloc(sizeof(TexturedExample));
@@ -44,8 +44,8 @@ void ExampleTexturedEnter(OPgameState* last) {
 	};
 
 	texturedExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	OPshader* vert = (OPshader*)OPcmanGet("TexturedModel.vert");
-	OPshader* frag = (OPshader*)OPcmanGet("TexturedModel.frag");
+	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture3D.vert");
+	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
 	*texturedExample->Effect = OPrenderCreateEffectStride(
 		*vert,
 		*frag,
@@ -56,7 +56,7 @@ void ExampleTexturedEnter(OPgameState* last) {
 		);
 
 	texturedExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
-	*texturedExample->Camera = OPcamProj(
+	*texturedExample->Camera = OPcamPersp(
 		OPVEC3_ONE * 2.0,
 		OPvec3Create(0, 0, 0),
 		OPvec3Create(0, 1, 0),
@@ -77,7 +77,7 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 	OPrenderBindEffect(texturedExample->Effect);
 
 	OPmat4 world, view, proj;
-	OPmat4BuildRotY(&world, texturedExample->Rotation / 100.0);
+	world = OPmat4RotY(texturedExample->Rotation / 100.0);
 
 	OPcamGetView((*texturedExample->Camera), &view);
 	OPcamGetProj((*texturedExample->Camera), &proj);

@@ -4,6 +4,7 @@
 #include "./Human/include/Rendering/OPrenderBuffer.h"
 #include "./Math/include/OPboundingBox3D.h"
 #include "./Human/include/Rendering/Skinning/OPskeleton.h"
+#include "./Human/include/Rendering/Skinning/OPskeletonAnimation.h"
 #include "./Human/include/Rendering/OPMvertex.h"
 
 
@@ -19,6 +20,7 @@ typedef struct{
 	OPrenderBuffer IndexBuffer;
 	OPboundingBox3D boundingBox;
 	OPskeleton* Skeleton;
+	OPskeletonAnimation SkeletonAnimation;
 	ui32 VertexSize;
 	void* Vertices;
 	void* Indicies;

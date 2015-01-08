@@ -28,7 +28,7 @@ void ExampleParticleSystemEnter(OPgameState* last) {
 	particleSystemExample = (ParticleSystemExample*)OPalloc(sizeof(ParticleSystemExample));
 
 	particleSystemExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
-	*particleSystemExample->Camera = OPcamProj(
+	*particleSystemExample->Camera = OPcamPersp(
 		OPVEC3_ONE * 10.0,
 		OPVEC3_ZERO,
 		OPvec3Create(0, 1, 0),
@@ -49,13 +49,13 @@ OPint ExampleParticleSystemUpdate(OPtimer* time) {
 	OPrenderClear(0, 0, 0);
 	
 	OPparticle p = {
-		{ 0, 0, 0 },
-		{ 0, 0.001f, 0 },
+		{ {{0, 0, 0}} },
+		{ {{0, 0.001f, 0}} },
 		0.01f,
 		-0.001f,
 		3000.0f,
 		3000.0f,
-		{ 1.0, 1.0, 1.0f, 1.0f },
+		{ {{1.0, 1.0, 1.0f, 1.0f}} },
 		sprite
 	};
 	OPparticleSysSpawn(particleSystemExample->ParticleSystem, p);

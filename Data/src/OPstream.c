@@ -143,7 +143,6 @@ OPchar* OPstreamString(OPstream* stream) {
 
 OPchar* OPstreamReadLine(OPstream* stream) {
 	OPchar buffer[512];
-	i32 len;
 	i32 i;
 	i32 pos;
 	OPchar* result;
@@ -182,7 +181,6 @@ OPchar* OPstreamReadLine(OPstream* stream) {
 OPint OPstreamReadKeyValuePair(OPstream* str, OPkeyValuePair* dst){
 	OPchar buffer[520];
 	OPchar buffer2[255];
-	OPchar buffer3[255];
 	OPint len;
 	i32 i;
 

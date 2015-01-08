@@ -2,6 +2,15 @@
 #include "OPfbxSdk.h"
 
 typedef struct {
+	OPint Size;
+	OPint ControlPointIndex[4];
+	OPvec3 Position[4];
+	OPvec3 Normal[4];
+	OPvec4 Tangent[4];
+	OPvec2 UV[4];
+} OPfbxMeshPoly;
+
+typedef struct {
 	FbxNode* Node;
 	FbxMesh* Mesh;
 
@@ -15,6 +24,233 @@ typedef struct {
 	OPint NormalCount;
 	OPint TangentCount;
 } OPfbxMeshData;
+
+OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData) {
+
+	OPfbxMeshPoly* polys = (OPfbxMeshPoly*)OPalloc(sizeof(OPfbxMeshPoly)* meshData->PolyCount);
+
+	FbxVector4* controlPoints = meshData->Mesh->GetControlPoints();
+	
+	OPint polySize;
+	for (OPint i = 0; i < meshData->PolyCount; i++) {
+		polySize = meshData->Mesh->GetPolygonSize(i);
+		polys[i].Size = polySize;
+
+		for (OPint j = 0; j < polySize; j++) {
+
+			int controlPointIndex = meshData->Mesh->GetPolygonVertex(i, j);
+
+			polys[i].ControlPointIndex[j] = controlPointIndex;
+			polys[i].Position[j] = OPvec3Create(
+				(f32)controlPoints[controlPointIndex][0],
+				(f32)controlPoints[controlPointIndex][1],
+				(f32)controlPoints[controlPointIndex][2]
+				);
+
+			// Only support for 1 normal currently
+			for (OPint k = 0; k < meshData->Mesh->GetElementNormalCount() && k <= 1; ++k) {
+
+				FbxGeometryElementNormal* eNormal = meshData->Mesh->GetElementNormal(k);
+
+				FbxVector4 normal;
+				if (eNormal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex) {
+
+					switch (eNormal->GetReferenceMode())
+					{
+						case FbxGeometryElement::eDirect: {
+							normal = eNormal->GetDirectArray().GetAt(0);
+							break;
+						}
+						case FbxGeometryElement::eIndexToDirect: {
+							int id = eNormal->GetIndexArray().GetAt(0);
+							normal = eNormal->GetDirectArray().GetAt(id);
+							break;
+						}
+					}
+					polys[i].Normal[j] = OPvec3Create(normal[0], normal[1], normal[2]);
+				}
+			}
+
+
+			// NOTE - Only supporting 1 UV per vertex
+			FbxVector2 uv;
+			for (OPint k = 0; k < meshData->Mesh->GetElementUVCount(); ++k)
+			{
+				FbxGeometryElementUV* eUV = meshData->Mesh->GetElementUV(k);
+
+				switch (eUV->GetMappingMode()) {
+
+					case FbxGeometryElement::eByControlPoint: {
+						switch (eUV->GetReferenceMode())
+						{
+							case FbxGeometryElement::eDirect: {
+								OPlg("+");
+								uv = eUV->GetDirectArray().GetAt(controlPointIndex);
+								break;
+							}
+							case FbxGeometryElement::eIndexToDirect: {
+								OPlg("-");
+								int id = eUV->GetIndexArray().GetAt(controlPointIndex);
+								uv = eUV->GetDirectArray().GetAt(id);
+								break;
+							}
+							default: {
+								OPlog("WARNING: Unsupported UV Control Point Type");
+								break;
+							}
+						}
+					}
+
+					case FbxGeometryElement::eByPolygonVertex: {
+						switch (eUV->GetReferenceMode())
+						{
+							case FbxGeometryElement::eDirect:
+							case FbxGeometryElement::eIndexToDirect:
+							{
+								OPint textureUVIndex = meshData->Mesh->GetTextureUVIndex(i, j);
+								OPlg("*");
+								OPlog("UV Index: %d", textureUVIndex);
+								uv = eUV->GetDirectArray().GetAt(textureUVIndex);
+								break;
+							}
+							default:
+								OPlog("WARNING: Unsupported UV Polygon Vertex Type");
+								break;
+						}
+					}
+
+					case FbxGeometryElement::eByPolygon: // doesn't make much sense for UVs
+					case FbxGeometryElement::eAllSame:   // doesn't make much sense for UVs
+					case FbxGeometryElement::eNone:       // doesn't make much sense for UVs
+						break;
+
+					default: {
+								 OPlog("WARNING: Unsupported UV Mapping Mode");
+								 break;
+					}
+				}
+
+				polys[i].UV[j] = OPvec2Create(uv[0], uv[1]);
+			}
+
+			FbxVector4 tangent;
+			for (OPint l = 0; l < meshData->Mesh->GetElementTangentCount(); ++l)
+			{
+				FbxGeometryElementTangent* eTangent = meshData->Mesh->GetElementTangent(l);
+
+				if (eTangent->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+				{
+					switch (eTangent->GetReferenceMode())
+					{
+					case FbxGeometryElement::eDirect: {
+						tangent = eTangent->GetDirectArray().GetAt(controlPointIndex);
+						break;
+					}
+					case FbxGeometryElement::eIndexToDirect:
+					{
+						int id = eTangent->GetIndexArray().GetAt(controlPointIndex);
+						tangent = eTangent->GetDirectArray().GetAt(id);
+						break;
+					}
+					default:
+						break; // other reference modes not shown here!
+					}
+				}
+				polys[i].Tangent[j] = OPvec4Create(tangent[0], tangent[1], tangent[2], tangent[3]);
+			}
+
+			// TODO(garrett): BiNormal
+			//for (l = 0; l < pMesh->GetElementBinormalCount(); ++l)
+			//{
+
+			//	FbxGeometryElementBinormal* leBinormal = pMesh->GetElementBinormal(l);
+
+			//	FBXSDK_sprintf(header, 100, "            Binormal: ");
+			//	if (leBinormal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+			//	{
+			//		switch (leBinormal->GetReferenceMode())
+			//		{
+			//		case FbxGeometryElement::eDirect:
+			//			Display3DVector(header, leBinormal->GetDirectArray().GetAt(vertexId));
+			//			break;
+			//		case FbxGeometryElement::eIndexToDirect:
+			//		{
+			//												   int id = leBinormal->GetIndexArray().GetAt(vertexId);
+			//												   Display3DVector(header, leBinormal->GetDirectArray().GetAt(id));
+			//		}
+			//			break;
+			//		default:
+			//			break; // other reference modes not shown here!
+			//		}
+			//	}
+			//}
+
+			// TODO(garrett): COLOR
+			//for (l = 0; l < pMesh->GetElementVertexColorCount(); l++)
+			//{
+			//	FbxGeometryElementVertexColor* leVtxc = pMesh->GetElementVertexColor(l);
+			//	FBXSDK_sprintf(header, 100, "            Color vertex: ");
+			//	switch (leVtxc->GetMappingMode())
+			//	{
+			//	default:
+			//		break;
+			//	case FbxGeometryElement::eByControlPoint:
+			//		switch (leVtxc->GetReferenceMode())
+			//		{
+			//		case FbxGeometryElement::eDirect:
+			//			DisplayColor(header, leVtxc->GetDirectArray().GetAt(lControlPointIndex));
+			//			break;
+			//		case FbxGeometryElement::eIndexToDirect:
+			//		{
+			//			int id = leVtxc->GetIndexArray().GetAt(lControlPointIndex);
+			//			DisplayColor(header, leVtxc->GetDirectArray().GetAt(id));
+			//		}
+			//			break;
+			//		default:
+			//			break; // other reference modes not shown here!
+			//		}
+			//		break;
+			//	case FbxGeometryElement::eByPolygonVertex:
+			//	{
+			//		switch (leVtxc->GetReferenceMode())
+			//		{
+			//		case FbxGeometryElement::eDirect:
+			//			DisplayColor(header, leVtxc->GetDirectArray().GetAt(vertexId));
+			//			break;
+			//		case FbxGeometryElement::eIndexToDirect:
+			//		{
+			//			int id = leVtxc->GetIndexArray().GetAt(vertexId);
+			//			DisplayColor(header, leVtxc->GetDirectArray().GetAt(id));
+			//		}
+			//			break;
+			//		default:
+			//			break; // other reference modes not shown here!
+			//		}
+			//	}
+			//		break;
+			//	case FbxGeometryElement::eByPolygon: // doesn't make much sense for UVs
+			//	case FbxGeometryElement::eAllSame:   // doesn't make much sense for UVs
+			//	case FbxGeometryElement::eNone:       // doesn't make much sense for UVs
+			//		break;
+			//	}
+			//}
+		}
+	}
+
+
+	OPlog("========= FBX Polys =========\n");
+	for (OPint i = 0; i < meshData->PolyCount; i++) {
+		OPlog("Size: %d", polys[i].Size);
+		for (OPint j = 0; j < polys[i].Size; j++) {
+			OPlog("Ind: %d", polys[i].ControlPointIndex[j]);
+			OPvec3Log("Pos: ", polys[i].Position[j]);
+			OPvec3Log("Norm: ", polys[i].Normal[j]);
+			OPvec2Log("UV: ", polys[i].UV[j]);
+		}
+	}
+
+	return polys;
+}
 
 OPint _meshVertexCount(FbxMesh* fbxMesh) {
 	OPint vertexCount = 0;
@@ -193,10 +429,12 @@ OPvec2* OPfbxMeshDataGetUVs(OPfbxMeshData* meshData) {
 						switch (eUV->GetReferenceMode())
 						{
 							case FbxGeometryElement::eDirect: {
+								OPlg("+");
 								uv = eUV->GetDirectArray().GetAt(controlPointIndex);
 								break;
 							}
 							case FbxGeometryElement::eIndexToDirect: {
+								OPlg("-");
 								int id = eUV->GetIndexArray().GetAt(controlPointIndex);
 								uv = eUV->GetDirectArray().GetAt(id);
 								break;
@@ -208,13 +446,15 @@ OPvec2* OPfbxMeshDataGetUVs(OPfbxMeshData* meshData) {
 						}
 					}
 
-					case FbxGeometryElement::eByPolygonVertex: {
-						OPint textureUVIndex = meshData->Mesh->GetTextureUVIndex(i, j);						
+					case FbxGeometryElement::eByPolygonVertex: {					
 						switch (eUV->GetReferenceMode())
 						{
 							case FbxGeometryElement::eDirect:
 							case FbxGeometryElement::eIndexToDirect:
 							{
+								OPint textureUVIndex = meshData->Mesh->GetTextureUVIndex(i, j);	
+								OPlg("*");
+								OPlog("UV Index: %d",textureUVIndex );
 								uv = eUV->GetDirectArray().GetAt(textureUVIndex);
 								break;
 							}
@@ -236,8 +476,8 @@ OPvec2* OPfbxMeshDataGetUVs(OPfbxMeshData* meshData) {
 				}
 
 				uvs[pos] = OPvec2Create( uv[0], uv[1] );
-				pos++;
 				OPvec2Log("UV: ", uvs[pos]);
+				pos++;
 			}
 
 

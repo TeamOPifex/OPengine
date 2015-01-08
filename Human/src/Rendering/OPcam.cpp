@@ -2,7 +2,7 @@
 #include "./Human/include/Rendering/OPcam.h"
 #include "./Core/include/OPlog.h"
 
-OPcam OPcamProj(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat near, OPfloat far, OPfloat fov, OPfloat aspect){
+OPcam OPcamPersp(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat near, OPfloat far, OPfloat fov, OPfloat aspect){
 	
 	OPcam cam = {
 		position,
@@ -22,8 +22,8 @@ OPcam OPcamProj(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat near, OPfloat
 	OPmat4Identity(&cam.View);
 
 	// construct matricies
-	OPmat4Perspective(&cam.Proj, fov, aspect, near, far);
-	OPmat4look(&cam.View, &position, &target, &up);
+	cam.Proj = OPmat4Perspective(fov, aspect, near, far);
+	cam.View = OPmat4LookAt(position, target, up);
 
 	return cam;
 }
@@ -41,8 +41,8 @@ OPcam OPcamOrtho(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPflo
 	OPmat4Identity(&cam.View);
 
 	// construct matricies
-	OPmat4Ortho(&cam.Proj, left, right, bottom, top, zNear, zFar);
-	OPmat4look(&cam.View, &position, &target, &up);
+	cam.Proj = OPmat4Ortho(left, right, bottom, top, zNear, zFar);
+	cam.View = OPmat4LookAt(position, target, up);
 
 	return cam;
 }

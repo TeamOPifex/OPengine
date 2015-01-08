@@ -188,7 +188,6 @@ void OPstart(int argc, char** args) {
 
 	// game loop has finished, clean up
 	OPdestroy();
-	OPfree(_startUpDir);
 }
 #endif
 
