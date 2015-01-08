@@ -4,7 +4,7 @@
 
 	#include "./Pipeline/include/Rendering.h"
 	#include "./Human/include/Utilities/ImagePNG.h"
-	#include "./Core/include/Log.h"
+	#include "./Core/include/OPlog.h"
 	#include "./Data/include/OPcman.h"
 	#include "./Human/include/Rendering/OPmesh.h"
 	#include "./Human/include/Rendering/OPMvertex.h"

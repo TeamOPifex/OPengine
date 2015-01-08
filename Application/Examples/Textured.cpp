@@ -27,8 +27,8 @@ TexturedExample* texturedExample;
 
 void ExampleTexturedEnter(OPgameState* last) {
 	OPcmanLoad("PuzzleBlock.opm");
-	OPcmanLoad("TexturedModel.frag");
-	OPcmanLoad("TexturedModel.vert");
+	OPcmanLoad("Common/Texture.frag");
+	OPcmanLoad("Common/Texture3D.vert");
 	OPcmanLoad("TetrisBroken.png");
 
 	texturedExample = (TexturedExample*)OPalloc(sizeof(TexturedExample));
@@ -44,8 +44,8 @@ void ExampleTexturedEnter(OPgameState* last) {
 	};
 
 	texturedExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	OPshader* vert = (OPshader*)OPcmanGet("TexturedModel.vert");
-	OPshader* frag = (OPshader*)OPcmanGet("TexturedModel.frag");
+	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture3D.vert");
+	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
 	*texturedExample->Effect = OPrenderCreateEffectStride(
 		*vert,
 		*frag,

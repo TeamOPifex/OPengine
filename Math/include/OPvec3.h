@@ -66,47 +66,47 @@ extern const OPvec3 OPVEC3_LEFT;
 extern const OPvec3 OPVEC3_FORWARD;
 
 inline OPvec3 OPvec3Create(OPfloat x, OPfloat y, OPfloat z) {
-	OPvec3 tmp = { x, y, z };
+	OPvec3 tmp = { {x, y, z} };
 	return tmp;
 }
 
 inline OPvec3 operator+(OPvec3 lhs, OPvec3 vhs) { 
-	OPvec3 temp = { 0, 0, 0};
+	OPvec3 temp = { {0, 0, 0}};
 	OPvec3Add(&temp, &lhs, &vhs); 
 	return temp; 
 }
 inline OPvec3 operator-(OPvec3 lhs, OPvec3 vhs) { 
-	OPvec3 temp = { 0, 0, 0};
+	OPvec3 temp = { {0, 0, 0}};
 	OPvec3Sub(&temp, &lhs, &vhs); 
 	return temp; 
 }
 inline OPvec3 operator*(OPvec3 lhs, OPvec3 vhs) { 
-	OPvec3 temp = { 0, 0, 0};
+	OPvec3 temp = { {0, 0, 0}};
 	OPvec3Mul(&temp, &lhs, &vhs); 
 	return temp; 
 }
 inline OPvec3 operator*(OPvec3 lhs, OPfloat vhs) { 
-	OPvec3 temp = { 0, 0, 0};
+	OPvec3 temp = { {0, 0, 0}};
 	OPvec3Scl(&temp, &lhs, vhs); 
 	return temp; 
 }
 inline OPvec3 operator*(OPfloat lhs, OPvec3 vhs) { 
-	OPvec3 temp = { 0, 0, 0};
+	OPvec3 temp = { {0, 0, 0}};
 	OPvec3Scl(&temp, &vhs, lhs); 
 	return temp; 
 }
 inline OPvec3 operator/(OPvec3 lhs, OPvec3 vhs) { 
-	OPvec3 temp = { 0, 0, 0};
+	OPvec3 temp = { {0, 0, 0}};
 	OPvec3Div(&temp, &lhs, &vhs); 
 	return temp; 
 }
 inline OPvec3 operator/(OPvec3 lhs, OPfloat vhs) { 
-	OPvec3 temp = { 0, 0, 0};
+	OPvec3 temp = { {0, 0, 0}};
 	OPvec3Div(&temp, &lhs, vhs); 
 	return temp; 
 }
 inline OPvec3 operator/(OPfloat lhs, OPvec3 vhs) { 
-	OPvec3 temp = { 0, 0, 0};
+	OPvec3 temp = { {0, 0, 0}};
 	OPvec3Div(&temp, &vhs, lhs); 
 	return temp; 
 }
@@ -164,9 +164,9 @@ inline OPfloat OPvec3Dot(OPvec3 a, OPvec3 b) {
 
 inline OPvec3 OPvec3Cross(OPvec3 a, OPvec3 b) {
 	OPvec3 v = {
-		a.y * b.z - a.z * b.y,
+		{a.y * b.z - a.z * b.y,
 		a.z * b.x - a.x * b.z,
-		a.x * b.y - a.y * b.x,
+		a.x * b.y - a.y * b.x},
 	};
 
 	return v;
@@ -205,9 +205,9 @@ inline OPvec3 OPvec3Norm(OPvec3 v){
 
 inline OPvec3 OPvec3Read(OPstream* str) {
 	OPvec3 temp = {
+		{OPreadf32(str),
 		OPreadf32(str),
-		OPreadf32(str),
-		OPreadf32(str)
+		OPreadf32(str)}
 	};
 	return temp;
 }
@@ -220,9 +220,9 @@ inline void OPvec3Write(OPvec3 v, OPstream* str) {
 
 inline OPvec3 OPvec3RandNorm(){
 	OPvec3 v = {
+		{OPrandom() - 0.5f,
 		OPrandom() - 0.5f,
-		OPrandom() - 0.5f,
-		OPrandom() - 0.5f
+		OPrandom() - 0.5f}
 	};
 
 	return OPvec3Norm(v);

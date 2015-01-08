@@ -57,7 +57,8 @@ OPint OPfbxMeshCreate(OPfbxMesh* mesh, const OPchar* filename) {
 }
 
 OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* features, OPint animOnly) {
-	ofstream myFile(filename, ios::binary);
+	OPchar* output = OPstringCreateMerged(filename, ".opm");
+	ofstream myFile(output, ios::binary);
 	OPlog("Begin Writing File...");
 
 	if (!animOnly) {
@@ -207,18 +208,20 @@ OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* featu
 		}
 
 		if (features[Model_Bones]) {
-			writeI16(&myFile, mesh->Skeleton.BoneCount);
+			OPchar* skel = OPstringCreateMerged(output, ".skel");
+			ofstream mySkelFile(skel, ios::binary);
+			writeI16(&mySkelFile, mesh->Skeleton.BoneCount);
 			for (OPint i = 0; i < mesh->Skeleton.BoneCount; i++) {
-				writeI16(&myFile, mesh->Skeleton.Bones[i].Parent); // TODO: Bone Parent
+				writeI16(&mySkelFile, mesh->Skeleton.Bones[i].Parent); // TODO: Bone Parent
 
 				ui32 len = strlen(mesh->Skeleton.Bones[i].Name);
-				writeU32(&myFile, len);
-				write(&myFile, mesh->Skeleton.Bones[i].Name, len);
+				writeU32(&mySkelFile, len);
+				write(&mySkelFile, mesh->Skeleton.Bones[i].Name, len);
 				for (i32 c = 0; c < 4; c++) {
-					writeF32(&myFile, mesh->Skeleton.Bones[i].BindPose[c].x);
-					writeF32(&myFile, mesh->Skeleton.Bones[i].BindPose[c].y);
-					writeF32(&myFile, mesh->Skeleton.Bones[i].BindPose[c].z);
-					writeF32(&myFile, mesh->Skeleton.Bones[i].BindPose[c].w);
+					writeF32(&mySkelFile, mesh->Skeleton.Bones[i].BindPose[c].x);
+					writeF32(&mySkelFile, mesh->Skeleton.Bones[i].BindPose[c].y);
+					writeF32(&mySkelFile, mesh->Skeleton.Bones[i].BindPose[c].z);
+					writeF32(&mySkelFile, mesh->Skeleton.Bones[i].BindPose[c].w);
 				}
 			}
 		}
@@ -226,22 +229,27 @@ OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* featu
 
 	if (features[Model_Animations]) {
 		OPlog("Track Count: %d", mesh->Animation->AnimationTrackCount);
-		writeI16(&myFile, mesh->Animation->AnimationTrackCount);
+		//writeI16(&myAnimFile, mesh->Animation->AnimationTrackCount);
 		for (OPint i = 0; i < mesh->Animation->AnimationTrackCount; i++) {
 			OPlog("Track Name: %s", mesh->Animation->Animations[i].Name);
-			ui32 len = strlen(mesh->Animation->Animations[i].Name);
-			writeU32(&myFile, len);
-			write(&myFile, mesh->Animation->Animations[i].Name, len);
+			OPchar* prefix = OPstringCreateMerged(".", mesh->Animation->Animations[i].Name);
+			OPchar* animName = OPstringCreateMerged(prefix, ".anim");
+			OPchar* anim = OPstringCreateMerged(output, animName);			
+			ofstream myAnimFile(anim, ios::binary);
 
-			writeU32(&myFile, mesh->Animation->Animations[i].TotalFrames);
+			ui32 len = strlen(mesh->Animation->Animations[i].Name);
+			writeU32(&myAnimFile, len);
+			write(&myAnimFile, mesh->Animation->Animations[i].Name, len);
+
+			writeU32(&myAnimFile, mesh->Animation->Animations[i].TotalFrames);
 			for (OPint j = 0; j < mesh->Animation->Animations[i].TotalFrames * mesh->Skeleton.BoneCount; j++) {
 				OPlg("%d ", j);
 				OPmat4Log("Frame", mesh->Animation->Animations[i].JointTransform[j]);
 				for (i32 c = 0; c < 4; c++) {
-					writeF32(&myFile, mesh->Animation->Animations[i].JointTransform[j][c].x);
-					writeF32(&myFile, mesh->Animation->Animations[i].JointTransform[j][c].y);
-					writeF32(&myFile, mesh->Animation->Animations[i].JointTransform[j][c].z);
-					writeF32(&myFile, mesh->Animation->Animations[i].JointTransform[j][c].w);
+					writeF32(&myAnimFile, mesh->Animation->Animations[i].JointTransform[j][c].x);
+					writeF32(&myAnimFile, mesh->Animation->Animations[i].JointTransform[j][c].y);
+					writeF32(&myAnimFile, mesh->Animation->Animations[i].JointTransform[j][c].z);
+					writeF32(&myAnimFile, mesh->Animation->Animations[i].JointTransform[j][c].w);
 				}
 			}
 

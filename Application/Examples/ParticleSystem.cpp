@@ -49,13 +49,13 @@ OPint ExampleParticleSystemUpdate(OPtimer* time) {
 	OPrenderClear(0, 0, 0);
 	
 	OPparticle p = {
-		{ 0, 0, 0 },
-		{ 0, 0.001f, 0 },
+		{ {{0, 0, 0}} },
+		{ {{0, 0.001f, 0}} },
 		0.01f,
 		-0.001f,
 		3000.0f,
 		3000.0f,
-		{ 1.0, 1.0, 1.0f, 1.0f },
+		{ {{1.0, 1.0, 1.0f, 1.0f}} },
 		sprite
 	};
 	OPparticleSysSpawn(particleSystemExample->ParticleSystem, p);

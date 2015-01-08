@@ -58,8 +58,8 @@ void ExamplePhysicsEnter(OPgameState* last) {
 
 	OPcmanLoad("PuzzleBlock.opm");
 	OPcmanLoad("PuzzleSphere.opm");
-	OPcmanLoad("TexturedModel.frag");
-	OPcmanLoad("TexturedModel.vert");
+	OPcmanLoad("Common/Texture.frag");
+	OPcmanLoad("Common/Texture3D.vert");
 	OPcmanLoad("TetrisBroken.png");
 	OPcmanLoad("TetrisOrange.png");
 	OPcmanLoad("TetrisBlue.png");
@@ -80,8 +80,8 @@ void ExamplePhysicsEnter(OPgameState* last) {
 	};
 
 	physicsExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	OPshader* vert = (OPshader*)OPcmanGet("TexturedModel.vert");
-	OPshader* frag = (OPshader*)OPcmanGet("TexturedModel.frag");
+	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture3D.vert");
+	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
 	*physicsExample->Effect = OPrenderCreateEffectStride(
 		*vert,
 		*frag,
@@ -103,7 +103,7 @@ void ExamplePhysicsEnter(OPgameState* last) {
 
 	physicsExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
 	*physicsExample->Camera = OPcamPersp(
-		OPvec3Create(0, 40, 20),
+		OPvec3Create(0, 20, 30),
 		OPvec3Create(0, 1, 0),
 		OPvec3Create(0, 1, 0),
 		0.1f,
@@ -112,13 +112,13 @@ void ExamplePhysicsEnter(OPgameState* last) {
 		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
 		);
 
-	physicsExample->boxCount = 2000;
+	physicsExample->boxCount = 200;
 	physicsExample->boxes = (Dynamic*)OPalloc(sizeof(Dynamic)* physicsExample->boxCount);
 	for (ui32 i = 0; i < physicsExample->boxCount; i++) {
 		f32 r = OPrandom();
 		f32 r2 = 0.5;// OPrandom();
 		f32 r3 = OPrandom();
-		f32 size = 0.05f + (OPrandom() * 2);
+		f32 size = (0.05f + (OPrandom() * 2));
 		physicsExample->boxes[i].physics = OPphysicsCreateBoxDynamic(physicsExample->scene, -20 + (40 * r), 5 + 200 * r3, -20 + (40 * r2), size, size, size);
 		physicsExample->boxes[i].size = size;
 	}
@@ -126,9 +126,7 @@ void ExamplePhysicsEnter(OPgameState* last) {
 	physicsExample->boxStaticCount = 10;
 	physicsExample->boxesStatic = (Static*)OPalloc(sizeof(Static)*physicsExample->boxStaticCount);
 	for (ui32 i = 0; i < physicsExample->boxStaticCount; i++) {
-		f32 r = OPrandom();
-		f32 r2 = 0.5;// OPrandom();
-		f32 r3 = OPrandom();
+		f32 r2 = 0.5;
 		f32 size = 1;// 0.05f + (OPrandom() * 2);
 		physicsExample->boxesStatic[i].physics = OPphysicsCreateBoxStatic(physicsExample->scene, ((-10.0) + (i * 2)), i * 2, -20 + (40 * r2), size, size, size);
 		physicsExample->boxesStatic[i].size = size;
@@ -136,7 +134,7 @@ void ExamplePhysicsEnter(OPgameState* last) {
 
 	physicsExample->sphereCount = 5;
 	physicsExample->spheres = (Dynamic*)OPalloc(sizeof(Dynamic)* physicsExample->sphereCount);
-	physicsExample->spheres[0].physics = OPphysicsCreateSphereDynamic(physicsExample->scene, 0, 0, 0, 1);
+	physicsExample->spheres[0].physics = OPphysicsCreateSphereDynamic(physicsExample->scene, 0, 0, 0, 0.5);
 	physicsExample->spheres[0].size = 1;
 	for (ui32 i = 1; i < physicsExample->sphereCount; i++) {
 		f32 r = OPrandom();
@@ -153,7 +151,7 @@ void ExamplePhysicsEnter(OPgameState* last) {
 OPint ExamplePhysicsUpdate(OPtimer* time) {
 
 	if (OPkeyboardWasPressed(OPKEY_SPACE)) {
-		OPphysicsAddForce(physicsExample->spheres[0].physics, 0, 1500 * physicsExample->spheres[0].size, 0);
+		OPphysicsAddForce(physicsExample->spheres[0].physics, 0, 500 * physicsExample->spheres[0].size, 0);
 	}
 	f32 rate = 500 * physicsExample->spheres[0].size;
 	f32 rate2 = 50 * physicsExample->spheres[0].size;
@@ -187,12 +185,21 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 		OPphysicsAddForce(physicsExample->spheres[0].physics, 0, 0, rate2);
 	}
 
+	if (OPkeyboardIsDown(OPKEY_UP)) { physicsExample->Camera->_pos.y += 0.2; }
+	if (OPkeyboardIsDown(OPKEY_DOWN)) { physicsExample->Camera->_pos.y -= 0.2; }
+	if (OPkeyboardIsDown(OPKEY_LEFT)) { physicsExample->Camera->_pos.x -= 0.2; }
+	if (OPkeyboardIsDown(OPKEY_RIGHT)) { physicsExample->Camera->_pos.x += 0.2; }
+
+	physicsExample->Camera->_viewStale = 1;
+	OPcamUpdateView((*physicsExample->Camera));
+
+
 	OPphysicsStep(physicsExample->scene, time->Elapsed);
 
 	OPrenderDepth(1);
 	OPrenderClear(0.1, 0.1, 0.1);
 
-	OPmat4 world;
+	OPmat4 world = OPMAT4IDENTITY;
 
 	OPrenderBindMesh(physicsExample->Mesh);
 	OPrenderBindEffect(physicsExample->Effect);
@@ -214,12 +221,12 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	OPvec3 light = OPvec3Create(0, 1, 0);
 	OPrenderParamVec3("uLightDirection", &light);
 	OPrenderParami("uColorTexture", tex);
-	OPmat4 scale;
-	OPmat4 scratch;
+	OPmat4 scale = OPMAT4IDENTITY;
+	OPmat4 scratch = OPMAT4IDENTITY;
 	for (ui32 i = 0; i < physicsExample->boxCount; i++) {
 		scale = OPmat4Scl(physicsExample->boxes[i].size * 2, physicsExample->boxes[i].size * 2, physicsExample->boxes[i].size * 2);
 		OPphysicsGetTransform((OPphysicsActor*)physicsExample->boxes[i].physics, &scratch);
-		OPmat4Mul(&world, scale, scratch);
+		world = scratch * scale;
 		OPrenderParamMat4("uWorld", &world);
 		OPrenderMesh();
 	}
@@ -227,7 +234,7 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	for (ui32 i = 0; i < physicsExample->boxStaticCount; i++) {
 		scale = OPmat4Scl(physicsExample->boxesStatic[i].size * 2, physicsExample->boxesStatic[i].size * 2, physicsExample->boxesStatic[i].size * 2);
 		OPphysicsGetTransform((OPphysicsActor*)physicsExample->boxesStatic[i].physics, &scratch);
-		OPmat4Mul(&world, scale, scratch);
+		world = scratch * scale;
 		OPrenderParamMat4("uWorld", &world);
 		OPrenderMesh();
 	}
@@ -241,7 +248,7 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	OPrenderParami("uColorTexture", tex2);
 	scale = OPmat4Scl(physicsExample->spheres[0].size * 2, physicsExample->spheres[0].size * 2, physicsExample->spheres[0].size * 2);
 	OPphysicsGetTransform((OPphysicsActor*)physicsExample->spheres[0].physics, &scratch);
-	OPmat4Mul(&world, scale, scratch);
+	world = scratch * scale;
 	OPrenderParamMat4("uWorld", &world);
 	OPrenderMesh();
 
@@ -249,7 +256,7 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	for (ui32 i = 1; i < physicsExample->sphereCount; i++) {
 		scale = OPmat4Scl(physicsExample->spheres[i].size * 2, physicsExample->spheres[i].size * 2, physicsExample->spheres[i].size * 2);
 		OPphysicsGetTransform((OPphysicsActor*)physicsExample->spheres[i].physics, &scratch);
-		OPmat4Mul(&world, scale, scratch);
+		world = scratch * scale;
 		OPrenderParamMat4v("uWorld", 1, &world);
 		OPrenderMesh();
 	}

@@ -155,7 +155,6 @@ ui32 backgroundState = 0;
 OPint State0Update(OPtimer* time){
 	OPsprite* bg = (OPsprite*)OPcmanGet("gripe/walk");
 
-	ui32 elapsed = time->Elapsed;
 	//OPwebServerQueue(server, "time", (i8*)&elapsed, sizeof(ui32));
 	t += 0.005f * time->Elapsed;
 	OPgamePadSystemUpdate();

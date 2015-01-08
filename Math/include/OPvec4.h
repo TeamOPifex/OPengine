@@ -61,7 +61,7 @@ extern const OPvec4 OPvec4Zero;
 extern const OPvec4 OPvec4One;
 
 inline OPvec4 OPvec4Create(OPfloat x, OPfloat y, OPfloat z, OPfloat w) {
-	OPvec4 tmp = { x, y, z, w };
+	OPvec4 tmp = { {x, y, z, w} };
 	return tmp;
 }
 
@@ -143,10 +143,10 @@ inline OPfloat OPvec4Dist(OPvec4 a, OPvec4 b) {
 
 inline OPvec4 OPvec4Read(OPstream* str) {
 	OPvec4 temp = {
+		{OPreadf32(str),
 		OPreadf32(str),
 		OPreadf32(str),
-		OPreadf32(str),
-		OPreadf32(str)
+		OPreadf32(str)}
 	};
 	return temp;
 }
@@ -160,10 +160,10 @@ inline void OPvec4Write(OPvec4 v, OPstream* str) {
 
 inline OPvec4 OPvec4randNorm(){
 	OPvec4 v = {
+		{OPrandom() - 0.5f,
 		OPrandom() - 0.5f,
 		OPrandom() - 0.5f,
-		OPrandom() - 0.5f,
-		OPrandom() - 0.5f
+		OPrandom() - 0.5f}
 	};
 
 	return OPvec4Norm(v);
