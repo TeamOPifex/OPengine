@@ -52,7 +52,7 @@ void ExampleOculusEnter(OPgameState* last) {
 		);
 
 	oculusExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
-	*oculusExample->Camera = OPcamProj(
+	*oculusExample->Camera = OPcamPersp(
 		OPVEC3_ONE * 2.0,
 		OPvec3Create(0, 1, 0),
 		OPvec3Create(0, 1, 0),
@@ -83,7 +83,7 @@ OPint ExampleOculusUpdate(OPtimer* time) {
 	OPrenderBindEffect(oculusExample->Effect);
 
 	OPmat4 world, view, proj;
-	OPmat4BuildRotY(&world, oculusExample->Rotation / 100.0);
+	world = OPmat4RotY(oculusExample->Rotation / 100.0);
 
 	OPcamGetView((*oculusExample->Camera), &view);
 	OPcamGetProj((*oculusExample->Camera), &proj);

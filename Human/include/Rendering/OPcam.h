@@ -55,8 +55,7 @@ struct OPcam{
 //-----------------------------------------------------------------------------
 #define OPcamUpdateProj(cam){\
 	if (cam._projStale){\
-		OPmat4Perspective(\
-			&cam.Proj, \
+	cam.Proj = OPmat4Perspective(\
 			cam._fov, \
 			cam._aspect, \
 			cam._near, \
@@ -69,11 +68,10 @@ struct OPcam{
 //-----------------------------------------------------------------------------
 #define OPcamUpdateView(cam){\
 	if (cam._viewStale){\
-		OPmat4look(\
-		&cam.View, \
-		&cam._pos, \
-		&cam._targ, \
-		&cam._up\
+		cam.View = OPmat4LookAt(\
+		cam._pos, \
+		cam._targ, \
+		cam._up\
 		); \
 		cam._viewStale = false; \
 	}\
@@ -98,7 +96,7 @@ struct OPcam{
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPcam OPcamProj (OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPfloat zFar, OPfloat fov, OPfloat aspect);
+OPcam OPcamPersp (OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPfloat zFar, OPfloat fov, OPfloat aspect);
 OPcam OPcamOrtho(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPfloat zFar, OPfloat left, OPfloat right, OPfloat bottom, OPfloat top);
 
 

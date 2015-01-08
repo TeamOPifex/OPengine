@@ -46,7 +46,6 @@ OPchar* OPdirExecutable() {
 	char tmpPth[1024]; //MAX_PATH - 260
 	OPchar* result;
 	ui32 len;
-	ui32 res;
 
 	#ifdef OPIFEX_WINDOWS
 		// Will contain exe path

@@ -11,6 +11,12 @@
 #include "./Human/include/Rendering/OPmeshPacker.h"
 #include "./Human/include/Rendering/OPMvertex.h"
 
+typedef struct {
+	OPchar* Name;
+	OPuint FrameCount;
+	OPmat4* Frames; // Based on bone count * FrameCount
+} OPMdataAnim;
+
 typedef struct { 
 	void* vertices;
 	ui32 vertexCount;
@@ -28,6 +34,9 @@ typedef struct {
 
 	ui16 metaCount;
 	OPMmeta* meta;
+
+	ui16 trackCount;
+	OPMdataAnim* tracks;
 } OPMData;
 
 struct OPMPartNode_def;

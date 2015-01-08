@@ -974,7 +974,7 @@ static V8Return _CreateProj(const V8Args& args) {
 	V8Scope scope;
 
 	OPcam* camera = (OPcam*)OPalloc(sizeof(OPcam));
-	*camera = OPcamProj(
+	*camera = OPcamPersp(
 		OPvec3Create(args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue()),
 		OPvec3Create(args[3]->NumberValue(), args[4]->NumberValue(), args[5]->NumberValue()),
 		OPvec3Create(0, 1, 0),

@@ -78,7 +78,7 @@ void ColorHandler(OPstream* str, void* param) {
 }
 
 void FontHandler(OPstream* str, void* param) {
-	OPvec2 t = OPvec2str(str);
+	OPvec2 t = OPvec2Read(str);
 	fontPosX = t.x;
 	fontPosY = t.y;
 }
@@ -155,7 +155,6 @@ ui32 backgroundState = 0;
 OPint State0Update(OPtimer* time){
 	OPsprite* bg = (OPsprite*)OPcmanGet("gripe/walk");
 
-	ui32 elapsed = time->Elapsed;
 	//OPwebServerQueue(server, "time", (i8*)&elapsed, sizeof(ui32));
 	t += 0.005f * time->Elapsed;
 	OPgamePadSystemUpdate();
@@ -274,7 +273,7 @@ OPint State1Update(OPtimer* time){
 	//view = OPmat4();
 	//proj = OPmat4();
 
-	OPmat4BuildRotX(&world, t);
+	world = OPmat4RotX(t);
 	OPcamGetView(camera, &view);
 	OPcamGetProj(camera, &proj);
 

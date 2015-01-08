@@ -56,7 +56,7 @@ void ExampleMyoEnter(OPgameState* last) {
 		myoExample->Mesh->VertexSize);
 
 	// Sets up the camera as a perpsective camera for rendering
-	myoExample->Camera = OPcamProj(
+	myoExample->Camera = OPcamPersp(
 		OPVEC3_ONE * 2.0,
 		OPVEC3_UP,
 		OPVEC3_UP,
@@ -99,7 +99,7 @@ OPint ExampleMyoUpdate(OPtimer* time) {
 	myoExample->Rotation += OPmyoRollChange() * 100 * OPpi * 2;
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
-	OPmat4 world = OPmat4createRotY(myoExample->Rotation / 100.0f);
+	OPmat4 world = OPmat4RotY(myoExample->Rotation / 100.0f);
 	OPmat4Scl(&world, 0.25f, 0.25f, 0.25f);
 
 	////////////////////////

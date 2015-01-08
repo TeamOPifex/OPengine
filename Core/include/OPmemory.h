@@ -1,4 +1,3 @@
-#pragma once
 #ifndef OPEngine_Core_DYNMEM
 #define OPEngine_Core_DYNMEM
 

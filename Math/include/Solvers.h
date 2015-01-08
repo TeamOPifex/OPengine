@@ -56,9 +56,9 @@ inline OPint OPrayLineInter2(
 	OPvec2  ldlcD;
 	OPfloat lcD = 0.0f, u = -1.0f;
 
-	OPvec2Cross(&lcD, &l, D);	
+	lcD = OPvec2Cross(l, *D);
 	ldlcD = l / lcD;
-	OPvec2Cross(&u, &OmA, &ldlcD); 
+	u = OPvec2Cross(OmA, ldlcD); 
 	
 	//*intersect = l * u + A;
 
@@ -80,7 +80,7 @@ inline OPint OPlineCircleInter2(
 	OPfloat radSqr, OPvec2* intersection)
 {
 	OPvec2 dir = *B - *A;
-	OPfloat dist = OPvec2Dot(&dir, &dir);
+	OPfloat dist = OPvec2Dot(dir, dir);
 	OPfloat p = radSqr / dist;
 
 	//*intersect = dir * p + *CirclePos;

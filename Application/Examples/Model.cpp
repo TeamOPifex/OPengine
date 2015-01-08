@@ -26,22 +26,22 @@ typedef struct {
 	ui32 Rotation;			// The amount to rotate the Mesh
 	OPvec3 LightDirection;	// Where the Light Source is coming from
 } ModelExample;
+
 ModelExample* modelExample;
 
 void ExampleModelEnter(OPgameState* last) {
 
-	// Load up the mesh into the Content Manager
-	// If the model was already loaded by a previous Game State
-	// it'll continue on without reloading it
-	OPcmanLoad("cube.opm");
-
 	// Allocating a memory block for this example
 	modelExample = (ModelExample*)OPallocZero(sizeof(ModelExample));
-
+	
+	// Load up the mesh into the Content Manager
+	// If the model was already loaded by a previous Game State
+	// it'll continue on without reloading it.
+	// OPcamnLoadGet calls OPcmanLoad and then returns OPcmanGet
 	// The OPcmanLoad call ensures that this mesh has been loaded
 	// The OPcmanGet call returns a pointer to the resource (an OPmesh)
 	// that's contained in the Content Manager
-	modelExample->Mesh = (OPmesh*)OPcmanGet("cube.opm");
+	modelExample->Mesh = (OPmesh*)OPcmanLoadGet("cube.opm");
 
 	// The effect that will be used to render the mesh
 	// The renderGenEffect is a simplified utility method
@@ -56,7 +56,7 @@ void ExampleModelEnter(OPgameState* last) {
 		modelExample->Mesh->VertexSize);
 
 	// Sets up the camera as a perpsective camera for rendering
-	modelExample->Camera = OPcamProj(
+	modelExample->Camera = OPcamPersp(
 		OPVEC3_ONE * 2.0,
 		OPVEC3_UP,
 		OPVEC3_UP,
@@ -81,15 +81,13 @@ OPint ExampleModelUpdate(OPtimer* time) {
 	// Update
 	////////////////////////
 
-	OPglError("OpenGL Error");
-
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
 	if (OPkeyboardIsDown(OPKEY_SPACE)) { modelExample->Rotation++; }
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
-	OPmat4 world = OPmat4createRotY(modelExample->Rotation / 100.0);
+	OPmat4 world = OPmat4RotY(modelExample->Rotation / 100.0);
 	OPmat4Scl(&world, 0.25f, 0.25f, 0.25f);
 
 	////////////////////////

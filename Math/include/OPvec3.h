@@ -10,7 +10,6 @@
 struct OPvec3;
 struct OPmat4;
 
-inline OPfloat* OPvec3index(OPvec3* v, int idx);
 inline OPvec3 OPvec3Create(OPfloat x, OPfloat y, OPfloat z);
 
 inline void OPvec3Add(OPvec3* dst, OPvec3* a, OPvec3* b);
@@ -18,9 +17,9 @@ inline void OPvec3Sub(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3Mul(OPvec3* dst, OPvec3* a, OPvec3* b);
 inline void OPvec3Scl(OPvec3* dst, OPvec3* a, OPfloat s);
 inline void OPvec3Div(OPvec3* dst, OPvec3* a, OPvec3* b);
-inline void OPvec3Divf(OPvec3* dst, OPvec3* a, OPfloat b);
+inline void OPvec3Div(OPvec3* dst, OPvec3* a, OPfloat b);
 
-OPfloat OPvec3angleToTarget(OPvec3 pos, OPvec3 facing, OPvec3 target);
+OPfloat OPvec3AngleToTarget(OPvec3 pos, OPvec3 facing, OPvec3 target);
 
 struct OPvec3 {
 	union{
@@ -52,7 +51,7 @@ struct OPvec3 {
 		return *this; 
 	}
 	inline OPvec3 operator/=(OPfloat vhs) { 
-		OPvec3Divf(this, this, vhs); 
+		OPvec3Div(this, this, vhs); 
 		return *this; 
 	}
 	inline OPfloat& operator[](i32 i) {
@@ -67,48 +66,48 @@ extern const OPvec3 OPVEC3_LEFT;
 extern const OPvec3 OPVEC3_FORWARD;
 
 inline OPvec3 OPvec3Create(OPfloat x, OPfloat y, OPfloat z) {
-	OPvec3 tmp = { x, y, z };
+	OPvec3 tmp = { {x, y, z} };
 	return tmp;
 }
 
 inline OPvec3 operator+(OPvec3 lhs, OPvec3 vhs) { 
-	OPvec3 temp = { 0, 0, 0};
+	OPvec3 temp = { {0, 0, 0}};
 	OPvec3Add(&temp, &lhs, &vhs); 
 	return temp; 
 }
 inline OPvec3 operator-(OPvec3 lhs, OPvec3 vhs) { 
-	OPvec3 temp = { 0, 0, 0};
+	OPvec3 temp = { {0, 0, 0}};
 	OPvec3Sub(&temp, &lhs, &vhs); 
 	return temp; 
 }
 inline OPvec3 operator*(OPvec3 lhs, OPvec3 vhs) { 
-	OPvec3 temp = { 0, 0, 0};
+	OPvec3 temp = { {0, 0, 0}};
 	OPvec3Mul(&temp, &lhs, &vhs); 
 	return temp; 
 }
 inline OPvec3 operator*(OPvec3 lhs, OPfloat vhs) { 
-	OPvec3 temp = { 0, 0, 0};
+	OPvec3 temp = { {0, 0, 0}};
 	OPvec3Scl(&temp, &lhs, vhs); 
 	return temp; 
 }
 inline OPvec3 operator*(OPfloat lhs, OPvec3 vhs) { 
-	OPvec3 temp = { 0, 0, 0};
+	OPvec3 temp = { {0, 0, 0}};
 	OPvec3Scl(&temp, &vhs, lhs); 
 	return temp; 
 }
 inline OPvec3 operator/(OPvec3 lhs, OPvec3 vhs) { 
-	OPvec3 temp = { 0, 0, 0};
+	OPvec3 temp = { {0, 0, 0}};
 	OPvec3Div(&temp, &lhs, &vhs); 
 	return temp; 
 }
 inline OPvec3 operator/(OPvec3 lhs, OPfloat vhs) { 
-	OPvec3 temp = { 0, 0, 0};
-	OPvec3Divf(&temp, &lhs, vhs); 
+	OPvec3 temp = { {0, 0, 0}};
+	OPvec3Div(&temp, &lhs, vhs); 
 	return temp; 
 }
 inline OPvec3 operator/(OPfloat lhs, OPvec3 vhs) { 
-	OPvec3 temp = { 0, 0, 0};
-	OPvec3Divf(&temp, &vhs, lhs); 
+	OPvec3 temp = { {0, 0, 0}};
+	OPvec3Div(&temp, &vhs, lhs); 
 	return temp; 
 }
 
@@ -147,11 +146,12 @@ inline void OPvec3Div(OPvec3* dst, OPvec3* a, OPvec3* b) {
 	dst->z = a->z / b->z;
 }
 
-inline void OPvec3Divf(OPvec3* dst, OPvec3* a, OPfloat b) {
+inline void OPvec3Div(OPvec3* dst, OPvec3* a, OPfloat b) {
 	dst->x = a->x / b;
 	dst->y = a->y / b;
 	dst->z = a->z / b;
 }
+
 
 //    ___             _   _               _     _       _ _   _              _   _    
 //   | __|  _ _ _  __| |_(_)___ _ _  __ _| |   /_\  _ _(_) |_| |_  _ __  ___| |_(_)__ 
@@ -164,9 +164,9 @@ inline OPfloat OPvec3Dot(OPvec3 a, OPvec3 b) {
 
 inline OPvec3 OPvec3Cross(OPvec3 a, OPvec3 b) {
 	OPvec3 v = {
-		a.y * b.z - a.z * b.y,
+		{a.y * b.z - a.z * b.y,
 		a.z * b.x - a.x * b.z,
-		a.x * b.y - a.y * b.x,
+		a.x * b.y - a.y * b.x},
 	};
 
 	return v;
@@ -205,24 +205,24 @@ inline OPvec3 OPvec3Norm(OPvec3 v){
 
 inline OPvec3 OPvec3Read(OPstream* str) {
 	OPvec3 temp = {
+		{OPreadf32(str),
 		OPreadf32(str),
-		OPreadf32(str),
-		OPreadf32(str)
+		OPreadf32(str)}
 	};
 	return temp;
 }
 
-inline void OPvec3Write(OPvec3* v, OPstream* str) {
-	OPwrite(str, &v->x, sizeof(f32));
-	OPwrite(str, &v->y, sizeof(f32));
-	OPwrite(str, &v->z, sizeof(f32));
+inline void OPvec3Write(OPvec3 v, OPstream* str) {
+	OPwrite(str, &v.x, sizeof(f32));
+	OPwrite(str, &v.y, sizeof(f32));
+	OPwrite(str, &v.z, sizeof(f32));
 }
 
 inline OPvec3 OPvec3RandNorm(){
 	OPvec3 v = {
+		{OPrandom() - 0.5f,
 		OPrandom() - 0.5f,
-		OPrandom() - 0.5f,
-		OPrandom() - 0.5f
+		OPrandom() - 0.5f}
 	};
 
 	return OPvec3Norm(v);

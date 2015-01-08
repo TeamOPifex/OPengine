@@ -51,13 +51,12 @@ void OPphysicsGetTransform(OPphysicsActor* actor, OPmat4* mat)
 {
 #ifdef OPIFEX_PHYSICS
 	PxU32 n = actor->actor->getNbShapes();
-
 	PxShape** shapes = new PxShape*[n];
 
 	actor->actor->getShapes(shapes, n);
 
 	PxTransform pT = PxShapeExt::getGlobalPose(*shapes[0], *actor->actor);
-	
+
 	PxMat33 m = PxMat33(pT.q);
 
 	mat->cols[0].x = m.column0[0];
@@ -208,7 +207,7 @@ void OPphysicsStep(OPphysicsScene* scene, ui64 elapsed) {
 #ifdef OPIFEX_PHYSICS
 	scene->elapsed += elapsed;
 	if (scene->elapsed > (1000 * myTimestep)) {
-		scene->elapsed = 0;
+		scene->elapsed -= 1000 * myTimestep;
 		((PxScene*)scene->scene)->simulate(myTimestep);
 		((PxScene*)scene->scene)->fetchResults(true);
 	}

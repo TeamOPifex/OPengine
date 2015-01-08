@@ -13,6 +13,8 @@ extern "C" {
 	OPchar* OPstringGetNonConstant(const OPchar* str);
 	OPchar* OPstringCreateMerged(const OPchar* str, const OPchar* add);
 	OPchar* OPstringCopy(const OPchar* str);
+	OPint OPstringContains(OPchar* str, const OPchar* cmp);
+	void OPstringToLower(OPchar* str);
 
 #ifdef __cplusplus
 }

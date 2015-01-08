@@ -59,7 +59,7 @@ void ExampleSpineEnter(OPgameState* last) {
 	spineExample->Mesh = (OPmesh*)OPcmanGet("cube.opm");
 
 	// Sets up the camera as a perpsective camera for rendering
-	spineExample->Camera = OPcamProj(
+	spineExample->Camera = OPcamPersp(
 		OPvec3Create(0.0f, 0.0f, 45.0f),
 		OPvec3Create(0.0f, 0.0f, 0.0f),
 		OPVEC3_UP,
@@ -117,8 +117,6 @@ OPint ExampleSpineUpdate(OPtimer* time) {
 	// Update
 	////////////////////////
 
-	f32 dt = time->Elapsed / 1000.0f;
-
 	SpineUpdate(spineExample->spine, time);
 
 
@@ -128,7 +126,7 @@ OPint ExampleSpineUpdate(OPtimer* time) {
 	if (OPkeyboardIsDown(OPKEY_SPACE)) { spineExample->Rotation++; }
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
-	OPmat4 world = OPmat4createRotY(spineExample->Rotation / 100.0);
+	OPmat4 world = OPmat4RotY(spineExample->Rotation / 100.0);
 	OPmat4Scl(&world, 0.025f, 0.025f, 0.025f);
 
 	////////////////////////
