@@ -61,12 +61,13 @@ extern const OPvec2 OPvec2Zero;
 extern const OPvec2 OPvec2One;
 
 inline OPvec2 OPvec2Create(OPfloat x, OPfloat y) {
-	OPvec2 tmp = { x, y };
+    OPvec2 tmp;
+    tmp.x = x; tmp.y = y;
 	return tmp;
 }
 
 inline OPvec2 operator+(OPvec2 lhs, OPvec2 vhs) { 
-	OPvec2 temp = { 0.0, 0.0 };
+    OPvec2 temp = { 0.0, 0.0 };
 	OPvec2Add(&temp, &lhs, &vhs); 
 	return temp; 
 }

@@ -14,7 +14,7 @@ OPuint OPentHeapBytes(OPint entsize, OPint count){
 
 //-----------------------------------------------------------------------------
 OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
-	OPuint off = 0, i = count, j = 0;
+	OPuint off = 0, i = count;
 	OPminHeap free = {
 		NULL,
 		count,

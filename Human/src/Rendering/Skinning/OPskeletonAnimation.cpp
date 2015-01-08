@@ -18,9 +18,11 @@ OPskeletonAnimation* OPskeletonAnimationCreate(OPskeleton* skeleton, OPmat4* fra
 }
 
 void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
-	OPint ind;
+	OPint ind1, ind2;
+
 	skelAnim->Elapsed += timer->Elapsed;
-	if (skelAnim->Elapsed > skelAnim->FramesPer) {
+
+	while (skelAnim->Elapsed > skelAnim->FramesPer) {
 		skelAnim->Elapsed -= skelAnim->FramesPer;
 		skelAnim->Frame++;
 		if (skelAnim->Frame >= skelAnim->FrameCount) {
@@ -28,8 +30,33 @@ void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
 		}
 	}
 
+	OPfloat percent = skelAnim->Elapsed / (OPfloat)skelAnim->FramesPer;
+
 	for (OPint i = 0; i < skelAnim->Skeleton->hierarchyCount; i++) {
-		ind = skelAnim->Skeleton->hierarchyCount * skelAnim->Frame + i;
-		skelAnim->Skeleton->localPoses[i] = skelAnim->JointFrames[ind];
+
+		ind1 = skelAnim->Skeleton->hierarchyCount * skelAnim->Frame + i;
+		ind2 = skelAnim->Skeleton->hierarchyCount * (skelAnim->Frame + 1) + i;
+
+		// Innefficient and poor interpolation scheme
+		// TODO(garrett): Fix
+		// TODO(garrett): interpolate into the first frame if looping
+		if(skelAnim->Frame < (skelAnim->FrameCount - 2)) {
+
+			for(OPint j = 0; j < 4; j++) {
+				for(OPint k = 0; k < 4; k++) {
+
+					skelAnim->Skeleton->localPoses[i][j][k] = 
+						skelAnim->JointFrames[ind1][j][k] + 
+							(skelAnim->JointFrames[ind2][j][k] - skelAnim->JointFrames[ind1][j][k]) *
+						percent;
+
+				}
+			}
+
+		} else {
+			skelAnim->Skeleton->localPoses[i] = skelAnim->JointFrames[ind1];
+		}
+
 	}
+
 }

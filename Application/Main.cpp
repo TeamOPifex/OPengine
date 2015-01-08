@@ -15,7 +15,7 @@ void ApplicationInit() {
 
 	OPlogDebug("App starting");
 
-	OPchar* assetDir = NULL;
+	const OPchar* assetDir = NULL;
 #ifdef OPIFEX_ASSETS
 	assetDir = OPIFEX_ASSETS;
 #endif

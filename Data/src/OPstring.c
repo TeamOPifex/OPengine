@@ -58,5 +58,24 @@ OPchar* OPstringCreateMerged(const OPchar* str, const OPchar* add) {
 	return result;
 }
 
+OPint OPstringContains(OPchar* str, const OPchar* cmp) {
+	OPint i, strLen, cmpLen;
 
+	strLen = strlen(str);
+	cmpLen = strlen(cmp);
+	if(cmpLen < strLen) {
+		for(i = 0;i < strLen; i++) {
+			if(OPmemcmp(&str[i], cmp, cmpLen) == 0) {
+				return i;
+			}
+		}
+	}
+
+	return -1;
+}
+
+void OPstringToLower(OPchar* str) {
+	OPchar* p = str;
+	for ( ; *p; ++p) *p = tolower(*p);
+}
 

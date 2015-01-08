@@ -117,8 +117,6 @@ OPint ExampleSpineUpdate(OPtimer* time) {
 	// Update
 	////////////////////////
 
-	f32 dt = time->Elapsed / 1000.0f;
-
 	SpineUpdate(spineExample->spine, time);
 
 

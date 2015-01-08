@@ -21,5 +21,5 @@
 		} \
 	} while (0)
 #else
-	#define ASSERT ;
+	#define ASSERT(condition, message) ;
 #endif

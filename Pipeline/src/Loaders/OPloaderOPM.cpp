@@ -284,7 +284,7 @@ OPMData OPMloadData(OPstream* str) {
 		}
 	}
 
-	i16 trackCount;
+	i16 trackCount = 0;
 	OPMdataAnim* tracks = NULL;
 	if (OPMhasFeature(features, Animations) && OPMhasFeature(features, Bones)) {
 		trackCount = OPreadi16(str);
