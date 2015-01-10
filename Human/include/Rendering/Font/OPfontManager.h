@@ -47,8 +47,8 @@ typedef struct {
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
-extern OPfontManager* OPRENDER_CURR_FONT_MANAGER;
-extern OPeffect* OPRENDER_CURR_FONT_EFFECT;
+extern IMPORT_METHOD OPfontManager* OPRENDER_CURR_FONT_MANAGER;
+extern IMPORT_METHOD OPeffect* OPRENDER_CURR_FONT_EFFECT;
 
 
 //-----------------------------------------------------------------------------
@@ -58,15 +58,15 @@ extern OPeffect* OPRENDER_CURR_FONT_EFFECT;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPfontManager* OPfontManagerCreate(OPfont* font);
-OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 count);
+EXPORT_METHOD OPfontManager* OPfontManagerCreate(OPfont* font);
+EXPORT_METHOD OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 count);
 
-void OPfontManagerAddText(const OPchar* text);
-void OPfontManagerBuild(); 
-void OPfontManagerDestroy(OPfontManager* font);
+EXPORT_METHOD void OPfontManagerAddText(const OPchar* text);
+EXPORT_METHOD void OPfontManagerBuild();
+EXPORT_METHOD void OPfontManagerDestroy(OPfontManager* font);
 
-void OPfontManagerSetColor(OPfontManager* manager, f32 r, f32 g, f32 b, f32 a);
-void OPfontManagerSetColor(f32 r, f32 g, f32 b, f32 a);
+EXPORT_METHOD void OPfontManagerSetColor(OPfontManager* manager, f32 r, f32 g, f32 b, f32 a);
+EXPORT_METHOD void OPfontManagerSetColor(f32 r, f32 g, f32 b, f32 a);
 
 
 // TODO: Refactor

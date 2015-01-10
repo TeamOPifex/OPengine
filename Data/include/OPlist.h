@@ -24,13 +24,13 @@ extern "C" {
 	 * @param Size of each element that will be contained in the OPlist
 	 * @return A new OPlist
 	*/
-	OPlist* OPlistCreate(OPint capacity, OPint elementSize);
+	EXPORT_METHOD OPlist* OPlistCreate(OPint capacity, OPint elementSize);
 	
 	/* Destroys an OPlist
 	 * @param The OPlist to destroy
 	 * @return Success Result
 	*/
-	OPint OPlistDestroy(OPlist* list);
+	EXPORT_METHOD OPint OPlistDestroy(OPlist* list);
 
 	/* Copies an element into the OPlist
 	 * The value is mem copied into the list so the value passed can be safely freed
@@ -38,19 +38,19 @@ extern "C" {
 	 * @param value A pointer to the value (of elementSize which was specified on creation of the OPlist)
 	 * @return The index in the OPlist of the inserted element
 	*/
-	OPint OPlistPush(OPlist* list, ui8* value);
+	EXPORT_METHOD OPint OPlistPush(OPlist* list, ui8* value);
 
 	/* Pops the last element of the OPlist
 	 * @param list The OPlist to pop
 	 * @return Value of the last element (This will be overwritten on the next OPlistPush)
 	*/
-	ui8* OPlistPop(OPlist* list);
+	EXPORT_METHOD ui8* OPlistPop(OPlist* list);
 
 	/* Peeks at the last element of the OPlist
 	 * @param list The OPlist to peek
 	 * @return Value of the last element (This will be different on the next OPlistPush)
 	*/
-	ui8* OPlistPeek(OPlist* list);
+	EXPORT_METHOD ui8* OPlistPeek(OPlist* list);
 
 	/* Inserts an element at an index to an OPlist
 	 * @param list The OPlist to insert into
@@ -58,14 +58,14 @@ extern "C" {
 	 * @param index The index into the OPlist to insert the value
 	 * @return Success Result
 	*/
-	OPint OPlistInsert(OPlist* list, ui8* value, OPuint index);
+	EXPORT_METHOD OPint OPlistInsert(OPlist* list, ui8* value, OPuint index);
 	
 	/* Removes an element at an index of an OPlist
 	 * @param list The OPlist to remove from
 	 * @param index The index into the OPlist to remove
 	 * @return Success Result
 	*/
-	OPint OPlistRemoveAt(OPlist* list, OPuint index);
+	EXPORT_METHOD OPint OPlistRemoveAt(OPlist* list, OPuint index);
 
 
 	/* Gets an element at an index of an OPlist
@@ -73,7 +73,7 @@ extern "C" {
 	 * @param index The index into the OPlist to get a value
 	 * @return Value of the element
 	*/
-	ui8* OPlistGet(OPlist* list, OPuint index);
+	EXPORT_METHOD ui8* OPlistGet(OPlist* list, OPuint index);
 
 	/* Sets an element at an index of an OPlist
 	 * This will overwrite anything at the specified index
@@ -82,13 +82,13 @@ extern "C" {
 	 * @param value The value to set the index to
 	 * @return Value of the indexed element
 	*/
-	ui8* OPlistSet(OPlist* list, OPuint index, ui8* value);
+	EXPORT_METHOD ui8* OPlistSet(OPlist* list, OPuint index, ui8* value);
 
 	/* Current size of an OPlist
 	 * @param list The OPlist to find the size of
 	 * @param Total count of elements
 	*/
-	OPint OPlistSize(OPlist* list);
+	EXPORT_METHOD OPint OPlistSize(OPlist* list);
 
 #ifdef __cplusplus
 };

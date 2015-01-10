@@ -33,8 +33,8 @@ typedef struct{
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPmeshPacked OPrenderCreateMeshPacked(ui32 vertSize, ui32 indSize, ui32 vertCount, ui32 indCount, void* vertices, void* indices);
-void OPrenderMeshPacked(OPmeshPacked* mesh);
+EXPORT_METHOD OPmeshPacked OPrenderCreateMeshPacked(ui32 vertSize, ui32 indSize, ui32 vertCount, ui32 indCount, void* vertices, void* indices);
+EXPORT_METHOD void OPrenderMeshPacked(OPmeshPacked* mesh);
 
 
 #endif

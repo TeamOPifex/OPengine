@@ -58,23 +58,23 @@ typedef struct {
 #endif
 } OPphysicsActor;
 
-void OPphysicsInit();
-OPphysicsScene* OPphysicsCreateScene();
-void OPphysicsStep(OPphysicsScene* scene, ui64 elapsed);
-void OPphysicsDestroy(OPphysicsScene* scene);
-void OPphysicsShutdown();
+EXPORT_METHOD void OPphysicsInit();
+EXPORT_METHOD OPphysicsScene* OPphysicsCreateScene();
+EXPORT_METHOD void OPphysicsStep(OPphysicsScene* scene, ui64 elapsed);
+EXPORT_METHOD void OPphysicsDestroy(OPphysicsScene* scene);
+EXPORT_METHOD void OPphysicsShutdown();
 
-void OPphysicsAddForce(OPphysicsDynamic* dynamic, f32 x, f32 y, f32 z);
-void OPphysicsAddTorque(OPphysicsDynamic* dynamic, f32 x, f32 y, f32 z);
-void OPphysicsSetLinearVelocity(OPphysicsDynamic* dynamic, f32 x, f32 y, f32 z);
-void OPphysicsSetAngularVelocity(OPphysicsDynamic* dynamic, f32 x, f32 y, f32 z);
+EXPORT_METHOD void OPphysicsAddForce(OPphysicsDynamic* dynamic, f32 x, f32 y, f32 z);
+EXPORT_METHOD void OPphysicsAddTorque(OPphysicsDynamic* dynamic, f32 x, f32 y, f32 z);
+EXPORT_METHOD void OPphysicsSetLinearVelocity(OPphysicsDynamic* dynamic, f32 x, f32 y, f32 z);
+EXPORT_METHOD void OPphysicsSetAngularVelocity(OPphysicsDynamic* dynamic, f32 x, f32 y, f32 z);
 
-void OPphysicsGetTransform(OPphysicsActor* actor, OPmat4* mat);
-OPphysicsDynamic* OPphysicsCreateBoxDynamic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 sx, f32 sy, f32 sz);
-OPphysicsDynamic* OPphysicsCreateSphereDynamic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 s);
-OPphysicsStatic* OPphysicsCreateBoxStatic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 sx, f32 sy, f32 sz);
-OPphysicsStatic* OPphysicsCreateSphereStatic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 s);
-void* OPphysicsCreatePlane(OPphysicsScene* scene);
+EXPORT_METHOD void OPphysicsGetTransform(OPphysicsActor* actor, OPmat4* mat);
+EXPORT_METHOD OPphysicsDynamic* OPphysicsCreateBoxDynamic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 sx, f32 sy, f32 sz);
+EXPORT_METHOD OPphysicsDynamic* OPphysicsCreateSphereDynamic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 s);
+EXPORT_METHOD OPphysicsStatic* OPphysicsCreateBoxStatic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 sx, f32 sy, f32 sz);
+EXPORT_METHOD OPphysicsStatic* OPphysicsCreateSphereStatic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 s);
+EXPORT_METHOD void* OPphysicsCreatePlane(OPphysicsScene* scene);
 
 
 #endif

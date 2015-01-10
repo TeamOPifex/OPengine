@@ -31,40 +31,40 @@ typedef struct{
 /* Creates an OPlinkedList
  * @return Newly allocated OPlinkedList
 */
-OPlinkedList* OPllCreate();
+EXPORT_METHOD OPlinkedList* OPllCreate();
 
 /* Destroys an OPlinkedList
  * @param list The OPlinkedList to destroy
  * @return Success Result
 */
-OPint OPllDestroy(OPlinkedList* list);
+EXPORT_METHOD OPint OPllDestroy(OPlinkedList* list);
 
 /* Inserts a node into the first position of an OPlinkedList
  * @param list The OPlinkedList to insert into
  * @param data The pointer to put into the linked list
  * @return The OPllNode that was inserted
 */
-OPllNode* OPllInsertFirst(OPlinkedList* list, void* data);
+EXPORT_METHOD OPllNode* OPllInsertFirst(OPlinkedList* list, void* data);
 
 /* Inserts a node into the last position of an OPlinkedList
  * @param list The OPlinkedList to insert into
  * @param data The pointer to put into the linked list
  * @return The OPllNode that was inserted
 */
- OPllNode* OPllInsertLast(OPlinkedList* list, void* data);
+EXPORT_METHOD OPllNode* OPllInsertLast(OPlinkedList* list, void* data);
 
 /* Removes an OPllNode from an OPlinkedList
  * @param list The OPlinkedList to remove from
  * @param toRemove The OPllNode to remove from the OPlinkedList
  * @return The pointer to the data of the OPllNode removed
 */
-void* OPllRemove(OPlinkedList* list, OPllNode* toRemove);
+EXPORT_METHOD void* OPllRemove(OPlinkedList* list, OPllNode* toRemove);
 
 /* Gets the number of elements stored in the OPlinkedList
  * @param list The OPlinkedList to get the count from
  * @return The number of elements in the OPlinkedList
 */
-OPint OPllGetSize(OPlinkedList* list);
+EXPORT_METHOD OPint OPllGetSize(OPlinkedList* list);
 
 #ifdef __cplusplus
 };

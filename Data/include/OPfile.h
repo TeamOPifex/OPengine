@@ -41,14 +41,14 @@ extern "C" {
  *	@param file FILE* to the file stream
  *	@return ui16
  */
-ui16 OPreadui16(OPstream* str);
+	EXPORT_METHOD ui16 OPreadui16(OPstream* str);
 //-----------------------------------------------------------------------------
 /**
  * OPreadui32 - Reads the next 4 bytes from the file and converts to ui32
  *	@param file FILE* to the file stream
  *	@return ui32
  */
-ui32 OPreadui32(OPstream* str);
+	EXPORT_METHOD ui32 OPreadui32(OPstream* str);
 
 //-----------------------------------------------------------------------------
 /**
@@ -56,7 +56,7 @@ ui32 OPreadui32(OPstream* str);
  *	@param file FILE* to the file stream
  *	@return i8
  */
-OPchar OPreadi8(OPstream* str);
+	EXPORT_METHOD OPchar OPreadi8(OPstream* str);
 
 //-----------------------------------------------------------------------------
 /**
@@ -64,7 +64,7 @@ OPchar OPreadi8(OPstream* str);
  *	@param file FILE* to the file stream
  *	@return i16
  */
-i16 OPreadi16(OPstream* str);
+	EXPORT_METHOD i16 OPreadi16(OPstream* str);
 
 //-----------------------------------------------------------------------------
 /**
@@ -72,7 +72,7 @@ i16 OPreadi16(OPstream* str);
  *	@param file FILE* to the file stream
  *	@return i32
  */
-i32 OPreadi32(OPstream* str);
+	EXPORT_METHOD i32 OPreadi32(OPstream* str);
 
 //-----------------------------------------------------------------------------
 /**
@@ -80,7 +80,7 @@ i32 OPreadi32(OPstream* str);
  *	@param file FILE* to the file stream
  *	@return f32
  */
-f32 OPreadf32(OPstream* str);
+	EXPORT_METHOD f32 OPreadf32(OPstream* str);
 
 //-----------------------------------------------------------------------------
 /**
@@ -88,7 +88,7 @@ f32 OPreadf32(OPstream* str);
  *	@param file FILE* to the file stream
  *	@return i8*
  */
-OPchar* OPreadstring(OPstream* str);
+	EXPORT_METHOD OPchar* OPreadstring(OPstream* str);
 
 //-----------------------------------------------------------------------------
 /**
@@ -96,7 +96,7 @@ OPchar* OPreadstring(OPstream* str);
  *	@param path Location in the file system where the data will be written.
  *	@return FileInformation
  */
-OPfileInformation OPreadFileInformation(const char* path);
+	EXPORT_METHOD OPfileInformation OPreadFileInformation(const char* path);
 
 //-----------------------------------------------------------------------------
 /**
@@ -105,7 +105,7 @@ OPfileInformation OPreadFileInformation(const char* path);
  *	@param data OPstream instance which will be written
  *	@return 1 on success, 0 on failure
  */
-OPint OPwriteFile(const char* path, OPstream* data);
+	EXPORT_METHOD OPint OPwriteFile(const char* path, OPstream* data);
 
 //-----------------------------------------------------------------------------
 /**
@@ -113,7 +113,7 @@ OPint OPwriteFile(const char* path, OPstream* data);
  *	@param path Location where the data will be read from.
  *	@return pointer to the data stream, NULL on failure
  */
-OPstream* OPreadFile(const char* path);
+	EXPORT_METHOD OPstream* OPreadFile(const char* path);
 
 //-----------------------------------------------------------------------------
 /**
@@ -121,7 +121,7 @@ OPstream* OPreadFile(const char* path);
  *	@param path Location where the data will be read from.
  *	@return pointer to the data stream, NULL on failure
  */
-OPstream* OPreadFileLarge(const char* path, ui32 expectedSize);
+	EXPORT_METHOD OPstream* OPreadFileLarge(const char* path, ui32 expectedSize);
 
 //-----------------------------------------------------------------------------
 /**
@@ -129,7 +129,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize);
  *	@param path Location in the file system where we will look for a file.
  *	@return 1 on success, 0 on failure
  */
-OPint OPfileExists(const char* path);
+	EXPORT_METHOD OPint OPfileExists(const char* path);
 
 //-----------------------------------------------------------------------------
 /**
@@ -137,30 +137,31 @@ OPint OPfileExists(const char* path);
  *	@param path Location in the file system where we will look for a file.
  *	@return 1 on success, 0 on failure
  */
-OPint OPdeleteFile(const char* path);
+	EXPORT_METHOD OPint OPdeleteFile(const char* path);
 
-ui64 OPfileLastChange(const OPchar* path);
+	EXPORT_METHOD ui64 OPfileLastChange(const OPchar* path);
 
-OPfile OPfileOpen(const OPchar* path);
-OPint OPfileWriteui8(OPfile* file, ui8 data);
-OPint OPfileWriteui16(OPfile* file, ui16 data);
-OPint OPfileWriteui32(OPfile* file, ui32 data);
-OPint OPfileWritei8(OPfile* file, i8 data);
-OPint OPfileWritei16(OPfile* file, i16 data);
-OPint OPfileWritei32(OPfile* file, i32 data);
-OPint OPfileWriteString(OPfile* file, const OPchar* data);
-OPint OPfileWriteBytes(OPfile* file, void* data, ui64 bytesToWrite);
-ui8 OPfileReadui8(OPfile* file);
-ui16 OPfileReadui16(OPfile* file);
-ui32 OPfileReadui32(OPfile* file);
-i8 OPfileReadi8(OPfile* file);
-i16 OPfileReadi16(OPfile* file);
-i32 OPfileReadi32(OPfile* file);
-OPchar* OPfileReadString(OPfile* file);
-void* OPfileReadBytes(OPfile* file, ui64 bytesToRead);
-OPint OPfileSeekReset(OPfile* file);
-OPint OPfileSeek(OPfile* file, OPint pos);
-OPint OPfileClose(OPfile* file);
+	EXPORT_METHOD OPfile OPfileOpen(const OPchar* path);
+	EXPORT_METHOD OPint OPfileWriteui8(OPfile* file, ui8 data);
+	EXPORT_METHOD OPint OPfileWriteui16(OPfile* file, ui16 data);
+	EXPORT_METHOD OPint OPfileWriteui32(OPfile* file, ui32 data);
+	EXPORT_METHOD OPint OPfileWritei8(OPfile* file, i8 data);
+	EXPORT_METHOD OPint OPfileWritei16(OPfile* file, i16 data);
+	EXPORT_METHOD OPint OPfileWritei32(OPfile* file, i32 data);
+	EXPORT_METHOD OPint OPfileWriteString(OPfile* file, const OPchar* data);
+	EXPORT_METHOD OPint OPfileWriteBytes(OPfile* file, void* data, ui64 bytesToWrite);
+	EXPORT_METHOD ui8 OPfileReadui8(OPfile* file);
+	EXPORT_METHOD ui16 OPfileReadui16(OPfile* file);
+	EXPORT_METHOD ui32 OPfileReadui32(OPfile* file);
+	EXPORT_METHOD i8 OPfileReadi8(OPfile* file);
+	EXPORT_METHOD i16 OPfileReadi16(OPfile* file);
+	EXPORT_METHOD i32 OPfileReadi32(OPfile* file);
+	EXPORT_METHOD OPchar* OPfileReadString(OPfile* file);
+	EXPORT_METHOD void* OPfileReadBytes(OPfile* file, ui64 bytesToRead);
+	EXPORT_METHOD OPint OPfileSeekReset(OPfile* file);
+	EXPORT_METHOD OPint OPfileSeek(OPfile* file, OPint pos);
+	EXPORT_METHOD OPint OPfileClose(OPfile* file);
+	EXPORT_METHOD OPint OPfileCopy(const OPchar* existing, const OPchar* target, OPint failIfExists);
 
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus

@@ -22,15 +22,22 @@ OPsharedLibrary* OPsharedLibraryLoad(const OPchar* libraryName) {
 	if(library == NULL) return NULL;
 #elif defined(OPIFEX_WINDOWS)
 	OPchar* lib = OPstringCreateMerged(libraryName, ".dll");
+	OPchar* libTemp = OPstringCreateMerged(libraryName, ".temp.dll");
 	OPchar* path = OPstringCreateMerged(OPgetExecutableDir(), lib);
+	OPchar* pathTemp = OPstringCreateMerged(OPgetExecutableDir(), libTemp);
+	OPfileCopy(path, pathTemp, false);
 	OPlog(path);
-	HMODULE library = LoadLibraryA(path);
+	OPlog(pathTemp);
+	HMODULE library = LoadLibraryA(pathTemp);
 	if (library == NULL) return NULL;
 #endif
 
 	OPsharedLibrary* sharedLibrary = (OPsharedLibrary*)OPalloc(sizeof(OPsharedLibrary));
 	sharedLibrary->_library = library;
 	sharedLibrary->_libraryPath = path;
+#ifdef OPIFEX_WINDOWS
+	sharedLibrary->_libraryPathTemp = pathTemp;
+#endif
 	sharedLibrary->_symbols = OPlistCreate(4, sizeof(OPsharedLibrarySymbol));
 	sharedLibrary->_lastModifiedTime = OPfileLastChange(sharedLibrary->_libraryPath);
 
@@ -45,14 +52,18 @@ OPint OPsharedLibraryDestroy(OPsharedLibrary* sharedLibrary) {
 
 OPint OPsharedLibraryReload(OPsharedLibrary* sharedLibrary) {
 	ui64 lastChange = OPfileLastChange(sharedLibrary->_libraryPath);
+
 	if (sharedLibrary->_lastModifiedTime == lastChange) return 0;
+
+	OPlog("Reloading %s, %s", sharedLibrary->_libraryPath, sharedLibrary->_libraryPathTemp);
+	OPlog("Last Change: %llu Was: %llu", lastChange, sharedLibrary->_lastModifiedTime);
 	sharedLibrary->_lastModifiedTime = lastChange;
-	OPlog("Last Change: %d", lastChange);
 
 	if(OPsharedLibraryClose(sharedLibrary) != 0) {
 		OPlog("Failed to close library.");
 		return -1;
 	}
+
 #ifdef OPIFEX_UNIX
 
 	void* library = dlopen(sharedLibrary->_libraryPath, RTLD_NOW);
@@ -76,12 +87,22 @@ OPint OPsharedLibraryReload(OPsharedLibrary* sharedLibrary) {
 	}
 
 	return result;
+
 #elif defined(OPIFEX_WINDOWS)
-	HMODULE library = LoadLibraryA(sharedLibrary->_libraryPath);
-	if (library == NULL) return -2;
+	OPfileCopy(sharedLibrary->_libraryPath, sharedLibrary->_libraryPathTemp, false);
+	HMODULE library = NULL;
+	while (library == NULL) {
+		library = LoadLibraryA(sharedLibrary->_libraryPathTemp);
+		if (library == NULL) {
+			OPlog("Failed to reload library");
+			return -2;
+		}
+		OPlog("Library reloaded");
+	}
 	sharedLibrary->_library = library;
 
 	OPint elements = OPlistSize(sharedLibrary->_symbols);
+	OPlog("Symbols %d", elements);
 	void* symbol;
 	OPint result = 0;
 	for (OPint i = 0; i < elements; i++) {
@@ -91,10 +112,14 @@ OPint OPsharedLibraryReload(OPsharedLibrary* sharedLibrary) {
 			OPlog("!!!   Failed to reload symbol: %s", sharedLibrarySymbol->_symbolName);
 			result = -3;
 		}
+		else {
+			OPlog("Symbol Reloaded %s", sharedLibrarySymbol->_symbolName);
+		}
 		sharedLibrarySymbol->Symbol = symbol;
 	}
 
 	return result;
+
 #endif
 }
 
@@ -117,9 +142,10 @@ OPsharedLibrarySymbol* OPsharedLibraryLoadSymbol(OPsharedLibrary* sharedLibrary,
 OPint OPsharedLibraryClose(OPsharedLibrary* sharedLibrary) {
 #ifdef OPIFEX_UNIX
 	OPint result = dlclose(sharedLibrary->_library);
+	if (result != 0) return 1;
 #elif defined(OPIFEX_WINDOWS)
 	OPint result = FreeLibrary(sharedLibrary->_library);
+	if (result != 0) return 0;
 #endif
-	if (result != 0) return -1;
 	return 0;
 }

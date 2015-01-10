@@ -24,11 +24,11 @@ typedef struct {
 	OPLevelEntity* entities;
 } OPLevel;
 
-OPLevelEntity* OPlevelGetEntity(OPLevel* level, OPchar* name);
+EXPORT_METHOD OPLevelEntity* OPlevelGetEntity(OPLevel* level, OPchar* name);
 
-OPint OPlevelload(const OPchar* filename, OPLevel** level);
-OPint OPlevelReload(const OPchar* filename, OPLevel** level);
-OPint OPlevelUnload(void* image);
+EXPORT_METHOD OPint OPlevelload(const OPchar* filename, OPLevel** level);
+EXPORT_METHOD OPint OPlevelReload(const OPchar* filename, OPLevel** level);
+EXPORT_METHOD OPint OPlevelUnload(void* image);
 
 
 // prevent name mangling if compiling with c++

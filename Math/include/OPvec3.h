@@ -59,11 +59,11 @@ struct OPvec3 {
 	}
 };
 
-extern const OPvec3 OPVEC3_ZERO;
-extern const OPvec3 OPVEC3_ONE;
-extern const OPvec3 OPVEC3_UP;
-extern const OPvec3 OPVEC3_LEFT;
-extern const OPvec3 OPVEC3_FORWARD;
+extern IMPORT_METHOD const OPvec3 OPVEC3_ZERO;
+extern IMPORT_METHOD const OPvec3 OPVEC3_ONE;
+extern IMPORT_METHOD const OPvec3 OPVEC3_UP;
+extern IMPORT_METHOD const OPvec3 OPVEC3_LEFT;
+extern IMPORT_METHOD const OPvec3 OPVEC3_FORWARD;
 
 inline OPvec3 OPvec3Create(OPfloat x, OPfloat y, OPfloat z) {
 	OPvec3 tmp = { {x, y, z} };

@@ -32,6 +32,7 @@ add_source_group(src "${PROJECT_SOURCE_DIR}/Data/src" DATA_SRC)
 set(ALL_LIBS
 	1_Core
 )
+message(STATUS "DATA ALL_LIBS ${ALL_LIBS} ${1_Core}")
 
 
 #########################################
@@ -39,12 +40,13 @@ set(ALL_LIBS
 #########################################
 if(${OPIFEX_OPTION_SHARED})
 	add_library(2_Data SHARED ${DATA_SRC})
+	add_definitions(-DOPIFEX_SHARED)
 else()
 	add_library(2_Data STATIC ${DATA_SRC})
 endif()
 add_definitions(-D${OPIFEX_OS})
-
 target_link_libraries(2_Data ${ALL_LIBS})
+
 
 set_target_properties(2_Data PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(2_Data PROPERTIES OUTPUT_NAME "Data")

@@ -4,49 +4,49 @@
 #include "./Human/include/Rendering/OpenGL.h"
 #include "./Core/include/OPtypes.h"
 
-extern i32 OPRENDER_WIDTH;
-extern i32 OPRENDER_HEIGHT;
-extern i32 OPRENDER_SCREEN_WIDTH;
-extern i32 OPRENDER_SCREEN_HEIGHT;
-extern f32 OPRENDER_SCREEN_WIDTH_SCALE;
-extern f32 OPRENDER_SCREEN_HEIGHT_SCALE;
-extern OPint OPRENDER_FULLSCREEN;
-extern OPint OPRENDER_HAS_FOCUS;
+extern IMPORT_METHOD i32 OPRENDER_WIDTH;
+extern IMPORT_METHOD i32 OPRENDER_HEIGHT;
+extern IMPORT_METHOD i32 OPRENDER_SCREEN_WIDTH;
+extern IMPORT_METHOD i32 OPRENDER_SCREEN_HEIGHT;
+extern IMPORT_METHOD f32 OPRENDER_SCREEN_WIDTH_SCALE;
+extern IMPORT_METHOD f32 OPRENDER_SCREEN_HEIGHT_SCALE;
+extern IMPORT_METHOD OPint OPRENDER_FULLSCREEN;
+extern IMPORT_METHOD OPint OPRENDER_HAS_FOCUS;
 
 #ifndef OPIFEX_ANDROID
-extern GLFWwindow* window;
+extern IMPORT_METHOD GLFWwindow* window;
 #endif
 
-OPint OPrenderInit();
-void  OPrenderClear      (f32 r, f32 g, f32 b);
-void  OPrenderClearAlpha(f32 r, f32 g, f32 b, f32 a);
-void  OPrenderSetScreenSize(OPuint width, OPuint height);
-void  OPrenderSetViewport(OPuint x, OPuint y, OPuint width, OPuint height);
-void OPrenderResetViewport();
-OPint OPrenderGetWidth();
-OPint OPrenderGetHeight();
-OPfloat OPrenderGetAspectRatio(); 
-OPfloat OPrenderGetWidthAspectRatio();
-OPfloat OPrenderGetHeightAspectRatio();
+EXPORT_METHOD OPint OPrenderInit();
+EXPORT_METHOD void  OPrenderClear(f32 r, f32 g, f32 b);
+EXPORT_METHOD void  OPrenderClearAlpha(f32 r, f32 g, f32 b, f32 a);
+EXPORT_METHOD void  OPrenderSetScreenSize(OPuint width, OPuint height);
+EXPORT_METHOD void  OPrenderSetViewport(OPuint x, OPuint y, OPuint width, OPuint height);
+EXPORT_METHOD void OPrenderResetViewport();
+EXPORT_METHOD OPint OPrenderGetWidth();
+EXPORT_METHOD OPint OPrenderGetHeight();
+EXPORT_METHOD OPfloat OPrenderGetAspectRatio();
+EXPORT_METHOD OPfloat OPrenderGetWidthAspectRatio();
+EXPORT_METHOD OPfloat OPrenderGetHeightAspectRatio();
 
 /* Enables or Disables GL_CULL_FACE
  * @param state 0 for disable or 1 for enable
 */
-void OPrenderCull(OPint state);
+EXPORT_METHOD void OPrenderCull(OPint state);
 
 /* Sets the direction of culling
  * @param state 0 for back or 1 for front
 */
-void OPrenderCullMode(OPint state);
-void  OPrenderSwapBuffer ();
-void  OPrenderPresent    ();
-void OPrenderBlend(OPint state);
-void  OPrenderDepth(OPint state); 
-void OPrenderDepthWrite(OPint state);
-void  OPrenderShutdown   ();
+EXPORT_METHOD void OPrenderCullMode(OPint state);
+EXPORT_METHOD void  OPrenderSwapBuffer();
+EXPORT_METHOD void  OPrenderPresent();
+EXPORT_METHOD void OPrenderBlend(OPint state);
+EXPORT_METHOD void  OPrenderDepth(OPint state);
+EXPORT_METHOD void OPrenderDepthWrite(OPint state);
+EXPORT_METHOD void  OPrenderShutdown();
 
-ui32 OPgetNativeScreenWidth();
-ui32 OPgetNativeScreenHeight();
+EXPORT_METHOD ui32 OPgetNativeScreenWidth();
+EXPORT_METHOD ui32 OPgetNativeScreenHeight();
 
 inline void OPrenderBlendAlpha(){
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 

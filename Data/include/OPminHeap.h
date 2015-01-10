@@ -24,37 +24,37 @@ extern "C" {
 	 * @param capacity Number of elements to store
 	 * @return return The Created OPminHeap
 	*/
-	OPminHeap* OPminHeapCreate(OPuint capacity);
+	EXPORT_METHOD OPminHeap* OPminHeapCreate(OPuint capacity);
 
 	/* Destroys an OPminHeap
 	 * @param heap The OPminHeap to destroy
 	 * @return Success Result
 	*/
-	OPint OPminHeapDestroy(OPminHeap* heap);
+	EXPORT_METHOD OPint OPminHeapDestroy(OPminHeap* heap);
 
 	/* Puts an element into an OPminHeap
 	 * @param heap The OPminHeap to push an element into
 	 * @return Success Result
 	*/
-	OPint OPminHeapPush(OPminHeap* heap, OPint value);
+	EXPORT_METHOD OPint OPminHeapPush(OPminHeap* heap, OPint value);
 
 	/* Pops an element off the top of an OPminHeap
 	 * @param heap The OPminHeap to pop an element
 	 * @return The Index of the element popped off
 	*/
-	OPint OPminHeapPop(OPminHeap* heap);
+	EXPORT_METHOD OPint OPminHeapPop(OPminHeap* heap);
 
 	/* Looks at the top element of an OPminHeap without popping it off
 	 * @param heap The OPminHeap to look at
 	 * @return Index of the element
 	*/
-	OPint OPminHeapPeek(OPminHeap* heap);
+	EXPORT_METHOD OPint OPminHeapPeek(OPminHeap* heap);
 
 	/* Size of the OPminHeap
 	 * @param heap The OPminHeap to find the size of
 	 * @return Total size of the OPminHeap
 	*/
-	OPint OPminHeapSize(OPminHeap* heap);
+	EXPORT_METHOD OPint OPminHeapSize(OPminHeap* heap);
 
 #ifdef __cplusplus
 };

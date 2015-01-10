@@ -52,13 +52,13 @@ typedef struct{
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
-OPthread OPthreadStart(void* (*function) (void*), void* params);
-OPint    OPthreadStop(void* retval);
-OPint    OPthreadJoin(OPthread* thread);
+EXPORT_METHOD OPthread OPthreadStart(void* (*function) (void*), void* params);
+EXPORT_METHOD OPint    OPthreadStop(void* retval);
+EXPORT_METHOD OPint    OPthreadJoin(OPthread* thread);
 
 //-----------------------------------------------------------------------------
 
-OPmutex OPmutexCreate();
-OPint   OPmutexLock(OPmutex* mutex);
-OPint   OPmutexUnlock(OPmutex* mutex);
+EXPORT_METHOD OPmutex OPmutexCreate();
+EXPORT_METHOD OPint   OPmutexLock(OPmutex* mutex);
+EXPORT_METHOD OPint   OPmutexUnlock(OPmutex* mutex);
 #endif

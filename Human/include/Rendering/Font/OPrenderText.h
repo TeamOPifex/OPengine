@@ -4,8 +4,8 @@
 #include "./Human/include/Rendering/Font/OPfontManager.h"
 #include "./Core/include/Assert.h"
 
-void OPrenderText(const OPchar* text, OPvec4 color, OPvec2 pos, OPfontAlign align);
-void OPrenderText(const OPchar* text, OPvec4 color, OPmat4* world);
+EXPORT_METHOD void OPrenderText(const OPchar* text, OPvec4 color, OPvec2 pos, OPfontAlign align);
+EXPORT_METHOD void OPrenderText(const OPchar* text, OPvec4 color, OPmat4* world);
 
 inline void OPrenderText(const OPchar* text, OPmat4* world) {
 	OPrenderText(text, OPRENDER_CURR_FONT_MANAGER->_color, world);

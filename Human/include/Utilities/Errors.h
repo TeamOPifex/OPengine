@@ -3,6 +3,6 @@
 
 #include "./Core/include/OPtypes.h"
 
-OPint OPglError(const char* message);
+EXPORT_METHOD OPint OPglError(const char* message);
 
 #endif

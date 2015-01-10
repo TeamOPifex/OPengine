@@ -62,6 +62,7 @@ set(ALL_LIBS
 #########################################
 if(${OPIFEX_OPTION_SHARED})
 	add_library(8_Pipeline SHARED ${PIPELINE_SRC})
+	add_definitions(-DOPIFEX_SHARED)
 else()
 	add_library(8_Pipeline STATIC ${PIPELINE_SRC})
 endif()

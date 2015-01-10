@@ -14,21 +14,21 @@ typedef struct {
 	OPint	prevKeys[_OPMOUSE_MAX];
 } OPmouseState;
 
-extern OPmouseState Mouse;
+extern IMPORT_METHOD OPmouseState Mouse;
 
-void OPmouseUpdate();
-i32 OPmousePositionX();
-i32 OPmousePositionY();
-i32 OPmousePositionMovedX();
-i32 OPmousePositionMovedY();
-i32 OPmouseWheel();
-i32 OPmouseWheelMoved();
-OPint OPmouseIsDown(OPmouseKey key);
-OPint OPmouseIsUp(OPmouseKey key);
-OPint OPmouseWasPressed(OPmouseKey key);
-OPint OPmouseWasReleased(OPmouseKey key);
-void OPmouseSetPosition(i32 x, i32 y);
-void OPmouseSetPositionScreenCenter();
-OPint OPmouseAnyInputIsDown();
+EXPORT_METHOD void OPmouseUpdate();
+EXPORT_METHOD i32 OPmousePositionX();
+EXPORT_METHOD i32 OPmousePositionY();
+EXPORT_METHOD i32 OPmousePositionMovedX();
+EXPORT_METHOD i32 OPmousePositionMovedY();
+EXPORT_METHOD i32 OPmouseWheel();
+EXPORT_METHOD i32 OPmouseWheelMoved();
+EXPORT_METHOD OPint OPmouseIsDown(OPmouseKey key);
+EXPORT_METHOD OPint OPmouseIsUp(OPmouseKey key);
+EXPORT_METHOD OPint OPmouseWasPressed(OPmouseKey key);
+EXPORT_METHOD OPint OPmouseWasReleased(OPmouseKey key);
+EXPORT_METHOD void OPmouseSetPosition(i32 x, i32 y);
+EXPORT_METHOD void OPmouseSetPositionScreenCenter();
+EXPORT_METHOD OPint OPmouseAnyInputIsDown();
 
 #endif

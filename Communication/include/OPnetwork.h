@@ -41,7 +41,7 @@ typedef struct {
 	OPnetworkType ConnectionType;
 } OPnetwork;
 
-OPnetwork* OPnetworkCreate(OPnetworkType networkType);
+EXPORT_METHOD OPnetwork* OPnetworkCreate(OPnetworkType networkType);
 i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, i32 port);
 i32 OPnetworkServerStart(OPnetwork* network, i32 port);
 OPnetwork* OPnetworkAcceptClient(OPnetwork* network);

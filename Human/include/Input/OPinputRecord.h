@@ -15,12 +15,12 @@ typedef struct {
 	OPint MemorySize;
 } OPinputRecordMemoryBase;
 
-void OPinputRecordBegin(OPtimer* start, OPinputRecordMemoryBase* memoryMaps, ui16 memoryMapCount);
-OPint OPinputRecordIsRunning();
-OPint OPinputRecordIsRecording();
-OPint OPinputRecordIsPlayingBack();
-void OPinputRecordUpdate(OPtimer* timer);
-void OPinputRecordPlayback();
-void OPinputRecordEnd();
+EXPORT_METHOD void OPinputRecordBegin(OPtimer* start, OPinputRecordMemoryBase* memoryMaps, ui16 memoryMapCount);
+EXPORT_METHOD OPint OPinputRecordIsRunning();
+EXPORT_METHOD OPint OPinputRecordIsRecording();
+EXPORT_METHOD OPint OPinputRecordIsPlayingBack();
+EXPORT_METHOD void OPinputRecordUpdate(OPtimer* timer);
+EXPORT_METHOD void OPinputRecordPlayback();
+EXPORT_METHOD void OPinputRecordEnd();
 
 #endif

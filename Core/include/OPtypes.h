@@ -24,6 +24,19 @@
 #endif
 
 
+#if defined(OPIFEX_WINDOWS) && defined(OPIFEX_SHARED) && defined(OPIFEX_BUILD)
+//dllimport
+#define IMPORT_METHOD __declspec(dllexport)
+#define EXPORT_METHOD __declspec(dllexport)
+#elif defined(OPIFEX_WINDOWS) && defined(OPIFEX_SHARED)
+#define IMPORT_METHOD __declspec(dllimport)
+#define EXPORT_METHOD __declspec(dllimport)
+#else
+#define IMPORT_METHOD 
+#define EXPORT_METHOD 
+#endif
+
+
 #if defined(OPIFEX_ANDROID)
 #include <jni.h>
 #endif

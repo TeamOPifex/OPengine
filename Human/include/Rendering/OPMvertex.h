@@ -22,7 +22,7 @@ enum OPMKeyFeatures {
 	Key_Rotation = 0x04
 };
 
-OPint OPMhasFeature(ui32 features, ui32 feature);
+EXPORT_METHOD OPint OPMhasFeature(ui32 features, ui32 feature);
 
 typedef struct {
 	OPchar* Name;
@@ -74,8 +74,8 @@ typedef struct {
 	ui32 count;
 } OPvertices;
 
-OPvertices* OPverticesCreate(ui32 count, ui32 features);
-void OPverticesWriteVec2(OPvertices* vertices, OPvec2* data, ui32 feature);
-void OPverticesWriteVec3(OPvertices* vertices, OPvec3* data, ui32 feature);
-void OPverticesWriteVec4(OPvertices* vertices, OPvec4* data, ui32 feature);
+EXPORT_METHOD OPvertices* OPverticesCreate(ui32 count, ui32 features);
+EXPORT_METHOD void OPverticesWriteVec2(OPvertices* vertices, OPvec2* data, ui32 feature);
+EXPORT_METHOD void OPverticesWriteVec3(OPvertices* vertices, OPvec3* data, ui32 feature);
+EXPORT_METHOD void OPverticesWriteVec4(OPvertices* vertices, OPvec4* data, ui32 feature);
 #endif

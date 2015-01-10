@@ -32,12 +32,12 @@
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPmesh       OPquadCreate();
-OPmesh       OPquadCreateCustom(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd);
-OPmeshPacked OPquadCreatePacked();
-OPmesh       OPquadNormCreate();
-OPmeshPacked OPquadNormCreatePacked();
-void         OPquadDestroy(OPmesh* quad);
+EXPORT_METHOD OPmesh       OPquadCreate();
+EXPORT_METHOD OPmesh       OPquadCreateCustom(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd);
+EXPORT_METHOD OPmeshPacked OPquadCreatePacked();
+EXPORT_METHOD OPmesh       OPquadNormCreate();
+EXPORT_METHOD OPmeshPacked OPquadNormCreatePacked();
+EXPORT_METHOD void         OPquadDestroy(OPmesh* quad);
 
 #endif
  

@@ -89,7 +89,7 @@ __inline void OPentHeapKill(OPentHeap* heap, OPint i){
 * @param count Number of entities to manage
 * @return size in bytes required
 */
-OPuint     OPentHeapBytes(OPint entsize, OPint count);
+EXPORT_METHOD OPuint     OPentHeapBytes(OPint entsize, OPint count);
 
 /* Creates an EntHeap
 * @param segPtr Pointer to a block of memory, use OPentHeapBytes to alloc the right size
@@ -97,7 +97,7 @@ OPuint     OPentHeapBytes(OPint entsize, OPint count);
 * @param count Number of entities to manage
 * @return A new EntHeap
 */
-OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count);
+EXPORT_METHOD OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count);
 
 #ifdef __cplusplus
 }

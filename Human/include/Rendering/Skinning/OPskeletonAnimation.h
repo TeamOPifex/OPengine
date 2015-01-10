@@ -13,9 +13,9 @@ typedef struct {
 	ui64 FramesPer;
 } OPskeletonAnimation;
 
-void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPskeleton* skeleton, OPmat4* frames, i32 count);
-OPskeletonAnimation* OPskeletonAnimationCreate(OPskeleton* skeleton, OPmat4* frames, i32 count);
-void OPskeletonAnimationUpdate(OPskeletonAnimation* skeleton, OPtimer* timer);
+EXPORT_METHOD void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPskeleton* skeleton, OPmat4* frames, i32 count);
+EXPORT_METHOD OPskeletonAnimation* OPskeletonAnimationCreate(OPskeleton* skeleton, OPmat4* frames, i32 count);
+EXPORT_METHOD void OPskeletonAnimationUpdate(OPskeletonAnimation* skeleton, OPtimer* timer);
 
 
 

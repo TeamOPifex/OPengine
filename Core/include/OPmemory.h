@@ -46,14 +46,14 @@ extern "C" {
 * @param bytes Number of consecutive bytes to be allocated.
 * @return Address of allocated memory.
 */
-void* OPalloc(OPuint bytes);
+EXPORT_METHOD void* OPalloc(OPuint bytes);
 
 /**
 * Platform independent means to dynamically allocate memory and zero it out.
 * @param bytes Number of consecutive bytes to be allocated.
 * @return Address of allocated memory.
 */
-void* OPallocZero(OPuint bytes);
+EXPORT_METHOD void* OPallocZero(OPuint bytes);
 
 //-----------------------------------------------------------------------------
 /**
@@ -62,7 +62,7 @@ void* OPallocZero(OPuint bytes);
  * @param bytes Number of consecutive bytes to be allocated.
  * @return Address of allocated memory.
  */
-void* OPrealloc(void* ptr, OPuint bytes);
+EXPORT_METHOD void* OPrealloc(void* ptr, OPuint bytes);
 
 //-----------------------------------------------------------------------------
 /**
@@ -71,7 +71,7 @@ void* OPrealloc(void* ptr, OPuint bytes);
  *		is taken.
  * @param ptr Address to the memory segment to deallocate
  */
-void  OPfree(void* ptr);
+EXPORT_METHOD void  OPfree(void* ptr);
 
 #ifdef __cplusplus
 }

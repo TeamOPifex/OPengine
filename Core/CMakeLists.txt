@@ -32,6 +32,7 @@ add_source_group(src/ "${PROJECT_SOURCE_DIR}/Core/src" CORE_SRC)
 #########################################
 if(${OPIFEX_OPTION_SHARED})
 	add_library(1_Core SHARED ${CORE_SRC})
+	add_definitions(-DOPIFEX_SHARED)
 else()
 	add_library(1_Core STATIC ${CORE_SRC})
 endif()

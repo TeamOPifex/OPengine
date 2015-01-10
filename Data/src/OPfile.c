@@ -8,6 +8,7 @@
 
 #if defined(OPIFEX_WINDOWS)
 #include <share.h>
+#include <Windows.h>
 #endif
 
 #ifdef OPIFEX_UNIX
@@ -273,16 +274,23 @@ ui64 OPfileLastChange(const OPchar* path) {
 	ULONGLONG rtn;
 	HANDLE hFile = CreateFile(path, GENERIC_READ,
 		FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	
 	if (hFile != INVALID_HANDLE_VALUE)
 	{
 		FILETIME ftCreate, ftAccess, ftWrite;
 		// Retrieve the file times for the file.
-		if (!GetFileTime(hFile, &ftCreate, &ftAccess, &ftWrite))
+		if (!GetFileTime(hFile, &ftCreate, &ftAccess, &ftWrite)){
+			CloseHandle(hFile);
 			return 0;
+		}
 		CloseHandle(hFile);
 		rtn = (((ULONGLONG)ftWrite.dwHighDateTime) << 32) +
 			ftWrite.dwLowDateTime;
+
 		return rtn;
+	}
+	else {
+		OPlog("Failed to open handle for %s", path);
 	}
 #elif defined(OPIFEX_UNIX)
 	struct stat st;
@@ -415,4 +423,11 @@ OPint OPfileSeek(OPfile* file, OPint pos) {
 OPint OPfileClose(OPfile* file) {
     close(file->_handle);
     return 1;
+}
+
+OPint OPfileCopy(const OPchar* existing, const OPchar* target, OPint failIfExists) {
+#ifdef OPIFEX_WINDOWS
+	return CopyFile(existing, target, failIfExists);
+#endif
+	return 0;
 }

@@ -17,12 +17,12 @@ struct OPgameState_def{
 	void* Data;
 };
 
-extern OPgameState* ActiveState;
+extern IMPORT_METHOD OPgameState* ActiveState;
 
 /* Changes the current game state, on change calls the Exit on the current game state, and then the initialize on the new game state
 * @param targetState OPgameState to change to
 */
-void OPgameStateChange(OPgameState* targetState);
+EXPORT_METHOD void OPgameStateChange(OPgameState* targetState);
 
 /* Creates a new OPgameState
 * @param init The Initialize function for the game state
@@ -30,13 +30,13 @@ void OPgameStateChange(OPgameState* targetState);
 * @param exit The Exit function for the game state
 * @return A new OPgameState
 */ 
-OPgameState* OPgameStateCreate(void (*init)(OPgameState*), OPint(*update)(OPtimer*), void (*exit)(OPgameState*));
+EXPORT_METHOD OPgameState* OPgameStateCreate(void(*init)(OPgameState*), OPint(*update)(OPtimer*), void(*exit)(OPgameState*));
 
 /* Destroys an OPgameState by deallocating the memory
 * @param state The game state to destroy
 * @return Success Result
 */
-OPint OPgameStateDestroy(OPgameState* state);
+EXPORT_METHOD OPint OPgameStateDestroy(OPgameState* state);
 
 #ifdef __cplusplus
 }

@@ -52,7 +52,7 @@ extern ALCdevice*  AL_OPaudioDevice;
 extern ALCcontext* AL_OPaudioContext;
 #endif
 
-extern OPmutex OPAUD_CURR_MUTEX;
+extern IMPORT_METHOD OPmutex OPAUD_CURR_MUTEX;
 //-----------------------------------------------------------------------------
 
 
@@ -90,11 +90,11 @@ extern LPOVOPENCALLBACKS   fn_ov_open_callbacks;
 // | |  | |  ___/ _` | | | |/ _` | |/ _ \  |  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 // | |__| | |  | (_| | |_| | (_| | | (_) | | |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //  \____/|_|   \__,_|\__,_|\__,_|_|\___/  |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPint OPaudInit();
+EXPORT_METHOD OPint OPaudInit();
 
-OPvec3 OPaudEarPosition(OPvec3* pos);
-OPvec3 OPaudEarVelocity(OPvec3* pos);
-OPvec3 OPaudEarForwardUp(OPfloat* pos);
+EXPORT_METHOD OPvec3 OPaudEarPosition(OPvec3* pos);
+EXPORT_METHOD OPvec3 OPaudEarVelocity(OPvec3* pos);
+EXPORT_METHOD OPvec3 OPaudEarForwardUp(OPfloat* pos);
 
 
 #endif

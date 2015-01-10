@@ -7,8 +7,8 @@
 extern "C" {
 #endif
 
-	OPchar* OPdirCurrent();
-	OPchar* OPdirExecutable();
+	EXPORT_METHOD OPchar* OPdirCurrent();
+	EXPORT_METHOD OPchar* OPdirExecutable();
 
 #ifdef __cplusplus
 }

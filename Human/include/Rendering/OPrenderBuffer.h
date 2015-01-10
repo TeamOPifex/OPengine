@@ -26,8 +26,8 @@ typedef struct{
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
-extern OPrenderBuffer* OPRENDER_CURR_VB;
-extern OPrenderBuffer* OPRENDER_CURR_IB;
+extern IMPORT_METHOD OPrenderBuffer* OPRENDER_CURR_VB;
+extern IMPORT_METHOD OPrenderBuffer* OPRENDER_CURR_IB;
 
 //-----------------------------------------------------------------------------
 //  _____                     _____                  _____  _               _   _               
@@ -46,16 +46,16 @@ extern OPrenderBuffer* OPRENDER_CURR_IB;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPrenderBuffer OPrenderGenBuffer(ui32 type);
-void OPrenderDelBuffer(OPrenderBuffer* buff);
-void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, ui32 count, const void* data);
-void OPrenderSetBufferSubData(OPrenderBuffer* buff, ui32 elementSize, ui32 offsetCount, ui32 count, const void* data);
-void OPrenderBindBuffer(OPrenderBuffer* buffer);
+EXPORT_METHOD OPrenderBuffer OPrenderGenBuffer(ui32 type);
+EXPORT_METHOD void OPrenderDelBuffer(OPrenderBuffer* buff);
+EXPORT_METHOD void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, ui32 count, const void* data);
+EXPORT_METHOD void OPrenderSetBufferSubData(OPrenderBuffer* buff, ui32 elementSize, ui32 offsetCount, ui32 count, const void* data);
+EXPORT_METHOD void OPrenderBindBuffer(OPrenderBuffer* buffer);
 
-void OPrenderDrawBufferIndexed(ui32 offset);
-void OPrenderDrawBuffer(ui32 offset);
-void OPrenderDrawIndexed(ui32 offset, ui32 count);
-void OPrenderDrawUserArray(void* vertices, ui32 attrs, ui32 offset, ui32 count);
+EXPORT_METHOD void OPrenderDrawBufferIndexed(ui32 offset);
+EXPORT_METHOD void OPrenderDrawBuffer(ui32 offset);
+EXPORT_METHOD void OPrenderDrawIndexed(ui32 offset, ui32 count);
+EXPORT_METHOD void OPrenderDrawUserArray(void* vertices, ui32 attrs, ui32 offset, ui32 count);
 
 
 #endif

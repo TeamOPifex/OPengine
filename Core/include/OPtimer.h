@@ -43,7 +43,7 @@ extern "C" {
  *	@param timer Pointer to new instance of OPtimer
  *	@return Error code on failure
  */
-OPint OPtimerCreate(OPtimer* timer);
+	EXPORT_METHOD OPint OPtimerCreate(OPtimer* timer);
 
 //----------------------------------------------------------------------------
 /**
@@ -53,7 +53,7 @@ OPint OPtimerCreate(OPtimer* timer);
  *	if the OPtimer pointer is null before operating on it.
  * @param timer Pointer to an OPtimer instance which will be updated.
  */
-void OPtimerTick(OPtimer* timer);
+	EXPORT_METHOD void OPtimerTick(OPtimer* timer);
 
 //----------------------------------------------------------------------------
 /**
@@ -65,7 +65,7 @@ void OPtimerTick(OPtimer* timer);
  * @param timer Pointer to an OPtimer instance.
  * @return Fractional time in milliseconds since the last tick.
  */
-OPfloat  OPtimerDelta(OPtimer* timer);
+	EXPORT_METHOD OPfloat  OPtimerDelta(OPtimer* timer);
 
 //----------------------------------------------------------------------------
 /**
@@ -78,7 +78,7 @@ OPfloat  OPtimerDelta(OPtimer* timer);
  * @param timer Pointer to an OPtimer instance.
  * @return Whole milliseconds from the first tick, to the most recent.
  */
-ui64 OPtimerTotal(OPtimer* timer);
+	EXPORT_METHOD ui64 OPtimerTotal(OPtimer* timer);
 
 #ifdef __cplusplus
 }

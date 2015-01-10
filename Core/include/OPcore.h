@@ -51,7 +51,7 @@ extern "C" {
 	 * @param argc Number of arguments passed through on start
 	 * @param args Each of the arguments passed into the program at start
 	 */
-	void OPstart(int argc, char** args);
+	EXPORT_METHOD void OPstart(int argc, char** args);
 #endif
 
 //----------------------------------------------------------------------------
@@ -61,15 +61,15 @@ extern "C" {
  *	and result in the termination and clean up of all user code and 
  *	data. 
  */
-void OPend();
+EXPORT_METHOD void OPend();
 
 //----------------------------------------------------------------------------
 /* Gets the current OPtimer being used by the engine
  * @return A pointer to the current OPtimer being used by the OPengine
 */
-OPtimer* OPgetTime();
-OPchar* OPgetStartupDir();
-OPchar* OPgetExecutableDir();
+EXPORT_METHOD OPtimer* OPgetTime();
+EXPORT_METHOD OPchar* OPgetStartupDir();
+EXPORT_METHOD OPchar* OPgetExecutableDir();
 
 // Helper methods to create a more cross-platform code structure for the entry point of your main
 #ifdef OPIFEX_ANDROID

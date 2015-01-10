@@ -19,8 +19,8 @@ typedef struct {
 	OPfloat outlineThickness;
 } OPfontGlyph;
 
-OPfontGlyph* OPfontGlyphCreate();
-void OPfontGlyphDestroy(OPfontGlyph* glyph);
-OPfloat OPfontGlyphGetKerning(OPfontGlyph* glyph, OPchar charcode);
+EXPORT_METHOD OPfontGlyph* OPfontGlyphCreate();
+EXPORT_METHOD void OPfontGlyphDestroy(OPfontGlyph* glyph);
+EXPORT_METHOD OPfloat OPfontGlyphGetKerning(OPfontGlyph* glyph, OPchar charcode);
 
 #endif

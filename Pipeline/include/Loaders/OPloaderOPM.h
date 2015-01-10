@@ -49,12 +49,12 @@ struct OPMPartNode_def{
 	OPMPartNode* Children;
 };
 
-void OPMgenerateTangent(OPvec3* tangent, OPMvertex* v1, OPMvertex* v2);
-OPMData OPMloadData(OPstream* str);
-OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh);
-OPint OPMload(const OPchar* filename, OPmesh** mesh);
-OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh);
-OPint OPMReload(const OPchar* filename, OPmesh** mesh);
-OPint OPMUnload(void* image);
+EXPORT_METHOD void OPMgenerateTangent(OPvec3* tangent, OPMvertex* v1, OPMvertex* v2);
+EXPORT_METHOD OPMData OPMloadData(OPstream* str);
+EXPORT_METHOD OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh);
+EXPORT_METHOD OPint OPMload(const OPchar* filename, OPmesh** mesh);
+EXPORT_METHOD OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh);
+EXPORT_METHOD OPint OPMReload(const OPchar* filename, OPmesh** mesh);
+EXPORT_METHOD OPint OPMUnload(void* image);
 
 #endif

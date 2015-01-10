@@ -21,16 +21,16 @@ typedef struct {
 	OPeffect* Effect;
 } OPsprite3D;
 
-void OPsprite3DInit(OPeffect* effect);
-OPsprite3D* OPsprite3DCreate(OPsprite** sprites, OPeffect* effect);
-void OPsprite3DCreateFill(OPsprite3D* sprite, OPsprite** sprites, OPeffect* effect);
-void OPsprite3DDestroy(OPsprite3D* sprite);
-void OPsprite3DUpdate(OPsprite3D* sprite, ui64 elapsed);
-void OPsprite3DSetSprite(OPsprite3D* sprite, i32 index);
-void OPsprite3DPrepReRender(OPsprite3D* sprite, OPvec3 offset, OPfloat rotation);
-void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfloat rotation);
-void OPsprite3DRender(OPsprite3D* sprite, OPcam* camera);
-void OPsprite3DRenderOffsetRot(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfloat rotation);
-OPvec2 OPsprite3DSize(OPsprite3D* sprite);
+EXPORT_METHOD void OPsprite3DInit(OPeffect* effect);
+EXPORT_METHOD OPsprite3D* OPsprite3DCreate(OPsprite** sprites, OPeffect* effect);
+EXPORT_METHOD void OPsprite3DCreateFill(OPsprite3D* sprite, OPsprite** sprites, OPeffect* effect);
+EXPORT_METHOD void OPsprite3DDestroy(OPsprite3D* sprite);
+EXPORT_METHOD void OPsprite3DUpdate(OPsprite3D* sprite, ui64 elapsed);
+EXPORT_METHOD void OPsprite3DSetSprite(OPsprite3D* sprite, i32 index);
+EXPORT_METHOD void OPsprite3DPrepReRender(OPsprite3D* sprite, OPvec3 offset, OPfloat rotation);
+EXPORT_METHOD void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfloat rotation);
+EXPORT_METHOD void OPsprite3DRender(OPsprite3D* sprite, OPcam* camera);
+EXPORT_METHOD void OPsprite3DRenderOffsetRot(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfloat rotation);
+EXPORT_METHOD OPvec2 OPsprite3DSize(OPsprite3D* sprite);
 
 #endif

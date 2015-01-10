@@ -13,9 +13,9 @@ typedef struct {
 	OPeffect* Effect;
 } OPtexture2D;
 
-OPtexture2D* OPtexture2DCreate(OPtexture* texture, OPeffect* effect);
-void OPtexture2DDestroy(OPtexture2D* character);
-void OPtexture2DPrepRender(OPtexture2D* tex2d);
-void OPtexture2DRender(OPtexture2D* tex2d);
+EXPORT_METHOD OPtexture2D* OPtexture2DCreate(OPtexture* texture, OPeffect* effect);
+EXPORT_METHOD void OPtexture2DDestroy(OPtexture2D* character);
+EXPORT_METHOD void OPtexture2DPrepRender(OPtexture2D* tex2d);
+EXPORT_METHOD void OPtexture2DRender(OPtexture2D* tex2d);
 
 #endif

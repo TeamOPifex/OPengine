@@ -17,22 +17,22 @@ extern "C" {
 
 	extern OPint LogToHandle;
 
-void OPlogSetOutput(OPint handle);
+	EXPORT_METHOD void OPlogSetOutput(OPint handle);
 
 // Prints out to the console, accepts variable arguments like sprintf
-void OPlg(const char* message, ...);
+EXPORT_METHOD void OPlg(const char* message, ...);
 
 // Prints out to the console, accepts variable arguments like sprintf, 
 // does not write a new line at the end of the message
-void OPlog(const char* message, ...);
+EXPORT_METHOD void OPlog(const char* message, ...);
 
-void OPlogDebug(const char* message, ...);
+EXPORT_METHOD void OPlogDebug(const char* message, ...);
 
-void OPlogInfo(const char* message, ...) ;
+EXPORT_METHOD void OPlogInfo(const char* message, ...);
 
-void OPlogWarn(const char* message, ...);
+EXPORT_METHOD void OPlogWarn(const char* message, ...);
 
-void OPlogErr(const char* message, ...);
+EXPORT_METHOD void OPlogErr(const char* message, ...);
 
 #ifdef __cplusplus
 };

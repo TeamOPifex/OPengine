@@ -17,30 +17,30 @@ extern "C" {
 		OPuint _elementSize;
 	} OPvector;
 
-	OPvector* OPvectorCreate(OPint elementSize);
-	void OPvectorDestroy(OPvector* vector);
+	EXPORT_METHOD OPvector* OPvectorCreate(OPint elementSize);
+	EXPORT_METHOD void OPvectorDestroy(OPvector* vector);
 
-	ui8* OPvectorGet(OPvector* vector, OPuint index);
+	EXPORT_METHOD ui8* OPvectorGet(OPvector* vector, OPuint index);
 
-	ui8* OPvectorFront(OPvector* vector);
-	ui8* OPvectorBack(OPvector* vector);
+	EXPORT_METHOD ui8* OPvectorFront(OPvector* vector);
+	EXPORT_METHOD ui8* OPvectorBack(OPvector* vector);
 	
-	OPint OPvectorContains(OPvector* vector, ui8* item, OPint(*cmp)(ui8 *, ui8 *));
-	OPint OPvectorIsEmpty(OPvector* vector);
-	OPint OPvectorSize(OPvector* vector);
+	EXPORT_METHOD OPint OPvectorContains(OPvector* vector, ui8* item, OPint(*cmp)(ui8 *, ui8 *));
+	EXPORT_METHOD OPint OPvectorIsEmpty(OPvector* vector);
+	EXPORT_METHOD OPint OPvectorSize(OPvector* vector);
 
-	OPint OPvectorCapacity(OPvector* vector);
+	EXPORT_METHOD OPint OPvectorCapacity(OPvector* vector);
 
-	void OPvectorClear(OPvector* vector);
-	void OPvectorSet(OPvector* vector, OPuint index, ui8* item);
-	void OPvectorErase(OPvector* vector, OPuint index);
-	void OPvectorEraseRange(OPvector* vector, OPuint indexFirst, OPuint indexLast);
+	EXPORT_METHOD void OPvectorClear(OPvector* vector);
+	EXPORT_METHOD void OPvectorSet(OPvector* vector, OPuint index, ui8* item);
+	EXPORT_METHOD void OPvectorErase(OPvector* vector, OPuint index);
+	EXPORT_METHOD void OPvectorEraseRange(OPvector* vector, OPuint indexFirst, OPuint indexLast);
 
-	void OPvectorPush(OPvector* vector, ui8* item);
-	void OPvectorPop(OPvector* vector, ui8* item);
-	void OPvectorInsert(OPvector* vector, OPuint index, ui8* item);
+	EXPORT_METHOD void OPvectorPush(OPvector* vector, ui8* item);
+	EXPORT_METHOD void OPvectorPop(OPvector* vector, ui8* item);
+	EXPORT_METHOD void OPvectorInsert(OPvector* vector, OPuint index, ui8* item);
 
-	void OPvectorReserve(OPvector* vector, OPuint size);
+	EXPORT_METHOD void OPvectorReserve(OPvector* vector, OPuint size);
 
 #ifdef __cplusplus
 };

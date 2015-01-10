@@ -9,14 +9,14 @@ typedef struct {
 	OPint	prevKeys[_OPKEYBOARD_MAX];
 } OPkeyboardState;
 
-extern OPkeyboardState Keyboard;
+extern IMPORT_METHOD OPkeyboardState Keyboard;
 
-void OPkeyboardUpdate(OPtimer* timer);
-void OPkeyboardUpdatePost(OPtimer* timer);
-OPint OPkeyboardIsDown(OPkeyboardKey key);
-OPint OPkeyboardIsUp(OPkeyboardKey key);
-OPint OPkeyboardWasPressed(OPkeyboardKey key);
-OPint OPkeyboardWasReleased(OPkeyboardKey key);
-OPint OPkeyboardAnyInputIsDown();
+EXPORT_METHOD void OPkeyboardUpdate(OPtimer* timer);
+EXPORT_METHOD void OPkeyboardUpdatePost(OPtimer* timer);
+EXPORT_METHOD OPint OPkeyboardIsDown(OPkeyboardKey key);
+EXPORT_METHOD OPint OPkeyboardIsUp(OPkeyboardKey key);
+EXPORT_METHOD OPint OPkeyboardWasPressed(OPkeyboardKey key);
+EXPORT_METHOD OPint OPkeyboardWasReleased(OPkeyboardKey key);
+EXPORT_METHOD OPint OPkeyboardAnyInputIsDown();
 
 #endif

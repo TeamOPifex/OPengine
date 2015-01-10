@@ -37,9 +37,9 @@ typedef struct{
  * @param n size to allocate
  * @return pointer to the allocated block of memory
 */
-void* OPmemPackAlloc(OPmemDesc* segments, OPuint segCount, OPint n);
+EXPORT_METHOD void* OPmemPackAlloc(OPmemDesc* segments, OPuint segCount, OPint n);
 
-void OPmemPackDealloc(void* Data, OPmemDesc* segments, OPint segCount, OPint n);
+EXPORT_METHOD void OPmemPackDealloc(void* Data, OPmemDesc* segments, OPint segCount, OPint n);
 
 #ifdef __cplusplus
 }

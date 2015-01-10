@@ -5,6 +5,8 @@
 #ifndef OPENGINE_HUMAN_INPUT_OCULUS
 #define OPENGINE_HUMAN_INPUT_OCULUS
 
+#include "./Core/include/OPtypes.h"
+
 #ifdef OPIFEX_OCULUS
 #include "./Math/include/Vector2.h"
 #include "./Math/include/Vector4.h"
@@ -25,16 +27,16 @@ typedef struct {
 #endif
 } OPoculus;
 
-extern OPoculus* OculusManager;
+extern IMPORT_METHOD OPoculus* OculusManager;
 
-int OPoculusStartup();
-int OPoculusInitialize();
-void OPoculusDestroy();
+EXPORT_METHOD int OPoculusStartup();
+EXPORT_METHOD int OPoculusInitialize();
+EXPORT_METHOD void OPoculusDestroy();
 
-void OPoculusUpdate();
+EXPORT_METHOD void OPoculusUpdate();
 
 
-void OPoculusBegin();
-void OPoculusEnd();
+EXPORT_METHOD void OPoculusBegin();
+EXPORT_METHOD void OPoculusEnd();
 
 #endif

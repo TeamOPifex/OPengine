@@ -56,14 +56,14 @@ extern OPtexture* OPRENDER_CURR_TEX;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPtexture OPtextureCreate(OPtextureDescription desc);
-void OPtextureDestroy(OPtexture* tex);
-ui32 OPtextureBind(OPtexture* tex);
-void OPtextureClearActive();
-void OPtextureSetData(void* data);
-void OPtexturePixelate();
-void OPtextureSmooth();
-OPvec4 OPtextureReadPixel(OPtexture* tex, OPint x, OPint y);
+EXPORT_METHOD OPtexture OPtextureCreate(OPtextureDescription desc);
+EXPORT_METHOD void OPtextureDestroy(OPtexture* tex);
+EXPORT_METHOD ui32 OPtextureBind(OPtexture* tex);
+EXPORT_METHOD void OPtextureClearActive();
+EXPORT_METHOD void OPtextureSetData(void* data);
+EXPORT_METHOD void OPtexturePixelate();
+EXPORT_METHOD void OPtextureSmooth();
+EXPORT_METHOD OPvec4 OPtextureReadPixel(OPtexture* tex, OPint x, OPint y);
 
 
 #endif

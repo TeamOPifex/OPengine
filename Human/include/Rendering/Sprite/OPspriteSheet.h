@@ -50,8 +50,8 @@ typedef struct{
 //   |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                                
 //                                                
-OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss);
-OPint OPspriteSheetUnload(void* ss);
-OPvec2 OPspriteCurrentFrameSize(OPsprite* sprite);
+EXPORT_METHOD OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss);
+EXPORT_METHOD OPint OPspriteSheetUnload(void* ss);
+EXPORT_METHOD OPvec2 OPspriteCurrentFrameSize(OPsprite* sprite);
 
 #endif

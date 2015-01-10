@@ -30,7 +30,7 @@ typedef struct{
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
-extern OPmeshPacker* OPRENDER_CURR_PACKER;
+extern IMPORT_METHOD OPmeshPacker* OPRENDER_CURR_PACKER;
 
 //-----------------------------------------------------------------------------
 //  _____                     _____                  _____  _               _   _               
@@ -48,13 +48,13 @@ extern OPmeshPacker* OPRENDER_CURR_PACKER;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPmeshPacker OPmeshPackerCreate();
-OPint OPmeshPackerDestroy(OPmeshPacker* packer);
+EXPORT_METHOD OPmeshPacker OPmeshPackerCreate();
+EXPORT_METHOD OPint OPmeshPackerDestroy(OPmeshPacker* packer);
 
-ui32 OPmeshPackerAddVB(ui32 vertexSize, void* verticesData, ui32 vertexCount);
-ui32 OPmeshPackerAddIB(ui32 indexSize, void* indicesData, ui32 indexCount);
-void OPmeshPackerBuild();
-void OPmeshPackerBind(OPmeshPacker* packer);
+EXPORT_METHOD ui32 OPmeshPackerAddVB(ui32 vertexSize, void* verticesData, ui32 vertexCount);
+EXPORT_METHOD ui32 OPmeshPackerAddIB(ui32 indexSize, void* indicesData, ui32 indexCount);
+EXPORT_METHOD void OPmeshPackerBuild();
+EXPORT_METHOD void OPmeshPackerBind(OPmeshPacker* packer);
 
 
 #endif

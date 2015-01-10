@@ -63,6 +63,7 @@ set(ALL_LIBS
 #########################################
 if(${OPIFEX_OPTION_SHARED})
 	add_library(6_Communication SHARED ${COMMUNICATION_SRC})
+	add_definitions(-DOPIFEX_SHARED)
 else()
 	add_library(6_Communication STATIC ${COMMUNICATION_SRC})
 endif()

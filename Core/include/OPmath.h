@@ -309,7 +309,7 @@ __inline OPint OPnear(OPfloat value, OPfloat target, OPfloat threshhold){
 *	Returns a randomized floating point number.
 * @return Floating point value with the range(0, 1)
 */
-OPfloat OPrandom();
+EXPORT_METHOD OPfloat OPrandom();
 
 //-----------------------------------------------------------------------------
 /**
@@ -319,7 +319,7 @@ OPfloat OPrandom();
 * @param max Largest possible number which can be generated
 * @return Floating point value with the range(min, max)
 */
-OPfloat OPrandRange(OPfloat min, OPfloat max);
+EXPORT_METHOD OPfloat OPrandRange(OPfloat min, OPfloat max);
 
 #define OPMIN(a,b) (((a) < (b)) ? (a) : (b))
 #define OPMAX(a,b) (((a) > (b)) ? (a) : (b))

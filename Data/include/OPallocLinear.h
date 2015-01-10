@@ -12,9 +12,9 @@ typedef struct {
 	void* _currentPos;
 } OPallocLinear;
 
-OPallocLinear* OPallocLinearCreate(OPuint sizeInBytes);
-void OPallocLinearDestroy(OPallocLinear* alloc);
-void* OPallocLinearAlloc(OPallocLinear* alloc, OPuint sizeInBytes);
+EXPORT_METHOD OPallocLinear* OPallocLinearCreate(OPuint sizeInBytes);
+EXPORT_METHOD void OPallocLinearDestroy(OPallocLinear* alloc);
+EXPORT_METHOD void* OPallocLinearAlloc(OPallocLinear* alloc, OPuint sizeInBytes);
 
 inline void OPallocLinearClear(OPallocLinear* alloc) {
 	alloc->_allocCount = 0;

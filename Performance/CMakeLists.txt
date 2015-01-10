@@ -40,6 +40,7 @@ set(ALL_LIBS
 #########################################
 if(${OPIFEX_OPTION_SHARED})
 	add_library(4_Performance SHARED ${PERFORMANCE_SRC})
+	add_definitions(-DOPIFEX_SHARED)
 else()
 	add_library(4_Performance STATIC ${PERFORMANCE_SRC})
 endif()

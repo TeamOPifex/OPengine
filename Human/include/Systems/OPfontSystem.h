@@ -6,6 +6,6 @@
 #include "./Human/include/Rendering/Font/OPfontManager.h"
 #include "./Human/include/Rendering/Font/OPrenderText.h"
 
-void OPsystemsLoadFontEffect();
+EXPORT_METHOD void OPsystemsLoadFontEffect();
 
 #endif

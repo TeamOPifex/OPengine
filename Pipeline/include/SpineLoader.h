@@ -25,16 +25,16 @@ typedef struct {
 
 } Spine;
 
-void SpineAddLoader();
-void SpineInitialize();
+EXPORT_METHOD void SpineAddLoader();
+EXPORT_METHOD void SpineInitialize();
 
-void SpineSetMix(Spine* spine, const OPchar* from, const OPchar* to, f32 duration);
-void SpineSetAnim(Spine* spine, i32 track, const OPchar* anim, OPint loop);
-void SpineAddAnim(Spine* spine, i32 track, const OPchar* anim, OPint loop, OPfloat delay);
-void SpineBuildMixingState(Spine* spine);
-i32 SpineLoad(const OPchar* filename, Spine** spine);
-void SpineRender(Spine* spine, OPmat4* world, OPeffect* effect, OPcam* camera);
-void SpineUpdate(Spine* spine, OPtimer* timer);
-i32 SpineUnload(void* spine);
+EXPORT_METHOD void SpineSetMix(Spine* spine, const OPchar* from, const OPchar* to, f32 duration);
+EXPORT_METHOD void SpineSetAnim(Spine* spine, i32 track, const OPchar* anim, OPint loop);
+EXPORT_METHOD void SpineAddAnim(Spine* spine, i32 track, const OPchar* anim, OPint loop, OPfloat delay);
+EXPORT_METHOD void SpineBuildMixingState(Spine* spine);
+EXPORT_METHOD i32 SpineLoad(const OPchar* filename, Spine** spine);
+EXPORT_METHOD void SpineRender(Spine* spine, OPmat4* world, OPeffect* effect, OPcam* camera);
+EXPORT_METHOD void SpineUpdate(Spine* spine, OPtimer* timer);
+EXPORT_METHOD i32 SpineUnload(void* spine);
 
 #endif

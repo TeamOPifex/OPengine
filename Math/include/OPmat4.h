@@ -130,8 +130,8 @@ inline OPmat4 operator*(OPmat4 lhs, OPmat4 rhs) {
 //   |___/\_, |_|_|_|_.__/\___/_|_\__| /_/ \_\_| |_|\__|_||_|_|_|_\___|\__|_\__|
 //        |__/                                                                  
 
-extern const OPmat4 OPMAT4ZERO;
-extern const OPmat4 OPMAT4IDENTITY; 
+extern IMPORT_METHOD const OPmat4 OPMAT4ZERO;
+extern IMPORT_METHOD const OPmat4 OPMAT4IDENTITY;
 
 inline OPmat4 OPmat4Create(
 	f32 _00, f32 _10, f32 _20, f32 _30,
@@ -420,9 +420,9 @@ inline void OPmat4Write(OPmat4 v, OPstream* str) {
 	OPvec4Write(v[3], str);
 }
 
-OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPfloat zNear, OPfloat zFar);
-OPmat4 OPmat4LookAt(OPvec3 eye, OPvec3 at, OPvec3 up);
-OPmat4 OPmat4Perspective(OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal);
-OPint OPmat4Inverse(OPmat4* dst, OPmat4 a);
+EXPORT_METHOD OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPfloat zNear, OPfloat zFar);
+EXPORT_METHOD OPmat4 OPmat4LookAt(OPvec3 eye, OPvec3 at, OPvec3 up);
+EXPORT_METHOD OPmat4 OPmat4Perspective(OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal);
+EXPORT_METHOD OPint OPmat4Inverse(OPmat4* dst, OPmat4 a);
 
 #endif

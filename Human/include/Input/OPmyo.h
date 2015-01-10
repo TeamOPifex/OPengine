@@ -25,20 +25,20 @@ typedef enum {
 	Myo_Vibration_Long
 } OPmyoVibrations;
 
-void OPmyoConnect();
-void OPmyoUpdate(OPtimer* timer);
+EXPORT_METHOD void OPmyoConnect();
+EXPORT_METHOD void OPmyoUpdate(OPtimer* timer);
 
-f32 OPmyoRoll();
-f32 OPmyoPitch();
-f32 OPmyoYaw();
-f32 OPmyoRollChange();
-f32 OPmyoPitchChange();
-f32 OPmyoYawChange();
-void OPmyoSetVibration(OPmyoVibrations vibration);
-OPint OPmyoPoseNow(OPmyoPoses pose);
-OPint OPmyoPoseWas(OPmyoPoses pose);
-OPint OPmyoPoseIs(OPmyoPoses pose);
-OPint OPmyoLock();
-OPint OPmyoUnlock(OPint state);
+EXPORT_METHOD f32 OPmyoRoll();
+EXPORT_METHOD f32 OPmyoPitch();
+EXPORT_METHOD f32 OPmyoYaw();
+EXPORT_METHOD f32 OPmyoRollChange();
+EXPORT_METHOD f32 OPmyoPitchChange();
+EXPORT_METHOD f32 OPmyoYawChange();
+EXPORT_METHOD void OPmyoSetVibration(OPmyoVibrations vibration);
+EXPORT_METHOD OPint OPmyoPoseNow(OPmyoPoses pose);
+EXPORT_METHOD OPint OPmyoPoseWas(OPmyoPoses pose);
+EXPORT_METHOD OPint OPmyoPoseIs(OPmyoPoses pose);
+EXPORT_METHOD OPint OPmyoLock();
+EXPORT_METHOD OPint OPmyoUnlock(OPint state);
 
 #endif

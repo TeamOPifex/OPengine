@@ -7,14 +7,14 @@
 extern "C" {
 #endif
 
-	OPint OPstringEquals(const OPchar* str, const OPchar* cmp);
-	OPint OPstringStartsWith(OPchar* str, const OPchar* cmp, i32 size);
-	void OPstringRemoveFromStart(OPchar* str, i32 size);
-	OPchar* OPstringGetNonConstant(const OPchar* str);
-	OPchar* OPstringCreateMerged(const OPchar* str, const OPchar* add);
-	OPchar* OPstringCopy(const OPchar* str);
-	OPint OPstringContains(OPchar* str, const OPchar* cmp);
-	void OPstringToLower(OPchar* str);
+	EXPORT_METHOD OPint OPstringEquals(const OPchar* str, const OPchar* cmp);
+	EXPORT_METHOD OPint OPstringStartsWith(OPchar* str, const OPchar* cmp, i32 size);
+	EXPORT_METHOD void OPstringRemoveFromStart(OPchar* str, i32 size);
+	EXPORT_METHOD OPchar* OPstringGetNonConstant(const OPchar* str);
+	EXPORT_METHOD OPchar* OPstringCreateMerged(const OPchar* str, const OPchar* add);
+	EXPORT_METHOD OPchar* OPstringCopy(const OPchar* str);
+	EXPORT_METHOD OPint OPstringContains(OPchar* str, const OPchar* cmp);
+	EXPORT_METHOD void OPstringToLower(OPchar* str);
 
 #ifdef __cplusplus
 }

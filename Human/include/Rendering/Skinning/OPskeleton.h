@@ -15,7 +15,7 @@ typedef struct {
 	OPmat4* skinned;
 } OPskeleton;
 
-OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* pose, i32 count);
-void OPskeletonUpdate(OPskeleton* skeleton);
+EXPORT_METHOD OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* pose, i32 count);
+EXPORT_METHOD void OPskeletonUpdate(OPskeleton* skeleton);
 
 #endif

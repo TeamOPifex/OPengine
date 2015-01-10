@@ -25,7 +25,7 @@ struct OPaudioPlayer{
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
-extern OPaudioPlayer* OPAUD_CURR_PLAYER;
+extern IMPORT_METHOD OPaudioPlayer* OPAUD_CURR_PLAYER;
 //-----------------------------------------------------------------------------
 
 
@@ -47,19 +47,19 @@ extern OPaudioPlayer* OPAUD_CURR_PLAYER;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPaudioPlayer OPaudPlayerCreate(OPaudioSource* src, OPint sounds, OPint looping);
+EXPORT_METHOD OPaudioPlayer OPaudPlayerCreate(OPaudioSource* src, OPint sounds, OPint looping);
 
-void OPaudPlayerDestroy(OPaudioPlayer* player);
-void OPaudPlayerPlay();
-void OPaudPlayerStop();
-void OPaudPlayerPause();
+EXPORT_METHOD void OPaudPlayerDestroy(OPaudioPlayer* player);
+EXPORT_METHOD void OPaudPlayerPlay();
+EXPORT_METHOD void OPaudPlayerStop();
+EXPORT_METHOD void OPaudPlayerPause();
 
-void OPaudPlayerUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length));
+EXPORT_METHOD void OPaudPlayerUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length));
 
-void OPaudPlayerPosition(OPvec3* position);
-void OPaudPlayerVelocity(OPvec3* velocity);
-void OPaudPlayerVolume  (OPfloat gain);
-void OPaudPlayerPitch   (OPfloat pitch);
+EXPORT_METHOD void OPaudPlayerPosition(OPvec3* position);
+EXPORT_METHOD void OPaudPlayerVelocity(OPvec3* velocity);
+EXPORT_METHOD void OPaudPlayerVolume(OPfloat gain);
+EXPORT_METHOD void OPaudPlayerPitch(OPfloat pitch);
 
 
 #endif

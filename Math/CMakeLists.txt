@@ -39,6 +39,7 @@ set(ALL_LIBS
 #########################################
 if(${OPIFEX_OPTION_SHARED})
 	add_library(3_Math SHARED ${MATH_SRC})
+	add_definitions(-DOPIFEX_SHARED)
 else()
 	add_library(3_Math STATIC ${MATH_SRC})
 endif()

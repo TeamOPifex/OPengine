@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef OPEngine_Core_GameCycle
 #define OPEngine_Core_GameCycle
 #include "./Core/include/OPtimer.h"
@@ -15,7 +13,7 @@ extern "C" {
  *	for performing any essential initialization, data allocation and setup
  *	which is needed to begin the primary game loop.
  */
-extern void (*OPinitialize)();
+	extern IMPORT_METHOD void(*OPinitialize)();
 
 //----------------------------------------------------------------------------
 /**
@@ -27,7 +25,7 @@ extern void (*OPinitialize)();
  *	and scene rendering.
  * @param timer OPtimer object representing current time measurments
  */
-extern int(*OPupdate)(OPtimer*);
+	extern IMPORT_METHOD int(*OPupdate)(OPtimer*);
 
 //----------------------------------------------------------------------------
 /**
@@ -37,7 +35,7 @@ extern int(*OPupdate)(OPtimer*);
  *	data, deallocating memory, releasing OS resources and closing
  *	network connections.
  */
-extern void (*OPdestroy)();
+	extern IMPORT_METHOD void(*OPdestroy)();
 
 #ifdef __cplusplus
 };

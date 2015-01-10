@@ -66,7 +66,7 @@ typedef struct{
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
-extern OPeffect* OPRENDER_CURR_EFFECT;
+extern IMPORT_METHOD OPeffect* OPRENDER_CURR_EFFECT;
 
 //-----------------------------------------------------------------------------
 // ______                _   _                 
@@ -76,38 +76,38 @@ extern OPeffect* OPRENDER_CURR_EFFECT;
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 // Shader creation
-OPint OPrenderLoadVertexShader  (const OPchar* filename, OPshader** shader);
-OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader);
+EXPORT_METHOD OPint OPrenderLoadVertexShader(const OPchar* filename, OPshader** shader);
+EXPORT_METHOD OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader);
 // shader destruction
-OPint OPrenderUnloadShader(OPshader* shader);
+EXPORT_METHOD OPint OPrenderUnloadShader(OPshader* shader);
 
 // effect creation
-OPeffect OPrenderCreateEffectStride(
+EXPORT_METHOD OPeffect OPrenderCreateEffectStride(
 	OPshader vert,
 	OPshader frag,
 	OPshaderAttribute* Attributes,
 	OPint AttribCount,
 	const OPchar* Name,
 	ui32 stride);
-OPeffect OPrenderCreateEffect(
+EXPORT_METHOD OPeffect OPrenderCreateEffect(
 	OPshader vert, OPshader frag,
 	OPshaderAttribute* Attributes, OPint AttribCount,
 	const OPchar* Name);
-OPeffect OPrenderGenEffect(
+EXPORT_METHOD OPeffect OPrenderGenEffect(
 	const OPchar* vert,
 	const OPchar* frag,
 	ui32 attrs,
 	const OPchar* Name,
 	ui32 stride);
 
-OPint OPrenderLoadEffect  (const OPchar* filename, OPeffect** effect);
+EXPORT_METHOD OPint OPrenderLoadEffect(const OPchar* filename, OPeffect** effect);
 
 // effect destruction
-OPint OPrenderUnloadEffect(OPeffect* effect);
+EXPORT_METHOD OPint OPrenderUnloadEffect(OPeffect* effect);
 
 // effect managment
-OPint OPrenderBindEffect(OPeffect* effect);
-ui32 OPrenderGetParam(const OPchar* parameterName);
+EXPORT_METHOD OPint OPrenderBindEffect(OPeffect* effect);
+EXPORT_METHOD ui32 OPrenderGetParam(const OPchar* parameterName);
 
 // parameter setting
 /*void OPrenderParamf(ui32 param, OPfloat f);

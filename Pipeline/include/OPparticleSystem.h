@@ -63,11 +63,11 @@ inline void OPparticleSysSpawn(OPparticleSys* sys, OPparticle particle){
 	}
 }
 
-void OPparticleSysInit(OPeffect* effect);
-OPparticleSys* OPparticleSysCreate(OPtexture* texture, ui16 count, OPeffect* effect);
-void OPparticleSysUpdate(OPparticleSys* sys, OPtimer* timer);
-void OPparticleSysDestroy(OPparticleSys* sys);
-void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(OPparticle*, OPmat4*));
+EXPORT_METHOD void OPparticleSysInit(OPeffect* effect);
+EXPORT_METHOD OPparticleSys* OPparticleSysCreate(OPtexture* texture, ui16 count, OPeffect* effect);
+EXPORT_METHOD void OPparticleSysUpdate(OPparticleSys* sys, OPtimer* timer);
+EXPORT_METHOD void OPparticleSysDestroy(OPparticleSys* sys);
+EXPORT_METHOD void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(OPparticle*, OPmat4*));
 
 #ifdef __cplusplus
 };

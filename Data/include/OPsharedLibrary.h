@@ -18,18 +18,19 @@ typedef struct {
 typedef struct {
 #ifdef OPIFEX_WINDOWS
 	HMODULE _library;
+	const OPchar* _libraryPathTemp;
 #else
 	void* _library;
 #endif
 	const OPchar* _libraryPath;
-	OPuint _lastModifiedTime;
+	ui64 _lastModifiedTime;
 	OPlist* _symbols;
 } OPsharedLibrary;
 
-OPsharedLibrary* OPsharedLibraryLoad(const OPchar* path);
-OPint OPsharedLibraryDestroy(OPsharedLibrary* sharedLibrary);
-OPint OPsharedLibraryReload(OPsharedLibrary* sharedLibrary);
-OPsharedLibrarySymbol* OPsharedLibraryLoadSymbol(OPsharedLibrary* sharedLibrary, const OPchar* symbolName);
-OPint OPsharedLibraryClose(OPsharedLibrary* sharedLibrary);
+EXPORT_METHOD OPsharedLibrary* OPsharedLibraryLoad(const OPchar* path);
+EXPORT_METHOD OPint OPsharedLibraryDestroy(OPsharedLibrary* sharedLibrary);
+EXPORT_METHOD OPint OPsharedLibraryReload(OPsharedLibrary* sharedLibrary);
+EXPORT_METHOD OPsharedLibrarySymbol* OPsharedLibraryLoadSymbol(OPsharedLibrary* sharedLibrary, const OPchar* symbolName);
+EXPORT_METHOD OPint OPsharedLibraryClose(OPsharedLibrary* sharedLibrary);
 
 #endif

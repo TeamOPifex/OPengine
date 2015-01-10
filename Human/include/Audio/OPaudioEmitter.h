@@ -72,10 +72,10 @@ typedef struct{
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
-extern OPaudioEmitter* OPAUD_CURR_EMITTER;
-extern OPmutex         OPAUD_CURR_MUTEX;
-extern OPentHeap       OPAUD_REG_EMITTERS;
-extern OPthread        OPAUD_UPDATE_THREAD;
+extern IMPORT_METHOD OPaudioEmitter* OPAUD_CURR_EMITTER;
+extern IMPORT_METHOD OPmutex         OPAUD_CURR_MUTEX;
+extern IMPORT_METHOD OPentHeap       OPAUD_REG_EMITTERS;
+extern IMPORT_METHOD OPthread        OPAUD_UPDATE_THREAD;
 //-----------------------------------------------------------------------------
 
 
@@ -99,34 +99,34 @@ extern OPthread        OPAUD_UPDATE_THREAD;
 //   / /\ \| | | |/ _` | |/ _ \|  __| | '_ ` _ \| | __| __/ _ \ '__| |  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //  / ____ \ |_| | (_| | | (_) | |____| | | | | | | |_| ||  __/ |    | |  | |_| | | | | (__| |_| | (_) | | | \__ \
 // /_/    \_\__,_|\__,_|_|\___/|______|_| |_| |_|_|\__|\__\___|_|    |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-void OPaudInitThread(OPint maxEmitters);
+EXPORT_METHOD void OPaudInitThread(OPint maxEmitters);
 
-OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint flags);
-void OPaudDestroyEmitter(OPaudioEmitter* emitter);
+EXPORT_METHOD OPaudioEmitter* OPaudCreateEmitter(OPaudioSource* src, OPint flags);
+EXPORT_METHOD void OPaudDestroyEmitter(OPaudioEmitter* emitter);
 
-OPaudioEmitter* OPaudGetEmitter(OPaudioSource* src, OPint flags);
-void OPaudRecycleEmitter(OPaudioEmitter* emitter);
+EXPORT_METHOD OPaudioEmitter* OPaudGetEmitter(OPaudioSource* src, OPint flags);
+EXPORT_METHOD void OPaudRecycleEmitter(OPaudioEmitter* emitter);
 
-void  OPaudEnqueueBuffer(ui8* buffer, OPint length);
+EXPORT_METHOD void  OPaudEnqueueBuffer(ui8* buffer, OPint length);
 
-void OPaudPlay ();
-void OPaudPause();
-void OPaudStop ();
-void OPaudSafePlay (OPaudioEmitter* emitter);
-void OPaudSafePause(OPaudioEmitter* emitter);
-void OPaudSafeStop (OPaudioEmitter* emitter);
+EXPORT_METHOD void OPaudPlay();
+EXPORT_METHOD void OPaudPause();
+EXPORT_METHOD void OPaudStop();
+EXPORT_METHOD void OPaudSafePlay(OPaudioEmitter* emitter);
+EXPORT_METHOD void OPaudSafePause(OPaudioEmitter* emitter);
+EXPORT_METHOD void OPaudSafeStop(OPaudioEmitter* emitter);
 
-OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length));
-OPint OPaudSafeUpdate(OPaudioEmitter* emitter, void(*Proc)(OPaudioEmitter* emit, OPint length));
+EXPORT_METHOD OPint OPaudUpdate(void(*Proc)(OPaudioEmitter* emit, OPint length));
+EXPORT_METHOD OPint OPaudSafeUpdate(OPaudioEmitter* emitter, void(*Proc)(OPaudioEmitter* emit, OPint length));
 
-OPint OPaudProc(OPaudioEmitter* emitter, void(*Proc)(OPaudioEmitter* emit, OPint length));
+EXPORT_METHOD OPint OPaudProc(OPaudioEmitter* emitter, void(*Proc)(OPaudioEmitter* emit, OPint length));
 
-void OPaudPosition(OPaudioEmitter* emitter, OPvec3* position);
-void OPaudVelocity(OPaudioEmitter* emitter, OPvec3* velocity);
-void OPaudVolume  (OPaudioEmitter* emitter, OPfloat gain);
-void OPaudPitch   (OPaudioEmitter* emitter, OPfloat pitch);
+EXPORT_METHOD void OPaudPosition(OPaudioEmitter* emitter, OPvec3* position);
+EXPORT_METHOD void OPaudVelocity(OPaudioEmitter* emitter, OPvec3* velocity);
+EXPORT_METHOD void OPaudVolume(OPaudioEmitter* emitter, OPfloat gain);
+EXPORT_METHOD void OPaudPitch(OPaudioEmitter* emitter, OPfloat pitch);
 //-----------------------------------------------------------------------------
-void OPaudProcess(OPaudioEmitter* emit, OPint length);
+EXPORT_METHOD void OPaudProcess(OPaudioEmitter* emit, OPint length);
 //-----------------------------------------------------------------------------
 
 #endif

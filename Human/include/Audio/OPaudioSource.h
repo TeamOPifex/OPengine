@@ -46,8 +46,8 @@ typedef struct sOPaudioSource OPaudioSource;
 //  \____/| .__/ \___|_| |_|_|_| |_|\__, | |_|   \__,_|_| |_|\___|___(_)
 //        | |                        __/ |                              
 //        |_|                       |___/                               
-OPint OPaudOpenWave(const OPchar* filename, OPaudioSource** source);
-OPint OPaudOpenOgg (const OPchar* filename, OPaudioSource** source);
+EXPORT_METHOD OPint OPaudOpenWave(const OPchar* filename, OPaudioSource** source);
+EXPORT_METHOD OPint OPaudOpenOgg(const OPchar* filename, OPaudioSource** source);
 //-----------------------------------------------------------------------------
 
 
@@ -61,8 +61,8 @@ OPint OPaudOpenOgg (const OPchar* filename, OPaudioSource** source);
 //  \_____|_|\___/|___/_|_| |_|\__, | |_|   \__,_|_| |_|\___|___(_)
 //                              __/ |                              
 //                             |___/                               
-OPint OPaudCloseWave(OPaudioSource* src);
-OPint OPaudCloseOgg (OPaudioSource* src);
+EXPORT_METHOD OPint OPaudCloseWave(OPaudioSource* src);
+EXPORT_METHOD OPint OPaudCloseOgg(OPaudioSource* src);
 //-----------------------------------------------------------------------------
 
 
@@ -76,8 +76,8 @@ OPint OPaudCloseOgg (OPaudioSource* src);
 // |_|  \_\___|\__,_|\__,_|_|_| |_|\__, | |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                  __/ |                                              
 //                                 |___/                                               
-OPint OPaudReadWave(OPaudioSource* src, ui64* position, ui8* dest, ui32 len);
-OPint OPaudReadOgg (OPaudioSource* src, ui64* position, ui8* dest, ui32 len);
+EXPORT_METHOD OPint OPaudReadWave(OPaudioSource* src, ui64* position, ui8* dest, ui32 len);
+EXPORT_METHOD OPint OPaudReadOgg(OPaudioSource* src, ui64* position, ui8* dest, ui32 len);
 //-----------------------------------------------------------------------------
 
 
@@ -91,8 +91,8 @@ OPint OPaudReadOgg (OPaudioSource* src, ui64* position, ui8* dest, ui32 len);
 // |_____/ \___|\___|_|\_\_|_| |_|\__, | |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                 __/ |                                              
 //                                |___/                                               
-OPint OPaudSeekWave(OPaudioSource* src, ui64* pos);
-OPint OPaudSeekOgg (OPaudioSource* src, ui64* pos);
+EXPORT_METHOD OPint OPaudSeekWave(OPaudioSource* src, ui64* pos);
+EXPORT_METHOD OPint OPaudSeekOgg(OPaudioSource* src, ui64* pos);
 //-----------------------------------------------------------------------------
 
 #endif

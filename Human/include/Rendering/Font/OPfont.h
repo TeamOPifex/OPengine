@@ -56,11 +56,11 @@ typedef struct {
 	OPfloat Width;
 } OPfontUserTextNode;
 
-void OPfontLoad(OPchar* filename, OPfont** data);
-void OPfontUnload(OPfont* font);
-OPfontGlyph* OPfontGetGlyph(OPfont* font, OPchar charcode);
-OPmesh OPfontCreateText(OPfont* font, OPchar* text);
-OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text);
-OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text);
+EXPORT_METHOD void OPfontLoad(OPchar* filename, OPfont** data);
+EXPORT_METHOD void OPfontUnload(OPfont* font);
+EXPORT_METHOD OPfontGlyph* OPfontGetGlyph(OPfont* font, OPchar charcode);
+EXPORT_METHOD OPmesh OPfontCreateText(OPfont* font, OPchar* text);
+EXPORT_METHOD OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text);
+EXPORT_METHOD OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text);
 
 #endif

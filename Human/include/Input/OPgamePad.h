@@ -19,20 +19,20 @@ typedef struct {
 	OPfloat		prevAxes[_OPGAMEPADAXIS_MAX];
 } OPgamePad;
 
-extern OPgamePad GamePads[CONTROLLERS];
+extern IMPORT_METHOD OPgamePad GamePads[CONTROLLERS];
 
-OPgamePad* OPgamePadGet(OPgamePadIndex index);
+EXPORT_METHOD OPgamePad* OPgamePadGet(OPgamePadIndex index);
 
-void OPgamePadUpdate(OPgamePad* controller);
-void OPgamePadReset(OPgamePad* controller);
-void OPgamePadSetDeadzone(OPgamePad* controller, OPfloat deadzone);
+EXPORT_METHOD void OPgamePadUpdate(OPgamePad* controller);
+EXPORT_METHOD void OPgamePadReset(OPgamePad* controller);
+//EXPORT_METHOD void OPgamePadSetDeadzone(OPgamePad* controller, OPfloat deadzone);
 
-void OPgamePadSystemUpdate();
-void OPgamePadSystemReset();
-void OPgamePadSetDeadzones(OPfloat deadzone);
+EXPORT_METHOD void OPgamePadSystemUpdate();
+EXPORT_METHOD void OPgamePadSystemReset();
+EXPORT_METHOD void OPgamePadSetDeadzones(OPfloat deadzone);
 
-OPvec2 OPgamePadLeftThumb(OPgamePad* controller);
-OPvec2 OPgamePadRightThumb(OPgamePad* controller);
+EXPORT_METHOD OPvec2 OPgamePadLeftThumb(OPgamePad* controller);
+EXPORT_METHOD OPvec2 OPgamePadRightThumb(OPgamePad* controller);
 
 inline OPint OPgamePadIsDown(OPgamePad* controller, OPgamePadButton button){
 	return controller->buttons[button];

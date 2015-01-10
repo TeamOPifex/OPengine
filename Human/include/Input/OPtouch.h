@@ -15,15 +15,15 @@ typedef struct {
 
 extern OPtouchState Touch;
 
-void OPtouchUpdate();
-f32 OPtouchPositionX();
-f32 OPtouchPositionY();
-f32 OPtouchPositionMovedX();
-f32 OPtouchPositionMovedY();
-OPint OPtouchIsDown();
-OPint OPtouchIsUp();
-OPint OPtouchWasPressed();
-OPint OPtouchWasReleased();
-OPint OPtouchAnyInputIsDown();
+EXPORT_METHOD void OPtouchUpdate();
+EXPORT_METHOD f32 OPtouchPositionX();
+EXPORT_METHOD f32 OPtouchPositionY();
+EXPORT_METHOD f32 OPtouchPositionMovedX();
+EXPORT_METHOD f32 OPtouchPositionMovedY();
+EXPORT_METHOD OPint OPtouchIsDown();
+EXPORT_METHOD OPint OPtouchIsUp();
+EXPORT_METHOD OPint OPtouchWasPressed();
+EXPORT_METHOD OPint OPtouchWasReleased();
+EXPORT_METHOD OPint OPtouchAnyInputIsDown();
 
 #endif

@@ -29,13 +29,13 @@ typedef struct {
 #include "./Human/include/Rendering/Font/OPfont.h"
 #include "./Human/include/Rendering/OPtexture.h"
 
-OPfontAtlas* OPfontAtlasCreate(OPint width, OPint height, OPint depth);
-void OPfontAtlasDestroy(OPfontAtlas* atlas);
-void OPfontAtlasSetRegion(OPfontAtlas* atlas, OPint x, OPint y, OPint width, OPint height, ui8* data, OPint stride);
-OPint OPfontAtlasFit(OPfontAtlas* atlas, OPint index, OPint width, OPint height);
-void OPfontAtlasMerge(OPfontAtlas* atlas);
-OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, OPint width, OPint height);
-OPtexture OPfontAtlasTexture(OPfontAtlas* atlas);
-void OPfontAtlasSavePNG(OPfontAtlas* atlas, OPchar* filename);
+EXPORT_METHOD OPfontAtlas* OPfontAtlasCreate(OPint width, OPint height, OPint depth);
+EXPORT_METHOD void OPfontAtlasDestroy(OPfontAtlas* atlas);
+EXPORT_METHOD void OPfontAtlasSetRegion(OPfontAtlas* atlas, OPint x, OPint y, OPint width, OPint height, ui8* data, OPint stride);
+EXPORT_METHOD OPint OPfontAtlasFit(OPfontAtlas* atlas, OPint index, OPint width, OPint height);
+EXPORT_METHOD void OPfontAtlasMerge(OPfontAtlas* atlas);
+EXPORT_METHOD OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, OPint width, OPint height);
+EXPORT_METHOD OPtexture OPfontAtlasTexture(OPfontAtlas* atlas);
+EXPORT_METHOD void OPfontAtlasSavePNG(OPfontAtlas* atlas, OPchar* filename);
 
 #endif

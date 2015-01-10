@@ -57,8 +57,8 @@ struct OPvec2 {
 	}
 };
 
-extern const OPvec2 OPvec2Zero;
-extern const OPvec2 OPvec2One;
+extern IMPORT_METHOD const OPvec2 OPvec2Zero;
+extern IMPORT_METHOD const OPvec2 OPvec2One;
 
 inline OPvec2 OPvec2Create(OPfloat x, OPfloat y) {
     OPvec2 tmp;

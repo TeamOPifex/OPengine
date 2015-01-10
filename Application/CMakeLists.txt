@@ -66,6 +66,9 @@ set(ALL_LIBS
 #########################################
 add_executable(9_Application ${APPLICATION_SRC})
 add_definitions(-D${OPIFEX_OS})
+if(${OPIFEX_OPTION_SHARED})
+	add_definitions(-DOPIFEX_SHARED)
+endif()
 
 target_link_libraries(9_Application	${ALL_LIBS})
 

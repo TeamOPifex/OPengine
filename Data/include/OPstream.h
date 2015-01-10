@@ -27,7 +27,7 @@ extern "C" {
  *	@param size Initial capacity in bytes
  *	@return Pointer to new stream instance
  */
-OPstream* OPstreamCreate(OPuint size);
+	EXPORT_METHOD OPstream* OPstreamCreate(OPuint size);
 
 //-----------------------------------------------------------------------------
 /**
@@ -35,7 +35,7 @@ OPstream* OPstreamCreate(OPuint size);
  *	@param stream Stream instance to deallocate
  *	@return 0 if stream is null. 1 if deallocation is successful.
  */
-OPuint OPstreamDestroy(OPstream* stream);
+	EXPORT_METHOD OPuint OPstreamDestroy(OPstream* stream);
 
 //-----------------------------------------------------------------------------
 /**
@@ -45,7 +45,7 @@ OPuint OPstreamDestroy(OPstream* stream);
  *	@param size Number of bytes being written
  *	@return 1 if successful, 0 if failure
  */
-OPuint OPwrite(OPstream* stream, void* data, OPuint size);
+	EXPORT_METHOD OPuint OPwrite(OPstream* stream, void* data, OPuint size);
 
 //-----------------------------------------------------------------------------
 /**
@@ -55,15 +55,15 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size);
  *	@return Pointer to a set of bytes existing in the stream
  *          no allocation performed.
  */
-ui8* OPread(OPstream* stream, OPuint size);
+	EXPORT_METHOD ui8* OPread(OPstream* stream, OPuint size);
 
-i8 OPstreamI8(OPstream* stream);
-i16 OPstreamI16(OPstream* stream);
-i32 OPstreamI32(OPstream* stream);
-ui8 OPstreamUI8(OPstream* stream);
-ui16 OPstreamUI16(OPstream* stream);
-ui32 OPstreamUI32(OPstream* stream);
-f32 OPstreamf32(OPstream* stream);
+	EXPORT_METHOD i8 OPstreamI8(OPstream* stream);
+	EXPORT_METHOD i16 OPstreamI16(OPstream* stream);
+	EXPORT_METHOD i32 OPstreamI32(OPstream* stream);
+	EXPORT_METHOD ui8 OPstreamUI8(OPstream* stream);
+	EXPORT_METHOD ui16 OPstreamUI16(OPstream* stream);
+	EXPORT_METHOD ui32 OPstreamUI32(OPstream* stream);
+	EXPORT_METHOD f32 OPstreamf32(OPstream* stream);
 
 /* Reads the first string it finds in the stream
  * Defined by a separated space.
@@ -71,14 +71,14 @@ f32 OPstreamf32(OPstream* stream);
  * @param stream The OPstream to read from
  * @return An allocated char* containing the string found (null terminated)
 */
-OPchar* OPstreamString(OPstream* stream);
+	EXPORT_METHOD OPchar* OPstreamString(OPstream* stream);
 
 /* Reads the next line available in the OPstream
  * Reads until it finds a \n and will remove all \r
  * @param stream The OPstream to read from
  * @return An allocated char* containing the line found (null terminated)
 */
-OPchar* OPstreamReadLine(OPstream* stream);
+	EXPORT_METHOD OPchar* OPstreamReadLine(OPstream* stream);
 
 /* Reads a text key value pair
  * Ex: '  Test   = My Value  ' would return a KeyValue of
@@ -88,7 +88,7 @@ OPchar* OPstreamReadLine(OPstream* stream);
  * @param dst A pointer to a KeyValuePair (it will be filled on success)
  * @return Success Result
 */
-OPint OPstreamReadKeyValuePair(OPstream* stream, OPkeyValuePair* dst);
+	EXPORT_METHOD OPint OPstreamReadKeyValuePair(OPstream* stream, OPkeyValuePair* dst);
 
 //-----------------------------------------------------------------------------
 /**
@@ -99,7 +99,7 @@ OPint OPstreamReadKeyValuePair(OPstream* stream, OPkeyValuePair* dst);
  *	@return Pointer to a set of bytes existing in the stream
  *          no allocation performed.
  */
-ui8* OPreadAt(OPstream* stream, OPuint pos, OPuint size);
+	EXPORT_METHOD ui8* OPreadAt(OPstream* stream, OPuint pos, OPuint size);
 
 //-----------------------------------------------------------------------------
 /**
@@ -109,7 +109,7 @@ ui8* OPreadAt(OPstream* stream, OPuint pos, OPuint size);
  *      @param size Number of bytes to copy from stream, to dest
  *      @return Greater than 0 on success, less than or equal to on failure
  */
-OPuint OPcopy(OPstream* stream, void* dest, OPuint size);
+	EXPORT_METHOD OPuint OPcopy(OPstream* stream, void* dest, OPuint size);
 
 //-----------------------------------------------------------------------------
 /**
@@ -118,7 +118,7 @@ OPuint OPcopy(OPstream* stream, void* dest, OPuint size);
  *	@param byte Byte index to skip to.
  *	@return Returns 0 if not in bounds and 1 if Seeking was successful
  */
-OPuint OPseek(OPstream* stream, OPuint byte);
+	EXPORT_METHOD OPuint OPseek(OPstream* stream, OPuint byte);
 
 #ifdef __cplusplus
 };
