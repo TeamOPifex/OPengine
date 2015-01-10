@@ -2,7 +2,7 @@
 
 #ifdef OPIFEX_V8
 
-#include "./Core/include/Log.h"
+#include "./Core/include/OPlog.h"
 
 #ifdef OPIFEX_NODEJS
 V8isolate* isolate = NULL;

@@ -21,7 +21,7 @@ enum OPscriptTypes {
 	OPscript_FRAME_BUFFER
 };
 
-#include "./Core/include/Types.h"
+#include "./Core/include/OPtypes.h"
 
 typedef Handle<ObjectTemplate> V8ObjectT;
 typedef Handle<Object> V8Object;

@@ -2,22 +2,10 @@
 
 #ifdef OPIFEX_V8
 
-#include "./Human/include/Input/Input.h"
-#include "./Human/include/Rendering/FrameBuffer.h"
-#include "./Human/include/Rendering/Renderer.h"
-#include "./Human/include/Rendering/Effect.h"
-#include "./Human/include/Rendering/Camera.h"
-#include "./Human/include/Rendering/Mesh.h"
-#include "./Human/include/Rendering/Texture.h"
-#include "./Human/include/Rendering/Font/FontManager.h"
-#include "./Human/include/Systems/FontSystem.h"
-#include "./Human/include/Input/GamePadSystem.h"
-#include "./Human/include/Rendering/Sprite/SpriteSheet.h"
-#include "./Pipeline/include/Sprite3D.h"
-#include "./Human/include/Audio/Audio.h"
-#include "./Human/include/Audio/AudioPlayer.h"
-#include "./Human/include/Input/Myo.h"
-#include "./Core/include/Timer.h"
+#include "./Pipeline/include/OPsprite3D.h"
+#include "./Human/include/Systems/OPinputSystem.h"
+#include "./Human/include/Human.h"
+#include "./Core/include/OPtimer.h"
 
 // Render
 static V8Return _OP_render_Init(const V8Args& args);
@@ -121,7 +109,7 @@ static V8Return _FrameBufferUnbind(const V8Args& args);
 static V8Return _FrameBufferCreate(const V8Args& args);
 static V8Return _FrameBufferCreateDepth(const V8Args& args);
 
-OPchar* keyNames[OPKEYBOARD_MAX] = {
+OPchar* keyNames[_OPKEYBOARD_MAX] = {
 		"BACKSPACE",
 		"TAB",
 		"ENTER",
@@ -216,7 +204,7 @@ OPchar* keyNames[OPKEYBOARD_MAX] = {
 		"RCONTROL"
 };
 
-OPchar* gamePadNames[GamePadButton_Max] = {
+OPchar* gamePadNames[_OPGAMEPADBUTTON_MAX] = {
 	"DPAD_UP",
 	"DPAD_DOWN",
 	"DPAD_LEFT",
@@ -259,7 +247,7 @@ V8ObjectGlobal GetButtonMap() {
 	V8ObjectGlobal buttons = CreateObjectG(isolate);
 
 
-	for (OPint i = 0; i < GamePadButton_Max; i++) {
+	for (OPint i = 0; i < _OPGAMEPADBUTTON_MAX; i++) {
 		OPchar* name = gamePadNames[i];
 		SetValueG(isolate, buttons, name, GetNumber(isolate, i));
 	}
@@ -270,7 +258,7 @@ V8ObjectGlobal GetButtonMap() {
 V8Object GetButtonMapO() {
 	V8Object buttons = CreateObject(isolate);
 
-	for (OPint i = 0; i < GamePadButton_Max; i++) {
+	for (OPint i = 0; i < _OPGAMEPADBUTTON_MAX; i++) {
 		OPchar* name = gamePadNames[i];
 		SetValue(isolate, buttons, name, GetNumber(isolate, i));
 	}
@@ -579,7 +567,7 @@ static V8Return _OP_render_BuildMesh(const V8Args& args) {
 static V8Return _OP_render_FullScreen(const V8Args& args) {
 	V8Scope scope;
 
-	OPrenderFullscreen = args[0]->Int32Value();
+	OPRENDER_FULLSCREEN = args[0]->Int32Value();
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -587,8 +575,8 @@ static V8Return _OP_render_FullScreen(const V8Args& args) {
 static V8Return _OP_render_ScreenSize(const V8Args& args) {
 	V8Scope scope;
 
-	OPscreenWidth = args[0]->Int32Value();
-	OPscreenHeight = args[1]->Int32Value();
+	OPRENDER_SCREEN_WIDTH = args[0]->Int32Value();
+	OPRENDER_SCREEN_HEIGHT = args[1]->Int32Value();
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -649,7 +637,9 @@ static V8Return _OP_effect_Create(const V8Args& args) {
 static V8Return _InputUpdate(const V8Args& args) {
 	V8Scope scope;
 
-	OPkeyboardUpdate();
+	// TODO(garrett): make input pass timer
+	OPtimer temp = {};
+	OPkeyboardUpdate(&temp);
 	OPmouseUpdate();
 	OPgamePadSystemUpdate();
 
@@ -666,10 +656,10 @@ static V8Return _Mouse(const V8Args& args) {
 	obj->Set(GetString(isolate, "dY"), GetNumber(isolate, OPmousePositionMovedY()));
 	obj->Set(GetString(isolate, "Wheel"), GetNumber(isolate, OPmouseWheel()));
 	obj->Set(GetString(isolate, "dWheel"), GetNumber(isolate, OPmouseWheelMoved()));
-	obj->Set(GetString(isolate, "LButton"), GetNumber(isolate, OPmouseIsDown(OPKEY_LBUTTON)));
-	obj->Set(GetString(isolate, "RButton"), GetNumber(isolate, OPmouseIsDown(OPKEY_RBUTTON)));
-	obj->Set(GetString(isolate, "LButtonRelease"), GetNumber(isolate, OPmouseWasPressed(OPKEY_LBUTTON)));
-	obj->Set(GetString(isolate, "RButtonRelease"), GetNumber(isolate, OPmouseWasPressed(OPKEY_RBUTTON)));
+	obj->Set(GetString(isolate, "LButton"), GetNumber(isolate, OPmouseIsDown(OPMOUSE_LBUTTON)));
+	obj->Set(GetString(isolate, "RButton"), GetNumber(isolate, OPmouseIsDown(OPMOUSE_RBUTTON)));
+	obj->Set(GetString(isolate, "LButtonRelease"), GetNumber(isolate, OPmouseWasPressed(OPMOUSE_LBUTTON)));
+	obj->Set(GetString(isolate, "RButtonRelease"), GetNumber(isolate, OPmouseWasPressed(OPMOUSE_RBUTTON)));
 
 	return SetReturn(args, &scope, obj);
 }
@@ -678,7 +668,7 @@ static V8Return _Keyboard(const V8Args& args) {
 	V8Scope scope;
 
 	Handle<Array> arr = CreateArray(isolate);
-	for (i32 i = 0; i < OPKEYBOARD_MAX_VALUE; i++) {
+	for (i32 i = 0; i < _OPKEYBOARD_MAX_VALUE; i++) {
 		arr->Set(i, GetNumber(isolate, OPkeyboardIsDown((OPkeyboardKey)i)));
 	}
 
@@ -780,15 +770,15 @@ static V8Return _OP_myo_Unlock(const V8Args& args) {
 
 static V8Return _GamePadLeftThumbX(const V8Args& args) {
 	V8Scope scope;
-	return SetReturn(args, &scope, GetNumberF32(isolate, OPgamePadLeftThumbX(OPgamePad((GamePadIndex)args[0]->Int32Value()))));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPgamePadLeftThumbX(OPgamePadGet((OPgamePadIndex)args[0]->Int32Value()))));
 }
 static V8Return _GamePadLeftThumbY(const V8Args& args) {
 	V8Scope scope;
-	return SetReturn(args, &scope, GetNumberF32(isolate, OPgamePadLeftThumbY(OPgamePad((GamePadIndex)args[0]->Int32Value()))));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPgamePadLeftThumbY(OPgamePadGet((OPgamePadIndex)args[0]->Int32Value()))));
 }
 static V8Return _GamePadLeftThumbIs(const V8Args& args) {
 	V8Scope scope;
-	OPgamePadController* controller = OPgamePad((GamePadIndex)args[0]->Int32Value());
+	OPgamePad* controller = OPgamePadGet((OPgamePadIndex)args[0]->Int32Value());
 	switch (args[1]->Int32Value())
 	{
 	case 0:
@@ -811,7 +801,7 @@ static V8Return _GamePadLeftThumbIs(const V8Args& args) {
 }
 static V8Return _GamePadLeftThumbNow(const V8Args& args) {
 	V8Scope scope;
-	OPgamePadController* controller = OPgamePad((GamePadIndex)args[0]->Int32Value());
+	OPgamePad* controller = OPgamePadGet((OPgamePadIndex)args[0]->Int32Value());
 	switch (args[1]->Int32Value())
 	{
 	case 0:
@@ -834,7 +824,7 @@ static V8Return _GamePadLeftThumbNow(const V8Args& args) {
 }
 static V8Return _GamePadLeftThumbWas(const V8Args& args) {
 	V8Scope scope;
-	OPgamePadController* controller = OPgamePad((GamePadIndex)args[0]->Int32Value());
+	OPgamePad* controller = OPgamePadGet((OPgamePadIndex)args[0]->Int32Value());
 	switch (args[1]->Int32Value())
 	{
 	case 0:
@@ -857,7 +847,7 @@ static V8Return _GamePadLeftThumbWas(const V8Args& args) {
 }
 static V8Return _GamePadRightThumbIs(const V8Args& args) {
 	V8Scope scope;
-	OPgamePadController* controller = OPgamePad((GamePadIndex)args[0]->Int32Value());
+	OPgamePad* controller = OPgamePadGet((OPgamePadIndex)args[0]->Int32Value());
 	switch (args[1]->Int32Value())
 	{
 	case 0:
@@ -880,7 +870,7 @@ static V8Return _GamePadRightThumbIs(const V8Args& args) {
 }
 static V8Return _GamePadRightThumbNow(const V8Args& args) {
 	V8Scope scope;
-	OPgamePadController* controller = OPgamePad((GamePadIndex)args[0]->Int32Value());
+	OPgamePad* controller = OPgamePadGet((OPgamePadIndex)args[0]->Int32Value());
 	switch (args[1]->Int32Value())
 	{
 	case 0:
@@ -903,7 +893,7 @@ static V8Return _GamePadRightThumbNow(const V8Args& args) {
 }
 static V8Return _GamePadRightThumbWas(const V8Args& args) {
 	V8Scope scope;
-	OPgamePadController* controller = OPgamePad((GamePadIndex)args[0]->Int32Value());
+	OPgamePad* controller = OPgamePadGet((OPgamePadIndex)args[0]->Int32Value());
 	switch (args[1]->Int32Value())
 	{
 	case 0:
@@ -926,38 +916,38 @@ static V8Return _GamePadRightThumbWas(const V8Args& args) {
 }
 static V8Return _GamePadRightThumbX(const V8Args& args) {
 	V8Scope scope;
-	return SetReturn(args, &scope, GetNumberF32(isolate, OPgamePadRightThumbX(OPgamePad((GamePadIndex)args[0]->Int32Value()))));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPgamePadRightThumbX(OPgamePadGet((OPgamePadIndex)args[0]->Int32Value()))));
 }
 static V8Return _GamePadRightThumbY(const V8Args& args) {
 	V8Scope scope;
-	return SetReturn(args, &scope, GetNumberF32(isolate, OPgamePadRightThumbY(OPgamePad((GamePadIndex)args[0]->Int32Value()))));
+	return SetReturn(args, &scope, GetNumberF32(isolate, OPgamePadRightThumbY(OPgamePadGet((OPgamePadIndex)args[0]->Int32Value()))));
 }
 static V8Return _GamePadIsDown(const V8Args& args) {
 	V8Scope scope;
-	return SetReturn(args, &scope, GetBool(isolate, OPgamePadIsDown(OPgamePad((GamePadIndex)args[0]->Int32Value()), (GamePadButton)args[1]->Int32Value())));
+	return SetReturn(args, &scope, GetBool(isolate, OPgamePadIsDown(OPgamePadGet((OPgamePadIndex)args[0]->Int32Value()), (OPgamePadButton)args[1]->Int32Value())));
 }
 static V8Return _GamePadIsUp(const V8Args& args) {
 	V8Scope scope;
-	return SetReturn(args, &scope, GetBool(isolate, OPgamePadIsUp(OPgamePad((GamePadIndex)args[0]->Int32Value()), (GamePadButton)args[1]->Int32Value())));
+	return SetReturn(args, &scope, GetBool(isolate, OPgamePadIsUp(OPgamePadGet((OPgamePadIndex)args[0]->Int32Value()), (OPgamePadButton)args[1]->Int32Value())));
 }
 static V8Return _GamePadWasPressed(const V8Args& args) {
 	V8Scope scope;
-	return SetReturn(args, &scope, GetBool(isolate, OPgamePadWasPressed(OPgamePad((GamePadIndex)args[0]->Int32Value()), (GamePadButton)args[1]->Int32Value())));
+	return SetReturn(args, &scope, GetBool(isolate, OPgamePadWasPressed(OPgamePadGet((OPgamePadIndex)args[0]->Int32Value()), (OPgamePadButton)args[1]->Int32Value())));
 
 }
 static V8Return _GamePadWasReleased(const V8Args& args) {
 	V8Scope scope;
-	return SetReturn(args, &scope, GetBool(isolate, OPgamePadWasReleased(OPgamePad((GamePadIndex)args[0]->Int32Value()), (GamePadButton)args[1]->Int32Value())));
+	return SetReturn(args, &scope, GetBool(isolate, OPgamePadWasReleased(OPgamePadGet((OPgamePadIndex)args[0]->Int32Value()), (OPgamePadButton)args[1]->Int32Value())));
 
 }
 static V8Return _GamePadIsConnected(const V8Args& args) {
 	V8Scope scope;
-	return SetReturn(args, &scope, GetBool(isolate, OPgamePadIsConnected(OPgamePad((GamePadIndex)args[0]->Int32Value()))));
+	return SetReturn(args, &scope, GetBool(isolate, OPgamePadIsConnected(OPgamePadGet((OPgamePadIndex)args[0]->Int32Value()))));
 
 }
 static V8Return _GamePadSetDeadzone(const V8Args& args) {
 	V8Scope scope;
-	OPgamePadSetDeadzone(OPgamePad((GamePadIndex)args[0]->Int32Value()), args[1]->NumberValue());
+	OPgamePadSetDeadzone(OPgamePadGet((OPgamePadIndex)args[0]->Int32Value()), args[1]->NumberValue());
 	return SetReturn(args, &scope, GetNull(isolate));
 }
 
@@ -981,12 +971,12 @@ static V8Return _CreateProj(const V8Args& args) {
 		0.1f,
 		1000.0f,
 		45.0f,
-		OPrenderWidth / (f32)OPrenderHeight
+		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
 		);
 
-	OPlogVec3("Camera Pos", &camera->_pos);
-	OPlogVec3("Camera Target", &camera->_targ);
-	OPlog("Aspect: %f", OPrenderWidth / (f32)OPrenderHeight);
+	OPvec3Log("Camera Pos", camera->_pos);
+	OPvec3Log("Camera Target", camera->_targ);
+	OPlog("Aspect: %f", OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT);
 
 	V8Object obj = CreateTypedObject(isolate, camera, OPscript_CAMERA);
 	SetFunction(isolate, obj, "SetPos", _CameraSetPos);
@@ -1202,7 +1192,7 @@ static V8Return _FontManagerSetRGBA(const V8Args& args) {
 	OPfontManager* manager = (OPfontManager*)GetPointer(args, isolate, &inScope, 5);
 	if (inScope == -1) SetReturn(args, &scope, GetNull(isolate));
 
-	OPfontManagerSetRGBA(manager, args[1 - inScope]->NumberValue(), args[2 - inScope]->NumberValue(), args[3 - inScope]->NumberValue(), args[4 - inScope]->NumberValue());
+	OPfontManagerSetColor(manager, args[1 - inScope]->NumberValue(), args[2 - inScope]->NumberValue(), args[3 - inScope]->NumberValue(), args[4 - inScope]->NumberValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -1240,7 +1230,7 @@ static V8Return _FontRenderText(const V8Args& args) {
 	V8Scope scope;
 
 	String::Utf8Value str(args[0]->ToString());
-	OPrenderTextXY(ToCString(str), args[1]->NumberValue(), args[2]->NumberValue());
+	OPrenderText(ToCString(str), args[1]->NumberValue(), args[2]->NumberValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -1250,7 +1240,7 @@ static V8Return _FontRenderTextMatrix(const V8Args& args) {
 	String::Utf8Value str(args[0]->ToString());
 	const OPchar* c = ToCString(str);
 	Handle<String> el = GetString(isolate, "Id");
-	OPrenderTextMat4(c, (OPmat4*)args[1]->ToObject()->Get(el)->IntegerValue());
+	OPrenderText(c, (OPmat4*)args[1]->ToObject()->Get(el)->IntegerValue());
 
 	return SetReturn(args, &scope, GetNull(isolate));
 }
@@ -1399,8 +1389,8 @@ static V8Return _FrameBufferCreate(const V8Args& args) {
 	V8Scope scope;
 	i32 inScope;
 	OPtextureDescription desc = {
-		OPrenderWidth,
-		OPrenderHeight,
+		OPRENDER_WIDTH,
+		OPRENDER_HEIGHT,
 		GL_RGBA,
 		GL_RGBA,
 		GL_FLOAT,
@@ -1454,7 +1444,7 @@ static V8Return _OP_timer_Elapsed(const V8Args& args) {
 static V8Return _OP_timer_Create(const V8Args& args) {
 	V8Scope scope;
 	OPtimer* timer = (OPtimer*)OPalloc(sizeof(OPtimer));
-	OPcreateTimer(timer);
+	OPtimerCreate(timer);
 
 	V8Object obj = CreateTypedObject(isolate, timer, OPscript_TIMER);
 	SetFunction(isolate, obj, "Elapsed", _OP_timer_Elapsed);

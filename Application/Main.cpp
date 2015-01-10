@@ -1,7 +1,9 @@
 #include "ExampleSelectorState.h"
+#include "./Scripting/include/OPloaderOPS.h"
 
 void InitializeLoaders() {
-	OPloadersAddDefault();
+	OPloadersAddDefault(); 
+	OPscriptAddLoader();
 }
 
 //////////////////////////////////////

@@ -10,7 +10,7 @@ extern "C" {
 #include "./Data/include/OPhashMap.h"
 #include "./Data/include/OPlinkedList.h"
 
-#define OP_CMAN_CAP 10000
+#define OP_CMAN_CAP 100
 
 #define OP_CMAN_KEY_EXISTS           -1
 #define OP_CMAN_NO_MATCHING_UPLOADER -2

@@ -14,3 +14,4 @@ extern OPgameState GS_EXAMPLE_PHYSICS;
 extern OPgameState GS_EXAMPLE_SKINNING;
 extern OPgameState GS_EXAMPLE_SPINE;
 extern OPgameState GS_EXAMPLE_TEXTURED;
+extern OPgameState GS_EXAMPLE_SCRIPTING;
