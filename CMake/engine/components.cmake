@@ -7,7 +7,7 @@ macro(add_opifex_assets APPLICATION_TARGET )
 	else()
 
 		add_definitions(-D_DEBUG)
-		SET(OPIFEX_ASSETS "${OPIFEX_ENGINE_REPOSITORY}/Assets/")
+		SET(OPIFEX_ASSETS "${PROJECT_SOURCE_DIR}/Assets/")
 		add_definitions(-DOPIFEX_ASSETS="${OPIFEX_ASSETS}")
 
 		message(STATUS "OPIFEX ASSETS SET TO: ${OPIFEX_ASSETS}")
@@ -51,7 +51,6 @@ macro(add_opifex_physics APPLICATION_TARGET )
 	endif()
 
 endmacro(add_opifex_physics)
-
 
 
 macro(add_opifex_v8 APPLICATION_TARGET )

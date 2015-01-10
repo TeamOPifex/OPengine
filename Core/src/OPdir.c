@@ -46,6 +46,7 @@ OPchar* OPdirExecutable() {
 	char tmpPth[1024]; //MAX_PATH - 260
 	OPchar* result;
 	ui32 len;
+	char* pos = NULL;
 
 	#ifdef OPIFEX_WINDOWS
 		// Will contain exe path
@@ -55,7 +56,7 @@ OPchar* OPdirExecutable() {
 			// When passing NULL to GetModuleHandle, it returns handle of exe itself
 			GetModuleFileName(hModule, ownPth, (sizeof(ownPth))); 
 			
-			char *pos = strrchr(ownPth, '\\');
+			pos = strrchr(ownPth, '\\');
 			if (pos != NULL) {
 				*pos = '\0'; //this will put the null terminator here. you can also copy to another string if you want
 			}

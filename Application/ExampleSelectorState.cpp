@@ -17,7 +17,7 @@ typedef struct {
 	OPgameState* state;
 } Example;
 
-#define ExampleCount 9
+#define ExampleCount 10
 
 typedef struct {
 	i32 Selected;
@@ -49,7 +49,8 @@ void ExampleSelectorEnter(OPgameState* last) {
 		"Skinning",
 		"Deferred",
 		"Oculus",
-		"Spine"
+		"Spine",
+		"Scripting"
 	};
 
 	for (OPint i = 0; i < ExampleCount; i++) {
@@ -66,6 +67,7 @@ void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector.Examples[6].state = &GS_EXAMPLE_DEFERRED;
 	exampleSelector.Examples[7].state = &GS_EXAMPLE_OCULUS;
 	exampleSelector.Examples[8].state = &GS_EXAMPLE_SPINE;
+	exampleSelector.Examples[9].state = &GS_EXAMPLE_SCRIPTING;
 
 	// Deferred Example in flux
 	exampleSelector.Examples[6].available = 0;
@@ -80,6 +82,10 @@ void ExampleSelectorEnter(OPgameState* last) {
 
 #ifndef OPIFEX_SPINE
 	exampleSelector.Examples[8].available = 0;
+#endif
+
+#ifndef OPIFEX_V8
+	exampleSelector.Examples[9].available = 0;
 #endif
 
 	OPlog("Entered Example Selector");

@@ -62,12 +62,7 @@ macro(output_library APPLICATION_TARGET LIBRARY_NAME )
 		populate_binary_directory()
 		SET(COPY_BINARY_RELATIVE_DIRECTORY "/${LIBRARY_NAME}/")
 		if(${OPIFEX_OPTION_SHARED})
-
-			if("${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX32" OR "${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX64")
-				SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.so")
-			else()
-				SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.dylib")
-			endif()
+			SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.dylib")
 		else()
 			SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.a")
 		endif()
@@ -171,12 +166,13 @@ macro(add_external_opifex_includes)
 		${OPIFEX_ENGINE_REPOSITORY}/External/Ogg/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/Vorbis/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/glm-0.9.5/
+		${OPIFEX_ENGINE_REPOSITORY}/External/V8/
+		${OPIFEX_ENGINE_REPOSITORY}/External/V8/include/
 	)
 endmacro(add_external_opifex_includes)
 
 macro(add_opifex_definitions APPLICATION_TARGET APPLICATION_DIR_DEPTH )
 
-	add_opifex_assets(${APPLICATION_TARGET})
 	add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS -D${OPIFEX_OS})
 
 	if(${OPIFEX_RELEASE})
@@ -221,6 +217,9 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	unset(LIBOGG CACHE)
 	unset(LIBVORBIS CACHE)
 	unset(LIBVORBISFILE CACHE)
+	unset(LIBV8 CACHE)
+	unset(LIBV8_LIBBASE CACHE)
+	unset(LIBV8_LIBPLATFORM CACHE)
 	
 	if( ${OPIFEX_OS_ANDROID} )
 		find_binary(LIBLODEPNG "LodePNG")
@@ -262,6 +261,24 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		${OPENAL_LIBRARY}
 		${OpenGL}
 	)
+
+	if(${OPIFEX_OPTION_V8})
+		find_binary(LIBV8 "v8" false)
+		find_binary(LIBV8_LIBBASE "v8_libbase" false)
+		find_binary(LIBV8_LIBPLATFORM "v8_libplatform" false)
+		add_definitions(-DOPIFEX_V8)
+		target_link_libraries(${APPLICATION_TARGET} 
+				ws2_32.lib
+				advapi32.lib
+				winmm.lib
+				${LIBV8}
+				${LIBV8_LIBBASE}
+				${LIBV8_LIBPLATFORM})
+				
+		copy_from_binaries_on_build(${APPLICATION_TARGET} "v8.dll" ${OPIFEX_OS_WINDOWS})
+		copy_from_binaries_on_build(${APPLICATION_TARGET} "icuuc.dll" ${OPIFEX_OS_WINDOWS})
+		copy_from_binaries_on_build(${APPLICATION_TARGET} "icui18n.dll" ${OPIFEX_OS_WINDOWS})
+	endif()
 
 	if( ${OPIFEX_OS_WINDOWS} )
 		if(${OPIFEX_RELEASE})
@@ -348,11 +365,7 @@ function(find_binary OPIFEX_LIBRARY OPIFEX_NAME NOT_STATIC)
 		message(STATUS "Is it shared?? ${OPIFEX_OPTION_SHARED}")
 		if(${OPIFEX_OPTION_SHARED})
 			if(${NOT_STATIC})
-				if("${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX32" OR "${OPIFEX_OS}" STREQUAL "OPIFEX_LINUX64")
-					SET(OPIFEX_LIBRARY_NAME "lib${OPIFEX_NAME}.so")
-				else()
-					SET(OPIFEX_LIBRARY_NAME "lib${OPIFEX_NAME}.dylib")
-				endif()
+				SET(OPIFEX_LIBRARY_NAME "lib${OPIFEX_NAME}.dylib")
 			endif()
 		endif()
 
@@ -387,6 +400,7 @@ macro(opifex_engine_status_messages)
 	message(STATUS "===================================")
 	message(STATUS "==    OPifex CMake Completed     ==")
 	message(STATUS "===================================\n\nCONFIGURED VARIABLES:\n")
+	message(STATUS "  OPIFEX_REPOSITORY: ${OPIFEX_REPOSITORY}")
 	message(STATUS "  OPIFEX_ENGINE_REPOSITORY: ${OPIFEX_ENGINE_REPOSITORY}")
 	message(STATUS "  OPIFEX_BINARIES: ${OPIFEX_BINARIES}")
 	message(STATUS "  OPIFEX_ASSETS: ${OPIFEX_ASSETS}")

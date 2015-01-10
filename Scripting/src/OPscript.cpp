@@ -2,7 +2,8 @@
 #include "./Scripting/include/OPscript.h"
 
 #ifdef OPIFEX_V8
-
+void Print(const v8::FunctionCallbackInfo<v8::Value>& args);
+void Require(const v8::FunctionCallbackInfo<v8::Value>& args);
 void(*CustomWrapper)(V8isolate* isolate, V8ObjectGlobal target) = NULL;
 
 static void LogCallback(const v8::FunctionCallbackInfo<v8::Value>& args) {
@@ -14,14 +15,18 @@ static void LogCallback(const v8::FunctionCallbackInfo<v8::Value>& args) {
 }
 
 Isolate* isolate = NULL;
+OPint SCRIPT_INITIALIZED = 0;
 #endif
 
 void OPscriptInit() {
 #ifdef OPIFEX_V8
-	v8::V8::InitializeICU();
-	v8::Platform* platform = v8::platform::CreateDefaultPlatform();
-	v8::V8::InitializePlatform(platform);
-	isolate = v8::Isolate::New();
+	if (!SCRIPT_INITIALIZED) {
+		v8::V8::InitializeICU();
+		v8::Platform* platform = v8::platform::CreateDefaultPlatform();
+		v8::V8::InitializePlatform(platform);
+		isolate = v8::Isolate::New();
+		SCRIPT_INITIALIZED = 1;
+	}
 #else
 	OPlog("V8 Engine Feature not enabled.");
 #endif
@@ -44,7 +49,7 @@ void Print(const v8::FunctionCallbackInfo<v8::Value>& args) {
 	}
 	printf("\n");
 }
-#include "./Data/include/ContentManager.h"
+#include "./Data/include/OPcman.h"
 
 bool StartsWith(OPchar* str, const OPchar* cmp, i32 size) {
 	ui32 lenA = strlen(str);
@@ -86,7 +91,7 @@ OPchar* PrependToString(OPchar* str, const OPchar* add) {
 	return result;
 }
 
-#include "./Data/include/File.h"
+#include "./Data/include/OPfile.h"
 
 void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 
@@ -106,7 +111,7 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 			PerformanceInitializeMethodsO(isolate, OP);
 			DataInitializeMethodsO(isolate, OP);
 			args.GetReturnValue().Set(OP);
-			OPlog("Loaded OP");
+			//OPlog("Loaded OP");
 			return;
 		}
 		else {
@@ -189,34 +194,115 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 #endif
 
 
-void OPscriptCompileAndRun(OPscript* script) {
+OPscriptCompiled OPscriptCompile(OPscript* script) {
+	if (!SCRIPT_INITIALIZED) {
+		OPscriptInit();
+	}
 #ifdef OPIFEX_V8
 	Isolate::Scope isolate_scope(isolate);
 	HandleScope scope(isolate);
 
 	Handle<ObjectTemplate> global = ObjectTemplate::New(isolate);
-	Handle<ObjectTemplate> empty = ObjectTemplate::New(isolate);
-	//Handle<ObjectTemplate> OP = ObjectTemplate::New(isolate);
-	// GlobalInitializeMethods(isolate, OP);
-	// HumanInitializeMethods(isolate, OP);
-	// PerformanceInitializeMethods(isolate, OP);
-	// MathInitializeMethods(isolate, OP);
-	// DataInitializeMethods(isolate, OP);
+	//Handle<ObjectTemplate> empty = ObjectTemplate::New(isolate);
 	if (CustomWrapper != NULL) {
 		CustomWrapper(isolate, global);
 	}
 	global->Set(String::NewFromUtf8(isolate, "require"), FunctionTemplate::New(isolate, Require));
 	global->Set(String::NewFromUtf8(isolate, "print"), FunctionTemplate::New(isolate, Print));
-	//global->Set(String::NewFromUtf8(isolate, "OP"), OP);
-	global->Set(String::NewFromUtf8(isolate, "global"), empty);
-	Local<Context> context = Context::New(isolate, NULL, global);
+	//global->Set(String::NewFromUtf8(isolate, "global"), empty);
+
+	Handle<Context> context = Context::New(isolate, NULL, global);
 	v8::Context::Scope context_scope(context);
 
 	Handle<String> source = String::NewFromUtf8(isolate, script->data);
 
 	v8::ScriptOrigin origin(v8::String::NewFromUtf8(context->GetIsolate(), "name"));
-	v8::Handle<v8::Script> compiled = v8::Script::Compile(source, &origin);
-	compiled->Run();
+	Handle<Script> compiled = v8::Script::Compile(source, &origin);
+
+	OPscriptCompiled result = { 
+		Persistent<Script, CopyablePersistentTraits<Script>>(isolate, compiled),
+		Persistent<Context, CopyablePersistentTraits<Context>>(isolate, context),
+		Persistent<ObjectTemplate, CopyablePersistentTraits<ObjectTemplate>>(isolate, global)
+	};
+
+	return result;
+#endif
+}
+
+void OPscriptRunFunc(OPscriptCompiled* scriptCompiled, OPchar* name, OPint count, ...) {
+	OPchar* arguments[10];
+
+	va_list argList;
+	va_start(argList, count);
+	OPchar* r = "Test";
+	for (OPint i = 0; i < count; i++) {
+		r = va_arg(argList, OPchar*);
+		arguments[i] = r;
+	}
+
+	va_end(argList);
+
+	Isolate::Scope isolate_scope(isolate);
+	HandleScope scope(isolate);
+
+	Handle<Context> context = Local<Context>::New(isolate, scriptCompiled->context);
+	v8::Context::Scope context_scope(context);
+
+	Handle<v8::Object> global = context->Global();
+	Handle<v8::Value> value = global->Get(String::NewFromUtf8(isolate, name));
+	Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
+	Handle<Value> argsToJs[10];
+	Handle<Value> js_result;
+	int final_result;
+
+	for (OPint i = 0; i < count; i++) {
+		argsToJs[i] = v8::String::NewFromUtf8(isolate, arguments[i]);
+	}
+
+	js_result = func->Call(global, count, argsToJs);
+}
+
+void OPscriptRun(OPscriptCompiled* scriptCompiled) {
+#ifdef OPIFEX_V8
+	Isolate::Scope isolate_scope(isolate);
+	HandleScope scope(isolate);
+
+	//Handle<ObjectTemplate> global = ObjectTemplate::New(isolate);;
+	//scriptCompiled->global.Reset(isolate, global);
+
+	//Handle<Context> context;
+	Handle<Context> context = Local<Context>::New(isolate, scriptCompiled->context);
+	////scriptCompiled->context = Context::New(isolate, NULL, scriptCompiled->global);
+	//scriptCompiled->context.Reset(isolate, context);
+	v8::Context::Scope context_scope(context);
+
+	Handle<Script> compiled = Local<Script>::New(isolate, scriptCompiled->result);
+	//scriptCompiled->result.Reset(isolate, compiled);
+
+	Local<Value> result = compiled->Run();
+	//scriptCompiled->context.Reset(isolate, context);
+
+	//Handle<v8::Object> global = context->Global();
+	//Handle<v8::Value> value = global->Get(String::NewFromUtf8(isolate, "clearToBlack"));
+	//Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
+	//Handle<Value> args[3];
+	//Handle<Value> js_result;
+	//int final_result;
+
+	//args[0] = v8::String::NewFromUtf8(isolate, "1");
+	//args[1] = v8::String::NewFromUtf8(isolate, "0");
+	//args[2] = v8::String::NewFromUtf8(isolate, "0");
+
+	//js_result = func->Call(global, 3, args);
+
+
+#endif
+}
+
+void OPscriptCompileAndRun(OPscript* script) {
+#ifdef OPIFEX_V8
+	OPscriptCompiled result = OPscriptCompile(script);
+	OPscriptRun(&result);
 #endif
 }
 
@@ -227,21 +313,14 @@ void OPscriptCompileAndRunStream(OPstream* stream) {
 
 	Handle<ObjectTemplate> global = ObjectTemplate::New(isolate);
 	Handle<ObjectTemplate> empty = ObjectTemplate::New(isolate);
-	//Handle<ObjectTemplate> OP = ObjectTemplate::New(isolate);
 	Handle<ObjectTemplate> console = ObjectTemplate::New(isolate);
 	console->Set(String::NewFromUtf8(isolate, "log"), FunctionTemplate::New(isolate, Print));
-	// GlobalInitializeMethods(isolate, OP);
-	// HumanInitializeMethods(isolate, OP);
-	// PerformanceInitializeMethods(isolate, OP);
-	// MathInitializeMethods(isolate, OP);
-	// DataInitializeMethods(isolate, OP);
 	if (CustomWrapper != NULL) {
 		CustomWrapper(isolate, global);
 	}
 
 	global->Set(String::NewFromUtf8(isolate, "require"), FunctionTemplate::New(isolate, Require));
 	global->Set(String::NewFromUtf8(isolate, "print"), FunctionTemplate::New(isolate, Print));
-	//global->Set(String::NewFromUtf8(isolate, "OP"), OP);
 	global->Set(String::NewFromUtf8(isolate, "global"), empty);
 	global->Set(String::NewFromUtf8(isolate, "console"), console);
 

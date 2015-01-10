@@ -2,8 +2,8 @@
 
 #ifdef OPIFEX_V8
 
-#include "./Core/include/Log.h"
-#include "./Performance/include/Physics.h"
+#include "./Core/include/OPlog.h"
+#include "./Performance/include/OPphysics.h"
 
 static V8Return _physicsInit(const V8Args& args);
 static V8Return _physicsCreateScene(const V8Args& args);

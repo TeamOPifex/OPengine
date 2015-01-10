@@ -3,7 +3,7 @@
 
 #ifdef OPIFEX_V8
 
-#include "./Scripting/include/Scripting.h"
+#include "./Scripting/include/OPscript.h"
 
 void HumanInitializeMethodsO(V8isolate* isolate, V8Object target);
 

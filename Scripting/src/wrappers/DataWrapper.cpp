@@ -2,8 +2,8 @@
 
 #ifdef OPIFEX_V8
 
-#include "./Core/include/Log.h"
-#include "./Data/include/ContentManager.h"
+#include "./Core/include/OPlog.h"
+#include "./Data/include/OPcman.h"
 #include "./Pipeline/include/DefaultLoaders.h"
 
 #ifdef OPIFEX_WINDOWS

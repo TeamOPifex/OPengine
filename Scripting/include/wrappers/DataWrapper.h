@@ -3,7 +3,7 @@
 
 #ifdef OPIFEX_V8
 
-#include "./Scripting/include/Scripting.h"
+#include "./Scripting/include/OPscript.h"
 
 void DataInitializeMethods(V8isolate* isolate, V8ObjectT target);
 void DataInitializeMethodsO(V8isolate* isolate, V8Object target);

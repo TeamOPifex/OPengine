@@ -2,9 +2,9 @@
 
 #ifdef OPIFEX_V8
 
-#include "./Core/include/Core.h"
-#include "./Core/include/Log.h"
-#include "./Core/include/Timer.h"
+#include "./Core/include/OPcore.h"
+#include "./Core/include/OPlog.h"
+#include "./Core/include/OPtimer.h"
 
 static V8Return _start(const V8Args& args);
 
