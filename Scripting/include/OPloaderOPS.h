@@ -5,9 +5,13 @@
 
 typedef struct {
 	OPchar* data;
+#ifdef _DEBUG
+	i8 changed;
+#endif
 } OPscript;
 
 void OPscriptAddLoader();
 OPint OPscriptLoad(const OPchar* filename, OPscript** script);
 OPint OPscriptUnload(OPscript* script);
+OPint OPscriptReload(const OPchar* filename, OPscript** script);
 #endif

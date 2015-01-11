@@ -7,6 +7,7 @@ extern "C" {
 
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmemory.h"
+#include "./Core/include/OPtimer.h"
 #include "./Data/include/OPhashMap.h"
 #include "./Data/include/OPlinkedList.h"
 
@@ -77,7 +78,7 @@ extern OPlinkedList* OP_CMAN_PURGE;
  * Looks at Last Write Time for each file once every second
  * When a change happens the Reload method is called
  */
-void OPcmanUpdate();
+void OPcmanUpdate(OPtimer* timer);
 
 /* Adds a loader to be used when OPcmanInit is called
 * @param loader Pointer to a defined asset loader

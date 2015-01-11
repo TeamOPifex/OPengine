@@ -194,7 +194,7 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 #endif
 
 
-OPscriptCompiled OPscriptCompile(OPscript* script) {
+OPint OPscriptCompile(OPscriptCompiled* scriptCompiled, OPscript* script) {
 	if (!SCRIPT_INITIALIZED) {
 		OPscriptInit();
 	}
@@ -218,6 +218,9 @@ OPscriptCompiled OPscriptCompile(OPscript* script) {
 
 	v8::ScriptOrigin origin(v8::String::NewFromUtf8(context->GetIsolate(), "name"));
 	Handle<Script> compiled = v8::Script::Compile(source, &origin);
+	if (compiled.IsEmpty()) {
+		return 0;
+	}
 
 	OPscriptCompiled result = { 
 		Persistent<Script, CopyablePersistentTraits<Script>>(isolate, compiled),
@@ -225,8 +228,10 @@ OPscriptCompiled OPscriptCompile(OPscript* script) {
 		Persistent<ObjectTemplate, CopyablePersistentTraits<ObjectTemplate>>(isolate, global)
 	};
 
-	return result;
+	*scriptCompiled = result;
+	return 1;
 #endif
+	return 0;
 }
 
 void OPscriptRunFunc(OPscriptCompiled* scriptCompiled, OPchar* name, OPint count, ...) {
@@ -267,42 +272,22 @@ void OPscriptRun(OPscriptCompiled* scriptCompiled) {
 	Isolate::Scope isolate_scope(isolate);
 	HandleScope scope(isolate);
 
-	//Handle<ObjectTemplate> global = ObjectTemplate::New(isolate);;
-	//scriptCompiled->global.Reset(isolate, global);
-
-	//Handle<Context> context;
 	Handle<Context> context = Local<Context>::New(isolate, scriptCompiled->context);
-	////scriptCompiled->context = Context::New(isolate, NULL, scriptCompiled->global);
-	//scriptCompiled->context.Reset(isolate, context);
 	v8::Context::Scope context_scope(context);
 
 	Handle<Script> compiled = Local<Script>::New(isolate, scriptCompiled->result);
-	//scriptCompiled->result.Reset(isolate, compiled);
 
 	Local<Value> result = compiled->Run();
-	//scriptCompiled->context.Reset(isolate, context);
-
-	//Handle<v8::Object> global = context->Global();
-	//Handle<v8::Value> value = global->Get(String::NewFromUtf8(isolate, "clearToBlack"));
-	//Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
-	//Handle<Value> args[3];
-	//Handle<Value> js_result;
-	//int final_result;
-
-	//args[0] = v8::String::NewFromUtf8(isolate, "1");
-	//args[1] = v8::String::NewFromUtf8(isolate, "0");
-	//args[2] = v8::String::NewFromUtf8(isolate, "0");
-
-	//js_result = func->Call(global, 3, args);
-
-
+	
 #endif
 }
 
 void OPscriptCompileAndRun(OPscript* script) {
 #ifdef OPIFEX_V8
-	OPscriptCompiled result = OPscriptCompile(script);
-	OPscriptRun(&result);
+	OPscriptCompiled result;
+	if (OPscriptCompile(&result, script)) {
+		OPscriptRun(&result);
+	}
 #endif
 }
 

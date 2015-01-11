@@ -13,6 +13,42 @@ macro(add_source_group FILTER_NAME SOURCE_PATH TARGET_LIST)
 
 endmacro(add_source_group)
 
+macro(add_asset_group FILTER_NAME SOURCE_PATH TARGET_LIST)
+
+	file(TO_NATIVE_PATH ${FILTER_NAME} NEW_FILTER_NAME)
+	file(GLOB TEMP_SRC
+		"${SOURCE_PATH}/*.js"
+		"${SOURCE_PATH}/*.wav"
+		"${SOURCE_PATH}/*.ogg"
+		"${SOURCE_PATH}/*.opm"
+		"${SOURCE_PATH}/*.opf"
+		"${SOURCE_PATH}/*.opss"
+		"${SOURCE_PATH}/*.ops"
+		"${SOURCE_PATH}/*.png"
+		"${SOURCE_PATH}/*.vert"
+		"${SOURCE_PATH}/*.frag"
+	)
+	source_group("${NEW_FILTER_NAME}" FILES ${TEMP_SRC})
+	list(APPEND ${TARGET_LIST} "${TEMP_SRC}")
+
+endmacro(add_asset_group)
+
+macro(add_asset_dir TARGET_LIST)
+	message(STATUS "!!! !!! ${TARGET_LIST} ${PROJECT_SOURCE_DIR}")
+	add_asset_group(Assets/Audio "${PROJECT_SOURCE_DIR}/Assets/Audio" ${TARGET_LIST})
+	add_asset_group(Assets/Fonts "${PROJECT_SOURCE_DIR}/Assets/Fonts" ${TARGET_LIST})
+	add_asset_group(Assets/Models "${PROJECT_SOURCE_DIR}/Assets/Models" ${TARGET_LIST})
+	add_asset_group(Assets/Shaders "${PROJECT_SOURCE_DIR}/Assets/Shaders" ${TARGET_LIST})
+	add_asset_group(Assets/Shaders/OPENGL_2_0 "${PROJECT_SOURCE_DIR}/Assets/Shaders/OPENGL_2_0" ${TARGET_LIST})
+	add_asset_group(Assets/Shaders/OPENGL_2_0/Common "${PROJECT_SOURCE_DIR}/Assets/Shaders/OPENGL_2_0/Common" ${TARGET_LIST})
+	add_asset_group(Assets/Shaders/OPENGL_3_3 "${PROJECT_SOURCE_DIR}/Assets/Shaders/OPENGL_3_3" ${TARGET_LIST})
+	add_asset_group(Assets/Shaders/OPENGL_3_3/Common "${PROJECT_SOURCE_DIR}/Assets/Shaders/OPENGL_3_3/Common" ${TARGET_LIST})
+	add_asset_group(Assets/Shaders/OPENGL_ES_2_0 "${PROJECT_SOURCE_DIR}/Assets/Shaders/OPENGL_ES_2_0" ${TARGET_LIST})
+	add_asset_group(Assets/Shaders/OPENGL_ES_2_0/Common "${PROJECT_SOURCE_DIR}/Assets/Shaders/OPENGL_ES_2_0/Common" ${TARGET_LIST})
+	add_asset_group(Assets/Scripts "${PROJECT_SOURCE_DIR}/Assets/Scripts" ${TARGET_LIST})
+	add_asset_group(Assets/Textures "${PROJECT_SOURCE_DIR}/Assets/Textures" ${TARGET_LIST})
+endmacro(add_asset_dir)
+
 macro(copy_source_group SOURCE_PATH DESTINATION_TARGET)
 
 	message(STATUS "COPY FROM '${SOURCE_PATH}'' to '${DESTINATION_TARGET}'")

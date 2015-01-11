@@ -57,7 +57,7 @@ void ApplicationInit() {
 int ApplicationUpdate(OPtimer* timer) {
 		
 	OPinputSystemUpdate(timer);
-	OPcmanUpdate();
+	OPcmanUpdate(timer);
 
 	if (OPkeyboardWasReleased(OPKEY_ESCAPE)) return 1;	
 	if (OPkeyboardWasReleased(OPKEY_BACKSPACE)) {
