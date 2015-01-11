@@ -5,6 +5,7 @@
 #include "./Data/include/OPfile.h"
 #include "./Data/include/OPlist.h"
 #include "./Data/include/OPstring.h"
+#include "./Core/include/OPdir.h"
 
 //  _____ _       _           _     
 // / ____| |     | |         | |    
@@ -22,16 +23,17 @@ OPlinkedList* OP_CMAN_PURGE;
 
 OPlist* _OP_CMAN_ASSETLOADERS = NULL;
 
-#if defined(_DEBUG) && defined(OPIFEX_WINDOWS)
-#define BUFSIZE MAX_PATH
-#include <windows.h>
+#if defined(_DEBUG)
+#ifdef OPIFEX_WINDOWS
+	#include <windows.h>
+#endif
 #include "./Data/include/OPstring.h"
 i64 OP_CMAN_LAST_CHECKED = 100;
 
 #endif
 
 void OPcmanUpdate(OPtimer* timer) {
-#if defined(_DEBUG) && defined(OPIFEX_WINDOWS)
+#if defined(_DEBUG)
 	i32 i, j;
 	long change;
 	Bucket bucket;
@@ -75,11 +77,6 @@ void OPcmanAddLoader(OPassetLoader* loader) {
 // Specifies how assets will be loaded for each file type
 OPint OPcmanInit(const OPchar* dir){
 
-#if defined(_DEBUG) && defined(OPIFEX_WINDOWS)
-	TCHAR Buffer[BUFSIZE];
-	DWORD dwRet;
-#endif
-
 	OPint result;
 	OPint i;
 	OPassetLoader* loader;
@@ -93,7 +90,7 @@ OPint OPcmanInit(const OPchar* dir){
 		_OP_CMAN_ASSETLOADERS = OPlistCreate(16, sizeof(OPassetLoader));
 	}
 
-	OP_CMAN_ASSET_FOLDER = "assets\\";
+	OP_CMAN_ASSET_FOLDER = "assets/";
 	if (dir) {
 		OP_CMAN_ASSET_FOLDER = OPstringCopy(dir);
 	}
@@ -127,10 +124,7 @@ OPint OPcmanInit(const OPchar* dir){
 
 
 #ifdef _DEBUG
-#ifdef OPIFEX_WINDOWS
-	dwRet = GetCurrentDirectory(BUFSIZE, Buffer);
-	OP_CMAN_ASSET_FOLDER = OPstringCreateMerged(Buffer, "\\");
-#endif
+	OP_CMAN_ASSET_FOLDER = OPdirCurrent();
 #endif
 
 	
@@ -213,7 +207,7 @@ OPint OPcmanLoad(const OPchar* key){
 				assetBucket->Asset = asset;
 				assetBucket->Unload = loader.Unload;
 				assetBucket->Dirty = 0;
-#if defined(_DEBUG) && defined(OPIFEX_WINDOWS)
+#if defined(_DEBUG)
 				assetBucket->Reload = loader.Reload;
 				assetBucket->FullPath = fullPath;
 				assetBucket->AbsolutePath = OPstringCreateMerged(OP_CMAN_ASSET_FOLDER, fullPath);

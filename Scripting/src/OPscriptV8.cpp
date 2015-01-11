@@ -13,6 +13,7 @@ void OPscriptInit() {
 		v8::V8::InitializeICU();
 		v8::Platform* platform = v8::platform::CreateDefaultPlatform();
 		v8::V8::InitializePlatform(platform);
+		v8::V8::Initialize();
 		isolate = v8::Isolate::New();
 		SCRIPT_INITIALIZED = 1;
 	}

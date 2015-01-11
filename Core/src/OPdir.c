@@ -35,7 +35,7 @@ OPchar* OPdirCurrent() {
 	len = strlen(cCurrentPath) + 1;
 	result = (OPchar*)OPalloc(sizeof(OPchar) * len);
 	OPmemcpy(result, cCurrentPath, sizeof(OPchar)* (len - 1));
-	result[len-1] = '\\';
+	result[len-1] = '/';
 	result[len] = NULL;
 	return result;
 }

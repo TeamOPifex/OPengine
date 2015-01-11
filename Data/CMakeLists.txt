@@ -44,6 +44,11 @@ else()
 endif()
 add_definitions(-D${OPIFEX_OS})
 
+if(${OPIFEX_RELEASE})
+else()
+	add_definitions(-D_DEBUG)
+endif()
+
 target_link_libraries(2_Data ${ALL_LIBS})
 
 set_target_properties(2_Data PROPERTIES LINKER_LANGUAGE CXX)
