@@ -106,8 +106,9 @@ OPscriptValuePersistent OPscriptGetValue(f32 val) {
 	HandleScope scope(isolate);
 
 	return Persistent<Value>(isolate, Number::New(isolate, val));
-#endif
+#else
 	return 0;
+#endif
 }
 
 OPscriptValuePersistent OPscriptGetValue(const OPchar* val) {
@@ -116,6 +117,7 @@ OPscriptValuePersistent OPscriptGetValue(const OPchar* val) {
 	HandleScope scope(isolate);
 
 	return Persistent<Value>(isolate, OPscriptV8GetString(isolate, val));
-#endif
+#else
 	return 0;
+#endif
 }
