@@ -21,7 +21,7 @@ ScriptingExample scriptingExample;
 void ExampleScriptingEnter(OPgameState* last) {
 	OPscriptInit();
 	scriptingExample.MyScript = (OPscript*)OPcmanLoadGet("myscript.js");
-	scriptingExample.Compiled = OPscriptCompile(scriptingExample.MyScript);
+	OPscriptCompile(&scriptingExample.Compiled, scriptingExample.MyScript);
 	OPscriptRun(&scriptingExample.Compiled);
 }
 

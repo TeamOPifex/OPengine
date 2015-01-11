@@ -2,6 +2,7 @@
 #include "./Data/include/OPfile.h"
 #include "./Core/include/OPmemory.h"
 #include "./Data/include/OPcman.h"
+#include "./Core/include/OPlog.h"
 
 void OPscriptAddLoader() {
 
@@ -11,7 +12,7 @@ void OPscriptAddLoader() {
 		sizeof(OPscript),
 		(OPint(*)(const OPchar*, void**))OPscriptLoad,
 		(OPint(*)(void*))OPscriptUnload,
-		NULL
+		(OPint(*)(const OPchar*, void**))OPscriptReload
 	};
 	OPcmanAddLoader(&loaderOPS);
 
@@ -21,7 +22,7 @@ void OPscriptAddLoader() {
 		sizeof(OPscript),
 		(OPint(*)(const OPchar*, void**))OPscriptLoad,
 		(OPint(*)(void*))OPscriptUnload,
-		NULL
+		(OPint(*)(const OPchar*, void**))OPscriptReload
 	};
 	OPcmanAddLoader(&loaderJS);
 	
@@ -33,6 +34,21 @@ OPint OPscriptLoad(const OPchar* filename, OPscript** script) {
 	(*script)->data = (OPchar*)OPalloc(str->Length);
 	OPmemcpy((*script)->data, str->Data, str->Length);
 	return 1;
+}
+
+OPint OPscriptReload(const OPchar* filename, OPscript** script) {
+	OPlog("Reload script");
+	OPscript* resultScript;
+	OPscript* tex = (OPscript*)(*script);
+	OPint result = OPscriptLoad(filename, &resultScript);
+	if (result) {
+		OPmemcpy(*script, resultScript, sizeof(OPscript));
+#ifdef _DEBUG
+		(*script)->changed = 1;
+#endif
+		OPfree(resultScript);
+	}
+	return result;
 }
 
 OPint OPscriptUnload(OPscript* script) {

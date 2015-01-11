@@ -24,7 +24,7 @@ typedef struct {
 } OPscriptCompiled;
 
 void OPscriptInit();
-OPscriptCompiled OPscriptCompile(OPscript* script);
+OPint OPscriptCompile(OPscriptCompiled* scriptCompiled, OPscript* script);
 void OPscriptRunFunc(OPscriptCompiled* scriptCompiled, OPchar* name, OPint count, ...);
 void OPscriptRun(OPscriptCompiled* scriptCompiled);
 void OPscriptCompileAndRun(OPscript* script);
