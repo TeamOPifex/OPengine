@@ -1,6 +1,13 @@
 #ifndef OPIFEX_SCRIPTING_WRAPPERS_V8_TYPES
 #define OPIFEX_SCRIPTING_WRAPPERS_V8_TYPES
 
+#include "./Core/include/OPtypes.h"
+
+#ifndef OPIFEX_V8
+typedef OPint OPscriptValuePersistent;
+typedef OPint OPscriptPersistentContext;
+#endif
+
 #ifdef OPIFEX_V8
 
 #include "v8.h"
@@ -27,7 +34,7 @@ typedef Handle<ObjectTemplate> V8ObjectTemplate;
 typedef Handle<Object> V8Object;
 typedef Handle<Value> OPscriptValue;
 typedef Persistent<Value> OPscriptValuePersistent;
-
+typedef Persistent<Context, CopyablePersistentTraits<Context>> OPscriptPersistentContext
 #ifdef OPIFEX_NODEJS
 
 typedef Arguments V8Args;

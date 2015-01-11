@@ -177,7 +177,7 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 }
 #endif
 
-OPint OPscriptCompile(OPscriptCompiled* scriptCompiled, OPscript* script, Persistent<Context, CopyablePersistentTraits<Context>>* existingContext) {
+OPint OPscriptCompile(OPscriptCompiled* scriptCompiled, OPscript* script, OPscriptPersistentContext* existingContext) {
 	OPscriptInit();
 #ifdef OPIFEX_V8
 	Isolate::Scope isolate_scope(isolate);
@@ -221,6 +221,7 @@ OPint OPscriptCompile(OPscriptCompiled* scriptCompiled, OPscript* script, Persis
 	return 0;
 }
 
+#ifdef OPIFEX_V8
 void _runCompiled(OPscriptCompiled* scriptCompiled) {
 
 	Isolate::Scope isolate_scope(isolate);
@@ -233,6 +234,7 @@ void _runCompiled(OPscriptCompiled* scriptCompiled) {
 
 	Local<Value> result = compiled->Run();
 }
+#endif
 
 void OPscriptUpdate(OPscriptCompiled* scriptCompiled) {
 #ifdef _DEBUG
@@ -248,6 +250,7 @@ void OPscriptUpdate(OPscriptCompiled* scriptCompiled) {
 }
 
 OPscriptValuePersistent OPscriptRunFunc(OPscriptCompiled* scriptCompiled, OPchar* name, OPint count, OPscriptValuePersistent* args) {
+#ifdef OPIFEX_V8
 	OPscriptUpdate(scriptCompiled);
 	
 	Isolate::Scope isolate_scope(isolate);
@@ -265,6 +268,7 @@ OPscriptValuePersistent OPscriptRunFunc(OPscriptCompiled* scriptCompiled, OPchar
 	}
 	
 	return Persistent<Value>(isolate, func->Call(global, count, values));
+#endif
 }
 
 void OPscriptRun(OPscriptCompiled* scriptCompiled) {

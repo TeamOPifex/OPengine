@@ -96,18 +96,26 @@ const OPchar* OPscriptV8ToCString(const v8::String::Utf8Value& value) {
 
 	return *value ? *value : "<string conversion failed>";
 }
+#endif
+
 
 OPscriptValuePersistent OPscriptGetValue(f32 val) {
+
+#ifdef OPIFEX_V8
 	Isolate::Scope isolate_scope(isolate);
 	HandleScope scope(isolate);
 
 	return Persistent<Value>(isolate, Number::New(isolate, val));
+#endif
+	return 0;
 }
 
 OPscriptValuePersistent OPscriptGetValue(const OPchar* val) {
+#ifdef OPIFEX_V8
 	Isolate::Scope isolate_scope(isolate);
 	HandleScope scope(isolate);
 
 	return Persistent<Value>(isolate, OPscriptV8GetString(isolate, val));
-}
 #endif
+	return 0;
+}
