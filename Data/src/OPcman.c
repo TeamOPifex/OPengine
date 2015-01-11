@@ -26,7 +26,7 @@ OPlist* _OP_CMAN_ASSETLOADERS = NULL;
 #define BUFSIZE MAX_PATH
 #include <windows.h>
 #include "./Data/include/OPstring.h"
-i64 OP_CMAN_LAST_CHECKED = 1000;
+i64 OP_CMAN_LAST_CHECKED = 100;
 
 #endif
 
@@ -39,7 +39,7 @@ void OPcmanUpdate(OPtimer* timer) {
 	OP_CMAN_LAST_CHECKED -= timer->Elapsed;
 	if (OP_CMAN_LAST_CHECKED < 0) {
 		// Only check for file changes once per second
-		OP_CMAN_LAST_CHECKED = 1000;
+		OP_CMAN_LAST_CHECKED = 100;
 		for (i = 0; i < OP_CMAN_HASHMAP.count; i++) {
 			bucket = OP_CMAN_HASHMAP.buckets[i];
 			for (j = 0; j < bucket.count; j++) {

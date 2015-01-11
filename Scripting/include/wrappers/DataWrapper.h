@@ -5,7 +5,7 @@
 
 #include "./Scripting/include/OPscript.h"
 
-void DataInitializeMethods(V8isolate* isolate, V8ObjectT target);
+void DataInitializeMethods(V8isolate* isolate, V8ObjectTemplate target);
 void DataInitializeMethodsO(V8isolate* isolate, V8Object target);
 
 #endif
