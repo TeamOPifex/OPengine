@@ -33,7 +33,7 @@ enum OPscriptTypes {
 typedef Handle<ObjectTemplate> V8ObjectTemplate;
 typedef Handle<Object> V8Object;
 typedef Handle<Value> OPscriptValue;
-typedef Persistent<Value> OPscriptValuePersistent;
+typedef Persistent<Value, CopyablePersistentTraits<Value> > OPscriptValuePersistent;
 typedef Persistent<Context, CopyablePersistentTraits<Context> > OPscriptPersistentContext;
 #ifdef OPIFEX_NODEJS
 
