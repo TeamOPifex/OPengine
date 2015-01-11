@@ -14,12 +14,12 @@ var amnt = 0;
 var dir = 1;
 
 function clearToBlack(r, g, b) {
-    print('rgb:' + r + ' ' + g + ' ' + b);
+    //print('rgb:' + r + ' ' + g + ' ' + b);
 	amnt += dir ? 0.01 : -0.01;
 	if(amnt > 1.0 || amnt < 0.0) {
 		dir = !dir;
 	}
-	OP.render.Clear(amnt,g,b);	
+	OP.render.Clear(amnt,0,1);	
 
 	//print('.');
 		
@@ -29,7 +29,7 @@ function clearToBlack(r, g, b) {
 }
 
 function run(arg) {
-    print(arg.test);
+    //print(arg.test);
 }
 // 	return 0;
 // }

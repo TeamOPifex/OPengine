@@ -74,6 +74,11 @@ if(${OPIFEX_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 endif()
 
+if(${OPIFEX_RELEASE})
+else()
+	add_definitions(-D_DEBUG)
+endif()
+
 add_opifex_v8(7_Scripting)
 
 #########################################

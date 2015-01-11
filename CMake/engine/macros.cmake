@@ -299,21 +299,29 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	)
 
 	if(${OPIFEX_OPTION_V8})
-		find_binary(LIBV8 "v8" false)
-		find_binary(LIBV8_LIBBASE "v8_libbase" false)
-		find_binary(LIBV8_LIBPLATFORM "v8_libplatform" false)
-		add_definitions(-DOPIFEX_V8)
-		target_link_libraries(${APPLICATION_TARGET} 
-				ws2_32.lib
-				advapi32.lib
-				winmm.lib
-				${LIBV8}
-				${LIBV8_LIBBASE}
-				${LIBV8_LIBPLATFORM})
-				
-		copy_from_binaries_on_build(${APPLICATION_TARGET} "v8.dll" ${OPIFEX_OS_WINDOWS})
-		copy_from_binaries_on_build(${APPLICATION_TARGET} "icuuc.dll" ${OPIFEX_OS_WINDOWS})
-		copy_from_binaries_on_build(${APPLICATION_TARGET} "icui18n.dll" ${OPIFEX_OS_WINDOWS})
+
+			find_binary(LIBV8 "v8" false)
+			find_binary(LIBV8_LIBBASE "v8_libbase" false)
+			find_binary(LIBV8_LIBPLATFORM "v8_libplatform" false)
+			add_definitions(-DOPIFEX_V8)
+		if( ${OPIFEX_OS_WINDOWS} )
+			target_link_libraries(${APPLICATION_TARGET} 
+					ws2_32.lib
+					advapi32.lib
+					winmm.lib
+					${LIBV8}
+					${LIBV8_LIBBASE}
+					${LIBV8_LIBPLATFORM})
+					
+			copy_from_binaries_on_build(${APPLICATION_TARGET} "v8.dll" ${OPIFEX_OS_WINDOWS})
+			copy_from_binaries_on_build(${APPLICATION_TARGET} "icuuc.dll" ${OPIFEX_OS_WINDOWS})
+			copy_from_binaries_on_build(${APPLICATION_TARGET} "icui18n.dll" ${OPIFEX_OS_WINDOWS})
+		else()
+			target_link_libraries(${APPLICATION_TARGET}
+					${LIBV8}
+					${LIBV8_LIBBASE}
+					${LIBV8_LIBPLATFORM})
+		endif()
 	endif()
 
 	if( ${OPIFEX_OS_WINDOWS} )
