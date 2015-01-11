@@ -1,9 +1,10 @@
 #ifndef OPIFEX_SCRIPTING_WRAPPERS_V8
 #define OPIFEX_SCRIPTING_WRAPPERS_V8
 
+#include "V8Types.h"
+
 #ifdef OPIFEX_V8
 
-#include "V8Types.h"
 #include "./Scripting/include/OPscriptV8.h"
 
 #ifdef OPIFEX_NODEJS
@@ -165,9 +166,6 @@ inline f32 OPscriptV8GetNumber(V8isolate* isolate, V8Object obj, const OPchar* n
 
 #endif
 
-OPscriptValuePersistent OPscriptGetValue(f32 val); 
-OPscriptValuePersistent OPscriptGetValue(const OPchar* val);
-
 void OPscriptV8LogProperties(Handle<Object> obj); 
 bool OPscriptV8IsObject(const V8Args& args, V8isolate* isolate, i32 position, OPscriptTypes type);
 V8Object OPscriptV8CreateTypedObject(V8isolate* isolate, void* Id, OPscriptTypes type);
@@ -180,5 +178,8 @@ bool OPscriptV8IsCallingObject(const V8Args& args, V8isolate* isolate, OPscriptT
 const OPchar* OPscriptV8ToCString(const v8::String::Utf8Value& value);
 
 #endif
+
+OPscriptValuePersistent OPscriptGetValue(f32 val); 
+OPscriptValuePersistent OPscriptGetValue(const OPchar* val);
 
 #endif

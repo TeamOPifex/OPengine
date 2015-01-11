@@ -2,6 +2,7 @@
 #define OPIFEX_SCRIPTING
 
 #include "./Scripting/include/wrappers/V8Helper.h"
+#include "./Scripting/include/OPscriptV8.h"
 #include "./Scripting/include/OPloaderOPS.h"
 #include "./Data/include/OPstream.h"
 
@@ -23,7 +24,7 @@ typedef struct {
 #endif
 } OPscriptCompiled;
 
-OPint OPscriptCompile(OPscriptCompiled* scriptCompiled, OPscript* script, Persistent<Context, CopyablePersistentTraits<Context>>* existingContext);
+OPint OPscriptCompile(OPscriptCompiled* scriptCompiled, OPscript* script, OPscriptPersistentContext* existingContext);
 OPscriptValuePersistent OPscriptRunFunc(OPscriptCompiled* scriptCompiled, OPchar* name, OPint count, OPscriptValuePersistent* args);
 void OPscriptRun(OPscriptCompiled* scriptCompiled);
 void OPscriptCompileAndRun(OPscript* script);
