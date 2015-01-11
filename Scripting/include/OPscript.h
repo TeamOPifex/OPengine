@@ -18,9 +18,9 @@ extern void(*CustomWrapper)(V8isolate* isolate, V8ObjectGlobal target);
 typedef struct {
 	OPscript* source;
 #ifdef OPIFEX_V8
-	Persistent<Script, CopyablePersistentTraits<Script>> result;
-	Persistent<Context, CopyablePersistentTraits<Context>> context;
-	Persistent<ObjectTemplate, CopyablePersistentTraits<ObjectTemplate>> global;
+	Persistent<Script, CopyablePersistentTraits<Script> > result;
+	Persistent<Context, CopyablePersistentTraits<Context> > context;
+	Persistent<ObjectTemplate, CopyablePersistentTraits<ObjectTemplate> > global;
 #endif
 } OPscriptCompiled;
 
