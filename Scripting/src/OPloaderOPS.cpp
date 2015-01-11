@@ -33,6 +33,11 @@ OPint OPscriptLoad(const OPchar* filename, OPscript** script) {
 	OPstream* str = OPreadFile(filename);
 	(*script)->data = (OPchar*)OPalloc(str->Length);
 	OPmemcpy((*script)->data, str->Data, str->Length);
+
+#ifdef _DEBUG
+	(*script)->changed = 0;
+#endif
+
 	return 1;
 }
 

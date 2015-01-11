@@ -36,10 +36,6 @@ void ExampleSelectorEnter(OPgameState* last) {
 
 	OPsystemsLoadFontEffect();
 
-	exampleSelector.FontManager = OPfontManagerCreate((OPfont*)OPcmanGet("Ubuntu.opf"));
-	OPfontManagerBind(exampleSelector.FontManager);
-	OPfontManagerSetAlign(exampleSelector.FontManager, OPFONT_ALIGN_LEFT);
-
 	const OPchar* Names[ExampleCount] = {
 		"Audio",
 		"Model",
@@ -52,6 +48,12 @@ void ExampleSelectorEnter(OPgameState* last) {
 		"Spine",
 		"Scripting"
 	};
+
+	exampleSelector.FontManager = OPfontManagerSetup("Ubuntu.opf", Names, ExampleCount);
+	OPfontManagerBind(exampleSelector.FontManager);
+	OPfontManagerSetAlign(exampleSelector.FontManager, OPFONT_ALIGN_LEFT);
+
+	
 
 	for (OPint i = 0; i < ExampleCount; i++) {
 		exampleSelector.Examples[i].name = Names[i];

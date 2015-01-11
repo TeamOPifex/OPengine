@@ -14,23 +14,7 @@ static void LogCallback(const v8::FunctionCallbackInfo<v8::Value>& args) {
 	OPlog("Logged: %s", *value);
 }
 
-Isolate* isolate = NULL;
-OPint SCRIPT_INITIALIZED = 0;
 #endif
-
-void OPscriptInit() {
-#ifdef OPIFEX_V8
-	if (!SCRIPT_INITIALIZED) {
-		v8::V8::InitializeICU();
-		v8::Platform* platform = v8::platform::CreateDefaultPlatform();
-		v8::V8::InitializePlatform(platform);
-		isolate = v8::Isolate::New();
-		SCRIPT_INITIALIZED = 1;
-	}
-#else
-	OPlog("V8 Engine Feature not enabled.");
-#endif
-}
 
 
 #ifdef OPIFEX_V8
@@ -98,7 +82,7 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 	if (args.Length() > 0 && args[0]->IsString()) {
 
 		v8::String::Utf8Value utf8(args[0]);
-		const char* p = ToCString(utf8);
+		const char* p = OPscriptV8ToCString(utf8);
 		ui32 len = strlen(p);
 
 		const OPchar* OPengine = "./node_modules/OPengine/OPengine";
@@ -193,25 +177,27 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 }
 #endif
 
-
-OPint OPscriptCompile(OPscriptCompiled* scriptCompiled, OPscript* script) {
-	if (!SCRIPT_INITIALIZED) {
-		OPscriptInit();
-	}
+OPint OPscriptCompile(OPscriptCompiled* scriptCompiled, OPscript* script, Persistent<Context, CopyablePersistentTraits<Context>>* existingContext) {
+	OPscriptInit();
 #ifdef OPIFEX_V8
 	Isolate::Scope isolate_scope(isolate);
 	HandleScope scope(isolate);
 
 	Handle<ObjectTemplate> global = ObjectTemplate::New(isolate);
-	//Handle<ObjectTemplate> empty = ObjectTemplate::New(isolate);
 	if (CustomWrapper != NULL) {
 		CustomWrapper(isolate, global);
 	}
 	global->Set(String::NewFromUtf8(isolate, "require"), FunctionTemplate::New(isolate, Require));
 	global->Set(String::NewFromUtf8(isolate, "print"), FunctionTemplate::New(isolate, Print));
-	//global->Set(String::NewFromUtf8(isolate, "global"), empty);
+	global->Set(String::NewFromUtf8(isolate, "global"), ObjectTemplate::New(isolate));
 
-	Handle<Context> context = Context::New(isolate, NULL, global);
+	Handle<Context> context;
+	if (existingContext == NULL) {
+		context = Context::New(isolate, NULL, global);
+	}
+	else {
+		context = Local<Context>::New(isolate, *existingContext);
+	}
 	v8::Context::Scope context_scope(context);
 
 	Handle<String> source = String::NewFromUtf8(isolate, script->data);
@@ -223,6 +209,7 @@ OPint OPscriptCompile(OPscriptCompiled* scriptCompiled, OPscript* script) {
 	}
 
 	OPscriptCompiled result = { 
+		script,
 		Persistent<Script, CopyablePersistentTraits<Script>>(isolate, compiled),
 		Persistent<Context, CopyablePersistentTraits<Context>>(isolate, context),
 		Persistent<ObjectTemplate, CopyablePersistentTraits<ObjectTemplate>>(isolate, global)
@@ -234,41 +221,8 @@ OPint OPscriptCompile(OPscriptCompiled* scriptCompiled, OPscript* script) {
 	return 0;
 }
 
-void OPscriptRunFunc(OPscriptCompiled* scriptCompiled, OPchar* name, OPint count, ...) {
-	OPchar* arguments[10];
+void _runCompiled(OPscriptCompiled* scriptCompiled) {
 
-	va_list argList;
-	va_start(argList, count);
-	OPchar* r = "Test";
-	for (OPint i = 0; i < count; i++) {
-		r = va_arg(argList, OPchar*);
-		arguments[i] = r;
-	}
-
-	va_end(argList);
-
-	Isolate::Scope isolate_scope(isolate);
-	HandleScope scope(isolate);
-
-	Handle<Context> context = Local<Context>::New(isolate, scriptCompiled->context);
-	v8::Context::Scope context_scope(context);
-
-	Handle<v8::Object> global = context->Global();
-	Handle<v8::Value> value = global->Get(String::NewFromUtf8(isolate, name));
-	Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
-	Handle<Value> argsToJs[10];
-	Handle<Value> js_result;
-	int final_result;
-
-	for (OPint i = 0; i < count; i++) {
-		argsToJs[i] = v8::String::NewFromUtf8(isolate, arguments[i]);
-	}
-
-	js_result = func->Call(global, count, argsToJs);
-}
-
-void OPscriptRun(OPscriptCompiled* scriptCompiled) {
-#ifdef OPIFEX_V8
 	Isolate::Scope isolate_scope(isolate);
 	HandleScope scope(isolate);
 
@@ -278,14 +232,52 @@ void OPscriptRun(OPscriptCompiled* scriptCompiled) {
 	Handle<Script> compiled = Local<Script>::New(isolate, scriptCompiled->result);
 
 	Local<Value> result = compiled->Run();
+}
+
+void OPscriptUpdate(OPscriptCompiled* scriptCompiled) {
+#ifdef _DEBUG
+	if (scriptCompiled->source->changed) {
+		OPscriptCompiled temp;
+		if (OPscriptCompile(&temp, scriptCompiled->source, &scriptCompiled->context)) {
+			*scriptCompiled = temp;
+			_runCompiled(scriptCompiled);
+		}
+		scriptCompiled->source->changed = 0;
+	}
+#endif
+}
+
+OPscriptValuePersistent OPscriptRunFunc(OPscriptCompiled* scriptCompiled, OPchar* name, OPint count, OPscriptValuePersistent* args) {
+	OPscriptUpdate(scriptCompiled);
 	
+	Isolate::Scope isolate_scope(isolate);
+	HandleScope scope(isolate);
+
+	Handle<Context> context = Local<Context>::New(isolate, scriptCompiled->context);
+	v8::Context::Scope context_scope(context);
+	Handle<v8::Object> global = context->Global();
+	Handle<v8::Value> value = global->Get(String::NewFromUtf8(isolate, name));
+	Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
+
+	Handle<Value> values[10];
+	for (OPint i = 0; i < count; i++) {
+		values[i] = Local<Value>::New(isolate, args[i]);
+	}
+	
+	return Persistent<Value>(isolate, func->Call(global, count, values));
+}
+
+void OPscriptRun(OPscriptCompiled* scriptCompiled) {
+#ifdef OPIFEX_V8
+	OPscriptUpdate(scriptCompiled);
+	_runCompiled(scriptCompiled);	
 #endif
 }
 
 void OPscriptCompileAndRun(OPscript* script) {
 #ifdef OPIFEX_V8
 	OPscriptCompiled result;
-	if (OPscriptCompile(&result, script)) {
+	if (OPscriptCompile(&result, script, NULL)) {
 		OPscriptRun(&result);
 	}
 #endif

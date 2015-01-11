@@ -5,10 +5,10 @@
 #include "./Core/include/OPlog.h"
 
 #ifdef OPIFEX_NODEJS
-V8isolate* isolate = NULL;
+//V8isolate* isolate = NULL;
 #endif
 
-void LogProperties(V8Object obj) {
+void OPscriptV8LogProperties(V8Object obj) {
 	Local<Array> arr = obj->GetPropertyNames();
 	for (i32 i = 0; i < arr->Length(); i++) {
 		Local<String> str = arr->Get(i)->ToString();
@@ -18,18 +18,18 @@ void LogProperties(V8Object obj) {
 
 }
 
-V8Object CreateTypedObject(V8isolate* isolate, void* Id, OPscriptTypes type) {
+V8Object OPscriptV8CreateTypedObject(V8isolate* isolate, void* Id, OPscriptTypes type) {
 
-	V8Object obj = CreateObject(isolate);
-	obj->Set(GetString(isolate, "Id"), GetNumber(isolate, (OPint)Id));
-	obj->Set(GetString(isolate, "Type"), GetNumber(isolate, (OPint)type));
+	V8Object obj = OPscriptV8CreateObject(isolate);
+	obj->Set(OPscriptV8GetString(isolate, "Id"), OPscriptV8GetNumber(isolate, (OPint)Id));
+	obj->Set(OPscriptV8GetString(isolate, "Type"), OPscriptV8GetNumber(isolate, (OPint)type));
 	return obj;
 
 }
 
-bool IsObject(const V8Args& args, V8isolate* isolate, i32 position, OPscriptTypes type) {
+bool OPscriptV8IsObject(const V8Args& args, V8isolate* isolate, i32 position, OPscriptTypes type) {
 	if (args.Length() > position && args[position]->IsObject()) {
-		Handle<Value> result = args[position]->ToObject()->Get(GetString(isolate, "Type"));
+		Handle<Value> result = args[position]->ToObject()->Get(OPscriptV8GetString(isolate, "Type"));
 		if (!result->IsNull()) {
 			return result->Int32Value() == (i32)type;
 		}
@@ -37,53 +37,53 @@ bool IsObject(const V8Args& args, V8isolate* isolate, i32 position, OPscriptType
 	return false;
 }
 
-bool IsCallingObject(const V8Args& args, V8isolate* isolate, OPscriptTypes type) {
+bool OPscriptV8IsCallingObject(const V8Args& args, V8isolate* isolate, OPscriptTypes type) {
 	if (args.This()->IsObject()) {
-		if (args.This()->HasOwnProperty(GetString(isolate, "Type"))) {
-			return args.This()->Get(GetString(isolate, "Type"))->Int32Value() == (i32)type;
+		if (args.This()->HasOwnProperty(OPscriptV8GetString(isolate, "Type"))) {
+			return args.This()->Get(OPscriptV8GetString(isolate, "Type"))->Int32Value() == (i32)type;
 		}
 	}
 	return false;
 }
 
-void* GetCallingPointer(const V8Args& args, V8isolate* isolate) {
-		Local<Value> val = args.This()->ToObject()->Get(GetString(isolate, "Id"));
+void* OPscriptV8GetCallingPointer(const V8Args& args, V8isolate* isolate) {
+		Local<Value> val = args.This()->ToObject()->Get(OPscriptV8GetString(isolate, "Id"));
 		return (void*)val->IntegerValue();
 }
 
-void* GetArgPointer(const V8Args& args, V8isolate* isolate, i32 position) {
+void* OPscriptV8GetArgPointer(const V8Args& args, V8isolate* isolate, i32 position) {
 
 	if (args.Length() > position) {
-		Local<Value> val = args[position]->ToObject()->Get(GetString(isolate, "Id"));
+		Local<Value> val = args[position]->ToObject()->Get(OPscriptV8GetString(isolate, "Id"));
 		return (void*)val->IntegerValue();
 	}
 
 	return NULL;
 }
 
-void* GetFirstPointer(const V8Args& args, V8isolate* isolate, i32* result, OPscriptTypes type) {
-	if (IsCallingObject(args, isolate, type)) {
+void* OPscriptV8GetFirstPointer(const V8Args& args, V8isolate* isolate, i32* result, OPscriptTypes type) {
+	if (OPscriptV8IsCallingObject(args, isolate, type)) {
 		*result = 1;
-		return GetCallingPointer(args, isolate);
+		return OPscriptV8GetCallingPointer(args, isolate);
 	}
 
-	if (IsObject(args, isolate, 0, type)) {
+	if (OPscriptV8IsObject(args, isolate, 0, type)) {
 		*result = 0;
-		return GetArgPointer(args, isolate, 0);
+		return OPscriptV8GetArgPointer(args, isolate, 0);
 	}
 
 	return NULL;
 }
 
-void* GetPointer(const V8Args& args, V8isolate* isolate, i32* result, i32 expected) {
+void* OPscriptV8GetPointer(const V8Args& args, V8isolate* isolate, i32* result, i32 expected) {
 
 	if (args.Length() < expected) {
-		Local<Value> val = args.This()->Get(GetString(isolate, "Id"));
+		Local<Value> val = args.This()->Get(OPscriptV8GetString(isolate, "Id"));
 		*result = 1;
 		return (void*)val->IntegerValue();
 	}
 	else if (args.Length() >= expected) {
-		Local<Value> val = args[0]->ToObject()->Get(GetString(isolate, "Id"));
+		Local<Value> val = args[0]->ToObject()->Get(OPscriptV8GetString(isolate, "Id"));
 		*result = 0;
 		return (void*)val->IntegerValue();
 	}
@@ -92,9 +92,22 @@ void* GetPointer(const V8Args& args, V8isolate* isolate, i32* result, i32 expect
 	return NULL;
 }
 
-const OPchar* ToCString(const v8::String::Utf8Value& value) {
+const OPchar* OPscriptV8ToCString(const v8::String::Utf8Value& value) {
 
 	return *value ? *value : "<string conversion failed>";
 }
 
+OPscriptValuePersistent OPscriptGetValue(f32 val) {
+	Isolate::Scope isolate_scope(isolate);
+	HandleScope scope(isolate);
+
+	return Persistent<Value>(isolate, Number::New(isolate, val));
+}
+
+OPscriptValuePersistent OPscriptGetValue(const OPchar* val) {
+	Isolate::Scope isolate_scope(isolate);
+	HandleScope scope(isolate);
+
+	return Persistent<Value>(isolate, OPscriptV8GetString(isolate, val));
+}
 #endif

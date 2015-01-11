@@ -18,23 +18,23 @@ static V8Return _cmanDelete(const V8Args& args);
 void DataInitializeMethods(V8isolate* isolate, V8ObjectGlobal target) {
 
 	// OP.cman
-	V8ObjectGlobal cman = CreateObjectG(isolate);
-	SetFunctionG(isolate, cman, "Init", _cmanInit);
-	SetFunctionG(isolate, cman, "Load", _cmanLoad);
-	SetFunctionG(isolate, cman, "Get", _cmanGet);
-	SetFunctionG(isolate, cman, "Delete", _cmanDelete);
-	SetObjectG(isolate, target, "cman", cman);
+	V8ObjectGlobal cman = OPscriptV8CreateObjectGlobal(isolate);
+	OPscriptV8SetFunctionGlobal(isolate, cman, "Init", _cmanInit);
+	OPscriptV8SetFunctionGlobal(isolate, cman, "Load", _cmanLoad);
+	OPscriptV8SetFunctionGlobal(isolate, cman, "Get", _cmanGet);
+	OPscriptV8SetFunctionGlobal(isolate, cman, "Delete", _cmanDelete);
+	OPscriptV8SetObjectGlobal(isolate, target, "cman", cman);
 
 }
 void DataInitializeMethodsO(V8isolate* isolate, V8Object target) {
 
 	// OP.cman
-	V8Object cman = CreateObject(isolate);
-	SetFunction(isolate, cman, "Init", _cmanInit);
-	SetFunction(isolate, cman, "Load", _cmanLoad);
-	SetFunction(isolate, cman, "Get", _cmanGet);
-	SetFunction(isolate, cman, "Delete", _cmanDelete);
-	SetObject(isolate, target, "cman", cman);
+	V8Object cman = OPscriptV8CreateObject(isolate);
+	OPscriptV8SetFunction(isolate, cman, "Init", _cmanInit);
+	OPscriptV8SetFunction(isolate, cman, "Load", _cmanLoad);
+	OPscriptV8SetFunction(isolate, cman, "Get", _cmanGet);
+	OPscriptV8SetFunction(isolate, cman, "Delete", _cmanDelete);
+	OPscriptV8SetObject(isolate, target, "cman", cman);
 
 }
 
@@ -47,7 +47,7 @@ static V8Return _cmanInit(const V8Args& args) {
 #ifndef OPIFEX_ANDROID
 	if (args.Length() > 0) {
 		v8::String::Utf8Value utf8(args[0]);
-		assetDir = ToCString(utf8);
+		assetDir = OPscriptV8ToCString(utf8);
 	}
 #endif
 
@@ -55,39 +55,39 @@ static V8Return _cmanInit(const V8Args& args) {
 	OPloadersAddDefault();
 	OPcmanInit(assetDir);
 
-	return SetReturn(args, &scope, GetNull(isolate));
+	return OPscriptV8SetReturn(args, &scope, OPscriptV8GetNull(isolate));
 }
 
 static V8Return _cmanLoad(const V8Args& args) {
 	V8Scope scope;
 
 	v8::String::Utf8Value utf8(args[0]);
-	const char* file = ToCString(utf8);
+	const char* file = OPscriptV8ToCString(utf8);
 	OPlog("Script Load: %s", file);
 	OPint result = OPcmanLoad(file);
 
-	return SetReturn(args, &scope, GetNumber(isolate, result));
+	return OPscriptV8SetReturn(args, &scope, OPscriptV8GetNumber(isolate, result));
 }
 
 static V8Return _cmanGet(const V8Args& args) {
 	V8Scope scope;
 
 	v8::String::Utf8Value utf8(args[0]);
-	const char* file = ToCString(utf8);
+	const char* file = OPscriptV8ToCString(utf8);
 	OPlog("Script Get: %s", file);
 	void* p = OPcmanGet(file);
 
-	return SetReturn(args, &scope, GetNumber(isolate, (OPint)p));
+	return OPscriptV8SetReturn(args, &scope, OPscriptV8GetNumber(isolate, (OPint)p));
 }
 
 static V8Return _cmanDelete(const V8Args& args) {
 	V8Scope scope;
 
 	v8::String::Utf8Value utf8(args[0]);
-	const char* file = ToCString(utf8);
+	const char* file = OPscriptV8ToCString(utf8);
 	OPcmanDelete(file);
 
-	return SetReturn(args, &scope, GetNull(isolate));
+	return OPscriptV8SetReturn(args, &scope, OPscriptV8GetNull(isolate));
 }
 
 #endif

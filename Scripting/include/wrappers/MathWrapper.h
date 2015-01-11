@@ -5,7 +5,7 @@
 
 #include "./Scripting/include/OPscript.h"
 
-void MathInitializeMethods(V8isolate* isolate, V8ObjectT target);
+void MathInitializeMethods(V8isolate* isolate, V8ObjectTemplate target);
 void MathInitializeMethodsO(V8isolate* isolate, V8Object target);
 
 #endif

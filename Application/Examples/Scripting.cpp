@@ -21,13 +21,19 @@ ScriptingExample scriptingExample;
 void ExampleScriptingEnter(OPgameState* last) {
 	OPscriptInit();
 	scriptingExample.MyScript = (OPscript*)OPcmanLoadGet("myscript.js");
-	OPscriptCompile(&scriptingExample.Compiled, scriptingExample.MyScript);
+	OPscriptCompile(&scriptingExample.Compiled, scriptingExample.MyScript, NULL);
 	OPscriptRun(&scriptingExample.Compiled);
 }
 
 OPint ExampleScriptingUpdate(OPtimer* time) {
 	//OPscriptCompileAndRun(scriptingExample.MyScript);
-	OPscriptRunFunc(&scriptingExample.Compiled, "clearToBlack", 3, "0", "0", "1");
+	OPscriptValuePersistent values[3] = {
+		OPscriptGetValue("1"),
+		OPscriptGetValue(1.0),
+		OPscriptGetValue(1.0)
+	};
+	OPscriptValuePersistent val = OPscriptRunFunc(&scriptingExample.Compiled, "clearToBlack", 3, values);
+	OPscriptRunFunc(&scriptingExample.Compiled, "run", 1, &val);
 
 	return false;
 }

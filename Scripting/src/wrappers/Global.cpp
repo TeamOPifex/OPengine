@@ -10,13 +10,13 @@ static V8Return _start(const V8Args& args);
 
 void GlobalInitializeMethods(V8isolate* isolate, V8ObjectGlobal target) {
 
-	SetFunctionG(isolate, target, "Start", _start);
+	OPscriptV8SetFunctionGlobal(isolate, target, "Start", _start);
 
 }
 
 void GlobalInitializeMethodsO(V8isolate* isolate, V8Object target) {
 
-	SetFunction(isolate, target, "Start", _start);
+	OPscriptV8SetFunction(isolate, target, "Start", _start);
 
 }
 
@@ -26,15 +26,15 @@ Local<Function> DestroyCallback;
 
 void ScriptingInit(){
 	const unsigned argc = 1;
-	Handle<Value> argv[argc] = { GetBool(isolate, true) };
-	Handle<Object> obj = CreateObject(isolate);
+	Handle<Value> argv[argc] = { OPscriptV8GetBool(isolate, true) };
+	Handle<Object> obj = OPscriptV8CreateObject(isolate);
 	InitializeCallback->Call(obj, argc, argv);
 }
 
 int ScriptingUpdate(OPtimer* timer){
 	const unsigned argc = 1;
-	Handle<Value> argv[argc] = { GetNumberF32(isolate, timer->Elapsed) };
-	Handle<Object> obj = CreateObject(isolate);
+	Handle<Value> argv[argc] = { OPscriptV8GetNumberF32(isolate, timer->Elapsed) };
+	Handle<Object> obj = OPscriptV8CreateObject(isolate);
 	Local<Value> result = UpdateCallback->Call(obj, argc, argv);
 	if (result->IsNumber())
 		return result->Int32Value();
@@ -45,8 +45,8 @@ int ScriptingUpdate(OPtimer* timer){
 void ScriptingDestroy()
 {
 	const unsigned argc = 1;
-	Handle<Value> argv[argc] = { GetBool(isolate, true) };
-	Handle<Object> obj = CreateObject(isolate);
+	Handle<Value> argv[argc] = { OPscriptV8GetBool(isolate, true) };
+	Handle<Object> obj = OPscriptV8CreateObject(isolate);
 	DestroyCallback->Call(obj, argc, argv);
 	return;
 }
@@ -67,7 +67,7 @@ static V8Return _start(const V8Args& args) {
 	OPstart(0, NULL);
 	OPend();
 
-	return SetReturn(args, &scope, GetNull(isolate));
+	return OPscriptV8SetReturn(args, &scope, OPscriptV8GetNull(isolate));
 }
 
 #endif
