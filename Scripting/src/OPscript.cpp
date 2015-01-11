@@ -210,9 +210,9 @@ OPint OPscriptCompile(OPscriptCompiled* scriptCompiled, OPscript* script, OPscri
 
 	OPscriptCompiled result = { 
 		script,
-		Persistent<Script, CopyablePersistentTraits<Script>>(isolate, compiled),
-		Persistent<Context, CopyablePersistentTraits<Context>>(isolate, context),
-		Persistent<ObjectTemplate, CopyablePersistentTraits<ObjectTemplate>>(isolate, global)
+		Persistent<Script, CopyablePersistentTraits<Script> >(isolate, compiled),
+		Persistent<Context, CopyablePersistentTraits<Context> >(isolate, context),
+		Persistent<ObjectTemplate, CopyablePersistentTraits<ObjectTemplate> >(isolate, global)
 	};
 
 	*scriptCompiled = result;
