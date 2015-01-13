@@ -85,8 +85,9 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		const char* p = OPscriptV8ToCString(utf8);
 		ui32 len = strlen(p);
 
-		const OPchar* OPengine = "./node_modules/OPengine/OPengine";
-		if (strlen(OPengine) == len && OPmemcmp(OPengine, p, len) == 0) {
+		const OPchar* OPengineNode = "./node_modules/OPengine/OPengine";
+		const OPchar* OPengine = "OPengine";
+		if ((strlen(OPengine) == len && OPmemcmp(OPengine, p, len) == 0) || (strlen(OPengineNode) == len && OPmemcmp(OPengineNode, p, len) == 0)) {
 
 			Handle<Object> OP = Object::New(isolate);
 			GlobalInitializeMethodsO(isolate, OP);
