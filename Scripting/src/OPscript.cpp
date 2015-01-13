@@ -238,7 +238,7 @@ void _runCompiled(OPscriptCompiled* scriptCompiled) {
 #endif
 
 void OPscriptUpdate(OPscriptCompiled* scriptCompiled) {
-#ifdef _DEBUG
+#if defined(_DEBUG) && defined(OPIFEX_V8)
 	if (scriptCompiled->source->changed) {
 		OPscriptCompiled temp;
 		if (OPscriptCompile(&temp, scriptCompiled->source, &scriptCompiled->context)) {
@@ -269,6 +269,8 @@ OPscriptValuePersistent OPscriptRunFunc(OPscriptCompiled* scriptCompiled, OPchar
 	}
 	
 	return Persistent<Value>(isolate, func->Call(global, count, values));
+#else
+	return 0;
 #endif
 }
 
