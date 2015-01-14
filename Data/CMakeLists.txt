@@ -44,7 +44,7 @@ else()
 endif()
 add_definitions(-D${OPIFEX_OS})
 
-if(${OPIFEX_RELEASE})
+if(${OPIFEX_OPTION_RELEASE})
 else()
 	add_definitions(-D_DEBUG)
 endif()

@@ -90,12 +90,12 @@ set_target_properties(5_Human PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(5_Human PROPERTIES OUTPUT_NAME "Human")
 
 
-if(${OPIFEX_RELEASE})
+if(${OPIFEX_OPTION_RELEASE})
 
 else()
 	add_definitions(-D_DEBUG)
 endif()
-if(${OPIFEX_RELEASE})
+if(${OPIFEX_OPTION_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 endif()
 

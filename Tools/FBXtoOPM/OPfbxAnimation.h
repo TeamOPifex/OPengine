@@ -26,17 +26,17 @@ OPfbxAnimation* OPfbxAnimationGet(OPfbxMeshData* meshData, OPfbxSkeleton* skelet
 	// Only 1 take right now
 	FbxAnimStack* currAnimStack = scene->Scene->GetSrcObject<FbxAnimStack>(0);
 	FbxString animStackName = currAnimStack->GetName();
-	OPlog("Anim Name: %s", animStackName.Buffer());
+	OPlogDebug("Anim Name: %s", animStackName.Buffer());
 
 	FbxTakeInfo* takeInfo = scene->Scene->GetTakeInfo(animStackName);
 	FbxTime start = takeInfo->mLocalTimeSpan.GetStart();
 	FbxTime end = takeInfo->mLocalTimeSpan.GetStop();
 
 	FbxLongLong mAnimationLength = end.GetFrameCount(FbxTime::eFrames24) - start.GetFrameCount(FbxTime::eFrames24) + 1;
-	OPlog("Anim Start: %d", (start.GetFrameCount(FbxTime::eFrames24) + 1));
-	OPlog("Anim End: %d", (end.GetFrameCount(FbxTime::eFrames24)));
-	OPlog("Anim Frames: %d", mAnimationLength);
-	OPlog("Bone Count: %d", skeleton->BoneCount);
+	OPlogDebug("Anim Start: %d", (start.GetFrameCount(FbxTime::eFrames24) + 1));
+	OPlogDebug("Anim End: %d", (end.GetFrameCount(FbxTime::eFrames24)));
+	OPlogDebug("Anim Frames: %d", mAnimationLength);
+	OPlogDebug("Bone Count: %d", skeleton->BoneCount);
 
 	result->Animations[0].StartFrame = (start.GetFrameCount(FbxTime::eFrames24) + 1);
 	result->Animations[0].EndFrame = end.GetFrameCount(FbxTime::eFrames24);
@@ -61,9 +61,9 @@ OPfbxAnimation* OPfbxAnimationGet(OPfbxMeshData* meshData, OPfbxSkeleton* skelet
 				FbxAMatrix boneLocalTransform = boneNode->EvaluateLocalTransform(currTime);
 
 				OPint ind = OPfbxSkeletonGetPos(skeleton, boneNode->GetName());
-				OPlog("Bone %s at Index %d", boneNode->GetName(), ind);
+				OPlogDebug("Bone %s at Index %d", boneNode->GetName(), ind);
 				OPint indAnimJoint = skeleton->BoneCount * currFrame + ind;
-				OPlog("Curr Frame: %d\nindAnimJoint: %d", f, indAnimJoint);
+				OPlogDebug("Curr Frame: %d\nindAnimJoint: %d", f, indAnimJoint);
 				_fbxmat4Log("Local Bone Transform", &boneLocalTransform);
 				
 				
@@ -94,7 +94,7 @@ OPfbxAnimation* OPfbxAnimationGet(OPfbxMeshData* meshData, OPfbxSkeleton* skelet
 				tmp[3][3] = lRow[3];
 
 				result->Animations[0].JointTransform[indAnimJoint] = tmp;
-				OPmat4Log("Anim Joint", result->Animations[0].JointTransform[indAnimJoint]);
+				//OPmat4Log("Anim Joint", result->Animations[0].JointTransform[indAnimJoint]);
 			}
 		}
 	}

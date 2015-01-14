@@ -19,6 +19,7 @@ int main(int argc, char **argv) {
 	if (argc > 1) {
 		for (arg = 1; arg < argc; ++arg)
 		{
+			OPlog("Arg: %s", argv[arg]);
 			if (IsParam(argv, arg, "--help") || IsParam(argv, arg, "-h"))
 			{
 				print_help();
@@ -49,29 +50,39 @@ int main(int argc, char **argv) {
 				continue;
 			}
 
-			if (IsParam(argv, arg, "--positions") || IsParam(argv, arg, "-p"))
+			if (IsParam(argv, arg, "--positions") || IsParam(argv, arg, "-p")) {
 				featureIn[Model_Positions] = specified = 1; continue;
+			}
 
-			if (IsParam(argv, arg, "--normals") || IsParam(argv, arg, "-n"))
+			if (IsParam(argv, arg, "--normals") || IsParam(argv, arg, "-n")) {
 				featureIn[Model_Normals] = specified = 1; continue;
+			}
 
-			if (IsParam(argv, arg, "--uvs") || IsParam(argv, arg, "-u"))
+			if (IsParam(argv, arg, "--uvs") || IsParam(argv, arg, "-u")) {
 				featureIn[Model_UVs] = specified = 1; continue;
+			}
 
-			if (IsParam(argv, arg, "--indices") || IsParam(argv, arg, "-i"))
+			if (IsParam(argv, arg, "--indices") || IsParam(argv, arg, "-i")) {
 				featureIn[Model_Indices] = specified = 1; continue;
+			}
 
-			if (IsParam(argv, arg, "--bones") || IsParam(argv, arg, "-b"))
+			if (IsParam(argv, arg, "--bones") || IsParam(argv, arg, "-b")) {
 				featureIn[Model_Bones] = specified = 1; continue;
+			}
 
-			if (IsParam(argv, arg, "--skeletons") || IsParam(argv, arg, "-s"))
+			if (IsParam(argv, arg, "--skeletons") || IsParam(argv, arg, "-s")) {
 				featureIn[Model_Skeletons] = specified = 1; continue;
+			}
 
-			if (IsParam(argv, arg, "--skinning") || IsParam(argv, arg, "-skin"))
+			if (IsParam(argv, arg, "--skinning") || IsParam(argv, arg, "-skin")) {
+				OPlog("Use Skinning");
 				featureIn[Model_Skinning] = specified = 1; continue;
+			}
 
-			if (IsParam(argv, arg, "--animations") || IsParam(argv, arg, "-a"))
+			if (IsParam(argv, arg, "--animations") || IsParam(argv, arg, "-a")) {
+				OPlog("Use Animations");
 				featureIn[Model_Animations] = specified = 1; continue;
+			}
 		}
 	}
 
@@ -91,6 +102,7 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 
+	OPlog("Begin processing");
 
 	//
 	// Get Features to Export from the FBX into the OPM

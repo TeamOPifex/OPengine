@@ -70,7 +70,7 @@ set_target_properties(8_Pipeline PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(8_Pipeline PROPERTIES OUTPUT_NAME "Pipeline")
 add_definitions(-D${OPIFEX_OS})
 
-if(${OPIFEX_RELEASE})
+if(${OPIFEX_OPTION_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 endif()
 

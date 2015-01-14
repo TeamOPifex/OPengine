@@ -71,7 +71,7 @@ set_target_properties(6_Communication PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(6_Communication PROPERTIES OUTPUT_NAME "Communication")
 add_definitions(-D${OPIFEX_OS})
 
-if(${OPIFEX_RELEASE})
+if(${OPIFEX_OPTION_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 endif()
 target_link_libraries(6_Communication ${ALL_LIBS})

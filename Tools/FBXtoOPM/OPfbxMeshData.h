@@ -84,18 +84,18 @@ OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData) {
 						switch (eUV->GetReferenceMode())
 						{
 							case FbxGeometryElement::eDirect: {
-								OPlg("+");
+								//OPlg("+");
 								uv = eUV->GetDirectArray().GetAt(controlPointIndex);
 								break;
 							}
 							case FbxGeometryElement::eIndexToDirect: {
-								OPlg("-");
+								//OPlg("-");
 								int id = eUV->GetIndexArray().GetAt(controlPointIndex);
 								uv = eUV->GetDirectArray().GetAt(id);
 								break;
 							}
 							default: {
-								OPlog("WARNING: Unsupported UV Control Point Type");
+								OPlogDebug("WARNING: Unsupported UV Control Point Type");
 								break;
 							}
 						}
@@ -108,13 +108,13 @@ OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData) {
 							case FbxGeometryElement::eIndexToDirect:
 							{
 								OPint textureUVIndex = meshData->Mesh->GetTextureUVIndex(i, j);
-								OPlg("*");
-								OPlog("UV Index: %d", textureUVIndex);
+								//OPlg("*");
+								OPlogDebug("UV Index: %d", textureUVIndex);
 								uv = eUV->GetDirectArray().GetAt(textureUVIndex);
 								break;
 							}
 							default:
-								OPlog("WARNING: Unsupported UV Polygon Vertex Type");
+								OPlogDebug("WARNING: Unsupported UV Polygon Vertex Type");
 								break;
 						}
 					}
@@ -125,7 +125,7 @@ OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData) {
 						break;
 
 					default: {
-								 OPlog("WARNING: Unsupported UV Mapping Mode");
+								 OPlogDebug("WARNING: Unsupported UV Mapping Mode");
 								 break;
 					}
 				}
@@ -238,14 +238,14 @@ OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData) {
 	}
 
 
-	OPlog("========= FBX Polys =========\n");
+	OPlogDebug("========= FBX Polys =========\n");
 	for (OPint i = 0; i < meshData->PolyCount; i++) {
-		OPlog("Size: %d", polys[i].Size);
+		OPlogDebug("Size: %d", polys[i].Size);
 		for (OPint j = 0; j < polys[i].Size; j++) {
-			OPlog("Ind: %d", polys[i].ControlPointIndex[j]);
-			OPvec3Log("Pos: ", polys[i].Position[j]);
-			OPvec3Log("Norm: ", polys[i].Normal[j]);
-			OPvec2Log("UV: ", polys[i].UV[j]);
+			OPlogDebug("Ind: %d", polys[i].ControlPointIndex[j]);
+			//OPvec3Log("Pos: ", polys[i].Position[j]);
+			//OPvec3Log("Norm: ", polys[i].Normal[j]);
+			//OPvec2Log("UV: ", polys[i].UV[j]);
 		}
 	}
 
@@ -276,7 +276,7 @@ OPint _meshIndexCount(FbxMesh* fbxMesh) {
 		} else if(size == 4) {
 			indexCount += 6;
 		} else {
-			OPlog("\tWARNING: Unsupported polygon size!");
+			OPlogDebug("\tWARNING: Unsupported polygon size!");
 		}
 	}
 
@@ -297,7 +297,7 @@ ui32* OPfbxMeshDataGetIndices(OPfbxMeshData* meshData) {
 			indices[pos+0] = indexOffset + 0;
 			indices[pos+1] = indexOffset + 1;
 			indices[pos+2] = indexOffset + 2;
-			OPlog("Ind: %d %d %d",indices[pos+0], indices[pos+1],indices[pos+2]);
+			OPlogDebug("Ind: %d %d %d",indices[pos+0], indices[pos+1],indices[pos+2]);
 			pos += 3;
 			indexOffset += 3;
 		} else if(polySize == 4) {
@@ -309,15 +309,15 @@ ui32* OPfbxMeshDataGetIndices(OPfbxMeshData* meshData) {
 			indices[pos+4] = indexOffset + 2;
 			indices[pos+5] = indexOffset + 3;
 
-			OPlog("Ind: %d %d %d %d %d %d", indices[pos+0], indices[pos+1],indices[pos+2], indices[pos+3], indices[pos+4],indices[pos+5]);
+			OPlogDebug("Ind: %d %d %d %d %d %d", indices[pos+0], indices[pos+1],indices[pos+2], indices[pos+3], indices[pos+4],indices[pos+5]);
 			pos += 6;
 			indexOffset += 4;
 		} else {
-			OPlog("WARNING: Unsupported polysize: %d", polySize);
+			OPlogDebug("WARNING: Unsupported polysize: %d", polySize);
 		}
 	}
 
-	OPlog("Pos: %d, Ind Count: %d", pos, meshData->IndexCount);
+	OPlogDebug("Pos: %d, Ind Count: %d", pos, meshData->IndexCount);
 
 	return indices;
 }
@@ -343,12 +343,12 @@ OPvec3* OPfbxMeshDataGetPositions(OPfbxMeshData* meshData) {
 				(f32)controlPoints[controlPointIndex][2]
 				);
 
-			OPvec3Log("Pos: ", positions[pos]);
+			//OPvec3Log("Pos: ", positions[pos]);
 
 			pos++;
 		}
 	}
-	OPlog("Pos: %d, Vert Count: %d", pos, meshData->VertexCount);
+	OPlogDebug("Pos: %d, Vert Count: %d", pos, meshData->VertexCount);
 
 	return positions;
 }
@@ -387,7 +387,7 @@ OPvec3* OPfbxMeshDataGetNormals(OPfbxMeshData* meshData) {
 
 					normals[pos] = OPvec3Create( normal[0], normal[1], normal[2] );
 
-					OPvec3Log("Normal: ", normals[pos]);
+					//OPvec3Log("Normal: ", normals[pos]);
 
 					pos++;
 				}
@@ -397,14 +397,14 @@ OPvec3* OPfbxMeshDataGetNormals(OPfbxMeshData* meshData) {
 		}
 
 	}
-	OPlog("Pos: %d, Norm Count: %d", pos, meshData->NormalCount);
+	OPlogDebug("Pos: %d, Norm Count: %d", pos, meshData->NormalCount);
 
 	return normals;
 }
 
 OPvec2* OPfbxMeshDataGetUVs(OPfbxMeshData* meshData) {
 	if(meshData->UVCount == 0) return NULL;
-	OPlog("UV Count: %d", meshData->UVCount);
+	OPlogDebug("UV Count: %d", meshData->UVCount);
 
 	OPvec2* uvs = (OPvec2*)OPalloc(sizeof(OPvec2) * meshData->UVCount);
 
@@ -440,7 +440,7 @@ OPvec2* OPfbxMeshDataGetUVs(OPfbxMeshData* meshData) {
 								break;
 							}
 							default: {
-								OPlog("WARNING: Unsupported UV Control Point Type");
+								OPlogDebug("WARNING: Unsupported UV Control Point Type");
 								break;
 							}
 						}
@@ -453,13 +453,13 @@ OPvec2* OPfbxMeshDataGetUVs(OPfbxMeshData* meshData) {
 							case FbxGeometryElement::eIndexToDirect:
 							{
 								OPint textureUVIndex = meshData->Mesh->GetTextureUVIndex(i, j);	
-								OPlg("*");
-								OPlog("UV Index: %d",textureUVIndex );
+								//OPlg("*");
+								OPlogDebug("UV Index: %d",textureUVIndex );
 								uv = eUV->GetDirectArray().GetAt(textureUVIndex);
 								break;
 							}
 							default:
-								OPlog("WARNING: Unsupported UV Polygon Vertex Type");
+								OPlogDebug("WARNING: Unsupported UV Polygon Vertex Type");
 								break;
 						}
 					}
@@ -470,13 +470,13 @@ OPvec2* OPfbxMeshDataGetUVs(OPfbxMeshData* meshData) {
 						break;
 
 					default: {
-						OPlog("WARNING: Unsupported UV Mapping Mode");
+						OPlogDebug("WARNING: Unsupported UV Mapping Mode");
 						break;
 					}
 				}
 
 				uvs[pos] = OPvec2Create( uv[0], uv[1] );
-				OPvec2Log("UV: ", uvs[pos]);
+				//OPvec2Log("UV: ", uvs[pos]);
 				pos++;
 			}
 
@@ -484,10 +484,10 @@ OPvec2* OPfbxMeshDataGetUVs(OPfbxMeshData* meshData) {
 		}
 	}
 
-	OPlog("Pos: %d, UV Count: %d", pos, meshData->UVCount);
+	OPlogDebug("Pos: %d, UV Count: %d", pos, meshData->UVCount);
 
 	if(pos != meshData->UVCount) {
-		OPlog("WARNING: Not all UVs were mapped.");
+		OPlogDebug("WARNING: Not all UVs were mapped.");
 	}
 
 	return uvs;
@@ -506,22 +506,22 @@ OPint OPfbxMeshDataGet(OPfbxMeshData* meshData, OPfbxScene* scene) {
 		attributeType = node->GetNodeAttribute()->GetAttributeType();
 		if(attributeType == FbxNodeAttribute::eMesh) {
 
-			OPlog("Found Mesh");
+			OPlogDebug("Found Mesh");
 			meshData->Mesh = node->GetMesh();
 			meshData->Node = node;
 
 			meshData->PolyCount = meshData->Mesh->GetPolygonCount();
-			OPlog("\tTotal Polys: %d", meshData->PolyCount);
+			OPlogDebug("\tTotal Polys: %d", meshData->PolyCount);
 
 			OPint vertexCount = _meshVertexCount(meshData->Mesh);
 			OPint indexCount = _meshIndexCount(meshData->Mesh);
-			OPlog("\tVertex Count: %d\n\tIndex Count: %d", vertexCount, indexCount);
+			OPlogDebug("\tVertex Count: %d\n\tIndex Count: %d", vertexCount, indexCount);
 
 			OPint colorCount = vertexCount * meshData->Mesh->GetElementVertexColorCount();
 			OPint uvCount = vertexCount * meshData->Mesh->GetElementUVCount();
 			OPint normalCount = vertexCount * meshData->Mesh->GetElementNormalCount();
 			OPint tangentCount = vertexCount * meshData->Mesh->GetElementTangentCount();
-			OPlog("\tColor Count: %d\n\tUV Count: %d\n\tNormal Count: %d\n\tTangent Count: %d", 
+			OPlogDebug("\tColor Count: %d\n\tUV Count: %d\n\tNormal Count: %d\n\tTangent Count: %d", 
 				colorCount, uvCount, normalCount, tangentCount);
 
 			meshData->VertexCount = vertexCount;
@@ -534,6 +534,6 @@ OPint OPfbxMeshDataGet(OPfbxMeshData* meshData, OPfbxScene* scene) {
 		}
 	}
 	// Failed to find a mesh
-	OPlog("Failed to find a mesh in the provided scene.");
+	OPlogDebug("Failed to find a mesh in the provided scene.");
 	return 1;
 }

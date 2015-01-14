@@ -57,7 +57,7 @@ add_library( LODEPNG STATIC	${LODEPNG_SRC})
 set_property(TARGET LODEPNG PROPERTY FOLDER "External")
 set_target_properties(LODEPNG PROPERTIES OUTPUT_NAME "LodePNG")
 
-if(${OPIFEX_RELEASE})
+if(${OPIFEX_OPTION_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 endif()
 
@@ -91,7 +91,7 @@ add_library( MONGOOSE STATIC	${MONGOOSE_SRC})
 set_property(TARGET MONGOOSE PROPERTY FOLDER "External")
 set_target_properties(MONGOOSE PROPERTIES OUTPUT_NAME "Mongoose")
 
-if(${OPIFEX_RELEASE})
+if(${OPIFEX_OPTION_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 endif()
 
@@ -128,7 +128,7 @@ if(${OPIFEX_SPINE})
 	set_property(TARGET SPINE PROPERTY FOLDER "External")
 	set_target_properties(SPINE PROPERTIES OUTPUT_NAME "Spine")
 
-	if(${OPIFEX_RELEASE})
+	if(${OPIFEX_OPTION_RELEASE})
 		add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 	endif()
 
