@@ -1,23 +1,22 @@
 #include "./Human/include/Rendering/Skinning/OPskeletonAnimation.h"
 
-void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPskeleton* skeleton, OPmat4* frames, i32 count) {
-	skelAnim->FrameCount = count;
-	skelAnim->Skeleton = skeleton;
+void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPmat4* frames, i32 frameCount) {
+	skelAnim->FrameCount = frameCount;
 	skelAnim->Frame = 0;
 	skelAnim->Elapsed = 0;
 	skelAnim->FramesPer = 1000 / 24;
-	OPint totalSize = sizeof(OPmat4)* count * skeleton->hierarchyCount;
+	OPint totalSize = sizeof(OPmat4)* frameCount * boneCount;
 	skelAnim->JointFrames = (OPmat4*)OPalloc(totalSize);
 	OPmemcpy(skelAnim->JointFrames, frames, totalSize);
 }
 
-OPskeletonAnimation* OPskeletonAnimationCreate(OPskeleton* skeleton, OPmat4* frames, i32 count) {
+OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPmat4* frames, i32 count) {
 	OPskeletonAnimation* result = (OPskeletonAnimation*)OPalloc(sizeof(OPskeletonAnimation));
-	OPskeletonAnimationInit(result, skeleton, frames, count);
+	OPskeletonAnimationInit(result, boneCount, frames, count);
 	return result;
 }
 
-void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
+void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer, OPskeleton* skeleton) {
 	OPint ind1, ind2;
 
 	skelAnim->Elapsed += timer->Elapsed;
@@ -32,10 +31,10 @@ void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
 
 	OPfloat percent = skelAnim->Elapsed / (OPfloat)skelAnim->FramesPer;
 
-	for (OPint i = 0; i < skelAnim->Skeleton->hierarchyCount; i++) {
+	for (OPint i = 0; i < skeleton->hierarchyCount; i++) {
 
-		ind1 = skelAnim->Skeleton->hierarchyCount * skelAnim->Frame + i;
-		ind2 = skelAnim->Skeleton->hierarchyCount * (skelAnim->Frame + 1) + i;
+		ind1 = skeleton->hierarchyCount * skelAnim->Frame + i;
+		ind2 = skeleton->hierarchyCount * (skelAnim->Frame + 1) + i;
 
 		// Innefficient and poor interpolation scheme
 		// TODO(garrett): Fix
@@ -45,7 +44,7 @@ void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
 			for(OPint j = 0; j < 4; j++) {
 				for(OPint k = 0; k < 4; k++) {
 
-					skelAnim->Skeleton->localPoses[i][j][k] = 
+					skeleton->localPoses[i][j][k] = 
 						skelAnim->JointFrames[ind1][j][k] + 
 							(skelAnim->JointFrames[ind2][j][k] - skelAnim->JointFrames[ind1][j][k]) *
 						percent;
@@ -54,7 +53,7 @@ void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
 			}
 
 		} else {
-			skelAnim->Skeleton->localPoses[i] = skelAnim->JointFrames[ind1];
+			skeleton->localPoses[i] = skelAnim->JointFrames[ind1];
 		}
 
 	}

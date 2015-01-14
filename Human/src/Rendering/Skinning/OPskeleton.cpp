@@ -8,30 +8,28 @@ inline void OPskeletonUpdateGlobalPoses(OPskeleton* skeleton) {
 }
 
 OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* pose, i32 count) {
-	OPint lenOfMatrices = sizeof(OPmat4)* count;
+	OPint sizeOfMatricesArray = sizeof(OPmat4)* count;
+	OPint sizeOfHierarchy = sizeof(i16)* count;
 	OPint sizeOfSkeleton = sizeof(OPskeleton);
-	void* memoryBlock = OPalloc(sizeOfSkeleton + lenOfMatrices * 4);
+	void* memoryBlock = OPalloc(sizeOfSkeleton + sizeOfHierarchy + sizeOfMatricesArray * 4);
 
 	OPskeleton* skeleton = (OPskeleton*)memoryBlock;
-	skeleton->hierarchy = hierarchy;
+
 	skeleton->hierarchyCount = count;
+	skeleton->hierarchy = (i16*)((OPint)memoryBlock + sizeOfSkeleton);
+	OPmemcpy(skeleton->hierarchy, hierarchy, sizeOfHierarchy);
 
-	skeleton->globalPoses = (OPmat4*)((OPint)memoryBlock + sizeOfSkeleton + lenOfMatrices * 0);
-	skeleton->localPoses = (OPmat4*)((OPint)memoryBlock + sizeOfSkeleton + lenOfMatrices * 1);
-	skeleton->skinned = (OPmat4*)((OPint)memoryBlock + sizeOfSkeleton + lenOfMatrices * 2);
-	skeleton->globalInvPoses = (OPmat4*)((OPint)memoryBlock + sizeOfSkeleton + lenOfMatrices * 3);
+	skeleton->globalPoses = (OPmat4*)((OPint)memoryBlock + sizeOfSkeleton + sizeOfHierarchy + sizeOfMatricesArray * 0);
+	skeleton->localPoses = (OPmat4*)((OPint)memoryBlock + sizeOfSkeleton + sizeOfHierarchy + sizeOfMatricesArray * 1);
+	skeleton->skinned = (OPmat4*)((OPint)memoryBlock + sizeOfSkeleton + sizeOfHierarchy + sizeOfMatricesArray * 2);
+	skeleton->globalInvPoses = (OPmat4*)((OPint)memoryBlock + sizeOfSkeleton + sizeOfHierarchy + sizeOfMatricesArray * 3);
 
-	OPmemcpy(skeleton->localPoses, pose, sizeof(OPmat4)* count);
+	OPmemcpy(skeleton->localPoses, pose, sizeOfMatricesArray);
 
 	OPskeletonUpdateGlobalPoses(skeleton);
 	for (OPint i = 0; i < skeleton->hierarchyCount; i++) {
 		OPmat4Inverse(&skeleton->globalInvPoses[i], skeleton->globalPoses[i]);
-
-		OPmat4 result = skeleton->globalInvPoses[i] * skeleton->globalPoses[i];
-		OPmat4Log("Inv:", skeleton->globalInvPoses[i]);
-		OPmat4Log("result:", result);
 	}
-	
 	
 	return skeleton;
 }
@@ -42,4 +40,8 @@ void OPskeletonUpdate(OPskeleton* skeleton) {
 	for (i32 i = 0; i < skeleton->hierarchyCount; i++) {
 		skeleton->skinned[i] = skeleton->globalPoses[i] * skeleton->globalInvPoses[i];
 	}
+}
+
+void OPskeletonDestroy(OPskeleton* skeleton) {
+	OPfree(skeleton);
 }
