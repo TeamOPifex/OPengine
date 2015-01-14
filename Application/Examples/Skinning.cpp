@@ -77,7 +77,7 @@ void ExampleSkinningEnter(OPgameState* last) {
 	f32 pos = 10 * SCALE;
 	*skinningExample->Camera = OPcamPersp(
 		OPvec3Create(pos, pos, pos),
-		OPvec3Create(0, 0, 0),
+		OPvec3Create(0, pos / 4.0, 0),
 		OPvec3Create(0, 1, 0),
 		0.1f,
 		5000.0f,
@@ -85,6 +85,8 @@ void ExampleSkinningEnter(OPgameState* last) {
 		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
 		);
 }
+
+OPint heldDown = 0;
 
 OPint ExampleSkinningUpdate(OPtimer* time) {
 	OPrenderDepth(1);
@@ -115,16 +117,26 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	}
 
 	if (OPkeyboardIsDown(OPKEY_N)) {
-		OPskeletonAnimationUpdate(skinningExample->animation2, time, skinningExample->skeleton);
+		heldDown += time->Elapsed;
+		if (heldDown > 500) heldDown = 500;
+		OPskeletonAnimationUpdate(skinningExample->animation, time);
+		OPskeletonAnimationUpdate(skinningExample->animation2, time);
+		OPskeletonAnimationMerge(skinningExample->animation, skinningExample->animation2, heldDown / 500.0f, skinningExample->skeleton);
 	}
 	else if (OPkeyboardIsDown(OPKEY_M)) {
-		OPskeletonAnimationUpdate(skinningExample->animation3, time, skinningExample->skeleton);
+		OPskeletonAnimationUpdate(skinningExample->animation3, time);
+		OPskeletonAnimationApply(skinningExample->animation3, skinningExample->skeleton);
 	}
 	else if (OPkeyboardIsDown(OPKEY_B)) {
-		OPskeletonAnimationUpdate(skinningExample->animation4, time, skinningExample->skeleton);
+		OPskeletonAnimationUpdate(skinningExample->animation4, time);
+		OPskeletonAnimationApply(skinningExample->animation4, skinningExample->skeleton);
 	}
 	else {
-		OPskeletonAnimationUpdate(skinningExample->animation, time, skinningExample->skeleton);
+		heldDown -= time->Elapsed;
+		if (heldDown < 0) heldDown = 0;
+		OPskeletonAnimationUpdate(skinningExample->animation, time);
+		OPskeletonAnimationUpdate(skinningExample->animation2, time);
+		OPskeletonAnimationMerge(skinningExample->animation, skinningExample->animation2, heldDown / 500.0f, skinningExample->skeleton);
 	}
 	//OPmat4Translate(&mesh->Skeleton->localPoses[pos], time->Elapsed / 1000.0f, 0, 0);
 	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_W) / 100.0f);

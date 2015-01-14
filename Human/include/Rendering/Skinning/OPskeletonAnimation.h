@@ -15,6 +15,8 @@ typedef struct {
 
 void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPmat4* frames, i32 count);
 OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPmat4* frames, i32 count);
-void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer, OPskeleton* skeleton);
+void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer);
+void OPskeletonAnimationApply(OPskeletonAnimation* skelAnim, OPskeleton* skeleton);
+void OPskeletonAnimationMerge(OPskeletonAnimation* skelAnim1, OPskeletonAnimation* skelAnim2, OPfloat merge, OPskeleton* skeleton);
 
 #endif

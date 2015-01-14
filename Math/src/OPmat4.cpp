@@ -135,3 +135,15 @@ OPint OPmat4Inverse(OPmat4* dst, OPmat4 a) {
 
 	return 1;
 }
+
+OPmat4 OPmat4Interpolate(OPmat4 a, OPmat4 b, OPfloat percent) {
+	OPmat4 result;
+
+	for (OPint j = 0; j < 4; j++) {
+		for (OPint k = 0; k < 4; k++) {
+			result[j][k] = a[j][k] * (1.0 - percent) + b[j][k] * percent;
+		}
+	}
+
+	return result;
+}

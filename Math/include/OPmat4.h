@@ -424,5 +424,6 @@ OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPf
 OPmat4 OPmat4LookAt(OPvec3 eye, OPvec3 at, OPvec3 up);
 OPmat4 OPmat4Perspective(OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal);
 OPint OPmat4Inverse(OPmat4* dst, OPmat4 a);
+OPmat4 OPmat4Interpolate(OPmat4 a, OPmat4 b, OPfloat percent);
 
 #endif
