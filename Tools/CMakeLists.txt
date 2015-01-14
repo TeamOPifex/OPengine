@@ -38,14 +38,14 @@ if(${OPIFEX_TOOLS_FONTMAKER})
 
 	target_link_libraries(Tools_FontMaker ${ALL_LIBS})	
 
-	if(${OPIFEX_RELEASE})
+	if(${OPIFEX_OPTION_RELEASE})
 		target_link_libraries( Tools_FontMaker ${PROJECT_SOURCE_DIR}/External/freetype/libs/release/win32/freetype253.lib )	
 	else()
 		target_link_libraries( Tools_FontMaker ${PROJECT_SOURCE_DIR}/External/freetype/libs/debug/win32/freetype253_D.lib )	
 	endif()
 
 	add_definitions(-D${OPIFEX_OS})
-	if(${OPIFEX_RELEASE})
+	if(${OPIFEX_OPTION_RELEASE})
 		add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 	endif()
 
@@ -127,6 +127,7 @@ if(${OPIFEX_TOOLS_FBXTOOPM})
 	if(${OPIFEX_OS_WINDOWS})
 		target_link_libraries(Tools_FBXtoOPM "C:/Program Files/Autodesk/FBX/FBX SDK/2015.1/lib/vs2013/x86/debug/libfbxsdk-mt.lib")
 	endif()	
+
 	if(${OPIFEX_OS_OSX})
 		target_link_libraries(Tools_FBXtoOPM "/Applications/Autodesk/FBX\ SDK/2015.1/lib/clang/debug/libfbxsdk.a")
 	endif()
@@ -142,7 +143,10 @@ if(${OPIFEX_TOOLS_FBXTOOPM})
 		OUTPUT_NAME "FBXtoOPM"
 	)
 
-	if(${OPIFEX_RELEASE})		
+	if(${OPIFEX_OPTION_RELEASE})
+
+		add_definitions(-DOPIFEX_RELEASE)
+		
 		#add_custom_command(TARGET ${Tools_FBXtoOPM} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 		#		"C:/Program Files/Autodesk/FBX/FBX SDK/2015.1/lib/vs2013/x86/release/libfbxsdk.dll"
 		#		"${PROJECT_BINARY_DIR}/Release")

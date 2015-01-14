@@ -28,12 +28,12 @@ OPint OPfbxSdkLoadScene(OPfbxScene* result, OPfbxSdk* sdk, const OPchar* filenam
 	// Need to create an importer to use to load the actual file
 	FbxImporter* importer = FbxImporter::Create(sdk->SdkManager, "");
 	if(!importer) {
-		OPlog("Failed to initialize importer");
+		OPlogDebug("Failed to initialize importer");
 		return 3;
 	}
 	if(!importer->Initialize(filename, -1, sdk->SdkManager->GetIOSettings())) {
-		OPlog("Failed to initialize file: %s", filename);
-		OPlog("Error from FBX: %s\n", importer->GetStatus().GetErrorString());
+		OPlogDebug("Failed to initialize file: %s", filename);
+		OPlogDebug("Error from FBX: %s\n", importer->GetStatus().GetErrorString());
 		return 1;
 	}
 
@@ -44,7 +44,7 @@ OPint OPfbxSdkLoadScene(OPfbxScene* result, OPfbxSdk* sdk, const OPchar* filenam
 	result->Scene = scene;
 	result->RootNode = scene->GetRootNode();
 	if(!result->RootNode) {
-		OPlog("Failed to get Root Node from the scene of file: %s", filename);
+		OPlogDebug("Failed to get Root Node from the scene of file: %s", filename);
 		return 2;
 	}
 

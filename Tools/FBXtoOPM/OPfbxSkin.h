@@ -35,7 +35,7 @@ void _fbxmat4Log(const OPchar* msg, FbxAMatrix* mat) {
 	FbxVector4 lRow1 = mat->GetRow(1);
 	FbxVector4 lRow2 = mat->GetRow(2);
 	FbxVector4 lRow3 = mat->GetRow(3);
-	OPlog("\t%s:\n\t\t%f,\t%f,\t%f,\t%f\n\t\t%f,\t%f,\t%f,\t%f\n\t\t%f,\t%f,\t%f,\t%f\n\t\t%f,\t%f,\t%f,\t%f",
+	OPlogDebug("\t%s:\n\t\t%f,\t%f,\t%f,\t%f\n\t\t%f,\t%f,\t%f,\t%f\n\t\t%f,\t%f,\t%f,\t%f\n\t\t%f,\t%f,\t%f,\t%f",
 		msg, 
 		lRow0[0], lRow0[1], lRow0[2], lRow0[3],
 		lRow1[0], lRow1[1], lRow1[2], lRow1[3],
@@ -50,12 +50,12 @@ OPfbxSkinBlendWeight* _skinBlendWeights(OPfbxMeshData* meshData, OPfbxSkeleton* 
 	OPint controlPointCount = meshData->Mesh->GetControlPointsCount();
 	OPint deformerCount = meshData->Mesh->GetDeformerCount();
 	if (deformerCount == 0) {
-		OPlog("This mesh doesn't have a skin.");
+		OPlogDebug("This mesh doesn't have a skin.");
 		return NULL;
 	}
 
 
-	OPlog("Generating Skin:");
+	OPlogDebug("Generating Skin:");
 
 	OPfbxSkinBlendWeight* result = (OPfbxSkinBlendWeight*)OPallocZero(sizeof(OPfbxSkinBlendWeight) * controlPointCount);
 	
@@ -63,17 +63,17 @@ OPfbxSkinBlendWeight* _skinBlendWeights(OPfbxMeshData* meshData, OPfbxSkeleton* 
 		FbxSkin* skinDeformer = (FbxSkin*)meshData->Mesh->GetDeformer(i, FbxDeformer::eSkin);
 
 		OPint clusterCount = skinDeformer->GetClusterCount();
-		OPlog("\tclusterCount: %d", clusterCount);
+		OPlogDebug("\tclusterCount: %d", clusterCount);
 		for (OPint j = 0; j < clusterCount; ++j)
 		{
 			FbxCluster* cluster = skinDeformer->GetCluster(j);
 
 			FbxNode* boneNode = cluster->GetLink();
 			FbxAMatrix transformLocalMatrix = boneNode->EvaluateLocalTransform();
-			OPlog("Bone: %s", boneNode->GetName());
+			OPlogDebug("Bone: %s", boneNode->GetName());
 
 			OPfbxSkeletonBone* bone = OPfbxSkeletonGet(skeleton, boneNode->GetName());
-			OPlog("\tFound Bone: %s", bone->Name);
+			OPlogDebug("\tFound Bone: %s", bone->Name);
 
 			FbxAMatrix transformMatrix;
 			FbxAMatrix transformLinkMatrix;
@@ -116,49 +116,49 @@ OPfbxSkinBlendWeight* _skinBlendWeights(OPfbxMeshData* meshData, OPfbxSkeleton* 
 			bone->BindPose[2][3] = lRow[2];
 			bone->BindPose[3][3] = lRow[3];
 
-			OPmat4Log("\tBind Pose", bone->BindPose);
+			//OPmat4Log("\tBind Pose", bone->BindPose);
 
 
 			if(!boneNode) {
-				OPlog("No Cluster link on bone");
+				OPlogDebug("No Cluster link on bone");
 				continue;
 			}
 
 
 			int vertexIndexCount = cluster->GetControlPointIndicesCount();
-			OPlog("vertexIndexCount: %d", vertexIndexCount);
+			OPlogDebug("vertexIndexCount: %d", vertexIndexCount);
 			for (int k = 0; k < vertexIndexCount; ++k)
 			{
 				const OPchar* name = boneNode->GetName();
 				int index = cluster->GetControlPointIndices()[k];
-				OPlog("Skin Index: %d for %s", index, name);
+				OPlogDebug("Skin Index: %d for %s", index, name);
 				double weight = cluster->GetControlPointWeights()[k];
 
 				if (weight == 0.0)
 				{
-					OPlog("w: %f: %s", weight, boneNode->GetName());
+					OPlogDebug("w: %f: %s", weight, boneNode->GetName());
 					continue;
 				}
 				if (result[index].c == 0) {
 
 					OPmemcpy(result[index].b1, name, strlen(name));
 					result[index].w1 = weight;
-					OPlog("w0: %f", weight);
+					OPlogDebug("w0: %f", weight);
 				}
 				if (result[index].c == 1) {
 					OPmemcpy(result[index].b2, name, strlen(name));
 					result[index].w2 = weight;
-					OPlog("w1: %f", weight);
+					OPlogDebug("w1: %f", weight);
 				}
 				if (result[index].c == 2) {
 					OPmemcpy(result[index].b3, name, strlen(name));
 					result[index].w3 = weight;
-					OPlog("w2: %f", weight);
+					OPlogDebug("w2: %f", weight);
 				}
 				if (result[index].c == 3) {
 					OPmemcpy(result[index].b4, name, strlen(name));
 					result[index].w4 = weight;
-					OPlog("w3: %f", weight);
+					OPlogDebug("w3: %f", weight);
 				}
 				result[index].c++;
 
@@ -167,16 +167,16 @@ OPfbxSkinBlendWeight* _skinBlendWeights(OPfbxMeshData* meshData, OPfbxSkeleton* 
 			// Only 1 take right now
 			FbxAnimStack* currAnimStack = scene->Scene->GetSrcObject<FbxAnimStack>(0);
 			FbxString animStackName = currAnimStack->GetName();
-			OPlog("Anim Name: %s", animStackName.Buffer());
+			OPlogDebug("Anim Name: %s", animStackName.Buffer());
 
 			FbxTakeInfo* takeInfo = scene->Scene->GetTakeInfo(animStackName);
 			FbxTime start = takeInfo->mLocalTimeSpan.GetStart();
 			FbxTime end = takeInfo->mLocalTimeSpan.GetStop();
 
 			FbxLongLong mAnimationLength = end.GetFrameCount(FbxTime::eFrames24) - start.GetFrameCount(FbxTime::eFrames24) + 1;
-			OPlog("Anim Start: %d", (start.GetFrameCount(FbxTime::eFrames24) + 1));
-			OPlog("Anim End: %d", (end.GetFrameCount(FbxTime::eFrames24)));
-			OPlog("Anim Frames: %d", mAnimationLength);
+			OPlogDebug("Anim Start: %d", (start.GetFrameCount(FbxTime::eFrames24) + 1));
+			OPlogDebug("Anim End: %d", (end.GetFrameCount(FbxTime::eFrames24)));
+			OPlogDebug("Anim Frames: %d", mAnimationLength);
 
 			for (FbxLongLong i = start.GetFrameCount(FbxTime::eFrames24); i <= end.GetFrameCount(FbxTime::eFrames24); ++i)
 			{
@@ -185,7 +185,7 @@ OPfbxSkinBlendWeight* _skinBlendWeights(OPfbxMeshData* meshData, OPfbxSkeleton* 
 				OPint currFrame = i;
 
 				FbxAMatrix boneLocalTransform = boneNode->EvaluateLocalTransform(currTime);
-				//OPlog("Frame %d", i);
+				//OPlogDebug("Frame %d", i);
 				//_fbxmat4Log("Local Bone Transform", &boneLocalTransform);
 
 				//FbxAMatrix currentTransformOffset = boneNode->EvaluateGlobalTransform(currTime) * geometryTransform;
@@ -202,14 +202,14 @@ OPfbxSkinBlendWeight* _skinBlendWeights(OPfbxMeshData* meshData, OPfbxSkeleton* 
 
 //OPint OPfbxSkinGet(OPfbxSkin* skin, OPfbxMeshData* meshData, OPfbxSkeleton* skeleton) {
 //	OPfbxSkinBlendWeight* blendWeights = _skinBlendWeights(meshData, skeleton);
-//	OPlog("Step: Blend Weights");
+//	OPlogDebug("Step: Blend Weights");
 //
 //	OPint size = meshData->VertexCount * 4;
-//	OPlog("SIZE: %d", size);
+//	OPlogDebug("SIZE: %d", size);
 //	skin->BoneIndices = (OPint*)OPallocZero(sizeof(OPint) * size);
 //	skin->BoneWeights = (f32*)OPallocZero(sizeof(f32) * size);
 //
-//	OPlog("Created weights & indices array");
+//	OPlogDebug("Created weights & indices array");
 //
 //	OPint pos = 0;
 //	OPint polygonCount = meshData->Mesh->GetPolygonCount();
@@ -221,7 +221,7 @@ OPfbxSkinBlendWeight* _skinBlendWeights(OPfbxMeshData* meshData, OPfbxSkeleton* 
 //		for (OPint j = 0; j < polygonSize; j++)
 //		{
 //			OPint controlPointIndex = meshData->Mesh->GetPolygonVertex(i, j);
-//			OPlog("CP: %d", controlPointIndex);
+//			OPlogDebug("CP: %d", controlPointIndex);
 //			OPint boneIndex;
 //			f32 boneWeight;
 //
@@ -262,7 +262,7 @@ OPfbxSkinBlendWeight* _skinBlendWeights(OPfbxMeshData* meshData, OPfbxSkeleton* 
 //
 //	}
 //
-//	OPlog("Pos: %d, Size: %d", pos, size);
+//	OPlogDebug("Pos: %d, Size: %d", pos, size);
 //
 //	OPfree(blendWeights);
 //	return 0; // Success

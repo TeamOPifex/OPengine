@@ -29,7 +29,7 @@ OPint _skeletonBoneCount(FbxNode* node) {
 void _skeletonFillBones(FbxNode* node, OPfbxSkeletonBone* bones, OPint* pos, OPint parent) {
 
 	bones[*pos].Name = OPstringCopy(node->GetName());
-	OPlog("Bone: %s", bones[*pos].Name);
+	OPlogDebug("Bone: %s", bones[*pos].Name);
 
 	bones[*pos].Parent = parent;
 	OPint index = *pos;
@@ -73,7 +73,7 @@ OPint OPfbxSkeletonGet(OPfbxSkeleton* skeleton, OPfbxScene* scene) {
 		if(attributeType == FbxNodeAttribute::eSkeleton) {
 
 			OPint totalBoneCount = _skeletonBoneCount(node);
-			OPlog("Total Bones in this model: %d", totalBoneCount);
+			OPlogDebug("Total Bones in this model: %d", totalBoneCount);
 
 			skeleton->BoneCount = totalBoneCount;
 			skeleton->Bones = (OPfbxSkeletonBone*)OPalloc(sizeof(OPfbxSkeletonBone) * totalBoneCount);
@@ -84,9 +84,9 @@ OPint OPfbxSkeletonGet(OPfbxSkeleton* skeleton, OPfbxScene* scene) {
 			// TODO(garrett): Remove Test Code
 			// OPfbxSkeletonBone* test = OPfbxSkeletonGet(skeleton, "joint1");
 			// if(test == NULL) {
-			// 	OPlog("Failed to find joint1");
+			// 	OPlogDebug("Failed to find joint1");
 			// } else {
-			// 	OPlog("Found %s", test->Name);
+			// 	OPlogDebug("Found %s", test->Name);
 			// }
 
 			return 0;
@@ -94,7 +94,7 @@ OPint OPfbxSkeletonGet(OPfbxSkeleton* skeleton, OPfbxScene* scene) {
 	}
 
 	// Failed to find a skeleton
-	OPlog("Failed to find a skeleton in the scene provided.");
+	OPlogDebug("Failed to find a skeleton in the scene provided.");
 	return -1;
 }
 

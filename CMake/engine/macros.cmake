@@ -86,7 +86,7 @@ endmacro(populate_binary_directory)
 
 macro(output_library APPLICATION_TARGET LIBRARY_NAME )
 
-	if(${OPIFEX_RELEASE})
+	if(${OPIFEX_OPTION_RELEASE})
 		SET(BINARY_RELEASE_MODE "release")
 	else()
 		SET(BINARY_RELEASE_MODE "debug")
@@ -118,7 +118,7 @@ endmacro(output_library)
 
 macro(output_library_from APPLICATION_TARGET RELATIVE_PATH LIBRARY_NAME )
 
-	if(${OPIFEX_RELEASE})
+	if(${OPIFEX_OPTION_RELEASE})
 		SET(BINARY_RELEASE_MODE "release")
 	else()
 		SET(BINARY_RELEASE_MODE "debug")
@@ -146,7 +146,7 @@ endmacro(output_library_from)
 
 macro(output_binary APPLICATION_TARGET RELATIVE_PATH FILE_PATH OPIFEX_MATCH )
 
-	if(${OPIFEX_RELEASE})
+	if(${OPIFEX_OPTION_RELEASE})
 		SET(BINARY_RELEASE_MODE "release")
 	else()
 		SET(BINARY_RELEASE_MODE "debug")
@@ -177,7 +177,7 @@ endmacro(copy_to_folder)
 
 macro(copy_from_binaries_on_build APPLICATION_TARGET FILE_PATH OPIFEX_MATCH )
 
-	if(${OPIFEX_RELEASE})
+	if(${OPIFEX_OPTION_RELEASE})
 		SET(BINARY_RELEASE_MODE "release")
 	else()
 		SET(BINARY_RELEASE_MODE "debug")
@@ -211,7 +211,7 @@ macro(add_opifex_definitions APPLICATION_TARGET APPLICATION_DIR_DEPTH )
 
 	add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS -D${OPIFEX_OS})
 
-	if(${OPIFEX_RELEASE})
+	if(${OPIFEX_OPTION_RELEASE})
 		
 	else()
 		add_definitions(-D_DEBUG)
@@ -231,9 +231,11 @@ macro(add_opifex_definitions APPLICATION_TARGET APPLICATION_DIR_DEPTH )
 	set_target_properties(${APPLICATION_TARGET} PROPERTIES LINKER_LANGUAGE CXX)
 
 
-	if(${OPIFEX_RELEASE})
-		add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
-		target_link_libraries(${APPLICATION_TARGET}	libcpmtd0.lib)
+	if(${OPIFEX_OPTION_RELEASE})
+		if(${OPIFEX_WINDOWS})
+			add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
+			target_link_libraries(${APPLICATION_TARGET}	libcpmtd0.lib)
+		endif()
 	endif()
 
 endmacro(add_opifex_definitions)
@@ -325,7 +327,7 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	endif()
 
 	if( ${OPIFEX_OS_WINDOWS} )
-		if(${OPIFEX_RELEASE})
+		if(${OPIFEX_OPTION_RELEASE})
 			find_binary(LIBOGG "libogg_static" false)
 			find_binary(LIBVORBIS "libvorbis_static" false)
 			find_binary(LIBVORBISFILE "libvorbisfile_static" false)
@@ -420,7 +422,7 @@ function(find_binary OPIFEX_LIBRARY OPIFEX_NAME NOT_STATIC)
 		if(${OPIFEX_OS_ANDROID})
 			SET(BINARY_RELEASE_MODE "")
 		else()
-			if(${OPIFEX_RELEASE})
+			if(${OPIFEX_OPTION_RELEASE})
 				SET(BINARY_RELEASE_MODE "release/")
 			else()
 				SET(BINARY_RELEASE_MODE "debug/")
@@ -479,7 +481,7 @@ macro(opifex_engine_status_messages)
 endmacro(opifex_engine_status_messages)
 
 
-if(${OPIFEX_RELEASE})
+if(${OPIFEX_OPTION_RELEASE})
 	SET(BINARY_RELEASE_MODE "release")
 else()
 	SET(BINARY_RELEASE_MODE "debug")

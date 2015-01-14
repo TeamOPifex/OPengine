@@ -47,7 +47,7 @@ endif()
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 add_definitions(-D${OPIFEX_OS})
 
-if(${OPIFEX_RELEASE})
+if(${OPIFEX_OPTION_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 endif()
 if( ${OPIFEX_OS_ANDROID} )
