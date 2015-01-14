@@ -19,8 +19,6 @@ typedef struct{
 	OPrenderBuffer VertexBuffer;
 	OPrenderBuffer IndexBuffer;
 	OPboundingBox3D boundingBox;
-	OPskeleton* Skeleton;
-	OPskeletonAnimation SkeletonAnimation;
 	ui32 VertexSize;
 	void* Vertices;
 	void* Indicies;

@@ -7,8 +7,11 @@ int main(int argc, char **argv) {
 	i8* filename = NULL;
 	i8* output = NULL;
 	OPint specified = 0;
-	OPint animOnly = 0;
 	OPint featureIn[9] = { 0, 0, 0, 0, 0,0 ,0 ,0 ,0 };
+
+	OPint animationCount = 0;
+	OPchar* animations[1024];
+	OPint animationFrames[2048];
 	
 	//
 	// Fill in provided arguments
@@ -26,6 +29,16 @@ int main(int argc, char **argv) {
 			{
 				++arg;
 				filename = argv[arg];
+				continue;
+			}
+
+			if (IsParam(argv, arg, "--anim") || IsParam(argv, arg, "-anim"))
+			{
+				animations[animationCount] = argv[++arg];
+				animationFrames[animationCount * 2] = atoi(argv[++arg]);
+				animationFrames[animationCount * 2 + 1] = atoi(argv[++arg]);
+				animationCount++;
+
 				continue;
 			}
 
@@ -108,7 +121,7 @@ int main(int argc, char **argv) {
 	}
 
 	if(OPfbxMeshCreate(&mesh, filename) == 0) {
-		OPfbxMeshWriteToFile(&mesh, output, features, animOnly);
+		OPfbxMeshWriteToFile(&mesh, output, features, animationCount, animations, animationFrames);
 	}
 
 	return 0;

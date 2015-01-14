@@ -115,13 +115,11 @@ OPMData OPMloadData(OPstream* str) {
 		colors = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
 	// Read Skinning
 	if (OPMhasFeature(features, Skinning)) {
-		OPlog("Has Skinning");
+		//OPlog("Has Skinning");
 		boneIndices = (OPvec4*)OPalloc(sizeof(OPvec4)* verticeCount);
 		boneWeights = (OPvec4*)OPalloc(sizeof(OPvec4)* verticeCount);
 	}
-	if (OPMhasFeature(features, Bones)) {
-		OPlog("Has Bones");
-	}
+
 
 	f32 x, y, z;
 	for(ui32 i = 0; i < verticeCount; i++) {
@@ -141,7 +139,7 @@ OPMData OPMloadData(OPstream* str) {
 			if (y > max.y) max.y = y;
 			if (z > max.z) max.z = z;
 
-			OPlog("Pos: %f %f %f", x, y, z);
+			//OPlog("Pos: %f %f %f", x, y, z);
 		}
 
 		// Read Normal
@@ -153,7 +151,7 @@ OPMData OPMloadData(OPstream* str) {
 			normals[i].y = y;
 			normals[i].z = z;
 			normals[i] = OPvec3Norm(normals[i]);
-			OPlog("Normal: %f %f %f", x, y, z);
+			//OPlog("Normal: %f %f %f", x, y, z);
 		}
 		
 		// Read Tangent
@@ -165,7 +163,7 @@ OPMData OPMloadData(OPstream* str) {
 			tangents[i].y = y;
 			tangents[i].z = z;
 			tangents[i] = OPvec3Norm(tangents[i]);
-			OPlog("Tangent: %f %f %f", x, y, z);
+			//OPlog("Tangent: %f %f %f", x, y, z);
 		}
 
 		// Read UV
@@ -174,7 +172,7 @@ OPMData OPMloadData(OPstream* str) {
 			y = OPreadf32(str);
 			uvs[i].x = x;
 			uvs[i].y = y;
-			OPlog("UV: %f %f", x, y);
+			//OPlog("UV: %f %f", x, y);
 		}
 
 		// Read Color
@@ -185,7 +183,7 @@ OPMData OPMloadData(OPstream* str) {
 			colors[i].x = x;
 			colors[i].y = y;
 			colors[i].z = z;
-			OPlog("Color: %f %f %f", x, y, z);
+			//OPlog("Color: %f %f %f", x, y, z);
 		}
 
 		// Read Skinning
@@ -200,15 +198,15 @@ OPMData OPMloadData(OPstream* str) {
 			boneWeights[i].z = OPreadf32(str);
 			boneWeights[i].w = OPreadf32(str);
 
-			OPlog("%f %f %f %f %f %f %f %f", 
-				boneIndices[i].x,
-				boneIndices[i].y,
-				boneIndices[i].z,
-				boneIndices[i].w,
-				boneWeights[i].x,
-				boneWeights[i].y,
-				boneWeights[i].z,
-				boneWeights[i].w);
+			//OPlog("%f %f %f %f %f %f %f %f", 
+			//	boneIndices[i].x,
+			//	boneIndices[i].y,
+			//	boneIndices[i].z,
+			//	boneIndices[i].w,
+			//	boneWeights[i].x,
+			//	boneWeights[i].y,
+			//	boneWeights[i].z,
+			//	boneWeights[i].w);
 		}
 	}
 
@@ -220,102 +218,102 @@ OPMData OPMloadData(OPstream* str) {
 		indices[i * 3 + 2] = OPreadui16(str);
 	}
 
-	i16* hierarchy = NULL;
-	OPmat4* pose = NULL;
-	ui16 hierarchyCount = 0;
+	//i16* hierarchy = NULL;
+	//OPmat4* pose = NULL;
+	//ui16 hierarchyCount = 0;
 
-	// Read Bones
-	if(OPMhasFeature(features, Bones)) {
-		OPlog("Has Bones");
-		i32 boneCount = OPreadi16(str);
-		hierarchyCount = boneCount;
-		hierarchy = (i16*)OPalloc(sizeof(i16)* boneCount);
-		pose = (OPmat4*)OPallocZero(sizeof(OPmat4)* boneCount);
-		
-		for(i32 i = 0; i < boneCount; i++) {
+	//// Read Bones
+	//if(OPMhasFeature(features, Bones)) {
+	//	OPlog("Has Bones");
+	//	i32 boneCount = OPreadi16(str);
+	//	hierarchyCount = boneCount;
+	//	hierarchy = (i16*)OPalloc(sizeof(i16)* boneCount);
+	//	pose = (OPmat4*)OPallocZero(sizeof(OPmat4)* boneCount);
+	//	
+	//	for(i32 i = 0; i < boneCount; i++) {
 
-			i32 boneIndex = OPreadi16(str);
-			hierarchy[i] = boneIndex;
+	//		i32 boneIndex = OPreadi16(str);
+	//		hierarchy[i] = boneIndex;
 
-			OPchar* name = OPreadstring(str);
+	//		OPchar* name = OPreadstring(str);
 
-			OPmat4* p = &(pose[i]);
-			//OPlog("Mat4 Bone: %x", p);
+	//		OPmat4* p = &(pose[i]);
+	//		//OPlog("Mat4 Bone: %x", p);
 
-			for (i32 c = 0; c < 4; c++) {
-				p->cols[c].x = OPreadf32(str);
-				p->cols[c].y = OPreadf32(str);
-				p->cols[c].z = OPreadf32(str);
-				p->cols[c].w = OPreadf32(str);
-			}
-
-
-			// f32 px = OPreadf32(str);
-			// f32 py = OPreadf32(str);
-			// f32 pz = OPreadf32(str);
-
-			// f32 rx = OPreadf32(str);
-			// f32 ry = OPreadf32(str);
-			// f32 rz = OPreadf32(str);
-			// f32 rw = OPreadf32(str);
-
-			// f32 sx = OPreadf32(str);
-			// f32 sy = OPreadf32(str);
-			// f32 sz = OPreadf32(str);
-
-			OPmat4 matRotate;
-			OPmat4 matTranslate;
-
-			//OPquat rot = OPquatCreate(rx, ry, rz, rw);
-
-			//OPmat4BuildQuat(&matRotate, &rot);
-			//OPmat4BuildTranslate(&matTranslate, px, py, pz);
-			//OPmat4Mul(&pose[i], &matTranslate, &matRotate);
-			//OPmat4Mul(&pose[i], &matRotate, &matTranslate);
-			//OPmat4Inverse(&pose[i], &pose[i]);
-			//OPmat4Transpose(&pose[i]);
-			//OPmat4Identity(p);
-			pose[i] = OPmat4Transpose(pose[i]);
+	//		for (i32 c = 0; c < 4; c++) {
+	//			p->cols[c].x = OPreadf32(str);
+	//			p->cols[c].y = OPreadf32(str);
+	//			p->cols[c].z = OPreadf32(str);
+	//			p->cols[c].w = OPreadf32(str);
+	//		}
 
 
-			OPlog("Joint: %d %d %s", i, boneIndex, name);
-			OPmat4Log("Bone", *p);
-			OPfree(name);
-		}
-	}
+	//		// f32 px = OPreadf32(str);
+	//		// f32 py = OPreadf32(str);
+	//		// f32 pz = OPreadf32(str);
 
-	i16 trackCount = 0;
-	OPMdataAnim* tracks = NULL;
-	if (OPMhasFeature(features, Animations) && OPMhasFeature(features, Bones)) {
-		trackCount = OPreadi16(str);
-		tracks = (OPMdataAnim*)OPalloc(sizeof(OPMdataAnim)* trackCount);
-		for (OPint i = 0; i < trackCount; i++) {
-			tracks[i].Name = OPreadstring(str);
+	//		// f32 rx = OPreadf32(str);
+	//		// f32 ry = OPreadf32(str);
+	//		// f32 rz = OPreadf32(str);
+	//		// f32 rw = OPreadf32(str);
 
-			tracks[i].FrameCount = OPreadui32(str);
+	//		// f32 sx = OPreadf32(str);
+	//		// f32 sy = OPreadf32(str);
+	//		// f32 sz = OPreadf32(str);
 
-			OPint totalFrames = tracks[i].FrameCount * hierarchyCount;
-			tracks[i].Frames = (OPmat4*)OPalloc(sizeof(OPmat4)* totalFrames);
+	//		OPmat4 matRotate;
+	//		OPmat4 matTranslate;
 
-			for (OPint j = 0; j < totalFrames; j++) {
+	//		//OPquat rot = OPquatCreate(rx, ry, rz, rw);
 
-				OPmat4* p = &(tracks[i].Frames[j]);
-				//OPlog("Mat4 Bone: %x", p);
+	//		//OPmat4BuildQuat(&matRotate, &rot);
+	//		//OPmat4BuildTranslate(&matTranslate, px, py, pz);
+	//		//OPmat4Mul(&pose[i], &matTranslate, &matRotate);
+	//		//OPmat4Mul(&pose[i], &matRotate, &matTranslate);
+	//		//OPmat4Inverse(&pose[i], &pose[i]);
+	//		//OPmat4Transpose(&pose[i]);
+	//		//OPmat4Identity(p);
+	//		pose[i] = OPmat4Transpose(pose[i]);
 
-				for (i32 c = 0; c < 4; c++) {
-					p->cols[c].x = OPreadf32(str);
-					p->cols[c].y = OPreadf32(str);
-					p->cols[c].z = OPreadf32(str);
-					p->cols[c].w = OPreadf32(str);
-				}
 
-				tracks[i].Frames[j] = OPmat4Transpose(tracks[i].Frames[j]);
-			}
-		}
-	}
+	//		OPlog("Joint: %d %d %s", i, boneIndex, name);
+	//		OPmat4Log("Bone", *p);
+	//		OPfree(name);
+	//	}
+	//}
 
-	OPlog("Index Count: %d", indicesCount);
-	OPlog("Vertex Count: %d", verticeCount);
+	//i16 trackCount = 0;
+	//OPMdataAnim* tracks = NULL;
+	//if (OPMhasFeature(features, Animations) && OPMhasFeature(features, Bones)) {
+	//	trackCount = OPreadi16(str);
+	//	tracks = (OPMdataAnim*)OPalloc(sizeof(OPMdataAnim)* trackCount);
+	//	for (OPint i = 0; i < trackCount; i++) {
+	//		tracks[i].Name = OPreadstring(str);
+
+	//		tracks[i].FrameCount = OPreadui32(str);
+
+	//		OPint totalFrames = tracks[i].FrameCount * hierarchyCount;
+	//		tracks[i].Frames = (OPmat4*)OPalloc(sizeof(OPmat4)* totalFrames);
+
+	//		for (OPint j = 0; j < totalFrames; j++) {
+
+	//			OPmat4* p = &(tracks[i].Frames[j]);
+	//			//OPlog("Mat4 Bone: %x", p);
+
+	//			for (i32 c = 0; c < 4; c++) {
+	//				p->cols[c].x = OPreadf32(str);
+	//				p->cols[c].y = OPreadf32(str);
+	//				p->cols[c].z = OPreadf32(str);
+	//				p->cols[c].w = OPreadf32(str);
+	//			}
+
+	//			tracks[i].Frames[j] = OPmat4Transpose(tracks[i].Frames[j]);
+	//		}
+	//	}
+	//}
+
+	//OPlog("Index Count: %d", indicesCount);
+	//OPlog("Vertex Count: %d", verticeCount);
 
 
 	// Read Animation
@@ -413,22 +411,22 @@ OPMData OPMloadData(OPstream* str) {
 	data.vertexSize = vertices->size * sizeof(f32);
 
 	data.bounds = OPboundingBox3DCreate(min, max);
-	data.hierarchy = hierarchy;
-	data.pose = pose;
-	data.hierarchyCount = hierarchyCount;
-	data.trackCount = trackCount;
-	data.tracks = tracks;
+	//data.hierarchy = hierarchy;
+	//data.pose = pose;
+	//data.hierarchyCount = hierarchyCount;
+	//data.trackCount = trackCount;
+	//data.tracks = tracks;
 
 
 
 	if (OPMhasFeature(features, Meta)) {
 		ui16 metaCount = OPreadui16(str);
-		OPlog("Meta Count: %d", metaCount);
+		//OPlog("Meta Count: %d", metaCount);
 		OPMmeta* meta = (OPMmeta*)OPalloc(sizeof(OPMmeta) * metaCount);
 		for(i32 i = 0; i < metaCount; i++) {
 			OPchar* metaName = OPreadstring(str);
 			OPchar* metaType = OPreadstring(str);
-			OPlog("Meta Name: %s (%s)", metaName, metaType);
+			//OPlog("Meta Name: %s (%s)", metaName, metaType);
 			f32 x = OPreadf32(str);
 			f32 y = OPreadf32(str);
 			f32 z = OPreadf32(str);
@@ -446,23 +444,21 @@ OPMData OPMloadData(OPstream* str) {
 		}
 		data.metaCount = metaCount;
 		data.meta = meta;
-	} else {
-		OPlog("Model has no meta information");
 	}
 
 	return data;
 }
 
 OPint OPMload(const OPchar* filename, OPmesh** mesh) {
-	OPlog("Reading File Data");
+	//OPlog("Reading File Data");
 	OPstream* str = OPreadFile(filename);
 	if (str == NULL) {
 		return 0;
 	}
-	OPlog("Reading OPMloadData");
+	//OPlog("Reading OPMloadData");
 	OPMData data = OPMloadData(str);
 
-	OPlog("Creating vertex and buffers");
+	//OPlog("Creating vertex and buffers");
 	// Create Vertex & Index Buffers for Mesh
 	OPmesh temp = OPrenderCreateMesh();
 	OPrenderBindMesh(&temp);
@@ -473,17 +469,17 @@ OPint OPMload(const OPchar* filename, OPmesh** mesh) {
 	);
 	temp.boundingBox = data.bounds;
 
-	if (data.hierarchy != NULL) {
-		temp.Skeleton = OPskeletonCreate(data.hierarchy, data.pose, data.hierarchyCount);
+	//if (data.hierarchy != NULL) {
+	//	temp.Skeleton = OPskeletonCreate(data.hierarchy, data.pose, data.hierarchyCount);
 
-		if (data.tracks != NULL)
-			OPskeletonAnimationInit(&temp.SkeletonAnimation, temp.Skeleton, data.tracks[0].Frames, data.tracks[0].FrameCount);
-	}
+	//	if (data.tracks != NULL)
+	//		OPskeletonAnimationInit(&temp.SkeletonAnimation, temp.Skeleton, data.tracks[0].Frames, data.tracks[0].FrameCount);
+	//}
 
 	temp.MetaCount = data.metaCount;
 	temp.Meta = data.meta;
 
-	OPlog("Disposing");
+	//OPlog("Disposing");
 
 	// Dispose of allocated buffers
 	//OPfree(data.vertices);
