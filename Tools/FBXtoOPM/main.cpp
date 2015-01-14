@@ -67,6 +67,9 @@ int main(int argc, char **argv) {
 			if (IsParam(argv, arg, "--skeletons") || IsParam(argv, arg, "-s"))
 				featureIn[Model_Skeletons] = specified = 1; continue;
 
+			if (IsParam(argv, arg, "--skinning") || IsParam(argv, arg, "-skin"))
+				featureIn[Model_Skinning] = specified = 1; continue;
+
 			if (IsParam(argv, arg, "--animations") || IsParam(argv, arg, "-a"))
 				featureIn[Model_Animations] = specified = 1; continue;
 		}
