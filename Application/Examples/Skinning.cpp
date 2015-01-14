@@ -26,6 +26,8 @@ typedef struct {
 	OPskeleton* skeleton;
 	OPskeletonAnimation* animation;
 	OPskeletonAnimation* animation2;
+	OPskeletonAnimation* animation3;
+	OPskeletonAnimation* animation4;
 } SkinningExample;
 
 SkinningExample* skinningExample;
@@ -38,15 +40,17 @@ void ExampleSkinningEnter(OPgameState* last) {
 	OPcmanLoad("Skinning.vert");
 	skinningExample = (SkinningExample*)OPalloc(sizeof(SkinningExample));
 
-	skinningExample->skeleton = (OPskeleton*)OPcmanLoadGet("skinned12.opm.skel");
-	skinningExample->animation = (OPskeletonAnimation*)OPcmanLoadGet("skinned12.opm.idle.anim");
-	skinningExample->animation2 = (OPskeletonAnimation*)OPcmanLoadGet("skinned12.opm.walk.anim");
+	skinningExample->skeleton = (OPskeleton*)OPcmanLoadGet("skinned13.opm.skel");
+	skinningExample->animation = (OPskeletonAnimation*)OPcmanLoadGet("skinned13.opm.idle normal.anim");
+	skinningExample->animation2 = (OPskeletonAnimation*)OPcmanLoadGet("skinned13.opm.run normal.anim");
+	skinningExample->animation3 = (OPskeletonAnimation*)OPcmanLoadGet("skinned13.opm.attack1.anim");
+	skinningExample->animation4 = (OPskeletonAnimation*)OPcmanLoadGet("skinned13.opm.defend.anim");
 
 
 	skinningExample->texture = (OPtexture*)OPcmanLoadGet("Knight.png");
 
 	skinningExample->pos = 0;
-	skinningExample->Mesh = (OPmesh*)OPcmanLoadGet("skinned12.opm");
+	skinningExample->Mesh = (OPmesh*)OPcmanLoadGet("skinned13.opm");
 
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
@@ -100,8 +104,24 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	skinningExample->Camera->_viewStale = 1;
 	OPcamUpdateView((*skinningExample->Camera));
 
+	if (OPkeyboardWasPressed(OPKEY_N)) {
+		skinningExample->animation2->Elapsed = skinningExample->animation2->Frame = 0;
+	}
+	if (OPkeyboardWasPressed(OPKEY_M)) {
+		skinningExample->animation3->Elapsed = skinningExample->animation3->Frame = 0;
+	}
+	if (OPkeyboardWasPressed(OPKEY_B)) {
+		skinningExample->animation4->Elapsed = skinningExample->animation4->Frame = 0;
+	}
+
 	if (OPkeyboardIsDown(OPKEY_N)) {
 		OPskeletonAnimationUpdate(skinningExample->animation2, time, skinningExample->skeleton);
+	}
+	else if (OPkeyboardIsDown(OPKEY_M)) {
+		OPskeletonAnimationUpdate(skinningExample->animation3, time, skinningExample->skeleton);
+	}
+	else if (OPkeyboardIsDown(OPKEY_B)) {
+		OPskeletonAnimationUpdate(skinningExample->animation4, time, skinningExample->skeleton);
 	}
 	else {
 		OPskeletonAnimationUpdate(skinningExample->animation, time, skinningExample->skeleton);
