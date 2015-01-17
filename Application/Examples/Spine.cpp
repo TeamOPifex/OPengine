@@ -100,8 +100,8 @@ void ExampleSpineEnter(OPgameState* last) {
 	// The renderGenEffect is a simplified utility method
 	// which requires the attributes are given in a set order
 	// Position (vec3), then Normal (vec3)
-	// For more granular control use OPrenderCreateEffect
-	spineExample->Effect = OPrenderGenEffect(
+	// For more granular control use OPeffectCreate
+	spineExample->Effect = OPeffectGen(
 		"SimpleTextured.vert",
 		"SimpleTextured.frag",
 		OPATTR_POSITION | OPATTR_UV,
@@ -162,6 +162,6 @@ OPint ExampleSpineUpdate(OPtimer* time) {
 // The OPifex Engine will call this itself when you call OPgameStateChange
 void ExampleSpineExit(OPgameState* next) {
 	// Clean up phase for the Game State
-	OPrenderUnloadEffect(&spineExample->Effect);
+	OPeffectUnload(&spineExample->Effect);
 	OPfree(spineExample);
 }

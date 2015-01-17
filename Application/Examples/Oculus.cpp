@@ -42,7 +42,7 @@ void ExampleOculusEnter(OPgameState* last) {
 	oculusExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
 	OPshader* vert = (OPshader*)OPcmanGet("SimpleModel.vert");
 	OPshader* frag = (OPshader*)OPcmanGet("SimpleModel.frag");
-	*oculusExample->Effect = OPrenderCreateEffectStride(
+	*oculusExample->Effect = OPeffectCreate(
 		*vert,
 		*frag,
 		attribs,
@@ -80,7 +80,7 @@ OPint ExampleOculusUpdate(OPtimer* time) {
 	if (OPkeyboardIsDown(OPKEY_P)) { oculusExample->Rotation++; }
 
 	OPrenderBindMesh(oculusExample->Mesh);
-	OPrenderBindEffect(oculusExample->Effect);
+	OPeffectBind(oculusExample->Effect);
 
 	OPmat4 world, view, proj;
 	world = OPmat4RotY(oculusExample->Rotation / 100.0);

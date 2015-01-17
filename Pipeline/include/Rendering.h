@@ -7,7 +7,7 @@
 
 inline void OPrenderBindMeshAndEffect(OPmesh* mesh, OPeffect* effect) {
 	OPrenderBindMesh(mesh);
-	OPrenderBindEffect(effect);
+	OPeffectBind(effect);
 }
 
 inline void OPrenderMesh3D(OPmat4* world, OPcam* cam) {
@@ -22,7 +22,7 @@ inline void OPrenderMesh3D(OPmat4* world, OPcam* cam) {
 
 inline void OPbindMeshEffectWorldCam(OPmesh* mesh, OPeffect* effect, OPmat4* world, OPcam* camera) {
 	OPrenderBindMesh(mesh);
-	OPrenderBindEffect(effect);
+	OPeffectBind(effect);
 
 	OPcamUpdateView((*camera));
 	OPcamUpdateProj((*camera));

@@ -43,8 +43,8 @@ OPassetLoader OP_DEFAULT_LOADERS[8] = {
 		"Shaders/",
 #endif
 		sizeof(OPshader),
-		(OPint (*)(const OPchar*, void**))OPrenderLoadVertexShader,
-		(OPint(*)(void*))OPrenderUnloadShader,
+		(OPint (*)(const OPchar*, void**))OPshaderLoadVertex,
+		(OPint(*)(void*))OPshaderUnload,
 		NULL
 	},
 	{
@@ -59,8 +59,8 @@ OPassetLoader OP_DEFAULT_LOADERS[8] = {
 		"Shaders/",
 #endif
 		sizeof(OPshader),
-		(OPint (*)(const OPchar*, void**))OPrenderLoadFragmentShader,
-		(OPint(*)(void*))OPrenderUnloadShader,
+		(OPint (*)(const OPchar*, void**))OPshaderLoadFragment,
+		(OPint(*)(void*))OPshaderUnload,
 		NULL
 	},
 	{

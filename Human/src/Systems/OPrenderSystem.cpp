@@ -12,7 +12,7 @@ OPeffect OPeffectLoadTextured2D(ui32 vertexStride) {
 	OPcmanLoad("Common/Texture.frag");
 	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture2D.vert");
 	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
-	OPeffect effect = OPrenderCreateEffectStride(
+	OPeffect effect = OPeffectCreate(
 		*vert,
 		*frag,
 		attribs,
@@ -35,7 +35,7 @@ OPeffect OPeffectLoadTextured3D(ui32 vertexStride) {
 	OPcmanLoad("Common/Texture.frag");
 	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture3D.vert");
 	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
-	OPeffect effect = OPrenderCreateEffectStride(
+	OPeffect effect = OPeffectCreate(
 		*vert,
 		*frag,
 		attribs,

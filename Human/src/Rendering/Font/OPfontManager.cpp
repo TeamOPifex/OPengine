@@ -5,8 +5,8 @@
 #include "./Data/include/OPcman.h"
 #include "./Core/include/Assert.h"
 
-OPfontManager* OPRENDER_CURR_FONT_MANAGER = NULL;
-OPeffect* OPRENDER_CURR_FONT_EFFECT = NULL;
+OPfontManager* OPFONTMANAGER_ACTIVE = NULL;
+OPeffect* OPFONTMANAGER_EFFECT_ACTIVE = NULL;
 
 OPfontManager* OPfontManagerCreate(OPfont* font) {
 	OPfontManager* temp = (OPfontManager*)OPallocZero(sizeof(OPfontManager));
@@ -35,7 +35,7 @@ OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 
 }
 
 void OPfontManagerDestroy(OPfontManager* font) {
-	OPRENDER_CURR_FONT_MANAGER = NULL;
+	OPFONTMANAGER_ACTIVE = NULL;
 	OPvectorDestroy(font->currNodes);
 	OPhashMapDestroy(font->builtNodes);
 	OPfree(font);
@@ -49,16 +49,16 @@ void OPfontManagerSetColor(OPfontManager* manager, f32 r, f32 g, f32 b, f32 a) {
 }
 
 void OPfontManagerAddText(const OPchar* text) {
-	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	OPmeshPackerBind(&OPRENDER_CURR_FONT_MANAGER->meshPacker);
+	ASSERT(OPFONTMANAGER_ACTIVE != NULL, "A Font Manager has not been bound yet");
+	OPmeshPackerBind(&OPFONTMANAGER_ACTIVE->meshPacker);
 	OPfontBuiltTextNode* node = (OPfontBuiltTextNode*)OPalloc(sizeof(OPfontBuiltTextNode));
-	*node = OPfontCreatePackedText(OPRENDER_CURR_FONT_MANAGER->_font, text);
-	OPhashMapPut(OPRENDER_CURR_FONT_MANAGER->builtNodes, text, node);
+	*node = OPfontCreatePackedText(OPFONTMANAGER_ACTIVE->_font, text);
+	OPhashMapPut(OPFONTMANAGER_ACTIVE->builtNodes, text, node);
 }
 
 void OPfontManagerBuild() {
-	ASSERT(OPRENDER_CURR_FONT_MANAGER != NULL, "A Font Manager has not been bound yet");
-	OPmeshPackerBind(&OPRENDER_CURR_FONT_MANAGER->meshPacker);
+	ASSERT(OPFONTMANAGER_ACTIVE != NULL, "A Font Manager has not been bound yet");
+	OPmeshPackerBind(&OPFONTMANAGER_ACTIVE->meshPacker);
 	OPmeshPackerBuild();
-	OPRENDER_CURR_FONT_MANAGER->isBuilt = true;
+	OPFONTMANAGER_ACTIVE->isBuilt = true;
 }

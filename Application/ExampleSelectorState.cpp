@@ -142,7 +142,7 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 			r = g = b = 0.2 + !isInActive * 0.4;
 		}
 		OPmat4Translate(&w, 0, -0.1, 0);
-		OPrenderText(exampleSelector.Examples[i].name, OPvec4Create(r,g,b,1), &w);
+		OPfontRender(exampleSelector.Examples[i].name, OPvec4Create(r,g,b,1), &w);
 	}
 
 	OPrenderPresent();
@@ -151,6 +151,6 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 
 void ExampleSelectorExit(OPgameState* next) {
 	OPfontManagerDestroy(exampleSelector.FontManager);
-	OPrenderBindEffect(NULL);
+	OPeffectBind(NULL);
 	OPcmanDelete("Ubuntu.opf");
 }

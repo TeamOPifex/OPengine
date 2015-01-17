@@ -15,7 +15,7 @@ var dir = 1;
 
 function clearToBlack(r, g, b) {
     //print('rgb:' + r + ' ' + g + ' ' + b);
-	amnt += dir ? 0.01 : -0.01;
+	amnt += dir ? 0.1 : -0.01;
 	if(amnt > 1.0 || amnt < 0.0) {
 		dir = !dir;
 	}

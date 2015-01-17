@@ -10,8 +10,8 @@ const OPchar* FontShaderFrag = "Common/Font.frag";
 
 void OPsystemsLoadFontEffect() {
 
-	if (OPRENDER_CURR_FONT_EFFECT != NULL) { 
-		OPrenderBindEffect(OPRENDER_CURR_FONT_EFFECT);
+	if (OPFONTMANAGER_EFFECT_ACTIVE != NULL) { 
+		OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
 		return; 
 	}
 
@@ -32,8 +32,8 @@ void OPsystemsLoadFontEffect() {
 		{ "aUV", GL_FLOAT, 2 }
 	};
 
-	OPRENDER_CURR_FONT_EFFECT = (OPeffect*)OPalloc(sizeof(OPeffect));
-	*OPRENDER_CURR_FONT_EFFECT = OPrenderCreateEffect(
+	OPFONTMANAGER_EFFECT_ACTIVE = (OPeffect*)OPalloc(sizeof(OPeffect));
+	*OPFONTMANAGER_EFFECT_ACTIVE = OPeffectCreate(
 		*(OPshader*)OPcmanGet(FontShaderVert),
 		*(OPshader*)OPcmanGet(FontShaderFrag),
 		attribs,

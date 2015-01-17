@@ -581,7 +581,7 @@ static V8Return _OP_effect_Create(const V8Args& args) {
 	const char *effectName = *v8::String::Utf8Value(obj->Get(OPscriptV8GetString(isolate, "Name"))->ToString());
 
 	OPeffect* effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	*effect = OPrenderCreateEffectStride(
+	*effect = OPeffectCreate(
 		*vert,
 		*frag,
 		attribs,
@@ -1051,7 +1051,7 @@ static V8Return _GetCameraProj(const V8Args& args) {
 static V8Return _BindEffect(const V8Args& args) {
 	V8Scope scope;
 
-	OPrenderBindEffect((OPeffect*)args[0]->IntegerValue());
+	OPeffectBind((OPeffect*)args[0]->IntegerValue());
 
 	return OPscriptV8SetReturn(args, &scope, OPscriptV8GetNull(isolate));
 }
@@ -1191,7 +1191,7 @@ static V8Return _FontRenderText(const V8Args& args) {
 	V8Scope scope;
 
 	String::Utf8Value str(args[0]->ToString());
-	OPrenderText(OPscriptV8ToCString(str), args[1]->NumberValue(), args[2]->NumberValue());
+	OPfontRender(OPscriptV8ToCString(str), args[1]->NumberValue(), args[2]->NumberValue());
 
 	return OPscriptV8SetReturn(args, &scope, OPscriptV8GetNull(isolate));
 }
@@ -1201,7 +1201,7 @@ static V8Return _FontRenderTextMatrix(const V8Args& args) {
 	String::Utf8Value str(args[0]->ToString());
 	const OPchar* c = OPscriptV8ToCString(str);
 	Handle<String> el = OPscriptV8GetString(isolate, "Id");
-	OPrenderText(c, (OPmat4*)args[1]->ToObject()->Get(el)->IntegerValue());
+	OPfontRender(c, (OPmat4*)args[1]->ToObject()->Get(el)->IntegerValue());
 
 	return OPscriptV8SetReturn(args, &scope, OPscriptV8GetNull(isolate));
 }

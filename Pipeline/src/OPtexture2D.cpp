@@ -10,7 +10,7 @@ void LoadDefaultTexture2DEffect() {
 	if (DEFAULT_TEXTURE2D_EFFECT != NULL) return;
 
 	DEFAULT_TEXTURE2D_EFFECT = (OPeffect*)OPalloc(sizeof(OPeffect));
-	*DEFAULT_TEXTURE2D_EFFECT = OPrenderGenEffect(
+	*DEFAULT_TEXTURE2D_EFFECT = OPeffectGen(
 		"Common/Texture2D.vert",
 		"Common/Texture.frag",
 		OPATTR_POSITION | OPATTR_UV,
@@ -46,7 +46,7 @@ void OPtexture2DDestroy(OPtexture2D* tex2d) {
 
 void OPtexture2DPrepRender(OPtexture2D* tex2d) {
 	OPrenderBindMesh(TEXTURE_2D_QUAD_MESH);
-	OPrenderBindEffect(tex2d->Effect);
+	OPeffectBind(tex2d->Effect);
 
 	OPrenderDepth(0);
 

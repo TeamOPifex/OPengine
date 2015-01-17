@@ -11,7 +11,7 @@ void OPsprite3DInit(OPeffect* effect) {
 
 	if (effect == NULL) {
 		EFFECT_SPRITE_3D = (OPeffect*)OPalloc(sizeof(OPeffect));
-		*EFFECT_SPRITE_3D = OPrenderGenEffect(
+		*EFFECT_SPRITE_3D = OPeffectGen(
 			"Common/OPspriteSheet3D.vert",
 			"Common/OPspriteSheet.frag",
 			OPATTR_POSITION | OPATTR_UV,
@@ -119,7 +119,7 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 
 	OPmat4 world, view, proj;
 	OPrenderBindMesh(&SPRITE_3D_QUAD_MESH);
-	OPrenderBindEffect(sprite->Effect);
+	OPeffectBind(sprite->Effect);
 
 	OPcamGetView((*camera), &view);
 	OPcamGetProj((*camera), &proj);

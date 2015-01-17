@@ -46,7 +46,7 @@ void ExampleTexturedEnter(OPgameState* last) {
 	texturedExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
 	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture3D.vert");
 	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
-	*texturedExample->Effect = OPrenderCreateEffectStride(
+	*texturedExample->Effect = OPeffectCreate(
 		*vert,
 		*frag,
 		attribs,
@@ -74,7 +74,7 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 	if (OPkeyboardIsDown(OPKEY_SPACE)) { texturedExample->Rotation++; }
 
 	OPrenderBindMesh(texturedExample->Mesh);
-	OPrenderBindEffect(texturedExample->Effect);
+	OPeffectBind(texturedExample->Effect);
 
 	OPmat4 world, view, proj;
 	world = OPmat4RotY(texturedExample->Rotation / 100.0);
@@ -100,7 +100,7 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 }
 
 void ExampleTexturedExit(OPgameState* next) {
-	OPrenderUnloadEffect(texturedExample->Effect);
+	OPeffectUnload(texturedExample->Effect);
 	OPfree(texturedExample->Effect);
 	OPfree(texturedExample->Camera);
 
