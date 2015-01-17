@@ -19,7 +19,7 @@ function clearToBlack(r, g, b) {
 	if(amnt > 1.0 || amnt < 0.0) {
 		dir = !dir;
 	}
-	OP.render.Clear(amnt,0,1);	
+	OP.render.Clear(Math.sin(amnt),Math.cos(amnt),1);	
 
 	//print('.');
 		
