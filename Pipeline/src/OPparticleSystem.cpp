@@ -13,7 +13,7 @@ void OPparticleSysInit(OPeffect* effect) {
 
 	if (effect == NULL) {
 		EFFECT_PARTICLE_SYSTEM = (OPeffect*)OPalloc(sizeof(OPeffect));
-		*EFFECT_PARTICLE_SYSTEM = OPrenderGenEffect(
+		*EFFECT_PARTICLE_SYSTEM = OPeffectGen(
 			"Common/OPparticleSystem.vert",
 			"Common/OPparticleSystem.frag",
 			OPATTR_POSITION | OPATTR_UV,
@@ -107,7 +107,7 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 	OPint frameChange = sys->fps && sys->timeElapsed > (1.0f / sys->fps);
 
 	OPrenderBindMesh(&PARTICLE_SYSTEM_QUAD_MESH);
-	OPrenderBindEffect(EFFECT_PARTICLE_SYSTEM);
+	OPeffectBind(EFFECT_PARTICLE_SYSTEM);
 
 	OPrenderParamMat4v("uView", 1, &cam->View);
 	OPrenderParamMat4v("uProj", 1, &cam->Proj);

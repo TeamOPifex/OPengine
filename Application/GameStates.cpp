@@ -119,7 +119,7 @@ void State0Enter(OPgameState* last){
 	//OPwebServerOnKey(server, "color", ColorHandler, &color);
 	//OPwebServerOnKey(server, "font", FontHandler, NULL);
 
-	OPss = OPrenderCreateEffect(
+	OPss = OPeffectCreate(
 		*(OPshader*)OPcmanGet("OPspriteSheet.vert"),
 		*(OPshader*)OPcmanGet("OPspriteSheet.frag"),
 		attribs,
@@ -196,7 +196,7 @@ OPint State0Update(OPtimer* time){
 	OPmat4Identity(&world);
 	OPrenderDepth(0);
 	OPrenderBindMesh(&quadMesh);
-	OPrenderBindEffect(&OPss);
+	OPeffectBind(&OPss);
 	OPtextureClearActive();
 	ui32 textureHandle = OPtextureBind(bg->Sheet);
 	OPtexturePixelate();
@@ -208,7 +208,7 @@ OPint State0Update(OPtimer* time){
 	OPrenderMesh();
 
 	// Required
-	OPrenderText(
+	OPfontRender(
 		"All of the text! Woot!",
 		pos.x + fontPosX,
 		pos.y + fontPosY
@@ -279,7 +279,7 @@ OPint State1Update(OPtimer* time){
 
 	OPmeshPackerBind(&packer);
 	OPrenderBindMesh(plane);
-	OPrenderBindEffect(&tri);
+	OPeffectBind(&tri);
 
 	OPtextureBind(tex);
 	OPrenderParami("uColorTexture", tex->Handle);
@@ -313,7 +313,7 @@ OPint State1Update(OPtimer* time){
 	//OPrenderSetViewport(0, 0, OPrenderWidth, OPrenderHeight);
 
 	//OPmeshPackerBind(&packer);
-	//OPrenderBindEffect(&post);
+	//OPeffectBind(&post);
 	//OPmat4Identity(&world);
 	//OPrenderParamMat4v("uWorld", 1, &world);
 
@@ -351,8 +351,8 @@ void State1Exit(OPgameState* next){
 	OPcmanDelete("steamPlaneSpec.png");
 	OPcmanDelete("noneNorm.png");	
 
-	OPrenderUnloadEffect(&tri);
-	OPrenderUnloadEffect(&post);
+	OPeffectUnload(&tri);
+	OPeffectUnload(&post);
 
 	OPfree(garbage);
 }

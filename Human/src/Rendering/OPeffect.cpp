@@ -4,106 +4,7 @@
 #include "./Data/include/OPvector.h"
 #include "./Data/include/OPcman.h"
 
-OPeffect* OPRENDER_CURR_EFFECT = NULL;
-//-----------------------------------------------------------------------------
-// ______                _   _                 
-//|  ____|              | | (_)                
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
-//|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
-//| |  | |_| | | | | (__| |_| | (_) | | | \__ \
-//|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-// Shader creation
-OPint OPrenderLoadVertexShader(const OPchar* filename, OPshader** shader){
-	OPshader vertex = -1;
-
-	OPstream* source = OPreadFile(filename);
-	
-	OPglError("GLShader::Error 0");
-	vertex = glCreateShader(OPvertexShader);
-	OPglError("GLShader::Error 1");
-	if(vertex){
-		OPchar* src = (OPchar*)source->Data;
-		
-		glShaderSource(vertex, 1, (const OPchar**)&src, 0);
-		OPglError("GLShader::Error 2");
-		glCompileShader(vertex);
-		OPglError("GLShader::Error 3");
-		GLint compiled = 0;
-		glGetShaderiv(vertex, GL_COMPILE_STATUS, &compiled);
-		OPglError("GLShader::Error 4");
-
-		if(!compiled){
-			char msg[4096];
-			i32 length = 0;
-			glGetShaderInfoLog(vertex, 4096, &length, msg);
-			OPlog("GLShader::Failed to compile Vertex Shader::%s", msg);
-
-			OPglError("GLShader::Error 5");
-			glDeleteShader(vertex);
-			OPstreamDestroy(source); // clean up stream
-			return -1;
-		}
-	}
-	else{
-		OPstreamDestroy(source); // clean up stream
-		return -1;
-	}
-	OPstreamDestroy(source); // clean up stream
-	
-	// if we made it this far, everything is a-ok
-	*shader = (OPshader*)OPalloc(sizeof(OPshader));
-	**shader = vertex; // copy the shader handle
-
-	OPglError("GLShader::Error 6");
-
-	return 1;
-}
-//-----------------------------------------------------------------------------
-OPint OPrenderLoadFragmentShader(const OPchar* filename, OPshader** shader){
-	OPshader frag = -1;
-	OPstream* source = OPreadFile(filename);
-
-	frag = glCreateShader(OPfragmentShader);
-
-	if(frag){
-		OPchar* src = (OPchar*)source->Data;
-		glShaderSource(frag, 1, (const OPchar**)&src, 0);
-		glCompileShader(frag);
-
-		GLint compiled = 0;
-		glGetShaderiv(frag, GL_COMPILE_STATUS, &compiled);
-		if(!compiled){
-
-			char msg[4096];
-			i32 length = 0;
-			glGetShaderInfoLog(frag, 4096, &length, msg);
-
-			OPlog("GLShader::Failed to compile Fragment Shader::%s", msg);
-
-			glDeleteShader(frag);
-			OPstreamDestroy(source); // clean up stream
-			return -1;
-		}
-	}
-	else{
-		OPstreamDestroy(source); // clean up stream
-		return -1;
-	}
-	OPstreamDestroy(source); // clean up stream
-	
-	// if we made it this far, everything is a-ok
-	*shader = (OPshader*)OPalloc(sizeof(OPshader));
-	**shader = frag; // copy the shader handle
-
-	return 1;
-}
-//-----------------------------------------------------------------------------
-// shader destruction
-OPint OPrenderUnloadShader(OPshader* shader){
-	glDeleteShader(*shader); // free up the gl shader
-	OPfree(shader); // free up the integer
-	return 1;
-}
+OPeffect* OPEFFECT_ACTIVE = NULL;
 
 OPeffect createEffect(OPshader vert,
 	OPshader frag,
@@ -112,7 +13,7 @@ OPeffect createEffect(OPshader vert,
 	const OPchar* Name,
 	ui32 stride) {
 
-	OPglError("OPrenderCreateEffect:Error 0: %d");
+	OPglError("OPeffectCreate:Error 0: %d");
 
 	OPint nameLen = strlen(Name) + 1;
 	OPeffect effect = {
@@ -147,7 +48,7 @@ OPeffect createEffect(OPshader vert,
 		OPlog("FAILED to link Shader Program: %s", Name);
 	}
 	else {
-		OPglError("OPrenderCreateEffect:Error 7");
+		OPglError("OPeffectCreate:Error 7");
 
 		i32 result;
 		ui32 nameLength;
@@ -193,7 +94,7 @@ OPeffect createEffect(OPshader vert,
 
 //-----------------------------------------------------------------------------
 // effect creation
-OPeffect OPrenderCreateEffectStride(
+OPeffect OPeffectCreate(
 	OPshader vert,
 	OPshader frag,
 	OPshaderAttribute* Attributes,
@@ -204,7 +105,7 @@ OPeffect OPrenderCreateEffectStride(
 }
 //-----------------------------------------------------------------------------
 // effect creation
-OPeffect OPrenderCreateEffect(
+OPeffect OPeffectCreate(
 	OPshader vert,
 	OPshader frag,
 	OPshaderAttribute* Attributes,
@@ -223,15 +124,13 @@ OPeffect OPrenderCreateEffect(
 	}
 	return createEffect(vert, frag, Attributes, AttribCount, Name, stride);
 }
-//-----------------------------------------------------------------------------
-OPint OPrenderLoadEffect  (const OPchar* filename, OPeffect** effect){
-	return 1;
-}
+
+
 //-----------------------------------------------------------------------------
 // effect destruction
-OPint OPrenderUnloadEffect(OPeffect* effect){
-	if (OPRENDER_CURR_EFFECT == effect) {
-		OPrenderBindEffect(NULL);
+OPint OPeffectUnload(OPeffect* effect){
+	if (OPEFFECT_ACTIVE == effect) {
+		OPeffectBind(NULL);
 	}
 	OPhashMapDestroy(effect->Parameters);
 	OPlistDestroy(effect->Attributes);
@@ -241,37 +140,36 @@ OPint OPrenderUnloadEffect(OPeffect* effect){
 }
 
 // effect managment
-OPint OPrenderBindEffect(OPeffect* effect){
-	OPglError("OPrenderBindEffect:Clear Errors");
+OPint OPeffectBind(OPeffect* effect){
+	OPglError("OPeffectBind:Clear Errors");
+
 	// disable attributes of the last effect
-	if(OPRENDER_CURR_EFFECT){
-		OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
-		for(;attrCount--;){
-			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
+	if (OPEFFECT_ACTIVE){
+		OPint attrCount = OPlistSize(OPEFFECT_ACTIVE->Attributes);
+		for (; attrCount--;){
+			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPEFFECT_ACTIVE->Attributes, attrCount);
 			glDisableVertexAttribArray((uintptr_t)attr->Handle);
-			if (OPglError("OPrenderBindEffect:Error ")) {
-				OPlog("Effect %s: Failed to disable attrib %s", OPRENDER_CURR_EFFECT->Name, attr->Name);
+			if (OPglError("OPeffectBind:Error ")) {
+				OPlog("Effect %s: Failed to disable attrib %s", OPEFFECT_ACTIVE->Name, attr->Name);
 			}
 		}
 	}
 
-	OPRENDER_CURR_EFFECT = effect;
+	OPEFFECT_ACTIVE = effect;
 
-	if (OPRENDER_CURR_EFFECT == NULL) return 1;
+	if (OPEFFECT_ACTIVE == NULL) return 1;
 
-	glUseProgram(OPRENDER_CURR_EFFECT->ProgramHandle);
-	if (OPglError("OPrenderBindEffect:Failed to use Program")) {
-		OPlog("For Shader: %s", OPRENDER_CURR_EFFECT->Name);
+	glUseProgram(OPEFFECT_ACTIVE->ProgramHandle);
+
+	if (OPglError("OPeffectBind:Failed to use Program")) {
+		OPlog("For Shader: %s", OPEFFECT_ACTIVE->Name);
 	}
 
 	// enable attributes of the new effect
-	OPint attrCount = OPlistSize(OPRENDER_CURR_EFFECT->Attributes);
-	for(;attrCount--;){
-		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPRENDER_CURR_EFFECT->Attributes, attrCount);
-		glEnableVertexAttribArray((uintptr_t)attr->Handle);
-		if (OPglError("OPrenderBindEffect:Error ")) {
-			OPlog("Failed to enable attrib %s", attr->Name);
-		}
+	OPint attrCount = OPlistSize(OPEFFECT_ACTIVE->Attributes);
+	for (; attrCount--;){
+		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPEFFECT_ACTIVE->Attributes, attrCount);
+
 		glVertexAttribPointer(
 			(uintptr_t)attr->Handle,
 			attr->Elements,
@@ -280,21 +178,27 @@ OPint OPrenderBindEffect(OPeffect* effect){
 			effect->Stride,
 			(void*)attr->Offset
 			);
-		if (OPglError("OPrenderBindEffect:Error ")) {
+		if (OPglError("OPeffectBind:Error ")) {
 			OPlog("Effect %s: Failed to set attrib ptr %s", effect->Name, attr->Name);
+		}
+
+		glEnableVertexAttribArray((uintptr_t)attr->Handle);
+		if (OPglError("OPeffectBind:Error ")) {
+			OPlog("Failed to enable attrib %s", attr->Name);
 		}
 	}
 
-	OPglError("OPrenderBindEffect:Errors Occured");
+	OPglError("OPeffectBind:Errors Occured");
 
 	return 1;
+	
 }
 
-ui32 OPrenderGetParam(const OPchar* parameterName){
-	if(OPhashMapExists(OPRENDER_CURR_EFFECT->Parameters, parameterName)){
+ui32 OPeffectGetParam(const OPchar* parameterName){
+	if(OPhashMapExists(OPEFFECT_ACTIVE->Parameters, parameterName)){
 		ui32* loc;
 		OPhashMapGet(
-			OPRENDER_CURR_EFFECT->Parameters,
+			OPEFFECT_ACTIVE->Parameters,
 			parameterName,
 			(void**)&loc
 		);
@@ -302,30 +206,20 @@ ui32 OPrenderGetParam(const OPchar* parameterName){
 	}
 	else{
 		ui32 loc = glGetUniformLocation(
-			OPRENDER_CURR_EFFECT->ProgramHandle,
+			OPEFFECT_ACTIVE->ProgramHandle,
 			parameterName
 		);
 
 		ui32* locPtr = (ui32*)OPalloc(sizeof(ui32));
 		*locPtr = loc;
-		OPhashMapPut(OPRENDER_CURR_EFFECT->Parameters, parameterName, &locPtr);
+		OPhashMapPut(OPEFFECT_ACTIVE->Parameters, parameterName, &locPtr);
 		return loc;
 	}
 }
 
-void OPrenderUseTexture(const OPchar* param, ui32 texture, ui32 slot){
-	GLuint loc = glGetUniformLocation(
-		OPRENDER_CURR_EFFECT->ProgramHandle,
-		param
-	);
-	glActiveTexture(GL_TEXTURE0 + slot);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glUniform1i(loc, slot);
-}
-
 //-----------------------------------------------------------------------------
 // effect creation
-OPeffect OPrenderGenEffect(
+OPeffect OPeffectGen(
 	const OPchar* vert,
 	const OPchar* frag,
 	ui32 attrs,

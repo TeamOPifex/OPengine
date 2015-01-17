@@ -104,14 +104,14 @@ void ExampleDeferredEnter(OPgameState* last) {
 //
 //	deferredExample->Mesh = (OPmesh*)OPcmanGet("PuzzleBlock.opm");
 //
-//	deferredExample->Effect = OPrenderGenEffect(
+//	deferredExample->Effect = OPeffectGen(
 //		"SimpleModel.vert",
 //		"SimpleModel.frag",
 //		OPATTR_POSITION | OPATTR_NORMAL,
 //		"Model Effect",
 //		deferredExample->Mesh->VertexSize);
 //
-//	deferredExample->DeferredEffect = OPrenderGenEffect(
+//	deferredExample->DeferredEffect = OPeffectGen(
 //		"Common/deferred.vert",
 //		"Common/deferred.frag",
 //		OPATTR_POSITION | OPATTR_NORMAL,
@@ -172,6 +172,6 @@ OPint ExampleDeferredUpdate(OPtimer* time) {
 }
 
 void ExampleDeferredExit(OPgameState* next) {
-	//OPrenderUnloadEffect(&deferredExample->Effect);
+	//OPeffectUnload(&deferredExample->Effect);
 	//OPfree(deferredExample);
 }

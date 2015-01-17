@@ -64,7 +64,7 @@ void ExampleSkinningEnter(OPgameState* last) {
 	skinningExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
 	OPshader* vert = (OPshader*)OPcmanGet("Skinning.vert");
 	OPshader* frag = (OPshader*)OPcmanGet("Skinning.frag");
-	*skinningExample->Effect = OPrenderCreateEffectStride(
+	*skinningExample->Effect = OPeffectCreate(
 		*vert,
 		*frag,
 		attribs,
@@ -144,7 +144,7 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	OPskeletonUpdate(skinningExample->skeleton);
 
 	OPrenderBindMesh(skinningExample->Mesh);
-	OPrenderBindEffect(skinningExample->Effect);
+	OPeffectBind(skinningExample->Effect);
 	
 	OPmat4 world, view, proj;
 	OPmat4Identity(&world);
@@ -172,7 +172,7 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 }
 
 void ExampleSkinningExit(OPgameState* next) {
-	OPrenderUnloadEffect(skinningExample->Effect);
+	OPeffectUnload(skinningExample->Effect);
 	OPfree(skinningExample->Effect);
 	OPfree(skinningExample->Camera);
 }

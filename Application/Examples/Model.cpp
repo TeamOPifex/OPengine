@@ -47,8 +47,8 @@ void ExampleModelEnter(OPgameState* last) {
 	// The renderGenEffect is a simplified utility method
 	// which requires the attributes are given in a set order
 	// Position (vec3), then Normal (vec3)
-	// For more granular control use OPrenderCreateEffect
-	modelExample->Effect = OPrenderGenEffect(
+	// For more granular control use OPeffectCreate
+	modelExample->Effect = OPeffectGen(
 		"SimpleModel.vert",
 		"SimpleModel.frag",
 		OPATTR_POSITION | OPATTR_NORMAL,
@@ -117,6 +117,6 @@ OPint ExampleModelUpdate(OPtimer* time) {
 // The OPifex Engine will call this itself when you call OPgameStateChange
 void ExampleModelExit(OPgameState* next) {
 	// Clean up phase for the Game State
-	OPrenderUnloadEffect(&modelExample->Effect);	
+	OPeffectUnload(&modelExample->Effect);	
 	OPfree(modelExample);
 }

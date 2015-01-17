@@ -12,7 +12,7 @@ void OPsprite2DInit(OPeffect* effect) {
 
 	if (effect == NULL) {
 		EFFECT_SPRITE_2D_PIPELINE = (OPeffect*)OPalloc(sizeof(OPeffect));
-		*EFFECT_SPRITE_2D_PIPELINE = OPrenderGenEffect(
+		*EFFECT_SPRITE_2D_PIPELINE = OPeffectGen(
 			"Common/OPspriteSheet.vert",
 			"Common/OPspriteSheet.frag",
 			OPATTR_POSITION | OPATTR_UV,
@@ -67,7 +67,7 @@ void OPsprite2DSetSprite(OPsprite2D* sprite, i32 index) {
 
 void OPsprite2DPrepRender(OPsprite2D* sprite) {
 	OPrenderBindMesh(&SPRITE_2D_QUAD_MESH_PIPELINE);
-	OPrenderBindEffect(sprite->Effect);
+	OPeffectBind(sprite->Effect);
 
 
 	sprite->CurrentSprite->Frame = sprite->CurrentFrame;

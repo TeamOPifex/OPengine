@@ -10,7 +10,7 @@ void LoadDefaultTexture3DEffect() {
 	if (DEFAULT_TEXTURE3D_EFFECT != NULL) return;
 
 	DEFAULT_TEXTURE3D_EFFECT = (OPeffect*)OPalloc(sizeof(OPeffect));
-	*DEFAULT_TEXTURE3D_EFFECT = OPrenderGenEffect(
+	*DEFAULT_TEXTURE3D_EFFECT = OPeffectGen(
 		"Common/Texture3D.vert",
 		"Common/Texture.frag",
 		OPATTR_POSITION | OPATTR_UV,
@@ -46,7 +46,7 @@ void OPtexture3DDestroy(OPtexture3D* tex3d) {
 
 void OPtexture3DPrepRender(OPtexture3D* tex3d, OPcam* camera) {
 	OPrenderBindMesh(TEXTURE_3D_QUAD_MESH);
-	OPrenderBindEffect(tex3d->Effect);
+	OPeffectBind(tex3d->Effect);
 
 	OPrenderDepth(0);
 

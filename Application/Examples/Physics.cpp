@@ -82,7 +82,7 @@ void ExamplePhysicsEnter(OPgameState* last) {
 	physicsExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
 	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture3D.vert");
 	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
-	*physicsExample->Effect = OPrenderCreateEffectStride(
+	*physicsExample->Effect = OPeffectCreate(
 		*vert,
 		*frag,
 		attribs,
@@ -92,7 +92,7 @@ void ExamplePhysicsEnter(OPgameState* last) {
 		);
 
 	physicsExample->SphereEffect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	*physicsExample->SphereEffect = OPrenderCreateEffectStride(
+	*physicsExample->SphereEffect = OPeffectCreate(
 		*vert,
 		*frag,
 		attribs,
@@ -202,7 +202,7 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	OPmat4 world = OPMAT4IDENTITY;
 
 	OPrenderBindMesh(physicsExample->Mesh);
-	OPrenderBindEffect(physicsExample->Effect);
+	OPeffectBind(physicsExample->Effect);
 
 	OPtextureClearActive();
 	ui32 tex = OPtextureBind(physicsExample->texture);
@@ -240,7 +240,7 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	}
 
 	OPrenderBindMesh(physicsExample->MeshSphere);
-	OPrenderBindEffect(physicsExample->SphereEffect);
+	OPeffectBind(physicsExample->SphereEffect);
 	OPrenderParamMat4("uProj", &proj);
 	OPrenderParamMat4("uView", &view);
 	OPrenderParamVec3("uLightDirection", &light);
