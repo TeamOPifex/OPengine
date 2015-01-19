@@ -24,9 +24,10 @@ typedef struct {
 #endif
 } OPscriptCompiled;
 
-OPint OPscriptCompile(OPscriptCompiled* scriptCompiled, OPscript* script, OPscriptPersistentContext* existingContext);
 OPscriptValuePersistent OPscriptRunFunc(OPscriptCompiled* scriptCompiled, OPchar* name, OPint count, OPscriptValuePersistent* args);
-void OPscriptRun(OPscriptCompiled* scriptCompiled);
+OPint OPscriptCompile(OPscriptCompiled* scriptCompiled, OPscript* script, OPscriptPersistentContext* existingContext);
+void OPscriptRun(OPscriptCompiled* scriptCompiled); 
+
 void OPscriptCompileAndRun(OPscript* script);
 void OPscriptCompileAndRunStream(OPstream* stream);
 void OPscriptLog(const char* data); 
@@ -34,6 +35,15 @@ void OPscriptLog(const char* data);
 inline OPint OPscriptCompile(OPscriptCompiled* scriptCompiled, OPscript* script) {
 	return OPscriptCompile(scriptCompiled, script, NULL);
 }
+
+inline OPint OPscriptCompileAndRun(OPscriptCompiled* scriptCompiled, OPscript* script, OPscriptPersistentContext* existingContext) {
+	OPint result = OPscriptCompile(scriptCompiled, script, existingContext);
+	if (result) {
+		OPscriptRun(scriptCompiled);
+	}
+	return result;
+}
+
 inline OPscriptValuePersistent OPscriptRunFunc(OPscriptCompiled* scriptCompiled, OPchar* name) {
 	return OPscriptRunFunc(scriptCompiled, name, 0, NULL);
 }
