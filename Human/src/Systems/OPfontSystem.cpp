@@ -8,7 +8,7 @@
 const OPchar* FontShaderVert = "Common/TexturedScreen.vert";
 const OPchar* FontShaderFrag = "Common/Font.frag";
 
-void OPsystemsLoadFontEffect() {
+void OPfontSystemLoadEffects() {
 
 	if (OPFONTMANAGER_EFFECT_ACTIVE != NULL) { 
 		OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);

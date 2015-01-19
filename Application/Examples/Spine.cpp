@@ -6,7 +6,7 @@
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Data/include/OPcman.h"
 
-#include "./Human/include/Utilities/ImagePNG.h"
+#include "./Human/include/Utilities/OPimagePNG.h"
 #include "./Human/include/Rendering/OPMvertex.h"
 
 #include "./Pipeline/include/SpineLoader.h"

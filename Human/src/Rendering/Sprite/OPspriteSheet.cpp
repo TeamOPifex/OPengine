@@ -1,5 +1,5 @@
 #include "./Human/include/Rendering/Sprite/OPspriteSheet.h"
-#include "./Human/include/Utilities/ImagePNG.h"
+#include "./Human/include/Utilities/OPimagePNG.h"
 #include "./Data/include/OPfile.h"
 #include "./Data/include/OPcman.h"
 #include "./Data/include/OPstring.h"

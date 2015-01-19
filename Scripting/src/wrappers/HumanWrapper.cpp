@@ -1112,7 +1112,7 @@ static V8Return _RenderParamTexture(const V8Args& args) {
 static V8Return _FontInit(const V8Args& args) {
 	V8Scope scope;
 
-	OPsystemsLoadFontEffect();
+	OPfontSystemLoadEffects();
 
 	return OPscriptV8SetReturn(args, &scope, OPscriptV8GetNull(isolate));
 }

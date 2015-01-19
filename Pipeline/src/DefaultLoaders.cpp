@@ -4,7 +4,7 @@
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Human/include/Systems/OPfontSystem.h"
 #include "./Human/include/Rendering/Sprite/OPspriteSheet.h"
-#include "./Human/include/Utilities/ImagePNG.h"
+#include "./Human/include/Utilities/OPimagePNG.h"
 
 OPassetLoader OP_DEFAULT_LOADERS[8] = {
 	{

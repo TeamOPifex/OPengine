@@ -1,6 +1,6 @@
 #include "GameStates.h"
 #include "./Core/include/Assert.h"
-#include "./Human/include/Utilities/ImagePNG.h"
+#include "./Human/include/Utilities/OPimagePNG.h"
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Human/include/Systems/OPfontSystem.h"
 #include "./Human/include/Systems/OPinputSystem.h"
