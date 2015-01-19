@@ -1,9 +1,8 @@
 
 ### CMake Setup
-include(CMake/engine/components.cmake) 
-include(CMake/engine/macros.cmake) 
+include(${CMAKE_CURRENT_LIST_DIR}/components.cmake) 
+include(${CMAKE_CURRENT_LIST_DIR}/macros.cmake) 
 ### Build Setup
-include(CMake/engine/build.cmake)
-include(CMake/engine/global.cmake)
-include(CMake/engine/packages.cmake)
-include(CMake/assets.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/build.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/global.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/packages.cmake)
