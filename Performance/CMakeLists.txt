@@ -12,6 +12,7 @@ include_directories(
 	../
 )
 
+add_external_opifex_includes()
 
 #########################################
 # Include Files
@@ -44,15 +45,9 @@ else()
 	add_library(4_Performance STATIC ${PERFORMANCE_SRC})
 endif()
 
-add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-add_definitions(-D${OPIFEX_OS})
 
 if(${OPIFEX_OPTION_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
-endif()
-if( ${OPIFEX_OS_ANDROID} )
-	add_definitions(-DOPIFEX_OPENGL_ES)
-	add_definitions(-DOPIFEX_OPENGL_ES_2)
 endif()
 
 target_link_libraries(4_Performance	${ALL_LIBS})

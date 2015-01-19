@@ -1,6 +1,6 @@
 #include "../../include/wrappers/DataWrapper.h"
 
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 
 #include "./Core/include/OPlog.h"
 #include "./Data/include/OPcman.h"

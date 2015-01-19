@@ -29,7 +29,7 @@ void OPlg(const char* message, ...){
 }
 
 void OPlogDebug(const char* message, ...) {
-#ifndef OPIFEX_RELEASE
+#ifndef OPIFEX_OPTION_RELEASE
 	va_list args;
 	va_start(args, message);
 	__android_log_vprint(ANDROID_LOG_DEBUG, "OPIFEX", message, args);
@@ -37,7 +37,7 @@ void OPlogDebug(const char* message, ...) {
 }
 
 void OPlogInfo(const char* message, ...) {
-#ifndef OPIFEX_RELEASE
+#ifndef OPIFEX_OPTION_RELEASE
 	va_list args;
 	va_start(args, message);
 	__android_log_vprint(ANDROID_LOG_INFO, "OPIFEX", message, args);
@@ -96,7 +96,7 @@ void OPlg(const char* message, ...){
 }
 
 void OPlogDebug(const char* message, ...) {
-	#ifndef OPIFEX_RELEASE
+	#ifndef OPIFEX_OPTION_RELEASE
 	va_list args;
 	va_start(args, message);
 		write(LogToHandle, "DEBUG: ", 7);
@@ -105,7 +105,7 @@ void OPlogDebug(const char* message, ...) {
 }
 
 void OPlogInfo(const char* message, ...) {
-	#ifndef OPIFEX_RELEASE
+	#ifndef OPIFEX_OPTION_RELEASE
 	va_list args;
 	va_start(args, message);
 		write(LogToHandle, "INFO: ", 6);

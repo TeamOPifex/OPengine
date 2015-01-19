@@ -7,7 +7,7 @@
 #include "./Human/include/Rendering/OPcam.h"
 
 
-#ifdef OPIFEX_SPINE
+#ifdef OPIFEX_OPTION_SPINE
 	#include <spine/spine.h>
 	#include <spine/extension.h>
 	#include <spine/SkeletonJson.h>
@@ -16,7 +16,7 @@
 
 typedef struct {
 
-#ifdef OPIFEX_SPINE
+#ifdef OPIFEX_OPTION_SPINE
 	spSkeletonBounds* bounds;
 	spSkeleton* skeleton;
 	spAnimationState* state;

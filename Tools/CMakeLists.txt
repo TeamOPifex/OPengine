@@ -14,16 +14,10 @@ if(${OPIFEX_TOOLS_FONTMAKER})
 
 	include_directories(
 		../External/freetype/win32/
-		../External/glfw-3.0.4/include/
-		../External/glew-1.9.0/include/
-		../External/Phsyx.3.2.1/include/
-		../External/GLES2/
-		../External/Ogg/include/
-		../External/Vorbis/include/
-		../External/OpenAL/
 		.
 		../
 	)
+	add_external_opifex_includes()
 
 	add_source_group(\\ "${PROJECT_SOURCE_DIR}/Tools/FontMaker" FONTMAKER_SRC)
 	set(ALL_LIBS
@@ -85,18 +79,11 @@ if(${OPIFEX_TOOLS_FBXTOOPM})
 
 	include_directories(
 		../External/freetype/win32/
-		../External/glfw-3.0.4/include/
-		../External/glm-0.9.1/
-		../External/glew-1.9.0/include/
-		../External/Phsyx.3.2.1/include/
-		../External/GLES2/
-		../External/Ogg/include/
-		../External/Vorbis/include/
-		../External/OpenAL/
 		.
 		../
 		
 	)
+	add_external_opifex_includes()
 
 	if(${OPIFEX_OS_WINDOWS})
 		include_directories("C:/Program Files/Autodesk/FBX/FBX SDK/2015.1/include")

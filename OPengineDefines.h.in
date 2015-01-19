@@ -1,0 +1,19 @@
+#ifndef OPENGINE_DEFINES
+#define OPENGINE_DEFINES
+
+#cmakedefine OPIFEX_OPTION_MYO
+#cmakedefine OPIFEX_OPTION_NODEJS
+#cmakedefine OPIFEX_OPTION_OCULUS
+#cmakedefine OPIFEX_OPTION_PHYSICS
+#cmakedefine OPIFEX_OPTION_RELEASE
+#cmakedefine OPIFEX_OPTION_SHARED
+#cmakedefine OPIFEX_OPTION_SPINE
+#cmakedefine OPIFEX_OPTION_V8
+#cmakedefine OPENGL_DESKTOP_TARGET ${OPENGL_DESKTOP_TARGET}
+#define ${OPIFEX_OS}
+
+#ifndef OPIFEX_OPTION_RELEASE
+#define _DEBUG
+#endif
+
+#endif

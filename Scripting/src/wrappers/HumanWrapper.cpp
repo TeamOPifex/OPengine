@@ -1,6 +1,6 @@
 #include "../../include/wrappers/HumanWrapper.h"
 
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 
 #include "./Pipeline/include/OPsprite3D.h"
 #include "./Human/include/Systems/OPinputSystem.h"

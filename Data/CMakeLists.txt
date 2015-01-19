@@ -12,6 +12,7 @@ include_directories(
 	../
 )
 
+add_external_opifex_includes()
 
 #########################################
 # Include Files
@@ -41,12 +42,6 @@ if(${OPIFEX_OPTION_SHARED})
 	add_library(2_Data SHARED ${DATA_SRC})
 else()
 	add_library(2_Data STATIC ${DATA_SRC})
-endif()
-add_definitions(-D${OPIFEX_OS})
-
-if(${OPIFEX_OPTION_RELEASE})
-else()
-	add_definitions(-D_DEBUG)
 endif()
 
 target_link_libraries(2_Data ${ALL_LIBS})

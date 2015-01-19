@@ -25,6 +25,7 @@ include_directories(
 	../External/Spine/include/
 	.
 	../
+	${BINARY_FOLDER}
 )
 
 
@@ -65,7 +66,6 @@ set(ALL_LIBS
 # BUILD
 #########################################
 add_executable(9_Application ${APPLICATION_SRC})
-add_definitions(-D${OPIFEX_OS})
 
 target_link_libraries(9_Application	${ALL_LIBS})
 

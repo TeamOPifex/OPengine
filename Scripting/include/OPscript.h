@@ -6,7 +6,7 @@
 #include "./Scripting/include/OPloaderOPS.h"
 #include "./Data/include/OPstream.h"
 
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 
 #include "v8.h"
 #include "./include/libplatform/libplatform.h"
@@ -17,7 +17,7 @@ extern void(*CustomWrapper)(V8isolate* isolate, V8ObjectGlobal target);
 
 typedef struct {
 	OPscript* source;
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 	Persistent<Script, CopyablePersistentTraits<Script> > result;
 	Persistent<Context, CopyablePersistentTraits<Context> > context;
 	Persistent<ObjectTemplate, CopyablePersistentTraits<ObjectTemplate> > global;

@@ -12,6 +12,8 @@ include_directories(
 	../
 )
 
+add_external_opifex_includes()
+
 #########################################
 # DEPENDENT LIBRARIES
 #########################################

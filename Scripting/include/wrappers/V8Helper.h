@@ -1,13 +1,14 @@
 #ifndef OPIFEX_SCRIPTING_WRAPPERS_V8
 #define OPIFEX_SCRIPTING_WRAPPERS_V8
 
+#include "./OPengineDefines.h"
 #include "V8Types.h"
 
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 
 #include "./Scripting/include/OPscriptV8.h"
 
-#ifdef OPIFEX_NODEJS
+#ifdef OPIFEX_OPTION_NODEJS
 
 inline V8Return OPscriptV8SetReturn(const V8Args& args, V8Scope* scope, Handle<Value> val) {
 	return scope->Close(val);

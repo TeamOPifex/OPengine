@@ -1,7 +1,9 @@
 #ifndef OPIFEX_SCRIPTING_WRAPPERS_MATH
 #define OPIFEX_SCRIPTING_WRAPPERS_MATH
 
-#ifdef OPIFEX_V8
+#include "./OPengineDefines.h"
+
+#ifdef OPIFEX_OPTION_V8
 
 #include "./Scripting/include/OPscript.h"
 

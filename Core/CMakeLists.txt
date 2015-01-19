@@ -12,7 +12,7 @@ include_directories(
 	../
 	./Core/include/
 )
-
+add_external_opifex_includes()
 
 #########################################
 # Include Files
@@ -35,13 +35,7 @@ if(${OPIFEX_OPTION_SHARED})
 else()
 	add_library(1_Core STATIC ${CORE_SRC})
 endif()
-add_definitions(-D${OPIFEX_OS})
 
-if(${OPIFEX_OPTION_RELEASE})
-	add_definitions(-DOPIFEX_RELEASE)
-else()
-	add_definitions(-D_DEBUG)
-endif()
 if(${OPIFEX_OPTION_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 endif()

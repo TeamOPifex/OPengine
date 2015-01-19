@@ -1,10 +1,10 @@
 #include "../../include/wrappers/V8Helper.h"
 
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 
 #include "./Core/include/OPlog.h"
 
-#ifdef OPIFEX_NODEJS
+#ifdef OPIFEX_OPTION_NODEJS
 //V8isolate* isolate = NULL;
 #endif
 
@@ -101,7 +101,7 @@ const OPchar* OPscriptV8ToCString(const v8::String::Utf8Value& value) {
 
 OPscriptValuePersistent OPscriptGetValue(f32 val) {
 
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 	Isolate::Scope isolate_scope(isolate);
 	HandleScope scope(isolate);
 
@@ -112,7 +112,7 @@ OPscriptValuePersistent OPscriptGetValue(f32 val) {
 }
 
 OPscriptValuePersistent OPscriptGetValue(const OPchar* val) {
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 	Isolate::Scope isolate_scope(isolate);
 	HandleScope scope(isolate);
 

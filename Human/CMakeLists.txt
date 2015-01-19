@@ -8,18 +8,11 @@ cmake_minimum_required(VERSION 2.8)
 # Include Directories
 #########################################
 include_directories(
-	../External/glfw-3.0.4/include/
-	../External/glew-1.9.0/include/
-	../External/Phsyx.3.2.1/include/
-	../External/GLES2/
-	../External/Ogg/include/
-	../External/Vorbis/include/
-	../External/OpenAL/
-	../External/VP8/include/
 	.
 	../
 )
 
+add_external_opifex_includes()
 
 #########################################
 # Include Files
@@ -82,7 +75,6 @@ else()
 	add_library(5_Human STATIC ${HUMAN_SRC})
 endif()
 add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS)
-add_definitions(-D${OPIFEX_OS})
 
 target_link_libraries(5_Human ${ALL_LIBS})
 
@@ -90,11 +82,6 @@ set_target_properties(5_Human PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(5_Human PROPERTIES OUTPUT_NAME "Human")
 
 
-if(${OPIFEX_OPTION_RELEASE})
-
-else()
-	add_definitions(-D_DEBUG)
-endif()
 if(${OPIFEX_OPTION_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 endif()

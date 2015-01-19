@@ -6,7 +6,7 @@
 #include "./Human/include/Input/OPtouch.h"
 #include "./Human/include/Input/OPgamePad.h"
 #include "./Human/include/Input/OPmyo.h"
-#ifdef OPIFEX_OCULUS
+#ifdef OPIFEX_OPTION_OCULUS
 #include "./Human/include/Input/OPoculus.h"
 #endif
 
