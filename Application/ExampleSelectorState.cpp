@@ -34,7 +34,7 @@ void ExampleSelectorEnter(OPgameState* last) {
 	OPcmanLoad("Ubuntu.opf");
 	OPcmanPurge();
 
-	OPsystemsLoadFontEffect();
+	OPfontSystemLoadEffects();
 
 	const OPchar* Names[ExampleCount] = {
 		"Audio",

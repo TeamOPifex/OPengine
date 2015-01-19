@@ -1,7 +1,7 @@
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Data/include/OPcman.h"
 
-OPeffect OPeffectLoadTextured2D(ui32 vertexStride) {
+OPeffect OPrenderSystemLoadTextured2D(ui32 vertexStride) {
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
 		{ "aNormal", GL_FLOAT, 3 },
@@ -24,7 +24,7 @@ OPeffect OPeffectLoadTextured2D(ui32 vertexStride) {
 	return effect;
 }
 
-OPeffect OPeffectLoadTextured3D(ui32 vertexStride) {
+OPeffect OPrenderSystemLoadTextured3D(ui32 vertexStride) {
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
 		{ "aNormal", GL_FLOAT, 3 },

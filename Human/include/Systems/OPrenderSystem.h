@@ -9,5 +9,5 @@
 
 #include "./Human/include/Rendering/Primitives/OPquad.h"
 
-OPeffect OPeffectLoadTextured2D(ui32 vertexStride);
-OPeffect OPeffectLoadTextured3D(ui32 vertexStride);
+OPeffect OPrenderSystemLoadTextured2D(ui32 vertexStride);
+OPeffect OPrenderSystemLoadTextured3D(ui32 vertexStride);

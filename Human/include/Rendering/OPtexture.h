@@ -12,6 +12,7 @@
 //  \___ \| __| '__| | | |/ __| __/ __|
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
+
 typedef struct{
 	ui16 Width, Height;
 	ui32 InternalFormat, Format, DataType;
@@ -32,6 +33,7 @@ typedef struct{
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
+
 extern OPtexture* OPRENDER_CURR_TEX;
 
 //-----------------------------------------------------------------------------
@@ -41,6 +43,7 @@ extern OPtexture* OPRENDER_CURR_TEX;
 // |  ___| '__/ _ \ |______| |  ___| '__/ _ \ / __| | |  | | | '__/ _ \/ __| __| \ \ / / _ / __|
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/   
+
 #define OPtextureNearest    GL_NEAREST
 #define OPtextureLinear     GL_LINEAR
 #define OPtextureNearestMip GL_NEAREST_MIPMAP_NEAREST
@@ -56,6 +59,7 @@ extern OPtexture* OPRENDER_CURR_TEX;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+
 OPtexture OPtextureCreate(OPtextureDescription desc);
 void OPtextureDestroy(OPtexture* tex);
 ui32 OPtextureBind(OPtexture* tex);
