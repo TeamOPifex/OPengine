@@ -21,8 +21,7 @@ ScriptingExample scriptingExample;
 void ExampleScriptingEnter(OPgameState* last) {
 	OPscriptInit();
 	scriptingExample.MyScript = (OPscript*)OPcmanLoadGet("myscript.js");
-	OPscriptCompile(&scriptingExample.Compiled, scriptingExample.MyScript, NULL);
-	OPscriptRun(&scriptingExample.Compiled);
+	OPscriptCompileAndRun(&scriptingExample.Compiled, scriptingExample.MyScript, NULL);
 }
 
 OPint ExampleScriptingUpdate(OPtimer* time) {
