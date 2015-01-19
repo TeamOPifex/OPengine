@@ -79,7 +79,7 @@ OPint ExampleOculusUpdate(OPtimer* time) {
 
 	if (OPkeyboardIsDown(OPKEY_P)) { oculusExample->Rotation++; }
 
-	OPrenderBindMesh(oculusExample->Mesh);
+	OPmeshBind(oculusExample->Mesh);
 	OPeffectBind(oculusExample->Effect);
 
 	OPmat4 world, view, proj;
@@ -88,14 +88,14 @@ OPint ExampleOculusUpdate(OPtimer* time) {
 	OPcamGetView((*oculusExample->Camera), &view);
 	OPcamGetProj((*oculusExample->Camera), &proj);
 
-	OPrenderParamMat4v("uWorld", 1, &world);
-	OPrenderParamMat4v("uProj", 1, &proj);
-	OPrenderParamMat4v("uView", 1, &view);
+	OPeffectParamMat4v("uWorld", 1, &world);
+	OPeffectParamMat4v("uProj", 1, &proj);
+	OPeffectParamMat4v("uView", 1, &view);
 
 	OPvec3 light = OPvec3Create(0, 1, 0);
-	OPrenderParamVec3("vLightDirection", &light);
+	OPeffectParamVec3("vLightDirection", &light);
 
-	OPrenderMesh();
+	OPmeshRender();
 	OPframeBufferUnbind();
 
 	OPrenderPresent();

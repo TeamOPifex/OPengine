@@ -145,10 +145,10 @@ OPint ExampleSpineUpdate(OPtimer* time) {
 	//OPbindMeshEffectWorldCam(spineExample->Mesh, &spineExample->Effect, &world, &spineExample->Camera);
 
 	// Sets the vLightDirection uniform on the Effect that is currently bound (modelExample->Effect)
-	//OPrenderParamVec3("vLightDirection", &spineExample->LightDirection);
+	//OPeffectParamVec3("vLightDirection", &spineExample->LightDirection);
 
 	// Renders to the screen the currently bound Mesh (modelExample->Mesh)
-	//OPrenderMesh();
+	//OPmeshRender();
 
 	// Swaps the back buffer
 	OPrenderPresent();

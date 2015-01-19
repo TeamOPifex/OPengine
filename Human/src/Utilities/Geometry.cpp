@@ -130,10 +130,10 @@ OPmesh* OPgeoCreateSphere(f32 radius, ui16 widthSegments, ui16 heightSegments) {
 	OPverticesWriteVec3(verticesStructure, norms, Normal);
 
 	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
-	*mesh = OPrenderCreateMesh();
-	OPrenderBindMesh(mesh);
+	*mesh = OPmeshCreate();
+	OPmeshBind(mesh);
 
-	OPrenderBuildMesh(
+	OPmeshBuild(
 		verticesStructure->size * sizeof(f32), 
 		sizeof(ui16), 
 		count, 

@@ -187,14 +187,14 @@ OPmesh OPfontCreateText(OPfont* font, OPchar* text) {
 		}
 	}
 
-	OPmesh mesh = OPrenderCreateMesh();
-	OPrenderBindMesh(&mesh);
-	OPrenderBuildMesh(vertexSize, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
+	OPmesh mesh = OPmeshCreate();
+	OPmeshBind(&mesh);
+	OPmeshBuild(vertexSize, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
 	return mesh;	
 }
 
 OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text) {
-	ASSERT(OPRENDER_CURR_PACKER != NULL, "No mesh packer bound.");
+	ASSERT(OPMESHPACKER_ACTIVE != NULL, "No mesh packer bound.");
 
 	ui32 vertexSize = sizeof(OPvertexColor);
 	ui32 indexSize = sizeof(ui16);
@@ -243,7 +243,7 @@ OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text) {
 	OPfontBuiltTextNode node;
 	node.Width = width;
 	node.packedMesh = (OPmeshPacked*)OPalloc(sizeof(OPmeshPacked));
-	*node.packedMesh = OPrenderCreateMeshPacked(vertexSize, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
+	*node.packedMesh = OPmeshPackedCreate(vertexSize, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
 
 	return node;
 }
@@ -298,9 +298,9 @@ OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text) {
 
 	OPfontUserTextNode node;
 	node.Width = width;
-	node.mesh = OPrenderCreateMesh();
-	OPrenderBindMesh(&node.mesh);
-	OPrenderBuildMesh(sizeof(OPvertexColor), sizeof(ui16), vertices->_size, indices->_size, vertices->items, indices->items);
+	node.mesh = OPmeshCreate();
+	OPmeshBind(&node.mesh);
+	OPmeshBuild(sizeof(OPvertexColor), sizeof(ui16), vertices->_size, indices->_size, vertices->items, indices->items);
 
 	OPvectorDestroy(vertices);
 	OPvectorDestroy(indices);

@@ -8,7 +8,7 @@
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
-OPmeshPacker* OPRENDER_CURR_PACKER;
+OPmeshPacker* OPMESHPACKER_ACTIVE;
 
 //-----------------------------------------------------------------------------
 // ______                _   _                 
@@ -30,14 +30,14 @@ OPmeshPacker OPmeshPackerCreate(){
 }
 //-----------------------------------------------------------------------------
 OPint OPmeshPackerDestroy(){
-	OPmeshPacker* packer = OPRENDER_CURR_PACKER;
+	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
 	OPstreamDestroy(&packer->vertices);
 	OPstreamDestroy(&packer->indices);
 	return 1;
 }
 //-----------------------------------------------------------------------------
 ui32 OPmeshPackerAddVB(ui32 vertexSize, void* verticesData, ui32 vertexCount){
-	OPmeshPacker* packer = OPRENDER_CURR_PACKER;
+	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
 	ui32 dataStartPos = packer->vertexOffset;
 	ui32 vertexBufferSize = vertexSize * vertexCount;
 	OPwrite(&packer->vertices, verticesData, vertexBufferSize );
@@ -47,7 +47,7 @@ ui32 OPmeshPackerAddVB(ui32 vertexSize, void* verticesData, ui32 vertexCount){
 }
 //-----------------------------------------------------------------------------
 ui32 OPmeshPackerAddIB(ui32 indexSize, void* indicesData, ui32 indexCount){
-	OPmeshPacker* packer = OPRENDER_CURR_PACKER;
+	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
 	ui32 dataStartPos = packer->vertexOffset;
 	ui32 indexBufferSize = indexSize * indexCount;
 
@@ -63,7 +63,7 @@ ui32 OPmeshPackerAddIB(ui32 indexSize, void* indicesData, ui32 indexCount){
 }
 //-----------------------------------------------------------------------------
 void OPmeshPackerBuild(){
-	OPmeshPacker* packer = OPRENDER_CURR_PACKER;
+	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
 	packer->VertexBuffer = OPrenderGenBuffer(OPvertexBuffer);
 	packer->IndexBuffer = OPrenderGenBuffer(OPindexBuffer);
 
@@ -81,12 +81,12 @@ void OPmeshPackerBuild(){
 		packer->indices.Data
 	);
 	
-	OPRENDER_CURR_PACKER->built = true;
+	OPMESHPACKER_ACTIVE->built = true;
 }
 //-----------------------------------------------------------------------------
 void OPmeshPackerBind(OPmeshPacker* packer){
-	OPRENDER_CURR_PACKER = packer;
-	if (!OPRENDER_CURR_PACKER->built) return;
+	OPMESHPACKER_ACTIVE = packer;
+	if (!OPMESHPACKER_ACTIVE->built) return;
 
 	OPglError("OPmeshPackerBind:Error 0");
 	OPrenderBindBuffer(&packer->VertexBuffer);

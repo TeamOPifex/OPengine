@@ -465,7 +465,7 @@ static V8Return _OP_render_CreateMesh(const V8Args& args) {
 	V8Scope scope;
 
 	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
-	*mesh = OPrenderCreateMesh();
+	*mesh = OPmeshCreate();
 
 	//V8Object obj = OPscriptV8CreateTypedObject(isolate, mesh, OPscript_MESH);
 	
@@ -479,7 +479,7 @@ static V8Return _OP_render_BindMesh(const V8Args& args) {
 	//OPmesh* mesh = (OPmesh*)OPscriptV8GetFirstPointer(args, isolate, &inScope, OPscript_MESH);
 	OPmesh* mesh = (OPmesh*)args[0]->IntegerValue();
 
-	OPrenderBindMesh(mesh);
+	OPmeshBind(mesh);
 
 	return OPscriptV8SetReturn(args, &scope, OPscriptV8GetNull(isolate));
 }
@@ -511,7 +511,7 @@ static V8Return _OP_render_BuildMesh(const V8Args& args) {
 		indices[i] = indexDataArray->Get(i)->Int32Value();
 	}
 
-	OPrenderBuildMesh(
+	OPmeshBuild(
 		sizeof(OPfloat) * vertexElementCount,
 		sizeof(ui16),
 		vertDataCount,
@@ -1059,7 +1059,7 @@ static V8Return _BindEffect(const V8Args& args) {
 static V8Return _RenderMesh(const V8Args& args) {
 	V8Scope scope;
 
-	OPrenderMesh();
+	OPmeshRender();
 
 	return OPscriptV8SetReturn(args, &scope, OPscriptV8GetNull(isolate));
 }
@@ -1084,7 +1084,7 @@ static V8Return _RenderParamMat4v(const V8Args& args) {
 	name[len] = '\0';
 
 	OPmat4* mat = (OPmat4*)args[1]->ToObject()->Get(OPscriptV8GetString(isolate, "Id"))->IntegerValue();
-	OPrenderParamMat4v(name, 1, mat);
+	OPeffectParamMat4v(name, 1, mat);
 
 	return OPscriptV8SetReturn(args, &scope, OPscriptV8GetNull(isolate));
 }
@@ -1094,7 +1094,7 @@ static V8Return _RenderParamVec3(const V8Args& args) {
 
 	v8::String::Utf8Value utf8(args[0]);
 	const char* p = OPscriptV8ToCString(utf8);
-	OPrenderParamVec3(p, (OPvec3*)args[1]->IntegerValue());
+	OPeffectParamVec3(p, (OPvec3*)args[1]->IntegerValue());
 
 	return OPscriptV8SetReturn(args, &scope, OPscriptV8GetNull(isolate));
 }
@@ -1104,7 +1104,7 @@ static V8Return _RenderParamTexture(const V8Args& args) {
 
 	v8::String::Utf8Value utf8(args[0]);
 	const char* p = OPscriptV8ToCString(utf8);
-	OPrenderParami(p, OPtextureBind((OPtexture*)args[1]->IntegerValue()));
+	OPeffectParami(p, OPtextureBind((OPtexture*)args[1]->IntegerValue()));
 
 	return OPscriptV8SetReturn(args, &scope, OPscriptV8GetNull(isolate));
 }

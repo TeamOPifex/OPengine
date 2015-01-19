@@ -143,7 +143,7 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_S) / -100.0f);
 	OPskeletonUpdate(skinningExample->skeleton);
 
-	OPrenderBindMesh(skinningExample->Mesh);
+	OPmeshBind(skinningExample->Mesh);
 	OPeffectBind(skinningExample->Effect);
 	
 	OPmat4 world, view, proj;
@@ -153,19 +153,19 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	OPcamGetView((*skinningExample->Camera), &view);
 	OPcamGetProj((*skinningExample->Camera), &proj);
 
-	OPrenderParamMat4("uWorld", &world);
-	OPrenderParamMat4("uView", &view);
-	OPrenderParamMat4("uProj", &proj);
+	OPeffectParamMat4("uWorld", &world);
+	OPeffectParamMat4("uView", &view);
+	OPeffectParamMat4("uProj", &proj);
 
-	OPrenderParamMat4v("uBones", skinningExample->skeleton->hierarchyCount, skinningExample->skeleton->skinned);
+	OPeffectParamMat4v("uBones", skinningExample->skeleton->hierarchyCount, skinningExample->skeleton->skinned);
 
 	OPvec3 light = OPvec3Create(0, 10, 0);
-	OPrenderParamVec3("uLightPosition", &light);
+	OPeffectParamVec3("uLightPosition", &light);
 
 	OPtextureClearActive();
-	OPrenderParami("uColorTexture", OPtextureBind(skinningExample->texture));
+	OPeffectParami("uColorTexture", OPtextureBind(skinningExample->texture));
 
-	OPrenderMesh();
+	OPmeshRender();
 
 	OPrenderPresent();
 	return false;

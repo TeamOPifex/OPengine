@@ -145,8 +145,8 @@ OPint ExampleDeferredUpdate(OPtimer* time) {
 	//OPrenderDepth(1);
 
 	//OPbindMeshEffectWorldCam(deferredExample->Mesh, &deferredExample->DeferredEffect, &world, &deferredExample->Camera);
-	//OPrenderParamVec3("vLightDirection", &deferredExample->LightDirection);
-	//OPrenderMesh();
+	//OPeffectParamVec3("vLightDirection", &deferredExample->LightDirection);
+	//OPmeshRender();
 
 	//OPrenderPresent();
 
@@ -158,8 +158,8 @@ OPint ExampleDeferredUpdate(OPtimer* time) {
 	//OPrenderClear(0, 0, 1);
 
 	//OPbindMeshEffectWorldCam(deferredExample->Mesh, &deferredExample->Effect, &world, &deferredExample->Camera);
-	//OPrenderParamVec3("vLightDirection", &deferredExample->LightDirection);
-	//OPrenderMesh();
+	//OPeffectParamVec3("vLightDirection", &deferredExample->LightDirection);
+	//OPmeshRender();
 
 	//OPtexture2DRender(deferredExample->GBuffer->Position2D);
 	//OPtexture2DRender(deferredExample->GBuffer->Diffuse2D);

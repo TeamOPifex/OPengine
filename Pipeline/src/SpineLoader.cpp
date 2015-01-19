@@ -178,9 +178,9 @@ void SpineRender(Spine* spine, OPmat4* world, OPeffect* effect, OPcam* camera) {
 			if (texture) {
 				OPtextureClearActive();
 				ui32 handle = OPtextureBind(texture);
-				OPrenderParami("uColorTexture", handle);
+				OPeffectParami("uColorTexture", handle);
 			}
-			OPrenderMesh();
+			OPmeshRender();
 		}
 		else if (attachment->type == SP_ATTACHMENT_MESH) {
 			OPlog("	* Mesh");

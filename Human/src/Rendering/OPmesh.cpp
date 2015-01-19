@@ -1,6 +1,6 @@
 #include "./Human/include/Rendering/OPmesh.h"
 
-OPmesh* OPRENDER_CURR_MESH;
+OPmesh* OPMESH_ACTIVE;
 
 //-----------------------------------------------------------------------------
 // ______                _   _                 
@@ -9,7 +9,7 @@ OPmesh* OPRENDER_CURR_MESH;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPmesh OPrenderCreateMesh(){
+OPmesh OPmeshCreate(){
 	OPmesh out = {
 		OPrenderGenBuffer(OPvertexBuffer),
 		OPrenderGenBuffer(OPindexBuffer)
@@ -19,29 +19,29 @@ OPmesh OPrenderCreateMesh(){
 }
 
 //-----------------------------------------------------------------------------
-void OPrenderBuildMesh(ui32 vertSize, ui32 indSize,
+void OPmeshBuild(ui32 vertSize, ui32 indSize,
 						 ui32 vertCount, ui32 indCount,
 						 void* vertices, void* indices){
-	OPrenderSetBufferData(&OPRENDER_CURR_MESH->IndexBuffer, indSize, indCount, indices);
-	OPrenderSetBufferData(&OPRENDER_CURR_MESH->VertexBuffer, vertSize, vertCount, vertices);
-	OPRENDER_CURR_MESH->VertexSize = vertSize;
-	OPRENDER_CURR_MESH->Vertices = vertices;
-	OPRENDER_CURR_MESH->Indicies = indices;
+	OPrenderSetBufferData(&OPMESH_ACTIVE->IndexBuffer, indSize, indCount, indices);
+	OPrenderSetBufferData(&OPMESH_ACTIVE->VertexBuffer, vertSize, vertCount, vertices);
+	OPMESH_ACTIVE->VertexSize = vertSize;
+	OPMESH_ACTIVE->Vertices = vertices;
+	OPMESH_ACTIVE->Indicies = indices;
 }
 
 //-----------------------------------------------------------------------------
-void OPrenderBindMesh(OPmesh* mesh){
+void OPmeshBind(OPmesh* mesh){
 	OPrenderBindBuffer(&mesh->VertexBuffer);
 	OPrenderBindBuffer(&mesh->IndexBuffer);
-	OPRENDER_CURR_MESH = mesh;
+	OPMESH_ACTIVE = mesh;
 }
 
 //-----------------------------------------------------------------------------
-void OPrenderMesh(){
+void OPmeshRender(){
 	OPrenderDrawBufferIndexed(0);
 }
 
-void OPrenderDestroyMesh(OPmesh* mesh) {
+void OPmeshDestroy(OPmesh* mesh) {
 	OPrenderDelBuffer(&mesh->VertexBuffer);
 	OPrenderDelBuffer(&mesh->IndexBuffer);
 }

@@ -45,7 +45,7 @@ void OPtexture2DDestroy(OPtexture2D* tex2d) {
 }
 
 void OPtexture2DPrepRender(OPtexture2D* tex2d) {
-	OPrenderBindMesh(TEXTURE_2D_QUAD_MESH);
+	OPmeshBind(TEXTURE_2D_QUAD_MESH);
 	OPeffectBind(tex2d->Effect);
 
 	OPrenderDepth(0);
@@ -56,11 +56,11 @@ void OPtexture2DPrepRender(OPtexture2D* tex2d) {
 	world += tex2d->Position;
 
 	OPtextureClearActive();
-	OPrenderParami("uColorTexture", OPtextureBind(tex2d->Texture));
-	OPrenderParamMat4v("uWorld", 1, &world);
+	OPeffectParami("uColorTexture", OPtextureBind(tex2d->Texture));
+	OPeffectParamMat4v("uWorld", 1, &world);
 }
 
 void OPtexture2DRender(OPtexture2D* tex2d) {
 	OPtexture2DPrepRender(tex2d);
-	OPrenderMesh();
+	OPmeshRender();
 }

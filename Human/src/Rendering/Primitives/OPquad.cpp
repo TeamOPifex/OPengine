@@ -52,9 +52,9 @@ ui16 OPquadIndexData[] = {
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPmesh OPquadCreate(){
-	OPmesh mesh = OPrenderCreateMesh();
-	OPrenderBindMesh(&mesh);
-	OPrenderBuildMesh(
+	OPmesh mesh = OPmeshCreate();
+	OPmeshBind(&mesh);
+	OPmeshBuild(
 		sizeof(OPfloat) * 5, sizeof(ui16),
 		4, 6,
 		OPquadVertData, OPquadIndexData
@@ -75,8 +75,8 @@ void SetQuadPoint(QuadPoint* point, f32 x, f32 y, f32 z, f32 u, f32 v) {
 }
 
 OPmesh OPquadCreateCustom(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
-	OPmesh mesh = OPrenderCreateMesh();
-	OPrenderBindMesh(&mesh);
+	OPmesh mesh = OPmeshCreate();
+	OPmeshBind(&mesh);
 
 	// 1, 1,
 	// 0, 1,
@@ -91,7 +91,7 @@ OPmesh OPquadCreateCustom(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 t
 	SetQuadPoint(&verts[2], offset.x - width, offset.y - height, 0, texcoordStart.x, texcoordStart.y);
 	SetQuadPoint(&verts[3], offset.x + width, offset.y - height, 0, texcoordEnd.x, texcoordStart.y);
 	
-	OPrenderBuildMesh(
+	OPmeshBuild(
 		sizeof(OPfloat)* 5, sizeof(ui16),
 		4, 6,
 		verts, OPquadIndexData
@@ -101,7 +101,7 @@ OPmesh OPquadCreateCustom(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 t
 
 //-----------------------------------------------------------------------------
 OPmeshPacked OPquadCreatePacked(){
-	return OPrenderCreateMeshPacked(
+	return OPmeshPackedCreate(
 		sizeof(OPfloat) * 5, sizeof(ui16),
 		4, 6,
 		OPquadVertData, OPquadIndexData
@@ -109,9 +109,9 @@ OPmeshPacked OPquadCreatePacked(){
 }
 //-----------------------------------------------------------------------------
 OPmesh OPquadNormCreate(){
-	OPmesh mesh = OPrenderCreateMesh();
-	OPrenderBindMesh(&mesh);
-	OPrenderBuildMesh(
+	OPmesh mesh = OPmeshCreate();
+	OPmeshBind(&mesh);
+	OPmeshBuild(
 		sizeof(OPfloat) * 8, sizeof(ui16),
 		4, 6,
 		OPquadVertNormData, OPquadIndexData
@@ -120,7 +120,7 @@ OPmesh OPquadNormCreate(){
 }
 //-----------------------------------------------------------------------------
 OPmeshPacked OPquadNormCreatePacked(){
-	return OPrenderCreateMeshPacked(
+	return OPmeshPackedCreate(
 		sizeof(OPfloat) * 8, sizeof(ui16),
 		4, 6,
 		OPquadVertNormData, OPquadIndexData
