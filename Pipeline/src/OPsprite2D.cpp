@@ -66,7 +66,7 @@ void OPsprite2DSetSprite(OPsprite2D* sprite, i32 index) {
 }
 
 void OPsprite2DPrepRender(OPsprite2D* sprite) {
-	OPrenderBindMesh(&SPRITE_2D_QUAD_MESH_PIPELINE);
+	OPmeshBind(&SPRITE_2D_QUAD_MESH_PIPELINE);
 	OPeffectBind(sprite->Effect);
 
 
@@ -91,15 +91,15 @@ void OPsprite2DPrepRender(OPsprite2D* sprite) {
 	world += sprite->Position;
 
 	OPtextureClearActive();
-	OPrenderParami("uColorTexture", OPtextureBind(sprite->CurrentSprite->Sheet));
-	OPrenderParamMat4("uWorld", &world);
-	OPrenderParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
-	OPrenderParamVec2("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size);
+	OPeffectParami("uColorTexture", OPtextureBind(sprite->CurrentSprite->Sheet));
+	OPeffectParamMat4("uWorld", &world);
+	OPeffectParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
+	OPeffectParamVec2("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size);
 }
 
 void OPsprite2DRender(OPsprite2D* sprite) {
 	OPsprite2DPrepRender(sprite);
-	OPrenderMesh();
+	OPmeshRender();
 }
 
 

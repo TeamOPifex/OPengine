@@ -9,11 +9,11 @@
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //-----------------------------------------------------------------------------
 
-OPmeshPacked OPrenderCreateMeshPacked(
+OPmeshPacked OPmeshPackedCreate(
 			ui32 vertSize, ui32 indSize,
 			ui32 vertCount, ui32 indCount,
 			void* vertices, void* indices){
-	OPmeshPacker* packer = OPRENDER_CURR_PACKER;
+	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
 
 	OPmeshPacked out = {
 		packer->indexOffset,
@@ -28,6 +28,6 @@ OPmeshPacked OPrenderCreateMeshPacked(
 	return out;
 }
 //-----------------------------------------------------------------------------
-void OPrenderMeshPacked(OPmeshPacked* mesh){
+void OPmeshPackedRender(OPmeshPacked* mesh){
 		glDrawElements(GL_TRIANGLES, mesh->elementCount, GL_UNSIGNED_SHORT, (void*)(mesh->offset));
 }

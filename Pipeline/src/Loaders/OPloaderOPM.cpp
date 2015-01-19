@@ -460,9 +460,9 @@ OPint OPMload(const OPchar* filename, OPmesh** mesh) {
 
 	//OPlog("Creating vertex and buffers");
 	// Create Vertex & Index Buffers for Mesh
-	OPmesh temp = OPrenderCreateMesh();
-	OPrenderBindMesh(&temp);
-	OPrenderBuildMesh(
+	OPmesh temp = OPmeshCreate();
+	OPmeshBind(&temp);
+	OPmeshBuild(
 		data.vertexSize, data.indexSize,
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
@@ -752,9 +752,9 @@ OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh){
 
 	OPMPartition(&data, triTable, vertList, 1);
 
-	OPmesh temp = OPrenderCreateMesh();
-	OPrenderBindMesh(&temp);
-	OPrenderBuildMesh(
+	OPmesh temp = OPmeshCreate();
+	OPmeshBind(&temp);
+	OPmeshBuild(
 		data.vertexSize, data.indexSize,
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
@@ -776,7 +776,7 @@ OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh) {
 	OPstream* str = OPreadFile(filename);
 	OPMData data = OPMloadData(str);
 
-	OPmeshPacked temp = OPrenderCreateMeshPacked(
+	OPmeshPacked temp = OPmeshPackedCreate(
 		data.vertexSize, data.indexSize,
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices

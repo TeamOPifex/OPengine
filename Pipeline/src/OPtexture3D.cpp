@@ -45,7 +45,7 @@ void OPtexture3DDestroy(OPtexture3D* tex3d) {
 }
 
 void OPtexture3DPrepRender(OPtexture3D* tex3d, OPcam* camera) {
-	OPrenderBindMesh(TEXTURE_3D_QUAD_MESH);
+	OPmeshBind(TEXTURE_3D_QUAD_MESH);
 	OPeffectBind(tex3d->Effect);
 
 	OPrenderDepth(0);
@@ -61,13 +61,13 @@ void OPtexture3DPrepRender(OPtexture3D* tex3d, OPcam* camera) {
 	world += tex3d->Position;
 
 	OPtextureClearActive();
-	OPrenderParami("uColorTexture", OPtextureBind(tex3d->Texture));
-	OPrenderParamMat4v("uWorld", 1, &world);
-	OPrenderParamMat4v("uProj", 1, &proj);
-	OPrenderParamMat4v("uView", 1, &view);
+	OPeffectParami("uColorTexture", OPtextureBind(tex3d->Texture));
+	OPeffectParamMat4v("uWorld", 1, &world);
+	OPeffectParamMat4v("uProj", 1, &proj);
+	OPeffectParamMat4v("uView", 1, &view);
 }
 
 void OPtexture3DRender(OPtexture3D* tex3d, OPcam* camera) {
 	OPtexture3DPrepRender(tex3d, camera);
-	OPrenderMesh();
+	OPmeshRender();
 }

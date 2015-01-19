@@ -93,11 +93,11 @@ void _OPparticlePrepareFrame(OPparticleSys* sys, OPparticle* p, OPint frameChang
 
 	// if this particle system is animated, set the offset uniforms for each particle
 	// to indicate the current frame of animation
-		OPrenderParamVec2("uTexCoordScale", &p->Animation->Frames[frame].Size);
-		OPrenderParamVec2("uSpriteOffset", &p->Animation->Frames[frame].Offset);
+		OPeffectParamVec2("uTexCoordScale", &p->Animation->Frames[frame].Size);
+		OPeffectParamVec2("uSpriteOffset", &p->Animation->Frames[frame].Offset);
 
 		OPtextureClearActive();
-		OPrenderParami("uColorTexture", OPtextureBind(p->Animation->Sheet));
+		OPeffectParami("uColorTexture", OPtextureBind(p->Animation->Sheet));
 	}
 
 }
@@ -106,17 +106,17 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 	OPmat4 world;
 	OPint frameChange = sys->fps && sys->timeElapsed > (1.0f / sys->fps);
 
-	OPrenderBindMesh(&PARTICLE_SYSTEM_QUAD_MESH);
+	OPmeshBind(&PARTICLE_SYSTEM_QUAD_MESH);
 	OPeffectBind(EFFECT_PARTICLE_SYSTEM);
 
-	OPrenderParamMat4v("uView", 1, &cam->View);
-	OPrenderParamMat4v("uProj", 1, &cam->Proj);
+	OPeffectParamMat4v("uView", 1, &cam->View);
+	OPeffectParamMat4v("uProj", 1, &cam->Proj);
 
 	if(!sys->fps){
-		OPrenderParamVec2("uTexCoordScale", &sys->uvScale);
-		OPrenderParamVec2("uSpriteOffset", (OPvec2*)&OPvec2Zero);
+		OPeffectParamVec2("uTexCoordScale", &sys->uvScale);
+		OPeffectParamVec2("uSpriteOffset", (OPvec2*)&OPvec2Zero);
 		OPtextureClearActive();
-		OPrenderParami("uColorTexture", OPtextureBind(sys->texture));
+		OPeffectParami("uColorTexture", OPtextureBind(sys->texture));
 	}
 
 
@@ -135,9 +135,9 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 				_OPparticlePrepareFrame(sys, p, frameChange);
 			}
 
-			OPrenderParamVec4("uTint", (OPvec4*)&p->Tint);
-			OPrenderParamMat4v("uWorld", 1, &world);
-			OPrenderMesh();
+			OPeffectParamVec4("uTint", (OPvec4*)&p->Tint);
+			OPeffectParamMat4v("uWorld", 1, &world);
+			OPmeshRender();
 		}
 	}
 	else {
@@ -151,9 +151,9 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 				_OPparticlePrepareFrame(sys, p, frameChange);
 			}
 
-			OPrenderParamVec4("uTint", (OPvec4*)&p->Tint);
-			OPrenderParamMat4v("uWorld", 1, &world);
-			OPrenderMesh();
+			OPeffectParamVec4("uTint", (OPvec4*)&p->Tint);
+			OPeffectParamMat4v("uWorld", 1, &world);
+			OPmeshRender();
 		}
 	}
 

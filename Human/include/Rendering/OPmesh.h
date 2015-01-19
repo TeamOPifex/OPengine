@@ -33,7 +33,7 @@ typedef struct{
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
-extern OPmesh* OPRENDER_CURR_MESH;
+extern OPmesh* OPMESH_ACTIVE;
 
 //-----------------------------------------------------------------------------
 //  _____                     _____                  _____  _               _   _               
@@ -51,12 +51,12 @@ extern OPmesh* OPRENDER_CURR_MESH;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPmesh OPrenderCreateMesh();
-void OPrenderDestroyMesh(OPmesh* mesh);
-void OPrenderBuildMesh(ui32 vertSize, ui32 indSize, ui32 vertCount, ui32 indCount, void* vertices, void* indices);
-void OPrenderBindMesh(OPmesh* mesh);
+OPmesh OPmeshCreate();
+void OPmeshDestroy(OPmesh* mesh);
+void OPmeshBuild(ui32 vertSize, ui32 indSize, ui32 vertCount, ui32 indCount, void* vertices, void* indices);
+void OPmeshBind(OPmesh* mesh);
 
-void OPrenderMesh();
+void OPmeshRender();
 
 
 #endif

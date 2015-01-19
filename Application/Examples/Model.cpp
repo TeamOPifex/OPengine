@@ -100,10 +100,10 @@ OPint ExampleModelUpdate(OPtimer* time) {
 	OPbindMeshEffectWorldCam(modelExample->Mesh, &modelExample->Effect, &world, &modelExample->Camera);
 	
 	// Sets the vLightDirection uniform on the Effect that is currently bound (modelExample->Effect)
-	OPrenderParamVec3("vLightDirection", &modelExample->LightDirection);
+	OPeffectParamVec3("vLightDirection", &modelExample->LightDirection);
 
 	// Renders to the screen the currently bound Mesh (modelExample->Mesh)
-	OPrenderMesh();
+	OPmeshRender();
 
 	// Swaps the back buffer
 	OPrenderPresent();

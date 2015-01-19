@@ -5,31 +5,31 @@
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Rendering/OPcam.h"
 
-inline void OPrenderBindMeshAndEffect(OPmesh* mesh, OPeffect* effect) {
-	OPrenderBindMesh(mesh);
+inline void OPmeshBindAndEffect(OPmesh* mesh, OPeffect* effect) {
+	OPmeshBind(mesh);
 	OPeffectBind(effect);
 }
 
-inline void OPrenderMesh3D(OPmat4* world, OPcam* cam) {
+inline void OPmeshRender3D(OPmat4* world, OPcam* cam) {
 	OPmat4 view, proj;
 	OPcamGetView((*cam), &view);
 	OPcamGetProj((*cam), &proj);
-	OPrenderParamMat4("uWorld", world);
-	OPrenderParamMat4("uProj", &proj);
-	OPrenderParamMat4("uView", &view);
-	OPrenderMesh();
+	OPeffectParamMat4("uWorld", world);
+	OPeffectParamMat4("uProj", &proj);
+	OPeffectParamMat4("uView", &view);
+	OPmeshRender();
 }
 
 inline void OPbindMeshEffectWorldCam(OPmesh* mesh, OPeffect* effect, OPmat4* world, OPcam* camera) {
-	OPrenderBindMesh(mesh);
+	OPmeshBind(mesh);
 	OPeffectBind(effect);
 
 	OPcamUpdateView((*camera));
 	OPcamUpdateProj((*camera));
 
-	OPrenderParamMat4("uWorld", world);
-	OPrenderParamMat4("uProj", &camera->Proj);
-	OPrenderParamMat4("uView", &camera->View);
+	OPeffectParamMat4("uWorld", world);
+	OPeffectParamMat4("uProj", &camera->Proj);
+	OPeffectParamMat4("uView", &camera->View);
 }
 
 #endif

@@ -6,17 +6,17 @@ void OPfontRenderSetParameters(OPvec4 color, OPmat4* world) {
 	OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
 	OPtextureClearActive();
 	ui32 textureHandle = OPtextureBind(OPFONTMANAGER_ACTIVE->_font->texture);
-	OPrenderParami("uColorTexture", textureHandle);
-	OPrenderParamVec4("uColor", &color);
-	OPrenderParamMat4v("uWorld", 1, world);
+	OPeffectParami("uColorTexture", textureHandle);
+	OPeffectParamVec4("uColor", &color);
+	OPeffectParamMat4v("uWorld", 1, world);
 }
 
 void OPfontRender(OPfontUserTextNode* node, OPvec4 color, OPmat4* world) {
 	OPfontRenderSetParameters(color, world);
-	OPrenderBindMesh(&node->mesh);
+	OPmeshBind(&node->mesh);
 	OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
 	if (OPFONTMANAGER_ACTIVE->pixelated) OPtexturePixelate();
-	OPrenderMesh();
+	OPmeshRender();
 }
 
 void OPfontRender(OPfontBuiltTextNode* node, OPvec4 color, OPmat4* world) {
@@ -24,7 +24,7 @@ void OPfontRender(OPfontBuiltTextNode* node, OPvec4 color, OPmat4* world) {
 	OPmeshPackerBind(&OPFONTMANAGER_ACTIVE->meshPacker);
 	OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
 	if (OPFONTMANAGER_ACTIVE->pixelated) OPtexturePixelate();
-	OPrenderMeshPacked(node->packedMesh);
+	OPmeshPackedRender(node->packedMesh);
 }
 
 void OPfontRenderSetAlign(OPmat4* world, OPfloat width, OPfontAlign align){
@@ -61,7 +61,7 @@ void OPfontRender(const OPchar* text, OPvec4 color, OPvec2 pos, OPfontAlign alig
 		OPmat4Scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f);
 		OPmat4Translate(&world, pos.x, pos.y, 0.0f);
 		OPfontRender(&textNode, color, &world);
-		OPrenderDestroyMesh(&textNode.mesh);
+		OPmeshDestroy(&textNode.mesh);
 	} else {
 		OPfontRenderSetAlign(&world, node->Width, align);
 		OPmat4Scl(&world, OPRENDER_SCREEN_WIDTH_SCALE * OPrenderGetWidthAspectRatio() / scale, OPRENDER_SCREEN_HEIGHT_SCALE * OPrenderGetHeightAspectRatio() / scale, 1.0f);
@@ -100,7 +100,7 @@ void OPfontRender(const OPchar* text, OPvec4 color, OPmat4* world) {
 		OPmat4Mul(&temp, *world, temp);
 
 		OPfontRender(&textNode, color, &temp);
-		OPrenderDestroyMesh(&textNode.mesh);
+		OPmeshDestroy(&textNode.mesh);
 	}
 	else {
 		OPfontRenderSetAlign(&aligned, node->Width, OPFONTMANAGER_ACTIVE->_align);

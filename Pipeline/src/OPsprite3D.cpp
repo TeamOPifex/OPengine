@@ -103,9 +103,9 @@ void OPsprite3DPrepReRender(OPsprite3D* sprite, OPvec3 offset, OPfloat rotation)
 	world *= scl;
 	world += offset + sprite->Position;
 
-	OPrenderParamMat4("uWorld", &world);
-	OPrenderParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
-	OPrenderParamVec2("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size);
+	OPeffectParamMat4("uWorld", &world);
+	OPeffectParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
+	OPeffectParamVec2("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size);
 }
 
 void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfloat rotation) {
@@ -118,7 +118,7 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	}
 
 	OPmat4 world, view, proj;
-	OPrenderBindMesh(&SPRITE_3D_QUAD_MESH);
+	OPmeshBind(&SPRITE_3D_QUAD_MESH);
 	OPeffectBind(sprite->Effect);
 
 	OPcamGetView((*camera), &view);
@@ -137,23 +137,23 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	ui32 bind = OPtextureBind(sprite->CurrentSprite->Sheet);
 
 	//OPlog("SpriteSheet %d @ %x", bind, sprite->CurrentSprite->Sheet);
-	OPrenderParami("uColorTexture", bind);
-	//OPrenderParamf("uAlpha", 1.0f);
-	OPrenderParamMat4("uWorld", &world);
-	OPrenderParamMat4("uView", &view);
-	OPrenderParamMat4("uProj", &proj);
-	OPrenderParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
-	OPrenderParamVec2("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size);
+	OPeffectParami("uColorTexture", bind);
+	//OPeffectParamf("uAlpha", 1.0f);
+	OPeffectParamMat4("uWorld", &world);
+	OPeffectParamMat4("uView", &view);
+	OPeffectParamMat4("uProj", &proj);
+	OPeffectParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
+	OPeffectParamVec2("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size);
 }
 
 void OPsprite3DRender(OPsprite3D* sprite, OPcam* camera) {
 	OPsprite3DPrepRender(sprite, camera, OPVEC3_ZERO, 0);
-	OPrenderMesh();
+	OPmeshRender();
 }
 
 void OPsprite3DRenderOffsetRot(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfloat rotation) {
 	OPsprite3DPrepRender(sprite, camera, offset, rotation);
-	OPrenderMesh();
+	OPmeshRender();
 }
 
 

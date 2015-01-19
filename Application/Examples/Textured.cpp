@@ -73,7 +73,7 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 	
 	if (OPkeyboardIsDown(OPKEY_SPACE)) { texturedExample->Rotation++; }
 
-	OPrenderBindMesh(texturedExample->Mesh);
+	OPmeshBind(texturedExample->Mesh);
 	OPeffectBind(texturedExample->Effect);
 
 	OPmat4 world, view, proj;
@@ -84,16 +84,16 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 
 	OPtextureClearActive();
 	ui32 tex = OPtextureBind(texturedExample->Texture);
-	OPrenderParami("uColorTexture", tex);
+	OPeffectParami("uColorTexture", tex);
 
-	OPrenderParamMat4("uWorld", &world);
-	OPrenderParamMat4("uProj", &proj);
-	OPrenderParamMat4("uView", &view);
+	OPeffectParamMat4("uWorld", &world);
+	OPeffectParamMat4("uProj", &proj);
+	OPeffectParamMat4("uView", &view);
 
 	OPvec3 light = OPvec3Create(0, 1, 0);
-	OPrenderParamVec3("vLightDirection", &light);
+	OPeffectParamVec3("vLightDirection", &light);
 
-	OPrenderMesh();
+	OPmeshRender();
 
 	OPrenderPresent();
 	return false;

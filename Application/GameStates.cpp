@@ -195,17 +195,17 @@ OPint State0Update(OPtimer* time){
 	OPmat4 world;
 	OPmat4Identity(&world);
 	OPrenderDepth(0);
-	OPrenderBindMesh(&quadMesh);
+	OPmeshBind(&quadMesh);
 	OPeffectBind(&OPss);
 	OPtextureClearActive();
 	ui32 textureHandle = OPtextureBind(bg->Sheet);
 	OPtexturePixelate();
-	OPrenderParamMat4("uWorld", &world);
-	OPrenderParami("uColorTexture", textureHandle);
+	OPeffectParamMat4("uWorld", &world);
+	OPeffectParami("uColorTexture", textureHandle);
 	//OPlog("X: %f, Y: %f", bg->Frames[0].Offset.x, bg->Frames[0].Offset.y);
-	OPrenderParamVec2("uOffset", &bg->Frames[0].Offset);
-	OPrenderParamVec2("uSize", &bg->Frames[0].Size);
-	OPrenderMesh();
+	OPeffectParamVec2("uOffset", &bg->Frames[0].Offset);
+	OPeffectParamVec2("uSize", &bg->Frames[0].Size);
+	OPmeshRender();
 
 	// Required
 	OPfontRender(
@@ -278,18 +278,18 @@ OPint State1Update(OPtimer* time){
 	OPcamGetProj(camera, &proj);
 
 	OPmeshPackerBind(&packer);
-	OPrenderBindMesh(plane);
+	OPmeshBind(plane);
 	OPeffectBind(&tri);
 
 	OPtextureBind(tex);
-	OPrenderParami("uColorTexture", tex->Handle);
+	OPeffectParami("uColorTexture", tex->Handle);
 	OPtextureBind(spec);
-	OPrenderParami("uSpecularTexture", spec->Handle);
+	OPeffectParami("uSpecularTexture", spec->Handle);
 	OPtextureBind(norm);
-	OPrenderParami("uNormalTexture", norm->Handle);
-	OPrenderParamMat4v("uWorld", 1, &world);
-	OPrenderParamMat4v("uProj", 1, &proj);
-	OPrenderParamMat4v("uView", 1, &view);
+	OPeffectParami("uNormalTexture", norm->Handle);
+	OPeffectParamMat4v("uWorld", 1, &world);
+	OPeffectParamMat4v("uProj", 1, &proj);
+	OPeffectParamMat4v("uView", 1, &view);
 
 	//OPframeBufferBind(&rt);
 	
@@ -306,7 +306,7 @@ OPint State1Update(OPtimer* time){
 		OPrenderClear(1.0f, 1.0f, 1.0f);
 	}
 
-	OPrenderMesh();
+	OPmeshRender();
 	//OPframeBufferUnbind();
 	//
 	//	OPrenderClear(1.0f, 1.0f, 1.0f);
@@ -315,12 +315,12 @@ OPint State1Update(OPtimer* time){
 	//OPmeshPackerBind(&packer);
 	//OPeffectBind(&post);
 	//OPmat4Identity(&world);
-	//OPrenderParamMat4v("uWorld", 1, &world);
+	//OPeffectParamMat4v("uWorld", 1, &world);
 
 	//OPtextureBind(&rt.Texture);
-	//OPrenderParami("uTexture", rt.Texture.Handle);
+	//OPeffectParami("uTexture", rt.Texture.Handle);
 
-	//OPrenderMeshPacked(&quad);
+	//OPmeshPackedRender(&quad);
 
 
 	if(t > 6) {
