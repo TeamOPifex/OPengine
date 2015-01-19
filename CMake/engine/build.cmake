@@ -1,4 +1,4 @@
-include(CMake/engine/architecture.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/architecture.cmake)
 
 target_architecture( ARCHITECTURE )
 SET(TARGET_ARCH_64 0)
