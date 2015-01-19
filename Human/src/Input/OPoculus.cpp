@@ -1,6 +1,6 @@
 #include "./Human/include/Input/OPoculus.h"
 
-#ifdef OPIFEX_OCULUS
+#ifdef OPIFEX_OPTION_OCULUS
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
 #include "./Core/include/Assert.h"
@@ -12,7 +12,7 @@ i32 oculusFrameIndex = 0;
 #endif
 
 void OPoculusUpdate() {
-#ifdef OPIFEX_OCULUS
+#ifdef OPIFEX_OPTION_OCULUS
 	ASSERT(OculusManager != NULL, "Oculus hasn't been initialized");
 	ovrHSWDisplayState hswDisplayState;
 	ovrHmd_GetHSWDisplayState(OculusManager->_hmdDevice, &hswDisplayState);
@@ -30,13 +30,13 @@ void OPoculusUpdate() {
 }
 
 void OPoculusBegin() {
-#ifdef OPIFEX_OCULUS
+#ifdef OPIFEX_OPTION_OCULUS
 	OculusManager->_timing = ovrHmd_BeginFrame(OculusManager->_hmdDevice, oculusFrameIndex++);
 #endif
 }
 
 void OPoculusEnd() {
-#ifdef OPIFEX_OCULUS
+#ifdef OPIFEX_OPTION_OCULUS
 
 	ovrEyeType eye0 = OculusManager->_hmdDevice->EyeRenderOrder[0];
 	ovrEyeType eye1 = OculusManager->_hmdDevice->EyeRenderOrder[1];
@@ -50,7 +50,7 @@ void OPoculusEnd() {
 }
 
 int OPoculusStartup() {
-#ifdef OPIFEX_OCULUS
+#ifdef OPIFEX_OPTION_OCULUS
 	ASSERT(OculusManager == NULL, "Oculus has already been initialized");
 	if (OculusManager != NULL) {
 		return 0;
@@ -76,7 +76,7 @@ int OPoculusStartup() {
 }
 
 int OPoculusInitialize() {
-#ifdef OPIFEX_OCULUS
+#ifdef OPIFEX_OPTION_OCULUS
 	ASSERT(OculusManager != NULL, "Oculus has already been initialized");
 
 	ovrSizei resolution = OculusManager->_hmdDevice->Resolution;
@@ -153,7 +153,7 @@ int OPoculusInitialize() {
 }
 
 void OPoculusDestroy() {
-#ifdef OPIFEX_OCULUS
+#ifdef OPIFEX_OPTION_OCULUS
 	if (OculusManager == NULL) return;
 
 	ovrHmd_Destroy(OculusManager->_hmdDevice);

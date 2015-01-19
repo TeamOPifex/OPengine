@@ -1,6 +1,6 @@
 #include "./Pipeline/include/SpineLoader.h"
 
-#ifdef OPIFEX_SPINE
+#ifdef OPIFEX_OPTION_SPINE
 
 	#include "./Pipeline/include/Rendering.h"
 	#include "./Human/include/Utilities/ImagePNG.h"
@@ -34,7 +34,7 @@
 
 void SpineAddLoader() {
 
-#ifdef OPIFEX_SPINE
+#ifdef OPIFEX_OPTION_SPINE
 	OPassetLoader loader = {
 		".atlas",
 		"Spine/",
@@ -48,7 +48,7 @@ void SpineAddLoader() {
 }
 
 void SpineInitialize() {
-#ifdef OPIFEX_SPINE
+#ifdef OPIFEX_OPTION_SPINE
 	if (!OP_SPINE_INITIALIZED) {
 		OP_SPINE_INITIALIZED = 1;
 		OP_SPINE_QUAD = OPquadCreate();
@@ -57,33 +57,33 @@ void SpineInitialize() {
 }
 
 void SpineSetMix(Spine* spine, const OPchar* from, const OPchar* to, f32 duration) {
-#ifdef OPIFEX_SPINE
+#ifdef OPIFEX_OPTION_SPINE
 	spAnimationStateData_setMixByName(spine->stateData, from, to, duration);
 #endif
 }
 
 void SpineSetAnim(Spine* spine, i32 track, const OPchar* anim, OPint loop) {
-#ifdef OPIFEX_SPINE
+#ifdef OPIFEX_OPTION_SPINE
 	ASSERT(spine->state != NULL, "Spine State has not been created yet.");
 	spAnimationState_setAnimationByName(spine->state, track, anim, loop);
 #endif
 }
 void SpineAddAnim(Spine* spine, i32 track, const OPchar* anim, OPint loop, OPfloat delay) {
-#ifdef OPIFEX_SPINE
+#ifdef OPIFEX_OPTION_SPINE
 	ASSERT(spine->state != NULL, "Spine State has not been created yet.");
 	spAnimationState_addAnimationByName(spine->state, track, anim, loop, delay);
 #endif
 }
 
 void SpineBuildMixingState(Spine* spine) {
-#ifdef OPIFEX_SPINE
+#ifdef OPIFEX_OPTION_SPINE
 	spine->state = spAnimationState_create(spine->stateData);
 #endif
 }
 
 i32 SpineLoad(const OPchar* filename, Spine** spine) {
 
-#ifdef OPIFEX_SPINE
+#ifdef OPIFEX_OPTION_SPINE
 
 	Spine* result = (Spine*)OPalloc(sizeof(Spine));
 
@@ -110,7 +110,7 @@ i32 SpineLoad(const OPchar* filename, Spine** spine) {
 }
 
 void SpineUpdate(Spine* spine, OPtimer* timer) {
-#ifdef OPIFEX_SPINE
+#ifdef OPIFEX_OPTION_SPINE
 	f32 dt = timer->Elapsed / 1000.0f;
 	spSkeletonBounds_update(spine->bounds, spine->skeleton, true);
 	spSkeleton_update(spine->skeleton, dt);
@@ -122,7 +122,7 @@ void SpineUpdate(Spine* spine, OPtimer* timer) {
 
 void SpineRender(Spine* spine, OPmat4* world, OPeffect* effect, OPcam* camera) {
 
-#ifdef OPIFEX_SPINE
+#ifdef OPIFEX_OPTION_SPINE
 	for (int i = 0; i < spine->skeleton->slotsCount; ++i) {
 
 		spSlot* slot = spine->skeleton->drawOrder[i];
@@ -197,7 +197,7 @@ void SpineRender(Spine* spine, OPmat4* world, OPeffect* effect, OPcam* camera) {
 }
 
 i32 SpineUnload(void* spine) {
-#ifdef OPIFEX_SPINE
+#ifdef OPIFEX_OPTION_SPINE
 	Spine* ent = (Spine*)spine;
 	spSkeletonBounds_dispose(ent->bounds);
 	spSkeleton_dispose(ent->skeleton);

@@ -1,6 +1,6 @@
 #include "../../include/wrappers/Global.h"
 
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 
 #include "./Core/include/OPcore.h"
 #include "./Core/include/OPlog.h"

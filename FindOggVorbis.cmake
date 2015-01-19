@@ -120,6 +120,14 @@ else()
 
 endif()
 
+
+mark_as_advanced(OGG_LIBRARY_RELEASE)
+mark_as_advanced(VORBIS_LIBRARY_RELEASE)
+mark_as_advanced(VORBISFILE_LIBRARY_RELEASE)
+mark_as_advanced(OGG_LIBRARY)
+mark_as_advanced(VORBIS_LIBRARY)
+mark_as_advanced(VORBISFILE_LIBRARY)
+
 message(STATUS "Ogg: ${OGG_LIBRARY}")
 
 mark_as_advanced(VORBIS_INCLUDE_DIR OGG_INCLUDE_DIR

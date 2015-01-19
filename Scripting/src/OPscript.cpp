@@ -1,7 +1,7 @@
 #include "./Core/include/OPlog.h"
 #include "./Scripting/include/OPscript.h"
 
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 void Print(const v8::FunctionCallbackInfo<v8::Value>& args);
 void Require(const v8::FunctionCallbackInfo<v8::Value>& args);
 void(*CustomWrapper)(V8isolate* isolate, V8ObjectGlobal target) = NULL;
@@ -17,7 +17,7 @@ static void LogCallback(const v8::FunctionCallbackInfo<v8::Value>& args) {
 #endif
 
 
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 #include "./Scripting/include/wrappers/HumanWrapper.h"
 #include "./Scripting/include/wrappers/DataWrapper.h"
 #include "./Scripting/include/wrappers/PerformanceWrapper.h"
@@ -180,7 +180,7 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 
 OPint OPscriptCompile(OPscriptCompiled* scriptCompiled, OPscript* script, OPscriptPersistentContext* existingContext) {
 	OPscriptInit();
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 	Isolate::Scope isolate_scope(isolate);
 	HandleScope scope(isolate);
 
@@ -222,7 +222,7 @@ OPint OPscriptCompile(OPscriptCompiled* scriptCompiled, OPscript* script, OPscri
 	return 0;
 }
 
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 void _runCompiled(OPscriptCompiled* scriptCompiled) {
 
 	Isolate::Scope isolate_scope(isolate);
@@ -238,7 +238,7 @@ void _runCompiled(OPscriptCompiled* scriptCompiled) {
 #endif
 
 void OPscriptUpdate(OPscriptCompiled* scriptCompiled) {
-#if defined(_DEBUG) && defined(OPIFEX_V8)
+#if defined(_DEBUG) && defined(OPIFEX_OPTION_V8)
 	if (scriptCompiled->source->changed) {
 		OPscriptCompiled temp;
 		if (OPscriptCompile(&temp, scriptCompiled->source, &scriptCompiled->context)) {
@@ -251,7 +251,7 @@ void OPscriptUpdate(OPscriptCompiled* scriptCompiled) {
 }
 
 OPscriptValuePersistent OPscriptRunFunc(OPscriptCompiled* scriptCompiled, OPchar* name, OPint count, OPscriptValuePersistent* args) {
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 	OPscriptUpdate(scriptCompiled);
 	
 	Isolate::Scope isolate_scope(isolate);
@@ -275,14 +275,14 @@ OPscriptValuePersistent OPscriptRunFunc(OPscriptCompiled* scriptCompiled, OPchar
 }
 
 void OPscriptRun(OPscriptCompiled* scriptCompiled) {
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 	OPscriptUpdate(scriptCompiled);
 	_runCompiled(scriptCompiled);	
 #endif
 }
 
 void OPscriptCompileAndRun(OPscript* script) {
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 	OPscriptCompiled result;
 	if (OPscriptCompile(&result, script, NULL)) {
 		OPscriptRun(&result);
@@ -291,7 +291,7 @@ void OPscriptCompileAndRun(OPscript* script) {
 }
 
 void OPscriptCompileAndRunStream(OPstream* stream) {
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 	Isolate::Scope isolate_scope(isolate);
 	HandleScope scope(isolate);
 
@@ -320,7 +320,7 @@ void OPscriptCompileAndRunStream(OPstream* stream) {
 }
 
 void OPscriptLog(const char* data) {
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 	//HandleScope scope(isolate);
 	//Local<Context> local_context = Context::New(isolate, context);
 	//Context::Scope context_scope(local_context);
@@ -337,7 +337,7 @@ void OPscriptLog(const char* data) {
 #endif
 }
 
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 void OPscriptRun(Handle<Script> script) {
 	HandleScope scope(isolate);
 	v8::Handle<v8::Value> result = script->Run();

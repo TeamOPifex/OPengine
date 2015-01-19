@@ -74,19 +74,19 @@ void ExampleSelectorEnter(OPgameState* last) {
 	// Deferred Example in flux
 	exampleSelector.Examples[6].available = 0;
 
-#ifndef OPIFEX_OCULUS
+#ifndef OPIFEX_OPTION_OCULUS
 	exampleSelector.Examples[7].available = 0;
 #endif
 
-#ifndef OPIFEX_PHYSICS
+#ifndef OPIFEX_OPTION_PHYSICS
 	exampleSelector.Examples[4].available = 0;
 #endif
 
-#ifndef OPIFEX_SPINE
+#ifndef OPIFEX_OPTION_SPINE
 	exampleSelector.Examples[8].available = 0;
 #endif
 
-#ifndef OPIFEX_V8
+#ifndef OPIFEX_OPTION_V8
 	exampleSelector.Examples[9].available = 0;
 #endif
 

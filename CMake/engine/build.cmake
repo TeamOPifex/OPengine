@@ -35,16 +35,6 @@ set(OPENGL_DESKTOP_TARGET "OPENGL_2_0" CACHE STRING
 set_property(CACHE OPIFEX_OS PROPERTY STRINGS OPIFEX_WIN32 OPIFEX_WIN64 OPIFEX_LINUX32 OPIFEX_LINUX64 OPIFEX_IOS OPIFEX_ANDROID OPIFEX_OSX32 OPIFEX_OSX64)
 set_property(CACHE OPENGL_DESKTOP_TARGET PROPERTY STRINGS OPENGL_2_0 OPENGL_3_3)
 
-option(OPIFEX_OPTION_OCULUS "Build the Oculus library into the engine" OFF)
-option(OPIFEX_OPTION_MYO "Build the Myo library into the engine" OFF)
-option(OPIFEX_OPTION_V8 "Build the V8 library into the engine" OFF)
-option(OPIFEX_OPTION_NODEJS "Configure build files for Node.js module" OFF)
-option(OPIFEX_OPTION_PHYSICS "Build the PhysX library into the engine" OFF)
-option(OPIFEX_OPTION_SPINE "Build the Spine library into the engine" OFF)
-
-option(OPIFEX_OPTION_RELEASE "Build the engine in release mode" OFF)
-option(OPIFEX_OPTION_SHARED "Build the engine as shared libraries" OFF)
-
 SET(OPIFEX_PROJECT_BINARY_DIR ${PROJECT_BINARY_DIR})
 SET(OPIFEX_PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR})
 

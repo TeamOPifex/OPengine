@@ -84,6 +84,49 @@ macro(populate_binary_directory)
 	endif()
 endmacro(populate_binary_directory)
 
+macro(set_binary_output BINARY_OUTPUT_VARIABLE )
+
+	UNSET(BINARY_OUTPUT_VARIABLE)
+
+	SET(PATH_TO_OPIFEX_BINARIES "${OPIFEX_PROJECT_BINARY_DIR}/Binaries")
+
+	if(OPIFEX_BINARIES)
+		SET(PATH_TO_OPIFEX_BINARIES ${OPIFEX_BINARIES})
+		message(STATUS "SETTING BINARY OUTPUT as Application")
+	endif()
+
+	if(${OPIFEX_OPTION_RELEASE})
+		SET(BINARY_RELEASE_MODE "release")
+	else()
+		SET(BINARY_RELEASE_MODE "debug")
+	endif()
+
+	if( "${OPIFEX_OS}" STREQUAL "${OPIFEX_ANDROID}" )
+
+	else()
+		populate_binary_directory()
+		SET(COPY_BINARY_RELATIVE_DIRECTORY "/${LIBRARY_NAME}/")
+		if(${OPIFEX_OPTION_SHARED})
+			SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.dylib")
+		else()
+			SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.a")
+		endif()
+
+		if("${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" OR "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64")		
+			if(${OPIFEX_OPTION_RELEASE})
+				SET(COPY_BINARY_RELATIVE_DIRECTORY "/${LIBRARY_NAME}/Release/")
+			else()
+				SET(COPY_BINARY_RELATIVE_DIRECTORY "/${LIBRARY_NAME}/Debug/")
+			endif()
+			SET(COPY_BINARY_LIBRARY "${LIBRARY_NAME}.lib")
+		endif()
+
+		SET(${BINARY_OUTPUT_VARIABLE} "${PATH_TO_OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}")
+		message(STATUS "OUTPUT BINARY DIRECTORY: ${${BINARY_OUTPUT_VARIABLE}}")
+	endif()
+
+endmacro(set_binary_output)
+
 macro(output_library APPLICATION_TARGET LIBRARY_NAME )
 
 	if(${OPIFEX_OPTION_RELEASE})
@@ -202,27 +245,36 @@ macro(copy_from_binaries_on_build APPLICATION_TARGET FILE_PATH OPIFEX_MATCH )
 endmacro(copy_from_binaries_on_build)
 
 macro(add_external_opifex_includes)
+	set_binary_output(BINARY_FOLDER)
 	include_directories(
 		${OPIFEX_ENGINE_REPOSITORY}
 		${OPIFEX_ENGINE_REPOSITORY}/External/glfw-3.0.4/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/glew-1.9.0/include/
+		${OPIFEX_ENGINE_REPOSITORY}/External/glm-0.9.5/
+		${OPIFEX_ENGINE_REPOSITORY}/External/Phsyx.3.2.1/include/
+		${OPIFEX_ENGINE_REPOSITORY}/External/GLES2/
 		${OPIFEX_ENGINE_REPOSITORY}/External/OpenAL/
 		${OPIFEX_ENGINE_REPOSITORY}/External/Ogg/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/Vorbis/include/
-		${OPIFEX_ENGINE_REPOSITORY}/External/glm-0.9.5/
 		${OPIFEX_ENGINE_REPOSITORY}/External/V8/
 		${OPIFEX_ENGINE_REPOSITORY}/External/V8/include/
+		${OPIFEX_ENGINE_REPOSITORY}/External/VP8/include/
+		${OPIFEX_ENGINE_REPOSITORY}/External/Oculus/include/
+		${OPIFEX_ENGINE_REPOSITORY}/External/Oculus/Src/
+		${OPIFEX_ENGINE_REPOSITORY}/External/Spine/include/
+		${OPIFEX_ENGINE_REPOSITORY}/External/Mongoose/include/
+		${BINARY_FOLDER}
 	)
 endmacro(add_external_opifex_includes)
 
+
 macro(add_opifex_definitions APPLICATION_TARGET APPLICATION_DIR_DEPTH )
 
-	add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS -D${OPIFEX_OS})
+	add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS)
 
 	if(${OPIFEX_OPTION_RELEASE})
 		
 	else()
-		add_definitions(-D_DEBUG)
 		if(${OPIFEX_OS_WINDOWS})
 			SET(OPIFEX_REPO "${APPLICATION_DIR_DEPTH}${OPIFEX_REPOSITORY}/Assets/")
 			add_definitions(-DOPIFEX_REPO="${OPIFEX_REPO}")
@@ -231,13 +283,8 @@ macro(add_opifex_definitions APPLICATION_TARGET APPLICATION_DIR_DEPTH )
 			add_definitions(-DOPIFEX_REPO="${OPIFEX_REPO}")
 		endif()
 	endif()
-
-	if(${OPIFEX_MYO})
-		add_definitions(-DOPIFEX_MYO)
-	endif()
 	
 	set_target_properties(${APPLICATION_TARGET} PROPERTIES LINKER_LANGUAGE CXX)
-
 
 	if(${OPIFEX_OPTION_RELEASE})
 		if(${OPIFEX_OS_WINDOWS})
@@ -267,6 +314,24 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	unset(LIBV8_LIBBASE CACHE)
 	unset(LIBV8_LIBPLATFORM CACHE)
 	
+
+	mark_as_advanced(LIBLODEPNG)
+	mark_as_advanced(LIBCORE)
+	mark_as_advanced(LIBDATA)
+	mark_as_advanced(LIBMATH)
+	mark_as_advanced(LIBPERFORMANCE)
+	mark_as_advanced(LIBSCRIPTING)
+	mark_as_advanced(LIBPIPELINE)
+	mark_as_advanced(LIBHUMAN)
+	mark_as_advanced(LIBGLEW_158)
+	mark_as_advanced(LIBGLFW)
+	mark_as_advanced(LIBOGG)
+	mark_as_advanced(LIBVORBIS)
+	mark_as_advanced(LIBVORBISFILE)
+	mark_as_advanced(LIBV8)
+	mark_as_advanced(LIBV8_LIBBASE)
+	mark_as_advanced(LIBV8_LIBPLATFORM)
+
 	if( ${OPIFEX_OS_ANDROID} )
 		find_binary(LIBLODEPNG "LodePNG")
 		find_binary(LIBCORE "opifex-core")

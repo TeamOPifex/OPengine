@@ -8,22 +8,11 @@ cmake_minimum_required(VERSION 2.8)
 # Include Directories
 #########################################
 include_directories(
-	../External/glfw-3.0.4/include/
-	../External/glm-0.9.5/
-	../External/glew-1.9.0/include/
-	../External/Phsyx.3.2.1/include/
-	../External/GLES2/
-	../External/Ogg/include/
-	../External/Vorbis/include/
-	../External/OpenAL/
-	../External/Oculus/include/
-	../External/Oculus/Src/
-	../External/Myo/include/
-	../External/V8/include/
-	../External/Spine/include/
 	.
 	../
 )
+
+add_external_opifex_includes()
 
 #########################################
 # Include Files
@@ -68,7 +57,6 @@ endif()
 
 set_target_properties(8_Pipeline PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(8_Pipeline PROPERTIES OUTPUT_NAME "Pipeline")
-add_definitions(-D${OPIFEX_OS})
 
 if(${OPIFEX_OPTION_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)

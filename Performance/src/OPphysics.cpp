@@ -1,7 +1,7 @@
 #include "./Performance/include/OPphysics.h"
 
 
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 
 	static PxPhysics* gPhysicsSDK = NULL;
 	static PxDefaultErrorCallback gDefaultErrorCallback;
@@ -12,7 +12,7 @@
 #endif
 
 void OPphysicsInit() {
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 	PxFoundation* foundation = PxCreateFoundation(PX_PHYSICS_VERSION, gDefaultAllocatorCallback, gDefaultErrorCallback);
 	gPhysicsSDK = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale());
 	// Might not need these yet
@@ -22,7 +22,7 @@ void OPphysicsInit() {
 
 OPphysicsScene* OPphysicsCreateScene() {
 
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 	OPphysicsScene* scene = (OPphysicsScene*)OPalloc(sizeof(OPphysicsScene));
 
 	PxSceneDesc sceneDesc(gPhysicsSDK->getTolerancesScale());
@@ -49,7 +49,7 @@ OPphysicsScene* OPphysicsCreateScene() {
 
 void OPphysicsGetTransform(OPphysicsActor* actor, OPmat4* mat)
 {
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 	PxU32 n = actor->actor->getNbShapes();
 	PxShape** shapes = new PxShape*[n];
 
@@ -83,31 +83,31 @@ void OPphysicsGetTransform(OPphysicsActor* actor, OPmat4* mat)
 
 
 void OPphysicsAddForce(OPphysicsDynamic* dynamic, f32 x, f32 y, f32 z){
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 	dynamic->actor->addForce(PxVec3(x, y, z));
 #endif
 }
 void OPphysicsAddTorque(OPphysicsDynamic* dynamic, f32 x, f32 y, f32 z){
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 	dynamic->actor->addTorque(PxVec3(x, y, z));
 #endif
 }
 
 void OPphysicsSetLinearVelocity(OPphysicsDynamic* dynamic, f32 x, f32 y, f32 z){
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 	dynamic->actor->setLinearVelocity(PxVec3(x, y, z));
 #endif
 }
 
 void OPphysicsSetAngularVelocity(OPphysicsDynamic* dynamic, f32 x, f32 y, f32 z){
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 	dynamic->actor->setAngularVelocity(PxVec3(x, y, z));
 #endif
 }
 
 
 OPphysicsDynamic* OPphysicsCreateBoxDynamic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 sx, f32 sy, f32 sz) {
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 	PxTransform cubeTransform(PxVec3(x, y, z));
 
 	PxMaterial* boxMaterial = gPhysicsSDK->createMaterial(0.6f, 0.8f, 0.5f);
@@ -128,7 +128,7 @@ OPphysicsDynamic* OPphysicsCreateBoxDynamic(OPphysicsScene* scene, f32 x, f32 y,
 }
 
 OPphysicsDynamic* OPphysicsCreateSphereDynamic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 s){
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 	PxTransform cubeTransform(PxVec3(x, y, z));
 
 	PxMaterial* boxMaterial = gPhysicsSDK->createMaterial(0.8f, 0.8f, 0.6f);
@@ -149,7 +149,7 @@ OPphysicsDynamic* OPphysicsCreateSphereDynamic(OPphysicsScene* scene, f32 x, f32
 }
 
 OPphysicsStatic* OPphysicsCreateBoxStatic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 sx, f32 sy, f32 sz) {
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 	PxTransform cubeTransform(PxVec3(x, y, z));
 
 	PxMaterial* boxMaterial = gPhysicsSDK->createMaterial(0.6f, 0.8f, 0.5f);
@@ -169,7 +169,7 @@ OPphysicsStatic* OPphysicsCreateBoxStatic(OPphysicsScene* scene, f32 x, f32 y, f
 }
 
 OPphysicsStatic* OPphysicsCreateSphereStatic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 s){
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 	PxTransform cubeTransform(PxVec3(x, y, z));
 
 	PxMaterial* boxMaterial = gPhysicsSDK->createMaterial(0.8f, 0.8f, 0.6f);
@@ -189,7 +189,7 @@ OPphysicsStatic* OPphysicsCreateSphereStatic(OPphysicsScene* scene, f32 x, f32 y
 }
 
 void* OPphysicsCreatePlane(OPphysicsScene* scene){
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 
 	PxTransform cubeTransform(PxVec3(0.0f, 4.0, 0.0f));
 	PxMaterial* planeMaterial = gPhysicsSDK->createMaterial(0.9f, 0.1f, 0.2f);
@@ -204,7 +204,7 @@ void* OPphysicsCreatePlane(OPphysicsScene* scene){
 }
 
 void OPphysicsStep(OPphysicsScene* scene, ui64 elapsed) {
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 	scene->elapsed += elapsed;
 	if (scene->elapsed > (1000 * myTimestep)) {
 		scene->elapsed -= 1000 * myTimestep;
@@ -217,13 +217,13 @@ void OPphysicsStep(OPphysicsScene* scene, ui64 elapsed) {
 
 void OPphysicsDestroy(OPphysicsScene* scene)
 {
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 	((PxScene*)scene->scene)->release();
 #endif
 }
 
 void OPphysicsShutdown() {
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 	gPhysicsSDK->release();
 #endif
 }

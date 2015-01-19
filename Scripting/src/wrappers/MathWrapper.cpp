@@ -1,6 +1,6 @@
 #include "../../include/wrappers/MathWrapper.h"
 
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 
 #include "./Math/include/OPvec3.h"
 #include "./Math/include/OPmat4.h"

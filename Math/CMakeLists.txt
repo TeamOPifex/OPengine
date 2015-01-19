@@ -12,6 +12,7 @@ include_directories(
 	../
 )
 
+add_external_opifex_includes()
 
 #########################################
 # Include Files
@@ -42,12 +43,11 @@ if(${OPIFEX_OPTION_SHARED})
 else()
 	add_library(3_Math STATIC ${MATH_SRC})
 endif()
-add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-add_definitions(-D${OPIFEX_OS})
 	
 if(${OPIFEX_OPTION_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 endif()
+
 target_link_libraries(3_Math ${ALL_LIBS})
 
 set_target_properties(3_Math PROPERTIES LINKER_LANGUAGE CXX)

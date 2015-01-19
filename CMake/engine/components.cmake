@@ -21,7 +21,6 @@ macro(add_opifex_physics APPLICATION_TARGET )
 	if(${OPIFEX_OPTION_PHYSICS}) 
 
 		message(STATUS "Link Physics")
-		add_definitions(-DOPIFEX_PHYSICS)
 		include_directories(../External/PhysX/include/)
 
 		if(${OPIFEX_OPTION_RELEASE})
@@ -57,7 +56,6 @@ macro(add_opifex_v8 APPLICATION_TARGET )
 
 	if(${OPIFEX_OPTION_V8})
 
-		add_definitions(-DOPIFEX_V8)
 		if(${OPIFEX_OS_WINDOWS})
 			target_link_libraries(${APPLICATION_TARGET} 
 				ws2_32.lib
@@ -149,7 +147,6 @@ macro(add_opifex_spine APPLICATION_TARGET )
 
 	if(${OPIFEX_OPTION_SPINE})
 		target_link_libraries(${APPLICATION_TARGET} SPINE)
-		add_definitions(-DOPIFEX_SPINE)
 	endif()
 	
 endmacro(add_opifex_spine)
@@ -159,7 +156,6 @@ macro(add_opifex_oculus APPLICATION_TARGET )
 
 	if(${OPIFEX_OPTION_OCULUS})
 		include_directories(../External/Oculus/include/	../External/Oculus/include/)
-		add_definitions(-DOPIFEX_OCULUS)
 		target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/OculusDK2/lib/win32/VS2010/libovrd.lib)
 	endif()
 	
@@ -170,7 +166,6 @@ macro(add_opifex_myo APPLICATION_TARGET )
 
 	if(${OPIFEX_OPTION_MYO})
 		include_directories(../External/Myo/include/)
-		add_definitions(-DOPIFEX_MYO)
 		if(${OPIFEX_OS_WIN64})
 			target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/Myo/lib/win64/myo64.lib)
 			copy_to_folder(${APPLICATION_TARGET}  "/External/Myo/lib/" "myo64.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})

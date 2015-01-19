@@ -8,6 +8,9 @@ SET(OPIFEX_ENGINE_REPOSITORY ${PROJECT_SOURCE_DIR})
 
 include(CMake/application.cmake)
 
+set_binary_output(BINARY_FOLDER)
+configure_file("OPengineDefines.h.in" "${BINARY_FOLDER}/OPengineDefines.h")
+
 ### Project Setup
 #########################################
 # External

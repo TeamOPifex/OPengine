@@ -3,7 +3,7 @@
 
 #include "./Math/include/OPmat4.h"
 
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 
 #include <PxPhysicsAPI.h>
 #include <extensions/PxExtensionsAPI.h>
@@ -41,19 +41,19 @@ typedef struct {
 } OPphysicsScene;
 
 typedef struct {
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 	PxRigidDynamic* actor;
 #endif
 } OPphysicsDynamic;
 
 typedef struct {
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 	PxRigidStatic* actor;
 #endif
 } OPphysicsStatic;
 
 typedef struct {
-#ifdef OPIFEX_PHYSICS
+#ifdef OPIFEX_OPTION_PHYSICS
 	PxRigidActor* actor;
 #endif
 } OPphysicsActor;

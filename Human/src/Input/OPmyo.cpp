@@ -1,6 +1,6 @@
 #include "./Human/include/Input/OPmyo.h"
 
-#ifdef OPIFEX_MYO
+#ifdef OPIFEX_OPTION_MYO
 #include <myo/myo.hpp>
 #include "./Core/include/OPmath.h"
 #include "./Core/include/OPmemory.h"
@@ -50,7 +50,7 @@ OPint OPmyoPoseIs(OPmyoPoses pose) {
 }
 
 
-#ifdef OPIFEX_MYO
+#ifdef OPIFEX_OPTION_MYO
 class DataCollector : public myo::DeviceListener {
 public:
 	DataCollector()
@@ -165,7 +165,7 @@ DataCollector* collector;
 
 void OPmyoSetVibration(OPmyoVibrations vibration) {
 
-#ifdef OPIFEX_MYO
+#ifdef OPIFEX_OPTION_MYO
 	if (myoDevice == NULL) return;
 	switch (vibration) {
 	case Myo_Vibration_Short:
@@ -182,7 +182,7 @@ void OPmyoSetVibration(OPmyoVibrations vibration) {
 }
 
 void OPmyoConnect() {
-	#ifdef OPIFEX_MYO
+	#ifdef OPIFEX_OPTION_MYO
 		OPbzero(&poses, sizeof(OPint)* Myo_Pose_Max);
 
 		hub = new myo::Hub("com.teamopifex.engine");
@@ -205,7 +205,7 @@ void OPmyoConnect() {
 	#endif
  }
 
-#ifdef OPIFEX_MYO
+#ifdef OPIFEX_OPTION_MYO
 
 OPint wavingState = 0;
 OPint lastWaved = 0;
@@ -214,7 +214,7 @@ OPint lastWaved = 0;
 
 void OPmyoProcess(OPtimer* timer) {
 
-#ifdef OPIFEX_MYO
+#ifdef OPIFEX_OPTION_MYO
 	if (OPmyoPitch() < -0.3f) { // Arm is upward
 		if (wavingState == 0) {
 			if (OPmyoYaw() < 2) {
@@ -264,7 +264,7 @@ void OPmyoProcess(OPtimer* timer) {
 }
 
 void OPmyoUpdate(OPtimer* timer) {
-	#ifdef OPIFEX_MYO
+	#ifdef OPIFEX_OPTION_MYO
 	if (hub) {
 		OPmemcpy(&prevPoses, &poses, sizeof(OPint)* Myo_Pose_Max);
 			hub->run(10);
@@ -275,14 +275,14 @@ void OPmyoUpdate(OPtimer* timer) {
 }
 
 OPint OPmyoLock() {
-	#ifdef OPIFEX_MYO
+	#ifdef OPIFEX_OPTION_MYO
 		myoDevice->lock();
 	#endif
 	return 0;
 }
 
 OPint OPmyoUnlock(OPint state) {
-	#ifdef OPIFEX_MYO
+	#ifdef OPIFEX_OPTION_MYO
 	if(myoDevice) {
 		if(state == 1) {
 			myoDevice->unlock(myo::Myo::unlockHold);

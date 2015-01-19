@@ -3,12 +3,12 @@
 
 #include "./Core/include/OPtypes.h"
 
-#ifndef OPIFEX_V8
+#ifndef OPIFEX_OPTION_V8
 typedef OPint OPscriptValuePersistent;
 typedef OPint OPscriptPersistentContext;
 #endif
 
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 
 #include "v8.h"
 using namespace v8;
@@ -35,7 +35,7 @@ typedef Handle<Object> V8Object;
 typedef Handle<Value> OPscriptValue;
 typedef Persistent<Value, CopyablePersistentTraits<Value> > OPscriptValuePersistent;
 typedef Persistent<Context, CopyablePersistentTraits<Context> > OPscriptPersistentContext;
-#ifdef OPIFEX_NODEJS
+#ifdef OPIFEX_OPTION_NODEJS
 
 typedef Arguments V8Args;
 typedef Handle<Value> V8Return;

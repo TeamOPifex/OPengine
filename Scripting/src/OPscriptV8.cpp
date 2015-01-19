@@ -2,13 +2,13 @@
 #include "./Scripting/include/OPscriptV8.h"
 #include "./Core/include/OPlog.h"
 
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 Isolate* isolate = NULL;
 OPint SCRIPT_INITIALIZED = 0;
 #endif
 
 void OPscriptInit() {
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 	if (!SCRIPT_INITIALIZED) {
 		v8::V8::InitializeICU();
 		v8::Platform* platform = v8::platform::CreateDefaultPlatform();

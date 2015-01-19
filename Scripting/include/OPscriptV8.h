@@ -3,7 +3,7 @@
 
 #include "./Scripting/include/wrappers/V8Types.h"
 
-#ifdef OPIFEX_V8
+#ifdef OPIFEX_OPTION_V8
 
 #include "v8.h"
 #include "./include/libplatform/libplatform.h"

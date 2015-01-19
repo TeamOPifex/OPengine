@@ -5,7 +5,7 @@
 #ifndef OPENGINE_HUMAN_INPUT_OCULUS
 #define OPENGINE_HUMAN_INPUT_OCULUS
 
-#ifdef OPIFEX_OCULUS
+#ifdef OPIFEX_OPTION_OCULUS
 #include "./Math/include/Vector2.h"
 #include "./Math/include/Vector4.h"
 
@@ -16,7 +16,7 @@
 #endif
 
 typedef struct {
-#ifdef OPIFEX_OCULUS
+#ifdef OPIFEX_OPTION_OCULUS
 	ovrHmd _hmdDevice;
 	OPframeBuffer _frameBuffer;
 	ovrFrameTiming _timing;

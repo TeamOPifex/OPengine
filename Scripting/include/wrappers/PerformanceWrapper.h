@@ -1,7 +1,9 @@
 #ifndef OPIFEX_SCRIPTING_WRAPPERS_PERFORMANCE
 #define OPIFEX_SCRIPTING_WRAPPERS_PERFORMANCE
 
-#ifdef OPIFEX_V8
+#include "./OPengineDefines.h"
+
+#ifdef OPIFEX_OPTION_V8
 
 #include "./Scripting/include/OPscript.h"
 
