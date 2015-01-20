@@ -3,7 +3,7 @@
 
 OPallocLinear* OPallocLinearCreate(OPuint sizeInBytes) {
 	ui64 totalBytes = sizeof(OPallocLinear) + sizeInBytes;
-	void* data = OPalloc(totalBytes);
+	void* data = OPallocZero(totalBytes);
 	OPallocLinear* alloc = (OPallocLinear*)data;
 	alloc->_headerStart = data;
 	alloc->_memStart = (void*)((OPint)data + sizeof(OPallocLinear));

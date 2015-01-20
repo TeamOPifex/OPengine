@@ -1,5 +1,7 @@
 #include "./Human/include/Input/OPinputRecord.h"
 #include "./Core/include/OPlog.h"
+#include "./Data/include/OPstring.h"
+#include "./Core/include/OPdir.h"
 
 OPfile _inputRecordFile;
 OPint _inputRecordRecording = 0;
@@ -12,7 +14,8 @@ void* _memory = NULL;
 OPint totalWritten = 0;
 
 void OPinputRecordBegin(OPtimer* start, OPinputRecordMemoryBase* memoryMaps, ui16 memoryMapCount) {
-	_inputRecordFile = OPfileOpen("input.opr");
+	OPchar* fileToOpen = OPstringCreateMerged(OPdirExecutable(), "input.opr");
+	_inputRecordFile = OPfileOpen(fileToOpen);
 	_inputRecordRecording = 1;
 	_inputRecordPlayback = 0;
 	_timeStart = start->TotalGametime;
@@ -75,22 +78,17 @@ void OPinputRecordUpdate(OPtimer* timer) {
 		frame = *((OPinputRecordFrame*)response);
 		OPfree(response);
 		Keyboard = frame.keyboardState;
-		OPlog("W: %d", Keyboard.keys[OPKEY_W]);
-		OPlog("S: %d", Keyboard.keys[OPKEY_S]);
 	}
 }
 
 void OPinputRecordPlayback() {
 	if(_inputRecordRecording) {
 		OPfileSeekReset(&_inputRecordFile);
-		OPlog("Total Written: %d bytes", totalWritten);
 		_inputRecordRecording = 0;
 		_inputRecordPlayback = 1;
 		if(_memoryMaps != NULL) {
 			ui64 memPos = 0;
 			for(ui16 i = 0; i < _memoryMapCount; i++) {
-				OPlog("mempos: %d", memPos);
-				OPlog("copy: %d", _memoryMaps[i].MemorySize);
 				OPmemcpy(*(_memoryMaps[i].Memory), (void*)((OPuint)_memory + memPos), _memoryMaps[i].MemorySize);		
 				memPos += _memoryMaps[i].MemorySize;
 			}

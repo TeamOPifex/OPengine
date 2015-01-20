@@ -312,6 +312,11 @@ OPfile OPfileOpen(const OPchar* path) {
 
 #elif defined(OPIFEX_WINDOWS)
 	// windows implementation
+
+	FILE* myFile = fopen(path, "w+b");
+	OPfile file = { myFile };
+	return file;
+
 #endif
 }
 
@@ -347,9 +352,11 @@ OPint OPfileWriteString(OPfile* file, const OPchar* data) {
 }
 
 OPint OPfileWriteBytes(OPfile* file, void* data, ui64 bytesToWrite) {
-	OPint bytesWritten = write(file->_handle, data, bytesToWrite);
-	OPlog("Bytes Written: %d / %d", bytesWritten, bytesToWrite);
-	return bytesWritten;
+#ifdef OPIFEX_WINDOWS
+	return fwrite(data, sizeof(char), bytesToWrite, file->_handle);
+#else
+	return write(file->_handle, data, bytesToWrite);
+#endif
 }
 
 ui8 OPfileReadui8(OPfile* file) {
@@ -397,22 +404,29 @@ OPchar* OPfileReadString(OPfile* file) {
 
 void* OPfileReadBytes(OPfile* file, ui64 bytesToRead) {
 	void* bytes = OPalloc(bytesToRead); 
+#ifdef OPIFEX_WINDOWS
+	OPint bytesRead = fread(bytes, sizeof(OPchar), bytesToRead, file->_handle);
+#else
 	OPint bytesRead = read(file->_handle, bytes, bytesToRead);
-	OPlog("Bytes Read: %d / %d", bytesRead, bytesToRead);
+#endif
 	if(bytesRead != bytesToRead) return NULL;
 	return bytes;
 }
 
-OPint OPfileSeekReset(OPfile* file) {
-    lseek(file->_handle, 0, SEEK_SET);
-    return 1;
-}
 OPint OPfileSeek(OPfile* file, OPint pos) {
+#ifdef OPIFEX_WINDOWS
+	fseek(file->_handle, 0, SEEK_SET);
+#else
     lseek(file->_handle, pos, SEEK_SET);
+#endif
     return 1;
 }
 
 OPint OPfileClose(OPfile* file) {
+#ifdef OPIFEX_WINDOWS
+	fclose(file->_handle);
+#else
     close(file->_handle);
+#endif
     return 1;
 }
