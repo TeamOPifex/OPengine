@@ -162,11 +162,9 @@ i16 OPfileReadi16(OPfile* file);
 i32 OPfileReadi32(OPfile* file);
 OPchar* OPfileReadString(OPfile* file);
 void* OPfileReadBytes(OPfile* file, ui64 bytesToRead);
+OPint OPfileSeekReset(OPfile* file);
 OPint OPfileSeek(OPfile* file, OPint pos);
 OPint OPfileClose(OPfile* file);
-inline OPint OPfileSeekReset(OPfile* file) {
-	return OPfileSeek(file, 0);
-}
 
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
