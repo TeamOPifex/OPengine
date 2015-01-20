@@ -34,7 +34,12 @@ typedef Handle<ObjectTemplate> V8ObjectTemplate;
 typedef Handle<Object> V8Object;
 typedef Handle<Value> OPscriptValue;
 typedef Persistent<Value, CopyablePersistentTraits<Value> > OPscriptValuePersistent;
+typedef Persistent<Object, CopyablePersistentTraits<Object> > OPscriptObjectPersistent;
 typedef Persistent<Context, CopyablePersistentTraits<Context> > OPscriptPersistentContext;
+
+#define OPSCRIPT_CREATE(val) \
+	Local<Object>::New(isolate, OPscriptCreate(val));
+
 #ifdef OPIFEX_OPTION_NODEJS
 
 typedef Arguments V8Args;

@@ -164,6 +164,36 @@ static V8Return _OPrand(const V8Args& args) {
 	return OPscriptV8SetReturn(args, &scope, OPscriptV8GetNumberF32(isolate, OPrandom()));
 }
 
+V8Object _vec3Setup(V8Object obj, OPvec3* val) {
+
+	obj->Set(OPscriptV8GetString(isolate, "Id"), OPscriptV8GetNumber(isolate, (OPint)val));
+	obj->Set(OPscriptV8GetString(isolate, "Type"), OPscriptV8GetNumber(isolate, (OPint)OPscript_VEC3));
+
+	OPscriptV8SetFunction(isolate, obj, "X", _OPvec3X);
+	OPscriptV8SetFunction(isolate, obj, "Y", _OPvec3Y);
+	OPscriptV8SetFunction(isolate, obj, "Z", _OPvec3Z);
+	OPscriptV8SetFunction(isolate, obj, "XYZ", _OPvec3XYZ);
+	OPscriptV8SetFunction(isolate, obj, "Set", _OPvec3Set);
+	OPscriptV8SetFunction(isolate, obj, "Add", _OPvec3Add);
+	OPscriptV8SetFunction(isolate, obj, "Sub", _OPvec3Sub);
+
+	return obj;
+}
+
+OPscriptObjectPersistent OPscriptCreatePersistent(OPvec3* val) {
+	OPscriptObjectPersistent result = OPscriptGetObj();
+	V8Object obj = Local<Object>::New(isolate, result);
+	//V8Object obj = V8Object::New(isolate, result);
+	_vec3Setup(obj, val);
+	return result;
+}
+
+V8Object OPscriptCreate(OPvec3* val) {
+	Handle<Object> obj = Object::New(isolate);
+	_vec3Setup(obj, val);
+	return obj;
+}
+
 static V8Return _OPvec3Create(const V8Args& args) {
 	V8Scope scope;
 
@@ -176,15 +206,19 @@ static V8Return _OPvec3Create(const V8Args& args) {
 		vec->y = args[1]->NumberValue();
 		vec->z = args[2]->NumberValue();
 	}
+	
 
-	V8Object obj = OPscriptV8CreateTypedObject(isolate, vec, OPscript_VEC3);
-	OPscriptV8SetFunction(isolate, obj, "X", _OPvec3X);
-	OPscriptV8SetFunction(isolate, obj, "Y", _OPvec3Y);
-	OPscriptV8SetFunction(isolate, obj, "Z", _OPvec3Z);
-	OPscriptV8SetFunction(isolate, obj, "XYZ", _OPvec3XYZ);
-	OPscriptV8SetFunction(isolate, obj, "Set", _OPvec3Set);
-	OPscriptV8SetFunction(isolate, obj, "Add", _OPvec3Add);
-	OPscriptV8SetFunction(isolate, obj, "Sub", _OPvec3Sub);
+	Handle<Object> obj = Object::New(isolate);
+	_vec3Setup(obj, vec);
+	
+	
+	//OPscriptV8SetFunction(isolate, obj, "X", _OPvec3X);
+	//OPscriptV8SetFunction(isolate, obj, "Y", _OPvec3Y);
+	//OPscriptV8SetFunction(isolate, obj, "Z", _OPvec3Z);
+	//OPscriptV8SetFunction(isolate, obj, "XYZ", _OPvec3XYZ);
+	//OPscriptV8SetFunction(isolate, obj, "Set", _OPvec3Set);
+	//OPscriptV8SetFunction(isolate, obj, "Add", _OPvec3Add);
+	//OPscriptV8SetFunction(isolate, obj, "Sub", _OPvec3Sub);
 
 	return OPscriptV8SetReturn(args, &scope, obj);
 }
