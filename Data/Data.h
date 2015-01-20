@@ -1,6 +1,7 @@
 #ifndef OPENGINE_DATA
 #define OPENGINE_DATA
 
+#include "./Data/include/OPallocLinear.h"
 #include "./Data/include/OPcman.h"
 #include "./Data/include/OPentHeap.h"
 #include "./Data/include/OPfile.h"
