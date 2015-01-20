@@ -422,6 +422,15 @@ OPint OPfileSeek(OPfile* file, OPint pos) {
     return 1;
 }
 
+OPint OPfileSeekReset(OPfile* file) {
+#ifdef OPIFEX_WINDOWS
+	OPfileSeek(file, 0);
+#else
+	lseek(file->_handle, 0, SEEK_SET);
+#endif
+	return 1;
+}
+
 OPint OPfileClose(OPfile* file) {
 #ifdef OPIFEX_WINDOWS
 	fclose(file->_handle);
