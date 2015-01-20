@@ -5,6 +5,7 @@
 void Print(const v8::FunctionCallbackInfo<v8::Value>& args);
 void Require(const v8::FunctionCallbackInfo<v8::Value>& args);
 void(*CustomWrapper)(V8isolate* isolate, V8ObjectGlobal target) = NULL;
+OPint(*CustomRequire)(V8isolate* isolate, const v8::FunctionCallbackInfo<v8::Value>& args) = NULL;
 
 static void LogCallback(const v8::FunctionCallbackInfo<v8::Value>& args) {
 	if (args.Length() < 1) return;
@@ -100,78 +101,81 @@ void Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 			return;
 		}
 		else {
-			OPchar* tmp = GetNonConstant(p);
-			OPchar* loadFile = tmp;
-			OPlog("Require: %s", loadFile);
+			if (CustomRequire == NULL || !CustomRequire(isolate, args)) {
 
-			const OPchar* begin = "./";
-			const OPchar* jsEnd = ".js";
-			const OPchar* opsEnd = ".ops";
-			const OPchar* dir = "assets/Scripts/";
+				OPchar* tmp = GetNonConstant(p);
+				OPchar* loadFile = tmp;
+				OPlog("Require: %s", loadFile);
 
-			if (StartsWith(loadFile, begin, 2)) {
-				OPlog("Starts with %s, removing it", begin);
-				RemoveFromStart(loadFile, 2);
-			}
+				const OPchar* begin = "./";
+				const OPchar* jsEnd = ".js";
+				const OPchar* opsEnd = ".ops";
+				const OPchar* dir = "assets/Scripts/";
 
-			if (!StartsWith(loadFile, jsEnd, 3) || !StartsWith(loadFile, opsEnd, 4)) {
-				OPlog("Doesn't start with %s or %s, adding .js", jsEnd, opsEnd);
-				OPchar* res = AddToString(loadFile, jsEnd);
-				OPlog("Result %s", res);
+				if (StartsWith(loadFile, begin, 2)) {
+					OPlog("Starts with %s, removing it", begin);
+					RemoveFromStart(loadFile, 2);
+				}
+
+				if (!StartsWith(loadFile, jsEnd, 3) || !StartsWith(loadFile, opsEnd, 4)) {
+					OPlog("Doesn't start with %s or %s, adding .js", jsEnd, opsEnd);
+					OPchar* res = AddToString(loadFile, jsEnd);
+					OPlog("Result %s", res);
+					OPfree(loadFile);
+					OPlog("Old array freed");
+					loadFile = res;
+				}
+
+				OPlog("Prepending String");
+
+				loadFile = PrependToString(loadFile, dir);
+
+				OPlog("Require: %s", loadFile);
+
+				OPstream* stream = OPreadFile(loadFile);
+				Handle<String> source = String::NewFromUtf8(isolate, (OPchar*)stream->Data);
+
+
+				Handle<ObjectTemplate> global = ObjectTemplate::New(isolate);
+				Handle<ObjectTemplate> empty = ObjectTemplate::New(isolate);
+				Handle<ObjectTemplate> module = ObjectTemplate::New(isolate);
+				global->Set(String::NewFromUtf8(isolate, "module"), module);
+				global->Set(String::NewFromUtf8(isolate, "require"), FunctionTemplate::New(isolate, Require));
+				global->Set(String::NewFromUtf8(isolate, "global"), empty);
+				Handle<ObjectTemplate> console = ObjectTemplate::New(isolate);
+				console->Set(String::NewFromUtf8(isolate, "log"), FunctionTemplate::New(isolate, Print));
+				global->Set(String::NewFromUtf8(isolate, "console"), console);
+
+				if (CustomWrapper != NULL) {
+					CustomWrapper(isolate, global);
+				}
+				Local<Context> context = Context::New(isolate, NULL, global);
+				v8::Context::Scope context_scope(context);
+
+				v8::ScriptOrigin origin(v8::String::NewFromUtf8(context->GetIsolate(), "name"));
+				v8::Handle<v8::Script> compiled = v8::Script::Compile(source, &origin);
+				if (compiled.IsEmpty()) {
+					OPlog("FAILED to Compile: %s", loadFile);
+					return;
+				}
+				OPlog("Compiled: %s", loadFile);
+				TryCatch trycatch;
+				Local<Value> result = compiled->Run();
+				if (result.IsEmpty()) {
+					Local<Value> exception = trycatch.Exception();
+					String::Utf8Value exception_str(exception);
+					OPlog("Exception: %s", *exception_str);
+				}
+				OPlog("Script ran");
+
+				OPlog("Processed: %s", loadFile);
+				Local<Value> exports = context->Global()->Get(String::NewFromUtf8(isolate, "module"))->ToObject()->Get(String::NewFromUtf8(isolate, "exports"));
+
+				args.GetReturnValue().Set(exports);
+
 				OPfree(loadFile);
-				OPlog("Old array freed");
-				loadFile = res;
+
 			}
-
-			OPlog("Prepending String");
-
-			loadFile = PrependToString(loadFile, dir);
-
-			OPlog("Require: %s", loadFile);
-
-			OPstream* stream = OPreadFile(loadFile);
-			Handle<String> source = String::NewFromUtf8(isolate, (OPchar*)stream->Data);
-
-
-			Handle<ObjectTemplate> global = ObjectTemplate::New(isolate);
-			Handle<ObjectTemplate> empty = ObjectTemplate::New(isolate);
-			Handle<ObjectTemplate> module = ObjectTemplate::New(isolate);
-			global->Set(String::NewFromUtf8(isolate, "module"), module);
-			global->Set(String::NewFromUtf8(isolate, "require"), FunctionTemplate::New(isolate, Require));
-			global->Set(String::NewFromUtf8(isolate, "global"), empty);
-			Handle<ObjectTemplate> console = ObjectTemplate::New(isolate);
-			console->Set(String::NewFromUtf8(isolate, "log"), FunctionTemplate::New(isolate, Print));
-			global->Set(String::NewFromUtf8(isolate, "console"), console);
-
-			if (CustomWrapper != NULL) {
-				CustomWrapper(isolate, global);
-			}
-			Local<Context> context = Context::New(isolate, NULL, global);
-			v8::Context::Scope context_scope(context);
-
-			v8::ScriptOrigin origin(v8::String::NewFromUtf8(context->GetIsolate(), "name"));
-			v8::Handle<v8::Script> compiled = v8::Script::Compile(source, &origin);
-			if (compiled.IsEmpty()) {
-				OPlog("FAILED to Compile: %s", loadFile);
-				return;
-			}
-			OPlog("Compiled: %s", loadFile);
-			TryCatch trycatch;
-			Local<Value> result = compiled->Run();
-			if (result.IsEmpty()) {
-				Local<Value> exception = trycatch.Exception();
-				String::Utf8Value exception_str(exception);
-				OPlog("Exception: %s", *exception_str);
-			}
-			OPlog("Script ran");
-
-			OPlog("Processed: %s", loadFile);
-			Local<Value> exports = context->Global()->Get(String::NewFromUtf8(isolate, "module"))->ToObject()->Get(String::NewFromUtf8(isolate, "exports"));
-
-			args.GetReturnValue().Set(exports);
-
-			OPfree(loadFile);
-
 
 		}
 	}

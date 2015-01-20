@@ -180,6 +180,7 @@ const OPchar* OPscriptV8ToCString(const v8::String::Utf8Value& value);
 
 #endif
 
+OPscriptObjectPersistent OPscriptGetObj();
 OPscriptValuePersistent OPscriptGetValue(f32 val); 
 OPscriptValuePersistent OPscriptGetValue(const OPchar* val);
 

@@ -98,6 +98,16 @@ const OPchar* OPscriptV8ToCString(const v8::String::Utf8Value& value) {
 }
 #endif
 
+OPscriptObjectPersistent OPscriptGetObj() {
+#ifdef OPIFEX_OPTION_V8
+	Isolate::Scope isolate_scope(isolate);
+	HandleScope scope(isolate);
+
+	return Persistent<Object>(isolate, Object::New(isolate));
+#else
+	return 0;
+#endif
+}
 
 OPscriptValuePersistent OPscriptGetValue(f32 val) {
 

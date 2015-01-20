@@ -13,6 +13,7 @@
 using namespace v8;
 
 extern void(*CustomWrapper)(V8isolate* isolate, V8ObjectGlobal target);
+extern OPint(*CustomRequire)(V8isolate* isolate, const v8::FunctionCallbackInfo<v8::Value>& args);
 #endif
 
 typedef struct {
