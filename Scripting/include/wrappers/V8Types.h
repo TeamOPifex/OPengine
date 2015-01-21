@@ -6,6 +6,7 @@
 #ifndef OPIFEX_OPTION_V8
 typedef OPint OPscriptValuePersistent;
 typedef OPint OPscriptPersistentContext;
+typedef OPint OPscriptObjectPersistent;
 #endif
 
 #ifdef OPIFEX_OPTION_V8

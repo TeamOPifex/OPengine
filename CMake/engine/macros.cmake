@@ -313,7 +313,11 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	unset(LIBV8 CACHE)
 	unset(LIBV8_LIBBASE CACHE)
 	unset(LIBV8_LIBPLATFORM CACHE)
-	
+	unset(LIBV8_NOSHNAPSHOT CACHE)
+	unset(LIBV8_ICUDATA CACHE)
+	unset(LIBV8_ICUUC CACHE)
+	unset(LIBV8_ICUI18N CACHE)
+
 
 	mark_as_advanced(LIBLODEPNG)
 	mark_as_advanced(LIBCORE)
@@ -331,6 +335,10 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	mark_as_advanced(LIBV8)
 	mark_as_advanced(LIBV8_LIBBASE)
 	mark_as_advanced(LIBV8_LIBPLATFORM)
+	mark_as_advanced(LIBV8_NOSHNAPSHOT)
+	mark_as_advanced(LIBV8_ICUDATA)
+	mark_as_advanced(LIBV8_ICUUC)
+	mark_as_advanced(LIBV8_ICUI18N)
 
 	if( ${OPIFEX_OS_ANDROID} )
 		find_binary(LIBLODEPNG "LodePNG")
@@ -374,10 +382,27 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	)
 
 	if(${OPIFEX_OPTION_V8})
+			if(${OPIFEX_OS_WINDOWS})
+				find_binary(LIBV8 "v8" false)
+				find_binary(LIBV8_LIBBASE "v8_libbase" false)
+				find_binary(LIBV8_LIBPLATFORM "v8_libplatform" false)
+			else()
+				find_binary(LIBV8 "v8_base" false)
+				find_binary(LIBV8_LIBBASE "v8_libbase" false)
+				find_binary(LIBV8_LIBPLATFORM "v8_libplatform" false)
+				find_binary(LIBV8_NOSHNAPSHOT "v8_nosnapshot" false)
+				find_binary(LIBV8_ICUDATA "icudata" false)
+				find_binary(LIBV8_ICUUC "icuuc" false)
+				find_binary(LIBV8_ICUI18N "icui18n" false)
 
-			find_binary(LIBV8 "v8" false)
-			find_binary(LIBV8_LIBBASE "v8_libbase" false)
-			find_binary(LIBV8_LIBPLATFORM "v8_libplatform" false)
+			target_link_libraries(${APPLICATION_TARGET} 
+					${LIBV8_NOSHNAPSHOT}
+					${LIBV8_ICUDATA}
+					${LIBV8_ICUUC}
+					${LIBV8_ICUI18N}
+				)
+
+			endif()
 			add_definitions(-DOPIFEX_V8)
 		if( ${OPIFEX_OS_WINDOWS} )
 			target_link_libraries(${APPLICATION_TARGET} 
