@@ -94,6 +94,9 @@ macro(add_opifex_v8 APPLICATION_TARGET )
 			endif()
 		else()
 
+			SET(CMAKE_C_FLAGS "-stdlib=libstdc++"	)
+			SET(CMAKE_CXX_FLAGS "-stdlib=libstdc++"	)
+
 			if(${OPIFEX_OPTION_RELEASE})
 
 				if(${OPIFEX_OS_64})
@@ -105,7 +108,15 @@ macro(add_opifex_v8 APPLICATION_TARGET )
 				endif()
 
 			else()
-			
+
+				copy_file_to_binaries(/External/V8/lib/debug/osx64/libv8_base.a)
+				copy_file_to_binaries(/External/V8/lib/debug/osx64/libv8_libbase.a)
+				copy_file_to_binaries(/External/V8/lib/debug/osx64/libv8_libplatform.a)
+				copy_file_to_binaries(/External/V8/lib/debug/osx64/libv8_nosnapshot.a)
+				copy_file_to_binaries(/External/V8/lib/debug/osx64/libicudata.a)
+				copy_file_to_binaries(/External/V8/lib/debug/osx64/libicuuc.a)
+				copy_file_to_binaries(/External/V8/lib/debug/osx64/libicui18n.a)
+				
 				if(${OPIFEX_OS_64})
 					target_link_libraries(${APPLICATION_TARGET} 
 						${PROJECT_SOURCE_DIR}/External/V8/lib/debug/osx64/libv8_nosnapshot.a)
