@@ -7,6 +7,7 @@
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
+
 OPfloat OPquadVertData[] = {
 	 1,  1, 0,
 	 1,  1,
@@ -51,6 +52,7 @@ ui16 OPquadIndexData[] = {
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+
 OPmesh OPquadCreate(){
 	OPmesh mesh = OPmeshCreate();
 	OPmeshBind(&mesh);
@@ -74,7 +76,18 @@ void SetQuadPoint(QuadPoint* point, f32 x, f32 y, f32 z, f32 u, f32 v) {
 	point->v = v;
 }
 
-OPmesh OPquadCreateCustom(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
+OPmesh OPquadCreate(OPfloat width, OPfloat height) {
+	return OPquadCreate(width, height, OPvec2Create(0, 0), OPvec2Create(0, 0), OPvec2Create(1, 1));
+}
+
+OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset) {
+	return OPquadCreate(width, height, offset, OPvec2Create(0, 0), OPvec2Create(1, 1));
+}
+OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
+	return OPquadCreate(width, height, OPvec2Create(0, 0), texcoordStart, texcoordEnd);
+}
+
+OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
 	OPmesh mesh = OPmeshCreate();
 	OPmeshBind(&mesh);
 
@@ -90,7 +103,7 @@ OPmesh OPquadCreateCustom(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 t
 	SetQuadPoint(&verts[1], offset.x - width, offset.y + height, 0, texcoordStart.x, texcoordEnd.y);
 	SetQuadPoint(&verts[2], offset.x - width, offset.y - height, 0, texcoordStart.x, texcoordStart.y);
 	SetQuadPoint(&verts[3], offset.x + width, offset.y - height, 0, texcoordEnd.x, texcoordStart.y);
-	
+
 	OPmeshBuild(
 		sizeof(OPfloat)* 5, sizeof(ui16),
 		4, 6,
@@ -129,4 +142,34 @@ OPmeshPacked OPquadNormCreatePacked(){
 //-----------------------------------------------------------------------------
 void OPquadDestroy(OPmesh* quad){
 	
+}
+
+
+OPmesh OPquadCreateZPlane() {
+	return OPquadCreateZPlane(1, 1, OPvec2Create(0, 0), OPvec2Create(1, 1));
+}
+OPmesh OPquadCreateZPlane(OPfloat width, OPfloat depth) {
+	return OPquadCreateZPlane(width, depth, OPvec2Create(0, 0), OPvec2Create(1, 1));
+}
+OPmesh OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
+
+	QuadPoint verts[4] = {
+		{ -width, 0, -depth, texcoordEnd.x, texcoordEnd.y },
+		{ width, 0, -depth, texcoordStart.x, texcoordEnd.y },
+		{ width, 0, depth, texcoordStart.x, texcoordStart.y },
+		{ -width, 0, depth, texcoordEnd.x, texcoordStart.y }
+	};
+	ui16 indicies[6] = {
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	OPmesh mesh = OPmeshCreate();
+	OPmeshBind(&mesh);
+	OPmeshBuild(
+		sizeof(OPfloat)* 5, sizeof(ui16),
+		4, 6,
+		verts, indicies
+		);
+	return mesh;
 }

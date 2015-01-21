@@ -66,7 +66,11 @@ extern const OPvec3 OPVEC3_LEFT;
 extern const OPvec3 OPVEC3_FORWARD;
 
 inline OPvec3 OPvec3Create(OPfloat x, OPfloat y, OPfloat z) {
-	OPvec3 tmp = { {x, y, z} };
+	OPvec3 tmp = { { x, y, z } };
+	return tmp;
+}
+inline OPvec3 OPvec3Create(OPfloat x) {
+	OPvec3 tmp = { { x, x, x } };
 	return tmp;
 }
 
@@ -201,6 +205,10 @@ inline OPfloat OPvec3Angle(OPvec3 a, OPvec3 b) {
 
 inline OPvec3 OPvec3Norm(OPvec3 v){
 	return v / OPvec3Len(v);
+}
+
+inline OPvec3 OPvec3Abs(OPvec3 v){
+	return OPvec3Create(OPabs(v.x), OPabs(v.y), OPabs(v.z));
 }
 
 inline OPvec3 OPvec3Read(OPstream* str) {

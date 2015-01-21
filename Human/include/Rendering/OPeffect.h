@@ -58,6 +58,9 @@ OPint OPeffectUnload(OPeffect* effect);
 OPint OPeffectBind(OPeffect* effect);
 ui32 OPeffectGetParam(const OPchar* parameterName);
 
+inline OPuint OPeffectParam(const OPchar* param) {
+	return glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
+}
 inline void OPeffectParamf(const OPchar* param, OPfloat f){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
 	glUniform1f(loc, f);
@@ -98,12 +101,18 @@ inline void OPeffectParamBindTex(const OPchar* param, OPtexture* tex){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
 	glUniform1i(loc, OPtextureBind(tex));
 }
+inline void OPeffectParamBindTex(OPuint loc, OPtexture* tex){
+	glUniform1i(loc, OPtextureBind(tex));
+}
 inline void OPeffectParamiv(const OPchar* param, OPint count, i32* i){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
 	glUniform1iv(loc, count, i);
 }
 inline void OPeffectParamMat4(const OPchar* param, OPmat4* matrices){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
+	glUniformMatrix4fv(loc, 1, GL_FALSE, (OPfloat*)matrices);
+}
+inline void OPeffectParamMat4(OPuint loc, OPmat4* matrices){
 	glUniformMatrix4fv(loc, 1, GL_FALSE, (OPfloat*)matrices);
 }
 inline void OPeffectParamMat4v(const OPchar* param, OPint count, OPmat4* matrices){
