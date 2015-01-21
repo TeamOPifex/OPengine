@@ -1,10 +1,13 @@
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Rendering/OpenGL.h"
+#include "./Human/include/Rendering/OPmesh.h"
 #include "./Core/include/Assert.h"
 #include "./Data/include/OPvector.h"
 #include "./Data/include/OPcman.h"
+#include "./Data/include/OPstring.h"
 
 OPeffect* OPEFFECT_ACTIVE = NULL;
+OPmesh* OPEFFECT_BOUND_MESH = NULL;
 
 OPeffect createEffect(OPshader vert,
 	OPshader frag,
@@ -68,9 +71,7 @@ OPeffect createEffect(OPshader vert,
 				effect.Stride += (4 * Attributes[i].Elements);
 				break;
 			}
-			nameLength = strlen(Attributes[i].Name);
-			attr.Name = (OPchar*)OPalloc(sizeof(OPchar)* nameLength + 1);
-			OPmemcpy((void*)attr.Name, (void*)Attributes[i].Name, nameLength + 1);
+			attr.Name = OPstringCopy(Attributes[i].Name);
 
 			result = glGetAttribLocation(
 				effect.ProgramHandle,
@@ -143,6 +144,11 @@ OPint OPeffectUnload(OPeffect* effect){
 OPint OPeffectBind(OPeffect* effect){
 	OPglError("OPeffectBind:Clear Errors");
 
+	if (OPEFFECT_ACTIVE == effect && OPEFFECT_BOUND_MESH == OPMESH_ACTIVE_PTR) {
+		return 1;
+	}
+
+
 	// disable attributes of the last effect
 	if (OPEFFECT_ACTIVE){
 		OPint attrCount = OPlistSize(OPEFFECT_ACTIVE->Attributes);
@@ -156,6 +162,7 @@ OPint OPeffectBind(OPeffect* effect){
 	}
 
 	OPEFFECT_ACTIVE = effect;
+	OPEFFECT_BOUND_MESH = OPMESH_ACTIVE;
 
 	if (OPEFFECT_ACTIVE == NULL) return 1;
 

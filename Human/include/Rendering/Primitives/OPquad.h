@@ -32,8 +32,15 @@
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+
 OPmesh       OPquadCreate();
-OPmesh       OPquadCreateCustom(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd);
+OPmesh       OPquadCreate(OPfloat width, OPfloat height);
+OPmesh       OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset);
+OPmesh		 OPquadCreate(OPfloat width, OPfloat height, OPvec2 texcoordStart, OPvec2 texcoordEnd);
+OPmesh       OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd);
+OPmesh       OPquadCreateZPlane();
+OPmesh       OPquadCreateZPlane(OPfloat width, OPfloat depth);
+OPmesh       OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OPvec2 texcoordEnd);
 OPmeshPacked OPquadCreatePacked();
 OPmesh       OPquadNormCreate();
 OPmeshPacked OPquadNormCreatePacked();

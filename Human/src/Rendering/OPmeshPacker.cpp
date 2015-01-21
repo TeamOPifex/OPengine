@@ -1,4 +1,5 @@
 #include "./Human/include/Rendering/OPmeshPacker.h"
+#include "./Human/include/Rendering/OPmesh.h"
 #include "./Human/include/Utilities/Errors.h"
 
 //-----------------------------------------------------------------------------
@@ -85,7 +86,7 @@ void OPmeshPackerBuild(){
 }
 //-----------------------------------------------------------------------------
 void OPmeshPackerBind(OPmeshPacker* packer){
-	OPMESHPACKER_ACTIVE = packer;
+	OPMESH_ACTIVE_PTR = OPMESHPACKER_ACTIVE = packer;
 	if (!OPMESHPACKER_ACTIVE->built) return;
 
 	OPglError("OPmeshPackerBind:Error 0");

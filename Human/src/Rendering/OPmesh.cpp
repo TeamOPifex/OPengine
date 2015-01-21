@@ -1,6 +1,7 @@
 #include "./Human/include/Rendering/OPmesh.h"
 
 OPmesh* OPMESH_ACTIVE;
+void* OPMESH_ACTIVE_PTR = NULL;
 
 //-----------------------------------------------------------------------------
 // ______                _   _                 
@@ -33,7 +34,7 @@ void OPmeshBuild(ui32 vertSize, ui32 indSize,
 void OPmeshBind(OPmesh* mesh){
 	OPrenderBindBuffer(&mesh->VertexBuffer);
 	OPrenderBindBuffer(&mesh->IndexBuffer);
-	OPMESH_ACTIVE = mesh;
+	OPMESH_ACTIVE_PTR = OPMESH_ACTIVE = mesh;
 }
 
 //-----------------------------------------------------------------------------
