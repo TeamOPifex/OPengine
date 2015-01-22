@@ -8,7 +8,8 @@ extern "C" {
 #endif
 
 	OPint OPstringEquals(const OPchar* str, const OPchar* cmp);
-	OPint OPstringStartsWith(OPchar* str, const OPchar* cmp, i32 size);
+	OPint OPstringStartsWith(OPchar* str, const OPchar* cmp);
+	OPint OPstringEndsWith(OPchar* str, const OPchar* cmp);
 	void OPstringRemoveFromStart(OPchar* str, i32 size);
 	OPchar* OPstringGetNonConstant(const OPchar* str);
 	OPchar* OPstringCreateMerged(const OPchar* str, const OPchar* add);

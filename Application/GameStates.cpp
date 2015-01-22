@@ -112,9 +112,9 @@ void State0Enter(OPgameState* last){
 	OPcmanLoad("stencil.opf");
 	OPcmanLoad("gripe.opss");
 
-	OPcmanLoad("Update.ops");
-	OPscript* scriptCode = (OPscript*)OPcmanGet("Update.ops");
-	OPscriptCompileAndRun(scriptCode);
+	// OPcmanLoad("Update.ops");
+	// OPscript* scriptCode = (OPscript*)OPcmanGet("Update.ops");
+	// OPscriptCompileAndRun(scriptCode);
 
 	//OPwebServerOnKey(server, "color", ColorHandler, &color);
 	//OPwebServerOnKey(server, "font", FontHandler, NULL);

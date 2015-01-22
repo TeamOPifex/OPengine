@@ -1,17 +1,17 @@
-#ifndef OPIFEX_SCRIPTING_V8
-#define OPIFEX_SCRIPTING_V8
+// #ifndef OPIFEX_SCRIPTING_V8
+// #define OPIFEX_SCRIPTING_V8
 
-#include "./Scripting/include/wrappers/V8Types.h"
+// #include "./Scripting/include/wrappers/V8Types.h"
 
-#ifdef OPIFEX_OPTION_V8
+// #ifdef OPIFEX_OPTION_V8
 
-#include "v8.h"
-#include "./include/libplatform/libplatform.h"
-using namespace v8;
+// #include "v8.h"
+// #include "./include/libplatform/libplatform.h"
+// using namespace v8;
 
-extern V8isolate* isolate;
-#endif
+// extern V8isolate* isolate;
+// #endif
 
-void OPscriptInit();
+// void OPscriptInit();
 
-#endif
+// #endif

@@ -1,15 +1,15 @@
-#ifndef OPIFEX_SCRIPTING_WRAPPERS_PERFORMANCE
-#define OPIFEX_SCRIPTING_WRAPPERS_PERFORMANCE
+// #ifndef OPIFEX_SCRIPTING_WRAPPERS_PERFORMANCE
+// #define OPIFEX_SCRIPTING_WRAPPERS_PERFORMANCE
 
-#include "./OPengineDefines.h"
+// #include "./OPengineDefines.h"
 
-#ifdef OPIFEX_OPTION_V8
+// #ifdef OPIFEX_OPTION_V8
 
-#include "./Scripting/include/OPscript.h"
+// #include "./Scripting/include/OPscript.h"
 
-void PerformanceInitializeMethods(V8isolate* isolate, V8ObjectTemplate target);
-void PerformanceInitializeMethodsO(V8isolate* isolate, V8Object target);
+// void PerformanceInitializeMethods(V8isolate* isolate, V8ObjectTemplate target);
+// void PerformanceInitializeMethodsO(V8isolate* isolate, V8Object target);
 
-#endif
+// #endif
 
-#endif
+// #endif
