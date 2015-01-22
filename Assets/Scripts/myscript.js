@@ -1,4 +1,4 @@
-var OP = require('./node_modules/OPengine/OPengine');
+var OP = require('OPengine');
 
 // function Initialize() {
 // 	print('SCRIPT INITIALIZED');	
@@ -12,6 +12,8 @@ var OP = require('./node_modules/OPengine/OPengine');
 
 var amnt = 0;
 var dir = 1;
+
+console.log('Test1');
 
 function clearToBlack(r, g, b) {
     //print('rgb:' + r + ' ' + g + ' ' + b);
@@ -28,8 +30,8 @@ function clearToBlack(r, g, b) {
 	return { test: 'Test' };
 }
 
-function run(arg) {
-    //print(arg.test);
+function run() {
+	console.log('Test');
 }
 // 	return 0;
 // }

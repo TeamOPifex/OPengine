@@ -8,11 +8,18 @@ OPint OPstringEquals(const OPchar* str, const OPchar* cmp) {
 	return OPmemcmp(str, cmp, lenA) == 0;
 }
 
-OPint OPstringStartsWith(OPchar* str, const OPchar* cmp, i32 size) {
+OPint OPstringStartsWith(OPchar* str, const OPchar* cmp) {
 	ui32 lenA = strlen(str);
 	ui32 lenB = strlen(cmp);
-	if (lenA < size || lenB < size) return 0;
-	return OPmemcmp(str, cmp, size) == 0;
+	if (lenA < lenB) return 0;
+	return OPmemcmp(str, cmp, lenB) == 0;
+}
+
+OPint OPstringEndsWith(OPchar* str, const OPchar* cmp) {
+	ui32 lenA = strlen(str);
+	ui32 lenB = strlen(cmp);
+	if (lenA < lenB) return 0;
+	return OPmemcmp(&str[lenA-lenB-1], cmp, lenB) == 0;
 }
 
 void OPstringRemoveFromStart(OPchar* str, i32 size) {

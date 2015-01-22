@@ -1,5 +1,5 @@
 #include "./ExampleSelectorState.h"
-#include "./Scripting/include/OPscript.h"
+#include "./Scripting/include/V8/OPscriptV8.h"
 
 void ExampleScriptingEnter(OPgameState* last);
 OPint ExampleScriptingUpdate(OPtimer* time);
@@ -13,26 +13,27 @@ OPgameState GS_EXAMPLE_SCRIPTING = {
 
 typedef struct {
 	OPscript* MyScript;
-	OPscriptCompiled Compiled;
+	OPscriptV8Compiled Compiled;
 } ScriptingExample;
 
 ScriptingExample scriptingExample;
 
 void ExampleScriptingEnter(OPgameState* last) {
-	OPscriptInit();
+	OPscriptV8Init();
 	scriptingExample.MyScript = (OPscript*)OPcmanLoadGet("myscript.js");
-	OPscriptCompileAndRun(&scriptingExample.Compiled, scriptingExample.MyScript, NULL);
+	OPscriptV8Compile(&scriptingExample.Compiled, scriptingExample.MyScript, NULL);
+	OPscriptV8Run(&scriptingExample.Compiled);
 }
 
 OPint ExampleScriptingUpdate(OPtimer* time) {
 	//OPscriptCompileAndRun(scriptingExample.MyScript);
-	OPscriptValuePersistent values[3] = {
-		OPscriptGetValue("1"),
-		OPscriptGetValue(1.0),
-		OPscriptGetValue(1.0)
-	};
-	OPscriptValuePersistent val = OPscriptRunFunc(&scriptingExample.Compiled, "clearToBlack", 3, values);
-	OPscriptRunFunc(&scriptingExample.Compiled, "run", 1, &val);
+	// OPscriptValuePersistent values[3] = {
+	// 	OPscriptGetValue("1"),
+	// 	OPscriptGetValue(1.0),
+	// 	OPscriptGetValue(1.0)
+	// };
+	// OPscriptValuePersistent val = OPscriptRunFunc(&scriptingExample.Compiled, "clearToBlack", 3, values);
+	OPscriptV8Run(&scriptingExample.Compiled, "run");
 
 	return false;
 }
