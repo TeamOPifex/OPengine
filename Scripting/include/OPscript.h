@@ -13,12 +13,16 @@
 using namespace v8;
 
 extern void(*CustomWrapper)(V8isolate* isolate, V8ObjectGlobal target);
-extern OPint(*CustomRequire)(V8isolate* isolate, const v8::FunctionCallbackInfo<v8::Value>& args);
+extern OPint(*CustomRequire)(V8isolate* isolate, const V8Args& args);
 #endif
 
 typedef struct {
 	OPscript* source;
-#ifdef OPIFEX_OPTION_V8
+#ifdef OPIFEX_OPTION_NODEJS
+	Persistent<Script> result;
+	Persistent<Context> context;
+	Persistent<ObjectTemplate> global;
+#elif defined(OPIFEX_OPTION_V8)
 	Persistent<Script, CopyablePersistentTraits<Script> > result;
 	Persistent<Context, CopyablePersistentTraits<Context> > context;
 	Persistent<ObjectTemplate, CopyablePersistentTraits<ObjectTemplate> > global;
