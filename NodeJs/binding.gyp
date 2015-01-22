@@ -4,20 +4,21 @@
             "target_name": "OPengine",
             "sources": [
                 "Wrapper.cpp",
-                "@OPIFEX_REPOSITORY@/Scripting/src/wrappers/Global.cpp",
-                "@OPIFEX_REPOSITORY@/Scripting/src/wrappers/DataWrapper.cpp",
-                "@OPIFEX_REPOSITORY@/Scripting/src/wrappers/MathWrapper.cpp",
-				"@OPIFEX_REPOSITORY@/Scripting/src/wrappers/HumanWrapper.cpp",
-				"@OPIFEX_REPOSITORY@/Scripting/src/wrappers/V8Helper.cpp"
+                "@PROJECT_SOURCE_DIR@/Scripting/src/wrappers/Global.cpp",
+                "@PROJECT_SOURCE_DIR@/Scripting/src/wrappers/DataWrapper.cpp",
+                "@PROJECT_SOURCE_DIR@/Scripting/src/wrappers/MathWrapper.cpp",
+				"@PROJECT_SOURCE_DIR@/Scripting/src/wrappers/HumanWrapper.cpp",
+				"@PROJECT_SOURCE_DIR@/Scripting/src/wrappers/V8Helper.cpp"
             ],
             "include_dirs": [
-                "@OPIFEX_REPOSITORY@/",
-                "@OPIFEX_REPOSITORY@/External/glew-1.9.0/include",
-                "@OPIFEX_REPOSITORY@/External/glfw-3.0.4/include",
-                "@OPIFEX_REPOSITORY@/External/glm-0.9.1",
-                "@OPIFEX_REPOSITORY@/External/V8/",
-                "@OPIFEX_REPOSITORY@/External/OpenAL/",
-                "@OPIFEX_REPOSITORY@/External/Myo/include/"
+                "@PROJECT_SOURCE_DIR@/",
+                "@BINARY_FOLDER@/",
+                "@PROJECT_SOURCE_DIR@/External/glew-1.9.0/include",
+                "@PROJECT_SOURCE_DIR@/External/glfw-3.0.4/include",
+                "@PROJECT_SOURCE_DIR@/External/glm-0.9.1",
+                "@PROJECT_SOURCE_DIR@/External/V8/",
+                "@PROJECT_SOURCE_DIR@/External/OpenAL/",
+                "@PROJECT_SOURCE_DIR@/External/Myo/include/"
             ],
             "cflags!": [
                 "-fno-exceptions"
@@ -83,8 +84,8 @@
                                             "../Pipeline/Release/",
                                             "../GLFW/src/Release/",
                                             "../External/Release/",
-                                            "../@OPIFEX_REPOSITORY@/External/Ogg/lib/win32/",
-                                            "../@OPIFEX_REPOSITORY@/External/Vorbis/lib/win32/",
+                                            "../@PROJECT_SOURCE_DIR@/External/Ogg/lib/win32/",
+                                            "../@PROJECT_SOURCE_DIR@/External/Vorbis/lib/win32/",
                                             "C:/Program Files (x86)/OpenAL 1.1 SDK/libs/Win32/",
                                         ]
                                     }

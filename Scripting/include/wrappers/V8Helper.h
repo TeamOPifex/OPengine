@@ -18,6 +18,10 @@ inline V8Object OPscriptV8CreateObject(V8isolate* isolate) {
 	return Object::New();
 }
 
+inline V8Object OPscriptV8CreateObject(V8isolate* isolate, OPscriptObjectPersistent persistent) {
+	return Object::New(persistent);
+}
+
 inline V8ObjectGlobal OPscriptV8CreateObjectGlobal(V8isolate* isolate) {
 	return Object::New();
 }
@@ -90,6 +94,10 @@ inline V8Return OPscriptV8SetReturn(const V8Args& args, V8Scope* scope, Handle<V
 
 inline V8Object OPscriptV8CreateObject(V8isolate* isolate) {
 	return Object::New(isolate);
+}
+
+inline V8Object OPscriptV8CreateObject(V8isolate* isolate, OPscriptObjectPersistent persistent) {
+	return Object::New(isolate, persistent);
 }
 
 inline V8ObjectTemplate OPscriptV8CreateObjectTemplate(V8isolate* isolate) {

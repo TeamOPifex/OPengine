@@ -34,9 +34,16 @@ enum OPscriptTypes {
 typedef Handle<ObjectTemplate> V8ObjectTemplate;
 typedef Handle<Object> V8Object;
 typedef Handle<Value> OPscriptValue;
+
+#ifdef OPIFEX_OPTION_NODEJS
+typedef Persistent<Value> OPscriptValuePersistent;
+typedef Persistent<Object> OPscriptObjectPersistent;
+typedef Persistent<Context> OPscriptPersistentContext;
+#else
 typedef Persistent<Value, CopyablePersistentTraits<Value> > OPscriptValuePersistent;
 typedef Persistent<Object, CopyablePersistentTraits<Object> > OPscriptObjectPersistent;
 typedef Persistent<Context, CopyablePersistentTraits<Context> > OPscriptPersistentContext;
+#endif
 
 #define OPSCRIPT_CREATE(val) \
 	Local<Object>::New(isolate, OPscriptCreate(val));

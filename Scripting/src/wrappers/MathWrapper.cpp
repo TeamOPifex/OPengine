@@ -189,7 +189,7 @@ OPscriptObjectPersistent OPscriptCreatePersistent(OPvec3* val) {
 }
 
 V8Object OPscriptCreate(OPvec3* val) {
-	Handle<Object> obj = Object::New(isolate);
+	V8Object obj = OPscriptV8CreateObject(isolate);
 	_vec3Setup(obj, val);
 	return obj;
 }
@@ -208,7 +208,7 @@ static V8Return _OPvec3Create(const V8Args& args) {
 	}
 	
 
-	Handle<Object> obj = Object::New(isolate);
+	V8Object obj = OPscriptV8CreateObject(isolate);
 	_vec3Setup(obj, vec);
 	
 	

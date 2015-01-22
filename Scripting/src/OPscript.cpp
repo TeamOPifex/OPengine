@@ -3,7 +3,7 @@
 
 #ifdef OPIFEX_OPTION_V8
 void Print(const v8::FunctionCallbackInfo<v8::Value>& args);
-void Require(const v8::FunctionCallbackInfo<v8::Value>& args);
+void Require(const V8Args& args);
 void(*CustomWrapper)(V8isolate* isolate, V8ObjectGlobal target) = NULL;
 OPint(*CustomRequire)(V8isolate* isolate, const v8::FunctionCallbackInfo<v8::Value>& args) = NULL;
 
@@ -15,10 +15,7 @@ static void LogCallback(const v8::FunctionCallbackInfo<v8::Value>& args) {
 	OPlog("Logged: %s", *value);
 }
 
-#endif
 
-
-#ifdef OPIFEX_OPTION_V8
 #include "./Scripting/include/wrappers/HumanWrapper.h"
 #include "./Scripting/include/wrappers/DataWrapper.h"
 #include "./Scripting/include/wrappers/PerformanceWrapper.h"
