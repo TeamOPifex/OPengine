@@ -27,7 +27,7 @@ function clearToBlack(r, g, b) {
 		
 	OP.render.Present();
 
-	return { test: 'Test' };
+	//return { test: 'Test' };
 }
 
 function run() {
