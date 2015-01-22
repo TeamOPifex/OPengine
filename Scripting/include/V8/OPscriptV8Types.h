@@ -23,6 +23,21 @@ struct OPscriptV8Compiled {
 	OPscriptV8PersistentContext Context;
 };
 
+
+enum OPscriptTypes {
+	OPscript_CAMERA = 0,
+	OPscript_VEC3,
+	OPscript_MAT4,
+	OPscript_MESH,
+	OPscript_TIMER,
+	OPscript_PHYSICS_SCENE,
+	OPscript_PHYSICS_ACTOR,
+	OPscript_PHYSICS_STATIC,
+	OPscript_PHYSICS_DYNAMIC,
+	OPscript_AUDIO_EMITTER,
+	OPscript_FRAME_BUFFER
+};
+
 #endif
 
 #endif
