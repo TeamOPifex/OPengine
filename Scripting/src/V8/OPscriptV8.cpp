@@ -202,7 +202,7 @@ Local<Value> OPscriptV8Run(OPscriptV8Compiled* scriptCompiled) {
 	return _runCompiled(scriptCompiled);	
 }
 
-OPscriptV8PersistentValue OPscriptV8Run(OPscriptV8Compiled* scriptCompiled, OPchar* name, OPint count, Persistent<Value>* args) {
+OPscriptV8PersistentValue OPscriptV8Run(OPscriptV8Compiled* scriptCompiled, OPchar* name, OPint count, OPscriptV8PersistentValue* args) {
 	OPSCRIPTV8_UPDATE(scriptCompiled);
 
 	Isolate::Scope isolate_scope(OPSCRIPTV8_ISOLATE);
@@ -226,6 +226,13 @@ OPscriptV8PersistentValue OPscriptV8Run(OPscriptV8Compiled* scriptCompiled, OPch
 
 OPscriptV8PersistentValue OPscriptV8Run(OPscriptV8Compiled* scriptCompiled, OPchar* name) {
 	return OPscriptV8Run(scriptCompiled, name, 0, NULL);
+}
+
+OPscriptV8PersistentObject OPscriptV8CreateObject() {
+	Isolate::Scope isolate_scope(OPSCRIPTV8_ISOLATE);
+	HandleScope scope(OPSCRIPTV8_ISOLATE);
+
+	return Persistent<Object>(OPSCRIPTV8_ISOLATE, Object::New(OPSCRIPTV8_ISOLATE));
 }
 
 #endif
