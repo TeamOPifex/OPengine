@@ -9,6 +9,8 @@
 #include "./Data/include/OPcman.h"
 #include "./Core/include/Assert.h"
 
+#include "./Scripting/include/V8/OPscriptV8WrapperHuman.h"
+
 OPscriptV8Isolate* OPSCRIPTV8_ISOLATE = NULL;
 void(*OPSCRIPTV8_WRAPPER)(Handle<ObjectTemplate>) = NULL;
 OPint(*OPSCRIPTV8_REQUIRE)(FunctionCallbackInfo<Value>) = NULL;
@@ -44,13 +46,14 @@ void _OPscriptV8SetConsole(Handle<ObjectTemplate> objTemplate) {
 }
 
 void _OPscriptV8WrapEngine(const v8::FunctionCallbackInfo<v8::Value>& args) {
-	// Handle<Object> OP = Object::New(OPSCRIPTV8_ISOLATE);
+	Handle<Object> OP = Object::New(OPSCRIPTV8_ISOLATE);
+	OPscriptV8WrapperHuman(OP);
 	// GlobalInitializeMethodsO(OPSCRIPTV8_ISOLATE, OP);
 	// HumanInitializeMethodsO(OPSCRIPTV8_ISOLATE, OP);
 	// MathInitializeMethodsO(OPSCRIPTV8_ISOLATE, OP);
 	// PerformanceInitializeMethodsO(OPSCRIPTV8_ISOLATE, OP);
 	// DataInitializeMethodsO(OPSCRIPTV8_ISOLATE, OP);
-	// args.GetReturnValue().Set(OP);
+	args.GetReturnValue().Set(OP);
 }
 
 OPchar* _OPscriptV8NormalizePath(const OPchar* path) {
@@ -157,6 +160,10 @@ OPint OPscriptV8Compile(OPscriptV8Compiled* compiled, OPscript* script, OPscript
 
 	*compiled = result;
 	return 1;
+}
+
+OPint OPscriptV8Compile(OPscriptV8Compiled* compiled, OPscript* script) {
+	OPscriptV8Compile(compiled, script, NULL);
 }
 
 Local<Value> _runCompiled(OPscriptV8Compiled* scriptCompiled) {
