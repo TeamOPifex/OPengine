@@ -3,10 +3,6 @@
 #include "./Pipeline/include/Loaders/OPloaderOPskeleton.h"
 #include "./Pipeline/include/Loaders/OPloaderOPanimation.h"
 
-#ifndef OPIFEX_ASSETS
-#define OPIFEX_ASSETS NULL
-#endif
-
 //////////////////////////////////////
 // Application Methods
 //////////////////////////////////////
