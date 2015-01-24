@@ -32,6 +32,9 @@ inline Handle<String> OPscriptV8GetString(const OPchar* val) {
 inline Handle<Value> OPscriptV8GetNumber(OPint number) {
 	return Number::New(OPSCRIPTV8_ISOLATE, number);
 }
+inline Handle<Value> OPscriptV8GetNumber(OPfloat number) {
+	return Number::New(OPSCRIPTV8_ISOLATE, number);
+}
 inline void OPscriptV8SetFunction(Handle<Object> obj, const OPchar* name, FunctionCallback function) {
 	Local<Function> func = Function::New(OPSCRIPTV8_ISOLATE, function);
 	obj->Set(OPscriptV8GetString(name), func);

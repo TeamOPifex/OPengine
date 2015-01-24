@@ -18,6 +18,7 @@ add_external_opifex_includes()
 #########################################
 add_source_group(include/ "${PROJECT_SOURCE_DIR}/Scripting/include" SCRIPTING_SRC)
 add_source_group(include/V8 "${PROJECT_SOURCE_DIR}/Scripting/include/V8" SCRIPTING_SRC)
+add_source_group(include/V8/WrapperMath "${PROJECT_SOURCE_DIR}/Scripting/include/V8/WrapperMath" SCRIPTING_SRC)
 add_source_group(include/wrappers "${PROJECT_SOURCE_DIR}/Scripting/include/wrappers" SCRIPTING_SRC)
 
 
@@ -27,6 +28,7 @@ add_source_group(include/wrappers "${PROJECT_SOURCE_DIR}/Scripting/include/wrapp
 add_source_group(\\ "${PROJECT_SOURCE_DIR}/Scripting" SCRIPTING_SRC)
 add_source_group(src/ "${PROJECT_SOURCE_DIR}/Scripting/src" SCRIPTING_SRC)
 add_source_group(src/V8 "${PROJECT_SOURCE_DIR}/Scripting/src/V8" SCRIPTING_SRC)
+add_source_group(src/V8/WrapperMath "${PROJECT_SOURCE_DIR}/Scripting/src/V8/WrapperMath" SCRIPTING_SRC)
 add_source_group(src/wrappers "${PROJECT_SOURCE_DIR}/Scripting/src/wrappers" SCRIPTING_SRC)
 
 

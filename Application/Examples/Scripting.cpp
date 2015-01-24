@@ -1,15 +1,8 @@
 #include "./ExampleSelectorState.h"
 #include "./Scripting/include/V8/OPscriptV8.h"
+#include "./Scripting/include/OPloaderOPS.h"
 
-void ExampleScriptingEnter(OPgameState* last);
-OPint ExampleScriptingUpdate(OPtimer* time);
-void ExampleScriptingExit(OPgameState* next);
-
-OPgameState GS_EXAMPLE_SCRIPTING = {
-	ExampleScriptingEnter,
-	ExampleScriptingUpdate,
-	ExampleScriptingExit
-};
+#ifdef OPIFEX_OPTION_V8
 
 typedef struct {
 	OPscript* MyScript;
@@ -42,3 +35,14 @@ OPint ExampleScriptingUpdate(OPtimer* time) {
 void ExampleScriptingExit(OPgameState* next) {
 
 }
+
+OPgameState GS_EXAMPLE_SCRIPTING = {
+	ExampleScriptingEnter,
+	ExampleScriptingUpdate,
+	ExampleScriptingExit
+};
+#else
+
+OPgameState GS_EXAMPLE_SCRIPTING;
+
+#endif

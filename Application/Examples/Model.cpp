@@ -41,7 +41,7 @@ void ExampleModelEnter(OPgameState* last) {
 	// The OPcmanLoad call ensures that this mesh has been loaded
 	// The OPcmanGet call returns a pointer to the resource (an OPmesh)
 	// that's contained in the Content Manager
-	modelExample->Mesh = (OPmesh*)OPcmanLoadGet("cube.opm");
+	modelExample->Mesh = (OPmesh*)OPcmanLoadGet("blobman.opm");
 
 	// The effect that will be used to render the mesh
 	// The renderGenEffect is a simplified utility method

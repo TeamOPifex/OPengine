@@ -9,6 +9,7 @@
 #include "./Data/include/OPcman.h"
 #include "./Core/include/Assert.h"
 
+#include "./Scripting/include/V8/OPscriptV8WrapperMath.h"
 #include "./Scripting/include/V8/OPscriptV8WrapperHuman.h"
 
 OPscriptV8Isolate* OPSCRIPTV8_ISOLATE = NULL;
@@ -48,6 +49,7 @@ void _OPscriptV8SetConsole(Handle<ObjectTemplate> objTemplate) {
 void _OPscriptV8WrapEngine(const v8::FunctionCallbackInfo<v8::Value>& args) {
 	Handle<Object> OP = Object::New(OPSCRIPTV8_ISOLATE);
 	OPscriptV8WrapperHuman(OP);
+	OPscriptV8WrapperMath(OP);
 	// GlobalInitializeMethodsO(OPSCRIPTV8_ISOLATE, OP);
 	// HumanInitializeMethodsO(OPSCRIPTV8_ISOLATE, OP);
 	// MathInitializeMethodsO(OPSCRIPTV8_ISOLATE, OP);
