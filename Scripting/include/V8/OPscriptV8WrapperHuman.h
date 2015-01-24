@@ -8,8 +8,7 @@
 #include "./Scripting/include/V8/OPscriptV8Types.h"
 
 void OPscriptV8WrapperHuman(Handle<Object> target);
-#include "./Math/include/OPvec3.h"
-Handle<Object> OPscriptV8Create(OPvec3* val);
+
 #endif
 
 #endif
