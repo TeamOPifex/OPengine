@@ -10,7 +10,7 @@
 #define OPSPHERICALCUBE_SCALE 1.0f
 #define OPSPHERICALCUBE_SCL 1
 
-enum PlanetSide
+enum OPsphericalCubeSide
 {
 	OP_SPHERICAL_CUBE_SIDE_TOP = 0,
 	OP_SPHERICAL_CUBE_SIDE_BOTTOM = 1,
@@ -48,7 +48,9 @@ struct OPsphericalCube {
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/   
 
-OPsphericalCube       OPsphericalCubeCreate(OPint size);
+OPsphericalCube       OPsphericalCubeCreate(OPint size); 
+OPvec3 OPsphericalCubePosition(OPvec3 pos, OPsphericalCubeSide* side);
+void         OPsphericalCubeDestroy(OPsphericalCube* sphericalCube);
 
 //-----------------------------------------------------------------------------
 // ______                _   _                 

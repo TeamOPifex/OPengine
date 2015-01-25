@@ -217,3 +217,128 @@ OPsphericalCube OPsphericalCubeCreate(OPint size) {
 
 	return result;
 }
+
+OPvec3 OPsphericalCubePosition(OPvec3 pos, OPsphericalCubeSide* side)
+{
+	OPvec3 position = pos;
+
+	OPfloat x = position.x;
+	OPfloat y = position.y;
+	OPfloat z = position.z;
+
+	OPfloat fx = OPabs(x);
+	OPfloat fy = OPabs(y);
+	OPfloat fz = OPabs(z);
+
+	OPfloat inverseSqrt2 = 1.0f / OPsqrt(2.0f);// 0.70710676908493042f;
+
+	if (fy >= fx && fy >= fz)
+	{
+		OPfloat a2 = x * x * 2.0;
+		OPfloat b2 = z * z * 2.0;
+		OPfloat inner = -a2 + b2 - 3;
+		OPfloat innersqrt = -(OPfloat)(OPsqrt((inner * inner) - 12.0f * a2));
+
+		if (x == 0.0)
+			position.x = 0.0f;
+		else
+			position.x = (OPfloat)(OPsqrt(innersqrt + a2 - b2 + 3.0f) * inverseSqrt2);
+
+		if (z == 0.0)
+			position.z = 0.0f;
+		else
+			position.z = (OPfloat)(OPsqrt(innersqrt - a2 + b2 + 3.0f) * inverseSqrt2);
+
+		if (position.x > 1.0) position.x = 1.0f;
+		if (position.z > 1.0) position.z = 1.0f;
+
+		if (x < 0) position.x = -position.x;
+		if (z < 0) position.z = -position.z;
+
+		if (y > 0) // top face
+		{
+			position.y = 1.0f;
+			*side = OP_SPHERICAL_CUBE_SIDE_TOP;
+		}
+		else // bottom face
+		{
+			position.y = -1.0f;
+			*side = OP_SPHERICAL_CUBE_SIDE_BOTTOM;
+		}
+	}
+	else if (fx >= fy && fx >= fz)
+	{
+		OPfloat a2 = y * y * 2.0;
+		OPfloat b2 = z * z * 2.0;
+		OPfloat inner = -a2 + b2 - 3;
+		OPfloat innersqrt = -OPsqrt((inner * inner) - 12.0 * a2);
+
+		if (y == 0.0)
+			position.y = 0.0f;
+		else
+			position.y = (OPfloat)(OPsqrt(innersqrt + a2 - b2 + 3.0) * inverseSqrt2);
+
+		if (z == 0.0 || z == -0.0)
+			position.z = 0.0f;
+		else
+			position.z = (OPfloat)(OPsqrt(innersqrt - a2 + b2 + 3.0) * inverseSqrt2);
+
+		if (position.y > 1.0) position.y = 1.0f;
+		if (position.z > 1.0) position.z = 1.0f;
+
+		if (y < 0) position.y = -position.y;
+		if (z < 0) position.z = -position.z;
+
+		if (x > 0) // right face
+		{
+			position.x = 1.0f;
+			*side = OP_SPHERICAL_CUBE_SIDE_RIGHT;
+		}
+		else // left face
+		{
+			position.x = -1.0f;
+			*side = OP_SPHERICAL_CUBE_SIDE_LEFT;
+		}
+	}
+	else
+	{
+		OPfloat a2 = x * x * 2.0;
+		OPfloat b2 = y * y * 2.0;
+		OPfloat inner = -a2 + b2 - 3;
+		OPfloat innersqrt = -OPsqrt((inner * inner) - 12.0 * a2);
+
+		if (x == 0.0)
+			position.x = 0.0f;
+		else
+			position.x = (float)(OPsqrt(innersqrt + a2 - b2 + 3.0) * inverseSqrt2);
+
+		if (y == 0.0)
+			position.y = 0.0f;
+		else
+			position.y = (float)(OPsqrt(innersqrt - a2 + b2 + 3.0) * inverseSqrt2);
+
+
+		if (position.x > 1.0) position.x = 1.0f;
+		if (position.y > 1.0) position.y = 1.0f;
+
+		if (x < 0) position.x = -position.x;
+		if (y < 0) position.y = -position.y;
+
+		if (z > 0) // front face
+		{
+			position.z = 1.0f;
+			*side = OP_SPHERICAL_CUBE_SIDE_FRONT;
+		}
+		else // back face
+		{
+			position.z = -1.0f;
+			*side = OP_SPHERICAL_CUBE_SIDE_BACK;
+		}
+	}
+
+	return position;
+}
+
+void         OPsphericalCubeDestroy(OPsphericalCube* sphericalCube) {
+
+}
