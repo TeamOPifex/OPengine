@@ -15,3 +15,4 @@ extern OPgameState GS_EXAMPLE_SKINNING;
 extern OPgameState GS_EXAMPLE_SPINE;
 extern OPgameState GS_EXAMPLE_TEXTURED;
 extern OPgameState GS_EXAMPLE_SCRIPTING;
+extern OPgameState GS_EXAMPLE_SPHERICALCUBE;

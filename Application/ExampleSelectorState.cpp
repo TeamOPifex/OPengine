@@ -17,7 +17,7 @@ typedef struct {
 	OPgameState* state;
 } Example;
 
-#define ExampleCount 10
+#define ExampleCount 11
 
 typedef struct {
 	i32 Selected;
@@ -46,7 +46,8 @@ void ExampleSelectorEnter(OPgameState* last) {
 		"Deferred",
 		"Oculus",
 		"Spine",
-		"Scripting"
+		"Scripting",
+		"Spherical Cube"
 	};
 
 	exampleSelector.FontManager = OPfontManagerSetup("Ubuntu.opf", Names, ExampleCount);
@@ -70,6 +71,7 @@ void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector.Examples[7].state = &GS_EXAMPLE_OCULUS;
 	exampleSelector.Examples[8].state = &GS_EXAMPLE_SPINE;
 	exampleSelector.Examples[9].state = &GS_EXAMPLE_SCRIPTING;
+	exampleSelector.Examples[10].state = &GS_EXAMPLE_SPHERICALCUBE;
 
 	// Deferred Example in flux
 	exampleSelector.Examples[6].available = 0;
