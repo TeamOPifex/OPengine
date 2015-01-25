@@ -158,17 +158,10 @@ OPsphericalCube OPsphericalCubeCreate(OPint size) {
 	// Sphericalize the coordinates
  	for (OPint i = 0; i < TotalVerts; i++)
 	{
-		//OPvec3 pos = OPVEC3_ZERO;
-		//pos.x = p.x*(float)OPsqrt(1 - (p.y*p.y) / 2 - (p.z*p.z) / 2 + (p.y*p.y*p.z*p.z) / 3);
-		//pos.y = p.y*(float)OPsqrt(1 - (p.z*p.z) / 2 - (p.x*p.x) / 2 + (p.x*p.x*p.z*p.z) / 3);
-		//pos.z = p.z*(float)OPsqrt(1 - (p.x*p.x) / 2 - (p.y*p.y) / 2 + (p.y*p.y*p.x*p.x) / 3);
 		vertsMem[i].pos = OPvec3Norm(vertsMem[i].pos);
+		vertsMem[i].norm = OPvec3Norm(vertsMem[i].pos);
 	}
 	
-
-
-		//VertexBuffers[j] = new VertexBuffer(Engine.GraphicsDevice, CustomVertex.VertexDeclaration, verts[j].Length, BufferUsage.None);
-		//VertexBuffers[j].SetData<CustomVertex>(verts[j], 0, verts[j].Length);
 	OPint index = 0;
 	OPint IndicesPerSide = (((LWH - 1)*(LWH - 1) * 6) / OPSPHERICALCUBE_SCL);
 	OPint totalIndices = IndicesPerSide * 6;
@@ -206,38 +199,6 @@ OPsphericalCube OPsphericalCubeCreate(OPint size) {
 		index = 0;
 	}
 
-	//IndexBuffers[i] = new IndexBuffer(Engine.GraphicsDevice, IndexElementSize.ThirtyTwoBits, indices[i].Length, BufferUsage.None);
-	//IndexBuffers[i].SetData(indices[i], 0, indices[i].Length);
-
-
-	//CalculateNormals(verts, SetUpIndices());
-
-	for (OPint i = 0; i < VertsPerSide * 6; i++)
-	{
-		vertsMem[i].norm = OPVEC3_ZERO;
-	}
-
-	for (OPint j = 0; j < 6; j++) {
-		for (OPint i = 0; i < IndicesPerSide / 3; i++)
-		{
-			ui16 index1 = indices[j][i * 3];
-			ui16 index2 = indices[j][i * 3 + 1];
-			ui16 index3 = indices[j][i * 3 + 2];
-
-			OPvec3 side1 = verts[j][index1].pos - verts[j][index3].pos;
-			OPvec3 side2 = verts[j][index1].pos - verts[j][index2].pos;
-			OPvec3 normal = OPvec3Cross(side1, side2);
-
-			verts[j][index1].norm += normal;
-			verts[j][index2].norm += normal;
-			verts[j][index3].norm += normal;
-		}
-	}
-
-	for (OPint i = 0; i < VertsPerSide * 6; i++) {
-		vertsMem[i].norm = OPvec3Norm(vertsMem[i].norm);
-	}
-
 	OPsphericalCube result;
 
 	for (OPint i = 0; i < 6; i++) {
@@ -250,6 +211,9 @@ OPsphericalCube OPsphericalCubeCreate(OPint size) {
 			(void*)verts[i], (void*)indices[i]
 			);
 	}
+
+	OPfree(vertsMem);
+	OPfree(indicesMem);
 
 	return result;
 }
