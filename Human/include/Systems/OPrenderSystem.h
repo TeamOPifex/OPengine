@@ -8,6 +8,7 @@
 #include "./Human/include/Rendering/OPframeBuffer.h"
 
 #include "./Human/include/Rendering/Primitives/OPquad.h"
+#include "./Human/include/Rendering/Primitives/OPsphericalCube.h"
 
 OPeffect OPrenderSystemLoadTextured2D(ui32 vertexStride);
 OPeffect OPrenderSystemLoadTextured3D(ui32 vertexStride);
