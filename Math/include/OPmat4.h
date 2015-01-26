@@ -349,6 +349,10 @@ inline void OPmat4Identity(OPmat4* m) {
  //                                                                                    
 
 /* NOTE(garrett): Pretty sure this unneeded now that we have OPquat
+       (Kirk): I think we still need it, we can use a quat to compound
+               rotations, but we may still need to retrieve them as a matrix
+               for use with shaders
+*/
 inline void OPmat4BuildQuat(OPmat4* dst, OPquat* qtr){
 	f32 x = qtr->x;		f32 y = qtr->y;		f32 z = qtr->z;		f32 w = qtr->w;
 	f32 x2 = x + x;		f32 y2 = y + y;		f32 z2 = z + z;
@@ -378,6 +382,7 @@ inline void OPmat4BuildQuat(OPmat4* dst, OPquat* qtr){
 	dst->cols[3].w = 1;
 }
 
+/*
 inline void OPmat4quat(OPmat4* m, OPquat* qtr) {
 	OPmat4 temp = OPMAT4ZERO;
 	OPmat4BuildQuat(&temp, qtr);

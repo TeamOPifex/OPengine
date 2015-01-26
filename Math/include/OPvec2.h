@@ -57,8 +57,8 @@ struct OPvec2 {
 	}
 };
 
-extern const OPvec2 OPvec2Zero;
-extern const OPvec2 OPvec2One;
+extern const OPvec2 OPVEC2_ZERO;
+extern const OPvec2 OPVEC2_ONE;
 
 inline OPvec2 OPvec2Create(OPfloat x, OPfloat y) {
     OPvec2 tmp;
@@ -195,6 +195,11 @@ inline OPvec2 OPvec2Read(OPstream* str) {
 		OPreadf32(str)
 	};
 	return temp;
+}
+
+inline OPvec2 OPvec2RandNorm(){
+	OPvec2 v = { OPrandom() - 0.5, OPrandom() - 0.5 };
+	return OPvec2Norm(v);
 }
 
 inline void OPvec2Write(OPvec2 v, OPstream* str) {
