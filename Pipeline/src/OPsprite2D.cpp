@@ -30,7 +30,7 @@ void OPsprite2DInit(OPeffect* effect) {
 
 OPsprite2D* OPsprite2DCreate(OPsprite** sprites, OPeffect* effect) {
 	OPsprite2D* sprite = (OPsprite2D*)OPallocZero(sizeof(OPsprite2D));
-	sprite->Scale = OPvec2One;
+	sprite->Scale = OPVEC2_ONE;
 	sprite->Sprites = sprites;
 	sprite->CurrentSprite = sprites[0];
 	sprite->Direction = 1;

@@ -23,7 +23,7 @@ OPtexture2D* OPtexture2DCreate(OPtexture* texture, OPeffect* effect) {
 	OPtexture2D* tex2d = (OPtexture2D*)OPalloc(sizeof(OPtexture2D));
 
 	OPbzero(tex2d, sizeof(OPtexture2D));
-	tex2d->Scale = OPvec2One;
+	tex2d->Scale = OPVEC2_ONE;
 	tex2d->Texture = texture;
 	tex2d->Effect = effect;
 

@@ -114,7 +114,7 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 
 	if(!sys->fps){
 		OPeffectParamVec2("uTexCoordScale", &sys->uvScale);
-		OPeffectParamVec2("uSpriteOffset", (OPvec2*)&OPvec2Zero);
+		OPeffectParamVec2("uSpriteOffset", (OPvec2*)&OPVEC2_ZERO);
 		OPtextureClearActive();
 		OPeffectParami("uColorTexture", OPtextureBind(sys->texture));
 	}
