@@ -33,8 +33,6 @@ void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
 }
 
 void OPskeletonAnimationUpdateEvents(OPskeletonAnimation* skelAnim) {
-	ASSERT(skelAnim->Events != NULL, "No events have been assigned to this animation");
-
 	if(skelAnim->LastFrame != skelAnim->Frame) {
 		for(OPint i = 0; i < skelAnim->EventCount; i++) {
 			if(skelAnim->Events[i].Frame > skelAnim->LastFrame && skelAnim->Events[i].Frame <= skelAnim->Frame) {
