@@ -11,7 +11,8 @@ typedef struct {
 } OPskeletonAnimationTransition;
 
 OPskeletonAnimationTransition OPskeletonAnimationTransitionInit(OPskeletonAnimation* start, OPskeletonAnimation* end, OPfloat duration);
-void OPskeletonAnimationTransitionUpdate(OPskeletonAnimationTransition* transition, OPtimer* timer);
+OPint OPskeletonAnimationTransitionUpdate(OPskeletonAnimationTransition* transition, OPtimer* timer);
+void OPskeletonAnimationTransitionApply(OPskeletonAnimationTransition* transition, OPskeleton* skeleton);
 void OPskeletonAnimationTransitionReset(OPskeletonAnimationTransition* transition);
 
 
