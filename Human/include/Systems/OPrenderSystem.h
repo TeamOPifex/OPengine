@@ -10,5 +10,7 @@
 #include "./Human/include/Rendering/Primitives/OPquad.h"
 #include "./Human/include/Rendering/Primitives/OPsphericalCube.h"
 
+#include "./Human/include/Rendering/Skinning/OPskeletonAnimationTransition.h"
+
 OPeffect OPrenderSystemLoadTextured2D(ui32 vertexStride);
 OPeffect OPrenderSystemLoadTextured3D(ui32 vertexStride);

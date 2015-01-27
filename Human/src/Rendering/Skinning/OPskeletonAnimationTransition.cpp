@@ -11,11 +11,20 @@ OPskeletonAnimationTransition OPskeletonAnimationTransitionInit(OPskeletonAnimat
 	return result;
 }
 
-void OPskeletonAnimationTransitionUpdate(OPskeletonAnimationTransition* transition, OPtimer* timer) {
+OPint OPskeletonAnimationTransitionUpdate(OPskeletonAnimationTransition* transition, OPtimer* timer) {
 	transition->Current += timer->Elapsed;
-	transition->
+	if(transition->Current >= transition->Duration) {
+		transition->Current = transition->Duration;
+		return 1;
+	}
+	return 0;
+}
+
+
+void OPskeletonAnimationTransitionApply(OPskeletonAnimationTransition* transition, OPskeleton* skeleton) {
+	OPskeletonAnimationMerge(transition->Start, transition->End, transition->Current / transition->Duration, skeleton);
 }
 
 void OPskeletonAnimationTransitionReset(OPskeletonAnimationTransition* transition) {
-
+	transition->Current = 0;
 }
