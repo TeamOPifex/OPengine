@@ -168,11 +168,10 @@ inline OPfloat OPvec3Dot(OPvec3 a, OPvec3 b) {
 
 inline OPvec3 OPvec3Cross(OPvec3 a, OPvec3 b) {
 	OPvec3 v = {
-		{a.y * b.z - a.z * b.y,
+		a.y * b.z - a.z * b.y,
 		a.z * b.x - a.x * b.z,
-		a.x * b.y - a.y * b.x},
+		a.x * b.y - a.y * b.x,
 	};
-
 	return v;
 }
 

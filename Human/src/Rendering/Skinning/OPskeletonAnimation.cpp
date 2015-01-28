@@ -1,10 +1,13 @@
 #include "./Human/include/Rendering/Skinning/OPskeletonAnimation.h"
+#include "./Core/include/Assert.h"
 
 void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPmat4* frames, i32 frameCount) {
+	OPbzero(skelAnim, sizeof(OPskeletonAnimation));
 	skelAnim->FrameCount = frameCount;
 	skelAnim->Frame = 0;
 	skelAnim->Elapsed = 0;
 	skelAnim->FramesPer = 1000 / 24;
+
 	OPint totalSize = sizeof(OPmat4)* frameCount * boneCount;
 	skelAnim->JointFrames = (OPmat4*)OPalloc(totalSize);
 	OPmemcpy(skelAnim->JointFrames, frames, totalSize);
@@ -18,12 +21,23 @@ OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPmat4* frames, 
 
 void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
 	skelAnim->Elapsed += timer->Elapsed;
+	skelAnim->LastFrame = skelAnim->Frame;
 
 	while (skelAnim->Elapsed > skelAnim->FramesPer) {
 		skelAnim->Elapsed -= skelAnim->FramesPer;
 		skelAnim->Frame++;
 		if (skelAnim->Frame >= skelAnim->FrameCount) {
 			skelAnim->Frame = 0;
+		}
+	}
+}
+
+void OPskeletonAnimationUpdateEvents(OPskeletonAnimation* skelAnim) {
+	if(skelAnim->LastFrame != skelAnim->Frame) {
+		for(OPint i = 0; i < skelAnim->EventCount; i++) {
+			if(skelAnim->Events[i].Frame > skelAnim->LastFrame && skelAnim->Events[i].Frame <= skelAnim->Frame) {
+				skelAnim->Events[i].Event(skelAnim, skelAnim->Events[i].Frame);
+			}
 		}
 	}
 }
@@ -89,4 +103,9 @@ void OPskeletonAnimationMerge(OPskeletonAnimation* skelAnim1, OPskeletonAnimatio
 		}
 
 	}
+}
+
+void OPskeletonAnimationSetEvents(OPskeletonAnimation* skelAnim, OPuint frames, OPskeletonAnimationEvent* events) {
+	skelAnim->Events = events;
+	skelAnim->EventCount = frames;
 }
