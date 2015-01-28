@@ -4,19 +4,38 @@
 #include "OPskeleton.h"
 #include "./Core/include/OPtimer.h"
 
-typedef struct {
+#define OPSKELETONANIMATION_MAX_EVENTS 6
+
+struct _OPskeletonAnimation;
+typedef _OPskeletonAnimation OPskeletonAnimation;
+
+struct _OPskeletonAnimationEvent
+{
+	void(*Event)(OPskeletonAnimation*, OPuint);
+	OPuint Frame;
+};
+typedef _OPskeletonAnimationEvent OPskeletonAnimationEvent;
+
+struct _OPskeletonAnimation{
 	OPskeleton* Skeleton;
 	OPmat4* JointFrames;
-	OPint FrameCount;
-	OPint Frame;
+	OPuint FrameCount;
+	OPuint Frame;
 	ui64 Elapsed;
 	ui64 FramesPer;
-} OPskeletonAnimation;
+
+	OPuint LastFrame;
+	OPskeletonAnimationEvent* Events;
+	OPuint EventCount;
+};
+
 
 void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPmat4* frames, i32 count);
 OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPmat4* frames, i32 count);
 void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer);
+void OPskeletonAnimationUpdateEvents(OPskeletonAnimation* skelAnim);
 void OPskeletonAnimationApply(OPskeletonAnimation* skelAnim, OPskeleton* skeleton);
 void OPskeletonAnimationMerge(OPskeletonAnimation* skelAnim1, OPskeletonAnimation* skelAnim2, OPfloat merge, OPskeleton* skeleton);
+void OPskeletonAnimationSetEvents(OPskeletonAnimation* skelAnim, OPuint frames, OPskeletonAnimationEvent* events);
 
 #endif
