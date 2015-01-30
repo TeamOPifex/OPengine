@@ -24,6 +24,8 @@ struct _OPskeletonAnimation{
 	ui64 Elapsed;
 	ui64 FramesPer;
 
+	OPint Loop;
+	OPuint LoopsCompleted;
 	OPuint LastFrame;
 	OPskeletonAnimationEvent* Events;
 	OPuint EventCount;
@@ -37,5 +39,9 @@ void OPskeletonAnimationUpdateEvents(OPskeletonAnimation* skelAnim);
 void OPskeletonAnimationApply(OPskeletonAnimation* skelAnim, OPskeleton* skeleton);
 void OPskeletonAnimationMerge(OPskeletonAnimation* skelAnim1, OPskeletonAnimation* skelAnim2, OPfloat merge, OPskeleton* skeleton);
 void OPskeletonAnimationSetEvents(OPskeletonAnimation* skelAnim, OPuint frames, OPskeletonAnimationEvent* events);
+inline void OPskeletonAnimationReset(OPskeletonAnimation* skelAnim) {
+	skelAnim->Frame = 0;
+	skelAnim->LoopsCompleted = 0;
+}
 
 #endif
