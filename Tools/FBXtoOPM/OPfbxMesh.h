@@ -116,6 +116,7 @@ OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* featu
 				writeF32(&myFile, norm.x);
 				writeF32(&myFile, norm.y);
 				writeF32(&myFile, norm.z);
+				OPvec3Log("Norm", norm);
 			}
 
 			if (features[Model_Tangents]) {

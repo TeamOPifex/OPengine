@@ -59,15 +59,46 @@ OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData) {
 					{
 						case FbxGeometryElement::eDirect: {
 							normal = eNormal->GetDirectArray().GetAt(0);
+							OPlog("Normal %f, %f, %f, %f", normal[0], normal[1], normal[2], normal[3]);
 							break;
 						}
 						case FbxGeometryElement::eIndexToDirect: {
 							int id = eNormal->GetIndexArray().GetAt(0);
 							normal = eNormal->GetDirectArray().GetAt(id);
+							OPlog("Normal2 %f, %f, %f, %f", normal[0], normal[1], normal[2], normal[3]);
 							break;
 						}
 					}
 					polys[i].Normal[j] = OPvec3Create(normal[0], normal[1], normal[2]);
+					OPvec3Log("Normal3", polys[i].Normal[j]);
+				} else if(eNormal->GetMappingMode() == FbxGeometryElement::eByControlPoint) {
+
+					
+					switch(eNormal->GetReferenceMode())
+					{
+					case FbxGeometryElement::eDirect:
+					{
+						polys[i].Normal[j].x = static_cast<float>(eNormal->GetDirectArray().GetAt(controlPointIndex).mData[0]);
+						polys[i].Normal[j].y = static_cast<float>(eNormal->GetDirectArray().GetAt(controlPointIndex).mData[1]);
+						polys[i].Normal[j].z = static_cast<float>(eNormal->GetDirectArray().GetAt(controlPointIndex).mData[2]);
+					}
+					break;
+
+					case FbxGeometryElement::eIndexToDirect:
+					{
+						int index = eNormal->GetIndexArray().GetAt(controlPointIndex);
+						polys[i].Normal[j].x = static_cast<float>(eNormal->GetDirectArray().GetAt(index).mData[0]);
+						polys[i].Normal[j].y = static_cast<float>(eNormal->GetDirectArray().GetAt(index).mData[1]);
+						polys[i].Normal[j].z = static_cast<float>(eNormal->GetDirectArray().GetAt(index).mData[2]);
+					}
+					break;
+
+					default:
+					OPlog("Invalid Reference");
+					}
+					break;
+				} else {
+					OPlog("No Normal");
 				}
 			}
 
