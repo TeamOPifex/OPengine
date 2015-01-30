@@ -139,7 +139,7 @@ OPMData OPMloadData(OPstream* str) {
 			if (y > max.y) max.y = y;
 			if (z > max.z) max.z = z;
 
-			//OPlog("Pos: %f %f %f", x, y, z);
+			OPlog("Pos: %f %f %f", x, y, z);
 		}
 
 		// Read Normal
@@ -151,7 +151,7 @@ OPMData OPMloadData(OPstream* str) {
 			normals[i].y = y;
 			normals[i].z = z;
 			normals[i] = OPvec3Norm(normals[i]);
-			//OPlog("Normal: %f %f %f", x, y, z);
+			OPlog("Normal: %f %f %f", x, y, z);
 		}
 		
 		// Read Tangent
