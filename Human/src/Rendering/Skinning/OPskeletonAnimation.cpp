@@ -7,6 +7,8 @@ void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPm
 	skelAnim->Frame = 0;
 	skelAnim->Elapsed = 0;
 	skelAnim->FramesPer = 1000 / 24;
+	skelAnim->Loop = 1;
+	skelAnim->LoopsCompleted = 0;
 
 	OPint totalSize = sizeof(OPmat4)* frameCount * boneCount;
 	skelAnim->JointFrames = (OPmat4*)OPalloc(totalSize);
@@ -27,7 +29,13 @@ void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
 		skelAnim->Elapsed -= skelAnim->FramesPer;
 		skelAnim->Frame++;
 		if (skelAnim->Frame >= skelAnim->FrameCount) {
-			skelAnim->Frame = 0;
+			if(skelAnim->Loop) {
+				skelAnim->Frame = 0;
+				skelAnim->LoopsCompleted++;
+			} else {
+				skelAnim->Frame--;
+				skelAnim->LoopsCompleted = 1;
+			}
 		}
 	}
 }
