@@ -240,9 +240,19 @@ OPint OPrenderInit(){
 	OPint _screenWidth = OPRENDER_SCREEN_WIDTH;
 	OPint _screenHeight = OPRENDER_SCREEN_HEIGHT;
 
-	window = glfwCreateWindow(_screenWidth, _screenHeight, "OPifex Entertainment", monitor, NULL);
-	OPlogInfo("Created window of size: %d x %d", _screenWidth, _screenHeight);
+	OPlog("%d x %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
+	OPlog("%d x %d", _screenWidth, _screenHeight);
+
+	window = glfwCreateWindow(_screenWidth, _screenHeight, 
+		"OPifex Entertainment", monitor, NULL);
+
+	OPlog("%d x %d", _screenWidth, _screenHeight);
+
+	OPlogInfo("Created window of size: %d x %d", 
+		_screenWidth, _screenHeight);
+
 	glfwGetFramebufferSize(window, &OPRENDER_SCREEN_WIDTH, &OPRENDER_SCREEN_HEIGHT);
+
 	OPRENDER_SCREEN_WIDTH_SCALE = _screenWidth / (f32)OPRENDER_SCREEN_WIDTH;
 	OPRENDER_SCREEN_HEIGHT_SCALE = _screenHeight / (f32)OPRENDER_SCREEN_HEIGHT;
 	OPlogInfo("Frame Buffer size: %d x %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
