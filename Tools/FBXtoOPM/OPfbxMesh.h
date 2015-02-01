@@ -72,6 +72,7 @@ OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* featu
 	OPlogDebug("Feature[Model_Bones]: %d", features[Model_Bones]);
 	OPlogDebug("Feature[Model_Skinning]: %d", features[Model_Skinning]);
 	OPlogDebug("Feature[Model_Animations]: %d", features[Model_Animations]);
+	OPlogDebug("Feature[Model_Meta]: %d", features[Model_Meta]);
 
 	ui32 feature = 0;
 	if (features[Model_Positions]) feature += 0x01;
