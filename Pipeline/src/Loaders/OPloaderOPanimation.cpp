@@ -25,6 +25,8 @@ OPint OPloaderOPanimationLoad(const OPchar* filename, OPskeletonAnimation** anim
 	OPint frameCount = OPreadui32(str);
 	OPint totalFrames = boneCount * frameCount;
 
+	OPlog("Name: %s, Frames: %d", name, frameCount);
+
 	OPmat4* frames = (OPmat4*)OPalloc(sizeof(OPmat4)* totalFrames);
 
 	for (OPint j = 0; j < totalFrames; j++) {
