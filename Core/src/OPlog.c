@@ -66,11 +66,9 @@ void OPlogSetOutput(OPint handle) {
 	}
 }
 
-
-void OPlog(const char* message, ...){
+void _log(va_list args, const char* message) {
 	char buffer[1024];
-    va_list args;
-	va_start(args, message);
+
 	vsnprintf(buffer, sizeof buffer, message, args);
 
 	if(errno) {
@@ -78,7 +76,15 @@ void OPlog(const char* message, ...){
 		errno = 0;
 	}
 	write(LogToHandle, buffer, strlen(buffer));
-	write(LogToHandle, "\n", 1);
+	write(LogToHandle, "\n", 1);	
+}
+
+void OPlog(const char* message, ...){
+    va_list args;
+	va_start(args, message);
+
+	_log(args, message);
+
     va_end(args);
 }
 
@@ -99,8 +105,12 @@ void OPlogDebug(const char* message, ...) {
 	#ifndef OPIFEX_OPTION_RELEASE
 	va_list args;
 	va_start(args, message);
-		write(LogToHandle, "DEBUG: ", 7);
-		OPlog(message, args);
+
+	write(LogToHandle, "DEBUG: ", 7);
+	_log(args, message);
+
+    va_end(args);
+
 	#endif
 }
 
@@ -108,23 +118,32 @@ void OPlogInfo(const char* message, ...) {
 	#ifndef OPIFEX_OPTION_RELEASE
 	va_list args;
 	va_start(args, message);
-		write(LogToHandle, "INFO: ", 6);
-		OPlog(message, args);
+
+	write(LogToHandle, "INFO: ", 6);
+	_log(args, message);
+
+    va_end(args);
 	#endif
 }
 
 void OPlogWarn(const char* message, ...) {
 	va_list args;
 	va_start(args, message);
+
 	write(LogToHandle, "WARNING: ", 9);
-	OPlog(message, args);
+	_log(args, message);
+
+    va_end(args);
 }
 
 void OPlogErr(const char* message, ...) {
 	va_list args;
 	va_start(args, message);
+
 	write(LogToHandle, "ERROR: ", 7);
-	OPlog(message, args);
+	_log(args, message);
+
+    va_end(args);
 }
 
 #endif

@@ -6,10 +6,10 @@
 typedef struct {
 	i32	wheel;
 	i32	prevWheel;
-	d64	positionX;
-	d64	positionY;
-	d64	prevPositionX;
-	d64	prevPositionY;
+	i32	positionX;
+	i32	positionY;
+	i32	prevPositionX;
+	i32	prevPositionY;
 	OPint	keys[_OPMOUSE_MAX];
 	OPint	prevKeys[_OPMOUSE_MAX];
 } OPmouseState;
