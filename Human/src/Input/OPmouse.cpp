@@ -32,24 +32,25 @@ void OPmouseUpdate() {
 		//}
 	}
 	// TODO: Fix this with the callback for GLFW3ß
-	double x, y;
+	d64 x, y;
 	glfwGetCursorPos(window, &x, &y);
+	OPmouseSetPositionScreenCenter();
 	Mouse.positionX = x;
 	Mouse.positionY = y;
 	//Mouse.wheel = glfwGetScroll(window);
 }
 
-i32 OPmousePositionX() {
+d64 OPmousePositionX() {
 	return Mouse.positionX;
 }
-i32 OPmousePositionY() {
+d64 OPmousePositionY() {
 	return Mouse.positionY;
 }
 
-i32 OPmousePositionMovedX() {
+d64 OPmousePositionMovedX() {
 	return Mouse.prevPositionX - Mouse.positionX;
 }
-i32 OPmousePositionMovedY() {
+d64 OPmousePositionMovedY() {
 	return Mouse.prevPositionY - Mouse.positionY;
 }
 
@@ -74,8 +75,8 @@ OPint OPmouseWasReleased(OPmouseKey key) {
 }
 void OPmouseSetPosition(i32 x, i32 y) {	
 	glfwSetCursorPos(window, x, y);
-	Mouse.positionX = x;
-	Mouse.positionY = y;
+	Mouse.prevPositionX = x;
+	Mouse.prevPositionY = y;
 }
 void OPmouseSetPositionScreenCenter() {
 	OPmouseSetPosition((OPRENDER_SCREEN_WIDTH * OPRENDER_SCREEN_WIDTH_SCALE) / 2, (OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE) / 2);
