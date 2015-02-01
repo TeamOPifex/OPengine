@@ -128,7 +128,7 @@ int main(int argc, char **argv) {
 		MenuOptions(
 			"Select OPM Features to Export\n------------------------",
 			features,
-			(MAX_FEATURES - 1),
+			(MAX_FEATURES),
 			"POSITION", "NORMAL", "UVS", "COLORS", "INDICES", "TANGENTS", "BONES", "SKIN", "ANIMATIONS", "SKELETONS", "META"
 			);
 	}
