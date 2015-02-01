@@ -82,6 +82,7 @@ OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* featu
 	if (features[Model_Bones]) feature += 0x20;
 	if (features[Model_Skinning]) feature += 0x40;
 	if (features[Model_Animations]) feature += 0x80;
+	if (features[Model_Meta]) feature += 0x200;
 
 
 	OPlogDebug("Feature: %d", feature);
@@ -207,6 +208,36 @@ OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* featu
 		}
 	}
 
+
+	if (features[Model_Meta]) {
+		writeU16(&myFile, mesh->MeshData.MetaCount);
+		for(OPuint i = 0; i < mesh->MeshData.MetaCount; i++) {
+
+			// Name
+			ui32 len = strlen(mesh->MeshData.Meta[i].Name);
+			writeU32(&myFile, len);
+			write(&myFile, mesh->MeshData.Meta[i].Name, len);
+
+			// Type
+			len = strlen(mesh->MeshData.Meta[i].Type);
+			writeU32(&myFile, len);
+			write(&myFile, mesh->MeshData.Meta[i].Type, len);
+
+			writeF32(&myFile, mesh->MeshData.Meta[i].Position[0]);
+			writeF32(&myFile, mesh->MeshData.Meta[i].Position[1]);
+			writeF32(&myFile, mesh->MeshData.Meta[i].Position[2]);
+
+			writeF32(&myFile, mesh->MeshData.Meta[i].Rotation[0]);
+			writeF32(&myFile, mesh->MeshData.Meta[i].Rotation[1]);
+			writeF32(&myFile, mesh->MeshData.Meta[i].Rotation[2]);
+
+			writeF32(&myFile, mesh->MeshData.Meta[i].Scale[0]);
+			writeF32(&myFile, mesh->MeshData.Meta[i].Scale[1]);
+			writeF32(&myFile, mesh->MeshData.Meta[i].Scale[2]);
+		}
+	}
+
+
 	if (features[Model_Bones]) {
 		OPchar* skel = OPstringCreateMerged(output, ".skel");
 		ofstream mySkelFile(skel, ios::binary);
@@ -291,6 +322,8 @@ OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* featu
 
 			}
 		}
+
+
 	}
 
 	return 0;
