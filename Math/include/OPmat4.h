@@ -301,9 +301,9 @@ inline void OPmat4Identity(OPmat4* m) {
 
  inline OPvec3 OPmat4Transform(OPvec3 a, OPmat4 b) {
 	 OPvec3 result;
-	 result.x = b[0].x * a.x + b[1].x * a.y + b[2].x * a.z;
-	 result.y = b[0].y * a.x + b[1].y * a.y + b[2].y * a.z;
-	 result.z = b[0].z * a.x + b[1].z * a.y + b[2].z * a.z;
+	 result.x = b[0].x * a.x + b[1].x * a.y + b[2].x * a.z + b[3][0] * 1.0;
+	 result.y = b[0].y * a.x + b[1].y * a.y + b[2].y * a.z + b[3][1] * 1.0;
+	 result.z = b[0].z * a.x + b[1].z * a.y + b[2].z * a.z + b[3][2] * 1.0;
 	 return result;
  }
 
