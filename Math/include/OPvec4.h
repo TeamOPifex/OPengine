@@ -1,4 +1,3 @@
-#pragma once
 #ifndef OP_MATH_VECTOR4
 #define OP_MATH_VECTOR4
 

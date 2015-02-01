@@ -1,7 +1,6 @@
-#pragma once
-
 #ifndef OPMATH_MAT4
 #define OPMATH_MAT4
+
 #include "./Math/include/OPvec2.h"
 #include "./Math/include/OPvec3.h"
 #include "./Math/include/OPvec4.h"
