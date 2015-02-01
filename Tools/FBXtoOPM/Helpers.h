@@ -16,7 +16,8 @@ enum ModelFeatures {
 	Model_Bones = 6,
 	Model_Skinning = 7,
 	Model_Animations = 8,
-	Model_Skeletons,
+	Model_Skeletons = 9,
+	Model_Meta = 10,
 	MAX_FEATURES
 };
 

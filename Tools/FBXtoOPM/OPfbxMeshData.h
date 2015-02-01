@@ -10,9 +10,21 @@ typedef struct {
 	OPvec2 UV[4];
 } OPfbxMeshPoly;
 
+
+typedef struct {
+	OPchar* Name;
+	OPchar* Type;
+	OPvec3 Position;
+	OPvec3 Rotation;
+	OPvec3 Scale;
+} OPfbxMeshDataMeta;
+
 typedef struct {
 	FbxNode* Node;
 	FbxMesh* Mesh;
+	OPfbxMeshDataMeta* Meta;
+
+	OPint MetaCount;
 
 	OPint PolyCount;
 
@@ -524,6 +536,178 @@ OPvec2* OPfbxMeshDataGetUVs(OPfbxMeshData* meshData) {
 	return uvs;
 }
 
+OPint OPfbxMeshDataGetPropBool(FbxObject* pObject, OPchar* name, OPint* val) {
+    FbxProperty lProperty = pObject->GetFirstProperty();
+    while (lProperty.IsValid())
+    {
+        if (lProperty.GetFlag(FbxPropertyFlags::eUserDefined))
+        {
+            FbxString lString = lProperty.GetLabel();
+            if(OPstringEquals(lString.Buffer(), name)) {
+				FbxDataType lPropertyDataType=lProperty.GetPropertyDataType();
+
+				if (lPropertyDataType.GetType() == eFbxBool)
+            	{
+            		(*val) = lProperty.Get<FbxBool>();
+                	return 1;
+                }
+            	return 0;
+            }
+        }
+        lProperty = pObject->GetNextProperty(lProperty);
+    }
+    return 0;
+}
+
+OPint OPfbxMeshDataGetPropString(FbxObject* pObject, OPchar* name, OPchar** val) {
+    FbxProperty lProperty = pObject->GetFirstProperty();
+    while (lProperty.IsValid())
+    {
+        if (lProperty.GetFlag(FbxPropertyFlags::eUserDefined))
+        {
+            FbxString lString = lProperty.GetLabel();
+            if(OPstringEquals(lString.Buffer(), name)) {
+				FbxDataType lPropertyDataType=lProperty.GetPropertyDataType();
+
+				if (lPropertyDataType.GetType() == eFbxString)
+            	{
+            		FbxString v = lProperty.Get<FbxString>();
+            		(*val) = OPstringCopy(v.Buffer());
+                	return 1;
+                }
+            	return 0;
+            }
+        }
+        lProperty = pObject->GetNextProperty(lProperty);
+    }
+    return 0;
+}
+
+// void DisplayUserProperties(FbxObject* pObject)
+// {
+//     int lCount = 0;
+//     FbxString lTitleStr = "    Property Count: ";
+
+//     FbxProperty lProperty = pObject->GetFirstProperty();
+//     while (lProperty.IsValid())
+//     {
+//         if (lProperty.GetFlag(FbxPropertyFlags::eUserDefined))
+//             lCount++;
+
+//         lProperty = pObject->GetNextProperty(lProperty);
+//     }
+
+//     if (lCount == 0)
+//         return; // there are no user properties to display
+
+//     OPlog("%s %d", lTitleStr.Buffer(), lCount);
+
+//     lProperty = pObject->GetFirstProperty();
+//     int i = 0;
+//     while (lProperty.IsValid())
+//     {
+//         if (lProperty.GetFlag(FbxPropertyFlags::eUserDefined))
+//         {
+//             OPlog("        Property %d", i);
+//             FbxString lString = lProperty.GetLabel();
+//             OPlog("            Display Name: %s", lString.Buffer());
+//             lString = lProperty.GetName();
+//             OPlog("            Internal Name: %s", lString.Buffer());
+//             OPlog("            Type: %s", lProperty.GetPropertyDataType().GetName());
+//             if (lProperty.HasMinLimit()) OPlog("            Min Limit: %llu", lProperty.GetMinLimit());
+//             if (lProperty.HasMaxLimit()) OPlog("            Max Limit: %llu", lProperty.GetMaxLimit());
+//             OPlog  ("            Is Animatable: %d", lProperty.GetFlag(FbxPropertyFlags::eAnimatable));
+            
+//                         FbxDataType lPropertyDataType=lProperty.GetPropertyDataType();
+
+//                         // BOOL
+//                         if (lPropertyDataType.GetType() == eFbxBool)
+//             {
+//                 OPlog("            Default Value: %d", lProperty.Get<FbxBool>());
+//                         }
+//                         // REAL
+//                         else if (lPropertyDataType.GetType() == eFbxDouble || lPropertyDataType.GetType() == eFbxFloat)
+//                         {
+//                 OPlog("            Default Value: %f", lProperty.Get<FbxDouble>());
+//                         }
+//                         // COLOR
+//                         else if (lPropertyDataType.Is(FbxColor3DT) || lPropertyDataType.Is(FbxColor4DT))
+//             {
+//                                 FbxColor lDefault;
+//                 char      lBuf[64];
+
+//                 lDefault = lProperty.Get<FbxColor>();
+//                 FBXSDK_sprintf(lBuf, 64, "R=%f, G=%f, B=%f, A=%f", lDefault.mRed, lDefault.mGreen, lDefault.mBlue, lDefault.mAlpha);
+//                 OPlog("            Default Value: %s", lBuf);
+//             }
+//                         // INTEGER
+//                         else if (lPropertyDataType.GetType() == eFbxInt)
+//                         {
+//                 OPlog("            Default Value: %d", lProperty.Get<FbxInt>());
+//                         }
+//                         // VECTOR
+//                         else if(lPropertyDataType.GetType() == eFbxDouble3 || lPropertyDataType.GetType() == eFbxDouble4)
+//                         {
+//                                 FbxDouble3 lDefault;
+//                 char   lBuf[64];
+
+//                 lDefault = lProperty.Get<FbxDouble3>();
+//                 FBXSDK_sprintf(lBuf, 64, "X=%f, Y=%f, Z=%f", lDefault[0], lDefault[1], lDefault[2]);
+//                 OPlog("            Default Value: %s", lBuf);
+//             }
+//                         // LIST
+//                         else if (lPropertyDataType.GetType() == eFbxEnum)
+//                         {
+//                 OPlog("            Default Value: %d", lProperty.Get<FbxEnum>());
+//                         }
+//                         // UNIDENTIFIED
+//             else
+//                         {
+//                 OPlog("            Default Value: UNIDENTIFIED");
+//             }
+//             i++;
+//         }
+
+//         lProperty = pObject->GetNextProperty(lProperty);
+//     }
+// }
+
+OPint OPfbxMeshDataIsMeta(FbxObject* pObject) {
+	OPint isMeta = 0;
+	if(OPfbxMeshDataGetPropBool(pObject, "OPIFEX_META", &isMeta)) {
+		OPlog("Found property OPIFEX_META");
+	}
+	return isMeta;
+}
+
+OPint OPfbxMeshDataMetaHasProp(FbxObject* pObject, OPchar* name) {    
+	FbxProperty lProperty = pObject->GetFirstProperty();
+    while (lProperty.IsValid())
+    {
+        if (lProperty.GetFlag(FbxPropertyFlags::eUserDefined))
+        {
+            FbxString lString = lProperty.GetLabel();
+            if(OPstringEquals(lString.Buffer(), name)) {
+            	return 1;
+            }
+        }
+        lProperty = pObject->GetNextProperty(lProperty);
+    }
+	return 0;
+}
+
+OPchar* OPfbxMeshDataMetaName(FbxObject* pObject) {
+	OPchar* result = NULL;
+	OPfbxMeshDataGetPropString(pObject, "OPIFEX_NAME", &result);
+	return result;
+}
+
+OPchar* OPfbxMeshDataMetaType(FbxObject* pObject) {
+	OPchar* result = NULL;
+	OPfbxMeshDataGetPropString(pObject, "OPIFEX_TYPE", &result);
+	return result;
+}
+
 OPint OPfbxMeshDataGet(OPfbxMeshData* meshData, OPfbxScene* scene) {
 
 	// Loop through each child in the root node of the scene until 
@@ -531,9 +715,63 @@ OPint OPfbxMeshDataGet(OPfbxMeshData* meshData, OPfbxScene* scene) {
 	// TODO: Support multiple meshes
 	FbxNodeAttribute::EType attributeType;
 	FbxNode* node;
+	OPint isMeta = 0;
+	OPuint totalMeta = 0;
+
+	// find all properties on all of the nodes
+	OPlog("Meta Data");
+	for (int i = 0; i < scene->RootNode->GetChildCount(); i++) {
+		node = scene->RootNode->GetChild(i);
+		if(OPfbxMeshDataIsMeta(node)) {
+			totalMeta++;
+		}
+	}
+
+	OPlog("Total Meta: %lld", totalMeta);
+
+	if(totalMeta > 0) {
+		meshData->Meta = (OPfbxMeshDataMeta*)OPalloc(sizeof(OPfbxMeshDataMeta) * totalMeta);
+		meshData->MetaCount = totalMeta;
+		OPint metaInd = 0;
+		for (int i = 0; i < scene->RootNode->GetChildCount(); i++) {
+			node = scene->RootNode->GetChild(i);
+			if(!OPfbxMeshDataIsMeta(node)) continue;
+
+			meshData->Meta[metaInd].Name = OPfbxMeshDataMetaName(node);
+			meshData->Meta[metaInd].Type = OPfbxMeshDataMetaType(node);
+			OPlog("META: %s -> %s", meshData->Meta[metaInd].Name, meshData->Meta[metaInd].Type);
+
+			FbxDouble3 pos = node->LclTranslation.Get();
+			OPlog("Pos: %f %f %f", pos[0], pos[1], pos[2]);
+			FbxDouble3 rot = node->LclRotation.Get();
+			OPlog("Rot: %f %f %f", rot[0], rot[1], rot[2]);
+			FbxDouble3 scl = node->LclScaling.Get();
+			OPlog("Scl: %f %f %f", scl[0], scl[1], scl[2]);
+
+			meshData->Meta[metaInd].Position[0] = pos[0];
+			meshData->Meta[metaInd].Position[1] = pos[1];
+			meshData->Meta[metaInd].Position[2] = pos[2];
+
+			meshData->Meta[metaInd].Rotation[0] = rot[0];
+			meshData->Meta[metaInd].Rotation[1] = rot[1];
+			meshData->Meta[metaInd].Rotation[2] = rot[2];
+
+			meshData->Meta[metaInd].Scale[0] = scl[0];
+			meshData->Meta[metaInd].Scale[1] = scl[1];
+			meshData->Meta[metaInd].Scale[2] = scl[2];
+
+			metaInd++;
+		}
+	}
+
 
 	for (int i = 0; i < scene->RootNode->GetChildCount(); i++) {
-		node = scene->RootNode->GetChild(i);		
+		node = scene->RootNode->GetChild(i);
+		if(OPfbxMeshDataIsMeta(node)) {
+			// Meta nodes don't get loaded
+			continue;
+		}
+
 		attributeType = node->GetNodeAttribute()->GetAttributeType();
 		if(attributeType == FbxNodeAttribute::eMesh) {
 
@@ -542,17 +780,17 @@ OPint OPfbxMeshDataGet(OPfbxMeshData* meshData, OPfbxScene* scene) {
 			meshData->Node = node;
 
 			meshData->PolyCount = meshData->Mesh->GetPolygonCount();
-			OPlogDebug("\tTotal Polys: %d", meshData->PolyCount);
+			OPlogDebug("\tTotal Polys: %ld", (meshData->PolyCount));
 
 			OPint vertexCount = _meshVertexCount(meshData->Mesh);
 			OPint indexCount = _meshIndexCount(meshData->Mesh);
-			OPlogDebug("\tVertex Count: %d\n\tIndex Count: %d", vertexCount, indexCount);
+			OPlogDebug("\tVertex Count: %ld\n\tIndex Count: %ld", vertexCount, indexCount);
 
 			OPint colorCount = vertexCount * meshData->Mesh->GetElementVertexColorCount();
 			OPint uvCount = vertexCount * meshData->Mesh->GetElementUVCount();
 			OPint normalCount = vertexCount * meshData->Mesh->GetElementNormalCount();
 			OPint tangentCount = vertexCount * meshData->Mesh->GetElementTangentCount();
-			OPlogDebug("\tColor Count: %d\n\tUV Count: %d\n\tNormal Count: %d\n\tTangent Count: %d", 
+			OPlogDebug("\tColor Count: %ld\n\tUV Count: %ld\n\tNormal Count: %ld\n\tTangent Count: %ld", 
 				colorCount, uvCount, normalCount, tangentCount);
 
 			meshData->VertexCount = vertexCount;

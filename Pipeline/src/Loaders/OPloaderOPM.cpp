@@ -426,7 +426,7 @@ OPMData OPMloadData(OPstream* str) {
 		for(i32 i = 0; i < metaCount; i++) {
 			OPchar* metaName = OPreadstring(str);
 			OPchar* metaType = OPreadstring(str);
-			//OPlog("Meta Name: %s (%s)", metaName, metaType);
+			OPlog("Meta Name: %s (%s)", metaName, metaType);
 			f32 x = OPreadf32(str);
 			f32 y = OPreadf32(str);
 			f32 z = OPreadf32(str);

@@ -83,6 +83,11 @@ int main(int argc, char **argv) {
 				OPlog("Use Animations");
 				featureIn[Model_Animations] = specified = 1; continue;
 			}
+
+			if (IsParam(argv, arg, "--meta") || IsParam(argv, arg, "-m")) {
+				OPlog("Use Meta");
+				featureIn[Model_Meta] = specified = 1; continue;
+			}
 		}
 	}
 
@@ -117,13 +122,14 @@ int main(int argc, char **argv) {
 	features[Model_Skinning] = specified ? featureIn[Model_Skinning] : 1;
 	features[Model_Skeletons] = specified ? featureIn[Model_Skeletons] : 1;
 	features[Model_Animations] = specified ? featureIn[Model_Animations] : 1;
+	features[Model_Meta] = specified ? featureIn[Model_Meta] : 1;
 
 	if (!specified) {
 		MenuOptions(
 			"Select OPM Features to Export\n------------------------",
 			features,
 			9,
-			"POSITION", "NORMAL", "UVS", "COLORS", "INDICES", "TANGENTS", "BONES", "SKIN", "ANIMATIONS", "SKELETONS"
+			"POSITION", "NORMAL", "UVS", "COLORS", "INDICES", "TANGENTS", "BONES", "SKIN", "ANIMATIONS", "SKELETONS", "META"
 			);
 	}
 	
