@@ -255,6 +255,9 @@ inline void OPmat4Identity(OPmat4* m) {
 	m[2][2] = z;
 	return m;
  }
+ inline OPmat4 OPmat4Scl(OPfloat x) {
+	return OPmat4Scl(x, x, x);
+ }
 
  inline OPmat4 OPmat4RotX(OPmat4 m, OPfloat x) {
 	OPmat4 result = OPMAT4ZERO;
@@ -282,6 +285,10 @@ inline void OPmat4Identity(OPmat4* m) {
 	 OPmat4 temp = OPmat4Scl(x, y, z);
 	 OPmat4Mul(&result, m, temp);
 	 return result;
+ }
+
+ inline OPmat4 OPmat4Scl(OPmat4 m, OPfloat x) {
+	 return OPmat4Scl(m, x, x, x);
  }
 
  inline OPmat4 OPmat4Translate(OPmat4 m, OPfloat x, OPfloat y, OPfloat z) {
