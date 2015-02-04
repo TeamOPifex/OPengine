@@ -82,7 +82,7 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 #endif
 
 	// allocate memory for the sprite sheet struct
-	*ss = (OPspriteSheet*)OPalloc(sizeof(OPspriteSheet));
+	*ss = (OPspriteSheet*)OPallocZero(sizeof(OPspriteSheet));
 	(*ss)->Names = (OPchar**)OPalloc(sizeof(OPchar*)* sprites);
 	(*ss)->Sprites = sprites;
 	(*ss)->Sheet = sheet;
@@ -117,7 +117,7 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 			ui32 flags = OPreadi32(str);
 			ui32 spriteFrames = 1;
 			OPspriteFrame* spriteFrameData = frameData + frameNum;
-			OPsprite* sprite = (OPsprite*)OPalloc(sizeof(OPsprite));
+			OPsprite* sprite = (OPsprite*)OPallocZero(sizeof(OPsprite));
 
 #ifdef _DEBUG
 			OPlog("Sprite '%s' @ %x", finalName, sprite);
@@ -180,7 +180,7 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 #endif
 
 			// create the asset to insert into the hashmap
-			if (!(assetBucket = (OPasset*)OPalloc(sizeof(OPasset))))
+			if (!(assetBucket = (OPasset*)OPallocZero(sizeof(OPasset))))
 				return OP_CMAN_BUCKET_ALLOC_FAILED;
 
 			assetBucket->Asset = (void*)sprite;
