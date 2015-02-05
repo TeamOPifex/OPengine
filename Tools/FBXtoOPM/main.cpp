@@ -7,11 +7,13 @@ int main(int argc, char **argv) {
 	i8* filename = NULL;
 	i8* output = NULL;
 	OPint specified = 0;
-	OPint featureIn[9] = { 0, 0, 0, 0, 0,0 ,0 ,0 ,0 };
+	OPint featureIn[9] = { 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 };
 
 	OPint animationCount = 0;
 	OPchar* animations[1024];
 	OPint animationFrames[2048];
+
+	OPfloat scale = 1.0;
 	
 	//
 	// Fill in provided arguments
@@ -40,6 +42,7 @@ int main(int argc, char **argv) {
 				animationFrames[animationCount * 2 + 1] = atoi(argv[++arg]);
 				animationCount++;
 
+				OPlog("Anim %d", animationCount);
 				continue;
 			}
 
@@ -87,6 +90,12 @@ int main(int argc, char **argv) {
 			if (IsParam(argv, arg, "--meta") || IsParam(argv, arg, "-m")) {
 				OPlog("Use Meta");
 				featureIn[Model_Meta] = specified = 1; continue;
+			}
+
+			if (IsParam(argv, arg, "--scale") || IsParam(argv, arg, "-scl")) {
+				++arg;
+				scale = atof(argv[arg]);
+				continue;
 			}
 		}
 	}
@@ -141,7 +150,7 @@ int main(int argc, char **argv) {
 		output[contains] = NULL;
 	}
 
-	if(OPfbxMeshCreate(&mesh, filename) == 0) {
+	if(OPfbxMeshCreate(&mesh, scale, filename) == 0) {
 		OPfbxMeshWriteToFile(&mesh, output, features, animationCount, animations, animationFrames);
 	}
 

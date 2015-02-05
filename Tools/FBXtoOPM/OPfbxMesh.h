@@ -21,7 +21,7 @@ typedef struct {
 
 } OPfbxMesh;
 
-OPint OPfbxMeshCreate(OPfbxMesh* mesh, const OPchar* filename) {
+OPint OPfbxMeshCreate(OPfbxMesh* mesh, OPfloat scale, const OPchar* filename) {
 
 	mesh->SDK = OPfbxSdkCreate();
 	mesh->SCENE;
@@ -37,12 +37,12 @@ OPint OPfbxMeshCreate(OPfbxMesh* mesh, const OPchar* filename) {
 
 		OPlogDebug("Step: MeshData");
 
-		mesh->Polys = OPfbxMeshDataGetPolygons(&mesh->MeshData);
+		mesh->Polys = OPfbxMeshDataGetPolygons(&mesh->MeshData, scale);
 
 		mesh->BlendWeights = _skinBlendWeights(&mesh->MeshData, &mesh->Skeleton, &mesh->SCENE);
 		OPlogDebug("Step: skin");
 
-		mesh->Animation = OPfbxAnimationGet(&mesh->MeshData, &mesh->Skeleton, &mesh->SCENE);
+		mesh->Animation = OPfbxAnimationGet(&mesh->MeshData, &mesh->Skeleton, &mesh->SCENE, scale);
 
 		OPlogDebug("End FBX SDK");
 		//OPfbxSdkDestroy(&SDK);
@@ -118,7 +118,6 @@ OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* featu
 				writeF32(&myFile, norm.x);
 				writeF32(&myFile, norm.y);
 				writeF32(&myFile, norm.z);
-				OPvec3Log("Norm", norm);
 			}
 
 			if (features[Model_Tangents]) {
@@ -266,6 +265,7 @@ OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* featu
 			OPlogDebug("Track Name to split: %s", mesh->Animation->Animations[0].Name);
 
 			for (OPint i = 0; i < animationCount; i++) {
+				OPlog("Anim %s", animationNames[i]);
 				OPchar* prefix = OPstringCreateMerged(".", animationNames[i]);
 				OPchar* animName = OPstringCreateMerged(prefix, ".anim");
 				OPchar* anim = OPstringCreateMerged(output, animName);
@@ -293,8 +293,7 @@ OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* featu
 					}
 				}
 			}
-		}
-		else {
+		} else {
 			//writeI16(&myAnimFile, mesh->Animation->AnimationTrackCount);
 			for (OPint i = 0; i < mesh->Animation->AnimationTrackCount; i++) {
 				OPlogDebug("Track Name: %s", mesh->Animation->Animations[i].Name);
@@ -326,6 +325,8 @@ OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* featu
 
 
 	}
+
+	OPlog("Finished writing files");
 
 	return 0;
 }
