@@ -16,7 +16,7 @@ typedef struct {
 	OPfbxAnimationTrack* Animations;
 } OPfbxAnimation;
 
-OPfbxAnimation* OPfbxAnimationGet(OPfbxMeshData* meshData, OPfbxSkeleton* skeleton, OPfbxScene* scene) {
+OPfbxAnimation* OPfbxAnimationGet(OPfbxMeshData* meshData, OPfbxSkeleton* skeleton, OPfbxScene* scene, OPfloat scale) {
 	OPint deformerCount = meshData->Mesh->GetDeformerCount();
 	OPfbxAnimation* result = (OPfbxAnimation*)OPalloc(sizeof(OPfbxAnimation));
 	result->AnimationTrackCount = 1;
@@ -66,7 +66,18 @@ OPfbxAnimation* OPfbxAnimationGet(OPfbxMeshData* meshData, OPfbxSkeleton* skelet
 				OPlogDebug("Curr Frame: %d\nindAnimJoint: %d", f, indAnimJoint);
 				_fbxmat4Log("Local Bone Transform", &boneLocalTransform);
 				
+				FbxVector4 _scl = boneLocalTransform.GetS();
+				FbxVector4 _rot = boneLocalTransform.GetR();
+				FbxVector4 _trl = boneLocalTransform.GetT();
 				
+				// Scale only the root node
+				//if(ind == 0) {
+				 	//_scl *= scale;
+					//_trl *= scale;
+				//}
+
+				boneLocalTransform = FbxAMatrix(_trl, _rot, _scl);
+
 				OPmat4 tmp;
 
 				FbxVector4 lRow = boneLocalTransform.GetRow(0);
@@ -92,6 +103,21 @@ OPfbxAnimation* OPfbxAnimationGet(OPfbxMeshData* meshData, OPfbxSkeleton* skelet
 				tmp[1][3] = lRow[1];
 				tmp[2][3] = lRow[2];
 				tmp[3][3] = lRow[3];
+
+				tmp = OPmat4Transpose(tmp);
+
+				// OPfloat x, y, z;
+				// x = tmp[3][0];
+				// y = tmp[3][1];
+				// z = tmp[3][2];
+
+				// if(ind == 0) {
+				// 	tmp = tmp * OPmat4Scl(scale);
+				// }
+
+				// tmp[3][0] = x;
+				// tmp[3][1] = y;
+				// tmp[3][2] = z;
 
 				result->Animations[0].JointTransform[indAnimJoint] = tmp;
 				//OPmat4Log("Anim Joint", result->Animations[0].JointTransform[indAnimJoint]);
