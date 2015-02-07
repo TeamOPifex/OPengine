@@ -202,6 +202,10 @@ inline OPfloat OPvec3Angle(OPvec3 a, OPvec3 b) {
 	return temp;
 }
 
+inline OPvec3 OPvec3Reflect(OPvec3 v, OPvec3 n){
+	return v - n * (2 * OPvec3Dot(v, n));
+}
+
 inline OPvec3 OPvec3Norm(OPvec3 v){
 	return v / OPvec3Len(v);
 }
