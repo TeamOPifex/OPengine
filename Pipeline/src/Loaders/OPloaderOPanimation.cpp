@@ -36,7 +36,7 @@ OPint OPloaderOPanimationLoad(const OPchar* filename, OPskeletonAnimation** anim
 			frames[j][c][2] = OPreadf32(str);
 			frames[j][c][3] = OPreadf32(str);
 		}
-		frames[j] = OPmat4Transpose(frames[j]);
+		//frames[j] = OPmat4Transpose(frames[j]);
 	}
 
 	*animation = OPskeletonAnimationCreate(boneCount, frames, frameCount);

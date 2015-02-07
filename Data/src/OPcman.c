@@ -46,9 +46,10 @@ void OPcmanUpdate(OPtimer* timer) {
 			bucket = OP_CMAN_HASHMAP.buckets[i];
 			for (j = 0; j < bucket.count; j++) {
 				asset = (OPasset*)bucket.pairs[j].value;
-				if (asset != NULL && asset->Reload) { // Only check the file, if there's a reload function
+				if (asset != NULL && asset->Reload != NULL) { // Only check the file, if there's a reload function
 					change = OPfileLastChange(asset->AbsolutePath);
 					if (change != asset->LastChange) {
+						OPlg("$, %s",asset->FullPath);
 						if (asset->Reload(asset->FullPath, &asset->Asset)) {
 							asset->LastChange = change;
 						}

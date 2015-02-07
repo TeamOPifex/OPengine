@@ -37,7 +37,7 @@ typedef struct {
 	OPint TangentCount;
 } OPfbxMeshData;
 
-OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData) {
+OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData, OPfloat scale) {
 
 	OPfbxMeshPoly* polys = (OPfbxMeshPoly*)OPalloc(sizeof(OPfbxMeshPoly)* meshData->PolyCount);
 
@@ -54,9 +54,9 @@ OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData) {
 
 			polys[i].ControlPointIndex[j] = controlPointIndex;
 			polys[i].Position[j] = OPvec3Create(
-				(f32)controlPoints[controlPointIndex][0],
-				(f32)controlPoints[controlPointIndex][1],
-				(f32)controlPoints[controlPointIndex][2]
+				(f32)controlPoints[controlPointIndex][0] * scale,
+				(f32)controlPoints[controlPointIndex][1] * scale,
+				(f32)controlPoints[controlPointIndex][2] * scale
 				);
 
 			// Only support for 1 normal currently
