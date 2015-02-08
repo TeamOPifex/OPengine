@@ -1,4 +1,5 @@
 #include "./Human/include/Rendering/Primitives/OPsphericalCube.h"
+#include "./Math/include/OPray3D.h"
 
 OPsphericalCube OPsphericalCubeCreate(OPint size) {
 
@@ -218,44 +219,134 @@ OPsphericalCube OPsphericalCubeCreate(OPint size) {
 	return result;
 }
 
+OPvec2 OPsphericalCubePlanePosition(const OPvec3 pos, OPsphericalCubeSide* side) {
+
+	//ASSERT(pos != OPVEC3_ZERO, "Cannot get position of zero");
+
+	OPvec3 position = OPVEC3_ZERO;
+	OPray3D ray = { OPvec3Create(0,0,0), pos };
+	OPplane3D plane;
+	d64 bounds = OPsqrt(1.0);
+	OPint result;
+	d64 dist;
+
+	// Test Top
+	{
+		plane.position = OPvec3Create(0, 0.5, 0);
+		plane.normal = OPvec3Create(0, 1, 0);
+		result = OPplane3DIntersects(plane, ray, &position);
+		if( result && OPabs(position.x) < 0.5 && OPabs(position.z) < 0.5) {
+			(*side) = OP_SPHERICAL_CUBE_SIDE_TOP;
+			OPlg("T");
+			return OPvec2Create(position.x, position.z);
+		}
+	}
+
+	// Test Bottom
+	{
+		plane.position = OPvec3Create(0, -0.5, 0);
+		plane.normal = OPvec3Create(0, -1, 0);
+		result = OPplane3DIntersects(plane, ray, &position);
+		if( result && OPabs(position.x) < 0.5 && OPabs(position.z) < 0.5) {
+			(*side) = OP_SPHERICAL_CUBE_SIDE_BOTTOM;
+			OPlg("B");
+			return OPvec2Create(-position.x, -position.z);
+		}
+	}
+
+	// Test Front
+	{
+		plane.position = OPvec3Create(0, 0, 0.5);
+		plane.normal = OPvec3Create(0, 0, 1);
+		result = OPplane3DIntersects(plane, ray, &position);
+		if( result && OPabs(position.x) < 0.5 && OPabs(position.y) < 0.5) {
+			(*side) = OP_SPHERICAL_CUBE_SIDE_FRONT;
+			OPlg("F");
+			return OPvec2Create(position.x, -position.y);
+		}
+	}
+
+	// Test Back
+	{
+		plane.position = OPvec3Create(0, 0, -0.5);
+		plane.normal = OPvec3Create(0, 0, -1);
+		result = OPplane3DIntersects(plane, ray, &position);
+		if( result && OPabs(position.x) < 0.5 && OPabs(position.y) < 0.5) {
+			(*side) = OP_SPHERICAL_CUBE_SIDE_BACK;
+			OPlg("B");
+			return OPvec2Create(position.x, -position.y);
+		}
+	}
+
+	// Test Left
+	{
+		plane.position = OPvec3Create(-0.5, 0, 0);
+		plane.normal = OPvec3Create(-1, 0, 0);
+		result = OPplane3DIntersects(plane, ray, &position);
+		if( result && OPabs(position.z) < 0.5 && OPabs(position.y) < 0.5) {
+			(*side) = OP_SPHERICAL_CUBE_SIDE_LEFT;
+			OPlg("L");
+			return OPvec2Create(-position.z, -position.y);
+		}
+	}
+
+	// Test Right
+	{
+		plane.position = OPvec3Create(0.5, 0, 0);
+		plane.normal = OPvec3Create(1, 0, 0);
+		result = OPplane3DIntersects(plane, ray, &position);	
+		if( result && OPabs(position.z) < 0.5 && OPabs(position.y) < 0.5) {
+			(*side) = OP_SPHERICAL_CUBE_SIDE_RIGHT;
+			OPlg("R");
+			return OPvec2Create(position.z, -position.y);
+		}
+	}
+
+	return OPVEC2_ZERO;
+}
+
 OPvec3 OPsphericalCubePosition(OPvec3 pos, OPsphericalCubeSide* side)
 {
 	OPvec3 position = pos;
 
-	OPfloat x = position.x;
-	OPfloat y = position.y;
-	OPfloat z = position.z;
+	d64 x = position.x;
+	d64 y = position.y;
+	d64 z = position.z;
 
 	OPfloat fx = OPabs(x);
 	OPfloat fy = OPabs(y);
 	OPfloat fz = OPabs(z);
 
-	OPfloat inverseSqrt2 = 1.0f / OPsqrt(2.0f);// 0.70710676908493042f;
+	d64 inverseSqrt2 = 1.0f / OPsqrt(2.0f);// 0.70710676908493042f;
+
+	d64 two = 2.0;
+	d64 twelve = 12.0;
+	d64 three = 3.0;
 
 	if (fy >= fx && fy >= fz)
 	{
-		OPfloat a2 = x * x * 2.0;
-		OPfloat b2 = z * z * 2.0;
-		OPfloat inner = -a2 + b2 - 3;
-		OPfloat innersqrt = -(OPfloat)(OPsqrt((inner * inner) - 12.0f * a2));
+		d64 a2 = x * x * two;
+		d64 b2 = z * z * two;
+		d64 inner = -a2 + b2 - three;
+		d64 innersqrt = -OPsqrt((inner * inner) - twelve * a2);
 
-		if (x == 0.0)
+		if (x > -0.01 && x < 0.01)
 			position.x = 0.0f;
 		else
-			position.x = (OPfloat)(OPsqrt(innersqrt + a2 - b2 + 3.0f) * inverseSqrt2);
+			position.x = (OPfloat)(OPsqrt(innersqrt + a2 - b2 + three) * inverseSqrt2);
 
-		if (z == 0.0)
+		if (z > -0.01 && z < 0.01)
 			position.z = 0.0f;
 		else
-			position.z = (OPfloat)(OPsqrt(innersqrt - a2 + b2 + 3.0f) * inverseSqrt2);
+			position.z = (OPfloat)(OPsqrt(innersqrt - a2 + b2 + three) * inverseSqrt2);
 
 		if (position.x > 1.0) position.x = 1.0f;
 		if (position.z > 1.0) position.z = 1.0f;
 
-		if (x < 0) position.x = -position.x;
-		if (z < 0) position.z = -position.z;
+		if (x < 0.0) position.x = -position.x;
+		if (z < 0.0) position.z = -position.z;
 
-		if (y > 0) // top face
+		if (y > 0.0) // top face
 		{
 			position.y = 1.0f;
 			*side = OP_SPHERICAL_CUBE_SIDE_TOP;
@@ -268,20 +359,20 @@ OPvec3 OPsphericalCubePosition(OPvec3 pos, OPsphericalCubeSide* side)
 	}
 	else if (fx >= fy && fx >= fz)
 	{
-		OPfloat a2 = y * y * 2.0;
-		OPfloat b2 = z * z * 2.0;
-		OPfloat inner = -a2 + b2 - 3;
-		OPfloat innersqrt = -OPsqrt((inner * inner) - 12.0 * a2);
+		d64 a2 = y * y * two;
+		d64 b2 = z * z * two;
+		d64 inner = -a2 + b2 - three;
+		d64 innersqrt = -OPsqrt((inner * inner) - twelve * a2);
 
-		if (y == 0.0)
+		if (y > -0.01 && y < 0.01)
 			position.y = 0.0f;
 		else
-			position.y = (OPfloat)(OPsqrt(innersqrt + a2 - b2 + 3.0) * inverseSqrt2);
+			position.y = (OPfloat)(OPsqrt(innersqrt + a2 - b2 + three) * inverseSqrt2);
 
-		if (z == 0.0 || z == -0.0)
+		if (z > -0.01 && z < 0.01)
 			position.z = 0.0f;
 		else
-			position.z = (OPfloat)(OPsqrt(innersqrt - a2 + b2 + 3.0) * inverseSqrt2);
+			position.z = (OPfloat)(OPsqrt(innersqrt - a2 + b2 + three) * inverseSqrt2);
 
 		if (position.y > 1.0) position.y = 1.0f;
 		if (position.z > 1.0) position.z = 1.0f;
@@ -302,20 +393,20 @@ OPvec3 OPsphericalCubePosition(OPvec3 pos, OPsphericalCubeSide* side)
 	}
 	else
 	{
-		OPfloat a2 = x * x * 2.0;
-		OPfloat b2 = y * y * 2.0;
-		OPfloat inner = -a2 + b2 - 3;
-		OPfloat innersqrt = -OPsqrt((inner * inner) - 12.0 * a2);
+		d64 a2 = x * x * two;
+		d64 b2 = y * y * two;
+		d64 inner = -a2 + b2 - three;
+		d64 innersqrt = -OPsqrt((inner * inner) - twelve * a2);
 
-		if (x == 0.0)
+		if (x > -0.01 && x < 0.01)
 			position.x = 0.0f;
 		else
-			position.x = (float)(OPsqrt(innersqrt + a2 - b2 + 3.0) * inverseSqrt2);
+			position.x = (float)(OPsqrt(innersqrt + a2 - b2 + three) * inverseSqrt2);
 
-		if (y == 0.0)
+		if (y > -0.01 && y < 0.01)
 			position.y = 0.0f;
 		else
-			position.y = (float)(OPsqrt(innersqrt - a2 + b2 + 3.0) * inverseSqrt2);
+			position.y = (float)(OPsqrt(innersqrt - a2 + b2 + three) * inverseSqrt2);
 
 
 		if (position.x > 1.0) position.x = 1.0f;

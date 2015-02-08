@@ -227,11 +227,11 @@ __inline OPfloat OPpow(OPfloat b, OPfloat exp){
 * @param f Floating point number.
 * @return square of f
 */
-__inline OPfloat OPsqrt(OPfloat f){
+__inline d64 OPsqrt(d64 f){
 #if defined(OPIFEX_UNIX) // linux implementation
 	return sqrt(f);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
-	return (OPfloat)sqrt(f);
+	return sqrt(f);
 #endif
 }
 

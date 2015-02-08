@@ -16,13 +16,16 @@ const OPmat4 OPMAT4IDENTITY = {
 
 OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPfloat zNear, OPfloat zFar){
 	OPmat4 m = OPMAT4IDENTITY;
-	m[0][0] = 2.0f / (right - left);
-	m[1][1] = -2.0f / (top - bottom);
-	m[2][2] = 2.0f / (zNear - zFar);
-	m[3][3] = 1.0f;
-	m[3][0] = -(right + left) / (right - left);
-	m[3][1] = -(top + bottom) / (top - bottom);
-	m[3][2] = -(zFar + zNear) / (zFar - zNear);
+	OPfloat w = (right - left);
+	OPfloat h = (top - bottom);
+
+	m[0][0] = 2.0f / w;
+	m[1][1] = 2.0f / h;
+	m[2][2] = 1.0f / (zFar - zNear);
+	m[3][0] = -((right + left) / (right - left));
+	m[3][1] = -((top + bottom) / (top - bottom));
+	//m[3][2] = -(zFar + zNear) / (zFar - zNear);
+	m[3][2] = -((zNear) / (zFar - zNear));
 	return m;
 }
 
@@ -51,6 +54,25 @@ OPmat4 OPmat4LookAt(OPvec3 eye, OPvec3 at, OPvec3 up) {
 	m[3].x = -sDot;
 	m[3].y = -uDot;
 	m[3].z = fDot;
+
+	// OPvec3 zaxis = OPvec3Norm(at - eye);
+	// OPvec3 xaxis = OPvec3Norm(OPvec3Cross(up, zaxis));
+	// OPvec3 yaxis = OPvec3Cross(zaxis, xaxis);
+
+	// m[0][0] = xaxis.x;
+	// m[0][1] = xaxis.y;
+	// m[0][2] = xaxis.z;
+	// m[0][3] = -OPvec3Dot(xaxis, eye);
+	
+	// m[1][0] = yaxis.x;
+	// m[1][1] = yaxis.y;
+	// m[1][2] = yaxis.z;
+	// m[1][3] = -OPvec3Dot(yaxis, eye);
+	
+	// m[2][0] = zaxis.x;
+	// m[2][1] = zaxis.y;
+	// m[2][2] = zaxis.z;
+	// m[2][3] = -OPvec3Dot(zaxis, eye);
 
 	return m;
 }
