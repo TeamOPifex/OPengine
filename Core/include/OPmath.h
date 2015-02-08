@@ -17,8 +17,11 @@
 #include <time.h>
 #endif
 
-#define OPpi 3.14159265359f
-#define OPe  2.71828182846f
+#define OPpi   3.14159265359f
+#define OPpi2  6.28318530718f
+#define OPpi_2 1.57079632679f
+#define OPpi_4 0.78539816339f
+#define OPe    2.71828182846f
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
@@ -200,8 +203,7 @@ __inline OPfloat OPatan(OPfloat f){
 * @return atan(f)	
 */
 __inline OPfloat OPatan2(OPfloat x, OPfloat y) {
-	return atan2(x, y);
-	return 0;
+	return atan2(y, x);
 }
 
 //-----------------------------------------------------------------------------
