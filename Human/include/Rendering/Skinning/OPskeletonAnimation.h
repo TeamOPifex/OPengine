@@ -11,8 +11,9 @@ typedef _OPskeletonAnimation OPskeletonAnimation;
 
 struct _OPskeletonAnimationEvent
 {
-	void(*Event)(OPskeletonAnimation*, OPuint);
+	void(*Event)(OPskeletonAnimation*, OPuint, void*);
 	OPuint Frame;
+	OPint OnFrameChange;
 };
 typedef _OPskeletonAnimationEvent OPskeletonAnimationEvent;
 
@@ -35,7 +36,7 @@ struct _OPskeletonAnimation{
 void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPmat4* frames, i32 count);
 OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPmat4* frames, i32 count);
 void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer);
-void OPskeletonAnimationUpdateEvents(OPskeletonAnimation* skelAnim);
+void OPskeletonAnimationUpdateEvents(OPskeletonAnimation* skelAnim, void* data);
 void OPskeletonAnimationApply(OPskeletonAnimation* skelAnim, OPskeleton* skeleton);
 void OPskeletonAnimationMerge(OPskeletonAnimation* skelAnim1, OPskeletonAnimation* skelAnim2, OPfloat merge, OPskeleton* skeleton);
 void OPskeletonAnimationSetEvents(OPskeletonAnimation* skelAnim, OPuint frames, OPskeletonAnimationEvent* events);

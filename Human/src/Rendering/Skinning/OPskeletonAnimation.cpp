@@ -46,11 +46,17 @@ void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
 	}
 }
 
-void OPskeletonAnimationUpdateEvents(OPskeletonAnimation* skelAnim) {
+void OPskeletonAnimationUpdateEvents(OPskeletonAnimation* skelAnim, void* data) {
 	if(skelAnim->LastFrame != skelAnim->Frame) {
 		for(OPint i = 0; i < skelAnim->EventCount; i++) {
 			if(skelAnim->Events[i].Frame > skelAnim->LastFrame && skelAnim->Events[i].Frame <= skelAnim->Frame) {
-				skelAnim->Events[i].Event(skelAnim, skelAnim->Events[i].Frame);
+				skelAnim->Events[i].Event(skelAnim, skelAnim->Events[i].Frame, data);
+			}
+		}
+	} else {
+		for(OPint i = 0; i < skelAnim->EventCount; i++) {
+			if(!skelAnim->Events[i].OnFrameChange && skelAnim->Events[i].Frame == skelAnim->Frame) {
+				skelAnim->Events[i].Event(skelAnim, skelAnim->Events[i].Frame, data);
 			}
 		}
 	}
