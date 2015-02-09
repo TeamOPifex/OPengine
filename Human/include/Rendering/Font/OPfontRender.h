@@ -38,10 +38,10 @@ inline void OPfontRender(const OPchar* text, OPvec2 pos, OPfontAlign align) {
 	OPfontRender(text, OPFONTMANAGER_ACTIVE->_color, pos, align);
 }
 inline void OPfontRender(const OPchar* text, OPvec3 color, OPvec2 pos) {
-	OPfontRender(text, OPvec4CreateFromVec3(color, 1.0f), pos, OPFONTMANAGER_ACTIVE->_align);
+	OPfontRender(text, OPvec4Create(color, 1.0f), pos, OPFONTMANAGER_ACTIVE->_align);
 }
 inline void OPfontRender(const OPchar* text, OPvec3 color, OPvec2 pos, OPfontAlign align) {
-	OPfontRender(text, OPvec4CreateFromVec3(color, 1.0f), pos, align);
+	OPfontRender(text, OPvec4Create(color, 1.0f), pos, align);
 }
 inline void OPfontRender(const OPchar* text, OPvec4 color, OPvec2 pos) {
 	ASSERT(OPFONTMANAGER_ACTIVE != NULL, "A Font Manager has not been bound yet");
