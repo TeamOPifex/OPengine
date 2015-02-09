@@ -212,9 +212,9 @@ macro(add_opifex_oggvorbis APPLICATION_TARGET )
 		copy_to_folder(${APPLICATION_TARGET} "/External/Vorbis/lib/release/" "libvorbis.dll" "/Application/Release" ${OPIFEX_OS_WINDOWS})
 		copy_to_folder(${APPLICATION_TARGET} "/External/Vorbis/lib/release/" "libvorbisfile.dll" "/Application/Release" ${OPIFEX_OS_WINDOWS})
 	else()
-		copy_to_folder(${APPLICATION_TARGET} "/External/Ogg/lib/debug/" "libogg.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
-		copy_to_folder(${APPLICATION_TARGET} "/External/Vorbis/lib/debug/" "libvorbis.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
-		copy_to_folder(${APPLICATION_TARGET} "/External/Vorbis/lib/debug/" "libvorbisfile.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+		copy_to_folder_msvc(${APPLICATION_TARGET} "/External/Ogg/lib/debug/" "libogg.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+		copy_to_folder_msvc(${APPLICATION_TARGET} "/External/Vorbis/lib/debug/" "libvorbis.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+		copy_to_folder_msvc(${APPLICATION_TARGET} "/External/Vorbis/lib/debug/" "libvorbisfile.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
 	endif()
 
 		
@@ -261,16 +261,34 @@ macro(add_opifex_oggvorbis APPLICATION_TARGET )
 
 		else()
 
-			message(STATUS "Copying... OggVorbis Win32 Debug")
-			copy_file_to_binaries(/External/Ogg/lib/debug/win32/ogg.dll)
-			copy_file_to_binaries(/External/Ogg/lib/debug/win32/libogg.dll)
-			copy_file_to_binaries(/External/Vorbis/lib/debug/win32/vorbisfile.dll)
-			copy_file_to_binaries(/External/Vorbis/lib/debug/win32/libvorbis.dll)
-			copy_file_to_binaries(/External/Vorbis/lib/debug/win32/libvorbisfile.dll)
+			if(${MSVC_VERSION} GREATER 1700)
 
-			copy_file_to_binaries(/External/Ogg/lib/debug/win32/libogg.lib)
-			copy_file_to_binaries(/External/Vorbis/lib/debug/win32/libvorbis.lib)
-			copy_file_to_binaries(/External/Vorbis/lib/debug/win32/libvorbisfile.lib)
+				message(STATUS "Copying... OggVorbis Win32 Debug for ${MSVC_VERSION}")
+
+				copy_file_to_binaries(/External/Ogg/lib/debug/win32/vs2013/ogg.dll)
+				copy_file_to_binaries(/External/Ogg/lib/debug/win32/vs2013/libogg.dll)
+				copy_file_to_binaries(/External/Vorbis/lib/debug/win32/vs2013/vorbisfile.dll)
+				copy_file_to_binaries(/External/Vorbis/lib/debug/win32/vs2013/libvorbis.dll)
+				copy_file_to_binaries(/External/Vorbis/lib/debug/win32/vs2013/libvorbisfile.dll)
+
+				copy_file_to_binaries(/External/Ogg/lib/debug/win32/vs2013/libogg.lib)
+				copy_file_to_binaries(/External/Vorbis/lib/debug/win32/vs2013/libvorbis.lib)
+				copy_file_to_binaries(/External/Vorbis/lib/debug/win32/vs2013/libvorbisfile.lib)
+
+
+			else()
+
+				copy_file_to_binaries(/External/Ogg/lib/debug/win32/ogg.dll)
+				copy_file_to_binaries(/External/Ogg/lib/debug/win32/libogg.dll)
+				copy_file_to_binaries(/External/Vorbis/lib/debug/win32/vorbisfile.dll)
+				copy_file_to_binaries(/External/Vorbis/lib/debug/win32/libvorbis.dll)
+				copy_file_to_binaries(/External/Vorbis/lib/debug/win32/libvorbisfile.dll)
+
+				copy_file_to_binaries(/External/Ogg/lib/debug/win32/libogg.lib)
+				copy_file_to_binaries(/External/Vorbis/lib/debug/win32/libvorbis.lib)
+				copy_file_to_binaries(/External/Vorbis/lib/debug/win32/libvorbisfile.lib)
+
+			endif()
 
 		endif()	
 	endif()
