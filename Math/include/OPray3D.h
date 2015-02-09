@@ -22,17 +22,17 @@ inline OPint OPplane3DIntersects(OPplane3D plane, OPray3D ray, OPvec3* position)
 	// t = (distance_to_origin - dot(point_on_line, plane_normal)) / dot(line_direction, plane_normal)	
 	
 	OPfloat distance_to_origin = OPvec3Len(plane.position);
-	OPlog("Distance to Origin: %f", distance_to_origin);
+	//OPlog("Distance to Origin: %f", distance_to_origin);
 
 	ray.direction = OPvec3Norm(ray.direction);
 	OPfloat DdotN = OPvec3Dot(ray.direction, plane.normal);
-	OPlog("Dot Product: %f", DdotN);
+	//OPlog("Dot Product: %f", DdotN);
 
 	if(DdotN == 0) return 0; // Does not intersect
 
 	OPfloat t = (distance_to_origin - OPvec3Dot(ray.position, plane.normal)) / DdotN;
 
-	OPlog("Distance along %f", t);
+	//OPlog("Distance along %f", t);
 
 	if(t > 0) {
 		(*position) = ray.position;
