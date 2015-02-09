@@ -219,6 +219,67 @@ OPsphericalCube OPsphericalCubeCreate(OPint size) {
 	return result;
 }
 
+OPvec2 OPsphericalCubePlanePositionSide(const OPvec3 pos, OPsphericalCubeSide side) {
+
+	OPvec3 position = OPVEC3_ZERO;
+	OPray3D ray = { OPvec3Create(0,0,0), pos };
+	OPplane3D plane;
+	OPint result;
+
+	switch(side) {
+
+		// Test Top
+		case OP_SPHERICAL_CUBE_SIDE_TOP: {
+			plane.position = OPvec3Create(0, 0.5, 0);
+			plane.normal = OPvec3Create(0, 1, 0);
+			result = OPplane3DIntersects(plane, ray, &position);
+			return OPvec2Create(position.x, position.z);
+		}
+
+		// Test Bottom
+		case OP_SPHERICAL_CUBE_SIDE_BOTTOM: {
+			plane.position = OPvec3Create(0, -0.5, 0);
+			plane.normal = OPvec3Create(0, -1, 0);
+			result = OPplane3DIntersects(plane, ray, &position);
+			return OPvec2Create(-position.x, -position.z);
+		}
+
+		// Test Front
+		case OP_SPHERICAL_CUBE_SIDE_FRONT: {
+			plane.position = OPvec3Create(0, 0, 0.5);
+			plane.normal = OPvec3Create(0, 0, 1);
+			result = OPplane3DIntersects(plane, ray, &position);
+			return OPvec2Create(position.x, -position.y);
+		}
+
+		// Test Back
+		case OP_SPHERICAL_CUBE_SIDE_BACK: {
+			plane.position = OPvec3Create(0, 0, -0.5);
+			plane.normal = OPvec3Create(0, 0, -1);
+			result = OPplane3DIntersects(plane, ray, &position);
+			return OPvec2Create(position.x, -position.y);
+		}
+
+		// Test Left
+		case OP_SPHERICAL_CUBE_SIDE_LEFT: {
+			plane.position = OPvec3Create(-0.5, 0, 0);
+			plane.normal = OPvec3Create(-1, 0, 0);
+			result = OPplane3DIntersects(plane, ray, &position);
+			return OPvec2Create(-position.z, -position.y);
+		}
+
+		// Test Right
+		case OP_SPHERICAL_CUBE_SIDE_RIGHT: {
+			plane.position = OPvec3Create(0.5, 0, 0);
+			plane.normal = OPvec3Create(1, 0, 0);
+			result = OPplane3DIntersects(plane, ray, &position);	
+			return OPvec2Create(position.z, -position.y);
+		}
+	}
+
+	return OPVEC2_ZERO;
+}
+
 OPvec2 OPsphericalCubePlanePosition(const OPvec3 pos, OPsphericalCubeSide* side) {
 
 	//ASSERT(pos != OPVEC3_ZERO, "Cannot get position of zero");
