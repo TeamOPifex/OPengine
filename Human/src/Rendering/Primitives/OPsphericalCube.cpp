@@ -237,7 +237,7 @@ OPvec2 OPsphericalCubePlanePosition(const OPvec3 pos, OPsphericalCubeSide* side)
 		result = OPplane3DIntersects(plane, ray, &position);
 		if( result && OPabs(position.x) < 0.5 && OPabs(position.z) < 0.5) {
 			(*side) = OP_SPHERICAL_CUBE_SIDE_TOP;
-			OPlg("T");
+			//OPlg("T");
 			return OPvec2Create(position.x, position.z);
 		}
 	}
@@ -249,7 +249,7 @@ OPvec2 OPsphericalCubePlanePosition(const OPvec3 pos, OPsphericalCubeSide* side)
 		result = OPplane3DIntersects(plane, ray, &position);
 		if( result && OPabs(position.x) < 0.5 && OPabs(position.z) < 0.5) {
 			(*side) = OP_SPHERICAL_CUBE_SIDE_BOTTOM;
-			OPlg("B");
+			//OPlg("B");
 			return OPvec2Create(-position.x, -position.z);
 		}
 	}
@@ -261,7 +261,7 @@ OPvec2 OPsphericalCubePlanePosition(const OPvec3 pos, OPsphericalCubeSide* side)
 		result = OPplane3DIntersects(plane, ray, &position);
 		if( result && OPabs(position.x) < 0.5 && OPabs(position.y) < 0.5) {
 			(*side) = OP_SPHERICAL_CUBE_SIDE_FRONT;
-			OPlg("F");
+			//OPlg("F");
 			return OPvec2Create(position.x, -position.y);
 		}
 	}
@@ -273,7 +273,7 @@ OPvec2 OPsphericalCubePlanePosition(const OPvec3 pos, OPsphericalCubeSide* side)
 		result = OPplane3DIntersects(plane, ray, &position);
 		if( result && OPabs(position.x) < 0.5 && OPabs(position.y) < 0.5) {
 			(*side) = OP_SPHERICAL_CUBE_SIDE_BACK;
-			OPlg("B");
+			//OPlg("B");
 			return OPvec2Create(position.x, -position.y);
 		}
 	}
@@ -285,7 +285,7 @@ OPvec2 OPsphericalCubePlanePosition(const OPvec3 pos, OPsphericalCubeSide* side)
 		result = OPplane3DIntersects(plane, ray, &position);
 		if( result && OPabs(position.z) < 0.5 && OPabs(position.y) < 0.5) {
 			(*side) = OP_SPHERICAL_CUBE_SIDE_LEFT;
-			OPlg("L");
+			//OPlg("L");
 			return OPvec2Create(-position.z, -position.y);
 		}
 	}
@@ -297,7 +297,7 @@ OPvec2 OPsphericalCubePlanePosition(const OPvec3 pos, OPsphericalCubeSide* side)
 		result = OPplane3DIntersects(plane, ray, &position);	
 		if( result && OPabs(position.z) < 0.5 && OPabs(position.y) < 0.5) {
 			(*side) = OP_SPHERICAL_CUBE_SIDE_RIGHT;
-			OPlg("R");
+			//OPlg("R");
 			return OPvec2Create(position.z, -position.y);
 		}
 	}
