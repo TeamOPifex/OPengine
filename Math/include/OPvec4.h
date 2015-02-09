@@ -64,6 +64,11 @@ inline OPvec4 OPvec4Create(OPfloat x, OPfloat y, OPfloat z, OPfloat w) {
 	return tmp;
 }
 
+inline OPvec4 OPvec4Create(OPvec3 xyz, OPfloat w) {
+	OPvec4 tmp = { xyz.x, xyz.y, xyz.z, w };
+	return tmp;
+}
+
 inline OPvec4 operator+(OPvec4 lhs, OPvec4 vhs) { 
 	OPvec4 temp = { 0, 0, 0};
 	OPvec4Add(&temp, &lhs, &vhs); 
@@ -111,11 +116,6 @@ inline OPvec4 operator/(OPfloat lhs, OPvec4 vhs) {
 //   |___/\_, |_|_|_|_.__/\___/_|_\__| /_/ \_\_| |_|\__|_||_|_|_|_\___|\__|_\__|
 //        |__/                                                                  
 
-
-inline OPvec4 OPvec4CreateFromVec3(OPvec3 xyz, OPfloat w) {
-	OPvec4 tmp = { xyz.x, xyz.y, xyz.z, w };
-	return tmp;
-}
 
 inline OPvec4 OPvec4Norm(OPvec4 a) {
 	OPfloat l = OPsqrt(a.x * a.x + a.y * a.y + a.z * a.z + a.w * a.w);
