@@ -50,6 +50,7 @@ struct OPsphericalCube {
 
 OPsphericalCube       OPsphericalCubeCreate(OPint size); 
 OPvec3 OPsphericalCubePosition(OPvec3 pos, OPsphericalCubeSide* side);
+OPvec2 OPsphericalCubePlanePositionSide(const OPvec3 pos, OPsphericalCubeSide side);
 OPvec2 OPsphericalCubePlanePosition(const OPvec3 pos, OPsphericalCubeSide* side);
 void         OPsphericalCubeDestroy(OPsphericalCube* sphericalCube);
 

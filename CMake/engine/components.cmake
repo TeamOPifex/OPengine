@@ -245,7 +245,7 @@ macro(add_opifex_oggvorbis APPLICATION_TARGET )
 			copy_file_to_binaries(/External/Vorbis/lib/debug/win64/libvorbisfile.lib)
 
 		endif()	
-	else()
+	elseif(${OPIFEX_OS_WIN32})
 		if(${OPIFEX_OPTION_RELEASE})
 
 			message(STATUS "Copying... OggVorbis Win32 Release")
@@ -260,6 +260,7 @@ macro(add_opifex_oggvorbis APPLICATION_TARGET )
 			copy_file_to_binaries(/External/Vorbis/lib/release/win32/libvorbisfile_static.lib)
 
 		else()
+
 
 			if(${MSVC_VERSION} GREATER 1700)
 
