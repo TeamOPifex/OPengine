@@ -357,7 +357,7 @@ OPMData OPMloadData(OPstream* str) {
 
 
 
-	OPMData data;
+	OPMData data = {};
 	data.indices = indices;
 	data.indexCount = indicesCount * 3;
 	data.indexSize = sizeof(ui16);

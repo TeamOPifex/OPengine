@@ -24,6 +24,7 @@ typedef struct{
 	ui64 TotalGametime;
 	ui64 TimeLastTick;
 	ui64 Elapsed;
+	ui64 GameElapsed;
 #if defined(OPIFEX_UNIX)
 	struct timeval _lastTime;
 #endif
@@ -66,6 +67,8 @@ void OPtimerTick(OPtimer* timer);
  * @return Fractional time in milliseconds since the last tick.
  */
 OPfloat  OPtimerDelta(OPtimer* timer);
+
+OPfloat  OPtimerGameDelta(OPtimer* timer);
 
 //----------------------------------------------------------------------------
 /**
