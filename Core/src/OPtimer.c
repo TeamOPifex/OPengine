@@ -10,11 +10,13 @@ OPint OPtimerCreate(OPtimer* timer){
 	timer->TotalGametime = 0;
 	timer->TimeLastTick = 0;
 	timer->Elapsed = 0;
+	timer->GameElapsed = timer->Elapsed;
 #elif defined(OPIFEX_WINDOWS)
 // Windows specific values for time
 	timer->TotalGametime = 0;
 	timer->TimeLastTick = timeGetTime();
 	timer->Elapsed = 0;
+	timer->GameElapsed = timer->Elapsed;
 #endif
 
 	return 0;
@@ -32,6 +34,7 @@ void OPtimerTick(OPtimer* timer){
 	timer->TotalGametime += elapsed;
 	timer->TimeLastTick = (time.tv_sec * 1000000 + time.tv_usec);
 	timer->Elapsed = elapsed;
+	timer->GameElapsed = timer->Elapsed;
 	
 	timer->_lastTime = time;
 #elif defined(OPIFEX_WINDOWS)
@@ -39,11 +42,14 @@ void OPtimerTick(OPtimer* timer){
 	DWORD time = timeGetTime();
 	
 	timer->Elapsed = time - timer->TimeLastTick;
+	timer->GameElapsed = timer->Elapsed;
 	timer->TimeLastTick = time;
 	timer->TotalGametime += timer->Elapsed;
 #endif
 }
+
 //----------------------------------------------------------------------------
+
 OPfloat  OPtimerDelta(OPtimer* timer){
 #if defined(OPIFEX_UNIX)
 	return (OPfloat)(timer->Elapsed / 1000.0);
@@ -51,7 +57,19 @@ OPfloat  OPtimerDelta(OPtimer* timer){
 	return (OPfloat)(timer->Elapsed / 1000.0);
 #endif	
 }
+
+//----------------------------------------------------------------------------
+
+OPfloat  OPtimerGameDelta(OPtimer* timer){
+#if defined(OPIFEX_UNIX)
+	return (OPfloat)(timer->GameElapsed / 1000.0);
+#elif defined(OPIFEX_WINDOWS)
+	return (OPfloat)(timer->GameElapsed / 1000.0);
+#endif	
+}
+
 //-----------------------------------------------------------------------------
+
 ui64 OPtimerTotal(OPtimer* timer){
 	return timer->TotalGametime;// / 1000000.0;
 }
