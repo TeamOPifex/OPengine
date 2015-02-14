@@ -144,9 +144,10 @@ OPint OPeffectUnload(OPeffect* effect){
 OPint OPeffectBind(OPeffect* effect){
 	OPglError("OPeffectBind:Clear Errors");
 
-	if (OPEFFECT_ACTIVE == effect && OPEFFECT_BOUND_MESH == OPMESH_ACTIVE_PTR) {
-		return 1;
-	}
+	// if (OPEFFECT_ACTIVE == effect && OPEFFECT_BOUND_MESH == OPMESH_ACTIVE_PTR) {
+	// 	//OPlog("Already bound, redoing it anyway");
+	// 	//return 1;
+	// }
 
 
 	// disable attributes of the last effect
