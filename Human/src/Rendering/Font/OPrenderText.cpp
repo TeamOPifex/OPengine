@@ -42,35 +42,37 @@ void OPfontRenderSetAlign(OPmat4* world, OPfloat width, OPfontAlign align){
 }
 
 void OPfontRender(const OPchar* text, OPvec4 color, OPvec2 pos, OPfontAlign align) {
-	ASSERT(OPFONTMANAGER_EFFECT_ACTIVE != NULL, "A Font Effect has not been bound yet");
-	ASSERT(OPFONTMANAGER_ACTIVE != NULL, "A Font Manager has not been bound yet");
-	ASSERT(OPFONTMANAGER_ACTIVE->builtNodes != NULL, "The bound Font Manager Hashmap hasn't been created yet");
+	// ASSERT(OPFONTMANAGER_EFFECT_ACTIVE != NULL, "A Font Effect has not been bound yet");
+	// ASSERT(OPFONTMANAGER_ACTIVE != NULL, "A Font Manager has not been bound yet");
+	// ASSERT(OPFONTMANAGER_ACTIVE->builtNodes != NULL, "The bound Font Manager Hashmap hasn't been created yet");
 
-	int tryHashMap = OPFONTMANAGER_ACTIVE->isBuilt;
-	OPfontBuiltTextNode* node = NULL;
-	if (tryHashMap) {
-		OPhashMapGet(OPFONTMANAGER_ACTIVE->builtNodes, text, (void**)&node);
-	}
+	// int tryHashMap = OPFONTMANAGER_ACTIVE->isBuilt;
+	// OPfontBuiltTextNode* node = NULL;
+	// if (tryHashMap) {
+	// 	OPhashMapGet(OPFONTMANAGER_ACTIVE->builtNodes, text, (void**)&node);
+	// }
 
-	OPmat4 world;
-	OPfloat scale = (OPRENDER_WIDTH / 2.0f) * OPRENDER_SCREEN_WIDTH_SCALE;
+	// OPmat4 world;
+	// OPfloat scale = (OPRENDER_WIDTH / 2.0f) * OPRENDER_SCREEN_WIDTH_SCALE;
 
-	if (node == NULL || !OPFONTMANAGER_ACTIVE->isBuilt) {
-		OPfontUserTextNode textNode = OPfontCreateUserText(OPFONTMANAGER_ACTIVE->_font, text);
-		OPfontRenderSetAlign(&world, textNode.Width, align);
-		OPmat4Scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f);
-		OPmat4Translate(&world, pos.x, pos.y, 0.0f);
-		OPfontRender(&textNode, color, &world);
-		OPmeshDestroy(&textNode.mesh);
-	} else {
-		OPfontRenderSetAlign(&world, node->Width, align);
-		OPmat4Scl(&world, OPRENDER_SCREEN_WIDTH_SCALE * OPrenderGetWidthAspectRatio() / scale, OPRENDER_SCREEN_HEIGHT_SCALE * OPrenderGetHeightAspectRatio() / scale, 1.0f);
-		OPmat4Translate(&world, pos.x, pos.y, 0.0f);
-		OPfontRender(node, color, &world);
-	}
+	// if (node == NULL || !OPFONTMANAGER_ACTIVE->isBuilt) {
+	// 	OPfontUserTextNode textNode = OPfontCreateUserText(OPFONTMANAGER_ACTIVE->_font, text);
+	// 	OPfontRenderSetAlign(&world, textNode.Width, align);
+	// 	OPmat4Scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f);
+	// 	OPmat4Translate(&world, pos.x, pos.y, 0.0f);
+	// 	OPfontRender(&textNode, color, &world);
+	// 	OPmeshDestroy(&textNode.mesh);
+	// } else {
+	// 	OPfontRenderSetAlign(&world, node->Width, align);
+	// 	OPmat4Scl(&world, OPRENDER_SCREEN_WIDTH_SCALE * OPrenderGetWidthAspectRatio() / scale, OPRENDER_SCREEN_HEIGHT_SCALE * OPrenderGetHeightAspectRatio() / scale, 1.0f);
+	// 	OPmat4Translate(&world, pos.x, pos.y, 0.0f);
+	// 	OPfontRender(node, color, &world);
+	// }
+	OPmat4 world = OPmat4Translate(pos.x, pos.y, 0);
+	OPfontRender(text, color, &world, align);
 }
 
-void OPfontRender(const OPchar* text, OPvec4 color, OPmat4* world) {
+void OPfontRender(const OPchar* text, OPvec4 color, OPmat4* world, OPfontAlign align) {
 	ASSERT(OPFONTMANAGER_EFFECT_ACTIVE != NULL, "A Font Effect has not been bound yet");
 	ASSERT(OPFONTMANAGER_ACTIVE != NULL, "A Font Manager has not been bound yet");
 	ASSERT(OPFONTMANAGER_ACTIVE->builtNodes != NULL, "The bound Font Manager Hashmap hasn't been created yet");
@@ -88,7 +90,7 @@ void OPfontRender(const OPchar* text, OPvec4 color, OPmat4* world) {
 	if (node == NULL || !OPFONTMANAGER_ACTIVE->isBuilt) {
 		OPfontUserTextNode textNode = OPfontCreateUserText(OPFONTMANAGER_ACTIVE->_font, text);
 
-		OPfontRenderSetAlign(&aligned, textNode.Width, OPFONTMANAGER_ACTIVE->_align);
+		OPfontRenderSetAlign(&aligned, textNode.Width, align);
 
 		scaled = OPmat4Scl(
 			OPrenderGetWidthAspectRatio() / scale, 
@@ -103,7 +105,7 @@ void OPfontRender(const OPchar* text, OPvec4 color, OPmat4* world) {
 		OPmeshDestroy(&textNode.mesh);
 	}
 	else {
-		OPfontRenderSetAlign(&aligned, node->Width, OPFONTMANAGER_ACTIVE->_align);
+		OPfontRenderSetAlign(&aligned, node->Width, align);
 
 		scaled = OPmat4Scl(
 			OPrenderGetWidthAspectRatio() / scale,

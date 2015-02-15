@@ -5,10 +5,13 @@
 #include "./Core/include/Assert.h"
 
 void OPfontRender(const OPchar* text, OPvec4 color, OPvec2 pos, OPfontAlign align);
-void OPfontRender(const OPchar* text, OPvec4 color, OPmat4* world);
+void OPfontRender(const OPchar* text, OPvec4 color, OPmat4* world, OPfontAlign align);
 
+inline void OPfontRender(const OPchar* text, OPvec4 color, OPmat4* world) {
+	OPfontRender(text, color, world, OPFONTMANAGER_ACTIVE->_align);
+}
 inline void OPfontRender(const OPchar* text, OPmat4* world) {
-	OPfontRender(text, OPFONTMANAGER_ACTIVE->_color, world);
+	OPfontRender(text, OPFONTMANAGER_ACTIVE->_color, world, OPFONTMANAGER_ACTIVE->_align);
 }
 inline void OPfontRender(const OPchar* text, f32 r, f32 g, f32 b, f32 a, f32 x, f32 y, OPfontAlign align) {
 	OPfontRender(text, OPvec4Create(r, g, b, a), OPvec2Create(x, y), align);

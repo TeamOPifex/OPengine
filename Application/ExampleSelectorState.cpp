@@ -135,8 +135,7 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 	OPrenderClear(0, 0, 0);
 
 	OPint isInActive = 0, isAvailable = 0;
-	OPmat4 w = OPmat4Scl(1, 1, 1);
-	OPmat4Translate(&w, -0.9, (exampleSelector.Selected) * 0.1, 0);
+	OPfloat start = (exampleSelector.Selected) * 0.1;
 
 	f32 r, g, b;
 	for (i32 i = 0; i < ExampleCount; i++) {
@@ -145,8 +144,7 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 		if (!exampleSelector.Examples[i].available) {
 			r = g = b = 0.2 + !isInActive * 0.4;
 		}
-		OPmat4Translate(&w, 0, -0.1, 0);
-		OPfontRender(exampleSelector.Examples[i].name, OPvec4Create(r,g,b,1), &w);
+		OPfontRender(exampleSelector.Examples[i].name, OPvec4Create(r,g,b,1), OPvec2Create(-0.9, start - 0.1 * i));
 	}
 
 	OPrenderPresent();
