@@ -20,4 +20,8 @@ OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* pose, i32 count);
 void OPskeletonUpdate(OPskeleton* skeleton);
 void OPskeletonDestroy(OPskeleton* skeleton);
 
+inline OPskeleton* OPskeletonCopy(OPskeleton* source) {
+	return OPskeletonCreate(source->hierarchy, source->localPoses, source->hierarchyCount);
+}
+
 #endif

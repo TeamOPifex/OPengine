@@ -66,9 +66,9 @@ OPfbxAnimation* OPfbxAnimationGet(OPfbxMeshData* meshData, OPfbxSkeleton* skelet
 				OPlogDebug("Curr Frame: %d\nindAnimJoint: %d", f, indAnimJoint);
 				_fbxmat4Log("Local Bone Transform", &boneLocalTransform);
 				
-				FbxVector4 _scl = boneLocalTransform.GetS();
-				FbxVector4 _rot = boneLocalTransform.GetR();
-				FbxVector4 _trl = boneLocalTransform.GetT();
+				// FbxVector4 _scl = boneLocalTransform.GetS();
+				// FbxVector4 _rot = boneLocalTransform.GetR();
+				// FbxVector4 _trl = boneLocalTransform.GetT();
 				
 				// Scale only the root node
 				//if(ind == 0) {
@@ -76,7 +76,7 @@ OPfbxAnimation* OPfbxAnimationGet(OPfbxMeshData* meshData, OPfbxSkeleton* skelet
 					//_trl *= scale;
 				//}
 
-				boneLocalTransform = FbxAMatrix(_trl, _rot, _scl);
+				//boneLocalTransform = FbxAMatrix(_trl, _rot, _scl);
 
 				OPmat4 tmp;
 
@@ -104,7 +104,7 @@ OPfbxAnimation* OPfbxAnimationGet(OPfbxMeshData* meshData, OPfbxSkeleton* skelet
 				tmp[2][3] = lRow[2];
 				tmp[3][3] = lRow[3];
 
-				tmp = OPmat4Transpose(tmp);
+				//tmp = OPmat4Transpose(tmp);
 
 				// OPfloat x, y, z;
 				// x = tmp[3][0];

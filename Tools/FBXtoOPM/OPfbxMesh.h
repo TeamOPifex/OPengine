@@ -34,7 +34,6 @@ OPint OPfbxMeshCreate(OPfbxMesh* mesh, OPfloat scale, const OPchar* filename) {
 		OPlogDebug("Step: Skeleton");
 
 		OPfbxMeshDataGet(&mesh->MeshData, &mesh->SCENE);
-
 		OPlogDebug("Step: MeshData");
 
 		mesh->Polys = OPfbxMeshDataGetPolygons(&mesh->MeshData, scale);
