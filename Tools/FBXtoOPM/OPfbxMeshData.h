@@ -43,6 +43,7 @@ OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData, OPfloat scale) 
 
 	FbxVector4* controlPoints = meshData->Mesh->GetControlPoints();
 	
+	OPint vertId = 0;
 	OPint polySize;
 	for (OPint i = 0; i < meshData->PolyCount; i++) {
 		polySize = meshData->Mesh->GetPolygonSize(i);
@@ -70,7 +71,7 @@ OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData, OPfloat scale) 
 					switch (eNormal->GetReferenceMode())
 					{
 						case FbxGeometryElement::eDirect: {
-							normal = eNormal->GetDirectArray().GetAt(0);
+							normal = eNormal->GetDirectArray().GetAt(vertId);
 							OPlog("Normal %f, %f, %f, %f", normal[0], normal[1], normal[2], normal[3]);
 							break;
 						}
@@ -93,6 +94,8 @@ OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData, OPfloat scale) 
 						polys[i].Normal[j].x = static_cast<float>(eNormal->GetDirectArray().GetAt(controlPointIndex).mData[0]);
 						polys[i].Normal[j].y = static_cast<float>(eNormal->GetDirectArray().GetAt(controlPointIndex).mData[1]);
 						polys[i].Normal[j].z = static_cast<float>(eNormal->GetDirectArray().GetAt(controlPointIndex).mData[2]);
+					
+						OPvec3Log("Normal4", polys[i].Normal[j]);
 					}
 					break;
 
@@ -102,6 +105,8 @@ OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData, OPfloat scale) 
 						polys[i].Normal[j].x = static_cast<float>(eNormal->GetDirectArray().GetAt(index).mData[0]);
 						polys[i].Normal[j].y = static_cast<float>(eNormal->GetDirectArray().GetAt(index).mData[1]);
 						polys[i].Normal[j].z = static_cast<float>(eNormal->GetDirectArray().GetAt(index).mData[2]);
+					
+						OPvec3Log("Normal5", polys[i].Normal[j]);
 					}
 					break;
 
@@ -277,6 +282,7 @@ OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData, OPfloat scale) 
 			//		break;
 			//	}
 			//}
+			vertId++; 
 		}
 	}
 

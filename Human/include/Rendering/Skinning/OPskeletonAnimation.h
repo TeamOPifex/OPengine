@@ -13,6 +13,7 @@ struct _OPskeletonAnimationEvent
 {
 	void(*Event)(OPskeletonAnimation*, OPuint, void*);
 	OPuint Frame;
+	OPuint End;
 	OPint OnFrameChange;
 };
 typedef _OPskeletonAnimationEvent OPskeletonAnimationEvent;
@@ -43,6 +44,10 @@ void OPskeletonAnimationSetEvents(OPskeletonAnimation* skelAnim, OPuint frames, 
 inline void OPskeletonAnimationReset(OPskeletonAnimation* skelAnim) {
 	skelAnim->Frame = 0;
 	skelAnim->LoopsCompleted = 0;
+}
+
+inline OPskeletonAnimation* OPskeletonAnimationCopy(OPskeletonAnimation* source, OPint boneCount) {
+	return OPskeletonAnimationCreate(boneCount, source->JointFrames, source->FrameCount);
 }
 
 #endif
