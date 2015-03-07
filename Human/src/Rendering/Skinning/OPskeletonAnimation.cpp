@@ -98,8 +98,13 @@ void OPskeletonAnimationMerge(OPskeletonAnimation* skelAnim1, OPskeletonAnimatio
 	for (OPint i = 0; i < skeleton->hierarchyCount; i++) {
 		
 		ind1 = skeleton->hierarchyCount * skelAnim1->Frame + i;
+
 		if (skelAnim1->Frame == skelAnim1->FrameCount - 1) {
-			ind2 = skeleton->hierarchyCount * (0) + i;
+			if(skelAnim1->Loop) {
+				ind2 = skeleton->hierarchyCount * (0) + i;
+			} else {
+				ind2 = skeleton->hierarchyCount * skelAnim1->Frame + i;
+			}
 		}
 		else {
 			ind2 = skeleton->hierarchyCount * (skelAnim1->Frame + 1) + i;

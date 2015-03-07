@@ -6,6 +6,7 @@
 #include "./Human/include/Rendering/OPattributes.h"
 #include "./Human/include/Rendering/OPrenderBuffer.h"
 #include "./Human/include/Rendering/OPtexture.h"
+#include "./Human/include/Rendering/OPcam.h"
 #include "./Math/include/Vectors.h"
 #include "./Math/include/OPmat4.h"
 #include "./Data/include/OPhashMap.h"
@@ -115,10 +116,45 @@ inline void OPeffectParamMat4(const OPchar* param, OPmat4* matrices){
 inline void OPeffectParamMat4(OPuint loc, OPmat4* matrices){
 	glUniformMatrix4fv(loc, 1, GL_FALSE, (OPfloat*)matrices);
 }
-inline void OPeffectParamMat4v(const OPchar* param, OPint count, OPmat4* matrices){
+inline void OPeffectParamMat4v(const OPchar* param, OPuint count, OPmat4* matrices){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
 	glUniformMatrix4fv(loc, count, GL_FALSE, (OPfloat*)matrices);
 }
 
+
+inline void OPeffectParam(OPuint loc, OPmat4 matrix){
+	OPeffectParamMat4(loc, &matrix);
+}
+inline void OPeffectParam(const OPchar* param, OPmat4 matrix){
+	OPeffectParamMat4(param, &matrix);
+}
+inline void OPeffectParam(const OPchar* param, OPuint count, OPmat4* matrices){
+	OPeffectParamMat4v(param, count, matrices);
+}
+inline void OPeffectParam(const OPchar* param, OPvec3 f){
+	OPeffectParamVec3(param, &f);
+}
+inline void OPeffectParam(const OPchar* param, OPuint count, OPvec3* f){
+	OPeffectParamVec3v(param, count, f);
+}
+inline void OPeffectParam(const OPchar* param, OPvec4 f){
+	OPeffectParamVec4(param, &f);
+}
+inline void OPeffectParam(const OPchar* param, OPuint count, OPvec4* f){
+	OPeffectParamVec4v(param, count, f);
+}
+inline void OPeffectParam(const OPchar* param, OPtexture* tex){
+	OPeffectParamBindTex(param, tex);
+}
+
+inline void OPeffectParam(OPcam camera) {
+	OPmat4 view, proj;
+
+	OPcamGetView(camera, &view);
+	OPcamGetProj(camera, &proj);
+
+	OPeffectParamMat4("uView", &view);
+	OPeffectParamMat4("uProj", &proj);
+}
 
 #endif
