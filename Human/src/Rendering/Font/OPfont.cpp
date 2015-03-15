@@ -196,6 +196,10 @@ OPmesh OPfontCreateText(OPfont* font, OPchar* text) {
 }
 
 OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text) {
+	return OPfontCreatePackedText(font, text, 1);
+}
+
+OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text, OPfloat scale) {
 	ASSERT(OPMESHPACKER_ACTIVE != NULL, "No mesh packer bound.");
 
 	ui32 vertexSize = sizeof(OPvertexColor);
@@ -203,9 +207,11 @@ OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text) {
 	OPvector* vertices = OPvectorCreate(vertexSize);
 	OPvector* indices = OPvectorCreate(indexSize);
 
+	OPfloat width = 0;
+	OPfloat height = font->height;
+
 	size_t i;
 
-	OPfloat width = 0;
 	for (i = 0; i< strlen(text); ++i)
 	{
 		OPfontGlyph* glyph = OPfontGetGlyph(font, text[i]);
@@ -216,11 +222,13 @@ OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text) {
 			{
 				kerning = OPfontGlyphGetKerning(glyph, text[i - 1]);
 			}
-			width += kerning;
-			int x0 = (int)(width + glyph->offsetX);
-			int y0 = (int)(glyph->offsetY);
-			int x1 = (int)(x0 + glyph->width);
-			int y1 = (int)(y0 - glyph->height);
+			width += kerning * scale;
+
+			int x0 = (int)(width + glyph->offsetX * scale);
+			int x1 = (int)(x0 + glyph->width * scale);
+			int y0 = font->size * scale-(int)(glyph->offsetY * scale) - (font->height * scale - font->size * scale);
+			int y1 = font->size * scale-(int)(glyph->offsetY * scale - glyph->height * scale) - (font->height * scale - font->size * scale);
+
 			float s0 = glyph->textureCoordinates.x;
 			float t0 = glyph->textureCoordinates.y;
 			float s1 = glyph->textureCoordinates.z;

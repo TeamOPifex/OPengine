@@ -75,8 +75,9 @@ void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector.textTimer = 0;
 	exampleSelector.textActive = 0;
 	exampleSelector.clear = OPvec3Create(0,0,0);
-	exampleSelector.FontManager = OPfontManagerSetup("Ubuntu.opf", Names, ExampleCount);
-	exampleSelector.FontManager->scale = 0.5;
+
+	exampleSelector.FontManager = OPfontManagerSetup("Ubuntu.opf", Names, ExampleCount, 0.5);
+
 	// OPfontManagerBind(exampleSelector.FontManager);
 	// OPfontManagerSetAlign(exampleSelector.FontManager, OPFONT_ALIGN_LEFT);
 	// OPfontManagerBind(NULL);
@@ -158,18 +159,21 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 	OPkeyboardUpdatePost(time);
 
 
-	if (OPkeyboardWasPressed(OPKEY_W) || OPkeyboardWasPressed(OPKEY_UP)) {
-		exampleSelector.Selected--;
-		if (exampleSelector.Selected < 0) exampleSelector.Selected = ExampleCount - 1;
+	if(!exampleSelector.textActive) {
+		if (OPkeyboardWasPressed(OPKEY_W) || OPkeyboardWasPressed(OPKEY_UP)) {
+			exampleSelector.Selected--;
+			if (exampleSelector.Selected < 0) exampleSelector.Selected = ExampleCount - 1;
+		}
+		if (OPkeyboardWasPressed(OPKEY_S) || OPkeyboardWasPressed(OPKEY_DOWN)) {
+			exampleSelector.Selected++;
+			if (exampleSelector.Selected >= ExampleCount) exampleSelector.Selected = 0;
+		}
+
+		if (exampleSelector.Examples[exampleSelector.Selected].available && (OPkeyboardWasPressed(OPKEY_SPACE) || OPkeyboardWasPressed(OPKEY_ENTER))) {
+			OPgameStateChange(exampleSelector.Examples[exampleSelector.Selected].state);
+			return 0;
+		}
 	}
-	if (OPkeyboardWasPressed(OPKEY_S) || OPkeyboardWasPressed(OPKEY_DOWN)) {
-		exampleSelector.Selected++;
-		if (exampleSelector.Selected >= ExampleCount) exampleSelector.Selected = 0;
-	}
-	// if (exampleSelector.Examples[exampleSelector.Selected].available && (OPkeyboardWasPressed(OPKEY_SPACE) || OPkeyboardWasPressed(OPKEY_ENTER))) {
-	// 	OPgameStateChange(exampleSelector.Examples[exampleSelector.Selected].state);
-	// 	return 0;
-	// }
 
 	if(OPkeyboardWasPressed(OPKEY_BACKSPACE) && exampleSelector.textActive && strlen(exampleSelector.buffer) > 0) {
 		OPlog("Buff %s", exampleSelector.buffer);
@@ -180,40 +184,40 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 	OPrenderClear(exampleSelector.clear);
 
 	OPint isInActive = 0, isAvailable = 0;
-	OPfloat start = (exampleSelector.Selected) * 0.1;
+	OPfloat start = -(exampleSelector.Selected) * 50 + 250;
 
-	//OPfontRenderBegin(exampleSelector.FontManager);
+	OPfontRenderBegin(exampleSelector.FontManager);
 
-	// f32 r, g, b;
-	// for (i32 i = 0; i < ExampleCount; i++) {
-	// 	isInActive = exampleSelector.Selected != i;
-	// 	r = 1, g = b = isInActive;
-	// 	if (!exampleSelector.Examples[i].available) {
-	// 		r = g = b = 0.2 + !isInActive * 0.4;
-	// 	}
-	// 	//OPvec4Create(r,g,b,1), 
-	// 	OPfontRender(exampleSelector.Examples[i].name, OPvec2Create(-0.9, start - 0.1 * i));
-	// }
+	f32 r, g, b;
+	for (i32 i = 0; i < ExampleCount; i++) {
+		isInActive = exampleSelector.Selected != i;
+		r = 1, g = b = isInActive;
+		if (!exampleSelector.Examples[i].available) {
+			r = g = b = 0.2 + !isInActive * 0.4;
+		}
+		OPfontColor(OPvec4Create(r,g,b,1)); 
+		OPfontRender(exampleSelector.Examples[i].name, OPvec2Create(50, start + 50 * i));
+	}
 
-	//OPfontRenderEnd();
+	OPfontRenderEnd();
 
 	OPimguiBegin();
 
-	if(OPimguiCheckbox(exampleSelector.checked, OPvec2Create(5,30), OPvec2Create(20, 20))) { //, OPvec4Create(0.9, 0.9, 0.9, 1), OPvec4Create(0.1,0.1,0.1,1));
+	if(OPimguiCheckbox(exampleSelector.checked, OPvec2Create(570, 20), OPvec2Create(20, 20))) { //, OPvec4Create(0.9, 0.9, 0.9, 1), OPvec4Create(0.1,0.1,0.1,1));
 		exampleSelector.checked = !exampleSelector.checked;
 	}
-	OPimguiLabel(OPvec2Create(50, 50), "TEST");
+	//OPimguiLabel(OPvec2Create(50, 50), "TEST");
 
-	OPimguiRadio(OPvec2Create(5,5), OPvec2Create(20, 20), OPvec4Create(0.9, 0.9, 0.9, 1), OPvec4Create(0.1,0.1,0.1, 1));
+	//OPimguiRadio(OPvec2Create(5,5), OPvec2Create(20, 20), OPvec4Create(0.9, 0.9, 0.9, 1), OPvec4Create(0.1,0.1,0.1, 1));
 	//OPimguiRadio(exampleSelector.imgui, OPvec2Create(300,150), OPvec2Create(10, 10), OPvec4Create(0.7, 0.7, 0.7, 1));
 
-	if(OPimguiButton(OPvec2Create(5, 150), "TOGGLE")) {
+	if(OPimguiButton(OPvec2Create(440, 20), "TOGGLE")) {
 		exampleSelector.clear.z = !exampleSelector.clear.z;
 	}
 
 	exampleSelector.textTimer += time->Elapsed;
 	//OPlog(" Active %d", exampleSelector.textActive);
-	OPint state = OPimguiTextbox(OPvec2Create(5, 250), exampleSelector.buffer, "Your Name", exampleSelector.textActive, exampleSelector.textTimer % 500 > 250);
+	OPint state = OPimguiTextbox(OPvec2Create(20, 20), exampleSelector.buffer, "Your Name", exampleSelector.textActive, exampleSelector.textTimer % 500 > 250);
 	if(state == 1) exampleSelector.textActive = true;
 	else if (state == 2) exampleSelector.textActive = false;
 
