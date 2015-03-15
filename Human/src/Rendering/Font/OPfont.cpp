@@ -246,7 +246,7 @@ OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text, OPf
 			for (OPint i = 0; i < 6; i++)
 				OPvectorPush(indices, (ui8*)&inds[i]);
 
-			width += glyph->advanceX;
+			width += glyph->advanceX * scale;
 		}
 	}
 
