@@ -28,6 +28,7 @@ add_source_group(include/Rendering/Font "${PROJECT_SOURCE_DIR}/Human/include/Ren
 add_source_group(include/Rendering/GL "${PROJECT_SOURCE_DIR}/Human/include/Rendering/GL" HUMAN_SRC)
 add_source_group(include/Rendering/Primitives "${PROJECT_SOURCE_DIR}/Human/include/Rendering/Primitives" HUMAN_SRC)
 add_source_group(include/Rendering/Sprite "${PROJECT_SOURCE_DIR}/Human/include/Rendering/Sprite" HUMAN_SRC)
+add_source_group(include/Rendering/UI "${PROJECT_SOURCE_DIR}/Human/include/Rendering/UI" HUMAN_SRC)
 add_source_group(include/Systems "${PROJECT_SOURCE_DIR}/Human/include/Systems" HUMAN_SRC)
 add_source_group(include/Utilities "${PROJECT_SOURCE_DIR}/Human/include/Utilities" HUMAN_SRC)
 
@@ -45,6 +46,7 @@ add_source_group(src/Rendering/GL "${PROJECT_SOURCE_DIR}/Human/src/Rendering/GL"
 add_source_group(src/Rendering/Primitives "${PROJECT_SOURCE_DIR}/Human/src/Rendering/Primitives" HUMAN_SRC)
 add_source_group(src/Rendering/Skinning "${PROJECT_SOURCE_DIR}/Human/src/Rendering/Skinning" HUMAN_SRC)
 add_source_group(src/Rendering/Sprite "${PROJECT_SOURCE_DIR}/Human/src/Rendering/Sprite" HUMAN_SRC)
+add_source_group(src/Rendering/UI "${PROJECT_SOURCE_DIR}/Human/src/Rendering/UI" HUMAN_SRC)
 add_source_group(src/Systems "${PROJECT_SOURCE_DIR}/Human/src/Systems" HUMAN_SRC)
 add_source_group(src/Utilities "${PROJECT_SOURCE_DIR}/Human/src/Utilities" HUMAN_SRC)
 

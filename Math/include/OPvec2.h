@@ -28,6 +28,11 @@ struct OPvec2 {
 	OPvec2 operator=(OPvec2 vhs) { 
 		OPmemcpy(this, &vhs, sizeof(OPvec2)); return *this;
 	}
+	inline OPvec2 operator+=(OPfloat vhs) {
+		this->x += vhs;
+		this->y += vhs;
+		return *this; 
+	}
 	inline OPvec2 operator+=(OPvec2 vhs) { 
 		OPvec2Add(this, this, &vhs); 
 		return *this; 

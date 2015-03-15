@@ -270,7 +270,7 @@ macro(add_external_opifex_includes)
 	set_binary_output(BINARY_FOLDER)
 	include_directories(
 		${OPIFEX_ENGINE_REPOSITORY}
-		${OPIFEX_ENGINE_REPOSITORY}/External/glfw-3.0.4/include/
+		${OPIFEX_ENGINE_REPOSITORY}/External/glfw/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/glew-1.9.0/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/glm-0.9.5/
 		${OPIFEX_ENGINE_REPOSITORY}/External/Phsyx.3.2.1/include/

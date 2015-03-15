@@ -35,6 +35,8 @@ typedef struct {
 	OPhashMap* builtNodes;
 	OPmeshPacker meshPacker;
 	OPint pixelated;
+	OPmat4 proj;
+	OPfloat scale;
 } OPfontManager;
 
 
@@ -50,6 +52,7 @@ typedef struct {
 
 extern OPfontManager* OPFONTMANAGER_ACTIVE;
 extern OPeffect* OPFONTMANAGER_EFFECT_ACTIVE;
+extern OPeffect* OPFONTMANAGER_EFFECT2D_ACTIVE;
 
 
 //-----------------------------------------------------------------------------

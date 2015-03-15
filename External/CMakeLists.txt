@@ -1,6 +1,6 @@
 ### GLFW
 
-SET( GLFW_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/External/glfw-3.0.4" )
+SET( GLFW_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/External/glfw" )
 add_subdirectory("${GLFW_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/GLFW)
 set_property(TARGET glfw PROPERTY FOLDER "External")
 add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS)

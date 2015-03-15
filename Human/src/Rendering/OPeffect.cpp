@@ -188,7 +188,10 @@ OPint OPeffectBind(OPeffect* effect){
 			);
 		if (OPglError("OPeffectBind:Error ")) {
 			OPlog("Effect %s: Failed to set attrib ptr %s", effect->Name, attr->Name);
-		}
+		} 
+		// else {
+		// 	OPlog("Set %s", attr->Name);
+		// }
 
 		glEnableVertexAttribArray((uintptr_t)attr->Handle);
 		if (OPglError("OPeffectBind:Error ")) {
@@ -256,6 +259,11 @@ OPeffect OPeffectGen(
 
 	if (attrs & OPATTR_UV) {
 		OPshaderAttribute attr = { "aUV", GL_FLOAT, 2 };
+		OPvectorPush(vector, (ui8*)&attr);
+	}
+
+	if (attrs & OPATTR_COLOR) {
+		OPshaderAttribute attr = { "aColor", GL_FLOAT, 4 };
 		OPvectorPush(vector, (ui8*)&attr);
 	}
 

@@ -8,6 +8,7 @@
 #include "./Human/include/Rendering/OPmeshPacker.h"
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Rendering/OPframeBuffer.h"
+#include "./Human/include/Rendering/UI/OPimgui.h"
 
 #include "./Human/include/Rendering/Primitives/OPquad.h"
 #include "./Human/include/Rendering/Primitives/OPsphericalCube.h"

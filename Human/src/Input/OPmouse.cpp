@@ -34,7 +34,7 @@ void OPmouseUpdate() {
 	// TODO: Fix this with the callback for GLFW3ß
 	d64 x, y;
 	glfwGetCursorPos(window, &x, &y);
-	OPmouseSetPositionScreenCenter();
+	//OPmouseSetPositionScreenCenter();
 	Mouse.positionX = x;
 	Mouse.positionY = y;
 	//Mouse.wheel = glfwGetScroll(window);
