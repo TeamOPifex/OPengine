@@ -218,7 +218,7 @@ OPint State0Update(OPtimer* time){
 	return false;
 }
 
-void State0Exit(OPgameState* next){
+OPint State0Exit(OPgameState* next){
 	OPcmanDelete("impact.wav");
 	OPcmanDelete("boom.wav");
 	OPcmanDelete("background.ogg");
@@ -232,6 +232,7 @@ void State0Exit(OPgameState* next){
 	OPcmanDelete("noneNorm.png");	
 
 	OPfree(garbage);
+	return 0;
 }
 //-----------------------------------------------------------------------------
 void State1Enter(OPgameState* last){
@@ -338,7 +339,7 @@ OPint State1Update(OPtimer* time){
 	return false;
 }
 
-void State1Exit(OPgameState* next){
+OPint State1Exit(OPgameState* next){
 	OPcmanDelete("impact.wav");
 	OPcmanDelete("boom.wav");
 	OPcmanDelete("background.ogg");
@@ -355,4 +356,5 @@ void State1Exit(OPgameState* next){
 	OPeffectUnload(&post);
 
 	OPfree(garbage);
+	return 0;
 }

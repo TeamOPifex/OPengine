@@ -3,17 +3,6 @@
 // OPifex Engine includes
 #include "./OPengine.h"
 
-void ExampleSpriteEnter(OPgameState* last);
-OPint ExampleSpriteUpdate(OPtimer* time);
-void ExampleSpriteExit(OPgameState* next);
-
-// This is the Game State for this SpriteExample
-// Each entry is a function pointer for Initialize, Update, Destroy
-OPgameState GS_EXAMPLE_SPRITE = {
-	ExampleSpriteEnter,
-	ExampleSpriteUpdate,
-	ExampleSpriteExit
-};
 
 typedef struct {
 	OPsprite* sprite;
@@ -46,6 +35,14 @@ OPint ExampleSpriteUpdate(OPtimer* time) {
 
 }
 
-void ExampleSpriteExit(OPgameState* next) {
-
+OPint ExampleSpriteExit(OPgameState* next) {
+	return 0;
 }
+
+// This is the Game State for this SpriteExample
+// Each entry is a function pointer for Initialize, Update, Destroy
+OPgameState GS_EXAMPLE_SPRITE = {
+	ExampleSpriteEnter,
+	ExampleSpriteUpdate,
+	ExampleSpriteExit
+};

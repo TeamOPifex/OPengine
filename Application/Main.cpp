@@ -25,7 +25,9 @@ int ApplicationUpdate(OPtimer* timer) {
 	OPcmanUpdate(timer);
 
 	if (OPkeyboardWasReleased(OPKEY_ESCAPE)) return 1;	
-	if (OPkeyboardWasReleased(OPKEY_BACKSPACE) && &GS_EXAMPLE_SELECTOR != ActiveState) OPgameStateChange(&GS_EXAMPLE_SELECTOR);
+	if (OPkeyboardWasReleased(OPKEY_BACKSPACE) && ActiveState != &GS_EXAMPLE_SELECTOR) {
+		OPgameStateChange(&GS_EXAMPLE_SELECTOR);
+	}
 	
 	return ActiveState->Update(timer);
 }

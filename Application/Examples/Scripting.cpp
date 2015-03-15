@@ -32,8 +32,8 @@ OPint ExampleScriptingUpdate(OPtimer* time) {
 	return false;
 }
 
-void ExampleScriptingExit(OPgameState* next) {
-
+OPint ExampleScriptingExit(OPgameState* next) {
+	return 0;
 }
 
 OPgameState GS_EXAMPLE_SCRIPTING = {

@@ -11,17 +11,6 @@
 
 #include "./Pipeline/include/SpineLoader.h"
 
-void ExampleSpineEnter(OPgameState* last);
-OPint ExampleSpineUpdate(OPtimer* time);
-void ExampleSpineExit(OPgameState* next);
-
-// This is the Game State for this ModelExample
-// Each entry is a function pointer for Initialize, Update, Destroy
-OPgameState GS_EXAMPLE_SPINE = {
-	ExampleSpineEnter,
-	ExampleSpineUpdate,
-	ExampleSpineExit
-};
 
 // Data for this Game State Example
 typedef struct {
@@ -160,8 +149,17 @@ OPint ExampleSpineUpdate(OPtimer* time) {
 }
 
 // The OPifex Engine will call this itself when you call OPgameStateChange
-void ExampleSpineExit(OPgameState* next) {
+OPint ExampleSpineExit(OPgameState* next) {
 	// Clean up phase for the Game State
 	OPeffectUnload(&spineExample->Effect);
 	OPfree(spineExample);
+	return 0;
 }
+
+// This is the Game State for this ModelExample
+// Each entry is a function pointer for Initialize, Update, Destroy
+OPgameState GS_EXAMPLE_SPINE = {
+	ExampleSpineEnter,
+	ExampleSpineUpdate,
+	ExampleSpineExit
+};

@@ -5,16 +5,6 @@
 #include "./Human/include/Rendering/OPMvertex.h"
 #include "./Human/include/Systems/OPinputSystem.h"
 
-void ExampleTexturedEnter(OPgameState* last);
-OPint ExampleTexturedUpdate(OPtimer* time);
-void ExampleTexturedExit(OPgameState* next);
-
-OPgameState GS_EXAMPLE_TEXTURED = {
-	ExampleTexturedEnter,
-	ExampleTexturedUpdate,
-	ExampleTexturedExit
-};
-
 typedef struct {
 	OPmesh* Mesh;
 	OPeffect* Effect;
@@ -99,10 +89,18 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 	return false;
 }
 
-void ExampleTexturedExit(OPgameState* next) {
+OPint ExampleTexturedExit(OPgameState* next) {
 	OPeffectUnload(texturedExample->Effect);
 	OPfree(texturedExample->Effect);
 	OPfree(texturedExample->Camera);
 
 	OPfree(texturedExample);
+
+	return 0;
 }
+
+OPgameState GS_EXAMPLE_TEXTURED = {
+	ExampleTexturedEnter,
+	ExampleTexturedUpdate,
+	ExampleTexturedExit
+};

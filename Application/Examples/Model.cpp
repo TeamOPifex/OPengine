@@ -6,17 +6,6 @@
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Data/include/OPcman.h"
 
-void ExampleModelEnter(OPgameState* last);
-OPint ExampleModelUpdate(OPtimer* time);
-void ExampleModelExit(OPgameState* next);
-
-// This is the Game State for this ModelExample
-// Each entry is a function pointer for Initialize, Update, Destroy
-OPgameState GS_EXAMPLE_MODEL = {
-	ExampleModelEnter,
-	ExampleModelUpdate,
-	ExampleModelExit
-};
 
 // Data for this Game State Example
 typedef struct {
@@ -115,8 +104,17 @@ OPint ExampleModelUpdate(OPtimer* time) {
 }
 
 // The OPifex Engine will call this itself when you call OPgameStateChange
-void ExampleModelExit(OPgameState* next) {
+OPint ExampleModelExit(OPgameState* next) {
 	// Clean up phase for the Game State
 	OPeffectUnload(&modelExample->Effect);	
 	OPfree(modelExample);
+	return 0;
 }
+
+// This is the Game State for this ModelExample
+// Each entry is a function pointer for Initialize, Update, Destroy
+OPgameState GS_EXAMPLE_MODEL = {
+	ExampleModelEnter,
+	ExampleModelUpdate,
+	ExampleModelExit
+};
