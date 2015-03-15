@@ -5,16 +5,6 @@
 
 #include "./Data/include/OPcman.h"
 
-void ExampleAudioEnter(OPgameState* last);
-OPint ExampleAudioUpdate(OPtimer* time);
-void ExampleAudioExit(OPgameState* next);
-
-OPgameState GS_EXAMPLE_AUDIO = {
-	ExampleAudioEnter,
-	ExampleAudioUpdate,
-	ExampleAudioExit
-};
-
 typedef struct {
 	OPaudioEmitter* Sound;
 	OPaudioEmitter* BackgroundSound;
@@ -53,9 +43,16 @@ OPint ExampleAudioUpdate(OPtimer* time) {
 	return false;
 }
 
-void ExampleAudioExit(OPgameState* next) {
+OPint ExampleAudioExit(OPgameState* next) {
 	OPaudRecycleEmitter(audioExample->Sound);
 	OPcmanUnload("step0.wav");
 
 	OPfree(audioExample);
+	return 0;
 }
+
+OPgameState GS_EXAMPLE_AUDIO = {
+	ExampleAudioEnter,
+	ExampleAudioUpdate,
+	ExampleAudioExit
+};

@@ -4,16 +4,6 @@
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Data/include/OPcman.h"
 
-void ExampleParticleSystemEnter(OPgameState* last);
-OPint ExampleParticleSystemUpdate(OPtimer* time);
-void ExampleParticleSystemExit(OPgameState* next);
-
-OPgameState GS_EXAMPLE_PARTICLESYSTEM = {
-	ExampleParticleSystemEnter,
-	ExampleParticleSystemUpdate,
-	ExampleParticleSystemExit
-};
-
 typedef struct {
 	OPcam* Camera;
 	OPparticleSys* ParticleSystem;
@@ -66,8 +56,15 @@ OPint ExampleParticleSystemUpdate(OPtimer* time) {
 	return false;
 }
 
-void ExampleParticleSystemExit(OPgameState* next) {
+OPint ExampleParticleSystemExit(OPgameState* next) {
 	OPfree(particleSystemExample->Camera);
 	OPparticleSysDestroy(particleSystemExample->ParticleSystem);
 	OPfree(particleSystemExample);
+	return 0;
 }
+
+OPgameState GS_EXAMPLE_PARTICLESYSTEM = {
+	ExampleParticleSystemEnter,
+	ExampleParticleSystemUpdate,
+	ExampleParticleSystemExit
+};

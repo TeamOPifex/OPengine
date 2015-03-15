@@ -2,15 +2,6 @@
 #include "./OPengine.h"
 #include "./Human/include/Utilities/Geometry.h"
 
-void ExampleDeferredEnter(OPgameState* last);
-OPint ExampleDeferredUpdate(OPtimer* time);
-void ExampleDeferredExit(OPgameState* next);
-
-OPgameState GS_EXAMPLE_DEFERRED = {
-	ExampleDeferredEnter,
-	ExampleDeferredUpdate,
-	ExampleDeferredExit
-};
 
 typedef struct {
 	OPframeBuffer FrameBuffer;
@@ -171,7 +162,14 @@ OPint ExampleDeferredUpdate(OPtimer* time) {
 	return false;
 }
 
-void ExampleDeferredExit(OPgameState* next) {
+OPint ExampleDeferredExit(OPgameState* next) {
 	//OPeffectUnload(&deferredExample->Effect);
 	//OPfree(deferredExample);
+	return 0;
 }
+
+OPgameState GS_EXAMPLE_DEFERRED = {
+	ExampleDeferredEnter,
+	ExampleDeferredUpdate,
+	ExampleDeferredExit
+};

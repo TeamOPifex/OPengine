@@ -13,7 +13,7 @@ typedef struct OPgameState_def OPgameState;
 struct OPgameState_def{
 	void (*Init)(OPgameState*);
 	OPint(*Update)(OPtimer*);
-	void (*Exit)(OPgameState*);
+	OPint (*Exit)(OPgameState*);
 	void* Data;
 };
 
@@ -30,7 +30,7 @@ void OPgameStateChange(OPgameState* targetState);
 * @param exit The Exit function for the game state
 * @return A new OPgameState
 */ 
-OPgameState* OPgameStateCreate(void (*init)(OPgameState*), OPint(*update)(OPtimer*), void (*exit)(OPgameState*));
+OPgameState* OPgameStateCreate(void (*init)(OPgameState*), OPint(*update)(OPtimer*), OPint(*exit)(OPgameState*));
 
 /* Destroys an OPgameState by deallocating the memory
 * @param state The game state to destroy
