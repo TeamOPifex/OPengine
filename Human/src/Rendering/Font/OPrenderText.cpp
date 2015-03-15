@@ -54,11 +54,10 @@ void OPfontRender(OPfontUserTextNode* node, OPmat4* world) {
 }
 
 void OPfontRender(OPfontBuiltTextNode* node, OPmat4* world) {
-	// OPmeshPackerBind(&OPFONTMANAGER_ACTIVE->meshPacker);
-	// _tempBind();
-	// OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
- // 	OPeffectParamMat4("uWorld", world);
-	// OPmeshPackedRender(node->packedMesh);
+	OPmeshPackerBind(&OPFONTMANAGER_ACTIVE->meshPacker);
+	OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
+ 	OPeffectParamMat4v("uWorld", 1, world);
+	OPmeshPackedRender(node->packedMesh);
 }
 
 // void OPfontRender2D(OPfontUserTextNode* node, OPvec4 color, OPmat4* world) {
@@ -156,8 +155,6 @@ void OPfontRender(const OPchar* text, OPmat4* world) {
 	}
 
 	OPmat4 aligned;
-	OPmat4 scaled;
-	OPfloat scale = (OPRENDER_WIDTH / 2.0f) * OPRENDER_SCREEN_WIDTH_SCALE;
 
 	if (node == NULL || !OPFONTMANAGER_ACTIVE->isBuilt) {
 		OPfontUserTextNode textNode = OPfontCreateUserText(OPFONTMANAGER_ACTIVE->_font, text, OPFONTMANAGER_ACTIVE->scale);

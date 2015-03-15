@@ -61,6 +61,7 @@ void OPfontUnload(OPfont* font);
 OPfontGlyph* OPfontGetGlyph(OPfont* font, OPchar charcode);
 OPmesh OPfontCreateText(OPfont* font, OPchar* text);
 OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text);
+OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text, OPfloat scale);
 OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text);
 OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text, OPfloat scale);
 OPvec2 OPfontGetSize(OPfont* font, const OPchar* text, OPfloat scale);

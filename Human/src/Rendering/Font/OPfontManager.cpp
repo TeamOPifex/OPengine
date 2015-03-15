@@ -24,11 +24,12 @@ OPfontManager* OPfontManagerCreate(OPfont* font) {
 	return temp;
 }
 
-OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 count) {
+OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 count, OPfloat scale) {
 	OPfontSystemLoadEffects();
 	OPcmanLoad(font);
 	OPfont* _font = (OPfont*)OPcmanGet(font);
 	OPfontManager* manager = OPfontManagerCreate(_font);
+	manager->scale = scale;
 	OPfontManagerBind(manager);
 	for (ui16 i = 0; i < count; i++) {
 		OPfontManagerAddText(text[i]);
@@ -57,7 +58,7 @@ void OPfontManagerAddText(const OPchar* text) {
 	ASSERT(OPFONTMANAGER_ACTIVE != NULL, "A Font Manager has not been bound yet");
 	OPmeshPackerBind(&OPFONTMANAGER_ACTIVE->meshPacker);
 	OPfontBuiltTextNode* node = (OPfontBuiltTextNode*)OPalloc(sizeof(OPfontBuiltTextNode));
-	*node = OPfontCreatePackedText(OPFONTMANAGER_ACTIVE->_font, text);
+	*node = OPfontCreatePackedText(OPFONTMANAGER_ACTIVE->_font, text, OPFONTMANAGER_ACTIVE->scale);
 	OPhashMapPut(OPFONTMANAGER_ACTIVE->builtNodes, text, node);
 }
 

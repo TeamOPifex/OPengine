@@ -64,7 +64,7 @@ extern OPeffect* OPFONTMANAGER_EFFECT2D_ACTIVE;
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
 OPfontManager* OPfontManagerCreate(OPfont* font);
-OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 count);
+OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 count, OPfloat scale);
 
 void OPfontManagerAddText(const OPchar* text);
 void OPfontManagerBuild(); 
