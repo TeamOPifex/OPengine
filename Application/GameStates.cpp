@@ -208,11 +208,11 @@ OPint State0Update(OPtimer* time){
 	OPmeshRender();
 
 	// Required
-	OPfontRender(
-		"All of the text! Woot!",
-		pos.x + fontPosX,
-		pos.y + fontPosY
-	);
+	// OPfontRender(
+	// 	"All of the text! Woot!",
+	// 	pos.x + fontPosX,
+	// 	pos.y + fontPosY
+	// );
 
 	OPrenderPresent();
 	return false;

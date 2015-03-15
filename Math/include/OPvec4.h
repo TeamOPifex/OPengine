@@ -64,6 +64,11 @@ inline OPvec4 OPvec4Create(OPfloat x, OPfloat y, OPfloat z, OPfloat w) {
 	return tmp;
 }
 
+inline OPvec4 OPvec4Create(OPfloat x) {
+	OPvec4 tmp = { {x, x, x, x} };
+	return tmp;
+}
+
 inline OPvec4 OPvec4Create(OPvec3 xyz, OPfloat w) {
 	OPvec4 tmp = { xyz.x, xyz.y, xyz.z, w };
 	return tmp;

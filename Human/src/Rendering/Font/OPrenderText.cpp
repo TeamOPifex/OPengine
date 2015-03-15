@@ -1,31 +1,78 @@
 #include "./Human/include/Rendering/Font/OPfontRender.h"
 #include "./Human/include/Rendering/OPrender.h"
 
-void OPfontRenderSetParameters(OPvec4 color, OPmat4* world) {
+void OPfontRenderBegin(OPfontManager* fontManager) {
+	ASSERT(fontManager != NULL, "A font manager must be used to begin");
+	ASSERT(OPFONTMANAGER_EFFECT_ACTIVE != NULL, "A font effect must be used to begin");
+	ASSERT(OPFONTMANAGER_ACTIVE == NULL, "A font manager has already been activated. Did you call OPfontRenderEnd?");
+	
+	OPFONTMANAGER_ACTIVE = fontManager;
+
 	OPrenderDepth(0);
 	OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
 	OPtextureClearActive();
 	ui32 textureHandle = OPtextureBind(OPFONTMANAGER_ACTIVE->_font->texture);
 	OPeffectParami("uColorTexture", textureHandle);
-	OPeffectParamVec4("uColor", &color);
-	OPeffectParamMat4v("uWorld", 1, world);
+	OPeffectParamVec4("uColor", &OPFONTMANAGER_ACTIVE->_color);
+	OPeffectParamMat4("uProj", &OPFONTMANAGER_ACTIVE->proj);
+	//OPmat4Log("proj", OPFONTMANAGER_ACTIVE->proj);
+	if (OPFONTMANAGER_ACTIVE->pixelated) OPtexturePixelate();
 }
 
-void OPfontRender(OPfontUserTextNode* node, OPvec4 color, OPmat4* world) {
-	OPfontRenderSetParameters(color, world);
+void OPfontRenderEnd() {
+	OPFONTMANAGER_ACTIVE = NULL;
+	OPrenderDepth(1);
+}
+
+// void OPfontRenderSetParameters(OPvec4 color, OPmat4* world) {
+// 	OPrenderDepth(0);
+// 	OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
+// 	OPtextureClearActive();
+// 	ui32 textureHandle = OPtextureBind(OPFONTMANAGER_ACTIVE->_font->texture);
+// 	OPeffectParami("uColorTexture", textureHandle);
+// 	OPeffectParamVec4("uColor", &color);
+// 	OPeffectParamMat4v("uWorld", 1, world);
+// 	if (OPFONTMANAGER_ACTIVE->pixelated) OPtexturePixelate();
+// }
+
+// void OPfontRenderSet2DParameters(OPvec4 color, OPmat4* world) {
+// 	OPrenderDepth(0);
+// 	OPeffectBind(OPFONTMANAGER_EFFECT2D_ACTIVE);
+// 	OPtextureClearActive();
+// 	ui32 textureHandle = OPtextureBind(OPFONTMANAGER_ACTIVE->_font->texture);
+// 	OPeffectParami("uColorTexture", textureHandle);
+// 	OPeffectParamVec4("uColor", &color);
+// 	OPeffectParamMat4v("uWorld", 1, world);
+// 	OPeffectParamMat4v("uProj", 1, &OPFONTMANAGER_ACTIVE->proj);
+// }
+
+void OPfontRender(OPfontUserTextNode* node, OPmat4* world) {
 	OPmeshBind(&node->mesh);
 	OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
-	if (OPFONTMANAGER_ACTIVE->pixelated) OPtexturePixelate();
+  	OPeffectParamMat4v("uWorld", 1, world);
 	OPmeshRender();
 }
 
-void OPfontRender(OPfontBuiltTextNode* node, OPvec4 color, OPmat4* world) {
-	OPfontRenderSetParameters(color, world);
-	OPmeshPackerBind(&OPFONTMANAGER_ACTIVE->meshPacker);
-	OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
-	if (OPFONTMANAGER_ACTIVE->pixelated) OPtexturePixelate();
-	OPmeshPackedRender(node->packedMesh);
+void OPfontRender(OPfontBuiltTextNode* node, OPmat4* world) {
+	// OPmeshPackerBind(&OPFONTMANAGER_ACTIVE->meshPacker);
+	// _tempBind();
+	// OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
+ // 	OPeffectParamMat4("uWorld", world);
+	// OPmeshPackedRender(node->packedMesh);
 }
+
+// void OPfontRender2D(OPfontUserTextNode* node, OPvec4 color, OPmat4* world) {
+// 	OPmeshBind(&node->mesh);
+// 	OPfontRenderSet2DParameters(color, world);
+// 	OPmeshRender();
+// }
+
+// void OPfontRender2D(OPfontBuiltTextNode* node, OPvec4 color, OPmat4* world) {
+// 	OPmeshPackerBind(&OPFONTMANAGER_ACTIVE->meshPacker);
+// 	OPfontRenderSet2DParameters(color, world);
+// 	if (OPFONTMANAGER_ACTIVE->pixelated) OPtexturePixelate();
+// 	OPmeshPackedRender(node->packedMesh);
+// }
 
 void OPfontRenderSetAlign(OPmat4* world, OPfloat width, OPfontAlign align){
 	switch (align) {
@@ -41,38 +88,63 @@ void OPfontRenderSetAlign(OPmat4* world, OPfloat width, OPfontAlign align){
 	}
 }
 
-void OPfontRender(const OPchar* text, OPvec4 color, OPvec2 pos, OPfontAlign align) {
-	// ASSERT(OPFONTMANAGER_EFFECT_ACTIVE != NULL, "A Font Effect has not been bound yet");
-	// ASSERT(OPFONTMANAGER_ACTIVE != NULL, "A Font Manager has not been bound yet");
-	// ASSERT(OPFONTMANAGER_ACTIVE->builtNodes != NULL, "The bound Font Manager Hashmap hasn't been created yet");
+// void OPfontRender2D(const OPchar* text, OPvec4 color, OPvec2 pos, OPfontAlign align) {
+// 	OPmat4 world = OPmat4Translate(pos.x, pos.y, 0);
+// 	OPfontRender2D(text, color, &world, align);
+// }
 
-	// int tryHashMap = OPFONTMANAGER_ACTIVE->isBuilt;
-	// OPfontBuiltTextNode* node = NULL;
-	// if (tryHashMap) {
-	// 	OPhashMapGet(OPFONTMANAGER_ACTIVE->builtNodes, text, (void**)&node);
-	// }
+// void OPfontRender(const OPchar* text, OPvec4 color, OPvec2 pos, OPfontAlign align) {
+// 	OPmat4 world = OPmat4Translate(pos.x, pos.y, 0);
+// 	OPfontRender(text, color, &world, align);
+// }
 
-	// OPmat4 world;
-	// OPfloat scale = (OPRENDER_WIDTH / 2.0f) * OPRENDER_SCREEN_WIDTH_SCALE;
+// void OPfontRender(const OPchar* text, OPmat4* world) {
+// 	ASSERT(OPFONTMANAGER_EFFECT_ACTIVE != NULL, "A Font Effect has not been bound yet");
+// 	ASSERT(OPFONTMANAGER_ACTIVE != NULL, "A Font Manager has not been bound yet");
+// 	ASSERT(OPFONTMANAGER_ACTIVE->builtNodes != NULL, "The bound Font Manager Hashmap hasn't been created yet");
 
-	// if (node == NULL || !OPFONTMANAGER_ACTIVE->isBuilt) {
-	// 	OPfontUserTextNode textNode = OPfontCreateUserText(OPFONTMANAGER_ACTIVE->_font, text);
-	// 	OPfontRenderSetAlign(&world, textNode.Width, align);
-	// 	OPmat4Scl(&world, OPrenderGetWidthAspectRatio() / scale, OPrenderGetHeightAspectRatio() / scale, 1.0f);
-	// 	OPmat4Translate(&world, pos.x, pos.y, 0.0f);
-	// 	OPfontRender(&textNode, color, &world);
-	// 	OPmeshDestroy(&textNode.mesh);
-	// } else {
-	// 	OPfontRenderSetAlign(&world, node->Width, align);
-	// 	OPmat4Scl(&world, OPRENDER_SCREEN_WIDTH_SCALE * OPrenderGetWidthAspectRatio() / scale, OPRENDER_SCREEN_HEIGHT_SCALE * OPrenderGetHeightAspectRatio() / scale, 1.0f);
-	// 	OPmat4Translate(&world, pos.x, pos.y, 0.0f);
-	// 	OPfontRender(node, color, &world);
-	// }
-	OPmat4 world = OPmat4Translate(pos.x, pos.y, 0);
-	OPfontRender(text, color, &world, align);
-}
+// 	int tryHashMap = OPFONTMANAGER_ACTIVE->isBuilt;
+// 	OPfontBuiltTextNode* node = NULL;
+// 	if (tryHashMap) {
+// 		OPhashMapGet(OPFONTMANAGER_ACTIVE->builtNodes, text, (void**)&node);
+// 	}
 
-void OPfontRender(const OPchar* text, OPvec4 color, OPmat4* world, OPfontAlign align) {
+// 	OPmat4 aligned;
+// 	OPmat4 scaled;
+// 	OPfloat scale = (OPRENDER_WIDTH / 2.0f) * OPRENDER_SCREEN_WIDTH_SCALE;
+
+// 	if (node == NULL || !OPFONTMANAGER_ACTIVE->isBuilt) {
+// 		OPfontUserTextNode textNode = OPfontCreateUserText(OPFONTMANAGER_ACTIVE->_font, text);
+
+// 		OPfontRenderSetAlign(&aligned, textNode.Width, align);
+
+// 		scaled = OPmat4Scl(
+// 			OPrenderGetWidthAspectRatio() / scale, 
+// 			OPrenderGetHeightAspectRatio() / scale, 
+// 			1.0f);
+
+// 		OPmat4 temp;
+// 		OPmat4Mul(&temp, scaled, aligned);
+// 		OPmat4Mul(&temp, *world, temp);
+
+// 		OPfontRender(&textNode, color, &temp);
+// 		OPmeshDestroy(&textNode.mesh);
+// 	}
+// 	else {
+// 		OPfontRenderSetAlign(&aligned, node->Width, align);
+
+// 		scaled = OPmat4Scl(
+// 			OPrenderGetWidthAspectRatio() / scale,
+// 			OPrenderGetHeightAspectRatio() / scale,
+// 			1.0f);
+// 		OPmat4 temp = scaled * aligned;
+// 		temp = (*world) * temp;
+// 		OPfontRender(node, color, &temp);
+// 	}
+// }
+
+
+void OPfontRender(const OPchar* text, OPmat4* world) {
 	ASSERT(OPFONTMANAGER_EFFECT_ACTIVE != NULL, "A Font Effect has not been bound yet");
 	ASSERT(OPFONTMANAGER_ACTIVE != NULL, "A Font Manager has not been bound yet");
 	ASSERT(OPFONTMANAGER_ACTIVE->builtNodes != NULL, "The bound Font Manager Hashmap hasn't been created yet");
@@ -88,31 +160,16 @@ void OPfontRender(const OPchar* text, OPvec4 color, OPmat4* world, OPfontAlign a
 	OPfloat scale = (OPRENDER_WIDTH / 2.0f) * OPRENDER_SCREEN_WIDTH_SCALE;
 
 	if (node == NULL || !OPFONTMANAGER_ACTIVE->isBuilt) {
-		OPfontUserTextNode textNode = OPfontCreateUserText(OPFONTMANAGER_ACTIVE->_font, text);
-
-		OPfontRenderSetAlign(&aligned, textNode.Width, align);
-
-		scaled = OPmat4Scl(
-			OPrenderGetWidthAspectRatio() / scale, 
-			OPrenderGetHeightAspectRatio() / scale, 
-			1.0f);
-
-		OPmat4 temp;
-		OPmat4Mul(&temp, scaled, aligned);
-		OPmat4Mul(&temp, *world, temp);
-
-		OPfontRender(&textNode, color, &temp);
+		OPfontUserTextNode textNode = OPfontCreateUserText(OPFONTMANAGER_ACTIVE->_font, text, OPFONTMANAGER_ACTIVE->scale);
+		OPfontRenderSetAlign(&aligned, textNode.Width, OPFONTMANAGER_ACTIVE->_align);
+		OPmat4 temp = (*world) * aligned;
+		//OPmat4Log("font", temp);
+		OPfontRender(&textNode, &temp);
 		OPmeshDestroy(&textNode.mesh);
 	}
 	else {
-		OPfontRenderSetAlign(&aligned, node->Width, align);
-
-		scaled = OPmat4Scl(
-			OPrenderGetWidthAspectRatio() / scale,
-			OPrenderGetHeightAspectRatio() / scale,
-			1.0f);
-		OPmat4 temp = scaled * aligned;
-		temp = (*world) * temp;
-		OPfontRender(node, color, &temp);
+		OPfontRenderSetAlign(&aligned, node->Width, OPFONTMANAGER_ACTIVE->_align);
+		OPmat4 temp = (*world) * aligned;
+		OPfontRender(node, &temp);
 	}
 }

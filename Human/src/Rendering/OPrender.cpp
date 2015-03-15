@@ -6,10 +6,12 @@
 #include "./Data/include/OPfile.h"
 
 
-i32 OPRENDER_WIDTH;
-i32 OPRENDER_HEIGHT;
+i32 OPRENDER_WIDTH = 1280;
+i32 OPRENDER_HEIGHT = 720;
 i32 OPRENDER_SCREEN_WIDTH = 1280;
 i32 OPRENDER_SCREEN_HEIGHT = 720;
+i32 OPRENDER_SCALED_WIDTH = 1280;
+i32 OPRENDER_SCALED_HEIGHT = 720;
 f32 OPRENDER_SCREEN_WIDTH_SCALE = 1;
 f32 OPRENDER_SCREEN_HEIGHT_SCALE = 1;
 OPint OPRENDER_FULLSCREEN = false;
@@ -76,6 +78,17 @@ void glfwErrorCallback(int error, const char* desc){
 void glfwWindowFocusCallback(GLFWwindow* window, int code) {
 	OPlogInfo("Focus Result: %d", code);
 	OPRENDER_HAS_FOCUS = code;
+}
+void glfwWindowDropCallback(GLFWwindow* window, int count, const OPchar** files) {
+	OPlog("Total Files: %d", count);
+	for(OPint i = 0; i < count; i++) {
+		OPlog("File: %s", files[i]);
+	}
+}
+#include "./Human/include/Input/OPkeyboard.h"
+void glfwCharacterCallback(GLFWwindow* window, unsigned int codepoint)
+{
+	OPkeyboardKey(codepoint);
 }
 #endif
 
@@ -231,6 +244,7 @@ OPint OPrenderInit(){
 	//glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	glfwWindowHint(GLFW_ALPHA_BITS, 8);
 
 	GLFWmonitor* monitor = NULL;
 	if (OPRENDER_FULLSCREEN){
@@ -255,6 +269,8 @@ OPint OPrenderInit(){
 
 	OPRENDER_SCREEN_WIDTH_SCALE = _screenWidth / (f32)OPRENDER_SCREEN_WIDTH;
 	OPRENDER_SCREEN_HEIGHT_SCALE = _screenHeight / (f32)OPRENDER_SCREEN_HEIGHT;
+	OPRENDER_SCALED_WIDTH = OPRENDER_SCREEN_WIDTH * OPRENDER_SCREEN_WIDTH_SCALE;
+	OPRENDER_SCALED_HEIGHT = OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE;
 	OPlogInfo("Frame Buffer size: %d x %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
 	OPlogDebug("Scale: %f x %f", OPRENDER_SCREEN_WIDTH_SCALE, OPRENDER_SCREEN_HEIGHT_SCALE);
 
@@ -274,19 +290,22 @@ OPint OPrenderInit(){
 
 	GLint w, h;
 
+	glewExperimental = GL_TRUE;
 	OPrenderSetViewport(0, 0, OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
 	if (glewInit() != GLEW_OK) return -1;	
 
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, true); 
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
+	
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCharCallback(window, glfwCharacterCallback);
+	glfwSetDropCallback(window, glfwWindowDropCallback);
 
 	// TODO: Determine how to optimize with this
-#if !defined(OPIFEX_OSX32) && !defined(OPIFEX_OSX64)
-	//GLuint VertexArrayID;
-	//glGenVertexArrays(1, &VertexArrayID);
-	//glBindVertexArray(VertexArrayID);
-#endif
+//#if !defined(OPIFEX_OSX32) && !defined(OPIFEX_OSX64)
+	GLuint VertexArrayID;
+	glGenVertexArrays(1, &VertexArrayID);
+	glBindVertexArray(VertexArrayID);
+//#endif
 
 	glEnable(GL_MULTISAMPLE_ARB);
 	glEnable(GL_BLEND); 
@@ -331,8 +350,19 @@ void  OPrenderClear(f32 r, f32 g, f32 b){
 }
 
 //-----------------------------------------------------------------------------
-void  OPrenderClearAlpha(f32 r, f32 g, f32 b, f32 a){
+void  OPrenderClear(f32 r, f32 g, f32 b, f32 a){
 	glClearColor(r, g, b, a);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+//-----------------------------------------------------------------------------
+void  OPrenderClear(OPvec3 color){
+	glClearColor(color.x, color.y, color.z, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+//-----------------------------------------------------------------------------
+void  OPrenderClear(OPvec4 color){
+	glClearColor(color.x, color.y, color.z, color.w);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 

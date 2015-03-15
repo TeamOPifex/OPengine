@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 2.8)
 # Include Directories
 #########################################
 include_directories(
-	../External/glfw-3.0.4/include/
+	../External/glfw/include/
 	../External/glm-0.9.5/
 	../External/glew-1.9.0/include/
 	../External/Phsyx.3.2.1/include/

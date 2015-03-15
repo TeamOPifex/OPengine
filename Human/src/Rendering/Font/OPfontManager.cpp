@@ -7,6 +7,7 @@
 
 OPfontManager* OPFONTMANAGER_ACTIVE = NULL;
 OPeffect* OPFONTMANAGER_EFFECT_ACTIVE = NULL;
+OPeffect* OPFONTMANAGER_EFFECT2D_ACTIVE = NULL;
 
 OPfontManager* OPfontManagerCreate(OPfont* font) {
 	OPfontManager* temp = (OPfontManager*)OPallocZero(sizeof(OPfontManager));
@@ -14,10 +15,12 @@ OPfontManager* OPfontManagerCreate(OPfont* font) {
 	temp->_color = OPvec4Create(0.0f, 0.0f, 0.0f, 1.0f);
 	temp->_align = OPFONT_ALIGN_LEFT;
 
+	temp->scale = 1.0f;
 	temp->currNodes = OPvectorCreate(sizeof(OPfontTextNode));
 	temp->isBuilt = false;
 	temp->builtNodes = OPhashMapCreate(16);
 	temp->meshPacker = OPmeshPackerCreate();
+	temp->proj = OPmat4Ortho(0, OPRENDER_SCREEN_WIDTH * OPRENDER_SCREEN_WIDTH_SCALE, OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE, 0, -1, 1);
 	return temp;
 }
 
@@ -31,6 +34,8 @@ OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 
 		OPfontManagerAddText(text[i]);
 	}
 	OPfontManagerBuild();
+	OPFONTMANAGER_ACTIVE = NULL;
+	
 	return manager;
 }
 
