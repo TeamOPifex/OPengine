@@ -63,6 +63,7 @@ OPint ExampleParticleSystemExit(OPgameState* next) {
 	return 0;
 }
 
+OPint GS_EXAMPLE_PARTICLESYSTEM_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_PARTICLESYSTEM = {
 	ExampleParticleSystemEnter,
 	ExampleParticleSystemUpdate,

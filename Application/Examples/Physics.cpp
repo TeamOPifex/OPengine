@@ -263,6 +263,12 @@ OPint ExamplePhysicsExit(OPgameState* next) {
 	return 0;
 }
 
+#ifndef OPIFEX_OPTION_PHYSICS
+OPint GS_EXAMPLE_PHYSICS_AVAILABLE = 0;
+#else
+OPint GS_EXAMPLE_PHYSICS_AVAILABLE = 1;
+#endif
+
 OPgameState GS_EXAMPLE_PHYSICS = {
 	ExamplePhysicsEnter,
 	ExamplePhysicsUpdate,

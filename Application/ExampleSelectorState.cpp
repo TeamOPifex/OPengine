@@ -4,8 +4,8 @@
 
 typedef struct {
 	const OPchar* name;
-	OPint available;
 	OPgameState* state;
+	OPint available;
 } Example;
 
 #define ExampleCount 13
@@ -22,70 +22,34 @@ ExampleSelector* exampleSelectorPtr = &exampleSelector;
 void ExampleSelectorEnter(OPgameState* last) {
 
 	OPcmanLoad("Ubuntu.opf");
-	OPcmanPurge();
 
 	OPfontSystemLoadEffects();
 
-	const OPchar* Names[ExampleCount] = {
-		"Audio",
-		"Model",
-		"Textured",
-		"Particle System",
-		"IMGUI",
-		"Physics",
-		"Skinning",
-		"Deferred",
-		"Oculus",
-		"Spine",
-		"Scripting",
-		"Spherical Cube",
-		"Sprite"
+	Example examples[ExampleCount] = {
+		{ "Audio", &GS_EXAMPLE_AUDIO, GS_EXAMPLE_AUDIO_AVAILABLE },
+		{ "Model", &GS_EXAMPLE_MODEL, GS_EXAMPLE_MODEL_AVAILABLE },
+		{ "Textured", &GS_EXAMPLE_TEXTURED, GS_EXAMPLE_TEXTURED_AVAILABLE },
+		{ "Particle System", &GS_EXAMPLE_PARTICLESYSTEM, GS_EXAMPLE_PARTICLESYSTEM_AVAILABLE },
+		{ "IMGUI", &GS_EXAMPLE_IMGUI, GS_EXAMPLE_IMGUI_AVAILABLE },
+		{ "Physics", &GS_EXAMPLE_PHYSICS, GS_EXAMPLE_PHYSICS_AVAILABLE },
+		{ "Skinning", &GS_EXAMPLE_SKINNING, GS_EXAMPLE_SKINNING_AVAILABLE },
+		{ "Deferred", &GS_EXAMPLE_DEFERRED, GS_EXAMPLE_DEFERRED_AVAILABLE }, // in flux
+		{ "Oculus", &GS_EXAMPLE_OCULUS, GS_EXAMPLE_OCULUS_AVAILABLE },
+		{ "Spine", &GS_EXAMPLE_SPINE, GS_EXAMPLE_SPINE_AVAILABLE },
+		{ "Scripting", &GS_EXAMPLE_SCRIPTING, GS_EXAMPLE_SCRIPTING_AVAILABLE },
+		{ "Spherical Cube", &GS_EXAMPLE_SPHERICALCUBE, GS_EXAMPLE_SPHERICALCUBE_AVAILABLE },
+		{ "Sprite", &GS_EXAMPLE_SPRITE, GS_EXAMPLE_SPRITE_AVAILABLE }
 	};
+	OPmemcpy(exampleSelector.Examples, examples, sizeof(Example) * ExampleCount);
 
+	const OPchar* Names[ExampleCount];
+	for (OPint i = 0; i < ExampleCount; i++) {
+		Names[i] = examples[i].name;
+	}
 	exampleSelector.FontManager = OPfontManagerSetup("Ubuntu.opf", Names, ExampleCount, 0.5);
 	exampleSelector.FontManager->scale = 0.75;
 
-	for (OPint i = 0; i < ExampleCount; i++) {
-		exampleSelector.Examples[i].name = Names[i];
-		exampleSelector.Examples[i].available = 1;
-	}
-
-
-
-	OPint pos = 0;
-
-	exampleSelector.Examples[pos++].state = &GS_EXAMPLE_AUDIO;
-	exampleSelector.Examples[pos++].state = &GS_EXAMPLE_MODEL;
-	exampleSelector.Examples[pos++].state = &GS_EXAMPLE_TEXTURED;
-	exampleSelector.Examples[pos++].state = &GS_EXAMPLE_PARTICLESYSTEM;
-	exampleSelector.Examples[pos++].state = &GS_EXAMPLE_IMGUI;
-
-#ifndef OPIFEX_OPTION_PHYSICS
-	exampleSelector.Examples[pos].available = 0;
-#endif
-	exampleSelector.Examples[pos++].state = &GS_EXAMPLE_PHYSICS;
-	exampleSelector.Examples[pos++].state = &GS_EXAMPLE_SKINNING;
-	
-	exampleSelector.Examples[pos].available = 0;	// Deferred Example in flux
-	exampleSelector.Examples[pos++].state = &GS_EXAMPLE_DEFERRED;
-
-#ifndef OPIFEX_OPTION_OCULUS
-	exampleSelector.Examples[pos].available = 0;
-#endif
-	exampleSelector.Examples[pos++].state = &GS_EXAMPLE_OCULUS;
-
-#ifndef OPIFEX_OPTION_SPINE
-	exampleSelector.Examples[pos].available = 0;
-#endif
-	exampleSelector.Examples[pos++].state = &GS_EXAMPLE_SPINE;
-
-#ifndef OPIFEX_OPTION_V8
-	exampleSelector.Examples[pos].available = 0;
-#endif
-	exampleSelector.Examples[pos++].state = &GS_EXAMPLE_SCRIPTING;
-	exampleSelector.Examples[pos++].state = &GS_EXAMPLE_SPHERICALCUBE;
-	exampleSelector.Examples[pos++].state = &GS_EXAMPLE_SPRITE;
-
+	OPcmanPurge();
 	OPlog("Entered Example Selector");
 }
 

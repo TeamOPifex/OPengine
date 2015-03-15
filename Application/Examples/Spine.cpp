@@ -156,6 +156,11 @@ OPint ExampleSpineExit(OPgameState* next) {
 	return 0;
 }
 
+#ifndef OPIFEX_OPTION_SPINE
+OPint GS_EXAMPLE_SPINE_AVAILABLE = 0;
+#else
+OPint GS_EXAMPLE_SPINE_AVAILABLE = 1;
+#endif
 // This is the Game State for this ModelExample
 // Each entry is a function pointer for Initialize, Update, Destroy
 OPgameState GS_EXAMPLE_SPINE = {

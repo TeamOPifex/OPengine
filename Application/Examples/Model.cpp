@@ -111,6 +111,7 @@ OPint ExampleModelExit(OPgameState* next) {
 	return 0;
 }
 
+OPint GS_EXAMPLE_MODEL_AVAILABLE = 1;
 // This is the Game State for this ModelExample
 // Each entry is a function pointer for Initialize, Update, Destroy
 OPgameState GS_EXAMPLE_MODEL = {
