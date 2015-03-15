@@ -99,6 +99,7 @@ OPint ExampleTexturedExit(OPgameState* next) {
 	return 0;
 }
 
+OPint GS_EXAMPLE_TEXTURED_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_TEXTURED = {
 	ExampleTexturedEnter,
 	ExampleTexturedUpdate,

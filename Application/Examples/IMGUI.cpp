@@ -98,10 +98,11 @@ OPint ExampleIMGUIUpdate(OPtimer* time) {
 
 OPint ExampleIMGUIExit(OPgameState* next) {
 	if(imguiExample.textActive) return 1;
-	
+
 	return 0;
 }
 
+OPint GS_EXAMPLE_IMGUI_AVAILABLE = 1;
 // This is the Game State for this IMGUIExample
 // Each entry is a function pointer for Initialize, Update, Destroy
 OPgameState GS_EXAMPLE_IMGUI = {

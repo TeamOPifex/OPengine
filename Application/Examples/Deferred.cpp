@@ -168,6 +168,7 @@ OPint ExampleDeferredExit(OPgameState* next) {
 	return 0;
 }
 
+OPint GS_EXAMPLE_DEFERRED_AVAILABLE = 0;
 OPgameState GS_EXAMPLE_DEFERRED = {
 	ExampleDeferredEnter,
 	ExampleDeferredUpdate,

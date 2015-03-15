@@ -123,6 +123,7 @@ OPint ExampleMyoExit(OPgameState* next) {
 	return 0;
 }
 
+OPint GS_EXAMPLE_MYO_AVAILABLE = 1;
 // This is the Game State for this MyoExample
 // Each entry is a function pointer for Initialize, Update, Destroy
 OPgameState GS_EXAMPLE_MYO = {
