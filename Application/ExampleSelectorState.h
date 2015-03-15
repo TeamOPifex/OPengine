@@ -4,31 +4,38 @@
 
 extern OPgameState GS_EXAMPLE_SELECTOR;
 
-extern OPint       GS_EXAMPLE_AUDIO_AVAILABLE;
-extern OPgameState GS_EXAMPLE_AUDIO;
-extern OPint       GS_EXAMPLE_DEFERRED_AVAILABLE;
-extern OPgameState GS_EXAMPLE_DEFERRED;
-extern OPint       GS_EXAMPLE_MODEL_AVAILABLE;
-extern OPgameState GS_EXAMPLE_MODEL;
-extern OPint       GS_EXAMPLE_MYO_AVAILABLE;
-extern OPgameState GS_EXAMPLE_MYO;
-extern OPint       GS_EXAMPLE_OCULUS_AVAILABLE;
-extern OPgameState GS_EXAMPLE_OCULUS;
-extern OPint       GS_EXAMPLE_PARTICLESYSTEM_AVAILABLE;
-extern OPgameState GS_EXAMPLE_PARTICLESYSTEM;
-extern OPint       GS_EXAMPLE_PHYSICS_AVAILABLE;
-extern OPgameState GS_EXAMPLE_PHYSICS;
-extern OPint       GS_EXAMPLE_SKINNING_AVAILABLE;
-extern OPgameState GS_EXAMPLE_SKINNING;
-extern OPint       GS_EXAMPLE_SPINE_AVAILABLE;
-extern OPgameState GS_EXAMPLE_SPINE;
-extern OPint       GS_EXAMPLE_TEXTURED_AVAILABLE;
-extern OPgameState GS_EXAMPLE_TEXTURED;
-extern OPint       GS_EXAMPLE_SCRIPTING_AVAILABLE;
-extern OPgameState GS_EXAMPLE_SCRIPTING;
-extern OPint       GS_EXAMPLE_SPHERICALCUBE_AVAILABLE;
-extern OPgameState GS_EXAMPLE_SPHERICALCUBE;
-extern OPint       GS_EXAMPLE_SPRITE_AVAILABLE;
-extern OPgameState GS_EXAMPLE_SPRITE;
-extern OPint       GS_EXAMPLE_IMGUI_AVAILABLE;
-extern OPgameState GS_EXAMPLE_IMGUI;
+// Determines whether the Example State will display the example
+// as available to select. They might not be available because
+// an option was not selected to be built. Ex: Oculus support
+extern OPint       GS_EXAMPLE_AUDIO_AVAILABLE,
+                   GS_EXAMPLE_DEFERRED_AVAILABLE,
+                   GS_EXAMPLE_MODEL_AVAILABLE,
+                   GS_EXAMPLE_MYO_AVAILABLE,
+                   GS_EXAMPLE_OCULUS_AVAILABLE,
+                   GS_EXAMPLE_PARTICLESYSTEM_AVAILABLE,
+                   GS_EXAMPLE_PHYSICS_AVAILABLE,
+                   GS_EXAMPLE_SKINNING_AVAILABLE,
+                   GS_EXAMPLE_SPINE_AVAILABLE,
+                   GS_EXAMPLE_TEXTURED_AVAILABLE,
+                   GS_EXAMPLE_SCRIPTING_AVAILABLE,
+                   GS_EXAMPLE_SPHERICALCUBE_AVAILABLE,
+                   GS_EXAMPLE_SPRITE_AVAILABLE,
+                   GS_EXAMPLE_IMGUI_AVAILABLE,
+                   GS_EXAMPLE_SHADOWS_AVAILABLE;
+
+// All of the example game states
+extern OPgameState GS_EXAMPLE_AUDIO,
+                   GS_EXAMPLE_DEFERRED,
+                   GS_EXAMPLE_MODEL,
+                   GS_EXAMPLE_MYO,
+                   GS_EXAMPLE_OCULUS,
+                   GS_EXAMPLE_PARTICLESYSTEM,
+                   GS_EXAMPLE_PHYSICS,
+                   GS_EXAMPLE_SKINNING,
+                   GS_EXAMPLE_SPINE,
+                   GS_EXAMPLE_TEXTURED,
+                   GS_EXAMPLE_SCRIPTING,
+                   GS_EXAMPLE_SPHERICALCUBE,
+                   GS_EXAMPLE_SPRITE,
+                   GS_EXAMPLE_IMGUI,
+                   GS_EXAMPLE_SHADOWS;
