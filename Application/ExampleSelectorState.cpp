@@ -77,6 +77,7 @@ void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector.clear = OPvec3Create(0,0,0);
 
 	exampleSelector.FontManager = OPfontManagerSetup("Ubuntu.opf", Names, ExampleCount, 0.5);
+	exampleSelector.FontManager->scale = 0.75;
 
 	// OPfontManagerBind(exampleSelector.FontManager);
 	// OPfontManagerSetAlign(exampleSelector.FontManager, OPFONT_ALIGN_LEFT);
@@ -184,9 +185,12 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 	OPrenderClear(exampleSelector.clear);
 
 	OPint isInActive = 0, isAvailable = 0;
-	OPfloat start = -(exampleSelector.Selected) * 50 + 250;
+	OPfloat start = -(exampleSelector.Selected) * 40 + OPRENDER_SCALED_HEIGHT / 2;
 
 	OPfontRenderBegin(exampleSelector.FontManager);
+
+	OPfontColor(OPvec4Create(1, 1, 1, 1)); 
+	OPfontRender("EXAMPLES", OPvec2Create(50, start - 60));
 
 	f32 r, g, b;
 	for (i32 i = 0; i < ExampleCount; i++) {
@@ -196,7 +200,7 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 			r = g = b = 0.2 + !isInActive * 0.4;
 		}
 		OPfontColor(OPvec4Create(r,g,b,1)); 
-		OPfontRender(exampleSelector.Examples[i].name, OPvec2Create(50, start + 50 * i));
+		OPfontRender(exampleSelector.Examples[i].name, OPvec2Create(75, start + 40 * i));
 	}
 
 	OPfontRenderEnd();
