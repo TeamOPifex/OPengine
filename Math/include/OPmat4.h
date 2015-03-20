@@ -248,6 +248,14 @@ inline void OPmat4Identity(OPmat4* m) {
 	return m;
 }
 
+ inline OPmat4 OPmat4Translate(OPvec2 v) {
+	OPmat4 m = OPMAT4IDENTITY;
+	m[3].x = v.x;
+	m[3].y = v.y;
+	m[3].z = 0;
+	return m;
+}
+
  inline OPmat4 OPmat4Scl(OPfloat x, OPfloat y, OPfloat z) {
 	 OPmat4 m = OPMAT4IDENTITY;
 	m[0][0] = x;
