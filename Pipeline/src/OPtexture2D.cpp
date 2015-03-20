@@ -19,7 +19,7 @@ void LoadDefaultTexture2DEffect() {
 		);
 }
 
-OPtexture2D* OPtexture2DCreate(OPtexture* texture, OPeffect* effect) {
+OPtexture2D* OPtexture2DCreate(OPtexture* texture, OPeffect* effect, OPvec2 uvStart, OPvec2 uvEnd) {
 	OPtexture2D* tex2d = (OPtexture2D*)OPalloc(sizeof(OPtexture2D));
 
 	OPbzero(tex2d, sizeof(OPtexture2D));
@@ -34,10 +34,14 @@ OPtexture2D* OPtexture2DCreate(OPtexture* texture, OPeffect* effect) {
 
 	if (TEXTURE_2D_QUAD_MESH == NULL) {
 		TEXTURE_2D_QUAD_MESH = (OPmesh*)OPalloc(sizeof(OPmesh));
-		*TEXTURE_2D_QUAD_MESH = OPquadCreate();
+		*TEXTURE_2D_QUAD_MESH = OPquadCreate(1, 1, uvStart, uvEnd);
 	}
 
 	return tex2d;
+}
+
+OPtexture2D* OPtexture2DCreate(OPtexture* texture, OPeffect* effect) {
+	return OPtexture2DCreate(texture, effect, OPVEC2_ZERO, OPVEC2_ONE);
 }
 
 void OPtexture2DDestroy(OPtexture2D* tex2d) {

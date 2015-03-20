@@ -33,6 +33,7 @@
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
+// OPmesh       OPquadCreate(OPint features, OPvec2 size);
 OPmesh       OPquadCreate();
 OPmesh       OPquadCreate(OPfloat width, OPfloat height);
 OPmesh       OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset);

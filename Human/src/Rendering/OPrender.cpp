@@ -91,8 +91,12 @@ void glfwCharacterCallback(GLFWwindow* window, unsigned int codepoint)
 	OPkeyboardKey(codepoint);
 }
 #endif
-
-OPint OPrenderInit(){
+OPint OPrenderInit() {
+	return OPrenderInit(OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
+}
+OPint OPrenderInit(i32 width, i32 height){
+	OPRENDER_SCREEN_WIDTH = width;
+	OPRENDER_SCREEN_HEIGHT = height;
 	OPlogDebug("Initializing Renderer");
 
 #ifdef OPIFEX_ANDROID
