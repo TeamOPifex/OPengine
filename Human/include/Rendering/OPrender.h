@@ -22,6 +22,7 @@ extern GLFWwindow* window;
 #endif
 
 OPint OPrenderInit();
+OPint OPrenderInit(i32 width, i32 height);
 void  OPrenderClear(f32 r, f32 g, f32 b);
 void  OPrenderClear(f32 r, f32 g, f32 b, f32 a);
 void  OPrenderClear(OPvec3 color);

@@ -14,6 +14,7 @@ typedef struct {
 	i32 Selected;
 	OPfontManager* FontManager;
 	Example Examples[ExampleCount];
+	OPtexture2D* bg;
 } ExampleSelector;
 
 ExampleSelector exampleSelector = { 0 };
@@ -25,6 +26,8 @@ void ExampleSelectorEnter(OPgameState* last) {
 
 	OPfontSystemLoadEffects();
 
+	exampleSelector.bg = OPtexture2DCreate((OPtexture*)OPcmanLoadGet("subtle-irongrip.png"), NULL, OPVEC2_ZERO, OPvec2Create(3, 3));
+	exampleSelector.bg->Scale = OPvec2Create(2,2);
 	Example examples[ExampleCount] = {
 		{ "Audio", &GS_EXAMPLE_AUDIO, GS_EXAMPLE_AUDIO_AVAILABLE },
 		{ "Model", &GS_EXAMPLE_MODEL, GS_EXAMPLE_MODEL_AVAILABLE },
@@ -57,7 +60,7 @@ void ExampleSelectorEnter(OPgameState* last) {
 
 OPint ExampleSelectorUpdate(OPtimer* time) {
 
-
+	// TODO: (garrett) move to its own example
 	if(OPinputRecordIsRunning() && OPkeyboardIsDown(OPKEY_K)) {
 		// Stop the Playback & Recording cycle
 		OPinputRecordEnd();
@@ -75,7 +78,6 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 	}
 	OPkeyboardUpdatePost(time);
 
-
 	if (OPkeyboardWasPressed(OPKEY_W) || OPkeyboardWasPressed(OPKEY_UP)) {
 		exampleSelector.Selected--;
 		if (exampleSelector.Selected < 0) exampleSelector.Selected = ExampleCount - 1;
@@ -92,20 +94,25 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 
 	OPrenderClear(0,0,0,1);
 
+	OPtexture2DRender(exampleSelector.bg);
+
 	OPint isInActive = 0, isAvailable = 0;
 	OPfloat start = -(exampleSelector.Selected) * 40 + OPRENDER_SCALED_HEIGHT / 2;
 
 	OPfontRenderBegin(exampleSelector.FontManager);
 
-	OPfontColor(OPvec4Create(1, 1, 1, 1)); 
-	OPfontRender("EXAMPLES", OPvec2Create(50, start - 60));
+	OPfontColor(OPvec4Create(1.0, 1.0, 1.0, 1)); 
+	OPfontRender("OPengine v0.4", OPvec2Create(50, start - 60));
 
 	f32 r, g, b;
 	for (i32 i = 0; i < ExampleCount; i++) {
 		isInActive = exampleSelector.Selected != i;
-		r = 1, g = b = isInActive;
+		r = 0.95, g = 0.84; b = 0;
+		if(isInActive) {
+			r = g = b = 1.0;
+		}
 		if (!exampleSelector.Examples[i].available) {
-			r = g = b = 0.2 + !isInActive * 0.4;
+			r = g = b = 0.4 + !isInActive * 0.4;
 		}
 		OPfontColor(OPvec4Create(r,g,b,1)); 
 		OPfontRender(exampleSelector.Examples[i].name, OPvec2Create(75, start + 40 * i));
