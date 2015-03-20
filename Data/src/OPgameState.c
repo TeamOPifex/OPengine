@@ -3,13 +3,14 @@
 OPgameState* ActiveState = NULL;
 
 void OPgameStateChange(OPgameState* targetState){
-	
+	OPgameState* lastState;
+
 	if (ActiveState && ActiveState->Exit != NULL) { 
 		if(ActiveState->Exit(targetState)) {
 			return;
 		}
 	}
-	OPgameState* lastState = ActiveState;
+	lastState = ActiveState;
 	ActiveState = targetState;
 	if (ActiveState->Init != NULL) ActiveState->Init(lastState);
 }
