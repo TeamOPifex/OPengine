@@ -24,7 +24,7 @@ add_source_group(include/Loaders/ "${PROJECT_SOURCE_DIR}/Pipeline/include/Loader
 #########################################
 # Source Files
 #########################################
-add_source_group(\\ "${PROJECT_SOURCE_DIR}/Pipeline" PIPELINE_SRC)
+add_source_group(/ "${PROJECT_SOURCE_DIR}/Pipeline" PIPELINE_SRC)
 add_source_group(src/ "${PROJECT_SOURCE_DIR}/Pipeline/src" PIPELINE_SRC)
 add_source_group(src/Loaders "${PROJECT_SOURCE_DIR}/Pipeline/src/Loaders" PIPELINE_SRC)
 

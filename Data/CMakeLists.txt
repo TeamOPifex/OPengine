@@ -17,7 +17,7 @@ add_external_opifex_includes()
 #########################################
 # Include Files
 #########################################
-add_source_group(\\ "${PROJECT_SOURCE_DIR}/Data" DATA_SRC)
+add_source_group(/ "${PROJECT_SOURCE_DIR}/Data" DATA_SRC)
 add_source_group(include "${PROJECT_SOURCE_DIR}/Data/include" DATA_SRC)
 
 
