@@ -3,7 +3,7 @@
 #ifdef OPIFEX_OPTION_V8
 
 #include "./Scripting/include/V8/OPscriptV8.h"
-#include "./Math/include/Math.h"
+#include "./Math/OPmath.h"
 
 void _OPscriptV8Vec3Update(Handle<Object> obj, OPvec3* val) {
 	obj->Set(OPscriptV8GetString("x"), OPscriptV8GetNumber(val->x));

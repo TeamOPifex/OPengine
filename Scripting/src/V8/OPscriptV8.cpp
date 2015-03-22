@@ -222,8 +222,6 @@ OPscriptV8PersistentValue OPscriptV8Run(OPscriptV8Compiled* scriptCompiled, OPch
 	}
 	
 	return Persistent<Value>(OPSCRIPTV8_ISOLATE, func->Call(global, count, values));
-
-
 }
 
 OPscriptV8PersistentValue OPscriptV8Run(OPscriptV8Compiled* scriptCompiled, OPchar* name) {
