@@ -25,6 +25,10 @@ typedef struct {
 	OPuint paramIndex;
 } OPmaterial;
 
+inline void OPmaterialClearParams(OPmaterial* material) {
+	material->paramIndex = 0;
+}
+
 inline void OPmaterialInit(OPmaterial* material, OPeffect* effect) {
 	material->effect = effect;
 	material->paramIndex = 0;
