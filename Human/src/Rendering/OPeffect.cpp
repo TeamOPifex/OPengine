@@ -22,7 +22,7 @@ OPeffect createEffect(OPshader vert,
 	OPeffect effect = {
 		vert,
 		frag,
-		-1,
+		0,
 		0
 	};
 

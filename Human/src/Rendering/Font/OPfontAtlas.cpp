@@ -3,7 +3,8 @@
 
 OPfontAtlas* OPfontAtlasCreate(OPint width, OPint height, OPint depth) {
 	OPfontAtlas* self = (OPfontAtlas*)OPalloc(sizeof(OPfontAtlas));
-	OPfontAtlasNode node = { 1, 1, width - 2 };
+	OPfontAtlasNode node = { 1, 1 };
+	node.z = width - 2;
 	self->nodes = OPvectorCreate(sizeof(OPfontAtlasNode));
 	self->used = 0;
 	self->width = width;

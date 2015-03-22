@@ -203,7 +203,9 @@ inline OPvec2 OPvec2Read(OPstream* str) {
 }
 
 inline OPvec2 OPvec2RandNorm(){
-	OPvec2 v = { OPrandom() - 0.5, OPrandom() - 0.5 };
+	OPvec2 v;
+	v.x = OPrandom() - 0.5;
+	v.y = OPrandom() - 0.5;
 	return OPvec2Norm(v);
 }
 

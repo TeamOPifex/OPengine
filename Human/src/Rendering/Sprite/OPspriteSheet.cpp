@@ -10,7 +10,9 @@ void __opSpriteScaleFrames(OPtexture* tex, OPspriteSheet* ss) {
 	ASSERT(tex, "__opSpriteScaleFrames() - spritesheet null");
 	OPint i = 0;
 	OPlog("Texture Size: %d, %d", tex->Description.Width, tex->Description.Height);
-	OPvec2 size = { tex->Description.Width, tex->Description.Height };
+	OPvec2 size;
+	size.x = tex->Description.Width;
+	size.y = tex->Description.Height;
 
 	for (i = ss->Sprites; i--;){
 		OPsprite* s = (OPsprite*)OPcmanGet(ss->Names[i]);
@@ -140,14 +142,12 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 				i32 x, y, w, h;
 				// read the sprite dimensions, scale them
 				// to fit within UV space
-				OPvec2 offset = {
-					(x = OPreadi32(str)),
-					(y = OPreadi32(str))
-				};
-				OPvec2 size = {
-					(w = OPreadi32(str)),
-					(h = OPreadi32(str))
-				};
+				OPvec2 offset;
+				offset.x = OPreadi32(str);
+				offset.y = OPreadi32(str);
+				OPvec2 size;
+				size.x = OPreadi32(str);
+				size.y = OPreadi32(str);
 
 				// setup frame structure, copy into the frame buffer
 				OPspriteFrame frame = {
