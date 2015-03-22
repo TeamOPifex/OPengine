@@ -31,7 +31,7 @@ set(ALL_LIBS
 # with full pathname. RELATIVE may makes it easier to extract an executable name
 # automatically.
 # file( GLOB APP_SOURCES RELATIVE app/*.cxx )
-message(status "About to build tests")
+message(STATUS "About to build tests")
 file( GLOB TEST_SOURCES ${PROJECT_SOURCE_DIR}/Tests/src/*.cpp )
 foreach( testSourceFile ${TEST_SOURCES} )
 	# I used a simple string replace, to cut off .cpp.

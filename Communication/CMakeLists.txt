@@ -23,7 +23,7 @@ add_source_group(include/ "${PROJECT_SOURCE_DIR}/Communication/include" COMMUNIC
 #########################################
 # Source Files
 #########################################
-add_source_group(\\ "${PROJECT_SOURCE_DIR}/Communication" COMMUNICATION_SRC)
+add_source_group(/ "${PROJECT_SOURCE_DIR}/Communication" COMMUNICATION_SRC)
 add_source_group(src/ "${PROJECT_SOURCE_DIR}/Communication/src" COMMUNICATION_SRC)
 
 
