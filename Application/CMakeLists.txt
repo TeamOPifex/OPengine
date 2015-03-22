@@ -47,6 +47,7 @@ add_asset_dir(APPLICATION_SRC)
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
 	${OPENAL_LIBRARY}
+	LODEPNG
 	1_Core
 	2_Data
 	3_Math
