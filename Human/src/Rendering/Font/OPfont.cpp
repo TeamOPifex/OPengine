@@ -118,10 +118,7 @@ OPfontGlyph* OPfontGetGlyph(OPfont* font, OPchar charcode)
 		size_t height = font->atlas->height;
 		OPfontAtlasRegion region = OPfontAtlasGetRegion(font->atlas, 5, 5);
 		OPfontGlyph * glyph = OPfontGlyphCreate();
-		static ui8 data[4 * 4 * 3] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+		static ui8 data[4 * 4 * 3] = { };
 		if (region.x < 0)
 		{
 			fprintf(stderr, "Texture atlas is full (line %d)\n", __LINE__);
@@ -170,8 +167,10 @@ OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const O
 			float s1 = glyph->textureCoordinates.z;
 			float t1 = glyph->textureCoordinates.w;
 
-			OPint offset = vertices->_size;
-			ui16 inds[6] = { 0 + offset, 1 + offset, 2 + offset, 0 + offset, 2 + offset, 3 + offset };
+			ui16 offset = vertices->_size;
+			ui16 inds[6];
+			inds[0] = offset; inds[1] = offset + 1; inds[2] = offset + 2;
+			inds[3] = offset; inds[4] = offset + 2; inds[5] = offset + 3;
 			OPvertexColor verts[4] = { { (OPfloat)x0, (OPfloat)y0, 0.0f, s0, t0 },
 			{ (OPfloat)x0, (OPfloat)y1, 0.0f, s0, t1 },
 			{ (OPfloat)x1, (OPfloat)y1, 0.0f, s1, t1 },

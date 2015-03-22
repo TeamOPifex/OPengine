@@ -30,7 +30,7 @@ OPrenderBuffer* OPRENDER_CURR_IB;
 OPrenderBuffer OPrenderGenBuffer(ui32 type){
 	OPrenderBuffer out = {
 		type,
-		-1
+		0
 	};
 
 	glGenBuffers(1, &out.Handle);

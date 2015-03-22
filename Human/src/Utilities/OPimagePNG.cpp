@@ -64,9 +64,10 @@ i32 OPimagePNGLoadStream(OPstream* str, i32 offset, OPtexture** image) {
 	OPtexture* tex = (OPtexture*)OPalloc(sizeof(OPtexture));
 	OPglError("OPimagePNGLoad:Error 2");
 
+	ui16 w = width, h = height;
 	OPtextureDescription desc = {
-		width,
-		height,
+		w,
+		h,
 		GL_RGBA,
 		GL_RGBA,
 		GL_UNSIGNED_BYTE,
