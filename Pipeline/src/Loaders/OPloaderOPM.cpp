@@ -183,7 +183,7 @@ OPMData OPMloadData(OPstream* str) {
 			colors[i].x = x;
 			colors[i].y = y;
 			colors[i].z = z;
-			//OPlog("Color: %f %f %f", x, y, z);
+			OPvec3Log("Color", colors[i]);
 		}
 
 		// Read Skinning
@@ -643,7 +643,7 @@ OPlinkedList* CreateTriList(OPMData* data, OPhashMap* triTable, OPlinkedList* ve
 
 OPMPartNode CreateOPMPartNode(OPlinkedList* triList){
 	OPllNode* node = triList->First;
-	OPint min = (OPint)node->Data, max = (OPint)node->Data;
+	OPuint min = (OPint)node->Data, max = (OPint)node->Data;
 
 	while(node){
 		OPint i = (OPint)node->Data;
@@ -718,8 +718,8 @@ OPMPartNode OPMPartition(OPMData* data, OPhashMap* triTable, OPlinkedList* vertL
 		OPMPartNode nodeB = children[1] = OPMPartition(data, triTable, trisB, depth - 1);
 
 		// Determine to and from using the two child nodes
-		OPint From = nodeA.From < nodeB.From ? nodeA.From : nodeB.From;
-		OPint To = nodeA.To > nodeB.To ? nodeA.To : nodeB.To;
+		OPuint From = nodeA.From < nodeB.From ? nodeA.From : nodeB.From;
+		OPuint To = nodeA.To > nodeB.To ? nodeA.To : nodeB.To;
 
 		OPMPartNode partNode = {
 			From,

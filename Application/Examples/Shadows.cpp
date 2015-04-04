@@ -117,7 +117,7 @@ void ExampleShadowsEnter(OPgameState* last) {
 
 	// Create the Frame Buffer that the shadow depth will be
 	// rendered to.
-	OPfloat shadowFrameBufferSize = 1024;
+	ui16 shadowFrameBufferSize = 1024;
 	OPtextureDescription desc = {
 		shadowFrameBufferSize,
 		shadowFrameBufferSize,

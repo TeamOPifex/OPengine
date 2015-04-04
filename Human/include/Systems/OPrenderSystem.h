@@ -2,6 +2,7 @@
 #include "./Human/include/Rendering/OPcam.h"
 #include "./Human/include/Rendering/OPrenderBuffer.h"
 #include "./Human/include/Rendering/OPmesh.h"
+#include "./Human/include/Rendering/OPmeshBuilder.h"
 #include "./Human/include/Rendering/OPmodel.h"
 #include "./Human/include/Rendering/OPmaterial.h"
 #include "./Human/include/Rendering/OPmeshPacked.h"
