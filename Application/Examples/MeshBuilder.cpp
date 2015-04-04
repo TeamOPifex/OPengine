@@ -24,7 +24,7 @@ struct MeshBuilderVert {
 
 void ExampleMeshBuilderEnter(OPgameState* last) {
 
-	OPmeshBuilder* builder = OPmeshBuilderCreate(sizeof(MeshBuilderVert));
+	OPmeshBuilder* builder = OPmeshBuilderCreate(sizeof(OPfloat) * 6);
 	
 	MeshBuilderVert one = { -1, 1, 0, 1, 0, 0 };
 	MeshBuilderVert two = { 1, 1, 0, 1, 0, 0 };

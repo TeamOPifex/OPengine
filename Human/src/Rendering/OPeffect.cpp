@@ -263,7 +263,7 @@ OPeffect OPeffectGen(
 	}
 
 	if (attrs & OPATTR_COLOR) {
-		OPshaderAttribute attr = { "aColor", GL_FLOAT, 4 };
+		OPshaderAttribute attr = { "aColor", GL_FLOAT, 3 };
 		OPvectorPush(vector, (ui8*)&attr);
 	}
 
