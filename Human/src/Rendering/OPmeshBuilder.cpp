@@ -6,7 +6,7 @@ void OPmeshBuilderInit(struct OPmeshBuilder* builder, ui16 vertexSize) {
 }
 
 OPmeshBuilder* OPmeshBuilderCreate(ui16 vertexSize) {
-	OPmeshBuilder* result;
+	OPmeshBuilder* result = (OPmeshBuilder*)OPalloc(sizeof(OPmeshBuilder));
 	OPmeshBuilderInit(result, vertexSize);
 	return result;
 }
