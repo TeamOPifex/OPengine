@@ -33,6 +33,7 @@ OPrenderBuffer OPrenderGenBuffer(ui32 type){
 		0
 	};
 
+	OPglError("OPrenderGenBuffer() - ERROR 0 clear %d");
 	glGenBuffers(1, &out.Handle);
 	OPglError("OPrenderGenBuffer() - ERROR!");
 
