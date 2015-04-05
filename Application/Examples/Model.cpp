@@ -9,7 +9,7 @@
 
 // Data for this Game State Example
 typedef struct {
-	OPmesh* Mesh;			// The Mesh to render
+	OPmesh Mesh;			// The Mesh to render
 	OPeffect Effect;		// The Effect used to render the Mesh
 	OPcam Camera;			// The Camera to use in the Effect to render the Mesh
 	ui32 Rotation;			// The amount to rotate the Mesh
@@ -30,7 +30,7 @@ void ExampleModelEnter(OPgameState* last) {
 	// The OPcmanLoad call ensures that this mesh has been loaded
 	// The OPcmanGet call returns a pointer to the resource (an OPmesh)
 	// that's contained in the Content Manager
-	modelExample->Mesh = (OPmesh*)OPcmanLoadGet("yup.opm");
+	modelExample->Mesh = OPcubeCreate(OPvec3Create(1,0,0));
 
 	// The effect that will be used to render the mesh
 	// The renderGenEffect is a simplified utility method
@@ -38,11 +38,11 @@ void ExampleModelEnter(OPgameState* last) {
 	// Position (vec3), then Normal (vec3)
 	// For more granular control use OPeffectCreate
 	modelExample->Effect = OPeffectGen(
-		"SimpleModel.vert",
-		"SimpleModel.frag",
-		OPATTR_POSITION | OPATTR_NORMAL,
+		"ColoredModel.vert",
+		"ColoredModel.frag",
+		OPATTR_POSITION | OPATTR_COLOR,
 		"Model Effect",
-		modelExample->Mesh->VertexSize);
+		modelExample->Mesh.VertexSize);
 
 	// Sets up the camera as a perpsective camera for rendering
 	modelExample->Camera = OPcamPersp(
@@ -86,7 +86,7 @@ OPint ExampleModelUpdate(OPtimer* time) {
 
 	// A helper utility which binds the Mesh, Effect and the World, View and Projection Matrices
 	// For more granular control please take a look at the Textured Example
-	OPbindMeshEffectWorldCam(modelExample->Mesh, &modelExample->Effect, &world, &modelExample->Camera);
+	OPbindMeshEffectWorldCam(&modelExample->Mesh, &modelExample->Effect, &world, &modelExample->Camera);
 	
 	// Sets the vLightDirection uniform on the Effect that is currently bound (modelExample->Effect)
 	OPeffectParamVec3("vLightDirection", &modelExample->LightDirection);
