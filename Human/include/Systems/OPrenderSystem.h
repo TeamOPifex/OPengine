@@ -13,9 +13,12 @@
 #include "./Human/include/Rendering/UI/OPimgui.h"
 
 #include "./Human/include/Rendering/Primitives/OPquad.h"
+#include "./Human/include/Rendering/Primitives/OPcube.h"
 #include "./Human/include/Rendering/Primitives/OPsphericalCube.h"
 
 #include "./Human/include/Rendering/Skinning/OPskeletonAnimationTransition.h"
+
+#include "./Human/include/Utilities/OPimagePNG.h"
 
 OPeffect OPrenderSystemLoadTextured2D(ui32 vertexStride);
 OPeffect OPrenderSystemLoadTextured3D(ui32 vertexStride);

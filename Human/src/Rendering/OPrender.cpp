@@ -430,9 +430,9 @@ void  OPrenderPresent(){
 #else
 	glfwSwapBuffers(window);	
 	glfwPollEvents();
-	// if(glfwWindowShouldClose(window)){
-	// 	OPend();
-	// }
+	if(glfwWindowShouldClose(window)){
+		OPend();
+	}
 #endif
 }
 //-----------------------------------------------------------------------------

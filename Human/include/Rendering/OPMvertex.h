@@ -65,7 +65,7 @@ typedef struct {
 typedef struct {
 	OPvec3 Position;
 	OPvec2 TexCoord;
-} OPvertexColor;
+} OPvertexTex;
 
 typedef struct {
 	i8* data;

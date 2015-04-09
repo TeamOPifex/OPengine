@@ -56,6 +56,19 @@ void OPmeshBuilderAdd(struct OPmeshBuilder* builder, void* one, void* two, void*
 	OPvectorPush(builder->Indices, (ui8*)&ind5);
 }
 
+void OPmeshBuilderAdd(struct OPmeshBuilder* builder, void** vertices, ui16 vertCount, ui16* indices, ui16 indCount) {
+	ui16 ind, indOffset = builder->Vertices->_size;
+
+	for(ui16 i = 0; i < vertCount; i++) {
+		OPvectorPush(builder->Vertices, (ui8*)vertices[i]);
+	}
+	
+	for(ui16 i = 0; i < indCount; i++) {
+		ind = indices[i] + indOffset;
+		OPvectorPush(builder->Indices, (ui8*)&ind);
+	}
+}
+
 OPmesh OPmeshBuilderGen(struct OPmeshBuilder* builder) {
 	void* verts = builder->Vertices->items;
 	void* indicies = builder->Indices->items;

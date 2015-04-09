@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include "./Core/include/OPlog.h"
+#include "./Core/include/Assert.h"
 #include "./Data/include/OPfile.h"
 #include <cstdio>
 #include <string>
@@ -45,6 +46,26 @@ i32 OPimagePNGLoad(const OPchar* filename, OPtexture** image){
 	return OPimagePNGLoadStream(str, 0, image);
 }
 
+OPimagePNG OPimagePNGLoadData(const OPchar* filename) {
+	ui32 error;
+	ui8* data;
+	ui32 width, height;
+	OPimagePNG result = { 0, 0, 0 };
+	OPstream* str = OPreadFile(filename);
+	ASSERT(str != NULL, "FAILED to read file");
+
+	error = lodepng_decode32(&data, &width, &height, str->Data, str->Length);
+	if(error) {
+		OPlog("LodePNG Error %d", error);
+		ASSERT(false, "FAILED to load PNG data");
+	}
+
+	result.Width = width;
+	result.Height = height;
+	result.Data = data;
+
+	return result;	
+}
 
 i32 OPimagePNGLoadStream(OPstream* str, i32 offset, OPtexture** image) {
 	OPglError("OPimagePNGLoad:Error 0");

@@ -171,7 +171,7 @@ OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const O
 			ui16 inds[6];
 			inds[0] = offset; inds[1] = offset + 1; inds[2] = offset + 2;
 			inds[3] = offset; inds[4] = offset + 2; inds[5] = offset + 3;
-			OPvertexColor verts[4] = { { (OPfloat)x0, (OPfloat)y0, 0.0f, s0, t0 },
+			OPvertexTex verts[4] = { { (OPfloat)x0, (OPfloat)y0, 0.0f, s0, t0 },
 			{ (OPfloat)x0, (OPfloat)y1, 0.0f, s0, t1 },
 			{ (OPfloat)x1, (OPfloat)y1, 0.0f, s1, t1 },
 			{ (OPfloat)x1, (OPfloat)y0, 0.0f, s1, t0 } };
@@ -189,7 +189,7 @@ OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const O
 }
 
 OPmesh OPfontCreateText(OPfont* font, OPchar* text) {
-	ui32 vertexSize = sizeof(OPvertexColor);
+	ui32 vertexSize = sizeof(OPvertexTex);
 	ui32 indexSize = sizeof(ui16);
 	OPvector* vertices = OPvectorCreate(vertexSize);
 	OPvector* indices = OPvectorCreate(indexSize);
@@ -209,7 +209,7 @@ OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text) {
 OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text, OPfloat scale) {
 	ASSERT(OPMESHPACKER_ACTIVE != NULL, "No mesh packer bound.");
 
-	ui32 vertexSize = sizeof(OPvertexColor);
+	ui32 vertexSize = sizeof(OPvertexTex);
 	ui32 indexSize = sizeof(ui16);
 	OPvector* vertices = OPvectorCreate(vertexSize);
 	OPvector* indices = OPvectorCreate(indexSize);
@@ -248,7 +248,7 @@ OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text) {
 
 OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text, float scale) {
 
-	ui32 vertexSize = sizeof(OPvertexColor);
+	ui32 vertexSize = sizeof(OPvertexTex);
 	ui32 texcoordsSize = sizeof(OPvec2);
 	ui32 indexSize = sizeof(ui16);
 	OPvector* vertices = OPvectorCreate(vertexSize);
@@ -260,7 +260,7 @@ OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text, float 
 	node.Width = size.x;
 	node.mesh = OPmeshCreate();
 	OPmeshBind(&node.mesh);
-	OPmeshBuild(sizeof(OPvertexColor), sizeof(ui16), vertices->_size, indices->_size, vertices->items, indices->items);
+	OPmeshBuild(sizeof(OPvertexTex), sizeof(ui16), vertices->_size, indices->_size, vertices->items, indices->items);
 
 	OPvectorDestroy(vertices);
 	OPvectorDestroy(indices);
