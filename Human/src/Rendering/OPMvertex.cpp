@@ -69,7 +69,6 @@ void OPverticesWriteVec3(OPvertices* vertices, OPvec3* data, ui32 feature) {
 	for (i32 i = 0; i < vertices->count; i++) {
 		void* dst = &vertices->data[offset * sizeof(f32)];
 		void* src = &data[i];
-		OPvec3Log("mesh vec3", data[i]);
 		OPmemcpy(dst, src, sizeof(OPvec3));
 		offset += vertices->size;
 	}

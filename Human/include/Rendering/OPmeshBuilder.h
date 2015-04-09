@@ -10,7 +10,7 @@ struct OPmeshBuilder {
 	OPvector* Indices;
 };
 
-void OPmeshBuilderInit(OPmeshBuilder* builder);
+void OPmeshBuilderInit(struct OPmeshBuilder* builder, ui16 vertexSize);
 OPmeshBuilder* OPmeshBuilderCreate(ui16 vertexSize);
 void OPmeshBuilderDestroy(struct OPmeshBuilder* builder);
 void OPmeshBuilderAdd(OPmeshBuilder* builder, void* one, void* two, void* three);

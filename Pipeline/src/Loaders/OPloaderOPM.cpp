@@ -183,7 +183,6 @@ OPMData OPMloadData(OPstream* str) {
 			colors[i].x = x;
 			colors[i].y = y;
 			colors[i].z = z;
-			OPvec3Log("Color", colors[i]);
 		}
 
 		// Read Skinning
