@@ -39,7 +39,7 @@ void ExampleFreeFlightEnter(OPgameState* last) {
 		freeFlightExample.Mesh->VertexSize
 		);
 
-	OPcamFreeFlightInit(&freeFlightExample.Camera, 1.0f);
+	OPcamFreeFlightInit(&freeFlightExample.Camera, 3.0f, 3.0f, OPVEC3_ONE);
 }
 
 OPint ExampleFreeFlightUpdate(OPtimer* timer) {
