@@ -65,6 +65,7 @@ extern const OPvec3 OPVEC3_ONE;
 extern const OPvec3 OPVEC3_UP;
 extern const OPvec3 OPVEC3_LEFT;
 extern const OPvec3 OPVEC3_FORWARD;
+extern const OPvec3 OPVEC3_BACKWARD;
 
 inline OPvec3 OPvec3Create(OPfloat x, OPfloat y, OPfloat z) {
 	OPvec3 tmp = { { x, y, z } };
