@@ -8,12 +8,11 @@
 struct OPcamFreeFlight {
 	OPcam Camera;
 	OPvec3 Rotation, Movement;
-	OPvec3 Position, Target;
 	OPfloat RotationSpeed, MoveSpeed;
 };
 
-void OPcamFreeFlightInit(OPcamFreeFlight* camFree, OPfloat speed);
-OPcamFreeFlight* OPcamFreeCreate(OPfloat speed);
+void OPcamFreeFlightInit(OPcamFreeFlight* camFree, OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position);
+OPcamFreeFlight* OPcamFreeCreate(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position);
 void OPcamFreeFlightUpdate(OPcamFreeFlight* camFree, OPtimer* timer);
 void OPcamFreeFlightUpdate(OPcamFreeFlight* camFree);
 void OPcamFreeFlightDestroy();
