@@ -8,7 +8,7 @@ typedef struct {
 	OPint available;
 } Example;
 
-#define ExampleCount 15
+#define ExampleCount 16
 
 typedef struct {
 	i32 Selected;
@@ -43,7 +43,8 @@ void ExampleSelectorEnter(OPgameState* last) {
 		{ "Spherical Cube", &GS_EXAMPLE_SPHERICALCUBE, GS_EXAMPLE_SPHERICALCUBE_AVAILABLE },
 		{ "Sprite", &GS_EXAMPLE_SPRITE, GS_EXAMPLE_SPRITE_AVAILABLE },
 		{ "Shadows", &GS_EXAMPLE_SHADOWS, GS_EXAMPLE_SHADOWS_AVAILABLE },
-		{ "Mesh Builder", &GS_EXAMPLE_MESH_BUILDER, GS_EXAMPLE_MESH_BUILDER_AVAILABLE }
+		{ "Mesh Builder", &GS_EXAMPLE_MESH_BUILDER, GS_EXAMPLE_MESH_BUILDER_AVAILABLE },
+		{ "Free Flight Camera", &GS_EXAMPLE_FREEFLIGHT, GS_EXAMPLE_FREEFLIGHT_AVAILABLE }
 	};
 	OPmemcpy(exampleSelector.Examples, examples, sizeof(Example) * ExampleCount);
 
