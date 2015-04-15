@@ -50,7 +50,11 @@ OPint ExampleFModExit(OPgameState* next) {
 	return 0;
 }
 
+#ifdef OPIFEX_OPTION_FMOD
 OPint GS_EXAMPLE_FMOD_AVAILABLE = 1;
+#else
+OPint GS_EXAMPLE_FMOD_AVAILABLE = 0;
+#endif
 OPgameState GS_EXAMPLE_FMOD = {
 	ExampleFModEnter,
 	ExampleFModUpdate,
