@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-extern OPassetLoader OP_DEFAULT_LOADERS[8];
+extern OPassetLoader OP_DEFAULT_LOADERS[6];
 void OPloadersAddDefault();
 
 #ifdef __cplusplus

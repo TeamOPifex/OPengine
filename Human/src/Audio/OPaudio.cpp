@@ -1,4 +1,5 @@
 #include "./Human/include/Audio/OPaudio.h"
+
 #include "./Core/include/Assert.h"
 
 #define OPAUDIO_SWAP(s1, s2){\
@@ -14,6 +15,8 @@
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
+
+#ifdef OPIFEX_OPTION_AUDIO
 #ifdef OPIFEX_ANDROID
 SLObjectItf SLES_engineObject;
 SLEngineItf SLES_engineEngine;
@@ -31,6 +34,8 @@ LPOVPCMTOTAL        fn_ov_pcm_total = NULL;
 LPOVINFO            fn_ov_info      = NULL;
 LPOVCOMMENT         fn_ov_comment   = NULL;
 LPOVOPENCALLBACKS   fn_ov_open_callbacks = NULL;
+#endif
+
 //-----------------------------------------------------------------------------
 //   ____  _____                _ _         ______                _   _                 
 //  / __ \|  __ \              | (_)       |  ____|              | | (_)                
@@ -39,6 +44,8 @@ LPOVOPENCALLBACKS   fn_ov_open_callbacks = NULL;
 // | |__| | |  | (_| | |_| | (_| | | (_) | | |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //  \____/|_|   \__,_|\__,_|\__,_|_|\___/  |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPint OPaudInit(){
+
+#ifdef OPIFEX_OPTION_AUDIO
 	OPAUD_CURR_MUTEX = OPmutexCreate();
 	OPlog("Initializing audio");
 
@@ -144,10 +151,13 @@ OPint OPaudInit(){
 	alDistanceModel(AL_LINEAR_DISTANCE);
 #endif
 	OPlog("Audio Initialized");
+#endif
 	return 1;
 }
 //-----------------------------------------------------------------------------
 OPvec3 OPaudEarPosition(OPvec3* pos){
+
+#ifdef OPIFEX_OPTION_AUDIO
 #ifdef OPIFEX_ANDROID	
 	OPvec3 out;
 	return out;
@@ -163,9 +173,12 @@ OPvec3 OPaudEarPosition(OPvec3* pos){
 	OPmutexUnlock(&OPAUD_CURR_MUTEX);
 	return out;
 #endif
+#endif
+	return OPVEC3_ZERO;
 }
 //-----------------------------------------------------------------------------
 OPvec3 OPaudEarVelocity(OPvec3* pos){
+#ifdef OPIFEX_OPTION_AUDIO
 #ifdef OPIFEX_ANDROID	
 	OPvec3 out;
 	return out;
@@ -182,9 +195,12 @@ OPvec3 OPaudEarVelocity(OPvec3* pos){
 	
 	return out;
 #endif
+#endif
+	return OPVEC3_ZERO;
 }
 //-----------------------------------------------------------------------------
 OPvec3 OPaudEarForwardUp(OPfloat* ori){
+#ifdef OPIFEX_OPTION_AUDIO
 #ifdef OPIFEX_ANDROID	
 	OPvec3 out;
 	return out;
@@ -200,5 +216,7 @@ OPvec3 OPaudEarForwardUp(OPfloat* ori){
 	OPmutexUnlock(&OPAUD_CURR_MUTEX);
 	return out;
 #endif
+#endif
+	return OPVEC3_ZERO;
 }
 //-----------------------------------------------------------------------------

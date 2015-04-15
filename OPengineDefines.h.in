@@ -9,6 +9,7 @@
 #cmakedefine OPIFEX_OPTION_SHARED
 #cmakedefine OPIFEX_OPTION_SPINE
 #cmakedefine OPIFEX_OPTION_FMOD
+#cmakedefine OPIFEX_OPTION_AUDIO
 #cmakedefine OPIFEX_OPTION_V8
 #cmakedefine OPENGL_DESKTOP_TARGET ${OPENGL_DESKTOP_TARGET}
 #define ${OPIFEX_OS}

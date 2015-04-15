@@ -1,6 +1,7 @@
 #ifndef OPENGINE_HUMAN_AUDIO_EMITTER
 #define OPENGINE_HUMAN_AUDIO_EMITTER
 
+#include "./Core/include/OPtypes.h"
 #include "OPaudioSource.h"
 #include "./Data/include/OPentHeap.h"
 
@@ -26,7 +27,6 @@ enum OPaudioEmitterState{
 //-----------------------------------------------------------------------------
 
 
-
 //-----------------------------------------------------------------------------
 //   _____ _                   _       
 //  / ____| |                 | |      
@@ -35,6 +35,7 @@ enum OPaudioEmitterState{
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 typedef struct{
+#ifdef OPIFEX_OPTION_AUDIO
 	OPint               CurrBuffer;           // index of the buffer currently being filled
 	OPint				Flags;                // Specifies behavior such as looping and threadedness
 	OPaudioEmitterState State;                // current play state of the sound
@@ -59,6 +60,7 @@ typedef struct{
 #else // All other targets...
 	ALuint al_src;
 	ALuint Buffers[BUFFER_COUNT]; // AL buffers 
+#endif
 #endif
 }OPaudioEmitter;
 //-----------------------------------------------------------------------------

@@ -51,7 +51,11 @@ OPint ExampleAudioExit(OPgameState* next) {
 	return 0;
 }
 
+#ifdef OPIFEX_OPTION_AUDIO
 OPint GS_EXAMPLE_AUDIO_AVAILABLE = 1;
+#else
+OPint GS_EXAMPLE_AUDIO_AVAILABLE = 0;
+#endif
 OPgameState GS_EXAMPLE_AUDIO = {
 	ExampleAudioEnter,
 	ExampleAudioUpdate,

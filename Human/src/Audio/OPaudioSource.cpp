@@ -1,6 +1,8 @@
 #include "./Human/include/Audio/OPaudioSource.h"
 
 
+#ifdef OPIFEX_OPTION_AUDIO
+
 size_t ov_read_func(void *ptr, size_t size, size_t nmemb, void *datasource){
 	return fread(ptr, size, nmemb, (FILE*)datasource);
 }
@@ -9,6 +11,8 @@ int ov_seek_func(void *datasource, ogg_int64_t offset, int whence) {
 }
 int ov_close_func(void *datasource){ return fclose((FILE*)datasource); }
 long ov_tell_func(void *datasource){ return ftell((FILE*)datasource); }
+
+#endif
 
 //-----------------------------------------------------------------------------
 //   ____                   _               ______                      
@@ -20,6 +24,7 @@ long ov_tell_func(void *datasource){ return ftell((FILE*)datasource); }
 //        | |                        __/ |                              
 //        |_|                       |___/                               
 OPint OPaudOpenWave(const OPchar* filename, OPaudioSource** source){
+#ifdef OPIFEX_OPTION_AUDIO
 	OPstream* str = OPreadFileLarge(filename, 1024);
 
 	if(!str) OPlog("Error: couldn't open '%s'\n", filename);
@@ -92,10 +97,12 @@ OPint OPaudOpenWave(const OPchar* filename, OPaudioSource** source){
 	}
 
 	source = NULL;
+#endif
 	return 0;
 }
 
 OPint OPaudOpenOgg(const OPchar* filename, OPaudioSource** source){
+#ifdef OPIFEX_OPTION_AUDIO
 	// Open Ogg Stream
 	//ov_callbacks	sCallbacks;
 	OggVorbis_File*	sOggVorbisFile = (OggVorbis_File*)OPalloc(sizeof(OggVorbis_File));
@@ -179,6 +186,7 @@ OPint OPaudOpenOgg(const OPchar* filename, OPaudioSource** source){
 		
 
 	source = NULL;
+#endif
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -195,18 +203,22 @@ OPint OPaudOpenOgg(const OPchar* filename, OPaudioSource** source){
 //                              __/ |                              
 //                             |___/                               
 OPint OPaudCloseWave(OPaudioSource* src){
+#ifdef OPIFEX_OPTION_AUDIO
 	if(OPstreamDestroy((OPstream*)src->DataSource)){
 		OPfree(src);
 		return 1;
 	}
+#endif
 	return 0;
 }
 
-OPint OPaudCloseOgg (OPaudioSource* src){
+OPint OPaudCloseOgg(OPaudioSource* src){
+#ifdef OPIFEX_OPTION_AUDIO
 	if(!ov_clear((OggVorbis_File*)src->DataSource)){
 		OPfree(src);
 		return 1;
 	}
+#endif
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -223,6 +235,7 @@ OPint OPaudCloseOgg (OPaudioSource* src){
 //                                  __/ |                                              
 //                                 |___/                                               
 OPint OPaudReadWave(OPaudioSource* src, ui64* position, ui8* dest, ui32 len){
+#ifdef OPIFEX_OPTION_AUDIO
 	ui64 pos = *position, srcLen = src->Description.Length, leng = (ui64)len;
 
 	// clip length to read if we are at / near the end
@@ -232,9 +245,12 @@ OPint OPaudReadWave(OPaudioSource* src, ui64* position, ui8* dest, ui32 len){
 	*position += leng;
 
 	return leng;
+#endif
+	return 0;
 }
 
-OPint OPaudReadOgg (OPaudioSource* src, ui64* position, ui8* dest, ui32 len){
+OPint OPaudReadOgg(OPaudioSource* src, ui64* position, ui8* dest, ui32 len){
+#ifdef OPIFEX_OPTION_AUDIO
 	ui32 origLen = len, decoded = 0;
 	i32 current_section;
 	OggVorbis_File* sOggVorbisFile = (OggVorbis_File*)src->DataSource;
@@ -254,6 +270,8 @@ OPint OPaudReadOgg (OPaudioSource* src, ui64* position, ui8* dest, ui32 len){
 	}
 	
 	return decoded;
+#endif
+	return 0;
 }
 //-----------------------------------------------------------------------------
 
@@ -270,14 +288,18 @@ OPint OPaudReadOgg (OPaudioSource* src, ui64* position, ui8* dest, ui32 len){
 //                                |___/                                               
 OPint OPaudSeekWave(OPaudioSource* src, ui64* pos){
 
+#ifdef OPIFEX_OPTION_AUDIO
 	//*pos += WAVE_HEADER;
 
 	// make sure it is not negative / out of bounds
 	if(*pos >= src->Description.Length) return -1;
 	return 1;
+#endif
+	return 0;
 }
 
-OPint OPaudSeekOgg (OPaudioSource* src, ui64* pos){
+OPint OPaudSeekOgg(OPaudioSource* src, ui64* pos){
+#ifdef OPIFEX_OPTION_AUDIO
 	OggVorbis_File* sOggVorbisFile = (OggVorbis_File*)src->DataSource;
 	if ((*pos) >= sOggVorbisFile->end) return -1;
 
@@ -285,5 +307,7 @@ OPint OPaudSeekOgg (OPaudioSource* src, ui64* pos){
 		sOggVorbisFile,
 		(*pos)
 	);
+#endif
+	return 0;
 }
 //-----------------------------------------------------------------------------
