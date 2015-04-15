@@ -1,9 +1,13 @@
 #ifndef OPENGINE_HUMAN_AUDIO_SOURCE
 #define OPENGINE_HUMAN_AUDIO_SOURCE
+
+
 #include "OPaudio.h"
+#include "./Core/include/OPtypes.h"
 
 
 #define WAVE_HEADER 44
+
 //-----------------------------------------------------------------------------
 //   _____ _                   _       
 //  / ____| |                 | |      

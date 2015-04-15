@@ -2,6 +2,7 @@
 #define OPENGINE_HUMAN_AUDIO_AUDIOPLAYER
 
 #include "./Core/include/OPtypes.h"
+
 #include "./Core/include/OPmath.h"
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
