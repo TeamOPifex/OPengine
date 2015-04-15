@@ -262,8 +262,20 @@ OPeffect OPeffectGen(
 		OPvectorPush(vector, (ui8*)&attr);
 	}
 
+	if (attrs & OPATTR_BONES) {
+		OPshaderAttribute attr1 = { "aBones", GL_FLOAT, 4 };
+		OPvectorPush(vector, (ui8*)&attr1);
+		OPshaderAttribute attr2 = { "aWeights", GL_FLOAT, 4 };
+		OPvectorPush(vector, (ui8*)&attr2);
+	}
+
 	if (attrs & OPATTR_COLOR) {
 		OPshaderAttribute attr = { "aColor", GL_FLOAT, 3 };
+		OPvectorPush(vector, (ui8*)&attr);
+	}
+
+	if (attrs & OPATTR_COLOR4) {
+		OPshaderAttribute attr = { "aColor", GL_FLOAT, 4 };
 		OPvectorPush(vector, (ui8*)&attr);
 	}
 
@@ -280,7 +292,7 @@ OPeffect OPeffectGen(
 			// TODO add more
 			switch (Attributes[i].Type){
 			case GL_FLOAT:
-				stride += (4 * Attributes[i].Elements);
+				stride += (sizeof(f32) * Attributes[i].Elements);
 				break;
 			}
 		}

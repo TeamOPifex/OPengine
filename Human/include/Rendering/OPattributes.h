@@ -6,7 +6,9 @@ enum OPattributes {
 	OPATTR_UV = 0x02,
 	OPATTR_TANGENT = 0x04,
 	OPATTR_NORMAL = 0x08,
-	OPATTR_COLOR = 0x10
+	OPATTR_COLOR = 0x10,
+	OPATTR_BONES = 0x20,
+	OPATTR_COLOR4 = 0x40
 };
 
 #endif
