@@ -199,6 +199,10 @@ inline void OPmat4Identity(OPmat4* m) {
 	return tmp;
 }
 
+ inline OPvec3 OPmat4GetTranslate(OPmat4 mat) {
+	 return OPvec3Create(mat[3][0], mat[3][1], mat[3][2]);
+ }
+
  inline OPmat4 OPmat4RotX(OPfloat t) {
 	OPfloat t1 = OPcos(t);
 	OPfloat t2 = OPsin(t);

@@ -43,7 +43,7 @@ void ExampleIMGUIEnter(OPgameState* last) {
 	imguiExample.effect = OPeffectGen(
 		"imgui.vert",
 		"imgui.frag",
-		OPATTR_POSITION | OPATTR_COLOR,
+		OPATTR_POSITION | OPATTR_COLOR4,
 		"IMGUI Shader",
 		sizeof(OPfloat) * 7
 		);
