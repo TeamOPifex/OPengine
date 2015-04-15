@@ -193,6 +193,21 @@ macro(add_opifex_myo APPLICATION_TARGET )
 	
 endmacro(add_opifex_myo)
 
+macro(add_opifex_fmod APPLICATION_TARGET )
+
+	if(${OPIFEX_OPTION_FMOD})
+		include_directories(../External/FMod/include/)
+		if(${OPIFEX_OS_WIN64})
+			target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/Myo/lib/win64/myo64.lib)
+		elseif(${OPIFEX_OS_WIN32})
+			target_link_libraries(${APPLICATION_TARGET}  ${PROJECT_SOURCE_DIR}/External/Myo/lib/win32/myo32.lib)
+		elseif(${OPIFEX_OS_OSX64})
+			target_link_libraries(${APPLICATION_TARGET}  ${PROJECT_SOURCE_DIR}/External/FMod/lib/libfmod.dylib)
+			target_link_libraries(${APPLICATION_TARGET}  ${PROJECT_SOURCE_DIR}/External/FMod/lib/libfmodL.dylib)
+		endif()
+	endif()
+	
+endmacro(add_opifex_fmod)
 
 
 macro(add_opifex_oggvorbis APPLICATION_TARGET )
