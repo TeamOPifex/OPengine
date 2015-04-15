@@ -69,6 +69,7 @@ target_link_libraries(8_Pipeline ${ALL_LIBS})
 add_opifex_assets(8_Pipeline)
 add_opifex_spine(8_Pipeline)
 add_opifex_v8(8_Pipeline)
+add_opifex_fmod(8_Pipeline)
 
 #########################################
 # OUTPUT BINARIES

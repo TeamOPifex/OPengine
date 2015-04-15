@@ -119,6 +119,10 @@ OPint OPvoxelsLoad(const OPchar* path, void** asset) {
 }
 
 OPvecInt3 OPvoxelsGet(OPvoxels* voxels, OPint x, OPint y, OPint z) {
+	if(x < 0 || x > voxels->size.x || y < 0 || y > voxels->size.y || z < 0 || z > voxels->size.z) {
+		OPvecInt3 z = { 0, 0, 0 };
+		return z;
+	}
 	return voxels->voxels[x + y * voxels->size.x + voxels->size.x * voxels->size.y * (voxels->size.z - 1 - z)];
 }
 
