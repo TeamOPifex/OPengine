@@ -414,6 +414,8 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		${OpenGL}
 	)
 
+	add_opifex_xinput(${APPLICATION_TARGET})
+
 	if(${OPIFEX_OPTION_V8})
 			if(${OPIFEX_OS_WINDOWS})
 				find_binary(LIBV8 "v8" false)
