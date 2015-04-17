@@ -18,9 +18,11 @@ struct OPfmodSound {
 	#endif
 };
 
-void OPfmodInit(OPfmod* fmod);
-void OPfmodLoad(OPfmod* fmod, OPfmodSound* sound, OPchar* name);
-void OPfmodPlay(OPfmod* fmod, OPfmodSound* sound);
-void OPfmodUpdate(OPfmod* fmod);
+extern OPfmod CURRENT_FMOD;
+
+void OPfmodInit();
+void OPfmodLoad(OPfmodSound* sound, OPchar* name);
+void OPfmodPlay(OPfmodSound* sound);
+void OPfmodUpdate();
 
 #endif
