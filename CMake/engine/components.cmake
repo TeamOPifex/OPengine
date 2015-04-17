@@ -351,6 +351,9 @@ endmacro(add_opifex_steam)
 
 macro(add_opifex_xinput APPLICATION_TARGET )
 
-	target_link_libraries(${APPLICATION_TARGET} XInput9_1_0.lib)
+	if(${OPIFEX_WINDOWS}) 
+	
+		target_link_libraries(${APPLICATION_TARGET} XInput9_1_0.lib)
+	endif()
 
 endmacro(add_opifex_xinput)
