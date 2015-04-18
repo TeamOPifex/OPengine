@@ -293,7 +293,7 @@ void OPgamePadUpdate(OPgamePad* controller){
 		OPmemcpy(
 			&controller->prevButtons, 
 			&controller->buttons, 
-			sizeof(OPint) * _OPGAMEPADAXIS_MAX);
+			sizeof(OPint) * _OPGAMEPADBUTTON_MAX);
 		OPmemcpy(
 			&controller->prevAxes, 
 			&controller->axes, 

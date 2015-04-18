@@ -37,10 +37,22 @@ void OPtimerTick(OPtimer* timer){
 #elif defined(OPIFEX_WINDOWS)
 	// Windows specific values for time
 	DWORD time = timeGetTime();
-	
-	timer->Elapsed = time - timer->TimeLastTick;
-	timer->TimeLastTick = time;
+
+
+
+	LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds;
+	LARGE_INTEGER Frequency;
+
+	QueryPerformanceFrequency(&Frequency);
+	QueryPerformanceCounter(&StartingTime);
+
+
+	timer->Elapsed = StartingTime.QuadPart - timer->TimeLastTick;
+	timer->Elapsed *= 1000;
+	timer->Elapsed /= Frequency.QuadPart;
+	timer->TimeLastTick = StartingTime.QuadPart;
 	timer->TotalGametime += timer->Elapsed;
+
 #endif
 }
 

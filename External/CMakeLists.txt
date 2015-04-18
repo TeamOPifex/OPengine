@@ -105,7 +105,7 @@ output_library_from(MONGOOSE "/External" "Mongoose")
 
 ### Spine
 
-if(${OPIFEX_SPINE})
+if(${OPIFEX_OPTION_SPINE})
 	include_directories("${PROJECT_SOURCE_DIR}/External/Spine/include")
 
 	#########################################

@@ -76,10 +76,10 @@ void ExampleSpineEnter(OPgameState* last) {
 
 
 	SpineSetAnim(spineExample->spine, 0, "idle", true);
-	SpineAddAnim(spineExample->spine, 0, "jump", false, 3);
-	SpineAddAnim(spineExample->spine, 0, "walk", true, 2);
-	SpineAddAnim(spineExample->spine, 1, "shoot", false, 5);
-	SpineAddAnim(spineExample->spine, 0, "death", false, 5);
+	//SpineAddAnim(spineExample->spine, 0, "jump", false, 3);
+	//SpineAddAnim(spineExample->spine, 0, "walk", true, 2);
+	//SpineAddAnim(spineExample->spine, 1, "shoot", false, 5);
+	//SpineAddAnim(spineExample->spine, 0, "death", false, 5);
 
 	spineExample->worldVertices = (f32*)OPalloc(sizeof(f32)* SPINE_MESH_VERTEX_COUNT_MAX);
 
@@ -105,6 +105,10 @@ OPint ExampleSpineUpdate(OPtimer* time) {
 	////////////////////////
 	// Update
 	////////////////////////
+
+	if (OPkeyboardWasPressed(OPKEY_SPACE)) {
+		SpineSetAnim(spineExample->spine, 0, "jump", true);
+	}
 
 	SpineUpdate(spineExample->spine, time);
 
