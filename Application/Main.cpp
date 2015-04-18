@@ -13,6 +13,7 @@ void ApplicationInit() {
 	OPscriptAddLoader();
 	OPskeletonAddLoader();
 	OPskeletonAnimationAddLoader();
+	SpineAddLoader();
 	OPcmanInit(OPIFEX_ASSETS);
 
 	OPrenderInit();

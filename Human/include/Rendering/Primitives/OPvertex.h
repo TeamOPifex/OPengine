@@ -8,4 +8,10 @@ typedef struct {
 	OPvec3 Color;
 } OPvertexColor;
 
+typedef struct {
+	OPvec3 Position;
+	OPvec2 TexCoord;
+	OPvec3 Color;
+} OPvertexTexColor;
+
 #endif

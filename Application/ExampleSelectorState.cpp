@@ -8,8 +8,6 @@ typedef struct {
 	OPint available;
 } Example;
 
-#define ExampleCount 17
-
 typedef struct {
 	i32 Selected;
 	OPfontManager* FontManager;
@@ -45,7 +43,8 @@ void ExampleSelectorEnter(OPgameState* last) {
 		{ "Shadows", &GS_EXAMPLE_SHADOWS, GS_EXAMPLE_SHADOWS_AVAILABLE },
 		{ "Mesh Builder", &GS_EXAMPLE_MESH_BUILDER, GS_EXAMPLE_MESH_BUILDER_AVAILABLE },
 		{ "Free Flight Camera", &GS_EXAMPLE_FREEFLIGHT, GS_EXAMPLE_FREEFLIGHT_AVAILABLE },
-		{ "FMOD", &GS_EXAMPLE_FMOD, GS_EXAMPLE_FMOD_AVAILABLE }
+		{ "FMOD", &GS_EXAMPLE_FMOD, GS_EXAMPLE_FMOD_AVAILABLE },
+		{ "Sprite System", &GS_EXAMPLE_SPRITESYSTEM, GS_EXAMPLE_SPRITESYSTEM_AVAILABLE }
 	};
 	OPmemcpy(exampleSelector.Examples, examples, sizeof(Example) * ExampleCount);
 

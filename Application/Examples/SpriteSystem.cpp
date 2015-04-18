@@ -1,0 +1,55 @@
+#include "./ExampleSelectorState.h"
+
+// OPifex Engine includes
+#include "./OPengine.h"
+#include "./Pipeline/include/OPspriteSystem.h"
+
+typedef struct {
+	OPspriteSystem spriteSystem;
+	OPeffect spriteEffect;
+	OPsprite* sprites[2];
+	OPcam camera;
+} SpriteSystemExample;
+
+SpriteSystemExample spriteSystemExample;
+
+void ExampleSpriteSystemEnter(OPgameState* last) {
+
+	OPcmanLoad("spriteExample.opss");
+
+	spriteSystemExample.sprites[0] = (OPsprite*)OPcmanGet("spriteExample/Bear");
+	OPspriteSystemEffectDefault(&spriteSystemExample.spriteEffect);
+	OPspriteSystemInit(&spriteSystemExample.spriteSystem, spriteSystemExample.sprites, 5, &spriteSystemExample.spriteEffect);
+	OPspriteSystemSprite* sp = OPspriteSystemAdd(&spriteSystemExample.spriteSystem);
+	sp->Scale = OPvec2Create(1, 1);
+
+	spriteSystemExample.camera = OPcamOrtho(OPvec3Create(0, 0, 10), OPVEC3_ZERO, OPVEC3_UP, 0.1f, 20.0f, 0, OPRENDER_WIDTH, 0, OPRENDER_HEIGHT);
+	//spriteSystemExample.camera = OPcamOrtho(OPvec3Create(0, 0, 10), OPVEC3_ZERO, OPVEC3_UP, 0.1f, 10.0f, -5, 5, -5, 5);
+}
+
+OPint ExampleSpriteSystemUpdate(OPtimer* time) {
+
+	OPspriteSystemUpdate(&spriteSystemExample.spriteSystem, time);
+
+	OPrenderClear(0, 0, 0);
+
+	OPspriteSystemRender(&spriteSystemExample.spriteSystem, &spriteSystemExample.camera);
+
+	OPrenderPresent();
+
+	return false;
+
+}
+
+OPint ExampleSpriteSystemExit(OPgameState* next) {
+	return 0;
+}
+
+OPint GS_EXAMPLE_SPRITESYSTEM_AVAILABLE = 1;
+// This is the Game State for this SpriteSystemExample
+// Each entry is a function pointer for Initialize, Update, Destroy
+OPgameState GS_EXAMPLE_SPRITESYSTEM = {
+	ExampleSpriteSystemEnter,
+	ExampleSpriteSystemUpdate,
+	ExampleSpriteSystemExit
+};
