@@ -1,12 +1,14 @@
 #version 330 core
 
-varying lowp vec2 vTexCoord; 
+in vec2 vUV;
 
 uniform sampler2D uColorTexture;
-uniform lowp vec4 uColor;
+uniform vec4 uColor;
+
+out vec4 FragColor;
 
 void main() {
-	vec4 tex = texture2D(uColorTexture, vTexCoord);	
-	gl_FragColor = tex * uColor;
-	gl_FragColor.a = tex.r;
+	vec4 tex = texture(uColorTexture, vUV);
+	FragColor = tex * uColor;
+	FragColor.a = tex.r;
 }

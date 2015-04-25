@@ -37,6 +37,7 @@ foreach( testSourceFile ${TEST_SOURCES} )
 	# I used a simple string replace, to cut off .cpp.
 	string( REPLACE ".cpp" "" testName ${testSourceFile} )
 	string( REPLACE "C:" "" testName ${testName} )
+	string( REPLACE "Y:" "" testName ${testName} )
 	string( REPLACE "Z:" "" testName ${testName} )
 	string( REPLACE "D:" "" testName ${testName} )
 	string( REGEX REPLACE "/.*/" "" testName ${testName} )

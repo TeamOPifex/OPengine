@@ -11,7 +11,7 @@ void OPspriteSystemEffectDefault(OPeffect* effect) {
 		);
 }
 
-void OPspriteSystemInit(OPspriteSystem* system, OPsprite** sprites, OPint count, OPeffect* effect) {
+void OPspriteSystemInit(OPspriteSystem* system, OPsprite** sprites, OPint count, OPeffect* effect, OPspriteSystemAlign alignment) {
 	system->Effect = effect;
 	system->SystemSprites = (OPspriteSystemSprite*)OPallocZero(sizeof(OPspriteSystemSprite)* count);
 	system->Count = 0;
@@ -19,7 +19,13 @@ void OPspriteSystemInit(OPspriteSystem* system, OPsprite** sprites, OPint count,
 	system->CountMax = count;
 	system->FrameRate = 24.0f;
 
-	system->_mesh = OPquadCreate(0.5f, 0.5f, OPvec2Create(0.0, 0.5));
+	switch (alignment) {
+	case OPSPRITESYSTEMALIGN_CENTER:
+		system->_mesh = OPquadCreate(0.5f, 0.5f);
+		break;
+	default:
+		system->_mesh = OPquadCreate(0.5f, 0.5f, OPvec2Create(0.0, 0.5));
+	}
 
 	for (OPuint i = 0; i < count; i++) {
 		system->SystemSprites[i].Scale = OPVEC2_ONE;
@@ -27,9 +33,9 @@ void OPspriteSystemInit(OPspriteSystem* system, OPsprite** sprites, OPint count,
 	}
 }
 
-OPspriteSystem* OPspriteSystemCreate(OPsprite** sprites, OPint count, OPeffect* effect) {
+OPspriteSystem* OPspriteSystemCreate(OPsprite** sprites, OPint count, OPeffect* effect, OPspriteSystemAlign alignment) {
 	OPspriteSystem* result = (OPspriteSystem*)OPalloc(sizeof(OPspriteSystem));
-	OPspriteSystemInit(result, sprites, count, effect);
+	OPspriteSystemInit(result, sprites, count, effect, alignment);
 	return result;
 }
 
@@ -41,7 +47,16 @@ OPspriteSystemSprite* OPspriteSystemAdd(OPspriteSystem* system) {
 }
 
 void OPspriteSystemRemove(OPspriteSystem* system, OPspriteSystemSprite* sprite) {
-	ASSERT(false, "Not implemented yet");
+	ASSERT(system->Count != 0, "Nothing to remove in Sprite System");
+	if (system->Count > 1) {
+		for (OPuint i = 0; i < system->Count - 1; i++) {
+			if (&system->SystemSprites[i] == sprite) {
+				system->SystemSprites[i] = system->SystemSprites[system->Count - 1];
+				break;
+			}
+		}
+	}
+	system->Count--;
 }
 
 void OPspriteSystemUpdate(OPspriteSystem* system, OPtimer* timer) {
@@ -84,6 +99,7 @@ void OPspriteSystemRender(OPspriteSystem* system, OPcam* cam) {
 		world = OPmat4Scl(frameSize.x * system->SystemSprites[i].Direction, frameSize.y, 0);
 		world *= OPmat4Scl(system->SystemSprites[i].Scale.x, system->SystemSprites[i].Scale.y, 1);
 		world += system->SystemSprites[i].Position;
+		world *= OPmat4RotZ(system->SystemSprites[i].Rotation);
 
 		OPeffectParamMat4("uWorld", &world);
 		OPeffectParamVec2("uOffset", &currentSprite->Frames[system->SystemSprites[i].CurrentFrame].Offset);

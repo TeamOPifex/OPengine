@@ -12,19 +12,19 @@ typedef struct {
 	OPframeBuffer ShadowFrameBuffer;
 	OPeffect Effect;
 	OPeffect ShadowEffect;
-	OPcam Camera;
 	OPcam ShadowCamera;
 	OPvec3 LightPosition;
 	OPmat4 ViewShadow;
 	OPmat4 ProjShadow;
 	OPmat4 BiasShadow;
 	OPtexture2D* shadow2D;
+	OPcamFreeFlight Camera;
 } ShadowsExample;
 
 ShadowsExample shadowsExample;
 
 
-#define GROUND 5.0
+#define GROUND 5.0f
 
 // Position
 // Normal
@@ -104,16 +104,6 @@ void ExampleShadowsEnter(OPgameState* last) {
 
 	OPmat4Log("Bias", shadowsExample.BiasShadow);
 
-	// The camera used to draw the model
-	shadowsExample.Camera = OPcamPersp(
-		OPvec3Create(5, 5, 5),
-		OPvec3Create(0, 0, 0),
-		OPvec3Create(0, 1, 0),
-		0.1f,
-		1000.0f,
-		45.0f,
-		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
-		);
 
 	// Create the Frame Buffer that the shadow depth will be
 	// rendered to.
@@ -187,17 +177,13 @@ void ExampleShadowsEnter(OPgameState* last) {
 	OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uShadow", &shadowsExample.ShadowFrameBuffer.Texture);
 
 
+	OPcamFreeFlightInit(&shadowsExample.Camera, 3.0f, 3.0f, OPVEC3_ONE);
 }
 
 OPint ExampleShadowsUpdate(OPtimer* timer) {
 
-	shadowsExample.Camera._pos.x -= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_A);
-	shadowsExample.Camera._pos.x += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_D);
-	shadowsExample.Camera._pos.z += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_W);
-	shadowsExample.Camera._pos.z -= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_S);
-	shadowsExample.Camera._pos.y += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_Q);
-	shadowsExample.Camera._pos.y -= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_E);
-	shadowsExample.Camera._viewStale = 1;
+
+	OPcamFreeFlightUpdate(&shadowsExample.Camera, timer);
 
 
 	shadowsExample.ShadowCamera._pos.x-= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_J);
@@ -228,8 +214,8 @@ OPint ExampleShadowsUpdate(OPtimer* timer) {
 	OPrenderCull(0);
 	OPrenderClear(1, 1, 1);
 
-	OPmodelDraw(shadowsExample.Model, &shadowsExample.ModelMaterials[1], shadowsExample.Camera);
-	OPmodelDraw(shadowsExample.Ground, &shadowsExample.GroundMaterials[1], shadowsExample.Camera);
+	OPmodelDraw(shadowsExample.Model, &shadowsExample.ModelMaterials[1], shadowsExample.Camera.Camera);
+	OPmodelDraw(shadowsExample.Ground, &shadowsExample.GroundMaterials[1], shadowsExample.Camera.Camera);
 	//OPmodelDraw(shadowsExample.Model, &shadowsExample.ModelMaterials[1], shadowsExample.ShadowCamera);
 	
 	//OPtexture2DRender(shadowsExample.shadow2D);

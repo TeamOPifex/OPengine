@@ -19,13 +19,13 @@ typedef struct {
 
 OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* pose, i32 count, OPchar** names);
 void OPskeletonUpdate(OPskeleton* skeleton);
-i16 OPskeletonGet(OPskeleton* skeleton, OPchar* name);
+i16 OPskeletonGet(OPskeleton* skeleton, const OPchar* name);
 void OPskeletonDestroy(OPskeleton* skeleton);
 
 inline OPskeleton* OPskeletonCopy(OPskeleton* source) {
 	return OPskeletonCreate(source->hierarchy, source->localPoses, source->hierarchyCount, source->jointNames);
 }
-inline OPmat4 OPskeletonLocal(OPskeleton* skeleton, OPchar* name) {
+inline OPmat4 OPskeletonLocal(OPskeleton* skeleton, const OPchar* name) {
 	i16 ind = OPskeletonGet(skeleton, name);
 	if (ind > -1)  {
 		return skeleton->localPoses[ind];
@@ -40,7 +40,7 @@ inline OPvec3 OPskeletonLocalTranslate(OPskeleton* skeleton, i16 ind) {
 	}
 	return result;
 }
-inline OPvec3 OPskeletonLocalTranslate(OPskeleton* skeleton, OPchar* name) {
+inline OPvec3 OPskeletonLocalTranslate(OPskeleton* skeleton, const OPchar* name) {
 	i16 ind = OPskeletonGet(skeleton, name);
 	return OPskeletonLocalTranslate(skeleton, ind);
 }

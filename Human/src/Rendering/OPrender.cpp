@@ -1,5 +1,7 @@
 #include "./Human/include/Rendering/OPrender.h"
 
+#if defined(OPIFEX_OPENGL_2_0) && !defined(OPIFEX_ANDROID)
+
 #include "./Core/include/OPlog.h"
 #include "./Core/include/OPcore.h"
 #include "./Core/include/Assert.h"
@@ -167,7 +169,7 @@ OPint OPrenderInit(i32 width, i32 height){
 	OPglError("OPrenderInit:Error 3");
 
 	OPlog("Android State Window %d", OPAndroidState->window);
-	
+
 
 	OPlog("eglMakeCurrent");
 	if (eglMakeCurrent(display, surface, surface, context) == EGL_FALSE) {
@@ -211,18 +213,18 @@ OPint OPrenderInit(i32 width, i32 height){
 #ifdef OPIFEX_OPENGL_ES_2
 	// Android doesn't need to create a window
 	//glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LESS); 
+	//glDepthFunc(GL_LESS);
 	////glCullFace(GL_FRONT);
 	////glEnable(GL_CULL_FACE);
 	//glDisable(GL_CULL_FACE);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glEnable( GL_BLEND );
 
 	//OPrenderWidth = JNIWidth();
 	//OPrenderHeight = JNIHeight();
 	//OPscreenWidth = JNIWidth();
 	//OPscreenHeight = JNIHeight();
-#else	
+#else
 
 	// OPstream* str = OPreadFile("../app.config");
 	// if (str) {
@@ -261,12 +263,12 @@ OPint OPrenderInit(i32 width, i32 height){
 	OPlog("%d x %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
 	OPlog("%d x %d", _screenWidth, _screenHeight);
 
-	window = glfwCreateWindow(_screenWidth, _screenHeight, 
+	window = glfwCreateWindow(_screenWidth, _screenHeight,
 		"OPifex Entertainment", monitor, NULL);
 
 	OPlog("%d x %d", _screenWidth, _screenHeight);
 
-	OPlogInfo("Created window of size: %d x %d", 
+	OPlogInfo("Created window of size: %d x %d",
 		_screenWidth, _screenHeight);
 
 	glfwGetFramebufferSize(window, &OPRENDER_SCREEN_WIDTH, &OPRENDER_SCREEN_HEIGHT);
@@ -278,7 +280,7 @@ OPint OPrenderInit(i32 width, i32 height){
 	OPlogInfo("Frame Buffer size: %d x %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
 	OPlogDebug("Scale: %f x %f", OPRENDER_SCREEN_WIDTH_SCALE, OPRENDER_SCREEN_HEIGHT_SCALE);
 
-	if(!window) {		
+	if(!window) {
 		OPlogErr("Failed to open GLFW window of %dx%d. If you have an Intel GPU, they are not 3.3 compatible.\n", OPRENDER_WIDTH, OPRENDER_HEIGHT );
 		glfwTerminate();
 		return -1;
@@ -296,10 +298,10 @@ OPint OPrenderInit(i32 width, i32 height){
 
 	glewExperimental = GL_TRUE;
 	OPrenderSetViewport(0, 0, OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
-	if (glewInit() != GLEW_OK) return -1;	
+	if (glewInit() != GLEW_OK) return -1;
 
-	glfwSetInputMode(window, GLFW_STICKY_KEYS, true); 
-	
+	glfwSetInputMode(window, GLFW_STICKY_KEYS, true);
+
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCharCallback(window, glfwCharacterCallback);
 	glfwSetDropCallback(window, glfwWindowDropCallback);
@@ -312,7 +314,7 @@ OPint OPrenderInit(i32 width, i32 height){
 //#endif
 
 	glEnable(GL_MULTISAMPLE_ARB);
-	glEnable(GL_BLEND); 
+	glEnable(GL_BLEND);
 	glEnable(GL_MULTISAMPLE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -420,7 +422,7 @@ void  OPrenderSwapBuffer(){
 #ifdef OPIFEX_OPENGL_ES_2
 	eglSwapBuffers(display, surface);
 #else
-	glfwSwapBuffers(window);	
+	glfwSwapBuffers(window);
 #endif
 }
 //-----------------------------------------------------------------------------
@@ -428,7 +430,7 @@ void  OPrenderPresent(){
 #ifdef OPIFEX_OPENGL_ES_2
 	eglSwapBuffers(display, surface);
 #else
-	glfwSwapBuffers(window);	
+	glfwSwapBuffers(window);
 	glfwPollEvents();
 	if(glfwWindowShouldClose(window)){
 		OPend();
@@ -466,3 +468,5 @@ void  OPrenderShutdown(){
 	glfwTerminate();
 #endif
 }
+
+#endif

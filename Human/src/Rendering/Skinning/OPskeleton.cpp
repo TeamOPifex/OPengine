@@ -39,7 +39,7 @@ OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* pose, i32 count, OPchar** n
 	return skeleton;
 }
 
-i16 OPskeletonGet(OPskeleton* skeleton, OPchar* name) {
+i16 OPskeletonGet(OPskeleton* skeleton, const OPchar* name) {
 	for (ui16 i = 0; i < skeleton->hierarchyCount; i++) {
 		if (OPstringEquals(name, skeleton->jointNames[i])) return i;
 	}

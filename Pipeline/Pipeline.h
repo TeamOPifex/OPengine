@@ -10,5 +10,6 @@
 #include "./Pipeline/include/OPtexture3D.h"
 #include "./Pipeline/include/SpineLoader.h"
 #include "./Pipeline/include/OPspriteSystem.h"
+#include "./Pipeline/include/OPfmod.h"
 
 #endif
