@@ -171,6 +171,7 @@ OPint OPeffectBind(OPeffect* effect){
 
 	if (OPglError("OPeffectBind:Failed to use Program")) {
 		OPlog("For Shader: %s", OPEFFECT_ACTIVE->Name);
+		return -1;
 	}
 
 	// enable attributes of the new effect

@@ -18,11 +18,25 @@ struct OPfmodSound {
 	#endif
 };
 
+struct OPfmodChannel {
+#ifdef OPIFEX_OPTION_FMOD
+	FMOD::Channel *Channel;
+#endif
+};
+
 extern OPfmod CURRENT_FMOD;
 
 void OPfmodInit();
 void OPfmodLoad(OPfmodSound* sound, OPchar* name);
-void OPfmodPlay(OPfmodSound* sound);
+OPfmodChannel OPfmodPlay(OPfmodSound* sound);
 void OPfmodUpdate();
+
+inline OPint OPfmodIsPlaying(OPfmodChannel channel) {
+	bool isPlaying;
+#ifdef OPIFEX_OPTION_FMOD
+	channel.Channel->isPlaying(&isPlaying);
+#endif
+	return isPlaying;
+}
 
 #endif

@@ -33,11 +33,12 @@ void OPfmodLoad(OPfmodSound* sound, OPchar* name) {
 	#endif
 }
 
-void OPfmodPlay(OPfmodSound* sound) {
+OPfmodChannel OPfmodPlay(OPfmodSound* sound) {
+	OPfmodChannel result;
 	#ifdef OPIFEX_OPTION_FMOD
-		FMOD::Channel    *channel = 0;
-		CURRENT_FMOD.System->playSound(sound->Sound, 0, false, &channel);
+		CURRENT_FMOD.System->playSound(sound->Sound, 0, false, &result.Channel);
 	#endif
+	return result;
 }
 
 void OPfmodUpdate() {

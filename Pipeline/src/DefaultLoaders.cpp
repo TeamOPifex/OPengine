@@ -21,7 +21,11 @@ OPassetLoader OP_DEFAULT_LOADERS[6] = {
 #ifdef OPIFEX_ANDROID
 		"Shaders/OPENGL_ES_2_0/",
 #else
+				#ifdef OPIFEX_OPENGL_3_3
+				"Shaders/OPENGL_3_3/",
+				#else
 		"Shaders/OPENGL_2_0/",
+				#endif
 #endif
 #else
 		"Shaders/",
@@ -37,7 +41,11 @@ OPassetLoader OP_DEFAULT_LOADERS[6] = {
 #ifdef OPIFEX_ANDROID
 		"Shaders/OPENGL_ES_2_0/",
 #else
+#ifdef OPIFEX_OPENGL_3_3
+				"Shaders/OPENGL_3_3/",
+#else
 		"Shaders/OPENGL_2_0/",
+				#endif
 #endif
 #else
 		"Shaders/",

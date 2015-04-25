@@ -19,7 +19,7 @@ void ExampleSpriteSystemEnter(OPgameState* last) {
 
 	spriteSystemExample.sprites[0] = (OPsprite*)OPcmanGet("spriteExample/Bear");
 	OPspriteSystemEffectDefault(&spriteSystemExample.spriteEffect);
-	OPspriteSystemInit(&spriteSystemExample.spriteSystem, spriteSystemExample.sprites, 5, &spriteSystemExample.spriteEffect);
+	OPspriteSystemInit(&spriteSystemExample.spriteSystem, spriteSystemExample.sprites, 5, &spriteSystemExample.spriteEffect, OPSPRITESYSTEMALIGN_BOTTOM_CENTER);
 	OPspriteSystemSprite* sp = OPspriteSystemAdd(&spriteSystemExample.spriteSystem);
 	sp->Scale = OPvec2Create(1, 1);
 

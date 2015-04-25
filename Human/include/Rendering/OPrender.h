@@ -21,12 +21,8 @@ extern OPint OPRENDER_HAS_FOCUS;
 extern GLFWwindow* window;
 #endif
 
-OPint OPrenderInit();
 OPint OPrenderInit(i32 width, i32 height);
-void  OPrenderClear(f32 r, f32 g, f32 b);
 void  OPrenderClear(f32 r, f32 g, f32 b, f32 a);
-void  OPrenderClear(OPvec3 color);
-void  OPrenderClear(OPvec4 color);
 void  OPrenderSetScreenSize(OPuint width, OPuint height);
 void  OPrenderSetViewport(OPuint x, OPuint y, OPuint width, OPuint height);
 void OPrenderResetViewport();
@@ -60,6 +56,19 @@ inline void OPrenderBlendAlpha(){
 }
 inline void OPrenderBlendAdditive(){
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE); 
+}
+
+inline OPint OPrenderInit() {
+	OPrenderInit(OPRENDER_WIDTH, OPRENDER_HEIGHT);
+}
+inline void  OPrenderClear(f32 r, f32 g, f32 b) {
+	OPrenderClear(r,g,b,1.0f);
+}
+inline void  OPrenderClear(OPvec3 color) {
+	OPrenderClear(color.x, color.y, color.z, 1.0f);
+}
+inline void  OPrenderClear(OPvec4 color) {
+	OPrenderClear(color.x, color.y, color.z, color.w);
 }
 
 #endif

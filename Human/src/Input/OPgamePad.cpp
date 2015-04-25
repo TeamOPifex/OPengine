@@ -154,6 +154,8 @@ void __OPlnxUpdateGamePad(OPgamePad* c){
 		return;
 	}
 
+	c->connected = true;
+
 	// get axis data, andmake sure the number of axes are expected
 	axisData = glfwGetJoystickAxes(c->playerIndex, &axes); 
 	//OPlog("Axes %d", axes);
