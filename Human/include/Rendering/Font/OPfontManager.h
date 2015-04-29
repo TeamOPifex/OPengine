@@ -26,6 +26,7 @@ typedef enum {
 } OPfontAlign;
 
 typedef struct {
+	OPfontUserTextNode dummyMesh;
 	OPfont* _font;
 	OPvec4 _color; 
 	OPfontAlign _align;

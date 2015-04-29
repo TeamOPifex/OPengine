@@ -65,7 +65,6 @@ OPint ExampleIMGUIUpdate(OPtimer* time) {
 		OPlog("Buff %s", imguiExample.buffer);
 	}
 
-
 	OPrenderClear(imguiExample.clear);
 
 	OPimguiBegin();
@@ -74,7 +73,6 @@ OPint ExampleIMGUIUpdate(OPtimer* time) {
 		imguiExample.checked = !imguiExample.checked;
 	}
 	//OPimguiLabel(OPvec2Create(50, 50), "TEST");
-
 	//OPimguiRadio(OPvec2Create(5,5), OPvec2Create(20, 20), OPvec4Create(0.9, 0.9, 0.9, 1), OPvec4Create(0.1,0.1,0.1, 1));
 	//OPimguiRadio(exampleSelector.imgui, OPvec2Create(300,150), OPvec2Create(10, 10), OPvec4Create(0.7, 0.7, 0.7, 1));
 
