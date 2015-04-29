@@ -1,3 +1,5 @@
+#include <include/Rendering/OPtexture.h>
+#include <include/Rendering/OPframeBuffer.h>
 #include "./Human/include/Rendering/OPframeBuffer.h"
 #include "./Core/include/OPlog.h"
 #include "./Human/include/Utilities/Errors.h"
@@ -24,16 +26,52 @@ GLuint createDepthTexture(int w, int h) {
 	GLuint tex;
 	glGenTextures(1, &tex);
 	glBindTexture(GL_TEXTURE_2D, tex);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 
 						w,
 						h, 
 						0, GL_DEPTH_COMPONENT, GL_FLOAT,
-						NULL); 
+						NULL);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+
 	return tex;
+}
+
+OPframeBuffer OPframeBufferCreateShadow(ui32 width, ui32 height) {
+	OPframeBuffer fb;
+
+	fb.Description.Width = width;
+	fb.Description.Height = height;
+	fb.Description.DataType = GL_FLOAT;
+	fb.Description.Format = GL_DEPTH_COMPONENT;
+	fb.Description.InternalFormat = GL_DEPTH_COMPONENT;
+	fb.Description.MagFilter = GL_LINEAR;
+	fb.Description.MinFilter = GL_LINEAR;
+	fb.Description.WrapX = GL_CLAMP_TO_EDGE;
+	fb.Description.WrapY = GL_CLAMP_TO_EDGE;
+	fb.Description.CompareFunc = GL_LEQUAL;
+	fb.Description.CompareMode = GL_COMPARE_R_TO_TEXTURE;
+
+	glGenFramebuffers(1, &fb.Handle);
+	glBindFramebuffer(GL_FRAMEBUFFER, fb.Handle);
+
+	fb.Texture = OPtextureCreate(fb.Description);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, fb.Texture.Handle, 0);
+
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+
+	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+		OPlog("Frame buffer NOT OK");
+	}
+
+	return fb;
 }
 
 OPframeBuffer OPframeBufferCreateDepth(OPtextureDescription desc) {
@@ -59,14 +97,7 @@ OPframeBuffer OPframeBufferCreateDepth(OPtextureDescription desc) {
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
 
-	OPlog("OPframeBufferCreateDepth 5");
-	OPglError("OPframeBufferCreateDepth:Error 6:%d");
-	glDrawBuffer(GL_NONE);
-	OPlog("OPframeBufferCreateDepth 6");
-	OPglError("OPframeBufferCreateDepth:Error 7:%d");
-	glReadBuffer(GL_NONE);
 	OPglError("OPframeBufferCreateDepth:Error 1:%d");
-	OPglError("OPframeBufferCreateDepth:Error 8:%d");
 	OPlog("OPframeBufferCreateDepth 7");
 
 	OPlog("OPframeBufferCreateDepth 4: %d", fb.Texture.Handle);

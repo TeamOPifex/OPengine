@@ -1,3 +1,4 @@
+#include <include/Rendering/OPtexture.h>
 #include "./Human/include/Rendering/OPtexture.h"
 #include "./Human/include/Utilities/Errors.h"
 #include "./Core/include/OPlog.h"
@@ -35,12 +36,10 @@ OPtexture OPtextureCreate(OPtextureDescription desc){
 	OPglError("OPtextureCreate::Error 5");
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, desc.WrapY);
 	OPglError("OPtextureCreate::Error 6");
-#ifndef OPIFEX_ANDROID
-	//glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-#else
-	//glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP_HINT, GL_TRUE);
-#endif
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, desc.CompareFunc);
 	OPglError("OPtextureCreate::Error 7");
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, desc.CompareMode);
+	OPglError("OPtextureCreate::Error 8");
 
 	return tex;
 }

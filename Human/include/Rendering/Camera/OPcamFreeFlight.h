@@ -11,10 +11,16 @@ struct OPcamFreeFlight {
 	OPfloat RotationSpeed, MoveSpeed;
 };
 
-void OPcamFreeFlightInit(OPcamFreeFlight* camFree, OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position);
-OPcamFreeFlight* OPcamFreeCreate(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position);
+void OPcamFreeFlightInit(OPcamFreeFlight* camFree, OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position, OPfloat camNear, OPfloat camFar);
+OPcamFreeFlight* OPcamFreeCreate(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position, OPfloat camNear, OPfloat camFar);
 void OPcamFreeFlightUpdate(OPcamFreeFlight* camFree, OPtimer* timer);
 void OPcamFreeFlightUpdate(OPcamFreeFlight* camFree);
 void OPcamFreeFlightDestroy();
 
+inline void OPcamFreeFlightInit(OPcamFreeFlight* camFree, OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position) {
+	OPcamFreeFlightInit(camFree, moveSpeed, rotateSpeed, position, 1.0f, 1000.0f);
+}
+inline OPcamFreeFlight* OPcamFreeCreate(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position) {
+	return OPcamFreeCreate(moveSpeed, rotateSpeed, position, 1.0f, 1000.0f);
+}
 #endif

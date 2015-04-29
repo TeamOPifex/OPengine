@@ -11,13 +11,13 @@ void OPfontRenderBegin(OPfontManager* fontManager);
 void OPfontRenderEnd();
 
 void OPfontRender(const OPchar* text, OPmat4* world);
+
 inline void OPfontRender(const OPchar* text, OPvec2 pos) {
 	OPmat4 world = OPmat4Translate(pos.x, pos.y, 0);
 	OPfontRender(text, &world);
 }
 
 inline void OPfontColor(OPvec4 color) {
-	OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
 	OPeffectParamVec4("uColor", &color);
 }
 

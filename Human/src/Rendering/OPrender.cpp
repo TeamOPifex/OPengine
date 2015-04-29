@@ -2,10 +2,7 @@
 
 #if defined(OPIFEX_OPENGL_2_0) && !defined(OPIFEX_ANDROID)
 
-#include "./Core/include/OPlog.h"
 #include "./Core/include/OPcore.h"
-#include "./Core/include/Assert.h"
-#include "./Data/include/OPfile.h"
 
 
 i32 OPRENDER_WIDTH = 1280;
@@ -19,6 +16,7 @@ f32 OPRENDER_SCREEN_HEIGHT_SCALE = 1;
 OPint OPRENDER_FULLSCREEN = false;
 OPint OPRENDER_HAS_FOCUS = 1;
 OPint glfwInitialized = 0;
+OPuint OPRENDER_VAO = 0;
 
 #ifndef OPIFEX_ANDROID
 GLFWwindow* window = NULL;
@@ -93,9 +91,7 @@ void glfwCharacterCallback(GLFWwindow* window, unsigned int codepoint)
 	OPkeyboardKey(codepoint);
 }
 #endif
-OPint OPrenderInit() {
-	return OPrenderInit(OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
-}
+
 OPint OPrenderInit(i32 width, i32 height){
 	OPRENDER_SCREEN_WIDTH = width;
 	OPRENDER_SCREEN_HEIGHT = height;
@@ -348,27 +344,9 @@ void OPrenderCullMode(OPint state) {
 		glCullFace(GL_BACK);
 	}
 }
-
-//-----------------------------------------------------------------------------
-void  OPrenderClear(f32 r, f32 g, f32 b){
-	glClearColor(r, g, b, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
 //-----------------------------------------------------------------------------
 void  OPrenderClear(f32 r, f32 g, f32 b, f32 a){
 	glClearColor(r, g, b, a);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-//-----------------------------------------------------------------------------
-void  OPrenderClear(OPvec3 color){
-	glClearColor(color.x, color.y, color.z, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-//-----------------------------------------------------------------------------
-void  OPrenderClear(OPvec4 color){
-	glClearColor(color.x, color.y, color.z, color.w);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 

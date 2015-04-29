@@ -17,6 +17,7 @@ f32 OPRENDER_SCREEN_WIDTH_SCALE;
 f32 OPRENDER_SCREEN_HEIGHT_SCALE;
 OPint OPRENDER_FULLSCREEN;
 OPint OPRENDER_HAS_FOCUS;
+OPuint OPRENDER_VAO = 0;
 
 GLFWwindow* window;
 ui8 glfwInitialized = 0;
@@ -64,9 +65,10 @@ OPint OPrenderInit(i32 width, i32 height) {
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_ALPHA_BITS, 8);
+    #ifdef OPIFEX_OSX
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    #endif
 
     GLFWmonitor* monitor = NULL;
     if (OPRENDER_FULLSCREEN){
@@ -80,10 +82,6 @@ OPint OPrenderInit(i32 width, i32 height) {
 
     OPlog("%d x %d", _screenWidth, _screenHeight);
 
-    int major, minor, rev;
-    glfwGetVersion(&major, &minor, &rev);
-    OPlog("OpenGL version set %d.%d.%d", major, minor, rev);
-
     window = glfwCreateWindow(_screenWidth, _screenHeight,
                               "OPifex Entertainment", monitor, NULL);
 
@@ -91,6 +89,12 @@ OPint OPrenderInit(i32 width, i32 height) {
 
     OPlogInfo("Created window of size: %d x %d",
               _screenWidth, _screenHeight);
+
+
+    int major, minor, rev;
+    glfwGetVersion(&major, &minor, &rev);
+
+    OPlog("OpenGL version set %d.%d.%d", major, minor, rev);
 
     glfwGetFramebufferSize(window, &OPRENDER_SCREEN_WIDTH, &OPRENDER_SCREEN_HEIGHT);
 
@@ -110,7 +114,6 @@ OPint OPrenderInit(i32 width, i32 height) {
     glfwMakeContextCurrent(window);
     OPglError("OPrenderInit error glfw current context window");
 
-
     glfwSetWindowFocusCallback(window, glfwWindowFocusCallback);
 
     glewExperimental = GL_TRUE;
@@ -129,9 +132,11 @@ OPint OPrenderInit(i32 width, i32 height) {
 
     OPglError("OPrenderInit error glfw setup");
 
-    GLuint VertexArrayID[1];
-    glGenVertexArrays(1, VertexArrayID);
-    glBindVertexArray(VertexArrayID[0]);
+
+    GLuint temp;
+    glGenVertexArrays(1, &temp);
+    OPRENDER_VAO = temp;
+    glBindVertexArray(OPRENDER_VAO);
 
     OPglError("OPrenderInit error VAO");
 
@@ -150,62 +155,110 @@ OPint OPrenderInit(i32 width, i32 height) {
 }
 
 void  OPrenderClear(f32 r, f32 g, f32 b, f32 a) {
-
+    glClearColor(r, g, b, a);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 void  OPrenderSetScreenSize(OPuint width, OPuint height) {
-
+    OPRENDER_SCREEN_WIDTH = width;
+    OPRENDER_SCREEN_HEIGHT = height;
 }
 void  OPrenderSetViewport(OPuint x, OPuint y, OPuint width, OPuint height) {
-
+    glViewport(x, y, width, height);
+    OPRENDER_WIDTH  = width;
+    OPRENDER_HEIGHT = height;
 }
 void OPrenderResetViewport() {
-
+    OPrenderSetViewport(0, 0, OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
 }
 OPint OPrenderGetWidth() {
-    return 0;
+    return OPRENDER_WIDTH;
 }
 OPint OPrenderGetHeight() {
-    return 0;
+    return OPRENDER_HEIGHT;
 }
 OPfloat OPrenderGetAspectRatio() {
-    return 0;
+    ASSERT(OPrenderGetHeight() > 0, "Height was not greater than 0, there was problem getting width and height");
+    return OPrenderGetWidth() / (OPfloat)OPrenderGetHeight();
 }
 OPfloat OPrenderGetWidthAspectRatio() {
-    return 0;
+    ASSERT(OPRENDER_WIDTH > 0, "Height was not greater than 0, there was problem getting width and height");
+    OPfloat aspect = OPRENDER_HEIGHT / (OPfloat)OPRENDER_WIDTH;
+    return aspect > 1.0f ? 1.0f : aspect;
 }
 OPfloat OPrenderGetHeightAspectRatio() {
-    return 0;
+    ASSERT(OPRENDER_HEIGHT > 0, "Height was not greater than 0, there was problem getting width and height");
+    OPfloat aspect = OPRENDER_WIDTH / (OPfloat)OPRENDER_HEIGHT;
+    return aspect > 1.0f ? 1.0f : aspect;
 }
 
 void OPrenderCull(OPint state) {
-
+    if (state) {
+        glEnable(GL_CULL_FACE);
+    }
+    else {
+        glDisable(GL_CULL_FACE);
+    }
 }
 void OPrenderCullMode(OPint state) {
-
+    if (state) {
+        glCullFace(GL_FRONT);
+    }
+    else {
+        glCullFace(GL_BACK);
+    }
 }
 void  OPrenderSwapBuffer () {
-
+    glfwSwapBuffers(window);
 }
 void  OPrenderPresent    () {
-
+    glfwSwapBuffers(window);
+    glfwPollEvents();
+    if(glfwWindowShouldClose(window)){
+        OPend();
+    }
 }
 void OPrenderBlend(OPint state) {
-
+    if (state)
+        glEnable(GL_BLEND);
+    else
+        glDisable(GL_BLEND);
 }
 void  OPrenderDepth(OPint state) {
-
+    if(state)
+        glEnable(GL_DEPTH_TEST);
+    else
+        glDisable(GL_DEPTH_TEST);
 }
 void OPrenderDepthWrite(OPint state) {
-
+    if (state)
+        glDepthMask(GL_TRUE);
+    else
+        glDepthMask(GL_FALSE);
 }
 void  OPrenderShutdown   () {
-
+    glfwTerminate();
 }
 
 ui32 OPgetNativeScreenWidth() {
-
+    if (!glfwInitialized) {
+        int result = glfwInit();
+        if (!result) {
+            OPlogErr("INIT FAILED %d", result);
+            return -1;
+        }
+        glfwInitialized = 1;
+    }
+    return glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
 }
 ui32 OPgetNativeScreenHeight() {
-
+    if (!glfwInitialized) {
+        int result = glfwInit();
+        if (!result) {
+            OPlogErr("INIT FAILED %d", result);
+            return -1;
+        }
+        glfwInitialized = 1;
+    }
+    return glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
 }
 #endif
