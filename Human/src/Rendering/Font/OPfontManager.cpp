@@ -1,3 +1,5 @@
+#include <include/Rendering/Font/OPfontManager.h>
+#include <include/Rendering/Font/OPfont.h>
 #include "./Human/include/Rendering/Font/OPfontManager.h"
 #include "./Human/include/Rendering/OPrender.h"
 #include "./Human/include/Systems/OPfontSystem.h"
@@ -21,6 +23,8 @@ OPfontManager* OPfontManagerCreate(OPfont* font) {
 	temp->builtNodes = OPhashMapCreate(16);
 	temp->meshPacker = OPmeshPackerCreate();
 	temp->proj = OPmat4Ortho(0, OPRENDER_SCREEN_WIDTH * OPRENDER_SCREEN_WIDTH_SCALE, OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE, 0, -1, 1);
+	temp->dummyMesh = OPfontCreateUserText(temp->_font, "", temp->scale);
+
 	return temp;
 }
 

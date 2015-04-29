@@ -9,6 +9,7 @@ void OPfontRenderBegin(OPfontManager* fontManager) {
 	OPFONTMANAGER_ACTIVE = fontManager;
 
 	OPrenderDepth(0);
+	OPmeshBind(&fontManager->dummyMesh.mesh);
 	OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
 	OPtextureClearActive();
 	ui32 textureHandle = OPtextureBind(OPFONTMANAGER_ACTIVE->_font->texture);
