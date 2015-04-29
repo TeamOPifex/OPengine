@@ -3,7 +3,7 @@
 #include "./Human/include/Input/OPgamePad.h"
 #include "./Human/include/Rendering/OPrender.h"
 
-void OPcamFreeFlightInit(OPcamFreeFlight* camFree, OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position) {
+void OPcamFreeFlightInit(OPcamFreeFlight* camFree, OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position, OPfloat camNear, OPfloat camFar) {
 	camFree->RotationSpeed = rotateSpeed;
 	camFree->MoveSpeed = moveSpeed;
 	camFree->Rotation = OPVEC3_ZERO;
@@ -13,7 +13,7 @@ void OPcamFreeFlightInit(OPcamFreeFlight* camFree, OPfloat moveSpeed, OPfloat ro
 		position,
 		OPVEC3_ZERO,
 		OPVEC3_UP,
-		1.0f, 1000.0f,
+		camNear, camFar,
 		45.0f,
 		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
 		);
@@ -21,9 +21,9 @@ void OPcamFreeFlightInit(OPcamFreeFlight* camFree, OPfloat moveSpeed, OPfloat ro
 	OPcamFreeFlightUpdate(camFree);
 }
 
-OPcamFreeFlight* OPcamFreeCreate(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position) {
+OPcamFreeFlight* OPcamFreeCreate(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position, OPfloat camNear, OPfloat camFar) {
 	OPcamFreeFlight* result = (OPcamFreeFlight*)OPalloc(sizeof(OPcamFreeFlight));
-	OPcamFreeFlightInit(result, moveSpeed, rotateSpeed, position);
+	OPcamFreeFlightInit(result, moveSpeed, rotateSpeed, position, camNear, camFar);
 	return result;
 }
 

@@ -1,3 +1,4 @@
+#include <include/Rendering/OPrender.h>
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Rendering/OpenGL.h"
 #include "./Human/include/Rendering/OPmesh.h"
@@ -168,6 +169,7 @@ OPint OPeffectBind(OPeffect* effect){
 	if (OPEFFECT_ACTIVE == NULL) return 1;
 
 	glUseProgram(OPEFFECT_ACTIVE->ProgramHandle);
+	glBindVertexArray(OPRENDER_VAO);
 
 	if (OPglError("OPeffectBind:Failed to use Program")) {
 		OPlog("For Shader: %s", OPEFFECT_ACTIVE->Name);
@@ -179,6 +181,11 @@ OPint OPeffectBind(OPeffect* effect){
 	for (; attrCount--;){
 		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPEFFECT_ACTIVE->Attributes, attrCount);
 
+		glEnableVertexAttribArray((uintptr_t)attr->Handle);
+		if (OPglError("OPeffectBind:Error ")) {
+			OPlog("Failed to enable attrib %s", attr->Name);
+		}
+
 		glVertexAttribPointer(
 			(uintptr_t)attr->Handle,
 			attr->Elements,
@@ -189,15 +196,10 @@ OPint OPeffectBind(OPeffect* effect){
 			);
 		if (OPglError("OPeffectBind:Error ")) {
 			OPlog("Effect %s: Failed to set attrib ptr %s", effect->Name, attr->Name);
-		} 
-		// else {
-		// 	OPlog("Set %s", attr->Name);
-		// }
-
-		glEnableVertexAttribArray((uintptr_t)attr->Handle);
-		if (OPglError("OPeffectBind:Error ")) {
-			OPlog("Failed to enable attrib %s", attr->Name);
 		}
+//		else {
+//			OPlog("Set %s", attr->Name);
+//		}
 	}
 
 	OPglError("OPeffectBind:Errors Occured");
@@ -217,7 +219,7 @@ ui32 OPeffectGetParam(const OPchar* parameterName){
 		return *loc;
 	}
 	else{
-		ui32 loc = glGetUniformLocation(
+		ui32 loc = (ui32)glGetUniformLocation(
 			OPEFFECT_ACTIVE->ProgramHandle,
 			parameterName
 		);

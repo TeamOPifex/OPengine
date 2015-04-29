@@ -2,7 +2,7 @@
 #define OPENGINE_HUMAN_RENDERER_FRAMEBUFFER
 
 #include "./Human/include/Rendering/OPtexture.h"
-#include "./Human/include/Rendering/OPrender.h"
+#include "OPrender.h"
 #include "./Core/include/OPtypes.h"
 
 
@@ -43,7 +43,7 @@ extern OPframeBuffer* OPRENDER_CURR_FRAMEBUFFER;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-
+OPframeBuffer OPframeBufferCreateShadow(ui32 width, ui32 height);
 OPframeBuffer OPframeBufferCreateDepth(OPtextureDescription desc);
 OPframeBuffer OPframeBufferCreate(OPtextureDescription desc);
 void OPframeBufferDestroy(OPframeBuffer* fb);

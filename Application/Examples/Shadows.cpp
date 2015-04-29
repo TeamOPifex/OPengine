@@ -8,6 +8,7 @@ typedef struct {
 	OPmaterial ModelMaterials[2];
 	OPmaterial GroundMaterials[2];
 	OPmesh GroundMesh;
+	OPtexture* ModelTexture;
 	OPtexture* GroundTexture;
 	OPframeBuffer ShadowFrameBuffer;
 	OPeffect Effect;
@@ -72,7 +73,8 @@ void ExampleShadowsEnter(OPgameState* last) {
 	shadowsExample.Ground.world = OPMAT4IDENTITY;
 	OPint vertexStride = shadowsExample.Model.mesh->VertexSize;
 
-	shadowsExample.GroundTexture = (OPtexture*)OPcmanLoadGet("WhiteTex.png");
+	shadowsExample.ModelTexture = (OPtexture*)OPcmanLoadGet("noneNorm.png");
+	shadowsExample.GroundTexture = (OPtexture*)OPcmanLoadGet("TetrisBlue.png");
 
 	// Create the effect used to draw a shadowed model
 	OPshaderAttribute attribs[] = {
@@ -91,13 +93,6 @@ void ExampleShadowsEnter(OPgameState* last) {
 		"Textured Effect",
 		vertexStride
 		);
-
-
-	// shadowsExample.BiasShadow = OPmat4Create(
-	// 	0.5, 0.0, 0.0, 0.0,
-	// 	0.0, 0.5, 0.0, 0.0,
-	// 	0.0, 0.0, 0.5, 0.0,
-	// 	0.5, 0.5, 0.5, 1.0);
 
 	shadowsExample.BiasShadow = OPmat4Translate(0.5, 0.5, 0.5);
 	shadowsExample.BiasShadow *= OPmat4Scl(0.5);
@@ -120,7 +115,7 @@ void ExampleShadowsEnter(OPgameState* last) {
 		GL_CLAMP_TO_EDGE
 		};
 
-	shadowsExample.ShadowFrameBuffer = OPframeBufferCreateDepth(desc);
+	shadowsExample.ShadowFrameBuffer = OPframeBufferCreateShadow(1024, 1024);
 	OPframeBufferUnbind();
 
 	shadowsExample.shadow2D = OPtexture2DCreate(&shadowsExample.ShadowFrameBuffer.Texture, NULL, OPvec2Create(0,0), OPvec2Create(1,1));
@@ -148,7 +143,7 @@ void ExampleShadowsEnter(OPgameState* last) {
 	// and direction of the light being used for shadows.
 	OPfloat size = 10;
 	shadowsExample.ShadowCamera = OPcamOrtho(
-	    OPvec3Create(0, 10, 10),
+	    OPvec3Create(0, 15, 15),
 	    OPvec3Create(0, 0, 0),
 	    OPvec3Create(0, 1, 0),
 	    0.01f, 50.0f,
@@ -165,7 +160,7 @@ void ExampleShadowsEnter(OPgameState* last) {
 	OPmaterialAddParam(&shadowsExample.ModelMaterials[1], "uViewShadow", &shadowsExample.ViewShadow);
 	OPmaterialAddParam(&shadowsExample.ModelMaterials[1], "uProjShadow", &shadowsExample.ProjShadow);
 	OPmaterialAddParam(&shadowsExample.ModelMaterials[1], "uBias", &shadowsExample.BiasShadow);
-	OPmaterialAddParam(&shadowsExample.ModelMaterials[1], "uColorTexture", shadowsExample.GroundTexture);
+	OPmaterialAddParam(&shadowsExample.ModelMaterials[1], "uColorTexture", shadowsExample.ModelTexture);
 	OPmaterialAddParam(&shadowsExample.ModelMaterials[1], "uShadow", &shadowsExample.ShadowFrameBuffer.Texture);
 
 	OPmaterialInit(&shadowsExample.GroundMaterials[1], &shadowsExample.Effect);
@@ -176,8 +171,7 @@ void ExampleShadowsEnter(OPgameState* last) {
 	OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uColorTexture", shadowsExample.GroundTexture);
 	OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uShadow", &shadowsExample.ShadowFrameBuffer.Texture);
 
-
-	OPcamFreeFlightInit(&shadowsExample.Camera, 3.0f, 3.0f, OPVEC3_ONE);
+	OPcamFreeFlightInit(&shadowsExample.Camera, 3.0f, 3.0f, OPVEC3_ONE, 0.01f, 50.0f);
 }
 
 OPint ExampleShadowsUpdate(OPtimer* timer) {
@@ -197,28 +191,26 @@ OPint ExampleShadowsUpdate(OPtimer* timer) {
 	OPcamGetProj(shadowsExample.ShadowCamera, &shadowsExample.ProjShadow);
 
 	OPrenderCull(1);
-
 	glCullFace(GL_FRONT);
-	//glCullFace(GL_BACK);
 	OPrenderDepth(1);
 	OPframeBufferBind(&shadowsExample.ShadowFrameBuffer);
-	//OPrenderSetViewport(0, 0, 1024, 1024);
 	OPrenderClear(0,0,0);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	
 	OPmodelDraw(shadowsExample.Model, &shadowsExample.ModelMaterials[0], shadowsExample.ShadowCamera);
-	//OPmodelDraw(shadowsExample.Ground, &shadowsExample.GroundMaterials[0], shadowsExample.ShadowCamera);
 
 	OPframeBufferUnbind();
 
 	OPrenderCull(0);
+
 	OPrenderClear(1, 1, 1);
 
 	OPmodelDraw(shadowsExample.Model, &shadowsExample.ModelMaterials[1], shadowsExample.Camera.Camera);
 	OPmodelDraw(shadowsExample.Ground, &shadowsExample.GroundMaterials[1], shadowsExample.Camera.Camera);
-	//OPmodelDraw(shadowsExample.Model, &shadowsExample.ModelMaterials[1], shadowsExample.ShadowCamera);
-	
-	//OPtexture2DRender(shadowsExample.shadow2D);
+//	OPmodelDraw(shadowsExample.Model, &shadowsExample.ModelMaterials[1], shadowsExample.ShadowCamera);
+//	OPmodelDraw(shadowsExample.Ground, &shadowsExample.GroundMaterials[1], shadowsExample.ShadowCamera);
+
+	OPtexture2DRender(shadowsExample.shadow2D);
 
 	OPrenderPresent();
 

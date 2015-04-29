@@ -1,10 +1,14 @@
-varying vec2 vUV;
-varying vec4 vShadowCoord;
-varying vec3 vNormal;
-varying vec3 vLightDirection;
+#version 330 core
+
+in vec2 vUV;
+in vec4 vShadowCoord;
+in vec3 vNormal;
+in vec3 vLightDirection;
 
 uniform sampler2D uColorTexture;
 uniform sampler2DShadow uShadow;
+
+out vec4 FragColor;
 
 void main(){
 
@@ -38,7 +42,7 @@ void main(){
 	vec4 shadowCoord = vShadowCoord / vShadowCoord.w;
 	shadowCoord.z -= bias;
 
-	vec3 MaterialDiffuseColor = texture2D( uColorTexture, vUV ).rgb;
+	vec3 MaterialDiffuseColor = texture( uColorTexture, vUV ).rgb;
 
 
 	//vec3 coord = vec3(shadowCoord.xy, (shadowCoord.z)/shadowCoord.w);
@@ -51,7 +55,7 @@ void main(){
 	//	}
 	//}
 
-	gl_FragColor =	 vec4(
+	FragColor =	 vec4(
 		visibility * MaterialDiffuseColor
 		, 1);
 }
