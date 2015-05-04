@@ -7,19 +7,18 @@
 #include "./Math/include/OPmat4.h"
 
 typedef struct {
-	OPmaterial material;
 	OPmat4 world;
 	OPmesh* mesh;
 } OPmodel;
 
-inline void OPmodelBind(OPmodel model) {
+inline void OPmodelBind(OPmodel model, OPmaterial* material) {
 	OPmeshBind(model.mesh);
-	OPmaterialBind(&model.material);
+	OPmaterialBind(material);
 	OPeffectParam("uWorld", model.world);
 }
 
-inline void OPmodelDraw(OPmodel model, OPcam cam) {
-	OPmodelBind(model);
+inline void OPmodelDraw(OPmodel model, OPmaterial* material, OPcam cam) {
+	OPmodelBind(model, material);
 	OPeffectParam(cam);
 	OPmeshRender();
 }

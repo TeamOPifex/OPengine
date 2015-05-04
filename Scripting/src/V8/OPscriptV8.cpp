@@ -165,7 +165,7 @@ OPint OPscriptV8Compile(OPscriptV8Compiled* compiled, OPscript* script, OPscript
 }
 
 OPint OPscriptV8Compile(OPscriptV8Compiled* compiled, OPscript* script) {
-	OPscriptV8Compile(compiled, script, NULL);
+	return OPscriptV8Compile(compiled, script, NULL);
 }
 
 Local<Value> _runCompiled(OPscriptV8Compiled* scriptCompiled) {
@@ -222,8 +222,6 @@ OPscriptV8PersistentValue OPscriptV8Run(OPscriptV8Compiled* scriptCompiled, OPch
 	}
 	
 	return Persistent<Value>(OPSCRIPTV8_ISOLATE, func->Call(global, count, values));
-
-
 }
 
 OPscriptV8PersistentValue OPscriptV8Run(OPscriptV8Compiled* scriptCompiled, OPchar* name) {

@@ -7,17 +7,6 @@
 #include "./Data/include/OPcman.h"
 #include "./Human/include/Rendering/Primitives/OPsphericalCube.h"
 
-void ExampleSphericalCubeEnter(OPgameState* last);
-OPint ExampleSphericalCubeUpdate(OPtimer* time);
-void ExampleSphericalCubeExit(OPgameState* next);
-
-// This is the Game State for this SphericalCubeExample
-// Each entry is a function pointer for Initialize, Update, Destroy
-OPgameState GS_EXAMPLE_SPHERICALCUBE = {
-	ExampleSphericalCubeEnter,
-	ExampleSphericalCubeUpdate,
-	ExampleSphericalCubeExit
-};
 
 // Data for this Game State Example
 typedef struct {
@@ -42,7 +31,7 @@ void ExampleSphericalCubeEnter(OPgameState* last) {
 	// The OPcmanLoad call ensures that this mesh has been loaded
 	// The OPcmanGet call returns a pointer to the resource (an OPmesh)
 	// that's contained in the Content Manager
-	sphericalCubeExample->SphericalCube = OPsphericalCubeCreate(2);
+	sphericalCubeExample->SphericalCube = OPsphericalCubeCreate(10);
 
 	// The effect that will be used to render the mesh
 	// The renderGenEffect is a simplified utility method
@@ -118,8 +107,19 @@ OPint ExampleSphericalCubeUpdate(OPtimer* time) {
 }
 
 // The OPifex Engine will call this itself when you call OPgameStateChange
-void ExampleSphericalCubeExit(OPgameState* next) {
+OPint ExampleSphericalCubeExit(OPgameState* next) {
 	// Clean up phase for the Game State
 	OPeffectUnload(&sphericalCubeExample->Effect);	
 	OPfree(sphericalCubeExample);
+	return 0;
 }
+
+
+OPint GS_EXAMPLE_SPHERICALCUBE_AVAILABLE = 1;
+// This is the Game State for this SphericalCubeExample
+// Each entry is a function pointer for Initialize, Update, Destroy
+OPgameState GS_EXAMPLE_SPHERICALCUBE = {
+	ExampleSphericalCubeEnter,
+	ExampleSphericalCubeUpdate,
+	ExampleSphericalCubeExit
+};

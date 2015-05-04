@@ -131,7 +131,7 @@ void State0Enter(OPgameState* last){
 	
 	const OPchar** text = (const OPchar**)OPalloc(sizeof(i8) * 1);
 	text[0] = "All of the text! Woot!";
-	fontManager = OPfontManagerSetup("stencil.opf", text, 1);
+	fontManager = OPfontManagerSetup("stencil.opf", text, 1, 1);
 
 	// Optional
 	OPfontManagerSetColor(fontManager, 0.0f, 0.0f, 1.0f, 1.0f);
@@ -208,17 +208,17 @@ OPint State0Update(OPtimer* time){
 	OPmeshRender();
 
 	// Required
-	OPfontRender(
-		"All of the text! Woot!",
-		pos.x + fontPosX,
-		pos.y + fontPosY
-	);
+	// OPfontRender(
+	// 	"All of the text! Woot!",
+	// 	pos.x + fontPosX,
+	// 	pos.y + fontPosY
+	// );
 
 	OPrenderPresent();
 	return false;
 }
 
-void State0Exit(OPgameState* next){
+OPint State0Exit(OPgameState* next){
 	OPcmanDelete("impact.wav");
 	OPcmanDelete("boom.wav");
 	OPcmanDelete("background.ogg");
@@ -232,6 +232,7 @@ void State0Exit(OPgameState* next){
 	OPcmanDelete("noneNorm.png");	
 
 	OPfree(garbage);
+	return 0;
 }
 //-----------------------------------------------------------------------------
 void State1Enter(OPgameState* last){
@@ -338,7 +339,7 @@ OPint State1Update(OPtimer* time){
 	return false;
 }
 
-void State1Exit(OPgameState* next){
+OPint State1Exit(OPgameState* next){
 	OPcmanDelete("impact.wav");
 	OPcmanDelete("boom.wav");
 	OPcmanDelete("background.ogg");
@@ -355,4 +356,5 @@ void State1Exit(OPgameState* next){
 	OPeffectUnload(&post);
 
 	OPfree(garbage);
+	return 0;
 }

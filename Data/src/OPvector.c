@@ -9,7 +9,7 @@ OPvector* OPvectorCreate(OPint elementSize) {
 
 	self->_elementSize = elementSize;
 	self->_size = 0;
-	self->_capacity = 1;
+	self->_capacity = 16;
 	self->items = OPalloc(self->_elementSize * self->_capacity);
 
 	return self;

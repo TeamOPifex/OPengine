@@ -11,10 +11,10 @@ typedef struct {
 } OPfontAtlasNode;
 
 typedef struct {
-	i32 x;
-	i32 y;
-	i32 width;
-	i32 height;
+	OPint x;
+	OPint y;
+	OPint width;
+	OPint height;
 } OPfontAtlasRegion;
 
 typedef struct {

@@ -4,8 +4,9 @@
 const OPvec3 OPVEC3_ZERO    = { 0, 0, 0 };
 const OPvec3 OPVEC3_ONE     = { 1, 1, 1 };
 const OPvec3 OPVEC3_UP      = { 0, 1, 0 };
-const OPvec3 OPVEC3_LEFT    = { 1, 0, 0 };
+const OPvec3 OPVEC3_LEFT = { 1, 0, 0 };
 const OPvec3 OPVEC3_FORWARD = { 0, 0, 1 };
+const OPvec3 OPVEC3_BACKWARD = { 0, 0, -1 };
 
 OPvec3 OPvec3::operator*=(OPmat4 rhs) 
 {

@@ -94,7 +94,7 @@ if(${OPIFEX_TOOLS_FBXTOOPM})
 	endif()
 
 
-	add_source_group(\\ "${PROJECT_SOURCE_DIR}/Tools/FBXtoOPM" FBXTOOPM_SRC)
+	add_source_group(/ "${PROJECT_SOURCE_DIR}/Tools/FBXtoOPM" FBXTOOPM_SRC)
 	
 	set(ALL_LIBS
 		1_Core

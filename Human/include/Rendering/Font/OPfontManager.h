@@ -26,6 +26,7 @@ typedef enum {
 } OPfontAlign;
 
 typedef struct {
+	OPfontUserTextNode dummyMesh;
 	OPfont* _font;
 	OPvec4 _color; 
 	OPfontAlign _align;
@@ -35,6 +36,8 @@ typedef struct {
 	OPhashMap* builtNodes;
 	OPmeshPacker meshPacker;
 	OPint pixelated;
+	OPmat4 proj;
+	OPfloat scale;
 } OPfontManager;
 
 
@@ -50,6 +53,7 @@ typedef struct {
 
 extern OPfontManager* OPFONTMANAGER_ACTIVE;
 extern OPeffect* OPFONTMANAGER_EFFECT_ACTIVE;
+extern OPeffect* OPFONTMANAGER_EFFECT2D_ACTIVE;
 
 
 //-----------------------------------------------------------------------------
@@ -61,7 +65,7 @@ extern OPeffect* OPFONTMANAGER_EFFECT_ACTIVE;
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
 OPfontManager* OPfontManagerCreate(OPfont* font);
-OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 count);
+OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 count, OPfloat scale);
 
 void OPfontManagerAddText(const OPchar* text);
 void OPfontManagerBuild(); 

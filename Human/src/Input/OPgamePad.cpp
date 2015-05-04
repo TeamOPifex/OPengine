@@ -1,4 +1,5 @@
 #include "./Human/include/Input/OPgamePad.h"
+#include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
 	
@@ -139,63 +140,77 @@ void __OPandUpdateGamePad(OPgamePad* controller){
 }
 #endif
 //-----------------------------------------------------------------------------
-#if !defined(OPIFEX_ANDROID) && defined(OPIFEX_UNIX)
+#ifdef OPIFEX_UNIX
 void __OPlnxUpdateGamePad(OPgamePad* c){
+	
 	i32  axes = 0, buttons = 0;
 	const f32* axisData   = NULL;
 	const ui8* buttonData = NULL;
 
 	// make sure the gamepad is connected
 	if(!glfwJoystickPresent((i32)c->playerIndex)){
+		//OPlog("Controller %d not connected", (i32)c->playerIndex);
 		c->connected = 0;
 		return;
 	}
 
+	c->connected = true;
+
 	// get axis data, andmake sure the number of axes are expected
 	axisData = glfwGetJoystickAxes(c->playerIndex, &axes); 
-	if(axes != 8){
-		// game pads should have 8 axes
-		// 2 for each stick, and 2 for the dpad
-		c->connected = 0;
-		return;
-	}
+	//OPlog("Axes %d", axes);
+	// if(axes != 8){
+	// 	// game pads should have 8 axes
+	// 	// 2 for each stick, and 2 for the dpad
+	// 	c->connected = 0;
+	// 	return;
+	// }
 	
 	// map left stick and trigger
 	c->axes[OPGAMEPADAXIS_LS_X] =  axisData[0];
 	c->axes[OPGAMEPADAXIS_LS_Y] = -axisData[1];
-	c->axes[OPGAMEPADAXIS_L2]   =  (axisData[2] + 1.0f) / 2.0f;
 
-	// map right stick and trigger
-	c->axes[OPGAMEPADAXIS_RS_X] =  axisData[3];
-	c->axes[OPGAMEPADAXIS_RS_Y] = -axisData[4];
+	c->axes[OPGAMEPADAXIS_RS_X] =  axisData[2];
+	c->axes[OPGAMEPADAXIS_RS_Y] = -axisData[3];
+
+	c->axes[OPGAMEPADAXIS_L2]   =  (axisData[4] + 1.0f) / 2.0f;
 	c->axes[OPGAMEPADAXIS_R2]   =  (axisData[5] + 1.0f) / 2.0f;
 
-	// map the dpad
-	c->buttons[OPGAMEPADBUTTON_DPAD_LEFT]  = axisData[6] == -1.0f;
-	c->buttons[OPGAMEPADBUTTON_DPAD_RIGHT] = axisData[6] ==  1.0f;
-	c->buttons[OPGAMEPADBUTTON_DPAD_UP]    = axisData[7] == -1.0f;
-	c->buttons[OPGAMEPADBUTTON_DPAD_DOWN]  = axisData[7] ==  1.0f;
+	// OPlog("L %f %f %f", c->axes[OPGAMEPADAXIS_LS_X], c->axes[OPGAMEPADAXIS_LS_Y], c->axes[OPGAMEPADAXIS_L2]);
+	// OPlog("R %f %f %f", c->axes[OPGAMEPADAXIS_RS_X], c->axes[OPGAMEPADAXIS_RS_Y], c->axes[OPGAMEPADAXIS_R2]);
+
+	// if(axes == 8) {
+	// 	// map right stick and trigger
+	// 	c->axes[OPGAMEPADAXIS_RS_X] =  axisData[3];
+	// 	c->axes[OPGAMEPADAXIS_RS_Y] = -axisData[4];
+	// 	c->axes[OPGAMEPADAXIS_R2]   =  (axisData[5] + 1.0f) / 2.0f;
+	// }
+
 
 	// get button data, make sure it's all kosher
 	buttonData = glfwGetJoystickButtons(c->playerIndex, &buttons);
-	if(buttons != 11){
+	if(buttons < 10){
 		// game pads should have 10 buttons
+		OPlog("GamePad had %d buttons but has to have at least %d buttons", buttons, 10);
 		c->connected = 0;
 		return;
 	}
 
+	c->buttons[OPGAMEPADBUTTON_DPAD_LEFT]  = buttonData[2];
+	c->buttons[OPGAMEPADBUTTON_DPAD_RIGHT] = buttonData[3];
+	c->buttons[OPGAMEPADBUTTON_DPAD_UP]    = buttonData[0];
+	c->buttons[OPGAMEPADBUTTON_DPAD_DOWN]  = buttonData[1];
 	// map buttons
-	c->buttons[OPGAMEPADBUTTON_A] = buttonData[0];
-	c->buttons[OPGAMEPADBUTTON_B] = buttonData[1];
-	c->buttons[OPGAMEPADBUTTON_X] = buttonData[2];
-	c->buttons[OPGAMEPADBUTTON_Y] = buttonData[3];
-	c->buttons[OPGAMEPADBUTTON_LEFT_SHOULDER]  = buttonData[4];
-	c->buttons[OPGAMEPADBUTTON_RIGHT_SHOULDER] = buttonData[5];
-	c->buttons[OPGAMEPADBUTTON_BACK]        = buttonData[6];
-	c->buttons[OPGAMEPADBUTTON_START]       = buttonData[7];
-	//c->buttons[OPGAMEPADBUTTON_A]         = buttonData[8];
-	c->buttons[OPGAMEPADBUTTON_LEFT_THUMB]  = buttonData[9];
-	c->buttons[OPGAMEPADBUTTON_RIGHT_THUMB] = buttonData[10];
+	c->buttons[OPGAMEPADBUTTON_A] = buttonData[11];
+	c->buttons[OPGAMEPADBUTTON_B] = buttonData[12];
+	c->buttons[OPGAMEPADBUTTON_X] = buttonData[13];
+	c->buttons[OPGAMEPADBUTTON_Y] = buttonData[14];
+	c->buttons[OPGAMEPADBUTTON_LEFT_SHOULDER]  = buttonData[8];
+	c->buttons[OPGAMEPADBUTTON_RIGHT_SHOULDER] = buttonData[9];
+	c->buttons[OPGAMEPADBUTTON_BACK]        = buttonData[5];
+	c->buttons[OPGAMEPADBUTTON_START]       = buttonData[4];
+	c->buttons[OPGAMEPADBUTTON_LEFT_THUMB]  = buttonData[6];
+	c->buttons[OPGAMEPADBUTTON_RIGHT_THUMB] = buttonData[7];
 }
 #endif
 //-----------------------------------------------------------------------------
@@ -280,7 +295,7 @@ void OPgamePadUpdate(OPgamePad* controller){
 		OPmemcpy(
 			&controller->prevButtons, 
 			&controller->buttons, 
-			sizeof(OPint) * _OPGAMEPADAXIS_MAX);
+			sizeof(OPint) * _OPGAMEPADBUTTON_MAX);
 		OPmemcpy(
 			&controller->prevAxes, 
 			&controller->axes, 
@@ -291,7 +306,7 @@ void OPgamePadUpdate(OPgamePad* controller){
 	__OPandUpdateGamePad(controller);
 #endif
 	
-#if !defined(OPIFEX_ANDROID) && defined(OPIFEX_UNIX)
+#ifdef OPIFEX_UNIX
 	__OPlnxUpdateGamePad(controller);	
 #endif
 

@@ -16,8 +16,7 @@ OPvertices* OPverticesCreate(ui32 count, ui32 features) {
 
 	OPvertices* vertices = (OPvertices*)OPalloc(sizeof(OPvertices));
 	OPuint totalDataSize = size * sizeof(f32)* count;
-	vertices->data = (i8*)OPalloc(totalDataSize);
-	OPbzero(vertices->data, totalDataSize);
+	vertices->data = (i8*)OPallocZero(totalDataSize);
 	vertices->features = features;
 	vertices->size = size;
 	vertices->count = count;
@@ -70,8 +69,8 @@ void OPverticesWriteVec3(OPvertices* vertices, OPvec3* data, ui32 feature) {
 	for (i32 i = 0; i < vertices->count; i++) {
 		void* dst = &vertices->data[offset * sizeof(f32)];
 		void* src = &data[i];
-		offset += vertices->size;
 		OPmemcpy(dst, src, sizeof(OPvec3));
+		offset += vertices->size;
 	}
 }
 

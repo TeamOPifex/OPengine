@@ -199,6 +199,10 @@ inline void OPmat4Identity(OPmat4* m) {
 	return tmp;
 }
 
+ inline OPvec3 OPmat4GetTranslate(OPmat4 mat) {
+	 return OPvec3Create(mat[3][0], mat[3][1], mat[3][2]);
+ }
+
  inline OPmat4 OPmat4RotX(OPfloat t) {
 	OPfloat t1 = OPcos(t);
 	OPfloat t2 = OPsin(t);
@@ -245,6 +249,14 @@ inline void OPmat4Identity(OPmat4* m) {
 	m[3].x = v.x;
 	m[3].y = v.y;
 	m[3].z = v.z;
+	return m;
+}
+
+ inline OPmat4 OPmat4Translate(OPvec2 v) {
+	OPmat4 m = OPMAT4IDENTITY;
+	m[3].x = v.x;
+	m[3].y = v.y;
+	m[3].z = 0;
 	return m;
 }
 

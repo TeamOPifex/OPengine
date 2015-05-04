@@ -6,23 +6,7 @@
 #include "./Human/include/Rendering/Sprite/OPspriteSheet.h"
 #include "./Human/include/Utilities/OPimagePNG.h"
 
-OPassetLoader OP_DEFAULT_LOADERS[8] = {
-	{
-		".wav",
-		"Audio/",
-		sizeof(OPaudioSource),
-		(OPint (*)(const OPchar*, void**))OPaudOpenWave,
-		(OPint(*)(void*))OPaudCloseWave,
-		NULL
-	},
-	{
-		".ogg",
-		"Audio/",
-		sizeof(OPaudioSource),
-		(OPint (*)(const OPchar*, void**))OPaudOpenOgg,
-		(OPint (*)(void*))OPaudCloseOgg,
-		NULL
-	},
+OPassetLoader OP_DEFAULT_LOADERS[6] = {
 	{
 		".png",
 		"Textures/",
@@ -37,7 +21,11 @@ OPassetLoader OP_DEFAULT_LOADERS[8] = {
 #ifdef OPIFEX_ANDROID
 		"Shaders/OPENGL_ES_2_0/",
 #else
+				#ifdef OPIFEX_OPENGL_3_3
+				"Shaders/OPENGL_3_3/",
+				#else
 		"Shaders/OPENGL_2_0/",
+				#endif
 #endif
 #else
 		"Shaders/",
@@ -53,7 +41,11 @@ OPassetLoader OP_DEFAULT_LOADERS[8] = {
 #ifdef OPIFEX_ANDROID
 		"Shaders/OPENGL_ES_2_0/",
 #else
+#ifdef OPIFEX_OPENGL_3_3
+				"Shaders/OPENGL_3_3/",
+#else
 		"Shaders/OPENGL_2_0/",
+				#endif
 #endif
 #else
 		"Shaders/",
@@ -88,6 +80,24 @@ OPassetLoader OP_DEFAULT_LOADERS[8] = {
 		NULL
 	},
 };
+
+//
+//{
+//	".wav",
+//		"Audio/",
+//		sizeof(OPaudioSource),
+//		(OPint(*)(const OPchar*, void**))OPaudOpenWave,
+//		(OPint(*)(void*))OPaudCloseWave,
+//		NULL
+//},
+//{
+//	".ogg",
+//	"Audio/",
+//	sizeof(OPaudioSource),
+//	(OPint(*)(const OPchar*, void**))OPaudOpenOgg,
+//	(OPint(*)(void*))OPaudCloseOgg,
+//	NULL
+//},
 
 
 void OPloadersAddDefault() {

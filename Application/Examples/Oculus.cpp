@@ -6,16 +6,6 @@
 #include "./Human/include/Rendering/OPMvertex.h"
 #include "./Human/include/Input/OPoculus.h"
 
-void ExampleOculusEnter(OPgameState* last);
-OPint ExampleOculusUpdate(OPtimer* time);
-void ExampleOculusExit(OPgameState* next);
-
-OPgameState GS_EXAMPLE_OCULUS = {
-	ExampleOculusEnter,
-	ExampleOculusUpdate,
-	ExampleOculusExit
-};
-
 typedef struct {
 	OPmesh* Mesh;
 	OPeffect* Effect;
@@ -104,9 +94,22 @@ OPint ExampleOculusUpdate(OPtimer* time) {
 	return false;
 }
 
-void ExampleOculusExit(OPgameState* next) {
+OPint ExampleOculusExit(OPgameState* next) {
 	OPfree(oculusExample->Effect);
 	OPfree(oculusExample->Camera);
 
 	OPfree(oculusExample);
+	return 0;
 }
+
+#ifndef OPIFEX_OPTION_OCULUS
+OPint GS_EXAMPLE_OCULUS_AVAILABLE = 0;
+#else
+OPint GS_EXAMPLE_OCULUS_AVAILABLE = 1;
+#endif
+
+OPgameState GS_EXAMPLE_OCULUS = {
+	ExampleOculusEnter,
+	ExampleOculusUpdate,
+	ExampleOculusExit
+};

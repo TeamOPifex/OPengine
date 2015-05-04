@@ -28,6 +28,11 @@ struct OPvec2 {
 	OPvec2 operator=(OPvec2 vhs) { 
 		OPmemcpy(this, &vhs, sizeof(OPvec2)); return *this;
 	}
+	inline OPvec2 operator+=(OPfloat vhs) {
+		this->x += vhs;
+		this->y += vhs;
+		return *this; 
+	}
 	inline OPvec2 operator+=(OPvec2 vhs) { 
 		OPvec2Add(this, this, &vhs); 
 		return *this; 
@@ -198,7 +203,9 @@ inline OPvec2 OPvec2Read(OPstream* str) {
 }
 
 inline OPvec2 OPvec2RandNorm(){
-	OPvec2 v = { OPrandom() - 0.5, OPrandom() - 0.5 };
+	OPvec2 v;
+	v.x = OPrandom() - 0.5;
+	v.y = OPrandom() - 0.5;
 	return OPvec2Norm(v);
 }
 

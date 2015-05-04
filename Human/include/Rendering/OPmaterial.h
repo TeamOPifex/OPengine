@@ -73,7 +73,6 @@ inline void OPmaterialBind(OPmaterial* material) {
 	OPeffectBind(material->effect);
 
 	OPtextureClearActive();
-	OPlog("Param Count %d", material->paramIndex);
 	for(OPuint i = 0; i < material->paramIndex; i++) {
 		switch(material->params[i].type) {
 			case MATERIAL_PARAM_TYPE_TEXTURE: {
@@ -81,7 +80,6 @@ inline void OPmaterialBind(OPmaterial* material) {
 				break;
 			}
 			case MATERIAL_PARAM_TYPE_VECTOR3: {
-				OPvec3Log("COLOR", (*(OPvec3*)material->params[i].data));
 				OPeffectParam(material->params[i].name, *(OPvec3*)material->params[i].data);
 				break;
 			}

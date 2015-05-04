@@ -3,13 +3,15 @@
 #ifdef OPIFEX_OPTION_SPINE
 
 	#include "./Pipeline/include/Rendering.h"
-	#include "./Human/include/Utilities/ImagePNG.h"
+	#include "./Human/include/Utilities/OPImagePNG.h"
 	#include "./Core/include/OPlog.h"
 	#include "./Data/include/OPcman.h"
 	#include "./Human/include/Rendering/OPmesh.h"
 	#include "./Human/include/Rendering/OPMvertex.h"
+	#include "./Human/include/Rendering/Primitives/OPvertex.h"
 	#include "./Human/include/Rendering/Primitives/OPquad.h"
 	#include "./Core/include/Assert.h"
+#include "./Data/include/OPstring.h"
 
 	void _spAtlasPage_createTexture(spAtlasPage* self, const char* path){
 		OPlog("Spine Atlas Texture to load: %s", path);
@@ -90,7 +92,9 @@ i32 SpineLoad(const OPchar* filename, Spine** spine) {
 	spAtlas* atlas = spAtlas_createFromFile(filename, NULL);
 	spSkeletonJson* json = spSkeletonJson_create(atlas);
 	json->scale = 0.6f;
-	spSkeletonData *skeletonData = spSkeletonJson_readSkeletonDataFile(json, "C:/_Repos/OPifex/OPifex.Hg/OPifex.Engine/Assets/Spine/spineboy.json");
+	OPchar* merged = OPstringCreateMerged(OPdirCurrent(), "Spine/spineboy.json");
+	spSkeletonData *skeletonData = spSkeletonJson_readSkeletonDataFile(json, merged);
+	OPfree(merged);
 
 	spSkeletonJson_dispose(json);
 	result->bounds = spSkeletonBounds_create();
@@ -130,7 +134,7 @@ void SpineRender(Spine* spine, OPmat4* world, OPeffect* effect, OPcam* camera) {
 		if (!attachment) continue;
 
 		OPtexture* texture = NULL;
-		OPvertexColor vertices[4];
+		OPvertexTexColor vertices[4];
 		f32 worldVertices[1000];
 
 		if (attachment->type == SP_ATTACHMENT_REGION) {
@@ -172,7 +176,7 @@ void SpineRender(Spine* spine, OPmat4* world, OPeffect* effect, OPcam* camera) {
 			vertices[3].TexCoord.x = regionAttachment->uvs[SP_VERTEX_X4];
 			vertices[3].TexCoord.y = regionAttachment->uvs[SP_VERTEX_Y4];
 
-			OPrenderSetBufferSubData(&OP_SPINE_QUAD.VertexBuffer, sizeof(OPvertexColor), 0, 4, vertices);
+			OPrenderSetBufferSubData(&OP_SPINE_QUAD.VertexBuffer, sizeof(OPvertexTexColor), 0, 4, vertices);
 
 			OPbindMeshEffectWorldCam(&OP_SPINE_QUAD, effect, world, camera);
 			if (texture) {

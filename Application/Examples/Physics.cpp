@@ -5,15 +5,6 @@
 
 #include "./Data/include/OPcman.h"
 
-void ExamplePhysicsEnter(OPgameState* last);
-OPint ExamplePhysicsUpdate(OPtimer* time);
-void ExamplePhysicsExit(OPgameState* next);
-
-OPgameState GS_EXAMPLE_PHYSICS = {
-	ExamplePhysicsEnter,
-	ExamplePhysicsUpdate,
-	ExamplePhysicsExit
-};
 
 typedef struct {
 	OPphysicsDynamic* physics;
@@ -265,8 +256,21 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	return false;
 }
 
-void ExamplePhysicsExit(OPgameState* next) {
+OPint ExamplePhysicsExit(OPgameState* next) {
 	OPphysicsDestroy(physicsExample->scene);
 
 	OPfree(physicsExample);
+	return 0;
 }
+
+#ifndef OPIFEX_OPTION_PHYSICS
+OPint GS_EXAMPLE_PHYSICS_AVAILABLE = 0;
+#else
+OPint GS_EXAMPLE_PHYSICS_AVAILABLE = 1;
+#endif
+
+OPgameState GS_EXAMPLE_PHYSICS = {
+	ExamplePhysicsEnter,
+	ExamplePhysicsUpdate,
+	ExamplePhysicsExit
+};
