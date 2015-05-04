@@ -25,7 +25,7 @@ add_source_group(include/wrappers "${PROJECT_SOURCE_DIR}/Scripting/include/wrapp
 #########################################
 # Source Files
 #########################################
-add_source_group(\\ "${PROJECT_SOURCE_DIR}/Scripting" SCRIPTING_SRC)
+add_source_group(/ "${PROJECT_SOURCE_DIR}/Scripting" SCRIPTING_SRC)
 add_source_group(src/ "${PROJECT_SOURCE_DIR}/Scripting/src" SCRIPTING_SRC)
 add_source_group(src/V8 "${PROJECT_SOURCE_DIR}/Scripting/src/V8" SCRIPTING_SRC)
 add_source_group(src/V8/WrapperMath "${PROJECT_SOURCE_DIR}/Scripting/src/V8/WrapperMath" SCRIPTING_SRC)

@@ -7,16 +7,6 @@
 
 #include "./Human/include/Systems/OPinputSystem.h"
 
-void ExampleSkinningEnter(OPgameState* last);
-OPint ExampleSkinningUpdate(OPtimer* time);
-void ExampleSkinningExit(OPgameState* next);
-
-OPgameState GS_EXAMPLE_SKINNING = {
-	ExampleSkinningEnter,
-	ExampleSkinningUpdate,
-	ExampleSkinningExit
-};
-
 typedef struct {
 	OPmesh* Mesh;
 	OPeffect* Effect;
@@ -171,8 +161,16 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	return false;
 }
 
-void ExampleSkinningExit(OPgameState* next) {
+OPint ExampleSkinningExit(OPgameState* next) {
 	OPeffectUnload(skinningExample->Effect);
 	OPfree(skinningExample->Effect);
 	OPfree(skinningExample->Camera);
+	return 0;
 }
+
+OPint GS_EXAMPLE_SKINNING_AVAILABLE = 1;
+OPgameState GS_EXAMPLE_SKINNING = {
+	ExampleSkinningEnter,
+	ExampleSkinningUpdate,
+	ExampleSkinningExit
+};

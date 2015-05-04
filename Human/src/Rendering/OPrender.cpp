@@ -1,20 +1,22 @@
 #include "./Human/include/Rendering/OPrender.h"
 
-#include "./Core/include/OPlog.h"
+#if defined(OPIFEX_OPENGL_2_0) && !defined(OPIFEX_ANDROID)
+
 #include "./Core/include/OPcore.h"
-#include "./Core/include/Assert.h"
-#include "./Data/include/OPfile.h"
 
 
-i32 OPRENDER_WIDTH;
-i32 OPRENDER_HEIGHT;
+i32 OPRENDER_WIDTH = 1280;
+i32 OPRENDER_HEIGHT = 720;
 i32 OPRENDER_SCREEN_WIDTH = 1280;
 i32 OPRENDER_SCREEN_HEIGHT = 720;
+i32 OPRENDER_SCALED_WIDTH = 1280;
+i32 OPRENDER_SCALED_HEIGHT = 720;
 f32 OPRENDER_SCREEN_WIDTH_SCALE = 1;
 f32 OPRENDER_SCREEN_HEIGHT_SCALE = 1;
 OPint OPRENDER_FULLSCREEN = false;
 OPint OPRENDER_HAS_FOCUS = 1;
 OPint glfwInitialized = 0;
+OPuint OPRENDER_VAO = 0;
 
 #ifndef OPIFEX_ANDROID
 GLFWwindow* window = NULL;
@@ -77,9 +79,22 @@ void glfwWindowFocusCallback(GLFWwindow* window, int code) {
 	OPlogInfo("Focus Result: %d", code);
 	OPRENDER_HAS_FOCUS = code;
 }
+void glfwWindowDropCallback(GLFWwindow* window, int count, const OPchar** files) {
+	OPlog("Total Files: %d", count);
+	for(OPint i = 0; i < count; i++) {
+		OPlog("File: %s", files[i]);
+	}
+}
+#include "./Human/include/Input/OPkeyboard.h"
+void glfwCharacterCallback(GLFWwindow* window, unsigned int codepoint)
+{
+	OPkeyboardKey(codepoint);
+}
 #endif
 
-OPint OPrenderInit(){
+OPint OPrenderInit(i32 width, i32 height){
+	OPRENDER_SCREEN_WIDTH = width;
+	OPRENDER_SCREEN_HEIGHT = height;
 	OPlogDebug("Initializing Renderer");
 
 #ifdef OPIFEX_ANDROID
@@ -150,7 +165,7 @@ OPint OPrenderInit(){
 	OPglError("OPrenderInit:Error 3");
 
 	OPlog("Android State Window %d", OPAndroidState->window);
-	
+
 
 	OPlog("eglMakeCurrent");
 	if (eglMakeCurrent(display, surface, surface, context) == EGL_FALSE) {
@@ -194,18 +209,18 @@ OPint OPrenderInit(){
 #ifdef OPIFEX_OPENGL_ES_2
 	// Android doesn't need to create a window
 	//glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LESS); 
+	//glDepthFunc(GL_LESS);
 	////glCullFace(GL_FRONT);
 	////glEnable(GL_CULL_FACE);
 	//glDisable(GL_CULL_FACE);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glEnable( GL_BLEND );
 
 	//OPrenderWidth = JNIWidth();
 	//OPrenderHeight = JNIHeight();
 	//OPscreenWidth = JNIWidth();
 	//OPscreenHeight = JNIHeight();
-#else	
+#else
 
 	// OPstream* str = OPreadFile("../app.config");
 	// if (str) {
@@ -231,6 +246,7 @@ OPint OPrenderInit(){
 	//glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	glfwWindowHint(GLFW_ALPHA_BITS, 8);
 
 	GLFWmonitor* monitor = NULL;
 	if (OPRENDER_FULLSCREEN){
@@ -243,22 +259,24 @@ OPint OPrenderInit(){
 	OPlog("%d x %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
 	OPlog("%d x %d", _screenWidth, _screenHeight);
 
-	window = glfwCreateWindow(_screenWidth, _screenHeight, 
+	window = glfwCreateWindow(_screenWidth, _screenHeight,
 		"OPifex Entertainment", monitor, NULL);
 
 	OPlog("%d x %d", _screenWidth, _screenHeight);
 
-	OPlogInfo("Created window of size: %d x %d", 
+	OPlogInfo("Created window of size: %d x %d",
 		_screenWidth, _screenHeight);
 
 	glfwGetFramebufferSize(window, &OPRENDER_SCREEN_WIDTH, &OPRENDER_SCREEN_HEIGHT);
 
 	OPRENDER_SCREEN_WIDTH_SCALE = _screenWidth / (f32)OPRENDER_SCREEN_WIDTH;
 	OPRENDER_SCREEN_HEIGHT_SCALE = _screenHeight / (f32)OPRENDER_SCREEN_HEIGHT;
+	OPRENDER_SCALED_WIDTH = OPRENDER_SCREEN_WIDTH * OPRENDER_SCREEN_WIDTH_SCALE;
+	OPRENDER_SCALED_HEIGHT = OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE;
 	OPlogInfo("Frame Buffer size: %d x %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
 	OPlogDebug("Scale: %f x %f", OPRENDER_SCREEN_WIDTH_SCALE, OPRENDER_SCREEN_HEIGHT_SCALE);
 
-	if(!window) {		
+	if(!window) {
 		OPlogErr("Failed to open GLFW window of %dx%d. If you have an Intel GPU, they are not 3.3 compatible.\n", OPRENDER_WIDTH, OPRENDER_HEIGHT );
 		glfwTerminate();
 		return -1;
@@ -274,22 +292,25 @@ OPint OPrenderInit(){
 
 	GLint w, h;
 
+	glewExperimental = GL_TRUE;
 	OPrenderSetViewport(0, 0, OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
-	if (glewInit() != GLEW_OK) return -1;	
+	if (glewInit() != GLEW_OK) return -1;
 
-	glfwSetInputMode(window, GLFW_STICKY_KEYS, true); 
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(window, GLFW_STICKY_KEYS, true);
 
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCharCallback(window, glfwCharacterCallback);
+	glfwSetDropCallback(window, glfwWindowDropCallback);
 
 	// TODO: Determine how to optimize with this
-#if !defined(OPIFEX_OSX32) && !defined(OPIFEX_OSX64)
-	//GLuint VertexArrayID;
-	//glGenVertexArrays(1, &VertexArrayID);
-	//glBindVertexArray(VertexArrayID);
-#endif
+//#if !defined(OPIFEX_OSX32) && !defined(OPIFEX_OSX64)
+	GLuint VertexArrayID;
+	glGenVertexArrays(1, &VertexArrayID);
+	glBindVertexArray(VertexArrayID);
+//#endif
 
 	glEnable(GL_MULTISAMPLE_ARB);
-	glEnable(GL_BLEND); 
+	glEnable(GL_BLEND);
 	glEnable(GL_MULTISAMPLE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -323,15 +344,8 @@ void OPrenderCullMode(OPint state) {
 		glCullFace(GL_BACK);
 	}
 }
-
 //-----------------------------------------------------------------------------
-void  OPrenderClear(f32 r, f32 g, f32 b){
-	glClearColor(r, g, b, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-//-----------------------------------------------------------------------------
-void  OPrenderClearAlpha(f32 r, f32 g, f32 b, f32 a){
+void  OPrenderClear(f32 r, f32 g, f32 b, f32 a){
 	glClearColor(r, g, b, a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
@@ -386,7 +400,7 @@ void  OPrenderSwapBuffer(){
 #ifdef OPIFEX_OPENGL_ES_2
 	eglSwapBuffers(display, surface);
 #else
-	glfwSwapBuffers(window);	
+	glfwSwapBuffers(window);
 #endif
 }
 //-----------------------------------------------------------------------------
@@ -394,7 +408,7 @@ void  OPrenderPresent(){
 #ifdef OPIFEX_OPENGL_ES_2
 	eglSwapBuffers(display, surface);
 #else
-	glfwSwapBuffers(window);	
+	glfwSwapBuffers(window);
 	glfwPollEvents();
 	if(glfwWindowShouldClose(window)){
 		OPend();
@@ -432,3 +446,5 @@ void  OPrenderShutdown(){
 	glfwTerminate();
 #endif
 }
+
+#endif

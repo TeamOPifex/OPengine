@@ -11,6 +11,9 @@
 OPkeyboardState Keyboard;
 
 #ifndef OPIFEX_ANDROID
+
+void (*OPKEYBOARD_STREAM)(OPchar);
+
 void OPkeyboardUpdate(OPtimer* timer) {
 	OPmemcpy(&Keyboard.prevKeys, &Keyboard.keys, _OPKEYBOARD_MAX * sizeof(OPint));
 	for(ui32 i = 0; i < _OPKEYBOARD_MAX; i++) {
@@ -22,19 +25,19 @@ void OPkeyboardUpdatePost(OPtimer* timer) {
    OPinputRecordUpdate(timer);
 }
 
-OPint OPkeyboardIsDown(OPkeyboardKey key) {
+OPint OPkeyboardIsDown(enum OPkeyboardKey key) {
 	return Keyboard.keys[key];
 }
 
-OPint OPkeyboardIsUp(OPkeyboardKey key) {
+OPint OPkeyboardIsUp(enum OPkeyboardKey key) {
 	return !Keyboard.keys[key];
 }
 
-OPint OPkeyboardWasPressed(OPkeyboardKey key) {
+OPint OPkeyboardWasPressed(enum OPkeyboardKey key) {
 	return Keyboard.keys[key] && !Keyboard.prevKeys[key];
 }
 
-OPint OPkeyboardWasReleased(OPkeyboardKey key) {
+OPint OPkeyboardWasReleased(enum OPkeyboardKey key) {
 	return !Keyboard.keys[key] && Keyboard.prevKeys[key];
 }
 
@@ -73,6 +76,13 @@ OPint OPkeyboardAnyInputIsDown() {
 }
 #endif
 
+void OPkeyboardKey(OPuint codepoint) {
+   if(OPKEYBOARD_STREAM) {
+      char c = (char)codepoint;
+      OPlog("Totes: %c", c);
+      OPKEYBOARD_STREAM(c);
+   }
+}
 
 ui32 OPkeyboardMapping[_OPKEYBOARD_MAX] = {
 #ifndef OPIFEX_ANDROID

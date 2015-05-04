@@ -28,6 +28,7 @@ OPint OPloaderOPskeletonLoad(const OPchar* filename, OPskeleton** skeleton) {
 	for (i32 i = 0; i < boneCount; i++) {
 		hierarchy[i] = OPreadi16(str);
 		jointNames[i] = OPreadstring(str);
+		OPlog(jointNames[i]);
 
 		for (i32 c = 0; c < 4; c++) {
 			pose[i][c][0] = OPreadf32(str);
@@ -39,7 +40,7 @@ OPint OPloaderOPskeletonLoad(const OPchar* filename, OPskeleton** skeleton) {
 		pose[i] = OPmat4Transpose(pose[i]);
 	}
 
-	*skeleton = OPskeletonCreate(hierarchy, pose, boneCount);
+	*skeleton = OPskeletonCreate(hierarchy, pose, boneCount, jointNames);
 
 	OPstreamDestroy(str);
 

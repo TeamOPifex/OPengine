@@ -230,6 +230,17 @@ endmacro(copy_to_folder)
 
 macro(copy_to_folder_msvc APPLICATION_TARGET RELATIVE_PATH FILE_PATH OUTPUT_PATH OPIFEX_MATCH )
 
+	if( ${OPIFEX_MATCH} )
+		populate_binary_directory()
+		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+			"${PROJECT_SOURCE_DIR}${RELATIVE_PATH}${BINARY_TARGET_DIRECTORY}/${FILE_PATH}"
+			${PROJECT_BINARY_DIR}${OUTPUT_PATH})			
+	endif()
+
+endmacro(copy_to_folder_msvc)
+
+macro(copy_to_folder_msvc_vs APPLICATION_TARGET RELATIVE_PATH FILE_PATH OUTPUT_PATH OPIFEX_MATCH )
+
 	
 	if( ${OPIFEX_MATCH} )
 		populate_binary_directory()
@@ -245,7 +256,7 @@ macro(copy_to_folder_msvc APPLICATION_TARGET RELATIVE_PATH FILE_PATH OUTPUT_PATH
 			
 	endif()
 
-endmacro(copy_to_folder_msvc)
+endmacro(copy_to_folder_msvc_vs)
 			
 
 macro(copy_from_binaries_on_build APPLICATION_TARGET FILE_PATH OPIFEX_MATCH )
@@ -270,7 +281,7 @@ macro(add_external_opifex_includes)
 	set_binary_output(BINARY_FOLDER)
 	include_directories(
 		${OPIFEX_ENGINE_REPOSITORY}
-		${OPIFEX_ENGINE_REPOSITORY}/External/glfw-3.0.4/include/
+		${OPIFEX_ENGINE_REPOSITORY}/External/glfw/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/glew-1.9.0/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/glm-0.9.5/
 		${OPIFEX_ENGINE_REPOSITORY}/External/Phsyx.3.2.1/include/
@@ -285,6 +296,7 @@ macro(add_external_opifex_includes)
 		${OPIFEX_ENGINE_REPOSITORY}/External/Oculus/Src/
 		${OPIFEX_ENGINE_REPOSITORY}/External/Spine/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/Mongoose/include/
+		${OPIFEX_ENGINE_REPOSITORY}/External/FMod/include/
 		${BINARY_FOLDER}
 	)
 endmacro(add_external_opifex_includes)
@@ -339,6 +351,7 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	unset(LIBV8_ICUDATA CACHE)
 	unset(LIBV8_ICUUC CACHE)
 	unset(LIBV8_ICUI18N CACHE)
+	unset(LIBFMOD CACHE)
 
 
 	mark_as_advanced(LIBLODEPNG)
@@ -361,6 +374,7 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	mark_as_advanced(LIBV8_ICUDATA)
 	mark_as_advanced(LIBV8_ICUUC)
 	mark_as_advanced(LIBV8_ICUI18N)
+	mark_as_advanced(LIBFMOD)
 
 	if( ${OPIFEX_OS_ANDROID} )
 		find_binary(LIBLODEPNG "LodePNG")
@@ -403,6 +417,24 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		${OpenGL}
 	)
 
+	add_opifex_xinput(${APPLICATION_TARGET})
+
+	if(${OPIFEX_OPTION_FMOD})
+	
+	if(${OPIFEX_OS_WINDOWS})
+		if(${OPIFEX_OS_WIN64})
+			find_dynamic(LIBFMOD "fmod64_vc")
+		else()
+			find_dynamic(LIBFMOD "fmod_vc")
+		endif()
+	else()
+		find_dynamic(LIBFMOD "fmod")
+	endif()
+		target_link_libraries(${APPLICATION_TARGET} 
+				${LIBFMOD}
+			)
+	endif()
+
 	if(${OPIFEX_OPTION_V8})
 			if(${OPIFEX_OS_WINDOWS})
 				find_binary(LIBV8 "v8" false)
@@ -414,7 +446,7 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 				find_binary(LIBV8_LIBPLATFORM "v8_libplatform" false)
 				find_binary(LIBV8_NOSHNAPSHOT "v8_nosnapshot" false)
 				find_binary(LIBV8_ICUDATA "icudata" false)
-				find_binary(LIBV8_ICUUC "icuuc" false)
+				find_binary(LIBV8_ICUUC "icuuc" fa lse)
 				find_binary(LIBV8_ICUI18N "icui18n" false)
 
 			target_link_libraries(${APPLICATION_TARGET} 
@@ -559,6 +591,34 @@ function(find_binary OPIFEX_LIBRARY OPIFEX_NAME NOT_STATIC)
 
 	endif()
 endfunction(find_binary)
+
+function(find_dynamic OPIFEX_LIBRARY OPIFEX_NAME)
+	populate_binary_directory()
+	SET(OPIFEX_LIBRARY_NAME "lib${OPIFEX_NAME}.dylib")
+		
+
+	if(${OPIFEX_OS_WINDOWS})
+		SET(OPIFEX_LIBRARY_NAME "${OPIFEX_NAME}.lib")
+	endif()
+
+	if(${OPIFEX_OS_ANDROID})
+		SET(BINARY_RELEASE_MODE "")
+	else()
+		message(STATUS "Find Library in release? ${BINARY_RELEASE_MODE}")
+		if(${OPIFEX_OPTION_RELEASE})
+			SET(BINARY_RELEASE_MODE "release/")
+		else()
+			SET(BINARY_RELEASE_MODE "debug/")
+		endif()
+	endif()
+
+
+	find_library( ${OPIFEX_LIBRARY} NAMES ${OPIFEX_LIBRARY_NAME} PATHS 
+	"${OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}" PARENT_SCOPE)
+
+	message(STATUS "Looking for '${OPIFEX_LIBRARY_NAME}' in '${OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}'")
+	message(STATUS "		Found: '${${OPIFEX_LIBRARY}}'")
+endfunction(find_dynamic)
 
 
 macro(opifex_engine_status_messages)

@@ -6,6 +6,7 @@
 #include "./Core/include/OPmemory.h"
 #include "./Data/include/OPstream.h"
 #include "./Data/include/OPfile.h"
+#include "./Math/include/OPvec2.h"
 
 struct OPvec3;
 struct OPmat4;
@@ -64,9 +65,14 @@ extern const OPvec3 OPVEC3_ONE;
 extern const OPvec3 OPVEC3_UP;
 extern const OPvec3 OPVEC3_LEFT;
 extern const OPvec3 OPVEC3_FORWARD;
+extern const OPvec3 OPVEC3_BACKWARD;
 
 inline OPvec3 OPvec3Create(OPfloat x, OPfloat y, OPfloat z) {
 	OPvec3 tmp = { { x, y, z } };
+	return tmp;
+}
+inline OPvec3 OPvec3Create(OPvec2 xy, OPfloat z) {
+	OPvec3 tmp = { { xy.x, xy.y, z } };
 	return tmp;
 }
 inline OPvec3 OPvec3Create(OPfloat x) {

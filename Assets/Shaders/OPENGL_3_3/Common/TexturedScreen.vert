@@ -1,14 +1,15 @@
 #version 330 core
-
-attribute vec3 aPosition;
-attribute vec2 aUV;
-varying lowp vec2 vTexCoord;
+in vec3 aPosition;
+in vec2 aUV;
 
 uniform mat4 uWorld;
+uniform mat4 uProj;
+
+out vec2 vUV;
 
 void main() {
-	vec4 screenPos = uWorld * vec4(aPosition,1);
+	vec4 screenPos = uProj * uWorld * vec4(aPosition,1);
 	gl_Position = screenPos;
-	
-	vTexCoord = aUV; 
+
+	vUV = aUV;
 }

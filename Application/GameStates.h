@@ -5,9 +5,9 @@ extern OPgameState State1;
 
 void State0Enter(OPgameState* last);
 OPint State0Update(OPtimer* time);
-void State0Exit(OPgameState* next);
+OPint State0Exit(OPgameState* next);
 
 
 void State1Enter(OPgameState* last);
 OPint State1Update(OPtimer* time);
-void State1Exit(OPgameState* next);
+OPint State1Exit(OPgameState* next);

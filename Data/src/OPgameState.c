@@ -3,14 +3,19 @@
 OPgameState* ActiveState = NULL;
 
 void OPgameStateChange(OPgameState* targetState){
-	OPgameState* lastState = ActiveState;
-	
-	if (ActiveState && ActiveState->Exit != NULL) ActiveState->Exit(targetState);
+	OPgameState* lastState;
+
+	if (ActiveState && ActiveState->Exit != NULL) { 
+		if(ActiveState->Exit(targetState)) {
+			return;
+		}
+	}
+	lastState = ActiveState;
 	ActiveState = targetState;
 	if (ActiveState->Init != NULL) ActiveState->Init(lastState);
 }
 
-OPgameState* OPgameStateCreate(void (*init)(OPgameState*), OPint(*update)(OPtimer*), void (*exit)(OPgameState*)){
+OPgameState* OPgameStateCreate(void (*init)(OPgameState*), OPint(*update)(OPtimer*), OPint(*exit)(OPgameState*)){
 	OPgameState* gs = (OPgameState*)OPalloc(sizeof(OPgameState));
 
 	gs->Init = init;

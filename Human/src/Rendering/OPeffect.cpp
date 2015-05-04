@@ -1,3 +1,4 @@
+#include <include/Rendering/OPrender.h>
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Rendering/OpenGL.h"
 #include "./Human/include/Rendering/OPmesh.h"
@@ -22,7 +23,7 @@ OPeffect createEffect(OPshader vert,
 	OPeffect effect = {
 		vert,
 		frag,
-		-1,
+		0,
 		0
 	};
 
@@ -171,12 +172,18 @@ OPint OPeffectBind(OPeffect* effect){
 
 	if (OPglError("OPeffectBind:Failed to use Program")) {
 		OPlog("For Shader: %s", OPEFFECT_ACTIVE->Name);
+		return -1;
 	}
 
 	// enable attributes of the new effect
 	OPint attrCount = OPlistSize(OPEFFECT_ACTIVE->Attributes);
 	for (; attrCount--;){
 		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPEFFECT_ACTIVE->Attributes, attrCount);
+
+		glEnableVertexAttribArray((uintptr_t)attr->Handle);
+		if (OPglError("OPeffectBind:Error ")) {
+			OPlog("Failed to enable attrib %s", attr->Name);
+		}
 
 		glVertexAttribPointer(
 			(uintptr_t)attr->Handle,
@@ -189,11 +196,9 @@ OPint OPeffectBind(OPeffect* effect){
 		if (OPglError("OPeffectBind:Error ")) {
 			OPlog("Effect %s: Failed to set attrib ptr %s", effect->Name, attr->Name);
 		}
-
-		glEnableVertexAttribArray((uintptr_t)attr->Handle);
-		if (OPglError("OPeffectBind:Error ")) {
-			OPlog("Failed to enable attrib %s", attr->Name);
-		}
+//		else {
+//			OPlog("Set %s", attr->Name);
+//		}
 	}
 
 	OPglError("OPeffectBind:Errors Occured");
@@ -213,7 +218,7 @@ ui32 OPeffectGetParam(const OPchar* parameterName){
 		return *loc;
 	}
 	else{
-		ui32 loc = glGetUniformLocation(
+		ui32 loc = (ui32)glGetUniformLocation(
 			OPEFFECT_ACTIVE->ProgramHandle,
 			parameterName
 		);
@@ -259,6 +264,23 @@ OPeffect OPeffectGen(
 		OPvectorPush(vector, (ui8*)&attr);
 	}
 
+	if (attrs & OPATTR_BONES) {
+		OPshaderAttribute attr1 = { "aBones", GL_FLOAT, 4 };
+		OPvectorPush(vector, (ui8*)&attr1);
+		OPshaderAttribute attr2 = { "aWeights", GL_FLOAT, 4 };
+		OPvectorPush(vector, (ui8*)&attr2);
+	}
+
+	if (attrs & OPATTR_COLOR) {
+		OPshaderAttribute attr = { "aColor", GL_FLOAT, 3 };
+		OPvectorPush(vector, (ui8*)&attr);
+	}
+
+	if (attrs & OPATTR_COLOR4) {
+		OPshaderAttribute attr = { "aColor", GL_FLOAT, 4 };
+		OPvectorPush(vector, (ui8*)&attr);
+	}
+
 	ui32 AttribCount = vector->_size;
 	OPshaderAttribute* Attributes = (OPshaderAttribute*)OPalloc(sizeof(OPshaderAttribute)* vector->_size);
 	OPmemcpy(Attributes, vector->items, sizeof(OPshaderAttribute)* vector->_size);
@@ -272,7 +294,7 @@ OPeffect OPeffectGen(
 			// TODO add more
 			switch (Attributes[i].Type){
 			case GL_FLOAT:
-				stride += (4 * Attributes[i].Elements);
+				stride += (sizeof(f32) * Attributes[i].Elements);
 				break;
 			}
 		}

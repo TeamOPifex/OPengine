@@ -6,17 +6,6 @@
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Data/include/OPcman.h"
 
-void ExampleMyoEnter(OPgameState* last);
-OPint ExampleMyoUpdate(OPtimer* time);
-void ExampleMyoExit(OPgameState* next);
-
-// This is the Game State for this MyoExample
-// Each entry is a function pointer for Initialize, Update, Destroy
-OPgameState GS_EXAMPLE_MYO = {
-	ExampleMyoEnter,
-	ExampleMyoUpdate,
-	ExampleMyoExit
-};
 
 // Data for this Game State Example
 typedef struct {
@@ -127,8 +116,18 @@ OPint ExampleMyoUpdate(OPtimer* time) {
 }
 
 // The OPifex Engine will call this itself when you call OPgameStateChange
-void ExampleMyoExit(OPgameState* next) {
+OPint ExampleMyoExit(OPgameState* next) {
 	// Clean up phase for the Game State
 	OPeffectUnload(&myoExample->Effect);	
 	OPfree(myoExample);
+	return 0;
 }
+
+OPint GS_EXAMPLE_MYO_AVAILABLE = 1;
+// This is the Game State for this MyoExample
+// Each entry is a function pointer for Initialize, Update, Destroy
+OPgameState GS_EXAMPLE_MYO = {
+	ExampleMyoEnter,
+	ExampleMyoUpdate,
+	ExampleMyoExit
+};

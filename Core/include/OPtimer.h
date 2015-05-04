@@ -22,7 +22,11 @@
  */
 typedef struct{
 	ui64 TotalGametime;
+#if defined(OPIFEX_WINDOWS)
+	LONGLONG TimeLastTick;
+#else
 	ui64 TimeLastTick;
+#endif
 	ui64 Elapsed;
 #if defined(OPIFEX_UNIX)
 	struct timeval _lastTime;

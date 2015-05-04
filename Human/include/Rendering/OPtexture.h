@@ -18,6 +18,7 @@ typedef struct{
 	ui32 InternalFormat, Format, DataType;
 	ui32 MinFilter, MagFilter;
 	ui32 WrapX, WrapY;
+	ui32 CompareFunc, CompareMode;
 }OPtextureDescription;
 
 

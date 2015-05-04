@@ -10,6 +10,7 @@ typedef struct {
 } OPkeyboardState;
 
 extern OPkeyboardState Keyboard;
+extern void (*OPKEYBOARD_STREAM)(OPchar);
 
 void OPkeyboardUpdate(OPtimer* timer);
 void OPkeyboardUpdatePost(OPtimer* timer);
@@ -18,5 +19,7 @@ OPint OPkeyboardIsUp(OPkeyboardKey key);
 OPint OPkeyboardWasPressed(OPkeyboardKey key);
 OPint OPkeyboardWasReleased(OPkeyboardKey key);
 OPint OPkeyboardAnyInputIsDown();
+
+void OPkeyboardKey(OPuint codepoint);
 
 #endif

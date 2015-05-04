@@ -32,8 +32,8 @@ OPint ExampleScriptingUpdate(OPtimer* time) {
 	return false;
 }
 
-void ExampleScriptingExit(OPgameState* next) {
-
+OPint ExampleScriptingExit(OPgameState* next) {
+	return 0;
 }
 
 OPgameState GS_EXAMPLE_SCRIPTING = {
@@ -45,4 +45,10 @@ OPgameState GS_EXAMPLE_SCRIPTING = {
 
 OPgameState GS_EXAMPLE_SCRIPTING;
 
+#endif
+
+#ifndef OPIFEX_OPTION_V8
+OPint GS_EXAMPLE_SCRIPTING_AVAILABLE = 0;
+#else
+OPint GS_EXAMPLE_SCRIPTING_AVAILABLE = 1;
 #endif

@@ -13,9 +13,15 @@ OPint OPglError(const char* message){
 	if(err != 0){
 		OPlog(message, err);
 
+		OPchar* errMsg = (OPchar*)gluErrorString(err);
+		OPlog(errMsg);
+
 		switch(err){
 			case GL_INVALID_ENUM:
 				OPlog("GL_INVALID_ENUM");
+				break;
+			case GL_INVALID_OPERATION:
+				OPlog("GL_INVALID_OPERATION");
 				break;
 			case GL_INVALID_VALUE:
 				OPlog("GL_INVALID_VALUE");

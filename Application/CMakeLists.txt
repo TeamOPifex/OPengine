@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 2.8)
 # Include Directories
 #########################################
 include_directories(
-	../External/glfw-3.0.4/include/
+	../External/glfw/include/
 	../External/glm-0.9.5/
 	../External/glew-1.9.0/include/
 	../External/Phsyx.3.2.1/include/
@@ -37,7 +37,7 @@ include_directories(
 #########################################
 # Source Files
 #########################################
-add_source_group(\\ "${PROJECT_SOURCE_DIR}/Application" APPLICATION_SRC)
+add_source_group(/ "${PROJECT_SOURCE_DIR}/Application" APPLICATION_SRC)
 add_source_group(Examples "${PROJECT_SOURCE_DIR}/Application/Examples" APPLICATION_SRC)
 add_asset_dir(APPLICATION_SRC)
 
@@ -47,6 +47,7 @@ add_asset_dir(APPLICATION_SRC)
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
 	${OPENAL_LIBRARY}
+	LODEPNG
 	1_Core
 	2_Data
 	3_Math
@@ -93,3 +94,5 @@ add_opifex_myo(9_Application)
 add_opifex_assets(9_Application)
 add_opifex_oggvorbis(9_Application)
 add_opifex_steam(9_Application)
+add_opifex_fmod(9_Application)
+add_opifex_xinput(9_Application)

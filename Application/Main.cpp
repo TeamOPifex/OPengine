@@ -13,6 +13,7 @@ void ApplicationInit() {
 	OPscriptAddLoader();
 	OPskeletonAddLoader();
 	OPskeletonAnimationAddLoader();
+	SpineAddLoader();
 	OPcmanInit(OPIFEX_ASSETS);
 
 	OPrenderInit();
@@ -25,7 +26,9 @@ int ApplicationUpdate(OPtimer* timer) {
 	OPcmanUpdate(timer);
 
 	if (OPkeyboardWasReleased(OPKEY_ESCAPE)) return 1;	
-	if (OPkeyboardWasReleased(OPKEY_BACKSPACE)) OPgameStateChange(&GS_EXAMPLE_SELECTOR);
+	if (OPkeyboardWasReleased(OPKEY_BACKSPACE) && ActiveState != &GS_EXAMPLE_SELECTOR) {
+		OPgameStateChange(&GS_EXAMPLE_SELECTOR);
+	}
 	
 	return ActiveState->Update(timer);
 }

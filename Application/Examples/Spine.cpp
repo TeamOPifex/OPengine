@@ -11,17 +11,6 @@
 
 #include "./Pipeline/include/SpineLoader.h"
 
-void ExampleSpineEnter(OPgameState* last);
-OPint ExampleSpineUpdate(OPtimer* time);
-void ExampleSpineExit(OPgameState* next);
-
-// This is the Game State for this ModelExample
-// Each entry is a function pointer for Initialize, Update, Destroy
-OPgameState GS_EXAMPLE_SPINE = {
-	ExampleSpineEnter,
-	ExampleSpineUpdate,
-	ExampleSpineExit
-};
 
 // Data for this Game State Example
 typedef struct {
@@ -87,10 +76,10 @@ void ExampleSpineEnter(OPgameState* last) {
 
 
 	SpineSetAnim(spineExample->spine, 0, "idle", true);
-	SpineAddAnim(spineExample->spine, 0, "jump", false, 3);
-	SpineAddAnim(spineExample->spine, 0, "walk", true, 2);
-	SpineAddAnim(spineExample->spine, 1, "shoot", false, 5);
-	SpineAddAnim(spineExample->spine, 0, "death", false, 5);
+	//SpineAddAnim(spineExample->spine, 0, "jump", false, 3);
+	//SpineAddAnim(spineExample->spine, 0, "walk", true, 2);
+	//SpineAddAnim(spineExample->spine, 1, "shoot", false, 5);
+	//SpineAddAnim(spineExample->spine, 0, "death", false, 5);
 
 	spineExample->worldVertices = (f32*)OPalloc(sizeof(f32)* SPINE_MESH_VERTEX_COUNT_MAX);
 
@@ -116,6 +105,10 @@ OPint ExampleSpineUpdate(OPtimer* time) {
 	////////////////////////
 	// Update
 	////////////////////////
+
+	if (OPkeyboardWasPressed(OPKEY_SPACE)) {
+		SpineSetAnim(spineExample->spine, 0, "jump", true);
+	}
 
 	SpineUpdate(spineExample->spine, time);
 
@@ -160,8 +153,22 @@ OPint ExampleSpineUpdate(OPtimer* time) {
 }
 
 // The OPifex Engine will call this itself when you call OPgameStateChange
-void ExampleSpineExit(OPgameState* next) {
+OPint ExampleSpineExit(OPgameState* next) {
 	// Clean up phase for the Game State
 	OPeffectUnload(&spineExample->Effect);
 	OPfree(spineExample);
+	return 0;
 }
+
+#ifndef OPIFEX_OPTION_SPINE
+OPint GS_EXAMPLE_SPINE_AVAILABLE = 0;
+#else
+OPint GS_EXAMPLE_SPINE_AVAILABLE = 1;
+#endif
+// This is the Game State for this ModelExample
+// Each entry is a function pointer for Initialize, Update, Destroy
+OPgameState GS_EXAMPLE_SPINE = {
+	ExampleSpineEnter,
+	ExampleSpineUpdate,
+	ExampleSpineExit
+};
