@@ -169,7 +169,6 @@ OPint OPeffectBind(OPeffect* effect){
 	if (OPEFFECT_ACTIVE == NULL) return 1;
 
 	glUseProgram(OPEFFECT_ACTIVE->ProgramHandle);
-	glBindVertexArray(OPRENDER_VAO);
 
 	if (OPglError("OPeffectBind:Failed to use Program")) {
 		OPlog("For Shader: %s", OPEFFECT_ACTIVE->Name);

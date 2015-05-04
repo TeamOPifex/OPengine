@@ -97,12 +97,19 @@ void ExampleShadowsEnter(OPgameState* last) {
 	shadowsExample.BiasShadow = OPmat4Translate(0.5, 0.5, 0.5);
 	shadowsExample.BiasShadow *= OPmat4Scl(0.5);
 
+	shadowsExample.BiasShadow = OPmat4Create(
+		0.5f, 0.0f, 0.0f, 0.0f,
+		0.0f, 0.5f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.5f, 0.0f,
+		0.5f, 0.5f, 0.5f, 1.0f
+	);
+
 	OPmat4Log("Bias", shadowsExample.BiasShadow);
 
 
 	// Create the Frame Buffer that the shadow depth will be
 	// rendered to.
-	ui16 shadowFrameBufferSize = 1024;
+	ui16 shadowFrameBufferSize = 2048;
 	OPtextureDescription desc = {
 		shadowFrameBufferSize,
 		shadowFrameBufferSize,
@@ -141,12 +148,12 @@ void ExampleShadowsEnter(OPgameState* last) {
 
 	// Create the camera used for the shadow. This is the position
 	// and direction of the light being used for shadows.
-	OPfloat size = 10;
+	OPfloat size = 5;
 	shadowsExample.ShadowCamera = OPcamOrtho(
-	    OPvec3Create(0, 15, 15),
+	    OPvec3Create(0,-10,10),
 	    OPvec3Create(0, 0, 0),
 	    OPvec3Create(0, 1, 0),
-	    0.01f, 50.0f,
+	    -20.0f, 30.0f,
 	    -size, size,
 	    -size, size );
 
@@ -210,7 +217,7 @@ OPint ExampleShadowsUpdate(OPtimer* timer) {
 //	OPmodelDraw(shadowsExample.Model, &shadowsExample.ModelMaterials[1], shadowsExample.ShadowCamera);
 //	OPmodelDraw(shadowsExample.Ground, &shadowsExample.GroundMaterials[1], shadowsExample.ShadowCamera);
 
-	OPtexture2DRender(shadowsExample.shadow2D);
+	//wOPtexture2DRender(shadowsExample.shadow2D);
 
 	OPrenderPresent();
 
