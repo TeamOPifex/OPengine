@@ -1,5 +1,3 @@
-#version 330 core
-
 attribute vec3 aPosition;
 attribute vec4 aColor;
 
