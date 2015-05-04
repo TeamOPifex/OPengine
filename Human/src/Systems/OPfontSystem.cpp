@@ -11,7 +11,7 @@ const OPchar* FontShaderFrag = "Common/Font.frag";
 
 void OPfontSystemLoadEffects() {
 
-	if (OPFONTMANAGER_EFFECT_ACTIVE != NULL) { 
+	if (OPFONTMANAGER_EFFECT_ACTIVE != NULL) {
 		return; 
 	}
 
