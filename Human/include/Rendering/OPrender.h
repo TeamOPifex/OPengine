@@ -60,7 +60,7 @@ inline void OPrenderBlendAdditive(){
 }
 
 inline OPint OPrenderInit() {
-	OPrenderInit(OPRENDER_WIDTH, OPRENDER_HEIGHT);
+	return OPrenderInit(OPRENDER_WIDTH, OPRENDER_HEIGHT);
 }
 inline void  OPrenderClear(f32 r, f32 g, f32 b) {
 	OPrenderClear(r,g,b,1.0f);
