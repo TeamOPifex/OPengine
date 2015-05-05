@@ -21,6 +21,8 @@ ModelExample* modelExample;
 void ExampleModelEnter(OPgameState* last) {
 
 	// Allocating a memory block for this example
+	// Typically not the favored approach for this, but shows
+    // how to allocate a block of memory.
 	modelExample = (ModelExample*)OPallocZero(sizeof(ModelExample));
 	
 	// Load up the mesh into the Content Manager
@@ -79,6 +81,7 @@ OPint ExampleModelUpdate(OPtimer* time) {
 	OPmat4 world = OPmat4RotY(modelExample->Rotation / 100.0);
 	OPmat4Scl(&world, 0.25f, 0.25f, 0.25f);
 
+
 	////////////////////////
 	// Render
 	////////////////////////
@@ -111,7 +114,9 @@ OPint ExampleModelExit(OPgameState* next) {
 	return 0;
 }
 
+// This is for the Example Selector only
 OPint GS_EXAMPLE_MODEL_AVAILABLE = 1;
+
 // This is the Game State for this ModelExample
 // Each entry is a function pointer for Initialize, Update, Destroy
 OPgameState GS_EXAMPLE_MODEL = {
