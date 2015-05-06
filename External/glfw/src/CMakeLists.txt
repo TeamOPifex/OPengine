@@ -94,3 +94,7 @@ if (GLFW_INSTALL)
     install(TARGETS glfw EXPORT glfwTargets DESTINATION lib${LIB_SUFFIX})
 endif()
 
+
+
+output_library_from(glfw "/GLFW/src" "glfw3")
+
