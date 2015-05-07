@@ -421,15 +421,15 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 
 	if(${OPIFEX_OPTION_FMOD})
 	
-	if(${OPIFEX_OS_WINDOWS})
-		if(${OPIFEX_OS_WIN64})
-			find_dynamic(LIBFMOD "fmod64_vc")
+		if(${OPIFEX_OS_WINDOWS})
+			if(${OPIFEX_OS_WIN64})
+				find_dynamic(LIBFMOD "fmod64_vc")
+			else()
+				find_dynamic(LIBFMOD "fmod_vc")
+			endif()
 		else()
-			find_dynamic(LIBFMOD "fmod_vc")
+			find_dynamic(LIBFMOD "fmod")
 		endif()
-	else()
-		find_dynamic(LIBFMOD "fmod")
-	endif()
 		target_link_libraries(${APPLICATION_TARGET} 
 				${LIBFMOD}
 			)
