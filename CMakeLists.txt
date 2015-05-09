@@ -111,3 +111,5 @@ message(STATUS "OpenGL (${OpenGL})")
 message(STATUS "GLFW_LIBRARIES (${GLFW_LIBRARIES})")
 
 opifex_engine_status_messages()
+
+message(STATUS "Variable: ${CMAKE_SOURCE_DIR}")
