@@ -42,7 +42,6 @@ set(ALL_LIBS
 	3_Math
 	4_Performance
 	5_Human
-	7_Scripting
 	glfw 
 	${GLFW_LIBRARIES}
 )
@@ -51,27 +50,27 @@ set(ALL_LIBS
 # BUILD
 #########################################
 if(${OPIFEX_OPTION_SHARED})
-	add_library(8_Pipeline SHARED ${PIPELINE_SRC})
+	add_library(7_Pipeline SHARED ${PIPELINE_SRC})
 else()
-	add_library(8_Pipeline STATIC ${PIPELINE_SRC})
+	add_library(7_Pipeline STATIC ${PIPELINE_SRC})
 endif()
 
-set_target_properties(8_Pipeline PROPERTIES LINKER_LANGUAGE CXX)
-set_target_properties(8_Pipeline PROPERTIES OUTPUT_NAME "Pipeline")
+set_target_properties(7_Pipeline PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(7_Pipeline PROPERTIES OUTPUT_NAME "Pipeline")
 
 if(${OPIFEX_OPTION_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 endif()
 
-target_link_libraries(8_Pipeline ${ALL_LIBS})
+target_link_libraries(7_Pipeline ${ALL_LIBS})
 
 
-add_opifex_assets(8_Pipeline)
-add_opifex_spine(8_Pipeline)
-add_opifex_v8(8_Pipeline)
-add_opifex_fmod(8_Pipeline)
+add_opifex_assets(7_Pipeline)
+add_opifex_spine(7_Pipeline)
+add_opifex_v8(7_Pipeline)
+add_opifex_fmod(7_Pipeline)
 
 #########################################
 # OUTPUT BINARIES
 #########################################
-output_library(8_Pipeline "Pipeline")
+output_library(7_Pipeline "Pipeline")

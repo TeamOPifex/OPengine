@@ -29,6 +29,7 @@ void OPfmodInit() {
 
 void OPfmodLoad(OPfmodSound* sound, OPchar* name) {
 	#ifdef OPIFEX_OPTION_FMOD
+
 	CURRENT_FMOD.System->createSound(name, FMOD_DEFAULT, 0, &sound->Sound);
 	#endif
 }
