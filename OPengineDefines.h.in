@@ -2,7 +2,6 @@
 #define OPENGINE_DEFINES
 
 #cmakedefine OPIFEX_OPTION_MYO
-#cmakedefine OPIFEX_OPTION_NODEJS
 #cmakedefine OPIFEX_OPTION_OCULUS
 #cmakedefine OPIFEX_OPTION_PHYSICS
 #cmakedefine OPIFEX_OPTION_RELEASE

@@ -6,6 +6,7 @@
 #include "./Math/include/OPvec4.h"
 #include "./Core/include/OPtypes.h"
 
+extern i8 OPRENDER_INITIALIZED;
 extern i32 OPRENDER_WIDTH;
 extern i32 OPRENDER_HEIGHT;
 extern i32 OPRENDER_SCREEN_WIDTH;

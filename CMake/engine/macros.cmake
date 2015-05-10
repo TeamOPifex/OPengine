@@ -421,15 +421,15 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 
 	if(${OPIFEX_OPTION_FMOD})
 	
-	if(${OPIFEX_OS_WINDOWS})
-		if(${OPIFEX_OS_WIN64})
-			find_dynamic(LIBFMOD "fmod64_vc")
+		if(${OPIFEX_OS_WINDOWS})
+			if(${OPIFEX_OS_WIN64})
+				find_dynamic(LIBFMOD "fmod64_vc")
+			else()
+				find_dynamic(LIBFMOD "fmod_vc")
+			endif()
 		else()
-			find_dynamic(LIBFMOD "fmod_vc")
+			find_dynamic(LIBFMOD "fmod")
 		endif()
-	else()
-		find_dynamic(LIBFMOD "fmod")
-	endif()
 		target_link_libraries(${APPLICATION_TARGET} 
 				${LIBFMOD}
 			)
@@ -479,21 +479,24 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	endif()
 
 	if( ${OPIFEX_OS_WINDOWS} )
-		if(${OPIFEX_OPTION_RELEASE})
-			find_binary(LIBOGG "libogg_static" false)
-			find_binary(LIBVORBIS "libvorbis_static" false)
-			find_binary(LIBVORBISFILE "libvorbisfile_static" false)
-		else()
-			find_binary(LIBOGG "libogg" false)
-			find_binary(LIBVORBIS "libvorbis" false)
-			find_binary(LIBVORBISFILE "libvorbisfile" false)
+		target_link_libraries(${APPLICATION_TARGET}	Winmm.lib)
+		if( ${OPIFEX_OPTION_AUDIO} )
+			if(${OPIFEX_OPTION_RELEASE})
+				find_binary(LIBOGG "libogg_static" false)
+				find_binary(LIBVORBIS "libvorbis_static" false)
+				find_binary(LIBVORBISFILE "libvorbisfile_static" false)
+			else()
+				find_binary(LIBOGG "libogg" false)
+				find_binary(LIBVORBIS "libvorbis" false)
+				find_binary(LIBVORBISFILE "libvorbisfile" false)
+			endif()
+			target_link_libraries(${APPLICATION_TARGET}
+				Winmm.lib
+				${LIBOGG}
+				${LIBVORBIS}
+				${LIBVORBISFILE}
+			)
 		endif()
-		target_link_libraries(${APPLICATION_TARGET}	
-			Winmm.lib
-			${LIBOGG}
-			${LIBVORBIS}
-			${LIBVORBISFILE}
-		)
 	endif()
 
 	if( ${MSVC_WIN7_FIX} )
@@ -511,13 +514,18 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 			${X11_LIBRARIES}
 			${CMAKE_THREAD_LIBS_INIT}
 			${CMAKE_DL_LIBS}
-			${OGG_LIBRARY}
-			${VORBIS_LIBRARY}
-			${VORBISFILE_LIBRARY}
-			-logg
 			${GL_LIBRARY}
 			${GLFW_LIBRARIES}
 		)
+
+		if( ${OPIFEX_OPTION_AUDIO} )
+			target_link_libraries(${APPLICATION_TARGET}
+				${OGG_LIBRARY}
+				${VORBIS_LIBRARY}
+				${VORBISFILE_LIBRARY}
+				-logg
+			)
+		endif()
 		SET(CMAKE_EXE_LINKER_FLAGS, "-ldl")
 	endif()
 
@@ -526,21 +534,27 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		SET(OPENAL_LIBRARY "/System/Library/Frameworks/OpenAL.framework")
 		target_link_libraries(${APPLICATION_TARGET}
 			${CMAKE_THREAD_LIBS_INIT}
-			${OPENAL_LIBRARY}
-			${OGG_LIBRARY}
-			${VORBIS_LIBRARY}
-			${VORBISFILE_LIBRARY}
 			${GLFW_LIBRARIES}
 		)
+		if( ${OPIFEX_OPTION_AUDIO} )
+			target_link_libraries(${APPLICATION_TARGET}
+				${OPENAL_LIBRARY}
+				${OGG_LIBRARY}
+				${VORBIS_LIBRARY}
+				${VORBISFILE_LIBRARY}
+			)
+		endif()
 		
 	endif()
 	
-	
-	copy_from_binaries_on_build(${APPLICATION_TARGET} "ogg.dll" ${OPIFEX_OS_WINDOWS})
-	copy_from_binaries_on_build(${APPLICATION_TARGET} "libogg.dll" ${OPIFEX_OS_WINDOWS})
-	copy_from_binaries_on_build(${APPLICATION_TARGET} "vorbisfile.dll" ${OPIFEX_OS_WINDOWS})
-	copy_from_binaries_on_build(${APPLICATION_TARGET} "libvorbis.dll" ${OPIFEX_OS_WINDOWS})
-	copy_from_binaries_on_build(${APPLICATION_TARGET} "libvorbisfile.dll" ${OPIFEX_OS_WINDOWS})
+
+	if( ${OPIFEX_OPTION_AUDIO} )
+		copy_from_binaries_on_build(${APPLICATION_TARGET} "ogg.dll" ${OPIFEX_OS_WINDOWS})
+		copy_from_binaries_on_build(${APPLICATION_TARGET} "libogg.dll" ${OPIFEX_OS_WINDOWS})
+		copy_from_binaries_on_build(${APPLICATION_TARGET} "vorbisfile.dll" ${OPIFEX_OS_WINDOWS})
+		copy_from_binaries_on_build(${APPLICATION_TARGET} "libvorbis.dll" ${OPIFEX_OS_WINDOWS})
+		copy_from_binaries_on_build(${APPLICATION_TARGET} "libvorbisfile.dll" ${OPIFEX_OS_WINDOWS})
+	endif()
 	#copy_from_binaries_on_build(${APPLICATION_TARGET} "myo32.dll" ${OPIFEX_OS_WINDOWS})
 	#copy_from_binaries_on_build(${APPLICATION_TARGET} "ble32.dll" ${OPIFEX_OS_WINDOWS})
 

@@ -145,6 +145,7 @@ OPint OPcmanIsLoaded(const OPchar* key){
 
 OPint OPcmanLoad(const OPchar* key){
 
+	OPlog("Load %s", key);
 
 	const OPchar* ext = NULL;
 	OPint success = 0;
@@ -184,6 +185,7 @@ OPint OPcmanLoad(const OPchar* key){
 				fullPath = strcat(fullPath, loader.AssetTypePath);
 				fullPath = strcat(fullPath, key);
 
+				OPlog("Path to load %s", fullPath);
 				// load the asset
 				asset = NULL;
 				success = loader.Load(fullPath, &asset);

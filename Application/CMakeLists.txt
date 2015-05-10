@@ -54,8 +54,8 @@ set(ALL_LIBS
 	4_Performance
 	5_Human
 	6_Communication
-	7_Scripting
-	8_Pipeline
+	7_Pipeline
+	8_Scripting
 	${ZLIB_LIBRARY}
 	${LIBPNG_LIBRARY}
 	${CMAKE_THREAD_LIBS_INIT}
@@ -66,7 +66,7 @@ set(ALL_LIBS
 #########################################
 # BUILD
 #########################################
-add_executable(9_Application ${APPLICATION_SRC})
+add_executable(9_Application ${APPLICATION_SRC} ../Scripting/src/Node/OPscriptNodeWrapperMath.cpp ../Scripting/include/Node/OPscriptNodeWrapperMath.h)
 
 target_link_libraries(9_Application	${ALL_LIBS})
 

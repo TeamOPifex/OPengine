@@ -1,18 +1,19 @@
-#include <node.h>
-#include <v8.h>
+#include "./Scripting/include/Node/OPscriptNodeWrapperCore.h"
+#include "./Scripting/include/Node/OPscriptNodeWrapperData.h"
+#include "./Scripting/include/Node/OPscriptNodeWrapperMath.h"
+#include "./Scripting/include/Node/OPscriptNodeWrapperPerformance.h"
+#include "./Scripting/include/Node/OPscriptNodeWrapperHuman.h"
+#include "./Scripting/include/Node/OPscriptNodeWrapperCommunication.h"
+#include "./Scripting/include/Node/OPscriptNodeWrapperPipeline.h"
 
-using namespace v8;
-
-#include "./Scripting/include/wrappers/Global.h"
-#include "./Scripting/include/wrappers/MathWrapper.h"
-#include "./Scripting/include/wrappers/DataWrapper.h"
-#include "./Scripting/include/wrappers/HumanWrapper.h"
-
-void InitializeMethods(V8ObjectGlobal target) {
-	GlobalInitializeMethodsO(NULL, target);
-	MathInitializeMethodsO(NULL, target);
-	DataInitializeMethodsO(NULL, target);
-	HumanInitializeMethodsO(NULL, target);
+void InitializeMethods(Handle<Object> exports) {
+    OPscriptNodeWrapperCore(exports);
+    OPscriptNodeWrapperData(exports);
+    OPscriptNodeWrapperMath(exports);
+    OPscriptNodeWrapperPerformance(exports);
+    OPscriptNodeWrapperHuman(exports);
+    OPscriptNodeWrapperCommunication(exports);
+    OPscriptNodeWrapperPipeline(exports);
 }
 
 NODE_MODULE(OPengine, InitializeMethods)

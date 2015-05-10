@@ -4,19 +4,21 @@
             "target_name": "OPengine",
             "sources": [
                 "Wrapper.cpp",
-                "@PROJECT_SOURCE_DIR@/Scripting/src/wrappers/Global.cpp",
-                "@PROJECT_SOURCE_DIR@/Scripting/src/wrappers/DataWrapper.cpp",
-                "@PROJECT_SOURCE_DIR@/Scripting/src/wrappers/MathWrapper.cpp",
-				"@PROJECT_SOURCE_DIR@/Scripting/src/wrappers/HumanWrapper.cpp",
-				"@PROJECT_SOURCE_DIR@/Scripting/src/wrappers/V8Helper.cpp"
+                 "../OPengine/Scripting/src/Node/OPscriptNodeWrapperCore.cpp",
+                 "../OPengine/Scripting/src/Node/OPscriptNodeWrapperData.cpp",
+                 "../OPengine/Scripting/src/Node/OPscriptNodeWrapperMath.cpp",
+                 "../OPengine/Scripting/src/Node/OPscriptNodeWrapperPerformance.cpp",
+                 "../OPengine/Scripting/src/Node/OPscriptNodeWrapperHuman.cpp",
+                 "../OPengine/Scripting/src/Node/OPscriptNodeWrapperCommunication.cpp",
+                 "../OPengine/Scripting/src/Node/OPscriptNodeWrapperPipeline.cpp"
             ],
             "include_dirs": [
                 "@PROJECT_SOURCE_DIR@/",
                 "@BINARY_FOLDER@/",
                 "@PROJECT_SOURCE_DIR@/External/glew-1.9.0/include",
-                "@PROJECT_SOURCE_DIR@/External/glfw-3.0.4/include",
-                "@PROJECT_SOURCE_DIR@/External/glm-0.9.1",
-                "@PROJECT_SOURCE_DIR@/External/V8/",
+                "@PROJECT_SOURCE_DIR@/External/glfw/include",
+                "@PROJECT_SOURCE_DIR@/External/PhysX/include",
+                "@PROJECT_SOURCE_DIR@/External/FMod/include",
                 "@PROJECT_SOURCE_DIR@/External/OpenAL/",
                 "@PROJECT_SOURCE_DIR@/External/Myo/include/"
             ],
@@ -31,9 +33,7 @@
                     "OS=='win'",
                     {
                         'defines': [
-                          'OPIFEX_WIN32',
-                          'OPIFEX_V8',
-                          'OPIFEX_NODEJS',
+                          'OPIFEX_OPTION_NODEJS',
                           "_ITERATOR_DEBUG_LEVEL=0"
                         ],
                         "link_settings": {
@@ -98,10 +98,7 @@
                     "OS=='mac'",
                     {
                         'defines': [
-                          'OPIFEX_OSX64',
-                          'OPIFEX_V8',
-                          'OPIFEX_NODEJS',
-                          'OPIFEX_MYO',
+                          'OPIFEX_OPTION_NODEJS',
                           "_ITERATOR_DEBUG_LEVEL=0"
                         ],
                         "link_settings": {

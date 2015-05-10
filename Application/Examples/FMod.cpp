@@ -14,7 +14,6 @@ void ExampleFModEnter(OPgameState* last) {
 	OPfmodLoad(&fmodExample.sound[2], "Audio/sfx.ogg");
 	OPfmodLoad(&fmodExample.sound[3], "Audio/impact.wav");
 	OPfmodLoad(&fmodExample.sound[4], "Audio/Powerup.wav");
-
 }
 
 OPint ExampleFModUpdate(OPtimer* time) {

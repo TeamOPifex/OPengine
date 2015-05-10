@@ -134,6 +134,7 @@ OPint OPwriteFile(const char* path, OPstream* stream){
 }
 
 OPstream* OPreadFile(const char* path) {
+    OPlog("OPreadFile");
 	return OPreadFileLarge(path, 32);
 }
 
@@ -143,6 +144,8 @@ OPstream* OPreadFile(const char* path) {
 
 //-----------------------------------------------------------------------------
 OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
+    OPlog("Read File");
+
 #ifdef OPIFEX_ANDROID
 	OPlog("OPreadFile: %s\n", path);
 	AAsset* asset = AAssetManager_open(OPAndroidState->activity->assetManager, path, AASSET_MODE_UNKNOWN);

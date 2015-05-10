@@ -17,6 +17,7 @@ void ApplicationInit() {
 	OPcmanInit(OPIFEX_ASSETS);
 
 	OPrenderInit();
+	OPgamePadSetDeadzones(0.2f);
 
 	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 }
@@ -26,7 +27,7 @@ int ApplicationUpdate(OPtimer* timer) {
 	OPcmanUpdate(timer);
 
 	if (OPkeyboardWasReleased(OPKEY_ESCAPE)) return 1;	
-	if (OPkeyboardWasReleased(OPKEY_BACKSPACE) && ActiveState != &GS_EXAMPLE_SELECTOR) {
+	if ((OPkeyboardWasReleased(OPKEY_BACKSPACE) || OPgamePadWasPressed(OPgamePadGet(OPGAMEPAD_ONE), OPGAMEPADBUTTON_BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
 		OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 	}
 	

@@ -45,6 +45,7 @@ set(ALL_LIBS
 	3_Math
 	4_Performance
 	5_Human
+	7_Pipeline
 	glfw 
 	${GLFW_LIBRARIES}
 )
@@ -53,36 +54,36 @@ set(ALL_LIBS
 # BUILD
 #########################################
 if(${OPIFEX_OPTION_SHARED})
-	add_library(7_Scripting SHARED ${SCRIPTING_SRC})
+	add_library(8_Scripting SHARED ${SCRIPTING_SRC})
 else()
-	add_library(7_Scripting STATIC ${SCRIPTING_SRC})
+	add_library(8_Scripting STATIC ${SCRIPTING_SRC})
 endif()
-target_link_libraries(7_Scripting ${ALL_LIBS})
-set_target_properties(7_Scripting PROPERTIES LINKER_LANGUAGE CXX)
-set_target_properties(7_Scripting PROPERTIES OUTPUT_NAME "Scripting")
+target_link_libraries(8_Scripting ${ALL_LIBS})
+set_target_properties(8_Scripting PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(8_Scripting PROPERTIES OUTPUT_NAME "Scripting")
 
 if(${OPIFEX_OPTION_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 endif()
 
-add_opifex_v8(7_Scripting)
+add_opifex_v8(8_Scripting)
 
 #########################################
 # OUTPUT BINARIES
 #########################################
-output_library(7_Scripting "Scripting")
+output_library(8_Scripting "Scripting")
 
 if(${OPIFEX_OPTION_V8})
 	if(${OPIFEX_OPTION_RELEASE})
-		output_binary(7_Scripting "/External/V8/lib/release/" "icui18n.dll" ${OPIFEX_OS_WINDOWS})
-		output_binary(7_Scripting "/External/V8/lib/release/" "icuuc.dll" ${OPIFEX_OS_WINDOWS})
-		output_binary(7_Scripting "/External/V8/lib/release/" "v8.dll" ${OPIFEX_OS_WINDOWS})
+		output_binary(8_Scripting "/External/V8/lib/release/" "icui18n.dll" ${OPIFEX_OS_WINDOWS})
+		output_binary(8_Scripting "/External/V8/lib/release/" "icuuc.dll" ${OPIFEX_OS_WINDOWS})
+		output_binary(8_Scripting "/External/V8/lib/release/" "v8.dll" ${OPIFEX_OS_WINDOWS})
 	else()	
-		output_binary(7_Scripting "/External/V8/lib/debug/" "icui18n.dll" ${OPIFEX_OS_WINDOWS})
-		output_binary(7_Scripting "/External/V8/lib/debug/" "icuuc.dll" ${OPIFEX_OS_WINDOWS})
-		output_binary(7_Scripting "/External/V8/lib/debug/" "v8.dll" ${OPIFEX_OS_WINDOWS})
-		output_binary(7_Scripting "/External/V8/lib/debug/" "v8.lib" ${OPIFEX_OS_WINDOWS})
-		output_binary(7_Scripting "/External/V8/lib/debug/" "v8_libbase.lib" ${OPIFEX_OS_WINDOWS})
-		output_binary(7_Scripting "/External/V8/lib/debug/" "v8_libplatform.lib" ${OPIFEX_OS_WINDOWS})
+		output_binary(8_Scripting "/External/V8/lib/debug/" "icui18n.dll" ${OPIFEX_OS_WINDOWS})
+		output_binary(8_Scripting "/External/V8/lib/debug/" "icuuc.dll" ${OPIFEX_OS_WINDOWS})
+		output_binary(8_Scripting "/External/V8/lib/debug/" "v8.dll" ${OPIFEX_OS_WINDOWS})
+		output_binary(8_Scripting "/External/V8/lib/debug/" "v8.lib" ${OPIFEX_OS_WINDOWS})
+		output_binary(8_Scripting "/External/V8/lib/debug/" "v8_libbase.lib" ${OPIFEX_OS_WINDOWS})
+		output_binary(8_Scripting "/External/V8/lib/debug/" "v8_libplatform.lib" ${OPIFEX_OS_WINDOWS})
 	endif()
 endif()

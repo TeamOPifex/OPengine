@@ -1,5 +1,5 @@
-#ifndef OP_PERFORMANCE_AABB2
-#define OP_PERFORMANCE_AABB2
+#ifndef OP_PERFORMANCE_PHYSICS
+#define OP_PERFORMANCE_PHYSICS
 
 #include "./Math/include/OPmat4.h"
 
