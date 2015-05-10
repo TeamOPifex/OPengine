@@ -284,8 +284,8 @@ OPint OPrenderInit(i32 width, i32 height){
 
 	glfwMakeContextCurrent(window);
 
-	if (glfwExtensionSupported("GL_ARB_multisample")) {
-		OPlogErr("Multisampling is supported");
+	if (!glfwExtensionSupported("GL_ARB_multisample")) {
+		OPlogErr("Multisampling is not supported");
 	}
 
 	glfwSetWindowFocusCallback(window, glfwWindowFocusCallback);
