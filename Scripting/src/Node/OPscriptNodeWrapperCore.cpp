@@ -25,8 +25,11 @@ int _update(OPtimer* timer) {
     Handle<Value> argv[argc] = { Number::New(isolate, timer->Elapsed) };
     Handle<Object> obj = NODE_NEW_OBJECT();
     Local<Value> result = _updateCallback->Call(obj, argc, argv);
-    if(result->IsNumber())
-        return result->Int32Value();
+    if(result->IsNumber()) {
+        OPint retVal = result->Int32Value();
+        OPlog("Update %d", retVal);
+        return retVal;
+    }
     return 0;
 }
 
@@ -52,17 +55,47 @@ void _OPstart(const FunctionCallbackInfo<Value>& args) {
  	OPdestroy = _end;
 
     OPstart(0, NULL);
+    OPlog("OPstart finished");
     OPend();
-
-    args.GetReturnValue().Set(String::NewFromUtf8(isolate, "world"));
 }
 
+// OP.timer.Create
+void _OPtimerCreate(const FunctionCallbackInfo<Value>& args) {
+    SCOPE_AND_ISOLATE
+
+ 	OPtimer* timer = (OPtimer*)OPalloc(sizeof(OPtimer));
+ 	OPtimerCreate(timer);
+
+    Handle<Object> obj = Object::New(isolate);
+    obj->Set(String::NewFromUtf8(isolate, "ptr"), Number::New(isolate, (OPint)timer));
+    obj->Set(String::NewFromUtf8(isolate, "elapsed"), Number::New(isolate, 0));
+
+    args.GetReturnValue().Set(obj);
+}
+
+// OP.timer.Update
+void _OPtimerUpdate(const FunctionCallbackInfo<Value>& args) {
+    SCOPE_AND_ISOLATE
+
+    Handle<Object> obj = args[0]->ToObject();
+    OPint ptr = (OPint)obj->Get(String::NewFromUtf8(isolate, "ptr"))->IntegerValue();
+ 	OPtimer* timer = (OPtimer*)(OPint)ptr;
+ 	OPtimerTick(timer);
+    obj->Set(String::NewFromUtf8(isolate, "elapsed"), Number::New(isolate, timer->Elapsed));
+}
+
+// Initialize the Core
 void OPscriptNodeWrapperCore(Handle<Object> exports) {
     SCOPE_AND_ISOLATE
 
-    Handle<Object> core = Object::New(isolate);
+    {
+        // OP.timer
+        Handle<Object> timer = Object::New(isolate);
+        NODE_SET_METHOD(timer, "Create", _OPtimerCreate);
+        NODE_SET_METHOD(timer, "Update", _OPtimerUpdate);
+        exports->Set(String::NewFromUtf8(isolate, "timer"), timer);
+    }
 
-    exports->Set(String::NewFromUtf8(isolate, "core"), core);
 
 
     NODE_SET_METHOD(exports, "start", _OPstart);

@@ -4,7 +4,7 @@
 
 #include "./Core/include/OPcore.h"
 
-
+i8 OPRENDER_INITIALIZED = 0;
 i32 OPRENDER_WIDTH = 1280;
 i32 OPRENDER_HEIGHT = 720;
 i32 OPRENDER_SCREEN_WIDTH = 1280;
@@ -318,6 +318,7 @@ OPint OPrenderInit(i32 width, i32 height){
 	OPRENDER_HEIGHT = OPRENDER_SCREEN_HEIGHT;
 #endif
 
+	OPRENDER_INITIALIZED = 1;
 	OPlogInfo("OpenGL Context Created W:%d H:%d", OPRENDER_WIDTH, OPRENDER_HEIGHT);
 	return 0;
 }

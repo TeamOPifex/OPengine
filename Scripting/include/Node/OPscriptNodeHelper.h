@@ -22,6 +22,10 @@ inline Handle<Object> NODE_NEW_OBJECT() {
     return Object::New(isolate);
 }
 
+enum OPscriptNodeTypes {
+
+};
+
 #endif
 
 #endif //OPIFEXENGINE_OPSCRIPTNODEWRAPPERMATH_H

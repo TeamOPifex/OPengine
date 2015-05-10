@@ -1,5 +1,7 @@
 #include "./Human/include/Utilities/Errors.h"
+#include "./Human/include/Rendering/OPrender.h"
 #include "Core/include/OPlog.h"
+#include "Core/include/Assert.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
 	#include <GLES2/gl2.h>
@@ -9,6 +11,8 @@
 #endif
 
 OPint OPglError(const char* message){
+	ASSERT(OPRENDER_INITIALIZED != 0, "OPrenderInit must be called first.");
+
 	GLenum err = glGetError();
 	if(err != 0){
 		OPlog(message, err);

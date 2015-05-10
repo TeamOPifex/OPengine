@@ -7,6 +7,7 @@
 #include "./Core/include/Assert.h"
 #include "include/Utilities/Errors.h"
 
+i8 OPRENDER_INITIALIZED = 0;
 i32 OPRENDER_WIDTH = 1280;
 i32 OPRENDER_HEIGHT = 720;
 i32 OPRENDER_SCREEN_WIDTH;
@@ -150,6 +151,7 @@ OPint OPrenderInit(i32 width, i32 height) {
 
     OPlogInfo("OpenGL Context Created W:%d H:%d", OPRENDER_WIDTH, OPRENDER_HEIGHT);
 
+	OPRENDER_INITIALIZED = 1;
     OPglError("OPrenderInit error clear end");
     return 0;
 }

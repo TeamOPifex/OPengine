@@ -23,7 +23,7 @@ set(ALL_LIBS
 	3_Math
 	4_Performance
 	5_Human
-	8_Pipeline
+	7_Pipeline
 )
 
 

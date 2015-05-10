@@ -1,5 +1,5 @@
-#ifndef OPENGINE_SCRIPTING_NODE_WRAPPERHUMAN
-#define OPENGINE_SCRIPTING_NODE_WRAPPERHUMAN
+#ifndef OPENGINE_SCRIPTING_NODE_WRAPPERCOMMUNICATION
+#define OPENGINE_SCRIPTING_NODE_WRAPPERCOMMUNICATION
 
 #include "./Core/include/OPtypes.h"
 #ifdef OPIFEX_OPTION_NODEJS
@@ -9,7 +9,7 @@
 
 using namespace v8;
 
-void OPscriptNodeWrapperHuman(Handle<Object> target);
+void OPscriptNodeWrapperCommunication(Handle<Object> target);
 
 #endif
 
