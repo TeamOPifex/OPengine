@@ -6,9 +6,9 @@
 
 #include "./Core/include/OPlog.h"
 
-void Method(const FunctionCallbackInfo<Value>& args) {
+NODE_RETURN_VAL Method(const NODE_ARGS& args) {
     SCOPE_AND_ISOLATE
-    args.GetReturnValue().Set(String::NewFromUtf8(isolate, "world"));
+    NODE_RETURN(NODE_NEW_STRING("world"));
 }
 
 void OPscriptNodeWrapperMath(Handle<Object> exports) {

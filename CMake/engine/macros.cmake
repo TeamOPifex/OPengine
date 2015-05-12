@@ -544,7 +544,6 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 				${VORBISFILE_LIBRARY}
 			)
 		endif()
-		
 	endif()
 	
 

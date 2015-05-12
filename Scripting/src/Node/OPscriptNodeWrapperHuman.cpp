@@ -125,8 +125,8 @@ void _SetKeyboardMap(Handle<Object> keyboard) {
 
  	for (OPint i = 0; i < OPKEY_RCONTROL; i++) {
  		keyboard->Set(
- 		    String::NewFromUtf8(isolate, keyNames[i]),
- 		    Number::New(isolate, i)
+ 		    NODE_NEW_STRING(keyNames[i]),
+ 		    NODE_NEW_NUMBER(i)
  		);
  	}
  }
@@ -136,59 +136,72 @@ void _SetGamePadMap(Handle<Object> buttons) {
 
  	for (OPint i = 0; i < _OPGAMEPADBUTTON_MAX; i++) {
  		buttons->Set(
- 		    String::NewFromUtf8(isolate, gamePadNames[i]),
- 		    Number::New(isolate, i)
+ 		    NODE_NEW_STRING(gamePadNames[i]),
+ 		    NODE_NEW_NUMBER(i)
  		);
  	}
 }
 
 // OP.render.Init
-void _OPrenderInit(const FunctionCallbackInfo<Value>& args) {
+NODE_RETURN_VAL _OPrenderInit(const NODE_ARGS& args) {
     SCOPE_AND_ISOLATE
     OPrenderInit();
+    NODE_RETURN_NULL
 }
 
 // OP.render.Clear
-void _OPrenderClear(const FunctionCallbackInfo<Value>& args) {
+NODE_RETURN_VAL _OPrenderClear(const NODE_ARGS& args) {
     SCOPE_AND_ISOLATE
     OPrenderClear(
         args[0]->NumberValue(),
         args[1]->NumberValue(),
         args[2]->NumberValue());
+    NODE_RETURN_NULL
 }
 
 // OP.render.Present
-void _OPrenderPresent(const FunctionCallbackInfo<Value>& args) {
+NODE_RETURN_VAL _OPrenderPresent(const NODE_ARGS& args) {
     SCOPE_AND_ISOLATE
     OPrenderPresent();
+    NODE_RETURN_NULL
+}
+
+// OP.render.Size
+NODE_RETURN_VAL _OPrenderSize(const NODE_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    Handle<Object> obj = NODE_NEW_OBJECT();
+    //obj->Set(NODE_NEW_STRING("ptr"), NODE_NEW_NUMBER((OPint)manager));
+    NODE_RETURN(obj);
 }
 
 // OP.input.Keyboard.WasPressed
-void _OPkeyboardWasPressed(const FunctionCallbackInfo<Value>& args) {
+NODE_RETURN_VAL _OPkeyboardWasPressed(const NODE_ARGS& args) {
     SCOPE_AND_ISOLATE
 
     enum OPkeyboardKey key = (enum OPkeyboardKey)args[0]->Int32Value();
     bool result = OPkeyboardWasPressed(key);
 
-    args.GetReturnValue().Set(Boolean::New(isolate, result));
+    NODE_RETURN(NODE_NEW_BOOL(result));
 }
 
 // OP.input.Keyboard.WasReleased
-void _OPkeyboardWasReleased(const FunctionCallbackInfo<Value>& args) {
+NODE_RETURN_VAL _OPkeyboardWasReleased(const NODE_ARGS& args) {
     SCOPE_AND_ISOLATE
 
     enum OPkeyboardKey key = (enum OPkeyboardKey)args[0]->Int32Value();
     bool result = OPkeyboardWasReleased(key);
 
-    args.GetReturnValue().Set(Boolean::New(isolate, result));
+    NODE_RETURN(NODE_NEW_BOOL(result));
 }
 
 // OP.input.Keyboard.Update
-void _OPkeyboardUpdate(const FunctionCallbackInfo<Value>& args) {
+NODE_RETURN_VAL _OPkeyboardUpdate(const NODE_ARGS& args) {
     OPkeyboardUpdate(NULL);
+    NODE_RETURN_NULL
 }
 
-void _OPcamCreatePersp(const FunctionCallbackInfo<Value>& args) {
+NODE_RETURN_VAL _OPcamCreatePersp(const NODE_ARGS& args) {
  	SCOPE_AND_ISOLATE
 
  	OPcam* camera = (OPcam*)OPalloc(sizeof(OPcam));
@@ -202,64 +215,126 @@ void _OPcamCreatePersp(const FunctionCallbackInfo<Value>& args) {
  		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
  		);
 
-    Handle<Object> cam = Object::New(isolate);
-    cam->Set(String::NewFromUtf8(isolate, "ptr"), Number::New(isolate, (OPint)camera));
-    args.GetReturnValue().Set(cam);
+    Handle<Object> cam = NODE_NEW_OBJECT();
+    cam->Set(NODE_NEW_STRING("ptr"), NODE_NEW_NUMBER((OPint)camera));
+    NODE_RETURN(cam);
 }
 
 
-void _OPfontSystemsLoadEffects(const FunctionCallbackInfo<Value>& args) {
+NODE_RETURN_VAL _OPfontSystemsLoadEffects(const NODE_ARGS& args) {
     OPfontSystemLoadEffects();
 }
 
-void _OPfontManagerSetup(const FunctionCallbackInfo<Value>& args) {
+NODE_RETURN_VAL _OPfontManagerSetup(const NODE_ARGS& args) {
     SCOPE_AND_ISOLATE
 
-    OPfontManager* manager = OPfontManagerSetup("Ubuntu.opf", Names, TotalEntries, 0.5);
+    const OPchar** Names = NULL;
+    OPuint TotalEntries = 0;
+    OPfontManager* manager = OPfontManagerSetup("Ubuntu.opf", Names, TotalEntries, 1.0);
 
+    Handle<Object> cam = NODE_NEW_OBJECT();
+    cam->Set(NODE_NEW_STRING("ptr"), NODE_NEW_NUMBER((OPint)manager));
+    NODE_RETURN(cam);
 }
+
+NODE_RETURN_VAL _OPfontManagerColor(const NODE_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    Handle<Object> obj = args[0]->ToObject();
+    OPint ptr = (OPint)obj->Get(NODE_NEW_STRING("ptr"))->IntegerValue();
+ 	OPfontManager* fontManager = (OPfontManager*)(OPint)ptr;
+    OPfontManagerSetColor(fontManager, args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue(), 1.0);
+
+    NODE_RETURN_NULL
+}
+
+NODE_RETURN_VAL _OPfontRenderBegin(const NODE_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    Handle<Object> obj = args[0]->ToObject();
+    OPint ptr = (OPint)obj->Get(NODE_NEW_STRING("ptr"))->IntegerValue();
+ 	OPfontManager* fontManager = (OPfontManager*)(OPint)ptr;
+
+    OPfontRenderBegin(fontManager);
+
+    NODE_RETURN_NULL
+}
+
+NODE_RETURN_VAL _OPfontRenderColor(const NODE_ARGS& args) {
+    SCOPE_AND_ISOLATE
+    OPfontColor(OPvec4Create(args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue(), 1.0));
+
+    NODE_RETURN_NULL
+}
+
+NODE_RETURN_VAL _OPfontRenderText(const NODE_ARGS& args) {
+    SCOPE_AND_ISOLATE
+    String::Utf8Value str(args[0]->ToString());
+    OPfontRender(*str, OPvec2Create(args[1]->NumberValue(), args[2]->NumberValue()));
+
+    NODE_RETURN_NULL
+}
+
+NODE_RETURN_VAL _OPfontRenderEnd(const NODE_ARGS& args) {
+    SCOPE_AND_ISOLATE
+    OPfontRenderEnd();
+    NODE_RETURN_NULL
+}
+
+
+
 
 void OPscriptNodeWrapperHuman(Handle<Object> exports) {
     SCOPE_AND_ISOLATE
 
 
     { // OP.font
-        Handle<Object> font = Object::New(isolate);
+        Handle<Object> font = NODE_NEW_OBJECT();
         NODE_SET_METHOD(font, "LoadEffects", _OPfontSystemsLoadEffects);
 
         { // OP.font.Manager
-            Handle<Object> manager = Object::New(isolate);
+            Handle<Object> manager = NODE_NEW_OBJECT();
             NODE_SET_METHOD(manager, "Setup", _OPfontManagerSetup);
-            font->Set(String::NewFromUtf8(isolate, "Manager"), manager);
+            NODE_SET_METHOD(manager, "Color", _OPfontManagerColor);
+            NODE_SET_OBJECT(font, "Manager", manager);
         }
 
-        exports->Set(String::NewFromUtf8(isolate, "font"), font);
+        { // OP.font.Render
+            Handle<Object> render = NODE_NEW_OBJECT();
+            NODE_SET_METHOD(render, "Begin", _OPfontRenderBegin);
+            NODE_SET_METHOD(render, "Color", _OPfontRenderColor);
+            NODE_SET_METHOD(render, "Text", _OPfontRenderText);
+            NODE_SET_METHOD(render, "End", _OPfontRenderEnd);
+            NODE_SET_OBJECT(font, "Render", render);
+        }
+
+        NODE_SET_OBJECT(exports, "font", font);
     }
 
 
     { // OP.cam
-        Handle<Object> cam = Object::New(isolate);
+        Handle<Object> cam = NODE_NEW_OBJECT();
         NODE_SET_METHOD(cam, "CreatePersp", _OPcamCreatePersp);
-        exports->Set(String::NewFromUtf8(isolate, "cam"), cam);
+        NODE_SET_OBJECT(exports, "cam", cam);
     }
 
 
     {   // OP.input
-        Handle<Object> input = Object::New(isolate);
+        Handle<Object> input = NODE_NEW_OBJECT();
 
         {   // OP.input.Keyboard
-            Handle<Object> keyboard = Object::New(isolate);
+            Handle<Object> keyboard = NODE_NEW_OBJECT();
             _SetKeyboardMap(keyboard);
             NODE_SET_METHOD(keyboard, "WasPressed", _OPkeyboardWasPressed);
             NODE_SET_METHOD(keyboard, "WasReleased", _OPkeyboardWasReleased);
             NODE_SET_METHOD(keyboard, "Update", _OPkeyboardUpdate);
-            input->Set(String::NewFromUtf8(isolate, "Keyboard"), keyboard);
+            NODE_SET_OBJECT(input, "Keyboard", keyboard);
         }
 
         {   // OP.input.GamePad
-            Handle<Object> gamepad = Object::New(isolate);
+            Handle<Object> gamepad = NODE_NEW_OBJECT();
             _SetGamePadMap(gamepad);
-            input->Set(String::NewFromUtf8(isolate, "GamePad"), gamepad);
+            NODE_SET_OBJECT(input, "GamePad", gamepad);
         }
 
         NODE_SET_OBJECT(exports, "input", input);
@@ -267,10 +342,11 @@ void OPscriptNodeWrapperHuman(Handle<Object> exports) {
 
 
     {   // OP.render
-        Handle<Object> render = Object::New(isolate);
+        Handle<Object> render = NODE_NEW_OBJECT();
         NODE_SET_METHOD(render, "Init", _OPrenderInit);
         NODE_SET_METHOD(render, "Clear", _OPrenderClear);
         NODE_SET_METHOD(render, "Present", _OPrenderPresent);
+        NODE_SET_METHOD(render, "Size", _OPrenderSize);
         NODE_SET_OBJECT(exports, "render", render);
     }
 

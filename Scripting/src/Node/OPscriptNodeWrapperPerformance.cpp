@@ -9,9 +9,9 @@
 void OPscriptNodeWrapperPerformance(Handle<Object> exports) {
     SCOPE_AND_ISOLATE
 
-    Handle<Object> performance = Object::New(isolate);
+    Handle<Object> performance = NODE_NEW_OBJECT();
 
-    exports->Set(String::NewFromUtf8(isolate, "performance"), performance);
+    NODE_SET_OBJECT(exports, "performance", performance);
 }
 
 #endif

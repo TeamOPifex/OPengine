@@ -14,7 +14,7 @@ Local<Function> _endCallback;
 void _init() {
     SCOPE_AND_ISOLATE
     const unsigned int argc = 1;
-    Handle<Value> argv[argc] = { Boolean::New(isolate, true) };
+    Handle<Value> argv[argc] = { NODE_NEW_BOOL(true) };
     Handle<Object> obj = NODE_NEW_OBJECT();
     _initCallback->Call(obj, argc, argv);
 }
@@ -22,7 +22,7 @@ void _init() {
 int _update(OPtimer* timer) {
     SCOPE_AND_ISOLATE
     const unsigned int argc = 1;
-    Handle<Value> argv[argc] = { Number::New(isolate, timer->Elapsed) };
+    Handle<Value> argv[argc] = { NODE_NEW_NUMBER(timer->Elapsed) };
     Handle<Object> obj = NODE_NEW_OBJECT();
     Local<Value> result = _updateCallback->Call(obj, argc, argv);
     if(result->IsNumber()) {
@@ -36,12 +36,12 @@ int _update(OPtimer* timer) {
 void _end() {
     SCOPE_AND_ISOLATE
     const unsigned int argc = 1;
-    Handle<Value> argv[argc] = { Boolean::New(isolate, true) };
+    Handle<Value> argv[argc] = { NODE_NEW_BOOL(true) };
     Handle<Object> obj = NODE_NEW_OBJECT();
     _endCallback->Call(obj, argc, argv);
 }
 
-void _OPstart(const FunctionCallbackInfo<Value>& args) {
+NODE_RETURN_VAL _OPstart(const NODE_ARGS& args) {
     SCOPE_AND_ISOLATE
 
     OPlog("Starting");
@@ -57,31 +57,37 @@ void _OPstart(const FunctionCallbackInfo<Value>& args) {
     OPstart(0, NULL);
     OPlog("OPstart finished");
     OPend();
+
+    NODE_RETURN_NULL
 }
 
 // OP.timer.Create
-void _OPtimerCreate(const FunctionCallbackInfo<Value>& args) {
+NODE_RETURN_VAL _OPtimerCreate(const NODE_ARGS& args) {
     SCOPE_AND_ISOLATE
 
  	OPtimer* timer = (OPtimer*)OPalloc(sizeof(OPtimer));
  	OPtimerCreate(timer);
 
-    Handle<Object> obj = Object::New(isolate);
-    obj->Set(String::NewFromUtf8(isolate, "ptr"), Number::New(isolate, (OPint)timer));
-    obj->Set(String::NewFromUtf8(isolate, "elapsed"), Number::New(isolate, 0));
+    Handle<Object> obj = NODE_NEW_OBJECT();
+    NODE_SET_PTR(obj, timer)
+    NODE_SET_NUMBER(obj, "ptr", (OPint)timer);
+    NODE_SET_NUMBER(obj, "elapsed", 0);
 
-    args.GetReturnValue().Set(obj);
+    NODE_RETURN(obj);
 }
 
 // OP.timer.Update
-void _OPtimerUpdate(const FunctionCallbackInfo<Value>& args) {
+NODE_RETURN_VAL _OPtimerUpdate(const NODE_ARGS& args) {
     SCOPE_AND_ISOLATE
 
     Handle<Object> obj = args[0]->ToObject();
-    OPint ptr = (OPint)obj->Get(String::NewFromUtf8(isolate, "ptr"))->IntegerValue();
- 	OPtimer* timer = (OPtimer*)(OPint)ptr;
+
+    OPtimer* timer = NODE_GET_PTR(obj, OPtimer);
  	OPtimerTick(timer);
-    obj->Set(String::NewFromUtf8(isolate, "elapsed"), Number::New(isolate, timer->Elapsed));
+
+    NODE_SET_NUMBER(obj, "elapsed", timer->Elapsed);
+
+    NODE_RETURN_NULL
 }
 
 // Initialize the Core
@@ -90,13 +96,11 @@ void OPscriptNodeWrapperCore(Handle<Object> exports) {
 
     {
         // OP.timer
-        Handle<Object> timer = Object::New(isolate);
+        Handle<Object> timer = NODE_NEW_OBJECT();
         NODE_SET_METHOD(timer, "Create", _OPtimerCreate);
         NODE_SET_METHOD(timer, "Update", _OPtimerUpdate);
-        exports->Set(String::NewFromUtf8(isolate, "timer"), timer);
+        NODE_SET_OBJECT(exports, "timer", timer);
     }
-
-
 
     NODE_SET_METHOD(exports, "start", _OPstart);
 }

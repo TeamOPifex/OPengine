@@ -66,7 +66,7 @@ set(ALL_LIBS
 #########################################
 # BUILD
 #########################################
-add_executable(9_Application ${APPLICATION_SRC} ../Scripting/src/Node/OPscriptNodeWrapperMath.cpp ../Scripting/include/Node/OPscriptNodeWrapperMath.h)
+add_executable(9_Application ${APPLICATION_SRC})
 
 target_link_libraries(9_Application	${ALL_LIBS})
 

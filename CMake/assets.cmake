@@ -59,7 +59,7 @@ if( ${OPIFEX_OS_ANDROID} )
 else()	
 	if(${OPIFEX_OPTION_NODEJS})
 		configure_file(		${PROJECT_SOURCE_DIR}/NodeJs/binding.gyp		${PROJECT_BINARY_DIR}/binding.gyp	)
-		file(COPY 			${PROJECT_SOURCE_DIR}/NodeJs/Wrapper.cpp DESTINATION ${PROJECT_BINARY_DIR}/)
+		configure_file(		${PROJECT_SOURCE_DIR}/NodeJs/Wrapper.cpp		${PROJECT_BINARY_DIR}/Wrapper.cpp	)
 	endif()
 
 	# Only copy assets if we're in release mode

@@ -8,7 +8,7 @@
 #include "./Core/include/OPlog.h"
 
 
-void _OPcmanInit(const FunctionCallbackInfo<Value>& args) {
+NODE_RETURN_VAL _OPcmanInit(const NODE_ARGS& args) {
     SCOPE_AND_ISOLATE
 
  	const char* assetDir = NULL;
@@ -20,9 +20,11 @@ void _OPcmanInit(const FunctionCallbackInfo<Value>& args) {
     }
 
     OPcmanInit(assetDir);
+
+    NODE_RETURN_NULL
 }
 
-void _OPcmanLoad(const FunctionCallbackInfo<Value>& args) {
+NODE_RETURN_VAL _OPcmanLoad(const NODE_ARGS& args) {
  	SCOPE_AND_ISOLATE
 
     if(args.Length() > 0) {
@@ -32,11 +34,12 @@ void _OPcmanLoad(const FunctionCallbackInfo<Value>& args) {
         OPlog("Test");
         OPint result = OPcmanLoad(file);
         OPlog("Script Load1: %d", result);
-        args.GetReturnValue().Set(Number::New(isolate, result));
+        NODE_RETURN(NODE_NEW_NUMBER(result));
  	}
+    NODE_RETURN_NULL
  }
 
-void _OPcmanGet(const FunctionCallbackInfo<Value>& args) {
+NODE_RETURN_VAL _OPcmanGet(const NODE_ARGS& args) {
  	SCOPE_AND_ISOLATE
 
     if(args.Length() > 0) {
@@ -45,11 +48,12 @@ void _OPcmanGet(const FunctionCallbackInfo<Value>& args) {
         OPlog("Script Load: %s", file);
         void* result = OPcmanGet(file);
         OPlog("Script Load: %x", result);
-        args.GetReturnValue().Set(Number::New(isolate, (OPint)result));
+        NODE_RETURN(NODE_NEW_NUMBER((OPint)result));
  	}
+    NODE_RETURN_NULL
 }
 
-void _OPcmanLoadGet(const FunctionCallbackInfo<Value>& args) {
+NODE_RETURN_VAL _OPcmanLoadGet(const NODE_ARGS& args) {
  	SCOPE_AND_ISOLATE
 
     if(args.Length() > 0) {
@@ -58,23 +62,23 @@ void _OPcmanLoadGet(const FunctionCallbackInfo<Value>& args) {
         OPlog("Script Load: %s", file);
         void* result = OPcmanLoadGet(file);
         OPlog("Script Load: %x", result);
-        args.GetReturnValue().Set(Number::New(isolate, (OPint)result));
+        NODE_RETURN(NODE_NEW_NUMBER((OPint)result));
  	}
- }
+    NODE_RETURN_NULL
+}
 
 void OPscriptNodeWrapperData(Handle<Object> exports) {
     SCOPE_AND_ISOLATE
 
     {
         // OP.cman
-        Handle<Object> cman = Object::New(isolate);
+        Handle<Object> cman = NODE_NEW_OBJECT();
         NODE_SET_METHOD(cman, "Init", _OPcmanInit);
         NODE_SET_METHOD(cman, "Load", _OPcmanLoad);
         NODE_SET_METHOD(cman, "Get", _OPcmanGet);
         NODE_SET_METHOD(cman, "LoadGet", _OPcmanLoadGet);
-        exports->Set(String::NewFromUtf8(isolate, "cman"), cman);
+        NODE_SET_OBJECT(exports, "cman", cman);
     }
-
 }
 
 #endif

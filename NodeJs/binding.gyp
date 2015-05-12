@@ -99,7 +99,8 @@
                     {
                         'defines': [
                           'OPIFEX_OPTION_NODEJS',
-                          "_ITERATOR_DEBUG_LEVEL=0"
+                          "_ITERATOR_DEBUG_LEVEL=0",
+                          "OPIFEX_NODEJS_@OPIFEX_NODE_VERSION@"
                         ],
                         "link_settings": {
                             "libraries": [
@@ -130,6 +131,16 @@
                     }
                 ]
             ]
+        },
+        {
+            'target_name': 'action_after_build',
+            'type': 'none',
+            'copies': [
+                {
+                    'files': [ '<(PRODUCT_DIR)/OPengine.node' ],
+                    'destination': '@BINARY_FOLDER@'
+                }
+            ],
         }
     ]
 }
