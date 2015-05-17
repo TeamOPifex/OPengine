@@ -28,12 +28,11 @@ OPfontManager* OPfontManagerCreate(OPfont* font) {
 	return temp;
 }
 
-OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 count, OPfloat scale) {
+OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 count) {
 	OPfontSystemLoadEffects();
-	OPcmanLoad(font);
-	OPfont* _font = (OPfont*)OPcmanGet(font);
+	OPfont* _font = (OPfont*)OPcmanLoadGet(font);
 	OPfontManager* manager = OPfontManagerCreate(_font);
-	manager->scale = scale;
+	manager->scale = 1.0;
 	OPfontManagerBind(manager);
 	for (ui16 i = 0; i < count; i++) {
 		OPfontManagerAddText(text[i]);

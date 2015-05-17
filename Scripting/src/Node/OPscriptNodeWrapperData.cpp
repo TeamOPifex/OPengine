@@ -30,10 +30,8 @@ NODE_RETURN_VAL _OPcmanLoad(const NODE_ARGS& args) {
     if(args.Length() > 0) {
         v8::String::Utf8Value utf8(args[0]);
         const char* file = *utf8;
-        OPlog("Script Load1: %s", file);
-        OPlog("Test");
         OPint result = OPcmanLoad(file);
-        OPlog("Script Load1: %d", result);
+
         NODE_RETURN(NODE_NEW_NUMBER(result));
  	}
     NODE_RETURN_NULL
@@ -45,10 +43,13 @@ NODE_RETURN_VAL _OPcmanGet(const NODE_ARGS& args) {
     if(args.Length() > 0) {
         v8::String::Utf8Value utf8(args[0]);
         const char* file = *utf8;
-        OPlog("Script Load: %s", file);
-        void* result = OPcmanGet(file);
-        OPlog("Script Load: %x", result);
-        NODE_RETURN(NODE_NEW_NUMBER((OPint)result));
+
+        void* asset = OPcmanGet(file);
+
+        Handle<Object> result = NODE_NEW_OBJECT();
+        NODE_SET_PTR(result, asset);
+
+        NODE_RETURN(result);
  	}
     NODE_RETURN_NULL
 }
@@ -59,10 +60,12 @@ NODE_RETURN_VAL _OPcmanLoadGet(const NODE_ARGS& args) {
     if(args.Length() > 0) {
         v8::String::Utf8Value utf8(args[0]);
         const char* file = *utf8;
-        OPlog("Script Load: %s", file);
-        void* result = OPcmanLoadGet(file);
-        OPlog("Script Load: %x", result);
-        NODE_RETURN(NODE_NEW_NUMBER((OPint)result));
+        void* asset = OPcmanLoadGet(file);
+
+        Handle<Object> result = NODE_NEW_OBJECT();
+        NODE_SET_PTR(result, asset);
+
+        NODE_RETURN(result);
  	}
     NODE_RETURN_NULL
 }

@@ -36,6 +36,7 @@ int ApplicationUpdate(OPtimer* timer) {
 
 void ApplicationDestroy() {
 	ActiveState->Exit(ActiveState);
+	OPcmanDestroy();
 }
 
 void ApplicationSetup() {

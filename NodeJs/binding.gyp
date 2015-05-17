@@ -7,8 +7,10 @@
                  "../OPengine/Scripting/src/Node/OPscriptNodeWrapperCore.cpp",
                  "../OPengine/Scripting/src/Node/OPscriptNodeWrapperData.cpp",
                  "../OPengine/Scripting/src/Node/OPscriptNodeWrapperMath.cpp",
+                 "../OPengine/Scripting/src/Node/Math/OPmat4Wrapper.cpp",
                  "../OPengine/Scripting/src/Node/OPscriptNodeWrapperPerformance.cpp",
                  "../OPengine/Scripting/src/Node/OPscriptNodeWrapperHuman.cpp",
+                 "../OPengine/Scripting/src/Node/Human/OPcamWrapper.cpp",
                  "../OPengine/Scripting/src/Node/OPscriptNodeWrapperCommunication.cpp",
                  "../OPengine/Scripting/src/Node/OPscriptNodeWrapperPipeline.cpp"
             ],

@@ -136,6 +136,13 @@ void* OPcmanLoadGet(const OPchar* key);
 */
 OPint OPcmanDelete(const OPchar* key);
 
+/* Marks an asset as ready to delete
+* It will only be removed from memory when OPcmanPurge is called
+* @param key The resource that's no longer needed
+* @return Success Result
+*/
+void OPcmanDestroy();
+
 #ifdef __cplusplus
 }
 #endif

@@ -4,12 +4,17 @@
 #include "OPtypes.h"
 #include <string.h>
 
+#ifndef OPIFEX_OPTION_RELEASE
+extern OPint OPallocations;
+extern OPint OPdeallocations;
+#endif
+
 #if defined(OPIFEX_UNIX)
 // android specific for malloc
 #include <stdlib.h> // stdlib is valid for linux and unix
 #elif defined(OPIFEX_WINDOWS)
 // Windows specific for malloc
-#include <stdlib.h> 
+#include <stdlib.h>
 #endif
 
 // Define preprocessor macros

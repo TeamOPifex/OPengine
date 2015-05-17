@@ -1,3 +1,4 @@
+#include <include/OPhashMap.h>
 #include "./Data/include/OPcman.h"
 #include "./Core/include/OPlog.h"
 #include "./Data/include/OPvector.h"
@@ -91,9 +92,10 @@ OPint OPcmanInit(const OPchar* dir){
 		_OP_CMAN_ASSETLOADERS = OPlistCreate(16, sizeof(OPassetLoader));
 	}
 
-	OP_CMAN_ASSET_FOLDER = "assets/";
 	if (dir) {
 		OP_CMAN_ASSET_FOLDER = OPstringCopy(dir);
+	} else {
+		OP_CMAN_ASSET_FOLDER = OPstringCopy("assets/");
 	}
 
 	OP_CMAN_ASSET_LOADER_COUNT = OPlistSize(_OP_CMAN_ASSETLOADERS);
@@ -125,6 +127,7 @@ OPint OPcmanInit(const OPchar* dir){
 
 
 #ifdef _DEBUG
+	OPfree(OP_CMAN_ASSET_FOLDER);
 	OP_CMAN_ASSET_FOLDER = OPdirCurrent();
 #endif
 
@@ -291,4 +294,33 @@ void* OPcmanLoadGet(const OPchar* key) {
 		return NULL;
 	}
 	return OPcmanGet(key);
+}
+
+void OPcmanDestroy() {
+
+	Bucket* bucket;
+	OPuint i, j, n, m;
+	KeyValuePair *pair;
+
+	n = OP_CMAN_HASHMAP.count;
+	bucket = OP_CMAN_HASHMAP.buckets;
+	i = 0;
+	while (i < n) {
+		m = bucket->count;
+		pair = bucket->pairs;
+		j = 0;
+		while(j < m) {
+			OPcmanDelete(pair->key);
+			pair++;
+			j++;
+		}
+		bucket++;
+		i++;
+	}
+	OPcmanPurge();
+
+	OPfree(OP_CMAN_ASSET_FOLDER);
+	OPfree(OP_CMAN_ASSETLOADERS);
+	OPhashMapDestroy(&OP_CMAN_HASHMAP);
+	OPllDestroy(OP_CMAN_PURGE);
 }

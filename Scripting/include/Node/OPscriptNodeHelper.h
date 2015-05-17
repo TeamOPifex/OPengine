@@ -5,6 +5,7 @@
 #ifdef OPIFEX_OPTION_NODEJS
 
 #include <node.h>
+#include <node_object_wrap.h>
 #include <v8.h>
 
 using namespace v8;
@@ -25,6 +26,9 @@ typedef Handle<Value> NODE_RETURN_VAL;
 #define NODE_NEW_STRING(name) String::New(name)
 #define NODE_NEW_NUMBER(val) Number::New(val)
 #define NODE_NEW_BOOL(val) Boolean::New(val)
+#define NODE_NEW_ARRAY() Array::New()
+#define NODE_NEW_FUNCTION(func) Local<Function>::New(func)
+#define NODE_NEW_FUNCTION_TEMPLATE(func) FunctionTemplate::New(func)
 #define NODE_NEW_NULL() Null()
 #define NODE_RETURN(val) return val;
 #define NODE_RETURN_NULL NODE_RETURN(NODE_NEW_NULL())
@@ -52,6 +56,9 @@ typedef void NODE_RETURN_VAL;
 #define NODE_NEW_STRING(name) String::NewFromUtf8(isolate, name)
 #define NODE_NEW_NUMBER(val) Number::New(isolate, val)
 #define NODE_NEW_BOOL(val) Boolean::New(isolate, val)
+#define NODE_NEW_ARRAY() Array::New(isolate)
+#define NODE_NEW_FUNCTION(func) Local<Function>::New(isolate, func)
+#define NODE_NEW_FUNCTION_TEMPLATE(func) FunctionTemplate::New(isolate, func)
 #define NODE_NEW_NULL() Null(isolate)
 #define NODE_RETURN(val) args.GetReturnValue().Set(val);
 #define NODE_RETURN_NULL ;
@@ -65,8 +72,17 @@ typedef void NODE_RETURN_VAL;
 
 
 #define NODE_SET_NUMBER(obj, name, val) obj->Set(NODE_NEW_STRING(name), NODE_NEW_NUMBER(val));
+#define NODE_GET_NUMBER(obj, name) obj->Get(NODE_NEW_STRING(name))->NumberValue();
 #define NODE_SET_PTR(obj, ptr) NODE_SET_NUMBER(obj, "ptr", (OPint)ptr)
 #define NODE_GET_PTR(obj, type) (type*)(OPint)obj->Get(NODE_NEW_STRING("ptr"))->IntegerValue();
+#define NODE_GET_ARG_PTR(args, ind, type) NODE_GET_PTR(args[ind]->ToObject(), type)
+
+#define NODE_SETUP_INSTANCE const unsigned argc = 1; \
+    Handle<Value> argv[argc] = { args[0] }; \
+    Local<Function> cons = NODE_NEW_FUNCTION(constructor); \
+    Local<Object> instance = cons->NewInstance(argc, argv);
+
+
 
 
 #endif

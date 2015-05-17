@@ -84,8 +84,8 @@ void ExampleSelectorEnter(OPgameState* last) {
         Names[i] = exampleSelector.Examples[i].name;
     }
 
-    exampleSelector.FontManager = OPfontManagerSetup("Ubuntu.opf", Names, TotalEntries, 0.5);
-    exampleSelector.FontManager->scale = 0.75;
+    exampleSelector.FontManager = OPfontManagerSetup("Ubuntu.opf", Names, TotalEntries);
+    exampleSelector.FontManager->scale = 0.5;
 
 	OPcmanPurge();
 	OPlog("Entered Example Selector");
@@ -169,7 +169,10 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 	OPfontRenderBegin(exampleSelector.FontManager);
 
 	OPfontColor(OPvec4Create(1.0, 1.0, 1.0, 1));
+    exampleSelector.FontManager->scale = 0.75;
 	OPfontRender("OPengine v0.4.6", OPvec2Create(50, start - 60));
+
+    exampleSelector.FontManager->scale = 0.5;
 
     OPint notTheCurrentlySelectedMenuItem = 0, isActiveCategory = 0;
 	f32 r, g, b;
@@ -217,7 +220,7 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
             // If it's the root menu we don't offset to the right
             // If it isn't the root menu, then we push it to right
             // to help indicate that it's a sub-menu
-            OPint isNotRootMenu = (exampleSelector.CurrentHierarchy != -1);
+            OPint isNotRootMenu = (exampleSelector.CurrentHierarchy != -1) ? 1 : 0;
             OPfontRender(exampleSelector.Examples[i].name,
                          OPvec2Create(75 + 40 * isNotRootMenu,
                                       start + 40 * (pos + isNotRootMenu)));

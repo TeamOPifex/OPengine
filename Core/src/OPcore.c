@@ -188,6 +188,13 @@ void OPstart(int argc, char** args) {
 
 	// game loop has finished, clean up
 	OPdestroy();
+
+	OPfree(_startUpDir);
+	OPfree(_execDir);
+
+	#ifndef OPIFEX_OPTION_RELEASE
+	OPlog("Alloc/Dealloc/Diff: %d / %d / %d", OPallocations, OPdeallocations, (OPallocations - OPdeallocations));
+	#endif
 }
 #endif
 
