@@ -3,9 +3,12 @@
         {
             "target_name": "OPengine",
             "sources": [
-                "Wrapper.cpp",
+                 "../OPengine/Scripting/src/Node/Wrapper.cpp",
                  "../OPengine/Scripting/src/Node/OPscriptNodeWrapperCore.cpp",
+                 "../OPengine/Scripting/src/Node/Core/OPdefinedWrapper.cpp",
+                 "../OPengine/Scripting/src/Node/Core/OPtimerWrapper.cpp",
                  "../OPengine/Scripting/src/Node/OPscriptNodeWrapperData.cpp",
+                 "../OPengine/Scripting/src/Node/Data/OPcmanWrapper.cpp",
                  "../OPengine/Scripting/src/Node/OPscriptNodeWrapperMath.cpp",
                  "../OPengine/Scripting/src/Node/Math/OPmat4Wrapper.cpp",
                  "../OPengine/Scripting/src/Node/Math/OPvec2Wrapper.cpp",
@@ -24,7 +27,9 @@
                  "../OPengine/Scripting/src/Node/Human/OPrenderWrapper.cpp",
                  "../OPengine/Scripting/src/Node/Human/OPtextureWrapper.cpp",
                  "../OPengine/Scripting/src/Node/OPscriptNodeWrapperCommunication.cpp",
-                 "../OPengine/Scripting/src/Node/OPscriptNodeWrapperPipeline.cpp"
+                 "../OPengine/Scripting/src/Node/OPscriptNodeWrapperPipeline.cpp",
+                 "../OPengine/Scripting/src/Node/Pipeline/OPloaderWrapper.cpp",
+                 "../OPengine/Scripting/src/Node/Pipeline/OPtexture2DWrapper.cpp"
             ],
             "include_dirs": [
                 "@PROJECT_SOURCE_DIR@/",

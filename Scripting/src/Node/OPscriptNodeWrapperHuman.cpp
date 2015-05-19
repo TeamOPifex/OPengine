@@ -2,13 +2,9 @@
 
 #ifdef OPIFEX_OPTION_NODEJS
 
-#include "./Scripting/include/Node/OPscriptNodeWrapperMath.h"
-#include "./Scripting/include/Node/Math/Wrappers.h"
 #include "./Scripting/include/Node/Human/Wrappers.h"
 
 void OPscriptNodeWrapperHuman(Handle<Object> exports) {
-    SCOPE_AND_ISOLATE
-
     OPcamWrapper(exports);
     OPcubeWrapper(exports);
     OPeffectWrapper(exports);

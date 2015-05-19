@@ -4,6 +4,8 @@
 #include "./Scripting/include/Node/OPscriptNodeHelper.h"
 #include "./Human/include/Rendering/OPcam.h"
 
+void OPscriptNodeWrapperHuman(Handle<Object> target);
+
 void OPcamWrapper(Handle<Object> exports);
 void OPcubeWrapper(Handle<Object> exports);
 void OPeffectWrapper(Handle<Object> exports);
