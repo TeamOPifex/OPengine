@@ -3,6 +3,7 @@
 #ifdef OPIFEX_OPTION_NODEJS
 
 #include "./Scripting/include/Node/OPscriptNodeWrapperMath.h"
+#include "./Scripting/include/Node/Math/OPvec3Wrapper.h"
 #include "./Scripting/include/Node/Math/OPmat4Wrapper.h"
 #include "./Scripting/include/Node/Human/OPcamWrapper.h"
 
@@ -485,8 +486,29 @@ NODE_RETURN_VAL _OPeffectParamMat4(const NODE_ARGS& args) {
 
 
     String::Utf8Value param(args[0]->ToString());
-    OPmat4Wrapper* obj = node::ObjectWrap::Unwrap<OPmat4Wrapper>(args[1]->ToObject());
-    OPeffectParamMat4(*param, &obj->value_);
+    OPmat4* obj = NODE_GET_ARG_PTR(args, 1, OPmat4);
+    OPeffectParamMat4(*param, obj);
+
+    NODE_RETURN_NULL
+}
+
+NODE_RETURN_VAL _OPeffectParamVec3(const NODE_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+
+    String::Utf8Value param(args[0]->ToString());
+    OPvec3* obj = NODE_GET_ARG_PTR(args, 1, OPvec3);
+    OPeffectParamVec3(*param, obj);
+
+    NODE_RETURN_NULL
+}
+
+NODE_RETURN_VAL _OPeffectParamTexture(const NODE_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    String::Utf8Value param(args[0]->ToString());
+    OPtexture* ptr = NODE_GET_ARG_PTR(args, 1, OPtexture);
+    OPeffectParam(*param, ptr);
 
     NODE_RETURN_NULL
 }
@@ -494,9 +516,16 @@ NODE_RETURN_VAL _OPeffectParamMat4(const NODE_ARGS& args) {
 NODE_RETURN_VAL _OPeffectParamCam(const NODE_ARGS& args) {
     SCOPE_AND_ISOLATE
 
+    OPcam* obj = NODE_GET_ARG_PTR(args, 0, OPcam);
+    OPeffectParam(*obj);
 
-    OPcamWrapper* obj = node::ObjectWrap::Unwrap<OPcamWrapper>(args[0]->ToObject());
-    OPeffectParam(obj->value_);
+    NODE_RETURN_NULL
+}
+
+NODE_RETURN_VAL _OPtextureClearActive(const NODE_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPtextureClearActive();
 
     NODE_RETURN_NULL
 }
@@ -552,7 +581,6 @@ void OPscriptNodeWrapperHuman(Handle<Object> exports) {
         NODE_SET_OBJECT(exports, "material", material);
     }
 
-    OPcamWrapper::Init(exports);
 
 //    { // OP.cam
 //        Handle<Object> cam = NODE_NEW_OBJECT();
@@ -592,6 +620,8 @@ void OPscriptNodeWrapperHuman(Handle<Object> exports) {
         NODE_SET_METHOD(effect, "Gen", _OPeffectGen);
         NODE_SET_METHOD(effect, "Bind", _OPeffectBind);
         NODE_SET_METHOD(effect, "ParamMat4", _OPeffectParamMat4);
+        NODE_SET_METHOD(effect, "ParamVec3", _OPeffectParamVec3);
+        NODE_SET_METHOD(effect, "ParamTex", _OPeffectParamTexture);
         NODE_SET_METHOD(effect, "ParamCam", _OPeffectParamCam);
         NODE_SET_OBJECT(exports, "effect", effect);
     }
@@ -606,6 +636,14 @@ void OPscriptNodeWrapperHuman(Handle<Object> exports) {
         NODE_SET_METHOD(render, "Depth", _OPrenderDepth);
         NODE_SET_OBJECT(exports, "render", render);
     }
+
+    { // OP.texture
+        Handle<Object> texture = NODE_NEW_OBJECT();
+        NODE_SET_METHOD(texture, "ClearActive", _OPtextureClearActive);
+        NODE_SET_OBJECT(exports, "texture", texture);
+    }
+
+    OPcamWrapper(exports);
 
     NODE_SET_NUMBER(exports, "ATTR_POSITION", OPATTR_POSITION);
     NODE_SET_NUMBER(exports, "ATTR_UV", OPATTR_UV);
