@@ -1,5 +1,5 @@
 // myobject.cc
-#include "./Scripting/include/Node/Math/OPvec3Wrapper.h"
+#include "./Scripting/include/Node/Math/Wrappers.h"
 
 NODE_RETURN_VAL _OPvec3LogSelf(const NODE_ARGS& args) {
     SCOPE_AND_ISOLATE;
@@ -43,59 +43,3 @@ void OPvec3Wrapper(Handle<Object> exports) {
     NODE_SET_OBJECT(exports, "vec3", vec3);
 
 }
-//
-//using namespace v8;
-//
-//Persistent<Function> OPvec3Wrapper::constructor;
-//
-//OPvec3Wrapper::OPvec3Wrapper() {
-//
-//}
-//
-//OPvec3Wrapper::~OPvec3Wrapper() {
-//
-//}
-//
-//NODE_RETURN_VAL OPvec3Wrapper::Init(Handle<Object> exports) {
-//    SCOPE_AND_ISOLATE;
-//
-//    // Prepare constructor template
-//    Local<FunctionTemplate> tpl = NODE_NEW_FUNCTION_TEMPLATE(New);
-//    tpl->SetClassName(NODE_NEW_STRING("OPvec3Wrapper"));
-//    tpl->InstanceTemplate()->SetInternalFieldCount(1);
-//
-//    // Prototype
-//    //NODE_SET_PROTOTYPE_METHOD(tpl, "RotX", RotX);
-//
-//    constructor.Reset(isolate, tpl->GetFunction());
-//    Handle<Object> vec3 = tpl->GetFunction();
-//    //NODE_SET_METHOD(mat4, "RotX", CreateRotX);
-//    NODE_SET_OBJECT(exports, "vec3", vec3);
-//
-//}
-//
-//NODE_RETURN_VAL OPvec3Wrapper::New(const NODE_ARGS& args) {
-//    SCOPE_AND_ISOLATE;
-//
-//    if (args.IsConstructCall()) {
-//        // Invoked as constructor: `new OPmat4Wrapper(...)`
-//        OPvec3Wrapper* obj = new OPvec3Wrapper();
-//        obj->value_ = OPvec3Create(args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue());
-//        obj->Wrap(args.This());
-//        NODE_RETURN(args.This());
-//    } else {
-//        // Invoked as plain function `OPmat4Wrapper(...)`, turn into construct call.
-//        const int argc = 1;
-//        Local<Value> argv[argc] = { args[0] };
-//        Local<Function> cons = NODE_NEW_FUNCTION(constructor);
-//        NODE_RETURN(cons->NewInstance(argc, argv));
-//    }
-//}
-//
-////
-////NODE_RETURN_VAL OPvec3Wrapper::RotX(const NODE_ARGS& args) {
-////    SCOPE_AND_ISOLATE;
-////    OPmat4Wrapper* obj = ObjectWrap::Unwrap<OPmat4Wrapper>(args.Holder());
-////
-////    obj->value_ = OPmat4RotX(obj->value_, args[0]->NumberValue());
-////}
