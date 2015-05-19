@@ -1,7 +1,7 @@
-// myobject.cc
 #include "./Scripting/include/Node/Human/Wrappers.h"
 #include "./Scripting/include/Node/Math/Wrappers.h"
 
+#include "./Human/include/Rendering/OPcam.h"
 
 NODE_RETURN_VAL _OPcamUpdateViewSelf(const NODE_ARGS& args) {
     SCOPE_AND_ISOLATE;

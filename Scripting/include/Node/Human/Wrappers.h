@@ -1,8 +1,7 @@
 #ifndef OPENGINE_SCRIPTING_NODE_HUMAN_WRAPPERS
-#define OPIFEXENGINE_WRAPPER_H
+#define OPENGINE_SCRIPTING_NODE_HUMAN_WRAPPERS
 
 #include "./Scripting/include/Node/OPscriptNodeHelper.h"
-#include "./Human/include/Rendering/OPcam.h"
 
 void OPscriptNodeWrapperHuman(Handle<Object> target);
 
@@ -19,4 +18,4 @@ void OPtextureWrapper(Handle<Object> exports);
 
 void OPATTRWrapper(Handle<Object> exports);
 
-#endif //OPIFEXENGINE_WRAPPER_H
+#endif

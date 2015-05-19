@@ -2,7 +2,7 @@
 #include "./Scripting/include/Node/Data/Wrappers.h"
 
 #include "./Data/Data.h"
-
+#include "./Core/include/OPlog.h"
 
 NODE_RETURN_VAL _OPcmanInit(const NODE_ARGS& args) {
     SCOPE_AND_ISOLATE

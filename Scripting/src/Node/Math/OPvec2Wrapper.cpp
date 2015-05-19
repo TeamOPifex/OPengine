@@ -1,5 +1,6 @@
-// myobject.cc
 #include "./Scripting/include/Node/Math/Wrappers.h"
+
+#include "./Math/include/OPvec2.h"
 
 NODE_RETURN_VAL _OPvec2LogSelf(const NODE_ARGS& args) {
     SCOPE_AND_ISOLATE;

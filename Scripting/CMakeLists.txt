@@ -20,6 +20,14 @@ add_source_group(include/ "${PROJECT_SOURCE_DIR}/Scripting/include" SCRIPTING_SR
 add_source_group(include/V8 "${PROJECT_SOURCE_DIR}/Scripting/include/V8" SCRIPTING_SRC)
 add_source_group(include/V8/WrapperMath "${PROJECT_SOURCE_DIR}/Scripting/include/V8/WrapperMath" SCRIPTING_SRC)
 add_source_group(include/wrappers "${PROJECT_SOURCE_DIR}/Scripting/include/wrappers" SCRIPTING_SRC)
+add_source_group(include/Node "${PROJECT_SOURCE_DIR}/Scripting/include/wrappers/Node" SCRIPTING_SRC)
+add_source_group(include/Node/Communication "${PROJECT_SOURCE_DIR}/Scripting/include/wrappers/Node/Communication" SCRIPTING_SRC)
+add_source_group(include/Node/Core "${PROJECT_SOURCE_DIR}/Scripting/include/wrappers/Node/Core" SCRIPTING_SRC)
+add_source_group(include/Node/Data "${PROJECT_SOURCE_DIR}/Scripting/include/wrappers/Node/Data" SCRIPTING_SRC)
+add_source_group(include/Node/Human "${PROJECT_SOURCE_DIR}/Scripting/include/wrappers/Node/Human" SCRIPTING_SRC)
+add_source_group(include/Node/Math "${PROJECT_SOURCE_DIR}/Scripting/include/wrappers/Node/Math" SCRIPTING_SRC)
+add_source_group(include/Node/Performance "${PROJECT_SOURCE_DIR}/Scripting/include/wrappers/Node/Performance" SCRIPTING_SRC)
+add_source_group(include/Node/Pipeline "${PROJECT_SOURCE_DIR}/Scripting/include/wrappers/Node/Pipeline" SCRIPTING_SRC)
 
 
 #########################################
@@ -30,6 +38,14 @@ add_source_group(src/ "${PROJECT_SOURCE_DIR}/Scripting/src" SCRIPTING_SRC)
 add_source_group(src/V8 "${PROJECT_SOURCE_DIR}/Scripting/src/V8" SCRIPTING_SRC)
 add_source_group(src/V8/WrapperMath "${PROJECT_SOURCE_DIR}/Scripting/src/V8/WrapperMath" SCRIPTING_SRC)
 add_source_group(src/wrappers "${PROJECT_SOURCE_DIR}/Scripting/src/wrappers" SCRIPTING_SRC)
+add_source_group(src/Node "${PROJECT_SOURCE_DIR}/Scripting/src/wrappers/Node" SCRIPTING_SRC)
+add_source_group(src/Node/Communication "${PROJECT_SOURCE_DIR}/Scripting/src/wrappers/Node/Communication" SCRIPTING_SRC)
+add_source_group(src/Node/Core "${PROJECT_SOURCE_DIR}/Scripting/src/wrappers/Node/Core" SCRIPTING_SRC)
+add_source_group(src/Node/Data "${PROJECT_SOURCE_DIR}/Scripting/src/wrappers/Node/Data" SCRIPTING_SRC)
+add_source_group(src/Node/Human "${PROJECT_SOURCE_DIR}/Scripting/src/wrappers/Node/Human" SCRIPTING_SRC)
+add_source_group(src/Node/Math "${PROJECT_SOURCE_DIR}/Scripting/src/wrappers/Node/Math" SCRIPTING_SRC)
+add_source_group(src/Node/Performance "${PROJECT_SOURCE_DIR}/Scripting/src/wrappers/Node/Performance" SCRIPTING_SRC)
+add_source_group(src/Node/Pipeline "${PROJECT_SOURCE_DIR}/Scripting/src/wrappers/Node/Pipeline" SCRIPTING_SRC)
 
 
 #########################################
