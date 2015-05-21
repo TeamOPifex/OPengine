@@ -1,34 +1,26 @@
 #include "./ExampleSelectorState.h"
-#include "./Scripting/include/V8/OPscriptV8.h"
+#include "./Scripting/include/JavaScript/OPjavaScriptV8.h"
 #include "./Scripting/include/OPloaderOPS.h"
 
 #ifdef OPIFEX_OPTION_V8
 
 typedef struct {
 	OPscript* MyScript;
-	OPscriptV8Compiled Compiled;
+	OPjavaScriptV8Compiled Compiled;
 } ScriptingExample;
 
 ScriptingExample scriptingExample;
 
 void ExampleScriptingEnter(OPgameState* last) {
-	OPscriptV8Init();
+	OPjavaScriptV8Init();
 	
-	scriptingExample.MyScript = (OPscript*)OPcmanLoadGet("myscript.js");
-	OPscriptV8Compile(&scriptingExample.Compiled, scriptingExample.MyScript, NULL);
-	OPscriptV8Run(&scriptingExample.Compiled);
+	scriptingExample.MyScript = (OPscript*)OPcmanLoadGet("main.js");
+	OPjavaScriptV8Compile(&scriptingExample.Compiled, scriptingExample.MyScript);
+	OPjavaScriptV8Run(&scriptingExample.Compiled);
 }
 
 OPint ExampleScriptingUpdate(OPtimer* time) {
-	//OPscriptCompileAndRun(scriptingExample.MyScript);
-	// OPscriptValuePersistent values[3] = {
-	// 	OPscriptGetValue("1"),
-	// 	OPscriptGetValue(1.0),
-	// 	OPscriptGetValue(1.0)
-	// };
-	// OPscriptValuePersistent val = OPscriptRunFunc(&scriptingExample.Compiled, "clearToBlack", 3, values);
-	OPscriptV8Run(&scriptingExample.Compiled, "clearToBlack");
-
+	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 	return false;
 }
 

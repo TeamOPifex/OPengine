@@ -298,29 +298,29 @@ void* OPcmanLoadGet(const OPchar* key) {
 
 void OPcmanDestroy() {
 
-	Bucket* bucket;
-	OPuint i, j, n, m;
-	KeyValuePair *pair;
-
-	n = OP_CMAN_HASHMAP.count;
-	bucket = OP_CMAN_HASHMAP.buckets;
-	i = 0;
-	while (i < n) {
-		m = bucket->count;
-		pair = bucket->pairs;
-		j = 0;
-		while(j < m) {
-			OPcmanDelete(pair->key);
-			pair++;
-			j++;
-		}
-		bucket++;
-		i++;
-	}
-	OPcmanPurge();
-
-	OPfree(OP_CMAN_ASSET_FOLDER);
-	OPfree(OP_CMAN_ASSETLOADERS);
-	OPhashMapDestroy(&OP_CMAN_HASHMAP);
-	OPllDestroy(OP_CMAN_PURGE);
+//	Bucket* bucket;
+//	OPuint i, j, n, m;
+//	KeyValuePair *pair;
+//
+//	n = OP_CMAN_HASHMAP.count;
+//	bucket = OP_CMAN_HASHMAP.buckets;
+//	i = 0;
+//	while (i < n) {
+//		m = bucket->count;
+//		pair = bucket->pairs;
+//		j = 0;
+//		while(j < m) {
+//			OPcmanDelete(pair->key);
+//			pair++;
+//			j++;
+//		}
+//		bucket++;
+//		i++;
+//	}
+//	OPcmanPurge();
+//
+//	OPfree(OP_CMAN_ASSET_FOLDER);
+//	OPfree(OP_CMAN_ASSETLOADERS);
+//	OPhashMapDestroy(&OP_CMAN_HASHMAP);
+//	OPllDestroy(OP_CMAN_PURGE);
 }

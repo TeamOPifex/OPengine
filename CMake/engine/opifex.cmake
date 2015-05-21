@@ -1,4 +1,7 @@
 
+SET ( CMAKE_C_FLAGS "-stdlib=libstdc++" CACHE STRING "compile flags" FORCE)
+SET ( CMAKE_CXX_FLAGS "-stdlib=libstdc++" CACHE STRING "compile flags" FORCE)
+
 ### CMake Setup
 include(${CMAKE_CURRENT_LIST_DIR}/components.cmake) 
 include(${CMAKE_CURRENT_LIST_DIR}/macros.cmake) 

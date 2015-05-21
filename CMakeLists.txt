@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-
 project(OPifexEngine)
+
 
 SET(OPIFEX_ENGINE_REPOSITORY ${PROJECT_SOURCE_DIR})
 

@@ -66,7 +66,7 @@ set(ALL_LIBS
 #########################################
 # BUILD
 #########################################
-add_executable(9_Application ${APPLICATION_SRC} ../Scripting/include/Node/Human/Wrappers.h)
+add_executable(9_Application ${APPLICATION_SRC} ../Scripting/include/JavaScript/Human/Wrappers.h)
 
 target_link_libraries(9_Application	${ALL_LIBS})
 

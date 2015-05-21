@@ -26,6 +26,8 @@ void OPscriptV8Init() {
 	}
 }
 
+
+
 void _OPscriptV8Log(const v8::FunctionCallbackInfo<v8::Value>& args) {
 	for (int i = 0; i < args.Length(); i++) {
 		v8::HandleScope scope(args.GetIsolate());
