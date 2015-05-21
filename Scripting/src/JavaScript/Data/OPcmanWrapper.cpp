@@ -9,13 +9,13 @@
 JS_RETURN_VAL _OPcmanInit(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
-    const char* assetDir = NULL;
+    OPchar* assetDir = "/Users/garretthoofman/OPengine/Assets";
 
-    if (args.Length() > 0) {
-        v8::String::Utf8Value utf8(args[0]);
-        assetDir = *utf8;
-        OPlog("Assets %s", assetDir);
-    }
+//    if (args.Length() > 0) {
+//        v8::String::Utf8Value utf8(args[0]);
+//        assetDir = *utf8;
+//        OPlog("Assets %s", assetDir);
+//    }
 
     OPcmanInit(assetDir);
 

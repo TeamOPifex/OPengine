@@ -1,11 +1,12 @@
 var OP = require('OPengine');
-	
-var exampleSelectorState = require('./ExampleSelectorState.js');
+
+var exampleSelectorState;
 
 function AppInitialize() {
-	//OP.loaders.AddDefault();
-	//OP.cman.Init();
-	//OP.render.Init();
+	OP.loaders.AddDefault();
+	OP.loaders.AddOPS();
+	OP.cman.Init('/Users/garretthoofman/OPengine/Assets');
+	OP.render.Init();
 }
 
 function AppUpdate(elapsed) {
@@ -13,6 +14,7 @@ function AppUpdate(elapsed) {
 
 	if (OP.keyboard.WasReleased(OP.KEY.ESCAPE)) return 1;	
 	if (OP.keyboard.WasReleased(OP.KEY.BACKSPACE) && OP.gameState.Active != exampleSelectorState) {
+		console.log('Changed');
 		OP.gameState.Change(exampleSelectorState);
 	}
 
@@ -26,6 +28,7 @@ function AppDestroy() {
 
 if(true) {
 	AppInitialize();
+	exampleSelectorState = require('./ExampleSelectorState.js');
 
 	var timer = OP.timer.Create();
 	OP.gameState.Change(exampleSelectorState);

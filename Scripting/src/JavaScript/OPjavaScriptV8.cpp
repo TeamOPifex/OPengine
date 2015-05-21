@@ -8,6 +8,8 @@
 #include "./Data/include/OPstring.h"
 #include "./Data/include/OPcman.h"
 
+#define CACHED_FILE_COUNT 256
+
 Isolate* isolate = NULL;
 
 void OPjavaScriptV8Init() {
@@ -53,17 +55,11 @@ OPchar* _OPscriptV8GetDir(const OPchar* path) {
         return OPstringCopy("");
     }
 }
-Handle<Value> _OPjavaScriptRequire(OPchar* pathToLoad) {
-    OPlog("Loading '%s' for Require", pathToLoad);
 
-    OPscript* scriptSource = (OPscript*)OPcmanLoadGet(pathToLoad);
 
-    OPchar* dir = _OPscriptV8GetDir(pathToLoad);
-
+Handle<Value> _OPjavaScriptRequireScript(OPscript* script, OPchar* dir) {
     OPjavaScriptV8Compiled compiled;
-    OPjavaScriptV8Compile(&compiled, scriptSource, dir);
-
-    OPfree(dir);
+    OPjavaScriptV8Compile(&compiled, script, dir);
 
     OPjavaScriptV8Run(&compiled);
     Handle<Context> localContext = Local<Context>::New(isolate, compiled.Context);
@@ -76,6 +72,38 @@ Handle<Value> _OPjavaScriptRequire(OPchar* pathToLoad) {
     return exports;
 }
 
+OPint loadCount = 0;
+Persistent<Value, CopyablePersistentTraits<Value> > loaded[CACHED_FILE_COUNT];
+OPchar* stored[CACHED_FILE_COUNT];
+
+Handle<Value> _OPjavaScriptRequire(OPchar* pathToLoad) {
+    OPlog("Loading '%s' for Require", pathToLoad);
+
+    for(OPint i = 0; i < loadCount; i++) {
+        if(OPstringEquals(pathToLoad, stored[i])) {
+            OPlog("Reloaded %s", pathToLoad);
+            return Local<Value>::New(isolate, loaded[i]);
+        }
+    }
+
+    ASSERT(loadCount < CACHED_FILE_COUNT, "Too many cached files. Increase the CACHED_FILE_COUNT define in OPjavaScriptV8.cpp");
+
+    OPscript *scriptSource = (OPscript *) OPcmanLoadGet(pathToLoad);
+
+    OPchar *dir = _OPscriptV8GetDir(pathToLoad);
+
+    Handle<Value> result = _OPjavaScriptRequireScript(scriptSource, dir);
+
+
+    loaded[loadCount] = Persistent<Value, CopyablePersistentTraits<Value> >(isolate, result);
+    stored[loadCount] = OPstringCopy(pathToLoad);
+    loadCount++;
+
+    OPfree(dir);
+
+    return result;
+}
+
 
 #include "./Scripting/include/JavaScript/Core/Wrappers.h"
 #include "./Scripting/include/JavaScript/Data/Wrappers.h"
@@ -85,20 +113,32 @@ Handle<Value> _OPjavaScriptRequire(OPchar* pathToLoad) {
 #include "./Scripting/include/JavaScript/Communication/Wrappers.h"
 #include "./Scripting/include/JavaScript/Pipeline/Wrappers.h"
 
-void _OPscriptV8WrapEngine(const v8::FunctionCallbackInfo<v8::Value>& args) {
-    Handle<Object> exports = JS_NEW_OBJECT();
+OPint setup = 0;
+Persistent<Object, CopyablePersistentTraits<Object> > exports;
 
-    OPscriptNodeWrapperCore(exports);
-    OPscriptNodeWrapperData(exports);
-    OPscriptNodeWrapperMath(exports);
-    OPscriptNodeWrapperPerformance(exports);
-    OPscriptNodeWrapperHuman(exports);
-    OPscriptNodeWrapperCommunication(exports);
-    OPscriptNodeWrapperPipeline(exports);
+Handle<Object> _OPscriptV8WrapEngine() {
 
-    JS_SET_OBJECT(exports, "gameState", _OPjavaScriptRequire("node_modules/OPengine/OPgameState.js"));
+    if (!setup) {
 
-    args.GetReturnValue().Set(exports);
+        Handle<Object> tmp = JS_NEW_OBJECT();
+
+        OPscriptNodeWrapperCore(tmp);
+        OPscriptNodeWrapperData(tmp);
+        OPscriptNodeWrapperMath(tmp);
+        OPscriptNodeWrapperPerformance(tmp);
+        OPscriptNodeWrapperHuman(tmp);
+        OPscriptNodeWrapperCommunication(tmp);
+        OPscriptNodeWrapperPipeline(tmp);
+
+        OPscript *result = NULL;
+        OPscriptLoad("Scripts/node_modules/OPengine/OPgameState.js", &result);
+        JS_SET_OBJECT(tmp, "gameState", _OPjavaScriptRequireScript(result, NULL));
+
+        exports = Persistent<Object, CopyablePersistentTraits<Object> >(isolate, tmp);
+        setup = 1;
+    }
+
+    return Local<Object>::New(isolate, exports);
 }
 
 OPchar* _OPscriptV8NormalizePath(const OPchar* path) {
@@ -142,7 +182,7 @@ void _OPscriptV8Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
     const char* arg0 = *utf8;
 
     if (OPstringEquals(arg0, "OPengine")) {
-        _OPscriptV8WrapEngine(args);
+        args.GetReturnValue().Set(_OPscriptV8WrapEngine());
         return;
     }
 

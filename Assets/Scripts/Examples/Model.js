@@ -19,6 +19,7 @@ function Initialize() {
 }
 
 function Update() {
+
 	if(OP.keyboard.IsDown(OP.KEY.SPACE)) this.Data.Rotation++;
 
 	var rot = this.Data.Rotation / 10.0;

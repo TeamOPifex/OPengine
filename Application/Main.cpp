@@ -1,5 +1,6 @@
 #include "ExampleSelectorState.h"
 #include "./Scripting/include/OPloaderOPS.h"
+#include "./Scripting/include/JavaScript/OPjavaScriptV8.h"
 #include "./Pipeline/include/Loaders/OPloaderOPskeleton.h"
 #include "./Pipeline/include/Loaders/OPloaderOPanimation.h"
 
@@ -50,9 +51,20 @@ void ApplicationSetup() {
 //////////////////////////////////////
 
 OP_MAIN {
+	#ifdef OPIFEX_OPTION_V8
+	OPjavaScriptV8Init();
+	chdir(OPIFEX_ASSETS);
+	OPscript* result = NULL;
+	OPscriptLoad("Scripts/main.js", &result);
+	OPjavaScriptV8Compiled compiled;
+	OPjavaScriptV8Compile(&compiled, result);
+	OPjavaScriptV8Run(&compiled);
+
+	#else
 	ApplicationSetup();
 
 	OP_MAIN_START
 	OP_MAIN_END
 	OP_MAIN_SUCCESS
+	#endif
 }
