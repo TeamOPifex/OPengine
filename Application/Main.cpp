@@ -52,19 +52,21 @@ void ApplicationSetup() {
 
 OP_MAIN {
 	#ifdef OPIFEX_OPTION_V8
-	OPjavaScriptV8Init();
-	chdir(OPIFEX_ASSETS);
-	OPscript* result = NULL;
-	OPscriptLoad("Scripts/main.js", &result);
-	OPjavaScriptV8Compiled compiled;
-	OPjavaScriptV8Compile(&compiled, result);
-	OPjavaScriptV8Run(&compiled);
+	if(argc > 1) {
+		OPjavaScriptV8Init();
+		chdir(OPIFEX_ASSETS);
+		OPscript *result = NULL;
+		OPscriptLoad(args[2], &result);
+		OPjavaScriptV8Compiled compiled;
+		OPjavaScriptV8Compile(&compiled, result);
+		OPjavaScriptV8Run(&compiled);
+		OP_MAIN_SUCCESS
+	}
 
-	#else
+	#endif
 	ApplicationSetup();
 
 	OP_MAIN_START
 	OP_MAIN_END
 	OP_MAIN_SUCCESS
-	#endif
 }

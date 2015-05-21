@@ -128,10 +128,12 @@ typedef void JS_RETURN_VAL;
     Local<Function> cons = JS_NEW_FUNCTION(constructor); \
     Local<Object> instance = cons->NewInstance(argc, argv);
 
-
+#define JS_GET_PERSISTENT_NUMBER(obj) Local<Value>::New(isolate, obj)->NumberValue()
+#define JS_CREATE_PERSISTENT(value) Persistent<Value>(isolate, value)
 typedef Persistent<Script, CopyablePersistentTraits<Script> > OPjavaScriptPersistentScript;
 typedef Persistent<Context, CopyablePersistentTraits<Context> > OPjavaScriptPersistentContext;
-
+typedef Persistent<Value, CopyablePersistentTraits<Value> > OPjavaScriptPersistentValue;
+typedef Persistent<Object, CopyablePersistentTraits<Object> > OPjavaScriptPersistentObject;
 
 
 #endif

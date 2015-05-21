@@ -5,26 +5,43 @@
 #ifdef OPIFEX_OPTION_V8
 
 typedef struct {
-	OPscript* MyScript;
-	OPjavaScriptV8Compiled Compiled;
+	OPscript* InitScript;
+	OPscript* UpdateScript;
+	OPscript* DestroyScript;
+	OPjavaScriptV8Compiled InitCompiled;
+	OPjavaScriptV8Compiled UpdateCompiled;
+	OPjavaScriptV8Compiled DestroyCompiled;
 } ScriptingExample;
 
 ScriptingExample scriptingExample;
 
 void ExampleScriptingEnter(OPgameState* last) {
 	OPjavaScriptV8Init();
-	
-	scriptingExample.MyScript = (OPscript*)OPcmanLoadGet("main.js");
-	OPjavaScriptV8Compile(&scriptingExample.Compiled, scriptingExample.MyScript);
-	OPjavaScriptV8Run(&scriptingExample.Compiled);
+
+	scriptingExample.InitScript = (OPscript*)OPcmanLoadGet("init.js");
+	scriptingExample.UpdateScript = (OPscript*)OPcmanLoadGet("update.js");
+	scriptingExample.DestroyScript = (OPscript*)OPcmanLoadGet("exit.js");
+	OPjavaScriptV8Compile(&scriptingExample.InitCompiled, scriptingExample.InitScript);
+	OPjavaScriptV8Compile(&scriptingExample.UpdateCompiled, scriptingExample.UpdateScript);
+	OPjavaScriptV8Compile(&scriptingExample.DestroyCompiled, scriptingExample.DestroyScript);
+
+    OPjavaScriptV8Run(&scriptingExample.InitCompiled);
+    OPjavaScriptV8Run(&scriptingExample.UpdateCompiled);
 }
 
 OPint ExampleScriptingUpdate(OPtimer* time) {
-	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
-	return false;
+    SCOPE_AND_ISOLATE;
+
+    OPjavaScriptPersistentValue args[1] = {
+            JS_CREATE_PERSISTENT(JS_NEW_NUMBER(0.5))
+    };
+    OPjavaScriptPersistentValue result = OPjavaScriptV8Run(&scriptingExample.UpdateCompiled, "Update", 1, args);
+
+	return JS_GET_PERSISTENT_NUMBER(result);
 }
 
 OPint ExampleScriptingExit(OPgameState* next) {
+	OPjavaScriptV8Run(&scriptingExample.DestroyCompiled);
 	return 0;
 }
 

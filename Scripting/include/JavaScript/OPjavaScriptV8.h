@@ -18,8 +18,9 @@ void OPjavaScriptV8Init();
 
 OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, OPchar* dir);
 void OPjavaScriptV8Update(OPjavaScriptV8Compiled* scriptCompiled);
-void OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled);
-
+OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled);
+OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, OPchar* name);
+OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, OPchar* name, OPuint count, OPjavaScriptPersistentValue* args);
 inline OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script) {
 	return OPjavaScriptV8Compile(compiled, script, NULL);
 }

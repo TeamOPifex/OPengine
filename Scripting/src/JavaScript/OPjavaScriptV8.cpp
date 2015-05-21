@@ -289,7 +289,7 @@ void OPjavaScriptV8Update(OPjavaScriptV8Compiled* scriptCompiled) {
 //    }
 }
 
-void OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled) {
+OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled) {
     SCOPE_AND_ISOLATE;
 
     Handle<Context> context = Local<Context>::New(isolate, scriptCompiled->Context);
@@ -303,7 +303,45 @@ void OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled) {
         Local<Value> exception = trycatch.Exception();
         String::Utf8Value exception_str(exception);
         OPlog("OPscriptV8: Exception: %s", *exception_str);
+
+        return Persistent<Value>(isolate, JS_NEW_NULL());
     }
+
+    return Persistent<Value>(isolate, result);
+}
+
+OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, OPchar* name) {
+    SCOPE_AND_ISOLATE;
+
+    Handle<Context> context = Local<Context>::New(isolate, scriptCompiled->Context);
+    v8::Context::Scope context_scope(context);
+    Handle<v8::Object> global = context->Global();
+    Handle<v8::Value> value = global->Get(JS_NEW_STRING(name));
+    Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
+    return Persistent<Value>(isolate, func->Call(global, 0, NULL));
+
+//    Handle<Value> values[10];
+//    for (OPint i = 0; i < count; i++) {
+//        values[i] = Local<Value>::New(OPSCRIPTV8_ISOLATE, args[i]);
+//    }
+
+}
+
+OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, OPchar* name, OPuint count, OPjavaScriptPersistentValue* args) {
+    SCOPE_AND_ISOLATE;
+
+    Handle<Context> context = Local<Context>::New(isolate, scriptCompiled->Context);
+    v8::Context::Scope context_scope(context);
+    Handle<v8::Object> global = context->Global();
+    Handle<v8::Value> value = global->Get(JS_NEW_STRING(name));
+    Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
+
+    Handle<Value> values[10];
+    for (OPint i = 0; i < count; i++) {
+        values[i] = Local<Value>::New(isolate, args[i]);
+    }
+
+    return Persistent<Value>(isolate, func->Call(global, count, values));
 }
 
 #endif
