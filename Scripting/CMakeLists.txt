@@ -10,6 +10,7 @@ cmake_minimum_required(VERSION 2.8)
 include_directories(
 	.
 	../
+	../External/Node/src/
 )
 add_external_opifex_includes()
 

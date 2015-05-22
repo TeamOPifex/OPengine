@@ -4,8 +4,6 @@
 
 #if defined(OPIFEX_OPTION_NODEJS) || defined(OPIFEX_OPTION_V8)
 
-#include "./Core/Core.h"
-
 
 void _SetDefines(Handle<Object> obj) {
     SCOPE_AND_ISOLATE

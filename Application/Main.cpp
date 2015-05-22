@@ -52,18 +52,15 @@ void ApplicationSetup() {
 
 OP_MAIN {
 	#ifdef OPIFEX_OPTION_V8
+	// If the V8 engine is compiled in,
+	// see if we have a script to run at startup
 	if(argc > 1) {
-		OPjavaScriptV8Init();
 		chdir(OPIFEX_ASSETS);
-		OPscript *result = NULL;
-		OPscriptLoad(args[2], &result);
-		OPjavaScriptV8Compiled compiled;
-		OPjavaScriptV8Compile(&compiled, result);
-		OPjavaScriptV8Run(&compiled);
+		OPjavaScriptV8SetupRun(args[2]);
 		OP_MAIN_SUCCESS
 	}
-
 	#endif
+
 	ApplicationSetup();
 
 	OP_MAIN_START

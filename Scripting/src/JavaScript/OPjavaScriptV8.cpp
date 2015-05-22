@@ -11,6 +11,7 @@
 #define CACHED_FILE_COUNT 256
 
 Isolate* isolate = NULL;
+OPint(*OPJAVASCRIPTV8_REQUIRE)(FunctionCallbackInfo<Value>) = NULL;
 
 void OPjavaScriptV8Init() {
 	if(isolate == NULL) {
@@ -179,13 +180,12 @@ void _OPscriptV8Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
     if (args.Length() == 0 || !args[0]->IsString()) return;
 
     v8::String::Utf8Value utf8(args[0]);
-    const char* arg0 = *utf8;
+    const char *arg0 = *utf8;
 
     if (OPstringEquals(arg0, "OPengine")) {
         args.GetReturnValue().Set(_OPscriptV8WrapEngine());
         return;
     }
-
 
 
     Handle<Object> currGlobal = args.Callee()->CreationContext()->Global();
@@ -194,45 +194,12 @@ void _OPscriptV8Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
     String::Utf8Value str(__dirname->ToString());
     //OPlog("__dirname %s", *str);
 
-    //if (OPSCRIPTV8_REQUIRE == NULL || !OPSCRIPTV8_REQUIRE(args)) {
+    if (OPJAVASCRIPTV8_REQUIRE == NULL || !OPJAVASCRIPTV8_REQUIRE(args)) {
+        OPchar *pathToLoad = _OPscriptV8NormalizePath(arg0);
+        args.GetReturnValue().Set(_OPjavaScriptRequire(pathToLoad));
+        OPfree(pathToLoad);
+    }
 
-    OPchar* pathToLoad = _OPscriptV8NormalizePath(arg0);
-    args.GetReturnValue().Set(_OPjavaScriptRequire(pathToLoad));
-    OPfree(pathToLoad);
-
-
-//
-//        OPchar* dir = _OPscriptV8GetDir(pathToLoad);
-//        OPlog("Curr Path %s", dir);
-//
-//
-//
-//        if(OPcmanLoad(pathToLoad) == 0) return;
-//
-//        OPscript* scriptSource = (OPscript*)OPcmanGet(pathToLoad);
-//
-//        OPfree(pathToLoad);
-//
-//        OPjavaScriptV8Compiled compiled;
-//        OPjavaScriptV8Compile(&compiled, scriptSource, dir);
-//        OPfree(dir);
-//
-//        //Local<Value> result =
-//        OPjavaScriptV8Run(&compiled);
-//        Handle<Context> localContext = Local<Context>::New(isolate, compiled.Context);
-//
-//        localContext->DetachGlobal();
-//        Local<Object> global = localContext->Global();
-//        Local<Value> moduleVal = global->Get(JS_NEW_STRING("module"));
-//        if(!moduleVal->IsNull()) {
-//            Local<Object> module = moduleVal->ToObject();
-//            Local<Value> exports = module->Get(JS_NEW_STRING("exports"));
-//
-//            args.GetReturnValue().Set(exports);
-//        }
-
-
-    //}
 }
 
 OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, OPchar* dir) {
@@ -342,6 +309,15 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
     }
 
     return Persistent<Value>(isolate, func->Call(global, count, values));
+}
+
+void OPjavaScriptV8SetupRun(OPchar* script) {
+    OPjavaScriptV8Init();
+    OPscript *result = NULL;
+    OPscriptLoad(script, &result);
+    OPjavaScriptV8Compiled compiled;
+    OPjavaScriptV8Compile(&compiled, result);
+    OPjavaScriptV8Run(&compiled);
 }
 
 #endif

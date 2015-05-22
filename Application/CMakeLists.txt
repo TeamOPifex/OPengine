@@ -23,6 +23,7 @@ include_directories(
 	../External/V8/
 	../External/VP8/include/
 	../External/Spine/include/
+	../External/Node/src/
 	.
 	../
 	${BINARY_FOLDER}
