@@ -34,11 +34,49 @@ void _SetGamePadMap(Handle<Object> buttons) {
     }
 }
 
+JS_RETURN_VAL _OPgamePadWasPressed(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+    OPgamePadButton btn = (OPgamePadButton)args[0]->IntegerValue();
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadWasPressed(ptr, btn)));
+}
+
+JS_RETURN_VAL _OPgamePadUpdate(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePadSystemUpdate();
+
+    JS_RETURN_NULL;
+}
+
+void _OPgamePadSetup(Handle<Object> result, OPgamePad* controller) {
+    SCOPE_AND_ISOLATE
+
+    JS_SET_PTR(result, controller);
+    JS_SET_METHOD(result, "WasPressed", _OPgamePadWasPressed);
+
+}
+
+JS_RETURN_VAL _OPgamePadGet(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* controller = OPgamePadGet((OPgamePadIndex)args[0]->IntegerValue());
+
+    Handle<Object> result = JS_NEW_OBJECT();
+    _OPgamePadSetup(result, controller);
+
+    JS_RETURN(result);
+}
+
 void OPgamePadWrapper(Handle<Object> exports) {
     SCOPE_AND_ISOLATE;
 
     Handle<Object> gamepad = JS_NEW_OBJECT();
     _SetGamePadMap(gamepad);
+    JS_SET_METHOD(gamepad, "Get", _OPgamePadGet);
+    JS_SET_METHOD(gamepad, "Update", _OPgamePadUpdate);
     JS_SET_OBJECT(exports, "gamePad", gamepad);
 
 }

@@ -23,6 +23,7 @@ void OPcubeWrapper(Handle<Object> exports) {
 
     Handle<Object> cube = JS_NEW_OBJECT();
     JS_SET_METHOD(cube, "Create", _OPcubeCreate);
+    JS_SET_NUMBER(cube, "size", sizeof(OPmesh));
     JS_SET_OBJECT(exports, "cube", cube);
 }
 

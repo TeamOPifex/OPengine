@@ -40,6 +40,7 @@ void OPtimerWrapper(Handle<Object> exports) {
     Handle<Object> timer = JS_NEW_OBJECT();
     JS_SET_METHOD(timer, "Create", _OPtimerCreate);
     JS_SET_METHOD(timer, "Update", _OPtimerUpdate);
+    JS_SET_NUMBER(timer, "size", sizeof(OPtimer));
     JS_SET_OBJECT(exports, "timer", timer);
 }
 #endif

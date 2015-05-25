@@ -92,6 +92,7 @@ void OPeffectWrapper(Handle<Object> exports) {
     JS_SET_METHOD(effect, "ParamVec3", _OPeffectParamVec3);
     JS_SET_METHOD(effect, "ParamTex", _OPeffectParamTexture);
     JS_SET_METHOD(effect, "ParamCam", _OPeffectParamCam);
+    JS_SET_NUMBER(effect, "size", sizeof(OPeffect));
     JS_SET_OBJECT(exports, "effect", effect);
 
 }

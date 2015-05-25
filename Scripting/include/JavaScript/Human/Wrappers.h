@@ -1,10 +1,14 @@
 #ifndef OPENGINE_SCRIPTING_NODE_HUMAN_WRAPPERS
 #define OPENGINE_SCRIPTING_NODE_HUMAN_WRAPPERS
 
+#ifdef OPIFEX_OPTION_NODEJS
+
 #include "./Scripting/include/JavaScript/OPjavaScriptHelper.h"
+#include "./Human/Human.h"
 
 void OPscriptNodeWrapperHuman(Handle<Object> target);
 
+void OPcamFreeFlightWrapper(Handle<Object> exports);
 void OPcamWrapper(Handle<Object> exports);
 void OPcubeWrapper(Handle<Object> exports);
 void OPeffectWrapper(Handle<Object> exports);
@@ -15,7 +19,14 @@ void OPmaterialWrapper(Handle<Object> exports);
 void OPmeshWrapper(Handle<Object> exports);
 void OPrenderWrapper(Handle<Object> exports);
 void OPtextureWrapper(Handle<Object> exports);
+void OPskeletonWrapper(Handle<Object> exports);
 
 void OPATTRWrapper(Handle<Object> exports);
+
+void OPcamWrapperCreate(Handle<Object> result, OPcam* ptr);
+void OPmeshWrapperCreate(Handle<Object> result, OPmesh* mesh);
+Handle<Object> OPsekeletonWrapperCreate(OPskeleton* skeleton);
+
+#endif
 
 #endif

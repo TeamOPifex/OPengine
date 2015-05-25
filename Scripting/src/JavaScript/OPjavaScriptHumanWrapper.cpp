@@ -5,6 +5,7 @@
 #include "./Scripting/include/JavaScript/Human/Wrappers.h"
 
 void OPscriptNodeWrapperHuman(Handle<Object> exports) {
+    OPcamFreeFlightWrapper(exports);
     OPcamWrapper(exports);
     OPcubeWrapper(exports);
     OPeffectWrapper(exports);
@@ -14,6 +15,7 @@ void OPscriptNodeWrapperHuman(Handle<Object> exports) {
     OPmaterialWrapper(exports);
     OPmeshWrapper(exports);
     OPrenderWrapper(exports);
+    OPskeletonWrapper(exports);
     OPtextureWrapper(exports);
 
     OPATTRWrapper(exports);

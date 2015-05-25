@@ -8,6 +8,7 @@ void OPscriptNodeWrapperMath(Handle<Object> exports) {
     OPmat4Wrapper(exports);
     OPvec2Wrapper(exports);
     OPvec3Wrapper(exports);
+    OPvec4Wrapper(exports);
 }
 
 #endif

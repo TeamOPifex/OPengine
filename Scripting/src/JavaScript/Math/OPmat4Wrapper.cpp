@@ -156,6 +156,7 @@ void OPmat4Wrapper(Handle<Object> exports) {
     JS_SET_METHOD(mat4, "Translate", _OPmat4Translate);
     JS_SET_METHOD(mat4, "Scl", _OPmat4Scale);
     JS_SET_METHOD(mat4, "Log", _OPmat4Log);
+    JS_SET_NUMBER(mat4, "size", sizeof(OPmat4));
     JS_SET_OBJECT(exports, "mat4", mat4);
 
 }

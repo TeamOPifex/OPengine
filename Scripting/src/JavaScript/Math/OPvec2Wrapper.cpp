@@ -66,6 +66,7 @@ void OPvec2Wrapper(Handle<Object> exports) {
     Handle<Object> vec2 = tpl->GetFunction();
     JS_SET_METHOD(vec2, "Log", _OPvec2Log);
     JS_SET_METHOD(vec2, "Set", _OPvec2Set);
+    JS_SET_NUMBER(vec2, "size", sizeof(OPvec2));
     JS_SET_OBJECT(exports, "vec2", vec2);
 
 }

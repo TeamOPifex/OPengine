@@ -4,8 +4,11 @@
 
 #if defined(OPIFEX_OPTION_NODEJS) || defined(OPIFEX_OPTION_V8)
 
-#include "./Human/Human.h"
-
+void OPmeshWrapperCreate(Handle<Object> result, OPmesh* mesh) {
+    SCOPE_AND_ISOLATE
+    
+    JS_SET_PTR(result, mesh);
+}
 
 JS_RETURN_VAL _OPmeshCreate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;

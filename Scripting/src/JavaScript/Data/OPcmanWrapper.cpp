@@ -9,15 +9,14 @@
 JS_RETURN_VAL _OPcmanInit(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
-    OPchar* assetDir = "/Users/garretthoofman/OPengine/Assets";
+   if (args.Length() > 0) {
+       v8::String::Utf8Value utf8(args[0]);
+        OPcmanInit(*utf8);
+       OPlog("Assets %s", *utf8);
+   } else {
+        OPcmanInit(NULL);
+   }
 
-//    if (args.Length() > 0) {
-//        v8::String::Utf8Value utf8(args[0]);
-//        assetDir = *utf8;
-//        OPlog("Assets %s", assetDir);
-//    }
-
-    OPcmanInit(assetDir);
 
     JS_RETURN_NULL
 }
@@ -68,6 +67,15 @@ JS_RETURN_VAL _OPcmanLoadGet(const JS_ARGS& args) {
     JS_RETURN_NULL
 }
 
+JS_RETURN_VAL _OPcmanAddLoader(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPassetLoader* ptr = JS_GET_ARG_PTR(args, 0, OPassetLoader);
+    OPcmanAddLoader(ptr);
+
+    JS_RETURN_NULL
+}
+
 void OPcmanWrapper(Handle<Object> exports) {
     SCOPE_AND_ISOLATE;
 
@@ -76,6 +84,7 @@ void OPcmanWrapper(Handle<Object> exports) {
     JS_SET_METHOD(cman, "Load", _OPcmanLoad);
     JS_SET_METHOD(cman, "Get", _OPcmanGet);
     JS_SET_METHOD(cman, "LoadGet", _OPcmanLoadGet);
+    JS_SET_METHOD(cman, "AddLoader", _OPcmanAddLoader);
     JS_SET_OBJECT(exports, "cman", cman);
 }
 

@@ -24,6 +24,32 @@ JS_RETURN_VAL _OPvec3Log(const JS_ARGS& args) {
     JS_RETURN_NULL;
 }
 
+JS_RETURN_VAL _OPvec3SetSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPlog("Setting Vec3 Self");
+
+    OPvec3* ptr = JS_GET_PTR(args.This(), OPvec3);
+    ptr->x = args[0]->NumberValue();
+    ptr->y = args[1]->NumberValue();
+    ptr->z = args[2]->NumberValue();
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPvec3Set(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPlog("Setting Vec3");
+
+    OPvec3* ptr = JS_GET_ARG_PTR(args, 0, OPvec3);
+    ptr->x = args[1]->NumberValue();
+    ptr->y = args[2]->NumberValue();
+    ptr->z = args[3]->NumberValue();
+
+    JS_RETURN_NULL;
+}
+
 JS_RETURN_VAL _OPvec3Create(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
@@ -33,6 +59,7 @@ JS_RETURN_VAL _OPvec3Create(const JS_ARGS& args) {
     JS_SET_PTR(result, ptr);
 
     JS_SET_METHOD(result, "Log", _OPvec3LogSelf);
+    JS_SET_METHOD(result, "Set", _OPvec3SetSelf);
 
     JS_RETURN(result);
 }
@@ -42,7 +69,10 @@ void OPvec3Wrapper(Handle<Object> exports) {
 
     Local<FunctionTemplate> tpl = JS_NEW_FUNCTION_TEMPLATE(_OPvec3Create);
     Handle<Object> vec3 = tpl->GetFunction();
+    JS_SET_METHOD(vec3, "Create", _OPvec3Create);
     JS_SET_METHOD(vec3, "Log", _OPvec3Log);
+    JS_SET_METHOD(vec3, "Set", _OPvec3Set);
+    JS_SET_NUMBER(vec3, "size", sizeof(OPvec3));
     JS_SET_OBJECT(exports, "vec3", vec3);
 
 }
