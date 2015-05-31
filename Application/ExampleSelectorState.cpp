@@ -67,6 +67,7 @@ void ExampleSelectorEnter(OPgameState* last) {
 
             // Advanced
             { "Physics", &GS_EXAMPLE_PHYSICS, GS_EXAMPLE_PHYSICS_AVAILABLE, 2 },
+            { "Physics Character", &GS_EXAMPLE_PHYSICSCHARACTER, GS_EXAMPLE_PHYSICSCHARACTER_AVAILABLE, 2 },
             { "Skinning", &GS_EXAMPLE_SKINNING, GS_EXAMPLE_SKINNING_AVAILABLE, 2 },
             { "Shadows", &GS_EXAMPLE_SHADOWS, GS_EXAMPLE_SHADOWS_AVAILABLE, 2 },
             { "Deferred", &GS_EXAMPLE_DEFERRED, GS_EXAMPLE_DEFERRED_AVAILABLE, 2 }, // in flux

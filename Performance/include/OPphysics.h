@@ -33,11 +33,50 @@
 using namespace physx;
 using namespace std;
 
+extern PxPhysics* gPhysicsSDK;
+
+#endif
+
+typedef struct {
+#ifdef OPIFEX_OPTION_PHYSICS
+	PxTriggerPair* triggerPairs;
+	ui32 count;
+#endif
+} OPphysicsTrigger;
+
+#ifdef OPIFEX_OPTION_PHYSICS
+class OPphysicsSimulationEventCallbackHandler : public PxSimulationEventCallback 
+{
+public:
+	OPphysicsSimulationEventCallbackHandler(void(*onTrigger)(OPphysicsTrigger)) {
+		_onTrigger = onTrigger;
+	}
+private:
+	virtual void onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs) {
+		OPlog("Contact");
+	}
+	virtual void onTrigger(PxTriggerPair* pairs, PxU32 count) {
+		OPphysicsTrigger trigger = {
+			pairs,
+			count
+		};
+		_onTrigger(trigger);
+	}
+	virtual void onConstraintBreak(PxConstraintInfo*, PxU32) {}
+	virtual void onWake(PxActor** , PxU32 ) {}
+	virtual void onSleep(PxActor** , PxU32 ){}
+
+	void(*_onTrigger)(OPphysicsTrigger);
+};
+
 #endif
 
 typedef struct {
 	void* scene;
 	ui64 elapsed;
+#ifdef OPIFEX_OPTION_PHYSICS
+	OPphysicsSimulationEventCallbackHandler* onTrigger;
+#endif
 } OPphysicsScene;
 
 typedef struct {
@@ -58,8 +97,22 @@ typedef struct {
 #endif
 } OPphysicsActor;
 
+// typedef struct {
+// #ifdef OPIFEX_OPTION_PHYSICS
+// 	PxControllerManager* manager;
+// #endif
+// } OPphysicsCharacterManager;
+
+// typedef struct {
+// #ifdef OPIFEX_OPTION_PHYSICS
+// 	ControlledActor* actor;
+// #endif
+// } OPphysicsControlledActor;
+
 void OPphysicsInit();
-OPphysicsScene* OPphysicsCreateScene();
+OPphysicsScene* OPphysicsCreateScene(void(*onTrigger)(OPphysicsTrigger));
+void OPphysicsRemoveDynamic(OPphysicsScene* scene, OPphysicsDynamic* actor);
+void OPphysicsRemoveStatic(OPphysicsScene* scene, OPphysicsStatic* actor);
 void OPphysicsStep(OPphysicsScene* scene, ui64 elapsed);
 void OPphysicsDestroy(OPphysicsScene* scene);
 void OPphysicsShutdown();
@@ -74,7 +127,6 @@ OPphysicsDynamic* OPphysicsCreateBoxDynamic(OPphysicsScene* scene, f32 x, f32 y,
 OPphysicsDynamic* OPphysicsCreateSphereDynamic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 s);
 OPphysicsStatic* OPphysicsCreateBoxStatic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 sx, f32 sy, f32 sz);
 OPphysicsStatic* OPphysicsCreateSphereStatic(OPphysicsScene* scene, f32 x, f32 y, f32 z, f32 s);
-void* OPphysicsCreatePlane(OPphysicsScene* scene);
-
+OPphysicsStatic* OPphysicsCreatePlane(OPphysicsScene* scene);
 
 #endif

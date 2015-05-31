@@ -44,9 +44,13 @@ JS_RETURN_VAL _OPgamePadWasPressed(const JS_ARGS& args) {
 }
 
 JS_RETURN_VAL _OPgamePadUpdate(const JS_ARGS& args) {
+    OPgamePadSystemUpdate();
+}
+
+JS_RETURN_VAL _OPgamePadSetDeadZones(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
-    OPgamePadSystemUpdate();
+    OPgamePadSetDeadZones(args[0]->NumberValue());
 
     JS_RETURN_NULL;
 }
@@ -77,6 +81,7 @@ void OPgamePadWrapper(Handle<Object> exports) {
     _SetGamePadMap(gamepad);
     JS_SET_METHOD(gamepad, "Get", _OPgamePadGet);
     JS_SET_METHOD(gamepad, "Update", _OPgamePadUpdate);
+    JS_SET_METHOD(gamepad, "SetDeadZones", _OPgamePadSetDeadZones);
     JS_SET_OBJECT(exports, "gamePad", gamepad);
 
 }

@@ -18,7 +18,7 @@ void ApplicationInit() {
 	OPcmanInit(OPIFEX_ASSETS);
 
 	OPrenderInit();
-	OPgamePadSetDeadzones(0.2f);
+	OPgamePadSetDeadZones(0.2f);
 
 	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 }

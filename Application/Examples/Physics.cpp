@@ -39,13 +39,16 @@ typedef struct {
 
 PhysicsExample* physicsExample;
 
+void OnTrigger(OPphysicsTrigger trigger) {
+	OPlog("User Defined Trigger");
+}
 
 void ExamplePhysicsEnter(OPgameState* last) {
 
 	physicsExample = (PhysicsExample*)OPalloc(sizeof(PhysicsExample));
 
 	OPphysicsInit();
-	physicsExample->scene = OPphysicsCreateScene();
+	physicsExample->scene = OPphysicsCreateScene(OnTrigger);
 
 	OPcmanLoad("PuzzleBlock.opm");
 	OPcmanLoad("PuzzleSphere.opm");

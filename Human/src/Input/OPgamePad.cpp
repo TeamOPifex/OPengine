@@ -359,7 +359,7 @@ void OPgamePadSystemReset()
 	}
 }
 
-void OPgamePadSetDeadzones(OPfloat deadzone)
+void OPgamePadSetDeadZones(OPfloat deadzone)
 {
 	for ( OPint i = CONTROLLERS; i--; )
 	{

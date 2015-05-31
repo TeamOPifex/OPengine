@@ -3,12 +3,11 @@
 
 #ifdef OPIFEX_OPTION_PHYSICS
 
-	static PxPhysics* gPhysicsSDK = NULL;
+	PxPhysics* gPhysicsSDK = NULL;
 	static PxDefaultErrorCallback gDefaultErrorCallback;
 	static PxDefaultAllocator gDefaultAllocatorCallback;
 	static PxSimulationFilterShader gDefaultFilterShader = PxDefaultSimulationFilterShader;
 	PxReal myTimestep = 1.0f / 60.0f;
-
 #endif
 
 void OPphysicsInit() {
@@ -20,12 +19,16 @@ void OPphysicsInit() {
 #endif
 }
 
-OPphysicsScene* OPphysicsCreateScene() {
+OPphysicsScene* OPphysicsCreateScene(void(*onTrigger)(OPphysicsTrigger)) {
 
 #ifdef OPIFEX_OPTION_PHYSICS
-	OPphysicsScene* scene = (OPphysicsScene*)OPalloc(sizeof(OPphysicsScene));
+	OPphysicsScene* scene = (OPphysicsScene*)OPallocZero(sizeof(OPphysicsScene));
 
 	PxSceneDesc sceneDesc(gPhysicsSDK->getTolerancesScale());
+	if(onTrigger != NULL) {
+		scene->onTrigger = new OPphysicsSimulationEventCallbackHandler(onTrigger);
+		sceneDesc.simulationEventCallback = scene->onTrigger;
+	}
 	sceneDesc.gravity = PxVec3(0.0f, -9.8f * 5.0f, 0.0f);
 
 	if (!sceneDesc.cpuDispatcher) {
@@ -116,6 +119,9 @@ OPphysicsDynamic* OPphysicsCreateBoxDynamic(OPphysicsScene* scene, f32 x, f32 y,
 
 	PxShape* aSphereShape = aSphereActor->createShape(PxBoxGeometry(sx, sy, sz), *boxMaterial);
 	aSphereActor->setMass(sx);
+	aSphereShape = aSphereActor->createShape(PxBoxGeometry(sx, sy, sz), *boxMaterial);
+	aSphereShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
+	aSphereShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
 
 	((PxScene*)scene->scene)->addActor(*aSphereActor);
 
@@ -138,7 +144,11 @@ OPphysicsDynamic* OPphysicsCreateSphereDynamic(OPphysicsScene* scene, f32 x, f32
 	PxShape* aSphereShape = aSphereActor->createShape(PxSphereGeometry(s), *boxMaterial);
 	aSphereActor->setMass(s);
 
+	aSphereShape = aSphereActor->createShape(PxSphereGeometry(s), *boxMaterial);
+	aSphereShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
+	aSphereShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
 	((PxScene*)scene->scene)->addActor(*aSphereActor);
+
 
 	OPphysicsDynamic* result = (OPphysicsDynamic*)OPalloc(sizeof(OPphysicsDynamic));
 	result->actor = aSphereActor;
@@ -157,6 +167,10 @@ OPphysicsStatic* OPphysicsCreateBoxStatic(OPphysicsScene* scene, f32 x, f32 y, f
 	PxRigidStatic* aSphereActor = gPhysicsSDK->createRigidStatic(cubeTransform);
 
 	PxShape* aSphereShape = aSphereActor->createShape(PxBoxGeometry(sx, sy, sz), *boxMaterial);
+
+	aSphereShape = aSphereActor->createShape(PxBoxGeometry(sx, sy, sz), *boxMaterial);
+	aSphereShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
+	aSphereShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
 
 	((PxScene*)scene->scene)->addActor(*aSphereActor);
 
@@ -178,6 +192,10 @@ OPphysicsStatic* OPphysicsCreateSphereStatic(OPphysicsScene* scene, f32 x, f32 y
 
 	PxShape* aSphereShape = aSphereActor->createShape(PxSphereGeometry(s), *boxMaterial);
 
+	aSphereShape = aSphereActor->createShape(PxSphereGeometry(s), *boxMaterial);
+
+	aSphereShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
+	aSphereShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
 	((PxScene*)scene->scene)->addActor(*aSphereActor);
 
 	OPphysicsStatic* result = (OPphysicsStatic*)OPalloc(sizeof(OPphysicsStatic));
@@ -188,7 +206,7 @@ OPphysicsStatic* OPphysicsCreateSphereStatic(OPphysicsScene* scene, f32 x, f32 y
 #endif
 }
 
-void* OPphysicsCreatePlane(OPphysicsScene* scene){
+OPphysicsStatic* OPphysicsCreatePlane(OPphysicsScene* scene) {
 #ifdef OPIFEX_OPTION_PHYSICS
 
 	PxTransform cubeTransform(PxVec3(0.0f, 4.0, 0.0f));
@@ -197,9 +215,24 @@ void* OPphysicsCreatePlane(OPphysicsScene* scene){
 	PxRigidStatic* aPlaneActor = gPhysicsSDK->createRigidStatic(pose);
 	PxShape* aPlaneShape = aPlaneActor->createShape(PxPlaneGeometry(), *planeMaterial);
 	((PxScene*)scene->scene)->addActor(*aPlaneActor);
-	return aPlaneActor;
+
+	OPphysicsStatic* result = (OPphysicsStatic*)OPalloc(sizeof(OPphysicsStatic));
+	result->actor = aPlaneActor;
+	return result;
 #else
 	return NULL;
+#endif
+}
+
+void OPphysicsRemoveDynamic(OPphysicsScene* scene, OPphysicsDynamic* actor) {
+#ifdef OPIFEX_OPTION_PHYSICS
+	((PxScene*)scene->scene)->removeActor(*actor->actor);
+#endif
+}
+
+void OPphysicsRemoveStatic(OPphysicsScene* scene, OPphysicsStatic* actor) {
+#ifdef OPIFEX_OPTION_PHYSICS
+	((PxScene*)scene->scene)->removeActor(*actor->actor);
 #endif
 }
 
