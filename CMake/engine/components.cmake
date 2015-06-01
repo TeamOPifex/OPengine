@@ -17,9 +17,9 @@ macro(add_opifex_assets APPLICATION_TARGET )
 	
 endmacro(add_opifex_assets)
 
-macro(add_opifex_physics APPLICATION_TARGET )
+macro(add_opifex_physx APPLICATION_TARGET )
 
-	if(${OPIFEX_OPTION_PHYSICS}) 
+	if(${OPIFEX_OPTION_PHYSX}) 
 
 		message(STATUS "Link Physics")
 		include_directories(../External/PhysX/include/)
@@ -166,7 +166,7 @@ macro(add_opifex_physics APPLICATION_TARGET )
 		endif()
 	endif()
 
-endmacro(add_opifex_physics)
+endmacro(add_opifex_physx)
 
 
 macro(add_opifex_v8 APPLICATION_TARGET )

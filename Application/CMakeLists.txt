@@ -88,7 +88,7 @@ set_target_properties(9_Application PROPERTIES OUTPUT_NAME "Application")
 #########################################
 
 add_opifex_spine(9_Application)
-add_opifex_physics(9_Application)
+add_opifex_physx(9_Application)
 add_opifex_v8(9_Application)
 add_opifex_oculus(9_Application)
 add_opifex_myo(9_Application)

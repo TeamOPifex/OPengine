@@ -59,6 +59,6 @@ set_target_properties(4_Performance PROPERTIES OUTPUT_NAME "Performance")
 #########################################
 # ADDITIONAL FEATURES
 #########################################
-add_opifex_physics(4_Performance)
+add_opifex_physx(4_Performance)
 
 output_library(4_Performance "Performance")

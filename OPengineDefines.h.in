@@ -3,7 +3,7 @@
 
 #cmakedefine OPIFEX_OPTION_MYO
 #cmakedefine OPIFEX_OPTION_OCULUS
-#cmakedefine OPIFEX_OPTION_PHYSICS
+#cmakedefine OPIFEX_OPTION_PHYSX
 #cmakedefine OPIFEX_OPTION_RELEASE
 #cmakedefine OPIFEX_OPTION_SHARED
 #cmakedefine OPIFEX_OPTION_SPINE
