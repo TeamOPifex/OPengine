@@ -154,12 +154,12 @@ void ExamplePhysicsCharacterEnter(OPgameState* last) {
 		physicsCharacterExample->boxes[i].size = size;
 	}
 
-	physicsCharacterExample->boxStaticCount = 10;
+	physicsCharacterExample->boxStaticCount = 100;
 	physicsCharacterExample->boxesStatic = (Static*)OPallocZero(sizeof(Static)*physicsCharacterExample->boxStaticCount);
 	for (ui32 i = 0; i < physicsCharacterExample->boxStaticCount; i++) {
 		f32 r2 = 0.5;
 		f32 size = 1;// 0.05f + (OPrandom() * 2);
-		physicsCharacterExample->boxesStatic[i].physics = OPphysXSceneCreateStatic(physicsCharacterExample->scene, OPvec3Create(((-10.0) + (i * 2)), i * 2, -20 + (40 * r2)));
+		physicsCharacterExample->boxesStatic[i].physics = OPphysXSceneCreateStatic(physicsCharacterExample->scene, OPvec3Create(-200 + OPrandom() * 400, 0, -200 + OPrandom() * 400));
 		physicsCharacterExample->boxesStatic[i].shape = OPphysXAddBoxShape(physicsCharacterExample->boxesStatic[i].physics, material, OPvec3Create(size, size, size));
 		OPphysXSceneAddActor(physicsCharacterExample->scene, physicsCharacterExample->boxesStatic[i].physics);
 		physicsCharacterExample->boxesStatic[i].size = size;
@@ -185,9 +185,21 @@ void ExamplePhysicsCharacterEnter(OPgameState* last) {
 		physicsCharacterExample->spheres[i].size = size;
 	}
 
-	PxTransform transform = PxTransform(PxVec3(0.0f, 0.0f, 0.0f), PxQuat(PxHalfPi, PxVec3(0.0f, 0.0f, 1.0f)));
-	physicsCharacterExample->physicsPlane = OPphysXSceneCreateStatic(physicsCharacterExample->scene, transform);
-	OPphysXAddPlaneShape(physicsCharacterExample->physicsPlane, material);
+	OPfloat pSize = 50;
+	OPvec3 verts[4] = {
+		{-pSize, 20, -pSize },
+		{pSize, -20, -pSize },
+		{pSize, -20, pSize },
+		{-pSize, 20, pSize }
+	};
+	ui32 indices[6] = {
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	PxTriangleMesh* mesh = OPphysXCreateTriangleMesh(4, (PxVec3*)verts, 2, (PxU32*)indices);
+	physicsCharacterExample->physicsPlane = OPphysXSceneCreateStatic(physicsCharacterExample->scene, OPVEC3_ZERO);
+	OPphysXAddTriangleMeshShape(physicsCharacterExample->physicsPlane, material, mesh);
 	OPphysXSceneAddActor(physicsCharacterExample->scene, physicsCharacterExample->physicsPlane);
 
 	physicsCharacterExample->manager = OPphysXControllerCreateManager(physicsCharacterExample->scene);
@@ -205,6 +217,10 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 	}
 
 	OPvec3 disp = OPvec3Create(0, -0.98 * 0.25, 0);
+
+	OPvec2 leftThumb = OPgamePadLeftThumb(OPgamePadGet(OPGAMEPAD_ONE));
+	disp.x += leftThumb.x * 0.5f;
+	disp.z -= leftThumb.y * 0.5f;
 
 	if (OPkeyboardIsDown(OPKEY_D)) {
 		disp.x = 0.5f;

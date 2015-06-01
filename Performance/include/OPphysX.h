@@ -11,6 +11,7 @@
 #include "./Math/include/OPvec3.h"
 #include "./Core/include/OPtimer.h"
 #include <PxPhysicsAPI.h>
+#include <cooking/PxCooking.h>
 #include <extensions/PxExtensionsAPI.h>
 #include <extensions/PxDefaultErrorCallback.h>
 #include <extensions/PxDefaultAllocator.h>
@@ -41,11 +42,13 @@ typedef PxShape OPphysXShape;
 // FUNCTIONS
 
 void OPphysXInit();
+PxTriangleMesh* OPphysXCreateTriangleMesh(ui32 vertCount, PxVec3* verts, ui32 triCount, PxU32* indices);
 void OPphysXSetFilter(OPphysXRigidActor* actor, ui32 filterGroup, ui32 filterMask);
 OPphysXMaterial* OPphysXCreateMaterial(f32 staticFriction, f32 dynamicFriction, f32 restitution);
 OPphysXShape* OPphysXAddSphereShape(OPphysXRigidActor* actor, OPphysXMaterial* material, OPfloat size);
 OPphysXShape* OPphysXAddBoxShape(OPphysXRigidActor* actor, OPphysXMaterial* material, OPvec3 size);
 OPphysXShape* OPphysXAddPlaneShape(OPphysXRigidActor* actor, OPphysXMaterial* material);
+OPphysXShape* OPphysXAddTriangleMeshShape(OPphysXRigidActor* actor, OPphysXMaterial* material, PxTriangleMesh* mesh);
 void OPphysXGetTransform(OPphysXRigidActor* actor, OPmat4* mat);
 void OPphysXShutdown();
 

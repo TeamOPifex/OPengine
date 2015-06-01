@@ -1,10 +1,12 @@
 #include "./Performance/include/OPphysX.h"
 #include "./Performance/include/OPphysXBasicFilterShader.h"
 #include "./Core/include/OPmemory.h"
+#include "./Core/include/Assert.h"
 
 #ifdef OPIFEX_OPTION_PHYSX
 
 PxPhysics* OPphysXSDK = NULL;
+PxCooking* OPphysXCooking = NULL;
 static PxDefaultErrorCallback _defaultErrorCallback;
 static PxDefaultAllocator _defaultAllocatorCallback;
 PxSimulationFilterShader OPphysXDefaultFilterShader = OPphysXBasicFilterShader;
@@ -13,6 +15,32 @@ void OPphysXInit() {
 	PxFoundation* foundation = PxCreateFoundation(PX_PHYSICS_VERSION, _defaultAllocatorCallback, _defaultErrorCallback);
 	OPphysXSDK = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale());
 	PxInitExtensions(*OPphysXSDK);
+	OPphysXCooking = PxCreateCooking(PX_PHYSICS_VERSION, *foundation, PxCookingParams(PxTolerancesScale()));
+	if (!OPphysXCooking) {
+		ASSERT(false, "Failed to initialize Cooking");
+	}
+}
+
+PxTriangleMesh* OPphysXCreateTriangleMesh(ui32 vertCount, PxVec3* verts, ui32 triCount, PxU32* indices) {
+	PxTriangleMeshDesc meshDesc;
+	meshDesc.points.count           = vertCount;
+	meshDesc.points.stride          = sizeof(PxVec3);
+	meshDesc.points.data            = verts;
+
+	meshDesc.triangles.count        = triCount;
+	meshDesc.triangles.stride       = 3*sizeof(PxU32);
+	meshDesc.triangles.data         = indices;
+	meshDesc.flags = PxMeshFlag::eFLIPNORMALS;
+
+	PxDefaultMemoryOutputStream writeBuffer;
+	bool status = OPphysXCooking->cookTriangleMesh(meshDesc, writeBuffer);
+	if(!status) {
+		OPlogErr("Failed to create cooked triangle");
+	    return NULL;
+	}
+
+	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
+	return OPphysXSDK->createTriangleMesh(readBuffer);
 }
 
 void OPphysXSetFilter(OPphysXRigidActor* actor, ui32 filterGroup, ui32 filterMask) {
@@ -49,6 +77,11 @@ OPphysXShape* OPphysXAddPlaneShape(OPphysXRigidActor* actor, OPphysXMaterial* ma
 // 	PxTransform pose = PxTransform(PxVec3(0.0f, 0.0f, 0.0f), PxQuat(PxHalfPi, PxVec3(0.0f, 0.0f, 1.0f)));
 	PxShape* planeShape = actor->createShape(PxPlaneGeometry(), *material);
 	return planeShape;
+}
+
+OPphysXShape* OPphysXAddTriangleMeshShape(OPphysXRigidActor* actor, OPphysXMaterial* material, PxTriangleMesh* mesh) {
+	PxShape* triMeshShape = actor->createShape(PxTriangleMeshGeometry(mesh), *material);
+	return triMeshShape;
 }
 
 void OPphysXGetTransform(OPphysXRigidActor* actor, OPmat4* mat) {
