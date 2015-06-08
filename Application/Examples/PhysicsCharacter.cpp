@@ -201,10 +201,10 @@ void ExamplePhysicsCharacterEnter(OPgameState* last) {
 	};
 
 	ui32 indices[12] = {
-		0, 1, 2,
-		0, 2, 3,
-		4, 5, 6,
-		4, 6, 7
+		2, 1, 0,
+		3, 2, 0,
+		6, 5, 4,
+		7, 6, 4
 	};
 
 	PxTriangleMesh* mesh = OPphysXCreateTriangleMesh(8, (PxVec3*)verts, 4, (PxU32*)indices);
@@ -214,7 +214,6 @@ void ExamplePhysicsCharacterEnter(OPgameState* last) {
 
 	physicsCharacterExample->manager = OPphysXControllerCreateManager(physicsCharacterExample->scene);
 	physicsCharacterExample->controller = OPphysXControllerCreate(physicsCharacterExample->manager, material, 0.5, 0.5, CharacterOnShapeHit, NULL, NULL);
-
 }
 
 OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {

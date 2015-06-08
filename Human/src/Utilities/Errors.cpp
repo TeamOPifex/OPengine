@@ -17,7 +17,7 @@ OPint OPglError(const char* message){
 	if(err != 0){
 		OPlog(message, err);
 
-		OPchar* errMsg = (OPchar*)gluErrorString(err);
+		OPchar* errMsg = "OPENGLERROR";// (OPchar*)gluErrorString(err);
 		OPlog(errMsg);
 
 		switch(err){

@@ -23,7 +23,8 @@ void ApplicationInit() {
 	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 }
 
-int ApplicationUpdate(OPtimer* timer) {		
+int ApplicationUpdate(OPtimer* timer) {	
+
 	OPinputSystemUpdate(timer);
 	OPcmanUpdate(timer);
 

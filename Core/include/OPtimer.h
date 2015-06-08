@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <sys/time.h> // link with -lrt
 #include <unistd.h>
+#include <time.h>
 #elif defined(OPIFEX_WINDOWS)
 // Windows specific lib
 #include <Windows.h>
@@ -22,14 +23,13 @@
  */
 typedef struct{
 	ui64 TotalGametime;
+	ui64 Elapsed;
 #if defined(OPIFEX_WINDOWS)
-	LONGLONG TimeLastTick;
+	LARGE_INTEGER TimeLastTick;
+#elif defined(OPIFEX_UNIX)
+	struct timeval TimeLastTick;
 #else
 	ui64 TimeLastTick;
-#endif
-	ui64 Elapsed;
-#if defined(OPIFEX_UNIX)
-	struct timeval _lastTime;
 #endif
 } OPtimer;
 
