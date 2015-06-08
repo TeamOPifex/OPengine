@@ -72,8 +72,7 @@ JS_RETURN_VAL _OPvec4Create(const JS_ARGS& args) {
         *ptr = OPvec4Create(0,0,0,0);
     }
     
-    Handle<Object> result = JS_NEW_OBJECT();
-    JS_RETURN(_OPvec4Setup(result, ptr));
+    JS_RETURN(_OPvec4Setup(JS_NEW_OBJECT(), ptr));
 }
 
 void OPvec4Wrapper(Handle<Object> exports) {

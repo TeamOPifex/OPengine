@@ -7,6 +7,10 @@
 
 void OPscriptNodeWrapperPerformance(Handle<Object> target);
 
+void OPphysXWrapper(Handle<Object> exports);
+void OPphysXControllerWrapper(Handle<Object> exports);
+void OPphysXSceneWrapper(Handle<Object> exports);
+
 #endif
 
 #endif

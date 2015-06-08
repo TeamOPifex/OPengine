@@ -51,6 +51,40 @@ JS_RETURN_VAL _OPskeletonGetSelf(const JS_ARGS& args) {
     JS_RETURN(JS_NEW_NUMBER(result));
 }
 
+JS_RETURN_VAL _OPskeletonLocalTranslate(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPlog("Skeleton Get");
+
+    OPskeleton* skeletonPtr = JS_GET_ARG_PTR(args, 0, OPskeleton);
+    i16 index = args[1]->IntegerValue();
+    OPvec3 pos = OPskeletonLocalTranslate(skeletonPtr, index);
+
+    OPvec3* ptr = (OPvec3*)OPalloc(sizeof(OPvec3));
+    *ptr = pos;
+    Handle<Object> result = JS_NEW_OBJECT();
+    OPvec3WrapperSetup(result, ptr);
+
+    JS_RETURN(result);
+}
+
+JS_RETURN_VAL _OPskeletonLocalTranslateSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPlog("Skeleton Get");
+
+    OPskeleton* skeletonPtr = JS_GET_PTR(args.This(), OPskeleton);
+    i16 index = args[0]->IntegerValue();
+    OPvec3 pos = OPskeletonLocalTranslate(skeletonPtr, index);
+
+    OPvec3* ptr = (OPvec3*)OPalloc(sizeof(OPvec3));
+    *ptr = pos;
+    Handle<Object> result = JS_NEW_OBJECT();
+    OPvec3WrapperSetup(result, ptr);
+
+    JS_RETURN(result);
+}
+
 JS_RETURN_VAL _OPskeletonDestroy(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
@@ -75,6 +109,7 @@ void OPskeletonWrapperCreate(Handle<Object> result, OPskeleton* skeleton) {
     JS_SET_PTR(result, skeleton);
     JS_SET_METHOD(result, "Update", _OPskeletonUpdateSelf);
     JS_SET_METHOD(result, "Get", _OPskeletonGetSelf);
+    JS_SET_METHOD(result, "LocalTranslate", _OPskeletonLocalTranslateSelf);
     JS_SET_METHOD(result, "Destroy", _OPskeletonDestroySelf);
 }
 
@@ -113,6 +148,7 @@ void OPskeletonWrapper(Handle<Object> exports) {
     JS_SET_METHOD(skeleton, "Destroy", _OPskeletonDestroy);
     JS_SET_METHOD(skeleton, "Wrap", _OPskeletonWrap);
     JS_SET_METHOD(skeleton, "AddLoader", _OPskeletonAddLoader);
+    JS_SET_METHOD(skeleton, "LocalTranslate", _OPskeletonLocalTranslate);
     //JS_SET_METHOD(skeleton, "Copy", _OPskeletonCopy);
     JS_SET_NUMBER(skeleton, "size", sizeof(OPskeleton));
     JS_SET_OBJECT(exports, "skeleton", skeleton);

@@ -5,7 +5,9 @@
 #include "./Scripting/include/JavaScript/Performance/Wrappers.h"
 
 void OPscriptNodeWrapperPerformance(Handle<Object> exports) {
-
+	OPphysXWrapper(exports);
+	OPphysXControllerWrapper(exports);
+	OPphysXSceneWrapper(exports);
 }
 
 #endif

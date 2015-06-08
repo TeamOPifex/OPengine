@@ -21,16 +21,16 @@ void OPphysXInit() {
 	}
 }
 
-PxTriangleMesh* OPphysXCreateTriangleMesh(ui32 vertCount, PxVec3* verts, ui32 triCount, PxU32* indices) {
+PxTriangleMesh* OPphysXCreateTriangleMesh(ui32 vertCount, PxVec3* verts, ui32 vertStride, ui32 triCount, PxU32* indices, ui32 indStride) {
 	PxTriangleMeshDesc meshDesc;
 	meshDesc.points.count           = vertCount;
-	meshDesc.points.stride          = sizeof(PxVec3);
+	meshDesc.points.stride          = vertStride;
 	meshDesc.points.data            = verts;
 
 	meshDesc.triangles.count        = triCount;
-	meshDesc.triangles.stride       = 3*sizeof(PxU32);
+	meshDesc.triangles.stride       = 3*indStride;
 	meshDesc.triangles.data         = indices;
-	meshDesc.flags = PxMeshFlag::eFLIPNORMALS;
+	//meshDesc.flags = PxMeshFlag::eFLIPNORMALS;
 
 	PxDefaultMemoryOutputStream writeBuffer;
 	bool status = OPphysXCooking->cookTriangleMesh(meshDesc, writeBuffer);
@@ -41,6 +41,10 @@ PxTriangleMesh* OPphysXCreateTriangleMesh(ui32 vertCount, PxVec3* verts, ui32 tr
 
 	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
 	return OPphysXSDK->createTriangleMesh(readBuffer);
+}
+
+PxTriangleMesh* OPphysXCreateTriangleMesh(ui32 vertCount, PxVec3* verts, ui32 triCount, PxU32* indices) {
+	return OPphysXCreateTriangleMesh(vertCount, verts, sizeof(PxVec3), triCount, indices, sizeof(PxU32));
 }
 
 void OPphysXSetFilter(OPphysXRigidActor* actor, ui32 filterGroup, ui32 filterMask) {

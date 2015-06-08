@@ -50,16 +50,101 @@ JS_RETURN_VAL _OPvec3Set(const JS_ARGS& args) {
     JS_RETURN_NULL;
 }
 
+JS_RETURN_VAL _OPvec3AddSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPlog("Setting Vec3 Self");
+
+    OPvec3* ptr = JS_GET_PTR(args.This(), OPvec3);
+    ptr->x += args[0]->NumberValue();
+    ptr->y += args[1]->NumberValue();
+    ptr->z += args[2]->NumberValue();
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPvec3Add(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPlog("Setting Vec3");
+
+    OPvec3* ptr = JS_GET_ARG_PTR(args, 0, OPvec3);
+    ptr->x += args[1]->NumberValue();
+    ptr->y += args[2]->NumberValue();
+    ptr->z += args[3]->NumberValue();
+
+    JS_RETURN_NULL;
+}
+
+
+JS_RETURN_VAL _OPvec3X(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPvec3* ptr = JS_GET_ARG_PTR(args, 0, OPvec3);
+    
+    JS_RETURN(JS_NEW_NUMBER(ptr->x));
+}
+
+JS_RETURN_VAL _OPvec3Y(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPvec3* ptr = JS_GET_ARG_PTR(args, 0, OPvec3);
+    
+    JS_RETURN(JS_NEW_NUMBER(ptr->y));
+}
+
+JS_RETURN_VAL _OPvec3Z(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPvec3* ptr = JS_GET_ARG_PTR(args, 0, OPvec3);
+    
+    JS_RETURN(JS_NEW_NUMBER(ptr->z));
+}
+
+JS_RETURN_VAL _OPvec3XSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPvec3* ptr = JS_GET_PTR(args.This(), OPvec3);
+    
+    JS_RETURN(JS_NEW_NUMBER(ptr->x));
+}
+
+JS_RETURN_VAL _OPvec3YSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPvec3* ptr = JS_GET_PTR(args.This(), OPvec3);
+    
+    JS_RETURN(JS_NEW_NUMBER(ptr->y));
+}
+
+JS_RETURN_VAL _OPvec3ZSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPvec3* ptr = JS_GET_PTR(args.This(), OPvec3);
+    
+    JS_RETURN(JS_NEW_NUMBER(ptr->z));
+}
+
+void OPvec3WrapperSetup(Handle<Object> result, OPvec3* ptr) {
+    SCOPE_AND_ISOLATE;
+
+    JS_SET_PTR(result, ptr);
+
+    JS_SET_METHOD(result, "Log", _OPvec3LogSelf);
+    JS_SET_METHOD(result, "Set", _OPvec3SetSelf);
+    JS_SET_METHOD(result, "Add", _OPvec3AddSelf);
+    JS_SET_METHOD(result, "X", _OPvec3XSelf);
+    JS_SET_METHOD(result, "Y", _OPvec3YSelf);
+    JS_SET_METHOD(result, "Z", _OPvec3ZSelf);
+}
+
 JS_RETURN_VAL _OPvec3Create(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvec3* ptr = (OPvec3*)OPalloc(sizeof(OPvec3));
     *ptr = OPVEC3_ZERO;
     Handle<Object> result = JS_NEW_OBJECT();
-    JS_SET_PTR(result, ptr);
-
-    JS_SET_METHOD(result, "Log", _OPvec3LogSelf);
-    JS_SET_METHOD(result, "Set", _OPvec3SetSelf);
+    OPvec3WrapperSetup(result, ptr);
 
     JS_RETURN(result);
 }
@@ -72,6 +157,10 @@ void OPvec3Wrapper(Handle<Object> exports) {
     JS_SET_METHOD(vec3, "Create", _OPvec3Create);
     JS_SET_METHOD(vec3, "Log", _OPvec3Log);
     JS_SET_METHOD(vec3, "Set", _OPvec3Set);
+    JS_SET_METHOD(vec3, "Add", _OPvec3Add);
+    JS_SET_METHOD(vec3, "X", _OPvec3X);
+    JS_SET_METHOD(vec3, "Y", _OPvec3Y);
+    JS_SET_METHOD(vec3, "Z", _OPvec3Z);
     JS_SET_NUMBER(vec3, "size", sizeof(OPvec3));
     JS_SET_OBJECT(exports, "vec3", vec3);
 

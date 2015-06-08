@@ -43,6 +43,7 @@ typedef Handle<Value> JS_RETURN_VAL;
 
 #define JS_SET_METHOD(obj, name, func) obj->Set(String::New(name), FunctionTemplate::New(func)->GetFunction());
 #define JS_SET_OBJECT(target, name, object) target->Set(JS_NEW_STRING(name), object);
+#define JS_SET_NUMBER(target, name, number) target->Set(JS_NEW_STRING(name), JS_NEW_NUMBER(number));
 
 
 #endif
@@ -78,6 +79,7 @@ typedef void JS_RETURN_VAL;
 #define JS_SET_METHOD(obj, name, func) NODE_SET_METHOD(obj, name, func)
 #define JS_SET_OBJECT(target, name, object) target->Set(JS_NEW_STRING(name), object);
 #define JS_SET_PROTOTYPE_METHOD(obj, name, func) obj->PrototypeTemplate()->Set(JS_NEW_STRING(name), JS_NEW_FUNCTION_TEMPLATE(func)->GetFunction());
+#define JS_SET_NUMBER(target, name, number) target->Set(JS_NEW_STRING(name), JS_NEW_NUMBER(number));
 
 #endif
 
@@ -112,6 +114,8 @@ typedef void JS_RETURN_VAL;
 #define JS_SET_METHOD(obj, name, func) obj->Set(JS_NEW_STRING(name), JS_NEW_FUNCTION_TEMPLATE(func)->GetFunction());
 #define JS_SET_OBJECT(target, name, object) target->Set(JS_NEW_STRING(name), object);
 #define JS_SET_PROTOTYPE_METHOD(obj, name, func) obj->PrototypeTemplate()->Set(JS_NEW_STRING(name), JS_NEW_FUNCTION_TEMPLATE(func)->GetFunction());
+#define JS_SET_NUMBER(target, name, number) target->Set(JS_NEW_STRING(name), JS_NEW_NUMBER(number));
+
 #endif
 
 

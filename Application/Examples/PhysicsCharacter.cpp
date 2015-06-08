@@ -186,18 +186,28 @@ void ExamplePhysicsCharacterEnter(OPgameState* last) {
 	}
 
 	OPfloat pSize = 50;
-	OPvec3 verts[4] = {
-		{-pSize, 20, -pSize },
-		{pSize, -20, -pSize },
-		{pSize, -20, pSize },
-		{-pSize, 20, pSize }
-	};
-	ui32 indices[6] = {
-		0, 1, 2,
-		0, 2, 3
+	OPfloat pHeight = 10;
+	
+	OPvec3 verts[8] = {
+		{-pSize, -pHeight, -pSize },
+		{0, pHeight, -pSize },
+		{0, pHeight, pSize },
+		{-pSize, -pHeight, pSize },
+
+		{0, pHeight, -pSize },
+		{pSize, -pHeight, -pSize },
+		{pSize, -pHeight, pSize },
+		{0, pHeight, pSize }
 	};
 
-	PxTriangleMesh* mesh = OPphysXCreateTriangleMesh(4, (PxVec3*)verts, 2, (PxU32*)indices);
+	ui32 indices[12] = {
+		0, 1, 2,
+		0, 2, 3,
+		4, 5, 6,
+		4, 6, 7
+	};
+
+	PxTriangleMesh* mesh = OPphysXCreateTriangleMesh(8, (PxVec3*)verts, 4, (PxU32*)indices);
 	physicsCharacterExample->physicsPlane = OPphysXSceneCreateStatic(physicsCharacterExample->scene, OPVEC3_ZERO);
 	OPphysXAddTriangleMeshShape(physicsCharacterExample->physicsPlane, material, mesh);
 	OPphysXSceneAddActor(physicsCharacterExample->scene, physicsCharacterExample->physicsPlane);

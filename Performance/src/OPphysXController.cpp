@@ -33,4 +33,9 @@ OPvec3 OPphysXControllerGetPos(OPphysXController* controller) {
 	return OPvec3Create(pos.x, pos.y, pos.z);
 }
 
+OPvec3 OPphysXControllerGetFootPos(OPphysXController* controller) {
+	PxExtendedVec3 pos = controller->getFootPosition();
+	return OPvec3Create(pos.x, pos.y, pos.z);
+}
+
 #endif

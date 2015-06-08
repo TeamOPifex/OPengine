@@ -17,6 +17,7 @@ OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OP
 OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OPphysXMaterial* material, OPfloat height, OPfloat radius);
 void OPphysXControllerMove(OPphysXController* controller, OPvec3 displacement, OPtimer* timer);
 OPvec3 OPphysXControllerGetPos(OPphysXController* controller);
+OPvec3 OPphysXControllerGetFootPos(OPphysXController* controller);
 
 // INLINES
 

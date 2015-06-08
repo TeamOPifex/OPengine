@@ -43,6 +43,7 @@ typedef PxShape OPphysXShape;
 
 void OPphysXInit();
 PxTriangleMesh* OPphysXCreateTriangleMesh(ui32 vertCount, PxVec3* verts, ui32 triCount, PxU32* indices);
+PxTriangleMesh* OPphysXCreateTriangleMesh(ui32 vertCount, PxVec3* verts, ui32 vertStride, ui32 triCount, PxU32* indices, ui32 indStride);
 void OPphysXSetFilter(OPphysXRigidActor* actor, ui32 filterGroup, ui32 filterMask);
 OPphysXMaterial* OPphysXCreateMaterial(f32 staticFriction, f32 dynamicFriction, f32 restitution);
 OPphysXShape* OPphysXAddSphereShape(OPphysXRigidActor* actor, OPphysXMaterial* material, OPfloat size);

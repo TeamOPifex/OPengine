@@ -6,6 +6,7 @@ macro(add_source_group FILTER_NAME SOURCE_PATH TARGET_LIST)
 		"${SOURCE_PATH}/*.h"
 		"${SOURCE_PATH}/*.cpp"
 		"${SOURCE_PATH}/*.c"
+		"${SOURCE_PATH}/*.cc"
 		"${SOURCE_PATH}/*.mm"
 	)
 	source_group("${NEW_FILTER_NAME}" FILES ${TEMP_SRC})
@@ -284,7 +285,7 @@ macro(add_external_opifex_includes)
 		${OPIFEX_ENGINE_REPOSITORY}/External/glfw/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/glew-1.9.0/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/glm-0.9.5/
-		${OPIFEX_ENGINE_REPOSITORY}/External/Phsyx.3.2.1/include/
+		${OPIFEX_ENGINE_REPOSITORY}/External/PhysX/Include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/GLES2/
 		${OPIFEX_ENGINE_REPOSITORY}/External/OpenAL/
 		${OPIFEX_ENGINE_REPOSITORY}/External/Ogg/include/
@@ -299,6 +300,7 @@ macro(add_external_opifex_includes)
 		${OPIFEX_ENGINE_REPOSITORY}/External/FMod/include/
 		${BINARY_FOLDER}
 	)
+	message(STATUS "Adding External OPifex includes")
 endmacro(add_external_opifex_includes)
 
 
@@ -352,6 +354,20 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	unset(LIBV8_ICUUC CACHE)
 	unset(LIBV8_ICUI18N CACHE)
 	unset(LIBFMOD CACHE)
+	unset(LIBLOW_LEVEL_DEBUG)
+	unset(LIBLOW_LEVEL_CLOTH_DEBUG)
+	unset(LIBPHYSX3_CHARACTER_KINEMATIC_DEBUG)
+	unset(LIBPHYSX3_COMMON_DEBUG)
+	unset(LIBPHYSX3_COOKING_DEBUG)
+	unset(LIBPHYSX3_DEBUG)
+	unset(LIBPHYSX3_EXTENSIONS_DEBUG)
+	unset(LIBPHYSX3_VEHICLE_DEBUG)
+	unset(LIBPHYSX_PROFILE_SDK_DEBUG)
+	unset(LIBPHYSX_VISUAL_DEBUGGER_SDK_DEBUG)
+	unset(LIBPVD_RUNTIME_DEBUG)
+	unset(LIBPX_TASK_DEBUG)
+	unset(LIBSCENE_QUERY_DEBUG)
+	unset(LIBSIMULATION_CONTROLLER_DEBUG)
 
 
 	mark_as_advanced(LIBLODEPNG)
@@ -375,6 +391,20 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	mark_as_advanced(LIBV8_ICUUC)
 	mark_as_advanced(LIBV8_ICUI18N)
 	mark_as_advanced(LIBFMOD)
+	mark_as_advanced(LIBLOW_LEVEL_DEBUG)
+	mark_as_advanced(LIBLOW_LEVEL_CLOTH_DEBUG)
+	mark_as_advanced(LIBPHYSX3_CHARACTER_KINEMATIC_DEBUG)
+	mark_as_advanced(LIBPHYSX3_COMMON_DEBUG)
+	mark_as_advanced(LIBPHYSX3_COOKING_DEBUG)
+	mark_as_advanced(LIBPHYSX3_DEBUG)
+	mark_as_advanced(LIBPHYSX3_EXTENSIONS_DEBUG)
+	mark_as_advanced(LIBPHYSX3_VEHICLE_DEBUG)
+	mark_as_advanced(LIBPHYSX_PROFILE_SDK_DEBUG)
+	mark_as_advanced(LIBPHYSX_VISUAL_DEBUGGER_SDK_DEBUG)
+	mark_as_advanced(LIBPVD_RUNTIME_DEBUG)
+	mark_as_advanced(LIBPX_TASK_DEBUG)
+	mark_as_advanced(LIBSCENE_QUERY_DEBUG)
+	mark_as_advanced(LIBSIMULATION_CONTROLLER_DEBUG)
 
 	if( ${OPIFEX_OS_ANDROID} )
 		find_binary(LIBLODEPNG "LodePNG")
@@ -476,6 +506,43 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 					${LIBV8_LIBBASE}
 					${LIBV8_LIBPLATFORM})
 		endif()
+	endif()
+
+	if(${OPIFEX_OPTION_PHYSX})
+			if(${OPIFEX_OS_WINDOWS})
+			else()
+				find_binary(LIBLOW_LEVEL_DEBUG "LowLevelDEBUG" false)
+				find_binary(LIBLOW_LEVEL_CLOTH_DEBUG "LowLevelClothDEBUG" false)
+				find_binary(LIBPHYSX3_CHARACTER_KINEMATIC_DEBUG "PhysX3CharacterKinematicDEBUG" false)
+				find_binary(LIBPHYSX3_COMMON_DEBUG "PhysX3CommonDEBUG" false)
+				find_binary(LIBPHYSX3_COOKING_DEBUG "PhysX3CookingDEBUG" false)
+				find_binary(LIBPHYSX3_DEBUG "PhysX3DEBUG" false)
+				find_binary(LIBPHYSX3_EXTENSIONS_DEBUG "PhysX3ExtensionsDEBUG" false)
+				find_binary(LIBPHYSX3_VEHICLE_DEBUG "PhysX3VehicleDEBUG" false)
+				find_binary(LIBPHYSX_PROFILE_SDK_DEBUG "PhysXProfileSDKDEBUG" false)
+				find_binary(LIBPHYSX_VISUAL_DEBUGGER_SDK_DEBUG "PhysXVisualDebuggerSDKDEBUG" false)
+				find_binary(LIBPVD_RUNTIME_DEBUG "PvdRuntimeDEBUG" false)
+				find_binary(LIBPX_TASK_DEBUG "PxTaskDEBUG" false)
+				find_binary(LIBSCENE_QUERY_DEBUG "SceneQueryDEBUG" false)
+				find_binary(LIBSIMULATION_CONTROLLER_DEBUG "SimulationControllerDEBUG" false)
+
+				target_link_libraries(${APPLICATION_TARGET} 
+						${LIBLOW_LEVEL_DEBUG}
+						${LIBLOW_LEVEL_CLOTH_DEBUG}
+						${LIBPHYSX3_CHARACTER_KINEMATIC_DEBUG}
+						${LIBPHYSX3_COMMON_DEBUG}
+						${LIBPHYSX3_COOKING_DEBUG}
+						${LIBPHYSX3_DEBUG}
+						${LIBPHYSX3_EXTENSIONS_DEBUG}
+						${LIBPHYSX3_VEHICLE_DEBUG}
+						${LIBPHYSX_PROFILE_SDK_DEBUG}
+						${LIBPHYSX_VISUAL_DEBUGGER_SDK_DEBUG}
+						${LIBPVD_RUNTIME_DEBUG}
+						${LIBPX_TASK_DEBUG}
+						${LIBSCENE_QUERY_DEBUG}
+						${LIBSIMULATION_CONTROLLER_DEBUG}
+					)
+			endif()
 	endif()
 
 	if( ${OPIFEX_OS_WINDOWS} )
