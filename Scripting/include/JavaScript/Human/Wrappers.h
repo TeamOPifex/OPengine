@@ -1,9 +1,10 @@
 #ifndef OPENGINE_SCRIPTING_NODE_HUMAN_WRAPPERS
 #define OPENGINE_SCRIPTING_NODE_HUMAN_WRAPPERS
 
-#ifdef OPIFEX_OPTION_NODEJS
-
 #include "./Scripting/include/JavaScript/OPjavaScriptHelper.h"
+
+#if defined(OPIFEX_OPTION_NODEJS) || defined(OPIFEX_OPTION_V8)
+
 #include "./Human/Human.h"
 
 void OPscriptNodeWrapperHuman(Handle<Object> target);

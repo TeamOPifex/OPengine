@@ -1,11 +1,11 @@
 // myobject.cc
 #include "./Scripting/include/JavaScript/Human/Wrappers.h"
 #include "./Scripting/include/JavaScript/Math/Wrappers.h"
-#include "./Pipeline/include/Loaders/OPloaderOPskeleton.h"
-#include "./Pipeline/include/Loaders/OPloaderOPanimation.h"
 
 #if defined(OPIFEX_OPTION_NODEJS) || defined(OPIFEX_OPTION_V8)
 
+#include "./Pipeline/include/Loaders/OPloaderOPskeleton.h"
+#include "./Pipeline/include/Loaders/OPloaderOPanimation.h"
 
 
 JS_RETURN_VAL _OPskeletonUpdate(const JS_ARGS& args) {

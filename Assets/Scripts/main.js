@@ -1,3 +1,5 @@
+console.log('loading...');
+
 var OP = require('OPengine');
 
 var exampleSelectorState;

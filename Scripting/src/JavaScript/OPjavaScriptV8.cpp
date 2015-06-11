@@ -131,15 +131,64 @@ Handle<Object> _OPscriptV8WrapEngine() {
         OPscriptNodeWrapperCommunication(tmp);
         OPscriptNodeWrapperPipeline(tmp);
 
+        OPlog("Wrapped the engine.");
+
         OPscript *result = NULL;
         OPscriptLoad("Scripts/node_modules/OPengine/OPgameState.js", &result);
+        OPlog("Loaded OPgameState.js Script.");
         JS_SET_OBJECT(tmp, "gameState", _OPjavaScriptRequireScript(result, NULL));
+
+        OPlog("Wrapped OPgameState.");
 
         exports = Persistent<Object, CopyablePersistentTraits<Object> >(isolate, tmp);
         setup = 1;
     }
 
     return Local<Object>::New(isolate, exports);
+}
+
+JS_RETURN_VAL _platform(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    #if defined(OPIFEX_WINDOWS)
+        JS_RETURN(JS_NEW_STRING("win32"));
+    #elif defined(OPIFEX_OSX)
+        JS_RETURN(JS_NEW_STRING("darwin"));
+    #else
+        JS_RETURN(JS_NEW_STRING("unix"));
+    #endif
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _arch(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    #if defined(OPIFEX_OS64)
+        JS_RETURN(JS_NEW_STRING("x64"));
+    #else
+        JS_RETURN(JS_NEW_STRING("x86"));
+    #endif
+
+    JS_RETURN_NULL;
+}
+
+OPint setupOS = 0;
+Persistent<Object, CopyablePersistentTraits<Object> > exportsOS;
+Handle<Object> _OPscriptV8WrapOS() {
+
+    if (!setupOS) {
+
+        Handle<Object> tmp = JS_NEW_OBJECT();
+
+        JS_SET_METHOD(tmp, "platform", _platform);
+        JS_SET_METHOD(tmp, "arch", _arch);
+
+        exportsOS = Persistent<Object, CopyablePersistentTraits<Object> >(isolate, tmp);
+        setupOS = 1;
+    }
+
+    return Local<Object>::New(isolate, exportsOS);
 }
 
 OPchar* _OPscriptV8NormalizePath(const OPchar* path) {
@@ -186,6 +235,10 @@ void _OPscriptV8Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
         args.GetReturnValue().Set(_OPscriptV8WrapEngine());
         return;
     }
+    if (OPstringEquals(arg0, "os")) {
+        args.GetReturnValue().Set(_OPscriptV8WrapOS());
+        return;
+    }
 
 
     Handle<Object> currGlobal = args.Callee()->CreationContext()->Global();
@@ -201,6 +254,16 @@ void _OPscriptV8Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
     }
 
 }
+void _OPscriptV8SetImmediate(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    SCOPE_AND_ISOLATE;
+
+    if (args.Length() == 0) return;
+
+    Handle<Object> obj = JS_NEW_OBJECT();
+    Handle<Value> argv[1] = { JS_NEW_BOOL(true) };
+    Local<Function> callback = Local<Function>::Cast(args[0]);
+    callback->Call(obj, 1, argv);
+}
 
 OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, OPchar* dir) {
 	ASSERT(isolate != NULL, "V8 Engine must be initialized first.");
@@ -210,7 +273,8 @@ OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, 
 	Handle<ObjectTemplate> global = JS_NEW_OBJECT_TEMPLATE();
 	global->Set(JS_NEW_STRING("module"), JS_NEW_OBJECT_TEMPLATE());
 	global->Set(JS_NEW_STRING("global"), JS_NEW_OBJECT_TEMPLATE());
-	global->Set(JS_NEW_STRING("require"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8Require));
+    global->Set(JS_NEW_STRING("require"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8Require));
+    global->Set(JS_NEW_STRING("setImmediate"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8SetImmediate));
 	_OPscriptV8SetConsole(global);
 
 	Handle<Context> localContext = Context::New(isolate, NULL, global);

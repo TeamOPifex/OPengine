@@ -1,7 +1,7 @@
 #ifndef OPENGINE_SCRIPTING_NODE_PIPELINE_WRAPPERS
 #define OPENGINE_SCRIPTING_NODE_PIPELINE_WRAPPERS
 
-#ifdef OPIFEX_OPTION_NODEJS
+#if defined(OPIFEX_OPTION_NODEJS) || defined(OPIFEX_OPTION_V8)
 
 #include "./Scripting/include/JavaScript/OPjavaScriptHelper.h"
 

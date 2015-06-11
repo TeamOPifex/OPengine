@@ -1,9 +1,9 @@
 #ifndef OPENGINE_SCRIPTING_NODE_MATH_WRAPPERS
 #define OPENGINE_SCRIPTING_NODE_MATH_WRAPPERS
 
-#ifdef OPIFEX_OPTION_NODEJS
-
 #include "./Scripting/include/JavaScript/OPjavaScriptHelper.h"
+
+#if defined(OPIFEX_OPTION_NODEJS) || defined(OPIFEX_OPTION_V8)
 
 void OPscriptNodeWrapperMath(Handle<Object> target);
 

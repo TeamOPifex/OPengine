@@ -2,6 +2,7 @@
     "targets": [
         {
             "target_name": "OPengine",
+            "type": "shared_library",
             "sources": [
                  "../OPengine/Scripting/src/JavaScript/NodeWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/OPjavaScriptCoreWrapper.cpp",
@@ -139,6 +140,20 @@
                                 "libglfw3.a",
                                 "libGLEW_158.a",
                                 "libLodePNG.a",
+                                "libLowLevelDEBUG.a",
+                                "libLowLevelClothDEBUG.a",
+                                "libPhysX3CharacterKinematicDEBUG.a",
+                                "libPhysX3CommonDEBUG.a",
+                                "libPhysX3CookingDEBUG.a",
+                                "libPhysX3DEBUG.a",
+                                "libPhysX3ExtensionsDEBUG.a",
+                                "libPhysX3VehicleDEBUG.a",
+                                "libPhysXProfileSDKDEBUG.a",
+                                "libPhysXVisualDebuggerSDKDEBUG.a",
+                                "libPvdRuntimeDEBUG.a",
+                                "libPxTaskDEBUG.a",
+                                "libSceneQueryDEBUG.a",
+                                "libSimulationControllerDEBUG.a",
                                 "/System/Library/Frameworks/Cocoa.framework",
                                 "/System/Library/Frameworks/OpenGL.framework",
                                 "/System/Library/Frameworks/IOKit.framework",
@@ -162,7 +177,7 @@
             'type': 'none',
             'copies': [
                 {
-                    'files': [ '<(PRODUCT_DIR)/OPengine.node' ],
+                    'files': [ '<(PRODUCT_DIR)/OPengine.dylib' ],
                     'destination': '@BINARY_FOLDER@'
                 }
             ],
