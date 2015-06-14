@@ -28,6 +28,10 @@ void OPphysXControllerMove(OPphysXController* controller, OPvec3 disp, OPtimer* 
 	controller->move(PxVec3(disp.x, disp.y, disp.z), 0.01f, timer->Elapsed, filters);
 }
 
+void OPphysXControllerSetFootPos(OPphysXController* controller, OPvec3 disp) {
+	controller->setFootPosition(PxExtendedVec3(disp.x, disp.y, disp.z));
+}
+
 OPvec3 OPphysXControllerGetPos(OPphysXController* controller) {
 	PxExtendedVec3 pos = controller->getPosition();
 	return OPvec3Create(pos.x, pos.y, pos.z);

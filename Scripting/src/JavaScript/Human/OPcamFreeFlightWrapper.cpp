@@ -35,6 +35,42 @@ JS_RETURN_VAL _OPcamFreeFlightDestroy(const JS_ARGS& args) {
     JS_RETURN_NULL;
 }
 
+JS_RETURN_VAL _OPcamFreeFlightSetRotX(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPcamFreeFlight* camPtr = JS_GET_ARG_PTR(args, 0, OPcamFreeFlight);
+    camPtr->Rotation.x = args[1]->NumberValue();
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPcamFreeFlightSetRotXSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPcamFreeFlight* camPtr = JS_GET_PTR(args.This(), OPcamFreeFlight);
+    camPtr->Rotation.x = args[0]->NumberValue();
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPcamFreeFlightSetRotY(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPcamFreeFlight* camPtr = JS_GET_ARG_PTR(args, 0, OPcamFreeFlight);
+    camPtr->Rotation.y = args[1]->NumberValue();
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPcamFreeFlightSetRotYSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPcamFreeFlight* camPtr = JS_GET_PTR(args.This(), OPcamFreeFlight);
+    camPtr->Rotation.y = args[0]->NumberValue();
+
+    JS_RETURN_NULL;
+}
+
 JS_RETURN_VAL _OPcamFreeFlightDestroySelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
@@ -50,6 +86,8 @@ void OPcamFreeFlightWrapperCreate(Handle<Object> result, OPcamFreeFlight* cam) {
     JS_SET_PTR(result, cam);
     JS_SET_METHOD(result, "Update", _OPcamFreeFlightUpdateSelf);
     JS_SET_METHOD(result, "Destroy", _OPcamFreeFlightDestroySelf);
+    JS_SET_METHOD(result, "SetRotX", _OPcamFreeFlightSetRotXSelf);
+    JS_SET_METHOD(result, "SetRotY", _OPcamFreeFlightSetRotYSelf);
 
     Handle<Object> internalCam = JS_NEW_OBJECT();
     OPcamWrapperCreate(internalCam, &cam->Camera);
@@ -92,6 +130,8 @@ void OPcamFreeFlightWrapper(Handle<Object> exports) {
     Handle<Object> camFreeFlight = JS_NEW_OBJECT();
     JS_SET_METHOD(camFreeFlight, "Create", _OPcamFreeFlightCreate);
     JS_SET_METHOD(camFreeFlight, "Update", _OPcamFreeFlightUpdate);
+    JS_SET_METHOD(camFreeFlight, "SetRotX", _OPcamFreeFlightSetRotX);
+    JS_SET_METHOD(camFreeFlight, "SetRotY", _OPcamFreeFlightSetRotY);
     JS_SET_METHOD(camFreeFlight, "Destroy", _OPcamFreeFlightDestroy);
     JS_SET_NUMBER(camFreeFlight, "size", sizeof(OPcamFreeFlight));
     JS_SET_OBJECT(exports, "camFreeFlight", camFreeFlight);

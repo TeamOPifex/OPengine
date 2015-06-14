@@ -41,13 +41,54 @@ JS_RETURN_VAL _OPcamUpdateProj(const JS_ARGS& args) {
     JS_RETURN_NULL;
 }
 
+JS_RETURN_VAL _OPcamSetPosSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPcam* ptr = JS_GET_PTR(args.This(), OPcam);
+    OPvec3* pos = JS_GET_ARG_PTR(args, 0, OPvec3);
+    ptr->_pos = *pos;
+    ptr->_viewStale = 1;
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPcamSetPos(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPcam* ptr = JS_GET_ARG_PTR(args, 0, OPcam);
+    OPvec3* pos = JS_GET_ARG_PTR(args, 1, OPvec3);
+    ptr->_pos = *pos;
+    ptr->_viewStale = 1;
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPcamSetTargetSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPcam* ptr = JS_GET_PTR(args.This(), OPcam);
+    OPvec3* pos = JS_GET_ARG_PTR(args, 0, OPvec3);
+    ptr->_targ = *pos;
+    ptr->_viewStale = 1;
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPcamSetTarget(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPcam* ptr = JS_GET_ARG_PTR(args, 0, OPcam);
+    OPvec3* pos = JS_GET_ARG_PTR(args, 1, OPvec3);
+    ptr->_targ = *pos;
+    ptr->_viewStale = 1;
+
+    JS_RETURN_NULL;
+}
+
 JS_RETURN_VAL _OPcamPersp(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
+    
     OPcam* ptr = (OPcam*)OPallocZero(sizeof(OPcam));
-    Handle<Object> result = JS_NEW_OBJECT();
-    JS_SET_PTR(result, ptr);
-
-    //JS_SET_METHOD(result, "Log", _OPvec3LogSelf);
 
     *ptr = OPcamPersp(
             OPvec3Create(
@@ -71,8 +112,8 @@ JS_RETURN_VAL _OPcamPersp(const JS_ARGS& args) {
             args[12]->NumberValue()
     );
 
-    JS_SET_METHOD(result, "UpdateView", _OPcamUpdateViewSelf);
-    JS_SET_METHOD(result, "UpdateProj", _OPcamUpdateProjSelf);
+    Handle<Object> result = JS_NEW_OBJECT();
+    OPcamWrapperCreate(result, ptr);
 
     JS_RETURN(result);
 }
@@ -83,7 +124,9 @@ void OPcamWrapperCreate(Handle<Object> result, OPcam* ptr) {
     JS_SET_PTR(result, ptr);
 
     JS_SET_METHOD(result, "UpdateView", _OPcamUpdateViewSelf);
-    JS_SET_METHOD(result, "UpdateProj", _OPcamUpdateProjSelf);    
+    JS_SET_METHOD(result, "UpdateProj", _OPcamUpdateProjSelf); 
+    JS_SET_METHOD(result, "SetPos", _OPcamSetPosSelf);
+    JS_SET_METHOD(result, "SetTarget", _OPcamSetTargetSelf);
 }
 
 JS_RETURN_VAL _OPcamCreate(const JS_ARGS& args) {
@@ -104,6 +147,8 @@ void OPcamWrapper(Handle<Object> exports) {
     JS_SET_METHOD(cam, "Persp", _OPcamPersp);
     JS_SET_METHOD(cam, "UpdateView", _OPcamUpdateView);
     JS_SET_METHOD(cam, "UpdateProj", _OPcamUpdateProj);
+    JS_SET_METHOD(cam, "SetPos", _OPcamSetPos);
+    JS_SET_METHOD(cam, "SetTarget", _OPcamSetTarget);
     JS_SET_NUMBER(cam, "size", sizeof(OPcam));
     JS_SET_OBJECT(exports, "cam", cam);
 

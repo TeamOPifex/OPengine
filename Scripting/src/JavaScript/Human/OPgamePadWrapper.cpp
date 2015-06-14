@@ -43,6 +43,22 @@ JS_RETURN_VAL _OPgamePadWasPressed(const JS_ARGS& args) {
     JS_RETURN(JS_NEW_BOOL(OPgamePadWasPressed(ptr, btn)));
 }
 
+JS_RETURN_VAL _OPgamePadIsConnected(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_ARG_PTR(args, 0, OPgamePad);
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadIsConnected(ptr)));
+}
+
+JS_RETURN_VAL _OPgamePadIsConnectedSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadIsConnected(ptr)));
+}
+
 JS_RETURN_VAL _OPgamePadUpdate(const JS_ARGS& args) {
     OPgamePadSystemUpdate();
 }
@@ -60,6 +76,7 @@ void _OPgamePadSetup(Handle<Object> result, OPgamePad* controller) {
 
     JS_SET_PTR(result, controller);
     JS_SET_METHOD(result, "WasPressed", _OPgamePadWasPressed);
+    JS_SET_METHOD(result, "IsConnected", _OPgamePadIsConnectedSelf);
 
 }
 
@@ -82,6 +99,7 @@ void OPgamePadWrapper(Handle<Object> exports) {
     JS_SET_METHOD(gamepad, "Get", _OPgamePadGet);
     JS_SET_METHOD(gamepad, "Update", _OPgamePadUpdate);
     JS_SET_METHOD(gamepad, "SetDeadZones", _OPgamePadSetDeadZones);
+    JS_SET_METHOD(gamepad, "IsConnected", _OPgamePadIsConnected);
     JS_SET_OBJECT(exports, "gamePad", gamepad);
 
 }
