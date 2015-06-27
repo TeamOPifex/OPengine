@@ -13,6 +13,8 @@ static PxDefaultAllocator _defaultAllocatorCallback;
 PxSimulationFilterShader OPphysXDefaultFilterShader = OPphysXBasicFilterShader;
 
 void OPphysXInit() {
+	if(OPphysXSDK != NULL) return;
+
 	PxFoundation* foundation = PxCreateFoundation(PX_PHYSICS_VERSION, _defaultAllocatorCallback, _defaultErrorCallback);
 	OPphysXSDK = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale());
 	PxInitExtensions(*OPphysXSDK);
@@ -23,6 +25,7 @@ void OPphysXInit() {
 }
 
 void OPphysXDebugger() {
+	
 	// check if PvdConnection manager is available on this platform
 	if(OPphysXSDK->getPvdConnectionManager() == NULL) {
 		OPlog("No Debugger Support");

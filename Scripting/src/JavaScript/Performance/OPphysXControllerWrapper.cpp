@@ -69,6 +69,14 @@ JS_RETURN_VAL _OPphysXControllerGetFootPos(const JS_ARGS& args) {
 	JS_RETURN(obj);
 }
 
+JS_RETURN_VAL _OPphysXControllerSetFootPos(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPphysXController* controller = JS_GET_ARG_PTR(args, 0, OPphysXController);
+	
+	OPphysXControllerSetFootPos(controller, OPvec3Create(args[1]->NumberValue(), args[2]->NumberValue(), args[3]->NumberValue()));
+}
+
 void OPphysXControllerWrapper(Handle<Object> exports) {
     SCOPE_AND_ISOLATE;
 
@@ -78,6 +86,7 @@ void OPphysXControllerWrapper(Handle<Object> exports) {
 	JS_SET_METHOD(physXController, "Move", _OPphysXControllerMove);
 	JS_SET_METHOD(physXController, "GetPos", _OPphysXControllerGetPos);
 	JS_SET_METHOD(physXController, "GetFootPos", _OPphysXControllerGetFootPos);
+	JS_SET_METHOD(physXController, "SetFootPos", _OPphysXControllerSetFootPos);
 	JS_SET_OBJECT(exports, "physXController", physXController);
     
 }

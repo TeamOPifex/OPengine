@@ -4,6 +4,14 @@
 
 #include "./Math/include/OPvec3.h"
 
+void OPvec3ResetValues(Handle<Object> result, OPvec3* ptr) {
+    SCOPE_AND_ISOLATE
+
+    JS_SET_NUMBER(result, "x", ptr->x);
+    JS_SET_NUMBER(result, "y", ptr->y);
+    JS_SET_NUMBER(result, "z", ptr->z);
+}
+
 JS_RETURN_VAL _OPvec3LogSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
@@ -33,6 +41,7 @@ JS_RETURN_VAL _OPvec3SetSelf(const JS_ARGS& args) {
     ptr->x = args[0]->NumberValue();
     ptr->y = args[1]->NumberValue();
     ptr->z = args[2]->NumberValue();
+    OPvec3ResetValues(args.This(), ptr);
 
     JS_RETURN_NULL;
 }
@@ -46,6 +55,7 @@ JS_RETURN_VAL _OPvec3Set(const JS_ARGS& args) {
     ptr->x = args[1]->NumberValue();
     ptr->y = args[2]->NumberValue();
     ptr->z = args[3]->NumberValue();
+    OPvec3ResetValues(args[0]->ToObject(), ptr);
 
     JS_RETURN_NULL;
 }
@@ -59,6 +69,7 @@ JS_RETURN_VAL _OPvec3AddSelf(const JS_ARGS& args) {
     ptr->x += args[0]->NumberValue();
     ptr->y += args[1]->NumberValue();
     ptr->z += args[2]->NumberValue();
+    OPvec3ResetValues(args.This(), ptr);
 
     JS_RETURN_NULL;
 }
@@ -72,6 +83,7 @@ JS_RETURN_VAL _OPvec3Add(const JS_ARGS& args) {
     ptr->x += args[1]->NumberValue();
     ptr->y += args[2]->NumberValue();
     ptr->z += args[3]->NumberValue();
+    OPvec3ResetValues(args[0]->ToObject(), ptr);
 
     JS_RETURN_NULL;
 }
@@ -125,7 +137,23 @@ JS_RETURN_VAL _OPvec3ZSelf(const JS_ARGS& args) {
     JS_RETURN(JS_NEW_NUMBER(ptr->z));
 }
 
-void OPvec3WrapperSetup(Handle<Object> result, OPvec3* ptr) {
+
+JS_RETURN_VAL _OPvec3Sync(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPvec3* ptr = JS_GET_ARG_PTR(args, 0, OPvec3);
+
+    OPvec3ResetValues(args[0]->ToObject(), ptr);
+}
+
+JS_RETURN_VAL _OPvec3SyncSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPvec3* ptr = JS_GET_PTR(args.This(), OPvec3);
+    OPvec3ResetValues(args.This(), ptr);
+}
+
+Handle<Object> OPvec3WrapperSetup(Handle<Object> result, OPvec3* ptr) {
     SCOPE_AND_ISOLATE;
 
     JS_SET_PTR(result, ptr);
@@ -136,6 +164,10 @@ void OPvec3WrapperSetup(Handle<Object> result, OPvec3* ptr) {
     JS_SET_METHOD(result, "X", _OPvec3XSelf);
     JS_SET_METHOD(result, "Y", _OPvec3YSelf);
     JS_SET_METHOD(result, "Z", _OPvec3ZSelf);
+    JS_SET_METHOD(result, "Sync", _OPvec3SyncSelf);
+    OPvec3ResetValues(result, ptr);
+
+    return result;
 }
 
 JS_RETURN_VAL _OPvec3Create(const JS_ARGS& args) {
@@ -161,6 +193,7 @@ void OPvec3Wrapper(Handle<Object> exports) {
     JS_SET_METHOD(vec3, "X", _OPvec3X);
     JS_SET_METHOD(vec3, "Y", _OPvec3Y);
     JS_SET_METHOD(vec3, "Z", _OPvec3Z);
+    JS_SET_METHOD(vec3, "Sync", _OPvec3Sync);
     JS_SET_NUMBER(vec3, "size", sizeof(OPvec3));
     JS_SET_OBJECT(exports, "vec3", vec3);
 
