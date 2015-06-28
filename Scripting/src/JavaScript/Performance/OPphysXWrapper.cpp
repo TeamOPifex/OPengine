@@ -173,11 +173,29 @@ JS_RETURN_VAL _OPphysXSetAngularVelocity(const JS_ARGS& args) {
 	JS_RETURN_NULL;
 }
 
-JS_RETURN_VAL _OPphysXSetAsTrigger(const JS_ARGS& args) {
+JS_RETURN_VAL _OPphysXSetGravity(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPphysXRigidActor* actor = JS_GET_ARG_PTR(args, 0, OPphysXRigidActor);
+    OPphysXSetGravity(actor, args[1]->IntegerValue());
+    
+	JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPphysXSetSimulation(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPphysXShape* shape = JS_GET_ARG_PTR(args, 0, OPphysXShape);
-    OPphysXSetAsTrigger(shape);
+    OPphysXSetSimulation(shape, args[1]->IntegerValue());
+    
+	JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPphysXSetTrigger(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPphysXShape* shape = JS_GET_ARG_PTR(args, 0, OPphysXShape);
+    OPphysXSetTrigger(shape, args[1]->IntegerValue());
     
 	JS_RETURN_NULL;
 }
@@ -202,7 +220,9 @@ void OPphysXWrapper(Handle<Object> exports) {
 	JS_SET_METHOD(physX, "AddTorque", _OPphysXAddTorque);
 	JS_SET_METHOD(physX, "SetLinearVelocity", _OPphysXSetLinearVelocity);
 	JS_SET_METHOD(physX, "SetAngularVelocity", _OPphysXSetAngularVelocity);
-	JS_SET_METHOD(physX, "SetAsTrigger", _OPphysXSetAsTrigger);
+	JS_SET_METHOD(physX, "SetGravity", _OPphysXSetGravity);
+	JS_SET_METHOD(physX, "SetSimulation", _OPphysXSetSimulation);
+	JS_SET_METHOD(physX, "SetTrigger", _OPphysXSetTrigger);
 	JS_SET_OBJECT(exports, "physX", physX);
     
 }

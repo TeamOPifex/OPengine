@@ -59,21 +59,33 @@ void OPphysXShutdown();
 inline void OPphysXSetMass(OPphysXRigidDynamic* actor, OPfloat amount) {
 	actor->setMass(amount);
 }
+
 inline void OPphysXAddForce(OPphysXRigidDynamic* dynamic, OPvec3 force) {
 	dynamic->addForce(PxVec3(force.x, force.y, force.z));
 }
+
 inline void OPphysXAddTorque(OPphysXRigidDynamic* dynamic, OPvec3 torque) {
 	dynamic->addTorque(PxVec3(torque.x, torque.y, torque.z));
 }
+
 inline void OPphysXSetLinearVelocity(OPphysXRigidDynamic* dynamic, OPvec3 velocity) {
 	dynamic->setLinearVelocity(PxVec3(velocity.x, velocity.y, velocity.z));
 }
+
 inline void OPphysXSetAngularVelocity(OPphysXRigidDynamic* dynamic, OPvec3 velocity) {
 	dynamic->setAngularVelocity(PxVec3(velocity.x, velocity.y, velocity.z));
 }
-inline void OPphysXSetAsTrigger(OPphysXShape* shape) {
-	shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
-	shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
+
+inline void OPphysXSetGravity(OPphysXRigidActor* actor, i8 state) {
+	actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, !state);
+}
+
+inline void OPphysXSetSimulation(OPphysXShape* shape, i8 state) {
+	shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, state);
+}
+
+inline void OPphysXSetTrigger(OPphysXShape* shape, i8 state) {
+	shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, state);
 }
 
 #endif
