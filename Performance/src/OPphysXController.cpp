@@ -17,7 +17,10 @@ OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OP
 	desc.material = material;
 	desc.reportCallback = new OPphysXControllerHitReport(onShapeHit, onControllerHit, onObstacleHit);
 
-	return manager->createController(desc);
+	OPphysXController* result = manager->createController(desc);
+
+	result->getActor()->setGlobalPose(PxTransform());
+	return result;
 }
 OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OPphysXMaterial* material, OPfloat height, OPfloat radius) {
 	return OPphysXControllerCreate(manager, material, height, radius, NULL, NULL, NULL);

@@ -200,6 +200,39 @@ JS_RETURN_VAL _OPphysXSetTrigger(const JS_ARGS& args) {
 	JS_RETURN_NULL;
 }
 
+JS_RETURN_VAL _OPphysXSetSceneQuery(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPphysXShape* shape = JS_GET_ARG_PTR(args, 0, OPphysXShape);
+    OPphysXSetSceneQuery(shape, args[1]->IntegerValue());
+    
+	JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPphysXOverlapping(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPphysXRigidActor* actor = JS_GET_ARG_PTR(args, 0, OPphysXRigidActor);
+    OPphysXRigidActor* other = JS_GET_ARG_PTR(args, 1, OPphysXRigidActor);
+
+    OPint result = OPphysXOverlapping(actor, other);
+    
+	JS_RETURN(JS_NEW_NUMBER(result));
+}
+
+JS_RETURN_VAL _OPphysXGetShape(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPphysXRigidActor* actor = JS_GET_ARG_PTR(args, 0, OPphysXRigidActor);
+	OPphysXShape* ptr = OPphysXGetShape(actor, args[1]->IntegerValue());
+	
+	Handle<Object> result = JS_NEW_OBJECT();
+	JS_SET_PTR(result, ptr);
+
+	JS_RETURN(result);
+}
+
+
 void OPphysXWrapper(Handle<Object> exports) {
     SCOPE_AND_ISOLATE;
 
@@ -213,6 +246,7 @@ void OPphysXWrapper(Handle<Object> exports) {
 	JS_SET_METHOD(physX, "AddPlaneShape", _OPphysXAddPlaneShape);
 	JS_SET_METHOD(physX, "AddTriangleMeshShape", _OPphysXAddTriangleMeshShape);
 	JS_SET_METHOD(physX, "GetTransform", _OPphysXGetTransform);
+	JS_SET_METHOD(physX, "Overlapping", _OPphysXOverlapping);
 	JS_SET_METHOD(physX, "Shutdown", _OPphysXShutdown);
 
 	JS_SET_METHOD(physX, "SetMass", _OPphysXSetMass);
@@ -222,7 +256,9 @@ void OPphysXWrapper(Handle<Object> exports) {
 	JS_SET_METHOD(physX, "SetAngularVelocity", _OPphysXSetAngularVelocity);
 	JS_SET_METHOD(physX, "SetGravity", _OPphysXSetGravity);
 	JS_SET_METHOD(physX, "SetSimulation", _OPphysXSetSimulation);
+	JS_SET_METHOD(physX, "SetSceneQuery", _OPphysXSetSceneQuery);
 	JS_SET_METHOD(physX, "SetTrigger", _OPphysXSetTrigger);
+	JS_SET_METHOD(physX, "GetShape", _OPphysXGetShape);
 	JS_SET_OBJECT(exports, "physX", physX);
     
 }

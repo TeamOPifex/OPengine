@@ -115,6 +115,89 @@ OPphysXShape* OPphysXAddTriangleMeshShape(OPphysXRigidActor* actor, OPphysXMater
 	return triMeshShape;
 }
 
+void OPphysXToMat4(PxTransform pT, OPmat4* mat) {
+
+	PxMat33 m = PxMat33(pT.q);
+
+	mat->cols[0].x = m.column0[0];
+	mat->cols[0].y = m.column0[1];
+	mat->cols[0].z = m.column0[2];
+	mat->cols[0].w = 0;
+
+	mat->cols[1].x = m.column1[0];
+	mat->cols[1].y = m.column1[1];
+	mat->cols[1].z = m.column1[2];
+	mat->cols[1].w = 0;
+
+	mat->cols[2].x = m.column2[0];
+	mat->cols[2].y = m.column2[1];
+	mat->cols[2].z = m.column2[2];
+	mat->cols[2].w = 0;
+
+	mat->cols[3].x = pT.p[0];
+	mat->cols[3].y = pT.p[1];
+	mat->cols[3].z = pT.p[2];
+	mat->cols[3].w = 1;
+}
+
+// Actor is a box with 2 shapes:
+//		A Box Geometry that has Simulation turned on
+//		A Box Geometry twice the size that has Simulation turned off and Triggers turned on
+// Other is Capsule PxController with only the default shape
+
+i8 OPphysXOverlapping(OPphysXRigidActor* actor, PxGeometry* otherGeometry, PxTransform otherTransform) {
+	OPuint actorShapeCount = actor->getNbShapes();
+	PxShape** actorShapes = new PxShape*[actorShapeCount];
+	actor->getShapes(actorShapes, actorShapeCount);
+
+	i8 collisionFound = 0;
+
+	for(OPuint i = 0; i < actorShapeCount; i++) {
+		if(PxShapeExt::overlap(*actorShapes[i], *actor, *otherGeometry, otherTransform)) {
+			collisionFound = 1;
+		}
+	}
+
+	OPfree(actorShapes);
+
+	return collisionFound;
+}
+
+i8 OPphysXOverlapping(OPphysXRigidActor* actor, OPphysXRigidActor* other) {
+	OPuint actorShapeCount = actor->getNbShapes();
+	OPuint otherShapeCount = other->getNbShapes();
+
+	if(actorShapeCount <= 0 || otherShapeCount <= 0) return 0;
+
+	PxShape** actorShapes = new PxShape*[actorShapeCount];
+	PxShape** otherShapes = new PxShape*[otherShapeCount];
+
+	actor->getShapes(actorShapes, actorShapeCount);
+	other->getShapes(otherShapes, otherShapeCount);
+
+	i8 collisionFound = 0;
+
+	for(OPuint i = 0; i < actorShapeCount; i++) {
+		for(OPuint j = 0; j < otherShapeCount; j++) {
+			PxGeometry otherGeometry = otherShapes[j]->getGeometry().any();
+			PxTransform otherTransform = PxShapeExt::getGlobalPose(*otherShapes[j], *other);
+			if(PxShapeExt::overlap(*actorShapes[i], *actor, otherGeometry, otherTransform)) {
+				collisionFound = 1;
+				break;
+			}
+		}
+
+		if(collisionFound) { 
+			break;
+		}
+	}
+
+	OPfree(actorShapes);
+	OPfree(otherShapes);
+
+	return collisionFound;
+}
+
 void OPphysXGetTransform(OPphysXRigidActor* actor, OPmat4* mat) {
 	ui32 n = actor->getNbShapes();
 	PxShape** shapes = new PxShape*[n];

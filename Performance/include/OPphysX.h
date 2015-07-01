@@ -52,6 +52,8 @@ OPphysXShape* OPphysXAddBoxShape(OPphysXRigidActor* actor, OPphysXMaterial* mate
 OPphysXShape* OPphysXAddPlaneShape(OPphysXRigidActor* actor, OPphysXMaterial* material);
 OPphysXShape* OPphysXAddTriangleMeshShape(OPphysXRigidActor* actor, OPphysXMaterial* material, PxTriangleMesh* mesh);
 void OPphysXGetTransform(OPphysXRigidActor* actor, OPmat4* mat);
+i8 OPphysXOverlapping(OPphysXRigidActor* actor, OPphysXRigidActor* other);
+i8 OPphysXOverlapping(OPphysXRigidActor* actor, PxGeometry* otherGeometry, PxTransform otherTransform);
 void OPphysXShutdown();
 
 // INLINES
@@ -86,6 +88,15 @@ inline void OPphysXSetSimulation(OPphysXShape* shape, i8 state) {
 
 inline void OPphysXSetTrigger(OPphysXShape* shape, i8 state) {
 	shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, state);
+}
+
+inline void OPphysXSetSceneQuery(OPphysXShape* shape, i8 state) {
+    shape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, state);
+}
+inline OPphysXShape* OPphysXGetShape(OPphysXRigidActor* actor, OPuint index) {
+	OPphysXShape* result;
+	actor->getShapes(&result, 1, index);
+	return result;
 }
 
 #endif
