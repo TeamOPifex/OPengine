@@ -2,7 +2,7 @@
 
 PxReal _timestep = 1.0f / 60.0f;
 
-void OPphysXSceneInit(OPphysXScene* scene, void(*onTrigger)(OPphysXTrigger), void(*onContact)(OPphysXContact)) {
+void OPphysXSceneInit(OPphysXScene* scene, OPvec3 gravity, void(*onTrigger)(OPphysXTrigger), void(*onContact)(OPphysXContact)) {
 
 	PxSceneDesc sceneDesc(OPphysXSDK->getTolerancesScale());
 
@@ -10,7 +10,7 @@ void OPphysXSceneInit(OPphysXScene* scene, void(*onTrigger)(OPphysXTrigger), voi
 		sceneDesc.simulationEventCallback = new OPphysXEventHandler(onTrigger, onContact);
 	}
 
-	sceneDesc.gravity = PxVec3(0.0f, -9.8f * 5.0f, 0.0f);
+	sceneDesc.gravity = PxVec3(gravity.x, gravity.y, gravity.z);
 
 	if (!sceneDesc.cpuDispatcher) {
 		PxDefaultCpuDispatcher* mCpuDispatcher = PxDefaultCpuDispatcherCreate(2);
@@ -25,15 +25,15 @@ void OPphysXSceneInit(OPphysXScene* scene, void(*onTrigger)(OPphysXTrigger), voi
 	scene->elapsed = 0;
 }
 
-OPphysXScene* OPphysXSceneCreate() {
+OPphysXScene* OPphysXSceneCreate(OPvec3 gravity) {
 	OPphysXScene* scene = (OPphysXScene*)OPallocZero(sizeof(OPphysXScene));
-	OPphysXSceneInit(scene, NULL, NULL);
+	OPphysXSceneInit(scene, gravity, NULL, NULL);
 	return scene;
 }
 
-OPphysXScene* OPphysXSceneCreate(void(*onTrigger)(OPphysXTrigger), void(*onContact)(OPphysXContact)) {
+OPphysXScene* OPphysXSceneCreate(OPvec3 gravity, void(*onTrigger)(OPphysXTrigger), void(*onContact)(OPphysXContact)) {
 	OPphysXScene* scene = (OPphysXScene*)OPallocZero(sizeof(OPphysXScene));
-	OPphysXSceneInit(scene, onTrigger, onContact);
+	OPphysXSceneInit(scene, gravity, onTrigger, onContact);
 	return scene;
 }
 

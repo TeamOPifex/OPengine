@@ -61,6 +61,7 @@ JS_RETURN_VAL _OPgamePadIsConnectedSelf(const JS_ARGS& args) {
 
 JS_RETURN_VAL _OPgamePadUpdate(const JS_ARGS& args) {
     OPgamePadSystemUpdate();
+    JS_RETURN_NULL;
 }
 
 JS_RETURN_VAL _OPgamePadSetDeadZones(const JS_ARGS& args) {

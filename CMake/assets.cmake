@@ -58,7 +58,14 @@ if( ${OPIFEX_OS_ANDROID} )
 	
 else()	
 	if(${OPIFEX_OPTION_NODEJS})
-		configure_file(		${PROJECT_SOURCE_DIR}/NodeJs/binding.gyp		${PROJECT_BINARY_DIR}/binding.gyp	)
+		message(STATUS "BINDING.GYP")
+		if(${OPIFEX_OPTION_RELEASE})
+			message(STATUS "RELEASE MODE BINDING.GYP")
+			configure_file(		${PROJECT_SOURCE_DIR}/NodeJs/bindingRelease.gyp		${PROJECT_BINARY_DIR}/binding.gyp	)
+		else()
+			message(STATUS "DEBUG MODE BINDING.GYP")
+			configure_file(		${PROJECT_SOURCE_DIR}/NodeJs/binding.gyp		${PROJECT_BINARY_DIR}/binding.gyp	)
+		endif()
 	endif()
 
 	# Only copy assets if we're in release mode

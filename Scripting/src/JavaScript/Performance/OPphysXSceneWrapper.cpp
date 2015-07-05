@@ -8,14 +8,18 @@
 JS_RETURN_VAL _OPphysXSceneInit(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
     OPphysXScene* scene = JS_GET_ARG_PTR(args, 0, OPphysXScene);
-	OPphysXSceneInit(scene, NULL, NULL);
+    OPvec3* gravity = JS_GET_ARG_PTR(args, 1, OPvec3);
+	OPphysXSceneInit(scene, *gravity, NULL, NULL);
 	JS_RETURN_NULL;
 }
 
 JS_RETURN_VAL _OPphysXSceneCreate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPphysXScene* ptr = OPphysXSceneCreate();
+
+    OPvec3* gravity = JS_GET_ARG_PTR(args, 0, OPvec3);
+
+    OPphysXScene* ptr = OPphysXSceneCreate(*gravity);
 
 	Handle<Object> result = JS_NEW_OBJECT();
 	JS_SET_PTR(result, ptr);

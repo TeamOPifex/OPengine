@@ -138,6 +138,8 @@ JS_RETURN_VAL _OPvec3Sync(const JS_ARGS& args) {
     OPvec3* ptr = JS_GET_ARG_PTR(args, 0, OPvec3);
 
     OPvec3ResetValues(args[0]->ToObject(), ptr);
+    
+    JS_RETURN_NULL;
 }
 
 JS_RETURN_VAL _OPvec3SyncSelf(const JS_ARGS& args) {
@@ -145,6 +147,8 @@ JS_RETURN_VAL _OPvec3SyncSelf(const JS_ARGS& args) {
 
     OPvec3* ptr = JS_GET_PTR(args.This(), OPvec3);
     OPvec3ResetValues(args.This(), ptr);
+
+    JS_RETURN_NULL;
 }
 
 Handle<Object> OPvec3WrapperSetup(Handle<Object> result, OPvec3* ptr) {

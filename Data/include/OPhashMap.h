@@ -40,6 +40,8 @@ typedef struct{
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                                                                    
 
+void OPhashMapInit(OPhashMap* hashMap, OPuint capacity);
+
 /* Creates a HashMap (Dictionary)
  * @param capacity The max number of buckets to hold
  * @return The newly create OPhashMap

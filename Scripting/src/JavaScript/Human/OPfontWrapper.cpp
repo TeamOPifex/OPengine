@@ -8,6 +8,7 @@
 
 JS_RETURN_VAL _OPfontSystemsLoadEffects(const JS_ARGS& args) {
     OPfontSystemLoadEffects();
+    JS_RETURN_NULL;
 }
 
 JS_RETURN_VAL _OPfontManagerScale(const JS_ARGS& args) {

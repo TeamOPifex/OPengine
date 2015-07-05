@@ -75,6 +75,8 @@ JS_RETURN_VAL _OPphysXControllerSetFootPos(const JS_ARGS& args) {
     OPphysXController* controller = JS_GET_ARG_PTR(args, 0, OPphysXController);
 	
 	OPphysXControllerSetFootPos(controller, OPvec3Create(args[1]->NumberValue(), args[2]->NumberValue(), args[3]->NumberValue()));
+
+    JS_RETURN_NULL;
 }
 
 void OPphysXControllerWrapper(Handle<Object> exports) {

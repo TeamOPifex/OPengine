@@ -79,7 +79,7 @@ void ExamplePhysicsCharacterEnter(OPgameState* last) {
 	physicsCharacterExample = (PhysicsCharacterExample*)OPalloc(sizeof(PhysicsCharacterExample));
 
 	OPphysXInit();
-	physicsCharacterExample->scene = OPphysXSceneCreate(CharacterOnTrigger, CharacterOnContact);
+	physicsCharacterExample->scene = OPphysXSceneCreate(OPvec3Create(0, -9.8, 0), CharacterOnTrigger, CharacterOnContact);
 
 	OPcmanLoad("PuzzleBlock.opm");
 	OPcmanLoad("PuzzleSphere.opm");

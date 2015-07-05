@@ -21,19 +21,30 @@ static ui64 hash(const OPchar* str);
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                                                                    
-OPhashMap* OPhashMapCreate(OPuint capacity)
+
+
+void OPhashMapInit(OPhashMap* hashMap, OPuint capacity)
 {
-	OPhashMap* hashMap;	
-	hashMap = (OPhashMap*)OPalloc(sizeof(OPhashMap));
-	if (hashMap == NULL) return NULL;
-	
+	OPlog("Creating a hashmap of size %d", capacity);
+
+	if (hashMap == NULL) return;
+	OPlog("hash map allocated");
+
 	hashMap->count = capacity;
 	hashMap->buckets = (Bucket*)OPalloc(hashMap->count * sizeof(Bucket));
 	if (hashMap->buckets == NULL) {
 		OPfree(hashMap);
-		return NULL;
+		return;
 	}
+	OPlog("Buckets allocated");
+
 	memset(hashMap->buckets, 0, hashMap->count * sizeof(Bucket));
+}
+
+OPhashMap* OPhashMapCreate(OPuint capacity)
+{
+	OPhashMap* hashMap = (OPhashMap*)OPalloc(sizeof(OPhashMap));
+	OPhashMapInit(hashMap, capacity);
 	return hashMap;
 }
 
@@ -92,15 +103,30 @@ OPint OPhashMapExists(const OPhashMap *map, const OPchar *key)
 	Bucket* bucket;
 	KeyValuePair* pair;
 
+	OPlog("Check to see if key is in Hashmap");
+
 	if (map == NULL) return 0;	
 	if (key == NULL) return 0;
-	
+
+	OPlog("Values are good to check");
+	OPlog("Total count in hashmap: %d", map->count);
+
 	index = hash(key) % map->count;
+
+	OPlog("This is the index: %d", index);
+
 	bucket = &(map->buckets[index]);
 
+	OPlog("found the bucket");
+
 	pair = get_pair(bucket, key);
+
+	OPlog("Fiding the pair");
+
 	if (pair == NULL) return 0;
 	
+	OPlog("The pair was found");
+
 	return 1;
 }
 
@@ -221,6 +247,8 @@ static KeyValuePair * get_pair(Bucket *bucket, const OPchar *key)
 // The key 'str' must have a length longer than 4 characters, or behavior is undefined
 static ui64 hash(const OPchar* str)
 {
+	OPlog("Running hash");
+
 	ui64 hash = 0xA1F9B450;
 	OPint i = 0;
 	ui8 c = str[0];
@@ -229,6 +257,8 @@ static ui64 hash(const OPchar* str)
 		c = *(++str);
 		++i;
 	}while (c || i < 4);
+
+	OPlog("Found the hash");
 
 	return hash;
 }

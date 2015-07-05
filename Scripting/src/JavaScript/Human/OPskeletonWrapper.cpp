@@ -136,6 +136,8 @@ JS_RETURN_VAL _OPskeletonWrap(const JS_ARGS& args) {
 JS_RETURN_VAL _OPskeletonAddLoader(const JS_ARGS& args) {
     OPskeletonAddLoader();
     OPskeletonAnimationAddLoader();
+    
+    JS_RETURN_NULL;
 }
 
 void OPskeletonWrapper(Handle<Object> exports) {

@@ -133,7 +133,8 @@ OPint OPcmanInit(const OPchar* dir){
 
 	
 	// create and copy the hashmap
-	OPmemcpy(&OP_CMAN_HASHMAP, OPhashMapCreate(OP_CMAN_CAP), sizeof(OPhashMap));
+	OPhashMapInit(&OP_CMAN_HASHMAP, OP_CMAN_CAP);
+	OPlog("Total count in hashmap: %d", OP_CMAN_HASHMAP.count);
 
 	// create and copy the purge list
 	OP_CMAN_PURGE = OPllCreate();
@@ -143,6 +144,8 @@ OPint OPcmanInit(const OPchar* dir){
 
 // checks to see if an asset is loaded, triggers the load or unload.
 OPint OPcmanIsLoaded(const OPchar* key){
+	OPlog("Check if %s is loaded.", key);
+	OPlog("Total count in hashmap: %d", OP_CMAN_HASHMAP.count);
 	return OPhashMapExists(&OP_CMAN_HASHMAP, key);
 }
 

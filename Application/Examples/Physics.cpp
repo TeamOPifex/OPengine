@@ -67,7 +67,7 @@ void ExamplePhysicsEnter(OPgameState* last) {
 	physicsExample = (PhysicsExample*)OPalloc(sizeof(PhysicsExample));
 
 	OPphysXInit();
-	physicsExample->scene = OPphysXSceneCreate(OnTrigger, OnContact);
+	physicsExample->scene = OPphysXSceneCreate(OPvec3Create(0, -9.8, 0), OnTrigger, OnContact);
 
 	OPcmanLoad("PuzzleBlock.opm");
 	OPcmanLoad("PuzzleSphere.opm");
