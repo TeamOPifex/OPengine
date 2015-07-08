@@ -2,7 +2,6 @@
     "targets": [
         {
             "target_name": "OPengine",
-            "type": "shared_library",
             "sources": [
                  "../OPengine/Scripting/src/JavaScript/NodeWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/OPjavaScriptCoreWrapper.cpp",
@@ -30,12 +29,14 @@
                  "../OPengine/Scripting/src/JavaScript/Human/OPkeyboardWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPmaterialWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPmeshWrapper.cpp",
+                 "../OPengine/Scripting/src/JavaScript/Human/OPmodelWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPrenderWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPskeletonWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPtextureWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/OPjavaScriptCommunicationWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/OPjavaScriptPipelineWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Pipeline/OPloaderWrapper.cpp",
+                 "../OPengine/Scripting/src/JavaScript/Pipeline/OPvoxelGeneratorWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Pipeline/OPtexture2DWrapper.cpp"
             ],
             "include_dirs": [
@@ -82,7 +83,7 @@
                                 "-lOpenAL32.lib"
                             ]
                         },
-                        "configurations": {                         
+                        "configurations": {
                             "Release": {
                                 "msvs_settings": {
                                     "VCCLCompilerTool": {
@@ -96,7 +97,7 @@
                                             "/LTCG /NODEFAULTLIB:MSVCRT"
                                         ]
                                     },
-                                    "VCLinkerTool": {     
+                                    "VCLinkerTool": {
                                         "IgnoreDefaultLibraryNames": [ 'libcmt.lib', 'libcpmt.lib' ],
                                         "LinkTimeCodeGeneration": 1,
                                         "LinkIncremental": 1,
@@ -177,7 +178,7 @@
             'type': 'none',
             'copies': [
                 {
-                    'files': [ '<(PRODUCT_DIR)/OPengine.dylib' ],
+                    'files': [ '<(PRODUCT_DIR)/OPengine.node' ],
                     'destination': '@BINARY_FOLDER@'
                 }
             ],

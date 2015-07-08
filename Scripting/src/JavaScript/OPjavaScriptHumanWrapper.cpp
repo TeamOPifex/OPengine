@@ -14,6 +14,7 @@ void OPscriptNodeWrapperHuman(Handle<Object> exports) {
     OPkeyboardWrapper(exports);
     OPmaterialWrapper(exports);
     OPmeshWrapper(exports);
+    OPmodelWrapper(exports);
     OPrenderWrapper(exports);
     OPskeletonWrapper(exports);
     OPtextureWrapper(exports);

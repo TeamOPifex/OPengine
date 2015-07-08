@@ -18,6 +18,7 @@ void OPgamePadWrapper(Handle<Object> exports);
 void OPkeyboardWrapper(Handle<Object> exports);
 void OPmaterialWrapper(Handle<Object> exports);
 void OPmeshWrapper(Handle<Object> exports);
+void OPmodelWrapper(Handle<Object> exports);
 void OPrenderWrapper(Handle<Object> exports);
 void OPtextureWrapper(Handle<Object> exports);
 void OPskeletonWrapper(Handle<Object> exports);

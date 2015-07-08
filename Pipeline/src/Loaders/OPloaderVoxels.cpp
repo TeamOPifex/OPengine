@@ -27,7 +27,7 @@ OPvec3* readColorData(OPstream* str) {
 
 	OPvecInt3 voxelSize = readVoxelVec3(str);
 	OPvecInt3 voxelOffset = readVoxelVec3(str);
-	
+
 	result = (OPvec3*)OPalloc(sizeof(OPvec3) * voxelSize.x * voxelSize.z * voxelSize.y);
 
 	OPlog("%d %d %d", voxelSize.x, voxelSize.z, voxelSize.y);
@@ -39,7 +39,7 @@ OPvec3* readColorData(OPstream* str) {
 				ui32 data = OPreadui32(str);
 				ui32 pos = xi + yi * voxelSize.x + (voxelSize.z - 1 - zi) * voxelSize.x * voxelSize.y;
 				result[pos] = OPvec3Create(((ui8*)&data)[0], ((ui8*)&data)[1], ((ui8*)&data)[2]);
-				OPlog("rgb - (%d, %d, %d)", ((ui8*)&data)[0], ((ui8*)&data)[1], ((ui8*)&data)[2]); 
+				//OPlog("rgb - (%d, %d, %d)", ((ui8*)&data)[0], ((ui8*)&data)[1], ((ui8*)&data)[2]);
 			}
 		}
 	}
@@ -57,7 +57,9 @@ OPvoxels readVoxelData(OPstream* str) {
 
 	OPvecInt3 voxelSize = readVoxelVec3(str);
 	OPvecInt3 voxelOffset = readVoxelVec3(str);
-	
+
+	OPlog("VOXEL DATA SIZE: %d %d %d", voxelSize.x, voxelSize.z, voxelSize.y);
+
 	OPvecInt3* voxels = (OPvecInt3*)OPalloc(sizeof(OPvecInt3) * voxelSize.x * voxelSize.z * voxelSize.y);
 
 	// read voxel data
@@ -65,13 +67,13 @@ OPvoxels readVoxelData(OPstream* str) {
 		for(int yi = 0; yi < voxelSize.y; ++yi){
 			for(int xi = 0; xi < voxelSize.x; ++xi){
 				ui32 data = OPreadui32(str);
-				if(data != 0) OPlog("rgb - (%d, %d, %d)", ((ui8*)&data)[0], ((ui8*)&data)[1], ((ui8*)&data)[2]); 
+				//if(data != 0) OPlog("rgb - (%d, %d, %d)", ((ui8*)&data)[0], ((ui8*)&data)[1], ((ui8*)&data)[2]);
 				OPvecInt3 voxel = {
-					((ui8*)&data)[0], 
-					((ui8*)&data)[1], 
+					((ui8*)&data)[0],
+					((ui8*)&data)[1],
 					((ui8*)&data)[2]
 				};
-				voxels[xi + yi * voxelSize.x + voxelSize.x * voxelSize.y * (voxelSize.z - 1 - zi)] = voxel;
+				voxels[(voxelSize.x - 1 - xi) + yi * voxelSize.x + voxelSize.x * voxelSize.y * (voxelSize.z - 1 - zi)] = voxel;
 			}
 		}
 	}
@@ -87,7 +89,7 @@ OPint OPvoxelsLoad(const OPchar* path, void** asset) {
 
 	OPlog("Reading %s", path);
 	OPstream* str = OPreadFile(path);
-	
+
 	ui32 version = OPreadui32(str);
 	ui32 colorFormat = OPreadui32(str);
 	ui32 zOrientation = OPreadui32(str);
@@ -110,10 +112,12 @@ OPint OPvoxelsLoad(const OPchar* path, void** asset) {
 
 	OPvec3* colors = readColorData(str);
 	OPfree(colors);
-	OPvoxels voxels = readVoxelData(str);
 
-	*asset = (OPvoxels*)OPalloc(sizeof(OPvoxels));
-	OPmemcpy(*asset, &voxels, sizeof(OPvoxels));
+	OPvoxels* temp = (OPvoxels*)OPalloc(sizeof(OPvoxels));
+	*temp = readVoxelData(str);
+	*asset = temp;
+
+	OPlog("Voxel Size %d, %d, %d", temp->size.x, temp->size.x, temp->size.z);
 
 	return 1;
 }
@@ -123,7 +127,7 @@ OPvecInt3 OPvoxelsGet(OPvoxels* voxels, OPint x, OPint y, OPint z) {
 		OPvecInt3 z = { 0, 0, 0 };
 		return z;
 	}
-	return voxels->voxels[x + y * voxels->size.x + voxels->size.x * voxels->size.y * (voxels->size.z - 1 - z)];
+	return voxels->voxels[x + y * voxels->size.x + voxels->size.x * voxels->size.y * z];
 }
 
 OPassetLoader* OPvoxelsLoader() {
