@@ -45,7 +45,15 @@ JS_RETURN_VAL OPphysXSceneCreateStatic(const JS_ARGS& args) {
 
     OPphysXScene* scene = JS_GET_ARG_PTR(args, 0, OPphysXScene);
     OPvec3* position = JS_GET_ARG_PTR(args, 1, OPvec3);
-    OPphysXRigidStatic* ptr = OPphysXSceneCreateStatic(scene, *position);
+
+    OPphysXRigidStatic* ptr;
+
+    if(args.Length() == 2) {
+    	ptr = OPphysXSceneCreateStatic(scene, *position);
+    } else {
+    	OPvec3* around = JS_GET_ARG_PTR(args, 3, OPvec3);
+    	ptr = OPphysXSceneCreateStatic(scene, *position, args[2]->NumberValue(), *around);
+    }
 
 	Handle<Object> result = JS_NEW_OBJECT();
 	JS_SET_PTR(result, ptr);

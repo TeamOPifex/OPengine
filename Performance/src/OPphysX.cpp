@@ -25,7 +25,7 @@ void OPphysXInit() {
 }
 
 void OPphysXDebugger() {
-	
+
 	// check if PvdConnection manager is available on this platform
 	if(OPphysXSDK->getPvdConnectionManager() == NULL) {
 		OPlog("No Debugger Support");
@@ -105,7 +105,7 @@ OPphysXShape* OPphysXAddBoxShape(OPphysXRigidActor* actor, OPphysXMaterial* mate
 }
 
 OPphysXShape* OPphysXAddPlaneShape(OPphysXRigidActor* actor, OPphysXMaterial* material) {
-// 	PxTransform pose = PxTransform(PxVec3(0.0f, 0.0f, 0.0f), PxQuat(PxHalfPi, PxVec3(0.0f, 0.0f, 1.0f)));
+	//PxTransform pose = PxTransform(PxVec3(0.0f, 0.0f, 0.0f), PxQuat(PxHalfPi, PxVec3(0.0f, 0.0f, 1.0f)));
 	PxShape* planeShape = actor->createShape(PxPlaneGeometry(), *material);
 	return planeShape;
 }
@@ -140,6 +140,16 @@ void OPphysXToMat4(PxTransform pT, OPmat4* mat) {
 	mat->cols[3].w = 1;
 }
 
+PxTransform OPphysXMat4ToPx(OPmat4* mat) {
+
+	PxTransform result = PxTransform(PxMat44((f32*)mat));
+	return result;
+}
+
+void OPphysXShapeSetPose(OPphysXShape* shape, OPmat4 transform) {
+	shape->setLocalPose(OPphysXMat4ToPx(&transform));
+}
+
 // Actor is a box with 2 shapes:
 //		A Box Geometry that has Simulation turned on
 //		A Box Geometry twice the size that has Simulation turned off and Triggers turned on
@@ -161,6 +171,10 @@ i8 OPphysXOverlapping(OPphysXRigidActor* actor, PxGeometry* otherGeometry, PxTra
 	OPfree(actorShapes);
 
 	return collisionFound;
+}
+
+i8 OPphysXShapeOverlapping(OPphysXRigidActor* actor, OPphysXShape* shape, PxGeometry* otherGeometry, PxTransform otherTransform) {
+	return PxShapeExt::overlap(*shape, *actor, *otherGeometry, otherTransform);
 }
 
 i8 OPphysXOverlapping(OPphysXRigidActor* actor, OPphysXRigidActor* other) {
@@ -187,7 +201,7 @@ i8 OPphysXOverlapping(OPphysXRigidActor* actor, OPphysXRigidActor* other) {
 			}
 		}
 
-		if(collisionFound) { 
+		if(collisionFound) {
 			break;
 		}
 	}
@@ -233,5 +247,16 @@ void OPphysXGetTransform(OPphysXRigidActor* actor, OPmat4* mat) {
 
 void OPphysXShutdown() {
 	OPphysXSDK->release();
+}
+
+i8 OPphysXBoxColliding(PxRigidDynamic* actor, OPvec3 size, OPvec3 pos) {
+	PxBoxGeometry otherGeometry = PxBoxGeometry(size.x, size.y, size.z);
+	PxTransform otherTransform = PxTransform(PxVec3(pos.x, pos.y, pos.z));
+	return OPphysXOverlapping(actor, &otherGeometry, otherTransform);
+}
+i8 OPphysXShapeBoxColliding(PxRigidDynamic* actor, OPphysXShape* shape, OPvec3 size, OPvec3 pos) {
+	PxBoxGeometry otherGeometry = PxBoxGeometry(size.x, size.y, size.z);
+	PxTransform otherTransform = PxTransform(PxVec3(pos.x, pos.y, pos.z));
+	return OPphysXShapeOverlapping(actor, shape, &otherGeometry, otherTransform);
 }
 #endif

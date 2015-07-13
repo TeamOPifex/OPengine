@@ -10,7 +10,12 @@ JS_RETURN_VAL _OPtexture2DCreate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
     OPtexture* texture = JS_GET_ARG_PTR(args, 0, OPtexture);
-    OPeffect* effect = JS_GET_ARG_PTR(args, 1, OPeffect);
+    OPeffect* effect = NULL;
+
+    if(args.Length() > 1) {
+      effect = JS_GET_ARG_PTR(args, 1, OPeffect);
+    }
+    
     OPtexture2D* tex2d;
 
     if(args.Length() > 2) {

@@ -48,6 +48,13 @@ OPphysXRigidDynamic* OPphysXSceneCreateDynamic(OPphysXScene* scene, PxTransform 
 	return actor;
 }
 
+OPphysXRigidStatic* OPphysXSceneCreateStatic(OPphysXScene* scene, OPvec3 position, OPfloat rotate, OPvec3 around) {
+	PxTransform transform = PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotate, PxVec3(around.x, around.y, around.z)));
+	OPphysXRigidStatic* actor = OPphysXSDK->createRigidStatic(transform);
+	return actor;
+}
+
+
 OPphysXRigidStatic* OPphysXSceneCreateStatic(OPphysXScene* scene, OPvec3 position) {
  	PxTransform transform(PxVec3(position.x, position.y, position.z));
 	OPphysXRigidStatic* actor = OPphysXSDK->createRigidStatic(transform);

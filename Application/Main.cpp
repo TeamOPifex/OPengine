@@ -1,4 +1,5 @@
 #include "ExampleSelectorState.h"
+#include "FontTest.h"
 #include "./Scripting/include/OPloaderOPS.h"
 #include "./Scripting/include/JavaScript/OPjavaScriptV8.h"
 #include "./Pipeline/include/Loaders/OPloaderOPskeleton.h"
@@ -23,16 +24,16 @@ void ApplicationInit() {
 	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 }
 
-int ApplicationUpdate(OPtimer* timer) {	
+int ApplicationUpdate(OPtimer* timer) {
 
 	OPinputSystemUpdate(timer);
 	OPcmanUpdate(timer);
 
-	if (OPkeyboardWasReleased(OPKEY_ESCAPE)) return 1;	
+	if (OPkeyboardWasReleased(OPKEY_ESCAPE)) return 1;
 	if ((OPkeyboardWasReleased(OPKEY_BACKSPACE) || OPgamePadWasPressed(OPgamePadGet(OPGAMEPAD_ONE), OPGAMEPADBUTTON_BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
 		OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 	}
-	
+
 	return ActiveState->Update(timer);
 }
 

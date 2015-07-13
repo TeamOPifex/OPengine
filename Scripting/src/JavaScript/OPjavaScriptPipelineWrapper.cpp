@@ -8,6 +8,7 @@ void OPscriptNodeWrapperPipeline(Handle<Object> exports) {
     OPvoxelGeneratorWrapper(exports);
     OPtexture2DWrapper(exports);
     OPloaderWrapper(exports);
+    OPloaderVoxelsWrapper(exports);
 }
 
 #endif

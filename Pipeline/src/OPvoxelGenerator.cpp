@@ -172,16 +172,20 @@ void addBackSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data
 	addSide(gen, data);
 }
 
-void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, OPvec4 bones, OPvec4 weights, OPvec3 offset, OPfloat scale) {
+void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, i8 center, OPvec4 bones, OPvec4 weights, OPvec3 offset, OPfloat scale) {
 
 	bool generate[6];
 	OPvoxelGeneratorData data;
 	data.Size = 0.5f;
-	data.Offset = OPvec3Create(
-		-(OPint)voxelData.size.x / 2.0,
-		-(OPint)voxelData.size.y / 2.0,
-		-(OPint)voxelData.size.z / 2.0
-		);
+	if(center) {
+		data.Offset = OPvec3Create(
+			-(OPint)voxelData.size.x / 2.0,
+			-(OPint)voxelData.size.y / 2.0,
+			-(OPint)voxelData.size.z / 2.0
+			);
+	} else {
+		data.Offset = OPVEC3_ZERO;
+	}
 
 	data.Offset += offset;
 
@@ -202,7 +206,6 @@ void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData
 				if (v.x == 0 && v.y == 0 && v.z == 0) continue;
 
 				// Otherwise, this Voxel is not empty
-				OPlog("Found");
 
 				data.Color = OPvec3Create(v.x / 255.0, v.y / 255.0, v.z / 255.0);
 

@@ -36,6 +36,7 @@
                  "../OPengine/Scripting/src/JavaScript/OPjavaScriptCommunicationWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/OPjavaScriptPipelineWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Pipeline/OPloaderWrapper.cpp",
+                 "../OPengine/Scripting/src/JavaScript/Pipeline/OPloaderVoxelsWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Pipeline/OPvoxelGeneratorWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Pipeline/OPtexture2DWrapper.cpp"
             ],

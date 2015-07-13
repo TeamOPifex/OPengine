@@ -33,13 +33,14 @@ OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 
 	OPfont* _font = (OPfont*)OPcmanLoadGet(font);
 	OPfontManager* manager = OPfontManagerCreate(_font);
 	manager->scale = 1.0;
+	manager->_color = OPvec4Create(1,1,1,1);
 	OPfontManagerBind(manager);
 	for (ui16 i = 0; i < count; i++) {
 		OPfontManagerAddText(text[i]);
 	}
 	OPfontManagerBuild();
 	OPFONTMANAGER_ACTIVE = NULL;
-	
+
 	return manager;
 }
 

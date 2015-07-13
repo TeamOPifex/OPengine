@@ -14,6 +14,7 @@ void OPmat4Wrapper(Handle<Object> exports);
 
 #include "./Math/include/OPvec3.h"
 
+void OPmat4WrapperCreate(Handle<Object> result, OPmat4* ptr);
 Handle<Object> OPvec3WrapperSetup(Handle<Object> result, OPvec3* ptr);
 
 #define OPVEC3WRAPPERSETUP(target, name, ptr) JS_SET_OBJECT(target, name, OPvec3WrapperSetup(JS_NEW_OBJECT(), ptr));

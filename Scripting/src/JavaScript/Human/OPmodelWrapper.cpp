@@ -75,6 +75,10 @@ void OPmodelWrapperCreate(Handle<Object> result, OPmodel* model) {
     JS_SET_METHOD(result, "Bind", _OPmodelBindSelf);
     JS_SET_METHOD(result, "Draw", _OPmodelDrawSelf);
     JS_SET_NUMBER(result, "size", sizeof(OPmodel));
+
+    Handle<Object> world = JS_NEW_OBJECT();
+    OPmat4WrapperCreate(world, &model->world);
+    JS_SET_OBJECT(result, "world", world);
 }
 
 JS_RETURN_VAL _OPmodelCreate(const JS_ARGS& args) {

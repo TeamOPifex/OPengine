@@ -50,10 +50,59 @@ JS_RETURN_VAL _OPrenderSize(const JS_ARGS& args) {
 
     JS_RETURN(obj);
 }
+
+JS_RETURN_VAL _OPrenderCull(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPrenderCull(args[0]->IntegerValue());
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPrenderCullMode(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPrenderCullMode(args[0]->IntegerValue());
+
+    JS_RETURN_NULL;
+}
+
 JS_RETURN_VAL _OPrenderDepth(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPrenderDepth(args[0]->IntegerValue());
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPrenderDepthWrite(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPrenderDepthWrite(args[0]->IntegerValue());
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPrenderBlend(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPrenderBlend(args[0]->IntegerValue());
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPrenderBlendAlpha(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPrenderBlendAlpha();
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPrenderBlendAdditive(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPrenderBlendAdditive();
 
     JS_RETURN_NULL;
 }
@@ -66,7 +115,13 @@ void OPrenderWrapper(Handle<Object> exports) {
     JS_SET_METHOD(render, "Clear", _OPrenderClear);
     JS_SET_METHOD(render, "Present", _OPrenderPresent);
     JS_SET_METHOD(render, "Size", _OPrenderSize);
+    JS_SET_METHOD(render, "Cull", _OPrenderCull);
+    JS_SET_METHOD(render, "CullMode", _OPrenderCullMode);
     JS_SET_METHOD(render, "Depth", _OPrenderDepth);
+    JS_SET_METHOD(render, "DepthWrite", _OPrenderDepthWrite);
+    JS_SET_METHOD(render, "Blend", _OPrenderBlend);
+    JS_SET_METHOD(render, "BlendAlpha", _OPrenderBlendAlpha);
+    JS_SET_METHOD(render, "BlendAdditive", _OPrenderBlendAdditive);
     JS_SET_OBJECT(exports, "render", render);
 
 }

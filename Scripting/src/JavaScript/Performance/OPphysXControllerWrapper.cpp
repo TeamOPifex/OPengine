@@ -30,6 +30,10 @@ JS_RETURN_VAL _OPphysXControllerCreate(const JS_ARGS& args) {
 	Handle<Object> result = JS_NEW_OBJECT();
 	JS_SET_PTR(result, ptr);
 
+	Handle<Object> actor = JS_NEW_OBJECT();
+	JS_SET_PTR(actor, ptr->getActor());
+	JS_SET_OBJECT(result, "actor", actor);
+
 	JS_RETURN(result);
 }
 
@@ -62,9 +66,10 @@ JS_RETURN_VAL _OPphysXControllerGetFootPos(const JS_ARGS& args) {
     OPphysXController* controller = JS_GET_ARG_PTR(args, 0, OPphysXController);
 	OPvec3 result = OPphysXControllerGetFootPos(controller);
 
-	OPvec3* ptr = (OPvec3*)OPalloc(sizeof(OPvec3));
 	Handle<Object> obj = JS_NEW_OBJECT();
-	OPvec3WrapperSetup(obj, ptr);
+	JS_SET_NUMBER(obj, "x", result.x);
+	JS_SET_NUMBER(obj, "y", result.y);
+	JS_SET_NUMBER(obj, "z", result.z);
 
 	JS_RETURN(obj);
 }

@@ -19,7 +19,7 @@ OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OP
 
 	OPphysXController* result = manager->createController(desc);
 
-	result->getActor()->setGlobalPose(PxTransform());
+	result->getActor()->setGlobalPose(PxTransform(PxVec3(0,0,0)));
 	return result;
 }
 OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OPphysXMaterial* material, OPfloat height, OPfloat radius) {

@@ -34,7 +34,7 @@ void _SetGamePadMap(Handle<Object> buttons) {
     }
 }
 
-JS_RETURN_VAL _OPgamePadWasPressed(const JS_ARGS& args) {
+JS_RETURN_VAL _OPgamePadWasPressedSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
@@ -59,6 +59,27 @@ JS_RETURN_VAL _OPgamePadIsConnectedSelf(const JS_ARGS& args) {
     JS_RETURN(JS_NEW_BOOL(OPgamePadIsConnected(ptr)));
 }
 
+JS_RETURN_VAL _OPgamePadIsDownSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+    OPgamePadButton btn = (OPgamePadButton)args[0]->IntegerValue();
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadIsDown(ptr, btn)));
+}
+
+JS_RETURN_VAL _OPgamePadLeftThumbSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+
+    Handle<Object> result = JS_NEW_OBJECT();
+    JS_SET_NUMBER(result, "x", OPgamePadLeftThumbX(ptr));
+    JS_SET_NUMBER(result, "y", OPgamePadLeftThumbY(ptr));
+
+    JS_RETURN(result);
+}
+
 JS_RETURN_VAL _OPgamePadUpdate(const JS_ARGS& args) {
     OPgamePadSystemUpdate();
     JS_RETURN_NULL;
@@ -76,8 +97,10 @@ void _OPgamePadSetup(Handle<Object> result, OPgamePad* controller) {
     SCOPE_AND_ISOLATE
 
     JS_SET_PTR(result, controller);
-    JS_SET_METHOD(result, "WasPressed", _OPgamePadWasPressed);
+    JS_SET_METHOD(result, "WasPressed", _OPgamePadWasPressedSelf);
     JS_SET_METHOD(result, "IsConnected", _OPgamePadIsConnectedSelf);
+    JS_SET_METHOD(result, "LeftThumb", _OPgamePadLeftThumbSelf);
+    JS_SET_METHOD(result, "IsDown", _OPgamePadIsDownSelf);
 
 }
 

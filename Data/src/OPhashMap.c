@@ -103,29 +103,19 @@ OPint OPhashMapExists(const OPhashMap *map, const OPchar *key)
 	Bucket* bucket;
 	KeyValuePair* pair;
 
-	OPlog("Check to see if key is in Hashmap");
-
 	if (map == NULL) return 0;	
 	if (key == NULL) return 0;
 
-	OPlog("Values are good to check");
-	OPlog("Total count in hashmap: %d", map->count);
-
 	index = hash(key) % map->count;
 
-	OPlog("This is the index: %d", index);
 
 	bucket = &(map->buckets[index]);
 
-	OPlog("found the bucket");
 
 	pair = get_pair(bucket, key);
 
-	OPlog("Fiding the pair");
 
 	if (pair == NULL) return 0;
-	
-	OPlog("The pair was found");
 
 	return 1;
 }
@@ -247,7 +237,6 @@ static KeyValuePair * get_pair(Bucket *bucket, const OPchar *key)
 // The key 'str' must have a length longer than 4 characters, or behavior is undefined
 static ui64 hash(const OPchar* str)
 {
-	OPlog("Running hash");
 
 	ui64 hash = 0xA1F9B450;
 	OPint i = 0;
@@ -257,8 +246,6 @@ static ui64 hash(const OPchar* str)
 		c = *(++str);
 		++i;
 	}while (c || i < 4);
-
-	OPlog("Found the hash");
 
 	return hash;
 }
