@@ -11,6 +11,8 @@ void OPloaderVoxelsWrapper(Handle<Object> exports);
 void OPvoxelGeneratorWrapper(Handle<Object> exports);
 void OPtexture2DWrapper(Handle<Object> exports);
 void OPloaderWrapper(Handle<Object> exports);
+void OPsprite2DWrapper(Handle<Object> exports);
+void OPspriteSystemWrapper(Handle<Object> exports);
 
 #endif
 

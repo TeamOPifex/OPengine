@@ -45,17 +45,23 @@ JS_RETURN_VAL _OPvec2Set(const JS_ARGS& args) {
     JS_RETURN_NULL;
 }
 
+void OPvec2WrapperCreate(Handle<Object> result, OPvec2* ptr) {
+  SCOPE_AND_ISOLATE;
+
+  JS_SET_PTR(result, ptr);
+
+  JS_SET_METHOD(result, "Log", _OPvec2LogSelf);
+  JS_SET_METHOD(result, "Set", _OPvec2SetSelf);
+}
+
 JS_RETURN_VAL _OPvec2Create(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvec2* ptr = (OPvec2*)OPalloc(sizeof(OPvec2));
     *ptr = OPVEC2_ZERO;
     Handle<Object> result = JS_NEW_OBJECT();
-    JS_SET_PTR(result, ptr);
-
-    JS_SET_METHOD(result, "Log", _OPvec2LogSelf);
-    JS_SET_METHOD(result, "Set", _OPvec2SetSelf);
-
+    OPvec2WrapperCreate(result, ptr);
+    
     JS_RETURN(result);
 }
 

@@ -87,7 +87,7 @@ JS_RETURN_VAL _OPcamSetTarget(const JS_ARGS& args) {
 
 JS_RETURN_VAL _OPcamPersp(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
-    
+
     OPcam* ptr = (OPcam*)OPallocZero(sizeof(OPcam));
 
     *ptr = OPcamPersp(
@@ -118,13 +118,48 @@ JS_RETURN_VAL _OPcamPersp(const JS_ARGS& args) {
     JS_RETURN(result);
 }
 
+JS_RETURN_VAL _OPcamOrtho(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPcam* ptr = (OPcam*)OPallocZero(sizeof(OPcam));
+
+    *ptr = OPcamOrtho(
+            OPvec3Create(
+                    args[0]->NumberValue(),
+                    args[1]->NumberValue(),
+                    args[2]->NumberValue()
+            ),
+            OPvec3Create(
+                    args[3]->NumberValue(),
+                    args[4]->NumberValue(),
+                    args[5]->NumberValue()
+            ),
+            OPvec3Create(
+                    args[6]->NumberValue(),
+                    args[7]->NumberValue(),
+                    args[8]->NumberValue()
+            ),
+            args[9]->NumberValue(),
+            args[10]->NumberValue(),
+            args[11]->IntegerValue(),
+            args[12]->IntegerValue(),
+            args[13]->IntegerValue(),
+            args[14]->IntegerValue()
+    );
+
+    Handle<Object> result = JS_NEW_OBJECT();
+    OPcamWrapperCreate(result, ptr);
+
+    JS_RETURN(result);
+}
+
 void OPcamWrapperCreate(Handle<Object> result, OPcam* ptr) {
     SCOPE_AND_ISOLATE;
-    
+
     JS_SET_PTR(result, ptr);
 
     JS_SET_METHOD(result, "UpdateView", _OPcamUpdateViewSelf);
-    JS_SET_METHOD(result, "UpdateProj", _OPcamUpdateProjSelf); 
+    JS_SET_METHOD(result, "UpdateProj", _OPcamUpdateProjSelf);
     JS_SET_METHOD(result, "SetPos", _OPcamSetPosSelf);
     JS_SET_METHOD(result, "SetTarget", _OPcamSetTargetSelf);
 }
@@ -145,6 +180,7 @@ void OPcamWrapper(Handle<Object> exports) {
     Local<FunctionTemplate> tpl = JS_NEW_FUNCTION_TEMPLATE(_OPcamCreate);
     Handle<Object> cam = tpl->GetFunction();
     JS_SET_METHOD(cam, "Persp", _OPcamPersp);
+    JS_SET_METHOD(cam, "Ortho", _OPcamOrtho);
     JS_SET_METHOD(cam, "UpdateView", _OPcamUpdateView);
     JS_SET_METHOD(cam, "UpdateProj", _OPcamUpdateProj);
     JS_SET_METHOD(cam, "SetPos", _OPcamSetPos);

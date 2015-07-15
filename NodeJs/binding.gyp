@@ -25,6 +25,8 @@
                  "../OPengine/Scripting/src/JavaScript/Human/OPcubeWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPeffectWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPfontWrapper.cpp",
+                 "../OPengine/Scripting/src/JavaScript/Human/OPfontManagerWrapper.cpp",
+                 "../OPengine/Scripting/src/JavaScript/Human/OPfontRenderWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPgamePadWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPkeyboardWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPmaterialWrapper.cpp",
@@ -38,7 +40,9 @@
                  "../OPengine/Scripting/src/JavaScript/Pipeline/OPloaderWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Pipeline/OPloaderVoxelsWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Pipeline/OPvoxelGeneratorWrapper.cpp",
-                 "../OPengine/Scripting/src/JavaScript/Pipeline/OPtexture2DWrapper.cpp"
+                 "../OPengine/Scripting/src/JavaScript/Pipeline/OPtexture2DWrapper.cpp",
+                 "../OPengine/Scripting/src/JavaScript/Pipeline/OPsprite2DWrapper.cpp",
+                 "../OPengine/Scripting/src/JavaScript/Pipeline/OPspriteSystemWrapper.cpp"
             ],
             "include_dirs": [
                 "@PROJECT_SOURCE_DIR@/",

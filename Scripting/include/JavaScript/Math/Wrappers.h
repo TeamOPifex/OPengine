@@ -14,6 +14,7 @@ void OPmat4Wrapper(Handle<Object> exports);
 
 #include "./Math/include/OPvec3.h"
 
+void OPvec2WrapperCreate(Handle<Object> result, OPvec2* ptr);
 void OPmat4WrapperCreate(Handle<Object> result, OPmat4* ptr);
 Handle<Object> OPvec3WrapperSetup(Handle<Object> result, OPvec3* ptr);
 

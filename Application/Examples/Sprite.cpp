@@ -21,7 +21,7 @@ void ExampleSpriteEnter(OPgameState* last) {
 
 OPint ExampleSpriteUpdate(OPtimer* time) {
 
-	OPsprite2DUpdate(spriteExample.sprite2D, time); 
+	OPsprite2DUpdate(spriteExample.sprite2D, time);
 
 	OPrenderClear(0,0,0);
 

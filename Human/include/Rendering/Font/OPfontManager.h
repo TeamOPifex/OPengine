@@ -7,9 +7,9 @@
 #include "./Data/include/OPhashMap.h"
 
 //-----------------------------------------------------------------------------
-//   _____ _                   _       
-//  / ____| |                 | |      
-// | (___ | |_ _ __ _   _  ___| |_ ___ 
+//   _____ _                   _
+//  / ____| |                 | |
+// | (___ | |_ _ __ _   _  ___| |_ ___
 //  \___ \| __| '__| | | |/ __| __/ __|
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
@@ -28,7 +28,7 @@ typedef enum {
 typedef struct {
 	OPfontUserTextNode dummyMesh;
 	OPfont* _font;
-	OPvec4 _color; 
+	OPvec4 _color;
 	OPfontAlign _align;
 
 	OPvector* currNodes;
@@ -44,9 +44,9 @@ typedef struct {
 
 
 //-----------------------------------------------------------------------------
-//   _____ _       _           _     
-//  / ____| |     | |         | |    
-// | |  __| | ___ | |__   __ _| |___ 
+//   _____ _       _           _
+//  / ____| |     | |         | |
+// | |  __| | ___ | |__   __ _| |___
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
@@ -57,9 +57,9 @@ extern OPeffect* OPFONTMANAGER_EFFECT2D_ACTIVE;
 
 
 //-----------------------------------------------------------------------------
-// ______                _   _                 
-//|  ____|              | | (_)                
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+// ______                _   _
+//|  ____|              | | (_)
+//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
@@ -68,7 +68,7 @@ OPfontManager* OPfontManagerCreate(OPfont* font);
 OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 count);
 
 void OPfontManagerAddText(const OPchar* text);
-void OPfontManagerBuild(); 
+void OPfontManagerBuild();
 void OPfontManagerDestroy(OPfontManager* font);
 
 void OPfontManagerSetColor(OPfontManager* manager, f32 r, f32 g, f32 b, f32 a);

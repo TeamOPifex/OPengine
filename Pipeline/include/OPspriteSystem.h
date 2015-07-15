@@ -40,7 +40,7 @@ typedef struct {
 
 void OPspriteSystemEffectDefault(OPeffect* effect);
 void OPspriteSystemInit(OPspriteSystem* system, OPsprite** sprites, OPint count, OPeffect* effect, OPspriteSystemAlign alignment);
-OPspriteSystem* OPspriteSystemCreate(OPint count, OPeffect* effect, OPspriteSystemAlign alignment);
+OPspriteSystem* OPspriteSystemCreate(OPsprite** sprites, OPint count, OPeffect* effect, OPspriteSystemAlign alignment);
 OPspriteSystemSprite* OPspriteSystemAdd(OPspriteSystem* system);
 void OPspriteSystemRemove(OPspriteSystem* system, OPspriteSystemSprite* sprite);
 void OPspriteSystemUpdate(OPspriteSystem* system, OPtimer* timer);

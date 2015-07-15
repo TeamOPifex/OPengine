@@ -15,7 +15,7 @@ JS_RETURN_VAL _OPtexture2DCreate(const JS_ARGS& args) {
     if(args.Length() > 1) {
       effect = JS_GET_ARG_PTR(args, 1, OPeffect);
     }
-    
+
     OPtexture2D* tex2d;
 
     if(args.Length() > 2) {
@@ -27,9 +27,9 @@ JS_RETURN_VAL _OPtexture2DCreate(const JS_ARGS& args) {
     Handle<Object> result = JS_NEW_OBJECT();
     JS_SET_PTR(result, tex2d);
 
-    Handle<Object> scale = JS_NEW_OBJECT();
-    JS_SET_PTR(scale, &tex2d->Scale);
-    JS_SET_OBJECT(result, "Scale", scale);
+    Handle<Object> Scale = JS_NEW_OBJECT();
+    OPvec2WrapperCreate(Scale, &tex2d->Scale);
+    JS_SET_OBJECT(result, "Scale", Scale);
 
     JS_RETURN(result);
 }

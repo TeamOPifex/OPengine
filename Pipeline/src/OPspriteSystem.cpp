@@ -12,7 +12,12 @@ void OPspriteSystemEffectDefault(OPeffect* effect) {
 }
 
 void OPspriteSystemInit(OPspriteSystem* system, OPsprite** sprites, OPint count, OPeffect* effect, OPspriteSystemAlign alignment) {
-	system->Effect = effect;
+	if(effect == NULL) {
+		system->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
+		OPspriteSystemEffectDefault(system->Effect);
+	} else {
+		system->Effect = effect;
+	}
 	system->SystemSprites = (OPspriteSystemSprite*)OPallocZero(sizeof(OPspriteSystemSprite)* count);
 	system->Count = 0;
 	system->Sprites = sprites;

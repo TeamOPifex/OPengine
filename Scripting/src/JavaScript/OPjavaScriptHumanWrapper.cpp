@@ -10,6 +10,8 @@ void OPscriptNodeWrapperHuman(Handle<Object> exports) {
     OPcubeWrapper(exports);
     OPeffectWrapper(exports);
     OPfontWrapper(exports);
+    OPfontManagerWrapper(exports);
+    OPfontRenderWrapper(exports);
     OPgamePadWrapper(exports);
     OPkeyboardWrapper(exports);
     OPmaterialWrapper(exports);
