@@ -13,6 +13,7 @@ void OPtexture2DWrapper(Handle<Object> exports);
 void OPloaderWrapper(Handle<Object> exports);
 void OPsprite2DWrapper(Handle<Object> exports);
 void OPspriteSystemWrapper(Handle<Object> exports);
+void OPfmodWrapper(Handle<Object> exports);
 
 #endif
 

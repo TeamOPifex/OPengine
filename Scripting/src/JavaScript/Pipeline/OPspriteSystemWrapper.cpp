@@ -71,14 +71,15 @@ JS_RETURN_VAL _OPspriteSystemRemove(const JS_ARGS& args) {
     JS_RETURN_NULL
 }
 
-// JS_RETURN_VAL _OPspriteSystemDestroy(const JS_ARGS& args) {
-//     SCOPE_AND_ISOLATE
-//
-//     OPspriteSystem* ptr = JS_GET_ARG_PTR(args, 0, OPspriteSystem);
-//     OPspriteSystemDestroy(ptr);
-//
-//     JS_RETURN_NULL
-// }
+JS_RETURN_VAL _OPspriteSystemDestroy(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPspriteSystem* ptr = JS_GET_ARG_PTR(args, 0, OPspriteSystem);
+    OPfree(ptr->Sprites);
+    OPspriteSystemDestroy(ptr);
+
+    JS_RETURN_NULL
+}
 
 JS_RETURN_VAL _OPspriteSystemUpdate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
@@ -133,7 +134,7 @@ void OPspriteSystemWrapper(Handle<Object> exports) {
     JS_SET_METHOD(result, "Update", _OPspriteSystemUpdate);
     JS_SET_METHOD(result, "Render", _OPspriteSystemRender);
     JS_SET_METHOD(result, "SetSprite", _OPspriteSystemSetSprite);
-    //JS_SET_METHOD(result, "Destroy", _OPspriteSystemDestroy);
+    JS_SET_METHOD(result, "Destroy", _OPspriteSystemDestroy);
     JS_SET_METHOD(result, "Current", _OPspriteSystemCurrent);
     JS_SET_NUMBER(result, "size", sizeof(OPspriteSystem));
     JS_SET_OBJECT(exports, "spriteSystem", result);

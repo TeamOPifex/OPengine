@@ -8,13 +8,13 @@
 #include "./Data/include/OPstring.h"
 #include "./Core/include/OPdir.h"
 
-//  _____ _       _           _     
-// / ____| |     | |         | |    
-//| |  __| | ___ | |__   __ _| |___ 
+//  _____ _       _           _
+// / ____| |     | |         | |
+//| |  __| | ___ | |__   __ _| |___
 //| | |_ | |/ _ \| '_ \ / _` | / __|
 //| |__| | | (_) | |_) | (_| | \__ \
 // \_____|_|\___/|_.__/ \__,_|_|___/
-//                                  
+//
 OPhashMap OP_CMAN_HASHMAP;
 OPassetLoader* OP_CMAN_ASSETLOADERS;
 OPint OP_CMAN_ASSET_LOADER_COUNT;
@@ -69,13 +69,13 @@ void OPcmanAddLoader(OPassetLoader* loader) {
 	OPlistPush(_OP_CMAN_ASSETLOADERS, (ui8*)loader);
 }
 
-// ______                _   _                 
-//|  ____|              | | (_)                
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+// ______                _   _
+//|  ____|              | | (_)
+//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-//                                                                                    
+//
 // Specifies how assets will be loaded for each file type
 OPint OPcmanInit(const OPchar* dir){
 
@@ -83,7 +83,7 @@ OPint OPcmanInit(const OPchar* dir){
 	OPint i;
 	OPassetLoader* loader;
 
-	result = 0; 
+	result = 0;
 	i = 0;
 
 
@@ -131,10 +131,9 @@ OPint OPcmanInit(const OPchar* dir){
 	OP_CMAN_ASSET_FOLDER = OPdirCurrent();
 #endif
 
-	
+
 	// create and copy the hashmap
 	OPhashMapInit(&OP_CMAN_HASHMAP, OP_CMAN_CAP);
-	OPlog("Total count in hashmap: %d", OP_CMAN_HASHMAP.count);
 
 	// create and copy the purge list
 	OP_CMAN_PURGE = OPllCreate();
@@ -144,14 +143,10 @@ OPint OPcmanInit(const OPchar* dir){
 
 // checks to see if an asset is loaded, triggers the load or unload.
 OPint OPcmanIsLoaded(const OPchar* key){
-	OPlog("Check if %s is loaded.", key);
-	OPlog("Total count in hashmap: %d", OP_CMAN_HASHMAP.count);
 	return OPhashMapExists(&OP_CMAN_HASHMAP, key);
 }
 
 OPint OPcmanLoad(const OPchar* key){
-
-	OPlog("Load %s", key);
 
 	const OPchar* ext = NULL;
 	OPint success = 0;
@@ -173,7 +168,7 @@ OPint OPcmanLoad(const OPchar* key){
 	if(ext){
 		OPint i = 0, extLen = strlen(ext);
 		extLen = extLen <= 8 ? extLen : 8;
-		
+
 		for (i = OP_CMAN_ASSET_LOADER_COUNT; i--;){
 			if(OPmemcmp(OP_CMAN_ASSETLOADERS[i].Extension, ext, extLen) == 0){
 				OPasset* assetBucket = NULL;
@@ -191,7 +186,6 @@ OPint OPcmanLoad(const OPchar* key){
 				fullPath = strcat(fullPath, loader.AssetTypePath);
 				fullPath = strcat(fullPath, key);
 
-				OPlog("Path to load %s", fullPath);
 				// load the asset
 				asset = NULL;
 				success = loader.Load(fullPath, &asset);
@@ -222,7 +216,7 @@ OPint OPcmanLoad(const OPchar* key){
 				assetBucket->AbsolutePath = OPstringCreateMerged(OP_CMAN_ASSET_FOLDER, fullPath);
 				assetBucket->LastChange = OPfileLastChange(assetBucket->AbsolutePath);
 #endif
-				
+
 				// finally insert into the hashmap
 				if(OPhashMapPut(&OP_CMAN_HASHMAP, key, assetBucket))
 					return 1;

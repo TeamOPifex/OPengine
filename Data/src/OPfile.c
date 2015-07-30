@@ -11,7 +11,7 @@
 #endif
 
 #ifdef OPIFEX_UNIX
-#include <sys/stat.h> 
+#include <sys/stat.h>
 #include <unistd.h>
 #endif
 
@@ -72,13 +72,13 @@ OPfileInformation OPreadFileInformation(const char* path){
 	OPfileInformation file;
 
 #ifdef OPIFEX_ANDROID
-	//AAssetManager* mgr = AAssetManager_fromJava(JNIEnvironment(), JNIAssetManager()); 
+	//AAssetManager* mgr = AAssetManager_fromJava(JNIEnvironment(), JNIAssetManager());
 	AAsset* asset = AAssetManager_open(OPAndroidState->activity->assetManager, path, AASSET_MODE_UNKNOWN);
 
 	off_t _start, _length;
     int fd = AAsset_openFileDescriptor(asset, &_start, &_length);
 
-    FILE* myFile = fdopen(dup(fd), "rb"); 
+    FILE* myFile = fdopen(dup(fd), "rb");
 	if(!myFile){
 		OPlog("File not loaded: %s\n", path);
 	}
@@ -100,7 +100,7 @@ OPfileInformation OPreadFileInformation(const char* path){
 		OPlog(buff);
 		return file;
 	}
-	fseek(myFile, 0, SEEK_END );	
+	fseek(myFile, 0, SEEK_END );
 	file.length = ftell( myFile );
 	fseek(myFile, 0, SEEK_SET);
 	file.file = myFile;
@@ -116,7 +116,7 @@ OPfileInformation OPreadFileInformation(const char* path){
 OPint OPwriteFile(const char* path, OPstream* stream){
 #if defined(OPIFEX_UNIX)
 	OPint fd = 0;
-	
+
 	// be sure that the file could be opened successfully
 	if((fd = open(path, O_CREAT|O_WRONLY|O_TRUNC)) > 0){
 		// write the entire stream in one go.
@@ -134,8 +134,7 @@ OPint OPwriteFile(const char* path, OPstream* stream){
 }
 
 OPstream* OPreadFile(const char* path) {
-    OPlog("OPreadFile");
-	return OPreadFileLarge(path, 32);
+    return OPreadFileLarge(path, 32);
 }
 
 
@@ -144,32 +143,30 @@ OPstream* OPreadFile(const char* path) {
 
 //-----------------------------------------------------------------------------
 OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
-    OPlog("Read File");
 
 #ifdef OPIFEX_ANDROID
-	OPlog("OPreadFile: %s\n", path);
 	AAsset* asset = AAssetManager_open(OPAndroidState->activity->assetManager, path, AASSET_MODE_UNKNOWN);
 	if (asset == NULL){
 		OPlog("OPreadFile: Asset man creation failed.\n");
-		return 0;	
+		return 0;
 	}
 
 	off_t start, length;
     int fd = AAsset_openFileDescriptor(asset, &start, &length);
-	
-    FILE* myFile = fdopen(dup(fd), "rb"); 
+
+    FILE* myFile = fdopen(dup(fd), "rb");
 	fseek(myFile, start, SEEK_SET);
-	
+
 	OPstream* str = OPstreamCreate(length);
 
 	// write the entire file into a stream
 	ui8* byte = OPalloc(sizeof(ui8) * length);
 	while(fread(byte, sizeof(ui8), length, myFile)){
 		OPwrite(str, byte, length);
-	}	
+	}
 	str->Data[length] = 0;
 
-	fclose(myFile); 
+	fclose(myFile);
 	OPseek(str, 0);
 	return str;
 
@@ -178,7 +175,6 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 	if(OPfileExists(path) >= 0){
 		OPint fd = 0;
 
-		OPlog("OPreadFile: %s", path);
 		fd = open(path, O_RDONLY);
 		// be sure that the file could be opened successfully
 	 	if(fd){
@@ -193,7 +189,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 				OPwrite(str, bytes, readBytes);
 			}
 			OPfree(bytes);
-			close(fd); 
+			close(fd);
 			OPseek(str, 0);
 
 			// finally return the stream
@@ -203,19 +199,18 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 	else{
 		OPlog("%s does not exist\n", path);
 		return NULL;
-	}	
+	}
 #elif defined(OPIFEX_WINDOWS)
 	// windows implementation
 	OPint fd = 0, i;
 	// check to see if the file exists
 	if(OPfileExists(path) > 0) {
-		OPlog("OPreadFile: %s", path);
- 
+
 		// be sure that the file could be opened successfully
 	 	if(!_sopen_s(&fd, path, _O_BINARY|_O_RDONLY, _SH_DENYWR, _S_IREAD)){
 			ui8 byte = 0;
 			OPstream* str = OPstreamCreate(expectedSize);
-			
+
 			ui8* bytes = (ui8*)OPalloc(1024);
 			ui32 readBytes = 1;
 			// write the entire file into a stream
@@ -224,7 +219,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 				OPwrite(str, bytes, readBytes);
 			}
 			OPfree(bytes);
-			close(fd); 
+			close(fd);
 			OPseek(str, 0);
 
 			// finally return the stream
@@ -272,7 +267,7 @@ OPint OPdeleteFile(const char* path){
 }
 
 ui64 OPfileLastChange(const OPchar* path) {
-#ifdef OPIFEX_WINDOWS	
+#ifdef OPIFEX_WINDOWS
 	ULONGLONG rtn;
 	HANDLE hFile = CreateFile(path, GENERIC_READ,
 		FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
@@ -304,7 +299,7 @@ OPfile OPfileOpen(const OPchar* path) {
 #if defined(OPIFEX_UNIX)
 	OPint fd = 0;
 	OPfile file = { 0 };
-	
+
 	// be sure that the file could be opened successfully
 	fd = open(path, O_RDWR | O_CREAT | O_TRUNC);
 	if(fd == 0) return file;
@@ -406,7 +401,7 @@ OPchar* OPfileReadString(OPfile* file) {
 }
 
 void* OPfileReadBytes(OPfile* file, ui64 bytesToRead) {
-	void* bytes = OPalloc(bytesToRead); 
+	void* bytes = OPalloc(bytesToRead);
 #ifdef OPIFEX_WINDOWS
 	OPint bytesRead = fread(bytes, sizeof(OPchar), bytesToRead, file->_handle);
 #else

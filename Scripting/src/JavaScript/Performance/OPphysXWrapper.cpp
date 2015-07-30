@@ -63,12 +63,12 @@ JS_RETURN_VAL _OPphysXAddSphereShape(const JS_ARGS& args) {
     OPphysXRigidActor* actor = JS_GET_ARG_PTR(args, 0, OPphysXRigidActor);
     OPphysXMaterial* material = JS_GET_ARG_PTR(args, 1, OPphysXMaterial);
     OPfloat size = args[2]->NumberValue();
-	OPphysXShape* ptr = OPphysXAddSphereShape(actor, material, size);
+  	OPphysXShape* ptr = OPphysXAddSphereShape(actor, material, size);
 
-	Handle<Object> result = JS_NEW_OBJECT();
-	JS_SET_PTR(result, ptr);
+  	Handle<Object> result = JS_NEW_OBJECT();
+  	JS_SET_PTR(result, ptr);
 
-	JS_RETURN(result);
+  	JS_RETURN(result);
 }
 
 JS_RETURN_VAL _OPphysXAddBoxShape(const JS_ARGS& args) {
@@ -77,12 +77,14 @@ JS_RETURN_VAL _OPphysXAddBoxShape(const JS_ARGS& args) {
     OPphysXRigidActor* actor = JS_GET_ARG_PTR(args, 0, OPphysXRigidActor);
     OPphysXMaterial* material = JS_GET_ARG_PTR(args, 1, OPphysXMaterial);
     OPvec3* size = JS_GET_ARG_PTR(args, 2, OPvec3);
-	OPphysXShape* ptr = OPphysXAddBoxShape(actor, material, *size);
+  	OPphysXShape* ptr = OPphysXAddBoxShape(actor, material, *size);
 
-	Handle<Object> result = JS_NEW_OBJECT();
-	JS_SET_PTR(result, ptr);
+    OPlog("Adding BOX %p", ptr);
 
-	JS_RETURN(result);
+  	Handle<Object> result = JS_NEW_OBJECT();
+  	JS_SET_PTR(result, ptr);
+
+  	JS_RETURN(result);
 }
 
 JS_RETURN_VAL _OPphysXAddPlaneShape(const JS_ARGS& args) {
@@ -117,6 +119,18 @@ JS_RETURN_VAL _OPphysXShapeBoxColliding(const JS_ARGS& args) {
     OPvec3* size = JS_GET_ARG_PTR(args, 2, OPvec3);
     OPvec3* pos = JS_GET_ARG_PTR(args, 3, OPvec3);
     i8 r = OPphysXShapeBoxColliding(actor, shape, *size, *pos);
+
+	  JS_RETURN(JS_NEW_NUMBER(r));
+}
+
+JS_RETURN_VAL _OPphysXTransformBoxColliding(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPmat4* transform = JS_GET_ARG_PTR(args, 0, OPmat4);
+    OPphysXShape* shape = JS_GET_ARG_PTR(args, 1, OPphysXShape);
+    OPvec3* size = JS_GET_ARG_PTR(args, 2, OPvec3);
+    OPvec3* pos = JS_GET_ARG_PTR(args, 3, OPvec3);
+    i8 r = OPphysXShapeBoxColliding(*transform, shape, *size, *pos);
 
 	  JS_RETURN(JS_NEW_NUMBER(r));
 }
@@ -253,12 +267,12 @@ JS_RETURN_VAL _OPphysXGetShape(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPphysXRigidActor* actor = JS_GET_ARG_PTR(args, 0, OPphysXRigidActor);
-	OPphysXShape* ptr = OPphysXGetShape(actor, args[1]->IntegerValue());
+  	OPphysXShape* ptr = OPphysXGetShape(actor, args[1]->IntegerValue());
 
-	Handle<Object> result = JS_NEW_OBJECT();
-	JS_SET_PTR(result, ptr);
+  	Handle<Object> result = JS_NEW_OBJECT();
+  	JS_SET_PTR(result, ptr);
 
-	JS_RETURN(result);
+  	JS_RETURN(result);
 }
 
 JS_RETURN_VAL _OPphysXShapeSetPose(const JS_ARGS& args) {
@@ -289,6 +303,7 @@ void OPphysXWrapper(Handle<Object> exports) {
 	JS_SET_METHOD(physX, "Shutdown", _OPphysXShutdown);
 	JS_SET_METHOD(physX, "BoxColliding", _OPphysXBoxColliding);
 	JS_SET_METHOD(physX, "ShapeBoxColliding", _OPphysXShapeBoxColliding);
+	JS_SET_METHOD(physX, "TransformBoxColliding", _OPphysXTransformBoxColliding);
 	JS_SET_METHOD(physX, "ShapeSetPose", _OPphysXShapeSetPose);
 
 	JS_SET_METHOD(physX, "SetMass", _OPphysXSetMass);

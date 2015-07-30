@@ -42,7 +42,8 @@
                  "../OPengine/Scripting/src/JavaScript/Pipeline/OPvoxelGeneratorWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Pipeline/OPtexture2DWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Pipeline/OPsprite2DWrapper.cpp",
-                 "../OPengine/Scripting/src/JavaScript/Pipeline/OPspriteSystemWrapper.cpp"
+                 "../OPengine/Scripting/src/JavaScript/Pipeline/OPspriteSystemWrapper.cpp",
+                 "../OPengine/Scripting/src/JavaScript/Pipeline/OPfmodWrapper.cpp"
             ],
             "include_dirs": [
                 "@PROJECT_SOURCE_DIR@/",
@@ -168,7 +169,8 @@
                                 "/System/Library/Frameworks/OpenAL.framework",
                                 "/System/Library/Frameworks/myo.framework",
                                 "/usr/local/lib/libogg.dylib",
-                                "/usr/local/lib/libvorbisfile.dylib"
+                                "/usr/local/lib/libvorbisfile.dylib",
+                                "/usr/local/lib/libfmod.dylib"
                             ],
                             "library_dirs": [
                                 "../Binaries/osx64/debug/"

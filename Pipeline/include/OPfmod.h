@@ -6,37 +6,41 @@
 	#include "./fmod.hpp"
 #endif
 
-struct OPfmod {
-	#ifdef OPIFEX_OPTION_FMOD
-	FMOD::System *System;
-	#endif
-};
-
-struct OPfmodSound {
-	#ifdef OPIFEX_OPTION_FMOD
-	FMOD::Sound *Sound;
-	#endif
-};
-
-struct OPfmodChannel {
 #ifdef OPIFEX_OPTION_FMOD
-	FMOD::Channel *Channel;
+typedef FMOD::ChannelGroup OPfmodChannelGroup;
+typedef FMOD::System OPfmod;
+typedef FMOD::Sound OPfmodSound;
+typedef FMOD::Channel OPfmodChannel;
+#else
+typedef void OPfmodChannelGroup;
+typedef void OPfmod;
+typedef void OPfmodSound;
+typedef void OPfmodChannel;
 #endif
-};
 
-extern OPfmod CURRENT_FMOD;
+extern OPfmod* CURRENT_FMOD;
 
 void OPfmodInit();
-void OPfmodLoad(OPfmodSound* sound, OPchar* name);
-OPfmodChannel OPfmodPlay(OPfmodSound* sound);
+OPfmodSound* OPfmodLoad(OPchar* name);
+OPfmodChannel* OPfmodPlay(OPfmodSound* sound);
+OPfmodChannelGroup* OPfmodCreateChannelGroup(const OPchar* name);
+OPfmodChannel* OPfmodPlay(OPfmodSound* sound, OPfmodChannelGroup* group);
+void OPfmodSetVolume(OPfmodChannel* channel, OPfloat volume);
+void OPfmodSetVolume(OPfmodChannelGroup* channel, OPfloat volume);
 void OPfmodUpdate();
 
-inline OPint OPfmodIsPlaying(OPfmodChannel channel) {
+inline OPint OPfmodIsPlaying(OPfmodChannel* channel) {
 	bool isPlaying;
 #ifdef OPIFEX_OPTION_FMOD
-	channel.Channel->isPlaying(&isPlaying);
+	channel->isPlaying(&isPlaying);
 #endif
 	return isPlaying;
+}
+
+inline void OPfmodSetPause(OPfmodChannel* channel, i8 pause) {
+	#ifdef OPIFEX_OPTION_FMOD
+	channel->setPaused(pause);
+	#endif
 }
 
 #endif

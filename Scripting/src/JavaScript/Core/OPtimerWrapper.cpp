@@ -34,12 +34,27 @@ JS_RETURN_VAL _OPtimerUpdate(const JS_ARGS& args) {
     JS_RETURN_NULL
 }
 
+// OP.timer.Update
+JS_RETURN_VAL _OPtimerSetElapsed(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    Handle<Object> obj = args[0]->ToObject();
+
+    OPtimer* timer = JS_GET_PTR(obj, OPtimer);
+    timer->Elapsed = args[1]->IntegerValue();
+
+    JS_SET_NUMBER(obj, "elapsed", timer->Elapsed);
+
+    JS_RETURN_NULL
+}
+
 void OPtimerWrapper(Handle<Object> exports) {
     SCOPE_AND_ISOLATE;
 
     Handle<Object> timer = JS_NEW_OBJECT();
     JS_SET_METHOD(timer, "Create", _OPtimerCreate);
     JS_SET_METHOD(timer, "Update", _OPtimerUpdate);
+    JS_SET_METHOD(timer, "SetElapsed", _OPtimerSetElapsed);
     JS_SET_NUMBER(timer, "size", sizeof(OPtimer));
     JS_SET_OBJECT(exports, "timer", timer);
 }

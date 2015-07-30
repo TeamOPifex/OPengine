@@ -177,6 +177,10 @@ i8 OPphysXShapeOverlapping(OPphysXRigidActor* actor, OPphysXShape* shape, PxGeom
 	return PxShapeExt::overlap(*shape, *actor, *otherGeometry, otherTransform);
 }
 
+i8 OPphysXShapeOverlapping(PxTransform transform, OPphysXShape* shape, PxGeometry* otherGeometry, PxTransform otherTransform) {
+		return PxGeometryQuery::overlap(shape->getGeometry().any(), transform, *otherGeometry, otherTransform);
+}
+
 i8 OPphysXOverlapping(OPphysXRigidActor* actor, OPphysXRigidActor* other) {
 	OPuint actorShapeCount = actor->getNbShapes();
 	OPuint otherShapeCount = other->getNbShapes();
@@ -250,13 +254,21 @@ void OPphysXShutdown() {
 }
 
 i8 OPphysXBoxColliding(PxRigidDynamic* actor, OPvec3 size, OPvec3 pos) {
-	PxBoxGeometry otherGeometry = PxBoxGeometry(size.x, size.y, size.z);
-	PxTransform otherTransform = PxTransform(PxVec3(pos.x, pos.y, pos.z));
-	return OPphysXOverlapping(actor, &otherGeometry, otherTransform);
+		PxBoxGeometry otherGeometry = PxBoxGeometry(size.x, size.y, size.z);
+		PxTransform otherTransform = PxTransform(PxVec3(pos.x, pos.y, pos.z));
+		return OPphysXOverlapping(actor, &otherGeometry, otherTransform);
 }
+
 i8 OPphysXShapeBoxColliding(PxRigidDynamic* actor, OPphysXShape* shape, OPvec3 size, OPvec3 pos) {
-	PxBoxGeometry otherGeometry = PxBoxGeometry(size.x, size.y, size.z);
-	PxTransform otherTransform = PxTransform(PxVec3(pos.x, pos.y, pos.z));
-	return OPphysXShapeOverlapping(actor, shape, &otherGeometry, otherTransform);
+		PxBoxGeometry otherGeometry = PxBoxGeometry(size.x, size.y, size.z);
+		PxTransform otherTransform = PxTransform(PxVec3(pos.x, pos.y, pos.z));
+		return OPphysXShapeOverlapping(actor, shape, &otherGeometry, otherTransform);
 }
+
+i8 OPphysXShapeBoxColliding(OPmat4 transform, OPphysXShape* shape, OPvec3 size, OPvec3 pos) {
+		PxBoxGeometry otherGeometry = PxBoxGeometry(size.x, size.y, size.z);
+		PxTransform otherTransform = PxTransform(PxVec3(pos.x, pos.y, pos.z));
+		return OPphysXShapeOverlapping(OPphysXMat4ToPx(&transform), shape, &otherGeometry, otherTransform);
+}
+
 #endif

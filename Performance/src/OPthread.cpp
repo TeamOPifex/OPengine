@@ -1,9 +1,9 @@
 #include "./Performance/include/OPthread.h"
 
 //-----------------------------------------------------------------------------
-// ______                _   _                 
-//|  ____|              | | (_)                
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+// ______                _   _
+//|  ____|              | | (_)
+//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
@@ -54,7 +54,7 @@ OPint OPthreadStop(void* retval){
 }
 //-----------------------------------------------------------------------------
 OPint OPthreadJoin(OPthread* thread){
-	
+
 #if defined(OPIFEX_WINDOWS)
 	WaitForSingleObject(thread->Thread, INFINITE);
 #else
@@ -66,7 +66,7 @@ OPint OPthreadJoin(OPthread* thread){
 OPmutex OPmutexCreate(){
 	OPmutex out;
 	OPbzero(&out, sizeof(OPmutex));
-	
+
 #if defined(OPIFEX_WINDOWS)
 	out.Mutex = CreateMutex(NULL, false, NULL);
 	if(out.Mutex == NULL) {
@@ -113,4 +113,3 @@ OPint OPmutexUnlock(OPmutex* mutex){
 	return 0;
 #endif
 }
-

@@ -60,6 +60,7 @@ void OPphysXShapeSetPose(OPphysXShape* shape, OPmat4 transform);
 
 i8 OPphysXBoxColliding(PxRigidDynamic* actor, OPvec3 size, OPvec3 pos);
 i8 OPphysXShapeBoxColliding(PxRigidDynamic* actor, OPphysXShape* shape, OPvec3 size, OPvec3 pos);
+i8 OPphysXShapeBoxColliding(OPmat4 transform, OPphysXShape* shape, OPvec3 size, OPvec3 pos);
 
 // INLINES
 

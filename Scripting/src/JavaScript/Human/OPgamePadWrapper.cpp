@@ -43,6 +43,15 @@ JS_RETURN_VAL _OPgamePadWasPressedSelf(const JS_ARGS& args) {
     JS_RETURN(JS_NEW_BOOL(OPgamePadWasPressed(ptr, btn)));
 }
 
+JS_RETURN_VAL _OPgamePadWasReleasedSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+    OPgamePadButton btn = (OPgamePadButton)args[0]->IntegerValue();
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadWasReleased(ptr, btn)));
+}
+
 JS_RETURN_VAL _OPgamePadIsConnected(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
@@ -80,6 +89,95 @@ JS_RETURN_VAL _OPgamePadLeftThumbSelf(const JS_ARGS& args) {
     JS_RETURN(result);
 }
 
+JS_RETURN_VAL _OPgamePadLeftThumbWasLeftSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftThumbWasLeft(ptr)));
+}
+
+JS_RETURN_VAL _OPgamePadLeftThumbWasRightSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftThumbWasRight(ptr)));
+}
+
+JS_RETURN_VAL _OPgamePadLeftThumbNowLeftSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftThumbNowLeft(ptr)));
+}
+
+JS_RETURN_VAL _OPgamePadLeftThumbNowRightSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftThumbNowRight(ptr)));
+}
+
+
+JS_RETURN_VAL _OPgamePadLeftThumbWasUpSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftThumbWasUp(ptr)));
+}
+
+JS_RETURN_VAL _OPgamePadLeftThumbWasDownSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftThumbWasDown(ptr)));
+}
+
+JS_RETURN_VAL _OPgamePadLeftThumbNowUpSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftThumbNowUp(ptr)));
+}
+
+JS_RETURN_VAL _OPgamePadLeftThumbNowDownSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftThumbNowDown(ptr)));
+}
+
+JS_RETURN_VAL _OPgamePadRightTriggerWasPressedSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadRightTriggerWasPressed(ptr)));
+}
+
+JS_RETURN_VAL _OPgamePadRightTriggerWasReleasedSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadRightTriggerWasReleased(ptr)));
+}
+
+JS_RETURN_VAL _OPgamePadRightTriggerIsDownSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadRightTriggerIsDown(ptr)));
+}
+
 JS_RETURN_VAL _OPgamePadUpdate(const JS_ARGS& args) {
     OPgamePadSystemUpdate();
     JS_RETURN_NULL;
@@ -98,9 +196,21 @@ void _OPgamePadSetup(Handle<Object> result, OPgamePad* controller) {
 
     JS_SET_PTR(result, controller);
     JS_SET_METHOD(result, "WasPressed", _OPgamePadWasPressedSelf);
+    JS_SET_METHOD(result, "WasReleased", _OPgamePadWasReleasedSelf);
     JS_SET_METHOD(result, "IsConnected", _OPgamePadIsConnectedSelf);
     JS_SET_METHOD(result, "LeftThumb", _OPgamePadLeftThumbSelf);
     JS_SET_METHOD(result, "IsDown", _OPgamePadIsDownSelf);
+    JS_SET_METHOD(result, "LeftThumbNowLeft", _OPgamePadLeftThumbNowLeftSelf);
+    JS_SET_METHOD(result, "LeftThumbNowRight", _OPgamePadLeftThumbNowRightSelf);
+    JS_SET_METHOD(result, "LeftThumbWasLeft", _OPgamePadLeftThumbWasLeftSelf);
+    JS_SET_METHOD(result, "LeftThumbWasRight", _OPgamePadLeftThumbWasRightSelf);
+    JS_SET_METHOD(result, "LeftThumbNowUp", _OPgamePadLeftThumbNowUpSelf);
+    JS_SET_METHOD(result, "LeftThumbNowDown", _OPgamePadLeftThumbNowDownSelf);
+    JS_SET_METHOD(result, "LeftThumbWasUp", _OPgamePadLeftThumbWasUpSelf);
+    JS_SET_METHOD(result, "LeftThumbWasDown", _OPgamePadLeftThumbWasDownSelf);
+    JS_SET_METHOD(result, "RightTriggerWasPressed", _OPgamePadRightTriggerWasPressedSelf);
+    JS_SET_METHOD(result, "RightTriggerWasReleased", _OPgamePadRightTriggerWasReleasedSelf);
+    JS_SET_METHOD(result, "RightTriggerIsDown", _OPgamePadRightTriggerIsDownSelf);
 
 }
 

@@ -11,6 +11,7 @@ void OPscriptNodeWrapperPipeline(Handle<Object> exports) {
     OPloaderVoxelsWrapper(exports);
     OPsprite2DWrapper(exports);
     OPspriteSystemWrapper(exports);
+    OPfmodWrapper(exports);
 }
 
 #endif

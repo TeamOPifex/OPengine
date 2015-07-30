@@ -5,7 +5,7 @@
 
 #ifdef OPIFEX_OPTION_PHYSX
 
-class OPphysXControllerHitReport : public PxUserControllerHitReport 
+class OPphysXControllerHitReport : public PxUserControllerHitReport
 {
 public:
 	/**
@@ -30,7 +30,7 @@ public:
 	@see PxControllersHit
 	*/
 	virtual void onControllerHit(const PxControllersHit& hit) {
-		OPlog("Controller Hit");
+		//OPlog("Controller Hit");
 	}
 
 	/**
@@ -44,7 +44,7 @@ public:
 
 	}
 
-	OPphysXControllerHitReport(	
+	OPphysXControllerHitReport(
 		void(*onShapeHit)(PxControllerShapeHit),
 		void(*onControllerHit)(PxControllersHit),
 		void(*onObstacleHit)(PxControllerObstacleHit)) {

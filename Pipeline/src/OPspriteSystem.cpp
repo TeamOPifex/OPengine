@@ -15,8 +15,10 @@ void OPspriteSystemInit(OPspriteSystem* system, OPsprite** sprites, OPint count,
 	if(effect == NULL) {
 		system->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
 		OPspriteSystemEffectDefault(system->Effect);
+		system->ExternalEffect = 0;
 	} else {
 		system->Effect = effect;
+		system->ExternalEffect = 1;
 	}
 	system->SystemSprites = (OPspriteSystemSprite*)OPallocZero(sizeof(OPspriteSystemSprite)* count);
 	system->Count = 0;
@@ -36,6 +38,13 @@ void OPspriteSystemInit(OPspriteSystem* system, OPsprite** sprites, OPint count,
 		system->SystemSprites[i].Scale = OPVEC2_ONE;
 		system->SystemSprites[i].Direction = 1;
 	}
+}
+
+void OPspriteSystemDestroy(OPspriteSystem* system) {
+	//OPeffectDestroy(system->Effect);
+	OPfree(system->Effect);
+	OPfree(system->SystemSprites);
+	//OPmeshDestroy(system->_mesh);
 }
 
 OPspriteSystem* OPspriteSystemCreate(OPsprite** sprites, OPint count, OPeffect* effect, OPspriteSystemAlign alignment) {

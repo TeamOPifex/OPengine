@@ -72,7 +72,7 @@ JS_RETURN_VAL _OPvec3AddSelf(const JS_ARGS& args) {
 
 JS_RETURN_VAL _OPvec3Add(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
-    
+
     OPvec3* ptr = JS_GET_ARG_PTR(args, 0, OPvec3);
     ptr->x += args[1]->NumberValue();
     ptr->y += args[2]->NumberValue();
@@ -87,7 +87,7 @@ JS_RETURN_VAL _OPvec3X(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvec3* ptr = JS_GET_ARG_PTR(args, 0, OPvec3);
-    
+
     JS_RETURN(JS_NEW_NUMBER(ptr->x));
 }
 
@@ -95,7 +95,7 @@ JS_RETURN_VAL _OPvec3Y(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvec3* ptr = JS_GET_ARG_PTR(args, 0, OPvec3);
-    
+
     JS_RETURN(JS_NEW_NUMBER(ptr->y));
 }
 
@@ -103,7 +103,7 @@ JS_RETURN_VAL _OPvec3Z(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvec3* ptr = JS_GET_ARG_PTR(args, 0, OPvec3);
-    
+
     JS_RETURN(JS_NEW_NUMBER(ptr->z));
 }
 
@@ -111,7 +111,7 @@ JS_RETURN_VAL _OPvec3XSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvec3* ptr = JS_GET_PTR(args.This(), OPvec3);
-    
+
     JS_RETURN(JS_NEW_NUMBER(ptr->x));
 }
 
@@ -119,7 +119,7 @@ JS_RETURN_VAL _OPvec3YSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvec3* ptr = JS_GET_PTR(args.This(), OPvec3);
-    
+
     JS_RETURN(JS_NEW_NUMBER(ptr->y));
 }
 
@@ -127,7 +127,7 @@ JS_RETURN_VAL _OPvec3ZSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvec3* ptr = JS_GET_PTR(args.This(), OPvec3);
-    
+
     JS_RETURN(JS_NEW_NUMBER(ptr->z));
 }
 
@@ -138,7 +138,7 @@ JS_RETURN_VAL _OPvec3Sync(const JS_ARGS& args) {
     OPvec3* ptr = JS_GET_ARG_PTR(args, 0, OPvec3);
 
     OPvec3ResetValues(args[0]->ToObject(), ptr);
-    
+
     JS_RETURN_NULL;
 }
 
@@ -147,6 +147,15 @@ JS_RETURN_VAL _OPvec3SyncSelf(const JS_ARGS& args) {
 
     OPvec3* ptr = JS_GET_PTR(args.This(), OPvec3);
     OPvec3ResetValues(args.This(), ptr);
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPvec3NormSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPvec3* ptr = JS_GET_PTR(args.This(), OPvec3);
+    *ptr = OPvec3Norm(*ptr);
 
     JS_RETURN_NULL;
 }
@@ -162,6 +171,7 @@ Handle<Object> OPvec3WrapperSetup(Handle<Object> result, OPvec3* ptr) {
     JS_SET_METHOD(result, "X", _OPvec3XSelf);
     JS_SET_METHOD(result, "Y", _OPvec3YSelf);
     JS_SET_METHOD(result, "Z", _OPvec3ZSelf);
+    JS_SET_METHOD(result, "Norm", _OPvec3NormSelf);
     JS_SET_METHOD(result, "Sync", _OPvec3SyncSelf);
     OPvec3ResetValues(result, ptr);
 
