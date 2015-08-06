@@ -83,6 +83,23 @@ JS_RETURN_VAL _OPrenderDepthWrite(const JS_ARGS& args) {
     JS_RETURN_NULL;
 }
 
+JS_RETURN_VAL _OPrenderFullScreen(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPRENDER_FULLSCREEN = args[0]->IntegerValue();
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPrenderSetScreenSize(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPRENDER_WIDTH = args[0]->IntegerValue();
+    OPRENDER_HEIGHT = args[0]->IntegerValue();
+
+    JS_RETURN_NULL;
+}
+
 JS_RETURN_VAL _OPrenderBlend(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
@@ -114,12 +131,14 @@ void OPrenderWrapper(Handle<Object> exports) {
     JS_SET_METHOD(render, "Init", _OPrenderInit);
     JS_SET_METHOD(render, "Clear", _OPrenderClear);
     JS_SET_METHOD(render, "Present", _OPrenderPresent);
+    JS_SET_METHOD(render, "SetScreenSize", _OPrenderSetScreenSize);
     JS_SET_METHOD(render, "Size", _OPrenderSize);
     JS_SET_METHOD(render, "Cull", _OPrenderCull);
     JS_SET_METHOD(render, "CullMode", _OPrenderCullMode);
     JS_SET_METHOD(render, "Depth", _OPrenderDepth);
     JS_SET_METHOD(render, "DepthWrite", _OPrenderDepthWrite);
     JS_SET_METHOD(render, "Blend", _OPrenderBlend);
+    JS_SET_METHOD(render, "FullScreen", _OPrenderFullScreen);
     JS_SET_METHOD(render, "BlendAlpha", _OPrenderBlendAlpha);
     JS_SET_METHOD(render, "BlendAdditive", _OPrenderBlendAdditive);
     JS_SET_OBJECT(exports, "render", render);

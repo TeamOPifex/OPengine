@@ -1,6 +1,7 @@
 // myobject.cc
 #include "./Scripting/include/JavaScript/Human/Wrappers.h"
 #include "./Scripting/include/JavaScript/Math/Wrappers.h"
+#include "./Data/include/OPstring.h"
 
 #if defined(OPIFEX_OPTION_NODEJS) || defined(OPIFEX_OPTION_V8)
 
@@ -48,7 +49,9 @@ JS_RETURN_VAL _OPmaterialAddParam(const JS_ARGS& args) {
 
     ui8 count = (ui8)args[4]->NumberValue();
 
-    OPmaterialAddParam(material, matParamType, *str, data, count);
+    OPchar* c = OPstringCopy(*str);
+
+    OPmaterialAddParam(material, matParamType, c, data, count);
 
     JS_RETURN_NULL;
 }
@@ -66,7 +69,11 @@ JS_RETURN_VAL _OPmaterialAddParamSelf(const JS_ARGS& args) {
 
     ui8 count = (ui8)args[3]->NumberValue();
 
-    OPmaterialAddParam(material, matParamType, *str, data, count);
+    OPchar* c = OPstringCopy(*str);
+
+    OPlog("DATA %p", data);
+
+    OPmaterialAddParam(material, matParamType, c, data, count);
 
     JS_RETURN_NULL;
 }

@@ -172,7 +172,7 @@ void addBackSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data
 	addSide(gen, data);
 }
 
-void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, i8 center, OPvec4 bones, OPvec4 weights, OPvec3 offset, OPfloat scale) {
+void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, i8 center, OPvec4 bones, OPvec4 weights, OPvec3 offset, OPfloat scale, i8 hideBack) {
 
 	bool generate[6];
 	OPvoxelGeneratorData data;
@@ -234,7 +234,7 @@ void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData
 				if (generate[vUp])		addTopSide(gen, &data, x, y, z);
 				if (generate[vDown])	addBottomSide(gen, &data, x, y, z);
 				if (generate[vForward]) addFrontSide(gen, &data, x, y, z);
-				if (generate[vBackward]) addBackSide(gen, &data, x, y, z);
+				if (!hideBack && generate[vBackward]) addBackSide(gen, &data, x, y, z);
 			}
 		}
 	}

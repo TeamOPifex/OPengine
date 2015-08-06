@@ -2,7 +2,6 @@
     "targets": [
         {
             "target_name": "OPengine",
-            "type": "shared_library",
             "sources": [
                  "../OPengine/Scripting/src/JavaScript/NodeWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/OPjavaScriptCoreWrapper.cpp",
@@ -26,17 +25,26 @@
                  "../OPengine/Scripting/src/JavaScript/Human/OPcubeWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPeffectWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPfontWrapper.cpp",
+                 "../OPengine/Scripting/src/JavaScript/Human/OPfontManagerWrapper.cpp",
+                 "../OPengine/Scripting/src/JavaScript/Human/OPfontRenderWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPgamePadWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPkeyboardWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPmaterialWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPmeshWrapper.cpp",
+                 "../OPengine/Scripting/src/JavaScript/Human/OPmodelWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPrenderWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPskeletonWrapper.cpp",
+                 "../OPengine/Scripting/src/JavaScript/Human/OPskeletonAnimationWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPtextureWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/OPjavaScriptCommunicationWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/OPjavaScriptPipelineWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Pipeline/OPloaderWrapper.cpp",
-                 "../OPengine/Scripting/src/JavaScript/Pipeline/OPtexture2DWrapper.cpp"
+                 "../OPengine/Scripting/src/JavaScript/Pipeline/OPloaderVoxelsWrapper.cpp",
+                 "../OPengine/Scripting/src/JavaScript/Pipeline/OPvoxelGeneratorWrapper.cpp",
+                 "../OPengine/Scripting/src/JavaScript/Pipeline/OPtexture2DWrapper.cpp",
+                 "../OPengine/Scripting/src/JavaScript/Pipeline/OPsprite2DWrapper.cpp",
+                 "../OPengine/Scripting/src/JavaScript/Pipeline/OPspriteSystemWrapper.cpp",
+                 "../OPengine/Scripting/src/JavaScript/Pipeline/OPfmodWrapper.cpp"
             ],
             "include_dirs": [
                 "@PROJECT_SOURCE_DIR@/",
@@ -47,6 +55,9 @@
                 "@PROJECT_SOURCE_DIR@/External/FMod/include",
                 "@PROJECT_SOURCE_DIR@/External/OpenAL/",
                 "@PROJECT_SOURCE_DIR@/External/Myo/include/"
+            ],
+            "cflags": [
+                "-stdlib=libstdc++"
             ],
             "cflags!": [
                 "-fno-exceptions"
@@ -60,7 +71,8 @@
                     {
                         'defines': [
                           'OPIFEX_OPTION_NODEJS',
-                          "_ITERATOR_DEBUG_LEVEL=0"
+                          "_ITERATOR_DEBUG_LEVEL=0",
+                          "OPIFEX_NODEJS_@OPIFEX_NODE_VERSION@"
                         ],
                         "link_settings": {
                             "libraries": [
@@ -71,18 +83,35 @@
                                 "-lHuman.lib",
                                 "-lCommunication.lib",
                                 "-lPipeline.lib",
+                                "-lScripting.lib",
                                 "-lglfw3.lib",
                                 "-lGLEW_158.lib",
                                 "-lLodePNG.lib",
                                 "-lopengl32.lib",
                                 "-lWinmm.lib",
-                                "-llibogg.lib",
-                                "-llibvorbis.lib",
-                                "-llibvorbisfile.lib",
-                                "-lOpenAL32.lib"
+                                "-lOpenAL32.lib",
+                                "-lfmod64_vc.lib",
+                                "-lLowLevelDEBUG.lib",
+                                "-lLowLevelClothDEBUG.lib",
+                                "-lPhysX3CharacterKinematic_x64.lib",
+                                "-lPhysX3Common_x64.lib",
+                                "-lPhysX3Cooking_x64.lib",
+                                "-lPhysX3_x64.lib",
+                                "-lPhysX3Extensions.lib",
+                                "-lPhysX3Vehicle.lib",
+                                "-lPhysXProfileSDK.lib",
+                                "-lPhysXVisualDebuggerSDK.lib",
+                                "-lPvdRuntime.lib",
+                                "-lPxTask.lib",
+                                "-lSceneQuery.lib",
+                                "-lSimulationController.lib",
+                                "-lXInput9_1_0.lib"
+                            ],
+                            "library_dirs": [
+                                "@BINARY_FOLDER@/"
                             ]
                         },
-                        "configurations": {                         
+                        "configurations": {
                             "Release": {
                                 "msvs_settings": {
                                     "VCCLCompilerTool": {
@@ -96,8 +125,8 @@
                                             "/LTCG /NODEFAULTLIB:MSVCRT"
                                         ]
                                     },
-                                    "VCLinkerTool": {     
-                                        "IgnoreDefaultLibraryNames": [ 'libcmt.lib', 'libcpmt.lib' ],
+                                    "VCLinkerTool": {
+                                        "IgnoreDefaultLibraryNames": [  ],
                                         "LinkTimeCodeGeneration": 1,
                                         "LinkIncremental": 1,
                                         "AdditionalLibraryDirectories": [
@@ -108,8 +137,10 @@
                                             "../Human/Release/",
                                             "../Communication/Release/",
                                             "../Pipeline/Release/",
+                                            "../Scripting/Release/",
                                             "../GLFW/src/Release/",
                                             "../External/Release/",
+                                            "../Binaries/win64/release/"
                                             "../@PROJECT_SOURCE_DIR@/External/Ogg/lib/win32/",
                                             "../@PROJECT_SOURCE_DIR@/External/Vorbis/lib/win32/",
                                             "C:/Program Files (x86)/OpenAL 1.1 SDK/libs/Win32/",
@@ -165,7 +196,7 @@
                                 "/usr/local/lib/libvorbisfile.dylib"
                             ],
                             "library_dirs": [
-                                "../Binaries/osx64/debug/"
+                                "../Binaries/osx64/release/"
                             ],
                         }
                     }

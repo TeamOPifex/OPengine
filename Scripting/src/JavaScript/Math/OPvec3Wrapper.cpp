@@ -157,6 +157,8 @@ JS_RETURN_VAL _OPvec3NormSelf(const JS_ARGS& args) {
     OPvec3* ptr = JS_GET_PTR(args.This(), OPvec3);
     *ptr = OPvec3Norm(*ptr);
 
+    OPvec3ResetValues(args.This()->ToObject(), ptr);
+
     JS_RETURN_NULL;
 }
 

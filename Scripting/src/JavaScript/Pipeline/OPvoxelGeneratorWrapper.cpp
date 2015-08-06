@@ -53,16 +53,17 @@ JS_RETURN_VAL _OPvoxelGeneratorAdd(const JS_ARGS& args) {
     OPvoxelGenerator* ptr = JS_GET_ARG_PTR(args, 0, OPvoxelGenerator);
     OPvoxels* voxels = JS_GET_ARG_PTR(args, 1, OPvoxels);
     i8 center = args[2]->IntegerValue();
+    i8 hideBack = args[3]->IntegerValue();
     OPlog("Arg count for add %d", args.Length());
-    if(args.Length() == 3) {
-          OPvoxelGeneratorAdd(ptr, *voxels, center);
+    if(args.Length() == 4) {
+          OPvoxelGeneratorAdd(ptr, *voxels, center, hideBack);
     } else {
-      OPvec4* bones = JS_GET_ARG_PTR(args, 3, OPvec4);
-      OPvec4* weights = JS_GET_ARG_PTR(args, 4, OPvec4);
-      OPvec3* offset = JS_GET_ARG_PTR(args, 5, OPvec3);
-      OPfloat scale = args[5]->NumberValue();
+      OPvec4* bones = JS_GET_ARG_PTR(args, 4, OPvec4);
+      OPvec4* weights = JS_GET_ARG_PTR(args, 5, OPvec4);
+      OPvec3* offset = JS_GET_ARG_PTR(args, 6, OPvec3);
+      OPfloat scale = args[7]->NumberValue();
 
-      OPvoxelGeneratorAdd(ptr, *voxels, center, *bones, *weights, *offset, scale);
+      OPvoxelGeneratorAdd(ptr, *voxels, center, *bones, *weights, *offset, scale, hideBack);
     }
 
     JS_RETURN_NULL;
@@ -74,18 +75,19 @@ JS_RETURN_VAL _OPvoxelGeneratorAddSelf(const JS_ARGS& args) {
     OPvoxelGenerator* ptr = JS_GET_PTR(args.This(), OPvoxelGenerator);
     OPvoxels* voxels = JS_GET_ARG_PTR(args, 0, OPvoxels);
     i8 center = args[1]->IntegerValue();
+    i8 hideBack = args[2]->IntegerValue();
     OPlog("Arg count for add %d", args.Length());
-    if(args.Length() == 2) {
+    if(args.Length() == 3) {
       OPlog("Generator: %p", ptr);
       OPlog("Voxels: %p", voxels);
-          OPvoxelGeneratorAdd(ptr, *voxels, center);
+          OPvoxelGeneratorAdd(ptr, *voxels, center, hideBack);
     } else {
-      OPvec4* bones = JS_GET_ARG_PTR(args, 2, OPvec4);
-      OPvec4* weights = JS_GET_ARG_PTR(args, 3, OPvec4);
-      OPvec3* offset = JS_GET_ARG_PTR(args, 4, OPvec3);
-      OPfloat scale = args[4]->NumberValue();
+      OPvec4* bones = JS_GET_ARG_PTR(args, 3, OPvec4);
+      OPvec4* weights = JS_GET_ARG_PTR(args, 4, OPvec4);
+      OPvec3* offset = JS_GET_ARG_PTR(args, 5, OPvec3);
+      OPfloat scale = args[6]->NumberValue();
 
-      OPvoxelGeneratorAdd(ptr, *voxels, center, *bones, *weights, *offset, scale);
+      OPvoxelGeneratorAdd(ptr, *voxels, center, *bones, *weights, *offset, scale, hideBack);
     }
 
     JS_RETURN_NULL;

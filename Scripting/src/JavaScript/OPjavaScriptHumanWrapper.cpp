@@ -19,6 +19,7 @@ void OPscriptNodeWrapperHuman(Handle<Object> exports) {
     OPmodelWrapper(exports);
     OPrenderWrapper(exports);
     OPskeletonWrapper(exports);
+    OPskeletonAnimationWrapper(exports);
     OPtextureWrapper(exports);
 
     OPATTRWrapper(exports);

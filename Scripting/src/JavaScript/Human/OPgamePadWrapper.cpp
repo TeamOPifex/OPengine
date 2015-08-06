@@ -178,6 +178,31 @@ JS_RETURN_VAL _OPgamePadRightTriggerIsDownSelf(const JS_ARGS& args) {
     JS_RETURN(JS_NEW_BOOL(OPgamePadRightTriggerIsDown(ptr)));
 }
 
+
+JS_RETURN_VAL _OPgamePadLeftTriggerWasPressedSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftTriggerWasPressed(ptr)));
+}
+
+JS_RETURN_VAL _OPgamePadLeftTriggerWasReleasedSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftTriggerWasReleased(ptr)));
+}
+
+JS_RETURN_VAL _OPgamePadLeftTriggerIsDownSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
+
+    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftTriggerIsDown(ptr)));
+}
+
 JS_RETURN_VAL _OPgamePadUpdate(const JS_ARGS& args) {
     OPgamePadSystemUpdate();
     JS_RETURN_NULL;
@@ -211,6 +236,9 @@ void _OPgamePadSetup(Handle<Object> result, OPgamePad* controller) {
     JS_SET_METHOD(result, "RightTriggerWasPressed", _OPgamePadRightTriggerWasPressedSelf);
     JS_SET_METHOD(result, "RightTriggerWasReleased", _OPgamePadRightTriggerWasReleasedSelf);
     JS_SET_METHOD(result, "RightTriggerIsDown", _OPgamePadRightTriggerIsDownSelf);
+    JS_SET_METHOD(result, "LeftTriggerWasPressed", _OPgamePadLeftTriggerWasPressedSelf);
+    JS_SET_METHOD(result, "LeftTriggerWasReleased", _OPgamePadLeftTriggerWasReleasedSelf);
+    JS_SET_METHOD(result, "LeftTriggerIsDown", _OPgamePadLeftTriggerIsDownSelf);
 
 }
 

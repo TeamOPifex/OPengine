@@ -48,18 +48,18 @@ struct OPvoxelGeneratorData {
 
 void OPvoxelGeneratorInit(struct OPvoxelGenerator* gen, OPuint features);
 struct OPvoxelGenerator* OPvoxelGeneratorCreate(OPuint features);
-void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, i8 center, OPvec4 bones, OPvec4 weights, OPvec3 offset, OPfloat scale);
+void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, i8 center, OPvec4 bones, OPvec4 weights, OPvec3 offset, OPfloat scale, i8 hideBack);
 OPmesh* OPvoxelGeneratorBuild(struct OPvoxelGenerator* gen);
 void OPvoxelGeneratorDestroy(struct OPvoxelGenerator* gen);
 
-inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, i8 center, OPvec4 bones, OPvec4 weights) {
-	OPvoxelGeneratorAdd(gen, voxelData, center, bones, weights, OPVEC3_ZERO, 1.0);
+inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, i8 center, OPvec4 bones, OPvec4 weights, i8 hideBack) {
+	OPvoxelGeneratorAdd(gen, voxelData, center, bones, weights, OPVEC3_ZERO, 1.0, hideBack);
 }
-inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, i8 center) {
-	OPvoxelGeneratorAdd(gen, voxelData, center, OPvec4Zero, OPvec4Zero);
+inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, i8 center, i8 hideBack) {
+	OPvoxelGeneratorAdd(gen, voxelData, center, OPvec4Zero, OPvec4Zero, hideBack);
 }
-inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, i8 center, OPvec3 offset) {
-	OPvoxelGeneratorAdd(gen, voxelData, center, OPvec4Zero, OPvec4Zero, offset, 1.0);
+inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, i8 center, OPvec3 offset, i8 hideBack) {
+	OPvoxelGeneratorAdd(gen, voxelData, center, OPvec4Zero, OPvec4Zero, offset, 1.0, hideBack);
 }
 
 #endif

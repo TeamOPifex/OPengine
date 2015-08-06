@@ -2,7 +2,7 @@
 #define OPENGINE_HUMAN_RENDERER_MATERIAL
 
 #include "OPeffect.h"
-#include "./Core/include/OPtypes.h"	
+#include "./Core/include/OPtypes.h"
 
 enum OPmaterialParamType {
 	MATERIAL_PARAM_TYPE_MATRIX4,
@@ -41,7 +41,7 @@ inline OPmaterial* OPmaterialCreate(OPeffect* effect) {
 }
 
 inline void OPmaterialAddParam(OPmaterial* material, OPmaterialParamType paramType, const OPchar* name, void* data, ui8 count ) {
-	OPlog("Name %s", name);
+	OPlog("Name %s %p", name, data);
 	material->params[material->paramIndex].type = paramType;
 	material->params[material->paramIndex].name = name;
 	material->params[material->paramIndex].data = data;
@@ -74,6 +74,9 @@ inline void OPmaterialBind(OPmaterial* material) {
 
 	OPtextureClearActive();
 	for(OPuint i = 0; i < material->paramIndex; i++) {
+
+		OPlog("%s %p", material->params[i].name, material->params[i].data);
+
 		switch(material->params[i].type) {
 			case MATERIAL_PARAM_TYPE_TEXTURE: {
 				OPeffectParam(material->params[i].name, (OPtexture*)material->params[i].data);

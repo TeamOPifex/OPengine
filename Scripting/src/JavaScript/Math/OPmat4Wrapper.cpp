@@ -187,7 +187,7 @@ JS_RETURN_VAL _OPmat4Create(const JS_ARGS& args) {
     *ptr = OPMAT4IDENTITY;
     Handle<Object> result = JS_NEW_OBJECT();
     OPmat4WrapperCreate(result, ptr);
-    
+
     JS_RETURN(result);
 }
 

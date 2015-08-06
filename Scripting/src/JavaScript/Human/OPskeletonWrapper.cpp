@@ -111,6 +111,12 @@ void OPskeletonWrapperCreate(Handle<Object> result, OPskeleton* skeleton) {
     JS_SET_METHOD(result, "Get", _OPskeletonGetSelf);
     JS_SET_METHOD(result, "LocalTranslate", _OPskeletonLocalTranslateSelf);
     JS_SET_METHOD(result, "Destroy", _OPskeletonDestroySelf);
+    JS_SET_NUMBER(result, "hierarchyCount", skeleton->hierarchyCount);
+    
+    Handle<Object> skinned = JS_NEW_OBJECT();
+    JS_SET_PTR(skinned, skeleton->skinned);
+    JS_SET_OBJECT(result, "skinned", skinned);
+
 }
 
 JS_RETURN_VAL _OPskeletonCreate(const JS_ARGS& args) {
@@ -136,7 +142,7 @@ JS_RETURN_VAL _OPskeletonWrap(const JS_ARGS& args) {
 JS_RETURN_VAL _OPskeletonAddLoader(const JS_ARGS& args) {
     OPskeletonAddLoader();
     OPskeletonAnimationAddLoader();
-    
+
     JS_RETURN_NULL;
 }
 

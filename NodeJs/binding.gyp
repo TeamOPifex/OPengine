@@ -34,6 +34,7 @@
                  "../OPengine/Scripting/src/JavaScript/Human/OPmodelWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPrenderWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPskeletonWrapper.cpp",
+                 "../OPengine/Scripting/src/JavaScript/Human/OPskeletonAnimationWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/Human/OPtextureWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/OPjavaScriptCommunicationWrapper.cpp",
                  "../OPengine/Scripting/src/JavaScript/OPjavaScriptPipelineWrapper.cpp",
@@ -67,7 +68,8 @@
                     {
                         'defines': [
                           'OPIFEX_OPTION_NODEJS',
-                          "_ITERATOR_DEBUG_LEVEL=0"
+                          "_ITERATOR_DEBUG_LEVEL=0",
+                          "OPIFEX_NODEJS_@OPIFEX_NODE_VERSION@"
                         ],
                         "link_settings": {
                             "libraries": [
@@ -83,10 +85,11 @@
                                 "-lLodePNG.lib",
                                 "-lopengl32.lib",
                                 "-lWinmm.lib",
-                                "-llibogg.lib",
-                                "-llibvorbis.lib",
-                                "-llibvorbisfile.lib",
-                                "-lOpenAL32.lib"
+                                "-lOpenAL32.lib",
+                                "-lfmod.lib"
+                            ],
+                            "library_dirs": [
+                                "@BINARY_FOLDER@/"
                             ]
                         },
                         "configurations": {
@@ -117,6 +120,7 @@
                                             "../Pipeline/Release/",
                                             "../GLFW/src/Release/",
                                             "../External/Release/",
+                                            "../Binaries/win64/release/",
                                             "../@PROJECT_SOURCE_DIR@/External/Ogg/lib/win32/",
                                             "../@PROJECT_SOURCE_DIR@/External/Vorbis/lib/win32/",
                                             "C:/Program Files (x86)/OpenAL 1.1 SDK/libs/Win32/",

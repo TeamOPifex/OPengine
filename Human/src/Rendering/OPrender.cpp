@@ -243,7 +243,7 @@ OPint OPrenderInit(i32 width, i32 height){
 	}
 
 	// Most of the below will be moved to a Windowing System
-	//glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	glfwWindowHint(GLFW_ALPHA_BITS, 8);

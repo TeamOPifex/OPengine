@@ -273,6 +273,8 @@ JS_RETURN_VAL _OPphysXGetShape(const JS_ARGS& args) {
   	JS_SET_PTR(result, ptr);
 
   	JS_RETURN(result);
+
+	JS_RETURN_NULL;
 }
 
 JS_RETURN_VAL _OPphysXShapeSetPose(const JS_ARGS& args) {
@@ -282,6 +284,8 @@ JS_RETURN_VAL _OPphysXShapeSetPose(const JS_ARGS& args) {
     OPmat4* transform = JS_GET_ARG_PTR(args, 1, OPmat4);
 
     OPphysXShapeSetPose(shape, *transform);
+    
+	JS_RETURN_NULL;
 }
 
 
