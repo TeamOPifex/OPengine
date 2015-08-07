@@ -31,6 +31,11 @@ JS_RETURN_VAL _OPtexture2DCreate(const JS_ARGS& args) {
     OPvec2WrapperCreate(Scale, &tex2d->Scale);
     JS_SET_OBJECT(result, "Scale", Scale);
 
+    Handle<Object> Position = JS_NEW_OBJECT();
+    OPvec2WrapperCreate(Position, &tex2d->Position);
+    JS_SET_OBJECT(result, "Position", Position);
+
+
     JS_RETURN(result);
 }
 

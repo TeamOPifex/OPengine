@@ -75,8 +75,6 @@ inline void OPmaterialBind(OPmaterial* material) {
 	OPtextureClearActive();
 	for(OPuint i = 0; i < material->paramIndex; i++) {
 
-		OPlog("%s %p", material->params[i].name, material->params[i].data);
-
 		switch(material->params[i].type) {
 			case MATERIAL_PARAM_TYPE_TEXTURE: {
 				OPeffectParam(material->params[i].name, (OPtexture*)material->params[i].data);

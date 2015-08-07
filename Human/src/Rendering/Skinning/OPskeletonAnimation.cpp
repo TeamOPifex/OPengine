@@ -29,10 +29,10 @@ void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
 	skelAnim->LastFrame = skelAnim->Frame;
 
 	while (skelAnim->Elapsed >= skelAnim->FramesPer) {
-		OPlog("Elapsed %d, FP %d, Frame %d",
-			skelAnim->Elapsed,
-			skelAnim->FramesPer,
-			skelAnim->Frame);
+		// OPlog("Elapsed %d, FP %d, Frame %d",
+		// 	skelAnim->Elapsed,
+		// 	skelAnim->FramesPer,
+		// 	skelAnim->Frame);
 		skelAnim->Elapsed -= skelAnim->FramesPer;
 		skelAnim->Frame++;
 		if (skelAnim->Frame >= skelAnim->FrameCount) {
