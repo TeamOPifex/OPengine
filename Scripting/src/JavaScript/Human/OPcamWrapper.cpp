@@ -41,6 +41,47 @@ JS_RETURN_VAL _OPcamUpdateProj(const JS_ARGS& args) {
     JS_RETURN_NULL;
 }
 
+
+JS_RETURN_VAL _OPcamGetViewSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPcam* ptr = JS_GET_PTR(args.This(), OPcam);
+    OPmat4* result = JS_GET_ARG_PTR(args, 0, OPmat4);
+    OPcamGetView((*ptr), result);
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPcamGetView(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPcam* ptr = JS_GET_ARG_PTR(args, 0, OPcam);
+    OPmat4* result = JS_GET_ARG_PTR(args, 1, OPmat4);
+    OPcamGetView((*ptr), result);
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPcamGetProjSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPcam* ptr = JS_GET_PTR(args.This(), OPcam);
+    OPmat4* result = JS_GET_ARG_PTR(args, 0, OPmat4);
+    OPcamGetProj((*ptr), result);
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPcamGetProj(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPcam* ptr = JS_GET_ARG_PTR(args, 0, OPcam);
+    OPmat4* result = JS_GET_ARG_PTR(args, 1, OPmat4);
+    OPcamGetProj((*ptr), result);
+
+    JS_RETURN_NULL;
+}
+
 JS_RETURN_VAL _OPcamSetPosSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
@@ -160,6 +201,8 @@ void OPcamWrapperCreate(Handle<Object> result, OPcam* ptr) {
 
     JS_SET_METHOD(result, "UpdateView", _OPcamUpdateViewSelf);
     JS_SET_METHOD(result, "UpdateProj", _OPcamUpdateProjSelf);
+    JS_SET_METHOD(result, "GetView", _OPcamGetViewSelf);
+    JS_SET_METHOD(result, "GetProj", _OPcamGetProjSelf);
     JS_SET_METHOD(result, "SetPos", _OPcamSetPosSelf);
     JS_SET_METHOD(result, "SetTarget", _OPcamSetTargetSelf);
 }
@@ -183,6 +226,8 @@ void OPcamWrapper(Handle<Object> exports) {
     JS_SET_METHOD(cam, "Ortho", _OPcamOrtho);
     JS_SET_METHOD(cam, "UpdateView", _OPcamUpdateView);
     JS_SET_METHOD(cam, "UpdateProj", _OPcamUpdateProj);
+    JS_SET_METHOD(cam, "GetView", _OPcamGetView);
+    JS_SET_METHOD(cam, "GetProj", _OPcamGetProj);
     JS_SET_METHOD(cam, "SetPos", _OPcamSetPos);
     JS_SET_METHOD(cam, "SetTarget", _OPcamSetTarget);
     JS_SET_NUMBER(cam, "size", sizeof(OPcam));

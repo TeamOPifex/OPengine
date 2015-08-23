@@ -81,7 +81,6 @@ JS_RETURN_VAL _OPeffectParamCam(const JS_ARGS& args) {
     JS_RETURN_NULL;
 }
 
-
 void OPeffectWrapper(Handle<Object> exports) {
     SCOPE_AND_ISOLATE;
 

@@ -166,6 +166,17 @@ JS_RETURN_VAL _OPmat4Log(const JS_ARGS& args) {
     JS_RETURN_NULL;
 }
 
+JS_RETURN_VAL _OPmat4Mul(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPmat4* result = JS_GET_ARG_PTR(args, 0, OPmat4);
+    OPmat4* a = JS_GET_ARG_PTR(args, 1, OPmat4);
+    OPmat4* b = JS_GET_ARG_PTR(args, 2, OPmat4);
+    OPmat4Mul(result, *a, *b);
+
+    JS_RETURN_NULL;
+}
+
 void OPmat4WrapperCreate(Handle<Object> result, OPmat4* ptr) {
     SCOPE_AND_ISOLATE
 
@@ -204,6 +215,7 @@ void OPmat4Wrapper(Handle<Object> exports) {
     JS_SET_METHOD(mat4, "RotX", _OPmat4RotX);
     JS_SET_METHOD(mat4, "RotY", _OPmat4RotY);
     JS_SET_METHOD(mat4, "RotZ", _OPmat4RotZ);
+    JS_SET_METHOD(mat4, "Mul", _OPmat4Mul);
     JS_SET_METHOD(mat4, "Translate", _OPmat4Translate);
     JS_SET_METHOD(mat4, "SetTranslate", _OPmat4SetTranslate);
     JS_SET_METHOD(mat4, "Scl", _OPmat4Scale);

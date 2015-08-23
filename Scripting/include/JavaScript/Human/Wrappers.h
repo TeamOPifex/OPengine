@@ -25,6 +25,7 @@ void OPrenderWrapper(Handle<Object> exports);
 void OPtextureWrapper(Handle<Object> exports);
 void OPskeletonWrapper(Handle<Object> exports);
 void OPskeletonAnimationWrapper(Handle<Object> exports);
+void OPframeBufferWrapper(Handle<Object> exports);
 
 void OPATTRWrapper(Handle<Object> exports);
 
