@@ -57,7 +57,7 @@ OP_MAIN {
 	// If the V8 engine is compiled in,
 	// see if we have a script to run at startup
 	if(argc > 1) {
-		chdir(OPIFEX_ASSETS);
+		//chdir(OPIFEX_ASSETS);
 		OPjavaScriptV8SetupRun(args[2]);
 		OP_MAIN_SUCCESS
 	}

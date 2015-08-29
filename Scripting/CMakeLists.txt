@@ -61,7 +61,7 @@ set(ALL_LIBS
 	4_Performance
 	5_Human
 	7_Pipeline
-	glfw 
+	glfw
 	${GLFW_LIBRARIES}
 )
 
@@ -93,12 +93,12 @@ if(${OPIFEX_OPTION_V8})
 		output_binary(8_Scripting "/External/V8/lib/release/" "icui18n.dll" ${OPIFEX_OS_WINDOWS})
 		output_binary(8_Scripting "/External/V8/lib/release/" "icuuc.dll" ${OPIFEX_OS_WINDOWS})
 		output_binary(8_Scripting "/External/V8/lib/release/" "v8.dll" ${OPIFEX_OS_WINDOWS})
-	else()	
-		output_binary(8_Scripting "/External/V8/lib/debug/" "icui18n.dll" ${OPIFEX_OS_WINDOWS})
-		output_binary(8_Scripting "/External/V8/lib/debug/" "icuuc.dll" ${OPIFEX_OS_WINDOWS})
-		output_binary(8_Scripting "/External/V8/lib/debug/" "v8.dll" ${OPIFEX_OS_WINDOWS})
-		output_binary(8_Scripting "/External/V8/lib/debug/" "v8.lib" ${OPIFEX_OS_WINDOWS})
-		output_binary(8_Scripting "/External/V8/lib/debug/" "v8_libbase.lib" ${OPIFEX_OS_WINDOWS})
-		output_binary(8_Scripting "/External/V8/lib/debug/" "v8_libplatform.lib" ${OPIFEX_OS_WINDOWS})
+	else()
+		#output_binary(8_Scripting "/External/V8/lib/debug/" "icui18n.dll" ${OPIFEX_OS_WINDOWS})
+		#output_binary(8_Scripting "/External/V8/lib/debug/" "icuuc.dll" ${OPIFEX_OS_WINDOWS})
+		#output_binary(8_Scripting "/External/V8/lib/debug/" "v8.dll" ${OPIFEX_OS_WINDOWS})
+		#output_binary(8_Scripting "/External/V8/lib/debug/" "v8.lib" ${OPIFEX_OS_WINDOWS})
+		#output_binary(8_Scripting "/External/V8/lib/debug/" "v8_libbase.lib" ${OPIFEX_OS_WINDOWS})
+		#output_binary(8_Scripting "/External/V8/lib/debug/" "v8_libplatform.lib" ${OPIFEX_OS_WINDOWS})
 	endif()
 endif()

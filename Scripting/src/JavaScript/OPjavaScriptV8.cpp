@@ -13,13 +13,29 @@
 Isolate* isolate = NULL;
 OPint(*OPJAVASCRIPTV8_REQUIRE)(FunctionCallbackInfo<Value>) = NULL;
 
+class ArrayBufferAllocator : public v8::ArrayBuffer::Allocator {
+public:
+	virtual void* Allocate(size_t length) {
+		void* data = AllocateUninitialized(length);
+		return data == NULL ? data : memset(data, 0, length);
+	}
+	virtual void* AllocateUninitialized(size_t length) { return malloc(length); }
+	virtual void Free(void* data, size_t) { free(data); }
+};
+
+ArrayBufferAllocator allocator;
+
 void OPjavaScriptV8Init() {
 	if(isolate == NULL) {
-		v8::V8::InitializeICU();
-		v8::Platform* platform = v8::platform::CreateDefaultPlatform();
-		v8::V8::InitializePlatform(platform);
-		v8::V8::Initialize();
-		isolate = Isolate::New();
+		if (v8::V8::InitializeICU()) {
+			v8::Platform* platform = v8::platform::CreateDefaultPlatform();
+			v8::V8::InitializePlatform(platform);
+			if (v8::V8::Initialize()) {
+				Isolate::CreateParams create_params;
+				create_params.array_buffer_allocator = &allocator;
+				isolate = Isolate::New(create_params);
+			}
+		}
 	}
 }
 
@@ -293,7 +309,7 @@ OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, 
 	Handle<String> source = JS_NEW_STRING(script->data);
 
 	v8::ScriptOrigin origin(JS_NEW_STRING("name"));
-	Handle<Script> compiledV8 = v8::Script::Compile(source, &origin);
+	Local<Script> compiledV8 = v8::Script::Compile(source, &origin);
 	if (compiledV8.IsEmpty()) {
 		return 0;
 	}
