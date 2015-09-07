@@ -143,6 +143,8 @@ OPint OPcmanDelete(const OPchar* key);
 */
 void OPcmanDestroy();
 
+OPint OPcmanSetDir(OPchar* dir);
+
 #ifdef __cplusplus
 }
 #endif

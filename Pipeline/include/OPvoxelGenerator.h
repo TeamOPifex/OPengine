@@ -2,6 +2,7 @@
 #define OPVOXEL_GENERATOR
 
 #include "./OPengine.h"
+
 #include "./Pipeline/include/Loaders/OPloaderVoxels.h"
 
 #define Z_SLICE voxelData.size.x * voxelData.size.y * z
@@ -24,6 +25,9 @@ struct OPvoxelGenerator {
 	OPuint Features;
 	OPuint VertexSize;
 	OPuint IndexOffset;
+	OPuint HideFace[6];
+	OPfloat Scale;
+	i8 Center;
 	void* Vertex;
 	OPlist* Vertices, *Indices;
 };
@@ -48,18 +52,20 @@ struct OPvoxelGeneratorData {
 
 void OPvoxelGeneratorInit(struct OPvoxelGenerator* gen, OPuint features);
 struct OPvoxelGenerator* OPvoxelGeneratorCreate(OPuint features);
-void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, i8 center, OPvec4 bones, OPvec4 weights, OPvec3 offset, OPfloat scale, i8 hideBack);
+void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, OPvec4 bones, OPvec4 weights, OPvec3 offset);
 OPmesh* OPvoxelGeneratorBuild(struct OPvoxelGenerator* gen);
 void OPvoxelGeneratorDestroy(struct OPvoxelGenerator* gen);
 
-inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, i8 center, OPvec4 bones, OPvec4 weights, i8 hideBack) {
-	OPvoxelGeneratorAdd(gen, voxelData, center, bones, weights, OPVEC3_ZERO, 1.0, hideBack);
+inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, OPvoxels voxelData) {
+	OPvoxelGeneratorAdd(gen, voxelData, OPvec4Zero, OPvec4Zero, OPVEC3_ZERO);
 }
-inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, i8 center, i8 hideBack) {
-	OPvoxelGeneratorAdd(gen, voxelData, center, OPvec4Zero, OPvec4Zero, hideBack);
+
+inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, OPvoxels voxelData, OPvec3 offset) {
+	OPvoxelGeneratorAdd(gen, voxelData, OPvec4Zero, OPvec4Zero, offset);
 }
-inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, i8 center, OPvec3 offset, i8 hideBack) {
-	OPvoxelGeneratorAdd(gen, voxelData, center, OPvec4Zero, OPvec4Zero, offset, 1.0, hideBack);
+
+inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, OPvoxels voxelData, OPvec4 bones, OPvec4 weights) {
+	OPvoxelGeneratorAdd(gen, voxelData, bones, weights, OPVEC3_ZERO);
 }
 
 #endif

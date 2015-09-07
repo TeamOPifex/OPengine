@@ -7,11 +7,13 @@
 #include "./include/libplatform/libplatform.h"
 #include "./Data/include/OPstring.h"
 #include "./Data/include/OPcman.h"
+#include "./v8-debug.h"
 
 #define CACHED_FILE_COUNT 256
 
 Isolate* isolate = NULL;
 OPint(*OPJAVASCRIPTV8_REQUIRE)(FunctionCallbackInfo<Value>) = NULL;
+void(*OPJAVASCRIPTV8_CUSTOMWRAPPER)(Handle<Object>) = NULL;
 
 class ArrayBufferAllocator : public v8::ArrayBuffer::Allocator {
 public:
@@ -34,6 +36,7 @@ void OPjavaScriptV8Init() {
 				Isolate::CreateParams create_params;
 				create_params.array_buffer_allocator = &allocator;
 				isolate = Isolate::New(create_params);
+
 			}
 		}
 	}
@@ -91,6 +94,9 @@ Handle<Value> _OPjavaScriptRequireScript(OPscript* script, OPchar* dir) {
 
 OPint loadCount = 0;
 Persistent<Value, CopyablePersistentTraits<Value> > loaded[CACHED_FILE_COUNT];
+#ifdef _DEBUG
+OPscript* loadedScripts[CACHED_FILE_COUNT];
+#endif
 OPchar* stored[CACHED_FILE_COUNT];
 
 Handle<Value> _OPjavaScriptRequire(OPchar* pathToLoad) {
@@ -99,13 +105,23 @@ Handle<Value> _OPjavaScriptRequire(OPchar* pathToLoad) {
     for(OPint i = 0; i < loadCount; i++) {
         if(OPstringEquals(pathToLoad, stored[i])) {
             OPlog("Reloaded %s", pathToLoad);
+
+			#ifdef _DEBUG
+			if(loadedScripts[i]->changed) {
+				// The script was changed, releoad the cache
+			    OPchar* tmpDir = _OPscriptV8GetDir(pathToLoad);
+				Handle<Value> tmpResult = _OPjavaScriptRequireScript(loadedScripts[i], tmpDir);
+				loaded[loadCount] = Persistent<Value, CopyablePersistentTraits<Value> >(isolate, tmpResult);
+				return tmpResult;
+			}
+			#endif
             return Local<Value>::New(isolate, loaded[i]);
         }
     }
 
     ASSERT(loadCount < CACHED_FILE_COUNT, "Too many cached files. Increase the CACHED_FILE_COUNT define in OPjavaScriptV8.cpp");
 
-    OPscript *scriptSource = (OPscript *) OPcmanLoadGet(pathToLoad);
+    OPscript* scriptSource = (OPscript *) OPcmanLoadGet(pathToLoad);
 
     OPchar *dir = _OPscriptV8GetDir(pathToLoad);
 
@@ -114,6 +130,9 @@ Handle<Value> _OPjavaScriptRequire(OPchar* pathToLoad) {
 
     loaded[loadCount] = Persistent<Value, CopyablePersistentTraits<Value> >(isolate, result);
     stored[loadCount] = OPstringCopy(pathToLoad);
+	#ifdef _DEBUG
+	loadedScripts[loadCount] = scriptSource;
+	#endif
     loadCount++;
 
     OPfree(dir);
@@ -137,26 +156,37 @@ Handle<Object> _OPscriptV8WrapEngine() {
 
     if (!setup) {
 
-        Handle<Object> tmp = JS_NEW_OBJECT();
+		Handle<Object> Wrapper = JS_NEW_OBJECT();
 
-        OPscriptNodeWrapperCore(tmp);
-        OPscriptNodeWrapperData(tmp);
-        OPscriptNodeWrapperMath(tmp);
-        OPscriptNodeWrapperPerformance(tmp);
-        OPscriptNodeWrapperHuman(tmp);
-        OPscriptNodeWrapperCommunication(tmp);
-        OPscriptNodeWrapperPipeline(tmp);
+        Handle<Object> OP = JS_NEW_OBJECT();
+
+        OPscriptNodeWrapperCore(OP);
+        OPscriptNodeWrapperData(OP);
+        OPscriptNodeWrapperMath(OP);
+        OPscriptNodeWrapperPerformance(OP);
+        OPscriptNodeWrapperHuman(OP);
+        OPscriptNodeWrapperCommunication(OP);
+        OPscriptNodeWrapperPipeline(OP);
 
         OPlog("Wrapped the engine.");
 
-        OPscript *result = NULL;
-        OPscriptLoad("Scripts/node_modules/OPengine/OPgameState.js", &result);
-        OPlog("Loaded OPgameState.js Script.");
-        JS_SET_OBJECT(tmp, "gameState", _OPjavaScriptRequireScript(result, NULL));
+        //OPscript *result = NULL;
+        //OPscriptLoad("Scripts/node_modules/OPengine/OPgameState.js", &result);
+        //OPlog("Loaded OPgameState.js Script.");
+        //JS_SET_OBJECT(tmp, "gameState", _OPjavaScriptRequireScript(result, NULL));
 
-        OPlog("Wrapped OPgameState.");
+        //OPlog("Wrapped OPgameState.");
 
-        exports = Persistent<Object, CopyablePersistentTraits<Object> >(isolate, tmp);
+		// If the application specified a Custom Wrapper
+		// Then we call it and it sets anyrthing it needs
+		// onto the Wrapper obj
+		if(OPJAVASCRIPTV8_CUSTOMWRAPPER != NULL) {
+			OPJAVASCRIPTV8_CUSTOMWRAPPER(Wrapper);
+		}
+
+		JS_SET_OBJECT(Wrapper, "OP", OP);
+
+        exports = Persistent<Object, CopyablePersistentTraits<Object> >(isolate, Wrapper);
         setup = 1;
     }
 
@@ -391,7 +421,7 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
     return Persistent<Value>(isolate, func->Call(global, count, values));
 }
 
-void OPjavaScriptV8SetupRun(OPchar* script) {
+void OPjavaScriptV8SetupRun(const OPchar* script) {
     OPjavaScriptV8Init();
     OPscript *result = NULL;
     OPscriptLoad(script, &result);

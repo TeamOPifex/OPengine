@@ -24,6 +24,7 @@ OPframeBuffer* OPRENDER_CURR_FRAMEBUFFER;
 GLuint createDepthTexture(int w, int h) {
 
 	GLuint tex;
+#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 	glGenTextures(1, &tex);
 	glBindTexture(GL_TEXTURE_2D, tex);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
@@ -38,13 +39,13 @@ GLuint createDepthTexture(int w, int h) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
-
+#endif
 	return tex;
 }
 
 OPframeBuffer OPframeBufferCreateShadow(ui32 width, ui32 height) {
 	OPframeBuffer fb;
-
+#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 	fb.Description.Width = width;
 	fb.Description.Height = height;
 	fb.Description.DataType = GL_FLOAT;
@@ -77,7 +78,7 @@ OPframeBuffer OPframeBufferCreateShadow(ui32 width, ui32 height) {
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+#endif
 	return fb;
 }
 
@@ -86,7 +87,7 @@ OPframeBuffer OPframeBufferCreateDepth(OPtextureDescription desc) {
 		desc
 	};
 
-#ifndef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 	OPlog("OPframeBufferCreateDepth 1");
 	OPglError("OPframeBufferCreateDepth:Error 1:%d");
 
@@ -167,7 +168,7 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 	ui32 dt = createDepthTexture(desc.Width, desc.Height);
 	OPlog("OPEngine Frame Buffer 5");
 
-#ifndef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 	OPglError("OPframeBufferCreate:Error 1:%d");
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fb.Handle);
 	OPlog("OPEngine Frame Buffer 6");
@@ -211,7 +212,7 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 #endif
 
 	// check fbo creation status
-#ifndef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 	GLenum e = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
 	OPlog("OPEngine Frame Buffer 9");
 #else
@@ -230,7 +231,7 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 		case GL_FRAMEBUFFER_COMPLETE:
 			OPlog("FBO OK");
 			break;
-#ifndef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 		case GL_FRAMEBUFFER_UNDEFINED:
 			OPlog("FBO Undefined");
 			break;
@@ -250,9 +251,9 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 	glBindTexture(GL_TEXTURE_2D, 0);
 	OPlog("OPEngine Frame Buffer 11");
 	OPglError("OPframeBufferCreate:Error 7:%d");
-#ifndef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) || !defined(OPIFEX_IOS)
 	OPlog("OPEngine Frame Buffer 12");
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	//glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	OPlog("OPEngine Frame Buffer 13");
 	OPglError("OPframeBufferCreate:Error 8:%d");
 #else
@@ -284,7 +285,7 @@ void OPframeBufferBind(OPframeBuffer* fb){
 void OPframeBufferBindRead(OPframeBuffer* fb){
 	//GLuint attachments[1] = {GL_COLOR_ATTACHMENT0};
 	OPRENDER_CURR_FRAMEBUFFER = fb;
-#ifdef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) || !defined(OPIFEX_IOS)
 	glBindFramebuffer(GL_FRAMEBUFFER, fb->Handle);
 #else
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, fb->Handle);
@@ -323,7 +324,7 @@ void OPframeBufferUnbind(){
 }
 
 void OPframeBufferSetReadBuffer(ui16 pos) {
-#ifdef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) || !defined(OPIFEX_IOS)
 	OPlog("OPframeBufferSetReadBuffer NOT SUPPORTED on Android");
 #else
 	glReadBuffer(GL_COLOR_ATTACHMENT0 + pos);
@@ -331,7 +332,7 @@ void OPframeBufferSetReadBuffer(ui16 pos) {
 }
 
 void OPframeBufferSetReadBufferDepth() {
-#ifdef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) || !defined(OPIFEX_IOS)
 	OPlog("OPframeBufferSetReadBufferDepth NOT SUPPORTED on Android");
 #else
 	glReadBuffer(GL_DEPTH_ATTACHMENT);
@@ -339,7 +340,7 @@ void OPframeBufferSetReadBufferDepth() {
 }
 
 void OPframeBufferAttach(OPtexture* texture, ui16 pos) {
-#ifdef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) || !defined(OPIFEX_IOS)
 	OPlog("OPframeBufferAttach NOT SUPPORTED on Android");
 #else
 	OPtextureBind(texture);
@@ -348,7 +349,7 @@ void OPframeBufferAttach(OPtexture* texture, ui16 pos) {
 }
 
 void OPframeBufferAttachDepth(OPtexture* texture) {
-#ifdef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) || !defined(OPIFEX_IOS)
 	OPlog("OPframeBufferAttachDepth NOT SUPPORTED on Android");
 #else
 	OPtextureBind(texture);

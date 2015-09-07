@@ -1,5 +1,7 @@
 #include "./Performance/include/OPphysXScene.h"
 
+#ifdef OPIFEX_OPTION_PHYSX
+
 PxReal _timestep = 1.0f / 60.0f;
 
 void OPphysXSceneInit(OPphysXScene* scene, OPvec3 gravity, void(*onTrigger)(OPphysXTrigger), void(*onContact)(OPphysXContact)) {
@@ -76,3 +78,5 @@ void OPphysXSceneUpdate(OPphysXScene* scene, OPtimer* timer) {
 		scene->scene->fetchResults(true);
 	}
 }
+
+#endif

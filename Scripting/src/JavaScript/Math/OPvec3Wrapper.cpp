@@ -162,6 +162,24 @@ JS_RETURN_VAL _OPvec3NormSelf(const JS_ARGS& args) {
     JS_RETURN_NULL;
 }
 
+JS_RETURN_VAL _OPvec3Destroy(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPvec3* ptr = JS_GET_ARG_PTR(args, 0, OPvec3);
+    OPfree(ptr);
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPvec3DestroySelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPvec3* ptr = JS_GET_PTR(args.This(), OPvec3);
+    OPfree(ptr);
+
+    JS_RETURN_NULL;
+}
+
 Handle<Object> OPvec3WrapperSetup(Handle<Object> result, OPvec3* ptr) {
     SCOPE_AND_ISOLATE;
 
@@ -175,6 +193,7 @@ Handle<Object> OPvec3WrapperSetup(Handle<Object> result, OPvec3* ptr) {
     JS_SET_METHOD(result, "Z", _OPvec3ZSelf);
     JS_SET_METHOD(result, "Norm", _OPvec3NormSelf);
     JS_SET_METHOD(result, "Sync", _OPvec3SyncSelf);
+    JS_SET_METHOD(result, "Destroy", _OPvec3DestroySelf);
     OPvec3ResetValues(result, ptr);
 
     return result;
@@ -204,6 +223,7 @@ void OPvec3Wrapper(Handle<Object> exports) {
     JS_SET_METHOD(vec3, "Y", _OPvec3Y);
     JS_SET_METHOD(vec3, "Z", _OPvec3Z);
     JS_SET_METHOD(vec3, "Sync", _OPvec3Sync);
+    JS_SET_METHOD(vec3, "Destroy", _OPvec3Destroy);
     JS_SET_NUMBER(vec3, "size", sizeof(OPvec3));
     JS_SET_OBJECT(exports, "vec3", vec3);
 

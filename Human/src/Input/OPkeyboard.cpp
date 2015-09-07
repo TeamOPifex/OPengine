@@ -4,13 +4,13 @@
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
 
-#ifndef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 	#include <GLFW/glfw3.h>
 #endif
 
 OPkeyboardState Keyboard;
 
-#ifndef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 
 void (*OPKEYBOARD_STREAM)(OPchar);
 
@@ -56,19 +56,19 @@ void OPkeyboardUpdatePost(OPtimer* timer) {
 
 }
 
-OPint OPkeyboardIsDown(OPkeyboardKey key) {
+OPint OPkeyboardIsDown(enum OPkeyboardKey key) {
 	return false;
 }
 
-OPint OPkeyboardIsUp(OPkeyboardKey key) {
+OPint OPkeyboardIsUp(enum OPkeyboardKey key) {
 	return true;
 }
 
-OPint OPkeyboardWasPressed(OPkeyboardKey key) {
+OPint OPkeyboardWasPressed(enum OPkeyboardKey key) {
 	return false;
 }
 
-OPint OPkeyboardWasReleased(OPkeyboardKey key) {
+OPint OPkeyboardWasReleased(enum OPkeyboardKey key) {
 	return false;
 }
 OPint OPkeyboardAnyInputIsDown() {
@@ -85,7 +85,7 @@ void OPkeyboardKey(OPuint codepoint) {
 }
 
 ui32 OPkeyboardMapping[_OPKEYBOARD_MAX] = {
-#ifndef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
    GLFW_KEY_BACKSPACE,	//   Key_BACKSPACE = 0,
    GLFW_KEY_TAB,		//   Key_TAB,
    GLFW_KEY_ENTER,		//   Key_ENTER,

@@ -22,12 +22,14 @@ void _init() {
 int _update(OPtimer* timer) {
     SCOPE_AND_ISOLATE
     const unsigned int argc = 1;
-    Handle<Value> argv[argc] = { JS_NEW_NUMBER(timer->Elapsed) };
+    Handle<Object> timerObj = JS_NEW_OBJECT();
+    JS_SET_PTR(timerObj, timer);
+
+    Handle<Value> argv[argc] = { timerObj };
     Handle<Object> obj = JS_NEW_OBJECT();
     Local<Value> result = _updateCallback->Call(obj, argc, argv);
     if(result->IsNumber()) {
         OPint retVal = result->Int32Value();
-        OPlog("Update %d", retVal);
         return retVal;
     }
     return 0;

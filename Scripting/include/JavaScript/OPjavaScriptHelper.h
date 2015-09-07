@@ -21,6 +21,12 @@ using namespace v8;
 #define NDEBUG
 #endif
 
+
+extern OPuint _JS_ARGC;
+#define JS_BEGIN_ARGS _JS_ARGC = 0;
+#define JS_BEGIN_ARGS_SELF _JS_ARGC = -1;
+
+
 ///////////////////////////////
 // SPECIFIC TO NODEJS 0.10.x
 ///////////////////////////////
@@ -57,6 +63,15 @@ typedef Persistent<Object> OPjavaScriptPersistentObject;
 #define JS_SET_PROTOTYPE_METHOD(obj, name, func) obj->PrototypeTemplate()->Set(JS_NEW_STRING(name), JS_NEW_FUNCTION_TEMPLATE(func)->GetFunction());
 #define JS_SET_NUMBER(target, name, number) target->Set(JS_NEW_STRING(name), JS_NEW_NUMBER(number));
 
+
+
+#define JS_RUN_SELF(m) \
+JS_BEGIN_ARGS_SELF \
+JS_RETURN(m(args));
+
+#define JS_RUN(m) \
+JS_BEGIN_ARGS \
+JS_RETURN(m(args));
 
 #endif
 
@@ -99,6 +114,17 @@ typedef Persistent<Object, CopyablePersistentTraits<Object> > OPjavaScriptPersis
 #define JS_SET_PROTOTYPE_METHOD(obj, name, func) obj->PrototypeTemplate()->Set(JS_NEW_STRING(name), JS_NEW_FUNCTION_TEMPLATE(func)->GetFunction());
 #define JS_SET_NUMBER(target, name, number) target->Set(JS_NEW_STRING(name), JS_NEW_NUMBER(number));
 
+
+
+
+#define JS_RUN_SELF(m) \
+JS_BEGIN_ARGS_SELF \
+m(args);
+
+#define JS_RUN(m) \
+JS_BEGIN_ARGS \
+m(args);
+
 #endif
 
 
@@ -140,12 +166,29 @@ typedef Persistent<Function, CopyablePersistentTraits<Function> > OPjavaScriptPe
 #define JS_SET_OBJECT(target, name, object) target->Set(JS_NEW_STRING(name), object);
 #define JS_SET_PROTOTYPE_METHOD(obj, name, func) obj->PrototypeTemplate()->Set(JS_NEW_STRING(name), JS_NEW_FUNCTION_TEMPLATE(func)->GetFunction());
 #define JS_SET_NUMBER(target, name, number) target->Set(JS_NEW_STRING(name), JS_NEW_NUMBER(number));
+
+
+
+
+#define JS_RUN_SELF(m) \
+JS_BEGIN_ARGS_SELF \
+m(args);
+
+#define JS_RUN(m) \
+JS_BEGIN_ARGS \
+m(args);
+
+
 #endif
 
 
 
-#define JS_SET_OBJECT(obj, name, val) obj->Set(JS_NEW_STRING(name), val);
-#define JS_SET_NUMBER(obj, name, val) obj->Set(JS_NEW_STRING(name), JS_NEW_NUMBER(val));
+///////////////////////////////
+// COMMON TO EACH NODE_10, NODE_12, V8
+///////////////////////////////
+
+//#define JS_SET_OBJECT(obj, name, val) obj->Set(JS_NEW_STRING(name), val);
+//#define JS_SET_NUMBER(obj, name, val) obj->Set(JS_NEW_STRING(name), JS_NEW_NUMBER(val));
 #define JS_SET_STRING(obj, name, val) obj->Set(JS_NEW_STRING(name), JS_NEW_STRING(val));
 #define JS_GET_NUMBER(obj, name) obj->Get(JS_NEW_STRING(name))->NumberValue();
 #define JS_GET_INTEGER(obj, name) obj->Get(JS_NEW_STRING(name))->IntegerValue();
@@ -162,6 +205,29 @@ typedef Persistent<Function, CopyablePersistentTraits<Function> > OPjavaScriptPe
 #define JS_CREATE_PERSISTENT(value) Persistent<Value>(isolate, value)
 
 
+
+
+inline void JS_SET_OBJECT_PTR(Handle<Object> obj, const OPchar* name, void* ptr) {
+	SCOPE_AND_ISOLATE
+
+    Handle<Object> tmp = JS_NEW_OBJECT();
+    JS_SET_PTR(tmp, ptr);
+    JS_SET_OBJECT(obj, name, tmp);
+}
+
+
+inline void* _JS_NEXT(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+    _JS_ARGC++;
+    if(_JS_ARGC == 0) {
+        return JS_GET_PTR(args.This(), void);
+    }
+    return JS_GET_ARG_PTR(args, _JS_ARGC - 1, void);
+}
+#define JS_NEXT_ARG_AS(t) (t*)_JS_NEXT(args);
+
+
 #endif
+
 
 #endif //OPIFEXENGINE_OPSCRIPTNODEWRAPPERMATH_H

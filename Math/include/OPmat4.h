@@ -25,15 +25,15 @@ inline OPvec4 OPmat4Transform(OPvec4 a, OPmat4 b);
 struct OPmat4 {
 	OPvec4 cols[4];
 
-	OPmat4 operator=(OPmat4 vhs) { 
+	OPmat4 operator=(OPmat4 vhs) {
 		OPmemcpy(this, (void*)&vhs, sizeof(OPmat4)); return *this;
 	}
 	inline OPvec4& operator[](const i32 i) {
 		return cols[i];
 	}
-	inline OPmat4& operator*=(OPmat4 vhs) { 
-		OPmat4Mul(this, *this, vhs); 
-		return *this; 
+	inline OPmat4& operator*=(OPmat4 vhs) {
+		OPmat4Mul(this, *this, vhs);
+		return *this;
 	}
 	inline OPmat4& operator*=(OPvec2 vhs) {
 		OPmat4Scl(this, vhs.x, vhs.y, 1);
@@ -51,13 +51,13 @@ struct OPmat4 {
 		OPmat4Scl(this, vhs.x, vhs.y, 1);
 		return *this;
 	}
-	inline OPmat4& operator/=(OPvec3 vhs) { 
-		OPmat4Scl(this, vhs.x, vhs.y, vhs.z); 
-		return *this; 
+	inline OPmat4& operator/=(OPvec3 vhs) {
+		OPmat4Scl(this, vhs.x, vhs.y, vhs.z);
+		return *this;
 	}
-	inline OPmat4& operator/=(OPvec4 vhs) { 
-		OPmat4Scl(this, vhs.x, vhs.y, vhs.z); 
-		return *this; 
+	inline OPmat4& operator/=(OPvec4 vhs) {
+		OPmat4Scl(this, vhs.x, vhs.y, vhs.z);
+		return *this;
 	}
 	inline OPmat4& operator+=(OPvec2 vhs) {
 		OPmat4Translate(this, vhs.x, vhs.y, 0);
@@ -109,11 +109,11 @@ struct OPmat4 {
 	}
 };
 
-inline OPvec3 operator*(OPvec3 lhs, OPmat4 rhs) { 
+inline OPvec3 operator*(OPvec3 lhs, OPmat4 rhs) {
 	return OPmat4Transform(lhs, rhs);
 }
 
-inline OPvec3 operator*(OPmat4 lhs, OPvec3 rhs) { 
+inline OPvec3 operator*(OPmat4 lhs, OPvec3 rhs) {
 	return OPmat4Transform(rhs, lhs);
 }
 
@@ -123,14 +123,14 @@ inline OPmat4 operator*(OPmat4 lhs, OPmat4 rhs) {
 	return temp;
 }
 
-//    ___            _         _ _        _       _ _   _              _   _    
-//   / __|_  _ _ __ | |__  ___| (_)__    /_\  _ _(_) |_| |_  _ __  ___| |_(_)__ 
+//    ___            _         _ _        _       _ _   _              _   _
+//   / __|_  _ _ __ | |__  ___| (_)__    /_\  _ _(_) |_| |_  _ __  ___| |_(_)__
 //   \__ \ || | '  \| '_ \/ _ \ | / _|  / _ \| '_| |  _| ' \| '  \/ -_)  _| / _|
 //   |___/\_, |_|_|_|_.__/\___/_|_\__| /_/ \_\_| |_|\__|_||_|_|_|_\___|\__|_\__|
-//        |__/                                                                  
+//        |__/
 
 extern const OPmat4 OPMAT4ZERO;
-extern const OPmat4 OPMAT4IDENTITY; 
+extern const OPmat4 OPMAT4IDENTITY;
 
 inline OPmat4 OPmat4Create(
 	f32 _00, f32 _10, f32 _20, f32 _30,
@@ -161,22 +161,22 @@ inline OPmat4 OPmat4Create(OPvec4 row0, OPvec4 row1, OPvec4 row2, OPvec4 row3) {
 inline void OPmat4Mul(OPmat4* dst, OPmat4 m1, OPmat4 m2)
 {
 	OPmat4 result;
-	result[0][0] = m1[0][0] * m2[0][0] + m1[1][0] * m2[0][1] + m1[2][0] * m2[0][2] + m1[3][0] * m2[0][3]; 
-	result[1][0] = m1[0][0] * m2[1][0] + m1[1][0] * m2[1][1] + m1[2][0] * m2[1][2] + m1[3][0] * m2[1][3]; 
-	result[2][0] = m1[0][0] * m2[2][0] + m1[1][0] * m2[2][1] + m1[2][0] * m2[2][2] + m1[3][0] * m2[2][3]; 
-	result[3][0] = m1[0][0] * m2[3][0] + m1[1][0] * m2[3][1] + m1[2][0] * m2[3][2] + m1[3][0] * m2[3][3]; 
-	result[0][1] = m1[0][1] * m2[0][0] + m1[1][1] * m2[0][1] + m1[2][1] * m2[0][2] + m1[3][1] * m2[0][3]; 
-	result[1][1] = m1[0][1] * m2[1][0] + m1[1][1] * m2[1][1] + m1[2][1] * m2[1][2] + m1[3][1] * m2[1][3]; 
-	result[2][1] = m1[0][1] * m2[2][0] + m1[1][1] * m2[2][1] + m1[2][1] * m2[2][2] + m1[3][1] * m2[2][3]; 
-	result[3][1] = m1[0][1] * m2[3][0] + m1[1][1] * m2[3][1] + m1[2][1] * m2[3][2] + m1[3][1] * m2[3][3]; 
-	result[0][2] = m1[0][2] * m2[0][0] + m1[1][2] * m2[0][1] + m1[2][2] * m2[0][2] + m1[3][2] * m2[0][3]; 
-	result[1][2] = m1[0][2] * m2[1][0] + m1[1][2] * m2[1][1] + m1[2][2] * m2[1][2] + m1[3][2] * m2[1][3]; 
-	result[2][2] = m1[0][2] * m2[2][0] + m1[1][2] * m2[2][1] + m1[2][2] * m2[2][2] + m1[3][2] * m2[2][3]; 
-	result[3][2] = m1[0][2] * m2[3][0] + m1[1][2] * m2[3][1] + m1[2][2] * m2[3][2] + m1[3][2] * m2[3][3]; 
-	result[0][3] = m1[0][3] * m2[0][0] + m1[1][3] * m2[0][1] + m1[2][3] * m2[0][2] + m1[3][3] * m2[0][3]; 
-	result[1][3] = m1[0][3] * m2[1][0] + m1[1][3] * m2[1][1] + m1[2][3] * m2[1][2] + m1[3][3] * m2[1][3]; 
-	result[2][3] = m1[0][3] * m2[2][0] + m1[1][3] * m2[2][1] + m1[2][3] * m2[2][2] + m1[3][3] * m2[2][3]; 
-	result[3][3] = m1[0][3] * m2[3][0] + m1[1][3] * m2[3][1] + m1[2][3] * m2[3][2] + m1[3][3] * m2[3][3]; 
+	result[0][0] = m1[0][0] * m2[0][0] + m1[1][0] * m2[0][1] + m1[2][0] * m2[0][2] + m1[3][0] * m2[0][3];
+	result[1][0] = m1[0][0] * m2[1][0] + m1[1][0] * m2[1][1] + m1[2][0] * m2[1][2] + m1[3][0] * m2[1][3];
+	result[2][0] = m1[0][0] * m2[2][0] + m1[1][0] * m2[2][1] + m1[2][0] * m2[2][2] + m1[3][0] * m2[2][3];
+	result[3][0] = m1[0][0] * m2[3][0] + m1[1][0] * m2[3][1] + m1[2][0] * m2[3][2] + m1[3][0] * m2[3][3];
+	result[0][1] = m1[0][1] * m2[0][0] + m1[1][1] * m2[0][1] + m1[2][1] * m2[0][2] + m1[3][1] * m2[0][3];
+	result[1][1] = m1[0][1] * m2[1][0] + m1[1][1] * m2[1][1] + m1[2][1] * m2[1][2] + m1[3][1] * m2[1][3];
+	result[2][1] = m1[0][1] * m2[2][0] + m1[1][1] * m2[2][1] + m1[2][1] * m2[2][2] + m1[3][1] * m2[2][3];
+	result[3][1] = m1[0][1] * m2[3][0] + m1[1][1] * m2[3][1] + m1[2][1] * m2[3][2] + m1[3][1] * m2[3][3];
+	result[0][2] = m1[0][2] * m2[0][0] + m1[1][2] * m2[0][1] + m1[2][2] * m2[0][2] + m1[3][2] * m2[0][3];
+	result[1][2] = m1[0][2] * m2[1][0] + m1[1][2] * m2[1][1] + m1[2][2] * m2[1][2] + m1[3][2] * m2[1][3];
+	result[2][2] = m1[0][2] * m2[2][0] + m1[1][2] * m2[2][1] + m1[2][2] * m2[2][2] + m1[3][2] * m2[2][3];
+	result[3][2] = m1[0][2] * m2[3][0] + m1[1][2] * m2[3][1] + m1[2][2] * m2[3][2] + m1[3][2] * m2[3][3];
+	result[0][3] = m1[0][3] * m2[0][0] + m1[1][3] * m2[0][1] + m1[2][3] * m2[0][2] + m1[3][3] * m2[0][3];
+	result[1][3] = m1[0][3] * m2[1][0] + m1[1][3] * m2[1][1] + m1[2][3] * m2[1][2] + m1[3][3] * m2[1][3];
+	result[2][3] = m1[0][3] * m2[2][0] + m1[1][3] * m2[2][1] + m1[2][3] * m2[2][2] + m1[3][3] * m2[2][3];
+	result[3][3] = m1[0][3] * m2[3][0] + m1[1][3] * m2[3][1] + m1[2][3] * m2[3][2] + m1[3][3] * m2[3][3];
 	*dst = result;
 };
 
@@ -303,17 +303,31 @@ inline void OPmat4Identity(OPmat4* m) {
 	 return OPmat4Scl(m, x, x, x);
  }
 
- inline OPmat4 OPmat4Translate(OPmat4 m, OPfloat x, OPfloat y, OPfloat z) {
-	 m[3][0] += x;
-	 m[3][1] += y;
-	 m[3][2] += z;
-	 return m;
-}
+  inline OPmat4 OPmat4Translate(OPmat4 m, OPfloat x, OPfloat y, OPfloat z) {
+ 	 m[3][0] += x;
+ 	 m[3][1] += y;
+ 	 m[3][2] += z;
+ 	 return m;
+ }
+
+  inline OPmat4 OPmat4SetTranslate(OPmat4 m, OPfloat x, OPfloat y, OPfloat z) {
+ 	 m[3][0] = x;
+ 	 m[3][1] = y;
+ 	 m[3][2] = z;
+ 	 return m;
+ }
 
  inline OPmat4 OPmat4Translate(OPmat4 m, OPvec3 v) {
 	 m[3][0] += v.x;
 	 m[3][1] += v.y;
 	 m[3][2] += v.z;
+	 return m;
+}
+
+inline OPmat4 OPmat4SetTranslate(OPmat4 m, OPvec3 v) {
+	 m[3][0] = v.x;
+	 m[3][1] = v.y;
+	 m[3][2] = v.z;
 	 return m;
 }
 
@@ -360,11 +374,11 @@ inline void OPmat4Identity(OPmat4* m) {
 	 OPmat4Mul(m, *m, tmp);
  }
 
- //    ___             _   _               _     _       _ _   _              _   _    
- //   | __|  _ _ _  __| |_(_)___ _ _  __ _| |   /_\  _ _(_) |_| |_  _ __  ___| |_(_)__ 
+ //    ___             _   _               _     _       _ _   _              _   _
+ //   | __|  _ _ _  __| |_(_)___ _ _  __ _| |   /_\  _ _(_) |_| |_  _ __  ___| |_(_)__
  //   | _| || | ' \/ _|  _| / _ \ ' \/ _` | |  / _ \| '_| |  _| ' \| '  \/ -_)  _| / _|
  //   |_| \_,_|_||_\__|\__|_\___/_||_\__,_|_| /_/ \_\_| |_|\__|_||_|_|_|_\___|\__|_\__|
- //                                                                                    
+ //
 
 /* NOTE(garrett): Pretty sure this unneeded now that we have OPquat
        (Kirk): I think we still need it, we can use a quat to compound
@@ -385,7 +399,7 @@ inline void OPmat4BuildQuat(OPmat4* dst, OPquat* qtr){
 	dst->cols[1].x = xy + wz;
 	dst->cols[1].y = 1 - (xx + zz);
 	dst->cols[1].z = yz - wx;
-	
+
 	dst->cols[2].x = xz - wy;
 	dst->cols[2].y = yz + wx;
 	dst->cols[2].z = 1 - (xx + yy);
@@ -393,7 +407,7 @@ inline void OPmat4BuildQuat(OPmat4* dst, OPquat* qtr){
 	dst->cols[3].x = 0;
 	dst->cols[3].y = 0;
 	dst->cols[3].z = 0;
-	
+
 	dst->cols[0].w = 0;
 	dst->cols[1].w = 0;
 	dst->cols[2].w = 0;
@@ -419,10 +433,10 @@ inline OPfloat OPmat4GetCofactor(OPfloat m0, OPfloat m1, OPfloat m2,
 
 inline void OPmat4Log(const OPchar* msg, OPmat4 m) {
 	OPlog("%s:\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f",
-		msg, 
-		m[0][0], m[1][0], m[2][0], m[3][0], 
-		m[0][1], m[1][1], m[2][1], m[3][1], 
-		m[0][2], m[1][2], m[2][2], m[3][2], 
+		msg,
+		m[0][0], m[1][0], m[2][0], m[3][0],
+		m[0][1], m[1][1], m[2][1], m[3][1],
+		m[0][2], m[1][2], m[2][2], m[3][2],
 		m[0][3], m[1][3], m[2][3], m[3][3]);
 }
 

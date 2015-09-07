@@ -6,6 +6,7 @@
 
 #include "./Pipeline/include/Loaders/OPloaderOPskeleton.h"
 #include "./Pipeline/include/Loaders/OPloaderOPanimation.h"
+#include "./Data/include/OPstring.h"
 
 
 JS_RETURN_VAL _OPskeletonUpdate(const JS_ARGS& args) {
@@ -112,7 +113,7 @@ void OPskeletonWrapperCreate(Handle<Object> result, OPskeleton* skeleton) {
     JS_SET_METHOD(result, "LocalTranslate", _OPskeletonLocalTranslateSelf);
     JS_SET_METHOD(result, "Destroy", _OPskeletonDestroySelf);
     JS_SET_NUMBER(result, "hierarchyCount", skeleton->hierarchyCount);
-    
+
     Handle<Object> skinned = JS_NEW_OBJECT();
     JS_SET_PTR(skinned, skeleton->skinned);
     JS_SET_OBJECT(result, "skinned", skinned);
@@ -122,8 +123,41 @@ void OPskeletonWrapperCreate(Handle<Object> result, OPskeleton* skeleton) {
 JS_RETURN_VAL _OPskeletonCreate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
-    OPskeleton* skeleton = (OPskeleton*)OPalloc(sizeof(OPskeleton));
-    Handle<Object> result = JS_NEW_OBJECT();;
+    Handle<Object> result = JS_NEW_OBJECT();
+
+    Local<Array> arr = Local<Array>::Cast(args[0]);
+    OPuint count =  arr->Length();
+    i16* hierarchy = (i16*)OPalloc(sizeof(i16) * count);
+    OPmat4* pose = (OPmat4*)OPalloc(sizeof(OPmat4) * count);
+    OPchar** names = (OPchar**)OPalloc(sizeof(OPchar*) * count);
+
+    for(OPuint i = 0 ; i < count; i++) {
+      hierarchy[i] = arr->Get(i)->NumberValue();
+      OPlog("h: %d", hierarchy[i]);
+    }
+
+
+    Local<Array> arrPose = Local<Array>::Cast(args[1]);
+    count =  arrPose->Length();
+    for(OPuint i = 0 ; i < count; i++) {
+      Local<Object> item = Local<Object>::Cast(arrPose->Get(i));
+      pose[i] = *JS_GET_PTR(item, OPmat4);
+      OPmat4Log("Pose", pose[i]);
+    }
+
+
+    Local<Array> arrNames = Local<Array>::Cast(args[2]);
+    count =  arrNames->Length();
+    OPlog("Name Count: %d, %d", count, sizeof(OPchar*));
+    OPlog("Pos %p", names);
+    for(OPuint i = 0 ; i < count; i++) {
+        OPlog("C: %d", i);
+        String::Utf8Value name(arrNames->Get(i)->ToString());
+        OPlog("Name: %s", *name);
+        names[i] = OPstringCopy(*name);
+    }
+
+    OPskeleton* skeleton = OPskeletonCreate(hierarchy, pose, count, names);
     OPskeletonWrapperCreate(result, skeleton);
 
     JS_RETURN(result);

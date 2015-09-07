@@ -11,31 +11,37 @@
 #include "./Human/include/Utilities/Errors.h"
 #include "./External/LodePNG/include/LodePNG.h"
 
-#if defined(OPIFEX_OPENGL_ES_2)
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
+
+#ifdef OPIFEX_OPENGL_ES_2
+    #ifdef OPIFEX_IOS
+    #include <OpenGLES/ES2/gl.h>
+    #else
+    #include <GLES2/gl2.h>
+    #include <GLES2/gl2ext.h>
+    #endif
+
 #else
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+    #include <GLFW/glfw3.h>
+    #include <GL/glew.h>
 #endif
 
 void OPimagePNG24WriteStream(ui8* imageData, i32 width, i32 height, ui8** data, OPuint* dataSize) {
 	ui32 error = lodepng_encode24(data, (size_t*)dataSize, imageData, width, height);
 }
 void OPimagePNG32WriteStream(ui8* imageData, i32 width, i32 height, ui8** data, OPuint* dataSize) {
-	ui32 error = lodepng_encode32(data, dataSize, imageData, width, height);
+	ui32 error = lodepng_encode32(data, (size_t*)dataSize, imageData, width, height);
 }
 
 void OPimagePNGCreate24(ui8* imageData, i32 width, i32 height, OPchar* filename) {
 	ui8*   data;
-	OPuint dataSize;
+	size_t dataSize;
 	ui32 error = lodepng_encode24(&data, &dataSize, imageData, width, height);
 	lodepng_save_file(data, dataSize, filename);
 }
 
 void OPimagePNGCreate32(ui8* imageData, i32 width, i32 height, OPchar* filename) {
 	ui8*   data;
-	OPuint dataSize;
+	size_t dataSize;
 	ui32 error = lodepng_encode32(&data, &dataSize, imageData, width, height);
 	lodepng_save_file(data, dataSize, filename);
 }

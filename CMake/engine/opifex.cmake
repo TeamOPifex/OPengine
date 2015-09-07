@@ -1,10 +1,10 @@
 
 SET ( CMAKE_C_FLAGS "-stdlib=libstdc++" CACHE STRING "compile flags" FORCE)
-SET ( CMAKE_CXX_FLAGS "-stdlib=libstdc++" CACHE STRING "compile flags" FORCE)
+SET ( CMAKE_CXX_FLAGS "-stdlib=libstdc++ -std=c++11" CACHE STRING "compile flags" FORCE)
 
 ### CMake Setup
-include(${CMAKE_CURRENT_LIST_DIR}/components.cmake) 
-include(${CMAKE_CURRENT_LIST_DIR}/macros.cmake) 
+include(${CMAKE_CURRENT_LIST_DIR}/components.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/macros.cmake)
 
 
 if(OPIFEX_BINARIES)

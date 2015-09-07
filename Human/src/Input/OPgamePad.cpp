@@ -3,7 +3,7 @@
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
 	
-#if !defined(OPIFEX_ANDROID) && defined(OPIFEX_UNIX)
+#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS) && defined(OPIFEX_UNIX)
 	#include <GLFW/glfw3.h>
 #elif defined(OPIFEX_WINDOWS)
 	#include <Windows.h>
@@ -140,7 +140,7 @@ void __OPandUpdateGamePad(OPgamePad* controller){
 }
 #endif
 //-----------------------------------------------------------------------------
-#ifdef OPIFEX_UNIX
+#if defined(OPIFEX_UNIX) && !defined(OPIFEX_IOS)
 void __OPlnxUpdateGamePad(OPgamePad* c){
 	
 	i32  axes = 0, buttons = 0;
@@ -306,7 +306,7 @@ void OPgamePadUpdate(OPgamePad* controller){
 	__OPandUpdateGamePad(controller);
 #endif
 	
-#ifdef OPIFEX_UNIX
+#if defined(OPIFEX_UNIX) && !defined(OPIFEX_IOS)
 	__OPlnxUpdateGamePad(controller);	
 #endif
 

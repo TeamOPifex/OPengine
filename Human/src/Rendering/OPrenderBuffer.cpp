@@ -4,11 +4,18 @@
 #include "./Core/include/OPlog.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
-	#include <GLES2/gl2.h>
-	#include <GLES2/gl2ext.h>
+    #ifdef OPIFEX_IOS
+    #include <OpenGLES/ES2/gl.h>
+    #else
+    #include <GLES2/gl2.h>
+    #include <GLES2/gl2ext.h>
+    #endif
+
 #else
-	#include <GL/glew.h>
+    #include <GLFW/glfw3.h>
+    #include <GL/glew.h>
 #endif
+
 
 //-----------------------------------------------------------------------------
 //   _____ _       _           _     
@@ -92,7 +99,7 @@ void OPrenderDrawIndexed(ui32 offset, ui32 count){
 
 void OPrenderDrawUserArray(void* vertices, ui32 attrs, ui32 offset, ui32 count) {
 
-#ifdef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) || !defined(OPIFEX_IOS)
 	OPlog("OPrenderDrawUserArray NOT SUPPORTED yet on Android");
 #else
 	ui32 off = 0;

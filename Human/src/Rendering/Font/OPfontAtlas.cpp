@@ -168,7 +168,7 @@ OPtexture OPfontAtlasTexture(OPfontAtlas* atlas) {
 	OPtextureDescription desc = { 
 		(ui16)atlas->width,
 		(ui16)atlas->height,
-		#ifndef OPIFEX_ANDROID
+		#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 		GL_RED,
 		GL_RED,
 		#else

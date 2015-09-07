@@ -52,12 +52,31 @@ JS_RETURN_VAL _OPvec4Set(const JS_ARGS& args) {
     JS_RETURN_NULL;
 }
 
+JS_RETURN_VAL _OPvec4Destroy(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPvec4* ptr = JS_GET_ARG_PTR(args, 0, OPvec4);
+    OPfree(ptr);
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPvec4DestroySelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPvec4* ptr = JS_GET_PTR(args.This(), OPvec4);
+    OPfree(ptr);
+
+    JS_RETURN_NULL;
+}
+
 Handle<Object> _OPvec4Setup(Handle<Object> result, OPvec4* ptr){
     SCOPE_AND_ISOLATE;
 
     JS_SET_PTR(result, ptr);
     JS_SET_METHOD(result, "Log", _OPvec4LogSelf);
     JS_SET_METHOD(result, "Set", _OPvec4SetSelf);
+    JS_SET_METHOD(result, "Destroy", _OPvec4DestroySelf);
 
     return result;
 }
@@ -71,7 +90,7 @@ JS_RETURN_VAL _OPvec4Create(const JS_ARGS& args) {
     } else {
         *ptr = OPvec4Create(0,0,0,0);
     }
-    
+
     JS_RETURN(_OPvec4Setup(JS_NEW_OBJECT(), ptr));
 }
 
@@ -83,6 +102,7 @@ void OPvec4Wrapper(Handle<Object> exports) {
     JS_SET_METHOD(vec4, "Create", _OPvec4Create);
     JS_SET_METHOD(vec4, "Set", _OPvec4Set);
     JS_SET_METHOD(vec4, "Log", _OPvec4Log);
+    JS_SET_METHOD(vec4, "Destroy", _OPvec4Destroy);
     JS_SET_NUMBER(vec4, "size", sizeof(OPvec4));
     JS_SET_OBJECT(exports, "vec4", vec4);
 

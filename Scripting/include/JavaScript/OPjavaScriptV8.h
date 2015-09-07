@@ -9,6 +9,7 @@
 #include "./Scripting/include/JavaScript/OPjavaScriptHelper.h"
 
 extern OPint(*OPJAVASCRIPTV8_REQUIRE)(FunctionCallbackInfo<Value>);
+extern void(*OPJAVASCRIPTV8_CUSTOMWRAPPER)(Handle<Object>);
 
 struct OPjavaScriptV8Compiled {
 	OPscript* Source;
@@ -24,7 +25,7 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
 OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, OPchar* name);
 OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, OPchar* name, OPuint count, OPjavaScriptPersistentValue* args);
 
-void OPjavaScriptV8SetupRun(OPchar* script);
+void OPjavaScriptV8SetupRun(const OPchar* script);
 
 inline OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script) {
 	return OPjavaScriptV8Compile(compiled, script, NULL);

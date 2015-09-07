@@ -17,4 +17,12 @@
 #define _DEBUG
 #endif
 
+#if defined(OPIFEX_OPTION_NODEJS) || defined(OPIFEX_OPTION_V8)
+#define OPIFEX_JAVASCRIPT
+#endif
+
+#ifndef OPIFEX_ASSETS
+#define OPIFEX_ASSETS NULL
+#endif
+
 #endif

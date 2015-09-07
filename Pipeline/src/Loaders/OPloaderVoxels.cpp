@@ -1,4 +1,5 @@
 #include "./Pipeline/include/Loaders/OPloaderVoxels.h"
+#include "./OPengine.h"
 
 OPchar* readMatrixName(OPstream* str) {
 	OPchar len = *OPread(str, sizeof(ui8));

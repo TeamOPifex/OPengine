@@ -4,8 +4,12 @@
 #include "Core/include/Assert.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
-	#include <GLES2/gl2.h>
-	#include <GLES2/gl2ext.h>
+    #ifdef OPIFEX_IOS
+    #include <OpenGLES/ES2/gl.h>
+    #else
+    #include <GLES2/gl2.h>
+    #include <GLES2/gl2ext.h>
+    #endif
 #else
 	#include <GL/glew.h>
 #endif
@@ -36,7 +40,7 @@ OPint OPglError(const char* message){
 			case GL_OUT_OF_MEMORY:
 				OPlog("GL_OUT_OF_MEMORY");
 				break;
-			#ifndef OPIFEX_ANDROID
+			#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 				case GL_STACK_UNDERFLOW:
 					OPlog("GL_STACK_UNDERFLOW");
 					break;

@@ -33,6 +33,18 @@ i64 OP_CMAN_LAST_CHECKED = 100;
 
 #endif
 
+OPint OPcmanSetDir(OPchar* dir) {
+	OPint result;
+#if defined(OPIFEX_WINDOWS)
+	result = _chdir(dir);
+#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
+	result = chdir(dir);
+#else
+	result = chdir(dir);
+#endif
+	return result;
+}
+
 void OPcmanUpdate(OPtimer* timer) {
 #if defined(_DEBUG)
 	i32 i, j;

@@ -1,4 +1,5 @@
 #include "./Pipeline/include/OPvoxelGenerator.h"
+#include "./OPengine.h"
 
 void OPvoxelGeneratorInit(struct OPvoxelGenerator* gen, OPuint features) {
 	gen->VertexSize = 0;
@@ -14,6 +15,9 @@ void OPvoxelGeneratorInit(struct OPvoxelGenerator* gen, OPuint features) {
 	gen->Indices = OPlistCreate(512, sizeof(ui32));
 	gen->Vertex = OPalloc(gen->VertexSize);
 	gen->IndexOffset = 0;
+
+	gen->Scale = 1.0f;
+	gen->Center = true;
 }
 
 struct OPvoxelGenerator* OPvoxelGeneratorCreate(OPuint features) {
@@ -172,12 +176,12 @@ void addBackSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data
 	addSide(gen, data);
 }
 
-void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, i8 center, OPvec4 bones, OPvec4 weights, OPvec3 offset, OPfloat scale, i8 hideBack) {
+void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, OPvec4 bones, OPvec4 weights, OPvec3 offset) {
 
 	bool generate[6];
 	OPvoxelGeneratorData data;
 	data.Size = 0.5f;
-	if(center) {
+	if(gen->Center) {
 		data.Offset = OPvec3Create(
 			-(OPint)voxelData.size.x / 2.0,
 			-(OPint)voxelData.size.y / 2.0,
@@ -189,8 +193,8 @@ void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData
 
 	data.Offset += offset;
 
-	OPlog("VOXEL SIZE %d, %d, %d", voxelData.size.x, voxelData.size.y, voxelData.size.z);
-	OPvec3Log("OFFSET VOXELS", data.Offset);
+	//OPlog("VOXEL SIZE %d, %d, %d", voxelData.size.x, voxelData.size.y, voxelData.size.z);
+	//OPvec3Log("OFFSET VOXELS", data.Offset);
 
 	for (ui8 i = 0; i < 4; i++) {
 		data.Vertices[i].Bones = bones;
@@ -229,12 +233,12 @@ void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData
 				generate[vForward] = z == voxelData.size.z - 1 || // Generate Forward Side Regardless
 					IS_BLOCK_INVISIBLE(VAL(x, y, z + 1)); // Forward Sided Neighbor is empty
 
-				if (generate[vLeft])	addLeftSide(gen, &data, x, y, z);
-				if (generate[vRight])	addRightSide(gen, &data, x, y, z);
-				if (generate[vUp])		addTopSide(gen, &data, x, y, z);
-				if (generate[vDown])	addBottomSide(gen, &data, x, y, z);
-				if (generate[vForward]) addFrontSide(gen, &data, x, y, z);
-				if (!hideBack && generate[vBackward]) addBackSide(gen, &data, x, y, z);
+				if (!gen->HideFace[0] && generate[vLeft])	addLeftSide(gen, &data, x, y, z);
+				if (!gen->HideFace[1] && generate[vRight])	addRightSide(gen, &data, x, y, z);
+				if (!gen->HideFace[2] && generate[vUp])		addTopSide(gen, &data, x, y, z);
+				if (!gen->HideFace[3] && generate[vDown])	addBottomSide(gen, &data, x, y, z);
+				if (!gen->HideFace[4] && generate[vForward]) addFrontSide(gen, &data, x, y, z);
+				if (!gen->HideFace[5] && generate[vBackward]) addBackSide(gen, &data, x, y, z);
 			}
 		}
 	}

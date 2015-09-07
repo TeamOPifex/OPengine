@@ -91,15 +91,20 @@ add_subdirectory("${PIPELINE_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Pipeline)
 #########################################
 # Application - Level 9
 #########################################
-
+if(OPIFEX_OS_IOS OR OPIFEX_OS_ANDROID)
+else()
 set(APPLICATION_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Application")
 add_subdirectory("${APPLICATION_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Application)
+endif()
 
 #########################################
 # Tests - Level
 #########################################
-set(TESTS_PATH "${PROJECT_SOURCE_DIR}/Tests")
-add_subdirectory("${TESTS_PATH}" ${PROJECT_BINARY_DIR}/Tests)
+if(OPIFEX_OS_IOS OR OPIFEX_OS_ANDROID)
+else()
+	set(TESTS_PATH "${PROJECT_SOURCE_DIR}/Tests")
+	add_subdirectory("${TESTS_PATH}" ${PROJECT_BINARY_DIR}/Tests)
+endif()
 
 ### Logging
 message(STATUS "OPIFEX_OS: ${OPIFEX_OS}")

@@ -19,7 +19,7 @@ extern OPint OPRENDER_FULLSCREEN;
 extern OPint OPRENDER_HAS_FOCUS;
 extern OPuint OPRENDER_VAO;
 
-#ifndef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 extern GLFWwindow* window;
 #endif
 

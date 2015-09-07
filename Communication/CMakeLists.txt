@@ -39,10 +39,7 @@ set(ALL_LIBS
 	3_Math
 	4_Performance
 	5_Human
-	${OGG_LIBRARY}
-	${VORBIS_LIBRARY}
-	${VORBISFILE_LIBRARY}
-	glfw 
+	glfw
 	${GLFW_LIBRARIES}
 	MONGOOSE
 )
@@ -63,6 +60,8 @@ if(${OPIFEX_OPTION_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 endif()
 target_link_libraries(6_Communication ${ALL_LIBS})
+
+add_opifex_oggvorbis(6_Communication)
 
 #########################################
 # OUTPUT BINARIES
