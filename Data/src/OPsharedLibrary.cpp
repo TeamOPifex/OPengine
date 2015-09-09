@@ -39,6 +39,7 @@ OPsharedLibrary* OPsharedLibraryLoad(const OPchar* libraryName) {
 
 OPint OPsharedLibraryDestroy(OPsharedLibrary* sharedLibrary) {
 	OPlistDestroy(sharedLibrary->_symbols);
+	OPfree(sharedLibrary->_symbols);
 	OPfree(sharedLibrary);
 	return true;
 }

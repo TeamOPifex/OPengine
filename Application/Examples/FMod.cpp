@@ -1,6 +1,8 @@
 #include "./ExampleSelectorState.h"
 #include "./Pipeline/include/OPfmod.h"
 
+#ifdef OPIFEX_OPTION_FMOD
+
 typedef struct {
 	OPfmodSound* sound[5];
 } FModExample;
@@ -48,9 +50,16 @@ OPint ExampleFModExit(OPgameState* next) {
 	return 0;
 }
 
-#ifdef OPIFEX_OPTION_FMOD
 OPint GS_EXAMPLE_FMOD_AVAILABLE = 1;
 #else
+void ExampleFModEnter(OPgameState* last) {}
+OPint ExampleFModUpdate(OPtimer* time) {
+	return 1;
+}
+OPint ExampleFModExit(OPgameState* next) {
+	return 0;
+}
+
 OPint GS_EXAMPLE_FMOD_AVAILABLE = 0;
 #endif
 OPgameState GS_EXAMPLE_FMOD = {

@@ -2,6 +2,8 @@
 
 #if defined(OPIFEX_OPTION_NODEJS) || defined(OPIFEX_OPTION_V8)
 
+#ifdef OPIFEX_OPTION_PHYSX
+
 #include "./Performance/include/OPphysX.h"
 #include "./Performance/include/OPphysXScene.h"
 
@@ -91,8 +93,10 @@ JS_RETURN_VAL _OPphysXSceneDestroy(const JS_ARGS& args) {
 	OPphysXSceneDestroy(scene);
 	JS_RETURN_NULL;
 }
+#endif
 
 void OPphysXSceneWrapper(Handle<Object> exports) {
+#ifdef OPIFEX_OPTION_PHYSX
     SCOPE_AND_ISOLATE;
 
     Handle<Object> physXScene = JS_NEW_OBJECT();
@@ -105,6 +109,7 @@ void OPphysXSceneWrapper(Handle<Object> exports) {
 	JS_SET_METHOD(physXScene, "Remove", _OPphysXSceneRemove);
 	JS_SET_METHOD(physXScene, "Destroy", _OPphysXSceneDestroy);
 	JS_SET_OBJECT(exports, "physXScene", physXScene);
+#endif
     
 }
 

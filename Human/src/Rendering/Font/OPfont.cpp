@@ -8,7 +8,7 @@
 #include "./Core/include/Assert.h"
 #include "./Core/include/OPmath.h"
 
-void OPfontLoad(OPchar* filename, OPfont** data) {
+OPint OPfontLoad(OPchar* filename, OPfont** data) {
 	OPfont* font = (OPfont*)OPalloc(sizeof(OPfont));
 	*data = font;
 
@@ -71,9 +71,11 @@ void OPfontLoad(OPchar* filename, OPfont** data) {
 	}
 
 	OPimagePNGLoadStream(str, str->_pointer, &font->texture);
+
+	return 1;
 }
 
-void OPfontUnload(OPfont* font)
+OPint OPfontUnload(OPfont* font)
 {
 	OPint i;
 	OPfontGlyph* glyph;
@@ -85,8 +87,11 @@ void OPfontUnload(OPfont* font)
 	}
 
 	OPvectorDestroy(font->glyphs);
+	OPfree(font->glyphs);
 	OPimagePNGUnload(font->texture);
 	OPfree(font);
+
+	return 1;
 }
 
 OPfontGlyph* OPfontGetGlyph(OPfont* font, OPchar charcode)
@@ -265,7 +270,9 @@ OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text, float 
 	OPmeshBuild(sizeof(OPvertexTex), sizeof(ui16), vertices->_size, indices->_size, vertices->items, indices->items);
 
 	OPvectorDestroy(vertices);
+	OPfree(vertices);
 	OPvectorDestroy(indices);
+	OPfree(indices);
 
 	return node;
 }

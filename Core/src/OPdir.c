@@ -32,11 +32,11 @@ OPchar* OPdirCurrent() {
 
 	OPlog("The current working directory is %s", cCurrentPath);
 
-	len = strlen(cCurrentPath) + 1;
+	len = strlen(cCurrentPath) + 2;
 	result = (OPchar*)OPalloc(sizeof(OPchar) * len);
-	OPmemcpy(result, cCurrentPath, sizeof(OPchar)* (len - 1));
-	result[len-1] = '/';
-	result[len] = NULL;
+	OPmemcpy(result, cCurrentPath, sizeof(OPchar)* (len - 2));
+	result[len-2] = '\\';
+	result[len-1] = NULL;
 	return result;
 }
 
@@ -62,11 +62,11 @@ OPchar* OPdirExecutable() {
 			}
 			OPlog("The executable directory is %s", ownPth);
 
-			len = strlen(ownPth) + 1;
+			len = strlen(ownPth) + 2;
 			result = (OPchar*)OPalloc(sizeof(OPchar)* len);
-			OPmemcpy(result, ownPth, sizeof(OPchar)* (len - 1));
-			result[len - 1] = '\\';
-			result[len] = NULL;
+			OPmemcpy(result, ownPth, sizeof(OPchar)* (len - 2));
+			result[len - 2] = '\\';
+			result[len - 1] = NULL;
 			return result;
 		}
 	#elif defined(OPIFEX_OSX)

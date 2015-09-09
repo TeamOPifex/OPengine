@@ -47,7 +47,9 @@ OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 
 void OPfontManagerDestroy(OPfontManager* font) {
 	OPFONTMANAGER_ACTIVE = NULL;
 	OPvectorDestroy(font->currNodes);
+	OPfree(font->currNodes);
 	OPhashMapDestroy(font->builtNodes);
+	OPfree(font->builtNodes);
 	OPfree(font);
 }
 

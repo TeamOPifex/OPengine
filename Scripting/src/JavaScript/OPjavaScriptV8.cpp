@@ -29,16 +29,15 @@ ArrayBufferAllocator allocator;
 
 void OPjavaScriptV8Init() {
 	if(isolate == NULL) {
-		if (v8::V8::InitializeICU()) {
-			v8::Platform* platform = v8::platform::CreateDefaultPlatform();
-			v8::V8::InitializePlatform(platform);
-			if (v8::V8::Initialize()) {
-				Isolate::CreateParams create_params;
-				create_params.array_buffer_allocator = &allocator;
-				isolate = Isolate::New(create_params);
+		ASSERT(v8::V8::InitializeICU(), "Make sure icudt.dll is available");
+		v8::Platform* platform = v8::platform::CreateDefaultPlatform();
+		v8::V8::InitializePlatform(platform);
+		ASSERT(v8::V8::Initialize(), "FAILED to initialize the V8 engine");
 
-			}
-		}
+		Isolate::CreateParams create_params;
+		create_params.array_buffer_allocator = &allocator;
+		isolate = Isolate::New(create_params);
+		
 	}
 }
 

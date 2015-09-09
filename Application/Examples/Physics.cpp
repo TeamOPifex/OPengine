@@ -1,4 +1,7 @@
 #include "./ExampleSelectorState.h"
+
+#ifdef OPIFEX_OPTION_PHYSX
+
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Performance/include/OPphysX.h"
 #include "./Performance/include/OPphysXScene.h"
@@ -313,14 +316,17 @@ OPint ExamplePhysicsExit(OPgameState* next) {
 	return 0;
 }
 
-#ifndef OPIFEX_OPTION_PHYSX
-OPint GS_EXAMPLE_PHYSICS_AVAILABLE = 0;
-#else
 OPint GS_EXAMPLE_PHYSICS_AVAILABLE = 1;
-#endif
-
 OPgameState GS_EXAMPLE_PHYSICS = {
 	ExamplePhysicsEnter,
 	ExamplePhysicsUpdate,
 	ExamplePhysicsExit
 };
+#else
+OPint GS_EXAMPLE_PHYSICS_AVAILABLE = 0;
+OPgameState GS_EXAMPLE_PHYSICS = {
+	NULL,
+	NULL,
+	NULL
+};
+#endif

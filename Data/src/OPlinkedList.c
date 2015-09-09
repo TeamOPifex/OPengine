@@ -10,12 +10,12 @@ OPlinkedList* OPllCreate(){
 //-----------------------------------------------------------------------------
 OPint OPllDestroy(OPlinkedList* list){
 	OPllNode* node = list->First;
-	do{
+	while (node) {
 		OPllNode* temp = node;
 		node = node->Next;
 
 		OPllRemove(list, temp);
-	}while(node);
+	}
 	return 1;
 }
 //-----------------------------------------------------------------------------

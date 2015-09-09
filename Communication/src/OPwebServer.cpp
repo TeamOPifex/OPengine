@@ -198,7 +198,9 @@ void OPwebServerDestroy(OPWebServer* server) {
 
 #ifndef OPIFEX_ANDROID
 	OPlistDestroy(server->WebSocketMessages);
+	OPfree(server->WebSocketMessages);
 	OPhashMapDestroy(server->WebSocketKeys);
+	OPfree(server->WebSocketKeys);
 	mg_destroy_server(&server->Server);
 #endif
 	OPfree(server);

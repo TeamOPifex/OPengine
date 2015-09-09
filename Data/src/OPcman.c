@@ -118,6 +118,7 @@ OPint OPcmanInit(const OPchar* dir){
 		OPmemcpy(&OP_CMAN_ASSETLOADERS[i], loader, sizeof(OPassetLoader));
 	}
 
+	OPlistDestroy(_OP_CMAN_ASSETLOADERS);
 	OPfree(_OP_CMAN_ASSETLOADERS);
 	_OP_CMAN_ASSETLOADERS = NULL;
 
@@ -139,8 +140,8 @@ OPint OPcmanInit(const OPchar* dir){
 
 
 #ifdef _DEBUG
-	OPfree(OP_CMAN_ASSET_FOLDER);
-	OP_CMAN_ASSET_FOLDER = OPdirCurrent();
+	//OPfree(OP_CMAN_ASSET_FOLDER);
+	//OP_CMAN_ASSET_FOLDER = OPdirCurrent();
 #endif
 
 
@@ -287,6 +288,10 @@ OPint OPcmanPurge(){
 		if(bucket->Dirty){
 			if(!bucket->Unload(bucket->Asset))
 				return 0;
+#if defined(_DEBUG)
+			OPfree(bucket->AbsolutePath);
+			OPfree(bucket->FullPath);
+#endif
 			OPfree(bucket);
 			bucket = NULL;
 		}
@@ -307,29 +312,37 @@ void* OPcmanLoadGet(const OPchar* key) {
 
 void OPcmanDestroy() {
 
-//	Bucket* bucket;
-//	OPuint i, j, n, m;
-//	KeyValuePair *pair;
-//
-//	n = OP_CMAN_HASHMAP.count;
-//	bucket = OP_CMAN_HASHMAP.buckets;
-//	i = 0;
-//	while (i < n) {
-//		m = bucket->count;
-//		pair = bucket->pairs;
-//		j = 0;
-//		while(j < m) {
-//			OPcmanDelete(pair->key);
-//			pair++;
-//			j++;
-//		}
-//		bucket++;
-//		i++;
-//	}
-//	OPcmanPurge();
-//
-//	OPfree(OP_CMAN_ASSET_FOLDER);
-//	OPfree(OP_CMAN_ASSETLOADERS);
-//	OPhashMapDestroy(&OP_CMAN_HASHMAP);
-//	OPllDestroy(OP_CMAN_PURGE);
+	Bucket* bucket;
+	OPuint i, j, n, m;
+	KeyValuePair *pair;
+
+	n = OP_CMAN_HASHMAP.count;
+	bucket = OP_CMAN_HASHMAP.buckets;
+	i = 0;
+	while (i < n) {
+		m = bucket->count;
+		pair = bucket->pairs;
+		j = 0;
+		while(j < m) {
+			OPcmanDelete(pair->key);
+			pair++;
+			j++;
+		}
+		bucket++;
+		i++;
+	}
+	OPcmanPurge();
+
+	if (_OP_CMAN_ASSETLOADERS) {
+		OPlistDestroy(_OP_CMAN_ASSETLOADERS);
+		OPfree(_OP_CMAN_ASSETLOADERS);
+	}
+
+	OPfree(OP_CMAN_ASSET_FOLDER);
+	OPfree(OP_CMAN_ASSETLOADERS);
+	OPhashMapDestroy(&OP_CMAN_HASHMAP);
+	if (OP_CMAN_PURGE) {
+		OPllDestroy(OP_CMAN_PURGE);
+		OPfree(OP_CMAN_PURGE);
+	}
 }

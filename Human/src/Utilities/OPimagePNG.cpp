@@ -142,7 +142,7 @@ i32 OPimagePNGReload(const OPchar* filename, OPtexture** image){
 i32 OPimagePNGUnload(void* image){
 	OPtexture* tex = (OPtexture*)image;
 	OPtextureDestroy(tex);
-	OPfree(image);
+	OPfree(tex);
 
 	return 1;
 }

@@ -2,6 +2,8 @@
 
 #if defined(OPIFEX_OPTION_NODEJS) || defined(OPIFEX_OPTION_V8)
 
+#ifdef OPIFEX_OPTION_PHYSX
+
 #include "./Performance/include/OPphysX.h"
 
 JS_RETURN_VAL _OPphysXInit(const JS_ARGS& args) {
@@ -287,9 +289,10 @@ JS_RETURN_VAL _OPphysXShapeSetPose(const JS_ARGS& args) {
     
 	JS_RETURN_NULL;
 }
-
+#endif
 
 void OPphysXWrapper(Handle<Object> exports) {
+#ifdef OPIFEX_OPTION_PHYSX
     SCOPE_AND_ISOLATE;
 
     Handle<Object> physX = JS_NEW_OBJECT();
@@ -321,6 +324,7 @@ void OPphysXWrapper(Handle<Object> exports) {
 	JS_SET_METHOD(physX, "SetTrigger", _OPphysXSetTrigger);
 	JS_SET_METHOD(physX, "GetShape", _OPphysXGetShape);
 	JS_SET_OBJECT(exports, "physX", physX);
+#endif
 
 }
 

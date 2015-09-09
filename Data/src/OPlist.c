@@ -23,7 +23,6 @@ OPlist* OPlistCreate(OPint capacity, OPint elementSize){
 //-----------------------------------------------------------------------------
 OPint OPlistDestroy(OPlist* list){
 	OPfree(list->_indices);
-	OPfree(list);
 	return 1;
 }
 //-----------------------------------------------------------------------------

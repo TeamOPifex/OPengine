@@ -40,17 +40,17 @@ void OPmouseUpdate() {
 	//Mouse.wheel = glfwGetScroll(window);
 }
 
-d64 OPmousePositionX() {
+i32 OPmousePositionX() {
 	return Mouse.positionX;
 }
-d64 OPmousePositionY() {
+i32 OPmousePositionY() {
 	return Mouse.positionY;
 }
 
-d64 OPmousePositionMovedX() {
+i32 OPmousePositionMovedX() {
 	return Mouse.prevPositionX - Mouse.positionX;
 }
-d64 OPmousePositionMovedY() {
+i32 OPmousePositionMovedY() {
 	return Mouse.prevPositionY - Mouse.positionY;
 }
 

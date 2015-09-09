@@ -5,6 +5,8 @@
 
 #if defined(OPIFEX_OPTION_NODEJS) || defined(OPIFEX_OPTION_V8)
 
+#ifdef OPIFEX_OPTION_FMOD
+
 #include "./Pipeline/Pipeline.h"
 
 JS_RETURN_VAL _OPfmodInit(const JS_ARGS& args) {
@@ -166,8 +168,10 @@ JS_RETURN_VAL _OPfmodSetPause(const JS_ARGS& args) {
 
     JS_RETURN_NULL;
 }
+#endif
 
 void OPfmodWrapper(Handle<Object> exports) {
+#ifdef OPIFEX_OPTION_FMOD
     SCOPE_AND_ISOLATE;
 
     Handle<Object> result = JS_NEW_OBJECT();
@@ -184,6 +188,7 @@ void OPfmodWrapper(Handle<Object> exports) {
     JS_SET_METHOD(result, "IsPlaying", _OPfmodIsPlaying);
     JS_SET_NUMBER(result, "size", sizeof(OPfmod));
     JS_SET_OBJECT(exports, "fmod", result);
+#endif
 }
 
 #endif

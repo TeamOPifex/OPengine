@@ -13,7 +13,7 @@ void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPm
 	OPint totalSize = sizeof(OPmat4)* frameCount * boneCount;
 	skelAnim->JointFrames = (OPmat4*)OPalloc(totalSize);
 	OPmemcpy(skelAnim->JointFrames, frames, totalSize);
-	for(OPuint i = 0; i < totalSize; i++) {
+	for (OPuint i = 0; i < frameCount * boneCount; i++) {
 		OPmat4SetTranslate(skelAnim->JointFrames[i], 0, 0, 0);
 	}
 }

@@ -277,5 +277,7 @@ OPmesh* OPvoxelGeneratorBuild(struct OPvoxelGenerator* gen) {
 
 void OPvoxelGeneratorDestroy(struct OPvoxelGenerator* gen) {
 	OPlistDestroy(gen->Vertices);
+	OPfree(gen->Vertices);
 	OPlistDestroy(gen->Indices);
+	OPfree(gen->Indices);
 }

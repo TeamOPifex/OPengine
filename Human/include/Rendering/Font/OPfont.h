@@ -56,8 +56,8 @@ typedef struct {
 	OPfloat Width;
 } OPfontUserTextNode;
 
-void OPfontLoad(OPchar* filename, OPfont** data);
-void OPfontUnload(OPfont* font);
+OPint OPfontLoad(OPchar* filename, OPfont** data);
+OPint OPfontUnload(OPfont* font);
 OPfontGlyph* OPfontGetGlyph(OPfont* font, OPchar charcode);
 OPmesh OPfontCreateText(OPfont* font, OPchar* text);
 OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text);

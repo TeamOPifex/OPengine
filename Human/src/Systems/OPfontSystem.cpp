@@ -43,6 +43,10 @@ void OPfontSystemLoadEffects() {
 
 }
 
+void OPfontSystemShutdownEffects() {
+	OPeffectUnload(OPFONTMANAGER_EFFECT_ACTIVE);
+	OPfree(OPFONTMANAGER_EFFECT_ACTIVE);
+}
 // void OPfontSystemLoadScreenEffects() {
 
 // 	if (OPFONTMANAGER_EFFECT_ACTIVE != NULL) { 

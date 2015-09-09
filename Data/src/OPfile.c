@@ -171,6 +171,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 	return str;
 
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
+	ui8 bytes[1024];
 	// check to see if the file exists
 	if(OPfileExists(path) >= 0){
 		OPint fd = 0;
@@ -202,6 +203,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 	}
 #elif defined(OPIFEX_WINDOWS)
 	// windows implementation
+	ui8 bytes[1024];
 	OPint fd = 0, i;
 	// check to see if the file exists
 	if(OPfileExists(path) > 0) {
@@ -211,14 +213,12 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 			ui8 byte = 0;
 			OPstream* str = OPstreamCreate(expectedSize);
 
-			ui8* bytes = (ui8*)OPalloc(1024);
 			ui32 readBytes = 1;
 			// write the entire file into a stream
 			while(readBytes) {
 				readBytes = read(fd, bytes, 1024);
 				OPwrite(str, bytes, readBytes);
 			}
-			OPfree(bytes);
 			close(fd);
 			OPseek(str, 0);
 

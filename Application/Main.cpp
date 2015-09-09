@@ -1,4 +1,5 @@
 #include "ExampleSelectorState.h"
+#include "EmptyState.h"
 #include "FontTest.h"
 #include "./Scripting/include/OPloaderOPS.h"
 #include "./Scripting/include/JavaScript/OPjavaScriptV8.h"
@@ -12,10 +13,10 @@
 
 void ApplicationInit() {
 	OPloadersAddDefault();
-	OPscriptAddLoader();
-	OPskeletonAddLoader();
-	OPskeletonAnimationAddLoader();
-	SpineAddLoader();
+	//OPscriptAddLoader();
+	//OPskeletonAddLoader();
+	//OPskeletonAnimationAddLoader();
+	//SpineAddLoader();
 	OPcmanInit(OPIFEX_ASSETS);
 
 	OPrenderInit();

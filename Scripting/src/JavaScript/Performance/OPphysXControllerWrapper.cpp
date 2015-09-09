@@ -2,6 +2,8 @@
 
 #if defined(OPIFEX_OPTION_NODEJS) || defined(OPIFEX_OPTION_V8)
 
+
+#ifdef OPIFEX_OPTION_PHYSX
 #include "./Performance/include/OPphysX.h"
 #include "./Performance/include/OPphysXController.h"
 #include "./Scripting/include/JavaScript/Math/Wrappers.h"
@@ -83,10 +85,11 @@ JS_RETURN_VAL _OPphysXControllerSetFootPos(const JS_ARGS& args) {
 
     JS_RETURN_NULL;
 }
+#endif
 
 void OPphysXControllerWrapper(Handle<Object> exports) {
+#ifdef OPIFEX_OPTION_PHYSX
     SCOPE_AND_ISOLATE;
-
     Handle<Object> physXController = JS_NEW_OBJECT();
 	JS_SET_METHOD(physXController, "CreateManager", _OPphysXControllerCreateManager);
 	JS_SET_METHOD(physXController, "Create", _OPphysXControllerCreate);
@@ -95,7 +98,7 @@ void OPphysXControllerWrapper(Handle<Object> exports) {
 	JS_SET_METHOD(physXController, "GetFootPos", _OPphysXControllerGetFootPos);
 	JS_SET_METHOD(physXController, "SetFootPos", _OPphysXControllerSetFootPos);
 	JS_SET_OBJECT(exports, "physXController", physXController);
-    
+#endif
 }
 
 #endif

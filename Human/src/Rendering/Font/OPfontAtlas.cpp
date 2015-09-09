@@ -18,6 +18,7 @@ OPfontAtlas* OPfontAtlasCreate(OPint width, OPint height, OPint depth) {
 
 void OPfontAtlasDestroy(OPfontAtlas* atlas){
 	OPvectorDestroy(atlas->nodes);
+	OPfree(atlas->nodes);
 	if (atlas->data){
 		OPfree(atlas->data);
 	}

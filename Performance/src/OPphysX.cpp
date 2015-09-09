@@ -1,10 +1,12 @@
 #include "./Performance/include/OPphysX.h"
+
+#ifdef OPIFEX_OPTION_PHYSX
+
 #include "./Performance/include/OPphysXBasicFilterShader.h"
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/Assert.h"
 #include "physxvisualdebuggersdk/PvdConnection.h"
 
-#ifdef OPIFEX_OPTION_PHYSX
 
 PxPhysics* OPphysXSDK = NULL;
 PxCooking* OPphysXCooking = NULL;

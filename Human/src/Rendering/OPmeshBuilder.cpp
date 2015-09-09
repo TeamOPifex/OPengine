@@ -13,7 +13,9 @@ OPmeshBuilder* OPmeshBuilderCreate(ui16 vertexSize) {
 
 void OPmeshBuilderDestroy(struct OPmeshBuilder* builder) {
 	OPvectorDestroy(builder->Vertices);
+	OPfree(builder->Vertices);
 	OPvectorDestroy(builder->Indices);
+	OPfree(builder->Indices);
 }
 
 void OPmeshBuilderAdd(struct OPmeshBuilder* builder, void* one, void* two, void* three) {

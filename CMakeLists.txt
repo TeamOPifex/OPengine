@@ -91,11 +91,9 @@ add_subdirectory("${PIPELINE_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Pipeline)
 #########################################
 # Application - Level 9
 #########################################
-if(OPIFEX_OS_IOS OR OPIFEX_OS_ANDROID)
-else()
 set(APPLICATION_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Application")
 add_subdirectory("${APPLICATION_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Application)
-endif()
+
 
 #########################################
 # Tests - Level

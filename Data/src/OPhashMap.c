@@ -28,12 +28,11 @@ void OPhashMapInit(OPhashMap* hashMap, OPuint capacity)
 	if (hashMap == NULL) return;
 
 	hashMap->count = capacity;
-	hashMap->buckets = (Bucket*)OPalloc(hashMap->count * sizeof(Bucket));
+	hashMap->buckets = (Bucket*)OPallocZero(hashMap->count * sizeof(Bucket));
 	if (hashMap->buckets == NULL) {
 		OPfree(hashMap);
 		return;
 	}
-	memset(hashMap->buckets, 0, hashMap->count * sizeof(Bucket));
 }
 
 OPhashMap* OPhashMapCreate(OPuint capacity)
@@ -57,19 +56,20 @@ void OPhashMapDestroy(OPhashMap* hashMap)
 	while (i < n) {
 		m = bucket->count;
 		pair = bucket->pairs;
-		j = 0;
-		while(j < m) {
-			OPfree(pair->key);
-			OPfree(pair->value);
-			pair++;
-			j++;
+		if (pair) {
+			j = 0;
+			while (j < m) {
+				OPfree(pair->key);
+				//OPfree(pair->value); // Hashmap shouldn't free the value inserted
+				pair++;
+				j++;
+			}
+			OPfree(bucket->pairs);
 		}
-		OPfree(bucket->pairs);
 		bucket++;
 		i++;
 	}
 	OPfree(hashMap->buckets);
-	OPfree(hashMap);
 }
 
 OPint OPhashMapGet(const OPhashMap* hashMap, const OPchar* key, void** dest)

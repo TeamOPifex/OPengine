@@ -1,5 +1,5 @@
 ### GLFW
-if(OPIFEX_OS_IOS)
+if(${OPIFEX_OS_IOS})
 else()
 SET( GLFW_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/External/glfw" )
 add_subdirectory("${GLFW_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/GLFW)
