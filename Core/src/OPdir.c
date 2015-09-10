@@ -42,11 +42,13 @@ OPchar* OPdirCurrent() {
 
 
 OPchar* OPdirExecutable() {
+#if defined(OPIFEX_WINDOWS) || defined(OPIFEX_OSX)
 	char ownPth[1024]; //MAX_PATH - 260
 	char tmpPth[1024]; //MAX_PATH - 260
 	OPchar* result;
 	ui32 len;
 	char* pos = NULL;
+#endif
 
 	#ifdef OPIFEX_WINDOWS
 		// Will contain exe path

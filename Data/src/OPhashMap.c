@@ -124,7 +124,7 @@ OPint OPhashMapPut(OPhashMap *map, const OPchar* key, void* value)
 
 	if (map == NULL || key == NULL) return 0;
 
-	key_len = strlen(key);
+	key_len = (OPuint)strlen(key);
 
 	// Get the bucket the key points to
 	index = hash(key) % map->count;

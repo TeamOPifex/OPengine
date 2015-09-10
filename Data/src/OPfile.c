@@ -101,7 +101,7 @@ OPfileInformation OPreadFileInformation(const char* path){
 		return file;
 	}
 	fseek(myFile, 0, SEEK_END );
-	file.length = ftell( myFile );
+	file.length = (OPuint)ftell( myFile );
 	fseek(myFile, 0, SEEK_SET);
 	file.file = myFile;
 	file.fileDescriptor = 0;
@@ -343,7 +343,7 @@ OPint OPfileWritei32(OPfile* file, i32 data) {
     return 1;
 }
 OPint OPfileWriteString(OPfile* file, const OPchar* data) {
-	ui32 len = strlen(data);
+	ui32 len = (OPuint)strlen(data);
 	write(file->_handle, len, sizeof(ui32));
     write(file->_handle, data, sizeof(OPchar) * len);
     return 1;
@@ -353,7 +353,7 @@ OPint OPfileWriteBytes(OPfile* file, void* data, ui64 bytesToWrite) {
 #ifdef OPIFEX_WINDOWS
 	return fwrite(data, sizeof(char), bytesToWrite, file->_handle);
 #else
-	return write(file->_handle, data, bytesToWrite);
+	return (OPint)write(file->_handle, data, bytesToWrite);
 #endif
 }
 

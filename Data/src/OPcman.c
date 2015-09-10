@@ -179,7 +179,7 @@ OPint OPcmanLoad(const OPchar* key){
 
 	ext = strrchr(key, '.');
 	if(ext){
-		OPint i = 0, extLen = strlen(ext);
+		OPint i = 0, extLen = (OPuint)strlen(ext);
 		extLen = extLen <= 8 ? extLen : 8;
 
 		for (i = OP_CMAN_ASSET_LOADER_COUNT; i--;){
@@ -192,7 +192,7 @@ OPint OPcmanLoad(const OPchar* key){
 				OPassetLoader loader = OP_CMAN_ASSETLOADERS[i];
 
 				// build the path string
-				len = strlen(loader.AssetTypePath) + strlen(key);
+				len = (OPuint)strlen(loader.AssetTypePath) + (OPuint)strlen(key);
 				fullPath = (OPchar*)OPalloc(sizeof(OPchar) * len + 1);
 				OPbzero(fullPath, len);
 				if(!fullPath) return OP_CMAN_PATH_ALLOC_FAILED;

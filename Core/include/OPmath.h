@@ -35,7 +35,7 @@ extern "C" {
 * @return integer ceiling
 */
 __inline OPint OPceil(OPfloat f){
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)  || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)// linux implementation
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)  || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) | defined(OPIFEX_IOS)// linux implementation
 	return (OPint)ceil(f);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
 	return (OPint)ceil(f);
@@ -107,7 +107,7 @@ __inline OPint	OPabsi(OPint i){
 * @return sin(f)
 */
 __inline OPfloat OPsin(OPfloat f){
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)	// linux implementation
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) || defined(OPIFEX_IOS)	// linux implementation
 	return sin(f);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
 	return (OPfloat)sin(f);
@@ -124,7 +124,7 @@ __inline OPfloat OPsin(OPfloat f){
 * @return cos(f)
 */
 __inline OPfloat OPcos(OPfloat f){
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)	// linux implementation
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) || defined(OPIFEX_IOS)	// linux implementation
 	return cos(f);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
 	return (OPfloat)cos(f);
@@ -141,7 +141,7 @@ __inline OPfloat OPcos(OPfloat f){
 * @return tan(f)
 */
 __inline OPfloat OPtan(OPfloat f){
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)	// linux implementation
+#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) || defined(OPIFEX_IOS)	// linux implementation
 	return tan(f);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
 	return (OPfloat)tan(f);

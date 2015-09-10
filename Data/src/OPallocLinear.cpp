@@ -2,11 +2,11 @@
 #include "./Core/include/OPmemory.h"
 
 OPallocLinear* OPallocLinearCreate(OPuint sizeInBytes) {
-	ui64 totalBytes = sizeof(OPallocLinear) + sizeInBytes;
+	OPuint totalBytes = sizeof(OPallocLinear) + sizeInBytes;
 	void* data = OPallocZero(totalBytes);
 	OPallocLinear* alloc = (OPallocLinear*)data;
 	alloc->_headerStart = data;
-	alloc->_memStart = (void*)((OPint)data + sizeof(OPallocLinear));
+	alloc->_memStart = (void*)((size_t)data + sizeof(OPallocLinear));
 	alloc->_size = sizeInBytes;
 	OPallocLinearClear(alloc);
 	return alloc;
@@ -23,7 +23,7 @@ void* OPallocLinearAlloc(OPallocLinear* alloc, OPuint sizeInBytes) {
 		return NULL;
 	}
 	void* block = alloc->_currentPos;
-	alloc->_currentPos = (void*)((OPint)block + sizeInBytes);
+	alloc->_currentPos = (void*)((size_t)block + sizeInBytes);
 	alloc->_usedMemory += sizeInBytes;
 	alloc->_allocCount++;
 	return block;
