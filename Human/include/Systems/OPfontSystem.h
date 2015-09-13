@@ -7,6 +7,7 @@
 #include "./Human/include/Rendering/Font/OPfontRender.h"
 
 void OPfontSystemLoadEffects();
+void OPfontSystemShutdownEffects();
 // void OPfontSystemLoadScreenEffects();
 
 #endif

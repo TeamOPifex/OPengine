@@ -29,7 +29,7 @@ void OPgamePadSetDeadzone(OPgamePad* controller, OPfloat deadzone);
 
 void OPgamePadSystemUpdate();
 void OPgamePadSystemReset();
-void OPgamePadSetDeadzones(OPfloat deadzone);
+void OPgamePadSetDeadZones(OPfloat deadzone);
 
 OPvec2 OPgamePadLeftThumb(OPgamePad* controller);
 OPvec2 OPgamePadRightThumb(OPgamePad* controller);

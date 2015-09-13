@@ -135,7 +135,9 @@ OPint OPeffectUnload(OPeffect* effect){
 		OPeffectBind(NULL);
 	}
 	OPhashMapDestroy(effect->Parameters);
+	OPfree(effect->Parameters);
 	OPlistDestroy(effect->Attributes);
+	OPfree(effect->Attributes);
 	glDeleteProgram(effect->ProgramHandle);
 	
 	return 1;
@@ -285,6 +287,7 @@ OPeffect OPeffectGen(
 	OPshaderAttribute* Attributes = (OPshaderAttribute*)OPalloc(sizeof(OPshaderAttribute)* vector->_size);
 	OPmemcpy(Attributes, vector->items, sizeof(OPshaderAttribute)* vector->_size);
 	OPvectorDestroy(vector);
+	OPfree(vector);
 
 
 	OPlog("Finding Effect Stride");

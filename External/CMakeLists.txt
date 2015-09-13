@@ -1,10 +1,10 @@
 ### GLFW
-
+if(${OPIFEX_OS_IOS})
+else()
 SET( GLFW_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/External/glfw" )
 add_subdirectory("${GLFW_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/GLFW)
 set_property(TARGET glfw PROPERTY FOLDER "External")
 add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS)
-
 
 ### GLEW
 
@@ -35,6 +35,7 @@ populate_binary_directory()
 
 output_library_from(GLEW_158 "/External" "GLEW_158")
 
+endif()
 
 ### LodePNG
 
@@ -137,4 +138,3 @@ if(${OPIFEX_OPTION_SPINE})
 
 	output_library_from(SPINE "/External" "Spine")
 endif()
-

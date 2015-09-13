@@ -1,38 +1,47 @@
 #include "./ExampleSelectorState.h"
-#include "./Scripting/include/V8/OPscriptV8.h"
+#include "./Scripting/include/JavaScript/OPjavaScriptV8.h"
 #include "./Scripting/include/OPloaderOPS.h"
 
 #ifdef OPIFEX_OPTION_V8
 
 typedef struct {
-	OPscript* MyScript;
-	OPscriptV8Compiled Compiled;
+	OPscript* InitScript;
+	OPscript* UpdateScript;
+	OPscript* DestroyScript;
+	OPjavaScriptV8Compiled InitCompiled;
+	OPjavaScriptV8Compiled UpdateCompiled;
+	OPjavaScriptV8Compiled DestroyCompiled;
 } ScriptingExample;
 
 ScriptingExample scriptingExample;
 
 void ExampleScriptingEnter(OPgameState* last) {
-	OPscriptV8Init();
-	
-	scriptingExample.MyScript = (OPscript*)OPcmanLoadGet("myscript.js");
-	OPscriptV8Compile(&scriptingExample.Compiled, scriptingExample.MyScript, NULL);
-	OPscriptV8Run(&scriptingExample.Compiled);
+	OPjavaScriptV8Init();
+
+	scriptingExample.InitScript = (OPscript*)OPcmanLoadGet("init.js");
+	scriptingExample.UpdateScript = (OPscript*)OPcmanLoadGet("update.js");
+	scriptingExample.DestroyScript = (OPscript*)OPcmanLoadGet("exit.js");
+	OPjavaScriptV8Compile(&scriptingExample.InitCompiled, scriptingExample.InitScript);
+	OPjavaScriptV8Compile(&scriptingExample.UpdateCompiled, scriptingExample.UpdateScript);
+	OPjavaScriptV8Compile(&scriptingExample.DestroyCompiled, scriptingExample.DestroyScript);
+
+    OPjavaScriptV8Run(&scriptingExample.InitCompiled);
+    OPjavaScriptV8Run(&scriptingExample.UpdateCompiled);
 }
 
 OPint ExampleScriptingUpdate(OPtimer* time) {
-	//OPscriptCompileAndRun(scriptingExample.MyScript);
-	// OPscriptValuePersistent values[3] = {
-	// 	OPscriptGetValue("1"),
-	// 	OPscriptGetValue(1.0),
-	// 	OPscriptGetValue(1.0)
-	// };
-	// OPscriptValuePersistent val = OPscriptRunFunc(&scriptingExample.Compiled, "clearToBlack", 3, values);
-	OPscriptV8Run(&scriptingExample.Compiled, "clearToBlack");
+    SCOPE_AND_ISOLATE;
 
-	return false;
+    OPjavaScriptPersistentValue args[1] = {
+            JS_CREATE_PERSISTENT(JS_NEW_NUMBER(0.5))
+    };
+    OPjavaScriptPersistentValue result = OPjavaScriptV8Run(&scriptingExample.UpdateCompiled, "Update", 1, args);
+
+	return JS_GET_PERSISTENT_NUMBER(result);
 }
 
 OPint ExampleScriptingExit(OPgameState* next) {
+	OPjavaScriptV8Run(&scriptingExample.DestroyCompiled);
 	return 0;
 }
 

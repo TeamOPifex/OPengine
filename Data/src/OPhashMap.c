@@ -3,37 +3,42 @@
 #include "./Data/include/OPstring.h"
 #include "./Core/include/OPlog.h"
 
-//  _____ _                   _       
-// / ____| |                 | |      
-//| (___ | |_ _ __ _   _  ___| |_ ___ 
+//  _____ _                   _
+// / ____| |                 | |
+//| (___ | |_ _ __ _   _  ___| |_ ___
 // \___ \| __| '__| | | |/ __| __/ __|
 // ____) | |_| |  | |_| | (__| |_\__ \
 //|_____/ \__|_|   \__,_|\___|\__|___/
-//                                                                      
+//
 
 static KeyValuePair* get_pair(Bucket *bucket, const OPchar *key);
 static ui64 hash(const OPchar* str);
 
-// ______                _   _                 
-//|  ____|              | | (_)                
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+// ______                _   _
+//|  ____|              | | (_)
+//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-//                                                                                    
-OPhashMap* OPhashMapCreate(OPuint capacity)
+//
+
+
+void OPhashMapInit(OPhashMap* hashMap, OPuint capacity)
 {
-	OPhashMap* hashMap;	
-	hashMap = (OPhashMap*)OPalloc(sizeof(OPhashMap));
-	if (hashMap == NULL) return NULL;
-	
+	if (hashMap == NULL) return;
+
 	hashMap->count = capacity;
-	hashMap->buckets = (Bucket*)OPalloc(hashMap->count * sizeof(Bucket));
+	hashMap->buckets = (Bucket*)OPallocZero(hashMap->count * sizeof(Bucket));
 	if (hashMap->buckets == NULL) {
 		OPfree(hashMap);
-		return NULL;
+		return;
 	}
-	memset(hashMap->buckets, 0, hashMap->count * sizeof(Bucket));
+}
+
+OPhashMap* OPhashMapCreate(OPuint capacity)
+{
+	OPhashMap* hashMap = (OPhashMap*)OPalloc(sizeof(OPhashMap));
+	OPhashMapInit(hashMap, capacity);
 	return hashMap;
 }
 
@@ -44,26 +49,27 @@ void OPhashMapDestroy(OPhashMap* hashMap)
 	KeyValuePair *pair;
 
 	if (hashMap == NULL) return;
-	
+
 	n = hashMap->count;
 	bucket = hashMap->buckets;
 	i = 0;
 	while (i < n) {
 		m = bucket->count;
 		pair = bucket->pairs;
-		j = 0;
-		while(j < m) {
-			OPfree(pair->key);
-			OPfree(pair->value);
-			pair++;
-			j++;
+		if (pair) {
+			j = 0;
+			while (j < m) {
+				OPfree(pair->key);
+				//OPfree(pair->value); // Hashmap shouldn't free the value inserted
+				pair++;
+				j++;
+			}
+			OPfree(bucket->pairs);
 		}
-		OPfree(bucket->pairs);
 		bucket++;
 		i++;
 	}
 	OPfree(hashMap->buckets);
-	OPfree(hashMap);
 }
 
 OPint OPhashMapGet(const OPhashMap* hashMap, const OPchar* key, void** dest)
@@ -74,7 +80,7 @@ OPint OPhashMapGet(const OPhashMap* hashMap, const OPchar* key, void** dest)
 
 	if (hashMap == NULL) return 0;
 	if (key == NULL) return 0;
-	
+
 	index = hash(key) % hashMap->count;
 	bucket = &(hashMap->buckets[index]);
 
@@ -92,15 +98,20 @@ OPint OPhashMapExists(const OPhashMap *map, const OPchar *key)
 	Bucket* bucket;
 	KeyValuePair* pair;
 
-	if (map == NULL) return 0;	
+	if (map == NULL) return 0;
 	if (key == NULL) return 0;
-	
+
 	index = hash(key) % map->count;
+
+
 	bucket = &(map->buckets[index]);
 
+
 	pair = get_pair(bucket, key);
+
+
 	if (pair == NULL) return 0;
-	
+
 	return 1;
 }
 
@@ -111,9 +122,9 @@ OPint OPhashMapPut(OPhashMap *map, const OPchar* key, void* value)
 	KeyValuePair* tmp_pairs, *pair;
 	OPchar* new_key;
 
-	if (map == NULL || key == NULL) return 0;	
-	
-	key_len = strlen(key);
+	if (map == NULL || key == NULL) return 0;
+
+	key_len = (OPuint)strlen(key);
 
 	// Get the bucket the key points to
 	index = hash(key) % map->count;
@@ -129,7 +140,7 @@ OPint OPhashMapPut(OPhashMap *map, const OPchar* key, void* value)
 	// Create the Key & Value
 	new_key = (OPchar*)OPalloc((key_len + 1) * sizeof(OPchar));
 	if (new_key == NULL) return 0;
-	
+
 	if (bucket->count == 0) {
 		// Create the first KeyValuePair in the bucket
 		bucket->pairs = (KeyValuePair*)OPalloc(sizeof(KeyValuePair));
@@ -189,14 +200,14 @@ OPint OPhashMapCount(const OPhashMap *map)
 	return count;
 }
 
-//    _____      _            _         ______                _   _                 
-//   |  __ \    (_)          | |       |  ____|              | | (_)                
-//   | |__) | __ ___   ____ _| |_ ___  | |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+//    _____      _            _         ______                _   _
+//   |  __ \    (_)          | |       |  ____|              | | (_)
+//   | |__) | __ ___   ____ _| |_ ___  | |__ _   _ _ __   ___| |_ _  ___  _ __  ___
 //   |  ___/ '__| \ \ / / _` | __/ _ \ |  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //   | |   | |  | |\ V / (_| | ||  __/ | |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //   |_|   |_|  |_| \_/ \__,_|\__\___| |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-//                                                                                  
-//                                                                                  
+//
+//
 static KeyValuePair * get_pair(Bucket *bucket, const OPchar *key)
 {
 	OPuint i, n;
@@ -204,13 +215,13 @@ static KeyValuePair * get_pair(Bucket *bucket, const OPchar *key)
 
 	n = bucket->count;
 	if (n == 0)	return NULL;
-	
+
 	pair = bucket->pairs;
 	i = 0;
 	while (i < n) {
 		if (pair->key != NULL && pair->value != NULL)
 			if (strcmp(pair->key, key) == 0)
-				return pair;				
+				return pair;
 
 		pair++;
 		i++;
@@ -221,6 +232,7 @@ static KeyValuePair * get_pair(Bucket *bucket, const OPchar *key)
 // The key 'str' must have a length longer than 4 characters, or behavior is undefined
 static ui64 hash(const OPchar* str)
 {
+
 	ui64 hash = 0xA1F9B450;
 	OPint i = 0;
 	ui8 c = str[0];

@@ -23,6 +23,7 @@ include_directories(
 	../External/V8/
 	../External/VP8/include/
 	../External/Spine/include/
+	../External/Node/src/
 	.
 	../
 	${BINARY_FOLDER}
@@ -66,7 +67,7 @@ set(ALL_LIBS
 #########################################
 # BUILD
 #########################################
-add_executable(9_Application ${APPLICATION_SRC} ../Scripting/src/Node/OPscriptNodeWrapperMath.cpp ../Scripting/include/Node/OPscriptNodeWrapperMath.h)
+add_executable(9_Application ${APPLICATION_SRC} ../Scripting/include/JavaScript/Human/Wrappers.h)
 
 target_link_libraries(9_Application	${ALL_LIBS})
 
@@ -87,7 +88,7 @@ set_target_properties(9_Application PROPERTIES OUTPUT_NAME "Application")
 #########################################
 
 add_opifex_spine(9_Application)
-add_opifex_physics(9_Application)
+add_opifex_physx(9_Application)
 add_opifex_v8(9_Application)
 add_opifex_oculus(9_Application)
 add_opifex_myo(9_Application)

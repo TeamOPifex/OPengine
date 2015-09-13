@@ -8,7 +8,7 @@
 #include "./Core/include/Assert.h"
 #include "./Core/include/OPmath.h"
 
-void OPfontLoad(OPchar* filename, OPfont** data) {
+OPint OPfontLoad(OPchar* filename, OPfont** data) {
 	OPfont* font = (OPfont*)OPalloc(sizeof(OPfont));
 	*data = font;
 
@@ -70,10 +70,12 @@ void OPfontLoad(OPchar* filename, OPfont** data) {
 		OPvectorPush(font->glyphs, (ui8*)&glyph);
 	}
 
-	OPimagePNGLoadStream(str, str->_pointer, &font->texture); 
+	OPimagePNGLoadStream(str, str->_pointer, &font->texture);
+
+	return 1;
 }
 
-void OPfontUnload(OPfont* font)
+OPint OPfontUnload(OPfont* font)
 {
 	OPint i;
 	OPfontGlyph* glyph;
@@ -85,8 +87,11 @@ void OPfontUnload(OPfont* font)
 	}
 
 	OPvectorDestroy(font->glyphs);
+	OPfree(font->glyphs);
 	OPimagePNGUnload(font->texture);
 	OPfree(font);
+
+	return 1;
 }
 
 OPfontGlyph* OPfontGetGlyph(OPfont* font, OPchar charcode)
@@ -124,7 +129,7 @@ OPfontGlyph* OPfontGetGlyph(OPfont* font, OPchar charcode)
 			fprintf(stderr, "Texture atlas is full (line %d)\n", __LINE__);
 			return NULL;
 		}
-		
+
 		OPfontAtlasSetRegion(font->atlas, region.x, region.y, 4, 4, data, 0);
 		glyph->charcode = (OPchar)(-1);
 		glyph->textureCoordinates.x = (region.x + 2) / (float)width;
@@ -176,8 +181,9 @@ OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const O
 			{ (OPfloat)x1, (OPfloat)y1, 0.0f, s1, t1 },
 			{ (OPfloat)x1, (OPfloat)y0, 0.0f, s1, t0 } };
 
-			for (OPint i = 0; i < 4; i++)
+			for (OPint i = 0; i < 4; i++) {
 				OPvectorPush(vertices, (ui8*)&verts[i]);
+			}
 			for (OPint i = 0; i < 6; i++)
 				OPvectorPush(indices, (ui8*)&inds[i]);
 
@@ -199,7 +205,7 @@ OPmesh OPfontCreateText(OPfont* font, OPchar* text) {
 	OPmesh mesh = OPmeshCreate();
 	OPmeshBind(&mesh);
 	OPmeshBuild(vertexSize, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
-	return mesh;	
+	return mesh;
 }
 
 OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text) {
@@ -259,11 +265,14 @@ OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text, float 
 	OPfontUserTextNode node;
 	node.Width = size.x;
 	node.mesh = OPmeshCreate();
+
 	OPmeshBind(&node.mesh);
 	OPmeshBuild(sizeof(OPvertexTex), sizeof(ui16), vertices->_size, indices->_size, vertices->items, indices->items);
 
 	OPvectorDestroy(vertices);
+	OPfree(vertices);
 	OPvectorDestroy(indices);
+	OPfree(indices);
 
 	return node;
 }

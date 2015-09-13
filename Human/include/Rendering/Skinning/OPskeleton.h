@@ -32,6 +32,7 @@ inline OPmat4 OPskeletonLocal(OPskeleton* skeleton, const OPchar* name) {
 	}
 	return OPMAT4IDENTITY;
 }
+
 inline OPvec3 OPskeletonLocalTranslate(OPskeleton* skeleton, i16 ind) {
 	OPvec3 result = OPVEC3_ZERO;
 	while (ind > -1) {

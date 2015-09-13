@@ -22,9 +22,9 @@ void ExampleSpriteSystemEnter(OPgameState* last) {
 	OPspriteSystemInit(&spriteSystemExample.spriteSystem, spriteSystemExample.sprites, 5, &spriteSystemExample.spriteEffect, OPSPRITESYSTEMALIGN_BOTTOM_CENTER);
 	OPspriteSystemSprite* sp = OPspriteSystemAdd(&spriteSystemExample.spriteSystem);
 	sp->Scale = OPvec2Create(1, 1);
+	sp->Position = OPvec2Create(300, 100);
 
 	spriteSystemExample.camera = OPcamOrtho(OPvec3Create(0, 0, 10), OPVEC3_ZERO, OPVEC3_UP, 0.1f, 20.0f, 0, OPRENDER_WIDTH, 0, OPRENDER_HEIGHT);
-	//spriteSystemExample.camera = OPcamOrtho(OPvec3Create(0, 0, 10), OPVEC3_ZERO, OPVEC3_UP, 0.1f, 10.0f, -5, 5, -5, 5);
 }
 
 OPint ExampleSpriteSystemUpdate(OPtimer* time) {

@@ -36,15 +36,17 @@ typedef struct {
 	OPfloat FrameRate;
 	OPsprite** Sprites;
 	OPeffect* Effect;
+	i8 ExternalEffect;
 } OPspriteSystem;
 
 void OPspriteSystemEffectDefault(OPeffect* effect);
 void OPspriteSystemInit(OPspriteSystem* system, OPsprite** sprites, OPint count, OPeffect* effect, OPspriteSystemAlign alignment);
-OPspriteSystem* OPspriteSystemCreate(OPint count, OPeffect* effect, OPspriteSystemAlign alignment);
+OPspriteSystem* OPspriteSystemCreate(OPsprite** sprites, OPint count, OPeffect* effect, OPspriteSystemAlign alignment);
 OPspriteSystemSprite* OPspriteSystemAdd(OPspriteSystem* system);
 void OPspriteSystemRemove(OPspriteSystem* system, OPspriteSystemSprite* sprite);
 void OPspriteSystemUpdate(OPspriteSystem* system, OPtimer* timer);
 void OPspriteSystemRender(OPspriteSystem* system, OPcam* camera);
+void OPspriteSystemDestroy(OPspriteSystem* system);
 
 inline OPsprite* OPspriteSystemCurrent(OPspriteSystem* system, OPspriteSystemSprite* sprite) {
 	return system->Sprites[sprite->CurrentSprite];

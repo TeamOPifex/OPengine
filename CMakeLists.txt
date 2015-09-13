@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-
 project(OPifexEngine)
+
 
 SET(OPIFEX_ENGINE_REPOSITORY ${PROJECT_SOURCE_DIR})
 
@@ -91,15 +91,18 @@ add_subdirectory("${PIPELINE_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Pipeline)
 #########################################
 # Application - Level 9
 #########################################
-
 set(APPLICATION_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Application")
 add_subdirectory("${APPLICATION_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Application)
+
 
 #########################################
 # Tests - Level
 #########################################
-set(TESTS_PATH "${PROJECT_SOURCE_DIR}/Tests")
-add_subdirectory("${TESTS_PATH}" ${PROJECT_BINARY_DIR}/Tests)
+if(OPIFEX_OS_IOS OR OPIFEX_OS_ANDROID)
+else()
+	set(TESTS_PATH "${PROJECT_SOURCE_DIR}/Tests")
+	add_subdirectory("${TESTS_PATH}" ${PROJECT_BINARY_DIR}/Tests)
+endif()
 
 ### Logging
 message(STATUS "OPIFEX_OS: ${OPIFEX_OS}")

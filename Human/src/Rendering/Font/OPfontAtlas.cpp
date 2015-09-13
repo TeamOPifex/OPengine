@@ -18,6 +18,7 @@ OPfontAtlas* OPfontAtlasCreate(OPint width, OPint height, OPint depth) {
 
 void OPfontAtlasDestroy(OPfontAtlas* atlas){
 	OPvectorDestroy(atlas->nodes);
+	OPfree(atlas->nodes);
 	if (atlas->data){
 		OPfree(atlas->data);
 	}
@@ -168,7 +169,7 @@ OPtexture OPfontAtlasTexture(OPfontAtlas* atlas) {
 	OPtextureDescription desc = { 
 		(ui16)atlas->width,
 		(ui16)atlas->height,
-		#ifndef OPIFEX_ANDROID
+		#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 		GL_RED,
 		GL_RED,
 		#else

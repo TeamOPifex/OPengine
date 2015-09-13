@@ -1,6 +1,7 @@
 varying vec2 vUV;
-varying vec4 vShadowCoord;
+varying vec4 vShadowCoord; // FragPosLightSpace
 varying vec3 vNormal;
+varying vec3 vFragPos;
 varying vec3 vLightDirection;
 
 uniform sampler2D uColorTexture;

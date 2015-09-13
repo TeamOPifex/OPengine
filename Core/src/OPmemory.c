@@ -1,5 +1,10 @@
 #include "./Core/include/OPmemory.h"
 
+#ifndef OPIFEX_OPTION_RELEASE
+OPint OPallocations = 0;
+OPint OPdeallocations = 0;
+#endif
+
 //-----------------------------------------------------------------------------
 /* OPalloc(..) - Platform independent means to dynamically allocate memory.
 *	Parameters:
@@ -8,6 +13,11 @@
 *		void* - Address of allocated memory.
 */
 void* OPalloc(OPuint bytes){
+
+#ifndef OPIFEX_OPTION_RELEASE
+	OPallocations++;
+#endif
+
 	// allocate memory (for each platform)
 #if defined(OPIFEX_UNIX)
 	// android specific for malloc
@@ -26,6 +36,9 @@ void* OPalloc(OPuint bytes){
 *		void* - Address of allocated memory.
 */
 void* OPallocZero(OPuint bytes){
+#ifndef OPIFEX_OPTION_RELEASE
+	OPallocations++;
+#endif
 	// allocate memory (for each platform)
 #if defined(OPIFEX_UNIX)
 	// android specific for malloc
@@ -67,6 +80,9 @@ void* OPrealloc(void* ptr, OPuint bytes){
  *		Nothing...
  */
 void OPfree(void* ptr){
+#ifndef OPIFEX_OPTION_RELEASE
+	OPdeallocations++;
+#endif
 	// free allocated memory (for each platform)
 	#if defined(OPIFEX_UNIX)
 	// android specific for malloc

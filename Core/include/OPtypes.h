@@ -3,7 +3,7 @@
 
 #include "OPengineDefines.h"
 
-#if defined(OPIFEX_OSX64) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_LINUX32) || defined(OPIFEX_ANDROID)
+#if defined(OPIFEX_OSX64) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_LINUX32) || defined(OPIFEX_ANDROID) || defined(OPIFEX_IOS)
 	#define OPIFEX_UNIX
 #endif
 
@@ -19,7 +19,7 @@
 	#define OPIFEX_WINDOWS
 #endif
 
-#if defined(OPIFEX_OSX64) || defined(OPIFEX_LINUX64) || defined(OPIFEX_WIN64)
+#if defined(OPIFEX_OSX64) || defined(OPIFEX_LINUX64) || defined(OPIFEX_WIN64) || defined(OPIFEX_IOS)
 #define OPIFEX_OS64
 #else
 #define OPIFEX_OS32

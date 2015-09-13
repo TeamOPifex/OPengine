@@ -35,11 +35,14 @@ OPtexture OPtextureCreate(OPtextureDescription desc){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, desc.WrapX);
 	OPglError("OPtextureCreate::Error 5");
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, desc.WrapY);
+#ifndef OPIFEX_IOS)
+    // TODO: (garrett) This should still work on iOS
 	OPglError("OPtextureCreate::Error 6");
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, desc.CompareFunc);
 	OPglError("OPtextureCreate::Error 7");
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, desc.CompareMode);
 	OPglError("OPtextureCreate::Error 8");
+#endif
 
 	return tex;
 }
@@ -97,7 +100,7 @@ void OPtextureSmooth(){
 OPvec4 OPtextureReadPixel(OPtexture* tex, OPint x, OPint y) {
 	OPvec4 result;
 
-#ifndef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 	glPixelStoref(GL_PACK_ALIGNMENT, 1);
 #endif
 

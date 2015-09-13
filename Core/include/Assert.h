@@ -9,14 +9,14 @@
 	#define ASSERT(condition, message) \
 	do {\
 	if (!(condition)) {\
-		OPlog("ASSERT: %s", message); \
+		OPlog("ASSERT: (%s:%d) %s", __FILE__, __LINE__, message); \
 	} \
 	} while (0)
 #elif defined _DEBUG
 	#define ASSERT(condition, message) \
 	do {\
 		if (!(condition)) {\
-			OPlog("ASSERT: %s", message); \
+			OPlog("ASSERT: (%s:%d) %s", __FILE__, __LINE__, message); \
 			exit(1);\
 		} \
 	} while (0)

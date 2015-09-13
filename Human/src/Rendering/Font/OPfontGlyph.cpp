@@ -9,6 +9,7 @@ OPfontGlyph* OPfontGlyphCreate() {
 
 void OPfontGlyphDestroy(OPfontGlyph* glyph) {
 	OPvectorDestroy(glyph->kerning);
+	OPfree(glyph->kerning);
 	OPfree(glyph);
 }
 

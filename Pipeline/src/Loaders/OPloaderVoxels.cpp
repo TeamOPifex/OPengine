@@ -1,4 +1,5 @@
 #include "./Pipeline/include/Loaders/OPloaderVoxels.h"
+#include "./OPengine.h"
 
 OPchar* readMatrixName(OPstream* str) {
 	OPchar len = *OPread(str, sizeof(ui8));
@@ -22,15 +23,12 @@ OPvec3* readColorData(OPstream* str) {
 	OPvec3* result = NULL;
 
 	OPchar* name = readMatrixName(str);
-	OPlog("Matrix: %s", name);
 	OPfree(name);
 
 	OPvecInt3 voxelSize = readVoxelVec3(str);
 	OPvecInt3 voxelOffset = readVoxelVec3(str);
-	
-	result = (OPvec3*)OPalloc(sizeof(OPvec3) * voxelSize.x * voxelSize.z * voxelSize.y);
 
-	OPlog("%d %d %d", voxelSize.x, voxelSize.z, voxelSize.y);
+	result = (OPvec3*)OPalloc(sizeof(OPvec3) * voxelSize.x * voxelSize.z * voxelSize.y);
 
 	// read voxel data
 	for(int zi = 0; zi < voxelSize.z; ++zi){
@@ -39,7 +37,7 @@ OPvec3* readColorData(OPstream* str) {
 				ui32 data = OPreadui32(str);
 				ui32 pos = xi + yi * voxelSize.x + (voxelSize.z - 1 - zi) * voxelSize.x * voxelSize.y;
 				result[pos] = OPvec3Create(((ui8*)&data)[0], ((ui8*)&data)[1], ((ui8*)&data)[2]);
-				OPlog("rgb - (%d, %d, %d)", ((ui8*)&data)[0], ((ui8*)&data)[1], ((ui8*)&data)[2]); 
+				//OPlog("rgb - (%d, %d, %d)", ((ui8*)&data)[0], ((ui8*)&data)[1], ((ui8*)&data)[2]);
 			}
 		}
 	}
@@ -52,12 +50,11 @@ OPvoxels readVoxelData(OPstream* str) {
 	OPvoxels result;
 
 	OPchar* name = readMatrixName(str);
-	OPlog("Matrix: %s", name);
 	OPfree(name);
 
 	OPvecInt3 voxelSize = readVoxelVec3(str);
 	OPvecInt3 voxelOffset = readVoxelVec3(str);
-	
+
 	OPvecInt3* voxels = (OPvecInt3*)OPalloc(sizeof(OPvecInt3) * voxelSize.x * voxelSize.z * voxelSize.y);
 
 	// read voxel data
@@ -65,13 +62,13 @@ OPvoxels readVoxelData(OPstream* str) {
 		for(int yi = 0; yi < voxelSize.y; ++yi){
 			for(int xi = 0; xi < voxelSize.x; ++xi){
 				ui32 data = OPreadui32(str);
-				if(data != 0) OPlog("rgb - (%d, %d, %d)", ((ui8*)&data)[0], ((ui8*)&data)[1], ((ui8*)&data)[2]); 
+				//if(data != 0) OPlog("rgb - (%d, %d, %d)", ((ui8*)&data)[0], ((ui8*)&data)[1], ((ui8*)&data)[2]);
 				OPvecInt3 voxel = {
-					((ui8*)&data)[0], 
-					((ui8*)&data)[1], 
+					((ui8*)&data)[0],
+					((ui8*)&data)[1],
 					((ui8*)&data)[2]
 				};
-				voxels[xi + yi * voxelSize.x + voxelSize.x * voxelSize.y * (voxelSize.z - 1 - zi)] = voxel;
+				voxels[(voxelSize.x - 1 - xi) + yi * voxelSize.x + voxelSize.x * voxelSize.y * (voxelSize.z - 1 - zi)] = voxel;
 			}
 		}
 	}
@@ -85,9 +82,8 @@ OPvoxels readVoxelData(OPstream* str) {
 
 OPint OPvoxelsLoad(const OPchar* path, void** asset) {
 
-	OPlog("Reading %s", path);
 	OPstream* str = OPreadFile(path);
-	
+
 	ui32 version = OPreadui32(str);
 	ui32 colorFormat = OPreadui32(str);
 	ui32 zOrientation = OPreadui32(str);
@@ -95,14 +91,14 @@ OPint OPvoxelsLoad(const OPchar* path, void** asset) {
 	ui32 visibilityMsk = OPreadui32(str);
 	ui32 matrixCount = OPreadui32(str);
 
-	OPlog("\tVersion: %u\n\tColor Frmt: %u\n\tZ ori: %u\n\tCompressed: %u\n\tVis Msk: %u\n\tMat count: %u\n",
-		version,
-		colorFormat,
-		zOrientation,
-		compressed,
-		visibilityMsk,
-		matrixCount
-	);
+	// OPlog("\tVersion: %u\n\tColor Frmt: %u\n\tZ ori: %u\n\tCompressed: %u\n\tVis Msk: %u\n\tMat count: %u\n",
+	// 	version,
+	// 	colorFormat,
+	// 	zOrientation,
+	// 	compressed,
+	// 	visibilityMsk,
+	// 	matrixCount
+	// );
 
 	ui32 width;
 	ui32 height;
@@ -110,10 +106,10 @@ OPint OPvoxelsLoad(const OPchar* path, void** asset) {
 
 	OPvec3* colors = readColorData(str);
 	OPfree(colors);
-	OPvoxels voxels = readVoxelData(str);
 
-	*asset = (OPvoxels*)OPalloc(sizeof(OPvoxels));
-	OPmemcpy(*asset, &voxels, sizeof(OPvoxels));
+	OPvoxels* temp = (OPvoxels*)OPalloc(sizeof(OPvoxels));
+	*temp = readVoxelData(str);
+	*asset = temp;
 
 	return 1;
 }
@@ -123,7 +119,7 @@ OPvecInt3 OPvoxelsGet(OPvoxels* voxels, OPint x, OPint y, OPint z) {
 		OPvecInt3 z = { 0, 0, 0 };
 		return z;
 	}
-	return voxels->voxels[x + y * voxels->size.x + voxels->size.x * voxels->size.y * (voxels->size.z - 1 - z)];
+	return voxels->voxels[x + y * voxels->size.x + voxels->size.x * voxels->size.y * z];
 }
 
 OPassetLoader* OPvoxelsLoader() {

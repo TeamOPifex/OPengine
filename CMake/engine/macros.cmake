@@ -6,6 +6,7 @@ macro(add_source_group FILTER_NAME SOURCE_PATH TARGET_LIST)
 		"${SOURCE_PATH}/*.h"
 		"${SOURCE_PATH}/*.cpp"
 		"${SOURCE_PATH}/*.c"
+		"${SOURCE_PATH}/*.cc"
 		"${SOURCE_PATH}/*.mm"
 	)
 	source_group("${NEW_FILTER_NAME}" FILES ${TEMP_SRC})
@@ -112,7 +113,7 @@ macro(set_binary_output BINARY_OUTPUT_VARIABLE )
 			SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.a")
 		endif()
 
-		if("${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" OR "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64")		
+		if("${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" OR "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64")
 			if(${OPIFEX_OPTION_RELEASE})
 				SET(COPY_BINARY_RELATIVE_DIRECTORY "/${LIBRARY_NAME}/Release/")
 			else()
@@ -146,7 +147,7 @@ macro(output_library APPLICATION_TARGET LIBRARY_NAME )
 			SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.a")
 		endif()
 
-		if("${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" OR "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64")		
+		if("${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" OR "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64")
 			if(${OPIFEX_OPTION_RELEASE})
 				SET(COPY_BINARY_RELATIVE_DIRECTORY "/${LIBRARY_NAME}/Release/")
 			else()
@@ -178,7 +179,7 @@ macro(output_library_from APPLICATION_TARGET RELATIVE_PATH LIBRARY_NAME )
 		SET(COPY_BINARY_RELATIVE_DIRECTORY "${RELATIVE_PATH}/")
 		SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.a")
 
-		if("${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" OR "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64")			
+		if("${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" OR "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64")
 			if(${OPIFEX_OPTION_RELEASE})
 				SET(COPY_BINARY_RELATIVE_DIRECTORY "/${RELATIVE_PATH}/Release/")
 			else()
@@ -215,13 +216,13 @@ endmacro(output_binary)
 
 macro(copy_to_folder APPLICATION_TARGET RELATIVE_PATH FILE_PATH OUTPUT_PATH OPIFEX_MATCH )
 
-	
+
 	if( ${OPIFEX_MATCH} )
 		populate_binary_directory()
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"${PROJECT_SOURCE_DIR}${RELATIVE_PATH}${BINARY_TARGET_DIRECTORY}/${FILE_PATH}"
 			${PROJECT_BINARY_DIR}${OUTPUT_PATH})
-			
+
 	endif()
 
 endmacro(copy_to_folder)
@@ -234,14 +235,14 @@ macro(copy_to_folder_msvc APPLICATION_TARGET RELATIVE_PATH FILE_PATH OUTPUT_PATH
 		populate_binary_directory()
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"${PROJECT_SOURCE_DIR}${RELATIVE_PATH}${BINARY_TARGET_DIRECTORY}/${FILE_PATH}"
-			${PROJECT_BINARY_DIR}${OUTPUT_PATH})			
+			${PROJECT_BINARY_DIR}${OUTPUT_PATH})
 	endif()
 
 endmacro(copy_to_folder_msvc)
 
 macro(copy_to_folder_msvc_vs APPLICATION_TARGET RELATIVE_PATH FILE_PATH OUTPUT_PATH OPIFEX_MATCH )
 
-	
+
 	if( ${OPIFEX_MATCH} )
 		populate_binary_directory()
 		if(${MSVC_VERSION} GREATER 1700)
@@ -253,11 +254,11 @@ macro(copy_to_folder_msvc_vs APPLICATION_TARGET RELATIVE_PATH FILE_PATH OUTPUT_P
 				"${PROJECT_SOURCE_DIR}${RELATIVE_PATH}${BINARY_TARGET_DIRECTORY}/${FILE_PATH}"
 				${PROJECT_BINARY_DIR}${OUTPUT_PATH})
 		endif()
-			
+
 	endif()
 
 endmacro(copy_to_folder_msvc_vs)
-			
+
 
 macro(copy_from_binaries_on_build APPLICATION_TARGET FILE_PATH OPIFEX_MATCH )
 
@@ -266,13 +267,13 @@ macro(copy_from_binaries_on_build APPLICATION_TARGET FILE_PATH OPIFEX_MATCH )
 	else()
 		SET(BINARY_RELEASE_MODE "debug")
 	endif()
-	
+
 	if( ${OPIFEX_MATCH} )
 		populate_binary_directory()
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"${OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}/${FILE_PATH}"
 			${PROJECT_BINARY_DIR}/${BINARY_RELEASE_MODE})
-			
+
 	endif()
 
 endmacro(copy_from_binaries_on_build)
@@ -284,7 +285,7 @@ macro(add_external_opifex_includes)
 		${OPIFEX_ENGINE_REPOSITORY}/External/glfw/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/glew-1.9.0/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/glm-0.9.5/
-		${OPIFEX_ENGINE_REPOSITORY}/External/Phsyx.3.2.1/include/
+		${OPIFEX_ENGINE_REPOSITORY}/External/PhysX/Include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/GLES2/
 		${OPIFEX_ENGINE_REPOSITORY}/External/OpenAL/
 		${OPIFEX_ENGINE_REPOSITORY}/External/Ogg/include/
@@ -299,6 +300,7 @@ macro(add_external_opifex_includes)
 		${OPIFEX_ENGINE_REPOSITORY}/External/FMod/include/
 		${BINARY_FOLDER}
 	)
+	message(STATUS "Adding External OPifex includes")
 endmacro(add_external_opifex_includes)
 
 
@@ -307,7 +309,7 @@ macro(add_opifex_definitions APPLICATION_TARGET APPLICATION_DIR_DEPTH )
 	add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS)
 
 	if(${OPIFEX_OPTION_RELEASE})
-		
+
 	else()
 		if(${OPIFEX_OS_WINDOWS})
 			SET(OPIFEX_REPO "${APPLICATION_DIR_DEPTH}${OPIFEX_REPOSITORY}/Assets/")
@@ -317,7 +319,7 @@ macro(add_opifex_definitions APPLICATION_TARGET APPLICATION_DIR_DEPTH )
 			add_definitions(-DOPIFEX_REPO="${OPIFEX_REPO}")
 		endif()
 	endif()
-	
+
 	set_target_properties(${APPLICATION_TARGET} PROPERTIES LINKER_LANGUAGE CXX)
 
 	if(${OPIFEX_OPTION_RELEASE})
@@ -345,13 +347,33 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	unset(LIBVORBIS CACHE)
 	unset(LIBVORBISFILE CACHE)
 	unset(LIBV8 CACHE)
+	unset(LIBV8_BASE_0 CACHE)
+	unset(LIBV8_BASE_1 CACHE)
+	unset(LIBV8_BASE_2 CACHE)
+	unset(LIBV8_BASE_3 CACHE)
 	unset(LIBV8_LIBBASE CACHE)
 	unset(LIBV8_LIBPLATFORM CACHE)
+	unset(LIBV8_EXTERNAL_SNAPSHOT CACHE)
 	unset(LIBV8_NOSHNAPSHOT CACHE)
 	unset(LIBV8_ICUDATA CACHE)
 	unset(LIBV8_ICUUC CACHE)
 	unset(LIBV8_ICUI18N CACHE)
+	unset(LIBV8_MKSNAPSHOT CACHE)
 	unset(LIBFMOD CACHE)
+	unset(LIBLOW_LEVEL_DEBUG)
+	unset(LIBLOW_LEVEL_CLOTH_DEBUG)
+	unset(LIBPHYSX3_CHARACTER_KINEMATIC_DEBUG)
+	unset(LIBPHYSX3_COMMON_DEBUG)
+	unset(LIBPHYSX3_COOKING_DEBUG)
+	unset(LIBPHYSX3_DEBUG)
+	unset(LIBPHYSX3_EXTENSIONS_DEBUG)
+	unset(LIBPHYSX3_VEHICLE_DEBUG)
+	unset(LIBPHYSX_PROFILE_SDK_DEBUG)
+	unset(LIBPHYSX_VISUAL_DEBUGGER_SDK_DEBUG)
+	unset(LIBPVD_RUNTIME_DEBUG)
+	unset(LIBPX_TASK_DEBUG)
+	unset(LIBSCENE_QUERY_DEBUG)
+	unset(LIBSIMULATION_CONTROLLER_DEBUG)
 
 
 	mark_as_advanced(LIBLODEPNG)
@@ -374,7 +396,22 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	mark_as_advanced(LIBV8_ICUDATA)
 	mark_as_advanced(LIBV8_ICUUC)
 	mark_as_advanced(LIBV8_ICUI18N)
+	mark_as_advanced(LIBV8_NOSNAPSHOT)
 	mark_as_advanced(LIBFMOD)
+	mark_as_advanced(LIBLOW_LEVEL_DEBUG)
+	mark_as_advanced(LIBLOW_LEVEL_CLOTH_DEBUG)
+	mark_as_advanced(LIBPHYSX3_CHARACTER_KINEMATIC_DEBUG)
+	mark_as_advanced(LIBPHYSX3_COMMON_DEBUG)
+	mark_as_advanced(LIBPHYSX3_COOKING_DEBUG)
+	mark_as_advanced(LIBPHYSX3_DEBUG)
+	mark_as_advanced(LIBPHYSX3_EXTENSIONS_DEBUG)
+	mark_as_advanced(LIBPHYSX3_VEHICLE_DEBUG)
+	mark_as_advanced(LIBPHYSX_PROFILE_SDK_DEBUG)
+	mark_as_advanced(LIBPHYSX_VISUAL_DEBUGGER_SDK_DEBUG)
+	mark_as_advanced(LIBPVD_RUNTIME_DEBUG)
+	mark_as_advanced(LIBPX_TASK_DEBUG)
+	mark_as_advanced(LIBSCENE_QUERY_DEBUG)
+	mark_as_advanced(LIBSIMULATION_CONTROLLER_DEBUG)
 
 	if( ${OPIFEX_OS_ANDROID} )
 		find_binary(LIBLODEPNG "LodePNG")
@@ -420,7 +457,7 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	add_opifex_xinput(${APPLICATION_TARGET})
 
 	if(${OPIFEX_OPTION_FMOD})
-	
+
 		if(${OPIFEX_OS_WINDOWS})
 			if(${OPIFEX_OS_WIN64})
 				find_dynamic(LIBFMOD "fmod64_vc")
@@ -430,16 +467,25 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		else()
 			find_dynamic(LIBFMOD "fmod")
 		endif()
-		target_link_libraries(${APPLICATION_TARGET} 
+		target_link_libraries(${APPLICATION_TARGET}
 				${LIBFMOD}
 			)
 	endif()
 
 	if(${OPIFEX_OPTION_V8})
+
 			if(${OPIFEX_OS_WINDOWS})
-				find_binary(LIBV8 "v8" false)
+				find_binary(LIBV8_BASE_0 "v8_base_0" false)
+				find_binary(LIBV8_BASE_1 "v8_base_1" false)
+				find_binary(LIBV8_BASE_2 "v8_base_2" false)
+				find_binary(LIBV8_BASE_3 "v8_base_3" false)
 				find_binary(LIBV8_LIBBASE "v8_libbase" false)
 				find_binary(LIBV8_LIBPLATFORM "v8_libplatform" false)
+				find_binary(LIBV8_EXTERNAL_SNAPSHOT "v8_external_snapshot" false)
+				find_binary(LIBV8_NOSNAPSHOT "v8_nosnapshot" false)
+				find_binary(LIBV8_ICUI18N "icui18n" false)
+				find_binary(LIBV8_ICUUC "icuuc" false)
+				find_binary(LIBV8_MKSNAPSHOT "mksnapshot" false)
 			else()
 				find_binary(LIBV8 "v8_base" false)
 				find_binary(LIBV8_LIBBASE "v8_libbase" false)
@@ -449,33 +495,92 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 				find_binary(LIBV8_ICUUC "icuuc" fa lse)
 				find_binary(LIBV8_ICUI18N "icui18n" false)
 
-			target_link_libraries(${APPLICATION_TARGET} 
-					${LIBV8_NOSHNAPSHOT}
-					${LIBV8_ICUDATA}
-					${LIBV8_ICUUC}
-					${LIBV8_ICUI18N}
-				)
-
 			endif()
+
 			add_definitions(-DOPIFEX_V8)
+
+
 		if( ${OPIFEX_OS_WINDOWS} )
-			target_link_libraries(${APPLICATION_TARGET} 
+			target_link_libraries(${APPLICATION_TARGET}
 					ws2_32.lib
 					advapi32.lib
 					winmm.lib
-					${LIBV8}
+					${LIBV8_BASE_0}
+					${LIBV8_BASE_1}
+					${LIBV8_BASE_2}
+					${LIBV8_BASE_3}
 					${LIBV8_LIBBASE}
-					${LIBV8_LIBPLATFORM})
-					
-			copy_from_binaries_on_build(${APPLICATION_TARGET} "v8.dll" ${OPIFEX_OS_WINDOWS})
-			copy_from_binaries_on_build(${APPLICATION_TARGET} "icuuc.dll" ${OPIFEX_OS_WINDOWS})
-			copy_from_binaries_on_build(${APPLICATION_TARGET} "icui18n.dll" ${OPIFEX_OS_WINDOWS})
+					${LIBV8_LIBPLATFORM}
+					#${LIBV8_EXTERNAL_SNAPSHOT}
+					${LIBV8_ICUI18N}
+					${LIBV8_ICUUC}
+					#${LIBV8_MKSNAPSHOT}
+					${LIBV8_NOSNAPSHOT}
+					)
+
+			#copy_from_binaries_on_build(${APPLICATION_TARGET} "v8.dll" ${OPIFEX_OS_WINDOWS})
+			#copy_from_binaries_on_build(${APPLICATION_TARGET} "icuuc.dll" ${OPIFEX_OS_WINDOWS})
+			#copy_from_binaries_on_build(${APPLICATION_TARGET} "icui18n.dll" ${OPIFEX_OS_WINDOWS})
 		else()
 			target_link_libraries(${APPLICATION_TARGET}
 					${LIBV8}
 					${LIBV8_LIBBASE}
-					${LIBV8_LIBPLATFORM})
+					${LIBV8_LIBPLATFORM}
+					${LIBV8_NOSHNAPSHOT}
+					${LIBV8_ICUDATA}
+					${LIBV8_ICUUC}
+					${LIBV8_ICUI18N})
 		endif()
+	endif()
+
+	if(${OPIFEX_OPTION_PHYSX})
+			if(${OPIFEX_OS_WINDOWS})
+				find_binary(LIBLOW_LEVEL_DEBUG "LowLevelDEBUG" false)
+				find_binary(LIBLOW_LEVEL_CLOTH_DEBUG "LowLevelClothDEBUG" false)
+				find_binary(LIBPHYSX3_CHARACTER_KINEMATIC_DEBUG "PhysX3CharacterKinematicDEBUG_x64" false)
+				find_binary(LIBPHYSX3_COMMON_DEBUG "PhysX3CommonDEBUG_x64" false)
+				find_binary(LIBPHYSX3_COOKING_DEBUG "PhysX3CookingDEBUG_x64" false)
+				find_binary(LIBPHYSX3_DEBUG "PhysX3DEBUG_x64" false)
+				find_binary(LIBPHYSX3_EXTENSIONS_DEBUG "PhysX3ExtensionsDEBUG" false)
+				find_binary(LIBPHYSX3_VEHICLE_DEBUG "PhysX3VehicleDEBUG" false)
+				find_binary(LIBPHYSX_PROFILE_SDK_DEBUG "PhysXProfileSDKDEBUG" false)
+				find_binary(LIBPHYSX_VISUAL_DEBUGGER_SDK_DEBUG "PhysXVisualDebuggerSDKDEBUG" false)
+				find_binary(LIBPVD_RUNTIME_DEBUG "PvdRuntimeDEBUG" false)
+				find_binary(LIBPX_TASK_DEBUG "PxTaskDEBUG" false)
+				find_binary(LIBSCENE_QUERY_DEBUG "SceneQueryDEBUG" false)
+				find_binary(LIBSIMULATION_CONTROLLER_DEBUG "SimulationControllerDEBUG" false)
+			else()
+				find_binary(LIBLOW_LEVEL_DEBUG "LowLevelDEBUG" false)
+				find_binary(LIBLOW_LEVEL_CLOTH_DEBUG "LowLevelClothDEBUG" false)
+				find_binary(LIBPHYSX3_CHARACTER_KINEMATIC_DEBUG "PhysX3CharacterKinematicDEBUG" false)
+				find_binary(LIBPHYSX3_COMMON_DEBUG "PhysX3CommonDEBUG" false)
+				find_binary(LIBPHYSX3_COOKING_DEBUG "PhysX3CookingDEBUG" false)
+				find_binary(LIBPHYSX3_DEBUG "PhysX3DEBUG" false)
+				find_binary(LIBPHYSX3_EXTENSIONS_DEBUG "PhysX3ExtensionsDEBUG" false)
+				find_binary(LIBPHYSX3_VEHICLE_DEBUG "PhysX3VehicleDEBUG" false)
+				find_binary(LIBPHYSX_PROFILE_SDK_DEBUG "PhysXProfileSDKDEBUG" false)
+				find_binary(LIBPHYSX_VISUAL_DEBUGGER_SDK_DEBUG "PhysXVisualDebuggerSDKDEBUG" false)
+				find_binary(LIBPVD_RUNTIME_DEBUG "PvdRuntimeDEBUG" false)
+				find_binary(LIBPX_TASK_DEBUG "PxTaskDEBUG" false)
+				find_binary(LIBSCENE_QUERY_DEBUG "SceneQueryDEBUG" false)
+				find_binary(LIBSIMULATION_CONTROLLER_DEBUG "SimulationControllerDEBUG" false)
+			endif()
+				target_link_libraries(${APPLICATION_TARGET}
+						${LIBLOW_LEVEL_DEBUG}
+						${LIBLOW_LEVEL_CLOTH_DEBUG}
+						${LIBPHYSX3_CHARACTER_KINEMATIC_DEBUG}
+						${LIBPHYSX3_COMMON_DEBUG}
+						${LIBPHYSX3_COOKING_DEBUG}
+						${LIBPHYSX3_DEBUG}
+						${LIBPHYSX3_EXTENSIONS_DEBUG}
+						${LIBPHYSX3_VEHICLE_DEBUG}
+						${LIBPHYSX_PROFILE_SDK_DEBUG}
+						${LIBPHYSX_VISUAL_DEBUGGER_SDK_DEBUG}
+						${LIBPVD_RUNTIME_DEBUG}
+						${LIBPX_TASK_DEBUG}
+						${LIBSCENE_QUERY_DEBUG}
+						${LIBSIMULATION_CONTROLLER_DEBUG}
+					)
 	endif()
 
 	if( ${OPIFEX_OS_WINDOWS} )
@@ -544,9 +649,8 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 				${VORBISFILE_LIBRARY}
 			)
 		endif()
-		
 	endif()
-	
+
 
 	if( ${OPIFEX_OPTION_AUDIO} )
 		copy_from_binaries_on_build(${APPLICATION_TARGET} "ogg.dll" ${OPIFEX_OS_WINDOWS})
@@ -597,7 +701,7 @@ function(find_binary OPIFEX_LIBRARY OPIFEX_NAME NOT_STATIC)
 		endif()
 
 
-		find_library( ${OPIFEX_LIBRARY} NAMES ${OPIFEX_LIBRARY_NAME} PATHS 
+		find_library( ${OPIFEX_LIBRARY} NAMES ${OPIFEX_LIBRARY_NAME} PATHS
 		"${OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}" PARENT_SCOPE)
 
 		message(STATUS "Looking for '${OPIFEX_LIBRARY_NAME}' in '${OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}'")
@@ -609,7 +713,7 @@ endfunction(find_binary)
 function(find_dynamic OPIFEX_LIBRARY OPIFEX_NAME)
 	populate_binary_directory()
 	SET(OPIFEX_LIBRARY_NAME "lib${OPIFEX_NAME}.dylib")
-		
+
 
 	if(${OPIFEX_OS_WINDOWS})
 		SET(OPIFEX_LIBRARY_NAME "${OPIFEX_NAME}.lib")
@@ -627,7 +731,7 @@ function(find_dynamic OPIFEX_LIBRARY OPIFEX_NAME)
 	endif()
 
 
-	find_library( ${OPIFEX_LIBRARY} NAMES ${OPIFEX_LIBRARY_NAME} PATHS 
+	find_library( ${OPIFEX_LIBRARY} NAMES ${OPIFEX_LIBRARY_NAME} PATHS
 	"${OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}" PARENT_SCOPE)
 
 	message(STATUS "Looking for '${OPIFEX_LIBRARY_NAME}' in '${OPIFEX_BINARIES}/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}'")
@@ -689,7 +793,7 @@ endif()
 
 macro(copy_file_to_binaries FILE_TO_COPY)
 
-		file(COPY 
+		file(COPY
 			${OPIFEX_ENGINE_REPOSITORY}${FILE_TO_COPY}
 			DESTINATION ${PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}/)
 

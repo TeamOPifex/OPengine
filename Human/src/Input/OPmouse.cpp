@@ -3,7 +3,7 @@
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
 
-#ifndef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 	#include <GLFW/glfw3.h>
 #endif
 
@@ -18,7 +18,7 @@ OPmouseState Mouse = {
 	0
 };
 
-#ifndef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 void OPmouseUpdate() {
 	OPmemcpy(&Mouse.prevKeys, &Mouse.keys, sizeof(OPint)* _OPMOUSE_MAX);
 	Mouse.prevPositionX = Mouse.positionX;
@@ -40,17 +40,17 @@ void OPmouseUpdate() {
 	//Mouse.wheel = glfwGetScroll(window);
 }
 
-d64 OPmousePositionX() {
+i32 OPmousePositionX() {
 	return Mouse.positionX;
 }
-d64 OPmousePositionY() {
+i32 OPmousePositionY() {
 	return Mouse.positionY;
 }
 
-d64 OPmousePositionMovedX() {
+i32 OPmousePositionMovedX() {
 	return Mouse.prevPositionX - Mouse.positionX;
 }
-d64 OPmousePositionMovedY() {
+i32 OPmousePositionMovedY() {
 	return Mouse.prevPositionY - Mouse.positionY;
 }
 
@@ -135,7 +135,7 @@ void OPmouseSetPositionScreenCenter() {
 #endif
 
 ui32 OPmouseMapping[_OPMOUSE_MAX] = {
-#ifndef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 	GLFW_MOUSE_BUTTON_1,	//	LBUTTON
 	GLFW_MOUSE_BUTTON_2,	//	RBUTTON
 	GLFW_MOUSE_BUTTON_4,	//	CANCEL

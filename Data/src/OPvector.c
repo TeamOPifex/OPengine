@@ -17,7 +17,6 @@ OPvector* OPvectorCreate(OPint elementSize) {
 
 void OPvectorDestroy(OPvector* vector) {
 	OPfree(vector->items);
-	OPfree(vector);
 }
 
 ui8* OPvectorGet(OPvector* vector, OPuint index) {

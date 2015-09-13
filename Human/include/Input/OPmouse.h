@@ -17,10 +17,10 @@ typedef struct {
 extern OPmouseState Mouse;
 
 void OPmouseUpdate();
-d64 OPmousePositionX();
-d64 OPmousePositionY();
-d64 OPmousePositionMovedX();
-d64 OPmousePositionMovedY();
+i32 OPmousePositionX();
+i32 OPmousePositionY();
+i32 OPmousePositionMovedX();
+i32 OPmousePositionMovedY();
 i32 OPmouseWheel();
 i32 OPmouseWheelMoved();
 OPint OPmouseIsDown(OPmouseKey key);

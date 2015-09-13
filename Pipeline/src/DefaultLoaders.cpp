@@ -6,7 +6,9 @@
 #include "./Human/include/Rendering/Sprite/OPspriteSheet.h"
 #include "./Human/include/Utilities/OPimagePNG.h"
 
-OPassetLoader OP_DEFAULT_LOADERS[6] = {
+#define OP_DEFAULT_LOADER_COUNT 6
+
+OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 	{
 		".png",
 		"Textures/",
@@ -101,7 +103,7 @@ OPassetLoader OP_DEFAULT_LOADERS[6] = {
 
 
 void OPloadersAddDefault() {
-	for (i32 i = 0; i < 8; i++) {
+	for (i32 i = 0; i < OP_DEFAULT_LOADER_COUNT; i++) {
 		OPcmanAddLoader(&OP_DEFAULT_LOADERS[i]);
 	}
 }

@@ -1,6 +1,6 @@
 #include "./Core/include/OPlog.h"
 
-OPint LogToHandle = 1;
+i32 LogToHandle = 1;
 
 #ifdef OPIFEX_ANDROID
 
@@ -60,7 +60,7 @@ void OPlogErr(const char* message, ...) {
 
 
 
-void OPlogSetOutput(OPint handle) {
+void OPlogSetOutput(i32 handle) {
 	if(handle > 0) {
 		LogToHandle = handle;
 	}

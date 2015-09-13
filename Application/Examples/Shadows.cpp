@@ -60,8 +60,9 @@ void ExampleShadowsEnter(OPgameState* last) {
 
 	// Load the model to be drawn
 	shadowsExample.Model.mesh = (OPmesh*)OPcmanLoadGet("basket.opm");
-	shadowsExample.Model.world = OPmat4Translate(1, 1, 0);
-	shadowsExample.Model.world *= OPmat4Scl(0.1);
+	shadowsExample.Model.world = OPmat4Translate(0, 10, 0);
+	shadowsExample.Model.world *= OPmat4Scl(1.0);
+
 	shadowsExample.GroundMesh = OPmeshCreate();
 	OPmeshBind(&shadowsExample.GroundMesh);
 	OPmeshBuild(
@@ -70,7 +71,7 @@ void ExampleShadowsEnter(OPgameState* last) {
 		_quadVertNormData, _quadIndexData
 		);
 	shadowsExample.Ground.mesh = &shadowsExample.GroundMesh;
-	shadowsExample.Ground.world = OPMAT4IDENTITY;
+	shadowsExample.Ground.world = OPmat4Scl(10.0);
 	OPint vertexStride = shadowsExample.Model.mesh->VertexSize;
 
 	shadowsExample.ModelTexture = (OPtexture*)OPcmanLoadGet("noneNorm.png");
@@ -84,7 +85,7 @@ void ExampleShadowsEnter(OPgameState* last) {
 	};
 
 	OPshader* vert = (OPshader*)OPcmanLoadGet("Common/TexturedShadow.vert");
-	OPshader* frag = (OPshader*)OPcmanLoadGet("Common/TexturedShadow.frag");
+	OPshader* frag = (OPshader*)OPcmanLoadGet("Common/TexturedShadow2.frag");
 	shadowsExample.Effect = OPeffectCreate(
 		*vert,
 		*frag,
@@ -149,13 +150,20 @@ void ExampleShadowsEnter(OPgameState* last) {
 	// Create the camera used for the shadow. This is the position
 	// and direction of the light being used for shadows.
 	OPfloat size = 5;
-	shadowsExample.ShadowCamera = OPcamOrtho(
-	    OPvec3Create(0,-10,10),
+	// shadowsExample.ShadowCamera = OPcamOrtho(
+	//     OPvec3Create(0,10,0.1),
+	//     OPvec3Create(0, 0, 0),
+	//     OPvec3Create(0, 1, 0),
+	//     -20.0f, 30.0f,
+	//     -size, size,
+	//     -size, size );
+	shadowsExample.ShadowCamera = OPcamPersp(
+	    OPvec3Create(0,5,0.1),
 	    OPvec3Create(0, 0, 0),
 	    OPvec3Create(0, 1, 0),
-	    -20.0f, 30.0f,
-	    -size, size,
-	    -size, size );
+	    0.1f, 30.0f,
+		45.0f, OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
+	     );
 
 
 
@@ -171,10 +179,11 @@ void ExampleShadowsEnter(OPgameState* last) {
 	OPmaterialAddParam(&shadowsExample.ModelMaterials[1], "uShadow", &shadowsExample.ShadowFrameBuffer.Texture);
 
 	OPmaterialInit(&shadowsExample.GroundMaterials[1], &shadowsExample.Effect);
-	OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uLightDirection", &shadowsExample.ShadowCamera._pos);
+	OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uLightPos", &shadowsExample.ShadowCamera._pos);
+	OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uViewPos", &shadowsExample.Camera.Camera._pos);
 	OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uViewShadow", &shadowsExample.ViewShadow);
 	OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uProjShadow", &shadowsExample.ProjShadow);
-	OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uBias", &shadowsExample.BiasShadow);
+	//OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uBias", &shadowsExample.BiasShadow);
 	OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uColorTexture", shadowsExample.GroundTexture);
 	OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uShadow", &shadowsExample.ShadowFrameBuffer.Texture);
 
@@ -189,6 +198,8 @@ OPint ExampleShadowsUpdate(OPtimer* timer) {
 
 	shadowsExample.ShadowCamera._pos.x-= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_J);
 	shadowsExample.ShadowCamera._pos.x += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_L);
+	shadowsExample.ShadowCamera._pos.y-= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_U);
+	shadowsExample.ShadowCamera._pos.y += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_O);
 	shadowsExample.ShadowCamera._pos.z += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_I);
 	shadowsExample.ShadowCamera._pos.z -= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_K);
 	shadowsExample.ShadowCamera._viewStale = 1;
@@ -203,7 +214,7 @@ OPint ExampleShadowsUpdate(OPtimer* timer) {
 	OPframeBufferBind(&shadowsExample.ShadowFrameBuffer);
 	OPrenderClear(0,0,0);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	
+
 	OPmodelDraw(shadowsExample.Model, &shadowsExample.ModelMaterials[0], shadowsExample.ShadowCamera);
 
 	OPframeBufferUnbind();

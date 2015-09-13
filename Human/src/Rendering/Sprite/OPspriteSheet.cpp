@@ -9,7 +9,6 @@ void __opSpriteScaleFrames(OPtexture* tex, OPspriteSheet* ss) {
 	ASSERT(tex, "__opSpriteScaleFrames() - texture null");
 	ASSERT(tex, "__opSpriteScaleFrames() - spritesheet null");
 	OPint i = 0;
-	OPlog("Texture Size: %d, %d", tex->Description.Width, tex->Description.Height);
 	OPvec2 size;
 	size.x = tex->Description.Width;
 	size.y = tex->Description.Height;
@@ -129,7 +128,7 @@ OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
 			OPbzero(sprite, sizeof(OPsprite));
 
 			if (flags){
-				// this sprite has animation frames	
+				// this sprite has animation frames
 				spriteFrames = OPreadi32(str);
 			}
 

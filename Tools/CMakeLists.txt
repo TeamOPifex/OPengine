@@ -116,7 +116,7 @@ if(${OPIFEX_TOOLS_FBXTOOPM})
 	endif()	
 
 	if(${OPIFEX_OS_OSX})
-		target_link_libraries(Tools_FBXtoOPM "/Applications/Autodesk/FBX\ SDK/2015.1/lib/clang/debug/libfbxsdk.a")
+		target_link_libraries(Tools_FBXtoOPM "/Applications/Autodesk/FBX\ SDK/2015.1/lib/clang/debug/libfbxsdk.dylib")
 	endif()
 
 

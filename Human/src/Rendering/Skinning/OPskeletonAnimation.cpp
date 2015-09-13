@@ -13,6 +13,9 @@ void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPm
 	OPint totalSize = sizeof(OPmat4)* frameCount * boneCount;
 	skelAnim->JointFrames = (OPmat4*)OPalloc(totalSize);
 	OPmemcpy(skelAnim->JointFrames, frames, totalSize);
+	for (OPuint i = 0; i < frameCount * boneCount; i++) {
+		OPmat4SetTranslate(skelAnim->JointFrames[i], 0, 0, 0);
+	}
 }
 
 OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPmat4* frames, i32 count) {
@@ -24,12 +27,12 @@ OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPmat4* frames, 
 
 void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
 	ASSERT(skelAnim->FramesPer != 0, "Must have at least 1 frame per second");
-	
+
 	skelAnim->Elapsed += timer->Elapsed;
 	skelAnim->LastFrame = skelAnim->Frame;
 
 	while (skelAnim->Elapsed >= skelAnim->FramesPer) {
-		// OPlog("Elapsed %d, FP %d, Frame %d", 
+		// OPlog("Elapsed %d, FP %d, Frame %d",
 		// 	skelAnim->Elapsed,
 		// 	skelAnim->FramesPer,
 		// 	skelAnim->Frame);
@@ -59,7 +62,7 @@ void OPskeletonAnimationUpdateEvents(OPskeletonAnimation* skelAnim, void* data) 
 		}
 	} else {
 		for(OPint i = 0; i < skelAnim->EventCount; i++) {
-			if( !skelAnim->Events[i].OnFrameChange && 
+			if( !skelAnim->Events[i].OnFrameChange &&
 				(skelAnim->Events[i].Frame <= skelAnim->Frame &&
 				 skelAnim->Events[i].End >= skelAnim->Frame )
 				) {
@@ -96,7 +99,7 @@ void OPskeletonAnimationMerge(OPskeletonAnimation* skelAnim1, OPskeletonAnimatio
 	OPfloat percent2 = skelAnim2->Elapsed / (OPfloat)skelAnim2->FramesPer;
 
 	for (OPint i = 0; i < skeleton->hierarchyCount; i++) {
-		
+
 		ind1 = skeleton->hierarchyCount * skelAnim1->Frame + i;
 
 		if (skelAnim1->Frame == skelAnim1->FrameCount - 1) {

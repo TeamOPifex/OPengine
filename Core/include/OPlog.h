@@ -15,9 +15,9 @@
 extern "C" {
 #endif
 
-	extern OPint LogToHandle;
+extern i32 LogToHandle;
 
-void OPlogSetOutput(OPint handle);
+void OPlogSetOutput(i32 handle);
 
 // Prints out to the console, accepts variable arguments like sprintf
 void OPlg(const char* message, ...);

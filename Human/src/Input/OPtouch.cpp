@@ -2,7 +2,7 @@
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
 
-#ifndef OPIFEX_ANDROID
+#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 	#include <GLFW/glfw3.h>
 #endif
 

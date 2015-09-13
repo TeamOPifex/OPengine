@@ -19,7 +19,7 @@ OPint OPstringEndsWith(OPchar* str, const OPchar* cmp) {
 	ui32 lenA = strlen(str);
 	ui32 lenB = strlen(cmp);
 	if (lenA < lenB) return 0;
-	return OPmemcmp(&str[lenA-lenB-1], cmp, lenB) == 0;
+	return OPmemcmp(&str[lenA-lenB], cmp, lenB) == 0;
 }
 
 void OPstringRemoveFromStart(OPchar* str, i32 size) {
@@ -52,7 +52,26 @@ OPchar* OPstringCopy(const OPchar* str) {
 	result = (OPchar*)OPalloc(sizeof(OPchar) * (len + 1));
 	strcpy(result, str);
 	result[len] = '\0';
-	
+
+	return result;
+}
+
+OPchar* OPstringSub(const OPchar* str, OPint start, OPint end) {
+	i32 len, subLen;
+	OPchar* result = NULL;
+
+	len = strlen(str);
+	subLen = end - start;
+
+	if(len < subLen) {
+		return NULL;
+	}
+
+
+	result = (OPchar*)OPalloc(sizeof(OPchar) * (subLen + 1));
+	OPmemcpy(result, &str[start], sizeof(OPchar) * subLen);
+	result[subLen] = '\0';
+
 	return result;
 }
 

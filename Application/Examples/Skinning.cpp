@@ -25,22 +25,22 @@ SkinningExample* skinningExample;
 #define SCALE 20
 
 void ExampleSkinningEnter(OPgameState* last) {
-	
+
 	OPcmanLoad("Skinning.frag");
 	OPcmanLoad("Skinning.vert");
 	skinningExample = (SkinningExample*)OPalloc(sizeof(SkinningExample));
 
-	skinningExample->skeleton = (OPskeleton*)OPcmanLoadGet("blobman.opm.skel");
-	skinningExample->animation = (OPskeletonAnimation*)OPcmanLoadGet("blobman.opm.Take 001.anim");
-	skinningExample->animation2 = (OPskeletonAnimation*)OPcmanLoadGet("blobman.opm.Take 001.anim");
-	skinningExample->animation3 = (OPskeletonAnimation*)OPcmanLoadGet("blobman.opm.Take 001.anim");
-	skinningExample->animation4 = (OPskeletonAnimation*)OPcmanLoadGet("blobman.opm.Take 001.anim");
+	skinningExample->skeleton = (OPskeleton*)OPcmanLoadGet("person.opm.skel");
+	skinningExample->animation = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
+	skinningExample->animation2 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
+	skinningExample->animation3 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
+	skinningExample->animation4 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
 
 
 	skinningExample->texture = (OPtexture*)OPcmanLoadGet("noneNorm.png");
 
 	skinningExample->pos = 0;
-	skinningExample->Mesh = (OPmesh*)OPcmanLoadGet("blobman.opm");
+	skinningExample->Mesh = (OPmesh*)OPcmanLoadGet("person.opm");
 
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
@@ -135,7 +135,7 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 
 	OPmeshBind(skinningExample->Mesh);
 	OPeffectBind(skinningExample->Effect);
-	
+
 	OPmat4 world, view, proj;
 	OPmat4Identity(&world);
 	//OPmat4BuildRotX(&world,- OPpi / 2.0);
