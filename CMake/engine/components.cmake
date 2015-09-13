@@ -270,9 +270,7 @@ macro(add_opifex_v8 APPLICATION_TARGET )
 				if(${OPIFEX_OS_64})
 					target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/V8/lib/release/osx64/v8.lib)
 				else()
-					target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/V8/lib/release/win32/v8.lib)
-					target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/V8/lib/release/win32/v8_libbase.lib)
-					target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/V8/lib/release/win32/v8_libplatform.lib)
+
 				endif()
 
 			else()
@@ -307,11 +305,15 @@ macro(add_opifex_v8 APPLICATION_TARGET )
 					target_link_libraries(${APPLICATION_TARGET}
 						${PROJECT_SOURCE_DIR}/External/V8/lib/debug/osx64/libicui18n.a)
 
+					target_link_libraries(${APPLICATION_TARGET}
+						${PROJECT_SOURCE_DIR}/External/V8/lib/debug/osx64/libgtest.a)
+
+					target_link_libraries(${APPLICATION_TARGET}
+						${PROJECT_SOURCE_DIR}/External/V8/lib/debug/osx64/libgmock.a)
+
 					message(STATUS "LIBV8")
 				else()
-					target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/V8/lib/debug/win32/v8.lib)
-					target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/V8/lib/debug/win32/v8_libbase.lib)
-					target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/V8/lib/debug/win32/v8_libplatform.lib)
+
 				endif()
 
 			endif()

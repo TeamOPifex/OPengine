@@ -495,13 +495,6 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 				find_binary(LIBV8_ICUUC "icuuc" fa lse)
 				find_binary(LIBV8_ICUI18N "icui18n" false)
 
-			target_link_libraries(${APPLICATION_TARGET}
-					${LIBV8_NOSHNAPSHOT}
-					${LIBV8_ICUDATA}
-					${LIBV8_ICUUC}
-					${LIBV8_ICUI18N}
-				)
-
 			endif()
 
 			add_definitions(-DOPIFEX_V8)
@@ -532,7 +525,11 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 			target_link_libraries(${APPLICATION_TARGET}
 					${LIBV8}
 					${LIBV8_LIBBASE}
-					${LIBV8_LIBPLATFORM})
+					${LIBV8_LIBPLATFORM}
+					${LIBV8_NOSHNAPSHOT}
+					${LIBV8_ICUDATA}
+					${LIBV8_ICUUC}
+					${LIBV8_ICUI18N})
 		endif()
 	endif()
 
