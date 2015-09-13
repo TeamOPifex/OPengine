@@ -50,19 +50,19 @@ typedef jdouble d64; //double type
 
 // PC integer types
 #if defined(OPIFEX_OS64)
-typedef long long   i64;
-#ifdef OPIFEX_WINDOWS
-typedef unsigned long long  ui64;  //long type
-#elif defined(OPIFEX_UNIX)
-typedef unsigned long  ui64;  //long type
-#endif
-typedef int     i32;
-typedef unsigned int   ui32; //int type
+	typedef long long   i64;
+	#ifdef OPIFEX_WINDOWS
+		typedef unsigned long long  ui64;  //long type
+	#elif defined(OPIFEX_UNIX)
+		typedef unsigned long  ui64;  //long type
+	#endif
+	typedef int     i32;
+	typedef unsigned int   ui32; //int type
 #elif defined(OPIFEX_OS32)
-typedef long    i64;
-typedef unsigned long  ui64;  //long type
-typedef int     i32;
-typedef unsigned int   ui32; //int type
+	typedef long    i64;
+	typedef unsigned long  ui64;  //long type
+	typedef int     i32;
+	typedef unsigned int   ui32; //int type
 #endif
 
 typedef short   i16;

@@ -69,7 +69,9 @@ OPchar* OPreadstring(OPstream* str) {
 }
 
 OPfileInformation OPreadFileInformation(const char* path){
-	OPfileInformation file;
+	OPfileInformation file = {
+		NULL, 0, 0, 0
+	};
 
 #ifdef OPIFEX_ANDROID
 	//AAssetManager* mgr = AAssetManager_fromJava(JNIEnvironment(), JNIAssetManager());
@@ -130,6 +132,7 @@ OPint OPwriteFile(const char* path, OPstream* stream){
 	}
 #elif defined(OPIFEX_WINDOWS)
 	// windows implementation
+	return 0;
 #endif
 }
 
@@ -204,7 +207,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 #elif defined(OPIFEX_WINDOWS)
 	// windows implementation
 	ui8 bytes[1024];
-	OPint fd = 0, i;
+	i32 fd = 0, i;
 	// check to see if the file exists
 	if(OPfileExists(path) > 0) {
 
@@ -258,7 +261,7 @@ OPint OPdeleteFile(const char* path){
 #if defined(OPIFEX_UNIX)
 		return unlink(path) + 1;
 #elif defined(OPIFEX_WINDOWS)
-
+		return 0;
 #endif
 	}
 	else{
@@ -319,33 +322,33 @@ OPfile OPfileOpen(const OPchar* path) {
 }
 
 OPint OPfileWriteui8(OPfile* file, ui8 data) {
-	write(file->_handle, &data, sizeof(ui8));
+	write((int)file->_handle, &data, sizeof(ui8));
     return 1;
 }
 OPint OPfileWriteui16(OPfile* file, ui16 data) {
-    write(file->_handle, &data, sizeof(ui16));
+	write((int)file->_handle, &data, sizeof(ui16));
     return 1;
 }
 OPint OPfileWriteui32(OPfile* file, ui32 data) {
-    write(file->_handle, &data, sizeof(ui32));
+	write((int)file->_handle, &data, sizeof(ui32));
     return 1;
 }
 OPint OPfileWritei8(OPfile* file, i8 data) {
-    write(file->_handle, &data, sizeof(i8));
+	write((int)file->_handle, &data, sizeof(i8));
     return 1;
 }
 OPint OPfileWritei16(OPfile* file, i16 data) {
-    write(file->_handle, &data, sizeof(i16));
+	write((int)file->_handle, &data, sizeof(i16));
     return 1;
 }
 OPint OPfileWritei32(OPfile* file, i32 data) {
-    write(file->_handle, &data, sizeof(i32));
+	write((int)file->_handle, &data, sizeof(i32));
     return 1;
 }
 OPint OPfileWriteString(OPfile* file, const OPchar* data) {
 	OPuint len = (OPuint)strlen(data);
-	write(file->_handle, (void*)len, sizeof(ui32));
-    write(file->_handle, data, sizeof(OPchar) * len);
+	write((int)file->_handle, (void*)len, sizeof(ui32));
+	write((int)file->_handle, data, sizeof(OPchar)* len);
     return 1;
 }
 
@@ -359,44 +362,44 @@ OPint OPfileWriteBytes(OPfile* file, void* data, ui64 bytesToWrite) {
 
 ui8 OPfileReadui8(OPfile* file) {
 	i8 bytes[sizeof(ui8)];
-	read(file->_handle, bytes, sizeof(ui8));
+	read((int)file->_handle, bytes, sizeof(ui8));
 	return *((ui8*)bytes);
 }
 
 ui16 OPfileReadui16(OPfile* file) {
 	i8 bytes[sizeof(ui16)];
-	read(file->_handle, bytes, sizeof(ui16));
+	read((int)file->_handle, bytes, sizeof(ui16));
 	return *((ui16*)bytes);
 }
 
 ui32 OPfileReadui32(OPfile* file) {
 	i8 bytes[sizeof(ui32)];
-	read(file->_handle, bytes, sizeof(ui32));
+	read((int)file->_handle, bytes, sizeof(ui32));
 	return *((ui32*)bytes);
 }
 
 i8 OPfileReadi8(OPfile* file) {
 	i8 bytes[sizeof(i8)];
-	read(file->_handle, bytes, sizeof(i8));
+	read((int)file->_handle, bytes, sizeof(i8));
 	return *((i8*)bytes);
 }
 
 i16 OPfileReadi16(OPfile* file) {
 	i8 bytes[sizeof(i16)];
-	read(file->_handle, bytes, sizeof(i16));
+	read((int)file->_handle, bytes, sizeof(i16));
 	return *((i16*)bytes);
 }
 
 i32 OPfileReadi32(OPfile* file) {
 	i8 bytes[sizeof(i32)];
-	read(file->_handle, bytes, sizeof(i32));
+	read((int)file->_handle, bytes, sizeof(i32));
 	return *((i32*)bytes);
 }
 
 OPchar* OPfileReadString(OPfile* file) {
 	ui32 len = OPfileReadui32(file);
 	OPchar* str = (OPchar*)OPalloc(sizeof(OPchar) * len);
-	read(file->_handle, str, sizeof(OPchar) * len);
+	read((int)file->_handle, str, sizeof(OPchar)* len);
 	return str;
 }
 

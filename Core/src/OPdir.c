@@ -68,7 +68,7 @@ OPchar* OPdirExecutable() {
 			result = (OPchar*)OPalloc(sizeof(OPchar)* len);
 			OPmemcpy(result, ownPth, sizeof(OPchar)* (len - 2));
 			result[len - 2] = '\\';
-			result[len - 1] = NULL;
+			result[len - 1] = '\0';
 			return result;
 		}
 	#elif defined(OPIFEX_OSX)

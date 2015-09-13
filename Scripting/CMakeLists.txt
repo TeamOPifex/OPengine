@@ -73,6 +73,8 @@ if(${OPIFEX_OPTION_SHARED})
 else()
 	add_library(8_Scripting STATIC ${SCRIPTING_SRC})
 endif()
+add_definitions(-DGLEW_STATIC)
+
 target_link_libraries(8_Scripting ${ALL_LIBS})
 set_target_properties(8_Scripting PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(8_Scripting PROPERTIES OUTPUT_NAME "Scripting")

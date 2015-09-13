@@ -42,7 +42,7 @@ set(ALL_LIBS
 	3_Math
 	4_Performance
 	5_Human
-	glfw 
+	glfw
 	${GLFW_LIBRARIES}
 )
 
@@ -54,6 +54,7 @@ if(${OPIFEX_OPTION_SHARED})
 else()
 	add_library(7_Pipeline STATIC ${PIPELINE_SRC})
 endif()
+add_definitions(-DGLEW_STATIC)
 
 set_target_properties(7_Pipeline PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(7_Pipeline PROPERTIES OUTPUT_NAME "Pipeline")

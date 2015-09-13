@@ -69,6 +69,8 @@ set(ALL_LIBS
 #########################################
 add_executable(9_Application ${APPLICATION_SRC} ../Scripting/include/JavaScript/Human/Wrappers.h)
 
+add_definitions(-DGLEW_STATIC)
+
 target_link_libraries(9_Application	${ALL_LIBS})
 
 if( ${OPIFEX_OS_WINDOWS} )

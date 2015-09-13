@@ -120,7 +120,7 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 	}
 
 
-	if (!ParticleTransform) {
+	if (ParticleTransform != NULL) {
 		for (OPint i = sys->heap->MaxIndex; i--;){
 			OPparticle* p = &((OPparticle*)sys->heap->Entities)[i];
 
