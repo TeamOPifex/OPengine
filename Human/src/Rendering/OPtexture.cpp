@@ -8,9 +8,9 @@ OPtexture* OPRENDER_CURR_TEX;
 ui32 ActiveTexture = 0;
 
 //-----------------------------------------------------------------------------
-// ______                _   _                 
-//|  ____|              | | (_)                
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+// ______                _   _
+//|  ____|              | | (_)
+//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
@@ -35,7 +35,7 @@ OPtexture OPtextureCreate(OPtextureDescription desc){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, desc.WrapX);
 	OPglError("OPtextureCreate::Error 5");
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, desc.WrapY);
-#ifndef OPIFEX_IOS)
+#ifndef OPIFEX_IOS
     // TODO: (garrett) This should still work on iOS
 	OPglError("OPtextureCreate::Error 6");
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, desc.CompareFunc);
@@ -74,8 +74,8 @@ void OPtextureClearActive() {
 void OPtextureSetData(void* data){
 	OPglError("OPtextureSetData::Error 0");
 	glTexImage2D(
-		GL_TEXTURE_2D, 
-		0, 
+		GL_TEXTURE_2D,
+		0,
 		OPRENDER_CURR_TEX->Description.InternalFormat,
 		OPRENDER_CURR_TEX->Description.Width,
 		OPRENDER_CURR_TEX->Description.Height,

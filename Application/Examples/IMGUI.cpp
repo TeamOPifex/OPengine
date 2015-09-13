@@ -20,7 +20,7 @@ void keystream(OPchar c) {
 	if(!imguiExample.textActive) return;
 	OPint p = strlen(imguiExample.buffer);
 	imguiExample.buffer[p] = c;
-	imguiExample.buffer[p+1] = NULL;
+	imguiExample.buffer[p+1] = '\0';
 	OPlog("MyCode %c", c);
 }
 
@@ -28,7 +28,7 @@ void ExampleIMGUIEnter(OPgameState* last) {
 
 	OPKEYBOARD_STREAM = keystream;
 
-	OPchar* data = "Testing";
+	const OPchar* data = "Testing";
 	for(OPint i = 0; i < strlen(data); i++) {
 		imguiExample.buffer[i] = data[i];
 	}
@@ -61,7 +61,7 @@ OPint ExampleIMGUIUpdate(OPtimer* time) {
 
 	if(OPkeyboardWasPressed(OPKEY_BACKSPACE) && imguiExample.textActive && strlen(imguiExample.buffer) > 0) {
 		OPlog("Buff %s", imguiExample.buffer);
-		imguiExample.buffer[strlen(imguiExample.buffer) - 1] = NULL;
+		imguiExample.buffer[strlen(imguiExample.buffer) - 1] = '\0';
 		OPlog("Buff %s", imguiExample.buffer);
 	}
 

@@ -14,7 +14,9 @@
 #define ${OPIFEX_OS}
 
 #ifndef OPIFEX_OPTION_RELEASE
+#ifndef _DEBUG
 #define _DEBUG
+#endif
 #endif
 
 #if defined(OPIFEX_OPTION_NODEJS) || defined(OPIFEX_OPTION_V8)

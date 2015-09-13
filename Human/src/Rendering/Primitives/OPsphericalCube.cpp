@@ -1,5 +1,6 @@
 #include "./Human/include/Rendering/Primitives/OPsphericalCube.h"
 #include "./Math/include/OPray3D.h"
+#include "./Core/include/Assert.h"
 
 OPsphericalCube OPsphericalCubeCreate(OPint size) {
 
@@ -162,7 +163,7 @@ OPsphericalCube OPsphericalCubeCreate(OPint size) {
 		vertsMem[i].pos = OPvec3Norm(vertsMem[i].pos);
 		vertsMem[i].norm = OPvec3Norm(vertsMem[i].pos);
 	}
-	
+
 	OPint index = 0;
 	OPint IndicesPerSide = (((LWH - 1)*(LWH - 1) * 6) / OPSPHERICALCUBE_SCL);
 	OPint totalIndices = IndicesPerSide * 6;
@@ -175,7 +176,7 @@ OPsphericalCube OPsphericalCubeCreate(OPint size) {
 	indices[OP_SPHERICAL_CUBE_SIDE_RIGHT] = &indicesMem[OP_SPHERICAL_CUBE_SIDE_RIGHT * IndicesPerSide];
 	indices[OP_SPHERICAL_CUBE_SIDE_FRONT] = &indicesMem[OP_SPHERICAL_CUBE_SIDE_FRONT * IndicesPerSide];
 	indices[OP_SPHERICAL_CUBE_SIDE_BACK] = &indicesMem[OP_SPHERICAL_CUBE_SIDE_BACK * IndicesPerSide];
-	
+
 
 	for (OPint i = 0; i < 6; i++) {
 		for (OPint x = 0; x < (LWH - 1); x += OPSPHERICALCUBE_SCL)
@@ -272,8 +273,12 @@ OPvec2 OPsphericalCubePlanePositionSide(const OPvec3 pos, OPsphericalCubeSide si
 		case OP_SPHERICAL_CUBE_SIDE_RIGHT: {
 			plane.position = OPvec3Create(0.5, 0, 0);
 			plane.normal = OPvec3Create(1, 0, 0);
-			result = OPplane3DIntersects(plane, ray, &position);	
+			result = OPplane3DIntersects(plane, ray, &position);
 			return OPvec2Create(position.z, -position.y);
+		}
+
+		case _OP_SPHERICAL_CUBE_SIDE_MAX: {
+			ASSERT(false, "Should never use the enumeration count of OPsphericalCube");
 		}
 	}
 
@@ -355,7 +360,7 @@ OPvec2 OPsphericalCubePlanePosition(const OPvec3 pos, OPsphericalCubeSide* side)
 	{
 		plane.position = OPvec3Create(0.5, 0, 0);
 		plane.normal = OPvec3Create(1, 0, 0);
-		result = OPplane3DIntersects(plane, ray, &position);	
+		result = OPplane3DIntersects(plane, ray, &position);
 		if( result && OPabs(position.z) < 0.5 && OPabs(position.y) < 0.5) {
 			(*side) = OP_SPHERICAL_CUBE_SIDE_RIGHT;
 			//OPlg("R");

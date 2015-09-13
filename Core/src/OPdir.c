@@ -36,7 +36,7 @@ OPchar* OPdirCurrent() {
 	result = (OPchar*)OPalloc(sizeof(OPchar) * len);
 	OPmemcpy(result, cCurrentPath, sizeof(OPchar)* (len - 2));
 	result[len-2] = '\\';
-	result[len-1] = NULL;
+	result[len-1] = '\0';
 	return result;
 }
 
@@ -56,8 +56,8 @@ OPchar* OPdirExecutable() {
 		if (hModule != NULL)
 		{
 			// When passing NULL to GetModuleHandle, it returns handle of exe itself
-			GetModuleFileName(hModule, ownPth, (sizeof(ownPth))); 
-			
+			GetModuleFileName(hModule, ownPth, (sizeof(ownPth)));
+
 			pos = strrchr(ownPth, '\\');
 			if (pos != NULL) {
 				*pos = '\0'; //this will put the null terminator here. you can also copy to another string if you want
@@ -78,14 +78,14 @@ OPchar* OPdirExecutable() {
 		len = strlen(tmpPth);
 		if(len < 1024) {
 			tmpPth[len] = '/';
-			tmpPth[len + 1] = NULL; 
+			tmpPth[len + 1] = '\0';
 		}
 		OPlog("The executable directory is \n%s\n%s", ownPth, tmpPth);
 
 		len = strlen(tmpPth);
 		result = (OPchar*)OPalloc(sizeof(OPchar)* len);
 		OPmemcpy(result, tmpPth, sizeof(OPchar)* len);
-		result[len] = NULL;
+		result[len] = '\0';
 
 		return result;
 	#else

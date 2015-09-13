@@ -62,7 +62,7 @@ inline OPquat OPquatSub(OPquat a, OPquat b){
 }
 
 inline OPquat OPquatMul(OPquat a, OPquat b){
-	register OPfloat dot = a.x * b.x + a.y * b.y + a.z * b.z;
+	OPfloat dot = a.x * b.x + a.y * b.y + a.z * b.z;
 	OPvec3 vb = OPQUAT_AXIS(b) * a.w;
 	OPvec3 va = OPQUAT_AXIS(a) * b.w;
 	OPvec3 sum = vb + va;
@@ -98,7 +98,7 @@ inline OPquat OPquatConj(OPquat a){
 		a.w
 	};
 
-	return out;	
+	return out;
 }
 
 inline OPquat OPquatNorm(OPquat a){
@@ -110,7 +110,7 @@ inline OPfloat OPquatDot(OPquat a, OPquat b){
 	return a.x * b.x +
 	       a.y * b.y +
 	       a.z * b.z +
-	       a.w * b.w; 
+	       a.w * b.w;
 }
 
 inline OPvec3 OPquatRot(OPquat q, OPvec3 p){
@@ -151,7 +151,7 @@ inline OPquat OPquatCreateLookAt(OPvec3 eye, OPvec3 target){
 	OPvec3 forwardUnit = OPvec3Norm(forward);
 
 	OPfloat dot = OPvec3Dot(forwardUnit, OPVEC3_FORWARD);
-	
+
 	if(OPabs(dot + 1.0) < 0.00001){
 		return OPquatCreate(OPVEC3_UP, OPpi);
 	}
@@ -160,7 +160,7 @@ inline OPquat OPquatCreateLookAt(OPvec3 eye, OPvec3 target){
 	}
 
 	OPfloat rotAngle = OPacos(dot);
-	
+
 	OPvec3 rotAxis = OPvec3Cross(forwardUnit, OPVEC3_FORWARD);
 	rotAxis = OPvec3Norm(rotAxis);
 

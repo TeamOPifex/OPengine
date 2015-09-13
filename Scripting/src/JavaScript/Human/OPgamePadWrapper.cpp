@@ -6,7 +6,7 @@
 
 #include "./Human/Human.h"
 
-OPchar* gamePadNames[_OPGAMEPADBUTTON_MAX] = {
+const OPchar* gamePadNames[_OPGAMEPADBUTTON_MAX] = {
         "DPAD_UP",
         "DPAD_DOWN",
         "DPAD_LEFT",

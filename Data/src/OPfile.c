@@ -343,8 +343,8 @@ OPint OPfileWritei32(OPfile* file, i32 data) {
     return 1;
 }
 OPint OPfileWriteString(OPfile* file, const OPchar* data) {
-	ui32 len = (OPuint)strlen(data);
-	write(file->_handle, len, sizeof(ui32));
+	OPuint len = (OPuint)strlen(data);
+	write(file->_handle, (void*)len, sizeof(ui32));
     write(file->_handle, data, sizeof(OPchar) * len);
     return 1;
 }

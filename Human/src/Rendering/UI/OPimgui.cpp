@@ -163,7 +163,7 @@ OPint OPimguiTextbox(OPvec2 pos, const OPchar* text, const OPchar* placeholder, 
 
 
 	_block(pos, OPvec2Create(400, size.y), OPIMGUI_ACTIVE->secondaryColor);
-	
+
 	OPvec2 p = pos;
 	p.x += OPIMGUI_ACTIVE->padding[0];
 	p.y += OPIMGUI_ACTIVE->padding[2];
@@ -188,12 +188,12 @@ OPint OPimguiTextbox(OPvec2 pos, const OPchar* text, const OPchar* placeholder, 
 	if(active && showCursor && !usePlaceholder) {
 		OPint charPos = strlen(buffer);
 		buffer[charPos] = '|';
-		buffer[charPos + 1] = NULL;
+		buffer[charPos + 1] = '\0';
 	}
 
 	OPfontColor(colorForFont);
 	OPfontRender(buffer, p);
-	
+
     glDisable(GL_SCISSOR_TEST);
 
 	if(clicked) return 1;
@@ -226,7 +226,7 @@ OPint OPimguiRadio(
 	_radio(pos, size, color);
 
 	if(mx >= topLeft.x && my >= topLeft.y &&
-		mx <= bottomRight.x && my <= bottomRight.y) 
+		mx <= bottomRight.x && my <= bottomRight.y)
 	{
 		OPvec2 inner = size;
 		inner *= 0.6;
@@ -300,9 +300,9 @@ void OPimguiLabel(OPvec2 pos, const OPchar* text) {
 void OPimguiLabel(
 	OPvec2 pos,
 	OPvec2 size,
-	const OPchar* text, 
-	OPvec4 bg, 
-	OPvec4 color, 
+	const OPchar* text,
+	OPvec4 bg,
+	OPvec4 color,
 	OPint fill) {
 
 	ASSERT(OPIMGUI_ACTIVE != NULL, "An IMGUI must be bound");

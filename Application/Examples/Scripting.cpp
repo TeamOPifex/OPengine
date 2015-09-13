@@ -35,7 +35,8 @@ OPint ExampleScriptingUpdate(OPtimer* time) {
     OPjavaScriptPersistentValue args[1] = {
             JS_CREATE_PERSISTENT(JS_NEW_NUMBER(0.5))
     };
-    OPjavaScriptPersistentValue result = OPjavaScriptV8Run(&scriptingExample.UpdateCompiled, "Update", 1, args);
+	const OPchar* name = "Update";
+    OPjavaScriptPersistentValue result = OPjavaScriptV8Run(&scriptingExample.UpdateCompiled, name, 1, args);
 
 	return JS_GET_PERSISTENT_NUMBER(result);
 }
