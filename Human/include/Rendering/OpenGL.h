@@ -1,3 +1,5 @@
+#include "./Core/include/OPtypes.h"
+
 #ifdef OPIFEX_OPENGL_ES_2
 	#ifdef OPIFEX_IOS
 		#include <OpenGLES/ES2/gl.h>

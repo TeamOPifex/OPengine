@@ -1,0 +1,18 @@
+macro(add_opifex_myo APPLICATION_TARGET )
+
+	if(${OPIFEX_OPTION_MYO})
+		include_directories(../External/Myo/include/)
+		if(${OPIFEX_OS_WIN64})
+			target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/Myo/lib/win64/myo64.lib)
+			copy_to_folder(${APPLICATION_TARGET}  "/External/Myo/lib/" "myo64.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+			copy_to_folder(${APPLICATION_TARGET}  "/External/Myo/lib/" "ble64.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+		elseif(${OPIFEX_OS_WIN32})
+			target_link_libraries(${APPLICATION_TARGET}  ${PROJECT_SOURCE_DIR}/External/Myo/lib/win32/myo32.lib)
+			copy_to_folder(${APPLICATION_TARGET}  "/External/Myo/lib/" "myo32.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+			copy_to_folder(${APPLICATION_TARGET}  "/External/Myo/lib/" "ble32.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+		elseif(${OPIFEX_OS_OSX64})
+			target_link_libraries(${APPLICATION_TARGET}  ${PROJECT_SOURCE_DIR}/External/Myo/lib/osx64/myo.framework)
+		endif()
+	endif()
+
+endmacro(add_opifex_myo)

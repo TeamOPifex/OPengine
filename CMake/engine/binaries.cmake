@@ -1,7 +1,14 @@
+
+### Setup the Binaries folder in prep for the build
+
+
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/android)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/android/debug)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/android/release)
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/ios)
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/ios/debug)
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/ios/release)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/win32)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/win32/debug)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/win32/release)

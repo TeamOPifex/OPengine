@@ -10,15 +10,15 @@ message(STATUS "Looking in: ${PROJECT_SOURCE_DIR}")
 
 if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
 
-	find_library(VP8_LIBRARY 
+	find_library(VP8_LIBRARY
 	   NAMES vpxmt vpxmtd
 	   PATHS
 	   "${PROJECT_SOURCE_DIR}/External/VP8/lib/win32"
 	)
-	
+
 elseif( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64" )
 
-   find_library(VP8_LIBRARY 
+   find_library(VP8_LIBRARY
       NAMES vpxmt vpxmtd
       PATHS
       "${PROJECT_SOURCE_DIR}/External/VP8/lib/win64"

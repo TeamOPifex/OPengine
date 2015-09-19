@@ -1,42 +1,20 @@
 
+set(OP_ASSETS_TARGET "${PROJECT_BINARY_DIR}")
+
 if( ${OPIFEX_OS_ANDROID} )
-	
+
+	set(OP_ASSETS_TARGET "${PROJECT_BINARY_DIR}/assets")
+
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Make/AndroidManifest.xml DESTINATION ${PROJECT_BINARY_DIR}/)
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Make/build.xml DESTINATION ${PROJECT_BINARY_DIR}/)
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Make/Install.bat DESTINATION ${PROJECT_BINARY_DIR}/)
-	file(COPY ${PROJECT_SOURCE_DIR}/Android/Java/GamePadButtonState.java DESTINATION ${PROJECT_BINARY_DIR}/src/com/opifex/SMRF/)	
-	file(COPY ${PROJECT_SOURCE_DIR}/Android/Java/GamePadAxes.java DESTINATION ${PROJECT_BINARY_DIR}/src/com/opifex/SMRF/)
-	file(COPY ${PROJECT_SOURCE_DIR}/Android/Java/GamePadButtons.java DESTINATION ${PROJECT_BINARY_DIR}/src/com/opifex/SMRF/)
-	file(COPY ${PROJECT_SOURCE_DIR}/Android/Java/ControllerState.java DESTINATION ${PROJECT_BINARY_DIR}/src/com/opifex/SMRF/)
-	file(COPY ${PROJECT_SOURCE_DIR}/Android/Java/GL2JNILib.java DESTINATION ${PROJECT_BINARY_DIR}/src/com/opifex/SMRF/)
-	file(COPY ${PROJECT_SOURCE_DIR}/Android/Java/GL2JNIView.java DESTINATION ${PROJECT_BINARY_DIR}/src/com/opifex/SMRF/)
-	file(COPY ${PROJECT_SOURCE_DIR}/Android/Java/OPEngine.java DESTINATION ${PROJECT_BINARY_DIR}/src/com/opifex/SMRF/)
-		
+
 	file(COPY ${PROJECT_SOURCE_DIR}/Android/Libs/ouya-sdk.jar DESTINATION ${PROJECT_BINARY_DIR}/libs/)
-	
+
 	configure_file(		${PROJECT_SOURCE_DIR}/Android/Make/Android.mk		${PROJECT_BINARY_DIR}/jni/Android.mk	)
 	configure_file(		${PROJECT_SOURCE_DIR}/Android/Make/Application.mk		${PROJECT_BINARY_DIR}/jni/Application.mk	)
 	configure_file(		${PROJECT_SOURCE_DIR}/Android/Make/strings.xml		${PROJECT_BINARY_DIR}/res/values/strings.xml	)
-	
-	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Audio" ${PROJECT_BINARY_DIR}/assets/Audio)
-	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Models" ${PROJECT_BINARY_DIR}/assets/Models)
-	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Textures" ${PROJECT_BINARY_DIR}/assets/Textures)
-	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Fonts" ${PROJECT_BINARY_DIR}/assets/Fonts)
-	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Scripts" ${PROJECT_BINARY_DIR}/assets/Scripts)
-	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Sprites" ${PROJECT_BINARY_DIR}/assets/Sprites)
-	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/OPENGL_ES_2_0" ${PROJECT_BINARY_DIR}/assets/Shaders)	
-	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/OPENGL_ES_2_0/Common" ${PROJECT_BINARY_DIR}/assets/Shaders/Common)	
-	
-	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web" ${PROJECT_BINARY_DIR}/assets/Web)	
-	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/css" ${PROJECT_BINARY_DIR}/assets/Web/css)	
-	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/fonts" ${PROJECT_BINARY_DIR}/assets/Web/fonts)	
-	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/images" ${PROJECT_BINARY_DIR}/assets/Web/images)	
-	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js" ${PROJECT_BINARY_DIR}/assets/Web/js)	
-	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular" ${PROJECT_BINARY_DIR}/assets/Web/angular)	
-	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/controllers" ${PROJECT_BINARY_DIR}/assets/Web/angular/controllers)	
-	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/directives" ${PROJECT_BINARY_DIR}/assets/Web/angular/directives)	
-	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/filters" ${PROJECT_BINARY_DIR}/assets/Web/angular/filters)	
-	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/services" ${PROJECT_BINARY_DIR}/assets/Web/angular/services)	
+
 
 	file(COPY ${PROJECT_SOURCE_DIR}/External/Ogg/lib/debug/android/libogg.a DESTINATION ${PROJECT_BINARY_DIR}/Binaries/android)
 	file(COPY ${PROJECT_SOURCE_DIR}/External/Vorbis/lib/debug/android/libvorbis.a DESTINATION ${PROJECT_BINARY_DIR}/Binaries/android)
@@ -55,8 +33,8 @@ if( ${OPIFEX_OS_ANDROID} )
 	file(COPY ${PROJECT_SOURCE_DIR}/External/PhysX/Lib/release/android/libPhysXProfileSDK.a 	DESTINATION 	${PROJECT_BINARY_DIR}/Binaries/android)
 	file(COPY ${PROJECT_SOURCE_DIR}/External/PhysX/Lib/release/android/libPxTask.a 	DESTINATION 	${PROJECT_BINARY_DIR}/Binaries/android)
 	file(COPY ${PROJECT_SOURCE_DIR}/External/PhysX/Lib/release/android/libPhysXVisualDebuggerSDK.a 	DESTINATION 	${PROJECT_BINARY_DIR}/Binaries/android)
-	
-else()	
+
+else()
 	if(${OPIFEX_OPTION_NODEJS})
 		message(STATUS "BINDING.GYP")
 		if(${OPIFEX_OPTION_RELEASE})
@@ -68,27 +46,29 @@ else()
 		endif()
 	endif()
 
-	# Only copy assets if we're in release mode
-	# It pulls from the Repository otherwise
-	if(${OPIFEX_OPTION_RELEASE})
+endif()
 
-		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Audio" ${PROJECT_BINARY_DIR}/Application/assets/Audio)	
-		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Models" ${PROJECT_BINARY_DIR}/Application/assets/Models)	
-		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Textures" ${PROJECT_BINARY_DIR}/Application/assets/Textures)	
-		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Fonts" ${PROJECT_BINARY_DIR}/Application/assets/Fonts)	
-		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Sprites" ${PROJECT_BINARY_DIR}/Application/assets/Sprites)	
-		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Scripts" ${PROJECT_BINARY_DIR}/Application/assets/Scripts)	
-		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/${OPENGL_DESKTOP_TARGET}" ${PROJECT_BINARY_DIR}/Application/assets/Shaders)	
-		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/${OPENGL_DESKTOP_TARGET}/Common" ${PROJECT_BINARY_DIR}/Application/assets/Shaders/Common)
-		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web" ${PROJECT_BINARY_DIR}/Application/assets/Web)	
-		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/css" ${PROJECT_BINARY_DIR}/Application/assets/Web/css)	
-		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/fonts" ${PROJECT_BINARY_DIR}/Application/assets/Web/fonts)	
-		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/images" ${PROJECT_BINARY_DIR}/Application/assets/Web/images)	
-		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js" ${PROJECT_BINARY_DIR}/Application/assets/Web/js)	
-		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular" ${PROJECT_BINARY_DIR}/Application/assets/Web/angular)	
-		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/controllers" ${PROJECT_BINARY_DIR}/Application/assets/Web/angular/controllers)	
-		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/directives" ${PROJECT_BINARY_DIR}/Application/assets/Web/angular/directives)	
-		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/filters" ${PROJECT_BINARY_DIR}/Application/assets/Web/angular/filters)	
-		copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/services" ${PROJECT_BINARY_DIR}/Application/assets/Web/angular/services)	
-	endif()
+# Only copy assets if we're in release mode
+# It pulls from the Repository otherwise
+if(${OPIFEX_OPTION_RELEASE} OR ${OPIFEX_OS_ANDROID})
+
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Audio" ${OP_ASSETS_TARGET}/Audio)
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Models" ${OP_ASSETS_TARGET}/Models)
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Textures" ${OP_ASSETS_TARGET}/Textures)
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Fonts" ${OP_ASSETS_TARGET}/Fonts)
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Sprites" ${OP_ASSETS_TARGET}/Sprites)
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Scripts" ${OP_ASSETS_TARGET}/Scripts)
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/${OPENGL_DESKTOP_TARGET}" ${OP_ASSETS_TARGET}/Shaders)
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Shaders/${OPENGL_DESKTOP_TARGET}/Common" ${OP_ASSETS_TARGET}/Shaders/Common)
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web" ${OP_ASSETS_TARGET}/Web)
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/css" ${OP_ASSETS_TARGET}/Web/css)
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/fonts" ${OP_ASSETS_TARGET}/Web/fonts)
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/images" ${OP_ASSETS_TARGET}/Web/images)
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js" ${OP_ASSETS_TARGET}/Web/js)
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular" ${OP_ASSETS_TARGET}/Web/angular)
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/controllers" ${OP_ASSETS_TARGET}/Web/angular/controllers)
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/directives" ${OP_ASSETS_TARGET}/Web/angular/directives)
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/filters" ${OP_ASSETS_TARGET}/Web/angular/filters)
+	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/services" ${OP_ASSETS_TARGET}/Web/angular/services)
+	
 endif()
