@@ -17,8 +17,8 @@
 
 include (CheckLibraryExists)
 
-find_path(VORBIS_INCLUDE_DIR vorbis/vorbisfile.h 
-   PATHS 
+find_path(VORBIS_INCLUDE_DIR vorbis/vorbisfile.h
+   PATHS
    "${PROJECT_SOURCE_DIR}/External/Vorbis/include"
 )
 
@@ -50,7 +50,7 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
 	  PATHS
 	  "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/release/win32"
 	)
-	
+
 	unset(OGG_LIBRARY)
 	unset(VORBIS_LIBRARY)
 	unset(VORBISFILE_LIBRARY)
@@ -59,19 +59,19 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
 
 		message(STATUS "Finding VS2013 ogg/vorbis")
 
-		find_library(OGG_LIBRARY 
+		find_library(OGG_LIBRARY
 		   NAMES ogg libogg
 		   PATHS
 		   "${PROJECT_SOURCE_DIR}/External/Ogg/lib/debug/win32/vs2013/"
 		)
 
-		find_library(VORBIS_LIBRARY 
+		find_library(VORBIS_LIBRARY
 		  NAMES vorbis libvorbis
 		  PATHS
 		  "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/debug/win32/vs2013/"
 		)
 
-		find_library(VORBISFILE_LIBRARY 
+		find_library(VORBISFILE_LIBRARY
 		   NAMES vorbisfile libvorbisfile
 		  PATHS
 		  "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/debug/win32/vs2013/"
@@ -79,19 +79,19 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
 
 	else()
 
-		find_library(OGG_LIBRARY 
+		find_library(OGG_LIBRARY
 		   NAMES ogg libogg
 		   PATHS
 		   "${PROJECT_SOURCE_DIR}/External/Ogg/lib/debug/win32"
 		)
 
-		find_library(VORBIS_LIBRARY 
+		find_library(VORBIS_LIBRARY
 		  NAMES vorbis libvorbis
 		  PATHS
 		  "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/debug/win32"
 		)
 
-		find_library(VORBISFILE_LIBRARY 
+		find_library(VORBISFILE_LIBRARY
 		   NAMES vorbisfile libvorbisfile
 		  PATHS
 		  "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/debug/win32"
@@ -118,20 +118,20 @@ elseif( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64" )
 	  PATHS
 	  "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/release/win64"
 	)
-	
-   find_library(OGG_LIBRARY 
+
+   find_library(OGG_LIBRARY
       NAMES ogg libogg
       PATHS
       "${PROJECT_SOURCE_DIR}/External/Ogg/lib/debug/win64"
    )
-   
-   find_library(VORBIS_LIBRARY 
+
+   find_library(VORBIS_LIBRARY
      NAMES vorbis libvorbis
      PATHS
      "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/debug/win64"
    )
 
-   find_library(VORBISFILE_LIBRARY 
+   find_library(VORBISFILE_LIBRARY
       NAMES vorbisfile libvorbisfile
      PATHS
      "${PROJECT_SOURCE_DIR}/External/Vorbis/lib/debug/win64"

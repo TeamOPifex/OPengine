@@ -45,6 +45,8 @@ else()
 	add_library(4_Performance STATIC ${PERFORMANCE_SRC})
 endif()
 
+add_definitions(-DGLEW_STATIC)
+
 
 if(${OPIFEX_OPTION_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)

@@ -37,7 +37,7 @@ void OPjavaScriptV8Init() {
 		Isolate::CreateParams create_params;
 		create_params.array_buffer_allocator = &allocator;
 		isolate = Isolate::New(create_params);
-		
+
 	}
 }
 
@@ -310,7 +310,7 @@ void _OPscriptV8SetImmediate(const v8::FunctionCallbackInfo<v8::Value>& args) {
     callback->Call(obj, 1, argv);
 }
 
-OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, OPchar* dir) {
+OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, const OPchar* dir) {
 	ASSERT(isolate != NULL, "V8 Engine must be initialized first.");
 
 	SCOPE_AND_ISOLATE;
@@ -386,7 +386,7 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
     return Persistent<Value>(isolate, result);
 }
 
-OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, OPchar* name) {
+OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, const OPchar* name) {
     SCOPE_AND_ISOLATE;
 
     Handle<Context> context = Local<Context>::New(isolate, scriptCompiled->Context);
@@ -403,7 +403,7 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
 
 }
 
-OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, OPchar* name, OPuint count, OPjavaScriptPersistentValue* args) {
+OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, const OPchar* name, OPuint count, OPjavaScriptPersistentValue* args) {
     SCOPE_AND_ISOLATE;
 
     Handle<Context> context = Local<Context>::New(isolate, scriptCompiled->Context);

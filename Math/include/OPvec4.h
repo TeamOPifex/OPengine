@@ -7,14 +7,14 @@
 #include "./Math/include/OPvec3.h"
 
 struct OPvec4;
-inline OPvec4 OPvec4Create(OPfloat x, OPfloat y, OPfloat z, OPfloat w);
+OPvec4 OPvec4Create(OPfloat x, OPfloat y, OPfloat z, OPfloat w);
 
-inline void OPvec4Add(OPvec4* dst, OPvec4* a, OPvec4* b);
-inline void OPvec4Sub(OPvec4* dst, OPvec4* a, OPvec4* b);
-inline void OPvec4Mul(OPvec4* dst, OPvec4* a, OPvec4* b);
-inline void OPvec4Scl(OPvec4* dst, OPvec4* a, OPfloat s);
-inline void OPvec4Div(OPvec4* dst, OPvec4* a, OPvec4* b);
-inline void OPvec4Div(OPvec4* dst, OPvec4* a, OPfloat b);
+void OPvec4Add(OPvec4* dst, OPvec4* a, OPvec4* b);
+void OPvec4Sub(OPvec4* dst, OPvec4* a, OPvec4* b);
+void OPvec4Mul(OPvec4* dst, OPvec4* a, OPvec4* b);
+void OPvec4Scl(OPvec4* dst, OPvec4* a, OPfloat s);
+void OPvec4Div(OPvec4* dst, OPvec4* a, OPvec4* b);
+void OPvec4Div(OPvec4* dst, OPvec4* a, OPfloat b);
 
 struct OPvec4 {
 	union{
@@ -23,33 +23,33 @@ struct OPvec4 {
 		};
 		OPfloat row[4];
 	};
-	OPvec4 operator=(OPvec4 vhs) { 
+	OPvec4 operator=(OPvec4 vhs) {
 		OPmemcpy(this, &vhs, sizeof(OPvec4)); return *this;
 	}
-	inline OPvec4 operator+=(OPvec4 vhs) { 
-		OPvec4Add(this, this, &vhs); 
-		return *this; 
+	inline OPvec4 operator+=(OPvec4 vhs) {
+		OPvec4Add(this, this, &vhs);
+		return *this;
 	}
-	inline OPvec4 operator-=(OPvec4 vhs) { 
-		OPvec4Sub(this, this, &vhs); 
-		return *this; 
+	inline OPvec4 operator-=(OPvec4 vhs) {
+		OPvec4Sub(this, this, &vhs);
+		return *this;
 	}
 	OPvec4 operator*=(OPmat4 rhs);
-	inline OPvec4 operator*=(OPvec4 vhs) { 
-		OPvec4Mul(this, this, &vhs); 
-		return *this; 
+	inline OPvec4 operator*=(OPvec4 vhs) {
+		OPvec4Mul(this, this, &vhs);
+		return *this;
 	}
-	inline OPvec4 operator*=(OPfloat vhs) { 
-		OPvec4Scl(this, this, vhs); 
-		return *this; 
+	inline OPvec4 operator*=(OPfloat vhs) {
+		OPvec4Scl(this, this, vhs);
+		return *this;
 	}
-	inline OPvec4 operator/=(OPvec4 vhs) { 
-		OPvec4Div(this, this, &vhs); 
-		return *this; 
+	inline OPvec4 operator/=(OPvec4 vhs) {
+		OPvec4Div(this, this, &vhs);
+		return *this;
 	}
-	inline OPvec4 operator/=(OPfloat vhs) { 
-		OPvec4Div(this, this, vhs); 
-		return *this; 
+	inline OPvec4 operator/=(OPfloat vhs) {
+		OPvec4Div(this, this, vhs);
+		return *this;
 	}
 	inline OPfloat& operator[](i32 i) {
 		return row[i];
@@ -74,52 +74,52 @@ inline OPvec4 OPvec4Create(OPvec3 xyz, OPfloat w) {
 	return tmp;
 }
 
-inline OPvec4 operator+(OPvec4 lhs, OPvec4 vhs) { 
+inline OPvec4 operator+(OPvec4 lhs, OPvec4 vhs) {
 	OPvec4 temp = { 0, 0, 0};
-	OPvec4Add(&temp, &lhs, &vhs); 
-	return temp; 
+	OPvec4Add(&temp, &lhs, &vhs);
+	return temp;
 }
-inline OPvec4 operator-(OPvec4 lhs, OPvec4 vhs) { 
+inline OPvec4 operator-(OPvec4 lhs, OPvec4 vhs) {
 	OPvec4 temp = { 0, 0, 0};
-	OPvec4Sub(&temp, &lhs, &vhs); 
-	return temp; 
+	OPvec4Sub(&temp, &lhs, &vhs);
+	return temp;
 }
-inline OPvec4 operator*(OPvec4 lhs, OPvec4 vhs) { 
+inline OPvec4 operator*(OPvec4 lhs, OPvec4 vhs) {
 	OPvec4 temp = { 0, 0, 0};
-	OPvec4Mul(&temp, &lhs, &vhs); 
-	return temp; 
+	OPvec4Mul(&temp, &lhs, &vhs);
+	return temp;
 }
-inline OPvec4 operator*(OPvec4 lhs, OPfloat vhs) { 
+inline OPvec4 operator*(OPvec4 lhs, OPfloat vhs) {
 	OPvec4 temp = { 0, 0, 0};
-	OPvec4Scl(&temp, &lhs, vhs); 
-	return temp; 
+	OPvec4Scl(&temp, &lhs, vhs);
+	return temp;
 }
-inline OPvec4 operator*(OPfloat lhs, OPvec4 vhs) { 
+inline OPvec4 operator*(OPfloat lhs, OPvec4 vhs) {
 	OPvec4 temp = { 0, 0, 0};
-	OPvec4Scl(&temp, &vhs, lhs); 
-	return temp; 
+	OPvec4Scl(&temp, &vhs, lhs);
+	return temp;
 }
-inline OPvec4 operator/(OPvec4 lhs, OPvec4 vhs) { 
+inline OPvec4 operator/(OPvec4 lhs, OPvec4 vhs) {
 	OPvec4 temp = { 0, 0, 0};
-	OPvec4Div(&temp, &lhs, &vhs); 
-	return temp; 
+	OPvec4Div(&temp, &lhs, &vhs);
+	return temp;
 }
-inline OPvec4 operator/(OPvec4 lhs, OPfloat vhs) { 
+inline OPvec4 operator/(OPvec4 lhs, OPfloat vhs) {
 	OPvec4 temp = { 0, 0, 0};
-	OPvec4Div(&temp, &lhs, vhs); 
-	return temp; 
+	OPvec4Div(&temp, &lhs, vhs);
+	return temp;
 }
-inline OPvec4 operator/(OPfloat lhs, OPvec4 vhs) { 
+inline OPvec4 operator/(OPfloat lhs, OPvec4 vhs) {
 	OPvec4 temp = { 0, 0, 0};
-	OPvec4Div(&temp, &vhs, lhs); 
-	return temp; 
+	OPvec4Div(&temp, &vhs, lhs);
+	return temp;
 }
 
-//    ___            _         _ _        _       _ _   _              _   _    
-//   / __|_  _ _ __ | |__  ___| (_)__    /_\  _ _(_) |_| |_  _ __  ___| |_(_)__ 
+//    ___            _         _ _        _       _ _   _              _   _
+//   / __|_  _ _ __ | |__  ___| (_)__    /_\  _ _(_) |_| |_  _ __  ___| |_(_)__
 //   \__ \ || | '  \| '_ \/ _ \ | / _|  / _ \| '_| |  _| ' \| '  \/ -_)  _| / _|
 //   |___/\_, |_|_|_|_.__/\___/_|_\__| /_/ \_\_| |_|\__|_||_|_|_|_\___|\__|_\__|
-//        |__/                                                                  
+//        |__/
 
 
 inline OPvec4 OPvec4Norm(OPvec4 a) {

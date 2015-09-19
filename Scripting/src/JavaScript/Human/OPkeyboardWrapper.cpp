@@ -7,7 +7,7 @@
 #include "./Human/Human.h"
 
 
-OPchar* keyNames[_OPKEYBOARD_MAX] = {
+const OPchar* keyNames[_OPKEYBOARD_MAX] = {
         "BACKSPACE",
         "TAB",
         "ENTER",

@@ -53,6 +53,8 @@ else()
 	add_library(6_Communication STATIC ${COMMUNICATION_SRC})
 endif()
 
+add_definitions(-DGLEW_STATIC)
+
 set_target_properties(6_Communication PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(6_Communication PROPERTIES OUTPUT_NAME "Communication")
 

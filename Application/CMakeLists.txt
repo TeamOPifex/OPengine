@@ -7,23 +7,9 @@ cmake_minimum_required(VERSION 2.8)
 #########################################
 # Include Directories
 #########################################
+add_external_opifex_includes()
+
 include_directories(
-	../External/glfw/include/
-	../External/glm-0.9.5/
-	../External/glew-1.9.0/include/
-	../External/Phsyx.3.2.1/include/
-	../External/GLES2/
-	../External/Ogg/include/
-	../External/Vorbis/include/
-	../External/OpenAL/
-	../External/Oculus/include/
-	../External/Oculus/Src/
-	../External/Myo/include/
-	../External/V8/include/
-	../External/V8/
-	../External/VP8/include/
-	../External/Spine/include/
-	../External/Node/src/
 	.
 	../
 	${BINARY_FOLDER}
@@ -41,6 +27,7 @@ include_directories(
 add_source_group(/ "${PROJECT_SOURCE_DIR}/Application" APPLICATION_SRC)
 add_source_group(Examples "${PROJECT_SOURCE_DIR}/Application/Examples" APPLICATION_SRC)
 add_asset_dir(APPLICATION_SRC)
+
 
 #########################################
 # DEPENDENT LIBRARIES
@@ -67,16 +54,14 @@ set(ALL_LIBS
 #########################################
 # BUILD
 #########################################
-add_executable(9_Application ${APPLICATION_SRC} ../Scripting/include/JavaScript/Human/Wrappers.h)
+add_executable(9_Application ${APPLICATION_SRC})
+
+add_definitions(-DGLEW_STATIC)
 
 target_link_libraries(9_Application	${ALL_LIBS})
 
 if( ${OPIFEX_OS_WINDOWS} )
 	target_link_libraries(9_Application	Winmm.lib)
-endif()
-
-if( ${MSVC_WIN7_FIX} )
-	target_link_libraries(9_Application	Xinput9_1_0.lib)
 endif()
 
 set_target_properties(9_Application PROPERTIES LINKER_LANGUAGE CXX)

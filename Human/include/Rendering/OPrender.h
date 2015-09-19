@@ -30,7 +30,7 @@ void  OPrenderSetViewport(OPuint x, OPuint y, OPuint width, OPuint height);
 void OPrenderResetViewport();
 OPint OPrenderGetWidth();
 OPint OPrenderGetHeight();
-OPfloat OPrenderGetAspectRatio(); 
+OPfloat OPrenderGetAspectRatio();
 OPfloat OPrenderGetWidthAspectRatio();
 OPfloat OPrenderGetHeightAspectRatio();
 
@@ -46,7 +46,7 @@ void OPrenderCullMode(OPint state);
 void  OPrenderSwapBuffer ();
 void  OPrenderPresent    ();
 void OPrenderBlend(OPint state);
-void  OPrenderDepth(OPint state); 
+void  OPrenderDepth(OPint state);
 void OPrenderDepthWrite(OPint state);
 void  OPrenderShutdown   ();
 
@@ -54,10 +54,10 @@ ui32 OPgetNativeScreenWidth();
 ui32 OPgetNativeScreenHeight();
 
 inline void OPrenderBlendAlpha(){
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 inline void OPrenderBlendAdditive(){
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE); 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 }
 
 inline OPint OPrenderInit() {

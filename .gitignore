@@ -1,4 +1,3 @@
 *.DS_Store
-External/V8/lib/debug/osx64/libv8_base.a
 External/PhysX/
 External/V8/

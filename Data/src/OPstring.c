@@ -1,5 +1,6 @@
 #include "./Data/include/OPstring.h"
 #include "./Core/include/OPmemory.h"
+#include <ctype.h>
 
 OPint OPstringEquals(const OPchar* str, const OPchar* cmp) {
 	ui32 lenA = strlen(str);
@@ -39,7 +40,7 @@ OPchar* OPstringGetNonConstant(const OPchar* str) {
 
 	result = (OPchar*)OPalloc(sizeof(OPchar) * (len + 1));
 	strcpy(result, str);
-	
+
 	return result;
 }
 
@@ -104,4 +105,3 @@ void OPstringToLower(OPchar* str) {
 	OPchar* p = str;
 	for ( ; *p; ++p) *p = tolower(*p);
 }
-

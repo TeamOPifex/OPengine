@@ -52,7 +52,7 @@ void OPCalculateTangents(OPMData* data) {
 		OPvec3 vecSmoothBitangent = OPvec3Cross(vecNormal, vecTangent);
 		vecSmoothBitangent = OPvec3Norm(vecSmoothBitangent);
 
-		OPvec3 vecSmoothTangent;
+		OPvec3 vecSmoothTangent = {};
 		OPvec3Cross(vecSmoothBitangent, vecNormal);
 		vecSmoothTangent = OPvec3Norm(vecSmoothTangent);
 		

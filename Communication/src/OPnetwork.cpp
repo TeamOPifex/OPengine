@@ -234,7 +234,7 @@ i32 OPnetworkReceive(OPnetwork* network, void* state, void(*receive)(void*, i32,
 
 	OPchar recvbuf[DEFAULT_BUFLEN];
 	i32 recvbuflen = DEFAULT_BUFLEN;
-	i32 iResult;
+	i32 iResult = 0;
 	sockaddr si_other;
 	i32 si_len = sizeof(si_other);
 

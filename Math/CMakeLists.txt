@@ -43,7 +43,9 @@ if(${OPIFEX_OPTION_SHARED})
 else()
 	add_library(3_Math STATIC ${MATH_SRC})
 endif()
-	
+
+add_definitions(-DGLEW_STATIC)
+
 if(${OPIFEX_OPTION_RELEASE})
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 endif()
