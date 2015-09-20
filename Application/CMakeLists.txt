@@ -15,6 +15,7 @@ include_directories(
 	${BINARY_FOLDER}
 )
 
+add_external_opifex_includes()
 
 #########################################
 # Include Files

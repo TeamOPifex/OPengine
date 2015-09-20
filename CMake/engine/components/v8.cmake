@@ -1,9 +1,5 @@
 
-macro(add_opifex_v8 APPLICATION_TARGET )
-
-	if(NOT ${OPIFEX_OPTION_V8})
-		RETURN()
-	endif()
+macro(add_opifex_v8_set_source)
 
 	# Look for an External Path to the V8 folder
 	SET(_V8_SOURCE 0)
@@ -16,7 +12,24 @@ macro(add_opifex_v8 APPLICATION_TARGET )
 		SET(_V8_PATH "${PROJECT_SOURCE_DIR}/External/V8/")
 	endif()
 
-	include_directories($(_V8_PATH)/include/)
+endmacro(add_opifex_v8_set_source)
+
+
+macro(add_opifex_v8_include)
+
+	add_opifex_v8_set_source()
+	include_directories(${_V8_PATH}/include/)
+
+endmacro(add_opifex_v8_include)
+
+
+macro(add_opifex_v8 APPLICATION_TARGET )
+
+	if(NOT ${OPIFEX_OPTION_V8})
+		RETURN()
+	endif()
+
+	add_opifex_v8_set_source()
 
 	# if _V8_SOURCE then look for libs in out/(arch).(mode)/
 
