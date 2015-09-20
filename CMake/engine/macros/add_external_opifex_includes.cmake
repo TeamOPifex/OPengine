@@ -2,6 +2,7 @@
 
 macro(add_external_opifex_includes)
 	set_binary_output(BINARY_FOLDER)
+
 	include_directories(
 		${OPIFEX_ENGINE_REPOSITORY}
 		${OPIFEX_ENGINE_REPOSITORY}/External/glfw/include/
@@ -22,5 +23,9 @@ macro(add_external_opifex_includes)
 		${OPIFEX_ENGINE_REPOSITORY}/External/FMod/include/
 		${BINARY_FOLDER}
 	)
+
+	add_opifex_physx_include()
+	add_opifex_v8_include()
+
 	message(STATUS "Adding External OPifex includes")
 endmacro(add_external_opifex_includes)
