@@ -108,18 +108,18 @@ SET(IS_SIMULATOR ${IOS_PLATFORM} STREQUAL "SIMULATOR")
 SET(IS_SIMULATOR_64 ${IOS_PLATFORM} STREQUAL "SIMULATOR64")
 
 # Check the platform selection and setup for developer root
-if (IS_OIS)
+if (${IS_OIS})
 	set (IOS_PLATFORM_LOCATION "iPhoneOS.platform")
 
 	# This causes the installers to properly locate the output libraries
 	set (CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphoneos")
-elseif (IS_SIMULATOR)
+elseif (${IS_SIMULATOR})
     set (SIMULATOR true)
 	set (IOS_PLATFORM_LOCATION "iPhoneSimulator.platform")
 
 	# This causes the installers to properly locate the output libraries
 	set (CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphonesimulator")
-elseif (IS_SIMULATOR_64)
+elseif (${IS_SIMULATOR_64})
     set (SIMULATOR true)
 	set (IOS_PLATFORM_LOCATION "iPhoneSimulator.platform")
 
@@ -163,15 +163,15 @@ set (CMAKE_OSX_SYSROOT ${CMAKE_IOS_SDK_ROOT} CACHE PATH "Sysroot used for iOS su
 
 
 # set the architecture for iOS
-if (IS_OIS)
+if (${IS_OIS})
     set (IOS_ARCH armv7 armv7s arm64)
 endif()
 
-if (IS_SIMULATOR)
+if (${IS_SIMULATOR})
     set (IOS_ARCH i386)
 endif()
 
-if (IS_SIMULATOR_64)
+if (${IS_SIMULATOR_64})
     set (IOS_ARCH x86_64)
 endif ()
 

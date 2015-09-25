@@ -36,6 +36,9 @@ populate_binary_directory()
 output_library_from(GLEW_158 "/External" "GLEW_158")
 
 
+endif()
+
+
 ### LodePNG
 
 #########################################
@@ -101,7 +104,6 @@ output_library_from(MONGOOSE "/External" "Mongoose")
 
 
 
-endif()
 
 
 
