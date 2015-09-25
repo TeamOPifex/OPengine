@@ -33,14 +33,13 @@ add_source_group(src/ "${PROJECT_SOURCE_DIR}/Communication/src" COMMUNICATION_SR
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
 	${OPENAL_LIBRARY}
-	GLEW_158
+	#GLEW_158
 	1_Core
 	2_Data
 	3_Math
 	4_Performance
 	5_Human
-	glfw
-	${GLFW_LIBRARIES}
+	# glfw ${GLFW_LIBRARIES}
 	MONGOOSE
 )
 
@@ -53,6 +52,7 @@ else()
 	add_library(6_Communication STATIC ${COMMUNICATION_SRC})
 endif()
 
+add_opifex_defines()
 add_definitions(-DGLEW_STATIC)
 
 set_target_properties(6_Communication PROPERTIES LINKER_LANGUAGE CXX)

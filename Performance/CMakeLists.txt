@@ -45,6 +45,7 @@ else()
 	add_library(4_Performance STATIC ${PERFORMANCE_SRC})
 endif()
 
+add_opifex_defines()
 add_definitions(-DGLEW_STATIC)
 
 

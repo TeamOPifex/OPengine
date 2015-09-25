@@ -34,7 +34,7 @@ add_asset_dir(APPLICATION_SRC)
 # DEPENDENT LIBRARIES
 #########################################
 set(ALL_LIBS
-	${OPENGL_LIBRARY}
+	#${OPENGL_LIBRARY}
 	${OPENAL_LIBRARY}
 	LODEPNG
 	1_Core
@@ -48,16 +48,40 @@ set(ALL_LIBS
 	${ZLIB_LIBRARY}
 	${LIBPNG_LIBRARY}
 	${CMAKE_THREAD_LIBS_INIT}
-	glfw ${GLFW_LIBRARIES}
 )
 
+#glfw ${GLFW_LIBRARIES}
 
 #########################################
 # BUILD
 #########################################
-add_executable(9_Application ${APPLICATION_SRC})
+#add_executable(9_Application ${APPLICATION_SRC})
 
-add_definitions(-DGLEW_STATIC)
+#add_definitions(-DGLEW_STATIC)
+
+
+
+
+set(CMAKE_OSX_SYSROOT iphoneos2.2.1)
+set(CMAKE_OSX_ARCHITECTURES $(ARCHS_STANDARD_32_BIT))
+set(CMAKE_CXX_FLAGS "-x objective-c++")
+set(CMAKE_EXE_LINKER_FLAGS
+    "-framework AudioToolbox -framework CoreGraphics -framework QuartzCore -framework UIKit"
+)
+link_directories(\${HOME}/\${SDKROOT}/lib)
+
+set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.mycompany.\${PRODUCT_NAME:identifier}")
+set(APP_TYPE MACOSX_BUNDLE)
+
+add_executable(9_Application
+    ${APP_TYPE}
+    ${APPLICATION_SRC}
+)
+#set_target_properties(${NAME} PROPERTIES XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer: My Name")
+
+
+
+add_opifex_defines()
 
 target_link_libraries(9_Application	${ALL_LIBS})
 
@@ -67,6 +91,11 @@ endif()
 
 set_target_properties(9_Application PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(9_Application PROPERTIES OUTPUT_NAME "Application")
+
+
+
+
+
 
 
 #########################################

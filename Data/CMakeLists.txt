@@ -44,6 +44,7 @@ else()
 	add_library(2_Data STATIC ${DATA_SRC})
 endif()
 
+add_opifex_defines()
 target_link_libraries(2_Data ${ALL_LIBS})
 
 set_target_properties(2_Data PROPERTIES LINKER_LANGUAGE CXX)

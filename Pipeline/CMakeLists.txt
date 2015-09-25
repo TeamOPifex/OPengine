@@ -35,15 +35,14 @@ add_source_group(src/Loaders "${PROJECT_SOURCE_DIR}/Pipeline/src/Loaders" PIPELI
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
 	${OPENAL_LIBRARY}
-	GLEW_158
+	#GLEW_158
 	LODEPNG
 	1_Core
 	2_Data
 	3_Math
 	4_Performance
 	5_Human
-	glfw
-	${GLFW_LIBRARIES}
+	#glfw ${GLFW_LIBRARIES}
 )
 
 #########################################
@@ -54,6 +53,7 @@ if(${OPIFEX_OPTION_SHARED})
 else()
 	add_library(7_Pipeline STATIC ${PIPELINE_SRC})
 endif()
+add_opifex_defines()
 add_definitions(-DGLEW_STATIC)
 
 set_target_properties(7_Pipeline PROPERTIES LINKER_LANGUAGE CXX)

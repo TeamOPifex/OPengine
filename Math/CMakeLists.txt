@@ -43,6 +43,7 @@ if(${OPIFEX_OPTION_SHARED})
 else()
 	add_library(3_Math STATIC ${MATH_SRC})
 endif()
+add_opifex_defines()
 
 add_definitions(-DGLEW_STATIC)
 

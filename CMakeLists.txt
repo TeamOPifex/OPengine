@@ -8,8 +8,8 @@ SET(OPIFEX_ENGINE_REPOSITORY ${PROJECT_SOURCE_DIR})
 
 include(CMake/application.cmake)
 
-configure_file("OPengineDefines.h.in" "${BINARY_FOLDER}/OPengineDefines.h")
-configure_file("OPengineDefines.cmake.in" "${BINARY_FOLDER}/OPengineDefines.cmake")
+#configure_file("OPengineDefines.h.in" "${BINARY_FOLDER}/OPengineDefines.h")
+#configure_file("OPengineDefines.cmake.in" "${BINARY_FOLDER}/OPengineDefines.cmake")
 
 ### Project Setup
 #########################################
