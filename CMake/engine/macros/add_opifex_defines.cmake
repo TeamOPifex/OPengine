@@ -54,4 +54,8 @@ macro(add_opifex_defines)
 		add_definitions(-DOPIFEX_ASSETS=NULL)
 	endif()
 
+	if(NOT ${OPIFEX_OS_IOS})
+		add_definitions(-DGLEW_STATIC)
+	endif()
+
 endmacro(add_opifex_defines)

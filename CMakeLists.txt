@@ -116,3 +116,9 @@ message(STATUS "GLFW_LIBRARIES (${GLFW_LIBRARIES})")
 opifex_engine_status_messages()
 
 message(STATUS "Variable: ${CMAKE_SOURCE_DIR}")
+
+
+
+
+# To Build for iOS
+# cmake ../OPengine -DCMAKE_TOOLCHAIN_FILE=./CMake/engine/toolchains/iOS.cmake -DIOS_PLATFORM=SIMULATOR -DOPIFEX_OS=OPIFEX_IOS -DOPENGL_DESKTOP_TARGET=OPENGL_ES_2

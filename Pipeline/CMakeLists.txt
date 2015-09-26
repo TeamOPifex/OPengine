@@ -35,13 +35,13 @@ add_source_group(src/Loaders "${PROJECT_SOURCE_DIR}/Pipeline/src/Loaders" PIPELI
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
 	${OPENAL_LIBRARY}
-	#GLEW_158
 	LODEPNG
 	1_Core
 	2_Data
 	3_Math
 	4_Performance
 	5_Human
+	#GLEW_158
 	#glfw ${GLFW_LIBRARIES}
 )
 
