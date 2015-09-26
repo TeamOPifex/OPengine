@@ -53,7 +53,7 @@ add_source_group(src/JavaScript/Pipeline "${PROJECT_SOURCE_DIR}/Scripting/src/Ja
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
 	${OPENAL_LIBRARY}
-	GLEW_158
+	#GLEW_158
 	LODEPNG
 	1_Core
 	2_Data
@@ -61,8 +61,7 @@ set(ALL_LIBS
 	4_Performance
 	5_Human
 	7_Pipeline
-	glfw
-	${GLFW_LIBRARIES}
+	#glfw ${GLFW_LIBRARIES}
 )
 
 #########################################
@@ -73,6 +72,7 @@ if(${OPIFEX_OPTION_SHARED})
 else()
 	add_library(8_Scripting STATIC ${SCRIPTING_SRC})
 endif()
+add_opifex_defines()
 add_definitions(-DGLEW_STATIC)
 
 target_link_libraries(8_Scripting ${ALL_LIBS})

@@ -59,14 +59,13 @@ add_source_group(src/Utilities "${PROJECT_SOURCE_DIR}/Human/src/Utilities" HUMAN
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
 	${OPENAL_LIBRARY}
-	GLEW_158
+	#GLEW_158
 	LODEPNG
 	1_Core
 	2_Data
 	3_Math
 	4_Performance
-	glfw 
-	${GLFW_LIBRARIES}
+	# glfw ${GLFW_LIBRARIES}
 )
 
 
@@ -78,6 +77,7 @@ if(${OPIFEX_OPTION_SHARED})
 else()
 	add_library(5_Human STATIC ${HUMAN_SRC})
 endif()
+add_opifex_defines()
 add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS)
 
 target_link_libraries(5_Human ${ALL_LIBS})

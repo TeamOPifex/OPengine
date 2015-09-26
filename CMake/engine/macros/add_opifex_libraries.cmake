@@ -116,8 +116,8 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		${LIBHUMAN}
 		${LIBSCRIPTING}
 		${LIBPIPELINE}
-		${LIBGLFW}
-		${LIBGLEW_158}
+		#${LIBGLFW}
+		#${LIBGLEW_158}
 		${OPENAL_LIBRARY}
 		${OpenGL}
 	)

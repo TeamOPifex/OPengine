@@ -7,19 +7,7 @@ cmake_minimum_required(VERSION 2.8)
 #########################################
 # Include Directories
 #########################################
-add_external_opifex_includes()
-
-include_directories(
-	.
-	../
-	${BINARY_FOLDER}
-)
-
-add_external_opifex_includes()
-
-#########################################
-# Include Files
-#########################################
+add_opifex_includes()
 
 
 #########################################
@@ -34,7 +22,6 @@ add_asset_dir(APPLICATION_SRC)
 # DEPENDENT LIBRARIES
 #########################################
 set(ALL_LIBS
-	${OPENGL_LIBRARY}
 	${OPENAL_LIBRARY}
 	LODEPNG
 	1_Core
@@ -48,26 +35,22 @@ set(ALL_LIBS
 	${ZLIB_LIBRARY}
 	${LIBPNG_LIBRARY}
 	${CMAKE_THREAD_LIBS_INIT}
-	glfw ${GLFW_LIBRARIES}
 )
 
 
 #########################################
 # BUILD
 #########################################
-add_executable(9_Application ${APPLICATION_SRC})
 
-add_definitions(-DGLEW_STATIC)
+add_opifex_executable(9_Application ${APPLICATION_SRC})
+target_link_libraries(9_Application ${ALL_LIBS})
 
-target_link_libraries(9_Application	${ALL_LIBS})
-
-if( ${OPIFEX_OS_WINDOWS} )
-	target_link_libraries(9_Application	Winmm.lib)
-endif()
 
 set_target_properties(9_Application PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(9_Application PROPERTIES OUTPUT_NAME "Application")
 
+add_opifex_targets(9_Application)
+add_opifex_defines()
 
 #########################################
 # ADDITIONAL FEATURES

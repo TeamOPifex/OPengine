@@ -8,8 +8,8 @@ SET(OPIFEX_ENGINE_REPOSITORY ${PROJECT_SOURCE_DIR})
 
 include(CMake/application.cmake)
 
-configure_file("OPengineDefines.h.in" "${BINARY_FOLDER}/OPengineDefines.h")
-configure_file("OPengineDefines.cmake.in" "${BINARY_FOLDER}/OPengineDefines.cmake")
+#configure_file("OPengineDefines.h.in" "${BINARY_FOLDER}/OPengineDefines.h")
+#configure_file("OPengineDefines.cmake.in" "${BINARY_FOLDER}/OPengineDefines.cmake")
 
 ### Project Setup
 #########################################
@@ -116,3 +116,9 @@ message(STATUS "GLFW_LIBRARIES (${GLFW_LIBRARIES})")
 opifex_engine_status_messages()
 
 message(STATUS "Variable: ${CMAKE_SOURCE_DIR}")
+
+
+
+
+# To Build for iOS
+# cmake ../OPengine -DCMAKE_TOOLCHAIN_FILE=./CMake/engine/toolchains/iOS.cmake -DIOS_PLATFORM=SIMULATOR -DOPIFEX_OS=OPIFEX_IOS -DOPENGL_DESKTOP_TARGET=OPENGL_ES_2

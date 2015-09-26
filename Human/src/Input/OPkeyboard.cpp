@@ -48,6 +48,9 @@ OPint OPkeyboardAnyInputIsDown() {
 	return false;
 }
 #else
+
+void (*OPKEYBOARD_STREAM)(OPchar);
+
 void OPkeyboardUpdate(OPtimer* timer) {
 
 }

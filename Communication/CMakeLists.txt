@@ -7,22 +7,14 @@ cmake_minimum_required(VERSION 2.8)
 #########################################
 # Include Directories
 #########################################
-include_directories(
-	.
-	../
-)
-
-add_external_opifex_includes()
-
-#########################################
-# Include Files
-#########################################
-add_source_group(include/ "${PROJECT_SOURCE_DIR}/Communication/include" COMMUNICATION_SRC)
+add_opifex_includes()
 
 
 #########################################
 # Source Files
 #########################################
+add_source_group(include/ "${PROJECT_SOURCE_DIR}/Communication/include" COMMUNICATION_SRC)
+
 add_source_group(/ "${PROJECT_SOURCE_DIR}/Communication" COMMUNICATION_SRC)
 add_source_group(src/ "${PROJECT_SOURCE_DIR}/Communication/src" COMMUNICATION_SRC)
 
@@ -33,14 +25,11 @@ add_source_group(src/ "${PROJECT_SOURCE_DIR}/Communication/src" COMMUNICATION_SR
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
 	${OPENAL_LIBRARY}
-	GLEW_158
 	1_Core
 	2_Data
 	3_Math
 	4_Performance
 	5_Human
-	glfw
-	${GLFW_LIBRARIES}
 	MONGOOSE
 )
 
@@ -53,7 +42,7 @@ else()
 	add_library(6_Communication STATIC ${COMMUNICATION_SRC})
 endif()
 
-add_definitions(-DGLEW_STATIC)
+add_opifex_defines()
 
 set_target_properties(6_Communication PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(6_Communication PROPERTIES OUTPUT_NAME "Communication")

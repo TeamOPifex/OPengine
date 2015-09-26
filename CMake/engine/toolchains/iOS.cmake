@@ -102,27 +102,32 @@ if (NOT DEFINED BUILD_ARM64)
 endif (NOT DEFINED BUILD_ARM64)
 set (BUILD_ARM64 ${BUILD_ARM64} CACHE STRING "Build arm64 arch or not")
 
+
+SET(IS_OIS ${IOS_PLATFORM} STREQUAL "OS")
+SET(IS_SIMULATOR ${IOS_PLATFORM} STREQUAL "SIMULATOR")
+SET(IS_SIMULATOR_64 ${IOS_PLATFORM} STREQUAL "SIMULATOR64")
+
 # Check the platform selection and setup for developer root
-if (${IOS_PLATFORM} STREQUAL "OS")
+if (${IS_OIS})
 	set (IOS_PLATFORM_LOCATION "iPhoneOS.platform")
 
 	# This causes the installers to properly locate the output libraries
 	set (CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphoneos")
-elseif (${IOS_PLATFORM} STREQUAL "SIMULATOR")
+elseif (${IS_SIMULATOR})
     set (SIMULATOR true)
 	set (IOS_PLATFORM_LOCATION "iPhoneSimulator.platform")
 
 	# This causes the installers to properly locate the output libraries
 	set (CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphonesimulator")
-elseif (${IOS_PLATFORM} STREQUAL "SIMULATOR64")
+elseif (${IS_SIMULATOR_64})
     set (SIMULATOR true)
 	set (IOS_PLATFORM_LOCATION "iPhoneSimulator.platform")
 
 	# This causes the installers to properly locate the output libraries
 	set (CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphonesimulator")
-else (${IOS_PLATFORM} STREQUAL "OS")
+else ()
 	message (FATAL_ERROR "Unsupported IOS_PLATFORM value selected. Please choose OS or SIMULATOR")
-endif (${IOS_PLATFORM} STREQUAL "OS")
+endif ()
 
 # Setup iOS developer location unless specified manually with CMAKE_IOS_DEVELOPER_ROOT
 # Note Xcode 4.3 changed the installation location, choose the most recent one available
@@ -154,14 +159,21 @@ set (CMAKE_IOS_SDK_ROOT ${CMAKE_IOS_SDK_ROOT} CACHE PATH "Location of the select
 # Set the sysroot default to the most recent SDK
 set (CMAKE_OSX_SYSROOT ${CMAKE_IOS_SDK_ROOT} CACHE PATH "Sysroot used for iOS support")
 
+
+
+
 # set the architecture for iOS
-if (${IOS_PLATFORM} STREQUAL "OS")
+if (${IS_OIS})
     set (IOS_ARCH armv7 armv7s arm64)
-elseif (${IOS_PLATFORM} STREQUAL "SIMULATOR")
+endif()
+
+if (${IS_SIMULATOR})
     set (IOS_ARCH i386)
-elseif (${IOS_PLATFORM} STREQUAL "SIMULATOR64")
+endif()
+
+if (${IS_SIMULATOR_64})
     set (IOS_ARCH x86_64)
-endif (${IOS_PLATFORM} STREQUAL "OS")
+endif ()
 
 set (CMAKE_OSX_ARCHITECTURES ${IOS_ARCH} CACHE string  "Build architecture for iOS")
 
@@ -204,3 +216,7 @@ macro (find_host_package)
 	set (CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 	set (CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 endmacro (find_host_package)
+
+
+
+message(STATUS "CMAKE SYSTEM PATH ${CMAKE_SYSTEM_FRAMEWORK_PATH}")

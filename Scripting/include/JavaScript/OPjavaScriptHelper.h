@@ -227,6 +227,17 @@ inline void* _JS_NEXT(const JS_ARGS& args) {
 #define JS_NEXT_ARG_AS(t) (t*)_JS_NEXT(args);
 
 
+
+
+#define JS_MAKE_WRAPPED_FN_NAME(x) _ ## x
+#define JS_MAKE_SELF_FN_NAME(x) x ## Self
+
+#define JS_HELPER_SELF_WRAPPER(funcName) \
+JS_RETURN_VAL JS_MAKE_WRAPPED_FN_NAME(funcName)(const JS_ARGS& args); \
+JS_RETURN_VAL funcName(const JS_ARGS& args) { JS_RUN(JS_MAKE_WRAPPED_FN_NAME(funcName)) } \
+JS_RETURN_VAL JS_MAKE_SELF_FN_NAME(funcName)(const JS_ARGS& args) { JS_RUN_SELF(JS_MAKE_WRAPPED_FN_NAME(funcName)) } \
+JS_RETURN_VAL JS_MAKE_WRAPPED_FN_NAME(funcName)(const JS_ARGS& args)
+
 #endif
 
 
