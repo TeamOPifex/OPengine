@@ -53,7 +53,23 @@ link_directories(\${HOME}/\${SDKROOT}/lib)
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.mycompany.\${PRODUCT_NAME:identifier}")
 set(APP_TYPE MACOSX_BUNDLE)
 
+SET(Resources "${PROJECT_SOURCE_DIR}/Assets/Fonts/Ubuntu.opf")
+# message(STATUS "RESOURCES ${APPLICATION_RESOURCES}")
 add_executable(9_Application ${APP_TYPE} ${APPLICATION_SRC})
+# SET_TARGET_PROPERTIES( 9_Application PROPERTIES RESOURCE "${APPLICATION_RESOURCES}" )
+
+# copy resource phase
+
+if(${OPIFEX_OS_IOS})
+	set(APP_NAME \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME})
+	set(RES_DIR ${test_SOURCE_DIR}/assets)
+	add_custom_command(
+	    TARGET 9_Application
+	    POST_BUILD
+	    COMMAND /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks ${RES_DIR} ${APP_NAME}
+	)
+endif()
+
 #set_target_properties(9_Application PROPERTIES XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer: My Name")
 set_xcode_property(9_Application GCC_GENERATE_DEBUGGING_SYMBOLS YES)
 
