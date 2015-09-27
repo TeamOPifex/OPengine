@@ -42,7 +42,22 @@ set(ALL_LIBS
 # BUILD
 #########################################
 
-add_opifex_executable(9_Application ${APPLICATION_SRC})
+# add_opifex_executable(9_Application ${APPLICATION_SRC})
+
+set(CMAKE_OSX_SYSROOT iphoneos2.2.1)
+set(CMAKE_OSX_ARCHITECTURES $(ARCHS_STANDARD_32_BIT))
+set(CMAKE_CXX_FLAGS "-x objective-c++")
+set(CMAKE_EXE_LINKER_FLAGS "-framework AudioToolbox -framework CoreGraphics -framework QuartzCore -framework UIKit -framework GLKit -framework OpenGLES")
+link_directories(\${HOME}/\${SDKROOT}/lib)
+
+set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.mycompany.\${PRODUCT_NAME:identifier}")
+set(APP_TYPE MACOSX_BUNDLE)
+
+add_executable(9_Application ${APP_TYPE} ${APPLICATION_SRC})
+#set_target_properties(9_Application PROPERTIES XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer: My Name")
+
+
+
 target_link_libraries(9_Application ${ALL_LIBS})
 
 
