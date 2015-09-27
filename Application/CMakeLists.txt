@@ -55,7 +55,7 @@ set(APP_TYPE MACOSX_BUNDLE)
 
 add_executable(9_Application ${APP_TYPE} ${APPLICATION_SRC})
 #set_target_properties(9_Application PROPERTIES XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer: My Name")
-
+set_xcode_property(9_Application GCC_GENERATE_DEBUGGING_SYMBOLS YES)
 
 
 target_link_libraries(9_Application ${ALL_LIBS})

@@ -35,6 +35,7 @@ if(${OPIFEX_OPTION_SHARED})
 else()
 	add_library(1_Core STATIC ${CORE_SRC})
 endif()
+set_xcode_property(1_Core GCC_GENERATE_DEBUGGING_SYMBOLS YES)
 add_opifex_defines()
 
 if(${OPIFEX_OPTION_RELEASE})

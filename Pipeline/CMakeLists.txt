@@ -53,6 +53,7 @@ if(${OPIFEX_OPTION_SHARED})
 else()
 	add_library(7_Pipeline STATIC ${PIPELINE_SRC})
 endif()
+set_xcode_property(7_Pipeline GCC_GENERATE_DEBUGGING_SYMBOLS YES)
 add_opifex_defines()
 add_definitions(-DGLEW_STATIC)
 

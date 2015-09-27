@@ -41,6 +41,7 @@ if(${OPIFEX_OPTION_SHARED})
 else()
 	add_library(6_Communication STATIC ${COMMUNICATION_SRC})
 endif()
+set_xcode_property(6_Communication GCC_GENERATE_DEBUGGING_SYMBOLS YES)
 
 add_opifex_defines()
 

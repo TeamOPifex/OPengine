@@ -43,6 +43,7 @@ if(${OPIFEX_OPTION_SHARED})
 else()
 	add_library(3_Math STATIC ${MATH_SRC})
 endif()
+set_xcode_property(3_Math GCC_GENERATE_DEBUGGING_SYMBOLS YES)
 add_opifex_defines()
 
 add_definitions(-DGLEW_STATIC)
