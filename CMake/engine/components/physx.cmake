@@ -3,13 +3,13 @@ macro(add_opifex_physx_set_source)
 
 	# Look for an External Path to the PhysX folder
 	SET(_PHYSX_SOURCE 0)
-	if(EXISTS ${PHYSX_PATH})
+	if(NOT "${PHYSX_PATH}" STREQUAL "")
 		message(STATUS "PhysX PATH WAS SET ${PHYSX_PATH}")
 		SET(_PHYSX_SOURCE 1)
 		SET(_PHYSX_PATH "${PHYSX_PATH}")
 	else()
 		# message(STATUS "PhysX PATH WAS NOT SET ${PHYSX_PATH}")
-		SET(_PHYSX_PATH "${PROJECT_SOURCE_DIR}/External/PhysX/")
+		SET(_PHYSX_PATH "${PROJECT_SOURCE_DIR}/External/PhysX")
 	endif()
 
 endmacro(add_opifex_physx_set_source)
@@ -18,8 +18,8 @@ endmacro(add_opifex_physx_set_source)
 macro(add_opifex_physx_include)
 
 	add_opifex_physx_set_source()
-	include_directories(${_PHYSX_PATH}Include/)
-	# message(STATUS "${_PHYSX_PATH}Include/")
+	include_directories(${_PHYSX_PATH}/Include/)
+	message(STATUS "${_PHYSX_PATH}/Include/")
 
 endmacro(add_opifex_physx_include)
 
