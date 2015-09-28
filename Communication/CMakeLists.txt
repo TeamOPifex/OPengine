@@ -41,8 +41,10 @@ if(${OPIFEX_OPTION_SHARED})
 else()
 	add_library(6_Communication STATIC ${COMMUNICATION_SRC})
 endif()
-set_xcode_property(6_Communication GCC_GENERATE_DEBUGGING_SYMBOLS YES)
 
+if(${OPIFEX_OS_IOS})
+	set_xcode_property(6_Communication GCC_GENERATE_DEBUGGING_SYMBOLS YES)
+endif()
 add_opifex_defines()
 
 set_target_properties(6_Communication PROPERTIES LINKER_LANGUAGE CXX)

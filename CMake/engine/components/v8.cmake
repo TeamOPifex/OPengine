@@ -4,11 +4,11 @@ macro(add_opifex_v8_set_source)
 	# Look for an External Path to the V8 folder
 	SET(_V8_SOURCE 0)
 	if(EXISTS ${V8_PATH})
-		message("V8 PATH WAS SET ${V8_PATH}")
+		message(STATUS "V8 PATH WAS SET ${V8_PATH}")
 		SET(_V8_SOURCE 1)
 		SET(_V8_PATH "${V8_PATH}")
 	else()
-		message("V8 PATH WAS NOT SET ${V8_PATH}")
+		# message(STATUS "V8 PATH WAS NOT SET ${V8_PATH}")
 		SET(_V8_PATH "${PROJECT_SOURCE_DIR}/External/V8/")
 	endif()
 
@@ -18,12 +18,12 @@ endmacro(add_opifex_v8_set_source)
 macro(add_opifex_v8_include)
 
 	add_opifex_v8_set_source()
-	include_directories(${_V8_PATH}/include/)
+	include_directories(${_V8_PATH}include/)
 
 endmacro(add_opifex_v8_include)
 
 
-macro(add_opifex_v8 APPLICATION_TARGET )
+function(add_opifex_v8 APPLICATION_TARGET )
 
 	if(NOT ${OPIFEX_OPTION_V8})
 		RETURN()
@@ -39,7 +39,7 @@ macro(add_opifex_v8 APPLICATION_TARGET )
 		add_opifex_v8_osx(${APPLICATION_TARGET})
 	endif()
 
-endmacro(add_opifex_v8)
+endfunction(add_opifex_v8)
 
 
 macro(add_opifex_v8_osx APPLICATION_TARGET)

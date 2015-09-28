@@ -44,8 +44,10 @@ if(${OPIFEX_OPTION_SHARED})
 else()
 	add_library(4_Performance STATIC ${PERFORMANCE_SRC})
 endif()
-set_xcode_property(4_Performance GCC_GENERATE_DEBUGGING_SYMBOLS YES)
 
+if(${OPIFEX_OS_IOS})
+	set_xcode_property(4_Performance GCC_GENERATE_DEBUGGING_SYMBOLS YES)
+endif()
 add_opifex_defines()
 add_definitions(-DGLEW_STATIC)
 

@@ -6,8 +6,6 @@
 #include "./Pipeline/include/Loaders/OPloaderOPskeleton.h"
 #include "./Pipeline/include/Loaders/OPloaderOPanimation.h"
 
-#import <UIKit/UIKit.h>
-
 //////////////////////////////////////
 // Application Methods
 //////////////////////////////////////
@@ -18,7 +16,8 @@ void ApplicationInit() {
 	//OPskeletonAddLoader();
 	//OPskeletonAnimationAddLoader();
 	//SpineAddLoader();
-	OPcmanInit([[[NSBundle mainBundle] bundlePath] UTF8String]);
+	OPlog("Assets %s", OPIFEX_ASSETS);
+	OPcmanInit(OPIFEX_ASSETS);
 
 	OPrenderInit();
 	OPgamePadSetDeadZones(0.2f);

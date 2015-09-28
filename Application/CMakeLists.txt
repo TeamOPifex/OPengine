@@ -42,8 +42,8 @@ set(ALL_LIBS
 # BUILD
 #########################################
 
-# add_opifex_executable(9_Application ${APPLICATION_SRC})
 
+if(${OPIFEX_OS_IOS})
 set(CMAKE_OSX_SYSROOT iphoneos2.2.1)
 set(CMAKE_OSX_ARCHITECTURES $(ARCHS_STANDARD_32_BIT))
 set(CMAKE_CXX_FLAGS "-x objective-c++")
@@ -60,7 +60,6 @@ add_executable(9_Application ${APP_TYPE} ${APPLICATION_SRC})
 
 # copy resource phase
 
-if(${OPIFEX_OS_IOS})
 	set(APP_NAME \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME})
 	set(RES_DIR ${test_SOURCE_DIR}/assets)
 	add_custom_command(
@@ -68,14 +67,18 @@ if(${OPIFEX_OS_IOS})
 	    POST_BUILD
 	    COMMAND /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks ${RES_DIR} ${APP_NAME}
 	)
+	else()
+
+	 add_opifex_executable(9_Application ${APPLICATION_SRC})
 endif()
 
 #set_target_properties(9_Application PROPERTIES XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer: My Name")
-set_xcode_property(9_Application GCC_GENERATE_DEBUGGING_SYMBOLS YES)
 
+if(${OPIFEX_OS_IOS})
+	set_xcode_property(9_Application GCC_GENERATE_DEBUGGING_SYMBOLS YES)
+endif()
 
 target_link_libraries(9_Application ${ALL_LIBS})
-
 
 set_target_properties(9_Application PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(9_Application PROPERTIES OUTPUT_NAME "Application")

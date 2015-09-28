@@ -1,5 +1,9 @@
 
-macro(opifex_engine_status_messages)
+function(opifex_engine_status_messages)
+
+
+	set_opifex_assets()
+	message(STATUS "OPIFEX ASSETS SET TO: ${OPIFEX_ASSETS}")
 
 	message(STATUS "")
 	message(STATUS "===================================")
@@ -42,4 +46,4 @@ macro(opifex_engine_status_messages)
 	message(STATUS "")
 	message(STATUS "===================================\n")
 
-endmacro(opifex_engine_status_messages)
+endfunction(opifex_engine_status_messages)
