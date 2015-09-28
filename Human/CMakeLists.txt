@@ -77,6 +77,10 @@ if(${OPIFEX_OPTION_SHARED})
 else()
 	add_library(5_Human STATIC ${HUMAN_SRC})
 endif()
+
+if(${OPIFEX_OS_IOS})
+	set_xcode_property(5_Human GCC_GENERATE_DEBUGGING_SYMBOLS YES)
+endif()
 add_opifex_defines()
 add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS)
 

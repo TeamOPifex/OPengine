@@ -16,6 +16,7 @@ function(add_opifex_executable name)
 		add_executable(${name} ${APP_TYPE} ${ARGV})
 		#set_target_properties(${NAME} PROPERTIES XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer: My Name")
 
+		message(STATUS "ADDING IOS EXECUTABLE ${name}")
 	else()
 		add_executable(${name} ${ARGV})
 		message(STATUS "ADDING EXECUTABLE ${name}")

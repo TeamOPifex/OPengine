@@ -49,10 +49,7 @@ macro(add_opifex_defines)
 		add_definitions(-DOPIFEX_JAVASCRIPT)
 	endif()
 
-	if(${OPIFEX_ASSETS})
-	else()
-		add_definitions(-DOPIFEX_ASSETS=NULL)
-	endif()
+	add_opifex_assets()
 
 	if(NOT ${OPIFEX_OS_IOS})
 		add_definitions(-DGLEW_STATIC)

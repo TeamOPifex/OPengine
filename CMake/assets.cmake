@@ -48,6 +48,7 @@ else()
 
 endif()
 
+
 # Only copy assets if we're in release mode
 # It pulls from the Repository otherwise
 if(${OPIFEX_OPTION_RELEASE} OR ${OPIFEX_OS_ANDROID})
@@ -70,5 +71,9 @@ if(${OPIFEX_OPTION_RELEASE} OR ${OPIFEX_OS_ANDROID})
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/directives" ${OP_ASSETS_TARGET}/Web/angular/directives)
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/filters" ${OP_ASSETS_TARGET}/Web/angular/filters)
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/services" ${OP_ASSETS_TARGET}/Web/angular/services)
-	
+
 endif()
+
+
+#file(GLOB FILES_RSC "${PROJECT_SOURCE_DIR}/Assets/Audio")
+#set_source_files_properties(${FILES_RSC} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)

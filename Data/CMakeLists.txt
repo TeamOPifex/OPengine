@@ -44,6 +44,10 @@ else()
 	add_library(2_Data STATIC ${DATA_SRC})
 endif()
 
+if(${OPIFEX_OS_IOS})
+	set_xcode_property(2_Data GCC_GENERATE_DEBUGGING_SYMBOLS YES)
+endif()
+
 add_opifex_defines()
 target_link_libraries(2_Data ${ALL_LIBS})
 

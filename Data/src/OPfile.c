@@ -173,7 +173,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 	OPseek(str, 0);
 	return str;
 
-#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64)
+#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) || defined(OPIFEX_IOS)
 	ui8 bytes[1024];
 	// check to see if the file exists
 	if(OPfileExists(path) >= 0){

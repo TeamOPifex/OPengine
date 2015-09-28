@@ -6,7 +6,6 @@
 #include "./Pipeline/include/Loaders/OPloaderOPskeleton.h"
 #include "./Pipeline/include/Loaders/OPloaderOPanimation.h"
 
-
 //////////////////////////////////////
 // Application Methods
 //////////////////////////////////////
@@ -17,6 +16,7 @@ void ApplicationInit() {
 	//OPskeletonAddLoader();
 	//OPskeletonAnimationAddLoader();
 	//SpineAddLoader();
+	OPlog("Assets %s", OPIFEX_ASSETS);
 	OPcmanInit(OPIFEX_ASSETS);
 
 	OPrenderInit();
