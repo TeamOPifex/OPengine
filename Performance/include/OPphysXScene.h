@@ -8,10 +8,10 @@
 #include "./Performance/include/OPphysX.h"
 #include "./Performance/include/OPphysXEventHandler.h"
 
-typedef struct {
+struct OPphysXScene {
 	PxScene* scene;
 	ui64 elapsed;
-} OPphysXScene;
+};
 
 // FUNCTIONS
 

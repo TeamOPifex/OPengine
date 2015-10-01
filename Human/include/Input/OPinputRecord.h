@@ -5,15 +5,17 @@
 #include "./Core/include/OPtimer.h"
 #include "./Data/include/OPfile.h"
 
-typedef struct {
+struct OPinputRecordFrame {
 	ui64 timeOffset;
 	OPkeyboardState keyboardState;
-} OPinputRecordFrame;
+};
+typedef struct OPinputRecordFrame OPinputRecordFrame;
 
-typedef struct {
+struct OPinputRecordMemoryBase {
 	void** Memory;
 	OPint MemorySize;
-} OPinputRecordMemoryBase;
+};
+typedef struct OPinputRecordMemoryBase OPinputRecordMemoryBase;
 
 void OPinputRecordBegin(OPtimer* start, OPinputRecordMemoryBase* memoryMaps, ui16 memoryMapCount);
 OPint OPinputRecordIsRunning();

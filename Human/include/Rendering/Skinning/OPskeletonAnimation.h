@@ -18,7 +18,7 @@ struct _OPskeletonAnimationEvent
 };
 typedef _OPskeletonAnimationEvent OPskeletonAnimationEvent;
 
-struct _OPskeletonAnimation{
+struct _OPskeletonAnimation {
 	OPskeleton* Skeleton;
 	OPmat4* JointFrames;
 	OPuint FrameCount;

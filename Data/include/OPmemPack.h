@@ -9,24 +9,25 @@ extern "C"
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmemory.h"
 
-//  _____ _                   _       
-// / ____| |                 | |      
-//| (___ | |_ _ __ _   _  ___| |_ ___ 
+//  _____ _                   _
+// / ____| |                 | |
+//| (___ | |_ _ __ _   _  ___| |_ ___
 // \___ \| __| '__| | | |/ __| __/ __|
 // ____) | |_| |  | |_| | (__| |_\__ \
 //|_____/ \__|_|   \__,_|\___|\__|___/
-//                                                                      
+//
 
-typedef struct{
+struct OPmemDesc {
 	void (*Alloc)(void* segmentPtr, OPuint count);
 	void (*Dealloc)(void* data);
 	OPuint (*Size)(OPuint count);
 	void* Data;
-} OPmemDesc;
+};
+typedef struct OPmemDesc OPmemDesc;
 
-// ______                _   _                 
-//|  ____|              | | (_)                
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+// ______                _   _
+//|  ____|              | | (_)
+//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/

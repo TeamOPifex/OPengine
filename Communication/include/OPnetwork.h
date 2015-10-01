@@ -23,23 +23,23 @@ enum OPnetworkType {
 	OPNETWORK_SERVER = 1
 };
 
-typedef struct {
+struct OPnetworkPacketRaw {
 	OPchar* Buffer;
 	i32 Length;
-} OPnetworkPacketRaw;
+};
 
-typedef struct {
+struct OPnetworkPacket {
 	OPnetworkPacketRaw* RawPacket;
 	// Header
 	i32 ClientId;
 	// Message
 	OPchar* Message;
-} OPnetworkPacket;
+};
 
-typedef struct {
+struct OPnetwork {
 	ui32 ConnectSocket;
 	OPnetworkType ConnectionType;
-} OPnetwork;
+};
 
 OPnetwork* OPnetworkCreate(OPnetworkType networkType);
 i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, i32 port);

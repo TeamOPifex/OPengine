@@ -4,10 +4,11 @@
 #include "./Human/include/Input/Enums/OPkeyboardKeys.h"
 #include "./Core/include/OPtimer.h"
 
-typedef struct {
+struct OPkeyboardState {
 	OPint	keys[_OPKEYBOARD_MAX];
 	OPint	prevKeys[_OPKEYBOARD_MAX];
-} OPkeyboardState;
+};
+typedef struct OPkeyboardState OPkeyboardState;
 
 extern OPkeyboardState Keyboard;
 extern void (*OPKEYBOARD_STREAM)(OPchar);

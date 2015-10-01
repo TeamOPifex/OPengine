@@ -3,7 +3,7 @@
 
 #include "./Human/include/Input/Enums/OPmouseKeys.h"
 
-typedef struct {
+struct OPmouseState {
 	i32	wheel;
 	i32	prevWheel;
 	d64	positionX;
@@ -12,7 +12,8 @@ typedef struct {
 	d64	prevPositionY;
 	OPint	keys[_OPMOUSE_MAX];
 	OPint	prevKeys[_OPMOUSE_MAX];
-} OPmouseState;
+};
+typedef struct OPmouseState OPmouseState;
 
 extern OPmouseState Mouse;
 

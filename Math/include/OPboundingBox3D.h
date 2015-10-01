@@ -3,10 +3,10 @@
 
 #include "./Math/include/OPvec3.h"
 
-typedef struct {
+struct OPboundingBox3D {
 	OPvec3 min;
 	OPvec3 max;
-} OPboundingBox3D;
+};
 
 inline OPboundingBox3D OPboundingBox3DCreate(OPvec3 min, OPvec3 max) {
 	OPboundingBox3D tmp = {

@@ -7,24 +7,24 @@
 #include "./Data/include/OPhashMap.h"
 #include "./Data/include/OPlist.h"
 
-typedef struct {
+struct OPWebServer {
 	struct mg_server* Server;
 	// WebSocket Messages
 	// Key, Data, Data Length
 	void(*Receive)(i8*, i8*, i32);
 	OPhashMap* WebSocketKeys;
 	OPlist* WebSocketMessages;
-} OPWebServer;
+};
 
-typedef struct {
+struct OPWebServerHandlerContainer {
 	void(*handler)(OPstream*, void*);
 	void* param;
-} OPWebServerHandlerContainer;
+};
 
-typedef struct {
+struct OPWebServerMessagesContainer {
 	ui32 messageCount;
 	OPstream** messages;
-} OPWebServerMessagesContainer;
+};
 
 OPWebServer* OPwebServerCreate(OPchar* port);
 void OPwebServerUpdate(OPWebServer* server);

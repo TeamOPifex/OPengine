@@ -3,12 +3,12 @@
 
 #include "./Core/include/OPtypes.h"
 
-typedef struct {
+struct OPscript {
 	OPchar* data;
 #ifdef _DEBUG
 	i8 changed;
 #endif
-} OPscript;
+};
 
 void OPscriptAddLoader();
 OPint OPscriptLoad(const OPchar* filename, OPscript** script);

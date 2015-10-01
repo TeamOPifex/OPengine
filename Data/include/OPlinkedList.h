@@ -16,17 +16,18 @@ extern "C" {
 struct OPllNode_def;
 typedef struct OPllNode_def OPllNode;
 
-struct OPllNode_def {	
+struct OPllNode_def {
 	OPllNode *Prev;
 	OPllNode *Next;
 	void* Data;
 };
 
-typedef struct{
+struct OPlinkedList {
 	OPint _size;
 	OPllNode* First;
 	OPllNode* Last;
-} OPlinkedList;
+};
+typedef struct OPlinkedList OPlinkedList;
 
 /* Creates an OPlinkedList
  * @return Newly allocated OPlinkedList

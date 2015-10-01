@@ -8,13 +8,14 @@
 #include "./Core/include/OPmemory.h"
 
 
-typedef struct{
+struct OPstream{
 	OPuint Length;   // bytes in this stream
 	OPuint Size;
 	i8 Buffer[128];
 	OPuint _pointer; // current location to write to
 	ui8* Data;
-} OPstream;
+};
+typedef struct OPstream OPstream;
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
@@ -88,7 +89,7 @@ OPchar* OPstreamReadLine(OPstream* stream);
  * @param dst A pointer to a KeyValuePair (it will be filled on success)
  * @return Success Result
 */
-OPint OPstreamReadKeyValuePair(OPstream* stream, OPkeyValuePair* dst);
+OPint OPstreamReadKeyValuePair(OPstream* stream, struct OPkeyValuePair* dst);
 
 //-----------------------------------------------------------------------------
 /**

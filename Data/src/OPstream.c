@@ -46,10 +46,10 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 		// will be resized to so that it will beable to contain
 		// the element
 		len = len > size ? len : size;
-		
+
 		// reallocate
 		//OPlog("OPstream - resizing to %u\n", sizeof(ui8) * (len << 1));
-		
+
 		nd = (ui8*)OPrealloc(
 			D,
 			(sizeof(ui8) * len) << 1
@@ -178,7 +178,7 @@ OPchar* OPstreamReadLine(OPstream* stream) {
 
 
 //-----------------------------------------------------------------------------
-OPint OPstreamReadKeyValuePair(OPstream* str, OPkeyValuePair* dst){
+OPint OPstreamReadKeyValuePair(OPstream* str, struct OPkeyValuePair* dst){
 	OPchar buffer[520];
 	OPchar buffer2[255];
 	OPint len;
@@ -216,7 +216,7 @@ ui8* OPreadAt(OPstream* stream, OPuint pos, OPuint size){
 OPuint OPcopy(OPstream* stream, void* dest, OPuint size){
 	OPuint ptr = stream->_pointer;
 	OPuint oldSize = size;
-	
+
 	// truncate the number of bytes that will be returned
 	// in the event that we are near the end of th stream
 	if(stream->Length <= ptr + size){
@@ -229,12 +229,12 @@ OPuint OPcopy(OPstream* stream, void* dest, OPuint size){
 	// copy the data, and update the pointer location
 	OPmemcpy(dest, stream->Data + ptr, size);
 	stream->_pointer += size;
- 
+
 	return size;
 }
 //-----------------------------------------------------------------------------
 OPuint OPseek(OPstream* stream, OPuint byte){
-	if(byte < stream->Length){	
+	if(byte < stream->Length){
 		stream->_pointer = byte;
 		return 1;
 	}

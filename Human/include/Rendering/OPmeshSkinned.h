@@ -7,33 +7,37 @@
 #include "./Math/include/OPvec4.h"
 
 
-	typedef struct {
+	struct OPmeshSkinnedKeyframe {
 		OPint Bone;
 		OPfloat Time;
 
 		//OPint Features;
 		//OPvec3 Position;
 		OPvec4 Rotation;
-	} OPmeshSkinnedKeyframe;
+	};
+	typedef struct OPmeshSkinnedKeyframe OPmeshSkinnedKeyframe;
 
-	typedef struct {
+	struct OPmeshSkinnedAnimation {
 		OPint KeyframeCount;
 		OPmeshSkinnedKeyframe* Frames;
-	} OPmeshSkinnedAnimation;
+	};
+	typedef struct OPmeshSkinnedAnimation OPmeshSkinnedAnimation;
 
-	typedef struct {
+	struct OPmeshSkinnedSkeleton {
 		ui16 JointCount;
 		ui16* Heirarchy;
 		OPmat4* LocalPoses;
 		OPmat4* GlobalPoses;
-	} OPmeshSkinnedSkeleton;
+	};
+	typedef struct OPmeshSkinnedSkeleton OPmeshSkinnedSkeleton;
 
-	typedef struct {
+	struct OPmeshSkinned {
 		OPmesh Mesh;
 		OPmeshSkinnedSkeleton* Skeleton;
 		OPint AnimationCount;
 		OPmeshSkinnedAnimation* Animations;
-	} OPmeshSkinned;
+	};
+	typedef struct OPmeshSkinned OPmeshSkinned;
 
 	void OPmeshSkinnedLocalToGlobalPose(OPmeshSkinned* skinned)
 	{
@@ -42,7 +46,7 @@
 
 		for (ui16 i = 1; i < skinned->Skeleton->JointCount; ++i)
 		{
-			OPmat4Mul(&skinned->Skeleton->GlobalPoses[i], 
+			OPmat4Mul(&skinned->Skeleton->GlobalPoses[i],
 				&skinned->Skeleton->GlobalPoses[skinned->Skeleton->Heirarchy[i]],
 				&skinned->Skeleton->LocalPoses[i]);
 		}

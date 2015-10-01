@@ -4,10 +4,10 @@
 #include "./Core/include/OPtypes.h"
 #include "./Math/include/OPvec3.h"
 
-typedef struct {
+struct OPboundingSphere3D {
 	OPvec3 pos;
 	OPfloat radius;
-} OPboundingSphere3D;
+};
 
 static inline OPint OPboundingSphere3DCollision(OPboundingSphere3D* obj1, OPboundingSphere3D* obj2){
 	OPvec3 relPos = obj1->pos - obj2->pos;

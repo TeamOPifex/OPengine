@@ -5,13 +5,13 @@
 #include "./Human/include/Rendering/OPtexture.h"
 #include "./Human/include/Rendering/OPeffect.h"
 
-typedef struct {
+struct OPtexture2D {
 	OPvec2 Position;
 	OPfloat Rotation;
 	OPvec2 Scale;
 	OPtexture* Texture;
 	OPeffect* Effect;
-} OPtexture2D;
+};
 
 OPtexture2D* OPtexture2DCreate(OPtexture* texture, OPeffect* effect, OPvec2 uvStart, OPvec2 uvEnd);
 OPtexture2D* OPtexture2DCreate(OPtexture* texture, OPeffect* effect);

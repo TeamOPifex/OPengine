@@ -3,7 +3,7 @@
 
 #include "./Core/include/OPtypes.h"
 
-typedef struct {
+struct OPtouchState {
 	OPint tapping;
 	OPint prevTapping;
 	OPint updated;
@@ -11,7 +11,8 @@ typedef struct {
 	f32	positionY;
 	f32	prevPositionX;
 	f32	prevPositionY;
-} OPtouchState;
+};
+typedef struct OPtouchState OPtouchState;
 
 extern OPtouchState Touch;
 

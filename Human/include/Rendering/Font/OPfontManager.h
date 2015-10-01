@@ -13,10 +13,11 @@
 //  \___ \| __| '__| | | |/ __| __/ __|
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
-typedef struct {
+struct OPfontTextNode {
 	OPchar* Text;
 	OPint Width;
-} OPfontTextNode;
+};
+typedef struct OPfontTextNode OPfontTextNode;
 
 
 typedef enum {
@@ -25,7 +26,7 @@ typedef enum {
 	OPFONT_ALIGN_RIGHT = 2
 } OPfontAlign;
 
-typedef struct {
+struct OPfontManager {
 	OPfontUserTextNode dummyMesh;
 	OPfont* _font;
 	OPvec4 _color;
@@ -38,8 +39,8 @@ typedef struct {
 	OPint pixelated;
 	OPmat4 proj;
 	OPfloat scale;
-} OPfontManager;
-
+};
+typedef struct OPfontManager OPfontManager;
 
 
 

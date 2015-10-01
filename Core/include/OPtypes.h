@@ -99,9 +99,10 @@ typedef f32 OPfloat;
 
 // A standard Key Value Pair
 // key[255], value[255]
-typedef struct {
+struct OPkeyValuePair {
 	OPchar key[255];
 	OPchar value[255];
-}OPkeyValuePair;
+};
+typedef struct OPkeyValuePair OPkeyValuePair;
 
 #endif

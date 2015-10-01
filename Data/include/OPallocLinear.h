@@ -3,14 +3,15 @@
 
 #include "./Core/include/OPtypes.h"
 
-typedef struct {
+struct OPallocLinear {
 	OPuint _allocCount;
 	OPuint _usedMemory;
 	OPuint _size;
 	void* _headerStart;
 	void* _memStart;
 	void* _currentPos;
-} OPallocLinear;
+};
+typedef struct OPallocLinear OPallocLinear;
 
 OPallocLinear* OPallocLinearCreate(OPuint sizeInBytes);
 void OPallocLinearDestroy(OPallocLinear* alloc);

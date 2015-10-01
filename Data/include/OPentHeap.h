@@ -11,15 +11,15 @@ extern "C"
 #include <stdio.h>
 
 //-----------------------------------------------------------------------------
-//  _____ _                   _       
-// / ____| |                 | |      
-//| (___ | |_ _ __ _   _  ___| |_ ___ 
+//  _____ _                   _
+// / ____| |                 | |
+//| (___ | |_ _ __ _   _  ___| |_ ___
 // \___ \| __| '__| | | |/ __| __/ __|
 // ____) | |_| |  | |_| | (__| |_\__ \
 //|_____/ \__|_|   \__,_|\___|\__|___/
-//                                                                      
+//
 
-typedef struct{
+struct OPentHeap {
 	void*   Entities;
 	OPint*  InUse;
 	OPint   EntSize;
@@ -27,15 +27,16 @@ typedef struct{
 	OPuint* Size;
 	OPuint  Capacity;
 	OPminHeap Free;
-} OPentHeap;
+};
+typedef struct OPentHeap OPentHeap;
 
 #define OPentHeapIsLiving(heap, i)\
 if(!heap->InUse[i]) continue;\
 
 //-----------------------------------------------------------------------------
-// ______                _   _                 
-//|  ____|              | | (_)                
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+// ______                _   _
+//|  ____|              | | (_)
+//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
@@ -72,7 +73,7 @@ __inline void* OPentHeapGet(OPentHeap* heap, OPint i){
 */
 __inline void OPentHeapKill(OPentHeap* heap, OPint i){
 	OPint inUse = heap->InUse[i];
-	
+
 	if(inUse){
 		OPint mi = heap->MaxIndex - 1;
 		OPminHeapPush(&heap->Free, i);

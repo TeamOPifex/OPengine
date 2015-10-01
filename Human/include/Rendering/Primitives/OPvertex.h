@@ -3,15 +3,17 @@
 
 #include "./Math/include/Vectors.h"
 
-typedef struct {
+struct OPvertexColor {
 	OPvec3 Position;
 	OPvec3 Color;
-} OPvertexColor;
+};
+typedef struct OPvertexColor OPvertexColor;
 
-typedef struct {
+struct OPvertexTexColor {
 	OPvec3 Position;
 	OPvec2 TexCoord;
 	OPvec3 Color;
-} OPvertexTexColor;
+};
+typedef struct OPvertexTexColor OPvertexTexColor;
 
 #endif

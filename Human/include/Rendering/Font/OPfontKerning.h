@@ -3,9 +3,10 @@
 
 #include "./Core/include/OPtypes.h"
 
-typedef struct {
+struct OPfontKerning {
 	OPchar charcode;
 	OPfloat kerning;
-} OPfontKerning;
+};
+typedef struct OPfontKerning OPfontKerning;
 
 #endif
