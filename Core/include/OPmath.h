@@ -4,14 +4,13 @@
 
 #include "OPtypes.h"
 
-#if defined(OPIFEX_UNIX)	// linux math libs
 #include <math.h>
+#if defined(OPIFEX_UNIX)	// linux math libs
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/time.h> // link with -lrt
 #include <time.h>
 #elif defined(OPIFEX_WINDOWS) 	// windows math libs
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -200,7 +199,7 @@ __inline OPfloat OPatan(OPfloat f){
 * OPatan2 - math helper
 *	Uses the signs of both parameters to determine the quadrant of the return floating point value.
 * @param f Floating point number.
-* @return atan(f)	
+* @return atan(f)
 */
 __inline OPfloat OPatan2(OPfloat x, OPfloat y) {
 	return atan2(y, x);
