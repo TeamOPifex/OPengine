@@ -19,26 +19,28 @@
 	writtenSuccesfully = write(fd, buff, count);\
 }\
 
-typedef struct {
+struct OPfile {
 #ifdef OPIFEX_WINDOWS
 	FILE* _handle;
 #else
 	OPint _handle;
 #endif
-} OPfile;
+};
+typedef struct OPfile OPfile;
 
-typedef struct {
+struct OPfileInformation {
 	FILE* file;
 	ui32 start;
 	ui32 length;
 	int fileDescriptor;
-} OPfileInformation;
+};
+typedef struct OPfileInformation OPfileInformation;
 
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
 extern "C" {
 #endif
-	
+
 //-----------------------------------------------------------------------------
 /**
  * OPreadui16 - Reads the next 2 bytes from the file and converts to ui16

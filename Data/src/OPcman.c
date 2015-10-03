@@ -45,7 +45,7 @@ OPint OPcmanSetDir(OPchar* dir) {
 	return result;
 }
 
-void OPcmanUpdate(OPtimer* timer) {
+void OPcmanUpdate(struct OPtimer* timer) {
 #if defined(_DEBUG)
 	i32 i, j;
 	long change;

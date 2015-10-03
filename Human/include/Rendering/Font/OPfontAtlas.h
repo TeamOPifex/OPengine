@@ -4,27 +4,30 @@
 #include "./Data/include/OPvector.h"
 #include "./Core/include/OPtypes.h"
 
-typedef struct {
+struct OPfontAtlasNode {
 	i32 x;
 	i32 y;
 	i32 z;
-} OPfontAtlasNode;
+};
+typedef struct OPfontAtlasNode OPfontAtlasNode;
 
-typedef struct {
+struct OPfontAtlasRegion {
 	OPint x;
 	OPint y;
 	OPint width;
 	OPint height;
-} OPfontAtlasRegion;
+};
+typedef struct OPfontAtlasRegion OPfontAtlasRegion;
 
-typedef struct {
+struct OPfontAtlas {
 	OPvector* nodes;
 	OPint width;
 	OPint height;
 	OPint depth;
 	OPint used;
 	ui8* data;
-} OPfontAtlas;
+};
+typedef struct OPfontAtlas OPfontAtlas;
 
 #include "./Human/include/Rendering/Font/OPfont.h"
 #include "./Human/include/Rendering/OPtexture.h"

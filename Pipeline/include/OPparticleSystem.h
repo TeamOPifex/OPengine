@@ -16,13 +16,13 @@ extern "C"{
 #endif
 
 //-----------------------------------------------------------------------------
-//   _____ _                   _       
-//  / ____| |                 | |      
-// | (___ | |_ _ __ _   _  ___| |_ ___ 
+//   _____ _                   _
+//  / ____| |                 | |
+// | (___ | |_ _ __ _   _  ___| |_ ___
 //  \___ \| __| '__| | | |/ __| __/ __|
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
-typedef struct {
+struct OPparticle {
 	OPvec3    Position;     // 12 bytes
 	OPvec3    Velocity;     // 12 bytes
 	OPfloat   Angle;        // 4 bytes
@@ -32,9 +32,9 @@ typedef struct {
 	OPvec4    Tint;         // 16 bytes
 	OPsprite* Animation;    // 4/8 bytes
 	ui8       CurrentFrame; // 1 byte
-} OPparticle;
+};
 
-typedef struct {
+struct OPparticleSys {
 	OPentHeap* heap;
 	OPparticle* particles;
 	OPtexture* texture;
@@ -42,14 +42,14 @@ typedef struct {
 	OPvec2 uvScale;
 	OPfloat fps;
 	OPfloat timeElapsed;
-} OPparticleSys;
+};
 
 inline void OPparticleUpdate(OPparticle* p, OPtimer* timer){
 	OPvec3 vel = p->Velocity;
 	OPfloat dr = p->AngularVelo * timer->Elapsed;
 	vel *= (OPfloat)timer->Elapsed;
 	p->Position += vel;
-	
+
 	p->Angle += dr;
 	p->Life -= timer->Elapsed;
 }

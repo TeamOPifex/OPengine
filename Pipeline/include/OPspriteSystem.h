@@ -16,7 +16,7 @@ enum OPspriteSystemAlign {
 	OPSPRITESYSTEMALIGN_TOP_RIGHT,
 };
 
-typedef struct {
+struct OPspriteSystemSprite {
 	OPvec2 Position;
 	OPvec2 Scale;
 	OPvec2 Center;
@@ -25,9 +25,9 @@ typedef struct {
 	OPint CurrentFrame;
 	OPuint CurrentElapsed;
 	OPint Direction;
-} OPspriteSystemSprite;
+};
 
-typedef struct {
+struct OPspriteSystem {
 	OPmesh _mesh;
 	OPspriteSystemSprite* SystemSprites;
 	OPspriteSystemAlign Align;
@@ -37,7 +37,7 @@ typedef struct {
 	OPsprite** Sprites;
 	OPeffect* Effect;
 	i8 ExternalEffect;
-} OPspriteSystem;
+};
 
 void OPspriteSystemEffectDefault(OPeffect* effect);
 void OPspriteSystemInit(OPspriteSystem* system, OPsprite** sprites, OPint count, OPeffect* effect, OPspriteSystemAlign alignment);

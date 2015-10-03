@@ -14,7 +14,7 @@
 	#include <spine/SkeletonData.h>
 #endif
 
-typedef struct {
+struct Spine {
 
 #ifdef OPIFEX_OPTION_SPINE
 	spSkeletonBounds* bounds;
@@ -23,7 +23,7 @@ typedef struct {
 	spAnimationStateData* stateData;
 #endif
 
-} Spine;
+};
 
 void SpineAddLoader();
 void SpineInitialize();

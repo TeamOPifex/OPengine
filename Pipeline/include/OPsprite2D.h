@@ -7,7 +7,7 @@
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Rendering/OPcam.h"
 
-typedef struct {
+struct OPsprite2D {
 	OPvec2 Position;
 	OPfloat Rotation;
 	OPvec2 Scale;
@@ -19,7 +19,7 @@ typedef struct {
 	ui64 CurrentElapsed;
 	OPint Loop;
 	OPeffect* Effect;
-} OPsprite2D;
+};
 
 void OPsprite2DInit(OPeffect* effect);
 OPsprite2D* OPsprite2DCreate(OPsprite** sprites, OPeffect* effect);

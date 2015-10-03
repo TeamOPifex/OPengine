@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-typedef struct {
+struct OPLevelEntity{
 	OPchar* name;
 	OPchar* resource;
 	OPvec3 position;
@@ -17,12 +17,12 @@ typedef struct {
 
 	ui16 collision;
 	ui16 physics;
-} OPLevelEntity;
+};
 
-typedef struct {
+struct OPLevel {
 	ui16 count;
 	OPLevelEntity* entities;
-} OPLevel;
+};
 
 OPLevelEntity* OPlevelGetEntity(OPLevel* level, OPchar* name);
 

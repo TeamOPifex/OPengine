@@ -5,7 +5,7 @@
 #include "./Math/include/OPvec4.h"
 #include "./Data/include/OPvector.h"
 
-typedef struct {
+struct OPfontGlyph {
 	OPchar charcode;
 	OPint width;
 	OPint height;
@@ -17,7 +17,8 @@ typedef struct {
 	OPvector* kerning;
 	OPint outlineType;
 	OPfloat outlineThickness;
-} OPfontGlyph;
+};
+typedef struct OPfontGlyph OPfontGlyph;
 
 OPfontGlyph* OPfontGlyphCreate();
 void OPfontGlyphDestroy(OPfontGlyph* glyph);

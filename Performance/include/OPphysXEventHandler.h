@@ -7,18 +7,18 @@
 
 // TYPES
 
-typedef struct {
+struct OPphysXTrigger {
 	PxTriggerPair* triggerPairs;
 	ui32 count;
-} OPphysXTrigger;
+};
 
-typedef struct {
+struct OPphysXContact {
 	PxContactPairHeader header;
 	const PxContactPair* contactPairs;
 	ui32 count;
-} OPphysXContact;
+};
 
-class OPphysXEventHandler : public PxSimulationEventCallback 
+class OPphysXEventHandler : public PxSimulationEventCallback
 {
 public:
 	OPphysXEventHandler(void(*onTrigger)(OPphysXTrigger), void(*onContact)(OPphysXContact)) {

@@ -3,10 +3,10 @@
 
 #include "./Math/include/OPvec2.h"
 
-typedef struct {
+struct OPline2D {
 	OPvec2 start;
 	OPvec2 end;
-} OPline2D;
+};
 
 inline OPline2D OPline2DCreate(OPvec2 start, OPvec2 end) {
 	OPline2D tmp = {

@@ -3,12 +3,13 @@
 
 #include "OPskeletonAnimation.h"
 
-typedef struct {
+struct OPskeletonAnimationTransition {
 	OPskeletonAnimation* Start;
 	OPskeletonAnimation* End;
 	OPfloat Duration;
 	OPfloat Current;
-} OPskeletonAnimationTransition;
+};
+typedef struct OPskeletonAnimationTransition OPskeletonAnimationTransition;
 
 OPskeletonAnimationTransition OPskeletonAnimationTransitionInit(OPskeletonAnimation* start, OPskeletonAnimation* end, OPfloat duration);
 OPint OPskeletonAnimationTransitionUpdate(OPskeletonAnimationTransition* transition, OPtimer* timer);

@@ -7,7 +7,7 @@
 #include "./Math/include/OPmat4.h"
 #include "./Math/include/OPvec4.h"
 
-typedef struct {
+struct OPskeleton {
 	ui16 hierarchyCount;
 	i16* hierarchy;
 	OPchar** jointNames;
@@ -15,7 +15,8 @@ typedef struct {
 	OPmat4* globalInvPoses;
 	OPmat4* localPoses;
 	OPmat4* skinned;
-} OPskeleton;
+};
+typedef struct OPskeleton OPskeleton;
 
 OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* pose, i32 count, OPchar** names);
 void OPskeletonUpdate(OPskeleton* skeleton);

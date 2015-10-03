@@ -15,7 +15,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-	
+
 // Android entry points
 #ifdef OPIFEX_ANDROID
 	#include <jni.h>
@@ -58,8 +58,8 @@ extern "C" {
 /**
  * Ends the game cycle.
  *	This function sets an internal flag which will cease the game loop.
- *	and result in the termination and clean up of all user code and 
- *	data. 
+ *	and result in the termination and clean up of all user code and
+ *	data.
  */
 void OPend();
 
@@ -67,7 +67,7 @@ void OPend();
 /* Gets the current OPtimer being used by the engine
  * @return A pointer to the current OPtimer being used by the OPengine
 */
-OPtimer* OPgetTime();
+struct OPtimer* OPgetTime();
 OPchar* OPgetStartupDir();
 OPchar* OPgetExecutableDir();
 

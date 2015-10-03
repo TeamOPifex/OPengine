@@ -12,18 +12,20 @@ enum OPmaterialParamType {
 	MATERIAL_PARAM_TYPE_VECTOR4
 };
 
-typedef struct {
+struct OPmaterialParam {
 	OPmaterialParamType  type;
 	const OPchar*        name;
 	void*                data;
 	ui8                  count;
-} OPmaterialParam;
+};
+typedef struct OPmaterialParam OPmaterialParam;
 
-typedef struct {
+struct OPmaterial {
 	OPeffect* effect;
 	OPmaterialParam params[10];
 	OPuint paramIndex;
-} OPmaterial;
+};
+typedef struct OPmaterial OPmaterial;
 
 inline void OPmaterialClearParams(OPmaterial* material) {
 	material->paramIndex = 0;

@@ -1,7 +1,7 @@
 #include "./Core/include/OPcore.h"
 #include "./Core/include/OPlog.h"
 
-OPtimer OPtime;
+struct OPtimer OPtime;
 OPchar* _startUpDir = NULL;
 OPchar* _execDir = NULL;
 OPint _OPengineRunning;
@@ -29,7 +29,7 @@ JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_init(JNIEnv * env, jobject obj,
 	OPlog("Window Size %d, %d", width, height);
 }
 
-JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_step(JNIEnv * env, jobject obj, jobject assetManager){	
+JNIEXPORT int JNICALL Java_com_opifex_GL2JNILib_step(JNIEnv * env, jobject obj, jobject assetManager){
 	if(!_OPengineRunning) return 1;
 
 	_JNIAssetManager = assetManager;
@@ -55,7 +55,7 @@ jint JNIHeight() { return _JNIHeight; }
 #endif
 
 void (*OPinitialize)();
-int(*OPupdate)(OPtimer*);
+int(*OPupdate)(struct OPtimer*);
 void (*OPdestroy)();
 
 
@@ -124,7 +124,7 @@ void OPstart(struct android_app* state) {
 
 	OPAndroidState = state;
 	OPAndroidState->onAppCmd = engine_handle_cmd;
-	
+
 	_OPengineRunning = 1;
 
 	while (_OPengineRunning) {
@@ -179,7 +179,7 @@ void OPstart(int argc, char** args) {
 	while(_OPengineRunning){
 		// update the timer
 		OPtimerTick(&OPtime);
-		
+
 		// update the game
 		if (OPupdate(&OPtime)) {
 			_OPengineRunning = 0;
@@ -204,7 +204,7 @@ void OPend(){
 	_OPengineRunning = 0;
 }
 
-OPtimer* OPgetTime() {
+struct OPtimer* OPgetTime() {
 	return &OPtime;
 }
 

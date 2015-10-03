@@ -4,12 +4,13 @@
 #include "./Human/include/Rendering/Font/OPfontManager.h"
 #include "./Math/include/OPvec4.h"
 
-typedef struct {
+struct OPimguiVertex {
 	OPvec3 Position;
 	OPvec4 Color;
-} OPimguiVertex;
+};
+typedef struct OPimguiVertex OPimguiVertex;
 
-typedef struct {
+struct OPimgui {
 	OPrenderBuffer buffer;
 	OPmat4 proj;
 
@@ -25,7 +26,8 @@ typedef struct {
 
 	OPfontManager* fontManager;
 	OPeffect* effect;
-} OPimgui;
+};
+typedef struct OPimgui OPimgui;
 
 extern OPimgui* OPIMGUI_ACTIVE;
 

@@ -10,35 +10,38 @@ extern "C"
 #include <string.h>
 #include "./Core/include/OPtypes.h"
 
-//  _____ _                   _       
-// / ____| |                 | |      
-//| (___ | |_ _ __ _   _  ___| |_ ___ 
+//  _____ _                   _
+// / ____| |                 | |
+//| (___ | |_ _ __ _   _  ___| |_ ___
 // \___ \| __| '__| | | |/ __| __/ __|
 // ____) | |_| |  | |_| | (__| |_\__ \
 //|_____/ \__|_|   \__,_|\___|\__|___/
-//                                                                      
-typedef struct{
+//
+struct KeyValuePair {
 	OPchar* key;
 	void* value;
-} KeyValuePair;
+};
+typedef struct KeyValuePair KeyValuePair;
 
-typedef struct{
+struct Bucket {
 	OPuint count;
 	KeyValuePair *pairs;
-} Bucket;
+};
+typedef struct Bucket Bucket;
 
-typedef struct{
+struct OPhashMap {
 	OPuint count;
 	Bucket *buckets;
-} OPhashMap;
+};
+typedef struct OPhashMap OPhashMap;
 
-// ______                _   _                 
-//|  ____|              | | (_)                
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+// ______                _   _
+//|  ____|              | | (_)
+//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-//                                                                                    
+//
 
 void OPhashMapInit(OPhashMap* hashMap, OPuint capacity);
 

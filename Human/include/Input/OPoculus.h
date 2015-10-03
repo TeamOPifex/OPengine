@@ -15,7 +15,7 @@
 #include "./External/OculusDK2/src/OVR_CAPI_GL.h"
 #endif
 
-typedef struct {
+struct OPoculus {
 #ifdef OPIFEX_OPTION_OCULUS
 	ovrHmd _hmdDevice;
 	OPframeBuffer _frameBuffer;
@@ -23,7 +23,8 @@ typedef struct {
 	ovrGLTexture* _ovrTexture;
 	ovrEyeRenderDesc _eyeRenderDesc;
 #endif
-} OPoculus;
+};
+typedef struct OPoculus OPoculus;
 
 extern OPoculus* OculusManager;
 

@@ -9,13 +9,14 @@
 extern "C" {
 #endif
 
-	//This will be replaced by OPlist 
-	typedef struct{
+	//This will be replaced by OPlist
+	struct OPvector{
 		void* items;
 		OPuint _capacity;
 		OPuint _size;
 		OPuint _elementSize;
-	} OPvector;
+	};
+	typedef struct OPvector OPvector;
 
 	OPvector* OPvectorCreate(OPint elementSize);
 	void OPvectorDestroy(OPvector* vector);
@@ -24,7 +25,7 @@ extern "C" {
 
 	ui8* OPvectorFront(OPvector* vector);
 	ui8* OPvectorBack(OPvector* vector);
-	
+
 	OPint OPvectorContains(OPvector* vector, ui8* item, OPint(*cmp)(ui8 *, ui8 *));
 	OPint OPvectorIsEmpty(OPvector* vector);
 	OPint OPvectorSize(OPvector* vector);

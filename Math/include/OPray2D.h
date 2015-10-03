@@ -3,10 +3,10 @@
 
 #include "./Math/include/OPvec2.h"
 
-typedef struct {
+struct OPray2D {
 	OPvec2 position;
 	OPvec2 direction;
-} OPray2D;
+};
 
 
 #endif

@@ -9,7 +9,7 @@
 
 #define CONTROLLERS 4
 
-typedef struct {
+struct OPgamePad {
 	OPint		playerIndex;
 	OPint           connected;
 	OPfloat		deadzone;
@@ -17,7 +17,8 @@ typedef struct {
 	OPint           prevButtons[_OPGAMEPADBUTTON_MAX];
 	OPfloat		axes[_OPGAMEPADAXIS_MAX];
 	OPfloat		prevAxes[_OPGAMEPADAXIS_MAX];
-} OPgamePad;
+};
+typedef struct OPgamePad OPgamePad;
 
 extern OPgamePad GamePads[CONTROLLERS];
 

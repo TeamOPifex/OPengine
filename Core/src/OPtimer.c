@@ -2,8 +2,8 @@
 #include "./Core/include/OPmemory.h"
 
 //----------------------------------------------------------------------------
-OPint OPtimerCreate(OPtimer* timer){
-	OPbzero(timer, sizeof(OPtimer));
+OPint OPtimerCreate(struct OPtimer* timer){
+	OPbzero(timer, sizeof(struct OPtimer));
 	if(!timer) return -1;
 #if defined(OPIFEX_UNIX)
 	gettimeofday(&(timer->TimeLastTick), NULL);
@@ -19,13 +19,13 @@ OPint OPtimerCreate(OPtimer* timer){
 	return 0;
 }
 //----------------------------------------------------------------------------
-void OPtimerTick(OPtimer* timer){
+void OPtimerTick(struct OPtimer* timer){
 #if defined(OPIFEX_UNIX)
 	struct timeval time;
 	ui64 elapsed;
 
 	gettimeofday(&time, NULL);
-	elapsed = ((time.tv_sec - timer->TimeLastTick.tv_sec) * 1000000 + 
+	elapsed = ((time.tv_sec - timer->TimeLastTick.tv_sec) * 1000000 +
 		(time.tv_usec - timer->TimeLastTick.tv_usec)) / 1000;
 
 	timer->TotalGametime += elapsed;
@@ -51,17 +51,16 @@ void OPtimerTick(OPtimer* timer){
 
 //----------------------------------------------------------------------------
 
-OPfloat  OPtimerDelta(OPtimer* timer){
+OPfloat  OPtimerDelta(struct OPtimer* timer){
 #if defined(OPIFEX_UNIX)
 	return (OPfloat)(timer->Elapsed / 1000.0);
 #elif defined(OPIFEX_WINDOWS)
 	return (OPfloat)(timer->Elapsed / 1000.0);
-#endif	
+#endif
 }
 
 //-----------------------------------------------------------------------------
 
-ui64 OPtimerTotal(OPtimer* timer){
+ui64 OPtimerTotal(struct OPtimer* timer){
 	return timer->TotalGametime;// / 1000000.0;
 }
-

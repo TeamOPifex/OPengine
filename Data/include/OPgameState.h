@@ -10,9 +10,9 @@ extern "C" {
 struct OPgameState_def;
 typedef struct OPgameState_def OPgameState;
 
-struct OPgameState_def{
+struct OPgameState_def {
 	void (*Init)(OPgameState*);
-	OPint(*Update)(OPtimer*);
+	OPint(*Update)(struct OPtimer*);
 	OPint (*Exit)(OPgameState*);
 	void* Data;
 };
@@ -29,8 +29,8 @@ void OPgameStateChange(OPgameState* targetState);
 * @param update The Update function for the game state
 * @param exit The Exit function for the game state
 * @return A new OPgameState
-*/ 
-OPgameState* OPgameStateCreate(void (*init)(OPgameState*), OPint(*update)(OPtimer*), OPint(*exit)(OPgameState*));
+*/
+OPgameState* OPgameStateCreate(void (*init)(OPgameState*), OPint(*update)(struct OPtimer*), OPint(*exit)(OPgameState*));
 
 /* Destroys an OPgameState by deallocating the memory
 * @param state The game state to destroy

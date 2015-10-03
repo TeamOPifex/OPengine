@@ -6,10 +6,11 @@
 #include "OPmaterial.h"
 #include "./Math/include/OPmat4.h"
 
-typedef struct {
+struct OPmodel {
 	OPmat4 world;
 	OPmesh* mesh;
-} OPmodel;
+};
+typedef struct OPmodel OPmodel; 
 
 inline void OPmodelBind(OPmodel model, OPmaterial* material) {
 	OPmeshBind(model.mesh);

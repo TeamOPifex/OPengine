@@ -23,24 +23,25 @@ extern "C" {
 #define OP_CMAN_RETRIEVE_FAILED      -8
 #define OP_CMAN_KEY_NOT_FOUND        -9
 
-//  _____ _                   _       
-// / ____| |                 | |      
-//| (___ | |_ _ __ _   _  ___| |_ ___ 
+//  _____ _                   _
+// / ____| |                 | |
+//| (___ | |_ _ __ _   _  ___| |_ ___
 // \___ \| __| '__| | | |/ __| __/ __|
 // ____) | |_| |  | |_| | (__| |_\__ \
 //|_____/ \__|_|   \__,_|\___|\__|___/
-//                                                                      
+//
 
-typedef struct{
+struct OPassetLoader {
 	const OPchar Extension[8];
 	const OPchar* AssetTypePath;
 	OPint AssetSize;
 	OPint (*Load)(const OPchar* path, void** assetOut);
 	OPint(*Unload)(void* assetIn);
 	OPint(*Reload)(const OPchar* path, void** assetOut);
-} OPassetLoader;
+};
+typedef struct OPassetLoader OPassetLoader;
 
-typedef struct{
+struct OPasset {
 	void* Asset;
 	OPint(*Unload)(void* assetIn);
 	OPint Dirty;
@@ -50,35 +51,36 @@ typedef struct{
 	OPchar* AbsolutePath;
 	i64 LastChange;
 #endif
-} OPasset;
+};
+typedef struct OPasset OPasset;
 
-//  _____ _       _           _     
-// / ____| |     | |         | |    
-//| |  __| | ___ | |__   __ _| |___ 
+//  _____ _       _           _
+// / ____| |     | |         | |
+//| |  __| | ___ | |__   __ _| |___
 //| | |_ | |/ _ \| '_ \ / _` | / __|
 //| |__| | | (_) | |_) | (_| | \__ \
 // \_____|_|\___/|_.__/ \__,_|_|___/
-//                              
+//
 
 extern OPhashMap OP_CMAN_HASHMAP;
 extern OPassetLoader* OP_CMAN_ASSETLOADERS;
 extern OPint OP_CMAN_ASSET_LOADER_COUNT;
 extern OPlinkedList* OP_CMAN_PURGE;
 
-// ______                _   _                 
-//|  ____|              | | (_)                
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+// ______                _   _
+//|  ____|              | | (_)
+//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-//                                                         
+//
 
 /* *Debug Only*
  * Watches the files of loaded resources for changes
  * Looks at Last Write Time for each file once every second
  * When a change happens the Reload method is called
  */
-void OPcmanUpdate(OPtimer* timer);
+void OPcmanUpdate(struct OPtimer* timer);
 
 /* Adds a loader to be used when OPcmanInit is called
 * @param loader Pointer to a defined asset loader

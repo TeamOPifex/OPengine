@@ -9,7 +9,7 @@
 #include "./Math/include/OPvec2.h"
 #include "./Human/include/Rendering/OPMvertex.h"
 
-typedef struct {
+struct OPfont {
 	OPvector* glyphs;
 	OPfontAtlas* atlas;
 	OPtexture* texture;
@@ -44,17 +44,20 @@ typedef struct {
 
 	OPfloat underlinePosition;
 	OPfloat underlineThickness;
-} OPfont;
+};
+typedef struct OPfont OPfont;
 
-typedef struct {
+struct OPfontBuiltTextNode {
 	OPmeshPacked* packedMesh;
 	OPfloat Width;
-} OPfontBuiltTextNode;
+};
+typedef struct OPfontBuiltTextNode OPfontBuiltTextNode;
 
-typedef struct {
+struct OPfontUserTextNode {
 	OPmesh mesh;
 	OPfloat Width;
-} OPfontUserTextNode;
+};
+typedef struct OPfontUserTextNode OPfontUserTextNode;
 
 OPint OPfontLoad(OPchar* filename, OPfont** data);
 OPint OPfontUnload(OPfont* font);

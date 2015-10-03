@@ -3,10 +3,10 @@
 
 #include "./Math/include/OPvec2.h"
 
-typedef struct {
+struct OPbox2D {
 	OPvec2 position;
 	OPvec2 size;
-} OPbox2D;
+};
 
 inline OPbox2D OPbox2DCreate(OPvec2 pos, OPvec2 size) {
 	OPbox2D tmp = {

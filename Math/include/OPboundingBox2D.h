@@ -3,10 +3,10 @@
 
 #include "./Math/include/OPvec2.h"
 
-typedef struct {
+struct OPboundingBox2D {
 	OPvec2 min;
 	OPvec2 max;
-} OPboundingBox2D;
+};
 
 /* Creates an OPboundingBox2D
  * @param min Minimum bounds of the bounding box to create

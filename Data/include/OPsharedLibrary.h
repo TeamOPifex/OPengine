@@ -10,10 +10,11 @@
 #define OPEXPORT extern "C"
 #endif
 
-typedef struct {
+struct OPsharedLibrarySymbol {
 	void* Symbol;
 	const OPchar* _symbolName;
-} OPsharedLibrarySymbol;
+};
+typedef struct OPsharedLibrarySymbol OPsharedLibrarySymbol;
 
 typedef struct {
 #ifdef OPIFEX_WINDOWS

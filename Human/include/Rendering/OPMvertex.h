@@ -24,55 +24,55 @@ enum OPMKeyFeatures {
 
 OPint OPMhasFeature(ui32 features, ui32 feature);
 
-typedef struct {
+struct OPMmeta {
 	OPchar* Name;
 	OPchar* Type;
 	OPvec3 Position;
 	OPvec3 Rotation;
 	OPvec3 Scale;
-} OPMmeta;
+};
 
-typedef struct {
+struct OPMvertex {
 	OPvec3 Position;
 	OPvec3 Normal;
 	OPvec3 Tangent;
 	OPvec2 TexCoord;
-} OPMvertex;
+};
 
-typedef struct {
+struct OPMvertexNormalUV {
 	OPvec3 Position;
 	OPvec3 Normal;
 	OPvec2 UV;
-} OPMvertexNormalUV;
+};
 
-typedef struct {
+struct OPMvertexColor {
 	OPvec3 Position;
 	OPvec3 Normal;
 	OPvec3 Tangent;
 	OPvec3 Color;
-} OPMvertexColor;
+};
 
 
-typedef struct {
+struct OPMvertexSkin {
 	OPvec3 Position;
 	OPvec3 Normal;
 	OPvec3 Tangent;
 	OPvec2 TexCoord;
 	OPvec4 Bones;
 	OPvec4 BoneWeights;
-} OPMvertexSkin;
+};
 
-typedef struct {
+struct OPvertexTex {
 	OPvec3 Position;
 	OPvec2 TexCoord;
-} OPvertexTex;
+};
 
-typedef struct {
+struct OPvertices {
 	i8* data;
 	ui32 features;
 	ui32 size;
 	ui32 count;
-} OPvertices;
+};
 
 OPvertices* OPverticesCreate(ui32 count, ui32 features);
 void OPverticesWriteVec2(OPvertices* vertices, OPvec2* data, ui32 feature);

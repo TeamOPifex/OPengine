@@ -21,7 +21,7 @@
  *	The OPtimer struct is responsible for keeping track of
  *	time elapsed between ticks, and total time over all updates.
  */
-typedef struct{
+struct OPtimer{
 	ui64 TotalGametime;
 	ui64 Elapsed;
 #if defined(OPIFEX_WINDOWS)
@@ -31,7 +31,8 @@ typedef struct{
 #else
 	ui64 TimeLastTick;
 #endif
-} OPtimer;
+} ;
+typedef struct OPtimer OPtimer;
 
 //---- Function prototypes ---------------------------------------------------
 // prevent name mangling if compiling with c++
@@ -47,7 +48,7 @@ extern "C" {
  *	@param timer Pointer to new instance of OPtimer
  *	@return Error code on failure
  */
-OPint OPtimerCreate(OPtimer* timer);
+OPint OPtimerCreate(struct OPtimer* timer);
 
 //----------------------------------------------------------------------------
 /**
@@ -57,7 +58,7 @@ OPint OPtimerCreate(OPtimer* timer);
  *	if the OPtimer pointer is null before operating on it.
  * @param timer Pointer to an OPtimer instance which will be updated.
  */
-void OPtimerTick(OPtimer* timer);
+void OPtimerTick(struct OPtimer* timer);
 
 //----------------------------------------------------------------------------
 /**
@@ -69,7 +70,7 @@ void OPtimerTick(OPtimer* timer);
  * @param timer Pointer to an OPtimer instance.
  * @return Fractional time in milliseconds since the last tick.
  */
-OPfloat  OPtimerDelta(OPtimer* timer);
+OPfloat  OPtimerDelta(struct OPtimer* timer);
 
 //----------------------------------------------------------------------------
 /**
@@ -82,7 +83,7 @@ OPfloat  OPtimerDelta(OPtimer* timer);
  * @param timer Pointer to an OPtimer instance.
  * @return Whole milliseconds from the first tick, to the most recent.
  */
-ui64 OPtimerTotal(OPtimer* timer);
+ui64 OPtimerTotal(struct OPtimer* timer);
 
 #ifdef __cplusplus
 }

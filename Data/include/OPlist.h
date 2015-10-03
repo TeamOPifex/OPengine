@@ -12,12 +12,13 @@ extern "C" {
 	/*
 	 * An OPlist
 	*/
-	typedef struct{
+	struct OPlist {
 		ui8* _indices;
 		OPuint _capacity;
 		OPuint _size;
 		OPuint _elementSize;
-	} OPlist;
+	};
+	typedef struct OPlist OPlist;
 
 	/* Creates a new OPlist
 	 * @param Starting count to allocate for the list
@@ -25,7 +26,7 @@ extern "C" {
 	 * @return A new OPlist
 	*/
 	OPlist* OPlistCreate(OPint capacity, OPint elementSize);
-	
+
 	/* Destroys an OPlist
 	 * @param The OPlist to destroy
 	 * @return Success Result
@@ -59,7 +60,7 @@ extern "C" {
 	 * @return Success Result
 	*/
 	OPint OPlistInsert(OPlist* list, ui8* value, OPuint index);
-	
+
 	/* Removes an element at an index of an OPlist
 	 * @param list The OPlist to remove from
 	 * @param index The index into the OPlist to remove

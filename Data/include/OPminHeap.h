@@ -14,11 +14,12 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-	typedef struct{
+	struct OPminHeap{
 		OPint* _indices;
 		OPuint _capacity;
 		OPuint _size;
-	} OPminHeap;
+	};
+	typedef struct OPminHeap OPminHeap;
 
 	/* Creates an OPminHeap
 	 * @param capacity Number of elements to store

@@ -6,13 +6,13 @@
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Rendering/OPcam.h"
 
-typedef struct {
+struct OPtexture3D {
 	OPvec3 Position;
 	OPvec3 Rotation;
 	OPvec3 Scale;
 	OPtexture* Texture;
 	OPeffect* Effect;
-} OPtexture3D;
+};
 
 OPtexture3D* OPtexture3DCreate(OPtexture* texture, OPeffect* effect);
 void OPtexture3DDestroy(OPtexture3D* character);

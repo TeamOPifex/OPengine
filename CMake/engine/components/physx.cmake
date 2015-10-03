@@ -8,7 +8,7 @@ macro(add_opifex_physx_set_source)
 		SET(_PHYSX_SOURCE 1)
 		SET(_PHYSX_PATH "${PHYSX_PATH}")
 	else()
-		# message(STATUS "PhysX PATH WAS NOT SET ${PHYSX_PATH}")
+		message(STATUS "PhysX PATH WAS NOT SET ${PHYSX_PATH}")
 		SET(_PHYSX_PATH "${PROJECT_SOURCE_DIR}/External/PhysX")
 	endif()
 
