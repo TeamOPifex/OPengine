@@ -3,6 +3,7 @@
 #include "./Core/include/OPmemory.h"
 #include "./Data/include/OPcman.h"
 #include "./Core/include/OPlog.h"
+#include "./Data/include/OPstring.h"
 
 void OPscriptAddLoader() {
 
@@ -25,7 +26,7 @@ void OPscriptAddLoader() {
 		(OPint(*)(const OPchar*, void**))OPscriptReload
 	};
 	OPcmanAddLoader(&loaderJS);
-	
+
 }
 
 OPint OPscriptLoad(const OPchar* filename, OPscript** script) {
@@ -33,6 +34,7 @@ OPint OPscriptLoad(const OPchar* filename, OPscript** script) {
 	OPstream* str = OPreadFile(filename);
 	(*script)->data = (OPchar*)OPalloc(str->Length);
 	OPmemcpy((*script)->data, str->Data, str->Length);
+	(*script)->filename = OPstringCopy(filename);
 
 #ifdef _DEBUG
 	(*script)->changed = 0;
@@ -58,6 +60,7 @@ OPint OPscriptReload(const OPchar* filename, OPscript** script) {
 
 OPint OPscriptUnload(OPscript* script) {
 	OPfree(script->data);
+	OPfree(script->filename);
 	OPfree(script);
 	return 1;
 }

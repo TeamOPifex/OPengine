@@ -12,16 +12,14 @@ else()
 	find_package(OpenGL REQUIRED)
 
 
-	include(${CMAKE_CURRENT_LIST_DIR}/find/OpenAL.cmake)
+	if(${OPIFEX_OPTION_AUDIO})
+		include(${CMAKE_CURRENT_LIST_DIR}/find/OpenAL.cmake)
+		include(${CMAKE_CURRENT_LIST_DIR}/find/OggVorbis.cmake)
+	endif()
 
 	if(APPLE)
-		include(${CMAKE_CURRENT_LIST_DIR}/find/OggVorbis.cmake)
 		include(${CMAKE_CURRENT_LIST_DIR}/find/IOKit.cmake)
 		find_package(Threads)
-	elseif(UNIX)
-		include(${CMAKE_CURRENT_LIST_DIR}/find/OggVorbis.cmake)
-	else()
-		include(${CMAKE_CURRENT_LIST_DIR}/find/OggVorbis.cmake)
 	endif()
 
 endif()

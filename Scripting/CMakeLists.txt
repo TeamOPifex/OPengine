@@ -52,8 +52,6 @@ add_source_group(src/JavaScript/Pipeline "${PROJECT_SOURCE_DIR}/Scripting/src/Ja
 #########################################
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
-	${OPENAL_LIBRARY}
-	#GLEW_158
 	LODEPNG
 	1_Core
 	2_Data
@@ -61,7 +59,6 @@ set(ALL_LIBS
 	4_Performance
 	5_Human
 	7_Pipeline
-	#glfw ${GLFW_LIBRARIES}
 )
 
 #########################################

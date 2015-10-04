@@ -98,6 +98,16 @@ JS_RETURN_VAL _OPfree(const JS_ARGS& args) {
  	JS_RETURN_NULL
 }
 
+// OP.log
+JS_RETURN_VAL _OPlog(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    String::Utf8Value str(args[0]->ToString());
+    OPlog(*str);
+
+ 	JS_RETURN_NULL
+}
+
 
 // Initialize the Core
 void OPscriptNodeWrapperCore(Handle<Object> exports) {
@@ -109,6 +119,7 @@ void OPscriptNodeWrapperCore(Handle<Object> exports) {
     JS_SET_METHOD(exports, "start", _OPstart);
     JS_SET_METHOD(exports, "alloc", _OPalloc);
     JS_SET_METHOD(exports, "allocZero", _OPallocZero);
+    JS_SET_METHOD(exports, "log", _OPlog);
     JS_SET_METHOD(exports, "free", _OPfree);
 }
 

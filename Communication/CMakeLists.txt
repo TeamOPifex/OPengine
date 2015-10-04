@@ -24,7 +24,6 @@ add_source_group(src/ "${PROJECT_SOURCE_DIR}/Communication/src" COMMUNICATION_SR
 #########################################
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
-	${OPENAL_LIBRARY}
 	1_Core
 	2_Data
 	3_Math

@@ -5,6 +5,7 @@
 
 struct OPscript {
 	OPchar* data;
+	OPchar* filename;
 #ifdef _DEBUG
 	i8 changed;
 #endif

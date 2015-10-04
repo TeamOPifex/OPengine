@@ -54,9 +54,7 @@ void _OPscriptV8Log(const v8::FunctionCallbackInfo<v8::Value>& args) {
 
 void _OPscriptV8SetConsole(Handle<ObjectTemplate> objTemplate) {
     Handle<ObjectTemplate> console = JS_NEW_OBJECT_TEMPLATE();
-    console->Set(JS_NEW_STRING("log"),
-            JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8Log));
-
+    console->Set(JS_NEW_STRING("log"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8Log));
     objTemplate->Set(JS_NEW_STRING("console"), console);
 }
 
@@ -76,9 +74,11 @@ OPchar* _OPscriptV8GetDir(const OPchar* path) {
 }
 
 
-Handle<Value> _OPjavaScriptRequireScript(OPscript* script, OPchar* dir) {
+ OPint _OPjavaScriptRequireScript(OPscript* script, OPchar* dir, Handle<Value>* result) {
     OPjavaScriptV8Compiled compiled;
-    OPjavaScriptV8Compile(&compiled, script, dir);
+    if(!OPjavaScriptV8Compile(&compiled, script, dir)) {
+		return 0;
+	}
 
     OPjavaScriptV8Run(&compiled);
     Handle<Context> localContext = Local<Context>::New(isolate, compiled.Context);
@@ -87,8 +87,8 @@ Handle<Value> _OPjavaScriptRequireScript(OPscript* script, OPchar* dir) {
     Local<Object> global = localContext->Global();
     Local<Value> moduleVal = global->Get(JS_NEW_STRING("module"));
     Local<Object> module = moduleVal->ToObject();
-    Handle<Value> exports = module->Get(JS_NEW_STRING("exports"));
-    return exports;
+    *result = module->Get(JS_NEW_STRING("exports"));
+    return 1;
 }
 
 OPint loadCount = 0;
@@ -98,7 +98,7 @@ OPscript* loadedScripts[CACHED_FILE_COUNT];
 #endif
 OPchar* stored[CACHED_FILE_COUNT];
 
-Handle<Value> _OPjavaScriptRequire(OPchar* pathToLoad) {
+OPint _OPjavaScriptRequire(OPchar* pathToLoad, Handle<Value>* result) {
     OPlog("Loading '%s' for Require", pathToLoad);
 
     for(OPint i = 0; i < loadCount; i++) {
@@ -109,12 +109,17 @@ Handle<Value> _OPjavaScriptRequire(OPchar* pathToLoad) {
 			if(loadedScripts[i]->changed) {
 				// The script was changed, releoad the cache
 			    OPchar* tmpDir = _OPscriptV8GetDir(pathToLoad);
-				Handle<Value> tmpResult = _OPjavaScriptRequireScript(loadedScripts[i], tmpDir);
+				Handle<Value> tmpResult;
+				if(!_OPjavaScriptRequireScript(loadedScripts[i], tmpDir, &tmpResult)) {
+					return 0;
+				}
 				loaded[loadCount] = Persistent<Value, CopyablePersistentTraits<Value> >(isolate, tmpResult);
-				return tmpResult;
+				*result = tmpResult;
+				return 1;
 			}
 			#endif
-            return Local<Value>::New(isolate, loaded[i]);
+			*result = Local<Value>::New(isolate, loaded[i]);
+            return 1;
         }
     }
 
@@ -124,10 +129,13 @@ Handle<Value> _OPjavaScriptRequire(OPchar* pathToLoad) {
 
     OPchar *dir = _OPscriptV8GetDir(pathToLoad);
 
-    Handle<Value> result = _OPjavaScriptRequireScript(scriptSource, dir);
+    Handle<Value> resultTemp;
+	if(!_OPjavaScriptRequireScript(scriptSource, dir, &resultTemp)) {
+		return 0;
+	}
 
 
-    loaded[loadCount] = Persistent<Value, CopyablePersistentTraits<Value> >(isolate, result);
+    loaded[loadCount] = Persistent<Value, CopyablePersistentTraits<Value> >(isolate, resultTemp);
     stored[loadCount] = OPstringCopy(pathToLoad);
 	#ifdef _DEBUG
 	loadedScripts[loadCount] = scriptSource;
@@ -136,7 +144,9 @@ Handle<Value> _OPjavaScriptRequire(OPchar* pathToLoad) {
 
     OPfree(dir);
 
-    return result;
+	*result = resultTemp;
+
+    return 1;
 }
 
 
@@ -294,11 +304,15 @@ void _OPscriptV8Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 
     if (OPJAVASCRIPTV8_REQUIRE == NULL || !OPJAVASCRIPTV8_REQUIRE(args)) {
         OPchar *pathToLoad = _OPscriptV8NormalizePath(arg0);
-        args.GetReturnValue().Set(_OPjavaScriptRequire(pathToLoad));
+		Handle<Value> result;
+		if(_OPjavaScriptRequire(pathToLoad, &result)) {
+	        args.GetReturnValue().Set(result);
+		}
         OPfree(pathToLoad);
     }
 
 }
+
 void _OPscriptV8SetImmediate(const v8::FunctionCallbackInfo<v8::Value>& args) {
     SCOPE_AND_ISOLATE;
 
@@ -308,6 +322,43 @@ void _OPscriptV8SetImmediate(const v8::FunctionCallbackInfo<v8::Value>& args) {
     Handle<Value> argv[1] = { JS_NEW_BOOL(true) };
     Local<Function> callback = Local<Function>::Cast(args[0]);
     callback->Call(obj, 1, argv);
+}
+
+void ReportException(v8::Isolate* isolate, v8::TryCatch* try_catch) {
+	v8::HandleScope handle_scope(isolate);
+	v8::String::Utf8Value exception(try_catch->Exception());
+	v8::Handle<v8::Message> message = try_catch->Message();
+
+	if (message.IsEmpty()) {
+		// V8 didn't provide any extra information about this error; just
+		// print the exception.
+		OPlog("%s\n", *exception);
+	} else {
+		// Print (filename):(line number): (message).
+		v8::String::Utf8Value filename(message->GetScriptOrigin().ResourceName());
+		int linenum = message->GetLineNumber();
+		OPlog("### %s:%i: %s\n", *filename, linenum, *exception);
+
+		// Print line of source code.
+		v8::String::Utf8Value sourceline(message->GetSourceLine());
+		OPlog("### %s\n", *sourceline);
+
+		// Print wavy underline (GetUnderline is deprecated).
+		int start = message->GetStartColumn();
+		for (int i = 0; i < start; i++) {
+			OPlg(" ");
+		}
+		int end = message->GetEndColumn();
+		for (int i = start; i < end; i++) {
+			OPlg("^");
+		}
+		OPlg("\n");
+
+		v8::String::Utf8Value stack_trace(try_catch->StackTrace());
+		if (stack_trace.length() > 0) {
+			OPlog("### %s\n", *stack_trace);
+		}
+	}
 }
 
 OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, const OPchar* dir) {
@@ -337,9 +388,12 @@ OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, 
 
 	Handle<String> source = JS_NEW_STRING(script->data);
 
-	v8::ScriptOrigin origin(JS_NEW_STRING("name"));
+	TryCatch trycatch;
+	v8::ScriptOrigin origin(JS_NEW_STRING(script->filename));
 	Local<Script> compiledV8 = v8::Script::Compile(source, &origin);
 	if (compiledV8.IsEmpty()) {
+		ReportException(isolate, &trycatch);
+
 		return 0;
 	}
 
@@ -376,9 +430,7 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
     TryCatch trycatch;
     Local<Value> result = compiled->Run();
     if (result.IsEmpty()) {
-        Local<Value> exception = trycatch.Exception();
-        String::Utf8Value exception_str(exception);
-        OPlog("OPscriptV8: Exception: %s", *exception_str);
+		ReportException(isolate, &trycatch);
 
         return Persistent<Value>(isolate, JS_NEW_NULL());
     }
