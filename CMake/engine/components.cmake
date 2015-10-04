@@ -11,3 +11,5 @@ include(${CMAKE_CURRENT_LIST_DIR}/components/fmod.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/components/oggvorbis.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/components/steam.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/components/xinput.cmake)
+
+include(${CMAKE_CURRENT_LIST_DIR}/components/assimp.cmake)

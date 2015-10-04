@@ -27,6 +27,7 @@ macro(add_external_opifex_includes)
 	add_opifex_physx_include()
 	add_opifex_v8_include()
 	add_opifex_fmod_include()
+	add_opifex_assimp_include()
 
 	# message(STATUS "Added External OPifex includes")
 endmacro(add_external_opifex_includes)
