@@ -22,7 +22,6 @@ add_asset_dir(APPLICATION_SRC)
 # DEPENDENT LIBRARIES
 #########################################
 set(ALL_LIBS
-	${OPENAL_LIBRARY}
 	LODEPNG
 	1_Core
 	2_Data

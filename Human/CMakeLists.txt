@@ -58,14 +58,11 @@ add_source_group(src/Utilities "${PROJECT_SOURCE_DIR}/Human/src/Utilities" HUMAN
 #########################################
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
-	${OPENAL_LIBRARY}
-	#GLEW_158
 	LODEPNG
 	1_Core
 	2_Data
 	3_Math
 	4_Performance
-	# glfw ${GLFW_LIBRARIES}
 )
 
 
