@@ -30,7 +30,7 @@ JS_RETURN_VAL _OPskeletonUpdateSelf(const JS_ARGS& args) {
 JS_RETURN_VAL _OPskeletonGet(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPlog("Skeleton Get");
+    // OPlog("Skeleton Get");
 
     OPskeleton* skeletonPtr = JS_GET_ARG_PTR(args, 0, OPskeleton);
     String::Utf8Value str(args[1]->ToString());
@@ -42,11 +42,11 @@ JS_RETURN_VAL _OPskeletonGet(const JS_ARGS& args) {
 JS_RETURN_VAL _OPskeletonGetSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPlog("Skeleton Get Self");
+    // OPlog("Skeleton Get Self");
 
     OPskeleton* skeletonPtr = JS_GET_PTR(args.This(), OPskeleton);
     String::Utf8Value str(args[0]->ToString());
-    OPlog("Find bone %s", *str);
+    // OPlog("Find bone %s", *str);
     i16 result = OPskeletonGet(skeletonPtr, *str);
 
     JS_RETURN(JS_NEW_NUMBER(result));
@@ -55,7 +55,7 @@ JS_RETURN_VAL _OPskeletonGetSelf(const JS_ARGS& args) {
 JS_RETURN_VAL _OPskeletonLocalTranslate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPlog("Skeleton Get");
+    // OPlog("Skeleton Get");
 
     OPskeleton* skeletonPtr = JS_GET_ARG_PTR(args, 0, OPskeleton);
     i16 index = args[1]->IntegerValue();
@@ -72,7 +72,7 @@ JS_RETURN_VAL _OPskeletonLocalTranslate(const JS_ARGS& args) {
 JS_RETURN_VAL _OPskeletonLocalTranslateSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPlog("Skeleton Get");
+    // OPlog("Skeleton Get");
 
     OPskeleton* skeletonPtr = JS_GET_PTR(args.This(), OPskeleton);
     i16 index = args[0]->IntegerValue();
@@ -133,7 +133,7 @@ JS_RETURN_VAL _OPskeletonCreate(const JS_ARGS& args) {
 
     for(OPuint i = 0 ; i < count; i++) {
       hierarchy[i] = arr->Get(i)->NumberValue();
-      OPlog("h: %d", hierarchy[i]);
+      // OPlog("h: %d", hierarchy[i]);
     }
 
 
@@ -142,18 +142,18 @@ JS_RETURN_VAL _OPskeletonCreate(const JS_ARGS& args) {
     for(OPuint i = 0 ; i < count; i++) {
       Local<Object> item = Local<Object>::Cast(arrPose->Get(i));
       pose[i] = *JS_GET_PTR(item, OPmat4);
-      OPmat4Log("Pose", pose[i]);
+      // OPmat4Log("Pose", pose[i]);
     }
 
 
     Local<Array> arrNames = Local<Array>::Cast(args[2]);
     count =  arrNames->Length();
-    OPlog("Name Count: %d, %d", count, sizeof(OPchar*));
-    OPlog("Pos %p", names);
+    // OPlog("Name Count: %d, %d", count, sizeof(OPchar*));
+    // OPlog("Pos %p", names);
     for(OPuint i = 0 ; i < count; i++) {
-        OPlog("C: %d", i);
+        // OPlog("C: %d", i);
         String::Utf8Value name(arrNames->Get(i)->ToString());
-        OPlog("Name: %s", *name);
+        // OPlog("Name: %s", *name);
         names[i] = OPstringCopy(*name);
     }
 

@@ -16,7 +16,7 @@
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 
-typedef struct OPaudioDescription {
+struct OPaudioDescription {
 	ui64  Length;
 	ui32 SamplesPerSecond;
 	ui16 BitsPerSample;

@@ -59,7 +59,7 @@ JS_RETURN_VAL _OPvec3Set(const JS_ARGS& args) {
 JS_RETURN_VAL _OPvec3AddSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPlog("Setting Vec3 Self");
+    // OPlog("Setting Vec3 Self");
 
     OPvec3* ptr = JS_GET_PTR(args.This(), OPvec3);
     ptr->x += args[0]->NumberValue();
