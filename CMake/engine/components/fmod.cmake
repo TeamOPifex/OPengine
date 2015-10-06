@@ -76,33 +76,49 @@ macro(add_opifex_fmod_windows APPLICATION_TARGET)
 
 
 	if(${OPIFEX_OS_WIN64})
-		target_link_libraries(${APPLICATION_TARGET}  ${PROJECT_SOURCE_DIR}/External/FMod/lib/win64/fmod64_vc.lib)
-		target_link_libraries(${APPLICATION_TARGET}  ${PROJECT_SOURCE_DIR}/External/FMod/lib/win64/fmodL64_vc.lib)
-		copy_file_to_binaries(/External/FMod/lib/win64/fmod64.dll)
-		copy_file_to_binaries(/External/FMod/lib/win64/fmodL64.dll)
-	elseif(${OPIFEX_OS_WIN32})
-		target_link_libraries(${APPLICATION_TARGET}  ${PROJECT_SOURCE_DIR}/External/FMod/lib/win32/fmod_vc.lib)
-		target_link_libraries(${APPLICATION_TARGET}  ${PROJECT_SOURCE_DIR}/External/FMod/lib/win32/fmodL_vc.lib)
-		copy_file_to_binaries(/External/FMod/lib/win32/fmod.dll)
-		copy_file_to_binaries(/External/FMod/lib/win32/fmodL.dll)
-	endif()
 
-	if(${OPIFEX_OPTION_RELEASE})
-		if(${OPIFEX_OS_WIN64})
-			copy_to_folder(${APPLICATION_TARGET} "/External/FMod/lib/" "fmod64.dll" "/Application/Release" ${OPIFEX_OS_WINDOWS})
-			copy_to_folder(${APPLICATION_TARGET} "/External/FMod/lib/" "fmodL64.dll" "/Application/Release" ${OPIFEX_OS_WINDOWS})
-		else()
-			copy_to_folder(${APPLICATION_TARGET} "/External/FMod/lib/" "fmod.dll" "/Application/Release" ${OPIFEX_OS_WINDOWS})
-			copy_to_folder(${APPLICATION_TARGET} "/External/FMod/lib/" "fmodL.dll" "/Application/Release" ${OPIFEX_OS_WINDOWS})
+		SET(_FMOD_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/FMOD/lib/debug/win64/")
+		if(_FMOD_SOURCE)
+			SET(_FMOD_BINARY_LOCATION "${_FMOD_PATH}\\lib\\")
 		endif()
-	else()
-		if(${OPIFEX_OS_WIN64})
-			copy_to_folder_msvc(${APPLICATION_TARGET} "/External/FMod/lib/" "fmod64.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
-			copy_to_folder_msvc(${APPLICATION_TARGET} "/External/FMod/lib/" "fmodL64.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
-		else()
-			copy_to_folder_msvc(${APPLICATION_TARGET} "/External/FMod/lib/" "fmod.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
-			copy_to_folder_msvc(${APPLICATION_TARGET} "/External/FMod/lib/" "fmodL.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+
+		copy_to_binaries(${_FMOD_BINARY_LOCATION}fmod64_vc.lib)
+		copy_to_binaries(${_FMOD_BINARY_LOCATION}fmodL64_vc.lib)
+
+		copy_to_binaries(${_FMOD_BINARY_LOCATION}fmod64.dll)
+		copy_to_binaries(${_FMOD_BINARY_LOCATION}fmodL64.dll)
+
+
+		link_from_binaries(${APPLICATION_TARGET}
+			fmod64_vc.lib
+			fmodL64_vc.lib
+			)
+
+		copy_from_binaries(${APPLICATION_TARGET} "fmod64.dll" "/Application/Debug")
+		copy_from_binaries(${APPLICATION_TARGET} "fmodL64.dll" "/Application/Debug")
+
+	elseif(${OPIFEX_OS_WIN32})
+
+
+		SET(_FMOD_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/FMOD/lib/debug/win32/")
+		if(_FMOD_SOURCE)
+			SET(_FMOD_BINARY_LOCATION "${_FMOD_PATH}\\lib\\")
 		endif()
+
+		copy_to_binaries(${_FMOD_BINARY_LOCATION}fmod_vc.lib)
+		copy_to_binaries(${_FMOD_BINARY_LOCATION}fmodL_vc.lib)
+
+		copy_to_binaries(${_FMOD_BINARY_LOCATION}fmod.dll)
+		copy_to_binaries(${_FMOD_BINARY_LOCATION}fmodL.dll)
+
+		link_from_binaries(${APPLICATION_TARGET}
+			fmod_vc.lib
+			fmodL_vc.lib
+			)
+
+		copy_from_binaries(${APPLICATION_TARGET} "fmod.dll" "/Application/Debug")
+		copy_from_binaries(${APPLICATION_TARGET} "fmodL.dll" "/Application/Debug")
+
 	endif()
 
 

@@ -218,43 +218,61 @@ macro(add_opifex_physx_windows APPLICATION_TARGET)
 
 	else()
 
-		target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/PhysX3DEBUG_x86.lib)
-		target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/PhysXProfileSDKDEBUG.lib)
-		target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/LowLevelDEBUG.lib)
-		target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/LowLevelClothDEBUG.lib)
-		target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/PhysX3CharacterKinematicDEBUG_x86.lib)
-		target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/PhysX3CommonDEBUG_x86.lib)
-		target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/PhysX3CookingDEBUG_x86.lib)
-		target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/PhysX3ExtensionsDEBUG.lib)
-		target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/PhysX3VehicleDEBUG.lib)
-		target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/PhysXVisualDebuggerSDKDEBUG.lib)
-		target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/PxTaskDEBUG.lib)
-		target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/PvdRuntimeDEBUG.lib)
-		target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/SceneQueryDEBUG.lib)
-		target_link_libraries(${APPLICATION_TARGET} ${PROJECT_SOURCE_DIR}/External/PhysX/lib/win32/SimulationControllerDEBUG.lib)
+		SET(_PHYSX_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/PhysX/lib/debug/win32/")
+		SET(_PHYSX_DLL_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/PhysX/lib/debug/win32/")
+		if(_PHYSX_SOURCE)
+			SET(_PHYSX_BINARY_LOCATION "${_PHYSX_PATH}\\Lib\\vc12win32\\")
+			SET(_PHYSX_DLL_LOCATION "${_PHYSX_PATH}\\Bin\\vc12win32\\")
+		endif()
 
-		copy_file_to_binaries(/External/PhysX/lib/win32/PhysX3DEBUG_x86.lib)
-		copy_file_to_binaries(/External/PhysX/lib/win32/PhysXProfileSDKDEBUG.lib)
-		copy_file_to_binaries(/External/PhysX/lib/win32/LowLevelDEBUG.lib)
-		copy_file_to_binaries(/External/PhysX/lib/win32/LowLevelClothDEBUG.lib)
-		copy_file_to_binaries(/External/PhysX/lib/win32/PhysX3CharacterKinematicDEBUG_x86.lib)
-		copy_file_to_binaries(/External/PhysX/lib/win32/PhysX3CommonDEBUG_x86.lib)
-		copy_file_to_binaries(/External/PhysX/lib/win32/PhysX3CookingDEBUG_x86.lib)
-		copy_file_to_binaries(/External/PhysX/lib/win32/PhysX3ExtensionsDEBUG.lib)
-		copy_file_to_binaries(/External/PhysX/lib/win32/PhysX3VehicleDEBUG.lib)
-		copy_file_to_binaries(/External/PhysX/lib/win32/PhysXVisualDebuggerSDKDEBUG.lib)
-		copy_file_to_binaries(/External/PhysX/lib/win32/PxTaskDEBUG.lib)
-		copy_file_to_binaries(/External/PhysX/lib/win32/PvdRuntimeDEBUG.lib)
-		copy_file_to_binaries(/External/PhysX/lib/win32/SceneQueryDEBUG.lib)
-		copy_file_to_binaries(/External/PhysX/lib/win32/SimulationControllerDEBUG.lib)
+		message("${PHYSX_PATH} ${_PHYSX_SOURCE}")
 
-		copy_to_folder(${APPLICATION_TARGET} "/External/PhysX/lib/" "PhysX3CharacterKinematicDEBUG_x86.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
-		copy_to_folder(${APPLICATION_TARGET} "/External/PhysX/lib/" "PhysX3CommonDEBUG_x86.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
-		copy_to_folder(${APPLICATION_TARGET} "/External/PhysX/lib/" "PhysX3CookingDEBUG_x86.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
-		copy_to_folder(${APPLICATION_TARGET} "/External/PhysX/lib/" "PhysX3DEBUG_x86.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
-		copy_to_folder(${APPLICATION_TARGET} "/External/PhysX/lib/" "PhysX3GpuDEBUG_x86.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
-		copy_to_folder(${APPLICATION_TARGET} "/External/PhysX/lib/" "PhysXDevice32.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
-		copy_to_folder(${APPLICATION_TARGET} "/External/PhysX/lib/" "nvToolsExt32_1.dll" "/Application/Debug" ${OPIFEX_OS_WINDOWS})
+		copy_to_binaries(${_PHYSX_BINARY_LOCATION}PhysX3DEBUG_x86.lib)
+		copy_to_binaries(${_PHYSX_BINARY_LOCATION}PhysXProfileSDKDEBUG.lib)
+		copy_to_binaries(${_PHYSX_BINARY_LOCATION}LowLevelDEBUG.lib)
+		copy_to_binaries(${_PHYSX_BINARY_LOCATION}LowLevelClothDEBUG.lib)
+		copy_to_binaries(${_PHYSX_BINARY_LOCATION}PhysX3CharacterKinematicDEBUG_x86.lib)
+		copy_to_binaries(${_PHYSX_BINARY_LOCATION}PhysX3CommonDEBUG_x86.lib)
+		copy_to_binaries(${_PHYSX_BINARY_LOCATION}PhysX3CookingDEBUG_x86.lib)
+		copy_to_binaries(${_PHYSX_BINARY_LOCATION}PhysX3ExtensionsDEBUG.lib)
+		copy_to_binaries(${_PHYSX_BINARY_LOCATION}PhysX3VehicleDEBUG.lib)
+		copy_to_binaries(${_PHYSX_BINARY_LOCATION}PhysXVisualDebuggerSDKDEBUG.lib)
+		copy_to_binaries(${_PHYSX_BINARY_LOCATION}PxTaskDEBUG.lib)
+		copy_to_binaries(${_PHYSX_BINARY_LOCATION}PvdRuntimeDEBUG.lib)
+		copy_to_binaries(${_PHYSX_BINARY_LOCATION}SceneQueryDEBUG.lib)
+		copy_to_binaries(${_PHYSX_BINARY_LOCATION}SimulationControllerDEBUG.lib)
+
+		copy_to_binaries(${_PHYSX_DLL_LOCATION}PhysX3CharacterKinematicDEBUG_x86.dll)
+		copy_to_binaries(${_PHYSX_DLL_LOCATION}PhysX3CommonDEBUG_x86.dll)
+		copy_to_binaries(${_PHYSX_DLL_LOCATION}PhysX3CookingDEBUG_x86.dll)
+		copy_to_binaries(${_PHYSX_DLL_LOCATION}PhysX3DEBUG_x86.dll)
+		copy_to_binaries(${_PHYSX_DLL_LOCATION}PhysX3GpuDEBUG_x86.dll)
+		copy_to_binaries(${_PHYSX_DLL_LOCATION}PhysXDevice.dll)
+		copy_to_binaries(${_PHYSX_DLL_LOCATION}nvToolsExt32_1.dll)
+
+		link_from_binaries(${APPLICATION_TARGET}
+			PhysX3DEBUG_x86.lib
+			PhysXProfileSDKDEBUG.lib
+			LowLevelDEBUG.lib
+			LowLevelClothDEBUG.lib
+			PhysX3CharacterKinematicDEBUG_x86.lib
+			PhysX3CommonDEBUG_x86.lib
+			PhysX3CookingDEBUG_x86.lib
+			PhysX3ExtensionsDEBUG.lib
+			PhysX3VehicleDEBUG.lib
+			PhysXVisualDebuggerSDKDEBUG.lib
+			PvdRuntimeDEBUG.lib
+			SceneQueryDEBUG.lib
+			SimulationControllerDEBUG.lib
+			)
+
+		copy_from_binaries(${APPLICATION_TARGET} "PhysX3CharacterKinematicDEBUG_x86.dll" "/Application/Debug")
+		copy_from_binaries(${APPLICATION_TARGET} "PhysX3CommonDEBUG_x86.dll" "/Application/Debug")
+		copy_from_binaries(${APPLICATION_TARGET} "PhysX3CookingDEBUG_x86.dll" "/Application/Debug")
+		copy_from_binaries(${APPLICATION_TARGET} "PhysX3DEBUG_x86.dll" "/Application/Debug")
+		copy_from_binaries(${APPLICATION_TARGET} "PhysX3GpuDEBUG_x86.dll" "/Application/Debug")
+		copy_from_binaries(${APPLICATION_TARGET} "PhysXDevice.dll" "/Application/Debug")
+		copy_from_binaries(${APPLICATION_TARGET} "nvToolsExt32_1.dll" "/Application/Debug")
 
 	endif()
 

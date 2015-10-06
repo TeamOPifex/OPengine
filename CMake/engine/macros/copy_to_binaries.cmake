@@ -1,7 +1,8 @@
-macro(copy_to_binaries FILE_TO_COPY)
+function(copy_to_binaries FILE_TO_COPY)
 
+	string(REPLACE "\\" "/" outputVar "${FILE_TO_COPY}")
 	file(COPY
-		${FILE_TO_COPY}
+		${outputVar}
 		DESTINATION ${PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE}/)
 
-endmacro(copy_to_binaries)
+endfunction(copy_to_binaries)
