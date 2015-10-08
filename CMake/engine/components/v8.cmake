@@ -99,39 +99,70 @@ macro(add_opifex_v8_windows APPLICATION_TARGET)
 		advapi32.lib
 		winmm.lib)
 
-	if(${OPIFEX_OPTION_RELEASE})
 
-		if(${OPIFEX_OS_64})
-			link_from_binaries(${APPLICATION_TARGET}
-				v8.lib)
+
+
+	if(${OPIFEX_OS_64})
+		if(${OPIFEX_OPTION_RELEASE})
+			link_from_binaries(${APPLICATION_TARGET} v8.lib)
 		else()
+
+		endif()
+	else()
+
+		if(${OPIFEX_OPTION_RELEASE})
+
+			SET(_V8_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/V8/lib/release/win32/")
+			if(_V8_SOURCE)
+				SET(_V8_BINARY_LOCATION "${V8_PATH}/out/x64.debug/")
+			endif()
+
 			link_from_binaries(${APPLICATION_TARGET}
 				v8.lib
 				v8_libbase.lib
 				v8_libplatform.lib)
-		endif()
+		else()
 
-	else()
 
-		if(${OPIFEX_OS_64})
+			SET(_V8_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/V8/lib/debug/win32/")
+			SET(_V8_DLL_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/V8/lib/debug/win32/")
+			if(_V8_SOURCE)
+				SET(_V8_BINARY_LOCATION "${V8_PATH}\\build\\Debug\\lib\\")
+				SET(_V8_DLL_LOCATION "${V8_PATH}\\build\\Debug\\")
+			endif()
+
+			copy_to_binaries(${_V8_DLL_LOCATION}icudt.dll)
+			copy_to_binaries(${_V8_DLL_LOCATION}icui18n.dll)
+			copy_to_binaries(${_V8_DLL_LOCATION}icuuc.dll)
+
+			copy_to_binaries(${_V8_BINARY_LOCATION}icuuc.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}icui18n.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_libbase.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_libplatform.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_nosnapshot.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_base_0.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_base_1.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_base_2.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_base_3.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_external_snapshot.lib)
 
 			link_from_binaries(${APPLICATION_TARGET}
-				v8_libbase.lib
-				v8_libplatform.lib
 				icuuc.lib
 				icui18n.lib
+				v8_libbase.lib
+				v8_libplatform.lib
+				v8_nosnapshot.lib
 				v8_base_0.lib
 				v8_base_1.lib
 				v8_base_2.lib
 				v8_base_3.lib
-				v8_nosnapshot.lib)
-		else()
-			link_from_binaries(${APPLICATION_TARGET}
-				v8.lib
-				v8_libbase.lib
-				v8_libplatform.lib)
-		endif()
+				)
 
+			copy_from_binaries(${APPLICATION_TARGET} "icudt.dll" "/Application/Debug")
+			copy_from_binaries(${APPLICATION_TARGET} "icui18n.dll" "/Application/Debug")
+			copy_from_binaries(${APPLICATION_TARGET} "icuuc.dll" "/Application/Debug")
+
+		endif()
 	endif()
 
 endmacro(add_opifex_v8_windows)

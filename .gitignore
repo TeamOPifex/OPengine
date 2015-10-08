@@ -1,3 +1,4 @@
 *.DS_Store
 External/PhysX/
 External/V8/
+External/Assimp/
