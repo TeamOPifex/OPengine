@@ -19,6 +19,16 @@ OPmesh OPmeshCreate(){
 	return out;
 }
 
+OPmesh* OPmeshCreate(OPmeshDesc desc) {
+	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
+	(*mesh) = OPmeshCreate();
+	OPmeshBind(mesh);
+
+	OPmeshBuild(desc.VertexSize, desc.IndexSize, desc.VertexCount, desc.IndexCount, desc.Vertices, desc.Indices);
+
+	return mesh;
+}
+
 //-----------------------------------------------------------------------------
 void OPmeshBuild(ui32 vertSize, ui32 indSize,
 						 ui32 vertCount, ui32 indCount,

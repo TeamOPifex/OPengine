@@ -40,9 +40,11 @@ void OPcamFreeFlightUpdate(OPcamFreeFlight* camFree, OPtimer* timer) {
 	OPfloat dt = timer->Elapsed / 1000.0f;
 	OPvec3 rot = { 0, 0, 0 };
 
-	OPfloat moveSpeed = dt * camFree->MoveSpeed * (1.0f + OPgamePadRightTrigger(OPgamePadGet(OPGAMEPAD_ONE)) * 3.0f);
-	OPfloat rotSpeed = dt * camFree->RotationSpeed * (1.0f + OPgamePadRightTrigger(OPgamePadGet(OPGAMEPAD_ONE)));
-	
+	OPfloat triggerDifference = 1.0f + (OPgamePadRightTrigger(OPgamePadGet(OPGAMEPAD_ONE)) - OPgamePadLeftTrigger(OPgamePadGet(OPGAMEPAD_ONE)) * 0.9);
+
+	OPfloat moveSpeed = dt * camFree->MoveSpeed * triggerDifference * 10.0f;
+	OPfloat rotSpeed = dt * camFree->RotationSpeed * triggerDifference;
+
 	camFree->Movement.z = OPkeyboardIsDown(OPKEY_S) - OPkeyboardIsDown(OPKEY_W) - OPgamePadLeftThumbY(OPgamePadGet(OPGAMEPAD_ONE));
 	camFree->Movement.x = OPkeyboardIsDown(OPKEY_E) - OPkeyboardIsDown(OPKEY_Q) + OPgamePadLeftThumbX(OPgamePadGet(OPGAMEPAD_ONE));
 	camFree->Movement *= moveSpeed;

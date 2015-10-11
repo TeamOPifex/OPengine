@@ -27,6 +27,15 @@ struct OPmesh {
 };
 typedef struct OPmesh OPmesh;
 
+struct OPmeshDesc {
+	void* Vertices;
+	ui32 VertexSize;
+	ui32 VertexCount;
+	void* Indices;
+	ui32 IndexSize;
+	ui32 IndexCount;
+};
+
 //-----------------------------------------------------------------------------
 //   _____ _       _           _
 //  / ____| |     | |         | |
@@ -54,6 +63,7 @@ extern void* OPMESH_ACTIVE_PTR;
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPmesh OPmeshCreate();
+OPmesh* OPmeshCreate(OPmeshDesc desc);
 void OPmeshDestroy(OPmesh* mesh);
 void OPmeshBuild(ui32 vertSize, ui32 indSize, ui32 vertCount, ui32 indCount, void* vertices, void* indices);
 void OPmeshBind(OPmesh* mesh);
