@@ -7,7 +7,7 @@ OPphysXControllerManager* OPphysXControllerCreateManager(OPphysXScene* scene) {
 	return PxCreateControllerManager(*scene->scene);
 }
 
-OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OPphysXMaterial* material, OPfloat height, OPfloat radius, 
+OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OPphysXMaterial* material, OPfloat height, OPfloat radius,
 		void(*onShapeHit)(PxControllerShapeHit),
 		void(*onControllerHit)(PxControllersHit),
 		void(*onObstacleHit)(PxControllerObstacleHit)) {
@@ -19,7 +19,7 @@ OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OP
 
 	OPphysXController* result = manager->createController(desc);
 
-	result->getActor()->setGlobalPose(PxTransform(PxVec3(0,0,0)));
+	result->getActor()->setGlobalPose(PxTransform(PxVec3(0,0,OPpi / 2.0f)));
 	return result;
 }
 OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OPphysXMaterial* material, OPfloat height, OPfloat radius) {

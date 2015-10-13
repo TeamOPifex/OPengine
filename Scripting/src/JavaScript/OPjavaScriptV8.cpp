@@ -324,43 +324,6 @@ void _OPscriptV8SetImmediate(const v8::FunctionCallbackInfo<v8::Value>& args) {
     callback->Call(obj, 1, argv);
 }
 
-void ReportException(v8::Isolate* isolate, v8::TryCatch* try_catch) {
-	v8::HandleScope handle_scope(isolate);
-	v8::String::Utf8Value exception(try_catch->Exception());
-	v8::Handle<v8::Message> message = try_catch->Message();
-
-	if (message.IsEmpty()) {
-		// V8 didn't provide any extra information about this error; just
-		// print the exception.
-		OPlog("%s\n", *exception);
-	} else {
-		// Print (filename):(line number): (message).
-		v8::String::Utf8Value filename(message->GetScriptOrigin().ResourceName());
-		int linenum = message->GetLineNumber();
-		OPlog("### %s:%i: %s\n", *filename, linenum, *exception);
-
-		// Print line of source code.
-		v8::String::Utf8Value sourceline(message->GetSourceLine());
-		OPlog("### %s\n", *sourceline);
-
-		// Print wavy underline (GetUnderline is deprecated).
-		int start = message->GetStartColumn();
-		for (int i = 0; i < start; i++) {
-			OPlg(" ");
-		}
-		int end = message->GetEndColumn();
-		for (int i = start; i < end; i++) {
-			OPlg("^");
-		}
-		OPlg("\n");
-
-		v8::String::Utf8Value stack_trace(try_catch->StackTrace());
-		if (stack_trace.length() > 0) {
-			OPlog("### %s\n", *stack_trace);
-		}
-	}
-}
-
 OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, const OPchar* dir) {
 	ASSERT(isolate != NULL, "V8 Engine must be initialized first.");
 
@@ -393,7 +356,6 @@ OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, 
 	Local<Script> compiledV8 = v8::Script::Compile(source, &origin);
 	if (compiledV8.IsEmpty()) {
 		ReportException(isolate, &trycatch);
-
 		return 0;
 	}
 
@@ -431,7 +393,6 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
     Local<Value> result = compiled->Run();
     if (result.IsEmpty()) {
 		ReportException(isolate, &trycatch);
-
         return Persistent<Value>(isolate, JS_NEW_NULL());
     }
 
@@ -446,7 +407,15 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
     Handle<v8::Object> global = context->Global();
     Handle<v8::Value> value = global->Get(JS_NEW_STRING(name));
     Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
-    return Persistent<Value>(isolate, func->Call(global, 0, NULL));
+
+	TryCatch trycatch;
+	Handle<Value> result = func->Call(global, 0, NULL);
+    if (result.IsEmpty()) {
+		ReportException(isolate, &trycatch);
+        return Persistent<Value>(isolate, JS_NEW_NULL());
+    }
+
+    return Persistent<Value>(isolate, result);
 
 //    Handle<Value> values[10];
 //    for (OPint i = 0; i < count; i++) {
@@ -469,7 +438,14 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
         values[i] = Local<Value>::New(isolate, args[i]);
     }
 
-    return Persistent<Value>(isolate, func->Call(global, count, values));
+	TryCatch trycatch;
+	Handle<Value> result = func->Call(global, count, values);
+	if (result.IsEmpty()) {
+		ReportException(isolate, &trycatch);
+		return Persistent<Value>(isolate, JS_NEW_NULL());
+	}
+
+    return Persistent<Value>(isolate, result);
 }
 
 void OPjavaScriptV8SetupRun(const OPchar* script) {

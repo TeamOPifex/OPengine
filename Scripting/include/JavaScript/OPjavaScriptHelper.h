@@ -178,6 +178,7 @@ m(args);
 JS_BEGIN_ARGS \
 m(args);
 
+void ReportException(v8::Isolate* isolate, v8::TryCatch* try_catch);
 
 #endif
 

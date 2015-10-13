@@ -38,7 +38,7 @@ void setData(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorVertex* vertex
 
 	if (gen->Features & OPATTR_POSITION) {
 		OPvec3* tmp = (OPvec3*)(void*)loc;
-		*tmp = vertex->Position * 2.0;//voxelGenData->Size;
+		*tmp = vertex->Position;
 		loc += sizeof(OPvec3);
 	}
 
