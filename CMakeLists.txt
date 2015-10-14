@@ -8,6 +8,9 @@ SET(OPIFEX_ENGINE_REPOSITORY ${PROJECT_SOURCE_DIR})
 
 include(CMake/application.cmake)
 
+string(REPLACE "\\" "/" _PHYSX_PATH "${PHYSX_PATH}")
+string(REPLACE "\\" "/" _V8_PATH "${V8_PATH}")
+string(REPLACE "\\" "/" _FMOD_PATH "${FMOD_PATH}")
 #configure_file("OPengineDefines.h.in" "${BINARY_FOLDER}/OPengineDefines.h")
 configure_file("OPengineDefines.cmake.in" "${BINARY_FOLDER}/OPengineDefines.cmake")
 
