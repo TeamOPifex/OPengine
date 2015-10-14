@@ -18,6 +18,13 @@ OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OP
 	desc.reportCallback = new OPphysXControllerHitReport(onShapeHit, onControllerHit, onObstacleHit);
 
 	OPphysXController* result = manager->createController(desc);
+	result->setContactOffset(0.02f);
+	OPuint shapesCount = result->getActor()->getNbShapes();
+	OPlog("# of shapes: %d", shapesCount);
+	PxShape* shapes = NULL;
+	result->getActor()->getShapes(&shapes, shapesCount);
+	shapes->setName("Generic Controller");
+	shapes->setContactOffset(0.02f);
 
 	result->getActor()->setGlobalPose(PxTransform(PxVec3(0,0,OPpi / 2.0f)));
 	return result;

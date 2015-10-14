@@ -43,6 +43,7 @@ int _update(OPtimer* timer) {
         Local<Value> result = _updateCallback->Call(obj, argc, argv);
         if (result.IsEmpty()) {
     		ReportException(isolate, &trycatch);
+            return 1;
         } else if(result->IsNumber()) {
             OPint retVal = result->Int32Value();
             return retVal;

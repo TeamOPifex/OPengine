@@ -218,6 +218,17 @@ i8 OPphysXOverlapping(OPphysXRigidActor* actor, OPphysXRigidActor* other) {
 	return collisionFound;
 }
 
+i8 OPphysXOverlapping(OPphysXRigidActor* actor, PxShape* actorShape, OPphysXRigidActor* other, PxShape* otherShape) {
+
+	PxGeometry actorGeometry = actorShape->getGeometry().any();
+	PxTransform actorTransform = PxShapeExt::getGlobalPose(*actorShape, *actor);
+
+	PxGeometry otherGeometry = otherShape->getGeometry().any();
+	PxTransform otherTransform = PxShapeExt::getGlobalPose(*otherShape, *other);
+
+	return PxGeometryQuery::overlap(actorGeometry, actorTransform, otherGeometry, otherTransform);
+}
+
 void OPphysXGetTransform(OPphysXRigidActor* actor, OPmat4* mat) {
 	ui32 n = actor->getNbShapes();
 	PxShape** shapes = new PxShape*[n];

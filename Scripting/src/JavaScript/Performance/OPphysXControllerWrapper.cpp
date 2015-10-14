@@ -20,6 +20,16 @@ JS_RETURN_VAL _OPphysXControllerCreateManager(const JS_ARGS& args) {
 	JS_RETURN(result);
 }
 
+void OnShapeHit(PxControllerShapeHit hit) {
+    // OPlog("PhysX Wrapper Controller -> Shape Hit :: %s", hit.shape->getName());
+}
+void OnControllerHit(PxControllersHit hit) {
+    OPlog("PhysX Wrapper Controller -> Controller Hit");
+}
+void OnObstacleHit(PxControllerObstacleHit hit) {
+    OPlog("PhysX Wrapper Controller -> Obstacle Hit");
+}
+
 JS_RETURN_VAL _OPphysXControllerCreate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
@@ -27,7 +37,9 @@ JS_RETURN_VAL _OPphysXControllerCreate(const JS_ARGS& args) {
     OPphysXMaterial* material = JS_GET_ARG_PTR(args, 1, OPphysXMaterial);
     OPfloat height = args[2]->NumberValue();
     OPfloat radius = args[3]->NumberValue();
-	OPphysXController* ptr = OPphysXControllerCreate(manager, material, height, radius);
+	OPphysXController* ptr = OPphysXControllerCreate(manager, material, height, radius, OnShapeHit, OnControllerHit, OnObstacleHit);
+
+    ptr->setContactOffset(0);
 
 	Handle<Object> result = JS_NEW_OBJECT();
 	JS_SET_PTR(result, ptr);
@@ -35,6 +47,19 @@ JS_RETURN_VAL _OPphysXControllerCreate(const JS_ARGS& args) {
 	Handle<Object> actor = JS_NEW_OBJECT();
 	JS_SET_PTR(actor, ptr->getActor());
 	JS_SET_OBJECT(result, "actor", actor);
+
+    Handle<Array> arr = JS_NEW_ARRAY();
+    OPuint numShapes = ptr->getActor()->getNbShapes();
+    PxShape** shapes = (PxShape**)OPalloc(sizeof(PxShape*) * numShapes);
+    ptr->getActor()->getShapes(shapes, numShapes);
+    for(OPuint i = 0; i < numShapes; i++) {
+        Handle<Object> arrObj = JS_NEW_OBJECT();
+        JS_SET_PTR(arrObj, shapes[i]);
+        arr->Set(i, arrObj);
+    }
+    OPfree(shapes);
+	JS_SET_OBJECT(result, "shapes", arr);
+
 
 	JS_RETURN(result);
 }
@@ -47,6 +72,32 @@ JS_RETURN_VAL _OPphysXControllerMove(const JS_ARGS& args) {
     OPtimer* timer = JS_GET_ARG_PTR(args, 2, OPtimer);
 	OPphysXControllerMove(controller, *displacement, timer);
 	JS_RETURN_NULL;
+}
+
+
+JS_RETURN_VAL _OPphysXControllerGetActorSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPphysXController* ptr = JS_GET_PTR(args.This(), OPphysXController);
+
+    void* actor = ptr->getActor();
+
+    Handle<Object> result = JS_NEW_OBJECT();
+    JS_SET_PTR(result, actor);
+    JS_RETURN(result);
+}
+
+
+JS_RETURN_VAL _OPphysXControllerGetActor(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPphysXController* ptr = JS_GET_ARG_PTR(args, 0, OPphysXController);
+
+    void* actor = ptr->getActor();
+
+    Handle<Object> result = JS_NEW_OBJECT();
+    JS_SET_PTR(result, actor);
+	JS_RETURN(result);
 }
 
 JS_RETURN_VAL _OPphysXControllerGetPos(const JS_ARGS& args) {
@@ -80,7 +131,7 @@ JS_RETURN_VAL _OPphysXControllerSetFootPos(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPphysXController* controller = JS_GET_ARG_PTR(args, 0, OPphysXController);
-	
+
 	OPphysXControllerSetFootPos(controller, OPvec3Create(args[1]->NumberValue(), args[2]->NumberValue(), args[3]->NumberValue()));
 
     JS_RETURN_NULL;
@@ -94,6 +145,7 @@ void OPphysXControllerWrapper(Handle<Object> exports) {
 	JS_SET_METHOD(physXController, "CreateManager", _OPphysXControllerCreateManager);
 	JS_SET_METHOD(physXController, "Create", _OPphysXControllerCreate);
 	JS_SET_METHOD(physXController, "Move", _OPphysXControllerMove);
+	JS_SET_METHOD(physXController, "GetActor", _OPphysXControllerGetActor);
 	JS_SET_METHOD(physXController, "GetPos", _OPphysXControllerGetPos);
 	JS_SET_METHOD(physXController, "GetFootPos", _OPphysXControllerGetFootPos);
 	JS_SET_METHOD(physXController, "SetFootPos", _OPphysXControllerSetFootPos);

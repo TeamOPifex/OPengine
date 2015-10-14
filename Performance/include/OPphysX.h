@@ -54,6 +54,7 @@ OPphysXShape* OPphysXAddTriangleMeshShape(OPphysXRigidActor* actor, OPphysXMater
 void OPphysXGetTransform(OPphysXRigidActor* actor, OPmat4* mat);
 i8 OPphysXOverlapping(OPphysXRigidActor* actor, OPphysXRigidActor* other);
 i8 OPphysXOverlapping(OPphysXRigidActor* actor, PxGeometry* otherGeometry, PxTransform otherTransform);
+i8 OPphysXOverlapping(OPphysXRigidActor* actor, PxShape* actorShape, OPphysXRigidActor* other, PxShape* otherShape);
 void OPphysXShutdown();
 PxTransform OPphysXMat4ToPx(OPmat4* mat);
 void OPphysXShapeSetPose(OPphysXShape* shape, OPmat4 transform);

@@ -1,4 +1,5 @@
 #include "./Scripting/include/JavaScript/Performance/Wrappers.h"
+#include "./Data/include/OPstring.h"
 
 #if defined(OPIFEX_OPTION_NODEJS) || defined(OPIFEX_OPTION_V8)
 
@@ -257,10 +258,21 @@ JS_RETURN_VAL _OPphysXSetSceneQuery(const JS_ARGS& args) {
 JS_RETURN_VAL _OPphysXOverlapping(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPphysXRigidActor* actor = JS_GET_ARG_PTR(args, 0, OPphysXRigidActor);
-    OPphysXRigidActor* other = JS_GET_ARG_PTR(args, 1, OPphysXRigidActor);
+    OPint result = 0;
 
-    OPint result = OPphysXOverlapping(actor, other);
+    if(args.Length() == 4) {
+        OPphysXRigidActor* actor = JS_GET_ARG_PTR(args, 0, OPphysXRigidActor);
+        OPphysXShape* actorShape = JS_GET_ARG_PTR(args, 1, OPphysXShape);
+        OPphysXRigidActor* other = JS_GET_ARG_PTR(args, 2, OPphysXRigidActor);
+        OPphysXShape* otherShape = JS_GET_ARG_PTR(args, 3, OPphysXShape);
+
+        result = OPphysXOverlapping(actor, actorShape, other, otherShape);
+    } else {
+        OPphysXRigidActor* actor = JS_GET_ARG_PTR(args, 0, OPphysXRigidActor);
+        OPphysXRigidActor* other = JS_GET_ARG_PTR(args, 1, OPphysXRigidActor);
+
+        result = OPphysXOverlapping(actor, other);
+    }
 
 	JS_RETURN(JS_NEW_NUMBER(result));
 }
@@ -286,9 +298,41 @@ JS_RETURN_VAL _OPphysXShapeSetPose(const JS_ARGS& args) {
     OPmat4* transform = JS_GET_ARG_PTR(args, 1, OPmat4);
 
     OPphysXShapeSetPose(shape, *transform);
-    
+
 	JS_RETURN_NULL;
 }
+
+JS_RETURN_VAL _OPphysXSetShapeName(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPphysXShape* shape = JS_GET_ARG_PTR(args, 0, OPphysXShape);
+
+    String::Utf8Value str(args[1]->ToString());
+    shape->setName(OPstringCopy(*str));
+
+	JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPphysXSetShapeContactOffset(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPphysXShape* shape = JS_GET_ARG_PTR(args, 0, OPphysXShape);
+    shape->setContactOffset(0.02f); //args[1]->IntegerValue()
+
+	JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPphysXSetShapeFilter(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPphysXShape* shape = JS_GET_ARG_PTR(args, 0, OPphysXShape);
+	PxFilterData fd = shape->getSimulationFilterData();
+	fd.word0 = args[1]->IntegerValue();
+	shape->setSimulationFilterData(fd);
+
+	JS_RETURN_NULL;
+}
+
 #endif
 
 void OPphysXWrapper(Handle<Object> exports) {
@@ -323,7 +367,10 @@ void OPphysXWrapper(Handle<Object> exports) {
 	JS_SET_METHOD(physX, "SetSceneQuery", _OPphysXSetSceneQuery);
 	JS_SET_METHOD(physX, "SetTrigger", _OPphysXSetTrigger);
 	JS_SET_METHOD(physX, "GetShape", _OPphysXGetShape);
-	JS_SET_OBJECT(exports, "physX", physX);
+	JS_SET_METHOD(physX, "SetShapeName", _OPphysXSetShapeName);
+	JS_SET_METHOD(physX, "SetShapeContactOffset", _OPphysXSetShapeContactOffset);
+    JS_SET_METHOD(physX, "SetShapeFilter", _OPphysXSetShapeFilter);
+    JS_SET_OBJECT(exports, "physX", physX);
 #endif
 
 }
