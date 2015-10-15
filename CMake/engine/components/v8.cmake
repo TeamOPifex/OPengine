@@ -149,14 +149,40 @@ macro(add_opifex_v8_windows APPLICATION_TARGET)
 		if(${OPIFEX_OPTION_RELEASE})
 
 			SET(_V8_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/V8/lib/release/win32/")
+			SET(_V8_DLL_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/V8/lib/release/win32/")
 			if(_V8_SOURCE)
-				SET(_V8_BINARY_LOCATION "${V8_PATH}/out/x64.debug/")
+				SET(_V8_BINARY_LOCATION "${V8_PATH}\\build\\Release\\lib\\")
+				SET(_V8_DLL_LOCATION "${V8_PATH}\\build\\Release\\")
 			endif()
 
+			copy_to_binaries(${_V8_DLL_LOCATION}icudt.dll)
+
+			copy_to_binaries(${_V8_BINARY_LOCATION}icuuc.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}icui18n.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_libbase.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_libplatform.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_nosnapshot.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_base_0.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_base_1.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_base_2.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_base_3.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_external_snapshot.lib)
+
 			link_from_binaries(${APPLICATION_TARGET}
-				v8.lib
+				icuuc.lib
+				icui18n.lib
 				v8_libbase.lib
-				v8_libplatform.lib)
+				v8_libplatform.lib
+				v8_nosnapshot.lib
+				v8_base_0.lib
+				v8_base_1.lib
+				v8_base_2.lib
+				v8_base_3.lib
+				)
+
+			copy_from_binaries(${APPLICATION_TARGET} "icudt.dll" "/Application/Release")
+
+			message(STATUS "SETUP WIN32 RELEASE of V8")
 		else()
 
 

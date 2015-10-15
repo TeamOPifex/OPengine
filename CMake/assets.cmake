@@ -1,5 +1,9 @@
 
-set(OP_ASSETS_TARGET "${PROJECT_BINARY_DIR}")
+set(OP_ASSETS_TARGET "${PROJECT_BINARY_DIR}/assets")
+
+if( ${OPIFEX_OS_WINDOWS})
+	set(OP_ASSETS_TARGET "${PROJECT_BINARY_DIR}/Application/assets")
+endif()
 
 if( ${OPIFEX_OS_ANDROID} )
 
@@ -49,6 +53,8 @@ else()
 endif()
 
 
+
+
 # Only copy assets if we're in release mode
 # It pulls from the Repository otherwise
 if(${OPIFEX_OPTION_RELEASE} OR ${OPIFEX_OS_ANDROID})
@@ -71,6 +77,8 @@ if(${OPIFEX_OPTION_RELEASE} OR ${OPIFEX_OS_ANDROID})
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/directives" ${OP_ASSETS_TARGET}/Web/angular/directives)
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/filters" ${OP_ASSETS_TARGET}/Web/angular/filters)
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/services" ${OP_ASSETS_TARGET}/Web/angular/services)
+
+	message(STATUS "COPYING FILES")
 
 endif()
 
