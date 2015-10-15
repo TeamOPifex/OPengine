@@ -328,7 +328,8 @@ JS_RETURN_VAL _OPphysXSetShapeFilter(const JS_ARGS& args) {
     OPphysXShape* shape = JS_GET_ARG_PTR(args, 0, OPphysXShape);
 	PxFilterData fd = shape->getSimulationFilterData();
 	fd.word0 = args[1]->IntegerValue();
-	shape->setSimulationFilterData(fd);
+	fd.word1 = args[2]->IntegerValue();
+	shape->setQueryFilterData(fd);
 
 	JS_RETURN_NULL;
 }
