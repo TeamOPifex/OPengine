@@ -113,8 +113,6 @@ macro(add_opifex_v8_windows APPLICATION_TARGET)
 			endif()
 
 			copy_to_binaries(${_V8_DLL_LOCATION}icudt.dll)
-			copy_to_binaries(${_V8_DLL_LOCATION}icui18n.dll)
-			copy_to_binaries(${_V8_DLL_LOCATION}icuuc.dll)
 
 			copy_to_binaries(${_V8_BINARY_LOCATION}icuuc.lib)
 			copy_to_binaries(${_V8_BINARY_LOCATION}icui18n.lib)
@@ -140,8 +138,6 @@ macro(add_opifex_v8_windows APPLICATION_TARGET)
 				)
 
 			copy_from_binaries(${APPLICATION_TARGET} "icudt.dll" "/Application/Debug")
-			#copy_from_binaries(${APPLICATION_TARGET} "icui18n.dll" "/Application/Debug")
-			#copy_from_binaries(${APPLICATION_TARGET} "icuuc.dll" "/Application/Debug")
 
 		endif()
 	else()
@@ -221,8 +217,6 @@ macro(add_opifex_v8_windows APPLICATION_TARGET)
 				)
 
 			copy_from_binaries(${APPLICATION_TARGET} "icudt.dll" "/Application/Debug")
-			#copy_from_binaries(${APPLICATION_TARGET} "icui18n.dll" "/Application/Debug")
-			#copy_from_binaries(${APPLICATION_TARGET} "icuuc.dll" "/Application/Debug")
 
 		endif()
 	endif()
