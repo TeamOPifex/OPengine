@@ -170,12 +170,6 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 
 			endif()
 
-			if(${OPIFEX_OPTION_RELEASE})
-			else()
-				copy_from_binaries_on_build(${APPLICATION_TARGET} "icui18n.dll" ${OPIFEX_OS_WINDOWS})
-				copy_from_binaries_on_build(${APPLICATION_TARGET} "icuuc.dll" ${OPIFEX_OS_WINDOWS})
-			endif()
-
 			copy_from_binaries_on_build(${APPLICATION_TARGET} "icudt.dll" ${OPIFEX_OS_WINDOWS})
 
 			add_definitions(-DOPIFEX_V8)
@@ -198,10 +192,6 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 					#${LIBV8_MKSNAPSHOT}
 					${LIBV8_NOSNAPSHOT}
 					)
-
-			#copy_from_binaries_on_build(${APPLICATION_TARGET} "v8.dll" ${OPIFEX_OS_WINDOWS})
-			#copy_from_binaries_on_build(${APPLICATION_TARGET} "icuuc.dll" ${OPIFEX_OS_WINDOWS})
-			#copy_from_binaries_on_build(${APPLICATION_TARGET} "icui18n.dll" ${OPIFEX_OS_WINDOWS})
 		else()
 			target_link_libraries(${APPLICATION_TARGET}
 					${LIBV8}
