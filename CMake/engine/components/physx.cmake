@@ -176,11 +176,21 @@ macro(add_opifex_physx_windows APPLICATION_TARGET)
 
 		else()
 
+
+		SET(_VS_FOLDER "vc12win64")
+		if(${MSVC_VERSION} GREATER 1700) # vs2013
+			SET(_VS_FOLDER "vc12win64")
+		elseif(${MSVC_VERSION} GREATER 1600) # vs2012
+			SET(_VS_FOLDER "vc11win64")
+		elseif(${MSVC_VERSION} GREATER 1400) # vs2010
+			SET(_VS_FOLDER "vc10win64")
+		endif()
+
 			SET(_PHYSX_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/PhysX/lib/debug/win64/")
 			SET(_PHYSX_DLL_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/PhysX/lib/debug/win64/")
 			if(_PHYSX_SOURCE)
-				SET(_PHYSX_BINARY_LOCATION "${_PHYSX_PATH}\\Lib\\vc12win64\\")
-				SET(_PHYSX_DLL_LOCATION "${_PHYSX_PATH}\\Bin\\vc12win64\\")
+				SET(_PHYSX_BINARY_LOCATION "${_PHYSX_PATH}\\Lib\\${_VS_FOLDER}\\")
+				SET(_PHYSX_DLL_LOCATION "${_PHYSX_PATH}\\Bin\\${_VS_FOLDER}\\")
 			endif()
 
 			message("${PHYSX_PATH} ${_PHYSX_SOURCE}")
@@ -236,13 +246,23 @@ macro(add_opifex_physx_windows APPLICATION_TARGET)
 	else()
 
 
+		SET(_VS_FOLDER "vc12win32")
+		if(${MSVC_VERSION} GREATER 1700) # vs2013
+			SET(_VS_FOLDER "vc12win32")
+		elseif(${MSVC_VERSION} GREATER 1600) # vs2012
+			SET(_VS_FOLDER "vc11win32")
+		elseif(${MSVC_VERSION} GREATER 1400) # vs2010
+			SET(_VS_FOLDER "vc10win32")
+		endif()
+
+
 		if(${OPIFEX_OPTION_RELEASE})
 
 			SET(_PHYSX_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/PhysX/lib/release/win32/")
 			SET(_PHYSX_DLL_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/PhysX/lib/release/win32/")
 			if(_PHYSX_SOURCE)
-				SET(_PHYSX_BINARY_LOCATION "${_PHYSX_PATH}\\Lib\\vc12win32\\")
-				SET(_PHYSX_DLL_LOCATION "${_PHYSX_PATH}\\Bin\\vc12win32\\")
+				SET(_PHYSX_BINARY_LOCATION "${_PHYSX_PATH}\\Lib\\${_VS_FOLDER}\\")
+				SET(_PHYSX_DLL_LOCATION "${_PHYSX_PATH}\\Bin\\${_VS_FOLDER}\\")
 			endif()
 
 			message("${PHYSX_PATH} ${_PHYSX_SOURCE}")
@@ -300,8 +320,8 @@ macro(add_opifex_physx_windows APPLICATION_TARGET)
 			SET(_PHYSX_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/PhysX/lib/debug/win32/")
 			SET(_PHYSX_DLL_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/PhysX/lib/debug/win32/")
 			if(_PHYSX_SOURCE)
-				SET(_PHYSX_BINARY_LOCATION "${_PHYSX_PATH}\\Lib\\vc12win32\\")
-				SET(_PHYSX_DLL_LOCATION "${_PHYSX_PATH}\\Bin\\vc12win32\\")
+				SET(_PHYSX_BINARY_LOCATION "${_PHYSX_PATH}\\Lib\\${_VS_FOLDER}\\")
+				SET(_PHYSX_DLL_LOCATION "${_PHYSX_PATH}\\Bin\\${_VS_FOLDER}\\")
 			endif()
 
 			message("${PHYSX_PATH} ${_PHYSX_SOURCE}")
