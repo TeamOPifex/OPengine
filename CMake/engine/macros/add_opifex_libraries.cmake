@@ -227,7 +227,7 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 					copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysX3CookingDEBUG_x64.dll" ${OPIFEX_OS_WINDOWS})
 					copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysX3DEBUG_x64.dll" ${OPIFEX_OS_WINDOWS})
 					copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysX3GpuDEBUG_x64.dll" ${OPIFEX_OS_WINDOWS})
-					copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysXDevice.dll" ${OPIFEX_OS_WINDOWS})
+					copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysXDevice64.dll" ${OPIFEX_OS_WINDOWS})
 					copy_from_binaries_on_build(${APPLICATION_TARGET} "nvToolsExt64_1.dll" ${OPIFEX_OS_WINDOWS})
 
 				else()
