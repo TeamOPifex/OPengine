@@ -178,11 +178,11 @@ macro(add_opifex_physx_windows APPLICATION_TARGET)
 
 
 		SET(_VS_FOLDER "vc12win64")
-		if(${MSVC_VERSION} GREATER 1700) // vs2013
+		if(${MSVC_VERSION} GREATER 1700) # vs2013
 			SET(_VS_FOLDER "vc12win64")
-		elseif(${MSVC_VERSION} GREATER 1600) // vs2012
+		elseif(${MSVC_VERSION} GREATER 1600) # vs2012
 			SET(_VS_FOLDER "vc11win64")
-		elseif(${MSVC_VERSION} GREATER 1400) // vs2010
+		elseif(${MSVC_VERSION} GREATER 1400) # vs2010
 			SET(_VS_FOLDER "vc10win64")
 		endif()
 
@@ -247,11 +247,11 @@ macro(add_opifex_physx_windows APPLICATION_TARGET)
 
 
 		SET(_VS_FOLDER "vc12win32")
-		if(${MSVC_VERSION} GREATER 1700) // vs2013
+		if(${MSVC_VERSION} GREATER 1700) # vs2013
 			SET(_VS_FOLDER "vc12win32")
-		elseif(${MSVC_VERSION} GREATER 1600) // vs2012
+		elseif(${MSVC_VERSION} GREATER 1600) # vs2012
 			SET(_VS_FOLDER "vc11win32")
-		elseif(${MSVC_VERSION} GREATER 1400) // vs2010
+		elseif(${MSVC_VERSION} GREATER 1400) # vs2010
 			SET(_VS_FOLDER "vc10win32")
 		endif()
 
