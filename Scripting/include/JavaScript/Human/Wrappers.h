@@ -32,6 +32,7 @@ void OPATTRWrapper(Handle<Object> exports);
 void OPfontManagerWrapperCreate(Handle<Object> result, OPfontManager* ptr);
 void OPcamWrapperCreate(Handle<Object> result, OPcam* ptr);
 void OPmeshWrapperCreate(Handle<Object> result, OPmesh* mesh);
+Handle<Object> OPmodelWrapperCreate(Handle<Object> result, void* model);
 Handle<Object> OPsekeletonWrapperCreate(OPskeleton* skeleton);
 
 #endif

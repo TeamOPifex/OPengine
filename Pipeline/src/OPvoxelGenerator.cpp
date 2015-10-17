@@ -16,6 +16,13 @@ void OPvoxelGeneratorInit(struct OPvoxelGenerator* gen, OPuint features) {
 	gen->Vertex = OPalloc(gen->VertexSize);
 	gen->IndexOffset = 0;
 
+	gen->HideFace[0] = 0;
+	gen->HideFace[1] = 0;
+	gen->HideFace[2] = 0;
+	gen->HideFace[3] = 0;
+	gen->HideFace[4] = 0;
+	gen->HideFace[5] = 0;
+
 	gen->Scale = 1.0f;
 	gen->Center = true;
 }
@@ -31,7 +38,7 @@ void setData(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorVertex* vertex
 
 	if (gen->Features & OPATTR_POSITION) {
 		OPvec3* tmp = (OPvec3*)(void*)loc;
-		*tmp = vertex->Position * 2.0;//voxelGenData->Size;
+		*tmp = vertex->Position;
 		loc += sizeof(OPvec3);
 	}
 
@@ -244,12 +251,7 @@ void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData
 	}
 }
 
-OPmesh* OPvoxelGeneratorBuild(struct OPvoxelGenerator* gen) {
-
-	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
-	(*mesh) = OPmeshCreate();
-	OPmeshBind(mesh);
-
+OPmeshDesc OPvoxelGeneratorBuildDesc(struct OPvoxelGenerator* gen) {
 	ui32 verticeCount = OPlistSize(gen->Vertices);
 	ui32 indiceCount = OPlistSize(gen->Indices);
 
@@ -267,10 +269,27 @@ OPmesh* OPvoxelGeneratorBuild(struct OPvoxelGenerator* gen) {
 		inds[i] = (*(ui32*)OPlistGet(gen->Indices, i));
 	}
 
-	OPmeshBuild(gen->VertexSize, sizeof(ui32), verticeCount, indiceCount, verts, inds);
+	OPmeshDesc result = {
+		verts,
+		(ui32)gen->VertexSize,
+		verticeCount,
+		inds,
+		sizeof(ui32),
+		indiceCount
+	};
 
-	OPfree(verts);
-	OPfree(inds);
+	return result;
+}
+
+OPmesh* OPvoxelGeneratorBuild(struct OPvoxelGenerator* gen) {
+
+	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
+	(*mesh) = OPmeshCreate();
+	OPmeshBind(mesh);
+
+	OPmeshDesc desc = OPvoxelGeneratorBuildDesc(gen);
+
+	OPmeshBuild(desc.VertexSize, desc.IndexSize, desc.VertexCount, desc.IndexCount, desc.Vertices, desc.Indices);
 
 	return mesh;
 }

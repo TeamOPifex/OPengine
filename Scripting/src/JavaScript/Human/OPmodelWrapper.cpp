@@ -67,18 +67,43 @@ JS_RETURN_VAL _OPmodelDrawSelf(const JS_ARGS& args) {
     JS_RETURN_NULL;
 }
 
-void OPmodelWrapperCreate(Handle<Object> result, OPmodel* model) {
+JS_RETURN_VAL _OPmodelSetMesh(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPmodel* model = JS_GET_ARG_PTR(args, 0, OPmodel);
+    OPmesh* mesh = JS_GET_ARG_PTR(args, 1, OPmesh);
+
+    model->mesh = mesh;
+
+    JS_RETURN_NULL;
+}
+
+JS_RETURN_VAL _OPmodelSetMeshSelf(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPmodel* model = JS_GET_PTR(args.This(), OPmodel);
+    OPmesh* mesh = JS_GET_ARG_PTR(args, 0, OPmesh);
+
+    model->mesh = mesh;
+
+    JS_RETURN_NULL;
+}
+
+Handle<Object> OPmodelWrapperCreate(Handle<Object> result, void* model) {
     SCOPE_AND_ISOLATE
 
     JS_SET_PTR(result, model);
     JS_SET_METHOD(result, "Destroy", _OPmodelDestroySelf);
     JS_SET_METHOD(result, "Bind", _OPmodelBindSelf);
+    JS_SET_METHOD(result, "SetMesh", _OPmodelSetMeshSelf);
     JS_SET_METHOD(result, "Draw", _OPmodelDrawSelf);
     JS_SET_NUMBER(result, "size", sizeof(OPmodel));
 
     Handle<Object> world = JS_NEW_OBJECT();
-    OPmat4WrapperCreate(world, &model->world);
+    OPmat4WrapperCreate(world, &((OPmodel*)model)->world);
     JS_SET_OBJECT(result, "world", world);
+
+    return result;
 }
 
 JS_RETURN_VAL _OPmodelCreate(const JS_ARGS& args) {
@@ -102,6 +127,7 @@ void OPmodelWrapper(Handle<Object> exports) {
     Handle<Object> model = JS_NEW_OBJECT();
     JS_SET_METHOD(model, "Create", _OPmodelCreate);
     JS_SET_METHOD(model, "Destroy", _OPmodelDestroy);
+    JS_SET_METHOD(model, "SetMesh", _OPmodelSetMesh);
     JS_SET_METHOD(model, "Bind", _OPmodelBind);
     JS_SET_METHOD(model, "Draw", _OPmodelDraw);
     JS_SET_NUMBER(model, "size", sizeof(OPmodel));

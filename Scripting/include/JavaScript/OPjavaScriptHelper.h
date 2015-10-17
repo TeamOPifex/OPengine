@@ -178,6 +178,7 @@ m(args);
 JS_BEGIN_ARGS \
 m(args);
 
+void ReportException(v8::Isolate* isolate, v8::TryCatch* try_catch);
 
 #endif
 
@@ -195,6 +196,24 @@ m(args);
 #define JS_SET_PTR(obj, ptr) JS_SET_NUMBER(obj, "ptr", (OPint)ptr)
 #define JS_GET_PTR(obj, type) (type*)(OPint)obj->Get(JS_NEW_STRING("ptr"))->IntegerValue();
 #define JS_GET_ARG_PTR(args, ind, type) JS_GET_PTR(args[ind]->ToObject(), type)
+#define JS_GET_ARG_OPUINT(args, ind) ((OPint)args[ind]->IntegerValue())
+
+#ifdef _DEBUG
+    #define JS_SET_TYPE(obj, t) JS_SET_STRING(obj, "type", t)
+    inline const OPchar* JS_GET_TYPE(Handle<Object> obj) {
+        String::Utf8Value str(obj->Get(JS_NEW_STRING("type"))->ToString());
+        return *str;
+    }
+    #define JS_GET_ARG_TYPE(args, ind) JS_GET_TYPE(args[ind]->ToObject())
+    #define JS_ASSERT_ARG_PTR_TYPE(args, ind, type, message) ASSERT(OPstringEquals(JS_GET_ARG_TYPE(args, ind), type), message)
+#else
+    #define JS_SET_TYPE(obj, t)
+    #define JS_GET_ARG_TYPE(args, ind)
+    #define JS_ASSERT_ARG_PTR_TYPE(args, ind, type, message)
+    inline const OPchar* JS_GET_TYPE(Handle<Object> obj) {
+        return NULL;
+    }
+#endif
 
 #define JS_SETUP_INSTANCE const unsigned argc = 1; \
     Handle<Value> argv[argc] = { args[0] }; \
@@ -227,6 +246,27 @@ inline void* _JS_NEXT(const JS_ARGS& args) {
 #define JS_NEXT_ARG_AS(t) (t*)_JS_NEXT(args);
 
 
+inline OPuint _JS_NEXT_OPUINT(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+    _JS_ARGC++;
+    if(_JS_ARGC == 0) {
+        return (OPuint)args.This()->IntegerValue();
+    }
+    return JS_GET_ARG_OPUINT(args, _JS_ARGC - 1);
+}
+#define JS_NEXT_ARG_AS_OPUINT() _JS_NEXT_OPUINT(args);
+
+
+inline Handle<Value> _JS_NEXT_ARG(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+    _JS_ARGC++;
+    if(_JS_ARGC == 0) {
+        return args.This();
+    }
+    return args[_JS_ARGC - 1];
+}
+#define JS_NEXT_ARG_VAL() _JS_NEXT_ARG(args);
+
 
 
 #define JS_MAKE_WRAPPED_FN_NAME(x) _ ## x
@@ -237,6 +277,64 @@ JS_RETURN_VAL JS_MAKE_WRAPPED_FN_NAME(funcName)(const JS_ARGS& args); \
 JS_RETURN_VAL funcName(const JS_ARGS& args) { JS_RUN(JS_MAKE_WRAPPED_FN_NAME(funcName)) } \
 JS_RETURN_VAL JS_MAKE_SELF_FN_NAME(funcName)(const JS_ARGS& args) { JS_RUN_SELF(JS_MAKE_WRAPPED_FN_NAME(funcName)) } \
 JS_RETURN_VAL JS_MAKE_WRAPPED_FN_NAME(funcName)(const JS_ARGS& args)
+
+
+
+#define JS_HELPER_EASY_DESTROY(t) \
+JS_HELPER_SELF_WRAPPER( JS_MAKE_WRAPPED_FN_NAME(t ## Destroy) ) { \
+    SCOPE_AND_ISOLATE \
+    t* ptr = JS_NEXT_ARG_AS(t); \
+    t ## Destroy(ptr);\
+    JS_RETURN_NULL; \
+}
+
+
+// EASY Wrappers for when it's just ptr passing
+#define JS_HELPER_EASY_FREE(t) \
+JS_HELPER_SELF_WRAPPER( JS_MAKE_WRAPPED_FN_NAME(t ## Free) ) { \
+    SCOPE_AND_ISOLATE \
+    t* ptr = JS_NEXT_ARG_AS(t); \
+    t ## Free(ptr);\
+    JS_RETURN_NULL; \
+}
+
+#define JS_HELPER_EASY_SELF_WRAPPER_1(t, m, arg1) \
+JS_HELPER_SELF_WRAPPER( JS_MAKE_WRAPPED_FN_NAME(t ## m) ) { \
+    SCOPE_AND_ISOLATE \
+    t* ptr = JS_NEXT_ARG_AS(t); \
+    arg1* a1 = JS_NEXT_ARG_AS(arg1); \
+    t ## m(ptr, a1);\
+    JS_RETURN_NULL; \
+}
+
+#define JS_HELPER_EASY_SELF_WRAPPER_2(t, m, arg1) \
+JS_HELPER_SELF_WRAPPER( JS_MAKE_WRAPPED_FN_NAME(t ## m) ) { \
+    SCOPE_AND_ISOLATE \
+    t* ptr = JS_NEXT_ARG_AS(t); \
+    arg1* a1 = JS_NEXT_ARG_AS(arg1); \
+    arg2* a2 = JS_NEXT_ARG_AS(arg2); \
+    t ## m(ptr, a1, a2);\
+    JS_RETURN_NULL; \
+}
+
+#define JS_HELPER_EASY_SELF_WRAPPER_1_RETURN(t, m, arg1, r) \
+JS_HELPER_SELF_WRAPPER( JS_MAKE_WRAPPED_FN_NAME(t ## m) ) { \
+    SCOPE_AND_ISOLATE \
+    t* ptr = JS_NEXT_ARG_AS(t); \
+    arg1* a1 = JS_NEXT_ARG_AS(arg1); \
+    void* result = t ## m(ptr, a1);\
+    JS_RETURN(r(JS_NEW_OBJECT(), result)); \
+}
+
+#define JS_HELPER_EASY_SELF_WRAPPER_2_RETURN(t, m, arg1, arg2, r) \
+JS_HELPER_SELF_WRAPPER( JS_MAKE_WRAPPED_FN_NAME(t ## m) ) { \
+    SCOPE_AND_ISOLATE \
+    t* ptr = JS_NEXT_ARG_AS(t); \
+    arg1* a1 = JS_NEXT_ARG_AS(arg1); \
+    arg2* a2 = JS_NEXT_ARG_AS(arg2); \
+    void* result = t ## m(ptr, a1, a2);\
+    JS_RETURN(r(JS_NEW_OBJECT(), result)); \
+}
 
 #endif
 

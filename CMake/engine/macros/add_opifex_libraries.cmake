@@ -129,8 +129,12 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		if(${OPIFEX_OS_WINDOWS})
 			if(${OPIFEX_OS_WIN64})
 				find_dynamic(LIBFMOD "fmod64_vc")
+				copy_from_binaries_on_build(${APPLICATION_TARGET} "fmod64.dll" ${OPIFEX_OS_WINDOWS})
+				copy_from_binaries_on_build(${APPLICATION_TARGET} "fmodL64.dll" ${OPIFEX_OS_WINDOWS})
 			else()
 				find_dynamic(LIBFMOD "fmod_vc")
+				copy_from_binaries_on_build(${APPLICATION_TARGET} "fmod.dll" ${OPIFEX_OS_WINDOWS})
+				copy_from_binaries_on_build(${APPLICATION_TARGET} "fmodL.dll" ${OPIFEX_OS_WINDOWS})
 			endif()
 		else()
 			find_dynamic(LIBFMOD "fmod")
@@ -143,6 +147,7 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	if(${OPIFEX_OPTION_V8})
 
 			if(${OPIFEX_OS_WINDOWS})
+
 				find_binary(LIBV8_BASE_0 "v8_base_0" false)
 				find_binary(LIBV8_BASE_1 "v8_base_1" false)
 				find_binary(LIBV8_BASE_2 "v8_base_2" false)
@@ -164,6 +169,14 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 				find_binary(LIBV8_ICUI18N "icui18n" false)
 
 			endif()
+
+			if(${OPIFEX_OPTION_RELEASE})
+			else()
+				copy_from_binaries_on_build(${APPLICATION_TARGET} "icui18n.dll" ${OPIFEX_OS_WINDOWS})
+				copy_from_binaries_on_build(${APPLICATION_TARGET} "icuuc.dll" ${OPIFEX_OS_WINDOWS})
+			endif()
+
+			copy_from_binaries_on_build(${APPLICATION_TARGET} "icudt.dll" ${OPIFEX_OS_WINDOWS})
 
 			add_definitions(-DOPIFEX_V8)
 
@@ -203,20 +216,81 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 
 	if(${OPIFEX_OPTION_PHYSX})
 			if(${OPIFEX_OS_WINDOWS})
-				find_binary(LIBLOW_LEVEL_DEBUG "LowLevelDEBUG" false)
-				find_binary(LIBLOW_LEVEL_CLOTH_DEBUG "LowLevelClothDEBUG" false)
-				find_binary(LIBPHYSX3_CHARACTER_KINEMATIC_DEBUG "PhysX3CharacterKinematicDEBUG_x64" false)
-				find_binary(LIBPHYSX3_COMMON_DEBUG "PhysX3CommonDEBUG_x64" false)
-				find_binary(LIBPHYSX3_COOKING_DEBUG "PhysX3CookingDEBUG_x64" false)
-				find_binary(LIBPHYSX3_DEBUG "PhysX3DEBUG_x64" false)
-				find_binary(LIBPHYSX3_EXTENSIONS_DEBUG "PhysX3ExtensionsDEBUG" false)
-				find_binary(LIBPHYSX3_VEHICLE_DEBUG "PhysX3VehicleDEBUG" false)
-				find_binary(LIBPHYSX_PROFILE_SDK_DEBUG "PhysXProfileSDKDEBUG" false)
-				find_binary(LIBPHYSX_VISUAL_DEBUGGER_SDK_DEBUG "PhysXVisualDebuggerSDKDEBUG" false)
-				find_binary(LIBPVD_RUNTIME_DEBUG "PvdRuntimeDEBUG" false)
-				find_binary(LIBPX_TASK_DEBUG "PxTaskDEBUG" false)
-				find_binary(LIBSCENE_QUERY_DEBUG "SceneQueryDEBUG" false)
-				find_binary(LIBSIMULATION_CONTROLLER_DEBUG "SimulationControllerDEBUG" false)
+				if(${OPIFEX_OS_WIN64})
+					find_binary(LIBLOW_LEVEL_DEBUG "LowLevelDEBUG" false)
+					find_binary(LIBLOW_LEVEL_CLOTH_DEBUG "LowLevelClothDEBUG" false)
+					find_binary(LIBPHYSX3_CHARACTER_KINEMATIC_DEBUG "PhysX3CharacterKinematicDEBUG_x64" false)
+					find_binary(LIBPHYSX3_COMMON_DEBUG "PhysX3CommonDEBUG_x64" false)
+					find_binary(LIBPHYSX3_COOKING_DEBUG "PhysX3CookingDEBUG_x64" false)
+					find_binary(LIBPHYSX3_DEBUG "PhysX3DEBUG_x64" false)
+					find_binary(LIBPHYSX3_EXTENSIONS_DEBUG "PhysX3ExtensionsDEBUG" false)
+					find_binary(LIBPHYSX3_VEHICLE_DEBUG "PhysX3VehicleDEBUG" false)
+					find_binary(LIBPHYSX_PROFILE_SDK_DEBUG "PhysXProfileSDKDEBUG" false)
+					find_binary(LIBPHYSX_VISUAL_DEBUGGER_SDK_DEBUG "PhysXVisualDebuggerSDKDEBUG" false)
+					find_binary(LIBPVD_RUNTIME_DEBUG "PvdRuntimeDEBUG" false)
+					find_binary(LIBPX_TASK_DEBUG "PxTaskDEBUG" false)
+					find_binary(LIBSCENE_QUERY_DEBUG "SceneQueryDEBUG" false)
+					find_binary(LIBSIMULATION_CONTROLLER_DEBUG "SimulationControllerDEBUG" false)
+
+					copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysX3CharacterKinematicDEBUG_x64.dll" ${OPIFEX_OS_WINDOWS})
+					copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysX3CommonDEBUG_x64.dll" ${OPIFEX_OS_WINDOWS})
+					copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysX3CookingDEBUG_x64.dll" ${OPIFEX_OS_WINDOWS})
+					copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysX3DEBUG_x64.dll" ${OPIFEX_OS_WINDOWS})
+					copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysX3GpuDEBUG_x64.dll" ${OPIFEX_OS_WINDOWS})
+					copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysXDevice.dll" ${OPIFEX_OS_WINDOWS})
+					copy_from_binaries_on_build(${APPLICATION_TARGET} "nvToolsExt64_1.dll" ${OPIFEX_OS_WINDOWS})
+
+				else()
+
+					if(${OPIFEX_OPTION_RELEASE})
+						find_binary(LIBLOW_LEVEL_DEBUG "LowLevel" false)
+						find_binary(LIBLOW_LEVEL_CLOTH_DEBUG "LowLevelCloth" false)
+						find_binary(LIBPHYSX3_CHARACTER_KINEMATIC_DEBUG "PhysX3CharacterKinematic_x86" false)
+						find_binary(LIBPHYSX3_COMMON_DEBUG "PhysX3Common_x86" false)
+						find_binary(LIBPHYSX3_COOKING_DEBUG "PhysX3Cooking_x86" false)
+						find_binary(LIBPHYSX3_DEBUG "PhysX3_x86" false)
+						find_binary(LIBPHYSX3_EXTENSIONS_DEBUG "PhysX3Extensions" false)
+						find_binary(LIBPHYSX3_VEHICLE_DEBUG "PhysX3Vehicle" false)
+						find_binary(LIBPHYSX_PROFILE_SDK_DEBUG "PhysXProfileSDK" false)
+						find_binary(LIBPHYSX_VISUAL_DEBUGGER_SDK_DEBUG "PhysXVisualDebuggerSDK" false)
+						find_binary(LIBPVD_RUNTIME_DEBUG "PvdRuntime" false)
+						find_binary(LIBPX_TASK_DEBUG "PxTask" false)
+						find_binary(LIBSCENE_QUERY_DEBUG "SceneQuery" false)
+						find_binary(LIBSIMULATION_CONTROLLER_DEBUG "SimulationController" false)
+
+						copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysX3CharacterKinematic_x86.dll" ${OPIFEX_OS_WINDOWS})
+						copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysX3Common_x86.dll" ${OPIFEX_OS_WINDOWS})
+						copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysX3Cooking_x86.dll" ${OPIFEX_OS_WINDOWS})
+						copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysX3_x86.dll" ${OPIFEX_OS_WINDOWS})
+						copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysX3Gpu_x86.dll" ${OPIFEX_OS_WINDOWS})
+						copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysXDevice.dll" ${OPIFEX_OS_WINDOWS})
+						copy_from_binaries_on_build(${APPLICATION_TARGET} "nvToolsExt32_1.dll" ${OPIFEX_OS_WINDOWS})
+					else()
+						find_binary(LIBLOW_LEVEL_DEBUG "LowLevelDEBUG" false)
+						find_binary(LIBLOW_LEVEL_CLOTH_DEBUG "LowLevelClothDEBUG" false)
+						find_binary(LIBPHYSX3_CHARACTER_KINEMATIC_DEBUG "PhysX3CharacterKinematicDEBUG_x86" false)
+						find_binary(LIBPHYSX3_COMMON_DEBUG "PhysX3CommonDEBUG_x86" false)
+						find_binary(LIBPHYSX3_COOKING_DEBUG "PhysX3CookingDEBUG_x86" false)
+						find_binary(LIBPHYSX3_DEBUG "PhysX3DEBUG_x86" false)
+						find_binary(LIBPHYSX3_EXTENSIONS_DEBUG "PhysX3ExtensionsDEBUG" false)
+						find_binary(LIBPHYSX3_VEHICLE_DEBUG "PhysX3VehicleDEBUG" false)
+						find_binary(LIBPHYSX_PROFILE_SDK_DEBUG "PhysXProfileSDKDEBUG" false)
+						find_binary(LIBPHYSX_VISUAL_DEBUGGER_SDK_DEBUG "PhysXVisualDebuggerSDKDEBUG" false)
+						find_binary(LIBPVD_RUNTIME_DEBUG "PvdRuntimeDEBUG" false)
+						find_binary(LIBPX_TASK_DEBUG "PxTaskDEBUG" false)
+						find_binary(LIBSCENE_QUERY_DEBUG "SceneQueryDEBUG" false)
+						find_binary(LIBSIMULATION_CONTROLLER_DEBUG "SimulationControllerDEBUG" false)
+
+						copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysX3CharacterKinematicDEBUG_x86.dll" ${OPIFEX_OS_WINDOWS})
+						copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysX3CommonDEBUG_x86.dll" ${OPIFEX_OS_WINDOWS})
+						copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysX3CookingDEBUG_x86.dll" ${OPIFEX_OS_WINDOWS})
+						copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysX3DEBUG_x86.dll" ${OPIFEX_OS_WINDOWS})
+						copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysX3GpuDEBUG_x86.dll" ${OPIFEX_OS_WINDOWS})
+						copy_from_binaries_on_build(${APPLICATION_TARGET} "PhysXDevice.dll" ${OPIFEX_OS_WINDOWS})
+						copy_from_binaries_on_build(${APPLICATION_TARGET} "nvToolsExt32_1.dll" ${OPIFEX_OS_WINDOWS})
+					endif()
+
+				endif()
 			else()
 				find_binary(LIBLOW_LEVEL_DEBUG "LowLevelDEBUG" false)
 				find_binary(LIBLOW_LEVEL_CLOTH_DEBUG "LowLevelClothDEBUG" false)
@@ -233,22 +307,23 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 				find_binary(LIBSCENE_QUERY_DEBUG "SceneQueryDEBUG" false)
 				find_binary(LIBSIMULATION_CONTROLLER_DEBUG "SimulationControllerDEBUG" false)
 			endif()
-				target_link_libraries(${APPLICATION_TARGET}
-						${LIBLOW_LEVEL_DEBUG}
-						${LIBLOW_LEVEL_CLOTH_DEBUG}
-						${LIBPHYSX3_CHARACTER_KINEMATIC_DEBUG}
-						${LIBPHYSX3_COMMON_DEBUG}
-						${LIBPHYSX3_COOKING_DEBUG}
-						${LIBPHYSX3_DEBUG}
-						${LIBPHYSX3_EXTENSIONS_DEBUG}
-						${LIBPHYSX3_VEHICLE_DEBUG}
-						${LIBPHYSX_PROFILE_SDK_DEBUG}
-						${LIBPHYSX_VISUAL_DEBUGGER_SDK_DEBUG}
-						${LIBPVD_RUNTIME_DEBUG}
-						${LIBPX_TASK_DEBUG}
-						${LIBSCENE_QUERY_DEBUG}
-						${LIBSIMULATION_CONTROLLER_DEBUG}
-					)
+
+			target_link_libraries(${APPLICATION_TARGET}
+					${LIBLOW_LEVEL_DEBUG}
+					${LIBLOW_LEVEL_CLOTH_DEBUG}
+					${LIBPHYSX3_CHARACTER_KINEMATIC_DEBUG}
+					${LIBPHYSX3_COMMON_DEBUG}
+					${LIBPHYSX3_COOKING_DEBUG}
+					${LIBPHYSX3_DEBUG}
+					${LIBPHYSX3_EXTENSIONS_DEBUG}
+					${LIBPHYSX3_VEHICLE_DEBUG}
+					${LIBPHYSX_PROFILE_SDK_DEBUG}
+					${LIBPHYSX_VISUAL_DEBUGGER_SDK_DEBUG}
+					${LIBPVD_RUNTIME_DEBUG}
+					${LIBPX_TASK_DEBUG}
+					${LIBSCENE_QUERY_DEBUG}
+					${LIBSIMULATION_CONTROLLER_DEBUG}
+				)
 	endif()
 
 	if( ${OPIFEX_OS_WINDOWS} )

@@ -28,6 +28,7 @@ extern OPint OPdeallocations;
 
 #define OPmemcmp(dest, src, size) memcmp(dest, src, size)
 
+// TODO: (garrett) bzero could be optimized out, I think this should use a memset type operation instead.
 #if defined(OPIFEX_UNIX)
 #define OPbzero(dest, size){\
 	bzero(dest, size);\

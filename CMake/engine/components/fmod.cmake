@@ -100,7 +100,12 @@ macro(add_opifex_fmod_windows APPLICATION_TARGET)
 	elseif(${OPIFEX_OS_WIN32})
 
 
-		SET(_FMOD_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/FMOD/lib/debug/win32/")
+		if(${OPIFEX_OPTION_RELEASE})
+			SET(_FMOD_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/FMOD/lib/release/win32/")
+		else()
+			SET(_FMOD_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/FMOD/lib/debug/win32/")
+		endif()
+
 		if(_FMOD_SOURCE)
 			SET(_FMOD_BINARY_LOCATION "${_FMOD_PATH}\\lib\\")
 		endif()
@@ -116,8 +121,13 @@ macro(add_opifex_fmod_windows APPLICATION_TARGET)
 			fmodL_vc.lib
 			)
 
-		copy_from_binaries(${APPLICATION_TARGET} "fmod.dll" "/Application/Debug")
-		copy_from_binaries(${APPLICATION_TARGET} "fmodL.dll" "/Application/Debug")
+		if(${OPIFEX_OPTION_RELEASE})
+			copy_from_binaries(${APPLICATION_TARGET} "fmod.dll" "/Application/Release")
+			copy_from_binaries(${APPLICATION_TARGET} "fmodL.dll" "/Application/Release")
+		else()
+			copy_from_binaries(${APPLICATION_TARGET} "fmod.dll" "/Application/Debug")
+			copy_from_binaries(${APPLICATION_TARGET} "fmodL.dll" "/Application/Debug")
+		endif()
 
 	endif()
 

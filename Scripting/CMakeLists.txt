@@ -89,18 +89,3 @@ add_opifex_v8(8_Scripting)
 # OUTPUT BINARIES
 #########################################
 output_library(8_Scripting "Scripting")
-
-if(${OPIFEX_OPTION_V8})
-	if(${OPIFEX_OPTION_RELEASE})
-		output_binary(8_Scripting "/External/V8/lib/release/" "icui18n.dll" ${OPIFEX_OS_WINDOWS})
-		output_binary(8_Scripting "/External/V8/lib/release/" "icuuc.dll" ${OPIFEX_OS_WINDOWS})
-		output_binary(8_Scripting "/External/V8/lib/release/" "v8.dll" ${OPIFEX_OS_WINDOWS})
-	else()
-		#output_binary(8_Scripting "/External/V8/lib/debug/" "icui18n.dll" ${OPIFEX_OS_WINDOWS})
-		#output_binary(8_Scripting "/External/V8/lib/debug/" "icuuc.dll" ${OPIFEX_OS_WINDOWS})
-		#output_binary(8_Scripting "/External/V8/lib/debug/" "v8.dll" ${OPIFEX_OS_WINDOWS})
-		#output_binary(8_Scripting "/External/V8/lib/debug/" "v8.lib" ${OPIFEX_OS_WINDOWS})
-		#output_binary(8_Scripting "/External/V8/lib/debug/" "v8_libbase.lib" ${OPIFEX_OS_WINDOWS})
-		#output_binary(8_Scripting "/External/V8/lib/debug/" "v8_libplatform.lib" ${OPIFEX_OS_WINDOWS})
-	endif()
-endif()

@@ -36,18 +36,19 @@ void* OPalloc(OPuint bytes){
 *		void* - Address of allocated memory.
 */
 void* OPallocZero(OPuint bytes){
+	void* result;
 #ifndef OPIFEX_OPTION_RELEASE
 	OPallocations++;
 #endif
 	// allocate memory (for each platform)
 #if defined(OPIFEX_UNIX)
 	// android specific for malloc
-	void* result = malloc(bytes);
+	result = malloc(bytes);
 	OPbzero(result, bytes);
 	return result;
 #elif defined(OPIFEX_WINDOWS)
 	// Windows specific for malloc
-	void* result = malloc(bytes);
+	result = malloc(bytes);
 	OPbzero(result, bytes);
 	return result;
 #endif

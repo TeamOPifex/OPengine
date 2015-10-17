@@ -16,7 +16,16 @@ void _init() {
     const unsigned int argc = 1;
     Handle<Value> argv[argc] = { JS_NEW_BOOL(true) };
     Handle<Object> obj = JS_NEW_OBJECT();
-    _initCallback->Call(obj, argc, argv);
+
+    #ifdef OPIFEX_OPTION_V8
+    	TryCatch trycatch;
+        Local<Value> result = _initCallback->Call(obj, argc, argv);
+        if (result.IsEmpty()) {
+    		ReportException(isolate, &trycatch);
+        }
+    #else
+        Local<Value> result = _initCallback->Call(obj, argc, argv);
+    #endif
 }
 
 int _update(OPtimer* timer) {
@@ -24,14 +33,28 @@ int _update(OPtimer* timer) {
     const unsigned int argc = 1;
     Handle<Object> timerObj = JS_NEW_OBJECT();
     JS_SET_PTR(timerObj, timer);
+    JS_SET_NUMBER(timerObj, "elapsed", timer->Elapsed);
 
     Handle<Value> argv[argc] = { timerObj };
     Handle<Object> obj = JS_NEW_OBJECT();
-    Local<Value> result = _updateCallback->Call(obj, argc, argv);
-    if(result->IsNumber()) {
-        OPint retVal = result->Int32Value();
-        return retVal;
-    }
+
+    #ifdef OPIFEX_OPTION_V8
+    	TryCatch trycatch;
+        Local<Value> result = _updateCallback->Call(obj, argc, argv);
+        if (result.IsEmpty()) {
+    		ReportException(isolate, &trycatch);
+            return 1;
+        } else if(result->IsNumber()) {
+            OPint retVal = result->Int32Value();
+            return retVal;
+        }
+    #else
+        Local<Value> result = _updateCallback->Call(obj, argc, argv);
+        if(result->IsNumber()) {
+            OPint retVal = result->Int32Value();
+            return retVal;
+        }
+    #endif
     return 0;
 }
 
@@ -40,7 +63,16 @@ void _end() {
     const unsigned int argc = 1;
     Handle<Value> argv[argc] = { JS_NEW_BOOL(true) };
     Handle<Object> obj = JS_NEW_OBJECT();
-    _endCallback->Call(obj, argc, argv);
+
+    #ifdef OPIFEX_OPTION_V8
+    	TryCatch trycatch;
+        Local<Value> result = _endCallback->Call(obj, argc, argv);
+        if (result.IsEmpty()) {
+    		ReportException(isolate, &trycatch);
+        }
+    #else
+        Local<Value> result = _endCallback->Call(obj, argc, argv);
+    #endif
 }
 
 JS_RETURN_VAL _OPstart(const JS_ARGS& args) {
