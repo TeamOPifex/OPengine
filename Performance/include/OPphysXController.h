@@ -19,7 +19,7 @@ void OPphysXControllerMove(OPphysXController* controller, OPvec3 displacement, O
 OPvec3 OPphysXControllerGetPos(OPphysXController* controller);
 OPvec3 OPphysXControllerGetFootPos(OPphysXController* controller);
 void OPphysXControllerSetFootPos(OPphysXController* controller, OPvec3 disp);
-
+void OPphysXControllerRelease(OPphysXController* controller);
 // INLINES
 
 

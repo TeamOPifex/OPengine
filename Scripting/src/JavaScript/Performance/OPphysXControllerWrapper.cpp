@@ -136,6 +136,17 @@ JS_RETURN_VAL _OPphysXControllerSetFootPos(const JS_ARGS& args) {
 
     JS_RETURN_NULL;
 }
+
+JS_RETURN_VAL _OPphysXControllerRelease(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE;
+
+    OPphysXController* controller = JS_GET_ARG_PTR(args, 0, OPphysXController);
+
+	OPphysXControllerRelease(controller);
+
+    JS_RETURN_NULL;
+}
+
 #endif
 
 void OPphysXControllerWrapper(Handle<Object> exports) {
@@ -144,6 +155,7 @@ void OPphysXControllerWrapper(Handle<Object> exports) {
     Handle<Object> physXController = JS_NEW_OBJECT();
 	JS_SET_METHOD(physXController, "CreateManager", _OPphysXControllerCreateManager);
 	JS_SET_METHOD(physXController, "Create", _OPphysXControllerCreate);
+	JS_SET_METHOD(physXController, "Release", _OPphysXControllerRelease);
 	JS_SET_METHOD(physXController, "Move", _OPphysXControllerMove);
 	JS_SET_METHOD(physXController, "GetActor", _OPphysXControllerGetActor);
 	JS_SET_METHOD(physXController, "GetPos", _OPphysXControllerGetPos);

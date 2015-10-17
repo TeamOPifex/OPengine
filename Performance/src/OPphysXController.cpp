@@ -52,4 +52,7 @@ OPvec3 OPphysXControllerGetFootPos(OPphysXController* controller) {
 	return OPvec3Create(pos.x, pos.y, pos.z);
 }
 
+void OPphysXControllerRelease(OPphysXController* controller) {
+	controller->release();
+}
 #endif
