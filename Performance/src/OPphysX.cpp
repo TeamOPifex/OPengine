@@ -10,6 +10,7 @@
 
 PxPhysics* OPphysXSDK = NULL;
 PxCooking* OPphysXCooking = NULL;
+PxFoundation* OPphysXFoundation = NULL;
 static PxDefaultErrorCallback _defaultErrorCallback;
 static PxDefaultAllocator _defaultAllocatorCallback;
 PxSimulationFilterShader OPphysXDefaultFilterShader = OPphysXBasicFilterShader;
@@ -17,10 +18,10 @@ PxSimulationFilterShader OPphysXDefaultFilterShader = OPphysXBasicFilterShader;
 void OPphysXInit() {
 	if(OPphysXSDK != NULL) return;
 
-	PxFoundation* foundation = PxCreateFoundation(PX_PHYSICS_VERSION, _defaultAllocatorCallback, _defaultErrorCallback);
-	OPphysXSDK = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale());
+	OPphysXFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, _defaultAllocatorCallback, _defaultErrorCallback);
+	OPphysXSDK = PxCreatePhysics(PX_PHYSICS_VERSION, *OPphysXFoundation, PxTolerancesScale());
 	PxInitExtensions(*OPphysXSDK);
-	OPphysXCooking = PxCreateCooking(PX_PHYSICS_VERSION, *foundation, PxCookingParams(PxTolerancesScale()));
+	OPphysXCooking = PxCreateCooking(PX_PHYSICS_VERSION, *OPphysXFoundation, PxCookingParams(PxTolerancesScale()));
 	if (!OPphysXCooking) {
 		ASSERT(false, "Failed to initialize Cooking");
 	}
@@ -263,7 +264,13 @@ void OPphysXGetTransform(OPphysXRigidActor* actor, OPmat4* mat) {
 }
 
 void OPphysXShutdown() {
+	OPphysXCooking->release();
+	OPphysXCooking = NULL;
 	OPphysXSDK->release();
+	OPphysXSDK = NULL;
+	PxCloseExtensions();
+	OPphysXFoundation->release();
+	OPphysXFoundation = NULL;
 }
 
 i8 OPphysXBoxColliding(PxRigidDynamic* actor, OPvec3 size, OPvec3 pos) {
