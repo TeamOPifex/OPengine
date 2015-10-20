@@ -76,12 +76,22 @@ JS_RETURN_VAL _OPcmanAddLoader(const JS_ARGS& args) {
     JS_RETURN_NULL
 }
 
+JS_RETURN_VAL _OPcmanUpdate(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPtimer* ptr = JS_GET_ARG_PTR(args, 0, OPtimer);
+    OPcmanUpdate(ptr);
+
+    JS_RETURN_NULL
+}
+
 void OPcmanWrapper(Handle<Object> exports) {
     SCOPE_AND_ISOLATE;
 
     Handle<Object> cman = JS_NEW_OBJECT();
     JS_SET_METHOD(cman, "Init", _OPcmanInit);
     JS_SET_METHOD(cman, "Load", _OPcmanLoad);
+    JS_SET_METHOD(cman, "Update", _OPcmanUpdate);
     JS_SET_METHOD(cman, "Get", _OPcmanGet);
     JS_SET_METHOD(cman, "LoadGet", _OPcmanLoadGet);
     JS_SET_METHOD(cman, "AddLoader", _OPcmanAddLoader);
