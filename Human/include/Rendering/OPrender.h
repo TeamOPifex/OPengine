@@ -21,6 +21,8 @@ extern OPuint OPRENDER_VAO;
 
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 extern GLFWwindow* window;
+extern void (*OP_WINDOW_DROP)();
+void OPrenderDragAndDropCB(void (*cb)());
 #endif
 
 OPint OPrenderInit(i32 width, i32 height);

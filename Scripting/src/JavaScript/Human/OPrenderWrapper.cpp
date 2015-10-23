@@ -124,6 +124,42 @@ JS_RETURN_VAL _OPrenderBlendAdditive(const JS_ARGS& args) {
     JS_RETURN_NULL;
 }
 
+ui8 _windowDropCallbackSet = 0;
+Local<Function> _windowDropCallback;
+
+void _OPrenderDragAndDropCB() {
+    if(!_windowDropCallbackSet) return;
+
+    OPlog("Hit C callback");
+
+    SCOPE_AND_ISOLATE
+    const unsigned int argc = 0;
+    Handle<Value> argv[argc] = { };
+    Handle<Object> obj = JS_NEW_OBJECT();
+
+    #ifdef OPIFEX_OPTION_V8
+    	TryCatch trycatch;
+        OPlog("Calling JS CB");
+        Local<Value> result = _windowDropCallback->Call(obj, argc, argv);
+        if (result.IsEmpty()) {
+            OPlog("Calling JS ERROR");
+    		ReportException(isolate, &trycatch);
+        }
+    #else
+        Local<Value> result = _windowDropCallback->Call(obj, argc, argv);
+    #endif
+}
+
+JS_RETURN_VAL _OPrenderDragAndDrop(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPrenderDragAndDropCB(_OPrenderDragAndDropCB);
+    _windowDropCallbackSet = 1;
+    _windowDropCallback = Local<Function>::Cast(args[0]);
+
+    JS_RETURN_NULL
+}
+
 void OPrenderWrapper(Handle<Object> exports) {
     SCOPE_AND_ISOLATE;
 
@@ -141,6 +177,7 @@ void OPrenderWrapper(Handle<Object> exports) {
     JS_SET_METHOD(render, "FullScreen", _OPrenderFullScreen);
     JS_SET_METHOD(render, "BlendAlpha", _OPrenderBlendAlpha);
     JS_SET_METHOD(render, "BlendAdditive", _OPrenderBlendAdditive);
+    JS_SET_METHOD(render, "DragAndDrop", _OPrenderDragAndDrop);
     JS_SET_OBJECT(exports, "render", render);
 
 }
