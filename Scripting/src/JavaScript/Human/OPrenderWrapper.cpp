@@ -125,7 +125,7 @@ JS_RETURN_VAL _OPrenderBlendAdditive(const JS_ARGS& args) {
 }
 
 ui8 _windowDropCallbackSet = 0;
-Local<Function> _windowDropCallback;
+Persistent<Function, CopyablePersistentTraits<Function> > _windowDropCallback;
 
 void _OPrenderDragAndDropCB() {
     if(!_windowDropCallbackSet) return;
@@ -134,13 +134,14 @@ void _OPrenderDragAndDropCB() {
 
     SCOPE_AND_ISOLATE
     const unsigned int argc = 0;
-    Handle<Value> argv[argc] = { };
+	Handle<Value>* argv = NULL;
     Handle<Object> obj = JS_NEW_OBJECT();
 
     #ifdef OPIFEX_OPTION_V8
     	TryCatch trycatch;
         OPlog("Calling JS CB");
-        Local<Value> result = _windowDropCallback->Call(obj, argc, argv);
+		Local<Function> cb = Local<Function>::New(isolate, _windowDropCallback);
+        Local<Value> result = cb->Call(obj, argc, argv);
         if (result.IsEmpty()) {
             OPlog("Calling JS ERROR");
     		ReportException(isolate, &trycatch);
@@ -155,7 +156,9 @@ JS_RETURN_VAL _OPrenderDragAndDrop(const JS_ARGS& args) {
 
     OPrenderDragAndDropCB(_OPrenderDragAndDropCB);
     _windowDropCallbackSet = 1;
-    _windowDropCallback = Local<Function>::Cast(args[0]);
+	Local<Function> tmp = Local<Function>::Cast(args[0]);
+	_windowDropCallback = Persistent<Function, CopyablePersistentTraits<Function> >(isolate, tmp);
+	_OPrenderDragAndDropCB();
 
     JS_RETURN_NULL
 }
