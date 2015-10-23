@@ -72,9 +72,9 @@ ui32 OPgetNativeScreenHeight() {
 
 #ifndef OPIFEX_ANDROID
 
-void(*OP_WINDOW_DROP)() = NULL;
+void(*OP_WINDOW_DROP)(int, const OPchar**) = NULL;
 
-void OPrenderDragAndDropCB(void (*cb)()) {
+void OPrenderDragAndDropCB(void (*cb)(int, const OPchar**)) {
 	OP_WINDOW_DROP = cb;
 }
 
@@ -93,7 +93,7 @@ void glfwWindowDropCallback(GLFWwindow* window, int count, const OPchar** files)
 	}
 
 	if(OP_WINDOW_DROP != NULL) {
-		OP_WINDOW_DROP();
+		OP_WINDOW_DROP(count, files);
 	}
 }
 #include "./Human/include/Input/OPkeyboard.h"
