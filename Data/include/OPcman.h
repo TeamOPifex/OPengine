@@ -60,7 +60,7 @@ struct OPasset {
 	OPint(*Unload)(void* assetIn);
 	OPint Dirty;
 #if defined(_DEBUG)
-	OPint(*Reload)(const OPchar* path, void** assetOut);
+	OPint(*Reload)(OPstream* stream, void** assetOut);
 	OPchar* FullPath;
 	OPchar* AbsolutePath;
 	i64 LastChange;

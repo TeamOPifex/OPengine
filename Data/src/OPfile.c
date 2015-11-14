@@ -274,13 +274,14 @@ OPstream* OPfileRead(OPfile* path, ui32 size){
 
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) || defined(OPIFEX_IOS)
 	ui8 bytes[1024];
+	ui32 readBytes;
 
 	OPint fd = path->_handle;
-		
+
 	// be sure that the file could be opened successfully
 	if (fd){
 
-		OPstream* str = OPstreamCreate(expectedSize);
+		OPstream* str = OPstreamCreate(size);
 
 		ui8* bytes = (ui8*)OPalloc(size);
 		// write the entire file into a stream
