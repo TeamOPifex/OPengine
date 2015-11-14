@@ -240,6 +240,76 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 		return NULL;
 }
 
+
+//-----------------------------------------------------------------------------
+OPstream* OPfileRead(OPfile* path, ui32 size){
+
+#ifdef OPIFEX_ANDROID
+	//AAsset* asset = AAssetManager_open(OPAndroidState->activity->assetManager, path, AASSET_MODE_UNKNOWN);
+	//
+	//if (asset == NULL){
+	//	OPlog("OPreadFile: Asset man creation failed.\n");
+	//	return 0;
+	//}
+
+	//off_t start, length;
+	//int fd = AAsset_openFileDescriptor(asset, &start, &length);
+
+	//FILE* myFile = fdopen(dup(fd), "rb");
+	//fseek(myFile, start, SEEK_SET);
+
+	FILE* myFile = path->_handle;
+
+	OPstream* str = OPstreamCreate(size);
+
+	// write the entire file into a stream
+	ui8* byte = OPalloc(sizeof(ui8)* size);
+	while (fread(byte, sizeof(ui8), size, myFile)){
+		OPwrite(str, byte, size);
+	}
+	str->Data[size] = 0;
+
+	OPseek(str, 0);
+	return str;
+
+#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) || defined(OPIFEX_IOS)
+	ui8 bytes[1024];
+
+	OPint fd = path->_handle;
+		
+	// be sure that the file could be opened successfully
+	if (fd){
+
+		OPstream* str = OPstreamCreate(expectedSize);
+
+		ui8* bytes = (ui8*)OPalloc(size);
+		// write the entire file into a stream
+		readBytes = read(fd, bytes, size);
+		OPwrite(str, bytes, readBytes);
+		OPfree(bytes);
+		OPseek(str, 0);
+
+		// finally return the stream
+		return str;
+	}
+#elif defined(OPIFEX_WINDOWS)
+	// windows implementation
+	ui8 bytes[1024];
+	FILE* fd = path->_handle, i;
+	// be sure that the file could be opened successfully
+	ui8 byte = 0;
+	OPstream* str = OPstreamCreate(size);
+
+	OPwrite(str, OPfileReadBytes(path, size), size);
+
+	OPseek(str, 0);
+
+	// finally return the stream
+	return str;
+#endif
+	return NULL;
+}
+
 //-----------------------------------------------------------------------------
 OPint OPfileExists(const char* path){
 #if defined(OPIFEX_UNIX)

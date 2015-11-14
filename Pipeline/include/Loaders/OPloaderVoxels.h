@@ -14,7 +14,7 @@ struct OPvoxels {
 	OPvecInt3* voxels;
 };
 
-OPint OPvoxelsLoad(const OPchar* path, void** asset);
+OPint OPvoxelsLoad(OPstream* path, void** asset);
 OPvecInt3 OPvoxelsGet(OPvoxels* voxels, OPint x, OPint y, OPint z);
 OPassetLoader* OPvoxelsLoader();
 

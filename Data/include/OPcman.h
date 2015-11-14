@@ -10,8 +10,11 @@ extern "C" {
 #include "./Core/include/OPtimer.h"
 #include "./Data/include/OPhashMap.h"
 #include "./Data/include/OPlinkedList.h"
+#include "./Data/include/OPstream.h"
+#include "./Data/include/OPfile.h"
 
 #define OP_CMAN_CAP 100
+#define OP_CMAN_MAX_RESOURCE_FILES 10
 
 #define OP_CMAN_KEY_EXISTS           -1
 #define OP_CMAN_NO_MATCHING_UPLOADER -2
@@ -31,13 +34,24 @@ extern "C" {
 //|_____/ \__|_|   \__,_|\___|\__|___/
 //
 
+
+struct OPresourceFile {
+	struct OPfile resourceFile;
+	ui16 headerSize;
+	ui16 resourceCount;
+	OPchar** resourceNames;
+	ui32* resourceOffset;
+	ui32* resourceSize;
+};
+typedef struct OPresourceFile OPresourceFile;
+
 struct OPassetLoader {
 	const OPchar Extension[8];
 	const OPchar* AssetTypePath;
 	OPint AssetSize;
-	OPint (*Load)(const OPchar* path, void** assetOut);
+	OPint(*Load)(OPstream* stream, void** assetOut);
 	OPint(*Unload)(void* assetIn);
-	OPint(*Reload)(const OPchar* path, void** assetOut);
+	OPint(*Reload)(OPstream* stream, void** assetOut);
 };
 typedef struct OPassetLoader OPassetLoader;
 
@@ -66,6 +80,7 @@ extern OPhashMap OP_CMAN_HASHMAP;
 extern OPassetLoader* OP_CMAN_ASSETLOADERS;
 extern OPint OP_CMAN_ASSET_LOADER_COUNT;
 extern OPlinkedList* OP_CMAN_PURGE;
+extern OPresourceFile OP_CMAN_RESOURCE_FILES[OP_CMAN_MAX_RESOURCE_FILES];
 
 // ______                _   _
 //|  ____|              | | (_)
@@ -146,6 +161,10 @@ OPint OPcmanDelete(const OPchar* key);
 void OPcmanDestroy();
 
 OPint OPcmanSetDir(OPchar* dir);
+
+
+void OPcmanLoadResourceFile(const OPchar* filename);
+OPstream* OPcmanGetResource(const OPchar* resourceName);
 
 #ifdef __cplusplus
 }

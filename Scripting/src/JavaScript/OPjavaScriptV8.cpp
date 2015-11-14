@@ -453,7 +453,8 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
 void OPjavaScriptV8SetupRun(const OPchar* script) {
     OPjavaScriptV8Init();
     OPscript *result = NULL;
-    OPscriptLoad(script, &result);
+	OPstream* str = OPreadFile(script);
+	OPscriptLoad(str, &result);
     OPjavaScriptV8Compiled compiled;
     OPjavaScriptV8Compile(&compiled, result);
     OPjavaScriptV8Run(&compiled);

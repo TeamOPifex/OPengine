@@ -3,6 +3,7 @@
 
 #include "./Human/include/Rendering/OpenGL.h"
 #include "./Core/include/OPtypes.h"
+#include "./Data/include/OPstream.h"
 
 //-----------------------------------------------------------------------------
 //  _____                     _____                  _____  _               _   _
@@ -48,8 +49,8 @@ struct OPshaderAttribute{
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
-OPint OPshaderLoadVertex(const OPchar* filename, OPshader** shader);
-OPint OPshaderLoadFragment(const OPchar* filename, OPshader** shader);
+OPint OPshaderLoadVertex(OPstream* str, OPshader** shader);
+OPint OPshaderLoadFragment(OPstream* str, OPshader** shader);
 OPint OPshaderUnload(OPshader* shader);
 
 

@@ -20,6 +20,9 @@ OPassetLoader* OP_CMAN_ASSETLOADERS;
 OPint OP_CMAN_ASSET_LOADER_COUNT;
 OPchar* OP_CMAN_ASSET_FOLDER;
 
+OPuint OP_CMAN_RESOURCE_FILE_COUNT = 0;
+OPresourceFile OP_CMAN_RESOURCE_FILES[OP_CMAN_MAX_RESOURCE_FILES];
+
 OPlinkedList* OP_CMAN_PURGE;
 
 OPlist* _OP_CMAN_ASSETLOADERS = NULL;
@@ -63,9 +66,9 @@ void OPcmanUpdate(struct OPtimer* timer) {
 					change = OPfileLastChange(asset->AbsolutePath);
 					if (change != asset->LastChange) {
 						OPlg("$, %s",asset->FullPath);
-						if (asset->Reload(asset->FullPath, &asset->Asset)) {
-							asset->LastChange = change;
-						}
+						//if (asset->Reload(asset->FullPath, &asset->Asset)) {
+						//	asset->LastChange = change;
+						//}
 					}
 				}
 			}
@@ -201,7 +204,10 @@ OPint OPcmanLoad(const OPchar* key){
 
 				// load the asset
 				asset = NULL;
-				success = loader.Load(fullPath, &asset);
+				OPstream* str = OPreadFileLarge(fullPath, 1024);
+				str->Source = fullPath;
+				success = loader.Load(str, &asset);
+				OPstreamDestroy(str);
 				if(success <= 0) {
 					OPlog("Failed to load %s", fullPath);
 					OPfree(fullPath);
@@ -345,4 +351,39 @@ void OPcmanDestroy() {
 		OPllDestroy(OP_CMAN_PURGE);
 		OPfree(OP_CMAN_PURGE);
 	}
+}
+
+void OPcmanLoadResourceFile(const OPchar* filename) {
+	OPresourceFile resource = OP_CMAN_RESOURCE_FILES[OP_CMAN_RESOURCE_FILE_COUNT++];
+	resource.resourceFile = OPfileOpen(filename);
+
+	ui8 version = OPfileReadui8(&resource.resourceFile);
+
+	resource.resourceCount = OPfileReadui16(&resource.resourceFile);
+	ui32 lengthOfNames = OPfileReadui32(&resource.resourceFile);
+	resource.resourceNames = (OPchar**)OPalloc(sizeof(OPchar*)* lengthOfNames);
+	resource.resourceOffset = (ui32*)OPalloc(sizeof(ui32)* resource.resourceCount);
+	resource.resourceSize = (ui32*)OPalloc(sizeof(ui32)* resource.resourceCount);
+
+	ui16 nameLength;
+	for (ui16 i = 0; i < resource.resourceCount; i++) {
+		nameLength  = OPfileReadui16(&resource.resourceFile);
+		resource.resourceNames[i] = OPfileReadString(&resource.resourceFile);
+		resource.resourceOffset = OPfileReadui32(&resource.resourceFile);
+		resource.resourceSize = OPfileReadui32(&resource.resourceFile);
+	}
+}
+
+OPstream* OPcmanGetResource(const OPchar* resourceName) {
+	for (ui16 i = 0; i < OP_CMAN_RESOURCE_FILE_COUNT; i++) {
+		OPresourceFile resource = OP_CMAN_RESOURCE_FILES[i];
+		for (ui16 j = 0; j < resource.resourceCount; j++) {
+			if (OPstringEquals(resourceName, resource.resourceNames[j])) {
+				OPfileSeek(&resource.resourceFile, resource.resourceOffset[j]);
+				OPstream* stream = OPfileRead(&resource.resourceFile, &resource.resourceSize[j]);
+				stream->Source = resource.resourceNames[j];
+			}
+		}
+	}
+	return NULL;
 }

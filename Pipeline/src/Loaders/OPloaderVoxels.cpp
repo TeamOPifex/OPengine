@@ -80,9 +80,9 @@ OPvoxels readVoxelData(OPstream* str) {
 	return result;
 }
 
-OPint OPvoxelsLoad(const OPchar* path, void** asset) {
+OPint OPvoxelsLoad(OPstream* str, void** asset) {
 
-	OPstream* str = OPreadFile(path);
+	//OPstream* str = OPreadFile(path);
 
 	ui32 version = OPreadui32(str);
 	ui32 colorFormat = OPreadui32(str);

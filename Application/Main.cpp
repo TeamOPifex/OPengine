@@ -13,8 +13,8 @@
 void ApplicationInit() {
 	OPloadersAddDefault();
 	//OPscriptAddLoader();
-	//OPskeletonAddLoader();
-	//OPskeletonAnimationAddLoader();
+	OPskeletonAddLoader();
+	OPskeletonAnimationAddLoader();
 	//SpineAddLoader();
 	OPlog("Assets %s", OPIFEX_ASSETS);
 	OPcmanInit(OPIFEX_ASSETS);

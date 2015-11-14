@@ -148,6 +148,7 @@ OPint OPdeleteFile(const char* path);
 ui64 OPfileLastChange(const OPchar* path);
 
 OPfile OPfileOpen(const OPchar* path);
+OPstream* OPfileRead(OPfile* path, ui32 size);
 OPint OPfileWriteui8(OPfile* file, ui8 data);
 OPint OPfileWriteui16(OPfile* file, ui16 data);
 OPint OPfileWriteui32(OPfile* file, ui32 data);
