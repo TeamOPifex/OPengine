@@ -19,6 +19,8 @@ void ApplicationInit() {
 	OPlog("Assets %s", OPIFEX_ASSETS);
 	OPcmanInit(OPIFEX_ASSETS);
 
+	OPcmanLoadResourceFile("pack.opresource");
+
 	OPrenderInit();
 	OPgamePadSetDeadZones(0.2f);
 

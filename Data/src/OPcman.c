@@ -358,6 +358,7 @@ void OPcmanLoadResourceFile(const OPchar* filename) {
 	resource.resourceFile = OPfileOpen(filename);
 
 	ui8 version = OPfileReadui8(&resource.resourceFile);
+	OPlogDebug("Version %d", version);
 
 	resource.resourceCount = OPfileReadui16(&resource.resourceFile);
 	ui32 lengthOfNames = OPfileReadui32(&resource.resourceFile);
@@ -365,12 +366,16 @@ void OPcmanLoadResourceFile(const OPchar* filename) {
 	resource.resourceOffset = (ui32*)OPalloc(sizeof(ui32)* resource.resourceCount);
 	resource.resourceSize = (ui32*)OPalloc(sizeof(ui32)* resource.resourceCount);
 
+	OPlogDebug("Resource Count %d", resource.resourceCount);
+
 	ui16 nameLength;
 	for (ui16 i = 0; i < resource.resourceCount; i++) {
 		nameLength  = OPfileReadui16(&resource.resourceFile);
 		resource.resourceNames[i] = OPfileReadString(&resource.resourceFile);
 		resource.resourceOffset = OPfileReadui32(&resource.resourceFile);
 		resource.resourceSize = OPfileReadui32(&resource.resourceFile);
+
+		OPlogDebug("Resource %s", resource.resourceNames[i]);
 	}
 }
 
