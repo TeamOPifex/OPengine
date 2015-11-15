@@ -381,7 +381,7 @@ OPfile OPfileOpen(const OPchar* path) {
 	OPfile file = { 0 };
 
 	// be sure that the file could be opened successfully
-	fd = open(path, O_RDWR | O_CREAT | O_TRUNC);
+	fd = open(path, O_RDONLY);
 	if(fd == 0) return file;
 
 	file._handle = fd;
