@@ -53,7 +53,7 @@ typedef struct OPsprite OPsprite;
 //   |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //
 //
-OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss);
+OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss);
 OPint OPspriteSheetUnload(void* ss);
 OPvec2 OPspriteCurrentFrameSize(OPsprite* sprite);
 

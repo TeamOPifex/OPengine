@@ -53,9 +53,9 @@ void OPMgenerateTangent(OPvec3* tangent, OPMvertex* v1, OPMvertex* v2);
 OPMData OPMloadData(OPstream* str);
 OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh);
 
-OPint OPMload(const OPchar* filename, OPmesh** mesh);
+OPint OPMload(OPstream* str, OPmesh** mesh);
 OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh);
-OPint OPMReload(const OPchar* filename, OPmesh** mesh);
+OPint OPMReload(OPstream* str, OPmesh** mesh);
 OPint OPMUnload(void* image);
 
 #endif

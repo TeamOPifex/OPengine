@@ -59,7 +59,7 @@ struct OPfontUserTextNode {
 };
 typedef struct OPfontUserTextNode OPfontUserTextNode;
 
-OPint OPfontLoad(OPchar* filename, OPfont** data);
+OPint OPfontLoad(OPstream* str, OPfont** data);
 OPint OPfontUnload(OPfont* font);
 OPfontGlyph* OPfontGetGlyph(OPfont* font, OPchar charcode);
 OPmesh OPfontCreateText(OPfont* font, OPchar* text);

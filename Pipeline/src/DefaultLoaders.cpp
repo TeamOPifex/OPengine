@@ -13,9 +13,9 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 		".png",
 		"Textures/",
 		sizeof(OPtexture),
-		(OPint (*)(const OPchar*, void**))OPimagePNGLoad,
+		(OPint(*)(OPstream*, void**))OPimagePNGLoad,
 		(OPint (*)(void*))OPimagePNGUnload,
-		(OPint(*)(const OPchar*, void**))OPimagePNGReload
+		(OPint(*)(OPstream*, void**))OPimagePNGReload
 	},
 	{
 		".vert",
@@ -33,7 +33,7 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 		"Shaders/",
 #endif
 		sizeof(OPshader),
-		(OPint (*)(const OPchar*, void**))OPshaderLoadVertex,
+		(OPint(*)(OPstream*, void**))OPshaderLoadVertex,
 		(OPint(*)(void*))OPshaderUnload,
 		NULL
 	},
@@ -53,7 +53,7 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 		"Shaders/",
 #endif
 		sizeof(OPshader),
-		(OPint (*)(const OPchar*, void**))OPshaderLoadFragment,
+		(OPint(*)(OPstream*, void**))OPshaderLoadFragment,
 		(OPint(*)(void*))OPshaderUnload,
 		NULL
 	},
@@ -61,15 +61,15 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 		".opm",
 		"Models/",
 		sizeof(OPmesh),
-		(OPint (*)(const OPchar*, void**))OPMload,
+		(OPint(*)(OPstream*, void**))OPMload,
 		(OPint(*)(void*))OPMUnload,
-		(OPint(*)(const OPchar*, void**))OPMReload
+		(OPint(*)(OPstream*, void**))OPMReload
 	},
 	{
 		".opf",
 		"Fonts/",
 		sizeof(OPfont),
-		(OPint(*)(const OPchar*, void**))OPfontLoad,
+		(OPint(*)(OPstream*, void**))OPfontLoad,
 		(OPint(*)(void*))OPfontUnload,
 		NULL
 	},
@@ -77,7 +77,7 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 		".opss",
 		"Sprites/",
 		sizeof(OPspriteSheet),
-		(OPint(*)(const OPchar*, void**))OPspriteSheetLoad,
+		(OPint(*)(OPstream*, void**))OPspriteSheetLoad,
 		(OPint(*)(void*))OPspriteSheetUnload,
 		NULL
 	},

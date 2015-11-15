@@ -46,10 +46,10 @@ void OPimagePNGCreate32(ui8* imageData, i32 width, i32 height, OPchar* filename)
 	lodepng_save_file(data, dataSize, filename);
 }
 
-i32 OPimagePNGLoad(const OPchar* filename, OPtexture** image){
-	OPlog("OPimagePNGLoad image %s", filename);
+i32 OPimagePNGLoad(OPstream* str, OPtexture** image){
+	OPlog("OPimagePNGLoad image %s", str->Source);
 	OPglError("OPimagePNGLoad:Error 0::%d");
-	OPstream* str = OPreadFile(filename);
+	//OPstream* str = OPreadFile(filename);
 	ASSERT(str != NULL, "Image not found.");
 	return OPimagePNGLoadStream(str, 0, image);
 }
@@ -117,7 +117,7 @@ i32 OPimagePNGLoadStream(OPstream* str, i32 offset, OPtexture** image) {
 
 	// clean up
 	OPfree(data);
-	OPstreamDestroy(str);
+	//OPstreamDestroy(str);
 
 	*image = tex;
 
@@ -126,9 +126,9 @@ i32 OPimagePNGLoadStream(OPstream* str, i32 offset, OPtexture** image) {
 	return 1;
 }
 
-i32 OPimagePNGReload(const OPchar* filename, OPtexture** image){
+i32 OPimagePNGReload(OPstream* str, OPtexture** image){
 	OPlog("Reload Image PNG");
-	OPstream* str = OPreadFile(filename);
+	//OPstream* str = OPreadFile(filename);
 	OPtexture* resultTex;
 	OPtexture* tex = (OPtexture*)(*image);
 	OPint result = OPimagePNGLoadStream(str, 0, &resultTex);

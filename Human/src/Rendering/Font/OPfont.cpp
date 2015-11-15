@@ -8,12 +8,12 @@
 #include "./Core/include/Assert.h"
 #include "./Core/include/OPmath.h"
 
-OPint OPfontLoad(OPchar* filename, OPfont** data) {
+OPint OPfontLoad(OPstream* str, OPfont** data) {
 	OPfont* font = (OPfont*)OPalloc(sizeof(OPfont));
 	*data = font;
 
 	i16 version;
-	OPstream* str = OPreadFile(filename);
+	//OPstream* str = OPreadFile(filename);
 
 	version = OPreadi16(str);
 	font->size = OPreadf32(str);
