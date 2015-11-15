@@ -24,7 +24,10 @@ OPint OPshaderLoadVertex(OPstream* source, OPshader** shader){
 	if (vertex){
 		OPchar* src = (OPchar*)source->Data;
 
-		glShaderSource(vertex, 1, (const OPchar**)&src, 0);
+		GLint lengths[1] = {
+			source->Size
+		};
+		glShaderSource(vertex, 1, (const OPchar**)&src, lengths);
 		OPglError("GLShader::Error 2");
 		glCompileShader(vertex);
 		OPglError("GLShader::Error 3");
@@ -68,7 +71,10 @@ OPint OPshaderLoadFragment(OPstream* source, OPshader** shader){
 
 	if (frag){
 		OPchar* src = (OPchar*)source->Data;
-		glShaderSource(frag, 1, (const OPchar**)&src, 0);
+		GLint lengths[1] = {
+			source->Size
+		};
+		glShaderSource(frag, 1, (const OPchar**)&src, lengths);
 		glCompileShader(frag);
 
 		GLint compiled = 0;

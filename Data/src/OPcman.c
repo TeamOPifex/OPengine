@@ -65,7 +65,7 @@ void OPcmanUpdate(struct OPtimer* timer) {
 				if (asset != NULL && asset->Reload != NULL) { // Only check the file, if there's a reload function
 					change = OPfileLastChange(asset->AbsolutePath);
 					if (change != asset->LastChange) {
-						OPlg("$, %s",asset->FullPath);
+						// OPlg("$, %s",asset->FullPath);
 						//if (asset->Reload(asset->FullPath, &asset->Asset)) {
 						//	asset->LastChange = change;
 						//}
@@ -203,8 +203,11 @@ OPint OPcmanLoad(const OPchar* key){
 				fullPath = strcat(fullPath, key);
 
 				// load the asset
+				OPstream* str = OPcmanGetResource(fullPath);
+				if (str == NULL) {
+					str = OPreadFileLarge(fullPath, 1024);
+				}
 				asset = NULL;
-				OPstream* str = OPreadFileLarge(fullPath, 1024);
 				str->Source = fullPath;
 				success = loader.Load(str, &asset);
 				OPstreamDestroy(str);
@@ -353,41 +356,68 @@ void OPcmanDestroy() {
 	}
 }
 
-void OPcmanLoadResourceFile(const OPchar* filename) {
-	OPresourceFile resource = OP_CMAN_RESOURCE_FILES[OP_CMAN_RESOURCE_FILE_COUNT++];
-	resource.resourceFile = OPfileOpen(filename);
+void OPcmanLoadResourcePack(const OPchar* filename) {
+	// Grab the next OPresourceFile slot available
+	OPresourceFile* resource = &OP_CMAN_RESOURCE_FILES[OP_CMAN_RESOURCE_FILE_COUNT++];
 
-	ui8 version = OPfileReadui8(&resource.resourceFile);
+	// Opens the File handle
+	// The file handle will stay open until the resourceFile is unloaded
+	resource->resourceFile = OPfileOpen(filename);
+
+	// Get the resourceFile version
+	ui8 version = OPfileReadui8(&resource->resourceFile);
 	OPlogDebug("Version %d", version);
 
-	resource.resourceCount = OPfileReadui16(&resource.resourceFile);
-	ui32 lengthOfNames = OPfileReadui32(&resource.resourceFile);
-	resource.resourceNames = (OPchar**)OPalloc(sizeof(OPchar*)* lengthOfNames);
-	resource.resourceOffset = (ui32*)OPalloc(sizeof(ui32)* resource.resourceCount);
-	resource.resourceSize = (ui32*)OPalloc(sizeof(ui32)* resource.resourceCount);
+	// The number of resources in this pack
+	resource->resourceCount = OPfileReadui16(&resource->resourceFile);
 
-	OPlogDebug("Resource Count %d", resource.resourceCount);
+	// The total length of all names
+	// This is used to make a contiguous block of OPchar data so that
+	// the lookup of resources is faster
+	ui32 lengthOfNames = OPfileReadui32(&resource->resourceFile);
+
+	// Allocate the necessary data
+	// TODO: (garrett) allocate this into a single struct so that there's only 1 allocation
+	resource->resourceNames = (OPchar**)OPalloc(sizeof(OPchar*)* resource->resourceCount);
+	resource->resourceOffset = (ui32*)OPalloc(sizeof(ui32)* resource->resourceCount);
+	resource->resourceSize = (ui32*)OPalloc(sizeof(ui32)* resource->resourceCount);
+
+	OPlogDebug("Resource Count %d", resource->resourceCount);
 
 	ui16 nameLength;
-	for (ui16 i = 0; i < resource.resourceCount; i++) {
-		nameLength  = OPfileReadui16(&resource.resourceFile);
-		resource.resourceNames[i] = OPfileReadString(&resource.resourceFile);
-		resource.resourceOffset = OPfileReadui32(&resource.resourceFile);
-		resource.resourceSize = OPfileReadui32(&resource.resourceFile);
+	for (ui16 i = 0; i < resource->resourceCount; i++) {
+		// TODO: (garrett) Read in the string into a contiguous block of OPchar data
+		resource->resourceNames[i] = OPfileReadString(&resource->resourceFile);
+		resource->resourceOffset[i] = OPfileReadui32(&resource->resourceFile);
+		resource->resourceSize[i] = OPfileReadui32(&resource->resourceFile);
 
-		OPlogDebug("Resource %s", resource.resourceNames[i]);
+		OPlogDebug("Resource %s", resource->resourceNames[i]);
 	}
 }
 
 OPstream* OPcmanGetResource(const OPchar* resourceName) {
+	// Loop through all currently loaded resource packs
 	for (ui16 i = 0; i < OP_CMAN_RESOURCE_FILE_COUNT; i++) {
 		OPresourceFile resource = OP_CMAN_RESOURCE_FILES[i];
+		// Loop through each resource in the pack
 		for (ui16 j = 0; j < resource.resourceCount; j++) {
-			if (OPstringEquals(resourceName, resource.resourceNames[j])) {
-				OPfileSeek(&resource.resourceFile, resource.resourceOffset[j]);
-				OPstream* stream = OPfileRead(&resource.resourceFile, &resource.resourceSize[j]);
-				stream->Source = resource.resourceNames[j];
+			// Try to find the resource requested
+			if (!OPstringEquals(resourceName, resource.resourceNames[j])) {
+				continue;
 			}
+
+			// The resource was found in this pack
+			// Set the seek position into the file
+			// Then load it into an OPstream
+			ui32 offset = resource.resourceOffset[j];
+			ui32 size = resource.resourceSize[j];
+
+			// TODO: (garrett) This should be done in a way that will support threading
+			OPfileSeek(&resource.resourceFile, offset);
+			OPstream* stream = OPfileRead(&resource.resourceFile, size);
+			stream->Source = resource.resourceNames[j];
+
+			return stream;
 		}
 	}
 	return NULL;

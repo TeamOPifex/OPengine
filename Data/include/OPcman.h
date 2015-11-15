@@ -163,7 +163,19 @@ void OPcmanDestroy();
 OPint OPcmanSetDir(OPchar* dir);
 
 
-void OPcmanLoadResourceFile(const OPchar* filename);
+/* Loads a Resource Pack into the OPcman
+* The header data is loaded into memory, but the individual resources will be loaded
+* at request. The FILE handle will remain open until the Resource Pack is unloaded.
+* @param filename The resource to load
+*/
+void OPcmanLoadResourcePack(const OPchar* filename);
+
+/* Gets an asset OPstream out of a Resource Pack that has been loaded
+* It will look in Resource Packs in the order they were loaded. If no
+* resource could be found, it will return NULL
+* @param resourceName The resource to load
+* @return An OPstream to the resource in any of the Resource Packs that have been loaded
+*/
 OPstream* OPcmanGetResource(const OPchar* resourceName);
 
 #ifdef __cplusplus

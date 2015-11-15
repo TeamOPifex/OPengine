@@ -270,6 +270,8 @@ OPstream* OPfileRead(OPfile* path, ui32 size){
 	str->Data[size] = 0;
 
 	OPseek(str, 0);
+
+	str->Source = path->path;
 	return str;
 
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) || defined(OPIFEX_IOS)
@@ -290,6 +292,8 @@ OPstream* OPfileRead(OPfile* path, ui32 size){
 		OPfree(bytes);
 		OPseek(str, 0);
 
+		str->Source = path->path;
+
 		// finally return the stream
 		return str;
 	}
@@ -300,6 +304,7 @@ OPstream* OPfileRead(OPfile* path, ui32 size){
 	// be sure that the file could be opened successfully
 	ui8 byte = 0;
 	OPstream* str = OPstreamCreate(size);
+	str->Source = path->path;
 
 	OPwrite(str, OPfileReadBytes(path, size), size);
 
@@ -316,8 +321,9 @@ OPint OPfileExists(const char* path){
 #if defined(OPIFEX_UNIX)
 	return access(path, F_OK) + 1;
 #elif defined(OPIFEX_WINDOWS)
-	FILE *istream;
-	if ((istream = fopen(path, "r")) != NULL)
+	FILE *istream = NULL;
+	istream = fopen(path, "r");
+	if (istream != NULL)
 	{
 		fclose(istream);
 		return 1;
@@ -385,8 +391,11 @@ OPfile OPfileOpen(const OPchar* path) {
 #elif defined(OPIFEX_WINDOWS)
 	// windows implementation
 
-	FILE* myFile = fopen(path, "w+b");
-	OPfile file = { myFile };
+	OPfile file = { NULL };
+	if (OPfileExists(path) > 0) {
+		file._handle = fopen(path, "r+b");
+	}
+	file.path = path;
 	return file;
 
 #endif
@@ -433,44 +442,73 @@ OPint OPfileWriteBytes(OPfile* file, void* data, ui64 bytesToWrite) {
 
 ui8 OPfileReadui8(OPfile* file) {
 	i8 bytes[sizeof(ui8)];
+#ifdef OPIFEX_WINDOWS
+	fread(bytes, sizeof(ui8), 1, file->_handle);
+#else
 	read((int)file->_handle, bytes, sizeof(ui8));
+#endif
 	return *((ui8*)bytes);
 }
 
 ui16 OPfileReadui16(OPfile* file) {
 	i8 bytes[sizeof(ui16)];
+#ifdef OPIFEX_WINDOWS
+	fread(bytes, sizeof(ui16), 1, file->_handle);
+#else
 	read((int)file->_handle, bytes, sizeof(ui16));
+#endif
 	return *((ui16*)bytes);
 }
 
 ui32 OPfileReadui32(OPfile* file) {
 	i8 bytes[sizeof(ui32)];
+#ifdef OPIFEX_WINDOWS
+	fread(bytes, sizeof(ui32), 1, file->_handle);
+#else
 	read((int)file->_handle, bytes, sizeof(ui32));
+#endif
 	return *((ui32*)bytes);
 }
 
 i8 OPfileReadi8(OPfile* file) {
 	i8 bytes[sizeof(i8)];
+#ifdef OPIFEX_WINDOWS
+	fread(bytes, sizeof(i8), 1, file->_handle);
+#else
 	read((int)file->_handle, bytes, sizeof(i8));
+#endif
 	return *((i8*)bytes);
 }
 
 i16 OPfileReadi16(OPfile* file) {
 	i8 bytes[sizeof(i16)];
+#ifdef OPIFEX_WINDOWS
+	fread(bytes, sizeof(i16), 1, file->_handle);
+#else
 	read((int)file->_handle, bytes, sizeof(i16));
+#endif
 	return *((i16*)bytes);
 }
 
 i32 OPfileReadi32(OPfile* file) {
 	i8 bytes[sizeof(i32)];
+#ifdef OPIFEX_WINDOWS
+	fread(bytes, sizeof(i32), 1, file->_handle);
+#else
 	read((int)file->_handle, bytes, sizeof(i32));
+#endif
 	return *((i32*)bytes);
 }
 
 OPchar* OPfileReadString(OPfile* file) {
 	ui32 len = OPfileReadui32(file);
-	OPchar* str = (OPchar*)OPalloc(sizeof(OPchar) * len);
+	OPchar* str = (OPchar*)OPalloc(sizeof(OPchar)* (len + 1));
+#ifdef OPIFEX_WINDOWS
+	fread(str, sizeof(OPchar), len, file->_handle);
+#else
 	read((int)file->_handle, str, sizeof(OPchar)* len);
+#endif
+	str[len] = NULL;
 	return str;
 }
 
@@ -487,7 +525,7 @@ void* OPfileReadBytes(OPfile* file, ui64 bytesToRead) {
 
 OPint OPfileSeek(OPfile* file, OPint pos) {
 #ifdef OPIFEX_WINDOWS
-	fseek(file->_handle, 0, SEEK_SET);
+	fseek(file->_handle, pos, SEEK_SET);
 #else
     lseek(file->_handle, pos, SEEK_SET);
 #endif
