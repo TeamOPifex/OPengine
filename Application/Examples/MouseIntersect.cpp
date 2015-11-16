@@ -91,24 +91,6 @@ void ExampleMouseIntersectEnter(OPgameState* last) {
 	OPrenderDepth(1);
 }
 
-bool intersection(OPboundingBox3D b, OPray3D ray) {
-    double tmin = -INFINITY, tmax = INFINITY;
-
-    for (int i = 0; i < 3; ++i) {
-        if (ray.direction[i] != 0.0) {
-            double t1 = (b.min[i] - ray.position[i])/ray.direction[i];
-            double t2 = (b.max[i] - ray.position[i])/ray.direction[i];
-
-            tmin = OPMAX(tmin, OPMIN(t1, t2));
-            tmax = OPMIN(tmax, OPMAX(t1, t2));
-        } else if (ray.position[i] <= b.min[i] || ray.position[i] >= b.max[i]) {
-            return false;
-        }
-    }
-
-    return tmax > tmin && tmax > 0.0;
-}
-
 OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 
 	////////////////////////
@@ -127,71 +109,17 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	mouseIntersectExample.Camera._viewStale = 1;
 	OPcamUpdateView(mouseIntersectExample.Camera);
 
-	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
-	OPmat4 world = OPmat4RotY(mouseIntersectExample.Rotation / 100.0);
-	OPmat4 world2 = OPmat4Translate(OPvec3Create(-5, 0, 0));
-	//OPmat4Scl(&world, 0.25f, 0.25f, 0.25f);
 
-	OPvec3 ray_wor = { 0, 0, 0};
-	OPvec3 ray_Origon = { 0, 0, 0};
+	OPray3D ray = { 0, 0, 0, 0, 0, 0};
+	OPvec3 positionHit = { 0, 0, 0};
 	OPint intersecting = 0;
 	if(OPmouseIsDown(OPMOUSE_LBUTTON)) {
-		// Step 0
-		i32 mouseX = OPmousePositionX();
-		i32 mouseY = OPmousePositionY();
 
-		// Step 1
-		OPfloat x = (((OPfloat)mouseX / (OPfloat)OPRENDER_SCALED_WIDTH) - 0.5f) * 2.0f;
-		OPfloat y = -(((OPfloat)mouseY / (OPfloat)OPRENDER_SCALED_HEIGHT) - 0.5f) * 2.0f;
-		OPvec4 rayStart_nds = OPvec4Create(x, y, -1.0, 1.0);
-		OPvec4 rayEnd_nds = OPvec4Create(x, y, 0.0f, 1.0);
-
-
-		OPvec4Log("Ray Start NDS", rayStart_nds);
-		OPvec4Log("Ray End NDS", rayEnd_nds);
-		OPlog("Screen %d x %d", OPRENDER_SCALED_WIDTH, OPRENDER_SCALED_HEIGHT);
-
-		OPmat4 inverseProjectionMatrix;
-		OPmat4Inverse(&inverseProjectionMatrix, mouseIntersectExample.Camera.Proj);
-		OPmat4 inverseViewMatrix;
-		OPmat4Inverse(&inverseViewMatrix, mouseIntersectExample.Camera.View);
-
-		OPmat4Log("View", mouseIntersectExample.Camera.View);
-		OPmat4Log("Inverse", inverseViewMatrix);
-
-
-		OPvec4 rayStartCamera = OPmat4Transform(rayStart_nds, inverseProjectionMatrix);
-		rayStartCamera /= rayStartCamera.w;
-		OPvec4 rayStartWorld = OPmat4Transform(rayStartCamera, inverseViewMatrix);
-		rayStartWorld /= rayStartWorld.w;
-		OPvec4 rayEndCamera = OPmat4Transform(rayEnd_nds, inverseProjectionMatrix);
-		rayEndCamera /= rayEndCamera.w;
-		OPvec4 rayEndWorld = OPmat4Transform(rayEndCamera, inverseViewMatrix);
-		rayEndWorld /= rayEndWorld.w;
-
-		OPvec4 rayDirWorld = rayEndWorld - rayStartWorld;
-		//rayDirWorld = OPvec4Norm(rayDirWorld);
-
-
-		ray_wor = OPvec3Norm(OPvec3Create(rayDirWorld.x, rayDirWorld.y, rayDirWorld.z));
-
-		OPvec3Log("World", ray_wor);
-		OPvec4Log("Origin", rayStartWorld);
-		ray_Origon = OPvec3Create(rayStartWorld.x, rayStartWorld.y, rayStartWorld.z);
-
-		// // Step 2
-		// OPvec4 ray_clip = OPvec4Create(rayStart_nds.x, rayStart_nds.y, -1.0, 1.0);
-		//
-		// // Step 3
-		// OPmat4Log("Proj", mouseIntersectExample.Camera.Proj);
-		// OPmat4Log("Inverse", inverseProjectionMatrix);
-		// OPvec4 ray_eye = OPmat4Transform(ray_clip, inverseProjectionMatrix);
-		// ray_eye = OPvec4Create(ray_eye.x, ray_eye.y, -1.0, 0.0);
-		//
-		// // Step 4
-		// OPvec4 ray_wor4 = OPmat4Transform(ray_eye, inverseViewMatrix);
-		// ray_wor = OPvec3Create(ray_wor4.x, ray_wor4.y, ray_wor4.z);
-		// ray_wor = OPvec3Norm(ray_wor);
+		ray = OPcamUnproject(
+			&mouseIntersectExample.Camera,
+			OPmousePositionX(),
+			OPmousePositionY()
+		);
 
 
 		{
@@ -199,12 +127,7 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 				OPvec3Create(-0.5, -0.5, -0.5),
 				OPvec3Create(0.5, 0.5, 0.5)
 			);
-			OPray3D ray = {
-				ray_Origon,
-				ray_wor
-			};
-
-			if(intersection(box, ray)) {
+			if(OPboundingBox3DRay3D(box, ray)) {
 				intersecting = 1;
 			}
 		}
@@ -214,27 +137,32 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 				OPvec3Create(-0.5 - 5.0, -0.5, -0.5),
 				OPvec3Create(0.5 - 5.0, 0.5, 0.5)
 			);
-			OPray3D ray = {
-				ray_Origon,
-				ray_wor
-			};
 
-			if(intersection(box, ray)) {
+			if(OPboundingBox3DRay3D(box, ray)) {
 				intersecting = 2;
+			}
+		}
+
+		{
+			OPplane3D plane = {
+				OPvec3Create(0,0,0),
+				OPvec3Create(0,1,0)
+			};
+			if(OPplane3DIntersects(plane, ray, &positionHit)) {
+				OPvec3Log("Intersect", positionHit);
 			}
 		}
 
 	}
 
 
-	OPvec3 posRay = ray_Origon;//mouseIntersectExample.Camera._pos;
-	posRay += ray_wor * OPvec3Len(ray_Origon);
-
-	// OPfloat cont = posRay.z / 10.0f;
-	// posRay.z = 0;
+	OPvec3 posRay = ray.position;
+	posRay += ray.direction * OPvec3Len(ray.position);
 
 
-	OPmat4 world3 = OPmat4Translate(posRay);
+	OPmat4 world = OPmat4Translate(OPvec3Create(0, 0, 0));
+	OPmat4 world2 = OPmat4Translate(OPvec3Create(-5, 0, 0));
+	OPmat4 world3 = OPmat4Translate(positionHit);
 	world3 = OPmat4Scl(world3, 0.125, 0.125, 0.125);
 
 	////////////////////////
@@ -283,7 +211,7 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	sprintf(buffer, "%d, %d", OPmousePositionX(), OPmousePositionY());
 	OPfontRender(buffer, OPvec2Create(50, 60));
 
-	sprintf(buffer, "%f, %f, %f", ray_wor.x, ray_wor.y, ray_wor.z);
+	sprintf(buffer, "%f, %f, %f", ray.direction.x, ray.direction.y, ray.direction.z);
 	OPfontRender(buffer, OPvec2Create(50, 120));
 
 	OPfontRenderEnd();
