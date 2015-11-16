@@ -1,3 +1,7 @@
+#include "./Core/include/OPtypes.h"
+
+#ifdef OPIFEX_IOS
+
 //
 //  GameViewController.m
 //  game-test
@@ -394,3 +398,5 @@ GLfloat gCubeVertexData[216] =
 }
 
 @end
+
+#endif

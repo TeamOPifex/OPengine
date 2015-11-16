@@ -2,7 +2,7 @@
 
 #include "./OPengine.h"
 
-#define ExampleCount 19
+#define ExampleCount 20
 
 extern OPgameState GS_EXAMPLE_SELECTOR;
 
@@ -28,7 +28,8 @@ extern OPint       GS_EXAMPLE_AUDIO_AVAILABLE,
                    GS_EXAMPLE_FREEFLIGHT_AVAILABLE,
                    GS_EXAMPLE_FMOD_AVAILABLE,
                    GS_EXAMPLE_SPRITESYSTEM_AVAILABLE,
-                   GS_EXAMPLE_PHYSICSCHARACTER_AVAILABLE;
+                   GS_EXAMPLE_PHYSICSCHARACTER_AVAILABLE,
+                   GS_EXAMPLE_MOUSE_INTERSECT_AVAILABLE;
 
 // All of the example game states
 extern OPgameState GS_EXAMPLE_AUDIO,
@@ -50,4 +51,5 @@ extern OPgameState GS_EXAMPLE_AUDIO,
                    GS_EXAMPLE_FREEFLIGHT,
                    GS_EXAMPLE_FMOD,
                    GS_EXAMPLE_SPRITESYSTEM,
-                   GS_EXAMPLE_PHYSICSCHARACTER;
+                   GS_EXAMPLE_PHYSICSCHARACTER,
+                   GS_EXAMPLE_MOUSE_INTERSECT;

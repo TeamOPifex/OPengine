@@ -1,3 +1,6 @@
+#include "./Core/include/OPtypes.h"
+
+#ifdef OPIFEX_IOS
 //
 //  AppDelegate.m
 //  game-test
@@ -43,3 +46,5 @@
 }
 
 @end
+
+#endif

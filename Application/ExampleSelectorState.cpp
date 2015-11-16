@@ -64,6 +64,7 @@ void ExampleSelectorEnter(OPgameState* last) {
            { "Spine", &GS_EXAMPLE_SPINE, GS_EXAMPLE_SPINE_AVAILABLE, 1 },
            { "IMGUI", &GS_EXAMPLE_IMGUI, GS_EXAMPLE_IMGUI_AVAILABLE, 1 },
            { "Spherical Cube", &GS_EXAMPLE_SPHERICALCUBE, GS_EXAMPLE_SPHERICALCUBE_AVAILABLE, 1 },
+           { "Mouse Intersect", &GS_EXAMPLE_MOUSE_INTERSECT, GS_EXAMPLE_MOUSE_INTERSECT_AVAILABLE, 1 },
 
            // Advanced
            { "Physics", &GS_EXAMPLE_PHYSICS, GS_EXAMPLE_PHYSICS_AVAILABLE, 2 },
@@ -240,7 +241,7 @@ OPint ExampleSelectorExit(OPgameState* next) {
 	//OPeffectBind(NULL);
 	//OPcmanDelete("Ubuntu.opf");
 	//OPtexture2DDestroy(exampleSelector.Background);
-	OPfontSystemShutdownEffects();
+	//OPfontSystemShutdownEffects();
 	return 0;
 }
 
