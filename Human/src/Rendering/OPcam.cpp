@@ -3,18 +3,19 @@
 #include "./Core/include/OPlog.h"
 
 OPcam OPcamPersp(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat near, OPfloat far, OPfloat fov, OPfloat aspect){
-	
+
+	float _fov = (float)((double)fov * 0.01745329251994329576923690768489);
 	OPcam cam = {
 		position,
 		target,
 		up,
-		fov,
+		_fov,
 		aspect,
 		near,
 		far,
 		{0},
 		{0},
-		0, 
+		0,
 		0
 	};
 
@@ -22,7 +23,7 @@ OPcam OPcamPersp(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat near, OPfloa
 	OPmat4Identity(&cam.View);
 
 	// construct matricies
-	cam.Proj = OPmat4Perspective(fov, aspect, near, far);
+	cam.Proj = OPmat4Perspective(_fov, aspect, near, far);
 	cam.View = OPmat4LookAt(position, target, up);
 
 	return cam;

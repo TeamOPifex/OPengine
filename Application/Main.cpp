@@ -31,6 +31,7 @@ void ApplicationInit() {
 
 	OPcmanLoadResourcePack("pack.oppack");
 
+
 	OPrenderInit();
 	OPgamePadSetDeadZones(0.2f);
 
