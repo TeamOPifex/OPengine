@@ -22,6 +22,10 @@
 #define OPpi_4 0.78539816339f
 #define OPe    2.71828182846f
 
+#define KB(bytes) (bytes * 1024)   // Kibibyte
+#define MB(bytes) KB(bytes) * 1024 // Mebibyte
+#define GB(bytes) MB(bytes) * 1024 // Gibibyte
+
 // prevent name mangling if compiling with c++
 #ifdef __cplusplus
 extern "C" {
