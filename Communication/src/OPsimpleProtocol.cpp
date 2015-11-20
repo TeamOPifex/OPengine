@@ -1,6 +1,6 @@
-/*#include "./include/SimpleProtocol.h"
-#include "./Core/include/DynamicMemory.h"
-#include "./Core/include/Log.h"
+#include "./Communication/include/OPsimpleProtocol.h"
+#include "./Core/include/OPmemory.h"
+#include "./Core/include/OPlog.h"
 
 OPnetworkProtocolSimple* OPnetworkProtocolSimpleCreate(OPnetworkType networkType) {
 
@@ -40,11 +40,12 @@ i32 OPnetworkProtocolSimpleSend(OPnetworkProtocolSimple* protocol, OPtimer* time
 	message->Data = packedData + sizeof(OPprotocolSimpleMessage);
 	memcpy(message->Data, data, size);
 
-	OPlog("data: %s", data);
-	OPlog("message data: %s", message->Data);
-	OPlog("packed data: %s", (packedData + sizeof(OPprotocolSimpleMessage)));
+	OPlog("data: %d", *data);
+	// OPlog("message data: %s", message->Data);
+	// OPlog("packed data: %s", (packedData + sizeof(OPprotocolSimpleMessage)));
 
 	i32 result = OPnetworkSend(protocol->Network, packedData, totalSize);
+	OPlog("Send Result %d", result);
 	OPfree(message);
 	return result;
 }
@@ -52,4 +53,4 @@ i32 OPnetworkProtocolSimpleSend(OPnetworkProtocolSimple* protocol, OPtimer* time
 void OPnetworkProtocolSimpleDestroy(OPnetworkProtocolSimple* protocol) {
 	OPnetworkDestroy(protocol->Network);
 	OPfree(protocol);
-}*/
+}
