@@ -10,17 +10,25 @@
 #define DEFAULT_PORT "27015"
 #define DEFAULT_BUFLEN 512
 
-#ifdef OPIFEX_UNIX
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <arpa/inet.h>
 #include <sys/types.h>
-#include <sys/socket.h>
+
+#ifdef OPIFEX_UNIX
+
 #include <netdb.h>
 #include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#else
+
+#include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <iphlpapi.h>
+#include <stdio.h>
 
 #endif
 
