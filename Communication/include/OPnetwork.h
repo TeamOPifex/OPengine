@@ -10,6 +10,27 @@
 #define DEFAULT_PORT "27015"
 #define DEFAULT_BUFLEN 512
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+
+#ifdef OPIFEX_UNIX
+
+#include <netdb.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#else
+
+#include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <iphlpapi.h>
+#include <stdio.h>
+
+#endif
 
 
 enum OPnetworkOperation {
@@ -36,14 +57,25 @@ struct OPnetworkPacket {
 	OPchar* Message;
 };
 
+struct OPneworkServerData {
+	fd_set master;
+	fd_set read_fds;
+	i32 fdmax;
+};
+
+struct OPneworkClientData {
+	i32 fd;
+};
+
 struct OPnetwork {
-	ui32 ConnectSocket;
+	i32 ConnectSocket;
 	OPnetworkType ConnectionType;
+	void* Data;
 };
 
 OPnetwork* OPnetworkCreate(OPnetworkType networkType);
-i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, i32 port);
-i32 OPnetworkServerStart(OPnetwork* network, i32 port);
+i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPchar* port);
+i32 OPnetworkServerStart(OPnetwork* network, OPchar* port);
 OPnetwork* OPnetworkAcceptClient(OPnetwork* network);
 i32 OPnetworkReceive(OPnetwork* network, void* state, void(*receive)(void*, i32, OPchar*));
 i32 OPnetworkSend(OPnetwork* network, i8* data, i32 size);

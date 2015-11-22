@@ -61,11 +61,11 @@ add_executable(9_Application ${APP_TYPE} ${APPLICATION_SRC})
 
 	set(APP_NAME \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME})
 	set(RES_DIR ${test_SOURCE_DIR}/assets)
-	add_custom_command(
-	    TARGET 9_Application
-	    POST_BUILD
-	    COMMAND /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks ${RES_DIR} ${APP_NAME}
-	)
+	#add_custom_command(
+	#    TARGET 9_Application
+	#    POST_BUILD
+	#    COMMAND /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks ${RES_DIR} ${APP_NAME}
+	#)
 	else()
 
 	 add_opifex_executable(9_Application ${APPLICATION_SRC})

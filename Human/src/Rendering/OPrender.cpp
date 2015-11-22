@@ -71,6 +71,13 @@ ui32 OPgetNativeScreenHeight() {
 }
 
 #ifndef OPIFEX_ANDROID
+
+void(*OP_WINDOW_DROP)(int, const OPchar**) = NULL;
+
+void OPrenderDragAndDropCB(void (*cb)(int, const OPchar**)) {
+	OP_WINDOW_DROP = cb;
+}
+
 void glfwErrorCallback(int error, const char* desc){
 	OPlog(desc);
 }
@@ -83,6 +90,10 @@ void glfwWindowDropCallback(GLFWwindow* window, int count, const OPchar** files)
 	OPlog("Total Files: %d", count);
 	for(OPint i = 0; i < count; i++) {
 		OPlog("File: %s", files[i]);
+	}
+
+	if(OP_WINDOW_DROP != NULL) {
+		OP_WINDOW_DROP(count, files);
 	}
 }
 #include "./Human/include/Input/OPkeyboard.h"

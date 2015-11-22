@@ -448,9 +448,9 @@ OPMData OPMloadData(OPstream* str) {
 	return data;
 }
 
-OPint OPMload(const OPchar* filename, OPmesh** mesh) {
+OPint OPMload(OPstream* str, OPmesh** mesh) {
 	//OPlog("Reading File Data");
-	OPstream* str = OPreadFile(filename);
+	//OPstream* str = OPreadFile(filename);
 	if (str == NULL) {
 		return 0;
 	}
@@ -483,7 +483,7 @@ OPint OPMload(const OPchar* filename, OPmesh** mesh) {
 	// Dispose of allocated buffers
 	//OPfree(data.vertices);
 	//OPfree(data.indices);
-	OPstreamDestroy(str);
+	//OPstreamDestroy(str);
 
 	*mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
 	OPmemcpy(*mesh, &temp, sizeof(OPmesh));
@@ -763,7 +763,7 @@ OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh){
 	// Dispose of allocated buffers
 	OPfree(data.vertices);
 	OPfree(data.indices);
-	OPstreamDestroy(str);
+	//OPstreamDestroy(str);
 
 	*mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
 	OPmemcpy(*mesh, &temp, sizeof(OPmesh));
@@ -784,7 +784,7 @@ OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh) {
 	// Dispose of allocated buffers
 	OPfree(data.vertices);
 	OPfree(data.indices);
-	OPstreamDestroy(str);
+	//OPstreamDestroy(str);
 
 	*mesh = (OPmeshPacked*)OPalloc(sizeof(OPmeshPacked));
 	OPmemcpy(*mesh, &temp, sizeof(OPmeshPacked));
@@ -792,11 +792,11 @@ OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh) {
 	return 1;
 }
 
-OPint OPMReload(const OPchar* filename, OPmesh** mesh){
+OPint OPMReload(OPstream* str, OPmesh** mesh){
 	OPlog("Reload Mesh OPM");
 	OPmesh* resultMesh;
 	OPmesh* tex = (OPmesh*)(*mesh);
-	OPint result = OPMload(filename, &resultMesh);
+	OPint result = OPMload(str, &resultMesh);
 	if (result) {
 		OPrenderDelBuffer(&tex->IndexBuffer);
 		OPrenderDelBuffer(&tex->VertexBuffer);

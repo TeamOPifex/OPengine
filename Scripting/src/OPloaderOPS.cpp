@@ -11,9 +11,9 @@ void OPscriptAddLoader() {
 		".ops",
 		"Scripts/",
 		sizeof(OPscript),
-		(OPint(*)(const OPchar*, void**))OPscriptLoad,
+		(OPint(*)(OPstream*, void**))OPscriptLoad,
 		(OPint(*)(void*))OPscriptUnload,
-		(OPint(*)(const OPchar*, void**))OPscriptReload
+		(OPint(*)(OPstream*, void**))OPscriptReload
 	};
 	OPcmanAddLoader(&loaderOPS);
 
@@ -21,20 +21,20 @@ void OPscriptAddLoader() {
 		".js",
 		"Scripts/",
 		sizeof(OPscript),
-		(OPint(*)(const OPchar*, void**))OPscriptLoad,
+		(OPint(*)(OPstream*, void**))OPscriptLoad,
 		(OPint(*)(void*))OPscriptUnload,
-		(OPint(*)(const OPchar*, void**))OPscriptReload
+		(OPint(*)(OPstream*, void**))OPscriptReload
 	};
 	OPcmanAddLoader(&loaderJS);
 
 }
 
-OPint OPscriptLoad(const OPchar* filename, OPscript** script) {
+OPint OPscriptLoad(OPstream* str, OPscript** script) {
 	*script = (OPscript*)OPalloc(sizeof(OPscript));
-	OPstream* str = OPreadFile(filename);
+	//OPstream* str = OPreadFile(filename);
 	(*script)->data = (OPchar*)OPalloc(str->Length);
 	OPmemcpy((*script)->data, str->Data, str->Length);
-	(*script)->filename = OPstringCopy(filename);
+	(*script)->filename = OPstringCopy(str->Source);
 
 #ifdef _DEBUG
 	(*script)->changed = 0;
@@ -43,11 +43,11 @@ OPint OPscriptLoad(const OPchar* filename, OPscript** script) {
 	return 1;
 }
 
-OPint OPscriptReload(const OPchar* filename, OPscript** script) {
+OPint OPscriptReload(OPstream* str, OPscript** script) {
 	OPlog("Reload script");
 	OPscript* resultScript;
 	OPscript* tex = (OPscript*)(*script);
-	OPint result = OPscriptLoad(filename, &resultScript);
+	OPint result = OPscriptLoad(str, &resultScript);
 	if (result) {
 		OPmemcpy(*script, resultScript, sizeof(OPscript));
 #ifdef _DEBUG

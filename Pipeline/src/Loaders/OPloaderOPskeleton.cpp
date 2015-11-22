@@ -7,15 +7,15 @@ void OPskeletonAddLoader() {
 		".skel",
 		"Models/",
 		sizeof(OPskeleton),
-		(OPint(*)(const OPchar*, void**))OPloaderOPskeletonLoad,
+		(OPint(*)(OPstream*, void**))OPloaderOPskeletonLoad,
 		(OPint(*)(void*))OPloaderOPskeletonUnload,
 		NULL
 	};
 	OPcmanAddLoader(&loader);
 }
 
-OPint OPloaderOPskeletonLoad(const OPchar* filename, OPskeleton** skeleton) {
-	OPstream* str = OPreadFile(filename);
+OPint OPloaderOPskeletonLoad(OPstream* str, OPskeleton** skeleton) {
+	//OPstream* str = OPreadFile(filename);
 
 	i32 boneCount = OPreadi16(str);
 
@@ -42,7 +42,7 @@ OPint OPloaderOPskeletonLoad(const OPchar* filename, OPskeleton** skeleton) {
 
 	*skeleton = OPskeletonCreate(hierarchy, pose, boneCount, jointNames);
 
-	OPstreamDestroy(str);
+	//OPstreamDestroy(str);
 
 	return 1;
 }
