@@ -86,9 +86,63 @@ enum OPMFaceFeatures {
 	OPM_Face_HasVertexColors = 0x80
 };
 
+OPMData OPMloadDataV2(OPstream* str) {
+	OPMData result;
+
+	// Already loaded version at this point
+	ui32 meshCount = OPreadui32(str);
+
+	for (ui32 i = 0; i < meshCount; i++) {
+		ui16 vertexMode = OPreadui16(str);
+
+		if (vertexMode == 2) {
+			OPlog("Version 2 not supported yet");
+			continue;
+		}
+
+		ui32 features = OPreadui32(str);
+		ui32 verticesCount = OPreadui32(str);
+		ui32 indicesCount = OPreadui32(str);
+
+		result.vertexCount = verticesCount;
+		result.indexCount = indicesCount;
+
+		ui32 vertexSize = 0;
+		if (OPMhasFeature(features, Position))
+			vertexSize += 3;
+		if (OPMhasFeature(features, Normal))
+			vertexSize += 3;
+		if (OPMhasFeature(features, Tangent))
+			vertexSize += 3;
+		if (OPMhasFeature(features, UV))
+			vertexSize += 2;
+		if (OPMhasFeature(features, Color))
+			vertexSize += 3;
+		if (OPMhasFeature(features, Skinning))
+			vertexSize += 6;
+		
+		result.indexSize = sizeof(ui16);
+		result.vertexSize = vertexSize * sizeof(f32);
+		result.indices = OPalloc(result.indexSize * indicesCount);
+		result.vertices = OPalloc(result.vertexSize * verticesCount);
+
+		f32* vertData = (f32*)result.vertices;
+		for (ui32 j = 0; j < verticesCount * vertexSize; j++) {
+			vertData[j] = OPreadf32(str);
+		}
+
+		ui16* indData = (ui16*)result.indices;
+		for (ui32 j = 0; j < indicesCount; j++) {
+			indData[j] = OPreadui16(str);
+		}
+	}
+
+	return result;
+}
+
 OPMData OPMloadData(OPstream* str) {
 	ui16 version = OPreadui16(str);
-	//if (version == 2) return OPMloadDataV2(str);
+	if (version == 2) return OPMloadDataV2(str);
 
 	ui32 features = OPreadui32(str);
 	ui32 verticeCount = OPreadui32(str);

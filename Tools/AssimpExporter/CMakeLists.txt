@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 
 if(${OPIFEX_TOOLS_ASSIMPEXPORTER})
-
+	message(STATUS "Including Assimp Exporter")
+	
 	include_directories(
 		.
 		../

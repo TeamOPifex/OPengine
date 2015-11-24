@@ -467,33 +467,3 @@
 //
 //	return 0;
 //}
-//
-//i32 OPnetworkShutdown(OPnetwork* network){
-//	i32 iResult = shutdown(network->ConnectSocket, SD_SEND);
-//	if (iResult == SOCKET_ERROR) {
-//	#ifdef OPIFEX_WINDOWS
-//	 	printf("shutdown failed: %d\n", WSAGetLastError());
-//	#endif
-//	 	WSA_CLEANUP();
-//	#ifdef OPIFEX_WINDOWS
-//	 	closesocket(network->ConnectSocket);
-//	#else
-//	 	close(network->ConnectSocket);
-//	#endif
-//	 	return 1;
-//	}
-//	
-//	#ifdef OPIFEX_WINDOWS
-//	 	closesocket(network->ConnectSocket);
-//	#else
-//	 	close(network->ConnectSocket);
-//	#endif
-//	
-//	WSA_CLEANUP();
-//	
-//	return 0;
-//}
-//
-//void OPnetworkDestroy(OPnetwork* network) {
-//	OPfree(network);
-//}

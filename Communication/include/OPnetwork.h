@@ -32,6 +32,8 @@
 
 #endif
 
+#define MAX_CLIENTS 16
+
 
 enum OPnetworkOperation {
 	OPNETWORK_OPERATION_ALLOW_DROPPED_PACKETS = 0,
@@ -42,6 +44,11 @@ enum OPnetworkOperation {
 enum OPnetworkType {
 	OPNETWORK_CLIENT = 0,
 	OPNETWORK_SERVER = 1
+};
+
+enum OPnetworkPrototcol {
+	OPNETWORK_TCP = 0,
+	OPNETWORK_UDP = 1
 };
 
 struct OPnetworkPacketRaw {
@@ -57,10 +64,14 @@ struct OPnetworkPacket {
 	OPchar* Message;
 };
 
-struct OPneworkServerData {
+struct OPneworkData {
 	fd_set master;
 	fd_set read_fds;
 	i32 fdmax;
+	i32 clientIndex;
+	struct sockaddr_storage peer_addr[MAX_CLIENTS];
+	OPchar* peer_host[MAX_CLIENTS];
+	OPchar* peer_port[MAX_CLIENTS];
 };
 
 struct OPneworkClientData {
@@ -70,14 +81,18 @@ struct OPneworkClientData {
 struct OPnetwork {
 	i32 ConnectSocket;
 	OPnetworkType ConnectionType;
-	void* Data;
+	OPnetworkPrototcol ConnectionProtocol;
+	OPneworkData Data;
+	void(*receive)(void*, i32, i32, OPchar*);
+	void(*connected)(void*, i32);
+	void(*disconnected)(void*, i32);
 };
 
-OPnetwork* OPnetworkCreate(OPnetworkType networkType);
+OPnetwork* OPnetworkCreate(OPnetworkType networkType, OPnetworkPrototcol protocol);
 i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPchar* port);
 i32 OPnetworkServerStart(OPnetwork* network, OPchar* port);
 OPnetwork* OPnetworkAcceptClient(OPnetwork* network);
-i32 OPnetworkReceive(OPnetwork* network, void* state, void(*receive)(void*, i32, OPchar*));
+i32 OPnetworkReceive(OPnetwork* network, void* state);
 i32 OPnetworkSend(OPnetwork* network, i8* data, i32 size);
 i32 OPnetworkShutdown(OPnetwork* network);
 void OPnetworkDestroy(OPnetwork* network);

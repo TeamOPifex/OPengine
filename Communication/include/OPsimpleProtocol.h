@@ -12,7 +12,7 @@ struct OPprotocolSimpleMessage {
 
 struct OPnetworkProtocolSimple {
 	OPnetwork* Network;
-	i32 LastReceived;
+	i32 LastReceived[MAX_CLIENTS];
 	i32 LastSent;
 	void(*Receive)(OPprotocolSimpleMessage);
 };

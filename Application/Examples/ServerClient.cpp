@@ -32,6 +32,12 @@ void ClientReceive(OPprotocolSimpleMessage message) {
 void ServerReceive(OPprotocolSimpleMessage message) {
 	OPlog("SERVER RECEIVED MESSAGE");
 	serverClientExampleExample.HeldDown = *message.Data;
+	OPnetworkProtocolSimpleSend(
+		serverClientExampleExample.Protocol,
+		NULL,
+		(i8*)&serverClientExampleExample.HeldDown,
+		sizeof(i8)
+		);
 }
 
 
@@ -66,15 +72,9 @@ OPint ExampleServerClientUpdate(OPtimer* time) {
 		OPnetworkClientConnect(serverClientExampleExample.Protocol->Network, "127.0.0.1", "1337");
 	}
 
-	if(serverClientExampleExample.Mode != 0 && OPmouseWasPressed(OPMOUSE_LBUTTON)) {
-		serverClientExampleExample.HeldDown = 1;
-		OPnetworkProtocolSimpleSend(
-			serverClientExampleExample.Protocol,
-			time,
-			(i8*)&serverClientExampleExample.HeldDown,
-			sizeof(i8)
-		);
-	}
+	//if(serverClientExampleExample.Mode != 0 && OPmouseWasPressed(OPMOUSE_LBUTTON)) {
+
+	//}
 	if(serverClientExampleExample.Mode != 0 && OPmouseWasReleased(OPMOUSE_LBUTTON)) {
 		serverClientExampleExample.HeldDown = 0;
 		OPnetworkProtocolSimpleSend(

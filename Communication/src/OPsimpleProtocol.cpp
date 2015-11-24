@@ -2,33 +2,50 @@
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
 
+void Connected(OPnetworkProtocolSimple* state, i32 index);
+void Disconnected(OPnetworkProtocolSimple* state, i32 index);
+void Receive(OPnetworkProtocolSimple* state, i32 len, i32 index, i8* data);
+
 OPnetworkProtocolSimple* OPnetworkProtocolSimpleCreate(OPnetworkType networkType) {
 
 	OPnetworkProtocolSimple* protocol = (OPnetworkProtocolSimple*)OPalloc(sizeof(OPnetworkProtocolSimple));
-	protocol->LastReceived = 0;
-	protocol->LastSent = 0;
-	protocol->Network = OPnetworkCreate(networkType);
+	protocol->Network = OPnetworkCreate(networkType, OPNETWORK_UDP);
+	protocol->Network->receive = (void(*)(void*, i32, i32, OPchar*))Receive;
+	protocol->Network->connected = (void(*)(void*, i32))Connected;
+	protocol->Network->disconnected = (void(*)(void*, i32))Disconnected;
 	return protocol;
 }
 
-void Receive(void* state, i32 len, i8* data) {
-	OPnetworkProtocolSimple* protocol = (OPnetworkProtocolSimple*)state;
+void Connected(OPnetworkProtocolSimple* state, i32 index) {
+	OPlogInfo("Network Protocol Simple Connected: %d", index);
+}
+
+void Disconnected(OPnetworkProtocolSimple* state, i32 index) {
+	OPlogInfo("Network Protocol Simple Disconnected: %d", index);
+}
+
+void Receive(OPnetworkProtocolSimple* state, i32 index, i32 len, i8* data) {
 	OPprotocolSimpleMessage message = *(OPprotocolSimpleMessage*)data;
 
-	if (protocol->LastReceived < message.TimeStamp) {
+	if (state->Network->ConnectionType == OPNETWORK_CLIENT || state->LastReceived[index] < message.TimeStamp) {
 
 		OPlog("packed received: %s", (data + sizeof(OPprotocolSimpleMessage)));
 		message.Data = (i8*)OPalloc(message.DataLength);
 		OPmemcpy(message.Data, (i8*)(data + sizeof(OPprotocolSimpleMessage)), message.DataLength);
 
-		protocol->Receive(message);
-		protocol->LastReceived = message.TimeStamp;
+		state->Receive(message);
+		if (state->Network->ConnectionType == OPNETWORK_SERVER) {
+			state->LastReceived[index] = message.TimeStamp;
+		}
+	}
+	else {
+		OPlog("Message Received Late: %d last was %d", message.TimeStamp, state->LastReceived[index]);
 	}
 }
 
 i32 OPnetworkProtocolSimpleReceive(OPnetworkProtocolSimple* protocol, void(*receive)(OPprotocolSimpleMessage)) {
 	protocol->Receive = receive;
-	return OPnetworkReceive(protocol->Network, (void*)protocol, Receive);
+	return OPnetworkReceive(protocol->Network, (void*)protocol);
 }
 
 i32 OPnetworkProtocolSimpleSend(OPnetworkProtocolSimple* protocol, OPtimer* timer, i8* data, i32 size) {

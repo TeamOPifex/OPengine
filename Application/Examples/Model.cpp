@@ -32,7 +32,8 @@ void ExampleModelEnter(OPgameState* last) {
 	// The OPcmanLoad call ensures that this mesh has been loaded
 	// The OPcmanGet call returns a pointer to the resource (an OPmesh)
 	// that's contained in the Content Manager
-	modelExample->Mesh = OPcubeCreate(OPvec3Create(1,0,0));
+	//modelExample->Mesh = OPcubeCreate(OPvec3Create(1,0,0));
+	modelExample->Mesh = *(OPmesh*)OPcmanLoadGet("output.opm");
 
 	// The effect that will be used to render the mesh
 	// The renderGenEffect is a simplified utility method
@@ -64,6 +65,7 @@ void ExampleModelEnter(OPgameState* last) {
 	// Since this is a simple example we'll ensure that it's set
 	// to turn the Depth Buffer on and continue
 	OPrenderDepth(1);
+	OPrenderCull(0);
 }
 
 OPint ExampleModelUpdate(OPtimer* time) {

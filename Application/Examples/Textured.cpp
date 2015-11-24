@@ -16,15 +16,15 @@ typedef struct {
 TexturedExample* texturedExample;
 
 void ExampleTexturedEnter(OPgameState* last) {
-	OPcmanLoad("PuzzleBlock.opm");
+	OPcmanLoad("adobe.opm");
 	OPcmanLoad("Common/Texture.frag");
 	OPcmanLoad("Common/Texture3D.vert");
-	OPcmanLoad("TetrisBroken.png");
+	OPcmanLoad("adobe.png");
 
 	texturedExample = (TexturedExample*)OPalloc(sizeof(TexturedExample));
 
-	texturedExample->Mesh = (OPmesh*)OPcmanGet("PuzzleBlock.opm");
-	texturedExample->Texture = (OPtexture*)OPcmanGet("TetrisBroken.png");
+	texturedExample->Mesh = (OPmesh*)OPcmanGet("adobe.opm");
+	texturedExample->Texture = (OPtexture*)OPcmanGet("adobe.png");
 	texturedExample->Rotation = 0;
 
 	OPshaderAttribute attribs[] = {
@@ -47,7 +47,7 @@ void ExampleTexturedEnter(OPgameState* last) {
 
 	texturedExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
 	*texturedExample->Camera = OPcamPersp(
-		OPVEC3_ONE * 2.0,
+		OPVEC3_ONE * 10.0,
 		OPvec3Create(0, 0, 0),
 		OPvec3Create(0, 1, 0),
 		0.1f,
