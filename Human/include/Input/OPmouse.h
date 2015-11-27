@@ -4,6 +4,7 @@
 #include "./Human/include/Input/Enums/OPmouseKeys.h"
 
 struct OPmouseState {
+	i32	updatedWheel;
 	i32	wheel;
 	i32	prevWheel;
 	d64	positionX;

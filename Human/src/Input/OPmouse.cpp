@@ -18,8 +18,15 @@ OPmouseState Mouse = {
 	0
 };
 
+void scrollCB(GLFWwindow* window, double x, double y) {
+	//Mouse.prevWheel = Mouse.wheel;
+	Mouse.updatedWheel += y;
+	OPlog("Scrolled %f, %f", x, y);
+}
+
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 void OPmouseUpdate() {
+	glfwSetScrollCallback(window, scrollCB);
 	OPmemcpy(&Mouse.prevKeys, &Mouse.keys, sizeof(OPint)* _OPMOUSE_MAX);
 	Mouse.prevPositionX = Mouse.positionX;
 	Mouse.prevPositionY = Mouse.positionY;
@@ -37,7 +44,7 @@ void OPmouseUpdate() {
 	//OPmouseSetPositionScreenCenter();
 	Mouse.positionX = x;
 	Mouse.positionY = y;
-	//Mouse.wheel = glfwGetScroll(window);
+	Mouse.wheel = Mouse.updatedWheel;// glfwGetScroll(window);
 }
 
 i32 OPmousePositionX() {

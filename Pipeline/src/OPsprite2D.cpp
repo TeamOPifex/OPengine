@@ -87,7 +87,7 @@ void OPsprite2DPrepRender(OPsprite2D* sprite) {
 	OPvec2 scl = sprite->Scale / 2.0;
 	scl.x *= sprite->Direction * widthScale * OPrenderGetWidthAspectRatio();
 	scl.y *= heightScale;
-	world *= scl;
+	world = OPmat4Scl(world, scl.x, scl.y, 1.0);
 	world += sprite->Position;
 
 	OPtextureClearActive();
