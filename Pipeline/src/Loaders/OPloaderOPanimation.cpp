@@ -7,15 +7,15 @@ void OPskeletonAnimationAddLoader() {
 		".anim",
 		"Models/",
 		sizeof(OPskeletonAnimation),
-		(OPint(*)(const OPchar*, void**))OPloaderOPanimationLoad,
+		(OPint(*)(OPstream*, void**))OPloaderOPanimationLoad,
 		(OPint(*)(void*))OPloaderOPanimationUnload,
 		NULL
 	};
 	OPcmanAddLoader(&loader);
 }
 
-OPint OPloaderOPanimationLoad(const OPchar* filename, OPskeletonAnimation** animation) {
-	OPstream* str = OPreadFile(filename);
+OPint OPloaderOPanimationLoad(OPstream* str, OPskeletonAnimation** animation) {
+	//OPstream* str = OPreadFile(filename);
 
 	i32 boneCount = OPreadi16(str);
 
@@ -45,7 +45,7 @@ OPint OPloaderOPanimationLoad(const OPchar* filename, OPskeletonAnimation** anim
 
 	OPfree(name);
 
-	OPstreamDestroy(str);
+	//OPstreamDestroy(str);
 
 	return 1;
 }

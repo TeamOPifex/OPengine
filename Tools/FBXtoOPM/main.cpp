@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
 	OPint animationFrames[2048];
 
 	OPfloat scale = 1.0;
-	
+
 	//
 	// Fill in provided arguments
 	//
@@ -141,7 +141,7 @@ int main(int argc, char **argv) {
 			"POSITION", "NORMAL", "UVS", "COLORS", "INDICES", "TANGENTS", "BONES", "SKIN", "ANIMATIONS", "SKELETONS", "META"
 			);
 	}
-	
+
 	// Build out the mesh and write it to file
 	OPfbxMesh mesh;
 	OPstringToLower(output);

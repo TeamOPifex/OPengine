@@ -95,12 +95,12 @@ void OPsprite3DPrepReRender(OPsprite3D* sprite, OPvec3 offset, OPfloat rotation)
 
 	OPmat4 world;
 	OPmat4Identity(&world);
-	world *= OPvec2Create(widthScale, heightScale);
+	world = OPmat4Scl(world, widthScale, heightScale, 1.0);
 	OPmat4RotZ(&world, rotation + sprite->Rotation.z);
 	OPmat4RotY(&world, sprite->Rotation.y);
 	OPvec3 scl = sprite->Scale / 2.0f;
 	scl.x *= sprite->Direction;
-	world *= scl;
+	world = OPmat4Scl(world, scl.x, scl.y, 1.0);
 	world += offset + sprite->Position;
 
 	OPeffectParamMat4("uWorld", &world);
@@ -127,12 +127,12 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	OPcamGetProj((*camera), &proj);
 
 	OPmat4Identity(&world);
-	world *= OPvec2Create(widthScale, heightScale);
+	world = OPmat4Scl(world, widthScale, heightScale, 1.0);
 	OPmat4RotZ(&world, rotation + sprite->Rotation.z);
 	OPmat4RotY(&world, sprite->Rotation.y);
 	OPvec3 scl = sprite->Scale / 2.0f;
 	scl.x *= sprite->Direction;
-	world *= scl;
+	world = OPmat4Scl(world, scl.x, scl.y, 1.0);
 	world += offset + sprite->Position;
 
 	OPtextureClearActive();

@@ -43,18 +43,18 @@ void __opSpriteScaleFrames(OPtexture* tex, OPspriteSheet* ss) {
 	}
 }
 
-OPint OPspriteSheetLoad(const OPchar* filename, OPspriteSheet** ss){
-	OPstream* str = OPreadFileLarge(filename, 1024);
+OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
+	//OPstream* str = OPreadFileLarge(filename, 1024);
 	i32 width, height;
 	i32 sprites, frames;
 	OPspriteFrame* frameData;
 	OPtexture *sheet, *temp;
 
-	ui32 filenameLength = strlen(filename);
+	ui32 filenameLength = strlen(str->Source);
 	ui32 filenameLengthWithoutExtension = filenameLength - 5 - 8 + 1;
 
 	OPchar* filenameWithoutExtension = (OPchar*)OPalloc(sizeof(OPchar)* filenameLengthWithoutExtension);
-	OPmemcpy(filenameWithoutExtension, filename + 8, filenameLengthWithoutExtension * sizeof(OPchar));
+	OPmemcpy(filenameWithoutExtension, str->Source + 8, filenameLengthWithoutExtension * sizeof(OPchar));
 	filenameWithoutExtension[filenameLengthWithoutExtension - 1] = '\0';
 
 	ASSERT(OP_CMAN_ASSETLOADERS,

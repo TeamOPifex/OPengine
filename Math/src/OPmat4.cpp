@@ -29,67 +29,41 @@ OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPf
 	return m;
 }
 
-OPmat4 OPmat4LookAt(OPvec3 eye, OPvec3 at, OPvec3 up) {
+OPmat4 OPmat4LookAt(OPvec3 eye, OPvec3 center, OPvec3 up) {
 	OPmat4 m = OPMAT4IDENTITY;
-	OPvec3 dist = at - eye;
+
+	OPvec3 dist = center - eye;
 	OPvec3 f = OPvec3Norm(dist);
-	OPvec3 u = OPvec3Norm(up);
-	OPvec3 s = OPvec3Cross(f, u);
-	s = OPvec3Norm(s);
-	u = OPvec3Cross(s, f);
+	OPvec3 crossed = OPvec3Cross(f, up);
+	OPvec3 s = OPvec3Norm(crossed);
+	OPvec3 u = OPvec3Cross(s, f);
 
-	OPfloat sDot = OPvec3Dot(s, eye);
-	OPfloat uDot = OPvec3Dot(u, eye);
-	OPfloat fDot = OPvec3Dot(f, eye);
-
-	m[0].x = s.x;
-	m[1].x = s.y;
-	m[2].x = s.z;
-	m[0].y = u.x;
-	m[1].y = u.y;
-	m[2].y = u.z;
-	m[0].z = -f.x;
-	m[1].z = -f.y;
-	m[2].z = -f.z;
-	m[3].x = -sDot;
-	m[3].y = -uDot;
-	m[3].z = fDot;
-
-	// OPvec3 zaxis = OPvec3Norm(at - eye);
-	// OPvec3 xaxis = OPvec3Norm(OPvec3Cross(up, zaxis));
-	// OPvec3 yaxis = OPvec3Cross(zaxis, xaxis);
-
-	// m[0][0] = xaxis.x;
-	// m[0][1] = xaxis.y;
-	// m[0][2] = xaxis.z;
-	// m[0][3] = -OPvec3Dot(xaxis, eye);
-	
-	// m[1][0] = yaxis.x;
-	// m[1][1] = yaxis.y;
-	// m[1][2] = yaxis.z;
-	// m[1][3] = -OPvec3Dot(yaxis, eye);
-	
-	// m[2][0] = zaxis.x;
-	// m[2][1] = zaxis.y;
-	// m[2][2] = zaxis.z;
-	// m[2][3] = -OPvec3Dot(zaxis, eye);
+	m[0][0] = s.x;
+	m[1][0] = s.y;
+	m[2][0] = s.z;
+	m[0][1] = u.x;
+	m[1][1] = u.y;
+	m[2][1] = u.z;
+	m[0][2] =-f.x;
+	m[1][2] =-f.y;
+	m[2][2] =-f.z;
+	m[3][0] =-OPvec3Dot(s, eye);
+	m[3][1] =-OPvec3Dot(u, eye);
+	m[3][2] = OPvec3Dot(f, eye);
 
 	return m;
 }
 
 OPmat4 OPmat4Perspective(OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal) {
-	OPmat4 m;
-	OPfloat top = OPtan(fovy * OPpi / 360.0f) * nearVal;
-	OPfloat right = top * aspect;
-	OPfloat range = farVal - nearVal;
-	OPvec4 c0 = { nearVal / right, 0, 0, 0 };
-	OPvec4 c1 = { 0, nearVal / top, 0, 0 };
-	OPvec4 c2 = { 0, 0, -(farVal + nearVal) / range, -1 };
-	OPvec4 c3 = { 0, 0, -2.0f*farVal*nearVal / range, 1 };
-	m[0] = c0;
-	m[1] = c1;
-	m[2] = c2;
-	m[3] = c3;
+	OPmat4 m = OPMAT4IDENTITY;
+
+	OPfloat tanHalfFovy = OPtan(fovy / 2.0);
+	m[0][0] = 1.0 / ( aspect * tanHalfFovy);
+	m[1][1] = 1.0 / tanHalfFovy;
+	m[2][2] = -(farVal + nearVal) / ( farVal - nearVal);
+	m[2][3] = -1.0;
+	m[3][2] = -(2.0 * farVal * nearVal) / ( farVal - nearVal);
+
 	return m;
 }
 

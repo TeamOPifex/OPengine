@@ -64,6 +64,7 @@ void ExampleSelectorEnter(OPgameState* last) {
            { "Spine", &GS_EXAMPLE_SPINE, GS_EXAMPLE_SPINE_AVAILABLE, 1 },
            { "IMGUI", &GS_EXAMPLE_IMGUI, GS_EXAMPLE_IMGUI_AVAILABLE, 1 },
            { "Spherical Cube", &GS_EXAMPLE_SPHERICALCUBE, GS_EXAMPLE_SPHERICALCUBE_AVAILABLE, 1 },
+           { "Mouse Intersect", &GS_EXAMPLE_MOUSE_INTERSECT, GS_EXAMPLE_MOUSE_INTERSECT_AVAILABLE, 1 },
 
            // Advanced
            { "Physics", &GS_EXAMPLE_PHYSICS, GS_EXAMPLE_PHYSICS_AVAILABLE, 2 },
@@ -72,7 +73,8 @@ void ExampleSelectorEnter(OPgameState* last) {
            { "Shadows", &GS_EXAMPLE_SHADOWS, GS_EXAMPLE_SHADOWS_AVAILABLE, 2 },
            { "Deferred", &GS_EXAMPLE_DEFERRED, GS_EXAMPLE_DEFERRED_AVAILABLE, 2 }, // in flux
            { "Scripting", &GS_EXAMPLE_SCRIPTING, GS_EXAMPLE_SCRIPTING_AVAILABLE, 2 },
-           { "Oculus", &GS_EXAMPLE_OCULUS, GS_EXAMPLE_OCULUS_AVAILABLE, 2 }
+           { "Oculus", &GS_EXAMPLE_OCULUS, GS_EXAMPLE_OCULUS_AVAILABLE, 2 },
+           { "Server Client", &GS_EXAMPLE_SERVER_CLIENT, GS_EXAMPLE_SERVER_CLIENT_AVAILABLE, 2 }
        };
        OPmemcpy(exampleSelector.Examples, examples, sizeof(Example) * TotalEntries);
 
@@ -240,7 +242,7 @@ OPint ExampleSelectorExit(OPgameState* next) {
 	//OPeffectBind(NULL);
 	//OPcmanDelete("Ubuntu.opf");
 	//OPtexture2DDestroy(exampleSelector.Background);
-	OPfontSystemShutdownEffects();
+	//OPfontSystemShutdownEffects();
 	return 0;
 }
 

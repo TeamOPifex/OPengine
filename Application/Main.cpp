@@ -11,13 +11,26 @@
 //////////////////////////////////////
 
 void ApplicationInit() {
+
+
+    OPlog("Size ui8: %d", sizeof(ui8));
+    OPlog("Size ui16: %d", sizeof(ui16));
+    OPlog("Size ui32: %d", sizeof(ui32));
+    OPlog("Size i8: %d", sizeof(i8));
+    OPlog("Size i16: %d", sizeof(i16));
+    OPlog("Size i32: %d", sizeof(i32));
+
+
 	OPloadersAddDefault();
 	//OPscriptAddLoader();
-	//OPskeletonAddLoader();
-	//OPskeletonAnimationAddLoader();
+	OPskeletonAddLoader();
+	OPskeletonAnimationAddLoader();
 	//SpineAddLoader();
 	OPlog("Assets %s", OPIFEX_ASSETS);
 	OPcmanInit(OPIFEX_ASSETS);
+
+	OPcmanLoadResourcePack("pack.oppack");
+
 
 	OPrenderInit();
 	OPgamePadSetDeadZones(0.2f);
@@ -53,6 +66,17 @@ void ApplicationSetup() {
 // Application Entry Point
 //////////////////////////////////////
 
+#ifdef OPIFEX_IOS
+#import <UIKit/UIKit.h>
+#import "./Human/include/Rendering/AppDelegate.h"
+
+int main(int argc, char * argv[]) {
+    @autoreleasepool {
+        return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
+    }
+}
+
+#else
 OP_MAIN {
 	#ifdef OPIFEX_OPTION_V8
 	// If the V8 engine is compiled in,
@@ -70,3 +94,4 @@ OP_MAIN {
 	OP_MAIN_END
 	OP_MAIN_SUCCESS
 }
+#endif

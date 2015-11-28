@@ -176,4 +176,25 @@ inline OPvec4 OPvec4randNorm(){
 inline void OPvec4Log(const OPchar* m, OPvec4 v) {
 	OPlog("%s: [%f, %f, %f, %f]", m, v.x, v.y, v.z, v.w);
 }
+
+inline void OPvec4Sub(OPvec4* dst, OPvec4* a, OPvec4* b) {
+	dst->x = a->x - b->x;
+	dst->y = a->y - b->y;
+	dst->z = a->z - b->z;
+	dst->w = a->w - b->w;
+}
+
+inline void OPvec4Div(OPvec4* dst, OPvec4* a, OPvec4* b) {
+	dst->x = a->x / b->x;
+	dst->y = a->y / b->y;
+	dst->z = a->z / b->z;
+	dst->w = a->w / b->w;
+}
+inline void OPvec4Div(OPvec4* dst, OPvec4* a, OPfloat b) {
+	dst->x = a->x / b;
+	dst->y = a->y / b;
+	dst->z = a->z / b;
+	dst->w = a->w / b;
+}
+
 #endif

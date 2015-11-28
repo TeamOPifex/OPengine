@@ -16,6 +16,7 @@ inline void OPmat4RotY(OPmat4* m, OPfloat x);
 inline void OPmat4RotZ(OPmat4* m, OPfloat x);
 inline void OPmat4Translate(OPmat4* m, OPfloat x, OPfloat y, OPfloat z);
 inline void OPmat4Scl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z);
+inline OPvec2 OPmat4Transform(OPvec2 a, OPmat4 b);
 inline OPvec3 OPmat4Transform(OPvec3 a, OPmat4 b);
 inline OPvec4 OPmat4Transform(OPvec4 a, OPmat4 b);
 
@@ -33,18 +34,6 @@ struct OPmat4 {
 	}
 	inline OPmat4& operator*=(OPmat4 vhs) {
 		OPmat4Mul(this, *this, vhs);
-		return *this;
-	}
-	inline OPmat4& operator*=(OPvec2 vhs) {
-		OPmat4Scl(this, vhs.x, vhs.y, 1);
-		return *this;
-	}
-	inline OPmat4& operator*=(OPvec3 vhs) {
-		OPmat4Scl(this, vhs.x, vhs.y, vhs.z);
-		return *this;
-	}
-	inline OPmat4& operator*=(OPvec4 vhs) {
-		OPmat4Scl(this, vhs.x, vhs.y, vhs.z);
 		return *this;
 	}
 	inline OPmat4& operator/=(OPvec2 vhs) {
@@ -339,14 +328,14 @@ inline OPmat4 OPmat4SetTranslate(OPmat4 m, OPvec3 v) {
 	 return result;
  }
 
- inline OPvec4 OPmat4Transform(OPvec4 a, OPmat4 b) {
-	 OPvec4 result;
-	 result.x = b[0][0] * a.x + b[1][0] * a.y + b[2][0] * a.z + b[3][0] * a.w;
-	 result.y = b[0][1] * a.x + b[1][1] * a.y + b[2][1] * a.z + b[3][1] * a.w;
-	 result.z = b[0][2] * a.x + b[1][2] * a.y + b[2][2] * a.z + b[3][2] * a.w;
-	 result.w = b[0][3] * a.x + b[1][3] * a.y + b[2][3] * a.z + b[3][3] * a.w;
-	 return result;
- }
+	inline OPvec4 OPmat4Transform(OPvec4 a, OPmat4 b) {
+		OPvec4 result;
+		result.x = b[0][0] * a.x + b[1][0] * a.y + b[2][0] * a.z + b[3][0] * a.w;
+		result.y = b[0][1] * a.x + b[1][1] * a.y + b[2][1] * a.z + b[3][1] * a.w;
+		result.z = b[0][2] * a.x + b[1][2] * a.y + b[2][2] * a.z + b[3][2] * a.w;
+		result.w = b[0][3] * a.x + b[1][3] * a.y + b[2][3] * a.z + b[3][3] * a.w;
+		return result;
+	}
 
  inline void OPmat4RotX(OPmat4* m, OPfloat x) {
 	 OPmat4 tmp = OPmat4RotX(x);

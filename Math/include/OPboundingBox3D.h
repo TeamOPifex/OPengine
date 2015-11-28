@@ -60,4 +60,24 @@ inline OPint OPboundingBox3DCollisionBoundingBox3D(OPboundingBox3D modelBounds, 
 
 	return BoundingBox3DCollision_None;
 }
+
+#include "./Math/include/OPray3D.h"
+inline i8 OPboundingBox3DRay3D(OPboundingBox3D b, OPray3D ray) {
+	double tmin = -INFINITY, tmax = INFINITY;
+
+	for (int i = 0; i < 3; ++i) {
+		if (ray.direction[i] != 0.0) {
+			double t1 = (b.min[i] - ray.position[i])/ray.direction[i];
+			double t2 = (b.max[i] - ray.position[i])/ray.direction[i];
+
+			tmin = OPMAX(tmin, OPMIN(t1, t2));
+			tmax = OPMIN(tmax, OPMAX(t1, t2));
+		} else if (ray.position[i] <= b.min[i] || ray.position[i] >= b.max[i]) {
+			return false;
+		}
+	}
+
+	return tmax > tmin && tmax > 0.0;
+}
+
 #endif

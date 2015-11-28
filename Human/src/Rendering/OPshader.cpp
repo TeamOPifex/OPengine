@@ -6,17 +6,17 @@
 #include "./Core/include/OPlog.h"
 
 //-----------------------------------------------------------------------------
-// ______                _   _                 
-//|  ____|              | | (_)                
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+// ______                _   _
+//|  ____|              | | (_)
+//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 // Shader creation
-OPint OPshaderLoadVertex(const OPchar* filename, OPshader** shader){
+OPint OPshaderLoadVertex(OPstream* source, OPshader** shader){
 	OPshader vertex = -1;
 
-	OPstream* source = OPreadFile(filename);
+	//OPstream* source = OPreadFile(filename);
 
 	OPglError("GLShader::Error 0");
 	vertex = glCreateShader(OPvertexShader);
@@ -24,7 +24,10 @@ OPint OPshaderLoadVertex(const OPchar* filename, OPshader** shader){
 	if (vertex){
 		OPchar* src = (OPchar*)source->Data;
 
-		glShaderSource(vertex, 1, (const OPchar**)&src, 0);
+		GLint lengths[1] = {
+			(GLint)source->Size
+		};
+		glShaderSource(vertex, 1, (const OPchar**)&src, lengths);
 		OPglError("GLShader::Error 2");
 		glCompileShader(vertex);
 		OPglError("GLShader::Error 3");
@@ -40,15 +43,15 @@ OPint OPshaderLoadVertex(const OPchar* filename, OPshader** shader){
 
 			OPglError("GLShader::Error 5");
 			glDeleteShader(vertex);
-			OPstreamDestroy(source); // clean up stream
+			//OPstreamDestroy(source); // clean up stream
 			return -1;
 		}
 	}
 	else{
-		OPstreamDestroy(source); // clean up stream
+		//OPstreamDestroy(source); // clean up stream
 		return -1;
 	}
-	OPstreamDestroy(source); // clean up stream
+	//OPstreamDestroy(source); // clean up stream
 
 	// if we made it this far, everything is a-ok
 	*shader = (OPshader*)OPalloc(sizeof(OPshader));
@@ -60,15 +63,18 @@ OPint OPshaderLoadVertex(const OPchar* filename, OPshader** shader){
 }
 
 //-----------------------------------------------------------------------------
-OPint OPshaderLoadFragment(const OPchar* filename, OPshader** shader){
+OPint OPshaderLoadFragment(OPstream* source, OPshader** shader){
 	OPshader frag = -1;
-	OPstream* source = OPreadFile(filename);
+	//OPstream* source = OPreadFile(filename);
 
 	frag = glCreateShader(OPfragmentShader);
 
 	if (frag){
 		OPchar* src = (OPchar*)source->Data;
-		glShaderSource(frag, 1, (const OPchar**)&src, 0);
+		GLint lengths[1] = {
+			(GLint)source->Size
+		};
+		glShaderSource(frag, 1, (const OPchar**)&src, lengths);
 		glCompileShader(frag);
 
 		GLint compiled = 0;
@@ -82,15 +88,15 @@ OPint OPshaderLoadFragment(const OPchar* filename, OPshader** shader){
 			OPlog("GLShader::Failed to compile Fragment Shader::%s", msg);
 
 			glDeleteShader(frag);
-			OPstreamDestroy(source); // clean up stream
+			//OPstreamDestroy(source); // clean up stream
 			return -1;
 		}
 	}
 	else{
-		OPstreamDestroy(source); // clean up stream
+		//OPstreamDestroy(source); // clean up stream
 		return -1;
 	}
-	OPstreamDestroy(source); // clean up stream
+	//OPstreamDestroy(source); // clean up stream
 
 	// if we made it this far, everything is a-ok
 	*shader = (OPshader*)OPalloc(sizeof(OPshader));
