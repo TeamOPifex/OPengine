@@ -118,8 +118,8 @@ inline OPmat4 operator*(OPmat4 lhs, OPmat4 rhs) {
 //   |___/\_, |_|_|_|_.__/\___/_|_\__| /_/ \_\_| |_|\__|_||_|_|_|_\___|\__|_\__|
 //        |__/
 
-extern const OPmat4 OPMAT4ZERO;
-extern const OPmat4 OPMAT4IDENTITY;
+extern const OPmat4 OPMAT4_ZERO;
+extern const OPmat4 OPMAT4_IDENTITY;
 
 inline OPmat4 OPmat4Create(
 	f32 _00, f32 _10, f32 _20, f32 _30,
@@ -195,7 +195,7 @@ inline void OPmat4Identity(OPmat4* m) {
  inline OPmat4 OPmat4RotX(OPfloat t) {
 	OPfloat t1 = OPcos(t);
 	OPfloat t2 = OPsin(t);
-	OPmat4 m = OPMAT4IDENTITY;
+	OPmat4 m = OPMAT4_IDENTITY;
 	m[1][1] = t1;
 	m[1][2] = t2;
 	m[2][1] = -t2;
@@ -206,7 +206,7 @@ inline void OPmat4Identity(OPmat4* m) {
  inline OPmat4 OPmat4RotY(OPfloat t){
 	OPfloat t1 = OPcos(t);
 	OPfloat t2 = OPsin(t);
-	OPmat4 m = OPMAT4IDENTITY;
+	OPmat4 m = OPMAT4_IDENTITY;
 	m[0][0] = t1;
 	m[0][2] = -t2;
 	m[2][0] = t2;
@@ -217,7 +217,7 @@ inline void OPmat4Identity(OPmat4* m) {
  inline OPmat4 OPmat4RotZ(OPfloat t) {
 	OPfloat t1 = OPcos(t);
 	OPfloat t2 = OPsin(t);
-	OPmat4 m = OPMAT4IDENTITY;
+	OPmat4 m = OPMAT4_IDENTITY;
 	m[0][0] = t1;
 	m[0][1] = t2;
 	m[1][0] = -t2;
@@ -226,7 +226,7 @@ inline void OPmat4Identity(OPmat4* m) {
 }
 
  inline OPmat4 OPmat4Translate(OPfloat x, OPfloat y, OPfloat z) {
-	 OPmat4 m = OPMAT4IDENTITY;
+	 OPmat4 m = OPMAT4_IDENTITY;
 	m[3][0] = x;
 	m[3][1] = y;
 	m[3][2] = z;
@@ -234,7 +234,7 @@ inline void OPmat4Identity(OPmat4* m) {
 }
 
  inline OPmat4 OPmat4Translate(OPvec3 v) {
-	 OPmat4 m = OPMAT4IDENTITY;
+	 OPmat4 m = OPMAT4_IDENTITY;
 	m[3].x = v.x;
 	m[3].y = v.y;
 	m[3].z = v.z;
@@ -242,7 +242,7 @@ inline void OPmat4Identity(OPmat4* m) {
 }
 
  inline OPmat4 OPmat4Translate(OPvec2 v) {
-	OPmat4 m = OPMAT4IDENTITY;
+	OPmat4 m = OPMAT4_IDENTITY;
 	m[3].x = v.x;
 	m[3].y = v.y;
 	m[3].z = 0;
@@ -250,7 +250,7 @@ inline void OPmat4Identity(OPmat4* m) {
 }
 
  inline OPmat4 OPmat4Scl(OPfloat x, OPfloat y, OPfloat z) {
-	 OPmat4 m = OPMAT4IDENTITY;
+	 OPmat4 m = OPMAT4_IDENTITY;
 	m[0][0] = x;
 	m[1][1] = y;
 	m[2][2] = z;
@@ -261,28 +261,28 @@ inline void OPmat4Identity(OPmat4* m) {
  }
 
  inline OPmat4 OPmat4RotX(OPmat4 m, OPfloat x) {
-	OPmat4 result = OPMAT4ZERO;
+	OPmat4 result = OPMAT4_ZERO;
 	OPmat4 temp = OPmat4RotX(x);
 	OPmat4Mul(&result, m, temp);
 	return result;
  }
 
  inline OPmat4 OPmat4RotY(OPmat4 m, OPfloat x) {
-	 OPmat4 result = OPMAT4ZERO;
+	 OPmat4 result = OPMAT4_ZERO;
 	 OPmat4 temp = OPmat4RotY(x);
 	 OPmat4Mul(&result, m, temp);
 	 return result;
  }
 
  inline OPmat4 OPmat4RotZ(OPmat4 m, OPfloat x) {
-	 OPmat4 result = OPMAT4ZERO;
+	 OPmat4 result = OPMAT4_ZERO;
 	 OPmat4 temp = OPmat4RotZ(x);
 	 OPmat4Mul(&result, m, temp);
 	 return result;
  }
 
  inline OPmat4 OPmat4Scl(OPmat4 m, OPfloat x, OPfloat y, OPfloat z) {
-	 OPmat4 result = OPMAT4ZERO;
+	 OPmat4 result = OPMAT4_ZERO;
 	 OPmat4 temp = OPmat4Scl(x, y, z);
 	 OPmat4Mul(&result, m, temp);
 	 return result;
@@ -405,10 +405,21 @@ inline void OPmat4BuildQuat(OPmat4* dst, OPquat* qtr){
 
 /*
 inline void OPmat4quat(OPmat4* m, OPquat* qtr) {
-	OPmat4 temp = OPMAT4ZERO;
+	OPmat4 temp = OPMAT4_ZERO;
 	OPmat4BuildQuat(&temp, qtr);
 	OPmat4Mul(m, m, &temp);
 }*/
+
+
+inline OPmat4 OPmat4From(OPquat a) {
+	OPmat4 result;
+	result[0] = OPvec4Create(1.0f - 2.0f*a.z*a.z - 2.0f*a.w*a.w, 2.0f*a.y*a.z - 2.0f*a.w*a.x, 2.0f*a.y*a.w + 2.0f*a.z*a.x, 0.0f);
+	result[1] = OPvec4Create(2*a.y*a.z + 2*a.w*a.x, 1-2*a.y*a.y-2*a.w*a.w, 2*a.z*a.w - 2*a.y*a.x, 0);
+	result[2] = OPvec4Create(2*a.y*a.w - 2*a.z*a.x, 2*a.z*a.w + 2*a.y*a.x, 1-2*a.y*a.y-2*a.z*a.z, 0);
+	result[3] = OPvec4Create(0,0,0,1);
+	return result;
+}
+
 
 inline OPfloat OPmat4GetCofactor(OPfloat m0, OPfloat m1, OPfloat m2,
 	                           OPfloat m3, OPfloat m4, OPfloat m5,
@@ -444,6 +455,24 @@ inline void OPmat4Write(OPmat4 v, OPstream* str) {
 	OPvec4Write(v[1], str);
 	OPvec4Write(v[2], str);
 	OPvec4Write(v[3], str);
+}
+
+
+
+inline OPmat4 OPmat4RotationBetween(OPvec3 start, OPvec3 dest) {
+	start = OPvec3Norm(start);
+	dest = OPvec3Norm(dest);
+
+	OPvec3 axis = OPvec3Cross(start, dest);
+	f32 len = OPvec3Len(axis);
+	if(len == 0) {
+		return OPMAT4_IDENTITY;
+	}
+
+	f32 angle = OPasin(len);
+	axis *= 1 / len;
+
+	return OPmat4RotY(axis.y) * OPmat4RotZ(axis.z) * OPmat4RotX(axis.x);
 }
 
 OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPfloat zNear, OPfloat zFar);

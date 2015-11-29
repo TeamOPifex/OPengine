@@ -142,6 +142,7 @@ OPMData OPMloadDataV2(OPstream* str) {
 
 OPMData OPMloadData(OPstream* str) {
 	ui16 version = OPreadui16(str);
+	OPlog("Reading OPM Version: %d", version);
 	if (version == 2) return OPMloadDataV2(str);
 
 	ui32 features = OPreadui32(str);
@@ -510,6 +511,7 @@ OPint OPMload(OPstream* str, OPmesh** mesh) {
 	}
 	//OPlog("Reading OPMloadData");
 	OPMData data = OPMloadData(str);
+	OPlog("Loaded OPM");
 
 	//OPlog("Creating vertex and buffers");
 	// Create Vertex & Index Buffers for Mesh
@@ -531,6 +533,10 @@ OPint OPMload(OPstream* str, OPmesh** mesh) {
 
 	temp.MetaCount = data.metaCount;
 	temp.Meta = data.meta;
+	temp.VertexSize = data.vertexSize;
+	temp.IndexSize = data.indexSize;
+	temp.VertexCount = data.vertexCount;
+	temp.IndexCount = data.indexCount;
 
 	//OPlog("Disposing");
 

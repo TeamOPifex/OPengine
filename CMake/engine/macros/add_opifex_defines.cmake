@@ -45,7 +45,10 @@ macro(add_opifex_defines)
 		add_definitions(-D_DEBUG)
 	endif()
 
-	if(${OPIFEX_OPTION_NODEJS} OR ${OPIFEX_OPTION_V8})
+	if(${OPIFEX_OPTION_NODEJS})
+		add_definitions(-DOPIFEX_JAVASCRIPT)
+	endif()
+	if(${OPIFEX_OPTION_V8})
 		add_definitions(-DOPIFEX_JAVASCRIPT)
 	endif()
 

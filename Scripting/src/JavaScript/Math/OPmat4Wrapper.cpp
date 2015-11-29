@@ -227,7 +227,7 @@ JS_RETURN_VAL _OPmat4Create(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmat4* ptr = (OPmat4*)OPalloc(sizeof(OPmat4));
-    *ptr = OPMAT4IDENTITY;
+    *ptr = OPMAT4_IDENTITY;
     Handle<Object> result = JS_NEW_OBJECT();
     OPmat4WrapperCreate(result, ptr);
 

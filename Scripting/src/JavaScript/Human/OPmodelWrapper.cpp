@@ -113,7 +113,7 @@ JS_RETURN_VAL _OPmodelCreate(const JS_ARGS& args) {
 
     OPmodel* model = (OPmodel*)OPallocZero(sizeof(OPmodel));
     model->mesh = mesh;
-    model->world = OPMAT4IDENTITY;
+    model->world = OPMAT4_IDENTITY;
 
     Handle<Object> result = JS_NEW_OBJECT();
     OPmodelWrapperCreate(result, model);
