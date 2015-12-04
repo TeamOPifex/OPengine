@@ -1,13 +1,5 @@
 #include "../ExampleSelectorState.h"
 
-// OPifex Engine includes
-#include "./Pipeline/include/Rendering.h"
-#include "./Human/include/Systems/OPinputSystem.h"
-#include "./Human/include/Systems/OPrenderSystem.h"
-#include "./Data/include/OPcman.h"
-#include "./Human/include/Rendering/OPtextureCube.h"
-
-
 // Data for this Game State Example
 typedef struct {
     OPmesh Mesh;			// The Mesh to render
@@ -17,7 +9,6 @@ typedef struct {
     OPtextureCube CubeMap;
     OPsphericalCube SphericalCube;
 } CubeMapExample;
-
 CubeMapExample cubeMapExample;
 
 void ExampleCubeMapEnter(OPgameState* last) {
@@ -43,20 +34,15 @@ void ExampleCubeMapEnter(OPgameState* last) {
     cubeMapExample.SphericalCube = OPsphericalCubeCreate(faces2);
 
     cubeMapExample.Effect = OPeffectGen(
-            "CubeMap.vert",
-            "CubeMap.frag",
+            "CubeMap.vert", "CubeMap.frag",
             OPATTR_POSITION,
             "Cube Map Effect",
             cubeMapExample.SphericalCube.sides[0].VertexSize);
 
     cubeMapExample.Camera = OPcamPersp(
-            OPVEC3_ONE,
-            OPVEC3_ZERO,
-            OPVEC3_UP,
-            0.1f,
-            1000.0f,
-            45.0f,
-            OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
+        OPVEC3_ONE, OPVEC3_ZERO, OPVEC3_UP,
+        0.1f, 1000.0f, 45.0f,
+        OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
     );
 
     // This can be controlled in the update loop if it varies
@@ -84,10 +70,6 @@ OPint ExampleCubeMapUpdate(OPtimer* time) {
     ////////////////////////
     OPrenderClear(0.4, 0.4, 0.4);
 
-//    OPbindMeshEffectWorldCam(&cubeMapExample.Mesh, &cubeMapExample.Effect, &world, &cubeMapExample.Camera);
-//
-//    OPmeshRender();
-
     for (OPint i = 0; i < 6; i++) {
         // A helper utility which binds the Mesh, Effect and the World, View and Projection Matrices
         // For more granular control please take a look at the Textured Example
@@ -102,24 +84,16 @@ OPint ExampleCubeMapUpdate(OPtimer* time) {
 
     OPrenderPresent();
 
-    // Tells the engine to continue running
-    // Returning true will tell the engine to terminate
     return false;
 
 }
 
-// The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleCubeMapExit(OPgameState* next) {
-    // Clean up phase for the Game State
     OPeffectUnload(&cubeMapExample.Effect);
     return 0;
 }
 
-// This is for the Example Selector only
 OPint GS_EXAMPLE_CUBE_MAP_AVAILABLE = 1;
-
-// This is the Game State for this ModelExample
-// Each entry is a function pointer for Initialize, Update, Destroy
 OPgameState GS_EXAMPLE_CUBE_MAP = {
         ExampleCubeMapEnter,
         ExampleCubeMapUpdate,

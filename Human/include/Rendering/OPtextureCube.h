@@ -33,9 +33,7 @@ void OPtextureCubeInit(OPtextureCube *result, OPimagePNG *faces);
 OPtextureCube * OPtextureCubeCreate(OPimagePNG* faces);
 void OPtextureCubeDestroy(OPtextureCube * result);
 void OPtextureCubeFree(OPtextureCube * result);
-
 void OPtextureCubeClearActive();
 ui32 OPtextureCubeBind(OPtextureCube* result);
-
 
 #endif
