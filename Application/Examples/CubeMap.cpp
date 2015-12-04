@@ -22,8 +22,25 @@ CubeMapExample cubeMapExample;
 
 void ExampleCubeMapEnter(OPgameState* last) {
 
+    OPimagePNG faces[6];
+    faces[0] = OPimagePNGLoadData("Textures/subtle-irongrip2.png");
+    faces[1] = OPimagePNGLoadData("Textures/subtle-irongrip2.png");
+    faces[2] = OPimagePNGLoadData("Textures/subtle-irongrip2.png");
+    faces[3] = OPimagePNGLoadData("Textures/subtle-irongrip2.png");
+    faces[4] = OPimagePNGLoadData("Textures/subtle-irongrip2.png");
+    faces[5] = OPimagePNGLoadData("Textures/subtle-irongrip2.png");
+    OPtextureCubeInit(&cubeMapExample.CubeMap, faces);
+
+    OPimagePNG faces2[6];
+    faces2[0] = OPimagePNGLoadData("Textures/cubeTex.png");
+    faces2[1] = OPimagePNGLoadData("Textures/cubeTex.png");
+    faces2[2] = OPimagePNGLoadData("Textures/cubeTex.png");
+    faces2[3] = OPimagePNGLoadData("Textures/cubeTex.png");
+    faces2[4] = OPimagePNGLoadData("Textures/cubeTex.png");
+    faces2[5] = OPimagePNGLoadData("Textures/cubeTex.png");
+
     cubeMapExample.Mesh = OPcubeCreate(OPvec3Create(1,0,0));
-    cubeMapExample.SphericalCube = OPsphericalCubeCreate(10);
+    cubeMapExample.SphericalCube = OPsphericalCubeCreate(faces2);
 
     cubeMapExample.Effect = OPeffectGen(
             "CubeMap.vert",
@@ -42,15 +59,6 @@ void ExampleCubeMapEnter(OPgameState* last) {
             OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
     );
 
-    OPimagePNG faces[6];
-    faces[0] = OPimagePNGLoadData("Textures/TetrisBroken.png");
-    faces[1] = OPimagePNGLoadData("Textures/TetrisGreen.png");
-    faces[2] = OPimagePNGLoadData("Textures/TetrisGray.png");
-    faces[3] = OPimagePNGLoadData("Textures/TetrisOrange.png");
-    faces[4] = OPimagePNGLoadData("Textures/TetrisRed.png");
-    faces[5] = OPimagePNGLoadData("Textures/TetrisFlawed.png");
-    OPtextureCubeInit(&cubeMapExample.CubeMap, faces);
-
     // This can be controlled in the update loop if it varies
     // Since this is a simple example we'll ensure that it's set
     // to turn the Depth Buffer on and continue
@@ -68,7 +76,7 @@ OPint ExampleCubeMapUpdate(OPtimer* time) {
 
     // Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
     OPmat4 world = OPmat4RotY(cubeMapExample.Rotation / 100.0);
-    OPmat4Scl(&world, 0.25f, 0.25f, 0.25f);
+    //OPmat4Scl(&world, 0.5f, 0.5f, 0.5f);
 
 
     ////////////////////////
