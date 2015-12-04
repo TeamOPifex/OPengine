@@ -7,6 +7,7 @@
 #include "./Human/include/Rendering/OPrenderBuffer.h"
 #include "./Human/include/Rendering/OPtexture.h"
 #include "./Human/include/Rendering/OPcam.h"
+#include "OPtextureCube.h"
 #include "./Math/include/Vectors.h"
 #include "./Math/include/OPmat4.h"
 #include "./Data/include/OPhashMap.h"
@@ -105,6 +106,13 @@ inline void OPeffectParamBindTex(const OPchar* param, OPtexture* tex){
 inline void OPeffectParamBindTex(OPuint loc, OPtexture* tex){
 	glUniform1i(loc, OPtextureBind(tex));
 }
+inline void OPeffectParamBindCubeMap(const OPchar* param, OPtextureCube * tex){
+	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
+	glUniform1i(loc, OPtextureCubeBind(tex));
+}
+inline void OPeffectParamBindCubeMap(OPuint loc, OPtextureCube * tex){
+	glUniform1i(loc, OPtextureCubeBind(tex));
+}
 inline void OPeffectParamiv(const OPchar* param, OPint count, i32* i){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
 	glUniform1iv(loc, count, i);
@@ -145,6 +153,9 @@ inline void OPeffectParam(const OPchar* param, OPuint count, OPvec4* f){
 }
 inline void OPeffectParam(const OPchar* param, OPtexture* tex){
 	OPeffectParamBindTex(param, tex);
+}
+inline void OPeffectParam(const OPchar* param, OPtextureCube * tex){
+	OPeffectParamBindCubeMap(param, tex);
 }
 
 inline void OPeffectParam(OPcam camera) {

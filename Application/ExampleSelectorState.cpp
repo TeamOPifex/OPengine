@@ -57,6 +57,7 @@ void ExampleSelectorEnter(OPgameState* last) {
            { "Textured", &GS_EXAMPLE_TEXTURED, GS_EXAMPLE_TEXTURED_AVAILABLE, 0 },
            { "Sprite", &GS_EXAMPLE_SPRITE, GS_EXAMPLE_SPRITE_AVAILABLE, 0 },
            { "Sprite System", &GS_EXAMPLE_SPRITESYSTEM, GS_EXAMPLE_SPRITESYSTEM_AVAILABLE, 0 },
+           { "Cube Map", &GS_EXAMPLE_CUBE_MAP, GS_EXAMPLE_CUBE_MAP_AVAILABLE, 0 },
 
            // Intermediate
            { "Mesh Builder", &GS_EXAMPLE_MESH_BUILDER, GS_EXAMPLE_MESH_BUILDER_AVAILABLE, 1 },

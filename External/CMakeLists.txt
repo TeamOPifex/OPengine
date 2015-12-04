@@ -56,7 +56,7 @@ add_source_group(src/ "${PROJECT_SOURCE_DIR}/External/LodePNG/src" LODEPNG_SRC)
 #########################################
 # BUILD
 #########################################
-add_library( LODEPNG STATIC	${LODEPNG_SRC} ../Math/include/OPtriangle.h)
+add_library( LODEPNG STATIC	${LODEPNG_SRC})
 
 set_property(TARGET LODEPNG PROPERTY FOLDER "External")
 set_target_properties(LODEPNG PROPERTIES OUTPUT_NAME "LodePNG")

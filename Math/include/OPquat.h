@@ -250,6 +250,25 @@ inline OPquat OPquatRotationBetween4(OPvec3 from, OPvec3 to)
 	return result;
 }
 
+inline OPquat OPquatRotationBetween5(OPvec3 normal) {
+	OPvec3 up = OPVEC3_UP;
+	normal = OPvec3Norm(normal);
+	OPvec3 axis = OPvec3Norm(OPvec3Cross(up, normal));
+	axis = OPvec3Norm(axis);
+
+	f32 dot = OPvec3Dot(OPVEC3_UP, normal);
+	f32 phi = OPacos(dot);
+
+//	OPquat result = {
+//		axis.x * OPsin(phi / 2.0f),
+//		axis.y * OPsin(phi / 2.0f),
+//		axis.z * OPsin(phi / 2.0f),
+//		OPcos(phi / 2.0f)
+//	};
+//	return result;
+	return OPquatCreate(axis, phi);
+}
+
 inline OPfloat OPquatLen(OPquat a){
 	return OPsqrt(a.x * a.x + a.y * a.y + a.z * a.z + a.w * a.w);
 }

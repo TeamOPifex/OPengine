@@ -411,12 +411,29 @@ inline void OPmat4quat(OPmat4* m, OPquat* qtr) {
 }*/
 
 
+//inline OPmat4 OPmat4From(OPquat a) {
+//	OPmat4 result;
+//	result[0] = OPvec4Create(1.0f - 2.0f*a.z*a.z - 2.0f*a.w*a.w, 2.0f*a.y*a.z - 2.0f*a.w*a.x, 2.0f*a.y*a.w + 2.0f*a.z*a.x, 0.0f);
+//	result[1] = OPvec4Create(2*a.y*a.z + 2*a.w*a.x, 1-2*a.y*a.y-2*a.w*a.w, 2*a.z*a.w - 2*a.y*a.x, 0);
+//	result[2] = OPvec4Create(2*a.y*a.w - 2*a.z*a.x, 2*a.z*a.w + 2*a.y*a.x, 1-2*a.y*a.y-2*a.z*a.z, 0);
+//	result[3] = OPvec4Create(0,0,0,1);
+//	return result;
+//}
+
 inline OPmat4 OPmat4From(OPquat a) {
-	OPmat4 result;
-	result[0] = OPvec4Create(1.0f - 2.0f*a.z*a.z - 2.0f*a.w*a.w, 2.0f*a.y*a.z - 2.0f*a.w*a.x, 2.0f*a.y*a.w + 2.0f*a.z*a.x, 0.0f);
-	result[1] = OPvec4Create(2*a.y*a.z + 2*a.w*a.x, 1-2*a.y*a.y-2*a.w*a.w, 2*a.z*a.w - 2*a.y*a.x, 0);
-	result[2] = OPvec4Create(2*a.y*a.w - 2*a.z*a.x, 2*a.z*a.w + 2*a.y*a.x, 1-2*a.y*a.y-2*a.z*a.z, 0);
-	result[3] = OPvec4Create(0,0,0,1);
+	OPmat4 result = OPMAT4_IDENTITY;
+	result[0][0] = 1.0f - 2.0f * a.y * a.y - 2.0f * a.z * a.z;
+	result[0][1] = 2.0f * a.x * a.y - 2.0f * a.w * a.z;
+	result[0][2] = 2.0f * a.x * a.z + 2.0f * a.w * a.y;
+	result[0][3] = 0.0f;
+	result[1][0] = 2.0f * a.x * a.y + 2.0f * a.w * a.z;
+	result[1][1] = 1.0f - 2.0f * a.x * a.x - 2.0f * a.z * a.z;
+	result[1][2] = 2.0f * a.y * a.z + 2.0f * a.w * a.x;
+	result[1][3] = 0;
+	result[2][0] = 2.0f * a.x * a.z - 2.0f * a.w * a.y;
+	result[2][1] = 2.0f * a.y * a.z - 2.0f * a.w * a.x;
+	result[2][2] = 1.0f - 2.0f * a.x * a.x - 2.0f * a.y * a.y;
+	result[2][3] = 0;
 	return result;
 }
 
@@ -473,6 +490,100 @@ inline OPmat4 OPmat4RotationBetween(OPvec3 start, OPvec3 dest) {
 	axis *= 1 / len;
 
 	return OPmat4RotY(axis.y) * OPmat4RotZ(axis.z) * OPmat4RotX(axis.x);
+}
+
+inline OPmat4 OPmat4RotationNormal(OPvec3 normal) {
+	OPvec3 up = OPVEC3_UP;
+	normal = OPvec3Norm(normal);
+	OPvec3 axis = OPvec3Norm(OPvec3Cross(up, normal));
+
+	OPvec3 other = OPvec3Norm(OPvec3Cross(axis, normal));
+
+	OPmat4 result = OPMAT4_IDENTITY;
+
+	result[0][0] = axis.x;
+	result[1][0] = axis.y;
+	result[2][0] = axis.z;
+
+	result[0][1] = normal.x;
+	result[1][1] = normal.y;
+	result[2][1] = normal.z;
+
+	result[0][2] = other.x;
+	result[1][2] = other.y;
+	result[2][2] = other.z;
+
+	return result;
+}
+
+inline OPmat4 OPmat4RotationNormal2(OPvec3 normal) {
+	OPvec3 up = OPVEC3_UP;
+	normal = OPvec3Norm(normal);
+	OPvec3 axis = OPvec3Norm(OPvec3Cross(up, normal));
+
+	f32 dot = OPvec3Dot(OPVEC3_UP, normal);
+	f32 phi = OPacos(dot);
+
+	OPmat4 result = OPMAT4_IDENTITY;
+
+	f32 rcos = OPcos(phi);
+	f32 rsin = OPsin(phi);
+	f32 u = axis.x;
+	f32 v = axis.y;
+	f32 w = axis.z;
+	result[0][0] =      rcos + u*u*(1-rcos);
+	result[1][0] =  w * rsin + v*u*(1-rcos);
+	result[2][0] = -v * rsin + w*u*(1-rcos);
+	result[0][1] = -w * rsin + u*v*(1-rcos);
+	result[1][1] =      rcos + v*v*(1-rcos);
+	result[2][1] =  u * rsin + w*v*(1-rcos);
+	result[0][2] =  v * rsin + u*w*(1-rcos);
+	result[1][2] = -u * rsin + v*w*(1-rcos);
+	result[2][2] =      rcos + w*w*(1-rcos);
+
+	return result;
+}
+
+inline OPmat4 OPmat4RemoveScale(OPmat4 a) {
+	OPvec3 r;
+	r = OPvec3Norm( OPvec3Create(a[0][0], a[0][1], a[0][2]) );
+	a[0][0] = r.x; a[0][1] = r.y; a[0][2] = r.z;
+
+	r = OPvec3Norm( OPvec3Create(a[1][0], a[1][1], a[1][2]) );
+	a[1][0] = r.x; a[1][1] = r.y; a[1][2] = r.z;
+
+	r = OPvec3Norm( OPvec3Create(a[2][0], a[2][1], a[2][2]) );
+	a[2][0] = r.x; a[2][1] = r.y; a[2][2] = r.z;
+
+	return a;
+}
+
+inline OPvec3 OPmat4Eulor( OPmat4 a)
+{
+	double sinPitch, cosPitch, sinRoll, cosRoll, sinYaw, cosYaw;
+
+	sinPitch = -a[2][0];
+	cosPitch = sqrt(1 - sinPitch*sinPitch);
+
+	if ( abs(cosPitch) > 0.0001)
+	{
+	sinRoll = a[2][1] / cosPitch;
+	cosRoll = a[2][2] / cosPitch;
+	sinYaw = a[1][0] / cosPitch;
+	cosYaw = a[0][0] / cosPitch;
+	}
+	else
+	{
+	sinRoll = -a[1][2];
+	cosRoll = a[1][1];
+	sinYaw = 0;
+	cosYaw = 1;
+	}
+
+	return OPvec3Create(
+			atan2(sinYaw, cosYaw) * 180 / OPpi,
+			atan2(sinPitch, cosPitch) * 180 / OPpi,
+			atan2(sinRoll, cosRoll) * 180 / OPpi);
 }
 
 OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPfloat zNear, OPfloat zFar);

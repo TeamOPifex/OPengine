@@ -5,7 +5,7 @@
 #include "./Core/include/Assert.h"
 
 OPtexture* OPRENDER_CURR_TEX;
-ui32 ActiveTexture = 0;
+ui32 OPTEXTURE_ACTIVE = 0;
 
 //-----------------------------------------------------------------------------
 // ______                _   _
@@ -53,21 +53,21 @@ void OPtextureDestroy(OPtexture* tex){
 }
 //-----------------------------------------------------------------------------
 ui32 OPtextureBind(OPtexture* tex){
-	ASSERT(ActiveTexture < 16, "Exceeded Active Texture Slots");
+	ASSERT(OPTEXTURE_ACTIVE < 16, "Exceeded Active Texture Slots");
 	OPglError("OPtextureBind::Error 0");
 	OPRENDER_CURR_TEX = tex;
-	glActiveTexture(GL_TEXTURE0 + ActiveTexture);
+	glActiveTexture(GL_TEXTURE0 + OPTEXTURE_ACTIVE);
 	if (OPglError("OPtextureBind::Error 1")) {
 		OPlog("FAILED to make active texture: %d", tex->Handle);
 	}
 	glBindTexture(GL_TEXTURE_2D, tex->Handle);
 	OPglError("OPtextureBind::Error 2");
 
-	return ActiveTexture++;
+	return OPTEXTURE_ACTIVE++;
 }
 
 void OPtextureClearActive() {
-	ActiveTexture = 0;
+	OPTEXTURE_ACTIVE = 0;
 }
 
 //-----------------------------------------------------------------------------
