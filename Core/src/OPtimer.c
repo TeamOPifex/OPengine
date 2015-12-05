@@ -2,17 +2,19 @@
 #include "./Core/include/OPmemory.h"
 
 //----------------------------------------------------------------------------
-OPint OPtimerCreate(struct OPtimer* timer){
+OPint OPtimerInit(struct OPtimer *timer){
 	OPbzero(timer, sizeof(struct OPtimer));
 	if(!timer) return -1;
+
 #if defined(OPIFEX_UNIX)
 	gettimeofday(&(timer->TimeLastTick), NULL);
 	timer->TotalGametime = 0;
 	timer->Elapsed = 0;
 #elif defined(OPIFEX_WINDOWS)
-// Windows specific values for time
-	timer->TotalGametime = 0;;
+	// Windows specific values for time
+	QueryPerformanceFrequency(&timer->Frequency);
 	QueryPerformanceCounter(&timer->TimeLastTick);
+	timer->TotalGametime = 0;
 	timer->Elapsed = 0;
 #endif
 
@@ -34,14 +36,13 @@ void OPtimerTick(struct OPtimer* timer){
 
 #elif defined(OPIFEX_WINDOWS)
 	// Windows specific values for time
-	LARGE_INTEGER StartingTime, Frequency;
+	LARGE_INTEGER StartingTime;
 
-	QueryPerformanceFrequency(&Frequency);
 	QueryPerformanceCounter(&StartingTime);
 
 	timer->Elapsed = StartingTime.QuadPart - timer->TimeLastTick.QuadPart;
 	timer->Elapsed *= 1000; // to milliseconds
-	timer->Elapsed /= Frequency.QuadPart;
+	timer->Elapsed /= timer->Frequency.QuadPart;
 
 	timer->TimeLastTick = StartingTime;
 	timer->TotalGametime += timer->Elapsed;
@@ -52,11 +53,7 @@ void OPtimerTick(struct OPtimer* timer){
 //----------------------------------------------------------------------------
 
 OPfloat  OPtimerDelta(struct OPtimer* timer){
-#if defined(OPIFEX_UNIX)
 	return (OPfloat)(timer->Elapsed / 1000.0);
-#elif defined(OPIFEX_WINDOWS)
-	return (OPfloat)(timer->Elapsed / 1000.0);
-#endif
 }
 
 //-----------------------------------------------------------------------------

@@ -3,7 +3,7 @@
 #include "./Core/include/OPlog.h"
 #include "./Core/include/Assert.h"
 
-void OPtextureCubeInit(OPtextureCube *result, OPimagePNG *faces) {
+void OPtextureCubeInit(OPtextureCube *result, OPimage *faces) {
     GLuint textureID;
     glGenTextures(1, &textureID);
     glActiveTexture(GL_TEXTURE0);
@@ -50,7 +50,7 @@ void OPtextureCubeInit(OPtextureCube *result, OPimagePNG *faces) {
 }
 
 
-OPtextureCube* OPtextureCubeCreate(OPimagePNG* faces) {
+OPtextureCube* OPtextureCubeCreate(OPimage * faces) {
     OPtextureCube* result = (OPtextureCube*)OPalloc(sizeof(OPtextureCube));
     OPtextureCubeInit(result, faces);
     return result;

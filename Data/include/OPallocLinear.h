@@ -3,6 +3,10 @@
 
 #include "./Core/include/OPtypes.h"
 
+/* Struct definitions */
+/**
+ * Linear Memory Block
+ */
 struct OPallocLinear {
 	OPuint _allocCount;
 	OPuint _usedMemory;
@@ -13,6 +17,10 @@ struct OPallocLinear {
 };
 typedef struct OPallocLinear OPallocLinear;
 
+void OPallocLinearInit(OPallocLinear* result, OPuint sizeInBytes);
+/**
+ * OPallocLinearCreate - creates a Linear Allocator
+ */
 OPallocLinear* OPallocLinearCreate(OPuint sizeInBytes);
 void OPallocLinearDestroy(OPallocLinear* alloc);
 void* OPallocLinearAlloc(OPallocLinear* alloc, OPuint sizeInBytes);

@@ -1,3 +1,4 @@
+
 #include "./Human/include/Utilities/OPimagePNG.h"
 
 #include <string.h>
@@ -28,6 +29,7 @@
 void OPimagePNG24WriteStream(ui8* imageData, i32 width, i32 height, ui8** data, OPuint* dataSize) {
 	ui32 error = lodepng_encode24(data, (size_t*)dataSize, imageData, width, height);
 }
+
 void OPimagePNG32WriteStream(ui8* imageData, i32 width, i32 height, ui8** data, OPuint* dataSize) {
 	ui32 error = lodepng_encode32(data, (size_t*)dataSize, imageData, width, height);
 }
@@ -54,11 +56,11 @@ i32 OPimagePNGLoad(OPstream* str, OPtexture** image){
 	return OPimagePNGLoadStream(str, 0, image);
 }
 
-OPimagePNG OPimagePNGLoadData(const OPchar* filename) {
+OPimage OPimagePNGLoadData(const OPchar* filename) {
 	ui32 error;
 	ui8* data;
 	ui32 width, height;
-	OPimagePNG result = { 0, 0, 0 };
+	OPimage result = { 0, 0, 0 };
 	OPstream* str = OPreadFile(filename);
 	ASSERT(str != NULL, "FAILED to read file");
 

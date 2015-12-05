@@ -1,7 +1,7 @@
 #ifndef OPENGINE_HUMAN_RENDERER_CUBEMAP
 #define OPENGINE_HUMAN_RENDERER_CUBEMAP
 
-#include <Human/include/Utilities/OPimagePNG.h>
+#include "OPimage.h"
 #include "./Human/include/Rendering/OpenGL.h"
 #include "./Human/include/Rendering/OPtexture.h"
 #include "./Core/include/OPtypes.h"
@@ -29,8 +29,8 @@ struct OPtextureCube {
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
-void OPtextureCubeInit(OPtextureCube *result, OPimagePNG *faces);
-OPtextureCube * OPtextureCubeCreate(OPimagePNG* faces);
+void OPtextureCubeInit(OPtextureCube *result, OPimage *faces);
+OPtextureCube * OPtextureCubeCreate(OPimage * faces);
 void OPtextureCubeDestroy(OPtextureCube * result);
 void OPtextureCubeFree(OPtextureCube * result);
 void OPtextureCubeClearActive();

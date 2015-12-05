@@ -13,7 +13,7 @@ CubeMapExample cubeMapExample;
 
 void ExampleCubeMapEnter(OPgameState* last) {
 
-    OPimagePNG faces[6];
+    OPimage faces[6];
     faces[0] = OPimagePNGLoadData("Textures/subtle-irongrip2.png");
     faces[1] = OPimagePNGLoadData("Textures/subtle-irongrip2.png");
     faces[2] = OPimagePNGLoadData("Textures/subtle-irongrip2.png");
@@ -22,7 +22,7 @@ void ExampleCubeMapEnter(OPgameState* last) {
     faces[5] = OPimagePNGLoadData("Textures/subtle-irongrip2.png");
     OPtextureCubeInit(&cubeMapExample.CubeMap, faces);
 
-    OPimagePNG faces2[6];
+    OPimage faces2[6];
     faces2[0] = OPimagePNGLoadData("Textures/cubeTex.png");
     faces2[1] = OPimagePNGLoadData("Textures/cubeTex.png");
     faces2[2] = OPimagePNGLoadData("Textures/cubeTex.png");

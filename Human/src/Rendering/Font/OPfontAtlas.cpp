@@ -1,4 +1,5 @@
 #include "./Human/include/Rendering/Font/OPfontAtlas.h"
+#include "./Human/include/Rendering/OPimage.h"
 #include "./Human/include/Utilities/OPimagePNG.h"
 
 OPfontAtlas* OPfontAtlasCreate(OPint width, OPint height, OPint depth) {

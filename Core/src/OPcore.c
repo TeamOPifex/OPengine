@@ -171,7 +171,7 @@ void OPstart(int argc, char** args) {
 	// Initialize the engine and game
 	_startUpDir = OPdirCurrent();
 	_execDir = OPdirExecutable();
-	OPtimerCreate(&OPtime);
+	OPtimerInit(&OPtime);
 	_OPengineRunning = 1;
 	OPinitialize();
 

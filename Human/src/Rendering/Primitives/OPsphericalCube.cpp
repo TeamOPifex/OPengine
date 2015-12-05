@@ -3,7 +3,7 @@
 #include "./Core/include/Assert.h"
 #include "./Core/include/Assert.h"
 
-OPsphericalCube OPsphericalCubeCreate(OPimagePNG* faces) {
+OPsphericalCube OPsphericalCubeCreate(OPimage * faces) {
 
 	ASSERT(faces != NULL, "Faces are required");
 	ui32 LWH = faces[0].Width;
