@@ -565,7 +565,7 @@ inline OPvec3 OPmat4Eulor( OPmat4 a)
 	sinPitch = -a[2][0];
 	cosPitch = sqrt(1 - sinPitch*sinPitch);
 
-	if ( abs(cosPitch) > 0.0001)
+	if ( OPabs(cosPitch) > 0.0001)
 	{
 	sinRoll = a[2][1] / cosPitch;
 	cosRoll = a[2][2] / cosPitch;

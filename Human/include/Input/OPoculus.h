@@ -6,27 +6,30 @@
 #define OPENGINE_HUMAN_INPUT_OCULUS
 
 #ifdef OPIFEX_OPTION_OCULUS
-#include "./Math/include/Vector2.h"
-#include "./Math/include/Vector4.h"
+#include "./Math/include/OPvec2.h"
+#include "./Math/include/OPvec4.h"
 
-#include "./Human/include/Rendering/FrameBuffer.h"
+#include "./Human/include/Rendering/OPframeBuffer.h"
 
-#include "./External/OculusDK2/src/OVR_CAPI.h"
-#include "./External/OculusDK2/src/OVR_CAPI_GL.h"
+#include <OVR_CAPI.h>
+#include "OVR_CAPI_GL.h"
+
 #endif
 
 struct OPoculus {
 #ifdef OPIFEX_OPTION_OCULUS
 	ovrHmd _hmdDevice;
-	OPframeBuffer _frameBuffer;
-	ovrFrameTiming _timing;
-	ovrGLTexture* _ovrTexture;
-	ovrEyeRenderDesc _eyeRenderDesc;
+	OPframeBuffer frameBuffer;
+	ovrGLTexture ovrTexture[2];
+	ovrSession session;
+	ovrGraphicsLuid luid;
+	ovrEyeRenderDesc eyeRenderDesc;
+	ovrHmdDesc desc;
 #endif
 };
 typedef struct OPoculus OPoculus;
 
-extern OPoculus* OculusManager;
+extern OPoculus OculusManager;
 
 int OPoculusStartup();
 int OPoculusInitialize();
