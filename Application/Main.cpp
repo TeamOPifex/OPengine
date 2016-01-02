@@ -31,7 +31,7 @@ void ApplicationInit() {
 
 	OPcmanLoadResourcePack("pack.oppack");
 
-
+	OPoculusStartup();
 	OPrenderInit();
 	OPgamePadSetDeadZones(0.2f);
 
