@@ -22,7 +22,7 @@ typedef struct {
 
 SkinningExample* skinningExample;
 
-#define SCALE 20
+#define SCALE 1
 
 void ExampleSkinningEnter(OPgameState* last) {
 
@@ -30,17 +30,18 @@ void ExampleSkinningEnter(OPgameState* last) {
 	OPcmanLoad("Skinning.vert");
 	skinningExample = (SkinningExample*)OPalloc(sizeof(SkinningExample));
 
-	skinningExample->skeleton = (OPskeleton*)OPcmanLoadGet("person.opm.skel");
-	skinningExample->animation = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
+	skinningExample->skeleton = (OPskeleton*)OPcmanLoadGet("patrick.opm.skel");
+	skinningExample->animation = (OPskeletonAnimation*)OPcmanLoadGet("patrick.opm.Take 001.anim");
 	skinningExample->animation2 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
 	skinningExample->animation3 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
 	skinningExample->animation4 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
 
 
-	skinningExample->texture = (OPtexture*)OPcmanLoadGet("noneNorm.png");
+	OPcmanLoad("Skinning.frag");
+	OPcmanLoad("Skinning.vert");
 
 	skinningExample->pos = 0;
-	skinningExample->Mesh = (OPmesh*)OPcmanLoadGet("person.opm");
+	skinningExample->Mesh = (OPmesh*)OPcmanLoadGet("patrick.opm");
 
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
@@ -74,6 +75,8 @@ void ExampleSkinningEnter(OPgameState* last) {
 		45.0f,
 		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
 		);
+
+		skinningExample->texture = (OPtexture*)OPcmanLoadGet("Knight.png");
 }
 
 OPint heldDown = 0;

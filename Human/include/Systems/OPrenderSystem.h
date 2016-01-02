@@ -18,6 +18,7 @@
 #include "./Human/include/Rendering/Primitives/OPsphericalCube.h"
 
 #include "./Human/include/Rendering/Skinning/OPskeletonAnimationTransition.h"
+#include "./Human/include/Rendering/Skinning/OPskeletonAnimationManager.h"
 
 #include "./Human/include/Utilities/OPimagePNG.h"
 

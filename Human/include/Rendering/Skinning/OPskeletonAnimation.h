@@ -36,9 +36,13 @@ struct _OPskeletonAnimation {
 
 void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPmat4* frames, i32 count);
 OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPmat4* frames, i32 count);
-void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer);
+void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer, OPfloat timeScale);
+inline void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
+	OPskeletonAnimationUpdate(skelAnim, timer, 1.0f);
+}
 void OPskeletonAnimationUpdateEvents(OPskeletonAnimation* skelAnim, void* data);
 void OPskeletonAnimationApply(OPskeletonAnimation* skelAnim, OPskeleton* skeleton);
+void OPskeletonAnimationApply(OPskeletonAnimation* skelAnim, OPskeleton* skeleton, i16 fromJoint);
 void OPskeletonAnimationMerge(OPskeletonAnimation* skelAnim1, OPskeletonAnimation* skelAnim2, OPfloat merge, OPskeleton* skeleton);
 void OPskeletonAnimationSetEvents(OPskeletonAnimation* skelAnim, OPuint frames, OPskeletonAnimationEvent* events);
 inline void OPskeletonAnimationReset(OPskeletonAnimation* skelAnim) {

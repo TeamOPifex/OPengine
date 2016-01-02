@@ -4,7 +4,7 @@
 #include "./Data/include/OPlist.h"
 
 void OPCalculateTangents(OPMData* data) {
-	for (ui16 a = 0; a < data->indexCount; a+=3) {		
+	for (ui16 a = 0; a < data->indexCount; a+=3) {
 		ui16 i1 = ((ui16*)data->indices)[a + 0];
         ui16 i2 = ((ui16*)data->indices)[a + 1];
         ui16 i3 = ((ui16*)data->indices)[a + 2];
@@ -12,7 +12,7 @@ void OPCalculateTangents(OPMData* data) {
 		OPMvertex& v1 = ((OPMvertex*)data->vertices)[i1];
         OPMvertex& v2 = ((OPMvertex*)data->vertices)[i2];
         OPMvertex& v3 = ((OPMvertex*)data->vertices)[i3];
-		
+
 		v1.Tangent.x = 0;
 		v1.Tangent.y = 0;
 		v1.Tangent.z = 0;
@@ -24,11 +24,11 @@ void OPCalculateTangents(OPMData* data) {
 		v3.Tangent.z = 0;
 	}
 
-	for (ui16 a = 0; a < data->indexCount; a+=3) {	
+	for (ui16 a = 0; a < data->indexCount; a+=3) {
 		ui16 i1 = ((ui16*)data->indices)[a + 0];
         ui16 i2 = ((ui16*)data->indices)[a + 1];
         ui16 i3 = ((ui16*)data->indices)[a + 2];
-        
+
 		OPMvertex& v1 = ((OPMvertex*)data->vertices)[i1];
         OPMvertex& v2 = ((OPMvertex*)data->vertices)[i2];
         OPMvertex& v3 = ((OPMvertex*)data->vertices)[i3];
@@ -55,7 +55,7 @@ void OPCalculateTangents(OPMData* data) {
 		OPvec3 vecSmoothTangent = {};
 		OPvec3Cross(vecSmoothBitangent, vecNormal);
 		vecSmoothTangent = OPvec3Norm(vecSmoothTangent);
-		
+
 		v1.Tangent += vecSmoothTangent;
 		v2.Tangent += vecSmoothTangent;
 		v3.Tangent += vecSmoothTangent;
@@ -120,7 +120,7 @@ OPMData OPMloadDataV2(OPstream* str) {
 			vertexSize += 3;
 		if (OPMhasFeature(features, Skinning))
 			vertexSize += 6;
-		
+
 		result.indexSize = sizeof(ui16);
 		result.vertexSize = vertexSize * sizeof(f32);
 		result.indices = OPalloc(result.indexSize * indicesCount);
@@ -158,19 +158,29 @@ OPMData OPMloadData(OPstream* str) {
 	OPvec4* boneIndices;
 	OPvec4* boneWeights;
 
-	if (OPMhasFeature(features, Position))
+	if (OPMhasFeature(features, Position)) {
+		OPlogDebug("Feature: Position");
 		positions = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
-	if (OPMhasFeature(features, Normal))
+	}
+	if (OPMhasFeature(features, Normal)) {
+		OPlogDebug("Feature: Normal");
 		normals = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
-	if (OPMhasFeature(features, Tangent))
+	}
+	if (OPMhasFeature(features, Tangent)) {
+		OPlogDebug("Feature: Tangent");
 		tangents = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
-	if (OPMhasFeature(features, UV))
+	}
+	if (OPMhasFeature(features, UV)) {
+		OPlogDebug("Feature: UV");
 		uvs = (OPvec2*)OPalloc(sizeof(OPvec2)* verticeCount);
-	if (OPMhasFeature(features, Color))
+	}
+	if (OPMhasFeature(features, Color)) {
+		OPlogDebug("Feature: Color");
 		colors = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
+	}
 	// Read Skinning
 	if (OPMhasFeature(features, Skinning)) {
-		//OPlog("Has Skinning");
+		OPlogDebug("Feature: Skinning");
 		boneIndices = (OPvec4*)OPalloc(sizeof(OPvec4)* verticeCount);
 		boneWeights = (OPvec4*)OPalloc(sizeof(OPvec4)* verticeCount);
 	}
@@ -208,7 +218,7 @@ OPMData OPMloadData(OPstream* str) {
 			normals[i] = OPvec3Norm(normals[i]);
 			//OPlog("Normal: %f %f %f", x, y, z);
 		}
-		
+
 		// Read Tangent
 		if(OPMhasFeature(features, Tangent)) {
 			x = OPreadf32(str);
@@ -252,7 +262,7 @@ OPMData OPMloadData(OPstream* str) {
 			boneWeights[i].z = OPreadf32(str);
 			boneWeights[i].w = OPreadf32(str);
 
-			//OPlog("%f %f %f %f %f %f %f %f", 
+			//OPlog("%f %f %f %f %f %f %f %f",
 			//	boneIndices[i].x,
 			//	boneIndices[i].y,
 			//	boneIndices[i].z,
@@ -283,7 +293,7 @@ OPMData OPMloadData(OPstream* str) {
 	//	hierarchyCount = boneCount;
 	//	hierarchy = (i16*)OPalloc(sizeof(i16)* boneCount);
 	//	pose = (OPmat4*)OPallocZero(sizeof(OPmat4)* boneCount);
-	//	
+	//
 	//	for(i32 i = 0; i < boneCount; i++) {
 
 	//		i32 boneIndex = OPreadi16(str);
@@ -436,7 +446,7 @@ OPMData OPMloadData(OPstream* str) {
 
 
 	//if (OPMhasFeature(features, Skinning)) {
-	//	
+	//
 	//	OPvec4* boneVertexIndices = (OPvec4*)OPalloc(sizeof(OPvec4)* verticeCount);
 	//	OPvec4* boneVertexWeights = (OPvec4*)OPalloc(sizeof(OPvec4)* verticeCount);
 
@@ -840,7 +850,7 @@ OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh) {
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
 	);
-	
+
 	// Dispose of allocated buffers
 	OPfree(data.vertices);
 	OPfree(data.indices);

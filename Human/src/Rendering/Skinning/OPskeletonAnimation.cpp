@@ -25,10 +25,10 @@ OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPmat4* frames, 
 }
 
 
-void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
+void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer, OPfloat timeScale) {
 	ASSERT(skelAnim->FramesPer != 0, "Must have at least 1 frame per second");
 
-	skelAnim->Elapsed += timer->Elapsed;
+	skelAnim->Elapsed += timer->Elapsed * timeScale;
 	skelAnim->LastFrame = skelAnim->Frame;
 
 	while (skelAnim->Elapsed >= skelAnim->FramesPer) {
@@ -83,7 +83,31 @@ void OPskeletonAnimationApply(OPskeletonAnimation* skelAnim, OPskeleton* skeleto
 
 		// Innefficient and poor interpolation scheme
 		// TODO(garrett): Fix - interpolate into the first frame if looping
-		if(skelAnim->Frame < (skelAnim->FrameCount - 2)) {
+		if(skelAnim->Frame <= (skelAnim->FrameCount - 2)) {
+			skeleton->localPoses[i] = OPmat4Interpolate(skelAnim->JointFrames[ind1], skelAnim->JointFrames[ind2], percent);
+		} else {
+			skeleton->localPoses[i] = skelAnim->JointFrames[ind1];
+		}
+
+	}
+
+}
+
+void OPskeletonAnimationApply(OPskeletonAnimation* skelAnim, OPskeleton* skeleton, i16 fromJoint) {
+	OPint ind1, ind2;
+	OPfloat percent = skelAnim->Elapsed / (OPfloat)skelAnim->FramesPer;
+
+
+	for (OPint i = fromJoint; i < skeleton->hierarchyCount; i++) {
+		if(i != fromJoint && skeleton->hierarchy[i] <= skeleton->hierarchy[fromJoint]) {
+			break;
+		}
+		ind1 = skeleton->hierarchyCount * skelAnim->Frame + i;
+		ind2 = skeleton->hierarchyCount * (skelAnim->Frame + 1) + i;
+
+		// Innefficient and poor interpolation scheme
+		// TODO(garrett): Fix - interpolate into the first frame if looping
+		if(skelAnim->Frame <= (skelAnim->FrameCount - 2)) {
 			skeleton->localPoses[i] = OPmat4Interpolate(skelAnim->JointFrames[ind1], skelAnim->JointFrames[ind2], percent);
 		} else {
 			skeleton->localPoses[i] = skelAnim->JointFrames[ind1];
