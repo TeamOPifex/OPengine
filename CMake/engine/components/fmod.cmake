@@ -18,7 +18,7 @@ macro(add_opifex_fmod_include)
 
 	add_opifex_fmod_set_source()
 	include_directories(${_FMOD_PATH}inc/)
-	# message(STATUS "${_FMOD_PATH}inc/")
+	message(STATUS "   ###   FMOD INCLUDE PATH ${_FMOD_PATH}inc/")
 
 endmacro(add_opifex_fmod_include)
 
