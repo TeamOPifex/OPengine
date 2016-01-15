@@ -25,6 +25,10 @@ OPallocLinear* OPallocLinearCreate(OPuint sizeInBytes);
 void OPallocLinearDestroy(OPallocLinear* alloc);
 void* OPallocLinearAlloc(OPallocLinear* alloc, OPuint sizeInBytes);
 
+inline OPuint OPallocLinearUsed(OPallocLinear* alloc) {
+    return alloc->_usedMemory;
+}
+
 inline void OPallocLinearClear(OPallocLinear* alloc) {
 	alloc->_allocCount = 0;
 	alloc->_usedMemory = 0;
