@@ -114,7 +114,8 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 		if (heldDown > 500) heldDown = 500;
 		OPskeletonAnimationUpdate(skinningExample->animation, time);
 		OPskeletonAnimationUpdate(skinningExample->animation2, time);
-		OPskeletonAnimationMerge(skinningExample->animation, skinningExample->animation2, heldDown / 500.0f, skinningExample->skeleton);
+		OPskeletonAnimationMerge(skinningExample->animation, skinningExample->animation2, heldDown / 500.0f);
+		OPskeletonAnimationApply(skinningExample->animation, skinningExample->skeleton);
 	}
 	else if (OPkeyboardIsDown(OPKEY_M)) {
 		OPskeletonAnimationUpdate(skinningExample->animation3, time);
@@ -129,7 +130,8 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 		if (heldDown < 0) heldDown = 0;
 		OPskeletonAnimationUpdate(skinningExample->animation, time);
 		OPskeletonAnimationUpdate(skinningExample->animation2, time);
-		OPskeletonAnimationMerge(skinningExample->animation, skinningExample->animation2, heldDown / 500.0f, skinningExample->skeleton);
+		OPskeletonAnimationMerge(skinningExample->animation, skinningExample->animation2, heldDown / 500.0f);
+		OPskeletonAnimationApply(skinningExample->animation, skinningExample->skeleton);
 	}
 	//OPmat4Translate(&mesh->Skeleton->localPoses[pos], time->Elapsed / 1000.0f, 0, 0);
 	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_W) / 100.0f);

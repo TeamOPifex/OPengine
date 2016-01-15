@@ -6,25 +6,29 @@
 
 #define OPSKELETONANIMATION_MAX_EVENTS 6
 
-struct _OPskeletonAnimation;
-typedef _OPskeletonAnimation OPskeletonAnimation;
+struct OPskeletonAnimation;
+typedef OPskeletonAnimation OPskeletonAnimation;
 
-struct _OPskeletonAnimationEvent
+struct OPskeletonAnimationEvent
 {
 	void(*Event)(OPskeletonAnimation*, OPuint, void*);
 	OPuint Frame;
 	OPuint End;
 	OPint OnFrameChange;
 };
-typedef _OPskeletonAnimationEvent OPskeletonAnimationEvent;
+typedef OPskeletonAnimationEvent OPskeletonAnimationEvent;
 
-struct _OPskeletonAnimation {
+struct OPskeletonAnimation {
 	OPskeleton* Skeleton;
+
 	OPmat4* JointFrames;
 	OPuint FrameCount;
 	OPuint Frame;
 	ui64 Elapsed;
 	ui64 FramesPer;
+
+	OPmat4* CurrentFrame;
+	OPint BoneCount;
 
 	OPint Loop;
 	OPuint LoopsCompleted;
@@ -43,7 +47,10 @@ inline void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* ti
 void OPskeletonAnimationUpdateEvents(OPskeletonAnimation* skelAnim, void* data);
 void OPskeletonAnimationApply(OPskeletonAnimation* skelAnim, OPskeleton* skeleton);
 void OPskeletonAnimationApply(OPskeletonAnimation* skelAnim, OPskeleton* skeleton, i16 fromJoint);
-void OPskeletonAnimationMerge(OPskeletonAnimation* skelAnim1, OPskeletonAnimation* skelAnim2, OPfloat merge, OPskeleton* skeleton);
+void OPskeletonAnimationApply(OPmat4* animationFrame, OPskeleton* skeleton);
+void OPskeletonAnimationApply(OPmat4* animationFrame, OPskeleton* skeleton, i16 fromJoint);
+void OPskeletonAnimationMerge(OPskeletonAnimation* skelAnim1, OPskeletonAnimation* skelAnim2, OPfloat merge);
+void OPskeletonAnimationCombine(OPskeletonAnimation* skelAnim, OPskeletonAnimation* skelAnim2, OPskeleton* skeleton, i16 fromJoint);
 void OPskeletonAnimationSetEvents(OPskeletonAnimation* skelAnim, OPuint frames, OPskeletonAnimationEvent* events);
 inline void OPskeletonAnimationReset(OPskeletonAnimation* skelAnim) {
 	skelAnim->Frame = 0;

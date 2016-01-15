@@ -60,9 +60,9 @@ inline void OPskeletonAnimationManagerSet(OPskeletonAnimationManager* manager, O
 }
 
 inline void OPskeletonAnimationManagerMix(OPskeletonAnimationManager* manager, OPskeletonAnimation* animation, i16 fromJoint) {
-	manager->animations[1] = animation;
-	manager->animationJointMix[1] = fromJoint;
-	manager->animationIndex = 2;
+	manager->animations[manager->animationIndex] = animation;
+	manager->animationJointMix[manager->animationIndex] = fromJoint;
+	manager->animationIndex++;
 	OPskeletonAnimationReset(animation);
 }
 
@@ -112,16 +112,17 @@ inline void OPskeletonAnimationManagerUpdate(OPskeletonAnimationManager* manager
 
 	if(manager->transition.animation != NULL) {
 		OPskeletonAnimationUpdate(manager->transition.animation, timer, timeScale);
-		OPskeletonAnimationMerge(manager->animations[0], manager->transition.animation, percentage, manager->skeleton);
+		OPskeletonAnimationMerge(manager->animations[0], manager->transition.animation, percentage);
 	} else {
-		for(ui16 i = 0; i < manager->animationIndex; i++) {
-			OPskeletonAnimationApply(manager->animations[i], manager->skeleton, manager->animationJointMix[i]);
+		for(ui16 i = 1; i < manager->animationIndex; i++) {
+			OPskeletonAnimationCombine(manager->animations[0], manager->animations[i], manager->skeleton, manager->animationJointMix[i]);
 		}
 	}
 
+	OPskeletonAnimationApply(manager->animations[0], manager->skeleton);
 	OPskeletonUpdate(manager->skeleton);
-
 }
+
 inline void OPskeletonAnimationManagerUpdate(OPskeletonAnimationManager* manager, OPtimer* timer) {
 	OPskeletonAnimationManagerUpdate(manager, timer, 1.0f);
 }
