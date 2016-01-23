@@ -9,7 +9,8 @@ enum OPmaterialParamType {
 	MATERIAL_PARAM_TYPE_MATRIX4V,
 	MATERIAL_PARAM_TYPE_TEXTURE,
 	MATERIAL_PARAM_TYPE_VECTOR3,
-	MATERIAL_PARAM_TYPE_VECTOR4
+	MATERIAL_PARAM_TYPE_VECTOR4,
+	MATERIAL_PARAM_TYPE_FLOAT
 };
 
 struct OPmaterialParam {
@@ -71,6 +72,10 @@ inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPmat4*
 	OPmaterialAddParam(material, MATERIAL_PARAM_TYPE_MATRIX4V, name, (void*)data, count);
 }
 
+inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, f32* data) {
+	OPmaterialAddParam(material, MATERIAL_PARAM_TYPE_FLOAT, name, (void*)data, 1);
+}
+
 inline void OPmaterialBind(OPmaterial* material) {
 	OPeffectBind(material->effect);
 
@@ -96,6 +101,10 @@ inline void OPmaterialBind(OPmaterial* material) {
 			}
 			case MATERIAL_PARAM_TYPE_MATRIX4V: {
 				OPeffectParam(material->params[i].name, material->params[i].count, (OPmat4*)material->params[i].data);
+				break;
+			}
+			case MATERIAL_PARAM_TYPE_FLOAT: {
+				OPeffectParam(material->params[i].name, *(f32*)material->params[i].data);
 				break;
 			}
 		}

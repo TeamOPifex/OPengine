@@ -113,6 +113,27 @@ inline OPfloat OPquatDot(OPquat a, OPquat b){
 	       a.w * b.w;
 }
 
+inline OPvec3 OPquatForward(OPquat a)
+{
+	return OPvec3Create(2 * (a.x * a.z + a.w * a.y),
+		2 * (a.y * a.x - a.w * a.x),
+		1 - 2 * (a.x * a.x + a.y * a.y));
+}
+
+inline OPvec3 OPquatUp(OPquat a)
+{
+	return OPvec3Create(2 * (a.x * a.y - a.w * a.z),
+		1 - 2 * (a.x * a.x + a.z * a.z),
+		2 * (a.y * a.z + a.w * a.x));
+}
+
+inline OPvec3 OPquatRight(OPquat a)
+{
+	return OPvec3Create(1 - 2 * (a.y * a.y + a.z * a.z),
+		2 * (a.x * a.y + a.w * a.z),
+		2 * (a.x * a.z - a.w * a.y));
+}
+
 inline OPvec3 OPquatRot(OPquat q, OPvec3 p){
 	OPvec3 qp = { q.x, q.y, q.z };
 	// OPquat conj = OPquatConj(q);

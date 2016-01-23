@@ -259,9 +259,16 @@ OPint OPrenderInit(i32 width, i32 height){
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	glfwWindowHint(GLFW_ALPHA_BITS, 8);
 
+
 	GLFWmonitor* monitor = NULL;
 	if (OPRENDER_FULLSCREEN){
 		monitor = glfwGetPrimaryMonitor();
+
+	/*	int count;
+		GLFWmonitor** monitors = glfwGetMonitors(&count);
+		if (count > 0) {
+			monitor = monitors[1];
+		}*/
 	}
 
 	OPint _screenWidth = OPRENDER_SCREEN_WIDTH;
@@ -272,7 +279,7 @@ OPint OPrenderInit(i32 width, i32 height){
 
 	window = glfwCreateWindow(_screenWidth, _screenHeight,
 		"OPifex Entertainment", monitor, NULL);
-
+	
 	OPlog("%d x %d", _screenWidth, _screenHeight);
 
 	OPlogInfo("Created window of size: %d x %d",

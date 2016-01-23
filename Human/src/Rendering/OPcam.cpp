@@ -3,6 +3,8 @@
 #include "./Human/include/Rendering/OPrender.h"
 #include "./Core/include/OPlog.h"
 
+#include "./Human/include/Rendering/OPeffect.h"
+
 OPcam OPcamPersp(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat near, OPfloat far, OPfloat fov, OPfloat aspect){
 
 	float _fov = (float)((double)fov * 0.01745329251994329576923690768489);
@@ -87,4 +89,15 @@ OPray3D OPcamUnproject(OPcam* cam, i32 screenX, i32 screenY) {
 
 	return result;
 
+}
+
+
+
+void OPcamBind(OPcam camera) {
+	OPmat4 view, proj;
+	OPcamGetView(camera, &view);
+	OPcamGetProj(camera, &proj);
+
+	OPeffectParamMat4("uView", &view);
+	OPeffectParamMat4("uProj", &proj);
 }

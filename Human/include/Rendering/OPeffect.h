@@ -67,6 +67,9 @@ inline void OPeffectParamf(const OPchar* param, OPfloat f){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
 	glUniform1f(loc, f);
 }
+inline void OPeffectParamf(OPuint loc, OPfloat f) {
+	glUniform1f(loc, f);
+}
 inline void OPeffectParamfv(const OPchar* param, OPint count, OPfloat* f){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
 	glUniform1fv(loc, count, f);
@@ -130,6 +133,12 @@ inline void OPeffectParamMat4v(const OPchar* param, OPuint count, OPmat4* matric
 }
 
 
+inline void OPeffectParam(OPuint loc, f32 f) {
+	OPeffectParamf(loc, f);
+}
+inline void OPeffectParam(const OPchar* param, f32 f) {
+	OPeffectParamf(param, f);
+}
 inline void OPeffectParam(OPuint loc, OPmat4 matrix){
 	OPeffectParamMat4(loc, &matrix);
 }
