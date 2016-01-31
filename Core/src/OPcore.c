@@ -201,6 +201,7 @@ void OPstart(int argc, char** args) {
 }
 
 ui64 accumlator = 0;
+#define STEP 10.0f
 
 void OPstartStepped(int argc, char** args) {
 	// Initialize the engine and game
@@ -216,15 +217,17 @@ void OPstartStepped(int argc, char** args) {
 		OPtimerTick(&OPtime);
 
 		accumlator += OPtime.Elapsed;
-
-		while (accumlator > 30) {
-			if (OPupdateStepped(&OPtime, 30)) {
+        OPlog("Elapsed: %lu", OPtime.Elapsed);
+        OPlog("Accum: %lu", accumlator);
+        
+		while (accumlator > STEP) {
+			if (OPupdateStepped(&OPtime, STEP)) {
 				_OPengineRunning = 0;
 			}
-			accumlator -= 30;
+			accumlator -= STEP;
 		}
 
-		OPrenderStepped(accumlator / 30.0f);
+		OPrenderStepped(accumlator / STEP);
 	}
 
 	// game loop has finished, clean up

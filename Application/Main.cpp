@@ -55,18 +55,20 @@ int ApplicationUpdateStepped(OPtimer* timer, ui64 step) {
 	OPlog("%d", step);
 
 	OPinputSystemUpdate(timer);
-	OPcmanUpdate(timer);
+//	OPcmanUpdate(timer);
 
 	if (OPkeyboardWasReleased(OPKEY_ESCAPE)) return 1;
-	if ((OPkeyboardWasReleased(OPKEY_BACKSPACE) || OPgamePadWasPressed(OPgamePadGet(OPGAMEPAD_ONE), OPGAMEPADBUTTON_BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
-		OPgameStateChange(&GS_EXAMPLE_SELECTOR);
-	}
+// 	if ((OPkeyboardWasReleased(OPKEY_BACKSPACE) || OPgamePadWasPressed(OPgamePadGet(OPGAMEPAD_ONE), OPGAMEPADBUTTON_BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
+// 		OPgameStateChange(&GS_EXAMPLE_SELECTOR);
+// 	}
 
-	return ActiveState->Update(timer);
+	return 0; //ActiveState->Update(timer);
 }
 
 void ApplicationRenderStepped(OPfloat alpha) {
 	OPlog("[%f]", alpha);
+    OPrenderClear(0,0,0);
+    OPrenderPresent();
 }
 
 void ApplicationDestroy() {
