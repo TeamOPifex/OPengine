@@ -29,6 +29,9 @@ extern void (*OPinitialize)();
  */
 extern int(*OPupdate)(struct OPtimer*);
 
+extern int(*OPupdateStepped)(struct OPtimer*, ui64);
+extern void(*OPrenderStepped)(float);
+
 //----------------------------------------------------------------------------
 /**
  * Game engine termination.

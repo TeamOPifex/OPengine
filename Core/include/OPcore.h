@@ -38,6 +38,7 @@ extern "C" {
 
 #ifdef OPIFEX_ANDROID
 	void OPstart(struct android_app* state);
+	void OPstartStepped(struct android_app* state);
 #else
 	/**
 	 * Begins the game cycle.
@@ -52,6 +53,7 @@ extern "C" {
 	 * @param args Each of the arguments passed into the program at start
 	 */
 	void OPstart(int argc, char** args);
+	void OPstartStepped(int argc, char** args);
 #endif
 
 //----------------------------------------------------------------------------
@@ -81,6 +83,7 @@ OPchar* OPgetExecutableDir();
 #define OP_MAIN int main(int argc, char** args)
 #define OP_MAIN_SUCCESS return 0;
 #define OP_MAIN_START OPstart(argc, args);
+#define OP_MAIN_START_STEPPED OPstartStepped(argc, args);
 #define OP_MAIN_END OPend();
 #endif
 

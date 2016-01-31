@@ -56,6 +56,8 @@ jint JNIHeight() { return _JNIHeight; }
 
 void (*OPinitialize)();
 int(*OPupdate)(struct OPtimer*);
+int(*OPupdateStepped)(struct OPtimer*, ui64);
+void(*OPrenderStepped)(float);
 void (*OPdestroy)();
 
 
@@ -196,6 +198,45 @@ void OPstart(int argc, char** args) {
 	OPlog("Alloc/Dealloc/Diff: %d / %d / %d", OPallocations, OPdeallocations, (OPallocations - OPdeallocations));
 	ASSERT((OPallocations - OPdeallocations) == 0, "ALERT - Not all allocated memory was freed");
 	#endif
+}
+
+ui64 accumlator = 0;
+
+void OPstartStepped(int argc, char** args) {
+	// Initialize the engine and game
+	_startUpDir = OPdirCurrent();
+	_execDir = OPdirExecutable();
+	OPtimerInit(&OPtime);
+	_OPengineRunning = 1;
+	OPinitialize();
+
+	// main game loop
+	while (_OPengineRunning) {
+		// update the timer
+		OPtimerTick(&OPtime);
+
+		accumlator += OPtime.Elapsed;
+
+		while (accumlator > 30) {
+			if (OPupdateStepped(&OPtime, 30)) {
+				_OPengineRunning = 0;
+			}
+			accumlator -= 30;
+		}
+
+		OPrenderStepped(accumlator / 30.0f);
+	}
+
+	// game loop has finished, clean up
+	OPdestroy();
+
+	OPfree(_startUpDir);
+	OPfree(_execDir);
+
+#ifndef OPIFEX_OPTION_RELEASE
+	OPlog("Alloc/Dealloc/Diff: %d / %d / %d", OPallocations, OPdeallocations, (OPallocations - OPdeallocations));
+	ASSERT((OPallocations - OPdeallocations) == 0, "ALERT - Not all allocated memory was freed");
+#endif
 }
 #endif
 
