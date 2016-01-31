@@ -155,87 +155,92 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
        exampleSelector.Selected = exampleSelector.HierarchyDepth[exampleSelector.CurrentHierarchy + 1];
    }
 
+	return false;
+}
 
-    ///////////////
-    // RENDER
-    ///////////////
+void ExampleSelectorRender(OPfloat delta) {
 
-	OPrenderClear(0,0,0,1);
 
-   // Render the background
+	///////////////
+	// RENDER
+	///////////////
+
+	OPrenderClear(0, 0, 0, 1);
+
+	// Render the background
 	OPtexture2DRender(exampleSelector.Background);
 
 
-   // Y coordinate to start drawing the text
+	// Y coordinate to start drawing the text
 	OPfloat start = -(exampleSelector.Selected) * 40 + OPRENDER_SCALED_HEIGHT / 2;
 
 
 	OPfontRenderBegin(exampleSelector.FontManager);
 
 	OPfontColor(OPvec4Create(1.0, 1.0, 1.0, 1));
-   exampleSelector.FontManager->scale = 0.75;
+	exampleSelector.FontManager->scale = 0.75;
 	OPfontRender("OPengine v0.4.6", OPvec2Create(50, start - 60));
 
-   exampleSelector.FontManager->scale = 0.5;
+	exampleSelector.FontManager->scale = 0.5;
 
-   OPint notTheCurrentlySelectedMenuItem = 0, isActiveCategory = 0;
+	OPint notTheCurrentlySelectedMenuItem = 0, isActiveCategory = 0;
 	f32 r, g, b;
-   i32 pos = 0;
+	i32 pos = 0;
 	for (i32 i = 0; i < TotalEntries; i++) {
 
-       isActiveCategory = i == exampleSelector.CurrentHierarchy;
-       if(exampleSelector.Examples[i].parent != exampleSelector.CurrentHierarchy && !isActiveCategory) continue;
+		isActiveCategory = i == exampleSelector.CurrentHierarchy;
+		if (exampleSelector.Examples[i].parent != exampleSelector.CurrentHierarchy && !isActiveCategory) continue;
 
 		notTheCurrentlySelectedMenuItem = exampleSelector.Selected != pos;
-       // Set Selected Color (bright yellow-ish gold)
+		// Set Selected Color (bright yellow-ish gold)
 		r = 0.95, g = 0.84; b = 0;
 
-		if(notTheCurrentlySelectedMenuItem) {
+		if (notTheCurrentlySelectedMenuItem) {
 			r = g = b = 1.0;
 		}
 
 		if (!exampleSelector.Examples[i].available) {
-           // Menu item is not available so make it really dark
+			// Menu item is not available so make it really dark
 			r = g = b = 0.3;
-           // Menu item is not available but it's the currently selected
-           // item, so we'll brighten it just a bit so that we know what
-           // is selected.
-           if(!notTheCurrentlySelectedMenuItem) {
-               r  = g = b = 0.5;
-           }
+			// Menu item is not available but it's the currently selected
+			// item, so we'll brighten it just a bit so that we know what
+			// is selected.
+			if (!notTheCurrentlySelectedMenuItem) {
+				r = g = b = 0.5;
+			}
 		}
 
-       // If this is a category, then it becomes light blue
-       if(isActiveCategory || exampleSelector.Examples[i].state == NULL) {
-           r = g = 0.7; b = 1.0;
-           if(notTheCurrentlySelectedMenuItem && exampleSelector.CurrentDepth == 0) {
-               r = g = 0.4; b = 0.7;
-           }
-       }
+		// If this is a category, then it becomes light blue
+		if (isActiveCategory || exampleSelector.Examples[i].state == NULL) {
+			r = g = 0.7; b = 1.0;
+			if (notTheCurrentlySelectedMenuItem && exampleSelector.CurrentDepth == 0) {
+				r = g = 0.4; b = 0.7;
+			}
+		}
 
 
-		OPfontColor(OPvec4Create(r,g,b,1));
+		OPfontColor(OPvec4Create(r, g, b, 1));
 
-       // If it's a category it doesn't get pushed to the right
-       if(isActiveCategory) {
-           OPfontRender(exampleSelector.Examples[i].name,
-                        OPvec2Create(75, start + 40 * pos));
-       } else {
-           // If it's the root menu we don't offset to the right
-           // If it isn't the root menu, then we push it to right
-           // to help indicate that it's a sub-menu
-           OPint isNotRootMenu = (exampleSelector.CurrentHierarchy != -1) ? 1 : 0;
-           OPfontRender(exampleSelector.Examples[i].name,
-                        OPvec2Create(75 + 40 * isNotRootMenu,
-                                     start + 40 * (pos + isNotRootMenu)));
-           pos++;
-       }
+		// If it's a category it doesn't get pushed to the right
+		if (isActiveCategory) {
+			OPfontRender(exampleSelector.Examples[i].name,
+				OPvec2Create(75, start + 40 * pos));
+		}
+		else {
+			// If it's the root menu we don't offset to the right
+			// If it isn't the root menu, then we push it to right
+			// to help indicate that it's a sub-menu
+			OPint isNotRootMenu = (exampleSelector.CurrentHierarchy != -1) ? 1 : 0;
+			OPfontRender(exampleSelector.Examples[i].name,
+				OPvec2Create(75 + 40 * isNotRootMenu,
+					start + 40 * (pos + isNotRootMenu)));
+			pos++;
+		}
 	}
 
 	OPfontRenderEnd();
 
 	OPrenderPresent();
-	return false;
 }
 
 OPint ExampleSelectorExit(OPgameState* next) {
@@ -251,5 +256,6 @@ OPint ExampleSelectorExit(OPgameState* next) {
 OPgameState GS_EXAMPLE_SELECTOR = {
 	ExampleSelectorEnter,
 	ExampleSelectorUpdate,
+	ExampleSelectorRender,
 	ExampleSelectorExit
 };

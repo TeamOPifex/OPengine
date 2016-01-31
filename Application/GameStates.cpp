@@ -56,12 +56,14 @@ void* garbage;
 OPgameState State0 = {
 	State0Enter,
 	State0Update,
+	State0Render,
 	State0Exit
 };
 
 OPgameState State1 = {
 	State1Enter,
 	State1Update,
+	State1Render,
 	State1Exit
 };
 
@@ -216,7 +218,9 @@ OPint State0Update(OPtimer* time){
 	OPrenderPresent();
 	return false;
 }
+void State0Render(OPfloat delta) {
 
+}
 OPint State0Exit(OPgameState* next){
 	OPcmanDelete("impact.wav");
 	OPcmanDelete("boom.wav");
@@ -337,7 +341,9 @@ OPint State1Update(OPtimer* time){
 
 	return false;
 }
+void State1Render(OPfloat delta) {
 
+}
 OPint State1Exit(OPgameState* next){
 	OPcmanDelete("impact.wav");
 	OPcmanDelete("boom.wav");

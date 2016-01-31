@@ -105,7 +105,9 @@ OPint ExampleSphericalCubeUpdate(OPtimer* time) {
 	return false;
 
 }
+void ExampleSphericalCubeRender(OPfloat delta) {
 
+}
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleSphericalCubeExit(OPgameState* next) {
 	// Clean up phase for the Game State
@@ -121,5 +123,6 @@ OPint GS_EXAMPLE_SPHERICALCUBE_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_SPHERICALCUBE = {
 	ExampleSphericalCubeEnter,
 	ExampleSphericalCubeUpdate,
+	ExampleSphericalCubeRender,
 	ExampleSphericalCubeExit
 };

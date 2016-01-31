@@ -34,7 +34,9 @@ OPint ExampleSpriteUpdate(OPtimer* time) {
 	return false;
 
 }
+void ExampleSpriteRender(OPfloat delta) {
 
+}
 OPint ExampleSpriteExit(OPgameState* next) {
 	return 0;
 }
@@ -45,5 +47,6 @@ OPint GS_EXAMPLE_SPRITE_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_SPRITE = {
 	ExampleSpriteEnter,
 	ExampleSpriteUpdate,
+	ExampleSpriteRender,
 	ExampleSpriteExit
 };

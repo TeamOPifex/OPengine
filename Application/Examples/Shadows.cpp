@@ -236,6 +236,10 @@ OPint ExampleShadowsUpdate(OPtimer* timer) {
 	return false;
 }
 
+void ExampleShadowsRender(OPfloat delta) {
+
+}
+
 OPint ExampleShadowsExit(OPgameState* next) {
 	return 0;
 }
@@ -244,5 +248,6 @@ OPint GS_EXAMPLE_SHADOWS_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_SHADOWS = {
 	ExampleShadowsEnter,
 	ExampleShadowsUpdate,
+	ExampleShadowsRender,
 	ExampleShadowsExit
 };

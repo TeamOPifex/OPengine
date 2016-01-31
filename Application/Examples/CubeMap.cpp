@@ -60,32 +60,36 @@ OPint ExampleCubeMapUpdate(OPtimer* time) {
 
     if (OPkeyboardIsDown(OPKEY_SPACE)) { cubeMapExample.Rotation++; }
 
-    // Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
-    OPmat4 world = OPmat4RotY(cubeMapExample.Rotation / 100.0);
-    //OPmat4Scl(&world, 0.5f, 0.5f, 0.5f);
 
-
-    ////////////////////////
-    // Render
-    ////////////////////////
-    OPrenderClear(0.4, 0.4, 0.4);
-
-    for (OPint i = 0; i < 6; i++) {
-        // A helper utility which binds the Mesh, Effect and the World, View and Projection Matrices
-        // For more granular control please take a look at the Textured Example
-        OPbindMeshEffectWorldCam(&cubeMapExample.SphericalCube.sides[i], &cubeMapExample.Effect, &world, &cubeMapExample.Camera);
-
-        OPtextureCubeClearActive();
-        OPeffectParam("uColorTexture", &cubeMapExample.CubeMap);
-
-        // Renders to the screen the currently bound Mesh (sphericalCubeExample->Mesh)
-        OPmeshRender();
-    }
-
-    OPrenderPresent();
 
     return false;
 
+}
+
+void ExampleCubeMapRender(OPfloat delta) {
+
+	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
+	OPmat4 world = OPmat4RotY(cubeMapExample.Rotation / 100.0);
+	//OPmat4Scl(&world, 0.5f, 0.5f, 0.5f);
+
+	////////////////////////
+	// Render
+	////////////////////////
+	OPrenderClear(0.4, 0.4, 0.4);
+
+	for (OPint i = 0; i < 6; i++) {
+		// A helper utility which binds the Mesh, Effect and the World, View and Projection Matrices
+		// For more granular control please take a look at the Textured Example
+		OPbindMeshEffectWorldCam(&cubeMapExample.SphericalCube.sides[i], &cubeMapExample.Effect, &world, &cubeMapExample.Camera);
+
+		OPtextureCubeClearActive();
+		OPeffectParam("uColorTexture", &cubeMapExample.CubeMap);
+
+		// Renders to the screen the currently bound Mesh (sphericalCubeExample->Mesh)
+		OPmeshRender();
+	}
+
+	OPrenderPresent();
 }
 
 OPint ExampleCubeMapExit(OPgameState* next) {
@@ -97,5 +101,6 @@ OPint GS_EXAMPLE_CUBE_MAP_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_CUBE_MAP = {
         ExampleCubeMapEnter,
         ExampleCubeMapUpdate,
+	ExampleCubeMapRender,
         ExampleCubeMapExit
 };

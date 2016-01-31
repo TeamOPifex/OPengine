@@ -88,7 +88,9 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 	OPrenderPresent();
 	return false;
 }
+void ExampleTexturedRender(OPfloat delta) {
 
+}
 OPint ExampleTexturedExit(OPgameState* next) {
 	OPeffectUnload(texturedExample->Effect);
 	OPfree(texturedExample->Effect);
@@ -103,5 +105,6 @@ OPint GS_EXAMPLE_TEXTURED_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_TEXTURED = {
 	ExampleTexturedEnter,
 	ExampleTexturedUpdate,
+	ExampleTexturedRender,
 	ExampleTexturedExit
 };

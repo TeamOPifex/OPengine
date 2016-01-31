@@ -29,8 +29,15 @@ extern void (*OPinitialize)();
  */
 extern int(*OPupdate)(struct OPtimer*);
 
-extern int(*OPupdateStepped)(struct OPtimer*, ui64);
-extern void(*OPrenderStepped)(float);
+//----------------------------------------------------------------------------
+/**
+* Game engine render.
+*	This function pointer points to a user function which accepts an
+*	OPfloat as an argument. This function performs whatever actions are
+*   needed to do scene rendering.
+* @param delta OPfloat object representing time into the frame
+*/
+extern void(*OPrender)(OPfloat);
 
 //----------------------------------------------------------------------------
 /**

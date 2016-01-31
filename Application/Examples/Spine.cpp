@@ -150,7 +150,9 @@ OPint ExampleSpineUpdate(OPtimer* time) {
 	return false;
 
 }
+void ExampleSpineRender(OPfloat delta) {
 
+}
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleSpineExit(OPgameState* next) {
 	// Clean up phase for the Game State
@@ -169,5 +171,6 @@ OPint GS_EXAMPLE_SPINE_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_SPINE = {
 	ExampleSpineEnter,
 	ExampleSpineUpdate,
+	ExampleSpineRender,
 	ExampleSpineExit
 };

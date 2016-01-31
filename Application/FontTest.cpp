@@ -16,7 +16,9 @@ OPint FontTestUpdate(OPtimer* time) {
 	OPrenderPresent();
 	return false;
 }
+void FontTestRender(OPfloat delta) {
 
+}
 OPint FontTestExit(OPgameState* next) {
 	return 0;
 }
@@ -25,5 +27,6 @@ OPint FontTestExit(OPgameState* next) {
 OPgameState GS_FONT_TEST = {
 	FontTestEnter,
 	FontTestUpdate,
+	FontTestRender,
 	FontTestExit
 };

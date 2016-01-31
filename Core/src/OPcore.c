@@ -56,8 +56,7 @@ jint JNIHeight() { return _JNIHeight; }
 
 void (*OPinitialize)();
 int(*OPupdate)(struct OPtimer*);
-int(*OPupdateStepped)(struct OPtimer*, ui64);
-void(*OPrenderStepped)(float);
+void(*OPrender)(OPfloat);
 void (*OPdestroy)();
 
 
@@ -185,7 +184,9 @@ void OPstart(int argc, char** args) {
 		// update the game
 		if (OPupdate(&OPtime)) {
 			_OPengineRunning = 0;
+			break;
 		}
+		OPrender(1.0f);
 	}
 
 	// game loop has finished, clean up
@@ -204,10 +205,16 @@ ui64 accumlator = 0;
 #define STEP 10.0f
 
 void OPstartStepped(int argc, char** args) {
+	OPtimer frameStepped;
+
 	// Initialize the engine and game
 	_startUpDir = OPdirCurrent();
 	_execDir = OPdirExecutable();
+
 	OPtimerInit(&OPtime);
+	OPtimerInit(&frameStepped);
+	frameStepped.Elapsed = STEP;	
+
 	_OPengineRunning = 1;
 	OPinitialize();
 
@@ -216,18 +223,32 @@ void OPstartStepped(int argc, char** args) {
 		// update the timer
 		OPtimerTick(&OPtime);
 
+#if _DEBUG
+		// This will usually only happen if we stopped at a breakpoint
+		// and then resumed. This will make sure that we don't try to
+		// update 15+ seconds at a time.
+		if (OPtime.Elapsed > 500) {
+			OPtime.Elapsed = 16;
+		}
+#endif
+
 		accumlator += OPtime.Elapsed;
-        OPlog("Elapsed: %lu", OPtime.Elapsed);
-        OPlog("Accum: %lu", accumlator);
         
 		while (accumlator > STEP) {
-			if (OPupdateStepped(&OPtime, STEP)) {
+			frameStepped.TotalGametime += STEP;
+			// The Elapsed time is always set to the STEP
+			// at initialization of the OPtimer
+			// The TotalGameTime is incremented by STEP
+			if (OPupdate(&frameStepped)) {
 				_OPengineRunning = 0;
+				break;
 			}
 			accumlator -= STEP;
 		}
 
-		OPrenderStepped(accumlator / STEP);
+		if (_OPengineRunning) {
+			OPrender(accumlator / STEP);
+		}
 	}
 
 	// game loop has finished, clean up

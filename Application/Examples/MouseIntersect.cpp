@@ -224,6 +224,9 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	return false;
 
 }
+void ExampleMouseIntersectRender(OPfloat delta) {
+
+}
 
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleMouseIntersectExit(OPgameState* next) {
@@ -240,5 +243,6 @@ OPint GS_EXAMPLE_MOUSE_INTERSECT_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_MOUSE_INTERSECT = {
 	ExampleMouseIntersectEnter,
 	ExampleMouseIntersectUpdate,
+	ExampleMouseIntersectRender,
 	ExampleMouseIntersectExit
 };

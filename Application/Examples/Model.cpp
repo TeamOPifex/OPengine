@@ -108,6 +108,10 @@ OPint ExampleModelUpdate(OPtimer* time) {
 
 }
 
+void ExampleModelRender(OPfloat delta) {
+
+}
+
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleModelExit(OPgameState* next) {
 	// Clean up phase for the Game State
@@ -124,5 +128,6 @@ OPint GS_EXAMPLE_MODEL_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_MODEL = {
 	ExampleModelEnter,
 	ExampleModelUpdate,
+	ExampleModelRender,
 	ExampleModelExit
 };
