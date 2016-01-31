@@ -13,6 +13,7 @@ typedef struct OPgameState_def OPgameState;
 struct OPgameState_def {
 	void (*Init)(OPgameState*);
 	OPint(*Update)(struct OPtimer*);
+	void(*Render)(OPfloat);
 	OPint (*Exit)(OPgameState*);
 	void* Data;
 };

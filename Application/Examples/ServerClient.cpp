@@ -126,7 +126,9 @@ OPint ExampleServerClientUpdate(OPtimer* time) {
 	return false;
 
 }
+void ExampleServerClientRender(OPfloat delta) {
 
+}
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleServerClientExit(OPgameState* next) {
 
@@ -141,5 +143,6 @@ OPint GS_EXAMPLE_SERVER_CLIENT_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_SERVER_CLIENT = {
 	ExampleServerClientEnter,
 	ExampleServerClientUpdate,
+	ExampleServerClientRender,
 	ExampleServerClientExit
 };

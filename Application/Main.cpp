@@ -51,6 +51,11 @@ int ApplicationUpdate(OPtimer* timer) {
 	return ActiveState->Update(timer);
 }
 
+void ApplicationRender(OPfloat delta) {
+	OPlog("[%f]", delta);
+	ActiveState->Render(delta);
+}
+
 void ApplicationDestroy() {
 	ActiveState->Exit(ActiveState);
 	OPcmanDestroy();
@@ -59,6 +64,7 @@ void ApplicationDestroy() {
 void ApplicationSetup() {
 	OPinitialize = ApplicationInit;
 	OPupdate = ApplicationUpdate;
+	OPrender = ApplicationRender;
 	OPdestroy = ApplicationDestroy;
 }
 
@@ -88,9 +94,11 @@ OP_MAIN {
 	}
 	#endif
 
+	//ApplicationSetup();
 	ApplicationSetup();
 
 	OP_MAIN_START
+	//OP_MAIN_START_STEPPED
 	OP_MAIN_END
 	OP_MAIN_SUCCESS
 }

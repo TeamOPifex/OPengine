@@ -5,9 +5,12 @@ void EmptyStateInit(OPgameState* last) {
 
 
 OPint EmptyStateUpdate(OPtimer* time) {
-	OPrenderClear(0,0,0,1);
-	OPrenderPresent();
 	return false;
+}
+
+void EmptyStateRender(OPfloat delta) {
+	OPrenderClear(0, 0, 0, 1);
+	OPrenderPresent();
 }
 
 OPint EmptyStateExit(OPgameState* next) {
@@ -18,5 +21,6 @@ OPint EmptyStateExit(OPgameState* next) {
 OPgameState GS_EMPTY = {
 	EmptyStateInit,
 	EmptyStateUpdate,
+	EmptyStateRender,
 	EmptyStateExit
 };

@@ -55,6 +55,9 @@ OPint ExampleParticleSystemUpdate(OPtimer* time) {
 	OPrenderPresent();
 	return false;
 }
+void ExampleParticleSystemRender(OPfloat delta) {
+
+}
 
 OPint ExampleParticleSystemExit(OPgameState* next) {
 	OPfree(particleSystemExample->Camera);
@@ -67,5 +70,6 @@ OPint GS_EXAMPLE_PARTICLESYSTEM_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_PARTICLESYSTEM = {
 	ExampleParticleSystemEnter,
 	ExampleParticleSystemUpdate,
+	ExampleParticleSystemRender,
 	ExampleParticleSystemExit
 };

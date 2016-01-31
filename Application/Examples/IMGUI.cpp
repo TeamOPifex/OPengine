@@ -94,6 +94,10 @@ OPint ExampleIMGUIUpdate(OPtimer* time) {
 
 }
 
+void ExampleIMGUIRender(OPfloat delta) {
+
+}
+
 OPint ExampleIMGUIExit(OPgameState* next) {
 	if(imguiExample.textActive) return 1;
 
@@ -106,5 +110,6 @@ OPint GS_EXAMPLE_IMGUI_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_IMGUI = {
 	ExampleIMGUIEnter,
 	ExampleIMGUIUpdate,
+	ExampleIMGUIRender,
 	ExampleIMGUIExit
 };

@@ -102,6 +102,10 @@ OPint ExampleOculusExit(OPgameState* next) {
 	return 0;
 }
 
+void ExampleOculusRender(OPfloat delta) {
+
+}
+
 #ifndef OPIFEX_OPTION_OCULUS
 OPint GS_EXAMPLE_OCULUS_AVAILABLE = 0;
 #else
@@ -111,5 +115,6 @@ OPint GS_EXAMPLE_OCULUS_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_OCULUS = {
 	ExampleOculusEnter,
 	ExampleOculusUpdate,
+	ExampleOculusRender,
 	ExampleOculusExit
 };

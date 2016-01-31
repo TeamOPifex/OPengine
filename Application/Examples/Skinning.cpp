@@ -165,7 +165,9 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	OPrenderPresent();
 	return false;
 }
+void ExampleSkinningRender(OPfloat delta) {
 
+}
 OPint ExampleSkinningExit(OPgameState* next) {
 	OPeffectUnload(skinningExample->Effect);
 	OPfree(skinningExample->Effect);
@@ -177,5 +179,6 @@ OPint GS_EXAMPLE_SKINNING_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_SKINNING = {
 	ExampleSkinningEnter,
 	ExampleSkinningUpdate,
+	ExampleSkinningRender,
 	ExampleSkinningExit
 };

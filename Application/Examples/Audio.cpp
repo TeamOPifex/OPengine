@@ -37,10 +37,12 @@ OPint ExampleAudioUpdate(OPtimer* time) {
 		OPaudVolume(audioExample->BackgroundSound, 0.5f);
 		OPaudPlay();
 	}
+	return false;
+}
 
+void ExampleAudioRender(OPfloat delta) {
 	OPrenderClear(0, 0, 0);
 	OPrenderPresent();
-	return false;
 }
 
 OPint ExampleAudioExit(OPgameState* next) {
@@ -59,5 +61,6 @@ OPint GS_EXAMPLE_AUDIO_AVAILABLE = 0;
 OPgameState GS_EXAMPLE_AUDIO = {
 	ExampleAudioEnter,
 	ExampleAudioUpdate,
+	ExampleAudioRender,
 	ExampleAudioExit
 };

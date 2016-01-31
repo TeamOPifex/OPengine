@@ -40,9 +40,13 @@ OPint ExampleFModUpdate(OPtimer* time) {
 		OPfmodPlay(fmodExample.sound[4]);
 	}
 
+
+	return false;
+}
+
+void ExampleFModRender(OPfloat delta) {
 	OPrenderClear(0, 0, 0);
 	OPrenderPresent();
-	return false;
 }
 
 OPint ExampleFModExit(OPgameState* next) {
@@ -56,6 +60,9 @@ void ExampleFModEnter(OPgameState* last) {}
 OPint ExampleFModUpdate(OPtimer* time) {
 	return 1;
 }
+void ExampleFModRender(OPfloat delta) {
+
+}
 OPint ExampleFModExit(OPgameState* next) {
 	return 0;
 }
@@ -65,5 +72,6 @@ OPint GS_EXAMPLE_FMOD_AVAILABLE = 0;
 OPgameState GS_EXAMPLE_FMOD = {
 	ExampleFModEnter,
 	ExampleFModUpdate,
+	ExampleFModRender,
 	ExampleFModExit
 };

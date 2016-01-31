@@ -4,4 +4,6 @@ void (*OPinitialize)();
 
 int(*OPupdate)(struct OPtimer*);
 
+void(*OPrender)(float);
+
 void (*OPdestroy)();

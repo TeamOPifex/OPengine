@@ -40,7 +40,9 @@ OPint ExampleSpriteSystemUpdate(OPtimer* time) {
 	return false;
 
 }
+void ExampleSpriteSystemRender(OPfloat delta) {
 
+}
 OPint ExampleSpriteSystemExit(OPgameState* next) {
 	return 0;
 }
@@ -51,5 +53,6 @@ OPint GS_EXAMPLE_SPRITESYSTEM_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_SPRITESYSTEM = {
 	ExampleSpriteSystemEnter,
 	ExampleSpriteSystemUpdate,
+	ExampleSpriteSystemRender,
 	ExampleSpriteSystemExit
 };
