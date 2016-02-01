@@ -27,7 +27,7 @@ void OPlg(const char* message, ...);
 // does not write a new line at the end of the message
 void OPlog(const char* message, ...);
 
-void OPvlog(const char* message, va_list args);
+void OPvlog(ui32 level, const char* channel, const char* message, va_list args);
 
 void OPlogChannel(i32 level, const char* channel, const char* message, ...);
 
