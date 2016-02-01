@@ -1,6 +1,8 @@
 #include "./Core/include/OPlog.h"
 
 i32 LogToHandle = 1;
+i32 OP_LOG_LEVEL = 999;
+void(*OPlogHandler)(ui32, const char*, const char*) = NULL;
 
 #ifdef OPIFEX_ANDROID
 
@@ -66,24 +68,34 @@ void OPlogSetOutput(i32 handle) {
 	}
 }
 
-void _log(va_list args, const char* message) {
-	char buffer[1024];
 
-	vsnprintf(buffer, sizeof buffer, message, args);
+void OPvlog(ui32 level, const char* channel, const char* message, va_list args) {
+	char buffer[1024], buffer2[1024];
 
-	if(errno) {
+	if (errno) {
 		perror("SYSTEM ERROR");
 		errno = 0;
 	}
-	write(LogToHandle, buffer, strlen(buffer));
-	write(LogToHandle, "\n", 1);	
+
+	if (level > OP_LOG_LEVEL) {
+		return;
+	}
+
+	if (OPlogHandler != NULL) {
+		vsnprintf(buffer, sizeof buffer, message, args);
+		OPlogHandler(level, channel, buffer);
+	} else {
+		sprintf(buffer2, "%s: %s\n", channel, message);
+		vsnprintf(buffer, sizeof buffer, buffer2, args);
+		write(LogToHandle, buffer, strlen(buffer));
+	}
 }
 
 void OPlog(const char* message, ...){
     va_list args;
 	va_start(args, message);
 
-	_log(args, message);
+	OPvlog(1000, "", message, args);
 
     va_end(args);
 }
@@ -101,13 +113,21 @@ void OPlg(const char* message, ...){
     va_end(args);
 }
 
+void OPlogChannel(i32 level, const char* channel, const char* message, ...) {
+	va_list args;
+	va_start(args, message);
+
+	OPvlog(level, channel, message, args);
+
+	va_end(args);
+}
+
 void OPlogDebug(const char* message, ...) {
 	#ifndef OPIFEX_OPTION_RELEASE
 	va_list args;
 	va_start(args, message);
 
-	write(LogToHandle, "DEBUG: ", 7);
-	_log(args, message);
+	OPvlog(10, "DEBUG", message, args);
 
     va_end(args);
 
@@ -119,8 +139,7 @@ void OPlogInfo(const char* message, ...) {
 	va_list args;
 	va_start(args, message);
 
-	write(LogToHandle, "INFO: ", 6);
-	_log(args, message);
+	OPvlog(30, "INFO", message, args);
 
     va_end(args);
 	#endif
@@ -130,8 +149,7 @@ void OPlogWarn(const char* message, ...) {
 	va_list args;
 	va_start(args, message);
 
-	write(LogToHandle, "WARNING: ", 9);
-	_log(args, message);
+	OPvlog(20, "WARNING", message, args);
 
     va_end(args);
 }
@@ -140,10 +158,12 @@ void OPlogErr(const char* message, ...) {
 	va_list args;
 	va_start(args, message);
 
-	write(LogToHandle, "ERROR: ", 7);
-	_log(args, message);
+	OPvlog(0, "ERROR", message, args);
 
     va_end(args);
 }
 
 #endif
+
+
+

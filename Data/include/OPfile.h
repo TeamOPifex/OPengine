@@ -170,6 +170,9 @@ OPint OPfileSeekReset(OPfile* file);
 OPint OPfileSeek(OPfile* file, OPint pos);
 OPint OPfileClose(OPfile* file);
 
+OPfileInformation OPfileCreate(const char* path);
+
+
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 };

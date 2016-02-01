@@ -66,7 +66,7 @@ add_executable(9_Application ${APP_TYPE} ${APPLICATION_SRC})
 	#    POST_BUILD
 	#    COMMAND /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks ${RES_DIR} ${APP_NAME}
 	#)
-	else()
+else()
 
 	 add_opifex_executable(9_Application ${APPLICATION_SRC})
 endif()

@@ -5,6 +5,7 @@
 #include "./Scripting/include/JavaScript/OPjavaScriptV8.h"
 #include "./Pipeline/include/Loaders/OPloaderOPskeleton.h"
 #include "./Pipeline/include/Loaders/OPloaderOPanimation.h"
+#include "./Data/include/OPlogToFile.h"
 
 //////////////////////////////////////
 // Application Methods
@@ -12,6 +13,7 @@
 
 void ApplicationInit() {
 
+	OPlogToFile(".opengine.debug.txt");
 
     OPlog("Size ui8: %d", sizeof(ui8));
     OPlog("Size ui16: %d", sizeof(ui16));
@@ -83,7 +85,8 @@ int main(int argc, char * argv[]) {
 }
 
 #else
-OP_MAIN {
+
+OP_MAIN {	
 	#ifdef OPIFEX_OPTION_V8
 	// If the V8 engine is compiled in,
 	// see if we have a script to run at startup
@@ -94,7 +97,6 @@ OP_MAIN {
 	}
 	#endif
 
-	//ApplicationSetup();
 	ApplicationSetup();
 
 	OP_MAIN_START

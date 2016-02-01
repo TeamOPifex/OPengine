@@ -7,7 +7,6 @@
 #ifdef OPIFEX_UNIX
 #include <unistd.h>
 #endif
-#include <string.h>
 #include <stdio.h>
 #include <errno.h>
 
@@ -16,6 +15,8 @@ extern "C" {
 #endif
 
 extern i32 LogToHandle;
+
+extern void(*OPlogHandler)(ui32, const char*, const char*);
 
 void OPlogSetOutput(i32 handle);
 
@@ -26,12 +27,20 @@ void OPlg(const char* message, ...);
 // does not write a new line at the end of the message
 void OPlog(const char* message, ...);
 
+void OPvlog(const char* message, va_list args);
+
+void OPlogChannel(i32 level, const char* channel, const char* message, ...);
+
+// Level 10
 void OPlogDebug(const char* message, ...);
 
+// Level 30
 void OPlogInfo(const char* message, ...) ;
 
+// Level 20
 void OPlogWarn(const char* message, ...);
 
+// Level 0
 void OPlogErr(const char* message, ...);
 
 #ifdef __cplusplus
