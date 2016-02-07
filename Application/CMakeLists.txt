@@ -77,10 +77,14 @@ if(${OPIFEX_OS_IOS})
 	set_xcode_property(9_Application GCC_GENERATE_DEBUGGING_SYMBOLS YES)
 endif()
 
-target_link_libraries(9_Application ${ALL_LIBS})
+target_link_libraries(9_Application ${ALL_LIBS} glfw sdl sdl_image)
 
 set_target_properties(9_Application PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(9_Application PROPERTIES OUTPUT_NAME "Application")
+
+if(${OPIFEX_OPTION_EMSCRIPTEN)
+		SET(CMAKE_EXE_LINKER_FLAGS, "-s USE_GLFW=3")
+endif()
 
 add_opifex_targets(9_Application)
 add_opifex_defines()

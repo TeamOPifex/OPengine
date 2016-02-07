@@ -60,7 +60,7 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 				(OPuint)D,
 				(sizeof(ui8) * len) << 1
 			);
-			return -1;
+			return 0;
 		}
 
 		// check to see if reallocation is successful

@@ -1,4 +1,6 @@
 #include "./Human/include/Rendering/OPrender.h"
+#include<emscripten/emscripten.h>
+#define GLFW_INCLUDE_ES2 
 
 #if defined(OPIFEX_OPENGL_2_0) && !defined(OPIFEX_ANDROID)
 
@@ -246,7 +248,9 @@ OPint OPrenderInit(i32 width, i32 height){
 
 	if (!glfwInitialized) {
 		glfwInitialized = 1;
+		OPlog("Initializing GLFW");
 		int result = glfwInit();
+		OPlog("Initialized");
 		if (!result) {
 			OPlogErr("INIT FAILED %d", result);
 			return -1;
@@ -318,7 +322,7 @@ OPint OPrenderInit(i32 width, i32 height){
 
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCharCallback(window, glfwCharacterCallback);
-	glfwSetDropCallback(window, glfwWindowDropCallback);
+	//glfwSetDropCallback(window, glfwWindowDropCallback);
 
 	// TODO: Determine how to optimize with this
 //#if !defined(OPIFEX_OSX32) && !defined(OPIFEX_OSX64)

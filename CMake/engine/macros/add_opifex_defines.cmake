@@ -48,6 +48,11 @@ macro(add_opifex_defines)
 	if(${OPIFEX_OPTION_NODEJS})
 		add_definitions(-DOPIFEX_JAVASCRIPT)
 	endif()
+
+	if(${OPIFEX_OPTION_EMSCRIPTEN})
+		add_definitions(-DOPIFEX_EMSCRIPTEN)
+	endif()
+
 	if(${OPIFEX_OPTION_V8})
 		add_definitions(-DOPIFEX_JAVASCRIPT)
 	endif()

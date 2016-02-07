@@ -3,14 +3,13 @@
 #include "./Core/include/OPtypes.h"
 
 #include <stdio.h>  /* defines FILENAME_MAX */
-#ifdef OPIFEX_WINDOWS
+#ifdef OPIFEX_EMSCRIPTEN
+    
+#elif defined(OPIFEX_WINDOWS)
 	#include <direct.h>
 	#define GetCurrentDir _getcwd
 #elif defined(OPIFEX_OSX)
 	#include <mach-o/dyld.h>
-#endif
-
-#ifdef OPIFEX_OSX
 	#include <libproc.h>
 #endif
 
@@ -50,7 +49,9 @@ OPchar* OPdirExecutable() {
 	char* pos = NULL;
 #endif
 
-	#ifdef OPIFEX_WINDOWS
+    #ifdef OPIFEX_EMSCRIPTEN
+    
+	#elif defined(OPIFEX_WINDOWS)
 		// Will contain exe path
 		HMODULE hModule = GetModuleHandle(NULL);
 		if (hModule != NULL)

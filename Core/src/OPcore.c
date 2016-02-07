@@ -167,7 +167,54 @@ void OPstart(struct android_app* state) {
 	OPdestroy();
 
 }
+
+#elif defined(OPIFEX_EMSCRIPTEN)
+
+#include <emscripten/emscripten.h>
+
+void OPemscriptenCleanup(){
+        
+	// game loop has finished, clean up
+	OPdestroy();
+
+	OPfree(_startUpDir);
+	OPfree(_execDir);
+
+	#ifndef OPIFEX_OPTION_RELEASE
+	OPlog("Alloc/Dealloc/Diff: %d / %d / %d", OPallocations, OPdeallocations, (OPallocations - OPdeallocations));
+	ASSERT((OPallocations - OPdeallocations) == 0, "ALERT - Not all allocated memory was freed");
+	#endif
+}
+
+void OPemscriptenLoop(){
+    
+	// update the timer
+	OPtimerTick(&OPtime);
+
+	// update the game
+	if (OPupdate(&OPtime)) {
+		_OPengineRunning = 0;
+		emscripten_cancel_main_loop();
+		OPemscriptenCleanup();
+		exit(0);
+		return;
+	}
+	OPrender(1.0f);
+}
+
+void OPstart(int argc, char** args) {
+	// Initialize the engine and game
+	_startUpDir = OPdirCurrent();
+	_execDir = OPdirExecutable();
+	OPtimerInit(&OPtime);
+	_OPengineRunning = 1;
+	OPinitialize();
+
+    emscripten_set_main_loop(OPemscriptenLoop, 0, 1);
+
+}
 #else
+
 void OPstart(int argc, char** args) {
 	// Initialize the engine and game
 	_startUpDir = OPdirCurrent();

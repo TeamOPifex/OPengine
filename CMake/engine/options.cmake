@@ -12,6 +12,7 @@ else()
     option(OPIFEX_OPTION_SPINE "Build the Spine library into the engine" OFF)
     option(OPIFEX_OPTION_FMOD "Build the FMod library into the engine" OFF)
     option(OPIFEX_OPTION_AUDIO "Build the Audio into the engine" OFF)
+    option(OPIFEX_OPTION_EMSCRIPTEN "Build the engine with Emscripten" OFF)
 endif()
 
 option(OPIFEX_OPTION_NODEJS "Configure build files for JavaScript-0_12-0_12.js module" OFF)

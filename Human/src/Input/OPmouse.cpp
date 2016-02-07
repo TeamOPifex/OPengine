@@ -26,7 +26,9 @@ void scrollCB(GLFWwindow* window, double x, double y) {
 
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 void OPmouseUpdate() {
+    // TODO: This shouldn't happen on every update, needs to be moved to an initialization
 	glfwSetScrollCallback(window, scrollCB);
+	
 	OPmemcpy(&Mouse.prevKeys, &Mouse.keys, sizeof(OPint)* _OPMOUSE_MAX);
 	Mouse.prevPositionX = Mouse.positionX;
 	Mouse.prevPositionY = Mouse.positionY;

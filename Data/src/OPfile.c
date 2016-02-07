@@ -180,17 +180,28 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 		OPint fd = 0;
 
 		fd = open(path, O_RDONLY);
+		OPlog("FD %d for", fd);
+		OPlog(path);
+		if(fd < 0) {
+		    return NULL;
+		}
 		// be sure that the file could be opened successfully
 	 	if(fd){
 
 			OPstream* str = OPstreamCreate(expectedSize);
 
 			ui8* bytes = (ui8*)OPalloc(1024);
-			ui32 readBytes = 1;
+			i32 readBytes = 1;
+			i32 writtenBytes = 0;
 			// write the entire file into a stream
 			while(readBytes) {
 				readBytes = read(fd, bytes, 1024);
-				OPwrite(str, bytes, readBytes);
+				OPlog("Read %d bytes", readBytes);
+				if(readBytes < 0) {
+				    return NULL;
+				}
+				
+				writtenBytes = OPwrite(str, bytes, readBytes);
 			}
 			OPfree(bytes);
 			close(fd);

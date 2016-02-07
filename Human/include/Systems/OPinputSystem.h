@@ -11,7 +11,9 @@
 inline void OPinputSystemUpdate(OPtimer* timer) {
 	OPkeyboardUpdate(timer);
 	OPmouseUpdate();
+    #ifndef OPIFEX_EMSCRIPTEN
 	OPgamePadSystemUpdate();
+    #endif
 }
 
 #endif
