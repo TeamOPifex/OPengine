@@ -1,7 +1,7 @@
 # OPengine
 See documentation at: http://opengine.io/docs
 
-## OPengine Launcher
+## # OPengine Launcher
 ![Image of Launcher](https://i.imgur.com/h6wflMI.gif)
 
 Download at [http://opengine.io](http://opengine.io)
@@ -15,6 +15,10 @@ Get an invite: [http://slackin-opifex.herokuapp.com](http://slackin-opifex.herok
 
 Then join: [https://opifex.slack.com/](https://opifex.slack.com/)
 
+## # Trello Board
+![Trello](http://i.imgur.com/LXoKnoF.png)
 
-## License
+View the roadmap here: [https://trello.com/b/TeRMlNOE/opengine](https://trello.com/b/TeRMlNOE/opengine)
+
+## # License
 View the [License.md](https://github.com/TeamOPifex/OPengine/blob/master/License.md)
