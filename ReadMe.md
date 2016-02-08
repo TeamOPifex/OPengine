@@ -2,7 +2,8 @@
 See documentation at: http://opengine.io/docs
 
 ## OPengine Launcher
-[http://opengine.io](http://opengine.io)
+![Image of Launcher](https://i.imgur.com/h6wflMI.gif)
+Download at [http://opengine.io](http://opengine.io)
 
 ## # Slack Channel
 [http://slackin-opifex.herokuapp.com](http://slackin-opifex.herokuapp.com)
