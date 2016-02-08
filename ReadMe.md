@@ -14,3 +14,7 @@ Or build it yourself: [https://github.com/TeamOPifex/OPengine.Launcher](https://
 Get an invite: [http://slackin-opifex.herokuapp.com](http://slackin-opifex.herokuapp.com)
 
 Then join: [https://opifex.slack.com/](https://opifex.slack.com/)
+
+
+## License
+View the [License.md](https://github.com/TeamOPifex/OPengine/blob/master/License.md)
