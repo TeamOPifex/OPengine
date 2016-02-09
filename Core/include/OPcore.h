@@ -39,6 +39,9 @@ extern "C" {
 #ifdef OPIFEX_ANDROID
 	void OPstart(struct android_app* state);
 	void OPstartStepped(struct android_app* state);
+#elif defined(OPIFEX_IOS)
+    OPint OPstartUpdate();
+    void OPstart(int argc, char** args);
 #else
 	/**
 	 * Begins the game cycle.

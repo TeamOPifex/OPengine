@@ -8,6 +8,7 @@
 #include "./Data/include/OPstream.h"
 
 struct OPvec2;
+typedef struct OPvec2 OPvec2;
 inline OPvec2 OPvec2Create(OPfloat x, OPfloat y);
 
 inline void OPvec2Add(OPvec2* dst, OPvec2* a, OPvec2* b);

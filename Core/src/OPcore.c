@@ -167,6 +167,43 @@ void OPstart(struct android_app* state) {
 	OPdestroy();
 
 }
+#elif defined(OPIFEX_IOS)
+OPint OPstartUpdate() {
+    if(!_OPengineRunning) return 0;
+    
+   	// update the timer
+	OPtimerTick(&OPtime);
+
+	// update the game
+	if (OPupdate(&OPtime)) {
+		_OPengineRunning = 0;
+		
+		// game loop has finished, clean up
+    	OPdestroy();
+    
+    	OPfree(_startUpDir);
+    	OPfree(_execDir);
+    
+    	#ifndef OPIFEX_OPTION_RELEASE
+    	OPlog("Alloc/Dealloc/Diff: %d / %d / %d", OPallocations, OPdeallocations, (OPallocations - OPdeallocations));
+    	ASSERT((OPallocations - OPdeallocations) == 0, "ALERT - Not all allocated memory was freed");
+    	#endif
+    	
+		return 1;
+	}
+	
+	OPrender(1.0f); 
+	
+}
+
+void OPstart(int argc, char** args) {
+    	// Initialize the engine and game
+	_startUpDir = OPdirCurrent();
+	_execDir = OPdirExecutable();
+	OPtimerInit(&OPtime);
+	_OPengineRunning = 1;
+	OPinitialize();
+}
 #else
 void OPstart(int argc, char** args) {
 	// Initialize the engine and game

@@ -50,4 +50,5 @@ if( ${OPIFEX_OS_WINDOWS} )
 	target_link_libraries(1_Core Winmm.lib)
 endif()
 
+# install (TARGETS 1_Core DESTINATION ../../Binaries/ios/debug)
 output_library(1_Core "Core")

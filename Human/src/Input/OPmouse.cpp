@@ -5,6 +5,11 @@
 
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 	#include <GLFW/glfw3.h>
+void scrollCB(GLFWwindow* window, double x, double y) {
+    //Mouse.prevWheel = Mouse.wheel;
+    Mouse.updatedWheel += y;
+    OPlog("Scrolled %f, %f", x, y);
+}
 #endif
 
 OPmouseState Mouse = {
@@ -18,11 +23,7 @@ OPmouseState Mouse = {
 	0
 };
 
-void scrollCB(GLFWwindow* window, double x, double y) {
-	//Mouse.prevWheel = Mouse.wheel;
-	Mouse.updatedWheel += y;
-	OPlog("Scrolled %f, %f", x, y);
-}
+
 
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 void OPmouseUpdate() {
