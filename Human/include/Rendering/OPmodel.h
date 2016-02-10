@@ -5,6 +5,7 @@
 #include "OPeffect.h"
 #include "OPmaterial.h"
 #include "./Math/include/OPmat4.h"
+#include "./Human/include/Rendering/OPcam.h"
 
 struct OPmodel {
 	OPmat4 world;
@@ -16,6 +17,11 @@ inline void OPmodelBind(OPmodel model, OPmaterial* material) {
 	OPmeshBind(model.mesh);
 	OPmaterialBind(material);
 	OPeffectParam("uWorld", model.world);
+}
+
+inline void OPmodelBind(OPmodel model, OPmaterial* material, OPcam camera) {
+	OPmodelBind(model, material);
+	OPcamBind(camera);
 }
 
 inline void OPmodelDraw(OPmodel model, OPmaterial* material, OPcam cam) {

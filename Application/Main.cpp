@@ -5,6 +5,7 @@
 #include "./Scripting/include/JavaScript/OPjavaScriptV8.h"
 #include "./Pipeline/include/Loaders/OPloaderOPskeleton.h"
 #include "./Pipeline/include/Loaders/OPloaderOPanimation.h"
+#include "./Data/include/OPlogToFile.h"
 
 //////////////////////////////////////
 // Application Methods
@@ -12,6 +13,7 @@
 
 void ApplicationInit() {
 
+	//OPlogToFile(".opengine.debug.txt");
 
     OPlog("Size ui8: %d", sizeof(ui8));
     OPlog("Size ui16: %d", sizeof(ui16));
@@ -29,13 +31,14 @@ void ApplicationInit() {
 	OPlog("Assets %s", OPIFEX_ASSETS);
 	OPcmanInit(OPIFEX_ASSETS);
 
-	OPcmanLoadResourcePack("pack.oppack");
+	//OPcmanLoadResourcePack("pack.oppack");
 
-
+	OPoculusStartup();
 	OPrenderInit();
 	OPgamePadSetDeadZones(0.2f);
 
-	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
+	//OPgameStateChange(&GS_EXAMPLE_SELECTOR);
+	OPgameStateChange(&GS_EXAMPLE_MODEL);
 }
 
 int ApplicationUpdate(OPtimer* timer) {
@@ -51,6 +54,11 @@ int ApplicationUpdate(OPtimer* timer) {
 	return ActiveState->Update(timer);
 }
 
+void ApplicationRender(OPfloat delta) {
+	OPlog("[%f]", delta);
+	ActiveState->Render(delta);
+}
+
 void ApplicationDestroy() {
 	ActiveState->Exit(ActiveState);
 	OPcmanDestroy();
@@ -59,6 +67,7 @@ void ApplicationDestroy() {
 void ApplicationSetup() {
 	OPinitialize = ApplicationInit;
 	OPupdate = ApplicationUpdate;
+	OPrender = ApplicationRender;
 	OPdestroy = ApplicationDestroy;
 }
 
@@ -66,17 +75,7 @@ void ApplicationSetup() {
 // Application Entry Point
 //////////////////////////////////////
 
-#ifdef OPIFEX_IOS
-#import <UIKit/UIKit.h>
-#import "./Human/include/Rendering/AppDelegate.h"
-
-int main(int argc, char * argv[]) {
-    @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
-    }
-}
-
-#else
+#ifndef OPIFEX_IOS
 OP_MAIN {
 	#ifdef OPIFEX_OPTION_V8
 	// If the V8 engine is compiled in,
@@ -91,6 +90,7 @@ OP_MAIN {
 	ApplicationSetup();
 
 	OP_MAIN_START
+	//OP_MAIN_START_STEPPED
 	OP_MAIN_END
 	OP_MAIN_SUCCESS
 }

@@ -31,7 +31,7 @@ inline OPmat4 OPskeletonLocal(OPskeleton* skeleton, const OPchar* name) {
 	if (ind > -1)  {
 		return skeleton->localPoses[ind];
 	}
-	return OPMAT4IDENTITY;
+	return OPMAT4_IDENTITY;
 }
 
 inline OPvec3 OPskeletonLocalTranslate(OPskeleton* skeleton, i16 ind) {

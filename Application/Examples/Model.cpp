@@ -24,7 +24,7 @@ void ExampleModelEnter(OPgameState* last) {
 	// Typically not the favored approach for this, but shows
     // how to allocate a block of memory.
 	modelExample = (ModelExample*)OPallocZero(sizeof(ModelExample));
-	
+
 	// Load up the mesh into the Content Manager
 	// If the model was already loaded by a previous Game State
 	// it'll continue on without reloading it.
@@ -92,7 +92,7 @@ OPint ExampleModelUpdate(OPtimer* time) {
 	// A helper utility which binds the Mesh, Effect and the World, View and Projection Matrices
 	// For more granular control please take a look at the Textured Example
 	OPbindMeshEffectWorldCam(&modelExample->Mesh, &modelExample->Effect, &world, &modelExample->Camera);
-	
+
 	// Sets the vLightDirection uniform on the Effect that is currently bound (modelExample->Effect)
 	OPeffectParamVec3("vLightDirection", &modelExample->LightDirection);
 
@@ -108,10 +108,14 @@ OPint ExampleModelUpdate(OPtimer* time) {
 
 }
 
+void ExampleModelRender(OPfloat delta) {
+
+}
+
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleModelExit(OPgameState* next) {
 	// Clean up phase for the Game State
-	OPeffectUnload(&modelExample->Effect);	
+	OPeffectUnload(&modelExample->Effect);
 	OPfree(modelExample);
 	return 0;
 }
@@ -124,5 +128,6 @@ OPint GS_EXAMPLE_MODEL_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_MODEL = {
 	ExampleModelEnter,
 	ExampleModelUpdate,
+	ExampleModelRender,
 	ExampleModelExit
 };

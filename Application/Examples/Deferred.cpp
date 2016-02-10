@@ -162,6 +162,10 @@ OPint ExampleDeferredUpdate(OPtimer* time) {
 	return false;
 }
 
+void ExampleDeferredRender(OPfloat delta) {
+	
+}
+
 OPint ExampleDeferredExit(OPgameState* next) {
 	//OPeffectUnload(&deferredExample->Effect);
 	//OPfree(deferredExample);
@@ -172,5 +176,6 @@ OPint GS_EXAMPLE_DEFERRED_AVAILABLE = 0;
 OPgameState GS_EXAMPLE_DEFERRED = {
 	ExampleDeferredEnter,
 	ExampleDeferredUpdate,
+	ExampleDeferredRender,
 	ExampleDeferredExit
 };

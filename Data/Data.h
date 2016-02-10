@@ -15,5 +15,6 @@
 #include "./Data/include/OPstring.h"
 #include "./Data/include/OPvector.h"
 #include "./Data/include/OPsharedLibrary.h"
+#include "./Data/include/OPlogToFile.h"
 
 #endif

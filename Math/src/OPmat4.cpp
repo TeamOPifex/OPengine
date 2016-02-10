@@ -1,13 +1,13 @@
 #include "./Math/include/OPmat4.h"
 
-const OPmat4 OPMAT4ZERO = {
+const OPmat4 OPMAT4_ZERO = {
 	0, 0, 0, 0,
 	0, 0, 0, 0,
 	0, 0, 0, 0,
 	0, 0, 0, 0
 };
 
-const OPmat4 OPMAT4IDENTITY = {
+const OPmat4 OPMAT4_IDENTITY = {
 	1, 0, 0, 0,
 	0, 1, 0, 0,
 	0, 0, 1, 0,
@@ -15,7 +15,7 @@ const OPmat4 OPMAT4IDENTITY = {
 };
 
 OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPfloat zNear, OPfloat zFar){
-	OPmat4 m = OPMAT4IDENTITY;
+	OPmat4 m = OPMAT4_IDENTITY;
 	OPfloat w = (right - left);
 	OPfloat h = (top - bottom);
 
@@ -30,7 +30,7 @@ OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPf
 }
 
 OPmat4 OPmat4LookAt(OPvec3 eye, OPvec3 center, OPvec3 up) {
-	OPmat4 m = OPMAT4IDENTITY;
+	OPmat4 m = OPMAT4_IDENTITY;
 
 	OPvec3 dist = center - eye;
 	OPvec3 f = OPvec3Norm(dist);
@@ -55,7 +55,7 @@ OPmat4 OPmat4LookAt(OPvec3 eye, OPvec3 center, OPvec3 up) {
 }
 
 OPmat4 OPmat4Perspective(OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal) {
-	OPmat4 m = OPMAT4IDENTITY;
+	OPmat4 m = OPMAT4_IDENTITY;
 
 	OPfloat tanHalfFovy = OPtan(fovy / 2.0);
 	m[0][0] = 1.0 / ( aspect * tanHalfFovy);
@@ -84,7 +84,7 @@ OPint OPmat4Inverse(OPmat4* dst, OPmat4 a) {
 	OPfloat determinant = m[0] * cofactor0 - m[1] * cofactor1 + m[2] * cofactor2 - m[3] * cofactor3;
 	if (OPabsf(determinant) <= 0.00001f)
 	{
-		*dst = OPMAT4IDENTITY;
+		*dst = OPMAT4_IDENTITY;
 		return 0;
 	}
 

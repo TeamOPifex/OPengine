@@ -45,17 +45,12 @@ macro(add_opifex_assimp_osx APPLICATION_TARGET)
 
 	if(${OPIFEX_OS_OSX64})
 
-		SET(_ASSIMP_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/PhysX/lib/debug/osx64/")
+		SET(_ASSIMP_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/Assimp/lib/debug/osx64/")
 		if(_ASSIMP_SOURCE)
 			SET(_ASSIMP_BINARY_LOCATION "${ASSIMP_PATH}/Lib/osx64/")
 		endif()
 
 		message("${ASSIMP_PATH} ${_ASSIMP_SOURCE}")
-
-		copy_to_binaries(${_ASSIMP_BINARY_LOCATION}libPhysX3DEBUG.a)
-
-		link_from_binaries(${APPLICATION_TARGET}
-			libPhysX3DEBUG.a)
 
 	elseif(${OPIFEX_OS_OSX32})
 
@@ -70,7 +65,7 @@ macro(add_opifex_assimp_windows APPLICATION_TARGET)
 	if(${OPIFEX_OS_WIN64})
 
 		SET(_ASSIMP_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/Assimp/lib/debug/win64/")
-  	SET(_ASSIMP_DLL_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/Assimp/lib/debug/win64/")
+  		SET(_ASSIMP_DLL_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/Assimp/lib/debug/win64/")
 		if(_ASSIMP_SOURCE)
 			SET(_ASSIMP_BINARY_LOCATION "${ASSIMP_PATH}/lib64/")
   		SET(_ASSIMP_DLL_LOCATION "${ASSIMP_PATH}/bin64/")

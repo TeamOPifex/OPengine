@@ -11,12 +11,14 @@
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Rendering/OPframeBuffer.h"
 #include "./Human/include/Rendering/UI/OPimgui.h"
+#include "./Human/include/Rendering/OPimage.h"
 
 #include "./Human/include/Rendering/Primitives/OPquad.h"
 #include "./Human/include/Rendering/Primitives/OPcube.h"
 #include "./Human/include/Rendering/Primitives/OPsphericalCube.h"
 
 #include "./Human/include/Rendering/Skinning/OPskeletonAnimationTransition.h"
+#include "./Human/include/Rendering/Skinning/OPskeletonAnimationManager.h"
 
 #include "./Human/include/Utilities/OPimagePNG.h"
 

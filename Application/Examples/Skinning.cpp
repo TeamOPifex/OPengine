@@ -22,7 +22,7 @@ typedef struct {
 
 SkinningExample* skinningExample;
 
-#define SCALE 20
+#define SCALE 1
 
 void ExampleSkinningEnter(OPgameState* last) {
 
@@ -30,17 +30,18 @@ void ExampleSkinningEnter(OPgameState* last) {
 	OPcmanLoad("Skinning.vert");
 	skinningExample = (SkinningExample*)OPalloc(sizeof(SkinningExample));
 
-	skinningExample->skeleton = (OPskeleton*)OPcmanLoadGet("person.opm.skel");
-	skinningExample->animation = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
+	skinningExample->skeleton = (OPskeleton*)OPcmanLoadGet("patrick.opm.skel");
+	skinningExample->animation = (OPskeletonAnimation*)OPcmanLoadGet("patrick.opm.Take 001.anim");
 	skinningExample->animation2 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
 	skinningExample->animation3 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
 	skinningExample->animation4 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
 
 
-	skinningExample->texture = (OPtexture*)OPcmanLoadGet("noneNorm.png");
+	OPcmanLoad("Skinning.frag");
+	OPcmanLoad("Skinning.vert");
 
 	skinningExample->pos = 0;
-	skinningExample->Mesh = (OPmesh*)OPcmanLoadGet("person.opm");
+	skinningExample->Mesh = (OPmesh*)OPcmanLoadGet("patrick.opm");
 
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
@@ -74,6 +75,8 @@ void ExampleSkinningEnter(OPgameState* last) {
 		45.0f,
 		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
 		);
+
+		skinningExample->texture = (OPtexture*)OPcmanLoadGet("Knight.png");
 }
 
 OPint heldDown = 0;
@@ -111,7 +114,8 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 		if (heldDown > 500) heldDown = 500;
 		OPskeletonAnimationUpdate(skinningExample->animation, time);
 		OPskeletonAnimationUpdate(skinningExample->animation2, time);
-		OPskeletonAnimationMerge(skinningExample->animation, skinningExample->animation2, heldDown / 500.0f, skinningExample->skeleton);
+		OPskeletonAnimationMerge(skinningExample->animation, skinningExample->animation2, heldDown / 500.0f);
+		OPskeletonAnimationApply(skinningExample->animation, skinningExample->skeleton);
 	}
 	else if (OPkeyboardIsDown(OPKEY_M)) {
 		OPskeletonAnimationUpdate(skinningExample->animation3, time);
@@ -126,7 +130,8 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 		if (heldDown < 0) heldDown = 0;
 		OPskeletonAnimationUpdate(skinningExample->animation, time);
 		OPskeletonAnimationUpdate(skinningExample->animation2, time);
-		OPskeletonAnimationMerge(skinningExample->animation, skinningExample->animation2, heldDown / 500.0f, skinningExample->skeleton);
+		OPskeletonAnimationMerge(skinningExample->animation, skinningExample->animation2, heldDown / 500.0f);
+		OPskeletonAnimationApply(skinningExample->animation, skinningExample->skeleton);
 	}
 	//OPmat4Translate(&mesh->Skeleton->localPoses[pos], time->Elapsed / 1000.0f, 0, 0);
 	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_W) / 100.0f);
@@ -160,7 +165,9 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	OPrenderPresent();
 	return false;
 }
+void ExampleSkinningRender(OPfloat delta) {
 
+}
 OPint ExampleSkinningExit(OPgameState* next) {
 	OPeffectUnload(skinningExample->Effect);
 	OPfree(skinningExample->Effect);
@@ -172,5 +179,6 @@ OPint GS_EXAMPLE_SKINNING_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_SKINNING = {
 	ExampleSkinningEnter,
 	ExampleSkinningUpdate,
+	ExampleSkinningRender,
 	ExampleSkinningExit
 };

@@ -92,8 +92,22 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		find_binary(LIBHUMAN "Human")
 		find_binary(LIBGLEW_158 "GLEW_158")
 		find_binary(LIBGLFW "glfw3")
+		target_link_libraries(${APPLICATION_TARGET}
+			${LIBGLFW}
+			${LIBGLEW_158}
+		)
+	elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_IOS")
+		message(STATUS "HEY WE'RE IOS, SHOULD BE GOOD")
+		find_binary(LIBLODEPNG "LodePNG" false)
+		find_binary(LIBCORE "Core" true)
+		find_binary(LIBDATA "Data" true)
+		find_binary(LIBMATH "Math" true)
+		find_binary(LIBPERFORMANCE "Performance" true)
+		find_binary(LIBSCRIPTING "Scripting" true)
+		find_binary(LIBPIPELINE "Pipeline" true)
+		find_binary(LIBHUMAN "Human" true)
 	else()
-
+		message(STATUS "!!!!!!!!!!!! NOT IOS OR ANDROID")
 		find_binary(LIBLODEPNG "LodePNG" false)
 		find_binary(LIBCORE "Core" true)
 		find_binary(LIBDATA "Data" true)
@@ -104,6 +118,11 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		find_binary(LIBHUMAN "Human" true)
 		find_binary(LIBGLEW_158 "GLEW_158" false)
 		find_binary(LIBGLFW "glfw3" false)
+
+		target_link_libraries(${APPLICATION_TARGET}
+			${LIBGLFW}
+			${LIBGLEW_158}
+		)
 	endif()
 
 	target_link_libraries(${APPLICATION_TARGET}

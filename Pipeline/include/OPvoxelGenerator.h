@@ -58,11 +58,11 @@ OPmesh* OPvoxelGeneratorBuild(struct OPvoxelGenerator* gen);
 void OPvoxelGeneratorDestroy(struct OPvoxelGenerator* gen);
 
 inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, OPvoxels voxelData) {
-	OPvoxelGeneratorAdd(gen, voxelData, OPvec4Zero, OPvec4Zero, OPVEC3_ZERO);
+	OPvoxelGeneratorAdd(gen, voxelData, OPVEC4_ZERO, OPVEC4_ZERO, OPVEC3_ZERO);
 }
 
 inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, OPvoxels voxelData, OPvec3 offset) {
-	OPvoxelGeneratorAdd(gen, voxelData, OPvec4Zero, OPvec4Zero, offset);
+	OPvoxelGeneratorAdd(gen, voxelData, OPVEC4_ZERO, OPVEC4_ZERO, offset);
 }
 
 inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, OPvoxels voxelData, OPvec4 bones, OPvec4 weights) {

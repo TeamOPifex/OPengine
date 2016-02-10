@@ -241,7 +241,7 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	OPrenderDepth(1);
 	OPrenderClear(0.1, 0.1, 0.1);
 
-	OPmat4 world = OPMAT4IDENTITY;
+	OPmat4 world = OPMAT4_IDENTITY;
 
 	OPmeshBind(physicsExample->Mesh);
 	OPeffectBind(physicsExample->Effect);
@@ -263,8 +263,8 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	OPvec3 light = OPvec3Create(0, 1, 0);
 	OPeffectParamVec3("uLightDirection", &light);
 	OPeffectParami("uColorTexture", tex);
-	OPmat4 scale = OPMAT4IDENTITY;
-	OPmat4 scratch = OPMAT4IDENTITY;
+	OPmat4 scale = OPMAT4_IDENTITY;
+	OPmat4 scratch = OPMAT4_IDENTITY;
 	for (ui32 i = 0; i < physicsExample->boxCount; i++) {
 		if(physicsExample->boxes[i].dead) continue;
 		scale = OPmat4Scl(physicsExample->boxes[i].size * 2, physicsExample->boxes[i].size * 2, physicsExample->boxes[i].size * 2);

@@ -115,6 +115,10 @@ OPint ExampleMyoUpdate(OPtimer* time) {
 
 }
 
+void ExampleMyoRender(OPfloat delta) {
+
+}
+
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleMyoExit(OPgameState* next) {
 	// Clean up phase for the Game State
@@ -129,5 +133,6 @@ OPint GS_EXAMPLE_MYO_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_MYO = {
 	ExampleMyoEnter,
 	ExampleMyoUpdate,
+	ExampleMyoRender,
 	ExampleMyoExit
 };

@@ -26,6 +26,7 @@ struct OPtimer{
 	ui64 Elapsed;
 #if defined(OPIFEX_WINDOWS)
 	LARGE_INTEGER TimeLastTick;
+	LARGE_INTEGER Frequency;
 #elif defined(OPIFEX_UNIX)
 	struct timeval TimeLastTick;
 #else
@@ -41,14 +42,14 @@ extern "C" {
 #endif
 
 /**
- * OPtimerCreate - creates an OPtimer instance
+ * OPtimerInit - creates an OPtimer instance
  *	Allocates space and initializes an OPtimer struct, then returns a
  *	pointer to the allocated memory segment. If allocation fails, a NULL
  *	pointer is returned.
  *	@param timer Pointer to new instance of OPtimer
  *	@return Error code on failure
  */
-OPint OPtimerCreate(struct OPtimer* timer);
+OPint OPtimerInit(struct OPtimer *timer);
 
 //----------------------------------------------------------------------------
 /**

@@ -16,6 +16,9 @@ void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPm
 	for (OPuint i = 0; i < frameCount * boneCount; i++) {
 		OPmat4SetTranslate(skelAnim->JointFrames[i], 0, 0, 0);
 	}
+
+	skelAnim->CurrentFrame = (OPmat4*)OPalloc(sizeof(OPmat4) * boneCount);
+	skelAnim->BoneCount = boneCount;
 }
 
 OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPmat4* frames, i32 count) {
@@ -25,10 +28,10 @@ OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPmat4* frames, 
 }
 
 
-void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
+void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer, OPfloat timeScale) {
 	ASSERT(skelAnim->FramesPer != 0, "Must have at least 1 frame per second");
 
-	skelAnim->Elapsed += timer->Elapsed;
+	skelAnim->Elapsed += timer->Elapsed * timeScale;
 	skelAnim->LastFrame = skelAnim->Frame;
 
 	while (skelAnim->Elapsed >= skelAnim->FramesPer) {
@@ -47,6 +50,25 @@ void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
 				skelAnim->LoopsCompleted = 1;
 			}
 		}
+	}
+
+	OPint ind1, ind2;
+	OPfloat percent = skelAnim->Elapsed / (OPfloat)skelAnim->FramesPer;
+
+	for (OPint i = 0; i < skelAnim->BoneCount; i++) {
+
+		ind1 = skelAnim->BoneCount * skelAnim->Frame + i;
+		ind2 = skelAnim->BoneCount * (skelAnim->Frame + 1) + i;
+
+		// Innefficient and poor interpolation scheme
+		// TODO(garrett): Fix - interpolate into the first frame if looping
+		if (skelAnim->Frame <= (skelAnim->FrameCount - 2)) {
+			skelAnim->CurrentFrame[i] = OPmat4Interpolate(skelAnim->JointFrames[ind1], skelAnim->JointFrames[ind2], percent);
+		}
+		else {
+			skelAnim->CurrentFrame[i] = skelAnim->JointFrames[ind1];
+		}
+
 	}
 }
 
@@ -73,52 +95,78 @@ void OPskeletonAnimationUpdateEvents(OPskeletonAnimation* skelAnim, void* data) 
 }
 
 void OPskeletonAnimationApply(OPskeletonAnimation* skelAnim, OPskeleton* skeleton) {
-	OPint ind1, ind2;
-	OPfloat percent = skelAnim->Elapsed / (OPfloat)skelAnim->FramesPer;
+	ASSERT(skeleton->hierarchyCount == skelAnim->BoneCount, "This animation is not meant for this skeleton, Bone Count mismatch.");
 
 	for (OPint i = 0; i < skeleton->hierarchyCount; i++) {
-
-		ind1 = skeleton->hierarchyCount * skelAnim->Frame + i;
-		ind2 = skeleton->hierarchyCount * (skelAnim->Frame + 1) + i;
-
-		// Innefficient and poor interpolation scheme
-		// TODO(garrett): Fix - interpolate into the first frame if looping
-		if(skelAnim->Frame < (skelAnim->FrameCount - 2)) {
-			skeleton->localPoses[i] = OPmat4Interpolate(skelAnim->JointFrames[ind1], skelAnim->JointFrames[ind2], percent);
-		} else {
-			skeleton->localPoses[i] = skelAnim->JointFrames[ind1];
-		}
-
+		skeleton->localPoses[i] = skelAnim->CurrentFrame[i];
 	}
-
 }
 
-void OPskeletonAnimationMerge(OPskeletonAnimation* skelAnim1, OPskeletonAnimation* skelAnim2, OPfloat merge, OPskeleton* skeleton) {
+void OPskeletonAnimationApply(OPmat4* animationFrame, OPskeleton* skeleton) {
+	for (OPint i = 0; i < skeleton->hierarchyCount; i++) {
+		skeleton->localPoses[i] = animationFrame[i];
+	}
+}
+
+void OPskeletonAnimationApply(OPskeletonAnimation* skelAnim, OPskeleton* skeleton, i16 fromJoint) {
+	ASSERT(skeleton->hierarchyCount == skelAnim->BoneCount, "This animation is not meant for this skeleton, Bone Count mismatch.");
+
+	for (OPint i = fromJoint; i < skeleton->hierarchyCount; i++) {
+		if (i != fromJoint && skeleton->hierarchy[i] <= skeleton->hierarchy[fromJoint]) {
+			break;
+		}
+		skeleton->localPoses[i] = skelAnim->CurrentFrame[i];
+	}
+}
+
+void OPskeletonAnimationApply(OPmat4* animationFrame, OPskeleton* skeleton, i16 fromJoint) {
+	for (OPint i = fromJoint; i < skeleton->hierarchyCount; i++) {
+		if (i != fromJoint && skeleton->hierarchy[i] <= skeleton->hierarchy[fromJoint]) {
+			break;
+		}
+		skeleton->localPoses[i] = animationFrame[i];
+	}
+}
+
+void OPskeletonAnimationCombine(OPskeletonAnimation* skelAnim, OPskeletonAnimation* skelAnim2, OPskeleton* skeleton, i16 fromJoint) {
+	ASSERT(skelAnim2->BoneCount == skelAnim->BoneCount, "Bone Count must match");
+
+	for (OPint i = fromJoint; i < skeleton->hierarchyCount; i++) {
+		if (i != fromJoint && skeleton->hierarchy[i] <= skeleton->hierarchy[fromJoint]) {
+			break;
+		}
+		skelAnim->CurrentFrame[i] = skelAnim2->CurrentFrame[i];
+	}
+}
+
+void OPskeletonAnimationMerge(OPskeletonAnimation* skelAnim1, OPskeletonAnimation* skelAnim2, OPfloat merge) {
+	ASSERT(skelAnim1->BoneCount == skelAnim2->BoneCount, "Bone Count must match");
+
 	OPint ind1, ind2, ind3, ind4;
 	OPfloat percent1 = skelAnim1->Elapsed / (OPfloat)skelAnim1->FramesPer;
 	OPfloat percent2 = skelAnim2->Elapsed / (OPfloat)skelAnim2->FramesPer;
 
-	for (OPint i = 0; i < skeleton->hierarchyCount; i++) {
+	for (OPint i = 0; i < skelAnim1->BoneCount; i++) {
 
-		ind1 = skeleton->hierarchyCount * skelAnim1->Frame + i;
+		ind1 = skelAnim1->BoneCount * skelAnim1->Frame + i;
 
 		if (skelAnim1->Frame == skelAnim1->FrameCount - 1) {
 			if(skelAnim1->Loop) {
-				ind2 = skeleton->hierarchyCount * (0) + i;
+				ind2 = skelAnim1->BoneCount * (0) + i;
 			} else {
-				ind2 = skeleton->hierarchyCount * skelAnim1->Frame + i;
+				ind2 = skelAnim1->BoneCount * skelAnim1->Frame + i;
 			}
 		}
 		else {
-			ind2 = skeleton->hierarchyCount * (skelAnim1->Frame + 1) + i;
+			ind2 = skelAnim1->BoneCount * (skelAnim1->Frame + 1) + i;
 		}
 
-		ind3 = skeleton->hierarchyCount * skelAnim2->Frame + i;
+		ind3 = skelAnim1->BoneCount * skelAnim2->Frame + i;
 		if (skelAnim2->Frame == skelAnim2->FrameCount - 1) {
-			ind4 = skeleton->hierarchyCount * (0) + i;
+			ind4 = skelAnim1->BoneCount * (0) + i;
 		}
 		else {
-			ind4 = skeleton->hierarchyCount * (skelAnim2->Frame + 1) + i;
+			ind4 = skelAnim1->BoneCount * (skelAnim2->Frame + 1) + i;
 		}
 
 		// Innefficient and poor interpolation scheme
@@ -128,13 +176,16 @@ void OPskeletonAnimationMerge(OPskeletonAnimation* skelAnim1, OPskeletonAnimatio
 		OPmat4 anim2 = OPmat4Interpolate(skelAnim2->JointFrames[ind3], skelAnim2->JointFrames[ind4], percent2);
 
 		if (merge == 1.0) {
-			skeleton->localPoses[i] = anim2;
+			skelAnim1->CurrentFrame[i] = anim2;
+			skelAnim2->CurrentFrame[i] = anim2;
 		}
 		else if (merge == 0.0) {
-			skeleton->localPoses[i] = anim1;
+			skelAnim1->CurrentFrame[i] = anim1;
+			skelAnim2->CurrentFrame[i] = anim1;
 		}
 		else {
-			skeleton->localPoses[i] = OPmat4Interpolate(anim1, anim2, merge);
+			skelAnim1->CurrentFrame[i] = OPmat4Interpolate(anim1, anim2, merge);
+			skelAnim2->CurrentFrame[i] = skelAnim1->CurrentFrame[i];
 		}
 
 	}

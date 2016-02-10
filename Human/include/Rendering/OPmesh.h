@@ -20,7 +20,10 @@ struct OPmesh {
 	OPrenderBuffer IndexBuffer;
 	OPboundingBox3D boundingBox;
 	ui32 VertexSize;
+	ui32 VertexCount;
 	void* Vertices;
+	ui32 IndexSize;
+	ui32 IndexCount;
 	void* Indicies;
 	ui16 MetaCount;
 	OPMmeta* Meta;

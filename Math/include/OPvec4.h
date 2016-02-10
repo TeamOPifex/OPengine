@@ -56,8 +56,8 @@ struct OPvec4 {
 	}
 };
 
-extern const OPvec4 OPvec4Zero;
-extern const OPvec4 OPvec4One;
+extern const OPvec4 OPVEC4_ZERO;
+extern const OPvec4 OPVEC4_ONE;
 
 inline OPvec4 OPvec4Create(OPfloat x, OPfloat y, OPfloat z, OPfloat w) {
 	OPvec4 tmp = { {x, y, z, w} };

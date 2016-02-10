@@ -6,6 +6,7 @@
 #include "./Human/include/Rendering/OPmeshPacker.h"
 #include "./Human/include/Rendering/OPmeshPacked.h"
 #include "./Math/include/OPvec2.h"
+#include "./Human/include/Rendering/OPimage.h"
 
 #define OPSPHERICALCUBE_SCALE 1.0f
 #define OPSPHERICALCUBE_SCL 1
@@ -48,6 +49,7 @@ struct OPsphericalCube {
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/   
 
+OPsphericalCube OPsphericalCubeCreate(OPimage * faces);
 OPsphericalCube       OPsphericalCubeCreate(OPint size); 
 OPvec3 OPsphericalCubePosition(OPvec3 pos, OPsphericalCubeSide* side);
 OPvec2 OPsphericalCubePlanePositionSide(const OPvec3 pos, OPsphericalCubeSide side);

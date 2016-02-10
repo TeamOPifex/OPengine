@@ -549,3 +549,15 @@ OPint OPfileClose(OPfile* file) {
 #endif
     return 1;
 }
+
+
+OPfileInformation OPfileCreate(const char* path) {
+	OPfileInformation result;
+
+	result.start = 0;
+	result.length = 0;	
+	result.file = fopen(path, "w+");
+	result.fileDescriptor = open(path, O_RDWR);;
+
+	return result;
+}

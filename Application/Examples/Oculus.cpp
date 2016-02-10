@@ -13,36 +13,37 @@ typedef struct {
 	ui32 Rotation;
 } OculusExample;
 
-OculusExample* oculusExample;
+OculusExample oculusExample;
 
 void ExampleOculusEnter(OPgameState* last) {
-	//OPoculusInitialize();
+
+	OPoculusInitialize();
 
 	OPcmanLoad("untitled.opm");
 	OPcmanLoad("SimpleModel.frag");
 	OPcmanLoad("SimpleModel.vert");
 
-	oculusExample->Mesh = (OPmesh*)OPcmanGet("untitled.opm");
+	oculusExample.Mesh = (OPmesh*)OPcmanGet("untitled.opm");
 
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
 		{ "aNormal", GL_FLOAT, 3 }
 	};
 
-	oculusExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
+	oculusExample.Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
 	OPshader* vert = (OPshader*)OPcmanGet("SimpleModel.vert");
 	OPshader* frag = (OPshader*)OPcmanGet("SimpleModel.frag");
-	*oculusExample->Effect = OPeffectCreate(
+	*oculusExample.Effect = OPeffectCreate(
 		*vert,
 		*frag,
 		attribs,
 		2,
 		"Oculus Effect",
-		oculusExample->Mesh->VertexSize
+		oculusExample.Mesh->VertexSize
 		);
 
-	oculusExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
-	*oculusExample->Camera = OPcamPersp(
+	oculusExample.Camera = (OPcam*)OPalloc(sizeof(OPcam));
+	*oculusExample.Camera = OPcamPersp(
 		OPVEC3_ONE * 2.0,
 		OPvec3Create(0, 1, 0),
 		OPvec3Create(0, 1, 0),
@@ -67,16 +68,16 @@ OPint ExampleOculusUpdate(OPtimer* time) {
 	OPrenderDepth(1);
 	OPrenderClear(0, 0, 0);
 
-	if (OPkeyboardIsDown(OPKEY_P)) { oculusExample->Rotation++; }
+	if (OPkeyboardIsDown(OPKEY_P)) { oculusExample.Rotation++; }
 
-	OPmeshBind(oculusExample->Mesh);
-	OPeffectBind(oculusExample->Effect);
+	OPmeshBind(oculusExample.Mesh);
+	OPeffectBind(oculusExample.Effect);
 
 	OPmat4 world, view, proj;
-	world = OPmat4RotY(oculusExample->Rotation / 100.0);
+	world = OPmat4RotY(oculusExample.Rotation / 100.0);
 
-	OPcamGetView((*oculusExample->Camera), &view);
-	OPcamGetProj((*oculusExample->Camera), &proj);
+	OPcamGetView((*oculusExample.Camera), &view);
+	OPcamGetProj((*oculusExample.Camera), &proj);
 
 	OPeffectParamMat4v("uWorld", 1, &world);
 	OPeffectParamMat4v("uProj", 1, &proj);
@@ -95,11 +96,14 @@ OPint ExampleOculusUpdate(OPtimer* time) {
 }
 
 OPint ExampleOculusExit(OPgameState* next) {
-	OPfree(oculusExample->Effect);
-	OPfree(oculusExample->Camera);
+	OPfree(oculusExample.Effect);
+	OPfree(oculusExample.Camera);
 
-	OPfree(oculusExample);
 	return 0;
+}
+
+void ExampleOculusRender(OPfloat delta) {
+
 }
 
 #ifndef OPIFEX_OPTION_OCULUS
@@ -111,5 +115,6 @@ OPint GS_EXAMPLE_OCULUS_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_OCULUS = {
 	ExampleOculusEnter,
 	ExampleOculusUpdate,
+	ExampleOculusRender,
 	ExampleOculusExit
 };

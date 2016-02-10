@@ -44,11 +44,14 @@ void ExampleFreeFlightEnter(OPgameState* last) {
 
 OPint ExampleFreeFlightUpdate(OPtimer* timer) {
 	OPcamFreeFlightUpdate(&freeFlightExample.Camera, timer);
+	if (OPkeyboardIsDown(OPKEY_SPACE)) { freeFlightExample.Rotation++; }
 
+	return false;
+}
+
+void ExampleFreeFlightRender(OPfloat delta) {
 	OPrenderDepth(1);
 	OPrenderClear(0, 0, 0);
-
-	if (OPkeyboardIsDown(OPKEY_SPACE)) { freeFlightExample.Rotation++; }
 
 	OPmeshBind(freeFlightExample.Mesh);
 	OPeffectBind(freeFlightExample.Effect);
@@ -73,7 +76,6 @@ OPint ExampleFreeFlightUpdate(OPtimer* timer) {
 	OPmeshRender();
 
 	OPrenderPresent();
-	return false;
 }
 
 OPint ExampleFreeFlightExit(OPgameState* next) {
@@ -87,5 +89,6 @@ OPint GS_EXAMPLE_FREEFLIGHT_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_FREEFLIGHT = {
 	ExampleFreeFlightEnter,
 	ExampleFreeFlightUpdate,
+	ExampleFreeFlightRender,
 	ExampleFreeFlightExit
 };

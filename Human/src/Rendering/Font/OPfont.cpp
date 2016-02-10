@@ -2,6 +2,7 @@
 #include "./Human/include/Rendering/Font/OPfontAtlas.h"
 #include "./Human/include/Rendering/Font/OPfontGlyph.h"
 #include "./Human/include/Rendering/OPMvertex.h"
+#include "./Human/include/Rendering/OPimage.h"
 #include "./Human/include/Utilities/OPimagePNG.h"
 #include "./Data/include/OPstream.h"
 #include "./Data/include/OPfile.h"

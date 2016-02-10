@@ -7,6 +7,7 @@
 #include "./Data/include/OPlist.h"
 #include "./Data/include/OPstring.h"
 #include "./Core/include/OPdir.h"
+#include "./Core/include/OPcore.h"
 
 //  _____ _       _           _
 // / ____| |     | |         | |
@@ -110,7 +111,7 @@ OPint OPcmanInit(const OPchar* dir){
 	if (dir) {
 		OP_CMAN_ASSET_FOLDER = OPstringCopy(dir);
 	} else {
-		OP_CMAN_ASSET_FOLDER = OPstringCopy("assets/");
+		OP_CMAN_ASSET_FOLDER = OPstringCreateMerged(OPgetExecutableDir(), "assets/"); // OPstringCopy("assets/");
 	}
 
 	OP_CMAN_ASSET_LOADER_COUNT = OPlistSize(_OP_CMAN_ASSETLOADERS);

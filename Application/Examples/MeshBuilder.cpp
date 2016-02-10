@@ -76,6 +76,9 @@ OPint ExampleMeshBuilderUpdate(OPtimer* time) {
 
 	return 0;
 }
+void ExampleMeshBuilderRender(OPfloat delta) {
+
+}
 
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleMeshBuilderExit(OPgameState* next) {
@@ -90,5 +93,6 @@ OPint GS_EXAMPLE_MESH_BUILDER_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_MESH_BUILDER = {
 	ExampleMeshBuilderEnter,
 	ExampleMeshBuilderUpdate,
+	ExampleMeshBuilderRender,
 	ExampleMeshBuilderExit
 };

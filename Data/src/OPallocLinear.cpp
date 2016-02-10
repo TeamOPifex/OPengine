@@ -1,14 +1,18 @@
 #include "./Data/include/OPallocLinear.h"
 #include "./Core/include/OPmemory.h"
 
+void OPallocLinearInit(OPallocLinear* result, OPuint sizeInBytes) {
+	result->_headerStart = result;
+	result->_memStart = (void*)((size_t)result + sizeof(OPallocLinear));
+	result->_size = sizeInBytes;
+	OPallocLinearClear(result);
+}
+
 OPallocLinear* OPallocLinearCreate(OPuint sizeInBytes) {
 	OPuint totalBytes = sizeof(OPallocLinear) + sizeInBytes;
 	void* data = OPallocZero(totalBytes);
 	OPallocLinear* alloc = (OPallocLinear*)data;
-	alloc->_headerStart = data;
-	alloc->_memStart = (void*)((size_t)data + sizeof(OPallocLinear));
-	alloc->_size = sizeInBytes;
-	OPallocLinearClear(alloc);
+	OPallocLinearInit(alloc, sizeInBytes);
 	return alloc;
 }
 
