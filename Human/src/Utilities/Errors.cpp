@@ -19,33 +19,33 @@ OPint OPglError(const char* message){
 
 	GLenum err = glGetError();
 	if(err != 0){
-		OPlog(message, err);
+		OPlogErr(message, err);
 
 		const OPchar* errMsg = "OPENGLERROR";// (OPchar*)gluErrorString(err);
-		OPlog(errMsg);
+		OPlogErr(errMsg);
 
 		switch(err){
 			case GL_INVALID_ENUM:
-				OPlog("GL_INVALID_ENUM");
+				OPlogErr("GL_INVALID_ENUM");
 				break;
 			case GL_INVALID_OPERATION:
-				OPlog("GL_INVALID_OPERATION");
+				OPlogErr("GL_INVALID_OPERATION");
 				break;
 			case GL_INVALID_VALUE:
-				OPlog("GL_INVALID_VALUE");
+				OPlogErr("GL_INVALID_VALUE");
 				break;
 			case GL_INVALID_FRAMEBUFFER_OPERATION:
-				OPlog("GL_INVALID_FRAMEBUFFER_OPERATION");
+				OPlogErr("GL_INVALID_FRAMEBUFFER_OPERATION");
 				break;
 			case GL_OUT_OF_MEMORY:
-				OPlog("GL_OUT_OF_MEMORY");
+				OPlogErr("GL_OUT_OF_MEMORY");
 				break;
 			#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 				case GL_STACK_UNDERFLOW:
-					OPlog("GL_STACK_UNDERFLOW");
+					OPlogErr("GL_STACK_UNDERFLOW");
 					break;
 				case GL_STACK_OVERFLOW:
-					OPlog("GL_STACK_OVERFLOW");
+					OPlogErr("GL_STACK_OVERFLOW");
 					break;
 			#endif
 		}

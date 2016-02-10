@@ -22,6 +22,7 @@ OPuint OPRENDER_VAO = 0;
 OPint OPrenderInit(i32 width, i32 height){
     OPRENDER_SCREEN_WIDTH = width;
     OPRENDER_SCREEN_HEIGHT = height;
+    OPRENDER_INITIALIZED = 1;
     OPlogDebug("Initializing iOS Renderer");
     
     

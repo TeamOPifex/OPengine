@@ -87,7 +87,11 @@ void OPvlog(ui32 level, const char* channel, const char* message, va_list args) 
 	} else {
 		sprintf(buffer2, "%s: %s\n", channel, message);
 		vsnprintf(buffer, sizeof buffer, buffer2, args);
+#ifndef OPIFEX_IOS
 		write(LogToHandle, buffer, strlen(buffer));
+#else
+        printf(buffer);
+#endif
 	}
 }
 
@@ -95,7 +99,7 @@ void OPlog(const char* message, ...){
     va_list args;
 	va_start(args, message);
 
-	OPvlog(1000, "", message, args);
+	OPvlog(100, "", message, args);
 
     va_end(args);
 }

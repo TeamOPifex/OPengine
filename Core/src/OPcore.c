@@ -167,6 +167,44 @@ void OPstart(struct android_app* state) {
 	OPdestroy();
 
 }
+#elif defined(OPIFEX_IOS)
+void OPstartRender() {
+	OPrender(1.0f);
+}
+
+OPint OPstartUpdate() {
+    if(!_OPengineRunning) return 0;
+
+   	// update the timer
+	OPtimerTick(&OPtime);
+
+	// update the game
+	if (OPupdate(&OPtime)) {
+		_OPengineRunning = 0;
+
+		// game loop has finished, clean up
+    	OPdestroy();
+
+    	OPfree(_startUpDir);
+    	OPfree(_execDir);
+
+    	#ifndef OPIFEX_OPTION_RELEASE
+    	OPlog("Alloc/Dealloc/Diff: %d / %d / %d", OPallocations, OPdeallocations, (OPallocations - OPdeallocations));
+    	ASSERT((OPallocations - OPdeallocations) == 0, "ALERT - Not all allocated memory was freed");
+    	#endif
+
+		return 1;
+	}
+}
+
+void OPstart(int argc, char** args) {
+    	// Initialize the engine and game
+	_startUpDir = OPdirCurrent();
+	_execDir = OPdirExecutable();
+	OPtimerInit(&OPtime);
+	_OPengineRunning = 1;
+	OPinitialize();
+}
 #else
 void OPstart(int argc, char** args) {
 	// Initialize the engine and game
@@ -213,7 +251,7 @@ void OPstartStepped(int argc, char** args) {
 
 	OPtimerInit(&OPtime);
 	OPtimerInit(&frameStepped);
-	frameStepped.Elapsed = STEP;	
+	frameStepped.Elapsed = STEP;
 
 	_OPengineRunning = 1;
 	OPinitialize();
@@ -233,7 +271,7 @@ void OPstartStepped(int argc, char** args) {
 #endif
 
 		accumlator += OPtime.Elapsed;
-        
+
 		while (accumlator > STEP) {
 			frameStepped.TotalGametime += STEP;
 			// The Elapsed time is always set to the STEP

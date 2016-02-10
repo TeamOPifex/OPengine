@@ -165,9 +165,9 @@ void ExampleSelectorRender(OPfloat delta) {
 	// RENDER
 	///////////////
 
-	OPrenderClear(0, 0, 0, 1);
-
-	// Render the background
+	OPrenderClear(1, 0, 0);
+	//
+	// // Render the background
 	OPtexture2DRender(exampleSelector.Background);
 
 
@@ -240,7 +240,9 @@ void ExampleSelectorRender(OPfloat delta) {
 
 	OPfontRenderEnd();
 
-	OPrenderPresent();
+	// OPrenderPresent();
+
+	OPlog("rendered example");
 }
 
 OPint ExampleSelectorExit(OPgameState* next) {

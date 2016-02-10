@@ -20,15 +20,15 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 	{
 		".vert",
 #ifdef _DEBUG
-#ifdef OPIFEX_ANDROID
+	#if defined(OPIFEX_ANDROID) || defined(OPIFEX_IOS)
 		"Shaders/OPENGL_ES_2_0/",
-#else
-				#ifdef OPIFEX_OPENGL_3_3
-				"Shaders/OPENGL_3_3/",
-				#else
-		"Shaders/OPENGL_2_0/",
-				#endif
-#endif
+	#else
+		#ifdef OPIFEX_OPENGL_3_3
+			"Shaders/OPENGL_3_3/",
+		#else
+			"Shaders/OPENGL_2_0/",
+		#endif
+	#endif
 #else
 		"Shaders/",
 #endif
@@ -40,15 +40,15 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 	{
 		".frag",
 #ifdef _DEBUG
-#ifdef OPIFEX_ANDROID
+	#if defined(OPIFEX_ANDROID) || defined(OPIFEX_IOS)
 		"Shaders/OPENGL_ES_2_0/",
-#else
-#ifdef OPIFEX_OPENGL_3_3
-				"Shaders/OPENGL_3_3/",
-#else
-		"Shaders/OPENGL_2_0/",
-				#endif
-#endif
+	#else
+		#ifdef OPIFEX_OPENGL_3_3
+			"Shaders/OPENGL_3_3/",
+		#else
+			"Shaders/OPENGL_2_0/",
+		#endif
+	#endif
 #else
 		"Shaders/",
 #endif

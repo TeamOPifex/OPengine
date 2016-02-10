@@ -105,6 +105,7 @@ GLfloat gCubeVertexData[216] =
 
 - (void)viewDidLoad
 {
+    printf("viewDidLoad");
     [super viewDidLoad];
 
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
@@ -153,6 +154,7 @@ GLfloat gCubeVertexData[216] =
 
 - (void)setupGL
 {
+    printf("setupGL");
     [EAGLContext setCurrentContext:self.context];
 
     [self loadShaders];

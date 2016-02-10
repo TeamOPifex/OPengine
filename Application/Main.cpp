@@ -13,7 +13,7 @@
 
 void ApplicationInit() {
 
-	OPlogToFile(".opengine.debug.txt");
+	//OPlogToFile(".opengine.debug.txt");
 
     OPlog("Size ui8: %d", sizeof(ui8));
     OPlog("Size ui16: %d", sizeof(ui16));
@@ -31,13 +31,14 @@ void ApplicationInit() {
 	OPlog("Assets %s", OPIFEX_ASSETS);
 	OPcmanInit(OPIFEX_ASSETS);
 
-	OPcmanLoadResourcePack("pack.oppack");
+	//OPcmanLoadResourcePack("pack.oppack");
 
 	OPoculusStartup();
 	OPrenderInit();
 	OPgamePadSetDeadZones(0.2f);
 
-	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
+	//OPgameStateChange(&GS_EXAMPLE_SELECTOR);
+	OPgameStateChange(&GS_EXAMPLE_MODEL);
 }
 
 int ApplicationUpdate(OPtimer* timer) {
@@ -74,19 +75,8 @@ void ApplicationSetup() {
 // Application Entry Point
 //////////////////////////////////////
 
-#ifdef OPIFEX_IOS
-#import <UIKit/UIKit.h>
-#import "./Human/include/Rendering/AppDelegate.h"
-
-int main(int argc, char * argv[]) {
-    @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
-    }
-}
-
-#else
-
-OP_MAIN {	
+#ifndef OPIFEX_IOS
+OP_MAIN {
 	#ifdef OPIFEX_OPTION_V8
 	// If the V8 engine is compiled in,
 	// see if we have a script to run at startup

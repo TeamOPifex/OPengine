@@ -17,8 +17,10 @@ OPint OPshaderLoadVertex(OPstream* source, OPshader** shader){
 	OPshader vertex = -1;
 
 	//OPstream* source = OPreadFile(filename);
+	OPlog("Loading shader %d", OPvertexShader);
 
 	OPglError("GLShader::Error 0");
+
 	vertex = glCreateShader(OPvertexShader);
 	OPglError("GLShader::Error 1");
 	if (vertex){
@@ -39,6 +41,7 @@ OPint OPshaderLoadVertex(OPstream* source, OPshader** shader){
 			char msg[4096];
 			i32 length = 0;
 			glGetShaderInfoLog(vertex, 4096, &length, msg);
+			printf(msg);
 			OPlog("GLShader::Failed to compile Vertex Shader::%s", msg);
 
 			OPglError("GLShader::Error 5");
@@ -48,6 +51,7 @@ OPint OPshaderLoadVertex(OPstream* source, OPshader** shader){
 		}
 	}
 	else{
+		OPlogErr("Failed to generate a vertex shader");
 		//OPstreamDestroy(source); // clean up stream
 		return -1;
 	}
