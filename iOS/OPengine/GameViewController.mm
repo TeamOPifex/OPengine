@@ -11,10 +11,15 @@
 #include "./Core/include/OPlog.h"
 #include "./Core/include/OPcore.h"
 #include "./Human/include/Rendering/OPrender.h"
+
+
+///////////////////////////////
+// YOUR APPLICATION HEADER FILE GOES HERE
+///////////////////////////////
 #include "./Application/Main.h"
 
 @interface GameViewController () {
-    
+
 }
 
 @property (strong, nonatomic) EAGLContext *context;
@@ -30,33 +35,36 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    OPlog("Loading");
-    printf("test");
-    
-    
+
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 
     if (!self.context) {
         NSLog(@"Failed to create ES context");
     }
-    
+
     GLKView *view = (GLKView *)self.view;
     view.context = self.context;
     view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
-    
+
     [self setupGL];
-    
+
+
+
     OPRENDER_WIDTH = self.view.bounds.size.width;
     OPRENDER_HEIGHT = self.view.bounds.size.height;
+
+    ///////////////////////////////
+    // YOUR APPLICATION SETUP FUNCTION GOES HERE
+    ///////////////////////////////
     ApplicationSetup();
+
     OPstart(0, NULL);
 }
 
 - (void)dealloc
-{    
+{
     [self tearDownGL];
-    
+
     if ([EAGLContext currentContext] == self.context) {
         [EAGLContext setCurrentContext:nil];
     }
@@ -68,9 +76,9 @@
 
     if ([self isViewLoaded] && ([[self view] window] == nil)) {
         self.view = nil;
-        
+
         [self tearDownGL];
-        
+
         if ([EAGLContext currentContext] == self.context) {
             [EAGLContext setCurrentContext:nil];
         }
@@ -87,13 +95,13 @@
 - (void)setupGL
 {
     [EAGLContext setCurrentContext:self.context];
-    
+
 }
 
 - (void)tearDownGL
 {
     [EAGLContext setCurrentContext:self.context];
-    
+
     self.effect = nil;
 }
 
@@ -102,16 +110,13 @@
 - (void)update
 {
     // iOS needs to control the update/render loop because of the view
-    
+    OPstartUpdate();
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-    
-    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
     // The view does the OPrenderPresent
-    OPstartUpdate();
+    OPstartRender();
 }
 
 #pragma mark -  OpenGL ES 2 shader compilation

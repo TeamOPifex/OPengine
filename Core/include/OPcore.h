@@ -40,6 +40,7 @@ extern "C" {
 	void OPstart(struct android_app* state);
 	void OPstartStepped(struct android_app* state);
 #elif defined(OPIFEX_IOS)
+	void OPstartRender();
     OPint OPstartUpdate();
     void OPstart(int argc, char** args);
 #else
@@ -82,6 +83,12 @@ OPchar* OPgetExecutableDir();
 	#define OP_MAIN_SUCCESS return;
 	#define OP_MAIN_START OPstart(state);
 	#define OP_MAIN_END OPend();
+#elif OPIFEX_IOS
+	#define OP_MAIN int _OP_WRAPPED_MAIN(int argc, char** args)
+	#define OP_MAIN_START OPstart(argc, args);
+	#define OP_MAIN_START_STEPPED OPstartStepped(argc, args);
+	#define OP_MAIN_END OPend();
+	#define OP_MAIN_SUCCESS return 0;
 #else
 
 #if defined(OPIFEX_OPTION_RELEASE) && defined(OPIFEX_WINDOWS)

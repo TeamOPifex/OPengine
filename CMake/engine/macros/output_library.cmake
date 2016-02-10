@@ -44,3 +44,39 @@ macro(output_library APPLICATION_TARGET LIBRARY_NAME )
 	endif()
 
 endmacro(output_library)
+
+macro(output_library_from_app APPLICATION_TARGET LIBRARY_NAME )
+
+	if(${OPIFEX_OPTION_RELEASE})
+		SET(BINARY_RELEASE_MODE "release")
+	else()
+		SET(BINARY_RELEASE_MODE "debug")
+	endif()
+
+	if( "${OPIFEX_OS}" STREQUAL "${OPIFEX_ANDROID}" )
+
+	else()
+		populate_binary_directory()
+		SET(COPY_BINARY_RELATIVE_DIRECTORY "/")
+
+		if(${OPIFEX_OPTION_SHARED})
+			SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.dylib")
+		else()
+			SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.a")
+		endif()
+
+		if("${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" OR "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64")
+			if(${OPIFEX_OPTION_RELEASE})
+				SET(COPY_BINARY_RELATIVE_DIRECTORY "/Release/")
+			else()
+				SET(COPY_BINARY_RELATIVE_DIRECTORY "/Debug/")
+			endif()
+			SET(COPY_BINARY_LIBRARY "${LIBRARY_NAME}.lib")
+		endif()
+
+		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+			"${OPIFEX_PROJECT_BINARY_DIR}${COPY_BINARY_RELATIVE_DIRECTORY}${COPY_BINARY_LIBRARY}"
+			${OPIFEX_PROJECT_BINARY_DIR}/Binaries/${BINARY_TARGET_DIRECTORY}/${BINARY_RELEASE_MODE})
+	endif()
+
+endmacro(output_library_from_app)
