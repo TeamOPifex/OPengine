@@ -31,14 +31,14 @@ void ApplicationInit() {
 	OPlog("Assets %s", OPIFEX_ASSETS);
 	OPcmanInit(OPIFEX_ASSETS);
 
-	//OPcmanLoadResourcePack("pack.oppack");
+	OPcmanLoadResourcePack("pack.oppack");
 
 	OPoculusStartup();
 	OPrenderInit();
 	OPgamePadSetDeadZones(0.2f);
 
-	//OPgameStateChange(&GS_EXAMPLE_SELECTOR);
-	OPgameStateChange(&GS_EXAMPLE_MODEL);
+	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
+	//OPgameStateChange(&GS_EXAMPLE_MODEL);
 }
 
 int ApplicationUpdate(OPtimer* timer) {
@@ -55,7 +55,7 @@ int ApplicationUpdate(OPtimer* timer) {
 }
 
 void ApplicationRender(OPfloat delta) {
-	OPlog("[%f]", delta);
+	//OPlog("[%f]", delta);
 	ActiveState->Render(delta);
 }
 

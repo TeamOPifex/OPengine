@@ -240,9 +240,9 @@ void ExampleSelectorRender(OPfloat delta) {
 
 	OPfontRenderEnd();
 
-	// OPrenderPresent();
+	OPrenderPresent();
 
-	OPlog("rendered example");
+	//OPlog("rendered example");
 }
 
 OPint ExampleSelectorExit(OPgameState* next) {
