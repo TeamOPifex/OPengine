@@ -2,6 +2,7 @@
 
 OPmesh* OPMESH_ACTIVE;
 void* OPMESH_ACTIVE_PTR = NULL;
+ui64 OPMESH_GLOBAL_ID = 1;
 
 //-----------------------------------------------------------------------------
 // ______                _   _
@@ -15,12 +16,15 @@ OPmesh OPmeshCreate(){
 		OPrenderGenBuffer(OPvertexBuffer),
 		OPrenderGenBuffer(OPindexBuffer)
 	};
+	
+	out.Id = OPMESH_GLOBAL_ID++;
 
 	return out;
 }
 
 OPmesh* OPmeshCreate(OPmeshDesc desc) {
 	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
+    mesh->Id = OPMESH_GLOBAL_ID++;
 	(*mesh) = OPmeshCreate();
 	OPmeshBind(mesh);
 

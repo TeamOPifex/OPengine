@@ -6,7 +6,48 @@
 #include "./Human/include/Rendering/Skinning/OPskeleton.h"
 #include "./Human/include/Rendering/Skinning/OPskeletonAnimation.h"
 #include "./Human/include/Rendering/OPMvertex.h"
+#include "./Human/include/Rendering/OPvertexLayout.h"
 
+struct OPmeshDataMeta {
+	OPchar* Name;
+	OPchar* Type;
+	OPvec3 Position;
+	OPvec3 Rotation;
+	OPvec3 Scale;
+};
+
+struct OPmeshDataAnim {
+	OPchar* Name;
+	OPuint FrameCount;
+	OPmat4* Frames; // Based on bone count * FrameCount
+};
+
+struct OPmeshData {
+    OPvertexLayout vertexLayout;
+	OPboundingBox3D bounds;
+    
+    // Counts
+	ui32 vertexCount;
+	ui32 indexCount;
+	ui16 hierarchyCount;
+	ui16 trackCount;
+	ui16 metaCount;
+	
+	// Index Size (ui16 or ui32)
+	ui32 indexSize;
+
+	void* indices;
+	void* vertices;
+	i16* hierarchy;
+	OPmat4* pose;
+	OPmeshDataMeta* meta;
+	OPmeshDataAnim* tracks;
+	
+    ui32 VertexSize() {
+        return vertexLayout.Size();
+    }
+};
+typedef struct OPmeshData OPmeshData;
 
 //-----------------------------------------------------------------------------
 //   _____ _                   _
@@ -18,6 +59,9 @@
 struct OPmesh {
 	OPrenderBuffer VertexBuffer;
 	OPrenderBuffer IndexBuffer;
+	OPvertexLayout vertexLayout;
+	OPmeshData* meshData;
+	
 	OPboundingBox3D boundingBox;
 	ui32 VertexSize;
 	ui32 VertexCount;
@@ -27,6 +71,7 @@ struct OPmesh {
 	void* Indicies;
 	ui16 MetaCount;
 	OPMmeta* Meta;
+	ui64 Id;
 };
 typedef struct OPmesh OPmesh;
 

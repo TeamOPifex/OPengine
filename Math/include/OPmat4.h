@@ -12,6 +12,7 @@
 struct OPmat4;
 inline void OPmat4Mul(OPmat4* dst, OPmat4 m1, OPmat4 m2);
 inline void OPmat4RotX(OPmat4* m, OPfloat x);
+inline OPmat4 OPmat4RotY(OPfloat t);
 inline void OPmat4RotY(OPmat4* m, OPfloat x);
 inline void OPmat4RotZ(OPmat4* m, OPfloat x);
 inline void OPmat4Translate(OPmat4* m, OPfloat x, OPfloat y, OPfloat z);
@@ -95,6 +96,18 @@ struct OPmat4 {
 	inline OPmat4& operator-=(OPvec4* vhs) {
 		OPmat4Translate(this, -vhs->x, -vhs->y, -vhs->z);
 		return *this;
+	}
+	
+	void SetRotY(f32 val) {
+	    *this = OPmat4RotY(val);    
+	}
+	
+	void RotY(f32 val) {
+	    OPmat4RotY(this, val);
+	}
+	
+	void Scl(f32 val) {
+	    OPmat4Scl(this, val, val, val);
 	}
 };
 

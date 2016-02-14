@@ -143,8 +143,14 @@ OPint OPeffectUnload(OPeffect* effect){
 	return 1;
 }
 
+void OPeffectUse(OPeffect* effect) {
+    OPEFFECT_ACTIVE = effect;
+    if (OPEFFECT_ACTIVE == NULL) return;
+	glUseProgram(OPEFFECT_ACTIVE->ProgramHandle);
+}
+
 // effect managment
-OPint OPeffectBind(OPeffect* effect){
+OPint OPeffectBind(OPeffect* effect, ui32 stride){
 	OPglError("OPeffectBind:Clear Errors");
 
 	// if (OPEFFECT_ACTIVE == effect && OPEFFECT_BOUND_MESH == OPMESH_ACTIVE_PTR) {
@@ -192,7 +198,7 @@ OPint OPeffectBind(OPeffect* effect){
 			attr->Elements,
 			attr->Type,
 			GL_FALSE,
-			effect->Stride,
+			stride,
 			(void*)attr->Offset
 			);
 		if (OPglError("OPeffectBind:Error ")) {

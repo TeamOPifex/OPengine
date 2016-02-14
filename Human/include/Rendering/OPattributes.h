@@ -28,6 +28,6 @@ enum OPattributes2 {
     OPATTR2_TEXCOORD5 = 0x2000,
     OPATTR2_TEXCOORD6 = 0x4000,
     OPATTR2_TEXCOORD7 = 0x8000
-}
+};
 
 #endif

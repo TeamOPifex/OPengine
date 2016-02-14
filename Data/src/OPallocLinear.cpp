@@ -1,5 +1,6 @@
 #include "./Data/include/OPallocLinear.h"
 #include "./Core/include/OPmemory.h"
+#include "./Core/include/Assert.h"
 
 void OPallocLinearInit(OPallocLinear* result, OPuint sizeInBytes) {
 	result->_headerStart = result;
@@ -24,6 +25,7 @@ void OPallocLinearDestroy(OPallocLinear* alloc) {
 void* OPallocLinearAlloc(OPallocLinear* alloc, OPuint sizeInBytes) {
 	//OPallocAlignAdjustment
 	if(alloc->_usedMemory + sizeInBytes > alloc->_size) {
+	    ASSERT(false, "NO MEMORY LEFT");
 		return NULL;
 	}
 	void* block = alloc->_currentPos;

@@ -57,7 +57,11 @@ OPeffect OPeffectCreate(OPshader vert, OPshader frag, OPshaderAttribute* Attribu
 OPeffect OPeffectGen(const OPchar* vert, const OPchar* frag, ui32 attrs, const OPchar* Name, ui32 stride);
 
 OPint OPeffectUnload(OPeffect* effect);
-OPint OPeffectBind(OPeffect* effect);
+void OPeffectUse(OPeffect* effect);
+OPint OPeffectBind(OPeffect* effect, ui32 stride);
+inline OPint OPeffectBind(OPeffect* effect) {
+    return OPeffectBind(effect, effect->Stride);
+}
 ui32 OPeffectGetParam(const OPchar* parameterName);
 
 inline OPuint OPeffectParam(const OPchar* param) {
