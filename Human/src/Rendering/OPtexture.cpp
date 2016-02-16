@@ -113,3 +113,14 @@ OPvec4 OPtextureReadPixel(OPtexture* tex, OPint x, OPint y) {
 
 	return result;
 }
+
+#include "./Data/include/OPcman.h"
+void OPtexture::Load(OPchar* asset) {
+    OPtexture* result = (OPtexture*)OPcmanLoadGet(asset);
+    this->Handle = result->Handle;
+    this->Description = result->Description;
+}
+
+OPtexture* OPtextureLoad(OPchar* asset) {
+    return (OPtexture*)OPcmanLoadGet(asset);
+}

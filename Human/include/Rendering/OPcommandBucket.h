@@ -2,7 +2,7 @@
 #define OPENGINE_HUMAN_RENDERING_COMMAND_BUCKET
 
 #include "./Data/include/OPradixSort.h"
-
+#include "./Human/include/Rendering/Commands/OPcommandDrawIndexed.h"
 
 struct OPcommandDraw
 {
@@ -14,19 +14,7 @@ struct OPcommandDraw
     OPrenderBuffer* indexBuffer;
 };
 
-struct OPcommandDrawIndexed
-{
-    ui32 indexCount;
-    ui32 startIndex;
-    ui32 baseVertex;
-    
-    ui32 stride;
-    OPvertexLayout* vertexLayout;
-    OPrenderBuffer* vertexBuffer;
-    OPrenderBuffer* indexBuffer;
-    OPmaterial* material;
-    OPmat4* world;
-};
+
 
 struct OPcommandDrawCommand {
     // void* next;
@@ -34,27 +22,30 @@ struct OPcommandDrawCommand {
     void(*dispatch)(void*, OPcam*);
 };
 
-struct OPcommandBucket;
-inline void OPcommandBucketInit(OPcommandBucket* commandBucket, ui64(*keyGen)(OPcommandBucket*, OPmodel*, OPmaterial*), OPuint bucketSize, OPcam* camera);
-inline void OPcommandBucketFlush(OPcommandBucket* commandBucket);
-inline OPcommandDrawIndexed* OPcommandBucketDrawIndexed(OPcommandBucket* commandBucket, OPmodel* model, OPmaterial* material);
-inline void OPcommandBucketSortKeys(OPcommandBucket* commandBucket);
 
-inline void OPcommandBucketCommandDrawIndex(void* data, OPcam* camera) {
-    OPcommandDrawIndexed* dc = (OPcommandDrawIndexed*)data;
+
+struct OPcommandBucket;
+inline void OPcommandBucketInit(OPcommandBucket* commandBucket, OPuint bucketSize, OPcam* camera);
+inline void OPcommandBucketFlush(OPcommandBucket* commandBucket);
+inline void OPcommandBucketSortKeys(OPcommandBucket* commandBucket);
+inline void OPcommandBucketSubmit(OPcommandBucket* commandBucket, ui64 key, void(*dispatch)(void*, OPcam*), void* data);
+
+// ui64 OPCOMMAND_BUCKET_DEFAULT_KEY_GEN(OPcommandBucket* commandBucket, OPmodel* model, OPtexture* texture, OPmaterial* material) {
     
-    OPrenderBindBuffer(dc->vertexBuffer);
-    OPrenderBindBuffer(dc->indexBuffer);
-    OPmaterialBind(dc->material, dc->stride);
-	OPeffectParam(*camera);
-    OPeffectParam("uWorld", *dc->world);
-	OPmeshRender();
-}
+//     ui64 meshId = model->mesh->Id << 0;     // 00 - 06 bits
+//     ui64 textureId = texture->Handle << 6;  // 07 - 12 bits
+//     ui64 materialId = material->id << 12;   // 13 - 19 bits
+//     ui64 renderTarget = 0 << 18;            // 20 - 26 bits
+    
+//     return meshId | textureId | materialId | renderTarget;
+// }
 
 struct OPcommandBucketKey {
   ui64 key;
   OPcommandDrawCommand* command;
 };
+
+inline OPcommandDrawIndexed* OPcommandBucketCreateDrawIndexed(OPcommandBucket* commandBucket);
 
 struct OPcommandBucket {
     OPuint bucketSize;
@@ -68,31 +59,34 @@ struct OPcommandBucket {
     OPcam* camera;
     OPframeBuffer* frameBuffer[4];
     
-    ui64(*keyGen)(OPcommandBucket*, OPmodel*, OPmaterial*);
-
-    
-    void Init(ui64(*keyGen)(OPcommandBucket*, OPmodel*, OPmaterial*), OPuint bucketSize, OPcam* camera) {
-        OPcommandBucketInit(this, keyGen, bucketSize, camera);
+    void Init(OPuint bucketSize, OPcam* camera) {
+        OPcommandBucketInit(this, bucketSize, camera);
     }
     
     void Flush() {
         OPcommandBucketFlush(this);
     }
     
-    OPcommandDrawIndexed* DrawIndexed(OPmodel* model, OPmaterial* material) {
-        return OPcommandBucketDrawIndexed(this, model, material);
-    }
-    
     void Sort() {
         OPcommandBucketSortKeys(this);
+    }
+    
+    OPcommandDrawIndexed* CreateDrawIndexed() {
+        return OPcommandBucketCreateDrawIndexed(this);
+    }
+    
+    void Submit(ui64 key, void(*dispatch)(void*, OPcam*), void* data) {
+        OPcommandBucketSubmit(this, key, dispatch, data);
     }
 };
 typedef struct OPcommandBucket OPcommandBucket;
 
+inline OPcommandDrawIndexed* OPcommandBucketCreateDrawIndexed(OPcommandBucket* commandBucket) {
+    return (OPcommandDrawIndexed*)OPallocLinearAlloc(commandBucket->allocator, sizeof(OPcommandDrawIndexed));
+}
 
 inline void OPcommandBucketInit(
-    OPcommandBucket* commandBucket, 
-    ui64(*keyGen)(OPcommandBucket*, OPmodel*, OPmaterial*),
+    OPcommandBucket* commandBucket,
     OPuint bucketSize,
     OPcam* camera
     ) {
@@ -106,37 +100,9 @@ inline void OPcommandBucketInit(
     commandBucket->commands = (OPcommandDrawCommand*)OPalloc(sizeof(OPcommandDrawCommand) * bucketSize);
     commandBucket->keyIndex = 0;
     
-    commandBucket->keyGen = keyGen;
-    
     commandBucket->allocator = OPallocLinearCreate(KB(1));
 }
 
-inline OPcommandDrawIndexed* OPcommandBucketDrawIndexed(OPcommandBucket* commandBucket, OPmodel* model, OPmaterial* material) {
-    // TODO: Generate Key based on mesh and material
-    ui64 key = commandBucket->keyGen(commandBucket, model, material);
-    void* resultData = OPallocLinearAlloc(commandBucket->allocator, sizeof(OPcommandDrawIndexed));
-    
-    commandBucket->commands[commandBucket->keyIndex].data = resultData;
-    commandBucket->commands[commandBucket->keyIndex].dispatch = OPcommandBucketCommandDrawIndex;
-    commandBucket->keys[commandBucket->keyIndex].key = key;
-    commandBucket->keys[commandBucket->keyIndex].command = &commandBucket->commands[commandBucket->keyIndex];
-    
-    OPcommandDrawIndexed* result = (OPcommandDrawIndexed*)resultData;
-    
-    result->startIndex = 0;
-    result->baseVertex = 0;
-    result->material = material;
-    result->indexCount = model->mesh->IndexCount;
-    result->vertexLayout = NULL;
-    result->vertexBuffer = &model->mesh->VertexBuffer;
-    result->indexBuffer = &model->mesh->IndexBuffer;
-    result->world = &model->world;
-    result->stride = model->mesh->VertexSize;
-    
-    commandBucket->keyIndex++;
-    
-    return result;
-}
 
 inline void OPcommandBucketAdd(OPcommandBucket* commandBucket, OPuint key, OPuint commandSize) {
     //commandBucket->
@@ -187,6 +153,15 @@ inline void OPcommandBucketFlush(OPcommandBucket* commandBucket) {
     
     commandBucket->keyIndex = 0;
     OPallocLinearClear(commandBucket->allocator);
+}
+
+inline void OPcommandBucketSubmit(OPcommandBucket* commandBucket, ui64 key, void(*dispatch)(void*, OPcam*), void* data) {
+    commandBucket->commands[commandBucket->keyIndex].data = data;
+    commandBucket->commands[commandBucket->keyIndex].dispatch = dispatch;
+    commandBucket->keys[commandBucket->keyIndex].key = key;
+    commandBucket->keys[commandBucket->keyIndex].command = &commandBucket->commands[commandBucket->keyIndex];
+    
+    commandBucket->keyIndex++;
 }
 
 #endif

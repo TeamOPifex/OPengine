@@ -109,6 +109,10 @@ struct OPmat4 {
 	void Scl(f32 val) {
 	    OPmat4Scl(this, val, val, val);
 	}
+	
+	void Translate(f32 x, f32 y, f32 z) {
+	    OPmat4Translate(this, x, y, z);
+	}
 };
 
 inline OPvec3 operator*(OPvec3 lhs, OPmat4 rhs) {
