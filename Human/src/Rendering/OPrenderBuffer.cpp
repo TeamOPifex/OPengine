@@ -2,6 +2,7 @@
 #include "./Human/include/Utilities/Errors.h"
 #include "./Human/include/Rendering/OPattributes.h"
 #include "./Core/include/OPlog.h"
+#include "./Core/include/Assert.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
     #ifdef OPIFEX_IOS
@@ -87,6 +88,7 @@ void OPrenderDrawBuffer(ui32 offset){
 void OPrenderDrawBufferIndexed(ui32 offset){
 	OPglError("OPrenderDrawBufferIndexed:Error 0:%d");
 	GLenum indType = OPRENDER_CURR_IB->ElementSize == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+	ASSERT(OPRENDER_CURR_IB != NULL, "Index Buffer hasn't been set");
 	glDrawElements(GL_TRIANGLES, OPRENDER_CURR_IB->ElementCount, indType, (void*)(offset * sizeof(GLuint)));
 	OPglError("OPrenderDrawBufferIndexed:Error 1:%d");
 }

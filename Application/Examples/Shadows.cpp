@@ -72,7 +72,7 @@ void ExampleShadowsEnter(OPgameState* last) {
 		);
 	shadowsExample.Ground.mesh = &shadowsExample.GroundMesh;
 	shadowsExample.Ground.world = OPmat4Scl(10.0);
-	OPint vertexStride = shadowsExample.Model.mesh->VertexSize;
+	OPint vertexStride = shadowsExample.Model.mesh->vertexLayout.stride;
 
 	shadowsExample.ModelTexture = (OPtexture*)OPcmanLoadGet("noneNorm.png");
 	shadowsExample.GroundTexture = (OPtexture*)OPcmanLoadGet("TetrisBlue.png");
@@ -171,7 +171,7 @@ void ExampleShadowsEnter(OPgameState* last) {
 	OPmaterialInit(&shadowsExample.GroundMaterials[0], &shadowsExample.ShadowEffect);
 
 	OPmaterialInit(&shadowsExample.ModelMaterials[1], &shadowsExample.Effect);
-	OPmaterialAddParam(&shadowsExample.ModelMaterials[1], "uLightDirection", &shadowsExample.ShadowCamera._pos);
+	OPmaterialAddParam(&shadowsExample.ModelMaterials[1], "uLightDirection", &shadowsExample.ShadowCamera.pos);
 	OPmaterialAddParam(&shadowsExample.ModelMaterials[1], "uViewShadow", &shadowsExample.ViewShadow);
 	OPmaterialAddParam(&shadowsExample.ModelMaterials[1], "uProjShadow", &shadowsExample.ProjShadow);
 	OPmaterialAddParam(&shadowsExample.ModelMaterials[1], "uBias", &shadowsExample.BiasShadow);
@@ -179,8 +179,8 @@ void ExampleShadowsEnter(OPgameState* last) {
 	OPmaterialAddParam(&shadowsExample.ModelMaterials[1], "uShadow", &shadowsExample.ShadowFrameBuffer.Texture);
 
 	OPmaterialInit(&shadowsExample.GroundMaterials[1], &shadowsExample.Effect);
-	OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uLightPos", &shadowsExample.ShadowCamera._pos);
-	OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uViewPos", &shadowsExample.Camera.Camera._pos);
+	OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uLightPos", &shadowsExample.ShadowCamera.pos);
+	OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uViewPos", &shadowsExample.Camera.Camera.pos);
 	OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uViewShadow", &shadowsExample.ViewShadow);
 	OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uProjShadow", &shadowsExample.ProjShadow);
 	//OPmaterialAddParam(&shadowsExample.GroundMaterials[1], "uBias", &shadowsExample.BiasShadow);
@@ -196,17 +196,17 @@ OPint ExampleShadowsUpdate(OPtimer* timer) {
 	OPcamFreeFlightUpdate(&shadowsExample.Camera, timer);
 
 
-	shadowsExample.ShadowCamera._pos.x-= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_J);
-	shadowsExample.ShadowCamera._pos.x += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_L);
-	shadowsExample.ShadowCamera._pos.y-= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_U);
-	shadowsExample.ShadowCamera._pos.y += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_O);
-	shadowsExample.ShadowCamera._pos.z += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_I);
-	shadowsExample.ShadowCamera._pos.z -= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_K);
-	shadowsExample.ShadowCamera._viewStale = 1;
+	shadowsExample.ShadowCamera.pos.x-= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_J);
+	shadowsExample.ShadowCamera.pos.x += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_L);
+	shadowsExample.ShadowCamera.pos.y-= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_U);
+	shadowsExample.ShadowCamera.pos.y += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_O);
+	shadowsExample.ShadowCamera.pos.z += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_I);
+	shadowsExample.ShadowCamera.pos.z -= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_K);
+	shadowsExample.ShadowCamera.Update();
 
 
-	OPcamGetView(shadowsExample.ShadowCamera, &shadowsExample.ViewShadow);
-	OPcamGetProj(shadowsExample.ShadowCamera, &shadowsExample.ProjShadow);
+	//OPcamGetView(shadowsExample.ShadowCamera, &shadowsExample.ViewShadow);
+	//OPcamGetProj(shadowsExample.ShadowCamera, &shadowsExample.ProjShadow);
 
 	OPrenderCull(1);
 	glCullFace(GL_FRONT);
@@ -215,7 +215,7 @@ OPint ExampleShadowsUpdate(OPtimer* timer) {
 	OPrenderClear(0,0,0);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
-	OPmodelDraw(shadowsExample.Model, &shadowsExample.ModelMaterials[0], shadowsExample.ShadowCamera);
+	OPmodelDraw(shadowsExample.Model, &shadowsExample.ModelMaterials[0], &shadowsExample.ShadowCamera);
 
 	OPframeBufferUnbind();
 
@@ -223,8 +223,8 @@ OPint ExampleShadowsUpdate(OPtimer* timer) {
 
 	OPrenderClear(1, 1, 1);
 
-	OPmodelDraw(shadowsExample.Model, &shadowsExample.ModelMaterials[1], shadowsExample.Camera.Camera);
-	OPmodelDraw(shadowsExample.Ground, &shadowsExample.GroundMaterials[1], shadowsExample.Camera.Camera);
+	OPmodelDraw(shadowsExample.Model, &shadowsExample.ModelMaterials[1], &shadowsExample.Camera.Camera);
+	OPmodelDraw(shadowsExample.Ground, &shadowsExample.GroundMaterials[1], &shadowsExample.Camera.Camera);
 //	OPmodelDraw(shadowsExample.Model, &shadowsExample.ModelMaterials[1], shadowsExample.ShadowCamera);
 //	OPmodelDraw(shadowsExample.Ground, &shadowsExample.GroundMaterials[1], shadowsExample.ShadowCamera);
 

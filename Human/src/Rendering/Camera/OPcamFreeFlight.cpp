@@ -31,9 +31,9 @@ void OPcamFreeFlightUpdate(OPcamFreeFlight* camFree) {
 	OPmat4 rotation = OPmat4RotY(camFree->Rotation.y) * OPmat4RotX(camFree->Rotation.x);
 	OPvec3 target = OPmat4Transform(OPVEC3_BACKWARD, rotation);
 
-	camFree->Camera._pos += OPmat4Transform(camFree->Movement, rotation);
-	camFree->Camera._targ = camFree->Camera._pos + target;
-	camFree->Camera._viewStale = 1;
+	camFree->Camera.pos += OPmat4Transform(camFree->Movement, rotation);
+	camFree->Camera.target = camFree->Camera.pos + target;
+	camFree->Camera.Update();
 }
 
 void OPcamFreeFlightUpdate(OPcamFreeFlight* camFree, OPtimer* timer) {

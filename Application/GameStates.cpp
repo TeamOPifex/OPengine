@@ -272,14 +272,12 @@ OPint State1Update(OPtimer* time){
 
 	t += 0.005f * time->Elapsed;
 	
-	OPmat4 world, view, proj;
+	OPmat4 world;
 	//world = OPmat4();
 	//view = OPmat4();
 	//proj = OPmat4();
 
 	world = OPmat4RotX(t);
-	OPcamGetView(camera, &view);
-	OPcamGetProj(camera, &proj);
 
 	OPmeshPackerBind(&packer);
 	OPmeshBind(plane);
@@ -292,8 +290,8 @@ OPint State1Update(OPtimer* time){
 	OPtextureBind(norm);
 	OPeffectParami("uNormalTexture", norm->Handle);
 	OPeffectParamMat4v("uWorld", 1, &world);
-	OPeffectParamMat4v("uProj", 1, &proj);
-	OPeffectParamMat4v("uView", 1, &view);
+	OPeffectParamMat4v("uProj", 1, &camera.proj);
+	OPeffectParamMat4v("uView", 1, &camera.view);
 
 	//OPframeBufferBind(&rt);
 	

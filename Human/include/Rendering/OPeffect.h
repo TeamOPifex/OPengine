@@ -4,6 +4,7 @@
 #include "./Human/include/Utilities/Errors.h"
 #include "./Human/include/Rendering/OPshader.h"
 #include "./Human/include/Rendering/OPattributes.h"
+#include "./Human/include/Rendering/OPvertexLayout.h"
 #include "./Human/include/Rendering/OPrenderBuffer.h"
 #include "./Human/include/Rendering/OPtexture.h"
 #include "./Human/include/Rendering/OPcam.h"
@@ -28,15 +29,7 @@
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 
-struct OPeffect {
-	OPshader  Vertex;
-	OPshader  Fragment;
-	ui32      ProgramHandle;
-	ui32      Stride;
-	OPhashMap*  Parameters;
-	OPlist*   Attributes;
-	OPchar    Name[OP_EFFECT_NAME_LEN];
-};
+struct OPeffect;
 typedef struct OPeffect OPeffect;
 
 //-----------------------------------------------------------------------------
@@ -55,9 +48,35 @@ extern OPeffect* OPEFFECT_ACTIVE;
 OPeffect OPeffectCreate(OPshader vert, OPshader frag, OPshaderAttribute* Attributes, OPint AttribCount, const OPchar* Name, ui32 stride);
 OPeffect OPeffectCreate(OPshader vert, OPshader frag, OPshaderAttribute* Attributes, OPint AttribCount, const OPchar* Name);
 OPeffect OPeffectGen(const OPchar* vert, const OPchar* frag, ui32 attrs, const OPchar* Name, ui32 stride);
+OPeffect OPeffectGen(const OPchar* vert, const OPchar* frag, OPvertexLayout* layout);
 
 OPint OPeffectUnload(OPeffect* effect);
-OPint OPeffectBind(OPeffect* effect);
+void OPeffectUse(OPeffect* effect);
+OPint OPeffectBind(OPeffect* effect, ui32 stride);
+
+
+struct OPeffect {
+	OPshader  Vertex;
+	OPshader   Fragment;
+	ui32      ProgramHandle;
+	ui32      Stride;
+	OPhashMap*  Parameters;
+	OPlist*   Attributes;
+	OPchar    Name[OP_EFFECT_NAME_LEN];
+
+	void Init(const OPchar* vert, const OPchar* frag, ui32 attrs, const OPchar* Name, ui32 stride) {
+		*this = OPeffectGen(vert, frag, attrs, Name, stride);
+	}
+	void Init(const OPchar* vert, const OPchar* frag, OPvertexLayout* layout) {
+		*this = OPeffectGen(vert, frag, layout);
+	}
+};
+
+
+inline OPint OPeffectBind(OPeffect* effect) {
+	if (effect == NULL) return OPeffectBind(effect, 0);
+	return OPeffectBind(effect, effect->Stride);
+}
 ui32 OPeffectGetParam(const OPchar* parameterName);
 
 inline OPuint OPeffectParam(const OPchar* param) {
@@ -167,14 +186,9 @@ inline void OPeffectParam(const OPchar* param, OPtextureCube * tex){
 	OPeffectParamBindCubeMap(param, tex);
 }
 
-inline void OPeffectParam(OPcam camera) {
-	OPmat4 view, proj;
-
-	OPcamGetView(camera, &view);
-	OPcamGetProj(camera, &proj);
-
-	OPeffectParamMat4("uView", &view);
-	OPeffectParamMat4("uProj", &proj);
+inline void OPeffectParam(OPcam* camera) {
+	OPeffectParamMat4("uView", &camera->view);
+	OPeffectParamMat4("uProj", &camera->proj);
 }
 
 #endif

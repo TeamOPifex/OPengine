@@ -7,10 +7,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-struct OPgameState_def;
-typedef struct OPgameState_def OPgameState;
 
-struct OPgameState_def {
+struct OPgameState;
+typedef struct OPgameState OPgameState;
+
+struct OPgameState {
 	void (*Init)(OPgameState*);
 	OPint(*Update)(struct OPtimer*);
 	void(*Render)(OPfloat);

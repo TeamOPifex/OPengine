@@ -39,7 +39,7 @@ void ExampleOculusEnter(OPgameState* last) {
 		attribs,
 		2,
 		"Oculus Effect",
-		oculusExample.Mesh->VertexSize
+		oculusExample.Mesh->vertexLayout.stride
 		);
 
 	oculusExample.Camera = (OPcam*)OPalloc(sizeof(OPcam));
@@ -73,15 +73,12 @@ OPint ExampleOculusUpdate(OPtimer* time) {
 	OPmeshBind(oculusExample.Mesh);
 	OPeffectBind(oculusExample.Effect);
 
-	OPmat4 world, view, proj;
+	OPmat4 world;
 	world = OPmat4RotY(oculusExample.Rotation / 100.0);
 
-	OPcamGetView((*oculusExample.Camera), &view);
-	OPcamGetProj((*oculusExample.Camera), &proj);
-
 	OPeffectParamMat4v("uWorld", 1, &world);
-	OPeffectParamMat4v("uProj", 1, &proj);
-	OPeffectParamMat4v("uView", 1, &view);
+	OPeffectParamMat4v("uProj", 1, &oculusExample.Camera->proj);
+	OPeffectParamMat4v("uView", 1, &oculusExample.Camera->view);
 
 	OPvec3 light = OPvec3Create(0, 1, 0);
 	OPeffectParamVec3("vLightDirection", &light);

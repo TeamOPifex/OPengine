@@ -11,12 +11,9 @@ inline void OPmeshBindAndEffect(OPmesh* mesh, OPeffect* effect) {
 }
 
 inline void OPmeshRender3D(OPmat4* world, OPcam* cam) {
-	OPmat4 view, proj;
-	OPcamGetView((*cam), &view);
-	OPcamGetProj((*cam), &proj);
 	OPeffectParamMat4("uWorld", world);
-	OPeffectParamMat4("uProj", &proj);
-	OPeffectParamMat4("uView", &view);
+	OPeffectParamMat4("uProj", &cam->proj);
+	OPeffectParamMat4("uView", &cam->view);
 	OPmeshRender();
 }
 
@@ -24,12 +21,11 @@ inline void OPbindMeshEffectWorldCam(OPmesh* mesh, OPeffect* effect, OPmat4* wor
 	OPmeshBind(mesh);
 	OPeffectBind(effect);
 
-	OPcamUpdateView((*camera));
-	OPcamUpdateProj((*camera));
+	//OPcamUpdate(camera);
 
 	OPeffectParamMat4("uWorld", world);
-	OPeffectParamMat4("uProj", &camera->Proj);
-	OPeffectParamMat4("uView", &camera->View);
+	OPeffectParamMat4("uProj", &camera->proj);
+	OPeffectParamMat4("uView", &camera->view);
 }
 
 #endif

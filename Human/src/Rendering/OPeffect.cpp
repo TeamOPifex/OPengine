@@ -90,7 +90,7 @@ OPeffect createEffect(OPshader vert,
 
 		effect.Stride = stride;
 	}
-	
+
 	return effect;
 }
 
@@ -113,7 +113,7 @@ OPeffect OPeffectCreate(
 	OPshaderAttribute* Attributes,
 	OPint AttribCount,
 	const OPchar* Name){
-	
+
 	ui32 stride = 0;
 
 	for (OPint i = 0; i < AttribCount; i++){
@@ -139,12 +139,18 @@ OPint OPeffectUnload(OPeffect* effect){
 	OPlistDestroy(effect->Attributes);
 	OPfree(effect->Attributes);
 	glDeleteProgram(effect->ProgramHandle);
-	
+
 	return 1;
 }
 
+void OPeffectUse(OPeffect* effect) {
+    OPEFFECT_ACTIVE = effect;
+    if (OPEFFECT_ACTIVE == NULL) return;
+	glUseProgram(OPEFFECT_ACTIVE->ProgramHandle);
+}
+
 // effect managment
-OPint OPeffectBind(OPeffect* effect){
+OPint OPeffectBind(OPeffect* effect, ui32 stride){
 	OPglError("OPeffectBind:Clear Errors");
 
 	// if (OPEFFECT_ACTIVE == effect && OPEFFECT_BOUND_MESH == OPMESH_ACTIVE_PTR) {
@@ -166,7 +172,7 @@ OPint OPeffectBind(OPeffect* effect){
 	}
 
 	OPEFFECT_ACTIVE = effect;
-	OPEFFECT_BOUND_MESH = OPMESH_ACTIVE;
+	//OPEFFECT_BOUND_MESH = OPMESH_ACTIVE;
 
 	if (OPEFFECT_ACTIVE == NULL) return 1;
 
@@ -192,7 +198,7 @@ OPint OPeffectBind(OPeffect* effect){
 			attr->Elements,
 			attr->Type,
 			GL_FALSE,
-			effect->Stride,
+			stride,
 			(void*)attr->Offset
 			);
 		if (OPglError("OPeffectBind:Error ")) {
@@ -206,7 +212,7 @@ OPint OPeffectBind(OPeffect* effect){
 	OPglError("OPeffectBind:Errors Occured");
 
 	return 1;
-	
+
 }
 
 ui32 OPeffectGetParam(const OPchar* parameterName){
@@ -321,4 +327,29 @@ OPeffect OPeffectGen(
 	OPlog("Create the Effect");
 
 	return createEffect(*vertShader, *fragShader, Attributes, AttribCount, Name, stride);
+}
+
+OPeffect OPeffectGen(const OPchar* vert, const OPchar* frag, OPvertexLayout* layout) {
+
+	OPlog("Building Effect");
+
+	OPlog("Loading Vert for Effect: %s", vert);
+
+	if (!OPcmanIsLoaded(vert)) {
+		OPlog("Wasn't already loaded. Loading it.");
+		OPcmanLoad(vert);
+	}
+	else {
+		OPlog("Already loaded.c");
+	}
+	OPshader* vertShader = (OPshader*)OPcmanGet(vert);
+
+	OPlog("Loading Frag for Effect: %s", frag);
+
+	if (!OPcmanIsLoaded(frag)) OPcmanLoad(frag);
+	OPshader* fragShader = (OPshader*)OPcmanGet(frag);
+
+	OPlog("Create the Effect");
+
+	return createEffect(*vertShader, *fragShader, layout->attributes, layout->count, "GEN EFFECT", layout->stride);
 }
