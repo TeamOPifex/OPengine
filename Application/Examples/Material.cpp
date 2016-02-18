@@ -28,7 +28,7 @@ void ExampleMaterialEnter(OPgameState* last) {
 		"ColoredModel.frag",
 		OPATTR_POSITION | OPATTR_COLOR,
 		"Model Effect",
-		materialExample.Model.mesh->VertexSize);
+		materialExample.Model.mesh->vertexLayout.stride);
 
 	materialExample.Camera = OPcamPersp(
 		OPVEC3_ONE * 2.0,

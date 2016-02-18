@@ -19,33 +19,33 @@ struct CommandBucketExample {
 	ui32 rotation;			// The amount to rotate the Mesh
 	OPvec3 lightDirection;	// Where the Light Source is coming from
 	OPcommandBucket renderBucket;
-	
+
 	void Init(OPgameState* last) {
     	model.Init("output.opm");
     	model2.Init("patrick.opm");
-    
+
     	effect = OPeffectGen(
     		"ColoredModel.vert", "ColoredModel.frag",
     		OPATTR_POSITION | OPATTR_COLOR,
-    		"Model Effect", model.mesh->VertexSize);
-    
+    		"Model Effect", model.mesh->vertexLayout.stride);
+
     	camera = OPcamPersp(
     		OPVEC3_ONE * 2.0, OPVEC3_UP, OPVEC3_UP,
     		0.1f, 1000.0f,
     		45.0f, OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
     		);
-    
+
     	lightDirection = OPVEC3_UP;
-    
+
         material.Init(&effect);
         material.AddParam("vLightDirection", &lightDirection);
-    
+
     	OPrenderDepth(1);
     	OPrenderCull(0);
-    	
+
     	renderBucket.Init(16, &camera);
 	}
-	
+
 	OPint Update(OPtimer* time) {
 	    if (OPkeyboardIsDown(OPKEY_SPACE)) { rotation++; }
 
@@ -53,27 +53,27 @@ struct CommandBucketExample {
     	model.world.Scl(0.25f);
     	model2.world = OPmat4Translate(1, 0, 0);
     	model2.world.Scl(0.025f);
-    
+
     	return false;
 	}
-	
+
 	void Render(OPfloat delta) {
     	OPrenderClear(0.4, 0.4, 0.4);
-    	
+
     	OPcommandDrawIndexed* dc = renderBucket.CreateDrawIndexed();
     	dc->Set(&model2, &material);
     	renderBucket.Submit(dc->key, dc->dispatch, dc);
-    	
+
     	dc = renderBucket.CreateDrawIndexed();
     	dc->Set(&model, &material);
     	renderBucket.Submit(dc->key, dc->dispatch, dc);
-    	
+
         renderBucket.Sort();
         renderBucket.Flush();
-        
+
     	OPrenderPresent();
     }
-    
+
     OPint Exit(OPgameState* next) {
     	//OPeffectUnload(&effect);
     	return 0;

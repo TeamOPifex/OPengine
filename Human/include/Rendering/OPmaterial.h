@@ -44,7 +44,7 @@ struct OPmaterial {
 	i8 depth;
 	i8 cull;
 	i8 alpha;
-	
+
 	void SetDepth(i8 val) {
 		depth = val;
 	}
@@ -56,39 +56,39 @@ struct OPmaterial {
 	void ClearParams() {
 	    OPmaterialClearParams(this);
 	}
-	
+
 	void Init(OPeffect* effect) {
 	    OPmaterialInit(this, effect);
 	}
-	
+
 	void AddParam(OPmaterialParamType paramType, const OPchar* name, void* data, ui8 count) {
 	    OPmaterialAddParam(this, paramType, name, data, count);
 	}
-	
+
 	void AddParam(const OPchar* name, OPtexture* data) {
 	    OPmaterialAddParam(this, name, data);
 	}
-	
+
 	void AddParam(const OPchar* name, OPvec3* data) {
 	    OPmaterialAddParam(this, name, data);
 	}
-	
+
 	void AddParam(const OPchar* name, OPvec4* data) {
 	    OPmaterialAddParam(this, name, data);
 	}
-	
+
 	void AddParam(const OPchar* name, OPmat4* data) {
 	    OPmaterialAddParam(this, name, data);
 	}
-	
+
 	void AddParam(const OPchar* name, OPmat4* data, ui8 count) {
 	    OPmaterialAddParam(this, name, data, count);
 	}
-	
+
 	void AddParam(const OPchar* name, f32* data) {
 	    OPmaterialAddParam(this, name, data);
 	}
-	
+
 	void Bind() {
 	    OPmaterialBind(this);
 	}
@@ -178,6 +178,7 @@ inline void OPmaterialBind(OPmaterial* material) {
 
 inline void OPmaterialBind(OPmaterial* material, ui32 stride) {
 	OPeffectBind(material->effect, stride);
+	OPlog("Effect Bind with %d", stride);
 
 	OPrenderDepth(material->depth);
 	OPrenderCull(material->cull);

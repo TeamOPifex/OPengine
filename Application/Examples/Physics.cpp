@@ -104,7 +104,7 @@ void ExamplePhysicsEnter(OPgameState* last) {
 		attribs,
 		3,
 		"Model Effect",
-		physicsExample->Mesh->VertexSize
+		physicsExample->Mesh->vertexLayout.stride
 		);
 
 	physicsExample->SphereEffect = (OPeffect*)OPalloc(sizeof(OPeffect));
@@ -114,7 +114,7 @@ void ExamplePhysicsEnter(OPgameState* last) {
 		attribs,
 		3,
 		"Model Effect",
-		physicsExample->MeshSphere->VertexSize
+		physicsExample->MeshSphere->vertexLayout.stride
 		);
 
 	physicsExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
@@ -252,7 +252,7 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	ui32 tex3 = OPtextureBind(physicsExample->textureSphere);
 	ui32 tex4 = OPtextureBind(physicsExample->textureStatic);
 
-	OPmat4 view, proj;	
+	OPmat4 view, proj;
 
 	OPcamGetView((*physicsExample->Camera), &view);
 	OPcamGetProj((*physicsExample->Camera), &proj);

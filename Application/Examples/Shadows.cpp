@@ -72,7 +72,7 @@ void ExampleShadowsEnter(OPgameState* last) {
 		);
 	shadowsExample.Ground.mesh = &shadowsExample.GroundMesh;
 	shadowsExample.Ground.world = OPmat4Scl(10.0);
-	OPint vertexStride = shadowsExample.Model.mesh->VertexSize;
+	OPint vertexStride = shadowsExample.Model.mesh->vertexLayout.stride;
 
 	shadowsExample.ModelTexture = (OPtexture*)OPcmanLoadGet("noneNorm.png");
 	shadowsExample.GroundTexture = (OPtexture*)OPcmanLoadGet("TetrisBlue.png");

@@ -25,14 +25,14 @@ struct OPmeshDataAnim {
 struct OPmeshData {
     OPvertexLayout vertexLayout;
 	OPboundingBox3D bounds;
-    
+
     // Counts
 	ui32 vertexCount;
 	ui32 indexCount;
 	ui16 hierarchyCount;
 	ui16 trackCount;
 	ui16 metaCount;
-	
+
 	// Index Size (ui16 or ui32)
 	ui32 indexSize;
 
@@ -42,7 +42,7 @@ struct OPmeshData {
 	OPmat4* pose;
 	OPmeshDataMeta* meta;
 	OPmeshDataAnim* tracks;
-	
+
     ui32 VertexSize() {
         return vertexLayout.stride;
     }
@@ -61,9 +61,8 @@ struct OPmesh {
 	OPrenderBuffer IndexBuffer;
 	OPvertexLayout vertexLayout;
 	OPmeshData* meshData;
-	
+
 	OPboundingBox3D boundingBox;
-	ui32 VertexSize;
 	ui32 VertexCount;
 	void* Vertices;
 	ui32 IndexSize;

@@ -16,7 +16,7 @@ OPmesh OPmeshCreate(){
 		OPrenderGenBuffer(OPvertexBuffer),
 		OPrenderGenBuffer(OPindexBuffer)
 	};
-	
+
 	out.Id = OPMESH_GLOBAL_ID++;
 
 	return out;
@@ -39,7 +39,7 @@ void OPmeshBuild(ui32 vertSize, ui32 indSize,
 						 void* vertices, void* indices){
 	OPrenderSetBufferData(&OPMESH_ACTIVE->IndexBuffer, indSize, indCount, indices);
 	OPrenderSetBufferData(&OPMESH_ACTIVE->VertexBuffer, vertSize, vertCount, vertices);
-	OPMESH_ACTIVE->VertexSize = vertSize;
+	//OPMESH_ACTIVE->VertexSize = vertSize;
 	OPMESH_ACTIVE->Vertices = vertices;
 	OPMESH_ACTIVE->Indicies = indices;
 }

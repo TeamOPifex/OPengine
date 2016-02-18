@@ -434,12 +434,15 @@ void  OPrenderPresent(){
 	}
 #endif
 }
+#include "./Human/include/Utilities/Errors.h"
 //-----------------------------------------------------------------------------
 void  OPrenderDepth(OPint state){
-	if(state)
+	if(state) {
 		glEnable(GL_DEPTH_TEST);
-	else
+        OPglError("OPrenderDepth:SET Failed");
+	} else {
 		glDisable(GL_DEPTH_TEST);
+	}
 }
 
 void OPrenderDepthWrite(OPint state) {

@@ -12,9 +12,10 @@ OPcam OPcamPersp(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat near, OPfloa
 	cam.pos = position;
 	cam.target = target;
 	cam.up = up;
-	cam.fov = fov;
+	cam.fov = _fov;
 	cam.aspect = aspect;
 	cam.nearView = near;
+	cam.farView = far;
 
 	OPmat4Identity(&cam.proj);
 	OPmat4Identity(&cam.view);
@@ -85,7 +86,7 @@ OPray3D OPcamUnproject(OPcam* cam, i32 screenX, i32 screenY) {
 
 void OPcamUpdateView(OPcam* cam) {
 	cam->view = OPmat4LookAt(
-		cam->pos, 
+		cam->pos,
 		cam->target,
 		cam->up);
 }

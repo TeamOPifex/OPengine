@@ -44,7 +44,7 @@ OPcam OPcamPersp(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPflo
 OPcam OPcamOrtho(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPfloat zFar, OPfloat left, OPfloat right, OPfloat bottom, OPfloat top);
 OPray3D OPcamUnproject(OPcam* cam, i32 x, i32 y);
 void OPcamUpdateView(OPcam* cam);
-void OpcamUpdateProj(OPcam* cam);
+void OPcamUpdateProj(OPcam* cam);
 void OPcamUpdate(OPcam* cam);
 void OPcamBind(OPcam* camera);
 

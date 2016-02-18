@@ -37,7 +37,7 @@ void ExampleCubeMapEnter(OPgameState* last) {
             "CubeMap.vert", "CubeMap.frag",
             OPATTR_POSITION,
             "Cube Map Effect",
-            cubeMapExample.SphericalCube.sides[0].VertexSize);
+            cubeMapExample.SphericalCube.sides[0].vertexLayout.stride);
 
     cubeMapExample.Camera = OPcamPersp(
         OPVEC3_ONE, OPVEC3_ZERO, OPVEC3_UP,

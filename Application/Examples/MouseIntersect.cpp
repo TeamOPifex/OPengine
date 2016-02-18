@@ -60,7 +60,7 @@ void ExampleMouseIntersectEnter(OPgameState* last) {
 		"ColoredModel.frag",
 		OPATTR_POSITION | OPATTR_COLOR,
 		"Model Effect",
-		mouseIntersectExample.Mesh.VertexSize);
+		mouseIntersectExample.Mesh.vertexLayout.stride);
 
 	// Sets up the camera as a perpsective camera for rendering
 	mouseIntersectExample.Camera = OPcamPersp(

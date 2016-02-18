@@ -94,7 +94,7 @@ void ExampleSpineEnter(OPgameState* last) {
 		"SimpleTextured.frag",
 		OPATTR_POSITION | OPATTR_UV,
 		"Model Effect",
-		spineExample->quad.VertexSize);
+		spineExample->quad.vertexLayout.stride);
 
 	SpineInitialize();
 }

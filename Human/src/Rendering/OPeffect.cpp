@@ -66,24 +66,22 @@ OPeffect createEffect(OPshader vert,
 				0
 			};
 
-			OPshaderAttribute attrTemp = Attributes[i];
-
 			// TODO add more
-			switch (attrTemp.Type){
+			switch (Attributes[i].Type){
 			case GL_FLOAT:
-				effect.Stride += (4 * attrTemp.Elements);
+				effect.Stride += (4 * Attributes[i].Elements);
 				break;
 			}
-			attr.Name = OPstringCopy(attrTemp.Name);
+			attr.Name = OPstringCopy(Attributes[i].Name);
 
 			result = glGetAttribLocation(
 				effect.ProgramHandle,
-				attrTemp.Name
+				Attributes[i].Name
 				);
 			attr.Handle = (OPuint)result;
 
 			if (result < 0) {
-				OPlog("FAILED to find attribute: '%s' in effect '%s'", attrTemp.Name, effect.Name);
+				OPlog("FAILED to find attribute: '%s' in effect '%s'", Attributes[i].Name, effect.Name);
 			}
 			else {
 				OPlistPush(effect.Attributes, (ui8*)&attr);
@@ -92,7 +90,7 @@ OPeffect createEffect(OPshader vert,
 
 		effect.Stride = stride;
 	}
-	
+
 	return effect;
 }
 
@@ -115,7 +113,7 @@ OPeffect OPeffectCreate(
 	OPshaderAttribute* Attributes,
 	OPint AttribCount,
 	const OPchar* Name){
-	
+
 	ui32 stride = 0;
 
 	for (OPint i = 0; i < AttribCount; i++){
@@ -141,7 +139,7 @@ OPint OPeffectUnload(OPeffect* effect){
 	OPlistDestroy(effect->Attributes);
 	OPfree(effect->Attributes);
 	glDeleteProgram(effect->ProgramHandle);
-	
+
 	return 1;
 }
 
@@ -174,7 +172,7 @@ OPint OPeffectBind(OPeffect* effect, ui32 stride){
 	}
 
 	OPEFFECT_ACTIVE = effect;
-	OPEFFECT_BOUND_MESH = OPMESH_ACTIVE;
+	//OPEFFECT_BOUND_MESH = OPMESH_ACTIVE;
 
 	if (OPEFFECT_ACTIVE == NULL) return 1;
 
@@ -214,7 +212,7 @@ OPint OPeffectBind(OPeffect* effect, ui32 stride){
 	OPglError("OPeffectBind:Errors Occured");
 
 	return 1;
-	
+
 }
 
 ui32 OPeffectGetParam(const OPchar* parameterName){
@@ -334,7 +332,7 @@ OPeffect OPeffectGen(
 OPeffect OPeffectGen(const OPchar* vert, const OPchar* frag, OPvertexLayout* layout) {
 
 	OPlog("Building Effect");
-	
+
 	OPlog("Loading Vert for Effect: %s", vert);
 
 	if (!OPcmanIsLoaded(vert)) {
@@ -353,5 +351,5 @@ OPeffect OPeffectGen(const OPchar* vert, const OPchar* frag, OPvertexLayout* lay
 
 	OPlog("Create the Effect");
 
-	return createEffect(*vertShader, *fragShader, layout->attributes, layout->count, "", layout->stride);
+	return createEffect(*vertShader, *fragShader, layout->attributes, layout->count, "GEN EFFECT", layout->stride);
 }

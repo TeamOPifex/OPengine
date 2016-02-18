@@ -37,6 +37,7 @@ class TestClass : BaseClass {
 
 void ApplicationInit() {
 
+	OP_LOG_LEVEL = 2000;
     // ui64 val = 4;
     // ui64 val2 = 8 << 3;
     // ui64 result = val | val2;
@@ -95,7 +96,7 @@ int ApplicationUpdate(OPtimer* timer) {
 }
 
 void ApplicationRender(OPfloat delta) {
-	OPlog("[%f]", delta);
+	// OPlog("[%f]", delta);
 	ActiveState->Render(delta);
 }
 

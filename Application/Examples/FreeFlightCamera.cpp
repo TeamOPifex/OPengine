@@ -36,7 +36,7 @@ void ExampleFreeFlightEnter(OPgameState* last) {
 		attribs,
 		3,
 		"Textured Effect",
-		freeFlightExample.Mesh->VertexSize
+		freeFlightExample.Mesh->vertexLayout.stride
 		);
 
 	OPcamFreeFlightInit(&freeFlightExample.Camera, 3.0f, 3.0f, OPVEC3_ONE);

@@ -61,7 +61,7 @@ void ExampleSkinningEnter(OPgameState* last) {
 		attribs,
 		5,
 		"Model Effect",
-		skinningExample->Mesh->VertexSize
+		skinningExample->Mesh->vertexLayout.stride
 		);
 
 	skinningExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));

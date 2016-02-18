@@ -42,7 +42,7 @@ void ExampleTexturedEnter(OPgameState* last) {
 		attribs,
 		3,
 		"Textured Effect",
-		texturedExample->Mesh->VertexSize
+		texturedExample->Mesh->vertexLayout.stride
 		);
 
 	texturedExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
@@ -55,12 +55,12 @@ void ExampleTexturedEnter(OPgameState* last) {
 		45.0f,
 		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
 		);
+	OPrenderDepth(1);
 }
 
 OPint ExampleTexturedUpdate(OPtimer* time) {
-	OPrenderDepth(1);
 	OPrenderClear(0, 0, 0);
-	
+
 	if (OPkeyboardIsDown(OPKEY_SPACE)) { texturedExample->Rotation++; }
 
 	OPmeshBind(texturedExample->Mesh);
@@ -68,7 +68,7 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 
 	OPmat4 world;
 	world = OPmat4RotY(texturedExample->Rotation / 100.0);
-	
+
 	OPtextureClearActive();
 	ui32 tex = OPtextureBind(texturedExample->Texture);
 	OPeffectParami("uColorTexture", tex);

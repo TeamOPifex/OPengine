@@ -159,33 +159,44 @@ OPMData OPMloadData(OPstream* str) {
 
 	OPvec4* boneIndices;
 	OPvec4* boneWeights;
+	
+
+	OPvertexLayoutBuilder layout;
+	OPvertexLayoutBuilderInit(&layout);
 
 	if (OPMhasFeature(features, Position)) {
 		OPlogDebug("Feature: Position");
 		positions = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
+		OPvertexLayoutBuilderAdd(&layout, OPATTR_POSITION);
 	}
 	if (OPMhasFeature(features, Normal)) {
 		OPlogDebug("Feature: Normal");
 		normals = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
+		OPvertexLayoutBuilderAdd(&layout, OPATTR_NORMAL);
 	}
 	if (OPMhasFeature(features, Tangent)) {
 		OPlogDebug("Feature: Tangent");
 		tangents = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
+		OPvertexLayoutBuilderAdd(&layout, OPATTR_TANGENT);
 	}
 	if (OPMhasFeature(features, UV)) {
 		OPlogDebug("Feature: UV");
 		uvs = (OPvec2*)OPalloc(sizeof(OPvec2)* verticeCount);
+		OPvertexLayoutBuilderAdd(&layout, OPATTR_UV);
 	}
 	if (OPMhasFeature(features, Color)) {
 		OPlogDebug("Feature: Color");
 		colors = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
+		OPvertexLayoutBuilderAdd(&layout, OPATTR_COLOR);
 	}
 	// Read Skinning
 	if (OPMhasFeature(features, Skinning)) {
 		OPlogDebug("Feature: Skinning");
 		boneIndices = (OPvec4*)OPalloc(sizeof(OPvec4)* verticeCount);
 		boneWeights = (OPvec4*)OPalloc(sizeof(OPvec4)* verticeCount);
+		OPvertexLayoutBuilderAdd(&layout, OPATTR_BONES);
 	}
+		
 
 
 	f32 x, y, z;
@@ -424,6 +435,8 @@ OPMData OPMloadData(OPstream* str) {
 
 
 	OPMData data = {};
+	
+	data.vertexLayout = layout.Build();
 	data.indices = indices;
 	data.indexCount = indicesCount * 3;
 	data.indexSize = sizeof(ui16);
@@ -529,6 +542,7 @@ OPint OPMload(OPstream* str, OPmesh** mesh) {
 	// Create Vertex & Index Buffers for Mesh
 	OPmesh temp = OPmeshCreate();
 	OPmeshBind(&temp);
+	OPlogDebug("VERTEX STRIDE %u", data.vertexLayout.stride);
 	OPmeshBuild(
 		data.vertexLayout.stride, data.indexSize,
 		data.vertexCount, data.indexCount,
@@ -546,7 +560,7 @@ OPint OPMload(OPstream* str, OPmesh** mesh) {
 
 	temp.MetaCount = data.metaCount;
 	temp.Meta = data.meta;
-	temp.VertexSize = data.vertexLayout.stride;
+	//temp.VertexSize = data.vertexLayout.stride;
 	temp.IndexSize = data.indexSize;
 	temp.VertexCount = data.vertexCount;
 	temp.IndexCount = data.indexCount;

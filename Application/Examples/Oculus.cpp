@@ -39,7 +39,7 @@ void ExampleOculusEnter(OPgameState* last) {
 		attribs,
 		2,
 		"Oculus Effect",
-		oculusExample.Mesh->VertexSize
+		oculusExample.Mesh->vertexLayout.stride
 		);
 
 	oculusExample.Camera = (OPcam*)OPalloc(sizeof(OPcam));
@@ -75,7 +75,7 @@ OPint ExampleOculusUpdate(OPtimer* time) {
 
 	OPmat4 world;
 	world = OPmat4RotY(oculusExample.Rotation / 100.0);
-	
+
 	OPeffectParamMat4v("uWorld", 1, &world);
 	OPeffectParamMat4v("uProj", 1, &oculusExample.Camera->proj);
 	OPeffectParamMat4v("uView", 1, &oculusExample.Camera->view);

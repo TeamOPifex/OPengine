@@ -23,7 +23,7 @@ inline void OPvertexLayoutInit(OPvertexLayout* layout, ui16 count, OPchar** name
 	f32 attributeSize;
     for(ui16 i = 0 ; i < count; i++ ) {
 		layout->attributes[i].Name = names[i];
-		layout->attributes[i].Type = types[i];
+		layout->attributes[i].Type = GL_FLOAT;// types[i];
 		layout->attributes[i].Elements = counts[i];
 		layout->attributes[i].Offset = offset;
 		attributeSize = counts[i] * sizeof(f32);

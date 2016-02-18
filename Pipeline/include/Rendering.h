@@ -21,7 +21,7 @@ inline void OPbindMeshEffectWorldCam(OPmesh* mesh, OPeffect* effect, OPmat4* wor
 	OPmeshBind(mesh);
 	OPeffectBind(effect);
 
-	OPcamUpdate(camera);
+	//OPcamUpdate(camera);
 
 	OPeffectParamMat4("uWorld", world);
 	OPeffectParamMat4("uProj", &camera->proj);

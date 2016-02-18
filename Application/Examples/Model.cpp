@@ -45,7 +45,8 @@ void ExampleModelEnter(OPgameState* last) {
 		"ColoredModel.frag",
 		OPATTR_POSITION | OPATTR_COLOR,
 		"Model Effect",
-		modelExample->Mesh.VertexSize);
+		modelExample->Mesh.vertexLayout.stride);
+		
 
 	// Sets up the camera as a perpsective camera for rendering
 	modelExample->Camera = OPcamPersp(
@@ -70,6 +71,7 @@ void ExampleModelEnter(OPgameState* last) {
 
 OPint ExampleModelUpdate(OPtimer* time) {
 
+	
 	////////////////////////
 	// Update
 	////////////////////////
@@ -79,6 +81,17 @@ OPint ExampleModelUpdate(OPtimer* time) {
 	// this application's main.cpp
 	if (OPkeyboardIsDown(OPKEY_SPACE)) { modelExample->Rotation++; }
 
+
+	// Tells the engine to continue running
+	// Returning true will tell the engine to terminate
+	return false;
+}
+
+void ExampleModelRender(OPfloat delta) {
+
+	OPrenderDepth(1);
+	OPrenderCull(0);
+	
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
 	OPmat4 world = OPmat4RotY(modelExample->Rotation / 100.0);
 	OPmat4Scl(&world, 0.25f, 0.25f, 0.25f);
@@ -99,17 +112,23 @@ OPint ExampleModelUpdate(OPtimer* time) {
 	// Renders to the screen the currently bound Mesh (modelExample->Mesh)
 	OPmeshRender();
 
+
+// 	OPmeshBind(&modelExample->Mesh);
+// 	OPeffectBind(&modelExample->Effect);
+
+
+// 	OPeffectParamMat4("uWorld", &world);
+// 	OPeffectParamMat4("uProj", &modelExample->Camera.proj);
+// 	OPeffectParamMat4("uView", &modelExample->Camera.view);
+
+// 	OPvec3 light = OPvec3Create(0, 1, 0);
+// 	OPeffectParamVec3("vLightDirection", &light);
+
+// 	OPmeshRender();
+	
+	
 	// Swaps the back buffer
 	OPrenderPresent();
-
-	// Tells the engine to continue running
-	// Returning true will tell the engine to terminate
-	return false;
-
-}
-
-void ExampleModelRender(OPfloat delta) {
-
 }
 
 // The OPifex Engine will call this itself when you call OPgameStateChange
