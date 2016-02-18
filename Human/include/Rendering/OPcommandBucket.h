@@ -1,167 +1,138 @@
 #ifndef OPENGINE_HUMAN_RENDERING_COMMAND_BUCKET
 #define OPENGINE_HUMAN_RENDERING_COMMAND_BUCKET
 
+#include "./Human/include/Rendering/OPcam.h"
+#include "./Human/include/Rendering/OPframeBuffer.h"
 #include "./Data/include/OPradixSort.h"
-#include "./Human/include/Rendering/Commands/OPcommandDrawIndexed.h"
-
-struct OPcommandDraw
-{
-    ui32 vertexCount;
-    ui32 startVertex;
-    
-    OPvertexLayout* vertexLayout;
-    OPrenderBuffer* vertexBuffer;
-    OPrenderBuffer* indexBuffer;
-};
+#include "./Data/include/OPallocLinear.h"
 
 
+//-----------------------------------------------------------------------------
+//  _____                     _____                  _____  _               _   _
+// |  __ \                   |  __ \                |  __ \(_)             | | (_)
+// | |__) _ __ ___   ______  | |__) _ __ ___   ___  | |  | |_ _ __ ___  ___| |_ ___   _____ ___
+// |  ___| '__/ _ \ |______| |  ___| '__/ _ \ / __| | |  | | | '__/ _ \/ __| __| \ \ / / _ / __|
+// | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
+// |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/
 
-struct OPcommandDrawCommand {
-    // void* next;
-    void* data;
-    void(*dispatch)(void*, OPcam*);
-};
-
-
-
+struct OPcommandDrawCommand;
+struct OPcommandBucketKey;
 struct OPcommandBucket;
-inline void OPcommandBucketInit(OPcommandBucket* commandBucket, OPuint bucketSize, OPcam* camera);
-inline void OPcommandBucketFlush(OPcommandBucket* commandBucket);
-inline void OPcommandBucketSortKeys(OPcommandBucket* commandBucket);
-inline void OPcommandBucketSubmit(OPcommandBucket* commandBucket, ui64 key, void(*dispatch)(void*, OPcam*), void* data);
-
-// ui64 OPCOMMAND_BUCKET_DEFAULT_KEY_GEN(OPcommandBucket* commandBucket, OPmodel* model, OPtexture* texture, OPmaterial* material) {
-    
-//     ui64 meshId = model->mesh->Id << 0;     // 00 - 06 bits
-//     ui64 textureId = texture->Handle << 6;  // 07 - 12 bits
-//     ui64 materialId = material->id << 12;   // 13 - 19 bits
-//     ui64 renderTarget = 0 << 18;            // 20 - 26 bits
-    
-//     return meshId | textureId | materialId | renderTarget;
-// }
-
-struct OPcommandBucketKey {
-  ui64 key;
-  OPcommandDrawCommand* command;
-};
-
-inline OPcommandDrawIndexed* OPcommandBucketCreateDrawIndexed(OPcommandBucket* commandBucket);
-
-struct OPcommandBucket {
-    OPuint bucketSize;
-    OPallocLinear* allocator;
-        
-    ui64 keyIndex;
-    OPcommandBucketKey* keys;
-    OPcommandBucketKey* copykeys;
-    OPcommandDrawCommand* commands;
-    
-    OPcam* camera;
-    OPframeBuffer* frameBuffer[4];
-    
-    void Init(OPuint bucketSize, OPcam* camera) {
-        OPcommandBucketInit(this, bucketSize, camera);
-    }
-    
-    void Flush() {
-        OPcommandBucketFlush(this);
-    }
-    
-    void Sort() {
-        OPcommandBucketSortKeys(this);
-    }
-    
-    OPcommandDrawIndexed* CreateDrawIndexed() {
-        return OPcommandBucketCreateDrawIndexed(this);
-    }
-    
-    void Submit(ui64 key, void(*dispatch)(void*, OPcam*), void* data) {
-        OPcommandBucketSubmit(this, key, dispatch, data);
-    }
-};
+typedef struct OPcommandDrawCommand OPcommandDrawCommand;
+typedef struct OPcommandBucketKey OPcommandBucketKey;
 typedef struct OPcommandBucket OPcommandBucket;
 
-inline OPcommandDrawIndexed* OPcommandBucketCreateDrawIndexed(OPcommandBucket* commandBucket) {
-    return (OPcommandDrawIndexed*)OPallocLinearAlloc(commandBucket->allocator, sizeof(OPcommandDrawIndexed));
-}
-
-inline void OPcommandBucketInit(
-    OPcommandBucket* commandBucket,
-    OPuint bucketSize,
-    OPcam* camera
-    ) {
-        
-    commandBucket->bucketSize = bucketSize;
-    commandBucket->camera = camera;
-    
-    commandBucket->keys = (OPcommandBucketKey*)OPalloc(sizeof(OPcommandBucketKey) * bucketSize);
-    commandBucket->copykeys = (OPcommandBucketKey*)OPalloc(sizeof(OPcommandBucketKey) * bucketSize);
-    
-    commandBucket->commands = (OPcommandDrawCommand*)OPalloc(sizeof(OPcommandDrawCommand) * bucketSize);
-    commandBucket->keyIndex = 0;
-    
-    commandBucket->allocator = OPallocLinearCreate(KB(1));
-}
 
 
-inline void OPcommandBucketAdd(OPcommandBucket* commandBucket, OPuint key, OPuint commandSize) {
-    //commandBucket->
-    
-    // AddKey
-    // AddData
-    
-}
+//-----------------------------------------------------------------------------
+// ______                _   _
+//|  ____|              | | (_)
+//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
+//|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
+//| |  | |_| | | | | (__| |_| | (_) | | | \__ \
+//|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
-inline OPcommandDraw* OPcommandBucketAddDraw(OPcommandBucket* commandBucket) {
-    return NULL;
-}
-
-inline i64 OPcommandBucketSortGetKey(void* data, i64 index) {
-    OPcommandBucketKey* keys = (OPcommandBucketKey*)data;
-    return keys[index].key;
-}
-
-inline void* OPcommandBucketSortGetEnitity(void* data, i64 index) {
-    OPcommandBucketKey* keys = (OPcommandBucketKey*)data;
-    return &keys[index];
-}
-
-inline void OPcommandBucketSortSetEntity(void* data, i64 index, void* entity) {
-    OPcommandBucketKey* keys = (OPcommandBucketKey*)data;
-    OPcommandBucketKey* key = (OPcommandBucketKey*)entity;
-    
-    keys[index].key = key->key;
-    keys[index].command = key->command;
-}
-
-inline void OPcommandBucketSortKeys(OPcommandBucket* commandBucket) {
-    // Sort the keys from lower order to higher order
-    OPradixSort(
-        commandBucket->keys,
-        commandBucket->copykeys,
-        commandBucket->keyIndex,
-        OPcommandBucketSortGetKey,
-        OPcommandBucketSortGetEnitity,
-        OPcommandBucketSortSetEntity);
-}
-
-inline void OPcommandBucketFlush(OPcommandBucket* commandBucket) {
-    
-    for(ui64 i = 0; i < commandBucket->keyIndex; i++) {
-        commandBucket->keys[i].command->dispatch(commandBucket->keys[i].command->data, commandBucket->camera);
-    }
-    
-    commandBucket->keyIndex = 0;
-    OPallocLinearClear(commandBucket->allocator);
-}
-
+void OPcommandBucketInit(OPcommandBucket* commandBucket, OPuint bucketSize, OPcam* camera);
+void OPcommandBucketFlush(OPcommandBucket* commandBucket);
+void OPcommandBucketSortKeys(OPcommandBucket* commandBucket);
+void OPcommandBucketSubmit(OPcommandBucket* commandBucket, ui64 key, void(*dispatch)(void*, OPcam*), void* data, void* next);
 inline void OPcommandBucketSubmit(OPcommandBucket* commandBucket, ui64 key, void(*dispatch)(void*, OPcam*), void* data) {
-    commandBucket->commands[commandBucket->keyIndex].data = data;
-    commandBucket->commands[commandBucket->keyIndex].dispatch = dispatch;
-    commandBucket->keys[commandBucket->keyIndex].key = key;
-    commandBucket->keys[commandBucket->keyIndex].command = &commandBucket->commands[commandBucket->keyIndex];
-    
-    commandBucket->keyIndex++;
+	OPcommandBucketSubmit(commandBucket, key, dispatch, data, NULL);
 }
+inline void OPcommandBucketRender(OPcommandBucket* commandBucket) {
+	OPcommandBucketSortKeys(commandBucket);
+	OPcommandBucketFlush(commandBucket);
+}
+
+#include "./Human/include/Rendering/Commands/OPcommandDrawIndexed.h"
+
+// Helper draw commands already in the engine
+// Users will be able to define their own, just won't be a helper function
+// in the struct itself unless they modify the OPengine source itself
+OPcommandDrawIndexed* OPcommandBucketCreateDrawIndexed(OPcommandBucket* commandBucket);
+
+
+
+//-----------------------------------------------------------------------------
+//   _____ _                   _
+//  / ____| |                 | |
+// | (___ | |_ _ __ _   _  ___| |_ ___
+//  \___ \| __| '__| | | |/ __| __/ __|
+//  ____) | |_| |  | |_| | (__| |_\__ \
+// |_____/ \__|_|   \__,_|\___|\__|___/
+
+struct OPcommandDrawCommand {
+	// TODO: (garrett) allow linked list of commands
+	// For example, you might want to copy data to the gpu
+	// and then render that data. The sort key would be the
+	// same so it should be a linked list of commands to draw
+	void* next; 
+	void* data; // The data for the draw command
+				// This is a function pointer to the function that will handle
+				// the draw call for the *data
+	void(*dispatch)(void*, OPcam*);
+};
+
+// A key for the OPcommandBucket that will be sorted for rendering order
+struct OPcommandBucketKey {
+	ui64 key; // Key which will sort the draw call
+	OPcommandDrawCommand* command; // Pointer to the data to render
+};
+
+struct OPcommandBucket {
+	// Number of draw calls this bucket can support
+	ui32 bucketSize;
+	// The linear allocator used for this creating Command data
+    OPallocLinear* allocator;
+    
+	// The current count of commands/keys
+    ui32 keyIndex;
+	// The keys & ordering of the draw calls
+    OPcommandBucketKey* keys;
+	// A duplicate data segment used for sorting (Radix)
+    OPcommandBucketKey* copykeys;
+	// An array of the actual data for the draw commands
+    OPcommandDrawCommand* commands;
+    
+	// The camera should not change for a command bucket
+    OPcam* camera;
+	// The target framebuffers will not change for a command bucket
+    OPframeBuffer* frameBuffer[4];
+    
+
+	// Simple wrapper functions
+	// These are just convenient functions for calling the C style functions
+
+    inline void Init(OPuint bucketSize, OPcam* camera) {
+        OPcommandBucketInit(this, bucketSize, camera);
+    }
+	
+	inline void Sort() {
+		OPcommandBucketSortKeys(this);
+	}
+
+	inline void Flush() {
+        OPcommandBucketFlush(this);
+    }
+
+	inline void Render() {
+		OPcommandBucketRender(this);
+	}
+    
+	inline OPcommandDrawIndexed* CreateDrawIndexed() {
+        return OPcommandBucketCreateDrawIndexed(this);
+    }
+
+	void CreateDrawIndexedSubmit(OPmodel* model, OPmaterial* material, OPtexture* texture);
+	void CreateDrawIndexedSubmit(OPmodelTextured* model, OPmaterial* material);
+    
+	inline void Submit(ui64 key, void(*dispatch)(void*, OPcam*), void* data) {
+        OPcommandBucketSubmit(this, key, dispatch, data, NULL);
+    }
+	
+	inline void Submit(ui64 key, void(*dispatch)(void*, OPcam*), void* data, void* next) {
+		OPcommandBucketSubmit(this, key, dispatch, data, next);
+	}
+};
 
 #endif

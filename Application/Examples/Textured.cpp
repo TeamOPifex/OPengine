@@ -66,19 +66,16 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 	OPmeshBind(texturedExample->Mesh);
 	OPeffectBind(texturedExample->Effect);
 
-	OPmat4 world, view, proj;
+	OPmat4 world;
 	world = OPmat4RotY(texturedExample->Rotation / 100.0);
-
-	OPcamGetView((*texturedExample->Camera), &view);
-	OPcamGetProj((*texturedExample->Camera), &proj);
-
+	
 	OPtextureClearActive();
 	ui32 tex = OPtextureBind(texturedExample->Texture);
 	OPeffectParami("uColorTexture", tex);
 
 	OPeffectParamMat4("uWorld", &world);
-	OPeffectParamMat4("uProj", &proj);
-	OPeffectParamMat4("uView", &view);
+	OPeffectParamMat4("uProj", &texturedExample->Camera->proj);
+	OPeffectParamMat4("uView", &texturedExample->Camera->view);
 
 	OPvec3 light = OPvec3Create(0, 1, 0);
 	OPeffectParamVec3("vLightDirection", &light);

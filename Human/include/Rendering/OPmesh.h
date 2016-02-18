@@ -44,7 +44,7 @@ struct OPmeshData {
 	OPmeshDataAnim* tracks;
 	
     ui32 VertexSize() {
-        return vertexLayout.Size();
+        return vertexLayout.stride;
     }
 };
 typedef struct OPmeshData OPmeshData;

@@ -6,4 +6,6 @@ void OPmaterialInit(OPmaterial* material, OPeffect* effect) {
 	material->effect = effect;
 	material->paramIndex = 0;
 	material->id = OPMATERIAL_GLOBAL_ID++;
+	material->depth = 1;
+	material->cull = 1;
 }

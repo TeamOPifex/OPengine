@@ -62,11 +62,11 @@ struct CommandBucketExample {
     	
     	OPcommandDrawIndexed* dc = renderBucket.CreateDrawIndexed();
     	dc->Set(&model2, &material);
-    	renderBucket.Submit(dc->Key(), dc->dispatch, dc);
+    	renderBucket.Submit(dc->key, dc->dispatch, dc);
     	
     	dc = renderBucket.CreateDrawIndexed();
     	dc->Set(&model, &material);
-    	renderBucket.Submit(dc->Key(), dc->dispatch, dc);
+    	renderBucket.Submit(dc->key, dc->dispatch, dc);
     	
         renderBucket.Sort();
         renderBucket.Flush();

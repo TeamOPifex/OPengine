@@ -15,6 +15,7 @@ extern "C" {
 #endif
 
 extern i32 LogToHandle;
+extern i32 OP_LOG_LEVEL;
 
 extern void(*OPlogHandler)(ui32, const char*, const char*);
 

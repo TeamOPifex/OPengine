@@ -18,9 +18,9 @@ struct OPMdataAnim {
 };
 
 struct OPMData { 
+	OPvertexLayout vertexLayout;
 	void* vertices;
 	ui32 vertexCount;
-	ui32 vertexSize;
 
 	void* indices;
 	ui32 indexCount;

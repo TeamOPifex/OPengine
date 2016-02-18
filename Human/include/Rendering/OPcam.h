@@ -1,37 +1,15 @@
 #ifndef OPENGINE_HUMAN_RENDERER_CAMERA
 #define OPENGINE_HUMAN_RENDERER_CAMERA
 
+#include "./Human/include/Rendering/OPrender.h"
 #include "./Math/include/OPvec3.h"
 #include "./Math/include/OPmat4.h"
 #include "./Math/include/OPray3D.h"
 #include "./Core/include/OPmath.h"
 
-//-----------------------------------------------------------------------------
-//   _____ _                   _
-//  / ____| |                 | |
-// | (___ | |_ _ __ _   _  ___| |_ ___
-//  \___ \| __| '__| | | |/ __| __/ __|
-//  ____) | |_| |  | |_| | (__| |_\__ \
-// |_____/ \__|_|   \__,_|\___|\__|___/
 struct OPcam;
+typedef struct OPcam OPcam;
 
-struct OPcam{
-	OPvec3 _pos;
-	OPvec3 _targ;
-	OPvec3 _up;
-	OPfloat _fov;
-	OPfloat _aspect;
-	OPfloat _near;
-	OPfloat _far;
-	OPmat4 Proj;
-	OPmat4 View;
-	OPint _projStale;
-	OPint _viewStale;
-	OPcam operator=(OPcam cam) {
-		OPmemcpy(this, &cam, sizeof(OPcam));
-		return *this;
-	}
-};
 
 //-----------------------------------------------------------------------------
 //  _____                     _____                  _____  _               _   _
@@ -41,54 +19,17 @@ struct OPcam{
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/
 
-#define OPcamSetPosition(cam, pos) (cam)->_pos = pos;(cam)->_viewStale=1;
-#define OPcamGetPosition(cam) (cam)->_pos
+#define OPcamSetPosition(cam, pos) (cam)->pos = pos; (cam)->viewStale=1;
+#define OPcamGetPosition(cam) (cam)->pos
 
-#define OPcamSetTarget(cam, targ) (cam)->_targ = targ;(cam)->_viewStale=1;
-#define OPcamGetTarget(cam) (cam)->_targ
+#define OPcamSetTarget(cam, targ) (cam)->targ = targ; (cam)->viewStale=1;
+#define OPcamGetTarget(cam) (cam)->targ
 
-#define OPcamSetUp(cam, up) (cam)->_up = up;(cam)->_viewStale=1;
-#define OPcamGetUp(cam) (cam)->_up
+#define OPcamSetUp(cam, up) (cam)->up = up; (cam)->viewStale=1;
+#define OPcamGetUp(cam) (cam)->up
 
-#define OPcamSetFOV(cam, fov) (cam)->_fov = fov;(cam)->_projStale=1;
-#define OPcamGetFOV(cam) (cam)->_fov
-
-//-----------------------------------------------------------------------------
-#define OPcamUpdateProj(cam){\
-	if (cam._projStale){\
-	cam.Proj = OPmat4Perspective(\
-			cam._fov, \
-			cam._aspect, \
-			cam._near, \
-			cam._far\
-			); \
-		cam._projStale = false; \
-	}\
-}\
-
-//-----------------------------------------------------------------------------
-#define OPcamUpdateView(cam){\
-	if (cam._viewStale){\
-		cam.View = OPmat4LookAt(\
-		cam._pos, \
-		cam._targ, \
-		cam._up\
-		); \
-		cam._viewStale = false; \
-	}\
-}\
-
-//-----------------------------------------------------------------------------
-#define OPcamGetProj(cam, proj){\
-	OPcamUpdateProj(cam);\
-	(*proj) = cam.Proj;\
-}\
-
-//-----------------------------------------------------------------------------
-#define OPcamGetView(cam, view){\
-	OPcamUpdateView(cam);\
-	(*view) = cam.View;\
-}\
+#define OPcamSetFOV(cam, fov) (cam)->fov = fov; (cam)->projStale=1;
+#define OPcamGetFOV(cam) (cam)->fov
 
 
 //-----------------------------------------------------------------------------
@@ -98,9 +39,57 @@ struct OPcam{
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPcam OPcamPersp (OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPfloat zFar, OPfloat fov, OPfloat aspect);
+
+OPcam OPcamPersp(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPfloat zFar, OPfloat fov, OPfloat aspect);
 OPcam OPcamOrtho(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPfloat zFar, OPfloat left, OPfloat right, OPfloat bottom, OPfloat top);
 OPray3D OPcamUnproject(OPcam* cam, i32 x, i32 y);
-void OPcamBind(OPcam camera);
+void OPcamUpdateView(OPcam* cam);
+void OpcamUpdateProj(OPcam* cam);
+void OPcamUpdate(OPcam* cam);
+void OPcamBind(OPcam* camera);
+
+
+//-----------------------------------------------------------------------------
+//   _____ _                   _
+//  / ____| |                 | |
+// | (___ | |_ _ __ _   _  ___| |_ ___
+//  \___ \| __| '__| | | |/ __| __/ __|
+//  ____) | |_| |  | |_| | (__| |_\__ \
+// |_____/ \__|_|   \__,_|\___|\__|___/
+
+struct OPcam {
+	OPvec3 pos;
+	OPvec3 target;
+	OPvec3 up;
+
+	OPfloat fov;
+	OPfloat aspect;
+
+	OPfloat nearView;
+	OPfloat farView;
+
+	OPmat4 proj;
+	OPmat4 view;
+
+	inline void Update() {
+		OPcamUpdate(this);
+	}
+
+	inline void SetPerspective(OPvec3 position, OPvec3 target) {
+		*this = OPcamPersp(position, target, OPVEC3_UP, 0.1f, 1000.0f, 45.0f, OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT);
+	}
+
+	inline void SetPerspective(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPfloat zFar, OPfloat fov, OPfloat aspect) {
+		*this = OPcamPersp(position, target, up, zNear, zFar, fov, aspect);
+	}
+
+	inline void SetOrtho(OPvec3 position, OPvec3 target, OPfloat size) {
+		*this = OPcamOrtho(position, target, OPVEC3_UP, 0.1f, 100.0f, size, size, size, size);
+	}
+
+	inline void SetOrtho(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPfloat zFar, OPfloat left, OPfloat right, OPfloat bottom, OPfloat top) {
+		*this = OPcamOrtho(position, target, up, zNear, zFar, left, right, bottom, top);
+	}
+};
 
 #endif

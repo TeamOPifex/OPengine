@@ -18,9 +18,6 @@ struct OPmaterialParam {
 	const OPchar*        name;
 	void*                data;
 	ui8                  count;
-	i8 depth;
-	i8 alpha;
-	i8 cull;
 };
 typedef struct OPmaterialParam OPmaterialParam;
 
@@ -44,7 +41,18 @@ struct OPmaterial {
 	OPmaterialParam params[10];
 	OPuint paramIndex;
 	ui64 id;
+	i8 depth;
+	i8 cull;
+	i8 alpha;
 	
+	void SetDepth(i8 val) {
+		depth = val;
+	}
+
+	void SetCull(i8 val) {
+		cull = val;
+	}
+
 	void ClearParams() {
 	    OPmaterialClearParams(this);
 	}
@@ -133,6 +141,9 @@ inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, f32* da
 inline void OPmaterialBind(OPmaterial* material) {
 	OPeffectBind(material->effect);
 
+	OPrenderDepth(material->depth);
+	OPrenderCull(material->cull);
+
 	OPtextureClearActive();
 	for(OPuint i = 0; i < material->paramIndex; i++) {
 
@@ -167,6 +178,9 @@ inline void OPmaterialBind(OPmaterial* material) {
 
 inline void OPmaterialBind(OPmaterial* material, ui32 stride) {
 	OPeffectBind(material->effect, stride);
+
+	OPrenderDepth(material->depth);
+	OPrenderCull(material->cull);
 
 	OPtextureClearActive();
 	for(OPuint i = 0; i < material->paramIndex; i++) {

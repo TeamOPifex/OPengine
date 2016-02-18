@@ -98,20 +98,24 @@ struct OPmat4 {
 		return *this;
 	}
 	
-	void SetRotY(f32 val) {
-	    *this = OPmat4RotY(val);    
+	inline OPmat4* SetRotY(f32 val) {
+	    *this = OPmat4RotY(val);
+		return this;
 	}
 	
-	void RotY(f32 val) {
+	inline OPmat4* RotY(f32 val) {
 	    OPmat4RotY(this, val);
+		return this;
 	}
 	
-	void Scl(f32 val) {
+	inline OPmat4* Scl(f32 val) {
 	    OPmat4Scl(this, val, val, val);
+		return this;
 	}
 	
-	void Translate(f32 x, f32 y, f32 z) {
+	inline OPmat4* Translate(f32 x, f32 y, f32 z) {
 	    OPmat4Translate(this, x, y, z);
+		return this;
 	}
 };
 

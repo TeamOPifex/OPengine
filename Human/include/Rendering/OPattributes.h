@@ -11,6 +11,14 @@ enum OPattributes {
 	OPATTR_COLOR4 = 0x40
 };
 
+enum OPattributeTypes {
+	OPATTR_TYPE_UINT8,
+	OPATTR_TYPE_UINT10,
+	OPATTR_TYPE_INT16,
+	OPATTR_TYPE_HALF,
+	OPATTR_TYPE_FLOAT
+};
+
 enum OPattributes2 {
     OPATTR2_POSITION = 0x01,
     OPATTR2_NORMAL = 0x02,

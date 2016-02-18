@@ -6,12 +6,12 @@ void OPmodelBind(OPmodel model, OPmaterial* material) {
 	OPeffectParam("uWorld", model.world);
 }
 
-void OPmodelBind(OPmodel model, OPmaterial* material, OPcam camera) {
+void OPmodelBind(OPmodel model, OPmaterial* material, OPcam* camera) {
 	OPmodelBind(model, material);
 	OPcamBind(camera);
 }
 
-void OPmodelDraw(OPmodel model, OPmaterial* material, OPcam cam) {
+void OPmodelDraw(OPmodel model, OPmaterial* material, OPcam* cam) {
 	OPmodelBind(model, material);
 	OPeffectParam(cam);
 	OPmeshRender();

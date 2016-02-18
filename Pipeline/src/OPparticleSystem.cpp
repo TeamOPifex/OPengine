@@ -109,8 +109,8 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 	OPmeshBind(&PARTICLE_SYSTEM_QUAD_MESH);
 	OPeffectBind(EFFECT_PARTICLE_SYSTEM);
 
-	OPeffectParamMat4v("uView", 1, &cam->View);
-	OPeffectParamMat4v("uProj", 1, &cam->Proj);
+	OPeffectParamMat4v("uView", 1, &cam->view);
+	OPeffectParamMat4v("uProj", 1, &cam->proj);
 
 	if(!sys->fps){
 		OPeffectParamVec2("uTexCoordScale", &sys->uvScale);
@@ -145,7 +145,7 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 		for (OPint i = sys->heap->MaxIndex; i--;){
 			OPparticle* p = &((OPparticle*)sys->heap->Entities)[i];
 			if (p->Life <= 0) continue;
-			ParticleTransform(p, &world);
+			//ParticleTransform(p, &world);
 
 			if(sys->fps){
 				_OPparticlePrepareFrame(sys, p, frameChange);

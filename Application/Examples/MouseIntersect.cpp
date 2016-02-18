@@ -102,12 +102,12 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	// this application's main.cpp
 	if (OPkeyboardIsDown(OPKEY_SPACE)) { mouseIntersectExample.Rotation++; }
 
-	mouseIntersectExample.Camera._pos.x -= OPkeyboardIsDown(OPKEY_A) * time->Elapsed * 0.01f;
-	mouseIntersectExample.Camera._pos.x += OPkeyboardIsDown(OPKEY_D) * time->Elapsed * 0.01f;
-	mouseIntersectExample.Camera._targ.x -= OPkeyboardIsDown(OPKEY_A) * time->Elapsed * 0.01f;
-	mouseIntersectExample.Camera._targ.x += OPkeyboardIsDown(OPKEY_D) * time->Elapsed * 0.01f;
-	mouseIntersectExample.Camera._viewStale = 1;
-	OPcamUpdateView(mouseIntersectExample.Camera);
+	mouseIntersectExample.Camera.pos.x -= OPkeyboardIsDown(OPKEY_A) * time->Elapsed * 0.01f;
+	mouseIntersectExample.Camera.pos.x += OPkeyboardIsDown(OPKEY_D) * time->Elapsed * 0.01f;
+	mouseIntersectExample.Camera.target.x -= OPkeyboardIsDown(OPKEY_A) * time->Elapsed * 0.01f;
+	mouseIntersectExample.Camera.target.x += OPkeyboardIsDown(OPKEY_D) * time->Elapsed * 0.01f;
+	mouseIntersectExample.Camera.Update();
+	OPcamUpdateView(&mouseIntersectExample.Camera);
 
 
 	OPray3D ray = { 0, 0, 0, 0, 0, 0};

@@ -10,8 +10,8 @@
 
 struct OPmodel;
 void OPmodelBind(OPmodel model, OPmaterial* material);
-void OPmodelBind(OPmodel model, OPmaterial* material, OPcam camera);
-void OPmodelDraw(OPmodel model, OPmaterial* material, OPcam camera);
+void OPmodelBind(OPmodel model, OPmaterial* material, OPcam* camera);
+void OPmodelDraw(OPmodel model, OPmaterial* material, OPcam* camera);
 
 struct OPmodel {
 	OPmat4 world;
@@ -25,14 +25,26 @@ struct OPmodel {
 	    OPmodelBind(*this, material);
 	}
 	
-	void Bind(OPmaterial* material, OPcam camera) {
+	void Bind(OPmaterial* material, OPcam* camera) {
 	    OPmodelBind(*this, material, camera);
 	}
 	
-	void Draw(OPmaterial* material, OPcam camera) {
+	void Draw(OPmaterial* material, OPcam* camera) {
 	    OPmodelDraw(*this, material, camera);
 	}
 };
 typedef struct OPmodel OPmodel;
+
+
+struct OPmodelTextured {
+	OPmodel model;
+	OPtexture* texture;
+
+	void Init(OPchar* modelAsset, OPchar* textureAsset) {
+		model.Init(modelAsset);
+		texture = OPtextureLoad(textureAsset);
+	}
+};
+typedef struct OPmodelTextured OPmodelTextured;
 
 #endif

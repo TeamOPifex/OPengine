@@ -1,6 +1,6 @@
 #include "./Pipeline/include/Loaders/OPloaderOPM.h"
+#include "./Human/include/Rendering/OPattributes.h"
 #include "./Math/include/OPquat.h"
-
 #include "./Data/include/OPlist.h"
 
 void OPCalculateTangents(OPMData* data) {
@@ -107,27 +107,29 @@ OPMData OPMloadDataV2(OPstream* str) {
 		result.vertexCount = verticesCount;
 		result.indexCount = indicesCount;
 
-		ui32 vertexSize = 0;
-		if (OPMhasFeature(features, Position))
-			vertexSize += 3;
-		if (OPMhasFeature(features, Normal))
-			vertexSize += 3;
-		if (OPMhasFeature(features, Tangent))
-			vertexSize += 3;
-		if (OPMhasFeature(features, UV))
-			vertexSize += 2;
-		if (OPMhasFeature(features, Color))
-			vertexSize += 3;
-		if (OPMhasFeature(features, Skinning))
-			vertexSize += 6;
+		OPvertexLayoutBuilder layout;
+		OPvertexLayoutBuilderInit(&layout);
 
+		if (OPMhasFeature(features, Position))
+			OPvertexLayoutBuilderAdd(&layout, OPATTR_POSITION);
+		if (OPMhasFeature(features, Normal))
+			OPvertexLayoutBuilderAdd(&layout, OPATTR_NORMAL);
+		if (OPMhasFeature(features, Tangent))
+			OPvertexLayoutBuilderAdd(&layout, OPATTR_TANGENT);
+		if (OPMhasFeature(features, UV))
+			OPvertexLayoutBuilderAdd(&layout, OPATTR_UV);
+		if (OPMhasFeature(features, Color))
+			OPvertexLayoutBuilderAdd(&layout, OPATTR_COLOR);
+		if (OPMhasFeature(features, Skinning))
+			OPvertexLayoutBuilderAdd(&layout, OPATTR_BONES);
+
+		result.vertexLayout = layout.Build();
 		result.indexSize = sizeof(ui16);
-		result.vertexSize = vertexSize * sizeof(f32);
 		result.indices = OPalloc(result.indexSize * indicesCount);
-		result.vertices = OPalloc(result.vertexSize * verticesCount);
+		result.vertices = OPalloc(result.vertexLayout.stride * verticesCount);
 
 		f32* vertData = (f32*)result.vertices;
-		for (ui32 j = 0; j < verticesCount * vertexSize; j++) {
+		for (ui32 j = 0; j < verticesCount * (result.vertexLayout.stride / sizeof(f32)); j++) {
 			vertData[j] = OPreadf32(str);
 		}
 
@@ -472,7 +474,7 @@ OPMData OPMloadData(OPstream* str) {
 	//}
 
 	data.vertices = vertices->data;
-	data.vertexSize = vertices->size * sizeof(f32);
+	//data.vertexSize = vertices->size * sizeof(f32);
 
 	data.bounds = OPboundingBox3DCreate(min, max);
 	//data.hierarchy = hierarchy;
@@ -528,10 +530,11 @@ OPint OPMload(OPstream* str, OPmesh** mesh) {
 	OPmesh temp = OPmeshCreate();
 	OPmeshBind(&temp);
 	OPmeshBuild(
-		data.vertexSize, data.indexSize,
+		data.vertexLayout.stride, data.indexSize,
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
 	);
+	temp.vertexLayout = data.vertexLayout;
 	temp.boundingBox = data.bounds;
 
 	//if (data.hierarchy != NULL) {
@@ -543,7 +546,7 @@ OPint OPMload(OPstream* str, OPmesh** mesh) {
 
 	temp.MetaCount = data.metaCount;
 	temp.Meta = data.meta;
-	temp.VertexSize = data.vertexSize;
+	temp.VertexSize = data.vertexLayout.stride;
 	temp.IndexSize = data.indexSize;
 	temp.VertexCount = data.vertexCount;
 	temp.IndexCount = data.indexCount;
@@ -824,7 +827,7 @@ OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh){
 	OPmesh temp = OPmeshCreate();
 	OPmeshBind(&temp);
 	OPmeshBuild(
-		data.vertexSize, data.indexSize,
+		data.vertexLayout.stride, data.indexSize,
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
 	);
@@ -846,7 +849,7 @@ OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh) {
 	OPMData data = OPMloadData(str);
 
 	OPmeshPacked temp = OPmeshPackedCreate(
-		data.vertexSize, data.indexSize,
+		data.vertexLayout.stride, data.indexSize,
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
 	);

@@ -66,22 +66,24 @@ OPeffect createEffect(OPshader vert,
 				0
 			};
 
+			OPshaderAttribute attrTemp = Attributes[i];
+
 			// TODO add more
-			switch (Attributes[i].Type){
+			switch (attrTemp.Type){
 			case GL_FLOAT:
-				effect.Stride += (4 * Attributes[i].Elements);
+				effect.Stride += (4 * attrTemp.Elements);
 				break;
 			}
-			attr.Name = OPstringCopy(Attributes[i].Name);
+			attr.Name = OPstringCopy(attrTemp.Name);
 
 			result = glGetAttribLocation(
 				effect.ProgramHandle,
-				Attributes[i].Name
+				attrTemp.Name
 				);
 			attr.Handle = (OPuint)result;
 
 			if (result < 0) {
-				OPlog("FAILED to find attribute: '%s' in effect '%s'", Attributes[i].Name, effect.Name);
+				OPlog("FAILED to find attribute: '%s' in effect '%s'", attrTemp.Name, effect.Name);
 			}
 			else {
 				OPlistPush(effect.Attributes, (ui8*)&attr);
@@ -327,4 +329,29 @@ OPeffect OPeffectGen(
 	OPlog("Create the Effect");
 
 	return createEffect(*vertShader, *fragShader, Attributes, AttribCount, Name, stride);
+}
+
+OPeffect OPeffectGen(const OPchar* vert, const OPchar* frag, OPvertexLayout* layout) {
+
+	OPlog("Building Effect");
+	
+	OPlog("Loading Vert for Effect: %s", vert);
+
+	if (!OPcmanIsLoaded(vert)) {
+		OPlog("Wasn't already loaded. Loading it.");
+		OPcmanLoad(vert);
+	}
+	else {
+		OPlog("Already loaded.c");
+	}
+	OPshader* vertShader = (OPshader*)OPcmanGet(vert);
+
+	OPlog("Loading Frag for Effect: %s", frag);
+
+	if (!OPcmanIsLoaded(frag)) OPcmanLoad(frag);
+	OPshader* fragShader = (OPshader*)OPcmanGet(frag);
+
+	OPlog("Create the Effect");
+
+	return createEffect(*vertShader, *fragShader, layout->attributes, layout->count, "", layout->stride);
 }

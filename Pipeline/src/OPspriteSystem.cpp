@@ -93,16 +93,15 @@ void OPspriteSystemRender(OPspriteSystem* system, OPcam* cam) {
 	if (system->Count == 0) return;
 
 	OPsprite* currentSprite;
-	OPmat4 world, proj, view;
-	view = OPmat4Translate(cam->_pos * -1);
-	OPcamGetProj((*cam), &proj);
+	OPmat4 world, view;
+	view = OPmat4Translate(cam->pos * -1);
 
 	OPmeshBind(&system->_mesh);
 	OPeffectBind(system->Effect);
 
 	OPtextureClearActive();
 	OPeffectParami("uColorTexture", OPtextureBind(system->Sprites[0]->Sheet));
-	OPeffectParamMat4("uProj", &proj);
+	OPeffectParamMat4("uProj", &cam->proj);
 	OPeffectParamMat4("uView", &view);
 
 	for (OPuint i = 0; i < system->Count; i++) {
