@@ -5,8 +5,8 @@
 #include "./Human/include/Systems/OPfontSystem.h"
 #include "./Human/include/Rendering/Sprite/OPspriteSheet.h"
 #include "./Human/include/Utilities/OPimagePNG.h"
+#include "./Data/include/OPjson.h"
 
-#define OP_DEFAULT_LOADER_COUNT 6
 
 OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 	{
@@ -79,6 +79,14 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 		sizeof(OPspriteSheet),
 		(OPint(*)(OPstream*, void**))OPspriteSheetLoad,
 		(OPint(*)(void*))OPspriteSheetUnload,
+		NULL
+	},
+	{
+		".meta",
+		"",
+		sizeof(OPjson),
+		(OPint(*)(OPstream*, void**))OPjsonCmanLoad,
+		NULL,
 		NULL
 	},
 };

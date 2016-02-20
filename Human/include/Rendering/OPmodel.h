@@ -16,19 +16,19 @@ void OPmodelDraw(OPmodel model, OPmaterial* material, OPcam* camera);
 struct OPmodel {
 	OPmat4 world;
 	OPmesh* mesh;
-	
+
 	void Init(const OPchar* mesh) {
 	    this->mesh = (OPmesh*)OPcmanLoadGet(mesh);
 	}
-	
+
 	void Bind(OPmaterial* material) {
 	    OPmodelBind(*this, material);
 	}
-	
+
 	void Bind(OPmaterial* material, OPcam* camera) {
 	    OPmodelBind(*this, material, camera);
 	}
-	
+
 	void Draw(OPmaterial* material, OPcam* camera) {
 	    OPmodelDraw(*this, material, camera);
 	}
@@ -40,7 +40,7 @@ struct OPmodelTextured {
 	OPmodel model;
 	OPtexture* texture;
 
-	void Init(OPchar* modelAsset, OPchar* textureAsset) {
+	void Init(const OPchar* modelAsset, const OPchar* textureAsset) {
 		model.Init(modelAsset);
 		texture = OPtextureLoad(textureAsset);
 	}

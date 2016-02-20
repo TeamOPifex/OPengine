@@ -33,6 +33,7 @@ set(ALL_LIBS
 	${ZLIB_LIBRARY}
 	${LIBPNG_LIBRARY}
 	${CMAKE_THREAD_LIBS_INIT}
+    jansson
 )
 
 

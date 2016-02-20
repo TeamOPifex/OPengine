@@ -1,10 +1,28 @@
+### jansson
+SET( JANSSON_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/External/jansson" )
+add_subdirectory("${JANSSON_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/jansson)
+set_property(TARGET jansson PROPERTY FOLDER "External")
+
+file(GLOB JANSSON_INCLUDES
+	"${PROJECT_BINARY_DIR}/jansson/include/*.h"
+)
+message(STATUS "JANSON INCLUDES ${PROJECT_BINARY_DIR}/jansson/include/ | ${JANSSON_INCLUDES}")
+
+set_binary_output(BINARY_FOLDER)
+message(STATUS "Installing to ${BINARY_FOLDER}")
+file(COPY ${JANSSON_INCLUDES} DESTINATION ${BINARY_FOLDER})
+output_library_from(jansson "/jansson/lib" "jansson")
+
 ### GLFW
 if(${OPIFEX_OS_IOS})
 else()
+
 SET( GLFW_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/External/glfw" )
 add_subdirectory("${GLFW_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/GLFW)
 set_property(TARGET glfw PROPERTY FOLDER "External")
 add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS)
+
+output_library_from(glfw "/GLFW/src" "glfw3")
 
 ### GLEW
 

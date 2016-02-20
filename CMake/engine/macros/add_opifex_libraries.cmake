@@ -11,6 +11,7 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	unset(LIBHUMAN CACHE)
 	unset(LIBGLEW_158 CACHE)
 	unset(LIBGLFW CACHE)
+	unset(LIBJANSSON CACHE)
 	unset(LIBOGG CACHE)
 	unset(LIBVORBIS CACHE)
 	unset(LIBVORBISFILE CACHE)
@@ -54,6 +55,7 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	mark_as_advanced(LIBHUMAN)
 	mark_as_advanced(LIBGLEW_158)
 	mark_as_advanced(LIBGLFW)
+	mark_as_advanced(LIBJANSSON)
 	mark_as_advanced(LIBOGG)
 	mark_as_advanced(LIBVORBIS)
 	mark_as_advanced(LIBVORBISFILE)
@@ -118,10 +120,12 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		find_binary(LIBHUMAN "Human" true)
 		find_binary(LIBGLEW_158 "GLEW_158" false)
 		find_binary(LIBGLFW "glfw3" false)
+		find_binary(LIBJANSSON "jansson" false)
 
 		target_link_libraries(${APPLICATION_TARGET}
 			${LIBGLFW}
 			${LIBGLEW_158}
+			${LIBJANSSON}
 		)
 	endif()
 

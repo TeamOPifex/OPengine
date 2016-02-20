@@ -18,6 +18,9 @@ macro(add_external_opifex_includes)
 		${BINARY_FOLDER}
 	)
 
+    message(STATUS "@@@@@ @@@@@ INCLUDING HEADERS ${JANSSON_HDR_PUBLIC}")
+    message(STATUS "@@@@@ @@@@@ FROM ${BINARY_FOLDER}")
+
 	add_opifex_physx_include()
 	add_opifex_v8_include()
 	add_opifex_fmod_include()

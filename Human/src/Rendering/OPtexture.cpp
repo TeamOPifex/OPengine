@@ -121,6 +121,6 @@ void OPtexture::Load(OPchar* asset) {
     this->Description = result->Description;
 }
 
-OPtexture* OPtextureLoad(OPchar* asset) {
+OPtexture* OPtextureLoad(const OPchar* asset) {
     return (OPtexture*)OPcmanLoadGet(asset);
 }

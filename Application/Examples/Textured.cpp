@@ -16,15 +16,19 @@ typedef struct {
 TexturedExample* texturedExample;
 
 void ExampleTexturedEnter(OPgameState* last) {
-	OPcmanLoad("adobe.opm");
+	// OPcmanLoad("adobe.opm");
+	// OPcmanLoad("adobe.png");
 	OPcmanLoad("Common/Texture.frag");
 	OPcmanLoad("Common/Texture3D.vert");
-	OPcmanLoad("adobe.png");
 
 	texturedExample = (TexturedExample*)OPalloc(sizeof(TexturedExample));
 
-	texturedExample->Mesh = (OPmesh*)OPcmanGet("adobe.opm");
-	texturedExample->Texture = (OPtexture*)OPcmanGet("adobe.png");
+	OPjson* meta = (OPjson*)OPcmanLoadGet("Models/adobe.opm.meta");
+	const OPchar* _model = OPjsonString(OPjsonGet(meta, "model"));
+	const OPchar* _texture = OPjsonString(OPjsonGet(meta, "texture"));
+
+	texturedExample->Mesh = (OPmesh*)OPcmanLoadGet(_model);
+	texturedExample->Texture = (OPtexture*)OPcmanLoadGet(_texture);
 	texturedExample->Rotation = 0;
 
 	OPshaderAttribute attribs[] = {

@@ -9,53 +9,43 @@
 
 #include <bitset>
 #include <string>
+#include <jansson.h>
 
 //////////////////////////////////////
 // Application Methods
 //////////////////////////////////////
-
-struct TestStruct {
-    i32 test;
-    i32 tested() {
-        return 0;
-    }
-    i32 testedagain() {
-        return this->test;
-    }
-};
-
-class BaseClass {
-    OPint another;
-};
-
-class TestClass : BaseClass {
-  OPint test;  
-  TestClass() {
-    test = 2;
-  }
-};
+/* forward refs */
 
 void ApplicationInit() {
+    OPjson* root = OPjsonLoad("{ \"test\": \"Message\", \"Count\": 1337, \"State\": true }");
+
+    if (root) {
+        OPjson* test = OPjsonGet(root, "test");
+        OPjson* count = OPjsonGet(root, "Count");
+        OPjson* state = OPjsonGet(root, "State");
+        OPlog("TEST: %s", OPjsonString(test));
+        OPlog("Number: %d", OPjsonI64(count));
+        OPlog("State: %d", OPjsonBool(state));
+        OPjsonDestroy(root);
+    } else {
+        OPlog("FAILED to print JSON");
+    }
+
+
 
 	OP_LOG_LEVEL = 2000;
     // ui64 val = 4;
     // ui64 val2 = 8 << 3;
     // ui64 result = val | val2;
-    
+
     // std::bitset<64> bitset1 { result };   // the bitset representation of 4
     // std::string str = bitset1.to_string();
-    
+
     // OPlogDebug("Bitset %s", str.c_str());
     // exit(0);
     // return;
-   
+
 	//OPlogToFile(".opengine.debug.txt");
-    
-    TestStruct tester;
-    tester.test = 1337;
-    
-    OPlogDebug("Size TestStruct: %d, %d", sizeof(TestStruct), tester.test);
-    OPlogDebug("Size TestClass: %d", sizeof(TestClass));
 
     OPlog("Size ui8: %d", sizeof(ui8));
     OPlog("Size ui16: %d", sizeof(ui16));
@@ -73,7 +63,11 @@ void ApplicationInit() {
 	OPlog("Assets %s", OPIFEX_ASSETS);
 	OPcmanInit(OPIFEX_ASSETS);
 
-	OPcmanLoadResourcePack("pack.oppack");
+	//OPcmanLoadResourcePack("pack.oppack");
+
+    OPjson* ground = (OPjson*)OPcmanLoadGet("ground.meta");
+    OPjson* model = OPjsonGet(ground, "model");
+    OPlog("MODEL from JSON: %s", OPjsonString(model));
 
 	OPoculusStartup();
 	OPrenderInit();
@@ -128,7 +122,7 @@ int main(int argc, char * argv[]) {
 
 #else
 
-OP_MAIN {	
+OP_MAIN {
 	#ifdef OPIFEX_OPTION_V8
 	// If the V8 engine is compiled in,
 	// see if we have a script to run at startup

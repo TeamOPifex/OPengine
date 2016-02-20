@@ -2,14 +2,14 @@
 macro(add_source_group FILTER_NAME SOURCE_PATH TARGET_LIST)
 
 	file(TO_NATIVE_PATH ${FILTER_NAME} NEW_FILTER_NAME)
-		file(GLOB TEMP_SRC
-			"${SOURCE_PATH}/*.h"
-			"${SOURCE_PATH}/*.cpp"
-			"${SOURCE_PATH}/*.c"
-			"${SOURCE_PATH}/*.cc"
-			"${SOURCE_PATH}/*.mm"
-			"${SOURCE_PATH}/*.m"
-		)
+	file(GLOB TEMP_SRC
+		"${SOURCE_PATH}/*.h"
+		"${SOURCE_PATH}/*.cpp"
+		"${SOURCE_PATH}/*.c"
+		"${SOURCE_PATH}/*.cc"
+		"${SOURCE_PATH}/*.mm"
+		"${SOURCE_PATH}/*.m"
+	)
 	source_group("${NEW_FILTER_NAME}" FILES ${TEMP_SRC})
 	list(APPEND ${TARGET_LIST} "${TEMP_SRC}")
 
@@ -32,7 +32,7 @@ macro(add_source_group_recurse SOURCE_PATH TARGET_LIST)
     SET(${TARGET_LIST} ${dir_list})
 
     FOREACH(dir_path ${dir_list})
-        
+
         if(${dir_path} STREQUAL ${SOURCE_PATH})
             add_source_group(/ ${SOURCE_PATH} ${TARGET_LIST})
             message(STATUS "PATH: /")
