@@ -75,9 +75,3 @@ void* OPllRemove(OPlinkedList* list, OPllNode* toRemove){
 }
 //-----------------------------------------------------------------------------
 OPint OPllGetSize(OPlinkedList* list){ return list->_size; }
-//-----------------------------------------------------------------------------
-//- C++ Definitions -----------------------------------------------------------
-#ifdef __cplusplus // compile the C++ class
-using namespace OPEngine::Data;
-
-#endif

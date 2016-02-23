@@ -164,7 +164,7 @@ OPchar* OPstreamReadLine(OPstream* stream) {
 		}
 	} while(c != '\n');
 
-	result = OPalloc(sizeof(OPchar) * i);
+	result = (OPchar*)OPalloc(sizeof(OPchar) * i);
 	OPmemcpy(result, buffer, sizeof(OPchar) * (i - 1));
 	result[i - 1] = '\0';
 

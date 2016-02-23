@@ -17,12 +17,12 @@
 /* forward refs */
 
 void ApplicationInit() {
-    OPjson* root = OPjsonLoad("{ \"test\": \"Message\", \"Count\": 1337, \"State\": true }");
+    OPjson root = OPjsonLoad("{ \"test\": \"Message\", \"Count\": 1337, \"State\": true }");
 
-    if (root) {
-        OPjson* test = OPjsonGet(root, "test");
-        OPjson* count = OPjsonGet(root, "Count");
-        OPjson* state = OPjsonGet(root, "State");
+    if (root._json) {
+        OPjson test = OPjsonGet(root, "test");
+        OPjson count = OPjsonGet(root, "Count");
+        OPjson state = OPjsonGet(root, "State");
         OPlog("TEST: %s", OPjsonString(test));
         OPlog("Number: %d", OPjsonI64(count));
         OPlog("State: %d", OPjsonBool(state));
@@ -66,7 +66,7 @@ void ApplicationInit() {
 	//OPcmanLoadResourcePack("pack.oppack");
 
     OPjson* ground = (OPjson*)OPcmanLoadGet("ground.meta");
-    OPjson* model = OPjsonGet(ground, "model");
+    OPjson model = OPjsonGet(*ground, "model");
     OPlog("MODEL from JSON: %s", OPjsonString(model));
 
 	OPoculusStartup();

@@ -17,7 +17,7 @@ inline void OPvertexLayoutInit(OPvertexLayout* layout, ui16 count, OPchar** name
 
 	layout->count = count;
     layout->attributes = (OPshaderAttribute*)OPalloc(sizeof(OPshaderAttribute) * count);
-    
+
 	ui32 offset = 0;
 	layout->stride = 0;
 	f32 attributeSize;
@@ -29,6 +29,15 @@ inline void OPvertexLayoutInit(OPvertexLayout* layout, ui16 count, OPchar** name
 		attributeSize = counts[i] * sizeof(f32);
 		offset += attributeSize;
 		layout->stride += attributeSize;
+    }
+}
+inline void OPvertexLayoutInit(OPvertexLayout* layout, OPshaderAttribute* attributes, ui16 count) {
+	layout->count = count;
+    layout->attributes = attributes;
+
+	layout->stride = 0;
+    for(ui16 i = 0 ; i < count; i++ ) {
+		layout->stride += layout->attributes[i].Elements * sizeof(f32);
     }
 }
 
@@ -49,7 +58,7 @@ struct OPvertexLayoutBuilder {
     void Init() {
         OPvertexLayoutBuilderInit(this);
     }
-    
+
     OPvertexLayout Build() {
         return OPvertexLayoutBuilderBuild(this);
     }

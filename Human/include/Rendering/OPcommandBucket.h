@@ -66,7 +66,7 @@ struct OPcommandDrawCommand {
 	// For example, you might want to copy data to the gpu
 	// and then render that data. The sort key would be the
 	// same so it should be a linked list of commands to draw
-	void* next; 
+	void* next;
 	void* data; // The data for the draw command
 				// This is a function pointer to the function that will handle
 				// the draw call for the *data
@@ -83,8 +83,8 @@ struct OPcommandBucket {
 	// Number of draw calls this bucket can support
 	ui32 bucketSize;
 	// The linear allocator used for this creating Command data
-    OPallocLinear* allocator;
-    
+    OPallocator* allocator;
+
 	// The current count of commands/keys
     ui32 keyIndex;
 	// The keys & ordering of the draw calls
@@ -93,12 +93,12 @@ struct OPcommandBucket {
     OPcommandBucketKey* copykeys;
 	// An array of the actual data for the draw commands
     OPcommandDrawCommand* commands;
-    
+
 	// The camera should not change for a command bucket
     OPcam* camera;
 	// The target framebuffers will not change for a command bucket
     OPframeBuffer* frameBuffer[4];
-    
+
 
 	// Simple wrapper functions
 	// These are just convenient functions for calling the C style functions
@@ -106,7 +106,7 @@ struct OPcommandBucket {
     inline void Init(OPuint bucketSize, OPcam* camera) {
         OPcommandBucketInit(this, bucketSize, camera);
     }
-	
+
 	inline void Sort() {
 		OPcommandBucketSortKeys(this);
 	}
@@ -118,18 +118,18 @@ struct OPcommandBucket {
 	inline void Render() {
 		OPcommandBucketRender(this);
 	}
-    
+
 	inline OPcommandDrawIndexed* CreateDrawIndexed() {
         return OPcommandBucketCreateDrawIndexed(this);
     }
 
 	void CreateDrawIndexedSubmit(OPmodel* model, OPmaterial* material, OPtexture* texture);
 	void CreateDrawIndexedSubmit(OPmodelTextured* model, OPmaterial* material);
-    
+
 	inline void Submit(ui64 key, void(*dispatch)(void*, OPcam*), void* data) {
         OPcommandBucketSubmit(this, key, dispatch, data, NULL);
     }
-	
+
 	inline void Submit(ui64 key, void(*dispatch)(void*, OPcam*), void* data, void* next) {
 		OPcommandBucketSubmit(this, key, dispatch, data, next);
 	}

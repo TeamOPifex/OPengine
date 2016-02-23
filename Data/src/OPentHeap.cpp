@@ -17,7 +17,7 @@ OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count){
 	OPuint off = 0, i = count;
 	OPminHeap free = {
 		NULL,
-		count,
+		(OPuint)count,
 		0
 	};
 	OPentHeap* heapPtr = NULL;

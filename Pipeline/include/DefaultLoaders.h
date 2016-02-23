@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-#define OP_DEFAULT_LOADER_COUNT 7
+#define OP_DEFAULT_LOADER_COUNT 8
 extern OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT];
 void OPloadersAddDefault();
 

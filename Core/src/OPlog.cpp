@@ -1,4 +1,5 @@
 #include "./Core/include/OPlog.h"
+#include <string>
 
 i32 LogToHandle = 1;
 i32 OP_LOG_LEVEL = 999;
@@ -168,6 +169,3 @@ void OPlogErr(const char* message, ...) {
 }
 
 #endif
-
-
-

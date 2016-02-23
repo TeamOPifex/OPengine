@@ -178,7 +178,6 @@ inline void OPmaterialBind(OPmaterial* material) {
 
 inline void OPmaterialBind(OPmaterial* material, ui32 stride) {
 	OPeffectBind(material->effect, stride);
-	OPlog("Effect Bind with %d", stride);
 
 	OPrenderDepth(material->depth);
 	OPrenderCull(material->cull);

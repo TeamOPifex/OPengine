@@ -104,10 +104,3 @@ ui8* OPlistSet(OPlist* list, OPuint index, ui8* value){
 OPint OPlistSize(OPlist* list){
 	return list->_size;
 }
-
-//-----------------------------------------------------------------------------
-//- C++ Definitions -----------------------------------------------------------
-#ifdef __cplusplus // compile the C++ class
-using namespace OPEngine::Data;
-
-#endif

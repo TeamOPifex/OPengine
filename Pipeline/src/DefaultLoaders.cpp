@@ -89,6 +89,14 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 		NULL,
 		NULL
 	},
+	{
+		".json",
+		"",
+		sizeof(OPjson),
+		(OPint(*)(OPstream*, void**))OPjsonCmanLoad,
+		NULL,
+		NULL
+	}
 };
 
 //

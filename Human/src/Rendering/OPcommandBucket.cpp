@@ -2,7 +2,7 @@
 
 
 OPcommandDrawIndexed* OPcommandBucketCreateDrawIndexed(OPcommandBucket* commandBucket) {
-	return (OPcommandDrawIndexed*)OPallocLinearAlloc(commandBucket->allocator, sizeof(OPcommandDrawIndexed));
+	return (OPcommandDrawIndexed*)commandBucket->allocator->alloc(commandBucket->allocator, sizeof(OPcommandDrawIndexed));
 }
 
 void OPcommandBucketInit(OPcommandBucket* commandBucket, OPuint bucketSize, OPcam* camera) {
@@ -16,7 +16,7 @@ void OPcommandBucketInit(OPcommandBucket* commandBucket, OPuint bucketSize, OPca
 	commandBucket->commands = (OPcommandDrawCommand*)OPalloc(sizeof(OPcommandDrawCommand) * bucketSize);
 	commandBucket->keyIndex = 0;
 
-	commandBucket->allocator = OPallocLinearCreate(KB(1));
+	commandBucket->allocator = OPallocatorLinearCreate(KB(1));
 }
 
 i64 OPcommandBucketSortGetKey(void* data, i64 index) {
@@ -55,7 +55,7 @@ void OPcommandBucketFlush(OPcommandBucket* commandBucket) {
 	}
 
 	commandBucket->keyIndex = 0;
-	OPallocLinearClear(commandBucket->allocator);
+	commandBucket->allocator->clear(commandBucket->allocator);
 }
 
 void OPcommandBucketSubmit(OPcommandBucket* commandBucket, ui64 key, void(*dispatch)(void*, OPcam*), void* data, void* next) {

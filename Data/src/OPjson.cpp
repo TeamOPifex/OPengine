@@ -1,20 +1,19 @@
 #include "./Data/include/OPjson.h"
 #include "./Core/include/OPlog.h"
 
-OPjson* OPjsonLoad(const OPchar* data) {
+OPjson OPjsonLoad(const OPchar* data) {
 	json_t *root;
 	json_error_t error;
-	root = json_loads(data, 0, &error);
-	if (root) {
-		return root;
-	} else {
-		OPlogErr(stderr, "json error on line %d: %s\n", error.line, error.text);
-		return (json_t *)0;
+	OPjson result;
+	result._json = json_loads(data, 0, &error);
+	if (!result._json) {
+		OPlogErr("json error on line %d: %s\n", error.line, error.text);
 	}
+	return result;
 }
 
-enum OPJSON_TYPE OPjsonType(OPjson* json) {
-	switch (json_typeof(json)) {
+enum OPJSON_TYPE OPjsonType(OPjson json) {
+	switch (json_typeof(json._json)) {
     case JSON_OBJECT:
         return OPJSON_OBJECT;
     case JSON_ARRAY:
@@ -50,8 +49,8 @@ void print_json_true(json_t *element, int indent);
 void print_json_false(json_t *element, int indent);
 void print_json_null(json_t *element, int indent);
 
-void OPjsonLog(OPjson *root) {
-    print_json_aux(root, 0);
+void OPjsonLog(OPjson root) {
+    print_json_aux(root._json, 0);
 }
 
 void print_json_aux(json_t *element, int indent) {
@@ -92,11 +91,14 @@ const char *json_plural(int count) {
     return count == 1 ? "" : "s";
 }
 
-ui32 OPjsonElements(OPjson* json) {
-	return json_object_size(json);
+ui32 OPjsonElements(OPjson json) {
+	return json_object_size(json._json);
 }
-OPjson* OPjsonGet(OPjson* json, const OPchar* key) {
-	return json_object_get(json, key);
+OPjson OPjsonGet(OPjson json, const OPchar* key) {
+	OPjson result = {
+		json_object_get(json._json, key)
+	};
+	return result;
 }
 // const OPchar* OPjsonKey(OPjson* json) {
 // 	const OPchar* key;
@@ -119,11 +121,14 @@ void print_json_object(json_t *element, int indent) {
     }
 }
 
-ui32 OPjsonArraySize(OPjson* json) {
-	return json_array_size(json);
+ui32 OPjsonArraySize(OPjson json) {
+	return json_array_size(json._json);
 }
-OPjson* OPjsonArrayGet(OPjson* json, ui32 index) {
-	return json_array_get(json, index);
+OPjson OPjsonArrayGet(OPjson json, ui32 index) {
+	OPjson result = {
+		json_array_get(json._json, index)
+	};
+	return result;
 }
 
 void print_json_array(json_t *element, int indent) {
@@ -135,17 +140,17 @@ void print_json_array(json_t *element, int indent) {
         print_json_aux(json_array_get(element, i), indent + 2);
     }
 }
-const OPchar* OPjsonString(OPjson* json) {
-	return json_string_value(json);
+const OPchar* OPjsonString(OPjson json) {
+	return json_string_value(json._json);
 }
-i64 OPjsonI64(OPjson* json) {
-	return json_integer_value(json);
+i64 OPjsonI64(OPjson json) {
+	return json_integer_value(json._json);
 }
-f32 OPjsonF32(OPjson* json) {
-	return json_real_value(json);
+f32 OPjsonF32(OPjson json) {
+	return json_real_value(json._json);
 }
-i8 OPjsonBool(OPjson* json) {
-	if(json_typeof(json) == JSON_TRUE) {
+i8 OPjsonBool(OPjson json) {
+	if(json_typeof(json._json) == JSON_TRUE) {
 		return 1;
 	}
 	return 0;
@@ -181,15 +186,16 @@ void print_json_null(json_t *element, int indent) {
 }
 
 
-void OPjsonDestroy(OPjson* json) {
-	json_decref(json);
+void OPjsonDestroy(OPjson json) {
+	json_decref(json._json);
 }
 
 
 OPint OPjsonCmanLoad(OPstream* str, void** asset) {
-	OPjson* data;
-	data = OPjsonLoad(str->Data);
-	if(!data) {
+	OPjson* data = (OPjson*)OPalloc(sizeof(OPjson));
+
+	*data = OPjsonLoad((OPchar*)str->Data);
+	if(!data->_json) {
 		return 0;
 	}
 	*asset = data;

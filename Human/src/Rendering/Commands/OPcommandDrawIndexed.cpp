@@ -39,10 +39,8 @@ void OPcommandDrawIndexTexture(void* data, OPcam* camera) {
 	OPglError("ERROR PRIOR TO TEXTURE BIND");
 	ui32 tex = OPtextureBind(dc->texture);
 	OPglError("ERROR PRIOR TO COLOR TEX BIND");
-	OPlog("Binding Tex Id %d", tex);
 	//OPeffectParam("uColorTexture", tex);
 
-	OPlog("RENDER THE MESH FROM COMMAND");
 	OPglError("ERROR PRIOR TO RENDER");
 
 	OPmeshRender();
