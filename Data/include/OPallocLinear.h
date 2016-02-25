@@ -17,13 +17,13 @@ struct OPallocatorLinear {
 };
 typedef struct OPallocatorLinear OPallocatorLinear;
 
-void OPallocatorLinearInit(OPallocatorLinear* result, OPuint sizeInBytes);
+void OPallocatorLinearInit(OPallocator* result, OPuint sizeInBytes);
 OPallocator* OPallocatorLinearCreate(OPuint sizeInBytes);
-void OPallocatorLinearDestroy(OPallocatorLinear* alloc);
+void OPallocatorLinearDestroy(OPallocator* alloc);
 
-void* OPallocatorLinearAlloc(OPallocatorLinear* alloc, OPuint sizeInBytes);
-void OPallocatorLinearFree(OPallocatorLinear* alloc, void* data);
-void OPallocatorLinearReset(OPallocatorLinear* alloc);
+void* OPallocatorLinearAlloc(OPallocator* alloc, OPuint sizeInBytes);
+void OPallocatorLinearFree(OPallocator* alloc, void* data);
+void OPallocatorLinearReset(OPallocator* alloc);
 
 inline OPuint OPallocatorLinearUsed(OPallocatorLinear* alloc) {
     return alloc->_usedMemory;

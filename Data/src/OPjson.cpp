@@ -195,9 +195,16 @@ OPint OPjsonCmanLoad(OPstream* str, void** asset) {
 	OPjson* data = (OPjson*)OPalloc(sizeof(OPjson));
 
 	*data = OPjsonLoad((OPchar*)str->Data);
-	if(!data->_json) {
+	if (!data->_json) {
 		return 0;
 	}
 	*asset = data;
+	return 1;
+}
+
+OPint OPjsonCmanUnload(void* asset) {
+	OPjson* data = (OPjson*)asset;
+	OPjsonDestroy(*data);
+	OPfree(data);
 	return 1;
 }

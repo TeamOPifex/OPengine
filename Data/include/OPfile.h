@@ -25,7 +25,7 @@ struct OPfile {
 #else
 	OPint _handle;
 #endif
-	OPchar* path;
+	const OPchar* path;
 };
 typedef struct OPfile OPfile;
 

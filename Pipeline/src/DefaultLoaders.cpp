@@ -86,7 +86,7 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 		"",
 		sizeof(OPjson),
 		(OPint(*)(OPstream*, void**))OPjsonCmanLoad,
-		NULL,
+		(OPint(*)(void*))OPjsonCmanUnload,
 		NULL
 	},
 	{
@@ -94,7 +94,7 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 		"",
 		sizeof(OPjson),
 		(OPint(*)(OPstream*, void**))OPjsonCmanLoad,
-		NULL,
+		(OPint(*)(void*))OPjsonCmanUnload,
 		NULL
 	}
 };

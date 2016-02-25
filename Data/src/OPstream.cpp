@@ -254,14 +254,14 @@ OPStream::~OPStream(){
 }
 
 OPuint OPStream::Seek(OPuint byte){
-	OPseek(this->_stream, byte);
+	return OPseek(this->_stream, byte);
 }
 
 OPuint OPStream::Write(void* data, OPuint size){
-	OPwrite(this->_stream, data, size);
+	return OPwrite(this->_stream, data, size);
 }
 
 ui8*   OPStream::Read(OPuint size){
-	OPread(this->_stream, size);
+	return OPread(this->_stream, size);
 }
 #endif

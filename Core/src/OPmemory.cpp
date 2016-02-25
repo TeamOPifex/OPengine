@@ -62,23 +62,10 @@ void* OPalloc(OPuint bytes){
 *		void* - Address of allocated memory.
 */
 void* OPallocZero(OPuint bytes){
-	return OPDEFAULT_ALLOCATOR.alloc(&OPDEFAULT_ALLOCATOR, bytes);
-// 	void* result;
-// #ifndef OPIFEX_OPTION_RELEASE
-// 	OPallocations++;
-// #endif
-// 	// allocate memory (for each platform)
-// #if defined(OPIFEX_UNIX)
-// 	// android specific for malloc
-// 	result = malloc(bytes);
-// 	OPbzero(result, bytes);
-// 	return result;
-// #elif defined(OPIFEX_WINDOWS)
-// 	// Windows specific for malloc
-// 	result = malloc(bytes);
-// 	OPbzero(result, bytes);
-// 	return result;
-// #endif
+	void* result;
+	result = OPDEFAULT_ALLOCATOR.alloc(&OPDEFAULT_ALLOCATOR, bytes);
+ 	OPbzero(result, bytes);
+ 	return result;
 }
 //-----------------------------------------------------------------------------
 /* OPrealloc(..) - Platform independent means to dynamically reallocate memory.

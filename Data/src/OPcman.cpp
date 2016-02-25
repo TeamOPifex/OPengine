@@ -40,7 +40,7 @@ i64 OP_CMAN_LAST_CHECKED = 100;
 OPint OPcmanSetDir(OPchar* dir) {
 	OPint result;
 #if defined(OPIFEX_WINDOWS)
-	result = _chdir(dir);
+	result = SetCurrentDirectory(dir);
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 	result = chdir(dir);
 #else
@@ -128,7 +128,7 @@ OPint OPcmanInit(const OPchar* dir){
 
 	// Switch to the assets directory
 #if defined(OPIFEX_WINDOWS)
-	result = _chdir(OP_CMAN_ASSET_FOLDER);
+	result = SetCurrentDirectory(OP_CMAN_ASSET_FOLDER);
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
 	result = chdir(OP_CMAN_ASSET_FOLDER);
 #else

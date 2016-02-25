@@ -37,6 +37,7 @@ void OPjsonLog(OPjson root);
 void OPjsonDestroy(OPjson json);
 
 OPint OPjsonCmanLoad(OPstream* str, void** asset);
+OPint OPjsonCmanUnload(void* asset);
 
 inline const OPchar* OPjsonString(OPjson json, const OPchar* key);
 

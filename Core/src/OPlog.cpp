@@ -1,5 +1,7 @@
 #include "./Core/include/OPlog.h"
 #include <string>
+#include <stdio.h>
+#include <ostream>
 
 i32 LogToHandle = 1;
 i32 OP_LOG_LEVEL = 999;
@@ -89,7 +91,7 @@ void OPvlog(ui32 level, const char* channel, const char* message, va_list args) 
 		sprintf(buffer2, "%s: %s\n", channel, message);
 		vsnprintf(buffer, sizeof buffer, buffer2, args);
 #ifndef OPIFEX_IOS
-		write(LogToHandle, buffer, strlen(buffer));
+		//write(LogToHandle, buffer, strlen(buffer));
 #else
         printf(buffer);
 #endif
@@ -114,7 +116,7 @@ void OPlg(const char* message, ...){
 		perror("SYSTEM ERROR");
 		errno = 0;
 	}
-	write(LogToHandle, buffer, strlen(buffer));
+	//write(LogToHandle, buffer, strlen(buffer));
     va_end(args);
 }
 
