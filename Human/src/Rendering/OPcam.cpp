@@ -5,7 +5,7 @@
 
 #include "./Human/include/Rendering/OPeffect.h"
 
-OPcam OPcamPersp(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat near, OPfloat far, OPfloat fov, OPfloat aspect){
+OPcam OPcamPersp(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat nearView, OPfloat farView, OPfloat fov, OPfloat aspect){
 
 	float _fov = (float)((double)fov * 0.01745329251994329576923690768489);
 	OPcam cam;
@@ -14,14 +14,14 @@ OPcam OPcamPersp(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat near, OPfloa
 	cam.up = up;
 	cam.fov = _fov;
 	cam.aspect = aspect;
-	cam.nearView = near;
-	cam.farView = far;
+	cam.nearView = nearView;
+	cam.farView = farView;
 
 	OPmat4Identity(&cam.proj);
 	OPmat4Identity(&cam.view);
 
 	// construct matricies
-	cam.proj = OPmat4Perspective(_fov, aspect, near, far);
+	cam.proj = OPmat4Perspective(_fov, aspect, nearView, farView);
 	cam.view = OPmat4LookAt(position, target, up);
 
 	return cam;

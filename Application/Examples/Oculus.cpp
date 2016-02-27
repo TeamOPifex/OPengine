@@ -74,7 +74,7 @@ OPint ExampleOculusUpdate(OPtimer* time) {
 	OPeffectBind(oculusExample.Effect);
 
 	OPmat4 world;
-	world = OPmat4RotY(oculusExample.Rotation / 100.0);
+	world = OPmat4RotY(oculusExample.Rotation / 100.0f);
 
 	OPeffectParamMat4v("uWorld", 1, &world);
 	OPeffectParamMat4v("uProj", 1, &oculusExample.Camera->proj);

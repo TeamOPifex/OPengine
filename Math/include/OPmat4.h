@@ -1,6 +1,8 @@
 #ifndef OPMATH_MAT4
 #define OPMATH_MAT4
 
+// INCLUDES
+
 #include "./Math/include/OPvec2.h"
 #include "./Math/include/OPvec3.h"
 #include "./Math/include/OPvec4.h"
@@ -9,17 +11,43 @@
 #include "./Core/include/OPmath.h"
 #include "./Core/include/OPlog.h"
 
+// PRE DECLARATION
 struct OPmat4;
+typedef struct OPmat4 OPmat4;
+
+// CIRCULAR INCLUDES
+
+// DEFINES
+
+// EXTERNALS
+extern const OPmat4 OPMAT4_ZERO;
+extern const OPmat4 OPMAT4_IDENTITY;
+
+// METHOD PRE DECLARATIONS
+
+// INLINE PRE DECLARATIONS
+inline OPmat4 OPmat4Mul(OPmat4 m1, OPmat4 m2);
 inline void OPmat4Mul(OPmat4* dst, OPmat4 m1, OPmat4 m2);
+
+inline OPmat4 OPmat4RotX(OPfloat t);
 inline void OPmat4RotX(OPmat4* m, OPfloat x);
 inline OPmat4 OPmat4RotY(OPfloat t);
 inline void OPmat4RotY(OPmat4* m, OPfloat x);
+inline OPmat4 OPmat4RotZ(OPfloat t);
 inline void OPmat4RotZ(OPmat4* m, OPfloat x);
+
+inline OPmat4 OPmat4Translate(OPfloat x, OPfloat y, OPfloat z);
 inline void OPmat4Translate(OPmat4* m, OPfloat x, OPfloat y, OPfloat z);
+
+inline OPmat4 OPmat4Scl(OPfloat x);
+inline OPmat4 OPmat4Scl(OPfloat x, OPfloat y, OPfloat z);
 inline void OPmat4Scl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z);
+
 inline OPvec2 OPmat4Transform(OPvec2 a, OPmat4 b);
 inline OPvec3 OPmat4Transform(OPvec3 a, OPmat4 b);
 inline OPvec4 OPmat4Transform(OPvec4 a, OPmat4 b);
+
+// STRUCT DEFINITIONS
 
 // Data Structure 4 * 4 = 16 floats
 //		32 bit = 16 * 32 = 512 bits or 64 bytes
@@ -98,13 +126,53 @@ struct OPmat4 {
 		return *this;
 	}
 	
-	inline OPmat4* SetRotY(f32 val) {
-	    *this = OPmat4RotY(val);
+	inline OPmat4* SetRotX(f32 val) {
+		*this = OPmat4RotX(val);
 		return this;
 	}
-	
+
+	inline OPmat4* SetRotY(f32 val) {
+		*this = OPmat4RotY(val);
+		return this;
+	}
+
+	inline OPmat4* SetRotZ(f32 val) {
+		*this = OPmat4RotZ(val);
+		return this;
+	}
+
+	inline OPmat4* SetScl(f32 val) {
+		*this = OPmat4Scl(val);
+		return this;
+	}
+
+	inline OPmat4* SetScl(f32 x, f32 y, f32 z) {
+		*this = OPmat4Scl(x, y, z);
+		return this;
+	}
+
+	inline OPmat4* SetTranslate(f32 x, f32 y, f32 z) {
+		*this = OPmat4Translate(x, y, z);
+		return this;
+	}
+
+	inline OPmat4* SetIdentity(f32 val) {
+		*this = OPMAT4_IDENTITY;
+		return this;
+	}
+
+	inline OPmat4* RotX(f32 val) {
+		OPmat4RotX(this, val);
+		return this;
+	}
+
 	inline OPmat4* RotY(f32 val) {
-	    OPmat4RotY(this, val);
+		OPmat4RotY(this, val);
+		return this;
+	}
+
+	inline OPmat4* RotZ(f32 val) {
+		OPmat4RotY(this, val);
 		return this;
 	}
 	
@@ -118,6 +186,8 @@ struct OPmat4 {
 		return this;
 	}
 };
+
+// INLINE DEFINITIONS
 
 inline OPvec3 operator*(OPvec3 lhs, OPmat4 rhs) {
 	return OPmat4Transform(lhs, rhs);
@@ -139,8 +209,7 @@ inline OPmat4 operator*(OPmat4 lhs, OPmat4 rhs) {
 //   |___/\_, |_|_|_|_.__/\___/_|_\__| /_/ \_\_| |_|\__|_||_|_|_|_\___|\__|_\__|
 //        |__/
 
-extern const OPmat4 OPMAT4_ZERO;
-extern const OPmat4 OPMAT4_IDENTITY;
+
 
 inline OPmat4 OPmat4Create(
 	f32 _00, f32 _10, f32 _20, f32 _30,
@@ -201,8 +270,8 @@ inline void OPmat4Identity(OPmat4* m) {
 
  inline OPmat4 OPmat4Transpose(OPmat4 m){
 	OPmat4 tmp;
-	for(OPint i = 0; i < 4; i++) {
-		for(OPint j = 0; j < 4; j++) {
+	for(i32 i = 0; i < 4; i++) {
+		for(i32 j = 0; j < 4; j++) {
 			tmp[j][i] = m[i][j];
 		}
 	}
@@ -343,9 +412,9 @@ inline OPmat4 OPmat4SetTranslate(OPmat4 m, OPvec3 v) {
 
  inline OPvec3 OPmat4Transform(OPvec3 a, OPmat4 b) {
 	 OPvec3 result;
-	 result.x = b[0].x * a.x + b[1].x * a.y + b[2].x * a.z + b[3][0] * 1.0;
-	 result.y = b[0].y * a.x + b[1].y * a.y + b[2].y * a.z + b[3][1] * 1.0;
-	 result.z = b[0].z * a.x + b[1].z * a.y + b[2].z * a.z + b[3][2] * 1.0;
+	 result.x = b[0].x * a.x + b[1].x * a.y + b[2].x * a.z + b[3][0] * 1.0f;
+	 result.y = b[0].y * a.x + b[1].y * a.y + b[2].y * a.z + b[3][1] * 1.0f;
+	 result.z = b[0].z * a.x + b[1].z * a.y + b[2].z * a.z + b[3][2] * 1.0f;
 	 return result;
  }
 
@@ -581,10 +650,10 @@ inline OPmat4 OPmat4RemoveScale(OPmat4 a) {
 
 inline OPvec3 OPmat4Eulor( OPmat4 a)
 {
-	double sinPitch, cosPitch, sinRoll, cosRoll, sinYaw, cosYaw;
+	d64 sinPitch, cosPitch, sinRoll, cosRoll, sinYaw, cosYaw;
 
 	sinPitch = -a[2][0];
-	cosPitch = sqrt(1 - sinPitch*sinPitch);
+	cosPitch = OPsqrt(1 - sinPitch*sinPitch);
 
 	if ( OPabs(cosPitch) > 0.0001)
 	{
@@ -602,9 +671,9 @@ inline OPvec3 OPmat4Eulor( OPmat4 a)
 	}
 
 	return OPvec3Create(
-			atan2(sinYaw, cosYaw) * 180 / OPpi,
-			atan2(sinPitch, cosPitch) * 180 / OPpi,
-			atan2(sinRoll, cosRoll) * 180 / OPpi);
+			(OPfloat)(atan2(sinYaw, cosYaw) * 180 / OPpi),
+			(OPfloat)(atan2(sinPitch, cosPitch) * 180 / OPpi),
+			(OPfloat)(atan2(sinRoll, cosRoll) * 180 / OPpi));
 }
 
 OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPfloat zNear, OPfloat zFar);

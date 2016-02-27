@@ -68,7 +68,7 @@ void ExampleSkinningEnter(OPgameState* last) {
 	f32 pos = 10 * SCALE;
 	*skinningExample->Camera = OPcamPersp(
 		OPvec3Create(pos, pos, pos),
-		OPvec3Create(0, pos / 4.0, 0),
+		OPvec3Create(0, pos / 4.0f, 0),
 		OPvec3Create(0, 1, 0),
 		0.1f,
 		500.0f,
@@ -91,10 +91,10 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	//if (OPkeyboardWasPressed(OPKEY_M)) { skinningExample->Mesh->SkeletonAnimation.Frame++; }
 	//if (OPkeyboardWasPressed(OPKEY_N)) { skinningExample->Mesh->SkeletonAnimation.Frame--; }
 
-	if (OPkeyboardIsDown(OPKEY_UP)) { skinningExample->Camera->pos.y += 0.1 * SCALE; }
-	if (OPkeyboardIsDown(OPKEY_DOWN)) { skinningExample->Camera->pos.y -= 0.1 * SCALE; }
-	if (OPkeyboardIsDown(OPKEY_LEFT)) { skinningExample->Camera->pos.x -= 0.1 * SCALE; }
-	if (OPkeyboardIsDown(OPKEY_RIGHT)) { skinningExample->Camera->pos.x += 0.1 * SCALE; }
+	if (OPkeyboardIsDown(OPKEY_UP)) { skinningExample->Camera->pos.y += (OPfloat)(0.1 * SCALE); }
+	if (OPkeyboardIsDown(OPKEY_DOWN)) { skinningExample->Camera->pos.y -= (OPfloat)(0.1 * SCALE); }
+	if (OPkeyboardIsDown(OPKEY_LEFT)) { skinningExample->Camera->pos.x -= (OPfloat)(0.1 * SCALE); }
+	if (OPkeyboardIsDown(OPKEY_RIGHT)) { skinningExample->Camera->pos.x += (OPfloat)(0.1 * SCALE); }
 
 	skinningExample->Camera->Update();
 	OPcamUpdateView(skinningExample->Camera);

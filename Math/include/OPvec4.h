@@ -123,7 +123,7 @@ inline OPvec4 operator/(OPfloat lhs, OPvec4 vhs) {
 
 
 inline OPvec4 OPvec4Norm(OPvec4 a) {
-	OPfloat l = OPsqrt(a.x * a.x + a.y * a.y + a.z * a.z + a.w * a.w);
+	OPfloat l = (OPfloat)OPsqrt(a.x * a.x + a.y * a.y + a.z * a.z + a.w * a.w);
 	return OPvec4Create(
 		a.x / l,
 		a.y / l,
@@ -137,7 +137,7 @@ inline OPfloat OPvec4Dot(OPvec4 a, OPvec4 b) {
 }
 
 inline OPfloat OPvec4Len(OPvec4 a) {
-	return OPsqrt(a.x * a.x + a.y * a.y + a.z * a.z + a.w * a.w);
+	return (OPfloat)OPsqrt(a.x * a.x + a.y * a.y + a.z * a.z + a.w * a.w);
 }
 
 inline OPfloat OPvec4Dist(OPvec4 a, OPvec4 b) {

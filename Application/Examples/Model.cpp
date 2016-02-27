@@ -93,14 +93,14 @@ void ExampleModelRender(OPfloat delta) {
 	OPrenderCull(0);
 	
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
-	OPmat4 world = OPmat4RotY(modelExample->Rotation / 100.0);
+	OPmat4 world = OPmat4RotY(modelExample->Rotation / 100.0f);
 	OPmat4Scl(&world, 0.25f, 0.25f, 0.25f);
 
 
 	////////////////////////
 	// Render
 	////////////////////////
-	OPrenderClear(0.4, 0.4, 0.4);
+	OPrenderClear(0.4f, 0.4f, 0.4f);
 
 	// A helper utility which binds the Mesh, Effect and the World, View and Projection Matrices
 	// For more granular control please take a look at the Textured Example

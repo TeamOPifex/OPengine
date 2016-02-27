@@ -3,29 +3,29 @@
 #include <ctype.h>
 
 OPint OPstringEquals(const OPchar* str, const OPchar* cmp) {
-	ui32 lenA = strlen(str);
-	ui32 lenB = strlen(cmp);
+	ui32 lenA = (ui32)strlen(str);
+	ui32 lenB = (ui32)strlen(cmp);
 	if (lenA != lenB) return 0;
 	return OPmemcmp(str, cmp, lenA) == 0;
 }
 
 OPint OPstringStartsWith(OPchar* str, const OPchar* cmp) {
-	ui32 lenA = strlen(str);
-	ui32 lenB = strlen(cmp);
+	ui32 lenA = (ui32)strlen(str);
+	ui32 lenB = (ui32)strlen(cmp);
 	if (lenA < lenB) return 0;
 	return OPmemcmp(str, cmp, lenB) == 0;
 }
 
 OPint OPstringEndsWith(OPchar* str, const OPchar* cmp) {
-	ui32 lenA = strlen(str);
-	ui32 lenB = strlen(cmp);
+	ui32 lenA = (ui32)strlen(str);
+	ui32 lenB = (ui32)strlen(cmp);
 	if (lenA < lenB) return 0;
 	return OPmemcmp(&str[lenA-lenB], cmp, lenB) == 0;
 }
 
 void OPstringRemoveFromStart(OPchar* str, i32 size) {
-	i32 i;
-	i32 len = strlen(str);
+	ui32 i;
+	ui32 len = (ui32)strlen(str);
 	for (i = 0; i < len - size; i++) {
 		str[i] = str[i + size];
 	}
@@ -33,35 +33,37 @@ void OPstringRemoveFromStart(OPchar* str, i32 size) {
 }
 
 OPchar* OPstringGetNonConstant(const OPchar* str) {
-	i32 len;
+	ui32 len, size;
 	OPchar* result = NULL;
 
-	len = strlen(str);
+	len = (ui32)strlen(str);
+	size = (len + 1) * sizeof(OPchar);
 
-	result = (OPchar*)OPalloc(sizeof(OPchar) * (len + 1));
-	strcpy(result, str);
+	result = (OPchar*)OPalloc(size);
+	strcpy_s(result, size, str);
 
 	return result;
 }
 
 OPchar* OPstringCopy(const OPchar* str) {
-	i32 len;
+	ui32 len, size;
 	OPchar* result = NULL;
 
-	len = strlen(str);
+	len = (ui32)strlen(str);
+	size = (len + 1) * sizeof(OPchar);
 
-	result = (OPchar*)OPalloc(sizeof(OPchar) * (len + 1));
-	strcpy(result, str);
+	result = (OPchar*)OPallocZero(size);
+	strcpy_s(result, size, str);
 	result[len] = '\0';
 
 	return result;
 }
 
-OPchar* OPstringSub(const OPchar* str, OPint start, OPint end) {
-	i32 len, subLen;
+OPchar* OPstringSub(const OPchar* str, ui32 start, ui32 end) {
+	ui32 len, subLen;
 	OPchar* result = NULL;
 
-	len = strlen(str);
+	len = (ui32)strlen(str);
 	subLen = end - start;
 
 	if(len < subLen) {
@@ -77,19 +79,19 @@ OPchar* OPstringSub(const OPchar* str, OPint start, OPint end) {
 }
 
 OPchar* OPstringCreateMerged(const OPchar* str, const OPchar* add) {
-	i32 lenA = strlen(str);
-	i32 lenB = strlen(add);
+	ui32 lenA = (ui32)strlen(str);
+	ui32 lenB = (ui32)strlen(add);
 	OPchar* result = (OPchar*)OPalloc(lenA + lenB + 1);
-	strcpy(result, str);
+	strcpy_s(result, lenA + 1, str);
 	strcat(result, add);
 	return result;
 }
 
 OPint OPstringContains(OPchar* str, const OPchar* cmp) {
-	OPint i, strLen, cmpLen;
+	ui32 i, strLen, cmpLen;
 
-	strLen = strlen(str);
-	cmpLen = strlen(cmp);
+	strLen = (ui32)strlen(str);
+	cmpLen = (ui32)strlen(cmp);
 	if(cmpLen < strLen) {
 		for(i = 0;i < strLen; i++) {
 			if(OPmemcmp(&str[i], cmp, cmpLen) == 0) {

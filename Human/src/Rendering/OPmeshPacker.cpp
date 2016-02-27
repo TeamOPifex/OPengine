@@ -37,25 +37,25 @@ OPint OPmeshPackerDestroy(){
 	return 1;
 }
 //-----------------------------------------------------------------------------
-ui32 OPmeshPackerAddVB(ui32 vertexSize, void* verticesData, ui32 vertexCount){
+OPuint OPmeshPackerAddVB(ui32 vertexSize, void* verticesData, OPuint vertexCount){
 	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
-	ui32 dataStartPos = packer->vertexOffset;
-	ui32 vertexBufferSize = vertexSize * vertexCount;
+	OPuint dataStartPos = packer->vertexOffset;
+	OPuint vertexBufferSize = vertexSize * vertexCount;
 	OPwrite(&packer->vertices, verticesData, vertexBufferSize );
 	packer->vertexOffset += vertexBufferSize;
 
 	return dataStartPos;
 }
 //-----------------------------------------------------------------------------
-ui32 OPmeshPackerAddIB(ui32 indexSize, void* indicesData, ui32 indexCount){
+OPuint OPmeshPackerAddIB(ui32 indexSize, void* indicesData, OPuint indexCount){
 	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
-	ui32 dataStartPos = packer->vertexOffset;
-	ui32 indexBufferSize = indexSize * indexCount;
+	OPuint dataStartPos = packer->vertexOffset;
+	OPuint indexBufferSize = indexSize * indexCount;
 
 	ui16* dat = (ui16*)indicesData;
-	ui32 offset = packer->vertexElementOffset;
+	OPuint offset = packer->vertexElementOffset;
 	for(OPuint i = 0; i < indexCount; ++i){
-		ui16 index = dat[i] + offset;
+		ui16 index = dat[i] + (ui16)offset;
 		OPwrite(&packer->indices, &index, indexSize);
 	}
 

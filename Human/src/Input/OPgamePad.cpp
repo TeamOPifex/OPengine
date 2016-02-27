@@ -6,7 +6,6 @@
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS) && defined(OPIFEX_UNIX)
 	#include <GLFW/glfw3.h>
 #elif defined(OPIFEX_WINDOWS)
-	#include <Windows.h>
 	#include <Xinput.h>
 	#pragma comment(lib, "XInput.lib")
 #elif defined(OPIFEX_ANDROID)
@@ -218,7 +217,7 @@ void __OPlnxUpdateGamePad(OPgamePad* c){
 void __OPwinUpdateGamePad(OPgamePad* controller){
 	XINPUT_STATE controllerState;
 	ZeroMemory(&controllerState, sizeof(XINPUT_STATE));
-	DWORD result = XInputGetState(controller->playerIndex, &controllerState);
+	DWORD result = XInputGetState((DWORD)controller->playerIndex, &controllerState);
 
 	// check to see if the controller is connected
 	if(result == ERROR_SUCCESS){

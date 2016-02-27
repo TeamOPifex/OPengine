@@ -57,7 +57,7 @@ void ExampleFreeFlightRender(OPfloat delta) {
 	OPeffectBind(freeFlightExample.Effect);
 
 	OPmat4 world;
-	world = OPmat4RotY(freeFlightExample.Rotation / 100.0);
+	world = OPmat4RotY(freeFlightExample.Rotation / 100.0f);
 
 
 	OPtextureClearActive();

@@ -14,7 +14,7 @@ extern "C" {
 	OPchar* OPstringGetNonConstant(const OPchar* str);
 	OPchar* OPstringCreateMerged(const OPchar* str, const OPchar* add);
 	OPchar* OPstringCopy(const OPchar* str);
-	OPchar* OPstringSub(const OPchar* str, OPint start, OPint end);
+	OPchar* OPstringSub(const OPchar* str, ui32 start, ui32 end);
 	OPint OPstringContains(OPchar* str, const OPchar* cmp);
 	void OPstringToLower(OPchar* str);
 

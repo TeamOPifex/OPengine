@@ -23,6 +23,17 @@
 #define OPIFEX_OS32
 #endif
 
+#if defined(OPIFEX_WINDOWS)
+
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
+// Windows specific lib
+#include <Windows.h>
+#include <Mmsystem.h>
+
+#endif
 
 #if defined(OPIFEX_ANDROID)
 #include <jni.h>

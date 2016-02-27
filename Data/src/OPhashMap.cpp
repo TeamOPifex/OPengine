@@ -173,8 +173,8 @@ OPint OPhashMapPut(OPhashMap *map, const OPchar* key, void* value)
 
 OPint OPhashMapCount(const OPhashMap *map)
 {
-	unsigned int i, j, n, m;
-	unsigned int count;
+	OPuint i, j, n, m;
+	OPuint count;
 	Bucket *bucket;
 	KeyValuePair *pair;
 

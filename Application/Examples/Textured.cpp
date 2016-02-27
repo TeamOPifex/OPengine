@@ -71,7 +71,7 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 	OPeffectBind(texturedExample->Effect);
 
 	OPmat4 world;
-	world = OPmat4RotY(texturedExample->Rotation / 100.0);
+	world = OPmat4RotY(texturedExample->Rotation / 100.0f);
 
 	OPtextureClearActive();
 	ui32 tex = OPtextureBind(texturedExample->Texture);

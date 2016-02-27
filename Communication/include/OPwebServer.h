@@ -22,7 +22,7 @@ struct OPWebServerHandlerContainer {
 };
 
 struct OPWebServerMessagesContainer {
-	ui32 messageCount;
+	OPuint messageCount;
 	OPstream** messages;
 };
 

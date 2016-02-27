@@ -2,7 +2,6 @@
 #include "./Core/include/OPlog.h"
 
 OPjson OPjsonLoad(const OPchar* data) {
-	json_t *root;
 	json_error_t error;
 	OPjson result;
 	result._json = json_loads(data, 0, &error);
@@ -84,7 +83,7 @@ void print_json_aux(json_t *element, int indent) {
     }
 }
 void print_json_indent(int indent) {
-    int i;
+    // int i;
     //for (i = 0; i < indent; i++) { OPlg(' '); }
 }
 const char *json_plural(int count) {
@@ -92,7 +91,7 @@ const char *json_plural(int count) {
 }
 
 ui32 OPjsonElements(OPjson json) {
-	return json_object_size(json._json);
+	return (ui32)json_object_size(json._json);
 }
 OPjson OPjsonGet(OPjson json, const OPchar* key) {
 	OPjson result = {
@@ -105,13 +104,13 @@ OPjson OPjsonGet(OPjson json, const OPchar* key) {
 //
 // }
 void print_json_object(json_t *element, int indent) {
-    size_t size;
+    i32 size;
     const char *key;
     json_t *value;
 
     print_json_indent(indent);
 
-    size = json_object_size(element);
+    size = (i32)json_object_size(element);
     OPlog("JSON Object of %ld pair%s:\n", size, json_plural(size));
 
     json_object_foreach(element, key, value) {
@@ -122,7 +121,7 @@ void print_json_object(json_t *element, int indent) {
 }
 
 ui32 OPjsonArraySize(OPjson json) {
-	return json_array_size(json._json);
+	return (ui32)json_array_size(json._json);
 }
 OPjson OPjsonArrayGet(OPjson json, ui32 index) {
 	OPjson result = {
@@ -132,8 +131,8 @@ OPjson OPjsonArrayGet(OPjson json, ui32 index) {
 }
 
 void print_json_array(json_t *element, int indent) {
-    size_t i;
-    size_t size = json_array_size(element);
+    ui32 i;
+    ui32 size = (ui32)json_array_size(element);
     print_json_indent(indent);
     OPlog("JSON Array of %ld element%s:\n", size, json_plural(size));
     for (i = 0; i < size; i++) {
@@ -147,7 +146,7 @@ i64 OPjsonI64(OPjson json) {
 	return json_integer_value(json._json);
 }
 f32 OPjsonF32(OPjson json) {
-	return json_real_value(json._json);
+	return (f32)json_real_value(json._json);
 }
 i8 OPjsonBool(OPjson json) {
 	if(json_typeof(json._json) == JSON_TRUE) {

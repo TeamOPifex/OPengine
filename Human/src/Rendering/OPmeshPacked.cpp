@@ -11,7 +11,7 @@
 
 OPmeshPacked OPmeshPackedCreate(
 			ui32 vertSize, ui32 indSize,
-			ui32 vertCount, ui32 indCount,
+			OPuint vertCount, OPuint indCount,
 			void* vertices, void* indices){
 	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
 
@@ -29,5 +29,5 @@ OPmeshPacked OPmeshPackedCreate(
 }
 //-----------------------------------------------------------------------------
 void OPmeshPackedRender(OPmeshPacked* mesh){
-		glDrawElements(GL_TRIANGLES, mesh->elementCount, GL_UNSIGNED_SHORT, (void*)(mesh->offset));
+		glDrawElements(GL_TRIANGLES, (GLsizei)mesh->elementCount, GL_UNSIGNED_SHORT, (void*)(mesh->offset));
 }

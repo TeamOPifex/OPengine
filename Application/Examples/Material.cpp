@@ -54,7 +54,7 @@ OPint ExampleMaterialUpdate(OPtimer* time) {
 	if (OPkeyboardIsDown(OPKEY_SPACE)) { materialExample.Rotation++; }
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
-	materialExample.Model.world = OPmat4RotY(materialExample.Rotation / 100.0);
+	materialExample.Model.world = OPmat4RotY(materialExample.Rotation / 100.0f);
 	OPmat4Scl(&materialExample.Model.world, 0.25f, 0.25f, 0.25f);
 
 	return false;
@@ -62,7 +62,7 @@ OPint ExampleMaterialUpdate(OPtimer* time) {
 }
 
 void ExampleMaterialRender(OPfloat delta) {
-	OPrenderClear(0.4, 0.4, 0.4);
+	OPrenderClear(0.4f, 0.4f, 0.4f);
     OPmodelDraw(materialExample.Model, &materialExample.Material, &materialExample.Camera);
 	OPrenderPresent();
 }

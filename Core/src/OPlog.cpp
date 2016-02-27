@@ -4,7 +4,7 @@
 #include <ostream>
 
 i32 LogToHandle = 1;
-i32 OP_LOG_LEVEL = 999;
+ui32 OP_LOG_LEVEL = 999;
 void(*OPlogHandler)(ui32, const char*, const char*) = NULL;
 
 #ifdef OPIFEX_ANDROID
@@ -88,7 +88,7 @@ void OPvlog(ui32 level, const char* channel, const char* message, va_list args) 
 		vsnprintf(buffer, sizeof buffer, message, args);
 		OPlogHandler(level, channel, buffer);
 	} else {
-		sprintf(buffer2, "%s: %s\n", channel, message);
+		sprintf_s(buffer2, "%s: %s\n", channel, message);
 		vsnprintf(buffer, sizeof buffer, buffer2, args);
 #ifndef OPIFEX_IOS
 		//write(LogToHandle, buffer, strlen(buffer));

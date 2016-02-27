@@ -77,13 +77,13 @@ OPint ExampleSphericalCubeUpdate(OPtimer* time) {
 	if (OPkeyboardIsDown(OPKEY_SPACE)) { sphericalCubeExample->Rotation++; }
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
-	OPmat4 world = OPmat4RotY(sphericalCubeExample->Rotation / 100.0);
+	OPmat4 world = OPmat4RotY(sphericalCubeExample->Rotation / 100.0f);
 	//OPmat4Scl(&world, 0.25f, 0.25f, 0.25f);
 
 	////////////////////////
 	// Render
 	////////////////////////
-	OPrenderClear(0.2, 0.2, 0.2);
+	OPrenderClear(0.2f, 0.2f, 0.2f);
 
 	for (OPint i = 0; i < 6; i++) {
 		// A helper utility which binds the Mesh, Effect and the World, View and Projection Matrices

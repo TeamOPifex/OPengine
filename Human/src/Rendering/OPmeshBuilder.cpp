@@ -21,7 +21,7 @@ void OPmeshBuilderDestroy(struct OPmeshBuilder* builder) {
 void OPmeshBuilderAdd(struct OPmeshBuilder* builder, void* one, void* two, void* three) {
 
 	ui16 ind0, ind1, ind2;
-	ind0 = builder->Vertices->_size;
+	ind0 = (ui16)builder->Vertices->_size;
 	ind1 = ind0 + 1;
 	ind2 = ind0 + 2;
 	OPlog("Triangle %d, %d, %d", ind0, ind1, ind2);
@@ -38,7 +38,7 @@ void OPmeshBuilderAdd(struct OPmeshBuilder* builder, void* one, void* two, void*
 void OPmeshBuilderAdd(struct OPmeshBuilder* builder, void* one, void* two, void* three, void* four) {
 
 	ui16 ind0, ind1, ind2, ind3, ind4, ind5;
-	ind0 = builder->Vertices->_size;
+	ind0 = (ui16)builder->Vertices->_size;
 	ind1 = ind0 + 1;
 	ind2 = ind0 + 2;
 	ind3 = ind0;
@@ -59,7 +59,7 @@ void OPmeshBuilderAdd(struct OPmeshBuilder* builder, void* one, void* two, void*
 }
 
 void OPmeshBuilderAdd(struct OPmeshBuilder* builder, void** vertices, ui16 vertCount, ui16* indices, ui16 indCount) {
-	ui16 ind, indOffset = builder->Vertices->_size;
+	ui16 ind, indOffset = (ui16)builder->Vertices->_size;
 
 	for(ui16 i = 0; i < vertCount; i++) {
 		OPvectorPush(builder->Vertices, (ui8*)vertices[i]);
@@ -78,7 +78,7 @@ OPmesh OPmeshBuilderGen(struct OPmeshBuilder* builder) {
 	OPmesh mesh = OPmeshCreate();
 	OPmeshBind(&mesh);
 	OPmeshBuild(
-		builder->Vertices->_elementSize, sizeof(ui16),
+		(ui32)builder->Vertices->_elementSize, sizeof(ui16),
 		builder->Vertices->_size, builder->Indices->_size,
 		verts, indicies
 		);

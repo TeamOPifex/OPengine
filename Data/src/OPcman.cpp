@@ -30,7 +30,7 @@ OPlist* _OP_CMAN_ASSETLOADERS = NULL;
 
 #if defined(_DEBUG)
 #ifdef OPIFEX_WINDOWS
-	#include <windows.h>
+
 #endif
 #include "./Data/include/OPstring.h"
 i64 OP_CMAN_LAST_CHECKED = 100;
@@ -52,7 +52,7 @@ OPint OPcmanSetDir(OPchar* dir) {
 void OPcmanUpdate(struct OPtimer* timer) {
 #if defined(_DEBUG)
 	i32 i, j;
-	long change;
+	ui64 change;
 	Bucket bucket;
 	OPasset* asset;
 	OP_CMAN_LAST_CHECKED -= timer->Elapsed;
@@ -385,7 +385,6 @@ void OPcmanLoadResourcePack(const OPchar* filename) {
 
 	OPlogDebug("Resource Count %d", resource->resourceCount);
 
-	ui16 nameLength;
 	for (ui16 i = 0; i < resource->resourceCount; i++) {
 		// TODO: (garrett) Read in the string into a contiguous block of OPchar data
 		resource->resourceNames[i] = OPfileReadString(&resource->resourceFile);

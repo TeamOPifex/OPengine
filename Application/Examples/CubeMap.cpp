@@ -69,13 +69,13 @@ OPint ExampleCubeMapUpdate(OPtimer* time) {
 void ExampleCubeMapRender(OPfloat delta) {
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
-	OPmat4 world = OPmat4RotY(cubeMapExample.Rotation / 100.0);
+	OPmat4 world = OPmat4RotY(cubeMapExample.Rotation / 100.0f);
 	//OPmat4Scl(&world, 0.5f, 0.5f, 0.5f);
 
 	////////////////////////
 	// Render
 	////////////////////////
-	OPrenderClear(0.4, 0.4, 0.4);
+	OPrenderClear(0.4f, 0.4f, 0.4f);
 
 	for (OPint i = 0; i < 6; i++) {
 		// A helper utility which binds the Mesh, Effect and the World, View and Projection Matrices

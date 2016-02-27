@@ -105,7 +105,7 @@ OPvec4 OPtextureReadPixel(OPtexture* tex, OPint x, OPint y) {
 #endif
 
 	unsigned char pixel[4] = { 0 };
-	glReadPixels(x, y, 1, 1, tex->Description.Format, tex->Description.DataType, &pixel);
+	glReadPixels((GLint)x, (GLint)y, 1, 1, tex->Description.Format, tex->Description.DataType, &pixel);
 	result.x = pixel[0];
 	result.y = pixel[1];
 	result.z = pixel[2];

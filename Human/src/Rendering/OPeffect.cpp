@@ -55,7 +55,6 @@ OPeffect createEffect(OPshader vert,
 		OPglError("OPeffectCreate:Error 7");
 
 		i32 result;
-		ui32 nameLength;
 		// create, and copy attributes into list
 		for (OPint i = 0; i < AttribCount; i++){
 			OPshaderAttribute attr = {
@@ -164,7 +163,7 @@ OPint OPeffectBind(OPeffect* effect, ui32 stride){
 		OPint attrCount = OPlistSize(OPEFFECT_ACTIVE->Attributes);
 		for (; attrCount--;){
 			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPEFFECT_ACTIVE->Attributes, attrCount);
-			glDisableVertexAttribArray((uintptr_t)attr->Handle);
+			glDisableVertexAttribArray((GLuint)attr->Handle);
 			if (OPglError("OPeffectBind:Error ")) {
 				OPlog("Effect %s: Failed to disable attrib %s", OPEFFECT_ACTIVE->Name, attr->Name);
 			}
@@ -188,13 +187,13 @@ OPint OPeffectBind(OPeffect* effect, ui32 stride){
 	for (; attrCount--;){
 		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPEFFECT_ACTIVE->Attributes, attrCount);
 
-		glEnableVertexAttribArray((uintptr_t)attr->Handle);
+		glEnableVertexAttribArray((GLuint)attr->Handle);
 		if (OPglError("OPeffectBind:Error ")) {
 			OPlog("Failed to enable attrib %s", attr->Name);
 		}
 
 		glVertexAttribPointer(
-			(uintptr_t)attr->Handle,
+			(GLuint)attr->Handle,
 			attr->Elements,
 			attr->Type,
 			GL_FALSE,
@@ -289,7 +288,7 @@ OPeffect OPeffectGen(
 		OPvectorPush(vector, (ui8*)&attr);
 	}
 
-	ui32 AttribCount = vector->_size;
+	OPuint AttribCount = vector->_size;
 	OPshaderAttribute* Attributes = (OPshaderAttribute*)OPalloc(sizeof(OPshaderAttribute)* vector->_size);
 	OPmemcpy(Attributes, vector->items, sizeof(OPshaderAttribute)* vector->_size);
 	OPvectorDestroy(vector);
@@ -299,7 +298,7 @@ OPeffect OPeffectGen(
 	OPlog("Finding Effect Stride");
 
 	if (stride == 0){
-		for (OPint i = 0; i < AttribCount; i++){
+		for (OPuint i = 0; i < AttribCount; i++){
 			// TODO add more
 			switch (Attributes[i].Type){
 			case GL_FLOAT:

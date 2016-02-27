@@ -15,7 +15,7 @@
 struct OPrenderBuffer {
 	ui32 Type;
 	ui32 ElementSize;
-	ui32 ElementCount;
+	OPuint ElementCount;
 	ui32 Handle;
 };
 
@@ -48,8 +48,8 @@ extern OPrenderBuffer* OPRENDER_CURR_IB;
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPrenderBuffer OPrenderGenBuffer(ui32 type);
 void OPrenderDelBuffer(OPrenderBuffer* buff);
-void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, ui32 count, const void* data);
-void OPrenderSetBufferSubData(OPrenderBuffer* buff, ui32 elementSize, ui32 offsetCount, ui32 count, const void* data);
+void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, OPuint count, const void* data);
+void OPrenderSetBufferSubData(OPrenderBuffer* buff, ui32 elementSize, ui32 offsetCount, OPuint count, const void* data);
 void OPrenderBindBuffer(OPrenderBuffer* buffer);
 
 void OPrenderDrawBufferIndexed(ui32 offset);

@@ -57,12 +57,12 @@ OPmat4 OPmat4LookAt(OPvec3 eye, OPvec3 center, OPvec3 up) {
 OPmat4 OPmat4Perspective(OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal) {
 	OPmat4 m = OPMAT4_IDENTITY;
 
-	OPfloat tanHalfFovy = OPtan(fovy / 2.0);
-	m[0][0] = 1.0 / ( aspect * tanHalfFovy);
-	m[1][1] = 1.0 / tanHalfFovy;
+	OPfloat tanHalfFovy = OPtan(fovy / 2.0f);
+	m[0][0] = 1.0f / ( aspect * tanHalfFovy);
+	m[1][1] = 1.0f / tanHalfFovy;
 	m[2][2] = -(farVal + nearVal) / ( farVal - nearVal);
-	m[2][3] = -1.0;
-	m[3][2] = -(2.0 * farVal * nearVal) / ( farVal - nearVal);
+	m[2][3] = -1.0f;
+	m[3][2] = -(2.0f * farVal * nearVal) / ( farVal - nearVal);
 
 	return m;
 }
@@ -135,9 +135,9 @@ OPint OPmat4Inverse(OPmat4* dst, OPmat4 a) {
 OPmat4 OPmat4Interpolate(OPmat4 a, OPmat4 b, OPfloat percent) {
 	OPmat4 result;
 
-	for (OPint j = 0; j < 4; j++) {
-		for (OPint k = 0; k < 4; k++) {
-			result[j][k] = a[j][k] * (1.0 - percent) + b[j][k] * percent;
+	for (i32 j = 0; j < 4; j++) {
+		for (i32 k = 0; k < 4; k++) {
+			result[j][k] = a[j][k] * (1.0f - percent) + b[j][k] * percent;
 		}
 	}
 

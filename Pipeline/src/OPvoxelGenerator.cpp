@@ -99,7 +99,7 @@ void addSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data) {
 	}
 }
 
-void addLeftSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data, i32 x, i32 y, i32 z) {
+void addLeftSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data, OPint x, OPint y, OPint z) {
 	data->Vertices[0].Position = OPvec3Create(-data->Size + x, data->Size+ y, data->Size + z);   // top left
 	data->Vertices[1].Position = OPvec3Create(-data->Size + x, data->Size+ y, -data->Size + z);  // top right
 	data->Vertices[2].Position = OPvec3Create(-data->Size + x, -data->Size+ y, -data->Size + z); // bottom right
@@ -113,7 +113,7 @@ void addLeftSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data
 	addSide(gen, data);
 }
 
-void addRightSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data, i32 x, i32 y, i32 z) {
+void addRightSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data, OPint x, OPint y, OPint z) {
 	data->Vertices[0].Position = OPvec3Create(data->Size + x, data->Size+ y, -data->Size + z);
 	data->Vertices[1].Position = OPvec3Create(data->Size + x, data->Size+ y, data->Size + z);
 	data->Vertices[2].Position = OPvec3Create(data->Size + x, -data->Size+ y, data->Size + z);
@@ -127,7 +127,7 @@ void addRightSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* dat
 	addSide(gen, data);
 }
 
-void addTopSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data, i32 x, i32 y, i32 z) {
+void addTopSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data, OPint x, OPint y, OPint z) {
 	data->Vertices[0].Position = OPvec3Create(-data->Size + x, data->Size+ y, data->Size + z); // left back
 	data->Vertices[1].Position = OPvec3Create(data->Size + x, data->Size+ y, data->Size + z);  // right back
 	data->Vertices[2].Position = OPvec3Create(data->Size + x, data->Size+ y, -data->Size + z); // right front
@@ -141,7 +141,7 @@ void addTopSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data,
 	addSide(gen, data);
 }
 
-void addFrontSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data, i32 x, i32 y, i32 z) {
+void addFrontSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data, OPint x, OPint y, OPint z) {
 	data->Vertices[0].Position = OPvec3Create(data->Size + x, data->Size+ y, data->Size + z); // right top
 	data->Vertices[1].Position = OPvec3Create(-data->Size + x, data->Size+ y, data->Size + z); // left top
 	data->Vertices[2].Position = OPvec3Create(-data->Size + x, -data->Size+ y, data->Size + z); // left bottom
@@ -155,7 +155,7 @@ void addFrontSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* dat
 	addSide(gen, data);
 }
 
-void addBottomSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data, i32 x, i32 y, i32 z) {
+void addBottomSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data, OPint x, OPint y, OPint z) {
 	data->Vertices[0].Position = OPvec3Create(-data->Size + x, -data->Size+ y, -data->Size + z);
 	data->Vertices[1].Position = OPvec3Create(data->Size + x, -data->Size+ y, -data->Size + z);
 	data->Vertices[2].Position = OPvec3Create(data->Size + x, -data->Size+ y, data->Size + z);
@@ -169,7 +169,7 @@ void addBottomSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* da
 	addSide(gen, data);
 }
 
-void addBackSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data, i32 x, i32 y, i32 z) {
+void addBackSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data, OPint x, OPint y, OPint z) {
 	data->Vertices[0].Position = OPvec3Create(-data->Size + x, data->Size + y, -data->Size + z);
 	data->Vertices[1].Position = OPvec3Create(data->Size + x, data->Size + y, -data->Size + z);
 	data->Vertices[2].Position = OPvec3Create(data->Size + x, -data->Size + y, -data->Size + z);
@@ -190,9 +190,9 @@ void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData
 	data.Size = 0.5f;
 	if(gen->Center) {
 		data.Offset = OPvec3Create(
-			-(OPint)voxelData.size.x / 2.0,
-			-(OPint)voxelData.size.y / 2.0,
-			-(OPint)voxelData.size.z / 2.0
+			-(OPint)voxelData.size.x / 2.0f,
+			-(OPint)voxelData.size.y / 2.0f,
+			-(OPint)voxelData.size.z / 2.0f
 			);
 	} else {
 		data.Offset = OPVEC3_ZERO;
@@ -208,17 +208,17 @@ void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData
 		data.Vertices[i].Weights = weights;
 	}
 
-	for (i32 x = 0; x < voxelData.size.x; x++) {
-		for (i32 y = 0; y < voxelData.size.y; y++) {
-			for (i32 z = 0; z < voxelData.size.z; z++) {
-				ui32 pos = x + Y_LINE + Z_SLICE;
+	for (OPint x = 0; x < voxelData.size.x; x++) {
+		for (OPint y = 0; y < voxelData.size.y; y++) {
+			for (OPint z = 0; z < voxelData.size.z; z++) {
+				OPint pos = x + Y_LINE + Z_SLICE;
 				OPvecInt3 v = voxelData.voxels[pos];
 
 				if (v.x == 0 && v.y == 0 && v.z == 0) continue;
 
 				// Otherwise, this Voxel is not empty
 
-				data.Color = OPvec3Create(v.x / 255.0, v.y / 255.0, v.z / 255.0);
+				data.Color = OPvec3Create(v.x / 255.0f, v.y / 255.0f, v.z / 255.0f);
 
 				OPbzero(generate, sizeof(bool)* 6);
 
@@ -252,13 +252,13 @@ void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData
 }
 
 OPmeshDesc OPvoxelGeneratorBuildDesc(struct OPvoxelGenerator* gen) {
-	ui32 verticeCount = OPlistSize(gen->Vertices);
-	ui32 indiceCount = OPlistSize(gen->Indices);
+	ui32 verticeCount = (ui32)OPlistSize(gen->Vertices);
+	ui32 indiceCount = (ui32)OPlistSize(gen->Indices);
 
 	void* verts = OPalloc(gen->VertexSize* verticeCount);
 	ui32* inds = (ui32*)OPalloc(sizeof(ui32)* indiceCount);
 
-	for (i32 i = 0; i < verticeCount; i++) {
+	for (ui32 i = 0; i < verticeCount; i++) {
 		ui8* data = OPlistGet(gen->Vertices, i);
 		OPmemcpy((void*)((OPuint)verts + gen->VertexSize* i), data, gen->VertexSize);
 	}

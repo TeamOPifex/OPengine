@@ -48,7 +48,8 @@ OPint OPminHeapPush(OPminHeap* heap, OPint value){
 
 //-----------------------------------------------------------------------------
 OPint OPminHeapPop(OPminHeap* heap){
-	OPint minElement,lastElement,child,now;
+	OPint minElement, lastElement, child;
+	OPuint now;
 	minElement = heap->_indices[1];
 	lastElement = heap->_indices[heap->_size--];
     /* now refers to the index at which we are now */

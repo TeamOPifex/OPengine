@@ -48,7 +48,7 @@ void ExampleMouseIntersectEnter(OPgameState* last) {
 	// OPmeshBuilderDestroy(builder);
 
 	mouseIntersectExample.Mesh = OPcubeCreate(OPvec3Create(1,0,0));
-	mouseIntersectExample.Mesh2 = OPcubeCreate(OPvec3Create(0.8,0.8,0.8));
+	mouseIntersectExample.Mesh2 = OPcubeCreate(OPvec3Create(0.8f,0.8f,0.8f));
 
 	// The effect that will be used to render the mesh
 	// The renderGenEffect is a simplified utility method
@@ -169,11 +169,11 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	// Render
 	////////////////////////
 	if(intersecting == 1) {
-		OPrenderClear(0, 0, 1.0);
+		OPrenderClear(0, 0, 1.0f);
 	} else if(intersecting == 2) {
-		OPrenderClear(0, 1.0, 0.0);
+		OPrenderClear(0, 1.0f, 0.0);
 	} else {
-		OPrenderClear(0.4, 0.4, 0.4);
+		OPrenderClear(0.4f, 0.4f, 0.4f);
 	}
 
 	// A helper utility which binds the Mesh, Effect and the World, View and Projection Matrices
@@ -208,10 +208,10 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	OPfontColor(OPvec4Create(1.0, 1.0, 1.0, 1));
    	mouseIntersectExample.FontManager->scale = 0.75;
 	i8 buffer[256];
-	sprintf(buffer, "%d, %d", OPmousePositionX(), OPmousePositionY());
+	sprintf_s(buffer, "%d, %d", OPmousePositionX(), OPmousePositionY());
 	OPfontRender(buffer, OPvec2Create(50, 60));
 
-	sprintf(buffer, "%f, %f, %f", ray.direction.x, ray.direction.y, ray.direction.z);
+	sprintf_s(buffer, "%f, %f, %f", ray.direction.x, ray.direction.y, ray.direction.z);
 	OPfontRender(buffer, OPvec2Create(50, 120));
 
 	OPfontRenderEnd();

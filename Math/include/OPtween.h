@@ -122,13 +122,13 @@ inline OPfloat OPtween_sineEaseInOut(OPfloat p)
 // Tweening Function : shifted quadrant IV of unit circle
 inline OPfloat OPtween_circularEaseIn(OPfloat p)
 {
-	return 1.0f - OPsqrt(1.0f - (p * p));
+	return 1.0f - (OPfloat)OPsqrt(1.0f - (p * p));
 }
 
 // Tweening Function : shifted quadrant II of unit circle
 inline OPfloat OPtween_circularEaseOut(OPfloat p)
 {
-	return OPsqrt((2.0f - p) * p);
+	return (OPfloat)OPsqrt((2.0f - p) * p);
 }
 
 // Tweening Function : 
@@ -138,9 +138,9 @@ inline OPfloat OPtween_circularEaseInOut(OPfloat p)
 {
     if(p < 0.5f)
     {
-		return 0.5f * (1.0f - OPsqrt(1.0f - 4.0f * (p * p)));
+		return 0.5f * (1.0f - (OPfloat)OPsqrt(1.0f - 4.0f * (p * p)));
     }
-	return 0.5f * (OPsqrt(-((2.0f * p) - 3.0f) * ((2.0f * p) - 1.0f)) + 1.0f);
+	return 0.5f * ((OPfloat)OPsqrt(-((2.0f * p) - 3.0f) * ((2.0f * p) - 1.0f)) + 1.0f);
 }
 
 // Tweening Function : y = 2^(10(x - 1))

@@ -19,8 +19,11 @@ struct CommandBucketExample {
 	ui32 rotation;			// The amount to rotate the Mesh
 	OPvec3 lightDirection;	// Where the Light Source is coming from
 	OPcommandBucket renderBucket;
+	OPallocator* allocator;
 
 	void Init(OPgameState* last) {
+		allocator = OPallocatorLinearCreate(MB(4));
+
     	model.Init("output.opm");
     	model2.Init("patrick.opm");
 
@@ -43,13 +46,13 @@ struct CommandBucketExample {
     	OPrenderDepth(1);
     	OPrenderCull(0);
 
-    	renderBucket.Init(16, &camera);
+    	renderBucket.Init(16, &camera, allocator);
 	}
 
 	OPint Update(OPtimer* time) {
 	    if (OPkeyboardIsDown(OPKEY_SPACE)) { rotation++; }
 
-    	model.world.SetRotY(rotation / 100.0);
+    	model.world.SetRotY(rotation / 100.0f);
     	model.world.Scl(0.25f);
     	model2.world = OPmat4Translate(1, 0, 0);
     	model2.world.Scl(0.025f);
@@ -58,7 +61,7 @@ struct CommandBucketExample {
 	}
 
 	void Render(OPfloat delta) {
-    	OPrenderClear(0.4, 0.4, 0.4);
+    	OPrenderClear(0.4f, 0.4f, 0.4f);
 
     	OPcommandDrawIndexed* dc = renderBucket.CreateDrawIndexed();
     	dc->Set(&model2, &material);

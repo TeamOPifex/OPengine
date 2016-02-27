@@ -2,7 +2,7 @@
 
 void (*OPinitialize)();
 
-int(*OPupdate)(struct OPtimer*);
+OPint(*OPupdate)(struct OPtimer*);
 
 void(*OPrender)(float);
 

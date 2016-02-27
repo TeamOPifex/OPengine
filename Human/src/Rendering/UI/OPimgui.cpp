@@ -21,7 +21,7 @@ OPimgui* OPimguiCreate(OPeffect* effect, OPfontManager* fontManager) {
 	// OPlog("Screen %d, %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
 	// OPlog("Screen %f, %f", OPRENDER_SCREEN_WIDTH_SCALE, OPRENDER_SCREEN_HEIGHT_SCALE);
 
-	imgui->proj = OPmat4Ortho(0, OPRENDER_SCALED_WIDTH, OPRENDER_SCALED_HEIGHT, 0, -1, 1);
+	imgui->proj = OPmat4Ortho(0, (OPfloat)OPRENDER_SCALED_WIDTH, (OPfloat)OPRENDER_SCALED_HEIGHT, 0, -1, 1);
 
 	OPglError("IMGUI:Error 1");
 
@@ -136,11 +136,11 @@ OPint OPimguiTextbox(OPvec2 pos, const OPchar* text, const OPchar* placeholder, 
 	if(strlen(text) == 0 && !active) {
 		usePlaceholder = 1;
 		colorForFont = OPIMGUI_ACTIVE->hoverColor;
-		for(OPint i = 0 ; i < strlen(placeholder) + 1; i++) {
+		for(ui32 i = 0 ; i < strlen(placeholder) + 1; i++) {
 			buffer[i] = placeholder[i];
 		}
 	} else {
-		for(OPint i = 0 ; i < strlen(text) + 1; i++) {
+		for(ui32 i = 0 ; i < strlen(text) + 1; i++) {
 			buffer[i] = text[i];
 		}
 	}
@@ -168,19 +168,22 @@ OPint OPimguiTextbox(OPvec2 pos, const OPchar* text, const OPchar* placeholder, 
 	p.x += OPIMGUI_ACTIVE->padding[0];
 	p.y += OPIMGUI_ACTIVE->padding[2];
 
-	OPint diff = (400 - OPIMGUI_ACTIVE->padding[0] - OPIMGUI_ACTIVE->padding[0] - 25);
+	OPint diff = (OPint)(400 - OPIMGUI_ACTIVE->padding[0] - OPIMGUI_ACTIVE->padding[0] - 25);
 	if(textSize.x > diff) {
 		p.x -= (textSize.x - diff);
 	}
 
 	//p.y = (OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE) - p.y - size.y;
 
-	OPint screenHeight = (OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE);
+	OPint screenHeight = (OPint)(OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE);
 	OPint x, y, z, w;
-	x = pos.x / OPRENDER_SCREEN_HEIGHT_SCALE; y = OPRENDER_SCREEN_HEIGHT - (pos.y + size.y) / OPRENDER_SCREEN_HEIGHT_SCALE; z = 400 / OPRENDER_SCREEN_HEIGHT_SCALE; w = size.y / OPRENDER_SCREEN_HEIGHT_SCALE;
+	x = (OPint)(pos.x / OPRENDER_SCREEN_HEIGHT_SCALE); 
+	y = (OPint)(OPRENDER_SCREEN_HEIGHT - (pos.y + size.y) / OPRENDER_SCREEN_HEIGHT_SCALE); 
+	z = (OPint)(400 / OPRENDER_SCREEN_HEIGHT_SCALE);
+	w = (OPint)(size.y / OPRENDER_SCREEN_HEIGHT_SCALE);
 	//OPlog("%d, Scissor %d,%d %dx%d", screenHeight, x,y,z,w);
 
-    glScissor(x,y,z,w);
+    glScissor((GLint)x, (GLint)y, (GLsizei)z, (GLsizei)w);
     glEnable(GL_SCISSOR_TEST);
     //OPrenderClear(1,0,0);
         // draw other stuff using window's scissor
@@ -229,7 +232,7 @@ OPint OPimguiRadio(
 		mx <= bottomRight.x && my <= bottomRight.y)
 	{
 		OPvec2 inner = size;
-		inner *= 0.6;
+		inner *= 0.6f;
 		_radio(pos, inner, selected);
 	}
 
@@ -255,7 +258,7 @@ OPint OPimguiCheckbox(
 	OPint mx = OPmousePositionX(), my = OPmousePositionY();
 
 	OPvec2 inner = size;
-	inner *= 0.6;
+	inner *= 0.6f;
 	OPvec2 innerPos = pos;
 	OPvec2 diff = size - inner;
 	diff /= 2;

@@ -26,10 +26,7 @@
 #define MB(bytes) KB(bytes) * 1024 // Mebibyte
 #define GB(bytes) MB(bytes) * 1024 // Gibibyte
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 /**
 * OPceil - math helper
 *	Calculates the ceiling of a floating point number. For example
@@ -69,6 +66,10 @@ __inline OPint OPfloor(OPfloat f){
 * @return absolute value
 */
 __inline OPfloat OPabs(OPfloat f){
+	return (OPfloat)fabs(f);
+}
+
+__inline d64 OPabs(d64 f) {
 	return fabs(f);
 }
 
@@ -206,7 +207,7 @@ __inline OPfloat OPatan(OPfloat f){
 * @return atan(f)
 */
 __inline OPfloat OPatan2(OPfloat x, OPfloat y) {
-	return atan2(y, x);
+	return (OPfloat)atan2(y, x);
 }
 
 //-----------------------------------------------------------------------------
@@ -329,7 +330,4 @@ OPfloat OPrandRange(OPfloat min, OPfloat max);
 #define OPMIN(a,b) (((a) < (b)) ? (a) : (b))
 #define OPMAX(a,b) (((a) > (b)) ? (a) : (b))
 
-#ifdef __cplusplus
-}
-#endif
 #endif

@@ -15,7 +15,7 @@
 static int iterate_callback(struct mg_connection *c, enum mg_event ev, void* server_obj) {
 	if (ev == MG_POLL && c->is_websocket) {
 		OPWebServerMessagesContainer* messagesContainer = (OPWebServerMessagesContainer*)c->callback_param;
-		for (i32 i = 0; i < messagesContainer->messageCount; i++) {
+		for (ui32 i = 0; i < messagesContainer->messageCount; i++) {
 			mg_websocket_write(c, 2, (i8*)messagesContainer->messages[i]->Data, messagesContainer->messages[i]->Size);
 		}
 	}
@@ -50,7 +50,6 @@ static int send_reply(struct mg_connection *conn, OPWebServer* server) {
 
 		if (OPhashMapExists(server->WebSocketKeys, key)) {
 			OPWebServerHandlerContainer* container;
-			void(*handler)(OPstream*);
 			OPhashMapGet(server->WebSocketKeys, key, (void**)&container);
 			container->handler(str, container->param);
 			mg_websocket_write(conn, 2, conn->content, conn->content_len);
@@ -64,16 +63,16 @@ static int send_reply(struct mg_connection *conn, OPWebServer* server) {
 	}
 	else {
 		OPlog("Requested: %s", conn->uri);
-		i32 uriLength = strlen(conn->uri);
+		ui32 uriLength = (ui32)strlen(conn->uri);
 		if (conn->uri[0] == '/' && uriLength == 1) {
 			OPstream* index = OPreadFile("Web/index.html");
 			mg_send_header(conn, "Content-Type", "text/html");
-			mg_send_data(conn, index->Data, index->Length);
+			mg_send_data(conn, index->Data, (int)index->Length);
 			return MG_TRUE;
 		} else {
 			const OPchar* path = "";
-			i32 urisize = strlen(conn->uri);
-			i32 size = urisize + strlen(path);
+			ui32 urisize = (ui32)strlen(conn->uri);
+			ui32 size = urisize + (ui32)strlen(path);
 
 			if (urisize < 1) return MG_TRUE;
 			i32 offset = conn->uri[0] == '/';
@@ -87,7 +86,7 @@ static int send_reply(struct mg_connection *conn, OPWebServer* server) {
 			if ((size == 12 || size == 11) && OPmemcmp(filepath + size - 4, ".ico", 4)) {
 				OPstream* index = OPreadFile("Web/favicon.ico");
 				mg_send_header(conn, "Content-Type", "text/html");
-				mg_send_data(conn, index->Data, index->Length);
+				mg_send_data(conn, index->Data, (int)index->Length);
 				return MG_TRUE;
 			}
 
@@ -110,7 +109,7 @@ static int send_reply(struct mg_connection *conn, OPWebServer* server) {
 
 			OPfree(filepath);
 
-			mg_send_data(conn, index->Data, index->Size);
+			mg_send_data(conn, index->Data, (int)index->Size);
 			OPstreamDestroy(index);
 			return MG_TRUE;
 		}
@@ -165,7 +164,7 @@ void OPwebServerUpdate(OPWebServer* server) {
 	messagesContainer->messageCount = OPlistSize(server->WebSocketMessages);
 	messagesContainer->messages = (OPstream**)OPalloc(sizeof(OPstream*) * messagesContainer->messageCount);
 
-	for (i32 i = 0; i < messagesContainer->messageCount; i++) {
+	for (OPuint i = 0; i < messagesContainer->messageCount; i++) {
 		messagesContainer->messages[i] = (OPstream*)OPlistPop(server->WebSocketMessages);;
 	}
 
@@ -182,10 +181,10 @@ void OPwebServerUpdate(OPWebServer* server) {
 
 void OPwebServerQueue(OPWebServer* server, OPchar* key, i8* data, ui32 datalen) {
 #ifndef OPIFEX_ANDROID
-	ui32 size = sizeof(i8) * strlen(key) + datalen;
+	ui32 size = (ui32)sizeof(i8) * (ui32)strlen(key) + datalen;
 	OPstream* d = OPstreamCreate(size);
 	
-	ui32 len = strlen(key);
+	ui32 len = (ui32)strlen(key);
 	OPwrite(d, (ui8*)&len, sizeof(ui32));
 	OPwrite(d, key, sizeof(OPchar)* len);
 	OPwrite(d, data, datalen);

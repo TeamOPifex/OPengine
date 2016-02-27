@@ -101,6 +101,6 @@ ui8* OPlistSet(OPlist* list, OPuint index, ui8* value){
 	return list->_indices + (index * list->_elementSize);
 }
 //-----------------------------------------------------------------------------
-OPint OPlistSize(OPlist* list){
+OPuint OPlistSize(OPlist* list){
 	return list->_size;
 }

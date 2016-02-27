@@ -29,7 +29,7 @@ void ExampleIMGUIEnter(OPgameState* last) {
 	OPKEYBOARD_STREAM = keystream;
 
 	const OPchar* data = "Testing";
-	for(OPint i = 0; i < strlen(data); i++) {
+	for(ui32 i = 0; i < strlen(data); i++) {
 		imguiExample.buffer[i] = data[i];
 	}
 	imguiExample.textTimer = 0;
@@ -50,7 +50,7 @@ void ExampleIMGUIEnter(OPgameState* last) {
 	imguiExample.imgui = OPimguiCreate(&imguiExample.effect, imguiExample.FontManager);
 	imguiExample.imgui->primaryColor = OPvec4Create(1, 0, 0, 1);
 	imguiExample.imgui->secondaryColor = OPvec4Create(1, 1, 1, 1);
-	imguiExample.imgui->hoverColor = OPvec4Create(0.9, 0.9, 0.9, 1);
+	imguiExample.imgui->hoverColor = OPvec4Create(0.9f, 0.9f, 0.9f, 1);
 	imguiExample.imgui->padding = OPvec4Create(10, 10, 10, 10);
 
 	OPimguiBind(imguiExample.imgui);

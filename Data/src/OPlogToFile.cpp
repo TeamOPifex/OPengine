@@ -5,7 +5,7 @@ OPfileInformation _logFile;
 
 void _OPlogToFile(ui32 level, const char* channel, const char* message) {
 	char buffer[1024];
-	sprintf(buffer, "%s[%d]: %s\n", channel, level, message);
+	sprintf_s(buffer, "%s[%d]: %s\n", channel, level, message);
 	fprintf(_logFile.file, "%s", buffer);
 }
 

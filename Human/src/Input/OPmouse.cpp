@@ -7,7 +7,7 @@
 	#include <GLFW/glfw3.h>
 void scrollCB(GLFWwindow* window, double x, double y) {
     //Mouse.prevWheel = Mouse.wheel;
-    Mouse.updatedWheel += y;
+    Mouse.updatedWheel += (i32)y;
     OPlog("Scrolled %f, %f", x, y);
 }
 #endif
@@ -49,17 +49,17 @@ void OPmouseUpdate() {
 }
 
 i32 OPmousePositionX() {
-	return Mouse.positionX;
+	return (i32)Mouse.positionX;
 }
 i32 OPmousePositionY() {
-	return Mouse.positionY;
+	return (i32)Mouse.positionY;
 }
 
 i32 OPmousePositionMovedX() {
-	return Mouse.prevPositionX - Mouse.positionX;
+	return (i32)(Mouse.prevPositionX - Mouse.positionX);
 }
 i32 OPmousePositionMovedY() {
-	return Mouse.prevPositionY - Mouse.positionY;
+	return (i32)(Mouse.prevPositionY - Mouse.positionY);
 }
 
 i32 OPmouseWheel() {
@@ -87,7 +87,9 @@ void OPmouseSetPosition(i32 x, i32 y) {
 	Mouse.prevPositionY = y;
 }
 void OPmouseSetPositionScreenCenter() {
-	OPmouseSetPosition((OPRENDER_SCREEN_WIDTH * OPRENDER_SCREEN_WIDTH_SCALE) / 2, (OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE) / 2);
+	OPmouseSetPosition(
+		(i32)((OPRENDER_SCREEN_WIDTH * OPRENDER_SCREEN_WIDTH_SCALE) / 2), 
+			(i32)((OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE) / 2));
 }
 OPint OPmouseAnyInputIsDown() {
 	for (ui32 i = 0; i < _OPMOUSE_MAX; i++) {

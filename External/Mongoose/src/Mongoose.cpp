@@ -3186,7 +3186,7 @@ struct dir_entry **arr) {
 
 		if (arr_ind < arr_size) {
 			(*arr)[arr_ind].conn = conn;
-			(*arr)[arr_ind].file_name = strdup(dp->d_name);
+			(*arr)[arr_ind].file_name = _strdup(dp->d_name);
 			stat(path, &(*arr)[arr_ind].st);
 			arr_ind++;
 		}

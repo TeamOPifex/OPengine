@@ -15,9 +15,9 @@
 struct OPmeshPacker{
 	OPrenderBuffer VertexBuffer;
 	OPrenderBuffer IndexBuffer;
-	ui32 vertexElementOffset;
-	ui32 vertexOffset;
-	ui32 indexOffset;
+	OPuint vertexElementOffset;
+	OPuint vertexOffset;
+	OPuint indexOffset;
 	OPstream vertices;
 	OPstream indices;
 	OPint built;
@@ -52,8 +52,8 @@ extern OPmeshPacker* OPMESHPACKER_ACTIVE;
 OPmeshPacker OPmeshPackerCreate();
 OPint OPmeshPackerDestroy(OPmeshPacker* packer);
 
-ui32 OPmeshPackerAddVB(ui32 vertexSize, void* verticesData, ui32 vertexCount);
-ui32 OPmeshPackerAddIB(ui32 indexSize, void* indicesData, ui32 indexCount);
+OPuint OPmeshPackerAddVB(ui32 vertexSize, void* verticesData, OPuint vertexCount);
+OPuint OPmeshPackerAddIB(ui32 indexSize, void* indicesData, OPuint indexCount);
 void OPmeshPackerBuild();
 void OPmeshPackerBind(OPmeshPacker* packer);
 

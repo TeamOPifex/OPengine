@@ -11,7 +11,7 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #elif defined(OPIFEX_WINDOWS)
-#include <windows.h>
+
 #endif
 
 #define OPTHREAD_STOPPED 0

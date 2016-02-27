@@ -12,7 +12,7 @@ typedef struct {
 } Example;
 
 typedef struct {
-	i32 Selected;
+	OPint Selected;
     OPint Initialized;
 	OPfontManager* FontManager;
 	Example Examples[TotalEntries];
@@ -174,7 +174,7 @@ void ExampleSelectorRender(OPfloat delta) {
 
 
 	// Y coordinate to start drawing the text
-	OPfloat start = -(exampleSelector.Selected) * 40 + OPRENDER_SCALED_HEIGHT / 2;
+	OPfloat start = -(exampleSelector.Selected) * 40.0f + OPRENDER_SCALED_HEIGHT / 2.0f;
 
 
 	OPfontRenderBegin(exampleSelector.FontManager);
@@ -195,7 +195,7 @@ void ExampleSelectorRender(OPfloat delta) {
 
 		notTheCurrentlySelectedMenuItem = exampleSelector.Selected != pos;
 		// Set Selected Color (bright yellow-ish gold)
-		r = 0.95, g = 0.84; b = 0;
+		r = 0.95f, g = 0.84f; b = 0;
 
 		if (notTheCurrentlySelectedMenuItem) {
 			r = g = b = 1.0;
@@ -203,7 +203,7 @@ void ExampleSelectorRender(OPfloat delta) {
 
 		if (!exampleSelector.Examples[i].available) {
 			// Menu item is not available so make it really dark
-			r = g = b = 0.3;
+			r = g = b = 0.3f;
 			// Menu item is not available but it's the currently selected
 			// item, so we'll brighten it just a bit so that we know what
 			// is selected.
@@ -214,9 +214,9 @@ void ExampleSelectorRender(OPfloat delta) {
 
 		// If this is a category, then it becomes light blue
 		if (isActiveCategory || exampleSelector.Examples[i].state == NULL) {
-			r = g = 0.7; b = 1.0;
+			r = g = 0.7f; b = 1.0f;
 			if (notTheCurrentlySelectedMenuItem && exampleSelector.CurrentDepth == 0) {
-				r = g = 0.4; b = 0.7;
+				r = g = 0.4f; b = 0.7f;
 			}
 		}
 
@@ -234,7 +234,7 @@ void ExampleSelectorRender(OPfloat delta) {
 			// to help indicate that it's a sub-menu
 			OPint isNotRootMenu = (exampleSelector.CurrentHierarchy != -1) ? 1 : 0;
 			OPfontRender(exampleSelector.Examples[i].name,
-				OPvec2Create(75 + 40 * isNotRootMenu,
+				OPvec2Create((OPfloat)(75 + 40 * isNotRootMenu),
 					start + 40 * (pos + isNotRootMenu)));
 			pos++;
 		}

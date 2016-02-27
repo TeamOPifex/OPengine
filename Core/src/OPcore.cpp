@@ -54,11 +54,6 @@ jint JNIHeight() { return _JNIHeight; }
 
 #endif
 
-void (*OPinitialize)();
-int(*OPupdate)(struct OPtimer*);
-void(*OPrender)(OPfloat);
-void (*OPdestroy)();
-
 
 #ifdef OPIFEX_ANDROID
 
@@ -240,7 +235,7 @@ void OPstart(int argc, char** args) {
 }
 
 ui64 accumlator = 0;
-#define STEP 10.0f
+ui64 STEP = 10;
 
 void OPstartStepped(int argc, char** args) {
 	OPtimer frameStepped;
@@ -285,7 +280,7 @@ void OPstartStepped(int argc, char** args) {
 		}
 
 		if (_OPengineRunning) {
-			OPrender(accumlator / STEP);
+			OPrender(accumlator / (OPfloat)STEP);
 		}
 	}
 

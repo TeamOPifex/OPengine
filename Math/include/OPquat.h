@@ -173,10 +173,10 @@ inline OPquat OPquatCreateLookAt(OPvec3 eye, OPvec3 target){
 
 	OPfloat dot = OPvec3Dot(forwardUnit, OPVEC3_FORWARD);
 
-	if(OPabs(dot + 1.0) < 0.00001){
+	if(OPabs(dot + 1.0f) < 0.00001f){
 		return OPquatCreate(OPVEC3_UP, OPpi);
 	}
-	else if(OPabs(dot - 1.0) < 0.00001){
+	else if(OPabs(dot - 1.0f) < 0.00001f){
 		return OPQUAT_IDENTITY;
 	}
 
@@ -291,7 +291,7 @@ inline OPquat OPquatRotationBetween5(OPvec3 normal) {
 }
 
 inline OPfloat OPquatLen(OPquat a){
-	return OPsqrt(a.x * a.x + a.y * a.y + a.z * a.z + a.w * a.w);
+	return (OPfloat)OPsqrt(a.x * a.x + a.y * a.y + a.z * a.z + a.w * a.w);
 }
 
 inline OPquat OPquatLerp(OPquat a, OPquat b, OPfloat p){

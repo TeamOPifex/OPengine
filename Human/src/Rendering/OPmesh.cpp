@@ -35,7 +35,7 @@ OPmesh* OPmeshCreate(OPmeshDesc desc) {
 
 //-----------------------------------------------------------------------------
 void OPmeshBuild(ui32 vertSize, ui32 indSize,
-						 ui32 vertCount, ui32 indCount,
+						 OPuint vertCount, OPuint indCount,
 						 void* vertices, void* indices){
 	OPrenderSetBufferData(&OPMESH_ACTIVE->IndexBuffer, indSize, indCount, indices);
 	OPrenderSetBufferData(&OPMESH_ACTIVE->VertexBuffer, vertSize, vertCount, vertices);

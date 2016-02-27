@@ -86,12 +86,12 @@ inline void OPeffectParamf(const OPchar* param, OPfloat f){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
 	glUniform1f(loc, f);
 }
-inline void OPeffectParamf(OPuint loc, OPfloat f) {
-	glUniform1f(loc, f);
+inline void OPeffectParamf(OPint loc, OPfloat f) {
+	glUniform1f((GLint)loc, f);
 }
 inline void OPeffectParamfv(const OPchar* param, OPint count, OPfloat* f){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
-	glUniform1fv(loc, count, f);
+	glUniform1fv(loc, (GLsizei)count, f);
 }
 inline void OPeffectParamVec2(const OPchar* param, OPvec2* f){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
@@ -107,58 +107,58 @@ inline void OPeffectParamVec4(const OPchar* param, OPvec4* f){
 }
 inline void OPeffectParamVec2v(const OPchar* param, OPint count, OPvec2* f){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
-	glUniform2fv(loc, count, (OPfloat*)f);
+	glUniform2fv(loc, (GLsizei)count, (OPfloat*)f);
 }
 inline void OPeffectParamVec3v(const OPchar* param, OPint count, OPvec3* f){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
-	glUniform3fv(loc, count, (OPfloat*)f);
+	glUniform3fv(loc, (GLsizei)count, (OPfloat*)f);
 }
 inline void OPeffectParamVec4v(const OPchar* param, OPint count, OPvec4* f){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
-	glUniform4fv(loc, count, (OPfloat*)f);
+	glUniform4fv(loc, (GLsizei)count, (OPfloat*)f);
 }
 inline void OPeffectParami(const OPchar* param, OPint i){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
-	glUniform1i(loc, i);
+	glUniform1i(loc, (GLint)i);
 }
 inline void OPeffectParamBindTex(const OPchar* param, OPtexture* tex){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
 	glUniform1i(loc, OPtextureBind(tex));
 }
-inline void OPeffectParamBindTex(OPuint loc, OPtexture* tex){
+inline void OPeffectParamBindTex(i32 loc, OPtexture* tex){
 	glUniform1i(loc, OPtextureBind(tex));
 }
 inline void OPeffectParamBindCubeMap(const OPchar* param, OPtextureCube * tex){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
-	glUniform1i(loc, OPtextureCubeBind(tex));
+	glUniform1i((GLint)loc, OPtextureCubeBind(tex));
 }
-inline void OPeffectParamBindCubeMap(OPuint loc, OPtextureCube * tex){
+inline void OPeffectParamBindCubeMap(i32 loc, OPtextureCube * tex){
 	glUniform1i(loc, OPtextureCubeBind(tex));
 }
 inline void OPeffectParamiv(const OPchar* param, OPint count, i32* i){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
-	glUniform1iv(loc, count, i);
+	glUniform1iv(loc, (GLsizei)count, i);
 }
 inline void OPeffectParamMat4(const OPchar* param, OPmat4* matrices){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
 	glUniformMatrix4fv(loc, 1, GL_FALSE, (OPfloat*)matrices);
 }
-inline void OPeffectParamMat4(OPuint loc, OPmat4* matrices){
+inline void OPeffectParamMat4(i32 loc, OPmat4* matrices){
 	glUniformMatrix4fv(loc, 1, GL_FALSE, (OPfloat*)matrices);
 }
 inline void OPeffectParamMat4v(const OPchar* param, OPuint count, OPmat4* matrices){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
-	glUniformMatrix4fv(loc, count, GL_FALSE, (OPfloat*)matrices);
+	glUniformMatrix4fv(loc, (GLsizei)count, GL_FALSE, (OPfloat*)matrices);
 }
 
 
-inline void OPeffectParam(OPuint loc, f32 f) {
+inline void OPeffectParam(i32 loc, f32 f) {
 	OPeffectParamf(loc, f);
 }
 inline void OPeffectParam(const OPchar* param, f32 f) {
 	OPeffectParamf(param, f);
 }
-inline void OPeffectParam(OPuint loc, OPmat4 matrix){
+inline void OPeffectParam(i32 loc, OPmat4 matrix){
 	OPeffectParamMat4(loc, &matrix);
 }
 inline void OPeffectParam(const OPchar* param, OPmat4 matrix){

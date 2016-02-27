@@ -7,16 +7,16 @@
 #include "./Core/include/OPtypes.h"
 
 extern i8 OPRENDER_INITIALIZED;
-extern i32 OPRENDER_WIDTH;
-extern i32 OPRENDER_HEIGHT;
-extern i32 OPRENDER_SCREEN_WIDTH;
-extern i32 OPRENDER_SCREEN_HEIGHT;
-extern i32 OPRENDER_SCALED_WIDTH;
-extern i32 OPRENDER_SCALED_HEIGHT;
+extern ui32 OPRENDER_WIDTH;
+extern ui32 OPRENDER_HEIGHT;
+extern ui32 OPRENDER_SCREEN_WIDTH;
+extern ui32 OPRENDER_SCREEN_HEIGHT;
+extern ui32 OPRENDER_SCALED_WIDTH;
+extern ui32 OPRENDER_SCALED_HEIGHT;
 extern f32 OPRENDER_SCREEN_WIDTH_SCALE;
 extern f32 OPRENDER_SCREEN_HEIGHT_SCALE;
-extern OPint OPRENDER_FULLSCREEN;
-extern OPint OPRENDER_HAS_FOCUS;
+extern i8 OPRENDER_FULLSCREEN;
+extern i8 OPRENDER_HAS_FOCUS;
 extern OPuint OPRENDER_VAO;
 
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
@@ -27,8 +27,8 @@ void OPrenderDragAndDropCB(void (*cb)(int, const OPchar**));
 
 OPint OPrenderInit(i32 width, i32 height);
 void  OPrenderClear(f32 r, f32 g, f32 b, f32 a);
-void  OPrenderSetScreenSize(OPuint width, OPuint height);
-void  OPrenderSetViewport(OPuint x, OPuint y, OPuint width, OPuint height);
+void  OPrenderSetScreenSize(ui32 width, ui32 height);
+void  OPrenderSetViewport(OPint x, OPint y, ui32 width, ui32 height);
 void OPrenderResetViewport();
 OPint OPrenderGetWidth();
 OPint OPrenderGetHeight();

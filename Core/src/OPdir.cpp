@@ -22,7 +22,7 @@
 OPchar* OPdirCurrent() {
 	OPchar cCurrentPath[FILENAME_MAX];
 	OPchar* result;
-	ui16 len;
+	ui32 len;
 	if (!GetCurrentDir(cCurrentPath, sizeof(cCurrentPath)))
     {
     	return NULL;
@@ -32,7 +32,7 @@ OPchar* OPdirCurrent() {
 
 	OPlog("The current working directory is %s", cCurrentPath);
 
-	len = strlen(cCurrentPath) + 2;
+	len = (ui32)strlen(cCurrentPath) + 2;
 	result = (OPchar*)OPalloc(sizeof(OPchar) * len);
 	OPmemcpy(result, cCurrentPath, sizeof(OPchar)* (len - 2));
 	result[len-2] = '\\';
@@ -44,10 +44,12 @@ OPchar* OPdirCurrent() {
 OPchar* OPdirExecutable() {
 #if defined(OPIFEX_WINDOWS) || defined(OPIFEX_OSX)
 	char ownPth[1024]; //MAX_PATH - 260
-	char tmpPth[1024]; //MAX_PATH - 260
 	OPchar* result;
 	ui32 len;
 	char* pos = NULL;
+#endif
+#if defined(OPIFEX_OSX)
+	char tmpPth[1024]; //MAX_PATH - 260
 #endif
 
 	#ifdef OPIFEX_WINDOWS
@@ -64,7 +66,7 @@ OPchar* OPdirExecutable() {
 			}
 			OPlog("The executable directory is %s", ownPth);
 
-			len = strlen(ownPth) + 2;
+			len = (ui32)strlen(ownPth) + 2;
 			result = (OPchar*)OPalloc(sizeof(OPchar)* len);
 			OPmemcpy(result, ownPth, sizeof(OPchar)* (len - 2));
 			result[len - 2] = '\\';

@@ -17,21 +17,8 @@
 /* forward refs */
 
 void ApplicationInit() {
-    OPjson root = OPjsonLoad("{ \"test\": \"Message\", \"Count\": 1337, \"State\": true }");
-
-    if (root._json) {
-        OPjson test = OPjsonGet(root, "test");
-        OPjson count = OPjsonGet(root, "Count");
-        OPjson state = OPjsonGet(root, "State");
-        OPlog("TEST: %s", OPjsonString(test));
-        OPlog("Number: %d", OPjsonI64(count));
-        OPlog("State: %d", OPjsonBool(state));
-        OPjsonDestroy(root);
-    } else {
-        OPlog("FAILED to print JSON");
-    }
-
-
+	//OPallocator* allocator = OPallocatorLinearCreate(MB(128));
+	//OPDEFAULT_ALLOCATOR = *allocator;
 
 	OP_LOG_LEVEL = 2000;
     // ui64 val = 4;
@@ -76,7 +63,7 @@ void ApplicationInit() {
 	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 }
 
-int ApplicationUpdate(OPtimer* timer) {
+OPint ApplicationUpdate(OPtimer* timer) {
 
 	OPinputSystemUpdate(timer);
 	OPcmanUpdate(timer);

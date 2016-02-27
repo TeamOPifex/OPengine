@@ -61,10 +61,10 @@ OPint ExampleMeshBuilderUpdate(OPtimer* time) {
 	OPlog("Update");
 	if (OPkeyboardIsDown(OPKEY_SPACE)) { meshBuilderExample.Rotation++; }
 	OPlog("Update 1");
-	OPmat4 world = OPmat4RotY(meshBuilderExample.Rotation / 100.0);
+	OPmat4 world = OPmat4RotY(meshBuilderExample.Rotation / 100.0f);
 	OPlog("Update 2");
 
-	OPrenderClear(0.4, 0.4, 0.4);
+	OPrenderClear(0.4f, 0.4f, 0.4f);
 	OPlog("Update 3");
 	OPbindMeshEffectWorldCam(&meshBuilderExample.Mesh, &meshBuilderExample.Effect, &world, &meshBuilderExample.Camera);
 

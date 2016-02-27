@@ -33,6 +33,7 @@ typedef struct OPcommandBucket OPcommandBucket;
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
 void OPcommandBucketInit(OPcommandBucket* commandBucket, OPuint bucketSize, OPcam* camera);
+void OPcommandBucketInit(OPcommandBucket* commandBucket, OPuint bucketSize, OPcam* camera, OPallocator* allocator);
 void OPcommandBucketFlush(OPcommandBucket* commandBucket);
 void OPcommandBucketSortKeys(OPcommandBucket* commandBucket);
 void OPcommandBucketSubmit(OPcommandBucket* commandBucket, ui64 key, void(*dispatch)(void*, OPcam*), void* data, void* next);
@@ -81,7 +82,7 @@ struct OPcommandBucketKey {
 
 struct OPcommandBucket {
 	// Number of draw calls this bucket can support
-	ui32 bucketSize;
+	OPuint bucketSize;
 	// The linear allocator used for this creating Command data
     OPallocator* allocator;
 
@@ -99,13 +100,20 @@ struct OPcommandBucket {
 	// The target framebuffers will not change for a command bucket
     OPframeBuffer* frameBuffer[4];
 
+	// Determines whether the command bucket will free the allocator
+	// on OPcommandBucketDestroy/Free
+	i8 controlOfAllocator;
 
 	// Simple wrapper functions
 	// These are just convenient functions for calling the C style functions
 
-    inline void Init(OPuint bucketSize, OPcam* camera) {
-        OPcommandBucketInit(this, bucketSize, camera);
-    }
+	inline void Init(OPuint bucketSize, OPcam* camera) {
+		OPcommandBucketInit(this, bucketSize, camera);
+	}
+
+	inline void Init(OPuint bucketSize, OPcam* camera, OPallocator* allocator) {
+		OPcommandBucketInit(this, bucketSize, camera, allocator);
+	}
 
 	inline void Sort() {
 		OPcommandBucketSortKeys(this);

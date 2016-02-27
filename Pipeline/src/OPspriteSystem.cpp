@@ -34,7 +34,7 @@ void OPspriteSystemInit(OPspriteSystem* system, OPsprite** sprites, OPint count,
 		system->_mesh = OPquadCreate(0.5f, 0.5f, OPvec2Create(0.0, 0.5));
 	}
 
-	for (OPuint i = 0; i < count; i++) {
+	for (OPint i = 0; i < count; i++) {
 		system->SystemSprites[i].Scale = OPVEC2_ONE;
 		system->SystemSprites[i].Direction = 1;
 	}

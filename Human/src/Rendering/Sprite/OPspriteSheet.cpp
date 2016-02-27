@@ -51,7 +51,7 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 	OPspriteFrame* frameData;
 	OPtexture *sheet, *temp;
 
-	ui32 filenameLength = strlen(str->Source);
+	ui32 filenameLength = (ui32)strlen(str->Source);
 	ui32 filenameLengthWithoutExtension = filenameLength - 5 - 8 + 1;
 
 	OPchar* filenameWithoutExtension = (OPchar*)OPalloc(sizeof(OPchar)* filenameLengthWithoutExtension);
@@ -101,7 +101,7 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 
 			OPchar* nameData = OPreadstring(str);
 			OPchar* name = (OPchar*)nameData;
-			ui32 nameDataLength = strlen(name);
+			ui32 nameDataLength = (ui32)strlen(name);
 
 			// OPchar* finalName = (OPchar*)OPalloc(filenameLengthWithoutExtension + 1 + nameDataLength);
 			// OPmemcpy(finalName, filenameWithoutExtension, filenameLengthWithoutExtension);
@@ -139,15 +139,14 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 
 			// Load all the frames
 			for (OPint j = 0; j < spriteFrames; j++){
-				i32 x, y, w, h;
 				// read the sprite dimensions, scale them
 				// to fit within UV space
 				OPvec2 offset;
-				offset.x = OPreadi32(str);
-				offset.y = OPreadi32(str);
+				offset.x = (OPfloat)OPreadi32(str);
+				offset.y = (OPfloat)OPreadi32(str);
 				OPvec2 size;
-				size.x = OPreadi32(str);
-				size.y = OPreadi32(str);
+				size.x = (OPfloat)OPreadi32(str);
+				size.y = (OPfloat)OPreadi32(str);
 
 				// setup frame structure, copy into the frame buffer
 				OPspriteFrame frame = {

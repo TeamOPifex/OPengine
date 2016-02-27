@@ -13,8 +13,8 @@
 // |_____/ \__|_|   \__,_|\___|\__|___/
 struct OPmeshPacked {
 	OPuint offset;
-	ui32 count;
-	ui32 elementCount;
+	OPuint count;
+	OPuint elementCount;
 };
 typedef struct OPmeshPacked OPmeshPacked;
 
@@ -34,7 +34,7 @@ typedef struct OPmeshPacked OPmeshPacked;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPmeshPacked OPmeshPackedCreate(ui32 vertSize, ui32 indSize, ui32 vertCount, ui32 indCount, void* vertices, void* indices);
+OPmeshPacked OPmeshPackedCreate(ui32 vertSize, ui32 indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
 void OPmeshPackedRender(OPmeshPacked* mesh);
 
 

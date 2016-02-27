@@ -94,7 +94,7 @@ OPint ExampleMyoUpdate(OPtimer* time) {
 	////////////////////////
 	// Render
 	////////////////////////
-	OPrenderClear(0.4, 0.4, 0.4);
+	OPrenderClear(0.4f, 0.4f, 0.4f);
 
 	// A helper utility which binds the Mesh, Effect and the World, View and Projection Matrices
 	// For more granular control please take a look at the Textured Example

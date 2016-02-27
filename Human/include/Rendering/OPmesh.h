@@ -112,7 +112,7 @@ extern void* OPMESH_ACTIVE_PTR;
 OPmesh OPmeshCreate();
 OPmesh* OPmeshCreate(OPmeshDesc desc);
 void OPmeshDestroy(OPmesh* mesh);
-void OPmeshBuild(ui32 vertSize, ui32 indSize, ui32 vertCount, ui32 indCount, void* vertices, void* indices);
+void OPmeshBuild(ui32 vertSize, ui32 indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
 void OPmeshBind(OPmesh* mesh);
 
 void OPmeshRender();

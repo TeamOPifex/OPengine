@@ -289,7 +289,7 @@ OPMData OPMloadData(OPstream* str) {
 
 	ui32 indicesCount = OPreadui32(str);
 	ui16* indices = (ui16*)OPalloc(sizeof(ui16)* (indicesCount * 3));
-	for(int i = 0; i < indicesCount; i++) {
+	for(ui32 i = 0; i < indicesCount; i++) {
 		indices[i * 3 + 0] = OPreadui16(str);
 		indices[i * 3 + 1] = OPreadui16(str);
 		indices[i * 3 + 2] = OPreadui16(str);
@@ -587,7 +587,7 @@ OPhashMap* CreateTriangleTable(OPMData* data){
 	for(int i = (data->indexCount / 3); i--;){
 		int* tri;
 
-		sprintf(index, "%d", i * 3);
+		sprintf_s(index, "%d", i * 3);
 		OPhashMapGet(triTable, index, (void**)&tri);
 
 		// if this vertex's tri has been stored, skip it
@@ -601,7 +601,7 @@ OPhashMap* CreateTriangleTable(OPMData* data){
 			tri[j] = i * 3 + j;
 
 			// store the triangle at this vertex's index
-			sprintf(index, "%d", i * 3 + j);
+			sprintf_s(index, "%d", i * 3 + j);
 			OPhashMapPut(triTable, index, tri);
 		}
 	}
@@ -637,7 +637,7 @@ OPvec3 GetCenterOfMass(OPMData* data, OPlinkedList* vertList){
 		node = node->Next;
 		++verts;
 	}
-	com /= verts;
+	com /= (OPfloat)verts;
 
 	return com;
 }
@@ -708,9 +708,9 @@ OPlinkedList* CreateTriList(OPMData* data, OPhashMap* triTable, OPlinkedList* ve
 		OPint* tri = NULL;
 
 #ifdef OPIFEX_OS64
-			sprintf(index, "%lld", (OPint)node->Data);
+			sprintf_s(index, "%lld", (OPint)node->Data);
 #else
-			sprintf(index, "%d", (OPint)node->Data);
+			sprintf_s(index, "%d", (OPint)node->Data);
 #endif
 		OPhashMapGet(triTable, index, (void**)&tri);
 
@@ -732,7 +732,7 @@ OPMPartNode CreateOPMPartNode(OPlinkedList* triList){
 	OPuint min = (OPint)node->Data, max = (OPint)node->Data;
 
 	while(node){
-		OPint i = (OPint)node->Data;
+		OPuint i = (OPuint)node->Data;
 		min = min > i ? i : min;
 		max = max < i ? i : max;
 		node = node->Next;
