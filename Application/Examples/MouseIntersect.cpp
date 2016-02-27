@@ -208,10 +208,10 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	OPfontColor(OPvec4Create(1.0, 1.0, 1.0, 1));
    	mouseIntersectExample.FontManager->scale = 0.75;
 	i8 buffer[256];
-	sprintf_s(buffer, "%d, %d", OPmousePositionX(), OPmousePositionY());
+	sprintf(buffer, "%d, %d", OPmousePositionX(), OPmousePositionY());
 	OPfontRender(buffer, OPvec2Create(50, 60));
 
-	sprintf_s(buffer, "%f, %f, %f", ray.direction.x, ray.direction.y, ray.direction.z);
+	sprintf(buffer, "%f, %f, %f", ray.direction.x, ray.direction.y, ray.direction.z);
 	OPfontRender(buffer, OPvec2Create(50, 120));
 
 	OPfontRenderEnd();

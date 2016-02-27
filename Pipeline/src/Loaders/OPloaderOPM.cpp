@@ -587,7 +587,7 @@ OPhashMap* CreateTriangleTable(OPMData* data){
 	for(int i = (data->indexCount / 3); i--;){
 		int* tri;
 
-		sprintf_s(index, "%d", i * 3);
+		sprintf(index, "%d", i * 3);
 		OPhashMapGet(triTable, index, (void**)&tri);
 
 		// if this vertex's tri has been stored, skip it
@@ -601,7 +601,7 @@ OPhashMap* CreateTriangleTable(OPMData* data){
 			tri[j] = i * 3 + j;
 
 			// store the triangle at this vertex's index
-			sprintf_s(index, "%d", i * 3 + j);
+			sprintf(index, "%d", i * 3 + j);
 			OPhashMapPut(triTable, index, tri);
 		}
 	}
@@ -708,9 +708,9 @@ OPlinkedList* CreateTriList(OPMData* data, OPhashMap* triTable, OPlinkedList* ve
 		OPint* tri = NULL;
 
 #ifdef OPIFEX_OS64
-			sprintf_s(index, "%lld", (OPint)node->Data);
+			sprintf(index, "%lld", (OPint)node->Data);
 #else
-			sprintf_s(index, "%d", (OPint)node->Data);
+			sprintf(index, "%d", (OPint)node->Data);
 #endif
 		OPhashMapGet(triTable, index, (void**)&tri);
 

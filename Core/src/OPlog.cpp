@@ -88,7 +88,7 @@ void OPvlog(ui32 level, const char* channel, const char* message, va_list args) 
 		vsnprintf(buffer, sizeof buffer, message, args);
 		OPlogHandler(level, channel, buffer);
 	} else {
-		sprintf_s(buffer2, "%s: %s\n", channel, message);
+		sprintf(buffer2, "%s: %s\n", channel, message);
 		vsnprintf(buffer, sizeof buffer, buffer2, args);
 #ifndef OPIFEX_IOS
 		//write(LogToHandle, buffer, strlen(buffer));

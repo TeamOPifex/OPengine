@@ -100,7 +100,7 @@ ui8* OPread(OPstream* stream, OPuint size){
 
 void _fillBuffer(OPstream* stream) {
 	const i8* buffer = (i8*)(stream->Data + stream->_pointer);
-	sscanf_s(buffer, "%s", stream->Buffer);
+	sscanf(buffer, "%s", stream->Buffer);
 	stream->_pointer += strlen(stream->Buffer) + 1;
 }
 
@@ -188,19 +188,19 @@ OPint OPstreamReadKeyValuePair(OPstream* str, struct OPkeyValuePair* dst){
 	// check to see if we are at the end of the stream or not
 	if(str->_pointer >= str->Length) return 0;
 
-	sscanf_s((OPchar*)str->Data + str->_pointer, "%520[^\n]", buffer);
+	sscanf((OPchar*)str->Data + str->_pointer, "%520[^\n]", buffer);
 	len = strlen(buffer);
 	OPlog("OPstreamReadKeyValuePair() - buffer: '%s'", buffer);
 
 	if(!len) return 0;
 
 	str->_pointer += len + 1;
-	sscanf_s(buffer, "%255[^ =]%*[= \t]%255[^\r\n]", buffer2, dst->value);
+	sscanf(buffer, "%255[^ =]%*[= \t]%255[^\r\n]", buffer2, dst->value);
 
 	OPlog("OPstreamReadKeyValuePair() - '%s' = '%s'", buffer2, dst->value);
 
 	// Removes any trailing whitespace from t,he values
-	sscanf_s(buffer2, "%s", dst->key);
+	sscanf(buffer2, "%s", dst->key);
 
 	for (i = 0; i < strlen(dst->key); i++){
 		dst->key[i] = tolower(dst->key[i]);

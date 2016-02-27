@@ -97,7 +97,7 @@ __inline OPfloat OPabsf(OPfloat f){
 */
 __inline OPint	OPabsi(OPint i){
 #if defined(OPIFEX_UNIX) // linux implementation
-	return (OPint)OPabs(i);
+	return (OPint)OPabs((OPfloat)i);
 #elif defined(OPIFEX_WINDOWS) 	// windows implementation
 	return (OPint)OPabs((OPfloat)i);
 #endif

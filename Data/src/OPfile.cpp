@@ -95,7 +95,11 @@ OPfileInformation OPreadFileInformation(const char* path){
 	FILE* myFile;
 
 	myFile = NULL;
+	#ifdef OPIFEX_WINDOWS
 	fopen_s(&myFile, path, "rb");
+	#else
+	myFile = fopen(path, "rb");
+	#endif
     ASSERT(myFile != NULL, "File not loaded");
 	if(!myFile){
 		char buff[256];
@@ -584,9 +588,17 @@ OPfileInformation OPfileCreate(const char* path) {
 
 	result.start = 0;
 	result.length = 0;
+	#ifdef OPIFEX_WINDOWS
 	fopen_s(&result.file, path, "w+");
+	#else
+	result.file = fopen(path, "w+");
+	#endif
 
+    #ifdef OPIFEX_WINDOWS
 	_sopen_s(&result.fileDescriptor, path, O_RDWR, _SH_DENYNO, _S_IREAD | _S_IWRITE);
+	#else
+	result.fileDescriptor = open(path, O_RDWR);
+	#endif
 
 	return result;
 }

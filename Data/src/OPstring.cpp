@@ -40,7 +40,11 @@ OPchar* OPstringGetNonConstant(const OPchar* str) {
 	size = (len + 1) * sizeof(OPchar);
 
 	result = (OPchar*)OPalloc(size);
+	#ifdef OPIFEX_WINDOWS
 	strcpy_s(result, size, str);
+	#else
+	result = strcpy(result, str);
+	#endif
 
 	return result;
 }
@@ -53,7 +57,11 @@ OPchar* OPstringCopy(const OPchar* str) {
 	size = (len + 1) * sizeof(OPchar);
 
 	result = (OPchar*)OPallocZero(size);
+	#ifdef OPIFEX_WINDOWS
 	strcpy_s(result, size, str);
+	#else
+	result = strcpy(result, str);
+	#endif
 	result[len] = '\0';
 
 	return result;
@@ -82,7 +90,11 @@ OPchar* OPstringCreateMerged(const OPchar* str, const OPchar* add) {
 	ui32 lenA = (ui32)strlen(str);
 	ui32 lenB = (ui32)strlen(add);
 	OPchar* result = (OPchar*)OPalloc(lenA + lenB + 1);
+	#ifdef OPIFEX_WINDOWS
 	strcpy_s(result, lenA + 1, str);
+	#else
+	result = strcpy(result, str);
+	#endif
 	strcat(result, add);
 	return result;
 }
