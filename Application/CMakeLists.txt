@@ -34,7 +34,7 @@ set(ALL_LIBS
 	${ZLIB_LIBRARY}
 	${LIBPNG_LIBRARY}
 	${CMAKE_THREAD_LIBS_INIT}
-    jansson
+  jansson
 )
 
 
@@ -76,4 +76,3 @@ add_opifex_oggvorbis(9_Application)
 add_opifex_steam(9_Application)
 add_opifex_fmod(9_Application)
 add_opifex_xinput(9_Application)
-

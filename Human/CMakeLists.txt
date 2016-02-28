@@ -65,6 +65,8 @@ set(ALL_LIBS
 	2_Data
 	3_Math
 	4_Performance
+	GLEW_158
+	glfw
 )
 
 
