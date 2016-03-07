@@ -26,7 +26,7 @@ void OPlog(const char* message, ...){
 }
 
 void OPlg(const char* message, ...){
-	char buffer[1024];
+	char buffer[4096];
 	va_list args;
 	va_start(args, message);
 	__android_log_vprint(ANDROID_LOG_INFO, "OPIFEX", message, args);
@@ -73,7 +73,7 @@ void OPlogSetOutput(i32 handle) {
 
 
 void OPvlog(ui32 level, const char* channel, const char* message, va_list args) {
-	char buffer[1024], buffer2[1024];
+	char buffer[4096], buffer2[4096];
 
 	if (errno) {
 		perror("SYSTEM ERROR");
@@ -91,7 +91,7 @@ void OPvlog(ui32 level, const char* channel, const char* message, va_list args) 
 		sprintf(buffer2, "%s: %s\n", channel, message);
 		vsnprintf(buffer, sizeof buffer, buffer2, args);
 #ifndef OPIFEX_IOS
-		//write(LogToHandle, buffer, strlen(buffer));
+		write(LogToHandle, buffer, strlen(buffer));
 #else
         printf(buffer);
 #endif

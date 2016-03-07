@@ -50,6 +50,7 @@ OPchar* OPdirExecutable() {
 #endif
 #if defined(OPIFEX_OSX)
 	char tmpPth[1024]; //MAX_PATH - 260
+	i32 lastSlash;
 #endif
 
 	#ifdef OPIFEX_WINDOWS
@@ -74,13 +75,18 @@ OPchar* OPdirExecutable() {
 			return result;
 		}
 	#elif defined(OPIFEX_OSX)
+		lastSlash = -1;
 		len = _NSGetExecutablePath(ownPth, &len);
 		realpath(ownPth, tmpPth);
 
 		len = strlen(tmpPth);
-		if(len < 1024) {
-			tmpPth[len] = '/';
-			tmpPth[len + 1] = '\0';
+		for(ui32 i = 0; i < len; i++) {
+			if(tmpPth[i] == '/') {
+				lastSlash = i;
+			}
+		}
+		if(lastSlash > -1) {
+			tmpPth[lastSlash + 1] = '\0';
 		}
 		OPlog("The executable directory is \n%s\n%s", ownPth, tmpPth);
 

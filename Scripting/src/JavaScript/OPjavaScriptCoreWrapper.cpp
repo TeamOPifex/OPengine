@@ -9,6 +9,7 @@
 
 Local<Function> _initCallback;
 Local<Function> _updateCallback;
+Local<Function> _renderCallback;
 Local<Function> _endCallback;
 
 void _init() {
@@ -28,7 +29,7 @@ void _init() {
     #endif
 }
 
-int _update(OPtimer* timer) {
+OPint _update(OPtimer* timer) {
     SCOPE_AND_ISOLATE
     const unsigned int argc = 1;
     Handle<Object> timerObj = JS_NEW_OBJECT();
@@ -41,6 +42,7 @@ int _update(OPtimer* timer) {
     #ifdef OPIFEX_OPTION_V8
     	TryCatch trycatch;
         Local<Value> result = _updateCallback->Call(obj, argc, argv);
+
         if (result.IsEmpty()) {
     		ReportException(isolate, &trycatch);
             return 1;
@@ -56,6 +58,17 @@ int _update(OPtimer* timer) {
         }
     #endif
     return 0;
+}
+
+void _render(OPfloat delta) {
+    SCOPE_AND_ISOLATE
+    const unsigned int argc = 1;
+
+    Handle<Value> argv[argc] = { JS_NEW_NUMBER(delta) };
+    Handle<Object> obj = JS_NEW_OBJECT();
+
+	TryCatch trycatch;
+    _renderCallback->Call(obj, argc, argv);
 }
 
 void _end() {
@@ -82,13 +95,37 @@ JS_RETURN_VAL _OPstart(const JS_ARGS& args) {
 
     _initCallback = Local<Function>::Cast(args[0]);
     _updateCallback = Local<Function>::Cast(args[1]);
-    _endCallback = Local<Function>::Cast(args[2]);
+    _renderCallback = Local<Function>::Cast(args[2]);
+    _endCallback = Local<Function>::Cast(args[3]);
 
  	OPinitialize = _init;
  	OPupdate = _update;
+    OPrender = _render;
  	OPdestroy = _end;
 
     OPstart(0, NULL);
+    OPlog("OPstart finished");
+    OPend();
+
+    JS_RETURN_NULL
+}
+
+JS_RETURN_VAL _OPstartStepped(const JS_ARGS& args) {
+    SCOPE_AND_ISOLATE
+
+    OPlog("Starting");
+
+    _initCallback = Local<Function>::Cast(args[0]);
+    _updateCallback = Local<Function>::Cast(args[1]);
+    _renderCallback = Local<Function>::Cast(args[2]);
+    _endCallback = Local<Function>::Cast(args[3]);
+
+ 	OPinitialize = _init;
+ 	OPupdate = _update;
+    OPrender = _render;
+ 	OPdestroy = _end;
+
+    OPstartStepped(0, NULL);
     OPlog("OPstart finished");
     OPend();
 
@@ -149,6 +186,7 @@ void OPscriptNodeWrapperCore(Handle<Object> exports) {
     OPdefinedWrapper(exports);
 
     JS_SET_METHOD(exports, "start", _OPstart);
+    JS_SET_METHOD(exports, "startStepped", _OPstartStepped);
     JS_SET_METHOD(exports, "alloc", _OPalloc);
     JS_SET_METHOD(exports, "allocZero", _OPallocZero);
     JS_SET_METHOD(exports, "log", _OPlog);

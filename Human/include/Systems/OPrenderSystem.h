@@ -14,6 +14,8 @@
 #include "./Human/include/Rendering/UI/OPimgui.h"
 #include "./Human/include/Rendering/OPimage.h"
 
+#include "./Human/include/Rendering/Commands/OPcommandDrawIndexed.h"
+
 #include "./Human/include/Rendering/Primitives/OPquad.h"
 #include "./Human/include/Rendering/Primitives/OPcube.h"
 #include "./Human/include/Rendering/Primitives/OPsphericalCube.h"

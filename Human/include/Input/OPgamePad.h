@@ -23,6 +23,9 @@ typedef struct OPgamePad OPgamePad;
 extern OPgamePad GamePads[CONTROLLERS];
 
 OPgamePad* OPgamePadGet(OPgamePadIndex index);
+inline OPgamePad* OPgamePadGet(ui32 index) {
+	return OPgamePadGet((enum OPgamePadIndex)index);
+}
 
 void OPgamePadUpdate(OPgamePad* controller);
 void OPgamePadReset(OPgamePad* controller);

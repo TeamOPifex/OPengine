@@ -125,7 +125,7 @@ struct OPmat4 {
 		OPmat4Translate(this, -vhs->x, -vhs->y, -vhs->z);
 		return *this;
 	}
-	
+
 	inline OPmat4* SetRotX(f32 val) {
 		*this = OPmat4RotX(val);
 		return this;
@@ -148,6 +148,11 @@ struct OPmat4 {
 
 	inline OPmat4* SetScl(f32 x, f32 y, f32 z) {
 		*this = OPmat4Scl(x, y, z);
+		return this;
+	}
+
+	inline OPmat4* SetTranslate(OPvec3 val) {
+		*this = OPmat4Translate(val.x, val.y, val.z);
 		return this;
 	}
 
@@ -175,12 +180,17 @@ struct OPmat4 {
 		OPmat4RotY(this, val);
 		return this;
 	}
-	
+
 	inline OPmat4* Scl(f32 val) {
 	    OPmat4Scl(this, val, val, val);
 		return this;
 	}
-	
+
+	inline OPmat4* Scl(OPvec3 val) {
+	    OPmat4Scl(this, val.x, val.y, val.z);
+		return this;
+	}
+
 	inline OPmat4* Translate(f32 x, f32 y, f32 z) {
 	    OPmat4Translate(this, x, y, z);
 		return this;

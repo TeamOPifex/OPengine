@@ -90,7 +90,7 @@ void OPcamFreeFlightWrapperCreate(Handle<Object> result, OPcamFreeFlight* cam) {
     JS_SET_METHOD(result, "SetRotY", _OPcamFreeFlightSetRotYSelf);
 
     Handle<Object> internalCam = JS_NEW_OBJECT();
-    OPcamWrapperCreate(internalCam, &cam->Camera);
+    OPcamWrapper(internalCam, &cam->Camera);
     JS_SET_OBJECT(result, "Camera", internalCam);
 }
 

@@ -168,7 +168,7 @@ JS_RETURN_VAL _OPrenderDragAndDrop(const JS_ARGS& args) {
 
 void OPrenderWrapper(Handle<Object> exports) {
     SCOPE_AND_ISOLATE;
-
+    
     Handle<Object> render = JS_NEW_OBJECT();
     JS_SET_METHOD(render, "Init", _OPrenderInit);
     JS_SET_METHOD(render, "Clear", _OPrenderClear);

@@ -12,7 +12,8 @@ OPstream* OPstreamCreate(OPuint size){
 	s->Length = size;
 	s->Size = 0;
 	s->_pointer = 0;
-
+	s->Source = NULL;
+	
 	// no trash allowed
 	OPbzero(s->Data, size);
 

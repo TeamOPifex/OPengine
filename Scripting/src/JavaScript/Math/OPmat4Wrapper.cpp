@@ -47,9 +47,9 @@ JS_RETURN_VAL _OPmat4SetScale(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmat4* ptr = JS_GET_ARG_PTR(args, 0, OPmat4);
-    if(args.Length() == 3) {
+    if(args.Length() == 4) {
         *ptr = OPmat4Scl(args[1]->NumberValue(), args[2]->NumberValue(), args[3]->NumberValue());
-    } else if(args.Length() == 1) {
+    } else if(args.Length() == 2) {
         *ptr = OPmat4Scl(args[1]->NumberValue());
     }
 

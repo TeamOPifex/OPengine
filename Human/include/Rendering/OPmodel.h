@@ -19,6 +19,7 @@ struct OPmodel {
 
 	void Init(const OPchar* mesh) {
 	    this->mesh = (OPmesh*)OPcmanLoadGet(mesh);
+		this->world = OPMAT4_IDENTITY;
 	}
 
 	void Bind(OPmaterial* material) {

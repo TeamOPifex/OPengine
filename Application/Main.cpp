@@ -43,7 +43,7 @@ void ApplicationInit() {
 
 
 	OPloadersAddDefault();
-	//OPscriptAddLoader();
+	OPscriptAddLoader();
 	OPskeletonAddLoader();
 	OPskeletonAnimationAddLoader();
 	//SpineAddLoader();

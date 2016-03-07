@@ -227,13 +227,12 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 		OPphysXAddForce(physicsExample->spheres[0].physics, OPvec3Create(0, 0, rate2));
 	}
 
-	if (OPkeyboardIsDown(OPKEY_UP)) { physicsExample->Camera->_pos.y += 0.2; }
-	if (OPkeyboardIsDown(OPKEY_DOWN)) { physicsExample->Camera->_pos.y -= 0.2; }
-	if (OPkeyboardIsDown(OPKEY_LEFT)) { physicsExample->Camera->_pos.x -= 0.2; }
-	if (OPkeyboardIsDown(OPKEY_RIGHT)) { physicsExample->Camera->_pos.x += 0.2; }
+	if (OPkeyboardIsDown(OPKEY_UP)) { physicsExample->Camera->pos.y += 0.2; }
+	if (OPkeyboardIsDown(OPKEY_DOWN)) { physicsExample->Camera->pos.y -= 0.2; }
+	if (OPkeyboardIsDown(OPKEY_LEFT)) { physicsExample->Camera->pos.x -= 0.2; }
+	if (OPkeyboardIsDown(OPKEY_RIGHT)) { physicsExample->Camera->pos.x += 0.2; }
 
-	physicsExample->Camera->_viewStale = 1;
-	OPcamUpdateView((*physicsExample->Camera));
+	OPcamUpdate(physicsExample->Camera);
 
 
 	OPphysXSceneUpdate(physicsExample->scene, time);
@@ -252,13 +251,9 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	ui32 tex3 = OPtextureBind(physicsExample->textureSphere);
 	ui32 tex4 = OPtextureBind(physicsExample->textureStatic);
 
-	OPmat4 view, proj;
 
-	OPcamGetView((*physicsExample->Camera), &view);
-	OPcamGetProj((*physicsExample->Camera), &proj);
-
-	OPeffectParamMat4("uProj", &proj);
-	OPeffectParamMat4("uView", &view);
+	OPeffectParamMat4("uProj", &physicsExample->Camera->proj);
+	OPeffectParamMat4("uView", &physicsExample->Camera->view);
 
 	OPvec3 light = OPvec3Create(0, 1, 0);
 	OPeffectParamVec3("uLightDirection", &light);
@@ -285,8 +280,8 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 
 	OPmeshBind(physicsExample->MeshSphere);
 	OPeffectBind(physicsExample->SphereEffect);
-	OPeffectParamMat4("uProj", &proj);
-	OPeffectParamMat4("uView", &view);
+	OPeffectParamMat4("uProj", &physicsExample->Camera->proj);
+	OPeffectParamMat4("uView", &physicsExample->Camera->view);
 	OPeffectParamVec3("uLightDirection", &light);
 
 	OPeffectParami("uColorTexture", tex2);
@@ -309,6 +304,10 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	return false;
 }
 
+void ExamplePhysicsRender(OPfloat delta) {
+    
+}
+
 OPint ExamplePhysicsExit(OPgameState* next) {
 	OPphysXSceneDestroy(physicsExample->scene);
 	OPphysXShutdown();
@@ -320,11 +319,13 @@ OPint GS_EXAMPLE_PHYSICS_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_PHYSICS = {
 	ExamplePhysicsEnter,
 	ExamplePhysicsUpdate,
+	ExamplePhysicsRender,
 	ExamplePhysicsExit
 };
 #else
 OPint GS_EXAMPLE_PHYSICS_AVAILABLE = 0;
 OPgameState GS_EXAMPLE_PHYSICS = {
+	NULL,
 	NULL,
 	NULL,
 	NULL

@@ -24,6 +24,18 @@ void OPcommandBucketInit(OPcommandBucket* commandBucket, OPuint bucketSize, OPca
 	commandBucket->allocator = allocator;
 }
 
+OPcommandBucket* OPcommandBucketCreate(OPuint bucketSize, OPcam* camera, OPallocator* allocator) {
+	OPcommandBucket* result = (OPcommandBucket*)OPalloc(sizeof(OPcommandBucket));
+	OPcommandBucketInit(result, bucketSize, camera, allocator);
+	return result;
+}
+
+OPcommandBucket* OPcommandBucketCreate(OPuint bucketSize, OPcam* camera) {
+	OPcommandBucket* result = (OPcommandBucket*)OPalloc(sizeof(OPcommandBucket));
+	OPcommandBucketInit(result, bucketSize, camera);
+	return result;
+}
+
 i64 OPcommandBucketSortGetKey(void* data, i64 index) {
 	OPcommandBucketKey* keys = (OPcommandBucketKey*)data;
 	return keys[index].key;

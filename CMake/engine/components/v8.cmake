@@ -18,6 +18,8 @@ endmacro(add_opifex_v8_set_source)
 macro(add_opifex_v8_include)
 
 	add_opifex_v8_set_source()
+	message(STATUS "@@@@@@@@@:::::::: ${_V8_PATH}/include/")
+	include_directories(${_V8_PATH}/)
 	include_directories(${_V8_PATH}/include/)
 
 endmacro(add_opifex_v8_include)

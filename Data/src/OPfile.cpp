@@ -1,6 +1,7 @@
 #include "./Data/include/OPfile.h"
 #include "./Core/include/OPlog.h"
 #include "./Core/include/Assert.h"
+#include "./Data/include/OPstring.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -141,7 +142,7 @@ OPint OPwriteFile(const char* path, OPstream* stream){
 }
 
 OPstream* OPreadFile(const char* path) {
-    return OPreadFileLarge(path, 32);
+    return OPreadFileLarge(path, 2048);
 }
 
 
@@ -165,6 +166,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 	fseek(myFile, start, SEEK_SET);
 
 	OPstream* str = OPstreamCreate(length);
+	str->Source = OPstringCopy(path);
 
 	// write the entire file into a stream
 	ui8* byte = OPalloc(sizeof(ui8) * length);
@@ -188,6 +190,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 	 	if(fd){
 
 			OPstream* str = OPstreamCreate(expectedSize);
+			str->Source = OPstringCopy(path);
 
 			ui8* bytes = (ui8*)OPalloc(1024);
 			ui32 readBytes = 1;
@@ -219,6 +222,7 @@ OPstream* OPreadFileLarge(const char* path, ui32 expectedSize){
 	 	if(!_sopen_s(&fd, path, _O_BINARY|_O_RDONLY, _SH_DENYWR, _S_IREAD)){
 			ui8 byte = 0;
 			OPstream* str = OPstreamCreate(expectedSize);
+			str->Source = OPstringCopy(path);
 
 			ui32 readBytes = 1;
 			// write the entire file into a stream

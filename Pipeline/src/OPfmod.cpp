@@ -19,6 +19,7 @@ void OPfmodInit() {
 		OPlog("FMod Get Version %d", result);
 
 		OPlog("FMod Version %u", version);
+		OPlog("FMod Header Version %u", FMOD_VERSION);
 
 		ASSERT(version >= FMOD_VERSION, "FMOD lib version doesn't match header version");
 

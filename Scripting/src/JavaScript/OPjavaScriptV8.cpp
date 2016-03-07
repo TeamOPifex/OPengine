@@ -40,6 +40,7 @@ void OPjavaScriptV8Init() {
 		create_params.array_buffer_allocator = &allocator;
 		isolate = Isolate::New(create_params);
 
+		OPlog("Javascript V8 engine Initialized");
 	}
 }
 
@@ -195,7 +196,7 @@ Handle<Object> _OPscriptV8WrapEngine() {
 			OPJAVASCRIPTV8_CUSTOMWRAPPER(Wrapper);
 		}
 
-		JS_SET_OBJECT(Wrapper, "OP", OP);
+		JS_SET_OBJECT(Wrapper, "engine", OP);
 
         exports = Persistent<Object, CopyablePersistentTraits<Object> >(isolate, Wrapper);
         setup = 1;
@@ -288,15 +289,17 @@ void _OPscriptV8Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
     v8::String::Utf8Value utf8(args[0]);
     const char *arg0 = *utf8;
 
-    if (OPstringEquals(arg0, "OPengine")) {
+	OPlog("Requiring: %s", arg0);
+
+    if (OPstringEquals(arg0, "OP")) {
         args.GetReturnValue().Set(_OPscriptV8WrapEngine());
         return;
     }
+
     if (OPstringEquals(arg0, "os")) {
         args.GetReturnValue().Set(_OPscriptV8WrapOS());
         return;
     }
-
 
     Handle<Object> currGlobal = args.Callee()->CreationContext()->Global();
     Handle<Value> __dirname = currGlobal->Get(JS_NEW_STRING("__dirname"));
@@ -328,6 +331,7 @@ void _OPscriptV8SetImmediate(const v8::FunctionCallbackInfo<v8::Value>& args) {
 
 OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, const OPchar* dir) {
 	ASSERT(isolate != NULL, "V8 Engine must be initialized first.");
+	OPlog("compiling");
 
 	SCOPE_AND_ISOLATE;
 
@@ -338,9 +342,13 @@ OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, 
     global->Set(JS_NEW_STRING("setImmediate"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8SetImmediate));
 	_OPscriptV8SetConsole(global);
 
+	OPlog("Wrapped the things");
+
 	Handle<Context> localContext = Context::New(isolate, NULL, global);
 
 	v8::Context::Scope context_scope(localContext);
+
+	OPlog("Created the context");
 
 
     Local<Object> globalSelf = localContext->Global();
@@ -350,12 +358,16 @@ OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, 
         JS_SET_STRING(globalSelf, "__dirname", dir);
     }
 
+	OPlog("Now for the source");
+	OPlog("%s", script->filename);
+	//OPlog("%s", script->data);
 
 	Handle<String> source = JS_NEW_STRING(script->data);
 
 	TryCatch trycatch;
 	v8::ScriptOrigin origin(JS_NEW_STRING(script->filename));
 	Local<Script> compiledV8 = v8::Script::Compile(source, &origin);
+	OPlog("Compile was attempted");
 	if (compiledV8.IsEmpty()) {
 		ReportException(isolate, &trycatch);
 		return 0;
@@ -370,7 +382,6 @@ OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, 
 	*compiled = result;
 	return 1;
 }
-
 
 void OPjavaScriptV8Update(OPjavaScriptV8Compiled* scriptCompiled) {
 //    if (scriptCompiled->Source->changed) {
@@ -426,7 +437,7 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
 
 }
 
-OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, const OPchar* name, OPuint count, OPjavaScriptPersistentValue* args) {
+OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, const OPchar* name, OPuint count, void** args) {
     SCOPE_AND_ISOLATE;
 
     Handle<Context> context = Local<Context>::New(isolate, scriptCompiled->Context);
@@ -437,7 +448,10 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
 
     Handle<Value> values[10];
     for (OPint i = 0; i < count; i++) {
-        values[i] = Local<Value>::New(isolate, args[i]);
+		Local<Object> obj = JS_NEW_OBJECT();
+		JS_SET_PTR(obj, args[i]);
+        values[i] = obj;
+		// Local<Object>::New(isolate, args[i]);
     }
 
 	TryCatch trycatch;
@@ -454,10 +468,16 @@ void OPjavaScriptV8SetupRun(const OPchar* script) {
     OPjavaScriptV8Init();
     OPscript *result = NULL;
 	OPstream* str = OPreadFile(script);
+	ASSERT(str != NULL, "File couldn't be found");
+	ASSERT(str->Source != NULL, "Filename wasn't set.");
+	OPlog("Script read");
 	OPscriptLoad(str, &result);
+	OPlog("Script loaded");
     OPjavaScriptV8Compiled compiled;
     OPjavaScriptV8Compile(&compiled, result);
+	OPlog("Script compiled");
     OPjavaScriptV8Run(&compiled);
+	OPlog("Script run");
 }
 
 #endif

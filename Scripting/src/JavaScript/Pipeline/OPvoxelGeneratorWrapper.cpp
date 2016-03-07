@@ -30,7 +30,7 @@ JS_RETURN_VAL _OPvoxelGeneratorBuild(const JS_ARGS& args) {
     OPmesh* mesh = OPvoxelGeneratorBuild(ptr);
 
     Handle<Object> result = JS_NEW_OBJECT();
-    OPmeshWrapperCreate(result, mesh);
+    OPmeshWrapper(result, mesh);
 
     JS_RETURN(result);
 }
@@ -42,7 +42,7 @@ JS_RETURN_VAL _OPvoxelGeneratorBuildSelf(const JS_ARGS& args) {
     OPmesh* mesh = OPvoxelGeneratorBuild(ptr);
 
     Handle<Object> result = JS_NEW_OBJECT();
-    OPmeshWrapperCreate(result, mesh);
+    OPmeshWrapper(result, mesh);
 
     JS_RETURN(result);
 }

@@ -104,7 +104,7 @@ JS_RETURN_VAL _OPskeletonDestroySelf(const JS_ARGS& args) {
     JS_RETURN_NULL;
 }
 
-void OPskeletonWrapperCreate(Handle<Object> result, OPskeleton* skeleton) {
+Handle<Object> OPskeletonWrapperCreate(Handle<Object> result, OPskeleton* skeleton) {
     SCOPE_AND_ISOLATE
 
     JS_SET_PTR(result, skeleton);

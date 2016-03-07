@@ -66,7 +66,7 @@ void OPcommandDrawIndexedSet(OPcommandDrawIndexed* result, OPmodel* model, OPmat
 }
 
 void OPcommandDrawIndexedSet(OPcommandDrawIndexed* result, OPmodel* model, OPmaterial* material, OPtexture* texture) {
-
+	
 	ui64 meshId = model->mesh->Id << 0;     // 00 - 06 bits
 	ui64 textureId = texture->Handle << 6;  // 07 - 12 bits
 	ui64 materialId = material->id << 12;   // 13 - 19 bits

@@ -13,8 +13,8 @@ struct OPstream{
 	OPuint Size;
 	i8 Buffer[128];
 	OPuint _pointer; // current location to write to
-	ui8* Data;
 	const OPchar* Source;
+	ui8* Data;
 };
 typedef struct OPstream OPstream;
 

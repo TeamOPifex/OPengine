@@ -34,6 +34,8 @@ typedef struct OPcommandBucket OPcommandBucket;
 
 void OPcommandBucketInit(OPcommandBucket* commandBucket, OPuint bucketSize, OPcam* camera);
 void OPcommandBucketInit(OPcommandBucket* commandBucket, OPuint bucketSize, OPcam* camera, OPallocator* allocator);
+OPcommandBucket* OPcommandBucketCreate(OPuint bucketSize, OPcam* camera);
+OPcommandBucket* OPcommandBucketCreate(OPuint bucketSize, OPcam* camera, OPallocator* allocator);
 void OPcommandBucketFlush(OPcommandBucket* commandBucket);
 void OPcommandBucketSortKeys(OPcommandBucket* commandBucket);
 void OPcommandBucketSubmit(OPcommandBucket* commandBucket, ui64 key, void(*dispatch)(void*, OPcam*), void* data, void* next);

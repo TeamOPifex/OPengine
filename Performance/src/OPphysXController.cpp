@@ -42,6 +42,10 @@ void OPphysXControllerSetFootPos(OPphysXController* controller, OPvec3 disp) {
 	controller->setFootPosition(PxExtendedVec3(disp.x, disp.y, disp.z));
 }
 
+void OPphysXControllerSetPos(OPphysXController* controller, OPvec3 disp) {
+	controller->setPosition(PxExtendedVec3(disp.x, disp.y, disp.z));
+}
+
 OPvec3 OPphysXControllerGetPos(OPphysXController* controller) {
 	PxExtendedVec3 pos = controller->getPosition();
 	return OPvec3Create(pos.x, pos.y, pos.z);

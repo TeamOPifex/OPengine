@@ -1,5 +1,6 @@
 #include "./Data/include/OPstring.h"
 #include "./Core/include/OPmemory.h"
+#include "./Core/include/OPlog.h"
 #include <ctype.h>
 
 OPint OPstringEquals(const OPchar* str, const OPchar* cmp) {
@@ -52,6 +53,9 @@ OPchar* OPstringGetNonConstant(const OPchar* str) {
 OPchar* OPstringCopy(const OPchar* str) {
 	ui32 len, size;
 	OPchar* result = NULL;
+
+	OPlog("copy string");
+	OPlog("copying %s", str);
 
 	len = (ui32)strlen(str);
 	size = (len + 1) * sizeof(OPchar);

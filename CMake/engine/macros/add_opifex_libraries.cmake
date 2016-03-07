@@ -11,6 +11,7 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	unset(LIBHUMAN CACHE)
 	unset(LIBGLEW_158 CACHE)
 	unset(LIBGLFW CACHE)
+	unset(LIBMONGOOSE CACHE)
 	unset(LIBJANSSON CACHE)
 	unset(LIBOGG CACHE)
 	unset(LIBVORBIS CACHE)
@@ -51,10 +52,12 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	mark_as_advanced(LIBMATH)
 	mark_as_advanced(LIBPERFORMANCE)
 	mark_as_advanced(LIBSCRIPTING)
+	mark_as_advanced(LIBCOMMUNICATION)
 	mark_as_advanced(LIBPIPELINE)
 	mark_as_advanced(LIBHUMAN)
 	mark_as_advanced(LIBGLEW_158)
 	mark_as_advanced(LIBGLFW)
+	mark_as_advanced(LIBMONGOOSE)
 	mark_as_advanced(LIBJANSSON)
 	mark_as_advanced(LIBOGG)
 	mark_as_advanced(LIBVORBIS)
@@ -90,10 +93,12 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		find_binary(LIBMATH "Math")
 		find_binary(LIBPERFORMANCE "Performance")
 		find_binary(LIBSCRIPTING "Scripting")
+		find_binary(LIBCOMMUNICATION "Communication" true)
 		find_binary(LIBPIPELINE "Pipeline")
 		find_binary(LIBHUMAN "Human")
 		find_binary(LIBGLEW_158 "GLEW_158")
 		find_binary(LIBGLFW "glfw3")
+		find_binary(LIBMONGOOSE "Mongoose")
 		target_link_libraries(${APPLICATION_TARGET}
 			${LIBGLFW}
 			${LIBGLEW_158}
@@ -106,8 +111,10 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		find_binary(LIBMATH "Math" true)
 		find_binary(LIBPERFORMANCE "Performance" true)
 		find_binary(LIBSCRIPTING "Scripting" true)
+		find_binary(LIBCOMMUNICATION "Communication" true)
 		find_binary(LIBPIPELINE "Pipeline" true)
 		find_binary(LIBHUMAN "Human" true)
+		find_binary(LIBMONGOOSE "Mongoose" true)
 	else()
 		message(STATUS "!!!!!!!!!!!! NOT IOS OR ANDROID")
 		find_binary(LIBLODEPNG "LodePNG" false)
@@ -116,11 +123,13 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		find_binary(LIBMATH "Math" true)
 		find_binary(LIBPERFORMANCE "Performance" true)
 		find_binary(LIBSCRIPTING "Scripting" true)
+		find_binary(LIBCOMMUNICATION "Communication" true)
 		find_binary(LIBPIPELINE "Pipeline" true)
 		find_binary(LIBHUMAN "Human" true)
 		find_binary(LIBGLEW_158 "GLEW_158" false)
 		find_binary(LIBGLFW "glfw3" false)
 		find_binary(LIBJANSSON "jansson" false)
+		find_binary(LIBMONGOOSE "Mongoose" false)
 
 		target_link_libraries(${APPLICATION_TARGET}
 			${LIBGLFW}
@@ -138,8 +147,10 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		${LIBPERFORMANCE}
 		${LIBHUMAN}
 		${LIBSCRIPTING}
+		${LIBCOMMUNICATION}
 		${LIBPIPELINE}
 		${LIBGLFW}
+		${LIBMONGOOSE}
 		${LIBGLEW_158}
 		${OPENAL_LIBRARY}
 		${OpenGL}
