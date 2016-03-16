@@ -26,6 +26,8 @@ macro(add_external_opifex_includes)
 	add_opifex_fmod_include()
 	add_opifex_assimp_include()
 	add_opifex_oculus_include()
+	add_opifex_asio_include()
+	add_opifex_raknet_include()
 
 	# message(STATUS "Added External OPifex includes")
 endmacro(add_external_opifex_includes)
