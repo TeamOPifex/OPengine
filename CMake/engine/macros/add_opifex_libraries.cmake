@@ -30,6 +30,7 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	unset(LIBV8_ICUI18N CACHE)
 	unset(LIBV8_MKSNAPSHOT CACHE)
 	unset(LIBFMOD CACHE)
+	unset(LIBRAKNET CACHE)
 	unset(LIBLOW_LEVEL_DEBUG)
 	unset(LIBLOW_LEVEL_CLOTH_DEBUG)
 	unset(LIBPHYSX3_CHARACTER_KINEMATIC_DEBUG)
@@ -71,6 +72,7 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	mark_as_advanced(LIBV8_ICUI18N)
 	mark_as_advanced(LIBV8_NOSNAPSHOT)
 	mark_as_advanced(LIBFMOD)
+	mark_as_advanced(LIBRAKNET)
 	mark_as_advanced(LIBLOW_LEVEL_DEBUG)
 	mark_as_advanced(LIBLOW_LEVEL_CLOTH_DEBUG)
 	mark_as_advanced(LIBPHYSX3_CHARACTER_KINEMATIC_DEBUG)
@@ -175,6 +177,22 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		endif()
 		target_link_libraries(${APPLICATION_TARGET}
 				${LIBFMOD}
+			)
+	endif()
+
+	if(${OPIFEX_OPTION_RAKNET})
+
+		if(${OPIFEX_OS_WINDOWS})
+			if(${OPIFEX_OS_WIN64})
+				find_dynamic(LIBRAKNET "RakNet_VS2008_LibStatic_Debug_x64")
+			else()
+				find_dynamic(LIBRAKNET "RakNet_VS2008_LibStatic_Debug_x86")
+			endif()
+		else()
+			find_dynamic(LIBFMOD "fmod")
+		endif()
+		target_link_libraries(${APPLICATION_TARGET}
+				${LIBRAKNET}
 			)
 	endif()
 

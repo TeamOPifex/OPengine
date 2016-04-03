@@ -248,4 +248,12 @@ inline OPvec3 OPvec3RandNorm(){
 inline void OPvec3Log(const OPchar* m, OPvec3 v) {
 	OPlog("%s: [%f, %f, %f]", m, v.x, v.y, v.z);
 }
+
+inline OPvec3 OPvec3Tween(OPvec3 a, OPvec3 b, OPfloat delta) {
+	return OPvec3Create(
+		a.x + (b.x - a.x) * delta,
+		a.y + (b.y - a.y) * delta,
+		a.z + (b.z - a.z) * delta
+		);
+}
 #endif

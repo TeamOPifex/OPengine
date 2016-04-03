@@ -21,7 +21,6 @@ void ExampleServerClientEnter(OPgameState* last) {
 	serverClientExampleExample.Mode = 0;
 	serverClientExampleExample.HeldDown = 0;
 	serverClientExampleExample.Protocol = NULL;
-
 }
 
 void ClientReceive(OPprotocolSimpleMessage message) {

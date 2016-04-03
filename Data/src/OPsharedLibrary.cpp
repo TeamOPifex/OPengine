@@ -138,7 +138,9 @@ OPint OPsharedLibraryClose(OPsharedLibrary* sharedLibrary) {
 
 
 OPdll OPdllOpen(const OPchar* path) {
-
+	OPdll result;
+#if defined(OPIFEX_WINDOWS)
+#else
 	OPchar* pathMerge = OPstringCreateMerged(OPgetExecutableDir(), path);
 
 	void* library = dlopen(pathMerge, RTLD_LAZY);
@@ -147,13 +149,15 @@ OPdll OPdllOpen(const OPchar* path) {
 		OPlogErr("FAILED TO LOAD LIBRARY");
 	}
 
-	OPdll result;
 	result.library = library;
 	result.path = pathMerge;
 	result.lastModified = OPfileLastChange(pathMerge);
+#endif
 	return result;
 }
 OPint OPdllUpdate(OPdll* dll) {
+#if defined(OPIFEX_WINDOWS)
+#else
 	ui64 lastChange = OPfileLastChange(dll->path);
 	if (dll->lastModified == lastChange) return 0;
 	dll->lastModified = lastChange;
@@ -167,10 +171,14 @@ OPint OPdllUpdate(OPdll* dll) {
 			OPlogErr("FAILED TO LOAD LIBRARY");
 		}
 	}
+#endif
 	return 1;
 }
 void* OPdllSymbol(OPdll* dll, const OPchar* symbol) {
-	void* result = dlsym(dll->library, symbol);
+	void* result = NULL;
+#if defined(OPIFEX_WINDOWS)
+#else
+	result = dlsym(dll->library, symbol);
 	Dl_info info;
 	if (dladdr(result, &info)) {
 		OPlog("Info on dependencies():\n");
@@ -181,8 +189,12 @@ void* OPdllSymbol(OPdll* dll, const OPchar* symbol) {
 	} else {
 		OPlog("No valid data");
 	}
+#endif
 	return result;
 }
 void OPdllClose(OPdll* dll) {
+#if defined(OPIFEX_WINDOWS)
+#else
 	dlclose(dll->library);
+#endif
 }

@@ -17,18 +17,16 @@ endmacro(add_opifex_raknet_set_source)
 macro(add_opifex_raknet_include)
 
 	add_opifex_raknet_set_source()
-	include_directories(${_RAKNET_PATH}/)
-	message(STATUS "   ###   RAKNET INCLUDE PATH ${_RAKNET_PATH}inc/")
+	include_directories(${_RAKNET_PATH}/Source/)
+	message(STATUS "   ###   RAKNET INCLUDE PATH ${_RAKNET_PATH}/Source/")
 
 endmacro(add_opifex_raknet_include)
 
 
 function(add_opifex_raknet APPLICATION_TARGET )
 
-	# message("   CHOOSE FMOD")
-
-	if(NOT ${OPIFEX_OPTION_FMOD})
-		# message(STATUS "   FMOD NOT SELECTED")
+	if(NOT ${OPIFEX_OPTION_RAKNET})
+		message(STATUS "   RAKNET NOT SELECTED")
 		RETURN()
 	endif()
 
@@ -36,11 +34,11 @@ function(add_opifex_raknet APPLICATION_TARGET )
 
 	message(STATUS "Link RAKNET")
 
-    if(${OPIFEX_OS_WINDOWS})
-		# message(STATUS "Adding Windows FMOD")
+  if(${OPIFEX_OS_WINDOWS})
+		message(STATUS "Adding Windows RakNet")
 		add_opifex_raknet_windows(${APPLICATION_TARGET})
-    else()
-		# message(STATUS "Adding OSX FMOD")
+  else()
+		message(STATUS "Adding OSX RakNet")
 		add_opifex_raknet_osx(${APPLICATION_TARGET})
 	endif()
 
@@ -75,37 +73,37 @@ macro(add_opifex_raknet_windows APPLICATION_TARGET)
 
 	if(${OPIFEX_OS_WIN64})
 
-		SET(_FMOD_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/Raknet/lib/debug/win64/")
+		SET(_RAKNET_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/Raknet/lib/debug/win64/")
 		if(_RAKNET_SOURCE)
-			SET(_FMOD_BINARY_LOCATION "${_RAKNET_PATH}\\lib\\")
+			SET(_RAKNET_BINARY_LOCATION "${_RAKNET_PATH}\\Lib\\")
 		endif()
 
-		copy_to_binaries(${_FMOD_BINARY_LOCATION}libRakNetDLL.lib)
-		copy_to_binaries(${_FMOD_BINARY_LOCATION}libRakNetDLL.dll)
+		copy_to_binaries(${_RAKNET_BINARY_LOCATION}RakNet_VS2008_LibStatic_Debug_x64.lib)
+		#copy_to_binaries(${_RAKNET_BINARY_LOCATION}RakNet_VS2008_DLL_Debug_Win32.dll)
 
 
 		link_from_binaries(${APPLICATION_TARGET}
-			libRakNetDLL.lib
+			RakNet_VS2008_LibStatic_Debug_x64.lib
 			)
 
-		copy_from_binaries(${APPLICATION_TARGET} "libRakNetDLL.dll" "/Application/Debug")
+		#copy_from_binaries(${APPLICATION_TARGET} "RakNet_VS2008_DLL_Debug_Win32.dll" "/Application/Debug")
 
 	elseif(${OPIFEX_OS_WIN32})
 
 
 		if(${OPIFEX_OPTION_RELEASE})
-			SET(_FMOD_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/Raknet/lib/release/win32/")
+			SET(_RAKNET_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/Raknet/lib/release/win32/")
 		else()
-			SET(_FMOD_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/Raknet/lib/debug/win32/")
+			SET(_RAKNET_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/Raknet/lib/debug/win32/")
 		endif()
 
 		if(_RAKNET_SOURCE)
-			SET(_FMOD_BINARY_LOCATION "${_RAKNET_PATH}\\lib\\")
+			SET(_RAKNET_BINARY_LOCATION "${_RAKNET_PATH}\\lib\\")
 		endif()
 
-		copy_to_binaries(${_FMOD_BINARY_LOCATION}libRakNetDLL.lib)
+		copy_to_binaries(${_RAKNET_BINARY_LOCATION}libRakNetDLL.lib)
 
-		copy_to_binaries(${_FMOD_BINARY_LOCATION}libRakNetDLL.dll)
+		copy_to_binaries(${_RAKNET_BINARY_LOCATION}libRakNetDLL.dll)
 
 		link_from_binaries(${APPLICATION_TARGET}
 			libRakNetDLL.lib

@@ -29,6 +29,15 @@ macro(add_opifex_defines)
 		add_definitions(-DOPIFEX_OPTION_FMOD)
 	endif()
 
+	if(${OPIFEX_OPTION_ASIO})
+		add_definitions(-DOPIFEX_OPTION_ASIO)
+		add_definitions(-DASIO_STANDALONE)
+	endif()
+
+	if(${OPIFEX_OPTION_RAKNET})
+		add_definitions(-DOPIFEX_OPTION_RAKNET)
+	endif()
+
 	if(${OPIFEX_OPTION_AUDIO})
 		add_definitions(-DOPIFEX_OPTION_AUDIO)
 	endif()

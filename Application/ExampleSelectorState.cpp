@@ -70,6 +70,8 @@ void ExampleSelectorEnter(OPgameState* last) {
            { "Mouse Intersect", &GS_EXAMPLE_MOUSE_INTERSECT, GS_EXAMPLE_MOUSE_INTERSECT_AVAILABLE, 1 },
 
            // Advanced
+           { "Asio", &GS_EXAMPLE_ASIO, GS_EXAMPLE_ASIO_AVAILABLE, 2 },
+           { "RakNet", &GS_EXAMPLE_RAKNET, GS_EXAMPLE_RAKNET_AVAILABLE, 2 },
            { "Physics", &GS_EXAMPLE_PHYSICS, GS_EXAMPLE_PHYSICS_AVAILABLE, 2 },
            { "Physics Character", &GS_EXAMPLE_PHYSICSCHARACTER, GS_EXAMPLE_PHYSICSCHARACTER_AVAILABLE, 2 },
            { "Skinning", &GS_EXAMPLE_SKINNING, GS_EXAMPLE_SKINNING_AVAILABLE, 2 },

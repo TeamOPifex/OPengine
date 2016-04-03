@@ -192,7 +192,12 @@ struct OPmat4 {
 	}
 
 	inline OPmat4* Translate(f32 x, f32 y, f32 z) {
-	    OPmat4Translate(this, x, y, z);
+		OPmat4Translate(this, x, y, z);
+		return this;
+	}
+
+	inline OPmat4* Translate(OPvec3 val) {
+		OPmat4Translate(this,val.x, val.y,val.z);
 		return this;
 	}
 };
