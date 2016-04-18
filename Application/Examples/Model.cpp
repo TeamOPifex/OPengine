@@ -79,7 +79,7 @@ OPint ExampleModelUpdate(OPtimer* time) {
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
-	if (OPkeyboardIsDown(OPKEY_SPACE)) { modelExample->Rotation++; }
+	if (OPkeyboardIsDown(OPKEY_SPACE)) { modelExample->Rotation += time->Elapsed; }
 
 
 	// Tells the engine to continue running

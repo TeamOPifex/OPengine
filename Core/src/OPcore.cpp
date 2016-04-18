@@ -214,6 +214,9 @@ void OPstart(int argc, char** args) {
 		// update the timer
 		OPtimerTick(&OPtime);
 
+		// Make sure that at least 1 ms has passed
+		if (OPtime.Elapsed == 0) continue;
+
 		// update the game
 		if (OPupdate(&OPtime)) {
 			_OPengineRunning = 0;

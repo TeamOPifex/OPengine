@@ -21,7 +21,7 @@ OPint OPtimerInit(struct OPtimer *timer){
 	return 0;
 }
 //----------------------------------------------------------------------------
-void OPtimerTick(struct OPtimer* timer){
+void OPtimerTick(struct OPtimer* timer) {
 #if defined(OPIFEX_UNIX)
 	struct timeval time;
 	ui64 elapsed;
@@ -31,8 +31,11 @@ void OPtimerTick(struct OPtimer* timer){
 		(time.tv_usec - timer->TimeLastTick.tv_usec)) / 1000;
 
 	timer->TotalGametime += elapsed;
-	timer->TimeLastTick = time;
 	timer->Elapsed = elapsed;
+	if (timer->Elapsed != 0) {
+		// We want to keep adding up until at least 1 ms has elapsed
+		timer->TimeLastTick = time;
+	}
 
 #elif defined(OPIFEX_WINDOWS)
 	// Windows specific values for time
@@ -44,8 +47,11 @@ void OPtimerTick(struct OPtimer* timer){
 	timer->Elapsed *= 1000; // to milliseconds
 	timer->Elapsed /= timer->Frequency.QuadPart;
 
-	timer->TimeLastTick = StartingTime;
 	timer->TotalGametime += timer->Elapsed;
+	if (timer->Elapsed != 0) {
+		// We want to keep adding up until at least 1 ms has elapsed
+		timer->TimeLastTick = StartingTime;
+	}
 
 #endif
 }
