@@ -8,6 +8,7 @@ void OPfontRenderBegin(OPfontManager* fontManager);
 void OPfontRenderEnd();
 
 void OPfontRender(const OPchar* text, OPmat4* world);
+void OPfontRender(const OPchar* text, OPmat4* world, ui8 useJustWorld);
 
 inline void OPfontRender(const OPchar* text, OPvec2 pos) {
 	OPmat4 world = OPmat4Translate(pos.x, pos.y, 0);

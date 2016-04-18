@@ -182,7 +182,12 @@ struct OPmat4 {
 	}
 
 	inline OPmat4* Scl(f32 val) {
-	    OPmat4Scl(this, val, val, val);
+		OPmat4Scl(this, val, val, val);
+		return this;
+	}
+
+	inline OPmat4* Scl(f32 x, f32 y, f32 z) {
+		OPmat4Scl(this, x, y, z);
 		return this;
 	}
 

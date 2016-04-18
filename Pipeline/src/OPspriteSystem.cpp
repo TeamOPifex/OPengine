@@ -30,6 +30,9 @@ void OPspriteSystemInit(OPspriteSystem* system, OPsprite** sprites, OPint count,
 	case OPSPRITESYSTEMALIGN_CENTER:
 		system->_mesh = OPquadCreate(0.5f, 0.5f);
 		break;
+	case OPSPRITESYSTEMALIGN_BOTTOM_LEFT:
+		system->_mesh = OPquadCreate(0.5f, 0.5f, OPvec2Create(0.5, 0.5));
+		break;
 	default:
 		system->_mesh = OPquadCreate(0.5f, 0.5f, OPvec2Create(0.0, 0.5));
 	}
@@ -99,6 +102,8 @@ void OPspriteSystemRender(OPspriteSystem* system, OPcam* cam) {
 	OPmeshBind(&system->_mesh);
 	OPeffectBind(system->Effect);
 
+	OPtexturePixelate();
+
 	OPtextureClearActive();
 	OPeffectParami("uColorTexture", OPtextureBind(system->Sprites[0]->Sheet));
 	OPeffectParamMat4("uProj", &cam->proj);
@@ -109,10 +114,13 @@ void OPspriteSystemRender(OPspriteSystem* system, OPcam* cam) {
 		OPvec2 frameSize = OPspriteCurrentFrameSize(currentSprite);
 
 		//world = // OPmat4Translate((frameSize.x / 2.0) *system->SystemSprites[i].Scale.x, (frameSize.y / 2.0) *system->SystemSprites[i].Scale.y, 0);
-		world = OPmat4Scl(frameSize.x * system->SystemSprites[i].Direction, frameSize.y, 0);
-		world *= OPmat4Scl(system->SystemSprites[i].Scale.x, system->SystemSprites[i].Scale.y, 1);
-		world += system->SystemSprites[i].Position;
-		world *= OPmat4RotZ(system->SystemSprites[i].Rotation);
+		world = OPMAT4_IDENTITY;
+		//world.Scl(system->SystemSprites[i].Scale.x, system->SystemSprites[i].Scale.y, 1.0f);
+		//world.RotZ(system->SystemSprites[i].Rotation); 
+		world.Scl(system->SystemSprites[i].Scale.x, system->SystemSprites[i].Scale.y, 1.0f);
+		world.Translate(system->SystemSprites[i].Position.x, system->SystemSprites[i].Position.y, 0);
+		world.Scl(frameSize.x * system->SystemSprites[i].Direction, frameSize.y, 0);
+
 
 		OPeffectParamMat4("uWorld", &world);
 		OPeffectParamVec2("uOffset", &currentSprite->Frames[system->SystemSprites[i].CurrentFrame].Offset);

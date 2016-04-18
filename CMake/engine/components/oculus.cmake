@@ -3,7 +3,7 @@ macro(add_opifex_oculus_set_source)
 	# Look for an External Path to the V8 folder
 	SET(_OCULUS_SOURCE 0)
 	if(NOT "${OCULUS_PATH}" STREQUAL "")
-		message(STATUS "OCULUS PATH WAS SET ${OCULUS_PATH}")
+		# message(STATUS "OCULUS PATH WAS SET ${OCULUS_PATH}")
 		SET(_OCULUS_SOURCE 1)
 		SET(_OCULUS_PATH "${OCULUS_PATH}")
 	else()

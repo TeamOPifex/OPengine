@@ -171,5 +171,8 @@ OPmesh OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OP
 		4, 6,
 		verts, indicies
 		);
+	
+	mesh.vertexLayout.stride = sizeof(OPfloat) * 5;
+
 	return mesh;
 }

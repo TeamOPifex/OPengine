@@ -4,11 +4,11 @@ macro(add_opifex_assimp_set_source)
 	# Look for an External Path to the Assimp folder
 	SET(_ASSIMP_SOURCE 0)
 	if(NOT "${ASSIMP_PATH}" STREQUAL "")
-		message(STATUS "Assimp PATH WAS SET ${ASSIMP_PATH}")
+		# message(STATUS "Assimp PATH WAS SET ${ASSIMP_PATH}")
 		SET(_ASSIMP_SOURCE 1)
 		SET(_ASSIMP_PATH "${ASSIMP_PATH}")
 	else()
-		message(STATUS "Assimp PATH WAS NOT SET ${ASSIMP_PATH}")
+		# message(STATUS "Assimp PATH WAS NOT SET ${ASSIMP_PATH}")
 		SET(_ASSIMP_PATH "${PROJECT_SOURCE_DIR}/External/Assimp")
 	endif()
 
@@ -19,7 +19,7 @@ macro(add_opifex_assimp_include)
 
 	add_opifex_assimp_set_source()
 	include_directories(${_ASSIMP_PATH}/include/)
-	message(STATUS "${_ASSIMP_PATH}/include/")
+	# message(STATUS "${_ASSIMP_PATH}/include/")
 
 endmacro(add_opifex_assimp_include)
 
@@ -28,7 +28,7 @@ function(add_opifex_assimp APPLICATION_TARGET )
 
 	add_opifex_assimp_set_source()
 
-	message(STATUS "Link Assimp")
+	# message(STATUS "Link Assimp")
 
   if(${OPIFEX_OS_WINDOWS})
 		add_opifex_assimp_windows(${APPLICATION_TARGET})
@@ -50,7 +50,7 @@ macro(add_opifex_assimp_osx APPLICATION_TARGET)
 			SET(_ASSIMP_BINARY_LOCATION "${ASSIMP_PATH}/Lib/osx64/")
 		endif()
 
-		message("${ASSIMP_PATH} ${_ASSIMP_SOURCE}")
+		# message("${ASSIMP_PATH} ${_ASSIMP_SOURCE}")
 
 	elseif(${OPIFEX_OS_OSX32})
 

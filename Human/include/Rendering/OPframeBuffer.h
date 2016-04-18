@@ -13,11 +13,7 @@
 //  \___ \| __| '__| | | |/ __| __/ __|
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
-struct OPframeBuffer{
-	OPtextureDescription Description;
-	OPtexture Texture;
-	ui32 Handle;
-};
+struct OPframeBuffer;
 typedef struct OPframeBuffer OPframeBuffer;
 
 //-----------------------------------------------------------------------------
@@ -56,5 +52,22 @@ void OPframeBufferSetReadBufferDepth();
 void OPframeBufferBindTex(OPframeBuffer* fb);
 void OPframeBufferUnbind();
 void OPframeBufferAttachDepth(OPtexture* texture);
+
+
+
+
+struct OPframeBuffer {
+	OPtextureDescription Description;
+	OPtexture Texture;
+	ui32 Handle;
+
+	void Bind() {
+		OPframeBufferBind(this);
+	}
+
+	void Unbind() {
+		OPframeBufferUnbind();
+	}
+};
 
 #endif

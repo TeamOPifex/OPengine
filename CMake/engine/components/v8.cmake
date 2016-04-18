@@ -4,7 +4,7 @@ macro(add_opifex_v8_set_source)
 	# Look for an External Path to the V8 folder
 	SET(_V8_SOURCE 0)
 	if(NOT "${V8_PATH}" STREQUAL "")
-		message(STATUS "V8 PATH WAS SET ${V8_PATH}")
+		# message(STATUS "V8 PATH WAS SET ${V8_PATH}")
 		SET(_V8_SOURCE 1)
 		SET(_V8_PATH "${V8_PATH}")
 	else()
@@ -18,7 +18,7 @@ endmacro(add_opifex_v8_set_source)
 macro(add_opifex_v8_include)
 
 	add_opifex_v8_set_source()
-	message(STATUS "@@@@@@@@@:::::::: ${_V8_PATH}/include/")
+	# message(STATUS "@@@@@@@@@:::::::: ${_V8_PATH}/include/")
 	include_directories(${_V8_PATH}/)
 	include_directories(${_V8_PATH}/include/)
 
@@ -84,7 +84,7 @@ macro(add_opifex_v8_osx APPLICATION_TARGET)
 				libicuuc.a
 				libicui18n.a)
 
-			message(STATUS "LIBV8")
+			# message(STATUS "LIBV8")
 		else()
 
 		endif()
@@ -139,7 +139,7 @@ macro(add_opifex_v8_windows APPLICATION_TARGET)
 				v8_base_3.lib
 				)
 
-			copy_from_binaries(${APPLICATION_TARGET} "icudt.dll" "/Application/Debug")
+			copy_from_binaries(${APPLICATION_TARGET} "icudt.dll" "/Application/Debug/")
 
 		endif()
 	else()
@@ -178,9 +178,9 @@ macro(add_opifex_v8_windows APPLICATION_TARGET)
 				v8_base_3.lib
 				)
 
-			copy_from_binaries(${APPLICATION_TARGET} "icudt.dll" "/Application/Release")
+			copy_from_binaries(${APPLICATION_TARGET} "icudt.dll" "/Application/Release/")
 
-			message(STATUS "SETUP WIN32 RELEASE of V8")
+			# message(STATUS "SETUP WIN32 RELEASE of V8")
 		else()
 
 
@@ -218,7 +218,7 @@ macro(add_opifex_v8_windows APPLICATION_TARGET)
 				v8_base_3.lib
 				)
 
-			copy_from_binaries(${APPLICATION_TARGET} "icudt.dll" "/Application/Debug")
+			copy_from_binaries(${APPLICATION_TARGET} "icudt.dll" "/Application/Debug/")
 
 		endif()
 	endif()

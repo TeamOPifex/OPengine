@@ -4,7 +4,7 @@ SET(JANSSON_EXAMPLES OFF CACHE BOOL "Build JANSSON_EXAMPLES" FORCE)
 SET(JANSSON_BUILD_DOCS OFF CACHE BOOL "Build JANSSON_BUILD_DOCS" FORCE)
 
 if(${OPIFEX_OPTION_SHARED})
-SET(JANSSON_BUILD_SHARED_LIBS ON CACHE BOOL "Build JANSSON_BUILD_SHARED_LIBS" FORCE)
+    SET(JANSSON_BUILD_SHARED_LIBS ON CACHE BOOL "Build JANSSON_BUILD_SHARED_LIBS" FORCE)
 endif()
 
 option(JANSSON_WITHOUT_TESTS "Build shared libraries" OFF)
@@ -15,16 +15,13 @@ set_property(TARGET jansson PROPERTY FOLDER "External")
 file(GLOB JANSSON_INCLUDES
 	"${PROJECT_BINARY_DIR}/jansson/include/*.h"
 )
-message(STATUS "JANSON INCLUDES ${PROJECT_BINARY_DIR}/jansson/include/ | ${JANSSON_INCLUDES}")
+# message(STATUS "JANSON INCLUDES ${PROJECT_BINARY_DIR}/jansson/include/ | ${JANSSON_INCLUDES}")
 
 set_binary_output(BINARY_FOLDER)
-message(STATUS "Installing to ${BINARY_FOLDER}")
+# message(STATUS "Installing to ${BINARY_FOLDER}")
 file(COPY ${JANSSON_INCLUDES} DESTINATION ${BINARY_FOLDER})
-if(${OPIFEX_OPTION_SHARED})
-	output_library_from(jansson "/jansson/bin" "jansson_d")
-else()
-	output_library_from(jansson "/jansson/lib" "jansson")
-endif()
+
+
 
 ### GLFW
 SET(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "Build GLFW_BUILD_EXAMPLES" FORCE)
@@ -41,7 +38,7 @@ add_subdirectory("${GLFW_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/GLFW)
 set_property(TARGET glfw PROPERTY FOLDER "External")
 add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS)
 
-output_library_from(glfw "/GLFW/src" "glfw3")
+# output_library_from(glfw "/GLFW/src" "glfw3")
 
 ### GLEW
 

@@ -8,16 +8,16 @@
 #include "include/Utilities/Errors.h"
 
 i8 OPRENDER_INITIALIZED = 0;
-i32 OPRENDER_WIDTH = 1280;
-i32 OPRENDER_HEIGHT = 720;
-i32 OPRENDER_SCREEN_WIDTH;
-i32 OPRENDER_SCREEN_HEIGHT;
-i32 OPRENDER_SCALED_WIDTH;
-i32 OPRENDER_SCALED_HEIGHT;
+ui32 OPRENDER_WIDTH = 1280;
+ui32 OPRENDER_HEIGHT = 720;
+ui32 OPRENDER_SCREEN_WIDTH;
+ui32 OPRENDER_SCREEN_HEIGHT;
+ui32 OPRENDER_SCALED_WIDTH;
+ui32 OPRENDER_SCALED_HEIGHT;
 f32 OPRENDER_SCREEN_WIDTH_SCALE;
 f32 OPRENDER_SCREEN_HEIGHT_SCALE;
-OPint OPRENDER_FULLSCREEN;
-OPint OPRENDER_HAS_FOCUS;
+i8 OPRENDER_FULLSCREEN;
+i8 OPRENDER_HAS_FOCUS;
 OPuint OPRENDER_VAO = 0;
 
 GLFWwindow* window;
@@ -97,7 +97,10 @@ OPint OPrenderInit(i32 width, i32 height) {
 
     OPlog("OpenGL version set %d.%d.%d", major, minor, rev);
 
-    glfwGetFramebufferSize(window, &OPRENDER_SCREEN_WIDTH, &OPRENDER_SCREEN_HEIGHT);
+	int w, h;
+	glfwGetFramebufferSize(window, &w, &h);
+	OPRENDER_SCREEN_WIDTH = (ui32)w;
+	OPRENDER_SCREEN_HEIGHT = (ui32)h;
 
     OPRENDER_SCREEN_WIDTH_SCALE = _screenWidth / (f32)OPRENDER_SCREEN_WIDTH;
     OPRENDER_SCREEN_HEIGHT_SCALE = _screenHeight / (f32)OPRENDER_SCREEN_HEIGHT;
@@ -165,7 +168,7 @@ void  OPrenderSetScreenSize(OPuint width, OPuint height) {
     OPRENDER_SCREEN_WIDTH = width;
     OPRENDER_SCREEN_HEIGHT = height;
 }
-void  OPrenderSetViewport(OPuint x, OPuint y, OPuint width, OPuint height) {
+void  OPrenderSetViewport(OPint x, OPint y, ui32 width, ui32 height) {
     glViewport(x, y, width, height);
     OPRENDER_WIDTH  = width;
     OPRENDER_HEIGHT = height;

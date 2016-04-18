@@ -18,7 +18,7 @@ macro(add_opifex_raknet_include)
 
 	add_opifex_raknet_set_source()
 	include_directories(${_RAKNET_PATH}/Source/)
-	message(STATUS "   ###   RAKNET INCLUDE PATH ${_RAKNET_PATH}/Source/")
+	# message(STATUS "   ###   RAKNET INCLUDE PATH ${_RAKNET_PATH}/Source/")
 
 endmacro(add_opifex_raknet_include)
 
@@ -26,19 +26,19 @@ endmacro(add_opifex_raknet_include)
 function(add_opifex_raknet APPLICATION_TARGET )
 
 	if(NOT ${OPIFEX_OPTION_RAKNET})
-		message(STATUS "   RAKNET NOT SELECTED")
+		# message(STATUS "   RAKNET NOT SELECTED")
 		RETURN()
 	endif()
 
 	add_opifex_raknet_set_source()
 
-	message(STATUS "Link RAKNET")
+	# message(STATUS "Link RAKNET")
 
   if(${OPIFEX_OS_WINDOWS})
-		message(STATUS "Adding Windows RakNet")
+		# message(STATUS "Adding Windows RakNet")
 		add_opifex_raknet_windows(${APPLICATION_TARGET})
   else()
-		message(STATUS "Adding OSX RakNet")
+		# message(STATUS "Adding OSX RakNet")
 		add_opifex_raknet_osx(${APPLICATION_TARGET})
 	endif()
 
@@ -56,7 +56,7 @@ macro(add_opifex_raknet_osx APPLICATION_TARGET)
 			SET(_FMOD_BINARY_LOCATION "${RAKNET_PATH}/DLL/")
 		endif()
 
-		message(STATUS "Looking for FMOD libs in ${_FMOD_BINARY_LOCATION}")
+		# message(STATUS "Looking for FMOD libs in ${_FMOD_BINARY_LOCATION}")
 
 		copy_to_binaries(${_FMOD_BINARY_LOCATION}libRakNetDLL.dylib)
 		link_from_binaries(${APPLICATION_TARGET}
@@ -86,7 +86,7 @@ macro(add_opifex_raknet_windows APPLICATION_TARGET)
 			RakNet_VS2008_LibStatic_Debug_x64.lib
 			)
 
-		#copy_from_binaries(${APPLICATION_TARGET} "RakNet_VS2008_DLL_Debug_Win32.dll" "/Application/Debug")
+		#copy_from_binaries(${APPLICATION_TARGET} "RakNet_VS2008_DLL_Debug_Win32.dll" "/Application/Debug/")
 
 	elseif(${OPIFEX_OS_WIN32})
 
@@ -110,9 +110,9 @@ macro(add_opifex_raknet_windows APPLICATION_TARGET)
 			)
 
 		if(${OPIFEX_OPTION_RELEASE})
-			copy_from_binaries(${APPLICATION_TARGET} "libRakNetDLL.dll" "/Application/Release")
+			copy_from_binaries(${APPLICATION_TARGET} "libRakNetDLL.dll" "/Application/Release/")
 		else()
-			copy_from_binaries(${APPLICATION_TARGET} "libRakNetDLL.dll" "/Application/Debug")
+			copy_from_binaries(${APPLICATION_TARGET} "libRakNetDLL.dll" "/Application/Debug/")
 		endif()
 
 	endif()

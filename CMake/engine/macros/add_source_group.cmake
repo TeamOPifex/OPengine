@@ -1,7 +1,7 @@
 
 macro(add_source_group FILTER_NAME SOURCE_PATH TARGET_LIST)
 
-	file(TO_NATIVE_PATH ${FILTER_NAME} NEW_FILTER_NAME)
+	file(TO_NATIVE_PATH "${FILTER_NAME}" NEW_FILTER_NAME)
 	file(GLOB TEMP_SRC
 		"${SOURCE_PATH}/*.h"
 		"${SOURCE_PATH}/*.cpp"
@@ -35,14 +35,14 @@ macro(add_source_group_recurse SOURCE_PATH TARGET_LIST)
 
         if(${dir_path} STREQUAL ${SOURCE_PATH})
             add_source_group(/ ${SOURCE_PATH} ${TARGET_LIST})
-            message(STATUS "PATH: /")
+            # message(STATUS "PATH: /")
         else()
             string(LENGTH ${SOURCE_PATH} source_path_len)
             string(LENGTH ${dir_path} dir_path_len)
             math(EXPR len "${dir_path_len} - ${source_path_len}")
             string(SUBSTRING ${dir_path} ${source_path_len} ${dir_path_len} trunc_dir_path)
             add_source_group(trunc_dir_path ${dir_path} ${TARGET_LIST})
-            message(STATUS "PATH: ${trunc_dir_path}")
+            # message(STATUS "PATH: ${trunc_dir_path}")
         endif()
     ENDFOREACH()
 

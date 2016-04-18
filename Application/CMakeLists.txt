@@ -13,7 +13,7 @@ add_opifex_includes()
 #########################################
 # Source Files
 #########################################
-add_source_group(\\ "${PROJECT_SOURCE_DIR}/Application" APPLICATION_SRC)
+add_source_group(/ "${PROJECT_SOURCE_DIR}/Application" APPLICATION_SRC)
 add_source_group(Examples "${PROJECT_SOURCE_DIR}/Application/Examples" APPLICATION_SRC)
 add_asset_dir(APPLICATION_SRC)
 

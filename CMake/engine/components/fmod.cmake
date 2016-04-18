@@ -18,7 +18,7 @@ macro(add_opifex_fmod_include)
 
 	add_opifex_fmod_set_source()
 	include_directories(${_FMOD_PATH}/inc/)
-	message(STATUS "   ###   FMOD INCLUDE PATH ${_FMOD_PATH}inc/")
+	# message(STATUS "   ###   FMOD INCLUDE PATH ${_FMOD_PATH}inc/")
 
 endmacro(add_opifex_fmod_include)
 
@@ -34,7 +34,7 @@ function(add_opifex_fmod APPLICATION_TARGET )
 
 	add_opifex_fmod_set_source()
 
-	message(STATUS "Link FMOD")
+	# message(STATUS "Link FMOD")
 
     if(${OPIFEX_OS_WINDOWS})
 		# message(STATUS "Adding Windows FMOD")
@@ -58,7 +58,7 @@ macro(add_opifex_fmod_osx APPLICATION_TARGET)
 			SET(_FMOD_BINARY_LOCATION "${FMOD_PATH}/lib/")
 		endif()
 
-		message(STATUS "Looking for FMOD libs in ${_FMOD_BINARY_LOCATION}")
+		# message(STATUS "Looking for FMOD libs in ${_FMOD_BINARY_LOCATION}")
 
 		copy_to_binaries(${_FMOD_BINARY_LOCATION}libfmod.dylib)
 		copy_to_binaries(${_FMOD_BINARY_LOCATION}libfmodL.dylib)
@@ -94,8 +94,14 @@ macro(add_opifex_fmod_windows APPLICATION_TARGET)
 			fmodL64_vc.lib
 			)
 
-		copy_from_binaries(${APPLICATION_TARGET} "fmod64.dll" "/Application/Debug")
-		copy_from_binaries(${APPLICATION_TARGET} "fmodL64.dll" "/Application/Debug")
+					if(${OPIFEX_OPTION_RELEASE})
+							copy_from_binaries(${APPLICATION_TARGET} "fmod64.dll" "/Application/Release/")
+							copy_from_binaries(${APPLICATION_TARGET} "fmodL64.dll" "/Application/Release/")
+					else()
+							copy_from_binaries(${APPLICATION_TARGET} "fmod64.dll" "/Application/Debug/")
+							copy_from_binaries(${APPLICATION_TARGET} "fmodL64.dll" "/Application/Debug/")
+					endif()
+
 
 	elseif(${OPIFEX_OS_WIN32})
 
@@ -122,11 +128,11 @@ macro(add_opifex_fmod_windows APPLICATION_TARGET)
 			)
 
 		if(${OPIFEX_OPTION_RELEASE})
-			copy_from_binaries(${APPLICATION_TARGET} "fmod.dll" "/Application/Release")
-			copy_from_binaries(${APPLICATION_TARGET} "fmodL.dll" "/Application/Release")
+			copy_from_binaries(${APPLICATION_TARGET} "fmod.dll" "/Application/Release/")
+			copy_from_binaries(${APPLICATION_TARGET} "fmodL.dll" "/Application/Release/")
 		else()
-			copy_from_binaries(${APPLICATION_TARGET} "fmod.dll" "/Application/Debug")
-			copy_from_binaries(${APPLICATION_TARGET} "fmodL.dll" "/Application/Debug")
+			copy_from_binaries(${APPLICATION_TARGET} "fmod.dll" "/Application/Debug/")
+			copy_from_binaries(${APPLICATION_TARGET} "fmodL.dll" "/Application/Debug/")
 		endif()
 
 	endif()

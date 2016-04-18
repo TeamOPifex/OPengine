@@ -101,7 +101,7 @@ void OPcamUpdateProj(OPcam* cam) {
 
 void OPcamUpdate(OPcam* cam) {
 	OPcamUpdateView(cam);
-	OPcamUpdateProj(cam);
+	//OPcamUpdateProj(cam);
 }
 
 

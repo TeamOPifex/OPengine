@@ -3,47 +3,15 @@ function(opifex_engine_status_messages)
 
 
 	set_opifex_assets()
-	message(STATUS "OPIFEX ASSETS SET TO: ${OPIFEX_ASSETS}")
 
-	message(STATUS "")
-	message(STATUS "===================================")
-	message(STATUS "==    OPifex CMake Completed     ==")
-	message(STATUS "===================================\n\nCONFIGURED VARIABLES:\n")
-	message(STATUS "  OPIFEX_REPOSITORY: ${OPIFEX_REPOSITORY}")
-	message(STATUS "  OPIFEX_ENGINE_REPOSITORY: ${OPIFEX_ENGINE_REPOSITORY}")
-	message(STATUS "  OPIFEX_BINARIES: ${OPIFEX_BINARIES}")
-	message(STATUS "  OPIFEX_ASSETS: ${OPIFEX_ASSETS}")
-	message(STATUS "  OPIFEX_OS: ${OPIFEX_OS}")
-	message(STATUS "  PROJECT_BINARY_DIR: ${PROJECT_BINARY_DIR}")
-	message(STATUS "  PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
-	message(STATUS "")
-	message(STATUS "===================================")
-	message(STATUS "==       OPifex Configured       ==")
-	message(STATUS "===================================\n\nCONFIGURED VARIABLES:\n")
-	message(STATUS "  OPIFEX_OPTION_RELEASE: ${OPIFEX_OPTION_RELEASE}")
-	message(STATUS "")
-	message(STATUS "===================================\n\nCONFIGURED:\n")
-	message(STATUS "  OPENAL_LIBRARY: ${OPENAL_LIBRARY}")
-	message(STATUS "  GLFW_LIBRARIES: ${GLFW_LIBRARIES}")
-	message(STATUS "  OGG_LIBRARY: ${OGG_LIBRARY}")
-	message(STATUS "  VORBISFILE_LIBRARY: ${VORBISFILE_LIBRARY}")
-	message(STATUS "  GLFW_LIBRARIES: ${GLFW_LIBRARIES}")
-	message(STATUS "")
-	message(STATUS "===================================\n\nCONFIGURED BINARIES:\n")
-	message(STATUS "  LIBLODEPNG: ${LIBLODEPNG}")
-	message(STATUS "  LIBCORE: ${LIBCORE}")
-	message(STATUS "  LIBDATA: ${LIBDATA}")
-	message(STATUS "  LIBMATH: ${LIBMATH}")
-	message(STATUS "  LIBPERFORMANCE: ${LIBPERFORMANCE}")
-	message(STATUS "  LIBSCRIPTING: ${LIBSCRIPTING}")
-	message(STATUS "  LIBPIPELINE: ${LIBPIPELINE}")
-	message(STATUS "  LIBHUMAN: ${LIBHUMAN}")
-	message(STATUS "  LIBGLEW_158: ${LIBGLEW_158}")
-	message(STATUS "  LIBGLFW: ${LIBGLFW}")
-	message(STATUS "  LIBOGG: ${LIBOGG}")
-	message(STATUS "  LIBVORBIS: ${LIBVORBIS}")
-	message(STATUS "  LIBVORBISFILE: ${LIBVORBISFILE}")
-	message(STATUS "")
-	message(STATUS "===================================\n")
+	message(STATUS "\nOPengine CMake Success\n===================================\n
+		OPIFEX_REPOSITORY: ${OPIFEX_REPOSITORY}
+		OPIFEX_ENGINE_REPOSITORY: ${OPIFEX_ENGINE_REPOSITORY}
+		OPIFEX_BINARIES: ${OPIFEX_BINARIES}
+		OPIFEX_ASSETS: ${OPIFEX_ASSETS}
+		OPIFEX_OS: ${OPIFEX_OS}
+		PROJECT_BINARY_DIR: ${PROJECT_BINARY_DIR}
+		PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}
+		OPIFEX_OPTION_RELEASE: ${OPIFEX_OPTION_RELEASE}\n")
 
 endfunction(opifex_engine_status_messages)

@@ -18,7 +18,7 @@ macro(add_opifex_asio_include)
 
 	add_opifex_asio_set_source()
 	include_directories(${_ASIO_PATH}/include/)
-	message(STATUS "   ###   ASIO INCLUDE PATH ${_ASIO_PATH}include/")
+	# message(STATUS "   ###   ASIO INCLUDE PATH ${_ASIO_PATH}include/")
 
 endmacro(add_opifex_asio_include)
 

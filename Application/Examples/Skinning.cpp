@@ -30,9 +30,9 @@ void ExampleSkinningEnter(OPgameState* last) {
 	OPcmanLoad("Skinning.vert");
 	skinningExample = (SkinningExample*)OPalloc(sizeof(SkinningExample));
 
-	skinningExample->skeleton = (OPskeleton*)OPcmanLoadGet("patrick.opm.skel");
-	skinningExample->animation = (OPskeletonAnimation*)OPcmanLoadGet("patrick.opm.Take 001.anim");
-	skinningExample->animation2 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
+	skinningExample->skeleton = (OPskeleton*)OPcmanLoadGet("ld35person.opm.skel");
+	skinningExample->animation = (OPskeletonAnimation*)OPcmanLoadGet("ld35person.opm.Take 001.anim");
+	skinningExample->animation2 = (OPskeletonAnimation*)OPcmanLoadGet("ld35person.opm.Take 001.anim");
 	skinningExample->animation3 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
 	skinningExample->animation4 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
 
@@ -41,7 +41,7 @@ void ExampleSkinningEnter(OPgameState* last) {
 	OPcmanLoad("Skinning.vert");
 
 	skinningExample->pos = 0;
-	skinningExample->Mesh = (OPmesh*)OPcmanLoadGet("patrick.opm");
+	skinningExample->Mesh = (OPmesh*)OPcmanLoadGet("ld35person.opm");
 
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
