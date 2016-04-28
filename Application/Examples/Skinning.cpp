@@ -30,9 +30,9 @@ void ExampleSkinningEnter(OPgameState* last) {
 	OPcmanLoad("Skinning.vert");
 	skinningExample = (SkinningExample*)OPalloc(sizeof(SkinningExample));
 
-	skinningExample->skeleton = (OPskeleton*)OPcmanLoadGet("patrick.opm.skel");
-	skinningExample->animation = (OPskeletonAnimation*)OPcmanLoadGet("patrick.opm.Take 001.anim");
-	skinningExample->animation2 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
+	skinningExample->skeleton = (OPskeleton*)OPcmanLoadGet("ld35person.opm.skel");
+	skinningExample->animation = (OPskeletonAnimation*)OPcmanLoadGet("ld35person.opm.Take 001.anim");
+	skinningExample->animation2 = (OPskeletonAnimation*)OPcmanLoadGet("ld35person.opm.Take 001.anim");
 	skinningExample->animation3 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
 	skinningExample->animation4 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
 
@@ -41,7 +41,7 @@ void ExampleSkinningEnter(OPgameState* last) {
 	OPcmanLoad("Skinning.vert");
 
 	skinningExample->pos = 0;
-	skinningExample->Mesh = (OPmesh*)OPcmanLoadGet("patrick.opm");
+	skinningExample->Mesh = (OPmesh*)OPcmanLoadGet("ld35person.opm");
 
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", GL_FLOAT, 3 },
@@ -61,14 +61,14 @@ void ExampleSkinningEnter(OPgameState* last) {
 		attribs,
 		5,
 		"Model Effect",
-		skinningExample->Mesh->VertexSize
+		skinningExample->Mesh->vertexLayout.stride
 		);
 
 	skinningExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
 	f32 pos = 10 * SCALE;
 	*skinningExample->Camera = OPcamPersp(
 		OPvec3Create(pos, pos, pos),
-		OPvec3Create(0, pos / 4.0, 0),
+		OPvec3Create(0, pos / 4.0f, 0),
 		OPvec3Create(0, 1, 0),
 		0.1f,
 		500.0f,
@@ -91,13 +91,13 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	//if (OPkeyboardWasPressed(OPKEY_M)) { skinningExample->Mesh->SkeletonAnimation.Frame++; }
 	//if (OPkeyboardWasPressed(OPKEY_N)) { skinningExample->Mesh->SkeletonAnimation.Frame--; }
 
-	if (OPkeyboardIsDown(OPKEY_UP)) { skinningExample->Camera->_pos.y += 0.1 * SCALE; }
-	if (OPkeyboardIsDown(OPKEY_DOWN)) { skinningExample->Camera->_pos.y -= 0.1 * SCALE; }
-	if (OPkeyboardIsDown(OPKEY_LEFT)) { skinningExample->Camera->_pos.x -= 0.1 * SCALE; }
-	if (OPkeyboardIsDown(OPKEY_RIGHT)) { skinningExample->Camera->_pos.x += 0.1 * SCALE; }
+	if (OPkeyboardIsDown(OPKEY_UP)) { skinningExample->Camera->pos.y += (OPfloat)(0.1 * SCALE); }
+	if (OPkeyboardIsDown(OPKEY_DOWN)) { skinningExample->Camera->pos.y -= (OPfloat)(0.1 * SCALE); }
+	if (OPkeyboardIsDown(OPKEY_LEFT)) { skinningExample->Camera->pos.x -= (OPfloat)(0.1 * SCALE); }
+	if (OPkeyboardIsDown(OPKEY_RIGHT)) { skinningExample->Camera->pos.x += (OPfloat)(0.1 * SCALE); }
 
-	skinningExample->Camera->_viewStale = 1;
-	OPcamUpdateView((*skinningExample->Camera));
+	skinningExample->Camera->Update();
+	OPcamUpdateView(skinningExample->Camera);
 
 	if (OPkeyboardWasPressed(OPKEY_N)) {
 		skinningExample->animation2->Elapsed = skinningExample->animation2->Frame = 0;
@@ -141,16 +141,13 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	OPmeshBind(skinningExample->Mesh);
 	OPeffectBind(skinningExample->Effect);
 
-	OPmat4 world, view, proj;
+	OPmat4 world;
 	OPmat4Identity(&world);
 	//OPmat4BuildRotX(&world,- OPpi / 2.0);
 
-	OPcamGetView((*skinningExample->Camera), &view);
-	OPcamGetProj((*skinningExample->Camera), &proj);
-
 	OPeffectParamMat4("uWorld", &world);
-	OPeffectParamMat4("uView", &view);
-	OPeffectParamMat4("uProj", &proj);
+	OPeffectParamMat4("uView", &skinningExample->Camera->view);
+	OPeffectParamMat4("uProj", &skinningExample->Camera->proj);
 
 	OPeffectParamMat4v("uBones", skinningExample->skeleton->hierarchyCount, skinningExample->skeleton->skinned);
 

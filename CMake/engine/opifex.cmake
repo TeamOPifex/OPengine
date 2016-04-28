@@ -4,6 +4,7 @@
 ### CMake Setup
 include(${CMAKE_CURRENT_LIST_DIR}/components.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/macros.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/marketplace.cmake)
 
 
 ### Build Setup
@@ -19,12 +20,15 @@ if(${OPIFEX_OS_IOS})
 	SET ( CMAKE_CXX_FLAGS "-stdlib=libstdc++ -std=c++11 -fobjc-abi-version=2 -fobjc-arc -std=gnu++11 -stdlib=libc++ -isysroot ${CMAKE_OSX_SYSROOT}" CACHE STRING "compile flags" FORCE)
 	# -mios-simulator-version-min=6.0
 else()
-	if(${OPIFEX_OS_32})
-		SET ( CMAKE_C_FLAGS "-stdlib=libstdc++ -m32" CACHE STRING "compile flags" FORCE)
-		SET ( CMAKE_CXX_FLAGS "-stdlib=libstdc++ -std=c++11 -m32" CACHE STRING "compile flags" FORCE)
+	if(${OPIFEX_OS_WINDOWS})
 	else()
-		SET ( CMAKE_C_FLAGS "-stdlib=libstdc++" CACHE STRING "compile flags" FORCE)
-		SET ( CMAKE_CXX_FLAGS "-stdlib=libstdc++ -std=c++11" CACHE STRING "compile flags" FORCE)
+		if(${OPIFEX_OS_32})
+			SET ( CMAKE_C_FLAGS "-stdlib=libstdc++ -m32" CACHE STRING "compile flags" FORCE)
+			SET ( CMAKE_CXX_FLAGS "-stdlib=libstdc++ -std=c++11 -m32" CACHE STRING "compile flags" FORCE)
+		else()
+			SET ( CMAKE_C_FLAGS "-stdlib=libstdc++" CACHE STRING "compile flags" FORCE)
+			SET ( CMAKE_CXX_FLAGS "-stdlib=libstdc++ -std=c++11" CACHE STRING "compile flags" FORCE)
+		endif()
 	endif()
 endif()
 

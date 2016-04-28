@@ -50,7 +50,7 @@ JS_RETURN_VAL _OPmodelDraw(const JS_ARGS& args) {
     OPmaterial* material = JS_GET_ARG_PTR(args, 1, OPmaterial);
     OPcam* camera = JS_GET_ARG_PTR(args, 2, OPcam);
 
-    OPmodelDraw(*model, material, *camera);
+    OPmodelDraw(*model, material, camera);
 
     JS_RETURN_NULL;
 }
@@ -62,7 +62,7 @@ JS_RETURN_VAL _OPmodelDrawSelf(const JS_ARGS& args) {
     OPmaterial* material = JS_GET_ARG_PTR(args, 0, OPmaterial);
     OPcam* camera = JS_GET_ARG_PTR(args, 1, OPcam);
 
-    OPmodelDraw(*model, material, *camera);
+    OPmodelDraw(*model, material, camera);
 
     JS_RETURN_NULL;
 }
@@ -89,7 +89,7 @@ JS_RETURN_VAL _OPmodelSetMeshSelf(const JS_ARGS& args) {
     JS_RETURN_NULL;
 }
 
-Handle<Object> OPmodelWrapperCreate(Handle<Object> result, void* model) {
+Handle<Object> OPmodelWrapperCreate(Handle<Object> result, OPmodel* model) {
     SCOPE_AND_ISOLATE
 
     JS_SET_PTR(result, model);
@@ -133,6 +133,13 @@ void OPmodelWrapper(Handle<Object> exports) {
     JS_SET_NUMBER(model, "size", sizeof(OPmodel));
     JS_SET_OBJECT(exports, "model", model);
 
+}
+
+Handle<Object> OPmodelTexturedWrapper(Handle<Object> result, OPmodelTextured* model) {
+    SCOPE_AND_ISOLATE
+
+    JS_SET_OBJECT_PTR(result, "texture", model->texture);
+    return OPmodelWrapperCreate(result, &model->model);
 }
 
 #endif

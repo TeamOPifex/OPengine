@@ -7,7 +7,7 @@ macro(set_binary_output BINARY_OUTPUT_VARIABLE )
 
 	if(OPIFEX_BINARIES)
 		SET(PATH_TO_OPIFEX_BINARIES ${OPIFEX_BINARIES})
-		message(STATUS "SETTING BINARY OUTPUT as Application")
+		# message(STATUS "SETTING BINARY OUTPUT as Application")
 	endif()
 
 	if(${OPIFEX_OPTION_RELEASE})

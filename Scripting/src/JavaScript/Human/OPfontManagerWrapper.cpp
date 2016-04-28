@@ -14,7 +14,7 @@ JS_RETURN_VAL _OPfontManagerSetup(const JS_ARGS& args) {
     OPfontManager* manager = OPfontManagerSetup(*font, NULL, 0);
 
     Handle<Object> result = JS_NEW_OBJECT();
-    OPfontManagerWrapperCreate(result, manager);
+    OPfontManagerWrapper(result, manager);
 
     JS_RETURN(result);
 }
@@ -27,7 +27,7 @@ JS_RETURN_VAL _OPfontManagerCreate(const JS_ARGS& args) {
     OPfontManager* manager = OPfontManagerCreate(font);
 
     Handle<Object> result = JS_NEW_OBJECT();
-    OPfontManagerWrapperCreate(result, manager);
+    OPfontManagerWrapper(result, manager);
 
     JS_RETURN(result);
 }
@@ -92,7 +92,7 @@ JS_RETURN_VAL _OPfontManagerDestroySelf(const JS_ARGS& args) {
     JS_RETURN_NULL;
 }
 
-void OPfontManagerWrapperCreate(Handle<Object> result, OPfontManager* ptr) {
+Handle<Object> OPfontManagerWrapper(Handle<Object> result, OPfontManager* ptr) {
     SCOPE_AND_ISOLATE;
 
     JS_SET_PTR(result, ptr);

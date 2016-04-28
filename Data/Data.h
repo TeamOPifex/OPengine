@@ -16,5 +16,6 @@
 #include "./Data/include/OPvector.h"
 #include "./Data/include/OPsharedLibrary.h"
 #include "./Data/include/OPlogToFile.h"
+#include "./Data/include/OPjson.h"
 
 #endif

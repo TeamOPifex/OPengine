@@ -163,11 +163,11 @@ inline OPfloat OPvec2Cross(OPvec2 a, OPvec2 b){
 }
 
 inline OPfloat OPvec2Len(OPvec2 v){
-	return OPsqrt(v.x * v.x + v.y * v.y);
+	return (OPfloat)OPsqrt(v.x * v.x + v.y * v.y);
 }
 
 inline OPvec2 OPvec2Norm(OPvec2 a){
-	OPfloat l = OPsqrt(a.x * a.x + a.y * a.y);
+	OPfloat l = (OPfloat)OPsqrt(a.x * a.x + a.y * a.y);
 	if(l == 0) {
 		return a;
 	}
@@ -205,8 +205,8 @@ inline OPvec2 OPvec2Read(OPstream* str) {
 
 inline OPvec2 OPvec2RandNorm(){
 	OPvec2 v;
-	v.x = OPrandom() - 0.5;
-	v.y = OPrandom() - 0.5;
+	v.x = OPrandom() - 0.5f;
+	v.y = OPrandom() - 0.5f;
 	return OPvec2Norm(v);
 }
 

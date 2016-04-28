@@ -50,9 +50,7 @@ void OPtexture3DPrepRender(OPtexture3D* tex3d, OPcam* camera) {
 
 	OPrenderDepth(0);
 
-	OPmat4 world, view, proj;
-	OPcamGetView((*camera), &view);
-	OPcamGetProj((*camera), &proj);
+	OPmat4 world;
 
 
 	OPmat4Identity(&world);
@@ -63,8 +61,8 @@ void OPtexture3DPrepRender(OPtexture3D* tex3d, OPcam* camera) {
 	OPtextureClearActive();
 	OPeffectParami("uColorTexture", OPtextureBind(tex3d->Texture));
 	OPeffectParamMat4v("uWorld", 1, &world);
-	OPeffectParamMat4v("uProj", 1, &proj);
-	OPeffectParamMat4v("uView", 1, &view);
+	OPeffectParamMat4v("uProj", 1, &camera->proj);
+	OPeffectParamMat4v("uView", 1, &camera->view);
 }
 
 void OPtexture3DRender(OPtexture3D* tex3d, OPcam* camera) {

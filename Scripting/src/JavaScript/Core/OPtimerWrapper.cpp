@@ -6,12 +6,20 @@
 
 #include "./Core/Core.h"
 
+Handle<Object> OPtimerWrapper(Handle<Object> result, OPtimer* ptr) {
+    SCOPE_AND_ISOLATE
+
+    JS_SET_PTR(result, ptr);
+
+    return result;
+}
+
 // OP.timer.Create
 JS_RETURN_VAL _OPtimerCreate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
     OPtimer* timer = (OPtimer*)OPalloc(sizeof(OPtimer));
-    OPtimerCreate(timer);
+    OPtimerInit(timer);
 
     Handle<Object> obj = JS_NEW_OBJECT();
     JS_SET_PTR(obj, timer)

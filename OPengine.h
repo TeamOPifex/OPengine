@@ -7,6 +7,7 @@
 #include "./Performance/Performance.h"
 #include "./Human/Human.h"
 #include "./Pipeline/Pipeline.h"
+#include "./Communication/Communication.h"
 #include "./Scripting/Scripting.h"
 
 #endif

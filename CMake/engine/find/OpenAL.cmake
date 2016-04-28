@@ -38,7 +38,7 @@ if(  ${OPIFEX_OS_WIN32}  )
   )
 
 elseif( ${OPIFEX_OS_WIN64} )
-  message(STATUS "64 Bit OpenAL")
+  # message(STATUS "64 Bit OpenAL")
   find_library(OPENAL_LIBRARY
     NAMES OpenAL32
     HINTS
@@ -98,9 +98,9 @@ else()
   endif()
 endif()
 
-message(STATUS "OpenAL include: ${OPENAL_INCLUDE_DIR}")
-message(STATUS "OpenAL lib: ${OPENAL_LIBRARY}")
-message(STATUS "")
+# message(STATUS "OpenAL include: ${OPENAL_INCLUDE_DIR}")
+# message(STATUS "OpenAL lib: ${OPENAL_LIBRARY}")
+# message(STATUS "")
 
 if (NOT OPENAL_INCLUDE_DIR)
       message(FATAL_ERROR "Could NOT find OPENAL_INCLUDE_DIR")

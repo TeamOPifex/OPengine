@@ -3,10 +3,6 @@
 
 #include "./Core/include/OPtypes.h"
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-
 #define DEFAULT_PORT "27015"
 #define DEFAULT_BUFLEN 512
 
@@ -23,8 +19,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #else
-
-#include <windows.h>
+#include <Windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <iphlpapi.h>

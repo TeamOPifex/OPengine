@@ -25,7 +25,7 @@ struct MeshBuilderVert {
 void ExampleMeshBuilderEnter(OPgameState* last) {
 
 	OPmeshBuilder* builder = OPmeshBuilderCreate(sizeof(OPfloat) * 6);
-	
+
 	MeshBuilderVert one = { -1, 1, 0, 1, 0, 0 };
 	MeshBuilderVert two = { 1, 1, 0, 1, 0, 0 };
 	MeshBuilderVert three = { 1, -1, 0, 1, 0, 0 };
@@ -40,7 +40,7 @@ void ExampleMeshBuilderEnter(OPgameState* last) {
 		"ColoredModel.frag",
 		OPATTR_POSITION | OPATTR_COLOR,
 		"MeshBuilder Effect",
-		meshBuilderExample.Mesh.VertexSize);
+		meshBuilderExample.Mesh.vertexLayout.stride);
 
 	meshBuilderExample.Camera = OPcamPersp(
 		OPVEC3_ONE * 2.0,
@@ -61,13 +61,13 @@ OPint ExampleMeshBuilderUpdate(OPtimer* time) {
 	OPlog("Update");
 	if (OPkeyboardIsDown(OPKEY_SPACE)) { meshBuilderExample.Rotation++; }
 	OPlog("Update 1");
-	OPmat4 world = OPmat4RotY(meshBuilderExample.Rotation / 100.0);
+	OPmat4 world = OPmat4RotY(meshBuilderExample.Rotation / 100.0f);
 	OPlog("Update 2");
 
-	OPrenderClear(0.4, 0.4, 0.4);
+	OPrenderClear(0.4f, 0.4f, 0.4f);
 	OPlog("Update 3");
 	OPbindMeshEffectWorldCam(&meshBuilderExample.Mesh, &meshBuilderExample.Effect, &world, &meshBuilderExample.Camera);
-	
+
 	OPlog("Update 4");
 	OPmeshRender();
 	OPlog("Update 5");

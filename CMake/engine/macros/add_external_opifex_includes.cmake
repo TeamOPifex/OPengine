@@ -18,11 +18,16 @@ macro(add_external_opifex_includes)
 		${BINARY_FOLDER}
 	)
 
+    #message(STATUS "@@@@@ @@@@@ INCLUDING HEADERS ${JANSSON_HDR_PUBLIC}")
+    #message(STATUS "@@@@@ @@@@@ FROM ${BINARY_FOLDER}")
+
 	add_opifex_physx_include()
 	add_opifex_v8_include()
 	add_opifex_fmod_include()
 	add_opifex_assimp_include()
 	add_opifex_oculus_include()
+	add_opifex_asio_include()
+	add_opifex_raknet_include()
 
 	# message(STATUS "Added External OPifex includes")
 endmacro(add_external_opifex_includes)

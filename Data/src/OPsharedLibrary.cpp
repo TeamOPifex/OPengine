@@ -7,7 +7,7 @@
 // TODO: abstract out to Windows and Linux
 #ifdef OPIFEX_UNIX
 	#include <dlfcn.h>
-	#include <sys/stat.h> 
+	#include <sys/stat.h>
 	#include <unistd.h>
 #endif
 
@@ -61,20 +61,27 @@ OPint OPsharedLibraryReload(OPsharedLibrary* sharedLibrary) {
 
 	sharedLibrary->_library = library;
 
+	//return 1;
+
 	OPint elements = OPlistSize(sharedLibrary->_symbols);
 	void* symbol;
 	OPint result = 0;
 	for(OPint i = 0; i < elements; i++) {
+		OPlog("Get %d", i);
+
 		OPsharedLibrarySymbol* sharedLibrarySymbol = (OPsharedLibrarySymbol*)OPlistGet(sharedLibrary->_symbols, i);
 		symbol = dlsym(sharedLibrary->_library, sharedLibrarySymbol->_symbolName);
 		if(symbol == NULL) {
 			OPlog("!!!   Failed to reload symbol: %s", sharedLibrarySymbol->_symbolName);
 			result = -3;
 		} else {
-			OPlog("Ssymbol Reloaded: %s", sharedLibrarySymbol->_symbolName);
+			OPlog("Symbol Reloaded: %s", sharedLibrarySymbol->_symbolName);
 		}
 		sharedLibrarySymbol->Symbol = symbol;
+		OPlog("Symbol set");
 	}
+
+	OPlog("Finished setting");
 
 	return result;
 #elif defined(OPIFEX_WINDOWS)
@@ -118,9 +125,76 @@ OPsharedLibrarySymbol* OPsharedLibraryLoadSymbol(OPsharedLibrary* sharedLibrary,
 OPint OPsharedLibraryClose(OPsharedLibrary* sharedLibrary) {
 #ifdef OPIFEX_UNIX
 	OPint result = dlclose(sharedLibrary->_library);
+		OPlog("Log Close %d", result);
+	if(result <= 0) return 0;
 #elif defined(OPIFEX_WINDOWS)
 	OPint result = FreeLibrary(sharedLibrary->_library);
 #endif
+
 	if (result != 0) return -1;
 	return 0;
+}
+
+
+
+OPdll OPdllOpen(const OPchar* path) {
+	OPdll result;
+#if defined(OPIFEX_WINDOWS)
+#else
+	OPchar* pathMerge = OPstringCreateMerged(OPgetExecutableDir(), path);
+
+	void* library = dlopen(pathMerge, RTLD_LAZY);
+
+	if(library == NULL) {
+		OPlogErr("FAILED TO LOAD LIBRARY");
+	}
+
+	result.library = library;
+	result.path = pathMerge;
+	result.lastModified = OPfileLastChange(pathMerge);
+#endif
+	return result;
+}
+OPint OPdllUpdate(OPdll* dll) {
+#if defined(OPIFEX_WINDOWS)
+#else
+	ui64 lastChange = OPfileLastChange(dll->path);
+	if (dll->lastModified == lastChange) return 0;
+	dll->lastModified = lastChange;
+
+	OPdllClose(dll);
+	dll->library = NULL;
+	while(dll->library == NULL) {
+		dll->library = dlopen(dll->path, RTLD_LAZY);
+
+		if(dll->library == NULL) {
+			OPlogErr("FAILED TO LOAD LIBRARY");
+		}
+	}
+#endif
+	return 1;
+}
+void* OPdllSymbol(OPdll* dll, const OPchar* symbol) {
+	void* result = NULL;
+#if defined(OPIFEX_WINDOWS)
+#else
+	result = dlsym(dll->library, symbol);
+	Dl_info info;
+	if (dladdr(result, &info)) {
+		OPlog("Info on dependencies():\n");
+		OPlog("    Pathname: %s\n",         info.dli_fname);
+		OPlog("    Base address: %p\n",      info.dli_fbase);
+		OPlog("    Nearest symbol: %s\n",    info.dli_sname);
+		OPlog("    Symbol address: %p\n",    info.dli_saddr);
+	} else {
+		OPlog("No valid data");
+	}
+#endif
+	return result;
+}
+void OPdllClose(OPdll* dll) {
+#if defined(OPIFEX_WINDOWS)
+#else
+	dlclose(dll->library);
+#endif
 }

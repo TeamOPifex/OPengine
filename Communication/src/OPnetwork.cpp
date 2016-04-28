@@ -10,7 +10,6 @@
 #include <stdlib.h>
 
  #ifdef OPIFEX_WINDOWS
-	 #include <windows.h>
 	 #include <winsock2.h>
 	 #include <ws2tcpip.h>
 	 #include <iphlpapi.h>
@@ -34,7 +33,9 @@
 	#define CLOSESOCKET(socket) close(socket);
  #endif
 
+#ifndef INVALID_SOCKET
 #define INVALID_SOCKET -1
+#endif
 #define BUFSIZE 2048
 
 struct OPnetworkAddress {
@@ -61,7 +62,6 @@ ui64 OPnetworkLookupAddress(OPchar *kpAddress, OPchar** resolved)
  			return INADDR_NONE;
  		}
 
- 		OPchar** pAlias;
  		i32 i = 0;
  		struct in_addr addr;
 
@@ -72,7 +72,7 @@ ui64 OPnetworkLookupAddress(OPchar *kpAddress, OPchar** resolved)
  				addr.s_addr = *(u_long *)pHE->h_addr_list[i++];
 
  				OPchar* ad = inet_ntoa(addr);
- 				i32 len = strlen(ad);
+ 				ui32 len = (ui32)strlen(ad);
  				*resolved = (OPchar*)OPalloc(len + 1);
  				OPmemcpy(*resolved, ad, len);
  				(*resolved)[len] = NULL;
@@ -399,7 +399,7 @@ i32 OPnetworkServerStartUDP(OPnetwork* network) {
 	 tv.tv_sec = 0;
 	 tv.tv_usec = 1000;
 
-	 i32 i, j;
+	 i32 i;
 	 i32 newfd;
 	 struct sockaddr_storage remoteaddr;
 	 socklen_t addrlen;
@@ -502,7 +502,7 @@ i32 OPnetworkServerStartUDP(OPnetwork* network) {
 					 }
 
 					 i32 found = 0;
-					 ui32 i = 0;
+					 i32 i = 0;
 					 for (; i < network->Data.clientIndex; i++) {
 						 if (OPstringEquals(host, network->Data.peer_host[i]) &&
 							 OPstringEquals(port, network->Data.peer_port[i])) {
@@ -610,7 +610,7 @@ i32 OPnetworkServerStartUDP(OPnetwork* network) {
 		}
 		else {
 			socklen_t peer_addr_len = sizeof(struct sockaddr_storage);
-			for (ui32 i = 0; i < network->Data.clientIndex; i++) {
+			for (i32 i = 0; i < network->Data.clientIndex; i++) {
 				if (sendto(network->ConnectSocket, data, size, 0, (struct sockaddr *)&network->Data.peer_addr[i], peer_addr_len) == -1) {
 					OPnetworkLogError("send error");
 				}

@@ -89,7 +89,7 @@ extern "C" {
 	 * @param list The OPlist to find the size of
 	 * @param Total count of elements
 	*/
-	OPint OPlistSize(OPlist* list);
+	OPuint OPlistSize(OPlist* list);
 
 #ifdef __cplusplus
 };

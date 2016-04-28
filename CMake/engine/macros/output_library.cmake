@@ -35,7 +35,11 @@ macro(output_library APPLICATION_TARGET LIBRARY_NAME )
 			else()
 				SET(COPY_BINARY_RELATIVE_DIRECTORY "/${LIBRARY_NAME}/Debug/")
 			endif()
-			SET(COPY_BINARY_LIBRARY "${LIBRARY_NAME}.lib")
+			if(${OPIFEX_OPTION_SHARED})
+				SET(COPY_BINARY_LIBRARY "${LIBRARY_NAME}.dll")
+			else()
+				SET(COPY_BINARY_LIBRARY "${LIBRARY_NAME}.lib")
+			endif()
 		endif()
 
 		add_custom_command(TARGET ${APPLICATION_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different

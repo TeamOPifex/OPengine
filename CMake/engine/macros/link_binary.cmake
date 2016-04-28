@@ -12,7 +12,7 @@ macro(link_from_binaries APPLICATION_TARGET)
 
 		foreach( item IN LISTS extra_macro_args )
 
-	        message ("Got an optional arg: ${TMP_BIN_DIR} ${item} ${APPLICATION_TARGET}")
+	        # message ("Got an optional arg: ${TMP_BIN_DIR} ${item} ${APPLICATION_TARGET}")
 			target_link_libraries(${APPLICATION_TARGET} ${TMP_BIN_DIR}/${item})
 
 

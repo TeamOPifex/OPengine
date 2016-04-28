@@ -12,7 +12,7 @@ typedef struct {
 } Example;
 
 typedef struct {
-	i32 Selected;
+	OPint Selected;
     OPint Initialized;
 	OPfontManager* FontManager;
 	Example Examples[TotalEntries];
@@ -54,20 +54,25 @@ void ExampleSelectorEnter(OPgameState* last) {
            { "FMOD", &GS_EXAMPLE_FMOD, GS_EXAMPLE_FMOD_AVAILABLE, 0 },
            { "Free Flight Camera", &GS_EXAMPLE_FREEFLIGHT, GS_EXAMPLE_FREEFLIGHT_AVAILABLE, 0 },
            { "Model", &GS_EXAMPLE_MODEL, GS_EXAMPLE_MODEL_AVAILABLE, 0 },
+           { "Material", &GS_EXAMPLE_MATERIAL, GS_EXAMPLE_MATERIAL_AVAILABLE, 0 },
            { "Textured", &GS_EXAMPLE_TEXTURED, GS_EXAMPLE_TEXTURED_AVAILABLE, 0 },
            { "Sprite", &GS_EXAMPLE_SPRITE, GS_EXAMPLE_SPRITE_AVAILABLE, 0 },
            { "Sprite System", &GS_EXAMPLE_SPRITESYSTEM, GS_EXAMPLE_SPRITESYSTEM_AVAILABLE, 0 },
            { "Cube Map", &GS_EXAMPLE_CUBE_MAP, GS_EXAMPLE_CUBE_MAP_AVAILABLE, 0 },
 
            // Intermediate
+           { "Command Buckets", &GS_EXAMPLE_COMMAND_BUCKET, GS_EXAMPLE_COMMAND_BUCKET_AVAILABLE, 1 },
            { "Mesh Builder", &GS_EXAMPLE_MESH_BUILDER, GS_EXAMPLE_MESH_BUILDER_AVAILABLE, 1 },
            { "Particle System", &GS_EXAMPLE_PARTICLESYSTEM, GS_EXAMPLE_PARTICLESYSTEM_AVAILABLE, 1 },
            { "Spine", &GS_EXAMPLE_SPINE, GS_EXAMPLE_SPINE_AVAILABLE, 1 },
-           { "IMGUI", &GS_EXAMPLE_IMGUI, GS_EXAMPLE_IMGUI_AVAILABLE, 1 },
+		   { "IMGUI", &GS_EXAMPLE_IMGUI, GS_EXAMPLE_IMGUI_AVAILABLE, 1 },
+		   { "Ocornuts IMGUI", &GS_EXAMPLE_OCORNUT_IMGUI, GS_EXAMPLE_OCORNUT_IMGUI_AVAILABLE, 1 },
            { "Spherical Cube", &GS_EXAMPLE_SPHERICALCUBE, GS_EXAMPLE_SPHERICALCUBE_AVAILABLE, 1 },
            { "Mouse Intersect", &GS_EXAMPLE_MOUSE_INTERSECT, GS_EXAMPLE_MOUSE_INTERSECT_AVAILABLE, 1 },
 
            // Advanced
+           { "Asio", &GS_EXAMPLE_ASIO, GS_EXAMPLE_ASIO_AVAILABLE, 2 },
+           { "RakNet", &GS_EXAMPLE_RAKNET, GS_EXAMPLE_RAKNET_AVAILABLE, 2 },
            { "Physics", &GS_EXAMPLE_PHYSICS, GS_EXAMPLE_PHYSICS_AVAILABLE, 2 },
            { "Physics Character", &GS_EXAMPLE_PHYSICSCHARACTER, GS_EXAMPLE_PHYSICSCHARACTER_AVAILABLE, 2 },
            { "Skinning", &GS_EXAMPLE_SKINNING, GS_EXAMPLE_SKINNING_AVAILABLE, 2 },
@@ -172,7 +177,7 @@ void ExampleSelectorRender(OPfloat delta) {
 
 
 	// Y coordinate to start drawing the text
-	OPfloat start = -(exampleSelector.Selected) * 40 + OPRENDER_SCALED_HEIGHT / 2;
+	OPfloat start = -(exampleSelector.Selected) * 40.0f + OPRENDER_SCALED_HEIGHT / 2.0f;
 
 
 	OPfontRenderBegin(exampleSelector.FontManager);
@@ -193,7 +198,7 @@ void ExampleSelectorRender(OPfloat delta) {
 
 		notTheCurrentlySelectedMenuItem = exampleSelector.Selected != pos;
 		// Set Selected Color (bright yellow-ish gold)
-		r = 0.95, g = 0.84; b = 0;
+		r = 0.95f, g = 0.84f; b = 0;
 
 		if (notTheCurrentlySelectedMenuItem) {
 			r = g = b = 1.0;
@@ -201,7 +206,7 @@ void ExampleSelectorRender(OPfloat delta) {
 
 		if (!exampleSelector.Examples[i].available) {
 			// Menu item is not available so make it really dark
-			r = g = b = 0.3;
+			r = g = b = 0.3f;
 			// Menu item is not available but it's the currently selected
 			// item, so we'll brighten it just a bit so that we know what
 			// is selected.
@@ -212,9 +217,9 @@ void ExampleSelectorRender(OPfloat delta) {
 
 		// If this is a category, then it becomes light blue
 		if (isActiveCategory || exampleSelector.Examples[i].state == NULL) {
-			r = g = 0.7; b = 1.0;
+			r = g = 0.7f; b = 1.0f;
 			if (notTheCurrentlySelectedMenuItem && exampleSelector.CurrentDepth == 0) {
-				r = g = 0.4; b = 0.7;
+				r = g = 0.4f; b = 0.7f;
 			}
 		}
 
@@ -232,7 +237,7 @@ void ExampleSelectorRender(OPfloat delta) {
 			// to help indicate that it's a sub-menu
 			OPint isNotRootMenu = (exampleSelector.CurrentHierarchy != -1) ? 1 : 0;
 			OPfontRender(exampleSelector.Examples[i].name,
-				OPvec2Create(75 + 40 * isNotRootMenu,
+				OPvec2Create((OPfloat)(75 + 40 * isNotRootMenu),
 					start + 40 * (pos + isNotRootMenu)));
 			pos++;
 		}
@@ -240,9 +245,9 @@ void ExampleSelectorRender(OPfloat delta) {
 
 	OPfontRenderEnd();
 
-	// OPrenderPresent();
+	OPrenderPresent();
 
-	OPlog("rendered example");
+	//OPlog("rendered example");
 }
 
 OPint ExampleSelectorExit(OPgameState* next) {

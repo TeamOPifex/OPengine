@@ -115,7 +115,7 @@ void ExamplePhysicsCharacterEnter(OPgameState* last) {
 		attribs,
 		3,
 		"Model Effect",
-		physicsCharacterExample->Mesh->VertexSize
+		physicsCharacterExample->Mesh->vertexLayout.stride
 		);
 
 	physicsCharacterExample->SphereEffect = (OPeffect*)OPalloc(sizeof(OPeffect));
@@ -125,7 +125,7 @@ void ExamplePhysicsCharacterEnter(OPgameState* last) {
 		attribs,
 		3,
 		"Model Effect",
-		physicsCharacterExample->MeshSphere->VertexSize
+		physicsCharacterExample->MeshSphere->vertexLayout.stride
 		);
 
 	physicsCharacterExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
@@ -255,13 +255,12 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 	f32 rate = 500 * physicsCharacterExample->spheres[0].size;
 	f32 rate2 = 50 * physicsCharacterExample->spheres[0].size;
 
-	if (OPkeyboardIsDown(OPKEY_UP)) { physicsCharacterExample->Camera->_pos.y += 0.2; }
-	if (OPkeyboardIsDown(OPKEY_DOWN)) { physicsCharacterExample->Camera->_pos.y -= 0.2; }
-	if (OPkeyboardIsDown(OPKEY_LEFT)) { physicsCharacterExample->Camera->_pos.x -= 0.2; }
-	if (OPkeyboardIsDown(OPKEY_RIGHT)) { physicsCharacterExample->Camera->_pos.x += 0.2; }
+	if (OPkeyboardIsDown(OPKEY_UP)) { physicsCharacterExample->Camera->pos.y += 0.2; }
+	if (OPkeyboardIsDown(OPKEY_DOWN)) { physicsCharacterExample->Camera->pos.y -= 0.2; }
+	if (OPkeyboardIsDown(OPKEY_LEFT)) { physicsCharacterExample->Camera->pos.x -= 0.2; }
+	if (OPkeyboardIsDown(OPKEY_RIGHT)) { physicsCharacterExample->Camera->pos.x += 0.2; }
 
-	physicsCharacterExample->Camera->_viewStale = 1;
-	OPcamUpdateView((*physicsCharacterExample->Camera));
+	OPcamUpdate(physicsCharacterExample->Camera);
 
 
 	OPphysXSceneUpdate(physicsCharacterExample->scene, time);
@@ -280,13 +279,9 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 	ui32 tex3 = OPtextureBind(physicsCharacterExample->textureSphere);
 	ui32 tex4 = OPtextureBind(physicsCharacterExample->textureStatic);
 
-	OPmat4 view, proj;	
 
-	OPcamGetView((*physicsCharacterExample->Camera), &view);
-	OPcamGetProj((*physicsCharacterExample->Camera), &proj);
-
-	OPeffectParamMat4("uProj", &proj);
-	OPeffectParamMat4("uView", &view);
+	OPeffectParamMat4("uProj", &physicsCharacterExample->Camera->proj);
+	OPeffectParamMat4("uView", &physicsCharacterExample->Camera->view);
 
 	OPvec3 light = OPvec3Create(0, 1, 0);
 	OPeffectParamVec3("uLightDirection", &light);
@@ -313,8 +308,8 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 
 	OPmeshBind(physicsCharacterExample->MeshSphere);
 	OPeffectBind(physicsCharacterExample->SphereEffect);
-	OPeffectParamMat4("uProj", &proj);
-	OPeffectParamMat4("uView", &view);
+	OPeffectParamMat4("uProj", &physicsCharacterExample->Camera->proj);
+	OPeffectParamMat4("uView", &physicsCharacterExample->Camera->view);
 	OPeffectParamVec3("uLightDirection", &light);
 
 	OPeffectParami("uColorTexture", tex2);
@@ -344,6 +339,10 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 	return false;
 }
 
+void ExamplePhysicsCharacterRender(OPfloat delta) {
+    
+}
+
 OPint ExamplePhysicsCharacterExit(OPgameState* next) {
 	OPphysXSceneDestroy(physicsCharacterExample->scene);
 	OPphysXShutdown();
@@ -356,12 +355,14 @@ OPint GS_EXAMPLE_PHYSICSCHARACTER_AVAILABLE = 1;
 OPgameState GS_EXAMPLE_PHYSICSCHARACTER = {
 	ExamplePhysicsCharacterEnter,
 	ExamplePhysicsCharacterUpdate,
+	ExamplePhysicsCharacterRender,
 	ExamplePhysicsCharacterExit
 };
 #else
 OPint GS_EXAMPLE_PHYSICSCHARACTER_AVAILABLE = 0;
 
 OPgameState GS_EXAMPLE_PHYSICSCHARACTER = {
+	NULL,
 	NULL,
 	NULL,
 	NULL

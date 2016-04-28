@@ -45,7 +45,8 @@ void ExampleModelEnter(OPgameState* last) {
 		"ColoredModel.frag",
 		OPATTR_POSITION | OPATTR_COLOR,
 		"Model Effect",
-		modelExample->Mesh.VertexSize);
+		modelExample->Mesh.vertexLayout.stride);
+		
 
 	// Sets up the camera as a perpsective camera for rendering
 	modelExample->Camera = OPcamPersp(
@@ -70,6 +71,7 @@ void ExampleModelEnter(OPgameState* last) {
 
 OPint ExampleModelUpdate(OPtimer* time) {
 
+	
 	////////////////////////
 	// Update
 	////////////////////////
@@ -77,17 +79,28 @@ OPint ExampleModelUpdate(OPtimer* time) {
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
-	if (OPkeyboardIsDown(OPKEY_SPACE)) { modelExample->Rotation++; }
+	if (OPkeyboardIsDown(OPKEY_SPACE)) { modelExample->Rotation += time->Elapsed; }
 
+
+	// Tells the engine to continue running
+	// Returning true will tell the engine to terminate
+	return false;
+}
+
+void ExampleModelRender(OPfloat delta) {
+
+	OPrenderDepth(1);
+	OPrenderCull(0);
+	
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
-	OPmat4 world = OPmat4RotY(modelExample->Rotation / 100.0);
+	OPmat4 world = OPmat4RotY(modelExample->Rotation / 100.0f);
 	OPmat4Scl(&world, 0.25f, 0.25f, 0.25f);
 
 
 	////////////////////////
 	// Render
 	////////////////////////
-	OPrenderClear(0.4, 0.4, 0.4);
+	OPrenderClear(0.4f, 0.4f, 0.4f);
 
 	// A helper utility which binds the Mesh, Effect and the World, View and Projection Matrices
 	// For more granular control please take a look at the Textured Example
@@ -99,17 +112,23 @@ OPint ExampleModelUpdate(OPtimer* time) {
 	// Renders to the screen the currently bound Mesh (modelExample->Mesh)
 	OPmeshRender();
 
+
+// 	OPmeshBind(&modelExample->Mesh);
+// 	OPeffectBind(&modelExample->Effect);
+
+
+// 	OPeffectParamMat4("uWorld", &world);
+// 	OPeffectParamMat4("uProj", &modelExample->Camera.proj);
+// 	OPeffectParamMat4("uView", &modelExample->Camera.view);
+
+// 	OPvec3 light = OPvec3Create(0, 1, 0);
+// 	OPeffectParamVec3("vLightDirection", &light);
+
+// 	OPmeshRender();
+	
+	
 	// Swaps the back buffer
 	OPrenderPresent();
-
-	// Tells the engine to continue running
-	// Returning true will tell the engine to terminate
-	return false;
-
-}
-
-void ExampleModelRender(OPfloat delta) {
-
 }
 
 // The OPifex Engine will call this itself when you call OPgameStateChange

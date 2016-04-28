@@ -182,7 +182,7 @@ inline OPvec3 OPvec3Cross(OPvec3 a, OPvec3 b) {
 }
 
 inline OPfloat OPvec3Len(OPvec3 v) {
-	return OPsqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+	return (OPfloat)OPsqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
 inline OPfloat OPvec3Dist(OPvec3 a, OPvec3 b) {
@@ -199,8 +199,8 @@ inline OPfloat OPvec3Angle(OPvec3 a, OPvec3 b) {
 	OPfloat temp = 0;
 
 	OPfloat top = a.x * b.x + a.y * b.y + a.z * b.z;
-	OPfloat bottom = OPsqrt(a.x * a.x + a.y * a.y + a.z * a.z) * 
-					 OPsqrt(b.x * b.x + b.y * b.y + b.z * b.z);
+	OPfloat bottom = (OPfloat)OPsqrt(a.x * a.x + a.y * a.y + a.z * a.z) *
+		(OPfloat)OPsqrt(b.x * b.x + b.y * b.y + b.z * b.z);
 	if(bottom == 0) return 0;
 	
 	OPfloat cosTheta = top / bottom;
@@ -247,5 +247,13 @@ inline OPvec3 OPvec3RandNorm(){
 
 inline void OPvec3Log(const OPchar* m, OPvec3 v) {
 	OPlog("%s: [%f, %f, %f]", m, v.x, v.y, v.z);
+}
+
+inline OPvec3 OPvec3Tween(OPvec3 a, OPvec3 b, OPfloat delta) {
+	return OPvec3Create(
+		a.x + (b.x - a.x) * delta,
+		a.y + (b.y - a.y) * delta,
+		a.z + (b.z - a.z) * delta
+		);
 }
 #endif

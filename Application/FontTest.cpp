@@ -8,7 +8,7 @@ void FontTestEnter(OPgameState* last) {
 
 OPint FontTestUpdate(OPtimer* time) {
 
-	OPrenderClear(0.1,0.1,0.1,1);
+	OPrenderClear(0.1f,0.1f,0.1f,1);
 	OPfontRenderBegin(fontTestManager);
 	OPfontRender("test", OPvec2Create(0,0));
 	OPfontRenderEnd();

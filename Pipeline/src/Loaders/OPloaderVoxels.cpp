@@ -35,7 +35,7 @@ OPvec3* readColorData(OPstream* str) {
 		for(int yi = 0; yi < voxelSize.y; ++yi){
 			for(int xi = 0; xi < voxelSize.x; ++xi){
 				ui32 data = OPreadui32(str);
-				ui32 pos = xi + yi * voxelSize.x + (voxelSize.z - 1 - zi) * voxelSize.x * voxelSize.y;
+				ui32 pos = (ui32)(xi + yi * voxelSize.x + (voxelSize.z - 1 - zi) * voxelSize.x * voxelSize.y);
 				result[pos] = OPvec3Create(((ui8*)&data)[0], ((ui8*)&data)[1], ((ui8*)&data)[2]);
 				//OPlog("rgb - (%d, %d, %d)", ((ui8*)&data)[0], ((ui8*)&data)[1], ((ui8*)&data)[2]);
 			}
@@ -99,10 +99,6 @@ OPint OPvoxelsLoad(OPstream* str, void** asset) {
 	// 	visibilityMsk,
 	// 	matrixCount
 	// );
-
-	ui32 width;
-	ui32 height;
-	ui32 depth;
 
 	OPvec3* colors = readColorData(str);
 	OPfree(colors);

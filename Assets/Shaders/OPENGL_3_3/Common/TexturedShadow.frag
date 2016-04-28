@@ -1,83 +1,94 @@
 #version 330 core
 
-in vec2 vUV;
-in vec4 vShadowCoord;
-in vec3 vNormal;
-in vec3 vLightDirection;
+in VS_OUT {
+    vec3 FragPos;
+    vec3 Normal;
+    vec2 TexCoords;
+    vec4 FragPosLightSpace;
+} fs_in;
 
 uniform sampler2D uColorTexture;
-uniform sampler2DShadow uShadow;
+uniform sampler2D uShadow;
+
+uniform vec3 uLightPos;
+uniform vec3 uViewPos;
+
+// uniform bool uShadows;
 
 out vec4 FragColor;
 
-void main(){
 
-	vec2 poissonDisk[16];
-   	poissonDisk[0] = vec2( -0.94201624, -0.39906216 );
-   	poissonDisk[1] = vec2( 0.94558609, -0.76890725 );
-   	poissonDisk[2] = vec2( -0.094184101, -0.92938870 );
-   	poissonDisk[3] = vec2( 0.34495938, 0.29387760 );
-   	poissonDisk[4] = vec2( -0.91588581, 0.45771432 );
-   	poissonDisk[5] = vec2( -0.81544232, -0.87912464 );
-   	poissonDisk[6] = vec2( -0.38277543, 0.27676845 );
-   	poissonDisk[7] = vec2( 0.97484398, 0.75648379 );
-   	poissonDisk[8] = vec2( 0.44323325, -0.97511554 );
-   	poissonDisk[9] = vec2( 0.53742981, -0.47373420 );
-   	poissonDisk[10] = vec2( -0.26496911, -0.41893023 );
-   	poissonDisk[11] = vec2( 0.79197514, 0.19090188 );
-   	poissonDisk[12] = vec2( -0.24188840, 0.99706507 );
-   	poissonDisk[13] = vec2( -0.81409955, 0.91437590 );
-   	poissonDisk[14] = vec2( 0.19984126, 0.78641367 );
-   	poissonDisk[15] = vec2( 0.14383161, -0.14100790 );
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
 
-	vec3 n = normalize( vNormal );
-	vec3 l = normalize( vLightDirection );
+    // Transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
 
-	float cosTheta = clamp( dot( n, l ), 0.0, 1.0 );
+    // Get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(uShadow, projCoords.xy).r; 
 
-	//float bias = 0.005 * tan(acos(cosTheta));
-	//bias = clamp(bias, 0.0, 0.01);
-	float bias = 0.005;
+    // Get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
 
-	vec4 shadowCoord = vShadowCoord / vShadowCoord.w;
-	shadowCoord.z -= bias;
+    // Calculate bias (based on depth map resolution and slope)
+    vec3 normal = normalize(fs_in.Normal);
+    vec3 lightDir = normalize(uLightPos - fs_in.FragPos);
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
 
-	vec3 MaterialDiffuseColor = texture( uColorTexture, vUV ).rgb;
+    // Check whether current frag pos is in shadow
+    // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+    // PCF
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(uShadow, 0);
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(uShadow, projCoords.xy + vec2(x, y) * texelSize).r; 
+            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;        
+        }    
+    }
+    shadow /= 9.0;
+    
+    // Keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
+    if(projCoords.z > 1.0)
+        shadow = 0.0;
+        
+    return shadow;
+}
 
+void main()
+{           
+    vec3 color = texture(uColorTexture, fs_in.TexCoords).rgb;
+    vec3 normal = normalize(fs_in.Normal);
 
-	//vec3 coord = vec3(shadowCoord.xy, (shadowCoord.z)/shadowCoord.w);
-	//float visibility = texture( uShadow, vec3(vShadowCoord.xy, (vShadowCoord.z)/vShadowCoord.w) );
+    vec3 lightColor = vec3(0.3);
 
- 	//for (int i=0;i<16;i++){
-	//	if ( texture2D( uShadow, shadowCoord.xy + poissonDisk[i]/1400.0 ).z  <  shadowCoord.z ){
-	//		shadow-=0.05;
-	//		shadow = 0.0;
-	//	}
-	//}
-
-	float visibility = 1.0;
-	for (int i=0;i<16;i++){
-		// use either :
-		//  - Always the same samples.
-		//    Gives a fixed pattern in the shadow, but no noise
-		int index = i;
-		//  - A random sample, based on the pixel's screen location.
-		//    No banding, but the shadow moves with the camera, which looks weird.
-		// int index = int(16.0*random(gl_FragCoord.xyy, i))%16;
-		//  - A random sample, based on the pixel's position in world space.
-		//    The position is rounded to the millimeter to avoid too much aliasing
-		// int index = int(16.0*random(floor(Position_worldspace.xyz*1000.0), i))%16;
-
-		// being fully in the shadow will eat up 4*0.2 = 0.8
-		// 0.2 potentially remain, which is quite dark.
-		visibility -= 0.05*(1.0-texture( uShadow, vec3(vShadowCoord.xy + poissonDisk[index]/1400.0,  (vShadowCoord.z-bias)/vShadowCoord.w) ));
-
-	}
-
-	//visibility = texture( uShadow, vec3(vShadowCoord.xy, (vShadowCoord.z)/vShadowCoord.w) );
+    // Ambient
+    vec3 ambient = 0.3 * color;
 
 
-	FragColor =	 vec4(
-		visibility * MaterialDiffuseColor
-		, 1);
+    // Diffuse
+    vec3 lightDir = normalize(uLightPos - fs_in.FragPos);
+    float diff = max(dot(lightDir, normal), 0.0);
+    vec3 diffuse = diff * lightColor;
+
+
+    // Specular
+    vec3 viewDir = normalize(uViewPos - fs_in.FragPos);
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = 0.0;
+    vec3 halfwayDir = normalize(lightDir + viewDir);  
+    spec = pow(max(dot(normal, halfwayDir), 0.0), 64.0);
+    vec3 specular = vec3(0,0,0);//spec * lightColor;    
+
+    // Calculate shadow
+    //float shadow = shadows ? ShadowCalculation(fs_in.FragPosLightSpace) : 0.0;       
+    float shadow = ShadowCalculation(fs_in.FragPosLightSpace);
+	//shadow = 0;             
+    vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;    
+    
+    FragColor = vec4(lighting, 1.0f);
 }

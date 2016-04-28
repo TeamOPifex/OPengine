@@ -10,9 +10,7 @@
 #include <unistd.h>
 #include <time.h>
 #elif defined(OPIFEX_WINDOWS)
-// Windows specific lib
-#include <Windows.h>
-#include <Mmsystem.h>
+
 #endif
 
 /* Struct definitions */

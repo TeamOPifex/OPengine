@@ -16,9 +16,9 @@ OPsphericalCube OPsphericalCubeCreate(OPimage * faces) {
 	// Vec 3 Position
 	// Vec 3 Normal
 	// Vec 2 UV
-	OPint VertsPerSide = LWH * LWH;
-	OPint PerSideSize = sizeof(OPsphericalCubeVertex)* VertsPerSide;
-	OPint TotalVerts = VertsPerSide * 6;
+	ui32 VertsPerSide = LWH * LWH;
+	ui32 PerSideSize = sizeof(OPsphericalCubeVertex)* VertsPerSide;
+	ui32 TotalVerts = VertsPerSide * 6;
 	OPsphericalCubeVertex* vertsMem = (OPsphericalCubeVertex*)OPalloc(PerSideSize * 6);
 
 	OPsphericalCubeVertex* verts[6];
@@ -199,12 +199,12 @@ OPsphericalCube OPsphericalCubeCreate(OPimage * faces) {
 				if ((LWH - 1) - x < xscl)
 					xscl = (LWH - 1) - x;
 
-				indices[i][index++] = x*LWH + y;
-				indices[i][index++] = x*LWH + y + tscl;
-				indices[i][index++] = (x + xscl)*LWH + y + tscl;
-				indices[i][index++] = x*LWH + y;
-				indices[i][index++] = (x + xscl)*LWH + y + tscl;
-				indices[i][index++] = (x + xscl)*LWH + y;
+				indices[i][index++] = (ui16)(x*LWH + y);
+				indices[i][index++] = (ui16)(x*LWH + y + tscl);
+				indices[i][index++] = (ui16)((x + xscl)*LWH + y + tscl);
+				indices[i][index++] = (ui16)(x*LWH + y);
+				indices[i][index++] = (ui16)((x + xscl)*LWH + y + tscl);
+				indices[i][index++] = (ui16)((x + xscl)*LWH + y);
 			}
 		}
 		index = 0;
@@ -214,7 +214,7 @@ OPsphericalCube OPsphericalCubeCreate(OPimage * faces) {
 		for (OPint x = 0; x < (LWH - 1); x += OPSPHERICALCUBE_SCL) {
 			for (OPint y = 0; y < (LWH - 1); y += OPSPHERICALCUBE_SCL) {
 				f32 _x = (f32)faces[face].Data[4 * x * LWH + (y + 0) * 4];
-				verts[face][y * LWH + x].pos *= 1.0 + (_x - 128.0f) / 255.0f;
+				verts[face][y * LWH + x].pos *= 1.0f + (_x - 128.0f) / 255.0f;
 			}
 		}
 	}
@@ -239,15 +239,15 @@ OPsphericalCube OPsphericalCubeCreate(OPimage * faces) {
 	return result;
 }
 
-OPsphericalCube OPsphericalCubeCreate(OPint size) {
+OPsphericalCube OPsphericalCubeCreate(ui16 size) {
 
-	OPint LWH = size;
+	ui16 LWH = size;
 	// Vec 3 Position
 	// Vec 3 Normal
 	// Vec 2 UV
-	OPint VertsPerSide = LWH * LWH;
-	OPint PerSideSize = sizeof(OPsphericalCubeVertex)* VertsPerSide;
-	OPint TotalVerts = VertsPerSide * 6;
+	ui32 VertsPerSide = LWH * LWH;
+	ui32 PerSideSize = sizeof(OPsphericalCubeVertex)* VertsPerSide;
+	ui32 TotalVerts = VertsPerSide * 6;
 	OPsphericalCubeVertex* vertsMem = (OPsphericalCubeVertex*)OPalloc(PerSideSize * 6);
 
 	OPsphericalCubeVertex* verts[6];
@@ -416,14 +416,14 @@ OPsphericalCube OPsphericalCubeCreate(OPint size) {
 
 
 	for (OPint i = 0; i < 6; i++) {
-		for (OPint x = 0; x < (LWH - 1); x += OPSPHERICALCUBE_SCL)
+		for (ui16 x = 0; x < (LWH - 1); x += OPSPHERICALCUBE_SCL)
 		{
-			for (OPint y = 0; y < (LWH - 1); y += OPSPHERICALCUBE_SCL)
+			for (ui16 y = 0; y < (LWH - 1); y += OPSPHERICALCUBE_SCL)
 			{
-				OPint tscl = OPSPHERICALCUBE_SCL;
+				ui16 tscl = OPSPHERICALCUBE_SCL;
 				if ((LWH - 1) - y < tscl)
 					tscl = (LWH - 1) - y;
-				OPint xscl = OPSPHERICALCUBE_SCL;
+				ui16 xscl = OPSPHERICALCUBE_SCL;
 				if ((LWH - 1) - x < xscl)
 					xscl = (LWH - 1) - x;
 
@@ -531,7 +531,6 @@ OPvec2 OPsphericalCubePlanePosition(const OPvec3 pos, OPsphericalCubeSide* side)
 	OPplane3D plane;
 	d64 bounds = OPsqrt(1.0);
 	OPint result;
-	d64 dist;
 
 	// Test Top
 	{
@@ -616,9 +615,9 @@ OPvec3 OPsphericalCubePosition(OPvec3 pos, OPsphericalCubeSide* side)
 	d64 y = position.y;
 	d64 z = position.z;
 
-	OPfloat fx = OPabs(x);
-	OPfloat fy = OPabs(y);
-	OPfloat fz = OPabs(z);
+	OPfloat fx = (OPfloat)OPabs(x);
+	OPfloat fy = (OPfloat)OPabs(y);
+	OPfloat fz = (OPfloat)OPabs(z);
 
 	d64 inverseSqrt2 = 1.0f / OPsqrt(2.0f);// 0.70710676908493042f;
 

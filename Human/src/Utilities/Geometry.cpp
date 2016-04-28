@@ -21,8 +21,8 @@ OPmesh* OPgeoCreateSphere(f32 radius, ui16 widthSegments, ui16 heightSegments) {
 
 		for (x = 0; x <= widthSegments; x++) {
 
-			f32 u = x / widthSegments;
-			f32 v = y / heightSegments;
+			f32 u = x / (f32)widthSegments;
+			f32 v = y / (f32)heightSegments;
 
 			f32 vx = -radius * OPcos(phiStart + u * phiLength) * OPsin(thetaStart + v * thetaLength);
 			f32 vy = radius * OPcos(thetaStart + v * thetaLength);
@@ -35,7 +35,7 @@ OPmesh* OPgeoCreateSphere(f32 radius, ui16 widthSegments, ui16 heightSegments) {
 
 			OPlistPush(normals, (ui8*)&normal);
 
-			ui16 pos = OPlistSize(vertices) - 1;
+			ui16 pos = (ui16)OPlistSize(vertices) - 1;
 			OPlistPush(verticeIndices, (ui8*)&pos);
 
 			//uvsRow.push(new THREE.Vector2(u, 1 - v));
@@ -107,20 +107,20 @@ OPmesh* OPgeoCreateSphere(f32 radius, ui16 widthSegments, ui16 heightSegments) {
 
 	}
 
-	ui16 count = OPlistSize(vertices);
-	ui16 indCount = OPlistSize(indices);
+	OPuint count = OPlistSize(vertices);
+	OPuint indCount = OPlistSize(indices);
 
 	OPvec3* verts = (OPvec3*)OPalloc(sizeof(OPvec3) * count);
 	OPvec3* norms = (OPvec3*)OPalloc(sizeof(OPvec3) * count);
 	ui16* inds = (ui16*)OPalloc(sizeof(ui16)* indCount);
 
-	for (i32 i = 0; i < count; i++) {
+	for (OPuint i = 0; i < count; i++) {
 		OPvec3* vec = (OPvec3*)OPlistGet(vertices, i);
 		OPvec3* norm = (OPvec3*)OPlistGet(normals, i);
 		OPmemcpy(&verts[i], vec, sizeof(OPvec3));
 		OPmemcpy(&norms[i], norm, sizeof(OPvec3));
 	}
-	for (i32 i = 0; i < indCount; i++) {
+	for (OPuint i = 0; i < indCount; i++) {
 		ui16* ind = (ui16*)OPlistGet(indices, i);
 		OPmemcpy(&inds[i], ind, sizeof(ui16));
 	}

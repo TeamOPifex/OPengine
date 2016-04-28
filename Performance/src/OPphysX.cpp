@@ -27,7 +27,7 @@ void OPphysXInit() {
 	}
 }
 
-void OPphysXDebugger() {
+void OPphysXDebugger(const OPchar* host) {
 
 	// check if PvdConnection manager is available on this platform
 	if(OPphysXSDK->getPvdConnectionManager() == NULL) {
@@ -36,7 +36,7 @@ void OPphysXDebugger() {
 	}
 
 	// setup connection parameters
-	const char*     pvd_host_ip = "10.211.55.7";  // IP of the PC which is running PVD
+	// const char*     pvd_host_ip = "10.211.55.7";  // IP of the PC which is running PVD
 	int             port        = 5425;         // TCP port to connect to, where PVD is listening
 	unsigned int    timeout     = 100;          // timeout in milliseconds to wait for PVD to respond,
 	                                            // consoles and remote PCs need a higher timeout.
@@ -44,7 +44,7 @@ void OPphysXDebugger() {
 
 	// and now try to connect
 	physx::debugger::comm::PvdConnection* theConnection = PxVisualDebuggerExt::createConnection(OPphysXSDK->getPvdConnectionManager(),
-	    pvd_host_ip, port, timeout, connectionFlags);
+		host, port, timeout, connectionFlags);
 
 	// // remember to release the connection at shutdown
 	//     if (theConnection)

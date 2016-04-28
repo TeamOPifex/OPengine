@@ -2,7 +2,7 @@
 #include "./Human/include/Rendering/OPimage.h"
 #include "./Human/include/Utilities/OPimagePNG.h"
 
-OPfontAtlas* OPfontAtlasCreate(OPint width, OPint height, OPint depth) {
+OPfontAtlas* OPfontAtlasCreate(i32 width, i32 height, OPint depth) {
 	OPfontAtlas* self = (OPfontAtlas*)OPalloc(sizeof(OPfontAtlas));
 	OPfontAtlasNode node = { 1, 1 };
 	node.z = width - 2;
@@ -85,9 +85,10 @@ void OPfontAtlasMerge(OPfontAtlas* atlas)
 	}
 }
 
-OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, OPint width, OPint height)
+OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, i32 width, i32 height)
 {
-	OPint y, best_height, best_width, best_index;
+	OPint y;
+	OPint best_height, best_width, best_index;
 	OPfontAtlasNode *node, *prev;
 	OPfontAtlasRegion region = { 0, 0, width, height };
 	OPuint i;
@@ -110,7 +111,7 @@ OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, OPint width, OPint he
 				best_index = i;
 				best_width = node->z;
 				region.x = node->x;
-				region.y = y;
+				region.y = (i32)y;
 			}
 		}
 	}

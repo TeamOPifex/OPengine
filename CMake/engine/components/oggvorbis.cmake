@@ -26,7 +26,7 @@ macro(add_opifex_oggvorbis APPLICATION_TARGET )
 
 		if(${OPIFEX_OS_WIN64})
 			if(${OPIFEX_OPTION_RELEASE})
-				message(STATUS "Copying... OggVorbis Win64 Release")
+				# message(STATUS "Copying... OggVorbis Win64 Release")
 				copy_file_to_binaries(/External/Ogg/lib/release/win64/ogg.dll)
 				copy_file_to_binaries(/External/Ogg/lib/release/win64/libogg.dll)
 				copy_file_to_binaries(/External/Vorbis/lib/release/win64/vorbisfile.dll)
@@ -39,7 +39,7 @@ macro(add_opifex_oggvorbis APPLICATION_TARGET )
 
 			else()
 
-				message(STATUS "Copying... OggVorbis Win64 Debug")
+				# message(STATUS "Copying... OggVorbis Win64 Debug")
 				copy_file_to_binaries(/External/Ogg/lib/debug/win64/ogg.dll)
 				copy_file_to_binaries(/External/Ogg/lib/debug/win64/libogg.dll)
 				copy_file_to_binaries(/External/Vorbis/lib/debug/win64/vorbisfile.dll)
@@ -54,7 +54,7 @@ macro(add_opifex_oggvorbis APPLICATION_TARGET )
 		elseif(${OPIFEX_OS_WIN32})
 			if(${OPIFEX_OPTION_RELEASE})
 
-				message(STATUS "Copying... OggVorbis Win32 Release")
+				# message(STATUS "Copying... OggVorbis Win32 Release")
 				copy_file_to_binaries(/External/Ogg/lib/release/win32/ogg.dll)
 				copy_file_to_binaries(/External/Ogg/lib/release/win32/libogg.dll)
 				copy_file_to_binaries(/External/Vorbis/lib/release/win32/vorbisfile.dll)
@@ -70,7 +70,7 @@ macro(add_opifex_oggvorbis APPLICATION_TARGET )
 
 				if(${MSVC_VERSION} GREATER 1700)
 
-					message(STATUS "Copying... OggVorbis Win32 Debug for ${MSVC_VERSION}")
+					# message(STATUS "Copying... OggVorbis Win32 Debug for ${MSVC_VERSION}")
 
 					copy_file_to_binaries(/External/Ogg/lib/debug/win32/vs2013/ogg.dll)
 					copy_file_to_binaries(/External/Ogg/lib/debug/win32/vs2013/libogg.dll)

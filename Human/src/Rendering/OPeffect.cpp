@@ -55,7 +55,6 @@ OPeffect createEffect(OPshader vert,
 		OPglError("OPeffectCreate:Error 7");
 
 		i32 result;
-		ui32 nameLength;
 		// create, and copy attributes into list
 		for (OPint i = 0; i < AttribCount; i++){
 			OPshaderAttribute attr = {
@@ -90,7 +89,7 @@ OPeffect createEffect(OPshader vert,
 
 		effect.Stride = stride;
 	}
-	
+
 	return effect;
 }
 
@@ -113,7 +112,7 @@ OPeffect OPeffectCreate(
 	OPshaderAttribute* Attributes,
 	OPint AttribCount,
 	const OPchar* Name){
-	
+
 	ui32 stride = 0;
 
 	for (OPint i = 0; i < AttribCount; i++){
@@ -139,12 +138,18 @@ OPint OPeffectUnload(OPeffect* effect){
 	OPlistDestroy(effect->Attributes);
 	OPfree(effect->Attributes);
 	glDeleteProgram(effect->ProgramHandle);
-	
+
 	return 1;
 }
 
+void OPeffectUse(OPeffect* effect) {
+    OPEFFECT_ACTIVE = effect;
+    if (OPEFFECT_ACTIVE == NULL) return;
+	glUseProgram(OPEFFECT_ACTIVE->ProgramHandle);
+}
+
 // effect managment
-OPint OPeffectBind(OPeffect* effect){
+OPint OPeffectBind(OPeffect* effect, ui32 stride){
 	OPglError("OPeffectBind:Clear Errors");
 
 	// if (OPEFFECT_ACTIVE == effect && OPEFFECT_BOUND_MESH == OPMESH_ACTIVE_PTR) {
@@ -158,7 +163,7 @@ OPint OPeffectBind(OPeffect* effect){
 		OPint attrCount = OPlistSize(OPEFFECT_ACTIVE->Attributes);
 		for (; attrCount--;){
 			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPEFFECT_ACTIVE->Attributes, attrCount);
-			glDisableVertexAttribArray((uintptr_t)attr->Handle);
+			glDisableVertexAttribArray((GLuint)attr->Handle);
 			if (OPglError("OPeffectBind:Error ")) {
 				OPlog("Effect %s: Failed to disable attrib %s", OPEFFECT_ACTIVE->Name, attr->Name);
 			}
@@ -166,7 +171,7 @@ OPint OPeffectBind(OPeffect* effect){
 	}
 
 	OPEFFECT_ACTIVE = effect;
-	OPEFFECT_BOUND_MESH = OPMESH_ACTIVE;
+	//OPEFFECT_BOUND_MESH = OPMESH_ACTIVE;
 
 	if (OPEFFECT_ACTIVE == NULL) return 1;
 
@@ -182,17 +187,17 @@ OPint OPeffectBind(OPeffect* effect){
 	for (; attrCount--;){
 		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPEFFECT_ACTIVE->Attributes, attrCount);
 
-		glEnableVertexAttribArray((uintptr_t)attr->Handle);
+		glEnableVertexAttribArray((GLuint)attr->Handle);
 		if (OPglError("OPeffectBind:Error ")) {
 			OPlog("Failed to enable attrib %s", attr->Name);
 		}
 
 		glVertexAttribPointer(
-			(uintptr_t)attr->Handle,
+			(GLuint)attr->Handle,
 			attr->Elements,
 			attr->Type,
 			GL_FALSE,
-			effect->Stride,
+			stride,
 			(void*)attr->Offset
 			);
 		if (OPglError("OPeffectBind:Error ")) {
@@ -206,7 +211,7 @@ OPint OPeffectBind(OPeffect* effect){
 	OPglError("OPeffectBind:Errors Occured");
 
 	return 1;
-	
+
 }
 
 ui32 OPeffectGetParam(const OPchar* parameterName){
@@ -283,7 +288,7 @@ OPeffect OPeffectGen(
 		OPvectorPush(vector, (ui8*)&attr);
 	}
 
-	ui32 AttribCount = vector->_size;
+	OPuint AttribCount = vector->_size;
 	OPshaderAttribute* Attributes = (OPshaderAttribute*)OPalloc(sizeof(OPshaderAttribute)* vector->_size);
 	OPmemcpy(Attributes, vector->items, sizeof(OPshaderAttribute)* vector->_size);
 	OPvectorDestroy(vector);
@@ -293,7 +298,7 @@ OPeffect OPeffectGen(
 	OPlog("Finding Effect Stride");
 
 	if (stride == 0){
-		for (OPint i = 0; i < AttribCount; i++){
+		for (OPuint i = 0; i < AttribCount; i++){
 			// TODO add more
 			switch (Attributes[i].Type){
 			case GL_FLOAT:
@@ -321,4 +326,29 @@ OPeffect OPeffectGen(
 	OPlog("Create the Effect");
 
 	return createEffect(*vertShader, *fragShader, Attributes, AttribCount, Name, stride);
+}
+
+OPeffect OPeffectGen(const OPchar* vert, const OPchar* frag, OPvertexLayout* layout) {
+
+	OPlog("Building Effect");
+
+	OPlog("Loading Vert for Effect: %s", vert);
+
+	if (!OPcmanIsLoaded(vert)) {
+		OPlog("Wasn't already loaded. Loading it.");
+		OPcmanLoad(vert);
+	}
+	else {
+		OPlog("Already loaded.c");
+	}
+	OPshader* vertShader = (OPshader*)OPcmanGet(vert);
+
+	OPlog("Loading Frag for Effect: %s", frag);
+
+	if (!OPcmanIsLoaded(frag)) OPcmanLoad(frag);
+	OPshader* fragShader = (OPshader*)OPcmanGet(frag);
+
+	OPlog("Create the Effect");
+
+	return createEffect(*vertShader, *fragShader, layout->attributes, layout->count, "GEN EFFECT", layout->stride);
 }

@@ -165,15 +165,15 @@ OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const O
 
 			int x0 = (int)(width + glyph->offsetX * scale);
 			int x1 = (int)(x0 + glyph->width * scale);
-			int y0 = font->size * scale-(int)(glyph->offsetY * scale) - (font->height * scale - font->size * scale);
-			int y1 = font->size * scale-(int)(glyph->offsetY * scale - glyph->height * scale) - (font->height * scale - font->size * scale);
+			int y0 = (int)(font->size * scale-(int)(glyph->offsetY * scale) - (font->height * scale - font->size * scale));
+			int y1 = (int)(font->size * scale-(int)(glyph->offsetY * scale - glyph->height * scale) - (font->height * scale - font->size * scale));
 
 			float s0 = glyph->textureCoordinates.x;
 			float t0 = glyph->textureCoordinates.y;
 			float s1 = glyph->textureCoordinates.z;
 			float t1 = glyph->textureCoordinates.w;
 
-			ui16 offset = vertices->_size;
+			ui16 offset = (ui16)vertices->_size;
 			ui16 inds[6];
 			inds[0] = offset; inds[1] = offset + 1; inds[2] = offset + 2;
 			inds[3] = offset; inds[4] = offset + 2; inds[5] = offset + 3;

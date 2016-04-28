@@ -31,16 +31,16 @@ void OPcamFreeFlightUpdate(OPcamFreeFlight* camFree) {
 	OPmat4 rotation = OPmat4RotY(camFree->Rotation.y) * OPmat4RotX(camFree->Rotation.x);
 	OPvec3 target = OPmat4Transform(OPVEC3_BACKWARD, rotation);
 
-	camFree->Camera._pos += OPmat4Transform(camFree->Movement, rotation);
-	camFree->Camera._targ = camFree->Camera._pos + target;
-	camFree->Camera._viewStale = 1;
+	camFree->Camera.pos += OPmat4Transform(camFree->Movement, rotation);
+	camFree->Camera.target = camFree->Camera.pos + target;
+	camFree->Camera.Update();
 }
 
 void OPcamFreeFlightUpdate(OPcamFreeFlight* camFree, OPtimer* timer) {
 	OPfloat dt = timer->Elapsed / 1000.0f;
 	OPvec3 rot = { 0, 0, 0 };
 
-	OPfloat triggerDifference = 1.0f + (OPgamePadRightTrigger(OPgamePadGet(OPGAMEPAD_ONE)) - OPgamePadLeftTrigger(OPgamePadGet(OPGAMEPAD_ONE)) * 0.9);
+	OPfloat triggerDifference = 1.0f + (OPgamePadRightTrigger(OPgamePadGet(OPGAMEPAD_ONE)) - OPgamePadLeftTrigger(OPgamePadGet(OPGAMEPAD_ONE)) * 0.9f);
 
 	OPfloat moveSpeed = dt * camFree->MoveSpeed * triggerDifference * 10.0f;
 	OPfloat rotSpeed = dt * camFree->RotationSpeed * triggerDifference;

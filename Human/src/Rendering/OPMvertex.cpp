@@ -1,9 +1,9 @@
 #include "./Human/include/Rendering/OPMvertex.h"
-OPint OPMhasFeature(ui32 features, ui32 feature) {
+ui32 OPMhasFeature(ui32 features, OPMFeatures feature) {
 	return (features & feature) > 0;
 }
 
-OPvertices* OPverticesCreate(ui32 count, ui32 features) {
+OPvertices* OPverticesCreate(OPuint count, ui32 features) {
 	ui32 size = 0;
 	size += OPMhasFeature(features, Position) * 3;
 	size += OPMhasFeature(features, Normal) * 3;
@@ -50,11 +50,11 @@ ui32 OPverticesOffset(OPvertices* vertices, ui32 feature) {
 	return offset;
 }
 
-void OPverticesWriteVec2(OPvertices* vertices, OPvec2* data, ui32 feature) {
+void OPverticesWriteVec2(OPvertices* vertices, OPvec2* data, OPMFeatures feature) {
 	if (!OPMhasFeature(vertices->features, feature)) return;
 
 	ui32 offset = OPverticesOffset(vertices, feature);
-	for (i32 i = 0; i < vertices->count; i++) {
+	for (ui32 i = 0; i < vertices->count; i++) {
 		void* dst = &vertices->data[offset * sizeof(f32)];
 		void* src = &data[i];
 		offset += vertices->size;
@@ -62,11 +62,11 @@ void OPverticesWriteVec2(OPvertices* vertices, OPvec2* data, ui32 feature) {
 	}
 }
 
-void OPverticesWriteVec3(OPvertices* vertices, OPvec3* data, ui32 feature) {
+void OPverticesWriteVec3(OPvertices* vertices, OPvec3* data, OPMFeatures feature) {
 	if (!OPMhasFeature(vertices->features, feature)) return;
 
 	ui32 offset = OPverticesOffset(vertices, feature);
-	for (i32 i = 0; i < vertices->count; i++) {
+	for (ui32 i = 0; i < vertices->count; i++) {
 		void* dst = &vertices->data[offset * sizeof(f32)];
 		void* src = &data[i];
 		OPmemcpy(dst, src, sizeof(OPvec3));
@@ -74,11 +74,11 @@ void OPverticesWriteVec3(OPvertices* vertices, OPvec3* data, ui32 feature) {
 	}
 }
 
-void OPverticesWriteVec4(OPvertices* vertices, OPvec4* data, ui32 feature) {
+void OPverticesWriteVec4(OPvertices* vertices, OPvec4* data, OPMFeatures feature) {
 	if (!OPMhasFeature(vertices->features, feature)) return;
 
 	ui32 offset = OPverticesOffset(vertices, feature);
-	for (i32 i = 0; i < vertices->count; i++) {
+	for (ui32 i = 0; i < vertices->count; i++) {
 		void* dst = &vertices->data[offset * sizeof(f32)];
 		void* src = &data[i];
 		offset += vertices->size;

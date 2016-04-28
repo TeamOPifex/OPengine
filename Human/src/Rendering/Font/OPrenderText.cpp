@@ -78,3 +78,26 @@ void OPfontRender(const OPchar* text, OPmat4* world) {
 		OPfontRender(node, &temp);
 	}
 }
+
+void OPfontRender(const OPchar* text, OPmat4* world, ui8 useJustWorld) {
+	ASSERT(OPFONTMANAGER_EFFECT_ACTIVE != NULL, "A Font Effect has not been bound yet");
+	ASSERT(OPFONTMANAGER_ACTIVE != NULL, "A Font Manager has not been bound yet");
+	ASSERT(OPFONTMANAGER_ACTIVE->builtNodes != NULL, "The bound Font Manager Hashmap hasn't been created yet");
+
+	int tryHashMap = OPFONTMANAGER_ACTIVE->isBuilt;
+	OPfontBuiltTextNode* node = NULL;
+	if (tryHashMap) {
+		OPhashMapGet(OPFONTMANAGER_ACTIVE->builtNodes, text, (void**)&node);
+	}
+
+	OPmat4 aligned;
+
+	if (node == NULL || !OPFONTMANAGER_ACTIVE->isBuilt) {
+		OPfontUserTextNode textNode = OPfontCreateUserText(OPFONTMANAGER_ACTIVE->_font, text, 1.0);
+		OPfontRender(&textNode, world);
+		OPmeshDestroy(&textNode.mesh);
+	}
+	else {
+		OPfontRender(node, world);
+	}
+}

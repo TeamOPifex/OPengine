@@ -94,7 +94,7 @@ void ExampleSpineEnter(OPgameState* last) {
 		"SimpleTextured.frag",
 		OPATTR_POSITION | OPATTR_UV,
 		"Model Effect",
-		spineExample->quad.VertexSize);
+		spineExample->quad.vertexLayout.stride);
 
 	SpineInitialize();
 }
@@ -118,7 +118,7 @@ OPint ExampleSpineUpdate(OPtimer* time) {
 	if (OPkeyboardIsDown(OPKEY_SPACE)) { spineExample->Rotation++; }
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
-	OPmat4 world = OPmat4RotY(spineExample->Rotation / 100.0);
+	OPmat4 world = OPmat4RotY(spineExample->Rotation / 100.0f);
 	OPmat4Scl(&world, 0.025f, 0.025f, 0.025f);
 
 	////////////////////////

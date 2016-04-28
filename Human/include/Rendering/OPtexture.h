@@ -25,6 +25,8 @@ struct OPtextureDescription{
 struct OPtexture {
 	OPtextureDescription Description;
 	ui32 Handle;
+
+	void Load(OPchar* asset);
 };
 
 //-----------------------------------------------------------------------------
@@ -69,6 +71,6 @@ void OPtextureSetData(void* data);
 void OPtexturePixelate();
 void OPtextureSmooth();
 OPvec4 OPtextureReadPixel(OPtexture* tex, OPint x, OPint y);
-
+OPtexture* OPtextureLoad(const OPchar* asset);
 
 #endif

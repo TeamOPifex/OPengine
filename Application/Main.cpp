@@ -7,11 +7,30 @@
 #include "./Pipeline/include/Loaders/OPloaderOPanimation.h"
 #include "./Data/include/OPlogToFile.h"
 
+#include <bitset>
+#include <string>
+#include <jansson.h>
+
 //////////////////////////////////////
 // Application Methods
 //////////////////////////////////////
+/* forward refs */
 
 void ApplicationInit() {
+	//OPallocator* allocator = OPallocatorLinearCreate(MB(128));
+	//OPDEFAULT_ALLOCATOR = *allocator;
+
+	OP_LOG_LEVEL = 2000;
+    // ui64 val = 4;
+    // ui64 val2 = 8 << 3;
+    // ui64 result = val | val2;
+
+    // std::bitset<64> bitset1 { result };   // the bitset representation of 4
+    // std::string str = bitset1.to_string();
+
+    // OPlogDebug("Bitset %s", str.c_str());
+    // exit(0);
+    // return;
 
 	//OPlogToFile(".opengine.debug.txt");
 
@@ -24,7 +43,7 @@ void ApplicationInit() {
 
 
 	OPloadersAddDefault();
-	//OPscriptAddLoader();
+	OPscriptAddLoader();
 	OPskeletonAddLoader();
 	OPskeletonAnimationAddLoader();
 	//SpineAddLoader();
@@ -33,15 +52,19 @@ void ApplicationInit() {
 
 	//OPcmanLoadResourcePack("pack.oppack");
 
+    OPjson* ground = (OPjson*)OPcmanLoadGet("ground.meta");
+    OPjson model = OPjsonGet(*ground, "model");
+    OPlog("MODEL from JSON: %s", OPjsonString(model));
+
 	OPoculusStartup();
 	OPrenderInit();
 	OPgamePadSetDeadZones(0.2f);
 
-	//OPgameStateChange(&GS_EXAMPLE_SELECTOR);
-	OPgameStateChange(&GS_EXAMPLE_MODEL);
+	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 }
 
-int ApplicationUpdate(OPtimer* timer) {
+OPint ApplicationUpdate(OPtimer* timer) {
+	OPrenderUpdate();
 
 	OPinputSystemUpdate(timer);
 	OPcmanUpdate(timer);
@@ -55,7 +78,7 @@ int ApplicationUpdate(OPtimer* timer) {
 }
 
 void ApplicationRender(OPfloat delta) {
-	OPlog("[%f]", delta);
+	// OPlog("[%f]", delta);
 	ActiveState->Render(delta);
 }
 
@@ -75,7 +98,18 @@ void ApplicationSetup() {
 // Application Entry Point
 //////////////////////////////////////
 
-#ifndef OPIFEX_IOS
+#ifdef OPIFEX_IOS
+#import <UIKit/UIKit.h>
+#import "./Human/include/Rendering/AppDelegate.h"
+
+int main(int argc, char * argv[]) {
+    @autoreleasepool {
+        return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
+    }
+}
+
+#else
+
 OP_MAIN {
 	#ifdef OPIFEX_OPTION_V8
 	// If the V8 engine is compiled in,
@@ -89,8 +123,8 @@ OP_MAIN {
 
 	ApplicationSetup();
 
-	OP_MAIN_START
-	//OP_MAIN_START_STEPPED
+	//OP_MAIN_START
+	OP_MAIN_START_STEPPED
 	OP_MAIN_END
 	OP_MAIN_SUCCESS
 }

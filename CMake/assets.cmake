@@ -59,6 +59,9 @@ endif()
 # It pulls from the Repository otherwise
 if(${OPIFEX_OPTION_RELEASE} OR ${OPIFEX_OS_ANDROID})
 
+	if( ${OPIFEX_OS_WINDOWS})
+		set(OP_ASSETS_TARGET "${PROJECT_BINARY_DIR}/Application/Release/assets")
+	endif()
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Audio" ${OP_ASSETS_TARGET}/Audio)
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Models" ${OP_ASSETS_TARGET}/Models)
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Textures" ${OP_ASSETS_TARGET}/Textures)
@@ -78,7 +81,7 @@ if(${OPIFEX_OPTION_RELEASE} OR ${OPIFEX_OS_ANDROID})
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/filters" ${OP_ASSETS_TARGET}/Web/angular/filters)
 	copy_source_group("${PROJECT_SOURCE_DIR}/Assets/Web/js/angular/services" ${OP_ASSETS_TARGET}/Web/angular/services)
 
-	message(STATUS "COPYING FILES")
+	# message(STATUS "COPYING FILES")
 
 endif()
 

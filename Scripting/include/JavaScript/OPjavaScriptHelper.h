@@ -168,7 +168,13 @@ typedef Persistent<Function, CopyablePersistentTraits<Function> > OPjavaScriptPe
 #define JS_SET_NUMBER(target, name, number) target->Set(JS_NEW_STRING(name), JS_NEW_NUMBER(number));
 
 
-
+#define JS_VALUE_TO_ARRAY(A) Handle<Array>::Cast(A)
+#define JS_VALUE_TO_OBJECT(A) A->ToObject()
+#define JS_OBJECT_GET(A, B) A->Get(JS_NEW_STRING(B))
+#define JS_OBJECT_GET_INT(A, B) JS_OBJECT_GET(A,B)->IntegerValue();
+// Warning the * will be invalid if used outside of the scope
+#define JS_OBJECT_GET_STRING(A, B) *String::Utf8Value(JS_OBJECT_GET(A,B)->ToString())
+#define JS_TO_STRING(A) *String::Utf8Value(A->ToString())
 
 #define JS_RUN_SELF(m) \
 JS_BEGIN_ARGS_SELF \
@@ -335,6 +341,14 @@ JS_HELPER_SELF_WRAPPER( JS_MAKE_WRAPPED_FN_NAME(t ## m) ) { \
     void* result = t ## m(ptr, a1, a2);\
     JS_RETURN(r(JS_NEW_OBJECT(), result)); \
 }
+
+// Helps with wrapping
+#define JS_WRAP_(WRAPPER,EXTERNAL,NAME,PTR) JS_SET_OBJECT(EXTERNAL, NAME, WRAPPER(JS_NEW_OBJECT(), PTR));
+#define JS_WRAP(EXTERNAL,NAME,PTR) JS_WRAP_(OPjavaScriptWrap, EXTERNAL,NAME,PTR)
+#define JS_EASY_WRAP_(TYPE) inline Handle<Object> OPjavaScriptWrap(Handle<Object> result, TYPE* ptr) { return TYPE ## Wrapper(result, ptr); }
+#define JS_EASY_WRAP_PTR(TYPE) Handle<Object> \
+    TYPE ## Wrapper(Handle<Object> result, TYPE* ptr); \
+    JS_EASY_WRAP_(TYPE)
 
 #endif
 

@@ -10,11 +10,8 @@
 #include <stdio.h>
 #include <errno.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern i32 LogToHandle;
+extern ui32 OP_LOG_LEVEL;
 
 extern void(*OPlogHandler)(ui32, const char*, const char*);
 
@@ -23,7 +20,7 @@ void OPlogSetOutput(i32 handle);
 // Prints out to the console, accepts variable arguments like sprintf
 void OPlg(const char* message, ...);
 
-// Prints out to the console, accepts variable arguments like sprintf, 
+// Prints out to the console, accepts variable arguments like sprintf,
 // does not write a new line at the end of the message
 void OPlog(const char* message, ...);
 
@@ -43,8 +40,5 @@ void OPlogWarn(const char* message, ...);
 // Level 0
 void OPlogErr(const char* message, ...);
 
-#ifdef __cplusplus
-};
-#endif
 
 #endif

@@ -16,15 +16,19 @@ typedef struct {
 TexturedExample* texturedExample;
 
 void ExampleTexturedEnter(OPgameState* last) {
-	OPcmanLoad("adobe.opm");
+	// OPcmanLoad("adobe.opm");
+	// OPcmanLoad("adobe.png");
 	OPcmanLoad("Common/Texture.frag");
 	OPcmanLoad("Common/Texture3D.vert");
-	OPcmanLoad("adobe.png");
 
 	texturedExample = (TexturedExample*)OPalloc(sizeof(TexturedExample));
 
-	texturedExample->Mesh = (OPmesh*)OPcmanGet("adobe.opm");
-	texturedExample->Texture = (OPtexture*)OPcmanGet("adobe.png");
+	OPjson* meta = (OPjson*)OPcmanLoadGet("Models/adobe.opm.meta");
+	const OPchar* _model = OPjsonString(OPjsonGet(*meta, "model"));
+	const OPchar* _texture = OPjsonString(OPjsonGet(*meta, "texture"));
+
+	texturedExample->Mesh = (OPmesh*)OPcmanLoadGet(_model);
+	texturedExample->Texture = (OPtexture*)OPcmanLoadGet(_texture);
 	texturedExample->Rotation = 0;
 
 	OPshaderAttribute attribs[] = {
@@ -42,7 +46,7 @@ void ExampleTexturedEnter(OPgameState* last) {
 		attribs,
 		3,
 		"Textured Effect",
-		texturedExample->Mesh->VertexSize
+		texturedExample->Mesh->vertexLayout.stride
 		);
 
 	texturedExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
@@ -55,30 +59,27 @@ void ExampleTexturedEnter(OPgameState* last) {
 		45.0f,
 		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
 		);
+	OPrenderDepth(1);
 }
 
 OPint ExampleTexturedUpdate(OPtimer* time) {
-	OPrenderDepth(1);
 	OPrenderClear(0, 0, 0);
-	
+
 	if (OPkeyboardIsDown(OPKEY_SPACE)) { texturedExample->Rotation++; }
 
 	OPmeshBind(texturedExample->Mesh);
 	OPeffectBind(texturedExample->Effect);
 
-	OPmat4 world, view, proj;
-	world = OPmat4RotY(texturedExample->Rotation / 100.0);
-
-	OPcamGetView((*texturedExample->Camera), &view);
-	OPcamGetProj((*texturedExample->Camera), &proj);
+	OPmat4 world;
+	world = OPmat4RotY(texturedExample->Rotation / 100.0f);
 
 	OPtextureClearActive();
 	ui32 tex = OPtextureBind(texturedExample->Texture);
 	OPeffectParami("uColorTexture", tex);
 
 	OPeffectParamMat4("uWorld", &world);
-	OPeffectParamMat4("uProj", &proj);
-	OPeffectParamMat4("uView", &view);
+	OPeffectParamMat4("uProj", &texturedExample->Camera->proj);
+	OPeffectParamMat4("uView", &texturedExample->Camera->view);
 
 	OPvec3 light = OPvec3Create(0, 1, 0);
 	OPeffectParamVec3("vLightDirection", &light);

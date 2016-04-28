@@ -1,13 +1,13 @@
 #ifndef OPENGINE_DATA_OPALLOCLINEAR
 #define OPENGINE_DATA_OPALLOCLINEAR
 
-#include "./Core/include/OPtypes.h"
+#include "./Core/include/OPallocator.h"
 
 /* Struct definitions */
 /**
  * Linear Memory Block
  */
-struct OPallocLinear {
+struct OPallocatorLinear {
 	OPuint _allocCount;
 	OPuint _usedMemory;
 	OPuint _size;
@@ -15,24 +15,18 @@ struct OPallocLinear {
 	void* _memStart;
 	void* _currentPos;
 };
-typedef struct OPallocLinear OPallocLinear;
+typedef struct OPallocatorLinear OPallocatorLinear;
 
-void OPallocLinearInit(OPallocLinear* result, OPuint sizeInBytes);
-/**
- * OPallocLinearCreate - creates a Linear Allocator
- */
-OPallocLinear* OPallocLinearCreate(OPuint sizeInBytes);
-void OPallocLinearDestroy(OPallocLinear* alloc);
-void* OPallocLinearAlloc(OPallocLinear* alloc, OPuint sizeInBytes);
+void OPallocatorLinearInit(OPallocator* result, OPuint sizeInBytes);
+OPallocator* OPallocatorLinearCreate(OPuint sizeInBytes);
+void OPallocatorLinearDestroy(OPallocator* alloc);
 
-inline OPuint OPallocLinearUsed(OPallocLinear* alloc) {
+void* OPallocatorLinearAlloc(OPallocator* alloc, OPuint sizeInBytes);
+void OPallocatorLinearFree(OPallocator* alloc, void* data);
+void OPallocatorLinearReset(OPallocator* alloc);
+
+inline OPuint OPallocatorLinearUsed(OPallocatorLinear* alloc) {
     return alloc->_usedMemory;
-}
-
-inline void OPallocLinearClear(OPallocLinear* alloc) {
-	alloc->_allocCount = 0;
-	alloc->_usedMemory = 0;
-	alloc->_currentPos = alloc->_memStart;
 }
 
 #endif

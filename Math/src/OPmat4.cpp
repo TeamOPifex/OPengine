@@ -19,13 +19,21 @@ OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPf
 	OPfloat w = (right - left);
 	OPfloat h = (top - bottom);
 
-	m[0][0] = 2.0f / w;
-	m[1][1] = 2.0f / h;
-	m[2][2] = 1.0f / (zFar - zNear);
-	m[3][0] = -((right + left) / (right - left));
-	m[3][1] = -((top + bottom) / (top - bottom));
-	//m[3][2] = -(zFar + zNear) / (zFar - zNear);
-	m[3][2] = -((zNear) / (zFar - zNear));
+	//m[0][0] = 2.0f / w;
+	//m[1][1] = 2.0f / h;
+	//m[2][2] = 1.0f / (zFar - zNear);
+	//m[3][0] = -((right + left) / (right - left));
+	//m[3][1] = -((top + bottom) / (top - bottom));
+	////m[3][2] = -(zFar + zNear) / (zFar - zNear);
+	//m[3][2] = -((zNear) / (zFar - zNear));
+
+	m[0][0] = 2.0 / (right - left);
+	m[1][1] = 2.0 / (top - bottom);
+	m[2][2] = -2.0 / (zFar - zNear);
+	m[3][0] = -(right + left) / (right - left);
+	m[3][1] = -(top + bottom) / (top - bottom);
+	m[3][2] = -(zFar + zNear) / (zFar - zNear);
+
 	return m;
 }
 
@@ -51,18 +59,49 @@ OPmat4 OPmat4LookAt(OPvec3 eye, OPvec3 center, OPvec3 up) {
 	m[3][1] =-OPvec3Dot(u, eye);
 	m[3][2] = OPvec3Dot(f, eye);
 
+
+	//OPvec3 X, Y, Z;
+
+	//Z = eye - center;
+	//Z = OPvec3Norm(Z);
+
+	//Y = up;
+	//X = OPvec3Cross(Y, Z);
+
+	//Y = OPvec3Cross(Z, X);
+
+	//X = OPvec3Norm(X);
+	//Y = OPvec3Norm(Y);
+
+	//m[0][0] = X.x;
+	//m[1][0] = X.y;
+	//m[2][0] = X.z;
+	//m[3][0] = -OPvec3Dot(X, eye);
+	//m[0][1] = Y.x;
+	//m[1][1] = Y.y;
+	//m[2][1] = Y.z;
+	//m[3][1] = -OPvec3Dot(Y, eye);
+	//m[0][2] = Z.x;
+	//m[1][2] = Z.y;
+	//m[2][2] = Z.z;
+	//m[3][2] = -OPvec3Dot(Z, eye);
+	//m[0][3] = 0;
+	//m[1][3] = 0;
+	//m[2][3] = 0;
+	//m[3][3] = 1.0f;
+
 	return m;
 }
 
 OPmat4 OPmat4Perspective(OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal) {
 	OPmat4 m = OPMAT4_IDENTITY;
 
-	OPfloat tanHalfFovy = OPtan(fovy / 2.0);
-	m[0][0] = 1.0 / ( aspect * tanHalfFovy);
-	m[1][1] = 1.0 / tanHalfFovy;
+	OPfloat tanHalfFovy = OPtan(fovy / 2.0f);
+	m[0][0] = 1.0f / ( aspect * tanHalfFovy);
+	m[1][1] = 1.0f / tanHalfFovy;
 	m[2][2] = -(farVal + nearVal) / ( farVal - nearVal);
-	m[2][3] = -1.0;
-	m[3][2] = -(2.0 * farVal * nearVal) / ( farVal - nearVal);
+	m[2][3] = -1.0f;
+	m[3][2] = -(2.0f * farVal * nearVal) / ( farVal - nearVal);
 
 	return m;
 }
@@ -135,9 +174,9 @@ OPint OPmat4Inverse(OPmat4* dst, OPmat4 a) {
 OPmat4 OPmat4Interpolate(OPmat4 a, OPmat4 b, OPfloat percent) {
 	OPmat4 result;
 
-	for (OPint j = 0; j < 4; j++) {
-		for (OPint k = 0; k < 4; k++) {
-			result[j][k] = a[j][k] * (1.0 - percent) + b[j][k] * percent;
+	for (i32 j = 0; j < 4; j++) {
+		for (i32 k = 0; k < 4; k++) {
+			result[j][k] = a[j][k] * (1.0f - percent) + b[j][k] * percent;
 		}
 	}
 

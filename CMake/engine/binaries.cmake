@@ -1,7 +1,7 @@
 
 ### Setup the Binaries folder in prep for the build
 
-message(STATUS "Creating Binaries Directories")
+# message(STATUS "Creating Binaries Directories")
 
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/android/)
@@ -28,5 +28,7 @@ file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/osx32/release/)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/osx64/)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/osx64/debug/)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/osx64/release/)
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Application/Debug/)
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Application/Release/)
 
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/assets)

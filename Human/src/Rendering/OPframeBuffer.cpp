@@ -46,39 +46,49 @@ GLuint createDepthTexture(int w, int h) {
 OPframeBuffer OPframeBufferCreateShadow(ui32 width, ui32 height) {
 	OPframeBuffer fb;
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
+
+	// Setup the Texture Descriptor
 	fb.Description.Width = width;
 	fb.Description.Height = height;
 	fb.Description.DataType = GL_FLOAT;
 	fb.Description.Format = GL_DEPTH_COMPONENT;
 	fb.Description.InternalFormat = GL_DEPTH_COMPONENT;
-	fb.Description.MagFilter = GL_LINEAR;
-	fb.Description.MinFilter = GL_LINEAR;
-	fb.Description.WrapX = GL_CLAMP_TO_EDGE;
-	fb.Description.WrapY = GL_CLAMP_TO_EDGE;
+	fb.Description.MagFilter = GL_NEAREST;
+	fb.Description.MinFilter = GL_NEAREST;
+	fb.Description.WrapX = GL_CLAMP_TO_BORDER;
+	fb.Description.WrapY = GL_CLAMP_TO_BORDER;
 	fb.Description.CompareFunc = GL_LEQUAL;
 	fb.Description.CompareMode = GL_COMPARE_R_TO_TEXTURE;
 
+	// Create the Framebuffer
 	glGenFramebuffers(1, &fb.Handle);
 
+	// Create a nex Depth Texture
 	fb.Texture = OPtextureCreate(fb.Description);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 	GLfloat borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
+	// Bind this framebuffer as the current one
 	glBindFramebuffer(GL_FRAMEBUFFER, fb.Handle);
 
+	// Attach the created depth texture as the depth buffer for this Framebuffer
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, fb.Texture.Handle, 0);
 
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
+	// Turn off the color buffer
+	// (For shadows we only need depth information)
+	//glDrawBuffer(GL_NONE);
+	//glReadBuffer(GL_NONE);
 
 	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
 		OPlog("Frame buffer NOT OK");
 	}
 
+	// Set the current framebuffer back to the display
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #endif
+
 	return fb;
 }
 

@@ -2,6 +2,7 @@
 #include "./Human/include/Utilities/Errors.h"
 #include "./Human/include/Rendering/OPattributes.h"
 #include "./Core/include/OPlog.h"
+#include "./Core/include/Assert.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
     #ifdef OPIFEX_IOS
@@ -51,7 +52,7 @@ void OPrenderDelBuffer(OPrenderBuffer* buff){
 	glDeleteBuffers(1, &buff->Handle);
 }
 //-----------------------------------------------------------------------------
-void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, ui32 count, const void* data){
+void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, OPuint count, const void* data){
 	OPrenderBindBuffer(buff);
 	buff->ElementSize  = elementSize;
 	buff->ElementCount = count;
@@ -60,7 +61,7 @@ void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, ui32 count, c
 	OPglError("OPrenderSetBufferData() - ERROR!");
 }
 
-void OPrenderSetBufferSubData(OPrenderBuffer* buff, ui32 elementSize, ui32 offsetCount, ui32 count, const void* data) {
+void OPrenderSetBufferSubData(OPrenderBuffer* buff, ui32 elementSize, ui32 offsetCount, OPuint count, const void* data) {
 	OPrenderBindBuffer(buff);
 	glBufferSubData(buff->Type, offsetCount * elementSize, count * elementSize, data);
 }
@@ -81,13 +82,14 @@ void OPrenderBindBuffer(OPrenderBuffer* buffer){
 }
 //-----------------------------------------------------------------------------
 void OPrenderDrawBuffer(ui32 offset){
-	glDrawArrays(GL_TRIANGLES, offset, OPRENDER_CURR_VB->ElementCount);
+	glDrawArrays(GL_TRIANGLES, offset, (GLsizei)OPRENDER_CURR_VB->ElementCount);
 }
 //-----------------------------------------------------------------------------
 void OPrenderDrawBufferIndexed(ui32 offset){
 	OPglError("OPrenderDrawBufferIndexed:Error 0:%d");
 	GLenum indType = OPRENDER_CURR_IB->ElementSize == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
-	glDrawElements(GL_TRIANGLES, OPRENDER_CURR_IB->ElementCount, indType, (void*)(offset * sizeof(GLuint)));
+	ASSERT(OPRENDER_CURR_IB != NULL, "Index Buffer hasn't been set");
+	glDrawElements(GL_TRIANGLES, (GLsizei)OPRENDER_CURR_IB->ElementCount, indType, (void*)(offset * sizeof(GLuint)));
 	OPglError("OPrenderDrawBufferIndexed:Error 1:%d");
 }
 

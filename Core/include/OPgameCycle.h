@@ -27,7 +27,7 @@ extern void (*OPinitialize)();
  *	and scene rendering.
  * @param timer OPtimer object representing current time measurments
  */
-extern int(*OPupdate)(struct OPtimer*);
+extern OPint(*OPupdate)(struct OPtimer*);
 
 //----------------------------------------------------------------------------
 /**

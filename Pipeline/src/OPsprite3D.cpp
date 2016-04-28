@@ -119,13 +119,10 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 		heightScale = frameSize.y / frameSize.x;
 	}
 
-	OPmat4 world, view, proj;
+	OPmat4 world;
 	OPmeshBind(&SPRITE_3D_QUAD_MESH);
 	OPeffectBind(sprite->Effect);
-
-	OPcamGetView((*camera), &view);
-	OPcamGetProj((*camera), &proj);
-
+	
 	OPmat4Identity(&world);
 	world = OPmat4Scl(world, widthScale, heightScale, 1.0);
 	OPmat4RotZ(&world, rotation + sprite->Rotation.z);
@@ -142,8 +139,8 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	OPeffectParami("uColorTexture", bind);
 	//OPeffectParamf("uAlpha", 1.0f);
 	OPeffectParamMat4("uWorld", &world);
-	OPeffectParamMat4("uView", &view);
-	OPeffectParamMat4("uProj", &proj);
+	OPeffectParamMat4("uView", &camera->view);
+	OPeffectParamMat4("uProj", &camera->proj);
 	OPeffectParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
 	OPeffectParamVec2("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size);
 }

@@ -2,6 +2,7 @@
 
 OPmesh* OPMESH_ACTIVE;
 void* OPMESH_ACTIVE_PTR = NULL;
+ui64 OPMESH_GLOBAL_ID = 1;
 
 //-----------------------------------------------------------------------------
 // ______                _   _
@@ -16,11 +17,14 @@ OPmesh OPmeshCreate(){
 		OPrenderGenBuffer(OPindexBuffer)
 	};
 
+	out.Id = OPMESH_GLOBAL_ID++;
+
 	return out;
 }
 
 OPmesh* OPmeshCreate(OPmeshDesc desc) {
 	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
+    mesh->Id = OPMESH_GLOBAL_ID++;
 	(*mesh) = OPmeshCreate();
 	OPmeshBind(mesh);
 
@@ -31,11 +35,11 @@ OPmesh* OPmeshCreate(OPmeshDesc desc) {
 
 //-----------------------------------------------------------------------------
 void OPmeshBuild(ui32 vertSize, ui32 indSize,
-						 ui32 vertCount, ui32 indCount,
+						 OPuint vertCount, OPuint indCount,
 						 void* vertices, void* indices){
 	OPrenderSetBufferData(&OPMESH_ACTIVE->IndexBuffer, indSize, indCount, indices);
 	OPrenderSetBufferData(&OPMESH_ACTIVE->VertexBuffer, vertSize, vertCount, vertices);
-	OPMESH_ACTIVE->VertexSize = vertSize;
+	//OPMESH_ACTIVE->VertexSize = vertSize;
 	OPMESH_ACTIVE->Vertices = vertices;
 	OPMESH_ACTIVE->Indicies = indices;
 }

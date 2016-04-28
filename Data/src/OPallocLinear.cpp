@@ -1,34 +1,59 @@
 #include "./Data/include/OPallocLinear.h"
 #include "./Core/include/OPmemory.h"
+#include "./Core/include/Assert.h"
 
-void OPallocLinearInit(OPallocLinear* result, OPuint sizeInBytes) {
-	result->_headerStart = result;
-	result->_memStart = (void*)((size_t)result + sizeof(OPallocLinear));
-	result->_size = sizeInBytes;
-	OPallocLinearClear(result);
+void OPallocatorLinearInit(OPallocator* alloc, OPuint sizeInBytes) {
+	OPallocatorLinear* data = (OPallocatorLinear*)alloc->data;
+	data->_headerStart = data;
+	data->_memStart = (void*)((size_t)data + sizeof(OPallocatorLinear));
+	data->_size = sizeInBytes;
+	OPallocatorLinearReset(alloc);
 }
 
-OPallocLinear* OPallocLinearCreate(OPuint sizeInBytes) {
-	OPuint totalBytes = sizeof(OPallocLinear) + sizeInBytes;
+OPallocator* OPallocatorLinearCreate(OPuint sizeInBytes) {
+	OPallocator* allocator = (OPallocator*)OPalloc(sizeof(OPallocator));
+
+	OPuint totalBytes = sizeof(OPallocatorLinear) + sizeInBytes;
 	void* data = OPallocZero(totalBytes);
-	OPallocLinear* alloc = (OPallocLinear*)data;
-	OPallocLinearInit(alloc, sizeInBytes);
-	return alloc;
+
+	OPallocatorLinear* alloc = (OPallocatorLinear*)data;
+	allocator->data = alloc;
+	OPallocatorLinearInit(allocator, sizeInBytes);
+
+	allocator->alloc = (void*(*)(void*, OPuint))OPallocatorLinearAlloc;
+	allocator->free = (void(*)(void*, void*))OPallocatorLinearFree;
+	allocator->clear = (void(*)(void*))OPallocatorLinearReset;
+	
+	return allocator;
 }
 
-void OPallocLinearDestroy(OPallocLinear* alloc) {
-	OPfree(alloc->_headerStart);
+void OPallocatorLinearFree(OPallocator* alloc, void* data) {
+
+}
+
+void OPallocatorLinearReset(OPallocator* alloc) {
+	OPallocatorLinear* data = (OPallocatorLinear*)alloc->data;
+	data->_allocCount = 0;
+	data->_usedMemory = 0;
+	data->_currentPos = data->_memStart;
+}
+
+void OPallocatorLinearDestroy(OPallocator* alloc) {
+	OPallocatorLinear* data = (OPallocatorLinear*)alloc->data;
+	OPfree(data->_headerStart);
 }
 
 // TODO: Align Memory into DWORD sized chunks
-void* OPallocLinearAlloc(OPallocLinear* alloc, OPuint sizeInBytes) {
+void* OPallocatorLinearAlloc(OPallocator* alloc, OPuint sizeInBytes) {
+	OPallocatorLinear* data = (OPallocatorLinear*)alloc->data;
 	//OPallocAlignAdjustment
-	if(alloc->_usedMemory + sizeInBytes > alloc->_size) {
+	if(data->_usedMemory + sizeInBytes > data->_size) {
+	    ASSERT(false, "NO MEMORY LEFT");
 		return NULL;
 	}
-	void* block = alloc->_currentPos;
-	alloc->_currentPos = (void*)((size_t)block + sizeInBytes);
-	alloc->_usedMemory += sizeInBytes;
-	alloc->_allocCount++;
+	void* block = data->_currentPos;
+	data->_currentPos = (void*)((size_t)block + sizeInBytes);
+	data->_usedMemory += sizeInBytes;
+	data->_allocCount++;
 	return block;
 }

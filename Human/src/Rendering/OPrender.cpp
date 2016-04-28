@@ -5,17 +5,17 @@
 #include "./Core/include/OPcore.h"
 
 i8 OPRENDER_INITIALIZED = 0;
-i32 OPRENDER_WIDTH = 1280;
-i32 OPRENDER_HEIGHT = 720;
-i32 OPRENDER_SCREEN_WIDTH = 1280;
-i32 OPRENDER_SCREEN_HEIGHT = 720;
-i32 OPRENDER_SCALED_WIDTH = 1280;
-i32 OPRENDER_SCALED_HEIGHT = 720;
+ui32 OPRENDER_WIDTH = 1280;
+ui32 OPRENDER_HEIGHT = 720;
+ui32 OPRENDER_SCREEN_WIDTH = 1280;
+ui32 OPRENDER_SCREEN_HEIGHT = 720;
+ui32 OPRENDER_SCALED_WIDTH = 1280;
+ui32 OPRENDER_SCALED_HEIGHT = 720;
 f32 OPRENDER_SCREEN_WIDTH_SCALE = 1;
 f32 OPRENDER_SCREEN_HEIGHT_SCALE = 1;
-OPint OPRENDER_FULLSCREEN = false;
-OPint OPRENDER_HAS_FOCUS = 1;
-OPint glfwInitialized = 0;
+i8 OPRENDER_FULLSCREEN = false;
+i8 OPRENDER_HAS_FOCUS = 1;
+i8 glfwInitialized = 0;
 OPuint OPRENDER_VAO = 0;
 
 #ifndef OPIFEX_ANDROID
@@ -271,26 +271,29 @@ OPint OPrenderInit(i32 width, i32 height){
 		}*/
 	}
 
-	OPint _screenWidth = OPRENDER_SCREEN_WIDTH;
-	OPint _screenHeight = OPRENDER_SCREEN_HEIGHT;
+	i32 _screenWidth = (i32)OPRENDER_SCREEN_WIDTH;
+	i32 _screenHeight = (i32)OPRENDER_SCREEN_HEIGHT;
 
 	OPlog("%d x %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
 	OPlog("%d x %d", _screenWidth, _screenHeight);
 
 	window = glfwCreateWindow(_screenWidth, _screenHeight,
 		"OPifex Entertainment", monitor, NULL);
-	
+
 	OPlog("%d x %d", _screenWidth, _screenHeight);
 
 	OPlogInfo("Created window of size: %d x %d",
 		_screenWidth, _screenHeight);
 
-	glfwGetFramebufferSize(window, &OPRENDER_SCREEN_WIDTH, &OPRENDER_SCREEN_HEIGHT);
+	int w, h;
+	glfwGetFramebufferSize(window, &w, &h);
+	OPRENDER_SCREEN_WIDTH = (ui32)w;
+	OPRENDER_SCREEN_HEIGHT = (ui32)h;
 
 	OPRENDER_SCREEN_WIDTH_SCALE = _screenWidth / (f32)OPRENDER_SCREEN_WIDTH;
 	OPRENDER_SCREEN_HEIGHT_SCALE = _screenHeight / (f32)OPRENDER_SCREEN_HEIGHT;
-	OPRENDER_SCALED_WIDTH = OPRENDER_SCREEN_WIDTH * OPRENDER_SCREEN_WIDTH_SCALE;
-	OPRENDER_SCALED_HEIGHT = OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE;
+	OPRENDER_SCALED_WIDTH = (i32)(OPRENDER_SCREEN_WIDTH * OPRENDER_SCREEN_WIDTH_SCALE);
+	OPRENDER_SCALED_HEIGHT = (i32)(OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE);
 	OPlogInfo("Frame Buffer size: %d x %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
 	OPlogDebug("Scale: %f x %f", OPRENDER_SCREEN_WIDTH_SCALE, OPRENDER_SCREEN_HEIGHT_SCALE);
 
@@ -307,8 +310,6 @@ OPint OPrenderInit(i32 width, i32 height){
 	}
 
 	glfwSetWindowFocusCallback(window, glfwWindowFocusCallback);
-
-	GLint w, h;
 
 	glewExperimental = GL_TRUE;
 	OPrenderSetViewport(0, 0, OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
@@ -341,7 +342,7 @@ OPint OPrenderInit(i32 width, i32 height){
 	return 0;
 }
 
-void  OPrenderSetScreenSize(OPuint width, OPuint height) {
+void  OPrenderSetScreenSize(ui32 width, ui32 height) {
 	OPRENDER_SCREEN_WIDTH = width;
 	OPRENDER_SCREEN_HEIGHT = height;
 }
@@ -370,8 +371,8 @@ void  OPrenderClear(f32 r, f32 g, f32 b, f32 a){
 }
 
 //-----------------------------------------------------------------------------
-void  OPrenderSetViewport(OPuint x, OPuint y, OPuint width, OPuint height){
-	glViewport(x, y, width, height);
+void  OPrenderSetViewport(OPint x, OPint y, ui32 width, ui32 height){
+	glViewport((GLint)x, (GLint)y, width, height);
 	OPRENDER_WIDTH  = width;
 	OPRENDER_HEIGHT = height;
 }
@@ -422,24 +423,34 @@ void  OPrenderSwapBuffer(){
 	glfwSwapBuffers(window);
 #endif
 }
-//-----------------------------------------------------------------------------
-void  OPrenderPresent(){
+
+void OPrenderUpdate() {
 #ifdef OPIFEX_OPENGL_ES_2
-	eglSwapBuffers(display, surface);
 #else
-	glfwSwapBuffers(window);
 	glfwPollEvents();
 	if(glfwWindowShouldClose(window)){
 		OPend();
 	}
 #endif
 }
+
+//-----------------------------------------------------------------------------
+void  OPrenderPresent(){
+#ifdef OPIFEX_OPENGL_ES_2
+	eglSwapBuffers(display, surface);
+#else
+	glfwSwapBuffers(window);
+#endif
+}
+#include "./Human/include/Utilities/Errors.h"
 //-----------------------------------------------------------------------------
 void  OPrenderDepth(OPint state){
-	if(state)
+	if(state) {
 		glEnable(GL_DEPTH_TEST);
-	else
+        OPglError("OPrenderDepth:SET Failed");
+	} else {
 		glDisable(GL_DEPTH_TEST);
+	}
 }
 
 void OPrenderDepthWrite(OPint state) {

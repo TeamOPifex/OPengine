@@ -36,7 +36,7 @@ void ExampleFreeFlightEnter(OPgameState* last) {
 		attribs,
 		3,
 		"Textured Effect",
-		freeFlightExample.Mesh->VertexSize
+		freeFlightExample.Mesh->vertexLayout.stride
 		);
 
 	OPcamFreeFlightInit(&freeFlightExample.Camera, 3.0f, 3.0f, OPVEC3_ONE);
@@ -56,19 +56,17 @@ void ExampleFreeFlightRender(OPfloat delta) {
 	OPmeshBind(freeFlightExample.Mesh);
 	OPeffectBind(freeFlightExample.Effect);
 
-	OPmat4 world, view, proj;
-	world = OPmat4RotY(freeFlightExample.Rotation / 100.0);
+	OPmat4 world;
+	world = OPmat4RotY(freeFlightExample.Rotation / 100.0f);
 
-	OPcamGetView((freeFlightExample.Camera.Camera), &view);
-	OPcamGetProj((freeFlightExample.Camera.Camera), &proj);
 
 	OPtextureClearActive();
 	ui32 tex = OPtextureBind(freeFlightExample.Texture);
 	OPeffectParami("uColorTexture", tex);
 
 	OPeffectParamMat4("uWorld", &world);
-	OPeffectParamMat4("uProj", &proj);
-	OPeffectParamMat4("uView", &view);
+	OPeffectParamMat4("uProj", &freeFlightExample.Camera.Camera.proj);
+	OPeffectParamMat4("uView", &freeFlightExample.Camera.Camera.view);
 
 	OPvec3 light = OPvec3Create(0, 1, 0);
 	OPeffectParamVec3("vLightDirection", &light);

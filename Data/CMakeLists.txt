@@ -32,6 +32,7 @@ add_source_group(src "${PROJECT_SOURCE_DIR}/Data/src" DATA_SRC)
 #########################################
 set(ALL_LIBS
 	1_Core
+	jansson
 )
 
 

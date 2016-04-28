@@ -2,12 +2,14 @@
 #define OPEngine_Core_DYNMEM
 
 #include "OPtypes.h"
+#include "OPallocator.h"
 #include <string.h>
 
 #ifndef OPIFEX_OPTION_RELEASE
 extern OPint OPallocations;
 extern OPint OPdeallocations;
 #endif
+extern OPallocator OPDEFAULT_ALLOCATOR;
 
 #if defined(OPIFEX_UNIX)
 // android specific for malloc
@@ -78,6 +80,11 @@ void* OPrealloc(void* ptr, OPuint bytes);
  * @param ptr Address to the memory segment to deallocate
  */
 void  OPfree(void* ptr);
+
+
+
+void* OPsysAlloc(OPuint bytes);
+void OPsysFree(void* ptr);
 
 #ifdef __cplusplus
 }

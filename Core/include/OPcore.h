@@ -1,7 +1,6 @@
 #pragma once
 #ifndef OPEngine_Core
 #define OPEngine_Core
-#define WIN32_LEAN_AND_MEAN 0
 
 #include "OPtypes.h"
 #include "OPgameCycle.h"
@@ -92,7 +91,12 @@ OPchar* OPgetExecutableDir();
 #else
 
 #if defined(OPIFEX_OPTION_RELEASE) && defined(OPIFEX_WINDOWS)
-	#define OP_MAIN  int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
+	//#define OP_MAIN int main(int argc, char** args)
+	#ifdef _CONSOLE
+		#define OP_MAIN int main(int argc, char** args)
+	#else
+		#define OP_MAIN  int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
+	#endif
 	#define OP_MAIN_START OPstart(__argc, __argv);
 	#define OP_MAIN_START_STEPPED OPstartStepped(__argc, __argv);
 #else

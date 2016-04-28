@@ -77,7 +77,7 @@ OPimage OPimagePNGLoadData(const OPchar* filename) {
 	return result;	
 }
 
-i32 OPimagePNGLoadStream(OPstream* str, i32 offset, OPtexture** image) {
+i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
 	OPglError("OPimagePNGLoad:Error 0");
 	ui32 error;
 	ui8* data;
@@ -133,7 +133,7 @@ i32 OPimagePNGReload(OPstream* str, OPtexture** image){
 	//OPstream* str = OPreadFile(filename);
 	OPtexture* resultTex;
 	OPtexture* tex = (OPtexture*)(*image);
-	OPint result = OPimagePNGLoadStream(str, 0, &resultTex);
+	i32 result = OPimagePNGLoadStream(str, 0, &resultTex);
 	if (result) {
 		OPmemcpy(*image, resultTex, sizeof(OPtexture));
 		OPfree(resultTex);

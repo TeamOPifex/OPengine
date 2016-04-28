@@ -2,11 +2,10 @@
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
-	
+
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS) && defined(OPIFEX_UNIX)
 	#include <GLFW/glfw3.h>
 #elif defined(OPIFEX_WINDOWS)
-	#include <Windows.h>
 	#include <Xinput.h>
 	#pragma comment(lib, "XInput.lib")
 #elif defined(OPIFEX_ANDROID)
@@ -35,7 +34,7 @@ OPgamePad GamePads[CONTROLLERS] = {
 		false,
 		0.1f
 	}
-}; 
+};
 
 //-----------------------------------------------------------------------------
 OPgamePad* OPgamePadGet(OPgamePadIndex index) {
@@ -66,7 +65,7 @@ OPgamePad* OPgamePadGet(OPgamePadIndex index) {
 				OPlog("Class method not found");
 				return false;
 		}
-		
+
 		JNIEnvironment()->DeleteLocalRef(methodInfo2.classID);
 
 		OPint result = JNIEnvironment()->CallBooleanMethod(controller, methodInfo2.methodID, button);
@@ -84,8 +83,8 @@ OPgamePad* OPgamePadGet(OPgamePadIndex index) {
 
 		OPJniMethodInfo methodInfo;
 
-		if (!OPjniGetMethodInfo(methodInfo, CONTROLLER_CLASS_NAME, "getAxisValue", "(I)F")) 
-		{ 
+		if (!OPjniGetMethodInfo(methodInfo, CONTROLLER_CLASS_NAME, "getAxisValue", "(I)F"))
+		{
 			return 0;
 		}
 
@@ -142,7 +141,7 @@ void __OPandUpdateGamePad(OPgamePad* controller){
 //-----------------------------------------------------------------------------
 #if defined(OPIFEX_UNIX) && !defined(OPIFEX_IOS)
 void __OPlnxUpdateGamePad(OPgamePad* c){
-	
+
 	i32  axes = 0, buttons = 0;
 	const f32* axisData   = NULL;
 	const ui8* buttonData = NULL;
@@ -157,7 +156,7 @@ void __OPlnxUpdateGamePad(OPgamePad* c){
 	c->connected = true;
 
 	// get axis data, andmake sure the number of axes are expected
-	axisData = glfwGetJoystickAxes(c->playerIndex, &axes); 
+	axisData = glfwGetJoystickAxes(c->playerIndex, &axes);
 	//OPlog("Axes %d", axes);
 	// if(axes != 8){
 	// 	// game pads should have 8 axes
@@ -165,7 +164,7 @@ void __OPlnxUpdateGamePad(OPgamePad* c){
 	// 	c->connected = 0;
 	// 	return;
 	// }
-	
+
 	// map left stick and trigger
 	c->axes[OPGAMEPADAXIS_LS_X] =  axisData[0];
 	c->axes[OPGAMEPADAXIS_LS_Y] = -axisData[1];
@@ -218,7 +217,7 @@ void __OPlnxUpdateGamePad(OPgamePad* c){
 void __OPwinUpdateGamePad(OPgamePad* controller){
 	XINPUT_STATE controllerState;
 	ZeroMemory(&controllerState, sizeof(XINPUT_STATE));
-	DWORD result = XInputGetState(controller->playerIndex, &controllerState);
+	DWORD result = XInputGetState((DWORD)controller->playerIndex, &controllerState);
 
 	// check to see if the controller is connected
 	if(result == ERROR_SUCCESS){
@@ -237,7 +236,7 @@ void __OPwinUpdateGamePad(OPgamePad* controller){
 		controller->axes[OPGAMEPADAXIS_RS_X] = controllerState.Gamepad.sThumbRX / (OPfloat)SHRT_MAX;
 		controller->axes[OPGAMEPADAXIS_RS_Y] = controllerState.Gamepad.sThumbRY / (OPfloat)SHRT_MAX;
 #pragma endregion
-		
+
 #pragma region Button states
 
 		controller->buttons[OPGAMEPADBUTTON_LEFT_SHOULDER] =
@@ -293,27 +292,27 @@ void __OPwinUpdateGamePad(OPgamePad* controller){
 void OPgamePadUpdate(OPgamePad* controller){
 	if(OPgamePadIsConnected(controller)) {
 		OPmemcpy(
-			&controller->prevButtons, 
-			&controller->buttons, 
+			&controller->prevButtons,
+			&controller->buttons,
 			sizeof(OPint) * _OPGAMEPADBUTTON_MAX);
 		OPmemcpy(
-			&controller->prevAxes, 
-			&controller->axes, 
+			&controller->prevAxes,
+			&controller->axes,
 			sizeof(OPfloat) * _OPGAMEPADAXIS_MAX);
 	}
 
 #ifdef OPIFEX_ANDROID
 	__OPandUpdateGamePad(controller);
 #endif
-	
+
 #if defined(OPIFEX_UNIX) && !defined(OPIFEX_IOS)
-	__OPlnxUpdateGamePad(controller);	
+	__OPlnxUpdateGamePad(controller);
 #endif
 
 #ifdef OPIFEX_WINDOWS
 	__OPwinUpdateGamePad(controller);
 #endif
-	
+
 	OPvec2 axis;
 	OPfloat len;
 
@@ -322,7 +321,7 @@ void OPgamePadUpdate(OPgamePad* controller){
 	len = OPvec2Len(axis);
 	controller->axes[0] *= len > controller->deadzone;
 	controller->axes[1] *= len > controller->deadzone;
-	
+
 	axis.x = controller->axes[2];
 	axis.y = controller->axes[3];
 	len = OPvec2Len(axis);

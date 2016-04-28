@@ -27,9 +27,9 @@ find_path(OGG_INCLUDE_DIR ogg/ogg.h
    "${PROJECT_SOURCE_DIR}/External/Ogg/include"
 )
 
-message(STATUS "Looking in: ${PROJECT_SOURCE_DIR}")
-message(STATUS "Vorbis Include: ${VORBIS_INCLUDE_DIR}")
-message(STATUS "Ogg Include: ${OGG_INCLUDE_DIR}")
+# message(STATUS "Looking in: ${PROJECT_SOURCE_DIR}")
+# message(STATUS "Vorbis Include: ${VORBIS_INCLUDE_DIR}")
+# message(STATUS "Ogg Include: ${OGG_INCLUDE_DIR}")
 
 if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
 
@@ -57,7 +57,7 @@ if( "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" )
 
 	if(${MSVC_VERSION} GREATER 1700)
 
-		message(STATUS "Finding VS2013 ogg/vorbis")
+		# message(STATUS "Finding VS2013 ogg/vorbis")
 
 		find_library(OGG_LIBRARY
 		   NAMES ogg libogg
@@ -158,7 +158,7 @@ mark_as_advanced(OGG_LIBRARY)
 mark_as_advanced(VORBIS_LIBRARY)
 mark_as_advanced(VORBISFILE_LIBRARY)
 
-message(STATUS "Ogg: ${OGG_LIBRARY}")
+# message(STATUS "Ogg: ${OGG_LIBRARY}")
 
 mark_as_advanced(VORBIS_INCLUDE_DIR OGG_INCLUDE_DIR
                  OGG_LIBRARY VORBIS_LIBRARY VORBISFILE_LIBRARY)
@@ -188,7 +188,7 @@ endif (VORBIS_INCLUDE_DIR AND VORBIS_LIBRARY AND VORBISFILE_LIBRARY)
 
 if (OGGVORBIS_FOUND)
    if (NOT OggVorbis_FIND_QUIETLY)
-      message(STATUS "Found OggVorbis: ${OGGVORBIS_LIBRARIES}")
+      # message(STATUS "Found OggVorbis: ${OGGVORBIS_LIBRARIES}")
    endif (NOT OggVorbis_FIND_QUIETLY)
 else (OGGVORBIS_FOUND)
    if (OggVorbis_FIND_REQUIRED)

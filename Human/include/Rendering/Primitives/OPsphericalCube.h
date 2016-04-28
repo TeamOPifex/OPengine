@@ -50,7 +50,7 @@ struct OPsphericalCube {
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/   
 
 OPsphericalCube OPsphericalCubeCreate(OPimage * faces);
-OPsphericalCube       OPsphericalCubeCreate(OPint size); 
+OPsphericalCube       OPsphericalCubeCreate(ui16 size); 
 OPvec3 OPsphericalCubePosition(OPvec3 pos, OPsphericalCubeSide* side);
 OPvec2 OPsphericalCubePlanePositionSide(const OPvec3 pos, OPsphericalCubeSide side);
 OPvec2 OPsphericalCubePlanePosition(const OPvec3 pos, OPsphericalCubeSide* side);

@@ -1,7 +1,7 @@
 #include "./Human/include/Rendering/Skinning/OPskeletonAnimation.h"
 #include "./Core/include/Assert.h"
 
-void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPmat4* frames, i32 frameCount) {
+void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPmat4* frames, OPuint frameCount) {
 	OPbzero(skelAnim, sizeof(OPskeletonAnimation));
 	skelAnim->FrameCount = frameCount;
 	skelAnim->Frame = 0;
@@ -21,7 +21,7 @@ void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPm
 	skelAnim->BoneCount = boneCount;
 }
 
-OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPmat4* frames, i32 count) {
+OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPmat4* frames, OPuint count) {
 	OPskeletonAnimation* result = (OPskeletonAnimation*)OPalloc(sizeof(OPskeletonAnimation));
 	OPskeletonAnimationInit(result, boneCount, frames, count);
 	return result;
@@ -31,7 +31,7 @@ OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPmat4* frames, 
 void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer, OPfloat timeScale) {
 	ASSERT(skelAnim->FramesPer != 0, "Must have at least 1 frame per second");
 
-	skelAnim->Elapsed += timer->Elapsed * timeScale;
+	skelAnim->Elapsed += (ui64)(timer->Elapsed * timeScale);
 	skelAnim->LastFrame = skelAnim->Frame;
 
 	while (skelAnim->Elapsed >= skelAnim->FramesPer) {
@@ -74,7 +74,7 @@ void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer, OP
 
 void OPskeletonAnimationUpdateEvents(OPskeletonAnimation* skelAnim, void* data) {
 	if(skelAnim->LastFrame != skelAnim->Frame) {
-		for(OPint i = 0; i < skelAnim->EventCount; i++) {
+		for(OPuint i = 0; i < skelAnim->EventCount; i++) {
 			// Start Frame is no longer the LastFrame
 			// And Event Frame is between Start & End
 			if( (skelAnim->Events[i].Frame <= skelAnim->Frame &&
@@ -83,7 +83,7 @@ void OPskeletonAnimationUpdateEvents(OPskeletonAnimation* skelAnim, void* data) 
 			}
 		}
 	} else {
-		for(OPint i = 0; i < skelAnim->EventCount; i++) {
+		for(OPuint i = 0; i < skelAnim->EventCount; i++) {
 			if( !skelAnim->Events[i].OnFrameChange &&
 				(skelAnim->Events[i].Frame <= skelAnim->Frame &&
 				 skelAnim->Events[i].End >= skelAnim->Frame )

@@ -6,28 +6,46 @@
 #include "OPmaterial.h"
 #include "./Math/include/OPmat4.h"
 #include "./Human/include/Rendering/OPcam.h"
+#include "./Data/include/OPcman.h"
+
+struct OPmodel;
+void OPmodelBind(OPmodel model, OPmaterial* material);
+void OPmodelBind(OPmodel model, OPmaterial* material, OPcam* camera);
+void OPmodelDraw(OPmodel model, OPmaterial* material, OPcam* camera);
 
 struct OPmodel {
 	OPmat4 world;
 	OPmesh* mesh;
+
+	void Init(const OPchar* mesh) {
+	    this->mesh = (OPmesh*)OPcmanLoadGet(mesh);
+		this->world = OPMAT4_IDENTITY;
+	}
+
+	void Bind(OPmaterial* material) {
+	    OPmodelBind(*this, material);
+	}
+
+	void Bind(OPmaterial* material, OPcam* camera) {
+	    OPmodelBind(*this, material, camera);
+	}
+
+	void Draw(OPmaterial* material, OPcam* camera) {
+	    OPmodelDraw(*this, material, camera);
+	}
 };
-typedef struct OPmodel OPmodel; 
+typedef struct OPmodel OPmodel;
 
-inline void OPmodelBind(OPmodel model, OPmaterial* material) {
-	OPmeshBind(model.mesh);
-	OPmaterialBind(material);
-	OPeffectParam("uWorld", model.world);
-}
 
-inline void OPmodelBind(OPmodel model, OPmaterial* material, OPcam camera) {
-	OPmodelBind(model, material);
-	OPcamBind(camera);
-}
+struct OPmodelTextured {
+	OPmodel model;
+	OPtexture* texture;
 
-inline void OPmodelDraw(OPmodel model, OPmaterial* material, OPcam cam) {
-	OPmodelBind(model, material);
-	OPeffectParam(cam);
-	OPmeshRender();
-}
+	void Init(const OPchar* modelAsset, const OPchar* textureAsset) {
+		model.Init(modelAsset);
+		texture = OPtextureLoad(textureAsset);
+	}
+};
+typedef struct OPmodelTextured OPmodelTextured;
 
 #endif

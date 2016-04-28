@@ -5,11 +5,11 @@
 
 #if defined(OPIFEX_OPTION_NODEJS) || defined(OPIFEX_OPTION_V8)
 
-void OPmeshWrapperCreate(Handle<Object> result, OPmesh* mesh) {
+Handle<Object> OPmeshWrapper(Handle<Object> result, OPmesh* mesh) {
     SCOPE_AND_ISOLATE
 
     JS_SET_PTR(result, mesh);
-    JS_SET_NUMBER(result, "VertexSize", mesh->VertexSize);
+    JS_SET_NUMBER(result, "VertexSize", mesh->vertexLayout.stride);
 }
 
 JS_RETURN_VAL _OPmeshCreate(const JS_ARGS& args) {
@@ -18,7 +18,7 @@ JS_RETURN_VAL _OPmeshCreate(const JS_ARGS& args) {
     OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
     *mesh = OPmeshCreate();
     Handle<Object> result = JS_NEW_OBJECT();
-    OPmeshWrapperCreate(result, mesh);
+    OPmeshWrapper(result, mesh);
 
     JS_RETURN(result);
 }
@@ -30,7 +30,7 @@ JS_RETURN_VAL _OPmeshLoad(const JS_ARGS& args) {
     OPmesh* mesh = (OPmesh*)OPcmanLoadGet(*name);
 
     Handle<Object> result = JS_NEW_OBJECT();
-    OPmeshWrapperCreate(result, mesh);
+    OPmeshWrapper(result, mesh);
 
     JS_RETURN(result);
 }

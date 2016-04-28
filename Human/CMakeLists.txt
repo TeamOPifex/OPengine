@@ -24,6 +24,7 @@ add_source_group(include/Input "${PROJECT_SOURCE_DIR}/Human/include/Input" HUMAN
 add_source_group(include/Input "${PROJECT_SOURCE_DIR}/Human/include/Input" HUMAN_SRC)
 add_source_group(include/Rendering "${PROJECT_SOURCE_DIR}/Human/include/Rendering" HUMAN_SRC)
 add_source_group(include/Rendering/Camera "${PROJECT_SOURCE_DIR}/Human/include/Rendering/Camera" HUMAN_SRC)
+add_source_group(include/Rendering/Commands "${PROJECT_SOURCE_DIR}/Human/include/Rendering/Commands" HUMAN_SRC)
 add_source_group(include/Rendering/Skinning "${PROJECT_SOURCE_DIR}/Human/include/Rendering/Skinning" HUMAN_SRC)
 add_source_group(include/Rendering/Font "${PROJECT_SOURCE_DIR}/Human/include/Rendering/Font" HUMAN_SRC)
 add_source_group(include/Rendering/GL "${PROJECT_SOURCE_DIR}/Human/include/Rendering/GL" HUMAN_SRC)
@@ -43,6 +44,7 @@ add_source_group(src/Input "${PROJECT_SOURCE_DIR}/Human/src/Input" HUMAN_SRC)
 add_source_group(src/Input "${PROJECT_SOURCE_DIR}/Human/src/Input" HUMAN_SRC)
 add_source_group(src/Rendering "${PROJECT_SOURCE_DIR}/Human/src/Rendering" HUMAN_SRC)
 add_source_group(src/Rendering/Camera "${PROJECT_SOURCE_DIR}/Human/src/Rendering/Camera" HUMAN_SRC)
+add_source_group(src/Rendering/Commands "${PROJECT_SOURCE_DIR}/Human/src/Rendering/Commands" HUMAN_SRC)
 add_source_group(src/Rendering/Font "${PROJECT_SOURCE_DIR}/Human/src/Rendering/Font" HUMAN_SRC)
 add_source_group(src/Rendering/GL "${PROJECT_SOURCE_DIR}/Human/src/Rendering/GL" HUMAN_SRC)
 add_source_group(src/Rendering/Primitives "${PROJECT_SOURCE_DIR}/Human/src/Rendering/Primitives" HUMAN_SRC)
@@ -63,6 +65,8 @@ set(ALL_LIBS
 	2_Data
 	3_Math
 	4_Performance
+	GLEW_158
+	glfw
 )
 
 

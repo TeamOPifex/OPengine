@@ -14,7 +14,7 @@ extern "C" {
 	void OPimagePNGCreate24(ui8* imageData, i32 width, i32 height, OPchar* filename);
 	void OPimagePNGCreate32(ui8* imageData, i32 width, i32 height, OPchar* filename);
 	i32 OPimagePNGLoad(OPstream* str, OPtexture** image);
-	i32 OPimagePNGLoadStream(OPstream* str, i32 offset, OPtexture** image);
+	i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image);
 	OPimage OPimagePNGLoadData(const OPchar* filename);
 	i32 OPimagePNGReload(OPstream* str, OPtexture** image);
 	i32 OPimagePNGUnload(void* image);

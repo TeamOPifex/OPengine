@@ -8,12 +8,13 @@ cmake_minimum_required(VERSION 2.8)
 # Include Directories
 #########################################
 add_opifex_includes()
-
+add_marketplace_addons_projects()
 
 #########################################
 # Source Files
 #########################################
-add_source_group_recurse("${PROJECT_SOURCE_DIR}/Application" APPLICATION_SRC)
+add_source_group(/ "${PROJECT_SOURCE_DIR}/Application" APPLICATION_SRC)
+add_source_group(Examples "${PROJECT_SOURCE_DIR}/Application/Examples" APPLICATION_SRC)
 add_asset_dir(APPLICATION_SRC)
 
 
@@ -33,6 +34,7 @@ set(ALL_LIBS
 	${ZLIB_LIBRARY}
 	${LIBPNG_LIBRARY}
 	${CMAKE_THREAD_LIBS_INIT}
+  jansson
 )
 
 
@@ -74,4 +76,7 @@ add_opifex_oggvorbis(9_Application)
 add_opifex_steam(9_Application)
 add_opifex_fmod(9_Application)
 add_opifex_xinput(9_Application)
+add_opifex_raknet(9_Application)
 
+message(STATUS "ADDING ${ADDON}")
+add_marketplace_addons(9_Application)
