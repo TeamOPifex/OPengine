@@ -64,6 +64,7 @@ void ApplicationInit() {
 }
 
 OPint ApplicationUpdate(OPtimer* timer) {
+	OPrenderUpdate();
 
 	OPinputSystemUpdate(timer);
 	OPcmanUpdate(timer);

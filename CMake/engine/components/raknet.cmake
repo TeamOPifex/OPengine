@@ -73,20 +73,37 @@ macro(add_opifex_raknet_windows APPLICATION_TARGET)
 
 	if(${OPIFEX_OS_WIN64})
 
-		SET(_RAKNET_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/Raknet/lib/debug/win64/")
-		if(_RAKNET_SOURCE)
-			SET(_RAKNET_BINARY_LOCATION "${_RAKNET_PATH}\\Lib\\")
-		endif()
+				if(${OPIFEX_OPTION_RELEASE})
+								SET(_RAKNET_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/Raknet/lib/release/win64/")
+								if(_RAKNET_SOURCE)
+									SET(_RAKNET_BINARY_LOCATION "${_RAKNET_PATH}\\Lib\\")
+								endif()
 
-		copy_to_binaries(${_RAKNET_BINARY_LOCATION}RakNet_VS2008_LibStatic_Debug_x64.lib)
-		#copy_to_binaries(${_RAKNET_BINARY_LOCATION}RakNet_VS2008_DLL_Debug_Win32.dll)
+								copy_to_binaries(${_RAKNET_BINARY_LOCATION}RakNet_VS2008_LibStatic_Release_x64.lib)
+								#copy_to_binaries(${_RAKNET_BINARY_LOCATION}RakNet_VS2008_DLL_Debug_Win32.dll)
 
 
-		link_from_binaries(${APPLICATION_TARGET}
-			RakNet_VS2008_LibStatic_Debug_x64.lib
-			)
+								link_from_binaries(${APPLICATION_TARGET}
+									RakNet_VS2008_LibStatic_Release_x64.lib
+									)
+
+				else()
+
+				SET(_RAKNET_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/Raknet/lib/debug/win64/")
+				if(_RAKNET_SOURCE)
+					SET(_RAKNET_BINARY_LOCATION "${_RAKNET_PATH}\\Lib\\")
+				endif()
+
+				copy_to_binaries(${_RAKNET_BINARY_LOCATION}RakNet_VS2008_LibStatic_Debug_x64.lib)
+				#copy_to_binaries(${_RAKNET_BINARY_LOCATION}RakNet_VS2008_DLL_Debug_Win32.dll)
+
+
+				link_from_binaries(${APPLICATION_TARGET}
+					RakNet_VS2008_LibStatic_Debug_x64.lib
+					)
 
 		#copy_from_binaries(${APPLICATION_TARGET} "RakNet_VS2008_DLL_Debug_Win32.dll" "/Application/Debug/")
+			endif()
 
 	elseif(${OPIFEX_OS_WIN32})
 

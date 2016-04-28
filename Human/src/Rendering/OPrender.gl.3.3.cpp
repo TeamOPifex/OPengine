@@ -216,12 +216,19 @@ void OPrenderCullMode(OPint state) {
 void  OPrenderSwapBuffer () {
     glfwSwapBuffers(window);
 }
+
+void OPrenderUpdate() {
+#ifdef OPIFEX_OPENGL_ES_2
+#else
+	glfwPollEvents();
+	if(glfwWindowShouldClose(window)){
+		OPend();
+	}
+#endif
+}
+
 void  OPrenderPresent    () {
     glfwSwapBuffers(window);
-    glfwPollEvents();
-    if(glfwWindowShouldClose(window)){
-        OPend();
-    }
 }
 void OPrenderBlend(OPint state) {
     if (state)

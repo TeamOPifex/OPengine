@@ -279,7 +279,7 @@ OPint OPrenderInit(i32 width, i32 height){
 
 	window = glfwCreateWindow(_screenWidth, _screenHeight,
 		"OPifex Entertainment", monitor, NULL);
-	
+
 	OPlog("%d x %d", _screenWidth, _screenHeight);
 
 	OPlogInfo("Created window of size: %d x %d",
@@ -423,16 +423,23 @@ void  OPrenderSwapBuffer(){
 	glfwSwapBuffers(window);
 #endif
 }
+
+void OPrenderUpdate() {
+#ifdef OPIFEX_OPENGL_ES_2
+#else
+	glfwPollEvents();
+	if(glfwWindowShouldClose(window)){
+		OPend();
+	}
+#endif
+}
+
 //-----------------------------------------------------------------------------
 void  OPrenderPresent(){
 #ifdef OPIFEX_OPENGL_ES_2
 	eglSwapBuffers(display, surface);
 #else
 	glfwSwapBuffers(window);
-	glfwPollEvents();
-	if(glfwWindowShouldClose(window)){
-		OPend();
-	}
 #endif
 }
 #include "./Human/include/Utilities/Errors.h"

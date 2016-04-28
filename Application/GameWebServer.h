@@ -3,7 +3,6 @@
 
 #include "./Communication/include/OPwebServer.h"
 
-extern OPWebServer* server;
-
+extern OPwebServer* server;
 
 #endif

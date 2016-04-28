@@ -47,6 +47,7 @@ void OPrenderCull(OPint state);
 void OPrenderCullMode(OPint state);
 void  OPrenderSwapBuffer ();
 void  OPrenderPresent    ();
+void OPrenderUpdate();
 void OPrenderBlend(OPint state);
 void  OPrenderDepth(OPint state);
 void OPrenderDepthWrite(OPint state);

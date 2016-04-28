@@ -4,6 +4,7 @@
 ### CMake Setup
 include(${CMAKE_CURRENT_LIST_DIR}/components.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/macros.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/marketplace.cmake)
 
 
 ### Build Setup
