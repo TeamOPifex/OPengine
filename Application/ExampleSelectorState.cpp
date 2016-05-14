@@ -33,6 +33,7 @@ void ExampleSelectorEnter(OPgameState* last) {
 	OPfontSystemLoadEffects();
 
     // The background image to use
+	OPcmanLoadGet("subtle-irongrip.png");
 	exampleSelector.Background = OPtexture2DCreate((OPtexture*)OPcmanLoadGet("subtle-irongrip.png"), NULL, OPVEC2_ZERO, OPvec2Create(3, 3));
 	exampleSelector.Background->Scale = OPvec2Create(2,2);
 
@@ -94,9 +95,9 @@ void ExampleSelectorEnter(OPgameState* last) {
     }
 
     exampleSelector.FontManager = OPfontManagerSetup("Ubuntu.opf", Names, TotalEntries);
-    exampleSelector.FontManager->scale = 0.5;
+    //exampleSelector.FontManager->scale = 0.5;
 
-	OPcmanPurge();
+	//OPcmanPurge();
 	OPlog("Entered Example Selector");
 }
 
@@ -251,11 +252,11 @@ void ExampleSelectorRender(OPfloat delta) {
 }
 
 OPint ExampleSelectorExit(OPgameState* next) {
-	//OPfontManagerDestroy(exampleSelector.FontManager);
-	//OPeffectBind(NULL);
-	//OPcmanDelete("Ubuntu.opf");
-	//OPtexture2DDestroy(exampleSelector.Background);
-	//OPfontSystemShutdownEffects();
+	OPeffectBind(NULL);
+	OPfontManagerDestroy(exampleSelector.FontManager);
+	OPtexture2DDestroy(exampleSelector.Background);
+	OPtexture2DUnloadGlobals();
+	OPfontSystemShutdownEffects();
 	return 0;
 }
 

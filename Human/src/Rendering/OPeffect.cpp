@@ -135,6 +135,11 @@ OPint OPeffectUnload(OPeffect* effect){
 	}
 	OPhashMapDestroy(effect->Parameters);
 	OPfree(effect->Parameters);
+	ui32 size = OPlistSize(effect->Attributes);
+	for (ui32 i = 0; i < size; i++) {
+		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistPop(effect->Attributes);
+		OPfree(attr->Name);
+	}
 	OPlistDestroy(effect->Attributes);
 	OPfree(effect->Attributes);
 	glDeleteProgram(effect->ProgramHandle);
@@ -325,7 +330,11 @@ OPeffect OPeffectGen(
 
 	OPlog("Create the Effect");
 
-	return createEffect(*vertShader, *fragShader, Attributes, AttribCount, Name, stride);
+	OPeffect result = createEffect(*vertShader, *fragShader, Attributes, AttribCount, Name, stride);
+
+	OPfree(Attributes);
+
+	return result;
 }
 
 OPeffect OPeffectGen(const OPchar* vert, const OPchar* frag, OPvertexLayout* layout) {

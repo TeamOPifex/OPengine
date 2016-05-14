@@ -311,7 +311,7 @@ OPstream* OPfileRead(OPfile* path, ui32 size){
 	// be sure that the file could be opened successfully
 	ui8 byte = 0;
 	OPstream* str = OPstreamCreate(size);
-	str->Source = path->path;
+	str->Source = OPstringCopy(path->path);
 
 	OPwrite(str, OPfileReadBytes(path, size), size);
 

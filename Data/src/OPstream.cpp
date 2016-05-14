@@ -22,6 +22,7 @@ OPstream* OPstreamCreate(OPuint size){
 //-----------------------------------------------------------------------------
 OPuint OPstreamDestroy(OPstream* stream){
 	if(!stream) return 0;
+	if (stream->Source != NULL) OPfree(stream->Source);
 	OPfree(stream->Data);
 	OPfree(stream);
 

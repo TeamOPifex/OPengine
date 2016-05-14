@@ -208,8 +208,6 @@ OPint OPcmanLoad(const OPchar* key){
 				if (str == NULL) {
 					str = OPreadFileLarge(fullPath, 1024);
 				}
-				asset = NULL;
-				str->Source = fullPath;
 				success = loader.Load(str, &asset);
 				OPstreamDestroy(str);
 				if(success <= 0) {
