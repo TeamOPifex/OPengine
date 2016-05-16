@@ -79,7 +79,8 @@ void ExampleSelectorEnter(OPgameState* last) {
            { "Skinning", &GS_EXAMPLE_SKINNING, GS_EXAMPLE_SKINNING_AVAILABLE, 2 },
            { "Shadows", &GS_EXAMPLE_SHADOWS, GS_EXAMPLE_SHADOWS_AVAILABLE, 2 },
            { "Deferred", &GS_EXAMPLE_DEFERRED, GS_EXAMPLE_DEFERRED_AVAILABLE, 2 }, // in flux
-           { "Scripting", &GS_EXAMPLE_SCRIPTING, GS_EXAMPLE_SCRIPTING_AVAILABLE, 2 },
+		   { "Scripting", &GS_EXAMPLE_SCRIPTING, GS_EXAMPLE_SCRIPTING_AVAILABLE, 2 },
+		   { "Lua", &GS_EXAMPLE_LUA, GS_EXAMPLE_LUA_AVAILABLE, 2 },
            { "Oculus", &GS_EXAMPLE_OCULUS, GS_EXAMPLE_OCULUS_AVAILABLE, 2 },
            { "Server Client", &GS_EXAMPLE_SERVER_CLIENT, GS_EXAMPLE_SERVER_CLIENT_AVAILABLE, 2 }
        };

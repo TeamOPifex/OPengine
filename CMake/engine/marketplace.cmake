@@ -25,8 +25,11 @@ endmacro(eval)
 
 function(add_marketplace_addons_projects)
   foreach(ADDON ${OPENGINE_ADDONS})
+    message(STATUS "************ Addon: ${ADDON}")
     include(${OPIFEX_MARKETPLACE}/${ADDON}/addon.cmake)
-    eval("ADDON_${ADDON}_PROJECT(${CMAKE_CURRENT_BINARY_DIR})")
+    string(REPLACE "." ";" VERSION_LIST ${ADDON})
+    list(GET VERSION_LIST 0 ADDON_NAME)
+    eval("ADDON_${ADDON_NAME}_PROJECT(${CMAKE_CURRENT_BINARY_DIR})")
   endforeach()
 endfunction(add_marketplace_addons_projects)
 
@@ -35,15 +38,15 @@ function(add_marketplace_addons APPLICATION_TARGET)
   foreach(ADDON ${OPENGINE_ADDONS})
 
     message(STATUS "************ Addon: ${ADDON}")
-    # add_subdirectory (../../../../marketplace/${ADDON} "${CMAKE_CURRENT_BINARY_DIR}/${ADDON}_build")
-    # target_link_libraries(${APPLICATION_TARGET} imgui)
-    # ADDON_IMGUI(APPLICATION_TARGET)
 
     include(${OPIFEX_MARKETPLACE}/${ADDON}/addon.cmake)
-    # eval("ADDON_${ADDON}_PROJECT(${CMAKE_CURRENT_BINARY_DIR})")
-    eval("ADDON_${ADDON}(APPLICATION_TARGET)")
-    eval("target_link_libraries(${APPLICATION_TARGET} ${ADDON})")
-    add_definitions(-DADDON_${ADDON})
+
+    string(REPLACE "." ";" VERSION_LIST ${ADDON})
+    list(GET VERSION_LIST 0 ADDON_NAME)
+
+    eval("ADDON_${ADDON_NAME}(APPLICATION_TARGET)")
+    eval("target_link_libraries(${APPLICATION_TARGET} ${ADDON_NAME})")
+    add_definitions(-DADDON_${ADDON_NAME})
 
   endforeach()
 

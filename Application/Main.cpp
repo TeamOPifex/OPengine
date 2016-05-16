@@ -64,7 +64,6 @@ void ApplicationInit() {
 }
 
 OPint ApplicationUpdate(OPtimer* timer) {
-	return 1;
 	OPrenderUpdate();
 
 	OPinputSystemUpdate(timer);
