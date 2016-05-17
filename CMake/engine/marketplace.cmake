@@ -33,7 +33,7 @@ function(add_marketplace_addons_projects)
   endforeach()
 endfunction(add_marketplace_addons_projects)
 
-function(add_marketplace_addons APPLICATION_TARGET)
+function(add_marketplace_addons APPLICATION_TARGET FOLDER)
 
   foreach(ADDON ${OPENGINE_ADDONS})
 
@@ -44,8 +44,15 @@ function(add_marketplace_addons APPLICATION_TARGET)
     string(REPLACE "." ";" VERSION_LIST ${ADDON})
     list(GET VERSION_LIST 0 ADDON_NAME)
 
-    eval("ADDON_${ADDON_NAME}(APPLICATION_TARGET)")
-    eval("target_link_libraries(${APPLICATION_TARGET} ${ADDON_NAME})")
+    eval("ADDON_${ADDON_NAME}(APPLICATION_TARGET ${FOLDER})")
+
+    SET(TEMP_RESULT "")
+
+    eval("ADDON_${ADDON_NAME}_LINK(TEMP_RESULT)")
+
+    message(STATUS "************ Result: ${ADDON_NAME} ${TEMP_RESULT}")
+
+    eval("target_link_libraries(${APPLICATION_TARGET} ${TEMP_RESULT})")
     add_definitions(-DADDON_${ADDON_NAME})
 
   endforeach()

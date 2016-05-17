@@ -3,16 +3,19 @@
 // OPifex Engine includes
 #include "./OPengine.h"
 
+
+#ifdef ADDON_lua
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
+#endif
 
 typedef struct {
 
 } LuaExample;
 
 LuaExample luaExample;
-
+#ifdef ADDON_lua
 extern "C" {
 	static int l_cppfunction(lua_State *L) {
 		double arg = luaL_checknumber(L, 1);
@@ -20,8 +23,9 @@ extern "C" {
 		return 1;
 	}
 }
-
+#endif
 void ExampleLuaEnter(OPgameState* last) {
+#ifdef ADDON_lua
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
 
@@ -68,6 +72,7 @@ void ExampleLuaEnter(OPgameState* last) {
 	lua_pop(L, 1);
 
 	//cout << "** Rel
+#endif
 }
 
 OPint ExampleLuaUpdate(OPtimer* time) {

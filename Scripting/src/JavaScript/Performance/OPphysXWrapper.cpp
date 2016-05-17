@@ -15,7 +15,7 @@ JS_RETURN_VAL _OPphysXInit(const JS_ARGS& args) {
 
 JS_RETURN_VAL _OPphysXDebugger(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
-	OPphysXDebugger();
+	OPphysXDebugger("127.0.0.1");
 	JS_RETURN_NULL;
 }
 

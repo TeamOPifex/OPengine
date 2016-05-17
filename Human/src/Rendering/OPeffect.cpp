@@ -168,6 +168,7 @@ OPint OPeffectBind(OPeffect* effect, ui32 stride){
 		OPint attrCount = OPlistSize(OPEFFECT_ACTIVE->Attributes);
 		for (; attrCount--;){
 			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPEFFECT_ACTIVE->Attributes, attrCount);
+
 			glDisableVertexAttribArray((GLuint)attr->Handle);
 			if (OPglError("OPeffectBind:Error ")) {
 				OPlog("Effect %s: Failed to disable attrib %s", OPEFFECT_ACTIVE->Name, attr->Name);
