@@ -34,19 +34,19 @@ void ApplicationInit() {
 
 	//OPlogToFile(".opengine.debug.txt");
 
-    OPlog("Size ui8: %d", sizeof(ui8));
-    OPlog("Size ui16: %d", sizeof(ui16));
-    OPlog("Size ui32: %d", sizeof(ui32));
-    OPlog("Size i8: %d", sizeof(i8));
-    OPlog("Size i16: %d", sizeof(i16));
-    OPlog("Size i32: %d", sizeof(i32));
+    //OPlog("Size ui8: %d", sizeof(ui8));
+    //OPlog("Size ui16: %d", sizeof(ui16));
+    //OPlog("Size ui32: %d", sizeof(ui32));
+    //OPlog("Size i8: %d", sizeof(i8));
+    //OPlog("Size i16: %d", sizeof(i16));
+    //OPlog("Size i32: %d", sizeof(i32));
 
 
 	OPloadersAddDefault();
 	OPscriptAddLoader();
 	OPskeletonAddLoader();
 	OPskeletonAnimationAddLoader();
-	//SpineAddLoader();
+	SpineAddLoader();
 	OPlog("Assets %s", OPIFEX_ASSETS);
 	OPcmanInit(OPIFEX_ASSETS);
 
@@ -64,6 +64,7 @@ void ApplicationInit() {
 }
 
 OPint ApplicationUpdate(OPtimer* timer) {
+	OPrenderUpdate();
 
 	OPinputSystemUpdate(timer);
 	OPcmanUpdate(timer);

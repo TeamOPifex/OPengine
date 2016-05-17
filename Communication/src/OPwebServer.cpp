@@ -14,18 +14,22 @@
 
 static int iterate_callback(struct mg_connection *c, enum mg_event ev, void* server_obj) {
 	if (ev == MG_POLL && c->is_websocket) {
-		OPWebServerMessagesContainer* messagesContainer = (OPWebServerMessagesContainer*)c->callback_param;
-		for (ui32 i = 0; i < messagesContainer->messageCount; i++) {
-			mg_websocket_write(c, 2, (i8*)messagesContainer->messages[i]->Data, messagesContainer->messages[i]->Size);
+		OPwebServer* webServer = (OPwebServer*)c->callback_param;
+		for (ui32 i = 0; i < webServer->messageCount; i++) {
+			mg_websocket_write(c, 2, (i8*)webServer->messages[i]->Data, webServer->messages[i]->Size);
 		}
+		//OPWebServerMessagesContainer* messagesContainer = (OPWebServerMessagesContainer*)c->callback_param;
+		//for (ui32 i = 0; i < messagesContainer->messageCount; i++) {
+		//	mg_websocket_write(c, 2, (i8*)messagesContainer->messages[i]->Data, messagesContainer->messages[i]->Size);
+		//}
 	}
 
 	return MG_TRUE;
 }
 
-static int send_reply(struct mg_connection *conn, OPWebServer* server) {
+static int send_reply(struct mg_connection *conn, OPwebServer* server) {
 	if (conn->is_websocket) {
-		OPlog("Web Socket Request... %s", conn->content);
+		// OPlog("Web Socket Request... %s", conn->content);
 		// This handler is called for each incoming websocket frame, one or more
 		// times for connection lifetime.
 		// Echo websocket data back to the client.
@@ -62,7 +66,7 @@ static int send_reply(struct mg_connection *conn, OPWebServer* server) {
 		//return MG_FALSE;
 	}
 	else {
-		OPlog("Requested: %s", conn->uri);
+		// OPlog("Requested: %s", conn->uri);
 		ui32 uriLength = (ui32)strlen(conn->uri);
 		if (conn->uri[0] == '/' && uriLength == 1) {
 			OPstream* index = OPreadFile("Web/index.html");
@@ -120,7 +124,7 @@ static int send_reply(struct mg_connection *conn, OPWebServer* server) {
 
 static int ev_handler(struct mg_connection *conn, enum mg_event ev, void* server_obj) {
 	if (ev == MG_REQUEST) {
-		return send_reply(conn, (OPWebServer*)server_obj);
+		return send_reply(conn, (OPwebServer*)server_obj);
 	}
 	else if (ev == MG_AUTH) {
 		return MG_TRUE;
@@ -133,20 +137,20 @@ static int ev_handler(struct mg_connection *conn, enum mg_event ev, void* server
 #endif
 
 
-OPWebServer* OPwebServerCreate(OPchar* port) {
-	OPWebServer* server = (OPWebServer*)OPalloc(sizeof(OPWebServer));
+OPwebServer* OPwebServerCreate(OPchar* port) {
+	OPwebServer* server = (OPwebServer*)OPalloc(sizeof(OPwebServer));
 #ifndef OPIFEX_ANDROID
 	server->WebSocketKeys = OPhashMapCreate(16);
-	server->WebSocketMessages = OPlistCreate(16, sizeof(OPstream));
-
+	//server->WebSocketMessages = OPlistCreate(16, sizeof(OPstream));
+	server->messageCount = 0;
 	server->Server = mg_create_server(NULL, ev_handler, server);
 	mg_set_option(server->Server, "listening_port", port);
-	printf("Started on port %s\n", mg_get_option(server->Server, "listening_port"));
+	printf("Started Web Server on port %s\n", mg_get_option(server->Server, "listening_port"));
 #endif
 	return server;
 }
 
-void OPwebServerOnKey(OPWebServer* server, OPchar* key, void(*handler)(OPstream*, void*), void* param) {
+void OPwebServerOnKey(OPwebServer* server, OPchar* key, void(*handler)(OPstream*, void*), void* param) {
 
 #ifndef OPIFEX_ANDROID
 	OPWebServerHandlerContainer* container = (OPWebServerHandlerContainer*)OPalloc(sizeof(OPWebServerHandlerContainer));
@@ -156,48 +160,51 @@ void OPwebServerOnKey(OPWebServer* server, OPchar* key, void(*handler)(OPstream*
 #endif
 }
 
-void OPwebServerUpdate(OPWebServer* server) {
+void OPwebServerUpdate(OPwebServer* server) {
 #ifndef OPIFEX_ANDROID
 	mg_poll_server(server->Server, 1);
 
-	OPWebServerMessagesContainer* messagesContainer = (OPWebServerMessagesContainer*)OPalloc(sizeof(OPWebServerMessagesContainer));
-	messagesContainer->messageCount = OPlistSize(server->WebSocketMessages);
-	messagesContainer->messages = (OPstream**)OPalloc(sizeof(OPstream*) * messagesContainer->messageCount);
+	//OPWebServerMessagesContainer* messagesContainer = (OPWebServerMessagesContainer*)OPalloc(sizeof(OPWebServerMessagesContainer));
+	//messagesContainer->messageCount = OPlistSize(server->WebSocketMessages);
+	//messagesContainer->messages = (OPstream**)OPalloc(sizeof(OPstream*) * messagesContainer->messageCount);
 
-	for (OPuint i = 0; i < messagesContainer->messageCount; i++) {
-		messagesContainer->messages[i] = (OPstream*)OPlistPop(server->WebSocketMessages);;
-	}
+	//for (OPuint i = 0; i < messagesContainer->messageCount; i++) {
+	//	messagesContainer->messages[i] = (OPstream*)OPlistPop(server->WebSocketMessages);;
+	//}
 
-	mg_iterate_over_connections(server->Server, iterate_callback, messagesContainer);
+	mg_iterate_over_connections(server->Server, iterate_callback, server);
+	server->messageCount = 0;
 
 	//for (i32 i = 0; i < messagesContainer->messageCount; i++) {
 	//	OPstreamDestroy(messagesContainer->messages[i]);
 	//}
 
-	OPfree(messagesContainer->messages);
-	OPfree(messagesContainer);
+	//OPfree(messagesContainer->messages);
+	//OPfree(messagesContainer);
 #endif
 }
 
-void OPwebServerQueue(OPWebServer* server, OPchar* key, i8* data, ui32 datalen) {
+void OPwebServerQueue(OPwebServer* server, OPchar* key, i8* data, ui32 datalen) {
 #ifndef OPIFEX_ANDROID
 	ui32 size = (ui32)sizeof(i8) * (ui32)strlen(key) + datalen;
-	OPstream* d = OPstreamCreate(size);
-	
+	// TODO: (garrett) Lets get rid of allocating an OPstream every time. We can allocate
+	// a default block of memory to use as a per update scratch
+	OPstream* d = OPstreamCreate(size);	
 	ui32 len = (ui32)strlen(key);
 	OPwrite(d, (ui8*)&len, sizeof(ui32));
 	OPwrite(d, key, sizeof(OPchar)* len);
 	OPwrite(d, data, datalen);
 	OPseek(d, 0);
-	OPlistPush(server->WebSocketMessages, (ui8*)d);
+	server->messages[server->messageCount] = d;
+	server->messageCount++;
 #endif
 }
 
-void OPwebServerDestroy(OPWebServer* server) {
+void OPwebServerDestroy(OPwebServer* server) {
 
 #ifndef OPIFEX_ANDROID
-	OPlistDestroy(server->WebSocketMessages);
-	OPfree(server->WebSocketMessages);
+	//OPlistDestroy(server->WebSocketMessages);
+	//OPfree(server->WebSocketMessages);
 	OPhashMapDestroy(server->WebSocketKeys);
 	OPfree(server->WebSocketKeys);
 	mg_destroy_server(&server->Server);

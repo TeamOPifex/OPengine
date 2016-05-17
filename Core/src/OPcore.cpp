@@ -270,7 +270,7 @@ void OPstartStepped(int argc, char** args) {
 
 		accumlator += OPtime.Elapsed;
 
-		while (accumlator > STEP) {
+		while (accumlator >= STEP) {
 			frameStepped.TotalGametime += STEP;
 			// The Elapsed time is always set to the STEP
 			// at initialization of the OPtimer

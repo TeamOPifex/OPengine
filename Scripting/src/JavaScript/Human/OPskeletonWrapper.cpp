@@ -118,6 +118,7 @@ Handle<Object> OPskeletonWrapperCreate(Handle<Object> result, OPskeleton* skelet
     JS_SET_PTR(skinned, skeleton->skinned);
     JS_SET_OBJECT(result, "skinned", skinned);
 
+	return result;
 }
 
 JS_RETURN_VAL _OPskeletonCreate(const JS_ARGS& args) {

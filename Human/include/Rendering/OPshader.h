@@ -33,7 +33,7 @@ typedef GLenum OPshader;
 // |_____/ \__|_|   \__,_|\___|\__|___/
 
 struct OPshaderAttribute{
-	const OPchar* Name;
+	OPchar* Name;
 	ui32         Type;
 	ui32         Elements;
 	OPuint        Offset;

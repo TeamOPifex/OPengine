@@ -18,6 +18,7 @@ OPtexture2D* OPtexture2DCreate(OPtexture* texture, OPeffect* effect);
 void OPtexture2DDestroy(OPtexture2D* character);
 void OPtexture2DPrepRender(OPtexture2D* tex2d);
 void OPtexture2DRender(OPtexture2D* tex2d);
+void OPtexture2DUnloadGlobals();
 inline OPtexture2D* OPtexture2DCreate(OPtexture* texture) {
 	return OPtexture2DCreate(texture, NULL);
 }

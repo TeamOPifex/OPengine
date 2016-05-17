@@ -1,5 +1,6 @@
 macro(add_asset_dir TARGET_LIST)
 	# message(STATUS "!!! !!! ${TARGET_LIST} ${PROJECT_SOURCE_DIR}")
+	add_asset_group(Assets/ "${PROJECT_SOURCE_DIR}/Assets/" ${TARGET_LIST})
 	add_asset_group(Assets/Audio "${PROJECT_SOURCE_DIR}/Assets/Audio" ${TARGET_LIST})
 	add_asset_group(Assets/Fonts "${PROJECT_SOURCE_DIR}/Assets/Fonts" ${TARGET_LIST})
 	add_asset_group(Assets/Models "${PROJECT_SOURCE_DIR}/Assets/Models" ${TARGET_LIST})

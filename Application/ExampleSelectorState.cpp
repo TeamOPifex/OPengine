@@ -33,6 +33,7 @@ void ExampleSelectorEnter(OPgameState* last) {
 	OPfontSystemLoadEffects();
 
     // The background image to use
+	OPcmanLoadGet("subtle-irongrip.png");
 	exampleSelector.Background = OPtexture2DCreate((OPtexture*)OPcmanLoadGet("subtle-irongrip.png"), NULL, OPVEC2_ZERO, OPvec2Create(3, 3));
 	exampleSelector.Background->Scale = OPvec2Create(2,2);
 
@@ -65,7 +66,8 @@ void ExampleSelectorEnter(OPgameState* last) {
            { "Mesh Builder", &GS_EXAMPLE_MESH_BUILDER, GS_EXAMPLE_MESH_BUILDER_AVAILABLE, 1 },
            { "Particle System", &GS_EXAMPLE_PARTICLESYSTEM, GS_EXAMPLE_PARTICLESYSTEM_AVAILABLE, 1 },
            { "Spine", &GS_EXAMPLE_SPINE, GS_EXAMPLE_SPINE_AVAILABLE, 1 },
-           { "IMGUI", &GS_EXAMPLE_IMGUI, GS_EXAMPLE_IMGUI_AVAILABLE, 1 },
+		   { "IMGUI", &GS_EXAMPLE_IMGUI, GS_EXAMPLE_IMGUI_AVAILABLE, 1 },
+		   { "Ocornuts IMGUI", &GS_EXAMPLE_OCORNUT_IMGUI, GS_EXAMPLE_OCORNUT_IMGUI_AVAILABLE, 1 },
            { "Spherical Cube", &GS_EXAMPLE_SPHERICALCUBE, GS_EXAMPLE_SPHERICALCUBE_AVAILABLE, 1 },
            { "Mouse Intersect", &GS_EXAMPLE_MOUSE_INTERSECT, GS_EXAMPLE_MOUSE_INTERSECT_AVAILABLE, 1 },
 
@@ -77,8 +79,10 @@ void ExampleSelectorEnter(OPgameState* last) {
            { "Skinning", &GS_EXAMPLE_SKINNING, GS_EXAMPLE_SKINNING_AVAILABLE, 2 },
            { "Shadows", &GS_EXAMPLE_SHADOWS, GS_EXAMPLE_SHADOWS_AVAILABLE, 2 },
            { "Deferred", &GS_EXAMPLE_DEFERRED, GS_EXAMPLE_DEFERRED_AVAILABLE, 2 }, // in flux
-           { "Scripting", &GS_EXAMPLE_SCRIPTING, GS_EXAMPLE_SCRIPTING_AVAILABLE, 2 },
-           { "Oculus", &GS_EXAMPLE_OCULUS, GS_EXAMPLE_OCULUS_AVAILABLE, 2 },
+		   { "Scripting", &GS_EXAMPLE_SCRIPTING, GS_EXAMPLE_SCRIPTING_AVAILABLE, 2 },
+		   { "Lua", &GS_EXAMPLE_LUA, GS_EXAMPLE_LUA_AVAILABLE, 2 },
+		   { "Oculus", &GS_EXAMPLE_OCULUS, GS_EXAMPLE_OCULUS_AVAILABLE, 2 },
+		   { "OpenVR", &GS_EXAMPLE_OPENVR, GS_EXAMPLE_OPENVR_AVAILABLE, 2 },
            { "Server Client", &GS_EXAMPLE_SERVER_CLIENT, GS_EXAMPLE_SERVER_CLIENT_AVAILABLE, 2 }
        };
        OPmemcpy(exampleSelector.Examples, examples, sizeof(Example) * TotalEntries);
@@ -93,9 +97,9 @@ void ExampleSelectorEnter(OPgameState* last) {
     }
 
     exampleSelector.FontManager = OPfontManagerSetup("Ubuntu.opf", Names, TotalEntries);
-    exampleSelector.FontManager->scale = 0.5;
+    //exampleSelector.FontManager->scale = 0.5;
 
-	OPcmanPurge();
+	//OPcmanPurge();
 	OPlog("Entered Example Selector");
 }
 
@@ -250,11 +254,11 @@ void ExampleSelectorRender(OPfloat delta) {
 }
 
 OPint ExampleSelectorExit(OPgameState* next) {
-	//OPfontManagerDestroy(exampleSelector.FontManager);
-	//OPeffectBind(NULL);
-	//OPcmanDelete("Ubuntu.opf");
-	//OPtexture2DDestroy(exampleSelector.Background);
-	//OPfontSystemShutdownEffects();
+	OPeffectBind(NULL);
+	OPfontManagerDestroy(exampleSelector.FontManager);
+	OPtexture2DDestroy(exampleSelector.Background);
+	OPtexture2DUnloadGlobals();
+	OPfontSystemShutdownEffects();
 	return 0;
 }
 

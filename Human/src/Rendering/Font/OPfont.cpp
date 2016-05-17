@@ -81,7 +81,7 @@ OPint OPfontUnload(OPfont* font)
 	OPint i;
 	OPfontGlyph* glyph;
 
-	for (i = 0; i<OPvectorSize(font->glyphs); ++i)
+	for (i = 0; i<OPvectorSize(font->glyphs); i++)
 	{
 		glyph = *(OPfontGlyph**)OPvectorGet(font->glyphs, i);
 		OPfontGlyphDestroy(glyph);

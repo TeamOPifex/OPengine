@@ -99,6 +99,8 @@ Handle<Object> OPfontManagerWrapper(Handle<Object> result, OPfontManager* ptr) {
     JS_SET_METHOD(result, "Destroy", _OPfontManagerDestroySelf);
     JS_SET_METHOD(result, "SetScale", _OPfontManagerSetScaleSelf);
     JS_SET_METHOD(result, "SetAlign", _OPfontManagerSetAlignSelf);
+
+	return result;
 }
 
 void OPfontManagerWrapper(Handle<Object> exports) {

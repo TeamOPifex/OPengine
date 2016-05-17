@@ -10,6 +10,8 @@ Handle<Object> OPmeshWrapper(Handle<Object> result, OPmesh* mesh) {
 
     JS_SET_PTR(result, mesh);
     JS_SET_NUMBER(result, "VertexSize", mesh->vertexLayout.stride);
+
+	return result;
 }
 
 JS_RETURN_VAL _OPmeshCreate(const JS_ARGS& args) {

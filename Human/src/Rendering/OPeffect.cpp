@@ -135,6 +135,11 @@ OPint OPeffectUnload(OPeffect* effect){
 	}
 	OPhashMapDestroy(effect->Parameters);
 	OPfree(effect->Parameters);
+	ui32 size = OPlistSize(effect->Attributes);
+	for (ui32 i = 0; i < size; i++) {
+		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistPop(effect->Attributes);
+		OPfree(attr->Name);
+	}
 	OPlistDestroy(effect->Attributes);
 	OPfree(effect->Attributes);
 	glDeleteProgram(effect->ProgramHandle);
@@ -163,6 +168,7 @@ OPint OPeffectBind(OPeffect* effect, ui32 stride){
 		OPint attrCount = OPlistSize(OPEFFECT_ACTIVE->Attributes);
 		for (; attrCount--;){
 			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPEFFECT_ACTIVE->Attributes, attrCount);
+
 			glDisableVertexAttribArray((GLuint)attr->Handle);
 			if (OPglError("OPeffectBind:Error ")) {
 				OPlog("Effect %s: Failed to disable attrib %s", OPEFFECT_ACTIVE->Name, attr->Name);
@@ -325,7 +331,11 @@ OPeffect OPeffectGen(
 
 	OPlog("Create the Effect");
 
-	return createEffect(*vertShader, *fragShader, Attributes, AttribCount, Name, stride);
+	OPeffect result = createEffect(*vertShader, *fragShader, Attributes, AttribCount, Name, stride);
+
+	OPfree(Attributes);
+
+	return result;
 }
 
 OPeffect OPeffectGen(const OPchar* vert, const OPchar* frag, OPvertexLayout* layout) {
