@@ -691,7 +691,11 @@ install(EXPORT JanssonTargets
 set(JANSSON_LIBRARIES jansson CACHE STRING "Jansson libraries")
 
 if(${OPIFEX_OPTION_RELEASE})
-  output_library_from(jansson "jansson/lib" "jansson")
+  output_library_from(jansson "/jansson/lib" "jansson")
 else()
-  output_library_from(jansson "jansson/lib" "jansson_d")
+    if(${OPIFEX_OPTION_WINDOWS})
+      output_library_from(jansson "/jansson/lib" "jansson_d")
+    else()
+      output_library_from(jansson "/jansson/lib" "jansson")
+    endif()
 endif()

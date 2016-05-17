@@ -64,8 +64,8 @@ OPint OPrenderInit(i32 width, i32 height) {
 
 
     glfwWindowHint(GLFW_SAMPLES, 4);
-    //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     #ifdef OPIFEX_OSX
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);

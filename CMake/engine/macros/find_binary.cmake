@@ -26,6 +26,8 @@ macro(find_binary OPIFEX_LIBRARY OPIFEX_NAME NOT_STATIC)
 
 		if(${OPIFEX_OS_WINDOWS})
 			SET(OPIFEX_LIBRARY_NAME "${OPIFEX_NAME}.lib")
+        else()
+    		SET(OPIFEX_LIBRARY_NAME "lib${OPIFEX_NAME}.a")
 		endif()
 
 		if(${OPIFEX_OS_ANDROID})
