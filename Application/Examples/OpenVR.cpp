@@ -12,6 +12,7 @@
 #endif
 
 typedef struct {
+#ifdef ADDON_openvr
 	vr::IVRSystem* hmd;
 	vr::IVRRenderModels* renderModels;
 	bool showTrackedDevice[vr::k_unMaxTrackedDeviceCount];
@@ -49,10 +50,12 @@ typedef struct {
 	OPmesh* mesh;
 	OPeffect modelEffect;
 	OPtexture* texture;
+#endif
 } OpenVRExample;
 
 OpenVRExample openVRExample;
 
+#ifdef ADDON_openvr
 char* GetTrackedDeviceString(vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t unDevice, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError *peError = NULL)
 {
 	uint32_t unRequiredBufferLen = pHmd->GetStringTrackedDeviceProperty(unDevice, prop, NULL, 0, peError);
@@ -238,7 +241,7 @@ OPmat4 GetHMDMatrixPoseEye(vr::Hmd_Eye nEye)
 
 	return matrixObj;
 }
-
+#endif
 void ExampleOpenVREnter(OPgameState* last) {
 #ifdef ADDON_openvr
 
@@ -318,6 +321,7 @@ void ExampleOpenVREnter(OPgameState* last) {
 #endif
 }
 
+#ifdef ADDON_openvr
 void SetupRenderModelForTrackedDevice(vr::TrackedDeviceIndex_t unTrackedDeviceIndex)
 {
 	if (unTrackedDeviceIndex >= vr::k_unMaxTrackedDeviceCount)
@@ -364,9 +368,11 @@ void ProcessVREvent(const vr::VREvent_t & event)
 	break;
 	}
 }
+#endif
 
 OPint ExampleOpenVRUpdate(OPtimer* time) {
 
+#ifdef ADDON_openvr
 	vr::VREvent_t event;
 	while (openVRExample.hmd->PollNextEvent(&event, sizeof(event)))
 	{
@@ -382,10 +388,12 @@ OPint ExampleOpenVRUpdate(OPtimer* time) {
 			openVRExample.showTrackedDevice[unDevice] = state.ulButtonPressed == 0;
 		}
 	}
+	#endif
 
 	return false;
 }
 
+#ifdef ADDON_openvr
 OPmat4 GetCurrentViewProjectionMatrix(vr::Hmd_Eye nEye)
 {
 	OPmat4 matMVP;
@@ -534,8 +542,10 @@ void UpdateHMDMatrixPose()
 			OPmat4Inverse(&openVRExample.HMDPose, openVRExample.DevicePose[vr::k_unTrackedDeviceIndex_Hmd]);// .invert();
 	}
 }
+#endif
 
 void ExampleOpenVRRender(OPfloat delta) {
+#ifdef ADDON_openvr
 	// for now as fast as possible
 	if (openVRExample.hmd)
 	{
@@ -589,11 +599,13 @@ void ExampleOpenVRRender(OPfloat delta) {
 	}
 
 	UpdateHMDMatrixPose();
-
+	
+	#else
 
 	OPrenderClear(0, 0, 0);
 
 	OPrenderPresent();
+	#endif
 }
 
 OPint ExampleOpenVRExit(OPgameState* next) {

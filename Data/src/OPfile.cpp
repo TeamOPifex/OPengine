@@ -279,7 +279,7 @@ OPstream* OPfileRead(OPfile* path, ui32 size){
 
 	OPseek(str, 0);
 
-	str->Source = path->path;
+	str->Source = OPstringCopy(path->path);
 	return str;
 
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) || defined(OPIFEX_IOS)
@@ -300,7 +300,7 @@ OPstream* OPfileRead(OPfile* path, ui32 size){
 		OPfree(bytes);
 		OPseek(str, 0);
 
-		str->Source = path->path;
+		str->Source = OPstringCopy(path->path);
 
 		// finally return the stream
 		return str;
