@@ -175,8 +175,8 @@ void SetupDistortion()
 
 	openVRExample.indexSize = vIndices.size();
 
-	glGenVertexArrays(1, &openVRExample.m_unLensVAO);
-	glBindVertexArray(openVRExample.m_unLensVAO);
+	//glGenVertexArrays(1, &openVRExample.m_unLensVAO);
+	//glBindVertexArray(openVRExample.m_unLensVAO);
 
 	glGenBuffers(1, &openVRExample.m_glIDVertBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, openVRExample.m_glIDVertBuffer);
@@ -198,7 +198,7 @@ void SetupDistortion()
 	glEnableVertexAttribArray(3);
 	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(VertexDataLens), (void *)offsetof(VertexDataLens, texCoordBlue));
 
-	glBindVertexArray(0);
+	//glBindVertexArray(0);
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
@@ -262,7 +262,12 @@ void ExampleOpenVREnter(OPgameState* last) {
 		sizeof(GL_FLOAT) * ( 4 + 2 + 2 + 2)
 	);
 
-	openVRExample.mesh = (OPmesh*)OPcmanLoadGet("environment_04.opm");
+	//openVRExample.mesh = (OPmesh*)OPcmanLoadGet("environment_04.opm");
+	//openVRExample.texture = (OPtexture*)OPcmanLoadGet("Environments.png");
+	//openVRExample.mesh = (OPmesh*)OPcmanLoadGet("ld35person.opm");
+	//openVRExample.texture = (OPtexture*)OPcmanLoadGet("Knight.png");
+	openVRExample.mesh = (OPmesh*)OPcmanLoadGet("wolf.opm");
+	openVRExample.texture = (OPtexture*)OPcmanLoadGet("wolf.png");
 
 	OPshaderAttribute attribs2[] = {
 		{ "aPosition", GL_FLOAT, 3 },
@@ -270,8 +275,10 @@ void ExampleOpenVREnter(OPgameState* last) {
 		{ "aUV", GL_FLOAT, 2 }
 	};
 
-	vert = (OPshader*)OPcmanLoadGet("Common/Texture3DMVP.vert");
-	frag = (OPshader*)OPcmanLoadGet("Common/Texture.frag");
+	//vert = (OPshader*)OPcmanLoadGet("Common/Texture3DMVP.vert");
+	//frag = (OPshader*)OPcmanLoadGet("Common/Texture.frag");
+	vert = (OPshader*)OPcmanLoadGet("Common/TexturedShadowMVP.vert");
+	frag = (OPshader*)OPcmanLoadGet("Common/TexturedShadowMVP.frag");	
 	openVRExample.modelEffect = OPeffectCreate(
 		*vert,
 		*frag,
@@ -280,7 +287,6 @@ void ExampleOpenVREnter(OPgameState* last) {
 		"Textured Effect",
 		openVRExample.mesh->vertexLayout.stride
 	);	
-	openVRExample.texture = (OPtexture*)OPcmanLoadGet("Environments.png");
 	
 
 	vr::EVRInitError eError = vr::VRInitError_None;
@@ -408,18 +414,51 @@ OPmat4 GetCurrentViewProjectionMatrix(vr::Hmd_Eye nEye)
 
 	return matMVP;
 }
+OPmat4 GetCurrentViewMatrix(vr::Hmd_Eye nEye)
+{
+	OPmat4 matMVP;
+	if (nEye == vr::Eye_Left)
+	{
+		matMVP = openVRExample.eyePosLeft * openVRExample.HMDPose;
+	}
+	else if (nEye == vr::Eye_Right)
+	{
+		matMVP = openVRExample.eyePosRight *  openVRExample.HMDPose;
+	}
+
+	return matMVP;
+}OPmat4 GetCurrentProjectionMatrix(vr::Hmd_Eye nEye)
+{
+	OPmat4 matMVP;
+	if (nEye == vr::Eye_Left)
+	{
+		matMVP = openVRExample.ProjectionLeft;
+	}
+	else if (nEye == vr::Eye_Right)
+	{
+		matMVP = openVRExample.ProjectionRight;
+	}
+
+	return matMVP;
+}
 
 void RenderScene(vr::EVREye eye) {
 	OPrenderClear(0, 0, 0);
 	OPrenderDepth(1);
-	OPmat4 mvp = GetCurrentViewProjectionMatrix(eye);
-	OPmat4 scaled = mvp * OPmat4Scl(0.1, 0.1, 0.1);
+	//OPmat4 mvp = GetCurrentViewProjectionMatrix(eye);
+	OPmat4 proj = GetCurrentProjectionMatrix(eye);
+	OPmat4 view = GetCurrentViewMatrix(eye);
+	OPfloat scl = 0.05;
+	OPmat4 world = OPmat4Scl(scl) * OPmat4Translate(0, -1, 0);
 
+	//glBindVertexArray(OPRENDER_VAO);
 	OPmeshBind(openVRExample.mesh);
 	OPeffectBind(&openVRExample.modelEffect);
 	OPtextureClearActive();
 	OPeffectParamBindTex("uColorTexture", openVRExample.texture);
-	OPeffectParamMat4("uMVP", &scaled);
+	OPeffectParamMat4("uWorld", &world);
+	OPeffectParamMat4("uView", &view);
+	OPeffectParamMat4("uProj", &proj);
 	OPmeshRender();
 }
 
@@ -471,7 +510,7 @@ void RenderDistortion() {
 	glDisable(GL_DEPTH_TEST);
 	glViewport(0, 0, OPRENDER_WIDTH, OPRENDER_HEIGHT);
 
-	glBindVertexArray(openVRExample.lensVAO);
+	//glBindVertexArray(openVRExample.lensVAO);
 	glUseProgram(openVRExample.lensProgramID);
 
 	//render left lens (first half of index array )
@@ -490,7 +529,7 @@ void RenderDistortion() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glDrawElements(GL_TRIANGLES, openVRExample.indexSize / 2, GL_UNSIGNED_SHORT, (const void *)(openVRExample.indexSize));
 
-	glBindVertexArray(0);
+	//glBindVertexArray(0);
 	glUseProgram(0);
 }
 
@@ -602,9 +641,9 @@ void ExampleOpenVRRender(OPfloat delta) {
 	
 	#else
 
-	OPrenderClear(0, 0, 0);
+	//OPrenderClear(0, 0, 0);
 
-	OPrenderPresent();
+	//OPrenderPresent();
 	#endif
 }
 
