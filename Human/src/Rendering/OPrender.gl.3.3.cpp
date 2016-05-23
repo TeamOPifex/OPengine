@@ -44,6 +44,11 @@ void glfwCharacterCallback(GLFWwindow* window, unsigned int codepoint)
     OPkeyboardKey(codepoint);
 }
 
+void(*OP_WINDOW_DROP)(int, const OPchar**) = NULL;
+void OPrenderDragAndDropCB(void(*cb)(int, const OPchar**)) {
+	OP_WINDOW_DROP = cb;
+}
+
 
 OPint OPrenderInit(i32 width, i32 height) {
     OPlogDebug("Initializing Renderer");

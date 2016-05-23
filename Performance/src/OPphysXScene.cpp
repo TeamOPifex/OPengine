@@ -3,6 +3,8 @@
 #ifdef OPIFEX_OPTION_PHYSX
 
 PxReal _timestep = 1.0f / 60.0f;
+// TODO: (garrett) this should be tied with the OPcore fixed timestep
+ui64 _physXTimeStep = 16;
 
 void OPphysXSceneInit(OPphysXScene* scene, OPvec3 gravity, void(*onTrigger)(OPphysXTrigger), void(*onContact)(OPphysXContact)) {
 
@@ -68,14 +70,58 @@ OPphysXRigidStatic* OPphysXSceneCreateStatic(OPphysXScene* scene, PxTransform tr
 	return actor;
 }
 
-
+void OPphysXSceneUpdate(OPphysXScene* scene, ui64 timestep) {
+	scene->scene->simulate(timestep / 1000.f);
+	scene->scene->fetchResults(true);
+}
 
 void OPphysXSceneUpdate(OPphysXScene* scene, OPtimer* timer) {
 	scene->elapsed += timer->Elapsed;
-	if (scene->elapsed > (1000 * _timestep)) {
-		scene->elapsed -= 1000 * _timestep;
+	if (scene->elapsed > _physXTimeStep) { //(1000 * _timestep)
+		scene->elapsed -= _physXTimeStep;// 1000 * _timestep;
 		scene->scene->simulate(_timestep);
 		scene->scene->fetchResults(true);
+	}
+}
+
+void OPphysXSceneAddWalls(OPphysXScene* scene, OPfloat left, OPfloat right, OPfloat forward, OPfloat backward, OPphysXMaterial* material, i8 addFloor) {
+	PxTransform transform;
+	OPphysXRigidStatic* plane;
+
+	if(addFloor)
+	{
+		transform = PxTransform(PxVec3(0.0f, 0.0f, 0.0f), PxQuat(PxHalfPi, PxVec3(0.0f, 0.0f, 1.0f)));
+		plane = OPphysXSceneCreateStatic(scene, transform);
+		OPphysXAddPlaneShape(plane, material);
+		OPphysXSceneAddActor(scene, plane);
+	}
+
+	{
+		transform = PxTransform(PxVec3(left, 0.0f, 0.0f), PxQuat(0, PxVec3(1.0f, 0.0f, 0.0f)));
+		plane = OPphysXSceneCreateStatic(scene, transform);
+		OPphysXAddPlaneShape(plane, material);
+		OPphysXSceneAddActor(scene, plane);
+	}
+
+	{
+		transform = PxTransform(PxVec3(right, 0.0f, 0.0f), PxQuat(PxPi, PxVec3(0.0f, 1.0f, 0.0f)));
+		plane = OPphysXSceneCreateStatic(scene, transform);
+		OPphysXAddPlaneShape(plane, material);
+		OPphysXSceneAddActor(scene, plane);
+	}
+
+	{
+		transform = PxTransform(PxVec3(0.0f, 0.0f, forward), PxQuat(PxHalfPi, PxVec3(0.0f, 1.0f, 0.0f)));
+		plane = OPphysXSceneCreateStatic(scene, transform);
+		OPphysXAddPlaneShape(plane, material);
+		OPphysXSceneAddActor(scene, plane);
+	}
+
+	{
+		transform = PxTransform(PxVec3(0.0f, 0.0f, backward), PxQuat(-PxHalfPi, PxVec3(0.0f, 1.0f, 0.0f)));
+		plane = OPphysXSceneCreateStatic(scene, transform);
+		OPphysXAddPlaneShape(plane, material);
+		OPphysXSceneAddActor(scene, plane);
 	}
 }
 

@@ -49,18 +49,19 @@ OPint OPscriptLoad(OPstream* str, OPscript** script) {
 }
 
 OPint OPscriptReload(OPstream* str, OPscript** script) {
-	OPlog("Reload script");
-	OPscript* resultScript;
-	OPscript* tex = (OPscript*)(*script);
-	OPint result = OPscriptLoad(str, &resultScript);
-	if (result) {
-		OPmemcpy(*script, resultScript, sizeof(OPscript));
-#ifdef _DEBUG
-		(*script)->changed = 1;
-#endif
-		OPfree(resultScript);
-	}
-	return result;
+//	OPlog("Reload script");
+//	OPscript* resultScript;
+//	OPscript* tex = (OPscript*)(*script);
+//	OPint result = OPscriptLoad(str, &resultScript);
+//	if (result) {
+//		OPmemcpy(*script, resultScript, sizeof(OPscript));
+//#ifdef _DEBUG
+//		(*script)->changed = 1;
+//#endif
+//		OPfree(resultScript);
+//	}
+//	return result;
+	return 1;
 }
 
 OPint OPscriptUnload(OPscript* script) {

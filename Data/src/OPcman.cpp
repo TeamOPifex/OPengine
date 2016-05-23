@@ -67,9 +67,11 @@ void OPcmanUpdate(struct OPtimer* timer) {
 					change = OPfileLastChange(asset->AbsolutePath);
 					if (change != asset->LastChange) {
 						// OPlg("$, %s",asset->FullPath);
-						//if (asset->Reload(asset->FullPath, &asset->Asset)) {
-						//	asset->LastChange = change;
-						//}
+						OPstream* str = OPreadFileLarge(asset->FullPath, 1024);
+						if (asset->Reload(str, &asset->Asset)) {
+							asset->LastChange = change;
+						}
+						OPstreamDestroy(str);
 					}
 				}
 			}

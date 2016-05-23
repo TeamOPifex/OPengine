@@ -7,7 +7,7 @@ OPcommandDrawIndexed* OPcommandBucketCreateDrawIndexed(OPcommandBucket* commandB
 
 void OPcommandBucketInit(OPcommandBucket* commandBucket, OPuint bucketSize, OPcam* camera) {
 	commandBucket->controlOfAllocator = 1;
-	OPcommandBucketInit(commandBucket, bucketSize, camera, OPallocatorLinearCreate(KB(1)));
+	OPcommandBucketInit(commandBucket, bucketSize, camera, OPallocatorLinearCreate(KB(bucketSize)));
 }
 
 void OPcommandBucketInit(OPcommandBucket* commandBucket, OPuint bucketSize, OPcam* camera, OPallocator* allocator) {

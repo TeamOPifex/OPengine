@@ -528,6 +528,12 @@ OPMData OPMloadData(OPstream* str) {
 	return data;
 }
 
+OPMData OPMloadData(const OPchar * filename)
+{
+	OPstream* stream = OPreadFile(filename);
+	return OPMloadData(stream);
+}
+
 OPint OPMload(OPstream* str, OPmesh** mesh) {
 	//OPlog("Reading File Data");
 	//OPstream* str = OPreadFile(filename);

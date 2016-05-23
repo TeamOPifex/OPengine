@@ -115,10 +115,14 @@ inline OPvec3 operator/(OPvec3 lhs, OPfloat vhs) {
 	OPvec3Div(&temp, &lhs, vhs); 
 	return temp; 
 }
-inline OPvec3 operator/(OPfloat lhs, OPvec3 vhs) { 
-	OPvec3 temp = { {0, 0, 0}};
-	OPvec3Div(&temp, &vhs, lhs); 
-	return temp; 
+inline OPvec3 operator/(OPfloat lhs, OPvec3 vhs) {
+	OPvec3 temp = { { 0, 0, 0 } };
+	OPvec3Div(&temp, &vhs, lhs);
+	return temp;
+}
+
+inline bool operator==(const OPvec3& lhs, const OPvec3& vhs) {
+	return lhs.x == vhs.x && lhs.y == vhs.y && lhs.z == vhs.z;
 }
 
 //    ___            _         _ _        _       _ _   _              _   _    
