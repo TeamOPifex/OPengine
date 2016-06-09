@@ -79,7 +79,9 @@ void ApplicationInit() {
 	secondWindow = OPrenderCreateWindow(NULL, false, "Secondary Window", OPMONITOR_LIST[1].VideoModeCurrent.Width - contain - contain, OPMONITOR_LIST[1].VideoModeCurrent.Height - contain - contain);
 	secondWindow->SetPosition(OPMONITOR_LIST[1].X + contain, OPMONITOR_LIST[1].Y + contain);
 
+#ifdef ADDON_imgui
 	OPimguiInit(secondWindow->Window, true);
+#endif
 
 	OPGAMEPADSYSTEM.SetDeadzones(0.2f);
 
