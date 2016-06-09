@@ -70,7 +70,7 @@ OPint ExampleOculusUpdate(OPtimer* time) {
 
 	if (OPkeyboardIsDown(OPKEY_P)) { oculusExample.Rotation++; }
 
-	OPmeshBind(oculusExample.Mesh);
+	oculusExample.Mesh->Bind();
 	OPeffectBind(oculusExample.Effect);
 
 	OPmat4 world;

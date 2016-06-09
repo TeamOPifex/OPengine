@@ -228,8 +228,7 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 	}
 
 	OPvec3 disp = OPvec3Create(0, -0.98 * 0.25, 0);
-
-	OPvec2 leftThumb = OPgamePadLeftThumb(OPgamePadGet(OPGAMEPAD_ONE));
+	OPvec2 leftThumb = OPgamePadGet(OPGAMEPAD_ONE)->LeftThumb();
 	disp.x += leftThumb.x * 0.5f;
 	disp.z -= leftThumb.y * 0.5f;
 
@@ -270,7 +269,7 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 
 	OPmat4 world = OPMAT4_IDENTITY;
 
-	OPmeshBind(physicsCharacterExample->Mesh);
+	physicsCharacterExample->Mesh->Bind();
 	OPeffectBind(physicsCharacterExample->Effect);
 
 	OPtextureClearActive();
@@ -306,7 +305,7 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 		OPmeshRender();
 	}
 
-	OPmeshBind(physicsCharacterExample->MeshSphere);
+	physicsCharacterExample->MeshSphere->Bind();
 	OPeffectBind(physicsCharacterExample->SphereEffect);
 	OPeffectParamMat4("uProj", &physicsCharacterExample->Camera->proj);
 	OPeffectParamMat4("uView", &physicsCharacterExample->Camera->view);

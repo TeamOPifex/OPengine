@@ -106,7 +106,7 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 	OPmat4 world;
 	OPint frameChange = sys->fps && sys->timeElapsed > (1.0f / sys->fps);
 
-	OPmeshBind(&PARTICLE_SYSTEM_QUAD_MESH);
+	PARTICLE_SYSTEM_QUAD_MESH.Bind();
 	OPeffectBind(EFFECT_PARTICLE_SYSTEM);
 
 	OPeffectParamMat4v("uView", 1, &cam->view);

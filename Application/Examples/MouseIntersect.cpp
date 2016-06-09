@@ -110,7 +110,7 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	OPcamUpdateView(&mouseIntersectExample.Camera);
 
 
-	OPray3D ray = { 0, 0, 0, 0, 0, 0};
+	OPray3D ray = { OPvec3(0, 0, 0), OPvec3(0, 0, 0) };
 	OPvec3 positionHit = { 0, 0, 0};
 	OPint intersecting = 0;
 	if(OPmouseIsDown(OPMOUSE_LBUTTON)) {

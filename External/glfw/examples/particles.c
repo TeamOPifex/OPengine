@@ -1,7 +1,7 @@
 //========================================================================
 // A simple particle engine with threaded physics
 // Copyright (c) Marcus Geelnard
-// Copyright (c) Camilla Berglund <elmindreda@elmindreda.org>
+// Copyright (c) Camilla Berglund <elmindreda@glfw.org>
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -24,6 +24,11 @@
 //
 //========================================================================
 
+#if defined(_MSC_VER)
+ // Make MS math.h define M_PI
+ #define _USE_MATH_DEFINES
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -32,8 +37,9 @@
 
 #include <tinycthread.h>
 #include <getopt.h>
+#include <linmath.h>
 
-#define GLFW_INCLUDE_GLU
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 // Define tokens for GL_EXT_separate_specular_color if not already defined
@@ -42,11 +48,6 @@
 #define GL_SINGLE_COLOR_EXT               0x81F9
 #define GL_SEPARATE_SPECULAR_COLOR_EXT    0x81FA
 #endif // GL_EXT_separate_specular_color
-
-// Some <math.h>'s do not define M_PI
-#ifndef M_PI
-#define M_PI 3.141592654
-#endif
 
 
 //========================================================================
@@ -785,17 +786,22 @@ static void draw_scene(GLFWwindow* window, double t)
     double xpos, ypos, zpos, angle_x, angle_y, angle_z;
     static double t_old = 0.0;
     float dt;
+    mat4x4 projection;
 
     // Calculate frame-to-frame delta time
     dt = (float) (t - t_old);
     t_old = t;
 
+    mat4x4_perspective(projection,
+                       65.f * (float) M_PI / 180.f,
+                       aspect_ratio,
+                       1.0, 60.0);
+
     glClearColor(0.1f, 0.1f, 0.1f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(65.0, aspect_ratio, 1.0, 60.0);
+    glLoadMatrixf((const GLfloat*) projection);
 
     // Setup camera
     glMatrixMode(GL_MODELVIEW);
@@ -870,7 +876,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         switch (key)
         {
             case GLFW_KEY_ESCAPE:
-                glfwSetWindowShouldClose(window, GL_TRUE);
+                glfwSetWindowShouldClose(window, GLFW_TRUE);
                 break;
             case GLFW_KEY_W:
                 wireframe = !wireframe;
@@ -984,13 +990,14 @@ int main(int argc, char** argv)
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glfwMakeContextCurrent(window);
+    gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
     glfwSwapInterval(1);
 
-    glfwSetWindowSizeCallback(window, resize_callback);
+    glfwSetFramebufferSizeCallback(window, resize_callback);
     glfwSetKeyCallback(window, key_callback);
 
     // Set initial aspect ratio
-    glfwGetWindowSize(window, &width, &height);
+    glfwGetFramebufferSize(window, &width, &height);
     resize_callback(window, width, height);
 
     // Upload particle texture

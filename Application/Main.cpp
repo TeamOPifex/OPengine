@@ -7,6 +7,14 @@
 #include "./Pipeline/include/Loaders/OPloaderOPanimation.h"
 #include "./Data/include/OPlogToFile.h"
 
+#ifdef ADDON_assimp
+#include "./OPassimp.h"
+#endif
+
+#ifdef ADDON_imgui
+#include "OPimgui.h"
+#endif
+
 #include <bitset>
 #include <string>
 #include <jansson.h>
@@ -16,6 +24,8 @@
 //////////////////////////////////////
 /* forward refs */
 
+OPwindow* mainWindow;
+OPwindow* secondWindow;
 void ApplicationInit() {
 	//OPallocator* allocator = OPallocatorLinearCreate(MB(128));
 	//OPDEFAULT_ALLOCATOR = *allocator;
@@ -47,6 +57,9 @@ void ApplicationInit() {
 	OPskeletonAddLoader();
 	OPskeletonAnimationAddLoader();
 	SpineAddLoader();
+#ifdef ADDON_assimp
+	OPassimpAddLoaders();
+#endif
 	OPlog("Assets %s", OPIFEX_ASSETS);
 	OPcmanInit(OPIFEX_ASSETS);
 
@@ -58,19 +71,38 @@ void ApplicationInit() {
 
 	OPoculusStartup();
 	OPrenderInit();
-	OPgamePadSetDeadZones(0.2f);
+
+	i32 contain = 0;
+	mainWindow = OPrenderCreateWindow(NULL, false, "Main Window", OPMONITOR_LIST[0].VideoModeCurrent.Width - contain - contain, OPMONITOR_LIST[0].VideoModeCurrent.Height - contain - contain);
+	mainWindow->SetPosition(OPMONITOR_LIST[0].X + contain, OPMONITOR_LIST[0].Y + contain);
+	
+	secondWindow = OPrenderCreateWindow(NULL, false, "Secondary Window", OPMONITOR_LIST[1].VideoModeCurrent.Width - contain - contain, OPMONITOR_LIST[1].VideoModeCurrent.Height - contain - contain);
+	secondWindow->SetPosition(OPMONITOR_LIST[1].X + contain, OPMONITOR_LIST[1].Y + contain);
+
+	OPimguiInit(secondWindow->Window, true);
+
+	OPGAMEPADSYSTEM.SetDeadzones(0.2f);
+
+	mainWindow->Bind();
+	mainWindow->Focus();
+
+	
 
 	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 }
 
 OPint ApplicationUpdate(OPtimer* timer) {
+	secondWindow->Bind();
+	OPrenderUpdate();
+
+	mainWindow->Bind();
 	OPrenderUpdate();
 
 	OPinputSystemUpdate(timer);
 	OPcmanUpdate(timer);
 
 	if (OPkeyboardWasReleased(OPKEY_ESCAPE)) return 1;
-	if ((OPkeyboardWasReleased(OPKEY_BACKSPACE) || OPgamePadWasPressed(OPgamePadGet(OPGAMEPAD_ONE), OPGAMEPADBUTTON_BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
+	if ((OPkeyboardWasReleased(OPKEY_BACKSPACE) || OPgamePadGet(OPGAMEPAD_ONE)->WasPressed(OPGAMEPADBUTTON_BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
 		OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 	}
 
@@ -79,7 +111,26 @@ OPint ApplicationUpdate(OPtimer* timer) {
 
 void ApplicationRender(OPfloat delta) {
 	// OPlog("[%f]", delta);
+	mainWindow->Bind();
 	ActiveState->Render(delta);
+
+	secondWindow->Bind();
+#ifdef ADDON_imgui
+	OPlog("Frame Started");
+	OPimguiNewFrame();
+	{
+		static float f = 0.0f;
+		ImGui::Text("Hello, world!");
+		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	}
+
+#endif
+	OPrenderClear(0.2, 0.2, 0.2);
+#ifdef ADDON_imgui
+	ImGui::Render();
+#endif
+	OPrenderPresent();
 }
 
 void ApplicationDestroy() {

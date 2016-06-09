@@ -40,7 +40,7 @@ JS_RETURN_VAL _OPgamePadWasPressedSelf(const JS_ARGS& args) {
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
     OPgamePadButton btn = (OPgamePadButton)args[0]->IntegerValue();
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadWasPressed(ptr, btn)));
+    JS_RETURN(JS_NEW_BOOL(ptr->WasPressed(btn)));
 }
 
 JS_RETURN_VAL _OPgamePadWasReleasedSelf(const JS_ARGS& args) {
@@ -49,7 +49,7 @@ JS_RETURN_VAL _OPgamePadWasReleasedSelf(const JS_ARGS& args) {
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
     OPgamePadButton btn = (OPgamePadButton)args[0]->IntegerValue();
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadWasReleased(ptr, btn)));
+    JS_RETURN(JS_NEW_BOOL(ptr->WasReleased(btn)));
 }
 
 JS_RETURN_VAL _OPgamePadIsConnected(const JS_ARGS& args) {
@@ -57,7 +57,7 @@ JS_RETURN_VAL _OPgamePadIsConnected(const JS_ARGS& args) {
 
     OPgamePad* ptr = JS_GET_ARG_PTR(args, 0, OPgamePad);
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadIsConnected(ptr)));
+    JS_RETURN(JS_NEW_BOOL(ptr->IsConnected()));
 }
 
 JS_RETURN_VAL _OPgamePadIsConnectedSelf(const JS_ARGS& args) {
@@ -65,7 +65,7 @@ JS_RETURN_VAL _OPgamePadIsConnectedSelf(const JS_ARGS& args) {
 
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadIsConnected(ptr)));
+    JS_RETURN(JS_NEW_BOOL(ptr->IsConnected()));
 }
 
 JS_RETURN_VAL _OPgamePadIsDownSelf(const JS_ARGS& args) {
@@ -74,7 +74,7 @@ JS_RETURN_VAL _OPgamePadIsDownSelf(const JS_ARGS& args) {
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
     OPgamePadButton btn = (OPgamePadButton)args[0]->IntegerValue();
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadIsDown(ptr, btn)));
+    JS_RETURN(JS_NEW_BOOL(ptr->IsDown(btn)));
 }
 
 JS_RETURN_VAL _OPgamePadLeftThumbSelf(const JS_ARGS& args) {
@@ -83,8 +83,8 @@ JS_RETURN_VAL _OPgamePadLeftThumbSelf(const JS_ARGS& args) {
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
 
     Handle<Object> result = JS_NEW_OBJECT();
-    JS_SET_NUMBER(result, "x", OPgamePadLeftThumbX(ptr));
-    JS_SET_NUMBER(result, "y", OPgamePadLeftThumbY(ptr));
+    JS_SET_NUMBER(result, "x", ptr->LeftThumbX());
+    JS_SET_NUMBER(result, "y", ptr->LeftThumbY());
 
     JS_RETURN(result);
 }
@@ -94,7 +94,7 @@ JS_RETURN_VAL _OPgamePadLeftThumbWasLeftSelf(const JS_ARGS& args) {
 
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftThumbWasLeft(ptr)));
+    JS_RETURN(JS_NEW_BOOL(ptr->LeftThumbWasLeft()));
 }
 
 JS_RETURN_VAL _OPgamePadLeftThumbWasRightSelf(const JS_ARGS& args) {
@@ -102,7 +102,7 @@ JS_RETURN_VAL _OPgamePadLeftThumbWasRightSelf(const JS_ARGS& args) {
 
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftThumbWasRight(ptr)));
+    JS_RETURN(JS_NEW_BOOL(ptr->LeftThumbWasRight()));
 }
 
 JS_RETURN_VAL _OPgamePadLeftThumbNowLeftSelf(const JS_ARGS& args) {
@@ -110,7 +110,7 @@ JS_RETURN_VAL _OPgamePadLeftThumbNowLeftSelf(const JS_ARGS& args) {
 
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftThumbNowLeft(ptr)));
+    JS_RETURN(JS_NEW_BOOL(ptr->LeftThumbNowLeft()));
 }
 
 JS_RETURN_VAL _OPgamePadLeftThumbNowRightSelf(const JS_ARGS& args) {
@@ -118,7 +118,7 @@ JS_RETURN_VAL _OPgamePadLeftThumbNowRightSelf(const JS_ARGS& args) {
 
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftThumbNowRight(ptr)));
+    JS_RETURN(JS_NEW_BOOL(ptr->LeftThumbNowRight()));
 }
 
 
@@ -127,7 +127,7 @@ JS_RETURN_VAL _OPgamePadLeftThumbWasUpSelf(const JS_ARGS& args) {
 
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftThumbWasUp(ptr)));
+    JS_RETURN(JS_NEW_BOOL(ptr->LeftThumbWasUp()));
 }
 
 JS_RETURN_VAL _OPgamePadLeftThumbWasDownSelf(const JS_ARGS& args) {
@@ -135,7 +135,7 @@ JS_RETURN_VAL _OPgamePadLeftThumbWasDownSelf(const JS_ARGS& args) {
 
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftThumbWasDown(ptr)));
+    JS_RETURN(JS_NEW_BOOL(ptr->LeftThumbWasDown()));
 }
 
 JS_RETURN_VAL _OPgamePadLeftThumbNowUpSelf(const JS_ARGS& args) {
@@ -143,7 +143,7 @@ JS_RETURN_VAL _OPgamePadLeftThumbNowUpSelf(const JS_ARGS& args) {
 
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftThumbNowUp(ptr)));
+    JS_RETURN(JS_NEW_BOOL(ptr->LeftThumbNowUp()));
 }
 
 JS_RETURN_VAL _OPgamePadLeftThumbNowDownSelf(const JS_ARGS& args) {
@@ -151,7 +151,7 @@ JS_RETURN_VAL _OPgamePadLeftThumbNowDownSelf(const JS_ARGS& args) {
 
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftThumbNowDown(ptr)));
+    JS_RETURN(JS_NEW_BOOL(ptr->LeftThumbNowDown()));
 }
 
 JS_RETURN_VAL _OPgamePadRightTriggerWasPressedSelf(const JS_ARGS& args) {
@@ -159,7 +159,7 @@ JS_RETURN_VAL _OPgamePadRightTriggerWasPressedSelf(const JS_ARGS& args) {
 
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadRightTriggerWasPressed(ptr)));
+    JS_RETURN(JS_NEW_BOOL(ptr->RightTriggerWasPressed()));
 }
 
 JS_RETURN_VAL _OPgamePadRightTriggerWasReleasedSelf(const JS_ARGS& args) {
@@ -167,7 +167,7 @@ JS_RETURN_VAL _OPgamePadRightTriggerWasReleasedSelf(const JS_ARGS& args) {
 
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadRightTriggerWasReleased(ptr)));
+    JS_RETURN(JS_NEW_BOOL(ptr->RightTriggerWasReleased()));
 }
 
 JS_RETURN_VAL _OPgamePadRightTriggerIsDownSelf(const JS_ARGS& args) {
@@ -175,7 +175,7 @@ JS_RETURN_VAL _OPgamePadRightTriggerIsDownSelf(const JS_ARGS& args) {
 
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadRightTriggerIsDown(ptr)));
+    JS_RETURN(JS_NEW_BOOL(ptr->RightTriggerIsDown()));
 }
 
 
@@ -184,7 +184,7 @@ JS_RETURN_VAL _OPgamePadLeftTriggerWasPressedSelf(const JS_ARGS& args) {
 
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftTriggerWasPressed(ptr)));
+    JS_RETURN(JS_NEW_BOOL(ptr->LeftTriggerWasPressed()));
 }
 
 JS_RETURN_VAL _OPgamePadLeftTriggerWasReleasedSelf(const JS_ARGS& args) {
@@ -192,7 +192,7 @@ JS_RETURN_VAL _OPgamePadLeftTriggerWasReleasedSelf(const JS_ARGS& args) {
 
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftTriggerWasReleased(ptr)));
+    JS_RETURN(JS_NEW_BOOL(ptr->LeftTriggerWasReleased()));
 }
 
 JS_RETURN_VAL _OPgamePadLeftTriggerIsDownSelf(const JS_ARGS& args) {
@@ -200,18 +200,18 @@ JS_RETURN_VAL _OPgamePadLeftTriggerIsDownSelf(const JS_ARGS& args) {
 
     OPgamePad* ptr = JS_GET_PTR(args.This(), OPgamePad);
 
-    JS_RETURN(JS_NEW_BOOL(OPgamePadLeftTriggerIsDown(ptr)));
+    JS_RETURN(JS_NEW_BOOL(ptr->LeftTriggerIsDown()));
 }
 
 JS_RETURN_VAL _OPgamePadUpdate(const JS_ARGS& args) {
-    OPgamePadSystemUpdate();
+	OPGAMEPADSYSTEM.Update();
     JS_RETURN_NULL;
 }
 
 JS_RETURN_VAL _OPgamePadSetDeadZones(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
-    OPgamePadSetDeadZones(args[0]->NumberValue());
+	OPGAMEPADSYSTEM.SetDeadzones(args[0]->NumberValue());
 
     JS_RETURN_NULL;
 }
@@ -245,7 +245,7 @@ void _OPgamePadSetup(Handle<Object> result, OPgamePad* controller) {
 JS_RETURN_VAL _OPgamePadGet(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
-    OPgamePad* controller = OPgamePadGet((OPgamePadIndex)args[0]->IntegerValue());
+    OPgamePad* controller = OPgamePadGet(args[0]->IntegerValue());
 
     Handle<Object> result = JS_NEW_OBJECT();
     _OPgamePadSetup(result, controller);

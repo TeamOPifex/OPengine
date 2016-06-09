@@ -177,10 +177,11 @@ OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const O
 			ui16 inds[6];
 			inds[0] = offset; inds[1] = offset + 1; inds[2] = offset + 2;
 			inds[3] = offset; inds[4] = offset + 2; inds[5] = offset + 3;
-			OPvertexTex verts[4] = { { (OPfloat)x0, (OPfloat)y0, 0.0f, s0, t0 },
-			{ (OPfloat)x0, (OPfloat)y1, 0.0f, s0, t1 },
-			{ (OPfloat)x1, (OPfloat)y1, 0.0f, s1, t1 },
-			{ (OPfloat)x1, (OPfloat)y0, 0.0f, s1, t0 } };
+			OPvertexTex verts[4] = { 
+				{ OPvec3(x0, y0, 0.0f), OPvec2(s0, t0) },
+				{ OPvec3(x0, y1, 0.0f), OPvec2(s0, t1) },
+				{ OPvec3(x1, y1, 0.0f), OPvec2(s1, t1) },
+				{ OPvec3(x1, y0, 0.0f), OPvec2(s1, t0) } };
 
 			for (OPint i = 0; i < 4; i++) {
 				OPvectorPush(vertices, (ui8*)&verts[i]);
@@ -204,7 +205,7 @@ OPmesh OPfontCreateText(OPfont* font, OPchar* text) {
 	_OPfontBuild(vertices, indices, font, text, 1);
 
 	OPmesh mesh = OPmeshCreate();
-	OPmeshBind(&mesh);
+	mesh.Bind();
 	OPmeshBuild(vertexSize, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
 	return mesh;
 }
@@ -267,7 +268,7 @@ OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text, float 
 	node.Width = size.x;
 	node.mesh = OPmeshCreate();
 
-	OPmeshBind(&node.mesh);
+	node.mesh.Bind();
 	OPmeshBuild(sizeof(OPvertexTex), sizeof(ui16), vertices->_size, indices->_size, vertices->items, indices->items);
 
 	OPvectorDestroy(vertices);

@@ -452,7 +452,7 @@ void RenderScene(vr::EVREye eye) {
 	OPmat4 world = OPmat4Scl(scl) * OPmat4Translate(0, -1, 0);
 
 	//glBindVertexArray(OPRENDER_VAO);
-	OPmeshBind(openVRExample.mesh);
+	openVRExample.mesh->Bind();
 	OPeffectBind(&openVRExample.modelEffect);
 	OPtextureClearActive();
 	OPeffectParamBindTex("uColorTexture", openVRExample.texture);

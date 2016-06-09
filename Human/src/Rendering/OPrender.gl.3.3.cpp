@@ -6,6 +6,7 @@
 #include "./Human/include/Input/OPkeyboard.h"
 #include "./Core/include/Assert.h"
 #include "include/Utilities/Errors.h"
+#include "./Human/include/Rendering/OPmonitor.h"
 
 i8 OPRENDER_INITIALIZED = 0;
 ui32 OPRENDER_WIDTH = 1280;
@@ -49,14 +50,9 @@ void OPrenderDragAndDropCB(void(*cb)(int, const OPchar**)) {
 	OP_WINDOW_DROP = cb;
 }
 
-
-OPint OPrenderInit(i32 width, i32 height) {
+OPint OPrenderInit() {
     OPlogDebug("Initializing Renderer");
-
-
-    OPRENDER_SCREEN_WIDTH = width;
-    OPRENDER_SCREEN_HEIGHT = height;
-
+	
     glfwSetErrorCallback(glfwErrorCallback);
 
     ASSERT(glfwInitialized == 0, "GLFW has already been initialized");
@@ -76,93 +72,119 @@ OPint OPrenderInit(i32 width, i32 height) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     #endif
 
-    GLFWmonitor* monitor = NULL;
-    if (OPRENDER_FULLSCREEN){
-        monitor = glfwGetPrimaryMonitor();
-    }
+	int monitorCount;
+	GLFWmonitor** monitors = glfwGetMonitors(&monitorCount);
+	for (ui8 i = 0; i < monitorCount & i < OPMONITOR_MAX; i++) {
+		OPMONITOR_LIST[i].Init(monitors[i]);
+	}
 
-    OPint _screenWidth = OPRENDER_SCREEN_WIDTH;
-    OPint _screenHeight = OPRENDER_SCREEN_HEIGHT;
+	OPMONITOR_COUNT = monitorCount;
 
-    OPlog("%d x %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
+	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+	OPMONITOR_PRIMARY.Init(primaryMonitor);
 
-    OPlog("%d x %d", _screenWidth, _screenHeight);
+  //  GLFWmonitor* monitor = NULL;
+  //  if (OPRENDER_FULLSCREEN){
+		//monitor = primaryMonitor;
+  //  }
 
-    window = glfwCreateWindow(_screenWidth, _screenHeight,
-                              "OPifex Entertainment", monitor, NULL);
 
-    OPlog("%d x %d", _screenWidth, _screenHeight);
 
-    OPlogInfo("Created window of size: %d x %d",
-              _screenWidth, _screenHeight);
+    //OPint _screenWidth = OPRENDER_SCREEN_WIDTH;
+    //OPint _screenHeight = OPRENDER_SCREEN_HEIGHT;
+
+    //OPlog("%d x %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
+
+    //OPlog("%d x %d", _screenWidth, _screenHeight);
+
+
+
+
+
+    //window = glfwCreateWindow(_screenWidth, _screenHeight,
+    //                          "OPifex Entertainment", monitor, NULL);
+
+    //OPlog("%d x %d", _screenWidth, _screenHeight);
+
+    //OPlogInfo("Created window of size: %d x %d",
+    //          _screenWidth, _screenHeight);
 
 
     int major, minor, rev;
     glfwGetVersion(&major, &minor, &rev);
 
-    OPlog("OpenGL version set %d.%d.%d", major, minor, rev);
+    OPlog("GLFW version %d.%d.%d", major, minor, rev);
 
-	int w, h;
-	glfwGetFramebufferSize(window, &w, &h);
-	OPRENDER_SCREEN_WIDTH = (ui32)w;
-	OPRENDER_SCREEN_HEIGHT = (ui32)h;
+	//int w, h;
+	//glfwGetFramebufferSize(window, &w, &h);
+	//OPRENDER_SCREEN_WIDTH = (ui32)w;
+	//OPRENDER_SCREEN_HEIGHT = (ui32)h;
 
-    OPRENDER_SCREEN_WIDTH_SCALE = _screenWidth / (f32)OPRENDER_SCREEN_WIDTH;
-    OPRENDER_SCREEN_HEIGHT_SCALE = _screenHeight / (f32)OPRENDER_SCREEN_HEIGHT;
-    OPRENDER_SCALED_WIDTH = OPRENDER_SCREEN_WIDTH * OPRENDER_SCREEN_WIDTH_SCALE;
-    OPRENDER_SCALED_HEIGHT = OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE;
-    OPlogInfo("Frame Buffer size: %d x %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
-    OPlogDebug("Scale: %f x %f", OPRENDER_SCREEN_WIDTH_SCALE, OPRENDER_SCREEN_HEIGHT_SCALE);
+ //   OPRENDER_SCREEN_WIDTH_SCALE = _screenWidth / (f32)OPRENDER_SCREEN_WIDTH;
+ //   OPRENDER_SCREEN_HEIGHT_SCALE = _screenHeight / (f32)OPRENDER_SCREEN_HEIGHT;
+ //   OPRENDER_SCALED_WIDTH = OPRENDER_SCREEN_WIDTH * OPRENDER_SCREEN_WIDTH_SCALE;
+ //   OPRENDER_SCALED_HEIGHT = OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE;
+ //   OPlogInfo("Frame Buffer size: %d x %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
+ //   OPlogDebug("Scale: %f x %f", OPRENDER_SCREEN_WIDTH_SCALE, OPRENDER_SCREEN_HEIGHT_SCALE);
 
-    if(!window) {
-        OPlogErr("Failed to open GLFW window of %dx%d. If you have an Intel GPU, they are not 3.3 compatible.\n", OPRENDER_WIDTH, OPRENDER_HEIGHT );
-        glfwTerminate();
-        return -1;
-    }
+ //   if(!window) {
+ //       OPlogErr("Failed to open GLFW window of %dx%d. If you have an Intel GPU, they are not 3.3 compatible.\n", OPRENDER_WIDTH, OPRENDER_HEIGHT );
+ //       glfwTerminate();
+ //       return -1;
+ //   }
 
 	OPRENDER_INITIALIZED = 1;
-
+/*
     glfwMakeContextCurrent(window);
     OPglError("OPrenderInit error glfw current context window");
 
     glfwSetWindowFocusCallback(window, glfwWindowFocusCallback);
+*/
+    //OPrenderSetViewport(0, 0, (OPuint)OPRENDER_SCREEN_WIDTH, (OPuint)OPRENDER_SCREEN_HEIGHT);
+    //OPglError("OPrenderInit error viewport set");
 
-    glewExperimental = GL_TRUE;
-    OPrenderSetViewport(0, 0, (OPuint)OPRENDER_SCREEN_WIDTH, (OPuint)OPRENDER_SCREEN_HEIGHT);
-    OPglError("OPrenderInit error viewport set");
+	//glewExperimental = GL_TRUE;
+	//if (glewInit() != GLEW_OK) {
+	//	OPlogErr("Failed to init glew");
+	//	return -1;
+	//}
 
-    if (glewInit() != GLEW_OK) return -1;
+ //   OPglError("OPrenderInit error glew initialed");
 
-    OPglError("OPrenderInit error glew initialed");
-
-    glfwSetInputMode(window, GLFW_STICKY_KEYS, true);
+    //glfwSetInputMode(window, GLFW_STICKY_KEYS, true);
 
     //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetCharCallback(window, glfwCharacterCallback);
-    glfwSetDropCallback(window, glfwWindowDropCallback);
+    //glfwSetCharCallback(window, glfwCharacterCallback);
+    //glfwSetDropCallback(window, glfwWindowDropCallback);
 
-    OPglError("OPrenderInit error glfw setup");
+    //OPglError("OPrenderInit error glfw setup");
 
 
-    GLuint temp;
-    glGenVertexArrays(1, &temp);
-    OPRENDER_VAO = temp;
-    glBindVertexArray(OPRENDER_VAO);
+    //GLuint temp;
+    //glGenVertexArrays(1, &temp);
+    //OPRENDER_VAO = temp;
+    //glBindVertexArray(OPRENDER_VAO);
 
-    OPglError("OPrenderInit error VAO");
+    //OPglError("OPrenderInit error VAO");
 
-    glEnable(GL_MULTISAMPLE_ARB);
-    glEnable(GL_BLEND);
-    glEnable(GL_MULTISAMPLE);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glEnable(GL_MULTISAMPLE_ARB);
+    //glEnable(GL_BLEND);
+    //glEnable(GL_MULTISAMPLE);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    OPRENDER_WIDTH = OPRENDER_SCREEN_WIDTH;
-    OPRENDER_HEIGHT = OPRENDER_SCREEN_HEIGHT;
+    //OPRENDER_WIDTH = OPRENDER_SCREEN_WIDTH;
+    //OPRENDER_HEIGHT = OPRENDER_SCREEN_HEIGHT;
 
-    OPlogInfo("OpenGL Context Created W:%d H:%d", OPRENDER_WIDTH, OPRENDER_HEIGHT);
+    //OPlogInfo("OpenGL Context Created W:%d H:%d", OPRENDER_WIDTH, OPRENDER_HEIGHT);
 
-    OPglError("OPrenderInit error clear end");
+    //OPglError("OPrenderInit error clear end");
     return 0;
+}
+
+OPwindow* OPrenderCreateWindow(OPmonitor* monitor, bool fullscreen, const OPchar* title, ui32 width, ui32 height) {
+	OPwindow* window = (OPwindow*)OPalloc(sizeof(OPwindow));
+	window->Init(monitor, fullscreen, title, width, height);
+	return window;
 }
 
 void  OPrenderClear(f32 r, f32 g, f32 b, f32 a) {
@@ -219,21 +241,24 @@ void OPrenderCullMode(OPint state) {
     }
 }
 void  OPrenderSwapBuffer () {
-    glfwSwapBuffers(window);
+	ASSERT(OPWINDOW_ACTIVE != NULL, "There must be an active window");
+    glfwSwapBuffers(OPWINDOW_ACTIVE->Window);
 }
 
 void OPrenderUpdate() {
+	ASSERT(OPWINDOW_ACTIVE != NULL, "There must be an active window");
 #ifdef OPIFEX_OPENGL_ES_2
 #else
 	glfwPollEvents();
-	if(glfwWindowShouldClose(window)){
+	if(glfwWindowShouldClose(OPWINDOW_ACTIVE->Window)){
 		OPend();
 	}
 #endif
 }
 
 void  OPrenderPresent    () {
-    glfwSwapBuffers(window);
+	ASSERT(OPWINDOW_ACTIVE != NULL, "There must be an active window");
+    glfwSwapBuffers(OPWINDOW_ACTIVE->Window);
 }
 void OPrenderBlend(OPint state) {
     if (state)

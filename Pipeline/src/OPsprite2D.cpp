@@ -66,7 +66,7 @@ void OPsprite2DSetSprite(OPsprite2D* sprite, i32 index) {
 }
 
 void OPsprite2DPrepRender(OPsprite2D* sprite) {
-	OPmeshBind(&SPRITE_2D_QUAD_MESH_PIPELINE);
+	SPRITE_2D_QUAD_MESH_PIPELINE.Bind();
 	OPeffectBind(sprite->Effect);
 
 

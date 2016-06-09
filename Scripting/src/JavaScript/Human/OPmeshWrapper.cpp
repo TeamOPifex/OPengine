@@ -66,7 +66,7 @@ JS_RETURN_VAL _OPmeshBind(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmesh* mesh = JS_GET_ARG_PTR(args, 0, OPmesh);
-    OPmeshBind(mesh);
+	mesh->Bind();
 
     JS_RETURN_NULL;
 }

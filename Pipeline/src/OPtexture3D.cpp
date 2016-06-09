@@ -45,7 +45,7 @@ void OPtexture3DDestroy(OPtexture3D* tex3d) {
 }
 
 void OPtexture3DPrepRender(OPtexture3D* tex3d, OPcam* camera) {
-	OPmeshBind(TEXTURE_3D_QUAD_MESH);
+	TEXTURE_3D_QUAD_MESH->Bind();
 	OPeffectBind(tex3d->Effect);
 
 	OPrenderDepth(0);

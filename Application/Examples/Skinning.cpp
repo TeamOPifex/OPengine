@@ -138,7 +138,7 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_S) / -100.0f);
 	OPskeletonUpdate(skinningExample->skeleton);
 
-	OPmeshBind(skinningExample->Mesh);
+	skinningExample->Mesh->Bind();
 	OPeffectBind(skinningExample->Effect);
 
 	OPmat4 world;

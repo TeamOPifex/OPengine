@@ -224,7 +224,7 @@ OPsphericalCube OPsphericalCubeCreate(OPimage * faces) {
 
 	for (OPint i = 0; i < 6; i++) {
 		result.sides[i] = OPmeshCreate();
-		OPmeshBind(&result.sides[i]);
+		result.sides[i].Bind();
 
 		OPmeshBuild(
 				sizeof(OPsphericalCubeVertex), sizeof(ui16),
@@ -442,7 +442,7 @@ OPsphericalCube OPsphericalCubeCreate(ui16 size) {
 
 	for (OPint i = 0; i < 6; i++) {
 		result.sides[i] = OPmeshCreate();
-		OPmeshBind(&result.sides[i]);
+		result.sides[i].Bind();
 
 		OPmeshBuild(
 			sizeof(OPsphericalCubeVertex), sizeof(ui16),

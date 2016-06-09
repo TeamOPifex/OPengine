@@ -35,7 +35,7 @@ void ExampleSelectorEnter(OPgameState* last) {
     // The background image to use
 	OPcmanLoadGet("subtle-irongrip.png");
 	exampleSelector.Background = OPtexture2DCreate((OPtexture*)OPcmanLoadGet("subtle-irongrip.png"), NULL, OPVEC2_ZERO, OPvec2Create(3, 3));
-	exampleSelector.Background->Scale = OPvec2Create(2,2);
+	exampleSelector.Background->Scale = OPvec2Create(3,2);
 
     if(!exampleSelector.Initialized) {
        // This ensures that our menu selections stay in place
@@ -115,10 +115,10 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 
    // Move the current menu selection up and down
    // Automatically wrap around if it exceeds the bounds of options
-	if (OPkeyboardWasPressed(OPKEY_W) || OPkeyboardWasPressed(OPKEY_UP) || OPgamePadLeftThumbNowUp(exampleSelector.Controller) || OPgamePadWasPressed(exampleSelector.Controller, OPGAMEPADBUTTON_DPAD_UP)) {
+	if (OPkeyboardWasPressed(OPKEY_W) || OPkeyboardWasPressed(OPKEY_UP) || exampleSelector.Controller->LeftThumbNowUp() || exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_DPAD_UP)) {
 		exampleSelector.Selected--;
 	}
-	if (OPkeyboardWasPressed(OPKEY_S) || OPkeyboardWasPressed(OPKEY_DOWN) || OPgamePadLeftThumbNowDown(exampleSelector.Controller) || OPgamePadWasPressed(exampleSelector.Controller, OPGAMEPADBUTTON_DPAD_DOWN)) {
+	if (OPkeyboardWasPressed(OPKEY_S) || OPkeyboardWasPressed(OPKEY_DOWN) || exampleSelector.Controller->LeftThumbNowDown() || exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_DPAD_DOWN)) {
 		exampleSelector.Selected++;
 	}
    if (exampleSelector.Selected < 0) exampleSelector.Selected = currentCategoryCount - 1;
@@ -134,7 +134,7 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
    }
 
    // When an example is selected:
-	if (exampleSelector.Examples[actualSelected].available && (OPkeyboardWasPressed(OPKEY_SPACE) || OPkeyboardWasPressed(OPKEY_E)|| OPkeyboardWasPressed(OPKEY_D) || OPkeyboardWasPressed(OPKEY_ENTER)  || OPgamePadWasPressed(exampleSelector.Controller, OPGAMEPADBUTTON_A) || OPgamePadWasPressed(exampleSelector.Controller, OPGAMEPADBUTTON_DPAD_RIGHT))) {
+	if (exampleSelector.Examples[actualSelected].available && (OPkeyboardWasPressed(OPKEY_SPACE) || OPkeyboardWasPressed(OPKEY_E)|| OPkeyboardWasPressed(OPKEY_D) || OPkeyboardWasPressed(OPKEY_ENTER)  || exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_A) || exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_DPAD_RIGHT))) {
 
        // Hard coded to category [3] which is Exit
        if(actualSelected == 3) {
@@ -156,7 +156,7 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 	}
 
    // Jump backwards in the hierarchy
-   if ((OPkeyboardWasPressed(OPKEY_BACKSPACE) || OPkeyboardWasPressed(OPKEY_A) || OPgamePadWasPressed(exampleSelector.Controller, OPGAMEPADBUTTON_BACK)|| OPgamePadWasPressed(exampleSelector.Controller, OPGAMEPADBUTTON_B) || OPgamePadWasPressed(exampleSelector.Controller, OPGAMEPADBUTTON_DPAD_LEFT))) {
+   if ((OPkeyboardWasPressed(OPKEY_BACKSPACE) || OPkeyboardWasPressed(OPKEY_A) || exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_BACK)|| exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_B) || exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_DPAD_LEFT))) {
        exampleSelector.HierarchyDepth[exampleSelector.CurrentHierarchy + 1] = exampleSelector.Selected;
        exampleSelector.CurrentHierarchy = -1;
        exampleSelector.CurrentDepth--;

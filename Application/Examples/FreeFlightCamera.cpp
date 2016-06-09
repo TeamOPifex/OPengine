@@ -53,7 +53,7 @@ void ExampleFreeFlightRender(OPfloat delta) {
 	OPrenderDepth(1);
 	OPrenderClear(0, 0, 0);
 
-	OPmeshBind(freeFlightExample.Mesh);
+	freeFlightExample.Mesh->Bind();
 	OPeffectBind(freeFlightExample.Effect);
 
 	OPmat4 world;

@@ -26,40 +26,67 @@ struct OPvec2 {
 		OPfloat row[2];
 	};
 
+	OPvec2() {
+		x = 0; y = 0;
+	}
+
+	OPvec2(OPfloat x, OPfloat y) {
+		this->x = x;
+		this->y = y;
+	}
+
 	OPvec2 operator=(OPvec2 vhs) { 
 		OPmemcpy(this, &vhs, sizeof(OPvec2)); return *this;
 	}
+
 	inline OPvec2 operator+=(OPfloat vhs) {
 		this->x += vhs;
 		this->y += vhs;
 		return *this; 
 	}
+
 	inline OPvec2 operator+=(OPvec2 vhs) { 
 		OPvec2Add(this, this, &vhs); 
 		return *this; 
 	}
+
 	inline OPvec2 operator-=(OPvec2 vhs) { 
 		OPvec2Sub(this, this, &vhs); 
 		return *this; 
 	}
+
 	inline OPvec2 operator*=(OPvec2 vhs) { 
 		OPvec2Mul(this, this, &vhs); 
 		return *this; 
 	}
+
 	inline OPvec2 operator*=(OPfloat vhs) { 
 		OPvec2Scl(this, this, vhs); 
 		return *this; 
 	}
+
 	inline OPvec2 operator/=(OPvec2 vhs) { 
 		OPvec2Div(this, this, &vhs); 
 		return *this; 
 	}
+
 	inline OPvec2 operator/=(OPfloat vhs) { 
 		OPvec2Div(this, this, vhs); 
 		return *this; 
 	}
+
 	inline OPfloat& operator[](i32 i) {
 		return row[i];
+	}
+
+	// Normalizes the array
+	void Norm() {
+		OPfloat l = (OPfloat)OPsqrt(this->x * this->x + this->y * this->y);
+		if (l == 0) {
+			return;
+		}
+		this->x /= l;
+		this->y /= l;
 	}
 };
 

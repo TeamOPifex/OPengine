@@ -61,7 +61,7 @@ void OPtexture2DDestroy(OPtexture2D* tex2d) {
 }
 
 void OPtexture2DPrepRender(OPtexture2D* tex2d) {
-	OPmeshBind(TEXTURE_2D_QUAD_MESH);
+	TEXTURE_2D_QUAD_MESH->Bind();
 	OPeffectBind(tex2d->Effect);
 
 	OPrenderDepth(0);

@@ -26,7 +26,7 @@ OPmesh* OPmeshCreate(OPmeshDesc desc) {
 	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
     mesh->Id = OPMESH_GLOBAL_ID++;
 	(*mesh) = OPmeshCreate();
-	OPmeshBind(mesh);
+	mesh->Bind();
 
 	OPmeshBuild(desc.VertexSize, desc.IndexSize, desc.VertexCount, desc.IndexCount, desc.Vertices, desc.Indices);
 
@@ -45,10 +45,10 @@ void OPmeshBuild(ui32 vertSize, ui32 indSize,
 }
 
 //-----------------------------------------------------------------------------
-void OPmeshBind(OPmesh* mesh){
-	OPrenderBindBuffer(&mesh->VertexBuffer);
-	OPrenderBindBuffer(&mesh->IndexBuffer);
-	OPMESH_ACTIVE_PTR = OPMESH_ACTIVE = mesh;
+void OPmesh::Bind(){
+	OPrenderBindBuffer(&VertexBuffer);
+	OPrenderBindBuffer(&IndexBuffer);
+	OPMESH_ACTIVE_PTR = OPMESH_ACTIVE = this;
 }
 
 //-----------------------------------------------------------------------------

@@ -46,7 +46,7 @@ struct OPresourceFile {
 typedef struct OPresourceFile OPresourceFile;
 
 struct OPassetLoader {
-	const OPchar Extension[8];
+	const OPchar Extension[16];
 	const OPchar* AssetTypePath;
 	OPint AssetSize;
 	OPint(*Load)(OPstream* stream, void** assetOut);

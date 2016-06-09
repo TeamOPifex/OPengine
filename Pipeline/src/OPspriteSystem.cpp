@@ -99,7 +99,7 @@ void OPspriteSystemRender(OPspriteSystem* system, OPcam* cam) {
 	OPmat4 world, view;
 	view = OPmat4Translate(cam->pos * -1);
 
-	OPmeshBind(&system->_mesh);
+	system->_mesh.Bind();
 	OPeffectBind(system->Effect);
 
 	OPtexturePixelate();

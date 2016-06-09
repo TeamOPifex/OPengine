@@ -55,7 +55,7 @@ ui16 OPquadIndexData[] = {
 
 OPmesh OPquadCreate(){
 	OPmesh mesh = OPmeshCreate();
-	OPmeshBind(&mesh);
+	mesh.Bind();
 	OPmeshBuild(
 		sizeof(OPfloat) * 5, sizeof(ui16),
 		4, 6,
@@ -89,7 +89,7 @@ OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 texcoordStart, OPvec2 
 
 OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
 	OPmesh mesh = OPmeshCreate();
-	OPmeshBind(&mesh);
+	mesh.Bind();
 
 	// 1, 1,
 	// 0, 1,
@@ -123,7 +123,7 @@ OPmeshPacked OPquadCreatePacked(){
 //-----------------------------------------------------------------------------
 OPmesh OPquadNormCreate(){
 	OPmesh mesh = OPmeshCreate();
-	OPmeshBind(&mesh);
+	mesh.Bind();
 	OPmeshBuild(
 		sizeof(OPfloat) * 8, sizeof(ui16),
 		4, 6,
@@ -165,7 +165,7 @@ OPmesh OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OP
 	};
 
 	OPmesh mesh = OPmeshCreate();
-	OPmeshBind(&mesh);
+	mesh.Bind();
 	OPmeshBuild(
 		sizeof(OPfloat)* 5, sizeof(ui16),
 		4, 6,

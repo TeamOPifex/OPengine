@@ -9,9 +9,7 @@
 #include "./Data/include/OPcman.h"
 
 struct OPmodel;
-void OPmodelBind(OPmodel model, OPmaterial* material);
-void OPmodelBind(OPmodel model, OPmaterial* material, OPcam* camera);
-void OPmodelDraw(OPmodel model, OPmaterial* material, OPcam* camera);
+typedef struct OPmodel OPmodel;
 
 struct OPmodel {
 	OPmat4 world;
@@ -22,20 +20,14 @@ struct OPmodel {
 		this->world = OPMAT4_IDENTITY;
 	}
 
-	void Bind(OPmaterial* material) {
-	    OPmodelBind(*this, material);
-	}
-
-	void Bind(OPmaterial* material, OPcam* camera) {
-	    OPmodelBind(*this, material, camera);
-	}
-
-	void Draw(OPmaterial* material, OPcam* camera) {
-	    OPmodelDraw(*this, material, camera);
-	}
+	void Bind(OPmaterial* material);
+	void Bind(OPmaterial* material, OPcam* camera);
+	void Draw(OPmaterial* material, OPcam* camera);
 };
-typedef struct OPmodel OPmodel;
 
+
+struct OPmodelTextured;
+typedef struct OPmodelTextured OPmodelTextured;
 
 struct OPmodelTextured {
 	OPmodel model;
@@ -46,6 +38,5 @@ struct OPmodelTextured {
 		texture = OPtextureLoad(textureAsset);
 	}
 };
-typedef struct OPmodelTextured OPmodelTextured;
 
 #endif

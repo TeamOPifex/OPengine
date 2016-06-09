@@ -547,7 +547,7 @@ OPint OPMload(OPstream* str, OPmesh** mesh) {
 	//OPlog("Creating vertex and buffers");
 	// Create Vertex & Index Buffers for Mesh
 	OPmesh temp = OPmeshCreate();
-	OPmeshBind(&temp);
+	temp.Bind();
 	OPlogDebug("VERTEX STRIDE %u", data.vertexLayout.stride);
 	OPmeshBuild(
 		data.vertexLayout.stride, data.indexSize,
@@ -845,7 +845,7 @@ OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh){
 	OPMPartition(&data, triTable, vertList, 1);
 
 	OPmesh temp = OPmeshCreate();
-	OPmeshBind(&temp);
+	temp.Bind();
 	OPmeshBuild(
 		data.vertexLayout.stride, data.indexSize,
 		data.vertexCount, data.indexCount,

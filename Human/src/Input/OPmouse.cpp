@@ -2,6 +2,7 @@
 #include "./Human/include/Rendering/OPrender.h"
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
+#include "./Core/include/Assert.h"
 
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 	#include <GLFW/glfw3.h>
@@ -27,21 +28,22 @@ OPmouseState Mouse = {
 
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 void OPmouseUpdate() {
-	glfwSetScrollCallback(window, scrollCB);
+	ASSERT(OPWINDOW_ACTIVE != NULL, "There must be an active window");
+	glfwSetScrollCallback(OPWINDOW_ACTIVE->Window, scrollCB);
 	OPmemcpy(&Mouse.prevKeys, &Mouse.keys, sizeof(OPint)* _OPMOUSE_MAX);
 	Mouse.prevPositionX = Mouse.positionX;
 	Mouse.prevPositionY = Mouse.positionY;
 	Mouse.prevWheel = Mouse.wheel;
 
 	for(ui32 i = 0; i < _OPMOUSE_MAX; i++) {
-		Mouse.keys[i] = glfwGetMouseButton(window, OPmouseMapping[i]);
+		Mouse.keys[i] = glfwGetMouseButton(OPWINDOW_ACTIVE->Window, OPmouseMapping[i]);
 		//if(Mouse.keys[i]) {
 		//	OPlog("Key %d : %d", i, OPmouseCodes[i]);
 		//}
 	}
 	// TODO: Fix this with the callback for GLFW3ß
 	d64 x, y;
-	glfwGetCursorPos(window, &x, &y);
+	glfwGetCursorPos(OPWINDOW_ACTIVE->Window, &x, &y);
 	//OPmouseSetPositionScreenCenter();
 	Mouse.positionX = x;
 	Mouse.positionY = y;

@@ -8,7 +8,6 @@ cmake_minimum_required(VERSION 2.8)
 # Include Directories
 #########################################
 add_opifex_includes()
-add_marketplace_addons_projects()
 
 #########################################
 # Source Files

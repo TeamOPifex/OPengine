@@ -16,7 +16,7 @@ inline void OPfontRender(const OPchar* text, OPvec2 pos) {
 }
 
 inline void OPfontColor(OPvec4 color) {
-	OPmeshBind(&OPFONTMANAGER_ACTIVE->dummyMesh.mesh);
+	OPFONTMANAGER_ACTIVE->dummyMesh.mesh.Bind();
 	OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
 	OPeffectParamVec4("uColor", &color);
 }

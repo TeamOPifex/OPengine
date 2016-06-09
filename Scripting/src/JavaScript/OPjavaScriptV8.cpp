@@ -249,7 +249,7 @@ Handle<Object> _OPscriptV8WrapOS() {
     return Local<Object>::New(isolate, exportsOS);
 }
 
-OPchar* _OPscriptV8NormalizePath(const OPchar* path) {
+OPchar* _OPscriptV8NormalizePath(const OPchar* path, bool assumeModule) {
 
     // Get a copy of the current argument path that we can use to alter it
     OPchar* pathCopy = OPstringCopy(path);
@@ -268,7 +268,7 @@ OPchar* _OPscriptV8NormalizePath(const OPchar* path) {
 
     // If the require doesn't end with a .js or a .ops then load from node_modules
 
-    if (!OPstringEndsWith(pathToLoad, jsEnd) && !OPstringEndsWith(pathToLoad, opsEnd)) {
+    if (assumeModule && !OPstringEndsWith(pathToLoad, jsEnd) && !OPstringEndsWith(pathToLoad, opsEnd)) {
         OPchar* start = OPstringCreateMerged("node_modules/", pathToLoad);
         OPchar* result = OPstringCreateMerged(start, "/index.js");
         OPfree(start);
@@ -282,39 +282,67 @@ OPchar* _OPscriptV8NormalizePath(const OPchar* path) {
 
 
 void _OPscriptV8Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
-    SCOPE_AND_ISOLATE;
+	SCOPE_AND_ISOLATE;
 
-    if (args.Length() == 0 || !args[0]->IsString()) return;
+	if (args.Length() == 0 || !args[0]->IsString()) return;
 
-    v8::String::Utf8Value utf8(args[0]);
-    const char *arg0 = *utf8;
+	v8::String::Utf8Value utf8(args[0]);
+	const char *arg0 = *utf8;
 
 	OPlog("Requiring: %s", arg0);
 
-    if (OPstringEquals(arg0, "OP")) {
-        args.GetReturnValue().Set(_OPscriptV8WrapEngine());
-        return;
-    }
+	if (OPstringEquals(arg0, "OP")) {
+		args.GetReturnValue().Set(_OPscriptV8WrapEngine());
+		return;
+	}
 
-    if (OPstringEquals(arg0, "os")) {
-        args.GetReturnValue().Set(_OPscriptV8WrapOS());
-        return;
-    }
+	if (OPstringEquals(arg0, "os")) {
+		args.GetReturnValue().Set(_OPscriptV8WrapOS());
+		return;
+	}
 
-    Handle<Object> currGlobal = args.Callee()->CreationContext()->Global();
-    Handle<Value> __dirname = currGlobal->Get(JS_NEW_STRING("__dirname"));
+	Handle<Object> currGlobal = args.Callee()->CreationContext()->Global();
+	Handle<Value> __dirname = currGlobal->Get(JS_NEW_STRING("__dirname"));
 
-    String::Utf8Value str(__dirname->ToString());
-    //OPlog("__dirname %s", *str);
+	String::Utf8Value str(__dirname->ToString());
+	//OPlog("__dirname %s", *str);
 
-    if (OPJAVASCRIPTV8_REQUIRE == NULL || !OPJAVASCRIPTV8_REQUIRE(args)) {
-        OPchar *pathToLoad = _OPscriptV8NormalizePath(arg0);
+	if (OPJAVASCRIPTV8_REQUIRE == NULL || !OPJAVASCRIPTV8_REQUIRE(args)) {
+		OPchar *pathToLoad = _OPscriptV8NormalizePath(arg0, true);
 		Handle<Value> result;
-		if(_OPjavaScriptRequire(pathToLoad, &result)) {
-	        args.GetReturnValue().Set(result);
+		if (_OPjavaScriptRequire(pathToLoad, &result)) {
+			args.GetReturnValue().Set(result);
 		}
-        OPfree(pathToLoad);
-    }
+		OPfree(pathToLoad);
+	}
+
+}
+
+
+void _OPscriptV8Load(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	SCOPE_AND_ISOLATE;
+
+	if (args.Length() == 0 || !args[0]->IsString()) return;
+
+	v8::String::Utf8Value utf8(args[0]);
+	const char *arg0 = *utf8;
+
+	OPlog("Load: %s", arg0);
+
+	Handle<Object> currGlobal = args.Callee()->CreationContext()->Global();
+	Handle<Value> __dirname = currGlobal->Get(JS_NEW_STRING("__dirname"));
+
+	String::Utf8Value str(__dirname->ToString());
+	//OPlog("__dirname %s", *str);
+
+	if (OPJAVASCRIPTV8_REQUIRE == NULL || !OPJAVASCRIPTV8_REQUIRE(args)) {
+		OPchar *pathToLoad = _OPscriptV8NormalizePath(arg0, false);
+		Handle<Value> result;
+		if (_OPjavaScriptRequire(pathToLoad, &result)) {
+			args.GetReturnValue().Set(result);
+		}
+		OPfree(pathToLoad);
+	}
 
 }
 
@@ -338,7 +366,8 @@ OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, 
 	Handle<ObjectTemplate> global = JS_NEW_OBJECT_TEMPLATE();
 	global->Set(JS_NEW_STRING("module"), JS_NEW_OBJECT_TEMPLATE());
 	global->Set(JS_NEW_STRING("global"), JS_NEW_OBJECT_TEMPLATE());
-    global->Set(JS_NEW_STRING("require"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8Require));
+	global->Set(JS_NEW_STRING("require"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8Require));
+	global->Set(JS_NEW_STRING("load"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8Load));
     global->Set(JS_NEW_STRING("setImmediate"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8SetImmediate));
 	_OPscriptV8SetConsole(global);
 
