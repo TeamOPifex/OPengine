@@ -75,6 +75,49 @@ struct OPvec3 {
 	inline OPfloat& operator[](i32 i) {
 		return row[i];
 	}
+
+
+	inline OPvec3 operator+(OPvec3 vhs) {
+		OPvec3 temp(0, 0, 0);
+		OPvec3Add(&temp, this, &vhs);
+		return temp;
+	}
+	inline OPvec3 operator-(OPvec3 vhs) {
+		OPvec3 temp(0, 0, 0);
+		OPvec3Sub(&temp, this, &vhs);
+		return temp;
+	}
+	inline OPvec3 operator*(OPvec3 vhs) {
+		OPvec3 temp(0, 0, 0);
+		OPvec3Mul(&temp, this, &vhs);
+		return temp;
+	}
+
+	/*inline OPvec3 operator*(OPfloat vhs) {
+		OPvec3 temp(0, 0, 0);
+		OPvec3Scl(&temp, this, vhs);
+		return temp;
+	}*/
+	inline OPvec3 operator/(OPvec3 vhs) {
+		OPvec3 temp(0, 0, 0);
+		OPvec3Div(&temp, this, &vhs);
+		return temp;
+	}
+	inline OPvec3 operator/(OPfloat vhs) {
+		OPvec3 temp(0, 0, 0);
+		OPvec3Div(&temp, this, vhs);
+		return temp;
+	}
+	//inline OPvec3 operator/(OPvec3 vhs) {
+	//	OPvec3 temp(0, 0, 0);
+	//	OPvec3Div(&temp, &vhs, this);
+	//	return temp;
+	//}
+
+	inline bool operator==(const OPvec3& vhs) {
+		return this->x == vhs.x && this->y == vhs.y && this->z == vhs.z;
+	}
+
 	
 	// Normalizes the array
 	void Norm() {
@@ -87,6 +130,30 @@ struct OPvec3 {
 		this->z /= l;
 	}
 };
+
+#ifndef CASTXML
+inline OPvec3 operator*(OPfloat lhs, OPvec3& rhs)
+{
+	OPvec3 temp;
+	OPvec3Scl(&temp, &rhs, lhs);
+	return temp;
+}
+inline OPvec3 operator*(OPvec3& rhs, OPfloat vhs) {
+	OPvec3 temp(0, 0, 0);
+	OPvec3Scl(&temp, &rhs, vhs);
+	return temp;
+}
+inline OPvec3 operator*(const OPvec3& rhs, OPfloat vhs) {
+	return OPvec3(rhs.x * vhs, rhs.y * vhs, rhs.z * vhs);
+}
+#endif
+
+//inline OPvec3 operator*(OPvec3 lhs, OPfloat& rhs)
+//{
+//	OPvec3 temp;
+//	OPvec3Scl(&temp, &lhs, rhs);
+//	return temp;
+//}
 
 extern const OPvec3 OPVEC3_ZERO;
 extern const OPvec3 OPVEC3_ONE;
@@ -106,51 +173,6 @@ inline OPvec3 OPvec3Create(OPvec2 xy, OPfloat z) {
 inline OPvec3 OPvec3Create(OPfloat x) {
 	OPvec3 tmp(x, x, x);
 	return tmp;
-}
-
-inline OPvec3 operator+(OPvec3 lhs, OPvec3 vhs) { 
-	OPvec3 temp(0, 0, 0);
-	OPvec3Add(&temp, &lhs, &vhs); 
-	return temp; 
-}
-inline OPvec3 operator-(OPvec3 lhs, OPvec3 vhs) { 
-	OPvec3 temp(0, 0, 0);
-	OPvec3Sub(&temp, &lhs, &vhs); 
-	return temp; 
-}
-inline OPvec3 operator*(OPvec3 lhs, OPvec3 vhs) { 
-	OPvec3 temp(0, 0, 0);
-	OPvec3Mul(&temp, &lhs, &vhs); 
-	return temp; 
-}
-inline OPvec3 operator*(OPvec3 lhs, OPfloat vhs) { 
-	OPvec3 temp(0, 0, 0);
-	OPvec3Scl(&temp, &lhs, vhs); 
-	return temp; 
-}
-inline OPvec3 operator*(OPfloat lhs, OPvec3 vhs) { 
-	OPvec3 temp(0, 0, 0);
-	OPvec3Scl(&temp, &vhs, lhs); 
-	return temp; 
-}
-inline OPvec3 operator/(OPvec3 lhs, OPvec3 vhs) { 
-	OPvec3 temp(0, 0, 0);
-	OPvec3Div(&temp, &lhs, &vhs); 
-	return temp; 
-}
-inline OPvec3 operator/(OPvec3 lhs, OPfloat vhs) { 
-	OPvec3 temp(0, 0, 0);
-	OPvec3Div(&temp, &lhs, vhs); 
-	return temp; 
-}
-inline OPvec3 operator/(OPfloat lhs, OPvec3 vhs) {
-	OPvec3 temp(0, 0, 0);
-	OPvec3Div(&temp, &vhs, lhs);
-	return temp;
-}
-
-inline bool operator==(const OPvec3& lhs, const OPvec3& vhs) {
-	return lhs.x == vhs.x && lhs.y == vhs.y && lhs.z == vhs.z;
 }
 
 //    ___            _         _ _        _       _ _   _              _   _    
@@ -205,12 +227,11 @@ inline OPfloat OPvec3Dot(OPvec3 a, OPvec3 b) {
 }
 
 inline OPvec3 OPvec3Cross(OPvec3 a, OPvec3 b) {
-	OPvec3 v = {
-		a.y * b.z - a.z * b.y,
-		a.z * b.x - a.x * b.z,
-		a.x * b.y - a.y * b.x,
-	};
-	return v;
+	return OPvec3(
+		(a.y * b.z) - (a.z * b.y),
+		(a.z * b.x) - (a.x * b.z),
+		(a.x * b.y) - (a.y * b.x)
+	);
 }
 
 inline OPfloat OPvec3Len(OPvec3 v) {

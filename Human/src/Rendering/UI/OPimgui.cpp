@@ -99,14 +99,14 @@ void _radio(
 	OPfloat halfHeight = size.y / 2.5f;
 
 	OPvec2 points[8];
-	points[0] = OPvec2Create(pos.x - size.x, pos.y - halfHeight);
-	points[1] = OPvec2Create(pos.x - size.x, pos.y + halfHeight);
-	points[2] = OPvec2Create(pos.x - halfWidth, pos.y + size.y);
-	points[3] = OPvec2Create(pos.x + halfWidth, pos.y + size.y);
-	points[4] = OPvec2Create(pos.x + size.x, pos.y + halfHeight);
-	points[5] = OPvec2Create(pos.x + size.x, pos.y - halfHeight);
-	points[6] = OPvec2Create(pos.x + halfWidth, pos.y - size.y);
-	points[7] = OPvec2Create(pos.x - halfWidth, pos.y - size.y);
+	points[0] = OPvec2(pos.x - size.x, pos.y - halfHeight);
+	points[1] = OPvec2(pos.x - size.x, pos.y + halfHeight);
+	points[2] = OPvec2(pos.x - halfWidth, pos.y + size.y);
+	points[3] = OPvec2(pos.x + halfWidth, pos.y + size.y);
+	points[4] = OPvec2(pos.x + size.x, pos.y + halfHeight);
+	points[5] = OPvec2(pos.x + size.x, pos.y - halfHeight);
+	points[6] = OPvec2(pos.x + halfWidth, pos.y - size.y);
+	points[7] = OPvec2(pos.x - halfWidth, pos.y - size.y);
 
 	OPimguiVertex data[24];
 	for(OPint i = 0; i < 8; i++) {
@@ -162,7 +162,7 @@ OPint OPimguiTextbox(OPvec2 pos, const OPchar* text, const OPchar* placeholder, 
 	OPint clicked = mouseWithin && OPmouseWasPressed(OPMOUSE_LBUTTON);
 
 
-	_block(pos, OPvec2Create(400, size.y), OPIMGUI_ACTIVE->secondaryColor);
+	_block(pos, OPvec2(400, size.y), OPIMGUI_ACTIVE->secondaryColor);
 
 	OPvec2 p = pos;
 	p.x += OPIMGUI_ACTIVE->padding[0];

@@ -28,7 +28,7 @@ JS_RETURN_VAL _OPfontRender(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     String::Utf8Value str(args[0]->ToString());
-    OPvec2 pos = OPvec2Create(args[1]->NumberValue(), args[2]->NumberValue());
+    OPvec2 pos = OPvec2(args[1]->NumberValue(), args[2]->NumberValue());
     OPfontRender(*str, pos);
 
     JS_RETURN_NULL;

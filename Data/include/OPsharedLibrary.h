@@ -43,6 +43,9 @@ OPint OPsharedLibraryClose(OPsharedLibrary* sharedLibrary);
 #define STRING_MERGE_3(A,B,C) STRING_MERGE_NX(A,B,C)
 #define OPDLL_PATH(A) "lib" #A ".dylib"
 
+struct OPdll;
+typedef struct OPdll OPdll;
+
 struct OPdll {
 	#ifdef OPIFEX_WINDOWS
 		HMODULE library;

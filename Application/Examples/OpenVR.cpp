@@ -101,13 +101,13 @@ void SetupDistortion()
 		for (int x = 0; x<m_iLensGridSegmentCountH; x++)
 		{
 			u = x*w; v = 1 - y*h;
-			vert.position = OPvec2Create(Xoffset + u, -1 + 2 * y*h);
+			vert.position = OPvec2(Xoffset + u, -1 + 2 * y*h);
 
 			vr::DistortionCoordinates_t dc0 = openVRExample.hmd->ComputeDistortion(vr::Eye_Left, u, v);
 
-			vert.texCoordRed = OPvec2Create(dc0.rfRed[0], 1 - dc0.rfRed[1]);
-			vert.texCoordGreen = OPvec2Create(dc0.rfGreen[0], 1 - dc0.rfGreen[1]);
-			vert.texCoordBlue = OPvec2Create(dc0.rfBlue[0], 1 - dc0.rfBlue[1]);
+			vert.texCoordRed = OPvec2(dc0.rfRed[0], 1 - dc0.rfRed[1]);
+			vert.texCoordGreen = OPvec2(dc0.rfGreen[0], 1 - dc0.rfGreen[1]);
+			vert.texCoordBlue = OPvec2(dc0.rfBlue[0], 1 - dc0.rfBlue[1]);
 
 			vVerts.push_back(vert);
 		}
@@ -120,13 +120,13 @@ void SetupDistortion()
 		for (int x = 0; x<m_iLensGridSegmentCountH; x++)
 		{
 			u = x*w; v = 1 - y*h;
-			vert.position = OPvec2Create(Xoffset + u, -1 + 2 * y*h);
+			vert.position = OPvec2(Xoffset + u, -1 + 2 * y*h);
 
 			vr::DistortionCoordinates_t dc0 = openVRExample.hmd->ComputeDistortion(vr::Eye_Right, u, v);
 
-			vert.texCoordRed = OPvec2Create(dc0.rfRed[0], 1 - dc0.rfRed[1]);
-			vert.texCoordGreen = OPvec2Create(dc0.rfGreen[0], 1 - dc0.rfGreen[1]);
-			vert.texCoordBlue = OPvec2Create(dc0.rfBlue[0], 1 - dc0.rfBlue[1]);
+			vert.texCoordRed = OPvec2(dc0.rfRed[0], 1 - dc0.rfRed[1]);
+			vert.texCoordGreen = OPvec2(dc0.rfGreen[0], 1 - dc0.rfGreen[1]);
+			vert.texCoordBlue = OPvec2(dc0.rfBlue[0], 1 - dc0.rfBlue[1]);
 
 			vVerts.push_back(vert);
 		}

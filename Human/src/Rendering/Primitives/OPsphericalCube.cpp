@@ -51,7 +51,7 @@ OPsphericalCube OPsphericalCubeCreate(OPimage * faces) {
 				OPvec3 pos = OPvec3Create(xPos, yPos, max.z);
 
 				verts[OP_SPHERICAL_CUBE_SIDE_BACK][x * LWH + y].pos = pos;
-				verts[OP_SPHERICAL_CUBE_SIDE_BACK][x * LWH + y].uv = OPvec2Create(x / (float)(LWH - 1), y / (float)(LWH - 1));
+				verts[OP_SPHERICAL_CUBE_SIDE_BACK][x * LWH + y].uv = OPvec2(x / (float)(LWH - 1), y / (float)(LWH - 1));
 			}
 		}
 	}
@@ -73,7 +73,7 @@ OPsphericalCube OPsphericalCubeCreate(OPimage * faces) {
 				OPvec3 pos = OPvec3Create(xPos, yPos, max.z);
 
 				verts[OP_SPHERICAL_CUBE_SIDE_FRONT][x * LWH + y].pos = pos;
-				verts[OP_SPHERICAL_CUBE_SIDE_FRONT][x * LWH + y].uv = OPvec2Create(x / (float)(LWH - 1), y / (float)(LWH - 1));
+				verts[OP_SPHERICAL_CUBE_SIDE_FRONT][x * LWH + y].uv = OPvec2(x / (float)(LWH - 1), y / (float)(LWH - 1));
 			}
 		}
 	}
@@ -95,7 +95,7 @@ OPsphericalCube OPsphericalCubeCreate(OPimage * faces) {
 				OPvec3 pos = OPvec3Create(max.x, yPos, xPos);
 
 				verts[OP_SPHERICAL_CUBE_SIDE_LEFT][x * LWH + y].pos = pos;
-				verts[OP_SPHERICAL_CUBE_SIDE_LEFT][x * LWH + y].uv = OPvec2Create(x / (float)(LWH - 1), y / (float)(LWH - 1));
+				verts[OP_SPHERICAL_CUBE_SIDE_LEFT][x * LWH + y].uv = OPvec2(x / (float)(LWH - 1), y / (float)(LWH - 1));
 			}
 		}
 	}
@@ -117,7 +117,7 @@ OPsphericalCube OPsphericalCubeCreate(OPimage * faces) {
 				OPvec3 pos = OPvec3Create(max.x, yPos, xPos);
 
 				verts[OP_SPHERICAL_CUBE_SIDE_RIGHT][x * LWH + y].pos = pos;
-				verts[OP_SPHERICAL_CUBE_SIDE_RIGHT][x * LWH + y].uv = OPvec2Create(x / (float)(LWH - 1), y / (float)(LWH - 1));
+				verts[OP_SPHERICAL_CUBE_SIDE_RIGHT][x * LWH + y].uv = OPvec2(x / (float)(LWH - 1), y / (float)(LWH - 1));
 			}
 		}
 	}
@@ -139,7 +139,7 @@ OPsphericalCube OPsphericalCubeCreate(OPimage * faces) {
 				OPvec3 pos = OPvec3Create(xPos, max.y, yPos);
 
 				verts[OP_SPHERICAL_CUBE_SIDE_TOP][x * LWH + y].pos = pos;
-				verts[OP_SPHERICAL_CUBE_SIDE_TOP][x * LWH + y].uv = OPvec2Create(x / (float)(LWH - 1), y / (float)(LWH - 1));
+				verts[OP_SPHERICAL_CUBE_SIDE_TOP][x * LWH + y].uv = OPvec2(x / (float)(LWH - 1), y / (float)(LWH - 1));
 			}
 		}
 	}
@@ -161,7 +161,7 @@ OPsphericalCube OPsphericalCubeCreate(OPimage * faces) {
 				OPvec3 pos = OPvec3Create(xPos, max.y, yPos);
 
 				verts[OP_SPHERICAL_CUBE_SIDE_BOTTOM][x * LWH + y].pos = pos;
-				verts[OP_SPHERICAL_CUBE_SIDE_BOTTOM][x * LWH + y].uv = OPvec2Create(x / (float)(LWH - 1), y / (float)(LWH - 1));
+				verts[OP_SPHERICAL_CUBE_SIDE_BOTTOM][x * LWH + y].uv = OPvec2(x / (float)(LWH - 1), y / (float)(LWH - 1));
 			}
 		}
 	}
@@ -279,7 +279,7 @@ OPsphericalCube OPsphericalCubeCreate(ui16 size) {
 				OPvec3 pos = OPvec3Create(xPos, yPos, max.z);
 
 				verts[OP_SPHERICAL_CUBE_SIDE_BACK][x * LWH + y].pos = pos;
-				verts[OP_SPHERICAL_CUBE_SIDE_BACK][x * LWH + y].uv = OPvec2Create(x / (float)(LWH - 1), y / (float)(LWH - 1));
+				verts[OP_SPHERICAL_CUBE_SIDE_BACK][x * LWH + y].uv = OPvec2(x / (float)(LWH - 1), y / (float)(LWH - 1));
 			}
 		}
 	}
@@ -301,7 +301,7 @@ OPsphericalCube OPsphericalCubeCreate(ui16 size) {
 				OPvec3 pos = OPvec3Create(xPos, yPos, max.z);
 
 				verts[OP_SPHERICAL_CUBE_SIDE_FRONT][x * LWH + y].pos = pos;
-				verts[OP_SPHERICAL_CUBE_SIDE_FRONT][x * LWH + y].uv = OPvec2Create(x / (float)(LWH - 1), y / (float)(LWH - 1));
+				verts[OP_SPHERICAL_CUBE_SIDE_FRONT][x * LWH + y].uv = OPvec2(x / (float)(LWH - 1), y / (float)(LWH - 1));
 			}
 		}
 	}
@@ -323,7 +323,7 @@ OPsphericalCube OPsphericalCubeCreate(ui16 size) {
 				OPvec3 pos = OPvec3Create(max.x, yPos, xPos);
 
 				verts[OP_SPHERICAL_CUBE_SIDE_LEFT][x * LWH + y].pos = pos;
-				verts[OP_SPHERICAL_CUBE_SIDE_LEFT][x * LWH + y].uv = OPvec2Create(x / (float)(LWH - 1), y / (float)(LWH - 1));
+				verts[OP_SPHERICAL_CUBE_SIDE_LEFT][x * LWH + y].uv = OPvec2(x / (float)(LWH - 1), y / (float)(LWH - 1));
 			}
 		}
 	}
@@ -345,7 +345,7 @@ OPsphericalCube OPsphericalCubeCreate(ui16 size) {
 				OPvec3 pos = OPvec3Create(max.x, yPos, xPos);
 
 				verts[OP_SPHERICAL_CUBE_SIDE_RIGHT][x * LWH + y].pos = pos;
-				verts[OP_SPHERICAL_CUBE_SIDE_RIGHT][x * LWH + y].uv = OPvec2Create(x / (float)(LWH - 1), y / (float)(LWH - 1));
+				verts[OP_SPHERICAL_CUBE_SIDE_RIGHT][x * LWH + y].uv = OPvec2(x / (float)(LWH - 1), y / (float)(LWH - 1));
 			}
 		}
 	}
@@ -367,7 +367,7 @@ OPsphericalCube OPsphericalCubeCreate(ui16 size) {
 				OPvec3 pos = OPvec3Create(xPos, max.y, yPos);
 
 				verts[OP_SPHERICAL_CUBE_SIDE_TOP][x * LWH + y].pos = pos;
-				verts[OP_SPHERICAL_CUBE_SIDE_TOP][x * LWH + y].uv = OPvec2Create(x / (float)(LWH - 1), y / (float)(LWH - 1));
+				verts[OP_SPHERICAL_CUBE_SIDE_TOP][x * LWH + y].uv = OPvec2(x / (float)(LWH - 1), y / (float)(LWH - 1));
 			}
 		}
 	}
@@ -389,7 +389,7 @@ OPsphericalCube OPsphericalCubeCreate(ui16 size) {
 				OPvec3 pos = OPvec3Create(xPos, max.y, yPos);
 
 				verts[OP_SPHERICAL_CUBE_SIDE_BOTTOM][x * LWH + y].pos = pos;
-				verts[OP_SPHERICAL_CUBE_SIDE_BOTTOM][x * LWH + y].uv = OPvec2Create(x / (float)(LWH - 1), y / (float)(LWH - 1));
+				verts[OP_SPHERICAL_CUBE_SIDE_BOTTOM][x * LWH + y].uv = OPvec2(x / (float)(LWH - 1), y / (float)(LWH - 1));
 			}
 		}
 	}
@@ -471,7 +471,7 @@ OPvec2 OPsphericalCubePlanePositionSide(const OPvec3 pos, OPsphericalCubeSide si
 			plane.position = OPvec3Create(0, 0.5, 0);
 			plane.normal = OPvec3Create(0, 1, 0);
 			result = OPplane3DIntersects(plane, ray, &position);
-			return OPvec2Create(position.x, position.z);
+			return OPvec2(position.x, position.z);
 		}
 
 		// Test Bottom
@@ -479,7 +479,7 @@ OPvec2 OPsphericalCubePlanePositionSide(const OPvec3 pos, OPsphericalCubeSide si
 			plane.position = OPvec3Create(0, -0.5, 0);
 			plane.normal = OPvec3Create(0, -1, 0);
 			result = OPplane3DIntersects(plane, ray, &position);
-			return OPvec2Create(-position.x, -position.z);
+			return OPvec2(-position.x, -position.z);
 		}
 
 		// Test Front
@@ -487,7 +487,7 @@ OPvec2 OPsphericalCubePlanePositionSide(const OPvec3 pos, OPsphericalCubeSide si
 			plane.position = OPvec3Create(0, 0, 0.5);
 			plane.normal = OPvec3Create(0, 0, 1);
 			result = OPplane3DIntersects(plane, ray, &position);
-			return OPvec2Create(position.x, -position.y);
+			return OPvec2(position.x, -position.y);
 		}
 
 		// Test Back
@@ -495,7 +495,7 @@ OPvec2 OPsphericalCubePlanePositionSide(const OPvec3 pos, OPsphericalCubeSide si
 			plane.position = OPvec3Create(0, 0, -0.5);
 			plane.normal = OPvec3Create(0, 0, -1);
 			result = OPplane3DIntersects(plane, ray, &position);
-			return OPvec2Create(position.x, -position.y);
+			return OPvec2(position.x, -position.y);
 		}
 
 		// Test Left
@@ -503,7 +503,7 @@ OPvec2 OPsphericalCubePlanePositionSide(const OPvec3 pos, OPsphericalCubeSide si
 			plane.position = OPvec3Create(-0.5, 0, 0);
 			plane.normal = OPvec3Create(-1, 0, 0);
 			result = OPplane3DIntersects(plane, ray, &position);
-			return OPvec2Create(-position.z, -position.y);
+			return OPvec2(-position.z, -position.y);
 		}
 
 		// Test Right
@@ -511,7 +511,7 @@ OPvec2 OPsphericalCubePlanePositionSide(const OPvec3 pos, OPsphericalCubeSide si
 			plane.position = OPvec3Create(0.5, 0, 0);
 			plane.normal = OPvec3Create(1, 0, 0);
 			result = OPplane3DIntersects(plane, ray, &position);
-			return OPvec2Create(position.z, -position.y);
+			return OPvec2(position.z, -position.y);
 		}
 
 		case _OP_SPHERICAL_CUBE_SIDE_MAX: {
@@ -540,7 +540,7 @@ OPvec2 OPsphericalCubePlanePosition(const OPvec3 pos, OPsphericalCubeSide* side)
 		if( result && OPabs(position.x) < 0.5 && OPabs(position.z) < 0.5) {
 			(*side) = OP_SPHERICAL_CUBE_SIDE_TOP;
 			//OPlg("T");
-			return OPvec2Create(position.x, position.z);
+			return OPvec2(position.x, position.z);
 		}
 	}
 
@@ -552,7 +552,7 @@ OPvec2 OPsphericalCubePlanePosition(const OPvec3 pos, OPsphericalCubeSide* side)
 		if( result && OPabs(position.x) < 0.5 && OPabs(position.z) < 0.5) {
 			(*side) = OP_SPHERICAL_CUBE_SIDE_BOTTOM;
 			//OPlg("B");
-			return OPvec2Create(-position.x, -position.z);
+			return OPvec2(-position.x, -position.z);
 		}
 	}
 
@@ -564,7 +564,7 @@ OPvec2 OPsphericalCubePlanePosition(const OPvec3 pos, OPsphericalCubeSide* side)
 		if( result && OPabs(position.x) < 0.5 && OPabs(position.y) < 0.5) {
 			(*side) = OP_SPHERICAL_CUBE_SIDE_FRONT;
 			//OPlg("F");
-			return OPvec2Create(position.x, -position.y);
+			return OPvec2(position.x, -position.y);
 		}
 	}
 
@@ -576,7 +576,7 @@ OPvec2 OPsphericalCubePlanePosition(const OPvec3 pos, OPsphericalCubeSide* side)
 		if( result && OPabs(position.x) < 0.5 && OPabs(position.y) < 0.5) {
 			(*side) = OP_SPHERICAL_CUBE_SIDE_BACK;
 			//OPlg("B");
-			return OPvec2Create(position.x, -position.y);
+			return OPvec2(position.x, -position.y);
 		}
 	}
 
@@ -588,7 +588,7 @@ OPvec2 OPsphericalCubePlanePosition(const OPvec3 pos, OPsphericalCubeSide* side)
 		if( result && OPabs(position.z) < 0.5 && OPabs(position.y) < 0.5) {
 			(*side) = OP_SPHERICAL_CUBE_SIDE_LEFT;
 			//OPlg("L");
-			return OPvec2Create(-position.z, -position.y);
+			return OPvec2(-position.z, -position.y);
 		}
 	}
 
@@ -600,7 +600,7 @@ OPvec2 OPsphericalCubePlanePosition(const OPvec3 pos, OPsphericalCubeSide* side)
 		if( result && OPabs(position.z) < 0.5 && OPabs(position.y) < 0.5) {
 			(*side) = OP_SPHERICAL_CUBE_SIDE_RIGHT;
 			//OPlg("R");
-			return OPvec2Create(position.z, -position.y);
+			return OPvec2(position.z, -position.y);
 		}
 	}
 

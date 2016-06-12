@@ -69,20 +69,20 @@ OPint ExampleIMGUIUpdate(OPtimer* time) {
 
 	OPimguiBegin();
 
-	if(OPimguiCheckbox(imguiExample.checked, OPvec2Create(570, 20), OPvec2Create(20, 20))) { //, OPvec4Create(0.9, 0.9, 0.9, 1), OPvec4Create(0.1,0.1,0.1,1));
+	if(OPimguiCheckbox(imguiExample.checked, OPvec2(570, 20), OPvec2(20, 20))) { //, OPvec4Create(0.9, 0.9, 0.9, 1), OPvec4Create(0.1,0.1,0.1,1));
 		imguiExample.checked = !imguiExample.checked;
 	}
-	//OPimguiLabel(OPvec2Create(50, 50), "TEST");
-	//OPimguiRadio(OPvec2Create(5,5), OPvec2Create(20, 20), OPvec4Create(0.9, 0.9, 0.9, 1), OPvec4Create(0.1,0.1,0.1, 1));
-	//OPimguiRadio(exampleSelector.imgui, OPvec2Create(300,150), OPvec2Create(10, 10), OPvec4Create(0.7, 0.7, 0.7, 1));
+	//OPimguiLabel(OPvec2(50, 50), "TEST");
+	//OPimguiRadio(OPvec2(5,5), OPvec2(20, 20), OPvec4Create(0.9, 0.9, 0.9, 1), OPvec4Create(0.1,0.1,0.1, 1));
+	//OPimguiRadio(exampleSelector.imgui, OPvec2(300,150), OPvec2(10, 10), OPvec4Create(0.7, 0.7, 0.7, 1));
 
-	if(OPimguiButton(OPvec2Create(440, 20), "TOGGLE")) {
+	if(OPimguiButton(OPvec2(440, 20), "TOGGLE")) {
 		imguiExample.clear.z = !imguiExample.clear.z;
 	}
 
 	imguiExample.textTimer += time->Elapsed;
 	//OPlog(" Active %d", exampleSelector.textActive);
-	OPint state = OPimguiTextbox(OPvec2Create(20, 20), imguiExample.buffer, "Your Name", imguiExample.textActive, imguiExample.textTimer % 500 > 250);
+	OPint state = OPimguiTextbox(OPvec2(20, 20), imguiExample.buffer, "Your Name", imguiExample.textActive, imguiExample.textTimer % 500 > 250);
 	if(state == 1) imguiExample.textActive = true;
 	else if (state == 2) imguiExample.textActive = false;
 

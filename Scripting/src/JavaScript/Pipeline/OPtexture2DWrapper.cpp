@@ -19,7 +19,7 @@ JS_RETURN_VAL _OPtexture2DCreate(const JS_ARGS& args) {
     OPtexture2D* tex2d;
 
     if(args.Length() > 2) {
-        tex2d = OPtexture2DCreate(texture, effect, OPvec2Create(args[2]->NumberValue(), args[3]->NumberValue()), OPvec2Create(args[4]->NumberValue(), args[5]->NumberValue()));
+        tex2d = OPtexture2DCreate(texture, effect, OPvec2(args[2]->NumberValue(), args[3]->NumberValue()), OPvec2(args[4]->NumberValue(), args[5]->NumberValue()));
     } else {
         tex2d = OPtexture2DCreate(texture, effect);
     }

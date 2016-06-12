@@ -34,8 +34,8 @@ void ExampleSelectorEnter(OPgameState* last) {
 
     // The background image to use
 	OPcmanLoadGet("subtle-irongrip.png");
-	exampleSelector.Background = OPtexture2DCreate((OPtexture*)OPcmanLoadGet("subtle-irongrip.png"), NULL, OPVEC2_ZERO, OPvec2Create(3, 3));
-	exampleSelector.Background->Scale = OPvec2Create(3,2);
+	exampleSelector.Background = OPtexture2DCreate((OPtexture*)OPcmanLoadGet("subtle-irongrip.png"), NULL, OPVEC2_ZERO, OPvec2(3, 3));
+	exampleSelector.Background->Scale = OPvec2(3,2);
 
     if(!exampleSelector.Initialized) {
        // This ensures that our menu selections stay in place
@@ -187,7 +187,7 @@ void ExampleSelectorRender(OPfloat delta) {
 
 	OPfontColor(OPvec4Create(1.0, 1.0, 1.0, 1));
 	exampleSelector.FontManager->scale = 0.75;
-	OPfontRender("OPengine v0.4.6", OPvec2Create(50, start - 60));
+	OPfontRender("OPengine v0.4.6", OPvec2(50, start - 60));
 
 	exampleSelector.FontManager->scale = 0.5;
 
@@ -232,7 +232,7 @@ void ExampleSelectorRender(OPfloat delta) {
 		// If it's a category it doesn't get pushed to the right
 		if (isActiveCategory) {
 			OPfontRender(exampleSelector.Examples[i].name,
-				OPvec2Create(75, start + 40 * pos));
+				OPvec2(75, start + 40 * pos));
 		}
 		else {
 			// If it's the root menu we don't offset to the right
@@ -240,7 +240,7 @@ void ExampleSelectorRender(OPfloat delta) {
 			// to help indicate that it's a sub-menu
 			OPint isNotRootMenu = (exampleSelector.CurrentHierarchy != -1) ? 1 : 0;
 			OPfontRender(exampleSelector.Examples[i].name,
-				OPvec2Create((OPfloat)(75 + 40 * isNotRootMenu),
+				OPvec2((OPfloat)(75 + 40 * isNotRootMenu),
 					start + 40 * (pos + isNotRootMenu)));
 			pos++;
 		}

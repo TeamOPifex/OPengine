@@ -12,11 +12,12 @@ struct OPmat3 {
 	OPmat3 operator=(OPmat3 vhs) { 
 		OPmemcpy(this, &vhs, sizeof(OPmat3)); return *this;
 	}
+
+	inline OPvec3* OPmat3Index(int idx) {
+		return &((OPvec3*)(this))[idx];
+	}
 };
 
-inline OPvec3* OPmat3Index(OPmat3* m, int idx){
-	return &((OPvec3*)(m))[idx];
-}
 
 inline void OPmat3Identity(OPmat3* dst) {
 	OPbzero(dst, sizeof(OPmat3));

@@ -163,8 +163,8 @@ typedef struct {
 		//ShadowFrameBuffer = OPframeBufferCreate(desc);
 
 		shadow2D = OPtexture2DCreate(&ShadowFrameBuffer.Texture);
-		shadow2D->Scale = OPvec2Create(0.25, 0.25);
-		shadow2D->Position = OPvec2Create(0.5, 0.5);
+		shadow2D->Scale = OPvec2(0.25, 0.25);
+		shadow2D->Position = OPvec2(0.5, 0.5);
 
 		// Setup the effect that will be used to render the depth
 		// onto the frame buffer.

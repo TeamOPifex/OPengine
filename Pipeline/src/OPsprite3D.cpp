@@ -168,5 +168,5 @@ OPvec2 OPsprite3DSize(OPsprite3D* sprite) {
 
 	f32 width = sprite->Scale.x * widthScale;
 	f32 height = sprite->Scale.y * heightScale;
-	return OPvec2Create(width, height);
+	return OPvec2(width, height);
 }

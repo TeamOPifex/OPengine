@@ -77,14 +77,14 @@ void SetQuadPoint(QuadPoint* point, f32 x, f32 y, f32 z, f32 u, f32 v) {
 }
 
 OPmesh OPquadCreate(OPfloat width, OPfloat height) {
-	return OPquadCreate(width, height, OPvec2Create(0, 0), OPvec2Create(0, 0), OPvec2Create(1, 1));
+	return OPquadCreate(width, height, OPvec2(0, 0), OPvec2(0, 0), OPvec2(1, 1));
 }
 
 OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset) {
-	return OPquadCreate(width, height, offset, OPvec2Create(0, 0), OPvec2Create(1, 1));
+	return OPquadCreate(width, height, offset, OPvec2(0, 0), OPvec2(1, 1));
 }
 OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
-	return OPquadCreate(width, height, OPvec2Create(0, 0), texcoordStart, texcoordEnd);
+	return OPquadCreate(width, height, OPvec2(0, 0), texcoordStart, texcoordEnd);
 }
 
 OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
@@ -146,10 +146,10 @@ void OPquadDestroy(OPmesh* quad){
 
 
 OPmesh OPquadCreateZPlane() {
-	return OPquadCreateZPlane(1, 1, OPvec2Create(0, 0), OPvec2Create(1, 1));
+	return OPquadCreateZPlane(1, 1, OPvec2(0, 0), OPvec2(1, 1));
 }
 OPmesh OPquadCreateZPlane(OPfloat width, OPfloat depth) {
-	return OPquadCreateZPlane(width, depth, OPvec2Create(0, 0), OPvec2Create(1, 1));
+	return OPquadCreateZPlane(width, depth, OPvec2(0, 0), OPvec2(1, 1));
 }
 OPmesh OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
 

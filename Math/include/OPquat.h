@@ -135,16 +135,16 @@ inline OPvec3 OPquatRight(OPquat a)
 }
 
 inline OPvec3 OPquatRot(OPquat q, OPvec3 p){
-	OPvec3 qp = { q.x, q.y, q.z };
+	OPvec3 qp( q.x, q.y, q.z );
 	// OPquat conj = OPquatConj(q);
 	// conj = OPquatMul(&qp, &conj);
 	// OPquat rot = OPquatMul(q, &conj);
 	// OPvec3 out = { rot.x, rot.y, rot.z };
 
-	OPvec3 c1 = OPvec3Cross(p, qp) + q.w * p;
+	OPvec3 c1 = OPvec3Cross(p, qp) + p * q.w;
 	OPvec3 c2 = OPvec3Cross(c1, qp);
 
-	return p + 2.0 * c2;
+	return p + c2 * 2.0;
 }
 
 inline OPfloat OPquatAngularDif(OPquat a, OPquat b){

@@ -193,7 +193,7 @@ OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const O
 		}
 	}
 
-	return OPvec2Create(width, height);
+	return OPvec2(width, height);
 }
 
 OPmesh OPfontCreateText(OPfont* font, OPchar* text) {
@@ -247,7 +247,7 @@ OPvec2 OPfontGetSize(OPfont* font, const OPchar* text, OPfloat scale) {
 			width += glyph->advanceX * scale;
 		}
 	}
-	return OPvec2Create(width, height);
+	return OPvec2(width, height);
 }
 
 OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text) {

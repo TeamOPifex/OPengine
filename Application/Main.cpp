@@ -72,7 +72,7 @@ void ApplicationInit() {
 	OPoculusStartup();
 	OPrenderInit();
 
-	i32 contain = 0;
+	i32 contain = 50;
 	mainWindow = OPrenderCreateWindow(NULL, false, "Main Window", OPMONITOR_LIST[0].VideoModeCurrent.Width - contain - contain, OPMONITOR_LIST[0].VideoModeCurrent.Height - contain - contain);
 	mainWindow->SetPosition(OPMONITOR_LIST[0].X + contain, OPMONITOR_LIST[0].Y + contain);
 	
@@ -118,7 +118,7 @@ void ApplicationRender(OPfloat delta) {
 
 	secondWindow->Bind();
 #ifdef ADDON_imgui
-	OPlog("Frame Started");
+	//OPlog("Frame Started");
 	OPimguiNewFrame();
 	{
 		static float f = 0.0f;
