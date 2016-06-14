@@ -119,41 +119,6 @@ output_library_from(LODEPNG "/External" "LodePNG")
 
 
 
-### Mongoose
-
-#########################################
-# Include Files
-#########################################
-add_source_group(include/ "${PROJECT_SOURCE_DIR}/External/Mongoose/include" MONGOOSE_SRC)
-
-#########################################
-# Source Files
-#########################################
-add_source_group(src/ "${PROJECT_SOURCE_DIR}/External/Mongoose/src" MONGOOSE_SRC)
-
-#########################################
-# BUILD
-#########################################
-if(${OPIFEX_OPTION_SHARED})
-add_library( MONGOOSE SHARED	${MONGOOSE_SRC})
-else()
-add_library( MONGOOSE STATIC	${MONGOOSE_SRC})
-endif()
-
-set_property(TARGET MONGOOSE PROPERTY FOLDER "External")
-set_target_properties(MONGOOSE PROPERTIES OUTPUT_NAME "Mongoose")
-
-if(${OPIFEX_OPTION_RELEASE})
-	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
-endif()
-
-populate_binary_directory()
-
-output_library_from(MONGOOSE "/External" "Mongoose")
-
-
-
-
 
 
 
