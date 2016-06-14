@@ -9,7 +9,8 @@
 
 struct OPvec2;
 typedef struct OPvec2 OPvec2;
-inline OPvec2 OPvec2Create(OPfloat x, OPfloat y);
+
+//inline OPvec2 OPvec2(OPfloat x, OPfloat y);
 
 inline void OPvec2Add(OPvec2* dst, OPvec2* a, OPvec2* b);
 inline void OPvec2Sub(OPvec2* dst, OPvec2* a, OPvec2* b);
@@ -26,93 +27,116 @@ struct OPvec2 {
 		OPfloat row[2];
 	};
 
+	OPvec2() {
+		x = 0; y = 0;
+	}
+
+	OPvec2(OPfloat x, OPfloat y) {
+		this->x = x;
+		this->y = y;
+	}
+
 	OPvec2 operator=(OPvec2 vhs) { 
 		OPmemcpy(this, &vhs, sizeof(OPvec2)); return *this;
 	}
+
 	inline OPvec2 operator+=(OPfloat vhs) {
 		this->x += vhs;
 		this->y += vhs;
 		return *this; 
 	}
+
 	inline OPvec2 operator+=(OPvec2 vhs) { 
 		OPvec2Add(this, this, &vhs); 
 		return *this; 
 	}
+
 	inline OPvec2 operator-=(OPvec2 vhs) { 
 		OPvec2Sub(this, this, &vhs); 
 		return *this; 
 	}
+
 	inline OPvec2 operator*=(OPvec2 vhs) { 
 		OPvec2Mul(this, this, &vhs); 
 		return *this; 
 	}
+
 	inline OPvec2 operator*=(OPfloat vhs) { 
 		OPvec2Scl(this, this, vhs); 
 		return *this; 
 	}
+
 	inline OPvec2 operator/=(OPvec2 vhs) { 
 		OPvec2Div(this, this, &vhs); 
 		return *this; 
 	}
+
 	inline OPvec2 operator/=(OPfloat vhs) { 
 		OPvec2Div(this, this, vhs); 
 		return *this; 
 	}
+
 	inline OPfloat& operator[](i32 i) {
 		return row[i];
+	}
+
+
+	inline OPvec2 operator+(OPvec2 vhs) {
+		OPvec2 temp(0, 0);
+		OPvec2Add(&temp, this, &vhs);
+		return temp;
+	}
+	inline OPvec2 operator-(OPvec2 vhs) {
+		OPvec2 temp(0, 0);
+		OPvec2Sub(&temp, this, &vhs);
+		return temp;
+	}
+	inline OPvec2 operator*(OPvec2 vhs) {
+		OPvec2 temp(0, 0);
+		OPvec2Mul(&temp, this, &vhs);
+		return temp;
+	}
+	inline OPvec2 operator*(OPfloat vhs) {
+		OPvec2 temp(0, 0);
+		OPvec2Scl(&temp, this, vhs);
+		return temp;
+	}
+	//inline OPvec2 operator*(OPvec2 vhs) {
+	//	OPvec2 temp(0, 0);
+	//	OPvec2Scl(&temp, &vhs, this);
+	//	return temp;
+	//}
+	inline OPvec2 operator/(OPvec2 vhs) {
+		OPvec2 temp(0, 0);
+		OPvec2Div(&temp, this, &vhs);
+		return temp;
+	}
+	inline OPvec2 operator/(OPfloat vhs) {
+		OPvec2 temp(0, 0);
+		OPvec2Div(&temp, this, vhs);
+		return temp;
+	}
+
+	//inline OPvec2 operator/(OPvec2 vhs) {
+	//	OPvec2 temp(0, 0);
+	//	OPvec2Div(&temp, &vhs, this);
+	//	return temp;
+	//}
+
+	// Normalizes the array
+	void Norm() {
+		OPfloat l = (OPfloat)OPsqrt(this->x * this->x + this->y * this->y);
+		if (l == 0) {
+			return;
+		}
+		this->x /= l;
+		this->y /= l;
 	}
 };
 
 extern const OPvec2 OPVEC2_ZERO;
 extern const OPvec2 OPVEC2_ONE;
 
-inline OPvec2 OPvec2Create(OPfloat x, OPfloat y) {
-    OPvec2 tmp;
-    tmp.x = x; tmp.y = y;
-	return tmp;
-}
-
-inline OPvec2 operator+(OPvec2 lhs, OPvec2 vhs) { 
-    OPvec2 temp = { 0.0, 0.0 };
-	OPvec2Add(&temp, &lhs, &vhs); 
-	return temp; 
-}
-inline OPvec2 operator-(OPvec2 lhs, OPvec2 vhs) { 
-	OPvec2 temp = { 0.0, 0.0 };
-	OPvec2Sub(&temp, &lhs, &vhs); 
-	return temp; 
-}
-inline OPvec2 operator*(OPvec2 lhs, OPvec2 vhs) { 
-	OPvec2 temp = { 0.0, 0.0 };
-	OPvec2Mul(&temp, &lhs, &vhs); 
-	return temp; 
-}
-inline OPvec2 operator*(OPvec2 lhs, OPfloat vhs) { 
-	OPvec2 temp = { 0.0, 0.0 };
-	OPvec2Scl(&temp, &lhs, vhs); 
-	return temp; 
-}
-inline OPvec2 operator*(OPfloat lhs, OPvec2 vhs) { 
-	OPvec2 temp = { 0.0, 0.0 };
-	OPvec2Scl(&temp, &vhs, lhs); 
-	return temp; 
-}
-inline OPvec2 operator/(OPvec2 lhs, OPvec2 vhs) { 
-	OPvec2 temp = { 0.0, 0.0 };
-	OPvec2Div(&temp, &lhs, &vhs); 
-	return temp; 
-}
-inline OPvec2 operator/(OPvec2 lhs, OPfloat vhs) { 
-	OPvec2 temp = { 0.0, 0.0 };
-	OPvec2Div(&temp, &lhs, vhs); 
-	return temp; 
-}
-
-inline OPvec2 operator/(OPfloat lhs, OPvec2 vhs) { 
-	OPvec2 temp = { 0.0, 0.0 };
-	OPvec2Div(&temp, &vhs, lhs); 
-	return temp; 
-}
 
 //    ___            _         _ _        _       _ _   _              _   _    
 //   / __|_  _ _ __ | |__  ___| (_)__    /_\  _ _(_) |_| |_  _ __  ___| |_(_)__ 
@@ -171,15 +195,15 @@ inline OPvec2 OPvec2Norm(OPvec2 a){
 	if(l == 0) {
 		return a;
 	}
-	return OPvec2Create(a.x / l, a.y / l);
+	return OPvec2(a.x / l, a.y / l);
 }
 
 inline OPvec2 OPvec2Perp(OPvec2 a){
-	return OPvec2Create(a.y, a.x);
+	return OPvec2(a.y, a.x);
 }
 
 inline OPfloat OPvec2Dist(OPvec2 a, OPvec2 b) {
-	OPvec2 tmp = OPvec2Create(a.x - b.x, a.y - b.y);
+	OPvec2 tmp = OPvec2(a.x - b.x, a.y - b.y);
 	return OPvec2Len(tmp);
 }
 
@@ -196,10 +220,10 @@ inline OPfloat OPvec2Angle(OPvec2 a, OPvec2 b) {
 }
 
 inline OPvec2 OPvec2Read(OPstream* str) {
-	OPvec2 temp = {
+	OPvec2 temp(
 		OPreadf32(str),
 		OPreadf32(str)
-	};
+	);
 	return temp;
 }
 

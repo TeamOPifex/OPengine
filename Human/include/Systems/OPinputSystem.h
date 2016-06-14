@@ -11,7 +11,7 @@
 inline void OPinputSystemUpdate(OPtimer* timer) {
 	OPkeyboardUpdate(timer);
 	OPmouseUpdate();
-	OPgamePadSystemUpdate();
+	OPGAMEPADSYSTEM.Update();
 }
 
 #endif

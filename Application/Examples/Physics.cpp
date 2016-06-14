@@ -242,7 +242,7 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 
 	OPmat4 world = OPMAT4_IDENTITY;
 
-	OPmeshBind(physicsExample->Mesh);
+	physicsExample->Mesh->Bind();
 	OPeffectBind(physicsExample->Effect);
 
 	OPtextureClearActive();
@@ -278,7 +278,7 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 		OPmeshRender();
 	}
 
-	OPmeshBind(physicsExample->MeshSphere);
+	physicsExample->MeshSphere->Bind();
 	OPeffectBind(physicsExample->SphereEffect);
 	OPeffectParamMat4("uProj", &physicsExample->Camera->proj);
 	OPeffectParamMat4("uView", &physicsExample->Camera->view);

@@ -118,7 +118,7 @@ i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
 	OPglError("OPimagePNGLoad:Error 6");
 
 	// clean up
-	OPfree(data);
+	free(data); // Clean up load png 
 	//OPstreamDestroy(str);
 
 	*image = tex;

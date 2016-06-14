@@ -138,14 +138,14 @@ OPint OPhashMapPut(OPhashMap *map, const OPchar* key, void* value)
 	}
 
 	// Create the Key & Value
-	new_key = (OPchar*)OPalloc((key_len + 1) * sizeof(OPchar));
-	if (new_key == NULL) return 0;
+	//new_key = (OPchar*)OPalloc((key_len + 1) * sizeof(OPchar));
+	//if (new_key == NULL) return 0;
 
 	if (bucket->count == 0) {
 		// Create the first KeyValuePair in the bucket
 		bucket->pairs = (KeyValuePair*)OPalloc(sizeof(KeyValuePair));
 		if (bucket->pairs == NULL) {
-			OPfree(new_key);
+			//OPfree(new_key);
 			return 0;
 		}
 		bucket->count = 1;
@@ -154,7 +154,7 @@ OPint OPhashMapPut(OPhashMap *map, const OPchar* key, void* value)
 		// Add to the array of pairs
 		tmp_pairs = (KeyValuePair*)OPrealloc(bucket->pairs, (bucket->count + 1) * sizeof(KeyValuePair));
 		if (tmp_pairs == NULL) {
-			OPfree(new_key);
+			//OPfree(new_key);
 			return 0;
 		}
 		bucket->pairs = tmp_pairs;

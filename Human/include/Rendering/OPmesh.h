@@ -71,6 +71,8 @@ struct OPmesh {
 	ui16 MetaCount;
 	OPMmeta* Meta;
 	ui64 Id;
+
+	void Bind();
 };
 typedef struct OPmesh OPmesh;
 
@@ -113,7 +115,7 @@ OPmesh OPmeshCreate();
 OPmesh* OPmeshCreate(OPmeshDesc desc);
 void OPmeshDestroy(OPmesh* mesh);
 void OPmeshBuild(ui32 vertSize, ui32 indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
-void OPmeshBind(OPmesh* mesh);
+
 
 void OPmeshRender();
 

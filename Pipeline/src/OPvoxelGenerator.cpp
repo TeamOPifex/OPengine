@@ -285,7 +285,7 @@ OPmesh* OPvoxelGeneratorBuild(struct OPvoxelGenerator* gen) {
 
 	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
 	(*mesh) = OPmeshCreate();
-	OPmeshBind(mesh);
+	mesh->Bind();
 
 	OPmeshDesc desc = OPvoxelGeneratorBuildDesc(gen);
 

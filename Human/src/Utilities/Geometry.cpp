@@ -131,7 +131,7 @@ OPmesh* OPgeoCreateSphere(f32 radius, ui16 widthSegments, ui16 heightSegments) {
 
 	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
 	*mesh = OPmeshCreate();
-	OPmeshBind(mesh);
+	mesh->Bind();
 
 	OPmeshBuild(
 		verticesStructure->size * sizeof(f32), 

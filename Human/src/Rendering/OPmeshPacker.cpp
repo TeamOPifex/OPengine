@@ -29,6 +29,7 @@ OPmeshPacker OPmeshPackerCreate(){
 
 	return packer;
 }
+
 //-----------------------------------------------------------------------------
 OPint OPmeshPackerDestroy(){
 	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
@@ -36,6 +37,13 @@ OPint OPmeshPackerDestroy(){
 	OPstreamDestroy(&packer->indices);
 	return 1;
 }
+
+OPint OPmeshPackerDestroy(OPmeshPacker* packer) {
+	OPstreamDestroy(&packer->vertices);
+	OPstreamDestroy(&packer->indices);
+	return 1;
+}
+
 //-----------------------------------------------------------------------------
 OPuint OPmeshPackerAddVB(ui32 vertexSize, void* verticesData, OPuint vertexCount){
 	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;

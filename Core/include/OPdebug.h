@@ -2,13 +2,15 @@
 #define TIMED_BLOCK_(num) TIMED_BLOCK__(num)
 #define TIMED_BLOCK TIMED_BLOCK_(__LINE__)
 
-struct timed_block {
+#include "./Core/include/OPtypes.h"
 
-	timed_block(OPint counter, OPchar* filename, OPint lineNumber, OPchar* filename) {
-
-	}
-
-	~timed_block() {
-
-	}
-};
+//struct timed_block {
+//
+//	timed_block(OPint counter, OPchar* filename, OPint lineNumber, OPchar* filename) {
+//
+//	}
+//
+//	~timed_block() {
+//
+//	}
+//};

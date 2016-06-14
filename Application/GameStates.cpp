@@ -158,7 +158,7 @@ OPint State0Update(OPtimer* time){
 
 	//OPwebServerQueue(server, "time", (i8*)&elapsed, sizeof(ui32));
 	t += 0.005f * time->Elapsed;
-	OPgamePadSystemUpdate();
+	OPGAMEPADSYSTEM.Update();
 	OPkeyboardUpdate(time);
 
 	if (backgroundState == 2) {
@@ -170,7 +170,7 @@ OPint State0Update(OPtimer* time){
 		OPrenderClear(color.x, color.y, color.z);
 	}
 
-	OPvec2 pos = OPgamePadLeftThumb(OPgamePadGet(OPGAMEPAD_ONE));
+	OPvec2 pos = OPgamePadGet(OPGAMEPAD_ONE)->LeftThumb();
 
 	if(OPkeyboardWasPressed(OPKEY_SPACE)){
 		//OPlog("Should play");
@@ -189,14 +189,14 @@ OPint State0Update(OPtimer* time){
 		OPlog("Queued Color Message");
 	}
 
-	if(OPgamePadIsDown(OPgamePadGet(OPGAMEPAD_ONE), OPGAMEPADBUTTON_BACK)){
+	if(OPgamePadGet(OPGAMEPAD_ONE)->IsDown(OPGAMEPADBUTTON_BACK)){
 		OPlog("Should end");
 		OPend();
 	}
 	OPmat4 world;
 	OPmat4Identity(&world);
 	OPrenderDepth(0);
-	OPmeshBind(&quadMesh);
+	quadMesh.Bind();
 	OPeffectBind(&OPss);
 	OPtextureClearActive();
 	ui32 textureHandle = OPtextureBind(bg->Sheet);
@@ -280,7 +280,7 @@ OPint State1Update(OPtimer* time){
 	world = OPmat4RotX(t);
 
 	OPmeshPackerBind(&packer);
-	OPmeshBind(plane);
+	plane->Bind();
 	OPeffectBind(&tri);
 
 	OPtextureBind(tex);
@@ -296,10 +296,10 @@ OPint State1Update(OPtimer* time){
 	//OPframeBufferBind(&rt);
 	
 	OPgamePad* _gamePad = OPgamePadGet(OPGAMEPAD_ONE);
-	OPgamePadUpdate(_gamePad);
+	_gamePad->Update();
 	
-	if(OPgamePadIsConnected(_gamePad)) {
-		if(OPgamePadIsDown(_gamePad, OPGAMEPADBUTTON_A) || OPgamePadIsDown(_gamePad, OPGAMEPADBUTTON_B) || OPgamePadIsDown(_gamePad, OPGAMEPADBUTTON_X) || OPgamePadIsDown(_gamePad, OPGAMEPADBUTTON_Y)) {
+	if(_gamePad->IsConnected()) {
+		if(_gamePad->IsDown(OPGAMEPADBUTTON_A) || _gamePad->IsDown(OPGAMEPADBUTTON_B) || _gamePad->IsDown(OPGAMEPADBUTTON_X) || _gamePad->IsDown(OPGAMEPADBUTTON_Y)) {
 			OPrenderClear( 0.0f, 0.0f, 1.0f);
 		} else {
 			OPrenderClear( 0.0f, 0.0f, 0.0f);
@@ -331,7 +331,7 @@ OPint State1Update(OPtimer* time){
 	}
 
 
-	if(OPgamePadIsConnected(_gamePad) && OPgamePadWasPressed(_gamePad, OPGAMEPADBUTTON_RIGHT_SHOULDER)){
+	if(_gamePad->IsConnected() && _gamePad->WasPressed(OPGAMEPADBUTTON_RIGHT_SHOULDER)){
 		return true;
 	}
 

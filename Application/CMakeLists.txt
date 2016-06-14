@@ -8,7 +8,6 @@ cmake_minimum_required(VERSION 2.8)
 # Include Directories
 #########################################
 add_opifex_includes()
-add_marketplace_addons_projects()
 
 #########################################
 # Source Files
@@ -79,4 +78,9 @@ add_opifex_xinput(9_Application)
 add_opifex_raknet(9_Application)
 
 message(STATUS "ADDING ${ADDON}")
-add_marketplace_addons(9_Application)
+if(${OPIFEX_OPTION_RELEASE})
+  SET(BINARY_RELEASE_MODE "release")
+else()
+  SET(BINARY_RELEASE_MODE "debug")
+endif()
+add_marketplace_addons(9_Application "Application/${BINARY_RELEASE_MODE}/")

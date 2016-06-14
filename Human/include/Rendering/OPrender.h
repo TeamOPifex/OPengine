@@ -25,7 +25,10 @@ extern void (*OP_WINDOW_DROP)(int, const OPchar**);
 void OPrenderDragAndDropCB(void (*cb)(int, const OPchar**));
 #endif
 
-OPint OPrenderInit(i32 width, i32 height);
+#include "./Human/include/Rendering/OPwindow.h"
+
+OPwindow* OPrenderCreateWindow(OPmonitor* monitor, bool fullscreen, const OPchar* title, ui32 width, ui32 height);
+OPint OPrenderInit();
 void  OPrenderClear(f32 r, f32 g, f32 b, f32 a);
 void  OPrenderSetScreenSize(ui32 width, ui32 height);
 void  OPrenderSetViewport(OPint x, OPint y, ui32 width, ui32 height);
@@ -63,9 +66,9 @@ inline void OPrenderBlendAdditive(){
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 }
 
-inline OPint OPrenderInit() {
-	return OPrenderInit(OPRENDER_WIDTH, OPRENDER_HEIGHT);
-}
+//inline OPint OPrenderInit() {
+//	return OPrenderInit(OPRENDER_WIDTH, OPRENDER_HEIGHT);
+//}
 inline void  OPrenderClear(f32 r, f32 g, f32 b) {
 	OPrenderClear(r,g,b,1.0f);
 }

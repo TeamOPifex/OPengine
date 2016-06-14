@@ -56,19 +56,19 @@ DeferredGBuffer* DeferredGBufferCreate() {
 //
 //	gbuffer->Position2D = OPtexture2DCreate(&gbuffer->Position, NULL);
 //	gbuffer->Position2D->Scale = OPvec2One * 0.25;
-//	gbuffer->Position2D->Position = OPvec2Create(-0.75, 0.75);
+//	gbuffer->Position2D->Position = OPvec2(-0.75, 0.75);
 //
 //	gbuffer->Diffuse2D = OPtexture2DCreate(&gbuffer->Diffuse, NULL);
 //	gbuffer->Diffuse2D->Scale = OPvec2One * 0.25;
-//	gbuffer->Diffuse2D->Position = OPvec2Create(0.75, 0.75);
+//	gbuffer->Diffuse2D->Position = OPvec2(0.75, 0.75);
 //
 //	gbuffer->Normal2D = OPtexture2DCreate(&gbuffer->Normal, NULL);
 //	gbuffer->Normal2D->Scale = OPvec2One * 0.25;
-//	gbuffer->Normal2D->Position = OPvec2Create(0.75, -0.75);
+//	gbuffer->Normal2D->Position = OPvec2(0.75, -0.75);
 //
 //	gbuffer->Depth2D = OPtexture2DCreate(&gbuffer->Depth, NULL);
 //	gbuffer->Depth2D->Scale = OPvec2One * 0.25;
-//	gbuffer->Depth2D->Position = OPvec2Create(-0.75, -0.75);
+//	gbuffer->Depth2D->Position = OPvec2(-0.75, -0.75);
 //
 	return gbuffer;
 }

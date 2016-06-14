@@ -64,7 +64,7 @@ typedef struct {
 
 		// Create the ground quad
 		GroundMesh = OPmeshCreate();
-		OPmeshBind(&GroundMesh);
+		GroundMesh.Bind();
 		OPmeshBuild(
 			sizeof(OPfloat) * 8, sizeof(ui16),
 			4, 6,
@@ -163,8 +163,8 @@ typedef struct {
 		//ShadowFrameBuffer = OPframeBufferCreate(desc);
 
 		shadow2D = OPtexture2DCreate(&ShadowFrameBuffer.Texture);
-		shadow2D->Scale = OPvec2Create(0.25, 0.25);
-		shadow2D->Position = OPvec2Create(0.5, 0.5);
+		shadow2D->Scale = OPvec2(0.25, 0.25);
+		shadow2D->Position = OPvec2(0.5, 0.5);
 
 		// Setup the effect that will be used to render the depth
 		// onto the frame buffer.
@@ -262,11 +262,11 @@ typedef struct {
 		OPrenderClear(0.1, 0.1, 0.1);
 
 		if (ViewFromLight) {
-			OPmodelDraw(Model, &ModelMaterials[1], &ShadowCamera);
-			OPmodelDraw(Ground, &GroundMaterials[1], &ShadowCamera);
+			Model.Draw(&ModelMaterials[1], &ShadowCamera);
+			Ground.Draw(&ModelMaterials[1], &ShadowCamera);
 		} else {
-			OPmodelDraw(Model, &ModelMaterials[1], &Camera.Camera);
-			OPmodelDraw(Ground, &GroundMaterials[1], &Camera.Camera);
+			Model.Draw(&ModelMaterials[1], &Camera.Camera);
+			Ground.Draw(&GroundMaterials[1], &Camera.Camera);
 		}
 
 		OPtexture2DRender(shadow2D);

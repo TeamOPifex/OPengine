@@ -67,9 +67,11 @@ void OPcmanUpdate(struct OPtimer* timer) {
 					change = OPfileLastChange(asset->AbsolutePath);
 					if (change != asset->LastChange) {
 						// OPlg("$, %s",asset->FullPath);
-						//if (asset->Reload(asset->FullPath, &asset->Asset)) {
-						//	asset->LastChange = change;
-						//}
+						OPstream* str = OPreadFileLarge(asset->FullPath, 1024);
+						if (asset->Reload(str, &asset->Asset)) {
+							asset->LastChange = change;
+						}
+						OPstreamDestroy(str);
 					}
 				}
 			}
@@ -208,8 +210,6 @@ OPint OPcmanLoad(const OPchar* key){
 				if (str == NULL) {
 					str = OPreadFileLarge(fullPath, 1024);
 				}
-				asset = NULL;
-				str->Source = fullPath;
 				success = loader.Load(str, &asset);
 				OPstreamDestroy(str);
 				if(success <= 0) {

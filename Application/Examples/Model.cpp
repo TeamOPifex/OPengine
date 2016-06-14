@@ -33,6 +33,7 @@ void ExampleModelEnter(OPgameState* last) {
 	// The OPcmanGet call returns a pointer to the resource (an OPmesh)
 	// that's contained in the Content Manager
 	//modelExample->Mesh = OPcubeCreate(OPvec3Create(1,0,0));
+	//OPmesh* mesh = (OPmesh*)OPcmanLoadGet("Box.obj");
 	modelExample->Mesh = *(OPmesh*)OPcmanLoadGet("output.opm");
 
 	// The effect that will be used to render the mesh

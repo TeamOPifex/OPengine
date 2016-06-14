@@ -14,7 +14,6 @@ macro(add_external_opifex_includes)
 		${OPIFEX_ENGINE_REPOSITORY}/External/Vorbis/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/VP8/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/Spine/include/
-		${OPIFEX_ENGINE_REPOSITORY}/External/Mongoose/include/
 		${BINARY_FOLDER}
 	)
 

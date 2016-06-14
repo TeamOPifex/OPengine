@@ -39,8 +39,8 @@ OPint ExampleParticleSystemUpdate(OPtimer* time) {
 	OPrenderClear(0, 0, 0);
 	
 	OPparticle p = {
-		{ {{0, 0, 0}} },
-		{ {{0, 0.001f, 0}} },
+		OPvec3(),
+		OPvec3(0, 0.001f, 0),
 		0.01f,
 		-0.001f,
 		3000,

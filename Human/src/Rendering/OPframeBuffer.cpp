@@ -156,6 +156,47 @@ OPframeBuffer OPframeBufferCreateDepth(OPtextureDescription desc) {
 	return fb;
 }
 
+// TODO: (garrett)This is sloppy and will be taken care of when I refactor OPframeBuffer
+OPframeBuffer OPframeBufferCreateVR(ui32 width, ui32 height) {
+
+	OPframeBuffer framebufferDesc;
+
+	glGenFramebuffers(1, &framebufferDesc.RenderFramebufferId);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebufferDesc.RenderFramebufferId);
+
+	glGenRenderbuffers(1, &framebufferDesc.DepthBufferId);
+	glBindRenderbuffer(GL_RENDERBUFFER, framebufferDesc.DepthBufferId);
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT, width, height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, framebufferDesc.DepthBufferId);
+
+	glGenTextures(1, &framebufferDesc.RenderTextureId);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, framebufferDesc.RenderTextureId);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA8, width, height, true);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, framebufferDesc.RenderTextureId, 0);
+
+	glGenFramebuffers(1, &framebufferDesc.ResolveFramebufferId);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebufferDesc.ResolveFramebufferId);
+
+	glGenTextures(1, &framebufferDesc.ResolveTextureId);
+	glBindTexture(GL_TEXTURE_2D, framebufferDesc.ResolveTextureId);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebufferDesc.ResolveTextureId, 0);
+
+	// check FBO status
+	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (status != GL_FRAMEBUFFER_COMPLETE)
+	{
+		OPlogErr("Failed to create frame buffer");
+		return framebufferDesc;
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	return framebufferDesc;
+}
+
 OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 	OPlog("OPEngine Frame Buffer 1");
 	OPframeBuffer fb = {

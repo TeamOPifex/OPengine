@@ -6,7 +6,7 @@
 #include "./Human/include/Rendering/OPcam.h"
 
 inline void OPmeshBindAndEffect(OPmesh* mesh, OPeffect* effect) {
-	OPmeshBind(mesh);
+	mesh->Bind();
 	OPeffectBind(effect);
 }
 
@@ -18,7 +18,7 @@ inline void OPmeshRender3D(OPmat4* world, OPcam* cam) {
 }
 
 inline void OPbindMeshEffectWorldCam(OPmesh* mesh, OPeffect* effect, OPmat4* world, OPcam* camera) {
-	OPmeshBind(mesh);
+	mesh->Bind();
 	OPeffectBind(effect);
 
 	//OPcamUpdate(camera);

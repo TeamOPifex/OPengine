@@ -120,7 +120,7 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	}
 
 	OPmat4 world;
-	OPmeshBind(&SPRITE_3D_QUAD_MESH);
+	SPRITE_3D_QUAD_MESH.Bind();
 	OPeffectBind(sprite->Effect);
 	
 	OPmat4Identity(&world);
@@ -168,5 +168,5 @@ OPvec2 OPsprite3DSize(OPsprite3D* sprite) {
 
 	f32 width = sprite->Scale.x * widthScale;
 	f32 height = sprite->Scale.y * heightScale;
-	return OPvec2Create(width, height);
+	return OPvec2(width, height);
 }

@@ -19,6 +19,18 @@ void LoadDefaultTexture2DEffect() {
 		);
 }
 
+void OPtexture2DUnloadGlobals() {
+	if (DEFAULT_TEXTURE2D_EFFECT != NULL) {
+		OPeffectUnload(DEFAULT_TEXTURE2D_EFFECT);
+		OPfree(DEFAULT_TEXTURE2D_EFFECT);
+	}
+	if (TEXTURE_2D_QUAD_MESH != NULL) {
+		OPmeshDestroy(TEXTURE_2D_QUAD_MESH);
+		OPfree(TEXTURE_2D_QUAD_MESH->Vertices);
+		OPfree(TEXTURE_2D_QUAD_MESH);
+	}
+}
+
 OPtexture2D* OPtexture2DCreate(OPtexture* texture, OPeffect* effect, OPvec2 uvStart, OPvec2 uvEnd) {
 	OPtexture2D* tex2d = (OPtexture2D*)OPalloc(sizeof(OPtexture2D));
 
@@ -49,7 +61,7 @@ void OPtexture2DDestroy(OPtexture2D* tex2d) {
 }
 
 void OPtexture2DPrepRender(OPtexture2D* tex2d) {
-	OPmeshBind(TEXTURE_2D_QUAD_MESH);
+	TEXTURE_2D_QUAD_MESH->Bind();
 	OPeffectBind(tex2d->Effect);
 
 	OPrenderDepth(0);

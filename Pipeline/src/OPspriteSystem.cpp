@@ -31,10 +31,10 @@ void OPspriteSystemInit(OPspriteSystem* system, OPsprite** sprites, OPint count,
 		system->_mesh = OPquadCreate(0.5f, 0.5f);
 		break;
 	case OPSPRITESYSTEMALIGN_BOTTOM_LEFT:
-		system->_mesh = OPquadCreate(0.5f, 0.5f, OPvec2Create(0.5, 0.5));
+		system->_mesh = OPquadCreate(0.5f, 0.5f, OPvec2(0.5, 0.5));
 		break;
 	default:
-		system->_mesh = OPquadCreate(0.5f, 0.5f, OPvec2Create(0.0, 0.5));
+		system->_mesh = OPquadCreate(0.5f, 0.5f, OPvec2(0.0, 0.5));
 	}
 
 	for (OPint i = 0; i < count; i++) {
@@ -99,7 +99,7 @@ void OPspriteSystemRender(OPspriteSystem* system, OPcam* cam) {
 	OPmat4 world, view;
 	view = OPmat4Translate(cam->pos * -1);
 
-	OPmeshBind(&system->_mesh);
+	system->_mesh.Bind();
 	OPeffectBind(system->Effect);
 
 	OPtexturePixelate();

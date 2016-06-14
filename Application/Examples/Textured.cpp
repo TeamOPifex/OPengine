@@ -67,7 +67,7 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 
 	if (OPkeyboardIsDown(OPKEY_SPACE)) { texturedExample->Rotation++; }
 
-	OPmeshBind(texturedExample->Mesh);
+	texturedExample->Mesh->Bind();
 	OPeffectBind(texturedExample->Effect);
 
 	OPmat4 world;

@@ -238,7 +238,7 @@ void OPstart(int argc, char** args) {
 }
 
 ui64 accumlator = 0;
-ui64 STEP = 10;
+ui64 STEP = 16;
 
 void OPstartStepped(int argc, char** args) {
 	OPtimer frameStepped;
@@ -263,7 +263,7 @@ void OPstartStepped(int argc, char** args) {
 		// This will usually only happen if we stopped at a breakpoint
 		// and then resumed. This will make sure that we don't try to
 		// update 15+ seconds at a time.
-		if (OPtime.Elapsed > 500) {
+		if (OPtime.Elapsed > 2000) {
 			OPtime.Elapsed = 16;
 		}
 #endif

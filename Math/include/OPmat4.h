@@ -2,7 +2,7 @@
 #define OPMATH_MAT4
 
 // INCLUDES
-
+#include "./Core/include/OPtypes.h"
 #include "./Math/include/OPvec2.h"
 #include "./Math/include/OPvec3.h"
 #include "./Math/include/OPvec4.h"
@@ -61,6 +61,13 @@ struct OPmat4 {
 	inline OPvec4& operator[](const i32 i) {
 		return cols[i];
 	}
+
+	inline OPmat4 operator*(OPmat4 rhs) {
+		OPmat4 temp;
+		OPmat4Mul(&temp, *this, rhs);
+		return temp;
+	}
+
 	inline OPmat4& operator*=(OPmat4 vhs) {
 		OPmat4Mul(this, *this, vhs);
 		return *this;
@@ -125,6 +132,7 @@ struct OPmat4 {
 		OPmat4Translate(this, -vhs->x, -vhs->y, -vhs->z);
 		return *this;
 	}
+
 
 	inline OPmat4* SetRotX(f32 val) {
 		*this = OPmat4RotX(val);
@@ -208,20 +216,6 @@ struct OPmat4 {
 };
 
 // INLINE DEFINITIONS
-
-inline OPvec3 operator*(OPvec3 lhs, OPmat4 rhs) {
-	return OPmat4Transform(lhs, rhs);
-}
-
-inline OPvec3 operator*(OPmat4 lhs, OPvec3 rhs) {
-	return OPmat4Transform(rhs, lhs);
-}
-
-inline OPmat4 operator*(OPmat4 lhs, OPmat4 rhs) {
-	OPmat4 temp;
-	OPmat4Mul(&temp, lhs, rhs);
-	return temp;
-}
 
 //    ___            _         _ _        _       _ _   _              _   _
 //   / __|_  _ _ __ | |__  ___| (_)__    /_\  _ _(_) |_| |_  _ __  ___| |_(_)__

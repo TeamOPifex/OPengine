@@ -10,7 +10,7 @@ OPint FontTestUpdate(OPtimer* time) {
 
 	OPrenderClear(0.1f,0.1f,0.1f,1);
 	OPfontRenderBegin(fontTestManager);
-	OPfontRender("test", OPvec2Create(0,0));
+	OPfontRender("test", OPvec2(0,0));
 	OPfontRenderEnd();
 
 	OPrenderPresent();

@@ -6,156 +6,228 @@
 #include "Enums/OPgamePadAxes.h"
 #include "Enums/OPgamePadButtons.h"
 #include "Enums/OPgamePadIndices.h"
+#include "./Core/include/Assert.h"
 
 #define CONTROLLERS 4
 
 struct OPgamePad {
-	OPint		playerIndex;
-	OPint           connected;
-	OPfloat		deadzone;
-	OPint           buttons[_OPGAMEPADBUTTON_MAX];
-	OPint           prevButtons[_OPGAMEPADBUTTON_MAX];
-	OPfloat		axes[_OPGAMEPADAXIS_MAX];
-	OPfloat		prevAxes[_OPGAMEPADAXIS_MAX];
+	OPgamePad(i8 index) {
+		controllerIndex = index;
+		connected = false;
+		deadzone = 0.1f;
+	}
+
+	i8 controllerIndex;
+	OPfloat axes[_OPGAMEPADAXIS_MAX];
+	OPfloat prevAxes[_OPGAMEPADAXIS_MAX];
+	OPfloat deadzone;
+	bool connected;
+	bool buttons[_OPGAMEPADBUTTON_MAX];
+	bool prevButtons[_OPGAMEPADBUTTON_MAX];
+
+	void Update();
+	void Reset();
+
+	OPvec2 LeftThumb();
+	OPvec2 RightThumb();
+	
+	OPint IsConnected() {
+		return connected;
+	}
+
+	void SetDeadzone(OPfloat deadzone) {
+		this->deadzone = deadzone;
+	}
+
+	// Buttons
+
+	bool IsDown(OPgamePadButton button) {
+		return buttons[button];
+	}
+	bool IsUp(OPgamePadButton button) {
+		return !buttons[button];
+	}
+	bool WasPressed(OPgamePadButton button) {
+		return buttons[button] && !prevButtons[button];
+	}
+	bool WasReleased(OPgamePadButton button) {
+		return !buttons[button] && prevButtons[button];
+	}
+
+	// Left Thumbstick
+
+	bool LeftThumbIsRight() { 
+		return axes[OPGAMEPADAXIS_LS_X] > deadzone; 
+	}
+	bool LeftThumbNowRight() { 
+		return prevAxes[OPGAMEPADAXIS_LS_X] <= deadzone && axes[OPGAMEPADAXIS_LS_X] > deadzone; 
+	}
+	bool LeftThumbWasRight() { 
+		return prevAxes[OPGAMEPADAXIS_LS_X] > deadzone && axes[OPGAMEPADAXIS_LS_X] <= deadzone; 
+	}
+	bool LeftThumbIsLeft() { 
+		return axes[OPGAMEPADAXIS_LS_X] < -deadzone; 
+	}
+	bool LeftThumbNowLeft() { 
+		return prevAxes[OPGAMEPADAXIS_LS_X] >= -deadzone && axes[OPGAMEPADAXIS_LS_X] < -deadzone; 
+	}
+	bool LeftThumbWasLeft() { 
+		return prevAxes[OPGAMEPADAXIS_LS_X] < -deadzone && axes[OPGAMEPADAXIS_LS_X] >= -deadzone; 
+	}
+	bool LeftThumbIsUp() { 
+		return axes[OPGAMEPADAXIS_LS_Y] > deadzone; 
+	}
+	bool LeftThumbNowUp() { 
+		return prevAxes[OPGAMEPADAXIS_LS_Y] <= deadzone && axes[OPGAMEPADAXIS_LS_Y] > deadzone; 
+	}
+	bool LeftThumbWasUp() { 
+		return prevAxes[OPGAMEPADAXIS_LS_Y] > deadzone && axes[OPGAMEPADAXIS_LS_Y] <= deadzone; 
+	}
+	bool LeftThumbIsDown() { 
+		return axes[OPGAMEPADAXIS_LS_Y] < -deadzone; 
+	}
+	bool LeftThumbNowDown() { 
+		return prevAxes[OPGAMEPADAXIS_LS_Y] >= -deadzone && axes[OPGAMEPADAXIS_LS_Y] < -deadzone; 
+	}
+	bool LeftThumbWasDown() {
+		return prevAxes[OPGAMEPADAXIS_LS_Y] < -deadzone && axes[OPGAMEPADAXIS_LS_Y] >= -deadzone; 
+	}
+	OPfloat LeftThumbX() {
+		return axes[OPGAMEPADAXIS_LS_X];
+	}
+	OPfloat LeftThumbY() {
+		return axes[OPGAMEPADAXIS_LS_Y];
+	}
+	
+	// Right Thumbstick
+
+	bool RightThumbIsRight() { 
+		return axes[OPGAMEPADAXIS_RS_X] > deadzone; 
+	}
+	bool RightThumbNowRight() { 
+		return prevAxes[OPGAMEPADAXIS_RS_X] <= deadzone && axes[OPGAMEPADAXIS_RS_X] > deadzone; 
+	}
+	bool RightThumbWasRight() { 
+		return prevAxes[OPGAMEPADAXIS_RS_X] > deadzone && axes[OPGAMEPADAXIS_RS_X] <= deadzone; 
+	}
+	bool RightThumbIsLeft() { 
+		return axes[OPGAMEPADAXIS_RS_X] < -deadzone; 
+	}
+	bool RightThumbNowLeft() { 
+		return prevAxes[OPGAMEPADAXIS_RS_X] >= -deadzone && axes[OPGAMEPADAXIS_RS_X] < -deadzone; 
+	}
+	bool RightThumbWasLeft() { 
+		return prevAxes[OPGAMEPADAXIS_RS_X] < -deadzone && axes[OPGAMEPADAXIS_RS_X] >= -deadzone; 
+	}
+	bool RightThumbIsUp() { 
+		return axes[OPGAMEPADAXIS_RS_Y] > deadzone; 
+	}
+	bool RightThumbNowUp() { 
+		return prevAxes[OPGAMEPADAXIS_RS_Y] <= deadzone && axes[OPGAMEPADAXIS_LS_Y] > deadzone; 
+	}
+	bool RightThumbWasUp() { 
+		return prevAxes[OPGAMEPADAXIS_RS_Y] > deadzone && axes[OPGAMEPADAXIS_LS_Y] <= deadzone; 
+	}
+	bool RightThumbIsDown() { 
+		return axes[OPGAMEPADAXIS_RS_Y] < -deadzone; 
+	}
+	bool RightThumbNowDown() { 
+		return prevAxes[OPGAMEPADAXIS_RS_Y] >= -deadzone && axes[OPGAMEPADAXIS_LS_Y] < -deadzone; 
+	}
+	bool RightThumbWasDown() { 
+		return prevAxes[OPGAMEPADAXIS_RS_Y] < -deadzone && axes[OPGAMEPADAXIS_LS_Y] >= -deadzone; 
+	}
+	OPfloat RightThumbX() {
+		return axes[OPGAMEPADAXIS_RS_X];
+	}
+	OPfloat RightThumbY() {
+		return axes[OPGAMEPADAXIS_RS_Y];
+	}
+
+	// Left Trigger
+
+	OPfloat LeftTrigger() {
+		return axes[OPGAMEPADAXIS_L2];
+	}
+	bool LeftTriggerWasPressed() { 
+		return axes[OPGAMEPADAXIS_L2] > 0 && prevAxes[OPGAMEPADAXIS_L2] <= 0; 
+	}
+	bool LeftTriggerWasReleased() { 
+		return axes[OPGAMEPADAXIS_L2] <= 0 && prevAxes[OPGAMEPADAXIS_L2] > 0; 
+	}
+	bool LeftTriggerIsDown() { 
+		return axes[OPGAMEPADAXIS_L2] > 0; 
+	}
+	bool LeftTriggerIsUp() { 
+		return axes[OPGAMEPADAXIS_L2] <= 0; 
+	}
+
+	// Right Trigger
+
+	OPfloat RightTrigger() {
+		return axes[OPGAMEPADAXIS_R2];
+	}
+	bool RightTriggerWasPressed() { 
+		return axes[OPGAMEPADAXIS_R2] > 0 && prevAxes[OPGAMEPADAXIS_R2] <= 0;
+	}
+	bool RightTriggerWasReleased() { 
+		return axes[OPGAMEPADAXIS_R2] <= 0 && prevAxes[OPGAMEPADAXIS_L2] > 0;
+	}
+	bool RightTriggerIsDown() { 
+		return axes[OPGAMEPADAXIS_R2] > 0; 
+	}
+	bool RightTriggerIsUp() { 
+		return axes[OPGAMEPADAXIS_R2] <= 0; 
+	}
+
+	bool AnyPrevInputIsDown();
+	bool AnyPrevInputIsUp() {
+		return !AnyPrevInputIsDown();
+	}	
+	bool AnyInputIsDown();
+	bool AnyInputIsUp() {
+		return !AnyInputIsDown();
+	}
+	bool AnyInputWasPressed() {
+		return AnyInputIsDown() && AnyPrevInputIsUp();
+	}
+	bool AnyInputWasReleased() {
+		return AnyInputIsUp() && AnyPrevInputIsDown();
+	}
 };
 typedef struct OPgamePad OPgamePad;
 
-extern OPgamePad GamePads[CONTROLLERS];
+struct OPgamePadSystem {
+	OPgamePad gamePads[CONTROLLERS];
 
-OPgamePad* OPgamePadGet(OPgamePadIndex index);
-inline OPgamePad* OPgamePadGet(ui32 index) {
-	return OPgamePadGet((enum OPgamePadIndex)index);
-}
-
-void OPgamePadUpdate(OPgamePad* controller);
-void OPgamePadReset(OPgamePad* controller);
-void OPgamePadSetDeadzone(OPgamePad* controller, OPfloat deadzone);
-
-void OPgamePadSystemUpdate();
-void OPgamePadSystemReset();
-void OPgamePadSetDeadZones(OPfloat deadzone);
-
-OPvec2 OPgamePadLeftThumb(OPgamePad* controller);
-OPvec2 OPgamePadRightThumb(OPgamePad* controller);
-
-inline OPint OPgamePadIsDown(OPgamePad* controller, OPgamePadButton button){
-	return controller->buttons[button];
-}
-
-inline OPint OPgamePadIsUp(OPgamePad* controller, OPgamePadButton button){
-	return !controller->buttons[button];
-}
-
-inline OPint OPgamePadWasPressed(OPgamePad* controller, OPgamePadButton button){
-	return controller->buttons[button] && !controller->prevButtons[button];
-}
-
-inline OPint OPgamePadWasReleased(OPgamePad* controller, OPgamePadButton button){
-	return !controller->buttons[button] && controller->prevButtons[button];
-}
-
-inline OPint OPgamePadLeftThumbIsRight(OPgamePad* controller) { return controller->axes[OPGAMEPADAXIS_LS_X] > controller->deadzone; }
-inline OPint OPgamePadLeftThumbNowRight(OPgamePad* controller) { return controller->prevAxes[OPGAMEPADAXIS_LS_X] <= controller->deadzone && controller->axes[OPGAMEPADAXIS_LS_X] > controller->deadzone; }
-inline OPint OPgamePadLeftThumbWasRight(OPgamePad* controller) { return controller->prevAxes[OPGAMEPADAXIS_LS_X] > controller->deadzone && controller->axes[OPGAMEPADAXIS_LS_X] <= controller->deadzone; }
-inline OPint OPgamePadLeftThumbIsLeft(OPgamePad* controller) { return controller->axes[OPGAMEPADAXIS_LS_X] < -controller->deadzone; }
-inline OPint OPgamePadLeftThumbNowLeft(OPgamePad* controller) { return controller->prevAxes[OPGAMEPADAXIS_LS_X] >= -controller->deadzone && controller->axes[OPGAMEPADAXIS_LS_X] < -controller->deadzone; }
-inline OPint OPgamePadLeftThumbWasLeft(OPgamePad* controller) { return controller->prevAxes[OPGAMEPADAXIS_LS_X] < -controller->deadzone && controller->axes[OPGAMEPADAXIS_LS_X] >= -controller->deadzone; }
-inline OPfloat OPgamePadLeftThumbX(OPgamePad* controller) {
-	return controller->axes[OPGAMEPADAXIS_LS_X];
-}
-
-inline OPint OPgamePadLeftThumbIsUp(OPgamePad* controller) { return controller->axes[OPGAMEPADAXIS_LS_Y] > controller->deadzone; }
-inline OPint OPgamePadLeftThumbNowUp(OPgamePad* controller) { return controller->prevAxes[OPGAMEPADAXIS_LS_Y] <= controller->deadzone && controller->axes[OPGAMEPADAXIS_LS_Y] > controller->deadzone; }
-inline OPint OPgamePadLeftThumbWasUp(OPgamePad* controller) { return controller->prevAxes[OPGAMEPADAXIS_LS_Y] > controller->deadzone && controller->axes[OPGAMEPADAXIS_LS_Y] <= controller->deadzone; }
-inline OPint OPgamePadLeftThumbIsDown(OPgamePad* controller) { return controller->axes[OPGAMEPADAXIS_LS_Y] < -controller->deadzone; }
-inline OPint OPgamePadLeftThumbNowDown(OPgamePad* controller) { return controller->prevAxes[OPGAMEPADAXIS_LS_Y] >= -controller->deadzone && controller->axes[OPGAMEPADAXIS_LS_Y] < -controller->deadzone; }
-inline OPint OPgamePadLeftThumbWasDown(OPgamePad* controller) { return controller->prevAxes[OPGAMEPADAXIS_LS_Y] < -controller->deadzone && controller->axes[OPGAMEPADAXIS_LS_Y] >= -controller->deadzone; }
-inline OPfloat OPgamePadLeftThumbY(OPgamePad* controller) {
-	return controller->axes[OPGAMEPADAXIS_LS_Y];
-}
-
-inline OPint OPgamePadRightThumbIsRight(OPgamePad* controller) { return controller->axes[OPGAMEPADAXIS_RS_X] > controller->deadzone; }
-inline OPint OPgamePadRightThumbNowRight(OPgamePad* controller) { return controller->prevAxes[OPGAMEPADAXIS_RS_X] <= controller->deadzone && controller->axes[OPGAMEPADAXIS_RS_X] > controller->deadzone; }
-inline OPint OPgamePadRightThumbWasRight(OPgamePad* controller) { return controller->prevAxes[OPGAMEPADAXIS_RS_X] > controller->deadzone && controller->axes[OPGAMEPADAXIS_RS_X] <= controller->deadzone; }
-inline OPint OPgamePadRightThumbIsLeft(OPgamePad* controller) { return controller->axes[OPGAMEPADAXIS_RS_X] < -controller->deadzone; }
-inline OPint OPgamePadRightThumbNowLeft(OPgamePad* controller) { return controller->prevAxes[OPGAMEPADAXIS_RS_X] >= -controller->deadzone && controller->axes[OPGAMEPADAXIS_RS_X] < -controller->deadzone; }
-inline OPint OPgamePadRightThumbWasLeft(OPgamePad* controller) { return controller->prevAxes[OPGAMEPADAXIS_RS_X] < -controller->deadzone && controller->axes[OPGAMEPADAXIS_RS_X] >= -controller->deadzone; }
-inline OPfloat OPgamePadRightThumbX(OPgamePad* controller) {
-	return controller->axes[OPGAMEPADAXIS_RS_X];
-}
-
-
-inline OPint OPgamePadRightThumbIsUp(OPgamePad* controller) { return controller->axes[OPGAMEPADAXIS_RS_Y] > controller->deadzone; }
-inline OPint OPgamePadRightThumbNowUp(OPgamePad* controller) { return controller->prevAxes[OPGAMEPADAXIS_RS_Y] <= controller->deadzone && controller->axes[OPGAMEPADAXIS_LS_Y] > controller->deadzone; }
-inline OPint OPgamePadRightThumbWasUp(OPgamePad* controller) { return controller->prevAxes[OPGAMEPADAXIS_RS_Y] > controller->deadzone && controller->axes[OPGAMEPADAXIS_LS_Y] <= controller->deadzone; }
-inline OPint OPgamePadRightThumbIsDown(OPgamePad* controller) { return controller->axes[OPGAMEPADAXIS_RS_Y] < -controller->deadzone; }
-inline OPint OPgamePadRightThumbNowDown(OPgamePad* controller) { return controller->prevAxes[OPGAMEPADAXIS_RS_Y] >= -controller->deadzone && controller->axes[OPGAMEPADAXIS_LS_Y] < -controller->deadzone; }
-inline OPint OPgamePadRightThumbWasDown(OPgamePad* controller) { return controller->prevAxes[OPGAMEPADAXIS_RS_Y] < -controller->deadzone && controller->axes[OPGAMEPADAXIS_LS_Y] >= -controller->deadzone; }
-inline OPfloat OPgamePadRightThumbY(OPgamePad* controller) {
-	return controller->axes[OPGAMEPADAXIS_RS_Y];
-}
-
-inline OPfloat OPgamePadLeftTrigger(OPgamePad* controller) {
-	return controller->axes[OPGAMEPADAXIS_L2];
-}
-inline OPint OPgamePadLeftTriggerWasPressed(OPgamePad* controller) { return controller->axes[OPGAMEPADAXIS_L2] > 0 && controller->prevAxes[OPGAMEPADAXIS_L2] <= 0; }
-inline OPint OPgamePadLeftTriggerWasReleased(OPgamePad* controller) { return controller->axes[OPGAMEPADAXIS_L2] <= 0 && controller->prevAxes[OPGAMEPADAXIS_L2] > 0; }
-inline OPint OPgamePadLeftTriggerIsDown(OPgamePad* controller) { return controller->axes[OPGAMEPADAXIS_L2] > 0; }
-inline OPint OPgamePadLeftTriggerIsUp(OPgamePad* controller) { return controller->axes[OPGAMEPADAXIS_L2] <= 0; }
-
-inline OPfloat OPgamePadRightTrigger(OPgamePad* controller) {
-	return controller->axes[OPGAMEPADAXIS_R2];
-}
-inline OPint OPgamePadRightTriggerWasPressed(OPgamePad* controller) { return controller->axes[OPGAMEPADAXIS_R2] > 0 && controller->prevAxes[OPGAMEPADAXIS_R2] <= 0; }
-inline OPint OPgamePadRightTriggerWasReleased(OPgamePad* controller) { return controller->axes[OPGAMEPADAXIS_R2] <= 0 && controller->prevAxes[OPGAMEPADAXIS_L2] > 0; }
-inline OPint OPgamePadRightTriggerIsDown(OPgamePad* controller) { return controller->axes[OPGAMEPADAXIS_R2] > 0; }
-inline OPint OPgamePadRightTriggerIsUp(OPgamePad* controller) { return controller->axes[OPGAMEPADAXIS_R2] <= 0; }
-
-inline OPint OPgamePadIsConnected(OPgamePad* controller) {
-	return controller->connected;
-}
-
-inline void OPgamePadSetDeadzone(OPgamePad* controller, OPfloat deadzone) {
-	controller->deadzone = deadzone;
-}
-
-inline OPint OPgamePadAnyPrevInputIsDown(OPgamePad* controller) {
-	ui32 count = _OPGAMEPADBUTTON_MAX;
-	for (; count > 0; count--) {
-		if (controller->prevButtons[count]) return true;
+	void Update();
+	void Reset();
+	void SetDeadzones(OPfloat deadzone);
+	OPgamePad* Get(OPgamePadIndex index);
+	OPgamePad* Get(i8 index) {
+		ASSERT(index < CONTROLLERS - 1, "Trying to access a controller that's not indexed, see CONTROLLERS global");
+		return &gamePads[index];
 	}
-	return false;
-}
-
-inline OPint OPgamePadAnyPrevInputIsUp(OPgamePad* controller) {
-	return !OPgamePadAnyPrevInputIsDown(controller);
-}
-
-inline OPint OPgamePadAnyInputIsDown(OPgamePad* controller) {
-	ui32 count = _OPGAMEPADBUTTON_MAX;
-	for (; count > 0; count--) {
-		if (controller->buttons[count]) return true;
+	
+	bool AnyControllerInputIsDown() {
+		ui32 count = CONTROLLERS - 1;
+		for (; count > 0; count--) {
+			if (gamePads[count].AnyInputIsDown()) return true;
+		}
+		return false;
 	}
-	return false;
+};
+typedef struct OPgamePadSystem OPgamePadSystem;
+
+extern OPgamePadSystem OPGAMEPADSYSTEM;
+
+
+inline OPgamePad* OPgamePadGet(OPgamePadIndex index) {
+	return OPGAMEPADSYSTEM.Get(index);
+}
+inline OPgamePad* OPgamePadGet(i8 index) {
+	return OPGAMEPADSYSTEM.Get(index);
 }
 
-inline OPint OPgamePadAnyControllerInputIsDown() {
-	ui32 count = 3;
-	for (; count > 0; count--) {
-		if (OPgamePadAnyInputIsDown(OPgamePadGet((OPgamePadIndex)count))) return true;
-	}
-	return false;
-}
-
-inline OPint OPgamePadAnyInputIsUp(OPgamePad* controller) {
-	return !OPgamePadAnyInputIsDown(controller);
-}
-
-inline OPint OPgamePadAnyInputWasPressed(OPgamePad* controller) {
-	return OPgamePadAnyInputIsDown(controller) && OPgamePadAnyPrevInputIsUp(controller);
-}
-inline OPint OPgamePadAnyInputWasReleased(OPgamePad* controller) {
-	return OPgamePadAnyInputIsUp(controller) && OPgamePadAnyPrevInputIsDown(controller);
-}
 
 #endif

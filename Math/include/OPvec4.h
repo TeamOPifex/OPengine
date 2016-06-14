@@ -54,6 +54,48 @@ struct OPvec4 {
 	inline OPfloat& operator[](i32 i) {
 		return row[i];
 	}
+
+
+	inline OPvec4 operator+(OPvec4 vhs) {
+		OPvec4 temp = { 0, 0, 0 };
+		OPvec4Add(&temp, this, &vhs);
+		return temp;
+	}
+	inline OPvec4 operator-(OPvec4 vhs) {
+		OPvec4 temp = { 0, 0, 0 };
+		OPvec4Sub(&temp, this, &vhs);
+		return temp;
+	}
+	inline OPvec4 operator*(OPvec4 vhs) {
+		OPvec4 temp = { 0, 0, 0 };
+		OPvec4Mul(&temp, this, &vhs);
+		return temp;
+	}
+	inline OPvec4 operator*(OPfloat vhs) {
+		OPvec4 temp = { 0, 0, 0 };
+		OPvec4Scl(&temp, this, vhs);
+		return temp;
+	}
+	//inline OPvec4 operator*(OPvec4 vhs) {
+	//	OPvec4 temp = { 0, 0, 0 };
+	//	OPvec4Scl(&temp, this, vhs);
+	//	return temp;
+	//}
+	inline OPvec4 operator/(OPvec4 vhs) {
+		OPvec4 temp = { 0, 0, 0 };
+		OPvec4Div(&temp, this, &vhs);
+		return temp;
+	}
+	inline OPvec4 operator/(OPfloat vhs) {
+		OPvec4 temp = { 0, 0, 0 };
+		OPvec4Div(&temp, this, vhs);
+		return temp;
+	}
+	//inline OPvec4 operator/(OPvec4 vhs) {
+	//	OPvec4 temp = { 0, 0, 0 };
+	//	OPvec4Div(&temp, this, lhs);
+	//	return temp;
+	//}
 };
 
 extern const OPvec4 OPVEC4_ZERO;
@@ -72,47 +114,6 @@ inline OPvec4 OPvec4Create(OPfloat x) {
 inline OPvec4 OPvec4Create(OPvec3 xyz, OPfloat w) {
 	OPvec4 tmp = { xyz.x, xyz.y, xyz.z, w };
 	return tmp;
-}
-
-inline OPvec4 operator+(OPvec4 lhs, OPvec4 vhs) {
-	OPvec4 temp = { 0, 0, 0};
-	OPvec4Add(&temp, &lhs, &vhs);
-	return temp;
-}
-inline OPvec4 operator-(OPvec4 lhs, OPvec4 vhs) {
-	OPvec4 temp = { 0, 0, 0};
-	OPvec4Sub(&temp, &lhs, &vhs);
-	return temp;
-}
-inline OPvec4 operator*(OPvec4 lhs, OPvec4 vhs) {
-	OPvec4 temp = { 0, 0, 0};
-	OPvec4Mul(&temp, &lhs, &vhs);
-	return temp;
-}
-inline OPvec4 operator*(OPvec4 lhs, OPfloat vhs) {
-	OPvec4 temp = { 0, 0, 0};
-	OPvec4Scl(&temp, &lhs, vhs);
-	return temp;
-}
-inline OPvec4 operator*(OPfloat lhs, OPvec4 vhs) {
-	OPvec4 temp = { 0, 0, 0};
-	OPvec4Scl(&temp, &vhs, lhs);
-	return temp;
-}
-inline OPvec4 operator/(OPvec4 lhs, OPvec4 vhs) {
-	OPvec4 temp = { 0, 0, 0};
-	OPvec4Div(&temp, &lhs, &vhs);
-	return temp;
-}
-inline OPvec4 operator/(OPvec4 lhs, OPfloat vhs) {
-	OPvec4 temp = { 0, 0, 0};
-	OPvec4Div(&temp, &lhs, vhs);
-	return temp;
-}
-inline OPvec4 operator/(OPfloat lhs, OPvec4 vhs) {
-	OPvec4 temp = { 0, 0, 0};
-	OPvec4Div(&temp, &vhs, lhs);
-	return temp;
 }
 
 //    ___            _         _ _        _       _ _   _              _   _

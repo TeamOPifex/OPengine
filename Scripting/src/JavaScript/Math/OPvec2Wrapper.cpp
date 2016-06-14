@@ -54,7 +54,7 @@ void OPvec2WrapperCreate(Handle<Object> result, OPvec2* ptr) {
   JS_SET_METHOD(result, "Set", _OPvec2SetSelf);
 }
 
-JS_RETURN_VAL _OPvec2Create(const JS_ARGS& args) {
+JS_RETURN_VAL _OPvec2(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvec2* ptr = (OPvec2*)OPalloc(sizeof(OPvec2));
@@ -68,7 +68,7 @@ JS_RETURN_VAL _OPvec2Create(const JS_ARGS& args) {
 void OPvec2Wrapper(Handle<Object> exports) {
     SCOPE_AND_ISOLATE;
 
-    Local<FunctionTemplate> tpl = JS_NEW_FUNCTION_TEMPLATE(_OPvec2Create);
+    Local<FunctionTemplate> tpl = JS_NEW_FUNCTION_TEMPLATE(_OPvec2);
     Handle<Object> vec2 = tpl->GetFunction();
     JS_SET_METHOD(vec2, "Log", _OPvec2Log);
     JS_SET_METHOD(vec2, "Set", _OPvec2Set);

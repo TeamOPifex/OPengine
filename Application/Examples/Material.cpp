@@ -63,7 +63,7 @@ OPint ExampleMaterialUpdate(OPtimer* time) {
 
 void ExampleMaterialRender(OPfloat delta) {
 	OPrenderClear(0.4f, 0.4f, 0.4f);
-    OPmodelDraw(materialExample.Model, &materialExample.Material, &materialExample.Camera);
+	materialExample.Model.Draw(&materialExample.Material, &materialExample.Camera);
 	OPrenderPresent();
 }
 

@@ -26,10 +26,10 @@ void ExampleMeshBuilderEnter(OPgameState* last) {
 
 	OPmeshBuilder* builder = OPmeshBuilderCreate(sizeof(OPfloat) * 6);
 
-	MeshBuilderVert one = { -1, 1, 0, 1, 0, 0 };
-	MeshBuilderVert two = { 1, 1, 0, 1, 0, 0 };
-	MeshBuilderVert three = { 1, -1, 0, 1, 0, 0 };
-	MeshBuilderVert four = { -1, -1, 0, 1, 0, 0 };
+	MeshBuilderVert one = { OPvec3(-1, 1, 0), OPvec3(1, 0, 0) };
+	MeshBuilderVert two = { OPvec3(1, 1, 0), OPvec3(1, 0, 0) };
+	MeshBuilderVert three = { OPvec3(1, -1, 0), OPvec3(1, 0, 0) };
+	MeshBuilderVert four = { OPvec3(-1, -1, 0), OPvec3(1, 0, 0) };
 	OPmeshBuilderAdd(builder, &one, &two, &three, &four);
 
 	meshBuilderExample.Mesh = OPmeshBuilderGen(builder);

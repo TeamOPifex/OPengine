@@ -8,6 +8,8 @@ SET(OPIFEX_ENGINE_REPOSITORY ${PROJECT_SOURCE_DIR})
 
 include(CMake/application.cmake)
 
+add_marketplace_addons_projects()
+
 string(REPLACE "\\" "/" _PHYSX_PATH "${PHYSX_PATH}")
 string(REPLACE "\\" "/" _V8_PATH "${V8_PATH}")
 string(REPLACE "\\" "/" _FMOD_PATH "${FMOD_PATH}")
@@ -96,6 +98,14 @@ add_subdirectory("${PIPELINE_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Pipeline)
 #########################################
 set(APPLICATION_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Application")
 add_subdirectory("${APPLICATION_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Application)
+
+
+#########################################
+# Editor - Level 9
+#########################################
+# Will come back to this later
+#set(EDITOR_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Editor")
+#add_subdirectory("${EDITOR_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Editor)
 
 
 #########################################

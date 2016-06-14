@@ -12,6 +12,10 @@ macro(add_asset_group FILTER_NAME SOURCE_PATH TARGET_LIST)
 		"${SOURCE_PATH}/*.png"
 		"${SOURCE_PATH}/*.vert"
 		"${SOURCE_PATH}/*.frag"
+		"${SOURCE_PATH}/*.meta"
+		"${SOURCE_PATH}/*.ini"
+		"${SOURCE_PATH}/*.lua"
+		"${SOURCE_PATH}/*.opscene"
 	)
 	source_group("${NEW_FILTER_NAME}" FILES ${TEMP_SRC})
 	list(APPEND ${TARGET_LIST} "${TEMP_SRC}")

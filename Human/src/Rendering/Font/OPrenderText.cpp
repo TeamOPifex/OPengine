@@ -9,7 +9,7 @@ void OPfontRenderBegin(OPfontManager* fontManager) {
 	OPFONTMANAGER_ACTIVE = fontManager;
 
 	OPrenderDepth(0);
-	OPmeshBind(&fontManager->dummyMesh.mesh);
+	fontManager->dummyMesh.mesh.Bind();
 	OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
 	OPtextureClearActive();
 	ui32 textureHandle = OPtextureBind(OPFONTMANAGER_ACTIVE->_font->texture);
@@ -25,7 +25,7 @@ void OPfontRenderEnd() {
 }
 
 void OPfontRender(OPfontUserTextNode* node, OPmat4* world) {
-	OPmeshBind(&node->mesh);
+	node->mesh.Bind();
 	OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
   	OPeffectParamMat4v("uWorld", 1, world);
 	OPmeshRender();

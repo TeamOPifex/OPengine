@@ -690,8 +690,13 @@ install(EXPORT JanssonTargets
 # For use when simply using add_library from a parent project to build jansson.
 set(JANSSON_LIBRARIES jansson CACHE STRING "Jansson libraries")
 
+
 if(${OPIFEX_OPTION_RELEASE})
-  output_library_from(jansson "jansson/lib" "jansson")
+  output_library_from(jansson "/jansson/lib" "jansson")
 else()
-  output_library_from(jansson "jansson/lib" "jansson_d")
+    if(${OPIFEX_OS_WINDOWS})
+      output_library_from(jansson "/jansson/lib" "jansson_d")
+    else()
+      output_library_from(jansson "/jansson/lib" "jansson")
+    endif()
 endif()

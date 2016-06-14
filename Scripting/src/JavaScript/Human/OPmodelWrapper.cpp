@@ -27,7 +27,7 @@ JS_RETURN_VAL _OPmodelBind(const JS_ARGS& args) {
 
     OPmodel* model = JS_GET_ARG_PTR(args, 0, OPmodel);
     OPmaterial* material = JS_GET_ARG_PTR(args, 1, OPmaterial);
-    OPmodelBind(*model, material);
+	model->Bind(material);
 
     JS_RETURN_NULL;
 }
@@ -38,7 +38,7 @@ JS_RETURN_VAL _OPmodelBindSelf(const JS_ARGS& args) {
 
     OPmodel* model = JS_GET_PTR(args.This(), OPmodel);
     OPmaterial* material = JS_GET_ARG_PTR(args, 0, OPmaterial);
-    OPmodelBind(*model, material);
+	model->Bind(material);
 
     JS_RETURN_NULL;
 }
@@ -50,7 +50,7 @@ JS_RETURN_VAL _OPmodelDraw(const JS_ARGS& args) {
     OPmaterial* material = JS_GET_ARG_PTR(args, 1, OPmaterial);
     OPcam* camera = JS_GET_ARG_PTR(args, 2, OPcam);
 
-    OPmodelDraw(*model, material, camera);
+	model->Draw(material, camera);
 
     JS_RETURN_NULL;
 }
@@ -62,7 +62,7 @@ JS_RETURN_VAL _OPmodelDrawSelf(const JS_ARGS& args) {
     OPmaterial* material = JS_GET_ARG_PTR(args, 0, OPmaterial);
     OPcam* camera = JS_GET_ARG_PTR(args, 1, OPcam);
 
-    OPmodelDraw(*model, material, camera);
+	model->Draw(material, camera);
 
     JS_RETURN_NULL;
 }

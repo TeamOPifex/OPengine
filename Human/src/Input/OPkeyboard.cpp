@@ -3,6 +3,7 @@
 #include "./Human/include/Rendering/OPrender.h"
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
+#include "./Core/include/Assert.h"
 
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 	#include <GLFW/glfw3.h>
@@ -15,9 +16,11 @@ OPkeyboardState Keyboard;
 void (*OPKEYBOARD_STREAM)(OPchar);
 
 void OPkeyboardUpdate(OPtimer* timer) {
+	ASSERT(OPWINDOW_ACTIVE != NULL, "There must be an active window");
+
 	OPmemcpy(&Keyboard.prevKeys, &Keyboard.keys, _OPKEYBOARD_MAX * sizeof(OPint));
 	for(ui32 i = 0; i < _OPKEYBOARD_MAX; i++) {
-		Keyboard.keys[i] = glfwGetKey(window, OPkeyboardMapping[i]);
+		Keyboard.keys[i] = glfwGetKey(OPWINDOW_ACTIVE->Window, OPkeyboardMapping[i]);
 	}
 }
 

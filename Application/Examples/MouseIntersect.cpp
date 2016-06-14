@@ -110,7 +110,7 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	OPcamUpdateView(&mouseIntersectExample.Camera);
 
 
-	OPray3D ray = { 0, 0, 0, 0, 0, 0};
+	OPray3D ray = { OPvec3(0, 0, 0), OPvec3(0, 0, 0) };
 	OPvec3 positionHit = { 0, 0, 0};
 	OPint intersecting = 0;
 	if(OPmouseIsDown(OPMOUSE_LBUTTON)) {
@@ -209,10 +209,10 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
    	mouseIntersectExample.FontManager->scale = 0.75;
 	i8 buffer[256];
 	sprintf(buffer, "%d, %d", OPmousePositionX(), OPmousePositionY());
-	OPfontRender(buffer, OPvec2Create(50, 60));
+	OPfontRender(buffer, OPvec2(50, 60));
 
 	sprintf(buffer, "%f, %f, %f", ray.direction.x, ray.direction.y, ray.direction.z);
-	OPfontRender(buffer, OPvec2Create(50, 120));
+	OPfontRender(buffer, OPvec2(50, 120));
 
 	OPfontRenderEnd();
 

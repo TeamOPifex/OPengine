@@ -1,18 +1,18 @@
 #include "./Human/include/Rendering/OPmodel.h"
 
-void OPmodelBind(OPmodel model, OPmaterial* material) {
-	OPmeshBind(model.mesh);
+void OPmodel::Bind(OPmaterial* material) {
+	mesh->Bind();
 	OPmaterialBind(material);
-	OPeffectParam("uWorld", model.world);
+	OPeffectParam("uWorld", world);
 }
 
-void OPmodelBind(OPmodel model, OPmaterial* material, OPcam* camera) {
-	OPmodelBind(model, material);
+void OPmodel::Bind(OPmaterial* material, OPcam* camera) {
+	Bind(material);
 	OPcamBind(camera);
 }
 
-void OPmodelDraw(OPmodel model, OPmaterial* material, OPcam* cam) {
-	OPmodelBind(model, material);
+void OPmodel::Draw(OPmaterial* material, OPcam* cam) {
+	Bind(material);
 	OPeffectParam(cam);
 	OPmeshRender();
 }
