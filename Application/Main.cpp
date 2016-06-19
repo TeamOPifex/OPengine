@@ -71,13 +71,17 @@ void ApplicationInit() {
 
 	OPoculusStartup();
 	OPrenderInit();
+	OPlog("Render init");
 
 	i32 contain = 50;
-	mainWindow = OPrenderCreateWindow(NULL, false, "Main Window", OPMONITOR_LIST[0].VideoModeCurrent.Width - contain - contain, OPMONITOR_LIST[0].VideoModeCurrent.Height - contain - contain);
-	mainWindow->SetPosition(OPMONITOR_LIST[0].X + contain, OPMONITOR_LIST[0].Y + contain);
+	mainWindow = OPrenderCreateWindow(NULL, false, "Main Window", 1280, 720);
+
+	OPlog("Render set"); 
+	//mainWindow->SetPosition(OPMONITOR_LIST[0].X + contain, OPMONITOR_LIST[0].Y + contain);
 	
-	secondWindow = OPrenderCreateWindow(NULL, false, "Secondary Window", OPMONITOR_LIST[1].VideoModeCurrent.Width - contain - contain, OPMONITOR_LIST[1].VideoModeCurrent.Height - contain - contain);
-	secondWindow->SetPosition(OPMONITOR_LIST[1].X + contain, OPMONITOR_LIST[1].Y + contain);
+	OPlog("Window created");
+//	secondWindow = OPrenderCreateWindow(NULL, false, "Secondary Window", OPMONITOR_LIST[1].VideoModeCurrent.Width - contain - contain, OPMONITOR_LIST[1].VideoModeCurrent.Height - contain - contain);
+//	secondWindow->SetPosition(OPMONITOR_LIST[1].X + contain, OPMONITOR_LIST[1].Y + contain);
 
 #ifdef ADDON_imgui
 	OPimguiInit(secondWindow->Window, true);
@@ -94,45 +98,49 @@ void ApplicationInit() {
 }
 
 OPint ApplicationUpdate(OPtimer* timer) {
-	secondWindow->Bind();
+// 	secondWindow->Bind();
+// 	OPrenderUpdate();
+
+	OPlog("Update 1");
+	//mainWindow->Bind();
 	OPrenderUpdate();
 
-	mainWindow->Bind();
-	OPrenderUpdate();
-
+	OPlog("Update  2");
 	OPinputSystemUpdate(timer);
 	OPcmanUpdate(timer);
+	OPlog("Update 3");
 
 	if (OPkeyboardWasReleased(OPKEY_ESCAPE)) return 1;
 	if ((OPkeyboardWasReleased(OPKEY_BACKSPACE) || OPgamePadGet(OPGAMEPAD_ONE)->WasPressed(OPGAMEPADBUTTON_BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
 		OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 	}
 
+	OPlog("Update 4");
 	return ActiveState->Update(timer);
 }
 
 void ApplicationRender(OPfloat delta) {
 	// OPlog("[%f]", delta);
-	mainWindow->Bind();
+	//mainWindow->Bind();
 	ActiveState->Render(delta);
 
-	secondWindow->Bind();
-#ifdef ADDON_imgui
-	//OPlog("Frame Started");
-	OPimguiNewFrame();
-	{
-		static float f = 0.0f;
-		ImGui::Text("Hello, world!");
-		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	}
+// 	secondWindow->Bind();
+// #ifdef ADDON_imgui
+// 	//OPlog("Frame Started");
+// 	OPimguiNewFrame();
+// 	{
+// 		static float f = 0.0f;
+// 		ImGui::Text("Hello, world!");
+// 		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+// 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+// 	}
 
-#endif
-	OPrenderClear(0.2, 0.2, 0.2);
-#ifdef ADDON_imgui
-	ImGui::Render();
-#endif
-	OPrenderPresent();
+// #endif
+// 	OPrenderClear(0.2, 0.2, 0.2);
+// #ifdef ADDON_imgui
+// 	ImGui::Render();
+// #endif
+// 	OPrenderPresent();
 }
 
 void ApplicationDestroy() {

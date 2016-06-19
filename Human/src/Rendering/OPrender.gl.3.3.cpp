@@ -27,7 +27,7 @@ ui8 glfwInitialized = 0;
 
 
 void glfwErrorCallback(int error, const char* desc){
-    OPlog(desc);
+    OPlog("GLFW ERROR: %s", desc);
 }
 
 void glfwWindowFocusCallback(GLFWwindow* window, int code) {
