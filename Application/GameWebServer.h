@@ -2,7 +2,7 @@
 #define OPENGINE_APPLICATION_WEBSERVER
 
 #ifdef ADDON_mongoose
-#include "./Communication/include/OPwebServer.h"
+#include "OPmongoose.h"
 
 extern OPwebServer* server;
 #endif

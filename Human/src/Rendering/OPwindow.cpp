@@ -6,13 +6,13 @@
 
 OPwindow* OPWINDOW_ACTIVE = NULL;
 
-void OPwindow::Init(OPmonitor* monitor, bool fullscreen, const OPchar* title, ui32 width, ui32 height) {
+void OPwindow::Init(OPmonitor* monitor, bool fullscreen, bool borderless, const OPchar* title, ui32 width, ui32 height) {
 	ASSERT(fullscreen == false || (fullscreen && monitor != NULL), "To create a fullscreen window, a monitor must be declared");
 	GLFWmonitor* display = NULL;
 	if (monitor != NULL) {
 		display = monitor->Monitor;
 	}
-	glfwWindowHint(GLFW_DECORATED, false);
+	glfwWindowHint(GLFW_DECORATED, !borderless);
 	Window = glfwCreateWindow(width, height, title, display, NULL);
 	
 	glfwSetInputMode(Window, GLFW_STICKY_KEYS, true);

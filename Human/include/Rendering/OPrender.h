@@ -27,7 +27,7 @@ void OPrenderDragAndDropCB(void (*cb)(int, const OPchar**));
 
 #include "./Human/include/Rendering/OPwindow.h"
 
-OPwindow* OPrenderCreateWindow(OPmonitor* monitor, bool fullscreen, const OPchar* title, ui32 width, ui32 height);
+OPwindow* OPrenderCreateWindow(OPmonitor* monitor, bool fullscreen, bool borderless, const OPchar* title, ui32 width, ui32 height);
 OPint OPrenderInit();
 void  OPrenderClear(f32 r, f32 g, f32 b, f32 a);
 void  OPrenderSetScreenSize(ui32 width, ui32 height);

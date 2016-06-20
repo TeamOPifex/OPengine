@@ -73,10 +73,10 @@ void ApplicationInit() {
 	OPrenderInit();
 
 	i32 contain = 50;
-	mainWindow = OPrenderCreateWindow(NULL, false, "Main Window", OPMONITOR_LIST[0].VideoModeCurrent.Width - contain - contain, OPMONITOR_LIST[0].VideoModeCurrent.Height - contain - contain);
+	mainWindow = OPrenderCreateWindow(NULL, false, true, "Main Window", OPMONITOR_LIST[0].VideoModeCurrent.Width - contain - contain, OPMONITOR_LIST[0].VideoModeCurrent.Height - contain - contain);
 	mainWindow->SetPosition(OPMONITOR_LIST[0].X + contain, OPMONITOR_LIST[0].Y + contain);
 	
-	secondWindow = OPrenderCreateWindow(NULL, false, "Secondary Window", OPMONITOR_LIST[1].VideoModeCurrent.Width - contain - contain, OPMONITOR_LIST[1].VideoModeCurrent.Height - contain - contain);
+	secondWindow = OPrenderCreateWindow(NULL, false, true, "Secondary Window", OPMONITOR_LIST[1].VideoModeCurrent.Width - contain - contain, OPMONITOR_LIST[1].VideoModeCurrent.Height - contain - contain);
 	secondWindow->SetPosition(OPMONITOR_LIST[1].X + contain, OPMONITOR_LIST[1].Y + contain);
 
 #ifdef ADDON_imgui
