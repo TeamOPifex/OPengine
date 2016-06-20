@@ -103,9 +103,7 @@ void glfwCharacterCallback(GLFWwindow* window, unsigned int codepoint)
 }
 #endif
 
-OPint OPrenderInit(i32 width, i32 height){
-	OPRENDER_SCREEN_WIDTH = width;
-	OPRENDER_SCREEN_HEIGHT = height;
+OPint OPrenderInit(){
 	OPlogDebug("Initializing Renderer");
 
 #ifdef OPIFEX_ANDROID
@@ -260,86 +258,34 @@ OPint OPrenderInit(i32 width, i32 height){
 	glfwWindowHint(GLFW_ALPHA_BITS, 8);
 
 
-	GLFWmonitor* monitor = NULL;
-	if (OPRENDER_FULLSCREEN){
-		monitor = glfwGetPrimaryMonitor();
-
-	/*	int count;
-		GLFWmonitor** monitors = glfwGetMonitors(&count);
-		if (count > 0) {
-			monitor = monitors[1];
-		}*/
+	int monitorCount;
+	GLFWmonitor** monitors = glfwGetMonitors(&monitorCount);
+	for (ui8 i = 0; i < monitorCount & i < OPMONITOR_MAX; i++) {
+		OPMONITOR_LIST[i].Init(monitors[i]);
 	}
 
-	i32 _screenWidth = (i32)OPRENDER_SCREEN_WIDTH;
-	i32 _screenHeight = (i32)OPRENDER_SCREEN_HEIGHT;
+	OPMONITOR_COUNT = monitorCount;
 
-	OPlog("%d x %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
-	OPlog("%d x %d", _screenWidth, _screenHeight);
+	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+	OPMONITOR_PRIMARY.Init(primaryMonitor);
 
-	window = glfwCreateWindow(_screenWidth, _screenHeight,
-		"OPifex Entertainment", monitor, NULL);
 
-	OPlog("%d x %d", _screenWidth, _screenHeight);
 
-	OPlogInfo("Created window of size: %d x %d",
-		_screenWidth, _screenHeight);
+	int major, minor, rev;
+	glfwGetVersion(&major, &minor, &rev);
 
-	int w, h;
-	glfwGetFramebufferSize(window, &w, &h);
-	OPRENDER_SCREEN_WIDTH = (ui32)w;
-	OPRENDER_SCREEN_HEIGHT = (ui32)h;
+	OPlog("GLFW version %d.%d.%d", major, minor, rev);
 
-	OPRENDER_SCREEN_WIDTH_SCALE = _screenWidth / (f32)OPRENDER_SCREEN_WIDTH;
-	OPRENDER_SCREEN_HEIGHT_SCALE = _screenHeight / (f32)OPRENDER_SCREEN_HEIGHT;
-	OPRENDER_SCALED_WIDTH = (i32)(OPRENDER_SCREEN_WIDTH * OPRENDER_SCREEN_WIDTH_SCALE);
-	OPRENDER_SCALED_HEIGHT = (i32)(OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE);
-	OPlogInfo("Frame Buffer size: %d x %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
-	OPlogDebug("Scale: %f x %f", OPRENDER_SCREEN_WIDTH_SCALE, OPRENDER_SCREEN_HEIGHT_SCALE);
-
-	if(!window) {
-		OPlogErr("Failed to open GLFW window of %dx%d. If you have an Intel GPU, they are not 3.3 compatible.\n", OPRENDER_WIDTH, OPRENDER_HEIGHT );
-		glfwTerminate();
-		return -1;
-	}
-
-	glfwMakeContextCurrent(window);
-
-	if (!glfwExtensionSupported("GL_ARB_multisample")) {
-		OPlogErr("Multisampling is not supported");
-	}
-
-	glfwSetWindowFocusCallback(window, glfwWindowFocusCallback);
-
-	glewExperimental = GL_TRUE;
-	OPrenderSetViewport(0, 0, OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
-	if (glewInit() != GLEW_OK) return -1;
-
-	glfwSetInputMode(window, GLFW_STICKY_KEYS, true);
-
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	glfwSetCharCallback(window, glfwCharacterCallback);
-	glfwSetDropCallback(window, glfwWindowDropCallback);
-
-	// TODO: Determine how to optimize with this
-//#if !defined(OPIFEX_OSX32) && !defined(OPIFEX_OSX64)
-	GLuint VertexArrayID;
-	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
-//#endif
-
-	glEnable(GL_MULTISAMPLE_ARB);
-	glEnable(GL_BLEND);
-	glEnable(GL_MULTISAMPLE);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	OPRENDER_WIDTH = OPRENDER_SCREEN_WIDTH;
-	OPRENDER_HEIGHT = OPRENDER_SCREEN_HEIGHT;
 #endif
-
 	OPRENDER_INITIALIZED = 1;
 	OPlogInfo("OpenGL Context Created W:%d H:%d", OPRENDER_WIDTH, OPRENDER_HEIGHT);
 	return 0;
+}
+
+OPwindow* OPrenderCreateWindow(OPmonitor* monitor, bool fullscreen, const OPchar* title, ui32 width, ui32 height) {
+	OPwindow* window = (OPwindow*)OPalloc(sizeof(OPwindow));
+	window->Init(monitor, fullscreen, title, width, height);
+	return window;
 }
 
 void  OPrenderSetScreenSize(ui32 width, ui32 height) {
@@ -425,10 +371,11 @@ void  OPrenderSwapBuffer(){
 }
 
 void OPrenderUpdate() {
+	ASSERT(OPWINDOW_ACTIVE != NULL, "There must be an active window");
 #ifdef OPIFEX_OPENGL_ES_2
 #else
 	glfwPollEvents();
-	if(glfwWindowShouldClose(window)){
+	if (glfwWindowShouldClose(OPWINDOW_ACTIVE->Window)) {
 		OPend();
 	}
 #endif
@@ -439,7 +386,8 @@ void  OPrenderPresent(){
 #ifdef OPIFEX_OPENGL_ES_2
 	eglSwapBuffers(display, surface);
 #else
-	glfwSwapBuffers(window);
+	ASSERT(OPWINDOW_ACTIVE != NULL, "There must be an active window");
+	glfwSwapBuffers(OPWINDOW_ACTIVE->Window);
 #endif
 }
 #include "./Human/include/Utilities/Errors.h"
