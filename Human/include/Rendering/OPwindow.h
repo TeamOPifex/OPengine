@@ -20,7 +20,7 @@ struct OPwindow {
 	// TODO: (garrett) not how this is supposed to work, but we'll keep it for now
 	GLuint VAO;
 
-	void Init(OPmonitor* monitor, bool fullscreen, const OPchar* title, ui32 width, ui32 height);
+	void Init(OPmonitor* monitor, bool fullscreen, bool borderless, const OPchar* title, ui32 width, ui32 height);
 	void Bind();
 	void Focus();
 	void SetPosition(i32 x, i32 y);
