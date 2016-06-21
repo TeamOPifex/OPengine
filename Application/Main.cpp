@@ -74,7 +74,7 @@ void ApplicationInit() {
 	OPlog("Render init");
 
 	i32 contain = 50;
-	mainWindow = OPrenderCreateWindow(NULL, false, "Main Window", 1280, 720);
+	mainWindow = OPrenderCreateWindow(NULL, false, true, "Main Window", 1280, 720);
 
 	OPlog("Render set"); 
 	//mainWindow->SetPosition(OPMONITOR_LIST[0].X + contain, OPMONITOR_LIST[0].Y + contain);
@@ -84,7 +84,7 @@ void ApplicationInit() {
 //	secondWindow->SetPosition(OPMONITOR_LIST[1].X + contain, OPMONITOR_LIST[1].Y + contain);
 
 #ifdef ADDON_imgui
-	OPimguiInit(secondWindow->Window, true);
+//	OPimguiInit(secondWindow->Window, true);
 #endif
 
 	OPGAMEPADSYSTEM.SetDeadzones(0.2f);
