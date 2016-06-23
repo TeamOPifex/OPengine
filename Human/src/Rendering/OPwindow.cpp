@@ -9,8 +9,6 @@ OPwindow* OPWINDOW_ACTIVE = NULL;
 void OPwindow::Init(OPmonitor* monitor, bool fullscreen, bool borderless, const OPchar* title, ui32 width, ui32 height) {
 	ASSERT(fullscreen == false || (fullscreen && monitor != NULL), "To create a fullscreen window, a monitor must be declared");
 
-	OPlog("GLFWMonitor");
-	
 	GLFWmonitor* display = NULL;
 	if (monitor != NULL) {
 		OPlog("Not showing monitor");
@@ -19,17 +17,12 @@ void OPwindow::Init(OPmonitor* monitor, bool fullscreen, bool borderless, const 
 	glfwWindowHint(GLFW_DECORATED, borderless);
 	Window = glfwCreateWindow(width, height, title, display, NULL);
 
-	OPlog("GLFWMonitor 2");
 	//glfwSetCharCallback(window, glfwCharacterCallback);
 	//glfwSetDropCallback(window, glfwWindowDropCallback);
-	OPlog("GLFWMonitor 3");
 
 	ASSERT(Window != NULL, "Unable to create the window.");
 
 	glfwSetInputMode(Window, GLFW_STICKY_KEYS, true);
-	OPlog("GLFWMonitor 4");
-
-	OPlog("unable");
 
 	Width = width;
 	Height = height;
