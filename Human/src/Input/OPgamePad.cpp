@@ -154,7 +154,7 @@ void __OPlnxUpdateGamePad(OPgamePad* c){
 	const ui8* buttonData = NULL;
 
 	// make sure the gamepad is connected
-	if(!glfwJoystickPresent((i32)c->playerIndex)){
+	if(!glfwJoystickPresent((i32)c->controllerIndex)){
 		//OPlog("Controller %d not connected", (i32)c->playerIndex);
 		c->connected = 0;
 		return;
@@ -163,7 +163,7 @@ void __OPlnxUpdateGamePad(OPgamePad* c){
 	c->connected = true;
 
 	// get axis data, andmake sure the number of axes are expected
-	axisData = glfwGetJoystickAxes(c->playerIndex, &axes);
+	axisData = glfwGetJoystickAxes(c->controllerIndex, &axes);
 	//OPlog("Axes %d", axes);
 	// if(axes != 8){
 	// 	// game pads should have 8 axes
@@ -194,7 +194,7 @@ void __OPlnxUpdateGamePad(OPgamePad* c){
 
 
 	// get button data, make sure it's all kosher
-	buttonData = glfwGetJoystickButtons(c->playerIndex, &buttons);
+	buttonData = glfwGetJoystickButtons(c->controllerIndex, &buttons);
 	if(buttons < 10){
 		// game pads should have 10 buttons
 		OPlog("GamePad had %d buttons but has to have at least %d buttons", buttons, 10);
@@ -313,7 +313,7 @@ void OPgamePad::Update(){
 #endif
 
 #if defined(OPIFEX_UNIX) && !defined(OPIFEX_IOS)
-	__OPlnxUpdateGamePad(controller);
+	__OPlnxUpdateGamePad(this);
 #endif
 
 #ifdef OPIFEX_WINDOWS
