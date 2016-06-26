@@ -34,8 +34,8 @@ void ApplicationInit() {
 	
 	OPrenderInitDevice(mainWindow);
 
-	OPcmanLoadGet("Tutorial02.vert");
-	OPcmanLoadGet("Tutorial02.frag");
+	//OPcmanLoadGet("Tutorial02.vert");
+	//OPcmanLoadGet("Tutorial02.frag");
 
 	//OPGAMEPADSYSTEM.SetDeadzones(0.2f);	
 

@@ -28,6 +28,7 @@ function(add_opifex_executable name)
         set_target_properties(${name} PROPERTIES WORKING_DIRECTORY "$(ProjectDir)$(Configuration)\\")
     else()
 		    add_executable(${name} ${ARGV})
+        add_definitions(-D_CONSOLE)
     endif()
 
     if(${IS_DIRECTX})

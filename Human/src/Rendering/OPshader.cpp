@@ -66,6 +66,7 @@ OPint OPshaderLoadVertex(OPstream* source, OPshader** shader){
 	return 1;
 }
 
+#ifdef OPIFEX_DIRECTX_11
 #include <windows.h>
 #include <windowsx.h>
 #include <d3d11.h>
@@ -154,6 +155,7 @@ OPint OPshaderLoadFragmentDX11(OPstream* source, OPshader** shader) {
 
 	return result;
 }
+#endif
 
 //-----------------------------------------------------------------------------
 OPint OPshaderLoadFragment(OPstream* source, OPshader** shader){

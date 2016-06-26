@@ -90,6 +90,7 @@ void OPwindow::Init(OPmonitor* monitor, bool fullscreen, bool borderless, const 
 }
 
 OPint OPwindow::Update() {
+#ifdef OPIFEX_DIRECTX_11
 	// this struct holds Windows event messages
 	MSG msg;
 
@@ -107,6 +108,9 @@ OPint OPwindow::Update() {
 	//return msg.wParam;
 	if (msg.message == WM_QUIT)
 		return 1;
+#else
+	OPrenderUpdate();
+#endif
 
 	return 0;
 }
