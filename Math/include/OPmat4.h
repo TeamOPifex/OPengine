@@ -185,7 +185,7 @@ struct OPmat4 {
 	}
 
 	inline OPmat4* RotZ(f32 val) {
-		OPmat4RotY(this, val);
+		OPmat4RotZ(this, val);
 		return this;
 	}
 
@@ -232,10 +232,10 @@ inline OPmat4 OPmat4Create(
 	f32 _03, f32 _13, f32 _23, f32 _33) {
 
 	OPmat4 temp = {
-		_00, _10, _20, _30,
-		_01, _11, _21, _31,
-		_02, _12, _22, _32,
-		_03, _13, _23, _33
+		OPvec4(_00, _10, _20, _30),
+		OPvec4(_01, _11, _21, _31),
+		OPvec4(_02, _12, _22, _32),
+		OPvec4(_03, _13, _23, _33)
 	};
 
 	return temp;

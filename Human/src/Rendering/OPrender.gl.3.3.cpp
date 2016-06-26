@@ -181,6 +181,10 @@ OPint OPrenderInit() {
     return 0;
 }
 
+OPint OPrenderInitDevice(OPwindow* window) {
+	return 1;
+}
+
 OPwindow* OPrenderCreateWindow(OPmonitor* monitor, bool fullscreen, bool borderless, const OPchar* title, ui32 width, ui32 height) {
 	OPwindow* window = (OPwindow*)OPalloc(sizeof(OPwindow));
 	window->Init(monitor, fullscreen, borderless, title, width, height);

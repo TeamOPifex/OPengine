@@ -25,10 +25,24 @@ extern void (*OP_WINDOW_DROP)(int, const OPchar**);
 void OPrenderDragAndDropCB(void (*cb)(int, const OPchar**));
 #endif
 
+#ifdef OPIFEX_DIRECTX_11
+
+#include <windows.h>
+#include <windowsx.h>
+#include <d3d11.h>
+#include <d3d11_1.h>
+
+// include the Direct3D Library file
+#pragma comment (lib, "d3d11.lib")
+extern ID3D11Device* g_pd3dDevice;
+
+#endif
+
 #include "./Human/include/Rendering/OPwindow.h"
 
 OPwindow* OPrenderCreateWindow(OPmonitor* monitor, bool fullscreen, bool borderless, const OPchar* title, ui32 width, ui32 height);
 OPint OPrenderInit();
+OPint OPrenderInitDevice(OPwindow* window);
 void  OPrenderClear(f32 r, f32 g, f32 b, f32 a);
 void  OPrenderSetScreenSize(ui32 width, ui32 height);
 void  OPrenderSetViewport(OPint x, OPint y, ui32 width, ui32 height);

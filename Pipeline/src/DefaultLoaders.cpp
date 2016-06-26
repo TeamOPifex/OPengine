@@ -23,17 +23,25 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 	#if defined(OPIFEX_ANDROID) || defined(OPIFEX_IOS)
 		"Shaders/OPENGL_ES_2_0/",
 	#else
-		#ifdef OPIFEX_OPENGL_3_3
-			"Shaders/OPENGL_3_3/",
+		#ifdef OPIFEX_DIRECTX_11
+			"Shaders/DIRECTX_11/",
 		#else
-			"Shaders/OPENGL_2_0/",
+			#ifdef OPIFEX_OPENGL_3_3
+				"Shaders/OPENGL_3_3/",
+			#else
+				"Shaders/OPENGL_2_0/",
+			#endif
 		#endif
 	#endif
 #else
 		"Shaders/",
 #endif
 		sizeof(OPshader),
+#ifdef OPIFEX_DIRECTX_11
+		(OPint(*)(OPstream*, void**))OPshaderLoadVertexDX11,
+#else
 		(OPint(*)(OPstream*, void**))OPshaderLoadVertex,
+#endif
 		(OPint(*)(void*))OPshaderUnload,
 		NULL
 	},
@@ -43,17 +51,25 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 	#if defined(OPIFEX_ANDROID) || defined(OPIFEX_IOS)
 		"Shaders/OPENGL_ES_2_0/",
 	#else
-		#ifdef OPIFEX_OPENGL_3_3
-			"Shaders/OPENGL_3_3/",
+		#ifdef OPIFEX_DIRECTX_11
+			"Shaders/DIRECTX_11/",
 		#else
-			"Shaders/OPENGL_2_0/",
+			#ifdef OPIFEX_OPENGL_3_3
+				"Shaders/OPENGL_3_3/",
+			#else
+				"Shaders/OPENGL_2_0/",
+			#endif
 		#endif
 	#endif
 #else
 		"Shaders/",
 #endif
 		sizeof(OPshader),
+#ifdef OPIFEX_DIRECTX_11
+		(OPint(*)(OPstream*, void**))OPshaderLoadFragmentDX11,
+#else
 		(OPint(*)(OPstream*, void**))OPshaderLoadFragment,
+#endif
 		(OPint(*)(void*))OPshaderUnload,
 		NULL
 	},
@@ -97,6 +113,7 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 		(OPint(*)(void*))OPjsonCmanUnload,
 		NULL
 	}
+
 };
 
 //

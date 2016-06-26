@@ -8,6 +8,7 @@ extern "C" {
 #endif
 
 	void OPlogToFile(const char* path);
+	void OPlogToFileClose();
 
 #ifdef __cplusplus
 };

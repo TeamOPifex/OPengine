@@ -119,7 +119,7 @@ endif()
 
 ### Logging
 # message(STATUS "OPIFEX_OS: ${OPIFEX_OS}")
-# message(STATUS "OPENGL_DESKTOP_TARGET: ${OPENGL_DESKTOP_TARGET}")
+# message(STATUS "RENDER_TARGET: ${RENDER_TARGET}")
 # message(STATUS "Ogg Library: ${OGG_LIBRARY}")
 # message(STATUS "Vorbis Library: ${VORBIS_LIBRARY}")
 # message(STATUS "VorbisFile Library: ${VORBISFILE_LIBRARY}")
@@ -134,4 +134,4 @@ opifex_engine_status_messages()
 
 
 # To Build for iOS
-# cmake ../OPengine -DCMAKE_TOOLCHAIN_FILE=./CMake/engine/toolchains/iOS.cmake -DIOS_PLATFORM=SIMULATOR -DOPIFEX_OS=OPIFEX_IOS -DOPENGL_DESKTOP_TARGET=OPENGL_ES_2
+# cmake ../OPengine -DCMAKE_TOOLCHAIN_FILE=./CMake/engine/toolchains/iOS.cmake -DIOS_PLATFORM=SIMULATOR -DOPIFEX_OS=OPIFEX_IOS -DRENDER_TARGET=OPENGL_ES_2

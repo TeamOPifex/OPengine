@@ -13,3 +13,7 @@ void OPlogToFile(const char* path) {
 	_logFile = OPfileCreate(path);
 	OPlogHandler = _OPlogToFile;
 }
+
+void OPlogToFileClose() {
+	fclose(_logFile.file);
+}

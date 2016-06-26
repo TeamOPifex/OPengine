@@ -15,6 +15,10 @@
 extern "C" {
 #endif
 
+#ifdef OPIFEX_WINDOWS
+	extern HINSTANCE OP_HINSTANCE;
+#endif
+
 // Android entry points
 #ifdef OPIFEX_ANDROID
 	#include <jni.h>
@@ -78,35 +82,43 @@ OPchar* OPgetExecutableDir();
 
 // Helper methods to create a more cross-platform code structure for the entry point of your main
 #ifdef OPIFEX_ANDROID
-	#define OP_MAIN void android_main(struct android_app* state)
-	#define OP_MAIN_SUCCESS return;
-	#define OP_MAIN_START OPstart(state);
-	#define OP_MAIN_END OPend();
+#define OP_MAIN void android_main(struct android_app* state) {
+#define OP_MAIN_SUCCESS return;
+#define OP_MAIN_START OPstart(state);
+#define OP_MAIN_END OPend();
 #elif OPIFEX_IOS
-	#define OP_MAIN int _OP_WRAPPED_MAIN(int argc, char** args)
-	#define OP_MAIN_START OPstart(argc, args);
-	#define OP_MAIN_START_STEPPED OPstartStepped(argc, args);
-	#define OP_MAIN_END OPend();
-	#define OP_MAIN_SUCCESS return 0;
+#define OP_MAIN int _OP_WRAPPED_MAIN(int argc, char** args) {
+#define OP_MAIN_START OPstart(argc, args);
+#define OP_MAIN_START_STEPPED OPstartStepped(argc, args);
+#define OP_MAIN_END OPend();
+#define OP_MAIN_SUCCESS return 0;
 #else
 
 #if defined(OPIFEX_OPTION_RELEASE) && defined(OPIFEX_WINDOWS)
-	//#define OP_MAIN int main(int argc, char** args)
-	#ifdef _CONSOLE
-		#define OP_MAIN int main(int argc, char** args)
-	#else
-		#define OP_MAIN  int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
-	#endif
-	#define OP_MAIN_START OPstart(__argc, __argv);
-	#define OP_MAIN_START_STEPPED OPstartStepped(__argc, __argv);
+	//#define OP_MAIN int main(int argc, char** args) {
+#ifdef _CONSOLE
+#define OP_MAIN int main(int argc, char** args) {
 #else
-	#define OP_MAIN int main(int argc, char** args)
-	#define OP_MAIN_START OPstart(argc, args);
-	#define OP_MAIN_START_STEPPED OPstartStepped(argc, args);
+#define OP_MAIN  int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {
+#endif
+#define OP_MAIN_START OPstart(__argc, __argv);
+#define OP_MAIN_START_STEPPED OPstartStepped(__argc, __argv);
+#else
+
+	#ifdef _CONSOLE
+		#define OP_MAIN_START int main(int argc, char** args) {
+		#define OP_MAIN_RUN OPstart(argc, args);
+		#define OP_MAIN_RUN_STEPPED OPstartStepped(argc, args);
+	#else
+		#define OP_MAIN_START int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) { OP_HINSTANCE = hInstance;
+		#define OP_MAIN_RUN OPstart(0, NULL);
+		#define OP_MAIN_RUN_STEPPED OPstartStepped(0, NULL);
+	#endif
 #endif
 
-#define OP_MAIN_SUCCESS return 0;
-#define OP_MAIN_END OPend();
+#define OP_MAIN_END OPend(); \
+	return 0; \
+	}
 
 #endif
 

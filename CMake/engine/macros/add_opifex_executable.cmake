@@ -19,13 +19,22 @@ function(add_opifex_executable name)
 		# message(STATUS "ADDING IOS EXECUTABLE ${name}")
 	else()
     # message(STATUS "${OPIFEX_OPTION_RELEASE} AND ${OPIFEX_OS_WINDOWS}")
-    if(${OPIFEX_OPTION_RELEASE} AND ${OPIFEX_OS_WINDOWS})
+    SET(USE_AS_WINDOWS_APP ${OPIFEX_OPTION_RELEASE} AND ${OPIFEX_OS_WINDOWS})
+    SET(IS_DIRECTX ${RENDER_TARGET} STREQUAL "DIRECTX_11")
+    SET(USE_AS_WINDOWS_APP ${USE_AS_WINDOWS_APP} OR ${IS_DIRECTX})
+
+    if(${USE_AS_WINDOWS_APP})
 		    add_executable(${name} WIN32 ${ARGV})
         set_target_properties(${name} PROPERTIES WORKING_DIRECTORY "$(ProjectDir)$(Configuration)\\")
     else()
 		    add_executable(${name} ${ARGV})
+        add_definitions(-D_CONSOLE)
     endif()
-    
+
+    if(${IS_DIRECTX})
+      target_link_libraries(${name} d3d11.lib d3dcompiler.lib;)
+    endif()
+
 		# message(STATUS "ADDING EXECUTABLE ${name}")
 	endif()
 

@@ -51,6 +51,8 @@ struct OPshaderAttribute{
 
 OPint OPshaderLoadVertex(OPstream* str, OPshader** shader);
 OPint OPshaderLoadFragment(OPstream* str, OPshader** shader);
+OPint OPshaderLoadVertexDX11(OPstream* source, OPshader** shader);
+OPint OPshaderLoadFragmentDX11(OPstream* source, OPshader** shader);
 OPint OPshaderUnload(OPshader* shader);
 
 

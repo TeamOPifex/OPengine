@@ -3,7 +3,11 @@
 #include <stdio.h>
 #include <ostream>
 
+#ifdef OPIFEX_WINDOWS
+HANDLE LogToHandle = NULL;
+#else
 i32 LogToHandle = 1;
+#endif
 ui32 OP_LOG_LEVEL = 0;
 void(*OPlogHandler)(ui32, const char*, const char*) = NULL;
 
@@ -64,12 +68,17 @@ void OPlogErr(const char* message, ...) {
 #else
 
 
-
+#ifdef OPIFEX_WINDOWS
+void OPlogSetOutput(HANDLE handle) {
+	LogToHandle = handle;
+}
+#else
 void OPlogSetOutput(i32 handle) {
 	if(handle > 0) {
 		LogToHandle = handle;
 	}
 }
+#endif
 
 
 void OPvlog(ui32 level, const char* channel, const char* message, va_list args) {
@@ -92,7 +101,10 @@ void OPvlog(ui32 level, const char* channel, const char* message, va_list args) 
 		vsnprintf(buffer, sizeof buffer, buffer2, args);
 #ifndef OPIFEX_IOS
 		printf(buffer);
-		// write(LogToHandle, buffer, strlen(buffer));
+		//if (LogToHandle) {
+		//	WriteFile(LogToHandle, buffer, strlen(buffer), 0, 0);
+		//}
+		
 #else
         printf(buffer);
 #endif

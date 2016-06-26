@@ -45,7 +45,7 @@ OPint ExampleParticleSystemUpdate(OPtimer* time) {
 		-0.001f,
 		3000,
 		3000,
-		{ {{1.0, 1.0, 1.0f, 1.0f}} },
+		OPvec4(1.0, 1.0, 1.0f, 1.0f),
 		sprite
 	};
 	OPparticleSysSpawn(particleSystemExample->ParticleSystem, p);
