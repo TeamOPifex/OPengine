@@ -20,7 +20,9 @@ void OPkeyboardUpdate(OPtimer* timer) {
 
 	OPmemcpy(&Keyboard.prevKeys, &Keyboard.keys, _OPKEYBOARD_MAX * sizeof(OPint));
 	for(ui32 i = 0; i < _OPKEYBOARD_MAX; i++) {
+#ifndef OPIFEX_DIRECTX_11
 		Keyboard.keys[i] = glfwGetKey(OPWINDOW_ACTIVE->Window, OPkeyboardMapping[i]);
+#endif
 	}
 }
 

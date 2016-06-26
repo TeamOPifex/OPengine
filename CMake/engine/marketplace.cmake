@@ -55,6 +55,9 @@ function(add_marketplace_addons APPLICATION_TARGET FOLDER)
     eval("target_link_libraries(${APPLICATION_TARGET} ${TEMP_RESULT})")
     add_definitions(-DADDON_${ADDON_NAME})
 
+    eval("ADDON_${ADDON_NAME}_DEFINES(TEMP_RESULT)")
+    add_definitions(${TEMP_RESULT})
+
   endforeach()
 
 endfunction(add_marketplace_addons)

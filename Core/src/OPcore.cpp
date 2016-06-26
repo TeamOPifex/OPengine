@@ -6,6 +6,9 @@ OPchar* _startUpDir = NULL;
 OPchar* _execDir = NULL;
 OPint _OPengineRunning;
 
+#ifdef OPIFEX_WINDOWS
+	HINSTANCE OP_HINSTANCE;
+#endif
 
 #ifdef OPIFEX_ANDROID
 

@@ -10,12 +10,20 @@
 #include <stdio.h>
 #include <errno.h>
 
+#ifdef OPIFEX_WINDOWS
+extern HANDLE LogToHandle;
+#else
 extern i32 LogToHandle;
+#endif
 extern ui32 OP_LOG_LEVEL;
 
 extern void(*OPlogHandler)(ui32, const char*, const char*);
 
+#ifdef OPIFEX_WINDOWS
+void OPlogSetOutput(HANDLE handle);
+#else
 void OPlogSetOutput(i32 handle);
+#endif
 
 // Prints out to the console, accepts variable arguments like sprintf
 void OPlg(const char* message, ...);

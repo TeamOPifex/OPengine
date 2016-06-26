@@ -29,21 +29,27 @@ OPmouseState Mouse = {
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 void OPmouseUpdate() {
 	ASSERT(OPWINDOW_ACTIVE != NULL, "There must be an active window");
+#ifndef OPIFEX_DIRECTX_11
 	glfwSetScrollCallback(OPWINDOW_ACTIVE->Window, scrollCB);
+#endif
 	OPmemcpy(&Mouse.prevKeys, &Mouse.keys, sizeof(OPint)* _OPMOUSE_MAX);
 	Mouse.prevPositionX = Mouse.positionX;
 	Mouse.prevPositionY = Mouse.positionY;
 	Mouse.prevWheel = Mouse.wheel;
 
 	for(ui32 i = 0; i < _OPMOUSE_MAX; i++) {
+#ifndef OPIFEX_DIRECTX_11
 		Mouse.keys[i] = glfwGetMouseButton(OPWINDOW_ACTIVE->Window, OPmouseMapping[i]);
+#endif
 		//if(Mouse.keys[i]) {
 		//	OPlog("Key %d : %d", i, OPmouseCodes[i]);
 		//}
 	}
 	// TODO: Fix this with the callback for GLFW3ß
 	d64 x, y;
+#ifndef OPIFEX_DIRECTX_11
 	glfwGetCursorPos(OPWINDOW_ACTIVE->Window, &x, &y);
+#endif
 	//OPmouseSetPositionScreenCenter();
 	Mouse.positionX = x;
 	Mouse.positionY = y;

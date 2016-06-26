@@ -1,17 +1,17 @@
 #include "./Math/include/OPmat4.h"
 
 const OPmat4 OPMAT4_ZERO = {
-	0, 0, 0, 0,
-	0, 0, 0, 0,
-	0, 0, 0, 0,
-	0, 0, 0, 0
+	OPvec4(0, 0, 0, 0),
+	OPvec4(0, 0, 0, 0),
+	OPvec4(0, 0, 0, 0),
+	OPvec4(0, 0, 0, 0)
 };
 
 const OPmat4 OPMAT4_IDENTITY = {
-	1, 0, 0, 0,
-	0, 1, 0, 0,
-	0, 0, 1, 0,
-	0, 0, 0, 1
+	OPvec4(1, 0, 0, 0),
+	OPvec4(0, 1, 0, 0),
+	OPvec4(0, 0, 1, 0),
+	OPvec4(0, 0, 0, 1)
 };
 
 OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPfloat zNear, OPfloat zFar){
