@@ -1,7 +1,6 @@
 # OPengine
-See the [Getting Started](http://opengine.io/tutorial/getting-started) tutorial at: http://opengine.io/tutorial/getting-started
 
-See the OPengine documentation at: http://opengine.io/docs
+See the OPengine documentation at: http://docs.opengine.io
 
 ## # OPengine Launcher
 ![Image of Launcher](http://i.imgur.com/wxRNclT.png)
