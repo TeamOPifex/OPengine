@@ -16,7 +16,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd,
 void OPwindow::Init(OPmonitor* monitor, bool fullscreen, bool borderless, const OPchar* title, ui32 width, ui32 height) {
 	ASSERT(fullscreen == false || (fullscreen && monitor != NULL), "To create a fullscreen window, a monitor must be declared");
 
-#if defined(OPIFEX_OPENGL_2_0)// || defined(OPIFEX_OPENGL_3_3)
+#if defined(OPIFEX_OPENGL_2_0) || defined(OPIFEX_OPENGL_3_3)
 	GLFWmonitor* display = NULL;
 	if (monitor != NULL) {
 		OPlog("Not showing monitor");
@@ -51,7 +51,9 @@ void OPwindow::Init(OPmonitor* monitor, bool fullscreen, bool borderless, const 
 	glEnable(GL_MULTISAMPLE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glGenVertexArrays(1, &VAO);
+	glGenVertexArrays(1, &VAO);	
+	OPRENDER_VAO = VAO;
+	glBindVertexArray(OPRENDER_VAO);
 #else
 	WNDCLASSEX wc;
 
@@ -85,7 +87,7 @@ void OPwindow::Init(OPmonitor* monitor, bool fullscreen, bool borderless, const 
 
 	ShowWindow(Window, true);
 
-	OPWINDOW_ACTIVE = this;
+	Bind();
 #endif
 }
 

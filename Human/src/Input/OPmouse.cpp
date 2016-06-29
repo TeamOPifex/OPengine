@@ -90,7 +90,9 @@ OPint OPmouseWasReleased(OPmouseKey key) {
 	return !Mouse.keys[key] && Mouse.prevKeys[key];
 }
 void OPmouseSetPosition(i32 x, i32 y) {	
-	glfwSetCursorPos(window, x, y);
+#ifndef OPIFEX_DIRECTX_11
+	glfwSetCursorPos(OPWINDOW_ACTIVE->Window, x, y);
+#endif
 	Mouse.prevPositionX = x;
 	Mouse.prevPositionY = y;
 }

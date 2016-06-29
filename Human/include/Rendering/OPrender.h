@@ -20,7 +20,6 @@ extern i8 OPRENDER_HAS_FOCUS;
 extern OPuint OPRENDER_VAO;
 
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
-extern GLFWwindow* window;
 extern void (*OP_WINDOW_DROP)(int, const OPchar**);
 void OPrenderDragAndDropCB(void (*cb)(int, const OPchar**));
 #endif

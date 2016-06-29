@@ -208,6 +208,7 @@ OPint OPeffectBind(OPeffect* effect, ui32 stride){
 			);
 		if (OPglError("OPeffectBind:Error ")) {
 			OPlog("Effect %s: Failed to set attrib ptr %s", effect->Name, attr->Name);
+			OPlog("Very likely that there's no VAO bound");
 		}
 //		else {
 //			OPlog("Set %s", attr->Name);

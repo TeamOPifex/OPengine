@@ -297,11 +297,11 @@ void __OPwinUpdateGamePad(OPgamePad* controller){
 #endif
 
 void OPgamePad::Update(){
-	if(IsConnected()) {
+	if(connected) {
 		OPmemcpy(
 			&prevButtons,
 			&buttons,
-			sizeof(OPint) * _OPGAMEPADBUTTON_MAX);
+			sizeof(bool) * _OPGAMEPADBUTTON_MAX);
 		OPmemcpy(
 			&prevAxes,
 			&axes,

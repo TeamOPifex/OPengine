@@ -402,11 +402,10 @@ OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, 
 		return 0;
 	}
 
-    OPjavaScriptV8Compiled result = {
-		script,
-		Persistent<Script, CopyablePersistentTraits<Script> >(isolate, compiledV8),
-		Persistent<Context, CopyablePersistentTraits<Context> >(isolate, localContext),
-	};
+	OPjavaScriptV8Compiled result;
+	result.Source = script;
+	result.Script = Persistent<Script, CopyablePersistentTraits<Script> >(isolate, compiledV8),
+	result.Context = Persistent<Context, CopyablePersistentTraits<Context> >(isolate, localContext);
 
 	*compiled = result;
 	return 1;
@@ -508,5 +507,19 @@ void OPjavaScriptV8SetupRun(const OPchar* script) {
     OPjavaScriptV8Run(&compiled);
 	OPlog("Script run");
 }
+
+OPint OPjavaScriptV8Compiled::Compile(const OPchar* path) {
+	return OPjavaScriptV8Compile(this, path);
+}
+
+OPint OPjavaScriptV8Compiled::Execute() {
+	ScriptResult = OPjavaScriptV8Run(this);
+	return 1;
+}
+
+OPjavaScriptPersistentValue OPjavaScriptV8Compiled::Function(const OPchar* name, OPuint count, void** args) {
+	return OPjavaScriptV8Run(this, name, count, args);
+}
+
 
 #endif

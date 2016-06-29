@@ -278,11 +278,14 @@ inline Handle<Value> _JS_NEXT_ARG(const JS_ARGS& args) {
 #define JS_MAKE_WRAPPED_FN_NAME(x) _ ## x
 #define JS_MAKE_SELF_FN_NAME(x) x ## Self
 
+// Makes 2 methods out of 1 that will make it a callable from the object itself
+// ex: VectorAdd(vector, [1, 1, 1]) vs vector.Add([1,1,1])
 #define JS_HELPER_SELF_WRAPPER(funcName) \
 JS_RETURN_VAL JS_MAKE_WRAPPED_FN_NAME(funcName)(const JS_ARGS& args); \
 JS_RETURN_VAL funcName(const JS_ARGS& args) { JS_RUN(JS_MAKE_WRAPPED_FN_NAME(funcName)) } \
 JS_RETURN_VAL JS_MAKE_SELF_FN_NAME(funcName)(const JS_ARGS& args) { JS_RUN_SELF(JS_MAKE_WRAPPED_FN_NAME(funcName)) } \
 JS_RETURN_VAL JS_MAKE_WRAPPED_FN_NAME(funcName)(const JS_ARGS& args)
+
 
 
 
@@ -349,6 +352,13 @@ JS_HELPER_SELF_WRAPPER( JS_MAKE_WRAPPED_FN_NAME(t ## m) ) { \
 #define JS_EASY_WRAP_PTR(TYPE) Handle<Object> \
     TYPE ## Wrapper(Handle<Object> result, TYPE* ptr); \
     JS_EASY_WRAP_(TYPE)
+
+
+
+#define JS_NEXT_ARG_AS_NUMBER args[_JS_ARGC]->NumberValue(); _JS_ARGC++;
+#define JS_NEXT_ARG_AS_INTEGER args[_JS_ARGC]->IntegerValue(); _JS_ARGC++;
+#define JS_NEXT_ARG_AS_STRING(name) String::Utf8Value name ## string(args[_JS_ARGC]->ToString()); _JS_ARGC++; const OPchar* name = *(name ## string);
+
 
 #endif
 

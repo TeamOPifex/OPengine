@@ -16,6 +16,31 @@ struct OPjavaScriptV8Compiled {
 	OPscript* Source;
 	OPjavaScriptPersistentScript Script;
 	OPjavaScriptPersistentContext Context;
+	OPjavaScriptPersistentValue ScriptResult;
+
+	OPjavaScriptV8Compiled() {
+
+	}
+	OPjavaScriptV8Compiled(const OPchar* file) {
+		CompileAndExecute(file);
+	}
+
+	OPint Compile(const OPchar* file);
+	OPint Execute();
+	OPjavaScriptPersistentValue Function(const OPchar* name, OPuint count, void** args);
+	OPjavaScriptPersistentValue Function(const OPchar* name) {
+		Function(name, 0, NULL);
+	}
+	OPjavaScriptPersistentValue Function(const OPchar* name, void* arg) {
+		Function(name, 1, (void**)arg);
+	}
+
+	OPint CompileAndExecute(const OPchar* file) {
+		if (Compile(file)) {
+			return Execute();
+		}
+		return 0;
+	}
 };
 
 void OPjavaScriptV8Init();

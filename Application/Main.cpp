@@ -13,7 +13,7 @@ OPwindow* mainWindow;
 void ApplicationInit() {
 
 	OP_LOG_LEVEL = 2000;
-	OPlogToFile("output.txt");
+	//OPlogToFile("output.txt");
 	OPlog("test");
 
 	OPloadersAddDefault();
@@ -37,33 +37,29 @@ void ApplicationInit() {
 	//OPcmanLoadGet("Tutorial02.vert");
 	//OPcmanLoadGet("Tutorial02.frag");
 
-	//OPGAMEPADSYSTEM.SetDeadzones(0.2f);	
+	OPGAMEPADSYSTEM.SetDeadzones(0.2f);	
 
-	//OPgameStateChange(&GS_EXAMPLE_SELECTOR);
+	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 }
 
 OPint ApplicationUpdate(OPtimer* timer) {
 	if (mainWindow->Update()) {
 		return 1;
 	}
-	//OPrenderUpdate();
 
-	//OPinputSystemUpdate(timer);
-	//OPcmanUpdate(timer);
+	OPinputSystemUpdate(timer);
+	OPcmanUpdate(timer);
 
-	//if (OPkeyboardWasReleased(OPKEY_ESCAPE)) return 1;
-	//if ((OPkeyboardWasReleased(OPKEY_BACKSPACE) || OPgamePadGet(OPGAMEPAD_ONE)->WasPressed(OPGAMEPADBUTTON_BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
-	//	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
-	//}
+	if (OPkeyboardWasReleased(OPKEY_ESCAPE)) return 1;
+	if ((OPkeyboardWasReleased(OPKEY_BACKSPACE) || OPgamePadGet(OPGAMEPAD_ONE)->WasPressed(OPGAMEPADBUTTON_BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
+		OPgameStateChange(&GS_EXAMPLE_SELECTOR);
+	}
 
-	//return ActiveState->Update(timer);
-	return 0;
+	return ActiveState->Update(timer);
 }
 
 void ApplicationRender(OPfloat delta) {
-	//ActiveState->Render(delta);
-	OPrenderClear(0, 0, 0.5f);
-	OPrenderPresent();
+	ActiveState->Render(delta);
 }
 
 void ApplicationDestroy() {
@@ -103,7 +99,7 @@ OP_MAIN_START
 	if(argc > 1) {
 		//chdir(OPIFEX_ASSETS);
 		OPjavaScriptV8SetupRun(args[2]);
-		OP_MAIN_SUCCESS
+		return 0;
 	}
 	#endif
 
