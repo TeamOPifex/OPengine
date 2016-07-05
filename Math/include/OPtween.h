@@ -6,10 +6,15 @@
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmath.h"
 
+inline OPfloat OPtween(OPfloat v1, OPfloat v2, OPfloat d) {
+	return v1 + ((v2 - v1) * d);
+}
+
 // Tweening Function : y = x
 inline OPfloat OPtween_linear(OPfloat p) {
 	return p;
 }
+
 
 // Tweening Function : y = x^2
 inline OPfloat OPtween_quadraticEaseIn(OPfloat p) {
