@@ -269,7 +269,7 @@ typedef struct {
 			Ground.Draw(&GroundMaterials[1], &Camera.Camera);
 		}
 
-		OPtexture2DRender(shadow2D);
+		//OPtexture2DRender(shadow2D);
 
 		OPrenderPresent();
 	}
