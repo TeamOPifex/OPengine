@@ -6,6 +6,7 @@ function(opifex_engine_status_messages)
 
 	message(STATUS "\nOPengine CMake Success\n===================================\n
 		OPIFEX_REPOSITORY: ${OPIFEX_REPOSITORY}
+        RENDERER: ${RENDER_TARGET}
 		OPIFEX_ENGINE_REPOSITORY: ${OPIFEX_ENGINE_REPOSITORY}
 		OPIFEX_BINARIES: ${OPIFEX_BINARIES}
 		OPIFEX_ASSETS: ${OPIFEX_ASSETS}

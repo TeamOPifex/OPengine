@@ -3,15 +3,19 @@
 #include "./Human/include/Rendering/OPrender.h"
 #include "./Human/include/Utilities/Errors.h"
 #include "./Human/include/Rendering/OPglew.h"
+#ifdef OPIFEX_DIRECTX_11
 #include <windows.h>
 #include <windowsx.h>
+#endif
 
 OPwindow* OPWINDOW_ACTIVE = NULL;
 
+#ifdef OPIFEX_DIRECTX_11
 LRESULT CALLBACK WindowProc(HWND hWnd,
 	UINT message,
 	WPARAM wParam,
 	LPARAM lParam);
+#endif
 
 void OPwindow::Init(OPmonitor* monitor, bool fullscreen, bool borderless, const OPchar* title, ui32 width, ui32 height) {
 	ASSERT(fullscreen == false || (fullscreen && monitor != NULL), "To create a fullscreen window, a monitor must be declared");
@@ -43,7 +47,7 @@ void OPwindow::Init(OPmonitor* monitor, bool fullscreen, bool borderless, const 
 	glfwMakeContextCurrent(Window);
 	OPWINDOW_ACTIVE = this;
 	OPglewInit();
-	
+
 	OPglError("OPrenderInit error glfw setup");
 
 	glEnable(GL_MULTISAMPLE_ARB);
@@ -51,7 +55,7 @@ void OPwindow::Init(OPmonitor* monitor, bool fullscreen, bool borderless, const 
 	glEnable(GL_MULTISAMPLE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glGenVertexArrays(1, &VAO);	
+	glGenVertexArrays(1, &VAO);
 	OPRENDER_VAO = VAO;
 	glBindVertexArray(OPRENDER_VAO);
 #else
@@ -117,6 +121,7 @@ OPint OPwindow::Update() {
 	return 0;
 }
 
+#ifdef OPIFEX_DIRECTX_11
 // this is the main message handler for the program
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -135,6 +140,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	// Handle any messages the switch statement didn't
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
+#endif
 
 
 void OPwindow::Bind() {
@@ -152,12 +158,12 @@ void OPwindow::Bind() {
 	OPRENDER_SCREEN_HEIGHT_SCALE = HeightScaled;
 	OPRENDER_SCALED_WIDTH = OPRENDER_SCREEN_WIDTH * OPRENDER_SCREEN_WIDTH_SCALE;
 	OPRENDER_SCALED_HEIGHT = OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE;
-	
+
 	OPRENDER_WIDTH = OPRENDER_SCREEN_WIDTH;
 	OPRENDER_HEIGHT = OPRENDER_SCREEN_HEIGHT;
 
 	OPrenderSetViewport(0, 0, (OPuint)OPRENDER_SCREEN_WIDTH, (OPuint)OPRENDER_SCREEN_HEIGHT);
-	
+
 	OPRENDER_VAO = VAO;
 	glBindVertexArray(OPRENDER_VAO);
 

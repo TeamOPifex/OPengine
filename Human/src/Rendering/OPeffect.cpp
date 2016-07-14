@@ -19,7 +19,7 @@ OPeffect createEffect(OPshader vert,
 
 	OPglError("OPeffectCreate:Error 0: %d");
 
-	OPint nameLen = strlen(Name) + 1;
+	//OPint nameLen = strlen(Name) + 1;
 	OPeffect effect = {
 		vert,
 		frag,
@@ -28,12 +28,13 @@ OPeffect createEffect(OPshader vert,
 	};
 
 	// copy the name into the struct
-	OPmemcpy(
-		effect.Name,
-		Name,
-		nameLen > OP_EFFECT_NAME_LEN ? OP_EFFECT_NAME_LEN : nameLen
-		); effect.Name[OP_EFFECT_NAME_LEN - 1] = '\0';
+	// OPmemcpy(
+	// 	effect.Name,
+	// 	Name,
+	// 	nameLen > OP_EFFECT_NAME_LEN ? OP_EFFECT_NAME_LEN : nameLen
+	// 	); effect.Name[OP_EFFECT_NAME_LEN - 1] = '\0';
 
+    effect.Name = OPstringCopy(Name);
 	effect.Parameters = OPhashMapCreate(32);
 	effect.Attributes = OPlistCreate(AttribCount, sizeof(OPshaderAttribute));
 
@@ -45,13 +46,21 @@ OPeffect createEffect(OPshader vert,
 
 	i32 status;
 	glGetProgramiv(effect.ProgramHandle, GL_LINK_STATUS, &status);
-	glUseProgram(effect.ProgramHandle);
+
+    if(status == GL_FALSE) {
+        OPchar buffer[2048];
+        GLsizei length;
+        glGetProgramInfoLog(effect.ProgramHandle, 2048, &length, buffer);
+        OPlog("Program Log: %s", buffer);
+        OPlog("vert: %d, frag: %d", vert, frag);
+    	OPlog("FAILED to link Shader Program: %s", Name);
+        OPglError("Shader Error");
+    }
 	ASSERT(status == GL_TRUE, "Failed to Link Shader Program");
 
-	if (status == GL_FALSE) {
-		OPlog("FAILED to link Shader Program: %s", Name);
-	}
-	else {
+    glUseProgram(effect.ProgramHandle);
+
+	if (status == GL_TRUE) {
 		OPglError("OPeffectCreate:Error 7");
 
 		i32 result;
@@ -184,7 +193,7 @@ OPint OPeffectBind(OPeffect* effect, ui32 stride){
 	glUseProgram(OPEFFECT_ACTIVE->ProgramHandle);
 
 	if (OPglError("OPeffectBind:Failed to use Program")) {
-		OPlog("For Shader: %s", OPEFFECT_ACTIVE->Name);
+		OPlog("For Shader: %s (%d)", OPEFFECT_ACTIVE->Name, OPEFFECT_ACTIVE->ProgramHandle);
 		return -1;
 	}
 
@@ -330,7 +339,7 @@ OPeffect OPeffectGen(
 	if (!OPcmanIsLoaded(frag)) OPcmanLoad(frag);
 	OPshader* fragShader = (OPshader*)OPcmanGet(frag);
 
-	OPlog("Create the Effect");
+	OPlog("Create the Effect: %s", Name);
 
 	OPeffect result = createEffect(*vertShader, *fragShader, Attributes, AttribCount, Name, stride);
 

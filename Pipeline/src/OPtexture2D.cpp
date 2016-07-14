@@ -23,11 +23,13 @@ void OPtexture2DUnloadGlobals() {
 	if (DEFAULT_TEXTURE2D_EFFECT != NULL) {
 		OPeffectUnload(DEFAULT_TEXTURE2D_EFFECT);
 		OPfree(DEFAULT_TEXTURE2D_EFFECT);
+        DEFAULT_TEXTURE2D_EFFECT = NULL;
 	}
 	if (TEXTURE_2D_QUAD_MESH != NULL) {
 		OPmeshDestroy(TEXTURE_2D_QUAD_MESH);
 		OPfree(TEXTURE_2D_QUAD_MESH->Vertices);
 		OPfree(TEXTURE_2D_QUAD_MESH);
+        TEXTURE_2D_QUAD_MESH = NULL;
 	}
 }
 
@@ -45,6 +47,7 @@ OPtexture2D* OPtexture2DCreate(OPtexture* texture, OPeffect* effect, OPvec2 uvSt
 	}
 
 	if (TEXTURE_2D_QUAD_MESH == NULL) {
+        OPlog("creating quad");
 		TEXTURE_2D_QUAD_MESH = (OPmesh*)OPalloc(sizeof(OPmesh));
 		*TEXTURE_2D_QUAD_MESH = OPquadCreate(1, 1, uvStart, uvEnd);
 	}
@@ -66,10 +69,21 @@ void OPtexture2DPrepRender(OPtexture2D* tex2d) {
 
 	OPrenderDepth(0);
 
-	OPmat4 world = OPmat4RotZ(tex2d->Rotation);
-	world = OPmat4Scl(world, tex2d->Scale.x, tex2d->Scale.y, 1.0);
-	world = OPmat4Scl(world, OPrenderGetWidthAspectRatio() * tex2d->Texture->Description.Width / tex2d->Texture->Description.Height, 1.0, 1.0);
-	world += tex2d->Position;
+
+
+	// OPmat4 world = OPmat4RotZ(tex2d->Rotation);
+	// world = OPmat4Scl(world, tex2d->Scale.x, tex2d->Scale.y, 1.0);
+	// world = OPmat4Scl(world, OPrenderGetWidthAspectRatio() * tex2d->Texture->Description.Width / tex2d->Texture->Description.Height, 1.0, 1.0);
+	// world += tex2d->Position;
+
+    OPmat4 world = OPMAT4_IDENTITY;
+    OPmat4 size = OPMAT4_IDENTITY;
+    size.Translate(tex2d->Position.x / (OPfloat)OPRENDER_WIDTH, tex2d->Position.y / (OPfloat)OPRENDER_HEIGHT, 0);
+    size.Scl(tex2d->Texture->Description.Width, tex2d->Texture->Description.Height, 1.0);
+    OPmat4 view = OPMAT4_IDENTITY;
+    view.Scl(1.0f / (OPfloat)OPRENDER_WIDTH, 1.0f / (OPfloat)OPRENDER_HEIGHT, 1.0f);
+
+    world = size * view;
 
 	OPtextureClearActive();
 	OPeffectParami("uColorTexture", OPtextureBind(tex2d->Texture));

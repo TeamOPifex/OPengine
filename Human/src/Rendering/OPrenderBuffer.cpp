@@ -19,9 +19,9 @@
 
 
 //-----------------------------------------------------------------------------
-//   _____ _       _           _     
-//  / ____| |     | |         | |    
-// | |  __| | ___ | |__   __ _| |___ 
+//   _____ _       _           _
+//  / ____| |     | |         | |
+// | |  __| | ___ | |__   __ _| |___
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
@@ -29,9 +29,9 @@ OPrenderBuffer* OPRENDER_CURR_VB;
 OPrenderBuffer* OPRENDER_CURR_IB;
 
 //-----------------------------------------------------------------------------
-// ______                _   _                 
-//|  ____|              | | (_)                
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+// ______                _   _
+//|  ____|              | | (_)
+//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
@@ -67,11 +67,16 @@ void OPrenderSetBufferSubData(OPrenderBuffer* buff, ui32 elementSize, ui32 offse
 }
 //-----------------------------------------------------------------------------
 void OPrenderBindBuffer(OPrenderBuffer* buffer){
-	
+
 	OPglError("OPrenderBindBuffer:Error 0");
 	glBindBuffer(buffer->Type, buffer->Handle);
 	if(OPglError("OPrenderBindBuffer:Error 1")) {
 		OPlog("Buffer Failed to Bind - Type (%d) / Handle (%d)", buffer->Type, buffer->Handle);
+        if(buffer->Type == OPvertexBuffer) {
+            OPlog("Buffer Failed to Bind - Type (Vertex Buffer)");
+        } else {
+            OPlog("Buffer Failed to Bind - Type (Index Buffer)");
+        }
 	}
 	if(buffer->Type == OPvertexBuffer){
 		OPRENDER_CURR_VB = buffer;

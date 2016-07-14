@@ -104,7 +104,7 @@ void glfwCharacterCallback(GLFWwindow* window, unsigned int codepoint)
 #endif
 
 OPint OPrenderInit(){
-	OPlogDebug("Initializing Renderer");
+	OPlogDebug("Initializing OPENGL_2_0 Renderer");
 
 #ifdef OPIFEX_ANDROID
 	OPRENDER_SCREEN_WIDTH = JNIWidth();

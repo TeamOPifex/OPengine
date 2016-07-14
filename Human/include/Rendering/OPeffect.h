@@ -62,7 +62,7 @@ struct OPeffect {
 	ui32      Stride;
 	OPhashMap*  Parameters;
 	OPlist*   Attributes;
-	OPchar    Name[OP_EFFECT_NAME_LEN];
+	OPchar*    Name; //[OP_EFFECT_NAME_LEN]
 
 	void Init(const OPchar* vert, const OPchar* frag, ui32 attrs, const OPchar* Name, ui32 stride) {
 		*this = OPeffectGen(vert, frag, attrs, Name, stride);

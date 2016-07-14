@@ -17,7 +17,7 @@ OPint OPshaderLoadVertex(OPstream* source, OPshader** shader){
 	OPshader vertex = -1;
 
 	//OPstream* source = OPreadFile(filename);
-	OPlog("Loading shader %d", OPvertexShader);
+	//OPlog("Loading shader %d", OPvertexShader);
 
 	OPglError("GLShader::Error 0");
 
@@ -79,8 +79,8 @@ OPint OPshaderCompileDX11(OPstream* source, OPshader** shader, const OPchar* sha
 	DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #ifdef _DEBUG
 	// Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-	// Setting this flag improves the shader debugging experience, but still allows 
-	// the shaders to be optimized and to run exactly the way they will run in 
+	// Setting this flag improves the shader debugging experience, but still allows
+	// the shaders to be optimized and to run exactly the way they will run in
 	// the release configuration of this program.
 	dwShaderFlags |= D3DCOMPILE_DEBUG;
 
@@ -125,7 +125,7 @@ OPint OPshaderLoadVertexDX11(OPstream* source, OPshader** shader) {
 	OPint result = OPshaderCompileDX11(source, shader, "VS", "vs_4_0", &blob);
 	if (result <= 0) {
 		return result;
-	}	
+	}
 	HRESULT hr = S_OK;
 
 	ID3D11VertexShader* g_pVertexShader = nullptr;

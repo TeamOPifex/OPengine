@@ -51,8 +51,8 @@ void OPrenderDragAndDropCB(void(*cb)(int, const OPchar**)) {
 }
 
 OPint OPrenderInit() {
-    OPlogDebug("Initializing Renderer");
-	
+    OPlogDebug("Initializing OPENGL_3_3 Renderer");
+
     glfwSetErrorCallback(glfwErrorCallback);
 
     ASSERT(glfwInitialized == 0, "GLFW has already been initialized");
