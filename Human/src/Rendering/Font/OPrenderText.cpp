@@ -68,13 +68,13 @@ void OPfontRender(const OPchar* text, OPmat4* world) {
 	if (node == NULL || !OPFONTMANAGER_ACTIVE->isBuilt) {
 		OPfontUserTextNode textNode = OPfontCreateUserText(OPFONTMANAGER_ACTIVE->_font, text, 1.0);
 		OPfontRenderSetAlign(&aligned, textNode.Width, OPFONTMANAGER_ACTIVE->_align);
-		OPmat4 temp = (*world) * aligned * OPmat4Scl(OPFONTMANAGER_ACTIVE->scale);
+		OPmat4 temp = (*world) * OPmat4Scl(OPFONTMANAGER_ACTIVE->scale) * aligned;
 		OPfontRender(&textNode, &temp);
 		OPmeshDestroy(&textNode.mesh);
 	}
 	else {
 		OPfontRenderSetAlign(&aligned, node->Width, OPFONTMANAGER_ACTIVE->_align);
-		OPmat4 temp = (*world) * aligned * OPmat4Scl(OPFONTMANAGER_ACTIVE->scale);
+		OPmat4 temp = (*world) * OPmat4Scl(OPFONTMANAGER_ACTIVE->scale) * aligned;
 		OPfontRender(node, &temp);
 	}
 }

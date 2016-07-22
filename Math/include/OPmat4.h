@@ -169,7 +169,7 @@ struct OPmat4 {
 		return this;
 	}
 
-	inline OPmat4* SetIdentity(f32 val) {
+	inline OPmat4* SetIdentity() {
 		*this = OPMAT4_IDENTITY;
 		return this;
 	}

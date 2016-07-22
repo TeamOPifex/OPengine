@@ -79,7 +79,7 @@ void OPtexture2DPrepRender(OPtexture2D* tex2d) {
     OPmat4 world = OPMAT4_IDENTITY;
     OPmat4 size = OPMAT4_IDENTITY;
     size.Translate(tex2d->Position.x / (OPfloat)OPRENDER_WIDTH, tex2d->Position.y / (OPfloat)OPRENDER_HEIGHT, 0);
-    size.Scl(tex2d->Texture->Description.Width, tex2d->Texture->Description.Height, 1.0);
+    size.Scl(tex2d->Texture->Description.Width * tex2d->Scale.x, tex2d->Texture->Description.Height * tex2d->Scale.y, 1.0);
     OPmat4 view = OPMAT4_IDENTITY;
     view.Scl(1.0f / (OPfloat)OPRENDER_WIDTH, 1.0f / (OPfloat)OPRENDER_HEIGHT, 1.0f);
 

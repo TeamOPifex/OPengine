@@ -26,7 +26,7 @@ void OPwindow::Init(OPmonitor* monitor, bool fullscreen, bool borderless, const 
 		OPlog("Not showing monitor");
 		display = monitor->Monitor;
 	}
-	glfwWindowHint(GLFW_DECORATED, borderless);
+	glfwWindowHint(GLFW_DECORATED, !borderless);
 	Window = glfwCreateWindow(width, height, title, display, NULL);
 
 	//glfwSetCharCallback(window, glfwCharacterCallback);

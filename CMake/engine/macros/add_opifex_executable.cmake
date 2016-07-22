@@ -24,7 +24,7 @@ function(add_opifex_executable name)
     SET(USE_AS_WINDOWS_APP ${USE_AS_WINDOWS_APP} OR ${IS_DIRECTX})
 
     if(${USE_AS_WINDOWS_APP})
-		    add_executable(${name} WIN32 ${ARGV})
+	    add_executable(${name} WIN32 ${ARGV})
         set_target_properties(${name} PROPERTIES WORKING_DIRECTORY "$(ProjectDir)$(Configuration)\\")
     else()
 		    add_executable(${name} ${ARGV})

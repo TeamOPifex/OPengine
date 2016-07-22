@@ -76,7 +76,7 @@ struct OPcam {
 	}
 
 	inline void SetPerspective(OPvec3 position, OPvec3 target) {
-		*this = OPcamPersp(position, target, OPVEC3_UP, 0.1f, 1000.0f, 45.0f, OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT);
+		*this = OPcamPersp(position, target, OPVEC3_UP, 0.1f, 1000.0f, 45.0f, OPWINDOW_ACTIVE->Width / (f32)OPWINDOW_ACTIVE->Height);
 	}
 
 	inline void SetPerspective(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPfloat zFar, OPfloat fov, OPfloat aspect) {

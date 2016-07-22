@@ -15,5 +15,6 @@
 #include "./Pipeline/include/OPspriteSystem.h"
 #include "./Pipeline/include/OPfmod.h"
 #include "./Pipeline/include/OPvoxelGenerator.h"
+#include "./Pipeline/include/OPscene.h"
 
 #endif
