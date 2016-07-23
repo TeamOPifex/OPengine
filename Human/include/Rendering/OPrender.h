@@ -39,7 +39,7 @@ extern ID3D11Device* g_pd3dDevice;
 
 #include "./Human/include/Rendering/OPwindow.h"
 
-OPwindow* OPrenderCreateWindow(OPmonitor* monitor, bool fullscreen, bool borderless, const OPchar* title, ui32 width, ui32 height);
+//OPwindow* OPrenderCreateWindow(OPmonitor* monitor, bool fullscreen, bool borderless, const OPchar* title, ui32 width, ui32 height);
 OPint OPrenderInit();
 OPint OPrenderInitDevice(OPwindow* window);
 void  OPrenderClear(f32 r, f32 g, f32 b, f32 a);
@@ -69,19 +69,12 @@ void  OPrenderDepth(OPint state);
 void OPrenderDepthWrite(OPint state);
 void  OPrenderShutdown   ();
 
-ui32 OPgetNativeScreenWidth();
-ui32 OPgetNativeScreenHeight();
-
 inline void OPrenderBlendAlpha(){
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 inline void OPrenderBlendAdditive(){
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 }
-
-//inline OPint OPrenderInit() {
-//	return OPrenderInit(OPRENDER_WIDTH, OPRENDER_HEIGHT);
-//}
 inline void  OPrenderClear(f32 r, f32 g, f32 b) {
 	OPrenderClear(r,g,b,1.0f);
 }

@@ -182,3 +182,32 @@ void OPwindow::Focus() {
 	glfwFocusWindow(Window);
 #endif
 }
+
+
+
+
+// // These are all OPwindow calls now
+//
+// void glfwErrorCallback(int error, const char* desc){
+//     OPlog("GLFW ERROR: %s", desc);
+// }
+//
+// void glfwWindowFocusCallback(GLFWwindow* window, int code) {
+//     OPlogInfo("Focus Result: %d", code);
+//     OPRENDER_HAS_FOCUS = code;
+// }
+// void glfwWindowDropCallback(GLFWwindow* window, int count, const OPchar** files) {
+//     OPlog("Total Files: %d", count);
+//     for(OPint i = 0; i < count; i++) {
+//         OPlog("File: %s", files[i]);
+//     }
+// }
+// void glfwCharacterCallback(GLFWwindow* window, unsigned int codepoint)
+// {
+//     OPkeyboardKey(codepoint);
+// }
+//
+// void(*OP_WINDOW_DROP)(int, const OPchar**) = NULL;
+// void OPrenderDragAndDropCB(void(*cb)(int, const OPchar**)) {
+// 	OP_WINDOW_DROP = cb;
+// }
