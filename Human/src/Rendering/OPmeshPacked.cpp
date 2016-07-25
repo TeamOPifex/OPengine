@@ -19,11 +19,11 @@ OPmeshPacked OPmeshPackedCreate(
 	OPmeshPacked out = {
 		packer->indexOffset,
 		indCount,
-		indCount
+		vertCount
 	};
 
 	OPmeshPackerAddVB(vertSize, vertices, vertCount);
-	OPmeshPackerAddIB((ui32)indSize, indices, indCount);
+	OPmeshPackerAddIB(indSize, indices, indCount);
 	packer->vertexElementOffset += vertCount;
 	
 	return out;

@@ -53,7 +53,7 @@ OPmeshPacker OPmeshPackerCreate();
 OPint OPmeshPackerDestroy(OPmeshPacker* packer);
 
 OPuint OPmeshPackerAddVB(ui32 vertexSize, void* verticesData, OPuint vertexCount);
-OPuint OPmeshPackerAddIB(ui32 indexSize, void* indicesData, OPuint indexCount);
+OPuint OPmeshPackerAddIB(OPindexSize indexSize, void* indicesData, OPuint indexCount);
 void OPmeshPackerBuild();
 void OPmeshPackerBind(OPmeshPacker* packer);
 

@@ -54,17 +54,18 @@ OPuint OPmeshPackerAddVB(ui32 vertexSize, void* verticesData, OPuint vertexCount
 
 	return dataStartPos;
 }
+
 //-----------------------------------------------------------------------------
-OPuint OPmeshPackerAddIB(ui32 indexSize, void* indicesData, OPuint indexCount){
+OPuint OPmeshPackerAddIB(OPindexSize indexSize, void* indicesData, OPuint indexCount){
 	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
 	OPuint dataStartPos = packer->vertexOffset;
-	OPuint indexBufferSize = indexSize * indexCount;
+	OPuint indexBufferSize = (ui32)indexSize * indexCount;
 
 	ui16* dat = (ui16*)indicesData;
 	OPuint offset = packer->vertexElementOffset;
 	for(OPuint i = 0; i < indexCount; ++i){
 		ui16 index = dat[i] + (ui16)offset;
-		OPwrite(&packer->indices, &index, indexSize);
+		OPwrite(&packer->indices, &index, (ui32)indexSize);
 	}
 
 	packer->indexOffset += indexBufferSize;
@@ -77,8 +78,11 @@ void OPmeshPackerBuild(){
 	packer->VertexBuffer.Init();
 	packer->IndexBuffer.Init();
 
+	packer->VertexBuffer.Bind();
+	packer->IndexBuffer.Bind();
+
 	packer->VertexBuffer.SetData(1, packer->vertexOffset, packer->vertices.Data);
-	packer->IndexBuffer.SetData(OPindexSize::BIT, packer->indexOffset, packer->indices.Data);
+	packer->IndexBuffer.SetData(OPindexSize::BYTE, packer->indexOffset, packer->indices.Data);
 		
 	OPMESHPACKER_ACTIVE->built = true;
 }
