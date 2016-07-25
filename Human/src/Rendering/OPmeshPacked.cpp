@@ -19,7 +19,7 @@ OPmeshPacked OPmeshPackedCreate(
 	OPmeshPacked out = {
 		packer->indexOffset,
 		indCount,
-		vertCount
+		indCount
 	};
 
 	OPmeshPackerAddVB(vertSize, vertices, vertCount);
