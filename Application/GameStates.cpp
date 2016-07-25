@@ -39,7 +39,7 @@ OPmesh unPackedQuad;
 OPmesh* plane;
 OPeffect tri, post, OPss;
 OPcam camera;
-OPtexture* tex, *spec, *norm;
+OPtextureOLD* tex, *spec, *norm;
 OPframeBuffer rt;
 OPint PackerCreated = 0;
 OPeffect eftTexScreenSpriteSheet;
@@ -121,8 +121,8 @@ void State0Enter(OPgameState* last){
 	//OPwebServerOnKey(server, "font", FontHandler, NULL);
 
 	OPss = OPeffectCreate(
-		*(OPshader*)OPcmanGet("OPspriteSheet.vert"),
-		*(OPshader*)OPcmanGet("OPspriteSheet.frag"),
+		*(OPshaderOLD*)OPcmanGet("OPspriteSheet.vert"),
+		*(OPshaderOLD*)OPcmanGet("OPspriteSheet.frag"),
 		attribs,
 		2,
 		"Sprite sheet effect"
@@ -256,9 +256,9 @@ void State1Enter(OPgameState* last){
 	OPcmanPurge();
 
 	plane = (OPmesh*)OPcmanGet("BiPlane.opm");
-	tex  = (OPtexture*)OPcmanGet("steamPlaneSkin.png");
-	spec = (OPtexture*)OPcmanGet("steamPlaneSpec.png");
-	norm = (OPtexture*)OPcmanGet("noneNorm.png");
+	tex  = (OPtextureOLD*)OPcmanGet("steamPlaneSkin.png");
+	spec = (OPtextureOLD*)OPcmanGet("steamPlaneSpec.png");
+	norm = (OPtextureOLD*)OPcmanGet("noneNorm.png");
 
 	garbage = OPalloc(1024 * 10); // allocate ten megs of crap
 

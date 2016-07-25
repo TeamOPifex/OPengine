@@ -198,9 +198,9 @@ OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const O
 
 OPmesh OPfontCreateText(OPfont* font, OPchar* text) {
 	ui32 vertexSize = sizeof(OPvertexTex);
-	ui32 indexSize = sizeof(ui16);
+	OPindexSize indexSize = OPindexSize::SHORT;// sizeof(ui16);
 	OPvector* vertices = OPvectorCreate(vertexSize);
-	OPvector* indices = OPvectorCreate(indexSize);
+	OPvector* indices = OPvectorCreate((ui32)indexSize);
 
 	_OPfontBuild(vertices, indices, font, text, 1);
 
@@ -218,9 +218,9 @@ OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text, OPf
 	ASSERT(OPMESHPACKER_ACTIVE != NULL, "No mesh packer bound.");
 
 	ui32 vertexSize = sizeof(OPvertexTex);
-	ui32 indexSize = sizeof(ui16);
+	OPindexSize indexSize = OPindexSize::SHORT;// sizeof(ui16);
 	OPvector* vertices = OPvectorCreate(vertexSize);
-	OPvector* indices = OPvectorCreate(indexSize);
+	OPvector* indices = OPvectorCreate((ui32)indexSize);
 
 	OPvec2 size = _OPfontBuild(vertices, indices, font, text, scale);
 
@@ -269,7 +269,7 @@ OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text, float 
 	node.mesh = OPmeshCreate();
 
 	node.mesh.Bind();
-	OPmeshBuild(sizeof(OPvertexTex), sizeof(ui16), vertices->_size, indices->_size, vertices->items, indices->items);
+	OPmeshBuild(sizeof(OPvertexTex), OPindexSize::SHORT, vertices->_size, indices->_size, vertices->items, indices->items);
 
 	OPvectorDestroy(vertices);
 	OPfree(vertices);

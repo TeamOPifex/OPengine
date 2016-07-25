@@ -133,7 +133,7 @@ struct OPcommandBucket {
         return OPcommandBucketCreateDrawIndexed(this);
     }
 
-	void CreateDrawIndexedSubmit(OPmodel* model, OPmaterial* material, OPtexture* texture);
+	void CreateDrawIndexedSubmit(OPmodel* model, OPmaterial* material, OPtextureOLD* texture);
 	void CreateDrawIndexedSubmit(OPmodelTextured* model, OPmaterial* material);
 
 	inline void Submit(ui64 key, void(*dispatch)(void*, OPcam*), void* data) {

@@ -274,7 +274,7 @@ OPmeshDesc OPvoxelGeneratorBuildDesc(struct OPvoxelGenerator* gen) {
 		(ui32)gen->VertexSize,
 		verticeCount,
 		inds,
-		sizeof(ui32),
+		OPindexSize::INT,
 		indiceCount
 	};
 

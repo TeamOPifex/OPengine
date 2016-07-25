@@ -36,8 +36,8 @@ typedef struct {
 	OPmaterial ModelMaterials[2];
 	OPmaterial GroundMaterials[2];
 	OPmesh GroundMesh;
-	OPtexture* ModelTexture;
-	OPtexture* GroundTexture;
+	OPtextureOLD* ModelTexture;
+	OPtextureOLD* GroundTexture;
 	OPframeBuffer ShadowFrameBuffer;
 	OPeffect Effect;
 	OPeffect Effect2;
@@ -47,7 +47,7 @@ typedef struct {
 	OPmat4 ViewShadow;
 	OPmat4 ProjShadow;
 	OPmat4 BiasShadow;
-	OPtexture2D* shadow2D;
+	OPtexture2DOLD* shadow2D;
 	OPcamFreeFlight Camera;
 
 	i8 ViewFromLight;
@@ -66,7 +66,7 @@ typedef struct {
 		GroundMesh = OPmeshCreate();
 		GroundMesh.Bind();
 		OPmeshBuild(
-			sizeof(OPfloat) * 8, sizeof(ui16),
+			sizeof(OPfloat) * 8, OPindexSize::SHORT,
 			4, 6,
 			_quadVertNormData, _quadIndexData
 		);
@@ -79,8 +79,8 @@ typedef struct {
 		//Ground.world.RotX(OPpi_2)->RotZ(OPpi);
 
 		// Load up the textures
-		ModelTexture = (OPtexture*)OPcmanLoadGet("noneNorm.png");
-		GroundTexture = (OPtexture*)OPcmanLoadGet("TetrisBlue.png");
+		ModelTexture = (OPtextureOLD*)OPcmanLoadGet("noneNorm.png");
+		GroundTexture = (OPtextureOLD*)OPcmanLoadGet("TetrisBlue.png");
 
 
 		// Create the effect used to draw a shadowed model
@@ -90,8 +90,8 @@ typedef struct {
 			{ "aUV", GL_FLOAT, 2 }
 		};
 
-		OPshader* vert = (OPshader*)OPcmanLoadGet("Common/TexturedShadow.vert");
-		OPshader* frag = (OPshader*)OPcmanLoadGet("Common/TexturedShadow.frag");
+		OPshaderOLD* vert = (OPshaderOLD*)OPcmanLoadGet("Common/TexturedShadow.vert");
+		OPshaderOLD* frag = (OPshaderOLD*)OPcmanLoadGet("Common/TexturedShadow.frag");
 		Effect = OPeffectCreate(
 			*vert,
 			*frag,
@@ -172,8 +172,8 @@ typedef struct {
 			{ "aPosition", GL_FLOAT, 3 }
 		};
 
-		vert = (OPshader*)OPcmanLoadGet("Common/DepthRTT.vert");
-		frag = (OPshader*)OPcmanLoadGet("Common/DepthRTT.frag");
+		vert = (OPshaderOLD*)OPcmanLoadGet("Common/DepthRTT.vert");
+		frag = (OPshaderOLD*)OPcmanLoadGet("Common/DepthRTT.frag");
 		ShadowEffect = OPeffectCreate(
 			*vert,
 			*frag,

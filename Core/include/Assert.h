@@ -13,6 +13,7 @@
 	} \
 	} while (0)
 #elif defined _DEBUG
+	#include "stdlib.h"
 	#define ASSERT(condition, message) \
 	do {\
 		if (!(condition)) {\

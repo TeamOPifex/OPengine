@@ -12,12 +12,15 @@
 //  \___ \| __| '__| | | |/ __| __/ __|
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
-struct OPrenderBuffer {
-	ui32 Type;
-	ui32 ElementSize;
-	OPuint ElementCount;
-	ui32 Handle;
-};
+//struct OPrenderBuffer {
+//	ui32 Type;
+//	ui32 ElementSize;
+//	OPuint ElementCount;
+//	ui32 Handle;
+//};
+
+#include "./Human/include/Rendering/OPvertexBuffer.h"
+#include "./Human/include/Rendering/OPindexBuffer.h"
 
 //-----------------------------------------------------------------------------
 //   _____ _       _           _
@@ -26,8 +29,8 @@ struct OPrenderBuffer {
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
-extern OPrenderBuffer* OPRENDER_CURR_VB;
-extern OPrenderBuffer* OPRENDER_CURR_IB;
+extern OPvertexBuffer* OPRENDER_CURR_VB;
+extern OPindexBuffer* OPRENDER_CURR_IB;
 
 //-----------------------------------------------------------------------------
 //  _____                     _____                  _____  _               _   _
@@ -36,8 +39,8 @@ extern OPrenderBuffer* OPRENDER_CURR_IB;
 // |  ___| '__/ _ \ |______| |  ___| '__/ _ \ / __| | |  | | | '__/ _ \/ __| __| \ \ / / _ / __|
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/
-#define OPvertexBuffer GL_ARRAY_BUFFER
-#define OPindexBuffer  GL_ELEMENT_ARRAY_BUFFER
+#define OPvertexBufferOLD GL_ARRAY_BUFFER
+#define OPindexBufferOLD  GL_ELEMENT_ARRAY_BUFFER
 
 //-----------------------------------------------------------------------------
 // ______                _   _
@@ -46,11 +49,12 @@ extern OPrenderBuffer* OPRENDER_CURR_IB;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPrenderBuffer OPrenderGenBuffer(ui32 type);
-void OPrenderDelBuffer(OPrenderBuffer* buff);
-void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, OPuint count, const void* data);
-void OPrenderSetBufferSubData(OPrenderBuffer* buff, ui32 elementSize, ui32 offsetCount, OPuint count, const void* data);
-void OPrenderBindBuffer(OPrenderBuffer* buffer);
+//OPrenderBuffer OPrenderGenBuffer(ui32 type);
+//void OPrenderDelBuffer(OPrenderBuffer* buff);
+//void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, OPuint count, const void* data);
+//void OPrenderSetBufferSubData(OPrenderBuffer* buff, ui32 elementSize, ui32 offsetCount, OPuint count, const void* data);
+void OPrenderBindBuffer(OPvertexBuffer* buffer);
+void OPrenderBindBuffer(OPindexBuffer* buffer);
 
 void OPrenderDrawBufferIndexed(ui32 offset);
 void OPrenderDrawBuffer(ui32 offset);

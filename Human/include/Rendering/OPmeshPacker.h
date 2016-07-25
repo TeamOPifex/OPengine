@@ -13,8 +13,8 @@
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 struct OPmeshPacker{
-	OPrenderBuffer VertexBuffer;
-	OPrenderBuffer IndexBuffer;
+	OPvertexBuffer VertexBuffer;
+	OPindexBuffer IndexBuffer;
 	OPuint vertexElementOffset;
 	OPuint vertexOffset;
 	OPuint indexOffset;

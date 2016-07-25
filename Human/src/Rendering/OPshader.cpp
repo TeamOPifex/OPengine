@@ -13,8 +13,8 @@
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 // Shader creation
-OPint OPshaderLoadVertex(OPstream* source, OPshader** shader){
-	OPshader vertex = -1;
+OPint OPshaderLoadVertex(OPstream* source, OPshaderOLD** shader){
+	OPshaderOLD vertex = -1;
 
 	//OPstream* source = OPreadFile(filename);
 	//OPlog("Loading shader %d", OPvertexShader);
@@ -58,7 +58,7 @@ OPint OPshaderLoadVertex(OPstream* source, OPshader** shader){
 	//OPstreamDestroy(source); // clean up stream
 
 	// if we made it this far, everything is a-ok
-	*shader = (OPshader*)OPalloc(sizeof(OPshader));
+	*shader = (OPshaderOLD*)OPalloc(sizeof(OPshaderOLD));
 	**shader = vertex; // copy the shader handle
 
 	OPglError("GLShader::Error 6");
@@ -158,8 +158,8 @@ OPint OPshaderLoadFragmentDX11(OPstream* source, OPshader** shader) {
 #endif
 
 //-----------------------------------------------------------------------------
-OPint OPshaderLoadFragment(OPstream* source, OPshader** shader){
-	OPshader frag = -1;
+OPint OPshaderLoadFragment(OPstream* source, OPshaderOLD** shader){
+	OPshaderOLD frag = -1;
 	//OPstream* source = OPreadFile(filename);
 
 	frag = glCreateShader(OPfragmentShader);
@@ -194,14 +194,14 @@ OPint OPshaderLoadFragment(OPstream* source, OPshader** shader){
 	//OPstreamDestroy(source); // clean up stream
 
 	// if we made it this far, everything is a-ok
-	*shader = (OPshader*)OPalloc(sizeof(OPshader));
+	*shader = (OPshaderOLD*)OPalloc(sizeof(OPshaderOLD));
 	**shader = frag; // copy the shader handle
 
 	return 1;
 }
 //-----------------------------------------------------------------------------
 // shader destruction
-OPint OPshaderUnload(OPshader* shader){
+OPint OPshaderUnload(OPshaderOLD* shader){
 #ifdef OPIFEX_DIRECTX_11
 #else
 	glDeleteShader(*shader); // free up the gl shader

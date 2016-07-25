@@ -38,10 +38,10 @@ typedef struct {
 	Dynamic* spheres;
 	ui32 sphereCount;
 	PxRigidStatic* physicsPlane;
-	OPtexture* texture;
-	OPtexture* textureStatic;
-	OPtexture* texturePlayer;
-	OPtexture* textureSphere;
+	OPtextureOLD* texture;
+	OPtextureOLD* textureStatic;
+	OPtextureOLD* texturePlayer;
+	OPtextureOLD* textureSphere;
 	OPphysXScene* scene;
 } PhysicsExample;
 
@@ -81,10 +81,10 @@ void ExamplePhysicsEnter(OPgameState* last) {
 	OPcmanLoad("TetrisBlue.png");
 	OPcmanLoad("TetrisGreen.png");
 
-	physicsExample->texture = (OPtexture*)OPcmanGet("TetrisBroken.png");
-	physicsExample->texturePlayer = (OPtexture*)OPcmanGet("TetrisOrange.png");
-	physicsExample->textureSphere = (OPtexture*)OPcmanGet("TetrisBlue.png");
-	physicsExample->textureStatic = (OPtexture*)OPcmanGet("TetrisGreen.png");
+	physicsExample->texture = (OPtextureOLD*)OPcmanGet("TetrisBroken.png");
+	physicsExample->texturePlayer = (OPtextureOLD*)OPcmanGet("TetrisOrange.png");
+	physicsExample->textureSphere = (OPtextureOLD*)OPcmanGet("TetrisBlue.png");
+	physicsExample->textureStatic = (OPtextureOLD*)OPcmanGet("TetrisGreen.png");
 
 	physicsExample->Mesh = (OPmesh*)OPcmanGet("PuzzleBlock.opm");
 	physicsExample->MeshSphere = (OPmesh*)OPcmanGet("PuzzleSphere.opm");
@@ -96,8 +96,8 @@ void ExamplePhysicsEnter(OPgameState* last) {
 	};
 
 	physicsExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture3D.vert");
-	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
+	OPshaderOLD* vert = (OPshaderOLD*)OPcmanGet("Common/Texture3D.vert");
+	OPshaderOLD* frag = (OPshaderOLD*)OPcmanGet("Common/Texture.frag");
 	*physicsExample->Effect = OPeffectCreate(
 		*vert,
 		*frag,

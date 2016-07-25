@@ -16,9 +16,9 @@
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 
-struct OPtextureCube {
+struct OPtextureCubeOLD {
     ui16 Width, Height;
-    OPtexture Texture;
+	OPtextureOLD Texture;
 };
 
 //-----------------------------------------------------------------------------
@@ -29,11 +29,11 @@ struct OPtextureCube {
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
-void OPtextureCubeInit(OPtextureCube *result, OPimage *faces);
-OPtextureCube * OPtextureCubeCreate(OPimage * faces);
-void OPtextureCubeDestroy(OPtextureCube * result);
-void OPtextureCubeFree(OPtextureCube * result);
+void OPtextureCubeInit(OPtextureCubeOLD *result, OPimage *faces);
+OPtextureCubeOLD * OPtextureCubeCreate(OPimage * faces);
+void OPtextureCubeDestroy(OPtextureCubeOLD * result);
+void OPtextureCubeFree(OPtextureCubeOLD * result);
 void OPtextureCubeClearActive();
-ui32 OPtextureCubeBind(OPtextureCube* result);
+ui32 OPtextureCubeBind(OPtextureCubeOLD* result);
 
 #endif

@@ -27,8 +27,8 @@ typedef struct OPcommandDrawIndexed OPcommandDrawIndexed;
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
 void OPcommandDrawIndexedSet(OPcommandDrawIndexed* result, OPmodel* model, OPmaterial* material);
-void OPcommandDrawIndexedSet(OPcommandDrawIndexed* result, OPmodel* model, OPmaterial* material, OPtexture* texture);
-void OPcommandDrawIndexedSubmit(OPcommandBucket* commandBucket, OPmodel* model, OPmaterial* material, OPtexture* texture);
+void OPcommandDrawIndexedSet(OPcommandDrawIndexed* result, OPmodel* model, OPmaterial* material, OPtextureOLD* texture);
+void OPcommandDrawIndexedSubmit(OPcommandBucket* commandBucket, OPmodel* model, OPmaterial* material, OPtextureOLD* texture);
 inline void OPcommandDrawIndexedSubmit(OPcommandBucket* commandBucket, OPmodelTextured* model, OPmaterial* material) {
 	OPcommandDrawIndexedSubmit(commandBucket, &model->model, material, model->texture);
 }
@@ -57,13 +57,15 @@ struct OPcommandDrawIndexed
 
     ui32 stride; // TODO: (garrett) Stride should come out of the vertex layout
     OPvertexLayout* vertexLayout;
-    OPrenderBuffer* vertexBuffer;
-    OPrenderBuffer* indexBuffer;
+	//OPrenderBuffer* vertexBuffer;
+	OPvertexBuffer* vertexBuffer;
+	OPindexBuffer* indexBuffer;
+	//OPrenderBuffer* indexBuffer;
     OPmaterial* material;
     
 	// Per Mesh Data
     OPmat4* world;
-    OPtexture* texture;
+    OPtextureOLD* texture;
 
 
 	// Helper/Wrapper functions
@@ -71,7 +73,7 @@ struct OPcommandDrawIndexed
         OPcommandDrawIndexedSet(this, model, material);
     }
     
-	inline void Set(OPmodel* model, OPmaterial* material, OPtexture* texture) {
+	inline void Set(OPmodel* model, OPmaterial* material, OPtextureOLD* texture) {
         OPcommandDrawIndexedSet(this, model, material, texture);
     }
 };

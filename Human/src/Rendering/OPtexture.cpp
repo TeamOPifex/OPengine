@@ -4,7 +4,7 @@
 #include "./Core/include/OPlog.h"
 #include "./Core/include/Assert.h"
 
-OPtexture* OPRENDER_CURR_TEX;
+OPtextureOLD* OPRENDER_CURR_TEX;
 ui32 OPTEXTURE_ACTIVE = 0;
 
 //-----------------------------------------------------------------------------
@@ -14,8 +14,8 @@ ui32 OPTEXTURE_ACTIVE = 0;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPtexture OPtextureCreate(OPtextureDescription desc){
-	OPtexture tex = {
+OPtextureOLD OPtextureCreate(OPtextureDescription desc){
+	OPtextureOLD tex = {
 		desc,
 		0
 	};
@@ -48,11 +48,11 @@ OPtexture OPtextureCreate(OPtextureDescription desc){
 }
 
 //-----------------------------------------------------------------------------
-void OPtextureDestroy(OPtexture* tex){
+void OPtextureDestroy(OPtextureOLD* tex){
 	glDeleteTextures(1, &tex->Handle);
 }
 //-----------------------------------------------------------------------------
-ui32 OPtextureBind(OPtexture* tex){
+ui32 OPtextureBind(OPtextureOLD* tex){
 	ASSERT(OPTEXTURE_ACTIVE < 16, "Exceeded Active Texture Slots");
 	OPglError("OPtextureBind::Error 0");
 	OPRENDER_CURR_TEX = tex;
@@ -97,7 +97,7 @@ void OPtextureSmooth(){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-OPvec4 OPtextureReadPixel(OPtexture* tex, OPint x, OPint y) {
+OPvec4 OPtextureReadPixel(OPtextureOLD* tex, OPint x, OPint y) {
 	OPvec4 result;
 
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
@@ -115,12 +115,12 @@ OPvec4 OPtextureReadPixel(OPtexture* tex, OPint x, OPint y) {
 }
 
 #include "./Data/include/OPcman.h"
-void OPtexture::Load(OPchar* asset) {
-    OPtexture* result = (OPtexture*)OPcmanLoadGet(asset);
+void OPtextureOLD::Load(OPchar* asset) {
+	OPtextureOLD* result = (OPtextureOLD*)OPcmanLoadGet(asset);
     this->Handle = result->Handle;
     this->Description = result->Description;
 }
 
-OPtexture* OPtextureLoad(const OPchar* asset) {
-    return (OPtexture*)OPcmanLoadGet(asset);
+OPtextureOLD* OPtextureLoad(const OPchar* asset) {
+    return (OPtextureOLD*)OPcmanLoadGet(asset);
 }

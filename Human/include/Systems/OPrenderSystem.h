@@ -13,6 +13,8 @@
 #include "./Human/include/Rendering/OPframeBuffer.h"
 #include "./Human/include/Rendering/UI/OPimgui.h"
 #include "./Human/include/Rendering/OPimage.h"
+#include "./Human/include/Rendering/OPwindow.h"
+#include "./Human/include/Rendering/OPwindowSystem.h"
 
 #include "./Human/include/Rendering/Commands/OPcommandDrawIndexed.h"
 

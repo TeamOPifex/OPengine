@@ -167,7 +167,7 @@ OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, i32 width, i32 height
 	return region;
 }
 
-OPtexture OPfontAtlasTexture(OPfontAtlas* atlas) {
+OPtextureOLD OPfontAtlasTexture(OPfontAtlas* atlas) {
 	OPtextureDescription desc = { 
 		(ui16)atlas->width,
 		(ui16)atlas->height,
@@ -194,7 +194,7 @@ OPtexture OPfontAtlasTexture(OPfontAtlas* atlas) {
 		desc.Format = GL_RGB;
 		desc.DataType = GL_UNSIGNED_BYTE;
 	}
-	OPtexture texture = OPtextureCreate(desc);
+	OPtextureOLD texture = OPtextureCreate(desc);
 	OPtextureBind(&texture);
 	OPtextureSetData(atlas->data);
 	return texture;

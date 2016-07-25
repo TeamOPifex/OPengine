@@ -5,10 +5,10 @@
 
 typedef struct {
 	OPframeBuffer FrameBuffer;
-	OPtexture Position;
-	OPtexture Diffuse;
-	OPtexture Normal;
-	OPtexture Depth;
+	OPtextureOLD Position;
+	OPtextureOLD Diffuse;
+	OPtextureOLD Normal;
+	OPtextureOLD Depth;
 	OPtexture2D* Position2D;
 	OPtexture2D* Diffuse2D;
 	OPtexture2D* Normal2D;

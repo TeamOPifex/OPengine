@@ -7,13 +7,13 @@
 #include "./Pipeline/include/OPtexture2D.h"
 
 typedef struct {
-	OPtexture2D* Tex;
+	OPtexture2DOLD* Tex;
 } Texture2DExample;
 
 Texture2DExample texture2DExample;
 
 void ExampleTexture2DEnter(OPgameState* last) {
-    OPtexture* tex = (OPtexture*)OPcmanLoadGet("cubeTex.png");
+    OPtextureOLD* tex = (OPtextureOLD*)OPcmanLoadGet("cubeTex.png");
     texture2DExample.Tex = OPtexture2DCreate(tex, NULL);
 
     texture2DExample.Tex->Position.y = 250;

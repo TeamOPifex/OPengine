@@ -8,7 +8,7 @@
 // Application Methods
 //////////////////////////////////////
 
-OPwindow* mainWindow;
+OPwindow mainWindow;
 
 void ApplicationInit() {
 
@@ -28,22 +28,18 @@ void ApplicationInit() {
 	OPcmanInit(OPIFEX_ASSETS);
 
 	OPoculusStartup();
-	OPrenderInit();
 
-	mainWindow = OPrenderCreateWindow(NULL, false, true, "Main Window", 1280, 720);
+	OPwindowSystemInit();
+	mainWindow.Init(NULL, false, true, "Main Window", 1280, 720);
+	OPrenderInit(&mainWindow);
 	
-	OPrenderInitDevice(mainWindow);
-
-	//OPcmanLoadGet("Tutorial02.vert");
-	//OPcmanLoadGet("Tutorial02.frag");
-
 	OPGAMEPADSYSTEM.SetDeadzones(0.2f);	
 
 	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 }
 
 OPint ApplicationUpdate(OPtimer* timer) {
-	if (mainWindow->Update()) {
+	if (mainWindow.Update()) {
 		return 1;
 	}
 
@@ -68,11 +64,38 @@ void ApplicationDestroy() {
 	OPlogToFileClose();
 }
 
+
+void RenderTestInit() {
+	OPwindowSystemInit();
+	mainWindow.Init(NULL, false, false, "Main Window", 1280, 720);
+	OPrenderInit(&mainWindow, OPRENDERER::OPRENDERER_OPENGL);
+}
+
+OPint RenderTestUpdate(OPtimer* timer) {
+	mainWindow.Update();
+	OPrenderClear(0, 0, 0);
+	OPrenderPresent();
+	return 0;
+}
+
+void RenderTestRender(OPfloat delta) {
+
+}
+
+void RenderTestDestroy() {
+
+}
+
 void ApplicationSetup() {
 	OPinitialize = ApplicationInit;
 	OPupdate = ApplicationUpdate;
 	OPrender = ApplicationRender;
 	OPdestroy = ApplicationDestroy;
+
+	//OPinitialize = RenderTestInit;
+	//OPupdate = RenderTestUpdate;
+	//OPrender = RenderTestRender;
+	//OPdestroy = RenderTestDestroy;
 }
 
 //////////////////////////////////////

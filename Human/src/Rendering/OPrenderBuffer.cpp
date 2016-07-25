@@ -11,12 +11,10 @@
     #include <GLES2/gl2.h>
     #include <GLES2/gl2ext.h>
     #endif
-
 #else
     #include <GLFW/glfw3.h>
     #include <GL/glew.h>
 #endif
-
 
 //-----------------------------------------------------------------------------
 //   _____ _       _           _
@@ -25,8 +23,8 @@
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
-OPrenderBuffer* OPRENDER_CURR_VB;
-OPrenderBuffer* OPRENDER_CURR_IB;
+OPvertexBuffer* OPRENDER_CURR_VB;
+OPindexBuffer* OPRENDER_CURR_IB;
 
 //-----------------------------------------------------------------------------
 // ______                _   _
@@ -35,56 +33,67 @@ OPrenderBuffer* OPRENDER_CURR_IB;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPrenderBuffer OPrenderGenBuffer(ui32 type){
-	OPrenderBuffer out = {
-		type,
-		0
-	};
+//OPrenderBuffer OPrenderGenBuffer(ui32 type){
+//	OPrenderBuffer out = {
+//		type,
+//		0
+//	};
+//
+//	OPglError("OPrenderGenBuffer() - ERROR 0 clear %d");
+//	glGenBuffers(1, &out.Handle);
+//	OPglError("OPrenderGenBuffer() - ERROR!");
+//
+//
+//	return out;
+//}
+////-----------------------------------------------------------------------------
+//void OPrenderDelBuffer(OPrenderBuffer* buff){
+//	glDeleteBuffers(1, &buff->Handle);
+//}
+////-----------------------------------------------------------------------------
+//void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, OPuint count, const void* data){
+//	OPrenderBindBuffer(buff);
+//	buff->ElementSize  = elementSize;
+//	buff->ElementCount = count;
+//
+//	glBufferData(buff->Type, elementSize * count, data, GL_STATIC_DRAW);
+//	OPglError("OPrenderSetBufferData() - ERROR!");
+//}
+//
+//void OPrenderSetBufferSubData(OPrenderBuffer* buff, ui32 elementSize, ui32 offsetCount, OPuint count, const void* data) {
+//	OPrenderBindBuffer(buff);
+//	glBufferSubData(buff->Type, offsetCount * elementSize, count * elementSize, data);
+//}
 
-	OPglError("OPrenderGenBuffer() - ERROR 0 clear %d");
-	glGenBuffers(1, &out.Handle);
-	OPglError("OPrenderGenBuffer() - ERROR!");
+void OPrenderBindBuffer(OPvertexBuffer* buffer) {
+	buffer->Bind();
+	OPRENDER_CURR_VB = buffer;
+}
 
-	return out;
+void OPrenderBindBuffer(OPindexBuffer* buffer) {
+	buffer->Bind();
+	OPRENDER_CURR_IB = buffer;
 }
 //-----------------------------------------------------------------------------
-void OPrenderDelBuffer(OPrenderBuffer* buff){
-	glDeleteBuffers(1, &buff->Handle);
-}
-//-----------------------------------------------------------------------------
-void OPrenderSetBufferData(OPrenderBuffer* buff, ui32 elementSize, OPuint count, const void* data){
-	OPrenderBindBuffer(buff);
-	buff->ElementSize  = elementSize;
-	buff->ElementCount = count;
-
-	glBufferData(buff->Type, elementSize * count, data, GL_STATIC_DRAW);
-	OPglError("OPrenderSetBufferData() - ERROR!");
-}
-
-void OPrenderSetBufferSubData(OPrenderBuffer* buff, ui32 elementSize, ui32 offsetCount, OPuint count, const void* data) {
-	OPrenderBindBuffer(buff);
-	glBufferSubData(buff->Type, offsetCount * elementSize, count * elementSize, data);
-}
-//-----------------------------------------------------------------------------
-void OPrenderBindBuffer(OPrenderBuffer* buffer){
-
-	OPglError("OPrenderBindBuffer:Error 0");
-	glBindBuffer(buffer->Type, buffer->Handle);
-	if(OPglError("OPrenderBindBuffer:Error 1")) {
-		OPlog("Buffer Failed to Bind - Type (%d) / Handle (%d)", buffer->Type, buffer->Handle);
-        if(buffer->Type == OPvertexBuffer) {
-            OPlog("Buffer Failed to Bind - Type (Vertex Buffer)");
-        } else {
-            OPlog("Buffer Failed to Bind - Type (Index Buffer)");
-        }
-	}
-	if(buffer->Type == OPvertexBuffer){
-		OPRENDER_CURR_VB = buffer;
-	}
-	else{
-		OPRENDER_CURR_IB = buffer;
-	}
-}
+//void OPrenderBindBuffer(OPrenderBuffer* buffer){
+//
+//	OPglError("OPrenderBindBuffer:Error 0");
+//	glBindBuffer(buffer->Type, buffer->Handle);
+//	if(OPglError("OPrenderBindBuffer:Error 1")) {
+//		OPlog("Buffer Failed to Bind - Type (%d) / Handle (%d)", buffer->Type, buffer->Handle);
+//        if(buffer->Type == OPvertexBufferOLD) {
+//            OPlog("Buffer Failed to Bind - Type (Vertex Buffer)");
+//        } else {
+//            OPlog("Buffer Failed to Bind - Type (Index Buffer)");
+//        }
+//	}
+//	if(buffer->Type == OPvertexBufferOLD){
+//		OPRENDER_CURR_VB = buffer;
+//	}
+//	else{
+//		OPRENDER_CURR_IB = buffer;
+//	}
+//}
 //-----------------------------------------------------------------------------
 void OPrenderDrawBuffer(ui32 offset){
 	glDrawArrays(GL_TRIANGLES, offset, (GLsizei)OPRENDER_CURR_VB->ElementCount);
@@ -92,7 +101,7 @@ void OPrenderDrawBuffer(ui32 offset){
 //-----------------------------------------------------------------------------
 void OPrenderDrawBufferIndexed(ui32 offset){
 	OPglError("OPrenderDrawBufferIndexed:Error 0:%d");
-	GLenum indType = OPRENDER_CURR_IB->ElementSize == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+	GLenum indType = OPRENDER_CURR_IB->ElementSize == OPindexSize::SHORT ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
 	ASSERT(OPRENDER_CURR_IB != NULL, "Index Buffer hasn't been set");
 	glDrawElements(GL_TRIANGLES, (GLsizei)OPRENDER_CURR_IB->ElementCount, indType, (void*)(offset * sizeof(GLuint)));
 	OPglError("OPrenderDrawBufferIndexed:Error 1:%d");
@@ -100,7 +109,7 @@ void OPrenderDrawBufferIndexed(ui32 offset){
 
 //-----------------------------------------------------------------------------
 void OPrenderDrawIndexed(ui32 offset, ui32 count){
-	GLenum indType = OPRENDER_CURR_IB->ElementSize == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+	GLenum indType = OPRENDER_CURR_IB->ElementSize == OPindexSize::SHORT ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
 	glDrawElements(GL_TRIANGLES, count, indType, (void*)(offset * sizeof(GLuint)));
 }
 

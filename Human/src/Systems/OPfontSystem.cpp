@@ -34,8 +34,8 @@ void OPfontSystemLoadEffects() {
 
 	OPFONTMANAGER_EFFECT_ACTIVE = (OPeffect*)OPalloc(sizeof(OPeffect));
 	*OPFONTMANAGER_EFFECT_ACTIVE = OPeffectCreate(
-		*(OPshader*)OPcmanGet(FontShaderVert),
-		*(OPshader*)OPcmanGet(FontShaderFrag),
+		*(OPshaderOLD*)OPcmanGet(FontShaderVert),
+		*(OPshaderOLD*)OPcmanGet(FontShaderFrag),
 		attribs,
 		2,
 		"Common Font Effect"

@@ -1,4 +1,5 @@
 #include "./Human/include/Rendering/OPmeshPacked.h"
+#include "./Human/include/Rendering/OPindexSize.h"
 
 //-----------------------------------------------------------------------------
 // ______                _   _                 
@@ -10,7 +11,7 @@
 //-----------------------------------------------------------------------------
 
 OPmeshPacked OPmeshPackedCreate(
-			ui32 vertSize, ui32 indSize,
+			ui32 vertSize, OPindexSize indSize,
 			OPuint vertCount, OPuint indCount,
 			void* vertices, void* indices){
 	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
@@ -22,11 +23,12 @@ OPmeshPacked OPmeshPackedCreate(
 	};
 
 	OPmeshPackerAddVB(vertSize, vertices, vertCount);
-	OPmeshPackerAddIB(indSize, indices, indCount);
+	OPmeshPackerAddIB((ui32)indSize, indices, indCount);
 	packer->vertexElementOffset += vertCount;
 	
 	return out;
 }
+
 //-----------------------------------------------------------------------------
 void OPmeshPackedRender(OPmeshPacked* mesh){
 		glDrawElements(GL_TRIANGLES, (GLsizei)mesh->elementCount, GL_UNSIGNED_SHORT, (void*)(mesh->offset));

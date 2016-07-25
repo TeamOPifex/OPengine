@@ -57,7 +57,7 @@ OPmesh OPquadCreate(){
 	OPmesh mesh = OPmeshCreate();
 	mesh.Bind();
 	OPmeshBuild(
-		sizeof(OPfloat) * 5, sizeof(ui16),
+		sizeof(OPfloat) * 5, OPindexSize::SHORT,
 		4, 6,
 		OPquadVertData, OPquadIndexData
 	);
@@ -105,7 +105,7 @@ OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoor
 	SetQuadPoint(&verts[3], offset.x + width, offset.y - height, 0, texcoordEnd.x, texcoordStart.y);
 
 	OPmeshBuild(
-		sizeof(OPfloat)* 5, sizeof(ui16),
+		sizeof(OPfloat)* 5, OPindexSize::SHORT,
 		4, 6,
 		verts, OPquadIndexData
 		);
@@ -115,7 +115,7 @@ OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoor
 //-----------------------------------------------------------------------------
 OPmeshPacked OPquadCreatePacked(){
 	return OPmeshPackedCreate(
-		sizeof(OPfloat) * 5, sizeof(ui16),
+		sizeof(OPfloat) * 5, OPindexSize::SHORT,
 		4, 6,
 		OPquadVertData, OPquadIndexData
 	);
@@ -125,7 +125,7 @@ OPmesh OPquadNormCreate(){
 	OPmesh mesh = OPmeshCreate();
 	mesh.Bind();
 	OPmeshBuild(
-		sizeof(OPfloat) * 8, sizeof(ui16),
+		sizeof(OPfloat) * 8, OPindexSize::SHORT,
 		4, 6,
 		OPquadVertNormData, OPquadIndexData
 	);
@@ -134,7 +134,7 @@ OPmesh OPquadNormCreate(){
 //-----------------------------------------------------------------------------
 OPmeshPacked OPquadNormCreatePacked(){
 	return OPmeshPackedCreate(
-		sizeof(OPfloat) * 8, sizeof(ui16),
+		sizeof(OPfloat) * 8, OPindexSize::SHORT,
 		4, 6,
 		OPquadVertNormData, OPquadIndexData
 	);
@@ -167,7 +167,7 @@ OPmesh OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OP
 	OPmesh mesh = OPmeshCreate();
 	mesh.Bind();
 	OPmeshBuild(
-		sizeof(OPfloat)* 5, sizeof(ui16),
+		sizeof(OPfloat)* 5, OPindexSize::SHORT,
 		4, 6,
 		verts, indicies
 		);

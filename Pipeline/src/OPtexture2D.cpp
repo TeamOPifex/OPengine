@@ -33,10 +33,10 @@ void OPtexture2DUnloadGlobals() {
 	}
 }
 
-OPtexture2D* OPtexture2DCreate(OPtexture* texture, OPeffect* effect, OPvec2 uvStart, OPvec2 uvEnd) {
-	OPtexture2D* tex2d = (OPtexture2D*)OPalloc(sizeof(OPtexture2D));
+OPtexture2DOLD* OPtexture2DCreate(OPtextureOLD* texture, OPeffect* effect, OPvec2 uvStart, OPvec2 uvEnd) {
+	OPtexture2DOLD* tex2d = (OPtexture2DOLD*)OPalloc(sizeof(OPtexture2DOLD));
 
-	OPbzero(tex2d, sizeof(OPtexture2D));
+	OPbzero(tex2d, sizeof(OPtexture2DOLD));
 	tex2d->Scale = OPVEC2_ONE;
 	tex2d->Texture = texture;
 	tex2d->Effect = effect;
@@ -55,15 +55,15 @@ OPtexture2D* OPtexture2DCreate(OPtexture* texture, OPeffect* effect, OPvec2 uvSt
 	return tex2d;
 }
 
-OPtexture2D* OPtexture2DCreate(OPtexture* texture, OPeffect* effect) {
+OPtexture2DOLD* OPtexture2DCreate(OPtextureOLD* texture, OPeffect* effect) {
 	return OPtexture2DCreate(texture, effect, OPVEC2_ZERO, OPVEC2_ONE);
 }
 
-void OPtexture2DDestroy(OPtexture2D* tex2d) {
+void OPtexture2DDestroy(OPtexture2DOLD* tex2d) {
 	OPfree(tex2d);
 }
 
-void OPtexture2DPrepRender(OPtexture2D* tex2d) {
+void OPtexture2DPrepRender(OPtexture2DOLD* tex2d) {
 	TEXTURE_2D_QUAD_MESH->Bind();
 	OPeffectBind(tex2d->Effect);
 
@@ -90,7 +90,7 @@ void OPtexture2DPrepRender(OPtexture2D* tex2d) {
 	OPeffectParamMat4v("uWorld", 1, &world);
 }
 
-void OPtexture2DRender(OPtexture2D* tex2d) {
+void OPtexture2DRender(OPtexture2DOLD* tex2d) {
 	OPtexture2DPrepRender(tex2d);
 	OPmeshRender();
 }

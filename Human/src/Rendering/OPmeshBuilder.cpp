@@ -78,7 +78,7 @@ OPmesh OPmeshBuilderGen(struct OPmeshBuilder* builder) {
 	OPmesh mesh = OPmeshCreate();
 	mesh.Bind();
 	OPmeshBuild(
-		(ui32)builder->Vertices->_elementSize, sizeof(ui16),
+		(ui32)builder->Vertices->_elementSize, OPindexSize::SHORT,
 		builder->Vertices->_size, builder->Indices->_size,
 		verts, indicies
 		);

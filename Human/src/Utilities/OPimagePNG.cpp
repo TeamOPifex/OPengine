@@ -48,7 +48,7 @@ void OPimagePNGCreate32(ui8* imageData, i32 width, i32 height, OPchar* filename)
 	lodepng_save_file(data, dataSize, filename);
 }
 
-i32 OPimagePNGLoad(OPstream* str, OPtexture** image){
+i32 OPimagePNGLoad(OPstream* str, OPtextureOLD** image){
 	OPlog("OPimagePNGLoad image %s", str->Source);
 	OPglError("OPimagePNGLoad:Error 0::%d");
 	//OPstream* str = OPreadFile(filename);
@@ -77,7 +77,7 @@ OPimage OPimagePNGLoadData(const OPchar* filename) {
 	return result;	
 }
 
-i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
+i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtextureOLD** image) {
 	OPglError("OPimagePNGLoad:Error 0");
 	ui32 error;
 	ui8* data;
@@ -92,7 +92,7 @@ i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
 	//	if (data[i] == 0) break;
 	//}
 	OPglError("OPimagePNGLoad:Error 1");
-	OPtexture* tex = (OPtexture*)OPalloc(sizeof(OPtexture));
+	OPtextureOLD* tex = (OPtextureOLD*)OPalloc(sizeof(OPtextureOLD));
 	OPglError("OPimagePNGLoad:Error 2");
 
 	ui16 w = width, h = height;
@@ -128,21 +128,21 @@ i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
 	return 1;
 }
 
-i32 OPimagePNGReload(OPstream* str, OPtexture** image){
+i32 OPimagePNGReload(OPstream* str, OPtextureOLD** image){
 	OPlog("Reload Image PNG");
 	//OPstream* str = OPreadFile(filename);
-	OPtexture* resultTex;
-	OPtexture* tex = (OPtexture*)(*image);
+	OPtextureOLD* resultTex;
+	OPtextureOLD* tex = (OPtextureOLD*)(*image);
 	i32 result = OPimagePNGLoadStream(str, 0, &resultTex);
 	if (result) {
-		OPmemcpy(*image, resultTex, sizeof(OPtexture));
+		OPmemcpy(*image, resultTex, sizeof(OPtextureOLD));
 		OPfree(resultTex);
 	}
 	return result;
 }
 
 i32 OPimagePNGUnload(void* image){
-	OPtexture* tex = (OPtexture*)image;
+	OPtextureOLD* tex = (OPtextureOLD*)image;
 	OPtextureDestroy(tex);
 	OPfree(tex);
 

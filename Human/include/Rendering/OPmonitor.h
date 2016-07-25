@@ -26,13 +26,16 @@ struct OPmonitor {
 	i32 WidthMM;
 	i32 HeightMM;
 
-	GLFWmonitor* Monitor;
+	GLFWmonitor* Handle;
 	OPmonitorVideoMode VideoModeCurrent;
 	i32 VideoModesCount;
 	OPmonitorVideoMode* VideoModes;
 
 	void Init(GLFWmonitor* monitor);
 };
+
+extern bool OPMONITOR_SETUP;
+void OPmonitorSetup();
 
 extern ui8 OPMONITOR_COUNT;
 extern OPmonitor OPMONITOR_PRIMARY;

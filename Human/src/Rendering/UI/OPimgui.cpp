@@ -16,7 +16,7 @@ OPimgui* OPimguiCreate(OPeffect* effect, OPfontManager* fontManager) {
 
 	OPglError("IMGUI:Error CLEAR");
 
-	imgui->buffer = OPrenderGenBuffer(OPvertexBuffer);
+	imgui->buffer.Init();// = OPrenderGenBuffer(OPvertexBufferOLD);
 	// OPlog("Render %d, %d", OPRENDER_WIDTH, OPRENDER_HEIGHT);
 	// OPlog("Screen %d, %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
 	// OPlog("Screen %f, %f", OPRENDER_SCREEN_WIDTH_SCALE, OPRENDER_SCREEN_HEIGHT_SCALE);
@@ -77,7 +77,8 @@ void _block(
     //                 x1, y2, 0, color.x, color.y, color.z, color.w
     //               };
 
-	OPrenderSetBufferData(&OPIMGUI_ACTIVE->buffer, sizeof(OPimguiVertex), 6, data);
+	//OPrenderSetBufferData(&OPIMGUI_ACTIVE->buffer, sizeof(OPimguiVertex), 6, data);
+	OPIMGUI_ACTIVE->buffer.SetData(sizeof(OPimguiVertex), 6, data);
 	OPeffectBind(OPIMGUI_ACTIVE->effect);
 
 	OPeffectParam("uProj", OPIMGUI_ACTIVE->proj);
@@ -120,7 +121,8 @@ void _radio(
 		data[i * 3 + 2].Position = OPvec3Create(center, 0);
 	}
 
-	OPrenderSetBufferData(&OPIMGUI_ACTIVE->buffer, sizeof(OPimguiVertex), 24, data);
+	//OPrenderSetBufferData(&OPIMGUI_ACTIVE->buffer, sizeof(OPimguiVertex), 24, data);
+	OPIMGUI_ACTIVE->buffer.SetData(sizeof(OPimguiVertex), 24, data);
 	OPeffectBind(OPIMGUI_ACTIVE->effect);
 	OPeffectParam("uProj", OPIMGUI_ACTIVE->proj);
 	glDrawArrays(GL_TRIANGLES, 0, 24);

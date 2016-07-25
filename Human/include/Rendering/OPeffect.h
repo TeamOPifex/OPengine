@@ -45,8 +45,8 @@ extern OPeffect* OPEFFECT_ACTIVE;
 
 // effect creation
 
-OPeffect OPeffectCreate(OPshader vert, OPshader frag, OPshaderAttribute* Attributes, OPint AttribCount, const OPchar* Name, ui32 stride);
-OPeffect OPeffectCreate(OPshader vert, OPshader frag, OPshaderAttribute* Attributes, OPint AttribCount, const OPchar* Name);
+OPeffect OPeffectCreate(OPshaderOLD vert, OPshaderOLD frag, OPshaderAttribute* Attributes, OPint AttribCount, const OPchar* Name, ui32 stride);
+OPeffect OPeffectCreate(OPshaderOLD vert, OPshaderOLD frag, OPshaderAttribute* Attributes, OPint AttribCount, const OPchar* Name);
 OPeffect OPeffectGen(const OPchar* vert, const OPchar* frag, ui32 attrs, const OPchar* Name, ui32 stride);
 OPeffect OPeffectGen(const OPchar* vert, const OPchar* frag, OPvertexLayout* layout);
 
@@ -56,8 +56,8 @@ OPint OPeffectBind(OPeffect* effect, ui32 stride);
 
 
 struct OPeffect {
-	OPshader  Vertex;
-	OPshader   Fragment;
+	OPshaderOLD  Vertex;
+	OPshaderOLD   Fragment;
 	ui32      ProgramHandle;
 	ui32      Stride;
 	OPhashMap*  Parameters;
@@ -121,18 +121,18 @@ inline void OPeffectParami(const OPchar* param, OPint i){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
 	glUniform1i(loc, (GLint)i);
 }
-inline void OPeffectParamBindTex(const OPchar* param, OPtexture* tex){
+inline void OPeffectParamBindTex(const OPchar* param, OPtextureOLD* tex){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
 	glUniform1i(loc, OPtextureBind(tex));
 }
-inline void OPeffectParamBindTex(i32 loc, OPtexture* tex){
+inline void OPeffectParamBindTex(i32 loc, OPtextureOLD* tex){
 	glUniform1i(loc, OPtextureBind(tex));
 }
-inline void OPeffectParamBindCubeMap(const OPchar* param, OPtextureCube * tex){
+inline void OPeffectParamBindCubeMap(const OPchar* param, OPtextureCubeOLD * tex){
 	GLuint loc = glGetUniformLocation(OPEFFECT_ACTIVE->ProgramHandle, param);
 	glUniform1i((GLint)loc, OPtextureCubeBind(tex));
 }
-inline void OPeffectParamBindCubeMap(i32 loc, OPtextureCube * tex){
+inline void OPeffectParamBindCubeMap(i32 loc, OPtextureCubeOLD * tex){
 	glUniform1i(loc, OPtextureCubeBind(tex));
 }
 inline void OPeffectParamiv(const OPchar* param, OPint count, i32* i){
@@ -179,10 +179,10 @@ inline void OPeffectParam(const OPchar* param, OPvec4 f){
 inline void OPeffectParam(const OPchar* param, OPuint count, OPvec4* f){
 	OPeffectParamVec4v(param, count, f);
 }
-inline void OPeffectParam(const OPchar* param, OPtexture* tex){
+inline void OPeffectParam(const OPchar* param, OPtextureOLD* tex){
 	OPeffectParamBindTex(param, tex);
 }
-inline void OPeffectParam(const OPchar* param, OPtextureCube * tex){
+inline void OPeffectParam(const OPchar* param, OPtextureCubeOLD * tex){
 	OPeffectParamBindCubeMap(param, tex);
 }
 

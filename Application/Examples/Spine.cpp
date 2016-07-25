@@ -21,7 +21,6 @@ typedef struct {
 
 	Spine* spine;
 	f32* worldVertices;
-	OPrenderBuffer* buffer;
 	OPmesh quad;
 } SpineExample;
 SpineExample* spineExample;

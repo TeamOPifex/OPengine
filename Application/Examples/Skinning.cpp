@@ -12,7 +12,7 @@ typedef struct {
 	OPeffect* Effect;
 	OPcam* Camera;
 	ui32 pos;
-	OPtexture* texture;
+	OPtextureOLD* texture;
 	OPskeleton* skeleton;
 	OPskeletonAnimation* animation;
 	OPskeletonAnimation* animation2;
@@ -53,8 +53,8 @@ void ExampleSkinningEnter(OPgameState* last) {
 	};
 
 	skinningExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	OPshader* vert = (OPshader*)OPcmanGet("Skinning.vert");
-	OPshader* frag = (OPshader*)OPcmanGet("Skinning.frag");
+	OPshaderOLD* vert = (OPshaderOLD*)OPcmanGet("Skinning.vert");
+	OPshaderOLD* frag = (OPshaderOLD*)OPcmanGet("Skinning.frag");
 	*skinningExample->Effect = OPeffectCreate(
 		*vert,
 		*frag,
@@ -76,7 +76,7 @@ void ExampleSkinningEnter(OPgameState* last) {
 		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
 		);
 
-		skinningExample->texture = (OPtexture*)OPcmanLoadGet("Knight.png");
+		skinningExample->texture = (OPtextureOLD*)OPcmanLoadGet("Knight.png");
 }
 
 OPint heldDown = 0;

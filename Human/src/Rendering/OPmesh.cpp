@@ -4,6 +4,8 @@ OPmesh* OPMESH_ACTIVE;
 void* OPMESH_ACTIVE_PTR = NULL;
 ui64 OPMESH_GLOBAL_ID = 1;
 
+#include "./Human/include/Rendering/OPrender.h"
+
 //-----------------------------------------------------------------------------
 // ______                _   _
 //|  ____|              | | (_)
@@ -12,10 +14,10 @@ ui64 OPMESH_GLOBAL_ID = 1;
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPmesh OPmeshCreate(){
-	OPmesh out = {
-		OPrenderGenBuffer(OPvertexBuffer),
-		OPrenderGenBuffer(OPindexBuffer)
-	};
+	OPmesh out;
+
+	OPRENDERER_ACTIVE->VertexBuffer.Init(&out.vertexBuffer);
+	OPRENDERER_ACTIVE->IndexBuffer.Init(&out.indexBuffer);
 
 	out.Id = OPMESH_GLOBAL_ID++;
 
@@ -34,20 +36,21 @@ OPmesh* OPmeshCreate(OPmeshDesc desc) {
 }
 
 //-----------------------------------------------------------------------------
-void OPmeshBuild(ui32 vertSize, ui32 indSize,
+void OPmeshBuild(ui32 vertSize, OPindexSize indSize,
 						 OPuint vertCount, OPuint indCount,
 						 void* vertices, void* indices){
-	OPrenderSetBufferData(&OPMESH_ACTIVE->IndexBuffer, indSize, indCount, indices);
-	OPrenderSetBufferData(&OPMESH_ACTIVE->VertexBuffer, vertSize, vertCount, vertices);
-	//OPMESH_ACTIVE->VertexSize = vertSize;
+	OPMESH_ACTIVE->indexBuffer.SetData(indSize, indCount, indices);
+	OPMESH_ACTIVE->vertexBuffer.SetData(vertSize, vertCount, vertices);
+
 	OPMESH_ACTIVE->Vertices = vertices;
 	OPMESH_ACTIVE->Indicies = indices;
 }
 
 //-----------------------------------------------------------------------------
 void OPmesh::Bind(){
-	OPrenderBindBuffer(&VertexBuffer);
-	OPrenderBindBuffer(&IndexBuffer);
+	OPrenderBindBuffer(&vertexBuffer);
+	OPrenderBindBuffer(&indexBuffer);
+
 	OPMESH_ACTIVE_PTR = OPMESH_ACTIVE = this;
 }
 
@@ -57,6 +60,6 @@ void OPmeshRender(){
 }
 
 void OPmeshDestroy(OPmesh* mesh) {
-	OPrenderDelBuffer(&mesh->VertexBuffer);
-	OPrenderDelBuffer(&mesh->IndexBuffer);
+	mesh->vertexBuffer.Destroy();
+	mesh->indexBuffer.Destroy();
 }

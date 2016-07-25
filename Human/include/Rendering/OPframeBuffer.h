@@ -45,20 +45,20 @@ OPframeBuffer OPframeBufferCreateDepth(OPtextureDescription desc);
 OPframeBuffer OPframeBufferCreate(OPtextureDescription desc);
 OPframeBuffer OPframeBufferCreateVR(ui32 width, ui32 height);
 void OPframeBufferDestroy(OPframeBuffer* fb);
-void OPframeBufferAttach(OPtexture* texture, ui16 pos);
+void OPframeBufferAttach(OPtextureOLD* texture, ui16 pos);
 void OPframeBufferBind(OPframeBuffer* fb);
 void OPframeBufferBindRead(OPframeBuffer* fb);
 void OPframeBufferSetReadBuffer(ui16 pos);
 void OPframeBufferSetReadBufferDepth();
 void OPframeBufferBindTex(OPframeBuffer* fb);
 void OPframeBufferUnbind();
-void OPframeBufferAttachDepth(OPtexture* texture);
+void OPframeBufferAttachDepth(OPtextureOLD* texture);
 
 
 
 struct OPframeBuffer {
 	OPtextureDescription Description;
-	OPtexture Texture;
+	OPtextureOLD Texture;
 	ui32 Handle;
 
 	ui32 DepthBufferId;

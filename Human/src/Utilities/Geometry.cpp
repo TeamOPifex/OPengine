@@ -135,7 +135,7 @@ OPmesh* OPgeoCreateSphere(f32 radius, ui16 widthSegments, ui16 heightSegments) {
 
 	OPmeshBuild(
 		verticesStructure->size * sizeof(f32), 
-		sizeof(ui16), 
+		OPindexSize::SHORT,
 		count, 
 		indCount, 
 		verticesStructure->data, 

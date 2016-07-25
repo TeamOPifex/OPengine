@@ -12,7 +12,7 @@
 struct OPfont {
 	OPvector* glyphs;
 	OPfontAtlas* atlas;
-	OPtexture* texture;
+	OPtextureOLD* texture;
 
 	// Font Size
 	OPfloat size;

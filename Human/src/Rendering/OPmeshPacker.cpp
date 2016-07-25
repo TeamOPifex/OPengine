@@ -73,23 +73,13 @@ OPuint OPmeshPackerAddIB(ui32 indexSize, void* indicesData, OPuint indexCount){
 //-----------------------------------------------------------------------------
 void OPmeshPackerBuild(){
 	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
-	packer->VertexBuffer = OPrenderGenBuffer(OPvertexBuffer);
-	packer->IndexBuffer = OPrenderGenBuffer(OPindexBuffer);
 
-	OPrenderSetBufferData(
-		&packer->VertexBuffer,
-		1,
-		packer->vertexOffset,
-		packer->vertices.Data
-	);
+	packer->VertexBuffer.Init();
+	packer->IndexBuffer.Init();
 
-	OPrenderSetBufferData(
-		&packer->IndexBuffer,
-		1,
-		packer->indexOffset,
-		packer->indices.Data
-	);
-	
+	packer->VertexBuffer.SetData(1, packer->vertexOffset, packer->vertices.Data);
+	packer->IndexBuffer.SetData(OPindexSize::BIT, packer->indexOffset, packer->indices.Data);
+		
 	OPMESHPACKER_ACTIVE->built = true;
 }
 //-----------------------------------------------------------------------------

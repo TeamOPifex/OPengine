@@ -13,7 +13,7 @@
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/
 
-typedef GLenum OPshader;
+typedef GLenum OPshaderOLD;
 
 #ifdef OPIFEX_OPENGL_ES_2
 #define OPvertexShader   GL_VERTEX_SHADER
@@ -49,11 +49,11 @@ struct OPshaderAttribute{
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
-OPint OPshaderLoadVertex(OPstream* str, OPshader** shader);
-OPint OPshaderLoadFragment(OPstream* str, OPshader** shader);
-OPint OPshaderLoadVertexDX11(OPstream* source, OPshader** shader);
-OPint OPshaderLoadFragmentDX11(OPstream* source, OPshader** shader);
-OPint OPshaderUnload(OPshader* shader);
+OPint OPshaderLoadVertex(OPstream* str, OPshaderOLD** shader);
+OPint OPshaderLoadFragment(OPstream* str, OPshaderOLD** shader);
+OPint OPshaderLoadVertexDX11(OPstream* source, OPshaderOLD** shader);
+OPint OPshaderLoadFragmentDX11(OPstream* source, OPshaderOLD** shader);
+OPint OPshaderUnload(OPshaderOLD* shader);
 
 
 #endif

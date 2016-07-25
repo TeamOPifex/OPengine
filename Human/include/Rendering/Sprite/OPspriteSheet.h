@@ -22,7 +22,7 @@ struct OPspriteSheet {
 	OPint      Height;
 	OPint      Sprites;
 	OPchar**   Names;
-	OPtexture* Sheet;
+	OPtextureOLD* Sheet;
 };
 typedef struct OPspriteSheet OPspriteSheet;
 
@@ -40,7 +40,7 @@ struct OPsprite {
 	OPspriteFrame* Frames;  // pointer to animation's frames
 	OPint          Frame;   // index of the current frame
 	OPfloat        Elapsed; // time since last frame change
-	OPtexture*     Sheet;   // texture that this sprite will use
+	OPtextureOLD*     Sheet;   // texture that this sprite will use
 };
 typedef struct OPsprite OPsprite;
 

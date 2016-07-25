@@ -10,8 +10,8 @@
 OPeffect* OPEFFECT_ACTIVE = NULL;
 OPmesh* OPEFFECT_BOUND_MESH = NULL;
 
-OPeffect createEffect(OPshader vert,
-	OPshader frag,
+OPeffect createEffect(OPshaderOLD vert,
+	OPshaderOLD frag,
 	OPshaderAttribute* Attributes,
 	OPint AttribCount,
 	const OPchar* Name,
@@ -105,8 +105,8 @@ OPeffect createEffect(OPshader vert,
 //-----------------------------------------------------------------------------
 // effect creation
 OPeffect OPeffectCreate(
-	OPshader vert,
-	OPshader frag,
+	OPshaderOLD vert,
+	OPshaderOLD frag,
 	OPshaderAttribute* Attributes,
 	OPint AttribCount,
 	const OPchar* Name,
@@ -116,8 +116,8 @@ OPeffect OPeffectCreate(
 //-----------------------------------------------------------------------------
 // effect creation
 OPeffect OPeffectCreate(
-	OPshader vert,
-	OPshader frag,
+	OPshaderOLD vert,
+	OPshaderOLD frag,
 	OPshaderAttribute* Attributes,
 	OPint AttribCount,
 	const OPchar* Name){
@@ -332,12 +332,12 @@ OPeffect OPeffectGen(
 	} else {
 		OPlog("Already loaded.c");
 	}
-	OPshader* vertShader = (OPshader*)OPcmanGet(vert);
+	OPshaderOLD* vertShader = (OPshaderOLD*)OPcmanGet(vert);
 
 	OPlog("Loading Frag for Effect: %s", frag);
 
 	if (!OPcmanIsLoaded(frag)) OPcmanLoad(frag);
-	OPshader* fragShader = (OPshader*)OPcmanGet(frag);
+	OPshaderOLD* fragShader = (OPshaderOLD*)OPcmanGet(frag);
 
 	OPlog("Create the Effect: %s", Name);
 
@@ -361,12 +361,12 @@ OPeffect OPeffectGen(const OPchar* vert, const OPchar* frag, OPvertexLayout* lay
 	else {
 		OPlog("Already loaded.c");
 	}
-	OPshader* vertShader = (OPshader*)OPcmanGet(vert);
+	OPshaderOLD* vertShader = (OPshaderOLD*)OPcmanGet(vert);
 
 	OPlog("Loading Frag for Effect: %s", frag);
 
 	if (!OPcmanIsLoaded(frag)) OPcmanLoad(frag);
-	OPshader* fragShader = (OPshader*)OPcmanGet(frag);
+	OPshaderOLD* fragShader = (OPshaderOLD*)OPcmanGet(frag);
 
 	OPlog("Create the Effect");
 

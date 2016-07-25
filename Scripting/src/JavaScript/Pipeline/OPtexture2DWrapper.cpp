@@ -9,14 +9,14 @@
 JS_RETURN_VAL _OPtexture2DCreate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
-    OPtexture* texture = JS_GET_ARG_PTR(args, 0, OPtexture);
+    OPtextureOLD* texture = JS_GET_ARG_PTR(args, 0, OPtextureOLD);
     OPeffect* effect = NULL;
 
     if(args.Length() > 1) {
       effect = JS_GET_ARG_PTR(args, 1, OPeffect);
     }
 
-    OPtexture2D* tex2d;
+	OPtexture2DOLD* tex2d;
 
     if(args.Length() > 2) {
         tex2d = OPtexture2DCreate(texture, effect, OPvec2(args[2]->NumberValue(), args[3]->NumberValue()), OPvec2(args[4]->NumberValue(), args[5]->NumberValue()));
@@ -42,7 +42,7 @@ JS_RETURN_VAL _OPtexture2DCreate(const JS_ARGS& args) {
 JS_RETURN_VAL _OPtexture2DDestroy(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
-    OPtexture2D* tex2d = JS_GET_ARG_PTR(args, 0, OPtexture2D);
+		OPtexture2DOLD* tex2d = JS_GET_ARG_PTR(args, 0, OPtexture2DOLD);
     OPtexture2DDestroy(tex2d);
 
     JS_RETURN_NULL
@@ -51,7 +51,7 @@ JS_RETURN_VAL _OPtexture2DDestroy(const JS_ARGS& args) {
 JS_RETURN_VAL _OPtexture2DPrepRender(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
-    OPtexture2D* tex2d = JS_GET_ARG_PTR(args, 0, OPtexture2D);
+		OPtexture2DOLD* tex2d = JS_GET_ARG_PTR(args, 0, OPtexture2DOLD);
     OPtexture2DPrepRender(tex2d);
 
     JS_RETURN_NULL
@@ -60,7 +60,7 @@ JS_RETURN_VAL _OPtexture2DPrepRender(const JS_ARGS& args) {
 JS_RETURN_VAL _OPtexture2DRender(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
-    OPtexture2D* tex2d = JS_GET_ARG_PTR(args, 0, OPtexture2D);
+		OPtexture2DOLD* tex2d = JS_GET_ARG_PTR(args, 0, OPtexture2DOLD);
     OPtexture2DRender(tex2d);
 
     JS_RETURN_NULL
@@ -74,7 +74,7 @@ void OPtexture2DWrapper(Handle<Object> exports) {
     JS_SET_METHOD(texture2D, "Destroy", _OPtexture2DDestroy);
     JS_SET_METHOD(texture2D, "PrepRender", _OPtexture2DPrepRender);
     JS_SET_METHOD(texture2D, "Render", _OPtexture2DRender);
-    JS_SET_NUMBER(texture2D, "size", sizeof(OPtexture2D));
+    JS_SET_NUMBER(texture2D, "size", sizeof(OPtexture2DOLD));
     JS_SET_OBJECT(exports, "texture2D", texture2D);
 }
 

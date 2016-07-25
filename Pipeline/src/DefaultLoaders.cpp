@@ -12,7 +12,7 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 	{
 		".png",
 		"Textures/",
-		sizeof(OPtexture),
+		sizeof(OPtextureOLD),
 		(OPint(*)(OPstream*, void**))OPimagePNGLoad,
 		(OPint (*)(void*))OPimagePNGUnload,
 		(OPint(*)(OPstream*, void**))OPimagePNGReload
@@ -36,7 +36,7 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 #else
 		"Shaders/",
 #endif
-		sizeof(OPshader),
+		sizeof(OPshaderOLD),
 #ifdef OPIFEX_DIRECTX_11
 		(OPint(*)(OPstream*, void**))OPshaderLoadVertexDX11,
 #else
@@ -64,7 +64,7 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 #else
 		"Shaders/",
 #endif
-		sizeof(OPshader),
+		sizeof(OPshaderOLD),
 #ifdef OPIFEX_DIRECTX_11
 		(OPint(*)(OPstream*, void**))OPshaderLoadFragmentDX11,
 #else

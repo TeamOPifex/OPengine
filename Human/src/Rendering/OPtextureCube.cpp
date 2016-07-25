@@ -3,7 +3,7 @@
 #include "./Core/include/OPlog.h"
 #include "./Core/include/Assert.h"
 
-void OPtextureCubeInit(OPtextureCube *result, OPimage *faces) {
+void OPtextureCubeInit(OPtextureCubeOLD *result, OPimage *faces) {
     GLuint textureID;
     glGenTextures(1, &textureID);
     glActiveTexture(GL_TEXTURE0);
@@ -53,17 +53,17 @@ void OPtextureCubeInit(OPtextureCube *result, OPimage *faces) {
 }
 
 
-OPtextureCube* OPtextureCubeCreate(OPimage * faces) {
-    OPtextureCube* result = (OPtextureCube*)OPalloc(sizeof(OPtextureCube));
+OPtextureCubeOLD* OPtextureCubeCreate(OPimage * faces) {
+	OPtextureCubeOLD* result = (OPtextureCubeOLD*)OPalloc(sizeof(OPtextureCubeOLD));
     OPtextureCubeInit(result, faces);
     return result;
 }
 
-void OPtextureCubeDestroy(OPtextureCube * result) {
+void OPtextureCubeDestroy(OPtextureCubeOLD * result) {
 
 }
 
-void OPtextureCubeFree(OPtextureCube * result) {
+void OPtextureCubeFree(OPtextureCubeOLD * result) {
     OPtextureCubeDestroy(result);
     OPfree(result);
 }
@@ -74,7 +74,7 @@ void OPtextureCubeClearActive() {
     OPTEXTURECUBE_ACTIVE = 0;
 }
 
-ui32 OPtextureCubeBind(OPtextureCube* result) {
+ui32 OPtextureCubeBind(OPtextureCubeOLD* result) {
     ASSERT(OPTEXTURECUBE_ACTIVE < 16, "Exceeded Active Texture Slots");
     OPglError("OPtextureBind::Error 0");
     OPRENDER_CURR_TEX = &result->Texture;

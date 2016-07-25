@@ -31,8 +31,8 @@ void ExampleOculusEnter(OPgameState* last) {
 	};
 
 	oculusExample.Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	OPshader* vert = (OPshader*)OPcmanGet("SimpleModel.vert");
-	OPshader* frag = (OPshader*)OPcmanGet("SimpleModel.frag");
+	OPshaderOLD* vert = (OPshaderOLD*)OPcmanGet("SimpleModel.vert");
+	OPshaderOLD* frag = (OPshaderOLD*)OPcmanGet("SimpleModel.frag");
 	*oculusExample.Effect = OPeffectCreate(
 		*vert,
 		*frag,

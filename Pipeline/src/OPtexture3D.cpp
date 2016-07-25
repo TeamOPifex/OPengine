@@ -19,7 +19,7 @@ void LoadDefaultTexture3DEffect() {
 		);
 }
 
-OPtexture3D* OPtexture3DCreate(OPtexture* texture, OPeffect* effect) {
+OPtexture3D* OPtexture3DCreate(OPtextureOLD* texture, OPeffect* effect) {
 	OPtexture3D* tex3d = (OPtexture3D*)OPalloc(sizeof(OPtexture3D));
 
 	OPbzero(tex3d, sizeof(OPtexture3D));

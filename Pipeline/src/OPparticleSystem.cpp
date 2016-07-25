@@ -29,7 +29,7 @@ void OPparticleSysInit(OPeffect* effect) {
 	}
 }
 
-OPparticleSys* OPparticleSysCreate(OPtexture* texture, ui16 count, OPeffect* effect) {
+OPparticleSys* OPparticleSysCreate(OPtextureOLD* texture, ui16 count, OPeffect* effect) {
 	OPparticleSys* sys = (OPparticleSys*)OPalloc(sizeof(OPparticleSys));
 	sys->texture = texture;
 	OPuint entHeapSize = OPentHeapBytes(sizeof(OPparticle), count);

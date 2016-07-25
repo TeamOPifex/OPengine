@@ -6,4 +6,6 @@
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Human/include/Systems/OPinputSystem.h"
 
+#include "./Human/include/Platform/opengl.h"
+
 #endif

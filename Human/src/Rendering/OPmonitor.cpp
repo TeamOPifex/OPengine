@@ -1,16 +1,17 @@
 #include "./Human/include/Rendering/OPmonitor.h"
 
+bool OPMONITOR_SETUP = false;
+
 ui8 OPMONITOR_COUNT = 0;
 OPmonitor OPMONITOR_PRIMARY;
 OPmonitor OPMONITOR_LIST[OPMONITOR_MAX];
 
-
 void OPmonitor::Init(GLFWmonitor* monitor) {
-	Monitor = monitor;
-	glfwGetMonitorPos(Monitor, &X, &Y);
-	glfwGetMonitorPhysicalSize(Monitor, &WidthMM, &HeightMM);
+	Handle = monitor;
+	glfwGetMonitorPos(Handle, &X, &Y);
+	glfwGetMonitorPhysicalSize(Handle, &WidthMM, &HeightMM);
 
-	const GLFWvidmode* modes = glfwGetVideoModes(Monitor, &VideoModesCount);
+	const GLFWvidmode* modes = glfwGetVideoModes(Handle, &VideoModesCount);
 	VideoModes = (OPmonitorVideoMode*)OPalloc(sizeof(OPmonitorVideoMode) * VideoModesCount);
 	for (ui32 i = 0; i < VideoModesCount; i++) {
 		VideoModes[i].Width = modes[i].width;
@@ -21,7 +22,7 @@ void OPmonitor::Init(GLFWmonitor* monitor) {
 		VideoModes[i].RefreshRate = modes[i].refreshRate;
 	}
 
-	const GLFWvidmode* mode = glfwGetVideoMode(Monitor);
+	const GLFWvidmode* mode = glfwGetVideoMode(Handle);
 	VideoModeCurrent.Width = mode->width;
 	VideoModeCurrent.Height = mode->height;
 	VideoModeCurrent.Red = mode->redBits;
@@ -29,4 +30,18 @@ void OPmonitor::Init(GLFWmonitor* monitor) {
 	VideoModeCurrent.Blue = mode->blueBits;
 	VideoModeCurrent.RefreshRate = mode->refreshRate;
 
+	OPMONITOR_SETUP = true;
+}
+
+void OPmonitorSetup() {
+	int monitorCount;
+
+	GLFWmonitor** monitors = glfwGetMonitors(&monitorCount);
+	OPMONITOR_COUNT = monitorCount;
+	for (ui8 i = 0; i < monitorCount & i < OPMONITOR_MAX; i++) {
+		OPMONITOR_LIST[i].Init(monitors[i]);
+	}
+
+	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+	OPMONITOR_PRIMARY.Init(primaryMonitor);
 }

@@ -6,7 +6,7 @@ typedef struct {
     OPeffect Effect;		// The Effect used to render the Mesh
     OPcam Camera;			// The Camera to use in the Effect to render the Mesh
     ui32 Rotation;			// The amount to rotate the Mesh
-    OPtextureCube CubeMap;
+    OPtextureCubeOLD CubeMap;
     OPsphericalCube SphericalCube;
 } CubeMapExample;
 CubeMapExample cubeMapExample;

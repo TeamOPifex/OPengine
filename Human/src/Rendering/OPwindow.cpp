@@ -1,8 +1,9 @@
 #include "./Human/include/Rendering/OPwindow.h"
-#include "./Core/include/Assert.h"
 #include "./Human/include/Rendering/OPrender.h"
 #include "./Human/include/Utilities/Errors.h"
 #include "./Human/include/Rendering/OPglew.h"
+#include "./Core/include/Assert.h"
+
 #ifdef OPIFEX_DIRECTX_11
 #include <windows.h>
 #include <windowsx.h>
@@ -24,7 +25,7 @@ void OPwindow::Init(OPmonitor* monitor, bool fullscreen, bool borderless, const 
 	GLFWmonitor* display = NULL;
 	if (monitor != NULL) {
 		OPlog("Not showing monitor");
-		display = monitor->Monitor;
+		display = monitor->Handle;
 	}
 	glfwWindowHint(GLFW_DECORATED, !borderless);
 	Window = glfwCreateWindow(width, height, title, display, NULL);
@@ -115,7 +116,10 @@ OPint OPwindow::Update() {
 	if (msg.message == WM_QUIT)
 		return 1;
 #else
-	OPrenderUpdate();
+	glfwPollEvents();
+	if (glfwWindowShouldClose(OPWINDOW_ACTIVE->Window)) {
+		OPend();
+	}
 #endif
 
 	return 0;

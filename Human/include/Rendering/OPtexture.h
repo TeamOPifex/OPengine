@@ -22,7 +22,7 @@ struct OPtextureDescription{
 };
 
 
-struct OPtexture {
+struct OPtextureOLD {
 	OPtextureDescription Description;
 	ui32 Handle;
 
@@ -37,7 +37,7 @@ struct OPtexture {
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
 
-extern OPtexture* OPRENDER_CURR_TEX;
+extern OPtextureOLD* OPRENDER_CURR_TEX;
 
 //-----------------------------------------------------------------------------
 //  _____                     _____                  _____  _               _   _
@@ -63,14 +63,14 @@ extern OPtexture* OPRENDER_CURR_TEX;
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
-OPtexture OPtextureCreate(OPtextureDescription desc);
-void OPtextureDestroy(OPtexture* tex);
-ui32 OPtextureBind(OPtexture* tex);
+OPtextureOLD OPtextureCreate(OPtextureDescription desc);
+void OPtextureDestroy(OPtextureOLD* tex);
+ui32 OPtextureBind(OPtextureOLD* tex);
 void OPtextureClearActive();
 void OPtextureSetData(void* data);
 void OPtexturePixelate();
 void OPtextureSmooth();
-OPvec4 OPtextureReadPixel(OPtexture* tex, OPint x, OPint y);
-OPtexture* OPtextureLoad(const OPchar* asset);
+OPvec4 OPtextureReadPixel(OPtextureOLD* tex, OPint x, OPint y);
+OPtextureOLD* OPtextureLoad(const OPchar* asset);
 
 #endif

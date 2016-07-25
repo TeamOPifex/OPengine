@@ -124,8 +124,8 @@ OPMData OPMloadDataV2(OPstream* str) {
 			OPvertexLayoutBuilderAdd(&layout, OPATTR_BONES);
 
 		result.vertexLayout = layout.Build();
-		result.indexSize = sizeof(ui16);
-		result.indices = OPalloc(result.indexSize * indicesCount);
+		result.indexSize = OPindexSize::SHORT;// sizeof(ui16);
+		result.indices = OPalloc((ui32)result.indexSize * indicesCount);
 		result.vertices = OPalloc(result.vertexLayout.stride * verticesCount);
 
 		f32* vertData = (f32*)result.vertices;
@@ -439,7 +439,7 @@ OPMData OPMloadData(OPstream* str) {
 	data.vertexLayout = layout.Build();
 	data.indices = indices;
 	data.indexCount = indicesCount * 3;
-	data.indexSize = sizeof(ui16);
+	data.indexSize = OPindexSize::SHORT;// sizeof(ui16);
 	data.vertexCount = verticeCount;
 
 	OPvertices* vertices = OPverticesCreate(verticeCount, features);
@@ -891,8 +891,10 @@ OPint OPMReload(OPstream* str, OPmesh** mesh){
 	OPmesh* tex = (OPmesh*)(*mesh);
 	OPint result = OPMload(str, &resultMesh);
 	if (result) {
-		OPrenderDelBuffer(&tex->IndexBuffer);
-		OPrenderDelBuffer(&tex->VertexBuffer);
+		tex->indexBuffer.Destroy();
+		tex->vertexBuffer.Destroy();
+		//OPrenderDelBuffer(&tex->IndexBuffer);
+		//OPrenderDelBuffer(&tex->VertexBuffer);
 		OPmemcpy(*mesh, resultMesh, sizeof(OPmesh));
 		OPfree(resultMesh);
 	}
@@ -902,8 +904,10 @@ OPint OPMReload(OPstream* str, OPmesh** mesh){
 OPint OPMUnload(void* mesh){
 	OPmesh* m = (OPmesh*)mesh;
 
-	OPrenderDelBuffer(&m->IndexBuffer);
-	OPrenderDelBuffer(&m->VertexBuffer);
+	m->indexBuffer.Destroy();
+	m->vertexBuffer.Destroy();
+	//OPrenderDelBuffer(&m->IndexBuffer);
+	//OPrenderDelBuffer(&m->VertexBuffer);
 	OPfree(m);
 
 	return 1;

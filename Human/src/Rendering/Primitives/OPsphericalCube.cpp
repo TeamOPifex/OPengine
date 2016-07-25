@@ -227,7 +227,7 @@ OPsphericalCube OPsphericalCubeCreate(OPimage * faces) {
 		result.sides[i].Bind();
 
 		OPmeshBuild(
-				sizeof(OPsphericalCubeVertex), sizeof(ui16),
+				sizeof(OPsphericalCubeVertex), OPindexSize::SHORT,
 				VertsPerSide, IndicesPerSide,
 				(void*)verts[i], (void*)indices[i]
 		);
@@ -445,7 +445,7 @@ OPsphericalCube OPsphericalCubeCreate(ui16 size) {
 		result.sides[i].Bind();
 
 		OPmeshBuild(
-			sizeof(OPsphericalCubeVertex), sizeof(ui16),
+			sizeof(OPsphericalCubeVertex), OPindexSize::SHORT,
 			VertsPerSide, IndicesPerSide,
 			(void*)verts[i], (void*)indices[i]
 			);

@@ -4,8 +4,10 @@
 void OPcommandDrawIndex(void* data, OPcam* camera) {
 	OPcommandDrawIndexed* dc = (OPcommandDrawIndexed*)data;
 
-	OPrenderBindBuffer(dc->vertexBuffer);
-	OPrenderBindBuffer(dc->indexBuffer);
+	dc->vertexBuffer->Bind();
+	dc->indexBuffer->Bind();
+	//OPrenderBindBuffer(dc->vertexBuffer);
+	//OPrenderBindBuffer(dc->indexBuffer);
 	OPmaterialBind(dc->material, dc->stride);
 	OPeffectParam(camera);
 
@@ -19,8 +21,10 @@ void OPcommandDrawIndexTexture(void* data, OPcam* camera) {
 	OPcommandDrawIndexed* dc = (OPcommandDrawIndexed*)data;
 
 	OPglError("ERROR PRIOR TO BUFFER BIND");
-	OPrenderBindBuffer(dc->vertexBuffer);
-	OPrenderBindBuffer(dc->indexBuffer);
+	dc->vertexBuffer->Bind();
+	dc->indexBuffer->Bind();
+	//OPrenderBindBuffer(dc->vertexBuffer);
+	//OPrenderBindBuffer(dc->indexBuffer);
 
 	OPglError("ERROR PRIOR TO MATERIAL BIND");
 	OPmaterialBind(dc->material, dc->stride);
@@ -60,14 +64,16 @@ void OPcommandDrawIndexedSet(OPcommandDrawIndexed* result, OPmodel* model, OPmat
 	result->material = material;
 	result->indexCount = model->mesh->IndexCount;
 	result->vertexLayout = NULL;
-	result->vertexBuffer = &model->mesh->VertexBuffer;
-	result->indexBuffer = &model->mesh->IndexBuffer;
+	result->vertexBuffer = &model->mesh->vertexBuffer;
+	//result->vertexBuffer = &model->mesh->VertexBuffer;
+	result->indexBuffer = &model->mesh->indexBuffer;
+	//result->indexBuffer = &model->mesh->IndexBuffer;
 	result->world = &model->world;
 	result->stride = model->mesh->vertexLayout.stride;
 	result->dispatch = OPcommandDrawIndex;
 }
 
-void OPcommandDrawIndexedSet(OPcommandDrawIndexed* result, OPmodel* model, OPmaterial* material, OPtexture* texture) {
+void OPcommandDrawIndexedSet(OPcommandDrawIndexed* result, OPmodel* model, OPmaterial* material, OPtextureOLD* texture) {
 	
 	ui64 meshId = model->mesh->Id << 0;     // 00 - 06 bits
 	ui64 textureId = texture->Handle << 6;  // 07 - 12 bits
@@ -80,15 +86,17 @@ void OPcommandDrawIndexedSet(OPcommandDrawIndexed* result, OPmodel* model, OPmat
 	result->material = material;
 	result->indexCount = model->mesh->IndexCount;
 	result->vertexLayout = NULL;
-	result->vertexBuffer = &model->mesh->VertexBuffer;
-	result->indexBuffer = &model->mesh->IndexBuffer;
+	result->vertexBuffer = &model->mesh->vertexBuffer;
+	//result->vertexBuffer = &model->mesh->VertexBuffer;
+	result->indexBuffer = &model->mesh->indexBuffer;
+	//result->indexBuffer = &model->mesh->IndexBuffer;
 	result->world = &model->world;
 	result->texture = texture;
 	result->stride = model->mesh->vertexLayout.stride;
 	result->dispatch = OPcommandDrawIndexTexture;
 }
 
-void OPcommandDrawIndexedSubmit(OPcommandBucket* commandBucket, OPmodel* model, OPmaterial* material, OPtexture* texture) {
+void OPcommandDrawIndexedSubmit(OPcommandBucket* commandBucket, OPmodel* model, OPmaterial* material, OPtextureOLD* texture) {
 	OPcommandDrawIndexed* dc = commandBucket->CreateDrawIndexed();
 	dc->Set(model, material, texture);
 	commandBucket->Submit(dc->key, dc->dispatch, dc);

@@ -15,7 +15,7 @@
 #endif
 
 OPint OPglError(const char* message){
-	ASSERT(OPRENDER_INITIALIZED != 0, "OPrenderInit must be called first.");
+	//ASSERT(OPRENDER_INITIALIZED != 0, "OPrenderInit must be called first.");
 
 	GLenum err = glGetError();
 	if(err != 0){
