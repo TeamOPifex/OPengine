@@ -6,13 +6,13 @@
 #include "./Data/include/OPstring.h"
 #include "./Core/include/Assert.h"
 
-void __opSpriteScaleFrames(OPtextureOLD* tex, OPspriteSheet* ss) {
+void __opSpriteScaleFrames(OPtexture* tex, OPspriteSheet* ss) {
 	ASSERT(tex, "__opSpriteScaleFrames() - texture null");
 	ASSERT(tex, "__opSpriteScaleFrames() - spritesheet null");
 	OPint i = 0;
 	OPvec2 size;
-	size.x = tex->Description.Width;
-	size.y = tex->Description.Height;
+	size.x = tex->textureDesc.width;
+	size.y = tex->textureDesc.height;
 
 	for (i = ss->Sprites; i--;){
 		OPsprite* s = (OPsprite*)OPcmanGet(ss->Names[i]);
@@ -49,7 +49,7 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 	i32 width, height;
 	i32 sprites, frames;
 	OPspriteFrame* frameData;
-	OPtextureOLD *sheet, *temp;
+	OPtexture *sheet, *temp;
 
 	ui32 filenameLength = (ui32)strlen(str->Source);
 	ui32 filenameLengthWithoutExtension = filenameLength - 5 - 8 + 1;
@@ -65,7 +65,7 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 	// allocate space for the texture before it's created
 	// this will allow us to refer to its location without
 	// yet having loaded it.
-	sheet = (OPtextureOLD*)OPalloc(sizeof(OPtextureOLD));
+	sheet = (OPtexture*)OPalloc(sizeof(OPtexture));
 
 	// read the dimensions of the image
 	width = OPreadi32(str);
@@ -212,7 +212,7 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 
 	// copy the texture's data into the pre allocated texture
 	// then clean up the temp texture object
-	OPmemcpy(sheet, temp, sizeof(OPtextureOLD));
+	OPmemcpy(sheet, temp, sizeof(OPtexture));
 #ifdef _DEBUG
 	OPlog("Copied SpriteSheet!");
 #endif
@@ -258,8 +258,8 @@ OPint OPspriteSheetUnload(void* ss){
 }
 
 OPvec2 OPspriteCurrentFrameSize(OPsprite* sprite) {
-	f32 sheetWidth = sprite->Sheet->Description.Width;
-	f32 sheetHeight = sprite->Sheet->Description.Height;
+	f32 sheetWidth = sprite->Sheet->textureDesc.width;
+	f32 sheetHeight = sprite->Sheet->textureDesc.height;
 	f32 frameWidth = (sprite->Frames[sprite->Frame].Size.x * sheetWidth);
 	f32 frameHeight = (sprite->Frames[sprite->Frame].Size.y * sheetHeight);
 	return OPvec2(frameWidth, frameHeight);

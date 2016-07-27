@@ -35,7 +35,7 @@ void OPcommandDrawIndexTexture(void* data, OPcam* camera) {
 
 	OPglError("ERROR PRIOR TO CLEAR ACTIVE");
 
-	OPtextureClearActive();
+	//OPtextureClearActive();
 	OPglError("ERROR PRIOR TO TEXTURE BIND");
 	//ui32 tex = OPtextureBind(dc->texture);
 	//OPglError("ERROR PRIOR TO COLOR TEX BIND");
@@ -73,10 +73,10 @@ void OPcommandDrawIndexedSet(OPcommandDrawIndexed* result, OPmodel* model, OPmat
 	result->dispatch = OPcommandDrawIndex;
 }
 
-void OPcommandDrawIndexedSet(OPcommandDrawIndexed* result, OPmodel* model, OPmaterial* material, OPtextureOLD* texture) {
+void OPcommandDrawIndexedSet(OPcommandDrawIndexed* result, OPmodel* model, OPmaterial* material, OPtexture* texture) {
 	
 	ui64 meshId = model->mesh->Id << 0;     // 00 - 06 bits
-	ui64 textureId = texture->Handle << 6;  // 07 - 12 bits
+	ui64 textureId = texture->guid << 6;  // 07 - 12 bits
 	ui64 materialId = material->id << 12;   // 13 - 19 bits
 	ui64 renderTarget = 0 << 18;            // 20 - 26 bits
 	result->key = meshId | textureId | materialId | renderTarget;
@@ -96,7 +96,7 @@ void OPcommandDrawIndexedSet(OPcommandDrawIndexed* result, OPmodel* model, OPmat
 	result->dispatch = OPcommandDrawIndexTexture;
 }
 
-void OPcommandDrawIndexedSubmit(OPcommandBucket* commandBucket, OPmodel* model, OPmaterial* material, OPtextureOLD* texture) {
+void OPcommandDrawIndexedSubmit(OPcommandBucket* commandBucket, OPmodel* model, OPmaterial* material, OPtexture* texture) {
 	OPcommandDrawIndexed* dc = commandBucket->CreateDrawIndexed();
 	dc->Set(model, material, texture);
 	commandBucket->Submit(dc->key, dc->dispatch, dc);

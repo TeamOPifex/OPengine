@@ -37,7 +37,7 @@ struct OPparticle {
 struct OPparticleSys {
 	OPentHeap* heap;
 	OPparticle* particles;
-	OPtextureOLD* texture;
+	OPtexture* texture;
 	OPeffect* effect;
 	OPvec2 uvScale;
 	OPfloat fps;
@@ -64,7 +64,7 @@ inline void OPparticleSysSpawn(OPparticleSys* sys, OPparticle particle){
 }
 
 void OPparticleSysInit(OPeffect* effect);
-OPparticleSys* OPparticleSysCreate(OPtextureOLD* texture, ui16 count, OPeffect* effect);
+OPparticleSys* OPparticleSysCreate(OPtexture* texture, ui16 count, OPeffect* effect);
 void OPparticleSysUpdate(OPparticleSys* sys, OPtimer* timer);
 void OPparticleSysDestroy(OPparticleSys* sys);
 void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(OPparticle*, OPmat4*));

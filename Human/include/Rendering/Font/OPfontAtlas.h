@@ -38,7 +38,7 @@ void OPfontAtlasSetRegion(OPfontAtlas* atlas, OPint x, OPint y, OPint width, OPi
 OPint OPfontAtlasFit(OPfontAtlas* atlas, OPint index, OPint width, OPint height);
 void OPfontAtlasMerge(OPfontAtlas* atlas);
 OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, i32 width, i32 height);
-OPtextureOLD OPfontAtlasTexture(OPfontAtlas* atlas);
+OPtexture OPfontAtlasTexture(OPfontAtlas* atlas);
 void OPfontAtlasSavePNG(OPfontAtlas* atlas, OPchar* filename);
 
 #endif

@@ -48,23 +48,24 @@ OPframeBuffer OPframeBufferCreateShadow(ui32 width, ui32 height) {
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 
 	// Setup the Texture Descriptor
-	fb.Description.Width = width;
-	fb.Description.Height = height;
-	fb.Description.DataType = GL_FLOAT;
-	fb.Description.Format = GL_DEPTH_COMPONENT;
-	fb.Description.InternalFormat = GL_DEPTH_COMPONENT;
-	fb.Description.MagFilter = GL_NEAREST;
-	fb.Description.MinFilter = GL_NEAREST;
-	fb.Description.WrapX = GL_CLAMP_TO_BORDER;
-	fb.Description.WrapY = GL_CLAMP_TO_BORDER;
-	fb.Description.CompareFunc = GL_LEQUAL;
-	fb.Description.CompareMode = GL_COMPARE_R_TO_TEXTURE;
+	//fb.Description.Width = width;
+	//fb.Description.Height = height;
+	//fb.Description.DataType = GL_FLOAT;
+	//fb.Description.Format = GL_DEPTH_COMPONENT;
+	//fb.Description.InternalFormat = GL_DEPTH_COMPONENT;
+	//fb.Description.MagFilter = GL_NEAREST;
+	//fb.Description.MinFilter = GL_NEAREST;
+	//fb.Description.WrapX = GL_CLAMP_TO_BORDER;
+	//fb.Description.WrapY = GL_CLAMP_TO_BORDER;
+	//fb.Description.CompareFunc = GL_LEQUAL;
+	//fb.Description.CompareMode = GL_COMPARE_R_TO_TEXTURE;
 
 	// Create the Framebuffer
 	glGenFramebuffers(1, &fb.Handle);
 
 	// Create a nex Depth Texture
-	fb.Texture = OPtextureCreate(fb.Description);
+	//fb.Texture =  OPtextureCreate(fb.Description);
+	OPRENDERER_ACTIVE->Texture.Init(&fb.Texture, fb.Description);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 	GLfloat borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
@@ -74,7 +75,8 @@ OPframeBuffer OPframeBufferCreateShadow(ui32 width, ui32 height) {
 	glBindFramebuffer(GL_FRAMEBUFFER, fb.Handle);
 
 	// Attach the created depth texture as the depth buffer for this Framebuffer
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, fb.Texture.Handle, 0);
+	// TODO: (garrett) implement with OPframeBufferAPI
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, fb.Texture.Handle, 0);
 
 	// Turn off the color buffer
 	// (For shadows we only need depth information)
@@ -92,7 +94,7 @@ OPframeBuffer OPframeBufferCreateShadow(ui32 width, ui32 height) {
 	return fb;
 }
 
-OPframeBuffer OPframeBufferCreateDepth(OPtextureDescription desc) {
+OPframeBuffer OPframeBufferCreateDepth(OPtextureDesc desc) {
 	OPframeBuffer fb = {
 		desc
 	};
@@ -111,16 +113,17 @@ OPframeBuffer OPframeBufferCreateDepth(OPtextureDescription desc) {
 	//OPframeBufferBind(&fb);
 	OPlog("OPframeBufferCreateDepth 3");
 
-	fb.Texture = OPtextureCreate(desc);
+	//fb.Texture = OPtextureCreate(desc);
+	OPRENDERER_ACTIVE->Texture.Init(&fb.Texture, desc);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
 
 	OPglError("OPframeBufferCreateDepth:Error 1:%d");
 	OPlog("OPframeBufferCreateDepth 7");
 
-	OPlog("OPframeBufferCreateDepth 4: %d", fb.Texture.Handle);
+	//OPlog("OPframeBufferCreateDepth 4: %d", fb.Texture.Handle);
 	OPglError("OPframeBufferCreateDepth:Error 5:%d");
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, fb.Texture.Handle, 0);
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, fb.Texture.Handle, 0);
 	GLenum frameBufferStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	OPglError("OPframeBufferCreateDepth:Error 9:%d");
 
@@ -197,26 +200,29 @@ OPframeBuffer OPframeBufferCreateVR(ui32 width, ui32 height) {
 	return framebufferDesc;
 }
 
-OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
+OPframeBuffer OPframeBufferCreate(OPtextureDesc desc){
 	OPlog("OPEngine Frame Buffer 1");
 	OPframeBuffer fb = {
-		desc,
-		OPtextureCreate(desc),
-		0
+		desc
 	};
+	fb.Handle = 0;
+	OPRENDERER_ACTIVE->Texture.Init(&fb.Texture, desc);
+
 	OPlog("OPEngine Frame Buffer 2");
 
 	// generate and bind the fbo
 	glGenFramebuffers(1, &fb.Handle);
 	OPlog("OPEngine Frame Buffer 3");
 	// setup color texture
-	OPtextureClearActive();
-	ui32 handle = OPtextureBind(&fb.Texture);
-	OPtextureSetData(NULL);
-	glBindTexture(GL_TEXTURE_2D, handle);
+	//OPtextureClearActive();
+
+	//ui32 handle = OPtextureBind(&fb.Texture);
+	//OPtextureSetData(NULL);
+	//glBindTexture(GL_TEXTURE_2D, handle);
+
 	OPlog("OPEngine Frame Buffer 4");
 	// attach the depth texture
-	ui32 dt = createDepthTexture(desc.Width, desc.Height);
+	ui32 dt = createDepthTexture(desc.width, desc.height);
 	OPlog("OPEngine Frame Buffer 5");
 
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
@@ -232,8 +238,8 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 	OPlog("OPEngine Frame Buffer 6.5");
 	// attach the color texture
 
-	OPlog("OPframeBufferCreate glFramebufferTexture2D : FB Handle :%d", fb.Texture.Handle);
-	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fb.Texture.Handle, 0);
+	//OPlog("OPframeBufferCreate glFramebufferTexture2D : FB Handle :%d", fb.Texture.Handle);
+	//glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fb.Texture.Handle, 0);
 	OPlog("OPframeBufferCreate glFramebufferRenderbuffer");
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, dt, 0);
 
@@ -316,7 +322,7 @@ OPframeBuffer OPframeBufferCreate(OPtextureDescription desc){
 }
 //-----------------------------------------------------------------------------
 void OPframeBufferDestroy(OPframeBuffer* fb){
-	OPtextureDestroy(&fb->Texture);
+	fb->Texture.Destroy();
 	glDeleteFramebuffers(1, &fb->Handle);
 }
 //-----------------------------------------------------------------------------
@@ -330,7 +336,7 @@ void OPframeBufferBind(OPframeBuffer* fb){
 
 	OPglError("OPframeBufferBind:Error 1:%d");
 	//glDrawBuffers(1,  attachments);
-	OPrenderSetViewport(0, 0, fb->Description.Width, fb->Description.Height);
+	OPrenderSetViewport(0, 0, fb->Description.width, fb->Description.height);
 }
 //-----------------------------------------------------------------------------
 void OPframeBufferBindRead(OPframeBuffer* fb){
@@ -342,11 +348,12 @@ void OPframeBufferBindRead(OPframeBuffer* fb){
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, fb->Handle);
 #endif
 	//glDrawBuffers(1,  attachments);
-	OPrenderSetViewport(0, 0, fb->Description.Width, fb->Description.Height);
+	OPrenderSetViewport(0, 0, fb->Description.width, fb->Description.height);
 }
 //-----------------------------------------------------------------------------
 void OPframeBufferBindTex(OPframeBuffer* fb){
-	OPtextureBind(&fb->Texture);
+	//OPtextureBind(&fb->Texture);
+	OPRENDERER_ACTIVE->Texture.Bind(&fb->Texture, 0);
 }
 //-----------------------------------------------------------------------------
 void OPframeBufferUnbind(){

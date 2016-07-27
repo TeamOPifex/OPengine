@@ -3,7 +3,7 @@
 
 #include "./Human/include/Rendering/OPmeshPacker.h"
 #include "./Human/include/Rendering/OPrenderBuffer.h"
-#include "./Human/include/Rendering/OPindexSize.h"
+#include "./Human/include/Rendering/Enums/OPindexSize.h"
 
 //-----------------------------------------------------------------------------
 //   _____ _                   _

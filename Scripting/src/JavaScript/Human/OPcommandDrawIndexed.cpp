@@ -19,7 +19,7 @@ JS_RETURN_VAL _OPcommandDrawIndexedSubmit(const JS_ARGS& args) {
     OPcommandBucket* commandBucket = JS_GET_ARG_PTR(args, 0, OPcommandBucket);
     OPmodel* model = JS_GET_ARG_PTR(args, 1, OPmodel);
     OPmaterial* material = JS_GET_ARG_PTR(args, 2, OPmaterial);
-    OPtextureOLD* texture = JS_GET_ARG_PTR(args, 1, OPtextureOLD);
+    OPtexture* texture = JS_GET_ARG_PTR(args, 1, OPtexture);
     OPcommandDrawIndexedSubmit(commandBucket, model, material, texture);
 
     JS_RETURN_NULL;

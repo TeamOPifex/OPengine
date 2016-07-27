@@ -7,7 +7,7 @@ struct OPindexBufferAPI;
 typedef struct OPindexBufferAPI OPindexBufferAPI;
 
 struct OPindexBuffer;
-#include "./Human/include/Rendering/OPindexSize.h"
+#include "./Human/include/Rendering/Enums/OPindexSize.h"
 
 struct OPindexBufferAPI {
 	OPindexBuffer*(*Create)() = 0;

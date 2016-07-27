@@ -27,7 +27,7 @@ inline void OPmaterialClearParams(OPmaterial* material);
 void OPmaterialInit(OPmaterial* material, OPeffect* effect);
 inline OPmaterial* OPmaterialCreate(OPeffect* effect);
 inline void OPmaterialAddParam(OPmaterial* material, OPmaterialParamType paramType, const OPchar* name, void* data, ui8 count );
-inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPtextureOLD* data);
+inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPtexture* data);
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPvec3* data);
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPvec4* data);
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPmat4* data);
@@ -65,7 +65,7 @@ struct OPmaterial {
 	    OPmaterialAddParam(this, paramType, name, data, count);
 	}
 
-	void AddParam(const OPchar* name, OPtextureOLD* data) {
+	void AddParam(const OPchar* name, OPtexture* data) {
 	    OPmaterialAddParam(this, name, data);
 	}
 
@@ -114,7 +114,7 @@ inline void OPmaterialAddParam(OPmaterial* material, OPmaterialParamType paramTy
 	material->paramIndex++;
 }
 
-inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPtextureOLD* data) {
+inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPtexture* data) {
 	OPmaterialAddParam(material, MATERIAL_PARAM_TYPE_TEXTURE, name, (void*)data, 1);
 }
 
@@ -144,12 +144,12 @@ inline void OPmaterialBind(OPmaterial* material) {
 	OPrenderDepth(material->depth);
 	OPrenderCull(material->cull);
 
-	OPtextureClearActive();
+	//OPtextureClearActive();
 	for(OPuint i = 0; i < material->paramIndex; i++) {
 
 		switch(material->params[i].type) {
 			case MATERIAL_PARAM_TYPE_TEXTURE: {
-				OPeffectParam(material->params[i].name, (OPtextureOLD*)material->params[i].data);
+				OPeffectParam(material->params[i].name, (OPtexture*)material->params[i].data);
 				break;
 			}
 			case MATERIAL_PARAM_TYPE_VECTOR3: {
@@ -182,12 +182,12 @@ inline void OPmaterialBind(OPmaterial* material, ui32 stride) {
 	OPrenderDepth(material->depth);
 	OPrenderCull(material->cull);
 
-	OPtextureClearActive();
+	//OPtextureClearActive();
 	for(OPuint i = 0; i < material->paramIndex; i++) {
 
 		switch(material->params[i].type) {
 			case MATERIAL_PARAM_TYPE_TEXTURE: {
-				OPeffectParam(material->params[i].name, (OPtextureOLD*)material->params[i].data);
+				OPeffectParam(material->params[i].name, (OPtexture*)material->params[i].data);
 				break;
 			}
 			case MATERIAL_PARAM_TYPE_VECTOR3: {

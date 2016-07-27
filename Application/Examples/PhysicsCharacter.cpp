@@ -38,10 +38,10 @@ typedef struct {
 	Dynamic* spheres;
 	ui32 sphereCount;
 	PxRigidStatic* physicsPlane;
-	OPtextureOLD* texture;
-	OPtextureOLD* textureStatic;
-	OPtextureOLD* texturePlayer;
-	OPtextureOLD* textureSphere;
+	OPtexture* texture;
+	OPtexture* textureStatic;
+	OPtexture* texturePlayer;
+	OPtexture* textureSphere;
 	OPphysXScene* scene;
 	OPphysXControllerManager* manager;
 	OPphysXController* controller;
@@ -92,10 +92,10 @@ void ExamplePhysicsCharacterEnter(OPgameState* last) {
 	OPcmanLoad("TetrisBlue.png");
 	OPcmanLoad("TetrisGreen.png");
 
-	physicsCharacterExample->texture = (OPtextureOLD*)OPcmanGet("TetrisBroken.png");
-	physicsCharacterExample->texturePlayer = (OPtextureOLD*)OPcmanGet("TetrisOrange.png");
-	physicsCharacterExample->textureSphere = (OPtextureOLD*)OPcmanGet("TetrisBlue.png");
-	physicsCharacterExample->textureStatic = (OPtextureOLD*)OPcmanGet("TetrisGreen.png");
+	physicsCharacterExample->texture = (OPtexture*)OPcmanGet("TetrisBroken.png");
+	physicsCharacterExample->texturePlayer = (OPtexture*)OPcmanGet("TetrisOrange.png");
+	physicsCharacterExample->textureSphere = (OPtexture*)OPcmanGet("TetrisBlue.png");
+	physicsCharacterExample->textureStatic = (OPtexture*)OPcmanGet("TetrisGreen.png");
 
 	physicsCharacterExample->Mesh = (OPmesh*)OPcmanGet("PuzzleBlock.opm");
 	physicsCharacterExample->MeshSphere = (OPmesh*)OPcmanGet("PuzzleSphere.opm");
@@ -272,11 +272,7 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 	physicsCharacterExample->Mesh->Bind();
 	OPeffectBind(physicsCharacterExample->Effect);
 
-	OPtextureClearActive();
-	ui32 tex = OPtextureBind(physicsCharacterExample->texture);
-	ui32 tex2 = OPtextureBind(physicsCharacterExample->texturePlayer);
-	ui32 tex3 = OPtextureBind(physicsCharacterExample->textureSphere);
-	ui32 tex4 = OPtextureBind(physicsCharacterExample->textureStatic);
+	//OPtextureClearActive();
 
 
 	OPeffectParamMat4("uProj", &physicsCharacterExample->Camera->proj);
@@ -284,7 +280,7 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 
 	OPvec3 light = OPvec3Create(0, 1, 0);
 	OPeffectParamVec3("uLightDirection", &light);
-	OPeffectParami("uColorTexture", tex);
+	OPeffectParamBindTex("uColorTexture", physicsCharacterExample->texture);
 	OPmat4 scale = OPMAT4_IDENTITY;
 	OPmat4 scratch = OPMAT4_IDENTITY;
 	for (ui32 i = 0; i < physicsCharacterExample->boxCount; i++) {
@@ -295,7 +291,7 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 		OPeffectParamMat4("uWorld", &world);
 		OPmeshRender();
 	}
-	OPeffectParami("uColorTexture", tex4);
+	OPeffectParamBindTex("uColorTexture", physicsCharacterExample->textureStatic);
 	for (ui32 i = 0; i < physicsCharacterExample->boxStaticCount; i++) {
 		if(physicsCharacterExample->boxesStatic[i].dead) continue;
 		scale = OPmat4Scl(physicsCharacterExample->boxesStatic[i].size * 2, physicsCharacterExample->boxesStatic[i].size * 2, physicsCharacterExample->boxesStatic[i].size * 2);
@@ -311,7 +307,7 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 	OPeffectParamMat4("uView", &physicsCharacterExample->Camera->view);
 	OPeffectParamVec3("uLightDirection", &light);
 
-	OPeffectParami("uColorTexture", tex2);
+	OPeffectParamBindTex("uColorTexture", physicsCharacterExample->texturePlayer);
 	scale = OPmat4Scl(physicsCharacterExample->spheres[0].size * 2, physicsCharacterExample->spheres[0].size * 2, physicsCharacterExample->spheres[0].size * 2);
 	OPphysXGetTransform((OPphysXRigidActor*)physicsCharacterExample->spheres[0].physics, &scratch);
 	world = scratch * scale;
@@ -324,7 +320,7 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 		OPmeshRender();
 	}
 
-	OPeffectParami("uColorTexture", tex3);
+	OPeffectParamBindTex("uColorTexture", physicsCharacterExample->textureSphere);
 	for (ui32 i = 1; i < physicsCharacterExample->sphereCount; i++) {
 		scale = OPmat4Scl(physicsCharacterExample->spheres[i].size * 2, physicsCharacterExample->spheres[i].size * 2, physicsCharacterExample->spheres[i].size * 2);
 		OPphysXGetTransform((OPphysXRigidActor*)physicsCharacterExample->spheres[i].physics, &scratch);

@@ -31,7 +31,7 @@ typedef struct OPmodelTextured OPmodelTextured;
 
 struct OPmodelTextured {
 	OPmodel model;
-	OPtextureOLD* texture;
+	OPtexture* texture;
 
 	void Init(const OPchar* modelAsset, const OPchar* textureAsset) {
 		model.Init(modelAsset);

@@ -6,7 +6,7 @@ typedef struct {
 	OPeffect* Effect;
 	OPcamFreeFlight Camera;
 	ui32 Rotation;
-	OPtextureOLD* Texture;
+	OPtexture* Texture;
 } FreeFlightExample;
 
 FreeFlightExample freeFlightExample;
@@ -18,7 +18,7 @@ void ExampleFreeFlightEnter(OPgameState* last) {
 	OPcmanLoad("TetrisBroken.png");
 
 	freeFlightExample.Mesh = (OPmesh*)OPcmanGet("PuzzleBlock.opm");
-	freeFlightExample.Texture = (OPtextureOLD*)OPcmanGet("TetrisBroken.png");
+	freeFlightExample.Texture = (OPtexture*)OPcmanGet("TetrisBroken.png");
 	freeFlightExample.Rotation = 0;
 
 	OPshaderAttribute attribs[] = {
@@ -60,9 +60,7 @@ void ExampleFreeFlightRender(OPfloat delta) {
 	world = OPmat4RotY(freeFlightExample.Rotation / 100.0f);
 
 
-	OPtextureClearActive();
-	ui32 tex = OPtextureBind(freeFlightExample.Texture);
-	OPeffectParami("uColorTexture", tex);
+	OPeffectParamBindTex("uColorTexture", freeFlightExample.Texture);
 
 	OPeffectParamMat4("uWorld", &world);
 	OPeffectParamMat4("uProj", &freeFlightExample.Camera.Camera.proj);

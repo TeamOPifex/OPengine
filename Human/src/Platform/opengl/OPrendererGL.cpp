@@ -109,10 +109,10 @@ void OPrendererShutdownGL() {
 #include "./Human/include/Platform/opengl/OPframeBuffer2DGL.h"
 #include "./Human/include/Platform/opengl/OPframeBufferDepthGL.h"
 #include "./Human/include/Platform/opengl/OPindexBufferGL.h"
-#include "./Human/include/Platform/opengl/OPshaderGL.h"
+#include "./Human/include/Platform/opengl/OPshaderAPIGL.h"
 #include "./Human/include/Platform/opengl/OPshaderResourceGL.h"
-#include "./Human/include/Platform/opengl/OPshaderUniformGL.h"
-#include "./Human/include/Platform/opengl/OPtextureGL.h"
+#include "./Human/include/Platform/opengl/OPshaderUniformAPIGL.h"
+#include "./Human/include/Platform/opengl/OPtextureAPIGL.h"
 #include "./Human/include/Platform/opengl/OPtexture2DGL.h"
 #include "./Human/include/Platform/opengl/OPtextureCubeGL.h"
 #include "./Human/include/Platform/opengl/OPtextureDepthGL.h"
@@ -136,10 +136,10 @@ OPrenderer* OPrendererGL() {
 	OPframeBuffer2DGLInit(&OPRENDERERGL.FrameBuffer2D);
 	OPframeBufferDepthGLInit(&OPRENDERERGL.FrameBufferDepth);
 	OPindexBufferAPIGLInit(&OPRENDERERGL.IndexBuffer);
-	OPshaderGLInit(&OPRENDERERGL.Shader);
+	OPshaderAPIGLInit(&OPRENDERERGL.Shader);
 	OPshaderResourceGLInit(&OPRENDERERGL.ShaderResource);
-	OPshaderUniformGLInit(&OPRENDERERGL.ShaderUniform);
-	OPtextureGLInit(&OPRENDERERGL.Texture);
+	OPshaderUniformAPIGLInit(&OPRENDERERGL.ShaderUniform);
+	OPtextureAPIGLInit(&OPRENDERERGL.Texture);
 	OPtexture2DGLInit(&OPRENDERERGL.Texture2D);
 	OPtextureCubeGLInit(&OPRENDERERGL.TextureCube);
 	OPtextureDepthGLInit(&OPRENDERERGL.TextureDepth);

@@ -90,8 +90,7 @@ void OPsprite2DPrepRender(OPsprite2D* sprite) {
 	world = OPmat4Scl(world, scl.x, scl.y, 1.0);
 	world += sprite->Position;
 
-	OPtextureClearActive();
-	OPeffectParami("uColorTexture", OPtextureBind(sprite->CurrentSprite->Sheet));
+	OPeffectParamBindTex("uColorTexture", sprite->CurrentSprite->Sheet);
 	OPeffectParamMat4("uWorld", &world);
 	OPeffectParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
 	OPeffectParamVec2("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size);

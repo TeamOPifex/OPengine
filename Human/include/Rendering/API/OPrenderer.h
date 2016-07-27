@@ -11,10 +11,10 @@ typedef struct OPrenderer OPrenderer;
 #include "./Human/include/Rendering/API/OPframeBuffer2D.h"
 #include "./Human/include/Rendering/API/OPframeBufferDepth.h"
 #include "./Human/include/Rendering/API/OPindexBufferAPI.h"
-#include "./Human/include/Rendering/API/OPshader.h"
+#include "./Human/include/Rendering/API/OPshaderAPI.h"
 #include "./Human/include/Rendering/API/OPshaderResource.h"
-#include "./Human/include/Rendering/API/OPshaderUniform.h"
-#include "./Human/include/Rendering/API/OPtexture.h"
+#include "./Human/include/Rendering/API/OPshaderUniformAPI.h"
+#include "./Human/include/Rendering/API/OPtextureAPI.h"
 #include "./Human/include/Rendering/API/OPtexture2D.h"
 #include "./Human/include/Rendering/API/OPtextureCube.h"
 #include "./Human/include/Rendering/API/OPtextureDepth.h"
@@ -37,10 +37,10 @@ struct OPrenderer {
 	OPframeBuffer2D FrameBuffer2D;
 	OPframeBufferDepth FrameBufferDepth;
 	OPindexBufferAPI IndexBuffer;
-	OPshader Shader;
+	OPshaderAPI Shader;
 	OPshaderResource ShaderResource;
-	OPshaderUniform ShaderUniform;
-	OPtexture Texture;
+	OPshaderUniformAPI ShaderUniform;
+	OPtextureAPI Texture;
 	OPtexture2D Texture2D;
 	OPtextureCube TextureCube;
 	OPtextureDepth TextureDepth;

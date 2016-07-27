@@ -32,6 +32,7 @@ add_source_group(include/Rendering/GL "${PROJECT_SOURCE_DIR}/Human/include/Rende
 add_source_group(include/Rendering/Primitives "${PROJECT_SOURCE_DIR}/Human/include/Rendering/Primitives" HUMAN_SRC)
 add_source_group(include/Rendering/Sprite "${PROJECT_SOURCE_DIR}/Human/include/Rendering/Sprite" HUMAN_SRC)
 add_source_group(include/Rendering/UI "${PROJECT_SOURCE_DIR}/Human/include/Rendering/UI" HUMAN_SRC)
+add_source_group(include/Rendering/Enums "${PROJECT_SOURCE_DIR}/Human/include/Rendering/Enums" HUMAN_SRC)
 add_source_group(include/Systems "${PROJECT_SOURCE_DIR}/Human/include/Systems" HUMAN_SRC)
 add_source_group(include/Utilities "${PROJECT_SOURCE_DIR}/Human/include/Utilities" HUMAN_SRC)
 add_source_group(include/Platform "${PROJECT_SOURCE_DIR}/Human/include/Platform" HUMAN_SRC)

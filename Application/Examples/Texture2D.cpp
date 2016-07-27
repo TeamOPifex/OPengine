@@ -13,7 +13,7 @@ typedef struct {
 Texture2DExample texture2DExample;
 
 void ExampleTexture2DEnter(OPgameState* last) {
-    OPtextureOLD* tex = (OPtextureOLD*)OPcmanLoadGet("cubeTex.png");
+    OPtexture* tex = (OPtexture*)OPcmanLoadGet("cubeTex.png");
     texture2DExample.Tex = OPtexture2DCreate(tex, NULL);
 
     texture2DExample.Tex->Position.y = 250;

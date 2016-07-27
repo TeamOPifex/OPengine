@@ -12,7 +12,7 @@ typedef struct {
 	OPeffect* Effect;
 	OPcam* Camera;
 	ui32 pos;
-	OPtextureOLD* texture;
+	OPtexture* texture;
 	OPskeleton* skeleton;
 	OPskeletonAnimation* animation;
 	OPskeletonAnimation* animation2;
@@ -76,7 +76,7 @@ void ExampleSkinningEnter(OPgameState* last) {
 		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
 		);
 
-		skinningExample->texture = (OPtextureOLD*)OPcmanLoadGet("Knight.png");
+		skinningExample->texture = (OPtexture*)OPcmanLoadGet("Knight.png");
 }
 
 OPint heldDown = 0;
@@ -154,8 +154,7 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	OPvec3 light = OPvec3Create(0, 10, 0);
 	OPeffectParamVec3("uLightPosition", &light);
 
-	OPtextureClearActive();
-	OPeffectParami("uColorTexture", OPtextureBind(skinningExample->texture));
+	OPeffectParamBindTex("uColorTexture", skinningExample->texture);
 
 	OPmeshRender();
 

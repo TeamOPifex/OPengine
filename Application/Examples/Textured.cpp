@@ -10,7 +10,7 @@ typedef struct {
 	OPeffect* Effect;
 	OPcam* Camera;
 	ui32 Rotation;
-	OPtextureOLD* Texture;
+	OPtexture* Texture;
 } TexturedExample;
 
 TexturedExample* texturedExample;
@@ -28,7 +28,7 @@ void ExampleTexturedEnter(OPgameState* last) {
 	const OPchar* _texture = OPjsonString(OPjsonGet(*meta, "texture"));
 
 	texturedExample->Mesh = (OPmesh*)OPcmanLoadGet(_model);
-	texturedExample->Texture = (OPtextureOLD*)OPcmanLoadGet(_texture);
+	texturedExample->Texture = (OPtexture*)OPcmanLoadGet(_texture);
 	texturedExample->Rotation = 0;
 
 	OPshaderAttribute attribs[] = {
@@ -73,9 +73,7 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 	OPmat4 world;
 	world = OPmat4RotY(texturedExample->Rotation / 100.0f);
 
-	OPtextureClearActive();
-	ui32 tex = OPtextureBind(texturedExample->Texture);
-	OPeffectParami("uColorTexture", tex);
+	OPeffectParamBindTex("uColorTexture", texturedExample->Texture);
 
 	OPeffectParamMat4("uWorld", &world);
 	OPeffectParamMat4("uProj", &texturedExample->Camera->proj);

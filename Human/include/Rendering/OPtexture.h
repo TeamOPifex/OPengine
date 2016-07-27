@@ -12,22 +12,46 @@
 //  \___ \| __| '__| | | |/ __| __/ __|
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
+//
+//struct OPtextureDescription{
+//	ui16 Width, Height;
+//	ui32 InternalFormat, Format, DataType;
+//	ui32 MinFilter, MagFilter;
+//	ui32 WrapX, WrapY;
+//	ui32 CompareFunc, CompareMode;
+//};
 
-struct OPtextureDescription{
-	ui16 Width, Height;
-	ui32 InternalFormat, Format, DataType;
-	ui32 MinFilter, MagFilter;
-	ui32 WrapX, WrapY;
-	ui32 CompareFunc, CompareMode;
+#include "./Human/include/Rendering/OPrender.h"
+#include "./Human/include/Rendering/OPtextureDesc.h"
+
+struct OPtexture {
+	void* internalPtr;
+	OPuint guid;
+	OPtextureDesc textureDesc;
+
+	inline void SetData(const void* pixelData) {
+		OPRENDERER_ACTIVE->Texture.SetData(this, pixelData);
+	}
+
+	inline void Bind(ui32 slot) {
+		OPRENDERER_ACTIVE->Texture.Bind(this, slot);
+	}
+
+	inline void Unbind(ui32 slot) {
+		OPRENDERER_ACTIVE->Texture.Unbind(this, slot);
+	}
+
+	inline void Destroy() {
+		OPRENDERER_ACTIVE->Texture.Destroy(this);
+	}
 };
-
-
-struct OPtextureOLD {
-	OPtextureDescription Description;
-	ui32 Handle;
-
-	void Load(OPchar* asset);
-};
+//
+//struct OPtextureOLD {
+//	OPtextureDescription Description;
+//	ui32 Handle;
+//
+//	void Load(OPchar* asset);
+//};
 
 //-----------------------------------------------------------------------------
 //   _____ _       _           _
@@ -37,7 +61,8 @@ struct OPtextureOLD {
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
 
-extern OPtextureOLD* OPRENDER_CURR_TEX;
+//extern OPtextureOLD* OPRENDER_CURR_TEX;
+extern OPtexture* OPRENDER_CURR_TEX;
 
 //-----------------------------------------------------------------------------
 //  _____                     _____                  _____  _               _   _
@@ -47,13 +72,13 @@ extern OPtextureOLD* OPRENDER_CURR_TEX;
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/
 
-#define OPtextureNearest    GL_NEAREST
-#define OPtextureLinear     GL_LINEAR
-#define OPtextureNearestMip GL_NEAREST_MIPMAP_NEAREST
-#define OPtextureLinearMip  GL_LINEAR_MIPMAP_LINEAR
-
-#define OPtextureRepeat GL_REPEAT
-#define OPtextureClamp  GL_CLAMP_TO_EDGE
+//#define OPtextureNearest    GL_NEAREST
+//#define OPtextureLinear     GL_LINEAR
+//#define OPtextureNearestMip GL_NEAREST_MIPMAP_NEAREST
+//#define OPtextureLinearMip  GL_LINEAR_MIPMAP_LINEAR
+//
+//#define OPtextureRepeat GL_REPEAT
+//#define OPtextureClamp  GL_CLAMP_TO_EDGE
 
 //-----------------------------------------------------------------------------
 // ______                _   _
@@ -63,14 +88,14 @@ extern OPtextureOLD* OPRENDER_CURR_TEX;
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
-OPtextureOLD OPtextureCreate(OPtextureDescription desc);
-void OPtextureDestroy(OPtextureOLD* tex);
-ui32 OPtextureBind(OPtextureOLD* tex);
-void OPtextureClearActive();
-void OPtextureSetData(void* data);
-void OPtexturePixelate();
-void OPtextureSmooth();
-OPvec4 OPtextureReadPixel(OPtextureOLD* tex, OPint x, OPint y);
-OPtextureOLD* OPtextureLoad(const OPchar* asset);
+//OPtextureOLD OPtextureCreate(OPtextureDescription desc);
+//void OPtextureDestroy(OPtextureOLD* tex);
+//ui32 OPtextureBind(OPtextureOLD* tex);
+//void OPtextureClearActive();
+//void OPtextureSetData(void* data);
+//void OPtexturePixelate();
+//void OPtextureSmooth();
+//OPvec4 OPtextureReadPixel(OPtextureOLD* tex, OPint x, OPint y);
+OPtexture* OPtextureLoad(const OPchar* asset);
 
 #endif

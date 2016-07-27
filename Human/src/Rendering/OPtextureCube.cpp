@@ -46,7 +46,7 @@ void OPtextureCubeInit(OPtextureCubeOLD *result, OPimage *faces) {
         OPlog("FAILED to make cube map texture");
     }
 
-    result->Texture.Handle = textureID;
+    //result->Texture.Handle = textureID;
 
     return;
     //return textureID;
@@ -76,14 +76,6 @@ void OPtextureCubeClearActive() {
 
 ui32 OPtextureCubeBind(OPtextureCubeOLD* result) {
     ASSERT(OPTEXTURECUBE_ACTIVE < 16, "Exceeded Active Texture Slots");
-    OPglError("OPtextureBind::Error 0");
-    OPRENDER_CURR_TEX = &result->Texture;
-    glActiveTexture(GL_TEXTURE0 + OPTEXTURECUBE_ACTIVE);
-    if (OPglError("OPtextureBind::Error 1")) {
-        OPlog("FAILED to make active texture: %d", result->Texture.Handle);
-    }
-    glBindTexture(GL_TEXTURE_CUBE_MAP, result->Texture.Handle);
-    OPglError("OPtextureBind::Error 2");
-
+	OPRENDERER_ACTIVE->Texture.Bind(&result->Texture, OPTEXTURECUBE_ACTIVE);
     return OPTEXTURECUBE_ACTIVE++;
 }

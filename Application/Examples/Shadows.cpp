@@ -36,8 +36,8 @@ typedef struct {
 	OPmaterial ModelMaterials[2];
 	OPmaterial GroundMaterials[2];
 	OPmesh GroundMesh;
-	OPtextureOLD* ModelTexture;
-	OPtextureOLD* GroundTexture;
+	OPtexture* ModelTexture;
+	OPtexture* GroundTexture;
 	OPframeBuffer ShadowFrameBuffer;
 	OPeffect Effect;
 	OPeffect Effect2;
@@ -79,8 +79,8 @@ typedef struct {
 		//Ground.world.RotX(OPpi_2)->RotZ(OPpi);
 
 		// Load up the textures
-		ModelTexture = (OPtextureOLD*)OPcmanLoadGet("noneNorm.png");
-		GroundTexture = (OPtextureOLD*)OPcmanLoadGet("TetrisBlue.png");
+		ModelTexture = (OPtexture*)OPcmanLoadGet("noneNorm.png");
+		GroundTexture = (OPtexture*)OPcmanLoadGet("TetrisBlue.png");
 
 
 		// Create the effect used to draw a shadowed model
@@ -115,16 +115,12 @@ typedef struct {
 		// Create the Frame Buffer that the shadow depth will be
 		// rendered to.
 		ui16 shadowFrameBufferSize = 1024;
-		OPtextureDescription desc = {
+		OPtextureDesc desc = {
 			1024,
 			1024,
-			GL_RGBA, //GL_DEPTH_COMPONENT16,
-			GL_RGBA, //GL_DEPTH_COMPONENT,
-			GL_FLOAT,
-			GL_NEAREST,
-			GL_NEAREST,
-			GL_CLAMP_TO_BORDER,
-			GL_CLAMP_TO_BORDER
+			OPtextureFormat::RGBA,
+			OPtextureWrap::CLAMP_TO_BORDER,
+			OPtextureFilter::NEAREST
 		};
 
 
@@ -132,6 +128,14 @@ typedef struct {
 		const GLuint SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 		GLuint depthMapFBO;
 		glGenFramebuffers(1, &depthMapFBO);
+
+		OPtextureDesc depthDesc;
+		depthDesc.width = SHADOW_WIDTH;
+		depthDesc.height = SHADOW_HEIGHT;
+		depthDesc.filter = OPtextureFilter::NEAREST;
+		depthDesc.wrap = OPtextureWrap::CLAMP_TO_BORDER;
+		depthDesc.format = OPtextureFormat::NONE;
+
 		// - Create depth texture
 		GLuint depthMap;
 		glGenTextures(1, &depthMap);
@@ -154,11 +158,11 @@ typedef struct {
 
 
 		ShadowFrameBuffer.Handle = depthMapFBO;
-		ShadowFrameBuffer.Texture.Handle = depthMap;
-		ShadowFrameBuffer.Description.Width = SHADOW_WIDTH;
-		ShadowFrameBuffer.Description.Height = SHADOW_HEIGHT;
-		ShadowFrameBuffer.Texture.Description.Width = SHADOW_WIDTH;
-		ShadowFrameBuffer.Texture.Description.Height = SHADOW_HEIGHT;
+		//ShadowFrameBuffer.Texture.Handle = depthMap;
+		ShadowFrameBuffer.Description.width = SHADOW_WIDTH;
+		ShadowFrameBuffer.Description.height = SHADOW_HEIGHT;
+		ShadowFrameBuffer.Texture.textureDesc.width = SHADOW_WIDTH;
+		ShadowFrameBuffer.Texture.textureDesc.height = SHADOW_HEIGHT;
 		//ShadowFrameBuffer = OPframeBufferCreateShadow(1024, 1024);
 		//ShadowFrameBuffer = OPframeBufferCreate(desc);
 

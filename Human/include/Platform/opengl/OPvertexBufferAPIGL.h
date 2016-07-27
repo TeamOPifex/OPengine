@@ -6,7 +6,7 @@
 
 void OPvertexBufferAPIGLInit(OPvertexBufferAPI* vertexBuffer);
 
-struct OPvertexBufferAPIGL {
+struct OPvertexBufferGL {
 	ui32 Handle;
 };
 

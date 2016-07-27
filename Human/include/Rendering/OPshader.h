@@ -15,6 +15,13 @@
 
 typedef GLenum OPshaderOLD;
 
+#include "./Human/include/Rendering/Enums/OPshaderType.h"
+
+struct OPshader {
+	void* internalPtr;
+	OPshaderType shaderType;
+};
+
 #ifdef OPIFEX_OPENGL_ES_2
 #define OPvertexShader   GL_VERTEX_SHADER
 #define OPfragmentShader GL_FRAGMENT_SHADER

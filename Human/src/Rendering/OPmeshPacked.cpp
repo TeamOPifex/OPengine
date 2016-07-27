@@ -1,5 +1,5 @@
 #include "./Human/include/Rendering/OPmeshPacked.h"
-#include "./Human/include/Rendering/OPindexSize.h"
+#include "./Human/include/Rendering/Enums/OPindexSize.h"
 
 //-----------------------------------------------------------------------------
 // ______                _   _                 

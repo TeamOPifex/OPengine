@@ -34,7 +34,7 @@ void ExampleSelectorEnter(OPgameState* last) {
 
     // The background image to use
 	OPcmanLoadGet("subtle-irongrip.png");
-	exampleSelector.Background = OPtexture2DCreate((OPtextureOLD*)OPcmanLoadGet("subtle-irongrip.png"), NULL, OPVEC2_ZERO, OPvec2(3, 3));
+	exampleSelector.Background = OPtexture2DCreate((OPtexture*)OPcmanLoadGet("subtle-irongrip.png"), NULL, OPVEC2_ZERO, OPvec2(3, 3));
 	exampleSelector.Background->Scale = OPvec2(5,2.81);
 
     if(!exampleSelector.Initialized) {

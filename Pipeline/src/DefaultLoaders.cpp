@@ -12,7 +12,7 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 	{
 		".png",
 		"Textures/",
-		sizeof(OPtextureOLD),
+		sizeof(OPtexture),
 		(OPint(*)(OPstream*, void**))OPimagePNGLoad,
 		(OPint (*)(void*))OPimagePNGUnload,
 		(OPint(*)(OPstream*, void**))OPimagePNGReload

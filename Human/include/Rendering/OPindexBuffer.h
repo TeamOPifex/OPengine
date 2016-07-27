@@ -6,7 +6,7 @@ typedef struct OPindexBuffer OPindexBuffer;
 
 #include "./Core/include/OPtypes.h"
 #include "./Human/include/Rendering/OPrender.h"
-#include "./Human/include/Rendering/OPindexSize.h"
+#include "./Human/include/Rendering/Enums/OPindexSize.h"
 
 
 struct OPindexBuffer {

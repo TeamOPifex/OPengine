@@ -132,11 +132,11 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	world = OPmat4Scl(world, scl.x, scl.y, 1.0);
 	world += offset + sprite->Position;
 
-	OPtextureClearActive();
-	ui32 bind = OPtextureBind(sprite->CurrentSprite->Sheet);
+	//OPtextureClearActive();
+	//ui32 bind = OPtextureBind(sprite->CurrentSprite->Sheet);
 
 	//OPlog("SpriteSheet %d @ %x", bind, sprite->CurrentSprite->Sheet);
-	OPeffectParami("uColorTexture", bind);
+	OPeffectParamBindTex("uColorTexture", sprite->CurrentSprite->Sheet);
 	//OPeffectParamf("uAlpha", 1.0f);
 	OPeffectParamMat4("uWorld", &world);
 	OPeffectParamMat4("uView", &camera->view);

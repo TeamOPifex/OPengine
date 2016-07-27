@@ -29,7 +29,7 @@ void OPparticleSysInit(OPeffect* effect) {
 	}
 }
 
-OPparticleSys* OPparticleSysCreate(OPtextureOLD* texture, ui16 count, OPeffect* effect) {
+OPparticleSys* OPparticleSysCreate(OPtexture* texture, ui16 count, OPeffect* effect) {
 	OPparticleSys* sys = (OPparticleSys*)OPalloc(sizeof(OPparticleSys));
 	sys->texture = texture;
 	OPuint entHeapSize = OPentHeapBytes(sizeof(OPparticle), count);
@@ -96,8 +96,8 @@ void _OPparticlePrepareFrame(OPparticleSys* sys, OPparticle* p, OPint frameChang
 		OPeffectParamVec2("uTexCoordScale", &p->Animation->Frames[frame].Size);
 		OPeffectParamVec2("uSpriteOffset", &p->Animation->Frames[frame].Offset);
 
-		OPtextureClearActive();
-		OPeffectParami("uColorTexture", OPtextureBind(p->Animation->Sheet));
+		//OPtextureClearActive();
+		OPeffectParamBindTex("uColorTexture", p->Animation->Sheet);
 	}
 
 }
@@ -115,8 +115,7 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 	if(!sys->fps){
 		OPeffectParamVec2("uTexCoordScale", &sys->uvScale);
 		OPeffectParamVec2("uSpriteOffset", (OPvec2*)&OPVEC2_ZERO);
-		OPtextureClearActive();
-		OPeffectParami("uColorTexture", OPtextureBind(sys->texture));
+		OPeffectParamBindTex("uColorTexture", sys->texture);
 	}
 
 

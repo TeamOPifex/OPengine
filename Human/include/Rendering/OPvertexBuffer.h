@@ -8,7 +8,7 @@ typedef struct OPvertexBuffer OPvertexBuffer;
 #include "./Human/include/Rendering/OPrender.h"
 
 struct OPvertexBuffer {
-	void* internalPointer;
+	void* internalPtr;
 	OPuint ElementCount;
 	ui32 ElementSize;
 

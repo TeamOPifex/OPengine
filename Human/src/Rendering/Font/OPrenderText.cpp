@@ -11,12 +11,13 @@ void OPfontRenderBegin(OPfontManager* fontManager) {
 	OPrenderDepth(0);
 	fontManager->dummyMesh.mesh.Bind();
 	OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
-	OPtextureClearActive();
-	ui32 textureHandle = OPtextureBind(OPFONTMANAGER_ACTIVE->_font->texture);
-	OPeffectParami("uColorTexture", textureHandle);
+	//OPtextureClearActive();
+	OPRENDERER_ACTIVE->Texture.Bind(OPFONTMANAGER_ACTIVE->_font->texture, 0);
+	//ui32 textureHandle = OPtextureBind(OPFONTMANAGER_ACTIVE->_font->texture);
+	OPeffectParamBindTex("uColorTexture", OPFONTMANAGER_ACTIVE->_font->texture);	
 	OPeffectParamVec4("uColor", &OPFONTMANAGER_ACTIVE->_color);
 	OPeffectParamMat4("uProj", &OPFONTMANAGER_ACTIVE->proj);
-	if (OPFONTMANAGER_ACTIVE->pixelated) OPtexturePixelate();
+	//if (OPFONTMANAGER_ACTIVE->pixelated) OPtexturePixelate();
 }
 
 void OPfontRenderEnd() {

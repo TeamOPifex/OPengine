@@ -18,7 +18,7 @@
 
 struct OPtextureCubeOLD {
     ui16 Width, Height;
-	OPtextureOLD Texture;
+	OPtexture Texture;
 };
 
 //-----------------------------------------------------------------------------

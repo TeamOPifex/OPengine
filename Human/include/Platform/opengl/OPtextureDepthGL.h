@@ -2,7 +2,7 @@
 #define OPENGINE_HUMAN_RENDERING_TEXTURE_DEPTH_GL
 
 #include "./Human/include/Rendering/API/OPtextureDepth.h"
-#include "./Human/include/Platform/opengl/OPtextureGL.h"
+#include "./Human/include/Platform/opengl/OPtextureAPIGL.h"
 
 void OPtextureDepthGLInit(OPtextureDepth* textureDept);
 

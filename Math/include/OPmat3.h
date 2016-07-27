@@ -4,7 +4,6 @@
 #include "./Core/include/OPmemory.h"
 
 struct OPmat3;
-inline OPvec3* OPmat3Index(OPmat3* m, int idx);
 inline void OPmat3Identity(OPmat3* dst);
 
 struct OPmat3 {
@@ -20,7 +19,6 @@ struct OPmat3 {
 
 
 inline void OPmat3Identity(OPmat3* dst) {
-	OPbzero(dst, sizeof(OPmat3));
 	dst->cols[0].x = 1;
 	dst->cols[1].y = 1;
 	dst->cols[2].z = 1;

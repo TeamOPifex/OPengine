@@ -102,10 +102,10 @@ void OPspriteSystemRender(OPspriteSystem* system, OPcam* cam) {
 	system->_mesh.Bind();
 	OPeffectBind(system->Effect);
 
-	OPtexturePixelate();
+	//OPtexturePixelate();
 
-	OPtextureClearActive();
-	OPeffectParami("uColorTexture", OPtextureBind(system->Sprites[0]->Sheet));
+	//OPtextureClearActive();
+	OPeffectParamBindTex("uColorTexture", system->Sprites[0]->Sheet);
 	OPeffectParamMat4("uProj", &cam->proj);
 	OPeffectParamMat4("uView", &view);
 

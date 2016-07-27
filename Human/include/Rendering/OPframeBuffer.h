@@ -41,24 +41,24 @@ extern OPframeBuffer* OPRENDER_CURR_FRAMEBUFFER;
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 OPframeBuffer OPframeBufferCreateShadow(ui32 width, ui32 height);
-OPframeBuffer OPframeBufferCreateDepth(OPtextureDescription desc);
-OPframeBuffer OPframeBufferCreate(OPtextureDescription desc);
+OPframeBuffer OPframeBufferCreateDepth(OPtextureDesc desc);
+OPframeBuffer OPframeBufferCreate(OPtextureDesc desc);
 OPframeBuffer OPframeBufferCreateVR(ui32 width, ui32 height);
 void OPframeBufferDestroy(OPframeBuffer* fb);
-void OPframeBufferAttach(OPtextureOLD* texture, ui16 pos);
+void OPframeBufferAttach(OPtexture* texture, ui16 pos);
 void OPframeBufferBind(OPframeBuffer* fb);
 void OPframeBufferBindRead(OPframeBuffer* fb);
 void OPframeBufferSetReadBuffer(ui16 pos);
 void OPframeBufferSetReadBufferDepth();
 void OPframeBufferBindTex(OPframeBuffer* fb);
 void OPframeBufferUnbind();
-void OPframeBufferAttachDepth(OPtextureOLD* texture);
+void OPframeBufferAttachDepth(OPtexture* texture);
 
 
 
 struct OPframeBuffer {
-	OPtextureDescription Description;
-	OPtextureOLD Texture;
+	OPtextureDesc Description;
+	OPtexture Texture;
 	ui32 Handle;
 
 	ui32 DepthBufferId;

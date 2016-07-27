@@ -39,7 +39,7 @@ OPmesh unPackedQuad;
 OPmesh* plane;
 OPeffect tri, post, OPss;
 OPcam camera;
-OPtextureOLD* tex, *spec, *norm;
+OPtexture* tex, *spec, *norm;
 OPframeBuffer rt;
 OPint PackerCreated = 0;
 OPeffect eftTexScreenSpriteSheet;
@@ -198,11 +198,8 @@ OPint State0Update(OPtimer* time){
 	OPrenderDepth(0);
 	quadMesh.Bind();
 	OPeffectBind(&OPss);
-	OPtextureClearActive();
-	ui32 textureHandle = OPtextureBind(bg->Sheet);
-	OPtexturePixelate();
 	OPeffectParamMat4("uWorld", &world);
-	OPeffectParami("uColorTexture", textureHandle);
+	OPeffectParamBindTex("uColorTexture", bg->Sheet);
 	//OPlog("X: %f, Y: %f", bg->Frames[0].Offset.x, bg->Frames[0].Offset.y);
 	OPeffectParamVec2("uOffset", &bg->Frames[0].Offset);
 	OPeffectParamVec2("uSize", &bg->Frames[0].Size);
@@ -256,9 +253,9 @@ void State1Enter(OPgameState* last){
 	OPcmanPurge();
 
 	plane = (OPmesh*)OPcmanGet("BiPlane.opm");
-	tex  = (OPtextureOLD*)OPcmanGet("steamPlaneSkin.png");
-	spec = (OPtextureOLD*)OPcmanGet("steamPlaneSpec.png");
-	norm = (OPtextureOLD*)OPcmanGet("noneNorm.png");
+	tex  = (OPtexture*)OPcmanGet("steamPlaneSkin.png");
+	spec = (OPtexture*)OPcmanGet("steamPlaneSpec.png");
+	norm = (OPtexture*)OPcmanGet("noneNorm.png");
 
 	garbage = OPalloc(1024 * 10); // allocate ten megs of crap
 
@@ -283,12 +280,9 @@ OPint State1Update(OPtimer* time){
 	plane->Bind();
 	OPeffectBind(&tri);
 
-	OPtextureBind(tex);
-	OPeffectParami("uColorTexture", tex->Handle);
-	OPtextureBind(spec);
-	OPeffectParami("uSpecularTexture", spec->Handle);
-	OPtextureBind(norm);
-	OPeffectParami("uNormalTexture", norm->Handle);
+	OPeffectParamBindTex("uColorTexture", tex);
+	OPeffectParamBindTex("uSpecularTexture", spec);
+	OPeffectParamBindTex("uNormalTexture", norm);
 	OPeffectParamMat4v("uWorld", 1, &world);
 	OPeffectParamMat4v("uProj", 1, &camera.proj);
 	OPeffectParamMat4v("uView", 1, &camera.view);

@@ -33,7 +33,7 @@ void OPtexture2DUnloadGlobals() {
 	}
 }
 
-OPtexture2DOLD* OPtexture2DCreate(OPtextureOLD* texture, OPeffect* effect, OPvec2 uvStart, OPvec2 uvEnd) {
+OPtexture2DOLD* OPtexture2DCreate(OPtexture* texture, OPeffect* effect, OPvec2 uvStart, OPvec2 uvEnd) {
 	OPtexture2DOLD* tex2d = (OPtexture2DOLD*)OPalloc(sizeof(OPtexture2DOLD));
 
 	OPbzero(tex2d, sizeof(OPtexture2DOLD));
@@ -55,7 +55,7 @@ OPtexture2DOLD* OPtexture2DCreate(OPtextureOLD* texture, OPeffect* effect, OPvec
 	return tex2d;
 }
 
-OPtexture2DOLD* OPtexture2DCreate(OPtextureOLD* texture, OPeffect* effect) {
+OPtexture2DOLD* OPtexture2DCreate(OPtexture* texture, OPeffect* effect) {
 	return OPtexture2DCreate(texture, effect, OPVEC2_ZERO, OPVEC2_ONE);
 }
 
@@ -79,14 +79,13 @@ void OPtexture2DPrepRender(OPtexture2DOLD* tex2d) {
     OPmat4 world = OPMAT4_IDENTITY;
     OPmat4 size = OPMAT4_IDENTITY;
     size.Translate(tex2d->Position.x / (OPfloat)OPRENDER_WIDTH, tex2d->Position.y / (OPfloat)OPRENDER_HEIGHT, 0);
-    size.Scl(tex2d->Texture->Description.Width * tex2d->Scale.x, tex2d->Texture->Description.Height * tex2d->Scale.y, 1.0);
+    size.Scl(tex2d->Texture->textureDesc.width * tex2d->Scale.x, tex2d->Texture->textureDesc.height * tex2d->Scale.y, 1.0);
     OPmat4 view = OPMAT4_IDENTITY;
     view.Scl(1.0f / (OPfloat)OPRENDER_WIDTH, 1.0f / (OPfloat)OPRENDER_HEIGHT, 1.0f);
 
     world = size * view;
 
-	OPtextureClearActive();
-	OPeffectParami("uColorTexture", OPtextureBind(tex2d->Texture));
+	OPeffectParamBindTex("uColorTexture", tex2d->Texture);
 	OPeffectParamMat4v("uWorld", 1, &world);
 }
 

@@ -85,7 +85,7 @@ void OPcommandBucketSubmit(OPcommandBucket* commandBucket, ui64 key, void(*dispa
 	commandBucket->keyIndex++;
 }
 
-void OPcommandBucket::CreateDrawIndexedSubmit(OPmodel* model, OPmaterial* material, OPtextureOLD* texture) {
+void OPcommandBucket::CreateDrawIndexedSubmit(OPmodel* model, OPmaterial* material, OPtexture* texture) {
 	OPcommandDrawIndexedSubmit(this, model, material, texture);
 }
 

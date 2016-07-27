@@ -27,8 +27,8 @@ typedef struct OPcommandDrawIndexed OPcommandDrawIndexed;
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
 void OPcommandDrawIndexedSet(OPcommandDrawIndexed* result, OPmodel* model, OPmaterial* material);
-void OPcommandDrawIndexedSet(OPcommandDrawIndexed* result, OPmodel* model, OPmaterial* material, OPtextureOLD* texture);
-void OPcommandDrawIndexedSubmit(OPcommandBucket* commandBucket, OPmodel* model, OPmaterial* material, OPtextureOLD* texture);
+void OPcommandDrawIndexedSet(OPcommandDrawIndexed* result, OPmodel* model, OPmaterial* material, OPtexture* texture);
+void OPcommandDrawIndexedSubmit(OPcommandBucket* commandBucket, OPmodel* model, OPmaterial* material, OPtexture* texture);
 inline void OPcommandDrawIndexedSubmit(OPcommandBucket* commandBucket, OPmodelTextured* model, OPmaterial* material) {
 	OPcommandDrawIndexedSubmit(commandBucket, &model->model, material, model->texture);
 }
@@ -65,7 +65,7 @@ struct OPcommandDrawIndexed
     
 	// Per Mesh Data
     OPmat4* world;
-    OPtextureOLD* texture;
+    OPtexture* texture;
 
 
 	// Helper/Wrapper functions
@@ -73,7 +73,7 @@ struct OPcommandDrawIndexed
         OPcommandDrawIndexedSet(this, model, material);
     }
     
-	inline void Set(OPmodel* model, OPmaterial* material, OPtextureOLD* texture) {
+	inline void Set(OPmodel* model, OPmaterial* material, OPtexture* texture) {
         OPcommandDrawIndexedSet(this, model, material, texture);
     }
 };
