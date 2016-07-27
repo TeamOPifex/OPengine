@@ -103,7 +103,8 @@ i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
 	desc.wrap = OPtextureWrap::REPEAT;
 	desc.filter = OPtextureFilter::LINEAR;
 
-	OPRENDERER_ACTIVE->Texture.Init(tex, desc, data);
+	OPRENDERER_ACTIVE->Texture.Init(tex, desc);
+	tex->SetData(data);
 
 	// clean up
 	free(data); // Clean up load png 

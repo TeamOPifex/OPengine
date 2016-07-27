@@ -867,9 +867,9 @@ OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh){
 OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh) {
 	OPstream* str = OPreadFile(filename);
 	OPMData data = OPMloadData(str);
-
+	
 	OPmeshPacked temp = OPmeshPackedCreate(
-		data.vertexLayout.stride, data.indexSize,
+		data.vertexLayout, data.indexSize,
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
 	);

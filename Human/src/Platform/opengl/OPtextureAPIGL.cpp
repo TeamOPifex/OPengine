@@ -37,7 +37,10 @@ ui32 OPtextureFilterToGL(OPtextureFilter textureFilter) {
 OPtexture* OPtextureGLInit(OPtexture* texture, OPtextureDesc textureDesc, const void* pixelData) {
 	OPtextureGL* internalPtr = (OPtextureGL*)OPalloc(sizeof(OPtextureGL));;
 	texture->internalPtr = internalPtr;
+	texture->textureDesc = textureDesc;
+
 	OPGLFN(glGenTextures(1, &internalPtr->Handle));
+	OPGLFN(glActiveTexture(GL_TEXTURE0 + 0));
 	OPGLFN(glBindTexture(GL_TEXTURE_2D, internalPtr->Handle));
 
 	ui32 textureFormat = OPtextureFormatToGL(textureDesc.format);

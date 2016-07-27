@@ -2,6 +2,7 @@
 #define OPENGINE_HUMAN_RENDERER_MESH_PACKER
 
 #include "./Human/include/Rendering/OPrenderBuffer.h"
+#include "./Human/include/Rendering/OPvertexLayout.h"
 #include "./Data/include/OPstream.h"
 #include "./Core/include/OPmemory.h"
 

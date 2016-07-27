@@ -4,6 +4,7 @@
 #include "./Human/include/Rendering/OPmeshPacker.h"
 #include "./Human/include/Rendering/OPrenderBuffer.h"
 #include "./Human/include/Rendering/Enums/OPindexSize.h"
+#include "./Human/include/Rendering/OPvertexLayout.h"
 
 //-----------------------------------------------------------------------------
 //   _____ _                   _
@@ -16,6 +17,7 @@ struct OPmeshPacked {
 	OPuint offset;
 	OPuint count;
 	OPuint elementCount;
+	OPvertexLayout vertexLayout;
 };
 typedef struct OPmeshPacked OPmeshPacked;
 
@@ -35,7 +37,7 @@ typedef struct OPmeshPacked OPmeshPacked;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPmeshPacked OPmeshPackedCreate(ui32 vertSize, OPindexSize indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
+OPmeshPacked OPmeshPackedCreate(OPvertexLayout vertexLayout, OPindexSize indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
 void OPmeshPackedRender(OPmeshPacked* mesh);
 
 

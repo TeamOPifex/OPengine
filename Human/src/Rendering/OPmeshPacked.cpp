@@ -11,18 +11,18 @@
 //-----------------------------------------------------------------------------
 
 OPmeshPacked OPmeshPackedCreate(
-			ui32 vertSize, OPindexSize indSize,
+			OPvertexLayout vertexLayout, OPindexSize indSize,
 			OPuint vertCount, OPuint indCount,
 			void* vertices, void* indices){
 	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
 
-	OPmeshPacked out = {
-		packer->indexOffset,
-		indCount,
-		indCount
-	};
+	OPmeshPacked out;
+	out.offset = packer->indexOffset;
+	out.count = indCount;
+	out.elementCount = indCount;
+	out.vertexLayout = vertexLayout;
 
-	OPmeshPackerAddVB(vertSize, vertices, vertCount);
+	OPmeshPackerAddVB(vertexLayout.stride, vertices, vertCount);
 	OPmeshPackerAddIB(indSize, indices, indCount);
 	packer->vertexElementOffset += vertCount;
 	
@@ -31,5 +31,5 @@ OPmeshPacked OPmeshPackedCreate(
 
 //-----------------------------------------------------------------------------
 void OPmeshPackedRender(OPmeshPacked* mesh){
-		glDrawElements(GL_TRIANGLES, (GLsizei)mesh->elementCount, GL_UNSIGNED_SHORT, (void*)(mesh->offset));
+	glDrawElements(GL_TRIANGLES, (GLsizei)mesh->elementCount, GL_UNSIGNED_SHORT, (void*)(mesh->offset));
 }

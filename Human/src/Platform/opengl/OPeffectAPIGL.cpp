@@ -50,6 +50,9 @@ bool OPeffectGLAddUniform(OPeffect* effect, const OPchar* name) {
 
 void OPeffectGLBind(OPeffect* effect) {
 	OPeffectGL* effectGL = (OPeffectGL*)effect->internalPtr;
+	for (OPuint i  = 0; i < 8; i++) {
+		OPGLFN(glDisableVertexAttribArray(i));
+	}
 	OPGLFN(glUseProgram(effectGL->Handle));
 }
 

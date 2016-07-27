@@ -227,7 +227,12 @@ OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text, OPf
 	OPfontBuiltTextNode node;
 	node.Width = size.x;
 	node.packedMesh = (OPmeshPacked*)OPalloc(sizeof(OPmeshPacked));
-	*node.packedMesh = OPmeshPackedCreate(vertexSize, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
+	OPvertexLayoutBuilder builder;
+	builder.Init();
+	builder.Add(OPattributes::POSITION);
+	builder.Add(OPattributes::UV);
+	OPvertexLayout vertexLayout = builder.Build();
+	*node.packedMesh = OPmeshPackedCreate(vertexLayout, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
 
 	return node;
 }

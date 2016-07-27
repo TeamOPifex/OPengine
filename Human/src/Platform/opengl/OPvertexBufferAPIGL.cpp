@@ -30,9 +30,6 @@ void OPvertexBufferGLSetLayout(OPvertexBuffer* vertexBuffer, OPvertexLayout* ver
 		OPGLFN(glEnableVertexAttribArray(i));
 		OPGLFN(glVertexAttribPointer(i, shaderAttribute.Elements, shaderAttribute.Type, GL_FALSE, vertexLayout->stride, (const void*)shaderAttribute.Offset));
 	}
-	//for (; i < 8; i++) {
-	//	OPGLFN(glDisableVertexAttribArray(i));
-	//}
 }
 
 void OPvertexBufferGLBind(OPvertexBuffer* vertexBuffer) {

@@ -24,16 +24,17 @@ void OPfontRenderEnd() {
 }
 
 void OPfontRender(OPfontUserTextNode* node, OPmat4* world) {
-	node->mesh.Bind();
 	OPFONTMANAGER_EFFECT_ACTIVE->Bind();
 	OPFONTMANAGER_EFFECT_ACTIVE->Set("uWorld", world);
+	node->mesh.Bind();
 	OPmeshRender();
 }
 
 void OPfontRender(OPfontBuiltTextNode* node, OPmat4* world) {
-	OPmeshPackerBind(&OPFONTMANAGER_ACTIVE->meshPacker);
 	OPFONTMANAGER_EFFECT_ACTIVE->Bind();
 	OPFONTMANAGER_EFFECT_ACTIVE->Set("uWorld", world);
+	OPmeshPackerBind(&OPFONTMANAGER_ACTIVE->meshPacker);
+	OPRENDERER_ACTIVE->VertexBuffer.SetLayout(&OPFONTMANAGER_ACTIVE->meshPacker.VertexBuffer, &node->packedMesh->vertexLayout);
 	OPmeshPackedRender(node->packedMesh);
 }
 

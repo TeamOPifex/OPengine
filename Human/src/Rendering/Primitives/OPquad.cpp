@@ -92,7 +92,7 @@ OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoor
 	OPvertexLayoutBuilder builder;
 	builder.Init();
 	builder.Add(OPattributes::POSITION);
-	builder.Add(OPattributes::NORMAL);
+	builder.Add(OPattributes::UV);
 	mesh.vertexLayout = builder.Build();
 	mesh.Bind();
 
@@ -119,8 +119,13 @@ OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoor
 
 //-----------------------------------------------------------------------------
 OPmeshPacked OPquadCreatePacked(){
+	OPvertexLayoutBuilder builder;
+	builder.Init();
+	builder.Add(OPattributes::POSITION);
+	builder.Add(OPattributes::UV);
+	OPvertexLayout vertexLayout = builder.Build();
 	return OPmeshPackedCreate(
-		sizeof(OPfloat) * 5, OPindexSize::SHORT,
+		vertexLayout, OPindexSize::SHORT,
 		4, 6,
 		OPquadVertData, OPquadIndexData
 	);
@@ -138,8 +143,15 @@ OPmesh OPquadNormCreate(){
 }
 //-----------------------------------------------------------------------------
 OPmeshPacked OPquadNormCreatePacked(){
+
+	OPvertexLayoutBuilder builder;
+	builder.Init();
+	builder.Add(OPattributes::POSITION);
+	builder.Add(OPattributes::NORMAL);
+	builder.Add(OPattributes::UV);
+	OPvertexLayout vertexLayout = builder.Build();
 	return OPmeshPackedCreate(
-		sizeof(OPfloat) * 8, OPindexSize::SHORT,
+		vertexLayout, OPindexSize::SHORT,
 		4, 6,
 		OPquadVertNormData, OPquadIndexData
 	);
