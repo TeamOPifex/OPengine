@@ -89,6 +89,11 @@ OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 texcoordStart, OPvec2 
 
 OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
 	OPmesh mesh = OPmeshCreate();
+	OPvertexLayoutBuilder builder;
+	builder.Init();
+	builder.Add(OPattributes::POSITION);
+	builder.Add(OPattributes::NORMAL);
+	mesh.vertexLayout = builder.Build();
 	mesh.Bind();
 
 	// 1, 1,

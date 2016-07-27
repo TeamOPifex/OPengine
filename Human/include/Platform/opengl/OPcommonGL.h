@@ -27,3 +27,5 @@ bool OPcommonGLLog(const OPchar* function, const OPchar* file, i32 line);
 #endif
 
 #endif
+
+// OPlog(#x); \

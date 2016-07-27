@@ -108,20 +108,20 @@ OPMData OPMloadDataV2(OPstream* str) {
 		result.indexCount = indicesCount;
 
 		OPvertexLayoutBuilder layout;
-		OPvertexLayoutBuilderInit(&layout);
+		layout.Init();
 
 		if (OPMhasFeature(features, Position))
-			OPvertexLayoutBuilderAdd(&layout, OPATTR_POSITION);
+			layout.Add(OPattributes::POSITION);
 		if (OPMhasFeature(features, Normal))
-			OPvertexLayoutBuilderAdd(&layout, OPATTR_NORMAL);
+			layout.Add(OPattributes::NORMAL);
 		if (OPMhasFeature(features, Tangent))
-			OPvertexLayoutBuilderAdd(&layout, OPATTR_TANGENT);
+			layout.Add(OPattributes::TANGENT);
 		if (OPMhasFeature(features, UV))
-			OPvertexLayoutBuilderAdd(&layout, OPATTR_UV);
+			layout.Add(OPattributes::UV);
 		if (OPMhasFeature(features, Color))
-			OPvertexLayoutBuilderAdd(&layout, OPATTR_COLOR);
+			layout.Add(OPattributes::COLOR);
 		if (OPMhasFeature(features, Skinning))
-			OPvertexLayoutBuilderAdd(&layout, OPATTR_BONES);
+			layout.Add(OPattributes::BONES);
 
 		result.vertexLayout = layout.Build();
 		result.indexSize = OPindexSize::SHORT;// sizeof(ui16);
@@ -162,39 +162,39 @@ OPMData OPMloadData(OPstream* str) {
 	
 
 	OPvertexLayoutBuilder layout;
-	OPvertexLayoutBuilderInit(&layout);
+	layout.Init();
 
 	if (OPMhasFeature(features, Position)) {
 		OPlogDebug("Feature: Position");
 		positions = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
-		OPvertexLayoutBuilderAdd(&layout, OPATTR_POSITION);
+		layout.Add(OPattributes::POSITION);
 	}
 	if (OPMhasFeature(features, Normal)) {
 		OPlogDebug("Feature: Normal");
 		normals = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
-		OPvertexLayoutBuilderAdd(&layout, OPATTR_NORMAL);
+		layout.Add(OPattributes::NORMAL);
 	}
 	if (OPMhasFeature(features, Tangent)) {
 		OPlogDebug("Feature: Tangent");
 		tangents = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
-		OPvertexLayoutBuilderAdd(&layout, OPATTR_TANGENT);
+		layout.Add(OPattributes::TANGENT);
 	}
 	if (OPMhasFeature(features, UV)) {
 		OPlogDebug("Feature: UV");
 		uvs = (OPvec2*)OPalloc(sizeof(OPvec2)* verticeCount);
-		OPvertexLayoutBuilderAdd(&layout, OPATTR_UV);
+		layout.Add(OPattributes::UV);
 	}
 	if (OPMhasFeature(features, Color)) {
 		OPlogDebug("Feature: Color");
 		colors = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
-		OPvertexLayoutBuilderAdd(&layout, OPATTR_COLOR);
+		layout.Add(OPattributes::COLOR);
 	}
 	// Read Skinning
 	if (OPMhasFeature(features, Skinning)) {
 		OPlogDebug("Feature: Skinning");
 		boneIndices = (OPvec4*)OPalloc(sizeof(OPvec4)* verticeCount);
 		boneWeights = (OPvec4*)OPalloc(sizeof(OPvec4)* verticeCount);
-		OPvertexLayoutBuilderAdd(&layout, OPATTR_BONES);
+		layout.Add(OPattributes::BONES);
 	}
 		
 

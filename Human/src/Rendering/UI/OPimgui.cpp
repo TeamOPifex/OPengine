@@ -79,9 +79,8 @@ void _block(
 
 	//OPrenderSetBufferData(&OPIMGUI_ACTIVE->buffer, sizeof(OPimguiVertex), 6, data);
 	OPIMGUI_ACTIVE->buffer.SetData(sizeof(OPimguiVertex), 6, data);
-	OPeffectBind(OPIMGUI_ACTIVE->effect);
-
-	OPeffectParam("uProj", OPIMGUI_ACTIVE->proj);
+	OPIMGUI_ACTIVE->effect->Bind();
+	OPIMGUI_ACTIVE->effect->Set("uProj", &OPIMGUI_ACTIVE->proj);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
@@ -123,8 +122,8 @@ void _radio(
 
 	//OPrenderSetBufferData(&OPIMGUI_ACTIVE->buffer, sizeof(OPimguiVertex), 24, data);
 	OPIMGUI_ACTIVE->buffer.SetData(sizeof(OPimguiVertex), 24, data);
-	OPeffectBind(OPIMGUI_ACTIVE->effect);
-	OPeffectParam("uProj", OPIMGUI_ACTIVE->proj);
+	OPIMGUI_ACTIVE->effect->Bind();
+	OPIMGUI_ACTIVE->effect->Set("uProj", &OPIMGUI_ACTIVE->proj);
 	glDrawArrays(GL_TRIANGLES, 0, 24);
 }
 

@@ -88,12 +88,7 @@ void ExampleSpineEnter(OPgameState* last) {
 	// which requires the attributes are given in a set order
 	// Position (vec3), then Normal (vec3)
 	// For more granular control use OPeffectCreate
-	spineExample->Effect = OPeffectGen(
-		"SimpleTextured.vert",
-		"SimpleTextured.frag",
-		OPATTR_POSITION | OPATTR_UV,
-		"Model Effect",
-		spineExample->quad.vertexLayout.stride);
+	spineExample->Effect.Init("SimpleTextured.vert", "SimpleTextured.frag");
 
 	SpineInitialize();
 }
@@ -155,7 +150,7 @@ void ExampleSpineRender(OPfloat delta) {
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleSpineExit(OPgameState* next) {
 	// Clean up phase for the Game State
-	OPeffectUnload(&spineExample->Effect);
+	spineExample->Effect.Destroy();
 	OPfree(spineExample);
 	return 0;
 }

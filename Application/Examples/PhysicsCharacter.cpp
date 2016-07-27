@@ -107,26 +107,12 @@ void ExamplePhysicsCharacterEnter(OPgameState* last) {
 	};
 
 	physicsCharacterExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	OPshaderOLD* vert = (OPshaderOLD*)OPcmanGet("Common/Texture3D.vert");
-	OPshaderOLD* frag = (OPshaderOLD*)OPcmanGet("Common/Texture.frag");
-	*physicsCharacterExample->Effect = OPeffectCreate(
-		*vert,
-		*frag,
-		attribs,
-		3,
-		"Model Effect",
-		physicsCharacterExample->Mesh->vertexLayout.stride
-		);
+	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture3D.vert");
+	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
+	physicsCharacterExample->Effect->Init(vert, frag);
 
 	physicsCharacterExample->SphereEffect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	*physicsCharacterExample->SphereEffect = OPeffectCreate(
-		*vert,
-		*frag,
-		attribs,
-		3,
-		"Model Effect",
-		physicsCharacterExample->MeshSphere->vertexLayout.stride
-		);
+	physicsCharacterExample->SphereEffect->Init(vert, frag);
 
 	physicsCharacterExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
 	*physicsCharacterExample->Camera = OPcamPersp(
@@ -270,17 +256,17 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 	OPmat4 world = OPMAT4_IDENTITY;
 
 	physicsCharacterExample->Mesh->Bind();
-	OPeffectBind(physicsCharacterExample->Effect);
+	physicsCharacterExample->Effect->Bind();
 
 	//OPtextureClearActive();
 
 
-	OPeffectParamMat4("uProj", &physicsCharacterExample->Camera->proj);
-	OPeffectParamMat4("uView", &physicsCharacterExample->Camera->view);
+	OPeffectSet("uProj", &physicsCharacterExample->Camera->proj);
+	OPeffectSet("uView", &physicsCharacterExample->Camera->view);
 
 	OPvec3 light = OPvec3Create(0, 1, 0);
-	OPeffectParamVec3("uLightDirection", &light);
-	OPeffectParamBindTex("uColorTexture", physicsCharacterExample->texture);
+	OPeffectSet("uLightDirection", &light);
+	OPeffectSet("uColorTexture", physicsCharacterExample->texture);
 	OPmat4 scale = OPMAT4_IDENTITY;
 	OPmat4 scratch = OPMAT4_IDENTITY;
 	for (ui32 i = 0; i < physicsCharacterExample->boxCount; i++) {
@@ -288,44 +274,44 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 		scale = OPmat4Scl(physicsCharacterExample->boxes[i].size * 2, physicsCharacterExample->boxes[i].size * 2, physicsCharacterExample->boxes[i].size * 2);
 		OPphysXGetTransform((OPphysXRigidActor*)physicsCharacterExample->boxes[i].physics, &scratch);
 		world = scratch * scale;
-		OPeffectParamMat4("uWorld", &world);
+		OPeffectSet("uWorld", &world);
 		OPmeshRender();
 	}
-	OPeffectParamBindTex("uColorTexture", physicsCharacterExample->textureStatic);
+	OPeffectSet("uColorTexture", physicsCharacterExample->textureStatic);
 	for (ui32 i = 0; i < physicsCharacterExample->boxStaticCount; i++) {
 		if(physicsCharacterExample->boxesStatic[i].dead) continue;
 		scale = OPmat4Scl(physicsCharacterExample->boxesStatic[i].size * 2, physicsCharacterExample->boxesStatic[i].size * 2, physicsCharacterExample->boxesStatic[i].size * 2);
 		OPphysXGetTransform((OPphysXRigidActor*)physicsCharacterExample->boxesStatic[i].physics, &scratch);
 		world = scratch * scale;
-		OPeffectParamMat4("uWorld", &world);
+		OPeffectSet("uWorld", &world);
 		OPmeshRender();
 	}
 
 	physicsCharacterExample->MeshSphere->Bind();
-	OPeffectBind(physicsCharacterExample->SphereEffect);
-	OPeffectParamMat4("uProj", &physicsCharacterExample->Camera->proj);
-	OPeffectParamMat4("uView", &physicsCharacterExample->Camera->view);
-	OPeffectParamVec3("uLightDirection", &light);
+	physicsCharacterExample->SphereEffect->Bind();
+	OPeffectSet("uProj", &physicsCharacterExample->Camera->proj);
+	OPeffectSet("uView", &physicsCharacterExample->Camera->view);
+	OPeffectSet("uLightDirection", &light);
 
-	OPeffectParamBindTex("uColorTexture", physicsCharacterExample->texturePlayer);
+	OPeffectSet("uColorTexture", physicsCharacterExample->texturePlayer);
 	scale = OPmat4Scl(physicsCharacterExample->spheres[0].size * 2, physicsCharacterExample->spheres[0].size * 2, physicsCharacterExample->spheres[0].size * 2);
 	OPphysXGetTransform((OPphysXRigidActor*)physicsCharacterExample->spheres[0].physics, &scratch);
 	world = scratch * scale;
-	OPeffectParamMat4("uWorld", &world);
+	OPeffectSet("uWorld", &world);
 	OPmeshRender();
 
 	{
 		world = OPmat4Translate(pos.x, pos.y, pos.z) * OPmat4Scl(1);
-		OPeffectParamMat4("uWorld", &world);
+		OPeffectSet("uWorld", &world);
 		OPmeshRender();
 	}
 
-	OPeffectParamBindTex("uColorTexture", physicsCharacterExample->textureSphere);
+	OPeffectSet("uColorTexture", physicsCharacterExample->textureSphere);
 	for (ui32 i = 1; i < physicsCharacterExample->sphereCount; i++) {
 		scale = OPmat4Scl(physicsCharacterExample->spheres[i].size * 2, physicsCharacterExample->spheres[i].size * 2, physicsCharacterExample->spheres[i].size * 2);
 		OPphysXGetTransform((OPphysXRigidActor*)physicsCharacterExample->spheres[i].physics, &scratch);
 		world = scratch * scale;
-		OPeffectParamMat4v("uWorld", 1, &world);
+		OPeffectSet("uWorld", 1, &world);
 		OPmeshRender();
 	}
 

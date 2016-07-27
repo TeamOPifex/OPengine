@@ -8,6 +8,7 @@ struct OPrenderer;
 typedef struct OPrenderer OPrenderer;
 
 #include "./Human/include/Rendering/API/OPcontext.h"
+#include "./Human/include/Rendering/API/OPeffectAPI.h"
 #include "./Human/include/Rendering/API/OPframeBuffer2D.h"
 #include "./Human/include/Rendering/API/OPframeBufferDepth.h"
 #include "./Human/include/Rendering/API/OPindexBufferAPI.h"
@@ -34,6 +35,7 @@ struct OPrenderer {
 	void(*Shutdown)() = 0;
 
 	OPcontext Context;
+	OPeffectAPI Effect;
 	OPframeBuffer2D FrameBuffer2D;
 	OPframeBufferDepth FrameBufferDepth;
 	OPindexBufferAPI IndexBuffer;

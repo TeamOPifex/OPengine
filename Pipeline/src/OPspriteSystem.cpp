@@ -2,13 +2,7 @@
 #include "./Core/include/Assert.h"
 
 void OPspriteSystemEffectDefault(OPeffect* effect) {
-	*effect = OPeffectGen(
-		"Common/OPspriteSheet.vert",
-		"Common/OPspriteSheet.frag",
-		OPATTR_POSITION | OPATTR_UV,
-		"Sprite sheet effect",
-		0
-		);
+	effect->Init("Common/OPspriteSheet.vert", "Common/OPspriteSheet.frag");
 }
 
 void OPspriteSystemInit(OPspriteSystem* system, OPsprite** sprites, OPint count, OPeffect* effect, OPspriteSystemAlign alignment) {
@@ -100,14 +94,14 @@ void OPspriteSystemRender(OPspriteSystem* system, OPcam* cam) {
 	view = OPmat4Translate(cam->pos * -1);
 
 	system->_mesh.Bind();
-	OPeffectBind(system->Effect);
+	system->Effect->Bind();
 
 	//OPtexturePixelate();
 
 	//OPtextureClearActive();
-	OPeffectParamBindTex("uColorTexture", system->Sprites[0]->Sheet);
-	OPeffectParamMat4("uProj", &cam->proj);
-	OPeffectParamMat4("uView", &view);
+	OPeffectSet("uColorTexture", system->Sprites[0]->Sheet);
+	OPeffectSet("uProj", &cam->proj);
+	OPeffectSet("uView", &view);
 
 	for (OPuint i = 0; i < system->Count; i++) {
 		currentSprite = system->Sprites[system->SystemSprites[i].CurrentSprite];
@@ -122,9 +116,9 @@ void OPspriteSystemRender(OPspriteSystem* system, OPcam* cam) {
 		world.Scl(frameSize.x * system->SystemSprites[i].Direction, frameSize.y, 0);
 
 
-		OPeffectParamMat4("uWorld", &world);
-		OPeffectParamVec2("uOffset", &currentSprite->Frames[system->SystemSprites[i].CurrentFrame].Offset);
-		OPeffectParamVec2("uSize", &currentSprite->Frames[system->SystemSprites[i].CurrentFrame].Size);
+		OPeffectSet("uWorld", &world);
+		OPeffectSet("uOffset", &currentSprite->Frames[system->SystemSprites[i].CurrentFrame].Offset);
+		OPeffectSet("uSize", &currentSprite->Frames[system->SystemSprites[i].CurrentFrame].Size);
 
 		OPmeshRender();
 	}

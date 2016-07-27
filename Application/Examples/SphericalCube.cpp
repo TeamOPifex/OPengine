@@ -38,12 +38,7 @@ void ExampleSphericalCubeEnter(OPgameState* last) {
 	// which requires the attributes are given in a set order
 	// Position (vec3), then Normal (vec3)
 	// For more granular control use OPeffectCreate
-	sphericalCubeExample->Effect = OPeffectGen(
-		"SimpleModel.vert",
-		"SimpleModel.frag",
-		OPATTR_POSITION | OPATTR_NORMAL | OPATTR_UV,
-		"SphericalCube Effect",
-		sizeof(OPsphericalCubeVertex));
+	sphericalCubeExample->Effect.Init("SimpleModel.vert", "SimpleModel.frag");
 
 	// Sets up the camera as a perpsective camera for rendering
 	sphericalCubeExample->Camera = OPcamPersp(
@@ -91,7 +86,7 @@ OPint ExampleSphericalCubeUpdate(OPtimer* time) {
 		OPbindMeshEffectWorldCam(&sphericalCubeExample->SphericalCube.sides[i], &sphericalCubeExample->Effect, &world, &sphericalCubeExample->Camera);
 		
 		// Sets the vLightDirection uniform on the Effect that is currently bound (sphericalCubeExample->Effect)
-		OPeffectParamVec3("vLightDirection", &sphericalCubeExample->LightDirection);
+		OPeffectSet("vLightDirection", &sphericalCubeExample->LightDirection);
 
 		// Renders to the screen the currently bound Mesh (sphericalCubeExample->Mesh)
 		OPmeshRender();
@@ -111,7 +106,7 @@ void ExampleSphericalCubeRender(OPfloat delta) {
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleSphericalCubeExit(OPgameState* next) {
 	// Clean up phase for the Game State
-	OPeffectUnload(&sphericalCubeExample->Effect);	
+	sphericalCubeExample->Effect.Destroy();	
 	OPfree(sphericalCubeExample);
 	return 0;
 }

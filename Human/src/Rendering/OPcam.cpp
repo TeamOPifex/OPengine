@@ -106,6 +106,6 @@ void OPcamUpdate(OPcam* cam) {
 
 
 void OPcamBind(OPcam* camera) {
-	OPeffectParamMat4("uView", &camera->view);
-	OPeffectParamMat4("uProj", &camera->proj);
+	OPeffectSet("uView", &camera->view);
+	OPeffectSet("uProj", &camera->proj);
 }

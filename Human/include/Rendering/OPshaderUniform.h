@@ -6,6 +6,7 @@ typedef OPshaderUniform OPshaderUniform;
 
 struct OPshaderUniform {
 	void* internalPtr;
+	bool Found;
 };
 
 #endif

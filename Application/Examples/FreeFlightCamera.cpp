@@ -28,16 +28,9 @@ void ExampleFreeFlightEnter(OPgameState* last) {
 	};
 
 	freeFlightExample.Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	OPshaderOLD* vert = (OPshaderOLD*)OPcmanGet("Common/Texture3D.vert");
-	OPshaderOLD* frag = (OPshaderOLD*)OPcmanGet("Common/Texture.frag");
-	*freeFlightExample.Effect = OPeffectCreate(
-		*vert,
-		*frag,
-		attribs,
-		3,
-		"Textured Effect",
-		freeFlightExample.Mesh->vertexLayout.stride
-		);
+	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture3D.vert");
+	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
+	freeFlightExample.Effect->Init(vert, frag);
 
 	OPcamFreeFlightInit(&freeFlightExample.Camera, 3.0f, 3.0f, OPVEC3_ONE);
 }
@@ -54,20 +47,20 @@ void ExampleFreeFlightRender(OPfloat delta) {
 	OPrenderClear(0, 0, 0);
 
 	freeFlightExample.Mesh->Bind();
-	OPeffectBind(freeFlightExample.Effect);
+	freeFlightExample.Effect->Bind();
 
 	OPmat4 world;
 	world = OPmat4RotY(freeFlightExample.Rotation / 100.0f);
 
 
-	OPeffectParamBindTex("uColorTexture", freeFlightExample.Texture);
+	OPeffectSet("uColorTexture", freeFlightExample.Texture);
 
-	OPeffectParamMat4("uWorld", &world);
-	OPeffectParamMat4("uProj", &freeFlightExample.Camera.Camera.proj);
-	OPeffectParamMat4("uView", &freeFlightExample.Camera.Camera.view);
+	OPeffectSet("uWorld", &world);
+	OPeffectSet("uProj", &freeFlightExample.Camera.Camera.proj);
+	OPeffectSet("uView", &freeFlightExample.Camera.Camera.view);
 
 	OPvec3 light = OPvec3Create(0, 1, 0);
-	OPeffectParamVec3("vLightDirection", &light);
+	OPeffectSet("vLightDirection", &light);
 
 	OPmeshRender();
 
@@ -75,7 +68,7 @@ void ExampleFreeFlightRender(OPfloat delta) {
 }
 
 OPint ExampleFreeFlightExit(OPgameState* next) {
-	OPeffectUnload(freeFlightExample.Effect);
+	freeFlightExample.Effect->Destroy();
 	OPfree(freeFlightExample.Effect);
 
 	return 0;

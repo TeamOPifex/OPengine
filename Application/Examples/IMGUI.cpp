@@ -40,13 +40,7 @@ void ExampleIMGUIEnter(OPgameState* last) {
 	imguiExample.FontManager->scale = 0.75;
 
 
-	imguiExample.effect = OPeffectGen(
-		"imgui.vert",
-		"imgui.frag",
-		OPATTR_POSITION | OPATTR_COLOR4,
-		"IMGUI Shader",
-		sizeof(OPfloat) * 7
-		);
+	imguiExample.effect.Init("imgui.vert", "imgui.frag");
 	imguiExample.imgui = OPimguiCreate(&imguiExample.effect, imguiExample.FontManager);
 	imguiExample.imgui->primaryColor = OPvec4Create(1, 0, 0, 1);
 	imguiExample.imgui->secondaryColor = OPvec4Create(1, 1, 1, 1);

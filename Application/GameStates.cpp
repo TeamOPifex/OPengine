@@ -120,13 +120,7 @@ void State0Enter(OPgameState* last){
 	//OPwebServerOnKey(server, "color", ColorHandler, &color);
 	//OPwebServerOnKey(server, "font", FontHandler, NULL);
 
-	OPss = OPeffectCreate(
-		*(OPshaderOLD*)OPcmanGet("OPspriteSheet.vert"),
-		*(OPshaderOLD*)OPcmanGet("OPspriteSheet.frag"),
-		attribs,
-		2,
-		"Sprite sheet effect"
-	);
+	OPss.Init((OPshader*)OPcmanGet("OPspriteSheet.vert"), (OPshader*)OPcmanGet("OPspriteSheet.frag"));
 
 	// Required
 	
@@ -197,12 +191,12 @@ OPint State0Update(OPtimer* time){
 	OPmat4Identity(&world);
 	OPrenderDepth(0);
 	quadMesh.Bind();
-	OPeffectBind(&OPss);
-	OPeffectParamMat4("uWorld", &world);
-	OPeffectParamBindTex("uColorTexture", bg->Sheet);
+	OPss.Bind();
+	OPeffectSet("uWorld", &world);
+	OPeffectSet("uColorTexture", bg->Sheet);
 	//OPlog("X: %f, Y: %f", bg->Frames[0].Offset.x, bg->Frames[0].Offset.y);
-	OPeffectParamVec2("uOffset", &bg->Frames[0].Offset);
-	OPeffectParamVec2("uSize", &bg->Frames[0].Size);
+	OPeffectSet("uOffset", &bg->Frames[0].Offset);
+	OPeffectSet("uSize", &bg->Frames[0].Size);
 	OPmeshRender();
 
 	// Required
@@ -278,14 +272,14 @@ OPint State1Update(OPtimer* time){
 
 	OPmeshPackerBind(&packer);
 	plane->Bind();
-	OPeffectBind(&tri);
+	tri.Bind();
 
-	OPeffectParamBindTex("uColorTexture", tex);
-	OPeffectParamBindTex("uSpecularTexture", spec);
-	OPeffectParamBindTex("uNormalTexture", norm);
-	OPeffectParamMat4v("uWorld", 1, &world);
-	OPeffectParamMat4v("uProj", 1, &camera.proj);
-	OPeffectParamMat4v("uView", 1, &camera.view);
+	OPeffectSet("uColorTexture", tex);
+	OPeffectSet("uSpecularTexture", spec);
+	OPeffectSet("uNormalTexture", norm);
+	OPeffectSet("uWorld", 1, &world);
+	OPeffectSet("uProj", 1, &camera.proj);
+	OPeffectSet("uView", 1, &camera.view);
 
 	//OPframeBufferBind(&rt);
 	
@@ -349,8 +343,8 @@ OPint State1Exit(OPgameState* next){
 	OPcmanDelete("steamPlaneSpec.png");
 	OPcmanDelete("noneNorm.png");	
 
-	OPeffectUnload(&tri);
-	OPeffectUnload(&post);
+	tri.Destroy();
+	post.Destroy();
 
 	OPfree(garbage);
 	return 0;

@@ -10,18 +10,14 @@ void LoadDefaultTexture2DEffect() {
 	if (DEFAULT_TEXTURE2D_EFFECT != NULL) return;
 
 	DEFAULT_TEXTURE2D_EFFECT = (OPeffect*)OPalloc(sizeof(OPeffect));
-	*DEFAULT_TEXTURE2D_EFFECT = OPeffectGen(
-		"Common/Texture2D.vert",
-		"Common/Texture.frag",
-		OPATTR_POSITION | OPATTR_UV,
-		"Texture2D Effect",
-		0
-		);
+	DEFAULT_TEXTURE2D_EFFECT->Init("Common/Texture2D.vert", "Common/Texture.frag");
+	DEFAULT_TEXTURE2D_EFFECT->AddUniform("uColorTexture");
+	DEFAULT_TEXTURE2D_EFFECT->AddUniform("uWorld");
 }
 
 void OPtexture2DUnloadGlobals() {
 	if (DEFAULT_TEXTURE2D_EFFECT != NULL) {
-		OPeffectUnload(DEFAULT_TEXTURE2D_EFFECT);
+		DEFAULT_TEXTURE2D_EFFECT->Destroy();
 		OPfree(DEFAULT_TEXTURE2D_EFFECT);
         DEFAULT_TEXTURE2D_EFFECT = NULL;
 	}
@@ -64,8 +60,8 @@ void OPtexture2DDestroy(OPtexture2DOLD* tex2d) {
 }
 
 void OPtexture2DPrepRender(OPtexture2DOLD* tex2d) {
+	tex2d->Effect->Bind();
 	TEXTURE_2D_QUAD_MESH->Bind();
-	OPeffectBind(tex2d->Effect);
 
 	OPrenderDepth(0);
 
@@ -85,8 +81,8 @@ void OPtexture2DPrepRender(OPtexture2DOLD* tex2d) {
 
     world = size * view;
 
-	OPeffectParamBindTex("uColorTexture", tex2d->Texture);
-	OPeffectParamMat4v("uWorld", 1, &world);
+	OPeffectSet("uColorTexture", tex2d->Texture);
+	OPeffectSet("uWorld", 1, &world);
 }
 
 void OPtexture2DRender(OPtexture2DOLD* tex2d) {

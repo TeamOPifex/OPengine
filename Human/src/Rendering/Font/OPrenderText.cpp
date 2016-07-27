@@ -10,14 +10,12 @@ void OPfontRenderBegin(OPfontManager* fontManager) {
 
 	OPrenderDepth(0);
 	fontManager->dummyMesh.mesh.Bind();
-	OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
+	OPFONTMANAGER_EFFECT_ACTIVE->Bind();
 	//OPtextureClearActive();
 	OPRENDERER_ACTIVE->Texture.Bind(OPFONTMANAGER_ACTIVE->_font->texture, 0);
-	//ui32 textureHandle = OPtextureBind(OPFONTMANAGER_ACTIVE->_font->texture);
-	OPeffectParamBindTex("uColorTexture", OPFONTMANAGER_ACTIVE->_font->texture);	
-	OPeffectParamVec4("uColor", &OPFONTMANAGER_ACTIVE->_color);
-	OPeffectParamMat4("uProj", &OPFONTMANAGER_ACTIVE->proj);
-	//if (OPFONTMANAGER_ACTIVE->pixelated) OPtexturePixelate();
+	OPFONTMANAGER_EFFECT_ACTIVE->Set("uColorTexture", OPFONTMANAGER_ACTIVE->_font->texture);
+	OPFONTMANAGER_EFFECT_ACTIVE->Set("uColor", &OPFONTMANAGER_ACTIVE->_color);
+	OPFONTMANAGER_EFFECT_ACTIVE->Set("uProj", &OPFONTMANAGER_ACTIVE->proj);
 }
 
 void OPfontRenderEnd() {
@@ -27,15 +25,15 @@ void OPfontRenderEnd() {
 
 void OPfontRender(OPfontUserTextNode* node, OPmat4* world) {
 	node->mesh.Bind();
-	OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
-  	OPeffectParamMat4v("uWorld", 1, world);
+	OPFONTMANAGER_EFFECT_ACTIVE->Bind();
+	OPFONTMANAGER_EFFECT_ACTIVE->Set("uWorld", world);
 	OPmeshRender();
 }
 
 void OPfontRender(OPfontBuiltTextNode* node, OPmat4* world) {
 	OPmeshPackerBind(&OPFONTMANAGER_ACTIVE->meshPacker);
-	OPeffectBind(OPFONTMANAGER_EFFECT_ACTIVE);
- 	OPeffectParamMat4v("uWorld", 1, world);
+	OPFONTMANAGER_EFFECT_ACTIVE->Bind();
+	OPFONTMANAGER_EFFECT_ACTIVE->Set("uWorld", world);
 	OPmeshPackedRender(node->packedMesh);
 }
 

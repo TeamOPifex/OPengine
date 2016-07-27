@@ -19,14 +19,17 @@ const OPchar* OPshaderTypeToString(OPshaderType shaderType) {
 OPshader* OPshaderGLInit(OPshader* shader, OPshaderType shaderType, const OPchar* source, OPuint sourceLen) {
 	OPshaderGL* shaderGL = (OPshaderGL*)OPalloc(sizeof(OPshaderGL));
 	shader->internalPtr = shaderGL;
+	shader->shaderType = shaderType;
 
 	// Set the Shader Type
 	switch (shaderType) {
 		case OPshaderType::VERTEX: {
 			OPGLFN(shaderGL->Handle = glCreateShader(GL_VERTEX_SHADER));
+			break;
 		}
 		case OPshaderType::FRAGMENT: {
 			OPGLFN(shaderGL->Handle = glCreateShader(GL_FRAGMENT_SHADER));
+			break;
 		}
 	}
 
@@ -42,10 +45,10 @@ OPshader* OPshaderGLInit(OPshader* shader, OPshaderType shaderType, const OPchar
 	OPGLFN(glGetShaderiv(shaderGL->Handle, GL_COMPILE_STATUS, &compileResult));
 
 	if (!compileResult) {
-		char msg[4096];
 		i32 length = 0;
-		OPGLFN(glGetShaderInfoLog(shaderGL->Handle, 4096, &length, msg));
-		OPlogErr("OPshaderGLInit::Failed to compile %s Shader::%s", OPshaderTypeToString(shaderType), msg);
+		OPlogErr("Failed to compile %s Shader", OPshaderTypeToString(shaderType));
+		OPGLFN(glGetShaderInfoLog(shaderGL->Handle, OPSCRATCHBUFFER_SIZE, &length, OPSCRATCHBUFFER));
+		OPlogErr("OPshaderGLInit::%s", OPSCRATCHBUFFER);
 		OPGLFN(glDeleteShader(shaderGL->Handle));
 		shaderGL->Compiled = false;
 	}

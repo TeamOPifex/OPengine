@@ -1,374 +1,396 @@
-#include <include/Rendering/OPrender.h>
 #include "./Human/include/Rendering/OPeffect.h"
-#include "./Human/include/Rendering/OpenGL.h"
-#include "./Human/include/Rendering/OPmesh.h"
-#include "./Core/include/Assert.h"
-#include "./Data/include/OPvector.h"
-#include "./Data/include/OPcman.h"
-#include "./Data/include/OPstring.h"
 
 OPeffect* OPEFFECT_ACTIVE = NULL;
-OPmesh* OPEFFECT_BOUND_MESH = NULL;
 
-OPeffect createEffect(OPshaderOLD vert,
-	OPshaderOLD frag,
-	OPshaderAttribute* Attributes,
-	OPint AttribCount,
-	const OPchar* Name,
-	ui32 stride) {
-
-	OPglError("OPeffectCreate:Error 0: %d");
-
-	//OPint nameLen = strlen(Name) + 1;
-	OPeffect effect = {
-		vert,
-		frag,
-		0,
-		0
-	};
-
-	// copy the name into the struct
-	// OPmemcpy(
-	// 	effect.Name,
-	// 	Name,
-	// 	nameLen > OP_EFFECT_NAME_LEN ? OP_EFFECT_NAME_LEN : nameLen
-	// 	); effect.Name[OP_EFFECT_NAME_LEN - 1] = '\0';
-
-    effect.Name = OPstringCopy(Name);
-	effect.Parameters = OPhashMapCreate(32);
-	effect.Attributes = OPlistCreate(AttribCount, sizeof(OPshaderAttribute));
-
-	effect.ProgramHandle = glCreateProgram();
-
-	glAttachShader(effect.ProgramHandle, vert);
-	glAttachShader(effect.ProgramHandle, frag);
-	glLinkProgram(effect.ProgramHandle);
-
-	i32 status;
-	glGetProgramiv(effect.ProgramHandle, GL_LINK_STATUS, &status);
-
-    if(status == GL_FALSE) {
-        OPchar buffer[2048];
-        GLsizei length;
-        glGetProgramInfoLog(effect.ProgramHandle, 2048, &length, buffer);
-        OPlog("Program Log: %s", buffer);
-        OPlog("vert: %d, frag: %d", vert, frag);
-    	OPlog("FAILED to link Shader Program: %s", Name);
-        OPglError("Shader Error");
-    }
-	ASSERT(status == GL_TRUE, "Failed to Link Shader Program");
-
-    glUseProgram(effect.ProgramHandle);
-
-	if (status == GL_TRUE) {
-		OPglError("OPeffectCreate:Error 7");
-
-		i32 result;
-		// create, and copy attributes into list
-		for (OPint i = 0; i < AttribCount; i++){
-			OPshaderAttribute attr = {
-				NULL,
-				Attributes[i].Type,
-				Attributes[i].Elements,
-				effect.Stride,
-				0
-			};
-
-			// TODO add more
-			switch (Attributes[i].Type){
-			case GL_FLOAT:
-				effect.Stride += (4 * Attributes[i].Elements);
-				break;
-			}
-			attr.Name = OPstringCopy(Attributes[i].Name);
-
-			result = glGetAttribLocation(
-				effect.ProgramHandle,
-				Attributes[i].Name
-				);
-			attr.Handle = (OPuint)result;
-
-			if (result < 0) {
-				OPlog("FAILED to find attribute: '%s' in effect '%s'", Attributes[i].Name, effect.Name);
-			}
-			else {
-				OPlistPush(effect.Attributes, (ui8*)&attr);
-			}
-		}
-
-		effect.Stride = stride;
-	}
-
-	return effect;
+void OPeffect::Init(OPshader* vert, OPshader* frag) {
+	OPhashMapInit(&uniforms, 32);
+	OPRENDERER_ACTIVE->Effect.Init(this, vert, frag);
 }
 
-//-----------------------------------------------------------------------------
-// effect creation
-OPeffect OPeffectCreate(
-	OPshaderOLD vert,
-	OPshaderOLD frag,
-	OPshaderAttribute* Attributes,
-	OPint AttribCount,
-	const OPchar* Name,
-	ui32 stride) {
-	return createEffect(vert, frag, Attributes, AttribCount, Name, stride);
-}
-//-----------------------------------------------------------------------------
-// effect creation
-OPeffect OPeffectCreate(
-	OPshaderOLD vert,
-	OPshaderOLD frag,
-	OPshaderAttribute* Attributes,
-	OPint AttribCount,
-	const OPchar* Name){
+OPshaderUniform* OPeffect::GetUniform(const OPchar* name) {
+	OPshaderUniform* result = NULL;
 
-	ui32 stride = 0;
-
-	for (OPint i = 0; i < AttribCount; i++){
-		// TODO add more
-		switch (Attributes[i].Type){
-			case GL_FLOAT:
-				stride += (4 * Attributes[i].Elements);
-				break;
-		}
+	bool found = OPhashMapGet(&uniforms, name, (void**)&result);
+	if (!found) {
+		OPlog("Shader Uniform not added: %s", name);
 	}
-	return createEffect(vert, frag, Attributes, AttribCount, Name, stride);
-}
-
-
-//-----------------------------------------------------------------------------
-// effect destruction
-OPint OPeffectUnload(OPeffect* effect){
-	if (OPEFFECT_ACTIVE == effect) {
-		OPeffectBind(NULL);
-	}
-	OPhashMapDestroy(effect->Parameters);
-	OPfree(effect->Parameters);
-	ui32 size = OPlistSize(effect->Attributes);
-	for (ui32 i = 0; i < size; i++) {
-		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistPop(effect->Attributes);
-		OPfree(attr->Name);
-	}
-	OPlistDestroy(effect->Attributes);
-	OPfree(effect->Attributes);
-	glDeleteProgram(effect->ProgramHandle);
-
-	return 1;
-}
-
-void OPeffectUse(OPeffect* effect) {
-    OPEFFECT_ACTIVE = effect;
-    if (OPEFFECT_ACTIVE == NULL) return;
-	glUseProgram(OPEFFECT_ACTIVE->ProgramHandle);
-}
-
-// effect managment
-OPint OPeffectBind(OPeffect* effect, ui32 stride){
-	OPglError("OPeffectBind:Clear Errors");
-
-	// if (OPEFFECT_ACTIVE == effect && OPEFFECT_BOUND_MESH == OPMESH_ACTIVE_PTR) {
-	// 	//OPlog("Already bound, redoing it anyway");
-	// 	//return 1;
-	// }
-
-
-	// disable attributes of the last effect
-	if (OPEFFECT_ACTIVE){
-		OPint attrCount = OPlistSize(OPEFFECT_ACTIVE->Attributes);
-		for (; attrCount--;){
-			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPEFFECT_ACTIVE->Attributes, attrCount);
-
-			glDisableVertexAttribArray((GLuint)attr->Handle);
-			if (OPglError("OPeffectBind:Error ")) {
-				OPlog("Effect %s: Failed to disable attrib %s", OPEFFECT_ACTIVE->Name, attr->Name);
-			}
-		}
-	}
-
-	OPEFFECT_ACTIVE = effect;
-	//OPEFFECT_BOUND_MESH = OPMESH_ACTIVE;
-
-	if (OPEFFECT_ACTIVE == NULL) return 1;
-
-	glUseProgram(OPEFFECT_ACTIVE->ProgramHandle);
-
-	if (OPglError("OPeffectBind:Failed to use Program")) {
-		OPlog("For Shader: %s (%d)", OPEFFECT_ACTIVE->Name, OPEFFECT_ACTIVE->ProgramHandle);
-		return -1;
-	}
-
-	// enable attributes of the new effect
-	OPint attrCount = OPlistSize(OPEFFECT_ACTIVE->Attributes);
-	for (; attrCount--;){
-		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPEFFECT_ACTIVE->Attributes, attrCount);
-
-		glEnableVertexAttribArray((GLuint)attr->Handle);
-		if (OPglError("OPeffectBind:Error ")) {
-			OPlog("Failed to enable attrib %s", attr->Name);
-		}
-
-		glVertexAttribPointer(
-			(GLuint)attr->Handle,
-			attr->Elements,
-			attr->Type,
-			GL_FALSE,
-			stride,
-			(void*)attr->Offset
-			);
-		if (OPglError("OPeffectBind:Error ")) {
-			OPlog("Effect %s: Failed to set attrib ptr %s", effect->Name, attr->Name);
-			OPlog("Very likely that there's no VAO bound");
-		}
-//		else {
-//			OPlog("Set %s", attr->Name);
-//		}
-	}
-
-	OPglError("OPeffectBind:Errors Occured");
-
-	return 1;
-
-}
-
-ui32 OPeffectGetParam(const OPchar* parameterName){
-	if(OPhashMapExists(OPEFFECT_ACTIVE->Parameters, parameterName)){
-		ui32* loc;
-		OPhashMapGet(
-			OPEFFECT_ACTIVE->Parameters,
-			parameterName,
-			(void**)&loc
-		);
-		return *loc;
-	}
-	else{
-		ui32 loc = (ui32)glGetUniformLocation(
-			OPEFFECT_ACTIVE->ProgramHandle,
-			parameterName
-		);
-
-		ui32* locPtr = (ui32*)OPalloc(sizeof(ui32));
-		*locPtr = loc;
-		OPhashMapPut(OPEFFECT_ACTIVE->Parameters, parameterName, &locPtr);
-		return loc;
-	}
-}
-
-//-----------------------------------------------------------------------------
-// effect creation
-OPeffect OPeffectGen(
-	const OPchar* vert,
-	const OPchar* frag,
-	ui32 attrs,
-	const OPchar* Name,
-	ui32 stride) {
-
-	OPlog("Building Effect");
-
-	OPvector* vector = OPvectorCreate(sizeof(OPshaderAttribute));
-
-
-	if (attrs & OPATTR_POSITION) {
-		OPshaderAttribute attr = { "aPosition", GL_FLOAT, 3 };
-		OPvectorPush(vector, (ui8*)&attr);
-	}
-
-	if (attrs & OPATTR_NORMAL) {
-		OPshaderAttribute attr = { "aNormal", GL_FLOAT, 3 };
-		OPvectorPush(vector, (ui8*)&attr);
-	}
-
-	if (attrs & OPATTR_TANGENT) {
-		OPshaderAttribute attr = { "aTangent", GL_FLOAT, 3 };
-		OPvectorPush(vector, (ui8*)&attr);
-	}
-
-	if (attrs & OPATTR_UV) {
-		OPshaderAttribute attr = { "aUV", GL_FLOAT, 2 };
-		OPvectorPush(vector, (ui8*)&attr);
-	}
-
-	if (attrs & OPATTR_BONES) {
-		OPshaderAttribute attr1 = { "aBones", GL_FLOAT, 4 };
-		OPvectorPush(vector, (ui8*)&attr1);
-		OPshaderAttribute attr2 = { "aWeights", GL_FLOAT, 4 };
-		OPvectorPush(vector, (ui8*)&attr2);
-	}
-
-	if (attrs & OPATTR_COLOR) {
-		OPshaderAttribute attr = { "aColor", GL_FLOAT, 3 };
-		OPvectorPush(vector, (ui8*)&attr);
-	}
-
-	if (attrs & OPATTR_COLOR4) {
-		OPshaderAttribute attr = { "aColor", GL_FLOAT, 4 };
-		OPvectorPush(vector, (ui8*)&attr);
-	}
-
-	OPuint AttribCount = vector->_size;
-	OPshaderAttribute* Attributes = (OPshaderAttribute*)OPalloc(sizeof(OPshaderAttribute)* vector->_size);
-	OPmemcpy(Attributes, vector->items, sizeof(OPshaderAttribute)* vector->_size);
-	OPvectorDestroy(vector);
-	OPfree(vector);
-
-
-	OPlog("Finding Effect Stride");
-
-	if (stride == 0){
-		for (OPuint i = 0; i < AttribCount; i++){
-			// TODO add more
-			switch (Attributes[i].Type){
-			case GL_FLOAT:
-				stride += (sizeof(f32) * Attributes[i].Elements);
-				break;
-			}
-		}
-	}
-
-	OPlog("Loading Vert for Effect: %s", vert);
-
-	if (!OPcmanIsLoaded(vert)) {
-		OPlog("Wasn't already loaded. Loading it.");
-		OPcmanLoad(vert);
-	} else {
-		OPlog("Already loaded.c");
-	}
-	OPshaderOLD* vertShader = (OPshaderOLD*)OPcmanGet(vert);
-
-	OPlog("Loading Frag for Effect: %s", frag);
-
-	if (!OPcmanIsLoaded(frag)) OPcmanLoad(frag);
-	OPshaderOLD* fragShader = (OPshaderOLD*)OPcmanGet(frag);
-
-	OPlog("Create the Effect: %s", Name);
-
-	OPeffect result = createEffect(*vertShader, *fragShader, Attributes, AttribCount, Name, stride);
-
-	OPfree(Attributes);
+	ASSERT(found, "The uniform must be added first");
 
 	return result;
 }
 
-OPeffect OPeffectGen(const OPchar* vert, const OPchar* frag, OPvertexLayout* layout) {
 
-	OPlog("Building Effect");
-
-	OPlog("Loading Vert for Effect: %s", vert);
-
-	if (!OPcmanIsLoaded(vert)) {
-		OPlog("Wasn't already loaded. Loading it.");
-		OPcmanLoad(vert);
-	}
-	else {
-		OPlog("Already loaded.c");
-	}
-	OPshaderOLD* vertShader = (OPshaderOLD*)OPcmanGet(vert);
-
-	OPlog("Loading Frag for Effect: %s", frag);
-
-	if (!OPcmanIsLoaded(frag)) OPcmanLoad(frag);
-	OPshaderOLD* fragShader = (OPshaderOLD*)OPcmanGet(frag);
-
-	OPlog("Create the Effect");
-
-	return createEffect(*vertShader, *fragShader, layout->attributes, layout->count, "GEN EFFECT", layout->stride);
-}
+//#include <include/Rendering/OPrender.h>
+//#include "./Human/include/Rendering/OPeffect.h"
+//#include "./Human/include/Rendering/OpenGL.h"
+//#include "./Human/include/Rendering/OPmesh.h"
+//#include "./Core/include/Assert.h"
+//#include "./Data/include/OPvector.h"
+//#include "./Data/include/OPcman.h"
+//#include "./Data/include/OPstring.h"
+//
+//OPeffect* OPEFFECT_ACTIVE = NULL;
+//OPmesh* OPEFFECT_BOUND_MESH = NULL;
+//
+//OPeffect createEffect(OPshaderOLD vert,
+//	OPshaderOLD frag,
+//	OPshaderAttribute* Attributes,
+//	OPint AttribCount,
+//	const OPchar* Name,
+//	ui32 stride) {
+//
+//	OPglError("OPeffectCreate:Error 0: %d");
+//
+//	//OPint nameLen = strlen(Name) + 1;
+//	OPeffect effect = {
+//		vert,
+//		frag,
+//		0,
+//		0
+//	};
+//
+//	// copy the name into the struct
+//	// OPmemcpy(
+//	// 	effect.Name,
+//	// 	Name,
+//	// 	nameLen > OP_EFFECT_NAME_LEN ? OP_EFFECT_NAME_LEN : nameLen
+//	// 	); effect.Name[OP_EFFECT_NAME_LEN - 1] = '\0';
+//
+//    effect.Name = OPstringCopy(Name);
+//	effect.Parameters = OPhashMapCreate(32);
+//	effect.Attributes = OPlistCreate(AttribCount, sizeof(OPshaderAttribute));
+//
+//	effect.ProgramHandle = glCreateProgram();
+//
+//	glAttachShader(effect.ProgramHandle, vert);
+//	glAttachShader(effect.ProgramHandle, frag);
+//	glLinkProgram(effect.ProgramHandle);
+//
+//	i32 status;
+//	glGetProgramiv(effect.ProgramHandle, GL_LINK_STATUS, &status);
+//
+//    if(status == GL_FALSE) {
+//        OPchar buffer[2048];
+//        GLsizei length;
+//        glGetProgramInfoLog(effect.ProgramHandle, 2048, &length, buffer);
+//        OPlog("Program Log: %s", buffer);
+//        OPlog("vert: %d, frag: %d", vert, frag);
+//    	OPlog("FAILED to link Shader Program: %s", Name);
+//        OPglError("Shader Error");
+//    }
+//	ASSERT(status == GL_TRUE, "Failed to Link Shader Program");
+//
+//    glUseProgram(effect.ProgramHandle);
+//
+//	if (status == GL_TRUE) {
+//		OPglError("OPeffectCreate:Error 7");
+//
+//		i32 result;
+//		// create, and copy attributes into list
+//		for (OPint i = 0; i < AttribCount; i++){
+//			OPshaderAttribute attr = {
+//				NULL,
+//				Attributes[i].Type,
+//				Attributes[i].Elements,
+//				effect.Stride,
+//				0
+//			};
+//
+//			// TODO add more
+//			switch (Attributes[i].Type){
+//			case GL_FLOAT:
+//				effect.Stride += (4 * Attributes[i].Elements);
+//				break;
+//			}
+//			attr.Name = OPstringCopy(Attributes[i].Name);
+//
+//			result = glGetAttribLocation(
+//				effect.ProgramHandle,
+//				Attributes[i].Name
+//				);
+//			attr.Handle = (OPuint)result;
+//
+//			if (result < 0) {
+//				OPlog("FAILED to find attribute: '%s' in effect '%s'", Attributes[i].Name, effect.Name);
+//			}
+//			else {
+//				OPlistPush(effect.Attributes, (ui8*)&attr);
+//			}
+//		}
+//
+//		effect.Stride = stride;
+//	}
+//
+//	return effect;
+//}
+//
+////-----------------------------------------------------------------------------
+//// effect creation
+//OPeffect OPeffectCreate(
+//	OPshaderOLD vert,
+//	OPshaderOLD frag,
+//	OPshaderAttribute* Attributes,
+//	OPint AttribCount,
+//	const OPchar* Name,
+//	ui32 stride) {
+//	return createEffect(vert, frag, Attributes, AttribCount, Name, stride);
+//}
+////-----------------------------------------------------------------------------
+//// effect creation
+//OPeffect OPeffectCreate(
+//	OPshaderOLD vert,
+//	OPshaderOLD frag,
+//	OPshaderAttribute* Attributes,
+//	OPint AttribCount,
+//	const OPchar* Name){
+//
+//	ui32 stride = 0;
+//
+//	for (OPint i = 0; i < AttribCount; i++){
+//		// TODO add more
+//		switch (Attributes[i].Type){
+//			case GL_FLOAT:
+//				stride += (4 * Attributes[i].Elements);
+//				break;
+//		}
+//	}
+//	return createEffect(vert, frag, Attributes, AttribCount, Name, stride);
+//}
+//
+//
+////-----------------------------------------------------------------------------
+//// effect destruction
+//OPint OPeffectUnload(OPeffect* effect){
+//	if (OPEFFECT_ACTIVE == effect) {
+//		OPeffectBind(NULL);
+//	}
+//	OPhashMapDestroy(effect->Parameters);
+//	OPfree(effect->Parameters);
+//	ui32 size = OPlistSize(effect->Attributes);
+//	for (ui32 i = 0; i < size; i++) {
+//		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistPop(effect->Attributes);
+//		OPfree(attr->Name);
+//	}
+//	OPlistDestroy(effect->Attributes);
+//	OPfree(effect->Attributes);
+//	glDeleteProgram(effect->ProgramHandle);
+//
+//	return 1;
+//}
+//
+//void OPeffectUse(OPeffect* effect) {
+//    OPEFFECT_ACTIVE = effect;
+//    if (OPEFFECT_ACTIVE == NULL) return;
+//	glUseProgram(OPEFFECT_ACTIVE->ProgramHandle);
+//}
+//
+//// effect managment
+//OPint OPeffectBind(OPeffect* effect, ui32 stride){
+//	OPglError("OPeffectBind:Clear Errors");
+//
+//	// if (OPEFFECT_ACTIVE == effect && OPEFFECT_BOUND_MESH == OPMESH_ACTIVE_PTR) {
+//	// 	//OPlog("Already bound, redoing it anyway");
+//	// 	//return 1;
+//	// }
+//
+//
+//	// disable attributes of the last effect
+//	if (OPEFFECT_ACTIVE){
+//		OPint attrCount = OPlistSize(OPEFFECT_ACTIVE->Attributes);
+//		for (; attrCount--;){
+//			OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPEFFECT_ACTIVE->Attributes, attrCount);
+//
+//			glDisableVertexAttribArray((GLuint)attr->Handle);
+//			if (OPglError("OPeffectBind:Error ")) {
+//				OPlog("Effect %s: Failed to disable attrib %s", OPEFFECT_ACTIVE->Name, attr->Name);
+//			}
+//		}
+//	}
+//
+//	OPEFFECT_ACTIVE = effect;
+//	//OPEFFECT_BOUND_MESH = OPMESH_ACTIVE;
+//
+//	if (OPEFFECT_ACTIVE == NULL) return 1;
+//
+//	glUseProgram(OPEFFECT_ACTIVE->ProgramHandle);
+//
+//	if (OPglError("OPeffectBind:Failed to use Program")) {
+//		OPlog("For Shader: %s (%d)", OPEFFECT_ACTIVE->Name, OPEFFECT_ACTIVE->ProgramHandle);
+//		return -1;
+//	}
+//
+//	// enable attributes of the new effect
+//	OPint attrCount = OPlistSize(OPEFFECT_ACTIVE->Attributes);
+//	for (; attrCount--;){
+//		OPshaderAttribute* attr = (OPshaderAttribute*)OPlistGet(OPEFFECT_ACTIVE->Attributes, attrCount);
+//
+//		glEnableVertexAttribArray((GLuint)attr->Handle);
+//		if (OPglError("OPeffectBind:Error ")) {
+//			OPlog("Failed to enable attrib %s", attr->Name);
+//		}
+//
+//		glVertexAttribPointer(
+//			(GLuint)attr->Handle,
+//			attr->Elements,
+//			attr->Type,
+//			GL_FALSE,
+//			stride,
+//			(void*)attr->Offset
+//			);
+//		if (OPglError("OPeffectBind:Error ")) {
+//			OPlog("Effect %s: Failed to set attrib ptr %s", effect->Name, attr->Name);
+//			OPlog("Very likely that there's no VAO bound");
+//		}
+////		else {
+////			OPlog("Set %s", attr->Name);
+////		}
+//	}
+//
+//	OPglError("OPeffectBind:Errors Occured");
+//
+//	return 1;
+//
+//}
+//
+//ui32 OPeffectGetParam(const OPchar* parameterName){
+//	if(OPhashMapExists(OPEFFECT_ACTIVE->Parameters, parameterName)){
+//		ui32* loc;
+//		OPhashMapGet(
+//			OPEFFECT_ACTIVE->Parameters,
+//			parameterName,
+//			(void**)&loc
+//		);
+//		return *loc;
+//	}
+//	else{
+//		ui32 loc = (ui32)glGetUniformLocation(
+//			OPEFFECT_ACTIVE->ProgramHandle,
+//			parameterName
+//		);
+//
+//		ui32* locPtr = (ui32*)OPalloc(sizeof(ui32));
+//		*locPtr = loc;
+//		OPhashMapPut(OPEFFECT_ACTIVE->Parameters, parameterName, &locPtr);
+//		return loc;
+//	}
+//}
+//
+////-----------------------------------------------------------------------------
+//// effect creation
+//OPeffect OPeffectGen(
+//	const OPchar* vert,
+//	const OPchar* frag,
+//	ui32 attrs,
+//	const OPchar* Name,
+//	ui32 stride) {
+//
+//	OPlog("Building Effect");
+//
+//	OPvector* vector = OPvectorCreate(sizeof(OPshaderAttribute));
+//
+//
+//	if (attrs & OPATTR_POSITION) {
+//		OPshaderAttribute attr = { "aPosition", GL_FLOAT, 3 };
+//		OPvectorPush(vector, (ui8*)&attr);
+//	}
+//
+//	if (attrs & OPATTR_NORMAL) {
+//		OPshaderAttribute attr = { "aNormal", GL_FLOAT, 3 };
+//		OPvectorPush(vector, (ui8*)&attr);
+//	}
+//
+//	if (attrs & OPATTR_TANGENT) {
+//		OPshaderAttribute attr = { "aTangent", GL_FLOAT, 3 };
+//		OPvectorPush(vector, (ui8*)&attr);
+//	}
+//
+//	if (attrs & OPATTR_UV) {
+//		OPshaderAttribute attr = { "aUV", GL_FLOAT, 2 };
+//		OPvectorPush(vector, (ui8*)&attr);
+//	}
+//
+//	if (attrs & OPATTR_BONES) {
+//		OPshaderAttribute attr1 = { "aBones", GL_FLOAT, 4 };
+//		OPvectorPush(vector, (ui8*)&attr1);
+//		OPshaderAttribute attr2 = { "aWeights", GL_FLOAT, 4 };
+//		OPvectorPush(vector, (ui8*)&attr2);
+//	}
+//
+//	if (attrs & OPATTR_COLOR) {
+//		OPshaderAttribute attr = { "aColor", GL_FLOAT, 3 };
+//		OPvectorPush(vector, (ui8*)&attr);
+//	}
+//
+//	if (attrs & OPATTR_COLOR4) {
+//		OPshaderAttribute attr = { "aColor", GL_FLOAT, 4 };
+//		OPvectorPush(vector, (ui8*)&attr);
+//	}
+//
+//	OPuint AttribCount = vector->_size;
+//	OPshaderAttribute* Attributes = (OPshaderAttribute*)OPalloc(sizeof(OPshaderAttribute)* vector->_size);
+//	OPmemcpy(Attributes, vector->items, sizeof(OPshaderAttribute)* vector->_size);
+//	OPvectorDestroy(vector);
+//	OPfree(vector);
+//
+//
+//	OPlog("Finding Effect Stride");
+//
+//	if (stride == 0){
+//		for (OPuint i = 0; i < AttribCount; i++){
+//			// TODO add more
+//			switch (Attributes[i].Type){
+//			case GL_FLOAT:
+//				stride += (sizeof(f32) * Attributes[i].Elements);
+//				break;
+//			}
+//		}
+//	}
+//
+//	OPlog("Loading Vert for Effect: %s", vert);
+//
+//	if (!OPcmanIsLoaded(vert)) {
+//		OPlog("Wasn't already loaded. Loading it.");
+//		OPcmanLoad(vert);
+//	} else {
+//		OPlog("Already loaded.c");
+//	}
+//	OPshaderOLD* vertShader = (OPshaderOLD*)OPcmanGet(vert);
+//
+//	OPlog("Loading Frag for Effect: %s", frag);
+//
+//	if (!OPcmanIsLoaded(frag)) OPcmanLoad(frag);
+//	OPshaderOLD* fragShader = (OPshaderOLD*)OPcmanGet(frag);
+//
+//	OPlog("Create the Effect: %s", Name);
+//
+//	OPeffect result = createEffect(*vertShader, *fragShader, Attributes, AttribCount, Name, stride);
+//
+//	OPfree(Attributes);
+//
+//	return result;
+//}
+//
+//OPeffect OPeffectGen(const OPchar* vert, const OPchar* frag, OPvertexLayout* layout) {
+//
+//	OPlog("Building Effect");
+//
+//	OPlog("Loading Vert for Effect: %s", vert);
+//
+//	if (!OPcmanIsLoaded(vert)) {
+//		OPlog("Wasn't already loaded. Loading it.");
+//		OPcmanLoad(vert);
+//	}
+//	else {
+//		OPlog("Already loaded.c");
+//	}
+//	OPshaderOLD* vertShader = (OPshaderOLD*)OPcmanGet(vert);
+//
+//	OPlog("Loading Frag for Effect: %s", frag);
+//
+//	if (!OPcmanIsLoaded(frag)) OPcmanLoad(frag);
+//	OPshaderOLD* fragShader = (OPshaderOLD*)OPcmanGet(frag);
+//
+//	OPlog("Create the Effect");
+//
+//	return createEffect(*vertShader, *fragShader, layout->attributes, layout->count, "GEN EFFECT", layout->stride);
+//}

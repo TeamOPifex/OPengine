@@ -35,12 +35,7 @@ void ExampleMeshBuilderEnter(OPgameState* last) {
 	meshBuilderExample.Mesh = OPmeshBuilderGen(builder);
 	OPmeshBuilderDestroy(builder);
 
-	meshBuilderExample.Effect = OPeffectGen(
-		"ColoredModel.vert",
-		"ColoredModel.frag",
-		OPATTR_POSITION | OPATTR_COLOR,
-		"MeshBuilder Effect",
-		meshBuilderExample.Mesh.vertexLayout.stride);
+	meshBuilderExample.Effect.Init("ColoredModel.vert", "ColoredModel.frag");
 
 	meshBuilderExample.Camera = OPcamPersp(
 		OPVEC3_ONE * 2.0,
@@ -83,7 +78,7 @@ void ExampleMeshBuilderRender(OPfloat delta) {
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleMeshBuilderExit(OPgameState* next) {
 	// Clean up phase for the Game State
-	OPeffectUnload(&meshBuilderExample.Effect);
+	meshBuilderExample.Effect.Destroy();
 	return 0;
 }
 

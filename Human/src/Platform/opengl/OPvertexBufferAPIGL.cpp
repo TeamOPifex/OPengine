@@ -23,12 +23,16 @@ void OPvertexBufferGLSetData(OPvertexBuffer* vertexBuffer, ui32 elementSize, OPu
 }
 
 void OPvertexBufferGLSetLayout(OPvertexBuffer* vertexBuffer, OPvertexLayout* vertexLayout) {
-	for (ui32 i = 0; i < vertexLayout->count; i++)
+	ui32 i = 0;
+	for (; i < vertexLayout->count; i++)
 	{
 		OPshaderAttribute shaderAttribute = vertexLayout->attributes[i];
 		OPGLFN(glEnableVertexAttribArray(i));
 		OPGLFN(glVertexAttribPointer(i, shaderAttribute.Elements, shaderAttribute.Type, GL_FALSE, vertexLayout->stride, (const void*)shaderAttribute.Offset));
 	}
+	//for (; i < 8; i++) {
+	//	OPGLFN(glDisableVertexAttribArray(i));
+	//}
 }
 
 void OPvertexBufferGLBind(OPvertexBuffer* vertexBuffer) {
@@ -49,6 +53,7 @@ void OPvertexBufferAPIGLInit(OPvertexBufferAPI* vertexBuffer) {
 	vertexBuffer->Init = OPvertexBufferGLInit;
 	vertexBuffer->Create = OPvertexBufferGLCreate;
 	vertexBuffer->SetData = OPvertexBufferGLSetData;
+	vertexBuffer->SetLayout = OPvertexBufferGLSetLayout;
 	vertexBuffer->Bind = OPvertexBufferGLBind;
 	vertexBuffer->Unbind = OPvertexBufferGLUnbind;
 	vertexBuffer->Destroy = OPvertexBufferGLDestroy;

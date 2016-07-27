@@ -37,12 +37,7 @@ void ExampleMyoEnter(OPgameState* last) {
 	// which requires the attributes are given in a set order
 	// Position (vec3), then Normal (vec3)
 	// For more granular control use OPeffectCreate
-	myoExample->Effect = OPeffectGen(
-		"SimpleModel.vert",
-		"SimpleModel.frag",
-		OPATTR_POSITION | OPATTR_NORMAL,
-		"Model Effect",
-		myoExample->Mesh->vertexLayout.stride);
+	myoExample->Effect.Init("SimpleModel.vert", "SimpleModel.frag");
 
 	// Sets up the camera as a perpsective camera for rendering
 	myoExample->Camera = OPcamPersp(
@@ -101,7 +96,7 @@ OPint ExampleMyoUpdate(OPtimer* time) {
 	OPbindMeshEffectWorldCam(myoExample->Mesh, &myoExample->Effect, &world, &myoExample->Camera);
 
 	// Sets the vLightDirection uniform on the Effect that is currently bound (myoExample->Effect)
-	OPeffectParamVec3("vLightDirection", &myoExample->LightDirection);
+	OPeffectSet("vLightDirection", &myoExample->LightDirection);
 
 	// Renders to the screen the currently bound Mesh (myoExample->Mesh)
 	OPmeshRender();
@@ -122,7 +117,7 @@ void ExampleMyoRender(OPfloat delta) {
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleMyoExit(OPgameState* next) {
 	// Clean up phase for the Game State
-	OPeffectUnload(&myoExample->Effect);
+	myoExample->Effect.Destroy();
 	OPfree(myoExample);
 	return 0;
 }

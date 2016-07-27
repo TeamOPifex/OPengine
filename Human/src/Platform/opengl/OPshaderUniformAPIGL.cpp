@@ -10,7 +10,13 @@ OPshaderUniform* OPshaderUniformGLInit(OPshaderUniform* shaderUniform, OPeffect*
 
 	OPeffectGL* effectGL = (OPeffectGL*)effect->internalPtr;
 	
-	shaderUniformGL->Handle = glGetUniformLocation(effectGL->Handle, name);
+	
+	GLint result = glGetUniformLocation(effectGL->Handle, name);
+	if (result > -1) {
+		shaderUniformGL->Handle = result;
+	}
+
+	shaderUniform->Found = result > -1;
 
 	return shaderUniform;
 }

@@ -55,12 +55,7 @@ void ExampleMouseIntersectEnter(OPgameState* last) {
 	// which requires the attributes are given in a set order
 	// Position (vec3), then Normal (vec3)
 	// For more granular control use OPeffectCreate
-	mouseIntersectExample.Effect = OPeffectGen(
-		"ColoredModel.vert",
-		"ColoredModel.frag",
-		OPATTR_POSITION | OPATTR_COLOR,
-		"Model Effect",
-		mouseIntersectExample.Mesh.vertexLayout.stride);
+	mouseIntersectExample.Effect.Init( "ColoredModel.vert", "ColoredModel.frag");
 
 	// Sets up the camera as a perpsective camera for rendering
 	mouseIntersectExample.Camera = OPcamPersp(
@@ -181,7 +176,7 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	OPbindMeshEffectWorldCam(&mouseIntersectExample.Mesh, &mouseIntersectExample.Effect, &world, &mouseIntersectExample.Camera);
 
 	// Sets the vLightDirection uniform on the Effect that is currently bound (modelExample->Effect)
-	OPeffectParamVec3("vLightDirection", &mouseIntersectExample.LightDirection);
+	OPeffectSet("vLightDirection", &mouseIntersectExample.LightDirection);
 
 	// Renders to the screen the currently bound Mesh (modelExample->Mesh)
 	OPmeshRender();
@@ -191,7 +186,7 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 		&mouseIntersectExample.Effect,
 		&world2,
 		&mouseIntersectExample.Camera);
-	OPeffectParamVec3("vLightDirection", &mouseIntersectExample.LightDirection);
+	OPeffectSet("vLightDirection", &mouseIntersectExample.LightDirection);
 	OPmeshRender();
 
 	if(OPmouseIsDown(OPMOUSE_LBUTTON)) {
@@ -200,7 +195,7 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 			&mouseIntersectExample.Effect,
 			&world3,
 			&mouseIntersectExample.Camera);
-		OPeffectParamVec3("vLightDirection", &mouseIntersectExample.LightDirection);
+		OPeffectSet("vLightDirection", &mouseIntersectExample.LightDirection);
 		OPmeshRender();
 	}
 
@@ -231,7 +226,7 @@ void ExampleMouseIntersectRender(OPfloat delta) {
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleMouseIntersectExit(OPgameState* next) {
 	// Clean up phase for the Game State
-	OPeffectUnload(&mouseIntersectExample.Effect);
+	mouseIntersectExample.Effect.Destroy();
 	return 0;
 }
 

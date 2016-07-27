@@ -33,11 +33,7 @@ void ExampleCubeMapEnter(OPgameState* last) {
     cubeMapExample.Mesh = OPcubeCreate(OPvec3Create(1,0,0));
     cubeMapExample.SphericalCube = OPsphericalCubeCreate(faces2);
 
-    cubeMapExample.Effect = OPeffectGen(
-            "CubeMap.vert", "CubeMap.frag",
-            OPATTR_POSITION,
-            "Cube Map Effect",
-            cubeMapExample.SphericalCube.sides[0].vertexLayout.stride);
+    cubeMapExample.Effect.Init("CubeMap.vert", "CubeMap.frag");
 
     cubeMapExample.Camera = OPcamPersp(
         OPVEC3_ONE, OPVEC3_ZERO, OPVEC3_UP,
@@ -83,7 +79,7 @@ void ExampleCubeMapRender(OPfloat delta) {
 		OPbindMeshEffectWorldCam(&cubeMapExample.SphericalCube.sides[i], &cubeMapExample.Effect, &world, &cubeMapExample.Camera);
 
 		OPtextureCubeClearActive();
-		OPeffectParam("uColorTexture", &cubeMapExample.CubeMap);
+		//OPeffectSet("uColorTexture", &cubeMapExample.CubeMap);
 
 		// Renders to the screen the currently bound Mesh (sphericalCubeExample->Mesh)
 		OPmeshRender();
@@ -93,7 +89,7 @@ void ExampleCubeMapRender(OPfloat delta) {
 }
 
 OPint ExampleCubeMapExit(OPgameState* next) {
-    OPeffectUnload(&cubeMapExample.Effect);
+    cubeMapExample.Effect.Destroy();
     return 0;
 }
 

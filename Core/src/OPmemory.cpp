@@ -5,6 +5,8 @@ OPint OPallocations = 0;
 OPint OPdeallocations = 0;
 #endif
 
+OPchar OPSCRATCHBUFFER[OPSCRATCHBUFFER_SIZE];
+
 void* OPallocatorBasicAlloc(void* alloc, OPuint bytes) {
 	#ifndef OPIFEX_OPTION_RELEASE
 		OPallocations++;

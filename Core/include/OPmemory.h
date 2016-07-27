@@ -5,6 +5,9 @@
 #include "OPallocator.h"
 #include <string.h>
 
+#define OPSCRATCHBUFFER_SIZE 4096
+extern OPchar OPSCRATCHBUFFER[OPSCRATCHBUFFER_SIZE];
+
 #ifndef OPIFEX_OPTION_RELEASE
 extern OPint OPallocations;
 extern OPint OPdeallocations;

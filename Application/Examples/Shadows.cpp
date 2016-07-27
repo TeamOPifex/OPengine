@@ -90,24 +90,10 @@ typedef struct {
 			{ "aUV", GL_FLOAT, 2 }
 		};
 
-		OPshaderOLD* vert = (OPshaderOLD*)OPcmanLoadGet("Common/TexturedShadow.vert");
-		OPshaderOLD* frag = (OPshaderOLD*)OPcmanLoadGet("Common/TexturedShadow.frag");
-		Effect = OPeffectCreate(
-			*vert,
-			*frag,
-			attribs,
-			3,
-			"Textured Effect",
-			Model.mesh->vertexLayout.stride
-		);
-		Effect2 = OPeffectCreate(
-			*vert,
-			*frag,
-			attribs,
-			3,
-			"Textured Effect 2",
-			GroundMesh.vertexLayout.stride
-		);
+		OPshader* vert = (OPshader*)OPcmanLoadGet("Common/TexturedShadow.vert");
+		OPshader* frag = (OPshader*)OPcmanLoadGet("Common/TexturedShadow.frag");
+		Effect.Init(vert, frag);
+		Effect2.Init(vert, frag);
 
 		OPmat4Log("Bias", BiasShadow);
 
@@ -176,16 +162,9 @@ typedef struct {
 			{ "aPosition", GL_FLOAT, 3 }
 		};
 
-		vert = (OPshaderOLD*)OPcmanLoadGet("Common/DepthRTT.vert");
-		frag = (OPshaderOLD*)OPcmanLoadGet("Common/DepthRTT.frag");
-		ShadowEffect = OPeffectCreate(
-			*vert,
-			*frag,
-			attribsShadow,
-			1,
-			"Shadow Effect",
-			Model.mesh->vertexLayout.stride
-		);
+		vert = (OPshader*)OPcmanLoadGet("Common/DepthRTT.vert");
+		frag = (OPshader*)OPcmanLoadGet("Common/DepthRTT.frag");
+		ShadowEffect.Init(vert, frag);
 
 		// Create the camera used for the shadow. This is the position
 		// and direction of the light being used for shadows.

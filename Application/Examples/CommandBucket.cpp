@@ -27,10 +27,7 @@ struct CommandBucketExample {
     	model.Init("output.opm");
     	model2.Init("patrick.opm");
 
-    	effect = OPeffectGen(
-    		"ColoredModel.vert", "ColoredModel.frag",
-    		OPATTR_POSITION | OPATTR_COLOR,
-    		"Model Effect", model.mesh->vertexLayout.stride);
+		effect.Init("ColoredModel.vert", "ColoredModel.frag");
 
     	camera = OPcamPersp(
     		OPVEC3_ONE * 2.0, OPVEC3_UP, OPVEC3_UP,

@@ -53,16 +53,9 @@ void ExampleSkinningEnter(OPgameState* last) {
 	};
 
 	skinningExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	OPshaderOLD* vert = (OPshaderOLD*)OPcmanGet("Skinning.vert");
-	OPshaderOLD* frag = (OPshaderOLD*)OPcmanGet("Skinning.frag");
-	*skinningExample->Effect = OPeffectCreate(
-		*vert,
-		*frag,
-		attribs,
-		5,
-		"Model Effect",
-		skinningExample->Mesh->vertexLayout.stride
-		);
+	OPshader* vert = (OPshader*)OPcmanGet("Skinning.vert");
+	OPshader* frag = (OPshader*)OPcmanGet("Skinning.frag");
+	skinningExample->Effect->Init(vert, frag);
 
 	skinningExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
 	f32 pos = 10 * SCALE;
@@ -139,22 +132,22 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	OPskeletonUpdate(skinningExample->skeleton);
 
 	skinningExample->Mesh->Bind();
-	OPeffectBind(skinningExample->Effect);
+	skinningExample->Effect->Bind();
 
 	OPmat4 world;
 	OPmat4Identity(&world);
 	//OPmat4BuildRotX(&world,- OPpi / 2.0);
 
-	OPeffectParamMat4("uWorld", &world);
-	OPeffectParamMat4("uView", &skinningExample->Camera->view);
-	OPeffectParamMat4("uProj", &skinningExample->Camera->proj);
+	OPeffectSet("uWorld", &world);
+	OPeffectSet("uView", &skinningExample->Camera->view);
+	OPeffectSet("uProj", &skinningExample->Camera->proj);
 
-	OPeffectParamMat4v("uBones", skinningExample->skeleton->hierarchyCount, skinningExample->skeleton->skinned);
+	OPeffectSet("uBones", skinningExample->skeleton->hierarchyCount, skinningExample->skeleton->skinned);
 
 	OPvec3 light = OPvec3Create(0, 10, 0);
-	OPeffectParamVec3("uLightPosition", &light);
+	OPeffectSet("uLightPosition", &light);
 
-	OPeffectParamBindTex("uColorTexture", skinningExample->texture);
+	OPeffectSet("uColorTexture", skinningExample->texture);
 
 	OPmeshRender();
 
@@ -165,7 +158,7 @@ void ExampleSkinningRender(OPfloat delta) {
 
 }
 OPint ExampleSkinningExit(OPgameState* next) {
-	OPeffectUnload(skinningExample->Effect);
+	skinningExample->Effect->Destroy();
 	OPfree(skinningExample->Effect);
 	OPfree(skinningExample->Camera);
 	return 0;

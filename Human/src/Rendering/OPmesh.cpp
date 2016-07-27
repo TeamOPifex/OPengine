@@ -49,6 +49,7 @@ void OPmeshBuild(ui32 vertSize, OPindexSize indSize,
 //-----------------------------------------------------------------------------
 void OPmesh::Bind(){
 	OPrenderBindBuffer(&vertexBuffer);
+	OPRENDERER_ACTIVE->VertexBuffer.SetLayout(&vertexBuffer, &vertexLayout);
 	OPrenderBindBuffer(&indexBuffer);
 
 	OPMESH_ACTIVE_PTR = OPMESH_ACTIVE = this;

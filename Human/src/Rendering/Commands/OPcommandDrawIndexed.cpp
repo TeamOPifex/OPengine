@@ -8,11 +8,11 @@ void OPcommandDrawIndex(void* data, OPcam* camera) {
 	dc->indexBuffer->Bind();
 	//OPrenderBindBuffer(dc->vertexBuffer);
 	//OPrenderBindBuffer(dc->indexBuffer);
-	OPmaterialBind(dc->material, dc->stride);
-	OPeffectParam(camera);
+	OPmaterialBind(dc->material);// , dc->stride);
+	OPeffectSet(camera);
 
 	// Per mesh Shader Data
-	OPeffectParam("uWorld", *dc->world);
+	OPeffectSet("uWorld", dc->world);
 
 	OPmeshRender();
 }
@@ -27,10 +27,10 @@ void OPcommandDrawIndexTexture(void* data, OPcam* camera) {
 	//OPrenderBindBuffer(dc->indexBuffer);
 
 	OPglError("ERROR PRIOR TO MATERIAL BIND");
-	OPmaterialBind(dc->material, dc->stride);
+	OPmaterialBind(dc->material);// , dc->stride);
 
 	OPglError("ERROR PRIOR TO CAMERA BIND");
-	OPeffectParam(camera);
+	OPeffectSet(camera);
 
 
 	OPglError("ERROR PRIOR TO CLEAR ACTIVE");
@@ -39,13 +39,13 @@ void OPcommandDrawIndexTexture(void* data, OPcam* camera) {
 	OPglError("ERROR PRIOR TO TEXTURE BIND");
 	//ui32 tex = OPtextureBind(dc->texture);
 	//OPglError("ERROR PRIOR TO COLOR TEX BIND");
-	OPeffectParamBindTex("uColorTexture", dc->texture);
+	OPeffectSet("uColorTexture", dc->texture);
 	//OPeffectParam("uColorTexture", tex);
 
 	OPglError("ERROR PRIOR TO WORLD BIND %d");
 
 	// Per mesh Shader Data
-	OPeffectParam("uWorld", *dc->world);
+	OPeffectSet("uWorld", dc->world);
 
 	OPglError("ERROR PRIOR TO RENDER");
 

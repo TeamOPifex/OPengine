@@ -41,12 +41,7 @@ void ExampleModelEnter(OPgameState* last) {
 	// which requires the attributes are given in a set order
 	// Position (vec3), then Normal (vec3)
 	// For more granular control use OPeffectCreate
-	modelExample->Effect = OPeffectGen(
-		"ColoredModel.vert",
-		"ColoredModel.frag",
-		OPATTR_POSITION | OPATTR_COLOR,
-		"Model Effect",
-		modelExample->Mesh.vertexLayout.stride);
+	modelExample->Effect.Init("ColoredModel.vert", "ColoredModel.frag");
 		
 
 	// Sets up the camera as a perpsective camera for rendering
@@ -108,7 +103,7 @@ void ExampleModelRender(OPfloat delta) {
 	OPbindMeshEffectWorldCam(&modelExample->Mesh, &modelExample->Effect, &world, &modelExample->Camera);
 
 	// Sets the vLightDirection uniform on the Effect that is currently bound (modelExample->Effect)
-	OPeffectParamVec3("vLightDirection", &modelExample->LightDirection);
+	OPeffectSet("vLightDirection", &modelExample->LightDirection);
 
 	// Renders to the screen the currently bound Mesh (modelExample->Mesh)
 	OPmeshRender();
@@ -135,7 +130,7 @@ void ExampleModelRender(OPfloat delta) {
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleModelExit(OPgameState* next) {
 	// Clean up phase for the Game State
-	OPeffectUnload(&modelExample->Effect);
+	modelExample->Effect.Destroy();
 	OPfree(modelExample);
 	return 0;
 }

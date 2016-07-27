@@ -256,7 +256,7 @@ void ExampleSelectorRender(OPfloat delta) {
 }
 
 OPint ExampleSelectorExit(OPgameState* next) {
-	OPeffectBind(NULL);
+	OPEFFECT_ACTIVE = NULL;
 	OPfontManagerDestroy(exampleSelector.FontManager);
 	OPtexture2DDestroy(exampleSelector.Background);
 	OPtexture2DUnloadGlobals();

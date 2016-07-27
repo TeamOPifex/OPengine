@@ -267,6 +267,11 @@ OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text, float 
 	OPfontUserTextNode node;
 	node.Width = size.x;
 	node.mesh = OPmeshCreate();
+	OPvertexLayoutBuilder builder;
+	builder.Init();
+	builder.Add(OPattributes::POSITION);
+	builder.Add(OPattributes::UV);
+	node.mesh.vertexLayout = builder.Build();
 
 	node.mesh.Bind();
 	OPmeshBuild(sizeof(OPvertexTex), OPindexSize::SHORT, vertices->_size, indices->_size, vertices->items, indices->items);

@@ -23,12 +23,7 @@ void ExampleMaterialEnter(OPgameState* last) {
 
 	materialExample.Model.mesh = (OPmesh*)OPcmanLoadGet("output.opm");
 
-	materialExample.Effect = OPeffectGen(
-		"ColoredModel.vert",
-		"ColoredModel.frag",
-		OPATTR_POSITION | OPATTR_COLOR,
-		"Model Effect",
-		materialExample.Model.mesh->vertexLayout.stride);
+	materialExample.Effect.Init("ColoredModel.vert", "ColoredModel.frag");
 
 	materialExample.Camera = OPcamPersp(
 		OPVEC3_ONE * 2.0,
@@ -70,7 +65,7 @@ void ExampleMaterialRender(OPfloat delta) {
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleMaterialExit(OPgameState* next) {
 	// Clean up phase for the Game State
-	OPeffectUnload(&materialExample.Effect);
+	materialExample.Effect.Destroy();
 	return 0;
 }
 
