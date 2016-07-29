@@ -2,18 +2,14 @@
 #include "./OPengine.h"
 
 void OPvoxelGeneratorInit(struct OPvoxelGenerator* gen, OPuint features) {
-	gen->VertexSize = 0;
-	gen->VertexSize += ((features & (OPuint)OPattributes::POSITION) > 0) * sizeof(OPvec3);
-	gen->VertexSize += ((features & (OPuint)OPattributes::NORMAL) > 0) * sizeof(OPvec3);
-	gen->VertexSize += ((features & (OPuint)OPattributes::TANGENT) > 0) * sizeof(OPvec3);
-	gen->VertexSize += ((features & (OPuint)OPattributes::UV) > 0) * sizeof(OPvec2);
-	gen->VertexSize += ((features & (OPuint)OPattributes::BONES) > 0) * sizeof(OPvec4) * 2;
-	gen->VertexSize += ((features & (OPuint)OPattributes::COLOR) > 0) * sizeof(OPvec3);
+	OPvertexLayoutBuilder builder;
+	builder.Init(features);
+	gen->VertexSize = builder.Build();
 
 	gen->Features = features;
-	gen->Vertices = OPlistCreate(512, gen->VertexSize);
+	gen->Vertices = OPlistCreate(512, gen->VertexSize.stride);
 	gen->Indices = OPlistCreate(512, sizeof(ui32));
-	gen->Vertex = OPalloc(gen->VertexSize);
+	gen->Vertex = OPalloc(gen->VertexSize.stride);
 	gen->IndexOffset = 0;
 
 	gen->HideFace[0] = 0;
@@ -255,12 +251,12 @@ OPmeshDesc OPvoxelGeneratorBuildDesc(struct OPvoxelGenerator* gen) {
 	ui32 verticeCount = (ui32)OPlistSize(gen->Vertices);
 	ui32 indiceCount = (ui32)OPlistSize(gen->Indices);
 
-	void* verts = OPalloc(gen->VertexSize* verticeCount);
+	void* verts = OPalloc(gen->VertexSize.stride * verticeCount);
 	ui32* inds = (ui32*)OPalloc(sizeof(ui32)* indiceCount);
 
 	for (ui32 i = 0; i < verticeCount; i++) {
 		ui8* data = OPlistGet(gen->Vertices, i);
-		OPmemcpy((void*)((OPuint)verts + gen->VertexSize* i), data, gen->VertexSize);
+		OPmemcpy((void*)((OPuint)verts + gen->VertexSize.stride * i), data, gen->VertexSize.stride);
 	}
 
 	OPlog("Index count: %d", indiceCount);
@@ -271,7 +267,7 @@ OPmeshDesc OPvoxelGeneratorBuildDesc(struct OPvoxelGenerator* gen) {
 
 	OPmeshDesc result = {
 		verts,
-		(ui32)gen->VertexSize,
+		gen->VertexSize,
 		verticeCount,
 		inds,
 		OPindexSize::INT,
@@ -283,11 +279,11 @@ OPmeshDesc OPvoxelGeneratorBuildDesc(struct OPvoxelGenerator* gen) {
 
 OPmesh* OPvoxelGeneratorBuild(struct OPvoxelGenerator* gen) {
 
-	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
-	(*mesh) = OPmeshCreate();
-	mesh->Bind();
 
 	OPmeshDesc desc = OPvoxelGeneratorBuildDesc(gen);
+	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
+	(*mesh) = OPmeshCreate(desc.VertexSize);
+	mesh->Bind();
 
 	OPmeshBuild(desc.VertexSize, desc.IndexSize, desc.VertexCount, desc.IndexCount, desc.Vertices, desc.Indices);
 

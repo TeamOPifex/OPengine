@@ -111,13 +111,14 @@ void OPrendererShutdownGL() {
 #include "./Human/include/Platform/opengl/OPframeBufferDepthGL.h"
 #include "./Human/include/Platform/opengl/OPindexBufferGL.h"
 #include "./Human/include/Platform/opengl/OPshaderAPIGL.h"
+#include "./Human/include/Platform/opengl/OPshaderAttributeAPIGL.h"
 #include "./Human/include/Platform/opengl/OPshaderResourceGL.h"
 #include "./Human/include/Platform/opengl/OPshaderUniformAPIGL.h"
 #include "./Human/include/Platform/opengl/OPtextureAPIGL.h"
 #include "./Human/include/Platform/opengl/OPtexture2DGL.h"
 #include "./Human/include/Platform/opengl/OPtextureCubeGL.h"
 #include "./Human/include/Platform/opengl/OPtextureDepthGL.h"
-#include "./Human/include/Platform/opengl/OPvertexArrayGL.h"
+#include "./Human/include/Platform/opengl/OPvertexArrayAPIGL.h"
 #include "./Human/include/Platform/opengl/OPvertexBufferAPIGL.h"
 
 OPrenderer OPRENDERERGL;
@@ -139,13 +140,14 @@ OPrenderer* OPrendererGL() {
 	OPframeBufferDepthGLInit(&OPRENDERERGL.FrameBufferDepth);
 	OPindexBufferAPIGLInit(&OPRENDERERGL.IndexBuffer);
 	OPshaderAPIGLInit(&OPRENDERERGL.Shader);
+	OPshaderAttributeAPIGLInit(&OPRENDERERGL.ShaderAttribute);
 	OPshaderResourceGLInit(&OPRENDERERGL.ShaderResource);
 	OPshaderUniformAPIGLInit(&OPRENDERERGL.ShaderUniform);
 	OPtextureAPIGLInit(&OPRENDERERGL.Texture);
 	OPtexture2DGLInit(&OPRENDERERGL.Texture2D);
 	OPtextureCubeGLInit(&OPRENDERERGL.TextureCube);
 	OPtextureDepthGLInit(&OPRENDERERGL.TextureDepth);
-	OPvertexArrayGLInit(&OPRENDERERGL.VertexArray);
+	OPvertexArrayAPIGLInit(&OPRENDERERGL.VertexArray);
 	OPvertexBufferAPIGLInit(&OPRENDERERGL.VertexBuffer);
 
 	return &OPRENDERERGL;

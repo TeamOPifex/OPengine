@@ -13,11 +13,14 @@ ui64 OPMESH_GLOBAL_ID = 1;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPmesh OPmeshCreate(){
+OPmesh OPmeshCreate(OPvertexLayout vertexLayout){
 	OPmesh out;
 
-	OPRENDERER_ACTIVE->VertexBuffer.Init(&out.vertexBuffer);
-	OPRENDERER_ACTIVE->IndexBuffer.Init(&out.indexBuffer);
+	out.vertexLayout = vertexLayout;
+	out.vertexArray.Init(&vertexLayout)->Bind();
+	out.vertexBuffer.Init()->Bind();
+	out.vertexBuffer.SetLayout(&vertexLayout);
+	out.indexBuffer.Init()->Bind();
 
 	out.Id = OPMESH_GLOBAL_ID++;
 
@@ -27,7 +30,7 @@ OPmesh OPmeshCreate(){
 OPmesh* OPmeshCreate(OPmeshDesc desc) {
 	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
     mesh->Id = OPMESH_GLOBAL_ID++;
-	(*mesh) = OPmeshCreate();
+	(*mesh) = OPmeshCreate(desc.VertexSize);
 	mesh->Bind();
 
 	OPmeshBuild(desc.VertexSize, desc.IndexSize, desc.VertexCount, desc.IndexCount, desc.Vertices, desc.Indices);
@@ -35,12 +38,22 @@ OPmesh* OPmeshCreate(OPmeshDesc desc) {
 	return mesh;
 }
 
+void OPmesh::SetVertexLayout(OPvertexLayout* vertexLayoutUpdate) {
+	vertexArray.Bind();
+	vertexBuffer.Bind();
+	vertexLayout = *vertexLayoutUpdate;
+	vertexBuffer.SetLayout(&vertexLayout);
+}
+
 //-----------------------------------------------------------------------------
-void OPmeshBuild(ui32 vertSize, OPindexSize indSize,
+void OPmeshBuild(OPvertexLayout vertexLayout, OPindexSize indSize,
 						 OPuint vertCount, OPuint indCount,
 						 void* vertices, void* indices){
+	
+	OPMESH_ACTIVE->vertexArray.Bind();
 	OPMESH_ACTIVE->indexBuffer.SetData(indSize, indCount, indices);
-	OPMESH_ACTIVE->vertexBuffer.SetData(vertSize, vertCount, vertices);
+	OPMESH_ACTIVE->vertexBuffer.SetData(vertexLayout.stride, vertCount, vertices);
+	OPMESH_ACTIVE->vertexLayout = vertexLayout;
 
 	OPMESH_ACTIVE->Vertices = vertices;
 	OPMESH_ACTIVE->Indicies = indices;
@@ -48,8 +61,9 @@ void OPmeshBuild(ui32 vertSize, OPindexSize indSize,
 
 //-----------------------------------------------------------------------------
 void OPmesh::Bind(){
+	OPRENDERER_ACTIVE->VertexArray.Bind(&vertexArray);
 	OPrenderBindBuffer(&vertexBuffer);
-	OPRENDERER_ACTIVE->VertexBuffer.SetLayout(&vertexBuffer, &vertexLayout);
+	//OPRENDERER_ACTIVE->VertexBuffer.SetLayout(&vertexBuffer, &vertexLayout);
 	OPrenderBindBuffer(&indexBuffer);
 
 	OPMESH_ACTIVE_PTR = OPMESH_ACTIVE = this;

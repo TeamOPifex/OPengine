@@ -30,11 +30,15 @@ void OPindexBufferGLBind(OPindexBuffer* indexBuffer) {
 
 void OPindexBufferGLUnbind(OPindexBuffer* indexBuffer) {
 	OPindexBufferAPIGL* buffer = (OPindexBufferAPIGL*)indexBuffer->internalPointer;
+	OPGLFN(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 }
 
 void OPindexBufferGLDestroy(OPindexBuffer* indexBuffer) {
 	OPindexBufferAPIGL* buffer = (OPindexBufferAPIGL*)indexBuffer->internalPointer;
+	OPindexBufferGLUnbind(indexBuffer);
 	OPGLFN(glDeleteBuffers(1, &buffer->Handle));
+	OPfree(buffer);
+	indexBuffer->internalPointer = NULL;
 }
 
 void OPindexBufferAPIGLInit(OPindexBufferAPI* indexBuffer) {

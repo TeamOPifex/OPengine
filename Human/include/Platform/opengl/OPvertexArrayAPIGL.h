@@ -1,12 +1,12 @@
 #ifndef OPENGINE_HUMAN_RENDERING_VERTEX_ARRAY_GL
 #define OPENGINE_HUMAN_RENDERING_VERTEX_ARRAY_GL
 
-#include "./Human/include/Rendering/API/OPvertexArray.h"
+#include "./Human/include/Rendering/API/OPvertexArrayAPI.h"
 
-void OPvertexArrayGLInit(OPvertexArray* vertexArray);
+void OPvertexArrayAPIGLInit(OPvertexArrayAPI* vertexArray);
 
 struct OPvertexArrayGL {
-
+	ui32 Handle;
 };
 
 #endif

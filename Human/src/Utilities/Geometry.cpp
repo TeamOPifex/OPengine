@@ -130,11 +130,18 @@ OPmesh* OPgeoCreateSphere(f32 radius, ui16 widthSegments, ui16 heightSegments) {
 	OPverticesWriteVec3(verticesStructure, norms, Normal);
 
 	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
-	*mesh = OPmeshCreate();
-	mesh->Bind();
 
+	// TODO: (garrett) Fix this
+	OPvertexLayoutBuilder builder;
+	builder.Init();
+	builder.Add(OPattributes::POSITION);
+	builder.Add(OPattributes::NORMAL);
+	builder.Add(OPattributes::UV);
+	OPvertexLayout vertexLayout = builder.Build();
+	*mesh = OPmeshCreate(vertexLayout);
+	mesh->Bind();
 	OPmeshBuild(
-		verticesStructure->size * sizeof(f32), 
+		vertexLayout,
 		OPindexSize::SHORT,
 		count, 
 		indCount, 

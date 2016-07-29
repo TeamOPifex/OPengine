@@ -5,7 +5,7 @@
 #include "./Data/include/OPvector.h"
 
 struct OPmeshBuilder {
-	ui16 VertexSize;
+	OPvertexLayout VertexSize;
 	OPvector* Vertices;
 	OPvector* Indices;
 };

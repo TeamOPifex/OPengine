@@ -7,7 +7,8 @@ struct OPeffectAPI;
 typedef struct OPeffectAPI OPeffectAPI;
 
 struct OPeffect;
-#include "./Human/include/Rendering/API/OPshaderAPI.h"
+struct OPshader;
+struct OPeffectAttribute;
 
 struct OPeffectAPI {
 	OPeffect*(*Create)(OPshader* vert, OPshader* frag) = 0;

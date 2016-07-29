@@ -23,7 +23,7 @@ void OPtexture2DUnloadGlobals() {
 	}
 	if (TEXTURE_2D_QUAD_MESH != NULL) {
 		OPmeshDestroy(TEXTURE_2D_QUAD_MESH);
-		OPfree(TEXTURE_2D_QUAD_MESH->Vertices);
+	//	OPfree(TEXTURE_2D_QUAD_MESH->Vertices);
 		OPfree(TEXTURE_2D_QUAD_MESH);
         TEXTURE_2D_QUAD_MESH = NULL;
 	}

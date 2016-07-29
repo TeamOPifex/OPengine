@@ -70,6 +70,8 @@ void OPtextureGLSetData(OPtexture* ptr, const void* pixelData) {
 void OPtextureGLDestroy(OPtexture* ptr) {
 	OPtextureGL* texture = (OPtextureGL*)ptr->internalPtr;
 	OPGLFN(glDeleteTextures(1, &texture->Handle));
+	OPfree(texture);
+	ptr->internalPtr = NULL;
 }
 
 void OPtextureGLBind(OPtexture* ptr, ui32 slot) {

@@ -30,6 +30,28 @@ OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag) {
 		OPlog("Program Log: %s", OPSCRATCHBUFFER);
 		return NULL;
 	}
+	else {
+		GLint i;
+		GLint count;
+		GLint size; // size of the variable
+		GLenum type; // type of the variable (float, vec3 or mat4, etc)
+
+		const GLsizei bufSize = 16; // maximum name length
+		GLchar name[bufSize]; // variable name in GLSL
+		GLsizei length; // name length
+
+		glGetProgramiv(effectGL->Handle, GL_ACTIVE_ATTRIBUTES, &count);
+		OPlogInfo("Active Attributes: %d", count);
+
+		for (i = 0; i < count; i++)
+		{
+			glGetActiveAttrib(effectGL->Handle, (GLuint)i, bufSize, &length, &size, &type, name);
+
+			OPlogInfo("Attribute #%d Type: %u Name: %s", i, type, name);
+		}
+	}
+
+
 
 	return effect;
 }
@@ -50,9 +72,9 @@ bool OPeffectGLAddUniform(OPeffect* effect, const OPchar* name) {
 
 void OPeffectGLBind(OPeffect* effect) {
 	OPeffectGL* effectGL = (OPeffectGL*)effect->internalPtr;
-	for (OPuint i  = 0; i < 8; i++) {
-		OPGLFN(glDisableVertexAttribArray(i));
-	}
+	//for (OPuint i  = 0; i < 8; i++) {
+	//	OPGLFN(glDisableVertexAttribArray(i));
+	//}
 	OPGLFN(glUseProgram(effectGL->Handle));
 }
 
@@ -63,6 +85,8 @@ void OPeffectGLUnbind(OPeffect* effect) {
 void OPeffectGLDestroy(OPeffect* effect) {
 	OPeffectGL* effectGL = (OPeffectGL*)effect->internalPtr;
 	OPGLFN(glDeleteProgram(effectGL->Handle));
+	OPfree(effectGL);
+	effect->internalPtr = NULL;
 }
 
 void OPeffectAPIGLInit(OPeffectAPI* effect) {

@@ -1,6 +1,9 @@
 #include "./Human/include/Platform/opengl/OPvertexBufferAPIGL.h"
+#include "./Human/include/Platform/opengl/OPeffectAPIGL.h"
+#include "./Human/include/Platform/opengl/OPshaderAttributeAPIGL.h"
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Rendering/OPvertexLayout.h"
+#include "./Human/include/Rendering/OPeffect.h"
 #include "./Core/include/OPmemory.h"
 
 OPvertexBuffer* OPvertexBufferGLInit(OPvertexBuffer* vertexBuffer) {
@@ -17,6 +20,7 @@ OPvertexBuffer* OPvertexBufferGLCreate() {
 
 void OPvertexBufferGLSetData(OPvertexBuffer* vertexBuffer, ui32 elementSize, OPuint count, const void* data) {
 	OPvertexBufferGL* buffer = (OPvertexBufferGL*)vertexBuffer->internalPtr;
+	OPGLFN(glBindBuffer(GL_ARRAY_BUFFER, buffer->Handle));
 	vertexBuffer->ElementSize = elementSize;
 	vertexBuffer->ElementCount = count;
 	OPGLFN(glBufferData(GL_ARRAY_BUFFER, elementSize * count, data, GL_STATIC_DRAW));
@@ -27,8 +31,12 @@ void OPvertexBufferGLSetLayout(OPvertexBuffer* vertexBuffer, OPvertexLayout* ver
 	for (; i < vertexLayout->count; i++)
 	{
 		OPshaderAttribute shaderAttribute = vertexLayout->attributes[i];
-		OPGLFN(glEnableVertexAttribArray(i));
-		OPGLFN(glVertexAttribPointer(i, shaderAttribute.Elements, shaderAttribute.Type, GL_FALSE, vertexLayout->stride, (const void*)shaderAttribute.Offset));
+		if (shaderAttribute.Location < 0) continue;
+		//OPshaderAttributeGL* shaderAttributeGL = (OPshaderAttributeGL*)shaderAttribute.internalPtr;		
+		//OPGLFN(OPint loc = glGetAttribLocation(effectGL->Handle, shaderAttribute.Name));
+
+		OPGLFN(glEnableVertexAttribArray(shaderAttribute.Location));
+		OPGLFN(glVertexAttribPointer(shaderAttribute.Location, shaderAttribute.Elements, shaderAttribute.Type, GL_FALSE, vertexLayout->stride, (const void*)shaderAttribute.Offset));
 	}
 }
 
@@ -43,7 +51,10 @@ void OPvertexBufferGLUnbind(OPvertexBuffer* vertexBuffer) {
 
 void OPvertexBufferGLDestroy(OPvertexBuffer* vertexBuffer) {
 	OPvertexBufferGL* buffer = (OPvertexBufferGL*)vertexBuffer->internalPtr;
+	OPvertexBufferGLUnbind(vertexBuffer);
 	OPGLFN(glDeleteBuffers(1, &buffer->Handle));
+	OPfree(buffer);
+	vertexBuffer->internalPtr = NULL;
 }
 
 void OPvertexBufferAPIGLInit(OPvertexBufferAPI* vertexBuffer) {

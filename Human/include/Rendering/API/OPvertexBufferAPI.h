@@ -8,6 +8,7 @@ typedef struct OPvertexBufferAPI OPvertexBufferAPI;
 
 struct OPvertexBuffer;
 struct OPvertexLayout;
+struct OPeffect;
 
 struct OPvertexBufferAPI {
 	OPvertexBuffer*(*Create)() = 0;

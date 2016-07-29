@@ -37,12 +37,14 @@ struct OPshader {
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 
-struct OPshaderAttribute{
+struct OPshaderAttribute {
 	OPchar* Name;
-	ui32         Type;
-	ui32         Elements;
-	OPuint        Offset;
-	OPuint		Handle;
+	ui32 Type;
+	ui32 Elements;
+	OPuint Offset;
+	OPint Location;
+
+	void* internalPtr;
 };
 
 

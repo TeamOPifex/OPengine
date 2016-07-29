@@ -1,4 +1,5 @@
 #include "./Human/include/Rendering/OPvertexLayout.h"
+#include "./Human/include/Rendering/OPeffect.h"
 
 void OPvertexLayout::Init(ui16 attributeCount, OPchar** names, OPattributeTypes* types, ui8* counts) {
 
@@ -13,6 +14,7 @@ void OPvertexLayout::Init(ui16 attributeCount, OPchar** names, OPattributeTypes*
 		attributes[i].Type = GL_FLOAT;// types[i];
 		attributes[i].Elements = counts[i];
 		attributes[i].Offset = offset;
+		attributes[i].Location = i;
 		attributeSize = counts[i] * sizeof(f32);
 		offset += attributeSize;
 		stride += attributeSize;
@@ -29,8 +31,23 @@ void OPvertexLayout::Init(OPshaderAttribute* attributes, ui16 count) {
 	}
 }
 
+void OPvertexLayout::SetOffsets(OPeffect* effect) {
+	for (OPuint i = 0; i < count; i++) {
+		OPRENDERER_ACTIVE->ShaderAttribute.SetOffset(&attributes[i], effect);
+	}
+}
+
 void OPvertexLayoutBuilder::Init() {
 	index = 0;
+}
+
+void OPvertexLayoutBuilder::Init(ui32 features) {
+	if ((features & (OPuint)OPattributes::POSITION) > 0) Add(OPattributes::POSITION);
+	if((features & (OPuint)OPattributes::NORMAL) > 0) Add(OPattributes::NORMAL);
+	if((features & (OPuint)OPattributes::TANGENT) > 0) Add(OPattributes::TANGENT);
+	if((features & (OPuint)OPattributes::UV) > 0) Add(OPattributes::UV);
+	if((features & (OPuint)OPattributes::BONES) > 0) Add(OPattributes::BONES);
+	if((features & (OPuint)OPattributes::COLOR) > 0) Add(OPattributes::COLOR);
 }
 
 void OPvertexLayoutBuilder::Add(OPattributes attribute) {

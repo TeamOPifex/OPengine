@@ -67,6 +67,8 @@ OPshader* OPshaderGLCreate(OPshaderType shaderType, const OPchar* source, OPuint
 void OPshaderGLDestroy(OPshader* shader) {
 	OPshaderGL* shaderGL = (OPshaderGL*)shader->internalPtr;
 	OPGLFN(glDeleteShader(shaderGL->Handle));
+	OPfree(shaderGL);
+	shader->internalPtr = NULL;
 }
 
 void OPshaderAPIGLInit(OPshaderAPI* shader) {

@@ -42,7 +42,9 @@ void ExampleModelEnter(OPgameState* last) {
 	// Position (vec3), then Normal (vec3)
 	// For more granular control use OPeffectCreate
 	modelExample->Effect.Init("ColoredModel.vert", "ColoredModel.frag");
-		
+	modelExample->Effect.AddUniform("uWorld");
+	modelExample->Effect.AddUniform("uView");
+	modelExample->Effect.AddUniform("uProj");
 
 	// Sets up the camera as a perpsective camera for rendering
 	modelExample->Camera = OPcamPersp(
@@ -103,24 +105,24 @@ void ExampleModelRender(OPfloat delta) {
 	OPbindMeshEffectWorldCam(&modelExample->Mesh, &modelExample->Effect, &world, &modelExample->Camera);
 
 	// Sets the vLightDirection uniform on the Effect that is currently bound (modelExample->Effect)
-	OPeffectSet("vLightDirection", &modelExample->LightDirection);
+	//OPeffectSet("vLightDirection", &modelExample->LightDirection);
 
 	// Renders to the screen the currently bound Mesh (modelExample->Mesh)
 	OPmeshRender();
 
 
-// 	OPmeshBind(&modelExample->Mesh);
-// 	OPeffectBind(&modelExample->Effect);
+	// 	OPmeshBind(&modelExample->Mesh);
+	// 	OPeffectBind(&modelExample->Effect);
 
 
-// 	OPeffectParamMat4("uWorld", &world);
-// 	OPeffectParamMat4("uProj", &modelExample->Camera.proj);
-// 	OPeffectParamMat4("uView", &modelExample->Camera.view);
+	// 	OPeffectParamMat4("uWorld", &world);
+	// 	OPeffectParamMat4("uProj", &modelExample->Camera.proj);
+	// 	OPeffectParamMat4("uView", &modelExample->Camera.view);
 
-// 	OPvec3 light = OPvec3Create(0, 1, 0);
-// 	OPeffectParamVec3("vLightDirection", &light);
+	// 	OPvec3 light = OPvec3Create(0, 1, 0);
+	// 	OPeffectParamVec3("vLightDirection", &light);
 
-// 	OPmeshRender();
+	// 	OPmeshRender();
 	
 	
 	// Swaps the back buffer

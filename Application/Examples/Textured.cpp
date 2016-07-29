@@ -7,8 +7,8 @@
 
 typedef struct {
 	OPmesh* Mesh;
-	OPeffect* Effect;
-	OPcam* Camera;
+	OPeffect Effect;
+	OPcam Camera;
 	ui32 Rotation;
 	OPtexture* Texture;
 } TexturedExample;
@@ -31,19 +31,25 @@ void ExampleTexturedEnter(OPgameState* last) {
 	texturedExample->Texture = (OPtexture*)OPcmanLoadGet(_texture);
 	texturedExample->Rotation = 0;
 
-	OPshaderAttribute attribs[] = {
-		{ "aPosition", GL_FLOAT, 3 },
-		{ "aNormal", GL_FLOAT, 3 },
-		{ "aUV", GL_FLOAT, 2 }
-	};
+	//OPshaderAttribute attribs[] = {
+	//	{ "aPosition", GL_FLOAT, 3 },
+	//	{ "aNormal", GL_FLOAT, 3 },
+	//	{ "aUV", GL_FLOAT, 2 }
+	//};
 
-	texturedExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
 	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture3D.vert");
 	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
-	texturedExample->Effect->Init(vert, frag);
+	texturedExample->Effect.Init(vert, frag);
+	texturedExample->Effect.AddUniform("uColorTexture");
+	//texturedExample->Effect->AddUniform("vLightDirection");
+	texturedExample->Effect.AddUniform("uWorld");
+	texturedExample->Effect.AddUniform("uProj");
+	texturedExample->Effect.AddUniform("uView");
 
-	texturedExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
-	*texturedExample->Camera = OPcamPersp(
+	texturedExample->Mesh->vertexLayout.SetOffsets(&texturedExample->Effect);
+	texturedExample->Mesh->vertexBuffer.SetLayout(&texturedExample->Mesh->vertexLayout);
+
+	texturedExample->Camera = OPcamPersp(
 		OPVEC3_ONE * 10.0,
 		OPvec3Create(0, 0, 0),
 		OPvec3Create(0, 1, 0),
@@ -60,8 +66,8 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 
 	if (OPkeyboardIsDown(OPKEY_SPACE)) { texturedExample->Rotation++; }
 
+	texturedExample->Effect.Bind();
 	texturedExample->Mesh->Bind();
-	texturedExample->Effect->Bind();
 
 	OPmat4 world;
 	world = OPmat4RotY(texturedExample->Rotation / 100.0f);
@@ -69,11 +75,11 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 	OPeffectSet("uColorTexture", texturedExample->Texture);
 
 	OPeffectSet("uWorld", &world);
-	OPeffectSet("uProj", &texturedExample->Camera->proj);
-	OPeffectSet("uView", &texturedExample->Camera->view);
+	OPeffectSet("uProj", &texturedExample->Camera.proj);
+	OPeffectSet("uView", &texturedExample->Camera.view);
 
-	OPvec3 light = OPvec3Create(0, 1, 0);
-	OPeffectSet("vLightDirection", &light);
+	//OPvec3 light = OPvec3Create(0, 1, 0);
+	//OPeffectSet("vLightDirection", &light);
 
 	OPmeshRender();
 
@@ -84,9 +90,7 @@ void ExampleTexturedRender(OPfloat delta) {
 
 }
 OPint ExampleTexturedExit(OPgameState* next) {
-	texturedExample->Effect->Destroy();
-	OPfree(texturedExample->Effect);
-	OPfree(texturedExample->Camera);
+	texturedExample->Effect.Destroy();
 
 	OPfree(texturedExample);
 

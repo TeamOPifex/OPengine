@@ -51,6 +51,9 @@ typedef struct OPmeshData OPmeshData;
 
 #include "./Human/include/Rendering/OPvertexBuffer.h"
 #include "./Human/include/Rendering/OPindexBuffer.h"
+#include "./Human/include/Rendering/OPvertexLayout.h"
+#include "./Human/include/Rendering/OPvertexArray.h"
+
 //-----------------------------------------------------------------------------
 //   _____ _                   _
 //  / ____| |                 | |
@@ -61,6 +64,7 @@ typedef struct OPmeshData OPmeshData;
 struct OPmesh {
 	OPvertexBuffer vertexBuffer;
 	OPindexBuffer indexBuffer;
+	OPvertexArray vertexArray;
 	//OPrenderBuffer VertexBuffer;
 	//OPrenderBuffer IndexBuffer;
 	OPvertexLayout vertexLayout;
@@ -77,12 +81,13 @@ struct OPmesh {
 	ui64 Id;
 
 	void Bind();
+	void SetVertexLayout(OPvertexLayout* vertexLayout);
 };
 typedef struct OPmesh OPmesh;
 
 struct OPmeshDesc {
 	void* Vertices;
-	ui32 VertexSize;
+	OPvertexLayout VertexSize;
 	ui32 VertexCount;
 	void* Indices;
 	OPindexSize IndexSize;
@@ -115,10 +120,10 @@ extern void* OPMESH_ACTIVE_PTR;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPmesh OPmeshCreate();
+OPmesh OPmeshCreate(OPvertexLayout vertexLayout);
 OPmesh* OPmeshCreate(OPmeshDesc desc);
 void OPmeshDestroy(OPmesh* mesh);
-void OPmeshBuild(ui32 vertSize, OPindexSize indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
+void OPmeshBuild(OPvertexLayout vertexLayout, OPindexSize indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
 
 
 void OPmeshRender();

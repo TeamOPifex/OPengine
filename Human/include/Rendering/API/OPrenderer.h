@@ -13,13 +13,14 @@ typedef struct OPrenderer OPrenderer;
 #include "./Human/include/Rendering/API/OPframeBufferDepth.h"
 #include "./Human/include/Rendering/API/OPindexBufferAPI.h"
 #include "./Human/include/Rendering/API/OPshaderAPI.h"
+#include "./Human/include/Rendering/API/OPshaderAttributeAPI.h"
 #include "./Human/include/Rendering/API/OPshaderResource.h"
 #include "./Human/include/Rendering/API/OPshaderUniformAPI.h"
 #include "./Human/include/Rendering/API/OPtextureAPI.h"
 #include "./Human/include/Rendering/API/OPtexture2D.h"
 #include "./Human/include/Rendering/API/OPtextureCube.h"
 #include "./Human/include/Rendering/API/OPtextureDepth.h"
-#include "./Human/include/Rendering/API/OPvertexArray.h"
+#include "./Human/include/Rendering/API/OPvertexArrayAPI.h"
 #include "./Human/include/Rendering/API/OPvertexBufferAPI.h"
 
 struct OPrenderer {
@@ -40,13 +41,14 @@ struct OPrenderer {
 	OPframeBufferDepth FrameBufferDepth;
 	OPindexBufferAPI IndexBuffer;
 	OPshaderAPI Shader;
+	OPshaderAttributeAPI ShaderAttribute;
 	OPshaderResource ShaderResource;
 	OPshaderUniformAPI ShaderUniform;
 	OPtextureAPI Texture;
 	OPtexture2D Texture2D;
 	OPtextureCube TextureCube;
 	OPtextureDepth TextureDepth;
-	OPvertexArray VertexArray;
+	OPvertexArrayAPI VertexArray;
 	OPvertexBufferAPI VertexBuffer;
 
 	inline void Clear(OPvec4 v) { _Clear(v); }

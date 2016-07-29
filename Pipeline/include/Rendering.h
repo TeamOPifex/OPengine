@@ -18,14 +18,12 @@ inline void OPmeshRender3D(OPmat4* world, OPcam* cam) {
 }
 
 inline void OPbindMeshEffectWorldCam(OPmesh* mesh, OPeffect* effect, OPmat4* world, OPcam* camera) {
-	mesh->Bind();
 	effect->Bind();
-
-	//OPcamUpdate(camera);
-
 	OPeffectSet("uWorld", world);
 	OPeffectSet("uProj", &camera->proj);
 	OPeffectSet("uView", &camera->view);
+
+	mesh->Bind();
 }
 
 #endif

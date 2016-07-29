@@ -54,10 +54,15 @@ ui16 OPquadIndexData[] = {
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
 OPmesh OPquadCreate(){
-	OPmesh mesh = OPmeshCreate();
+	OPvertexLayoutBuilder builder;
+	builder.Init();
+	builder.Add(OPattributes::POSITION);
+	builder.Add(OPattributes::UV);
+	OPvertexLayout vertexLayout = builder.Build();
+	OPmesh mesh = OPmeshCreate(vertexLayout);
 	mesh.Bind();
 	OPmeshBuild(
-		sizeof(OPfloat) * 5, OPindexSize::SHORT,
+		vertexLayout, OPindexSize::SHORT,
 		4, 6,
 		OPquadVertData, OPquadIndexData
 	);
@@ -88,12 +93,11 @@ OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 texcoordStart, OPvec2 
 }
 
 OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
-	OPmesh mesh = OPmeshCreate();
 	OPvertexLayoutBuilder builder;
 	builder.Init();
 	builder.Add(OPattributes::POSITION);
 	builder.Add(OPattributes::UV);
-	mesh.vertexLayout = builder.Build();
+	OPmesh mesh = OPmeshCreate(builder.Build());
 	mesh.Bind();
 
 	// 1, 1,
@@ -110,7 +114,7 @@ OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoor
 	SetQuadPoint(&verts[3], offset.x + width, offset.y - height, 0, texcoordEnd.x, texcoordStart.y);
 
 	OPmeshBuild(
-		sizeof(OPfloat)* 5, OPindexSize::SHORT,
+		mesh.vertexLayout, OPindexSize::SHORT,
 		4, 6,
 		verts, OPquadIndexData
 		);
@@ -132,10 +136,16 @@ OPmeshPacked OPquadCreatePacked(){
 }
 //-----------------------------------------------------------------------------
 OPmesh OPquadNormCreate(){
-	OPmesh mesh = OPmeshCreate();
+	OPvertexLayoutBuilder builder;
+	builder.Init();
+	builder.Add(OPattributes::POSITION);
+	builder.Add(OPattributes::NORMAL);
+	builder.Add(OPattributes::UV);
+	OPvertexLayout vertexLayout = builder.Build();
+	OPmesh mesh = OPmeshCreate(vertexLayout);
 	mesh.Bind();
 	OPmeshBuild(
-		sizeof(OPfloat) * 8, OPindexSize::SHORT,
+		vertexLayout, OPindexSize::SHORT,
 		4, 6,
 		OPquadVertNormData, OPquadIndexData
 	);
@@ -181,10 +191,15 @@ OPmesh OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OP
 		0, 2, 3
 	};
 
-	OPmesh mesh = OPmeshCreate();
+	OPvertexLayoutBuilder builder;
+	builder.Init();
+	builder.Add(OPattributes::POSITION);
+	builder.Add(OPattributes::UV);
+	OPvertexLayout vertexLayout = builder.Build();
+	OPmesh mesh = OPmeshCreate(vertexLayout);
 	mesh.Bind();
 	OPmeshBuild(
-		sizeof(OPfloat)* 5, OPindexSize::SHORT,
+		vertexLayout, OPindexSize::SHORT,
 		4, 6,
 		verts, indicies
 		);

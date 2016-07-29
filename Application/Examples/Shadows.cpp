@@ -63,10 +63,13 @@ typedef struct {
 		Model.world *= OPmat4Scl(8.0f);
 
 		// Create the ground quad
-		GroundMesh = OPmeshCreate();
+		OPvertexLayoutBuilder builder;
+		builder.Init((ui32)OPattributes::POSITION | (ui32)OPattributes::NORMAL | (ui32)OPattributes::UV);
+		OPvertexLayout vertexLayout = builder.Build();
+		GroundMesh = OPmeshCreate(vertexLayout);
 		GroundMesh.Bind();
 		OPmeshBuild(
-			sizeof(OPfloat) * 8, OPindexSize::SHORT,
+			vertexLayout, OPindexSize::SHORT,
 			4, 6,
 			_quadVertNormData, _quadIndexData
 		);
