@@ -4,7 +4,17 @@
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Rendering/OPvertexLayout.h"
 #include "./Human/include/Rendering/OPeffect.h"
+#include "./Human/include/Rendering/Enums/OPshaderType.h"
 #include "./Core/include/OPmemory.h"
+
+GLint OPshaderElementTypeToGL(OPshaderElementType shaderElementType) {
+	switch (shaderElementType) {
+		case OPshaderElementType::FLOAT: return GL_FLOAT;
+		case OPshaderElementType::INT: return GL_INT;
+		case OPshaderElementType::SHORT: return GL_SHORT;
+	}
+	return 0;
+}
 
 OPvertexBuffer* OPvertexBufferGLInit(OPvertexBuffer* vertexBuffer) {
 	OPvertexBufferGL* internalPtr = (OPvertexBufferGL*)OPalloc(sizeof(OPvertexBufferGL));;
@@ -36,17 +46,20 @@ void OPvertexBufferGLSetLayout(OPvertexBuffer* vertexBuffer, OPvertexLayout* ver
 		//OPGLFN(OPint loc = glGetAttribLocation(effectGL->Handle, shaderAttribute.Name));
 
 		OPGLFN(glEnableVertexAttribArray(shaderAttribute.Location));
-		OPGLFN(glVertexAttribPointer(shaderAttribute.Location, shaderAttribute.Elements, shaderAttribute.Type, GL_FALSE, vertexLayout->stride, (const void*)shaderAttribute.Offset));
+		OPGLFN(glVertexAttribPointer(shaderAttribute.Location, shaderAttribute.Elements, OPshaderElementTypeToGL(shaderAttribute.Type), GL_FALSE, vertexLayout->stride, (const void*)shaderAttribute.Offset));
 	}
 }
 
 void OPvertexBufferGLBind(OPvertexBuffer* vertexBuffer) {
 	OPvertexBufferGL* buffer = (OPvertexBufferGL*)vertexBuffer->internalPtr;
 	OPGLFN(glBindBuffer(GL_ARRAY_BUFFER, buffer->Handle));
+	OPRENDERER_ACTIVE->OPVERTEXBUFFER_ACTIVE = vertexBuffer;
 }
 
 void OPvertexBufferGLUnbind(OPvertexBuffer* vertexBuffer) {
 	OPvertexBufferGL* buffer = (OPvertexBufferGL*)vertexBuffer->internalPtr;
+	OPGLFN(glBindBuffer(GL_ARRAY_BUFFER, 0));
+	OPRENDERER_ACTIVE->OPVERTEXBUFFER_ACTIVE = NULL;
 }
 
 void OPvertexBufferGLDestroy(OPvertexBuffer* vertexBuffer) {

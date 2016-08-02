@@ -11,7 +11,7 @@ void OPvertexLayout::Init(ui16 attributeCount, OPchar** names, OPattributeTypes*
 	ui32 attributeSize;
 	for (ui16 i = 0; i < count; i++) {
 		attributes[i].Name = names[i];
-		attributes[i].Type = GL_FLOAT;// types[i];
+		attributes[i].Type = OPshaderElementType::FLOAT;// types[i];
 		attributes[i].Elements = counts[i];
 		attributes[i].Offset = offset;
 		attributes[i].Location = i;
@@ -37,20 +37,22 @@ void OPvertexLayout::SetOffsets(OPeffect* effect) {
 	}
 }
 
-void OPvertexLayoutBuilder::Init() {
+OPvertexLayoutBuilder* OPvertexLayoutBuilder::Init() {
 	index = 0;
+	return this;
 }
 
-void OPvertexLayoutBuilder::Init(ui32 features) {
+OPvertexLayoutBuilder* OPvertexLayoutBuilder::Init(ui32 features) {
 	if ((features & (OPuint)OPattributes::POSITION) > 0) Add(OPattributes::POSITION);
 	if((features & (OPuint)OPattributes::NORMAL) > 0) Add(OPattributes::NORMAL);
 	if((features & (OPuint)OPattributes::TANGENT) > 0) Add(OPattributes::TANGENT);
 	if((features & (OPuint)OPattributes::UV) > 0) Add(OPattributes::UV);
 	if((features & (OPuint)OPattributes::BONES) > 0) Add(OPattributes::BONES);
 	if((features & (OPuint)OPattributes::COLOR) > 0) Add(OPattributes::COLOR);
+	return this;
 }
 
-void OPvertexLayoutBuilder::Add(OPattributes attribute) {
+OPvertexLayoutBuilder* OPvertexLayoutBuilder::Add(OPattributes attribute) {
 	switch (attribute) {
 	case OPattributes::POSITION: {
 			names[index] = "aPosition";
@@ -99,6 +101,8 @@ void OPvertexLayoutBuilder::Add(OPattributes attribute) {
 			break;
 		}
 	}
+
+	return this;
 }
 
 OPvertexLayout OPvertexLayoutBuilder::Build() {

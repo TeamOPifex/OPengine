@@ -4,7 +4,7 @@
 #include "./Human/include/Rendering/OPshader.h"
 #include "./Data/include/OPstring.h"
 #include "./Core/include/OPmemory.h"
-#include "./Human/include/Rendering/OPattributes.h"
+#include "./Human/include/Rendering/Enums/OPattributes.h"
 
 
 struct OPvertexLayout;
@@ -34,9 +34,16 @@ struct OPvertexLayoutBuilder {
 	OPattributeTypes types[OPVERTEX_LAYOUT_BUILDER_MAX];
 	ui8 counts[OPVERTEX_LAYOUT_BUILDER_MAX];
 
-	void Init();
-	void Init(ui32 features);
-	void Add(OPattributes attribute);
+	OPvertexLayoutBuilder() {
+
+	}
+	OPvertexLayoutBuilder(ui32 features) {
+		Init(features);
+	}
+
+	OPvertexLayoutBuilder* Init();
+	OPvertexLayoutBuilder* Init(ui32 features);
+	OPvertexLayoutBuilder* Add(OPattributes attribute);
 	OPvertexLayout Build();
 };
 

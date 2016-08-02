@@ -40,7 +40,7 @@ void ExampleMyoEnter(OPgameState* last) {
 	myoExample->Effect.Init("SimpleModel.vert", "SimpleModel.frag");
 
 	// Sets up the camera as a perpsective camera for rendering
-	myoExample->Camera = OPcamPersp(
+	myoExample->Camera.SetPerspective(
 		OPVEC3_ONE * 2.0,
 		OPVEC3_UP,
 		OPVEC3_UP,
@@ -68,12 +68,11 @@ OPint ExampleMyoUpdate(OPtimer* time) {
 	////////////////////////
 
 	OPmyoUpdate(time);
-	OPglError("OpenGL Error");
 
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
-	if (OPkeyboardIsDown(OPKEY_SPACE)) { myoExample->Rotation++; }
+	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { myoExample->Rotation++; }
 
 	if (OPmyoPoseIs(Myo_Pose_Fist)) { myoExample->Rotation+=10; }
 	if (OPmyoPoseNow(Myo_Pose_Fist)) {

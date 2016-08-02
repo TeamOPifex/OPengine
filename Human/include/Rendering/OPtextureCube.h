@@ -2,7 +2,6 @@
 #define OPENGINE_HUMAN_RENDERER_CUBEMAP
 
 #include "OPimage.h"
-#include "./Human/include/Rendering/OpenGL.h"
 #include "./Human/include/Rendering/OPtexture.h"
 #include "./Core/include/OPtypes.h"
 #include "./Math/include/OPvec4.h"

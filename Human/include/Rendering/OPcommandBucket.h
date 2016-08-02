@@ -6,7 +6,6 @@
 #include "./Data/include/OPradixSort.h"
 #include "./Data/include/OPallocLinear.h"
 
-
 //-----------------------------------------------------------------------------
 //  _____                     _____                  _____  _               _   _
 // |  __ \                   |  __ \                |  __ \(_)             | | (_)
@@ -22,39 +21,7 @@ typedef struct OPcommandDrawCommand OPcommandDrawCommand;
 typedef struct OPcommandBucketKey OPcommandBucketKey;
 typedef struct OPcommandBucket OPcommandBucket;
 
-
-
-//-----------------------------------------------------------------------------
-// ______                _   _
-//|  ____|              | | (_)
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
-//|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
-//| |  | |_| | | | | (__| |_| | (_) | | | \__ \
-//|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-
-void OPcommandBucketInit(OPcommandBucket* commandBucket, OPuint bucketSize, OPcam* camera);
-void OPcommandBucketInit(OPcommandBucket* commandBucket, OPuint bucketSize, OPcam* camera, OPallocator* allocator);
-OPcommandBucket* OPcommandBucketCreate(OPuint bucketSize, OPcam* camera);
-OPcommandBucket* OPcommandBucketCreate(OPuint bucketSize, OPcam* camera, OPallocator* allocator);
-void OPcommandBucketFlush(OPcommandBucket* commandBucket);
-void OPcommandBucketSortKeys(OPcommandBucket* commandBucket);
-void OPcommandBucketSubmit(OPcommandBucket* commandBucket, ui64 key, void(*dispatch)(void*, OPcam*), void* data, void* next);
-inline void OPcommandBucketSubmit(OPcommandBucket* commandBucket, ui64 key, void(*dispatch)(void*, OPcam*), void* data) {
-	OPcommandBucketSubmit(commandBucket, key, dispatch, data, NULL);
-}
-inline void OPcommandBucketRender(OPcommandBucket* commandBucket) {
-	OPcommandBucketSortKeys(commandBucket);
-	OPcommandBucketFlush(commandBucket);
-}
-
 #include "./Human/include/Rendering/Commands/OPcommandDrawIndexed.h"
-
-// Helper draw commands already in the engine
-// Users will be able to define their own, just won't be a helper function
-// in the struct itself unless they modify the OPengine source itself
-OPcommandDrawIndexed* OPcommandBucketCreateDrawIndexed(OPcommandBucket* commandBucket);
-
-
 
 //-----------------------------------------------------------------------------
 //   _____ _                   _
@@ -109,40 +76,26 @@ struct OPcommandBucket {
 	// Simple wrapper functions
 	// These are just convenient functions for calling the C style functions
 
-	inline void Init(OPuint bucketSize, OPcam* camera) {
-		OPcommandBucketInit(this, bucketSize, camera);
-	}
-
-	inline void Init(OPuint bucketSize, OPcam* camera, OPallocator* allocator) {
-		OPcommandBucketInit(this, bucketSize, camera, allocator);
-	}
-
-	inline void Sort() {
-		OPcommandBucketSortKeys(this);
-	}
-
-	inline void Flush() {
-        OPcommandBucketFlush(this);
-    }
-
-	inline void Render() {
-		OPcommandBucketRender(this);
-	}
-
-	inline OPcommandDrawIndexed* CreateDrawIndexed() {
-        return OPcommandBucketCreateDrawIndexed(this);
-    }
-
+	void Init(OPuint bucketSize, OPcam* camera);
+	void Init(OPuint bucketSize, OPcam* camera, OPallocator* allocator);
+	void Submit(ui64 key, void(*dispatch)(void*, OPcam*), void* data, void* next);
+	void Sort();
+	void Flush();
+	void Render();
 	void CreateDrawIndexedSubmit(OPmodel* model, OPmaterial* material, OPtexture* texture);
 	void CreateDrawIndexedSubmit(OPmodelTextured* model, OPmaterial* material);
 
-	inline void Submit(ui64 key, void(*dispatch)(void*, OPcam*), void* data) {
-        OPcommandBucketSubmit(this, key, dispatch, data, NULL);
-    }
+	// Helper draw commands already in the engine
+	// Users will be able to define their own, just won't be a helper function
+	// in the struct itself unless they modify the OPengine source itself
+	OPcommandDrawIndexed* CreateDrawIndexed();
 
-	inline void Submit(ui64 key, void(*dispatch)(void*, OPcam*), void* data, void* next) {
-		OPcommandBucketSubmit(this, key, dispatch, data, next);
+	inline void Submit(ui64 key, void(*dispatch)(void*, OPcam*), void* data) {
+		Submit(key, dispatch, data, NULL);
 	}
+
+	static OPcommandBucket* Create(OPuint bucketSize, OPcam* camera);
+	static OPcommandBucket* Create(OPuint bucketSize, OPcam* camera, OPallocator* allocator);
 };
 
 #endif

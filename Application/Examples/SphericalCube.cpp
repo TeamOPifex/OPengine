@@ -41,7 +41,7 @@ void ExampleSphericalCubeEnter(OPgameState* last) {
 	sphericalCubeExample->Effect.Init("SimpleModel.vert", "SimpleModel.frag");
 
 	// Sets up the camera as a perpsective camera for rendering
-	sphericalCubeExample->Camera = OPcamPersp(
+	sphericalCubeExample->Camera.SetPerspective(
 		OPVEC3_ONE * 1,
 		OPVEC3_ZERO,
 		OPVEC3_UP,
@@ -69,7 +69,7 @@ OPint ExampleSphericalCubeUpdate(OPtimer* time) {
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
-	if (OPkeyboardIsDown(OPKEY_SPACE)) { sphericalCubeExample->Rotation++; }
+	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { sphericalCubeExample->Rotation++; }
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
 	OPmat4 world = OPmat4RotY(sphericalCubeExample->Rotation / 100.0f);

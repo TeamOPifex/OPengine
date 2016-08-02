@@ -47,7 +47,7 @@ void ExampleModelEnter(OPgameState* last) {
 	modelExample->Effect.AddUniform("uProj");
 
 	// Sets up the camera as a perpsective camera for rendering
-	modelExample->Camera = OPcamPersp(
+	modelExample->Camera.SetPerspective(
 		OPVEC3_ONE * 2.0,
 		OPVEC3_UP,
 		OPVEC3_UP,
@@ -77,7 +77,7 @@ OPint ExampleModelUpdate(OPtimer* time) {
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
-	if (OPkeyboardIsDown(OPKEY_SPACE)) { modelExample->Rotation += time->Elapsed; }
+	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { modelExample->Rotation += time->Elapsed; }
 
 
 	// Tells the engine to continue running

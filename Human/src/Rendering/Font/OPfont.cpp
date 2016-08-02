@@ -209,9 +209,8 @@ OPmesh OPfontCreateText(OPfont* font, OPchar* text) {
 	builder.Add(OPattributes::POSITION);
 	builder.Add(OPattributes::UV);
 	OPvertexLayout vertexLayout = builder.Build();
-	OPmesh mesh = OPmeshCreate(vertexLayout);
-	mesh.Bind();
-	OPmeshBuild(vertexLayout, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
+	OPmesh mesh = OPmesh(vertexLayout);
+	mesh.Build(vertexLayout, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
 	return mesh;
 }
 
@@ -231,13 +230,12 @@ OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text, OPf
 
 	OPfontBuiltTextNode node;
 	node.Width = size.x;
-	node.packedMesh = (OPmeshPacked*)OPalloc(sizeof(OPmeshPacked));
 	OPvertexLayoutBuilder builder;
 	builder.Init();
 	builder.Add(OPattributes::POSITION);
 	builder.Add(OPattributes::UV);
 	OPvertexLayout vertexLayout = builder.Build();
-	*node.packedMesh = OPmeshPackedCreate(vertexLayout, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
+	node.packedMesh = OPmeshPacked::Create(vertexLayout, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
 
 	return node;
 }
@@ -280,10 +278,9 @@ OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text, float 
 	builder.Init();
 	builder.Add(OPattributes::POSITION);
 	builder.Add(OPattributes::UV);
-	node.mesh = OPmeshCreate(builder.Build());
+	node.mesh = OPmesh(builder.Build());
 
-	node.mesh.Bind();
-	OPmeshBuild(node.mesh.vertexLayout, OPindexSize::SHORT, vertices->_size, indices->_size, vertices->items, indices->items);
+	node.mesh.Build(node.mesh.vertexLayout, OPindexSize::SHORT, vertices->_size, indices->_size, vertices->items, indices->items);
 
 	OPvectorDestroy(vertices);
 	OPfree(vertices);

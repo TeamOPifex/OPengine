@@ -46,7 +46,7 @@ void ExampleSpineEnter(OPgameState* last) {
 	spineExample->Mesh = (OPmesh*)OPcmanGet("cube.opm");
 
 	// Sets up the camera as a perpsective camera for rendering
-	spineExample->Camera = OPcamPersp(
+	spineExample->Camera.SetPerspective(
 		OPvec3Create(0.0f, 0.0f, 45.0f),
 		OPvec3Create(0.0f, 0.0f, 0.0f),
 		OPVEC3_UP,
@@ -99,7 +99,7 @@ OPint ExampleSpineUpdate(OPtimer* time) {
 	// Update
 	////////////////////////
 
-	if (OPkeyboardWasPressed(OPKEY_SPACE)) {
+	if (OPkeyboardWasPressed(OPkeyboardKey::SPACE)) {
 		SpineSetAnim(spineExample->spine, 0, "jump", true);
 	}
 
@@ -109,7 +109,7 @@ OPint ExampleSpineUpdate(OPtimer* time) {
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
-	if (OPkeyboardIsDown(OPKEY_SPACE)) { spineExample->Rotation++; }
+	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { spineExample->Rotation++; }
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
 	OPmat4 world = OPmat4RotY(spineExample->Rotation / 100.0f);

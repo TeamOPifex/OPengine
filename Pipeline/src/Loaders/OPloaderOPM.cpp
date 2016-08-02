@@ -1,5 +1,5 @@
 #include "./Pipeline/include/Loaders/OPloaderOPM.h"
-#include "./Human/include/Rendering/OPattributes.h"
+#include "./Human/include/Rendering/Enums/OPattributes.h"
 #include "./Math/include/OPquat.h"
 #include "./Data/include/OPlist.h"
 
@@ -546,10 +546,9 @@ OPint OPMload(OPstream* str, OPmesh** mesh) {
 
 	//OPlog("Creating vertex and buffers");
 	// Create Vertex & Index Buffers for Mesh
-	OPmesh temp = OPmeshCreate(data.vertexLayout);
-	OPMESH_ACTIVE_PTR = OPMESH_ACTIVE = &temp;
-	OPlogDebug("VERTEX STRIDE %u", data.vertexLayout.stride);
-	OPmeshBuild(
+	OPmesh temp = OPmesh(data.vertexLayout);
+	OPMESH_ACTIVE = &temp;
+	temp.Build(
 		data.vertexLayout, data.indexSize,
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
@@ -844,9 +843,8 @@ OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh){
 
 	OPMPartition(&data, triTable, vertList, 1);
 
-	OPmesh temp = OPmeshCreate(data.vertexLayout);
-	temp.Bind();
-	OPmeshBuild(
+	OPmesh temp = OPmesh(data.vertexLayout);
+	temp.Build(
 		data.vertexLayout, data.indexSize,
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
@@ -868,7 +866,7 @@ OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh) {
 	OPstream* str = OPreadFile(filename);
 	OPMData data = OPMloadData(str);
 	
-	OPmeshPacked temp = OPmeshPackedCreate(
+	OPmeshPacked temp = OPmeshPacked(
 		data.vertexLayout, data.indexSize,
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices

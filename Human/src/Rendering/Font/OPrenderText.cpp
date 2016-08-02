@@ -32,10 +32,10 @@ void OPfontRender(OPfontUserTextNode* node, OPmat4* world) {
 
 void OPfontRender(OPfontBuiltTextNode* node, OPmat4* world) {
 	OPFONTMANAGER_EFFECT_ACTIVE->Bind();
-	OPFONTMANAGER_EFFECT_ACTIVE->Set("uWorld", world);
-	OPmeshPackerBind(&OPFONTMANAGER_ACTIVE->meshPacker);
+	OPFONTMANAGER_EFFECT_ACTIVE->Set("uWorld", world); 
+	OPFONTMANAGER_ACTIVE->meshPacker.Bind();
 	OPRENDERER_ACTIVE->VertexBuffer.SetLayout(&OPFONTMANAGER_ACTIVE->meshPacker.VertexBuffer, &node->packedMesh->vertexLayout);
-	OPmeshPackedRender(node->packedMesh);
+	node->packedMesh->Render();
 }
 
 void OPfontRenderSetAlign(OPmat4* world, OPfloat width, OPfontAlign align){
@@ -70,7 +70,7 @@ void OPfontRender(const OPchar* text, OPmat4* world) {
 		OPfontRenderSetAlign(&aligned, textNode.Width, OPFONTMANAGER_ACTIVE->_align);
 		OPmat4 temp = (*world) * OPmat4Scl(OPFONTMANAGER_ACTIVE->scale) * aligned;
 		OPfontRender(&textNode, &temp);
-		OPmeshDestroy(&textNode.mesh);
+		textNode.mesh.Destroy();
 	}
 	else {
 		OPfontRenderSetAlign(&aligned, node->Width, OPFONTMANAGER_ACTIVE->_align);
@@ -95,7 +95,7 @@ void OPfontRender(const OPchar* text, OPmat4* world, ui8 useJustWorld) {
 	if (node == NULL || !OPFONTMANAGER_ACTIVE->isBuilt) {
 		OPfontUserTextNode textNode = OPfontCreateUserText(OPFONTMANAGER_ACTIVE->_font, text, 1.0);
 		OPfontRender(&textNode, world);
-		OPmeshDestroy(&textNode.mesh);
+		textNode.mesh.Destroy();
 	}
 	else {
 		OPfontRender(node, world);

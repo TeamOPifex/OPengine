@@ -101,9 +101,9 @@ void ExamplePhysicsCharacterEnter(OPgameState* last) {
 	physicsCharacterExample->MeshSphere = (OPmesh*)OPcmanGet("PuzzleSphere.opm");
 
 	OPshaderAttribute attribs[] = {
-		{ "aPosition", GL_FLOAT, 3 },
-		{ "aNormal", GL_FLOAT, 3 },
-		{ "aUV", GL_FLOAT, 2 }
+		{ "aPosition", OPshaderElementType::FLOAT, 3 },
+		{ "aNormal", OPshaderElementType::FLOAT, 3 },
+		{ "aUV", OPshaderElementType::FLOAT, 2 }
 	};
 
 	physicsCharacterExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
@@ -115,7 +115,7 @@ void ExamplePhysicsCharacterEnter(OPgameState* last) {
 	physicsCharacterExample->SphereEffect->Init(vert, frag);
 
 	physicsCharacterExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
-	*physicsCharacterExample->Camera = OPcamPersp(
+	physicsCharacterExample->Camera->SetPerspective(
 		OPvec3Create(0, 20, 50),
 		OPvec3Create(0, 1, 0),
 		OPvec3Create(0, 1, 0),
@@ -218,19 +218,19 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 	disp.x += leftThumb.x * 0.5f;
 	disp.z -= leftThumb.y * 0.5f;
 
-	if (OPkeyboardIsDown(OPKEY_D)) {
+	if (OPkeyboardIsDown(OPkeyboardKey::D)) {
 		disp.x = 0.5f;
 	}
-	if (OPkeyboardIsDown(OPKEY_A)) {
+	if (OPkeyboardIsDown(OPkeyboardKey::A)) {
 		disp.x = -0.5f;
 	}
-	if (OPkeyboardIsDown(OPKEY_W)) {
+	if (OPkeyboardIsDown(OPkeyboardKey::W)) {
 		disp.z = -0.5f;
 	}
-	if (OPkeyboardIsDown(OPKEY_S)) {
+	if (OPkeyboardIsDown(OPkeyboardKey::S)) {
 		disp.z = 0.5f;
 	}
-	if (OPkeyboardWasPressed(OPKEY_SPACE)) {
+	if (OPkeyboardWasPressed(OPkeyboardKey::SPACE)) {
 		disp.y = 5.0;
 	}
 
@@ -240,13 +240,12 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 	f32 rate = 500 * physicsCharacterExample->spheres[0].size;
 	f32 rate2 = 50 * physicsCharacterExample->spheres[0].size;
 
-	if (OPkeyboardIsDown(OPKEY_UP)) { physicsCharacterExample->Camera->pos.y += 0.2; }
-	if (OPkeyboardIsDown(OPKEY_DOWN)) { physicsCharacterExample->Camera->pos.y -= 0.2; }
-	if (OPkeyboardIsDown(OPKEY_LEFT)) { physicsCharacterExample->Camera->pos.x -= 0.2; }
-	if (OPkeyboardIsDown(OPKEY_RIGHT)) { physicsCharacterExample->Camera->pos.x += 0.2; }
+	if (OPkeyboardIsDown(OPkeyboardKey::UP)) { physicsCharacterExample->Camera->pos.y += 0.2; }
+	if (OPkeyboardIsDown(OPkeyboardKey::DOWN)) { physicsCharacterExample->Camera->pos.y -= 0.2; }
+	if (OPkeyboardIsDown(OPkeyboardKey::LEFT)) { physicsCharacterExample->Camera->pos.x -= 0.2; }
+	if (OPkeyboardIsDown(OPkeyboardKey::RIGHT)) { physicsCharacterExample->Camera->pos.x += 0.2; }
 
-	OPcamUpdate(physicsCharacterExample->Camera);
-
+	physicsCharacterExample->Camera->Update();
 
 	OPphysXSceneUpdate(physicsCharacterExample->scene, time);
 

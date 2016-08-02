@@ -1,40 +1,41 @@
 #include "./Human/include/Rendering/OPcommandBucket.h"
 
 
-OPcommandDrawIndexed* OPcommandBucketCreateDrawIndexed(OPcommandBucket* commandBucket) {
-	return (OPcommandDrawIndexed*)commandBucket->allocator->alloc(commandBucket->allocator, sizeof(OPcommandDrawIndexed));
+OPcommandDrawIndexed* OPcommandBucket::CreateDrawIndexed() {
+	return (OPcommandDrawIndexed*)allocator->alloc(allocator, sizeof(OPcommandDrawIndexed));
 }
 
-void OPcommandBucketInit(OPcommandBucket* commandBucket, OPuint bucketSize, OPcam* camera) {
-	commandBucket->controlOfAllocator = 1;
-	OPcommandBucketInit(commandBucket, bucketSize, camera, OPallocatorLinearCreate(KB(bucketSize)));
+void OPcommandBucket::Init(OPuint bucketSize, OPcam* camera) {
+	controlOfAllocator = 1;
+	Init(bucketSize, camera, OPallocatorLinearCreate(KB(bucketSize)));
 }
 
-void OPcommandBucketInit(OPcommandBucket* commandBucket, OPuint bucketSize, OPcam* camera, OPallocator* allocator) {
+void OPcommandBucket::Init(OPuint bucketSize, OPcam* camera, OPallocator* allocator) {
 
-	commandBucket->bucketSize = bucketSize;
-	commandBucket->camera = camera;
+	bucketSize = bucketSize;
+	camera = camera;
 
-	commandBucket->keys = (OPcommandBucketKey*)OPalloc(sizeof(OPcommandBucketKey) * bucketSize);
-	commandBucket->copykeys = (OPcommandBucketKey*)OPalloc(sizeof(OPcommandBucketKey) * bucketSize);
+	keys = (OPcommandBucketKey*)OPalloc(sizeof(OPcommandBucketKey) * bucketSize);
+	copykeys = (OPcommandBucketKey*)OPalloc(sizeof(OPcommandBucketKey) * bucketSize);
 
-	commandBucket->commands = (OPcommandDrawCommand*)OPalloc(sizeof(OPcommandDrawCommand) * bucketSize);
-	commandBucket->keyIndex = 0;
+	commands = (OPcommandDrawCommand*)OPalloc(sizeof(OPcommandDrawCommand) * bucketSize);
+	keyIndex = 0;
 
-	commandBucket->allocator = allocator;
+	allocator = allocator;
 }
 
-OPcommandBucket* OPcommandBucketCreate(OPuint bucketSize, OPcam* camera, OPallocator* allocator) {
+OPcommandBucket* OPcommandBucket::Create(OPuint bucketSize, OPcam* camera, OPallocator* allocator) {
 	OPcommandBucket* result = (OPcommandBucket*)OPalloc(sizeof(OPcommandBucket));
-	OPcommandBucketInit(result, bucketSize, camera, allocator);
+	result->Init(bucketSize, camera, allocator);
 	return result;
 }
 
-OPcommandBucket* OPcommandBucketCreate(OPuint bucketSize, OPcam* camera) {
+OPcommandBucket* OPcommandBucket::Create(OPuint bucketSize, OPcam* camera) {
 	OPcommandBucket* result = (OPcommandBucket*)OPalloc(sizeof(OPcommandBucket));
-	OPcommandBucketInit(result, bucketSize, camera);
+	result->Init(bucketSize, camera);
 	return result;
 }
+
 
 i64 OPcommandBucketSortGetKey(void* data, i64 index) {
 	OPcommandBucketKey* keys = (OPcommandBucketKey*)data;
@@ -54,35 +55,40 @@ void OPcommandBucketSortSetEntity(void* data, i64 index, void* entity) {
 	keys[index].command = key->command;
 }
 
-void OPcommandBucketSortKeys(OPcommandBucket* commandBucket) {
+void OPcommandBucket::Sort() {
 	// Sort the keys from lower order to higher order
 	OPradixSort(
-		commandBucket->keys,
-		commandBucket->copykeys,
-		commandBucket->keyIndex,
+		keys,
+		copykeys,
+		keyIndex,
 		OPcommandBucketSortGetKey,
 		OPcommandBucketSortGetEnitity,
 		OPcommandBucketSortSetEntity);
 }
 
-void OPcommandBucketFlush(OPcommandBucket* commandBucket) {
+void OPcommandBucket::Flush() {
 
-	for (ui64 i = 0; i < commandBucket->keyIndex; i++) {
-		commandBucket->keys[i].command->dispatch(commandBucket->keys[i].command->data, commandBucket->camera);
+	for (ui64 i = 0; i < keyIndex; i++) {
+		keys[i].command->dispatch(keys[i].command->data, camera);
 	}
 
-	commandBucket->keyIndex = 0;
-	commandBucket->allocator->clear(commandBucket->allocator);
+	keyIndex = 0;
+	allocator->clear(allocator);
 }
 
-void OPcommandBucketSubmit(OPcommandBucket* commandBucket, ui64 key, void(*dispatch)(void*, OPcam*), void* data, void* next) {
-	commandBucket->commands[commandBucket->keyIndex].data = data;
-	commandBucket->commands[commandBucket->keyIndex].dispatch = dispatch;
-	commandBucket->commands[commandBucket->keyIndex].next = next;
-	commandBucket->keys[commandBucket->keyIndex].key = key;
-	commandBucket->keys[commandBucket->keyIndex].command = &commandBucket->commands[commandBucket->keyIndex];
+void OPcommandBucket::Render() {
+	Sort();
+	Flush();
+}
 
-	commandBucket->keyIndex++;
+void OPcommandBucket::Submit(ui64 key, void(*dispatch)(void*, OPcam*), void* data, void* next) {
+	commands[keyIndex].data = data;
+	commands[keyIndex].dispatch = dispatch;
+	commands[keyIndex].next = next;
+	keys[keyIndex].key = key;
+	keys[keyIndex].command = &commands[keyIndex];
+
+	keyIndex++;
 }
 
 void OPcommandBucket::CreateDrawIndexedSubmit(OPmodel* model, OPmaterial* material, OPtexture* texture) {
@@ -92,6 +98,9 @@ void OPcommandBucket::CreateDrawIndexedSubmit(OPmodel* model, OPmaterial* materi
 void OPcommandBucket::CreateDrawIndexedSubmit(OPmodelTextured* model, OPmaterial* material) {
 	OPcommandDrawIndexedSubmit(this, model, material);
 }
+
+
+
 
 // ui64 OPCOMMAND_BUCKET_DEFAULT_KEY_GEN(OPcommandBucket* commandBucket, OPmodel* model, OPtexture* texture, OPmaterial* material) {
 //     ui64 meshId = model->mesh->Id << 0;     // 00 - 06 bits

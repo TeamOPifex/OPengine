@@ -4,6 +4,8 @@
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Core/include/OPmemory.h"
 
+bool OPeffectGLAddUniform(OPeffect* effect, const OPchar* name);
+
 OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag) {
 	OPeffectGL* effectGL = (OPeffectGL*)OPalloc(sizeof(OPeffectGL));
 	effect->internalPtr = effectGL;
@@ -49,6 +51,16 @@ OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag) {
 
 			OPlogInfo("Attribute #%d Type: %u Name: %s", i, type, name);
 		}
+
+		glGetProgramiv(effectGL->Handle, GL_ACTIVE_UNIFORMS, &count);
+		OPlogInfo("Active Uniforms: %d", count);
+
+		for (i = 0; i < count; i++)
+		{
+			glGetActiveUniform(effectGL->Handle, (GLuint)i, bufSize, &length, &size, &type, name);
+			OPeffectGLAddUniform(effect, name);
+			OPlogInfo("Uniform #%d Type: %u Name: %s", i, type, name);
+		}
 	}
 
 
@@ -58,7 +70,8 @@ OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag) {
 
 OPeffect* OPeffectGLCreate(OPshader* vert, OPshader* frag) {
 	OPeffect* effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	return OPeffectAPIGLInit(effect, vert, frag);
+	effect->Init(vert, frag);
+	return effect;
 }
 
 bool OPeffectGLAddUniform(OPeffect* effect, const OPchar* name) {
@@ -76,14 +89,17 @@ void OPeffectGLBind(OPeffect* effect) {
 	//	OPGLFN(glDisableVertexAttribArray(i));
 	//}
 	OPGLFN(glUseProgram(effectGL->Handle));
+	OPRENDERER_ACTIVE->OPEFFECT_ACTIVE = effect;
 }
 
 void OPeffectGLUnbind(OPeffect* effect) {
 	OPGLFN(glUseProgram(0));
+	OPRENDERER_ACTIVE->OPEFFECT_ACTIVE = NULL;
 }
 
 void OPeffectGLDestroy(OPeffect* effect) {
 	OPeffectGL* effectGL = (OPeffectGL*)effect->internalPtr;
+	OPeffectGLUnbind(effect);
 	OPGLFN(glDeleteProgram(effectGL->Handle));
 	OPfree(effectGL);
 	effect->internalPtr = NULL;

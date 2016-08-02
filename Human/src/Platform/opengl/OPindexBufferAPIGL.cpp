@@ -17,6 +17,7 @@ OPindexBuffer* OPindexBufferGLCreate() {
 
 void OPindexBufferGLSetData(OPindexBuffer* indexBuffer, OPindexSize size, OPuint count, const void* data) {
 	OPindexBufferAPIGL* buffer = (OPindexBufferAPIGL*)indexBuffer->internalPointer;
+	OPGLFN(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->Handle));
 	indexBuffer->ElementSize = size;
 	indexBuffer->ElementCount = count;
 	ui32 totalSize = (ui32)indexBuffer->ElementSize * count;
@@ -26,11 +27,13 @@ void OPindexBufferGLSetData(OPindexBuffer* indexBuffer, OPindexSize size, OPuint
 void OPindexBufferGLBind(OPindexBuffer* indexBuffer) {
 	OPindexBufferAPIGL* buffer = (OPindexBufferAPIGL*)indexBuffer->internalPointer;
 	OPGLFN(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->Handle));
+	OPRENDERER_ACTIVE->OPINDEXBUFFER_ACTIVE = indexBuffer;
 }
 
 void OPindexBufferGLUnbind(OPindexBuffer* indexBuffer) {
 	OPindexBufferAPIGL* buffer = (OPindexBufferAPIGL*)indexBuffer->internalPointer;
 	OPGLFN(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+	OPRENDERER_ACTIVE->OPINDEXBUFFER_ACTIVE = NULL;
 }
 
 void OPindexBufferGLDestroy(OPindexBuffer* indexBuffer) {

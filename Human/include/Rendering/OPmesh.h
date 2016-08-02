@@ -54,6 +54,18 @@ typedef struct OPmeshData OPmeshData;
 #include "./Human/include/Rendering/OPvertexLayout.h"
 #include "./Human/include/Rendering/OPvertexArray.h"
 
+struct OPmeshDesc {
+	void* Vertices;
+	OPvertexLayout VertexSize;
+	ui32 VertexCount;
+	void* Indices;
+	OPindexSize IndexSize;
+	ui32 IndexCount;
+};
+
+struct OPmesh;
+typedef struct OPmesh OPmesh;
+
 //-----------------------------------------------------------------------------
 //   _____ _                   _
 //  / ____| |                 | |
@@ -61,12 +73,12 @@ typedef struct OPmeshData OPmeshData;
 //  \___ \| __| '__| | | |/ __| __/ __|
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
+extern OPmesh* OPMESH_ACTIVE; 
+
 struct OPmesh {
 	OPvertexBuffer vertexBuffer;
 	OPindexBuffer indexBuffer;
 	OPvertexArray vertexArray;
-	//OPrenderBuffer VertexBuffer;
-	//OPrenderBuffer IndexBuffer;
 	OPvertexLayout vertexLayout;
 	OPmeshData* meshData;
 
@@ -80,51 +92,31 @@ struct OPmesh {
 	OPMmeta* Meta;
 	ui64 Id;
 
+	OPmesh() {
+
+	}
+
+	OPmesh(OPmeshDesc desc) {
+		Init(desc);
+	}
+
+	OPmesh(OPvertexLayout vertexLayout) {
+		Init(vertexLayout);
+	}
+
+	static OPmesh* Create(OPmeshDesc desc);
+	static OPmesh* Create(OPvertexLayout vertexLayout);
+	OPmesh* Init(OPmeshDesc desc);
+	OPmesh* Init(OPvertexLayout vertexLayout);
 	void Bind();
 	void SetVertexLayout(OPvertexLayout* vertexLayout);
+	void Build(OPvertexLayout vertexLayout, OPindexSize indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
+	void Destroy();
+	inline void Free() {
+		Destroy();
+		OPfree(this);
+	}
 };
-typedef struct OPmesh OPmesh;
-
-struct OPmeshDesc {
-	void* Vertices;
-	OPvertexLayout VertexSize;
-	ui32 VertexCount;
-	void* Indices;
-	OPindexSize IndexSize;
-	ui32 IndexCount;
-};
-
-//-----------------------------------------------------------------------------
-//   _____ _       _           _
-//  / ____| |     | |         | |
-// | |  __| | ___ | |__   __ _| |___
-// | | |_ | |/ _ \| '_ \ / _` | / __|
-// | |__| | | (_) | |_) | (_| | \__ \
-//  \_____|_|\___/|_.__/ \__,_|_|___/
-extern OPmesh* OPMESH_ACTIVE;
-extern void* OPMESH_ACTIVE_PTR;
-
-//-----------------------------------------------------------------------------
-//  _____                     _____                  _____  _               _   _
-// |  __ \                   |  __ \                |  __ \(_)             | | (_)
-// | |__) _ __ ___   ______  | |__) _ __ ___   ___  | |  | |_ _ __ ___  ___| |_ ___   _____ ___
-// |  ___| '__/ _ \ |______| |  ___| '__/ _ \ / __| | |  | | | '__/ _ \/ __| __| \ \ / / _ / __|
-// | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
-// |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/
-
-
-//-----------------------------------------------------------------------------
-// ______                _   _
-//|  ____|              | | (_)
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
-//|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
-//| |  | |_| | | | | (__| |_| | (_) | | | \__ \
-//|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPmesh OPmeshCreate(OPvertexLayout vertexLayout);
-OPmesh* OPmeshCreate(OPmeshDesc desc);
-void OPmeshDestroy(OPmesh* mesh);
-void OPmeshBuild(OPvertexLayout vertexLayout, OPindexSize indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
-
 
 void OPmeshRender();
 

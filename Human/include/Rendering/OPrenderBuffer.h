@@ -1,7 +1,6 @@
 #ifndef OPENGINE_HUMAN_RENDERER_BUFFER
 #define OPENGINE_HUMAN_RENDERER_BUFFER
 
-#include "./Human/include/Rendering/OpenGL.h"
 #include "./Core/include/OPtypes.h"
 
 
@@ -29,8 +28,6 @@
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
-extern OPvertexBuffer* OPRENDER_CURR_VB;
-extern OPindexBuffer* OPRENDER_CURR_IB;
 
 //-----------------------------------------------------------------------------
 //  _____                     _____                  _____  _               _   _

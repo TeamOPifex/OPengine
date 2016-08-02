@@ -8,7 +8,6 @@ typedef struct OPindexBuffer OPindexBuffer;
 #include "./Human/include/Rendering/OPrender.h"
 #include "./Human/include/Rendering/Enums/OPindexSize.h"
 
-
 struct OPindexBuffer {
 	void* internalPointer;
 	OPuint ElementCount;
@@ -33,10 +32,10 @@ struct OPindexBuffer {
 	inline void Destroy() {
 		OPRENDERER_ACTIVE->IndexBuffer.Destroy(this);
 	}
-};
 
-inline OPindexBuffer* OPindexBufferCreate() {
-	return OPRENDERER_ACTIVE->IndexBuffer.Create();
-}
+	static inline OPindexBuffer* Create() {
+		return OPRENDERER_ACTIVE->IndexBuffer.Create();
+	}
+};
 
 #endif

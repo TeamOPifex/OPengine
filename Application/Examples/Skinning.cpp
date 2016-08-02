@@ -44,12 +44,12 @@ void ExampleSkinningEnter(OPgameState* last) {
 	skinningExample->Mesh = (OPmesh*)OPcmanLoadGet("ld35person.opm");
 
 	OPshaderAttribute attribs[] = {
-		{ "aPosition", GL_FLOAT, 3 },
-		{ "aNormal", GL_FLOAT, 3 },
-		//{ "aTangent", GL_FLOAT, 3 },
-		{ "aUV", GL_FLOAT, 2 },
-		{ "aBlendIndices", GL_FLOAT, 4 },
-		{ "aBlendWeights", GL_FLOAT, 4 }
+		{ "aPosition", OPshaderElementType::FLOAT, 3 },
+		{ "aNormal", OPshaderElementType::FLOAT, 3 },
+		//{ "aTangent", OPshaderElementType::FLOAT, 3 },
+		{ "aUV", OPshaderElementType::FLOAT, 2 },
+		{ "aBlendIndices", OPshaderElementType::FLOAT, 4 },
+		{ "aBlendWeights", OPshaderElementType::FLOAT, 4 }
 	};
 
 	skinningExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
@@ -59,7 +59,7 @@ void ExampleSkinningEnter(OPgameState* last) {
 
 	skinningExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
 	f32 pos = 10 * SCALE;
-	*skinningExample->Camera = OPcamPersp(
+	skinningExample->Camera->SetPerspective(
 		OPvec3Create(pos, pos, pos),
 		OPvec3Create(0, pos / 4.0f, 0),
 		OPvec3Create(0, 1, 0),
@@ -78,31 +78,31 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	OPrenderDepth(1);
 	OPrenderClear(0, 0, 0);
 
-	if (OPkeyboardWasPressed(OPKEY_P)) { skinningExample->pos++; }
-	if (OPkeyboardWasPressed(OPKEY_O)) { skinningExample->pos--; }
+	if (OPkeyboardWasPressed(OPkeyboardKey::P)) { skinningExample->pos++; }
+	if (OPkeyboardWasPressed(OPkeyboardKey::O)) { skinningExample->pos--; }
 
-	//if (OPkeyboardWasPressed(OPKEY_M)) { skinningExample->Mesh->SkeletonAnimation.Frame++; }
-	//if (OPkeyboardWasPressed(OPKEY_N)) { skinningExample->Mesh->SkeletonAnimation.Frame--; }
+	//if (OPkeyboardWasPressed(OPkeyboardKey::M)) { skinningExample->Mesh->SkeletonAnimation.Frame++; }
+	//if (OPkeyboardWasPressed(OPkeyboardKey::N)) { skinningExample->Mesh->SkeletonAnimation.Frame--; }
 
-	if (OPkeyboardIsDown(OPKEY_UP)) { skinningExample->Camera->pos.y += (OPfloat)(0.1 * SCALE); }
-	if (OPkeyboardIsDown(OPKEY_DOWN)) { skinningExample->Camera->pos.y -= (OPfloat)(0.1 * SCALE); }
-	if (OPkeyboardIsDown(OPKEY_LEFT)) { skinningExample->Camera->pos.x -= (OPfloat)(0.1 * SCALE); }
-	if (OPkeyboardIsDown(OPKEY_RIGHT)) { skinningExample->Camera->pos.x += (OPfloat)(0.1 * SCALE); }
+	if (OPkeyboardIsDown(OPkeyboardKey::UP)) { skinningExample->Camera->pos.y += (OPfloat)(0.1 * SCALE); }
+	if (OPkeyboardIsDown(OPkeyboardKey::DOWN)) { skinningExample->Camera->pos.y -= (OPfloat)(0.1 * SCALE); }
+	if (OPkeyboardIsDown(OPkeyboardKey::LEFT)) { skinningExample->Camera->pos.x -= (OPfloat)(0.1 * SCALE); }
+	if (OPkeyboardIsDown(OPkeyboardKey::RIGHT)) { skinningExample->Camera->pos.x += (OPfloat)(0.1 * SCALE); }
 
 	skinningExample->Camera->Update();
-	OPcamUpdateView(skinningExample->Camera);
+	skinningExample->Camera->UpdateView();
 
-	if (OPkeyboardWasPressed(OPKEY_N)) {
+	if (OPkeyboardWasPressed(OPkeyboardKey::N)) {
 		skinningExample->animation2->Elapsed = skinningExample->animation2->Frame = 0;
 	}
-	if (OPkeyboardWasPressed(OPKEY_M)) {
+	if (OPkeyboardWasPressed(OPkeyboardKey::M)) {
 		skinningExample->animation3->Elapsed = skinningExample->animation3->Frame = 0;
 	}
-	if (OPkeyboardWasPressed(OPKEY_B)) {
+	if (OPkeyboardWasPressed(OPkeyboardKey::B)) {
 		skinningExample->animation4->Elapsed = skinningExample->animation4->Frame = 0;
 	}
 
-	if (OPkeyboardIsDown(OPKEY_N)) {
+	if (OPkeyboardIsDown(OPkeyboardKey::N)) {
 		heldDown += time->Elapsed;
 		if (heldDown > 500) heldDown = 500;
 		OPskeletonAnimationUpdate(skinningExample->animation, time);
@@ -110,11 +110,11 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 		OPskeletonAnimationMerge(skinningExample->animation, skinningExample->animation2, heldDown / 500.0f);
 		OPskeletonAnimationApply(skinningExample->animation, skinningExample->skeleton);
 	}
-	else if (OPkeyboardIsDown(OPKEY_M)) {
+	else if (OPkeyboardIsDown(OPkeyboardKey::M)) {
 		OPskeletonAnimationUpdate(skinningExample->animation3, time);
 		OPskeletonAnimationApply(skinningExample->animation3, skinningExample->skeleton);
 	}
-	else if (OPkeyboardIsDown(OPKEY_B)) {
+	else if (OPkeyboardIsDown(OPkeyboardKey::B)) {
 		OPskeletonAnimationUpdate(skinningExample->animation4, time);
 		OPskeletonAnimationApply(skinningExample->animation4, skinningExample->skeleton);
 	}
@@ -127,8 +127,8 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 		OPskeletonAnimationApply(skinningExample->animation, skinningExample->skeleton);
 	}
 	//OPmat4Translate(&mesh->Skeleton->localPoses[pos], time->Elapsed / 1000.0f, 0, 0);
-	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_W) / 100.0f);
-	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_S) / -100.0f);
+	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPkeyboardKey::W) / 100.0f);
+	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPkeyboardKey::S) / -100.0f);
 	OPskeletonUpdate(skinningExample->skeleton);
 
 	skinningExample->Mesh->Bind();

@@ -31,7 +31,7 @@ JS_HELPER_SELF_WRAPPER(_OPvertexLayoutInit) {
 
 		attributes[i].Name = OPstringCopy(*name);
 		attributes[i].Elements = elements;
-		attributes[i].Type = GL_FLOAT;
+		attributes[i].Type = OPshaderElementType::FLOAT;
 		//attributes[i].Offset = offset;
 
 		OPlog("attr: %s", *name);

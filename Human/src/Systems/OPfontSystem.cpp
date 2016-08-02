@@ -28,8 +28,8 @@ void OPfontSystemLoadEffects() {
 	}
 
 	OPshaderAttribute attribs[] = {
-		{ "aPosition", GL_FLOAT, 3 },
-		{ "aUV", GL_FLOAT, 2 }
+		{ "aPosition", OPshaderElementType::FLOAT, 3 },
+		{ "aUV", OPshaderElementType::FLOAT, 2 }
 	};
 
 	OPFONTMANAGER_EFFECT_ACTIVE = (OPeffect*)OPalloc(sizeof(OPeffect));

@@ -6,6 +6,7 @@
 #include "./Human/include/Input/OPmouse.h"
 #include "./Data/include/OPstring.h"
 
+#include "./Human/include/Platform/opengl/OPcommonGL.h"
 
 OPimgui* OPIMGUI_ACTIVE = NULL;
 
@@ -14,7 +15,6 @@ OPimgui* OPimguiCreate(OPeffect* effect, OPfontManager* fontManager) {
 	imgui->effect = effect;
 	imgui->fontManager = fontManager;
 
-	OPglError("IMGUI:Error CLEAR");
 
 	imgui->buffer.Init();// = OPrenderGenBuffer(OPvertexBufferOLD);
 	// OPlog("Render %d, %d", OPRENDER_WIDTH, OPRENDER_HEIGHT);
@@ -22,8 +22,6 @@ OPimgui* OPimguiCreate(OPeffect* effect, OPfontManager* fontManager) {
 	// OPlog("Screen %f, %f", OPRENDER_SCREEN_WIDTH_SCALE, OPRENDER_SCREEN_HEIGHT_SCALE);
 
 	imgui->proj = OPmat4Ortho(0, (OPfloat)OPRENDER_SCALED_WIDTH, (OPfloat)OPRENDER_SCALED_HEIGHT, 0, -1, 1);
-
-	OPglError("IMGUI:Error 1");
 
 	return imgui;
 }

@@ -29,7 +29,7 @@ struct CommandBucketExample {
 
 		effect.Init("ColoredModel.vert", "ColoredModel.frag");
 
-    	camera = OPcamPersp(
+    	camera.SetPerspective(
     		OPVEC3_ONE * 2.0, OPVEC3_UP, OPVEC3_UP,
     		0.1f, 1000.0f,
     		45.0f, OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
@@ -47,7 +47,7 @@ struct CommandBucketExample {
 	}
 
 	OPint Update(OPtimer* time) {
-	    if (OPkeyboardIsDown(OPKEY_SPACE)) { rotation++; }
+	    if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { rotation++; }
 
     	model.world.SetRotY(rotation / 100.0f);
     	model.world.Scl(0.25f);

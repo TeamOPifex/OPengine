@@ -8,7 +8,7 @@ void OPmodel::Bind(OPmaterial* material) {
 
 void OPmodel::Bind(OPmaterial* material, OPcam* camera) {
 	Bind(material);
-	OPcamBind(camera);
+	camera->Bind();
 }
 
 void OPmodel::Draw(OPmaterial* material, OPcam* cam) {

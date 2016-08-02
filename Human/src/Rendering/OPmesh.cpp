@@ -13,29 +13,33 @@ ui64 OPMESH_GLOBAL_ID = 1;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPmesh OPmeshCreate(OPvertexLayout vertexLayout){
-	OPmesh out;
-
-	out.vertexLayout = vertexLayout;
-	out.vertexArray.Init(&vertexLayout)->Bind();
-	out.vertexBuffer.Init()->Bind();
-	out.vertexBuffer.SetLayout(&vertexLayout);
-	out.indexBuffer.Init()->Bind();
-
-	out.Id = OPMESH_GLOBAL_ID++;
-
-	return out;
+OPmesh* OPmesh::Create(OPvertexLayout vertexLayout){
+	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
+	mesh->Init(vertexLayout);
+	return mesh;
 }
 
-OPmesh* OPmeshCreate(OPmeshDesc desc) {
+OPmesh* OPmesh::Create(OPmeshDesc desc) {
 	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
-    mesh->Id = OPMESH_GLOBAL_ID++;
-	(*mesh) = OPmeshCreate(desc.VertexSize);
-	mesh->Bind();
-
-	OPmeshBuild(desc.VertexSize, desc.IndexSize, desc.VertexCount, desc.IndexCount, desc.Vertices, desc.Indices);
-
+	mesh->Init(desc);
 	return mesh;
+}
+
+OPmesh* OPmesh::Init(OPvertexLayout vertexLayout) {
+	this->vertexLayout = vertexLayout;
+	vertexArray.Init(&vertexLayout)->Bind();
+	vertexBuffer.Init()->Bind();
+	vertexBuffer.SetLayout(&vertexLayout);
+	indexBuffer.Init()->Bind();
+	Id = OPMESH_GLOBAL_ID++;
+	return this;
+}
+
+OPmesh* OPmesh::Init(OPmeshDesc desc) {
+	Init(desc.VertexSize);
+	Bind();
+	Build(desc.VertexSize, desc.IndexSize, desc.VertexCount, desc.IndexCount, desc.Vertices, desc.Indices);
+	return this;
 }
 
 void OPmesh::SetVertexLayout(OPvertexLayout* vertexLayoutUpdate) {
@@ -46,25 +50,26 @@ void OPmesh::SetVertexLayout(OPvertexLayout* vertexLayoutUpdate) {
 }
 
 //-----------------------------------------------------------------------------
-void OPmeshBuild(OPvertexLayout vertexLayout, OPindexSize indSize,
+void OPmesh::Build(OPvertexLayout vertexLayout, OPindexSize indSize,
 						 OPuint vertCount, OPuint indCount,
 						 void* vertices, void* indices){
-	
-	OPMESH_ACTIVE->vertexArray.Bind();
-	OPMESH_ACTIVE->indexBuffer.SetData(indSize, indCount, indices);
-	OPMESH_ACTIVE->vertexBuffer.SetData(vertexLayout.stride, vertCount, vertices);
-	OPMESH_ACTIVE->vertexLayout = vertexLayout;
+	vertexArray.Bind();
+	vertexBuffer.SetData(vertexLayout.stride, vertCount, vertices);
+	indexBuffer.SetData(indSize, indCount, indices);
+	this->vertexLayout = vertexLayout;
 
-	OPMESH_ACTIVE->Vertices = vertices;
-	OPMESH_ACTIVE->Indicies = indices;
+	Vertices = vertices;
+	Indicies = indices;
 }
 
 //-----------------------------------------------------------------------------
 void OPmesh::Bind(){
-	OPRENDERER_ACTIVE->VertexArray.Bind(&vertexArray);
-	OPrenderBindBuffer(&vertexBuffer);
-	//OPRENDERER_ACTIVE->VertexBuffer.SetLayout(&vertexBuffer, &vertexLayout);
-	OPrenderBindBuffer(&indexBuffer);
+	vertexArray.Bind();
+	vertexBuffer.Bind();
+	indexBuffer.Bind();
+	//OPRENDERER_ACTIVE->VertexArray.Bind(&vertexArray);
+	//OPrenderBindBuffer(&vertexBuffer);
+	//OPrenderBindBuffer(&indexBuffer);
 
 	OPMESH_ACTIVE_PTR = OPMESH_ACTIVE = this;
 }
@@ -74,7 +79,7 @@ void OPmeshRender(){
 	OPrenderDrawBufferIndexed(0);
 }
 
-void OPmeshDestroy(OPmesh* mesh) {
-	mesh->vertexBuffer.Destroy();
-	mesh->indexBuffer.Destroy();
+void OPmesh::Destroy() {
+	vertexBuffer.Destroy();
+	indexBuffer.Destroy();
 }

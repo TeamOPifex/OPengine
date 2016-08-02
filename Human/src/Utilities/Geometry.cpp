@@ -138,9 +138,8 @@ OPmesh* OPgeoCreateSphere(f32 radius, ui16 widthSegments, ui16 heightSegments) {
 	builder.Add(OPattributes::NORMAL);
 	builder.Add(OPattributes::UV);
 	OPvertexLayout vertexLayout = builder.Build();
-	*mesh = OPmeshCreate(vertexLayout);
-	mesh->Bind();
-	OPmeshBuild(
+	*mesh = OPmesh(vertexLayout);
+	mesh->Build(
 		vertexLayout,
 		OPindexSize::SHORT,
 		count, 

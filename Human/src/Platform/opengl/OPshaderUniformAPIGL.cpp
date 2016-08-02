@@ -3,6 +3,7 @@
 #include "./Human/include/Platform/opengl/OPeffectAPIGL.h"
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Rendering/OPshaderUniform.h"
+#include "./Core/include/Assert.h"
 
 OPshaderUniform* OPshaderUniformGLInit(OPshaderUniform* shaderUniform, OPeffect* effect, const OPchar* name) {
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)OPalloc(sizeof(OPshaderUniformGL));;

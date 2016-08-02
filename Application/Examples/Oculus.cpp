@@ -26,8 +26,8 @@ void ExampleOculusEnter(OPgameState* last) {
 	oculusExample.Mesh = (OPmesh*)OPcmanGet("untitled.opm");
 
 	OPshaderAttribute attribs[] = {
-		{ "aPosition", GL_FLOAT, 3 },
-		{ "aNormal", GL_FLOAT, 3 }
+		{ "aPosition", OPshaderElementType::FLOAT, 3 },
+		{ "aNormal", OPshaderElementType::FLOAT, 3 }
 	};
 
 	oculusExample.Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
@@ -36,7 +36,7 @@ void ExampleOculusEnter(OPgameState* last) {
 	oculusExample.Effect->Init(vert, frag);
 
 	oculusExample.Camera = (OPcam*)OPalloc(sizeof(OPcam));
-	*oculusExample.Camera = OPcamPersp(
+	oculusExample.Camera->SetPerspective(
 		OPVEC3_ONE * 2.0,
 		OPvec3Create(0, 1, 0),
 		OPvec3Create(0, 1, 0),
@@ -61,7 +61,7 @@ OPint ExampleOculusUpdate(OPtimer* time) {
 	OPrenderDepth(1);
 	OPrenderClear(0, 0, 0);
 
-	if (OPkeyboardIsDown(OPKEY_P)) { oculusExample.Rotation++; }
+	if (OPkeyboardIsDown(OPkeyboardKey::P)) { oculusExample.Rotation++; }
 
 	oculusExample.Mesh->Bind();
 	oculusExample.Effect->Bind();

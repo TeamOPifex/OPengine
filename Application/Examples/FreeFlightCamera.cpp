@@ -22,9 +22,9 @@ void ExampleFreeFlightEnter(OPgameState* last) {
 	freeFlightExample.Rotation = 0;
 
 	OPshaderAttribute attribs[] = {
-		{ "aPosition", GL_FLOAT, 3 },
-		{ "aNormal", GL_FLOAT, 3 },
-		{ "aUV", GL_FLOAT, 2 }
+		{ "aPosition", OPshaderElementType::FLOAT, 3 },
+		{ "aNormal", OPshaderElementType::FLOAT, 3 },
+		{ "aUV", OPshaderElementType::FLOAT, 2 }
 	};
 
 	freeFlightExample.Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
@@ -37,7 +37,7 @@ void ExampleFreeFlightEnter(OPgameState* last) {
 
 OPint ExampleFreeFlightUpdate(OPtimer* timer) {
 	OPcamFreeFlightUpdate(&freeFlightExample.Camera, timer);
-	if (OPkeyboardIsDown(OPKEY_SPACE)) { freeFlightExample.Rotation++; }
+	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { freeFlightExample.Rotation++; }
 
 	return false;
 }

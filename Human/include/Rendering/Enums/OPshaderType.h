@@ -6,4 +6,10 @@ enum struct OPshaderType {
 	FRAGMENT
 };
 
+enum struct OPshaderElementType {
+	SHORT = 0,
+	INT,
+	FLOAT
+};
+
 #endif

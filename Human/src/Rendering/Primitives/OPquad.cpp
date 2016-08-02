@@ -59,9 +59,8 @@ OPmesh OPquadCreate(){
 	builder.Add(OPattributes::POSITION);
 	builder.Add(OPattributes::UV);
 	OPvertexLayout vertexLayout = builder.Build();
-	OPmesh mesh = OPmeshCreate(vertexLayout);
-	mesh.Bind();
-	OPmeshBuild(
+	OPmesh mesh = OPmesh(vertexLayout);
+	mesh.Build(
 		vertexLayout, OPindexSize::SHORT,
 		4, 6,
 		OPquadVertData, OPquadIndexData
@@ -97,7 +96,7 @@ OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoor
 	builder.Init();
 	builder.Add(OPattributes::POSITION);
 	builder.Add(OPattributes::UV);
-	OPmesh mesh = OPmeshCreate(builder.Build());
+	OPmesh mesh = OPmesh(builder.Build());
 	mesh.Bind();
 
 	// 1, 1,
@@ -113,7 +112,7 @@ OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoor
 	SetQuadPoint(&verts[2], offset.x - width, offset.y - height, 0, texcoordStart.x, texcoordStart.y);
 	SetQuadPoint(&verts[3], offset.x + width, offset.y - height, 0, texcoordEnd.x, texcoordStart.y);
 
-	OPmeshBuild(
+	mesh.Build(
 		mesh.vertexLayout, OPindexSize::SHORT,
 		4, 6,
 		verts, OPquadIndexData
@@ -128,11 +127,11 @@ OPmeshPacked OPquadCreatePacked(){
 	builder.Add(OPattributes::POSITION);
 	builder.Add(OPattributes::UV);
 	OPvertexLayout vertexLayout = builder.Build();
-	return OPmeshPackedCreate(
+	OPmeshPacked result = OPmeshPacked(
 		vertexLayout, OPindexSize::SHORT,
 		4, 6,
-		OPquadVertData, OPquadIndexData
-	);
+		OPquadVertData, OPquadIndexData);
+	return result;
 }
 //-----------------------------------------------------------------------------
 OPmesh OPquadNormCreate(){
@@ -142,9 +141,8 @@ OPmesh OPquadNormCreate(){
 	builder.Add(OPattributes::NORMAL);
 	builder.Add(OPattributes::UV);
 	OPvertexLayout vertexLayout = builder.Build();
-	OPmesh mesh = OPmeshCreate(vertexLayout);
-	mesh.Bind();
-	OPmeshBuild(
+	OPmesh mesh = OPmesh(vertexLayout);
+	mesh.Build(
 		vertexLayout, OPindexSize::SHORT,
 		4, 6,
 		OPquadVertNormData, OPquadIndexData
@@ -160,7 +158,7 @@ OPmeshPacked OPquadNormCreatePacked(){
 	builder.Add(OPattributes::NORMAL);
 	builder.Add(OPattributes::UV);
 	OPvertexLayout vertexLayout = builder.Build();
-	return OPmeshPackedCreate(
+	return OPmeshPacked(
 		vertexLayout, OPindexSize::SHORT,
 		4, 6,
 		OPquadVertNormData, OPquadIndexData
@@ -196,9 +194,8 @@ OPmesh OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OP
 	builder.Add(OPattributes::POSITION);
 	builder.Add(OPattributes::UV);
 	OPvertexLayout vertexLayout = builder.Build();
-	OPmesh mesh = OPmeshCreate(vertexLayout);
-	mesh.Bind();
-	OPmeshBuild(
+	OPmesh mesh = OPmesh(vertexLayout);
+	mesh.Build(
 		vertexLayout, OPindexSize::SHORT,
 		4, 6,
 		verts, indicies

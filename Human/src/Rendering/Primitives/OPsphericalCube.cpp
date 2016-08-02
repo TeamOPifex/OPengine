@@ -229,10 +229,8 @@ OPsphericalCube OPsphericalCubeCreate(OPimage * faces) {
 	builder.Add(OPattributes::UV);
 	OPvertexLayout vertexLayout = builder.Build();
 	for (OPint i = 0; i < 6; i++) {
-		result.sides[i] = OPmeshCreate(vertexLayout);
-		result.sides[i].Bind();
-
-		OPmeshBuild(
+		result.sides[i] = OPmesh(vertexLayout);
+		result.sides[i].Build(
 			vertexLayout, OPindexSize::SHORT,
 				VertsPerSide, IndicesPerSide,
 				(void*)verts[i], (void*)indices[i]
@@ -454,10 +452,8 @@ OPsphericalCube OPsphericalCubeCreate(ui16 size) {
 	OPvertexLayout vertexLayout = builder.Build();
 
 	for (OPint i = 0; i < 6; i++) {
-		result.sides[i] = OPmeshCreate(vertexLayout);
-		result.sides[i].Bind();
-
-		OPmeshBuild(
+		result.sides[i] = OPmesh(vertexLayout);
+		result.sides[i].Build(
 			vertexLayout, OPindexSize::SHORT,
 			VertsPerSide, IndicesPerSide,
 			(void*)verts[i], (void*)indices[i]

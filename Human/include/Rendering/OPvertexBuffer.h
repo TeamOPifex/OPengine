@@ -35,10 +35,10 @@ struct OPvertexBuffer {
 	inline void Destroy() {
 		OPRENDERER_ACTIVE->VertexBuffer.Destroy(this);
 	}
-};
 
-inline OPvertexBuffer* OPvertexBufferCreate() {
-	return OPRENDERER_ACTIVE->VertexBuffer.Create();
-}
+	inline static OPvertexBuffer* Create() {
+		return OPRENDERER_ACTIVE->VertexBuffer.Create();
+	}
+};
 
 #endif

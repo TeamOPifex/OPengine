@@ -78,8 +78,6 @@ void* OPrealloc(void* ptr, OPuint bytes);
  */
 void  OPfree(void* ptr);
 
-
-
 void* OPsysAlloc(OPuint bytes);
 void OPsysFree(void* ptr);
 

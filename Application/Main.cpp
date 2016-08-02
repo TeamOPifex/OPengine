@@ -29,9 +29,9 @@ void ApplicationInit() {
 
 	OPoculusStartup();
 
+	OPrenderInit();
 	OPwindowSystemInit();
-	mainWindow.Init(NULL, false, true, "Main Window", 1280, 720);
-	OPrenderInit(&mainWindow);
+	mainWindow.Init(NULL, OPwindowParameters("Main Window", true, 1280, 720));
 	
 	OPGAMEPADSYSTEM.SetDeadzones(0.2f);	
 
@@ -46,8 +46,8 @@ OPint ApplicationUpdate(OPtimer* timer) {
 	OPinputSystemUpdate(timer);
 	OPcmanUpdate(timer);
 
-	if (OPkeyboardWasReleased(OPKEY_ESCAPE)) return 1;
-	if ((OPkeyboardWasReleased(OPKEY_BACKSPACE) || OPgamePadGet(OPGAMEPAD_ONE)->WasPressed(OPGAMEPADBUTTON_BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
+	if (OPkeyboardWasReleased(OPkeyboardKey::ESCAPE)) return 1;
+	if ((OPkeyboardWasReleased(OPkeyboardKey::BACKSPACE) || OPgamePadGet(OPGAMEPAD_ONE)->WasPressed(OPGAMEPADBUTTON_BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
 		OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 	}
 
@@ -67,8 +67,8 @@ void ApplicationDestroy() {
 
 void RenderTestInit() {
 	OPwindowSystemInit();
-	mainWindow.Init(NULL, false, false, "Main Window", 1280, 720);
-	OPrenderInit(&mainWindow, OPRENDERER::OPRENDERER_OPENGL);
+	mainWindow.Init(NULL, OPwindowParameters("Main Window", true, 1280, 720));
+	OPrenderInit(OPrendererType::OPENGL);
 }
 
 OPint RenderTestUpdate(OPtimer* timer) {

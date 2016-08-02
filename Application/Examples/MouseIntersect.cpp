@@ -58,7 +58,7 @@ void ExampleMouseIntersectEnter(OPgameState* last) {
 	mouseIntersectExample.Effect.Init( "ColoredModel.vert", "ColoredModel.frag");
 
 	// Sets up the camera as a perpsective camera for rendering
-	mouseIntersectExample.Camera = OPcamPersp(
+	mouseIntersectExample.Camera.SetPerspective(
 		OPvec3Create(10, 10, 10),
 		OPVEC3_ZERO,
 		OPVEC3_UP,
@@ -95,14 +95,14 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
-	if (OPkeyboardIsDown(OPKEY_SPACE)) { mouseIntersectExample.Rotation++; }
+	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { mouseIntersectExample.Rotation++; }
 
-	mouseIntersectExample.Camera.pos.x -= OPkeyboardIsDown(OPKEY_A) * time->Elapsed * 0.01f;
-	mouseIntersectExample.Camera.pos.x += OPkeyboardIsDown(OPKEY_D) * time->Elapsed * 0.01f;
-	mouseIntersectExample.Camera.target.x -= OPkeyboardIsDown(OPKEY_A) * time->Elapsed * 0.01f;
-	mouseIntersectExample.Camera.target.x += OPkeyboardIsDown(OPKEY_D) * time->Elapsed * 0.01f;
+	mouseIntersectExample.Camera.pos.x -= OPkeyboardIsDown(OPkeyboardKey::A) * time->Elapsed * 0.01f;
+	mouseIntersectExample.Camera.pos.x += OPkeyboardIsDown(OPkeyboardKey::D) * time->Elapsed * 0.01f;
+	mouseIntersectExample.Camera.target.x -= OPkeyboardIsDown(OPkeyboardKey::A) * time->Elapsed * 0.01f;
+	mouseIntersectExample.Camera.target.x += OPkeyboardIsDown(OPkeyboardKey::D) * time->Elapsed * 0.01f;
 	mouseIntersectExample.Camera.Update();
-	OPcamUpdateView(&mouseIntersectExample.Camera);
+	mouseIntersectExample.Camera.UpdateView();
 
 
 	OPray3D ray = { OPvec3(0, 0, 0), OPvec3(0, 0, 0) };
@@ -110,8 +110,7 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	OPint intersecting = 0;
 	if(OPmouseIsDown(OPMOUSE_LBUTTON)) {
 
-		ray = OPcamUnproject(
-			&mouseIntersectExample.Camera,
+		ray = mouseIntersectExample.Camera.Unproject(
 			OPmousePositionX(),
 			OPmousePositionY()
 		);

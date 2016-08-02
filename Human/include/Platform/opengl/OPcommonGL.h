@@ -15,6 +15,7 @@
 #include <GLFW/glfw3.h>
 #endif
 
+i8 OPglewInit();
 GLenum OPcommonGLCheckError();
 bool OPcommonGLLog(const OPchar* function, const OPchar* file, i32 line);
 

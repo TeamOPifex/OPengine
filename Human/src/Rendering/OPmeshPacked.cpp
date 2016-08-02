@@ -10,26 +10,36 @@
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //-----------------------------------------------------------------------------
 
-OPmeshPacked OPmeshPackedCreate(
+OPmeshPacked* OPmeshPacked::Init(
 			OPvertexLayout vertexLayout, OPindexSize indSize,
 			OPuint vertCount, OPuint indCount,
 			void* vertices, void* indices){
+
 	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
 
-	OPmeshPacked out;
-	out.offset = packer->indexOffset;
-	out.count = indCount;
-	out.elementCount = indCount;
-	out.vertexLayout = vertexLayout;
+	offset = packer->indexOffset;
+	count = indCount;
+	elementCount = indCount;
+	this->vertexLayout = vertexLayout;
 
-	OPmeshPackerAddVB(vertexLayout.stride, vertices, vertCount);
-	OPmeshPackerAddIB(indSize, indices, indCount);
+	packer->AddVertexBuffer(vertexLayout.stride, vertices, vertCount);
+	packer->AddIndexBuffer(indSize, indices, indCount);
 	packer->vertexElementOffset += vertCount;
 	
-	return out;
+	return this;
+}
+
+OPmeshPacked* OPmeshPacked::Create(OPvertexLayout vertexLayout, OPindexSize indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices) {
+	OPmeshPacked* result = (OPmeshPacked*)OPalloc(sizeof(OPmeshPacked));
+	result->Init(vertexLayout, indSize, vertCount, indCount, vertices, indices);
+	return result;
 }
 
 //-----------------------------------------------------------------------------
-void OPmeshPackedRender(OPmeshPacked* mesh){
-	glDrawElements(GL_TRIANGLES, (GLsizei)mesh->elementCount, GL_UNSIGNED_SHORT, (void*)(mesh->offset));
+void OPmeshPacked::Render(){
+	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
+	packer->vertexArray.Bind();
+
+	OPRENDERER_ACTIVE->VertexArray.DrawIndexed(&packer->vertexArray, elementCount, offset);
+	//glDrawElements(GL_TRIANGLES, (GLsizei)elementCount, GL_UNSIGNED_SHORT, (void*)(offset));
 }

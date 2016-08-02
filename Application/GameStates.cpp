@@ -91,8 +91,8 @@ void ColorSingleHandler(OPstream* str, void* param) {
 
 void State0Enter(OPgameState* last){
 	OPshaderAttribute attribs[] = {
-		{ "aPosition", GL_FLOAT, 3 },
-		{ "aUV", GL_FLOAT, 2 }
+		{ "aPosition", OPshaderElementType::FLOAT, 3 },
+		{ "aUV", OPshaderElementType::FLOAT, 2 }
 	};
 
 	OPcmanLoad("impact.wav");
@@ -166,7 +166,7 @@ OPint State0Update(OPtimer* time){
 
 	OPvec2 pos = OPgamePadGet(OPGAMEPAD_ONE)->LeftThumb();
 
-	if(OPkeyboardWasPressed(OPKEY_SPACE)){
+	if(OPkeyboardWasPressed(OPkeyboardKey::SPACE)){
 		//OPlog("Should play");
 		////OPaudSetEmitter(sound);
 
@@ -270,7 +270,7 @@ OPint State1Update(OPtimer* time){
 
 	world = OPmat4RotX(t);
 
-	OPmeshPackerBind(&packer);
+	packer.Bind();
 	plane->Bind();
 	tri.Bind();
 

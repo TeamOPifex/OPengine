@@ -35,7 +35,7 @@ void ExampleCubeMapEnter(OPgameState* last) {
 
     cubeMapExample.Effect.Init("CubeMap.vert", "CubeMap.frag");
 
-    cubeMapExample.Camera = OPcamPersp(
+    cubeMapExample.Camera.SetPerspective(
         OPVEC3_ONE, OPVEC3_ZERO, OPVEC3_UP,
         0.1f, 1000.0f, 45.0f,
         OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
@@ -54,7 +54,7 @@ OPint ExampleCubeMapUpdate(OPtimer* time) {
     // Update
     ////////////////////////
 
-    if (OPkeyboardIsDown(OPKEY_SPACE)) { cubeMapExample.Rotation++; }
+    if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { cubeMapExample.Rotation++; }
 
 
 

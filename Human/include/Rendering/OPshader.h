@@ -1,7 +1,6 @@
 #ifndef OPENGINE_HUMAN_RENDERER_SHADER
 #define OPENGINE_HUMAN_RENDERER_SHADER
 
-#include "./Human/include/Rendering/OpenGL.h"
 #include "./Core/include/OPtypes.h"
 #include "./Data/include/OPstream.h"
 
@@ -20,14 +19,6 @@ struct OPshader {
 	OPshaderType shaderType;
 };
 
-#ifdef OPIFEX_OPENGL_ES_2
-#define OPvertexShader   GL_VERTEX_SHADER
-#define OPfragmentShader GL_FRAGMENT_SHADER
-#else
-#define OPvertexShader   GL_VERTEX_SHADER
-#define OPfragmentShader GL_FRAGMENT_SHADER
-#endif
-
 
 //-----------------------------------------------------------------------------
 //   _____ _                   _
@@ -39,7 +30,7 @@ struct OPshader {
 
 struct OPshaderAttribute {
 	OPchar* Name;
-	ui32 Type;
+	OPshaderElementType Type;
 	ui32 Elements;
 	OPuint Offset;
 	OPint Location;

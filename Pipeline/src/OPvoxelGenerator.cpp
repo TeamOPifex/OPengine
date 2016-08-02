@@ -281,11 +281,8 @@ OPmesh* OPvoxelGeneratorBuild(struct OPvoxelGenerator* gen) {
 
 
 	OPmeshDesc desc = OPvoxelGeneratorBuildDesc(gen);
-	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
-	(*mesh) = OPmeshCreate(desc.VertexSize);
-	mesh->Bind();
-
-	OPmeshBuild(desc.VertexSize, desc.IndexSize, desc.VertexCount, desc.IndexCount, desc.Vertices, desc.Indices);
+	OPmesh* mesh = OPmesh::Create(desc.VertexSize);
+	mesh->Build(desc.VertexSize, desc.IndexSize, desc.VertexCount, desc.IndexCount, desc.Vertices, desc.Indices);
 
 	return mesh;
 }

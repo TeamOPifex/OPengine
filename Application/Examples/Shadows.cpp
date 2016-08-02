@@ -66,9 +66,8 @@ typedef struct {
 		OPvertexLayoutBuilder builder;
 		builder.Init((ui32)OPattributes::POSITION | (ui32)OPattributes::NORMAL | (ui32)OPattributes::UV);
 		OPvertexLayout vertexLayout = builder.Build();
-		GroundMesh = OPmeshCreate(vertexLayout);
-		GroundMesh.Bind();
-		OPmeshBuild(
+		GroundMesh = OPmesh(vertexLayout);
+		GroundMesh.Build(
 			vertexLayout, OPindexSize::SHORT,
 			4, 6,
 			_quadVertNormData, _quadIndexData
@@ -88,9 +87,9 @@ typedef struct {
 
 		// Create the effect used to draw a shadowed model
 		OPshaderAttribute attribs[] = {
-			{ "aPosition", GL_FLOAT, 3 },
-			{ "aNormal", GL_FLOAT, 3 },
-			{ "aUV", GL_FLOAT, 2 }
+			{ "aPosition", OPshaderElementType::FLOAT, 3 },
+			{ "aNormal", OPshaderElementType::FLOAT, 3 },
+			{ "aUV", OPshaderElementType::FLOAT, 2 }
 		};
 
 		OPshader* vert = (OPshader*)OPcmanLoadGet("Common/TexturedShadow.vert");
@@ -114,78 +113,78 @@ typedef struct {
 
 
 
-		const GLuint SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
-		GLuint depthMapFBO;
-		glGenFramebuffers(1, &depthMapFBO);
+		//const GLuint SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+		//GLuint depthMapFBO;
+		//glGenFramebuffers(1, &depthMapFBO);
 
-		OPtextureDesc depthDesc;
-		depthDesc.width = SHADOW_WIDTH;
-		depthDesc.height = SHADOW_HEIGHT;
-		depthDesc.filter = OPtextureFilter::NEAREST;
-		depthDesc.wrap = OPtextureWrap::CLAMP_TO_BORDER;
-		depthDesc.format = OPtextureFormat::NONE;
+		//OPtextureDesc depthDesc;
+		//depthDesc.width = SHADOW_WIDTH;
+		//depthDesc.height = SHADOW_HEIGHT;
+		//depthDesc.filter = OPtextureFilter::NEAREST;
+		//depthDesc.wrap = OPtextureWrap::CLAMP_TO_BORDER;
+		//depthDesc.format = OPtextureFormat::NONE;
 
-		// - Create depth texture
-		GLuint depthMap;
-		glGenTextures(1, &depthMap);
-		glBindTexture(GL_TEXTURE_2D, depthMap);
+		//// - Create depth texture
+		//GLuint depthMap;
+		//glGenTextures(1, &depthMap);
+		//glBindTexture(GL_TEXTURE_2D, depthMap);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-		GLfloat borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
-		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		//GLfloat borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+		//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		//glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+		//glDrawBuffer(GL_NONE);
+		//glReadBuffer(GL_NONE);
+		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
 
-		ShadowFrameBuffer.Handle = depthMapFBO;
-		//ShadowFrameBuffer.Texture.Handle = depthMap;
-		ShadowFrameBuffer.Description.width = SHADOW_WIDTH;
-		ShadowFrameBuffer.Description.height = SHADOW_HEIGHT;
-		ShadowFrameBuffer.Texture.textureDesc.width = SHADOW_WIDTH;
-		ShadowFrameBuffer.Texture.textureDesc.height = SHADOW_HEIGHT;
-		//ShadowFrameBuffer = OPframeBufferCreateShadow(1024, 1024);
-		//ShadowFrameBuffer = OPframeBufferCreate(desc);
+		//ShadowFrameBuffer.Handle = depthMapFBO;
+		////ShadowFrameBuffer.Texture.Handle = depthMap;
+		//ShadowFrameBuffer.Description.width = SHADOW_WIDTH;
+		//ShadowFrameBuffer.Description.height = SHADOW_HEIGHT;
+		//ShadowFrameBuffer.Texture.textureDesc.width = SHADOW_WIDTH;
+		//ShadowFrameBuffer.Texture.textureDesc.height = SHADOW_HEIGHT;
+		////ShadowFrameBuffer = OPframeBufferCreateShadow(1024, 1024);
+		////ShadowFrameBuffer = OPframeBufferCreate(desc);
 
-		shadow2D = OPtexture2DCreate(&ShadowFrameBuffer.Texture);
-		shadow2D->Scale = OPvec2(0.25, 0.25);
-		shadow2D->Position = OPvec2(0.5, 0.5);
+		//shadow2D = OPtexture2DCreate(&ShadowFrameBuffer.Texture);
+		//shadow2D->Scale = OPvec2(0.25, 0.25);
+		//shadow2D->Position = OPvec2(0.5, 0.5);
 
-		// Setup the effect that will be used to render the depth
-		// onto the frame buffer.
-		OPshaderAttribute attribsShadow[] = {
-			{ "aPosition", GL_FLOAT, 3 }
-		};
+		//// Setup the effect that will be used to render the depth
+		//// onto the frame buffer.
+		//OPshaderAttribute attribsShadow[] = {
+		//	{ "aPosition", GL_FLOAT, 3 }
+		//};
 
-		vert = (OPshader*)OPcmanLoadGet("Common/DepthRTT.vert");
-		frag = (OPshader*)OPcmanLoadGet("Common/DepthRTT.frag");
-		ShadowEffect.Init(vert, frag);
+		//vert = (OPshader*)OPcmanLoadGet("Common/DepthRTT.vert");
+		//frag = (OPshader*)OPcmanLoadGet("Common/DepthRTT.frag");
+		//ShadowEffect.Init(vert, frag);
 
-		// Create the camera used for the shadow. This is the position
-		// and direction of the light being used for shadows.
-		OPfloat size = 30;
-		ShadowCamera = OPcamOrtho(
-		    OPvec3Create(0, 15, 1),
-		    OPvec3Create(0, 0, 0),
-		    OPvec3Create(0, 1, 0),
-		    0.01f, 120.0f,
-		    -size, size,
-		    -size, size );
-		//ShadowCamera = OPcamPersp(
-		//	OPvec3Create(0, 15, 0.001f),
-		//	OPvec3Create(0, 0, 0),
-		//	OPvec3Create(0, 1, 0),
-		//	1.0f, 1000.0f,
-		//	45.0f, 1.0
-		//);
+		//// Create the camera used for the shadow. This is the position
+		//// and direction of the light being used for shadows.
+		//OPfloat size = 30;
+		//ShadowCamera.SetOrtho(
+		//    OPvec3Create(0, 15, 1),
+		//    OPvec3Create(0, 0, 0),
+		//    OPvec3Create(0, 1, 0),
+		//    0.01f, 120.0f,
+		//    -size, size,
+		//    -size, size );
+		////ShadowCamera = OPcamPersp(
+		////	OPvec3Create(0, 15, 0.001f),
+		////	OPvec3Create(0, 0, 0),
+		////	OPvec3Create(0, 1, 0),
+		////	1.0f, 1000.0f,
+		////	45.0f, 1.0
+		////);
 
 
 		ModelMaterials[0].Init(&ShadowEffect);
@@ -213,15 +212,15 @@ typedef struct {
 	OPint Update(OPtimer* timer) {
 		OPcamFreeFlightUpdate(&Camera, timer);
 
-		ShadowCamera.pos.x -= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_J);
-		ShadowCamera.pos.x += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_L);
-		ShadowCamera.pos.y -= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_U);
-		ShadowCamera.pos.y += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_O);
-		ShadowCamera.pos.z += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_I);
-		ShadowCamera.pos.z -= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPKEY_K);
+		ShadowCamera.pos.x -= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPkeyboardKey::J);
+		ShadowCamera.pos.x += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPkeyboardKey::L);
+		ShadowCamera.pos.y -= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPkeyboardKey::U);
+		ShadowCamera.pos.y += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPkeyboardKey::O);
+		ShadowCamera.pos.z += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPkeyboardKey::I);
+		ShadowCamera.pos.z -= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPkeyboardKey::K);
 		ShadowCamera.Update();
 		
-		if (OPkeyboardWasReleased(OPKEY_V)) {
+		if (OPkeyboardWasReleased(OPkeyboardKey::V)) {
 			ViewFromLight = !ViewFromLight;
 		}
 

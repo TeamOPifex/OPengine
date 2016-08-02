@@ -49,7 +49,7 @@ void ExampleTexturedEnter(OPgameState* last) {
 	texturedExample->Mesh->vertexLayout.SetOffsets(&texturedExample->Effect);
 	texturedExample->Mesh->vertexBuffer.SetLayout(&texturedExample->Mesh->vertexLayout);
 
-	texturedExample->Camera = OPcamPersp(
+	texturedExample->Camera.SetPerspective(
 		OPVEC3_ONE * 10.0,
 		OPvec3Create(0, 0, 0),
 		OPvec3Create(0, 1, 0),
@@ -64,7 +64,7 @@ void ExampleTexturedEnter(OPgameState* last) {
 OPint ExampleTexturedUpdate(OPtimer* time) {
 	OPrenderClear(0, 0, 0);
 
-	if (OPkeyboardIsDown(OPKEY_SPACE)) { texturedExample->Rotation++; }
+	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { texturedExample->Rotation++; }
 
 	texturedExample->Effect.Bind();
 	texturedExample->Mesh->Bind();

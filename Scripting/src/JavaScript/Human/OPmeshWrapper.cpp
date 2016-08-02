@@ -41,7 +41,7 @@ JS_RETURN_VAL _OPmeshDestroy(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmesh* mesh = JS_GET_ARG_PTR(args, 0, OPmesh);
-    OPmeshDestroy(mesh);
+	mesh->Destroy();
 
     JS_RETURN_NULL;
 }

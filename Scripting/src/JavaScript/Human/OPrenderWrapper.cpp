@@ -10,9 +10,9 @@
 JS_RETURN_VAL _OPrenderInit(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-	OPwindow* window = JS_GET_ARG_PTR(args, 0, OPwindow);
+	//OPwindow* window = JS_GET_ARG_PTR(args, 0, OPwindow);
 
-    OPrenderInit(window);
+    OPrenderInit();
 
     JS_RETURN_NULL;
 }
@@ -113,7 +113,7 @@ JS_RETURN_VAL _OPrenderBlend(const JS_ARGS& args) {
 JS_RETURN_VAL _OPrenderBlendAlpha(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPrenderBlendAlpha();
+	OPRENDERER_ACTIVE->SetBlendModeAlpha();
 
     JS_RETURN_NULL;
 }
@@ -121,7 +121,7 @@ JS_RETURN_VAL _OPrenderBlendAlpha(const JS_ARGS& args) {
 JS_RETURN_VAL _OPrenderBlendAdditive(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPrenderBlendAdditive();
+	OPRENDERER_ACTIVE->SetBlendModeAdditive();
 
     JS_RETURN_NULL;
 }

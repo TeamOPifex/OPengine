@@ -17,7 +17,7 @@ void ExampleAsioEnter2(OPgameState* last) {
 OPint ExampleAsioUpdate(OPtimer* timer) {
 
 #ifdef OPIFEX_OPTION_ASIO
-	if (OPkeyboardWasPressed(OPKEY_S)) {
+	if (OPkeyboardWasPressed(OPkeyboardKey::S)) {
 		try {
 			asio::io_service io_service;
 			asio::ip::tcp::acceptor acceptor(io_service, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), 1337));
@@ -38,7 +38,7 @@ OPint ExampleAsioUpdate(OPtimer* timer) {
 		}
 	}
 
-	if (OPkeyboardWasPressed(OPKEY_C)) {
+	if (OPkeyboardWasPressed(OPkeyboardKey::C)) {
 		try {
 			asio::io_service io_service;
 			asio::ip::tcp::resolver resolver(io_service);

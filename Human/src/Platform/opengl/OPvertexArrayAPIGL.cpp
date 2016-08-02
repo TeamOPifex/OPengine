@@ -13,27 +13,6 @@ OPvertexArray* OPvertexArrayGLInit(OPvertexArray* vertexArray, OPvertexLayout* v
 	//vertexArray->vertexLayout = vertexLayout;
 	OPGLFN(glGenVertexArrays(1, &vertexArrayGL->Handle));
 
-	//ui32 i = 0;
-	//for (; i < vertexLayout->count; i++)
-	//{
-	//	OPshaderAttribute shaderAttribute = vertexLayout->attributes[i];
-	//	if (shaderAttribute.Location < 0) continue;
-	//	//OPshaderAttributeGL* shaderAttributeGL = (OPshaderAttributeGL*)shaderAttribute.internalPtr;		
-	//	//OPGLFN(OPint loc = glGetAttribLocation(effectGL->Handle, shaderAttribute.Name));
-
-	//	OPGLFN(glEnableVertexAttribArray(shaderAttribute.Location));
-	//	OPGLFN(glVertexAttribPointer(shaderAttribute.Location, shaderAttribute.Elements, shaderAttribute.Type, GL_FALSE, vertexLayout->stride, (const void*)shaderAttribute.Offset));
-	//}
-
-	//OPvertexArrayGLBind(vertexArray);
-	//for (ui32 i = 0; i < vertexLayout.count; i++)
-	//{
-	//	OPshaderAttribute shaderAttribute = vertexLayout.attributes[i];
-	//	OPGLFN(glEnableVertexAttribArray(i));
-	//	OPGLFN(glVertexAttribPointer(i, shaderAttribute.Elements, shaderAttribute.Type, GL_FALSE, vertexLayout.stride, (const void*)shaderAttribute.Offset));
-	//}
-	//OPvertexArrayGLUnbind(vertexArray);
-
 	return vertexArray;
 }
 
@@ -45,15 +24,22 @@ OPvertexArray* OPvertexArrayGLCreate(OPvertexLayout* vertexLayout) {
 void OPvertexArrayGLBind(OPvertexArray* vertexArray) {
 	OPvertexArrayGL* vertexArrayGL = (OPvertexArrayGL*)vertexArray->internalPtr;
 	OPGLFN(glBindVertexArray(vertexArrayGL->Handle));
+	OPRENDERER_ACTIVE->OPVERTEXARRAY_ACTIVE = vertexArray;
 }
 
-void OPvertexArrayGLDraw(OPvertexArray* vertexArray, OPuint count) {
+void OPvertexArrayGLDraw(OPvertexArray* vertexArray, OPuint count, OPuint offset) {
 	OPvertexArrayGL* vertexArrayGL = (OPvertexArrayGL*)vertexArray->internalPtr;
-	OPGLFN(glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, NULL));
+	OPGLFN(glDrawArrays(GL_TRIANGLES, offset, (GLsizei)count));
+}
+
+void OPvertexArrayGLDrawIndexed(OPvertexArray* vertexArray, OPuint count, OPuint offset) {
+	OPvertexArrayGL* vertexArrayGL = (OPvertexArrayGL*)vertexArray->internalPtr;
+	OPGLFN(glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, (void*)(offset * sizeof(GLuint))));
 }
 
 void OPvertexArrayGLUnbind(OPvertexArray* ptr) {
 	OPGLFN(glBindVertexArray(0));
+	OPRENDERER_ACTIVE->OPVERTEXARRAY_ACTIVE = NULL;
 }
 
 void OPvertexArrayGLDestroy(OPvertexArray* vertexArray) {
@@ -67,7 +53,8 @@ void OPvertexArrayAPIGLInit(OPvertexArrayAPI* vertexArray) {
 	vertexArray->Init = OPvertexArrayGLInit;
 	vertexArray->Create = OPvertexArrayGLCreate;
 	vertexArray->Bind = OPvertexArrayGLBind;
-	vertexArray->Draw = OPvertexArrayGLDraw;
+	vertexArray->_Draw = OPvertexArrayGLDraw;
+	vertexArray->_DrawIndexed = OPvertexArrayGLDrawIndexed;
 	vertexArray->Unbind = OPvertexArrayGLUnbind;
 	vertexArray->Destroy = OPvertexArrayGLDestroy;
 }
