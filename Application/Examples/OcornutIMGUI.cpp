@@ -13,7 +13,7 @@ OcornutIMGUIExample ocornutExample;
 
 void ExampleOcornutIMGUIEnter(OPgameState* last) {
 #ifdef ADDON_imgui
-	OPimguiInit(OPWINDOW_ACTIVE->Window, true);
+	OPimguiInit(OPWINDOW_ACTIVE, true);
 #endif
 }
 
