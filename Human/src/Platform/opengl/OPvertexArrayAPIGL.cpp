@@ -57,9 +57,19 @@ void OPvertexArrayGLDraw(OPvertexArray* vertexArray, OPuint count, OPuint offset
 	OPGLFN(glDrawArrays(GL_TRIANGLES, offset, (GLsizei)count));
 }
 
+ui32 OPindexSizeToGL(OPindexSize indexSize) {
+	switch (indexSize) {
+		case OPindexSize::BYTE: return GL_UNSIGNED_BYTE;
+		case OPindexSize::SHORT: return GL_UNSIGNED_SHORT;
+		case OPindexSize::INT: return GL_UNSIGNED_INT;
+	}
+	return 0;
+}
+
+#include "./Human/include/Rendering/OPindexBuffer.h"
 void OPvertexArrayGLDrawIndexed(OPvertexArray* vertexArray, OPuint count, OPuint offset) {
-	OPvertexArrayGL* vertexArrayGL = (OPvertexArrayGL*)vertexArray->internalPtr;
-	OPGLFN(glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, (void*)(offset * sizeof(GLuint))));
+	OPvertexArrayGL* vertexArrayGL = (OPvertexArrayGL*)vertexArray->internalPtr;	
+	OPGLFN(glDrawElements(GL_TRIANGLES, count, OPindexSizeToGL(OPRENDERER_ACTIVE->OPINDEXBUFFER_ACTIVE->ElementSize), (void*)(offset * sizeof(GLuint))));
 }
 
 void OPvertexArrayGLUnbind(OPvertexArray* ptr) {

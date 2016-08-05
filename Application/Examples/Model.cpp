@@ -24,6 +24,17 @@ void ExampleModelEnter(OPgameState* last) {
 	// Typically not the favored approach for this, but shows
     // how to allocate a block of memory.
 	modelExample = (ModelExample*)OPallocZero(sizeof(ModelExample));
+	
+	// The effect that will be used to render the mesh
+	// The renderGenEffect is a simplified utility method
+	// which requires the attributes are given in a set order
+	// Position (vec3), then Normal (vec3)
+	// For more granular control use OPeffectCreate
+	modelExample->Effect.Init("ColoredModel.vert", "ColoredModel.frag");
+	modelExample->Effect.Bind();
+	modelExample->Effect.AddUniform("uWorld");
+	modelExample->Effect.AddUniform("uView");
+	modelExample->Effect.AddUniform("uProj");
 
 	// Load up the mesh into the Content Manager
 	// If the model was already loaded by a previous Game State
@@ -35,16 +46,6 @@ void ExampleModelEnter(OPgameState* last) {
 	//modelExample->Mesh = OPcubeCreate(OPvec3Create(1,0,0));
 	//OPmesh* mesh = (OPmesh*)OPcmanLoadGet("Box.obj");
 	modelExample->Mesh = *(OPmesh*)OPcmanLoadGet("output.opm");
-
-	// The effect that will be used to render the mesh
-	// The renderGenEffect is a simplified utility method
-	// which requires the attributes are given in a set order
-	// Position (vec3), then Normal (vec3)
-	// For more granular control use OPeffectCreate
-	modelExample->Effect.Init("ColoredModel.vert", "ColoredModel.frag");
-	modelExample->Effect.AddUniform("uWorld");
-	modelExample->Effect.AddUniform("uView");
-	modelExample->Effect.AddUniform("uProj");
 
 	// Sets up the camera as a perpsective camera for rendering
 	modelExample->Camera.SetPerspective(
