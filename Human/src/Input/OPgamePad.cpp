@@ -154,17 +154,23 @@ void __OPlnxUpdateGamePad(OPgamePad* c){
 	const ui8* buttonData = NULL;
 
 	// make sure the gamepad is connected
-	if(!glfwJoystickPresent((i32)c->controllerIndex)){
+
+    // TODO: (garrett) implement API side
+	//if(!glfwJoystickPresent((i32)c->controllerIndex)){
 		//OPlog("Controller %d not connected", (i32)c->playerIndex);
 		c->connected = 0;
 		return;
-	}
+	//}
 
 	c->connected = true;
 
 	// get axis data, andmake sure the number of axes are expected
-	axisData = glfwGetJoystickAxes(c->controllerIndex, &axes);
-	//OPlog("Axes %d", axes);
+
+    // TODO: (garrett) implement API side
+	// axisData = glfwGetJoystickAxes(c->controllerIndex, &axes);
+
+
+    //OPlog("Axes %d", axes);
 	// if(axes != 8){
 	// 	// game pads should have 8 axes
 	// 	// 2 for each stick, and 2 for the dpad
@@ -194,7 +200,9 @@ void __OPlnxUpdateGamePad(OPgamePad* c){
 
 
 	// get button data, make sure it's all kosher
-	buttonData = glfwGetJoystickButtons(c->controllerIndex, &buttons);
+
+    // TODO: (garrett) implement gamepad API
+    //buttonData = glfwGetJoystickButtons(c->controllerIndex, &buttons);
 	if(buttons < 10){
 		// game pads should have 10 buttons
 		OPlog("GamePad had %d buttons but has to have at least %d buttons", buttons, 10);
@@ -354,7 +362,7 @@ bool OPgamePad::AnyPrevInputIsDown() {
 		if (prevButtons[count]) return true;
 	}
 	return false;
-}	
+}
 
 bool OPgamePad::AnyInputIsDown() {
 	ui32 count = _OPGAMEPADBUTTON_MAX;

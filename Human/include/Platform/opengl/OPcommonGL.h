@@ -15,6 +15,10 @@
 #include <GLFW/glfw3.h>
 #endif
 
+#ifndef __debugbreak
+#define __debugbreak __builtin_trap
+#endif
+
 i8 OPglewInit();
 GLenum OPcommonGLCheckError();
 bool OPcommonGLLog(const OPchar* function, const OPchar* file, i32 line);
@@ -22,7 +26,9 @@ bool OPcommonGLLog(const OPchar* function, const OPchar* file, i32 line);
 #ifdef _DEBUG
 #define OPGLFN(x) OPcommonGLCheckError();\
 		x; \
-		if (!OPcommonGLLog(#x, __FILE__, __LINE__)) __debugbreak();
+		if (!OPcommonGLLog(#x, __FILE__, __LINE__)) { \
+            __debugbreak(); \
+        }
 #else
 #define OPGLFN(x) x
 #endif

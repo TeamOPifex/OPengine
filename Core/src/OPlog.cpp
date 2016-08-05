@@ -4,7 +4,7 @@
 #include <ostream>
 
 #ifndef OutputDebugString
-#define OutputDebugString() 
+#define OutputDebugString(a) 
 #endif
 
 #ifdef OPIFEX_WINDOWS
@@ -109,7 +109,7 @@ void OPvlog(ui32 level, const char* channel, const char* message, va_list args) 
 		//if (LogToHandle) {
 		//	WriteFile(LogToHandle, buffer, strlen(buffer), 0, 0);
 		//}
-		
+
 #else
         printf(buffer);
 #endif
