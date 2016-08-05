@@ -21,7 +21,7 @@ OPimgui* OPimguiCreate(OPeffect* effect, OPfontManager* fontManager) {
 	// OPlog("Screen %d, %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
 	// OPlog("Screen %f, %f", OPRENDER_SCREEN_WIDTH_SCALE, OPRENDER_SCREEN_HEIGHT_SCALE);
 
-	imgui->proj = OPmat4Ortho(0, (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WidthScaled, (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScaled, 0, -1, 1);
+	imgui->proj = OPmat4Ortho(0, (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, 0, -1, 1);
 
 	return imgui;
 }

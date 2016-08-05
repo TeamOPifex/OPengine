@@ -175,7 +175,7 @@ void ExampleSelectorRender(OPfloat delta) {
 	// RENDER
 	///////////////
 
-	OPrenderClear(0.1, 0.1, 0.1);
+	OPrenderClear(0.4, 0.1, 0.1);
 	//
 	// // Render the background
 	OPtexture2DRender(exampleSelector.Background);

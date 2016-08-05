@@ -27,7 +27,6 @@ struct OPwindowAPI {
 	void(*Unbind)(OPwindow* window) = 0;
 	void(*Destroy)(OPwindow* window) = 0;
 
-
 	inline OPwindow* Create(OPmonitor* monitor, OPwindowParameters windowParameters) {
 		return _Create(monitor, windowParameters);
 	}

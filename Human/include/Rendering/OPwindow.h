@@ -12,9 +12,11 @@ struct OPwindow {
 	void* internalPtr;
 	ui32 Width;
 	ui32 Height;
+	ui32 WindowWidth;
+	ui32 WindowHeight;
 	f32 WidthScaled;
 	f32 HeightScaled;
-	
+
 	inline void Init(OPmonitor* monitor, OPwindowParameters windowParameters) {
 		OPRENDERER_ACTIVE->Window.Init(this, monitor, windowParameters);
 	}

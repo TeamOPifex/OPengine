@@ -75,12 +75,14 @@ void OPtexture2DPrepRender(OPtexture2DOLD* tex2d) {
 
     OPmat4 world = OPMAT4_IDENTITY;
     OPmat4 size = OPMAT4_IDENTITY;
-    size.Translate(tex2d->Position.x / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, tex2d->Position.y / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, 0);
-    size.Scl(tex2d->Texture->textureDesc.width * tex2d->Scale.x, tex2d->Texture->textureDesc.height * tex2d->Scale.y, 1.0);
+    //size.Translate(tex2d->Position.x / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, tex2d->Position.y / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, 0);
+    //size.Scl(tex2d->Texture->textureDesc.width * tex2d->Scale.x, tex2d->Texture->textureDesc.height * tex2d->Scale.y, 1.0);
     OPmat4 view = OPMAT4_IDENTITY;
-    view.Scl(1.0f / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, 1.0f / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, 1.0f);
+    //view = OPmat4Ortho(0, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, 0, -1, 1);
 
-    world = size * view;
+    //view.Scl(1.0f / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, 1.0f / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, 1.0f);
+
+    //world = view * size;
 
 	OPeffectSet("uColorTexture", tex2d->Texture);
 	OPeffectSet("uWorld", 1, &world);

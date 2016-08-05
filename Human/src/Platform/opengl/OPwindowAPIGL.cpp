@@ -53,13 +53,17 @@ OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameter
 
 	glfwSetInputMode(windowGL->Handle, GLFW_STICKY_KEYS, true);
 
-	window->Width = windowParameters.width;
-	window->Height = windowParameters.height;
+	window->WindowWidth = windowParameters.width;
+	window->WindowHeight = windowParameters.height;
 
 	int w, h;
 	glfwGetFramebufferSize(windowGL->Handle, &w, &h);
-	window->WidthScaled = w / (f32)window->Width;
-	window->HeightScaled = h / (f32)window->Height;
+	window->WidthScaled = w / (f32)window->WindowWidth;
+	window->HeightScaled = h / (f32)window->WindowHeight;
+	window->Width = (ui32)(window->WidthScaled * window->WindowWidth);
+	window->Height = (ui32)(window->HeightScaled * window->WindowHeight);
+
+    OPlogInfo("Window Scale: %f, %f", window->WidthScaled, window->HeightScaled);
 
 	return window;
 }
@@ -76,17 +80,6 @@ OPwindowParameters OPwindowDefaultParametersGL() {
 void OPwindowGLBind(OPwindow* window) {
 	OPwindowGL* windowGL = (OPwindowGL*)window->internalPtr;
 	glfwMakeContextCurrent(windowGL->Handle);
-
-	//OPRENDER_SCREEN_WIDTH = window->Width;
-	//OPRENDER_SCREEN_HEIGHT = window->Height;
-
-	//OPRENDER_SCREEN_WIDTH_SCALE = window->WidthScaled;
-	//OPRENDER_SCREEN_HEIGHT_SCALE = window->HeightScaled;
-	//OPRENDER_SCALED_WIDTH = OPRENDER_SCREEN_WIDTH * OPRENDER_SCREEN_WIDTH_SCALE;
-	//OPRENDER_SCALED_HEIGHT = OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE;
-
-	//OPRENDER_WIDTH = OPRENDER_SCREEN_WIDTH;
-	//OPRENDER_HEIGHT = OPRENDER_SCREEN_HEIGHT;
 
 	OPrenderSetViewport(0, 0, (OPuint)window->Width, (OPuint)window->Height);
 
@@ -106,7 +99,7 @@ void OPwindowFocusGL(OPwindow* window) {
 }
 
 OPint OPwindowGLUpdate(OPwindow* window) {
-	OPwindowGL* windowGL = (OPwindowGL*)window->internalPtr;	
+	OPwindowGL* windowGL = (OPwindowGL*)window->internalPtr;
 	glfwPollEvents();
 	if (glfwWindowShouldClose(windowGL->Handle)) {
 		return 1;

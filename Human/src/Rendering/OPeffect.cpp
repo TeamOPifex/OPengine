@@ -14,7 +14,7 @@ OPshaderUniform* OPeffect::GetUniform(const OPchar* name) {
 	if (!found) {
 		OPlog("Shader Uniform not present: %s", name);
 	}
-	ASSERT(found, "The uniform must be added first");
+	//ASSERT(found, "The uniform must be added first");
 
 	return result;
 }

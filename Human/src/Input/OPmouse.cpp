@@ -83,7 +83,7 @@ OPint OPmouseWasPressed(OPmouseKey key) {
 OPint OPmouseWasReleased(OPmouseKey key) {
 	return !Mouse.keys[key] && Mouse.prevKeys[key];
 }
-void OPmouseSetPosition(i32 x, i32 y) {	
+void OPmouseSetPosition(i32 x, i32 y) {
 	OPRENDERER_ACTIVE->Window.SetCursorPos(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE, OPvec2(x, y));
 	Mouse.prevPositionX = x;
 	Mouse.prevPositionY = y;
@@ -91,8 +91,8 @@ void OPmouseSetPosition(i32 x, i32 y) {
 
 #include "./Human/include/Rendering/OPwindow.h"
 void OPmouseSetPositionScreenCenter() {
-	i32 width = OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WidthScaled;
-	i32 height = OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScaled;
+	i32 width = OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width;
+	i32 height = OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height;
 
 	OPmouseSetPosition((i32)(width / 2), (i32)(height / 2));
 }
@@ -142,7 +142,7 @@ OPint OPmouseWasPressed(OPmouseKey key) {
 OPint OPmouseWasReleased(OPmouseKey key) {
 	return false;
 }
-void OPmouseSetPosition(i32 x, i32 y) {	
+void OPmouseSetPosition(i32 x, i32 y) {
 }
 void OPmouseSetPositionScreenCenter() {
 
