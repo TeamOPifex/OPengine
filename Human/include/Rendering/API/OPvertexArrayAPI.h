@@ -13,6 +13,7 @@ struct OPvertexArrayAPI {
 	OPvertexArray*(*Create)(OPvertexLayout* vertexLayout) = 0;
 	OPvertexArray*(*Init)(OPvertexArray* vertexArray, OPvertexLayout* vertexLayout) = 0;
 	void(*Bind)(OPvertexArray* ptr) = 0;
+	void(*SetLayout)(OPvertexArray* vertexArray, OPvertexLayout* vertexLayout) = 0;
 	void(*_Draw)(OPvertexArray* ptr, OPuint count, OPuint offset) = 0;
 	void(*_DrawIndexed)(OPvertexArray* ptr, OPuint count, OPuint offset) = 0;
 	void(*Unbind)(OPvertexArray* ptr) = 0;

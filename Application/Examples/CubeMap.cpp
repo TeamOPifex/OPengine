@@ -38,7 +38,7 @@ void ExampleCubeMapEnter(OPgameState* last) {
     cubeMapExample.Camera.SetPerspective(
         OPVEC3_ONE, OPVEC3_ZERO, OPVEC3_UP,
         0.1f, 1000.0f, 45.0f,
-        OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
+		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
     );
 
     // This can be controlled in the update loop if it varies

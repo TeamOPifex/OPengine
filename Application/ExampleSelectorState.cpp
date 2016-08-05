@@ -28,9 +28,9 @@ ExampleSelector* exampleSelectorPtr = &exampleSelector;
 
 void ExampleSelectorEnter(OPgameState* last) {
 
-	OPcmanLoad("Ubuntu.opf");
+	//OPcmanLoad("Ubuntu.opf");
 
-	OPfontSystemLoadEffects();
+	//OPfontSystemLoadEffects();
 
     // The background image to use
 	OPcmanLoadGet("subtle-irongrip.png");
@@ -97,7 +97,7 @@ void ExampleSelectorEnter(OPgameState* last) {
        Names[i] = exampleSelector.Examples[i].name;
     }
 
-	exampleSelector.FontManager = OPfontManagerSetup("Ubuntu.opf", Names, TotalEntries);
+	//exampleSelector.FontManager = OPfontManagerSetup("Ubuntu.opf", Names, TotalEntries);
 	//exampleSelector.FontManager = OPfontManagerSetup("Ubuntu.opf", NULL, 0);
     //exampleSelector.FontManager->scale = 0.5;
 
@@ -157,13 +157,13 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
        }
 	}
 
-   // Jump backwards in the hierarchy
-   if ((OPkeyboardWasPressed(OPkeyboardKey::BACKSPACE) || OPkeyboardWasPressed(OPkeyboardKey::A) || exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_BACK)|| exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_B) || exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_DPAD_LEFT))) {
-       exampleSelector.HierarchyDepth[exampleSelector.CurrentHierarchy + 1] = exampleSelector.Selected;
-       exampleSelector.CurrentHierarchy = -1;
-       exampleSelector.CurrentDepth--;
-       exampleSelector.Selected = exampleSelector.HierarchyDepth[exampleSelector.CurrentHierarchy + 1];
-   }
+	// Jump backwards in the hierarchy
+	if ((OPkeyboardWasPressed(OPkeyboardKey::BACKSPACE) || OPkeyboardWasPressed(OPkeyboardKey::A) || exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_BACK)|| exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_B) || exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_DPAD_LEFT))) {
+		exampleSelector.HierarchyDepth[exampleSelector.CurrentHierarchy + 1] = exampleSelector.Selected;
+		exampleSelector.CurrentHierarchy = -1;
+		exampleSelector.CurrentDepth--;
+		exampleSelector.Selected = exampleSelector.HierarchyDepth[exampleSelector.CurrentHierarchy + 1];
+	}
 
 	return false;
 }
@@ -175,80 +175,80 @@ void ExampleSelectorRender(OPfloat delta) {
 	// RENDER
 	///////////////
 
-	OPrenderClear(1, 0, 0);
+	OPrenderClear(0.1, 0.1, 0.1);
 	//
 	// // Render the background
 	OPtexture2DRender(exampleSelector.Background);
 
 
-	// Y coordinate to start drawing the text
-	OPfloat start = -(exampleSelector.Selected) * 40.0f + OPRENDER_SCALED_HEIGHT / 2.0f;
+	//// Y coordinate to start drawing the text
+	//OPfloat start = -(exampleSelector.Selected) * 40.0f + OPRENDER_SCALED_HEIGHT / 2.0f;
 
 
-	OPfontRenderBegin(exampleSelector.FontManager);
+	//OPfontRenderBegin(exampleSelector.FontManager);
 
-	OPfontColor(OPvec4Create(1.0, 1.0, 1.0, 1));
-	exampleSelector.FontManager->scale = 0.75;
-	OPfontRender("OPengine v0.4.6", OPvec2(50, start - 60));
+	//OPfontColor(OPvec4Create(1.0, 1.0, 1.0, 1));
+	//exampleSelector.FontManager->scale = 0.75;
+	//OPfontRender("OPengine v0.4.6", OPvec2(50, start - 60));
 
-	exampleSelector.FontManager->scale = 0.5;
+	//exampleSelector.FontManager->scale = 0.5;
 
-	OPint notTheCurrentlySelectedMenuItem = 0, isActiveCategory = 0;
-	f32 r, g, b;
-	i32 pos = 0;
-	for (i32 i = 0; i < TotalEntries; i++) {
+	//OPint notTheCurrentlySelectedMenuItem = 0, isActiveCategory = 0;
+	//f32 r, g, b;
+	//i32 pos = 0;
+	//for (i32 i = 0; i < TotalEntries; i++) {
 
-		isActiveCategory = i == exampleSelector.CurrentHierarchy;
-		if (exampleSelector.Examples[i].parent != exampleSelector.CurrentHierarchy && !isActiveCategory) continue;
+	//	isActiveCategory = i == exampleSelector.CurrentHierarchy;
+	//	if (exampleSelector.Examples[i].parent != exampleSelector.CurrentHierarchy && !isActiveCategory) continue;
 
-		notTheCurrentlySelectedMenuItem = exampleSelector.Selected != pos;
-		// Set Selected Color (bright yellow-ish gold)
-		r = 0.95f, g = 0.84f; b = 0;
+	//	notTheCurrentlySelectedMenuItem = exampleSelector.Selected != pos;
+	//	// Set Selected Color (bright yellow-ish gold)
+	//	r = 0.95f, g = 0.84f; b = 0;
 
-		if (notTheCurrentlySelectedMenuItem) {
-			r = g = b = 1.0;
-		}
+	//	if (notTheCurrentlySelectedMenuItem) {
+	//		r = g = b = 1.0;
+	//	}
 
-		if (!exampleSelector.Examples[i].available) {
-			// Menu item is not available so make it really dark
-			r = g = b = 0.3f;
-			// Menu item is not available but it's the currently selected
-			// item, so we'll brighten it just a bit so that we know what
-			// is selected.
-			if (!notTheCurrentlySelectedMenuItem) {
-				r = g = b = 0.5;
-			}
-		}
+	//	if (!exampleSelector.Examples[i].available) {
+	//		// Menu item is not available so make it really dark
+	//		r = g = b = 0.3f;
+	//		// Menu item is not available but it's the currently selected
+	//		// item, so we'll brighten it just a bit so that we know what
+	//		// is selected.
+	//		if (!notTheCurrentlySelectedMenuItem) {
+	//			r = g = b = 0.5;
+	//		}
+	//	}
 
-		// If this is a category, then it becomes light blue
-		if (isActiveCategory || exampleSelector.Examples[i].state == NULL) {
-			r = g = 0.7f; b = 1.0f;
-			if (notTheCurrentlySelectedMenuItem && exampleSelector.CurrentDepth == 0) {
-				r = g = 0.4f; b = 0.7f;
-			}
-		}
+	//	// If this is a category, then it becomes light blue
+	//	if (isActiveCategory || exampleSelector.Examples[i].state == NULL) {
+	//		r = g = 0.7f; b = 1.0f;
+	//		if (notTheCurrentlySelectedMenuItem && exampleSelector.CurrentDepth == 0) {
+	//			r = g = 0.4f; b = 0.7f;
+	//		}
+	//	}
 
 
-		OPfontColor(OPvec4Create(r, g, b, 1));
+	//	OPfontColor(OPvec4Create(r, g, b, 1));
 
-		// If it's a category it doesn't get pushed to the right
-		if (isActiveCategory) {
-			OPfontRender(exampleSelector.Examples[i].name,
-				OPvec2(75, start + 40 * pos));
-		}
-		else {
-			// If it's the root menu we don't offset to the right
-			// If it isn't the root menu, then we push it to right
-			// to help indicate that it's a sub-menu
-			OPint isNotRootMenu = (exampleSelector.CurrentHierarchy != -1) ? 1 : 0;
-			OPfontRender(exampleSelector.Examples[i].name,
-				OPvec2((OPfloat)(75 + 40 * isNotRootMenu),
-					start + 40 * (pos + isNotRootMenu)));
-			pos++;
-		}
-	}
+	//	// If it's a category it doesn't get pushed to the right
+	//	if (isActiveCategory) {
+	//		OPfontRender(exampleSelector.Examples[i].name,
+	//			OPvec2(75, start + 40 * pos));
+	//	}
+	//	else {
+	//		// If it's the root menu we don't offset to the right
+	//		// If it isn't the root menu, then we push it to right
+	//		// to help indicate that it's a sub-menu
+	//		OPint isNotRootMenu = (exampleSelector.CurrentHierarchy != -1) ? 1 : 0;
+	//		OPfontRender(exampleSelector.Examples[i].name,
+	//			OPvec2((OPfloat)(75 + 40 * isNotRootMenu),
+	//				start + 40 * (pos + isNotRootMenu)));
+	//		pos++;
+	//	}
+	//}
 
-	OPfontRenderEnd();
+	//OPfontRenderEnd();
 
 	OPrenderPresent();
 

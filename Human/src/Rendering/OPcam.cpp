@@ -44,8 +44,8 @@ void OPcam::SetOrtho(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, O
 OPray3D OPcam::Unproject(i32 screenX, i32 screenY) {
 
 	// [ -1 ... 1 ] range
-	OPfloat x = (((OPfloat)screenX / (OPfloat)OPRENDER_SCALED_WIDTH) - 0.5f) * 2.0f;
-	OPfloat y = -(((OPfloat)screenY / (OPfloat)OPRENDER_SCALED_HEIGHT) - 0.5f) * 2.0f;
+	OPfloat x = (((OPfloat)screenX / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WidthScaled) - 0.5f) * 2.0f;
+	OPfloat y = -(((OPfloat)screenY / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScaled) - 0.5f) * 2.0f;
 
 	// Start and End of ray
 	OPvec4 rayStart_nds = OPvec4Create(x, y, -1.0, 1.0);

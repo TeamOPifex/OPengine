@@ -22,7 +22,7 @@
 #include "./Math/include/OPvec4.h"
 
 struct OPrenderer {
-	i8(*Init)() = 0;
+	i8(*Init)(OPwindow* window) = 0;
 	void(*_Clear)(OPvec4 color) = 0;
 	void(*Present)() = 0;
 	void(*SetDepthTesting)(bool state) = 0;

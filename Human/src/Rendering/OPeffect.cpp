@@ -4,7 +4,6 @@
 OPeffect* OPEFFECT_ACTIVE = NULL;
 
 void OPeffect::Init(OPshader* vert, OPshader* frag) {
-	OPhashMapInit(&uniforms, 32);
 	OPRENDERER_ACTIVE->Effect.Init(this, vert, frag);
 }
 

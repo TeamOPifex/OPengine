@@ -1,5 +1,4 @@
 #include "./Human/include/Input/OPmouse.h"
-#include "./Human/include/Rendering/OPrender.h"
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
 #include "./Core/include/Assert.h"
@@ -25,6 +24,7 @@ OPmouseState Mouse = {
 };
 
 
+#include "./Human/include/Rendering/OPrender.h"
 
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 void OPmouseUpdate() {
@@ -43,14 +43,10 @@ void OPmouseUpdate() {
 		Mouse.keys[i] = OPRENDERER_ACTIVE->Window.GetButtonState(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE, (OPmouseButton)i);
 	}
 
-	// TODO: Fix this with the callback for GLFW3ß
-	d64 x, y;
-#ifndef OPIFEX_DIRECTX_11
 	OPvec2 pos = OPRENDERER_ACTIVE->Window.GetCursorPos(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE);
-#endif
 	//OPmouseSetPositionScreenCenter();
-	Mouse.positionX = x;
-	Mouse.positionY = y;
+	Mouse.positionX = pos.x;
+	Mouse.positionY = pos.y;
 	Mouse.wheel = Mouse.updatedWheel;// glfwGetScroll(window);
 }
 
@@ -92,11 +88,15 @@ void OPmouseSetPosition(i32 x, i32 y) {
 	Mouse.prevPositionX = x;
 	Mouse.prevPositionY = y;
 }
+
+#include "./Human/include/Rendering/OPwindow.h"
 void OPmouseSetPositionScreenCenter() {
-	OPmouseSetPosition(
-		(i32)((OPRENDER_SCREEN_WIDTH * OPRENDER_SCREEN_WIDTH_SCALE) / 2), 
-			(i32)((OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE) / 2));
+	i32 width = OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WidthScaled;
+	i32 height = OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScaled;
+
+	OPmouseSetPosition((i32)(width / 2), (i32)(height / 2));
 }
+
 OPint OPmouseAnyInputIsDown() {
 	for (ui32 i = 0; i < _OPMOUSE_MAX; i++) {
 		if (Mouse.keys[i]) return true;

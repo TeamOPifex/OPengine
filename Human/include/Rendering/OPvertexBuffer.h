@@ -20,10 +20,6 @@ struct OPvertexBuffer {
 		OPRENDERER_ACTIVE->VertexBuffer.SetData(this, elementSize, count, data);
 	}
 
-	inline void SetLayout(OPvertexLayout* vertexLayout) {
-		OPRENDERER_ACTIVE->VertexBuffer.SetLayout(this, vertexLayout);
-	}
-
 	inline void Bind() {
 		OPRENDERER_ACTIVE->VertexBuffer.Bind(this);
 	}

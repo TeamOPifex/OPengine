@@ -34,7 +34,7 @@ void OPfontRender(OPfontBuiltTextNode* node, OPmat4* world) {
 	OPFONTMANAGER_EFFECT_ACTIVE->Bind();
 	OPFONTMANAGER_EFFECT_ACTIVE->Set("uWorld", world); 
 	OPFONTMANAGER_ACTIVE->meshPacker.Bind();
-	OPRENDERER_ACTIVE->VertexBuffer.SetLayout(&OPFONTMANAGER_ACTIVE->meshPacker.VertexBuffer, &node->packedMesh->vertexLayout);
+	OPRENDERER_ACTIVE->VertexArray.SetLayout(&OPFONTMANAGER_ACTIVE->meshPacker.vertexArray, &node->packedMesh->vertexLayout);
 	node->packedMesh->Render();
 }
 

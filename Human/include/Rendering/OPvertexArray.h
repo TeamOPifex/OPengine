@@ -18,6 +18,10 @@ struct OPvertexArray {
 	inline void Bind() {
 		OPRENDERER_ACTIVE->VertexArray.Bind(this);
 	}
+
+	inline void SetLayout(OPvertexLayout* vertexLayout) {
+		OPRENDERER_ACTIVE->VertexArray.SetLayout(this, vertexLayout);
+	}
 };
 
 #endif

@@ -7,14 +7,6 @@
 #include "./Human/include/Rendering/Enums/OPshaderType.h"
 #include "./Core/include/OPmemory.h"
 
-GLint OPshaderElementTypeToGL(OPshaderElementType shaderElementType) {
-	switch (shaderElementType) {
-		case OPshaderElementType::FLOAT: return GL_FLOAT;
-		case OPshaderElementType::INT: return GL_INT;
-		case OPshaderElementType::SHORT: return GL_SHORT;
-	}
-	return 0;
-}
 
 OPvertexBuffer* OPvertexBufferGLInit(OPvertexBuffer* vertexBuffer) {
 	OPvertexBufferGL* internalPtr = (OPvertexBufferGL*)OPalloc(sizeof(OPvertexBufferGL));;
@@ -34,20 +26,6 @@ void OPvertexBufferGLSetData(OPvertexBuffer* vertexBuffer, ui32 elementSize, OPu
 	vertexBuffer->ElementSize = elementSize;
 	vertexBuffer->ElementCount = count;
 	OPGLFN(glBufferData(GL_ARRAY_BUFFER, elementSize * count, data, GL_STATIC_DRAW));
-}
-
-void OPvertexBufferGLSetLayout(OPvertexBuffer* vertexBuffer, OPvertexLayout* vertexLayout) {
-	ui32 i = 0;
-	for (; i < vertexLayout->count; i++)
-	{
-		OPshaderAttribute shaderAttribute = vertexLayout->attributes[i];
-		if (shaderAttribute.Location < 0) continue;
-		//OPshaderAttributeGL* shaderAttributeGL = (OPshaderAttributeGL*)shaderAttribute.internalPtr;		
-		//OPGLFN(OPint loc = glGetAttribLocation(effectGL->Handle, shaderAttribute.Name));
-
-		OPGLFN(glEnableVertexAttribArray(shaderAttribute.Location));
-		OPGLFN(glVertexAttribPointer(shaderAttribute.Location, shaderAttribute.Elements, OPshaderElementTypeToGL(shaderAttribute.Type), GL_FALSE, vertexLayout->stride, (const void*)shaderAttribute.Offset));
-	}
 }
 
 void OPvertexBufferGLBind(OPvertexBuffer* vertexBuffer) {
@@ -74,7 +52,6 @@ void OPvertexBufferAPIGLInit(OPvertexBufferAPI* vertexBuffer) {
 	vertexBuffer->Init = OPvertexBufferGLInit;
 	vertexBuffer->Create = OPvertexBufferGLCreate;
 	vertexBuffer->SetData = OPvertexBufferGLSetData;
-	vertexBuffer->SetLayout = OPvertexBufferGLSetLayout;
 	vertexBuffer->Bind = OPvertexBufferGLBind;
 	vertexBuffer->Unbind = OPvertexBufferGLUnbind;
 	vertexBuffer->Destroy = OPvertexBufferGLDestroy;

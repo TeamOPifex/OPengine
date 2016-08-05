@@ -17,25 +17,12 @@ void glfwErrorCallback(int error, const char* desc) {
 	OPlogErr("GLFW ERROR: %s", desc);
 }
 
-i8 OPrendererInitGL() {
+i8 OPrendererInitGL(OPwindow* window) {
 	OPlogInfo("Initializing OpenGL Renderer");
 
 	glfwSetErrorCallback(glfwErrorCallback);
-
-	OPint result = glfwInit();
-	if (!result) {
-		OPlogErr("Failed to initialize GLFW");
-		return -1;
-	}
-
-	glfwWindowHint(GLFW_SAMPLES, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, OPIFEX_OPENGL_MAJOR);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPIFEX_OPENGL_MINOR);
-
-#ifdef OPIFEX_OSX
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#endif
+	
+	window->Bind();
 
 	glEnable(GL_MULTISAMPLE_ARB);
 	glEnable(GL_BLEND);

@@ -32,7 +32,7 @@ struct CommandBucketExample {
     	camera.SetPerspective(
     		OPVEC3_ONE * 2.0, OPVEC3_UP, OPVEC3_UP,
     		0.1f, 1000.0f,
-    		45.0f, OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
+    		45.0f, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
     		);
 
     	lightDirection = OPVEC3_UP;

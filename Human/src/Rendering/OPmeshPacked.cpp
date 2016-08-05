@@ -22,6 +22,7 @@ OPmeshPacked* OPmeshPacked::Init(
 	elementCount = indCount;
 	this->vertexLayout = vertexLayout;
 
+	packer->vertexArray.Init(&vertexLayout);
 	packer->AddVertexBuffer(vertexLayout.stride, vertices, vertCount);
 	packer->AddIndexBuffer(indSize, indices, indCount);
 	packer->vertexElementOffset += vertCount;
@@ -39,7 +40,8 @@ OPmeshPacked* OPmeshPacked::Create(OPvertexLayout vertexLayout, OPindexSize indS
 void OPmeshPacked::Render(){
 	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
 	packer->vertexArray.Bind();
-
+	packer->VertexBuffer.Bind();
+	packer->IndexBuffer.Bind();
 	OPRENDERER_ACTIVE->VertexArray.DrawIndexed(&packer->vertexArray, elementCount, offset);
 	//glDrawElements(GL_TRIANGLES, (GLsizei)elementCount, GL_UNSIGNED_SHORT, (void*)(offset));
 }

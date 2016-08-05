@@ -32,7 +32,7 @@ void ExampleMaterialEnter(OPgameState* last) {
 		0.1f,
 		1000.0f,
 		45.0f,
-		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
+		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
 	materialExample.LightDirection = OPVEC3_UP;

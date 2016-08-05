@@ -8,6 +8,9 @@ bool OPeffectGLAddUniform(OPeffect* effect, const OPchar* name);
 
 OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag) {
 	OPeffectGL* effectGL = (OPeffectGL*)OPalloc(sizeof(OPeffectGL));
+
+	OPhashMapInit(&effect->uniforms, 32);
+
 	effect->internalPtr = effectGL;
 	effect->vertexShader = vert;
 	effect->fragmentShader = frag;

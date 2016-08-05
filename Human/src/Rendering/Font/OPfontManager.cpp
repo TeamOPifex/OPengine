@@ -22,7 +22,7 @@ OPfontManager* OPfontManagerCreate(OPfont* font) {
 	temp->isBuilt = false;
 	temp->builtNodes = OPhashMapCreate(16);
 	temp->meshPacker.Init();
-	temp->proj = OPmat4Ortho(0, OPRENDER_SCREEN_WIDTH * OPRENDER_SCREEN_WIDTH_SCALE, OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE, 0, -1, 1);
+	temp->proj = OPmat4Ortho(0, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WidthScaled, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScaled, 0, -1, 1);
 	temp->dummyMesh = OPfontCreateUserText(temp->_font, "", temp->scale);
 
 	return temp;

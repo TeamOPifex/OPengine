@@ -47,7 +47,7 @@ void ExampleTexturedEnter(OPgameState* last) {
 	texturedExample->Effect.AddUniform("uView");
 
 	texturedExample->Mesh->vertexLayout.SetOffsets(&texturedExample->Effect);
-	texturedExample->Mesh->vertexBuffer.SetLayout(&texturedExample->Mesh->vertexLayout);
+	texturedExample->Mesh->vertexArray.SetLayout(&texturedExample->Mesh->vertexLayout);
 
 	texturedExample->Camera.SetPerspective(
 		OPVEC3_ONE * 10.0,
@@ -56,7 +56,7 @@ void ExampleTexturedEnter(OPgameState* last) {
 		0.1f,
 		1000.0f,
 		45.0f,
-		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
+		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 	OPrenderDepth(1);
 }

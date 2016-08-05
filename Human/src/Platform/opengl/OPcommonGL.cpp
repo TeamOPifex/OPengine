@@ -6,8 +6,9 @@ bool glewInitialized = 0;
 i8 OPglewInit() {
 	if (glewInitialized) return 0;
 	glewExperimental = GL_TRUE;
-	if (glewInit() != GLEW_OK) {
-		OPlogErr("Failed to init glew");
+	GLenum result = glewInit();
+	if (result != GLEW_OK) {
+		OPlogErr("Failed to init glew: %d", result);
 		return -1;
 	}
 	glewInitialized = true;
@@ -22,7 +23,7 @@ bool OPcommonGLLog(const OPchar* function, const OPchar* file, i32 line) {
 	GLenum error = OPcommonGLCheckError();
 	if (error != GL_NO_ERROR)
 	{
-		OPlogErr("OpenGL Error: [%d] %s, %s, %s", error, function, file, line);
+		OPlogErr("OpenGL Error: [%d] %s, %s, %d", error, function, file, line);
 		return false;
 	}
 	return true;

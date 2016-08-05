@@ -7,6 +7,15 @@
 void OPvertexArrayGLBind(OPvertexArray* vertexArray);
 void OPvertexArrayGLUnbind(OPvertexArray* ptr);
 
+GLint OPshaderElementTypeToGL(OPshaderElementType shaderElementType) {
+	switch (shaderElementType) {
+	case OPshaderElementType::FLOAT: return GL_FLOAT;
+	case OPshaderElementType::INT: return GL_INT;
+	case OPshaderElementType::SHORT: return GL_SHORT;
+	}
+	return 0;
+}
+
 OPvertexArray* OPvertexArrayGLInit(OPvertexArray* vertexArray, OPvertexLayout* vertexLayout) {
 	OPvertexArrayGL* vertexArrayGL = (OPvertexArrayGL*)OPalloc(sizeof(OPvertexArrayGL));
 	vertexArray->internalPtr = vertexArrayGL;
@@ -25,6 +34,22 @@ void OPvertexArrayGLBind(OPvertexArray* vertexArray) {
 	OPvertexArrayGL* vertexArrayGL = (OPvertexArrayGL*)vertexArray->internalPtr;
 	OPGLFN(glBindVertexArray(vertexArrayGL->Handle));
 	OPRENDERER_ACTIVE->OPVERTEXARRAY_ACTIVE = vertexArray;
+}
+
+void OPvertexArrayGLSetLayout(OPvertexArray* vertexArray, OPvertexLayout* vertexLayout) {
+	OPvertexArrayGLBind(vertexArray);
+	
+	ui32 i = 0;
+	for (; i < vertexLayout->count; i++)
+	{
+		OPshaderAttribute shaderAttribute = vertexLayout->attributes[i];
+		if (shaderAttribute.Location < 0) continue;
+		//OPshaderAttributeGL* shaderAttributeGL = (OPshaderAttributeGL*)shaderAttribute.internalPtr;		
+		//OPGLFN(OPint loc = glGetAttribLocation(effectGL->Handle, shaderAttribute.Name));
+
+		OPGLFN(glEnableVertexAttribArray(shaderAttribute.Location));
+		OPGLFN(glVertexAttribPointer(shaderAttribute.Location, shaderAttribute.Elements, OPshaderElementTypeToGL(shaderAttribute.Type), GL_FALSE, vertexLayout->stride, (const void*)shaderAttribute.Offset));
+	}
 }
 
 void OPvertexArrayGLDraw(OPvertexArray* vertexArray, OPuint count, OPuint offset) {
@@ -53,6 +78,7 @@ void OPvertexArrayAPIGLInit(OPvertexArrayAPI* vertexArray) {
 	vertexArray->Init = OPvertexArrayGLInit;
 	vertexArray->Create = OPvertexArrayGLCreate;
 	vertexArray->Bind = OPvertexArrayGLBind;
+	vertexArray->SetLayout = OPvertexArrayGLSetLayout;
 	vertexArray->_Draw = OPvertexArrayGLDraw;
 	vertexArray->_DrawIndexed = OPvertexArrayGLDrawIndexed;
 	vertexArray->Unbind = OPvertexArrayGLUnbind;

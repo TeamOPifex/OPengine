@@ -6,7 +6,6 @@
 enum struct OPmouseButton {
 	LBUTTON = 0,
 	RBUTTON,
-	CANCEL,
 	MBUTTON,
 	XBUTTON_1,
 	XBUTTON_2,

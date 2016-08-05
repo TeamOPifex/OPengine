@@ -66,7 +66,7 @@ void ExampleSkinningEnter(OPgameState* last) {
 		0.1f,
 		500.0f,
 		45.0f,
-		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
+		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
 		skinningExample->texture = (OPtexture*)OPcmanLoadGet("Knight.png");

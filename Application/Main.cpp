@@ -29,9 +29,10 @@ void ApplicationInit() {
 
 	OPoculusStartup();
 
-	OPrenderInit();
+	OPrenderSetup();
 	OPwindowSystemInit();
-	mainWindow.Init(NULL, OPwindowParameters("Main Window", true, 1280, 720));
+	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, 1280, 720));
+	OPrenderInit(&mainWindow);
 	
 	OPGAMEPADSYSTEM.SetDeadzones(0.2f);	
 
@@ -66,9 +67,10 @@ void ApplicationDestroy() {
 
 
 void RenderTestInit() {
+	OPrenderSetup(OPrendererType::OPENGL);
 	OPwindowSystemInit();
 	mainWindow.Init(NULL, OPwindowParameters("Main Window", true, 1280, 720));
-	OPrenderInit(OPrendererType::OPENGL);
+	OPrenderInit(&mainWindow);
 }
 
 OPint RenderTestUpdate(OPtimer* timer) {

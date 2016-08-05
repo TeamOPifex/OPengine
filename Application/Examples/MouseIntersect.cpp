@@ -65,7 +65,7 @@ void ExampleMouseIntersectEnter(OPgameState* last) {
 		0.1f,
 		100.0f,
 		45.0f,
-		(OPfloat)OPRENDER_WIDTH / (OPfloat)OPRENDER_HEIGHT
+		(OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
 	// A default light direction used in the effect
