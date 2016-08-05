@@ -12,9 +12,7 @@ OPwindow mainWindow;
 
 void ApplicationInit() {
 
-	OP_LOG_LEVEL = 2000;
 	//OPlogToFile("output.txt");
-	OPlog("test");
 
 	OPloadersAddDefault();
 	OPscriptAddLoader();
@@ -60,32 +58,9 @@ void ApplicationRender(OPfloat delta) {
 }
 
 void ApplicationDestroy() {
-	//ActiveState->Exit(ActiveState);
+	ActiveState->Exit(ActiveState);
 	OPcmanDestroy();
 	OPlogToFileClose();
-}
-
-
-void RenderTestInit() {
-	OPrenderSetup(OPrendererType::OPENGL);
-	OPwindowSystemInit();
-	mainWindow.Init(NULL, OPwindowParameters("Main Window", true, 1280, 720));
-	OPrenderInit(&mainWindow);
-}
-
-OPint RenderTestUpdate(OPtimer* timer) {
-	mainWindow.Update();
-	OPrenderClear(0, 0, 0);
-	OPrenderPresent();
-	return 0;
-}
-
-void RenderTestRender(OPfloat delta) {
-
-}
-
-void RenderTestDestroy() {
-
 }
 
 void ApplicationSetup() {
@@ -93,11 +68,6 @@ void ApplicationSetup() {
 	OPupdate = ApplicationUpdate;
 	OPrender = ApplicationRender;
 	OPdestroy = ApplicationDestroy;
-
-	//OPinitialize = RenderTestInit;
-	//OPupdate = RenderTestUpdate;
-	//OPrender = RenderTestRender;
-	//OPdestroy = RenderTestDestroy;
 }
 
 //////////////////////////////////////
@@ -116,7 +86,9 @@ int main(int argc, char * argv[]) {
 
 #else
 
+#include <windows.h>
 OP_MAIN_START
+	OP_LOG_LEVEL = 2000;
 
 	#ifdef OPIFEX_OPTION_V8
 	// If the V8 engine is compiled in,

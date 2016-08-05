@@ -16,25 +16,16 @@ typedef struct {
 	OPvec3 LightDirection;	// Where the Light Source is coming from
 } ModelExample;
 
-ModelExample* modelExample;
+ModelExample modelExample;
 
 void ExampleModelEnter(OPgameState* last) {
-
-	// Allocating a memory block for this example
-	// Typically not the favored approach for this, but shows
-    // how to allocate a block of memory.
-	modelExample = (ModelExample*)OPallocZero(sizeof(ModelExample));
 	
 	// The effect that will be used to render the mesh
 	// The renderGenEffect is a simplified utility method
 	// which requires the attributes are given in a set order
 	// Position (vec3), then Normal (vec3)
 	// For more granular control use OPeffectCreate
-	modelExample->Effect.Init("ColoredModel.vert", "ColoredModel.frag");
-	modelExample->Effect.Bind();
-	modelExample->Effect.AddUniform("uWorld");
-	modelExample->Effect.AddUniform("uView");
-	modelExample->Effect.AddUniform("uProj");
+	modelExample.Effect.Init("ColoredModel.vert", "ColoredModel.frag");
 
 	// Load up the mesh into the Content Manager
 	// If the model was already loaded by a previous Game State
@@ -45,21 +36,13 @@ void ExampleModelEnter(OPgameState* last) {
 	// that's contained in the Content Manager
 	//modelExample->Mesh = OPcubeCreate(OPvec3Create(1,0,0));
 	//OPmesh* mesh = (OPmesh*)OPcmanLoadGet("Box.obj");
-	modelExample->Mesh = *(OPmesh*)OPcmanLoadGet("output.opm");
+	modelExample.Mesh = *(OPmesh*)OPcmanLoadGet("output.opm");
 
 	// Sets up the camera as a perpsective camera for rendering
-	modelExample->Camera.SetPerspective(
-		OPVEC3_ONE * 2.0,
-		OPVEC3_UP,
-		OPVEC3_UP,
-		0.1f,
-		1000.0f,
-		45.0f,
-		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
-		);
+	modelExample.Camera.SetPerspective(OPVEC3_ONE * 2.0, OPVEC3_ZERO);
 
 	// A default light direction used in the effect
-	modelExample->LightDirection = OPVEC3_UP;
+	modelExample.LightDirection = OPVEC3_UP;
 
 	// This can be controlled in the update loop if it varies
 	// Since this is a simple example we'll ensure that it's set
@@ -78,7 +61,7 @@ OPint ExampleModelUpdate(OPtimer* time) {
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
-	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { modelExample->Rotation += time->Elapsed; }
+	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { modelExample.Rotation += time->Elapsed; }
 
 
 	// Tells the engine to continue running
@@ -92,8 +75,8 @@ void ExampleModelRender(OPfloat delta) {
 	OPrenderCull(0);
 	
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
-	OPmat4 world = OPmat4RotY(modelExample->Rotation / 100.0f);
-	OPmat4Scl(&world, 0.25f, 0.25f, 0.25f);
+	OPmat4 world;
+	world.SetRotY(modelExample.Rotation / 100.0f)->Scl(0.25f, 0.25f, 0.25f);
 
 
 	////////////////////////
@@ -103,7 +86,7 @@ void ExampleModelRender(OPfloat delta) {
 
 	// A helper utility which binds the Mesh, Effect and the World, View and Projection Matrices
 	// For more granular control please take a look at the Textured Example
-	OPbindMeshEffectWorldCam(&modelExample->Mesh, &modelExample->Effect, &world, &modelExample->Camera);
+	OPbindMeshEffectWorldCam(&modelExample.Mesh, &modelExample.Effect, &world, &modelExample.Camera);
 
 	// Sets the vLightDirection uniform on the Effect that is currently bound (modelExample->Effect)
 	//OPeffectSet("vLightDirection", &modelExample->LightDirection);
@@ -111,21 +94,6 @@ void ExampleModelRender(OPfloat delta) {
 	// Renders to the screen the currently bound Mesh (modelExample->Mesh)
 	OPmeshRender();
 
-
-	// 	OPmeshBind(&modelExample->Mesh);
-	// 	OPeffectBind(&modelExample->Effect);
-
-
-	// 	OPeffectParamMat4("uWorld", &world);
-	// 	OPeffectParamMat4("uProj", &modelExample->Camera.proj);
-	// 	OPeffectParamMat4("uView", &modelExample->Camera.view);
-
-	// 	OPvec3 light = OPvec3Create(0, 1, 0);
-	// 	OPeffectParamVec3("vLightDirection", &light);
-
-	// 	OPmeshRender();
-	
-	
 	// Swaps the back buffer
 	OPrenderPresent();
 }
@@ -133,8 +101,7 @@ void ExampleModelRender(OPfloat delta) {
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleModelExit(OPgameState* next) {
 	// Clean up phase for the Game State
-	modelExample->Effect.Destroy();
-	OPfree(modelExample);
+	modelExample.Effect.Destroy();
 	return 0;
 }
 
