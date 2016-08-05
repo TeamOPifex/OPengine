@@ -12,7 +12,7 @@ OPshaderUniform* OPeffect::GetUniform(const OPchar* name) {
 
 	bool found = OPhashMapGet(&uniforms, name, (void**)&result);
 	if (!found) {
-		OPlog("Shader Uniform not added: %s", name);
+		OPlog("Shader Uniform not present: %s", name);
 	}
 	ASSERT(found, "The uniform must be added first");
 

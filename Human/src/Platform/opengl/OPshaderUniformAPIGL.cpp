@@ -10,8 +10,8 @@ OPshaderUniform* OPshaderUniformGLInit(OPshaderUniform* shaderUniform, OPeffect*
 	shaderUniform->internalPtr = shaderUniformGL;
 
 	OPeffectGL* effectGL = (OPeffectGL*)effect->internalPtr;
-	
-	
+
+
 	GLint result = glGetUniformLocation(effectGL->Handle, name);
 	if (result > -1) {
 		shaderUniformGL->Handle = result;
@@ -28,62 +28,107 @@ OPshaderUniform* OPshaderUniformGLCreate(OPeffect* effect, const OPchar* name) {
 }
 
 void OPshaderUniformSetFGL(OPshaderUniform* shaderUniform, f32 val) {
+    #ifdef _DEBUG
+        if(shaderUniform == NULL) return;
+    #endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	glUniform1f(shaderUniformGL->Handle, val);
 }
 void OPshaderUniformSetFvGL(OPshaderUniform* shaderUniform, OPuint count, f32* val) {
+    #ifdef _DEBUG
+        if(shaderUniform == NULL) return;
+    #endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	glUniform1fv(shaderUniformGL->Handle, count, val);
 }
 void OPshaderUniformSetIGL(OPshaderUniform* shaderUniform, i32 val) {
+    #ifdef _DEBUG
+        if(shaderUniform == NULL) return;
+    #endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	glUniform1i(shaderUniformGL->Handle, val);
 }
 void OPshaderUniformSetIvGL(OPshaderUniform* shaderUniform, OPuint count, i32* val) {
+    #ifdef _DEBUG
+        if(shaderUniform == NULL) return;
+    #endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	glUniform1iv(shaderUniformGL->Handle, count, val);
 }
 void OPshaderUniformSetVec2GL(OPshaderUniform* shaderUniform, OPvec2* val) {
+    #ifdef _DEBUG
+        if(shaderUniform == NULL) return;
+    #endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	glUniform2fv(shaderUniformGL->Handle, 1, (OPfloat*)val);
 }
 void OPshaderUniformSetVec2vGL(OPshaderUniform* shaderUniform, OPuint count, OPvec2* val) {
+    #ifdef _DEBUG
+        if(shaderUniform == NULL) return;
+    #endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	glUniform2fv(shaderUniformGL->Handle, count, (OPfloat*)val);
 }
 void OPshaderUniformSetVec3GL(OPshaderUniform* shaderUniform, OPvec3* val) {
+    #ifdef _DEBUG
+        if(shaderUniform == NULL) return;
+    #endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	glUniform3fv(shaderUniformGL->Handle, 1, (OPfloat*)val);
 }
 void OPshaderUniformSetVec3vGL(OPshaderUniform* shaderUniform, OPuint count, OPvec3* val) {
+    #ifdef _DEBUG
+        if(shaderUniform == NULL) return;
+    #endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	glUniform3fv(shaderUniformGL->Handle, count, (OPfloat*)val);
 }
 void OPshaderUniformSetVec4GL(OPshaderUniform* shaderUniform, OPvec4* val) {
+    #ifdef _DEBUG
+        if(shaderUniform == NULL) return;
+    #endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	glUniform4fv(shaderUniformGL->Handle, 1, (OPfloat*)val);
 }
 void OPshaderUniformSetVec4vGL(OPshaderUniform* shaderUniform, OPuint count, OPvec4* val) {
+    #ifdef _DEBUG
+        if(shaderUniform == NULL) return;
+    #endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	glUniform4fv(shaderUniformGL->Handle, count, (OPfloat*)val);
 }
 void OPshaderUniformSetMat3GL(OPshaderUniform* shaderUniform, OPmat3* val) {
+    #ifdef _DEBUG
+        if(shaderUniform == NULL) return;
+    #endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	glUniformMatrix3fv(shaderUniformGL->Handle, 1, GL_FALSE, (f32*)val);
 }
 void OPshaderUniformSetMat3vGL(OPshaderUniform* shaderUniform, OPuint count, OPmat3* val) {
+    #ifdef _DEBUG
+        if(shaderUniform == NULL) return;
+    #endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	glUniformMatrix3fv(shaderUniformGL->Handle, count, GL_FALSE, (f32*)val);
 }
 void OPshaderUniformSetMat4GL(OPshaderUniform* shaderUniform, OPmat4* val) {
+    #ifdef _DEBUG
+        if(shaderUniform == NULL) return;
+    #endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	glUniformMatrix4fv(shaderUniformGL->Handle, 1, GL_FALSE, (f32*)val);
 }
 void OPshaderUniformSetMat4vGL(OPshaderUniform* shaderUniform, OPuint count, OPmat4* val) {
+    #ifdef _DEBUG
+        if(shaderUniform == NULL) return;
+    #endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	glUniformMatrix4fv(shaderUniformGL->Handle, count, GL_FALSE, (f32*)val);
 }
 void OPshaderUniformSetTextureGL(OPshaderUniform* shaderUniform, OPtexture* val) {
+    #ifdef _DEBUG
+        if(shaderUniform == NULL) return;
+    #endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	val->Bind(shaderUniformGL->Handle);
 }

@@ -19,12 +19,16 @@ OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag) {
 	OPshaderGL* fragGL = (OPshaderGL*)frag->internalPtr;
 
 	OPGLFN(effectGL->Handle = glCreateProgram());
-
+    glBindAttribLocation(effectGL->Handle, 0, "aPosition");
+    glBindAttribLocation(effectGL->Handle, 1, "aUV");
 
 	OPGLFN(glAttachShader(effectGL->Handle, vertGL->Handle));
 	OPGLFN(glAttachShader(effectGL->Handle, fragGL->Handle));
 
 	OPGLFN(glLinkProgram(effectGL->Handle));
+    
+    glBindAttribLocation(effectGL->Handle, 0, "aPosition");
+    glBindAttribLocation(effectGL->Handle, 1, "aUV");
 
 	i32 status;
 	OPGLFN(glGetProgramiv(effectGL->Handle, GL_LINK_STATUS, &status));
@@ -48,11 +52,21 @@ OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag) {
 		glGetProgramiv(effectGL->Handle, GL_ACTIVE_ATTRIBUTES, &count);
 		OPlogInfo("Active Attributes: %d", count);
 
+        // i32 ind = 1;
+        // for (i = 0; i < count; i++)
+        // {
+		// 	glGetActiveAttrib(effectGL->Handle, (GLuint)i, bufSize, &length, &size, &type, name);
+        //     glBindAttribLocation(effectGL->Handle, ind--, name);
+        // }
+
 		for (i = 0; i < count; i++)
 		{
+
+            i32 result = glGetAttribLocation( effectGL->Handle, name );
+
 			glGetActiveAttrib(effectGL->Handle, (GLuint)i, bufSize, &length, &size, &type, name);
 
-			OPlogInfo("Attribute #%d Type: %u Name: %s", i, type, name);
+			OPlogInfo("Attribute #%d Type: %u Name: %s, Loc: %d", i, type, name, result);
 		}
 
 		glGetProgramiv(effectGL->Handle, GL_ACTIVE_UNIFORMS, &count);
@@ -75,6 +89,18 @@ OPeffect* OPeffectGLCreate(OPshader* vert, OPshader* frag) {
 	OPeffect* effect = (OPeffect*)OPalloc(sizeof(OPeffect));
 	effect->Init(vert, frag);
 	return effect;
+}
+
+void OPeffectGLSetVertexLayout(OPeffect* effect, OPvertexLayout* vertexLayout) {
+	OPeffectGL* effectGL = (OPeffectGL*)effect->internalPtr;
+	//OPvertexLayoutGL* vertexLayoutGL = (OPvertexLayoutGL*)vertexLayout->internalPtr;
+
+	ui32 i = 0;
+	for (; i < vertexLayout->count; i++)
+	{
+        glBindAttribLocation(effectGL->Handle, i, vertexLayout->attributes[i].Name);
+        vertexLayout->attributes[i].Location = i;//glGetAttribLocation( effectGL->Handle, vertexLayout->attributes[i].Name );
+    }
 }
 
 bool OPeffectGLAddUniform(OPeffect* effect, const OPchar* name) {
@@ -112,6 +138,7 @@ void OPeffectAPIGLInit(OPeffectAPI* effect) {
 	effect->Init = OPeffectAPIGLInit;
 	effect->Create = OPeffectGLCreate;
 	effect->AddUniform = OPeffectGLAddUniform;
+    effect->SetVertexLayout = OPeffectGLSetVertexLayout;
 	effect->Bind = OPeffectGLBind;
 	effect->Unbind = OPeffectGLUnbind;
 	effect->Destroy = OPeffectGLDestroy;

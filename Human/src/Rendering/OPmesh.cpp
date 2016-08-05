@@ -30,6 +30,7 @@ OPmesh* OPmesh::Init(OPvertexLayout vertexLayout) {
 	vertexArray.Init(&vertexLayout)->Bind();
 	vertexBuffer.Init()->Bind();
 	indexBuffer.Init()->Bind();
+    OPRENDERER_ACTIVE->Effect.SetVertexLayout(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE, &vertexLayout);
 	vertexArray.SetLayout(&vertexLayout);
 	Id = OPMESH_GLOBAL_ID++;
 	return this;
@@ -46,6 +47,7 @@ void OPmesh::SetVertexLayout(OPvertexLayout* vertexLayoutUpdate) {
 	vertexArray.Bind();
 	vertexBuffer.Bind();
 	indexBuffer.Bind();
+    OPRENDERER_ACTIVE->Effect.SetVertexLayout(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE, &vertexLayout);
 	vertexArray.SetLayout(&vertexLayout);
 	vertexLayout = *vertexLayoutUpdate;
 }
