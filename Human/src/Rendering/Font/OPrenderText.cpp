@@ -13,7 +13,7 @@ void OPfontRenderBegin(OPfontManager* fontManager) {
 	OPFONTMANAGER_EFFECT_ACTIVE->Bind();
 	//OPtextureClearActive();
 	OPRENDERER_ACTIVE->Texture.Bind(OPFONTMANAGER_ACTIVE->_font->texture, 0);
-	OPFONTMANAGER_EFFECT_ACTIVE->Set("uColorTexture", OPFONTMANAGER_ACTIVE->_font->texture);
+	OPFONTMANAGER_EFFECT_ACTIVE->Set("uColorTexture", OPFONTMANAGER_ACTIVE->_font->texture, 0);
 	OPFONTMANAGER_EFFECT_ACTIVE->Set("uColor", &OPFONTMANAGER_ACTIVE->_color);
 	OPFONTMANAGER_EFFECT_ACTIVE->Set("uProj", &OPFONTMANAGER_ACTIVE->proj);
 }

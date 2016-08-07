@@ -1,14 +1,15 @@
 #ifndef OP_MATH_VECTOR2
 #define OP_MATH_VECTOR2
+
+struct OPvec2;
+typedef struct OPvec2 OPvec2;
+
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmath.h"
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
 #include "./Data/include/OPfile.h"
 #include "./Data/include/OPstream.h"
-
-struct OPvec2;
-typedef struct OPvec2 OPvec2;
 
 //inline OPvec2 OPvec2(OPfloat x, OPfloat y);
 

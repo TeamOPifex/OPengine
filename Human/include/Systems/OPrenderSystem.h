@@ -1,6 +1,6 @@
 #include "./Human/include/Rendering/OPrender.h"
 #include "./Human/include/Rendering/OPcam.h"
-#include "./Human/include/Rendering/OPcommandBucket.h"
+#include "./Human/include/Rendering/OPrenderCommandBucket.h"
 #include "./Human/include/Rendering/Camera/OPcamFreeFlight.h"
 #include "./Human/include/Rendering/OPrenderBuffer.h"
 #include "./Human/include/Rendering/OPmesh.h"
@@ -15,8 +15,11 @@
 #include "./Human/include/Rendering/OPimage.h"
 #include "./Human/include/Rendering/OPwindow.h"
 #include "./Human/include/Rendering/OPwindowSystem.h"
+#include "./Human/include/Rendering/OPscene.h"
+#include "./Human/include/Rendering/OPrenderer.h"
+#include "./Human/include/Rendering/OPrendererForward.h"
 
-#include "./Human/include/Rendering/Commands/OPcommandDrawIndexed.h"
+#include "./Human/include/Rendering/Commands/OPrenderCommandDrawIndexed.h"
 
 #include "./Human/include/Rendering/Primitives/OPquad.h"
 #include "./Human/include/Rendering/Primitives/OPcube.h"

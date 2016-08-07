@@ -12,13 +12,14 @@ typedef struct OPvertexLayout OPvertexLayout;
 
 struct OPeffect;
 struct OPvertexLayout {
-	ui16 count;
+	ui8 count;
 	OPshaderAttribute* attributes;
 	ui32 stride;
 
 	void Init(ui16 attributeCount, OPchar** names, OPattributeTypes* types, ui8* counts);
-	void Init(OPshaderAttribute* attributes, ui16 count);
+	void Init(OPshaderAttribute* attributes, ui8 count);
 	void SetOffsets(OPeffect* effect);
+	void Log();
 };
 
 

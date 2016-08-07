@@ -108,3 +108,46 @@ void* OPsysAlloc(OPuint bytes) {
 void OPsysFree(void* ptr) {
 	free(ptr);
 }
+
+
+void* operator new(size_t size)
+{
+	return OPalloc(size);
+}
+
+
+void* operator new(size_t size, const char* file, ui32 line)
+{
+	return OPalloc(size);// , file, line);
+}
+
+void* operator new[](size_t size)
+{
+	return OPalloc(size);
+}
+
+void* operator new[](size_t size, const char* file, ui32 line)
+{
+	return OPalloc(size);// , file, line);
+}
+
+
+void operator delete(void* block)
+{
+	OPfree(block);
+}
+
+void operator delete(void* block, const char* file, ui32 line)
+{
+	OPfree(block);// , file, line);
+}
+
+void operator delete[](void* block)
+{
+	OPfree(block);
+}
+
+void operator delete[](void* block, const char* file, ui32 line)
+{
+	OPfree(block);// , file, line);
+}

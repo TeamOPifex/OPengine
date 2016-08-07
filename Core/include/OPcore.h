@@ -10,10 +10,6 @@
 #include "OPlog.h"
 #include "OPdir.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #ifdef OPIFEX_WINDOWS
 	extern HINSTANCE OP_HINSTANCE;
@@ -120,10 +116,6 @@ OPchar* OPgetExecutableDir();
 	return 0; \
 	}
 
-#endif
-
-#ifdef __cplusplus
-};
 #endif
 
 #endif

@@ -3,11 +3,6 @@
 
 #include "./Math/include/OPvec3.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 struct OPLevelEntity{
 	OPchar* name;
 	OPchar* resource;
@@ -31,9 +26,5 @@ OPint OPlevelReload(const OPchar* filename, OPLevel** level);
 OPint OPlevelUnload(void* image);
 
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-};
-#endif
 
 #endif

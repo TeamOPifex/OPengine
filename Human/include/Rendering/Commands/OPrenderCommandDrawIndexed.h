@@ -12,11 +12,9 @@
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/
 
-struct OPcommandDrawIndexed;
-typedef struct OPcommandDrawIndexed OPcommandDrawIndexed;
+struct OPrenderCommandDrawIndexed;
 
-
-#include "./Human/include/Rendering/OPcommandBucket.h"
+#include "./Human/include/Rendering/OPrenderCommandBucket.h"
 
 //-----------------------------------------------------------------------------
 // ______                _   _
@@ -26,11 +24,10 @@ typedef struct OPcommandDrawIndexed OPcommandDrawIndexed;
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
-void OPcommandDrawIndexedSet(OPcommandDrawIndexed* result, OPmodel* model, OPmaterial* material);
-void OPcommandDrawIndexedSet(OPcommandDrawIndexed* result, OPmodel* model, OPmaterial* material, OPtexture* texture);
-void OPcommandDrawIndexedSubmit(OPcommandBucket* commandBucket, OPmodel* model, OPmaterial* material, OPtexture* texture);
-inline void OPcommandDrawIndexedSubmit(OPcommandBucket* commandBucket, OPmodelTextured* model, OPmaterial* material) {
-	OPcommandDrawIndexedSubmit(commandBucket, &model->model, material, model->texture);
+void OPrenderCommandDrawIndexedSet(OPrenderCommandDrawIndexed* result, OPmodel* model, OPmaterialInstance* material);
+void OPrenderCommandDrawIndexedSubmit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmaterialInstance* material);
+inline void OPrenderCommandDrawIndexedSubmit(OPrenderCommandBucket* commandBucket, OPmodelTextured* model, OPmaterialInstance* material) {
+	OPrenderCommandDrawIndexedSubmit(commandBucket, &model->model, material);
 }
 
 //-----------------------------------------------------------------------------
@@ -42,7 +39,7 @@ inline void OPcommandDrawIndexedSubmit(OPcommandBucket* commandBucket, OPmodelTe
 // |_____/ \__|_|   \__,_|\___|\__|___/
 
 // Draws a mesh that has both a vertex buffer and an index buffer
-struct OPcommandDrawIndexed
+struct OPrenderCommandDrawIndexed
 {
 	// The key that will be passed to the OPcommandBucket
     ui64 key;
@@ -55,26 +52,18 @@ struct OPcommandDrawIndexed
     ui32 startIndex;
     ui32 baseVertex;
 
-    ui32 stride; // TODO: (garrett) Stride should come out of the vertex layout
-    OPvertexLayout* vertexLayout;
-	//OPrenderBuffer* vertexBuffer;
+	OPvertexArray* vertexArray;
 	OPvertexBuffer* vertexBuffer;
 	OPindexBuffer* indexBuffer;
-	//OPrenderBuffer* indexBuffer;
-    OPmaterial* material;
+	OPmaterialInstance* material;
     
 	// Per Mesh Data
     OPmat4* world;
-    OPtexture* texture;
-
 
 	// Helper/Wrapper functions
-    inline void Set(OPmodel* model, OPmaterial* material) {
-        OPcommandDrawIndexedSet(this, model, material);
-    }
-    
-	inline void Set(OPmodel* model, OPmaterial* material, OPtexture* texture) {
-        OPcommandDrawIndexedSet(this, model, material, texture);
+    inline OPrenderCommandDrawIndexed* Set(OPmodel* model, OPmaterialInstance* material) {
+        OPrenderCommandDrawIndexedSet(this, model, material);
+		return this;
     }
 };
 

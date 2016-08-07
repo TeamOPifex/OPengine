@@ -147,7 +147,7 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	OPvec3 light = OPvec3Create(0, 10, 0);
 	OPeffectSet("uLightPosition", &light);
 
-	OPeffectSet("uColorTexture", skinningExample->texture);
+	OPeffectSet("uColorTexture", skinningExample->texture, 0);
 
 	OPmeshRender();
 

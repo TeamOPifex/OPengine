@@ -36,6 +36,7 @@ void OPvertexArrayGLBind(OPvertexArray* vertexArray) {
 	OPRENDERER_ACTIVE->OPVERTEXARRAY_ACTIVE = vertexArray;
 }
 
+#include "./Human/include/Platform/opengl/OPeffectAPIGL.h"
 void OPvertexArrayGLSetLayout(OPvertexArray* vertexArray, OPvertexLayout* vertexLayout) {
 	OPvertexArrayGLBind(vertexArray);
 	
@@ -43,7 +44,17 @@ void OPvertexArrayGLSetLayout(OPvertexArray* vertexArray, OPvertexLayout* vertex
 	for (; i < vertexLayout->count; i++)
 	{
 		OPshaderAttribute shaderAttribute = vertexLayout->attributes[i];
-		if (shaderAttribute.Location < 0) continue;
+		if (shaderAttribute.Location < 0) {
+			if (OPRENDERER_ACTIVE->OPEFFECT_ACTIVE != NULL) {
+				OPeffectGL* effectGL = (OPeffectGL*)OPRENDERER_ACTIVE->OPEFFECT_ACTIVE->internalPtr;
+				OPGLFN(OPint loc = glGetAttribLocation(effectGL->Handle, shaderAttribute.Name));
+				shaderAttribute.Location = loc;
+			}
+
+			if (shaderAttribute.Location < 0) {
+				continue;
+			}
+		}
 		//OPshaderAttributeGL* shaderAttributeGL = (OPshaderAttributeGL*)shaderAttribute.internalPtr;		
 		//OPGLFN(OPint loc = glGetAttribLocation(effectGL->Handle, shaderAttribute.Name));
 

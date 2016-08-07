@@ -52,7 +52,7 @@ void OPtexture3DPrepRender(OPtexture3D* tex3d, OPcam* camera) {
 	world = OPmat4Scl(world, tex3d->Scale.x, tex3d->Scale.y, 1.0);
 	world += tex3d->Position;
 
-	OPeffectSet("uColorTexture", tex3d->Texture);
+	OPeffectSet("uColorTexture", tex3d->Texture, 0);
 	OPeffectSet("uWorld", 1, &world);
 	OPeffectSet("uProj", 1, &camera->proj);
 	OPeffectSet("uView", 1, &camera->view);

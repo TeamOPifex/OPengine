@@ -1,6 +1,6 @@
 #include "./Human/include/Rendering/OPrender.h"
 
-OPrenderer* OPRENDERER_ACTIVE = NULL;
+OPrenderAPI* OPRENDERER_ACTIVE = NULL;
 
 #if defined(OPIFEX_OPENGL_3_3)
 #define OPIFEX_OPENGL 1

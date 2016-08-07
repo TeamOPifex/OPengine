@@ -5,6 +5,7 @@ void* OPMESH_ACTIVE_PTR = NULL;
 ui64 OPMESH_GLOBAL_ID = 1;
 
 #include "./Human/include/Rendering/OPrender.h"
+#include "./Human/include/Rendering/OPeffect.h"
 
 //-----------------------------------------------------------------------------
 // ______                _   _
@@ -50,6 +51,13 @@ void OPmesh::SetVertexLayout(OPvertexLayout* vertexLayoutUpdate) {
     //OPRENDERER_ACTIVE->Effect.SetVertexLayout(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE, &vertexLayout);
 	vertexArray.SetLayout(&vertexLayout);
 	vertexLayout = *vertexLayoutUpdate;
+}
+
+void OPmesh::UpdateVertexLayout(OPeffect* effect) {
+	vertexArray.Bind();
+	vertexBuffer.Bind();
+	effect->UpdateVertexLayout(&vertexLayout);
+	vertexArray.SetLayout(&vertexLayout);
 }
 
 //-----------------------------------------------------------------------------

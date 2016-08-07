@@ -84,7 +84,7 @@ void OPsprite2DPrepRender(OPsprite2D* sprite) {
 	world = OPmat4Scl(world, scl.x, scl.y, 1.0);
 	world += sprite->Position;
 
-	OPeffectSet("uColorTexture", sprite->CurrentSprite->Sheet);
+	OPeffectSet("uColorTexture", sprite->CurrentSprite->Sheet, 0);
 	OPeffectSet("uWorld", &world);
 	OPeffectSet("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
 	OPeffectSet("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size);

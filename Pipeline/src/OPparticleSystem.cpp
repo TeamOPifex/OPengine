@@ -99,7 +99,7 @@ void _OPparticlePrepareFrame(OPparticleSys* sys, OPparticle* p, OPint frameChang
 		OPeffectSet("uSpriteOffset", &p->Animation->Frames[frame].Offset);
 
 		//OPtextureClearActive();
-		OPeffectSet("uColorTexture", p->Animation->Sheet);
+		OPeffectSet("uColorTexture", p->Animation->Sheet, 0);
 	}
 
 }
@@ -117,7 +117,7 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 	if(!sys->fps){
 		OPeffectSet("uTexCoordScale", &sys->uvScale);
 		OPeffectSet("uSpriteOffset", (OPvec2*)&OPVEC2_ZERO);
-		OPeffectSet("uColorTexture", sys->texture);
+		OPeffectSet("uColorTexture", sys->texture, 0);
 	}
 
 

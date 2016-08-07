@@ -9,12 +9,12 @@ void OPcam::SetPerspective(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat ne
 
 	float _fov = (float)((double)fov * 0.01745329251994329576923690768489);
 	pos = position;
-	target = target;
-	up = up;
-	fov = _fov;
-	aspect = aspect;
-	nearView = nearView;
-	farView = farView;
+	this->target = target;
+	this->up = up;
+	this->fov = _fov;
+	this->aspect = aspect;
+	this->nearView = nearView;
+	this->farView = farView;
 
 	OPmat4Identity(&proj);
 	OPmat4Identity(&view);

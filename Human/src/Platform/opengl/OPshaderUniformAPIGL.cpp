@@ -125,14 +125,15 @@ void OPshaderUniformSetMat4vGL(OPshaderUniform* shaderUniform, OPuint count, OPm
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	glUniformMatrix4fv(shaderUniformGL->Handle, count, GL_FALSE, (f32*)val);
 }
-void OPshaderUniformSetTextureGL(OPshaderUniform* shaderUniform, OPtexture* val) {
+void OPshaderUniformSetTextureGL(OPshaderUniform* shaderUniform, OPtexture* val, ui32 slot) {
     #ifdef _DEBUG
         if(shaderUniform == NULL) return;
     #endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
-	val->Bind(shaderUniformGL->Handle);
+	val->Bind(slot);
+	glUniform1i(shaderUniformGL->Handle, slot);
 }
-void OPshaderUniformSetTexturevGL(OPshaderUniform* shaderUniform, OPuint count, OPtexture* val) {
+void OPshaderUniformSetTexturevGL(OPshaderUniform* shaderUniform, OPuint count, OPtexture* val, ui32 slot) {
 	ASSERT(true, "NOT SUPPORTED YET");
 }
 void OPshaderUniformSetTextureCubeGL(OPshaderUniform* shaderUniform, OPtextureCube* val) {

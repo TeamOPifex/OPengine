@@ -53,7 +53,7 @@ void ExampleFreeFlightRender(OPfloat delta) {
 	world = OPmat4RotY(freeFlightExample.Rotation / 100.0f);
 
 
-	OPeffectSet("uColorTexture", freeFlightExample.Texture);
+	OPeffectSet("uColorTexture", freeFlightExample.Texture, 0);
 
 	OPeffectSet("uWorld", &world);
 	OPeffectSet("uProj", &freeFlightExample.Camera.Camera.proj);

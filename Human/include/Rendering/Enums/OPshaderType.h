@@ -12,4 +12,13 @@ enum struct OPshaderElementType {
 	FLOAT
 };
 
+inline const OPchar* OPshaderElementTypeToStr(OPshaderElementType shaderElementType) {
+	switch (shaderElementType) {
+		case OPshaderElementType::SHORT: return "SHORT";
+		case OPshaderElementType::INT: return "INT";
+		case OPshaderElementType::FLOAT: return "FLOAT";
+	}
+	return "";
+}
+
 #endif

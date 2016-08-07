@@ -110,6 +110,7 @@ struct OPmesh {
 	OPmesh* Init(OPvertexLayout vertexLayout);
 	void Bind();
 	void SetVertexLayout(OPvertexLayout* vertexLayout);
+	void UpdateVertexLayout(OPeffect* effect);
 	void Build(OPvertexLayout vertexLayout, OPindexSize indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
 	void Destroy();
 	inline void Free() {

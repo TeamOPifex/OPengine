@@ -1,5 +1,9 @@
 #ifndef OP_MATH_VECTOR3
 #define OP_MATH_VECTOR3
+
+struct OPvec3;
+struct OPmat4;
+
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmath.h"
 #include "./Core/include/OPlog.h"
@@ -7,9 +11,6 @@
 #include "./Data/include/OPstream.h"
 #include "./Data/include/OPfile.h"
 #include "./Math/include/OPvec2.h"
-
-struct OPvec3;
-struct OPmat4;
 
 inline OPvec3 OPvec3Create(OPfloat x, OPfloat y, OPfloat z);
 

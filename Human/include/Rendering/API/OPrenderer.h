@@ -21,7 +21,7 @@
 #include "./Human/include/Rendering/Enums/OPblendFunction.h"
 #include "./Math/include/OPvec4.h"
 
-struct OPrenderer {
+struct OPrenderAPI {
 	i8(*Init)(OPwindow* window) = 0;
 	void(*_Clear)(OPvec4 color) = 0;
 	void(*Present)() = 0;
@@ -73,6 +73,5 @@ struct OPrenderer {
 		SetBlendMode(OPblendFunction::SRC_ALPHA, OPblendFunction::ONE);
 	}
 };
-typedef struct OPrenderer OPrenderer;
 
 #endif

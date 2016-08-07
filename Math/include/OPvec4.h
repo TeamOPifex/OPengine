@@ -1,12 +1,13 @@
 #ifndef OP_MATH_VECTOR4
 #define OP_MATH_VECTOR4
 
+struct OPvec4;
+
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPmath.h"
 #include "./Math/include/OPvec3.h"
 
-struct OPvec4;
 OPvec4 OPvec4Create(OPfloat x, OPfloat y, OPfloat z, OPfloat w);
 
 void OPvec4Add(OPvec4* dst, OPvec4* a, OPvec4* b);

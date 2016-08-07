@@ -29,7 +29,7 @@ void ApplicationInit() {
 
 	OPrenderSetup();
 	OPwindowSystemInit();
-	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, 1280, 720));
+	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, 1920, 1080));
 	OPrenderInit(&mainWindow);
 	
 	OPGAMEPADSYSTEM.SetDeadzones(0.2f);	

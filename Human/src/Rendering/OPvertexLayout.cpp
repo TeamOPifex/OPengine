@@ -21,13 +21,20 @@ void OPvertexLayout::Init(ui16 attributeCount, OPchar** names, OPattributeTypes*
 	}
 }
 
-void OPvertexLayout::Init(OPshaderAttribute* attributes, ui16 count) {
-	count = count;
-	attributes = attributes;
+void OPvertexLayout::Init(OPshaderAttribute* attributes, ui8 count) {
+	this->count = count;
+	this->attributes = attributes;
 
 	stride = 0;
 	for (ui16 i = 0; i < count; i++) {
 		stride += attributes[i].Elements * sizeof(f32);
+	}
+}
+
+void OPvertexLayout::Log() {
+	OPlogInfo("Vertex Layout");
+	for (ui8 i = 0; i < count; i++) {
+		OPlogInfo("#%d : %s - %s ( %d )", i, attributes[i].Name, OPshaderElementTypeToStr(attributes[i].Type), attributes[i].Elements );
 	}
 }
 
@@ -45,7 +52,8 @@ OPvertexLayoutBuilder* OPvertexLayoutBuilder::Init() {
 OPvertexLayoutBuilder* OPvertexLayoutBuilder::Init(ui32 features) {
 	if ((features & (OPuint)OPattributes::POSITION) > 0) Add(OPattributes::POSITION);
 	if((features & (OPuint)OPattributes::NORMAL) > 0) Add(OPattributes::NORMAL);
-	if((features & (OPuint)OPattributes::TANGENT) > 0) Add(OPattributes::TANGENT);
+	if ((features & (OPuint)OPattributes::TANGENT) > 0) Add(OPattributes::TANGENT);
+	if ((features & (OPuint)OPattributes::BITANGENT) > 0) Add(OPattributes::BITANGENT);
 	if((features & (OPuint)OPattributes::UV) > 0) Add(OPattributes::UV);
 	if((features & (OPuint)OPattributes::BONES) > 0) Add(OPattributes::BONES);
 	if((features & (OPuint)OPattributes::COLOR) > 0) Add(OPattributes::COLOR);
@@ -70,6 +78,13 @@ OPvertexLayoutBuilder* OPvertexLayoutBuilder::Add(OPattributes attribute) {
 		}
 		case OPattributes::TANGENT: {
 			names[index] = "aTangent";
+			types[index] = OPATTR_TYPE_FLOAT;
+			counts[index] = 3;
+			index++;
+			break;
+		}
+		case OPattributes::BITANGENT: {
+			names[index] = "aBinormal";
 			types[index] = OPATTR_TYPE_FLOAT;
 			counts[index] = 3;
 			index++;

@@ -14,14 +14,11 @@
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/
 
-struct OPcommandDrawCommand;
-struct OPcommandBucketKey;
-struct OPcommandBucket;
-typedef struct OPcommandDrawCommand OPcommandDrawCommand;
-typedef struct OPcommandBucketKey OPcommandBucketKey;
-typedef struct OPcommandBucket OPcommandBucket;
+struct OPrenderCommand;
+struct OPrenderCommandBucketKey;
+struct OPrenderCommandBucket;
 
-#include "./Human/include/Rendering/Commands/OPcommandDrawIndexed.h"
+#include "./Human/include/Rendering/Commands/OPrenderCommandDrawIndexed.h"
 
 //-----------------------------------------------------------------------------
 //   _____ _                   _
@@ -31,7 +28,7 @@ typedef struct OPcommandBucket OPcommandBucket;
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 
-struct OPcommandDrawCommand {
+struct OPrenderCommand {
 	// TODO: (garrett) allow linked list of commands
 	// For example, you might want to copy data to the gpu
 	// and then render that data. The sort key would be the
@@ -44,12 +41,12 @@ struct OPcommandDrawCommand {
 };
 
 // A key for the OPcommandBucket that will be sorted for rendering order
-struct OPcommandBucketKey {
+struct OPrenderCommandBucketKey {
 	ui64 key; // Key which will sort the draw call
-	OPcommandDrawCommand* command; // Pointer to the data to render
+	OPrenderCommand* command; // Pointer to the data to render
 };
 
-struct OPcommandBucket {
+struct OPrenderCommandBucket {
 	// Number of draw calls this bucket can support
 	OPuint bucketSize;
 	// The linear allocator used for this creating Command data
@@ -58,14 +55,14 @@ struct OPcommandBucket {
 	// The current count of commands/keys
     ui32 keyIndex;
 	// The keys & ordering of the draw calls
-    OPcommandBucketKey* keys;
+    OPrenderCommandBucketKey* keys;
 	// A duplicate data segment used for sorting (Radix)
-    OPcommandBucketKey* copykeys;
+    OPrenderCommandBucketKey* copykeys;
 	// An array of the actual data for the draw commands
-    OPcommandDrawCommand* commands;
+	OPrenderCommand* commands;
 
 	// The camera should not change for a command bucket
-    OPcam* camera;
+    OPcam** camera;
 	// The target framebuffers will not change for a command bucket
     OPframeBuffer* frameBuffer[4];
 
@@ -76,26 +73,26 @@ struct OPcommandBucket {
 	// Simple wrapper functions
 	// These are just convenient functions for calling the C style functions
 
-	void Init(OPuint bucketSize, OPcam* camera);
-	void Init(OPuint bucketSize, OPcam* camera, OPallocator* allocator);
+	void Init(OPuint bucketSize, OPcam** camera);
+	void Init(OPuint bucketSize, OPcam** camera, OPallocator* allocator);
 	void Submit(ui64 key, void(*dispatch)(void*, OPcam*), void* data, void* next);
 	void Sort();
-	void Flush();
+	void Flush(bool keep);
 	void Render();
-	void CreateDrawIndexedSubmit(OPmodel* model, OPmaterial* material, OPtexture* texture);
-	void CreateDrawIndexedSubmit(OPmodelTextured* model, OPmaterial* material);
+	void Submit(OPmodelTextured* model, OPmaterialInstance* material);
 
 	// Helper draw commands already in the engine
 	// Users will be able to define their own, just won't be a helper function
 	// in the struct itself unless they modify the OPengine source itself
-	OPcommandDrawIndexed* CreateDrawIndexed();
+	OPrenderCommandDrawIndexed* CreateDrawIndexed();
 
 	inline void Submit(ui64 key, void(*dispatch)(void*, OPcam*), void* data) {
 		Submit(key, dispatch, data, NULL);
 	}
+	inline void Flush() { Flush(false); }
 
-	static OPcommandBucket* Create(OPuint bucketSize, OPcam* camera);
-	static OPcommandBucket* Create(OPuint bucketSize, OPcam* camera, OPallocator* allocator);
+	static OPrenderCommandBucket* Create(OPuint bucketSize, OPcam** camera);
+	static OPrenderCommandBucket* Create(OPuint bucketSize, OPcam** camera, OPallocator* allocator);
 };
 
 #endif

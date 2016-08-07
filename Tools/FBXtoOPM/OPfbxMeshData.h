@@ -7,6 +7,7 @@ typedef struct {
 	OPvec3 Position[4];
 	OPvec3 Normal[4];
 	OPvec4 Tangent[4];
+	OPvec4 BiTangent[4];
 	OPvec2 UV[4];
 } OPfbxMeshPoly;
 
@@ -178,7 +179,7 @@ OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData, OPfloat scale) 
 					}
 				}
 
-				polys[i].UV[j] = OPvec2Create(uv[0], uv[1]);
+				polys[i].UV[j] = OPvec2(uv[0], uv[1]);
 			}
 
 			FbxVector4 tangent;
@@ -207,31 +208,32 @@ OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData, OPfloat scale) 
 				polys[i].Tangent[j] = OPvec4Create(tangent[0], tangent[1], tangent[2], tangent[3]);
 			}
 
-			// TODO(garrett): BiNormal
-			//for (l = 0; l < pMesh->GetElementBinormalCount(); ++l)
-			//{
+			FbxVector4 bitangent;
+			for (OPint l = 0; l < meshData->Mesh->GetElementBinormalCount(); ++l)
+			{
+				FbxGeometryElementBinormal* eBinormal = meshData->Mesh->GetElementBinormal(l);
 
-			//	FbxGeometryElementBinormal* leBinormal = pMesh->GetElementBinormal(l);
+				if (eBinormal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+				{
+					switch (eBinormal->GetReferenceMode())
+					{
+					case FbxGeometryElement::eDirect: {
+						bitangent = eBinormal->GetDirectArray().GetAt(controlPointIndex);
+						break;
+					}
+					case FbxGeometryElement::eIndexToDirect:
+					{
+						int id = eBinormal->GetIndexArray().GetAt(controlPointIndex);
+						bitangent = eBinormal->GetDirectArray().GetAt(id);
+						break;
+					}
+					default:
+						break; // other reference modes not shown here!
+					}
+				}
+				polys[i].BiTangent[j] = OPvec4Create(bitangent[0], bitangent[1], bitangent[2], bitangent[3]);
+			}
 
-			//	FBXSDK_sprintf(header, 100, "            Binormal: ");
-			//	if (leBinormal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
-			//	{
-			//		switch (leBinormal->GetReferenceMode())
-			//		{
-			//		case FbxGeometryElement::eDirect:
-			//			Display3DVector(header, leBinormal->GetDirectArray().GetAt(vertexId));
-			//			break;
-			//		case FbxGeometryElement::eIndexToDirect:
-			//		{
-			//												   int id = leBinormal->GetIndexArray().GetAt(vertexId);
-			//												   Display3DVector(header, leBinormal->GetDirectArray().GetAt(id));
-			//		}
-			//			break;
-			//		default:
-			//			break; // other reference modes not shown here!
-			//		}
-			//	}
-			//}
 
 			// TODO(garrett): COLOR
 			//for (l = 0; l < pMesh->GetElementVertexColorCount(); l++)
@@ -524,7 +526,7 @@ OPvec2* OPfbxMeshDataGetUVs(OPfbxMeshData* meshData) {
 					}
 				}
 
-				uvs[pos] = OPvec2Create( uv[0], uv[1] );
+				uvs[pos] = OPvec2( uv[0], uv[1] );
 				//OPvec2Log("UV: ", uvs[pos]);
 				pos++;
 			}

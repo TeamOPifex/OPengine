@@ -13,7 +13,8 @@ void OPATTRWrapper(Handle<Object> exports) {
     Handle<Object> attrs = JS_NEW_OBJECT();
     JS_SET_NUMBER(attrs, "POSITION", (double)OPattributes::POSITION);
     JS_SET_NUMBER(attrs, "UV", (double)OPattributes::UV);
-    JS_SET_NUMBER(attrs, "TANGENT", (double)OPattributes::TANGENT);
+	JS_SET_NUMBER(attrs, "TANGENT", (double)OPattributes::TANGENT);
+	JS_SET_NUMBER(attrs, "BITANGENT", (double)OPattributes::BITANGENT);
     JS_SET_NUMBER(attrs, "NORMAL", (double)OPattributes::NORMAL);
     JS_SET_NUMBER(attrs, "COLOR", (double)OPattributes::COLOR);
     JS_SET_NUMBER(attrs, "BONES", (double)OPattributes::BONES);

@@ -84,7 +84,7 @@ void OPtexture2DPrepRender(OPtexture2DOLD* tex2d) {
 
     //world = view * size;
 
-	OPeffectSet("uColorTexture", tex2d->Texture);
+	OPeffectSet("uColorTexture", tex2d->Texture, 0);
 	OPeffectSet("uWorld", 1, &world);
 }
 

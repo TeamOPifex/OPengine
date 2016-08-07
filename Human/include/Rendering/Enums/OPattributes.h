@@ -8,7 +8,8 @@ enum struct OPattributes {
 	NORMAL = 0x08,
 	COLOR = 0x10,
 	BONES = 0x20,
-	COLOR4 = 0x40
+	COLOR4 = 0x40,
+	BITANGENT = 0x80
 };
 
 enum OPattributeTypes {

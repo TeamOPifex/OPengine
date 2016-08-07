@@ -72,7 +72,7 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 	OPmat4 world;
 	world = OPmat4RotY(texturedExample->Rotation / 100.0f);
 
-	OPeffectSet("uColorTexture", texturedExample->Texture);
+	OPeffectSet("uColorTexture", texturedExample->Texture, 0);
 
 	OPeffectSet("uWorld", &world);
 	OPeffectSet("uProj", &texturedExample->Camera.proj);

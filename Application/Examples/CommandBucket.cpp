@@ -5,7 +5,7 @@
 #include "./Human/include/Systems/OPinputSystem.h"
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Data/include/OPcman.h"
-#include "./Human/include/Rendering/OPcommandBucket.h"
+#include "./Human/include/Rendering/OPrenderCommandBucket.h"
 
 #include <bitset>
 #include <string>
@@ -15,10 +15,12 @@ struct CommandBucketExample {
 	OPmodel model2;
 	OPeffect effect;		// The Effect used to render the Mesh
 	OPmaterial material;
+	OPmaterialInstance materialInstance;
 	OPcam camera;			// The Camera to use in the Effect to render the Mesh
+	OPcam* cameraPtr;
 	ui32 rotation;			// The amount to rotate the Mesh
 	OPvec3 lightDirection;	// Where the Light Source is coming from
-	OPcommandBucket renderBucket;
+	OPrenderCommandBucket renderBucket;
 	OPallocator* allocator;
 
 	void Init(OPgameState* last) {
@@ -39,11 +41,13 @@ struct CommandBucketExample {
 
         material.Init(&effect);
         material.AddParam("vLightDirection", &lightDirection);
+		materialInstance.Init(&material);
 
     	OPrenderDepth(1);
     	OPrenderCull(0);
 
-    	renderBucket.Init(16, &camera, allocator);
+		cameraPtr = &camera;
+    	renderBucket.Init(16, &cameraPtr, allocator);
 	}
 
 	OPint Update(OPtimer* time) {
@@ -60,12 +64,12 @@ struct CommandBucketExample {
 	void Render(OPfloat delta) {
     	OPrenderClear(0.4f, 0.4f, 0.4f);
 
-    	OPcommandDrawIndexed* dc = renderBucket.CreateDrawIndexed();
-    	dc->Set(&model2, &material);
+    	OPrenderCommandDrawIndexed* dc = renderBucket.CreateDrawIndexed();
+    	dc->Set(&model2, &materialInstance);
     	renderBucket.Submit(dc->key, dc->dispatch, dc);
 
     	dc = renderBucket.CreateDrawIndexed();
-    	dc->Set(&model, &material);
+    	dc->Set(&model, &materialInstance);
     	renderBucket.Submit(dc->key, dc->dispatch, dc);
 
         renderBucket.Sort();

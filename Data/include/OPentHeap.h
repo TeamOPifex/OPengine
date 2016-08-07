@@ -1,10 +1,7 @@
 #ifndef OPEngine_Data_EntHeap
 #define OPEngine_Data_EntHeap
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmemory.h"
 #include "./Data/include/OPminHeap.h"
@@ -99,9 +96,5 @@ OPuint     OPentHeapBytes(OPint entsize, OPint count);
 * @return A new EntHeap
 */
 OPentHeap* OPentHeapCreate(void* segPtr, OPint entSize, OPint count);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

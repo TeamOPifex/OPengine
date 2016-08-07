@@ -4,11 +4,6 @@
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmemory.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 	/*
 	 * An OPlist
 	*/
@@ -91,8 +86,5 @@ extern "C" {
 	*/
 	OPuint OPlistSize(OPlist* list);
 
-#ifdef __cplusplus
-};
-#endif
 
 #endif

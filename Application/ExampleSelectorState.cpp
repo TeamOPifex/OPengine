@@ -28,9 +28,11 @@ ExampleSelector* exampleSelectorPtr = &exampleSelector;
 
 void ExampleSelectorEnter(OPgameState* last) {
 
+
 	//OPcmanLoad("Ubuntu.opf");
 
 	//OPfontSystemLoadEffects();
+
 
     // The background image to use
 	OPcmanLoadGet("subtle-irongrip.png");
@@ -51,6 +53,7 @@ void ExampleSelectorEnter(OPgameState* last) {
 
            // Actual Examples
            // Basics
+		   { "Scene", &GS_EXAMPLE_SCENE, GS_EXAMPLE_SCENE_AVAILABLE, 0 },
            { "Audio", &GS_EXAMPLE_AUDIO, GS_EXAMPLE_AUDIO_AVAILABLE, 0 },
            { "FMOD", &GS_EXAMPLE_FMOD, GS_EXAMPLE_FMOD_AVAILABLE, 0 },
            { "Free Flight Camera", &GS_EXAMPLE_FREEFLIGHT, GS_EXAMPLE_FREEFLIGHT_AVAILABLE, 0 },

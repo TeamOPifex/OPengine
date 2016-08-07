@@ -193,16 +193,16 @@ typedef struct {
 		ModelMaterials[1].Init(&Effect);
 		OPmaterialAddParam(&ModelMaterials[1], "uViewShadow", &ShadowCamera.view);
 		OPmaterialAddParam(&ModelMaterials[1], "uProjShadow", &ShadowCamera.proj);
-		OPmaterialAddParam(&ModelMaterials[1], "uColorTexture", ModelTexture);
-		OPmaterialAddParam(&ModelMaterials[1], "uShadow", &ShadowFrameBuffer.Texture);
+		OPmaterialAddParam(&ModelMaterials[1], "uColorTexture", ModelTexture, 0);
+		OPmaterialAddParam(&ModelMaterials[1], "uShadow", &ShadowFrameBuffer.Texture, 1);
 		OPmaterialAddParam(&ModelMaterials[1], "uLightPos", &ShadowCamera.pos);
 		OPmaterialAddParam(&ModelMaterials[1], "uViewPos", &Camera.Camera.pos);
 
 		OPmaterialInit(&GroundMaterials[1], &Effect2);
 		OPmaterialAddParam(&GroundMaterials[1], "uViewShadow", &ShadowCamera.view);
 		OPmaterialAddParam(&GroundMaterials[1], "uProjShadow", &ShadowCamera.proj);
-		OPmaterialAddParam(&GroundMaterials[1], "uColorTexture", ModelTexture);
-		OPmaterialAddParam(&GroundMaterials[1], "uShadow", &ShadowFrameBuffer.Texture);
+		OPmaterialAddParam(&GroundMaterials[1], "uColorTexture", ModelTexture, 0);
+		OPmaterialAddParam(&GroundMaterials[1], "uShadow", &ShadowFrameBuffer.Texture, 1);
 		OPmaterialAddParam(&GroundMaterials[1], "uLightPos", &ShadowCamera.pos);
 		OPmaterialAddParam(&GroundMaterials[1], "uViewPos", &Camera.Camera.pos);
 

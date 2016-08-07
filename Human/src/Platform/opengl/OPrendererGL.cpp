@@ -149,8 +149,8 @@ void OPrendererShutdownGL() {
 #include "./Human/include/Platform/opengl/OPvertexBufferAPIGL.h"
 #include "./Human/include/Platform/opengl/OPwindowAPIGL.h"
 
-OPrenderer OPRENDERERGL;
-OPrenderer* OPrendererGL() {
+OPrenderAPI OPRENDERERGL;
+OPrenderAPI* OPrendererGL() {
 	OPRENDERERGL.Init = OPrendererInitGL;
 	OPRENDERERGL._Clear = OPrendererClearGL;
 	OPRENDERERGL.Present = OPrendererPresentGL;

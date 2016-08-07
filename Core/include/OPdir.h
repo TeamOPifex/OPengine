@@ -3,16 +3,7 @@
 
 #include "./Core/include/OPtypes.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-	OPchar* OPdirCurrent();
-	OPchar* OPdirExecutable();
-
-#ifdef __cplusplus
-}
-#endif
-
+OPchar* OPdirCurrent();
+OPchar* OPdirExecutable();
 
 #endif

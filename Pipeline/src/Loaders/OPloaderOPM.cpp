@@ -53,7 +53,7 @@ void OPCalculateTangents(OPMData* data) {
 		vecSmoothBitangent = OPvec3Norm(vecSmoothBitangent);
 
 		OPvec3 vecSmoothTangent = {};
-		OPvec3Cross(vecSmoothBitangent, vecNormal);
+		vecSmoothTangent = OPvec3Cross(vecSmoothBitangent, vecNormal);
 		vecSmoothTangent = OPvec3Norm(vecSmoothTangent);
 
 		v1.Tangent += vecSmoothTangent;
@@ -62,6 +62,13 @@ void OPCalculateTangents(OPMData* data) {
 		v1.Tangent = OPvec3Norm(v1.Tangent);
 		v2.Tangent = OPvec3Norm(v2.Tangent);
 		v3.Tangent = OPvec3Norm(v3.Tangent);
+
+		v1.BiTangent += vecSmoothBitangent;
+		v2.BiTangent += vecSmoothBitangent;
+		v3.BiTangent += vecSmoothBitangent;
+		v1.BiTangent = OPvec3Norm(v1.BiTangent);
+		v2.BiTangent = OPvec3Norm(v2.BiTangent);
+		v3.BiTangent = OPvec3Norm(v3.BiTangent);
 	}
 }
 
@@ -154,7 +161,7 @@ OPMData OPMloadData(OPstream* str) {
 	OPvec3 max = OPVEC3_ZERO;
 
 
-	OPvec3* positions, *normals, *tangents, *colors;
+	OPvec3* positions, *normals, *tangents, *bitangents, *colors;
 	OPvec2* uvs;
 
 	OPvec4* boneIndices;
@@ -178,6 +185,11 @@ OPMData OPMloadData(OPstream* str) {
 		OPlogDebug("Feature: Tangent");
 		tangents = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
 		layout.Add(OPattributes::TANGENT);
+	}
+	if (OPMhasFeature(features, BiTangent)) {
+		OPlogDebug("Feature: BiTangent");
+		bitangents = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
+		layout.Add(OPattributes::BITANGENT);
 	}
 	if (OPMhasFeature(features, UV)) {
 		OPlogDebug("Feature: UV");
@@ -233,7 +245,7 @@ OPMData OPMloadData(OPstream* str) {
 		}
 
 		// Read Tangent
-		if(OPMhasFeature(features, Tangent)) {
+		if (OPMhasFeature(features, Tangent)) {
 			x = OPreadf32(str);
 			y = OPreadf32(str);
 			z = OPreadf32(str);
@@ -241,6 +253,18 @@ OPMData OPMloadData(OPstream* str) {
 			tangents[i].y = y;
 			tangents[i].z = z;
 			tangents[i] = OPvec3Norm(tangents[i]);
+			//OPlog("Tangent: %f %f %f", x, y, z);
+		}
+
+		// Read BiTangent
+		if (OPMhasFeature(features, BiTangent)) {
+			x = OPreadf32(str);
+			y = OPreadf32(str);
+			z = OPreadf32(str);
+			bitangents[i].x = x;
+			bitangents[i].y = y;
+			bitangents[i].z = z;
+			bitangents[i] = OPvec3Norm(bitangents[i]);
 			//OPlog("Tangent: %f %f %f", x, y, z);
 		}
 
@@ -450,6 +474,8 @@ OPMData OPMloadData(OPstream* str) {
 		OPverticesWriteVec3(vertices, normals, Normal);
 	if (OPMhasFeature(features, Tangent))
 		OPverticesWriteVec3(vertices, tangents, Tangent);
+	if (OPMhasFeature(features, BiTangent))
+		OPverticesWriteVec3(vertices, bitangents, BiTangent);
 	if (OPMhasFeature(features, UV))
 		OPverticesWriteVec2(vertices, uvs, UV);
 	if (OPMhasFeature(features, Color))
@@ -500,29 +526,32 @@ OPMData OPMloadData(OPstream* str) {
 
 	if (OPMhasFeature(features, Meta)) {
 		ui16 metaCount = OPreadui16(str);
-		//OPlog("Meta Count: %d", metaCount);
-		OPMmeta* meta = (OPMmeta*)OPalloc(sizeof(OPMmeta) * metaCount);
-		for(i32 i = 0; i < metaCount; i++) {
-			OPchar* metaName = OPreadstring(str);
-			OPchar* metaType = OPreadstring(str);
-			OPlog("Meta Name: %s (%s)", metaName, metaType);
-			f32 x = OPreadf32(str);
-			f32 y = OPreadf32(str);
-			f32 z = OPreadf32(str);
-			f32 rx = OPreadf32(str);
-			f32 ry = OPreadf32(str);
-			f32 rz = OPreadf32(str);
-			f32 sx = OPreadf32(str);
-			f32 sy = OPreadf32(str);
-			f32 sz = OPreadf32(str);
-			meta[i].Name = metaName;
-			meta[i].Type = metaType;
-			meta[i].Position = OPvec3Create(x,y,z);
-			meta[i].Rotation = OPvec3Create(rx,ry,rz);
-			meta[i].Scale = OPvec3Create(sx,sy,sz);
-		}
 		data.metaCount = metaCount;
-		data.meta = meta;
+
+		if (metaCount > 0) {
+			//OPlog("Meta Count: %d", metaCount);
+			OPMmeta* meta = (OPMmeta*)OPalloc(sizeof(OPMmeta) * metaCount);
+			for (i32 i = 0; i < metaCount; i++) {
+				OPchar* metaName = OPreadstring(str);
+				OPchar* metaType = OPreadstring(str);
+				OPlog("Meta Name: %s (%s)", metaName, metaType);
+				f32 x = OPreadf32(str);
+				f32 y = OPreadf32(str);
+				f32 z = OPreadf32(str);
+				f32 rx = OPreadf32(str);
+				f32 ry = OPreadf32(str);
+				f32 rz = OPreadf32(str);
+				f32 sx = OPreadf32(str);
+				f32 sy = OPreadf32(str);
+				f32 sz = OPreadf32(str);
+				meta[i].Name = metaName;
+				meta[i].Type = metaType;
+				meta[i].Position = OPvec3Create(x, y, z);
+				meta[i].Rotation = OPvec3Create(rx, ry, rz);
+				meta[i].Scale = OPvec3Create(sx, sy, sz);
+			}
+			data.meta = meta;
+		}
 	}
 
 	return data;

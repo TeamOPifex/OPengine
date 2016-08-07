@@ -3,6 +3,6 @@
 
 #include "./Human/include/Rendering/API/OPrenderer.h"
 
-OPrenderer* OPrendererGL();
+OPrenderAPI* OPrendererGL();
 
 #endif

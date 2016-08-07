@@ -3,7 +3,7 @@
 
 #include "./Human/include/Rendering/API/OPrenderer.h"
 
-extern OPrenderer* OPRENDERER_ACTIVE;
+extern OPrenderAPI* OPRENDERER_ACTIVE;
 
 #include "./Human/include/Rendering/Enums/OPrendererType.h"
 #include "./Math/include/OPvec3.h"

@@ -193,7 +193,7 @@ OPint State0Update(OPtimer* time){
 	quadMesh.Bind();
 	OPss.Bind();
 	OPeffectSet("uWorld", &world);
-	OPeffectSet("uColorTexture", bg->Sheet);
+	OPeffectSet("uColorTexture", bg->Sheet, 0);
 	//OPlog("X: %f, Y: %f", bg->Frames[0].Offset.x, bg->Frames[0].Offset.y);
 	OPeffectSet("uOffset", &bg->Frames[0].Offset);
 	OPeffectSet("uSize", &bg->Frames[0].Size);
@@ -274,9 +274,9 @@ OPint State1Update(OPtimer* time){
 	plane->Bind();
 	tri.Bind();
 
-	OPeffectSet("uColorTexture", tex);
-	OPeffectSet("uSpecularTexture", spec);
-	OPeffectSet("uNormalTexture", norm);
+	OPeffectSet("uColorTexture", tex, 0);
+	OPeffectSet("uSpecularTexture", spec, 1);
+	OPeffectSet("uNormalTexture", norm, 2);
 	OPeffectSet("uWorld", 1, &world);
 	OPeffectSet("uProj", 1, &camera.proj);
 	OPeffectSet("uView", 1, &camera.view);

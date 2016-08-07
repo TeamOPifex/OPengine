@@ -8,6 +8,7 @@ OPvertices* OPverticesCreate(OPuint count, ui32 features) {
 	size += OPMhasFeature(features, Position) * 3;
 	size += OPMhasFeature(features, Normal) * 3;
 	size += OPMhasFeature(features, Tangent) * 3;
+	size += OPMhasFeature(features, BiTangent) * 3;
 	size += OPMhasFeature(features, UV) * 2;
 	size += OPMhasFeature(features, Bones) * 4;
 	size += OPMhasFeature(features, Skinning) * 4;
@@ -31,9 +32,12 @@ ui32 OPverticesOffset(OPvertices* vertices, ui32 feature) {
 
 	if (feature & Normal) return offset;
 	offset += OPMhasFeature(vertices->features, Normal) * 3;
-	
+
 	if (feature & Tangent) return offset;
 	offset += OPMhasFeature(vertices->features, Tangent) * 3;
+
+	if (feature & BiTangent) return offset;
+	offset += OPMhasFeature(vertices->features, BiTangent) * 3;
 
 	if (feature & UV) return offset;
 	offset += OPMhasFeature(vertices->features, UV) * 2;
