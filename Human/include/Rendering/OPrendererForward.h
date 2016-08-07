@@ -7,7 +7,7 @@ struct OPrendererForward;
 
 struct OPrendererForward {
 	OPrenderer rendererRoot;
-	OPmaterial passes[1];
+	OPmaterial* passes[1];
 	OPrenderCommandBucket renderBucket[1];
 
 	OPrendererForward() { Setup(); }
@@ -17,6 +17,7 @@ struct OPrendererForward {
 	static OPrendererForward* Create();
 
 	inline void Init(OPcam** camera, ui32 maxCalls, ui32 maxLights) { rendererRoot.Init(camera, maxCalls, maxLights); }
+	inline void SetMaterial(OPmaterial* material, ui32 pass) { rendererRoot.SetMaterial(material, pass); }
 	inline void SetMaterialEffect(OPeffect* effect, ui32 pass) { rendererRoot.SetMaterialEffect(effect, pass); }
 	inline OPmaterialInstance* CreateMaterialInstance(ui32 pass = 0) { return rendererRoot.CreateMaterialInstance(pass); }
 	inline void Begin() { rendererRoot.Begin(); }

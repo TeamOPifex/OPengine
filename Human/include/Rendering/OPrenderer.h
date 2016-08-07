@@ -11,6 +11,7 @@ struct OPrenderer {
 	OPcam** camera;
 
 	void(*_Init)(OPrenderer* renderer, OPcam** camera, ui32 maxCalls, ui32 maxLights) = 0;
+	void(*_SetMaterial)(OPrenderer* renderer, OPmaterial* material, ui32 pass) = 0;
 	void(*_SetMaterialEffect)(OPrenderer* renderer, OPeffect* effect, ui32 pass) = 0;
 	OPmaterialInstance*(*_CreateMaterialInstance)(OPrenderer* renderer, ui32 pass) = 0;
 	void(*_Begin)(OPrenderer* renderer) = 0;
@@ -20,6 +21,7 @@ struct OPrenderer {
 	void(*_Present)(OPrenderer* renderer) = 0;
 
 	inline void Init(OPcam** camera, ui32 maxCalls, ui32 maxLights) { _Init(this, camera, maxCalls, maxLights); }
+	inline void SetMaterial(OPmaterial* material, ui32 pass) { _SetMaterial(this, material, pass); }
 	inline void SetMaterialEffect(OPeffect* effect, ui32 pass) { _SetMaterialEffect(this, effect, pass); }
 	inline OPmaterialInstance* CreateMaterialInstance(ui32 pass = 0) { return _CreateMaterialInstance(this, pass); }
 	inline void Begin() { _Begin(this); }
