@@ -11,14 +11,16 @@ OPmesh OPcubeCreate(OPvec3 color) {
 		verts[i].Color = color;
 	}
 
-	OPmeshBuilderInit(&builder, vertexSize);
+	OPvertexLayoutBuilder vertexLayoutBuilder;
+	vertexLayoutBuilder.Init()->Add(OPattributes::POSITION)->Add(OPattributes::COLOR);
+	builder.Init(vertexLayoutBuilder.Build());
 
 	{ // Back
 		verts[0].Position = OPvec3Create(0.5, 0.5, -0.5);
 		verts[1].Position = OPvec3Create(-0.5, 0.5, -0.5);
 		verts[2].Position = OPvec3Create(-0.5, -0.5, -0.5);
 		verts[3].Position = OPvec3Create(0.5, -0.5, -0.5);
-		OPmeshBuilderAdd(&builder, &verts[0], &verts[1], &verts[2], &verts[3]);
+		builder.Add(&verts[0], &verts[1], &verts[2], &verts[3]);
 	}
 
 	{ // Front
@@ -26,7 +28,7 @@ OPmesh OPcubeCreate(OPvec3 color) {
 		verts[1].Position = OPvec3Create(0.5, 0.5, 0.5);
 		verts[2].Position = OPvec3Create(0.5, -0.5, 0.5);
 		verts[3].Position = OPvec3Create(-0.5, -0.5, 0.5);
-		OPmeshBuilderAdd(&builder, &verts[0], &verts[1], &verts[2], &verts[3]);
+		builder.Add(&verts[0], &verts[1], &verts[2], &verts[3]);
 	}
 
 	{ // Top
@@ -34,7 +36,7 @@ OPmesh OPcubeCreate(OPvec3 color) {
 		verts[1].Position = OPvec3Create(0.5, 0.5, 0.5);
 		verts[2].Position = OPvec3Create(0.5, 0.5, -0.5);
 		verts[3].Position = OPvec3Create(-0.5, 0.5, -0.5);
-		OPmeshBuilderAdd(&builder, &verts[0], &verts[1], &verts[2], &verts[3]);
+		builder.Add(&verts[0], &verts[1], &verts[2], &verts[3]);
 	}
 
 	{ // Bottom
@@ -42,7 +44,7 @@ OPmesh OPcubeCreate(OPvec3 color) {
 		verts[1].Position = OPvec3Create(-0.5, -0.5, -0.5);
 		verts[2].Position = OPvec3Create(-0.5, -0.5, 0.5);
 		verts[3].Position = OPvec3Create(0.5, -0.5, 0.5);
-		OPmeshBuilderAdd(&builder, &verts[0], &verts[1], &verts[2], &verts[3]);
+		builder.Add(&verts[0], &verts[1], &verts[2], &verts[3]);
 	}
 
 	{ // Left
@@ -50,7 +52,7 @@ OPmesh OPcubeCreate(OPvec3 color) {
 		verts[1].Position = OPvec3Create(-0.5, 0.5, 0.5);
 		verts[2].Position = OPvec3Create(-0.5, -0.5, 0.5);
 		verts[3].Position = OPvec3Create(-0.5, -0.5, -0.5);
-		OPmeshBuilderAdd(&builder, &verts[0], &verts[1], &verts[2], &verts[3]);
+		builder.Add(&verts[0], &verts[1], &verts[2], &verts[3]);
 	}
 
 	{ // Right
@@ -58,10 +60,11 @@ OPmesh OPcubeCreate(OPvec3 color) {
 		verts[1].Position = OPvec3Create(0.5, 0.5, -0.5);
 		verts[2].Position = OPvec3Create(0.5, -0.5, -0.5);
 		verts[3].Position = OPvec3Create(0.5, -0.5, 0.5);
-		OPmeshBuilderAdd(&builder, &verts[0], &verts[1], &verts[2], &verts[3]);
+		builder.Add(&verts[0], &verts[1], &verts[2], &verts[3]);
 	}
 	
-	OPmesh result = OPmeshBuilderGen(&builder);
-	OPmeshBuilderDestroy(&builder);
+	OPmesh result = builder.Build();
+	builder.Destroy();
+
 	return result;
 }

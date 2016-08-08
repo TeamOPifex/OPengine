@@ -24,7 +24,7 @@ void ExampleSpriteSystemEnter(OPgameState* last) {
 	sp->Scale = OPvec2(10, 10);
 	sp->Position = OPvec2(300, 100);
 
-	spriteSystemExample.camera = OPcamOrtho(OPvec3Create(0, 0, 10), OPVEC3_ZERO, OPVEC3_UP, 0.1f, 20.0f, 0, (OPfloat)OPRENDER_WIDTH, 0, (OPfloat)OPRENDER_HEIGHT);
+	spriteSystemExample.camera.SetOrtho(OPvec3Create(0, 0, 10), OPVEC3_ZERO, OPVEC3_UP, 0.1f, 20.0f, 0, (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, 0, (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height);
 }
 
 OPint ExampleSpriteSystemUpdate(OPtimer* time) {

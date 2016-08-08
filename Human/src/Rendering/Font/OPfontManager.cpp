@@ -21,8 +21,8 @@ OPfontManager* OPfontManagerCreate(OPfont* font) {
 	temp->currNodes = OPvectorCreate(sizeof(OPfontTextNode));
 	temp->isBuilt = false;
 	temp->builtNodes = OPhashMapCreate(16);
-	temp->meshPacker = OPmeshPackerCreate();
-	temp->proj = OPmat4Ortho(0, OPRENDER_SCREEN_WIDTH * OPRENDER_SCREEN_WIDTH_SCALE, OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE, 0, -1, 1);
+	temp->meshPacker.Init();
+	temp->proj = OPmat4Ortho(0, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, 0, -1, 1);
 	temp->dummyMesh = OPfontCreateUserText(temp->_font, "", temp->scale);
 
 	return temp;
@@ -62,7 +62,7 @@ void OPfontManagerSetColor(OPfontManager* manager, f32 r, f32 g, f32 b, f32 a) {
 
 void OPfontManagerAddText(const OPchar* text) {
 	ASSERT(OPFONTMANAGER_ACTIVE != NULL, "A Font Manager has not been bound yet");
-	OPmeshPackerBind(&OPFONTMANAGER_ACTIVE->meshPacker);
+	OPFONTMANAGER_ACTIVE->meshPacker.Bind();
 	OPfontBuiltTextNode* node = (OPfontBuiltTextNode*)OPalloc(sizeof(OPfontBuiltTextNode));
 	*node = OPfontCreatePackedText(OPFONTMANAGER_ACTIVE->_font, text, OPFONTMANAGER_ACTIVE->scale);
 	OPhashMapPut(OPFONTMANAGER_ACTIVE->builtNodes, text, node);
@@ -70,7 +70,7 @@ void OPfontManagerAddText(const OPchar* text) {
 
 void OPfontManagerBuild() {
 	ASSERT(OPFONTMANAGER_ACTIVE != NULL, "A Font Manager has not been bound yet");
-	OPmeshPackerBind(&OPFONTMANAGER_ACTIVE->meshPacker);
-	OPmeshPackerBuild();
+	OPFONTMANAGER_ACTIVE->meshPacker.Bind();
+	OPFONTMANAGER_ACTIVE->meshPacker.Build();
 	OPFONTMANAGER_ACTIVE->isBuilt = true;
 }

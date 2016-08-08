@@ -27,24 +27,23 @@ void OPfontSystemLoadEffects() {
 		ASSERT(error, "Failed to load Fragment Shader for Font Effect");
 	}
 
-	OPshaderAttribute attribs[] = {
-		{ "aPosition", GL_FLOAT, 3 },
-		{ "aUV", GL_FLOAT, 2 }
-	};
+	//OPshaderAttribute attribs[] = {
+	//	{ "aPosition", OPshaderElementType::FLOAT, 3 },
+	//	{ "aUV", OPshaderElementType::FLOAT, 2 }
+	//};
 
 	OPFONTMANAGER_EFFECT_ACTIVE = (OPeffect*)OPalloc(sizeof(OPeffect));
-	*OPFONTMANAGER_EFFECT_ACTIVE = OPeffectCreate(
-		*(OPshader*)OPcmanGet(FontShaderVert),
-		*(OPshader*)OPcmanGet(FontShaderFrag),
-		attribs,
-		2,
-		"Common Font Effect"
-		);
+	OPFONTMANAGER_EFFECT_ACTIVE->Init((OPshader*)OPcmanGet(FontShaderVert), (OPshader*)OPcmanGet(FontShaderFrag));
 
+	//OPFONTMANAGER_EFFECT_ACTIVE->AddUniform("uColorTexture");
+	//OPFONTMANAGER_EFFECT_ACTIVE->AddUniform("uColor");
+	//OPFONTMANAGER_EFFECT_ACTIVE->AddUniform("uWorld");
+	//OPFONTMANAGER_EFFECT_ACTIVE->AddUniform("uView");
+	//OPFONTMANAGER_EFFECT_ACTIVE->AddUniform("uProj");
 }
 
 void OPfontSystemShutdownEffects() {
-	OPeffectUnload(OPFONTMANAGER_EFFECT_ACTIVE);
+	OPFONTMANAGER_EFFECT_ACTIVE->Destroy();
 	OPfree(OPFONTMANAGER_EFFECT_ACTIVE);
 }
 // void OPfontSystemLoadScreenEffects() {

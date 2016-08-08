@@ -127,7 +127,7 @@ void ExampleDeferredEnter(OPgameState* last) {
 OPint ExampleDeferredUpdate(OPtimer* time) {
 
 	// Update
-	//if (OPkeyboardIsDown(OPKEY_SPACE)) deferredExample->Rotation++;
+	//if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) deferredExample->Rotation++;
 	//OPmat4 world = OPmat4createRotY(deferredExample->Rotation / 100.0);
 
 	//// Render

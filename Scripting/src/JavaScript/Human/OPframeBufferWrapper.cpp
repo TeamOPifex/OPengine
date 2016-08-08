@@ -9,18 +9,18 @@
 JS_RETURN_VAL _OPframeBufferCreateDepth(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-	OPtextureDescription desc = {
-		4096,
-		4096,
-		GL_DEPTH_COMPONENT16,
-		GL_DEPTH_COMPONENT,
-		GL_FLOAT,
-		GL_LINEAR,
-		GL_LINEAR,
-		GL_CLAMP_TO_EDGE,
-		GL_CLAMP_TO_EDGE
-	};
-
+	//OPtextureDesc desc = {
+	//	4096,
+	//	4096,
+	//	GL_DEPTH_COMPONENT16,
+	//	GL_DEPTH_COMPONENT,
+	//	GL_FLOAT,
+	//	GL_LINEAR,
+	//	GL_LINEAR,
+	//	GL_CLAMP_TO_EDGE,
+	//	GL_CLAMP_TO_EDGE
+	//};
+	OPtextureDesc desc;
 	OPframeBuffer* fb = (OPframeBuffer*)OPalloc(sizeof(OPframeBuffer));
 	*fb = OPframeBufferCreateDepth(desc);
 

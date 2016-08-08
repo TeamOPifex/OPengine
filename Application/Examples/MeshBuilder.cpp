@@ -23,34 +23,20 @@ struct MeshBuilderVert {
 };
 
 void ExampleMeshBuilderEnter(OPgameState* last) {
-
-	OPmeshBuilder* builder = OPmeshBuilderCreate(sizeof(OPfloat) * 6);
+	OPvertexLayoutBuilder vertexLayoutBuilder = OPvertexLayoutBuilder((ui32)OPattributes::POSITION | (ui32)OPattributes::COLOR);
+	OPmeshBuilder builder = OPmeshBuilder(vertexLayoutBuilder.Build());
 
 	MeshBuilderVert one = { OPvec3(-1, 1, 0), OPvec3(1, 0, 0) };
 	MeshBuilderVert two = { OPvec3(1, 1, 0), OPvec3(1, 0, 0) };
 	MeshBuilderVert three = { OPvec3(1, -1, 0), OPvec3(1, 0, 0) };
 	MeshBuilderVert four = { OPvec3(-1, -1, 0), OPvec3(1, 0, 0) };
-	OPmeshBuilderAdd(builder, &one, &two, &three, &four);
+	builder.Add(&one, &two, &three, &four);
 
-	meshBuilderExample.Mesh = OPmeshBuilderGen(builder);
-	OPmeshBuilderDestroy(builder);
+	meshBuilderExample.Mesh = builder.BuildAndDestroy();
 
-	meshBuilderExample.Effect = OPeffectGen(
-		"ColoredModel.vert",
-		"ColoredModel.frag",
-		OPATTR_POSITION | OPATTR_COLOR,
-		"MeshBuilder Effect",
-		meshBuilderExample.Mesh.vertexLayout.stride);
+	meshBuilderExample.Effect.Init("ColoredModel.vert", "ColoredModel.frag");
 
-	meshBuilderExample.Camera = OPcamPersp(
-		OPVEC3_ONE * 2.0,
-		OPVEC3_UP,
-		OPVEC3_UP,
-		0.1f,
-		1000.0f,
-		45.0f,
-		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
-		);
+	meshBuilderExample.Camera.SetPerspective(OPVEC3_ONE * 2.0, OPVEC3_UP);
 
 	OPrenderDepth(1);
 	OPrenderCull(0);
@@ -58,21 +44,14 @@ void ExampleMeshBuilderEnter(OPgameState* last) {
 
 OPint ExampleMeshBuilderUpdate(OPtimer* time) {
 
-	OPlog("Update");
-	if (OPkeyboardIsDown(OPKEY_SPACE)) { meshBuilderExample.Rotation++; }
-	OPlog("Update 1");
+	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { meshBuilderExample.Rotation++; }
 	OPmat4 world = OPmat4RotY(meshBuilderExample.Rotation / 100.0f);
-	OPlog("Update 2");
 
 	OPrenderClear(0.4f, 0.4f, 0.4f);
-	OPlog("Update 3");
 	OPbindMeshEffectWorldCam(&meshBuilderExample.Mesh, &meshBuilderExample.Effect, &world, &meshBuilderExample.Camera);
 
-	OPlog("Update 4");
 	OPmeshRender();
-	OPlog("Update 5");
 	OPrenderPresent();
-	OPlog("Return");
 
 	return 0;
 }
@@ -83,7 +62,7 @@ void ExampleMeshBuilderRender(OPfloat delta) {
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleMeshBuilderExit(OPgameState* next) {
 	// Clean up phase for the Game State
-	OPeffectUnload(&meshBuilderExample.Effect);
+	meshBuilderExample.Effect.Destroy();
 	return 0;
 }
 

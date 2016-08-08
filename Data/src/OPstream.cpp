@@ -243,28 +243,3 @@ OPuint OPseek(OPstream* stream, OPuint byte){
 	}
 	return 0;
 }
-//-----------------------------------------------------------------------------
-//- C++ Definitions -----------------------------------------------------------
-#ifdef __cplusplus // compile the C++ class
-using namespace OPEngine::Data;
-
-OPStream::OPStream(OPuint size){
-	this->_stream = OPstreamCreate(size);
-}
-
-OPStream::~OPStream(){
-	OPstreamDestroy(this->_stream);
-}
-
-OPuint OPStream::Seek(OPuint byte){
-	return OPseek(this->_stream, byte);
-}
-
-OPuint OPStream::Write(void* data, OPuint size){
-	return OPwrite(this->_stream, data, size);
-}
-
-ui8*   OPStream::Read(OPuint size){
-	return OPread(this->_stream, size);
-}
-#endif

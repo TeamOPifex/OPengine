@@ -120,7 +120,7 @@ void ExampleRakNetServerUpdate() {
 	// Update the server
 	RakSleep(30);
 
-	if (OPkeyboardWasReleased(OPKEY_T)) {
+	if (OPkeyboardWasReleased(OPkeyboardKey::T)) {
 		const i8* msg = "Test 1337 message";
 
 		OPlogInfo("Sending Test Message: %s", msg);
@@ -224,7 +224,7 @@ void ExampleRakNetClientInit() {
 
 void ExampleRakNetClientUpdate() {
 
-	if (OPkeyboardWasReleased(OPKEY_T)) {
+	if (OPkeyboardWasReleased(OPkeyboardKey::T)) {
 		const i8* msg = "Test 1337 message";
 
 		OPlogInfo("Sending Test Message: %s", msg);
@@ -310,11 +310,11 @@ OPint ExampleRakNetUpdate(OPtimer* time) {
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
-	if (rakNetExampleExample.Mode == 0 && OPkeyboardWasReleased(OPKEY_S)) {
+	if (rakNetExampleExample.Mode == 0 && OPkeyboardWasReleased(OPkeyboardKey::S)) {
 		ExampleRakNetServerInit();
 	}
 
-	if (rakNetExampleExample.Mode == 0 && OPkeyboardWasReleased(OPKEY_C)) {
+	if (rakNetExampleExample.Mode == 0 && OPkeyboardWasReleased(OPkeyboardKey::C)) {
 		ExampleRakNetClientInit();
 	}
 

@@ -21,23 +21,23 @@ void ExampleFModEnter(OPgameState* last) {
 OPint ExampleFModUpdate(OPtimer* time) {
 	OPfmodUpdate();
 	OPgamePad* gamePad = OPgamePadGet(OPGAMEPAD_ONE);
-	if (OPkeyboardWasPressed(OPKEY_L) || gamePad->WasPressed(OPGAMEPADBUTTON_A)) {
+	if (OPkeyboardWasPressed(OPkeyboardKey::L) || gamePad->WasPressed(OPGAMEPADBUTTON_A)) {
 		OPfmodPlay(fmodExample.sound[0]);
 	}
 
-	if (OPkeyboardWasPressed(OPKEY_B) || gamePad->WasPressed(OPGAMEPADBUTTON_B)) {
+	if (OPkeyboardWasPressed(OPkeyboardKey::B) || gamePad->WasPressed(OPGAMEPADBUTTON_B)) {
 		OPfmodPlay(fmodExample.sound[1]);
 	}
 
-	if (OPkeyboardWasPressed(OPKEY_C) || gamePad->WasPressed(OPGAMEPADBUTTON_B)) {
+	if (OPkeyboardWasPressed(OPkeyboardKey::C) || gamePad->WasPressed(OPGAMEPADBUTTON_B)) {
 		OPfmodPlay(fmodExample.sound[2]);
 	}
 
-	if (OPkeyboardWasPressed(OPKEY_F) || gamePad->WasPressed(OPGAMEPADBUTTON_B)) {
+	if (OPkeyboardWasPressed(OPkeyboardKey::F) || gamePad->WasPressed(OPGAMEPADBUTTON_B)) {
 		OPfmodPlay(fmodExample.sound[3]);
 	}
 
-	if (OPkeyboardWasPressed(OPKEY_A) || gamePad->WasPressed(OPGAMEPADBUTTON_B)) {
+	if (OPkeyboardWasPressed(OPkeyboardKey::A) || gamePad->WasPressed(OPGAMEPADBUTTON_B)) {
 		OPfmodPlay(fmodExample.sound[4]);
 	}
 

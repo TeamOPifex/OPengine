@@ -3,6 +3,10 @@
 #include <stdio.h>
 #include <ostream>
 
+#ifndef OutputDebugString
+#define OutputDebugString(a) 
+#endif
+
 #ifdef OPIFEX_WINDOWS
 HANDLE LogToHandle = NULL;
 #else
@@ -99,12 +103,13 @@ void OPvlog(ui32 level, const char* channel, const char* message, va_list args) 
 	} else {
 		sprintf(buffer2, "%s: %s\n", channel, message);
 		vsnprintf(buffer, sizeof buffer, buffer2, args);
+		OutputDebugString(buffer);
 #ifndef OPIFEX_IOS
 		printf(buffer);
 		//if (LogToHandle) {
 		//	WriteFile(LogToHandle, buffer, strlen(buffer), 0, 0);
 		//}
-		
+
 #else
         printf(buffer);
 #endif

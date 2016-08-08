@@ -4,7 +4,6 @@
 #include "./Core/include/OPtypes.h"
 #include "./Data/include/OPlist.h"
 #ifdef OPIFEX_WINDOWS
-
 #define OPEXPORT extern "C" __declspec(dllexport)
 #else
 #define OPEXPORT extern "C"

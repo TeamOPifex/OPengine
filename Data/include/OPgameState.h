@@ -4,10 +4,6 @@
 #include "./Core/include/OPtypes.h"
 #include "./Data/include/OPlist.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 struct OPgameState;
 typedef struct OPgameState OPgameState;
 
@@ -40,7 +36,4 @@ OPgameState* OPgameStateCreate(void (*init)(OPgameState*), OPint(*update)(struct
 */
 OPint OPgameStateDestroy(OPgameState* state);
 
-#ifdef __cplusplus
-}
-#endif
 #endif

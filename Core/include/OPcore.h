@@ -10,10 +10,6 @@
 #include "OPlog.h"
 #include "OPdir.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #ifdef OPIFEX_WINDOWS
 	extern HINSTANCE OP_HINSTANCE;
@@ -95,16 +91,16 @@ OPchar* OPgetExecutableDir();
 #else
 
 #if defined(OPIFEX_OPTION_RELEASE) && defined(OPIFEX_WINDOWS)
-	//#define OP_MAIN int main(int argc, char** args) {
-#ifdef _CONSOLE
-#define OP_MAIN int main(int argc, char** args) {
+	#ifdef _CONSOLE
+		#define OP_MAIN_START int main(int argc, char** args) {
+		#define OP_MAIN_RUN OPstart(argc, args);
+		#define OP_MAIN_RUN_STEPPED OPstartStepped(argc, args);
+	#else
+		#define OP_MAIN_START int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) { OP_HINSTANCE = hInstance;
+		#define OP_MAIN_RUN OPstart(0, NULL);
+		#define OP_MAIN_RUN_STEPPED OPstartStepped(0, NULL);
+	#endif
 #else
-#define OP_MAIN  int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {
-#endif
-#define OP_MAIN_START OPstart(__argc, __argv);
-#define OP_MAIN_START_STEPPED OPstartStepped(__argc, __argv);
-#else
-
 	#ifdef _CONSOLE
 		#define OP_MAIN_START int main(int argc, char** args) {
 		#define OP_MAIN_RUN OPstart(argc, args);
@@ -120,10 +116,6 @@ OPchar* OPgetExecutableDir();
 	return 0; \
 	}
 
-#endif
-
-#ifdef __cplusplus
-};
 #endif
 
 #endif

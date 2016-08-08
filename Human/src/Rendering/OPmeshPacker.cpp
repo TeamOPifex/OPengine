@@ -9,7 +9,7 @@
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
-OPmeshPacker* OPMESHPACKER_ACTIVE;
+OPmeshPacker* OPMESHPACKER_ACTIVE = NULL;
 
 //-----------------------------------------------------------------------------
 // ______                _   _                 
@@ -18,34 +18,29 @@ OPmeshPacker* OPMESHPACKER_ACTIVE;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPmeshPacker OPmeshPackerCreate(){
-	OPmeshPacker packer;
-	OPbzero(&packer, sizeof(OPmeshPacker));
-	
-	packer.vertices = *OPstreamCreate(0);
-	packer.indices = *OPstreamCreate(0);
-	packer.vertexElementOffset = 0;
-	packer.built = false;
+OPmeshPacker* OPmeshPacker::Init(){
+	vertices = *OPstreamCreate(0);
+	indices = *OPstreamCreate(0);
+	vertexElementOffset = 0;
+	built = false;
+	return this;
+}
 
-	return packer;
+OPmeshPacker* OPmeshPacker::Create() {
+	OPmeshPacker* result = (OPmeshPacker*)OPalloc(sizeof(OPmeshPacker));
+	result->Init();
+	return result;
 }
 
 //-----------------------------------------------------------------------------
-OPint OPmeshPackerDestroy(){
-	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
-	OPstreamDestroy(&packer->vertices);
-	OPstreamDestroy(&packer->indices);
-	return 1;
-}
-
-OPint OPmeshPackerDestroy(OPmeshPacker* packer) {
-	OPstreamDestroy(&packer->vertices);
-	OPstreamDestroy(&packer->indices);
+OPint OPmeshPacker::Destroy(){
+	OPstreamDestroy(&vertices);
+	OPstreamDestroy(&indices);
 	return 1;
 }
 
 //-----------------------------------------------------------------------------
-OPuint OPmeshPackerAddVB(ui32 vertexSize, void* verticesData, OPuint vertexCount){
+OPuint OPmeshPacker::AddVertexBuffer(ui32 vertexSize, void* verticesData, OPuint vertexCount){
 	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
 	OPuint dataStartPos = packer->vertexOffset;
 	OPuint vertexBufferSize = vertexSize * vertexCount;
@@ -54,52 +49,43 @@ OPuint OPmeshPackerAddVB(ui32 vertexSize, void* verticesData, OPuint vertexCount
 
 	return dataStartPos;
 }
+
 //-----------------------------------------------------------------------------
-OPuint OPmeshPackerAddIB(ui32 indexSize, void* indicesData, OPuint indexCount){
+OPuint OPmeshPacker::AddIndexBuffer(OPindexSize indexSize, void* indicesData, OPuint indexCount){
 	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
 	OPuint dataStartPos = packer->vertexOffset;
-	OPuint indexBufferSize = indexSize * indexCount;
+	OPuint indexBufferSize = (ui32)indexSize * indexCount;
 
 	ui16* dat = (ui16*)indicesData;
 	OPuint offset = packer->vertexElementOffset;
 	for(OPuint i = 0; i < indexCount; ++i){
 		ui16 index = dat[i] + (ui16)offset;
-		OPwrite(&packer->indices, &index, indexSize);
+		OPwrite(&packer->indices, &index, (ui32)indexSize);
 	}
 
 	packer->indexOffset += indexBufferSize;
 	return dataStartPos;
 }
+
 //-----------------------------------------------------------------------------
-void OPmeshPackerBuild(){
-	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
-	packer->VertexBuffer = OPrenderGenBuffer(OPvertexBuffer);
-	packer->IndexBuffer = OPrenderGenBuffer(OPindexBuffer);
+void OPmeshPacker::Build(){
+	VertexBuffer.Init();
+	IndexBuffer.Init();
 
-	OPrenderSetBufferData(
-		&packer->VertexBuffer,
-		1,
-		packer->vertexOffset,
-		packer->vertices.Data
-	);
+	VertexBuffer.Bind();
+	IndexBuffer.Bind();
 
-	OPrenderSetBufferData(
-		&packer->IndexBuffer,
-		1,
-		packer->indexOffset,
-		packer->indices.Data
-	);
-	
-	OPMESHPACKER_ACTIVE->built = true;
+	VertexBuffer.SetData(1, vertexOffset, vertices.Data);
+	IndexBuffer.SetData(OPindexSize::BYTE, indexOffset, indices.Data);
+		
+	built = true;
 }
-//-----------------------------------------------------------------------------
-void OPmeshPackerBind(OPmeshPacker* packer){
-	OPMESH_ACTIVE_PTR = OPMESHPACKER_ACTIVE = packer;
-	if (!OPMESHPACKER_ACTIVE->built) return;
 
-	OPglError("OPmeshPackerBind:Error 0");
-	OPrenderBindBuffer(&packer->VertexBuffer);
-	OPglError("OPmeshPackerBind:Error 1");
-	OPrenderBindBuffer(&packer->IndexBuffer);
-	OPglError("OPmeshPackerBind:Error 2");
+//-----------------------------------------------------------------------------
+void OPmeshPacker::Bind(){
+	OPMESHPACKER_ACTIVE = this;
+	if (!built) return;
+
+	VertexBuffer.Bind();
+	IndexBuffer.Bind();
 }

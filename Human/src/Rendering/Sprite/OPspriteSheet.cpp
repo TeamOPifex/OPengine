@@ -11,8 +11,8 @@ void __opSpriteScaleFrames(OPtexture* tex, OPspriteSheet* ss) {
 	ASSERT(tex, "__opSpriteScaleFrames() - spritesheet null");
 	OPint i = 0;
 	OPvec2 size;
-	size.x = tex->Description.Width;
-	size.y = tex->Description.Height;
+	size.x = tex->textureDesc.width;
+	size.y = tex->textureDesc.height;
 
 	for (i = ss->Sprites; i--;){
 		OPsprite* s = (OPsprite*)OPcmanGet(ss->Names[i]);
@@ -258,8 +258,8 @@ OPint OPspriteSheetUnload(void* ss){
 }
 
 OPvec2 OPspriteCurrentFrameSize(OPsprite* sprite) {
-	f32 sheetWidth = sprite->Sheet->Description.Width;
-	f32 sheetHeight = sprite->Sheet->Description.Height;
+	f32 sheetWidth = sprite->Sheet->textureDesc.width;
+	f32 sheetHeight = sprite->Sheet->textureDesc.height;
 	f32 frameWidth = (sprite->Frames[sprite->Frame].Size.x * sheetWidth);
 	f32 frameHeight = (sprite->Frames[sprite->Frame].Size.y * sheetHeight);
 	return OPvec2(frameWidth, frameHeight);

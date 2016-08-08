@@ -89,7 +89,10 @@ if(${OPIFEX_TOOLS_FBXTOOPM})
 	add_external_opifex_includes()
 
 	if(${OPIFEX_OS_WINDOWS})
-		include_directories("C:/Program Files/Autodesk/FBX/FBX SDK/2015.1/include")
+		#include_directories("C:/Program Files/Autodesk/FBX/FBX SDK/2015.1/include")
+		include_directories("C:/Program Files/Autodesk/FBX/FBX SDK/2016.1.1/include")
+    else()
+        message(STATUS "NOT WINDOWS FOR FBX TOOL")
 	endif()
 
 	if(${OPIFEX_OS_OSX})
@@ -115,7 +118,8 @@ if(${OPIFEX_TOOLS_FBXTOOPM})
 
 
 	if(${OPIFEX_OS_WINDOWS})
-		target_link_libraries(Tools_FBXtoOPM "C:/Program Files/Autodesk/FBX/FBX SDK/2015.1/lib/vs2013/x86/debug/libfbxsdk-mt.lib")
+		#target_link_libraries(Tools_FBXtoOPM "C:/Program Files/Autodesk/FBX/FBX SDK/2015.1/lib/vs2013/x86/debug/libfbxsdk-mt.lib")
+		target_link_libraries(Tools_FBXtoOPM "C:/Program Files/Autodesk/FBX/FBX SDK/2016.1.1/lib/vs2015/x64/debug/libfbxsdk-mt.lib")
 	endif()
 
 	if(${OPIFEX_OS_OSX})

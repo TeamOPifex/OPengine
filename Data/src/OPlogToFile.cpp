@@ -15,5 +15,6 @@ void OPlogToFile(const char* path) {
 }
 
 void OPlogToFileClose() {
+	if (_logFile.file == NULL) return;
 	fclose(_logFile.file);
 }

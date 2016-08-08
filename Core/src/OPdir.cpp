@@ -30,7 +30,7 @@ OPchar* OPdirCurrent() {
 
 	cCurrentPath[sizeof(cCurrentPath) - 1] = '\0'; /* not really required */
 
-	OPlog("The current working directory is %s", cCurrentPath);
+	OPlogInfo("Working Directory: %s", cCurrentPath);
 
 	len = (ui32)strlen(cCurrentPath) + 2;
 	result = (OPchar*)OPalloc(sizeof(OPchar) * len);
@@ -65,7 +65,7 @@ OPchar* OPdirExecutable() {
 			if (pos != NULL) {
 				*pos = '\0'; //this will put the null terminator here. you can also copy to another string if you want
 			}
-			OPlog("The executable directory is %s", ownPth);
+			OPlogInfo("Executable Directory: %s", ownPth);
 
 			len = (ui32)strlen(ownPth) + 2;
 			result = (OPchar*)OPalloc(sizeof(OPchar)* len);

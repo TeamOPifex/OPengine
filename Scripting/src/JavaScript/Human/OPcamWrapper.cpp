@@ -9,7 +9,7 @@ JS_RETURN_VAL _OPcamUpdateSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPcam* ptr = JS_GET_PTR(args.This(), OPcam);
-    OPcamUpdate(ptr);
+	ptr->Update();
 
     JS_RETURN_NULL;
 }
@@ -18,7 +18,7 @@ JS_RETURN_VAL _OPcamUpdate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPcam* ptr = JS_GET_ARG_PTR(args, 0, OPcam);
-    OPcamUpdate(ptr);
+	ptr->Update();
 
     JS_RETURN_NULL;
 }
@@ -84,7 +84,7 @@ JS_RETURN_VAL _OPcamSetPosSelf(const JS_ARGS& args) {
         ptr->pos.y = args[1]->NumberValue();
         ptr->pos.z = args[2]->NumberValue();
     }
-    OPcamUpdate(ptr);
+	ptr->Update();
 
     JS_RETURN_NULL;
 }
@@ -108,7 +108,7 @@ JS_RETURN_VAL _OPcamSetPos(const JS_ARGS& args) {
         ptr->pos.y = args[2]->NumberValue();
         ptr->pos.z = args[3]->NumberValue();
     }
-    OPcamUpdate(ptr);
+	ptr->Update();
 
     JS_RETURN_NULL;
 }
@@ -120,7 +120,7 @@ JS_RETURN_VAL _OPcamSetTargetSelf(const JS_ARGS& args) {
     ptr->target.x = args[0]->NumberValue();
     ptr->target.y = args[1]->NumberValue();
     ptr->target.z = args[2]->NumberValue();
-    OPcamUpdate(ptr);
+	ptr->Update();
 
     JS_RETURN_NULL;
 }
@@ -132,7 +132,7 @@ JS_RETURN_VAL _OPcamSetTarget(const JS_ARGS& args) {
     ptr->target.x = args[1]->NumberValue();
     ptr->target.y = args[2]->NumberValue();
     ptr->target.z = args[3]->NumberValue();
-    OPcamUpdate(ptr);
+	ptr->Update();
 
     JS_RETURN_NULL;
 }
@@ -184,7 +184,7 @@ JS_RETURN_VAL _OPcamPersp(const JS_ARGS& args) {
 
     OPcam* ptr = (OPcam*)OPallocZero(sizeof(OPcam));
 
-    *ptr = OPcamPersp(
+    ptr->SetPerspective(
             OPvec3Create(
                     args[0]->NumberValue(),
                     args[1]->NumberValue(),
@@ -217,7 +217,7 @@ JS_RETURN_VAL _OPcamOrtho(const JS_ARGS& args) {
 
     OPcam* ptr = (OPcam*)OPallocZero(sizeof(OPcam));
 
-    *ptr = OPcamOrtho(
+    ptr->SetOrtho(
             OPvec3Create(
                     args[0]->NumberValue(),
                     args[1]->NumberValue(),

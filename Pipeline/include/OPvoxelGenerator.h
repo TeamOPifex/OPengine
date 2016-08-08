@@ -23,7 +23,7 @@ enum VoxelFaces {
 
 struct OPvoxelGenerator {
 	OPuint Features;
-	OPuint VertexSize;
+	OPvertexLayout VertexSize;
 	ui32 IndexOffset;
 	OPuint HideFace[6];
 	OPfloat Scale;

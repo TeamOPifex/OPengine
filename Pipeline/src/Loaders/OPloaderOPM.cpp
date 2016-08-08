@@ -1,5 +1,5 @@
 #include "./Pipeline/include/Loaders/OPloaderOPM.h"
-#include "./Human/include/Rendering/OPattributes.h"
+#include "./Human/include/Rendering/Enums/OPattributes.h"
 #include "./Math/include/OPquat.h"
 #include "./Data/include/OPlist.h"
 
@@ -53,7 +53,7 @@ void OPCalculateTangents(OPMData* data) {
 		vecSmoothBitangent = OPvec3Norm(vecSmoothBitangent);
 
 		OPvec3 vecSmoothTangent = {};
-		OPvec3Cross(vecSmoothBitangent, vecNormal);
+		vecSmoothTangent = OPvec3Cross(vecSmoothBitangent, vecNormal);
 		vecSmoothTangent = OPvec3Norm(vecSmoothTangent);
 
 		v1.Tangent += vecSmoothTangent;
@@ -62,6 +62,13 @@ void OPCalculateTangents(OPMData* data) {
 		v1.Tangent = OPvec3Norm(v1.Tangent);
 		v2.Tangent = OPvec3Norm(v2.Tangent);
 		v3.Tangent = OPvec3Norm(v3.Tangent);
+
+		v1.BiTangent += vecSmoothBitangent;
+		v2.BiTangent += vecSmoothBitangent;
+		v3.BiTangent += vecSmoothBitangent;
+		v1.BiTangent = OPvec3Norm(v1.BiTangent);
+		v2.BiTangent = OPvec3Norm(v2.BiTangent);
+		v3.BiTangent = OPvec3Norm(v3.BiTangent);
 	}
 }
 
@@ -108,24 +115,24 @@ OPMData OPMloadDataV2(OPstream* str) {
 		result.indexCount = indicesCount;
 
 		OPvertexLayoutBuilder layout;
-		OPvertexLayoutBuilderInit(&layout);
+		layout.Init();
 
 		if (OPMhasFeature(features, Position))
-			OPvertexLayoutBuilderAdd(&layout, OPATTR_POSITION);
+			layout.Add(OPattributes::POSITION);
 		if (OPMhasFeature(features, Normal))
-			OPvertexLayoutBuilderAdd(&layout, OPATTR_NORMAL);
+			layout.Add(OPattributes::NORMAL);
 		if (OPMhasFeature(features, Tangent))
-			OPvertexLayoutBuilderAdd(&layout, OPATTR_TANGENT);
+			layout.Add(OPattributes::TANGENT);
 		if (OPMhasFeature(features, UV))
-			OPvertexLayoutBuilderAdd(&layout, OPATTR_UV);
+			layout.Add(OPattributes::UV);
 		if (OPMhasFeature(features, Color))
-			OPvertexLayoutBuilderAdd(&layout, OPATTR_COLOR);
+			layout.Add(OPattributes::COLOR);
 		if (OPMhasFeature(features, Skinning))
-			OPvertexLayoutBuilderAdd(&layout, OPATTR_BONES);
+			layout.Add(OPattributes::BONES);
 
 		result.vertexLayout = layout.Build();
-		result.indexSize = sizeof(ui16);
-		result.indices = OPalloc(result.indexSize * indicesCount);
+		result.indexSize = OPindexSize::SHORT;// sizeof(ui16);
+		result.indices = OPalloc((ui32)result.indexSize * indicesCount);
 		result.vertices = OPalloc(result.vertexLayout.stride * verticesCount);
 
 		f32* vertData = (f32*)result.vertices;
@@ -154,7 +161,7 @@ OPMData OPMloadData(OPstream* str) {
 	OPvec3 max = OPVEC3_ZERO;
 
 
-	OPvec3* positions, *normals, *tangents, *colors;
+	OPvec3* positions, *normals, *tangents, *bitangents, *colors;
 	OPvec2* uvs;
 
 	OPvec4* boneIndices;
@@ -162,39 +169,44 @@ OPMData OPMloadData(OPstream* str) {
 	
 
 	OPvertexLayoutBuilder layout;
-	OPvertexLayoutBuilderInit(&layout);
+	layout.Init();
 
 	if (OPMhasFeature(features, Position)) {
 		OPlogDebug("Feature: Position");
 		positions = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
-		OPvertexLayoutBuilderAdd(&layout, OPATTR_POSITION);
+		layout.Add(OPattributes::POSITION);
 	}
 	if (OPMhasFeature(features, Normal)) {
 		OPlogDebug("Feature: Normal");
 		normals = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
-		OPvertexLayoutBuilderAdd(&layout, OPATTR_NORMAL);
+		layout.Add(OPattributes::NORMAL);
 	}
 	if (OPMhasFeature(features, Tangent)) {
 		OPlogDebug("Feature: Tangent");
 		tangents = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
-		OPvertexLayoutBuilderAdd(&layout, OPATTR_TANGENT);
+		layout.Add(OPattributes::TANGENT);
+	}
+	if (OPMhasFeature(features, BiTangent)) {
+		OPlogDebug("Feature: BiTangent");
+		bitangents = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
+		layout.Add(OPattributes::BITANGENT);
 	}
 	if (OPMhasFeature(features, UV)) {
 		OPlogDebug("Feature: UV");
 		uvs = (OPvec2*)OPalloc(sizeof(OPvec2)* verticeCount);
-		OPvertexLayoutBuilderAdd(&layout, OPATTR_UV);
+		layout.Add(OPattributes::UV);
 	}
 	if (OPMhasFeature(features, Color)) {
 		OPlogDebug("Feature: Color");
 		colors = (OPvec3*)OPalloc(sizeof(OPvec3)* verticeCount);
-		OPvertexLayoutBuilderAdd(&layout, OPATTR_COLOR);
+		layout.Add(OPattributes::COLOR);
 	}
 	// Read Skinning
 	if (OPMhasFeature(features, Skinning)) {
 		OPlogDebug("Feature: Skinning");
 		boneIndices = (OPvec4*)OPalloc(sizeof(OPvec4)* verticeCount);
 		boneWeights = (OPvec4*)OPalloc(sizeof(OPvec4)* verticeCount);
-		OPvertexLayoutBuilderAdd(&layout, OPATTR_BONES);
+		layout.Add(OPattributes::BONES);
 	}
 		
 
@@ -233,7 +245,7 @@ OPMData OPMloadData(OPstream* str) {
 		}
 
 		// Read Tangent
-		if(OPMhasFeature(features, Tangent)) {
+		if (OPMhasFeature(features, Tangent)) {
 			x = OPreadf32(str);
 			y = OPreadf32(str);
 			z = OPreadf32(str);
@@ -241,6 +253,18 @@ OPMData OPMloadData(OPstream* str) {
 			tangents[i].y = y;
 			tangents[i].z = z;
 			tangents[i] = OPvec3Norm(tangents[i]);
+			//OPlog("Tangent: %f %f %f", x, y, z);
+		}
+
+		// Read BiTangent
+		if (OPMhasFeature(features, BiTangent)) {
+			x = OPreadf32(str);
+			y = OPreadf32(str);
+			z = OPreadf32(str);
+			bitangents[i].x = x;
+			bitangents[i].y = y;
+			bitangents[i].z = z;
+			bitangents[i] = OPvec3Norm(bitangents[i]);
 			//OPlog("Tangent: %f %f %f", x, y, z);
 		}
 
@@ -439,7 +463,7 @@ OPMData OPMloadData(OPstream* str) {
 	data.vertexLayout = layout.Build();
 	data.indices = indices;
 	data.indexCount = indicesCount * 3;
-	data.indexSize = sizeof(ui16);
+	data.indexSize = OPindexSize::SHORT;// sizeof(ui16);
 	data.vertexCount = verticeCount;
 
 	OPvertices* vertices = OPverticesCreate(verticeCount, features);
@@ -450,6 +474,8 @@ OPMData OPMloadData(OPstream* str) {
 		OPverticesWriteVec3(vertices, normals, Normal);
 	if (OPMhasFeature(features, Tangent))
 		OPverticesWriteVec3(vertices, tangents, Tangent);
+	if (OPMhasFeature(features, BiTangent))
+		OPverticesWriteVec3(vertices, bitangents, BiTangent);
 	if (OPMhasFeature(features, UV))
 		OPverticesWriteVec2(vertices, uvs, UV);
 	if (OPMhasFeature(features, Color))
@@ -500,29 +526,32 @@ OPMData OPMloadData(OPstream* str) {
 
 	if (OPMhasFeature(features, Meta)) {
 		ui16 metaCount = OPreadui16(str);
-		//OPlog("Meta Count: %d", metaCount);
-		OPMmeta* meta = (OPMmeta*)OPalloc(sizeof(OPMmeta) * metaCount);
-		for(i32 i = 0; i < metaCount; i++) {
-			OPchar* metaName = OPreadstring(str);
-			OPchar* metaType = OPreadstring(str);
-			OPlog("Meta Name: %s (%s)", metaName, metaType);
-			f32 x = OPreadf32(str);
-			f32 y = OPreadf32(str);
-			f32 z = OPreadf32(str);
-			f32 rx = OPreadf32(str);
-			f32 ry = OPreadf32(str);
-			f32 rz = OPreadf32(str);
-			f32 sx = OPreadf32(str);
-			f32 sy = OPreadf32(str);
-			f32 sz = OPreadf32(str);
-			meta[i].Name = metaName;
-			meta[i].Type = metaType;
-			meta[i].Position = OPvec3Create(x,y,z);
-			meta[i].Rotation = OPvec3Create(rx,ry,rz);
-			meta[i].Scale = OPvec3Create(sx,sy,sz);
-		}
 		data.metaCount = metaCount;
-		data.meta = meta;
+
+		if (metaCount > 0) {
+			//OPlog("Meta Count: %d", metaCount);
+			OPMmeta* meta = (OPMmeta*)OPalloc(sizeof(OPMmeta) * metaCount);
+			for (i32 i = 0; i < metaCount; i++) {
+				OPchar* metaName = OPreadstring(str);
+				OPchar* metaType = OPreadstring(str);
+				OPlog("Meta Name: %s (%s)", metaName, metaType);
+				f32 x = OPreadf32(str);
+				f32 y = OPreadf32(str);
+				f32 z = OPreadf32(str);
+				f32 rx = OPreadf32(str);
+				f32 ry = OPreadf32(str);
+				f32 rz = OPreadf32(str);
+				f32 sx = OPreadf32(str);
+				f32 sy = OPreadf32(str);
+				f32 sz = OPreadf32(str);
+				meta[i].Name = metaName;
+				meta[i].Type = metaType;
+				meta[i].Position = OPvec3Create(x, y, z);
+				meta[i].Rotation = OPvec3Create(rx, ry, rz);
+				meta[i].Scale = OPvec3Create(sx, sy, sz);
+			}
+			data.meta = meta;
+		}
 	}
 
 	return data;
@@ -546,11 +575,10 @@ OPint OPMload(OPstream* str, OPmesh** mesh) {
 
 	//OPlog("Creating vertex and buffers");
 	// Create Vertex & Index Buffers for Mesh
-	OPmesh temp = OPmeshCreate();
-	temp.Bind();
-	OPlogDebug("VERTEX STRIDE %u", data.vertexLayout.stride);
-	OPmeshBuild(
-		data.vertexLayout.stride, data.indexSize,
+	OPmesh temp = OPmesh(data.vertexLayout);
+	OPMESH_ACTIVE = &temp;
+	temp.Build(
+		data.vertexLayout, data.indexSize,
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
 	);
@@ -844,10 +872,9 @@ OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh){
 
 	OPMPartition(&data, triTable, vertList, 1);
 
-	OPmesh temp = OPmeshCreate();
-	temp.Bind();
-	OPmeshBuild(
-		data.vertexLayout.stride, data.indexSize,
+	OPmesh temp = OPmesh(data.vertexLayout);
+	temp.Build(
+		data.vertexLayout, data.indexSize,
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
 	);
@@ -867,9 +894,9 @@ OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh){
 OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh) {
 	OPstream* str = OPreadFile(filename);
 	OPMData data = OPMloadData(str);
-
-	OPmeshPacked temp = OPmeshPackedCreate(
-		data.vertexLayout.stride, data.indexSize,
+	
+	OPmeshPacked temp = OPmeshPacked(
+		data.vertexLayout, data.indexSize,
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
 	);
@@ -891,8 +918,10 @@ OPint OPMReload(OPstream* str, OPmesh** mesh){
 	OPmesh* tex = (OPmesh*)(*mesh);
 	OPint result = OPMload(str, &resultMesh);
 	if (result) {
-		OPrenderDelBuffer(&tex->IndexBuffer);
-		OPrenderDelBuffer(&tex->VertexBuffer);
+		tex->indexBuffer.Destroy();
+		tex->vertexBuffer.Destroy();
+		//OPrenderDelBuffer(&tex->IndexBuffer);
+		//OPrenderDelBuffer(&tex->VertexBuffer);
 		OPmemcpy(*mesh, resultMesh, sizeof(OPmesh));
 		OPfree(resultMesh);
 	}
@@ -902,8 +931,10 @@ OPint OPMReload(OPstream* str, OPmesh** mesh){
 OPint OPMUnload(void* mesh){
 	OPmesh* m = (OPmesh*)mesh;
 
-	OPrenderDelBuffer(&m->IndexBuffer);
-	OPrenderDelBuffer(&m->VertexBuffer);
+	m->indexBuffer.Destroy();
+	m->vertexBuffer.Destroy();
+	//OPrenderDelBuffer(&m->IndexBuffer);
+	//OPrenderDelBuffer(&m->VertexBuffer);
 	OPfree(m);
 
 	return 1;

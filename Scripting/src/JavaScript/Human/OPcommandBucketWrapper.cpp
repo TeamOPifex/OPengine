@@ -23,7 +23,7 @@ JS_RETURN_VAL _OPcommandBucketCreate(const JS_ARGS& args) {
 
     OPcam* camera = JS_GET_ARG_PTR(args, 1, OPcam);
 
-	OPcommandBucket* cb = OPcommandBucketCreate(args[0]->IntegerValue(), camera);
+	OPcommandBucket* cb = OPcommandBucket::Create(args[0]->IntegerValue(), camera);
     Handle<Object> result = JS_NEW_OBJECT();
     OPcommandBucketWrapperCreate(result, cb);
 
@@ -69,7 +69,7 @@ JS_RETURN_VAL _OPcommandBucketFlush(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPcommandBucket* ptr = JS_GET_ARG_PTR(args, 0, OPcommandBucket);
-    OPcommandBucketFlush(ptr);
+	ptr->Flush();
 
     JS_RETURN_NULL;
 }
@@ -78,7 +78,7 @@ JS_RETURN_VAL _OPcommandBucketFlushSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPcommandBucket* ptr = JS_GET_PTR(args.This(), OPcommandBucket);
-    OPcommandBucketFlush(ptr);
+	ptr->Flush();
 
     JS_RETURN_NULL;
 }
@@ -87,7 +87,7 @@ JS_RETURN_VAL _OPcommandBucketRender(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPcommandBucket* ptr = JS_GET_ARG_PTR(args, 0, OPcommandBucket);
-    OPcommandBucketRender(ptr);
+	ptr->Render();
 
     JS_RETURN_NULL;
 }
@@ -96,7 +96,7 @@ JS_RETURN_VAL _OPcommandBucketRenderSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPcommandBucket* ptr = JS_GET_PTR(args.This(), OPcommandBucket);
-    OPcommandBucketRender(ptr);
+	ptr->Render();
 
     JS_RETURN_NULL;
 }

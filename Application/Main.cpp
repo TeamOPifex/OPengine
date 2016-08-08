@@ -8,13 +8,11 @@
 // Application Methods
 //////////////////////////////////////
 
-OPwindow* mainWindow;
+OPwindow mainWindow;
 
 void ApplicationInit() {
 
-	OP_LOG_LEVEL = 2000;
 	//OPlogToFile("output.txt");
-	OPlog("test");
 
 	OPloadersAddDefault();
 	OPscriptAddLoader();
@@ -28,30 +26,27 @@ void ApplicationInit() {
 	OPcmanInit(OPIFEX_ASSETS);
 
 	OPoculusStartup();
-	OPrenderInit();
 
-	mainWindow = OPrenderCreateWindow(NULL, false, true, "Main Window", 1280, 720);
+	OPrenderSetup();
+	OPwindowSystemInit();
+	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, 1920, 1080));
+	OPrenderInit(&mainWindow);
 	
-	OPrenderInitDevice(mainWindow);
-
-	//OPcmanLoadGet("Tutorial02.vert");
-	//OPcmanLoadGet("Tutorial02.frag");
-
 	OPGAMEPADSYSTEM.SetDeadzones(0.2f);	
 
 	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 }
 
 OPint ApplicationUpdate(OPtimer* timer) {
-	if (mainWindow->Update()) {
+	if (mainWindow.Update()) {
 		return 1;
 	}
 
 	OPinputSystemUpdate(timer);
 	OPcmanUpdate(timer);
 
-	if (OPkeyboardWasReleased(OPKEY_ESCAPE)) return 1;
-	if ((OPkeyboardWasReleased(OPKEY_BACKSPACE) || OPgamePadGet(OPGAMEPAD_ONE)->WasPressed(OPGAMEPADBUTTON_BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
+	if (OPkeyboardWasReleased(OPkeyboardKey::ESCAPE)) return 1;
+	if ((OPkeyboardWasReleased(OPkeyboardKey::BACKSPACE) || OPgamePadGet(OPGAMEPAD_ONE)->WasPressed(OPGAMEPADBUTTON_BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
 		OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 	}
 
@@ -63,7 +58,7 @@ void ApplicationRender(OPfloat delta) {
 }
 
 void ApplicationDestroy() {
-	//ActiveState->Exit(ActiveState);
+	ActiveState->Exit(ActiveState);
 	OPcmanDestroy();
 	OPlogToFileClose();
 }
@@ -92,6 +87,7 @@ int main(int argc, char * argv[]) {
 #else
 
 OP_MAIN_START
+	OP_LOG_LEVEL = 2000;
 
 	#ifdef OPIFEX_OPTION_V8
 	// If the V8 engine is compiled in,

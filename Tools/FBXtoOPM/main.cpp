@@ -3,6 +3,7 @@
 #include "./OPengine.h"
 
 int main(int argc, char **argv) {
+	OP_LOG_LEVEL = 2000;
 	int arg;
 	i8* filename = NULL;
 	i8* output = NULL;
@@ -69,6 +70,14 @@ int main(int argc, char **argv) {
 				featureIn[Model_Indices] = specified = 1; continue;
 			}
 
+			if (IsParam(argv, arg, "--tangents") || IsParam(argv, arg, "-t")) {
+				featureIn[Model_Tangents] = specified = 1; continue;
+			}
+
+			if (IsParam(argv, arg, "--bitangents") || IsParam(argv, arg, "-bi")) {
+				featureIn[Model_BiTangents] = specified = 1; continue;
+			}
+
 			if (IsParam(argv, arg, "--bones") || IsParam(argv, arg, "-b")) {
 				featureIn[Model_Bones] = specified = 1; continue;
 			}
@@ -127,6 +136,8 @@ int main(int argc, char **argv) {
 	features[Model_Normals] = specified ? featureIn[Model_Normals] : 1;
 	features[Model_UVs] = specified ? featureIn[Model_UVs] : 1;
 	features[Model_Indices] = specified ? featureIn[Model_Indices] : 1;
+	features[Model_Tangents] = specified ? featureIn[Model_Tangents] : 1;
+	features[Model_BiTangents] = specified ? featureIn[Model_BiTangents] : 1;
 	features[Model_Bones] = specified ? featureIn[Model_Bones] : 1;
 	features[Model_Skinning] = specified ? featureIn[Model_Skinning] : 1;
 	features[Model_Skeletons] = specified ? featureIn[Model_Skeletons] : 1;

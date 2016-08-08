@@ -235,7 +235,7 @@ void OPstart(int argc, char** args) {
 	OPfree(_execDir);
 
 	#ifndef OPIFEX_OPTION_RELEASE
-	OPlog("Alloc/Dealloc/Diff: %d / %d / %d", OPallocations, OPdeallocations, (OPallocations - OPdeallocations));
+	OPlogDebug("Alloc/Dealloc/Diff: %d / %d / %d", OPallocations, OPdeallocations, (OPallocations - OPdeallocations));
 	ASSERT((OPallocations - OPdeallocations) == 0, "ALERT - Not all allocated memory was freed");
 	#endif
 }

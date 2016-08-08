@@ -18,14 +18,14 @@ void ExampleParticleSystemEnter(OPgameState* last) {
 	particleSystemExample = (ParticleSystemExample*)OPalloc(sizeof(ParticleSystemExample));
 
 	particleSystemExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
-	*particleSystemExample->Camera = OPcamPersp(
+	particleSystemExample->Camera->SetPerspective(
 		OPVEC3_ONE * 10.0,
 		OPVEC3_ZERO,
 		OPvec3Create(0, 1, 0),
 		0.1f,
 		1000.0f,
 		45.0f,
-		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
+		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
 	OPparticleSysInit(NULL);

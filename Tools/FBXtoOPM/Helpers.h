@@ -18,6 +18,7 @@ enum ModelFeatures {
 	Model_Animations = 8,
 	Model_Skeletons = 9,
 	Model_Meta = 10,
+	Model_BiTangents = 11,
 	MAX_FEATURES
 };
 

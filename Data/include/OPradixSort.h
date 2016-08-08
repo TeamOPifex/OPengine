@@ -3,10 +3,6 @@
 
 #include "./Core/include/OPtypes.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 	/**
 	* Sorts an array based on a Radix sort algorithm
 	* @param data An array of data that contains a ui64 key
@@ -18,8 +14,5 @@ extern "C" {
 	*/
 	void OPradixSort(void* data, void* duplicate, i64 n, i64(*getKey)(void*, i64), void*(*getEntity)(void*, i64), void(*setKey)(void*, i64, void*));
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif

@@ -13,7 +13,8 @@ enum OPMFeatures {
 	Skinning = 0x40,
 	Animations = 0x80,
 	Color = 0x100,
-	Meta = 0x200
+	Meta = 0x200,
+	BiTangent = 0x400
 };
 
 enum OPMKeyFeatures {
@@ -36,6 +37,7 @@ struct OPMvertex {
 	OPvec3 Position;
 	OPvec3 Normal;
 	OPvec3 Tangent;
+	OPvec3 BiTangent;
 	OPvec2 TexCoord;
 };
 

@@ -1,0 +1,17 @@
+#ifndef OPENGINE_HUMAN_INPUT_ENUMS_MOUSE_BUTTON
+#define OPENGINE_HUMAN_INPUT_ENUMS_MOUSE_BUTTON
+
+#include "./Core/include/OPtypes.h"
+
+enum struct OPmouseButton {
+	LBUTTON = 0,
+	RBUTTON,
+	MBUTTON,
+	XBUTTON_1,
+	XBUTTON_2,
+	XBUTTON_3,
+	XBUTTON_4,
+	MAX
+};
+
+#endif

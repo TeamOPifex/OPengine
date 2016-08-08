@@ -10,10 +10,6 @@
 //#include "./../../Core/include/Core.h"
 #endif
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 	struct OPminHeap{
 		OPint* _indices;
 		OPuint _capacity;
@@ -56,9 +52,5 @@ extern "C" {
 	 * @return Total size of the OPminHeap
 	*/
 	OPint OPminHeapSize(OPminHeap* heap);
-
-#ifdef __cplusplus
-};
-#endif
 
 #endif

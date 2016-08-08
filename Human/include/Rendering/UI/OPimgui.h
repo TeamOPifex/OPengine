@@ -11,7 +11,7 @@ struct OPimguiVertex {
 typedef struct OPimguiVertex OPimguiVertex;
 
 struct OPimgui {
-	OPrenderBuffer buffer;
+	OPvertexBuffer buffer;
 	OPmat4 proj;
 
 	OPvec4 primaryColor;

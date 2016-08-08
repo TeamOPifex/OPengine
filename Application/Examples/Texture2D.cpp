@@ -7,7 +7,7 @@
 #include "./Pipeline/include/OPtexture2D.h"
 
 typedef struct {
-	OPtexture2D* Tex;
+	OPtexture2DOLD* Tex;
 } Texture2DExample;
 
 Texture2DExample texture2DExample;

@@ -11,9 +11,6 @@
 #include "./Math/include/OPvec2.h"
 #include "./Core/include/OPtimer.h"
 
-#ifdef __cplusplus
-extern "C"{
-#endif
 
 //-----------------------------------------------------------------------------
 //   _____ _                   _
@@ -69,9 +66,6 @@ void OPparticleSysUpdate(OPparticleSys* sys, OPtimer* timer);
 void OPparticleSysDestroy(OPparticleSys* sys);
 void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(OPparticle*, OPmat4*));
 
-#ifdef __cplusplus
-};
-#endif
 
 
 #endif

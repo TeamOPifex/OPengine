@@ -22,29 +22,22 @@ void ExampleFreeFlightEnter(OPgameState* last) {
 	freeFlightExample.Rotation = 0;
 
 	OPshaderAttribute attribs[] = {
-		{ "aPosition", GL_FLOAT, 3 },
-		{ "aNormal", GL_FLOAT, 3 },
-		{ "aUV", GL_FLOAT, 2 }
+		{ "aPosition", OPshaderElementType::FLOAT, 3 },
+		{ "aNormal", OPshaderElementType::FLOAT, 3 },
+		{ "aUV", OPshaderElementType::FLOAT, 2 }
 	};
 
 	freeFlightExample.Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
 	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture3D.vert");
 	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
-	*freeFlightExample.Effect = OPeffectCreate(
-		*vert,
-		*frag,
-		attribs,
-		3,
-		"Textured Effect",
-		freeFlightExample.Mesh->vertexLayout.stride
-		);
+	freeFlightExample.Effect->Init(vert, frag);
 
 	OPcamFreeFlightInit(&freeFlightExample.Camera, 3.0f, 3.0f, OPVEC3_ONE);
 }
 
 OPint ExampleFreeFlightUpdate(OPtimer* timer) {
 	OPcamFreeFlightUpdate(&freeFlightExample.Camera, timer);
-	if (OPkeyboardIsDown(OPKEY_SPACE)) { freeFlightExample.Rotation++; }
+	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { freeFlightExample.Rotation++; }
 
 	return false;
 }
@@ -54,22 +47,20 @@ void ExampleFreeFlightRender(OPfloat delta) {
 	OPrenderClear(0, 0, 0);
 
 	freeFlightExample.Mesh->Bind();
-	OPeffectBind(freeFlightExample.Effect);
+	freeFlightExample.Effect->Bind();
 
 	OPmat4 world;
 	world = OPmat4RotY(freeFlightExample.Rotation / 100.0f);
 
 
-	OPtextureClearActive();
-	ui32 tex = OPtextureBind(freeFlightExample.Texture);
-	OPeffectParami("uColorTexture", tex);
+	OPeffectSet("uColorTexture", freeFlightExample.Texture, 0);
 
-	OPeffectParamMat4("uWorld", &world);
-	OPeffectParamMat4("uProj", &freeFlightExample.Camera.Camera.proj);
-	OPeffectParamMat4("uView", &freeFlightExample.Camera.Camera.view);
+	OPeffectSet("uWorld", &world);
+	OPeffectSet("uProj", &freeFlightExample.Camera.Camera.proj);
+	OPeffectSet("uView", &freeFlightExample.Camera.Camera.view);
 
 	OPvec3 light = OPvec3Create(0, 1, 0);
-	OPeffectParamVec3("vLightDirection", &light);
+	OPeffectSet("vLightDirection", &light);
 
 	OPmeshRender();
 
@@ -77,7 +68,7 @@ void ExampleFreeFlightRender(OPfloat delta) {
 }
 
 OPint ExampleFreeFlightExit(OPgameState* next) {
-	OPeffectUnload(freeFlightExample.Effect);
+	freeFlightExample.Effect->Destroy();
 	OPfree(freeFlightExample.Effect);
 
 	return 0;

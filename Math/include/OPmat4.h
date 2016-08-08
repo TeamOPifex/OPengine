@@ -274,11 +274,7 @@ inline void OPmat4Mul(OPmat4* dst, OPmat4 m1, OPmat4 m2)
 };
 
 inline void OPmat4Identity(OPmat4* m) {
-	OPbzero(m, sizeof(OPmat4));
-	m->cols[0].x = 1;
-	m->cols[1].y = 1;
-	m->cols[2].z = 1;
-	m->cols[3].w = 1;
+	*m = OPMAT4_IDENTITY;
 }
 
 

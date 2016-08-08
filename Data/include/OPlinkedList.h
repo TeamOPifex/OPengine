@@ -8,10 +8,6 @@
 	#include "./Core/include/OPmemory.h"
 #endif
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 struct OPllNode_def;
 typedef struct OPllNode_def OPllNode;
@@ -67,8 +63,5 @@ void* OPllRemove(OPlinkedList* list, OPllNode* toRemove);
 */
 OPint OPllGetSize(OPlinkedList* list);
 
-#ifdef __cplusplus
-};
-#endif
 
 #endif

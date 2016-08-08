@@ -21,8 +21,7 @@ typedef struct {
 
 	Spine* spine;
 	f32* worldVertices;
-	OPrenderBuffer* buffer;
-	OPmesh quad;
+	OPmesh* quad;
 } SpineExample;
 SpineExample* spineExample;
 
@@ -47,14 +46,14 @@ void ExampleSpineEnter(OPgameState* last) {
 	spineExample->Mesh = (OPmesh*)OPcmanGet("cube.opm");
 
 	// Sets up the camera as a perpsective camera for rendering
-	spineExample->Camera = OPcamPersp(
+	spineExample->Camera.SetPerspective(
 		OPvec3Create(0.0f, 0.0f, 45.0f),
 		OPvec3Create(0.0f, 0.0f, 0.0f),
 		OPVEC3_UP,
 		0.1f,
 		1000.0f,
 		45.0f,
-		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
+		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
 	// A default light direction used in the effect
@@ -89,12 +88,7 @@ void ExampleSpineEnter(OPgameState* last) {
 	// which requires the attributes are given in a set order
 	// Position (vec3), then Normal (vec3)
 	// For more granular control use OPeffectCreate
-	spineExample->Effect = OPeffectGen(
-		"SimpleTextured.vert",
-		"SimpleTextured.frag",
-		OPATTR_POSITION | OPATTR_UV,
-		"Model Effect",
-		spineExample->quad.vertexLayout.stride);
+	spineExample->Effect.Init("SimpleTextured.vert", "SimpleTextured.frag");
 
 	SpineInitialize();
 }
@@ -105,7 +99,7 @@ OPint ExampleSpineUpdate(OPtimer* time) {
 	// Update
 	////////////////////////
 
-	if (OPkeyboardWasPressed(OPKEY_SPACE)) {
+	if (OPkeyboardWasPressed(OPkeyboardKey::SPACE)) {
 		SpineSetAnim(spineExample->spine, 0, "jump", true);
 	}
 
@@ -115,7 +109,7 @@ OPint ExampleSpineUpdate(OPtimer* time) {
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
-	if (OPkeyboardIsDown(OPKEY_SPACE)) { spineExample->Rotation++; }
+	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { spineExample->Rotation++; }
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
 	OPmat4 world = OPmat4RotY(spineExample->Rotation / 100.0f);
@@ -156,7 +150,7 @@ void ExampleSpineRender(OPfloat delta) {
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleSpineExit(OPgameState* next) {
 	// Clean up phase for the Game State
-	OPeffectUnload(&spineExample->Effect);
+	spineExample->Effect.Destroy();
 	OPfree(spineExample);
 	return 0;
 }

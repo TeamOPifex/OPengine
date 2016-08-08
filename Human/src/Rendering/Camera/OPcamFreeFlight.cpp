@@ -13,13 +13,13 @@ void OPcamFreeFlightInit(OPcamFreeFlight* camFree, OPfloat moveSpeed, OPfloat ro
 	OPfloat angle = OPvec3Angle(OPVEC3_FORWARD, OPvec3Norm(position));
 	camFree->Rotation.x = -angle;
 
-	camFree->Camera = OPcamPersp(
+	camFree->Camera.SetPerspective(
 		position,
 		OPVEC3_ZERO,
 		OPVEC3_UP,
 		camNear, camFar,
 		45.0f,
-		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
+		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
 
@@ -50,13 +50,13 @@ void OPcamFreeFlightUpdate(OPcamFreeFlight* camFree, OPtimer* timer) {
 
 	OPfloat moveSpeed = dt * camFree->MoveSpeed * triggerDifference * 10.0f;
 	OPfloat rotSpeed = dt * camFree->RotationSpeed * triggerDifference;
-
-	camFree->Movement.z = OPkeyboardIsDown(OPKEY_S) - OPkeyboardIsDown(OPKEY_W) - gamePad->LeftThumbY();
-	camFree->Movement.x = OPkeyboardIsDown(OPKEY_D) - OPkeyboardIsDown(OPKEY_A) + gamePad->LeftThumbX();
+	
+	camFree->Movement.z = OPkeyboardIsDown(OPkeyboardKey::S) - OPkeyboardIsDown(OPkeyboardKey::W) - gamePad->LeftThumbY();
+	camFree->Movement.x = OPkeyboardIsDown(OPkeyboardKey::D) - OPkeyboardIsDown(OPkeyboardKey::A) + gamePad->LeftThumbX();
 	camFree->Movement *= moveSpeed;
 
-	rot.y = OPkeyboardIsDown(OPKEY_Q) - OPkeyboardIsDown(OPKEY_E) - gamePad->RightThumbX();
-	rot.x = OPkeyboardIsDown(OPKEY_Z) - OPkeyboardIsDown(OPKEY_C) + gamePad->RightThumbY();
+	rot.y = OPkeyboardIsDown(OPkeyboardKey::Q) - OPkeyboardIsDown(OPkeyboardKey::E) - gamePad->RightThumbX();
+	rot.x = OPkeyboardIsDown(OPkeyboardKey::Z) - OPkeyboardIsDown(OPkeyboardKey::C) + gamePad->RightThumbY();
 	if (OPmouseIsDown(OPMOUSE_RBUTTON)) {
 		rot.x += OPmousePositionMovedY() / 10.0f;
 		rot.y += OPmousePositionMovedX() / 10.0f;
