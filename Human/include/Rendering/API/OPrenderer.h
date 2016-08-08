@@ -13,7 +13,7 @@
 #include "./Human/include/Rendering/API/OPshaderUniformAPI.h"
 #include "./Human/include/Rendering/API/OPtextureAPI.h"
 #include "./Human/include/Rendering/API/OPtexture2D.h"
-#include "./Human/include/Rendering/API/OPtextureCube.h"
+#include "./Human/include/Rendering/API/OPtextureCubeAPI.h"
 #include "./Human/include/Rendering/API/OPtextureDepth.h"
 #include "./Human/include/Rendering/API/OPvertexArrayAPI.h"
 #include "./Human/include/Rendering/API/OPvertexBufferAPI.h"
@@ -47,7 +47,7 @@ struct OPrenderAPI {
 	OPshaderUniformAPI ShaderUniform;
 	OPtextureAPI Texture;
 	OPtexture2D Texture2D;
-	OPtextureCube TextureCube;
+	OPtextureCubeAPI TextureCube;
 	OPtextureDepth TextureDepth;
 	OPvertexArrayAPI VertexArray;
 	OPvertexBufferAPI VertexBuffer;

@@ -27,8 +27,7 @@ OPtexture3D* OPtexture3DCreate(OPtexture* texture, OPeffect* effect) {
 	}
 
 	if (TEXTURE_3D_QUAD_MESH == NULL) {
-		TEXTURE_3D_QUAD_MESH = (OPmesh*)OPalloc(sizeof(OPmesh));
-		*TEXTURE_3D_QUAD_MESH = OPquadCreate();
+		TEXTURE_3D_QUAD_MESH = OPquadCreate();
 	}
 
 	return tex3d;

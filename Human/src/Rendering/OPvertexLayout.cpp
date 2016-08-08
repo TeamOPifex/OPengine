@@ -4,7 +4,7 @@
 void OPvertexLayout::Init(ui16 attributeCount, OPchar** names, OPattributeTypes* types, ui8* counts) {
 
 	count = attributeCount;
-	attributes = (OPshaderAttribute*)OPalloc(sizeof(OPshaderAttribute) * count);
+	attributes = (OPshaderAttribute*)OPalloc(sizeof(OPshaderAttribute) * attributeCount);
 
 	ui32 offset = 0;
 	stride = 0;

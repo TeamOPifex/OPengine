@@ -53,14 +53,14 @@ ui16 OPquadIndexData[] = {
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
-OPmesh OPquadCreate(){
+OPmesh* OPquadCreate(){
 	OPvertexLayoutBuilder builder;
 	builder.Init();
 	builder.Add(OPattributes::POSITION);
 	builder.Add(OPattributes::UV);
 	OPvertexLayout vertexLayout = builder.Build();
-	OPmesh mesh = OPmesh(vertexLayout);
-	mesh.Build(
+	OPmesh* mesh = OPNEW(OPmesh(vertexLayout));
+	mesh->Build(
 		vertexLayout, OPindexSize::SHORT,
 		4, 6,
 		OPquadVertData, OPquadIndexData
@@ -80,24 +80,25 @@ void SetQuadPoint(QuadPoint* point, f32 x, f32 y, f32 z, f32 u, f32 v) {
 	point->v = v;
 }
 
-OPmesh OPquadCreate(OPfloat width, OPfloat height) {
+OPmesh* OPquadCreate(OPfloat width, OPfloat height) {
 	return OPquadCreate(width, height, OPvec2(0, 0), OPvec2(0, 0), OPvec2(1, 1));
 }
 
-OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset) {
+OPmesh* OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset) {
 	return OPquadCreate(width, height, offset, OPvec2(0, 0), OPvec2(1, 1));
 }
-OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
+OPmesh* OPquadCreate(OPfloat width, OPfloat height, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
 	return OPquadCreate(width, height, OPvec2(0, 0), texcoordStart, texcoordEnd);
 }
 
-OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
+OPmesh* OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
 	OPvertexLayoutBuilder builder;
 	builder.Init();
 	builder.Add(OPattributes::POSITION);
 	builder.Add(OPattributes::UV);
-	OPmesh mesh = OPmesh(builder.Build());
-	mesh.Bind();
+	OPvertexLayout layout = builder.Build();
+	OPmesh* mesh = OPNEW(OPmesh(layout));
+	mesh->Bind();
 
 	// 1, 1,
 	// 0, 1,
@@ -112,8 +113,8 @@ OPmesh OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoor
 	SetQuadPoint(&verts[2], offset.x - width, offset.y - height, 0, texcoordStart.x, texcoordStart.y);
 	SetQuadPoint(&verts[3], offset.x + width, offset.y - height, 0, texcoordEnd.x, texcoordStart.y);
 
-	mesh.Build(
-		mesh.vertexLayout, OPindexSize::SHORT,
+	mesh->Build(
+		mesh->vertexLayout, OPindexSize::SHORT,
 		4, 6,
 		verts, OPquadIndexData
 		);
@@ -134,15 +135,15 @@ OPmeshPacked OPquadCreatePacked(){
 	return result;
 }
 //-----------------------------------------------------------------------------
-OPmesh OPquadNormCreate(){
+OPmesh* OPquadNormCreate(){
 	OPvertexLayoutBuilder builder;
 	builder.Init();
 	builder.Add(OPattributes::POSITION);
 	builder.Add(OPattributes::NORMAL);
 	builder.Add(OPattributes::UV);
 	OPvertexLayout vertexLayout = builder.Build();
-	OPmesh mesh = OPmesh(vertexLayout);
-	mesh.Build(
+	OPmesh* mesh = OPNEW(OPmesh(vertexLayout));
+	mesh->Build(
 		vertexLayout, OPindexSize::SHORT,
 		4, 6,
 		OPquadVertNormData, OPquadIndexData
@@ -170,13 +171,13 @@ void OPquadDestroy(OPmesh* quad){
 }
 
 
-OPmesh OPquadCreateZPlane() {
+OPmesh* OPquadCreateZPlane() {
 	return OPquadCreateZPlane(1, 1, OPvec2(0, 0), OPvec2(1, 1));
 }
-OPmesh OPquadCreateZPlane(OPfloat width, OPfloat depth) {
+OPmesh* OPquadCreateZPlane(OPfloat width, OPfloat depth) {
 	return OPquadCreateZPlane(width, depth, OPvec2(0, 0), OPvec2(1, 1));
 }
-OPmesh OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
+OPmesh* OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
 
 	QuadPoint verts[4] = {
 		{ -width, 0, -depth, texcoordEnd.x, texcoordEnd.y },
@@ -194,14 +195,14 @@ OPmesh OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OP
 	builder.Add(OPattributes::POSITION);
 	builder.Add(OPattributes::UV);
 	OPvertexLayout vertexLayout = builder.Build();
-	OPmesh mesh = OPmesh(vertexLayout);
-	mesh.Build(
+	OPmesh* mesh = OPNEW(OPmesh(vertexLayout));
+	mesh->Build(
 		vertexLayout, OPindexSize::SHORT,
 		4, 6,
 		verts, indicies
 		);
 	
-	mesh.vertexLayout.stride = sizeof(OPfloat) * 5;
+	mesh->vertexLayout.stride = sizeof(OPfloat) * 5;
 
 	return mesh;
 }

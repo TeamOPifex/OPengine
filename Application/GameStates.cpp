@@ -31,7 +31,7 @@ ui16 indexData[] = {
 	2, 0, 1
 };
 
-OPmesh quadMesh;
+OPmesh* quadMesh;
 
 OPmeshPacked quad;
 OPmeshPacker packer;
@@ -190,7 +190,7 @@ OPint State0Update(OPtimer* time){
 	OPmat4 world;
 	OPmat4Identity(&world);
 	OPrenderDepth(0);
-	quadMesh.Bind();
+	quadMesh->Bind();
 	OPss.Bind();
 	OPeffectSet("uWorld", &world);
 	OPeffectSet("uColorTexture", bg->Sheet, 0);

@@ -3,7 +3,7 @@
 #include "./Human/include/Rendering/Primitives/OPquad.h"
 
 int SPRITE_3D_INITIALIZED = 0;
-OPmesh SPRITE_3D_QUAD_MESH;
+OPmesh* SPRITE_3D_QUAD_MESH;
 OPeffect* EFFECT_SPRITE_3D;
 
 void OPsprite3DInit(OPeffect* effect) {
@@ -114,7 +114,7 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	}
 
 	OPmat4 world;
-	SPRITE_3D_QUAD_MESH.Bind();
+	SPRITE_3D_QUAD_MESH->Bind();
 	sprite->Effect->Bind();
 	
 	OPmat4Identity(&world);

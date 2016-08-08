@@ -1,13 +1,9 @@
-#ifndef OPENGINE_HUMAN_RENDERING_TEXTURE_CUBE_GL
-#define OPENGINE_HUMAN_RENDERING_TEXTURE_CUBE_GL
+#pragma once
 
-#include "./Human/include/Rendering/API/OPtextureCube.h"
-#include "./Human/include/Platform/opengl/OPtextureAPIGL.h"
+#include "./Human/include/Rendering/API/OPtextureCubeAPI.h"
 
-void OPtextureCubeGLInit(OPtextureCube* textureCube);
+void OPtextureCubeGLInit(OPtextureCubeAPI* textureCube);
 
 struct OPtextureCubeGL {
-	OPtextureGL Texture;
+	ui32 Handle;
 };
-
-#endif

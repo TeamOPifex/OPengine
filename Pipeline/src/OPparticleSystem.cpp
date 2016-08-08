@@ -6,7 +6,7 @@
 #include "./Data/include/OPcman.h"
 
 int PARTICLE_SYSTEM_INITIALIZED = 0;
-OPmesh PARTICLE_SYSTEM_QUAD_MESH;
+OPmesh* PARTICLE_SYSTEM_QUAD_MESH;
 OPeffect* EFFECT_PARTICLE_SYSTEM;
 
 void OPparticleSysInit(OPeffect* effect) {
@@ -108,7 +108,7 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 	OPmat4 world;
 	OPint frameChange = sys->fps && sys->timeElapsed > (1.0f / sys->fps);
 
-	PARTICLE_SYSTEM_QUAD_MESH.Bind();
+	PARTICLE_SYSTEM_QUAD_MESH->Bind();
 	EFFECT_PARTICLE_SYSTEM->Bind();
 
 	OPeffectSet("uView", 1, &cam->view);

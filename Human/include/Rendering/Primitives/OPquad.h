@@ -34,16 +34,16 @@
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
 // OPmesh       OPquadCreate(OPint features, OPvec2 size);
-OPmesh       OPquadCreate();
-OPmesh       OPquadCreate(OPfloat width, OPfloat height);
-OPmesh       OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset);
-OPmesh		 OPquadCreate(OPfloat width, OPfloat height, OPvec2 texcoordStart, OPvec2 texcoordEnd);
-OPmesh       OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd);
-OPmesh       OPquadCreateZPlane();
-OPmesh       OPquadCreateZPlane(OPfloat width, OPfloat depth);
-OPmesh       OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OPvec2 texcoordEnd);
+OPmesh*       OPquadCreate();
+OPmesh*       OPquadCreate(OPfloat width, OPfloat height);
+OPmesh*       OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset);
+OPmesh*		 OPquadCreate(OPfloat width, OPfloat height, OPvec2 texcoordStart, OPvec2 texcoordEnd);
+OPmesh*       OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd);
+OPmesh*       OPquadCreateZPlane();
+OPmesh*       OPquadCreateZPlane(OPfloat width, OPfloat depth);
+OPmesh*       OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OPvec2 texcoordEnd);
 OPmeshPacked OPquadCreatePacked();
-OPmesh       OPquadNormCreate();
+OPmesh*       OPquadNormCreate();
 OPmeshPacked OPquadNormCreatePacked();
 void         OPquadDestroy(OPmesh* quad);
 

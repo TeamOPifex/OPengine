@@ -12,7 +12,7 @@ typedef struct OPvertexLayout OPvertexLayout;
 
 struct OPeffect;
 struct OPvertexLayout {
-	ui8 count;
+	ui16 count;
 	OPshaderAttribute* attributes;
 	ui32 stride;
 
