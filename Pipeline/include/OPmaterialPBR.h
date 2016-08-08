@@ -14,6 +14,7 @@ struct OPmaterialPBR {
 	OPmaterialPBR() { }
 	OPmaterialPBR(OPeffect* effect) {
 		Init(effect);
+		rootMaterial.AddParam("uPreintegratedFG", (OPtexture*)OPcmanLoadGet("PreintegratedFG.png"), 6);
 	}
 
 	void Init(OPeffect* effect);

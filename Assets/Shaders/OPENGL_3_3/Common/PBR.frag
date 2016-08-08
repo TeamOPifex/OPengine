@@ -185,15 +185,17 @@ vec3 IBL(Light light, Material material, vec3 eye)
 	vec3 reflectionVector = normalize(reflect(-eye, gAttributes.normal));
 	float smoothness = 1.0 - material.roughness;
 	float mipLevel = (1.0 - smoothness * smoothness) * 10.0;
-	vec4 cs = textureLod(uEnvironmentMap, reflectionVector, mipLevel);
+	//vec4 cs = textureLod(uEnvironmentMap, reflectionVector, mipLevel);
+	vec4 cs = texture(uEnvironmentMap, reflectionVector);
 	vec3 result = pow(cs.xyz, vec3(GAMMA)) * RadianceIBLIntegration(NdotV, material.roughness, material.specular);
 
 	vec3 diffuseDominantDirection = gAttributes.normal;
 	float diffuseLowMip = 9.6;
-	vec3 diffuseImageLighting = textureLod(uEnvironmentMap, diffuseDominantDirection, diffuseLowMip).rgb;
+	//vec3 diffuseImageLighting = textureLod(uEnvironmentMap, diffuseDominantDirection, diffuseLowMip).rgb;
+	vec3 diffuseImageLighting = texture(uEnvironmentMap, diffuseDominantDirection).rgb;
 	diffuseImageLighting = pow(diffuseImageLighting, vec3(GAMMA));
 
-	return result + diffuseImageLighting * material.albedo.rgb;
+	return diffuseImageLighting * material.albedo.rgb * 0.05 * material.specular + result * material.specular * 0.05;
 }
 
 float Diffuse(Light light, Material material, vec3 eye)
@@ -280,4 +282,5 @@ void main()
 	vec3 finalColor = material.albedo.rgb * diffuse.rgb * visibility + (specular + IBL(light, material, eye)) * visibility;
 	finalColor = FinalGamma(finalColor);
 	color = vec4(finalColor, material.albedo.a);
+	//color = vec4(material.specular, 1);
 }

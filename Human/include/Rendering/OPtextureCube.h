@@ -34,19 +34,19 @@ struct OPtextureCube {
 	void* internalPtr;
 
 	inline OPtextureCube* Init(OPimage* images) {
-		return NULL;// return OPRENDERER_ACTIVE->TextureCube.Init(this, images);
+		return OPRENDERER_ACTIVE->TextureCube.Init(this, images);
 	}
 
 	inline OPtextureCube* Init(const OPchar** images) {
-		return NULL;//return OPRENDERER_ACTIVE->TextureCube.Init(this, images);
+		return OPRENDERER_ACTIVE->TextureCube.Init(this, images);
 	}
 
 	inline static OPtextureCube* Create(OPimage* images) {
-		return NULL;//return OPRENDERER_ACTIVE->TextureCube.Create(images);
+		return OPRENDERER_ACTIVE->TextureCube.Create(images);
 	}
 
 	inline static OPtextureCube* Create(const OPchar** images) {
-		return NULL;//return OPRENDERER_ACTIVE->TextureCube.Create(images);
+		return OPRENDERER_ACTIVE->TextureCube.Create(images);
 	}
 
 	inline void Bind(ui32 slot) {

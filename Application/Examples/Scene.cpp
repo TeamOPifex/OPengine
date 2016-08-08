@@ -37,22 +37,22 @@ typedef struct {
 	Light light;
 	OPcamFreeFlight camera;
 	OPmaterialPBR materialPBR;
-	//OPtextureCube environment;
+	OPtextureCube environment;
 } SceneExample;
 
 SceneExample sceneExample;
 
 
 void ExampleSceneEnter(OPgameState* last) {
-	//const OPchar* envImages[6] = {
-	//	"TetrisYellow.png",
-	//	"TetrisYellow.png",
-	//	"TetrisYellow.png",
-	//	"TetrisYellow.png",
-	//	"TetrisYellow.png",
-	//	"TetrisYellow.png"
-	//};
-	//sceneExample.environment.Init(envImages);
+	const OPchar* envImages[6] = {
+		"Textures/TetrisBroken.png",
+		"Textures/TetrisYellow.png",
+		"Textures/TetrisGreen.png",
+		"Textures/TetrisGray.png",
+		"Textures/TetrisOrange.png",
+		"Textures/TetrisRed.png"
+	};
+	sceneExample.environment.Init(envImages);
 
 	sceneExample.renderer = OPNEW(OPrendererForward());
 	sceneExample.scene.Init(&sceneExample.renderer->rendererRoot, 100);
@@ -71,9 +71,10 @@ void ExampleSceneEnter(OPgameState* last) {
 	materialInstance->SetSpecularMap("Dagger_Specular.png");
 	materialInstance->SetGlossMap("Dagger_Gloss.png");
 	materialInstance->SetNormalMap("Dagger_Normals.png");
+	materialInstance->SetEnvironmentMap(&sceneExample.environment);
 	OPsceneEntity* entity = sceneExample.scene.Add(&sceneExample.model, &materialInstance->rootMaterialInstance);
 	OPsceneEntity* entity2 = sceneExample.scene.Add(&sceneExample.model2, &materialInstance->rootMaterialInstance);
-	
+
 	entity->material->rootMaterial->AddParam("uCamPos", &sceneExample.camera.Camera.pos);
 }
 
