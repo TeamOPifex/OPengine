@@ -136,10 +136,16 @@ void OPshaderUniformSetTextureGL(OPshaderUniform* shaderUniform, OPtexture* val,
 void OPshaderUniformSetTexturevGL(OPshaderUniform* shaderUniform, OPuint count, OPtexture* val, ui32 slot) {
 	ASSERT(true, "NOT SUPPORTED YET");
 }
-void OPshaderUniformSetTextureCubeGL(OPshaderUniform* shaderUniform, OPtextureCube* val) {
-	ASSERT(true, "NOT SUPPORTED YET");
+void OPshaderUniformSetTextureCubeGL(OPshaderUniform* shaderUniform, OPtextureCube* val, ui32 slot) {
+	#ifdef _DEBUG
+		if (shaderUniform == NULL) return;
+	#endif
+	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
+	val->Bind(slot);
+	glUniform1i(shaderUniformGL->Handle, slot);
+
 }
-void OPshaderUniformSetTextureCubevGL(OPshaderUniform* shaderUniform, OPuint count, OPtextureCube* val) {
+void OPshaderUniformSetTextureCubevGL(OPshaderUniform* shaderUniform, OPuint count, OPtextureCube* val, ui32 slot) {
 	ASSERT(true, "NOT SUPPORTED YET");
 }
 

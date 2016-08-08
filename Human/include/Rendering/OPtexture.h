@@ -1,6 +1,8 @@
 #ifndef OPENGINE_HUMAN_RENDERER_TEXTURE
 #define OPENGINE_HUMAN_RENDERER_TEXTURE
 
+struct OPtexture;
+
 #include "./Core/include/OPtypes.h"
 #include "./Math/include/OPvec4.h"
 

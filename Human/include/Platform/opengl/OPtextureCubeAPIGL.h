@@ -2,7 +2,7 @@
 
 #include "./Human/include/Rendering/API/OPtextureCubeAPI.h"
 
-void OPtextureCubeGLInit(OPtextureCubeAPI* textureCube);
+void OPtextureCubeAPIGLInit(OPtextureCubeAPI* textureCube);
 
 struct OPtextureCubeGL {
 	ui32 Handle;

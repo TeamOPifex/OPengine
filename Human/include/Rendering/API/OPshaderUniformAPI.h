@@ -35,8 +35,8 @@ struct OPshaderUniformAPI {
 	void(*SetMat4v)(OPshaderUniform* shaderUniform, OPuint count, OPmat4* val);
 	void(*SetTexture)(OPshaderUniform* shaderUniform, OPtexture* val, ui32 slot);
 	void(*SetTexturev)(OPshaderUniform* shaderUniform, OPuint count, OPtexture* val, ui32 slot);
-	void(*SetTextureCube)(OPshaderUniform* shaderUniform, OPtextureCube* val);
-	void(*SetTextureCubev)(OPshaderUniform* shaderUniform, OPuint count, OPtextureCube* val);
+	void(*SetTextureCube)(OPshaderUniform* shaderUniform, OPtextureCube* val, ui32 slot);
+	void(*SetTextureCubev)(OPshaderUniform* shaderUniform, OPuint count, OPtextureCube* val, ui32 slot);
 
 	inline void Set(OPshaderUniform* shaderUniform, f32 val) { SetF(shaderUniform, val); }
 	inline void Set(OPshaderUniform* shaderUniform, OPuint count, f32* val) { SetFv(shaderUniform, count, val); }
@@ -54,8 +54,8 @@ struct OPshaderUniformAPI {
 	inline void Set(OPshaderUniform* shaderUniform, OPuint count, OPmat4* val) { SetMat4v(shaderUniform, count, val); }
 	inline void Set(OPshaderUniform* shaderUniform, OPtexture* val, ui32 slot) { SetTexture(shaderUniform, val, slot); }
 	inline void Set(OPshaderUniform* shaderUniform, OPuint count, OPtexture* val, ui32 slot) { SetTexturev(shaderUniform, count, val, slot); }
-	inline void Set(OPshaderUniform* shaderUniform, OPtextureCube* val) { SetTextureCube(shaderUniform, val); }
-	inline void Set(OPshaderUniform* shaderUniform, OPuint count, OPtextureCube* val) { SetTextureCubev(shaderUniform, count, val); }
+	inline void Set(OPshaderUniform* shaderUniform, OPtextureCube* val, ui32 slot) { SetTextureCube(shaderUniform, val, slot); }
+	inline void Set(OPshaderUniform* shaderUniform, OPuint count, OPtextureCube* val, ui32 slot) { SetTextureCubev(shaderUniform, count, val, slot); }
 };
 
 #endif

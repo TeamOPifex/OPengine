@@ -7,32 +7,21 @@ struct OPtextureCubeAPI;
 typedef struct OPtextureCubeAPI OPtextureCubeAPI;
 
 struct OPtextureCube;
-//struct OPimage;
+struct OPimage;
 
 struct OPtextureCubeAPI {
-	//OPtextureCube*(*Create)(OPimage* images) = 0;
-	//void(*Init)(OPtextureCube* textureCube) = 0;
-	//void(*Bind)(OPtextureCube* textureCube) = 0;
-	void(*Unbind)(OPtextureCube* textureCube) = 0;
-	void(*Unbind1)(OPtextureCube* textureCube) = 0;
-	void(*Unbind2)(OPtextureCube* textureCube) = 0;
-	void(*Unbind3)(OPtextureCube* textureCube) = 0;
-	void(*Unbind4)(OPtextureCube* textureCube) = 0;
-	void(*Unbind5)(OPtextureCube* textureCube) = 0;
-	void(*Unbind6)(OPtextureCube* textureCube) = 0;
-	void(*Unbind7)(OPtextureCube* textureCube) = 0;
-	void(*Unbind8)(OPtextureCube* textureCube) = 0;
-	void(*Unbind9)(OPtextureCube* textureCube) = 0;
-	void(*Unbind10)(OPtextureCube* textureCube) = 0;
-	void(*Unbind11)(OPtextureCube* textureCube) = 0;
-	void(*Unbind12)(OPtextureCube* textureCube) = 0;
-	void(*Unbind13)(OPtextureCube* textureCube) = 0;
-	void(*Unbind14)(OPtextureCube* textureCube) = 0;
-	void(*Unbind15)(OPtextureCube* textureCube) = 0;
-	void(*Unbind16)(OPtextureCube* textureCube) = 0;
-	void(*Unbind17)(OPtextureCube* textureCube) = 0;
-	void(*Unbind18)(OPtextureCube* textureCube) = 0;
-	void(*Unbind19)(OPtextureCube* textureCube) = 0;
+	OPtextureCube*(*_Create)(OPimage* textures) = 0;
+	OPtextureCube*(*_Init)(OPtextureCube* texture, OPimage* textures) = 0;
+	void(*Bind)(OPtextureCube* ptr, ui32 slot) = 0;
+	void(*Unbind)(OPtextureCube* ptr, ui32 slot) = 0;
+	void(*Destroy)(OPtextureCube* ptr) = 0;
+	
+	inline OPtextureCube* Create(OPimage* textures) { return _Create(textures); }
+	OPtextureCube* Create(const OPchar** textures);
+		
+	inline OPtextureCube* Init(OPtextureCube* textureCube, OPimage* textures) { return _Init(textureCube, textures); }
+	OPtextureCube* Init(OPtextureCube* textureCube, const OPchar** textures);
+
 };
 
 #endif

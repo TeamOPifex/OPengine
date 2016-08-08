@@ -37,12 +37,23 @@ typedef struct {
 	Light light;
 	OPcamFreeFlight camera;
 	OPmaterialPBR materialPBR;
+	//OPtextureCube environment;
 } SceneExample;
 
 SceneExample sceneExample;
 
 
 void ExampleSceneEnter(OPgameState* last) {
+	//const OPchar* envImages[6] = {
+	//	"TetrisYellow.png",
+	//	"TetrisYellow.png",
+	//	"TetrisYellow.png",
+	//	"TetrisYellow.png",
+	//	"TetrisYellow.png",
+	//	"TetrisYellow.png"
+	//};
+	//sceneExample.environment.Init(envImages);
+
 	sceneExample.renderer = OPNEW(OPrendererForward());
 	sceneExample.scene.Init(&sceneExample.renderer->rendererRoot, 100);
 	sceneExample.camera.Init();

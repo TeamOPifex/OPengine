@@ -75,4 +75,8 @@ struct OPmaterialPBRInstance {
 	inline void SetNormalMap(const OPchar* texture) {
 		SetNormalMap((OPtexture*)OPcmanLoadGet(texture));
 	}
+
+	inline void SetEnvironmentMap(OPtextureCube* textureCube) {
+		rootMaterialInstance.AddParam("uEnvironmentMap", textureCube, 4);
+	}
 };

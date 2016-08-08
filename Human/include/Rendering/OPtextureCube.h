@@ -20,6 +20,40 @@ struct OPtextureCubeOLD {
 	OPtexture Texture;
 };
 
+enum struct OPtextureCubeFace {
+	POSITIVE_X = 0,
+	NEGATIVE_X,
+	POSITIVE_Y,
+	NEGATIVE_Y,
+	POSITIVE_Z,
+	NEGATIVE_Z
+};
+
+#include "./Human/include/Rendering/OPrender.h"
+struct OPtextureCube {
+	void* internalPtr;
+
+	inline OPtextureCube* Init(OPimage* images) {
+		return NULL;// return OPRENDERER_ACTIVE->TextureCube.Init(this, images);
+	}
+
+	inline OPtextureCube* Init(const OPchar** images) {
+		return NULL;//return OPRENDERER_ACTIVE->TextureCube.Init(this, images);
+	}
+
+	inline static OPtextureCube* Create(OPimage* images) {
+		return NULL;//return OPRENDERER_ACTIVE->TextureCube.Create(images);
+	}
+
+	inline static OPtextureCube* Create(const OPchar** images) {
+		return NULL;//return OPRENDERER_ACTIVE->TextureCube.Create(images);
+	}
+
+	inline void Bind(ui32 slot) {
+		OPRENDERER_ACTIVE->TextureCube.Bind(this, slot);
+	}
+};
+
 //-----------------------------------------------------------------------------
 // ______                _   _
 //|  ____|              | | (_)

@@ -84,6 +84,7 @@ void OPwindowGLBind(OPwindow* window) {
 	OPrenderSetViewport(0, 0, (OPuint)window->Width, (OPuint)window->Height);
 
 	OPRENDERER_ACTIVE->OPWINDOW_ACTIVE = window;
+	ASSERT(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE == window, "How can this even happen?");
 }
 
 void OPwindowSetPositionGL(OPwindow* window, i32 x, i32 y) {

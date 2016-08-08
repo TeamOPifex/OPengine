@@ -80,8 +80,8 @@ struct OPeffect {
 	inline void Set(OPshaderUniform* shaderUniform, OPuint count, OPmat4* val) { OPRENDERER_ACTIVE->ShaderUniform.SetMat4v(shaderUniform, count, val); }
 	inline void Set(OPshaderUniform* shaderUniform, OPtexture* val, ui32 slot) { OPRENDERER_ACTIVE->ShaderUniform.SetTexture(shaderUniform, val, slot); }
 	inline void Set(OPshaderUniform* shaderUniform, OPuint count, OPtexture* val, ui32 slot) { OPRENDERER_ACTIVE->ShaderUniform.SetTexturev(shaderUniform, count, val, slot); }
-	inline void Set(OPshaderUniform* shaderUniform, OPtextureCube* val) { OPRENDERER_ACTIVE->ShaderUniform.SetTextureCube(shaderUniform, val); }
-	inline void Set(OPshaderUniform* shaderUniform, OPuint count, OPtextureCube* val) { OPRENDERER_ACTIVE->ShaderUniform.SetTextureCubev(shaderUniform, count, val); }
+	inline void Set(OPshaderUniform* shaderUniform, OPtextureCube* val, ui32 slot) { OPRENDERER_ACTIVE->ShaderUniform.SetTextureCube(shaderUniform, val, slot); }
+	inline void Set(OPshaderUniform* shaderUniform, OPuint count, OPtextureCube* val, ui32 slot) { OPRENDERER_ACTIVE->ShaderUniform.SetTextureCubev(shaderUniform, count, val, slot); }
 
 	OPshaderUniform* GetUniform(const OPchar* name);
 	inline void Set(const OPchar* name, f32 val) { OPRENDERER_ACTIVE->ShaderUniform.SetF(GetUniform(name), val); }
@@ -100,8 +100,8 @@ struct OPeffect {
 	inline void Set(const OPchar* name, OPuint count, OPmat4* val) { OPRENDERER_ACTIVE->ShaderUniform.SetMat4v(GetUniform(name), count, val); }
 	inline void Set(const OPchar* name, OPtexture* val, ui32 slot) { OPRENDERER_ACTIVE->ShaderUniform.SetTexture(GetUniform(name), val, slot); }
 	inline void Set(const OPchar* name, OPuint count, OPtexture* val, ui32 slot) { OPRENDERER_ACTIVE->ShaderUniform.SetTexturev(GetUniform(name), count, val, slot); }
-	inline void Set(const OPchar* name, OPtextureCube* val) { OPRENDERER_ACTIVE->ShaderUniform.SetTextureCube(GetUniform(name), val); }
-	inline void Set(const OPchar* name, OPuint count, OPtextureCube* val) { OPRENDERER_ACTIVE->ShaderUniform.SetTextureCubev(GetUniform(name), count, val); }
+	inline void Set(const OPchar* name, OPtextureCube* val, ui32 slot) { OPRENDERER_ACTIVE->ShaderUniform.SetTextureCube(GetUniform(name), val, slot); }
+	inline void Set(const OPchar* name, OPuint count, OPtextureCube* val, ui32 slot) { OPRENDERER_ACTIVE->ShaderUniform.SetTextureCubev(GetUniform(name), count, val, slot); }
 
 	void UpdateVertexLayout(OPvertexLayout* vertexLayout);
 
@@ -129,8 +129,8 @@ inline void OPeffectSet(const OPchar* name, OPmat4* val) { OPRENDERER_ACTIVE->Sh
 inline void OPeffectSet(const OPchar* name, OPuint count, OPmat4* val) { OPRENDERER_ACTIVE->ShaderUniform.SetMat4v(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE->GetUniform(name), count, val); }
 inline void OPeffectSet(const OPchar* name, OPtexture* val, ui32 slot) { OPRENDERER_ACTIVE->ShaderUniform.SetTexture(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE->GetUniform(name), val, slot); }
 inline void OPeffectSet(const OPchar* name, OPuint count, OPtexture* val, ui32 slot) { OPRENDERER_ACTIVE->ShaderUniform.SetTexturev(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE->GetUniform(name), count, val, slot); }
-inline void OPeffectSet(const OPchar* name, OPtextureCube* val) { OPRENDERER_ACTIVE->ShaderUniform.SetTextureCube(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE->GetUniform(name), val); }
-inline void OPeffectSet(const OPchar* name, OPuint count, OPtextureCube* val) { OPRENDERER_ACTIVE->ShaderUniform.SetTextureCubev(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE->GetUniform(name), count, val); }
+inline void OPeffectSet(const OPchar* name, OPtextureCube* val, ui32 slot) { OPRENDERER_ACTIVE->ShaderUniform.SetTextureCube(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE->GetUniform(name), val, slot); }
+inline void OPeffectSet(const OPchar* name, OPuint count, OPtextureCube* val, ui32 slot) { OPRENDERER_ACTIVE->ShaderUniform.SetTextureCubev(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE->GetUniform(name), count, val, slot); }
 inline void OPeffectSet(OPcam* val) {
 	OPRENDERER_ACTIVE->ShaderUniform.SetMat4(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE->GetUniform("uView"), &val->view);
 	OPRENDERER_ACTIVE->ShaderUniform.SetMat4(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE->GetUniform("uProj"), &val->proj);

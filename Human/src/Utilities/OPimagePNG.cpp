@@ -1,16 +1,17 @@
 
 #include "./Human/include/Utilities/OPimagePNG.h"
-
-#include <string.h>
-#include "./Core/include/OPlog.h"
-#include "./Core/include/Assert.h"
-#include "./Data/include/OPfile.h"
-#include <cstdio>
-#include <string>
-#include "./Core/include/OPmemory.h"
+#include "./External/LodePNG/include/LodePNG.h"
+#include "./Human/include/Rendering/OPimage.h"
 #include "./Human/include/Rendering/OPtexture.h"
 #include "./Human/include/Utilities/Errors.h"
-#include "./External/LodePNG/include/LodePNG.h"
+#include "./Data/include/OPfile.h"
+#include "./Core/include/OPlog.h"
+#include "./Core/include/Assert.h"
+#include "./Core/include/OPmemory.h"
+#include <stdio.h>
+#include <string.h>
+#include <cstdio>
+#include <string>
 
 //
 //#ifdef OPIFEX_OPENGL_ES_2
