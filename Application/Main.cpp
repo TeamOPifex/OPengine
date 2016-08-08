@@ -86,7 +86,6 @@ int main(int argc, char * argv[]) {
 
 #else
 
-#include <windows.h>
 OP_MAIN_START
 	OP_LOG_LEVEL = 2000;
 

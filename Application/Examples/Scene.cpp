@@ -7,41 +7,18 @@
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Data/include/OPcman.h"
 
-struct Light {
-	OPvec4 color;
-	OPvec3 position;
-	OPfloat p0;
-	OPvec3 direction;
-	OPfloat p1;
-	OPvec3 lightVector;
-	OPfloat intensity;
-};
-
-// Data for this Game State Example
 typedef struct {
-	OPfloat Rotation;			// The amount to rotate the Mesh
-
+	OPfloat Rotation;
 	OPscene scene;
 	OPrendererForward* renderer;
 	OPmodel model;
 	OPmodel model2;
-	OPmat4 world;
-	OPfloat albedoUsage;
-	OPfloat specularUsage;
-	OPfloat glossUsage;
-	OPfloat normalUsage;
-	OPvec4 albedoColor;
-	OPvec3 specularColor;
-	OPfloat glossColor;
-	OPvec3 normalColor;
-	Light light;
 	OPcamFreeFlight camera;
 	OPmaterialPBR materialPBR;
 	OPtextureCube environment;
 } SceneExample;
 
 SceneExample sceneExample;
-
 
 void ExampleSceneEnter(OPgameState* last) {
 	const OPchar* envImages[6] = {
@@ -60,11 +37,8 @@ void ExampleSceneEnter(OPgameState* last) {
 	sceneExample.scene.camera = &sceneExample.camera.Camera;
 
 	sceneExample.materialPBR.Init(OPNEW(OPeffect("Common/PBR.vert", "Common/PBR.frag")));
+	sceneExample.materialPBR.rootMaterial.AddParam("uCamPos", &sceneExample.camera.Camera.pos);
 	sceneExample.renderer->SetMaterial(&sceneExample.materialPBR.rootMaterial, 0);
-
-	sceneExample.model.Init("daggerpbr.opm");
-	sceneExample.model.mesh->vertexLayout.Log();
-	sceneExample.model2.Init("daggerpbr.opm");
 
 	OPmaterialPBRInstance* materialInstance = sceneExample.materialPBR.CreateInstance();
 	materialInstance->SetAlbedoMap("Dagger_Albedo.png");
@@ -72,10 +46,12 @@ void ExampleSceneEnter(OPgameState* last) {
 	materialInstance->SetGlossMap("Dagger_Gloss.png");
 	materialInstance->SetNormalMap("Dagger_Normals.png");
 	materialInstance->SetEnvironmentMap(&sceneExample.environment);
-	OPsceneEntity* entity = sceneExample.scene.Add(&sceneExample.model, &materialInstance->rootMaterialInstance);
-	OPsceneEntity* entity2 = sceneExample.scene.Add(&sceneExample.model2, &materialInstance->rootMaterialInstance);
 
-	entity->material->rootMaterial->AddParam("uCamPos", &sceneExample.camera.Camera.pos);
+    sceneExample.model.Init("daggerpbr.opm");
+    sceneExample.model2.Init("daggerpbr.opm");
+
+    sceneExample.scene.Add(&sceneExample.model, &materialInstance->rootMaterialInstance);
+    sceneExample.scene.Add(&sceneExample.model2, &materialInstance->rootMaterialInstance);
 }
 
 OPint ExampleSceneUpdate(OPtimer* time) {
