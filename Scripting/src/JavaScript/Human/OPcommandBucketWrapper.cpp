@@ -15,17 +15,17 @@
 // inline void OPcommandBucketSubmit(OPcommandBucket* commandBucket, ui64 key, void(*dispatch)(void*, OPcam*), void* data);
 // inline void OPcommandBucketRender(OPcommandBucket* commandBucket);
 
-void OPcommandBucketWrapperCreate(Handle<Object> result, OPcommandBucket* cb);
+void OPrenderCommandBucketWrapperCreate(Handle<Object> result, OPrenderCommandBucket* cb);
 
 JS_RETURN_VAL _OPcommandBucketCreate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
 
-    OPcam* camera = JS_GET_ARG_PTR(args, 1, OPcam);
+    OPcam** camera = JS_GET_ARG_PTR(args, 1, OPcam*);
 
-	OPcommandBucket* cb = OPcommandBucket::Create(args[0]->IntegerValue(), camera);
+	OPrenderCommandBucket* cb = OPrenderCommandBucket::Create(args[0]->IntegerValue(), camera);
     Handle<Object> result = JS_NEW_OBJECT();
-    OPcommandBucketWrapperCreate(result, cb);
+	OPrenderCommandBucketWrapperCreate(result, cb);
 
     JS_RETURN(result);
 }
@@ -33,12 +33,11 @@ JS_RETURN_VAL _OPcommandBucketCreate(const JS_ARGS& args) {
 JS_RETURN_VAL _OPcommandBucketCreateDrawIndexedSubmit(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPcommandBucket* ptr = JS_GET_ARG_PTR(args, 0, OPcommandBucket);
+	OPrenderCommandBucket* ptr = JS_GET_ARG_PTR(args, 0, OPrenderCommandBucket);
     OPmodel* model = JS_GET_ARG_PTR(args, 1, OPmodel);
-    OPmaterial* material = JS_GET_ARG_PTR(args, 2, OPmaterial);
-    OPtexture* texture = JS_GET_ARG_PTR(args, 3, OPtexture);
+    OPmaterialInstance* material = JS_GET_ARG_PTR(args, 2, OPmaterialInstance);
 
-    ptr->CreateDrawIndexedSubmit(model, material, texture);
+    ptr->Submit(model, material);
 
     JS_RETURN_NULL;
 }
@@ -68,7 +67,7 @@ JS_RETURN_VAL _OPcommandBucketCreateDrawIndexedSubmit(const JS_ARGS& args) {
 JS_RETURN_VAL _OPcommandBucketFlush(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPcommandBucket* ptr = JS_GET_ARG_PTR(args, 0, OPcommandBucket);
+	OPrenderCommandBucket* ptr = JS_GET_ARG_PTR(args, 0, OPrenderCommandBucket);
 	ptr->Flush();
 
     JS_RETURN_NULL;
@@ -77,7 +76,7 @@ JS_RETURN_VAL _OPcommandBucketFlush(const JS_ARGS& args) {
 JS_RETURN_VAL _OPcommandBucketFlushSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPcommandBucket* ptr = JS_GET_PTR(args.This(), OPcommandBucket);
+	OPrenderCommandBucket* ptr = JS_GET_PTR(args.This(), OPrenderCommandBucket);
 	ptr->Flush();
 
     JS_RETURN_NULL;
@@ -86,7 +85,7 @@ JS_RETURN_VAL _OPcommandBucketFlushSelf(const JS_ARGS& args) {
 JS_RETURN_VAL _OPcommandBucketRender(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPcommandBucket* ptr = JS_GET_ARG_PTR(args, 0, OPcommandBucket);
+	OPrenderCommandBucket* ptr = JS_GET_ARG_PTR(args, 0, OPrenderCommandBucket);
 	ptr->Render();
 
     JS_RETURN_NULL;
@@ -95,13 +94,13 @@ JS_RETURN_VAL _OPcommandBucketRender(const JS_ARGS& args) {
 JS_RETURN_VAL _OPcommandBucketRenderSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPcommandBucket* ptr = JS_GET_PTR(args.This(), OPcommandBucket);
+	OPrenderCommandBucket* ptr = JS_GET_PTR(args.This(), OPrenderCommandBucket);
 	ptr->Render();
 
     JS_RETURN_NULL;
 }
 
-void OPcommandBucketWrapperCreate(Handle<Object> result, OPcommandBucket* cb) {
+void OPrenderCommandBucketWrapperCreate(Handle<Object> result, OPrenderCommandBucket* cb) {
     SCOPE_AND_ISOLATE
 
     JS_SET_PTR(result, cb);
@@ -110,7 +109,7 @@ void OPcommandBucketWrapperCreate(Handle<Object> result, OPcommandBucket* cb) {
 
 }
 
-void OPcommandBucketWrapper(Handle<Object> exports) {
+void OPrenderCommandBucketWrapper(Handle<Object> exports) {
     SCOPE_AND_ISOLATE;
 
     Handle<Object> result = JS_NEW_OBJECT();
@@ -118,7 +117,7 @@ void OPcommandBucketWrapper(Handle<Object> exports) {
     JS_SET_METHOD(result, "CreateDrawIndexedSubmit", _OPcommandBucketCreateDrawIndexedSubmit);
     JS_SET_METHOD(result, "Flush", _OPcommandBucketFlush);
     JS_SET_METHOD(result, "Render", _OPcommandBucketRender);
-    JS_SET_NUMBER(result, "size", sizeof(OPcommandBucket));
+    JS_SET_NUMBER(result, "size", sizeof(OPrenderCommandBucket));
     JS_SET_OBJECT(exports, "commandBucket", result);
 
 }

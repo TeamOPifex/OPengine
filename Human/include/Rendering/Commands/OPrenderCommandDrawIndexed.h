@@ -26,9 +26,6 @@ struct OPrenderCommandDrawIndexed;
 
 void OPrenderCommandDrawIndexedSet(OPrenderCommandDrawIndexed* result, OPmodel* model, OPmaterialInstance* material);
 void OPrenderCommandDrawIndexedSubmit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmaterialInstance* material);
-inline void OPrenderCommandDrawIndexedSubmit(OPrenderCommandBucket* commandBucket, OPmodelTextured* model, OPmaterialInstance* material) {
-	OPrenderCommandDrawIndexedSubmit(commandBucket, &model->model, material);
-}
 
 //-----------------------------------------------------------------------------
 //   _____ _                   _

@@ -79,7 +79,7 @@ struct OPrenderCommandBucket {
 	void Sort();
 	void Flush(bool keep);
 	void Render();
-	void Submit(OPmodelTextured* model, OPmaterialInstance* material);
+	void Submit(OPmodel* model, OPmaterialInstance* material);
 
 	// Helper draw commands already in the engine
 	// Users will be able to define their own, just won't be a helper function

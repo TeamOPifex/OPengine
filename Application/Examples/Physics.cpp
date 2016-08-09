@@ -111,7 +111,7 @@ void ExamplePhysicsEnter(OPgameState* last) {
 		0.1f,
 		1000.0f,
 		45.0f,
-		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
+		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
 	OPphysXMaterial* material = OPphysXCreateMaterial(0.8, 0.8, 0.6);
@@ -237,7 +237,7 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 
 	OPvec3 light = OPvec3Create(0, 1, 0);
 	OPeffectSet("uLightDirection", &light);
-	OPeffectSet("uColorTexture", physicsExample->texture);
+	OPeffectSet("uColorTexture", physicsExample->texture, 0);
 	OPmat4 scale = OPMAT4_IDENTITY;
 	OPmat4 scratch = OPMAT4_IDENTITY;
 	for (ui32 i = 0; i < physicsExample->boxCount; i++) {
@@ -248,7 +248,7 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 		OPeffectSet("uWorld", &world);
 		OPmeshRender();
 	}
-	OPeffectSet("uColorTexture", physicsExample->textureStatic);
+	OPeffectSet("uColorTexture", physicsExample->textureStatic, 0);
 	for (ui32 i = 0; i < physicsExample->boxStaticCount; i++) {
 		if(physicsExample->boxesStatic[i].dead) continue;
 		scale = OPmat4Scl(physicsExample->boxesStatic[i].size * 2, physicsExample->boxesStatic[i].size * 2, physicsExample->boxesStatic[i].size * 2);
@@ -264,14 +264,14 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	OPeffectSet("uView", &physicsExample->Camera->view);
 	OPeffectSet("uLightDirection", &light);
 
-	OPeffectSet("uColorTexture", physicsExample->texturePlayer);
+	OPeffectSet("uColorTexture", physicsExample->texturePlayer, 0);
 	scale = OPmat4Scl(physicsExample->spheres[0].size * 2, physicsExample->spheres[0].size * 2, physicsExample->spheres[0].size * 2);
 	OPphysXGetTransform((OPphysXRigidActor*)physicsExample->spheres[0].physics, &scratch);
 	world = scratch * scale;
 	OPeffectSet("uWorld", &world);
 	OPmeshRender();
 
-	OPeffectSet("uColorTexture", physicsExample->textureSphere);
+	OPeffectSet("uColorTexture", physicsExample->textureSphere, 0);
 	for (ui32 i = 1; i < physicsExample->sphereCount; i++) {
 		scale = OPmat4Scl(physicsExample->spheres[i].size * 2, physicsExample->spheres[i].size * 2, physicsExample->spheres[i].size * 2);
 		OPphysXGetTransform((OPphysXRigidActor*)physicsExample->spheres[i].physics, &scratch);

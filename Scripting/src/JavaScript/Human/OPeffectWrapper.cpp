@@ -73,7 +73,7 @@ JS_RETURN_VAL _OPeffectParamTexture(const JS_ARGS& args) {
 
     String::Utf8Value param(args[0]->ToString());
     OPtexture* ptr = JS_GET_ARG_PTR(args, 1, OPtexture);
-	OPeffectSet(*param, ptr);
+	OPeffectSet(*param, ptr, 0);
 
     JS_RETURN_NULL;
 }
