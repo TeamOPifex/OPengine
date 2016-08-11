@@ -159,7 +159,7 @@ void OPphysXShapeSetPose(OPphysXShape* shape, OPmat4 transform) {
 // Other is Capsule PxController with only the default shape
 
 i8 OPphysXOverlapping(OPphysXRigidActor* actor, PxGeometry* otherGeometry, PxTransform otherTransform) {
-	OPuint actorShapeCount = actor->getNbShapes();
+	ui32 actorShapeCount = actor->getNbShapes();
 	PxShape** actorShapes = new PxShape*[actorShapeCount];
 	actor->getShapes(actorShapes, actorShapeCount);
 
@@ -185,8 +185,8 @@ i8 OPphysXShapeOverlapping(PxTransform transform, OPphysXShape* shape, PxGeometr
 }
 
 i8 OPphysXOverlapping(OPphysXRigidActor* actor, OPphysXRigidActor* other) {
-	OPuint actorShapeCount = actor->getNbShapes();
-	OPuint otherShapeCount = other->getNbShapes();
+	ui32 actorShapeCount = actor->getNbShapes();
+	ui32 otherShapeCount = other->getNbShapes();
 
 	if(actorShapeCount <= 0 || otherShapeCount <= 0) return 0;
 

@@ -11,7 +11,9 @@ OPmonitor* OPmonitorGLInit(OPmonitor* monitor, GLFWmonitor* glfwMonitor) {
 	glfwGetMonitorPos(monitorGL->Handle, &monitor->X, &monitor->Y);
 	glfwGetMonitorPhysicalSize(monitorGL->Handle, &monitor->WidthMM, &monitor->HeightMM);
 
-	const GLFWvidmode* modes = glfwGetVideoModes(monitorGL->Handle, &monitor->VideoModesCount);
+	i32 totalModes;
+	const GLFWvidmode* modes = glfwGetVideoModes(monitorGL->Handle, &totalModes);
+	monitor->VideoModesCount = totalModes;
 	monitor->VideoModes = (OPmonitorVideoMode*)OPalloc(sizeof(OPmonitorVideoMode) * monitor->VideoModesCount);
 	for (ui32 i = 0; i < monitor->VideoModesCount; i++) {
 		monitor->VideoModes[i].Width = modes[i].width;

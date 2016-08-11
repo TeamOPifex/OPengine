@@ -62,7 +62,7 @@ void OPmesh::UpdateVertexLayout(OPeffect* effect) {
 
 //-----------------------------------------------------------------------------
 void OPmesh::Build(OPvertexLayout vertexLayout, OPindexSize indSize,
-						 OPuint vertCount, OPuint indCount,
+			ui32 vertCount, ui32 indCount,
 						 void* vertices, void* indices){
 	vertexArray.Bind();
 	vertexBuffer.SetData(vertexLayout.stride, vertCount, vertices);

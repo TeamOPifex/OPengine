@@ -67,7 +67,7 @@ inline void OPrenderDepthWrite(bool state) {
 	OPRENDERER_ACTIVE->SetDepthWrite(state);
 }
 
-inline void OPrenderSetViewport(OPuint x, OPuint y, OPuint width, OPuint height) {
+inline void OPrenderSetViewport(ui32 x, ui32 y, ui32 width, ui32 height) {
 	OPRENDERER_ACTIVE->SetViewport(x, y, width, height);
 }
 

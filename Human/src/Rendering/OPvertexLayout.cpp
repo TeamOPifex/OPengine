@@ -50,6 +50,7 @@ OPvertexLayoutBuilder* OPvertexLayoutBuilder::Init() {
 }
 
 OPvertexLayoutBuilder* OPvertexLayoutBuilder::Init(ui32 features) {
+	index = 0;
 	if ((features & (OPuint)OPattributes::POSITION) > 0) Add(OPattributes::POSITION);
 	if((features & (OPuint)OPattributes::NORMAL) > 0) Add(OPattributes::NORMAL);
 	if ((features & (OPuint)OPattributes::TANGENT) > 0) Add(OPattributes::TANGENT);

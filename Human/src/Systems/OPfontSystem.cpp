@@ -45,6 +45,7 @@ void OPfontSystemLoadEffects() {
 void OPfontSystemShutdownEffects() {
 	OPFONTMANAGER_EFFECT_ACTIVE->Destroy();
 	OPfree(OPFONTMANAGER_EFFECT_ACTIVE);
+	OPFONTMANAGER_EFFECT_ACTIVE = NULL;
 }
 // void OPfontSystemLoadScreenEffects() {
 

@@ -111,7 +111,7 @@ struct OPmesh {
 	void Bind();
 	void SetVertexLayout(OPvertexLayout* vertexLayout);
 	void UpdateVertexLayout(OPeffect* effect);
-	void Build(OPvertexLayout vertexLayout, OPindexSize indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
+	void Build(OPvertexLayout vertexLayout, OPindexSize indSize, ui32 vertCount, ui32 indCount, void* vertices, void* indices);
 	void Destroy();
 	inline void Free() {
 		Destroy();

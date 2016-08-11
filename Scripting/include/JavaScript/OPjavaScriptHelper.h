@@ -152,6 +152,7 @@ typedef Persistent<Function, CopyablePersistentTraits<Function> > OPjavaScriptPe
 #define JS_NEW_OBJECT_TEMPLATE() ObjectTemplate::New(isolate)
 #define JS_NEW_STRING(name) String::NewFromUtf8(isolate, name)
 #define JS_NEW_NUMBER(val) Number::New(isolate, val)
+#define JS_NEW_INTEGER(val) Integer::New(isolate, val)
 #define JS_NEW_BOOL(val) Boolean::New(isolate, val)
 #define JS_NEW_ARRAY() Array::New(isolate)
 #define JS_NEW_FUNCTION(func) Local<Function>::New(isolate, func)
@@ -166,6 +167,7 @@ typedef Persistent<Function, CopyablePersistentTraits<Function> > OPjavaScriptPe
 #define JS_SET_OBJECT(target, name, object) target->Set(JS_NEW_STRING(name), object);
 #define JS_SET_PROTOTYPE_METHOD(obj, name, func) obj->PrototypeTemplate()->Set(JS_NEW_STRING(name), JS_NEW_FUNCTION_TEMPLATE(func));
 #define JS_SET_NUMBER(target, name, number) target->Set(JS_NEW_STRING(name), JS_NEW_NUMBER(number));
+#define JS_SET_INTEGER(target, name, number) target->Set(JS_NEW_STRING(name), JS_NEW_INTEGER(number));
 
 
 #define JS_VALUE_TO_ARRAY(A) Handle<Array>::Cast(A)

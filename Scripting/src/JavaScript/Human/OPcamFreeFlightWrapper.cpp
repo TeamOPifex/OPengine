@@ -39,7 +39,7 @@ JS_RETURN_VAL _OPcamFreeFlightSetRotX(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPcamFreeFlight* camPtr = JS_GET_ARG_PTR(args, 0, OPcamFreeFlight);
-    camPtr->Rotation.x = args[1]->NumberValue();
+    camPtr->Rotation.x = (OPfloat)args[1]->NumberValue();
 
     JS_RETURN_NULL;
 }
@@ -48,7 +48,7 @@ JS_RETURN_VAL _OPcamFreeFlightSetRotXSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPcamFreeFlight* camPtr = JS_GET_PTR(args.This(), OPcamFreeFlight);
-    camPtr->Rotation.x = args[0]->NumberValue();
+    camPtr->Rotation.x = (OPfloat)args[0]->NumberValue();
 
     JS_RETURN_NULL;
 }
@@ -57,7 +57,7 @@ JS_RETURN_VAL _OPcamFreeFlightSetRotY(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPcamFreeFlight* camPtr = JS_GET_ARG_PTR(args, 0, OPcamFreeFlight);
-    camPtr->Rotation.y = args[1]->NumberValue();
+    camPtr->Rotation.y = (OPfloat)args[1]->NumberValue();
 
     JS_RETURN_NULL;
 }
@@ -66,7 +66,7 @@ JS_RETURN_VAL _OPcamFreeFlightSetRotYSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPcamFreeFlight* camPtr = JS_GET_PTR(args.This(), OPcamFreeFlight);
-    camPtr->Rotation.y = args[0]->NumberValue();
+    camPtr->Rotation.y = (OPfloat)args[0]->NumberValue();
 
     JS_RETURN_NULL;
 }
@@ -97,24 +97,24 @@ void OPcamFreeFlightWrapperCreate(Handle<Object> result, OPcamFreeFlight* cam) {
 JS_RETURN_VAL _OPcamFreeFlightCreate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPfloat moveSpeed = 1, rotateSpeed = 1, camNear = 0.1, camFar = 100.0;
+    OPfloat moveSpeed = 1.0f, rotateSpeed = 1.0f, camNear = 0.1f, camFar = 100.0f;
     OPvec3 position = OPVEC3_ZERO;
 
     if(args.Length() > 0) {
-        moveSpeed = args[0]->NumberValue();
+        moveSpeed = (OPfloat)args[0]->NumberValue();
     }
     if(args.Length() > 1) {
-        rotateSpeed = args[1]->NumberValue();
+        rotateSpeed = (OPfloat)args[1]->NumberValue();
     }
     if(args.Length() > 2) {
         OPvec3* pos = JS_GET_PTR(args[2]->ToObject(), OPvec3);
         position = *pos;
     }
     if(args.Length() > 3) {
-        camNear = args[3]->NumberValue();
+        camNear = (OPfloat)args[3]->NumberValue();
     }
     if(args.Length() > 4) {
-        camFar = args[4]->NumberValue();
+        camFar = (OPfloat)args[4]->NumberValue();
     }
 
     OPcamFreeFlight* cam = OPcamFreeCreate(moveSpeed, rotateSpeed, position, camNear, camFar);

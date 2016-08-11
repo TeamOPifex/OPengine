@@ -55,14 +55,14 @@ struct OPhashMap {
 	* @param value Pointer to a pointer for the value to be stored in if successfully found
 	* @return Success Result
 	*/
-	OPint Get(const OPchar* key, void** value);
+	bool Get(const OPchar* key, void** value);
 
 	/* Determines if an OPhashMap contains a value with a key
 	* @param map The OPhashMap to find a value in
 	* @param key The key of the value trying to be found
 	* @return Success Result
 	*/
-	OPint Exists(const OPchar* key);
+	bool Exists(const OPchar* key);
 
 	/* Puts a value by a key into an OPhashMap. If all buckets have been used it will fail.
 	* @param map The OPhashMap to put the key/value into

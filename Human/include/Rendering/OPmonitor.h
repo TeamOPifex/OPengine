@@ -31,7 +31,7 @@ struct OPmonitor {
 
 	//GLFWmonitor* Handle;
 	OPmonitorVideoMode VideoModeCurrent;
-	i32 VideoModesCount;
+	ui32 VideoModesCount;
 	OPmonitorVideoMode* VideoModes;
 
 	static OPmonitorResult GetAll();

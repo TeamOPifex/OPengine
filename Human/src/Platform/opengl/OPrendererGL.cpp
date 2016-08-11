@@ -116,7 +116,7 @@ void OPrendererSetBlendModeGL(OPblendFunction src, OPblendFunction dst) {
 	OPGLFN(glBlendFunc(OPblendFunctionToGL(src), OPblendFunctionToGL(dst)));	
 }
 
-inline void OPrenderSetViewportGL(OPuint x, OPuint y, OPuint width, OPuint height) {
+inline void OPrenderSetViewportGL(ui32 x, ui32 y, ui32 width, ui32 height) {
 	OPGLFN(glViewport(x, y, width, height));
 }
 

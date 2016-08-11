@@ -46,8 +46,8 @@ struct OPmaterial {
 	OPmaterialParam params[OPMATERIAL_MAX_UNIFORMS];
 	OPuint paramIndex;
 	ui64 id;
-	i8 depth;
-	i8 cull;
+	bool depth;
+	bool cull;
 	i8 alpha;
 
 	OPmaterial() {
@@ -58,11 +58,11 @@ struct OPmaterial {
 		Init(effect);
 	}
 
-	void SetDepth(i8 val) {
+	void SetDepth(bool val) {
 		depth = val;
 	}
 
-	void SetCull(i8 val) {
+	void SetCull(bool val) {
 		cull = val;
 	}
 

@@ -7,9 +7,9 @@
 	//This will be replaced by OPlist
 	struct OPvector{
 		void* items;
-		OPuint _capacity;
-		OPuint _size;
-		OPuint _elementSize;
+		ui32 _capacity;
+		ui32 _size;
+		ui32 _elementSize;
 	};
 	typedef struct OPvector OPvector;
 
