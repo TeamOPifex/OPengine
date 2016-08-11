@@ -11,21 +11,20 @@
 
 #if defined(OPIFEX_OPTION_NODEJS) || defined(OPIFEX_OPTION_V8)
 
-void OPcommandDrawIndexedWrapperCreate(Handle<Object> result, OPcommandBucket* cb);
+void OPcommandDrawIndexedWrapperCreate(Handle<Object> result, OPrenderCommandBucket* cb);
 
 JS_RETURN_VAL _OPcommandDrawIndexedSubmit(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPcommandBucket* commandBucket = JS_GET_ARG_PTR(args, 0, OPcommandBucket);
+	OPrenderCommandBucket* commandBucket = JS_GET_ARG_PTR(args, 0, OPrenderCommandBucket);
     OPmodel* model = JS_GET_ARG_PTR(args, 1, OPmodel);
-    OPmaterial* material = JS_GET_ARG_PTR(args, 2, OPmaterial);
-    OPtexture* texture = JS_GET_ARG_PTR(args, 1, OPtexture);
-    OPcommandDrawIndexedSubmit(commandBucket, model, material, texture);
+    OPmaterialInstance* material = JS_GET_ARG_PTR(args, 2, OPmaterialInstance);
+	commandBucket->Submit(model, material);
 
     JS_RETURN_NULL;
 }
 
-void OPcommandDrawIndexedWrapperCreate(Handle<Object> result, OPcommandBucket* cb) {
+void OPcommandDrawIndexedWrapperCreate(Handle<Object> result, OPrenderCommandBucket* cb) {
     SCOPE_AND_ISOLATE
 
     JS_SET_PTR(result, cb);
@@ -36,7 +35,7 @@ void OPcommandDrawIndexedWrapper(Handle<Object> exports) {
 
     Handle<Object> result = JS_NEW_OBJECT();
     JS_SET_METHOD(result, "Submit", _OPcommandDrawIndexedSubmit);
-    JS_SET_NUMBER(result, "size", sizeof(OPcommandDrawIndexed));
+    JS_SET_NUMBER(result, "size", sizeof(OPrenderCommandDrawIndexed));
     JS_SET_OBJECT(exports, "commandDrawIndexed", result);
 
 }

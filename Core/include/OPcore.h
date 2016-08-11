@@ -1,6 +1,4 @@
 #pragma once
-#ifndef OPEngine_Core
-#define OPEngine_Core
 
 #include "OPtypes.h"
 #include "OPgameCycle.h"
@@ -10,10 +8,11 @@
 #include "OPlog.h"
 #include "OPdir.h"
 
-
 #ifdef OPIFEX_WINDOWS
 	extern HINSTANCE OP_HINSTANCE;
 #endif
+extern OPchar* OPSTARTUP_PATH;
+extern OPchar* OPEXECUTABLE_PATH;
 
 // Android entry points
 #ifdef OPIFEX_ANDROID
@@ -56,6 +55,19 @@
 	 * @param args Each of the arguments passed into the program at start
 	 */
 	void OPstart(int argc, char** args);
+
+	/**
+	* Begins the game cycle but with a Stepped Update Interval.
+	*	This function is responsible for several actions. It creates an
+	*	OPtimer instance, and invokes the function pointer OPinitialize() to
+	*	perform user defined initializations. Once initialized, the game loop
+	*	is started. The timer instance is updated on each iteration and passed
+	*	to the OPupdate function pointer. The game loop runs until OPend() is
+	*	called. At which point the OPdestroy() function pointer is called and
+	*	and clean up is performed.
+	* @param argc Number of arguments passed through on start
+	* @param args Each of the arguments passed into the program at start
+	*/
 	void OPstartStepped(int argc, char** args);
 #endif
 
@@ -68,26 +80,19 @@
  */
 void OPend();
 
-//----------------------------------------------------------------------------
-/* Gets the current OPtimer being used by the engine
- * @return A pointer to the current OPtimer being used by the OPengine
-*/
-struct OPtimer* OPgetTime();
-OPchar* OPgetStartupDir();
-OPchar* OPgetExecutableDir();
 
 // Helper methods to create a more cross-platform code structure for the entry point of your main
 #ifdef OPIFEX_ANDROID
-#define OP_MAIN void android_main(struct android_app* state) {
-#define OP_MAIN_SUCCESS return;
-#define OP_MAIN_START OPstart(state);
-#define OP_MAIN_END OPend();
+	#define OP_MAIN void android_main(struct android_app* state) {
+	#define OP_MAIN_SUCCESS return;
+	#define OP_MAIN_START OPstart(state);
+	#define OP_MAIN_END OPend();
 #elif OPIFEX_IOS
-#define OP_MAIN int _OP_WRAPPED_MAIN(int argc, char** args) {
-#define OP_MAIN_START OPstart(argc, args);
-#define OP_MAIN_START_STEPPED OPstartStepped(argc, args);
-#define OP_MAIN_END OPend();
-#define OP_MAIN_SUCCESS return 0;
+	#define OP_MAIN int _OP_WRAPPED_MAIN(int argc, char** args) {
+	#define OP_MAIN_START OPstart(argc, args);
+	#define OP_MAIN_START_STEPPED OPstartStepped(argc, args);
+	#define OP_MAIN_END OPend();
+	#define OP_MAIN_SUCCESS return 0;
 #else
 
 #if defined(OPIFEX_OPTION_RELEASE) && defined(OPIFEX_WINDOWS)
@@ -115,7 +120,5 @@ OPchar* OPgetExecutableDir();
 #define OP_MAIN_END OPend(); \
 	return 0; \
 	}
-
-#endif
 
 #endif

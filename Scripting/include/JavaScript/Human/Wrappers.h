@@ -26,7 +26,7 @@ void OPtextureWrapper(Handle<Object> exports);
 void OPskeletonWrapper(Handle<Object> exports);
 void OPskeletonAnimationWrapper(Handle<Object> exports);
 void OPframeBufferWrapper(Handle<Object> exports);
-void OPcommandBucketWrapper(Handle<Object> exports);
+void OPrenderCommandBucketWrapper(Handle<Object> exports);
 void OPcommandDrawIndexedWrapper(Handle<Object> exports);
 void OPvertexLayoutWrapper(Handle<Object> exports);
 

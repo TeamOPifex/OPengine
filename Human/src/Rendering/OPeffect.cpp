@@ -10,7 +10,7 @@ void OPeffect::Init(OPshader* vert, OPshader* frag) {
 OPshaderUniform* OPeffect::GetUniform(const OPchar* name) {
 	OPshaderUniform* result = NULL;
 
-	bool found = OPhashMapGet(&uniforms, name, (void**)&result);
+	bool found = uniforms.Get(name, (void**)&result);
 	if (!found) {
 		OPlog("Shader Uniform not present: %s", name);
 	}

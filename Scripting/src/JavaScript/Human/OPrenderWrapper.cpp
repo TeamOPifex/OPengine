@@ -10,9 +10,9 @@
 JS_RETURN_VAL _OPrenderInit(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-	//OPwindow* window = JS_GET_ARG_PTR(args, 0, OPwindow);
+	OPwindow* window = JS_GET_ARG_PTR(args, 0, OPwindow);
 
-    OPrenderInit();
+    OPrenderInit(window);
 
     JS_RETURN_NULL;
 }
@@ -43,12 +43,12 @@ JS_RETURN_VAL _OPrenderSize(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
     Handle<Object> obj = JS_NEW_OBJECT();
-    JS_SET_NUMBER(obj, "Width", OPRENDER_WIDTH);
-    JS_SET_NUMBER(obj, "Height", OPRENDER_HEIGHT);
-    JS_SET_NUMBER(obj, "ScreenWidth", OPRENDER_SCREEN_WIDTH);
-    JS_SET_NUMBER(obj, "ScreenHeight", OPRENDER_SCREEN_HEIGHT);
-    JS_SET_NUMBER(obj, "ScaledWidth", OPRENDER_SCALED_WIDTH);
-    JS_SET_NUMBER(obj, "ScaledHeight", OPRENDER_SCALED_HEIGHT);
+    JS_SET_NUMBER(obj, "Width", OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width);
+    JS_SET_NUMBER(obj, "Height", OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height);
+    JS_SET_NUMBER(obj, "ScreenWidth", OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowWidth);
+    JS_SET_NUMBER(obj, "ScreenHeight", OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowHeight);
+    JS_SET_NUMBER(obj, "ScaledWidth", OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WidthScaled);
+    JS_SET_NUMBER(obj, "ScaledHeight", OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScaled);
 
     JS_RETURN(obj);
 }
@@ -88,7 +88,7 @@ JS_RETURN_VAL _OPrenderDepthWrite(const JS_ARGS& args) {
 JS_RETURN_VAL _OPrenderFullScreen(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPRENDER_FULLSCREEN = args[0]->IntegerValue();
+	//OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->SetFullscreen(args[0]->IntegerValue());
 
     JS_RETURN_NULL;
 }
@@ -96,8 +96,7 @@ JS_RETURN_VAL _OPrenderFullScreen(const JS_ARGS& args) {
 JS_RETURN_VAL _OPrenderSetScreenSize(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPRENDER_WIDTH = args[0]->IntegerValue();
-    OPRENDER_HEIGHT = args[0]->IntegerValue();
+	//OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->SetSize(args[0]->IntegerValue(), args[1]->IntegerValue());
 
     JS_RETURN_NULL;
 }

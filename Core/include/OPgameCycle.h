@@ -1,7 +1,5 @@
 #pragma once
 
-#ifndef OPEngine_Core_GameCycle
-#define OPEngine_Core_GameCycle
 #include "./Core/include/OPtimer.h"
 
 /**
@@ -43,6 +41,3 @@ extern void(*OPrender)(OPfloat);
  *	network connections.
  */
 extern void (*OPdestroy)();
-
-
-#endif

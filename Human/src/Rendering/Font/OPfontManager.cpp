@@ -20,7 +20,7 @@ OPfontManager* OPfontManagerCreate(OPfont* font) {
 	temp->scale = 1.0f;
 	temp->currNodes = OPvectorCreate(sizeof(OPfontTextNode));
 	temp->isBuilt = false;
-	temp->builtNodes = OPhashMapCreate(16);
+	temp->builtNodes = OPhashMap::Create(16);
 	temp->meshPacker.Init();
 	temp->proj = OPmat4Ortho(0, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, 0, -1, 1);
 	temp->dummyMesh = OPfontCreateUserText(temp->_font, "", temp->scale);
@@ -48,7 +48,7 @@ void OPfontManagerDestroy(OPfontManager* font) {
 	OPFONTMANAGER_ACTIVE = NULL;
 	OPvectorDestroy(font->currNodes);
 	OPfree(font->currNodes);
-	OPhashMapDestroy(font->builtNodes);
+	font->builtNodes->Destroy();
 	OPfree(font->builtNodes);
 	OPfree(font);
 }
@@ -65,7 +65,7 @@ void OPfontManagerAddText(const OPchar* text) {
 	OPFONTMANAGER_ACTIVE->meshPacker.Bind();
 	OPfontBuiltTextNode* node = (OPfontBuiltTextNode*)OPalloc(sizeof(OPfontBuiltTextNode));
 	*node = OPfontCreatePackedText(OPFONTMANAGER_ACTIVE->_font, text, OPFONTMANAGER_ACTIVE->scale);
-	OPhashMapPut(OPFONTMANAGER_ACTIVE->builtNodes, text, node);
+	OPFONTMANAGER_ACTIVE->builtNodes->Put(text, node);
 }
 
 void OPfontManagerBuild() {

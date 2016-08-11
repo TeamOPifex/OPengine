@@ -1,5 +1,4 @@
-#ifndef OPENGINE_DATA_OPALLOCATOR
-#define OPENGINE_DATA_OPALLOCATOR
+#pragma once
 
 #include "./Core/include/OPtypes.h"
 
@@ -13,5 +12,3 @@ inline ui8 OPallocAlignAdjustment(const void* address, ui8 alignment)
 
     return adjustment;
 }
-
-#endif

@@ -24,8 +24,8 @@ void ExampleTexturedEnter(OPgameState* last) {
 	texturedExample = (TexturedExample*)OPalloc(sizeof(TexturedExample));
 
 	OPjson* meta = (OPjson*)OPcmanLoadGet("Models/adobe.opm.meta");
-	const OPchar* _model = OPjsonString(OPjsonGet(*meta, "model"));
-	const OPchar* _texture = OPjsonString(OPjsonGet(*meta, "texture"));
+	const OPchar* _model = meta->Get("model").String();
+	const OPchar* _texture = meta->Get("texture").String();
 
 	texturedExample->Mesh = (OPmesh*)OPcmanLoadGet(_model);
 	texturedExample->Texture = (OPtexture*)OPcmanLoadGet(_texture);

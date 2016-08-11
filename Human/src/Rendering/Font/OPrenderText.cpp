@@ -60,7 +60,7 @@ void OPfontRender(const OPchar* text, OPmat4* world) {
 	int tryHashMap = OPFONTMANAGER_ACTIVE->isBuilt;
 	OPfontBuiltTextNode* node = NULL;
 	if (tryHashMap) {
-		OPhashMapGet(OPFONTMANAGER_ACTIVE->builtNodes, text, (void**)&node);
+		OPFONTMANAGER_ACTIVE->builtNodes->Get(text, (void**)&node);
 	}
 
 	OPmat4 aligned;
@@ -87,7 +87,7 @@ void OPfontRender(const OPchar* text, OPmat4* world, ui8 useJustWorld) {
 	int tryHashMap = OPFONTMANAGER_ACTIVE->isBuilt;
 	OPfontBuiltTextNode* node = NULL;
 	if (tryHashMap) {
-		OPhashMapGet(OPFONTMANAGER_ACTIVE->builtNodes, text, (void**)&node);
+		OPFONTMANAGER_ACTIVE->builtNodes->Get(text, (void**)&node);
 	}
 
 	OPmat4 aligned;

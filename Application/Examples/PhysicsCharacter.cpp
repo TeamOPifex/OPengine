@@ -122,7 +122,7 @@ void ExamplePhysicsCharacterEnter(OPgameState* last) {
 		0.1f,
 		1000.0f,
 		45.0f,
-		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
+		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
 	OPphysXMaterial* material = OPphysXCreateMaterial(0.8, 0.8, 0.6);
@@ -265,7 +265,7 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 
 	OPvec3 light = OPvec3Create(0, 1, 0);
 	OPeffectSet("uLightDirection", &light);
-	OPeffectSet("uColorTexture", physicsCharacterExample->texture);
+	OPeffectSet("uColorTexture", physicsCharacterExample->texture, 0);
 	OPmat4 scale = OPMAT4_IDENTITY;
 	OPmat4 scratch = OPMAT4_IDENTITY;
 	for (ui32 i = 0; i < physicsCharacterExample->boxCount; i++) {
@@ -276,7 +276,7 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 		OPeffectSet("uWorld", &world);
 		OPmeshRender();
 	}
-	OPeffectSet("uColorTexture", physicsCharacterExample->textureStatic);
+	OPeffectSet("uColorTexture", physicsCharacterExample->textureStatic, 0);
 	for (ui32 i = 0; i < physicsCharacterExample->boxStaticCount; i++) {
 		if(physicsCharacterExample->boxesStatic[i].dead) continue;
 		scale = OPmat4Scl(physicsCharacterExample->boxesStatic[i].size * 2, physicsCharacterExample->boxesStatic[i].size * 2, physicsCharacterExample->boxesStatic[i].size * 2);
@@ -292,7 +292,7 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 	OPeffectSet("uView", &physicsCharacterExample->Camera->view);
 	OPeffectSet("uLightDirection", &light);
 
-	OPeffectSet("uColorTexture", physicsCharacterExample->texturePlayer);
+	OPeffectSet("uColorTexture", physicsCharacterExample->texturePlayer, 0);
 	scale = OPmat4Scl(physicsCharacterExample->spheres[0].size * 2, physicsCharacterExample->spheres[0].size * 2, physicsCharacterExample->spheres[0].size * 2);
 	OPphysXGetTransform((OPphysXRigidActor*)physicsCharacterExample->spheres[0].physics, &scratch);
 	world = scratch * scale;
@@ -305,7 +305,7 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 		OPmeshRender();
 	}
 
-	OPeffectSet("uColorTexture", physicsCharacterExample->textureSphere);
+	OPeffectSet("uColorTexture", physicsCharacterExample->textureSphere, 0);
 	for (ui32 i = 1; i < physicsCharacterExample->sphereCount; i++) {
 		scale = OPmat4Scl(physicsCharacterExample->spheres[i].size * 2, physicsCharacterExample->spheres[i].size * 2, physicsCharacterExample->spheres[i].size * 2);
 		OPphysXGetTransform((OPphysXRigidActor*)physicsCharacterExample->spheres[i].physics, &scratch);

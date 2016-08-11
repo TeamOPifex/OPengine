@@ -1,5 +1,4 @@
-#ifndef OP_ENGINE_CORE_LOG
-#define OP_ENGINE_CORE_LOG
+#pragma once
 
 #include "OPtypes.h"
 #include <stdarg.h>
@@ -47,6 +46,3 @@ void OPlogWarn(const char* message, ...);
 
 // Level 0
 void OPlogErr(const char* message, ...);
-
-
-#endif
