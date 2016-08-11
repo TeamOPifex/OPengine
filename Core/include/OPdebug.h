@@ -1,3 +1,5 @@
+#pragma once
+
 #define TIMED_BLOCK__(num) timed_block TimedBlock__##num(__COUNTER__, __FILE__, __LINE__, __FUNCTION__);
 #define TIMED_BLOCK_(num) TIMED_BLOCK__(num)
 #define TIMED_BLOCK TIMED_BLOCK_(__LINE__)

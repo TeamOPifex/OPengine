@@ -1,5 +1,4 @@
-#ifndef OPENGINE_CORE
-#define OPENGINE_CORE
+#pragma once
 
 #include "./Core/include/Assert.h"
 #include "./Core/include/OPcore.h"
@@ -10,5 +9,3 @@
 #include "./Core/include/OPmath.h"
 #include "./Core/include/OPtimer.h"
 #include "./Core/include/OPtypes.h"
-
-#endif

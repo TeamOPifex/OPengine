@@ -192,7 +192,7 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 			assetBucket->FullPath = NULL;
 			assetBucket->LastChange = NULL;
 #endif
-			OPhashMapPut(&OP_CMAN_HASHMAP, finalName, assetBucket);
+			OP_CMAN_HASHMAP.Put(finalName, assetBucket);
 
 #ifdef _DEBUG
 			if(OPcmanIsLoaded(finalName)) {

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "./OPlog.h"
 #include "./OPcore.h"
 

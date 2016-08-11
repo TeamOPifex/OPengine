@@ -113,7 +113,7 @@ OPint OPcmanInit(const OPchar* dir){
 	if (dir) {
 		OP_CMAN_ASSET_FOLDER = OPstringCopy(dir);
 	} else {
-		OP_CMAN_ASSET_FOLDER = OPstringCreateMerged(OPgetExecutableDir(), "assets/"); // OPstringCopy("assets/");
+		OP_CMAN_ASSET_FOLDER = OPstringCreateMerged(OPEXECUTABLE_PATH, "assets/"); // OPstringCopy("assets/");
 	}
 
 	OP_CMAN_ASSET_LOADER_COUNT = OPlistSize(_OP_CMAN_ASSETLOADERS);
@@ -157,7 +157,7 @@ OPint OPcmanInit(const OPchar* dir){
 
 
 	// create and copy the hashmap
-	OPhashMapInit(&OP_CMAN_HASHMAP, OP_CMAN_CAP);
+	OP_CMAN_HASHMAP.Init(OP_CMAN_CAP);
 
 	// create and copy the purge list
 	OP_CMAN_PURGE = OPllCreate();
@@ -167,16 +167,16 @@ OPint OPcmanInit(const OPchar* dir){
 
 // checks to see if an asset is loaded, triggers the load or unload.
 OPint OPcmanIsLoaded(const OPchar* key){
-	return OPhashMapExists(&OP_CMAN_HASHMAP, key);
+	return OP_CMAN_HASHMAP.Exists(key);
 }
 
 OPint OPcmanLoad(const OPchar* key){
 
 	const OPchar* ext = NULL;
 	OPint success = 0;
-	if(OPhashMapExists(&OP_CMAN_HASHMAP, key)){
+	if(OP_CMAN_HASHMAP.Exists(key)){
 		OPasset* existing = NULL;
-		OPhashMapGet(&OP_CMAN_HASHMAP, key, (void**)&existing);
+		OP_CMAN_HASHMAP.Get(key, (void**)&existing);
 
 		// the key may have been added, but see if there
 		// is any valid pointer in the bucket before declaring it exists
@@ -246,7 +246,7 @@ OPint OPcmanLoad(const OPchar* key){
 #endif
 
 				// finally insert into the hashmap
-				if(OPhashMapPut(&OP_CMAN_HASHMAP, key, assetBucket))
+				if(OP_CMAN_HASHMAP.Put(key, assetBucket))
 					return 1;
 
 				return OP_CMAN_INSERTION_FAILED;
@@ -261,17 +261,17 @@ OPint OPcmanUnload(const OPchar* key){
 	void* value = NULL;
 	OPasset* asset = NULL;
 
-	if(!OPhashMapExists(&OP_CMAN_HASHMAP, key))
+	if(!OP_CMAN_HASHMAP.Exists(key))
 		return OP_CMAN_KEY_NOT_FOUND;
 
-	if(!OPhashMapGet(&OP_CMAN_HASHMAP, key, &value))
+	if(!OP_CMAN_HASHMAP.Get(key, &value))
 		return OP_CMAN_RETRIEVE_FAILED;
 	asset = (OPasset*)value;
 
 	if(!value) return OP_CMAN_ASSET_LOAD_FAILED;
 
 	if(!asset->Unload(asset->Asset)) return 0;
-	OPhashMapPut(&OP_CMAN_HASHMAP, key, NULL);
+	OP_CMAN_HASHMAP.Put(key, NULL);
 	OPfree(asset); asset = NULL;
 
 	return 1;
@@ -280,17 +280,17 @@ OPint OPcmanUnload(const OPchar* key){
 // Returns a pointer to the asset requested by file name
 void* OPcmanGet(const OPchar* key){
 	OPasset* bucket = NULL;
-	if(!OPhashMapExists(&OP_CMAN_HASHMAP, key)) {
+	if(!OP_CMAN_HASHMAP.Exists(key)) {
 		OPlog("Asset has not been loaded. '%s'", key);
 		return NULL;
 	}
-	OPhashMapGet(&OP_CMAN_HASHMAP, key, (void**)&bucket);
+	OP_CMAN_HASHMAP.Get(key, (void**)&bucket);
 	return bucket->Asset;
 }
 
 OPint OPcmanDelete(const OPchar* key){
 	OPasset* bucket = NULL;
-	OPhashMapGet(&OP_CMAN_HASHMAP, key, (void**)&bucket);
+	OP_CMAN_HASHMAP.Get(key, (void**)&bucket);
 	OPllInsertLast(OP_CMAN_PURGE, bucket);
 	return bucket->Dirty = 1;
 }
@@ -355,7 +355,7 @@ void OPcmanDestroy() {
 
 	OPfree(OP_CMAN_ASSET_FOLDER);
 	OPfree(OP_CMAN_ASSETLOADERS);
-	OPhashMapDestroy(&OP_CMAN_HASHMAP);
+	OP_CMAN_HASHMAP.Destroy();
 	if (OP_CMAN_PURGE) {
 		OPllDestroy(OP_CMAN_PURGE);
 		OPfree(OP_CMAN_PURGE);

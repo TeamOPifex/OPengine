@@ -1,11 +1,11 @@
-#ifndef OPEngine_Data_GameStates
-#define OPEngine_Data_GameStates
-#include "./Core/include/OPtimer.h"
-#include "./Core/include/OPtypes.h"
-#include "./Data/include/OPlist.h"
+#pragma once
 
 struct OPgameState;
 typedef struct OPgameState OPgameState;
+
+#include "./Core/include/OPtimer.h"
+#include "./Core/include/OPtypes.h"
+#include "./Data/include/OPlist.h"
 
 struct OPgameState {
 	void (*Init)(OPgameState*);
@@ -35,5 +35,3 @@ OPgameState* OPgameStateCreate(void (*init)(OPgameState*), OPint(*update)(struct
 * @return Success Result
 */
 OPint OPgameStateDestroy(OPgameState* state);
-
-#endif

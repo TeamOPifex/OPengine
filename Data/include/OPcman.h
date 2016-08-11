@@ -1,5 +1,4 @@
-#ifndef OPEngine_Data_ContentMan
-#define OPEngine_Data_ContentMan
+#pragma once
 
 
 #include "./Core/include/OPtypes.h"
@@ -174,6 +173,3 @@ void OPcmanLoadResourcePack(const OPchar* filename);
 * @return An OPstream to the resource in any of the Resource Packs that have been loaded
 */
 OPstream* OPcmanGetResource(const OPchar* resourceName);
-
-
-#endif

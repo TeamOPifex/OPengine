@@ -613,7 +613,7 @@ OPint OPMload(OPstream* str, OPmesh** mesh) {
 }
 
 OPhashMap* CreateTriangleTable(OPMData* data){
-	OPhashMap* triTable = OPhashMapCreate(data->indexCount / 3);
+	OPhashMap* triTable = OPhashMap::Create(data->indexCount / 3);
 	OPchar index[10];
 	OPint compCount = 4;
 
@@ -622,7 +622,7 @@ OPhashMap* CreateTriangleTable(OPMData* data){
 		int* tri;
 
 		sprintf(index, "%d", i * 3);
-		OPhashMapGet(triTable, index, (void**)&tri);
+		triTable->Get(index, (void**)&tri);
 
 		// if this vertex's tri has been stored, skip it
 		if(tri) continue;
@@ -636,7 +636,7 @@ OPhashMap* CreateTriangleTable(OPMData* data){
 
 			// store the triangle at this vertex's index
 			sprintf(index, "%d", i * 3 + j);
-			OPhashMapPut(triTable, index, tri);
+			triTable->Put(index, tri);
 		}
 	}
 
@@ -746,7 +746,7 @@ OPlinkedList* CreateTriList(OPMData* data, OPhashMap* triTable, OPlinkedList* ve
 #else
 			sprintf(index, "%d", (OPint)node->Data);
 #endif
-		OPhashMapGet(triTable, index, (void**)&tri);
+			triTable->Get(index, (void**)&tri);
 
 		// only add indices if this tri hasn't been visited
 		if(!tri[3]){

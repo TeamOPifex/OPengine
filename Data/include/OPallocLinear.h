@@ -1,5 +1,4 @@
-#ifndef OPENGINE_DATA_OPALLOCLINEAR
-#define OPENGINE_DATA_OPALLOCLINEAR
+#pragma once
 
 #include "./Core/include/OPallocator.h"
 
@@ -28,5 +27,3 @@ void OPallocatorLinearReset(OPallocator* alloc);
 inline OPuint OPallocatorLinearUsed(OPallocatorLinear* alloc) {
     return alloc->_usedMemory;
 }
-
-#endif

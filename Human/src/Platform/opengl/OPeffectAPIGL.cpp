@@ -9,7 +9,7 @@ bool OPeffectGLAddUniform(OPeffect* effect, const OPchar* name);
 OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag) {
 	OPeffectGL* effectGL = (OPeffectGL*)OPalloc(sizeof(OPeffectGL));
 
-	OPhashMapInit(&effect->uniforms, 32);
+	effect->uniforms.Init(32);
 
 	effect->internalPtr = effectGL;
 	effect->vertexShader = vert;
@@ -82,8 +82,8 @@ void OPeffectGLSetVertexLayout(OPeffect* effect, OPvertexLayout* vertexLayout) {
 	ui32 i = 0;
 	for (; i < vertexLayout->count; i++)
 	{
-        glBindAttribLocation(effectGL->Handle, i, vertexLayout->attributes[i].Name);
-        vertexLayout->attributes[i].Location = i;//glGetAttribLocation( effectGL->Handle, vertexLayout->attributes[i].Name );
+        glBindAttribLocation(effectGL->Handle, i, vertexLayout->attributes[i].Name);		
+        vertexLayout->attributes[i].Location = glGetAttribLocation( effectGL->Handle, vertexLayout->attributes[i].Name );
     }
 }
 
@@ -92,7 +92,7 @@ bool OPeffectGLAddUniform(OPeffect* effect, const OPchar* name) {
 	if (!shaderUniform->Found) {
 		return false;
 	}
-	OPhashMapPut(&effect->uniforms, name, shaderUniform);
+	effect->uniforms.Put(name, shaderUniform);
 	return true;
 }
 

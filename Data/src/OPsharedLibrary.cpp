@@ -22,7 +22,7 @@ OPsharedLibrary* OPsharedLibraryLoad(const OPchar* libraryName) {
 	if(library == NULL) return NULL;
 #elif defined(OPIFEX_WINDOWS)
 	OPchar* lib = OPstringCreateMerged(libraryName, ".dll");
-	OPchar* path = OPstringCreateMerged(OPgetExecutableDir(), lib);
+	OPchar* path = OPstringCreateMerged(OPEXECUTABLE_PATH, lib);
 	OPlog(path);
 	HMODULE library = LoadLibraryA(path);
 	if (library == NULL) return NULL;

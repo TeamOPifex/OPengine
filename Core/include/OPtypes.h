@@ -1,5 +1,4 @@
-#ifndef OPENGINE_CORE_TYPES
-#define OPENGINE_CORE_TYPES
+#pragma once
 
 #define NULL 0
 
@@ -117,5 +116,3 @@ struct OPkeyValuePair {
 	OPchar value[255];
 };
 typedef struct OPkeyValuePair OPkeyValuePair;
-
-#endif

@@ -19,7 +19,7 @@ JS_RETURN_VAL _OPtimerCreate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
     OPtimer* timer = (OPtimer*)OPalloc(sizeof(OPtimer));
-    OPtimerInit(timer);
+	timer->Init();
 
     Handle<Object> obj = JS_NEW_OBJECT();
     JS_SET_PTR(obj, timer)
@@ -35,7 +35,7 @@ JS_RETURN_VAL _OPtimerUpdate(const JS_ARGS& args) {
     Handle<Object> obj = args[0]->ToObject();
 
     OPtimer* timer = JS_GET_PTR(obj, OPtimer);
-    OPtimerTick(timer);
+	timer->Tick();
 
     JS_SET_NUMBER(obj, "elapsed", timer->Elapsed);
 

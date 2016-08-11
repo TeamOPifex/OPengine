@@ -27,8 +27,7 @@ struct OPentHeap {
 };
 typedef struct OPentHeap OPentHeap;
 
-#define OPentHeapIsLiving(heap, i)\
-if(!heap->InUse[i]) continue;\
+#define OPentHeapIsLiving(heap, i) if(!heap->InUse[i]) continue;
 
 //-----------------------------------------------------------------------------
 // ______                _   _

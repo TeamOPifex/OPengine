@@ -1,9 +1,9 @@
 #include "./Core/include/OPcore.h"
 #include "./Core/include/OPlog.h"
 
-struct OPtimer OPtime;
-OPchar* _startUpDir = NULL;
-OPchar* _execDir = NULL;
+struct OPtimer OPTIMER;
+extern OPchar* OPSTARTUP_PATH = NULL;
+extern OPchar* OPEXECUTABLE_PATH = NULL;
 OPint _OPengineRunning;
 
 #ifdef OPIFEX_WINDOWS
@@ -206,22 +206,22 @@ void OPstart(int argc, char** args) {
 #else
 void OPstart(int argc, char** args) {
 	// Initialize the engine and game
-	_startUpDir = OPdirCurrent();
-	_execDir = OPdirExecutable();
-	OPtimerInit(&OPtime);
+	OPSTARTUP_PATH = OPdirCurrent();
+	OPEXECUTABLE_PATH = OPdirExecutable();
+	OPTIMER.Init();
 	_OPengineRunning = 1;
 	OPinitialize();
 
 	// main game loop
 	while(_OPengineRunning){
 		// update the timer
-		OPtimerTick(&OPtime);
+		OPTIMER.Tick();
 
 		// Make sure that at least 1 ms has passed
-		if (OPtime.Elapsed == 0) continue;
+		if (OPTIMER.Elapsed == 0) continue;
 
 		// update the game
-		if (OPupdate(&OPtime)) {
+		if (OPupdate(&OPTIMER)) {
 			_OPengineRunning = 0;
 			break;
 		}
@@ -231,8 +231,8 @@ void OPstart(int argc, char** args) {
 	// game loop has finished, clean up
 	OPdestroy();
 
-	OPfree(_startUpDir);
-	OPfree(_execDir);
+	OPfree(OPSTARTUP_PATH);
+	OPfree(OPEXECUTABLE_PATH);
 
 	#ifndef OPIFEX_OPTION_RELEASE
 	OPlogDebug("Alloc/Dealloc/Diff: %d / %d / %d", OPallocations, OPdeallocations, (OPallocations - OPdeallocations));
@@ -247,11 +247,11 @@ void OPstartStepped(int argc, char** args) {
 	OPtimer frameStepped;
 
 	// Initialize the engine and game
-	_startUpDir = OPdirCurrent();
-	_execDir = OPdirExecutable();
+	OPSTARTUP_PATH = OPdirCurrent();
+	OPEXECUTABLE_PATH = OPdirExecutable();
 
-	OPtimerInit(&OPtime);
-	OPtimerInit(&frameStepped);
+	OPTIMER.Init();
+	frameStepped.Init();
 	frameStepped.Elapsed = STEP;
 
 	_OPengineRunning = 1;
@@ -260,18 +260,18 @@ void OPstartStepped(int argc, char** args) {
 	// main game loop
 	while (_OPengineRunning) {
 		// update the timer
-		OPtimerTick(&OPtime);
+		OPTIMER.Tick();
 
 #if _DEBUG
 		// This will usually only happen if we stopped at a breakpoint
 		// and then resumed. This will make sure that we don't try to
 		// update 15+ seconds at a time.
-		if (OPtime.Elapsed > 2000) {
-			OPtime.Elapsed = 16;
+		if (OPTIMER.Elapsed > 2000) {
+			OPTIMER.Elapsed = 16;
 		}
 #endif
 
-		accumlator += OPtime.Elapsed;
+		accumlator += OPTIMER.Elapsed;
 
 		while (accumlator >= STEP) {
 			frameStepped.TotalGametime += STEP;
@@ -293,8 +293,8 @@ void OPstartStepped(int argc, char** args) {
 	// game loop has finished, clean up
 	OPdestroy();
 
-	OPfree(_startUpDir);
-	OPfree(_execDir);
+	OPfree(OPSTARTUP_PATH);
+	OPfree(OPEXECUTABLE_PATH);
 
 #ifndef OPIFEX_OPTION_RELEASE
 	OPlog("Alloc/Dealloc/Diff: %d / %d / %d", OPallocations, OPdeallocations, (OPallocations - OPdeallocations));
@@ -308,13 +308,13 @@ void OPend(){
 	_OPengineRunning = 0;
 }
 
-struct OPtimer* OPgetTime() {
-	return &OPtime;
-}
-
-OPchar* OPgetStartupDir() {
-	return _startUpDir;
-}
-OPchar* OPgetExecutableDir() {
-	return _execDir;
-}
+//struct OPtimer* OPgetTime() {
+//	return &OPtime;
+//}
+//
+//OPchar* OPgetStartupDir() {
+//	return _startUpDir;
+//}
+//OPchar* OPgetExecutableDir() {
+//	return _execDir;
+//}
