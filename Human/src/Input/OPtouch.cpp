@@ -3,7 +3,7 @@
 #include "./Core/include/OPlog.h"
 
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
-	#include <GLFW/glfw3.h>
+	//#include <GLFW/glfw3.h>
 #endif
 
 

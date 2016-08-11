@@ -1,10 +1,6 @@
 #ifndef OPEngine_Data_HashMap
 #define OPEngine_Data_HashMap
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
 
 #include <stdlib.h>
 #include <string.h>
@@ -85,8 +81,5 @@ OPint OPhashMapPut(OPhashMap* map, const OPchar* key, void* value);
 */
 OPint OPhashMapCount(const OPhashMap* map);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif

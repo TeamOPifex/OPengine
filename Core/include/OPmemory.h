@@ -1,14 +1,18 @@
-#ifndef OPEngine_Core_DYNMEM
-#define OPEngine_Core_DYNMEM
+#pragma once
 
 #include "OPtypes.h"
 #include "OPallocator.h"
 #include <string.h>
 
+#define OPSCRATCHBUFFER_SIZE 4096
+
+extern OPchar OPSCRATCHBUFFER[OPSCRATCHBUFFER_SIZE];
+
 #ifndef OPIFEX_OPTION_RELEASE
 extern OPint OPallocations;
 extern OPint OPdeallocations;
 #endif
+
 extern OPallocator OPDEFAULT_ALLOCATOR;
 
 #if defined(OPIFEX_UNIX)
@@ -31,23 +35,12 @@ extern OPallocator OPDEFAULT_ALLOCATOR;
 #define OPmemcmp(dest, src, size) memcmp(dest, src, size)
 
 // TODO: (garrett) bzero could be optimized out, I think this should use a memset type operation instead.
-#if defined(OPIFEX_UNIX)
-#define OPbzero(dest, size){\
-	bzero(dest, size);\
-}\
-
-#elif defined(OPIFEX_WINDOWS)
-#define OPbzero(dest, size){\
-	memset(dest, 0, size);\
-}\
-
+#if defined(OPIFEX_WINDOWS)
+#define OPbzero(dest, size) memset(dest, 0, size);
+#else
+#define OPbzero(dest, size) bzero(dest, size);
 #endif
 
-/* function definitions */
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /**
 * Platform independent means to dynamically allocate memory.
@@ -81,13 +74,17 @@ void* OPrealloc(void* ptr, OPuint bytes);
  */
 void  OPfree(void* ptr);
 
-
-
 void* OPsysAlloc(OPuint bytes);
 void OPsysFree(void* ptr);
 
-#ifdef __cplusplus
-}
-#endif
+void* operator new(size_t size);
+void* operator new(size_t size, const char* file, ui32 line);
+void* operator new[](size_t size);
+void* operator new[](size_t size, const char* file, ui32 line);
+void operator delete(void* block);
+void operator delete(void* block, const char* file, ui32 line);
+void operator delete[](void* block);
+void operator delete[](void* block, const char* file, ui32 line);
 
-#endif
+#define OPNEW(x) new(__FILE__, __LINE__) x
+#define OPALLOC(x,c) (x*)OPalloc(sizeof(x) * c)

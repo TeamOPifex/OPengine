@@ -23,21 +23,16 @@ void ExampleMaterialEnter(OPgameState* last) {
 
 	materialExample.Model.mesh = (OPmesh*)OPcmanLoadGet("output.opm");
 
-	materialExample.Effect = OPeffectGen(
-		"ColoredModel.vert",
-		"ColoredModel.frag",
-		OPATTR_POSITION | OPATTR_COLOR,
-		"Model Effect",
-		materialExample.Model.mesh->vertexLayout.stride);
+	materialExample.Effect.Init("ColoredModel.vert", "ColoredModel.frag");
 
-	materialExample.Camera = OPcamPersp(
+	materialExample.Camera.SetPerspective(
 		OPVEC3_ONE * 2.0,
 		OPVEC3_UP,
 		OPVEC3_UP,
 		0.1f,
 		1000.0f,
 		45.0f,
-		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
+		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
 	materialExample.LightDirection = OPVEC3_UP;
@@ -51,7 +46,7 @@ void ExampleMaterialEnter(OPgameState* last) {
 
 OPint ExampleMaterialUpdate(OPtimer* time) {
 
-	if (OPkeyboardIsDown(OPKEY_SPACE)) { materialExample.Rotation++; }
+	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { materialExample.Rotation++; }
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
 	materialExample.Model.world = OPmat4RotY(materialExample.Rotation / 100.0f);
@@ -70,7 +65,7 @@ void ExampleMaterialRender(OPfloat delta) {
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleMaterialExit(OPgameState* next) {
 	// Clean up phase for the Game State
-	OPeffectUnload(&materialExample.Effect);
+	materialExample.Effect.Destroy();
 	return 0;
 }
 

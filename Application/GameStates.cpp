@@ -31,7 +31,7 @@ ui16 indexData[] = {
 	2, 0, 1
 };
 
-OPmesh quadMesh;
+OPmesh* quadMesh;
 
 OPmeshPacked quad;
 OPmeshPacker packer;
@@ -91,8 +91,8 @@ void ColorSingleHandler(OPstream* str, void* param) {
 
 void State0Enter(OPgameState* last){
 	OPshaderAttribute attribs[] = {
-		{ "aPosition", GL_FLOAT, 3 },
-		{ "aUV", GL_FLOAT, 2 }
+		{ "aPosition", OPshaderElementType::FLOAT, 3 },
+		{ "aUV", OPshaderElementType::FLOAT, 2 }
 	};
 
 	OPcmanLoad("impact.wav");
@@ -120,13 +120,7 @@ void State0Enter(OPgameState* last){
 	//OPwebServerOnKey(server, "color", ColorHandler, &color);
 	//OPwebServerOnKey(server, "font", FontHandler, NULL);
 
-	OPss = OPeffectCreate(
-		*(OPshader*)OPcmanGet("OPspriteSheet.vert"),
-		*(OPshader*)OPcmanGet("OPspriteSheet.frag"),
-		attribs,
-		2,
-		"Sprite sheet effect"
-	);
+	OPss.Init((OPshader*)OPcmanGet("OPspriteSheet.vert"), (OPshader*)OPcmanGet("OPspriteSheet.frag"));
 
 	// Required
 	
@@ -172,7 +166,7 @@ OPint State0Update(OPtimer* time){
 
 	OPvec2 pos = OPgamePadGet(OPGAMEPAD_ONE)->LeftThumb();
 
-	if(OPkeyboardWasPressed(OPKEY_SPACE)){
+	if(OPkeyboardWasPressed(OPkeyboardKey::SPACE)){
 		//OPlog("Should play");
 		////OPaudSetEmitter(sound);
 
@@ -196,16 +190,13 @@ OPint State0Update(OPtimer* time){
 	OPmat4 world;
 	OPmat4Identity(&world);
 	OPrenderDepth(0);
-	quadMesh.Bind();
-	OPeffectBind(&OPss);
-	OPtextureClearActive();
-	ui32 textureHandle = OPtextureBind(bg->Sheet);
-	OPtexturePixelate();
-	OPeffectParamMat4("uWorld", &world);
-	OPeffectParami("uColorTexture", textureHandle);
+	quadMesh->Bind();
+	OPss.Bind();
+	OPeffectSet("uWorld", &world);
+	OPeffectSet("uColorTexture", bg->Sheet, 0);
 	//OPlog("X: %f, Y: %f", bg->Frames[0].Offset.x, bg->Frames[0].Offset.y);
-	OPeffectParamVec2("uOffset", &bg->Frames[0].Offset);
-	OPeffectParamVec2("uSize", &bg->Frames[0].Size);
+	OPeffectSet("uOffset", &bg->Frames[0].Offset);
+	OPeffectSet("uSize", &bg->Frames[0].Size);
 	OPmeshRender();
 
 	// Required
@@ -279,19 +270,16 @@ OPint State1Update(OPtimer* time){
 
 	world = OPmat4RotX(t);
 
-	OPmeshPackerBind(&packer);
+	packer.Bind();
 	plane->Bind();
-	OPeffectBind(&tri);
+	tri.Bind();
 
-	OPtextureBind(tex);
-	OPeffectParami("uColorTexture", tex->Handle);
-	OPtextureBind(spec);
-	OPeffectParami("uSpecularTexture", spec->Handle);
-	OPtextureBind(norm);
-	OPeffectParami("uNormalTexture", norm->Handle);
-	OPeffectParamMat4v("uWorld", 1, &world);
-	OPeffectParamMat4v("uProj", 1, &camera.proj);
-	OPeffectParamMat4v("uView", 1, &camera.view);
+	OPeffectSet("uColorTexture", tex, 0);
+	OPeffectSet("uSpecularTexture", spec, 1);
+	OPeffectSet("uNormalTexture", norm, 2);
+	OPeffectSet("uWorld", 1, &world);
+	OPeffectSet("uProj", 1, &camera.proj);
+	OPeffectSet("uView", 1, &camera.view);
 
 	//OPframeBufferBind(&rt);
 	
@@ -355,8 +343,8 @@ OPint State1Exit(OPgameState* next){
 	OPcmanDelete("steamPlaneSpec.png");
 	OPcmanDelete("noneNorm.png");	
 
-	OPeffectUnload(&tri);
-	OPeffectUnload(&post);
+	tri.Destroy();
+	post.Destroy();
 
 	OPfree(garbage);
 	return 0;

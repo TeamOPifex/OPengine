@@ -5,8 +5,8 @@
 #include "./Core/include/OPtimer.h"
 
 struct OPkeyboardState {
-	OPint	keys[_OPKEYBOARD_MAX];
-	OPint	prevKeys[_OPKEYBOARD_MAX];
+	OPint	keys[(ui32)OPkeyboardKey::MAX];
+	OPint	prevKeys[(ui32)OPkeyboardKey::MAX];
 };
 typedef struct OPkeyboardState OPkeyboardState;
 
@@ -21,6 +21,6 @@ OPint OPkeyboardWasPressed(OPkeyboardKey key);
 OPint OPkeyboardWasReleased(OPkeyboardKey key);
 OPint OPkeyboardAnyInputIsDown();
 
-void OPkeyboardKey(OPuint codepoint);
+//void OPkeyboardKey(OPuint codepoint);
 
 #endif

@@ -37,10 +37,6 @@ struct OPfileInformation {
 };
 typedef struct OPfileInformation OPfileInformation;
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 //-----------------------------------------------------------------------------
 /**
@@ -173,8 +169,4 @@ OPint OPfileClose(OPfile* file);
 OPfileInformation OPfileCreate(const char* path);
 
 
-//-----------------------------------------------------------------------------
-#ifdef __cplusplus
-};
-#endif
 #endif

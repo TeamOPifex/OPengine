@@ -50,7 +50,7 @@ OPint ExampleServerClientUpdate(OPtimer* time) {
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
-	if (serverClientExampleExample.Mode == 0 && OPkeyboardWasReleased(OPKEY_S)) {
+	if (serverClientExampleExample.Mode == 0 && OPkeyboardWasReleased(OPkeyboardKey::S)) {
 		// Server Mode
 		serverClientExampleExample.Mode = 1;
 		serverClientExampleExample.Protocol = OPnetworkProtocolSimpleCreate(
@@ -62,7 +62,7 @@ OPint ExampleServerClientUpdate(OPtimer* time) {
 		// 	ServerReceive
 		// );
 	}
-	if (serverClientExampleExample.Mode == 0 && OPkeyboardWasReleased(OPKEY_C)) {
+	if (serverClientExampleExample.Mode == 0 && OPkeyboardWasReleased(OPkeyboardKey::C)) {
 		// Client Mode
 		serverClientExampleExample.Mode = 2;
 		serverClientExampleExample.Protocol = OPnetworkProtocolSimpleCreate(

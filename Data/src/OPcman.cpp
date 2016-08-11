@@ -131,11 +131,15 @@ OPint OPcmanInit(const OPchar* dir){
 	// Switch to the assets directory
 #if defined(OPIFEX_WINDOWS)
 	result = SetCurrentDirectory(OP_CMAN_ASSET_FOLDER);
-#elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)
-	result = chdir(OP_CMAN_ASSET_FOLDER);
+
+	if (result) {
+		OPlogInfo("Directory Changed: %s", OP_CMAN_ASSET_FOLDER);
+	}
+	else {
+		OPlogErr("!Directory Change Failed: %s", OP_CMAN_ASSET_FOLDER);
+	}
 #else
 	result = chdir(OP_CMAN_ASSET_FOLDER);
-#endif
 
 	if (result == 0) {
 		OPlog("Directory Changed to: %s", OP_CMAN_ASSET_FOLDER);
@@ -143,6 +147,7 @@ OPint OPcmanInit(const OPchar* dir){
 	else {
 		OPlog("!Directory Change Failed: %s", OP_CMAN_ASSET_FOLDER);
 	}
+#endif
 
 
 #ifdef _DEBUG

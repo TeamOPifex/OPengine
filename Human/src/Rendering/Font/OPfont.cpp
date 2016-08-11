@@ -198,15 +198,19 @@ OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const O
 
 OPmesh OPfontCreateText(OPfont* font, OPchar* text) {
 	ui32 vertexSize = sizeof(OPvertexTex);
-	ui32 indexSize = sizeof(ui16);
+	OPindexSize indexSize = OPindexSize::SHORT;// sizeof(ui16);
 	OPvector* vertices = OPvectorCreate(vertexSize);
-	OPvector* indices = OPvectorCreate(indexSize);
+	OPvector* indices = OPvectorCreate((ui32)indexSize);
 
 	_OPfontBuild(vertices, indices, font, text, 1);
 
-	OPmesh mesh = OPmeshCreate();
-	mesh.Bind();
-	OPmeshBuild(vertexSize, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
+	OPvertexLayoutBuilder builder;
+	builder.Init();
+	builder.Add(OPattributes::POSITION);
+	builder.Add(OPattributes::UV);
+	OPvertexLayout vertexLayout = builder.Build();
+	OPmesh mesh = OPmesh(vertexLayout);
+	mesh.Build(vertexLayout, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
 	return mesh;
 }
 
@@ -218,16 +222,20 @@ OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text, OPf
 	ASSERT(OPMESHPACKER_ACTIVE != NULL, "No mesh packer bound.");
 
 	ui32 vertexSize = sizeof(OPvertexTex);
-	ui32 indexSize = sizeof(ui16);
+	OPindexSize indexSize = OPindexSize::SHORT;// sizeof(ui16);
 	OPvector* vertices = OPvectorCreate(vertexSize);
-	OPvector* indices = OPvectorCreate(indexSize);
+	OPvector* indices = OPvectorCreate((ui32)indexSize);
 
 	OPvec2 size = _OPfontBuild(vertices, indices, font, text, scale);
 
 	OPfontBuiltTextNode node;
 	node.Width = size.x;
-	node.packedMesh = (OPmeshPacked*)OPalloc(sizeof(OPmeshPacked));
-	*node.packedMesh = OPmeshPackedCreate(vertexSize, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
+	OPvertexLayoutBuilder builder;
+	builder.Init();
+	builder.Add(OPattributes::POSITION);
+	builder.Add(OPattributes::UV);
+	OPvertexLayout vertexLayout = builder.Build();
+	node.packedMesh = OPmeshPacked::Create(vertexLayout, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
 
 	return node;
 }
@@ -266,10 +274,13 @@ OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text, float 
 
 	OPfontUserTextNode node;
 	node.Width = size.x;
-	node.mesh = OPmeshCreate();
+	OPvertexLayoutBuilder builder;
+	builder.Init();
+	builder.Add(OPattributes::POSITION);
+	builder.Add(OPattributes::UV);
+	node.mesh = OPmesh(builder.Build());
 
-	node.mesh.Bind();
-	OPmeshBuild(sizeof(OPvertexTex), sizeof(ui16), vertices->_size, indices->_size, vertices->items, indices->items);
+	node.mesh.Build(node.mesh.vertexLayout, OPindexSize::SHORT, vertices->_size, indices->_size, vertices->items, indices->items);
 
 	OPvectorDestroy(vertices);
 	OPfree(vertices);

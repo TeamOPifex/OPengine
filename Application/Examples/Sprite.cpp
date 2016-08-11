@@ -26,7 +26,7 @@ OPint ExampleSpriteUpdate(OPtimer* time) {
 	OPrenderClear(0,0,0);
 
 	OPsprite2DPrepRender(spriteExample.sprite2D);
-	OPtexturePixelate();
+	//OPtexturePixelate();
 	OPmeshRender();
 
 	OPrenderPresent();

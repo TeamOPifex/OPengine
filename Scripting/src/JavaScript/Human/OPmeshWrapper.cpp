@@ -18,7 +18,7 @@ JS_RETURN_VAL _OPmeshCreate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
-    *mesh = OPmeshCreate();
+    //*mesh = OPmeshCreate();
     Handle<Object> result = JS_NEW_OBJECT();
     OPmeshWrapper(result, mesh);
 
@@ -41,7 +41,7 @@ JS_RETURN_VAL _OPmeshDestroy(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmesh* mesh = JS_GET_ARG_PTR(args, 0, OPmesh);
-    OPmeshDestroy(mesh);
+	mesh->Destroy();
 
     JS_RETURN_NULL;
 }

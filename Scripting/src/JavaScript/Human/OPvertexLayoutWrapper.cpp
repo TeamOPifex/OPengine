@@ -31,13 +31,13 @@ JS_HELPER_SELF_WRAPPER(_OPvertexLayoutInit) {
 
 		attributes[i].Name = OPstringCopy(*name);
 		attributes[i].Elements = elements;
-		attributes[i].Type = GL_FLOAT;
-		attributes[i].Offset = offset;
+		attributes[i].Type = OPshaderElementType::FLOAT;
+		//attributes[i].Offset = offset;
 
 		OPlog("attr: %s", *name);
 	}
 
-	OPvertexLayoutInit(ptr, attributes, arr->Length());
+	ptr->Init(attributes, arr->Length());
 
     JS_RETURN_NULL;
 }

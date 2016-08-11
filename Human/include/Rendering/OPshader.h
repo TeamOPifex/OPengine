@@ -1,7 +1,6 @@
 #ifndef OPENGINE_HUMAN_RENDERER_SHADER
 #define OPENGINE_HUMAN_RENDERER_SHADER
 
-#include "./Human/include/Rendering/OpenGL.h"
 #include "./Core/include/OPtypes.h"
 #include "./Data/include/OPstream.h"
 
@@ -13,15 +12,12 @@
 // | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
 // |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/
 
-typedef GLenum OPshader;
+#include "./Human/include/Rendering/Enums/OPshaderType.h"
 
-#ifdef OPIFEX_OPENGL_ES_2
-#define OPvertexShader   GL_VERTEX_SHADER
-#define OPfragmentShader GL_FRAGMENT_SHADER
-#else
-#define OPvertexShader   GL_VERTEX_SHADER
-#define OPfragmentShader GL_FRAGMENT_SHADER
-#endif
+struct OPshader {
+	void* internalPtr;
+	OPshaderType shaderType;
+};
 
 
 //-----------------------------------------------------------------------------
@@ -32,12 +28,14 @@ typedef GLenum OPshader;
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 
-struct OPshaderAttribute{
+struct OPshaderAttribute {
 	OPchar* Name;
-	ui32         Type;
-	ui32         Elements;
-	OPuint        Offset;
-	OPuint		Handle;
+	OPshaderElementType Type;
+	ui32 Elements;
+	OPuint Offset;
+	OPint Location;
+
+	void* internalPtr;
 };
 
 
@@ -51,8 +49,8 @@ struct OPshaderAttribute{
 
 OPint OPshaderLoadVertex(OPstream* str, OPshader** shader);
 OPint OPshaderLoadFragment(OPstream* str, OPshader** shader);
-OPint OPshaderLoadVertexDX11(OPstream* source, OPshader** shader);
-OPint OPshaderLoadFragmentDX11(OPstream* source, OPshader** shader);
+//OPint OPshaderLoadVertexDX11(OPstream* source, OPshader** shader);
+//OPint OPshaderLoadFragmentDX11(OPstream* source, OPshader** shader);
 OPint OPshaderUnload(OPshader* shader);
 
 

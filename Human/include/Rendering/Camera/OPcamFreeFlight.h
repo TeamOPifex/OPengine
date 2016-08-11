@@ -26,7 +26,7 @@ struct OPcamFreeFlight {
 	OPfloat RotationSpeed, MoveSpeed;
 
 	void Init() {
-		OPcamFreeFlightInit(this, 1.0, 1.0, OPvec3Create(0, 5, 5));
+		OPcamFreeFlightInit(this, 5.0, 1.0, OPvec3Create(5, 5, 5));
 	}
 
 	void Update(OPtimer* timer) {

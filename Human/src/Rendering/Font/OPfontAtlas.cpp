@@ -168,36 +168,18 @@ OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, i32 width, i32 height
 }
 
 OPtexture OPfontAtlasTexture(OPfontAtlas* atlas) {
-	OPtextureDescription desc = { 
-		(ui16)atlas->width,
-		(ui16)atlas->height,
-		#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
-		GL_RED,
-		GL_RED,
-		#else
-		GL_RGB,
-		GL_RGB,
-		#endif
-		GL_UNSIGNED_BYTE,
-		GL_LINEAR, 
-		GL_LINEAR, 
-		GL_CLAMP_TO_EDGE, 
-		GL_CLAMP_TO_EDGE		
-	};
+	OPtextureDesc desc;
+	desc.width = atlas->width;
+	desc.height = atlas->height;
+	desc.filter = OPtextureFilter::LINEAR;
+	desc.wrap = OPtextureWrap::CLAMP_TO_EDGE;
+	desc.format = OPtextureFormat::RGB;
 	if (atlas->depth == 4) {
-		desc.InternalFormat = GL_RGBA;
-		desc.Format = GL_RGBA;
-		desc.DataType = GL_UNSIGNED_BYTE;
+		desc.format = OPtextureFormat::RGBA;
 	}
-	if (atlas->depth == 3) {
-		desc.InternalFormat = GL_RGB;
-		desc.Format = GL_RGB;
-		desc.DataType = GL_UNSIGNED_BYTE;
-	}
-	OPtexture texture = OPtextureCreate(desc);
-	OPtextureBind(&texture);
-	OPtextureSetData(atlas->data);
-	return texture;
+	OPtexture result;
+	OPRENDERER_ACTIVE->Texture.Init(&result, desc, atlas->data);
+	return result;
 }
 
 void OPfontAtlasSavePNG(OPfontAtlas* atlas, OPchar* filename) {

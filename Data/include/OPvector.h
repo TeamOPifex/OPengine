@@ -4,11 +4,6 @@
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmemory.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 	//This will be replaced by OPlist
 	struct OPvector{
 		void* items;
@@ -43,8 +38,5 @@ extern "C" {
 
 	void OPvectorReserve(OPvector* vector, OPuint size);
 
-#ifdef __cplusplus
-};
-#endif
 
 #endif

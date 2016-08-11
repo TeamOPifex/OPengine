@@ -33,12 +33,6 @@ struct OPtimer{
 } ;
 typedef struct OPtimer OPtimer;
 
-//---- Function prototypes ---------------------------------------------------
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /**
  * OPtimerInit - creates an OPtimer instance
  *	Allocates space and initializes an OPtimer struct, then returns a
@@ -83,9 +77,5 @@ OPfloat  OPtimerDelta(struct OPtimer* timer);
  * @return Whole milliseconds from the first tick, to the most recent.
  */
 ui64 OPtimerTotal(struct OPtimer* timer);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

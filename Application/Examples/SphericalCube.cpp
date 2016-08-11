@@ -38,22 +38,17 @@ void ExampleSphericalCubeEnter(OPgameState* last) {
 	// which requires the attributes are given in a set order
 	// Position (vec3), then Normal (vec3)
 	// For more granular control use OPeffectCreate
-	sphericalCubeExample->Effect = OPeffectGen(
-		"SimpleModel.vert",
-		"SimpleModel.frag",
-		OPATTR_POSITION | OPATTR_NORMAL | OPATTR_UV,
-		"SphericalCube Effect",
-		sizeof(OPsphericalCubeVertex));
+	sphericalCubeExample->Effect.Init("SimpleModel.vert", "SimpleModel.frag");
 
 	// Sets up the camera as a perpsective camera for rendering
-	sphericalCubeExample->Camera = OPcamPersp(
+	sphericalCubeExample->Camera.SetPerspective(
 		OPVEC3_ONE * 1,
 		OPVEC3_ZERO,
 		OPVEC3_UP,
 		0.1f,
 		1000.0f,
 		45.0f,
-		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
+		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
 	// A default light direction used in the effect
@@ -74,7 +69,7 @@ OPint ExampleSphericalCubeUpdate(OPtimer* time) {
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
-	if (OPkeyboardIsDown(OPKEY_SPACE)) { sphericalCubeExample->Rotation++; }
+	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { sphericalCubeExample->Rotation++; }
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
 	OPmat4 world = OPmat4RotY(sphericalCubeExample->Rotation / 100.0f);
@@ -91,7 +86,7 @@ OPint ExampleSphericalCubeUpdate(OPtimer* time) {
 		OPbindMeshEffectWorldCam(&sphericalCubeExample->SphericalCube.sides[i], &sphericalCubeExample->Effect, &world, &sphericalCubeExample->Camera);
 		
 		// Sets the vLightDirection uniform on the Effect that is currently bound (sphericalCubeExample->Effect)
-		OPeffectParamVec3("vLightDirection", &sphericalCubeExample->LightDirection);
+		OPeffectSet("vLightDirection", &sphericalCubeExample->LightDirection);
 
 		// Renders to the screen the currently bound Mesh (sphericalCubeExample->Mesh)
 		OPmeshRender();
@@ -111,7 +106,7 @@ void ExampleSphericalCubeRender(OPfloat delta) {
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleSphericalCubeExit(OPgameState* next) {
 	// Clean up phase for the Game State
-	OPeffectUnload(&sphericalCubeExample->Effect);	
+	sphericalCubeExample->Effect.Destroy();	
 	OPfree(sphericalCubeExample);
 	return 0;
 }

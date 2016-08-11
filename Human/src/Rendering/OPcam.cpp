@@ -5,50 +5,47 @@
 
 #include "./Human/include/Rendering/OPeffect.h"
 
-OPcam OPcamPersp(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat nearView, OPfloat farView, OPfloat fov, OPfloat aspect){
+void OPcam::SetPerspective(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat nearView, OPfloat farView, OPfloat fov, OPfloat aspect){
 
 	float _fov = (float)((double)fov * 0.01745329251994329576923690768489);
-	OPcam cam;
-	cam.pos = position;
-	cam.target = target;
-	cam.up = up;
-	cam.fov = _fov;
-	cam.aspect = aspect;
-	cam.nearView = nearView;
-	cam.farView = farView;
+	pos = position;
+	this->target = target;
+	this->up = up;
+	this->fov = _fov;
+	this->aspect = aspect;
+	this->nearView = nearView;
+	this->farView = farView;
 
-	OPmat4Identity(&cam.proj);
-	OPmat4Identity(&cam.view);
-
-	// construct matricies
-	cam.proj = OPmat4Perspective(_fov, aspect, nearView, farView);
-	cam.view = OPmat4LookAt(position, target, up);
-
-	return cam;
-}
-
-OPcam OPcamOrtho(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPfloat zFar, OPfloat left, OPfloat right, OPfloat bottom, OPfloat top){
-	OPcam cam = {
-		position, target, up,
-		0,
-		0, zNear, zFar
-	};
-
-	OPmat4Identity(&cam.proj);
-	OPmat4Identity(&cam.view);
+	OPmat4Identity(&proj);
+	OPmat4Identity(&view);
 
 	// construct matricies
-	cam.proj = OPmat4Ortho(left, right, bottom, top, zNear, zFar);
-	cam.view = OPmat4LookAt(position, target, up);
-
-	return cam;
+	proj = OPmat4Perspective(_fov, aspect, nearView, farView);
+	view = OPmat4LookAt(position, target, up);
 }
 
-OPray3D OPcamUnproject(OPcam* cam, i32 screenX, i32 screenY) {
+void OPcam::SetOrtho(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPfloat zFar, OPfloat left, OPfloat right, OPfloat bottom, OPfloat top){
+	this->pos = position;
+	this->target = target;
+	this->up = up;
+	this->fov = 0;
+	this->aspect = 0;
+	this->nearView = zNear;
+	this->farView = zFar;
+
+	OPmat4Identity(&proj);
+	OPmat4Identity(&view);
+
+	// construct matricies
+	proj = OPmat4Ortho(left, right, bottom, top, zNear, zFar);
+	view = OPmat4LookAt(position, target, up);
+}
+
+OPray3D OPcam::Unproject(i32 screenX, i32 screenY) {
 
 	// [ -1 ... 1 ] range
-	OPfloat x = (((OPfloat)screenX / (OPfloat)OPRENDER_SCALED_WIDTH) - 0.5f) * 2.0f;
-	OPfloat y = -(((OPfloat)screenY / (OPfloat)OPRENDER_SCALED_HEIGHT) - 0.5f) * 2.0f;
+	OPfloat x = (((OPfloat)screenX / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width) - 0.5f) * 2.0f;
+	OPfloat y = -(((OPfloat)screenY / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height) - 0.5f) * 2.0f;
 
 	// Start and End of ray
 	OPvec4 rayStart_nds = OPvec4Create(x, y, -1.0, 1.0);
@@ -59,8 +56,8 @@ OPray3D OPcamUnproject(OPcam* cam, i32 screenX, i32 screenY) {
 	// Which will reduce the below calls as well
 	OPmat4 inverseProjectionMatrix;
 	OPmat4 inverseViewMatrix;
-	OPmat4Inverse(&inverseProjectionMatrix, cam->proj);
-	OPmat4Inverse(&inverseViewMatrix, cam->view);
+	OPmat4Inverse(&inverseProjectionMatrix, proj);
+	OPmat4Inverse(&inverseViewMatrix, view);
 
 	OPvec4 rayStartCamera = OPmat4Transform(rayStart_nds, inverseProjectionMatrix);
 	rayStartCamera /= rayStartCamera.w;
@@ -84,28 +81,28 @@ OPray3D OPcamUnproject(OPcam* cam, i32 screenX, i32 screenY) {
 
 }
 
-void OPcamUpdateView(OPcam* cam) {
-	cam->view = OPmat4LookAt(
-		cam->pos,
-		cam->target,
-		cam->up);
+void OPcam::UpdateView() {
+	view = OPmat4LookAt(
+		pos,
+		target,
+		up);
 }
 
-void OPcamUpdateProj(OPcam* cam) {
-	cam->proj = OPmat4Perspective(
-		cam->fov,
-		cam->aspect,
-		cam->nearView,
-		cam->farView);
+void OPcam::UpdateProj() {
+	proj = OPmat4Perspective(
+		fov,
+		aspect,
+		nearView,
+		farView);
 }
 
-void OPcamUpdate(OPcam* cam) {
-	OPcamUpdateView(cam);
+void OPcam::Update() {
+	UpdateView();
 	//OPcamUpdateProj(cam);
 }
 
 
-void OPcamBind(OPcam* camera) {
-	OPeffectParamMat4("uView", &camera->view);
-	OPeffectParamMat4("uProj", &camera->proj);
+void OPcam::Bind() {
+	OPeffectSet("uView", &view);
+	OPeffectSet("uProj", &proj);
 }

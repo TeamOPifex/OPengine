@@ -1,11 +1,6 @@
 #ifndef OPEngine_Data_MemPack
 #define OPEngine_Data_MemPack
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmemory.h"
 
@@ -41,9 +36,5 @@ typedef struct OPmemDesc OPmemDesc;
 void* OPmemPackAlloc(OPmemDesc* segments, OPuint segCount, OPint n);
 
 void OPmemPackDealloc(void* Data, OPmemDesc* segments, OPint segCount, OPint n);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

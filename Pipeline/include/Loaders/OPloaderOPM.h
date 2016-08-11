@@ -24,7 +24,7 @@ struct OPMData {
 
 	void* indices;
 	ui32 indexCount;
-	ui32 indexSize;
+	OPindexSize indexSize;
 
 	OPboundingBox3D bounds;
 

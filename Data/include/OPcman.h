@@ -1,9 +1,6 @@
 #ifndef OPEngine_Data_ContentMan
 #define OPEngine_Data_ContentMan
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmemory.h"
@@ -178,8 +175,5 @@ void OPcmanLoadResourcePack(const OPchar* filename);
 */
 OPstream* OPcmanGetResource(const OPchar* resourceName);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif
