@@ -22,9 +22,11 @@ struct CommandBucketExample {
 	OPvec3 lightDirection;	// Where the Light Source is coming from
 	OPrenderCommandBucket renderBucket;
 	OPallocator* allocator;
+	OPallocatorLinear* linearAllocator;
 
 	void Init(OPgameState* last) {
-		allocator = OPallocatorLinearCreate(MB(4));
+		linearAllocator = OPallocatorLinear::Create(MB(4));
+		allocator = linearAllocator->GetAllocator();
 
     	model.Init("output.opm");
     	model2.Init("patrick.opm");

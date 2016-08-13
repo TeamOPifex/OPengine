@@ -6,19 +6,19 @@ OPfontAtlas* OPfontAtlasCreate(i32 width, i32 height, OPint depth) {
 	OPfontAtlas* self = (OPfontAtlas*)OPalloc(sizeof(OPfontAtlas));
 	OPfontAtlasNode node = { 1, 1 };
 	node.z = width - 2;
-	self->nodes = OPvectorCreate(sizeof(OPfontAtlasNode));
+	self->nodes = OPvector::Create(sizeof(OPfontAtlasNode));
 	self->used = 0;
 	self->width = width;
 	self->height = height;
 	self->depth = depth;
-	OPvectorPush(self->nodes, (ui8*)&node);
+	self->nodes->Push((ui8*)&node);
 	self->data = (ui8*)OPalloc(width*height*depth*sizeof(ui8));
 	OPbzero(self->data, width*height*depth*sizeof(ui8));
 	return self;
 }
 
 void OPfontAtlasDestroy(OPfontAtlas* atlas){
-	OPvectorDestroy(atlas->nodes);
+	atlas->nodes->Destroy();
 	OPfree(atlas->nodes);
 	if (atlas->data){
 		OPfree(atlas->data);
@@ -41,7 +41,7 @@ OPint OPfontAtlasFit(OPfontAtlas* atlas, OPint index, OPint width, OPint height)
 	OPfontAtlasNode* node;
 	OPint x, y, width_left, i;
 
-	node = (OPfontAtlasNode*)(OPvectorGet(atlas->nodes, index));
+	node = (OPfontAtlasNode*)(atlas->nodes->Get(index));
 	x = node->x;
 	y = node->y;
 	width_left = width;
@@ -54,7 +54,7 @@ OPint OPfontAtlasFit(OPfontAtlas* atlas, OPint index, OPint width, OPint height)
 	y = node->y;
 
 	while (width_left > 0) {
-		node = (OPfontAtlasNode*)(OPvectorGet(atlas->nodes, i));
+		node = (OPfontAtlasNode*)(atlas->nodes->Get(i));
 		if (node->y > y){
 			y = node->y;
 		}
@@ -74,12 +74,12 @@ void OPfontAtlasMerge(OPfontAtlas* atlas)
 	
 	for (i = 0; i < (int)(atlas->nodes->_size) - 1; ++i)
 	{
-		node = (OPfontAtlasNode*)(OPvectorGet(atlas->nodes, i));
-		next = (OPfontAtlasNode*)(OPvectorGet(atlas->nodes, i + 1));
+		node = (OPfontAtlasNode*)(atlas->nodes->Get(i));
+		next = (OPfontAtlasNode*)(atlas->nodes->Get(i + 1));
 		if (node->y == next->y)
 		{
 			node->z += next->z;
-			OPvectorErase(atlas->nodes, i + 1);
+			atlas->nodes->Erase(i + 1);
 			--i;
 		}
 	}
@@ -103,7 +103,7 @@ OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, i32 width, i32 height
 		y = OPfontAtlasFit(atlas, i, width, height);
 		if (y >= 0)
 		{
-			node = (OPfontAtlasNode*)OPvectorGet(atlas->nodes, i);
+			node = (OPfontAtlasNode*)atlas->nodes->Get(i);
 			if (((y + height) < best_height) ||
 				(((y + height) == best_height) && (node->z < best_width)))
 			{
@@ -134,13 +134,13 @@ OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, i32 width, i32 height
 	node->x = region.x;
 	node->y = region.y + height;
 	node->z = width;
-	OPvectorInsert(atlas->nodes, best_index, (ui8*)node);
+	atlas->nodes->Insert(best_index, (ui8*)node);
 	OPfree(node);
 
 	for (i = best_index + 1; i < atlas->nodes->_size; ++i)
 	{
-		node = (OPfontAtlasNode*)OPvectorGet(atlas->nodes, i);
-		prev = (OPfontAtlasNode*)OPvectorGet(atlas->nodes, i - 1);
+		node = (OPfontAtlasNode*)atlas->nodes->Get(i);
+		prev = (OPfontAtlasNode*)atlas->nodes->Get(i - 1);
 
 		if (node->x < (prev->x + prev->z))
 		{
@@ -149,7 +149,7 @@ OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, i32 width, i32 height
 			node->z -= shrink;
 			if (node->z <= 0)
 			{
-				OPvectorErase(atlas->nodes, i);
+				atlas->nodes->Erase(i);
 				--i;
 			}
 			else

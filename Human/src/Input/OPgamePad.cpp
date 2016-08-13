@@ -255,46 +255,46 @@ void __OPwinUpdateGamePad(OPgamePad* controller){
 #pragma region Button states
 
 		controller->buttons[OPGAMEPADBUTTON_LEFT_SHOULDER] =
-			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER;
+			(controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) > 0;
 
 		controller->buttons[OPGAMEPADBUTTON_RIGHT_SHOULDER] =
-			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER;
+			(controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) > 0;
 
 		controller->buttons[OPGAMEPADBUTTON_A] =
-			(controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_A);
+			(controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_A) > 0;
 
 		controller->buttons[OPGAMEPADBUTTON_B] =
-			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_B;
+			(controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_B) > 0;
 
 		controller->buttons[OPGAMEPADBUTTON_X] =
-			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_X;
+			(controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_X) > 0;
 
 		controller->buttons[OPGAMEPADBUTTON_Y] =
-			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y;
+			(controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_Y) > 0;
 
 		controller->buttons[OPGAMEPADBUTTON_DPAD_UP] =
-			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP;
+			(controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) > 0;
 
 		controller->buttons[OPGAMEPADBUTTON_DPAD_DOWN] =
-			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN;
+			(controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) > 0;
 
 		controller->buttons[OPGAMEPADBUTTON_DPAD_LEFT] =
-			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT;
+			(controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) > 0;
 
 		controller->buttons[OPGAMEPADBUTTON_DPAD_RIGHT] =
-			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT;
+			(controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) > 0;
 
 		controller->buttons[OPGAMEPADBUTTON_START] =
-			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_START;
+			(controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_START) > 0;
 
 		controller->buttons[OPGAMEPADBUTTON_BACK] =
-			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_BACK;
+			(controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_BACK) > 0;
 
 		controller->buttons[OPGAMEPADBUTTON_LEFT_THUMB] =
-			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB;
+			(controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB) > 0;
 
 		controller->buttons[OPGAMEPADBUTTON_RIGHT_THUMB] =
-			controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB;
+			(controllerState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) > 0;
 #pragma endregion
 
 	}

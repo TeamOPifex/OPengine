@@ -1,5 +1,4 @@
-#ifndef OP_PERFORMANCE_PHYSX_BASIC_FILTER_SHADER
-#define OP_PERFORMANCE_PHYSX_BASIC_FILTER_SHADER
+#pragma once
 
 #include "./Performance/include/OPphysX.h"
 
@@ -26,7 +25,5 @@ PxFilterFlags OPphysXBasicFilterShader(
 	
 	return PxFilterFlag::eDEFAULT;
 }
-
-#endif
 
 #endif

@@ -12,26 +12,26 @@ OPLevelEntity* OPlevelGetEntity(OPLevel* level, OPchar* name) {
 }
 
 OPint OPlevelload(const OPchar* filename, OPLevel** level) {
-	OPstream* str = OPreadFile(filename);
+	OPstream* str = OPfile::ReadFromFile(filename);
 
-	ui16 version = OPreadui16(str);
+	ui16 version = str->UI16();
 	if (version == 1) {
-		ui16 count = OPreadui16(str);
+		ui16 count = str->UI16();
 		OPLevelEntity* entities = (OPLevelEntity*)OPalloc(sizeof(OPLevelEntity)* count);
 
 		for (i32 i = 0; i < count; i++) {
 
-			entities[i].name = OPreadstring(str);
-			if (OPreadui16(str)) { // Has Resource?
-				entities[i].resource = OPreadstring(str);
+			entities[i].name = str->String();
+			if (str->UI16()) { // Has Resource?
+				entities[i].resource = str->String();
 			}
 
 			entities[i].position = OPvec3Read(str);
 			entities[i].rotation = OPvec3Read(str);
 			entities[i].scale = OPvec3Read(str);
 
-			entities[i].collision = OPreadui16(str);
-			entities[i].physics = OPreadui16(str);
+			entities[i].collision = str->UI16();
+			entities[i].physics = str->UI16();
 
 		}
 

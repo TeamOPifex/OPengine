@@ -203,7 +203,7 @@ void ReportException(v8::Isolate* isolate, v8::TryCatch* try_catch);
 #define JS_GET_INTEGER(obj, name) obj->Get(JS_NEW_STRING(name))->IntegerValue();
 #define JS_SET_PTR(obj, ptr) JS_SET_NUMBER(obj, "ptr", (OPint)ptr)
 #define JS_GET_PTR(obj, type) (type*)(OPint)obj->Get(JS_NEW_STRING("ptr"))->IntegerValue();
-#define JS_GET_ARG_PTR(args, ind, type) JS_GET_PTR(args[ind]->ToObject(), type)
+#define JS_GET_ARG_PTR(args, ind, type) JS_GET_PTR(args[(int)ind]->ToObject(), type)
 #define JS_GET_ARG_OPUINT(args, ind) ((OPint)args[ind]->IntegerValue())
 
 #ifdef _DEBUG
@@ -271,7 +271,7 @@ inline Handle<Value> _JS_NEXT_ARG(const JS_ARGS& args) {
     if(_JS_ARGC == 0) {
         return args.This();
     }
-    return args[_JS_ARGC - 1];
+    return args[(int)(_JS_ARGC - 1)];
 }
 #define JS_NEXT_ARG_VAL() _JS_NEXT_ARG(args);
 

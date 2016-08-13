@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPtimer.h"

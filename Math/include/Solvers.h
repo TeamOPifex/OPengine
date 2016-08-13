@@ -1,5 +1,4 @@
-#ifndef OPIFEX_MATH_SOLVERS
-#define OPIFEX_MATH_SOLVERS
+#pragma once
 
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmath.h"
@@ -91,5 +90,3 @@ inline OPint OPlineCircleInter2(
 
 	return 0;
 }
-
-#endif

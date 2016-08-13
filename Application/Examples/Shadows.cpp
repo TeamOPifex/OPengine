@@ -244,7 +244,7 @@ typedef struct {
 			ShadowFrameBuffer.Unbind();
 		}
 		
-		OPrenderClear(0.1, 0.1, 0.1);
+		OPrenderClear(0.1f, 0.1f, 0.1f);
 
 		if (ViewFromLight) {
 			Model.Draw(&ModelMaterials[1], &ShadowCamera);

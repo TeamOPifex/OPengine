@@ -18,7 +18,7 @@ OPfontManager* OPfontManagerCreate(OPfont* font) {
 	temp->_align = OPFONT_ALIGN_LEFT;
 
 	temp->scale = 1.0f;
-	temp->currNodes = OPvectorCreate(sizeof(OPfontTextNode));
+	temp->currNodes = OPvector::Create(sizeof(OPfontTextNode));
 	temp->isBuilt = false;
 	temp->builtNodes = OPhashMap::Create(16);
 	temp->meshPacker.Init();
@@ -46,7 +46,7 @@ OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 
 
 void OPfontManagerDestroy(OPfontManager* font) {
 	OPFONTMANAGER_ACTIVE = NULL;
-	OPvectorDestroy(font->currNodes);
+	font->currNodes->Destroy();
 	OPfree(font->currNodes);
 	font->builtNodes->Destroy();
 	OPfree(font->builtNodes);

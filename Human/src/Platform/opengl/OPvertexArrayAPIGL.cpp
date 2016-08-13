@@ -58,14 +58,14 @@ void OPvertexArrayGLSetLayout(OPvertexArray* vertexArray, OPvertexLayout* vertex
 		//OPshaderAttributeGL* shaderAttributeGL = (OPshaderAttributeGL*)shaderAttribute.internalPtr;		
 		//OPGLFN(OPint loc = glGetAttribLocation(effectGL->Handle, shaderAttribute.Name));
 
-		OPGLFN(glEnableVertexAttribArray(shaderAttribute.Location));
-		OPGLFN(glVertexAttribPointer(shaderAttribute.Location, shaderAttribute.Elements, OPshaderElementTypeToGL(shaderAttribute.Type), GL_FALSE, vertexLayout->stride, (const void*)shaderAttribute.Offset));
+		OPGLFN(glEnableVertexAttribArray((GLuint)shaderAttribute.Location));
+		OPGLFN(glVertexAttribPointer((GLuint)shaderAttribute.Location, shaderAttribute.Elements, OPshaderElementTypeToGL(shaderAttribute.Type), GL_FALSE, vertexLayout->stride, (const void*)shaderAttribute.Offset));
 	}
 }
 
 void OPvertexArrayGLDraw(OPvertexArray* vertexArray, OPuint count, OPuint offset) {
 	OPvertexArrayGL* vertexArrayGL = (OPvertexArrayGL*)vertexArray->internalPtr;
-	OPGLFN(glDrawArrays(GL_TRIANGLES, offset, (GLsizei)count));
+	OPGLFN(glDrawArrays(GL_TRIANGLES, (GLint)offset, (GLsizei)count));
 }
 
 ui32 OPindexSizeToGL(OPindexSize indexSize) {
@@ -80,7 +80,7 @@ ui32 OPindexSizeToGL(OPindexSize indexSize) {
 #include "./Human/include/Rendering/OPindexBuffer.h"
 void OPvertexArrayGLDrawIndexed(OPvertexArray* vertexArray, OPuint count, OPuint offset) {
 	OPvertexArrayGL* vertexArrayGL = (OPvertexArrayGL*)vertexArray->internalPtr;	
-	OPGLFN(glDrawElements(GL_TRIANGLES, count, OPindexSizeToGL(OPRENDERER_ACTIVE->OPINDEXBUFFER_ACTIVE->ElementSize), (void*)(offset * sizeof(GLuint))));
+	OPGLFN(glDrawElements(GL_TRIANGLES, (GLint)count, OPindexSizeToGL(OPRENDERER_ACTIVE->OPINDEXBUFFER_ACTIVE->ElementSize), (void*)(offset * sizeof(GLuint))));
 }
 
 void OPvertexArrayGLUnbind(OPvertexArray* ptr) {

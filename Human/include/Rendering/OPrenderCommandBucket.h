@@ -50,7 +50,8 @@ struct OPrenderCommandBucket {
 	// Number of draw calls this bucket can support
 	OPuint bucketSize;
 	// The linear allocator used for this creating Command data
-    OPallocator* allocator;
+	OPallocator* allocator;
+	OPallocatorLinear* internalAllocator;
 
 	// The current count of commands/keys
     ui32 keyIndex;
@@ -66,10 +67,6 @@ struct OPrenderCommandBucket {
 	// The target framebuffers will not change for a command bucket
     OPframeBuffer* frameBuffer[4];
 
-	// Determines whether the command bucket will free the allocator
-	// on OPcommandBucketDestroy/Free
-	i8 controlOfAllocator;
-
 	// Simple wrapper functions
 	// These are just convenient functions for calling the C style functions
 
@@ -80,6 +77,7 @@ struct OPrenderCommandBucket {
 	void Flush(bool keep);
 	void Render();
 	void Submit(OPmodel* model, OPmaterialInstance* material);
+	void Destroy();
 
 	// Helper draw commands already in the engine
 	// Users will be able to define their own, just won't be a helper function

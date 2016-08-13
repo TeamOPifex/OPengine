@@ -84,7 +84,7 @@ OPint OPmouseWasReleased(OPmouseKey key) {
 	return !Mouse.keys[key] && Mouse.prevKeys[key];
 }
 void OPmouseSetPosition(i32 x, i32 y) {
-	OPRENDERER_ACTIVE->Window.SetCursorPos(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE, OPvec2(x, y));
+	OPRENDERER_ACTIVE->Window.SetCursorPos(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE, OPvec2((f32)x, (f32)y));
 	Mouse.prevPositionX = x;
 	Mouse.prevPositionY = y;
 }

@@ -99,6 +99,7 @@ JS_RETURN_VAL _OPmaterialBindSelf(const JS_ARGS& args) {
 void OPmaterialWrapperCreate(Handle<Object> result, OPmaterial* material) {
     SCOPE_AND_ISOLATE
 
+	
     JS_SET_PTR(result, material);
     JS_SET_METHOD(result, "ClearParams", _OPmaterialClearParamsSelf);
     JS_SET_METHOD(result, "AddParam", _OPmaterialAddParamSelf);

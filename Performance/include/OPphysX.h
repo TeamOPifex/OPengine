@@ -1,5 +1,4 @@
-#ifndef OP_PERFORMANCE_PHYSX
-#define OP_PERFORMANCE_PHYSX
+#pragma once
 
 #include "./Core/include/OPtypes.h"
 
@@ -105,8 +104,5 @@ inline OPphysXShape* OPphysXGetShape(OPphysXRigidActor* actor, ui32 index) {
 	actor->getShapes(&result, 1, index);
 	return result;
 }
-
-#endif
-
 
 #endif

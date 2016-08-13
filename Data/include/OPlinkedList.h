@@ -1,67 +1,36 @@
-#ifndef OPEngine_Data_LinkedList
-#define OPEngine_Data_LinkedList
+#pragma once
+
+struct OPlinkedList;
+struct OPlinkedListNode;
+
+typedef struct OPlinkedList OPlinkedList;
+typedef struct OPlinkedListNode OPlinkedListNode;
 
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmemory.h"
 
-#if defined(OPIFEX_ANDROID) && defined(__cplusplus)
-	#include "./Core/include/OPmemory.h"
-#endif
-
-
-struct OPllNode_def;
-typedef struct OPllNode_def OPllNode;
-
-struct OPllNode_def {
-	OPllNode *Prev;
-	OPllNode *Next;
+struct OPlinkedListNode {
+	OPlinkedListNode* Prev;
+	OPlinkedListNode* Next;
 	void* Data;
 };
 
 struct OPlinkedList {
-	OPint _size;
-	OPllNode* First;
-	OPllNode* Last;
+	OPuint _size;
+	OPlinkedListNode* First;
+	OPlinkedListNode* Last;
+
+	OPlinkedList() { _size = 0; }
+
+	// Inserts a node into the first position of an OPlinkedList
+	OPlinkedListNode* InsertFirst(void* data);
+	// Inserts a node into the last position of an OPlinkedList
+	OPlinkedListNode* InsertLast(void* data);
+	// Removes an OPllNode from an OPlinkedList
+	void* Remove(OPlinkedListNode* node);
+	// Gets the number of elements stored in the OPlinkedList
+	OPuint Size() { return _size; }
+	void Destroy();
+
+	static inline OPlinkedList* Create() { return OPNEW(OPlinkedList()); }
 };
-typedef struct OPlinkedList OPlinkedList;
-
-/* Creates an OPlinkedList
- * @return Newly allocated OPlinkedList
-*/
-OPlinkedList* OPllCreate();
-
-/* Destroys an OPlinkedList
- * @param list The OPlinkedList to destroy
- * @return Success Result
-*/
-OPint OPllDestroy(OPlinkedList* list);
-
-/* Inserts a node into the first position of an OPlinkedList
- * @param list The OPlinkedList to insert into
- * @param data The pointer to put into the linked list
- * @return The OPllNode that was inserted
-*/
-OPllNode* OPllInsertFirst(OPlinkedList* list, void* data);
-
-/* Inserts a node into the last position of an OPlinkedList
- * @param list The OPlinkedList to insert into
- * @param data The pointer to put into the linked list
- * @return The OPllNode that was inserted
-*/
- OPllNode* OPllInsertLast(OPlinkedList* list, void* data);
-
-/* Removes an OPllNode from an OPlinkedList
- * @param list The OPlinkedList to remove from
- * @param toRemove The OPllNode to remove from the OPlinkedList
- * @return The pointer to the data of the OPllNode removed
-*/
-void* OPllRemove(OPlinkedList* list, OPllNode* toRemove);
-
-/* Gets the number of elements stored in the OPlinkedList
- * @param list The OPlinkedList to get the count from
- * @return The number of elements in the OPlinkedList
-*/
-OPint OPllGetSize(OPlinkedList* list);
-
-
-#endif

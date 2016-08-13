@@ -2,29 +2,31 @@
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/Assert.h"
 
-void OPallocatorLinearInit(OPallocator* alloc, OPuint sizeInBytes) {
-	OPallocatorLinear* data = (OPallocatorLinear*)alloc->data;
-	data->_headerStart = data;
-	data->_memStart = (void*)((size_t)data + sizeof(OPallocatorLinear));
-	data->_size = sizeInBytes;
-	OPallocatorLinearReset(alloc);
+void* OPallocatorLinearAlloc(OPallocator* alloc, OPuint sizeInBytes);
+void OPallocatorLinearFree(OPallocator* alloc, void* data);
+void OPallocatorLinearReset(OPallocator* alloc);
+
+void OPallocatorLinear::Destroy() {
+	OPfree(_rootAlloc->data);
 }
 
-OPallocator* OPallocatorLinearCreate(OPuint sizeInBytes) {
-	OPallocator* allocator = (OPallocator*)OPalloc(sizeof(OPallocator));
-
+void OPallocatorLinear::Init(OPallocator* allocator, OPuint sizeInBytes) {
 	OPuint totalBytes = sizeof(OPallocatorLinear) + sizeInBytes;
 	void* data = OPallocZero(totalBytes);
 
 	OPallocatorLinear* alloc = (OPallocatorLinear*)data;
 	allocator->data = alloc;
-	OPallocatorLinearInit(allocator, sizeInBytes);
+
+	OPallocatorLinear* linearData = (OPallocatorLinear*)allocator->data;
+	_headerStart = linearData;
+	_memStart = (void*)((size_t)linearData + sizeof(OPallocatorLinear));
+	_size = sizeInBytes;
 
 	allocator->alloc = (void*(*)(void*, OPuint))OPallocatorLinearAlloc;
 	allocator->free = (void(*)(void*, void*))OPallocatorLinearFree;
 	allocator->clear = (void(*)(void*))OPallocatorLinearReset;
-	
-	return allocator;
+	_rootAlloc = allocator;
+	Reset();
 }
 
 void OPallocatorLinearFree(OPallocator* alloc, void* data) {
@@ -57,3 +59,4 @@ void* OPallocatorLinearAlloc(OPallocator* alloc, OPuint sizeInBytes) {
 	data->_allocCount++;
 	return block;
 }
+

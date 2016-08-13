@@ -2,8 +2,8 @@
 
 void OPmeshBuilder::Init(OPvertexLayout vertexLayout) {
 	VertexLayout = vertexLayout;
-	Vertices = OPvectorCreate(vertexLayout.stride);
-	Indices = OPvectorCreate(sizeof(ui16));
+	Vertices = OPvector::Create(vertexLayout.stride);
+	Indices = OPvector::Create(sizeof(ui16));
 }
 
 OPmeshBuilder* OPmeshBuilder::Create(OPvertexLayout vertexLayout) {
@@ -13,9 +13,9 @@ OPmeshBuilder* OPmeshBuilder::Create(OPvertexLayout vertexLayout) {
 }
 
 void OPmeshBuilder::Destroy() {
-	OPvectorDestroy(Vertices);
+	Vertices->Destroy();
 	OPfree(Vertices);
-	OPvectorDestroy(Indices);
+	Indices->Destroy();
 	OPfree(Indices);
 }
 
@@ -27,13 +27,13 @@ void OPmeshBuilder::Add(void* one, void* two, void* three) {
 	ind2 = ind0 + 2;
 	OPlog("Triangle %d, %d, %d", ind0, ind1, ind2);
 
-	OPvectorPush(Vertices, (ui8*)one);
-	OPvectorPush(Vertices, (ui8*)two);
-	OPvectorPush(Vertices, (ui8*)three);
+	Vertices->Push((ui8*)one);
+	Vertices->Push((ui8*)two);
+	Vertices->Push((ui8*)three);
 
-	OPvectorPush(Indices, (ui8*)&ind0);
-	OPvectorPush(Indices, (ui8*)&ind1);
-	OPvectorPush(Indices, (ui8*)&ind2);
+	Indices->Push((ui8*)&ind0);
+	Indices->Push((ui8*)&ind1);
+	Indices->Push((ui8*)&ind2);
 }
 
 void OPmeshBuilder::Add(void* one, void* two, void* three, void* four) {
@@ -46,29 +46,29 @@ void OPmeshBuilder::Add(void* one, void* two, void* three, void* four) {
 	ind4 = ind0 + 2;
 	ind5 = ind0 + 3;
 
-	OPvectorPush(Vertices, (ui8*)one);
-	OPvectorPush(Vertices, (ui8*)two);
-	OPvectorPush(Vertices, (ui8*)three);
-	OPvectorPush(Vertices, (ui8*)four);
+	Vertices->Push((ui8*)one);
+	Vertices->Push((ui8*)two);
+	Vertices->Push((ui8*)three);
+	Vertices->Push((ui8*)four);
 
-	OPvectorPush(Indices, (ui8*)&ind0);
-	OPvectorPush(Indices, (ui8*)&ind1);
-	OPvectorPush(Indices, (ui8*)&ind2);
-	OPvectorPush(Indices, (ui8*)&ind3);
-	OPvectorPush(Indices, (ui8*)&ind4);
-	OPvectorPush(Indices, (ui8*)&ind5);
+	Indices->Push((ui8*)&ind0);
+	Indices->Push((ui8*)&ind1);
+	Indices->Push((ui8*)&ind2);
+	Indices->Push((ui8*)&ind3);
+	Indices->Push((ui8*)&ind4);
+	Indices->Push((ui8*)&ind5);
 }
 
 void OPmeshBuilder::Add(void** vertices, ui16 vertCount, ui16* indices, ui16 indCount) {
 	ui16 ind, indOffset = (ui16)Vertices->_size;
 
 	for(ui16 i = 0; i < vertCount; i++) {
-		OPvectorPush(Vertices, (ui8*)vertices[i]);
+		Vertices->Push((ui8*)vertices[i]);
 	}
 	
 	for(ui16 i = 0; i < indCount; i++) {
 		ind = indices[i] + indOffset;
-		OPvectorPush(Indices, (ui8*)&ind);
+		Indices->Push((ui8*)&ind);
 	}
 }
 
@@ -80,7 +80,7 @@ OPmesh OPmeshBuilder::Build() {
 	mesh.Init(VertexLayout);
 	mesh.Build(
 		VertexLayout, OPindexSize::SHORT,
-		Vertices->_size, Indices->_size,
+		(ui32)Vertices->_size, (ui32)Indices->_size,
 		verts, indicies
 		);
 	return mesh;

@@ -53,7 +53,7 @@ inline void OPparticleUpdate(OPparticle* p, OPtimer* timer){
 
 inline void OPparticleSysSpawn(OPparticleSys* sys, OPparticle particle){
 	OPint ind = -1;
-	OPentHeapActivate(sys->heap, &ind);
+	sys->heap->Activate(&ind);
 	if (ind >= 0){
 		OPparticle* p = &((OPparticle*)sys->heap->Entities)[ind];
 		OPmemcpy(p, &particle, sizeof(OPparticle));

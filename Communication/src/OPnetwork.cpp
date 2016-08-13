@@ -43,7 +43,6 @@ struct OPnetworkAddress {
 	i32 iResult;
 };
 
-
 ui64 OPnetworkLookupAddress(OPchar *kpAddress, OPchar** resolved)
  {
  	ui64 a;
@@ -87,7 +86,7 @@ ui64 OPnetworkLookupAddress(OPchar *kpAddress, OPchar** resolved)
 
 OPnetwork* OPnetworkCreate(OPnetworkType networkType, OPnetworkPrototcol protocol) {
  	OPnetwork* network = (OPnetwork*)OPalloc(sizeof(OPnetwork));
- 	network->ConnectSocket = INVALID_SOCKET;
+ 	network->ConnectSocket = (i32)INVALID_SOCKET;
  	network->ConnectionType = networkType;
 	network->ConnectionProtocol = protocol;
 	network->Data.clientIndex = 0;
@@ -184,7 +183,7 @@ i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPchar* port) {
 	
 	
 	// Create the actual socket
- 	network->ConnectSocket = socket(networkAddress.result->ai_family, networkAddress.result->ai_socktype, networkAddress.result->ai_protocol);
+ 	network->ConnectSocket = (i32)socket(networkAddress.result->ai_family, networkAddress.result->ai_socktype, networkAddress.result->ai_protocol);
  	if (network->ConnectSocket == INVALID_SOCKET) {
 		OPnetworkLogError("Error at socket()");
  		freeaddrinfo(networkAddress.result);
@@ -204,13 +203,13 @@ i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPchar* port) {
 	}
 
 	for(p = servinfo; p != NULL; p = p->ai_next) {
-		if ((network->ConnectSocket = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
+		if ((network->ConnectSocket = (i32)socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
 			OPnetworkLogError("Error at socket()");
 			continue;
 		}
 		// setsockopt(network->ConnectSocket, SOL_SOCKET, SO_REUSEADDR, yes, sizeof(i32));
 	
-		if (connect(network->ConnectSocket, p->ai_addr, p->ai_addrlen) == -1) {
+		if (connect(network->ConnectSocket, p->ai_addr, (int)p->ai_addrlen) == -1) {
 			OPnetworkLogError("Error at connect()");
 	
 			CLOSESOCKET(network->ConnectSocket);
@@ -281,7 +280,7 @@ i32 OPnetworkServerStartUDP(OPnetwork* network) {
 	}
 
  	OPlogDebug("Connect Socket %d, %d, %d", networkAddress.result->ai_family, networkAddress.result->ai_socktype, networkAddress.result->ai_protocol);
- 	network->ConnectSocket = socket(networkAddress.result->ai_family, networkAddress.result->ai_socktype, networkAddress.result->ai_protocol);
+ 	network->ConnectSocket = (i32)socket(networkAddress.result->ai_family, networkAddress.result->ai_socktype, networkAddress.result->ai_protocol);
 	if (network->ConnectSocket == INVALID_SOCKET) {
 		OPnetworkLogError("Error at socket()");
 		freeaddrinfo(networkAddress.result);
@@ -425,7 +424,7 @@ i32 OPnetworkServerStartUDP(OPnetwork* network) {
 					 addrlen = sizeof remoteaddr;
 					 struct sockaddr* tmp = (struct sockaddr *)&remoteaddr;
 
-					 newfd = accept(network->ConnectSocket,
+					 newfd = (i32)accept(network->ConnectSocket,
 						 tmp,
 						 &addrlen
 						 );

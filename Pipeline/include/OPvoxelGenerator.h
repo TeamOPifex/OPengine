@@ -50,8 +50,8 @@ struct OPvoxelGeneratorData {
 	OPfloat Size;
 };
 
-void OPvoxelGeneratorInit(struct OPvoxelGenerator* gen, OPuint features);
-struct OPvoxelGenerator* OPvoxelGeneratorCreate(OPuint features);
+void OPvoxelGeneratorInit(struct OPvoxelGenerator* gen, ui32 features);
+struct OPvoxelGenerator* OPvoxelGeneratorCreate(ui32 features);
 void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, OPvec4 bones, OPvec4 weights, OPvec3 offset);
 OPmeshDesc OPvoxelGeneratorBuildDesc(struct OPvoxelGenerator* gen);
 OPmesh* OPvoxelGeneratorBuild(struct OPvoxelGenerator* gen);

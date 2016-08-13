@@ -112,7 +112,7 @@ OPvec2 OPwindowGLGetCursorPos(OPwindow* window) {
 	OPwindowGL* windowGL = (OPwindowGL*)window->internalPtr;
 	d64 x, y;
 	glfwGetCursorPos(windowGL->Handle, &x, &y);
-	return OPvec2(x, y);
+	return OPvec2((f32)x, (f32)y);
 }
 
 void OPwindowGLSetCursorPos(OPwindow* window, OPvec2 pos) {

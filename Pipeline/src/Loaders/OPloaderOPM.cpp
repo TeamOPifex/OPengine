@@ -97,19 +97,19 @@ OPMData OPMloadDataV2(OPstream* str) {
 	OPMData result;
 
 	// Already loaded version at this point
-	ui32 meshCount = OPreadui32(str);
+	ui32 meshCount = str->UI32();
 
 	for (ui32 i = 0; i < meshCount; i++) {
-		ui16 vertexMode = OPreadui16(str);
+		ui16 vertexMode = str->UI16();
 
 		if (vertexMode == 2) {
 			OPlog("Version 2 not supported yet");
 			continue;
 		}
 
-		ui32 features = OPreadui32(str);
-		ui32 verticesCount = OPreadui32(str);
-		ui32 indicesCount = OPreadui32(str);
+		ui32 features = str->UI32();
+		ui32 verticesCount = str->UI32();
+		ui32 indicesCount = str->UI32();
 
 		result.vertexCount = verticesCount;
 		result.indexCount = indicesCount;
@@ -137,12 +137,12 @@ OPMData OPMloadDataV2(OPstream* str) {
 
 		f32* vertData = (f32*)result.vertices;
 		for (ui32 j = 0; j < verticesCount * (result.vertexLayout.stride / sizeof(f32)); j++) {
-			vertData[j] = OPreadf32(str);
+			vertData[j] = str->F32();
 		}
 
 		ui16* indData = (ui16*)result.indices;
 		for (ui32 j = 0; j < indicesCount; j++) {
-			indData[j] = OPreadui16(str);
+			indData[j] = str->UI16();
 		}
 	}
 
@@ -150,12 +150,12 @@ OPMData OPMloadDataV2(OPstream* str) {
 }
 
 OPMData OPMloadData(OPstream* str) {
-	ui16 version = OPreadui16(str);
+	ui16 version = str->UI16();
 	OPlog("Reading OPM Version: %d", version);
 	if (version == 2) return OPMloadDataV2(str);
 
-	ui32 features = OPreadui32(str);
-	ui32 verticeCount = OPreadui32(str);
+	ui32 features = str->UI32();
+	ui32 verticeCount = str->UI32();
 
 	OPvec3 min = OPVEC3_ZERO;
 	OPvec3 max = OPVEC3_ZERO;
@@ -216,9 +216,9 @@ OPMData OPMloadData(OPstream* str) {
 
 		// Read Position
 		if(OPMhasFeature(features, Position)) {
-			x = OPreadf32(str);
-			y = OPreadf32(str);
-			z = OPreadf32(str);
+			x = str->F32();
+			y = str->F32();
+			z = str->F32();
 			positions[i].x = x;
 			positions[i].y = y;
 			positions[i].z = z;
@@ -234,9 +234,9 @@ OPMData OPMloadData(OPstream* str) {
 
 		// Read Normal
 		if(OPMhasFeature(features, Normal)) {
-			x = OPreadf32(str);
-			y = OPreadf32(str);
-			z = OPreadf32(str);
+			x = str->F32();
+			y = str->F32();
+			z = str->F32();
 			normals[i].x = x;
 			normals[i].y = y;
 			normals[i].z = z;
@@ -246,9 +246,9 @@ OPMData OPMloadData(OPstream* str) {
 
 		// Read Tangent
 		if (OPMhasFeature(features, Tangent)) {
-			x = OPreadf32(str);
-			y = OPreadf32(str);
-			z = OPreadf32(str);
+			x = str->F32();
+			y = str->F32();
+			z = str->F32();
 			tangents[i].x = x;
 			tangents[i].y = y;
 			tangents[i].z = z;
@@ -258,9 +258,9 @@ OPMData OPMloadData(OPstream* str) {
 
 		// Read BiTangent
 		if (OPMhasFeature(features, BiTangent)) {
-			x = OPreadf32(str);
-			y = OPreadf32(str);
-			z = OPreadf32(str);
+			x = str->F32();
+			y = str->F32();
+			z = str->F32();
 			bitangents[i].x = x;
 			bitangents[i].y = y;
 			bitangents[i].z = z;
@@ -270,8 +270,8 @@ OPMData OPMloadData(OPstream* str) {
 
 		// Read UV
 		if (OPMhasFeature(features, UV)) {
-			x = OPreadf32(str);
-			y = OPreadf32(str);
+			x = str->F32();
+			y = str->F32();
 			uvs[i].x = x;
 			uvs[i].y = y;
 			//OPlog("UV: %f %f", x, y);
@@ -279,9 +279,9 @@ OPMData OPMloadData(OPstream* str) {
 
 		// Read Color
 		if (OPMhasFeature(features, Color)) {
-			x = OPreadf32(str);
-			y = OPreadf32(str);
-			z = OPreadf32(str);
+			x = str->F32();
+			y = str->F32();
+			z = str->F32();
 			colors[i].x = x;
 			colors[i].y = y;
 			colors[i].z = z;
@@ -289,15 +289,15 @@ OPMData OPMloadData(OPstream* str) {
 
 		// Read Skinning
 		if (OPMhasFeature(features, Skinning)) {
-			boneIndices[i].x = (f32)OPreadui16(str);
-			boneIndices[i].y = (f32)OPreadui16(str);
-			boneIndices[i].z = (f32)OPreadui16(str);
-			boneIndices[i].w = (f32)OPreadui16(str);
+			boneIndices[i].x = (f32)str->UI16();
+			boneIndices[i].y = (f32)str->UI16();
+			boneIndices[i].z = (f32)str->UI16();
+			boneIndices[i].w = (f32)str->UI16();
 
-			boneWeights[i].x = OPreadf32(str);
-			boneWeights[i].y = OPreadf32(str);
-			boneWeights[i].z = OPreadf32(str);
-			boneWeights[i].w = OPreadf32(str);
+			boneWeights[i].x = str->F32();
+			boneWeights[i].y = str->F32();
+			boneWeights[i].z = str->F32();
+			boneWeights[i].w = str->F32();
 
 			//OPlog("%f %f %f %f %f %f %f %f",
 			//	boneIndices[i].x,
@@ -311,12 +311,12 @@ OPMData OPMloadData(OPstream* str) {
 		}
 	}
 
-	ui32 indicesCount = OPreadui32(str);
+	ui32 indicesCount = str->UI32();
 	ui16* indices = (ui16*)OPalloc(sizeof(ui16)* (indicesCount * 3));
 	for(ui32 i = 0; i < indicesCount; i++) {
-		indices[i * 3 + 0] = OPreadui16(str);
-		indices[i * 3 + 1] = OPreadui16(str);
-		indices[i * 3 + 2] = OPreadui16(str);
+		indices[i * 3 + 0] = str->UI16();
+		indices[i * 3 + 1] = str->UI16();
+		indices[i * 3 + 2] = str->UI16();
 	}
 
 	//i16* hierarchy = NULL;
@@ -326,41 +326,41 @@ OPMData OPMloadData(OPstream* str) {
 	//// Read Bones
 	//if(OPMhasFeature(features, Bones)) {
 	//	OPlog("Has Bones");
-	//	i32 boneCount = OPreadi16(str);
+	//	i32 boneCount = str->I16();
 	//	hierarchyCount = boneCount;
 	//	hierarchy = (i16*)OPalloc(sizeof(i16)* boneCount);
 	//	pose = (OPmat4*)OPallocZero(sizeof(OPmat4)* boneCount);
 	//
 	//	for(i32 i = 0; i < boneCount; i++) {
 
-	//		i32 boneIndex = OPreadi16(str);
+	//		i32 boneIndex = str->I16();
 	//		hierarchy[i] = boneIndex;
 
-	//		OPchar* name = OPreadstring(str);
+	//		OPchar* name = str->String();
 
 	//		OPmat4* p = &(pose[i]);
 	//		//OPlog("Mat4 Bone: %x", p);
 
 	//		for (i32 c = 0; c < 4; c++) {
-	//			p->cols[c].x = OPreadf32(str);
-	//			p->cols[c].y = OPreadf32(str);
-	//			p->cols[c].z = OPreadf32(str);
-	//			p->cols[c].w = OPreadf32(str);
+	//			p->cols[c].x = str->F32();
+	//			p->cols[c].y = str->F32();
+	//			p->cols[c].z = str->F32();
+	//			p->cols[c].w = str->F32();
 	//		}
 
 
-	//		// f32 px = OPreadf32(str);
-	//		// f32 py = OPreadf32(str);
-	//		// f32 pz = OPreadf32(str);
+	//		// f32 px = str->F32();
+	//		// f32 py = str->F32();
+	//		// f32 pz = str->F32();
 
-	//		// f32 rx = OPreadf32(str);
-	//		// f32 ry = OPreadf32(str);
-	//		// f32 rz = OPreadf32(str);
-	//		// f32 rw = OPreadf32(str);
+	//		// f32 rx = str->F32();
+	//		// f32 ry = str->F32();
+	//		// f32 rz = str->F32();
+	//		// f32 rw = str->F32();
 
-	//		// f32 sx = OPreadf32(str);
-	//		// f32 sy = OPreadf32(str);
-	//		// f32 sz = OPreadf32(str);
+	//		// f32 sx = str->F32();
+	//		// f32 sy = str->F32();
+	//		// f32 sz = str->F32();
 
 	//		OPmat4 matRotate;
 	//		OPmat4 matTranslate;
@@ -386,12 +386,12 @@ OPMData OPMloadData(OPstream* str) {
 	//i16 trackCount = 0;
 	//OPMdataAnim* tracks = NULL;
 	//if (OPMhasFeature(features, Animations) && OPMhasFeature(features, Bones)) {
-	//	trackCount = OPreadi16(str);
+	//	trackCount = str->I16();
 	//	tracks = (OPMdataAnim*)OPalloc(sizeof(OPMdataAnim)* trackCount);
 	//	for (OPint i = 0; i < trackCount; i++) {
-	//		tracks[i].Name = OPreadstring(str);
+	//		tracks[i].Name = str->String();
 
-	//		tracks[i].FrameCount = OPreadui32(str);
+	//		tracks[i].FrameCount = str->UI32();
 
 	//		OPint totalFrames = tracks[i].FrameCount * hierarchyCount;
 	//		tracks[i].Frames = (OPmat4*)OPalloc(sizeof(OPmat4)* totalFrames);
@@ -402,10 +402,10 @@ OPMData OPMloadData(OPstream* str) {
 	//			//OPlog("Mat4 Bone: %x", p);
 
 	//			for (i32 c = 0; c < 4; c++) {
-	//				p->cols[c].x = OPreadf32(str);
-	//				p->cols[c].y = OPreadf32(str);
-	//				p->cols[c].z = OPreadf32(str);
-	//				p->cols[c].w = OPreadf32(str);
+	//				p->cols[c].x = str->F32();
+	//				p->cols[c].y = str->F32();
+	//				p->cols[c].z = str->F32();
+	//				p->cols[c].w = str->F32();
 	//			}
 
 	//			tracks[i].Frames[j] = OPmat4Transpose(tracks[i].Frames[j]);
@@ -419,35 +419,35 @@ OPMData OPMloadData(OPstream* str) {
 
 	// Read Animation
 	//if(OPMhasFeature(features, Animations)) {
-	//	i8* name = OPreadstring(str);
-	//	ui32 keyframes = OPreadui32(str);
+	//	i8* name = str->String();
+	//	ui32 keyframes = str->UI32();
 	//	OPlog("Animation: %s", name);
 	//	OPlog("Frame Count %d", keyframes);
 	//	for(i32 i = 0; i < keyframes; i++) {
-	//		i32 index = OPreadi32(str);
-	//		ui32 keys = OPreadui32(str);
+	//		i32 index = str->I32();
+	//		ui32 keys = str->UI32();
 	//		OPlog("Keyframe %d", i);
 	//		OPlog("Bone %d", index);
 	//		for(i32 j = 0; j < keys; j++) {
-	//			ui32 keyFeatures = OPreadui32(str);
+	//			ui32 keyFeatures = str->UI32();
 	//			OPlog("Key: %d", (j + 1));
 	//			if(keyFeatures && Key_Time) {
-	//				f32 time = OPreadf32(str);
+	//				f32 time = str->F32();
 	//				OPlog("Keyframe Time: %f", time);
 	//			}
 
 	//			if(keyFeatures && Key_Position) {
-	//				f32 x = OPreadf32(str);
-	//				f32 y = OPreadf32(str);
-	//				f32 z = OPreadf32(str);
+	//				f32 x = str->F32();
+	//				f32 y = str->F32();
+	//				f32 z = str->F32();
 	//				//OPlog("Position: %f, %f, %f", x, y, z);
 	//			}
 
 	//			if(keyFeatures && Key_Rotation) {
-	//				f32 x = OPreadf32(str);
-	//				f32 y = OPreadf32(str);
-	//				f32 z = OPreadf32(str);
-	//				f32 w = OPreadf32(str);
+	//				f32 x = str->F32();
+	//				f32 y = str->F32();
+	//				f32 z = str->F32();
+	//				f32 w = str->F32();
 	//				OPlog("Rotation: %f, %f, %f, %f", x, y, z, w);
 	//			}
 	//		}
@@ -515,7 +515,7 @@ OPMData OPMloadData(OPstream* str) {
 	data.vertices = vertices->data;
 	//data.vertexSize = vertices->size * sizeof(f32);
 
-	data.bounds = OPboundingBox3DCreate(min, max);
+	data.bounds = OPboundingBox3D(min, max);
 	//data.hierarchy = hierarchy;
 	//data.pose = pose;
 	//data.hierarchyCount = hierarchyCount;
@@ -525,25 +525,25 @@ OPMData OPMloadData(OPstream* str) {
 
 
 	if (OPMhasFeature(features, Meta)) {
-		ui16 metaCount = OPreadui16(str);
+		ui16 metaCount = str->UI16();
 		data.metaCount = metaCount;
 
 		if (metaCount > 0) {
 			//OPlog("Meta Count: %d", metaCount);
 			OPMmeta* meta = (OPMmeta*)OPalloc(sizeof(OPMmeta) * metaCount);
 			for (i32 i = 0; i < metaCount; i++) {
-				OPchar* metaName = OPreadstring(str);
-				OPchar* metaType = OPreadstring(str);
+				OPchar* metaName = str->String();
+				OPchar* metaType = str->String();
 				OPlog("Meta Name: %s (%s)", metaName, metaType);
-				f32 x = OPreadf32(str);
-				f32 y = OPreadf32(str);
-				f32 z = OPreadf32(str);
-				f32 rx = OPreadf32(str);
-				f32 ry = OPreadf32(str);
-				f32 rz = OPreadf32(str);
-				f32 sx = OPreadf32(str);
-				f32 sy = OPreadf32(str);
-				f32 sz = OPreadf32(str);
+				f32 x = str->F32();
+				f32 y = str->F32();
+				f32 z = str->F32();
+				f32 rx = str->F32();
+				f32 ry = str->F32();
+				f32 rz = str->F32();
+				f32 sx = str->F32();
+				f32 sy = str->F32();
+				f32 sz = str->F32();
 				meta[i].Name = metaName;
 				meta[i].Type = metaType;
 				meta[i].Position = OPvec3Create(x, y, z);
@@ -559,7 +559,7 @@ OPMData OPMloadData(OPstream* str) {
 
 OPMData OPMloadData(const OPchar * filename)
 {
-	OPstream* stream = OPreadFile(filename);
+	OPstream* stream = OPfile::ReadFromFile(filename);
 	return OPMloadData(stream);
 }
 
@@ -621,7 +621,7 @@ OPhashMap* CreateTriangleTable(OPMData* data){
 	for(int i = (data->indexCount / 3); i--;){
 		int* tri;
 
-		sprintf(index, "%d", i * 3);
+		sprintf_s(index, 10, "%d", i * 3);
 		triTable->Get(index, (void**)&tri);
 
 		// if this vertex's tri has been stored, skip it
@@ -635,7 +635,7 @@ OPhashMap* CreateTriangleTable(OPMData* data){
 			tri[j] = i * 3 + j;
 
 			// store the triangle at this vertex's index
-			sprintf(index, "%d", i * 3 + j);
+			sprintf_s(index, 10, "%d", i * 3 + j);
 			triTable->Put(index, tri);
 		}
 	}
@@ -644,9 +644,9 @@ OPhashMap* CreateTriangleTable(OPMData* data){
 }
 
 OPlinkedList* CreateVertexList(OPMData* data){
-	OPlinkedList* vertList = OPllCreate();
-	for(OPint i = data->vertexCount; i--;)
-		OPllInsertLast(vertList, (void*)i);
+	OPlinkedList* vertList = OPlinkedList::Create();
+	for (OPint i = data->vertexCount; i--;)
+		vertList->InsertLast((void*)i);
 
 	return vertList;
 }
@@ -663,7 +663,7 @@ void UpdateBasis(OPvec3* axis, OPvec3* basis, OPvec3* position){
 OPvec3 GetCenterOfMass(OPMData* data, OPlinkedList* vertList){
 	OPMvertex* vertices = (OPMvertex*)data->vertices;
 	OPvec3 com = {0};
-	OPllNode* node = vertList->First;
+	OPlinkedListNode* node = vertList->First;
 	int verts = 0;
 
 	while(node){
@@ -699,16 +699,16 @@ OPvec3 GetNormal(OPvec3 bX, OPvec3 bY, OPvec3 bZ){
 void ReorderVerts(OPMData* data, OPlinkedList** spaceA, OPlinkedList** spaceB){
 	OPMvertex* vertices = (OPMvertex*)data->vertices;
 	OPint i = 0, j = 0;
-	OPllNode* node = (*spaceA)->First;
-	OPlinkedList* tempA = OPllCreate();
-	OPlinkedList* tempB = OPllCreate();
+	OPlinkedListNode* node = (*spaceA)->First;
+	OPlinkedList* tempA = OPlinkedList::Create();
+	OPlinkedList* tempB = OPlinkedList::Create();
 
 	// reorder spaceA
 	while(node){
 		OPMvertex temp = vertices[i];
 		vertices[i] = vertices[j = (OPint)node->Data];
 		vertices[j] = temp; // reinsert the displaced vert
-		OPllInsertLast(tempA, (void*)i);
+		tempA->InsertLast((void*)i);
 		++i;
 		node = node->Next;
 	}
@@ -719,14 +719,14 @@ void ReorderVerts(OPMData* data, OPlinkedList** spaceA, OPlinkedList** spaceB){
 		OPMvertex temp = vertices[i];
 		vertices[i] = vertices[j = (OPint)node->Data];
 		vertices[j] = temp; // reinsert the displaced vert
-		OPllInsertLast(tempB, (void*)i);
+		tempB->InsertLast((void*)i);
 		++i;
 		node = node->Next;
 	}
 
 	// destroy the old input lists
-	OPllDestroy(*spaceA);
-	OPllDestroy(*spaceB);
+	(*spaceA)->Destroy();
+	(*spaceB)->Destroy();
 
 	// set to the reorderd
 	*spaceA = tempA;
@@ -734,15 +734,15 @@ void ReorderVerts(OPMData* data, OPlinkedList** spaceA, OPlinkedList** spaceB){
 }
 
 OPlinkedList* CreateTriList(OPMData* data, OPhashMap* triTable, OPlinkedList* vertList, OPint atLeaf){
-	OPlinkedList* triList = OPllCreate();
-	OPllNode* node = vertList->First;
+	OPlinkedList* triList = OPlinkedList::Create();
+	OPlinkedListNode* node = vertList->First;
 	OPchar index[10];
 
 	while(node){
 		OPint* tri = NULL;
 
 #ifdef OPIFEX_OS64
-			sprintf(index, "%lld", (OPint)node->Data);
+			sprintf_s(index, 10, "%lld", (OPint)node->Data);
 #else
 			sprintf(index, "%d", (OPint)node->Data);
 #endif
@@ -751,7 +751,7 @@ OPlinkedList* CreateTriList(OPMData* data, OPhashMap* triTable, OPlinkedList* ve
 		// only add indices if this tri hasn't been visited
 		if(!tri[3]){
 			for(OPint i = 3; i--;){
-				OPllInsertLast(triList, (void*)tri[i]);
+				triList->InsertLast((void*)tri[i]);
 			}
 			if(atLeaf) tri[3] = 1; // mark tri as visited
 		}
@@ -762,7 +762,7 @@ OPlinkedList* CreateTriList(OPMData* data, OPhashMap* triTable, OPlinkedList* ve
 }
 
 OPMPartNode CreateOPMPartNode(OPlinkedList* triList){
-	OPllNode* node = triList->First;
+	OPlinkedListNode* node = triList->First;
 	OPuint min = (OPint)node->Data, max = (OPint)node->Data;
 
 	while(node){
@@ -784,9 +784,9 @@ OPMPartNode CreateOPMPartNode(OPlinkedList* triList){
 
 OPMPartNode OPMPartition(OPMData* data, OPhashMap* triTable, OPlinkedList* vertList, OPint depth){
 	OPMvertex* vertices = (OPMvertex*)data->vertices;
-	OPlinkedList* spaceA = OPllCreate();
-	OPlinkedList* spaceB = OPllCreate();
-	OPllNode* node = vertList->First;
+	OPlinkedList* spaceA = OPlinkedList::Create();
+	OPlinkedList* spaceB = OPlinkedList::Create();
+	OPlinkedListNode* node = vertList->First;
 
 	if(depth){
 		OPvec3 com = GetCenterOfMass(data, vertList);
@@ -818,10 +818,10 @@ OPMPartNode OPMPartition(OPMData* data, OPhashMap* triTable, OPlinkedList* vertL
 			OPvec3 diff = vertices[i].Position - com;
 
 			if(OPvec3Dot(diff, normal) > 0){
-				OPllInsertLast(spaceA, (void*)i);
+				spaceA->InsertLast((void*)i);
 			}
 			else{
-				OPllInsertLast(spaceB, (void*)i);
+				spaceB->InsertLast((void*)i);
 			}
 			node = node->Next;
 		}
@@ -849,8 +849,8 @@ OPMPartNode OPMPartition(OPMData* data, OPhashMap* triTable, OPlinkedList* vertL
 		};
 
 		// Free up stuff
-		OPllDestroy(spaceA); OPllDestroy(spaceB);
-		OPllDestroy(trisA); OPllDestroy(trisB);
+		spaceA->Destroy(); spaceB->Destroy();
+		trisA->Destroy(); trisB->Destroy();
 
 		return partNode;
 	}
@@ -863,7 +863,7 @@ OPMPartNode OPMPartition(OPMData* data, OPhashMap* triTable, OPlinkedList* vertL
 
 OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh){
 	OPlog("Reading File Data");
-	OPstream* str = OPreadFile(filename);
+	OPstream* str = OPfile::ReadFromFile(filename);
 	OPlog("Reading OPMloadData");
 	OPMData data = OPMloadData(str);
 
@@ -892,7 +892,7 @@ OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh){
 }
 
 OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh) {
-	OPstream* str = OPreadFile(filename);
+	OPstream* str = OPfile::ReadFromFile(filename);
 	OPMData data = OPMloadData(str);
 	
 	OPmeshPacked temp = OPmeshPacked(

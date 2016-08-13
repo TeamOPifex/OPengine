@@ -99,7 +99,7 @@ OPchar* OPstringCreateMerged(const OPchar* str, const OPchar* add) {
 	#else
 	result = strcpy(result, str);
 	#endif
-	strcat(result, add);
+	strcat_s(result, lenA + lenB + 1, add);
 	return result;
 }
 
@@ -122,4 +122,8 @@ OPint OPstringContains(OPchar* str, const OPchar* cmp) {
 void OPstringToLower(OPchar* str) {
 	OPchar* p = str;
 	for ( ; *p; ++p) *p = tolower(*p);
+}
+
+void OPstringScan(OPchar* destination, const OPchar* format, ...) {
+
 }

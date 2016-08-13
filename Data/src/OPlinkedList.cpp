@@ -1,77 +1,67 @@
 #include "./Data/include/OPlinkedList.h"
 
-//-----------------------------------------------------------------------------
-OPlinkedList* OPllCreate(){
-	OPlinkedList* list = (OPlinkedList*)OPalloc(sizeof(OPlinkedList));
-	list->_size = 0;
-	list->First = list->Last = NULL;
-	return list;
-}
-//-----------------------------------------------------------------------------
-OPint OPllDestroy(OPlinkedList* list){
-	OPllNode* node = list->First;
+void OPlinkedList::Destroy(){
+	OPlinkedListNode* temp;
+	OPlinkedListNode* node = First;
 	while (node) {
-		OPllNode* temp = node;
+		temp = node;
 		node = node->Next;
-
-		OPllRemove(list, temp);
+		Remove(temp);
 	}
-	return 1;
 }
-//-----------------------------------------------------------------------------
-OPllNode* OPllInsertFirst(OPlinkedList* list, void* data){
-	OPllNode* node = (OPllNode*)OPalloc(sizeof(OPllNode));
+
+OPlinkedListNode* OPlinkedList::InsertFirst(void* data){
+	OPlinkedListNode* node = OPNEW(OPlinkedListNode);
 	node->Data = data;
 	node->Next = node->Prev = NULL;
-	++list->_size;
+	++_size;
 
-	if(list->First == NULL){
-		list->Last = node;
+	if(First == NULL){
+		Last = node;
 	}
 	else{
-		node->Next = list->First;
-		list->First->Prev = node;
+		node->Next = First;
+		First->Prev = node;
 	}
 
-	list->First = node;
+	First = node;
 
 	return node;
 }
-//-----------------------------------------------------------------------------
-OPllNode* OPllInsertLast(OPlinkedList* list, void* data){
-	OPllNode* node = (OPllNode*)OPalloc(sizeof(OPllNode));
+
+OPlinkedListNode* OPlinkedList::InsertLast(void* data){
+	OPlinkedListNode* node = OPNEW(OPlinkedListNode);
 	node->Data = data;
 	node->Prev = node->Next = NULL;
-	++list->_size;
+	_size++;
 
-	if(list->Last == NULL){
-		list->First = node;
+	if(Last == NULL){
+		First = node;
 	}
 	else{
-		node->Prev = list->Last;
-		list->Last->Next = node;
+		node->Prev = Last;
+		Last->Next = node;
 	}
 
-	list->Last = node;
+	Last = node;
 
 	return node;
 }
-//-----------------------------------------------------------------------------
-void* OPllRemove(OPlinkedList* list, OPllNode* toRemove){
 
-	OPllNode *next = toRemove->Next, *prev = toRemove->Prev;
-	void* data = toRemove->Data;
+void* OPlinkedList::Remove(OPlinkedListNode* node){
+
+	OPlinkedListNode *next = node->Next, *prev = node->Prev;
+	void* data = node->Data;
 
 	if(prev) prev->Next = next;
-	else list->First = next;
+	else First = next;
 
 	if(next) next->Prev = prev;
-	else list->Last = prev;
+	else Last = prev;
 
-	OPfree(toRemove);
-	--list->_size;
+	OPfree(node);
+
+	_size--;
 
 	return data;
 }
-//-----------------------------------------------------------------------------
-OPint OPllGetSize(OPlinkedList* list){ return list->_size; }

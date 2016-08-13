@@ -17,8 +17,8 @@ struct OPindexBuffer {
 		return OPRENDERER_ACTIVE->IndexBuffer.Init(this);
 	}
 
-	inline void SetData(OPindexSize elementSize, ui32 count, const void* data) {
-		OPRENDERER_ACTIVE->IndexBuffer.SetData(this, elementSize, count, data);
+	inline void SetData(OPindexSize elementSize, OPuint count, const void* data) {
+		OPRENDERER_ACTIVE->IndexBuffer.SetData(this, elementSize, (ui32)count, data);
 	}
 
 	inline void Bind() {

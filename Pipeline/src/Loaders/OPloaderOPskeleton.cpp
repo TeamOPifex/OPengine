@@ -17,7 +17,7 @@ void OPskeletonAddLoader() {
 OPint OPloaderOPskeletonLoad(OPstream* str, OPskeleton** skeleton) {
 	//OPstream* str = OPreadFile(filename);
 
-	i32 boneCount = OPreadi16(str);
+	i32 boneCount = str->I16();
 
 	ASSERT(boneCount < OPSKELETON_MAX_BONE_COUNT, "Skeleton cannot contain more than OPSKELETON_MAX_BONE_COUNT");
 
@@ -26,15 +26,15 @@ OPint OPloaderOPskeletonLoad(OPstream* str, OPskeleton** skeleton) {
 	OPmat4 pose[OPSKELETON_MAX_BONE_COUNT];
 
 	for (i32 i = 0; i < boneCount; i++) {
-		hierarchy[i] = OPreadi16(str);
-		jointNames[i] = OPreadstring(str);
+		hierarchy[i] = str->I16();
+		jointNames[i] = str->String();
 		OPlog(jointNames[i]);
 
 		for (i32 c = 0; c < 4; c++) {
-			pose[i][c][0] = OPreadf32(str);
-			pose[i][c][1] = OPreadf32(str);
-			pose[i][c][2] = OPreadf32(str);
-			pose[i][c][3] = OPreadf32(str);
+			pose[i][c][0] = str->F32();
+			pose[i][c][1] = str->F32();
+			pose[i][c][2] = str->F32();
+			pose[i][c][3] = str->F32();
 		}
 
 		pose[i] = OPmat4Transpose(pose[i]);

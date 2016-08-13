@@ -1,6 +1,7 @@
 #pragma once
-#ifndef OPEngine_Core_Timer
-#define OPEngine_Core_Timer
+
+struct OPtimer;
+typedef struct OPtimer OPtimer;
 
 #include "OPtypes.h"
 
@@ -76,6 +77,3 @@ struct OPtimer{
 	*/
 	inline ui64 Total() { return TotalGametime;  }
 } ;
-typedef struct OPtimer OPtimer;
-
-#endif

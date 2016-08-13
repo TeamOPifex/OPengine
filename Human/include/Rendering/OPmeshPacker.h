@@ -19,8 +19,8 @@ struct OPmeshPacker{
 	OPuint vertexElementOffset;
 	OPuint vertexOffset;
 	OPuint indexOffset;
-	OPstream vertices;
-	OPstream indices;
+	OPstream* vertices;
+	OPstream* indices;
 	OPint built;
 
 	static OPmeshPacker* Create();

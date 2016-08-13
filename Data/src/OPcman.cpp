@@ -64,14 +64,14 @@ void OPcmanUpdate(struct OPtimer* timer) {
 			for (j = 0; j < bucket.count; j++) {
 				asset = (OPasset*)bucket.pairs[j].value;
 				if (asset != NULL && asset->Reload != NULL) { // Only check the file, if there's a reload function
-					change = OPfileLastChange(asset->AbsolutePath);
+					change = OPfile::LastChange(asset->AbsolutePath);
 					if (change != asset->LastChange) {
 						// OPlg("$, %s",asset->FullPath);
-						OPstream* str = OPreadFileLarge(asset->FullPath, 1024);
+						OPstream* str = OPfile::ReadFromFile(asset->FullPath, 1024);
 						if (asset->Reload(str, &asset->Asset)) {
 							asset->LastChange = change;
 						}
-						OPstreamDestroy(str);
+						str->Destroy();
 					}
 				}
 			}
@@ -82,9 +82,9 @@ void OPcmanUpdate(struct OPtimer* timer) {
 
 void OPcmanAddLoader(OPassetLoader* loader) {
 	if (_OP_CMAN_ASSETLOADERS == NULL) {
-		_OP_CMAN_ASSETLOADERS = OPlistCreate(16, sizeof(OPassetLoader));
+		_OP_CMAN_ASSETLOADERS = OPlist::Create(16, sizeof(OPassetLoader));
 	}
-	OPlistPush(_OP_CMAN_ASSETLOADERS, (ui8*)loader);
+	_OP_CMAN_ASSETLOADERS->Push((ui8*)loader);
 }
 
 // ______                _   _
@@ -107,7 +107,7 @@ OPint OPcmanInit(const OPchar* dir){
 
 	if (_OP_CMAN_ASSETLOADERS == NULL) {
 		OPlog("\n\n!!! NO ASSET LOADERS HAVE BEEN ADDED\n\n");
-		_OP_CMAN_ASSETLOADERS = OPlistCreate(16, sizeof(OPassetLoader));
+		_OP_CMAN_ASSETLOADERS = OPlist::Create(16, sizeof(OPassetLoader));
 	}
 
 	if (dir) {
@@ -116,15 +116,15 @@ OPint OPcmanInit(const OPchar* dir){
 		OP_CMAN_ASSET_FOLDER = OPstringCreateMerged(OPEXECUTABLE_PATH, "assets/"); // OPstringCopy("assets/");
 	}
 
-	OP_CMAN_ASSET_LOADER_COUNT = OPlistSize(_OP_CMAN_ASSETLOADERS);
+	OP_CMAN_ASSET_LOADER_COUNT = _OP_CMAN_ASSETLOADERS->Size();
 	OP_CMAN_ASSETLOADERS = (OPassetLoader*)OPalloc(sizeof(OPassetLoader)* OP_CMAN_ASSET_LOADER_COUNT);
 
 	for (i = 0; i < OP_CMAN_ASSET_LOADER_COUNT; i++) {
-		loader = (OPassetLoader*)OPlistGet(_OP_CMAN_ASSETLOADERS, i);
+		loader = (OPassetLoader*)_OP_CMAN_ASSETLOADERS->Get(i);
 		OPmemcpy(&OP_CMAN_ASSETLOADERS[i], loader, sizeof(OPassetLoader));
 	}
 
-	OPlistDestroy(_OP_CMAN_ASSETLOADERS);
+	_OP_CMAN_ASSETLOADERS->Destroy();
 	OPfree(_OP_CMAN_ASSETLOADERS);
 	_OP_CMAN_ASSETLOADERS = NULL;
 
@@ -160,7 +160,7 @@ OPint OPcmanInit(const OPchar* dir){
 	OP_CMAN_HASHMAP.Init(OP_CMAN_CAP);
 
 	// create and copy the purge list
-	OP_CMAN_PURGE = OPllCreate();
+	OP_CMAN_PURGE = OPlinkedList::Create();
 
 	return 1;
 }
@@ -205,18 +205,18 @@ OPint OPcmanLoad(const OPchar* key){
 				// build the path string
 				len = (OPuint)strlen(loader.AssetTypePath) + (OPuint)strlen(key);
 				fullPath = (OPchar*)OPalloc(sizeof(OPchar) * len + 1);
-				OPbzero(fullPath, len);
+				fullPath[0] = NULL;
 				if(!fullPath) return OP_CMAN_PATH_ALLOC_FAILED;
-				fullPath = strcat(fullPath, loader.AssetTypePath);
-				fullPath = strcat(fullPath, key);
+				strcat_s(fullPath, len, loader.AssetTypePath);
+				strcat_s(fullPath, len, key);
 
 				// load the asset
 				OPstream* str = OPcmanGetResource(fullPath);
 				if (str == NULL) {
-					str = OPreadFileLarge(fullPath, 1024);
+					str = OPfile::ReadFromFile(fullPath, 1024);
 				}
 				success = loader.Load(str, &asset);
-				OPstreamDestroy(str);
+				str->Destroy();
 				if(success <= 0) {
 					OPlog("Failed to load %s", fullPath);
 					OPfree(fullPath);
@@ -242,7 +242,7 @@ OPint OPcmanLoad(const OPchar* key){
 				assetBucket->Reload = loader.Reload;
 				assetBucket->FullPath = fullPath;
 				assetBucket->AbsolutePath = OPstringCreateMerged(OP_CMAN_ASSET_FOLDER, fullPath);
-				assetBucket->LastChange = OPfileLastChange(assetBucket->AbsolutePath);
+				assetBucket->LastChange = OPfile::LastChange(assetBucket->AbsolutePath);
 #endif
 
 				// finally insert into the hashmap
@@ -291,15 +291,15 @@ void* OPcmanGet(const OPchar* key){
 OPint OPcmanDelete(const OPchar* key){
 	OPasset* bucket = NULL;
 	OP_CMAN_HASHMAP.Get(key, (void**)&bucket);
-	OPllInsertLast(OP_CMAN_PURGE, bucket);
+	OP_CMAN_PURGE->InsertLast(bucket);
 	return bucket->Dirty = 1;
 }
 
 OPint OPcmanPurge(){
-	OPllNode* n = OP_CMAN_PURGE->First;
+	OPlinkedListNode* n = OP_CMAN_PURGE->First;
 	while (n){
 		OPasset* bucket = (OPasset*)n->Data;
-		OPllNode* next = n->Next;
+		OPlinkedListNode* next = n->Next;
 		if(bucket->Dirty){
 			if(!bucket->Unload(bucket->Asset))
 				return 0;
@@ -310,7 +310,7 @@ OPint OPcmanPurge(){
 			OPfree(bucket);
 			bucket = NULL;
 		}
-		OPllRemove(OP_CMAN_PURGE, n);
+		OP_CMAN_PURGE->Remove(n);
 		n = next;
 	}
 	return 1;
@@ -349,7 +349,7 @@ void OPcmanDestroy() {
 	OPcmanPurge();
 
 	if (_OP_CMAN_ASSETLOADERS) {
-		OPlistDestroy(_OP_CMAN_ASSETLOADERS);
+		_OP_CMAN_ASSETLOADERS->Destroy();
 		OPfree(_OP_CMAN_ASSETLOADERS);
 	}
 
@@ -357,7 +357,7 @@ void OPcmanDestroy() {
 	OPfree(OP_CMAN_ASSETLOADERS);
 	OP_CMAN_HASHMAP.Destroy();
 	if (OP_CMAN_PURGE) {
-		OPllDestroy(OP_CMAN_PURGE);
+		OP_CMAN_PURGE->Destroy();
 		OPfree(OP_CMAN_PURGE);
 	}
 }
@@ -368,19 +368,19 @@ void OPcmanLoadResourcePack(const OPchar* filename) {
 
 	// Opens the File handle
 	// The file handle will stay open until the resourceFile is unloaded
-	resource->resourceFile = OPfileOpen(filename);
+	resource->resourceFile.Init(filename);
 
 	// Get the resourceFile version
-	ui8 version = OPfileReadui8(&resource->resourceFile);
+	ui8 version = resource->resourceFile.Readui8();
 	OPlogDebug("Version %d", version);
 
 	// The number of resources in this pack
-	resource->resourceCount = OPfileReadui16(&resource->resourceFile);
+	resource->resourceCount = resource->resourceFile.Readui16();
 
 	// The total length of all names
 	// This is used to make a contiguous block of OPchar data so that
 	// the lookup of resources is faster
-	ui32 lengthOfNames = OPfileReadui32(&resource->resourceFile);
+	ui32 lengthOfNames = resource->resourceFile.Readui32();
 
 	// Allocate the necessary data
 	// TODO: (garrett) allocate this into a single struct so that there's only 1 allocation
@@ -392,9 +392,9 @@ void OPcmanLoadResourcePack(const OPchar* filename) {
 
 	for (ui16 i = 0; i < resource->resourceCount; i++) {
 		// TODO: (garrett) Read in the string into a contiguous block of OPchar data
-		resource->resourceNames[i] = OPfileReadString(&resource->resourceFile);
-		resource->resourceOffset[i] = OPfileReadui32(&resource->resourceFile);
-		resource->resourceSize[i] = OPfileReadui32(&resource->resourceFile);
+		resource->resourceNames[i] = resource->resourceFile.ReadString();
+		resource->resourceOffset[i] = resource->resourceFile.Readui32();
+		resource->resourceSize[i] = resource->resourceFile.Readui32();
 
 		OPlogDebug("Resource %s", resource->resourceNames[i]);
 	}
@@ -418,8 +418,8 @@ OPstream* OPcmanGetResource(const OPchar* resourceName) {
 			ui32 size = resource.resourceSize[j];
 
 			// TODO: (garrett) This should be done in a way that will support threading
-			OPfileSeek(&resource.resourceFile, offset);
-			OPstream* stream = OPfileRead(&resource.resourceFile, size);
+			resource.resourceFile.Seek(offset);
+			OPstream* stream = resource.resourceFile.Read(size);
 			stream->Source = resource.resourceNames[j];
 
 			return stream;

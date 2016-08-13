@@ -1,6 +1,4 @@
 #pragma once
-#ifndef OP_MATH_QUATERNION
-#define OP_MATH_QUATERNION
 
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmemory.h"
@@ -299,4 +297,3 @@ inline OPquat OPquatLerp(OPquat a, OPquat b, OPfloat p){
 	OPquat bs = OPquatScl(b, 1 - p);
 	return OPquatAdd(as, bs);
 }
-#endif

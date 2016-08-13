@@ -11,8 +11,8 @@ void __opSpriteScaleFrames(OPtexture* tex, OPspriteSheet* ss) {
 	ASSERT(tex, "__opSpriteScaleFrames() - spritesheet null");
 	OPint i = 0;
 	OPvec2 size;
-	size.x = tex->textureDesc.width;
-	size.y = tex->textureDesc.height;
+	size.x = (f32)tex->textureDesc.width;
+	size.y = (f32)tex->textureDesc.height;
 
 	for (i = ss->Sprites; i--;){
 		OPsprite* s = (OPsprite*)OPcmanGet(ss->Names[i]);
@@ -68,16 +68,16 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 	sheet = (OPtexture*)OPalloc(sizeof(OPtexture));
 
 	// read the dimensions of the image
-	width = OPreadi32(str);
-	height = OPreadi32(str);
+	width = str->I32();
+	height = str->I32();
 
 #ifdef _DEBUG
 	OPlog("Sprite sheet %dx%d", width, height);
 #endif
 
 	// read the sprite, and frame counts
-	sprites = OPreadi32(str);
-	frames = OPreadi32(str);
+	sprites = str->I32();
+	frames = str->I32();
 
 #ifdef _DEBUG
 	OPlog("Sprites: %d, Frames: %d", sprites, frames);
@@ -99,7 +99,7 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 			// setup a proxy var for frame data
 			OPasset* assetBucket = NULL;
 
-			OPchar* nameData = OPreadstring(str);
+			OPchar* nameData = str->String();
 			OPchar* name = (OPchar*)nameData;
 			ui32 nameDataLength = (ui32)strlen(name);
 
@@ -116,7 +116,7 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 
 			(*ss)->Names[i] = finalName;
 			OPfree(nameData);
-			ui32 flags = OPreadi32(str);
+			ui32 flags = str->I32();
 			ui32 spriteFrames = 1;
 			OPspriteFrame* spriteFrameData = frameData + frameNum;
 			OPsprite* sprite = (OPsprite*)OPallocZero(sizeof(OPsprite));
@@ -130,7 +130,7 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 
 			if (flags){
 				// this sprite has animation frames
-				spriteFrames = OPreadi32(str);
+				spriteFrames = str->I32();
 			}
 
 #ifdef _DEBUG
@@ -142,11 +142,11 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 				// read the sprite dimensions, scale them
 				// to fit within UV space
 				OPvec2 offset;
-				offset.x = (OPfloat)OPreadi32(str);
-				offset.y = (OPfloat)OPreadi32(str);
+				offset.x = (OPfloat)str->I32();
+				offset.y = (OPfloat)str->I32();
 				OPvec2 size;
-				size.x = (OPfloat)OPreadi32(str);
-				size.y = (OPfloat)OPreadi32(str);
+				size.x = (OPfloat)str->I32();
+				size.y = (OPfloat)str->I32();
 
 				// setup frame structure, copy into the frame buffer
 				OPspriteFrame frame = {
@@ -258,8 +258,8 @@ OPint OPspriteSheetUnload(void* ss){
 }
 
 OPvec2 OPspriteCurrentFrameSize(OPsprite* sprite) {
-	f32 sheetWidth = sprite->Sheet->textureDesc.width;
-	f32 sheetHeight = sprite->Sheet->textureDesc.height;
+	f32 sheetWidth = (f32)sprite->Sheet->textureDesc.width;
+	f32 sheetHeight = (f32)sprite->Sheet->textureDesc.height;
 	f32 frameWidth = (sprite->Frames[sprite->Frame].Size.x * sheetWidth);
 	f32 frameHeight = (sprite->Frames[sprite->Frame].Size.y * sheetHeight);
 	return OPvec2(frameWidth, frameHeight);

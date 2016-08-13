@@ -1,5 +1,4 @@
-#ifndef OP_MATH_VECTOR4
-#define OP_MATH_VECTOR4
+#pragma once
 
 struct OPvec4;
 
@@ -167,18 +166,18 @@ inline OPfloat OPvec4Dist(OPvec4 a, OPvec4 b) {
 }
 
 inline OPvec4 OPvec4Read(OPstream* str) {
-	OPvec4 temp(OPreadf32(str),
-		OPreadf32(str),
-		OPreadf32(str),
-		OPreadf32(str));
+	OPvec4 temp(str->F32(),
+		str->F32(),
+		str->F32(),
+		str->F32());
 	return temp;
 }
 
 inline void OPvec4Write(OPvec4 v, OPstream* str) {
-	OPwrite(str, &v.x, sizeof(f32));
-	OPwrite(str, &v.y, sizeof(f32));
-	OPwrite(str, &v.z, sizeof(f32));
-	OPwrite(str, &v.w, sizeof(f32));
+	str->Write(&v.x);
+	str->Write(&v.y);
+	str->Write(&v.z);
+	str->Write(&v.w);
 }
 
 inline OPvec4 OPvec4randNorm(){
@@ -213,5 +212,3 @@ inline void OPvec4Div(OPvec4* dst, OPvec4* a, OPfloat b) {
 	dst->z = a->z / b;
 	dst->w = a->w / b;
 }
-
-#endif

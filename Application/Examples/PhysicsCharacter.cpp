@@ -213,7 +213,7 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 		}
 	}
 
-	OPvec3 disp = OPvec3Create(0, -0.98 * 0.25, 0);
+	OPvec3 disp = OPvec3Create(0.0f, -0.98f * 0.25f, 0.0f);
 	OPvec2 leftThumb = OPgamePadGet(OPGAMEPAD_ONE)->LeftThumb();
 	disp.x += leftThumb.x * 0.5f;
 	disp.z -= leftThumb.y * 0.5f;

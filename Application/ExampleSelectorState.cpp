@@ -37,7 +37,7 @@ void ExampleSelectorEnter(OPgameState* last) {
     // The background image to use
 	OPcmanLoadGet("subtle-irongrip.png");
 	exampleSelector.Background = OPtexture2DCreate((OPtexture*)OPcmanLoadGet("subtle-irongrip.png"), NULL, OPVEC2_ZERO, OPvec2(3, 3));
-	exampleSelector.Background->Scale = OPvec2(5,2.81);
+	exampleSelector.Background->Scale = OPvec2(5.0f,2.81f);
 
     if(!exampleSelector.Initialized) {
        // This ensures that our menu selections stay in place
@@ -178,7 +178,7 @@ void ExampleSelectorRender(OPfloat delta) {
 	// RENDER
 	///////////////
 
-	OPrenderClear(0.4, 0.1, 0.1);
+	OPrenderClear(0.4f, 0.1f, 0.1f);
 	//
 	// // Render the background
 	OPtexture2DRender(exampleSelector.Background);

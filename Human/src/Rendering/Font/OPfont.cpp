@@ -16,59 +16,59 @@ OPint OPfontLoad(OPstream* str, OPfont** data) {
 	i16 version;
 	//OPstream* str = OPreadFile(filename);
 
-	version = OPreadi16(str);
-	font->size = OPreadf32(str);
-	font->hinting = OPreadi32(str);
-	font->outlineType = OPreadi32(str);
-	font->outlineThickness = OPreadf32(str);
-	font->filtering = OPreadi32(str);
-	font->lcdWeights[0] = OPreadi8(str);
-	font->lcdWeights[1] = OPreadi8(str);
-	font->lcdWeights[2] = OPreadi8(str);
-	font->lcdWeights[3] = OPreadi8(str);
-	font->lcdWeights[4] = OPreadi8(str);
-	font->kerning = OPreadi32(str);
-	font->height = OPreadf32(str);
-	font->lineGap = OPreadf32(str);
-	font->ascender = OPreadf32(str);
-	font->descender = OPreadf32(str);
-	font->underlinePosition = OPreadf32(str);
-	font->underlineThickness = OPreadf32(str);
+	version = str->I16();
+	font->size = str->F32();
+	font->hinting = str->I32();
+	font->outlineType = str->I32();
+	font->outlineThickness = str->F32();
+	font->filtering = str->I32();
+	font->lcdWeights[0] = str->I8();
+	font->lcdWeights[1] = str->I8();
+	font->lcdWeights[2] = str->I8();
+	font->lcdWeights[3] = str->I8();
+	font->lcdWeights[4] = str->I8();
+	font->kerning = str->I32();
+	font->height = str->F32();
+	font->lineGap = str->F32();
+	font->ascender = str->F32();
+	font->descender = str->F32();
+	font->underlinePosition = str->F32();
+	font->underlineThickness = str->F32();
 
 	i16 glyphCount;
-	glyphCount = OPreadi16(str);
-	font->glyphs = OPvectorCreate(sizeof(OPfontGlyph));
+	glyphCount = str->I16();
+	font->glyphs = OPvector::Create(sizeof(OPfontGlyph));
 
 	for (i16 i = glyphCount; i--;) {
 		OPfontGlyph* glyph = (OPfontGlyph*)OPalloc(sizeof(OPfontGlyph));
 
-		glyph->charcode = OPreadi8(str);
-		glyph->width = OPreadi32(str);
-		glyph->height = OPreadi32(str);
-		glyph->offsetX = OPreadi32(str);
-		glyph->offsetY = OPreadi32(str);
-		glyph->advanceX = OPreadf32(str);
-		glyph->advanceY = OPreadf32(str);
-		glyph->textureCoordinates.x = OPreadf32(str);
-		glyph->textureCoordinates.y = OPreadf32(str);
-		glyph->textureCoordinates.z = OPreadf32(str);
-		glyph->textureCoordinates.w = OPreadf32(str);
+		glyph->charcode = str->I8();
+		glyph->width = str->I32();
+		glyph->height = str->I32();
+		glyph->offsetX = str->I32();
+		glyph->offsetY = str->I32();
+		glyph->advanceX = str->F32();
+		glyph->advanceY = str->F32();
+		glyph->textureCoordinates.x = str->F32();
+		glyph->textureCoordinates.y = str->F32();
+		glyph->textureCoordinates.z = str->F32();
+		glyph->textureCoordinates.w = str->F32();
 
 		i16 kerningCount;
-		kerningCount = OPreadi16(str);
-		glyph->kerning = OPvectorCreate(sizeof(OPfontKerning));
+		kerningCount = str->I16();
+		glyph->kerning = OPvector::Create(sizeof(OPfontKerning));
 		for (i16 j = kerningCount; j--;) {
 			OPfontKerning kerning;
 
-			kerning.charcode = OPreadi8(str);
-			kerning.kerning = OPreadf32(str);
-			OPvectorPush(glyph->kerning, (ui8*)&kerning);
+			kerning.charcode = str->I8();
+			kerning.kerning = str->F32();
+			glyph->kerning->Push((ui8*)&kerning);
 		}
 
-		glyph->outlineType = OPreadi32(str);
-		glyph->outlineThickness = OPreadf32(str);
+		glyph->outlineType = str->I32();
+		glyph->outlineThickness = str->F32();
 
-		OPvectorPush(font->glyphs, (ui8*)&glyph);
+		font->glyphs->Push((ui8*)&glyph);
 	}
 
 	OPimagePNGLoadStream(str, str->_pointer, &font->texture);
@@ -81,13 +81,13 @@ OPint OPfontUnload(OPfont* font)
 	OPint i;
 	OPfontGlyph* glyph;
 
-	for (i = 0; i<OPvectorSize(font->glyphs); i++)
+	for (i = 0; i< font->glyphs->Size(); i++)
 	{
-		glyph = *(OPfontGlyph**)OPvectorGet(font->glyphs, i);
+		glyph = *(OPfontGlyph**)font->glyphs->Get(i);
 		OPfontGlyphDestroy(glyph);
 	}
 
-	OPvectorDestroy(font->glyphs);
+	font->glyphs->Destroy();
 	OPfree(font->glyphs);
 	OPimagePNGUnload(font->texture);
 	OPfree(font);
@@ -104,7 +104,7 @@ OPfontGlyph* OPfontGetGlyph(OPfont* font, OPchar charcode)
 	/* Check if charcode has been already loaded */
 	for (i = 0; i<font->glyphs->_size; ++i)
 	{
-		glyph = *(OPfontGlyph**)OPvectorGet(font->glyphs, i);
+		glyph = *(OPfontGlyph**)font->glyphs->Get(i);
 		// If charcode is -1, we don't care about outline type or thickness
 		if ((glyph->charcode == charcode) &&
 			((charcode == (wchar_t)(-1)) ||
@@ -137,7 +137,7 @@ OPfontGlyph* OPfontGetGlyph(OPfont* font, OPchar charcode)
 		glyph->textureCoordinates.y = (region.y + 2) / (float)height;
 		glyph->textureCoordinates.z = (region.x + 3) / (float)width;
 		glyph->textureCoordinates.w = (region.y + 3) / (float)height;
-		OPvectorPush(font->glyphs, (ui8*)&glyph);
+		font->glyphs->Push((ui8*)&glyph);
 		return glyph;
 	}
 
@@ -178,16 +178,16 @@ OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const O
 			inds[0] = offset; inds[1] = offset + 1; inds[2] = offset + 2;
 			inds[3] = offset; inds[4] = offset + 2; inds[5] = offset + 3;
 			OPvertexTex verts[4] = { 
-				{ OPvec3(x0, y0, 0.0f), OPvec2(s0, t0) },
-				{ OPvec3(x0, y1, 0.0f), OPvec2(s0, t1) },
-				{ OPvec3(x1, y1, 0.0f), OPvec2(s1, t1) },
-				{ OPvec3(x1, y0, 0.0f), OPvec2(s1, t0) } };
+				{ OPvec3((f32)x0, (f32)y0, 0.0f), OPvec2(s0, t0) },
+				{ OPvec3((f32)x0, (f32)y1, 0.0f), OPvec2(s0, t1) },
+				{ OPvec3((f32)x1, (f32)y1, 0.0f), OPvec2(s1, t1) },
+				{ OPvec3((f32)x1, (f32)y0, 0.0f), OPvec2(s1, t0) } };
 
 			for (OPint i = 0; i < 4; i++) {
-				OPvectorPush(vertices, (ui8*)&verts[i]);
+				vertices->Push((ui8*)&verts[i]);
 			}
 			for (OPint i = 0; i < 6; i++)
-				OPvectorPush(indices, (ui8*)&inds[i]);
+				indices->Push((ui8*)&inds[i]);
 
 			width += glyph->advanceX * scale;
 		}
@@ -199,8 +199,8 @@ OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const O
 OPmesh OPfontCreateText(OPfont* font, OPchar* text) {
 	ui32 vertexSize = sizeof(OPvertexTex);
 	OPindexSize indexSize = OPindexSize::SHORT;// sizeof(ui16);
-	OPvector* vertices = OPvectorCreate(vertexSize);
-	OPvector* indices = OPvectorCreate((ui32)indexSize);
+	OPvector* vertices = OPvector::Create(vertexSize);
+	OPvector* indices = OPvector::Create((ui32)indexSize);
 
 	_OPfontBuild(vertices, indices, font, text, 1);
 
@@ -210,7 +210,7 @@ OPmesh OPfontCreateText(OPfont* font, OPchar* text) {
 	builder.Add(OPattributes::UV);
 	OPvertexLayout vertexLayout = builder.Build();
 	OPmesh mesh = OPmesh(vertexLayout);
-	mesh.Build(vertexLayout, indexSize, vertices->_size, indices->_size, vertices->items, indices->items);
+	mesh.Build(vertexLayout, indexSize, (ui32)vertices->_size, (ui32)indices->_size, vertices->items, indices->items);
 	return mesh;
 }
 
@@ -223,8 +223,8 @@ OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text, OPf
 
 	ui32 vertexSize = sizeof(OPvertexTex);
 	OPindexSize indexSize = OPindexSize::SHORT;// sizeof(ui16);
-	OPvector* vertices = OPvectorCreate(vertexSize);
-	OPvector* indices = OPvectorCreate((ui32)indexSize);
+	OPvector* vertices = OPvector::Create(vertexSize);
+	OPvector* indices = OPvector::Create((ui32)indexSize);
 
 	OPvec2 size = _OPfontBuild(vertices, indices, font, text, scale);
 
@@ -267,8 +267,8 @@ OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text, float 
 	ui32 vertexSize = sizeof(OPvertexTex);
 	ui32 texcoordsSize = sizeof(OPvec2);
 	ui32 indexSize = sizeof(ui16);
-	OPvector* vertices = OPvectorCreate(vertexSize);
-	OPvector* indices = OPvectorCreate(indexSize);
+	OPvector* vertices = OPvector::Create(vertexSize);
+	OPvector* indices = OPvector::Create(indexSize);
 
 	OPvec2 size = _OPfontBuild(vertices, indices, font, text, scale);
 
@@ -280,11 +280,11 @@ OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text, float 
 	builder.Add(OPattributes::UV);
 	node.mesh = OPmesh(builder.Build());
 
-	node.mesh.Build(node.mesh.vertexLayout, OPindexSize::SHORT, vertices->_size, indices->_size, vertices->items, indices->items);
+	node.mesh.Build(node.mesh.vertexLayout, OPindexSize::SHORT, (ui32)vertices->_size, (ui32)indices->_size, vertices->items, indices->items);
 
-	OPvectorDestroy(vertices);
+	vertices->Destroy();
 	OPfree(vertices);
-	OPvectorDestroy(indices);
+	indices->Destroy();
 	OPfree(indices);
 
 	return node;

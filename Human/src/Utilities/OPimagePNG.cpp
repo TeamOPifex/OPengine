@@ -61,7 +61,7 @@ OPimage OPimagePNGLoadData(const OPchar* filename) {
 	ui8* data;
 	ui32 width, height;
 	OPimage result = { 0, 0, 0 };
-	OPstream* str = OPreadFile(filename);
+	OPstream* str = OPfile::ReadFromFile(filename);
 	ASSERT(str != NULL, "FAILED to read file");
 
 	error = lodepng_decode32(&data, &width, &height, str->Data, str->Length);

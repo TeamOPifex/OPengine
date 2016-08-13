@@ -1,6 +1,6 @@
-#include "./Core/include/OPcore.h"
+#include "./Core/include/OPdir.h"
 #include "./Core/include/OPlog.h"
-#include "./Core/include/OPtypes.h"
+#include "./Core/include/OPmemory.h"
 
 #include <stdio.h>  /* defines FILENAME_MAX */
 #ifdef OPIFEX_WINDOWS

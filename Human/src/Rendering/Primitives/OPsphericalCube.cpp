@@ -174,7 +174,7 @@ OPsphericalCube OPsphericalCubeCreate(OPimage * faces) {
 	}
 
 	OPint index = 0;
-	OPint IndicesPerSide = (((LWH - 1)*(LWH - 1) * 6) / OPSPHERICALCUBE_SCL);
+	ui32 IndicesPerSide = (((LWH - 1)*(LWH - 1) * 6) / OPSPHERICALCUBE_SCL);
 	OPint totalIndices = IndicesPerSide * 6;
 	ui16* indicesMem = (ui16*)OPalloc(sizeof(ui16)* totalIndices);
 
@@ -406,7 +406,7 @@ OPsphericalCube OPsphericalCubeCreate(ui16 size) {
 	}
 
 	OPint index = 0;
-	OPint IndicesPerSide = (((LWH - 1)*(LWH - 1) * 6) / OPSPHERICALCUBE_SCL);
+	ui32 IndicesPerSide = (((LWH - 1)*(LWH - 1) * 6) / OPSPHERICALCUBE_SCL);
 	OPint totalIndices = IndicesPerSide * 6;
 	ui16* indicesMem = (ui16*)OPalloc(sizeof(ui16)* totalIndices);
 

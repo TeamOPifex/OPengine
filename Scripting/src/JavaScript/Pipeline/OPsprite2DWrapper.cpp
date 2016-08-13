@@ -17,7 +17,7 @@ JS_RETURN_VAL _OPsprite2DInit(const JS_ARGS& args) {
 JS_RETURN_VAL _OPsprite2DCreate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
-    OPsprite** sprites;
+    OPsprite** sprites = NULL;
 
     OPsprite2D* ptr = OPsprite2DCreate(sprites, NULL);
 

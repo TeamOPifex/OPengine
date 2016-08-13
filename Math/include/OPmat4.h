@@ -1,8 +1,9 @@
-#ifndef OPMATH_MAT4
-#define OPMATH_MAT4
+#pragma once
+
+struct OPmat4;
+typedef struct OPmat4 OPmat4;
 
 // INCLUDES
-#include "./Core/include/OPtypes.h"
 #include "./Math/include/OPvec2.h"
 #include "./Math/include/OPvec3.h"
 #include "./Math/include/OPvec4.h"
@@ -10,14 +11,6 @@
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPmath.h"
 #include "./Core/include/OPlog.h"
-
-// PRE DECLARATION
-struct OPmat4;
-typedef struct OPmat4 OPmat4;
-
-// CIRCULAR INCLUDES
-
-// DEFINES
 
 // EXTERNALS
 extern const OPmat4 OPMAT4_ZERO;
@@ -428,14 +421,14 @@ inline OPmat4 OPmat4SetTranslate(OPmat4 m, OPvec3 v) {
 	 return result;
  }
 
-	inline OPvec4 OPmat4Transform(OPvec4 a, OPmat4 b) {
-		OPvec4 result;
-		result.x = b[0][0] * a.x + b[1][0] * a.y + b[2][0] * a.z + b[3][0] * a.w;
-		result.y = b[0][1] * a.x + b[1][1] * a.y + b[2][1] * a.z + b[3][1] * a.w;
-		result.z = b[0][2] * a.x + b[1][2] * a.y + b[2][2] * a.z + b[3][2] * a.w;
-		result.w = b[0][3] * a.x + b[1][3] * a.y + b[2][3] * a.z + b[3][3] * a.w;
-		return result;
-	}
+inline OPvec4 OPmat4Transform(OPvec4 a, OPmat4 b) {
+	OPvec4 result;
+	result.x = b[0][0] * a.x + b[1][0] * a.y + b[2][0] * a.z + b[3][0] * a.w;
+	result.y = b[0][1] * a.x + b[1][1] * a.y + b[2][1] * a.z + b[3][1] * a.w;
+	result.z = b[0][2] * a.x + b[1][2] * a.y + b[2][2] * a.z + b[3][2] * a.w;
+	result.w = b[0][3] * a.x + b[1][3] * a.y + b[2][3] * a.z + b[3][3] * a.w;
+	return result;
+}
 
  inline void OPmat4RotX(OPmat4* m, OPfloat x) {
 	 OPmat4 tmp = OPmat4RotX(x);
@@ -691,5 +684,3 @@ OPmat4 OPmat4LookAt(OPvec3 eye, OPvec3 at, OPvec3 up);
 OPmat4 OPmat4Perspective(OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal);
 OPint OPmat4Inverse(OPmat4* dst, OPmat4 a);
 OPmat4 OPmat4Interpolate(OPmat4 a, OPmat4 b, OPfloat percent);
-
-#endif

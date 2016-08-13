@@ -1,5 +1,4 @@
-#ifndef OPPERF_THREAD
-#define OPPERF_THREAD
+#pragma once
 
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPlog.h"
@@ -34,6 +33,8 @@ struct OPthread {
 	DWORD ThreadId;
 	void* Return;
 #endif
+
+
 };
 
 struct OPmutex {
@@ -42,6 +43,8 @@ struct OPmutex {
 #elif defined(OPIFEX_WINDOWS)
 	HANDLE Mutex;
 #endif
+
+
 };
 
 //-----------------------------------------------------------------------------
@@ -61,4 +64,3 @@ OPint    OPthreadJoin(OPthread* thread);
 OPmutex OPmutexCreate();
 OPint   OPmutexLock(OPmutex* mutex);
 OPint   OPmutexUnlock(OPmutex* mutex);
-#endif

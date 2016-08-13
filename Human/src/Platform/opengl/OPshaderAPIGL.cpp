@@ -16,7 +16,7 @@ const OPchar* OPshaderTypeToString(OPshaderType shaderType) {
 	return "";
 }
 
-OPshader* OPshaderGLInit(OPshader* shader, OPshaderType shaderType, const OPchar* source, ui32 sourceLen) {
+OPshader* OPshaderGLInit(OPshader* shader, OPshaderType shaderType, const OPchar* source, OPuint sourceLen) {
 	OPshaderGL* shaderGL = (OPshaderGL*)OPalloc(sizeof(OPshaderGL));
 	shader->internalPtr = shaderGL;
 	shader->shaderType = shaderType;
@@ -34,7 +34,7 @@ OPshader* OPshaderGLInit(OPshader* shader, OPshaderType shaderType, const OPchar
 	}
 
 	// Add the shader source to the shader
-	i32 length = sourceLen;
+	i32 length = (i32)sourceLen;
 	OPGLFN(glShaderSource(shaderGL->Handle, 1, &source, &length));
 
 	// Attempt to compile the shader code

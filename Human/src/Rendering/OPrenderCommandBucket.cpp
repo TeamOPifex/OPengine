@@ -6,8 +6,8 @@ OPrenderCommandDrawIndexed* OPrenderCommandBucket::CreateDrawIndexed() {
 }
 
 void OPrenderCommandBucket::Init(OPuint bucketSize, OPcam** camera) {
-	controlOfAllocator = 1;
-	Init(bucketSize, camera, OPallocatorLinearCreate(KB(bucketSize)));
+	internalAllocator = OPallocatorLinear::Create(KB(bucketSize));
+	Init(bucketSize, camera, internalAllocator->_rootAlloc);
 }
 
 void OPrenderCommandBucket::Init(OPuint bucketSize, OPcam** camera, OPallocator* allocator) {
@@ -22,6 +22,16 @@ void OPrenderCommandBucket::Init(OPuint bucketSize, OPcam** camera, OPallocator*
 	keyIndex = 0;
 
 	this->allocator = allocator;
+}
+
+void OPrenderCommandBucket::Destroy() {
+	if (internalAllocator != NULL) {
+		internalAllocator->Destroy();
+		OPfree(internalAllocator);
+	}
+	OPfree(keys);
+	OPfree(copykeys);
+	OPfree(commands);
 }
 
 OPrenderCommandBucket* OPrenderCommandBucket::Create(OPuint bucketSize, OPcam** camera, OPallocator* allocator) {

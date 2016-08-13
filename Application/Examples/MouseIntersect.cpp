@@ -117,22 +117,22 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 
 
 		{
-			OPboundingBox3D box = OPboundingBox3DCreate(
+			OPboundingBox3D box = OPboundingBox3D(
 				OPvec3Create(-0.5, -0.5, -0.5),
 				OPvec3Create(0.5, 0.5, 0.5)
 			);
-			if(OPboundingBox3DRay3D(box, ray)) {
+			if(box.Intersects(ray)) {
 				intersecting = 1;
 			}
 		}
 
 		{
-			OPboundingBox3D box = OPboundingBox3DCreate(
+			OPboundingBox3D box = OPboundingBox3D(
 				OPvec3Create(-0.5 - 5.0, -0.5, -0.5),
 				OPvec3Create(0.5 - 5.0, 0.5, 0.5)
 			);
 
-			if(OPboundingBox3DRay3D(box, ray)) {
+			if(box.Intersects(ray)) {
 				intersecting = 2;
 			}
 		}
@@ -202,10 +202,10 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	OPfontColor(OPvec4Create(1.0, 1.0, 1.0, 1));
    	mouseIntersectExample.FontManager->scale = 0.75;
 	i8 buffer[256];
-	sprintf(buffer, "%d, %d", OPmousePositionX(), OPmousePositionY());
+	sprintf_s(buffer, 256, "%d, %d", OPmousePositionX(), OPmousePositionY());
 	OPfontRender(buffer, OPvec2(50, 60));
 
-	sprintf(buffer, "%f, %f, %f", ray.direction.x, ray.direction.y, ray.direction.z);
+	sprintf_s(buffer, 256, "%f, %f, %f", ray.direction.x, ray.direction.y, ray.direction.z);
 	OPfontRender(buffer, OPvec2(50, 120));
 
 	OPfontRenderEnd();

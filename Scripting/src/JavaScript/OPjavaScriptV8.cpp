@@ -495,7 +495,7 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
 void OPjavaScriptV8SetupRun(const OPchar* script) {
     OPjavaScriptV8Init();
     OPscript *result = NULL;
-	OPstream* str = OPreadFile(script);
+	OPstream* str = OPfile::ReadFromFile(script);
 	ASSERT(str != NULL, "File couldn't be found");
 	ASSERT(str->Source != NULL, "Filename wasn't set.");
 	OPlog("Script read");

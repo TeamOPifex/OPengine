@@ -1,9 +1,7 @@
 #pragma once
-#ifndef OPIFEX_MATH_TWEEN
-#define OPIFEX_MATH_TWEEN
+
 // Based on - https://github.com/warrenm/AHEasing/blob/master/AHEasing/easing.c
 
-#include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmath.h"
 
 inline OPfloat OPtween(OPfloat v1, OPfloat v2, OPfloat d) {
@@ -258,4 +256,3 @@ inline OPfloat OPtween_bounceEaseInOut(OPfloat p)
 	}
 	return 0.5f * OPtween_bounceEaseOut(p * 2.0f - 1) + 0.5f;
 }
-#endif

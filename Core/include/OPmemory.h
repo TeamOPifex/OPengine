@@ -6,11 +6,13 @@
 
 #define OPSCRATCHBUFFER_SIZE 4096
 
+// Global buffer to use for temporary data
+// DO NOT USE WITH THREADING
 extern OPchar OPSCRATCHBUFFER[OPSCRATCHBUFFER_SIZE];
 
 #ifndef OPIFEX_OPTION_RELEASE
-extern OPint OPallocations;
-extern OPint OPdeallocations;
+	extern OPint OPallocations;
+	extern OPint OPdeallocations;
 #endif
 
 extern OPallocator OPDEFAULT_ALLOCATOR;
@@ -76,6 +78,8 @@ void  OPfree(void* ptr);
 
 void* OPsysAlloc(OPuint bytes);
 void OPsysFree(void* ptr);
+
+// C++ Overloads
 
 void* operator new(size_t size);
 void* operator new(size_t size, const char* file, ui32 line);

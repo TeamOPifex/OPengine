@@ -12,7 +12,7 @@ typedef struct {
 	OPmesh Mesh;			// The Mesh to render
 	OPeffect Effect;		// The Effect used to render the Mesh
 	OPcam Camera;			// The Camera to use in the Effect to render the Mesh
-	ui32 Rotation;			// The amount to rotate the Mesh
+	ui64 Rotation;			// The amount to rotate the Mesh
 	OPvec3 LightDirection;	// Where the Light Source is coming from
 } ModelExample;
 

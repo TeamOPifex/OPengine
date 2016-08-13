@@ -1,12 +1,7 @@
 #pragma once
 
 #include "OPtypes.h"
-#include "OPgameCycle.h"
-#include "OPmemory.h"
 #include "OPtimer.h"
-#include "Assert.h"
-#include "OPlog.h"
-#include "OPdir.h"
 
 #ifdef OPIFEX_WINDOWS
 	extern HINSTANCE OP_HINSTANCE;

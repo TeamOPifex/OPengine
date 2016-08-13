@@ -28,7 +28,7 @@ inline OPint OPfmodIsPlaying(OPfmodChannel* channel) {
 	return isPlaying;
 }
 
-inline void OPfmodSetPause(OPfmodChannel* channel, i8 pause) {
+inline void OPfmodSetPause(OPfmodChannel* channel, bool pause) {
 	channel->setPaused(pause);
 }
 

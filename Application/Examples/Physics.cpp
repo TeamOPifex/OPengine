@@ -70,7 +70,7 @@ void ExamplePhysicsEnter(OPgameState* last) {
 	physicsExample = (PhysicsExample*)OPalloc(sizeof(PhysicsExample));
 
 	OPphysXInit();
-	physicsExample->scene = OPphysXSceneCreate(OPvec3Create(0, -9.8, 0), OnTrigger, OnContact);
+	physicsExample->scene = OPphysXSceneCreate(OPvec3Create(0.0f, -9.8f, 0.0f), OnTrigger, OnContact);
 
 	OPcmanLoad("PuzzleBlock.opm");
 	OPcmanLoad("PuzzleSphere.opm");
@@ -197,34 +197,34 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	//}
 
 	if (OPkeyboardIsDown(OPkeyboardKey::A)) {
-		OPphysXAddTorque(physicsExample->spheres[0].physics, OPvec3Create(0, 0, rate));
-		OPphysXAddForce(physicsExample->spheres[0].physics, OPvec3Create(-rate2, 0, 0));
+		OPphysXAddTorque(physicsExample->spheres[0].physics, OPvec3Create(0.0f, 0.0f, rate));
+		OPphysXAddForce(physicsExample->spheres[0].physics, OPvec3Create(-rate2, 0.0f, 0.0f));
 	}
 	if (OPkeyboardIsDown(OPkeyboardKey::D)) {
-		OPphysXAddTorque(physicsExample->spheres[0].physics, OPvec3Create(0, 0, -rate));
-		OPphysXAddForce(physicsExample->spheres[0].physics, OPvec3Create(rate2, 0, 0));
+		OPphysXAddTorque(physicsExample->spheres[0].physics, OPvec3Create(0.0f, 0.0f, -rate));
+		OPphysXAddForce(physicsExample->spheres[0].physics, OPvec3Create(rate2, 0.0f, 0.0f));
 	}
 	if (OPkeyboardIsDown(OPkeyboardKey::W)) {
 		OPphysXAddTorque(physicsExample->spheres[0].physics, OPvec3Create(-rate, 0, 0));
-		OPphysXAddForce(physicsExample->spheres[0].physics, OPvec3Create(0, 0, -rate2));
+		OPphysXAddForce(physicsExample->spheres[0].physics, OPvec3Create(0.0f, 0.0f, -rate2));
 	}
 	if (OPkeyboardIsDown(OPkeyboardKey::S)) {
-		OPphysXAddTorque(physicsExample->spheres[0].physics, OPvec3Create(rate, 0, 0));
-		OPphysXAddForce(physicsExample->spheres[0].physics, OPvec3Create(0, 0, rate2));
+		OPphysXAddTorque(physicsExample->spheres[0].physics, OPvec3Create(rate, 0.0f, 0.0f));
+		OPphysXAddForce(physicsExample->spheres[0].physics, OPvec3Create(0.0f, 0.0f, rate2));
 	}
 
-	if (OPkeyboardIsDown(OPkeyboardKey::UP)) { physicsExample->Camera->pos.y += 0.2; }
-	if (OPkeyboardIsDown(OPkeyboardKey::DOWN)) { physicsExample->Camera->pos.y -= 0.2; }
-	if (OPkeyboardIsDown(OPkeyboardKey::LEFT)) { physicsExample->Camera->pos.x -= 0.2; }
-	if (OPkeyboardIsDown(OPkeyboardKey::RIGHT)) { physicsExample->Camera->pos.x += 0.2; }
+	if (OPkeyboardIsDown(OPkeyboardKey::UP)) { physicsExample->Camera->pos.y += 0.2f; }
+	if (OPkeyboardIsDown(OPkeyboardKey::DOWN)) { physicsExample->Camera->pos.y -= 0.2f; }
+	if (OPkeyboardIsDown(OPkeyboardKey::LEFT)) { physicsExample->Camera->pos.x -= 0.2f; }
+	if (OPkeyboardIsDown(OPkeyboardKey::RIGHT)) { physicsExample->Camera->pos.x += 0.2f; }
 
 	physicsExample->Camera->Update();
 
 
 	OPphysXSceneUpdate(physicsExample->scene, time);
 
-	OPrenderDepth(1);
-	OPrenderClear(0.1, 0.1, 0.1);
+	OPrenderDepth(true);
+	OPrenderClear(0.1f, 0.1f, 0.1f);
 
 	OPmat4 world = OPMAT4_IDENTITY;
 

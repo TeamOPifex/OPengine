@@ -86,7 +86,7 @@ void FontHandler(OPstream* str, void* param) {
 
 void ColorSingleHandler(OPstream* str, void* param) {
 	f32* p = (f32*)param;
-	*p = OPreadf32(str);
+	*p = str->F32();
 }
 
 void State0Enter(OPgameState* last){

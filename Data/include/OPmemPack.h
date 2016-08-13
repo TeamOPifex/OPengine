@@ -1,16 +1,9 @@
-#ifndef OPEngine_Data_MemPack
-#define OPEngine_Data_MemPack
+#pragma once
+
+struct OPmemDesc;
+typedef struct OPmemDesc OPmemDesc;
 
 #include "./Core/include/OPtypes.h"
-#include "./Core/include/OPmemory.h"
-
-//  _____ _                   _
-// / ____| |                 | |
-//| (___ | |_ _ __ _   _  ___| |_ ___
-// \___ \| __| '__| | | |/ __| __/ __|
-// ____) | |_| |  | |_| | (__| |_\__ \
-//|_____/ \__|_|   \__,_|\___|\__|___/
-//
 
 struct OPmemDesc {
 	void (*Alloc)(void* segmentPtr, OPuint count);
@@ -18,14 +11,6 @@ struct OPmemDesc {
 	OPuint (*Size)(OPuint count);
 	void* Data;
 };
-typedef struct OPmemDesc OPmemDesc;
-
-// ______                _   _
-//|  ____|              | | (_)
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
-//|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
-//| |  | |_| | | | | (__| |_| | (_) | | | \__ \
-//|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
 /* Allocates a block of memory to be used in segements
  * @param segments descriptors
@@ -36,5 +21,3 @@ typedef struct OPmemDesc OPmemDesc;
 void* OPmemPackAlloc(OPmemDesc* segments, OPuint segCount, OPint n);
 
 void OPmemPackDealloc(void* Data, OPmemDesc* segments, OPint segCount, OPint n);
-
-#endif

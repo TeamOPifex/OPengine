@@ -12,7 +12,7 @@ struct OPshader;
 
 struct OPshaderAPI {
 	OPshader*(*_Create)(OPshaderType shaderType, const OPchar* source, OPuint sourceLen) = 0;
-	OPshader*(*_Init)(OPshader* shader, OPshaderType shaderType, const OPchar* source, ui32 sourceLen) = 0;
+	OPshader*(*_Init)(OPshader* shader, OPshaderType shaderType, const OPchar* source, OPuint sourceLen) = 0;
 	void(*Destroy)(OPshader* shader) = 0;
 	
 	inline OPshader* Create(OPshaderType shaderType, const OPchar* source, OPuint sourceLen) {

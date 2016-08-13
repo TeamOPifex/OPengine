@@ -1,5 +1,10 @@
 #include "./Core/include/OPcore.h"
 #include "./Core/include/OPlog.h"
+#include "./Core/include/OPgameCycle.h"
+#include "./Core/include/OPmemory.h"
+#include "./Core/include/Assert.h"
+#include "./Core/include/OPlog.h"
+#include "./Core/include/OPdir.h"
 
 struct OPtimer OPTIMER;
 extern OPchar* OPSTARTUP_PATH = NULL;

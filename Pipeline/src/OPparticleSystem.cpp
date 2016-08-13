@@ -34,10 +34,10 @@ void OPparticleSysInit(OPeffect* effect) {
 OPparticleSys* OPparticleSysCreate(OPtexture* texture, ui16 count, OPeffect* effect) {
 	OPparticleSys* sys = (OPparticleSys*)OPalloc(sizeof(OPparticleSys));
 	sys->texture = texture;
-	OPuint entHeapSize = OPentHeapBytes(sizeof(OPparticle), count);
+	OPuint entHeapSize = OPentHeap::Bytes(sizeof(OPparticle), count);
 	OPparticle* particles = (OPparticle*)OPalloc(entHeapSize);
 	sys->particles = particles;
-	sys->heap = OPentHeapCreate(particles, sizeof(OPparticle), count);
+	sys->heap = OPentHeap::Create(particles, sizeof(OPparticle), count);
 	sys->uvScale.x = 0.2f;
 	sys->uvScale.y = 0.2f;
 	sys->fps = 0;
@@ -71,7 +71,7 @@ void OPparticleSysUpdate(OPparticleSys* sys, OPtimer* timer) {
 		// kill the particle and add it back to the heap
 		// if it has lived it's full life
 		if (p->Life <= 0){
-			OPentHeapKill(sys->heap, i);
+			sys->heap->Kill(i);
 		}
 	}
 
