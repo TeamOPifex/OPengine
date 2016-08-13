@@ -166,7 +166,7 @@ OPMData OPMloadData(OPstream* str) {
 
 	OPvec4* boneIndices;
 	OPvec4* boneWeights;
-	
+
 
 	OPvertexLayoutBuilder layout;
 	layout.Init();
@@ -208,7 +208,7 @@ OPMData OPMloadData(OPstream* str) {
 		boneWeights = (OPvec4*)OPalloc(sizeof(OPvec4)* verticeCount);
 		layout.Add(OPattributes::BONES);
 	}
-		
+
 
 
 	f32 x, y, z;
@@ -459,7 +459,7 @@ OPMData OPMloadData(OPstream* str) {
 
 
 	OPMData data = {};
-	
+
 	data.vertexLayout = layout.Build();
 	data.indices = indices;
 	data.indexCount = indicesCount * 3;
@@ -621,7 +621,11 @@ OPhashMap* CreateTriangleTable(OPMData* data){
 	for(int i = (data->indexCount / 3); i--;){
 		int* tri;
 
+        #ifdef OPIFEX_WINDOWS
 		sprintf_s(index, 10, "%d", i * 3);
+        #else
+		sprintf(index, "%d", i * 3);
+        #endif
 		triTable->Get(index, (void**)&tri);
 
 		// if this vertex's tri has been stored, skip it
@@ -635,7 +639,11 @@ OPhashMap* CreateTriangleTable(OPMData* data){
 			tri[j] = i * 3 + j;
 
 			// store the triangle at this vertex's index
+            #ifdef OPIFEX_WINDOWS
 			sprintf_s(index, 10, "%d", i * 3 + j);
+            #else
+			sprintf(index, "%d", i * 3 + j);
+            #endif
 			triTable->Put(index, tri);
 		}
 	}
@@ -741,7 +749,7 @@ OPlinkedList* CreateTriList(OPMData* data, OPhashMap* triTable, OPlinkedList* ve
 	while(node){
 		OPint* tri = NULL;
 
-#ifdef OPIFEX_OS64
+#ifdef OPIFEX_WINDOWS
 			sprintf_s(index, 10, "%lld", (OPint)node->Data);
 #else
 			sprintf(index, "%d", (OPint)node->Data);
@@ -894,7 +902,7 @@ OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh){
 OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh) {
 	OPstream* str = OPfile::ReadFromFile(filename);
 	OPMData data = OPMloadData(str);
-	
+
 	OPmeshPacked temp = OPmeshPacked(
 		data.vertexLayout, data.indexSize,
 		data.vertexCount, data.indexCount,

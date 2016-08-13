@@ -99,7 +99,12 @@ OPchar* OPstringCreateMerged(const OPchar* str, const OPchar* add) {
 	#else
 	result = strcpy(result, str);
 	#endif
+
+	#ifdef OPIFEX_WINDOWS
 	strcat_s(result, lenA + lenB + 1, add);
+    #else
+	strcat(result, add);
+    #endif
 	return result;
 }
 

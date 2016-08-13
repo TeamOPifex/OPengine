@@ -7,7 +7,11 @@ OPfileInformation _logFile;
 
 void _OPlogToFile(ui32 level, const char* channel, const char* message) {
 	char buffer[1024];
+    #ifdef OPIFEX_WINDOWS
 	sprintf_s(buffer, 1024, "%s[%d]: %s\n", channel, level, message);
+    #else
+	sprintf(buffer, "%s[%d]: %s\n", channel, level, message);
+    #endif
 	fprintf(_logFile.file, "%s", buffer);
 }
 

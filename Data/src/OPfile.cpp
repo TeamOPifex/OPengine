@@ -47,7 +47,7 @@ void OPfileInformation::Init(const OPchar* path){
 	file.length = _length;
 	file.fileDescriptor = fd;
 #else
-	
+
 	#ifdef OPIFEX_WINDOWS
 		fopen_s(&file, path, "rb");
 	#else
@@ -122,14 +122,14 @@ OPstream* OPfile::ReadFromFile(const char* path, ui32 expectedSize){
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) || defined(OPIFEX_IOS)
 	ui8 bytes[1024];
 	// check to see if the file exists
-	if(OPfileExists(path) >= 0){
+	if(OPfile::Exists(path)){
 		OPint fd = 0;
 
 		fd = open(path, O_RDONLY);
 		// be sure that the file could be opened successfully
 	 	if(fd){
 
-			OPstream* str = OPstreamCreate(expectedSize);
+			OPstream* str = OPstream::Create(expectedSize);
 			str->Source = OPstringCopy(path);
 
 			ui8* bytes = (ui8*)OPalloc(1024);
@@ -137,11 +137,11 @@ OPstream* OPfile::ReadFromFile(const char* path, ui32 expectedSize){
 			// write the entire file into a stream
 			while(readBytes) {
 				readBytes = read(fd, bytes, 1024);
-				OPwrite(str, bytes, readBytes);
+				str->Write(bytes, readBytes);
 			}
 			OPfree(bytes);
 			close(fd);
-			OPseek(str, 0);
+            str->Seek(0);
 
 			// finally return the stream
 			return str;
@@ -207,7 +207,7 @@ OPstream* OPfile::Read(ui32 size){
 
 	FILE* myFile = _handle;
 
-	OPstream* str = OPstreamCreate(size);
+	OPstream* str = OPstream::Create(size);
 
 	// write the entire file into a stream
 	ui8* byte = OPalloc(sizeof(ui8)* size);
@@ -230,14 +230,14 @@ OPstream* OPfile::Read(ui32 size){
 	// be sure that the file could be opened successfully
 	if (fd){
 
-		OPstream* str = OPstreamCreate(size);
+		OPstream* str = OPstream::Create(size);
 
 		ui8* bytes = (ui8*)OPalloc(size);
 		// write the entire file into a stream
 		readBytes = read(fd, bytes, size);
-		OPwrite(str, bytes, readBytes);
+        str->Write(bytes, readBytes);
 		OPfree(bytes);
-		OPseek(str, 0);
+        str->Seek(0);
 
 		str->Source = OPstringCopy(path);
 
@@ -323,7 +323,7 @@ void OPfile::Init(const OPchar* path) {
 	OPint fd = 0;
 	// be sure that the file could be opened successfully
 	fd = open(path, O_RDONLY);
-	if(fd == 0) return file;
+    ASSERT(fd != 0, "Failed to open file");
 
 	_handle = fd;
 	this->path = path;

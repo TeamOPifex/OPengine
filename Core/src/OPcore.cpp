@@ -7,8 +7,8 @@
 #include "./Core/include/OPdir.h"
 
 struct OPtimer OPTIMER;
-extern OPchar* OPSTARTUP_PATH = NULL;
-extern OPchar* OPEXECUTABLE_PATH = NULL;
+OPchar* OPSTARTUP_PATH = NULL;
+OPchar* OPEXECUTABLE_PATH = NULL;
 OPint _OPengineRunning;
 
 #ifdef OPIFEX_WINDOWS

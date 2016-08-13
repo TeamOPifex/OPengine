@@ -1,9 +1,20 @@
 #include "./Data/include/OPdll.h"
+#include "./Data/include/OPstring.h"
+#include "./Data/include/OPfile.h"
+#include "./Core/include/OPdir.h"
+#include "./Core/include/OPlog.h"
+#include "./Core/include/OPcore.h"
+
+#ifdef OPIFEX_UNIX
+	#include <dlfcn.h>
+	#include <sys/stat.h>
+	#include <unistd.h>
+#endif
 
 void OPdll::Init(const OPchar* path) {
 #if defined(OPIFEX_WINDOWS)
 #else
-	OPchar* pathMerge = OPstringCreateMerged(OPgetExecutableDir(), path);
+	OPchar* pathMerge = OPstringCreateMerged(OPEXECUTABLE_PATH, path);
 
 	library = dlopen(pathMerge, RTLD_LAZY);
 
@@ -12,14 +23,14 @@ void OPdll::Init(const OPchar* path) {
 	}
 
 	path = pathMerge;
-	lastModified = OPfileLastChange(pathMerge);
+	lastModified = OPfile::LastChange(pathMerge);
 #endif
 }
 
 OPint OPdll::Update() {
 #if defined(OPIFEX_WINDOWS)
 #else
-	ui64 lastChange = OPfileLastChange(path);
+	ui64 lastChange = OPfile::LastChange(path);
 	if (lastModified == lastChange) return 0;
 	lastModified = lastChange;
 

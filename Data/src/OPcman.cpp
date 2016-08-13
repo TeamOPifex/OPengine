@@ -207,8 +207,13 @@ OPint OPcmanLoad(const OPchar* key){
 				fullPath = (OPchar*)OPalloc(sizeof(OPchar) * len + 1);
 				fullPath[0] = NULL;
 				if(!fullPath) return OP_CMAN_PATH_ALLOC_FAILED;
-				strcat_s(fullPath, len, loader.AssetTypePath);
-				strcat_s(fullPath, len, key);
+                #ifdef OPIFEX_WINDOWS
+    				strcat_s(fullPath, len, loader.AssetTypePath);
+    				strcat_s(fullPath, len, key);
+                #else
+    				fullPath = strcat(fullPath, loader.AssetTypePath);
+    				fullPath = strcat(fullPath, key);
+                #endif
 
 				// load the asset
 				OPstream* str = OPcmanGetResource(fullPath);

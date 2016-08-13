@@ -17,10 +17,10 @@ void OPsharedLibrary::Init(const OPchar* libraryName) {
 #ifdef OPIFEX_UNIX
 	OPchar* temp = OPstringCreateMerged("lib", libraryName);
 	OPchar* lib = OPstringCreateMerged(temp, ".dylib");
-	OPchar* path = OPstringCreateMerged(OPgetExecutableDir(), lib);
+	OPchar* path = OPstringCreateMerged(OPEXECUTABLE_PATH, lib);
 	OPlog(path);
 	void* library = dlopen(path, RTLD_NOW);
-	if(library == NULL) return NULL;
+	ASSERT(library != NULL, "FAILED to load library");
 #elif defined(OPIFEX_WINDOWS)
 	OPchar* lib = OPstringCreateMerged(libraryName, ".dll");
 	OPchar* path = OPstringCreateMerged(OPEXECUTABLE_PATH, lib);
@@ -51,14 +51,14 @@ bool OPsharedLibrary::Reload() {
 
 	//return 1;
 
-	OPint elements = OPlistSize(_symbols);
+	OPint elements = _symbols->Size();
 	void* symbol;
 	OPint result = 0;
 	for(OPint i = 0; i < elements; i++) {
 		OPlog("Get %d", i);
 
-		OPsharedLibrarySymbol* sharedLibrarySymbol = (OPsharedLibrarySymbol*)OPlistGet(sharedLibrary->_symbols, i);
-		symbol = dlsym(sharedLibrary->_library, sharedLibrarySymbol->_symbolName);
+		OPsharedLibrarySymbol* sharedLibrarySymbol = (OPsharedLibrarySymbol*)_symbols->Get(i);
+		symbol = dlsym(_library, sharedLibrarySymbol->_symbolName);
 		if(symbol == NULL) {
 			OPlog("!!!   Failed to reload symbol: %s", sharedLibrarySymbol->_symbolName);
 			result = -3;
@@ -96,7 +96,7 @@ bool OPsharedLibrary::Reload() {
 
 OPsharedLibrarySymbol* OPsharedLibrary::LoadSymbol(const OPchar* symbolName) {
 #ifdef OPIFEX_UNIX
-	void* symbol = dlsym(sharedLibrary->_library, symbolName);
+	void* symbol = dlsym(_library, symbolName);
 #elif defined(OPIFEX_WINDOWS)
 	void* symbol = (void*)GetProcAddress(_library, symbolName);
 #endif
@@ -119,4 +119,3 @@ void OPsharedLibrary::Destroy() {
 	_symbols->Destroy();
 	OPfree(_symbols);
 }
-

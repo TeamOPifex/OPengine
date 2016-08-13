@@ -11,15 +11,15 @@ extern OPrenderAPI* OPRENDERER_ACTIVE;
 #include "./Core/include/OPtypes.h"
 
 #ifdef OPIFEX_DIRECTX_11
-
-#include <windows.h>
-#include <windowsx.h>
-#include <d3d11.h>
-#include <d3d11_1.h>
-
-// include the Direct3D Library file
-#pragma comment (lib, "d3d11.lib")
-extern ID3D11Device* g_pd3dDevice;
+    
+    #include <windows.h>
+    #include <windowsx.h>
+    #include <d3d11.h>
+    #include <d3d11_1.h>
+    
+    // include the Direct3D Library file
+    #pragma comment (lib, "d3d11.lib")
+    extern ID3D11Device* g_pd3dDevice;
 
 #endif
 

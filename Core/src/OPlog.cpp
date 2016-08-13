@@ -4,7 +4,7 @@
 #include <ostream>
 
 #ifndef OutputDebugString
-#define OutputDebugString(a) 
+#define OutputDebugString(a)
 #endif
 
 #ifdef OPIFEX_WINDOWS
@@ -101,8 +101,11 @@ void OPvlog(ui32 level, const char* channel, const char* message, va_list args) 
 		vsnprintf(buffer, sizeof buffer, message, args);
 		OPlogHandler(level, channel, buffer);
 	} else {
-		sprintf_s(buffer2, sizeof(buffer2), "%s: %s\n", channel, message);
-		//sprintf(buffer2, "%s: %s\n", channel, message);
+        #ifdef OPIFEX_WINDOWS
+		      sprintf_s(buffer2, sizeof(buffer2), "%s: %s\n", channel, message);
+        #else
+		      sprintf(buffer2, "%s: %s\n", channel, message);
+        #endif
 		vsnprintf(buffer, sizeof buffer, buffer2, args);
 		OutputDebugString(buffer);
 #ifndef OPIFEX_IOS
