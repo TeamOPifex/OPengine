@@ -6,6 +6,7 @@ typedef struct OPallocator OPallocator;
 #include "OPtypes.h"
 
 struct OPallocator {
+	void* internalPtr;
 	void* data;
 
 	void*(*alloc)(void*, OPuint);

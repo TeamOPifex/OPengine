@@ -11,21 +11,15 @@ void OPallocatorLinear::Destroy() {
 }
 
 void OPallocatorLinear::Init(OPallocator* allocator, OPuint sizeInBytes) {
-	OPuint totalBytes = sizeof(OPallocatorLinear) + sizeInBytes;
-	void* data = OPallocZero(totalBytes);
 
-	OPallocatorLinear* alloc = (OPallocatorLinear*)data;
-	allocator->data = alloc;
-
-	OPallocatorLinear* linearData = (OPallocatorLinear*)allocator->data;
-	_headerStart = linearData;
-	_memStart = (void*)((size_t)linearData + sizeof(OPallocatorLinear));
 	_size = sizeInBytes;
+	_rootAlloc = allocator;	
+	_rootAlloc->internalPtr = this;
+	_rootAlloc->alloc = (void*(*)(void*, OPuint))OPallocatorLinearAlloc;
+	_rootAlloc->free = (void(*)(void*, void*))OPallocatorLinearFree;
+	_rootAlloc->clear = (void(*)(void*))OPallocatorLinearReset;
+	_rootAlloc->data = OPallocZero(_size);
 
-	allocator->alloc = (void*(*)(void*, OPuint))OPallocatorLinearAlloc;
-	allocator->free = (void(*)(void*, void*))OPallocatorLinearFree;
-	allocator->clear = (void(*)(void*))OPallocatorLinearReset;
-	_rootAlloc = allocator;
 	Reset();
 }
 
@@ -34,29 +28,25 @@ void OPallocatorLinearFree(OPallocator* alloc, void* data) {
 }
 
 void OPallocatorLinearReset(OPallocator* alloc) {
-	OPallocatorLinear* data = (OPallocatorLinear*)alloc->data;
+	OPallocatorLinear* data = (OPallocatorLinear*)alloc->internalPtr;
 	data->_allocCount = 0;
 	data->_usedMemory = 0;
-	data->_currentPos = data->_memStart;
-}
-
-void OPallocatorLinearDestroy(OPallocator* alloc) {
-	OPallocatorLinear* data = (OPallocatorLinear*)alloc->data;
-	OPfree(data->_headerStart);
+	data->_currentPos = data->_rootAlloc->data;
 }
 
 // TODO: Align Memory into DWORD sized chunks
 void* OPallocatorLinearAlloc(OPallocator* alloc, OPuint sizeInBytes) {
-	OPallocatorLinear* data = (OPallocatorLinear*)alloc->data;
+	OPallocatorLinear* allocatorLinear = (OPallocatorLinear*)alloc->internalPtr;
+	void* data = allocatorLinear->_rootAlloc->data;
 	//OPallocAlignAdjustment
-	if(data->_usedMemory + sizeInBytes > data->_size) {
+	if(allocatorLinear->_usedMemory + sizeInBytes > allocatorLinear->_size) {
 	    ASSERT(false, "NO MEMORY LEFT");
 		return NULL;
 	}
-	void* block = data->_currentPos;
-	data->_currentPos = (void*)((size_t)block + sizeInBytes);
-	data->_usedMemory += sizeInBytes;
-	data->_allocCount++;
+	void* block = allocatorLinear->_currentPos;
+	allocatorLinear->_currentPos = (void*)((size_t)block + sizeInBytes);
+	allocatorLinear->_usedMemory += sizeInBytes;
+	allocatorLinear->_allocCount++;
 	return block;
 }
 

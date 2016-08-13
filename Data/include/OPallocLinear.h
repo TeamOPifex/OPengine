@@ -14,8 +14,6 @@ struct OPallocatorLinear {
 	OPuint _allocCount;
 	OPuint _usedMemory;
 	OPuint _size;
-	void* _headerStart;
-	void* _memStart;
 	void* _currentPos;
 
 	OPallocatorLinear() { }
@@ -32,15 +30,15 @@ struct OPallocatorLinear {
 	}
 
 	inline void* Alloc(OPuint sizeInBytes) {
-		return _rootAlloc->alloc(this, sizeInBytes);
+		return _rootAlloc->alloc(_rootAlloc, sizeInBytes);
 	}
 
 	inline void Free(void* data) {
-		return _rootAlloc->free(this, data);
+		return _rootAlloc->free(_rootAlloc, data);
 	}
 
 	inline void Reset() {
-		return _rootAlloc->clear(this);
+		return _rootAlloc->clear(_rootAlloc);
 	}
 
 	inline OPuint Used() {

@@ -40,6 +40,7 @@ void OPallocatorBasicReset(void* alloc) { }
 
 OPallocator OPDEFAULT_ALLOCATOR = {
 	NULL,
+	NULL,
 	OPallocatorBasicAlloc,
 	OPallocatorBasicFree,
 	OPallocatorBasicReset
