@@ -8,7 +8,6 @@
 #include "./Data/include/OPcman.h"
 #include "./Core/include/OPlog.h"
 #include "./Human/include/Input/OPmyo.h"
-#include "./Scripting/include/OPscript.h"
 #include "./Scripting/include/OPloaderOPS.h"
 #include "./Math/include/OPvec2.h"
 #include "GameWebServer.h"
