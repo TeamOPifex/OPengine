@@ -1,16 +1,12 @@
-#ifndef OPENGINE_HUMAN_RENDERING_SHADER_UNIFORM_API
-#define OPENGINE_HUMAN_RENDERING_SHADER_UNIFORM_API
-
-#include "./Core/include/OPtypes.h"
+#pragma once
 
 struct OPshaderUniformAPI;
 typedef struct OPshaderUniformAPI OPshaderUniformAPI;
 
-struct OPshaderUniform;
-
 #include "./Math/include/OPmat3.h"
 #include "./Math/include/OPmat4.h"
 
+struct OPshaderUniform;
 struct OPeffect;
 struct OPtexture;
 struct OPtextureCube;
@@ -57,5 +53,3 @@ struct OPshaderUniformAPI {
 	inline void Set(OPshaderUniform* shaderUniform, OPtextureCube* val, ui32 slot) { SetTextureCube(shaderUniform, val, slot); }
 	inline void Set(OPshaderUniform* shaderUniform, ui32 count, OPtextureCube* val, ui32 slot) { SetTextureCubev(shaderUniform, count, val, slot); }
 };
-
-#endif

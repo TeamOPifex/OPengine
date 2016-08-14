@@ -20,7 +20,7 @@ JS_RETURN_VAL _OPframeBufferCreateDepth(const JS_ARGS& args) {
 	//	GL_CLAMP_TO_EDGE,
 	//	GL_CLAMP_TO_EDGE
 	//};
-	OPtextureDesc desc;
+	OPtextureDesc desc = OPtextureDesc();
 	OPframeBuffer* fb = (OPframeBuffer*)OPalloc(sizeof(OPframeBuffer));
 	*fb = OPframeBufferCreateDepth(desc);
 

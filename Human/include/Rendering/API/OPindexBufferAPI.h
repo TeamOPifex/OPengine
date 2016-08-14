@@ -1,10 +1,9 @@
-#ifndef OPENGINE_HUMAN_RENDERING_API_INDEX_BUFFER
-#define OPENGINE_HUMAN_RENDERING_API_INDEX_BUFFER
-
-#include "./Core/include/OPtypes.h"
+#pragma once
 
 struct OPindexBufferAPI;
 typedef struct OPindexBufferAPI OPindexBufferAPI;
+
+#include "./Core/include/OPtypes.h"
 
 struct OPindexBuffer;
 #include "./Human/include/Rendering/Enums/OPindexSize.h"
@@ -17,5 +16,3 @@ struct OPindexBufferAPI {
 	void(*Unbind)(OPindexBuffer* indexBuffer) = 0;
 	void(*Destroy)(OPindexBuffer* indexBuffer) = 0;
 };
-
-#endif

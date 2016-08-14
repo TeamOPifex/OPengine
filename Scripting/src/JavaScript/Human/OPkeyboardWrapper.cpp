@@ -108,7 +108,7 @@ void _SetKeyboardMap(Handle<Object> keyboard) {
     for (OPint i = 0; i < (ui32)OPkeyboardKey::MAX; i++) {
         keyboard->Set(
             JS_NEW_STRING(keyNames[i]),
-            JS_NEW_NUMBER(i)
+            JS_NEW_INTEGER(i)
         );
     }
 }

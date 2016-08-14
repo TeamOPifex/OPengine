@@ -1,4 +1,5 @@
 #include "./Human/include/Platform/opengl/OPeffectAPIGL.h"
+#include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Platform/opengl/OPshaderAPIGL.h"
 #include "./Human/include/Rendering/OPshaderUniform.h"
 #include "./Human/include/Platform/opengl/OPcommonGL.h"

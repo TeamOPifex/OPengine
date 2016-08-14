@@ -26,7 +26,7 @@ JS_HELPER_SELF_WRAPPER(_OPvertexLayoutInit) {
 
 		String::Utf8Value name(JS_OBJECT_GET(obj, "name")->ToString());
 		OPint t = JS_OBJECT_GET_INT(obj, "type");
-		OPint elements = JS_OBJECT_GET_INT(obj, "elements");
+		ui32 elements = (ui32)JS_OBJECT_GET_INT(obj, "elements");
 		OPuint offset = JS_OBJECT_GET_INT(obj, "offset");
 
 		attributes[i].Name = OPstringCopy(*name);

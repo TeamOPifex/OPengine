@@ -4,16 +4,16 @@
 #include "./Human/include/Input/OPmouse.h"
 #include "./Human/include/Rendering/OPrender.h"
 
-void OPcamFreeFlightInit(OPcamFreeFlight* camFree, OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position, OPfloat camNear, OPfloat camFar) {
-	camFree->RotationSpeed = rotateSpeed;
-	camFree->MoveSpeed = moveSpeed;
-	camFree->Rotation = OPVEC3_ZERO;
-	camFree->Movement = OPVEC3_ZERO;
+void OPcamFreeFlight::Init(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position, OPfloat camNear, OPfloat camFar) {
+	RotationSpeed = rotateSpeed;
+	MoveSpeed = moveSpeed;
+	Rotation = OPVEC3_ZERO;
+	Movement = OPVEC3_ZERO;
 
 	OPfloat angle = OPvec3Angle(OPVEC3_FORWARD, OPvec3Norm(position));
-	camFree->Rotation.x = -angle;
+	Rotation.x = -angle;
 
-	camFree->Camera.SetPerspective(
+	Camera.SetPerspective(
 		position,
 		OPVEC3_ZERO,
 		OPVEC3_UP,
@@ -23,50 +23,44 @@ void OPcamFreeFlightInit(OPcamFreeFlight* camFree, OPfloat moveSpeed, OPfloat ro
 		);
 
 
-	OPcamFreeFlightUpdate(camFree);
+	Update();
 }
 
-OPcamFreeFlight* OPcamFreeCreate(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position, OPfloat camNear, OPfloat camFar) {
-	OPcamFreeFlight* result = (OPcamFreeFlight*)OPalloc(sizeof(OPcamFreeFlight));
-	OPcamFreeFlightInit(result, moveSpeed, rotateSpeed, position, camNear, camFar);
-	return result;
-}
-
-void OPcamFreeFlightUpdate(OPcamFreeFlight* camFree) {
-	OPmat4 rotation = OPmat4RotY(camFree->Rotation.y) * OPmat4RotX(camFree->Rotation.x);
+void OPcamFreeFlight::Update() {
+	OPmat4 rotation = OPmat4RotY(Rotation.y) * OPmat4RotX(Rotation.x);
 	OPvec3 target = OPmat4Transform(OPVEC3_BACKWARD, rotation);
 
-	camFree->Camera.pos += OPmat4Transform(camFree->Movement, rotation);
-	camFree->Camera.target = camFree->Camera.pos + target;
-	camFree->Camera.Update();
+	Camera.pos += OPmat4Transform(Movement, rotation);
+	Camera.target = Camera.pos + target;
+	Camera.Update();
 }
 
-void OPcamFreeFlightUpdate(OPcamFreeFlight* camFree, OPtimer* timer) {
+void OPcamFreeFlight::Update(OPtimer* timer) {
 	OPfloat dt = timer->Elapsed / 1000.0f;
 	OPvec3 rot = { 0, 0, 0 };
 
-	OPgamePad* gamePad = OPgamePadGet(OPGAMEPAD_ONE);
+	OPgamePad* gamePad = OPgamePadGet(OPgamePadIndex::ONE);
 	OPfloat triggerDifference = 1.0f + gamePad->RightTrigger() - (gamePad->LeftTrigger() * 0.9f);
 
-	OPfloat moveSpeed = dt * camFree->MoveSpeed * triggerDifference * 10.0f;
-	OPfloat rotSpeed = dt * camFree->RotationSpeed * triggerDifference;
+	OPfloat moveSpeed = dt * MoveSpeed * triggerDifference * 10.0f;
+	OPfloat rotSpeed = dt * RotationSpeed * triggerDifference;
 	
-	camFree->Movement.z = OPkeyboardIsDown(OPkeyboardKey::S) - OPkeyboardIsDown(OPkeyboardKey::W) - gamePad->LeftThumbY();
-	camFree->Movement.x = OPkeyboardIsDown(OPkeyboardKey::D) - OPkeyboardIsDown(OPkeyboardKey::A) + gamePad->LeftThumbX();
-	camFree->Movement *= moveSpeed;
+	Movement.z = OPkeyboardIsDown(OPkeyboardKey::S) - OPkeyboardIsDown(OPkeyboardKey::W) - gamePad->LeftThumbY();
+	Movement.x = OPkeyboardIsDown(OPkeyboardKey::D) - OPkeyboardIsDown(OPkeyboardKey::A) + gamePad->LeftThumbX();
+	Movement *= moveSpeed;
 
 	rot.y = OPkeyboardIsDown(OPkeyboardKey::Q) - OPkeyboardIsDown(OPkeyboardKey::E) - gamePad->RightThumbX();
 	rot.x = OPkeyboardIsDown(OPkeyboardKey::Z) - OPkeyboardIsDown(OPkeyboardKey::C) + gamePad->RightThumbY();
-	if (OPmouseIsDown(OPMOUSE_RBUTTON)) {
+	if (OPmouseIsDown(OPmouseButton::RBUTTON)) {
 		rot.x += OPmousePositionMovedY() / 10.0f;
 		rot.y += OPmousePositionMovedX() / 10.0f;
 	}
 	rot *= rotSpeed;
-	camFree->Rotation += rot;
-
-	OPcamFreeFlightUpdate(camFree);
+	Rotation += rot;
+	OPmouseButton
+	Update();
 }
 
-void OPcamFreeFlightDestroy() {
+void OPcamFreeFlight::Destroy() {
 
 }

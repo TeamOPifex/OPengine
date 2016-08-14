@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERING_ATTRIBUTES
-#define OPENGINE_HUMAN_RENDERING_ATTRIBUTES
+#pragma once
 
 enum struct OPattributes {
 	POSITION = 0x01,
@@ -20,6 +19,7 @@ enum OPattributeTypes {
 	OPATTR_TYPE_FLOAT
 };
 
+// TODO: (garrett) Get rid of these
 enum OPattributes2 {
     OPATTR2_POSITION = 0x01,
     OPATTR2_NORMAL = 0x02,
@@ -38,5 +38,3 @@ enum OPattributes2 {
     OPATTR2_TEXCOORD6 = 0x4000,
     OPATTR2_TEXCOORD7 = 0x8000
 };
-
-#endif

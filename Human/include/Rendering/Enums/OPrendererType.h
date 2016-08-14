@@ -1,9 +1,6 @@
-#ifndef OPENGINE_HUMAN_RENDERING_ENUMS_RENDERERTYPE
-#define OPENGINE_HUMAN_RENDERING_ENUMS_RENDERERTYPE
+#pragma once
 
 enum struct OPrendererType {
 	OPENGL,
 	DIRECTX
 };
-
-#endif

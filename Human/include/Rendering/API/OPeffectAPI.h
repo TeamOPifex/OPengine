@@ -1,10 +1,9 @@
-#ifndef OPENGINE_HUMAN_RENDERING_EFFECT_API
-#define OPENGINE_HUMAN_RENDERING_EFFECT_API
-
-#include "./Core/include/OPtypes.h"
+#pragma once
 
 struct OPeffectAPI;
 typedef struct OPeffectAPI OPeffectAPI;
+
+#include "./Core/include/OPtypes.h"
 
 struct OPeffect;
 struct OPshader;
@@ -20,5 +19,3 @@ struct OPeffectAPI {
 	void(*Unbind)(OPeffect* effect) = 0;
 	void(*Destroy)(OPeffect* effect) = 0;
 };
-
-#endif

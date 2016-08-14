@@ -37,7 +37,7 @@ JS_RETURN_VAL _OPfontManagerSetScale(const JS_ARGS& args) {
 
     OPfontManager* ptr = JS_GET_ARG_PTR(args, 0, OPfontManager);
 
-    ptr->scale = args[1]->NumberValue();
+    ptr->scale = (f32)args[1]->NumberValue();
 
     JS_RETURN_NULL;
 }
@@ -46,7 +46,7 @@ JS_RETURN_VAL _OPfontManagerSetScaleSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPfontManager* ptr = JS_GET_PTR(args.This(), OPfontManager);
-    ptr->scale = args[0]->NumberValue();
+    ptr->scale = (f32)args[0]->NumberValue();
 
     JS_RETURN_NULL;
 }

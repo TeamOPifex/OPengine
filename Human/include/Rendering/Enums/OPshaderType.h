@@ -1,5 +1,6 @@
-#ifndef OPENGINE_HUMAN_RENDERING_ENUMS_SHADER_TYPE
-#define OPENGINE_HUMAN_RENDERING_ENUMS_SHADER_TYPE
+#pragma once
+
+#include "./Core/include/OPtypes.h"
 
 enum struct OPshaderType {
 	VERTEX = 0,
@@ -20,5 +21,3 @@ inline const OPchar* OPshaderElementTypeToStr(OPshaderElementType shaderElementT
 	}
 	return "";
 }
-
-#endif

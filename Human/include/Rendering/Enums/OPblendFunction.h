@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERING_BLEND_FUNCTION
-#define OPENGINE_HUMAN_RENDERING_BLEND_FUNCTION
+#pragma once
 
 enum struct OPblendFunction {
 	ZERO,
@@ -18,5 +17,3 @@ enum struct OPblendFunction {
 	ONE_MINUS_CONSTANT_ALPHA,
 	SRC_ALPHA_SATURATE
 };
-
-#endif

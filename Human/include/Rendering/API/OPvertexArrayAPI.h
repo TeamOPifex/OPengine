@@ -1,11 +1,9 @@
-#ifndef OPENGINE_HUMAN_RENDERING_VERTEX_ARRAY_API
-#define OPENGINE_HUMAN_RENDERING_VERTEX_ARRAY_API
-
-#include "./Core/include/OPtypes.h"
+#pragma once
 
 struct OPvertexArrayAPI;
 typedef struct OPvertexArrayAPI OPvertexArrayAPI;
 
+#include "./Core/include/OPtypes.h"
 struct OPvertexArray;
 struct OPvertexLayout;
 
@@ -33,5 +31,3 @@ struct OPvertexArrayAPI {
 		_DrawIndexed(ptr, count, 0);
 	}
 };
-
-#endif

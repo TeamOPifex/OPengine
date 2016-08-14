@@ -1,5 +1,7 @@
-#ifndef OPENGINE_HUMAN_PLATFORM_SHADER_GL
-#define OPENGINE_HUMAN_PLATFORM_SHADER_GL
+#pragma once
+
+struct OPshaderGL;
+typedef struct OPshaderGL OPshaderGL;
 
 #include "./Human/include/Rendering/API/OPshaderAPI.h"
 
@@ -9,5 +11,3 @@ struct OPshaderGL {
 	ui32 Handle;
 	bool Compiled;
 };
-
-#endif

@@ -166,7 +166,7 @@ typedef Persistent<Function, CopyablePersistentTraits<Function> > OPjavaScriptPe
 #define JS_SET_METHOD(obj, name, func) obj->Set(JS_NEW_STRING(name), JS_NEW_FUNCTION_TEMPLATE(func)->GetFunction());
 #define JS_SET_OBJECT(target, name, object) target->Set(JS_NEW_STRING(name), object);
 #define JS_SET_PROTOTYPE_METHOD(obj, name, func) obj->PrototypeTemplate()->Set(JS_NEW_STRING(name), JS_NEW_FUNCTION_TEMPLATE(func));
-#define JS_SET_NUMBER(target, name, number) target->Set(JS_NEW_STRING(name), JS_NEW_NUMBER(number));
+#define JS_SET_NUMBER(target, name, number) target->Set(JS_NEW_STRING(name), JS_NEW_NUMBER((double)number));
 #define JS_SET_INTEGER(target, name, number) target->Set(JS_NEW_STRING(name), JS_NEW_INTEGER(number));
 
 
@@ -204,7 +204,7 @@ void ReportException(v8::Isolate* isolate, v8::TryCatch* try_catch);
 #define JS_SET_PTR(obj, ptr) JS_SET_NUMBER(obj, "ptr", (OPint)ptr)
 #define JS_GET_PTR(obj, type) (type*)(OPint)obj->Get(JS_NEW_STRING("ptr"))->IntegerValue();
 #define JS_GET_ARG_PTR(args, ind, type) JS_GET_PTR(args[(int)ind]->ToObject(), type)
-#define JS_GET_ARG_OPUINT(args, ind) ((OPint)args[ind]->IntegerValue())
+#define JS_GET_ARG_OPUINT(args, ind) ((OPint)args[(int)ind]->IntegerValue())
 
 #ifdef _DEBUG
     #define JS_SET_TYPE(obj, t) JS_SET_STRING(obj, "type", t)

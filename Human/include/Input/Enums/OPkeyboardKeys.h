@@ -1,7 +1,4 @@
-#ifndef OPENGINE_HUMAN_INPUT_ENUM_KEYBOARDKEY
-#define OPENGINE_HUMAN_INPUT_ENUM_KEYBOARDKEY
-
-#include "./Core/include/OPtypes.h"
+#pragma once
 
 enum struct OPkeyboardKey {
 	BACKSPACE = 0,
@@ -20,7 +17,7 @@ enum struct OPkeyboardKey {
 	RIGHT,
 	DOWN,
 	INSERT,
-	_DELETE,
+	DELETE_,
 	N0,
 	N1,
 	N2,
@@ -96,8 +93,5 @@ enum struct OPkeyboardKey {
 	RSHIFT,
 	LCONTROL,
 	RCONTROL,
-	MAX
+	_MAX
 };
-
-
-#endif

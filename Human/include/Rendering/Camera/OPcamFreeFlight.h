@@ -1,23 +1,10 @@
-#ifndef OPENGINE_HUMAN_RENDERER_CAMERA_FREE
-#define OPENGINE_HUMAN_RENDERER_CAMERA_FREE
+#pragma once
+
+struct OPcamFreeFlight;
+typedef struct OPcamFreeFlight OPcamFreeFlight;
 
 #include "./Human/include/Rendering/OPcam.h"
 #include "./Core/include/OPtimer.h"
-
-struct OPcamFreeFlight;
-
-void OPcamFreeFlightInit(OPcamFreeFlight* camFree, OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position, OPfloat camNear, OPfloat camFar);
-OPcamFreeFlight* OPcamFreeCreate(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position, OPfloat camNear, OPfloat camFar);
-void OPcamFreeFlightUpdate(OPcamFreeFlight* camFree, OPtimer* timer);
-void OPcamFreeFlightUpdate(OPcamFreeFlight* camFree);
-void OPcamFreeFlightDestroy();
-
-inline void OPcamFreeFlightInit(OPcamFreeFlight* camFree, OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position) {
-	OPcamFreeFlightInit(camFree, moveSpeed, rotateSpeed, position, 1.0f, 1000.0f);
-}
-inline OPcamFreeFlight* OPcamFreeCreate(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position) {
-	return OPcamFreeCreate(moveSpeed, rotateSpeed, position, 1.0f, 1000.0f);
-}
 
 // Free Flight Camera
 struct OPcamFreeFlight {
@@ -25,15 +12,45 @@ struct OPcamFreeFlight {
 	OPvec3 Rotation, Movement;
 	OPfloat RotationSpeed, MoveSpeed;
 
-	void Init() {
-		OPcamFreeFlightInit(this, 5.0, 1.0, OPvec3Create(5, 5, 5));
+	OPcamFreeFlight() { Init(); }
+	OPcamFreeFlight(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position) {
+		Init(moveSpeed, rotateSpeed, position);
+	}
+	OPcamFreeFlight(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position, OPfloat camNear, OPfloat camFar) { 
+		Init(moveSpeed, rotateSpeed, position, camNear, camFar);
 	}
 
-	void Update(OPtimer* timer) {
-		OPcamFreeFlightUpdate(this, timer);
+	void Init(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position, OPfloat camNear, OPfloat camFar);
+
+	void Update();
+	void Update(OPtimer* timer);
+	void Destroy();
+
+	inline void Init() {
+		Init(5.0f, 1.0f, OPvec3Create(5, 5, 5));
 	}
 
-	OPmat4* View() { return &Camera.view; }
-	OPmat4* Proj() { return &Camera.proj; }
+	inline void Init(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position) {
+		Init(moveSpeed, rotateSpeed, position, 0.1f, 1000.0f);
+	}
+
+	inline OPmat4* View() { 
+		return &Camera.view; 
+	}
+
+	inline OPmat4* Proj() { 
+		return &Camera.proj; 
+	}
+
+	inline static OPcamFreeFlight* Create() { 
+		return OPNEW(OPcamFreeFlight()); 
+	}
+
+	inline static OPcamFreeFlight* Create(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position) {
+		return OPNEW(OPcamFreeFlight(moveSpeed, rotateSpeed, position));
+	}
+
+	inline static OPcamFreeFlight* Create(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position, OPfloat camNear, OPfloat camFar) {
+		return OPNEW(OPcamFreeFlight(moveSpeed, rotateSpeed, position, camNear, camFar));
+	}
 };
-#endif

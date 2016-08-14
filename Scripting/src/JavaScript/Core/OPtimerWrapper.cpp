@@ -51,7 +51,7 @@ JS_RETURN_VAL _OPtimerSetElapsed(const JS_ARGS& args) {
     OPtimer* timer = JS_GET_PTR(obj, OPtimer);
     timer->Elapsed = args[1]->IntegerValue();
 
-    JS_SET_INTEGER(obj, "elapsed", timer->Elapsed);
+    JS_SET_INTEGER(obj, "elapsed", (int32_t)timer->Elapsed);
 
     JS_RETURN_NULL
 }

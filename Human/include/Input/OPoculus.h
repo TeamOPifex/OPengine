@@ -1,9 +1,9 @@
+#pragma once
 
+struct OPoculus;
+typedef struct OPoculus OPoculus;
 
 #define OVR_OS_WIN32
-
-#ifndef OPENGINE_HUMAN_INPUT_OCULUS
-#define OPENGINE_HUMAN_INPUT_OCULUS
 
 #ifdef OPIFEX_OPTION_OCULUS
 #include "./Math/include/OPvec2.h"
@@ -13,7 +13,6 @@
 
 #include <OVR_CAPI.h>
 #include "OVR_CAPI_GL.h"
-
 #endif
 
 struct OPoculus {
@@ -27,18 +26,12 @@ struct OPoculus {
 	ovrHmdDesc desc;
 #endif
 };
-typedef struct OPoculus OPoculus;
 
 extern OPoculus OculusManager;
 
 int OPoculusStartup();
 int OPoculusInitialize();
 void OPoculusDestroy();
-
 void OPoculusUpdate();
-
-
 void OPoculusBegin();
 void OPoculusEnd();
-
-#endif

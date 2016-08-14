@@ -32,11 +32,11 @@ void ExampleFreeFlightEnter(OPgameState* last) {
 	OPshader* frag = (OPshader*)OPCMAN.Get("Common/Texture.frag");
 	freeFlightExample.Effect->Init(vert, frag);
 
-	OPcamFreeFlightInit(&freeFlightExample.Camera, 3.0f, 3.0f, OPVEC3_ONE);
+	freeFlightExample.Camera.Init(3.0f, 3.0f, OPVEC3_ONE);
 }
 
 OPint ExampleFreeFlightUpdate(OPtimer* timer) {
-	OPcamFreeFlightUpdate(&freeFlightExample.Camera, timer);
+	freeFlightExample.Camera.Update(timer);
 	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { freeFlightExample.Rotation++; }
 
 	return false;

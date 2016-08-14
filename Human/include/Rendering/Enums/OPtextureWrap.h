@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERING_ENUMS_TEXTURE_WRAP
-#define OPENGINE_HUMAN_RENDERING_ENUMS_TEXTURE_WRAP
+#pragma once
 
 enum struct OPtextureWrap
 {
@@ -10,5 +9,3 @@ enum struct OPtextureWrap
 	CLAMP_TO_EDGE,
 	CLAMP_TO_BORDER
 };
-
-#endif

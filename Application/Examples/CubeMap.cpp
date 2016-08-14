@@ -31,7 +31,7 @@ void ExampleCubeMapEnter(OPgameState* last) {
     faces2[5] = OPimagePNGLoadData("Textures/cubeTex.png");
 
     cubeMapExample.Mesh = OPcubeCreate(OPvec3Create(1,0,0));
-    cubeMapExample.SphericalCube = OPsphericalCubeCreate(faces2);
+    cubeMapExample.SphericalCube.Init(faces2);
 
     cubeMapExample.Effect.Init("CubeMap.vert", "CubeMap.frag");
 

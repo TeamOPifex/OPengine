@@ -1,11 +1,9 @@
-#ifndef OPENGINE_HUMAN_RENDERING_VERTEX_BUFFER_API
-#define OPENGINE_HUMAN_RENDERING_VERTEX_BUFFER_API
-
-#include "./Core/include/OPtypes.h"
+#pragma once
 
 struct OPvertexBufferAPI;
 typedef struct OPvertexBufferAPI OPvertexBufferAPI;
 
+#include "./Core/include/OPtypes.h"
 struct OPvertexBuffer;
 struct OPvertexLayout;
 struct OPeffect;
@@ -18,5 +16,3 @@ struct OPvertexBufferAPI {
 	void(*Unbind)(OPvertexBuffer* vertexBuffer) = 0;
 	void(*Destroy)(OPvertexBuffer* vertexBuffer) = 0;
 };
-
-#endif

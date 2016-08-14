@@ -1,7 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERING_SHADER
-#define OPENGINE_HUMAN_RENDERING_SHADER
-
-#include "./Core/include/OPtypes.h"
+#pragma once
 
 struct OPshaderAPI;
 typedef struct OPshaderAPI OPshaderAPI;
@@ -31,5 +28,3 @@ struct OPshaderAPI {
 		return Init(shader, shaderType, (OPchar*)source->Data, source->Length);
 	}
 };
-
-#endif

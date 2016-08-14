@@ -1,5 +1,7 @@
-#ifndef OPENGINE_HUMAN_RENDERING_API_RENDERER
-#define OPENGINE_HUMAN_RENDERING_API_RENDERER
+#pragma once
+
+struct OPrenderAPI;
+typedef struct OPrenderAPI OPrenderAPI;
 
 #include "./Human/include/Rendering/API/OPcontext.h"
 #include "./Human/include/Rendering/API/OPeffectAPI.h"
@@ -73,5 +75,3 @@ struct OPrenderAPI {
 		SetBlendMode(OPblendFunction::SRC_ALPHA, OPblendFunction::ONE);
 	}
 };
-
-#endif

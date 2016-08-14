@@ -1,26 +1,23 @@
-#ifndef OPENGINE_HUMAN_INPUT_KEYBOARD
-#define OPENGINE_HUMAN_INPUT_KEYBOARD
+#pragma once
+
+struct OPkeyboardState;
+typedef struct OPkeyboardState OPkeyboardState;
 
 #include "./Human/include/Input/Enums/OPkeyboardKeys.h"
 #include "./Core/include/OPtimer.h"
 
 struct OPkeyboardState {
-	OPint	keys[(ui32)OPkeyboardKey::MAX];
-	OPint	prevKeys[(ui32)OPkeyboardKey::MAX];
+	bool	keys[(ui32)OPkeyboardKey::_MAX];
+	bool	prevKeys[(ui32)OPkeyboardKey::_MAX];
 };
-typedef struct OPkeyboardState OPkeyboardState;
 
 extern OPkeyboardState Keyboard;
 extern void (*OPKEYBOARD_STREAM)(OPchar);
 
 void OPkeyboardUpdate(OPtimer* timer);
 void OPkeyboardUpdatePost(OPtimer* timer);
-OPint OPkeyboardIsDown(OPkeyboardKey key);
-OPint OPkeyboardIsUp(OPkeyboardKey key);
-OPint OPkeyboardWasPressed(OPkeyboardKey key);
-OPint OPkeyboardWasReleased(OPkeyboardKey key);
-OPint OPkeyboardAnyInputIsDown();
-
-//void OPkeyboardKey(OPuint codepoint);
-
-#endif
+bool OPkeyboardIsDown(OPkeyboardKey key);
+bool OPkeyboardIsUp(OPkeyboardKey key);
+bool OPkeyboardWasPressed(OPkeyboardKey key);
+bool OPkeyboardWasReleased(OPkeyboardKey key);
+bool OPkeyboardAnyInputIsDown();

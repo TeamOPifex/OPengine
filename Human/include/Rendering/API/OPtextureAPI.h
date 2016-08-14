@@ -1,7 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERING_API_TEXTURE
-#define OPENGINE_HUMAN_RENDERING_API_TEXTURE
-
-#include "./Core/include/OPtypes.h"
+#pragma once
 
 struct OPtextureAPI;
 typedef struct OPtextureAPI OPtextureAPI;
@@ -31,5 +28,3 @@ struct OPtextureAPI {
 		return _Create(textureDesc, pixelData);
 	}
 };
-
-#endif

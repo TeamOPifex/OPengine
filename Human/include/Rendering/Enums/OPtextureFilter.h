@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERING_ENUMS_TEXTURE_FILTER
-#define OPENGINE_HUMAN_RENDERING_ENUMS_TEXTURE_FILTER
+#pragma once
 
 enum struct OPtextureFilter
 {
@@ -7,5 +6,3 @@ enum struct OPtextureFilter
 	LINEAR,
 	NEAREST
 };
-
-#endif

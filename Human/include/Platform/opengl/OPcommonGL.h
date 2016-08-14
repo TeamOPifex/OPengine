@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_PLATFORM_OPENGL_COMMON
-#define OPENGINE_HUMAN_PLATFORM_OPENGL_COMMON
+#pragma once
 
 #include "./Core/include/OPtypes.h"
 
@@ -11,12 +10,12 @@
 		#include <GLES2/gl2ext.h>
 	#endif
 #else
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+	#include <GL/glew.h>
+	#include <GLFW/glfw3.h>
 #endif
 
 #ifndef OPIFEX_WINDOWS
-#define __debugbreak __builtin_trap
+	#define __debugbreak __builtin_trap
 #endif
 
 i8 OPglewInit();
@@ -32,9 +31,5 @@ bool OPcommonGLLog(const OPchar* function, const OPchar* file, i32 line);
             __debugbreak(); \
         }
 #else
-#define OPGLFN(x) x
+	#define OPGLFN(x) x
 #endif
-
-#endif
-
-// OPlog(#x); \

@@ -1,11 +1,9 @@
-#ifndef OPENGINE_HUMAN_RENDERING_TEXTURE_CUBE_API
-#define OPENGINE_HUMAN_RENDERING_TEXTURE_CUBE_API
-
-#include "./Core/include/OPtypes.h"
+#pragma once
 
 struct OPtextureCubeAPI;
 typedef struct OPtextureCubeAPI OPtextureCubeAPI;
 
+#include "./Core/include/OPtypes.h"
 struct OPtextureCube;
 struct OPimage;
 
@@ -21,7 +19,4 @@ struct OPtextureCubeAPI {
 		
 	inline OPtextureCube* Init(OPtextureCube* textureCube, OPimage* textures) { return _Init(textureCube, textures); }
 	OPtextureCube* Init(OPtextureCube* textureCube, const OPchar** textures);
-
 };
-
-#endif

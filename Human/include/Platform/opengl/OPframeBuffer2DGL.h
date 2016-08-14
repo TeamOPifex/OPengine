@@ -1,11 +1,12 @@
-#ifndef OPENGINE_HUMAN_RENDERING_FRAMEBUFFER2D_GL
-#define OPENGINE_HUMAN_RENDERING_FRAMEBUFFER2D_GL
+#pragma once
+
+struct OPframeBuffer2DGL;
+typedef struct OPframeBuffer2DGL OPframeBuffer2DGL;
 
 #include "./Human/include/Rendering/API/OPframeBuffer2D.h"
 
 void OPframeBuffer2DGLInit(OPframeBuffer2D* frameBuffer2D);
 
 struct OPframeBuffer2DGL {
-};
 
-#endif
+};

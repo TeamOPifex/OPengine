@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_INPUT_MYO
-#define OPENGINE_HUMAN_INPUT_MYO
+#pragma once
 
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPtimer.h"
@@ -40,5 +39,3 @@ OPint OPmyoPoseWas(OPmyoPoses pose);
 OPint OPmyoPoseIs(OPmyoPoses pose);
 OPint OPmyoLock();
 OPint OPmyoUnlock(OPint state);
-
-#endif

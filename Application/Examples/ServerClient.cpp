@@ -71,10 +71,10 @@ OPint ExampleServerClientUpdate(OPtimer* time) {
 		OPnetworkClientConnect(serverClientExampleExample.Protocol->Network, "127.0.0.1", "1337");
 	}
 
-	//if(serverClientExampleExample.Mode != 0 && OPmouseWasPressed(OPMOUSE_LBUTTON)) {
+	//if(serverClientExampleExample.Mode != 0 && OPmouseWasPressed(OPmouseButton::LBUTTON)) {
 
 	//}
-	if(serverClientExampleExample.Mode != 0 && OPmouseWasReleased(OPMOUSE_LBUTTON)) {
+	if(serverClientExampleExample.Mode != 0 && OPmouseWasReleased(OPmouseButton::LBUTTON)) {
 		serverClientExampleExample.HeldDown = 0;
 		OPnetworkProtocolSimpleSend(
 			serverClientExampleExample.Protocol,

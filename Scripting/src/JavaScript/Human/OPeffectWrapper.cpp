@@ -14,9 +14,9 @@ JS_RETURN_VAL _OPeffectGen(const JS_ARGS& args) {
 
     String::Utf8Value vert(args[0]->ToString());
     String::Utf8Value frag(args[1]->ToString());
-    ui32 attrs = args[2]->IntegerValue();
+    ui32 attrs = (ui32)args[2]->IntegerValue();
     String::Utf8Value name(args[3]->ToString());
-    ui32 vertSize = args[4]->IntegerValue();
+    ui32 vertSize = (ui32)args[4]->IntegerValue();
 	effect->Init(*vert, *frag);
 
     Handle<Object> result = JS_NEW_OBJECT();

@@ -108,7 +108,7 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	OPray3D ray = { OPvec3(0, 0, 0), OPvec3(0, 0, 0) };
 	OPvec3 positionHit = { 0, 0, 0};
 	OPint intersecting = 0;
-	if(OPmouseIsDown(OPMOUSE_LBUTTON)) {
+	if(OPmouseIsDown(OPmouseButton::LBUTTON)) {
 
 		ray = mouseIntersectExample.Camera.Unproject(
 			OPmousePositionX(),
@@ -188,7 +188,7 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	OPeffectSet("vLightDirection", &mouseIntersectExample.LightDirection);
 	OPmeshRender();
 
-	if(OPmouseIsDown(OPMOUSE_LBUTTON)) {
+	if(OPmouseIsDown(OPmouseButton::LBUTTON)) {
 		OPbindMeshEffectWorldCam(
 			&mouseIntersectExample.Mesh2,
 			&mouseIntersectExample.Effect,

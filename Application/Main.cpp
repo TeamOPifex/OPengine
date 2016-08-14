@@ -11,6 +11,7 @@
 OPwindow mainWindow;
 
 void ApplicationInit() {
+	TIMED_BLOCK;
 
 	//OPlogToFile("output.txt");
 
@@ -47,7 +48,7 @@ OPint ApplicationUpdate(OPtimer* timer) {
 	OPCMAN_UPDATE(timer);
 
 	if (OPkeyboardWasReleased(OPkeyboardKey::ESCAPE)) return 1;
-	if ((OPkeyboardWasReleased(OPkeyboardKey::BACKSPACE) || OPgamePadGet(OPGAMEPAD_ONE)->WasPressed(OPGAMEPADBUTTON_BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
+	if ((OPkeyboardWasReleased(OPkeyboardKey::BACKSPACE) || OPgamePadGet(OPgamePadIndex::ONE)->WasPressed(OPgamePadButton::BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
 		OPgameStateChange(&GS_EXAMPLE_SELECTOR);
 	}
 

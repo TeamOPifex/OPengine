@@ -31,7 +31,7 @@ void ExampleSphericalCubeEnter(OPgameState* last) {
 	// The OPCMAN.Load call ensures that this mesh has been loaded
 	// The OPCMAN.Get call returns a pointer to the resource (an OPmesh)
 	// that's contained in the Content Manager
-	sphericalCubeExample->SphericalCube = OPsphericalCubeCreate(10);
+	sphericalCubeExample->SphericalCube.Init(10);
 
 	// The effect that will be used to render the mesh
 	// The renderGenEffect is a simplified utility method

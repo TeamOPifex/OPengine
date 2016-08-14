@@ -34,12 +34,12 @@ void OPmouseUpdate() {
 //	glfwSetScrollCallback(OPWINDOW_ACTIVE->Window, scrollCB);
 //#endif
 
-	OPmemcpy(&Mouse.prevKeys, &Mouse.keys, sizeof(OPint)* _OPMOUSE_MAX);
+	OPmemcpy(&Mouse.prevKeys, &Mouse.keys, sizeof(OPint)* (ui32)OPmouseButton::_MAX);
 	Mouse.prevPositionX = Mouse.positionX;
 	Mouse.prevPositionY = Mouse.positionY;
 	Mouse.prevWheel = Mouse.wheel;
 
-	for(ui32 i = 0; i < _OPMOUSE_MAX; i++) {
+	for(ui32 i = 0; i < (ui32)OPmouseButton::_MAX; i++) {
 		Mouse.keys[i] = OPRENDERER_ACTIVE->Window.GetButtonState(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE, (OPmouseButton)i);
 	}
 
@@ -71,17 +71,17 @@ i32 OPmouseWheelMoved() {
 	return Mouse.prevWheel - Mouse.wheel;
 }
 
-OPint OPmouseIsDown(OPmouseKey key) {
-	return Mouse.keys[key];
+bool OPmouseIsDown(OPmouseButton key) {
+	return Mouse.keys[(ui32)key];
 }
-OPint OPmouseIsUp(OPmouseKey key) {
-	return !Mouse.keys[key];
+bool OPmouseIsUp(OPmouseButton key) {
+	return !Mouse.keys[(ui32)key];
 }
-OPint OPmouseWasPressed(OPmouseKey key) {
-	return Mouse.keys[key] && !Mouse.prevKeys[key];
+bool OPmouseWasPressed(OPmouseButton key) {
+	return Mouse.keys[(ui32)key] && !Mouse.prevKeys[(ui32)key];
 }
-OPint OPmouseWasReleased(OPmouseKey key) {
-	return !Mouse.keys[key] && Mouse.prevKeys[key];
+bool OPmouseWasReleased(OPmouseButton key) {
+	return !Mouse.keys[(ui32)key] && Mouse.prevKeys[(ui32)key];
 }
 void OPmouseSetPosition(i32 x, i32 y) {
 	OPRENDERER_ACTIVE->Window.SetCursorPos(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE, OPvec2((f32)x, (f32)y));
@@ -97,8 +97,8 @@ void OPmouseSetPositionScreenCenter() {
 	OPmouseSetPosition((i32)(width / 2), (i32)(height / 2));
 }
 
-OPint OPmouseAnyInputIsDown() {
-	for (ui32 i = 0; i < _OPMOUSE_MAX; i++) {
+bool OPmouseAnyInputIsDown() {
+	for (ui32 i = 0; i < (ui32)OPmouseButton::_MAX; i++) {
 		if (Mouse.keys[i]) return true;
 	}
 	return false;

@@ -1,5 +1,7 @@
-#ifndef OPENGINE_HUMAN_RENDERING_FRAMEBUFFER_DEPTH_GL
-#define OPENGINE_HUMAN_RENDERING_FRAMEBUFFER_DEPTH_GL
+#pragma once
+
+struct OPframeBufferDepthGL;
+typedef struct OPframeBufferDepthGL OPframeBufferDepthGL;
 
 #include "./Human/include/Rendering/API/OPframeBufferDepth.h"
 
@@ -8,5 +10,3 @@ void OPframeBufferDepthGLInit(OPframeBufferDepth* frameBufferDepth);
 struct OPframeBufferDepthGL {
 
 };
-
-#endif

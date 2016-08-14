@@ -29,7 +29,7 @@ void _SetGamePadMap(Handle<Object> buttons) {
     for (OPint i = 0; i < _OPGAMEPADBUTTON_MAX; i++) {
         buttons->Set(
             JS_NEW_STRING(gamePadNames[i]),
-            JS_NEW_NUMBER(i)
+            JS_NEW_INTEGER(i)
         );
     }
 }
@@ -211,7 +211,7 @@ JS_RETURN_VAL _OPgamePadUpdate(const JS_ARGS& args) {
 JS_RETURN_VAL _OPgamePadSetDeadZones(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
-	OPGAMEPADSYSTEM.SetDeadzones(args[0]->NumberValue());
+	OPGAMEPADSYSTEM.SetDeadzones((f32)args[0]->NumberValue());
 
     JS_RETURN_NULL;
 }
@@ -245,7 +245,7 @@ void _OPgamePadSetup(Handle<Object> result, OPgamePad* controller) {
 JS_RETURN_VAL _OPgamePadGet(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
-    OPgamePad* controller = OPgamePadGet(args[0]->IntegerValue());
+    OPgamePad* controller = OPgamePadGet((i8)args[0]->IntegerValue());
 
     Handle<Object> result = JS_NEW_OBJECT();
     _OPgamePadSetup(result, controller);

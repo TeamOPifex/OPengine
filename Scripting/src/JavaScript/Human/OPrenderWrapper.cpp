@@ -22,9 +22,9 @@ JS_RETURN_VAL _OPrenderClear(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPrenderClear(
-    args[0]->NumberValue(),
-    args[1]->NumberValue(),
-    args[2]->NumberValue());
+		(f32)args[0]->NumberValue(),
+		(f32)args[1]->NumberValue(),
+		(f32)args[2]->NumberValue());
 
     JS_RETURN_NULL;
 }
@@ -56,7 +56,7 @@ JS_RETURN_VAL _OPrenderSize(const JS_ARGS& args) {
 JS_RETURN_VAL _OPrenderCull(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPrenderCull(args[0]->IntegerValue());
+    OPrenderCull(args[0]->IntegerValue() != 0);
 
     JS_RETURN_NULL;
 }
@@ -72,7 +72,7 @@ JS_RETURN_VAL _OPrenderCullMode(const JS_ARGS& args) {
 JS_RETURN_VAL _OPrenderDepth(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPrenderDepth(args[0]->IntegerValue());
+    OPrenderDepth(args[0]->IntegerValue() != 0);
 
     JS_RETURN_NULL;
 }
@@ -80,7 +80,7 @@ JS_RETURN_VAL _OPrenderDepth(const JS_ARGS& args) {
 JS_RETURN_VAL _OPrenderDepthWrite(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPrenderDepthWrite(args[0]->IntegerValue());
+    OPrenderDepthWrite(args[0]->IntegerValue() != 0);
 
     JS_RETURN_NULL;
 }
@@ -104,7 +104,7 @@ JS_RETURN_VAL _OPrenderSetScreenSize(const JS_ARGS& args) {
 JS_RETURN_VAL _OPrenderBlend(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPrenderBlend(args[0]->IntegerValue());
+    OPrenderBlend(args[0]->IntegerValue() != 0);
 
     JS_RETURN_NULL;
 }

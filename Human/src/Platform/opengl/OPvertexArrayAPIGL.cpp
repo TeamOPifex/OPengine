@@ -1,7 +1,10 @@
 #include "./Human/include/Platform/opengl/OPvertexArrayAPIGL.h"
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
+#include "./Human/include/Rendering/API/OPrenderer.h"
+#include "./Human/include/Rendering/OPrender.h"
 #include "./Human/include/Rendering/OPvertexArray.h"
 #include "./Human/include/Rendering/OPvertexLayout.h"
+#include "./Human/include/Rendering/OPeffect.h"
 #include "./Core/include/OPmemory.h"
 
 void OPvertexArrayGLBind(OPvertexArray* vertexArray);

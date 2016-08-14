@@ -206,11 +206,11 @@ typedef struct {
 		OPmaterialAddParam(&GroundMaterials[1], "uLightPos", &ShadowCamera.pos);
 		OPmaterialAddParam(&GroundMaterials[1], "uViewPos", &Camera.Camera.pos);
 
-		OPcamFreeFlightInit(&Camera, 3.0f, 3.0f, OPVEC3_ONE, 0.01f, 50.0f);
+		Camera.Init(3.0f, 3.0f, OPVEC3_ONE, 0.01f, 50.0f);
 	}
 
 	OPint Update(OPtimer* timer) {
-		OPcamFreeFlightUpdate(&Camera, timer);
+		Camera.Update(timer);
 
 		ShadowCamera.pos.x -= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPkeyboardKey::J);
 		ShadowCamera.pos.x += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPkeyboardKey::L);

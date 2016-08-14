@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERING_ENUMS_TEXTURE_FORMAT
-#define OPENGINE_HUMAN_RENDERING_ENUMS_TEXTURE_FORMAT
+#pragma once
 
 enum struct OPtextureFormat
 {
@@ -10,5 +9,3 @@ enum struct OPtextureFormat
 	LUMINANCE_ALPHA,
 	DEPTH
 };
-
-#endif

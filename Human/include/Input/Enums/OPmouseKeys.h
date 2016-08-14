@@ -1,20 +1,18 @@
-#ifndef OPENGINE_HUMAN_INPUT_MOUSEKEY
-#define OPENGINE_HUMAN_INPUT_MOUSEKEY
+#pragma once
 
-#include "./Core/include/OPtypes.h"
+//enum OPmouseKey {
+//	LBUTTON = 0,
+//	RBUTTON,
+//	CANCEL,
+//	MBUTTON,
+//	XBUTTON1_,
+//	XBUTTON2_,
+//	XBUTTON3_,
+//	XBUTTON4_,
+//	_MAX = 8
+//};
 
-enum OPmouseKey {
-	OPMOUSE_LBUTTON = 0,
-	OPMOUSE_RBUTTON,
-	OPMOUSE_CANCEL,
-	OPMOUSE_MBUTTON,
-	OPMOUSE_XBUTTON1,
-	OPMOUSE_XBUTTON2,
-	OPMOUSE_XBUTTON3,
-	OPMOUSE_XBUTTON4,
-	_OPMOUSE_MAX = 8
-};
 
-extern ui32 OPmouseMapping[_OPMOUSE_MAX];
-
-#endif
+//#include "./Core/include/OPtypes.h"
+//
+//extern ui32 OPmouseMapping[OPmouseKey::_MAX];

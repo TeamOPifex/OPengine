@@ -3,6 +3,7 @@
 
 #include "./Human/include/Rendering/OPcam.h"
 #include "./Human/include/Rendering/OPframeBuffer.h"
+#include "./Human/include/Rendering/OPmodel.h"
 #include "./Data/include/OPradixSort.h"
 #include "./Data/include/OPallocLinear.h"
 

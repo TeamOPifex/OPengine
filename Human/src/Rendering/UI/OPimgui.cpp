@@ -158,7 +158,7 @@ OPint OPimguiTextbox(OPvec2 pos, const OPchar* text, const OPchar* placeholder, 
 	OPint mouseWithin = mx >= topLeft.x && my >= topLeft.y &&
 		mx <= bottomRight.x && my <= bottomRight.y;
 
-	OPint clicked = mouseWithin && OPmouseWasPressed(OPMOUSE_LBUTTON);
+	OPint clicked = mouseWithin && OPmouseWasPressed(OPmouseButton::LBUTTON);
 
 
 	_block(pos, OPvec2(400, size.y), OPIMGUI_ACTIVE->secondaryColor);
@@ -199,7 +199,7 @@ OPint OPimguiTextbox(OPvec2 pos, const OPchar* text, const OPchar* placeholder, 
     glDisable(GL_SCISSOR_TEST);
 
 	if(clicked) return 1;
-	else if (OPmouseWasPressed(OPMOUSE_LBUTTON)) return 2;
+	else if (OPmouseWasPressed(OPmouseButton::LBUTTON)) return 2;
 	else return 0;
 }
 
@@ -273,7 +273,7 @@ OPint OPimguiCheckbox(
 		_block(innerPos, inner, hover);
 	}
 
-	if(mouseWithin && OPmouseWasPressed(OPMOUSE_LBUTTON)) {
+	if(mouseWithin && OPmouseWasPressed(OPmouseButton::LBUTTON)) {
 		return 1;
 	}
 
@@ -346,8 +346,8 @@ OPint OPimguiButton(OPvec2 pos, const OPchar* text, OPvec4 color, OPvec4 selecte
 	OPint mouseWithin = mx >= topLeft.x && my >= topLeft.y &&
 		mx <= bottomRight.x && my <= bottomRight.y;
 
-	OPint clicked = mouseWithin && OPmouseWasReleased(OPMOUSE_LBUTTON);
-	OPint down = mouseWithin && OPmouseIsDown(OPMOUSE_LBUTTON);
+	OPint clicked = mouseWithin && OPmouseWasReleased(OPmouseButton::LBUTTON);
+	OPint down = mouseWithin && OPmouseIsDown(OPmouseButton::LBUTTON);
 
 	if(clicked || down) {
 		_block(pos, size, selected);

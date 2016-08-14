@@ -103,7 +103,8 @@ void OPrenderCommandBucket::Submit(ui64 key, void(*dispatch)(void*, OPcam*), voi
 }
 
 void OPrenderCommandBucket::Submit(OPmodel* model, OPmaterialInstance* material) {
-	OPrenderCommandDrawIndexedSubmit(this, model, material);
+	
+	OPrenderCommandDrawIndexed::Submit(this, model, material);
 }
 
 

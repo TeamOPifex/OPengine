@@ -6,8 +6,8 @@
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/Assert.h"
 
-ui32 OPmouseMappingGL[(ui32)OPmouseButton::MAX];
-ui32 OPkeyboardMappingGL[(ui32)OPkeyboardKey::MAX];
+ui32 OPmouseMappingGL[(ui32)OPmouseButton::_MAX];
+ui32 OPkeyboardMappingGL[(ui32)OPkeyboardKey::_MAX];
 
 // TODO: (garrett) CMake should be generating these variables and we'll check for just OPIFEX_OPENGL and use the OPIFEX_OPENGL_MAJOR and OPIFEX_OPENGL_MINOR
 #if defined(OPIFEX_OPENGL_3_3)
@@ -235,7 +235,7 @@ void OPwindowAPIGLInit(OPwindowAPI* window) {
 	OPkeyboardMappingGL[(ui32)OPkeyboardKey::RIGHT] = GLFW_KEY_RIGHT;
 	OPkeyboardMappingGL[(ui32)OPkeyboardKey::DOWN] = GLFW_KEY_DOWN;
 	OPkeyboardMappingGL[(ui32)OPkeyboardKey::INSERT] = GLFW_KEY_INSERT;
-	OPkeyboardMappingGL[(ui32)OPkeyboardKey::_DELETE] = GLFW_KEY_DELETE;
+	OPkeyboardMappingGL[(ui32)OPkeyboardKey::DELETE_] = GLFW_KEY_DELETE;
 	OPkeyboardMappingGL[(ui32)OPkeyboardKey::LWIN] = GLFW_KEY_LEFT_SUPER;
 	OPkeyboardMappingGL[(ui32)OPkeyboardKey::RWIN] = GLFW_KEY_RIGHT_SUPER;
 	OPkeyboardMappingGL[(ui32)OPkeyboardKey::MULTIPLY] = GLFW_KEY_KP_MULTIPLY;

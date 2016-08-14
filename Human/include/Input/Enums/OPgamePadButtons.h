@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_INPUT_ENUMS_GAMEPADBUTTONS
-#define OPENGINE_HUMAN_INPUT_ENUMS_GAMEPADBUTTONS
+#pragma once
 
 #ifdef OPIFEX_ANDROID
 
@@ -24,23 +23,21 @@ typedef enum
 
 #endif
 
-enum OPgamePadButton
+enum struct OPgamePadButton
 {
-	OPGAMEPADBUTTON_DPAD_UP          = 0,
-	OPGAMEPADBUTTON_DPAD_DOWN        = 1,
-	OPGAMEPADBUTTON_DPAD_LEFT        = 2,
-	OPGAMEPADBUTTON_DPAD_RIGHT       = 3,
-	OPGAMEPADBUTTON_START            = 4,
-	OPGAMEPADBUTTON_BACK             = 5,
-	OPGAMEPADBUTTON_LEFT_THUMB       = 6,
-	OPGAMEPADBUTTON_RIGHT_THUMB      = 7,
-	OPGAMEPADBUTTON_LEFT_SHOULDER    = 8,
-	OPGAMEPADBUTTON_RIGHT_SHOULDER   = 9,
-	OPGAMEPADBUTTON_A                = 10,
-	OPGAMEPADBUTTON_B                = 11,
-	OPGAMEPADBUTTON_X                = 12,
-	OPGAMEPADBUTTON_Y                = 13,
-	_OPGAMEPADBUTTON_MAX			 = 14
+	DPAD_UP          = 0,
+	DPAD_DOWN        = 1,
+	DPAD_LEFT        = 2,
+	DPAD_RIGHT       = 3,
+	START            = 4,
+	BACK             = 5,
+	LEFT_THUMB       = 6,
+	RIGHT_THUMB      = 7,
+	LEFT_SHOULDER    = 8,
+	RIGHT_SHOULDER   = 9,
+	A                = 10,
+	B                = 11,
+	X                = 12,
+	Y                = 13,
+	_MAX			 = 14
 };
-
-#endif

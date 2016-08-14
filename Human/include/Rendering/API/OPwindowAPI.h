@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERING_WINDOW_API
-#define OPENGINE_HUMAN_RENDERING_WINDOW_API
+#pragma once
 
 struct OPwindowAPI;
 typedef struct OPwindowAPI OPwindowAPI;
@@ -51,5 +50,3 @@ struct OPwindowAPI {
 		return _Init(window, NULL, DefaultParameters());
 	}
 };
-
-#endif

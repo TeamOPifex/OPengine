@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_INPUT_ENUMS_GAMEPADAXES
-#define OPENGINE_HUMAN_INPUT_ENUMS_GAMEPADAXES
+#pragma once
 
 #ifdef OPIFEX_ANDROID
 
@@ -15,15 +14,13 @@ enum OUYAGamePadAxes
 
 #endif
 
-enum OPgamePadAxis
+enum struct OPgamePadAxis
 {
-	OPGAMEPADAXIS_LS_X				= 0,
-	OPGAMEPADAXIS_LS_Y				= 1,
-	OPGAMEPADAXIS_RS_X				= 2,
-	OPGAMEPADAXIS_RS_Y				= 3,
-	OPGAMEPADAXIS_L2				= 4,
-	OPGAMEPADAXIS_R2				= 5,
-	_OPGAMEPADAXIS_MAX				= 6
+	LS_X = 0,
+	LS_Y = 1,
+	RS_X = 2,
+	RS_Y = 3,
+	L2 = 4,
+	R2 = 5,
+	_MAX = 6
 };
-
-#endif

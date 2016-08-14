@@ -19,8 +19,8 @@ void (*OPKEYBOARD_STREAM)(OPchar);
 void OPkeyboardUpdate(OPtimer* timer) {
 	ASSERT(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE != NULL, "There must be an active window");
 
-	OPmemcpy(&Keyboard.prevKeys, &Keyboard.keys, (ui32)OPkeyboardKey::MAX * sizeof(OPint));
-	for(ui32 i = 0; i < (ui32)OPkeyboardKey::MAX; i++) {
+	OPmemcpy(&Keyboard.prevKeys, &Keyboard.keys, (ui32)OPkeyboardKey::_MAX * sizeof(OPint));
+	for(ui32 i = 0; i < (ui32)OPkeyboardKey::_MAX; i++) {
 		Keyboard.keys[i] = OPRENDERER_ACTIVE->Window.GetKeyboardState(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE, (OPkeyboardKey)i);
 	}
 }
@@ -29,24 +29,24 @@ void OPkeyboardUpdatePost(OPtimer* timer) {
    OPinputRecordUpdate(timer);
 }
 
-OPint OPkeyboardIsDown(OPkeyboardKey key) {
+bool OPkeyboardIsDown(OPkeyboardKey key) {
 	return Keyboard.keys[(ui32)key];
 }
 
-OPint OPkeyboardIsUp(OPkeyboardKey key) {
+bool OPkeyboardIsUp(OPkeyboardKey key) {
 	return !Keyboard.keys[(ui32)key];
 }
 
-OPint OPkeyboardWasPressed(OPkeyboardKey key) {
+bool OPkeyboardWasPressed(OPkeyboardKey key) {
 	return Keyboard.keys[(ui32)key] && !Keyboard.prevKeys[(ui32)key];
 }
 
-OPint OPkeyboardWasReleased(OPkeyboardKey key) {
+bool OPkeyboardWasReleased(OPkeyboardKey key) {
 	return !Keyboard.keys[(ui32)key] && Keyboard.prevKeys[(ui32)key];
 }
 
-OPint OPkeyboardAnyInputIsDown() {
-	for (ui32 i = 0; i < (ui32)OPkeyboardKey::MAX; i++) {
+bool OPkeyboardAnyInputIsDown() {
+	for (ui32 i = 0; i < (ui32)OPkeyboardKey::_MAX; i++) {
 		if (Keyboard.keys[i]) return true;
 	}
 	return false;
