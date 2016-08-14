@@ -155,7 +155,7 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
            exampleSelector.Selected = exampleSelector.HierarchyDepth[exampleSelector.CurrentHierarchy + 1];
        } else {
            // Otherwise it's an example, load it up.
-           OPgameStateChange(exampleSelector.Examples[actualSelected].state);
+           OPgameState::Change(exampleSelector.Examples[actualSelected].state);
            return 0;
        }
 	}

@@ -13,10 +13,10 @@ struct OPmemDesc {
 };
 
 /* Allocates a block of memory to be used in segements
- * @param segments descriptors
- * @param segCount number of segments
- * @param n size to allocate
- * @return pointer to the allocated block of memory
+* @param segments descriptors
+* @param segCount number of segments
+* @param n size to allocate
+* @return pointer to the allocated block of memory
 */
 void* OPmemPackAlloc(OPmemDesc* segments, OPuint segCount, OPint n);
 

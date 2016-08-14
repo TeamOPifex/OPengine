@@ -3,7 +3,6 @@
 struct OPentHeap;
 typedef struct OPentHeap OPentHeap;
 
-
 #include "./Data/include/OPminHeap.h"
 #include "./Core/include/OPmemory.h"
 #include <stdio.h>
@@ -27,15 +26,6 @@ struct OPentHeap {
 	*/
 	void Activate(OPint* i);
 
-	/* Get an indexed entity out of an EntHeap
-	* @param heap The EntHeap to get an entity
-	* @param i The index in the EntHeap to get
-	* @return Pointer to the entity
-	*/
-	inline void* Get(OPint i) {
-		return ((ui8*)Entities) + (i * EntSize);
-	}
-
 	/* Kill off an entity in an EntHeap. It will be re-used when OPentHeapActivate is called.
 	* @param heap The EntHeap to kill of an entity
 	* @param i Index of the entity in the EntHeap
@@ -48,6 +38,15 @@ struct OPentHeap {
 	* @return size in bytes required
 	*/
 	static OPuint Bytes(OPint entsize, OPint count);
+	
+	/* Get an indexed entity out of an EntHeap
+	* @param heap The EntHeap to get an entity
+	* @param i The index in the EntHeap to get
+	* @return Pointer to the entity
+	*/
+	inline void* Get(OPint i) {
+		return ((ui8*)Entities) + (i * EntSize);
+	}
 
 	/* Creates an EntHeap
 	* @param segPtr Pointer to a block of memory, use OPentHeapBytes to alloc the right size

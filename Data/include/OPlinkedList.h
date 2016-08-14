@@ -1,19 +1,11 @@
 #pragma once
 
 struct OPlinkedList;
-struct OPlinkedListNode;
-
 typedef struct OPlinkedList OPlinkedList;
-typedef struct OPlinkedListNode OPlinkedListNode;
 
+#include "./Data/include/OPlinkedListNode.h"
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmemory.h"
-
-struct OPlinkedListNode {
-	OPlinkedListNode* Prev;
-	OPlinkedListNode* Next;
-	void* Data;
-};
 
 struct OPlinkedList {
 	OPuint _size;
@@ -34,5 +26,7 @@ struct OPlinkedList {
 	OPuint Size() { return _size; }
 	void Destroy();
 
-	static inline OPlinkedList* Create() { return OPNEW(OPlinkedList()); }
+	static inline OPlinkedList* Create() { 
+		return OPNEW(OPlinkedList()); 
+	}
 };

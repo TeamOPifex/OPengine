@@ -76,4 +76,4 @@ struct OPtimer{
 	* @return Whole milliseconds from the first tick, to the most recent.
 	*/
 	inline ui64 Total() { return TotalGametime;  }
-} ;
+};

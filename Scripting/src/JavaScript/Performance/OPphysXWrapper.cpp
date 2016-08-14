@@ -22,9 +22,9 @@ JS_RETURN_VAL _OPphysXDebugger(const JS_ARGS& args) {
 JS_RETURN_VAL _OPphysXCreateTriangleMesh(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    ui32 vertCount = args[0]->IntegerValue();
+    ui32 vertCount = (ui32)args[0]->IntegerValue();
     PxVec3* verts = JS_GET_ARG_PTR(args, 1, PxVec3);
-    ui32 triCount = args[2]->IntegerValue();
+    ui32 triCount = (ui32)args[2]->IntegerValue();
     PxU32* indices = JS_GET_ARG_PTR(args, 3, PxU32);
 
 	PxTriangleMesh* ptr = OPphysXCreateTriangleMesh(vertCount, verts, triCount, indices);
@@ -39,8 +39,8 @@ JS_RETURN_VAL _OPphysXSetFilter(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPphysXRigidActor* actor = JS_GET_ARG_PTR(args, 0, OPphysXRigidActor);
-    ui32 filterGroup = args[1]->IntegerValue();
-    ui32 filterMask = args[2]->IntegerValue();
+    ui32 filterGroup = (ui32)args[1]->IntegerValue();
+    ui32 filterMask = (ui32)args[2]->IntegerValue();
 	OPphysXSetFilter(actor, filterGroup, filterMask);
 
 	JS_RETURN_NULL;
@@ -49,9 +49,9 @@ JS_RETURN_VAL _OPphysXSetFilter(const JS_ARGS& args) {
 JS_RETURN_VAL _OPphysXCreateMaterial(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    f32 staticFriction = args[0]->NumberValue();
-    f32 dynamicFriction = args[1]->NumberValue();
-    f32 restitution = args[2]->NumberValue();
+    f32 staticFriction = (f32)args[0]->NumberValue();
+    f32 dynamicFriction = (f32)args[1]->NumberValue();
+    f32 restitution = (f32)args[2]->NumberValue();
 	OPphysXMaterial* ptr = OPphysXCreateMaterial(staticFriction, dynamicFriction, restitution);
 
 	Handle<Object> result = JS_NEW_OBJECT();
@@ -65,7 +65,7 @@ JS_RETURN_VAL _OPphysXAddSphereShape(const JS_ARGS& args) {
 
     OPphysXRigidActor* actor = JS_GET_ARG_PTR(args, 0, OPphysXRigidActor);
     OPphysXMaterial* material = JS_GET_ARG_PTR(args, 1, OPphysXMaterial);
-    OPfloat size = args[2]->NumberValue();
+    OPfloat size = (f32)args[2]->NumberValue();
   	OPphysXShape* ptr = OPphysXAddSphereShape(actor, material, size);
 
   	Handle<Object> result = JS_NEW_OBJECT();
@@ -173,7 +173,7 @@ JS_RETURN_VAL _OPphysXSetMass(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPphysXRigidDynamic* actor = JS_GET_ARG_PTR(args, 0, OPphysXRigidDynamic);
-    OPfloat amount = args[1]->NumberValue();
+    OPfloat amount = (f32)args[1]->NumberValue();
     OPphysXSetMass(actor, amount);
 
 	JS_RETURN_NULL;
@@ -223,7 +223,7 @@ JS_RETURN_VAL _OPphysXSetGravity(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPphysXRigidActor* actor = JS_GET_ARG_PTR(args, 0, OPphysXRigidActor);
-    OPphysXSetGravity(actor, args[1]->IntegerValue());
+    OPphysXSetGravity(actor, args[1]->IntegerValue() != 0);
 
 	JS_RETURN_NULL;
 }
@@ -232,7 +232,7 @@ JS_RETURN_VAL _OPphysXSetSimulation(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPphysXShape* shape = JS_GET_ARG_PTR(args, 0, OPphysXShape);
-    OPphysXSetSimulation(shape, args[1]->IntegerValue());
+    OPphysXSetSimulation(shape, args[1]->IntegerValue() != 0);
 
 	JS_RETURN_NULL;
 }
@@ -241,7 +241,7 @@ JS_RETURN_VAL _OPphysXSetTrigger(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPphysXShape* shape = JS_GET_ARG_PTR(args, 0, OPphysXShape);
-    OPphysXSetTrigger(shape, args[1]->IntegerValue());
+    OPphysXSetTrigger(shape, args[1]->IntegerValue() != 0);
 
 	JS_RETURN_NULL;
 }
@@ -250,7 +250,7 @@ JS_RETURN_VAL _OPphysXSetSceneQuery(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPphysXShape* shape = JS_GET_ARG_PTR(args, 0, OPphysXShape);
-    OPphysXSetSceneQuery(shape, args[1]->IntegerValue());
+    OPphysXSetSceneQuery(shape, args[1]->IntegerValue() != 0);
 
 	JS_RETURN_NULL;
 }
@@ -274,14 +274,14 @@ JS_RETURN_VAL _OPphysXOverlapping(const JS_ARGS& args) {
         result = OPphysXOverlapping(actor, other);
     }
 
-	JS_RETURN(JS_NEW_NUMBER(result));
+	JS_RETURN(JS_NEW_NUMBER((double)result));
 }
 
 JS_RETURN_VAL _OPphysXGetShape(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPphysXRigidActor* actor = JS_GET_ARG_PTR(args, 0, OPphysXRigidActor);
-  	OPphysXShape* ptr = OPphysXGetShape(actor, args[1]->IntegerValue());
+  	OPphysXShape* ptr = OPphysXGetShape(actor, (ui32)args[1]->IntegerValue());
 
   	Handle<Object> result = JS_NEW_OBJECT();
   	JS_SET_PTR(result, ptr);
@@ -327,8 +327,8 @@ JS_RETURN_VAL _OPphysXSetShapeFilter(const JS_ARGS& args) {
 
     OPphysXShape* shape = JS_GET_ARG_PTR(args, 0, OPphysXShape);
 	PxFilterData fd = shape->getSimulationFilterData();
-	fd.word0 = args[1]->IntegerValue();
-	fd.word1 = args[2]->IntegerValue();
+	fd.word0 = (ui32)args[1]->IntegerValue();
+	fd.word1 = (ui32)args[2]->IntegerValue();
 	shape->setQueryFilterData(fd);
 
 	JS_RETURN_NULL;

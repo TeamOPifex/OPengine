@@ -33,14 +33,6 @@ struct OPlist {
 	*/
 	ui8* Pop();
 
-	/* Peeks at the last element of the OPlist
-	* @param list The OPlist to peek
-	* @return Value of the last element (This will be different on the next OPlistPush)
-	*/
-	inline ui8* Peek() {
-		return _indices + (_size - 1) * _elementSize;
-	}
-
 	/* Inserts an element at an index to an OPlist
 	* @param list The OPlist to insert into
 	* @param value The value to insert
@@ -55,16 +47,6 @@ struct OPlist {
 	* @return Success Result
 	*/
 	bool Remove(OPuint index);
-
-
-	/* Gets an element at an index of an OPlist
-	* @param list The OPlist to get an element from
-	* @param index The index into the OPlist to get a value
-	* @return Value of the element
-	*/
-	inline ui8* Get(OPuint index) { 
-		return _indices + (index * _elementSize); 
-	}
 
 	/* Sets an element at an index of an OPlist
 	* This will overwrite anything at the specified index
@@ -87,6 +69,23 @@ struct OPlist {
 	*/
 	void Destroy();
 
+	/* Peeks at the last element of the OPlist
+	* @param list The OPlist to peek
+	* @return Value of the last element (This will be different on the next OPlistPush)
+	*/
+	inline ui8* Peek() {
+		return _indices + (_size - 1) * _elementSize;
+	}
+
+	/* Gets an element at an index of an OPlist
+	* @param list The OPlist to get an element from
+	* @param index The index into the OPlist to get a value
+	* @return Value of the element
+	*/
+	inline ui8* Get(OPuint index) {
+		return _indices + (index * _elementSize);
+	}
+
 	// Destroy and then free this linked list
 	inline void Free() { 
 		Destroy(); 
@@ -98,5 +97,7 @@ struct OPlist {
 	* @param Size of each element that will be contained in the OPlist
 	* @return A new OPlist
 	*/
-	inline static OPlist* Create(OPuint capacity, OPuint elementSize) { return OPNEW(OPlist(capacity, elementSize)); }
+	inline static OPlist* Create(OPuint capacity, OPuint elementSize) { 
+		return OPNEW(OPlist(capacity, elementSize)); 
+	}
 };

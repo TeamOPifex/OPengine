@@ -315,7 +315,7 @@ OPint State1Update(OPtimer* time){
 
 	if(t > 6) {
 		//exit(0);
-		OPgameStateChange(&State0);
+		OPgameState::Change(&State0);
 	}
 
 

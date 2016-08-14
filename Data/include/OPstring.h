@@ -12,5 +12,4 @@ OPchar* OPstringCopy(const OPchar* str);
 OPchar* OPstringSub(const OPchar* str, ui32 start, ui32 end);
 OPint OPstringContains(OPchar* str, const OPchar* cmp);
 void OPstringToLower(OPchar* str);
-
 void OPstringScan(OPchar* destination, const OPchar* format, ...);

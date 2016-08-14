@@ -15,7 +15,6 @@ typedef struct OPdll OPdll;
 #define STRING_MERGE_3(A,B,C) STRING_MERGE_NX(A,B,C)
 #define OPDLL_PATH(A) "lib" #A ".dylib"
 
-
 struct OPdll {
 #ifdef OPIFEX_WINDOWS
 	HMODULE library;

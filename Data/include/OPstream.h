@@ -20,15 +20,6 @@ struct OPstream {
 
 	void Init(OPuint size);
 
-	//-----------------------------------------------------------------------------
-	/**
-	* OPstreamCreate - Allocates a byte stream instance.
-	*	@param size Initial capacity in bytes
-	*	@return Pointer to new stream instance
-	*/
-	inline static OPstream* Create(OPuint size) { return OPNEW(OPstream(size)); }
-
-	//-----------------------------------------------------------------------------
 	/**
 	* OPstreanDestroy - Deallocates memory used by a stream.
 	*	@param stream Stream instance to deallocate
@@ -36,7 +27,6 @@ struct OPstream {
 	*/
 	void Destroy();
 
-	//-----------------------------------------------------------------------------
 	/**
 	* OPwrite - Append data to the stream.
 	*	@param stream Pointer to the stream to write to
@@ -45,9 +35,7 @@ struct OPstream {
 	*	@return 1 if successful, 0 if failure
 	*/
 	OPuint Write(void* data, OPuint size);
-	inline OPuint Write(f32* data) { return Write(data, sizeof(f32)); }
 
-	//-----------------------------------------------------------------------------
 	/**
 	* OPread - Reads data and advances the pointer.
 	*	@param stream Pointer to the stream to read from
@@ -90,7 +78,6 @@ struct OPstream {
 	*/
 	OPint ReadKeyValuePair(struct OPkeyValuePair* dst);
 
-	//-----------------------------------------------------------------------------
 	/**
 	* OPreadAt - Reads data at a specific location.
 	*	@param stream Pointer to the stream to read from
@@ -101,7 +88,6 @@ struct OPstream {
 	*/
 	ui8* ReadAt(OPuint pos, OPuint size);
 
-	//-----------------------------------------------------------------------------
 	/**
 	* OPcopy - Reads data, and copies it into a provided buffer
 	*      @param stream Pointer to the stream to copy from
@@ -111,7 +97,6 @@ struct OPstream {
 	*/
 	OPuint Copy(void* dest, OPuint size);
 
-	//-----------------------------------------------------------------------------
 	/**
 	* OPseek - Skip to a specific byte location in the stream.
 	*	@param stream Pointer to the stream to seek
@@ -119,4 +104,15 @@ struct OPstream {
 	*	@return Returns 0 if not in bounds and 1 if Seeking was successful
 	*/
 	OPuint Seek(OPuint byte);
+
+	inline OPuint Write(f32* data) { return Write(data, sizeof(f32)); }
+
+	/**
+	* OPstreamCreate - Allocates a byte stream instance.
+	*	@param size Initial capacity in bytes
+	*	@return Pointer to new stream instance
+	*/
+	inline static OPstream* Create(OPuint size) {
+		return OPNEW(OPstream(size));
+	}
 };

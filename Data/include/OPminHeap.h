@@ -3,7 +3,6 @@
 struct OPminHeap;
 typedef struct OPminHeap OPminHeap;
 
-#include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmemory.h"
 
 struct OPminHeap {
@@ -32,12 +31,13 @@ struct OPminHeap {
 	*/
 	OPint Peek();
 
+	void Destroy();
+
 	/* Size of the OPminHeap
 	* @return Total size of the OPminHeap
 	*/
 	inline OPuint Size() { return _size; }
 
-	void Destroy();
 	inline void Free() {
 		Destroy();
 		OPfree(this);

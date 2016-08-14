@@ -29,7 +29,7 @@ JS_RETURN_VAL _OPcmanLoad(const JS_ARGS& args) {
         const char* file = *utf8;
         OPint result = OPCMAN.Load(file);
 
-        JS_RETURN(JS_NEW_NUMBER(result));
+        JS_RETURN(JS_NEW_NUMBER((double)result));
     }
     JS_RETURN_NULL
 }

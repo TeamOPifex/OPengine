@@ -18,12 +18,12 @@ struct OPasset {
 #endif
 
 	OPasset() { }
-
 	OPasset(void* asset, OPassetLoader* assetLoader, OPchar* pathToAsset) { Init(asset, assetLoader, pathToAsset); }
+	
 	void Init(void* asset, OPassetLoader* assetLoader, OPchar* pathToAsset);
+	void Destroy();
+
 	inline OPasset* Create(void* asset, OPassetLoader* assetLoader, OPchar* pathToAsset) {
 		return OPNEW(OPasset(asset, assetLoader, pathToAsset));
 	}
-
-	void Destroy();
 };

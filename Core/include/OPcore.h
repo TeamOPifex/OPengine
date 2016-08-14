@@ -19,6 +19,7 @@ extern bool OPENGINERUNNING;
  */
 void OPend();
 
-#define OP_MAIN_END OPend(); \
+#define OP_MAIN_END \
+		OPend(); \
 		return 0; \
 		}

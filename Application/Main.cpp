@@ -36,7 +36,7 @@ void ApplicationInit() {
 	
 	OPGAMEPADSYSTEM.SetDeadzones(0.2f);	
 
-	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
+	OPgameState::Change(&GS_EXAMPLE_SELECTOR);
 }
 
 OPint ApplicationUpdate(OPtimer* timer) {
@@ -49,7 +49,7 @@ OPint ApplicationUpdate(OPtimer* timer) {
 
 	if (OPkeyboardWasReleased(OPkeyboardKey::ESCAPE)) return 1;
 	if ((OPkeyboardWasReleased(OPkeyboardKey::BACKSPACE) || OPgamePadGet(OPgamePadIndex::ONE)->WasPressed(OPgamePadButton::BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
-		OPgameStateChange(&GS_EXAMPLE_SELECTOR);
+		OPgameState::Change(&GS_EXAMPLE_SELECTOR);
 	}
 
 	return ActiveState->Update(timer);

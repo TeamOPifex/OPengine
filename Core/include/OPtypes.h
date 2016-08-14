@@ -26,6 +26,8 @@
 
 #if defined(OPIFEX_WINDOWS) || defined(OPIFEX_OSX) || defined(OPIFEX_LINUX)
 #define OPIFEX_DESKTOP
+#else
+#define OPIFEX_MOBILE
 #endif
 
 #if defined(OPIFEX_WINDOWS)
