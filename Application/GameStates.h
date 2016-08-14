@@ -1,5 +1,7 @@
 #pragma once
+
 #include "./Data/include/OPgameState.h"
+
 extern OPgameState State0;
 extern OPgameState State1;
 

@@ -1,5 +1,4 @@
-#ifndef OPIFEXENGINE_OPSCRIPTNODEHELPER
-#define OPIFEXENGINE_OPSCRIPTNODEHELPER
+#pragma once
 
 #include "./Core/include/OPtypes.h"
 
@@ -363,6 +362,3 @@ JS_HELPER_SELF_WRAPPER( JS_MAKE_WRAPPED_FN_NAME(t ## m) ) { \
 
 
 #endif
-
-
-#endif //OPIFEXENGINE_OPSCRIPTNODEWRAPPERMATH_H

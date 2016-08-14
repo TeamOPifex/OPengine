@@ -1,5 +1,4 @@
-#ifndef OPENGINE_SCRIPTING_JAVASCRIPT_V8
-#define OPENGINE_SCRIPTING_JAVASCRIPT_V8
+#pragma once
 
 #include "./Core/include/OPtypes.h"
 #include "./Scripting/include/OPloaderOPS.h"
@@ -66,7 +65,5 @@ inline OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, const OPcha
 	#define OPJAVASCRIPTV8_UPDATE(compiled)
 #endif
 
-
-#endif
 
 #endif

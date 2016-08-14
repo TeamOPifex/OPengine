@@ -1,5 +1,4 @@
-#ifndef OPENGINE_SCRIPTING_NODE_PIPELINE_WRAPPERS
-#define OPENGINE_SCRIPTING_NODE_PIPELINE_WRAPPERS
+#pragma once
 
 #if defined(OPIFEX_OPTION_NODEJS) || defined(OPIFEX_OPTION_V8)
 
@@ -14,7 +13,5 @@ void OPloaderWrapper(Handle<Object> exports);
 void OPsprite2DWrapper(Handle<Object> exports);
 void OPspriteSystemWrapper(Handle<Object> exports);
 void OPfmodWrapper(Handle<Object> exports);
-
-#endif
 
 #endif

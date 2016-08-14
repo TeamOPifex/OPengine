@@ -1,5 +1,4 @@
-#ifndef OPENGINE_SCRIPTING
-#define OPENGINE_SCRIPTING
+#pragma once
 
 #include "./Scripting/include/JavaScript/OPjavaScriptHelper.h"
 #include "./Scripting/include/JavaScript/OPjavaScriptV8.h"
@@ -11,5 +10,3 @@
 #include "./Scripting/include/JavaScript/Math/Wrappers.h"
 #include "./Scripting/include/JavaScript/Performance/Wrappers.h"
 #include "./Scripting/include/JavaScript/Pipeline/Wrappers.h"
-
-#endif
