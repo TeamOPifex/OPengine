@@ -1,3 +1,5 @@
+#pragma once
+
 #include "./Human/include/Rendering/OPrender.h"
 #include "./Human/include/Rendering/OPcam.h"
 #include "./Human/include/Rendering/OPrenderCommandBucket.h"

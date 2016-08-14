@@ -1,11 +1,19 @@
-#ifndef OPIFEX_RENDERING_SKINNING_ANIMATION_MANAGER
-#define OPIFEX_RENDERING_SKINNING_ANIMATION_MANAGER
+#pragma once
+
+struct OPskeletonAnimationMix;
+struct OPskeletonAnimationManagerTransition;
+struct OPskeletonAnimationManager;
+
+typedef struct OPskeletonAnimationMix OPskeletonAnimationMix;
+typedef struct OPskeletonAnimationManagerTransition OPskeletonAnimationManagerTransition;
+typedef struct OPskeletonAnimationManager OPskeletonAnimationManager;
+
+#define OPMAX_ANIMATION_MERGES 3
 
 #include "./Human/include/Rendering/Skinning/OPskeletonAnimation.h"
 #include "./Human/include/Rendering/Skinning/OPskeletonAnimationTransition.h"
 #include "./Core/include/Assert.h"
 
-#define OPMAX_ANIMATION_MERGES 3
 
 // STEPS
 // Update Current Animation Mix
@@ -36,7 +44,6 @@ struct OPskeletonAnimationManager {
 	OPskeletonAnimationManagerTransition buffer;
 	OPfloat currentTime;
 };
-typedef struct OPskeletonAnimationManager OPskeletonAnimationManager;
 
 inline void OPskeletonAnimationManagerInit(OPskeletonAnimationManager* manager, OPskeleton* skeleton) {
 	manager->skeleton = skeleton;
@@ -135,5 +142,3 @@ inline void OPskeletonAnimationManagerFree(OPskeletonAnimationManager* manager) 
 	OPskeletonAnimationManagerDestroy(manager);
 	OPfree(manager);
 }
-
-#endif

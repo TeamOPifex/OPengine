@@ -1,14 +1,15 @@
-#ifndef OPENGINE_HUMAN_RENDERER_EFFECT
-#define OPENGINE_HUMAN_RENDERER_EFFECT
+#pragma once
 
-#include "./Human/include/Utilities/Errors.h"
+struct OPeffect;
+typedef struct OPeffect OPeffect;
+
 #include "./Human/include/Rendering/OPshader.h"
 #include "./Human/include/Rendering/Enums/OPattributes.h"
 #include "./Human/include/Rendering/OPvertexLayout.h"
 #include "./Human/include/Rendering/OPrenderBuffer.h"
 #include "./Human/include/Rendering/OPtexture.h"
 #include "./Human/include/Rendering/OPcam.h"
-#include "OPtextureCube.h"
+#include "./Human/include/Rendering/OPtextureCube.h"
 #include "./Math/include/Vectors.h"
 #include "./Math/include/OPmat4.h"
 #include "./Data/include/OPhashMap.h"
@@ -18,25 +19,6 @@
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPlog.h"
 #include "./Core/include/OPmemory.h"
-
-//-----------------------------------------------------------------------------
-//   _____ _                   _
-//  / ____| |                 | |
-// | (___ | |_ _ __ _   _  ___| |_ ___
-//  \___ \| __| '__| | | |/ __| __/ __|
-//  ____) | |_| |  | |_| | (__| |_\__ \
-// |_____/ \__|_|   \__,_|\___|\__|___/
-
-struct OPeffect;
-typedef struct OPeffect OPeffect;
-
-//-----------------------------------------------------------------------------
-//   _____ _       _           _
-//  / ____| |     | |         | |
-// | |  __| | ___ | |__   __ _| |___
-// | | |_ | |/ _ \| '_ \ / _` | / __|
-// | |__| | | (_) | |_) | (_| | \__ \
-//  \_____|_|\___/|_.__/ \__,_|_|___/
 
 struct OPeffect {
 	void* internalPtr;
@@ -135,5 +117,3 @@ inline void OPeffectSet(OPcam* val) {
 	OPRENDERER_ACTIVE->ShaderUniform.SetMat4(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE->GetUniform("uView"), &val->view);
 	OPRENDERER_ACTIVE->ShaderUniform.SetMat4(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE->GetUniform("uProj"), &val->proj);
 }
-
-#endif

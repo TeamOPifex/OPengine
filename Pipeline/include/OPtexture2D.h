@@ -1,5 +1,4 @@
-#ifndef OPENGINE_PIPELINE_TEXTURE2D
-#define OPENGINE_PIPELINE_TEXTURE2D
+#pragma once
 
 #include "./Math/include/OPvec2.h"
 #include "./Human/include/Rendering/OPtexture.h"
@@ -22,5 +21,3 @@ void OPtexture2DUnloadGlobals();
 inline OPtexture2DOLD* OPtexture2DCreate(OPtexture* texture) {
 	return OPtexture2DCreate(texture, NULL);
 }
-
-#endif

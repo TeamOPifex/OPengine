@@ -1,7 +1,5 @@
 #include "./Human/include/Rendering/OPwindow.h"
 #include "./Human/include/Rendering/OPrender.h"
-#include "./Human/include/Utilities/Errors.h"
-#include "./Human/include/Rendering/OPglew.h"
 #include "./Core/include/Assert.h"
 
 #ifdef OPIFEX_DIRECTX_11

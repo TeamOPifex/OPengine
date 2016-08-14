@@ -1,5 +1,7 @@
-#ifndef OPENGINE_HUMAN_RENDERING_IMAGE
-#define OPENGINE_HUMAN_RENDERING_IMAGE
+#pragma once
+
+struct OPimage;
+typedef struct OPimage OPimage;
 
 #include "./Core/include/OPtypes.h"
 
@@ -14,5 +16,3 @@ struct OPimage {
     ui8 Components;
     ui8* Data;
 };
-
-#endif

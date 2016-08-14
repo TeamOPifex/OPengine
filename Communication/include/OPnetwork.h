@@ -1,5 +1,4 @@
-#ifndef OPENGINE_COMMUNICATION_NETWORK
-#define OPENGINE_COMMUNICATION_NETWORK
+#pragma once
 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 
@@ -93,5 +92,3 @@ i32 OPnetworkReceive(OPnetwork* network, void* state);
 i32 OPnetworkSend(OPnetwork* network, i8* data, i32 size);
 i32 OPnetworkShutdown(OPnetwork* network);
 void OPnetworkDestroy(OPnetwork* network);
-
-#endif

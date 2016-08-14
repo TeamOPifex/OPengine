@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERING_SHADER_UNIFORM
-#define OPENGINE_HUMAN_RENDERING_SHADER_UNIFORM
+#pragma once
 
 struct OPshaderUniform;
 typedef OPshaderUniform OPshaderUniform;
@@ -8,5 +7,3 @@ struct OPshaderUniform {
 	void* internalPtr;
 	bool Found;
 };
-
-#endif

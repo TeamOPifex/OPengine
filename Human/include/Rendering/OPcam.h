@@ -1,23 +1,13 @@
-#ifndef OPENGINE_HUMAN_RENDERER_CAMERA
-#define OPENGINE_HUMAN_RENDERER_CAMERA
+#pragma once
+
+struct OPcam;
+typedef struct OPcam OPcam;
 
 #include "./Human/include/Rendering/OPrender.h"
 #include "./Human/include/Rendering/OPwindow.h"
 #include "./Math/include/OPvec3.h"
 #include "./Math/include/OPmat4.h"
 #include "./Math/include/OPray3D.h"
-#include "./Core/include/OPmath.h"
-
-struct OPcam;
-typedef struct OPcam OPcam;
-
-//-----------------------------------------------------------------------------
-//   _____ _                   _
-//  / ____| |                 | |
-// | (___ | |_ _ __ _   _  ___| |_ ___
-//  \___ \| __| '__| | | |/ __| __/ __|
-//  ____) | |_| |  | |_| | (__| |_\__ \
-// |_____/ \__|_|   \__,_|\___|\__|___/
 
 struct OPcam {
 	OPvec3 pos;
@@ -46,5 +36,3 @@ struct OPcam {
 		SetOrtho(position, target, OPVEC3_UP, 0.1f, 100.0f, size, size, size, size);
 	}
 };
-
-#endif

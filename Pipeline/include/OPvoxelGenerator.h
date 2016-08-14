@@ -1,5 +1,4 @@
-#ifndef OPVOXEL_GENERATOR
-#define OPVOXEL_GENERATOR
+#pragma once
 
 #include "./OPengine.h"
 
@@ -68,5 +67,3 @@ inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, OPvoxels voxelData
 inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, OPvoxels voxelData, OPvec4 bones, OPvec4 weights) {
 	OPvoxelGeneratorAdd(gen, voxelData, bones, weights, OPVEC3_ZERO);
 }
-
-#endif

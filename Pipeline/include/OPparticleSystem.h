@@ -1,5 +1,4 @@
-#ifndef OPENGINE_PIPELINE_PARTICLESYSTEM
-#define OPENGINE_PIPELINE_PARTICLESYSTEM
+#pragma once
 
 #include "./Human/include/Rendering/OPtexture.h"
 #include "./Human/include/Rendering/OPcam.h"
@@ -65,7 +64,3 @@ OPparticleSys* OPparticleSysCreate(OPtexture* texture, ui16 count, OPeffect* eff
 void OPparticleSysUpdate(OPparticleSys* sys, OPtimer* timer);
 void OPparticleSysDestroy(OPparticleSys* sys);
 void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(OPparticle*, OPmat4*));
-
-
-
-#endif

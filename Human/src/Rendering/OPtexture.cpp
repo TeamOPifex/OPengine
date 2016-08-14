@@ -1,6 +1,5 @@
 #include <include/Rendering/OPtexture.h>
 #include "./Human/include/Rendering/OPtexture.h"
-#include "./Human/include/Utilities/Errors.h"
 #include "./Core/include/OPlog.h"
 #include "./Core/include/Assert.h"
 //

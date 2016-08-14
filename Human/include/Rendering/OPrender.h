@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERER
-#define OPENGINE_HUMAN_RENDERER
+#pragma once
 
 #include "./Human/include/Rendering/API/OPrenderer.h"
 
@@ -86,5 +85,3 @@ inline void  OPrenderClear(OPvec3 color) {
 inline void  OPrenderClear(OPvec4 color) {
 	OPrenderClear(color.x, color.y, color.z, color.w);
 }
-
-#endif

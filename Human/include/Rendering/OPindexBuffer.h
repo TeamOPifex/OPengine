@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERING_INDEX_BUFFER
-#define OPENGINE_HUMAN_RENDERING_INDEX_BUFFER
+#pragma once
 
 struct OPindexBuffer;
 typedef struct OPindexBuffer OPindexBuffer;
@@ -37,5 +36,3 @@ struct OPindexBuffer {
 		return OPRENDERER_ACTIVE->IndexBuffer.Create();
 	}
 };
-
-#endif

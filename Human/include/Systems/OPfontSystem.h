@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_SYSTEMS_FONT
-#define OPENGINE_HUMAN_SYSTEMS_FONT
+#pragma once
 
 #include "./Human/include/Rendering/Font/OPfont.h"
 #include "./Human/include/Rendering/Font/OPfontAtlas.h"
@@ -9,5 +8,3 @@
 void OPfontSystemLoadEffects();
 void OPfontSystemShutdownEffects();
 // void OPfontSystemLoadScreenEffects();
-
-#endif

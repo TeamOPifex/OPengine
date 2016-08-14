@@ -1,5 +1,4 @@
-#ifndef OPENGINE_PIPELINE_SPRITESYSTEM
-#define OPENGINE_PIPELINE_SPRITESYSTEM
+#pragma once
 
 #include "./Human/include/Rendering/Sprite/OPspriteSheet.h"
 #include "./Math/include/Vectors.h"
@@ -61,5 +60,3 @@ inline OPboundingBox3D OPspriteSystemBoundingBox3D(OPspriteSystem* system, OPspr
 	};
 	return playerBox;
 }
-
-#endif

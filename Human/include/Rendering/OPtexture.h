@@ -1,13 +1,11 @@
-#ifndef OPENGINE_HUMAN_RENDERER_TEXTURE
-#define OPENGINE_HUMAN_RENDERER_TEXTURE
+#pragma once
 
 struct OPtexture;
+typedef struct OPtexture OPtexture;
 
-#include "./Core/include/OPtypes.h"
-#include "./Math/include/OPvec4.h"
-
-#include "./Human/include/Rendering/OPrender.h"
 #include "./Human/include/Rendering/OPtextureDesc.h"
+#include "./Human/include/Rendering/OPrender.h"
+#include "./Math/include/OPvec4.h"
 
 struct OPtexture {
 	void* internalPtr;
@@ -32,5 +30,3 @@ struct OPtexture {
 };
 
 OPtexture* OPtextureLoad(const OPchar* asset);
-
-#endif

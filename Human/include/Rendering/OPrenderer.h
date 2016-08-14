@@ -1,6 +1,7 @@
 #pragma once
 
 struct OPrenderer;
+typedef struct OPrenderer OPrenderer;
 
 #include "./Human/include/Rendering/OPcam.h"
 #include "./Human/include/Rendering/OPmesh.h"

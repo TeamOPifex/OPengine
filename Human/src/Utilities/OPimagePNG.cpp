@@ -3,7 +3,6 @@
 #include "./External/LodePNG/include/LodePNG.h"
 #include "./Human/include/Rendering/OPimage.h"
 #include "./Human/include/Rendering/OPtexture.h"
-#include "./Human/include/Utilities/Errors.h"
 #include "./Data/include/OPfile.h"
 #include "./Core/include/OPlog.h"
 #include "./Core/include/Assert.h"

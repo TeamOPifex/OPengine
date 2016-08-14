@@ -127,8 +127,8 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 		OPskeletonAnimationApply(skinningExample->animation, skinningExample->skeleton);
 	}
 	//OPmat4Translate(&mesh->Skeleton->localPoses[pos], time->Elapsed / 1000.0f, 0, 0);
-	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPkeyboardKey::W) / 100.0f);
-	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPkeyboardKey::S) / -100.0f);
+	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], (i32)OPkeyboardIsDown(OPkeyboardKey::W) / 100.0f);
+	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], (i32)OPkeyboardIsDown(OPkeyboardKey::S) / -100.0f);
 	OPskeletonUpdate(skinningExample->skeleton);
 
 	skinningExample->Mesh->Bind();

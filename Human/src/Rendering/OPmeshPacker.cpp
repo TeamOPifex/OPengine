@@ -1,6 +1,5 @@
 #include "./Human/include/Rendering/OPmeshPacker.h"
 #include "./Human/include/Rendering/OPmesh.h"
-#include "./Human/include/Utilities/Errors.h"
 
 //-----------------------------------------------------------------------------
 //   _____ _       _           _     

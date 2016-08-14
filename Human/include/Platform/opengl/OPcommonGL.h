@@ -18,7 +18,7 @@
 	#define __debugbreak __builtin_trap
 #endif
 
-i8 OPglewInit();
+bool OPglewInit();
 GLenum OPcommonGLCheckError();
 bool OPcommonGLLog(const OPchar* function, const OPchar* file, i32 line);
 

@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERER_CUBEMAP
-#define OPENGINE_HUMAN_RENDERER_CUBEMAP
+#pragma once
 
 #include "OPimage.h"
 #include "./Human/include/Rendering/OPtexture.h"
@@ -68,5 +67,3 @@ void OPtextureCubeDestroy(OPtextureCubeOLD * result);
 void OPtextureCubeFree(OPtextureCubeOLD * result);
 void OPtextureCubeClearActive();
 ui32 OPtextureCubeBind(OPtextureCubeOLD* result);
-
-#endif

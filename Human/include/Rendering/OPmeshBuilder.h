@@ -1,5 +1,7 @@
-#ifndef OPENGINE_HUMAN_RENDERER_MESHBUILDER
-#define OPENGINE_HUMAN_RENDERER_MESHBUILDER
+#pragma once
+
+struct OPmeshBuilder;
+typedef struct OPmeshBuilder OPmeshBuilder;
 
 #include "./Human/include/Rendering/OPmesh.h"
 #include "./Data/include/OPvector.h"
@@ -31,6 +33,3 @@ struct OPmeshBuilder {
 		return result;
 	}
 };
-
-
-#endif

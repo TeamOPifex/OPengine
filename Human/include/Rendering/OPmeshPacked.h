@@ -1,18 +1,13 @@
-#ifndef OPENGINE_HUMAN_RENDERER_MESH_PACKED
-#define OPENGINE_HUMAN_RENDERER_MESH_PACKED
+#pragma once
+
+struct OPmeshPacked;
+typedef struct OPmeshPacked OPmeshPacked;
 
 #include "./Human/include/Rendering/OPmeshPacker.h"
 #include "./Human/include/Rendering/OPrenderBuffer.h"
 #include "./Human/include/Rendering/Enums/OPindexSize.h"
 #include "./Human/include/Rendering/OPvertexLayout.h"
 
-//-----------------------------------------------------------------------------
-//   _____ _                   _
-//  / ____| |                 | |
-// | (___ | |_ _ __ _   _  ___| |_ ___
-//  \___ \| __| '__| | | |/ __| __/ __|
-//  ____) | |_| |  | |_| | (__| |_\__ \
-// |_____/ \__|_|   \__,_|\___|\__|___/
 struct OPmeshPacked {
 	OPuint offset;
 	OPuint count;
@@ -30,7 +25,3 @@ struct OPmeshPacked {
 	static OPmeshPacked* Create(OPvertexLayout vertexLayout, OPindexSize indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
 	void Render();
 };
-typedef struct OPmeshPacked OPmeshPacked;
-
-
-#endif

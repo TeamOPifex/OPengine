@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERER_MESH
-#define OPENGINE_HUMAN_RENDERER_MESH
+#pragma once
 
 #include "./Human/include/Rendering/OPrenderBuffer.h"
 #include "./Math/include/OPboundingBox3D.h"
@@ -120,6 +119,3 @@ struct OPmesh {
 };
 
 void OPmeshRender();
-
-
-#endif

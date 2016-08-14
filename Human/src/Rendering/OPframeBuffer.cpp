@@ -1,8 +1,6 @@
-#include <include/Rendering/OPtexture.h>
-#include <include/Rendering/OPframeBuffer.h>
 #include "./Human/include/Rendering/OPframeBuffer.h"
+#include "./Human/include/Rendering/OPtexture.h"
 #include "./Core/include/OPlog.h"
-#include "./Human/include/Utilities/Errors.h"
 
 //-----------------------------------------------------------------------------
 //   _____ _       _           _

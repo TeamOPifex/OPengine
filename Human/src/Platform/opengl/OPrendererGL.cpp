@@ -2,7 +2,6 @@
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Platform/opengl/OPwindowAPIGL.h"
 #include "./Human/include/Rendering/OPmonitor.h"
-#include "./Human/include/Rendering/OPglew.h"
 #include "./Human/include/Rendering/OPwindow.h"
 #include "./Core/include/Assert.h"
 

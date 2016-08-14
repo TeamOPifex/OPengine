@@ -1,16 +1,20 @@
-#ifndef OPENGINE_HUMAN_RENDERING_VERTEX_LAYOUT
-#define OPENGINE_HUMAN_RENDERING_VERTEX_LAYOUT
+#pragma once
+
+struct OPvertexLayout;
+struct OPvertexLayoutBuilder;
+
+typedef struct OPvertexLayout OPvertexLayout;
+typedef struct OPvertexLayoutBuilder OPvertexLayoutBuilder;
+
+// Assuming we'll never need more than 32 attributes in a vertex layout
+#define OPVERTEX_LAYOUT_BUILDER_MAX 32
 
 #include "./Human/include/Rendering/OPshader.h"
 #include "./Data/include/OPstring.h"
 #include "./Core/include/OPmemory.h"
 #include "./Human/include/Rendering/Enums/OPattributes.h"
-
-
-struct OPvertexLayout;
-typedef struct OPvertexLayout OPvertexLayout;
-
 struct OPeffect;
+
 struct OPvertexLayout {
 	ui16 count;
 	OPshaderAttribute* attributes;
@@ -22,12 +26,6 @@ struct OPvertexLayout {
 	void Log();
 };
 
-
-// Assuming we'll never need more than 32 attributes in a vertex layout
-#define OPVERTEX_LAYOUT_BUILDER_MAX 32
-
-struct OPvertexLayoutBuilder;
-typedef struct OPvertexLayoutBuilder OPvertexLayoutBuilder;
 
 struct OPvertexLayoutBuilder {
     ui32 index;
@@ -47,8 +45,3 @@ struct OPvertexLayoutBuilder {
 	OPvertexLayoutBuilder* Add(OPattributes attribute);
 	OPvertexLayout Build();
 };
-
-
-
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERING_WINDOW_PARAMETERS
-#define OPENGINE_HUMAN_RENDERING_WINDOW_PARAMETERS
+#pragma once
 
 struct OPwindowParameters;
 typedef struct OPwindowParameters OPwindowParameters;
@@ -26,5 +25,3 @@ struct OPwindowParameters {
 		this->height = height;
 	}
 };
-
-#endif

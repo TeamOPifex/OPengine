@@ -3,6 +3,9 @@
 struct OPscene;
 struct OPsceneEntity;
 
+typedef struct OPscene OPscene;
+typedef struct OPsceneEntity OPsceneEntity;
+
 #include "./Human/include/Rendering/OPmodel.h"
 #include "./Human/include/Rendering/OPrenderCommandBucket.h"
 #include "./Human/include/Rendering/OPrenderer.h"

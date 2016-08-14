@@ -3,16 +3,16 @@
 
 bool glewInitialized = 0;
 
-i8 OPglewInit() {
-	if (glewInitialized) return 0;
+bool OPglewInit() {
+	if (glewInitialized) return true;
 	glewExperimental = GL_TRUE;
 	GLenum result = glewInit();
 	if (result != GLEW_OK) {
 		OPlogErr("Failed to init glew: %d", result);
-		return -1;
+		return false;
 	}
 	glewInitialized = true;
-	return 0;
+	return true;
 }
 
 GLenum OPcommonGLCheckError() {

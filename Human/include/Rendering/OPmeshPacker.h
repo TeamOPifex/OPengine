@@ -1,16 +1,13 @@
-#ifndef OPENGINE_HUMAN_RENDERER_MESH_PACKER
-#define OPENGINE_HUMAN_RENDERER_MESH_PACKER
-
-#include "./Human/include/Rendering/OPrenderBuffer.h"
-#include "./Human/include/Rendering/OPvertexArray.h"
-#include "./Human/include/Rendering/OPvertexLayout.h"
-#include "./Data/include/OPstream.h"
-#include "./Core/include/OPmemory.h"
+#pragma once
 
 struct OPmeshPacker;
 typedef struct OPmeshPacker OPmeshPacker;
 
 extern OPmeshPacker* OPMESHPACKER_ACTIVE;
+
+#include "./Human/include/Rendering/OPrenderBuffer.h"
+#include "./Human/include/Rendering/OPvertexArray.h"
+#include "./Data/include/OPstream.h"
 
 struct OPmeshPacker{
 	OPvertexArray vertexArray;
@@ -31,5 +28,3 @@ struct OPmeshPacker{
 	void Bind();
 	OPint Destroy();
 };
-
-#endif

@@ -1,8 +1,6 @@
-#ifndef OPENGINE_HUMAN_UTILITIES_IMAGE_PNG
-#define OPENGINE_HUMAN_UTILITIES_IMAGE_PNG
+#pragma once
 
 #include "./Data/include/OPstream.h"
-
 struct OPtexture;
 struct OPimage;
 
@@ -15,5 +13,3 @@ i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image);
 OPimage OPimagePNGLoadData(const OPchar* filename);
 i32 OPimagePNGReload(OPstream* str, OPtexture** image);
 i32 OPimagePNGUnload(void* image);
-
-#endif

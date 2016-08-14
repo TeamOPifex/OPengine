@@ -1,5 +1,10 @@
-#ifndef OPENGINE_HUMAN_RENDERING_MODEL
-#define OPENGINE_HUMAN_RENDERING_MODEL
+#pragma once
+
+struct OPmodel;
+typedef struct OPmodel OPmodel;
+
+struct OPmodelTextured;
+typedef struct OPmodelTextured OPmodelTextured;
 
 #include "OPmesh.h"
 #include "OPeffect.h"
@@ -7,9 +12,6 @@
 #include "./Math/include/OPmat4.h"
 #include "./Human/include/Rendering/OPcam.h"
 #include "./Data/include/OPcman.h"
-
-struct OPmodel;
-typedef struct OPmodel OPmodel;
 
 struct OPmodel {
 	OPmat4 world;
@@ -26,9 +28,7 @@ struct OPmodel {
 };
 
 
-struct OPmodelTextured;
-typedef struct OPmodelTextured OPmodelTextured;
-
+// TODO: (garrett) remove this
 struct OPmodelTextured {
 	OPmodel model;
 	OPtexture* texture;
@@ -38,5 +38,3 @@ struct OPmodelTextured {
 		texture = OPtextureLoad(textureAsset);
 	}
 };
-
-#endif

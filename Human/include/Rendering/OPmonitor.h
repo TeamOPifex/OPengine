@@ -1,7 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERING_MONITOR
-#define OPENGINE_HUMAN_RENDERING_MONITOR
-
-#define OPMONITOR_MAX 4
+#pragma once
 
 struct OPmonitor;
 typedef struct OPmonitor OPmonitor;
@@ -11,6 +8,8 @@ typedef struct OPmonitorVideoMode OPmonitorVideoMode;
 
 struct OPmonitorResult;
 typedef struct OPmonitorResult OPmonitorResult;
+
+#define OPMONITOR_MAX 4
 
 #include "./Core/include/OPtypes.h"
 #include "./Math/include/OPvec2.h"
@@ -42,5 +41,3 @@ struct OPmonitorResult {
 	OPmonitor* monitors;
 	OPuint count;
 };
-
-#endif

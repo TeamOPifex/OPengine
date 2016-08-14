@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_SYSTEM_INPUT
-#define OPENGINE_HUMAN_SYSTEM_INPUT
+#pragma once
 
 #include "./Human/include/Input/OPkeyboard.h"
 #include "./Human/include/Input/OPmouse.h"
@@ -13,5 +12,3 @@ inline void OPinputSystemUpdate(OPtimer* timer) {
 	OPmouseUpdate();
 	OPGAMEPADSYSTEM.Update();
 }
-
-#endif

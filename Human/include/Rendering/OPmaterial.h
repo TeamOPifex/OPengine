@@ -1,10 +1,15 @@
-#ifndef OPENGINE_HUMAN_RENDERER_MATERIAL
-#define OPENGINE_HUMAN_RENDERER_MATERIAL
+#pragma once
+
+struct OPmaterial;
+struct OPmaterialParam;
+
+typedef struct OPmaterial OPmaterial;
+typedef struct OPmaterialParam OPmaterialParam;
+
+#define OPMATERIAL_MAX_UNIFORMS 20
 
 #include "OPeffect.h"
 #include "./Core/include/OPtypes.h"
-
-#define OPMATERIAL_MAX_UNIFORMS 20
 
 enum OPmaterialParamType {
 	MATERIAL_PARAM_TYPE_MATRIX4,
@@ -22,9 +27,8 @@ struct OPmaterialParam {
 	void*                data;
 	ui8                  count;
 };
-typedef struct OPmaterialParam OPmaterialParam;
 
-struct OPmaterial;
+
 
 inline void OPmaterialClearParams(OPmaterial* material);
 void OPmaterialInit(OPmaterial* material, OPeffect* effect);
@@ -312,5 +316,3 @@ struct OPmaterialInstance {
 	}
 
 };
-
-#endif

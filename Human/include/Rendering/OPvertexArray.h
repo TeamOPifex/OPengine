@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERING_VERTEX_ARRAY
-#define OPENGINE_HUMAN_RENDERING_VERTEX_ARRAY
+#pragma once
 
 struct OPvertexArray;
 typedef struct OPvertexArray OPvertexArray;
@@ -23,5 +22,3 @@ struct OPvertexArray {
 		OPRENDERER_ACTIVE->VertexArray.SetLayout(this, vertexLayout);
 	}
 };
-
-#endif

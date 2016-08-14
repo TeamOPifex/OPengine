@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERING_WINDOW
-#define OPENGINE_HUMAN_RENDERING_WINDOW
+#pragma once
 
 struct OPwindow;
 typedef struct OPwindow OPwindow;
@@ -34,4 +33,3 @@ struct OPwindow {
 	void Focus();
 	void SetPosition(i32 x, i32 y);
 };
-#endif

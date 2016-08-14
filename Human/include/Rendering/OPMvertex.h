@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERER_OPM_VERTEX
-#define OPENGINE_HUMAN_RENDERER_OPM_VERTEX
+#pragma once
 
 #include "./Math/include/Vectors.h"
 
@@ -80,4 +79,3 @@ OPvertices* OPverticesCreate(OPuint count, ui32 features);
 void OPverticesWriteVec2(OPvertices* vertices, OPvec2* data, OPMFeatures feature);
 void OPverticesWriteVec3(OPvertices* vertices, OPvec3* data, OPMFeatures feature);
 void OPverticesWriteVec4(OPvertices* vertices, OPvec4* data, OPMFeatures feature);
-#endif

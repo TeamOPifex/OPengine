@@ -1,6 +1,7 @@
 #pragma once
 
 struct OPrendererForward;
+typedef struct OPrendererForward OPrendererForward;
 
 #include "./Human/include/Rendering/OPrenderer.h"
 #include "./Human/include/Rendering/OPrenderCommandBucket.h"

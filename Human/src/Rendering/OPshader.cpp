@@ -1,5 +1,4 @@
 #include "./Human/include/Rendering/OPshader.h"
-#include "./Human/include/Utilities/Errors.h"
 #include "./Human/include/Rendering/OPrender.h"
 #include "./Data/include/OPcman.h"
 #include "./Data/include/OPstream.h"

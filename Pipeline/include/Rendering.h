@@ -1,5 +1,4 @@
-#ifndef OPENGINE_PIPELINE_RENDERING
-#define OPENGINE_PIPELINE_RENDERING
+#pragma once
 
 #include "./Human/include/Rendering/OPmesh.h"
 #include "./Human/include/Rendering/OPeffect.h"
@@ -25,5 +24,3 @@ inline void OPbindMeshEffectWorldCam(OPmesh* mesh, OPeffect* effect, OPmat4* wor
 
 	mesh->Bind();
 }
-
-#endif

@@ -1,5 +1,4 @@
 #include "./Human/include/Rendering/Commands/OPrenderCommandDrawIndexed.h"
-#include "./Human/include/Utilities/Errors.h"
 
 void OPrenderCommandDrawIndex(void* data, OPcam* camera) {
 	OPrenderCommandDrawIndexed* dc = (OPrenderCommandDrawIndexed*)data;

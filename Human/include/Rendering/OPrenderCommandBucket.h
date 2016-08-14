@@ -1,25 +1,19 @@
-#ifndef OPENGINE_HUMAN_RENDERING_COMMAND_BUCKET
-#define OPENGINE_HUMAN_RENDERING_COMMAND_BUCKET
-
-#include "./Human/include/Rendering/OPcam.h"
-#include "./Human/include/Rendering/OPframeBuffer.h"
-#include "./Human/include/Rendering/OPmodel.h"
-#include "./Data/include/OPradixSort.h"
-#include "./Data/include/OPallocLinear.h"
-
-//-----------------------------------------------------------------------------
-//  _____                     _____                  _____  _               _   _
-// |  __ \                   |  __ \                |  __ \(_)             | | (_)
-// | |__) _ __ ___   ______  | |__) _ __ ___   ___  | |  | |_ _ __ ___  ___| |_ ___   _____ ___
-// |  ___| '__/ _ \ |______| |  ___| '__/ _ \ / __| | |  | | | '__/ _ \/ __| __| \ \ / / _ / __|
-// | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
-// |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/
+#pragma once
 
 struct OPrenderCommand;
 struct OPrenderCommandBucketKey;
 struct OPrenderCommandBucket;
 
+typedef struct OPrenderCommand OPrenderCommand;
+typedef struct OPrenderCommandBucketKey OPrenderCommandBucketKey;
+typedef struct OPrenderCommandBucket OPrenderCommandBucket;
+
+#include "./Human/include/Rendering/OPcam.h"
+#include "./Human/include/Rendering/OPframeBuffer.h"
+#include "./Human/include/Rendering/OPmodel.h"
 #include "./Human/include/Rendering/Commands/OPrenderCommandDrawIndexed.h"
+#include "./Data/include/OPradixSort.h"
+#include "./Data/include/OPallocLinear.h"
 
 //-----------------------------------------------------------------------------
 //   _____ _                   _
@@ -93,5 +87,3 @@ struct OPrenderCommandBucket {
 	static OPrenderCommandBucket* Create(OPuint bucketSize, OPcam** camera);
 	static OPrenderCommandBucket* Create(OPuint bucketSize, OPcam** camera, OPallocator* allocator);
 };
-
-#endif

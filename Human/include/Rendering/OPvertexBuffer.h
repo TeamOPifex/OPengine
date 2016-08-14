@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERING_VERTEX_BUFFER
-#define OPENGINE_HUMAN_RENDERING_VERTEX_BUFFER
+#pragma once
 
 struct OPvertexBuffer;
 typedef struct OPvertexBuffer OPvertexBuffer;
@@ -36,5 +35,3 @@ struct OPvertexBuffer {
 		return OPRENDERER_ACTIVE->VertexBuffer.Create();
 	}
 };
-
-#endif
