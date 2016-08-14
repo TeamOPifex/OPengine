@@ -11,7 +11,7 @@ void OPskeletonAnimationAddLoader() {
 		(OPint(*)(void*))OPloaderOPanimationUnload,
 		NULL
 	};
-	OPcmanAddLoader(&loader);
+	OPCMAN.AddLoader(&loader);
 }
 
 OPint OPloaderOPanimationLoad(OPstream* str, OPskeletonAnimation** animation) {

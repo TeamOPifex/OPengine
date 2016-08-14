@@ -83,22 +83,22 @@ void ExamplePhysicsCharacterEnter(OPgameState* last) {
 	OPphysXInit();
 	physicsCharacterExample->scene = OPphysXSceneCreate(OPvec3Create(0, -9.8, 0), CharacterOnTrigger, CharacterOnContact);
 
-	OPcmanLoad("PuzzleBlock.opm");
-	OPcmanLoad("PuzzleSphere.opm");
-	OPcmanLoad("Common/Texture.frag");
-	OPcmanLoad("Common/Texture3D.vert");
-	OPcmanLoad("TetrisBroken.png");
-	OPcmanLoad("TetrisOrange.png");
-	OPcmanLoad("TetrisBlue.png");
-	OPcmanLoad("TetrisGreen.png");
+	OPCMAN.Load("PuzzleBlock.opm");
+	OPCMAN.Load("PuzzleSphere.opm");
+	OPCMAN.Load("Common/Texture.frag");
+	OPCMAN.Load("Common/Texture3D.vert");
+	OPCMAN.Load("TetrisBroken.png");
+	OPCMAN.Load("TetrisOrange.png");
+	OPCMAN.Load("TetrisBlue.png");
+	OPCMAN.Load("TetrisGreen.png");
 
-	physicsCharacterExample->texture = (OPtexture*)OPcmanGet("TetrisBroken.png");
-	physicsCharacterExample->texturePlayer = (OPtexture*)OPcmanGet("TetrisOrange.png");
-	physicsCharacterExample->textureSphere = (OPtexture*)OPcmanGet("TetrisBlue.png");
-	physicsCharacterExample->textureStatic = (OPtexture*)OPcmanGet("TetrisGreen.png");
+	physicsCharacterExample->texture = (OPtexture*)OPCMAN.Get("TetrisBroken.png");
+	physicsCharacterExample->texturePlayer = (OPtexture*)OPCMAN.Get("TetrisOrange.png");
+	physicsCharacterExample->textureSphere = (OPtexture*)OPCMAN.Get("TetrisBlue.png");
+	physicsCharacterExample->textureStatic = (OPtexture*)OPCMAN.Get("TetrisGreen.png");
 
-	physicsCharacterExample->Mesh = (OPmesh*)OPcmanGet("PuzzleBlock.opm");
-	physicsCharacterExample->MeshSphere = (OPmesh*)OPcmanGet("PuzzleSphere.opm");
+	physicsCharacterExample->Mesh = (OPmesh*)OPCMAN.Get("PuzzleBlock.opm");
+	physicsCharacterExample->MeshSphere = (OPmesh*)OPCMAN.Get("PuzzleSphere.opm");
 
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", OPshaderElementType::FLOAT, 3 },
@@ -107,8 +107,8 @@ void ExamplePhysicsCharacterEnter(OPgameState* last) {
 	};
 
 	physicsCharacterExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture3D.vert");
-	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
+	OPshader* vert = (OPshader*)OPCMAN.Get("Common/Texture3D.vert");
+	OPshader* frag = (OPshader*)OPCMAN.Get("Common/Texture.frag");
 	physicsCharacterExample->Effect->Init(vert, frag);
 
 	physicsCharacterExample->SphereEffect = (OPeffect*)OPalloc(sizeof(OPeffect));

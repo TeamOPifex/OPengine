@@ -6,6 +6,7 @@
 #include "./Human/include/Rendering/Sprite/OPspriteSheet.h"
 #include "./Human/include/Utilities/OPimagePNG.h"
 #include "./Data/include/OPjson.h"
+#include "./Core/include/OPdebug.h"
 
 
 OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
@@ -136,7 +137,8 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 
 
 void OPloadersAddDefault() {
+	TIMED_BLOCK
 	for (i32 i = 0; i < OP_DEFAULT_LOADER_COUNT; i++) {
-		OPcmanAddLoader(&OP_DEFAULT_LOADERS[i]);
+		OPCMAN.AddLoader(&OP_DEFAULT_LOADERS[i]);
 	}
 }

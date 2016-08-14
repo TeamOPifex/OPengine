@@ -26,22 +26,22 @@ SkinningExample* skinningExample;
 
 void ExampleSkinningEnter(OPgameState* last) {
 
-	OPcmanLoad("Skinning.frag");
-	OPcmanLoad("Skinning.vert");
+	OPCMAN.Load("Skinning.frag");
+	OPCMAN.Load("Skinning.vert");
 	skinningExample = (SkinningExample*)OPalloc(sizeof(SkinningExample));
 
-	skinningExample->skeleton = (OPskeleton*)OPcmanLoadGet("ld35person.opm.skel");
-	skinningExample->animation = (OPskeletonAnimation*)OPcmanLoadGet("ld35person.opm.Take 001.anim");
-	skinningExample->animation2 = (OPskeletonAnimation*)OPcmanLoadGet("ld35person.opm.Take 001.anim");
-	skinningExample->animation3 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
-	skinningExample->animation4 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
+	skinningExample->skeleton = (OPskeleton*)OPCMAN.LoadGet("ld35person.opm.skel");
+	skinningExample->animation = (OPskeletonAnimation*)OPCMAN.LoadGet("ld35person.opm.Take 001.anim");
+	skinningExample->animation2 = (OPskeletonAnimation*)OPCMAN.LoadGet("ld35person.opm.Take 001.anim");
+	skinningExample->animation3 = (OPskeletonAnimation*)OPCMAN.LoadGet("person.opm.Walk.anim");
+	skinningExample->animation4 = (OPskeletonAnimation*)OPCMAN.LoadGet("person.opm.Walk.anim");
 
 
-	OPcmanLoad("Skinning.frag");
-	OPcmanLoad("Skinning.vert");
+	OPCMAN.Load("Skinning.frag");
+	OPCMAN.Load("Skinning.vert");
 
 	skinningExample->pos = 0;
-	skinningExample->Mesh = (OPmesh*)OPcmanLoadGet("ld35person.opm");
+	skinningExample->Mesh = (OPmesh*)OPCMAN.LoadGet("ld35person.opm");
 
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", OPshaderElementType::FLOAT, 3 },
@@ -53,8 +53,8 @@ void ExampleSkinningEnter(OPgameState* last) {
 	};
 
 	skinningExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	OPshader* vert = (OPshader*)OPcmanGet("Skinning.vert");
-	OPshader* frag = (OPshader*)OPcmanGet("Skinning.frag");
+	OPshader* vert = (OPshader*)OPCMAN.Get("Skinning.vert");
+	OPshader* frag = (OPshader*)OPCMAN.Get("Skinning.frag");
 	skinningExample->Effect->Init(vert, frag);
 
 	skinningExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
@@ -69,7 +69,7 @@ void ExampleSkinningEnter(OPgameState* last) {
 		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
-		skinningExample->texture = (OPtexture*)OPcmanLoadGet("Knight.png");
+		skinningExample->texture = (OPtexture*)OPCMAN.LoadGet("Knight.png");
 }
 
 OPint heldDown = 0;

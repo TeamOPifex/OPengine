@@ -34,16 +34,16 @@ void ExampleSpineEnter(OPgameState* last) {
 	// Load up the mesh into the Content Manager
 	// If the model was already loaded by a previous Game State
 	// it'll continue on without reloading it
-	OPcmanLoad("cube.opm");
-	OPcmanLoad("spineboy.atlas");
+	OPCMAN.Load("cube.opm");
+	OPCMAN.Load("spineboy.atlas");
 
 	// Allocating a memory block for this example
 	spineExample = (SpineExample*)OPallocZero(sizeof(SpineExample));
 
-	// The OPcmanLoad call ensures that this mesh has been loaded
-	// The OPcmanGet call returns a pointer to the resource (an OPmesh)
+	// The OPCMAN.Load call ensures that this mesh has been loaded
+	// The OPCMAN.Get call returns a pointer to the resource (an OPmesh)
 	// that's contained in the Content Manager
-	spineExample->Mesh = (OPmesh*)OPcmanGet("cube.opm");
+	spineExample->Mesh = (OPmesh*)OPCMAN.Get("cube.opm");
 
 	// Sets up the camera as a perpsective camera for rendering
 	spineExample->Camera.SetPerspective(
@@ -64,7 +64,7 @@ void ExampleSpineEnter(OPgameState* last) {
 	// to turn the Depth Buffer on and continue
 	OPrenderDepth(1);
 
-	spineExample->spine = (Spine*)OPcmanGet("spineboy.atlas");
+	spineExample->spine = (Spine*)OPCMAN.Get("spineboy.atlas");
 
 	SpineSetMix(spineExample->spine, "walk", "jump", 0.2f);
 	SpineSetMix(spineExample->spine, "jump", "run", 0.2f);

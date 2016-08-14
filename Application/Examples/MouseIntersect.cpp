@@ -30,9 +30,9 @@ void ExampleMouseIntersectEnter(OPgameState* last) {
 	// Load up the mesh into the Content Manager
 	// If the model was already loaded by a previous Game State
 	// it'll continue on without reloading it.
-	// OPcamnLoadGet calls OPcmanLoad and then returns OPcmanGet
-	// The OPcmanLoad call ensures that this mesh has been loaded
-	// The OPcmanGet call returns a pointer to the resource (an OPmesh)
+	// OPcamnLoadGet calls OPCMAN.Load and then returns OPCMAN.Get
+	// The OPCMAN.Load call ensures that this mesh has been loaded
+	// The OPCMAN.Get call returns a pointer to the resource (an OPmesh)
 	// that's contained in the Content Manager
 	//mouseIntersectExample.Mesh = OPcubeCreate(OPvec3Create(1,0,0));
 
@@ -73,7 +73,7 @@ void ExampleMouseIntersectEnter(OPgameState* last) {
 
 
 
-	OPcmanLoad("Ubuntu.opf");
+	OPCMAN.Load("Ubuntu.opf");
 
 	OPfontSystemLoadEffects();
 

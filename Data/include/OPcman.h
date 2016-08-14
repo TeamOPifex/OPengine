@@ -1,14 +1,18 @@
 #pragma once
 
-#include "./Core/include/OPtypes.h"
-#include "./Core/include/OPmemory.h"
-#include "./Core/include/OPtimer.h"
-#include "./Data/include/OPhashMap.h"
-#include "./Data/include/OPlinkedList.h"
-#include "./Data/include/OPstream.h"
-#include "./Data/include/OPfile.h"
+struct OPcman;
+typedef struct OPcman OPcman;
 
-#define OP_CMAN_CAP 100
+#include "./Data/include/OPresourceFile.h"
+#include "./Data/include/OPassetLoader.h"
+#include "./Data/include/OPasset.h"
+#include "./Data/include/OPlinkedList.h"
+#include "./Data/include/OPhashMap.h"
+#include "./Data/include/OPvector.h"
+#include "./Core/include/OPtimer.h"
+
+#define OP_CMAN_CAP 1000
+#define OP_CMAN_MAX_ASSET_LOADERS 20
 #define OP_CMAN_MAX_RESOURCE_FILES 10
 
 #define OP_CMAN_KEY_EXISTS           -1
@@ -21,154 +25,50 @@
 #define OP_CMAN_RETRIEVE_FAILED      -8
 #define OP_CMAN_KEY_NOT_FOUND        -9
 
-//  _____ _                   _
-// / ____| |                 | |
-//| (___ | |_ _ __ _   _  ___| |_ ___
-// \___ \| __| '__| | | |/ __| __/ __|
-// ____) | |_| |  | |_| | (__| |_\__ \
-//|_____/ \__|_|   \__,_|\___|\__|___/
-//
+struct OPcman {
+	OPhashMap hashmap;
+	OPvector assetLoaders;
+	OPlinkedList purgeList;
+	OPvector resourceFiles;
+	OPchar* rootFolder;
 
-
-struct OPresourceFile {
-	struct OPfile resourceFile;
-	ui16 headerSize;
-	ui16 resourceCount;
-	OPchar** resourceNames;
-	ui32* resourceOffset;
-	ui32* resourceSize;
-};
-typedef struct OPresourceFile OPresourceFile;
-
-struct OPassetLoader {
-	const OPchar Extension[16];
-	const OPchar* AssetTypePath;
-	OPint AssetSize;
-	OPint(*Load)(OPstream* stream, void** assetOut);
-	OPint(*Unload)(void* assetIn);
-	OPint(*Reload)(OPstream* stream, void** assetOut);
-};
-typedef struct OPassetLoader OPassetLoader;
-
-struct OPasset {
-	void* Asset;
-	OPint(*Unload)(void* assetIn);
-	OPint Dirty;
-#if defined(_DEBUG)
-	OPint(*Reload)(OPstream* stream, void** assetOut);
-	OPchar* FullPath;
-	OPchar* AbsolutePath;
-	i64 LastChange;
+#ifdef _DEBUG
+	i64 lastChecked;
 #endif
+
+	OPcman() { }
+	OPcman(const OPchar* dir) { Init(dir); }
+	
+	bool Init(const OPchar* dir);
+	void AddLoader(OPassetLoader* loader);
+	void Update(OPtimer* timer);
+	bool Purge();
+	bool Add(const OPchar* assetKey, OPasset* asset);
+	bool Load(const OPchar* assetKey);
+	bool Unload(const OPchar* assetKey);
+	void* Get(const OPchar* assetKey);
+	bool Delete(const OPchar* assetKey);
+	void Destroy();
+	bool SetDir(OPchar* dir);
+	void LoadResourcePack(const OPchar* filename);
+	OPstream* GetResource(const OPchar* resourceName);
+
+	inline bool IsLoaded(const OPchar* asset) {
+		return hashmap.Exists(asset);
+	}
+
+	inline void* LoadGet(const OPchar* asset) {
+		if (Load(asset)) {
+			return Get(asset);
+		}
+		return NULL;
+	}
 };
-typedef struct OPasset OPasset;
 
-//  _____ _       _           _
-// / ____| |     | |         | |
-//| |  __| | ___ | |__   __ _| |___
-//| | |_ | |/ _ \| '_ \ / _` | / __|
-//| |__| | | (_) | |_) | (_| | \__ \
-// \_____|_|\___/|_.__/ \__,_|_|___/
-//
+extern OPcman OPCMAN;
 
-extern OPhashMap OP_CMAN_HASHMAP;
-extern OPassetLoader* OP_CMAN_ASSETLOADERS;
-extern OPint OP_CMAN_ASSET_LOADER_COUNT;
-extern OPlinkedList* OP_CMAN_PURGE;
-extern OPresourceFile OP_CMAN_RESOURCE_FILES[OP_CMAN_MAX_RESOURCE_FILES];
-
-// ______                _   _
-//|  ____|              | | (_)
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
-//|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
-//| |  | |_| | | | | (__| |_| | (_) | | | \__ \
-//|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-//
-
-/* *Debug Only*
- * Watches the files of loaded resources for changes
- * Looks at Last Write Time for each file once every second
- * When a change happens the Reload method is called
- */
-void OPcmanUpdate(struct OPtimer* timer);
-
-/* Adds a loader to be used when OPcmanInit is called
-* @param loader Pointer to a defined asset loader
-*/
-void OPcmanAddLoader(OPassetLoader* loader);
-
-/* Initializes the Content Manager with an array of Asset Loaders
-* A custom directoy can be provided otherwise it defaults to assets/
-* @param dir Directory to look for assets, if NULL then it will look in the startup directory for a folder named "Assets"
-* @return Success Result
-*/
-OPint OPcmanInit(const OPchar* dir);
-
-/* Unloads all assets that are no longer needed (marked deleted)
-* Assets that are no longer needed have been deleted with OPcmanDelete
-* @return Success Result
-*/
-OPint OPcmanPurge();
-
-/* checks to see if an asset is loaded, triggers the load or unload.
-* @param key The resource name to find
-* @return Success Result
-*/
-OPint OPcmanIsLoaded(const OPchar* key);
-
-/* Attempts to load an asset
-* @param key The resource name to load
-* @return Success Result
-*/
-OPint OPcmanLoad(const OPchar* key);
-
-/*
-* Unloads a resource
-* @param key The resource that's no longer needed
-* @return Success Result
-*/
-OPint OPcmanUnload(const OPchar* key);
-
-/* Returns a pointer to the resource requested by file name
-* @param key The resource name to load
-* @return Pointer to the resource requested. NULL if it wasn't found.
-*/
-void* OPcmanGet(const OPchar* key);
-
-/* Loads a resource and returns a pointer to the resource requested
-* @param key The resource name to load
-* @return Pointer to the resource requested. NULL if it failed to load or wasn't found.
-*/
-void* OPcmanLoadGet(const OPchar* key);
-
-/* Marks an asset as ready to delete
-* It will only be removed from memory when OPcmanPurge is called
-* @param key The resource that's no longer needed
-* @return Success Result
-*/
-OPint OPcmanDelete(const OPchar* key);
-
-/* Marks an asset as ready to delete
-* It will only be removed from memory when OPcmanPurge is called
-* @param key The resource that's no longer needed
-* @return Success Result
-*/
-void OPcmanDestroy();
-
-OPint OPcmanSetDir(OPchar* dir);
-
-
-/* Loads a Resource Pack into the OPcman
-* The header data is loaded into memory, but the individual resources will be loaded
-* at request. The FILE handle will remain open until the Resource Pack is unloaded.
-* @param filename The resource to load
-*/
-void OPcmanLoadResourcePack(const OPchar* filename);
-
-/* Gets an asset OPstream out of a Resource Pack that has been loaded
-* It will look in Resource Packs in the order they were loaded. If no
-* resource could be found, it will return NULL
-* @param resourceName The resource to load
-* @return An OPstream to the resource in any of the Resource Packs that have been loaded
-*/
-OPstream* OPcmanGetResource(const OPchar* resourceName);
+#ifdef _DEBUG
+	#define OPCMAN_UPDATE(timer) OPCMAN.Update(timer);
+#else
+	#define OPCMAN_UPDATE(timer) 
+#endif

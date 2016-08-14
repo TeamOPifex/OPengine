@@ -12,8 +12,8 @@ typedef struct {
 ParticleSystemExample* particleSystemExample;
 
 void ExampleParticleSystemEnter(OPgameState* last) {
-	OPcmanLoad("particleSheet.png");
-	OPcmanLoad("Toys.opss");
+	OPCMAN.Load("particleSheet.png");
+	OPCMAN.Load("Toys.opss");
 
 	particleSystemExample = (ParticleSystemExample*)OPalloc(sizeof(ParticleSystemExample));
 
@@ -34,7 +34,7 @@ void ExampleParticleSystemEnter(OPgameState* last) {
 }
 
 OPint ExampleParticleSystemUpdate(OPtimer* time) {
-	OPsprite* sprite = (OPsprite*)OPcmanGet("Toys/Dust");
+	OPsprite* sprite = (OPsprite*)OPCMAN.Get("Toys/Dust");
 	OPrenderDepth(0);
 	OPrenderClear(0, 0, 0);
 	

@@ -15,9 +15,9 @@ SpriteSystemExample spriteSystemExample;
 
 void ExampleSpriteSystemEnter(OPgameState* last) {
 
-	OPcmanLoad("spriteExample.opss");
+	OPCMAN.Load("spriteExample.opss");
 
-	spriteSystemExample.sprites[0] = (OPsprite*)OPcmanGet("spriteExample/Bear");
+	spriteSystemExample.sprites[0] = (OPsprite*)OPCMAN.Get("spriteExample/Bear");
 	OPspriteSystemEffectDefault(&spriteSystemExample.spriteEffect);
 	OPspriteSystemInit(&spriteSystemExample.spriteSystem, spriteSystemExample.sprites, 5, &spriteSystemExample.spriteEffect, OPSPRITESYSTEMALIGN_BOTTOM_CENTER);
 	OPspriteSystemSprite* sp = OPspriteSystemAdd(&spriteSystemExample.spriteSystem);

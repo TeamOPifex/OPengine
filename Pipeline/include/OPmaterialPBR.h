@@ -14,7 +14,7 @@ struct OPmaterialPBR {
 	OPmaterialPBR() { }
 	OPmaterialPBR(OPeffect* effect) {
 		Init(effect);
-		rootMaterial.AddParam("uPreintegratedFG", (OPtexture*)OPcmanLoadGet("PreintegratedFG.png"), 6);
+		rootMaterial.AddParam("uPreintegratedFG", (OPtexture*)OPCMAN.LoadGet("PreintegratedFG.png"), 6);
 	}
 
 	void Init(OPeffect* effect);
@@ -62,19 +62,19 @@ struct OPmaterialPBRInstance {
 	}	
 	
 	inline void SetAlbedoMap(const OPchar* texture) {
-		SetAlbedoMap((OPtexture*)OPcmanLoadGet(texture));
+		SetAlbedoMap((OPtexture*)OPCMAN.LoadGet(texture));
 	}
 
 	inline void SetSpecularMap(const OPchar* texture) {
-		SetSpecularMap((OPtexture*)OPcmanLoadGet(texture));
+		SetSpecularMap((OPtexture*)OPCMAN.LoadGet(texture));
 	}
 
 	inline void SetGlossMap(const OPchar* texture) {
-		SetGlossMap((OPtexture*)OPcmanLoadGet(texture));
+		SetGlossMap((OPtexture*)OPCMAN.LoadGet(texture));
 	}
 
 	inline void SetNormalMap(const OPchar* texture) {
-		SetNormalMap((OPtexture*)OPcmanLoadGet(texture));
+		SetNormalMap((OPtexture*)OPCMAN.LoadGet(texture));
 	}
 
 	inline void SetEnvironmentMap(OPtextureCube* textureCube) {

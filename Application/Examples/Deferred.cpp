@@ -86,14 +86,14 @@ typedef struct {
 DeferredExample* deferredExample;
 
 void ExampleDeferredEnter(OPgameState* last) {
-//	OPcmanLoad("PuzzleBlock.opm");
-//	OPcmanLoad("SimpleModel.frag");
-//	OPcmanLoad("SimpleModel.vert");
+//	OPCMAN.Load("PuzzleBlock.opm");
+//	OPCMAN.Load("SimpleModel.frag");
+//	OPCMAN.Load("SimpleModel.vert");
 //
 //	deferredExample = (DeferredExample*)OPallocZero(sizeof(DeferredExample));
 //	deferredExample->GBuffer = DeferredGBufferCreate();
 //
-//	deferredExample->Mesh = (OPmesh*)OPcmanGet("PuzzleBlock.opm");
+//	deferredExample->Mesh = (OPmesh*)OPCMAN.Get("PuzzleBlock.opm");
 //
 //	deferredExample->Effect = OPeffectGen(
 //		"SimpleModel.vert",

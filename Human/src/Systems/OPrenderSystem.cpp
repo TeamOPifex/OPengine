@@ -8,10 +8,10 @@ OPeffect OPrenderSystemLoadTextured2D(ui32 vertexStride) {
 		{ "aUV", OPshaderElementType::FLOAT, 2 }
 	};
 
-	OPcmanLoad("Common/Texture2D.vert");
-	OPcmanLoad("Common/Texture.frag");
-	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture2D.vert");
-	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
+	OPCMAN.Load("Common/Texture2D.vert");
+	OPCMAN.Load("Common/Texture.frag");
+	OPshader* vert = (OPshader*)OPCMAN.Get("Common/Texture2D.vert");
+	OPshader* frag = (OPshader*)OPCMAN.Get("Common/Texture.frag");
 
 	OPeffect effect;
 	effect.Init(vert, frag);
@@ -26,10 +26,10 @@ OPeffect OPrenderSystemLoadTextured3D(ui32 vertexStride) {
 		{ "aUV", OPshaderElementType::FLOAT, 2 }
 	};
 
-	OPcmanLoad("Common/Texture3D.vert");
-	OPcmanLoad("Common/Texture.frag");
-	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture3D.vert");
-	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
+	OPCMAN.Load("Common/Texture3D.vert");
+	OPCMAN.Load("Common/Texture.frag");
+	OPshader* vert = (OPshader*)OPCMAN.Get("Common/Texture3D.vert");
+	OPshader* frag = (OPshader*)OPCMAN.Get("Common/Texture.frag");
 
 	OPeffect effect;
 	effect.Init(vert, frag);

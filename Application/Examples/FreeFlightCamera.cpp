@@ -12,13 +12,13 @@ typedef struct {
 FreeFlightExample freeFlightExample;
 
 void ExampleFreeFlightEnter(OPgameState* last) {
-	OPcmanLoad("PuzzleBlock.opm");
-	OPcmanLoad("Common/Texture.frag");
-	OPcmanLoad("Common/Texture3D.vert");
-	OPcmanLoad("TetrisBroken.png");
+	OPCMAN.Load("PuzzleBlock.opm");
+	OPCMAN.Load("Common/Texture.frag");
+	OPCMAN.Load("Common/Texture3D.vert");
+	OPCMAN.Load("TetrisBroken.png");
 
-	freeFlightExample.Mesh = (OPmesh*)OPcmanGet("PuzzleBlock.opm");
-	freeFlightExample.Texture = (OPtexture*)OPcmanGet("TetrisBroken.png");
+	freeFlightExample.Mesh = (OPmesh*)OPCMAN.Get("PuzzleBlock.opm");
+	freeFlightExample.Texture = (OPtexture*)OPCMAN.Get("TetrisBroken.png");
 	freeFlightExample.Rotation = 0;
 
 	OPshaderAttribute attribs[] = {
@@ -28,8 +28,8 @@ void ExampleFreeFlightEnter(OPgameState* last) {
 	};
 
 	freeFlightExample.Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture3D.vert");
-	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
+	OPshader* vert = (OPshader*)OPCMAN.Get("Common/Texture3D.vert");
+	OPshader* frag = (OPshader*)OPCMAN.Get("Common/Texture.frag");
 	freeFlightExample.Effect->Init(vert, frag);
 
 	OPcamFreeFlightInit(&freeFlightExample.Camera, 3.0f, 3.0f, OPVEC3_ONE);

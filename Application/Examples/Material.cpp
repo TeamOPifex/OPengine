@@ -21,7 +21,7 @@ MaterialExample materialExample;
 
 void ExampleMaterialEnter(OPgameState* last) {
 
-	materialExample.Model.mesh = (OPmesh*)OPcmanLoadGet("output.opm");
+	materialExample.Model.mesh = (OPmesh*)OPCMAN.LoadGet("output.opm");
 
 	materialExample.Effect.Init("ColoredModel.vert", "ColoredModel.frag");
 

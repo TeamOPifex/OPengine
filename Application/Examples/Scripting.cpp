@@ -22,9 +22,9 @@ void ExampleScriptingEnter(OPgameState* last) {
 	scriptingExample.UpdateCompiled = OPjavaScriptV8Compiled("update.js");
 	scriptingExample.DestroyCompiled = OPjavaScriptV8Compiled("exit.js");
 
-	//scriptingExample.InitScript = (OPscript*)OPcmanLoadGet("init.js");
-	//scriptingExample.UpdateScript = (OPscript*)OPcmanLoadGet("update.js");
-	//scriptingExample.DestroyScript = (OPscript*)OPcmanLoadGet("exit.js");
+	//scriptingExample.InitScript = (OPscript*)OPCMAN.LoadGet("init.js");
+	//scriptingExample.UpdateScript = (OPscript*)OPCMAN.LoadGet("update.js");
+	//scriptingExample.DestroyScript = (OPscript*)OPCMAN.LoadGet("exit.js");
 	//OPjavaScriptV8Compile(&scriptingExample.InitCompiled, scriptingExample.InitScript);
 	//OPjavaScriptV8Compile(&scriptingExample.UpdateCompiled, scriptingExample.UpdateScript);
 	//OPjavaScriptV8Compile(&scriptingExample.DestroyCompiled, scriptingExample.DestroyScript);

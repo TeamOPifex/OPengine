@@ -20,7 +20,9 @@ struct OPlinkedList {
 	OPlinkedListNode* First;
 	OPlinkedListNode* Last;
 
-	OPlinkedList() { _size = 0; First = NULL; Last = NULL; }
+	OPlinkedList() { Init(); }
+
+	void Init();
 
 	// Inserts a node into the first position of an OPlinkedList
 	OPlinkedListNode* InsertFirst(void* data);

@@ -19,11 +19,11 @@ void ExampleOculusEnter(OPgameState* last) {
 
 	OPoculusInitialize();
 
-	OPcmanLoad("untitled.opm");
-	OPcmanLoad("SimpleModel.frag");
-	OPcmanLoad("SimpleModel.vert");
+	OPCMAN.Load("untitled.opm");
+	OPCMAN.Load("SimpleModel.frag");
+	OPCMAN.Load("SimpleModel.vert");
 
-	oculusExample.Mesh = (OPmesh*)OPcmanGet("untitled.opm");
+	oculusExample.Mesh = (OPmesh*)OPCMAN.Get("untitled.opm");
 
 	OPshaderAttribute attribs[] = {
 		{ "aPosition", OPshaderElementType::FLOAT, 3 },
@@ -31,8 +31,8 @@ void ExampleOculusEnter(OPgameState* last) {
 	};
 
 	oculusExample.Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	OPshader* vert = (OPshader*)OPcmanGet("SimpleModel.vert");
-	OPshader* frag = (OPshader*)OPcmanGet("SimpleModel.frag");
+	OPshader* vert = (OPshader*)OPCMAN.Get("SimpleModel.vert");
+	OPshader* frag = (OPshader*)OPCMAN.Get("SimpleModel.frag");
 	oculusExample.Effect->Init(vert, frag);
 
 	oculusExample.Camera = (OPcam*)OPalloc(sizeof(OPcam));

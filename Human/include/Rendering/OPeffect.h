@@ -50,7 +50,7 @@ struct OPeffect {
 
 	void Init(OPshader* vert, OPshader* frag);
 	void Init(const OPchar* vert, const OPchar* frag) {
-		Init((OPshader*)OPcmanLoadGet(vert), (OPshader*)OPcmanLoadGet(frag));
+		Init((OPshader*)OPCMAN.LoadGet(vert), (OPshader*)OPCMAN.LoadGet(frag));
 	}
 	inline void Bind() { 
 		OPRENDERER_ACTIVE->Effect.Bind(this); 

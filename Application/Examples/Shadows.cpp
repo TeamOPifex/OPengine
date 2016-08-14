@@ -58,7 +58,7 @@ typedef struct {
 		LightPosition = OPvec3Create(0, 10, 0);
 
 		// Load the model to be drawn
-		Model.mesh = (OPmesh*)OPcmanLoadGet("Sheep.opm");
+		Model.mesh = (OPmesh*)OPCMAN.LoadGet("Sheep.opm");
 		Model.world = OPmat4Translate(0, 0, 0);
 		Model.world *= OPmat4Scl(8.0f);
 
@@ -81,8 +81,8 @@ typedef struct {
 		//Ground.world.RotX(OPpi_2)->RotZ(OPpi);
 
 		// Load up the textures
-		ModelTexture = (OPtexture*)OPcmanLoadGet("noneNorm.png");
-		GroundTexture = (OPtexture*)OPcmanLoadGet("TetrisBlue.png");
+		ModelTexture = (OPtexture*)OPCMAN.LoadGet("noneNorm.png");
+		GroundTexture = (OPtexture*)OPCMAN.LoadGet("TetrisBlue.png");
 
 
 		// Create the effect used to draw a shadowed model
@@ -92,8 +92,8 @@ typedef struct {
 			{ "aUV", OPshaderElementType::FLOAT, 2 }
 		};
 
-		OPshader* vert = (OPshader*)OPcmanLoadGet("Common/TexturedShadow.vert");
-		OPshader* frag = (OPshader*)OPcmanLoadGet("Common/TexturedShadow.frag");
+		OPshader* vert = (OPshader*)OPCMAN.LoadGet("Common/TexturedShadow.vert");
+		OPshader* frag = (OPshader*)OPCMAN.LoadGet("Common/TexturedShadow.frag");
 		Effect.Init(vert, frag);
 		Effect2.Init(vert, frag);
 
@@ -164,8 +164,8 @@ typedef struct {
 		//	{ "aPosition", GL_FLOAT, 3 }
 		//};
 
-		//vert = (OPshader*)OPcmanLoadGet("Common/DepthRTT.vert");
-		//frag = (OPshader*)OPcmanLoadGet("Common/DepthRTT.frag");
+		//vert = (OPshader*)OPCMAN.LoadGet("Common/DepthRTT.vert");
+		//frag = (OPshader*)OPCMAN.LoadGet("Common/DepthRTT.frag");
 		//ShadowEffect.Init(vert, frag);
 
 		//// Create the camera used for the shadow. This is the position

@@ -41,7 +41,7 @@ JS_RETURN_VAL _OPeffectInit(const JS_ARGS& args) {
     String::Utf8Value vert(args[1]->ToString());
     String::Utf8Value frag(args[2]->ToString());
    // OPvertexLayout* layout = JS_GET_ARG_PTR(args, 3, OPvertexLayout);
-	OPRENDERER_ACTIVE->Effect.Init(effect, (OPshader*)OPcmanLoadGet(*vert), (OPshader*)OPcmanLoadGet(*frag));
+	OPRENDERER_ACTIVE->Effect.Init(effect, (OPshader*)OPCMAN.LoadGet(*vert), (OPshader*)OPCMAN.LoadGet(*frag));
 
     JS_RETURN_NULL;
 }

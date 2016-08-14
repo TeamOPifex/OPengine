@@ -30,7 +30,7 @@ OPfontManager* OPfontManagerCreate(OPfont* font) {
 
 OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 count) {
 	OPfontSystemLoadEffects();
-	OPfont* _font = (OPfont*)OPcmanLoadGet(font);
+	OPfont* _font = (OPfont*)OPCMAN.LoadGet(font);
 	OPfontManager* manager = OPfontManagerCreate(_font);
 	manager->scale = 1.0;
 	manager->_color = OPvec4Create(1,1,1,1);

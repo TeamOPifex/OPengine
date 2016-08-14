@@ -14,7 +14,7 @@ void OPparticleSysInit(OPeffect* effect) {
 
 	if (effect == NULL) {
 		EFFECT_PARTICLE_SYSTEM = (OPeffect*)OPalloc(sizeof(OPeffect));
-		EFFECT_PARTICLE_SYSTEM = OPRENDERER_ACTIVE->Effect.Create((OPshader*)OPcmanLoadGet("Common/OPparticleSystem.vert"), (OPshader*)OPcmanLoadGet("Common/OPparticleSystem.frag"));
+		EFFECT_PARTICLE_SYSTEM = OPRENDERER_ACTIVE->Effect.Create((OPshader*)OPCMAN.LoadGet("Common/OPparticleSystem.vert"), (OPshader*)OPCMAN.LoadGet("Common/OPparticleSystem.frag"));
 		//*EFFECT_PARTICLE_SYSTEM = OPeffectGen(
 		//	"Common/OPparticleSystem.vert",
 		//	"Common/OPparticleSystem.frag",

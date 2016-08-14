@@ -1,5 +1,11 @@
 #include "./Data/include/OPlinkedList.h"
 
+void OPlinkedList::Init() {
+	_size = 0; 
+	First = NULL; 
+	Last = NULL;
+}
+
 void OPlinkedList::Destroy(){
 	OPlinkedListNode* temp;
 	OPlinkedListNode* node = First;

@@ -57,7 +57,7 @@ inline OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* s
 	return OPjavaScriptV8Compile(compiled, script, NULL);
 }
 inline OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, const OPchar* path) {
-	OPscript* script = (OPscript*)OPcmanLoadGet(path);
+	OPscript* script = (OPscript*)OPCMAN.LoadGet(path);
 	return OPjavaScriptV8Compile(compiled, script);
 }
 #ifdef _DEBUG

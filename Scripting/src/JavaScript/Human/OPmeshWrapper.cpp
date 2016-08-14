@@ -29,7 +29,7 @@ JS_RETURN_VAL _OPmeshLoad(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     String::Utf8Value name(args[0]->ToString());
-    OPmesh* mesh = (OPmesh*)OPcmanLoadGet(*name);
+    OPmesh* mesh = (OPmesh*)OPCMAN.LoadGet(*name);
 
     Handle<Object> result = JS_NEW_OBJECT();
     OPmeshWrapper(result, mesh);

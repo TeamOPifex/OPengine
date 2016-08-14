@@ -95,32 +95,32 @@ void State0Enter(OPgameState* last){
 		{ "aUV", OPshaderElementType::FLOAT, 2 }
 	};
 
-	OPcmanLoad("impact.wav");
-	OPcmanLoad("boom.wav");
-	OPcmanLoad("background.ogg");
-	OPcmanLoad("TexturedSpecular.vert");
-	OPcmanLoad("TexturedSpecular.frag");
-	OPcmanLoad("TexturedScreen.vert");
-	OPcmanLoad("OPspriteSheet.frag");
-	OPcmanLoad("OPspriteSheet.vert");
-	OPcmanLoad("SpriteSheet.frag");
-	OPcmanLoad("Font.frag");
-	OPcmanLoad("Textured.frag");
-	OPcmanLoad("BiPlane.opm");
-	OPcmanLoad("steamPlaneSkin.png");
-	OPcmanLoad("steamPlaneSpec.png");
-	OPcmanLoad("noneNorm.png");
-	OPcmanLoad("stencil.opf");
-	OPcmanLoad("gripe.opss");
+	OPCMAN.Load("impact.wav");
+	OPCMAN.Load("boom.wav");
+	OPCMAN.Load("background.ogg");
+	OPCMAN.Load("TexturedSpecular.vert");
+	OPCMAN.Load("TexturedSpecular.frag");
+	OPCMAN.Load("TexturedScreen.vert");
+	OPCMAN.Load("OPspriteSheet.frag");
+	OPCMAN.Load("OPspriteSheet.vert");
+	OPCMAN.Load("SpriteSheet.frag");
+	OPCMAN.Load("Font.frag");
+	OPCMAN.Load("Textured.frag");
+	OPCMAN.Load("BiPlane.opm");
+	OPCMAN.Load("steamPlaneSkin.png");
+	OPCMAN.Load("steamPlaneSpec.png");
+	OPCMAN.Load("noneNorm.png");
+	OPCMAN.Load("stencil.opf");
+	OPCMAN.Load("gripe.opss");
 
-	// OPcmanLoad("Update.ops");
-	// OPscript* scriptCode = (OPscript*)OPcmanGet("Update.ops");
+	// OPCMAN.Load("Update.ops");
+	// OPscript* scriptCode = (OPscript*)OPCMAN.Get("Update.ops");
 	// OPscriptCompileAndRun(scriptCode);
 
 	//OPwebServerOnKey(server, "color", ColorHandler, &color);
 	//OPwebServerOnKey(server, "font", FontHandler, NULL);
 
-	OPss.Init((OPshader*)OPcmanGet("OPspriteSheet.vert"), (OPshader*)OPcmanGet("OPspriteSheet.frag"));
+	OPss.Init((OPshader*)OPCMAN.Get("OPspriteSheet.vert"), (OPshader*)OPCMAN.Get("OPspriteSheet.frag"));
 
 	// Required
 	
@@ -136,8 +136,8 @@ void State0Enter(OPgameState* last){
 	if(!OPAUD_CURR_PLAYER){
 		OPaudInit();
 		OPaudInitThread(11);
-		player = OPaudPlayerCreate((OPaudioSource*)OPcmanGet("impact.wav"), 10, 0); 
-		sound  = OPaudCreateEmitter((OPaudioSource*)OPcmanGet("impact.wav"), EMITTER_THREADED);
+		player = OPaudPlayerCreate((OPaudioSource*)OPCMAN.Get("impact.wav"), 10, 0); 
+		sound  = OPaudCreateEmitter((OPaudioSource*)OPCMAN.Get("impact.wav"), EMITTER_THREADED);
 	}
 
 	quadMesh = OPquadCreate();
@@ -148,7 +148,7 @@ void State0Enter(OPgameState* last){
 ui32 backgroundState = 0;
 
 OPint State0Update(OPtimer* time){
-	OPsprite* bg = (OPsprite*)OPcmanGet("gripe/walk");
+	OPsprite* bg = (OPsprite*)OPCMAN.Get("gripe/walk");
 
 	//OPwebServerQueue(server, "time", (i8*)&elapsed, sizeof(ui32));
 	t += 0.005f * time->Elapsed;
@@ -213,17 +213,17 @@ void State0Render(OPfloat delta) {
 
 }
 OPint State0Exit(OPgameState* next){
-	OPcmanDelete("impact.wav");
-	OPcmanDelete("boom.wav");
-	OPcmanDelete("background.ogg");
-	OPcmanDelete("TexturedSpecular.vert");
-	OPcmanDelete("TexturedSpecular.frag");
-	OPcmanDelete("TexturedScreen.vert");
-	OPcmanDelete("Textured.frag");
-	OPcmanDelete("BiPlane.opm");
-	OPcmanDelete("steamPlaneSkin.png");
-	OPcmanDelete("steamPlaneSpec.png");
-	OPcmanDelete("noneNorm.png");	
+	OPCMAN.Delete("impact.wav");
+	OPCMAN.Delete("boom.wav");
+	OPCMAN.Delete("background.ogg");
+	OPCMAN.Delete("TexturedSpecular.vert");
+	OPCMAN.Delete("TexturedSpecular.frag");
+	OPCMAN.Delete("TexturedScreen.vert");
+	OPCMAN.Delete("Textured.frag");
+	OPCMAN.Delete("BiPlane.opm");
+	OPCMAN.Delete("steamPlaneSkin.png");
+	OPCMAN.Delete("steamPlaneSpec.png");
+	OPCMAN.Delete("noneNorm.png");	
 
 	OPfree(garbage);
 	return 0;
@@ -231,25 +231,25 @@ OPint State0Exit(OPgameState* next){
 //-----------------------------------------------------------------------------
 void State1Enter(OPgameState* last){
 	OPlog("State1 Entering...");
-	OPcmanLoad("impact.wav");
-	OPcmanLoad("boom.wav");
-	OPcmanLoad("background.ogg");
-	OPcmanLoad("TexturedSpecular.vert");
-	OPcmanLoad("TexturedSpecular.frag");
-	OPcmanLoad("TexturedScreen.vert");
-	OPcmanLoad("Textured.frag");
-	OPcmanLoad("BiPlane.opm");
-	OPcmanLoad("steamPlaneSkin.png");
-	OPcmanLoad("steamPlaneSpec.png");
-	OPcmanLoad("noneNorm.png");	
+	OPCMAN.Load("impact.wav");
+	OPCMAN.Load("boom.wav");
+	OPCMAN.Load("background.ogg");
+	OPCMAN.Load("TexturedSpecular.vert");
+	OPCMAN.Load("TexturedSpecular.frag");
+	OPCMAN.Load("TexturedScreen.vert");
+	OPCMAN.Load("Textured.frag");
+	OPCMAN.Load("BiPlane.opm");
+	OPCMAN.Load("steamPlaneSkin.png");
+	OPCMAN.Load("steamPlaneSpec.png");
+	OPCMAN.Load("noneNorm.png");	
 	OPlog("State1 assets loaded!");
 
-	OPcmanPurge();
+	OPCMAN.Purge();
 
-	plane = (OPmesh*)OPcmanGet("BiPlane.opm");
-	tex  = (OPtexture*)OPcmanGet("steamPlaneSkin.png");
-	spec = (OPtexture*)OPcmanGet("steamPlaneSpec.png");
-	norm = (OPtexture*)OPcmanGet("noneNorm.png");
+	plane = (OPmesh*)OPCMAN.Get("BiPlane.opm");
+	tex  = (OPtexture*)OPCMAN.Get("steamPlaneSkin.png");
+	spec = (OPtexture*)OPCMAN.Get("steamPlaneSpec.png");
+	norm = (OPtexture*)OPCMAN.Get("noneNorm.png");
 
 	garbage = OPalloc(1024 * 10); // allocate ten megs of crap
 
@@ -331,17 +331,17 @@ void State1Render(OPfloat delta) {
 
 }
 OPint State1Exit(OPgameState* next){
-	OPcmanDelete("impact.wav");
-	OPcmanDelete("boom.wav");
-	OPcmanDelete("background.ogg");
-	OPcmanDelete("TexturedSpecular.vert");
-	OPcmanDelete("TexturedSpecular.frag");
-	OPcmanDelete("TexturedScreen.vert");
-	OPcmanDelete("Textured.frag");
-	OPcmanDelete("BiPlane.opm");
-	OPcmanDelete("steamPlaneSkin.png");
-	OPcmanDelete("steamPlaneSpec.png");
-	OPcmanDelete("noneNorm.png");	
+	OPCMAN.Delete("impact.wav");
+	OPCMAN.Delete("boom.wav");
+	OPCMAN.Delete("background.ogg");
+	OPCMAN.Delete("TexturedSpecular.vert");
+	OPCMAN.Delete("TexturedSpecular.frag");
+	OPCMAN.Delete("TexturedScreen.vert");
+	OPCMAN.Delete("Textured.frag");
+	OPCMAN.Delete("BiPlane.opm");
+	OPCMAN.Delete("steamPlaneSkin.png");
+	OPCMAN.Delete("steamPlaneSpec.png");
+	OPCMAN.Delete("noneNorm.png");	
 
 	tri.Destroy();
 	post.Destroy();

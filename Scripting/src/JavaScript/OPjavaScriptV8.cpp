@@ -128,7 +128,7 @@ OPint _OPjavaScriptRequire(OPchar* pathToLoad, Handle<Value>* result) {
 
     ASSERT(loadCount < CACHED_FILE_COUNT, "Too many cached files. Increase the CACHED_FILE_COUNT define in OPjavaScriptV8.cpp");
 
-    OPscript* scriptSource = (OPscript *) OPcmanLoadGet(pathToLoad);
+    OPscript* scriptSource = (OPscript *)OPCMAN.LoadGet(pathToLoad);
 
     OPchar *dir = _OPscriptV8GetDir(pathToLoad);
 

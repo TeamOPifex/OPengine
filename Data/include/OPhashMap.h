@@ -1,37 +1,14 @@
 #pragma once
 
 struct OPhashMap;
-struct KeyValuePair;
-struct Bucket;
 typedef struct OPhashMap OPhashMap;
-typedef struct KeyValuePair KeyValuePair;
-typedef struct Bucket Bucket;
 
-#include "./Core/include/OPtypes.h"
+#include "./Data/include/OPhashMapBucket.h"
 #include "./Core/include/OPmemory.h"
-
-//  _____ _                   _
-// / ____| |                 | |
-//| (___ | |_ _ __ _   _  ___| |_ ___
-// \___ \| __| '__| | | |/ __| __/ __|
-// ____) | |_| |  | |_| | (__| |_\__ \
-//|_____/ \__|_|   \__,_|\___|\__|___/
-//
-struct KeyValuePair {
-	OPchar* key;
-	void* value;
-};
-typedef struct KeyValuePair KeyValuePair;
-
-struct Bucket {
-	OPuint count;
-	KeyValuePair *pairs;
-};
-typedef struct Bucket Bucket;
 
 struct OPhashMap {
 	OPuint count;
-	Bucket *buckets;
+	OPhashMapBucket *buckets;
 
 	OPhashMap() { }
 	OPhashMap(OPuint capacity) { Init(capacity); }
@@ -71,6 +48,8 @@ struct OPhashMap {
 	* @return Success Result
 	*/
 	OPint Put(const OPchar* key, void* value);
+
+	bool Remove(const OPchar* key);
 
 	/* Gets the number of buckets being used by an OPhashMap
 	* @param map The OPhashMap to find a count

@@ -13,16 +13,16 @@ typedef struct {
 AudioExample* audioExample;
 
 void ExampleAudioEnter(OPgameState* last) {
-	OPcmanLoad("step0.wav");
-	OPcmanLoad("background.ogg");
+	OPCMAN.Load("step0.wav");
+	OPCMAN.Load("background.ogg");
 
 	OPaudInit();
 	OPaudInitThread(10);
 
 	audioExample = (AudioExample*)OPalloc(sizeof(AudioExample));
 
-	audioExample->Sound = OPaudCreateEmitter((OPaudioSource*)OPcmanGet("step0.wav"), EMITTER_THREADED);
-	audioExample->BackgroundSound = OPaudCreateEmitter((OPaudioSource*)OPcmanGet("background.ogg"), EMITTER_THREADED);
+	audioExample->Sound = OPaudCreateEmitter((OPaudioSource*)OPCMAN.Get("step0.wav"), EMITTER_THREADED);
+	audioExample->BackgroundSound = OPaudCreateEmitter((OPaudioSource*)OPCMAN.Get("background.ogg"), EMITTER_THREADED);
 }
 
 OPint ExampleAudioUpdate(OPtimer* time) {
@@ -47,7 +47,7 @@ void ExampleAudioRender(OPfloat delta) {
 
 OPint ExampleAudioExit(OPgameState* next) {
 	OPaudRecycleEmitter(audioExample->Sound);
-	OPcmanUnload("step0.wav");
+	OPCMAN.Unload("step0.wav");
 
 	OPfree(audioExample);
 	return 0;

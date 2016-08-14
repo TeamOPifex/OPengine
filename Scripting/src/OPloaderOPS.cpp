@@ -15,7 +15,7 @@ void OPscriptAddLoader() {
 		(OPint(*)(void*))OPscriptUnload,
 		(OPint(*)(OPstream*, void**))OPscriptReload
 	};
-	OPcmanAddLoader(&loaderOPS);
+	OPCMAN.AddLoader(&loaderOPS);
 
 	OPassetLoader loaderJS = {
 		".js",
@@ -25,7 +25,7 @@ void OPscriptAddLoader() {
 		(OPint(*)(void*))OPscriptUnload,
 		(OPint(*)(OPstream*, void**))OPscriptReload
 	};
-	OPcmanAddLoader(&loaderJS);
+	OPCMAN.AddLoader(&loaderJS);
 
 }
 

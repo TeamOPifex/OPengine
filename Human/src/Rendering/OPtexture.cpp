@@ -116,11 +116,11 @@
 
 #include "./Data/include/OPcman.h"
 //void OPtexture::Load(OPchar* asset) {
-//	OPtexture* result = (OPtexture*)OPcmanLoadGet(asset);
+//	OPtexture* result = (OPtexture*)OPCMAN.LoadGet(asset);
 //    this->Handle = result->Handle;
 //    this->Description = result->Description;
 //}
 
 OPtexture* OPtextureLoad(const OPchar* asset) {
-    return (OPtexture*)OPcmanLoadGet(asset);
+    return (OPtexture*)OPCMAN.LoadGet(asset);
 }

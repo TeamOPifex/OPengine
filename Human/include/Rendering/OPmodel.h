@@ -16,7 +16,7 @@ struct OPmodel {
 	OPmesh* mesh;
 
 	void Init(const OPchar* mesh) {
-	    this->mesh = (OPmesh*)OPcmanLoadGet(mesh);
+	    this->mesh = (OPmesh*)OPCMAN.LoadGet(mesh);
 		this->world = OPMAT4_IDENTITY;
 	}
 

@@ -16,19 +16,19 @@ typedef struct {
 TexturedExample* texturedExample;
 
 void ExampleTexturedEnter(OPgameState* last) {
-	// OPcmanLoad("adobe.opm");
-	// OPcmanLoad("adobe.png");
-	OPcmanLoad("Common/Texture.frag");
-	OPcmanLoad("Common/Texture3D.vert");
+	// OPCMAN.Load("adobe.opm");
+	// OPCMAN.Load("adobe.png");
+	OPCMAN.Load("Common/Texture.frag");
+	OPCMAN.Load("Common/Texture3D.vert");
 
 	texturedExample = (TexturedExample*)OPalloc(sizeof(TexturedExample));
 
-	OPjson* meta = (OPjson*)OPcmanLoadGet("Models/adobe.opm.meta");
+	OPjson* meta = (OPjson*)OPCMAN.LoadGet("Models/adobe.opm.meta");
 	const OPchar* _model = meta->Get("model").String();
 	const OPchar* _texture = meta->Get("texture").String();
 
-	texturedExample->Mesh = (OPmesh*)OPcmanLoadGet(_model);
-	texturedExample->Texture = (OPtexture*)OPcmanLoadGet(_texture);
+	texturedExample->Mesh = (OPmesh*)OPCMAN.LoadGet(_model);
+	texturedExample->Texture = (OPtexture*)OPCMAN.LoadGet(_texture);
 	texturedExample->Rotation = 0;
 
 	//OPshaderAttribute attribs[] = {
@@ -37,8 +37,8 @@ void ExampleTexturedEnter(OPgameState* last) {
 	//	{ "aUV", GL_FLOAT, 2 }
 	//};
 
-	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture3D.vert");
-	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
+	OPshader* vert = (OPshader*)OPCMAN.Get("Common/Texture3D.vert");
+	OPshader* frag = (OPshader*)OPCMAN.Get("Common/Texture.frag");
 	texturedExample->Effect.Init(vert, frag);
 	texturedExample->Effect.AddUniform("uColorTexture");
 	//texturedExample->Effect->AddUniform("vLightDirection");

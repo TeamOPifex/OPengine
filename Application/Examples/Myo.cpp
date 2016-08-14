@@ -22,15 +22,15 @@ void ExampleMyoEnter(OPgameState* last) {
 	// Load up the mesh into the Content Manager
 	// If the myo was already loaded by a previous Game State
 	// it'll continue on without reloading it
-	OPcmanLoad("cube.opm");
+	OPCMAN.Load("cube.opm");
 
 	// Allocating a memory block for this example
 	myoExample = (MyoExample*)OPallocZero(sizeof(MyoExample));
 
-	// The OPcmanLoad call ensures that this mesh has been loaded
-	// The OPcmanGet call returns a pointer to the resource (an OPmesh)
+	// The OPCMAN.Load call ensures that this mesh has been loaded
+	// The OPCMAN.Get call returns a pointer to the resource (an OPmesh)
 	// that's contained in the Content Manager
-	myoExample->Mesh = (OPmesh*)OPcmanGet("cube.opm");
+	myoExample->Mesh = (OPmesh*)OPCMAN.Get("cube.opm");
 
 	// The effect that will be used to render the mesh
 	// The renderGenEffect is a simplified utility method

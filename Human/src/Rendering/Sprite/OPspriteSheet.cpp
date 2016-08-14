@@ -15,7 +15,7 @@ void __opSpriteScaleFrames(OPtexture* tex, OPspriteSheet* ss) {
 	size.y = (f32)tex->textureDesc.height;
 
 	for (i = ss->Sprites; i--;){
-		OPsprite* s = (OPsprite*)OPcmanGet(ss->Names[i]);
+		OPsprite* s = (OPsprite*)OPCMAN.Get(ss->Names[i]);
 		OPint j = s->FrameCount;
 
 #ifdef _DEBUG
@@ -57,10 +57,6 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 	OPchar* filenameWithoutExtension = (OPchar*)OPalloc(sizeof(OPchar)* filenameLengthWithoutExtension);
 	OPmemcpy(filenameWithoutExtension, str->Source + 8, filenameLengthWithoutExtension * sizeof(OPchar));
 	filenameWithoutExtension[filenameLengthWithoutExtension - 1] = '\0';
-
-	ASSERT(OP_CMAN_ASSETLOADERS,
-		"OPspriteSheetLoad() - OP_CMAN_HASHMAP null, is content man initialized?"
-		);
 
 	// allocate space for the texture before it's created
 	// this will allow us to refer to its location without
@@ -178,24 +174,11 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 			OPlog("Inserting sprite '%s'", finalName);
 #endif
 
-			// create the asset to insert into the hashmap
-			if (!(assetBucket = (OPasset*)OPallocZero(sizeof(OPasset))))
-				return OP_CMAN_BUCKET_ALLOC_FAILED;
-
-			assetBucket->Asset = (void*)sprite;
-			assetBucket->Unload = NULL;
-			assetBucket->Dirty = 0;
-
-#if defined(_DEBUG) && defined(OPIFEX_WINDOWS)
-			assetBucket->Reload = NULL;
-			assetBucket->AbsolutePath = NULL;
-			assetBucket->FullPath = NULL;
-			assetBucket->LastChange = NULL;
-#endif
-			OP_CMAN_HASHMAP.Put(finalName, assetBucket);
+			assetBucket = OPNEW(OPasset((void*)sprite, NULL, NULL));
+			OPCMAN.Add(finalName, assetBucket);
 
 #ifdef _DEBUG
-			if(OPcmanIsLoaded(finalName)) {
+			if(OPCMAN.IsLoaded(finalName)) {
 				OPlog("OPSS %s loaded", finalName);
 			} else {
 				OPlog("OPSS FAILED TO LOAD %s", finalName);
@@ -238,11 +221,11 @@ OPint OPspriteSheetUnload(void* ss){
 	OPint i = sheet->Sprites;
 
 	// delete all frames for this sheet
-	OPfree(((OPsprite*)OPcmanGet(sheet->Names[i-1]))->Frames);
+	OPfree(((OPsprite*)OPCMAN.Get(sheet->Names[i-1]))->Frames);
 
 	// free all the sprites
 	for(;i--;){
-		OPsprite* s = (OPsprite*)OPcmanGet(sheet->Names[i]);
+		OPsprite* s = (OPsprite*)OPCMAN.Get(sheet->Names[i]);
 		OPfree(s);
 	}
 

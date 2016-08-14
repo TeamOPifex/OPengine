@@ -11,7 +11,7 @@ void OPskeletonAddLoader() {
 		(OPint(*)(void*))OPloaderOPskeletonUnload,
 		NULL
 	};
-	OPcmanAddLoader(&loader);
+	OPCMAN.AddLoader(&loader);
 }
 
 OPint OPloaderOPskeletonLoad(OPstream* str, OPskeleton** skeleton) {

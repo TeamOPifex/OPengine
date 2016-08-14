@@ -14,6 +14,8 @@ void ApplicationInit() {
 
 	//OPlogToFile("output.txt");
 
+	OPCMAN.Init(OPIFEX_ASSETS);
+
 	OPloadersAddDefault();
 	OPscriptAddLoader();
 	OPskeletonAddLoader();
@@ -23,7 +25,6 @@ void ApplicationInit() {
 	OPassimpAddLoaders();
 #endif
 	OPlog("Assets %s", OPIFEX_ASSETS);
-	OPcmanInit(OPIFEX_ASSETS);
 
 	OPoculusStartup();
 
@@ -43,7 +44,7 @@ OPint ApplicationUpdate(OPtimer* timer) {
 	}
 
 	OPinputSystemUpdate(timer);
-	OPcmanUpdate(timer);
+	OPCMAN_UPDATE(timer);
 
 	if (OPkeyboardWasReleased(OPkeyboardKey::ESCAPE)) return 1;
 	if ((OPkeyboardWasReleased(OPkeyboardKey::BACKSPACE) || OPgamePadGet(OPGAMEPAD_ONE)->WasPressed(OPGAMEPADBUTTON_BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
@@ -59,7 +60,7 @@ void ApplicationRender(OPfloat delta) {
 
 void ApplicationDestroy() {
 	ActiveState->Exit(ActiveState);
-	OPcmanDestroy();
+	OPCMAN.Destroy();
 	OPlogToFileClose();
 }
 
