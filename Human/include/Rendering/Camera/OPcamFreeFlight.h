@@ -12,7 +12,7 @@ struct OPcamFreeFlight {
 	OPvec3 Rotation, Movement;
 	OPfloat RotationSpeed, MoveSpeed;
 
-	OPcamFreeFlight() { Init(); }
+	OPcamFreeFlight() { }
 	OPcamFreeFlight(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position) {
 		Init(moveSpeed, rotateSpeed, position);
 	}

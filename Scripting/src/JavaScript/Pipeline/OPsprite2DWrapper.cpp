@@ -68,7 +68,7 @@ JS_RETURN_VAL _OPsprite2DSetSprite(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
     OPsprite2D* ptr = JS_GET_ARG_PTR(args, 0, OPsprite2D);
-    OPsprite2DSetSprite(ptr, args[1]->IntegerValue());
+    OPsprite2DSetSprite(ptr, (i32)args[1]->IntegerValue());
 
     JS_RETURN_NULL
 }

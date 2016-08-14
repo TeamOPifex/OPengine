@@ -81,7 +81,7 @@ void ExamplePhysicsCharacterEnter(OPgameState* last) {
 	physicsCharacterExample = (PhysicsCharacterExample*)OPalloc(sizeof(PhysicsCharacterExample));
 
 	OPphysXInit();
-	physicsCharacterExample->scene = OPphysXSceneCreate(OPvec3Create(0, -9.8, 0), CharacterOnTrigger, CharacterOnContact);
+	physicsCharacterExample->scene = OPphysXSceneCreate(OPvec3Create(0.0f, -9.8f, 0.0f), CharacterOnTrigger, CharacterOnContact);
 
 	OPCMAN.Load("PuzzleBlock.opm");
 	OPCMAN.Load("PuzzleSphere.opm");
@@ -125,7 +125,7 @@ void ExamplePhysicsCharacterEnter(OPgameState* last) {
 		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
-	OPphysXMaterial* material = OPphysXCreateMaterial(0.8, 0.8, 0.6);
+	OPphysXMaterial* material = OPphysXCreateMaterial(0.8f, 0.8f, 0.6f);
 
 	physicsCharacterExample->boxCount = 200;
 	physicsCharacterExample->boxes = (Dynamic*)OPallocZero(sizeof(Dynamic)* physicsCharacterExample->boxCount);
@@ -240,17 +240,17 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 	f32 rate = 500 * physicsCharacterExample->spheres[0].size;
 	f32 rate2 = 50 * physicsCharacterExample->spheres[0].size;
 
-	if (OPkeyboardIsDown(OPkeyboardKey::UP)) { physicsCharacterExample->Camera->pos.y += 0.2; }
-	if (OPkeyboardIsDown(OPkeyboardKey::DOWN)) { physicsCharacterExample->Camera->pos.y -= 0.2; }
-	if (OPkeyboardIsDown(OPkeyboardKey::LEFT)) { physicsCharacterExample->Camera->pos.x -= 0.2; }
-	if (OPkeyboardIsDown(OPkeyboardKey::RIGHT)) { physicsCharacterExample->Camera->pos.x += 0.2; }
+	if (OPkeyboardIsDown(OPkeyboardKey::UP)) { physicsCharacterExample->Camera->pos.y += 0.2f; }
+	if (OPkeyboardIsDown(OPkeyboardKey::DOWN)) { physicsCharacterExample->Camera->pos.y -= 0.2f; }
+	if (OPkeyboardIsDown(OPkeyboardKey::LEFT)) { physicsCharacterExample->Camera->pos.x -= 0.2f; }
+	if (OPkeyboardIsDown(OPkeyboardKey::RIGHT)) { physicsCharacterExample->Camera->pos.x += 0.2f; }
 
 	physicsCharacterExample->Camera->Update();
 
 	OPphysXSceneUpdate(physicsCharacterExample->scene, time);
 
 	OPrenderDepth(1);
-	OPrenderClear(0.1, 0.1, 0.1);
+	OPrenderClear(0.1f, 0.1f, 0.1f);
 
 	OPmat4 world = OPMAT4_IDENTITY;
 

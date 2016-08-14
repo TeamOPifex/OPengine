@@ -24,6 +24,10 @@
 #define OPIFEX_OS32
 #endif
 
+#if defined(OPIFEX_WINDOWS) || defined(OPIFEX_OSX) || defined(OPIFEX_LINUX)
+#define OPIFEX_DESKTOP
+#endif
+
 #if defined(OPIFEX_WINDOWS)
 
 #ifndef WIN32_LEAN_AND_MEAN

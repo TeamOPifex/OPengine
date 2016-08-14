@@ -114,7 +114,7 @@ void ExamplePhysicsEnter(OPgameState* last) {
 		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
-	OPphysXMaterial* material = OPphysXCreateMaterial(0.8, 0.8, 0.6);
+	OPphysXMaterial* material = OPphysXCreateMaterial(0.8f, 0.8f, 0.6f);
 
 	physicsExample->boxCount = 200;
 	physicsExample->boxes = (Dynamic*)OPallocZero(sizeof(Dynamic)* physicsExample->boxCount);
@@ -136,7 +136,7 @@ void ExamplePhysicsEnter(OPgameState* last) {
 	for (ui32 i = 0; i < physicsExample->boxStaticCount; i++) {
 		f32 r2 = 0.5;
 		f32 size = 1;// 0.05f + (OPrandom() * 2);
-		physicsExample->boxesStatic[i].physics = OPphysXSceneCreateStatic(physicsExample->scene, OPvec3Create(((-10.0) + (i * 2)), i * 2, -20 + (40 * r2)));
+		physicsExample->boxesStatic[i].physics = OPphysXSceneCreateStatic(physicsExample->scene, OPvec3Create(((-10.0f) + (i * 2)), i * 2.0f, -20.0f + (40.0f * r2)));
 		physicsExample->boxesStatic[i].shape = OPphysXAddBoxShape(physicsExample->boxesStatic[i].physics, material, OPvec3Create(size, size, size));
 		OPphysXSceneAddActor(physicsExample->scene, physicsExample->boxesStatic[i].physics);
 		physicsExample->boxesStatic[i].size = size;

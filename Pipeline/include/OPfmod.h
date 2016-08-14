@@ -22,7 +22,7 @@ void OPfmodSetVolume(OPfmodChannel* channel, OPfloat volume);
 void OPfmodSetVolume(OPfmodChannelGroup* channel, OPfloat volume);
 void OPfmodUpdate();
 
-inline OPint OPfmodIsPlaying(OPfmodChannel* channel) {
+inline bool OPfmodIsPlaying(OPfmodChannel* channel) {
 	bool isPlaying;
 	channel->isPlaying(&isPlaying);
 	return isPlaying;

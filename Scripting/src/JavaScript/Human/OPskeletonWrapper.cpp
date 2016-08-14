@@ -127,12 +127,12 @@ JS_RETURN_VAL _OPskeletonCreate(const JS_ARGS& args) {
     Handle<Object> result = JS_NEW_OBJECT();
 
     Local<Array> arr = Local<Array>::Cast(args[0]);
-    OPuint count =  arr->Length();
+    ui32 count =  arr->Length();
     i16* hierarchy = (i16*)OPalloc(sizeof(i16) * count);
     OPmat4* pose = (OPmat4*)OPalloc(sizeof(OPmat4) * count);
     OPchar** names = (OPchar**)OPalloc(sizeof(OPchar*) * count);
 
-    for(OPuint i = 0 ; i < count; i++) {
+    for(ui32 i = 0 ; i < count; i++) {
       hierarchy[i] = (i16)arr->Get(i)->NumberValue();
       // OPlog("h: %d", hierarchy[i]);
     }

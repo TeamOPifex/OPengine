@@ -6,7 +6,7 @@
 
 #include "./Human/Human.h"
 
-const OPchar* gamePadNames[_OPGAMEPADBUTTON_MAX] = {
+const OPchar* gamePadNames[(ui32)OPgamePadButton::_MAX] = {
         "DPAD_UP",
         "DPAD_DOWN",
         "DPAD_LEFT",
@@ -26,7 +26,7 @@ const OPchar* gamePadNames[_OPGAMEPADBUTTON_MAX] = {
 void _SetGamePadMap(Handle<Object> buttons) {
     SCOPE_AND_ISOLATE
 
-    for (OPint i = 0; i < _OPGAMEPADBUTTON_MAX; i++) {
+    for (ui32 i = 0; i < (ui32)OPgamePadButton::_MAX; i++) {
         buttons->Set(
             JS_NEW_STRING(gamePadNames[i]),
             JS_NEW_INTEGER(i)

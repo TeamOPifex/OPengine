@@ -27,7 +27,7 @@ struct OPjavaScriptV8Compiled {
 
 	OPint Compile(const OPchar* file);
 	OPint Execute();
-	OPjavaScriptPersistentValue Function(const OPchar* name, OPuint count, void** args);
+	OPjavaScriptPersistentValue Function(const OPchar* name, ui32 count, void** args);
 	OPjavaScriptPersistentValue Function(const OPchar* name) {
 		Function(name, 0, NULL);
 	}
@@ -49,7 +49,7 @@ OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, 
 void OPjavaScriptV8Update(OPjavaScriptV8Compiled* scriptCompiled);
 OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled);
 OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, const OPchar* name);
-OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, const OPchar* name, OPuint count, void** args);
+OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, const OPchar* name, ui32 count, void** args);
 
 void OPjavaScriptV8SetupRun(const OPchar* script);
 

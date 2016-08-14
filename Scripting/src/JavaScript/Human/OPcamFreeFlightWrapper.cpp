@@ -11,7 +11,7 @@ JS_RETURN_VAL _OPcamFreeFlightUpdate(const JS_ARGS& args) {
 
     OPcamFreeFlight* camPtr = JS_GET_ARG_PTR(args, 0, OPcamFreeFlight);
     OPtimer* timerPtr = JS_GET_ARG_PTR(args, 1, OPtimer);
-    OPcamFreeFlightUpdate(camPtr, timerPtr);
+	camPtr->Update(timerPtr);
 
     JS_RETURN_NULL;
 }
@@ -21,7 +21,7 @@ JS_RETURN_VAL _OPcamFreeFlightUpdateSelf(const JS_ARGS& args) {
 
     OPcamFreeFlight* camPtr = JS_GET_PTR(args.This(), OPcamFreeFlight);
     OPtimer* timerPtr = JS_GET_ARG_PTR(args, 0, OPtimer);
-    OPcamFreeFlightUpdate(camPtr, timerPtr);
+	camPtr->Update(timerPtr);
 
     JS_RETURN_NULL;
 }
@@ -117,7 +117,7 @@ JS_RETURN_VAL _OPcamFreeFlightCreate(const JS_ARGS& args) {
         camFar = (OPfloat)args[4]->NumberValue();
     }
 
-    OPcamFreeFlight* cam = OPcamFreeCreate(moveSpeed, rotateSpeed, position, camNear, camFar);
+    OPcamFreeFlight* cam = OPcamFreeFlight::Create(moveSpeed, rotateSpeed, position, camNear, camFar);
     Handle<Object> result = JS_NEW_OBJECT();
     OPcamFreeFlightWrapperCreate(result, cam);
 

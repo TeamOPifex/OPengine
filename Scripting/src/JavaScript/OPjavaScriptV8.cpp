@@ -63,8 +63,8 @@ void _OPscriptV8SetConsole(Handle<ObjectTemplate> objTemplate) {
 
 OPchar* _OPscriptV8GetDir(const OPchar* path) {
     OPchar* result = OPstringCopy("");
-    OPint pos = -1;
-    for(OPint i = 0; i < strlen(path); i++) {
+    i32 pos = -1;
+    for(i32 i = 0; i < strlen(path); i++) {
         if(path[i] == '/') {
             pos = i;
         }
@@ -465,7 +465,7 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
 
 }
 
-OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, const OPchar* name, OPuint count, void** args) {
+OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, const OPchar* name, ui32 count, void** args) {
     SCOPE_AND_ISOLATE;
 
     Handle<Context> context = Local<Context>::New(isolate, scriptCompiled->Context);
@@ -475,7 +475,7 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
     Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
 
     Handle<Value> values[10];
-    for (OPint i = 0; i < count; i++) {
+    for (ui32 i = 0; i < count; i++) {
 		Local<Object> obj = JS_NEW_OBJECT();
 		JS_SET_PTR(obj, args[i]);
         values[i] = obj;
@@ -517,7 +517,7 @@ OPint OPjavaScriptV8Compiled::Execute() {
 	return 1;
 }
 
-OPjavaScriptPersistentValue OPjavaScriptV8Compiled::Function(const OPchar* name, OPuint count, void** args) {
+OPjavaScriptPersistentValue OPjavaScriptV8Compiled::Function(const OPchar* name, ui32 count, void** args) {
 	return OPjavaScriptV8Run(this, name, count, args);
 }
 

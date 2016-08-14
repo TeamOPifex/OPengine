@@ -7,7 +7,7 @@
 #include "./Human/Human.h"
 
 
-const OPchar* keyNames[(ui32)OPkeyboardKey::MAX] = {
+const OPchar* keyNames[(ui32)OPkeyboardKey::_MAX] = {
         "BACKSPACE",
         "TAB",
         "ENTER",
@@ -105,7 +105,7 @@ const OPchar* keyNames[(ui32)OPkeyboardKey::MAX] = {
 void _SetKeyboardMap(Handle<Object> keyboard) {
     SCOPE_AND_ISOLATE;
 
-    for (OPint i = 0; i < (ui32)OPkeyboardKey::MAX; i++) {
+    for (ui32 i = 0; i < (ui32)OPkeyboardKey::_MAX; i++) {
         keyboard->Set(
             JS_NEW_STRING(keyNames[i]),
             JS_NEW_INTEGER(i)

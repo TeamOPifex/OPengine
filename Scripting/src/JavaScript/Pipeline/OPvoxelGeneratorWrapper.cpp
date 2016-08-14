@@ -51,7 +51,7 @@ JS_RETURN_VAL _OPvoxelGeneratorCenter(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvoxelGenerator* ptr = JS_GET_ARG_PTR(args, 0, OPvoxelGenerator);
-    ptr->Center = args[1]->IntegerValue();
+    ptr->Center = (i8)args[1]->IntegerValue();
 
     JS_RETURN_NULL;
 }
@@ -60,7 +60,7 @@ JS_RETURN_VAL _OPvoxelGeneratorCenterSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvoxelGenerator* ptr = JS_GET_PTR(args.This(), OPvoxelGenerator);
-    ptr->Center = args[0]->IntegerValue();
+    ptr->Center = (i8)args[0]->IntegerValue();
 
     JS_RETURN_NULL;
 }
@@ -121,7 +121,7 @@ JS_RETURN_VAL _OPvoxelGeneratorInit(const JS_ARGS& args) {
 
     OPvoxelGenerator* ptr = JS_GET_ARG_PTR(args, 0, OPvoxelGenerator);
 
-    OPvoxelGeneratorInit(ptr, args[1]->IntegerValue());
+    OPvoxelGeneratorInit(ptr, (ui32)args[1]->IntegerValue());
 
     Handle<Object> result = JS_NEW_OBJECT();
     OPvoxelGeneratorWrapperCreate(result, ptr);
@@ -133,7 +133,7 @@ JS_RETURN_VAL _OPvoxelGeneratorCreate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvoxelGenerator* ptr = (OPvoxelGenerator*)OPallocZero(sizeof(OPvoxelGenerator));
-    OPvoxelGeneratorInit(ptr, args[0]->IntegerValue());
+    OPvoxelGeneratorInit(ptr, (ui32)args[0]->IntegerValue());
 
     Handle<Object> result = JS_NEW_OBJECT();
     OPvoxelGeneratorWrapperCreate(result, ptr);
