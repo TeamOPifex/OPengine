@@ -21,6 +21,10 @@ void OPvertexLayout::Init(ui16 attributeCount, OPchar** names, OPattributeTypes*
 	}
 }
 
+void OPvertexLayout::Destroy() {
+	OPfree(attributes);
+}
+
 void OPvertexLayout::Init(OPshaderAttribute* attributes, ui8 count) {
 	this->count = count;
 	this->attributes = attributes;

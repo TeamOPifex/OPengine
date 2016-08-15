@@ -68,9 +68,9 @@ void OPtextureGLSetData(OPtexture* ptr, const void* pixelData) {
 }
 
 void OPtextureGLDestroy(OPtexture* ptr) {
-	OPtextureGL* texture = (OPtextureGL*)ptr->internalPtr;
-	OPGLFN(glDeleteTextures(1, &texture->Handle));
-	OPfree(texture);
+	OPtextureGL* textureGL = (OPtextureGL*)ptr->internalPtr;
+	OPGLFN(glDeleteTextures(1, &textureGL->Handle));
+	OPfree(textureGL);
 	ptr->internalPtr = NULL;
 }
 

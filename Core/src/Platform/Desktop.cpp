@@ -47,11 +47,11 @@ void OPstart(int argc, char** args) {
 	#endif
 }
 
-ui64 accumlator = 0;
-ui64 STEP = 16;
 
 void OPstartStepped(int argc, char** args) {
 	OPtimer frameStepped;
+	ui64 accumlator = 0;
+	ui64 STEP = 16;
 
 	// Initialize the engine and game
 	OPSTARTUP_PATH = OPdirCurrent();
@@ -104,7 +104,7 @@ void OPstartStepped(int argc, char** args) {
 	OPfree(OPEXECUTABLE_PATH);
 
 #ifndef OPIFEX_OPTION_RELEASE
-	OPlog("Alloc/Dealloc/Diff: %d / %d / %d", OPallocations, OPdeallocations, (OPallocations - OPdeallocations));
+	OPlogErr("Alloc/Dealloc/Diff: %d / %d / %d", OPallocations, OPdeallocations, (OPallocations - OPdeallocations));
 	ASSERT((OPallocations - OPdeallocations) == 0, "ALERT - Not all allocated memory was freed");
 #endif
 }

@@ -125,11 +125,11 @@ void State0Enter(OPgameState* last){
 	
 	const OPchar** text = (const OPchar**)OPalloc(sizeof(i8) * 1);
 	text[0] = "All of the text! Woot!";
-	fontManager = OPfontManagerSetup("stencil.opf", text, 1);
+	fontManager = OPfontManager::Create("stencil.opf", text, 1);
 
 	// Optional
-	OPfontManagerSetColor(fontManager, 0.0f, 0.0f, 1.0f, 1.0f);
-	OPfontManagerSetAlign(fontManager, OPFONT_ALIGN_CENTER);
+	fontManager->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
+	fontManager->SetAlign(OPfontAlign::CENTER);
 
 	
 	if(!OPAUD_CURR_PLAYER){

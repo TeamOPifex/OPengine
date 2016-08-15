@@ -1,4 +1,5 @@
 #include "./Core/include/OPmemory.h"
+#include "./Core/include/OPlog.h"
 
 #ifndef OPIFEX_OPTION_RELEASE
 OPint OPallocations = 0;
@@ -53,7 +54,8 @@ OPallocator OPDEFAULT_ALLOCATOR = {
 *	Returns:
 *		void* - Address of allocated memory.
 */
-void* OPalloc(OPuint bytes){
+void* _OPalloc(OPuint bytes, const OPchar* file, ui32 line, const OPchar* function){
+	OPlogChannel((ui32)OPlogLevel::MEMORY, "MEMORY", "NEW: %s [%d] (%s)", file, line, function);
 	return OPDEFAULT_ALLOCATOR.alloc(&OPDEFAULT_ALLOCATOR, bytes);
 }
 
@@ -64,12 +66,14 @@ void* OPalloc(OPuint bytes){
 *	Returns:
 *		void* - Address of allocated memory.
 */
-void* OPallocZero(OPuint bytes){
+void* _OPallocZero(OPuint bytes, const OPchar* file, ui32 line, const OPchar* function){
 	void* result;
+	OPlogChannel((ui32)OPlogLevel::MEMORY, "MEMORY", "NEW: %s [%d] (%s)", file, line, function);
 	result = OPDEFAULT_ALLOCATOR.alloc(&OPDEFAULT_ALLOCATOR, bytes);
  	OPbzero(result, bytes);
  	return result;
 }
+
 //-----------------------------------------------------------------------------
 /* OPrealloc(..) - Platform independent means to dynamically reallocate memory.
  *	Parameters:
@@ -97,7 +101,8 @@ void* OPrealloc(void* ptr, OPuint bytes){
  *	Returns:
  *		Nothing...
  */
-void OPfree(void* ptr){
+void _OPfree(void* ptr, const OPchar* file, ui32 line, const OPchar* function){
+	OPlogChannel((ui32)OPlogLevel::MEMORY, "MEMORY", "FREE: %s [%d] (%s)", file, line, function);
 	OPDEFAULT_ALLOCATOR.free(&OPDEFAULT_ALLOCATOR, ptr);
 }
 
@@ -119,7 +124,7 @@ void* operator new(size_t size)
 
 void* operator new(size_t size, const char* file, ui32 line)
 {
-	return OPalloc(size);// , file, line);
+	return OPalloc(size, file, line, NULL);
 }
 
 void* operator new[](size_t size)

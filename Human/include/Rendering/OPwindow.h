@@ -32,4 +32,5 @@ struct OPwindow {
 	void Bind();
 	void Focus();
 	void SetPosition(i32 x, i32 y);
+	void Destroy();
 };

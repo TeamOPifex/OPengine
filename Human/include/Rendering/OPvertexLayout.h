@@ -24,6 +24,7 @@ struct OPvertexLayout {
 	void Init(OPshaderAttribute* attributes, ui8 count);
 	void SetOffsets(OPeffect* effect);
 	void Log();
+	void Destroy();
 };
 
 

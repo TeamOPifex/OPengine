@@ -21,4 +21,8 @@ struct OPvertexArray {
 	inline void SetLayout(OPvertexLayout* vertexLayout) {
 		OPRENDERER_ACTIVE->VertexArray.SetLayout(this, vertexLayout);
 	}
+
+	inline void Destroy() {
+		OPRENDERER_ACTIVE->VertexArray.Destroy(this);
+	}
 };

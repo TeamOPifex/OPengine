@@ -3,7 +3,7 @@
 OPfontManager* fontTestManager;
 
 void FontTestEnter(OPgameState* last) {
-    fontTestManager = OPfontManagerSetup("Ubuntu.opf", NULL, 0);
+    fontTestManager = OPfontManager::Create("Ubuntu.opf", NULL, 0);
 }
 
 OPint FontTestUpdate(OPtimer* time) {

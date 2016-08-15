@@ -77,7 +77,7 @@ void ExampleMouseIntersectEnter(OPgameState* last) {
 
 	OPfontSystemLoadEffects();
 
-    mouseIntersectExample.FontManager = OPfontManagerSetup("Ubuntu.opf", NULL, 0);
+    mouseIntersectExample.FontManager = OPfontManager::Create("Ubuntu.opf", NULL, 0);
 
 
 	// This can be controlled in the update loop if it varies

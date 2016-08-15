@@ -179,3 +179,8 @@ void OPwindow::Focus() {
 // void OPrenderDragAndDropCB(void(*cb)(int, const OPchar**)) {
 // 	OP_WINDOW_DROP = cb;
 // }
+
+
+void OPwindow::Destroy() {
+	OPRENDERER_ACTIVE->Window.Destroy(this);
+}

@@ -118,6 +118,9 @@ OPmesh* OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoo
 		4, 6,
 		verts, OPquadIndexData
 		);
+
+	OPfree(verts);
+
 	return mesh;
 }
 

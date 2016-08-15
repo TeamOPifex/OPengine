@@ -113,6 +113,32 @@ void OPeffectGLUnbind(OPeffect* effect) {
 
 void OPeffectGLDestroy(OPeffect* effect) {
 	OPeffectGL* effectGL = (OPeffectGL*)effect->internalPtr;
+
+	OPhashMapBucket* bucket;
+	OPuint i, j, n, m;
+	OPhashMapPair *pair;
+
+	n = effect->uniforms.count;
+	bucket = effect->uniforms.buckets;
+	i = 0;
+	while (i < n) {
+		m = bucket->count;
+		pair = bucket->pairs;
+		j = 0;
+		while (j < m) {
+			// mark asset for removal
+			OPshaderUniform* shaderUniform = (OPshaderUniform*)pair->value;
+			shaderUniform->Destroy();
+			OPfree(shaderUniform);
+			pair++;
+			j++;
+		}
+		bucket++;
+		i++;
+	}
+
+	effect->uniforms.Destroy();
+
 	OPeffectGLUnbind(effect);
 	OPGLFN(glDeleteProgram(effectGL->Handle));
 	OPfree(effectGL);

@@ -91,6 +91,8 @@ void OPmeshRender(){
 }
 
 void OPmesh::Destroy() {
+	vertexLayout.Destroy();
 	vertexBuffer.Destroy();
 	indexBuffer.Destroy();
+	vertexArray.Destroy();
 }

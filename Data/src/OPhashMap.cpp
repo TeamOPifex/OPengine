@@ -143,7 +143,7 @@ OPint OPhashMap::Put(const OPchar* key, void* value)
 
 	if (bucket->count == 0) {
 		// Create the first KeyValuePair in the bucket
-		bucket->pairs = (OPhashMapPair*)OPalloc(sizeof(OPhashMapPair));
+		bucket->pairs = OPNEW(OPhashMapPair());
 		if (bucket->pairs == NULL) {
 			//OPfree(new_key);
 			return 0;
@@ -162,7 +162,7 @@ OPint OPhashMap::Put(const OPchar* key, void* value)
 	}
 
 	pair = &(bucket->pairs[bucket->count - 1]);
-	pair->key = OPstringCreateMerged(key, "");
+	pair->key = OPstringCopy(key);
 	pair->value = value;
 
 	/* Copy the key into the key-value pair */

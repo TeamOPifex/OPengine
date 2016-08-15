@@ -19,7 +19,7 @@ ui32 OPkeyboardMappingGL[(ui32)OPkeyboardKey::_MAX];
 OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameters windowParameters) {
 	//ASSERT(windowParameters.fullscreen == false || (windowParameters.fullscreen && monitor != NULL), "To create a fullscreen window, a monitor must be declared");
 
-	OPwindowGL* windowGL = (OPwindowGL*)OPalloc(sizeof(OPwindowGL));;
+	OPwindowGL* windowGL = OPNEW(OPwindowGL());
 	window->internalPtr = windowGL;
 
 	GLFWmonitor* display = NULL;
@@ -141,7 +141,7 @@ void OPwindowGLDestroy(OPwindow* window) {
 	OPwindowGL* windowGL = (OPwindowGL*)window->internalPtr;
 	OPwindowGLUnbind(window);
 	glfwDestroyWindow(windowGL->Handle);
-	OPfree(window);
+	OPfree(windowGL);
 	window->internalPtr = NULL;
 }
 

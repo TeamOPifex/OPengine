@@ -29,9 +29,9 @@ ExampleSelector* exampleSelectorPtr = &exampleSelector;
 void ExampleSelectorEnter(OPgameState* last) {
 
 
-	//OPCMAN.Load("Ubuntu.opf");
+	OPCMAN.Load("Ubuntu.opf");
 
-	//OPfontSystemLoadEffects();
+	OPfontSystemLoadEffects();
 
 
     // The background image to use
@@ -101,8 +101,9 @@ void ExampleSelectorEnter(OPgameState* last) {
     }
 
 	//exampleSelector.FontManager = OPfontManagerSetup("Ubuntu.opf", Names, TotalEntries);
-	exampleSelector.FontManager = OPfontManagerSetup("Ubuntu.opf", NULL, 0);
-    exampleSelector.FontManager->scale = 0.5;
+	//OPfont* font = (OPfont*)OPCMAN.LoadGet("Ubuntu.opf");
+	exampleSelector.FontManager = OPfontManager::Create("Ubuntu.opf", NULL, 0);
+	exampleSelector.FontManager->scale = 0.5;
 
 	OPCMAN.Purge();
 }
@@ -258,7 +259,9 @@ void ExampleSelectorRender(OPfloat delta) {
 }
 
 OPint ExampleSelectorExit(OPgameState* next) {
-	OPfontManagerDestroy(exampleSelector.FontManager);
+	exampleSelector.FontManager->Destroy();
+	OPfree(exampleSelector.FontManager);
+
 	OPtexture2DDestroy(exampleSelector.Background);
 	OPtexture2DUnloadGlobals();
 	OPfontSystemShutdownEffects();

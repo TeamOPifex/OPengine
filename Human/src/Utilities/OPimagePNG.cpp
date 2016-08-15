@@ -89,7 +89,7 @@ i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
 	//	OPlog("Data: %s", data[i]);
 	//	if (data[i] == 0) break;
 	//}
-	OPtexture* tex = (OPtexture*)OPalloc(sizeof(OPtexture));
+	OPtexture* tex = OPNEW(OPtexture());
 
 	ui16 w = width, h = height;
 	OPtextureDesc desc;
@@ -104,7 +104,6 @@ i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
 
 	// clean up
 	free(data); // Clean up load png 
-	//OPstreamDestroy(str);
 
 	*image = tex;
 
