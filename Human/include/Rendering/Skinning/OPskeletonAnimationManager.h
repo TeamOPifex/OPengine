@@ -1,12 +1,12 @@
 #pragma once
 
 struct OPskeletonAnimationMix;
-struct OPskeletonAnimationManagerTransition;
 struct OPskeletonAnimationManager;
+struct OPskeletonAnimationManagerTransition;
 
 typedef struct OPskeletonAnimationMix OPskeletonAnimationMix;
-typedef struct OPskeletonAnimationManagerTransition OPskeletonAnimationManagerTransition;
 typedef struct OPskeletonAnimationManager OPskeletonAnimationManager;
+typedef struct OPskeletonAnimationManagerTransition OPskeletonAnimationManagerTransition;
 
 #define OPMAX_ANIMATION_MERGES 3
 
@@ -43,6 +43,19 @@ struct OPskeletonAnimationManager {
 	OPskeletonAnimationManagerTransition transition;
 	OPskeletonAnimationManagerTransition buffer;
 	OPfloat currentTime;
+
+    inline void Transition(OPskeletonAnimation* animation, OPfloat duration) {
+    	if(animations[0] == animation) return;
+
+    	if(transition.animation == NULL) {
+    		transition.animation = animation;
+    		transition.transitionTime = duration;
+    		currentTime = 0.0f;
+    	} else {
+    		buffer.animation = animation;
+    		buffer.transitionTime = duration;
+    	}
+    }
 };
 
 inline void OPskeletonAnimationManagerInit(OPskeletonAnimationManager* manager, OPskeleton* skeleton) {
@@ -71,19 +84,6 @@ inline void OPskeletonAnimationManagerMix(OPskeletonAnimationManager* manager, O
 	manager->animationJointMix[manager->animationIndex] = fromJoint;
 	manager->animationIndex++;
 	OPskeletonAnimationReset(animation);
-}
-
-inline void OPskeletonAnimationManagerTransition(OPskeletonAnimationManager* manager, OPskeletonAnimation* animation, OPfloat duration) {
-	if(manager->animations[0] == animation) return;
-
-	if(manager->transition.animation == NULL) {
-		manager->transition.animation = animation;
-		manager->transition.transitionTime = duration;
-		manager->currentTime = 0.0f;
-	} else {
-		manager->buffer.animation = animation;
-		manager->buffer.transitionTime = duration;
-	}
 }
 
 inline void OPskeletonAnimationManagerUpdate(OPskeletonAnimationManager* manager, OPtimer* timer, OPfloat timeScale) {

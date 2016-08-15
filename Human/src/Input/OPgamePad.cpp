@@ -143,14 +143,14 @@ void __OPlnxUpdateGamePad(OPgamePad* c){
 	// }
 
 	// map left stick and trigger
-	c->axes[OPGAMEPADAXIS_LS_X] =  axisData[0];
-	c->axes[OPGAMEPADAXIS_LS_Y] = -axisData[1];
+	c->axes[(ui32)OPgamePadAxis::LS_X] =  axisData[0];
+	c->axes[(ui32)OPgamePadAxis::LS_Y] = -axisData[1];
 
-	c->axes[OPGAMEPADAXIS_RS_X] =  axisData[2];
-	c->axes[OPGAMEPADAXIS_RS_Y] = -axisData[3];
+	c->axes[(ui32)OPgamePadAxis::RS_X] =  axisData[2];
+	c->axes[(ui32)OPgamePadAxis::RS_Y] = -axisData[3];
 
-	c->axes[OPGAMEPADAXIS_L2]   =  (axisData[4] + 1.0f) / 2.0f;
-	c->axes[OPGAMEPADAXIS_R2]   =  (axisData[5] + 1.0f) / 2.0f;
+	c->axes[(ui32)OPgamePadAxis::L2]   =  (axisData[4] + 1.0f) / 2.0f;
+	c->axes[(ui32)OPgamePadAxis::R2]   =  (axisData[5] + 1.0f) / 2.0f;
 
 	// OPlog("L %f %f %f", c->axes[OPGAMEPADAXIS_LS_X], c->axes[OPGAMEPADAXIS_LS_Y], c->axes[OPGAMEPADAXIS_L2]);
 	// OPlog("R %f %f %f", c->axes[OPGAMEPADAXIS_RS_X], c->axes[OPGAMEPADAXIS_RS_Y], c->axes[OPGAMEPADAXIS_R2]);
@@ -174,21 +174,21 @@ void __OPlnxUpdateGamePad(OPgamePad* c){
 		return;
 	}
 
-	c->buttons[OPGAMEPADBUTTON_DPAD_LEFT]  = buttonData[2];
-	c->buttons[OPgamePadButton::DPAD_RIGHT] = buttonData[3];
-	c->buttons[OPgamePadButton::DPAD_UP]    = buttonData[0];
-	c->buttons[OPgamePadButton::DPAD_DOWN]  = buttonData[1];
+	c->buttons[(ui32)OPgamePadButton::DPAD_LEFT]  = buttonData[2];
+	c->buttons[(ui32)OPgamePadButton::DPAD_RIGHT] = buttonData[3];
+	c->buttons[(ui32)OPgamePadButton::DPAD_UP]    = buttonData[0];
+	c->buttons[(ui32)OPgamePadButton::DPAD_DOWN]  = buttonData[1];
 	// map buttons
-	c->buttons[OPgamePadButton::A] = buttonData[11];
-	c->buttons[OPgamePadButton::B] = buttonData[12];
-	c->buttons[OPGAMEPADBUTTON_X] = buttonData[13];
-	c->buttons[OPGAMEPADBUTTON_Y] = buttonData[14];
-	c->buttons[OPGAMEPADBUTTON_LEFT_SHOULDER]  = buttonData[8];
-	c->buttons[OPGAMEPADBUTTON_RIGHT_SHOULDER] = buttonData[9];
-	c->buttons[OPgamePadButton::BACK]        = buttonData[5];
-	c->buttons[OPGAMEPADBUTTON_START]       = buttonData[4];
-	c->buttons[OPGAMEPADBUTTON_LEFT_THUMB]  = buttonData[6];
-	c->buttons[OPGAMEPADBUTTON_RIGHT_THUMB] = buttonData[7];
+	c->buttons[(ui32)OPgamePadButton::A] = buttonData[11];
+	c->buttons[(ui32)OPgamePadButton::B] = buttonData[12];
+	c->buttons[(ui32)OPgamePadButton::X] = buttonData[13];
+	c->buttons[(ui32)OPgamePadButton::Y] = buttonData[14];
+	c->buttons[(ui32)OPgamePadButton::LEFT_SHOULDER]  = buttonData[8];
+	c->buttons[(ui32)OPgamePadButton::RIGHT_SHOULDER] = buttonData[9];
+	c->buttons[(ui32)OPgamePadButton::BACK]        = buttonData[5];
+	c->buttons[(ui32)OPgamePadButton::START]       = buttonData[4];
+	c->buttons[(ui32)OPgamePadButton::LEFT_THUMB]  = buttonData[6];
+	c->buttons[(ui32)OPgamePadButton::RIGHT_THUMB] = buttonData[7];
 }
 #endif
 //-----------------------------------------------------------------------------
