@@ -19,7 +19,7 @@ void (*OPKEYBOARD_STREAM)(OPchar);
 void OPkeyboard::Update(OPtimer* timer) {
 	ASSERT(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE != NULL, "There must be an active window");
 
-	OPmemcpy(&prevKeys, &keys, (ui32)OPkeyboardKey::_MAX * sizeof(OPint));
+	OPmemcpy(&prevKeys, &keys, (ui32)OPkeyboardKey::_MAX * sizeof(bool));
 	for(ui32 i = 0; i < (ui32)OPkeyboardKey::_MAX; i++) {
 		keys[i] = OPRENDERER_ACTIVE->Window.GetKeyboardState(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE, (OPkeyboardKey)i);
 	}
