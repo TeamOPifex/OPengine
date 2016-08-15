@@ -27,7 +27,7 @@ i8 OPrendererInitGL(OPwindow* window) {
 	glEnable(GL_BLEND);
 	glEnable(GL_MULTISAMPLE);
 
-	if (OPglewInit() != 0) {
+	if (!OPglewInit()) {
 		OPlogErr("Failed to initialize GLEW");
 		return -2;
 	}
