@@ -239,11 +239,3 @@ OPint OPspriteSheetUnload(void* ss){
 
 	return 1;
 }
-
-OPvec2 OPspriteCurrentFrameSize(OPsprite* sprite) {
-	f32 sheetWidth = (f32)sprite->Sheet->textureDesc.width;
-	f32 sheetHeight = (f32)sprite->Sheet->textureDesc.height;
-	f32 frameWidth = (sprite->Frames[sprite->Frame].Size.x * sheetWidth);
-	f32 frameHeight = (sprite->Frames[sprite->Frame].Size.y * sheetHeight);
-	return OPvec2(frameWidth, frameHeight);
-}

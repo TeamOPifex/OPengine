@@ -1,34 +1,12 @@
 #pragma once
 
 struct OPmaterial;
-struct OPmaterialParam;
-
 typedef struct OPmaterial OPmaterial;
-typedef struct OPmaterialParam OPmaterialParam;
 
 #define OPMATERIAL_MAX_UNIFORMS 20
 
-#include "OPeffect.h"
-#include "./Core/include/OPtypes.h"
-
-enum OPmaterialParamType {
-	MATERIAL_PARAM_TYPE_MATRIX4,
-	MATERIAL_PARAM_TYPE_MATRIX4V,
-	MATERIAL_PARAM_TYPE_TEXTURE,
-	MATERIAL_PARAM_TYPE_VECTOR3,
-	MATERIAL_PARAM_TYPE_VECTOR4,
-	MATERIAL_PARAM_TYPE_FLOAT,
-	MATERIAL_PARAM_TYPE_TEXTURE_CUBE
-};
-
-struct OPmaterialParam {
-	OPmaterialParamType  type;
-	const OPchar*        name;
-	void*                data;
-	ui8                  count;
-};
-
-
+#include "./Human/include/Rendering/OPeffect.h"
+#include "./Human/include/Rendering/OPmaterialParam.h"
 
 inline void OPmaterialClearParams(OPmaterial* material);
 void OPmaterialInit(OPmaterial* material, OPeffect* effect);
@@ -43,7 +21,6 @@ inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPmat4*
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, f32* data);
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, f32* data, ui8 count);
 inline void OPmaterialBind(OPmaterial* material);
-//inline void OPmaterialBind(OPmaterial* material, ui32 stride);
 
 struct OPmaterial {
 	OPeffect* effect;
@@ -139,35 +116,35 @@ inline void OPmaterialAddParam(OPmaterial* material, OPmaterialParamType paramTy
 }
 
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPtexture* data, ui32 slot) {
-	OPmaterialAddParam(material, MATERIAL_PARAM_TYPE_TEXTURE, name, (void*)data, slot);
+	OPmaterialAddParam(material, OPmaterialParamType::TEXTURE, name, (void*)data, slot);
 }
 
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPtextureCube* data, ui32 slot) {
-	OPmaterialAddParam(material, MATERIAL_PARAM_TYPE_TEXTURE_CUBE, name, (void*)data, slot);
+	OPmaterialAddParam(material, OPmaterialParamType::TEXTURE_CUBE, name, (void*)data, slot);
 }
 
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPvec3* data) {
-	OPmaterialAddParam(material, MATERIAL_PARAM_TYPE_VECTOR3, name, (void*)data, 1);
+	OPmaterialAddParam(material, OPmaterialParamType::VECTOR3, name, (void*)data, 1);
 }
 
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPvec4* data) {
-	OPmaterialAddParam(material, MATERIAL_PARAM_TYPE_VECTOR4, name, (void*)data, 1);
+	OPmaterialAddParam(material, OPmaterialParamType::VECTOR4, name, (void*)data, 1);
 }
 
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPmat4* data) {
-	OPmaterialAddParam(material, MATERIAL_PARAM_TYPE_MATRIX4, name, (void*)data, 1);
+	OPmaterialAddParam(material, OPmaterialParamType::MATRIX4, name, (void*)data, 1);
 }
 
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPmat4* data, ui8 count) {
-	OPmaterialAddParam(material, MATERIAL_PARAM_TYPE_MATRIX4V, name, (void*)data, count);
+	OPmaterialAddParam(material, OPmaterialParamType::MATRIX4V, name, (void*)data, count);
 }
 
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, f32* data) {
-	OPmaterialAddParam(material, MATERIAL_PARAM_TYPE_FLOAT, name, (void*)data, 1);
+	OPmaterialAddParam(material, OPmaterialParamType::FLOAT, name, (void*)data, 1);
 }
 
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, f32* data, ui8 count) {
-	OPmaterialAddParam(material, MATERIAL_PARAM_TYPE_FLOAT, name, (void*)data, count);
+	OPmaterialAddParam(material, OPmaterialParamType::FLOAT, name, (void*)data, count);
 }
 
 inline void OPmaterialBind(OPmaterial* material) {
@@ -176,44 +153,40 @@ inline void OPmaterialBind(OPmaterial* material) {
 	OPrenderDepth(material->depth);
 	OPrenderCull(material->cull);
 
-	//OPtextureClearActive();
 	for(OPuint i = 0; i < material->paramIndex; i++) {
 
 		switch(material->params[i].type) {
-			case MATERIAL_PARAM_TYPE_TEXTURE: {
+			case OPmaterialParamType::TEXTURE: {
 				material->effect->Set(material->params[i].name, (OPtexture*)material->params[i].data, material->params[i].count);
 				break;
 			}
-			case MATERIAL_PARAM_TYPE_TEXTURE_CUBE: {
+			case OPmaterialParamType::TEXTURE_CUBE: {
 				material->effect->Set(material->params[i].name, (OPtextureCube*)material->params[i].data, material->params[i].count);
 				break;
 			}
-			case MATERIAL_PARAM_TYPE_VECTOR3: {
+			case OPmaterialParamType::VECTOR3: {
 				material->effect->Set(material->params[i].name, (OPvec3*)material->params[i].data);
 				break;
 			}
-			case MATERIAL_PARAM_TYPE_VECTOR4: {
+			case OPmaterialParamType::VECTOR4: {
 				material->effect->Set(material->params[i].name, (OPvec4*)material->params[i].data);
 				break;
 			}
-			case MATERIAL_PARAM_TYPE_MATRIX4: {
+			case OPmaterialParamType::MATRIX4: {
 				material->effect->Set(material->params[i].name, (OPmat4*)material->params[i].data);
 				break;
 			}
-			case MATERIAL_PARAM_TYPE_MATRIX4V: {
+			case OPmaterialParamType::MATRIX4V: {
 				material->effect->Set(material->params[i].name, material->params[i].count, (OPmat4*)material->params[i].data);
 				break;
 			}
-			case MATERIAL_PARAM_TYPE_FLOAT: {
+			case OPmaterialParamType::FLOAT: {
 				material->effect->Set(material->params[i].name, *(f32*)material->params[i].data);
 				break;
 			}
 		}
 	}
 }
-
-
-
 
 struct OPmaterialInstance {
 	OPmaterial* rootMaterial;
@@ -251,31 +224,31 @@ struct OPmaterialInstance {
 	}
 
 	inline void AddParam(const OPchar* name, OPtexture* data, ui32 slot) {
-		AddParam(MATERIAL_PARAM_TYPE_TEXTURE, name, (void*)data, slot);
+		AddParam(OPmaterialParamType::TEXTURE, name, (void*)data, slot);
 	}
 
 	inline void AddParam(const OPchar* name, OPtextureCube* data, ui32 slot) {
-		AddParam(MATERIAL_PARAM_TYPE_TEXTURE_CUBE, name, (void*)data, slot);
+		AddParam(OPmaterialParamType::TEXTURE_CUBE, name, (void*)data, slot);
 	}
 
 	inline void AddParam(const OPchar* name, OPvec3* data) {
-		AddParam(MATERIAL_PARAM_TYPE_VECTOR3, name, (void*)data, 1);
+		AddParam(OPmaterialParamType::VECTOR3, name, (void*)data, 1);
 	}
 
 	inline void AddParam(const OPchar* name, OPvec4* data) {
-		AddParam(MATERIAL_PARAM_TYPE_VECTOR4, name, (void*)data, 1);
+		AddParam(OPmaterialParamType::VECTOR4, name, (void*)data, 1);
 	}
 
 	inline void AddParam(const OPchar* name, OPmat4* data) {
-		AddParam(MATERIAL_PARAM_TYPE_MATRIX4, name, (void*)data, 1);
+		AddParam(OPmaterialParamType::MATRIX4, name, (void*)data, 1);
 	}
 
 	inline void AddParam(const OPchar* name, OPmat4* data, ui8 count) {
-		AddParam(MATERIAL_PARAM_TYPE_MATRIX4V, name, (void*)data, count);
+		AddParam(OPmaterialParamType::MATRIX4V, name, (void*)data, count);
 	}
 
 	inline void AddParam(const OPchar* name, f32* data) {
-		AddParam(MATERIAL_PARAM_TYPE_FLOAT, name, (void*)data, 1);
+		AddParam(OPmaterialParamType::FLOAT, name, (void*)data, 1);
 	}
 
 	inline void Bind() {
@@ -283,36 +256,35 @@ struct OPmaterialInstance {
 
 		for (OPuint i = 0; i < paramIndex; i++) {
 			switch (params[i].type) {
-				case MATERIAL_PARAM_TYPE_TEXTURE: {
+				case OPmaterialParamType::TEXTURE: {
 					rootMaterial->effect->Set(params[i].name, (OPtexture*)params[i].data, params[i].count);
 					break;
 				}
-				case MATERIAL_PARAM_TYPE_TEXTURE_CUBE: {
+				case OPmaterialParamType::TEXTURE_CUBE: {
 					rootMaterial->effect->Set(params[i].name, (OPtextureCube*)params[i].data, params[i].count);
 					break;
 				}
-				case MATERIAL_PARAM_TYPE_VECTOR3: {
+				case OPmaterialParamType::VECTOR3: {
 					rootMaterial->effect->Set(params[i].name, (OPvec3*)params[i].data);
 					break;
 				}
-				case MATERIAL_PARAM_TYPE_VECTOR4: {
+				case OPmaterialParamType::VECTOR4: {
 					rootMaterial->effect->Set(params[i].name, (OPvec4*)params[i].data);
 					break;
 				}
-				case MATERIAL_PARAM_TYPE_MATRIX4: {
+				case OPmaterialParamType::MATRIX4: {
 					rootMaterial->effect->Set(params[i].name, (OPmat4*)params[i].data);
 					break;
 				}
-				case MATERIAL_PARAM_TYPE_MATRIX4V: {
+				case OPmaterialParamType::MATRIX4V: {
 					rootMaterial->effect->Set(params[i].name, params[i].count, (OPmat4*)params[i].data);
 					break;
 				}
-				case MATERIAL_PARAM_TYPE_FLOAT: {
+				case OPmaterialParamType::FLOAT: {
 					rootMaterial->effect->Set(params[i].name, *(f32*)params[i].data);
 					break;
 				}
 			}
 		}
 	}
-
 };

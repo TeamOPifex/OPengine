@@ -41,7 +41,7 @@ JS_RETURN_VAL _OPmaterialAddParam(const JS_ARGS& args) {
 
     OPmaterial* material = JS_GET_ARG_PTR(args, 0, OPmaterial);
 
-    enum OPmaterialParamType matParamType = (enum OPmaterialParamType)(OPint)args[1]->NumberValue();
+    OPmaterialParamType matParamType = (OPmaterialParamType)(OPint)args[1]->NumberValue();
 
     String::Utf8Value str(args[2]->ToString());
 
@@ -61,7 +61,7 @@ JS_RETURN_VAL _OPmaterialAddParamSelf(const JS_ARGS& args) {
 
     OPmaterial* material = JS_GET_PTR(args.This(), OPmaterial);
 
-    enum OPmaterialParamType matParamType = (enum OPmaterialParamType)(OPint)args[0]->NumberValue();
+    OPmaterialParamType matParamType = (OPmaterialParamType)(OPint)args[0]->NumberValue();
 
     String::Utf8Value str(args[1]->ToString());
 
@@ -132,11 +132,11 @@ void OPmaterialWrapper(Handle<Object> exports) {
     JS_SET_NUMBER(material, "size", sizeof(OPmaterial));
 
     Handle<Object> ParamType = JS_NEW_OBJECT();
-    JS_SET_NUMBER(ParamType, "MATRIX4", MATERIAL_PARAM_TYPE_MATRIX4);
-    JS_SET_NUMBER(ParamType, "MATRIX4V", MATERIAL_PARAM_TYPE_MATRIX4V);
-    JS_SET_NUMBER(ParamType, "TEXTURE", MATERIAL_PARAM_TYPE_TEXTURE);
-    JS_SET_NUMBER(ParamType, "VECTOR3", MATERIAL_PARAM_TYPE_VECTOR3);
-    JS_SET_NUMBER(ParamType, "VECTOR4", MATERIAL_PARAM_TYPE_VECTOR4);
+    JS_SET_NUMBER(ParamType, "MATRIX4", OPmaterialParamType::MATRIX4);
+    JS_SET_NUMBER(ParamType, "MATRIX4V", OPmaterialParamType::MATRIX4V);
+    JS_SET_NUMBER(ParamType, "TEXTURE", OPmaterialParamType::TEXTURE);
+    JS_SET_NUMBER(ParamType, "VECTOR3", OPmaterialParamType::VECTOR3);
+    JS_SET_NUMBER(ParamType, "VECTOR4", OPmaterialParamType::VECTOR4);
     JS_SET_OBJECT(material, "ParamType", ParamType);
 
     JS_SET_OBJECT(exports, "material", material);

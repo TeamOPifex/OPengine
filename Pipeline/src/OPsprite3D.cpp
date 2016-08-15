@@ -79,7 +79,7 @@ void OPsprite3DSetSprite(OPsprite3D* sprite, i32 index) {
 
 void OPsprite3DPrepReRender(OPsprite3D* sprite, OPvec3 offset, OPfloat rotation) {
 	sprite->CurrentSprite->Frame = sprite->CurrentFrame;
-	OPvec2 frameSize = OPspriteCurrentFrameSize(sprite->CurrentSprite);
+	OPvec2 frameSize = sprite->CurrentSprite->FrameSize();
 	OPfloat widthScale = frameSize.x / frameSize.y;
 	OPfloat heightScale = 1.0f;
 	if (widthScale > 1.0f) {
@@ -103,7 +103,7 @@ void OPsprite3DPrepReRender(OPsprite3D* sprite, OPvec3 offset, OPfloat rotation)
 }
 
 void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfloat rotation) {
-	OPvec2 frameSize = OPspriteCurrentFrameSize(sprite->CurrentSprite);
+	OPvec2 frameSize = sprite->CurrentSprite->FrameSize();
 	//offset.x += sprite->CurrentSprite->Frames[sprite->CurrentSprite->Frame].Size.x / 2.0f;
 	//offset.y += sprite->CurrentSprite->Frames[sprite->CurrentSprite->Frame].Size.y / 2.0f;
 	OPfloat widthScale = frameSize.x / frameSize.y;
@@ -151,7 +151,7 @@ void OPsprite3DRenderOffsetRot(OPsprite3D* sprite, OPcam* camera, OPvec3 offset,
 
 
 OPvec2 OPsprite3DSize(OPsprite3D* sprite) {
-	OPvec2 frameSize = OPspriteCurrentFrameSize(sprite->CurrentSprite);
+	OPvec2 frameSize = sprite->CurrentSprite->FrameSize();
 
 	OPfloat widthScale = frameSize.x / frameSize.y;
 	OPfloat heightScale = 1.0f;

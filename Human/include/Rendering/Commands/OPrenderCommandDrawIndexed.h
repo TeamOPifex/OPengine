@@ -3,7 +3,6 @@
 struct OPrenderCommandDrawIndexed;
 typedef struct OPrenderCommandDrawIndexed OPrenderCommandDrawIndexed;
 
-
 #include "./Human/include/Rendering/OPrenderCommandBucket.h"
 #include "./Human/include/Rendering/OPmodel.h"
 

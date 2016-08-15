@@ -105,7 +105,7 @@ void OPspriteSystemRender(OPspriteSystem* system, OPcam* cam) {
 
 	for (OPuint i = 0; i < system->Count; i++) {
 		currentSprite = system->Sprites[system->SystemSprites[i].CurrentSprite];
-		OPvec2 frameSize = OPspriteCurrentFrameSize(currentSprite);
+		OPvec2 frameSize = currentSprite->FrameSize();
 
 		//world = // OPmat4Translate((frameSize.x / 2.0) *system->SystemSprites[i].Scale.x, (frameSize.y / 2.0) *system->SystemSprites[i].Scale.y, 0);
 		world = OPMAT4_IDENTITY;

@@ -65,7 +65,7 @@ void OPsprite2DPrepRender(OPsprite2D* sprite) {
 
 
 	sprite->CurrentSprite->Frame = sprite->CurrentFrame;
-	OPvec2 frameSize = OPspriteCurrentFrameSize(sprite->CurrentSprite);
+	OPvec2 frameSize = sprite->CurrentSprite->FrameSize();
 	OPfloat widthScale = frameSize.x / frameSize.y;
 	OPfloat heightScale = 1.0f;
 	if (widthScale > 1.0f) {
