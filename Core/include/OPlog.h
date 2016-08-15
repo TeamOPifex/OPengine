@@ -20,7 +20,8 @@ enum struct OPlogLevel {
 	DEBUG = 10,
 	WARNINGS = 20,
 	INFO = 30,
-	VERBOSE = 3000
+	VERBOSE = 3000,
+	MEMORY = 5000
 };
 
 extern ui32 OPLOGLEVEL;

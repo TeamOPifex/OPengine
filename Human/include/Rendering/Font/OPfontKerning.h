@@ -1,5 +1,7 @@
-#ifndef OPENGINE_HUMAN_RENDERER_FONT_KERNING
-#define OPENGINE_HUMAN_RENDERER_FONT_KERNING
+#pragma once
+
+struct OPfontKerning;
+typedef struct OPfontKerning OPfontKerning;
 
 #include "./Core/include/OPtypes.h"
 
@@ -7,6 +9,3 @@ struct OPfontKerning {
 	OPchar charcode;
 	OPfloat kerning;
 };
-typedef struct OPfontKerning OPfontKerning;
-
-#endif

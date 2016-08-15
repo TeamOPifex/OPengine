@@ -93,6 +93,7 @@ void OPcman::Update(OPtimer* timer) {
 						asset->LastChange = change;
 					}
 					str->Destroy();
+					OPfree(str);
 				}
 			}
 		}
@@ -103,12 +104,12 @@ bool OPcman::Purge() {
 		OPlinkedListNode* n = purgeList.First;
 		while (n){
 			OPasset* asset = (OPasset*)n->Data;
-			OPlinkedListNode* next = n->Next;
 			if(asset->Dirty){
 				asset->Destroy();
 				OPfree(asset);
-				asset = NULL;
+				n->Data = NULL;
 			}
+			OPlinkedListNode* next = n->Next;
 			purgeList.Remove(n);
 			n = next;
 		}
@@ -125,6 +126,7 @@ bool OPcman::Load(const OPchar* assetKey) {
 		hashmap.Get(assetKey, (void**)&existing);
 	
 		ASSERT(existing != NULL, "Hashmap falsely claimed asset existed");
+		return true;
 	}
 
 	ext = strrchr(assetKey, '.');
@@ -146,6 +148,7 @@ bool OPcman::Load(const OPchar* assetKey) {
 		void* assetPtr;
 		OPint loadResult = loader->Load(str, &assetPtr);
 		str->Destroy();
+		OPfree(str);
 		if (loadResult <= 0) {
 			OPlogErr("Failed to load asset: %s", fullPathToAsset);
 			return false;
@@ -206,7 +209,7 @@ void OPcman::Destroy() {
 	OPuint i, j, n, m;
 	OPhashMapPair *pair;
 
-	n = hashmap.Count();
+	n = hashmap.count;
 	bucket = hashmap.buckets;
 	i = 0;
 	while (i < n) {
@@ -226,6 +229,7 @@ void OPcman::Destroy() {
 	Purge();
 
 	assetLoaders.Destroy();
+	resourceFiles.Destroy();
 	hashmap.Destroy();
 	purgeList.Destroy();
 	OPfree(rootFolder);

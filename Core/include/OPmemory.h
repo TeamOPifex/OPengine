@@ -49,14 +49,16 @@ extern OPallocator OPDEFAULT_ALLOCATOR;
 * @param bytes Number of consecutive bytes to be allocated.
 * @return Address of allocated memory.
 */
-void* OPalloc(OPuint bytes);
+void* _OPalloc(OPuint bytes, const OPchar* file, ui32 line, const OPchar* function);
+#define OPalloc(bytes) _OPalloc(bytes, __FILE__, __LINE__, __FUNCTION__)
 
 /**
 * Platform independent means to dynamically allocate memory and zero it out.
 * @param bytes Number of consecutive bytes to be allocated.
 * @return Address of allocated memory.
 */
-void* OPallocZero(OPuint bytes);
+void* _OPallocZero(OPuint bytes, const OPchar* file, ui32 line, const OPchar* function);
+#define OPallocZero(bytes) _OPallocZero(bytes, __FILE__, __LINE__, __FUNCTION__)
 
 //-----------------------------------------------------------------------------
 /**
@@ -74,7 +76,8 @@ void* OPrealloc(void* ptr, OPuint bytes);
  *		is taken.
  * @param ptr Address to the memory segment to deallocate
  */
-void  OPfree(void* ptr);
+void  _OPfree(void* ptr, const OPchar* file, ui32 line, const OPchar* function);
+#define OPfree(bytes) _OPfree(bytes, __FILE__, __LINE__, __FUNCTION__)
 
 void* OPsysAlloc(OPuint bytes);
 void OPsysFree(void* ptr);

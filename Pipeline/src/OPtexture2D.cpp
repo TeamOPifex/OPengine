@@ -9,10 +9,7 @@ OPmesh* TEXTURE_2D_QUAD_MESH = NULL;
 void LoadDefaultTexture2DEffect() {
 	if (DEFAULT_TEXTURE2D_EFFECT != NULL) return;
 
-	DEFAULT_TEXTURE2D_EFFECT = (OPeffect*)OPalloc(sizeof(OPeffect));
-	DEFAULT_TEXTURE2D_EFFECT->Init("Common/Texture2D.vert", "Common/Texture.frag");
-	//DEFAULT_TEXTURE2D_EFFECT->AddUniform("uColorTexture");
-	//DEFAULT_TEXTURE2D_EFFECT->AddUniform("uWorld");
+	DEFAULT_TEXTURE2D_EFFECT = OPNEW(OPeffect("Common/Texture2D.vert", "Common/Texture.frag"));
 }
 
 void OPtexture2DUnloadGlobals() {
@@ -23,7 +20,6 @@ void OPtexture2DUnloadGlobals() {
 	}
 	if (TEXTURE_2D_QUAD_MESH != NULL) {
 		TEXTURE_2D_QUAD_MESH->Destroy();
-	//	OPfree(TEXTURE_2D_QUAD_MESH->Vertices);
 		OPfree(TEXTURE_2D_QUAD_MESH);
         TEXTURE_2D_QUAD_MESH = NULL;
 	}
@@ -41,8 +37,8 @@ OPtexture2DOLD* OPtexture2DCreate(OPtexture* texture, OPeffect* effect, OPvec2 u
 		LoadDefaultTexture2DEffect();
 		tex2d->Effect = DEFAULT_TEXTURE2D_EFFECT;
 	}
-
-    tex2d->Effect->Bind();
+	
+	tex2d->Effect->Bind();
 
 	if (TEXTURE_2D_QUAD_MESH == NULL) {
 		TEXTURE_2D_QUAD_MESH = OPquadCreate(1, 1, uvStart, uvEnd);

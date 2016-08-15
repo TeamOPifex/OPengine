@@ -45,3 +45,7 @@ void OPmeshPacked::Render(){
 	OPRENDERER_ACTIVE->VertexArray.DrawIndexed(&packer->vertexArray, elementCount, offset);
 	//glDrawElements(GL_TRIANGLES, (GLsizei)elementCount, GL_UNSIGNED_SHORT, (void*)(offset));
 }
+
+void OPmeshPacked::Destroy() {
+	vertexLayout.Destroy();
+}

@@ -20,7 +20,11 @@ OPmeshPacker* OPMESHPACKER_ACTIVE = NULL;
 OPmeshPacker* OPmeshPacker::Init(){
 	vertices = OPstream::Create(0);
 	indices = OPstream::Create(0);
+	VertexBuffer.Init();
+	IndexBuffer.Init();
 	vertexElementOffset = 0;
+	indexOffset = 0;
+	vertexOffset = 0;
 	built = false;
 	return this;
 }
@@ -34,9 +38,11 @@ OPmeshPacker* OPmeshPacker::Create() {
 //-----------------------------------------------------------------------------
 OPint OPmeshPacker::Destroy(){
 	vertices->Destroy();
-	indices->Destroy();
 	OPfree(vertices);
+	indices->Destroy();
 	OPfree(indices);
+	VertexBuffer.Destroy();
+	IndexBuffer.Destroy();
 	return 1;
 }
 
@@ -70,8 +76,6 @@ OPuint OPmeshPacker::AddIndexBuffer(OPindexSize indexSize, void* indicesData, OP
 
 //-----------------------------------------------------------------------------
 void OPmeshPacker::Build(){
-	VertexBuffer.Init();
-	IndexBuffer.Init();
 
 	VertexBuffer.Bind();
 	IndexBuffer.Bind();

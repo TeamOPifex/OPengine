@@ -36,7 +36,7 @@ void ExampleIMGUIEnter(OPgameState* last) {
 	imguiExample.textActive = 0;
 	imguiExample.clear = OPvec3Create(0,0,0);
 
-	imguiExample.FontManager = OPfontManagerSetup("Ubuntu.opf", NULL, 0);
+	imguiExample.FontManager = OPfontManager::Create("Ubuntu.opf", NULL, 0);
 	imguiExample.FontManager->scale = 0.75;
 
 

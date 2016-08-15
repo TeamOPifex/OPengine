@@ -27,6 +27,12 @@ OPshaderUniform* OPshaderUniformGLCreate(OPeffect* effect, const OPchar* name) {
 	return OPshaderUniformGLInit(shaderUniform, effect, name);
 }
 
+void OPshaderUniformGLDestroy(OPshaderUniform* shaderUniform) {
+	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
+	OPfree(shaderUniformGL);
+	shaderUniform->internalPtr = NULL;
+}
+
 void OPshaderUniformSetFGL(OPshaderUniform* shaderUniform, f32 val) {
     #ifdef _DEBUG
         if(shaderUniform == NULL) return;
@@ -152,6 +158,7 @@ void OPshaderUniformSetTextureCubevGL(OPshaderUniform* shaderUniform, ui32 count
 void OPshaderUniformAPIGLInit(OPshaderUniformAPI* shaderUniform) {
 	shaderUniform->Create = OPshaderUniformGLCreate;
 	shaderUniform->Init = OPshaderUniformGLInit;
+	shaderUniform->Destroy = OPshaderUniformGLDestroy;
 
 	shaderUniform->SetF = OPshaderUniformSetFGL;
 	shaderUniform->SetFv = OPshaderUniformSetFvGL;

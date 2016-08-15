@@ -24,4 +24,5 @@ struct OPmeshPacked {
 	OPmeshPacked* Init(OPvertexLayout vertexLayout, OPindexSize indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
 	static OPmeshPacked* Create(OPvertexLayout vertexLayout, OPindexSize indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
 	void Render();
+	void Destroy();
 };

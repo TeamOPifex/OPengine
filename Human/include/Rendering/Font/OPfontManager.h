@@ -1,30 +1,19 @@
-#ifndef OPENGINE_HUMAN_RENDERER_FONT_MANAGER
-#define OPENGINE_HUMAN_RENDERER_FONT_MANAGER
+#pragma once
+
+struct OPfontManager;
+typedef struct OPfontManager OPfontManager;
 
 #include "./Human/include/Rendering/Font/OPfont.h"
+#include "./Human/include/Rendering/Font/OPfontTextNode.h"
+#include "./Human/include/Rendering/Enums/OPfontAlign.h"
+
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Math/include/Vectors.h"
 #include "./Data/include/OPhashMap.h"
 
-//-----------------------------------------------------------------------------
-//   _____ _                   _
-//  / ____| |                 | |
-// | (___ | |_ _ __ _   _  ___| |_ ___
-//  \___ \| __| '__| | | |/ __| __/ __|
-//  ____) | |_| |  | |_| | (__| |_\__ \
-// |_____/ \__|_|   \__,_|\___|\__|___/
-struct OPfontTextNode {
-	OPchar* Text;
-	OPint Width;
-};
-typedef struct OPfontTextNode OPfontTextNode;
-
-
-typedef enum {
-	OPFONT_ALIGN_LEFT = 0,
-	OPFONT_ALIGN_CENTER = 1,
-	OPFONT_ALIGN_RIGHT = 2
-} OPfontAlign;
+extern OPfontManager* OPFONTMANAGER_ACTIVE;
+extern OPeffect* OPFONTMANAGER_EFFECT_ACTIVE;
+extern OPeffect* OPFONTMANAGER_EFFECT2D_ACTIVE;
 
 struct OPfontManager {
 	OPfontUserTextNode dummyMesh;
@@ -39,76 +28,52 @@ struct OPfontManager {
 	OPint pixelated;
 	OPmat4 proj;
 	OPfloat scale;
+
+	OPfontManager() {}
+	OPfontManager(OPfont* font) { Init(font); }
+	OPfontManager(const OPchar* font, const OPchar** text, ui16 count) { Init(font, text, count); }
+
+	OPfontManager* Init(OPfont* font);
+	OPfontManager* Init(const OPchar* font, const OPchar** text, ui16 count);
+
+	void AddText(const OPchar* text);
+	void Build();
+	void SetColor(f32 r, f32 g, f32 b, f32 a);
+	void Destroy();
+
+	inline void Bind() {
+		OPFONTMANAGER_ACTIVE = this;
+	}
+
+	inline void Unbind() {
+		OPFONTMANAGER_ACTIVE = NULL;
+	}
+
+	inline void SetColor(OPvec3 color) {
+		SetColor(color.x, color.y, color.z, 1.0);
+	}
+
+	inline void SetColor(OPvec4 color) {
+		SetColor(color.x, color.y, color.z, color.w);
+	}
+
+	inline void SetColor(f32 r, f32 g, f32 b) {
+		SetColor(r, g, b, 1.0);
+	}
+	
+	inline void SetAlign(OPfontAlign align) {
+		_align = align;
+	}
+
+	inline static OPfontManager* Create(OPfont* font) {
+		return OPNEW(OPfontManager(font));
+	}
+
+	inline static OPfontManager* Create(const OPchar* font, const OPchar** text, ui16 count) {
+		return OPNEW(OPfontManager(font, text, count));
+	}
 };
-typedef struct OPfontManager OPfontManager;
 
-
-
-//-----------------------------------------------------------------------------
-//   _____ _       _           _
-//  / ____| |     | |         | |
-// | |  __| | ___ | |__   __ _| |___
-// | | |_ | |/ _ \| '_ \ / _` | / __|
-// | |__| | | (_) | |_) | (_| | \__ \
-//  \_____|_|\___/|_.__/ \__,_|_|___/
-
-extern OPfontManager* OPFONTMANAGER_ACTIVE;
-extern OPeffect* OPFONTMANAGER_EFFECT_ACTIVE;
-extern OPeffect* OPFONTMANAGER_EFFECT2D_ACTIVE;
-
-
-//-----------------------------------------------------------------------------
-// ______                _   _
-//|  ____|              | | (_)
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
-//|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
-//| |  | |_| | | | | (__| |_| | (_) | | | \__ \
-//|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-
-OPfontManager* OPfontManagerCreate(OPfont* font);
-OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 count);
-
-void OPfontManagerAddText(const OPchar* text);
-void OPfontManagerBuild();
-void OPfontManagerDestroy(OPfontManager* font);
-
-void OPfontManagerSetColor(OPfontManager* manager, f32 r, f32 g, f32 b, f32 a);
-void OPfontManagerSetColor(f32 r, f32 g, f32 b, f32 a);
-
-
-// TODO: Refactor
 inline void OPfontEffectBind(OPeffect* effect) {
 	OPFONTMANAGER_EFFECT_ACTIVE = effect;
 }
-inline void OPfontManagerBind(OPfontManager* manager) {
-	OPFONTMANAGER_ACTIVE = manager;
-}
-inline void OPfontManagerSetAlign(OPfontManager* manager, OPfontAlign align) {
-	manager->_align = align;
-}
-inline void OPfontManagerSetAlign(OPfontAlign align) {
-	OPFONTMANAGER_ACTIVE->_align = align;
-}
-inline void OPfontManagerSetColor(OPfontManager* manager, OPvec3 color) {
-	OPfontManagerSetColor(manager, color.x, color.y, color.z, 1.0);
-}
-inline void OPfontManagerSetColor(OPfontManager* manager, OPvec4 color) {
-	OPfontManagerSetColor(manager, color.x, color.y, color.z, color.w);
-}
-inline void OPfontManagerSetColor(OPfontManager* manager, f32 r, f32 g, f32 b) {
-	OPfontManagerSetColor(manager, r, g, b, 1.0);
-}
-inline void OPfontManagerSetColor(OPvec3 color) {
-	OPfontManagerSetColor(OPFONTMANAGER_ACTIVE, color.x, color.y, color.z, 1.0);
-}
-inline void OPfontManagerSetColor(OPvec4 color) {
-	OPfontManagerSetColor(OPFONTMANAGER_ACTIVE, color.x, color.y, color.z, color.w);
-}
-inline void OPfontManagerSetColor(f32 r, f32 g, f32 b) {
-	OPfontManagerSetColor(OPFONTMANAGER_ACTIVE, r, g, b, 1.0);
-}
-inline void OPfontManagerSetColor(f32 r, f32 g, f32 b, f32 a) {
-	OPfontManagerSetColor(OPFONTMANAGER_ACTIVE, r, g, b, a);
-}
-
-#endif

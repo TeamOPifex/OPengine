@@ -10,7 +10,8 @@
 #include "./Core/include/OPmath.h"
 
 OPint OPfontLoad(OPstream* str, OPfont** data) {
-	OPfont* font = (OPfont*)OPalloc(sizeof(OPfont));
+	OPfont* font = OPNEW(OPfont());
+
 	*data = font;
 
 	i16 version;
@@ -40,7 +41,8 @@ OPint OPfontLoad(OPstream* str, OPfont** data) {
 	font->glyphs = OPvector::Create(sizeof(OPfontGlyph));
 
 	for (i16 i = glyphCount; i--;) {
-		OPfontGlyph* glyph = (OPfontGlyph*)OPalloc(sizeof(OPfontGlyph));
+		OPfontGlyph* glyph = OPNEW(OPfontGlyph());
+		glyph->Init();
 
 		glyph->charcode = str->I8();
 		glyph->width = str->I32();
@@ -56,7 +58,6 @@ OPint OPfontLoad(OPstream* str, OPfont** data) {
 
 		i16 kerningCount;
 		kerningCount = str->I16();
-		glyph->kerning = OPvector::Create(sizeof(OPfontKerning));
 		for (i16 j = kerningCount; j--;) {
 			OPfontKerning kerning;
 
@@ -73,43 +74,71 @@ OPint OPfontLoad(OPstream* str, OPfont** data) {
 
 	OPimagePNGLoadStream(str, str->_pointer, &font->texture);
 
+	font->Init();
+
 	return 1;
 }
 
 OPint OPfontUnload(OPfont* font)
 {
-	OPint i;
-	OPfontGlyph* glyph;
-
-	for (i = 0; i< font->glyphs->Size(); i++)
-	{
-		glyph = *(OPfontGlyph**)font->glyphs->Get(i);
-		OPfontGlyphDestroy(glyph);
-	}
-
-	font->glyphs->Destroy();
-	OPfree(font->glyphs);
-	OPimagePNGUnload(font->texture);
+	font->Destroy();
 	OPfree(font);
-
 	return 1;
 }
 
-OPfontGlyph* OPfontGetGlyph(OPfont* font, OPchar charcode)
+void OPfont::Init() {
+	OPvertexLayoutBuilder builder;
+	builder.Init();
+	builder.Add(OPattributes::POSITION);
+	builder.Add(OPattributes::UV);
+	vertexLayout = builder.Build();
+	dummyTextNode.mesh = OPmesh(vertexLayout);
+
+	ui32 vertexSize = sizeof(OPvertexTex);
+	ui32 indexSize = sizeof(ui16);
+	vertices = OPvector::Create(vertexSize);
+	indices = OPvector::Create(indexSize);
+}
+
+void OPfont::Destroy() {
+	OPint i;
+	OPfontGlyph* glyph;
+
+	for (i = 0; i< glyphs->Size(); i++)
+	{
+		glyph = *(OPfontGlyph**)glyphs->Get(i);
+		glyph->Destroy();
+		OPfree(glyph);
+	}
+
+	glyphs->Destroy();
+	OPfree(glyphs);
+
+	OPimagePNGUnload(texture);
+
+	dummyTextNode.mesh.Destroy();
+
+	vertices->Destroy();
+	OPfree(vertices);
+	indices->Destroy();
+	OPfree(indices);
+}
+
+OPfontGlyph* OPfont::GetGlyph(OPchar charcode)
 {
 	size_t i;
 	OPchar buffer[2] = { 0, 0 };
 	OPfontGlyph* glyph;
 
 	/* Check if charcode has been already loaded */
-	for (i = 0; i<font->glyphs->_size; ++i)
+	for (i = 0; i< glyphs->_size; ++i)
 	{
-		glyph = *(OPfontGlyph**)font->glyphs->Get(i);
+		glyph = *(OPfontGlyph**)glyphs->Get(i);
 		// If charcode is -1, we don't care about outline type or thickness
 		if ((glyph->charcode == charcode) &&
 			((charcode == (wchar_t)(-1)) ||
-			((glyph->outlineType == font->outlineType) &&
-			(glyph->outlineThickness == font->outlineThickness))))
+			((glyph->outlineType == outlineType) &&
+			(glyph->outlineThickness == outlineThickness))))
 		{
 			return glyph;
 		}
@@ -120,10 +149,10 @@ OPfontGlyph* OPfontGetGlyph(OPfont* font, OPchar charcode)
 	*/
 	if (charcode == (OPchar)(-1))
 	{
-		size_t width = font->atlas->width;
-		size_t height = font->atlas->height;
-		OPfontAtlasRegion region = OPfontAtlasGetRegion(font->atlas, 5, 5);
-		OPfontGlyph * glyph = OPfontGlyphCreate();
+		size_t width = atlas->width;
+		size_t height = atlas->height;
+		OPfontAtlasRegion region = atlas->GetRegion(5, 5);
+		OPfontGlyph * glyph = OPfontGlyph::Create();
 		static ui8 data[4 * 4 * 3] = { };
 		if (region.x < 0)
 		{
@@ -131,13 +160,13 @@ OPfontGlyph* OPfontGetGlyph(OPfont* font, OPchar charcode)
 			return NULL;
 		}
 
-		OPfontAtlasSetRegion(font->atlas, region.x, region.y, 4, 4, data, 0);
+		atlas->SetRegion(region.x, region.y, 4, 4, data, 0);
 		glyph->charcode = (OPchar)(-1);
 		glyph->textureCoordinates.x = (region.x + 2) / (float)width;
 		glyph->textureCoordinates.y = (region.y + 2) / (float)height;
 		glyph->textureCoordinates.z = (region.x + 3) / (float)width;
 		glyph->textureCoordinates.w = (region.y + 3) / (float)height;
-		font->glyphs->Push((ui8*)&glyph);
+		glyphs->Push((ui8*)&glyph);
 		return glyph;
 	}
 
@@ -153,13 +182,13 @@ OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const O
 
 	for (i = 0; i< strlen(text); ++i)
 	{
-		OPfontGlyph* glyph = OPfontGetGlyph(font, text[i]);
+		OPfontGlyph* glyph = font->GetGlyph(text[i]);
 		if (glyph != NULL)
 		{
 			OPfloat kerning = 0;
 			if (i > 0)
 			{
-				kerning = OPfontGlyphGetKerning(glyph, text[i - 1]);
+				kerning = glyph->GetKerning( text[i - 1]);
 			}
 			width += kerning * scale;
 
@@ -196,13 +225,13 @@ OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const O
 	return OPvec2(width, height);
 }
 
-OPmesh OPfontCreateText(OPfont* font, OPchar* text) {
+OPmesh OPfont::CreateText(OPchar* text) {
 	ui32 vertexSize = sizeof(OPvertexTex);
 	OPindexSize indexSize = OPindexSize::SHORT;// sizeof(ui16);
 	OPvector* vertices = OPvector::Create(vertexSize);
 	OPvector* indices = OPvector::Create((ui32)indexSize);
 
-	_OPfontBuild(vertices, indices, font, text, 1);
+	_OPfontBuild(vertices, indices, this, text, 1);
 
 	OPvertexLayoutBuilder builder;
 	builder.Init();
@@ -214,11 +243,11 @@ OPmesh OPfontCreateText(OPfont* font, OPchar* text) {
 	return mesh;
 }
 
-OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text) {
-	return OPfontCreatePackedText(font, text, 1);
+OPfontBuiltTextNode OPfont::CreatePackedText(const OPchar* text) {
+	return CreatePackedText(text, 1);
 }
 
-OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text, OPfloat scale) {
+OPfontBuiltTextNode OPfont::CreatePackedText(const OPchar* text, OPfloat scale) {
 	ASSERT(OPMESHPACKER_ACTIVE != NULL, "No mesh packer bound.");
 
 	ui32 vertexSize = sizeof(OPvertexTex);
@@ -226,7 +255,7 @@ OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text, OPf
 	OPvector* vertices = OPvector::Create(vertexSize);
 	OPvector* indices = OPvector::Create((ui32)indexSize);
 
-	OPvec2 size = _OPfontBuild(vertices, indices, font, text, scale);
+	OPvec2 size = _OPfontBuild(vertices, indices, this, text, scale);
 
 	OPfontBuiltTextNode node;
 	node.Width = size.x;
@@ -240,52 +269,38 @@ OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text, OPf
 	return node;
 }
 
-OPvec2 OPfontGetSize(OPfont* font, const OPchar* text, OPfloat scale) {
+OPvec2 OPfont::GetSize(const OPchar* text, OPfloat scale) {
 
 	size_t i;
 	OPfloat width = 0;
-	OPfloat height = font->size * scale;
+	OPfloat height = size * scale;
 	for (i = 0; i< strlen(text); ++i)
 	{
-		OPfontGlyph* glyph = OPfontGetGlyph(font, text[i]);
+		OPfontGlyph* glyph = GetGlyph(text[i]);
 		if (glyph != NULL)
 		{
 			if (i > 0)
-				width += OPfontGlyphGetKerning(glyph, text[i - 1]) * scale;
+				width += glyph->GetKerning(text[i - 1]) * scale;
 			width += glyph->advanceX * scale;
 		}
 	}
 	return OPvec2(width, height);
 }
 
-OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text) {
-	return OPfontCreateUserText(font, text, 1);
+OPfontUserTextNode OPfont::CreateUserText(const OPchar* text) {
+	return CreateUserText(text, 1);
 }
 
-OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text, float scale) {
+OPfontUserTextNode OPfont::CreateUserText(const OPchar* text, float scale) {
 
-	ui32 vertexSize = sizeof(OPvertexTex);
-	ui32 texcoordsSize = sizeof(OPvec2);
-	ui32 indexSize = sizeof(ui16);
-	OPvector* vertices = OPvector::Create(vertexSize);
-	OPvector* indices = OPvector::Create(indexSize);
+	vertices->Clear();
+	indices->Clear();
 
-	OPvec2 size = _OPfontBuild(vertices, indices, font, text, scale);
+	OPvec2 size = _OPfontBuild(vertices, indices, this, text, scale);
 
-	OPfontUserTextNode node;
-	node.Width = size.x;
-	OPvertexLayoutBuilder builder;
-	builder.Init();
-	builder.Add(OPattributes::POSITION);
-	builder.Add(OPattributes::UV);
-	node.mesh = OPmesh(builder.Build());
+	dummyTextNode.Width = size.x;
 
-	node.mesh.Build(node.mesh.vertexLayout, OPindexSize::SHORT, (ui32)vertices->_size, (ui32)indices->_size, vertices->items, indices->items);
+	dummyTextNode.mesh.Build(dummyTextNode.mesh.vertexLayout, OPindexSize::SHORT, (ui32)vertices->_size, (ui32)indices->_size, vertices->items, indices->items);
 
-	vertices->Destroy();
-	OPfree(vertices);
-	indices->Destroy();
-	OPfree(indices);
-
-	return node;
+	return dummyTextNode;
 }

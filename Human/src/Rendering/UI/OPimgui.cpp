@@ -144,7 +144,7 @@ OPint OPimguiTextbox(OPvec2 pos, const OPchar* text, const OPchar* placeholder, 
 		}
 	}
 
-	OPvec2 textSize = OPfontGetSize(OPIMGUI_ACTIVE->fontManager->_font, buffer, OPIMGUI_ACTIVE->fontManager->scale);
+	OPvec2 textSize = OPIMGUI_ACTIVE->fontManager->_font->GetSize(buffer, OPIMGUI_ACTIVE->fontManager->scale);
 
 	OPvec2 size = textSize;
 	size.x = 400;//OPIMGUI_ACTIVE->padding[0] + OPIMGUI_ACTIVE->padding[1];
@@ -311,7 +311,7 @@ void OPimguiLabel(
 
 	if(bg.w > 0) {
 		// Determine label size
-		OPvec2 s = OPfontGetSize(OPIMGUI_ACTIVE->fontManager->_font, text, OPIMGUI_ACTIVE->fontManager->scale);
+		OPvec2 s = OPIMGUI_ACTIVE->fontManager->_font->GetSize(text, OPIMGUI_ACTIVE->fontManager->scale);
 
 		OPvec2 _size = s;
 		_size.x += 6;
@@ -333,7 +333,7 @@ void OPimguiLabel(
 
 OPint OPimguiButton(OPvec2 pos, const OPchar* text, OPvec4 color, OPvec4 selected, OPvec4 hover) {
 
-	OPvec2 size = OPfontGetSize(OPIMGUI_ACTIVE->fontManager->_font, text, OPIMGUI_ACTIVE->fontManager->scale);
+	OPvec2 size = OPIMGUI_ACTIVE->fontManager->_font->GetSize(text, OPIMGUI_ACTIVE->fontManager->scale);
 
 	size.x += OPIMGUI_ACTIVE->padding[0] + OPIMGUI_ACTIVE->padding[1];
 	size.y += OPIMGUI_ACTIVE->padding[2] + OPIMGUI_ACTIVE->padding[3];
