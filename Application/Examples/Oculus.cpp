@@ -61,7 +61,7 @@ OPint ExampleOculusUpdate(OPtimer* time) {
 	OPrenderDepth(1);
 	OPrenderClear(0, 0, 0);
 
-	if (OPkeyboardIsDown(OPkeyboardKey::P)) { oculusExample.Rotation++; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::P)) { oculusExample.Rotation++; }
 
 	oculusExample.Mesh->Bind();
 	oculusExample.Effect->Bind();

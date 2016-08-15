@@ -6,13 +6,13 @@ struct OPinputRecordMemoryBase;
 typedef struct OPinputRecordFrame OPinputRecordFrame;
 typedef struct OPinputRecordMemoryBase OPinputRecordMemoryBase;
 
-#include "OPkeyboard.h"
+#include "./Human/include/Input/OPkeyboard.h"
 #include "./Core/include/OPtimer.h"
 #include "./Data/include/OPfile.h"
 
 struct OPinputRecordFrame {
 	ui64 timeOffset;
-	OPkeyboardState keyboardState;
+	OPkeyboard keyboardState;
 };
 
 struct OPinputRecordMemoryBase {

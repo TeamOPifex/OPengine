@@ -37,7 +37,7 @@ void ExampleFreeFlightEnter(OPgameState* last) {
 
 OPint ExampleFreeFlightUpdate(OPtimer* timer) {
 	freeFlightExample.Camera.Update(timer);
-	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { freeFlightExample.Rotation++; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { freeFlightExample.Rotation++; }
 
 	return false;
 }

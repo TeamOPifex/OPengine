@@ -53,7 +53,7 @@ void ExampleIMGUIEnter(OPgameState* last) {
 OPint ExampleIMGUIUpdate(OPtimer* time) {
 
 
-	if(OPkeyboardWasPressed(OPkeyboardKey::BACKSPACE) && imguiExample.textActive && strlen(imguiExample.buffer) > 0) {
+	if(OPKEYBOARD.WasPressed(OPkeyboardKey::BACKSPACE) && imguiExample.textActive && strlen(imguiExample.buffer) > 0) {
 		OPlog("Buff %s", imguiExample.buffer);
 		imguiExample.buffer[strlen(imguiExample.buffer) - 1] = '\0';
 		OPlog("Buff %s", imguiExample.buffer);

@@ -1,10 +1,7 @@
 #pragma once
 
 struct OPgamePad;
-struct OPgamePadSystem;
-
 typedef struct OPgamePad OPgamePad;
-typedef struct OPgamePadSystem OPgamePadSystem;
 
 #include "./Core/include/OPtypes.h"
 #include "./Math/include/OPvec2.h"
@@ -12,8 +9,6 @@ typedef struct OPgamePadSystem OPgamePadSystem;
 #include "Enums/OPgamePadButtons.h"
 #include "Enums/OPgamePadIndices.h"
 #include "./Core/include/Assert.h"
-
-#define CONTROLLERS 4
 
 struct OPgamePad {
 	OPgamePad(i8 index) {
@@ -200,35 +195,3 @@ struct OPgamePad {
 		return AnyInputIsUp() && AnyPrevInputIsDown();
 	}
 };
-
-struct OPgamePadSystem {
-	OPgamePad gamePads[CONTROLLERS];
-
-	void Update();
-	void Reset();
-	void SetDeadzones(OPfloat deadzone);
-	OPgamePad* Get(OPgamePadIndex index);
-	OPgamePad* Get(i8 index) {
-		ASSERT(index < CONTROLLERS - 1, "Trying to access a controller that's not indexed, see CONTROLLERS global");
-		return &gamePads[index];
-	}
-	
-	bool AnyControllerInputIsDown() {
-		ui32 count = CONTROLLERS - 1;
-		for (; count > 0; count--) {
-			if (gamePads[count].AnyInputIsDown()) return true;
-		}
-		return false;
-	}
-};
-
-extern OPgamePadSystem OPGAMEPADSYSTEM;
-
-
-inline OPgamePad* OPgamePadGet(OPgamePadIndex index) {
-	return OPGAMEPADSYSTEM.Get(index);
-}
-
-inline OPgamePad* OPgamePadGet(i8 index) {
-	return OPGAMEPADSYSTEM.Get(index);
-}

@@ -178,7 +178,7 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 		}
 	}
 
-	if (OPkeyboardWasPressed(OPkeyboardKey::SPACE)) {
+	if (OPKEYBOARD.WasPressed(OPkeyboardKey::SPACE)) {
 		OPphysXAddForce(physicsExample->spheres[0].physics, OPvec3Create(0, 500 * physicsExample->spheres[0].size, 0));
 	}
 	f32 rate = 500 * physicsExample->spheres[0].size;
@@ -196,27 +196,27 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	//	OPphysicsSetLinearVelocity(spheres[0].physics, 0, 0, rate / 100);
 	//}
 
-	if (OPkeyboardIsDown(OPkeyboardKey::A)) {
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::A)) {
 		OPphysXAddTorque(physicsExample->spheres[0].physics, OPvec3Create(0.0f, 0.0f, rate));
 		OPphysXAddForce(physicsExample->spheres[0].physics, OPvec3Create(-rate2, 0.0f, 0.0f));
 	}
-	if (OPkeyboardIsDown(OPkeyboardKey::D)) {
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::D)) {
 		OPphysXAddTorque(physicsExample->spheres[0].physics, OPvec3Create(0.0f, 0.0f, -rate));
 		OPphysXAddForce(physicsExample->spheres[0].physics, OPvec3Create(rate2, 0.0f, 0.0f));
 	}
-	if (OPkeyboardIsDown(OPkeyboardKey::W)) {
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::W)) {
 		OPphysXAddTorque(physicsExample->spheres[0].physics, OPvec3Create(-rate, 0, 0));
 		OPphysXAddForce(physicsExample->spheres[0].physics, OPvec3Create(0.0f, 0.0f, -rate2));
 	}
-	if (OPkeyboardIsDown(OPkeyboardKey::S)) {
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::S)) {
 		OPphysXAddTorque(physicsExample->spheres[0].physics, OPvec3Create(rate, 0.0f, 0.0f));
 		OPphysXAddForce(physicsExample->spheres[0].physics, OPvec3Create(0.0f, 0.0f, rate2));
 	}
 
-	if (OPkeyboardIsDown(OPkeyboardKey::UP)) { physicsExample->Camera->pos.y += 0.2f; }
-	if (OPkeyboardIsDown(OPkeyboardKey::DOWN)) { physicsExample->Camera->pos.y -= 0.2f; }
-	if (OPkeyboardIsDown(OPkeyboardKey::LEFT)) { physicsExample->Camera->pos.x -= 0.2f; }
-	if (OPkeyboardIsDown(OPkeyboardKey::RIGHT)) { physicsExample->Camera->pos.x += 0.2f; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::UP)) { physicsExample->Camera->pos.y += 0.2f; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::DOWN)) { physicsExample->Camera->pos.y -= 0.2f; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::LEFT)) { physicsExample->Camera->pos.x -= 0.2f; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::RIGHT)) { physicsExample->Camera->pos.x += 0.2f; }
 
 	physicsExample->Camera->Update();
 

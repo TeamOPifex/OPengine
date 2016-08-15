@@ -53,7 +53,7 @@ struct CommandBucketExample {
 	}
 
 	OPint Update(OPtimer* time) {
-	    if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { rotation++; }
+	    if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { rotation++; }
 
     	model.world.SetRotY(rotation / 100.0f);
     	model.world.Scl(0.25f);

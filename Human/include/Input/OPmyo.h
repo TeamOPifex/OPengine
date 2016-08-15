@@ -3,7 +3,6 @@
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPtimer.h"
 
-
 typedef enum {
 	Myo_Pose_None,
 	Myo_Pose_Rest,

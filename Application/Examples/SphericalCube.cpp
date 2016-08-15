@@ -69,7 +69,7 @@ OPint ExampleSphericalCubeUpdate(OPtimer* time) {
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
-	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { sphericalCubeExample->Rotation++; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { sphericalCubeExample->Rotation++; }
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
 	OPmat4 world = OPmat4RotY(sphericalCubeExample->Rotation / 100.0f);

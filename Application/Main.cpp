@@ -34,7 +34,7 @@ void ApplicationInit() {
 	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, 1920, 1080));
 	OPrenderInit(&mainWindow);
 	
-	OPGAMEPADSYSTEM.SetDeadzones(0.2f);	
+	OPGAMEPADS.SetDeadzones(0.2f);
 
 	OPgameState::Change(&GS_EXAMPLE_SELECTOR);
 }
@@ -47,8 +47,8 @@ OPint ApplicationUpdate(OPtimer* timer) {
 	OPinputSystemUpdate(timer);
 	OPCMAN_UPDATE(timer);
 
-	if (OPkeyboardWasReleased(OPkeyboardKey::ESCAPE)) return 1;
-	if ((OPkeyboardWasReleased(OPkeyboardKey::BACKSPACE) || OPgamePadGet(OPgamePadIndex::ONE)->WasPressed(OPgamePadButton::BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
+	if (OPKEYBOARD.WasReleased(OPkeyboardKey::ESCAPE)) return 1;
+	if ((OPKEYBOARD.WasReleased(OPkeyboardKey::BACKSPACE) || OPGAMEPADS[0]->WasPressed(OPgamePadButton::BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
 		OPgameState::Change(&GS_EXAMPLE_SELECTOR);
 	}
 

@@ -13,41 +13,6 @@
 	#include "./Human/include/Utilities/AndroidNDK.h"
 #endif
 
-OPgamePadSystem OPGAMEPADSYSTEM = {
-	OPgamePad(0),
-	OPgamePad(1),
-	OPgamePad(2),
-	OPgamePad(3)
-};
-
-//OPgamePad GamePads[CONTROLLERS] = {
-//	{
-//		0,
-//		false,
-//		0.1f
-//	},
-//	{
-//		1,
-//		false,
-//		0.1f
-//	},
-//	{
-//		2,
-//		false,
-//		0.1f
-//	},
-//	{
-//		3,
-//		false,
-//		0.1f
-//	}
-//};
-
-//-----------------------------------------------------------------------------
-//OPgamePad* OPgamePadGet(OPgamePadIndex index) {
-//	return &GamePads[index];
-//}
-//-----------------------------------------------------------------------------
 #ifdef OPIFEX_ANDROID
 
 	#define CONTROLLER_CLASS_NAME "tv/ouya/console/api/OuyaController"
@@ -105,7 +70,6 @@ OPgamePadSystem OPGAMEPADSYSTEM = {
 #endif
 
 
-//-----------------------------------------------------------------------------
 #ifdef OPIFEX_ANDROID
 void __OPandUpdateGamePad(OPgamePad* controller){
 	jobject jcontroller = OPjniGetControllerByPlayer(controller->playerIndex);
@@ -145,7 +109,7 @@ void __OPandUpdateGamePad(OPgamePad* controller){
 	controller->axes[OPGAMEPADAXIS_RS_Y] = -OPjniGetAxisValue(jcontroller, OUYA_AXIS_RS_Y);
 }
 #endif
-//-----------------------------------------------------------------------------
+
 #if defined(OPIFEX_UNIX) && !defined(OPIFEX_IOS)
 void __OPlnxUpdateGamePad(OPgamePad* c){
 
@@ -370,35 +334,6 @@ bool OPgamePad::AnyInputIsDown() {
 		if (buttons[count]) return true;
 	}
 	return false;
-}
-
-
-OPgamePad* OPgamePadSystem::Get(OPgamePadIndex index) {
-	return &gamePads[(ui32)index];
-}
-
-void OPgamePadSystem::Update()
-{
-	for ( OPint i = CONTROLLERS; i--; )
-	{
-		gamePads[i].Update();
-	}
-}
-
-void OPgamePadSystem::Reset()
-{
-	for ( OPint i = CONTROLLERS; i--; )
-	{
-		gamePads[i].Reset();
-	}
-}
-
-void OPgamePadSystem::SetDeadzones(OPfloat deadzone)
-{
-	for ( OPint i = CONTROLLERS; i--; )
-	{
-		gamePads[i].SetDeadzone(deadzone);
-	}
 }
 
 OPvec2 OPgamePad::LeftThumb() {

@@ -54,7 +54,7 @@ void OPinputRecordUpdate(OPtimer* timer) {
 	if(_inputRecordRecording) {
 		OPinputRecordFrame frame = {
 			elapsed,
-			Keyboard
+			OPKEYBOARD
 		};
 		//frame.keyboardState.keys[OPKEY_W] = 3;
 		//frame.keyboardState.keys[OPKEY_S] = 3;
@@ -77,7 +77,7 @@ void OPinputRecordUpdate(OPtimer* timer) {
 		}
 		frame = *((OPinputRecordFrame*)response);
 		OPfree(response);
-		Keyboard = frame.keyboardState;
+		OPKEYBOARD = frame.keyboardState;
 	}
 }
 

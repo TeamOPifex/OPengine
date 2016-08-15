@@ -95,12 +95,12 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
-	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { mouseIntersectExample.Rotation++; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { mouseIntersectExample.Rotation++; }
 
-	mouseIntersectExample.Camera.pos.x -= OPkeyboardIsDown(OPkeyboardKey::A) * time->Elapsed * 0.01f;
-	mouseIntersectExample.Camera.pos.x += OPkeyboardIsDown(OPkeyboardKey::D) * time->Elapsed * 0.01f;
-	mouseIntersectExample.Camera.target.x -= OPkeyboardIsDown(OPkeyboardKey::A) * time->Elapsed * 0.01f;
-	mouseIntersectExample.Camera.target.x += OPkeyboardIsDown(OPkeyboardKey::D) * time->Elapsed * 0.01f;
+	mouseIntersectExample.Camera.pos.x -= OPKEYBOARD.IsDown(OPkeyboardKey::A) * time->Elapsed * 0.01f;
+	mouseIntersectExample.Camera.pos.x += OPKEYBOARD.IsDown(OPkeyboardKey::D) * time->Elapsed * 0.01f;
+	mouseIntersectExample.Camera.target.x -= OPKEYBOARD.IsDown(OPkeyboardKey::A) * time->Elapsed * 0.01f;
+	mouseIntersectExample.Camera.target.x += OPKEYBOARD.IsDown(OPkeyboardKey::D) * time->Elapsed * 0.01f;
 	mouseIntersectExample.Camera.Update();
 	mouseIntersectExample.Camera.UpdateView();
 
@@ -108,11 +108,11 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	OPray3D ray = { OPvec3(0, 0, 0), OPvec3(0, 0, 0) };
 	OPvec3 positionHit = { 0, 0, 0};
 	OPint intersecting = 0;
-	if(OPmouseIsDown(OPmouseButton::LBUTTON)) {
+	if(OPMOUSE.IsDown(OPmouseButton::LBUTTON)) {
 
 		ray = mouseIntersectExample.Camera.Unproject(
-			OPmousePositionX(),
-			OPmousePositionY()
+			OPMOUSE.X(),
+			OPMOUSE.Y()
 		);
 
 
@@ -188,7 +188,7 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	OPeffectSet("vLightDirection", &mouseIntersectExample.LightDirection);
 	OPmeshRender();
 
-	if(OPmouseIsDown(OPmouseButton::LBUTTON)) {
+	if(OPMOUSE.IsDown(OPmouseButton::LBUTTON)) {
 		OPbindMeshEffectWorldCam(
 			&mouseIntersectExample.Mesh2,
 			&mouseIntersectExample.Effect,
@@ -203,9 +203,9 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
    	mouseIntersectExample.FontManager->scale = 0.75;
 	i8 buffer[256];
     #ifdef OPIFEX_WINDOWS
-	sprintf_s(buffer, 256, "%d, %d", OPmousePositionX(), OPmousePositionY());
+	sprintf_s(buffer, 256, "%d, %d", OPMOUSE.X(), OPMOUSE.Y());
     #else
-	sprintf(buffer, "%d, %d", OPmousePositionX(), OPmousePositionY());
+	sprintf(buffer, "%d, %d", OPMOUSE.X(), OPMOUSE.Y());
     #endif
 	OPfontRender(buffer, OPvec2(50, 60));
 

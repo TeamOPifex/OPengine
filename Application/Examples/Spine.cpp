@@ -99,7 +99,7 @@ OPint ExampleSpineUpdate(OPtimer* time) {
 	// Update
 	////////////////////////
 
-	if (OPkeyboardWasPressed(OPkeyboardKey::SPACE)) {
+	if (OPKEYBOARD.WasPressed(OPkeyboardKey::SPACE)) {
 		SpineSetAnim(spineExample->spine, 0, "jump", true);
 	}
 
@@ -109,7 +109,7 @@ OPint ExampleSpineUpdate(OPtimer* time) {
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
-	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { spineExample->Rotation++; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { spineExample->Rotation++; }
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
 	OPmat4 world = OPmat4RotY(spineExample->Rotation / 100.0f);

@@ -212,15 +212,15 @@ typedef struct {
 	OPint Update(OPtimer* timer) {
 		Camera.Update(timer);
 
-		ShadowCamera.pos.x -= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPkeyboardKey::J);
-		ShadowCamera.pos.x += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPkeyboardKey::L);
-		ShadowCamera.pos.y -= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPkeyboardKey::U);
-		ShadowCamera.pos.y += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPkeyboardKey::O);
-		ShadowCamera.pos.z += 0.01f * timer->Elapsed * OPkeyboardIsDown(OPkeyboardKey::I);
-		ShadowCamera.pos.z -= 0.01f * timer->Elapsed * OPkeyboardIsDown(OPkeyboardKey::K);
+		ShadowCamera.pos.x -= 0.01f * timer->Elapsed * OPKEYBOARD.IsDown(OPkeyboardKey::J);
+		ShadowCamera.pos.x += 0.01f * timer->Elapsed * OPKEYBOARD.IsDown(OPkeyboardKey::L);
+		ShadowCamera.pos.y -= 0.01f * timer->Elapsed * OPKEYBOARD.IsDown(OPkeyboardKey::U);
+		ShadowCamera.pos.y += 0.01f * timer->Elapsed * OPKEYBOARD.IsDown(OPkeyboardKey::O);
+		ShadowCamera.pos.z += 0.01f * timer->Elapsed * OPKEYBOARD.IsDown(OPkeyboardKey::I);
+		ShadowCamera.pos.z -= 0.01f * timer->Elapsed * OPKEYBOARD.IsDown(OPkeyboardKey::K);
 		ShadowCamera.Update();
 		
-		if (OPkeyboardWasReleased(OPkeyboardKey::V)) {
+		if (OPKEYBOARD.WasReleased(OPkeyboardKey::V)) {
 			ViewFromLight = !ViewFromLight;
 		}
 

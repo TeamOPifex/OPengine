@@ -44,7 +44,7 @@ void ExampleMeshBuilderEnter(OPgameState* last) {
 
 OPint ExampleMeshBuilderUpdate(OPtimer* time) {
 
-	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { meshBuilderExample.Rotation++; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { meshBuilderExample.Rotation++; }
 	OPmat4 world = OPmat4RotY(meshBuilderExample.Rotation / 100.0f);
 
 	OPrenderClear(0.4f, 0.4f, 0.4f);

@@ -64,7 +64,7 @@ void ExampleTexturedEnter(OPgameState* last) {
 OPint ExampleTexturedUpdate(OPtimer* time) {
 	OPrenderClear(0, 0, 0);
 
-	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { texturedExample->Rotation++; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { texturedExample->Rotation++; }
 
 	texturedExample->Effect.Bind();
 	texturedExample->Mesh->Bind();

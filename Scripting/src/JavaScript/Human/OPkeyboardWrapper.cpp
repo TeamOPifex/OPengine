@@ -120,7 +120,7 @@ JS_RETURN_VAL _OPkeyboardWasPressed(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPkeyboardKey key = (OPkeyboardKey)args[0]->Int32Value();
-    bool result = OPkeyboardWasPressed(key);
+    bool result = OPKEYBOARD.WasPressed(key);
 
     JS_RETURN(JS_NEW_BOOL(result));
 }
@@ -130,7 +130,7 @@ JS_RETURN_VAL _OPkeyboardWasReleased(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPkeyboardKey key = (OPkeyboardKey)args[0]->Int32Value();
-    bool result = OPkeyboardWasReleased(key);
+    bool result = OPKEYBOARD.WasReleased(key);
 
     JS_RETURN(JS_NEW_BOOL(result));
 }
@@ -140,7 +140,7 @@ JS_RETURN_VAL _OPkeyboardIsDown(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPkeyboardKey key = (OPkeyboardKey)args[0]->Int32Value();
-    bool result = OPkeyboardIsDown(key);
+    bool result = OPKEYBOARD.IsDown(key);
 
     JS_RETURN(JS_NEW_BOOL(result));
 }
@@ -150,7 +150,7 @@ JS_RETURN_VAL _OPkeyboardIsDown(const JS_ARGS& args) {
 JS_RETURN_VAL _OPkeyboardUpdate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-            OPkeyboardUpdate(NULL);
+	OPKEYBOARD.Update(NULL);
 
     JS_RETURN_NULL;
 }

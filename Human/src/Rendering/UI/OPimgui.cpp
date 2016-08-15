@@ -154,11 +154,11 @@ OPint OPimguiTextbox(OPvec2 pos, const OPchar* text, const OPchar* placeholder, 
 	OPvec2 bottomRight = topLeft + size;
 
 
-	OPint mx = OPmousePositionX(), my = OPmousePositionY();
+	OPint mx = OPMOUSE.X(), my = OPMOUSE.Y();
 	OPint mouseWithin = mx >= topLeft.x && my >= topLeft.y &&
 		mx <= bottomRight.x && my <= bottomRight.y;
 
-	OPint clicked = mouseWithin && OPmouseWasPressed(OPmouseButton::LBUTTON);
+	OPint clicked = mouseWithin && OPMOUSE.WasPressed(OPmouseButton::LBUTTON);
 
 
 	_block(pos, OPvec2(400, size.y), OPIMGUI_ACTIVE->secondaryColor);
@@ -199,7 +199,7 @@ OPint OPimguiTextbox(OPvec2 pos, const OPchar* text, const OPchar* placeholder, 
     glDisable(GL_SCISSOR_TEST);
 
 	if(clicked) return 1;
-	else if (OPmouseWasPressed(OPmouseButton::LBUTTON)) return 2;
+	else if (OPMOUSE.WasPressed(OPmouseButton::LBUTTON)) return 2;
 	else return 0;
 }
 
@@ -223,7 +223,7 @@ OPint OPimguiRadio(
 	pos.x += size.x;
 	pos.y += size.y;
 
-	OPint mx = OPmousePositionX(), my = OPmousePositionY();
+	OPint mx = OPMOUSE.X(), my = OPMOUSE.Y();
 
 	_radio(pos, size, color);
 
@@ -254,7 +254,7 @@ OPint OPimguiCheckbox(
 
 	_block(pos, size, color);
 
-	OPint mx = OPmousePositionX(), my = OPmousePositionY();
+	OPint mx = OPMOUSE.X(), my = OPMOUSE.Y();
 
 	OPvec2 inner = size;
 	inner *= 0.6f;
@@ -273,7 +273,7 @@ OPint OPimguiCheckbox(
 		_block(innerPos, inner, hover);
 	}
 
-	if(mouseWithin && OPmouseWasPressed(OPmouseButton::LBUTTON)) {
+	if(mouseWithin && OPMOUSE.WasPressed(OPmouseButton::LBUTTON)) {
 		return 1;
 	}
 
@@ -342,12 +342,12 @@ OPint OPimguiButton(OPvec2 pos, const OPchar* text, OPvec4 color, OPvec4 selecte
 	OPvec2 bottomRight = topLeft + size;
 
 
-	OPint mx = OPmousePositionX(), my = OPmousePositionY();
+	OPint mx = OPMOUSE.X(), my = OPMOUSE.Y();
 	OPint mouseWithin = mx >= topLeft.x && my >= topLeft.y &&
 		mx <= bottomRight.x && my <= bottomRight.y;
 
-	OPint clicked = mouseWithin && OPmouseWasReleased(OPmouseButton::LBUTTON);
-	OPint down = mouseWithin && OPmouseIsDown(OPmouseButton::LBUTTON);
+	OPint clicked = mouseWithin && OPMOUSE.WasReleased(OPmouseButton::LBUTTON);
+	OPint down = mouseWithin && OPMOUSE.IsDown(OPmouseButton::LBUTTON);
 
 	if(clicked || down) {
 		_block(pos, size, selected);

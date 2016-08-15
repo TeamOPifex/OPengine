@@ -1,6 +1,6 @@
 #include "./Human/include/Rendering/Camera/OPcamFreeFlight.h"
 #include "./Human/include/Input/OPkeyboard.h"
-#include "./Human/include/Input/OPgamePad.h"
+#include "./Human/include/Input/OPgamePadSystem.h"
 #include "./Human/include/Input/OPmouse.h"
 #include "./Human/include/Rendering/OPrender.h"
 
@@ -39,25 +39,25 @@ void OPcamFreeFlight::Update(OPtimer* timer) {
 	OPfloat dt = timer->Elapsed / 1000.0f;
 	OPvec3 rot = { 0, 0, 0 };
 
-	OPgamePad* gamePad = OPgamePadGet(OPgamePadIndex::ONE);
+	OPgamePad* gamePad = OPGAMEPADS[0];
 	OPfloat triggerDifference = 1.0f + gamePad->RightTrigger() - (gamePad->LeftTrigger() * 0.9f);
 
 	OPfloat moveSpeed = dt * MoveSpeed * triggerDifference * 10.0f;
 	OPfloat rotSpeed = dt * RotationSpeed * triggerDifference;
 	
-	Movement.z = OPkeyboardIsDown(OPkeyboardKey::S) - OPkeyboardIsDown(OPkeyboardKey::W) - gamePad->LeftThumbY();
-	Movement.x = OPkeyboardIsDown(OPkeyboardKey::D) - OPkeyboardIsDown(OPkeyboardKey::A) + gamePad->LeftThumbX();
+	Movement.z = OPKEYBOARD.IsDown(OPkeyboardKey::S) - OPKEYBOARD.IsDown(OPkeyboardKey::W) - gamePad->LeftThumbY();
+	Movement.x = OPKEYBOARD.IsDown(OPkeyboardKey::D) - OPKEYBOARD.IsDown(OPkeyboardKey::A) + gamePad->LeftThumbX();
 	Movement *= moveSpeed;
 
-	rot.y = OPkeyboardIsDown(OPkeyboardKey::Q) - OPkeyboardIsDown(OPkeyboardKey::E) - gamePad->RightThumbX();
-	rot.x = OPkeyboardIsDown(OPkeyboardKey::Z) - OPkeyboardIsDown(OPkeyboardKey::C) + gamePad->RightThumbY();
-	if (OPmouseIsDown(OPmouseButton::RBUTTON)) {
-		rot.x += OPmousePositionMovedY() / 10.0f;
-		rot.y += OPmousePositionMovedX() / 10.0f;
+	rot.y = OPKEYBOARD.IsDown(OPkeyboardKey::Q) - OPKEYBOARD.IsDown(OPkeyboardKey::E) - gamePad->RightThumbX();
+	rot.x = OPKEYBOARD.IsDown(OPkeyboardKey::Z) - OPKEYBOARD.IsDown(OPkeyboardKey::C) + gamePad->RightThumbY();
+	if (OPMOUSE.IsDown(OPmouseButton::RBUTTON)) {
+		rot.x += OPMOUSE.MovedY() / 10.0f;
+		rot.y += OPMOUSE.MovedX() / 10.0f;
 	}
 	rot *= rotSpeed;
 	Rotation += rot;
-	OPmouseButton
+	//OPmouseButton
 	Update();
 }
 

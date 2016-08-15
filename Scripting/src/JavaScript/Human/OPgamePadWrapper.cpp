@@ -204,14 +204,14 @@ JS_RETURN_VAL _OPgamePadLeftTriggerIsDownSelf(const JS_ARGS& args) {
 }
 
 JS_RETURN_VAL _OPgamePadUpdate(const JS_ARGS& args) {
-	OPGAMEPADSYSTEM.Update();
+	OPGAMEPADS.Update();
     JS_RETURN_NULL;
 }
 
 JS_RETURN_VAL _OPgamePadSetDeadZones(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
-	OPGAMEPADSYSTEM.SetDeadzones((f32)args[0]->NumberValue());
+		OPGAMEPADS.SetDeadzones((f32)args[0]->NumberValue());
 
     JS_RETURN_NULL;
 }
@@ -245,7 +245,7 @@ void _OPgamePadSetup(Handle<Object> result, OPgamePad* controller) {
 JS_RETURN_VAL _OPgamePadGet(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
-    OPgamePad* controller = OPgamePadGet((i8)args[0]->IntegerValue());
+    OPgamePad* controller = OPGAMEPADS[(i32)args[0]->IntegerValue()];
 
     Handle<Object> result = JS_NEW_OBJECT();
     _OPgamePadSetup(result, controller);

@@ -46,7 +46,7 @@ void ExampleMaterialEnter(OPgameState* last) {
 
 OPint ExampleMaterialUpdate(OPtimer* time) {
 
-	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { materialExample.Rotation++; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { materialExample.Rotation++; }
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
 	materialExample.Model.world = OPmat4RotY(materialExample.Rotation / 100.0f);

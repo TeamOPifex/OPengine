@@ -214,23 +214,23 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 	}
 
 	OPvec3 disp = OPvec3Create(0.0f, -0.98f * 0.25f, 0.0f);
-	OPvec2 leftThumb = OPgamePadGet(OPgamePadIndex::ONE)->LeftThumb();
+	OPvec2 leftThumb = OPGAMEPADS[0]->LeftThumb();
 	disp.x += leftThumb.x * 0.5f;
 	disp.z -= leftThumb.y * 0.5f;
 
-	if (OPkeyboardIsDown(OPkeyboardKey::D)) {
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::D)) {
 		disp.x = 0.5f;
 	}
-	if (OPkeyboardIsDown(OPkeyboardKey::A)) {
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::A)) {
 		disp.x = -0.5f;
 	}
-	if (OPkeyboardIsDown(OPkeyboardKey::W)) {
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::W)) {
 		disp.z = -0.5f;
 	}
-	if (OPkeyboardIsDown(OPkeyboardKey::S)) {
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::S)) {
 		disp.z = 0.5f;
 	}
-	if (OPkeyboardWasPressed(OPkeyboardKey::SPACE)) {
+	if (OPKEYBOARD.WasPressed(OPkeyboardKey::SPACE)) {
 		disp.y = 5.0;
 	}
 
@@ -240,10 +240,10 @@ OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {
 	f32 rate = 500 * physicsCharacterExample->spheres[0].size;
 	f32 rate2 = 50 * physicsCharacterExample->spheres[0].size;
 
-	if (OPkeyboardIsDown(OPkeyboardKey::UP)) { physicsCharacterExample->Camera->pos.y += 0.2f; }
-	if (OPkeyboardIsDown(OPkeyboardKey::DOWN)) { physicsCharacterExample->Camera->pos.y -= 0.2f; }
-	if (OPkeyboardIsDown(OPkeyboardKey::LEFT)) { physicsCharacterExample->Camera->pos.x -= 0.2f; }
-	if (OPkeyboardIsDown(OPkeyboardKey::RIGHT)) { physicsCharacterExample->Camera->pos.x += 0.2f; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::UP)) { physicsCharacterExample->Camera->pos.y += 0.2f; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::DOWN)) { physicsCharacterExample->Camera->pos.y -= 0.2f; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::LEFT)) { physicsCharacterExample->Camera->pos.x -= 0.2f; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::RIGHT)) { physicsCharacterExample->Camera->pos.x += 0.2f; }
 
 	physicsCharacterExample->Camera->Update();
 

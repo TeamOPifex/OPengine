@@ -72,7 +72,7 @@ OPint ExampleMyoUpdate(OPtimer* time) {
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
-	if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { myoExample->Rotation++; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { myoExample->Rotation++; }
 
 	if (OPmyoPoseIs(Myo_Pose_Fist)) { myoExample->Rotation+=10; }
 	if (OPmyoPoseNow(Myo_Pose_Fist)) {

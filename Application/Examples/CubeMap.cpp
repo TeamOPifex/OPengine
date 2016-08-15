@@ -54,12 +54,9 @@ OPint ExampleCubeMapUpdate(OPtimer* time) {
     // Update
     ////////////////////////
 
-    if (OPkeyboardIsDown(OPkeyboardKey::SPACE)) { cubeMapExample.Rotation++; }
-
-
-
+    if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { cubeMapExample.Rotation++; }
+	
     return false;
-
 }
 
 void ExampleCubeMapRender(OPfloat delta) {

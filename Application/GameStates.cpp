@@ -151,8 +151,8 @@ OPint State0Update(OPtimer* time){
 
 	//OPwebServerQueue(server, "time", (i8*)&elapsed, sizeof(ui32));
 	t += 0.005f * time->Elapsed;
-	OPGAMEPADSYSTEM.Update();
-	OPkeyboardUpdate(time);
+	OPGAMEPADS.Update();
+	OPKEYBOARD.Update(time);
 
 	if (backgroundState == 2) {
 		OPrenderClear(1.0f, 0.0f, 0.0f);
@@ -163,9 +163,9 @@ OPint State0Update(OPtimer* time){
 		OPrenderClear(color.x, color.y, color.z);
 	}
 
-	OPvec2 pos = OPgamePadGet(OPgamePadIndex::ONE)->LeftThumb();
+	OPvec2 pos = OPGAMEPADS[0]->LeftThumb();
 
-	if(OPkeyboardWasPressed(OPkeyboardKey::SPACE)){
+	if(OPKEYBOARD.WasPressed(OPkeyboardKey::SPACE)){
 		//OPlog("Should play");
 		////OPaudSetEmitter(sound);
 
@@ -182,7 +182,7 @@ OPint State0Update(OPtimer* time){
 		OPlog("Queued Color Message");
 	}
 
-	if(OPgamePadGet(OPgamePadIndex::ONE)->IsDown(OPgamePadButton::BACK)){
+	if(OPGAMEPADS[0]->IsDown(OPgamePadButton::BACK)){
 		OPlog("Should end");
 		OPend();
 	}
@@ -282,7 +282,7 @@ OPint State1Update(OPtimer* time){
 
 	//OPframeBufferBind(&rt);
 	
-	OPgamePad* _gamePad = OPgamePadGet(OPgamePadIndex::ONE);
+	OPgamePad* _gamePad = OPGAMEPADS[0];
 	_gamePad->Update();
 	
 	if(_gamePad->IsConnected()) {

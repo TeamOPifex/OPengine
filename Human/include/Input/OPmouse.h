@@ -1,12 +1,14 @@
 #pragma once
 
-struct OPmouseState;
-typedef struct OPmouseState OPmouseState;
+struct OPmouse;
+typedef struct OPmouse OPmouse;
+
+extern OPmouse OPMOUSE;
 
 #include "./Human/include/Input/Enums/OPmouseButtons.h"
 #include "./Core/include/OPtypes.h"
 
-struct OPmouseState {
+struct OPmouse {
 	i32	updatedWheel;
 	i32	wheel;
 	i32	prevWheel;
@@ -14,23 +16,52 @@ struct OPmouseState {
 	d64	positionY;
 	d64	prevPositionX;
 	d64	prevPositionY;
-	bool	keys[(ui32)OPmouseButton::_MAX];
-	bool	prevKeys[(ui32)OPmouseButton::_MAX];
+	bool keys[(ui32)OPmouseButton::_MAX];
+	bool prevKeys[(ui32)OPmouseButton::_MAX];
+
+	void Update();
+	void SetPosition(i32 x, i32 y);
+	void SetPositionScreenCenter();
+	bool AnyInputIsDown();
+
+	inline i32 X() {
+		return (i32)positionX;
+	}
+
+	inline i32 Y() {
+		return (i32)positionY;
+	}
+
+	inline i32 MovedX() {
+		return (i32)(prevPositionX - positionX);
+	}
+
+	inline i32 MovedY() {
+		return (i32)(prevPositionY - positionY);
+	}
+
+	inline i32 Wheel() {
+		return wheel;
+	}
+
+	inline i32 WheelMoved() {
+		return prevWheel - wheel;
+	}
+
+	inline bool IsDown(OPmouseButton key) {
+		return keys[(ui32)key];
+	}
+
+	inline bool IsUp(OPmouseButton key) {
+		return !keys[(ui32)key];
+	}
+
+	inline bool WasPressed(OPmouseButton key) {
+		return keys[(ui32)key] && !prevKeys[(ui32)key];
+	}
+
+	inline bool WasReleased(OPmouseButton key) {
+		return !keys[(ui32)key] && prevKeys[(ui32)key];
+	}
 };
 
-extern OPmouseState Mouse;
-
-void OPmouseUpdate();
-i32 OPmousePositionX();
-i32 OPmousePositionY();
-i32 OPmousePositionMovedX();
-i32 OPmousePositionMovedY();
-i32 OPmouseWheel();
-i32 OPmouseWheelMoved();
-bool OPmouseIsDown(OPmouseButton key);
-bool OPmouseIsUp(OPmouseButton key);
-bool OPmouseWasPressed(OPmouseButton key);
-bool OPmouseWasReleased(OPmouseButton key);
-void OPmouseSetPosition(i32 x, i32 y);
-void OPmouseSetPositionScreenCenter();
-bool OPmouseAnyInputIsDown();
