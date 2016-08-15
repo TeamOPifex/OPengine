@@ -124,17 +124,17 @@ void* operator new(size_t size)
 
 void* operator new(size_t size, const char* file, ui32 line)
 {
-	return OPalloc(size, file, line, NULL);
+	return _OPalloc(size, file, line, NULL);
 }
 
 void* operator new[](size_t size)
 {
-	return OPalloc(size);
+	return _OPalloc(size, NULL, 0, NULL);
 }
 
 void* operator new[](size_t size, const char* file, ui32 line)
 {
-	return OPalloc(size);// , file, line);
+	return _OPalloc(size, file, line, NULL);
 }
 
 
