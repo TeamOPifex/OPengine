@@ -151,7 +151,7 @@ OPMData OPMloadDataV2(OPstream* str) {
 
 OPMData OPMloadData(OPstream* str) {
 	ui16 version = str->UI16();
-	OPlog("Reading OPM Version: %d", version);
+	//OPlog("Reading OPM Version: %d", version);
 	if (version == 2) return OPMloadDataV2(str);
 
 	ui32 features = str->UI32();
@@ -571,7 +571,7 @@ OPint OPMload(OPstream* str, OPmesh** mesh) {
 	}
 	//OPlog("Reading OPMloadData");
 	OPMData data = OPMloadData(str);
-	OPlog("Loaded OPM");
+	//OPlog("Loaded OPM");
 
 	//OPlog("Creating vertex and buffers");
 	// Create Vertex & Index Buffers for Mesh

@@ -45,7 +45,6 @@ OPtexture2DOLD* OPtexture2DCreate(OPtexture* texture, OPeffect* effect, OPvec2 u
     tex2d->Effect->Bind();
 
 	if (TEXTURE_2D_QUAD_MESH == NULL) {
-        OPlog("creating quad");
 		TEXTURE_2D_QUAD_MESH = OPquadCreate(1, 1, uvStart, uvEnd);
 	}
 

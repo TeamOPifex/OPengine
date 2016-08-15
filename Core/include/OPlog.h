@@ -14,7 +14,16 @@ extern HANDLE LogToHandle;
 #else
 extern i32 LogToHandle;
 #endif
-extern ui32 OP_LOG_LEVEL;
+
+enum struct OPlogLevel {
+	ERRORS = 0,
+	DEBUG = 10,
+	WARNINGS = 20,
+	INFO = 30,
+	VERBOSE = 3000
+};
+
+extern ui32 OPLOGLEVEL;
 
 extern void(*OPlogHandler)(ui32, const char*, const char*);
 

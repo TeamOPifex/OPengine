@@ -25,7 +25,6 @@ void ApplicationInit() {
 #ifdef ADDON_assimp
 	OPassimpAddLoaders();
 #endif
-	OPlog("Assets %s", OPIFEX_ASSETS);
 
 	OPoculusStartup();
 
@@ -89,7 +88,7 @@ int main(int argc, char * argv[]) {
 #else
 
 OP_MAIN_START
-	OP_LOG_LEVEL = 2000;
+	OPLOGLEVEL = (ui32)OPlogLevel::INFO;
 
 	#ifdef OPIFEX_OPTION_V8
 	// If the V8 engine is compiled in,

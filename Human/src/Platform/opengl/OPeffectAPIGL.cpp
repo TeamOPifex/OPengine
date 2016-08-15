@@ -46,24 +46,24 @@ OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag) {
 		GLsizei length; // name length
 
 		glGetProgramiv(effectGL->Handle, GL_ACTIVE_ATTRIBUTES, &count);
-		OPlogInfo("Active Attributes: %d", count);
+		OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Active Attributes: %d", count);
 		
 		for (i = 0; i < count; i++)
 		{
 			glGetActiveAttrib(effectGL->Handle, (GLuint)i, bufSize, &length, &size, &type, name);
 			i32 result = glGetAttribLocation(effectGL->Handle, name);
 
-			OPlogInfo("Attribute #%d Type: %u Name: %s, Loc: %d", i, type, name, result);
+			OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Attribute #%d Type: %u Name: %s, Loc: %d", i, type, name, result);
 		}
 
 		glGetProgramiv(effectGL->Handle, GL_ACTIVE_UNIFORMS, &count);
-		OPlogInfo("Active Uniforms: %d", count);
+		OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Active Uniforms: %d", count);
 
 		for (i = 0; i < count; i++)
 		{
 			glGetActiveUniform(effectGL->Handle, (GLuint)i, bufSize, &length, &size, &type, name);
 			OPeffectGLAddUniform(effect, name);
-			OPlogInfo("Uniform #%d Type: %u Name: %s", i, type, name);
+			OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Uniform #%d Type: %u Name: %s", i, type, name);
 		}
 	}
 

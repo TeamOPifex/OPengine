@@ -107,7 +107,7 @@ inline OPmaterial* OPmaterialCreate(OPeffect* effect) {
 }
 
 inline void OPmaterialAddParam(OPmaterial* material, OPmaterialParamType paramType, const OPchar* name, void* data, ui8 count ) {
-	OPlog("Name %s %p", name, data);
+	OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Name %s %p", name, data);
 	material->params[material->paramIndex].type = paramType;
 	material->params[material->paramIndex].name = name;
 	material->params[material->paramIndex].data = data;
@@ -215,7 +215,7 @@ struct OPmaterialInstance {
 	}
 
 	inline void AddParam(OPmaterialParamType paramType, const OPchar* name, void* data, ui8 count) {
-		OPlog("Name %s %p", name, data);
+		OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Name %s %p", name, data);
 		params[paramIndex].type = paramType;
 		params[paramIndex].name = name;
 		params[paramIndex].data = data;

@@ -12,7 +12,9 @@ HANDLE LogToHandle = NULL;
 #else
 i32 LogToHandle = 1;
 #endif
-ui32 OP_LOG_LEVEL = 0;
+
+ui32 OPLOGLEVEL = (ui32)OPlogLevel::ERRORS;
+
 void(*OPlogHandler)(ui32, const char*, const char*) = NULL;
 
 #ifdef OPIFEX_ANDROID
@@ -93,7 +95,7 @@ void OPvlog(ui32 level, const char* channel, const char* message, va_list args) 
 		errno = 0;
 	}
 
-	if (level > OP_LOG_LEVEL) {
+	if (level > OPLOGLEVEL) {
 		return;
 	}
 

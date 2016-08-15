@@ -21,8 +21,8 @@ struct OPtimedBlock {
 
 	~OPtimedBlock() {
 		timer.Tick();
-		OPlogChannel(30, "TIME", "%d ms for %s ", timer.Elapsed, func);
-		OPlogChannel(3000, "TIMEINFO", "%s:%d", filename, lineNumber);
+		OPlogChannel((ui32)OPlogLevel::INFO, "TIME", "%d ms for %s ", timer.Elapsed, func);
+		OPlogChannel((ui32)OPlogLevel::VERBOSE, "TIMEINFO", "%s:%d", filename, lineNumber);
 	}
 };
 

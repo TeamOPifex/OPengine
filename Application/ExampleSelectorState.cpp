@@ -104,8 +104,7 @@ void ExampleSelectorEnter(OPgameState* last) {
 	exampleSelector.FontManager = OPfontManagerSetup("Ubuntu.opf", NULL, 0);
     exampleSelector.FontManager->scale = 0.5;
 
-	//OPCMAN.Purge();
-	OPlog("Entered Example Selector");
+	OPCMAN.Purge();
 }
 
 

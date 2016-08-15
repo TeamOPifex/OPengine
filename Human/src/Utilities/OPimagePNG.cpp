@@ -49,7 +49,7 @@ void OPimagePNGCreate32(ui8* imageData, i32 width, i32 height, OPchar* filename)
 }
 
 i32 OPimagePNGLoad(OPstream* str, OPtexture** image){
-	OPlog("OPimagePNGLoad image %s", str->Source);
+	//OPlog("OPimagePNGLoad image %s", str->Source);
 	//OPstream* str = OPreadFile(filename);
 	ASSERT(str != NULL, "Image not found.");
 	return OPimagePNGLoadStream(str, 0, image);
