@@ -85,10 +85,10 @@ void* operator new(size_t size);
 void* operator new(size_t size, const char* file, ui32 line);
 void* operator new[](size_t size);
 void* operator new[](size_t size, const char* file, ui32 line);
-void operator delete(void* block);
-void operator delete(void* block, const char* file, ui32 line);
-void operator delete[](void* block);
-void operator delete[](void* block, const char* file, ui32 line);
+void operator delete(void* block) noexcept;
+void operator delete(void* block, const char* file, ui32 line) noexcept;
+void operator delete[](void* block) noexcept;
+void operator delete[](void* block, const char* file, ui32 line) noexcept;
 
 #define OPNEW(x) new(__FILE__, __LINE__) x
 #define OPALLOC(x,c) (x*)OPalloc(sizeof(x) * c)

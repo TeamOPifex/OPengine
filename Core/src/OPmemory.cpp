@@ -133,22 +133,22 @@ void* operator new[](size_t size, const char* file, ui32 line)
 }
 
 
-void operator delete(void* block)
+void operator delete(void* block) noexcept
 {
 	OPfree(block);
 }
 
-void operator delete(void* block, const char* file, ui32 line)
+void operator delete(void* block, const char* file, ui32 line) noexcept
 {
 	OPfree(block);// , file, line);
 }
 
-void operator delete[](void* block)
+void operator delete[](void* block) noexcept
 {
 	OPfree(block);
 }
 
-void operator delete[](void* block, const char* file, ui32 line)
+void operator delete[](void* block, const char* file, ui32 line) noexcept
 {
 	OPfree(block);// , file, line);
 }
