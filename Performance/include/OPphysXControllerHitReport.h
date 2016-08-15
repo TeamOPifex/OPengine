@@ -1,5 +1,4 @@
-#ifndef OP_PERFORMANCE_PHYSXCONTROLLERHITREPORT
-#define OP_PERFORMANCE_PHYSXCONTROLLERHITREPORT
+#pragma once
 
 #include "./Performance/include/OPphysX.h"
 
@@ -58,7 +57,5 @@ private:
 	void(*_onControllerHit)(PxControllersHit);
 	void(*_onObstacleHit)(PxControllerObstacleHit);
 };
-
-#endif
 
 #endif

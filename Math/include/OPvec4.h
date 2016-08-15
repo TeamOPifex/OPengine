@@ -1,6 +1,7 @@
 #pragma once
 
 struct OPvec4;
+typedef struct OPvec4 OPvec4;
 
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmemory.h"

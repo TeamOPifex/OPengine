@@ -1,5 +1,4 @@
-#ifndef OP_PERFORMANCE_PHYSXCONTROLLER
-#define OP_PERFORMANCE_PHYSXCONTROLLER
+#pragma once
 
 #include "./Core/include/OPtypes.h"
 
@@ -23,7 +22,5 @@ void OPphysXControllerSetFootPos(OPphysXController* controller, OPvec3 disp);
 void OPphysXControllerRelease(OPphysXController* controller);
 // INLINES
 
-
-#endif
 
 #endif

@@ -1,5 +1,8 @@
 #pragma once
 
+struct OPray3D;
+typedef struct OPray3D OPray3D;
+
 #include "./Math/include/OPvec3.h"
 
 struct OPray3D {

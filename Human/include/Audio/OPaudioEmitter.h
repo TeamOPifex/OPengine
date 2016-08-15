@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_AUDIO_EMITTER
-#define OPENGINE_HUMAN_AUDIO_EMITTER
+#pragma once
 
 #include "./Core/include/OPtypes.h"
 #include "OPaudioSource.h"
@@ -129,8 +128,4 @@ void OPaudPosition(OPaudioEmitter* emitter, OPvec3* position);
 void OPaudVelocity(OPaudioEmitter* emitter, OPvec3* velocity);
 void OPaudVolume  (OPaudioEmitter* emitter, OPfloat gain);
 void OPaudPitch   (OPaudioEmitter* emitter, OPfloat pitch);
-//-----------------------------------------------------------------------------
 void OPaudProcess(OPaudioEmitter* emit, OPint length);
-//-----------------------------------------------------------------------------
-
-#endif
