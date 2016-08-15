@@ -35,8 +35,8 @@ JS_RETURN_VAL _OPphysXControllerCreate(const JS_ARGS& args) {
 
     OPphysXControllerManager* manager = JS_GET_ARG_PTR(args, 0, OPphysXControllerManager);
     OPphysXMaterial* material = JS_GET_ARG_PTR(args, 1, OPphysXMaterial);
-    OPfloat height = args[2]->NumberValue();
-    OPfloat radius = args[3]->NumberValue();
+    OPfloat height = (f32)args[2]->NumberValue();
+    OPfloat radius = (f32)args[3]->NumberValue();
 	OPphysXController* ptr = OPphysXControllerCreate(manager, material, height, radius, OnShapeHit, OnControllerHit, OnObstacleHit);
 
     ptr->setContactOffset(0);
@@ -49,10 +49,10 @@ JS_RETURN_VAL _OPphysXControllerCreate(const JS_ARGS& args) {
 	JS_SET_OBJECT(result, "actor", actor);
 
     Handle<Array> arr = JS_NEW_ARRAY();
-    OPuint numShapes = ptr->getActor()->getNbShapes();
+    ui32 numShapes = ptr->getActor()->getNbShapes();
     PxShape** shapes = (PxShape**)OPalloc(sizeof(PxShape*) * numShapes);
     ptr->getActor()->getShapes(shapes, numShapes);
-    for(OPuint i = 0; i < numShapes; i++) {
+    for(ui32 i = 0; i < numShapes; i++) {
         Handle<Object> arrObj = JS_NEW_OBJECT();
         JS_SET_PTR(arrObj, shapes[i]);
         arr->Set(i, arrObj);
@@ -132,7 +132,7 @@ JS_RETURN_VAL _OPphysXControllerSetFootPos(const JS_ARGS& args) {
 
     OPphysXController* controller = JS_GET_ARG_PTR(args, 0, OPphysXController);
 
-	OPphysXControllerSetFootPos(controller, OPvec3Create(args[1]->NumberValue(), args[2]->NumberValue(), args[3]->NumberValue()));
+	OPphysXControllerSetFootPos(controller, OPvec3Create((f32)args[1]->NumberValue(), (f32)args[2]->NumberValue(), (f32)args[3]->NumberValue()));
 
     JS_RETURN_NULL;
 }

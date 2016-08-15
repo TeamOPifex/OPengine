@@ -30,10 +30,10 @@ JS_RETURN_VAL _OPvec4SetSelf(const JS_ARGS& args) {
     OPlog("Setting Vec4 Self");
 
     OPvec4* ptr = JS_GET_PTR(args.This(), OPvec4);
-    ptr->x = args[0]->NumberValue();
-    ptr->y = args[1]->NumberValue();
-    ptr->z = args[2]->NumberValue();
-    ptr->w = args[3]->NumberValue();
+    ptr->x = (f32)args[0]->NumberValue();
+    ptr->y = (f32)args[1]->NumberValue();
+    ptr->z = (f32)args[2]->NumberValue();
+    ptr->w = (f32)args[3]->NumberValue();
 
     JS_RETURN_NULL;
 }
@@ -44,10 +44,10 @@ JS_RETURN_VAL _OPvec4Set(const JS_ARGS& args) {
     OPlog("Setting Vec4");
 
     OPvec4* ptr = JS_GET_ARG_PTR(args, 0, OPvec4);
-    ptr->x = args[1]->NumberValue();
-    ptr->y = args[2]->NumberValue();
-    ptr->z = args[3]->NumberValue();
-    ptr->w = args[4]->NumberValue();
+    ptr->x = (f32)args[1]->NumberValue();
+    ptr->y = (f32)args[2]->NumberValue();
+    ptr->z = (f32)args[3]->NumberValue();
+    ptr->w = (f32)args[4]->NumberValue();
 
     JS_RETURN_NULL;
 }
@@ -86,7 +86,7 @@ JS_RETURN_VAL _OPvec4Create(const JS_ARGS& args) {
 
     OPvec4* ptr = (OPvec4*)OPalloc(sizeof(OPvec4));
     if(args.Length() == 4) {
-        *ptr = OPvec4Create(args[0]->NumberValue(),args[1]->NumberValue(),args[2]->NumberValue(),args[3]->NumberValue());
+        *ptr = OPvec4Create((f32)args[0]->NumberValue(), (f32)args[1]->NumberValue(), (f32)args[2]->NumberValue(), (f32)args[3]->NumberValue());
     } else {
         *ptr = OPvec4Create(0,0,0,0);
     }

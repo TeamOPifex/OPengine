@@ -137,7 +137,7 @@ JS_RETURN_VAL _OPstartStepped(const JS_ARGS& args) {
 JS_RETURN_VAL _OPalloc(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
- 	void* data = OPalloc(args[0]->NumberValue());
+ 	void* data = OPalloc(args[0]->IntegerValue());
 
     Handle<Object> obj = JS_NEW_OBJECT();
     JS_SET_PTR(obj, data);
@@ -149,7 +149,7 @@ JS_RETURN_VAL _OPalloc(const JS_ARGS& args) {
 JS_RETURN_VAL _OPallocZero(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
- 	void* data = OPallocZero(args[0]->NumberValue());
+ 	void* data = OPallocZero(args[0]->IntegerValue());
 
     Handle<Object> obj = JS_NEW_OBJECT();
     JS_SET_PTR(obj, data);

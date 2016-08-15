@@ -36,9 +36,9 @@ JS_RETURN_VAL _OPvec3SetSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvec3* ptr = JS_GET_PTR(args.This(), OPvec3);
-    ptr->x = args[0]->NumberValue();
-    ptr->y = args[1]->NumberValue();
-    ptr->z = args[2]->NumberValue();
+    ptr->x = (f32)args[0]->NumberValue();
+    ptr->y = (f32)args[1]->NumberValue();
+    ptr->z = (f32)args[2]->NumberValue();
     OPvec3ResetValues(args.This(), ptr);
 
     JS_RETURN(args.This());
@@ -48,9 +48,9 @@ JS_RETURN_VAL _OPvec3Set(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvec3* ptr = JS_GET_ARG_PTR(args, 0, OPvec3);
-    ptr->x = args[1]->NumberValue();
-    ptr->y = args[2]->NumberValue();
-    ptr->z = args[3]->NumberValue();
+    ptr->x = (f32)args[1]->NumberValue();
+    ptr->y = (f32)args[2]->NumberValue();
+    ptr->z = (f32)args[3]->NumberValue();
     OPvec3ResetValues(args[0]->ToObject(), ptr);
 
     JS_RETURN(args[0]);
@@ -62,9 +62,9 @@ JS_RETURN_VAL _OPvec3AddSelf(const JS_ARGS& args) {
     // OPlog("Setting Vec3 Self");
 
     OPvec3* ptr = JS_GET_PTR(args.This(), OPvec3);
-    ptr->x += args[0]->NumberValue();
-    ptr->y += args[1]->NumberValue();
-    ptr->z += args[2]->NumberValue();
+    ptr->x += (f32)args[0]->NumberValue();
+    ptr->y += (f32)args[1]->NumberValue();
+    ptr->z += (f32)args[2]->NumberValue();
     OPvec3ResetValues(args.This(), ptr);
 
     JS_RETURN(args.This());
@@ -74,9 +74,9 @@ JS_RETURN_VAL _OPvec3Add(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvec3* ptr = JS_GET_ARG_PTR(args, 0, OPvec3);
-    ptr->x += args[1]->NumberValue();
-    ptr->y += args[2]->NumberValue();
-    ptr->z += args[3]->NumberValue();
+    ptr->x += (f32)args[1]->NumberValue();
+    ptr->y += (f32)args[2]->NumberValue();
+    ptr->z += (f32)args[3]->NumberValue();
     OPvec3ResetValues(args[0]->ToObject(), ptr);
 
     JS_RETURN(args[0]);;
@@ -88,9 +88,9 @@ JS_RETURN_VAL _OPvec3SubSelf(const JS_ARGS& args) {
     // OPlog("Setting Vec3 Self");
 
     OPvec3* ptr = JS_GET_PTR(args.This(), OPvec3);
-    ptr->x -= args[0]->NumberValue();
-    ptr->y -= args[1]->NumberValue();
-    ptr->z -= args[2]->NumberValue();
+    ptr->x -= (f32)args[0]->NumberValue();
+    ptr->y -= (f32)args[1]->NumberValue();
+    ptr->z -= (f32)args[2]->NumberValue();
     OPvec3ResetValues(args.This(), ptr);
 
     JS_RETURN(args.This());
@@ -100,9 +100,9 @@ JS_RETURN_VAL _OPvec3Sub(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvec3* ptr = JS_GET_ARG_PTR(args, 0, OPvec3);
-    ptr->x -= args[1]->NumberValue();
-    ptr->y -= args[2]->NumberValue();
-    ptr->z -= args[3]->NumberValue();
+    ptr->x -= (f32)args[1]->NumberValue();
+    ptr->y -= (f32)args[2]->NumberValue();
+    ptr->z -= (f32)args[3]->NumberValue();
     OPvec3ResetValues(args[0]->ToObject(), ptr);
 
     JS_RETURN(args[0]);;

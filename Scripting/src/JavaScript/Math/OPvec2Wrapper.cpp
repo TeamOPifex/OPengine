@@ -28,8 +28,8 @@ JS_RETURN_VAL _OPvec2SetSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvec2* ptr = JS_GET_PTR(args.This(), OPvec2);
-    ptr->x = args[0]->NumberValue();
-    ptr->y = args[1]->NumberValue();
+    ptr->x = (f32)args[0]->NumberValue();
+    ptr->y = (f32)args[1]->NumberValue();
 
     JS_RETURN_NULL;
 }
@@ -38,8 +38,8 @@ JS_RETURN_VAL _OPvec2Set(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvec2* ptr = JS_GET_ARG_PTR(args, 0, OPvec2);
-    ptr->x = args[1]->NumberValue();
-    ptr->y = args[2]->NumberValue();
+    ptr->x = (f32)args[1]->NumberValue();
+    ptr->y = (f32)args[2]->NumberValue();
 
 
     JS_RETURN_NULL;

@@ -69,7 +69,7 @@ JS_RETURN_VAL _OPmat4Translate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmat4* ptr = JS_GET_ARG_PTR(args, 0, OPmat4);
-    *ptr = OPmat4Translate(*ptr, (f32)args[1]->NumberValue(), args[2]->NumberValue(), (f32)args[3]->NumberValue());
+    *ptr = OPmat4Translate(*ptr, (f32)args[1]->NumberValue(), (f32)args[2]->NumberValue(), (f32)args[3]->NumberValue());
 
     JS_RETURN(args[0]);
 }
