@@ -104,8 +104,17 @@ void OPstartStepped(int argc, char** args) {
 	OPfree(OPEXECUTABLE_PATH);
 
 #ifndef OPIFEX_OPTION_RELEASE
-	OPlogErr("Alloc/Dealloc/Diff: %d / %d / %d", OPallocations, OPdeallocations, (OPallocations - OPdeallocations));
-	ASSERT((OPallocations - OPdeallocations) == 0, "ALERT - Not all allocated memory was freed");
+    OPlogChannel((ui32)OPlogLevel::MEMORY, "MEMORY", "Allocations: %d", OPallocations);
+    OPlogChannel((ui32)OPlogLevel::MEMORY, "MEMORY", "Deallocations: %d", OPdeallocations);
+    OPlogChannel((ui32)OPlogLevel::MEMORY, "MEMORY", "Alloc - Dealloc: %d", (OPallocations - OPdeallocations));
+
+    OPlogChannel((ui32)OPlogLevel::MEMORY, "MEMORY", "Bytes Requested: %d (may not be correct because of realloc)", OPallocationBytesRequested);
+    OPlogChannel((ui32)OPlogLevel::MEMORY, "MEMORY", "Bytes Actual: %d", OPallocationBytes);
+    OPlogChannel((ui32)OPlogLevel::MEMORY, "MEMORY", "Bytes of Header: %d", OPallocationBytes - OPallocationBytesRequested);
+    OPlogChannel((ui32)OPlogLevel::MEMORY, "MEMORY", "Deallocated Bytes: %d", OPdeallocationBytes);
+    OPlogChannel((ui32)OPlogLevel::MEMORY, "MEMORY", "Alloc - Dealloc Bytes: %d", (OPallocationBytes - OPdeallocationBytes));
+
+    ASSERT((OPallocations - OPdeallocations) == 0, "ALERT - Not all allocated memory was freed");
 #endif
 }
 #endif

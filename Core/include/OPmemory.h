@@ -13,6 +13,9 @@ extern OPchar OPSCRATCHBUFFER[OPSCRATCHBUFFER_SIZE];
 #ifndef OPIFEX_OPTION_RELEASE
 	extern OPint OPallocations;
 	extern OPint OPdeallocations;
+    extern OPuint OPallocationBytes;
+    extern OPuint OPallocationBytesRequested;
+    extern OPuint OPdeallocationBytes;
 #endif
 
 extern OPallocator OPDEFAULT_ALLOCATOR;
@@ -43,7 +46,7 @@ extern OPallocator OPDEFAULT_ALLOCATOR;
 #define OPbzero(dest, size) bzero(dest, size);
 #endif
 
-
+#ifdef _DEBUG
 /**
 * Platform independent means to dynamically allocate memory.
 * @param bytes Number of consecutive bytes to be allocated.
@@ -59,7 +62,23 @@ void* _OPalloc(OPuint bytes, const OPchar* file, ui32 line, const OPchar* functi
 */
 void* _OPallocZero(OPuint bytes, const OPchar* file, ui32 line, const OPchar* function);
 #define OPallocZero(bytes) _OPallocZero(bytes, __FILE__, __LINE__, __FUNCTION__)
+#else
+/**
+* Platform independent means to dynamically allocate memory.
+* @param bytes Number of consecutive bytes to be allocated.
+* @return Address of allocated memory.
+*/
+void* _OPalloc(OPuint bytes);
+#define OPalloc(bytes) _OPalloc(bytes)
 
+/**
+* Platform independent means to dynamically allocate memory and zero it out.
+* @param bytes Number of consecutive bytes to be allocated.
+* @return Address of allocated memory.
+*/
+void* _OPallocZero(OPuint bytes);
+#define OPallocZero(bytes) _OPallocZero(bytes)
+#endif
 //-----------------------------------------------------------------------------
 /**
  * Platform independent means to dynamically reallocate memory.
@@ -76,22 +95,31 @@ void* OPrealloc(void* ptr, OPuint bytes);
  *		is taken.
  * @param ptr Address to the memory segment to deallocate
  */
-void  _OPfree(void* ptr, const OPchar* file, ui32 line, const OPchar* function);
-#define OPfree(bytes) _OPfree(bytes, __FILE__, __LINE__, __FUNCTION__)
+#ifdef _DEBUG
+    void  _OPfree(void* ptr, const OPchar* file, ui32 line, const OPchar* function);
+    #define OPfree(bytes) _OPfree(bytes, __FILE__, __LINE__, __FUNCTION__)
+#else
+    void  _OPfree(void* ptr);
+    #define OPfree(bytes) _OPfree(bytes)
+#endif
 
 void* OPsysAlloc(OPuint bytes);
 void OPsysFree(void* ptr);
 
 // C++ Overloads
 
-void* operator new(size_t size);
-void* operator new(size_t size, const char* file, ui32 line);
-void* operator new[](size_t size);
-void* operator new[](size_t size, const char* file, ui32 line);
-void operator delete(void* block) noexcept;
-void operator delete(void* block, const char* file, ui32 line) noexcept;
-void operator delete[](void* block) noexcept;
-void operator delete[](void* block, const char* file, ui32 line) noexcept;
+#ifdef _DEBUG
+    void* operator new(size_t size, const char* file, ui32 line);
+    void* operator new[](size_t size, const char* file, ui32 line);
+    void operator delete(void* block, const char* file, ui32 line) noexcept;
+    void operator delete[](void* block, const char* file, ui32 line) noexcept;
+    #define OPNEW(x) new(__FILE__, __LINE__) x
+#else
+    void* operator new(size_t size);
+    void* operator new[](size_t size);
+    void operator delete(void* block) noexcept;
+    void operator delete[](void* block) noexcept;
+    #define OPNEW(x) new x
+#endif
 
-#define OPNEW(x) new(__FILE__, __LINE__) x
 #define OPALLOC(x,c) (x*)OPalloc(sizeof(x) * c)
