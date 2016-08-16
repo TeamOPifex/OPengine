@@ -28,4 +28,5 @@ struct OPscene {
 	OPsceneEntity* Add(OPmodel* model, OPmaterialInstance* material);
 	OPint Update(OPtimer* timer);
 	void Render(OPfloat delta);
+	void Destroy();
 };

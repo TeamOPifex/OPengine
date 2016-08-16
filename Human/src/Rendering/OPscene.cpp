@@ -41,3 +41,7 @@ void OPscene::Render(OPfloat delta) {
 
 	renderer->Present();
 }
+
+void OPscene::Destroy() {
+	OPfree(entities);
+}

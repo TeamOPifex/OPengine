@@ -29,9 +29,15 @@ void OPrenderCommandBucket::Destroy() {
 		internalAllocator->Destroy();
 		OPfree(internalAllocator);
 	}
-	OPfree(keys);
-	OPfree(copykeys);
-	OPfree(commands);
+	if (keys != NULL) {
+		OPfree(keys);
+	}
+	if (copykeys != NULL) {
+		OPfree(copykeys);
+	}
+	if (commands != NULL) {
+		OPfree(commands);
+	}
 }
 
 OPrenderCommandBucket* OPrenderCommandBucket::Create(OPuint bucketSize, OPcam** camera, OPallocator* allocator) {

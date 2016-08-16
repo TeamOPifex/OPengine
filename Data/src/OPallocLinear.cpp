@@ -8,6 +8,7 @@ void OPallocatorLinearReset(OPallocator* alloc);
 
 void OPallocatorLinear::Destroy() {
 	OPfree(_rootAlloc->data);
+	OPfree(_rootAlloc);
 }
 
 void OPallocatorLinear::Init(OPallocator* allocator, OPuint sizeInBytes) {

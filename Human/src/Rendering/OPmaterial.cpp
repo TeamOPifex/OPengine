@@ -9,3 +9,11 @@ void OPmaterialInit(OPmaterial* material, OPeffect* effect) {
 	material->depth = 1;
 	material->cull = 1;
 }
+
+void OPmaterial::Destroy() {
+
+}
+
+void OPmaterialInstance::Destroy() {
+
+}

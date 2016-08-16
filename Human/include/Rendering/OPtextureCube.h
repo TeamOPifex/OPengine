@@ -51,6 +51,10 @@ struct OPtextureCube {
 	inline void Bind(ui32 slot) {
 		OPRENDERER_ACTIVE->TextureCube.Bind(this, slot);
 	}
+
+	inline void Destroy() {
+		OPRENDERER_ACTIVE->TextureCube.Destroy(this);
+	}
 };
 
 //-----------------------------------------------------------------------------

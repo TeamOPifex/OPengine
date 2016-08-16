@@ -9,9 +9,11 @@ OPuint OPallocationBytesRequested = 0;
 OPuint OPdeallocationBytes = 0;
 #endif
 
-#ifdef OPIFEX_OSX
+#if defined(OPIFEX_OSX)
 #include <malloc/malloc.h>
 #define OPMALLOC_SIZE(p) malloc_size(p)
+#elif defined(OPIFEX_WINDOWS)
+#define OPMALLOC_SIZE(p) _msize(p)
 #else
 #define OPMALLOC_SIZE(p) 0
 #endif

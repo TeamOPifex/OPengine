@@ -4,7 +4,7 @@
 void OPvertexLayout::Init(ui16 attributeCount, OPchar** names, OPattributeTypes* types, ui8* counts) {
 
 	count = attributeCount;
-	attributes = (OPshaderAttribute*)OPalloc(sizeof(OPshaderAttribute) * attributeCount);
+	//attributes = (OPshaderAttribute*)OPalloc(sizeof(OPshaderAttribute) * attributeCount);
 
 	ui32 offset = 0;
 	stride = 0;
@@ -22,18 +22,18 @@ void OPvertexLayout::Init(ui16 attributeCount, OPchar** names, OPattributeTypes*
 }
 
 void OPvertexLayout::Destroy() {
-	OPfree(attributes);
+
 }
 
-void OPvertexLayout::Init(OPshaderAttribute* attributes, ui8 count) {
-	this->count = count;
-	this->attributes = attributes;
-
-	stride = 0;
-	for (ui16 i = 0; i < count; i++) {
-		stride += attributes[i].Elements * sizeof(f32);
-	}
-}
+//void OPvertexLayout::Init(OPshaderAttribute* attributes, ui8 count) {
+//	this->count = count;
+//	this->attributes = attributes;
+//
+//	stride = 0;
+//	for (ui16 i = 0; i < count; i++) {
+//		stride += attributes[i].Elements * sizeof(f32);
+//	}
+//}
 
 void OPvertexLayout::Log() {
 	OPlogInfo("Vertex Layout");

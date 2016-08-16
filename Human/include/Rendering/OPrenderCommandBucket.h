@@ -45,17 +45,17 @@ struct OPrenderCommandBucket {
 	// Number of draw calls this bucket can support
 	OPuint bucketSize;
 	// The linear allocator used for this creating Command data
-	OPallocator* allocator;
-	OPallocatorLinear* internalAllocator;
+	OPallocator* allocator = NULL;
+	OPallocatorLinear* internalAllocator = NULL;
 
 	// The current count of commands/keys
     ui32 keyIndex;
 	// The keys & ordering of the draw calls
-    OPrenderCommandBucketKey* keys;
+    OPrenderCommandBucketKey* keys = NULL;
 	// A duplicate data segment used for sorting (Radix)
-    OPrenderCommandBucketKey* copykeys;
+    OPrenderCommandBucketKey* copykeys = NULL;
 	// An array of the actual data for the draw commands
-	OPrenderCommand* commands;
+	OPrenderCommand* commands = NULL;
 
 	// The camera should not change for a command bucket
     OPcam** camera;

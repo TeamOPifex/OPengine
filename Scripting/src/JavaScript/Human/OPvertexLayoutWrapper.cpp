@@ -17,27 +17,27 @@ JS_HELPER_SELF_WRAPPER(_OPvertexLayoutInit) {
 	Handle<Value> val = JS_NEXT_ARG_VAL();
 	Handle<Array> arr = JS_VALUE_TO_ARRAY(val);
 
-	OPshaderAttribute* attributes = (OPshaderAttribute*)OPalloc(sizeof(OPshaderAttribute) * arr->Length());
+	//OPshaderAttribute* attributes = (OPshaderAttribute*)OPalloc(sizeof(OPshaderAttribute) * arr->Length());
 
 
-	for(ui32 i = 0; i < arr->Length(); i++) {
-		Handle<Value> tmp = arr->Get(i);
-		Handle<Object> obj = JS_VALUE_TO_OBJECT(tmp);
+	//for(ui32 i = 0; i < arr->Length(); i++) {
+	//	Handle<Value> tmp = arr->Get(i);
+	//	Handle<Object> obj = JS_VALUE_TO_OBJECT(tmp);
 
-		String::Utf8Value name(JS_OBJECT_GET(obj, "name")->ToString());
-		OPint t = JS_OBJECT_GET_INT(obj, "type");
-		ui32 elements = (ui32)JS_OBJECT_GET_INT(obj, "elements");
-		OPuint offset = JS_OBJECT_GET_INT(obj, "offset");
+	//	String::Utf8Value name(JS_OBJECT_GET(obj, "name")->ToString());
+	//	OPint t = JS_OBJECT_GET_INT(obj, "type");
+	//	ui32 elements = (ui32)JS_OBJECT_GET_INT(obj, "elements");
+	//	OPuint offset = JS_OBJECT_GET_INT(obj, "offset");
 
-		attributes[i].Name = OPstringCopy(*name);
-		attributes[i].Elements = elements;
-		attributes[i].Type = OPshaderElementType::FLOAT;
-		//attributes[i].Offset = offset;
+	//	attributes[i].Name = OPstringCopy(*name);
+	//	attributes[i].Elements = elements;
+	//	attributes[i].Type = OPshaderElementType::FLOAT;
+	//	//attributes[i].Offset = offset;
 
-		OPlog("attr: %s", *name);
-	}
+	//	OPlog("attr: %s", *name);
+	//}
 
-	ptr->Init(attributes, arr->Length());
+	//ptr->Init(attributes, arr->Length());
 
     JS_RETURN_NULL;
 }

@@ -10,6 +10,8 @@ struct OPrendererForward {
 	OPrenderer rendererRoot;
 	OPmaterial* passes[1];
 	OPrenderCommandBucket renderBucket[1];
+	OPeffect* defaultEffect = NULL;
+	OPmaterial* defaultMaterial = NULL;
 
 	OPrendererForward() { Setup(); }
 
@@ -25,4 +27,5 @@ struct OPrendererForward {
 	inline void Submit(OPmodel* model, OPmaterialInstance* material) { rendererRoot.Submit(model, material); }
 	inline void End() { rendererRoot.End(); }
 	inline void Present() { rendererRoot.Present(); }
+	void Destroy();
 };

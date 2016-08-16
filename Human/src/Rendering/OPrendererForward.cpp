@@ -6,9 +6,9 @@ void OPrendererForwardInit(OPrenderer* renderer, OPcam** camera, ui32 maxCalls, 
 	renderer->camera = camera;
 	//forwardRenderer->passes[0].Init(OPNEW(OPeffect("Common/Texture3D.vert", "Common/Texture.frag")));
 
-	OPeffect* pass0Effect = OPNEW(OPeffect("Common/PBR.vert", "Common/PBR.frag"));
-	OPmaterial* pass0 = OPNEW(OPmaterial(pass0Effect));
-	forwardRenderer->passes[0] = pass0;
+	forwardRenderer->defaultEffect = OPNEW(OPeffect("Common/PBR.vert", "Common/PBR.frag"));
+	forwardRenderer->defaultMaterial = OPNEW(OPmaterial(forwardRenderer->defaultEffect));
+	forwardRenderer->passes[0] = forwardRenderer->defaultMaterial;
 	forwardRenderer->renderBucket[0].Init(maxCalls, renderer->camera);
 }
 
@@ -71,4 +71,16 @@ OPrendererForward* OPrendererForward::Setup() {
 OPrendererForward* OPrendererForward::Create() {
 	OPrendererForward* result = OPNEW(OPrendererForward());
 	return result->Setup();
+}
+
+void OPrendererForward::Destroy() {
+	if (defaultEffect) {
+		defaultEffect->Destroy();
+		OPfree(defaultEffect);
+	}
+	if (defaultMaterial) {
+		defaultMaterial->Destroy();
+		OPfree(defaultMaterial);
+	}
+	renderBucket[0].Destroy();
 }

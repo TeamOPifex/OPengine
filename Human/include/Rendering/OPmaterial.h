@@ -1,3 +1,4 @@
+// TODO: (garrett) restructure
 #pragma once
 
 struct OPmaterial;
@@ -94,6 +95,8 @@ struct OPmaterial {
 	void Bind() {
 	    OPmaterialBind(this);
 	}
+
+	void Destroy();
 };
 
 inline void OPmaterialClearParams(OPmaterial* material) {
@@ -287,4 +290,6 @@ struct OPmaterialInstance {
 			}
 		}
 	}
+
+	void Destroy();
 };

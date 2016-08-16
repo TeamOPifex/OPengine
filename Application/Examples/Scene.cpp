@@ -16,6 +16,7 @@ typedef struct {
 	OPcamFreeFlight camera;
 	OPmaterialPBR materialPBR;
 	OPtextureCube environment;
+	OPmaterialPBRInstance* materialInstance;
 } SceneExample;
 
 SceneExample sceneExample;
@@ -40,18 +41,18 @@ void ExampleSceneEnter(OPgameState* last) {
 	sceneExample.materialPBR.rootMaterial.AddParam("uCamPos", &sceneExample.camera.Camera.pos);
 	sceneExample.renderer->SetMaterial(&sceneExample.materialPBR.rootMaterial, 0);
 
-	OPmaterialPBRInstance* materialInstance = sceneExample.materialPBR.CreateInstance();
-	materialInstance->SetAlbedoMap("Dagger_Albedo.png");
-	materialInstance->SetSpecularMap("Dagger_Specular.png");
-	materialInstance->SetGlossMap("Dagger_Gloss.png");
-	materialInstance->SetNormalMap("Dagger_Normals.png");
-	materialInstance->SetEnvironmentMap(&sceneExample.environment);
+	sceneExample.materialInstance = sceneExample.materialPBR.CreateInstance();
+	sceneExample.materialInstance->SetAlbedoMap("Dagger_Albedo.png");
+	sceneExample.materialInstance->SetSpecularMap("Dagger_Specular.png");
+	sceneExample.materialInstance->SetGlossMap("Dagger_Gloss.png");
+	sceneExample.materialInstance->SetNormalMap("Dagger_Normals.png");
+	sceneExample.materialInstance->SetEnvironmentMap(&sceneExample.environment);
 
-    sceneExample.model.Init("daggerpbr.opm");
-    sceneExample.model2.Init("daggerpbr.opm");
+	sceneExample.model.Init("daggerpbr.opm");
+	sceneExample.model2.Init("daggerpbr.opm");
 
-    sceneExample.scene.Add(&sceneExample.model, &materialInstance->rootMaterialInstance);
-    sceneExample.scene.Add(&sceneExample.model2, &materialInstance->rootMaterialInstance);
+	sceneExample.scene.Add(&sceneExample.model, &sceneExample.materialInstance->rootMaterialInstance);
+	sceneExample.scene.Add(&sceneExample.model2, &sceneExample.materialInstance->rootMaterialInstance);
 }
 
 OPint ExampleSceneUpdate(OPtimer* time) {
@@ -69,7 +70,14 @@ void ExampleSceneRender(OPfloat delta) {
 }
 
 OPint ExampleSceneExit(OPgameState* next) {
+	OPfree(sceneExample.materialInstance);
+	sceneExample.materialPBR.rootMaterial.effect->Destroy();
+	OPfree(sceneExample.materialPBR.rootMaterial.effect);
+	sceneExample.scene.Destroy();
+	sceneExample.renderer->Destroy();
 	OPfree(sceneExample.renderer);
+	sceneExample.environment.Destroy();
+
 	return 0;
 }
 

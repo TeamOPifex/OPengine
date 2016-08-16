@@ -51,6 +51,8 @@ void OPtextureCubeGLUnbind(OPtextureCube* textureCube, ui32 slot) {
 void OPtextureCubeGLDestroy(OPtextureCube* textureCube) {
     OPtextureCubeGL* textureCubeGL = (OPtextureCubeGL*)textureCube->internalPtr;
     OPGLFN(glDeleteTextures(1, &textureCubeGL->Handle));
+	OPfree(textureCubeGL);
+	textureCube->internalPtr = NULL;
 }
 
 void OPtextureCubeAPIGLInit(OPtextureCubeAPI* textureCube) {

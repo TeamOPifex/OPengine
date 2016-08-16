@@ -73,6 +73,9 @@ OPimage OPimagePNGLoadData(const OPchar* filename) {
 	result.Height = height;
 	result.Data = data;
 
+	str->Destroy();
+	OPfree(str);
+
 	return result;	
 }
 

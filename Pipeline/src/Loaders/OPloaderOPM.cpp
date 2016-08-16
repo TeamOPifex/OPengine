@@ -161,11 +161,11 @@ OPMData OPMloadData(OPstream* str) {
 	OPvec3 max = OPVEC3_ZERO;
 
 
-	OPvec3* positions, *normals, *tangents, *bitangents, *colors;
-	OPvec2* uvs;
+	OPvec3* positions = NULL, *normals = NULL, *tangents = NULL, *bitangents = NULL, *colors = NULL;
+	OPvec2* uvs = NULL;
 
-	OPvec4* boneIndices;
-	OPvec4* boneWeights;
+	OPvec4* boneIndices = NULL;
+	OPvec4* boneWeights = NULL;
 
 
 	OPvertexLayoutBuilder layout;
@@ -486,6 +486,15 @@ OPMData OPMloadData(OPstream* str) {
 		OPverticesWriteVec4(vertices, boneWeights, Skinning);
 
 
+	if (positions) OPfree(positions);
+	if (normals) OPfree(normals);
+	if (tangents) OPfree(tangents);
+	if (bitangents) OPfree(bitangents);
+	if (colors) OPfree(colors);
+	if (uvs) OPfree(uvs);
+	if (boneIndices) OPfree(boneIndices);
+	if (boneWeights) OPfree(boneWeights);
+
 	//if (OPMhasFeature(features, Skinning)) {
 	//
 	//	OPvec4* boneVertexIndices = (OPvec4*)OPalloc(sizeof(OPvec4)* verticeCount);
@@ -513,6 +522,8 @@ OPMData OPMloadData(OPstream* str) {
 	//}
 
 	data.vertices = vertices->data;
+	OPfree(vertices);
+
 	//data.vertexSize = vertices->size * sizeof(f32);
 
 	data.bounds = OPboundingBox3D(min, max);
@@ -554,6 +565,8 @@ OPMData OPMloadData(OPstream* str) {
 		}
 	}
 
+
+
 	return data;
 }
 
@@ -582,6 +595,8 @@ OPint OPMload(OPstream* str, OPmesh** mesh) {
 		data.vertexCount, data.indexCount,
 		data.vertices, data.indices
 	);
+	OPfree(data.vertices);
+	OPfree(data.indices);
 	temp.vertexLayout = data.vertexLayout;
 	temp.boundingBox = data.bounds;
 
@@ -609,6 +624,30 @@ OPint OPMload(OPstream* str, OPmesh** mesh) {
 	*mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
 	OPmemcpy(*mesh, &temp, sizeof(OPmesh));
 
+	return 1;
+}
+
+
+OPint OPMReload(OPstream* str, OPmesh** mesh) {
+	OPlog("Reload Mesh OPM");
+	OPmesh* resultMesh;
+	OPmesh* tex = (OPmesh*)(*mesh);
+	OPint result = OPMload(str, &resultMesh);
+	if (result) {
+		tex->indexBuffer.Destroy();
+		tex->vertexBuffer.Destroy();
+		//OPrenderDelBuffer(&tex->IndexBuffer);
+		//OPrenderDelBuffer(&tex->VertexBuffer);
+		OPmemcpy(*mesh, resultMesh, sizeof(OPmesh));
+		OPfree(resultMesh);
+	}
+	return result;
+}
+
+OPint OPMUnload(void* mesh) {
+	OPmesh* m = (OPmesh*)mesh;
+	m->Destroy();
+	OPfree(m);
 	return 1;
 }
 
@@ -916,34 +955,6 @@ OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh) {
 
 	*mesh = (OPmeshPacked*)OPalloc(sizeof(OPmeshPacked));
 	OPmemcpy(*mesh, &temp, sizeof(OPmeshPacked));
-
-	return 1;
-}
-
-OPint OPMReload(OPstream* str, OPmesh** mesh){
-	OPlog("Reload Mesh OPM");
-	OPmesh* resultMesh;
-	OPmesh* tex = (OPmesh*)(*mesh);
-	OPint result = OPMload(str, &resultMesh);
-	if (result) {
-		tex->indexBuffer.Destroy();
-		tex->vertexBuffer.Destroy();
-		//OPrenderDelBuffer(&tex->IndexBuffer);
-		//OPrenderDelBuffer(&tex->VertexBuffer);
-		OPmemcpy(*mesh, resultMesh, sizeof(OPmesh));
-		OPfree(resultMesh);
-	}
-	return result;
-}
-
-OPint OPMUnload(void* mesh){
-	OPmesh* m = (OPmesh*)mesh;
-
-	m->indexBuffer.Destroy();
-	m->vertexBuffer.Destroy();
-	//OPrenderDelBuffer(&m->IndexBuffer);
-	//OPrenderDelBuffer(&m->VertexBuffer);
-	OPfree(m);
 
 	return 1;
 }

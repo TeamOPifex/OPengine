@@ -17,11 +17,11 @@ struct OPeffect;
 
 struct OPvertexLayout {
 	ui16 count;
-	OPshaderAttribute* attributes;
+	OPshaderAttribute attributes[OPVERTEX_LAYOUT_BUILDER_MAX];
 	ui32 stride;
 
 	void Init(ui16 attributeCount, OPchar** names, OPattributeTypes* types, ui8* counts);
-	void Init(OPshaderAttribute* attributes, ui8 count);
+	//void Init(OPshaderAttribute* attributes, ui8 count);
 	void SetOffsets(OPeffect* effect);
 	void Log();
 	void Destroy();
