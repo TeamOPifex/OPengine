@@ -33,7 +33,7 @@ void OPmouse::Update() {
 //	glfwSetScrollCallback(OPWINDOW_ACTIVE->Window, scrollCB);
 //#endif
 
-	OPmemcpy(&prevKeys, &keys, sizeof(OPint)* (ui32)OPmouseButton::_MAX);
+	OPmemcpy(&prevKeys, &keys, sizeof(bool)* (ui32)OPmouseButton::_MAX);
 	prevPositionX = positionX;
 	prevPositionY = positionY;
 	prevWheel = wheel;

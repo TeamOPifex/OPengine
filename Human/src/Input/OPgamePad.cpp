@@ -315,8 +315,8 @@ void OPgamePad::Update(){
 }
 
 void OPgamePad::Reset(){
-	OPbzero(&buttons, sizeof(i32) * (ui32)OPgamePadButton::_MAX);
-	OPbzero(&prevButtons, sizeof(i32) * (ui32)OPgamePadButton::_MAX);
+	OPbzero(&buttons, sizeof(bool) * (ui32)OPgamePadButton::_MAX);
+	OPbzero(&prevButtons, sizeof(bool) * (ui32)OPgamePadButton::_MAX);
 	OPbzero(&axes, sizeof(OPfloat) * (ui32)OPgamePadAxis::_MAX);
 }
 

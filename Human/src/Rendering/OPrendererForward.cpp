@@ -4,7 +4,6 @@ void OPrendererForwardInit(OPrenderer* renderer, OPcam** camera, ui32 maxCalls, 
 	OPrendererForward* forwardRenderer = (OPrendererForward*)renderer->internalPtr;
 
 	renderer->camera = camera;
-	//forwardRenderer->passes[0].Init(OPNEW(OPeffect("Common/Texture3D.vert", "Common/Texture.frag")));
 
 	forwardRenderer->defaultEffect = OPNEW(OPeffect("Common/PBR.vert", "Common/PBR.frag"));
 	forwardRenderer->defaultMaterial = OPNEW(OPmaterial(forwardRenderer->defaultEffect));
@@ -46,11 +45,8 @@ void OPrendererForwardEnd(OPrenderer* renderer) {
 
 void OPrendererForwardPresent(OPrenderer* renderer) {
 	OPrendererForward* forwardRenderer = (OPrendererForward*)renderer->internalPtr;
-
 	forwardRenderer->renderBucket[0].Sort();
 	forwardRenderer->renderBucket[0].Flush(false);
-
-	OPrenderPresent();
 }
 
 OPrendererForward* OPrendererForward::Setup() {

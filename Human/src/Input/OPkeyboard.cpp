@@ -48,24 +48,4 @@ void OPkeyboardUpdatePost(OPtimer* timer) {
 
 }
 
-OPint OPkeyboardIsDown(enum OPkeyboardKey key) {
-	return false;
-}
-
-OPint OPkeyboardIsUp(enum OPkeyboardKey key) {
-	return true;
-}
-
-OPint OPkeyboardWasPressed(enum OPkeyboardKey key) {
-	return false;
-}
-
-OPint OPkeyboardWasReleased(enum OPkeyboardKey key) {
-	return false;
-}
-
-OPint OPkeyboardAnyInputIsDown() {
-	return false;
-}
-
 #endif

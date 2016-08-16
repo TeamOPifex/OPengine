@@ -3,6 +3,14 @@
 #include "./Data/include/OPhashMap.h"
 #include "./Data/include/OPstring.h"
 
+#ifdef ADDON_imgui
+
+#include "OPimgui.h"
+static float arr[1000];
+static int ind = 0;
+static bool openDebugInfo = false;
+static bool openDebugInfoMemory = false;
+
 struct _memoryBlock {
 	const OPchar* _func;
 	ui64 _bytes;
@@ -45,7 +53,7 @@ void sort()
 }
 
 void RecalculateFunctionMemory() {
-		
+
 	_allocationFunctionsInd = 0;
 	bool found = false;
 	for (ui32 i = 0; i < _allocationsTrackerInd; i++) {
@@ -81,30 +89,33 @@ void _memoryTrackerFunc(const OPchar* func, ui64 bytes, const OPchar* file, ui64
 	RecalculateFunctionMemory();
 }
 
-#ifdef ADDON_imgui
-#include "OPimgui.h"
-static float arr[1000];
-static int ind = 0;
-static bool openDebugInfo = false;
-static bool openDebugInfoMemory = false;
 #endif
 
 OPvisualDebugInfo OPVISUALDEBUGINFO;
 
+
+void OPvisualDebugInfo::PreInitSetup() {
+#ifdef ADDON_imgui
+    OPALLOCATIONTRACKER = _memoryTrackerFunc;
+#endif
+}
+
 void OPvisualDebugInfo::Init() {
 #ifdef ADDON_imgui
+    PreInitSetup();
 	OPimguiInit(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE, true);
 #endif
-	OPALLOCATIONTRACKER = _memoryTrackerFunc;
 }
 
 void OPvisualDebugInfo::Update(OPtimer* timer) {
+#ifdef ADDON_imgui
 	if (OPKEYBOARD.WasPressed(OPkeyboardKey::F1)) {
 		openDebugInfo = !openDebugInfo;
 	}
 	if (OPKEYBOARD.WasPressed(OPkeyboardKey::F2)) {
 		openDebugInfoMemory = !openDebugInfoMemory;
 	}
+#endif
 }
 
 void OPvisualDebugInfo::Render(OPfloat delta) {
@@ -116,7 +127,7 @@ void OPvisualDebugInfo::Render(OPfloat delta) {
 	f32 bytesInKB = 1024;
 	f32 bytesInMB = bytesInKB * 1024;
 
-	OPimguiNewFrame();	
+	OPimguiNewFrame();
 
 	ImGui::SetNextWindowPos(ImVec2(10, 10));
 	if (!ImGui::Begin("Example: Fixed Overlay", &openDebugInfo, ImVec2(0, 0), 0.3f, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings))
@@ -269,9 +280,7 @@ void OPvisualDebugInfo::Render(OPfloat delta) {
 	}
 
 	//ImGui::ShowTestWindow();
-#endif
 
-#ifdef ADDON_imgui
 	ImGui::Render();
 #endif
 }
