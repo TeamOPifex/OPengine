@@ -9,8 +9,8 @@ extern OPvisualDebugInfo OPVISUALDEBUGINFO;
 #include "./Core/include/OPtimer.h"
 
 struct OPvisualDebugInfo {
-
 	void Init();
+    void PreInitSetup();
 	void Update(OPtimer* timer);
 	void Render(OPfloat delta);
 	void Destroy();
