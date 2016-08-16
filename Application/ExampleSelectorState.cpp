@@ -251,7 +251,9 @@ void ExampleSelectorRender(OPfloat delta) {
 		}
 	}
 
-	OPfontRenderEnd();
+	OPfontRenderEnd(); 
+	
+	OPVISUALDEBUGINFO.Render(delta);
 
 	OPrenderPresent();
 

@@ -16,6 +16,7 @@ extern OPchar OPSCRATCHBUFFER[OPSCRATCHBUFFER_SIZE];
     extern OPuint OPallocationBytes;
     extern OPuint OPallocationBytesRequested;
     extern OPuint OPdeallocationBytes;
+	extern void(*OPALLOCATIONTRACKER)(const OPchar*, ui64, const OPchar*, ui64);
 #endif
 
 extern OPallocator OPDEFAULT_ALLOCATOR;
@@ -109,11 +110,11 @@ void OPsysFree(void* ptr);
 // C++ Overloads
 
 #ifdef _DEBUG
-    void* operator new(size_t size, const char* file, ui32 line);
-    void* operator new[](size_t size, const char* file, ui32 line);
-    void operator delete(void* block, const char* file, ui32 line) noexcept;
-    void operator delete[](void* block, const char* file, ui32 line) noexcept;
-    #define OPNEW(x) new(__FILE__, __LINE__) x
+    void* operator new(size_t size, const char* file, ui32 line, const char* function);
+    void* operator new[](size_t size, const char* file, ui32 line, const char* function);
+    void operator delete(void* block, const char* file, ui32 line, const char* function) noexcept;
+    void operator delete[](void* block, const char* file, ui32 line, const char* function) noexcept;
+    #define OPNEW(x) new(__FILE__, __LINE__, __FUNCTION__) x
 #else
     void* operator new(size_t size);
     void* operator new[](size_t size);

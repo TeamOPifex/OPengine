@@ -35,6 +35,8 @@ void ApplicationInit() {
 	
 	OPGAMEPADS.SetDeadzones(0.2f);
 
+	OPVISUALDEBUGINFO.Init();
+
 	OPgameState::Change(&GS_EXAMPLE_SELECTOR);
 }
 
@@ -42,6 +44,7 @@ OPint ApplicationUpdate(OPtimer* timer) {
 	if (mainWindow.Update()) {
 		return 1;
 	}
+	OPVISUALDEBUGINFO.Update(timer);
 
 	OPinputSystemUpdate(timer);
 	OPCMAN_UPDATE(timer);
@@ -60,6 +63,7 @@ void ApplicationRender(OPfloat delta) {
 
 void ApplicationDestroy() {
 	ActiveState->Exit(ActiveState);
+	OPVISUALDEBUGINFO.Destroy();
 	OPCMAN.Destroy();
 	OPlogToFileClose();
 	mainWindow.Destroy();
@@ -89,7 +93,7 @@ int main(int argc, char * argv[]) {
 #else
 
 OP_MAIN_START
-	OPLOGLEVEL = (ui32)OPlogLevel::VERBOSE;
+	OPLOGLEVEL = (ui32)OPlogLevel::MEMORY;
 
 	#ifdef OPIFEX_OPTION_V8
 	// If the V8 engine is compiled in,

@@ -6,6 +6,6 @@ typedef struct OPhashMapPair OPhashMapPair;
 #include "./Core/include/OPtypes.h"
 
 struct OPhashMapPair {
-	OPchar* key;
-	void* value;
+	OPchar* key = NULL;
+	void* value = NULL;
 };

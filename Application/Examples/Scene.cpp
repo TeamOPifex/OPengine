@@ -66,6 +66,7 @@ OPint ExampleSceneUpdate(OPtimer* time) {
 void ExampleSceneRender(OPfloat delta) {
 	OPrenderClear(0.2f, 0.2f, 0.2f);
 	sceneExample.scene.Render(delta);
+	OPVISUALDEBUGINFO.Render(delta);
 	OPrenderPresent();
 }
 

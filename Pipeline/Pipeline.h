@@ -16,5 +16,6 @@
 #include "./Pipeline/include/OPfmod.h"
 #include "./Pipeline/include/OPvoxelGenerator.h"
 #include "./Pipeline/include/OPmaterialPBR.h"
+#include "./Pipeline/include/OPvisualDebugInfo.h"
 
 #endif

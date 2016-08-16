@@ -7,6 +7,7 @@ OPint OPdeallocations = 0;
 OPuint OPallocationBytes = 0;
 OPuint OPallocationBytesRequested = 0;
 OPuint OPdeallocationBytes = 0;
+void(*OPALLOCATIONTRACKER)(const OPchar*, ui64, const OPchar*, ui64) = NULL;
 #endif
 
 #if defined(OPIFEX_OSX)
@@ -61,6 +62,9 @@ OPallocator OPDEFAULT_ALLOCATOR = {
 */
 void* _OPalloc(OPuint bytes, const OPchar* file, ui32 line, const OPchar* function){
 	OPlogChannel((ui32)OPlogLevel::MEMORY, "MEMORY", "NEW: %s:%d (%s) %d bytes", file, line, function, bytes);
+	if (OPALLOCATIONTRACKER != NULL) {
+		OPALLOCATIONTRACKER(function, line, file, line);
+	}
 	return OPDEFAULT_ALLOCATOR.alloc(&OPDEFAULT_ALLOCATOR, bytes);
 }
 
@@ -74,6 +78,9 @@ void* _OPalloc(OPuint bytes, const OPchar* file, ui32 line, const OPchar* functi
 void* _OPallocZero(OPuint bytes, const OPchar* file, ui32 line, const OPchar* function){
 	void* result;
 	OPlogChannel((ui32)OPlogLevel::MEMORY, "MEMORY", "NEW: %s:%d (%s) %d bytes", file, line, function, bytes);
+	if (OPALLOCATIONTRACKER != NULL) {
+		OPALLOCATIONTRACKER(function, line, file, line);
+	}
 	result = OPDEFAULT_ALLOCATOR.alloc(&OPDEFAULT_ALLOCATOR, bytes);
  	OPbzero(result, bytes);
  	return result;
@@ -158,25 +165,25 @@ void OPsysFree(void* ptr) {
 
 #ifdef _DEBUG
 
-void* operator new(size_t size, const char* file, ui32 line)
+void* operator new(size_t size, const char* file, ui32 line, const char* function)
 {
-	return _OPalloc(size, file, line, NULL);
+	return _OPalloc(size, file, line, function);
 }
 
-void* operator new[](size_t size, const char* file, ui32 line)
+void* operator new[](size_t size, const char* file, ui32 line, const char* function)
 {
-	return _OPalloc(size, file, line, NULL);
+	return _OPalloc(size, file, line, function);
 }
 
 
-void operator delete(void* block, const char* file, ui32 line) noexcept
+void operator delete(void* block, const char* file, ui32 line, const char* function) noexcept
 {
-	_OPfree(block, file, line, NULL);
+	_OPfree(block, file, line, function);
 }
 
-void operator delete[](void* block, const char* file, ui32 line) noexcept
+void operator delete[](void* block, const char* file, ui32 line, const char* function) noexcept
 {
-	_OPfree(block, file, line, NULL);
+	_OPfree(block, file, line, function);
 }
 
 #else
