@@ -1,5 +1,4 @@
-#ifndef OP_PERFORMANCE_PHYSX
-#define OP_PERFORMANCE_PHYSX
+#pragma once
 
 #include "./Core/include/OPtypes.h"
 
@@ -85,28 +84,25 @@ inline void OPphysXSetAngularVelocity(OPphysXRigidDynamic* dynamic, OPvec3 veloc
 	dynamic->setAngularVelocity(PxVec3(velocity.x, velocity.y, velocity.z));
 }
 
-inline void OPphysXSetGravity(OPphysXRigidActor* actor, i8 state) {
+inline void OPphysXSetGravity(OPphysXRigidActor* actor, bool state) {
 	actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, !state);
 }
 
-inline void OPphysXSetSimulation(OPphysXShape* shape, i8 state) {
+inline void OPphysXSetSimulation(OPphysXShape* shape, bool state) {
 	shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, state);
 }
 
-inline void OPphysXSetTrigger(OPphysXShape* shape, i8 state) {
+inline void OPphysXSetTrigger(OPphysXShape* shape, bool state) {
 	shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, state);
 }
 
-inline void OPphysXSetSceneQuery(OPphysXShape* shape, i8 state) {
+inline void OPphysXSetSceneQuery(OPphysXShape* shape, bool state) {
     shape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, state);
 }
-inline OPphysXShape* OPphysXGetShape(OPphysXRigidActor* actor, OPuint index) {
+inline OPphysXShape* OPphysXGetShape(OPphysXRigidActor* actor, ui32 index) {
 	OPphysXShape* result;
 	actor->getShapes(&result, 1, index);
 	return result;
 }
-
-#endif
-
 
 #endif

@@ -8,9 +8,14 @@
 // Application Methods
 //////////////////////////////////////
 
-void ApplicationInit() {
+OPwindow mainWindow;
 
-	OP_LOG_LEVEL = 2000;
+void ApplicationInit() {
+	TIMED_BLOCK;
+
+	//OPlogToFile("output.txt");
+
+	OPCMAN.Init(OPIFEX_ASSETS);
 
 	OPloadersAddDefault();
 	OPscriptAddLoader();
@@ -20,28 +25,33 @@ void ApplicationInit() {
 #ifdef ADDON_assimp
 	OPassimpAddLoaders();
 #endif
-	OPlog("Assets %s", OPIFEX_ASSETS);
-	OPcmanInit(OPIFEX_ASSETS);
 
 	OPoculusStartup();
-	OPrenderInit();
 
-	OPrenderCreateWindow(NULL, false, true, "Main Window", 1280, 720);
+	OPrenderSetup();
+	OPwindowSystemInit();
+	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, 1920, 1080));
+	OPrenderInit(&mainWindow);
 	
-	OPGAMEPADSYSTEM.SetDeadzones(0.2f);	
+	OPGAMEPADS.SetDeadzones(0.2f);
 
-	OPgameStateChange(&GS_EXAMPLE_SELECTOR);
+	OPVISUALDEBUGINFO.Init();
+
+	OPgameState::Change(&GS_EXAMPLE_SELECTOR);
 }
 
 OPint ApplicationUpdate(OPtimer* timer) {
-	OPrenderUpdate();
+	if (mainWindow.Update()) {
+		return 1;
+	}
+	OPVISUALDEBUGINFO.Update(timer);
 
 	OPinputSystemUpdate(timer);
-	OPcmanUpdate(timer);
+	OPCMAN_UPDATE(timer);
 
-	if (OPkeyboardWasReleased(OPKEY_ESCAPE)) return 1;
-	if ((OPkeyboardWasReleased(OPKEY_BACKSPACE) || OPgamePadGet(OPGAMEPAD_ONE)->WasPressed(OPGAMEPADBUTTON_BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
-		OPgameStateChange(&GS_EXAMPLE_SELECTOR);
+	if (OPKEYBOARD.WasReleased(OPkeyboardKey::ESCAPE)) return 1;
+	if ((OPKEYBOARD.WasReleased(OPkeyboardKey::BACKSPACE) || OPGAMEPADS[0]->WasPressed(OPgamePadButton::BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
+		OPgameState::Change(&GS_EXAMPLE_SELECTOR);
 	}
 
 	return ActiveState->Update(timer);
@@ -53,7 +63,10 @@ void ApplicationRender(OPfloat delta) {
 
 void ApplicationDestroy() {
 	ActiveState->Exit(ActiveState);
-	OPcmanDestroy();
+	OPVISUALDEBUGINFO.Destroy();
+	OPCMAN.Destroy();
+	OPlogToFileClose();
+	mainWindow.Destroy();
 }
 
 void ApplicationSetup() {
@@ -79,22 +92,23 @@ int main(int argc, char * argv[]) {
 
 #else
 
-OP_MAIN {
+OP_MAIN_START
+	OPLOGLEVEL = (ui32)OPlogLevel::MEMORY;
+
 	#ifdef OPIFEX_OPTION_V8
 	// If the V8 engine is compiled in,
 	// see if we have a script to run at startup
 	if(argc > 1) {
 		//chdir(OPIFEX_ASSETS);
 		OPjavaScriptV8SetupRun(args[2]);
-		OP_MAIN_SUCCESS
+		return 0;
 	}
 	#endif
 
 	ApplicationSetup();
 
-	//OP_MAIN_START
-	OP_MAIN_START_STEPPED
-	OP_MAIN_END
-	OP_MAIN_SUCCESS
-}
+	//OP_MAIN_RUN
+	OP_MAIN_RUN_STEPPED
+
+OP_MAIN_END
 #endif

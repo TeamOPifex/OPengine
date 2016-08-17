@@ -6,6 +6,7 @@
 #include "./Human/include/Rendering/Sprite/OPspriteSheet.h"
 #include "./Human/include/Utilities/OPimagePNG.h"
 #include "./Data/include/OPjson.h"
+#include "./Core/include/OPdebug.h"
 
 
 OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
@@ -23,17 +24,25 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 	#if defined(OPIFEX_ANDROID) || defined(OPIFEX_IOS)
 		"Shaders/OPENGL_ES_2_0/",
 	#else
-		#ifdef OPIFEX_OPENGL_3_3
-			"Shaders/OPENGL_3_3/",
+		#ifdef OPIFEX_DIRECTX_11
+			"Shaders/DIRECTX_11/",
 		#else
-			"Shaders/OPENGL_2_0/",
+			#ifdef OPIFEX_OPENGL_3_3
+				"Shaders/OPENGL_3_3/",
+			#else
+				"Shaders/OPENGL_2_0/",
+			#endif
 		#endif
 	#endif
 #else
 		"Shaders/",
 #endif
 		sizeof(OPshader),
+#ifdef OPIFEX_DIRECTX_11
+		(OPint(*)(OPstream*, void**))OPshaderLoadVertexDX11,
+#else
 		(OPint(*)(OPstream*, void**))OPshaderLoadVertex,
+#endif
 		(OPint(*)(void*))OPshaderUnload,
 		NULL
 	},
@@ -43,17 +52,25 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 	#if defined(OPIFEX_ANDROID) || defined(OPIFEX_IOS)
 		"Shaders/OPENGL_ES_2_0/",
 	#else
-		#ifdef OPIFEX_OPENGL_3_3
-			"Shaders/OPENGL_3_3/",
+		#ifdef OPIFEX_DIRECTX_11
+			"Shaders/DIRECTX_11/",
 		#else
-			"Shaders/OPENGL_2_0/",
+			#ifdef OPIFEX_OPENGL_3_3
+				"Shaders/OPENGL_3_3/",
+			#else
+				"Shaders/OPENGL_2_0/",
+			#endif
 		#endif
 	#endif
 #else
 		"Shaders/",
 #endif
 		sizeof(OPshader),
+#ifdef OPIFEX_DIRECTX_11
+		(OPint(*)(OPstream*, void**))OPshaderLoadFragmentDX11,
+#else
 		(OPint(*)(OPstream*, void**))OPshaderLoadFragment,
+#endif
 		(OPint(*)(void*))OPshaderUnload,
 		NULL
 	},
@@ -97,6 +114,7 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 		(OPint(*)(void*))OPjsonCmanUnload,
 		NULL
 	}
+
 };
 
 //
@@ -119,7 +137,8 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 
 
 void OPloadersAddDefault() {
+	TIMED_BLOCK
 	for (i32 i = 0; i < OP_DEFAULT_LOADER_COUNT; i++) {
-		OPcmanAddLoader(&OP_DEFAULT_LOADERS[i]);
+		OPCMAN.AddLoader(&OP_DEFAULT_LOADERS[i]);
 	}
 }

@@ -1,8 +1,9 @@
-#ifndef OPMATH_MAT4
-#define OPMATH_MAT4
+#pragma once
+
+struct OPmat4;
+typedef struct OPmat4 OPmat4;
 
 // INCLUDES
-#include "./Core/include/OPtypes.h"
 #include "./Math/include/OPvec2.h"
 #include "./Math/include/OPvec3.h"
 #include "./Math/include/OPvec4.h"
@@ -10,14 +11,6 @@
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPmath.h"
 #include "./Core/include/OPlog.h"
-
-// PRE DECLARATION
-struct OPmat4;
-typedef struct OPmat4 OPmat4;
-
-// CIRCULAR INCLUDES
-
-// DEFINES
 
 // EXTERNALS
 extern const OPmat4 OPMAT4_ZERO;
@@ -169,7 +162,7 @@ struct OPmat4 {
 		return this;
 	}
 
-	inline OPmat4* SetIdentity(f32 val) {
+	inline OPmat4* SetIdentity() {
 		*this = OPMAT4_IDENTITY;
 		return this;
 	}
@@ -185,7 +178,7 @@ struct OPmat4 {
 	}
 
 	inline OPmat4* RotZ(f32 val) {
-		OPmat4RotY(this, val);
+		OPmat4RotZ(this, val);
 		return this;
 	}
 
@@ -232,10 +225,10 @@ inline OPmat4 OPmat4Create(
 	f32 _03, f32 _13, f32 _23, f32 _33) {
 
 	OPmat4 temp = {
-		_00, _10, _20, _30,
-		_01, _11, _21, _31,
-		_02, _12, _22, _32,
-		_03, _13, _23, _33
+		OPvec4(_00, _10, _20, _30),
+		OPvec4(_01, _11, _21, _31),
+		OPvec4(_02, _12, _22, _32),
+		OPvec4(_03, _13, _23, _33)
 	};
 
 	return temp;
@@ -274,11 +267,7 @@ inline void OPmat4Mul(OPmat4* dst, OPmat4 m1, OPmat4 m2)
 };
 
 inline void OPmat4Identity(OPmat4* m) {
-	OPbzero(m, sizeof(OPmat4));
-	m->cols[0].x = 1;
-	m->cols[1].y = 1;
-	m->cols[2].z = 1;
-	m->cols[3].w = 1;
+	*m = OPMAT4_IDENTITY;
 }
 
 
@@ -432,14 +421,14 @@ inline OPmat4 OPmat4SetTranslate(OPmat4 m, OPvec3 v) {
 	 return result;
  }
 
-	inline OPvec4 OPmat4Transform(OPvec4 a, OPmat4 b) {
-		OPvec4 result;
-		result.x = b[0][0] * a.x + b[1][0] * a.y + b[2][0] * a.z + b[3][0] * a.w;
-		result.y = b[0][1] * a.x + b[1][1] * a.y + b[2][1] * a.z + b[3][1] * a.w;
-		result.z = b[0][2] * a.x + b[1][2] * a.y + b[2][2] * a.z + b[3][2] * a.w;
-		result.w = b[0][3] * a.x + b[1][3] * a.y + b[2][3] * a.z + b[3][3] * a.w;
-		return result;
-	}
+inline OPvec4 OPmat4Transform(OPvec4 a, OPmat4 b) {
+	OPvec4 result;
+	result.x = b[0][0] * a.x + b[1][0] * a.y + b[2][0] * a.z + b[3][0] * a.w;
+	result.y = b[0][1] * a.x + b[1][1] * a.y + b[2][1] * a.z + b[3][1] * a.w;
+	result.z = b[0][2] * a.x + b[1][2] * a.y + b[2][2] * a.z + b[3][2] * a.w;
+	result.w = b[0][3] * a.x + b[1][3] * a.y + b[2][3] * a.z + b[3][3] * a.w;
+	return result;
+}
 
  inline void OPmat4RotX(OPmat4* m, OPfloat x) {
 	 OPmat4 tmp = OPmat4RotX(x);
@@ -695,5 +684,3 @@ OPmat4 OPmat4LookAt(OPvec3 eye, OPvec3 at, OPvec3 up);
 OPmat4 OPmat4Perspective(OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal);
 OPint OPmat4Inverse(OPmat4* dst, OPmat4 a);
 OPmat4 OPmat4Interpolate(OPmat4 a, OPmat4 b, OPfloat percent);
-
-#endif

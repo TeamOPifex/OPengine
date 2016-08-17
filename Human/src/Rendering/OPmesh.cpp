@@ -4,6 +4,9 @@ OPmesh* OPMESH_ACTIVE;
 void* OPMESH_ACTIVE_PTR = NULL;
 ui64 OPMESH_GLOBAL_ID = 1;
 
+#include "./Human/include/Rendering/OPrender.h"
+#include "./Human/include/Rendering/OPeffect.h"
+
 //-----------------------------------------------------------------------------
 // ______                _   _
 //|  ____|              | | (_)
@@ -11,43 +14,74 @@ ui64 OPMESH_GLOBAL_ID = 1;
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPmesh OPmeshCreate(){
-	OPmesh out = {
-		OPrenderGenBuffer(OPvertexBuffer),
-		OPrenderGenBuffer(OPindexBuffer)
-	};
-
-	out.Id = OPMESH_GLOBAL_ID++;
-
-	return out;
-}
-
-OPmesh* OPmeshCreate(OPmeshDesc desc) {
+OPmesh* OPmesh::Create(OPvertexLayout vertexLayout){
 	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
-    mesh->Id = OPMESH_GLOBAL_ID++;
-	(*mesh) = OPmeshCreate();
-	mesh->Bind();
-
-	OPmeshBuild(desc.VertexSize, desc.IndexSize, desc.VertexCount, desc.IndexCount, desc.Vertices, desc.Indices);
-
+	mesh->Init(vertexLayout);
 	return mesh;
 }
 
+OPmesh* OPmesh::Create(OPmeshDesc desc) {
+	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
+	mesh->Init(desc);
+	return mesh;
+}
+
+OPmesh* OPmesh::Init(OPvertexLayout vertexLayout) {
+	this->vertexLayout = vertexLayout;
+	vertexArray.Init(&vertexLayout)->Bind();
+	vertexBuffer.Init()->Bind();
+	indexBuffer.Init()->Bind();
+    //OPRENDERER_ACTIVE->Effect.SetVertexLayout(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE, &vertexLayout);
+	vertexArray.SetLayout(&vertexLayout);
+	Id = OPMESH_GLOBAL_ID++;
+	return this;
+}
+
+OPmesh* OPmesh::Init(OPmeshDesc desc) {
+	Init(desc.VertexSize);
+	Bind();
+	Build(desc.VertexSize, desc.IndexSize, desc.VertexCount, desc.IndexCount, desc.Vertices, desc.Indices);
+	return this;
+}
+
+void OPmesh::SetVertexLayout(OPvertexLayout* vertexLayoutUpdate) {
+	vertexArray.Bind();
+	vertexBuffer.Bind();
+	indexBuffer.Bind();
+    //OPRENDERER_ACTIVE->Effect.SetVertexLayout(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE, &vertexLayout);
+	vertexArray.SetLayout(&vertexLayout);
+	vertexLayout = *vertexLayoutUpdate;
+}
+
+void OPmesh::UpdateVertexLayout(OPeffect* effect) {
+	vertexArray.Bind();
+	vertexBuffer.Bind();
+	effect->UpdateVertexLayout(&vertexLayout);
+	vertexArray.SetLayout(&vertexLayout);
+}
+
 //-----------------------------------------------------------------------------
-void OPmeshBuild(ui32 vertSize, ui32 indSize,
-						 OPuint vertCount, OPuint indCount,
+void OPmesh::Build(OPvertexLayout vertexLayout, OPindexSize indSize,
+			ui32 vertCount, ui32 indCount,
 						 void* vertices, void* indices){
-	OPrenderSetBufferData(&OPMESH_ACTIVE->IndexBuffer, indSize, indCount, indices);
-	OPrenderSetBufferData(&OPMESH_ACTIVE->VertexBuffer, vertSize, vertCount, vertices);
-	//OPMESH_ACTIVE->VertexSize = vertSize;
-	OPMESH_ACTIVE->Vertices = vertices;
-	OPMESH_ACTIVE->Indicies = indices;
+	vertexArray.Bind();
+	vertexBuffer.SetData(vertexLayout.stride, vertCount, vertices);
+	indexBuffer.SetData(indSize, indCount, indices);
+	this->vertexLayout = vertexLayout;
+
+	Vertices = vertices;
+	Indicies = indices;
 }
 
 //-----------------------------------------------------------------------------
 void OPmesh::Bind(){
-	OPrenderBindBuffer(&VertexBuffer);
-	OPrenderBindBuffer(&IndexBuffer);
+	vertexArray.Bind();
+	vertexBuffer.Bind();
+	indexBuffer.Bind();
+	//OPRENDERER_ACTIVE->VertexArray.Bind(&vertexArray);
+	//OPrenderBindBuffer(&vertexBuffer);
+	//OPrenderBindBuffer(&indexBuffer);
+
 	OPMESH_ACTIVE_PTR = OPMESH_ACTIVE = this;
 }
 
@@ -56,7 +90,9 @@ void OPmeshRender(){
 	OPrenderDrawBufferIndexed(0);
 }
 
-void OPmeshDestroy(OPmesh* mesh) {
-	OPrenderDelBuffer(&mesh->VertexBuffer);
-	OPrenderDelBuffer(&mesh->IndexBuffer);
+void OPmesh::Destroy() {
+	vertexLayout.Destroy();
+	vertexBuffer.Destroy();
+	indexBuffer.Destroy();
+	vertexArray.Destroy();
 }

@@ -1,16 +1,6 @@
-#ifndef OPENGINE_DATA_LOG
-#define OPENGINE_DATA_LOG
+#pragma once
 
-#include "./Core/include/OPlog.h"
+#include "./Core/include/OPtypes.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-	void OPlogToFile(const char* path);
-
-#ifdef __cplusplus
-};
-#endif
-
-#endif
+void OPlogToFile(const OPchar* path);
+void OPlogToFileClose();

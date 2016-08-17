@@ -1,5 +1,4 @@
-#ifndef OPENGINE_SCRIPTING_NODE_CORE_WRAPPERS
-#define OPENGINE_SCRIPTING_NODE_CORE_WRAPPERS
+#pragma once
 
 #include "./Scripting/include/JavaScript/OPjavaScriptHelper.h"
 #include "./Core/Core.h"
@@ -12,7 +11,5 @@ void OPtimerWrapper(Handle<Object> exports);
 void OPdefinedWrapper(Handle<Object> exports);
 
 JS_EASY_WRAP_PTR(OPtimer)
-
-#endif
 
 #endif

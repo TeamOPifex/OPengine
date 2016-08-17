@@ -30,9 +30,9 @@ void ExampleMouseIntersectEnter(OPgameState* last) {
 	// Load up the mesh into the Content Manager
 	// If the model was already loaded by a previous Game State
 	// it'll continue on without reloading it.
-	// OPcamnLoadGet calls OPcmanLoad and then returns OPcmanGet
-	// The OPcmanLoad call ensures that this mesh has been loaded
-	// The OPcmanGet call returns a pointer to the resource (an OPmesh)
+	// OPcamnLoadGet calls OPCMAN.Load and then returns OPCMAN.Get
+	// The OPCMAN.Load call ensures that this mesh has been loaded
+	// The OPCMAN.Get call returns a pointer to the resource (an OPmesh)
 	// that's contained in the Content Manager
 	//mouseIntersectExample.Mesh = OPcubeCreate(OPvec3Create(1,0,0));
 
@@ -55,22 +55,17 @@ void ExampleMouseIntersectEnter(OPgameState* last) {
 	// which requires the attributes are given in a set order
 	// Position (vec3), then Normal (vec3)
 	// For more granular control use OPeffectCreate
-	mouseIntersectExample.Effect = OPeffectGen(
-		"ColoredModel.vert",
-		"ColoredModel.frag",
-		OPATTR_POSITION | OPATTR_COLOR,
-		"Model Effect",
-		mouseIntersectExample.Mesh.vertexLayout.stride);
+	mouseIntersectExample.Effect.Init( "ColoredModel.vert", "ColoredModel.frag");
 
 	// Sets up the camera as a perpsective camera for rendering
-	mouseIntersectExample.Camera = OPcamPersp(
+	mouseIntersectExample.Camera.SetPerspective(
 		OPvec3Create(10, 10, 10),
 		OPVEC3_ZERO,
 		OPVEC3_UP,
 		0.1f,
 		100.0f,
 		45.0f,
-		(OPfloat)OPRENDER_WIDTH / (OPfloat)OPRENDER_HEIGHT
+		(OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
 	// A default light direction used in the effect
@@ -78,11 +73,11 @@ void ExampleMouseIntersectEnter(OPgameState* last) {
 
 
 
-	OPcmanLoad("Ubuntu.opf");
+	OPCMAN.Load("Ubuntu.opf");
 
 	OPfontSystemLoadEffects();
 
-    mouseIntersectExample.FontManager = OPfontManagerSetup("Ubuntu.opf", NULL, 0);
+    mouseIntersectExample.FontManager = OPfontManager::Create("Ubuntu.opf", NULL, 0);
 
 
 	// This can be controlled in the update loop if it varies
@@ -100,45 +95,44 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
-	if (OPkeyboardIsDown(OPKEY_SPACE)) { mouseIntersectExample.Rotation++; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { mouseIntersectExample.Rotation++; }
 
-	mouseIntersectExample.Camera.pos.x -= OPkeyboardIsDown(OPKEY_A) * time->Elapsed * 0.01f;
-	mouseIntersectExample.Camera.pos.x += OPkeyboardIsDown(OPKEY_D) * time->Elapsed * 0.01f;
-	mouseIntersectExample.Camera.target.x -= OPkeyboardIsDown(OPKEY_A) * time->Elapsed * 0.01f;
-	mouseIntersectExample.Camera.target.x += OPkeyboardIsDown(OPKEY_D) * time->Elapsed * 0.01f;
+	mouseIntersectExample.Camera.pos.x -= OPKEYBOARD.IsDown(OPkeyboardKey::A) * time->Elapsed * 0.01f;
+	mouseIntersectExample.Camera.pos.x += OPKEYBOARD.IsDown(OPkeyboardKey::D) * time->Elapsed * 0.01f;
+	mouseIntersectExample.Camera.target.x -= OPKEYBOARD.IsDown(OPkeyboardKey::A) * time->Elapsed * 0.01f;
+	mouseIntersectExample.Camera.target.x += OPKEYBOARD.IsDown(OPkeyboardKey::D) * time->Elapsed * 0.01f;
 	mouseIntersectExample.Camera.Update();
-	OPcamUpdateView(&mouseIntersectExample.Camera);
+	mouseIntersectExample.Camera.UpdateView();
 
 
 	OPray3D ray = { OPvec3(0, 0, 0), OPvec3(0, 0, 0) };
 	OPvec3 positionHit = { 0, 0, 0};
 	OPint intersecting = 0;
-	if(OPmouseIsDown(OPMOUSE_LBUTTON)) {
+	if(OPMOUSE.IsDown(OPmouseButton::LBUTTON)) {
 
-		ray = OPcamUnproject(
-			&mouseIntersectExample.Camera,
-			OPmousePositionX(),
-			OPmousePositionY()
+		ray = mouseIntersectExample.Camera.Unproject(
+			OPMOUSE.X(),
+			OPMOUSE.Y()
 		);
 
 
 		{
-			OPboundingBox3D box = OPboundingBox3DCreate(
+			OPboundingBox3D box = OPboundingBox3D(
 				OPvec3Create(-0.5, -0.5, -0.5),
 				OPvec3Create(0.5, 0.5, 0.5)
 			);
-			if(OPboundingBox3DRay3D(box, ray)) {
+			if(box.Intersects(ray)) {
 				intersecting = 1;
 			}
 		}
 
 		{
-			OPboundingBox3D box = OPboundingBox3DCreate(
+			OPboundingBox3D box = OPboundingBox3D(
 				OPvec3Create(-0.5 - 5.0, -0.5, -0.5),
 				OPvec3Create(0.5 - 5.0, 0.5, 0.5)
 			);
 
-			if(OPboundingBox3DRay3D(box, ray)) {
+			if(box.Intersects(ray)) {
 				intersecting = 2;
 			}
 		}
@@ -181,7 +175,7 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	OPbindMeshEffectWorldCam(&mouseIntersectExample.Mesh, &mouseIntersectExample.Effect, &world, &mouseIntersectExample.Camera);
 
 	// Sets the vLightDirection uniform on the Effect that is currently bound (modelExample->Effect)
-	OPeffectParamVec3("vLightDirection", &mouseIntersectExample.LightDirection);
+	OPeffectSet("vLightDirection", &mouseIntersectExample.LightDirection);
 
 	// Renders to the screen the currently bound Mesh (modelExample->Mesh)
 	OPmeshRender();
@@ -191,16 +185,16 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 		&mouseIntersectExample.Effect,
 		&world2,
 		&mouseIntersectExample.Camera);
-	OPeffectParamVec3("vLightDirection", &mouseIntersectExample.LightDirection);
+	OPeffectSet("vLightDirection", &mouseIntersectExample.LightDirection);
 	OPmeshRender();
 
-	if(OPmouseIsDown(OPMOUSE_LBUTTON)) {
+	if(OPMOUSE.IsDown(OPmouseButton::LBUTTON)) {
 		OPbindMeshEffectWorldCam(
 			&mouseIntersectExample.Mesh2,
 			&mouseIntersectExample.Effect,
 			&world3,
 			&mouseIntersectExample.Camera);
-		OPeffectParamVec3("vLightDirection", &mouseIntersectExample.LightDirection);
+		OPeffectSet("vLightDirection", &mouseIntersectExample.LightDirection);
 		OPmeshRender();
 	}
 
@@ -208,10 +202,18 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	OPfontColor(OPvec4Create(1.0, 1.0, 1.0, 1));
    	mouseIntersectExample.FontManager->scale = 0.75;
 	i8 buffer[256];
-	sprintf(buffer, "%d, %d", OPmousePositionX(), OPmousePositionY());
+    #ifdef OPIFEX_WINDOWS
+	sprintf_s(buffer, 256, "%d, %d", OPMOUSE.X(), OPMOUSE.Y());
+    #else
+	sprintf(buffer, "%d, %d", OPMOUSE.X(), OPMOUSE.Y());
+    #endif
 	OPfontRender(buffer, OPvec2(50, 60));
 
+    #ifdef OPIFEX_WINDOWS
+	sprintf_s(buffer, 256, "%f, %f, %f", ray.direction.x, ray.direction.y, ray.direction.z);
+    #else
 	sprintf(buffer, "%f, %f, %f", ray.direction.x, ray.direction.y, ray.direction.z);
+    #endif
 	OPfontRender(buffer, OPvec2(50, 120));
 
 	OPfontRenderEnd();
@@ -231,7 +233,7 @@ void ExampleMouseIntersectRender(OPfloat delta) {
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleMouseIntersectExit(OPgameState* next) {
 	// Clean up phase for the Game State
-	OPeffectUnload(&mouseIntersectExample.Effect);
+	mouseIntersectExample.Effect.Destroy();
 	return 0;
 }
 

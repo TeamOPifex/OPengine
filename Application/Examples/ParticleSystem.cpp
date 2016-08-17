@@ -12,20 +12,20 @@ typedef struct {
 ParticleSystemExample* particleSystemExample;
 
 void ExampleParticleSystemEnter(OPgameState* last) {
-	OPcmanLoad("particleSheet.png");
-	OPcmanLoad("Toys.opss");
+	OPCMAN.Load("particleSheet.png");
+	OPCMAN.Load("Toys.opss");
 
 	particleSystemExample = (ParticleSystemExample*)OPalloc(sizeof(ParticleSystemExample));
 
 	particleSystemExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
-	*particleSystemExample->Camera = OPcamPersp(
+	particleSystemExample->Camera->SetPerspective(
 		OPVEC3_ONE * 10.0,
 		OPVEC3_ZERO,
 		OPvec3Create(0, 1, 0),
 		0.1f,
 		1000.0f,
 		45.0f,
-		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
+		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
 	OPparticleSysInit(NULL);
@@ -34,7 +34,7 @@ void ExampleParticleSystemEnter(OPgameState* last) {
 }
 
 OPint ExampleParticleSystemUpdate(OPtimer* time) {
-	OPsprite* sprite = (OPsprite*)OPcmanGet("Toys/Dust");
+	OPsprite* sprite = (OPsprite*)OPCMAN.Get("Toys/Dust");
 	OPrenderDepth(0);
 	OPrenderClear(0, 0, 0);
 	
@@ -45,7 +45,7 @@ OPint ExampleParticleSystemUpdate(OPtimer* time) {
 		-0.001f,
 		3000,
 		3000,
-		{ {{1.0, 1.0, 1.0f, 1.0f}} },
+		OPvec4(1.0, 1.0, 1.0f, 1.0f),
 		sprite
 	};
 	OPparticleSysSpawn(particleSystemExample->ParticleSystem, p);

@@ -1,10 +1,13 @@
-#ifndef OPENGINE_HUMAN_RENDERER_FONT
-#define OPENGINE_HUMAN_RENDERER_FONT
+#pragma once
+
+struct OPfont;
+typedef struct OPfont OPfont;
 
 #include "./Human/include/Rendering/Font/OPfontAtlas.h"
-#include "./Human/include/Rendering/OPmesh.h"
+#include "./Human/include/Rendering/Font/OPfontBuiltTextNode.h"
+#include "./Human/include/Rendering/Font/OPfontUserTextNode.h"
+
 #include "./Human/include/Rendering/OPtexture.h"
-#include "./Human/include/Rendering/OPmeshPacked.h"
 #include "./Human/include/Rendering/Font/OPfontGlyph.h"
 #include "./Math/include/OPvec2.h"
 #include "./Human/include/Rendering/OPMvertex.h"
@@ -44,29 +47,23 @@ struct OPfont {
 
 	OPfloat underlinePosition;
 	OPfloat underlineThickness;
-};
-typedef struct OPfont OPfont;
 
-struct OPfontBuiltTextNode {
-	OPmeshPacked* packedMesh;
-	OPfloat Width;
-};
-typedef struct OPfontBuiltTextNode OPfontBuiltTextNode;
+	OPfontUserTextNode dummyTextNode;
+	OPvector* vertices;
+	OPvector* indices;
+	OPvertexLayout vertexLayout;
 
-struct OPfontUserTextNode {
-	OPmesh mesh;
-	OPfloat Width;
+	void Init();
+	void Destroy();
+
+	OPfontGlyph* GetGlyph(OPchar charcode);
+	OPmesh CreateText(OPchar* text);
+	OPfontBuiltTextNode CreatePackedText(const OPchar* text);
+	OPfontBuiltTextNode CreatePackedText(const OPchar* text, OPfloat scale);
+	OPfontUserTextNode CreateUserText(const OPchar* text);
+	OPfontUserTextNode CreateUserText(const OPchar* text, OPfloat scale);
+	OPvec2 GetSize(const OPchar* text, OPfloat scale);
 };
-typedef struct OPfontUserTextNode OPfontUserTextNode;
 
 OPint OPfontLoad(OPstream* str, OPfont** data);
 OPint OPfontUnload(OPfont* font);
-OPfontGlyph* OPfontGetGlyph(OPfont* font, OPchar charcode);
-OPmesh OPfontCreateText(OPfont* font, OPchar* text);
-OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text);
-OPfontBuiltTextNode OPfontCreatePackedText(OPfont* font, const OPchar* text, OPfloat scale);
-OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text);
-OPfontUserTextNode OPfontCreateUserText(OPfont* font, const OPchar* text, OPfloat scale);
-OPvec2 OPfontGetSize(OPfont* font, const OPchar* text, OPfloat scale);
-
-#endif

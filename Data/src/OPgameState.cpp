@@ -1,8 +1,9 @@
 #include "./Data/include/OPgameState.h"
+#include "./Core/include/OPmemory.h"
 
 OPgameState* ActiveState = NULL;
 
-void OPgameStateChange(OPgameState* targetState){
+void OPgameState::Change(OPgameState* targetState){
 	OPgameState* lastState;
 
 	if (ActiveState && ActiveState->Exit != NULL) {
@@ -15,7 +16,7 @@ void OPgameStateChange(OPgameState* targetState){
 	if (ActiveState->Init != NULL) ActiveState->Init(lastState);
 }
 
-OPgameState* OPgameStateCreate(void (*init)(OPgameState*), OPint(*update)(struct OPtimer*), OPint(*exit)(OPgameState*)){
+OPgameState* OPgameState::Create(void (*init)(OPgameState*), OPint(*update)(struct OPtimer*), OPint(*exit)(OPgameState*)){
 	OPgameState* gs = (OPgameState*)OPalloc(sizeof(OPgameState));
 
 	gs->Init = init;
@@ -26,7 +27,7 @@ OPgameState* OPgameStateCreate(void (*init)(OPgameState*), OPint(*update)(struct
 	return gs;
 }
 
-OPint OPgameStateDestroy(OPgameState* state){
+OPint OPgameState::Destroy(OPgameState* state){
 	OPfree(state);
 	return 1;
 }

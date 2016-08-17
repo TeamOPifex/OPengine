@@ -27,7 +27,7 @@ JS_RETURN_VAL _OPloadersAddOPS(const JS_ARGS& args) {
 JS_RETURN_VAL _OPloadersAddVoxels(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-  	OPcmanAddLoader(OPvoxelsLoader());
+  	OPCMAN.AddLoader(OPvoxelsLoader());
 
     JS_RETURN_NULL;
 }

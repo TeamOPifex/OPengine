@@ -43,6 +43,8 @@ OPint OPfbxMeshCreate(OPfbxMesh* mesh, OPfloat scale, const OPchar* filename) {
 
 		mesh->Animation = OPfbxAnimationGet(&mesh->MeshData, &mesh->Skeleton, &mesh->SCENE, scale);
 
+		mesh->MeshData.MetaCount = 0;
+
 		OPlogDebug("End FBX SDK");
 		//OPfbxSdkDestroy(&SDK);
 
@@ -79,10 +81,12 @@ OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* featu
 	if (features[Model_UVs]) feature += 0x04;
 	if (features[Model_Colors]) feature += 0x100;
 	if (features[Model_Indices]) feature += 0x10;
+	if (features[Model_Tangents]) feature += 0x08;
 	if (features[Model_Bones]) feature += 0x20;
 	if (features[Model_Skinning]) feature += 0x40;
 	if (features[Model_Animations]) feature += 0x80;
 	if (features[Model_Meta]) feature += 0x200;
+	if (features[Model_BiTangents]) feature += 0x400;
 
 
 	OPlogDebug("Feature: %d", feature);
@@ -125,6 +129,14 @@ OPint OPfbxMeshWriteToFile(OPfbxMesh* mesh, const OPchar* filename, OPint* featu
 				writeF32(&myFile, tan.x);
 				writeF32(&myFile, tan.y);
 				writeF32(&myFile, tan.z);
+			}
+
+			if (features[Model_BiTangents]) {
+				//OPlg("%");
+				OPvec4 bitan = mesh->Polys[i].BiTangent[j];
+				writeF32(&myFile, bitan.x);
+				writeF32(&myFile, bitan.y);
+				writeF32(&myFile, bitan.z);
 			}
 
 			if (features[Model_UVs]) {

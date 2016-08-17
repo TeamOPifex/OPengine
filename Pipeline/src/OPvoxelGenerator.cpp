@@ -1,19 +1,15 @@
 #include "./Pipeline/include/OPvoxelGenerator.h"
 #include "./OPengine.h"
 
-void OPvoxelGeneratorInit(struct OPvoxelGenerator* gen, OPuint features) {
-	gen->VertexSize = 0;
-	gen->VertexSize += ((features & OPATTR_POSITION) > 0) * sizeof(OPvec3);
-	gen->VertexSize += ((features & OPATTR_NORMAL) > 0) * sizeof(OPvec3);
-	gen->VertexSize += ((features & OPATTR_TANGENT) > 0) * sizeof(OPvec3);
-	gen->VertexSize += ((features & OPATTR_UV) > 0) * sizeof(OPvec2);
-	gen->VertexSize += ((features & OPATTR_BONES) > 0) * sizeof(OPvec4) * 2;
-	gen->VertexSize += ((features & OPATTR_COLOR) > 0) * sizeof(OPvec3);
+void OPvoxelGeneratorInit(struct OPvoxelGenerator* gen, ui32 features) {
+	OPvertexLayoutBuilder builder;
+	builder.Init(features);
+	gen->VertexSize = builder.Build();
 
 	gen->Features = features;
-	gen->Vertices = OPlistCreate(512, gen->VertexSize);
-	gen->Indices = OPlistCreate(512, sizeof(ui32));
-	gen->Vertex = OPalloc(gen->VertexSize);
+	gen->Vertices = OPlist::Create(512, gen->VertexSize.stride);
+	gen->Indices = OPlist::Create(512, sizeof(ui32));
+	gen->Vertex = OPalloc(gen->VertexSize.stride);
 	gen->IndexOffset = 0;
 
 	gen->HideFace[0] = 0;
@@ -27,7 +23,7 @@ void OPvoxelGeneratorInit(struct OPvoxelGenerator* gen, OPuint features) {
 	gen->Center = true;
 }
 
-struct OPvoxelGenerator* OPvoxelGeneratorCreate(OPuint features) {
+struct OPvoxelGenerator* OPvoxelGeneratorCreate(ui32 features) {
   struct OPvoxelGenerator* result = (struct OPvoxelGenerator*)OPalloc(sizeof(struct OPvoxelGenerator));
   OPvoxelGeneratorInit(result, features);
   return result;
@@ -36,31 +32,31 @@ struct OPvoxelGenerator* OPvoxelGeneratorCreate(OPuint features) {
 void setData(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorVertex* vertex, void* data, struct OPvoxelGeneratorData* voxelGenData) {
 	OPuint loc = (OPuint)data;
 
-	if (gen->Features & OPATTR_POSITION) {
+	if (gen->Features & (OPuint)OPattributes::POSITION) {
 		OPvec3* tmp = (OPvec3*)(void*)loc;
 		*tmp = vertex->Position * gen->Scale;
 		loc += sizeof(OPvec3);
 	}
 
-	if (gen->Features & OPATTR_NORMAL) {
+	if (gen->Features & (OPuint)OPattributes::NORMAL) {
 		OPvec3* tmp = (OPvec3*)(void*)loc;
 		*tmp = vertex->Normal;
 		loc += sizeof(OPvec3);
 	}
 
-	if (gen->Features & OPATTR_TANGENT) {
+	if (gen->Features & (OPuint)OPattributes::TANGENT) {
 		OPvec3* tmp = (OPvec3*)(void*)loc;
 		*tmp = vertex->Tangent;
 		loc += sizeof(OPvec3);
 	}
 
-	if (gen->Features & OPATTR_UV) {
+	if (gen->Features & (OPuint)OPattributes::UV) {
 		OPvec2* tmp = (OPvec2*)(void*)loc;
 		*tmp = vertex->UV;
 		loc += sizeof(OPvec2);
 	}
 
-	if (gen->Features & OPATTR_BONES) {
+	if (gen->Features & (OPuint)OPattributes::BONES) {
 		OPvec4* tmp = (OPvec4*)(void*)loc;
 		*tmp = vertex->Bones;
 		loc += sizeof(OPvec4);
@@ -70,7 +66,7 @@ void setData(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorVertex* vertex
 		loc += sizeof(OPvec4);
 	}
 
-	if (gen->Features & OPATTR_COLOR) {
+	if (gen->Features & (OPuint)OPattributes::COLOR) {
 		OPvec3* tmp = (OPvec3*)(void*)loc;
 		*tmp = vertex->Color;
 		loc += sizeof(OPvec3);
@@ -83,7 +79,7 @@ void addSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data) {
 	for (i = 0; i < 4; i++) {
 		data->Vertices[i].Position += data->Offset;
 		setData(gen, &data->Vertices[i], gen->Vertex, data);
-		OPlistPush(gen->Vertices, (ui8*)gen->Vertex);
+		gen->Vertices->Push((ui8*)gen->Vertex);
 	}
 
 	data->Indices[0] = gen->IndexOffset;
@@ -95,7 +91,7 @@ void addSide(struct OPvoxelGenerator* gen, struct OPvoxelGeneratorData* data) {
 	gen->IndexOffset += 4;
 
 	for (i = 0; i < 6; i++) {
-		OPlistPush(gen->Indices, (ui8*)&data->Indices[i]);
+		gen->Indices->Push((ui8*)&data->Indices[i]);
 	}
 }
 
@@ -252,29 +248,29 @@ void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData
 }
 
 OPmeshDesc OPvoxelGeneratorBuildDesc(struct OPvoxelGenerator* gen) {
-	ui32 verticeCount = (ui32)OPlistSize(gen->Vertices);
-	ui32 indiceCount = (ui32)OPlistSize(gen->Indices);
+	ui32 verticeCount = (ui32)gen->Vertices->Size();
+	ui32 indiceCount = (ui32)gen->Indices->Size();
 
-	void* verts = OPalloc(gen->VertexSize* verticeCount);
+	void* verts = OPalloc(gen->VertexSize.stride * verticeCount);
 	ui32* inds = (ui32*)OPalloc(sizeof(ui32)* indiceCount);
 
 	for (ui32 i = 0; i < verticeCount; i++) {
-		ui8* data = OPlistGet(gen->Vertices, i);
-		OPmemcpy((void*)((OPuint)verts + gen->VertexSize* i), data, gen->VertexSize);
+		ui8* data = gen->Vertices->Get(i);
+		OPmemcpy((void*)((OPuint)verts + gen->VertexSize.stride * i), data, gen->VertexSize.stride);
 	}
 
 	OPlog("Index count: %d", indiceCount);
 
 	for (ui32 i = 0; i < indiceCount; i++) {
-		inds[i] = (*(ui32*)OPlistGet(gen->Indices, i));
+		inds[i] = (*(ui32*)gen->Indices->Get(i));
 	}
 
 	OPmeshDesc result = {
 		verts,
-		(ui32)gen->VertexSize,
+		gen->VertexSize,
 		verticeCount,
 		inds,
-		sizeof(ui32),
+		OPindexSize::INT,
 		indiceCount
 	};
 
@@ -283,20 +279,17 @@ OPmeshDesc OPvoxelGeneratorBuildDesc(struct OPvoxelGenerator* gen) {
 
 OPmesh* OPvoxelGeneratorBuild(struct OPvoxelGenerator* gen) {
 
-	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
-	(*mesh) = OPmeshCreate();
-	mesh->Bind();
 
 	OPmeshDesc desc = OPvoxelGeneratorBuildDesc(gen);
-
-	OPmeshBuild(desc.VertexSize, desc.IndexSize, desc.VertexCount, desc.IndexCount, desc.Vertices, desc.Indices);
+	OPmesh* mesh = OPmesh::Create(desc.VertexSize);
+	mesh->Build(desc.VertexSize, desc.IndexSize, desc.VertexCount, desc.IndexCount, desc.Vertices, desc.Indices);
 
 	return mesh;
 }
 
 void OPvoxelGeneratorDestroy(struct OPvoxelGenerator* gen) {
-	OPlistDestroy(gen->Vertices);
+	gen->Vertices->Destroy();
 	OPfree(gen->Vertices);
-	OPlistDestroy(gen->Indices);
+	gen->Indices->Destroy();
 	OPfree(gen->Indices);
 }

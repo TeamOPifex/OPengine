@@ -1,14 +1,13 @@
-#ifndef OP_MATH_VECTOR2
-#define OP_MATH_VECTOR2
-#include "./Core/include/OPtypes.h"
-#include "./Core/include/OPmath.h"
-#include "./Core/include/OPmemory.h"
-#include "./Core/include/OPlog.h"
-#include "./Data/include/OPfile.h"
-#include "./Data/include/OPstream.h"
+#pragma once
 
 struct OPvec2;
 typedef struct OPvec2 OPvec2;
+
+#include "./Data/include/OPfile.h"
+#include "./Data/include/OPstream.h"
+#include "./Core/include/OPmath.h"
+#include "./Core/include/OPmemory.h"
+#include "./Core/include/OPlog.h"
 
 //inline OPvec2 OPvec2(OPfloat x, OPfloat y);
 
@@ -221,8 +220,8 @@ inline OPfloat OPvec2Angle(OPvec2 a, OPvec2 b) {
 
 inline OPvec2 OPvec2Read(OPstream* str) {
 	OPvec2 temp(
-		OPreadf32(str),
-		OPreadf32(str)
+		str->F32(),
+		str->F32()
 	);
 	return temp;
 }
@@ -235,11 +234,10 @@ inline OPvec2 OPvec2RandNorm(){
 }
 
 inline void OPvec2Write(OPvec2 v, OPstream* str) {
-	OPwrite(str, &v.x, sizeof(f32));
-	OPwrite(str, &v.y, sizeof(f32));
+	str->Write(&v.x);
+	str->Write(&v.y);
 }
 
 inline void OPvec2Log(const OPchar* m, OPvec2 v) {
 	OPlog("%s: [%f, %f]", m, v.x, v.y);
 }
-#endif

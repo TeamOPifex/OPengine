@@ -23,7 +23,7 @@ JS_RETURN_VAL _OPspriteSystemCreate(const JS_ARGS& args) {
     Local<Array> arr = Local<Array>::Cast(args[0]);
     count =  arr->Length();
     sprites = (OPsprite**)OPalloc(sizeof(OPsprite*) * count);
-    for(OPuint i = 0 ; i < count; i++) {
+    for(ui32 i = 0 ; i < count; i++) {
       Local<Object> item = Local<Object>::Cast(arr->Get(i));
       sprites[i] = JS_GET_PTR(item, OPsprite);
     }

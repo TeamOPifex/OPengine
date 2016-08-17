@@ -1,13 +1,6 @@
 #pragma once
 
-#ifndef OPEngine_Core_GameCycle
-#define OPEngine_Core_GameCycle
 #include "./Core/include/OPtimer.h"
-
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /**
  * Game engine initialization.
@@ -48,9 +41,3 @@ extern void(*OPrender)(OPfloat);
  *	network connections.
  */
 extern void (*OPdestroy)();
-
-#ifdef __cplusplus
-};
-#endif
-
-#endif

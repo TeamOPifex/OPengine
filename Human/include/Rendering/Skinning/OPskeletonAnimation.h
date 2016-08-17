@@ -1,13 +1,15 @@
-#ifndef OPIFEX_RENDERING_SKINNING_ANIMATION
-#define OPIFEX_RENDERING_SKINNING_ANIMATION
+#pragma once
 
-#include "OPskeleton.h"
-#include "./Core/include/OPtimer.h"
+struct OPskeletonAnimation;
+struct OPskeletonAnimationEvent;
+
+typedef OPskeletonAnimation OPskeletonAnimation;
+typedef OPskeletonAnimationEvent OPskeletonAnimationEvent;
 
 #define OPSKELETONANIMATION_MAX_EVENTS 6
 
-struct OPskeletonAnimation;
-typedef OPskeletonAnimation OPskeletonAnimation;
+#include "OPskeleton.h"
+#include "./Core/include/OPtimer.h"
 
 struct OPskeletonAnimationEvent
 {
@@ -16,7 +18,6 @@ struct OPskeletonAnimationEvent
 	OPuint End;
 	OPint OnFrameChange;
 };
-typedef OPskeletonAnimationEvent OPskeletonAnimationEvent;
 
 struct OPskeletonAnimation {
 	OPskeleton* Skeleton;
@@ -60,5 +61,3 @@ inline void OPskeletonAnimationReset(OPskeletonAnimation* skelAnim) {
 inline OPskeletonAnimation* OPskeletonAnimationCopy(OPskeletonAnimation* source, OPint boneCount) {
 	return OPskeletonAnimationCreate(boneCount, source->JointFrames, source->FrameCount);
 }
-
-#endif

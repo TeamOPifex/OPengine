@@ -1,5 +1,4 @@
-#ifndef OPIFEXENGINE_OPSCRIPTNODEHELPER
-#define OPIFEXENGINE_OPSCRIPTNODEHELPER
+#pragma once
 
 #include "./Core/include/OPtypes.h"
 
@@ -152,6 +151,7 @@ typedef Persistent<Function, CopyablePersistentTraits<Function> > OPjavaScriptPe
 #define JS_NEW_OBJECT_TEMPLATE() ObjectTemplate::New(isolate)
 #define JS_NEW_STRING(name) String::NewFromUtf8(isolate, name)
 #define JS_NEW_NUMBER(val) Number::New(isolate, val)
+#define JS_NEW_INTEGER(val) Integer::New(isolate, val)
 #define JS_NEW_BOOL(val) Boolean::New(isolate, val)
 #define JS_NEW_ARRAY() Array::New(isolate)
 #define JS_NEW_FUNCTION(func) Local<Function>::New(isolate, func)
@@ -165,7 +165,8 @@ typedef Persistent<Function, CopyablePersistentTraits<Function> > OPjavaScriptPe
 #define JS_SET_METHOD(obj, name, func) obj->Set(JS_NEW_STRING(name), JS_NEW_FUNCTION_TEMPLATE(func)->GetFunction());
 #define JS_SET_OBJECT(target, name, object) target->Set(JS_NEW_STRING(name), object);
 #define JS_SET_PROTOTYPE_METHOD(obj, name, func) obj->PrototypeTemplate()->Set(JS_NEW_STRING(name), JS_NEW_FUNCTION_TEMPLATE(func));
-#define JS_SET_NUMBER(target, name, number) target->Set(JS_NEW_STRING(name), JS_NEW_NUMBER(number));
+#define JS_SET_NUMBER(target, name, number) target->Set(JS_NEW_STRING(name), JS_NEW_NUMBER((double)number));
+#define JS_SET_INTEGER(target, name, number) target->Set(JS_NEW_STRING(name), JS_NEW_INTEGER(number));
 
 
 #define JS_VALUE_TO_ARRAY(A) Handle<Array>::Cast(A)
@@ -201,8 +202,8 @@ void ReportException(v8::Isolate* isolate, v8::TryCatch* try_catch);
 #define JS_GET_INTEGER(obj, name) obj->Get(JS_NEW_STRING(name))->IntegerValue();
 #define JS_SET_PTR(obj, ptr) JS_SET_NUMBER(obj, "ptr", (OPint)ptr)
 #define JS_GET_PTR(obj, type) (type*)(OPint)obj->Get(JS_NEW_STRING("ptr"))->IntegerValue();
-#define JS_GET_ARG_PTR(args, ind, type) JS_GET_PTR(args[ind]->ToObject(), type)
-#define JS_GET_ARG_OPUINT(args, ind) ((OPint)args[ind]->IntegerValue())
+#define JS_GET_ARG_PTR(args, ind, type) JS_GET_PTR(args[(int)ind]->ToObject(), type)
+#define JS_GET_ARG_OPUINT(args, ind) ((OPint)args[(int)ind]->IntegerValue())
 
 #ifdef _DEBUG
     #define JS_SET_TYPE(obj, t) JS_SET_STRING(obj, "type", t)
@@ -269,7 +270,7 @@ inline Handle<Value> _JS_NEXT_ARG(const JS_ARGS& args) {
     if(_JS_ARGC == 0) {
         return args.This();
     }
-    return args[_JS_ARGC - 1];
+    return args[(int)(_JS_ARGC - 1)];
 }
 #define JS_NEXT_ARG_VAL() _JS_NEXT_ARG(args);
 
@@ -278,11 +279,14 @@ inline Handle<Value> _JS_NEXT_ARG(const JS_ARGS& args) {
 #define JS_MAKE_WRAPPED_FN_NAME(x) _ ## x
 #define JS_MAKE_SELF_FN_NAME(x) x ## Self
 
+// Makes 2 methods out of 1 that will make it a callable from the object itself
+// ex: VectorAdd(vector, [1, 1, 1]) vs vector.Add([1,1,1])
 #define JS_HELPER_SELF_WRAPPER(funcName) \
 JS_RETURN_VAL JS_MAKE_WRAPPED_FN_NAME(funcName)(const JS_ARGS& args); \
 JS_RETURN_VAL funcName(const JS_ARGS& args) { JS_RUN(JS_MAKE_WRAPPED_FN_NAME(funcName)) } \
 JS_RETURN_VAL JS_MAKE_SELF_FN_NAME(funcName)(const JS_ARGS& args) { JS_RUN_SELF(JS_MAKE_WRAPPED_FN_NAME(funcName)) } \
 JS_RETURN_VAL JS_MAKE_WRAPPED_FN_NAME(funcName)(const JS_ARGS& args)
+
 
 
 
@@ -350,7 +354,11 @@ JS_HELPER_SELF_WRAPPER( JS_MAKE_WRAPPED_FN_NAME(t ## m) ) { \
     TYPE ## Wrapper(Handle<Object> result, TYPE* ptr); \
     JS_EASY_WRAP_(TYPE)
 
+
+
+#define JS_NEXT_ARG_AS_NUMBER args[_JS_ARGC]->NumberValue(); _JS_ARGC++;
+#define JS_NEXT_ARG_AS_INTEGER args[_JS_ARGC]->IntegerValue(); _JS_ARGC++;
+#define JS_NEXT_ARG_AS_STRING(name) String::Utf8Value name ## string(args[_JS_ARGC]->ToString()); _JS_ARGC++; const OPchar* name = *(name ## string);
+
+
 #endif
-
-
-#endif //OPIFEXENGINE_OPSCRIPTNODEWRAPPERMATH_H

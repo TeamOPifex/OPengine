@@ -6,6 +6,7 @@
 #include "./Human/include/Input/OPmouse.h"
 #include "./Data/include/OPstring.h"
 
+#include "./Human/include/Platform/opengl/OPcommonGL.h"
 
 OPimgui* OPIMGUI_ACTIVE = NULL;
 
@@ -14,16 +15,13 @@ OPimgui* OPimguiCreate(OPeffect* effect, OPfontManager* fontManager) {
 	imgui->effect = effect;
 	imgui->fontManager = fontManager;
 
-	OPglError("IMGUI:Error CLEAR");
 
-	imgui->buffer = OPrenderGenBuffer(OPvertexBuffer);
+	imgui->buffer.Init();// = OPrenderGenBuffer(OPvertexBufferOLD);
 	// OPlog("Render %d, %d", OPRENDER_WIDTH, OPRENDER_HEIGHT);
 	// OPlog("Screen %d, %d", OPRENDER_SCREEN_WIDTH, OPRENDER_SCREEN_HEIGHT);
 	// OPlog("Screen %f, %f", OPRENDER_SCREEN_WIDTH_SCALE, OPRENDER_SCREEN_HEIGHT_SCALE);
 
-	imgui->proj = OPmat4Ortho(0, (OPfloat)OPRENDER_SCALED_WIDTH, (OPfloat)OPRENDER_SCALED_HEIGHT, 0, -1, 1);
-
-	OPglError("IMGUI:Error 1");
+	imgui->proj = OPmat4Ortho(0, (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, 0, -1, 1);
 
 	return imgui;
 }
@@ -77,10 +75,10 @@ void _block(
     //                 x1, y2, 0, color.x, color.y, color.z, color.w
     //               };
 
-	OPrenderSetBufferData(&OPIMGUI_ACTIVE->buffer, sizeof(OPimguiVertex), 6, data);
-	OPeffectBind(OPIMGUI_ACTIVE->effect);
-
-	OPeffectParam("uProj", OPIMGUI_ACTIVE->proj);
+	//OPrenderSetBufferData(&OPIMGUI_ACTIVE->buffer, sizeof(OPimguiVertex), 6, data);
+	OPIMGUI_ACTIVE->buffer.SetData(sizeof(OPimguiVertex), 6, data);
+	OPIMGUI_ACTIVE->effect->Bind();
+	OPIMGUI_ACTIVE->effect->Set("uProj", &OPIMGUI_ACTIVE->proj);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
@@ -120,9 +118,10 @@ void _radio(
 		data[i * 3 + 2].Position = OPvec3Create(center, 0);
 	}
 
-	OPrenderSetBufferData(&OPIMGUI_ACTIVE->buffer, sizeof(OPimguiVertex), 24, data);
-	OPeffectBind(OPIMGUI_ACTIVE->effect);
-	OPeffectParam("uProj", OPIMGUI_ACTIVE->proj);
+	//OPrenderSetBufferData(&OPIMGUI_ACTIVE->buffer, sizeof(OPimguiVertex), 24, data);
+	OPIMGUI_ACTIVE->buffer.SetData(sizeof(OPimguiVertex), 24, data);
+	OPIMGUI_ACTIVE->effect->Bind();
+	OPIMGUI_ACTIVE->effect->Set("uProj", &OPIMGUI_ACTIVE->proj);
 	glDrawArrays(GL_TRIANGLES, 0, 24);
 }
 
@@ -145,7 +144,7 @@ OPint OPimguiTextbox(OPvec2 pos, const OPchar* text, const OPchar* placeholder, 
 		}
 	}
 
-	OPvec2 textSize = OPfontGetSize(OPIMGUI_ACTIVE->fontManager->_font, buffer, OPIMGUI_ACTIVE->fontManager->scale);
+	OPvec2 textSize = OPIMGUI_ACTIVE->fontManager->_font->GetSize(buffer, OPIMGUI_ACTIVE->fontManager->scale);
 
 	OPvec2 size = textSize;
 	size.x = 400;//OPIMGUI_ACTIVE->padding[0] + OPIMGUI_ACTIVE->padding[1];
@@ -155,11 +154,11 @@ OPint OPimguiTextbox(OPvec2 pos, const OPchar* text, const OPchar* placeholder, 
 	OPvec2 bottomRight = topLeft + size;
 
 
-	OPint mx = OPmousePositionX(), my = OPmousePositionY();
+	OPint mx = OPMOUSE.X(), my = OPMOUSE.Y();
 	OPint mouseWithin = mx >= topLeft.x && my >= topLeft.y &&
 		mx <= bottomRight.x && my <= bottomRight.y;
 
-	OPint clicked = mouseWithin && OPmouseWasPressed(OPMOUSE_LBUTTON);
+	OPint clicked = mouseWithin && OPMOUSE.WasPressed(OPmouseButton::LBUTTON);
 
 
 	_block(pos, OPvec2(400, size.y), OPIMGUI_ACTIVE->secondaryColor);
@@ -175,12 +174,12 @@ OPint OPimguiTextbox(OPvec2 pos, const OPchar* text, const OPchar* placeholder, 
 
 	//p.y = (OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE) - p.y - size.y;
 
-	OPint screenHeight = (OPint)(OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE);
+	OPint screenHeight = (OPint)(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScaled);
 	OPint x, y, z, w;
-	x = (OPint)(pos.x / OPRENDER_SCREEN_HEIGHT_SCALE); 
-	y = (OPint)(OPRENDER_SCREEN_HEIGHT - (pos.y + size.y) / OPRENDER_SCREEN_HEIGHT_SCALE); 
-	z = (OPint)(400 / OPRENDER_SCREEN_HEIGHT_SCALE);
-	w = (OPint)(size.y / OPRENDER_SCREEN_HEIGHT_SCALE);
+	x = (OPint)(pos.x / OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScaled);
+	y = (OPint)(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height - (pos.y + size.y) / OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScaled);
+	z = (OPint)(400 / OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScaled);
+	w = (OPint)(size.y / OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScaled);
 	//OPlog("%d, Scissor %d,%d %dx%d", screenHeight, x,y,z,w);
 
     glScissor((GLint)x, (GLint)y, (GLsizei)z, (GLsizei)w);
@@ -200,7 +199,7 @@ OPint OPimguiTextbox(OPvec2 pos, const OPchar* text, const OPchar* placeholder, 
     glDisable(GL_SCISSOR_TEST);
 
 	if(clicked) return 1;
-	else if (OPmouseWasPressed(OPMOUSE_LBUTTON)) return 2;
+	else if (OPMOUSE.WasPressed(OPmouseButton::LBUTTON)) return 2;
 	else return 0;
 }
 
@@ -224,7 +223,7 @@ OPint OPimguiRadio(
 	pos.x += size.x;
 	pos.y += size.y;
 
-	OPint mx = OPmousePositionX(), my = OPmousePositionY();
+	OPint mx = OPMOUSE.X(), my = OPMOUSE.Y();
 
 	_radio(pos, size, color);
 
@@ -255,7 +254,7 @@ OPint OPimguiCheckbox(
 
 	_block(pos, size, color);
 
-	OPint mx = OPmousePositionX(), my = OPmousePositionY();
+	OPint mx = OPMOUSE.X(), my = OPMOUSE.Y();
 
 	OPvec2 inner = size;
 	inner *= 0.6f;
@@ -274,7 +273,7 @@ OPint OPimguiCheckbox(
 		_block(innerPos, inner, hover);
 	}
 
-	if(mouseWithin && OPmouseWasPressed(OPMOUSE_LBUTTON)) {
+	if(mouseWithin && OPMOUSE.WasPressed(OPmouseButton::LBUTTON)) {
 		return 1;
 	}
 
@@ -312,7 +311,7 @@ void OPimguiLabel(
 
 	if(bg.w > 0) {
 		// Determine label size
-		OPvec2 s = OPfontGetSize(OPIMGUI_ACTIVE->fontManager->_font, text, OPIMGUI_ACTIVE->fontManager->scale);
+		OPvec2 s = OPIMGUI_ACTIVE->fontManager->_font->GetSize(text, OPIMGUI_ACTIVE->fontManager->scale);
 
 		OPvec2 _size = s;
 		_size.x += 6;
@@ -334,7 +333,7 @@ void OPimguiLabel(
 
 OPint OPimguiButton(OPvec2 pos, const OPchar* text, OPvec4 color, OPvec4 selected, OPvec4 hover) {
 
-	OPvec2 size = OPfontGetSize(OPIMGUI_ACTIVE->fontManager->_font, text, OPIMGUI_ACTIVE->fontManager->scale);
+	OPvec2 size = OPIMGUI_ACTIVE->fontManager->_font->GetSize(text, OPIMGUI_ACTIVE->fontManager->scale);
 
 	size.x += OPIMGUI_ACTIVE->padding[0] + OPIMGUI_ACTIVE->padding[1];
 	size.y += OPIMGUI_ACTIVE->padding[2] + OPIMGUI_ACTIVE->padding[3];
@@ -343,12 +342,12 @@ OPint OPimguiButton(OPvec2 pos, const OPchar* text, OPvec4 color, OPvec4 selecte
 	OPvec2 bottomRight = topLeft + size;
 
 
-	OPint mx = OPmousePositionX(), my = OPmousePositionY();
+	OPint mx = OPMOUSE.X(), my = OPMOUSE.Y();
 	OPint mouseWithin = mx >= topLeft.x && my >= topLeft.y &&
 		mx <= bottomRight.x && my <= bottomRight.y;
 
-	OPint clicked = mouseWithin && OPmouseWasReleased(OPMOUSE_LBUTTON);
-	OPint down = mouseWithin && OPmouseIsDown(OPMOUSE_LBUTTON);
+	OPint clicked = mouseWithin && OPMOUSE.WasReleased(OPmouseButton::LBUTTON);
+	OPint down = mouseWithin && OPMOUSE.IsDown(OPmouseButton::LBUTTON);
 
 	if(clicked || down) {
 		_block(pos, size, selected);

@@ -2,13 +2,7 @@
 #include "./Core/include/Assert.h"
 
 void OPspriteSystemEffectDefault(OPeffect* effect) {
-	*effect = OPeffectGen(
-		"Common/OPspriteSheet.vert",
-		"Common/OPspriteSheet.frag",
-		OPATTR_POSITION | OPATTR_UV,
-		"Sprite sheet effect",
-		0
-		);
+	effect->Init("Common/OPspriteSheet.vert", "Common/OPspriteSheet.frag");
 }
 
 void OPspriteSystemInit(OPspriteSystem* system, OPsprite** sprites, OPint count, OPeffect* effect, OPspriteSystemAlign alignment) {
@@ -99,19 +93,19 @@ void OPspriteSystemRender(OPspriteSystem* system, OPcam* cam) {
 	OPmat4 world, view;
 	view = OPmat4Translate(cam->pos * -1);
 
-	system->_mesh.Bind();
-	OPeffectBind(system->Effect);
+	system->_mesh->Bind();
+	system->Effect->Bind();
 
-	OPtexturePixelate();
+	//OPtexturePixelate();
 
-	OPtextureClearActive();
-	OPeffectParami("uColorTexture", OPtextureBind(system->Sprites[0]->Sheet));
-	OPeffectParamMat4("uProj", &cam->proj);
-	OPeffectParamMat4("uView", &view);
+	//OPtextureClearActive();
+	OPeffectSet("uColorTexture", system->Sprites[0]->Sheet, 0);
+	OPeffectSet("uProj", &cam->proj);
+	OPeffectSet("uView", &view);
 
 	for (OPuint i = 0; i < system->Count; i++) {
 		currentSprite = system->Sprites[system->SystemSprites[i].CurrentSprite];
-		OPvec2 frameSize = OPspriteCurrentFrameSize(currentSprite);
+		OPvec2 frameSize = currentSprite->FrameSize();
 
 		//world = // OPmat4Translate((frameSize.x / 2.0) *system->SystemSprites[i].Scale.x, (frameSize.y / 2.0) *system->SystemSprites[i].Scale.y, 0);
 		world = OPMAT4_IDENTITY;
@@ -122,9 +116,9 @@ void OPspriteSystemRender(OPspriteSystem* system, OPcam* cam) {
 		world.Scl(frameSize.x * system->SystemSprites[i].Direction, frameSize.y, 0);
 
 
-		OPeffectParamMat4("uWorld", &world);
-		OPeffectParamVec2("uOffset", &currentSprite->Frames[system->SystemSprites[i].CurrentFrame].Offset);
-		OPeffectParamVec2("uSize", &currentSprite->Frames[system->SystemSprites[i].CurrentFrame].Size);
+		OPeffectSet("uWorld", &world);
+		OPeffectSet("uOffset", &currentSprite->Frames[system->SystemSprites[i].CurrentFrame].Offset);
+		OPeffectSet("uSize", &currentSprite->Frames[system->SystemSprites[i].CurrentFrame].Size);
 
 		OPmeshRender();
 	}

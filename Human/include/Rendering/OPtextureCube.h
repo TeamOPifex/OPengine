@@ -1,8 +1,6 @@
-#ifndef OPENGINE_HUMAN_RENDERER_CUBEMAP
-#define OPENGINE_HUMAN_RENDERER_CUBEMAP
+#pragma once
 
 #include "OPimage.h"
-#include "./Human/include/Rendering/OpenGL.h"
 #include "./Human/include/Rendering/OPtexture.h"
 #include "./Core/include/OPtypes.h"
 #include "./Math/include/OPvec4.h"
@@ -16,9 +14,47 @@
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
 
-struct OPtextureCube {
+struct OPtextureCubeOLD {
     ui16 Width, Height;
-    OPtexture Texture;
+	OPtexture Texture;
+};
+
+enum struct OPtextureCubeFace {
+	POSITIVE_X = 0,
+	NEGATIVE_X,
+	POSITIVE_Y,
+	NEGATIVE_Y,
+	POSITIVE_Z,
+	NEGATIVE_Z
+};
+
+#include "./Human/include/Rendering/OPrender.h"
+struct OPtextureCube {
+	void* internalPtr;
+
+	inline OPtextureCube* Init(OPimage* images) {
+		return OPRENDERER_ACTIVE->TextureCube.Init(this, images);
+	}
+
+	inline OPtextureCube* Init(const OPchar** images) {
+		return OPRENDERER_ACTIVE->TextureCube.Init(this, images);
+	}
+
+	inline static OPtextureCube* Create(OPimage* images) {
+		return OPRENDERER_ACTIVE->TextureCube.Create(images);
+	}
+
+	inline static OPtextureCube* Create(const OPchar** images) {
+		return OPRENDERER_ACTIVE->TextureCube.Create(images);
+	}
+
+	inline void Bind(ui32 slot) {
+		OPRENDERER_ACTIVE->TextureCube.Bind(this, slot);
+	}
+
+	inline void Destroy() {
+		OPRENDERER_ACTIVE->TextureCube.Destroy(this);
+	}
 };
 
 //-----------------------------------------------------------------------------
@@ -29,11 +65,9 @@ struct OPtextureCube {
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
-void OPtextureCubeInit(OPtextureCube *result, OPimage *faces);
-OPtextureCube * OPtextureCubeCreate(OPimage * faces);
-void OPtextureCubeDestroy(OPtextureCube * result);
-void OPtextureCubeFree(OPtextureCube * result);
+void OPtextureCubeInit(OPtextureCubeOLD *result, OPimage *faces);
+OPtextureCubeOLD * OPtextureCubeCreate(OPimage * faces);
+void OPtextureCubeDestroy(OPtextureCubeOLD * result);
+void OPtextureCubeFree(OPtextureCubeOLD * result);
 void OPtextureCubeClearActive();
-ui32 OPtextureCubeBind(OPtextureCube* result);
-
-#endif
+ui32 OPtextureCubeBind(OPtextureCubeOLD* result);

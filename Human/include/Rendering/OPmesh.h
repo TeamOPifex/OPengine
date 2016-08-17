@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERER_MESH
-#define OPENGINE_HUMAN_RENDERER_MESH
+#pragma once
 
 #include "./Human/include/Rendering/OPrenderBuffer.h"
 #include "./Math/include/OPboundingBox3D.h"
@@ -49,6 +48,23 @@ struct OPmeshData {
 };
 typedef struct OPmeshData OPmeshData;
 
+#include "./Human/include/Rendering/OPvertexBuffer.h"
+#include "./Human/include/Rendering/OPindexBuffer.h"
+#include "./Human/include/Rendering/OPvertexLayout.h"
+#include "./Human/include/Rendering/OPvertexArray.h"
+
+struct OPmeshDesc {
+	void* Vertices;
+	OPvertexLayout VertexSize;
+	ui32 VertexCount;
+	void* Indices;
+	OPindexSize IndexSize;
+	ui32 IndexCount;
+};
+
+struct OPmesh;
+typedef struct OPmesh OPmesh;
+
 //-----------------------------------------------------------------------------
 //   _____ _                   _
 //  / ____| |                 | |
@@ -56,68 +72,50 @@ typedef struct OPmeshData OPmeshData;
 //  \___ \| __| '__| | | |/ __| __/ __|
 //  ____) | |_| |  | |_| | (__| |_\__ \
 // |_____/ \__|_|   \__,_|\___|\__|___/
+extern OPmesh* OPMESH_ACTIVE; 
+
 struct OPmesh {
-	OPrenderBuffer VertexBuffer;
-	OPrenderBuffer IndexBuffer;
+	OPvertexBuffer vertexBuffer;
+	OPindexBuffer indexBuffer;
+	OPvertexArray vertexArray;
 	OPvertexLayout vertexLayout;
 	OPmeshData* meshData;
 
 	OPboundingBox3D boundingBox;
 	ui32 VertexCount;
 	void* Vertices;
-	ui32 IndexSize;
+	OPindexSize IndexSize;
 	ui32 IndexCount;
 	void* Indicies;
 	ui16 MetaCount;
 	OPMmeta* Meta;
 	ui64 Id;
 
+	OPmesh() {
+
+	}
+
+	OPmesh(OPmeshDesc desc) {
+		Init(desc);
+	}
+
+	OPmesh(OPvertexLayout vertexLayout) {
+		Init(vertexLayout);
+	}
+
+	static OPmesh* Create(OPmeshDesc desc);
+	static OPmesh* Create(OPvertexLayout vertexLayout);
+	OPmesh* Init(OPmeshDesc desc);
+	OPmesh* Init(OPvertexLayout vertexLayout);
 	void Bind();
+	void SetVertexLayout(OPvertexLayout* vertexLayout);
+	void UpdateVertexLayout(OPeffect* effect);
+	void Build(OPvertexLayout vertexLayout, OPindexSize indSize, ui32 vertCount, ui32 indCount, void* vertices, void* indices);
+	void Destroy();
+	inline void Free() {
+		Destroy();
+		OPfree(this);
+	}
 };
-typedef struct OPmesh OPmesh;
-
-struct OPmeshDesc {
-	void* Vertices;
-	ui32 VertexSize;
-	ui32 VertexCount;
-	void* Indices;
-	ui32 IndexSize;
-	ui32 IndexCount;
-};
-
-//-----------------------------------------------------------------------------
-//   _____ _       _           _
-//  / ____| |     | |         | |
-// | |  __| | ___ | |__   __ _| |___
-// | | |_ | |/ _ \| '_ \ / _` | / __|
-// | |__| | | (_) | |_) | (_| | \__ \
-//  \_____|_|\___/|_.__/ \__,_|_|___/
-extern OPmesh* OPMESH_ACTIVE;
-extern void* OPMESH_ACTIVE_PTR;
-
-//-----------------------------------------------------------------------------
-//  _____                     _____                  _____  _               _   _
-// |  __ \                   |  __ \                |  __ \(_)             | | (_)
-// | |__) _ __ ___   ______  | |__) _ __ ___   ___  | |  | |_ _ __ ___  ___| |_ ___   _____ ___
-// |  ___| '__/ _ \ |______| |  ___| '__/ _ \ / __| | |  | | | '__/ _ \/ __| __| \ \ / / _ / __|
-// | |   | | |  __/          | |   | | | (_) | (__  | |__| | | | |  __| (__| |_| |\ V |  __\__ \
-// |_|   |_|  \___|          |_|   |_|  \___/ \___| |_____/|_|_|  \___|\___|\__|_| \_/ \___|___/
-
-
-//-----------------------------------------------------------------------------
-// ______                _   _
-//|  ____|              | | (_)
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
-//|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
-//| |  | |_| | | | | (__| |_| | (_) | | | \__ \
-//|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-OPmesh OPmeshCreate();
-OPmesh* OPmeshCreate(OPmeshDesc desc);
-void OPmeshDestroy(OPmesh* mesh);
-void OPmeshBuild(ui32 vertSize, ui32 indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
-
 
 void OPmeshRender();
-
-
-#endif

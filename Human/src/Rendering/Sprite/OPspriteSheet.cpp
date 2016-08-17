@@ -11,11 +11,11 @@ void __opSpriteScaleFrames(OPtexture* tex, OPspriteSheet* ss) {
 	ASSERT(tex, "__opSpriteScaleFrames() - spritesheet null");
 	OPint i = 0;
 	OPvec2 size;
-	size.x = tex->Description.Width;
-	size.y = tex->Description.Height;
+	size.x = (f32)tex->textureDesc.width;
+	size.y = (f32)tex->textureDesc.height;
 
 	for (i = ss->Sprites; i--;){
-		OPsprite* s = (OPsprite*)OPcmanGet(ss->Names[i]);
+		OPsprite* s = (OPsprite*)OPCMAN.Get(ss->Names[i]);
 		OPint j = s->FrameCount;
 
 #ifdef _DEBUG
@@ -58,26 +58,22 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 	OPmemcpy(filenameWithoutExtension, str->Source + 8, filenameLengthWithoutExtension * sizeof(OPchar));
 	filenameWithoutExtension[filenameLengthWithoutExtension - 1] = '\0';
 
-	ASSERT(OP_CMAN_ASSETLOADERS,
-		"OPspriteSheetLoad() - OP_CMAN_HASHMAP null, is content man initialized?"
-		);
-
 	// allocate space for the texture before it's created
 	// this will allow us to refer to its location without
 	// yet having loaded it.
 	sheet = (OPtexture*)OPalloc(sizeof(OPtexture));
 
 	// read the dimensions of the image
-	width = OPreadi32(str);
-	height = OPreadi32(str);
+	width = str->I32();
+	height = str->I32();
 
 #ifdef _DEBUG
 	OPlog("Sprite sheet %dx%d", width, height);
 #endif
 
 	// read the sprite, and frame counts
-	sprites = OPreadi32(str);
-	frames = OPreadi32(str);
+	sprites = str->I32();
+	frames = str->I32();
 
 #ifdef _DEBUG
 	OPlog("Sprites: %d, Frames: %d", sprites, frames);
@@ -99,7 +95,7 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 			// setup a proxy var for frame data
 			OPasset* assetBucket = NULL;
 
-			OPchar* nameData = OPreadstring(str);
+			OPchar* nameData = str->String();
 			OPchar* name = (OPchar*)nameData;
 			ui32 nameDataLength = (ui32)strlen(name);
 
@@ -116,7 +112,7 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 
 			(*ss)->Names[i] = finalName;
 			OPfree(nameData);
-			ui32 flags = OPreadi32(str);
+			ui32 flags = str->I32();
 			ui32 spriteFrames = 1;
 			OPspriteFrame* spriteFrameData = frameData + frameNum;
 			OPsprite* sprite = (OPsprite*)OPallocZero(sizeof(OPsprite));
@@ -130,7 +126,7 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 
 			if (flags){
 				// this sprite has animation frames
-				spriteFrames = OPreadi32(str);
+				spriteFrames = str->I32();
 			}
 
 #ifdef _DEBUG
@@ -142,11 +138,11 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 				// read the sprite dimensions, scale them
 				// to fit within UV space
 				OPvec2 offset;
-				offset.x = (OPfloat)OPreadi32(str);
-				offset.y = (OPfloat)OPreadi32(str);
+				offset.x = (OPfloat)str->I32();
+				offset.y = (OPfloat)str->I32();
 				OPvec2 size;
-				size.x = (OPfloat)OPreadi32(str);
-				size.y = (OPfloat)OPreadi32(str);
+				size.x = (OPfloat)str->I32();
+				size.y = (OPfloat)str->I32();
 
 				// setup frame structure, copy into the frame buffer
 				OPspriteFrame frame = {
@@ -178,24 +174,11 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 			OPlog("Inserting sprite '%s'", finalName);
 #endif
 
-			// create the asset to insert into the hashmap
-			if (!(assetBucket = (OPasset*)OPallocZero(sizeof(OPasset))))
-				return OP_CMAN_BUCKET_ALLOC_FAILED;
-
-			assetBucket->Asset = (void*)sprite;
-			assetBucket->Unload = NULL;
-			assetBucket->Dirty = 0;
-
-#if defined(_DEBUG) && defined(OPIFEX_WINDOWS)
-			assetBucket->Reload = NULL;
-			assetBucket->AbsolutePath = NULL;
-			assetBucket->FullPath = NULL;
-			assetBucket->LastChange = NULL;
-#endif
-			OPhashMapPut(&OP_CMAN_HASHMAP, finalName, assetBucket);
+			assetBucket = OPNEW(OPasset((void*)sprite, NULL, NULL));
+			OPCMAN.Add(finalName, assetBucket);
 
 #ifdef _DEBUG
-			if(OPcmanIsLoaded(finalName)) {
+			if(OPCMAN.IsLoaded(finalName)) {
 				OPlog("OPSS %s loaded", finalName);
 			} else {
 				OPlog("OPSS FAILED TO LOAD %s", finalName);
@@ -238,11 +221,11 @@ OPint OPspriteSheetUnload(void* ss){
 	OPint i = sheet->Sprites;
 
 	// delete all frames for this sheet
-	OPfree(((OPsprite*)OPcmanGet(sheet->Names[i-1]))->Frames);
+	OPfree(((OPsprite*)OPCMAN.Get(sheet->Names[i-1]))->Frames);
 
 	// free all the sprites
 	for(;i--;){
-		OPsprite* s = (OPsprite*)OPcmanGet(sheet->Names[i]);
+		OPsprite* s = (OPsprite*)OPCMAN.Get(sheet->Names[i]);
 		OPfree(s);
 	}
 
@@ -255,12 +238,4 @@ OPint OPspriteSheetUnload(void* ss){
 	OPfree(ss);
 
 	return 1;
-}
-
-OPvec2 OPspriteCurrentFrameSize(OPsprite* sprite) {
-	f32 sheetWidth = sprite->Sheet->Description.Width;
-	f32 sheetHeight = sprite->Sheet->Description.Height;
-	f32 frameWidth = (sprite->Frames[sprite->Frame].Size.x * sheetWidth);
-	f32 frameHeight = (sprite->Frames[sprite->Frame].Size.y * sheetHeight);
-	return OPvec2(frameWidth, frameHeight);
 }

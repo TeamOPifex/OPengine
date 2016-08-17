@@ -6,7 +6,7 @@ typedef struct {
     OPeffect Effect;		// The Effect used to render the Mesh
     OPcam Camera;			// The Camera to use in the Effect to render the Mesh
     ui32 Rotation;			// The amount to rotate the Mesh
-    OPtextureCube CubeMap;
+    OPtextureCubeOLD CubeMap;
     OPsphericalCube SphericalCube;
 } CubeMapExample;
 CubeMapExample cubeMapExample;
@@ -31,18 +31,14 @@ void ExampleCubeMapEnter(OPgameState* last) {
     faces2[5] = OPimagePNGLoadData("Textures/cubeTex.png");
 
     cubeMapExample.Mesh = OPcubeCreate(OPvec3Create(1,0,0));
-    cubeMapExample.SphericalCube = OPsphericalCubeCreate(faces2);
+    cubeMapExample.SphericalCube.Init(faces2);
 
-    cubeMapExample.Effect = OPeffectGen(
-            "CubeMap.vert", "CubeMap.frag",
-            OPATTR_POSITION,
-            "Cube Map Effect",
-            cubeMapExample.SphericalCube.sides[0].vertexLayout.stride);
+    cubeMapExample.Effect.Init("CubeMap.vert", "CubeMap.frag");
 
-    cubeMapExample.Camera = OPcamPersp(
+    cubeMapExample.Camera.SetPerspective(
         OPVEC3_ONE, OPVEC3_ZERO, OPVEC3_UP,
         0.1f, 1000.0f, 45.0f,
-        OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
+		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
     );
 
     // This can be controlled in the update loop if it varies
@@ -58,12 +54,9 @@ OPint ExampleCubeMapUpdate(OPtimer* time) {
     // Update
     ////////////////////////
 
-    if (OPkeyboardIsDown(OPKEY_SPACE)) { cubeMapExample.Rotation++; }
-
-
-
+    if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { cubeMapExample.Rotation++; }
+	
     return false;
-
 }
 
 void ExampleCubeMapRender(OPfloat delta) {
@@ -83,7 +76,7 @@ void ExampleCubeMapRender(OPfloat delta) {
 		OPbindMeshEffectWorldCam(&cubeMapExample.SphericalCube.sides[i], &cubeMapExample.Effect, &world, &cubeMapExample.Camera);
 
 		OPtextureCubeClearActive();
-		OPeffectParam("uColorTexture", &cubeMapExample.CubeMap);
+		//OPeffectSet("uColorTexture", &cubeMapExample.CubeMap);
 
 		// Renders to the screen the currently bound Mesh (sphericalCubeExample->Mesh)
 		OPmeshRender();
@@ -93,7 +86,7 @@ void ExampleCubeMapRender(OPfloat delta) {
 }
 
 OPint ExampleCubeMapExit(OPgameState* next) {
-    OPeffectUnload(&cubeMapExample.Effect);
+    cubeMapExample.Effect.Destroy();
     return 0;
 }
 

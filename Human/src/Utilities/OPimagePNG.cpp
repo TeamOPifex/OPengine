@@ -1,30 +1,30 @@
 
 #include "./Human/include/Utilities/OPimagePNG.h"
-
-#include <string.h>
+#include "./External/LodePNG/include/LodePNG.h"
+#include "./Human/include/Rendering/OPimage.h"
+#include "./Human/include/Rendering/OPtexture.h"
+#include "./Data/include/OPfile.h"
 #include "./Core/include/OPlog.h"
 #include "./Core/include/Assert.h"
-#include "./Data/include/OPfile.h"
+#include "./Core/include/OPmemory.h"
+#include <stdio.h>
+#include <string.h>
 #include <cstdio>
 #include <string>
-#include "./Core/include/OPmemory.h"
-#include "./Human/include/Rendering/OPtexture.h"
-#include "./Human/include/Utilities/Errors.h"
-#include "./External/LodePNG/include/LodePNG.h"
 
-
-#ifdef OPIFEX_OPENGL_ES_2
-    #ifdef OPIFEX_IOS
-    #include <OpenGLES/ES2/gl.h>
-    #else
-    #include <GLES2/gl2.h>
-    #include <GLES2/gl2ext.h>
-    #endif
-
-#else
-    #include <GLFW/glfw3.h>
-    #include <GL/glew.h>
-#endif
+//
+//#ifdef OPIFEX_OPENGL_ES_2
+//    #ifdef OPIFEX_IOS
+//    #include <OpenGLES/ES2/gl.h>
+//    #else
+//    #include <GLES2/gl2.h>
+//    #include <GLES2/gl2ext.h>
+//    #endif
+//
+//#else
+//    #include <GLFW/glfw3.h>
+//    #include <GL/glew.h>
+//#endif
 
 void OPimagePNG24WriteStream(ui8* imageData, i32 width, i32 height, ui8** data, OPuint* dataSize) {
 	ui32 error = lodepng_encode24(data, (size_t*)dataSize, imageData, width, height);
@@ -49,8 +49,7 @@ void OPimagePNGCreate32(ui8* imageData, i32 width, i32 height, OPchar* filename)
 }
 
 i32 OPimagePNGLoad(OPstream* str, OPtexture** image){
-	OPlog("OPimagePNGLoad image %s", str->Source);
-	OPglError("OPimagePNGLoad:Error 0::%d");
+	//OPlog("OPimagePNGLoad image %s", str->Source);
 	//OPstream* str = OPreadFile(filename);
 	ASSERT(str != NULL, "Image not found.");
 	return OPimagePNGLoadStream(str, 0, image);
@@ -61,7 +60,7 @@ OPimage OPimagePNGLoadData(const OPchar* filename) {
 	ui8* data;
 	ui32 width, height;
 	OPimage result = { 0, 0, 0 };
-	OPstream* str = OPreadFile(filename);
+	OPstream* str = OPfile::ReadFromFile(filename);
 	ASSERT(str != NULL, "FAILED to read file");
 
 	error = lodepng_decode32(&data, &width, &height, str->Data, str->Length);
@@ -74,11 +73,13 @@ OPimage OPimagePNGLoadData(const OPchar* filename) {
 	result.Height = height;
 	result.Data = data;
 
+	str->Destroy();
+	OPfree(str);
+
 	return result;	
 }
 
 i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
-	OPglError("OPimagePNGLoad:Error 0");
 	ui32 error;
 	ui8* data;
 	ui32 width, height;
@@ -91,39 +92,24 @@ i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
 	//	OPlog("Data: %s", data[i]);
 	//	if (data[i] == 0) break;
 	//}
-	OPglError("OPimagePNGLoad:Error 1");
-	OPtexture* tex = (OPtexture*)OPalloc(sizeof(OPtexture));
-	OPglError("OPimagePNGLoad:Error 2");
+	OPtexture* tex = OPNEW(OPtexture());
 
 	ui16 w = width, h = height;
-	OPtextureDescription desc = {
-		w,
-		h,
-		GL_RGBA,
-		GL_RGBA,
-		GL_UNSIGNED_BYTE,
-		OPtextureLinear,
-		OPtextureLinear,
-		OPtextureRepeat,
-		OPtextureRepeat
-	};
+	OPtextureDesc desc;
+	desc.width = w;
+	desc.height = h;
+	desc.format = OPtextureFormat::RGBA;
+	desc.wrap = OPtextureWrap::REPEAT;
+	desc.filter = OPtextureFilter::LINEAR;
 
-	OPtextureClearActive();
-	OPglError("OPimagePNGLoad:Error 3");
-	*tex = OPtextureCreate(desc);
-	OPglError("OPimagePNGLoad:Error 4");
-	OPtextureBind(tex);
-	OPglError("OPimagePNGLoad:Error 5");
-	OPtextureSetData(data);
-	OPglError("OPimagePNGLoad:Error 6");
+	OPRENDERER_ACTIVE->Texture.Init(tex, desc);
+	tex->SetData(data);
 
 	// clean up
 	free(data); // Clean up load png 
-	//OPstreamDestroy(str);
 
 	*image = tex;
 
-	OPglError("OPimagePNGLoad:Error 7");
 
 	return 1;
 }
@@ -143,8 +129,7 @@ i32 OPimagePNGReload(OPstream* str, OPtexture** image){
 
 i32 OPimagePNGUnload(void* image){
 	OPtexture* tex = (OPtexture*)image;
-	OPtextureDestroy(tex);
+	tex->Destroy();
 	OPfree(tex);
-
 	return 1;
 }

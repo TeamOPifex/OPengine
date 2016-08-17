@@ -3,7 +3,7 @@
 #include "./Human/include/Rendering/Primitives/OPquad.h"
 
 int SPRITE_3D_INITIALIZED = 0;
-OPmesh SPRITE_3D_QUAD_MESH;
+OPmesh* SPRITE_3D_QUAD_MESH;
 OPeffect* EFFECT_SPRITE_3D;
 
 void OPsprite3DInit(OPeffect* effect) {
@@ -11,13 +11,7 @@ void OPsprite3DInit(OPeffect* effect) {
 
 	if (effect == NULL) {
 		EFFECT_SPRITE_3D = (OPeffect*)OPalloc(sizeof(OPeffect));
-		*EFFECT_SPRITE_3D = OPeffectGen(
-			"Common/OPspriteSheet3D.vert",
-			"Common/OPspriteSheet.frag",
-			OPATTR_POSITION | OPATTR_UV,
-			"3D Sprite sheet effect",
-			0
-			);
+		EFFECT_SPRITE_3D->Init("Common/OPspriteSheet3D.vert", "Common/OPspriteSheet.frag");
 
 		SPRITE_3D_INITIALIZED = 2;
 	}
@@ -85,7 +79,7 @@ void OPsprite3DSetSprite(OPsprite3D* sprite, i32 index) {
 
 void OPsprite3DPrepReRender(OPsprite3D* sprite, OPvec3 offset, OPfloat rotation) {
 	sprite->CurrentSprite->Frame = sprite->CurrentFrame;
-	OPvec2 frameSize = OPspriteCurrentFrameSize(sprite->CurrentSprite);
+	OPvec2 frameSize = sprite->CurrentSprite->FrameSize();
 	OPfloat widthScale = frameSize.x / frameSize.y;
 	OPfloat heightScale = 1.0f;
 	if (widthScale > 1.0f) {
@@ -103,13 +97,13 @@ void OPsprite3DPrepReRender(OPsprite3D* sprite, OPvec3 offset, OPfloat rotation)
 	world = OPmat4Scl(world, scl.x, scl.y, 1.0);
 	world += offset + sprite->Position;
 
-	OPeffectParamMat4("uWorld", &world);
-	OPeffectParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
-	OPeffectParamVec2("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size);
+	OPeffectSet("uWorld", &world);
+	OPeffectSet("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
+	OPeffectSet("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size);
 }
 
 void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfloat rotation) {
-	OPvec2 frameSize = OPspriteCurrentFrameSize(sprite->CurrentSprite);
+	OPvec2 frameSize = sprite->CurrentSprite->FrameSize();
 	//offset.x += sprite->CurrentSprite->Frames[sprite->CurrentSprite->Frame].Size.x / 2.0f;
 	//offset.y += sprite->CurrentSprite->Frames[sprite->CurrentSprite->Frame].Size.y / 2.0f;
 	OPfloat widthScale = frameSize.x / frameSize.y;
@@ -120,8 +114,8 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	}
 
 	OPmat4 world;
-	SPRITE_3D_QUAD_MESH.Bind();
-	OPeffectBind(sprite->Effect);
+	SPRITE_3D_QUAD_MESH->Bind();
+	sprite->Effect->Bind();
 	
 	OPmat4Identity(&world);
 	world = OPmat4Scl(world, widthScale, heightScale, 1.0);
@@ -132,17 +126,17 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	world = OPmat4Scl(world, scl.x, scl.y, 1.0);
 	world += offset + sprite->Position;
 
-	OPtextureClearActive();
-	ui32 bind = OPtextureBind(sprite->CurrentSprite->Sheet);
+	//OPtextureClearActive();
+	//ui32 bind = OPtextureBind(sprite->CurrentSprite->Sheet);
 
 	//OPlog("SpriteSheet %d @ %x", bind, sprite->CurrentSprite->Sheet);
-	OPeffectParami("uColorTexture", bind);
+	OPeffectSet("uColorTexture", sprite->CurrentSprite->Sheet, 0);
 	//OPeffectParamf("uAlpha", 1.0f);
-	OPeffectParamMat4("uWorld", &world);
-	OPeffectParamMat4("uView", &camera->view);
-	OPeffectParamMat4("uProj", &camera->proj);
-	OPeffectParamVec2("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
-	OPeffectParamVec2("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size);
+	OPeffectSet("uWorld", &world);
+	OPeffectSet("uView", &camera->view);
+	OPeffectSet("uProj", &camera->proj);
+	OPeffectSet("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
+	OPeffectSet("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size);
 }
 
 void OPsprite3DRender(OPsprite3D* sprite, OPcam* camera) {
@@ -157,7 +151,7 @@ void OPsprite3DRenderOffsetRot(OPsprite3D* sprite, OPcam* camera, OPvec3 offset,
 
 
 OPvec2 OPsprite3DSize(OPsprite3D* sprite) {
-	OPvec2 frameSize = OPspriteCurrentFrameSize(sprite->CurrentSprite);
+	OPvec2 frameSize = sprite->CurrentSprite->FrameSize();
 
 	OPfloat widthScale = frameSize.x / frameSize.y;
 	OPfloat heightScale = 1.0f;

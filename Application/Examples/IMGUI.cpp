@@ -36,17 +36,11 @@ void ExampleIMGUIEnter(OPgameState* last) {
 	imguiExample.textActive = 0;
 	imguiExample.clear = OPvec3Create(0,0,0);
 
-	imguiExample.FontManager = OPfontManagerSetup("Ubuntu.opf", NULL, 0);
+	imguiExample.FontManager = OPfontManager::Create("Ubuntu.opf", NULL, 0);
 	imguiExample.FontManager->scale = 0.75;
 
 
-	imguiExample.effect = OPeffectGen(
-		"imgui.vert",
-		"imgui.frag",
-		OPATTR_POSITION | OPATTR_COLOR4,
-		"IMGUI Shader",
-		sizeof(OPfloat) * 7
-		);
+	imguiExample.effect.Init("imgui.vert", "imgui.frag");
 	imguiExample.imgui = OPimguiCreate(&imguiExample.effect, imguiExample.FontManager);
 	imguiExample.imgui->primaryColor = OPvec4Create(1, 0, 0, 1);
 	imguiExample.imgui->secondaryColor = OPvec4Create(1, 1, 1, 1);
@@ -59,7 +53,7 @@ void ExampleIMGUIEnter(OPgameState* last) {
 OPint ExampleIMGUIUpdate(OPtimer* time) {
 
 
-	if(OPkeyboardWasPressed(OPKEY_BACKSPACE) && imguiExample.textActive && strlen(imguiExample.buffer) > 0) {
+	if(OPKEYBOARD.WasPressed(OPkeyboardKey::BACKSPACE) && imguiExample.textActive && strlen(imguiExample.buffer) > 0) {
 		OPlog("Buff %s", imguiExample.buffer);
 		imguiExample.buffer[strlen(imguiExample.buffer) - 1] = '\0';
 		OPlog("Buff %s", imguiExample.buffer);

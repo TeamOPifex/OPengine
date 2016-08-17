@@ -1,5 +1,5 @@
-#ifndef OPENGINE_PIPELINE_FMOD
-#define OPENGINE_PIPELINE_FMOD
+// TODO: (garrett) Move this into an addon
+#pragma once
 
 #include "./Core/include/OPtypes.h"
 
@@ -22,16 +22,14 @@ void OPfmodSetVolume(OPfmodChannel* channel, OPfloat volume);
 void OPfmodSetVolume(OPfmodChannelGroup* channel, OPfloat volume);
 void OPfmodUpdate();
 
-inline OPint OPfmodIsPlaying(OPfmodChannel* channel) {
+inline bool OPfmodIsPlaying(OPfmodChannel* channel) {
 	bool isPlaying;
 	channel->isPlaying(&isPlaying);
 	return isPlaying;
 }
 
-inline void OPfmodSetPause(OPfmodChannel* channel, i8 pause) {
+inline void OPfmodSetPause(OPfmodChannel* channel, bool pause) {
 	channel->setPaused(pause);
 }
-
-#endif
 
 #endif

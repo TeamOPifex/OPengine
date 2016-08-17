@@ -1,5 +1,4 @@
-#ifndef OP_PERFORMANCE_PHYSXEVENTHANDLER
-#define OP_PERFORMANCE_PHYSXEVENTHANDLER
+#pragma once
 
 #include "./Performance/include/OPphysX.h"
 
@@ -50,7 +49,5 @@ private:
 	void(*_onTrigger)(OPphysXTrigger);
 	void(*_onContact)(OPphysXContact);
 };
-
-#endif
 
 #endif

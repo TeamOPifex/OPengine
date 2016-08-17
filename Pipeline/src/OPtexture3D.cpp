@@ -10,13 +10,7 @@ void LoadDefaultTexture3DEffect() {
 	if (DEFAULT_TEXTURE3D_EFFECT != NULL) return;
 
 	DEFAULT_TEXTURE3D_EFFECT = (OPeffect*)OPalloc(sizeof(OPeffect));
-	*DEFAULT_TEXTURE3D_EFFECT = OPeffectGen(
-		"Common/Texture3D.vert",
-		"Common/Texture.frag",
-		OPATTR_POSITION | OPATTR_UV,
-		"Texture3D Effect",
-		0
-		);
+	DEFAULT_TEXTURE3D_EFFECT->Init("Common/Texture3D.vert", "Common/Texture.frag");
 }
 
 OPtexture3D* OPtexture3DCreate(OPtexture* texture, OPeffect* effect) {
@@ -33,8 +27,7 @@ OPtexture3D* OPtexture3DCreate(OPtexture* texture, OPeffect* effect) {
 	}
 
 	if (TEXTURE_3D_QUAD_MESH == NULL) {
-		TEXTURE_3D_QUAD_MESH = (OPmesh*)OPalloc(sizeof(OPmesh));
-		*TEXTURE_3D_QUAD_MESH = OPquadCreate();
+		TEXTURE_3D_QUAD_MESH = OPquadCreate();
 	}
 
 	return tex3d;
@@ -46,7 +39,7 @@ void OPtexture3DDestroy(OPtexture3D* tex3d) {
 
 void OPtexture3DPrepRender(OPtexture3D* tex3d, OPcam* camera) {
 	TEXTURE_3D_QUAD_MESH->Bind();
-	OPeffectBind(tex3d->Effect);
+	tex3d->Effect->Bind();
 
 	OPrenderDepth(0);
 
@@ -58,11 +51,10 @@ void OPtexture3DPrepRender(OPtexture3D* tex3d, OPcam* camera) {
 	world = OPmat4Scl(world, tex3d->Scale.x, tex3d->Scale.y, 1.0);
 	world += tex3d->Position;
 
-	OPtextureClearActive();
-	OPeffectParami("uColorTexture", OPtextureBind(tex3d->Texture));
-	OPeffectParamMat4v("uWorld", 1, &world);
-	OPeffectParamMat4v("uProj", 1, &camera->proj);
-	OPeffectParamMat4v("uView", 1, &camera->view);
+	OPeffectSet("uColorTexture", tex3d->Texture, 0);
+	OPeffectSet("uWorld", 1, &world);
+	OPeffectSet("uProj", 1, &camera->proj);
+	OPeffectSet("uView", 1, &camera->view);
 }
 
 void OPtexture3DRender(OPtexture3D* tex3d, OPcam* camera) {

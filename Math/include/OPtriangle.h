@@ -1,22 +1,19 @@
-//
-// Created by Garrett Hoofman on 11/28/15.
-//
+#pragma once
 
-#ifndef OPIFEXENGINE_OPTRIANGLE_H
-#define OPIFEXENGINE_OPTRIANGLE_H
+struct OPtriangle;
+typedef OPtriangle OPtriangle;
+
+#define EPSILON 0.000001
 
 #include "./Math/include/OPvec3.h"
+#include "./Math/include/OPray3D.h"
 
 struct OPtriangle {
     OPvec3 pointOne;
     OPvec3 pointTwo;
     OPvec3 pointThree;
 };
-typedef OPtriangle OPtriangle;
 
-#include "./Math/include/OPray3D.h"
-
-#define EPSILON 0.000001
 
 i8 OPtriangleRayIntersect(OPtriangle* triangle, OPray3D* ray, OPvec3* hit) {
     OPvec3 edge1, edge2, tvec, pvec, qvec;
@@ -55,5 +52,3 @@ i8 OPtriangleRayIntersect(OPtriangle* triangle, OPray3D* ray, OPvec3* hit) {
 
     return 1;
 }
-
-#endif //OPIFEXENGINE_OPTRIANGLE_H

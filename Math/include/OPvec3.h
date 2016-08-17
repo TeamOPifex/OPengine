@@ -1,5 +1,8 @@
-#ifndef OP_MATH_VECTOR3
-#define OP_MATH_VECTOR3
+#pragma once
+
+struct OPvec3;
+struct OPmat4;
+
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmath.h"
 #include "./Core/include/OPlog.h"
@@ -7,9 +10,6 @@
 #include "./Data/include/OPstream.h"
 #include "./Data/include/OPfile.h"
 #include "./Math/include/OPvec2.h"
-
-struct OPvec3;
-struct OPmat4;
 
 inline OPvec3 OPvec3Create(OPfloat x, OPfloat y, OPfloat z);
 
@@ -282,16 +282,16 @@ inline OPvec3 OPvec3Abs(OPvec3 v){
 
 inline OPvec3 OPvec3Read(OPstream* str) {
 	OPvec3 temp(
-		OPreadf32(str),
-		OPreadf32(str),
-		OPreadf32(str));
+		str->F32(),
+		str->F32(),
+		str->F32());
 	return temp;
 }
 
 inline void OPvec3Write(OPvec3 v, OPstream* str) {
-	OPwrite(str, &v.x, sizeof(f32));
-	OPwrite(str, &v.y, sizeof(f32));
-	OPwrite(str, &v.z, sizeof(f32));
+	str->Write(&v.x);
+	str->Write(&v.y);
+	str->Write(&v.z);
 }
 
 inline OPvec3 OPvec3RandNorm(){
@@ -313,4 +313,3 @@ inline OPvec3 OPvec3Tween(OPvec3 a, OPvec3 b, OPfloat delta) {
 		a.z + (b.z - a.z) * delta
 		);
 }
-#endif

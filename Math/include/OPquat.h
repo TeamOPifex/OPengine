@@ -1,36 +1,62 @@
 #pragma once
-#ifndef OP_MATH_QUATERNION
-#define OP_MATH_QUATERNION
 
-#include "./Core/include/OPtypes.h"
+struct OPquat;
+typedef struct OPquat OPquat;
+
+#include "./Math/include/OPvec3.h"
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPmath.h"
-#include "./Math/include/OPvec3.h"
 
 #define OPQUAT_AXIS(q) *((OPvec3*)(&q))
 
 struct OPquat {
 	OPfloat x, y, z, w;
+	OPquat() {
+		this->x = 0;
+		this->y = 0;
+		this->z = 0;
+		this->w = 1;
+	}
+
+	OPquat(OPfloat x, OPfloat y, OPfloat z, OPfloat w) {
+		this->x = x;
+		this->y = y;
+		this->z = z;
+		this->w = w;
+	}
+
+	OPquat(OPvec3 axis, OPfloat w) {
+		this->x = axis.x;
+		this->y = axis.y;
+		this->z = axis.z;
+		this->w = w;
+	}
+
 	OPquat operator=(OPquat vhs) {
 		OPmemcpy(this, &vhs, sizeof(OPquat)); return *this;
 	}
+
+	inline OPquat operator+(OPquat rhs) {
+		return OPquat(
+			x + rhs.x,
+			y + rhs.y,
+			z + rhs.z,
+			w + rhs.w);
+	}
+
+	inline OPquat operator-(OPquat rhs) {
+		return OPquat(
+			x - rhs.x,
+			y - rhs.y,
+			z - rhs.z,
+			w - rhs.w);
+	}
+
+	OPquat operator*(OPquat rhs);
 };
 
 extern const OPquat OPQUAT_IDENTITY;
 
-inline OPquat OPquatCreate(OPfloat x, OPfloat y, OPfloat z, OPfloat w) {
-	OPquat tmp = { x, y, z, w };
-	return tmp;
-}
-
-inline OPquat OPquatCreate(OPvec3 axis, OPfloat w) {
-	OPquat tmp = { axis.x, axis.y, axis.z, w };
-	return tmp;
-}
-
-inline OPquat OPquatAdd(OPquat a, OPquat b);
-inline OPquat OPquatSub(OPquat a, OPquat b);
-inline OPquat OPquatMul(OPquat a, OPquat b);
 inline OPquat OPquatScl(OPquat a, OPfloat s);
 inline OPquat OPquatConj(OPquat a);
 inline OPquat OPquatNorm(OPquat a);
@@ -41,43 +67,6 @@ inline OPquat OPquatCreateRot(OPvec3 axis, OPfloat angle);
 inline OPquat OPquatCreateLookAt(OPvec3 eye, OPvec3 target);
 inline OPvec3 OPquatRot(OPquat q, OPvec3 v);
 
-inline OPquat OPquatAdd(OPquat a, OPquat b){
-	OPquat out = {
-		a.x + b.x,
-		a.y + b.y,
-		a.z + b.z,
-		a.w + b.w
-	};
-	return out;
-}
-
-inline OPquat OPquatSub(OPquat a, OPquat b){
-	OPquat out = {
-		a.x - b.x,
-		a.y - b.y,
-		a.z - b.z,
-		a.w - b.w
-	};
-	return out;
-}
-
-inline OPquat OPquatMul(OPquat a, OPquat b){
-	OPfloat dot = a.x * b.x + a.y * b.y + a.z * b.z;
-	OPvec3 vb = OPQUAT_AXIS(b) * a.w;
-	OPvec3 va = OPQUAT_AXIS(a) * b.w;
-	OPvec3 sum = vb + va;
-	OPvec3 cross = OPvec3Cross(OPQUAT_AXIS(a), OPQUAT_AXIS(b));
-	sum += cross;
-
-	OPquat out = {
-		sum.x,
-		sum.y,
-		sum.z,
-		a.w * b.w - dot
-	};
-
-	return out;
-}
 
 inline OPquat OPquatScl(OPquat a, OPfloat s){
 	OPquat out = {
@@ -103,7 +92,7 @@ inline OPquat OPquatConj(OPquat a){
 
 inline OPquat OPquatNorm(OPquat a){
 	OPquat conj = OPquatConj(a);
-	return OPquatMul(a, conj);
+	return a * conj;
 }
 
 inline OPfloat OPquatDot(OPquat a, OPquat b){
@@ -174,7 +163,7 @@ inline OPquat OPquatCreateLookAt(OPvec3 eye, OPvec3 target){
 	OPfloat dot = OPvec3Dot(forwardUnit, OPVEC3_FORWARD);
 
 	if(OPabs(dot + 1.0f) < 0.00001f){
-		return OPquatCreate(OPVEC3_UP, OPpi);
+		return OPquat(OPVEC3_UP, OPpi);
 	}
 	else if(OPabs(dot - 1.0f) < 0.00001f){
 		return OPQUAT_IDENTITY;
@@ -205,7 +194,7 @@ inline OPquat OPquatRotationBetween(OPvec3 start, OPvec3 dest) {
 			rotationAxis = OPvec3Cross(OPvec3Create(1.0f, 0.0f, 0.0f), start);
 		}
 		rotationAxis = OPvec3Norm(rotationAxis);
-		return OPquatCreate(rotationAxis, 180.0f);
+		return OPquat(rotationAxis, 180.0f);
 	}
 
 	rotationAxis = OPvec3Cross(start, dest);
@@ -213,7 +202,7 @@ inline OPquat OPquatRotationBetween(OPvec3 start, OPvec3 dest) {
 	f32 s = (f32)OPsqrt( (1+cosTheta)*2 );
 	f32 invs = 1 / s;
 
-	return OPquatCreate(
+	return OPquat(
 		s * 0.5f,
 		rotationAxis.x * invs,
 		rotationAxis.y * invs,
@@ -234,11 +223,11 @@ inline OPquat OPquatRotationBetween2(OPvec3 start, OPvec3 dest) {
 	dest = OPvec3Norm(dest);
 
 	if(start.x == -dest.x && start.y == -dest.y && start.z == -dest.z) {
-		return OPquatCreate(OPvec3Norm(OPvec3Orthogonal(start)), 0);
+		return OPquat(OPvec3Norm(OPvec3Orthogonal(start)), 0);
 	}
 
 	OPvec3 half = OPvec3Norm(start + dest);
-	return OPquatCreate(OPvec3Cross(start, half), OPvec3Dot(start, half));
+	return OPquat(OPvec3Cross(start, half), OPvec3Dot(start, half));
 }
 
 inline OPquat OPquatRotationBetween3(OPvec3 start, OPvec3 dest) {
@@ -248,14 +237,14 @@ inline OPquat OPquatRotationBetween3(OPvec3 start, OPvec3 dest) {
 	OPvec3 axis = OPvec3Cross(start, dest);
 	f32 len = OPvec3Len(axis);
 	if(len == 0) {
-		return OPquatCreate(0,0,0,1);
+		return OPquat(0,0,0,1);
 	}
 
 	f32 angle = OPasin(len);
 	axis *= 1 / len;
 	//OPvec3Norm(axis);
 	//OPmat4RotY(axis.y)
-	return OPquatCreate(axis, angle);
+	return OPquat(axis, angle);
 }
 
 inline OPquat OPquatRotationBetween4(OPvec3 from, OPvec3 to)
@@ -287,7 +276,7 @@ inline OPquat OPquatRotationBetween5(OPvec3 normal) {
 //		OPcos(phi / 2.0f)
 //	};
 //	return result;
-	return OPquatCreate(axis, phi);
+	return OPquat(axis, phi);
 }
 
 inline OPfloat OPquatLen(OPquat a){
@@ -297,6 +286,5 @@ inline OPfloat OPquatLen(OPquat a){
 inline OPquat OPquatLerp(OPquat a, OPquat b, OPfloat p){
 	OPquat as = OPquatScl(a, p);
 	OPquat bs = OPquatScl(b, 1 - p);
-	return OPquatAdd(as, bs);
+	return as + bs;
 }
-#endif

@@ -58,7 +58,7 @@ JS_RETURN_VAL _OPskeletonLocalTranslate(const JS_ARGS& args) {
     // OPlog("Skeleton Get");
 
     OPskeleton* skeletonPtr = JS_GET_ARG_PTR(args, 0, OPskeleton);
-    i16 index = args[1]->IntegerValue();
+    i16 index = (i16)args[1]->IntegerValue();
     OPvec3 pos = OPskeletonLocalTranslate(skeletonPtr, index);
 
     OPvec3* ptr = (OPvec3*)OPalloc(sizeof(OPvec3));
@@ -75,7 +75,7 @@ JS_RETURN_VAL _OPskeletonLocalTranslateSelf(const JS_ARGS& args) {
     // OPlog("Skeleton Get");
 
     OPskeleton* skeletonPtr = JS_GET_PTR(args.This(), OPskeleton);
-    i16 index = args[0]->IntegerValue();
+    i16 index = (i16)args[0]->IntegerValue();
     OPvec3 pos = OPskeletonLocalTranslate(skeletonPtr, index);
 
     OPvec3* ptr = (OPvec3*)OPalloc(sizeof(OPvec3));
@@ -127,20 +127,20 @@ JS_RETURN_VAL _OPskeletonCreate(const JS_ARGS& args) {
     Handle<Object> result = JS_NEW_OBJECT();
 
     Local<Array> arr = Local<Array>::Cast(args[0]);
-    OPuint count =  arr->Length();
+    ui32 count =  arr->Length();
     i16* hierarchy = (i16*)OPalloc(sizeof(i16) * count);
     OPmat4* pose = (OPmat4*)OPalloc(sizeof(OPmat4) * count);
     OPchar** names = (OPchar**)OPalloc(sizeof(OPchar*) * count);
 
-    for(OPuint i = 0 ; i < count; i++) {
-      hierarchy[i] = arr->Get(i)->NumberValue();
+    for(ui32 i = 0 ; i < count; i++) {
+      hierarchy[i] = (i16)arr->Get(i)->NumberValue();
       // OPlog("h: %d", hierarchy[i]);
     }
 
 
     Local<Array> arrPose = Local<Array>::Cast(args[1]);
     count =  arrPose->Length();
-    for(OPuint i = 0 ; i < count; i++) {
+    for(ui32 i = 0 ; i < count; i++) {
       Local<Object> item = Local<Object>::Cast(arrPose->Get(i));
       pose[i] = *JS_GET_PTR(item, OPmat4);
       // OPmat4Log("Pose", pose[i]);
@@ -151,7 +151,7 @@ JS_RETURN_VAL _OPskeletonCreate(const JS_ARGS& args) {
     count =  arrNames->Length();
     // OPlog("Name Count: %d, %d", count, sizeof(OPchar*));
     // OPlog("Pos %p", names);
-    for(OPuint i = 0 ; i < count; i++) {
+    for(ui32 i = 0 ; i < count; i++) {
         // OPlog("C: %d", i);
         String::Utf8Value name(arrNames->Get(i)->ToString());
         // OPlog("Name: %s", *name);

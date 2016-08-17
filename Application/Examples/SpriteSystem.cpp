@@ -15,16 +15,16 @@ SpriteSystemExample spriteSystemExample;
 
 void ExampleSpriteSystemEnter(OPgameState* last) {
 
-	OPcmanLoad("spriteExample.opss");
+	OPCMAN.Load("spriteExample.opss");
 
-	spriteSystemExample.sprites[0] = (OPsprite*)OPcmanGet("spriteExample/Bear");
+	spriteSystemExample.sprites[0] = (OPsprite*)OPCMAN.Get("spriteExample/Bear");
 	OPspriteSystemEffectDefault(&spriteSystemExample.spriteEffect);
 	OPspriteSystemInit(&spriteSystemExample.spriteSystem, spriteSystemExample.sprites, 5, &spriteSystemExample.spriteEffect, OPSPRITESYSTEMALIGN_BOTTOM_CENTER);
 	OPspriteSystemSprite* sp = OPspriteSystemAdd(&spriteSystemExample.spriteSystem);
 	sp->Scale = OPvec2(10, 10);
 	sp->Position = OPvec2(300, 100);
 
-	spriteSystemExample.camera = OPcamOrtho(OPvec3Create(0, 0, 10), OPVEC3_ZERO, OPVEC3_UP, 0.1f, 20.0f, 0, (OPfloat)OPRENDER_WIDTH, 0, (OPfloat)OPRENDER_HEIGHT);
+	spriteSystemExample.camera.SetOrtho(OPvec3Create(0, 0, 10), OPVEC3_ZERO, OPVEC3_UP, 0.1f, 20.0f, 0, (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, 0, (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height);
 }
 
 OPint ExampleSpriteSystemUpdate(OPtimer* time) {

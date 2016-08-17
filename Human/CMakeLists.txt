@@ -21,8 +21,9 @@ add_external_opifex_includes()
 add_source_group(include/ "${PROJECT_SOURCE_DIR}/Human/include" HUMAN_SRC)
 add_source_group(include/Audio "${PROJECT_SOURCE_DIR}/Human/include/Audio" HUMAN_SRC)
 add_source_group(include/Input "${PROJECT_SOURCE_DIR}/Human/include/Input" HUMAN_SRC)
-add_source_group(include/Input "${PROJECT_SOURCE_DIR}/Human/include/Input" HUMAN_SRC)
+add_source_group(include/Input/Enums "${PROJECT_SOURCE_DIR}/Human/include/Input/Enums" HUMAN_SRC)
 add_source_group(include/Rendering "${PROJECT_SOURCE_DIR}/Human/include/Rendering" HUMAN_SRC)
+add_source_group(include/Rendering/API "${PROJECT_SOURCE_DIR}/Human/include/Rendering/API" HUMAN_SRC)
 add_source_group(include/Rendering/Camera "${PROJECT_SOURCE_DIR}/Human/include/Rendering/Camera" HUMAN_SRC)
 add_source_group(include/Rendering/Commands "${PROJECT_SOURCE_DIR}/Human/include/Rendering/Commands" HUMAN_SRC)
 add_source_group(include/Rendering/Skinning "${PROJECT_SOURCE_DIR}/Human/include/Rendering/Skinning" HUMAN_SRC)
@@ -31,8 +32,12 @@ add_source_group(include/Rendering/GL "${PROJECT_SOURCE_DIR}/Human/include/Rende
 add_source_group(include/Rendering/Primitives "${PROJECT_SOURCE_DIR}/Human/include/Rendering/Primitives" HUMAN_SRC)
 add_source_group(include/Rendering/Sprite "${PROJECT_SOURCE_DIR}/Human/include/Rendering/Sprite" HUMAN_SRC)
 add_source_group(include/Rendering/UI "${PROJECT_SOURCE_DIR}/Human/include/Rendering/UI" HUMAN_SRC)
+add_source_group(include/Rendering/Enums "${PROJECT_SOURCE_DIR}/Human/include/Rendering/Enums" HUMAN_SRC)
 add_source_group(include/Systems "${PROJECT_SOURCE_DIR}/Human/include/Systems" HUMAN_SRC)
 add_source_group(include/Utilities "${PROJECT_SOURCE_DIR}/Human/include/Utilities" HUMAN_SRC)
+add_source_group(include/Platform "${PROJECT_SOURCE_DIR}/Human/include/Platform" HUMAN_SRC)
+add_source_group(include/Platform/opengl "${PROJECT_SOURCE_DIR}/Human/include/Platform/opengl" HUMAN_SRC)
+add_source_group(include/Platform/directx "${PROJECT_SOURCE_DIR}/Human/include/Platform/directx" HUMAN_SRC)
 
 
 #########################################
@@ -43,6 +48,7 @@ add_source_group(src/Audio "${PROJECT_SOURCE_DIR}/Human/src/Audio" HUMAN_SRC)
 add_source_group(src/Input "${PROJECT_SOURCE_DIR}/Human/src/Input" HUMAN_SRC)
 add_source_group(src/Input "${PROJECT_SOURCE_DIR}/Human/src/Input" HUMAN_SRC)
 add_source_group(src/Rendering "${PROJECT_SOURCE_DIR}/Human/src/Rendering" HUMAN_SRC)
+add_source_group(src/Rendering/API "${PROJECT_SOURCE_DIR}/Human/src/Rendering/API" HUMAN_SRC)
 add_source_group(src/Rendering/Camera "${PROJECT_SOURCE_DIR}/Human/src/Rendering/Camera" HUMAN_SRC)
 add_source_group(src/Rendering/Commands "${PROJECT_SOURCE_DIR}/Human/src/Rendering/Commands" HUMAN_SRC)
 add_source_group(src/Rendering/Font "${PROJECT_SOURCE_DIR}/Human/src/Rendering/Font" HUMAN_SRC)
@@ -53,6 +59,9 @@ add_source_group(src/Rendering/Sprite "${PROJECT_SOURCE_DIR}/Human/src/Rendering
 add_source_group(src/Rendering/UI "${PROJECT_SOURCE_DIR}/Human/src/Rendering/UI" HUMAN_SRC)
 add_source_group(src/Systems "${PROJECT_SOURCE_DIR}/Human/src/Systems" HUMAN_SRC)
 add_source_group(src/Utilities "${PROJECT_SOURCE_DIR}/Human/src/Utilities" HUMAN_SRC)
+add_source_group(src/Platform "${PROJECT_SOURCE_DIR}/Human/src/Platform" HUMAN_SRC)
+add_source_group(src/Platform/opengl "${PROJECT_SOURCE_DIR}/Human/src/Platform/opengl" HUMAN_SRC)
+add_source_group(src/Platform/directx "${PROJECT_SOURCE_DIR}/Human/src/Platform/directx" HUMAN_SRC)
 
 
 #########################################

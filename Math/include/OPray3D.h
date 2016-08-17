@@ -1,5 +1,7 @@
-#ifndef OP_MATH_RAY3D
-#define OP_MATH_RAY3D
+#pragma once
+
+struct OPray3D;
+typedef struct OPray3D OPray3D;
 
 #include "./Math/include/OPvec3.h"
 
@@ -41,5 +43,3 @@ inline OPint OPplane3DIntersects(OPplane3D plane, OPray3D ray, OPvec3* position)
 	}
 	return 0; // Does not intersect
 }
-
-#endif

@@ -16,7 +16,7 @@ JS_RETURN_VAL _OPfontLoad(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     String::Utf8Value str(args[0]->ToString());
-    OPfont* font = (OPfont*)OPcmanLoadGet(*str);
+    OPfont* font = (OPfont*)OPCMAN.LoadGet(*str);
 
     Handle<Object> result = JS_NEW_OBJECT();
     JS_SET_PTR(result, font);

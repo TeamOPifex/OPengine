@@ -11,10 +11,10 @@ JS_RETURN_VAL _OPcmanInit(const JS_ARGS& args) {
 
    if (args.Length() > 0) {
        v8::String::Utf8Value utf8(args[0]);
-        OPcmanInit(*utf8);
+	   OPCMAN.Init(*utf8);
        OPlog("Assets %s", *utf8);
    } else {
-        OPcmanInit(NULL);
+	   OPCMAN.Init(NULL);
    }
 
 
@@ -27,9 +27,9 @@ JS_RETURN_VAL _OPcmanLoad(const JS_ARGS& args) {
     if(args.Length() > 0) {
         v8::String::Utf8Value utf8(args[0]);
         const char* file = *utf8;
-        OPint result = OPcmanLoad(file);
+        OPint result = OPCMAN.Load(file);
 
-        JS_RETURN(JS_NEW_NUMBER(result));
+        JS_RETURN(JS_NEW_NUMBER((double)result));
     }
     JS_RETURN_NULL
 }
@@ -41,7 +41,7 @@ JS_RETURN_VAL _OPcmanGet(const JS_ARGS& args) {
         v8::String::Utf8Value utf8(args[0]);
         const char* file = *utf8;
 
-        void* asset = OPcmanGet(file);
+        void* asset = OPCMAN.Get(file);
 
         Handle<Object> result = JS_NEW_OBJECT();
         JS_SET_PTR(result, asset);
@@ -57,7 +57,7 @@ JS_RETURN_VAL _OPcmanLoadGet(const JS_ARGS& args) {
     if(args.Length() > 0) {
         v8::String::Utf8Value utf8(args[0]);
         const char* file = *utf8;
-        void* asset = OPcmanLoadGet(file);
+        void* asset = OPCMAN.LoadGet(file);
 
         Handle<Object> result = JS_NEW_OBJECT();
         JS_SET_PTR(result, asset);
@@ -71,7 +71,7 @@ JS_RETURN_VAL _OPcmanAddLoader(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
     OPassetLoader* ptr = JS_GET_ARG_PTR(args, 0, OPassetLoader);
-    OPcmanAddLoader(ptr);
+	OPCMAN.AddLoader(ptr);
 
     JS_RETURN_NULL
 }
@@ -80,7 +80,7 @@ JS_RETURN_VAL _OPcmanUpdate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
     OPtimer* ptr = JS_GET_ARG_PTR(args, 0, OPtimer);
-    OPcmanUpdate(ptr);
+	OPCMAN.Update(ptr);
 
     JS_RETURN_NULL
 }

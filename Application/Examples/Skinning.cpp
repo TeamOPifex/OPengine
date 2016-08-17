@@ -26,57 +26,50 @@ SkinningExample* skinningExample;
 
 void ExampleSkinningEnter(OPgameState* last) {
 
-	OPcmanLoad("Skinning.frag");
-	OPcmanLoad("Skinning.vert");
+	OPCMAN.Load("Skinning.frag");
+	OPCMAN.Load("Skinning.vert");
 	skinningExample = (SkinningExample*)OPalloc(sizeof(SkinningExample));
 
-	skinningExample->skeleton = (OPskeleton*)OPcmanLoadGet("ld35person.opm.skel");
-	skinningExample->animation = (OPskeletonAnimation*)OPcmanLoadGet("ld35person.opm.Take 001.anim");
-	skinningExample->animation2 = (OPskeletonAnimation*)OPcmanLoadGet("ld35person.opm.Take 001.anim");
-	skinningExample->animation3 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
-	skinningExample->animation4 = (OPskeletonAnimation*)OPcmanLoadGet("person.opm.Walk.anim");
+	skinningExample->skeleton = (OPskeleton*)OPCMAN.LoadGet("ld35person.opm.skel");
+	skinningExample->animation = (OPskeletonAnimation*)OPCMAN.LoadGet("ld35person.opm.Take 001.anim");
+	skinningExample->animation2 = (OPskeletonAnimation*)OPCMAN.LoadGet("ld35person.opm.Take 001.anim");
+	skinningExample->animation3 = (OPskeletonAnimation*)OPCMAN.LoadGet("person.opm.Walk.anim");
+	skinningExample->animation4 = (OPskeletonAnimation*)OPCMAN.LoadGet("person.opm.Walk.anim");
 
 
-	OPcmanLoad("Skinning.frag");
-	OPcmanLoad("Skinning.vert");
+	OPCMAN.Load("Skinning.frag");
+	OPCMAN.Load("Skinning.vert");
 
 	skinningExample->pos = 0;
-	skinningExample->Mesh = (OPmesh*)OPcmanLoadGet("ld35person.opm");
+	skinningExample->Mesh = (OPmesh*)OPCMAN.LoadGet("ld35person.opm");
 
 	OPshaderAttribute attribs[] = {
-		{ "aPosition", GL_FLOAT, 3 },
-		{ "aNormal", GL_FLOAT, 3 },
-		//{ "aTangent", GL_FLOAT, 3 },
-		{ "aUV", GL_FLOAT, 2 },
-		{ "aBlendIndices", GL_FLOAT, 4 },
-		{ "aBlendWeights", GL_FLOAT, 4 }
+		{ "aPosition", OPshaderElementType::FLOAT, 3 },
+		{ "aNormal", OPshaderElementType::FLOAT, 3 },
+		//{ "aTangent", OPshaderElementType::FLOAT, 3 },
+		{ "aUV", OPshaderElementType::FLOAT, 2 },
+		{ "aBlendIndices", OPshaderElementType::FLOAT, 4 },
+		{ "aBlendWeights", OPshaderElementType::FLOAT, 4 }
 	};
 
 	skinningExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	OPshader* vert = (OPshader*)OPcmanGet("Skinning.vert");
-	OPshader* frag = (OPshader*)OPcmanGet("Skinning.frag");
-	*skinningExample->Effect = OPeffectCreate(
-		*vert,
-		*frag,
-		attribs,
-		5,
-		"Model Effect",
-		skinningExample->Mesh->vertexLayout.stride
-		);
+	OPshader* vert = (OPshader*)OPCMAN.Get("Skinning.vert");
+	OPshader* frag = (OPshader*)OPCMAN.Get("Skinning.frag");
+	skinningExample->Effect->Init(vert, frag);
 
 	skinningExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
 	f32 pos = 10 * SCALE;
-	*skinningExample->Camera = OPcamPersp(
+	skinningExample->Camera->SetPerspective(
 		OPvec3Create(pos, pos, pos),
 		OPvec3Create(0, pos / 4.0f, 0),
 		OPvec3Create(0, 1, 0),
 		0.1f,
 		500.0f,
 		45.0f,
-		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
+		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
-		skinningExample->texture = (OPtexture*)OPcmanLoadGet("Knight.png");
+		skinningExample->texture = (OPtexture*)OPCMAN.LoadGet("Knight.png");
 }
 
 OPint heldDown = 0;
@@ -85,31 +78,31 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	OPrenderDepth(1);
 	OPrenderClear(0, 0, 0);
 
-	if (OPkeyboardWasPressed(OPKEY_P)) { skinningExample->pos++; }
-	if (OPkeyboardWasPressed(OPKEY_O)) { skinningExample->pos--; }
+	if (OPKEYBOARD.WasPressed(OPkeyboardKey::P)) { skinningExample->pos++; }
+	if (OPKEYBOARD.WasPressed(OPkeyboardKey::O)) { skinningExample->pos--; }
 
-	//if (OPkeyboardWasPressed(OPKEY_M)) { skinningExample->Mesh->SkeletonAnimation.Frame++; }
-	//if (OPkeyboardWasPressed(OPKEY_N)) { skinningExample->Mesh->SkeletonAnimation.Frame--; }
+	//if (OPkeyboardWasPressed(OPkeyboardKey::M)) { skinningExample->Mesh->SkeletonAnimation.Frame++; }
+	//if (OPkeyboardWasPressed(OPkeyboardKey::N)) { skinningExample->Mesh->SkeletonAnimation.Frame--; }
 
-	if (OPkeyboardIsDown(OPKEY_UP)) { skinningExample->Camera->pos.y += (OPfloat)(0.1 * SCALE); }
-	if (OPkeyboardIsDown(OPKEY_DOWN)) { skinningExample->Camera->pos.y -= (OPfloat)(0.1 * SCALE); }
-	if (OPkeyboardIsDown(OPKEY_LEFT)) { skinningExample->Camera->pos.x -= (OPfloat)(0.1 * SCALE); }
-	if (OPkeyboardIsDown(OPKEY_RIGHT)) { skinningExample->Camera->pos.x += (OPfloat)(0.1 * SCALE); }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::UP)) { skinningExample->Camera->pos.y += (OPfloat)(0.1 * SCALE); }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::DOWN)) { skinningExample->Camera->pos.y -= (OPfloat)(0.1 * SCALE); }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::LEFT)) { skinningExample->Camera->pos.x -= (OPfloat)(0.1 * SCALE); }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::RIGHT)) { skinningExample->Camera->pos.x += (OPfloat)(0.1 * SCALE); }
 
 	skinningExample->Camera->Update();
-	OPcamUpdateView(skinningExample->Camera);
+	skinningExample->Camera->UpdateView();
 
-	if (OPkeyboardWasPressed(OPKEY_N)) {
+	if (OPKEYBOARD.WasPressed(OPkeyboardKey::N)) {
 		skinningExample->animation2->Elapsed = skinningExample->animation2->Frame = 0;
 	}
-	if (OPkeyboardWasPressed(OPKEY_M)) {
+	if (OPKEYBOARD.WasPressed(OPkeyboardKey::M)) {
 		skinningExample->animation3->Elapsed = skinningExample->animation3->Frame = 0;
 	}
-	if (OPkeyboardWasPressed(OPKEY_B)) {
+	if (OPKEYBOARD.WasPressed(OPkeyboardKey::B)) {
 		skinningExample->animation4->Elapsed = skinningExample->animation4->Frame = 0;
 	}
 
-	if (OPkeyboardIsDown(OPKEY_N)) {
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::N)) {
 		heldDown += time->Elapsed;
 		if (heldDown > 500) heldDown = 500;
 		OPskeletonAnimationUpdate(skinningExample->animation, time);
@@ -117,11 +110,11 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 		OPskeletonAnimationMerge(skinningExample->animation, skinningExample->animation2, heldDown / 500.0f);
 		OPskeletonAnimationApply(skinningExample->animation, skinningExample->skeleton);
 	}
-	else if (OPkeyboardIsDown(OPKEY_M)) {
+	else if (OPKEYBOARD.IsDown(OPkeyboardKey::M)) {
 		OPskeletonAnimationUpdate(skinningExample->animation3, time);
 		OPskeletonAnimationApply(skinningExample->animation3, skinningExample->skeleton);
 	}
-	else if (OPkeyboardIsDown(OPKEY_B)) {
+	else if (OPKEYBOARD.IsDown(OPkeyboardKey::B)) {
 		OPskeletonAnimationUpdate(skinningExample->animation4, time);
 		OPskeletonAnimationApply(skinningExample->animation4, skinningExample->skeleton);
 	}
@@ -134,28 +127,27 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 		OPskeletonAnimationApply(skinningExample->animation, skinningExample->skeleton);
 	}
 	//OPmat4Translate(&mesh->Skeleton->localPoses[pos], time->Elapsed / 1000.0f, 0, 0);
-	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_W) / 100.0f);
-	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], OPkeyboardIsDown(OPKEY_S) / -100.0f);
+	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], (i32)OPKEYBOARD.IsDown(OPkeyboardKey::W) / 100.0f);
+	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], (i32)OPKEYBOARD.IsDown(OPkeyboardKey::S) / -100.0f);
 	OPskeletonUpdate(skinningExample->skeleton);
 
 	skinningExample->Mesh->Bind();
-	OPeffectBind(skinningExample->Effect);
+	skinningExample->Effect->Bind();
 
 	OPmat4 world;
 	OPmat4Identity(&world);
 	//OPmat4BuildRotX(&world,- OPpi / 2.0);
 
-	OPeffectParamMat4("uWorld", &world);
-	OPeffectParamMat4("uView", &skinningExample->Camera->view);
-	OPeffectParamMat4("uProj", &skinningExample->Camera->proj);
+	OPeffectSet("uWorld", &world);
+	OPeffectSet("uView", &skinningExample->Camera->view);
+	OPeffectSet("uProj", &skinningExample->Camera->proj);
 
-	OPeffectParamMat4v("uBones", skinningExample->skeleton->hierarchyCount, skinningExample->skeleton->skinned);
+	OPeffectSet("uBones", skinningExample->skeleton->hierarchyCount, skinningExample->skeleton->skinned);
 
 	OPvec3 light = OPvec3Create(0, 10, 0);
-	OPeffectParamVec3("uLightPosition", &light);
+	OPeffectSet("uLightPosition", &light);
 
-	OPtextureClearActive();
-	OPeffectParami("uColorTexture", OPtextureBind(skinningExample->texture));
+	OPeffectSet("uColorTexture", skinningExample->texture, 0);
 
 	OPmeshRender();
 
@@ -166,7 +158,7 @@ void ExampleSkinningRender(OPfloat delta) {
 
 }
 OPint ExampleSkinningExit(OPgameState* next) {
-	OPeffectUnload(skinningExample->Effect);
+	skinningExample->Effect->Destroy();
 	OPfree(skinningExample->Effect);
 	OPfree(skinningExample->Camera);
 	return 0;

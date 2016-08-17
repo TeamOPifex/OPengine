@@ -11,66 +11,91 @@ OPfontManager* OPFONTMANAGER_ACTIVE = NULL;
 OPeffect* OPFONTMANAGER_EFFECT_ACTIVE = NULL;
 OPeffect* OPFONTMANAGER_EFFECT2D_ACTIVE = NULL;
 
-OPfontManager* OPfontManagerCreate(OPfont* font) {
-	OPfontManager* temp = (OPfontManager*)OPallocZero(sizeof(OPfontManager));
-	temp->_font = font;
-	temp->_color = OPvec4Create(0.0f, 0.0f, 0.0f, 1.0f);
-	temp->_align = OPFONT_ALIGN_LEFT;
-
-	temp->scale = 1.0f;
-	temp->currNodes = OPvectorCreate(sizeof(OPfontTextNode));
-	temp->isBuilt = false;
-	temp->builtNodes = OPhashMapCreate(16);
-	temp->meshPacker = OPmeshPackerCreate();
-	temp->proj = OPmat4Ortho(0, OPRENDER_SCREEN_WIDTH * OPRENDER_SCREEN_WIDTH_SCALE, OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE, 0, -1, 1);
-	temp->dummyMesh = OPfontCreateUserText(temp->_font, "", temp->scale);
-
-	return temp;
-}
-
-OPfontManager* OPfontManagerSetup(const OPchar* font, const OPchar** text, ui16 count) {
+OPfontManager* OPfontManager::Init(OPfont* font) {
 	OPfontSystemLoadEffects();
-	OPfont* _font = (OPfont*)OPcmanLoadGet(font);
-	OPfontManager* manager = OPfontManagerCreate(_font);
-	manager->scale = 1.0;
-	manager->_color = OPvec4Create(1,1,1,1);
-	OPfontManagerBind(manager);
+
+	_font = font;
+	_color = OPvec4Create(0.0f, 0.0f, 0.0f, 1.0f);
+	_align = OPfontAlign::LEFT;
+
+	scale = 1.0f;
+	currNodes = OPvector::Create(sizeof(OPfontTextNode));
+	isBuilt = false;
+	builtNodes = OPhashMap::Create(16);
+	meshPacker.Init();
+	proj = OPmat4Ortho(0, (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, 0.0f, -1.0f, 1.0f);
+	dummyMesh = _font->CreateUserText("", scale);
+
+	return this;
+}
+
+OPfontManager* OPfontManager::Init(const OPchar* font, const OPchar** text, ui16 count) {
+	OPfont* _font = (OPfont*)OPCMAN.LoadGet(font);
+	Init(_font);
+
+	this->scale = 1.0;
+	this->_color = OPvec4Create(1,1,1,1);
+	this->Bind();
 	for (ui16 i = 0; i < count; i++) {
-		OPfontManagerAddText(text[i]);
+		this->AddText(text[i]);
 	}
-	OPfontManagerBuild();
+	this->Build();
 	OPFONTMANAGER_ACTIVE = NULL;
 
-	return manager;
+	return this;
 }
 
-void OPfontManagerDestroy(OPfontManager* font) {
-	OPFONTMANAGER_ACTIVE = NULL;
-	OPvectorDestroy(font->currNodes);
-	OPfree(font->currNodes);
-	OPhashMapDestroy(font->builtNodes);
-	OPfree(font->builtNodes);
-	OPfree(font);
+void OPfontManager::Destroy() {
+	Unbind();
+	currNodes->Destroy();
+	OPfree(currNodes);
+
+	OPhashMapBucket* bucket;
+	OPuint i, j, n, m;
+	OPhashMapPair *pair;
+
+	n = builtNodes->count;
+	bucket = builtNodes->buckets;
+	i = 0;
+	while (i < n) {
+		m = bucket->count;
+		pair = bucket->pairs;
+		j = 0;
+		while (j < m) {
+			// mark asset for removal
+			OPfontBuiltTextNode* node = (OPfontBuiltTextNode*)pair->value;
+			node->packedMesh->Destroy();
+			OPfree(node);
+			pair++;
+			j++;
+		}
+		bucket++;
+		i++;
+	}
+
+	builtNodes->Destroy();
+	OPfree(builtNodes);
+
+	meshPacker.Destroy();
 }
 
-void OPfontManagerSetColor(OPfontManager* manager, f32 r, f32 g, f32 b, f32 a) {
-	manager->_color.x = r;
-	manager->_color.y = g;
-	manager->_color.z = b;
-	manager->_color.w = a;
+void OPfontManager::SetColor(f32 r, f32 g, f32 b, f32 a) {
+	_color.x = r;
+	_color.y = g;
+	_color.z = b;
+	_color.w = a;
 }
 
-void OPfontManagerAddText(const OPchar* text) {
-	ASSERT(OPFONTMANAGER_ACTIVE != NULL, "A Font Manager has not been bound yet");
-	OPmeshPackerBind(&OPFONTMANAGER_ACTIVE->meshPacker);
-	OPfontBuiltTextNode* node = (OPfontBuiltTextNode*)OPalloc(sizeof(OPfontBuiltTextNode));
-	*node = OPfontCreatePackedText(OPFONTMANAGER_ACTIVE->_font, text, OPFONTMANAGER_ACTIVE->scale);
-	OPhashMapPut(OPFONTMANAGER_ACTIVE->builtNodes, text, node);
+void OPfontManager::AddText(const OPchar* text) {
+	meshPacker.Bind();
+	OPfontBuiltTextNode* node = OPNEW(OPfontBuiltTextNode());
+	*node = _font->CreatePackedText(text, scale);
+	builtNodes->Put(text, node);
 }
 
-void OPfontManagerBuild() {
-	ASSERT(OPFONTMANAGER_ACTIVE != NULL, "A Font Manager has not been bound yet");
-	OPmeshPackerBind(&OPFONTMANAGER_ACTIVE->meshPacker);
-	OPmeshPackerBuild();
-	OPFONTMANAGER_ACTIVE->isBuilt = true;
+void OPfontManager::Build() {
+	dummyMesh.mesh.Bind();
+	meshPacker.Bind();
+	meshPacker.Build();
+	isBuilt = true;
 }

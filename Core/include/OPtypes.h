@@ -1,5 +1,6 @@
-#ifndef OPENGINE_CORE_TYPES
-#define OPENGINE_CORE_TYPES
+#pragma once
+
+#define NULL 0
 
 #if defined(OPIFEX_OSX64) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_LINUX32) || defined(OPIFEX_ANDROID) || defined(OPIFEX_IOS)
 	#define OPIFEX_UNIX
@@ -21,6 +22,12 @@
 #define OPIFEX_OS64
 #else
 #define OPIFEX_OS32
+#endif
+
+#if defined(OPIFEX_WINDOWS) || defined(OPIFEX_OSX) || defined(OPIFEX_LINUX)
+#define OPIFEX_DESKTOP
+#else
+#define OPIFEX_MOBILE
 #endif
 
 #if defined(OPIFEX_WINDOWS)
@@ -115,5 +122,3 @@ struct OPkeyValuePair {
 	OPchar value[255];
 };
 typedef struct OPkeyValuePair OPkeyValuePair;
-
-#endif

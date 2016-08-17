@@ -7,7 +7,7 @@
 #include "./Human/Human.h"
 
 
-const OPchar* keyNames[_OPKEYBOARD_MAX] = {
+const OPchar* keyNames[(ui32)OPkeyboardKey::_MAX] = {
         "BACKSPACE",
         "TAB",
         "ENTER",
@@ -105,10 +105,10 @@ const OPchar* keyNames[_OPKEYBOARD_MAX] = {
 void _SetKeyboardMap(Handle<Object> keyboard) {
     SCOPE_AND_ISOLATE;
 
-    for (OPint i = 0; i < OPKEY_RCONTROL; i++) {
+    for (ui32 i = 0; i < (ui32)OPkeyboardKey::_MAX; i++) {
         keyboard->Set(
             JS_NEW_STRING(keyNames[i]),
-            JS_NEW_NUMBER(i)
+            JS_NEW_INTEGER(i)
         );
     }
 }
@@ -119,8 +119,8 @@ void _SetKeyboardMap(Handle<Object> keyboard) {
 JS_RETURN_VAL _OPkeyboardWasPressed(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    enum OPkeyboardKey key = (enum OPkeyboardKey)args[0]->Int32Value();
-    bool result = OPkeyboardWasPressed(key);
+    OPkeyboardKey key = (OPkeyboardKey)args[0]->Int32Value();
+    bool result = OPKEYBOARD.WasPressed(key);
 
     JS_RETURN(JS_NEW_BOOL(result));
 }
@@ -129,8 +129,8 @@ JS_RETURN_VAL _OPkeyboardWasPressed(const JS_ARGS& args) {
 JS_RETURN_VAL _OPkeyboardWasReleased(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    enum OPkeyboardKey key = (enum OPkeyboardKey)args[0]->Int32Value();
-    bool result = OPkeyboardWasReleased(key);
+    OPkeyboardKey key = (OPkeyboardKey)args[0]->Int32Value();
+    bool result = OPKEYBOARD.WasReleased(key);
 
     JS_RETURN(JS_NEW_BOOL(result));
 }
@@ -139,8 +139,8 @@ JS_RETURN_VAL _OPkeyboardWasReleased(const JS_ARGS& args) {
 JS_RETURN_VAL _OPkeyboardIsDown(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    enum OPkeyboardKey key = (enum OPkeyboardKey)args[0]->Int32Value();
-    bool result = OPkeyboardIsDown(key);
+    OPkeyboardKey key = (OPkeyboardKey)args[0]->Int32Value();
+    bool result = OPKEYBOARD.IsDown(key);
 
     JS_RETURN(JS_NEW_BOOL(result));
 }
@@ -150,7 +150,7 @@ JS_RETURN_VAL _OPkeyboardIsDown(const JS_ARGS& args) {
 JS_RETURN_VAL _OPkeyboardUpdate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-            OPkeyboardUpdate(NULL);
+	OPKEYBOARD.Update(NULL);
 
     JS_RETURN_NULL;
 }

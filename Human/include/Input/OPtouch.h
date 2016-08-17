@@ -1,5 +1,7 @@
-#ifndef OPENGINE_HUMAN_INPUT_TOUCH
-#define OPENGINE_HUMAN_INPUT_TOUCH
+#pragma once
+
+struct OPtouchState;
+typedef struct OPtouchState OPtouchState;
 
 #include "./Core/include/OPtypes.h"
 
@@ -12,7 +14,6 @@ struct OPtouchState {
 	f32	prevPositionX;
 	f32	prevPositionY;
 };
-typedef struct OPtouchState OPtouchState;
 
 extern OPtouchState Touch;
 
@@ -26,5 +27,3 @@ OPint OPtouchIsUp();
 OPint OPtouchWasPressed();
 OPint OPtouchWasReleased();
 OPint OPtouchAnyInputIsDown();
-
-#endif

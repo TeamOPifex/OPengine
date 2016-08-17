@@ -135,7 +135,7 @@ JS_RETURN_VAL _OPfmodIsPlaying(const JS_ARGS& args) {
 
     OPfmodChannel* ptr = JS_GET_ARG_PTR(args, 0, OPfmodChannel);
 
-    i8 result = OPfmodIsPlaying(ptr);
+    bool result = OPfmodIsPlaying(ptr);
 
     JS_RETURN(JS_NEW_NUMBER(result));
 }
@@ -145,7 +145,7 @@ JS_RETURN_VAL _OPfmodSetVolume(const JS_ARGS& args) {
 
     OPfmodChannel* ptr = JS_GET_ARG_PTR(args, 0, OPfmodChannel);
 
-    OPfmodSetVolume(ptr, args[1]->NumberValue());
+    OPfmodSetVolume(ptr, (f32)args[1]->NumberValue());
 
     JS_RETURN_NULL;
 }
@@ -154,7 +154,7 @@ JS_RETURN_VAL _OPfmodSetChannelGroupVolume(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE
 
     OPfmodChannelGroup* ptr = JS_GET_ARG_PTR(args, 0, OPfmodChannelGroup);
-    OPfmodSetVolume(ptr, args[1]->NumberValue());
+    OPfmodSetVolume(ptr, (f32)args[1]->NumberValue());
 
     JS_RETURN_NULL;
 }
@@ -164,7 +164,7 @@ JS_RETURN_VAL _OPfmodSetPause(const JS_ARGS& args) {
 
     OPfmodChannel* ptr = JS_GET_ARG_PTR(args, 0, OPfmodChannel);
 
-    OPfmodSetPause(ptr, args[1]->IntegerValue());
+    OPfmodSetPause(ptr, args[1]->IntegerValue() != 0);
 
     JS_RETURN_NULL;
 }

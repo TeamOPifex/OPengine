@@ -15,7 +15,7 @@ OPint totalWritten = 0;
 
 void OPinputRecordBegin(OPtimer* start, OPinputRecordMemoryBase* memoryMaps, ui16 memoryMapCount) {
 	OPchar* fileToOpen = OPstringCreateMerged(OPdirExecutable(), "input.opr");
-	_inputRecordFile = OPfileOpen(fileToOpen);
+	_inputRecordFile.Init(fileToOpen);
 	_inputRecordRecording = 1;
 	_inputRecordPlayback = 0;
 	_timeStart = start->TotalGametime;
@@ -54,14 +54,14 @@ void OPinputRecordUpdate(OPtimer* timer) {
 	if(_inputRecordRecording) {
 		OPinputRecordFrame frame = {
 			elapsed,
-			Keyboard
+			OPKEYBOARD
 		};
 		//frame.keyboardState.keys[OPKEY_W] = 3;
 		//frame.keyboardState.keys[OPKEY_S] = 3;
-		totalWritten += OPfileWriteBytes(&_inputRecordFile, &frame, sizeof(OPinputRecordFrame));
+		totalWritten += _inputRecordFile.WriteBytes(&frame, sizeof(OPinputRecordFrame));
 	} else if(_inputRecordPlayback) {
 		OPinputRecordFrame frame;
-		void* response = OPfileReadBytes(&_inputRecordFile, sizeof(OPinputRecordFrame));
+		void* response = _inputRecordFile.ReadBytes(sizeof(OPinputRecordFrame));
 		if(response == NULL) { // Reset the loop
 
 			if(_memoryMaps != NULL) {
@@ -72,18 +72,18 @@ void OPinputRecordUpdate(OPtimer* timer) {
 				}
 			}
 
-			OPfileSeekReset(&_inputRecordFile);
-			response = OPfileReadBytes(&_inputRecordFile, sizeof(OPinputRecordFrame));
+			_inputRecordFile.SeekReset();
+			response = _inputRecordFile.ReadBytes(sizeof(OPinputRecordFrame));
 		}
 		frame = *((OPinputRecordFrame*)response);
 		OPfree(response);
-		Keyboard = frame.keyboardState;
+		OPKEYBOARD = frame.keyboardState;
 	}
 }
 
 void OPinputRecordPlayback() {
 	if(_inputRecordRecording) {
-		OPfileSeekReset(&_inputRecordFile);
+		_inputRecordFile.SeekReset();
 		_inputRecordRecording = 0;
 		_inputRecordPlayback = 1;
 		if(_memoryMaps != NULL) {
@@ -98,7 +98,7 @@ void OPinputRecordPlayback() {
 
 void OPinputRecordEnd() {
 	if(_inputRecordRecording || _inputRecordPlayback) {
-		OPfileClose(&_inputRecordFile);
+		_inputRecordFile.Destroy();
 		OPfree(_memoryMaps);
 		OPfree(_memory);
 		_memoryMaps = NULL;

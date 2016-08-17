@@ -5,40 +5,32 @@
 #include <errno.h>
 #include <ctype.h>
 
-//-----------------------------------------------------------------------------
-OPstream* OPstreamCreate(OPuint size){
-	OPstream* s = (OPstream*)OPalloc(sizeof(OPstream));
-	s->Data = (ui8*)OPalloc(size);
-	s->Length = size;
-	s->Size = 0;
-	s->_pointer = 0;
-	s->Source = NULL;
+void OPstream::Init(OPuint size){
+	Data = (ui8*)OPalloc(size);
+	Length = size;
+	Size = 0;
+	_pointer = 0;
+	Source = NULL;
 	
 	// no trash allowed
-	OPbzero(s->Data, size);
-
-	return s;
+	OPbzero(Data, size);
 }
-//-----------------------------------------------------------------------------
-OPuint OPstreamDestroy(OPstream* stream){
-	if(!stream) return 0;
-	if (stream->Source != NULL) OPfree(stream->Source);
-	OPfree(stream->Data);
-	OPfree(stream);
 
-	return 1;
+void OPstream::Destroy() {
+	if (Source != NULL) OPfree(Source);
+	OPfree(Data);
 }
-//-----------------------------------------------------------------------------
-OPuint OPwrite(OPstream* stream, void* data, OPuint size){
+
+OPuint OPstream::Write(void* data, OPuint size){
 	OPuint len, ptr;
 	ui8 *D, *d = (ui8*)data;
 	ui8* nd;
 
-	if(!stream || !data) return 0;
+	if(!data) return 0;
 
-	len = stream->Length;
-	ptr = stream->_pointer;
-	D   = stream->Data;
+	len = Length;
+	ptr = _pointer;
+	D   = Data;
 
 	// if we are out of space for this new element
 	// double the size of the array
@@ -67,10 +59,10 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 
 		// check to see if reallocation is successful
 		if(nd){
-			stream->Data = nd;
-			stream->Length = len << 1;
+			Data = nd;
+			Length = len << 1;
 
-			OPbzero(stream->Data + ptr, ((len << 1) - ptr));
+			OPbzero(Data + ptr, ((len << 1) - ptr));
 		}
 		else
 			return 0;
@@ -78,73 +70,70 @@ OPuint OPwrite(OPstream* stream, void* data, OPuint size){
 
 	// copy new data into the stream
 	//for(i = 0; i < size;)
-	//	stream->Data[ptr + i] = d[i++];
+	//	Data[ptr + i] = d[i++];
 	//write(1,".",1);
-	OPmemcpy(&stream->Data[ptr], d, size);
+	OPmemcpy(&Data[ptr], d, size);
 	//write(1,"+",1);
-	stream->_pointer += size;
+	_pointer += size;
 
-	if (stream->Size < stream->_pointer)
-		stream->Size = stream->_pointer;
+	if (Size < _pointer)
+		Size = _pointer;
 
 	return 1;
 }
 //-----------------------------------------------------------------------------
-ui8* OPread(OPstream* stream, OPuint size){
+ui8* OPstream::Read(OPuint size){
 	// retrieve data and pointer
-	OPuint ptr = stream->_pointer;
-	ui8* data = stream->Data + ptr;
+	OPuint ptr = _pointer;
+	ui8* data = Data + ptr;
 
-	stream->_pointer += size; // update pointer location
+	_pointer += size; // update pointer location
 	return data;
 }
 
-
 void _fillBuffer(OPstream* stream) {
 	const i8* buffer = (i8*)(stream->Data + stream->_pointer);
+#ifdef OPIFEX_WINDOWS
+	sscanf_s(buffer, "%s", stream->Buffer, 128);
+#else
 	sscanf(buffer, "%s", stream->Buffer);
+#endif
 	stream->_pointer += strlen(stream->Buffer) + 1;
 }
 
-i8 OPstreamI8(OPstream* stream) {
-	_fillBuffer(stream);
-	return atoi(stream->Buffer);
+i8 OPstream::I8() {
+	return *((i8*)Read(sizeof(i8)));
 }
-i16 OPstreamI16(OPstream* stream) {
-	_fillBuffer(stream);
-	return atoi(stream->Buffer);
+i16 OPstream::I16() {
+	return *((i16*)Read(sizeof(i16)));
 }
-i32 OPstreamI32(OPstream* stream) {
-	_fillBuffer(stream);
-	return atoi(stream->Buffer);
+i32 OPstream::I32() {
+	return *((i32*)Read(sizeof(i32)));
 }
-ui8 OPstreamUI8(OPstream* stream) {
-	_fillBuffer(stream);
-	return atoi(stream->Buffer);
+ui8 OPstream::UI8() {
+	return *((ui8*)Read(sizeof(ui8)));
 }
-ui16 OPstreamUI16(OPstream* stream) {
-	_fillBuffer(stream);
-	return atoi(stream->Buffer);
+ui16 OPstream::UI16() {
+	return *((ui16*)Read(sizeof(ui16)));
 }
-ui32 OPstreamUI32(OPstream* stream) {
-	_fillBuffer(stream);
-	return atoi(stream->Buffer);
+ui32 OPstream::UI32() {
+	return *((ui32*)Read(sizeof(ui32)));
 }
-f32 OPstreamf32(OPstream* stream) {
-	_fillBuffer(stream);
-	return (f32)atof(stream->Buffer);
-}
-OPchar* OPstreamString(OPstream* stream) {
-	_fillBuffer(stream);
-	return OPstringCopy(stream->Buffer);
+f32 OPstream::F32() {
+	return *((f32*)Read(sizeof(f32)));
 }
 
+OPchar* OPstream::String() {
+	ui32 j = 0, length = UI32();
+	OPchar* name = (OPchar*)OPalloc(length + 1);
+	for (; j < length; j++) {
+		name[j] = I8();
+	}
+	name[length] = '\0';
+	return name;
+}
 
-
-
-
-
-OPchar* OPstreamReadLine(OPstream* stream) {
+OPchar* OPstream::ReadLine() {
 	OPchar buffer[512];
 	i32 i;
 	i32 pos;
@@ -157,7 +146,7 @@ OPchar* OPstreamReadLine(OPstream* stream) {
 	// Read until we find a newline \n
 	// Or until we hit 512 chars
 	do {
-		c = ((OPchar*)(stream->Data + stream->_pointer))[i];
+		c = ((OPchar*)(Data + _pointer))[i];
 		i++;
 		if(c == '\r') {
 			pos--;
@@ -171,38 +160,45 @@ OPchar* OPstreamReadLine(OPstream* stream) {
 	OPmemcpy(result, buffer, sizeof(OPchar) * (i - 1));
 	result[i - 1] = '\0';
 
-	stream->_pointer += i;
+	_pointer += i;
 
 	return result;
 }
 
-
-
-
-
-//-----------------------------------------------------------------------------
-OPint OPstreamReadKeyValuePair(OPstream* str, struct OPkeyValuePair* dst){
+OPint OPstream::ReadKeyValuePair(struct OPkeyValuePair* dst){
 	OPchar buffer[520];
 	OPchar buffer2[255];
 	OPint len;
 	i32 i;
 
 	// check to see if we are at the end of the stream or not
-	if(str->_pointer >= str->Length) return 0;
+	if(_pointer >= Length) return 0;
 
-	sscanf((OPchar*)str->Data + str->_pointer, "%520[^\n]", buffer);
+#ifdef OPIFEX_WINDOWS
+	sscanf_s((OPchar*)Data + _pointer, "%520[^\n]", buffer, 520);
+#else
+	sscanf((OPchar*)Data + _pointer, "%520[^\n]", buffer);
+#endif
 	len = strlen(buffer);
 	OPlog("OPstreamReadKeyValuePair() - buffer: '%s'", buffer);
 
 	if(!len) return 0;
 
-	str->_pointer += len + 1;
+	_pointer += len + 1;
+#ifdef OPIFEX_WINDOWS
+	sscanf_s(buffer, "%255[^ =]%*[= \t]%255[^\r\n]", buffer2, 255, dst->value, 255);
+#else
 	sscanf(buffer, "%255[^ =]%*[= \t]%255[^\r\n]", buffer2, dst->value);
+#endif
 
 	OPlog("OPstreamReadKeyValuePair() - '%s' = '%s'", buffer2, dst->value);
 
 	// Removes any trailing whitespace from t,he values
+#ifdef OPIFEX_WINDOWS
+	sscanf_s(buffer2, "%s", dst->key, 255);
+#else
 	sscanf(buffer2, "%s", dst->key);
+#endif
 
 	for (i = 0; i < strlen(dst->key); i++){
 		dst->key[i] = tolower(dst->key[i]);
@@ -211,60 +207,34 @@ OPint OPstreamReadKeyValuePair(OPstream* str, struct OPkeyValuePair* dst){
 	return 1;
 }
 
-//-----------------------------------------------------------------------------
-ui8* OPreadAt(OPstream* stream, OPuint pos, OPuint size){
-	return stream->Data + pos;
+ui8* OPstream::ReadAt(OPuint pos, OPuint size){
+	return Data + pos;
 }
-//-----------------------------------------------------------------------------
-OPuint OPcopy(OPstream* stream, void* dest, OPuint size){
-	OPuint ptr = stream->_pointer;
+
+OPuint OPstream::Copy(void* dest, OPuint size){
+	OPuint ptr = _pointer;
 	OPuint oldSize = size;
 
 	// truncate the number of bytes that will be returned
 	// in the event that we are near the end of th stream
-	if(stream->Length <= ptr + size){
-		size = (stream->Length - ptr) - 1;
+	if(Length <= ptr + size){
+		size = (Length - ptr) - 1;
 	}
 
 	// ensure the size did not underflow
 	if(size <= oldSize) return -1;
 
 	// copy the data, and update the pointer location
-	OPmemcpy(dest, stream->Data + ptr, size);
-	stream->_pointer += size;
+	OPmemcpy(dest, Data + ptr, size);
+	_pointer += size;
 
 	return size;
 }
-//-----------------------------------------------------------------------------
-OPuint OPseek(OPstream* stream, OPuint byte){
-	if(byte < stream->Length){
-		stream->_pointer = byte;
+
+OPuint OPstream::Seek(OPuint byte){
+	if(byte < Length){
+		_pointer = byte;
 		return 1;
 	}
 	return 0;
 }
-//-----------------------------------------------------------------------------
-//- C++ Definitions -----------------------------------------------------------
-#ifdef __cplusplus // compile the C++ class
-using namespace OPEngine::Data;
-
-OPStream::OPStream(OPuint size){
-	this->_stream = OPstreamCreate(size);
-}
-
-OPStream::~OPStream(){
-	OPstreamDestroy(this->_stream);
-}
-
-OPuint OPStream::Seek(OPuint byte){
-	return OPseek(this->_stream, byte);
-}
-
-OPuint OPStream::Write(void* data, OPuint size){
-	return OPwrite(this->_stream, data, size);
-}
-
-ui8*   OPStream::Read(OPuint size){
-	return OPread(this->_stream, size);
-}
-#endif

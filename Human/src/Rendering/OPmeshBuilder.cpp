@@ -1,85 +1,86 @@
 #include "./Human/include/Rendering/OPmeshBuilder.h"
 
-void OPmeshBuilderInit(struct OPmeshBuilder* builder, ui16 vertexSize) {
-	builder->Vertices = OPvectorCreate(vertexSize);
-	builder->Indices = OPvectorCreate(sizeof(ui16));
+void OPmeshBuilder::Init(OPvertexLayout vertexLayout) {
+	VertexLayout = vertexLayout;
+	Vertices = OPvector::Create(vertexLayout.stride);
+	Indices = OPvector::Create(sizeof(ui16));
 }
 
-OPmeshBuilder* OPmeshBuilderCreate(ui16 vertexSize) {
+OPmeshBuilder* OPmeshBuilder::Create(OPvertexLayout vertexLayout) {
 	OPmeshBuilder* result = (OPmeshBuilder*)OPalloc(sizeof(OPmeshBuilder));
-	OPmeshBuilderInit(result, vertexSize);
+	result->Init(vertexLayout);
 	return result;
 }
 
-void OPmeshBuilderDestroy(struct OPmeshBuilder* builder) {
-	OPvectorDestroy(builder->Vertices);
-	OPfree(builder->Vertices);
-	OPvectorDestroy(builder->Indices);
-	OPfree(builder->Indices);
+void OPmeshBuilder::Destroy() {
+	Vertices->Destroy();
+	OPfree(Vertices);
+	Indices->Destroy();
+	OPfree(Indices);
 }
 
-void OPmeshBuilderAdd(struct OPmeshBuilder* builder, void* one, void* two, void* three) {
+void OPmeshBuilder::Add(void* one, void* two, void* three) {
 
 	ui16 ind0, ind1, ind2;
-	ind0 = (ui16)builder->Vertices->_size;
+	ind0 = (ui16)Vertices->_size;
 	ind1 = ind0 + 1;
 	ind2 = ind0 + 2;
 	OPlog("Triangle %d, %d, %d", ind0, ind1, ind2);
 
-	OPvectorPush(builder->Vertices, (ui8*)one);
-	OPvectorPush(builder->Vertices, (ui8*)two);
-	OPvectorPush(builder->Vertices, (ui8*)three);
+	Vertices->Push((ui8*)one);
+	Vertices->Push((ui8*)two);
+	Vertices->Push((ui8*)three);
 
-	OPvectorPush(builder->Indices, (ui8*)&ind0);
-	OPvectorPush(builder->Indices, (ui8*)&ind1);
-	OPvectorPush(builder->Indices, (ui8*)&ind2);
+	Indices->Push((ui8*)&ind0);
+	Indices->Push((ui8*)&ind1);
+	Indices->Push((ui8*)&ind2);
 }
 
-void OPmeshBuilderAdd(struct OPmeshBuilder* builder, void* one, void* two, void* three, void* four) {
+void OPmeshBuilder::Add(void* one, void* two, void* three, void* four) {
 
 	ui16 ind0, ind1, ind2, ind3, ind4, ind5;
-	ind0 = (ui16)builder->Vertices->_size;
+	ind0 = (ui16)Vertices->_size;
 	ind1 = ind0 + 1;
 	ind2 = ind0 + 2;
 	ind3 = ind0;
 	ind4 = ind0 + 2;
 	ind5 = ind0 + 3;
 
-	OPvectorPush(builder->Vertices, (ui8*)one);
-	OPvectorPush(builder->Vertices, (ui8*)two);
-	OPvectorPush(builder->Vertices, (ui8*)three);
-	OPvectorPush(builder->Vertices, (ui8*)four);
+	Vertices->Push((ui8*)one);
+	Vertices->Push((ui8*)two);
+	Vertices->Push((ui8*)three);
+	Vertices->Push((ui8*)four);
 
-	OPvectorPush(builder->Indices, (ui8*)&ind0);
-	OPvectorPush(builder->Indices, (ui8*)&ind1);
-	OPvectorPush(builder->Indices, (ui8*)&ind2);
-	OPvectorPush(builder->Indices, (ui8*)&ind3);
-	OPvectorPush(builder->Indices, (ui8*)&ind4);
-	OPvectorPush(builder->Indices, (ui8*)&ind5);
+	Indices->Push((ui8*)&ind0);
+	Indices->Push((ui8*)&ind1);
+	Indices->Push((ui8*)&ind2);
+	Indices->Push((ui8*)&ind3);
+	Indices->Push((ui8*)&ind4);
+	Indices->Push((ui8*)&ind5);
 }
 
-void OPmeshBuilderAdd(struct OPmeshBuilder* builder, void** vertices, ui16 vertCount, ui16* indices, ui16 indCount) {
-	ui16 ind, indOffset = (ui16)builder->Vertices->_size;
+void OPmeshBuilder::Add(void** vertices, ui16 vertCount, ui16* indices, ui16 indCount) {
+	ui16 ind, indOffset = (ui16)Vertices->_size;
 
 	for(ui16 i = 0; i < vertCount; i++) {
-		OPvectorPush(builder->Vertices, (ui8*)vertices[i]);
+		Vertices->Push((ui8*)vertices[i]);
 	}
 	
 	for(ui16 i = 0; i < indCount; i++) {
 		ind = indices[i] + indOffset;
-		OPvectorPush(builder->Indices, (ui8*)&ind);
+		Indices->Push((ui8*)&ind);
 	}
 }
 
-OPmesh OPmeshBuilderGen(struct OPmeshBuilder* builder) {
-	void* verts = builder->Vertices->items;
-	void* indicies = builder->Indices->items;
+OPmesh OPmeshBuilder::Build() {
+	void* verts = Vertices->items;
+	void* indicies = Indices->items;
 
-	OPmesh mesh = OPmeshCreate();
-	mesh.Bind();
-	OPmeshBuild(
-		(ui32)builder->Vertices->_elementSize, sizeof(ui16),
-		builder->Vertices->_size, builder->Indices->_size,
+	OPmesh mesh;
+	mesh.Init(VertexLayout);
+	mesh.Build(
+		VertexLayout, OPindexSize::SHORT,
+		(ui32)Vertices->_size, (ui32)Indices->_size,
 		verts, indicies
 		);
 	return mesh;

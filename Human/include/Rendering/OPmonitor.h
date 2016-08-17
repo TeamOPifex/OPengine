@@ -1,7 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERING_MONITOR
-#define OPENGINE_HUMAN_RENDERING_MONITOR
-
-#define OPMONITOR_MAX 4
+#pragma once
 
 struct OPmonitor;
 typedef struct OPmonitor OPmonitor;
@@ -9,8 +6,12 @@ typedef struct OPmonitor OPmonitor;
 struct OPmonitorVideoMode;
 typedef struct OPmonitorVideoMode OPmonitorVideoMode;
 
+struct OPmonitorResult;
+typedef struct OPmonitorResult OPmonitorResult;
+
+#define OPMONITOR_MAX 4
+
 #include "./Core/include/OPtypes.h"
-#include "./Human/include/Rendering/OpenGL.h"
 #include "./Math/include/OPvec2.h"
 
 struct OPmonitorVideoMode {
@@ -21,21 +22,22 @@ struct OPmonitorVideoMode {
 };
 
 struct OPmonitor {
+	void* internalPtr;
 	i32 X;
 	i32 Y;
 	i32 WidthMM;
 	i32 HeightMM;
 
-	GLFWmonitor* Monitor;
+	//GLFWmonitor* Handle;
 	OPmonitorVideoMode VideoModeCurrent;
-	i32 VideoModesCount;
+	ui32 VideoModesCount;
 	OPmonitorVideoMode* VideoModes;
 
-	void Init(GLFWmonitor* monitor);
+	static OPmonitorResult GetAll();
 };
 
-extern ui8 OPMONITOR_COUNT;
-extern OPmonitor OPMONITOR_PRIMARY;
-extern OPmonitor OPMONITOR_LIST[OPMONITOR_MAX];
-
-#endif
+struct OPmonitorResult {
+	OPmonitor primary;
+	OPmonitor* monitors;
+	OPuint count;
+};

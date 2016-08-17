@@ -54,7 +54,7 @@ JS_RETURN_VAL OPphysXSceneCreateStatic(const JS_ARGS& args) {
     	ptr = OPphysXSceneCreateStatic(scene, *position);
     } else {
     	OPvec3* around = JS_GET_ARG_PTR(args, 3, OPvec3);
-    	ptr = OPphysXSceneCreateStatic(scene, *position, args[2]->NumberValue(), *around);
+    	ptr = OPphysXSceneCreateStatic(scene, *position, (f32)args[2]->NumberValue(), *around);
     }
 
 	Handle<Object> result = JS_NEW_OBJECT();

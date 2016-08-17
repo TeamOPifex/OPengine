@@ -1,5 +1,4 @@
-#ifndef OP_PERFORMANCE_PHYSXSCENE
-#define OP_PERFORMANCE_PHYSXSCENE
+#pragma once
 
 #include "./Core/include/OPtypes.h"
 
@@ -41,7 +40,5 @@ inline void OPphysXSceneRemove(OPphysXScene* scene, OPphysXRigidActor* actor) {
 inline void OPphysXSceneDestroy(OPphysXScene* scene) {
 	scene->scene->release();
 }
-
-#endif
 
 #endif

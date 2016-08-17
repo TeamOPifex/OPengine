@@ -22,37 +22,32 @@ void ExampleMyoEnter(OPgameState* last) {
 	// Load up the mesh into the Content Manager
 	// If the myo was already loaded by a previous Game State
 	// it'll continue on without reloading it
-	OPcmanLoad("cube.opm");
+	OPCMAN.Load("cube.opm");
 
 	// Allocating a memory block for this example
 	myoExample = (MyoExample*)OPallocZero(sizeof(MyoExample));
 
-	// The OPcmanLoad call ensures that this mesh has been loaded
-	// The OPcmanGet call returns a pointer to the resource (an OPmesh)
+	// The OPCMAN.Load call ensures that this mesh has been loaded
+	// The OPCMAN.Get call returns a pointer to the resource (an OPmesh)
 	// that's contained in the Content Manager
-	myoExample->Mesh = (OPmesh*)OPcmanGet("cube.opm");
+	myoExample->Mesh = (OPmesh*)OPCMAN.Get("cube.opm");
 
 	// The effect that will be used to render the mesh
 	// The renderGenEffect is a simplified utility method
 	// which requires the attributes are given in a set order
 	// Position (vec3), then Normal (vec3)
 	// For more granular control use OPeffectCreate
-	myoExample->Effect = OPeffectGen(
-		"SimpleModel.vert",
-		"SimpleModel.frag",
-		OPATTR_POSITION | OPATTR_NORMAL,
-		"Model Effect",
-		myoExample->Mesh->vertexLayout.stride);
+	myoExample->Effect.Init("SimpleModel.vert", "SimpleModel.frag");
 
 	// Sets up the camera as a perpsective camera for rendering
-	myoExample->Camera = OPcamPersp(
+	myoExample->Camera.SetPerspective(
 		OPVEC3_ONE * 2.0,
 		OPVEC3_UP,
 		OPVEC3_UP,
 		0.1f,
 		1000.0f,
 		45.0f,
-		OPRENDER_WIDTH / (f32)OPRENDER_HEIGHT
+		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
 	// A default light direction used in the effect
@@ -73,12 +68,11 @@ OPint ExampleMyoUpdate(OPtimer* time) {
 	////////////////////////
 
 	OPmyoUpdate(time);
-	OPglError("OpenGL Error");
 
 	// The application root is set to update the Keyboard, Mouse and GamePads
 	// If you need more granular control for when these update, please modify
 	// this application's main.cpp
-	if (OPkeyboardIsDown(OPKEY_SPACE)) { myoExample->Rotation++; }
+	if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { myoExample->Rotation++; }
 
 	if (OPmyoPoseIs(Myo_Pose_Fist)) { myoExample->Rotation+=10; }
 	if (OPmyoPoseNow(Myo_Pose_Fist)) {
@@ -101,7 +95,7 @@ OPint ExampleMyoUpdate(OPtimer* time) {
 	OPbindMeshEffectWorldCam(myoExample->Mesh, &myoExample->Effect, &world, &myoExample->Camera);
 
 	// Sets the vLightDirection uniform on the Effect that is currently bound (myoExample->Effect)
-	OPeffectParamVec3("vLightDirection", &myoExample->LightDirection);
+	OPeffectSet("vLightDirection", &myoExample->LightDirection);
 
 	// Renders to the screen the currently bound Mesh (myoExample->Mesh)
 	OPmeshRender();
@@ -122,7 +116,7 @@ void ExampleMyoRender(OPfloat delta) {
 // The OPifex Engine will call this itself when you call OPgameStateChange
 OPint ExampleMyoExit(OPgameState* next) {
 	// Clean up phase for the Game State
-	OPeffectUnload(&myoExample->Effect);
+	myoExample->Effect.Destroy();
 	OPfree(myoExample);
 	return 0;
 }

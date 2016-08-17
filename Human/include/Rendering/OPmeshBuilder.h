@@ -1,20 +1,35 @@
-#ifndef OPENGINE_HUMAN_RENDERER_MESHBUILDER
-#define OPENGINE_HUMAN_RENDERER_MESHBUILDER
+#pragma once
+
+struct OPmeshBuilder;
+typedef struct OPmeshBuilder OPmeshBuilder;
 
 #include "./Human/include/Rendering/OPmesh.h"
 #include "./Data/include/OPvector.h"
 
 struct OPmeshBuilder {
-	ui16 VertexSize;
+	OPvertexLayout VertexLayout;
 	OPvector* Vertices;
 	OPvector* Indices;
+
+	OPmeshBuilder() {
+
+	}
+
+	OPmeshBuilder(OPvertexLayout vertexLayout) {
+		Init(vertexLayout);
+	}
+
+	OPmeshBuilder* Create(OPvertexLayout vertexSize);
+	void Init(OPvertexLayout vertexLayout);
+	void Add(void* one, void* two, void* three);
+	void Add(void* one, void* two, void* three, void* four);
+	void Add(void** vertices, ui16 vertCount, ui16* indices, ui16 indCount);
+	OPmesh Build();
+	void Destroy();
+
+	inline OPmesh BuildAndDestroy() {
+		OPmesh result = Build();
+		Destroy();
+		return result;
+	}
 };
-
-void OPmeshBuilderInit(struct OPmeshBuilder* builder, ui16 vertexSize);
-OPmeshBuilder* OPmeshBuilderCreate(ui16 vertexSize);
-void OPmeshBuilderDestroy(struct OPmeshBuilder* builder);
-void OPmeshBuilderAdd(OPmeshBuilder* builder, void* one, void* two, void* three);
-void OPmeshBuilderAdd(OPmeshBuilder* builder, void* one, void* two, void* three, void* four);
-OPmesh OPmeshBuilderGen(OPmeshBuilder* builder);
-
-#endif

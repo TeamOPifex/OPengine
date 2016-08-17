@@ -1,5 +1,5 @@
-#ifndef OPIFEX_PIPELINE_SPINELOADER
-#define OPIFEX_PIPELINE_SPINELOADER
+// TODO: (garrett) Move this into an addon
+#pragma once
 
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPtimer.h"
@@ -36,5 +36,3 @@ i32 SpineLoad(const OPchar* filename, Spine** spine);
 void SpineRender(Spine* spine, OPmat4* world, OPeffect* effect, OPcam* camera);
 void SpineUpdate(Spine* spine, OPtimer* timer);
 i32 SpineUnload(void* spine);
-
-#endif

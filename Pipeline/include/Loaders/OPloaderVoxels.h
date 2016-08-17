@@ -1,5 +1,4 @@
-#ifndef OPENGINE_PIPELINE_LOADERS_OPVOXELS
-#define OPENGINE_PIPELINE_LOADERS_OPVOXELS
+#pragma once
 
 #include "./Core/include/OPtypes.h"
 #include "./Data/include/OPcman.h"
@@ -17,5 +16,3 @@ struct OPvoxels {
 OPint OPvoxelsLoad(OPstream* path, void** asset);
 OPvecInt3 OPvoxelsGet(OPvoxels* voxels, OPint x, OPint y, OPint z);
 OPassetLoader* OPvoxelsLoader();
-
-#endif

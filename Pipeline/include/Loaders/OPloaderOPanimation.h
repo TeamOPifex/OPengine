@@ -1,10 +1,7 @@
-#ifndef OPENGINE_PIPELINE_LOADERS_OPANIMATION
-#define OPENGINE_PIPELINE_LOADERS_OPANIMATION
+#pragma once
 
 #include "./Human/include/Rendering/Skinning/OPskeletonAnimation.h"
 
 void OPskeletonAnimationAddLoader();
 OPint OPloaderOPanimationLoad(OPstream* filename, OPskeletonAnimation** animation);
 OPint OPloaderOPanimationUnload(OPskeletonAnimation* animation);
-
-#endif

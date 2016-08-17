@@ -1,12 +1,13 @@
-#ifndef OP_MATH_VECTOR4
-#define OP_MATH_VECTOR4
+#pragma once
+
+struct OPvec4;
+typedef struct OPvec4 OPvec4;
 
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPmath.h"
 #include "./Math/include/OPvec3.h"
 
-struct OPvec4;
 OPvec4 OPvec4Create(OPfloat x, OPfloat y, OPfloat z, OPfloat w);
 
 void OPvec4Add(OPvec4* dst, OPvec4* a, OPvec4* b);
@@ -23,6 +24,25 @@ struct OPvec4 {
 		};
 		OPfloat row[4];
 	};
+	OPvec4() {
+		this->x = 0;
+		this->y = 0;
+		this->z = 0;
+		this->w = 0;
+	}
+	OPvec4(OPfloat x) {
+		this->x = x;
+		this->y = x;
+		this->z = x;
+		this->w = x;
+	}
+	OPvec4(OPfloat x, OPfloat y, OPfloat z, OPfloat w) {
+		this->x = x;
+		this->y = y;
+		this->z = z;
+		this->w = w;
+	}
+
 	OPvec4 operator=(OPvec4 vhs) {
 		OPmemcpy(this, &vhs, sizeof(OPvec4)); return *this;
 	}
@@ -57,22 +77,22 @@ struct OPvec4 {
 
 
 	inline OPvec4 operator+(OPvec4 vhs) {
-		OPvec4 temp = { 0, 0, 0 };
+		OPvec4 temp;
 		OPvec4Add(&temp, this, &vhs);
 		return temp;
 	}
 	inline OPvec4 operator-(OPvec4 vhs) {
-		OPvec4 temp = { 0, 0, 0 };
+		OPvec4 temp;
 		OPvec4Sub(&temp, this, &vhs);
 		return temp;
 	}
 	inline OPvec4 operator*(OPvec4 vhs) {
-		OPvec4 temp = { 0, 0, 0 };
+		OPvec4 temp;
 		OPvec4Mul(&temp, this, &vhs);
 		return temp;
 	}
 	inline OPvec4 operator*(OPfloat vhs) {
-		OPvec4 temp = { 0, 0, 0 };
+		OPvec4 temp(0);
 		OPvec4Scl(&temp, this, vhs);
 		return temp;
 	}
@@ -82,12 +102,12 @@ struct OPvec4 {
 	//	return temp;
 	//}
 	inline OPvec4 operator/(OPvec4 vhs) {
-		OPvec4 temp = { 0, 0, 0 };
+		OPvec4 temp;
 		OPvec4Div(&temp, this, &vhs);
 		return temp;
 	}
 	inline OPvec4 operator/(OPfloat vhs) {
-		OPvec4 temp = { 0, 0, 0 };
+		OPvec4 temp;
 		OPvec4Div(&temp, this, vhs);
 		return temp;
 	}
@@ -102,17 +122,17 @@ extern const OPvec4 OPVEC4_ZERO;
 extern const OPvec4 OPVEC4_ONE;
 
 inline OPvec4 OPvec4Create(OPfloat x, OPfloat y, OPfloat z, OPfloat w) {
-	OPvec4 tmp = { {x, y, z, w} };
+	OPvec4 tmp(x, y, z, w);
 	return tmp;
 }
 
 inline OPvec4 OPvec4Create(OPfloat x) {
-	OPvec4 tmp = { {x, x, x, x} };
+	OPvec4 tmp(x, x, x, x);
 	return tmp;
 }
 
 inline OPvec4 OPvec4Create(OPvec3 xyz, OPfloat w) {
-	OPvec4 tmp = { xyz.x, xyz.y, xyz.z, w };
+	OPvec4 tmp(xyz.x, xyz.y, xyz.z, w);
 	return tmp;
 }
 
@@ -147,29 +167,25 @@ inline OPfloat OPvec4Dist(OPvec4 a, OPvec4 b) {
 }
 
 inline OPvec4 OPvec4Read(OPstream* str) {
-	OPvec4 temp = {
-		{OPreadf32(str),
-		OPreadf32(str),
-		OPreadf32(str),
-		OPreadf32(str)}
-	};
+	OPvec4 temp(str->F32(),
+		str->F32(),
+		str->F32(),
+		str->F32());
 	return temp;
 }
 
 inline void OPvec4Write(OPvec4 v, OPstream* str) {
-	OPwrite(str, &v.x, sizeof(f32));
-	OPwrite(str, &v.y, sizeof(f32));
-	OPwrite(str, &v.z, sizeof(f32));
-	OPwrite(str, &v.w, sizeof(f32));
+	str->Write(&v.x);
+	str->Write(&v.y);
+	str->Write(&v.z);
+	str->Write(&v.w);
 }
 
 inline OPvec4 OPvec4randNorm(){
-	OPvec4 v = {
-		{OPrandom() - 0.5f,
+	OPvec4 v(OPrandom() - 0.5f,
 		OPrandom() - 0.5f,
 		OPrandom() - 0.5f,
-		OPrandom() - 0.5f}
-	};
+		OPrandom() - 0.5f);
 
 	return OPvec4Norm(v);
 }
@@ -197,5 +213,3 @@ inline void OPvec4Div(OPvec4* dst, OPvec4* a, OPfloat b) {
 	dst->z = a->z / b;
 	dst->w = a->w / b;
 }
-
-#endif

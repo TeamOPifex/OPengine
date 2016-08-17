@@ -1,9 +1,14 @@
-#ifndef OPENGINE_HUMAN_INPUT_MOUSE
-#define OPENGINE_HUMAN_INPUT_MOUSE
+#pragma once
 
-#include "./Human/include/Input/Enums/OPmouseKeys.h"
+struct OPmouse;
+typedef struct OPmouse OPmouse;
 
-struct OPmouseState {
+extern OPmouse OPMOUSE;
+
+#include "./Human/include/Input/Enums/OPmouseButtons.h"
+#include "./Core/include/OPtypes.h"
+
+struct OPmouse {
 	i32	updatedWheel;
 	i32	wheel;
 	i32	prevWheel;
@@ -11,26 +16,52 @@ struct OPmouseState {
 	d64	positionY;
 	d64	prevPositionX;
 	d64	prevPositionY;
-	OPint	keys[_OPMOUSE_MAX];
-	OPint	prevKeys[_OPMOUSE_MAX];
+	bool keys[(ui32)OPmouseButton::_MAX];
+	bool prevKeys[(ui32)OPmouseButton::_MAX];
+
+	void Update();
+	void SetPosition(i32 x, i32 y);
+	void SetPositionScreenCenter();
+	bool AnyInputIsDown();
+
+	inline i32 X() {
+		return (i32)positionX;
+	}
+
+	inline i32 Y() {
+		return (i32)positionY;
+	}
+
+	inline i32 MovedX() {
+		return (i32)(prevPositionX - positionX);
+	}
+
+	inline i32 MovedY() {
+		return (i32)(prevPositionY - positionY);
+	}
+
+	inline i32 Wheel() {
+		return wheel;
+	}
+
+	inline i32 WheelMoved() {
+		return prevWheel - wheel;
+	}
+
+	inline bool IsDown(OPmouseButton key) {
+		return keys[(ui32)key];
+	}
+
+	inline bool IsUp(OPmouseButton key) {
+		return !keys[(ui32)key];
+	}
+
+	inline bool WasPressed(OPmouseButton key) {
+		return keys[(ui32)key] && !prevKeys[(ui32)key];
+	}
+
+	inline bool WasReleased(OPmouseButton key) {
+		return !keys[(ui32)key] && prevKeys[(ui32)key];
+	}
 };
-typedef struct OPmouseState OPmouseState;
 
-extern OPmouseState Mouse;
-
-void OPmouseUpdate();
-i32 OPmousePositionX();
-i32 OPmousePositionY();
-i32 OPmousePositionMovedX();
-i32 OPmousePositionMovedY();
-i32 OPmouseWheel();
-i32 OPmouseWheelMoved();
-OPint OPmouseIsDown(OPmouseKey key);
-OPint OPmouseIsUp(OPmouseKey key);
-OPint OPmouseWasPressed(OPmouseKey key);
-OPint OPmouseWasReleased(OPmouseKey key);
-void OPmouseSetPosition(i32 x, i32 y);
-void OPmouseSetPositionScreenCenter();
-OPint OPmouseAnyInputIsDown();
-
-#endif

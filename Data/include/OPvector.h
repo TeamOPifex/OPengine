@@ -1,50 +1,70 @@
-#ifndef OPEngine_Data_vector
-#define OPEngine_Data_vector
+#pragma once
 
-#include "./Core/include/OPtypes.h"
+struct OPvector;
+typedef struct OPvector OPvector;
+
 #include "./Core/include/OPmemory.h"
 
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
+//This will be replaced by OPlist
+struct OPvector {
+	void* items;
+	OPuint _capacity;
+	OPuint _size;
+	OPuint _elementSize;
 
-	//This will be replaced by OPlist
-	struct OPvector{
-		void* items;
-		OPuint _capacity;
-		OPuint _size;
-		OPuint _elementSize;
-	};
-	typedef struct OPvector OPvector;
+	OPvector() { }
+	OPvector(OPuint elementSize) { Init(elementSize); }
 
-	OPvector* OPvectorCreate(OPint elementSize);
-	void OPvectorDestroy(OPvector* vector);
+	void Init(OPuint elementSize);
+	OPint Contains(ui8* item, OPint(*cmp)(ui8 *, ui8 *));
+	void EraseRange(OPuint indexFirst, OPuint indexLast);
+	void Insert(OPuint index, ui8* item);
+	void Reserve(OPuint size);
+	void Destroy();
 
-	ui8* OPvectorGet(OPvector* vector, OPuint index);
+	inline ui8* Get(OPuint index) {
+		return (ui8*)items + index * _elementSize;
+	}
 
-	ui8* OPvectorFront(OPvector* vector);
-	ui8* OPvectorBack(OPvector* vector);
+	inline ui8* Front() {
+		return Get(0);
+	}
 
-	OPint OPvectorContains(OPvector* vector, ui8* item, OPint(*cmp)(ui8 *, ui8 *));
-	OPint OPvectorIsEmpty(OPvector* vector);
-	OPint OPvectorSize(OPvector* vector);
+	inline ui8* Back() {
+		return Get(_size - 1);
+	}
 
-	OPint OPvectorCapacity(OPvector* vector);
+	inline OPint IsEmpty() {
+		return _size == 0;
+	}
 
-	void OPvectorClear(OPvector* vector);
-	void OPvectorSet(OPvector* vector, OPuint index, ui8* item);
-	void OPvectorErase(OPvector* vector, OPuint index);
-	void OPvectorEraseRange(OPvector* vector, OPuint indexFirst, OPuint indexLast);
+	inline OPint Size() {
+		return _size;
+	}
 
-	void OPvectorPush(OPvector* vector, ui8* item);
-	void OPvectorPop(OPvector* vector, ui8* item);
-	void OPvectorInsert(OPvector* vector, OPuint index, ui8* item);
+	inline OPint Capacity() {
+		return _capacity;
+	}
 
-	void OPvectorReserve(OPvector* vector, OPuint size);
+	inline void Clear() {
+		_size = 0;
+	}
 
-#ifdef __cplusplus
+	inline void Set(OPuint index, ui8* item) {
+		OPmemcpy((ui8*)(items) + index * _elementSize, item, _elementSize);
+	}
+
+	inline void Erase(OPuint index) {
+		EraseRange(index, index + 1);
+	}
+
+	inline void Push(ui8* item) {
+		Insert(_size, item);
+	}
+
+	inline void Pop(ui8* item) {
+		_size--;
+	}
+	
+	inline static OPvector* Create(OPuint elementSize) { return OPNEW(OPvector(elementSize)); }
 };
-#endif
-
-#endif

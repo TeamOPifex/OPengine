@@ -1,12 +1,12 @@
-#ifndef OPENGINE_HUMAN_UTILITIES_LOADER_OPLVL
-#define OPENGINE_HUMAN_UTILITIES_LOADER_OPLVL
+#pragma once
+
+struct OPLevel;
+struct OPLevelEntity;
+
+typedef struct OPLevel OPLevel;
+typedef struct OPLevelEntity OPLevelEntity;
 
 #include "./Math/include/OPvec3.h"
-
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 struct OPLevelEntity{
 	OPchar* name;
@@ -29,11 +29,3 @@ OPLevelEntity* OPlevelGetEntity(OPLevel* level, OPchar* name);
 OPint OPlevelload(const OPchar* filename, OPLevel** level);
 OPint OPlevelReload(const OPchar* filename, OPLevel** level);
 OPint OPlevelUnload(void* image);
-
-
-// prevent name mangling if compiling with c++
-#ifdef __cplusplus
-};
-#endif
-
-#endif

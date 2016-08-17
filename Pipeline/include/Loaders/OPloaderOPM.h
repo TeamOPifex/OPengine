@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_UTILITIES_LOADER_OPM
-#define OPENGINE_HUMAN_UTILITIES_LOADER_OPM
+#pragma once
 
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
@@ -24,7 +23,7 @@ struct OPMData {
 
 	void* indices;
 	ui32 indexCount;
-	ui32 indexSize;
+	OPindexSize indexSize;
 
 	OPboundingBox3D bounds;
 
@@ -58,5 +57,3 @@ OPint OPMload(OPstream* str, OPmesh** mesh);
 OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh);
 OPint OPMReload(OPstream* str, OPmesh** mesh);
 OPint OPMUnload(void* image);
-
-#endif

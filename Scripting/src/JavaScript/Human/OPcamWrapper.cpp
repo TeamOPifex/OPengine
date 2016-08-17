@@ -9,7 +9,7 @@ JS_RETURN_VAL _OPcamUpdateSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPcam* ptr = JS_GET_PTR(args.This(), OPcam);
-    OPcamUpdate(ptr);
+	ptr->Update();
 
     JS_RETURN_NULL;
 }
@@ -18,7 +18,7 @@ JS_RETURN_VAL _OPcamUpdate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPcam* ptr = JS_GET_ARG_PTR(args, 0, OPcam);
-    OPcamUpdate(ptr);
+	ptr->Update();
 
     JS_RETURN_NULL;
 }
@@ -76,15 +76,15 @@ JS_RETURN_VAL _OPcamSetPosSelf(const JS_ARGS& args) {
 
     if(args[0]->IsArray()) {
         Handle<Array> arr = Handle<Array>::Cast(args[0]);
-        ptr->pos.x = arr->Get(0)->NumberValue();
-        ptr->pos.y = arr->Get(1)->NumberValue();
-        ptr->pos.z = arr->Get(2)->NumberValue();
+        ptr->pos.x = (f32)arr->Get(0)->NumberValue();
+        ptr->pos.y = (f32)arr->Get(1)->NumberValue();
+        ptr->pos.z = (f32)arr->Get(2)->NumberValue();
     } else {
-        ptr->pos.x = args[0]->NumberValue();
-        ptr->pos.y = args[1]->NumberValue();
-        ptr->pos.z = args[2]->NumberValue();
+        ptr->pos.x = (f32)args[0]->NumberValue();
+        ptr->pos.y = (f32)args[1]->NumberValue();
+        ptr->pos.z = (f32)args[2]->NumberValue();
     }
-    OPcamUpdate(ptr);
+	ptr->Update();
 
     JS_RETURN_NULL;
 }
@@ -100,15 +100,15 @@ JS_RETURN_VAL _OPcamSetPos(const JS_ARGS& args) {
     OPcam* ptr = JS_GET_ARG_PTR(args, 0, OPcam);
     if(args[1]->IsArray()) {
         Handle<Array> arr = Handle<Array>::Cast(args[1]);
-        ptr->pos.x = arr->Get(0)->NumberValue();
-        ptr->pos.y = arr->Get(1)->NumberValue();
-        ptr->pos.z = arr->Get(2)->NumberValue();
+        ptr->pos.x = (f32)arr->Get(0)->NumberValue();
+        ptr->pos.y = (f32)arr->Get(1)->NumberValue();
+        ptr->pos.z = (f32)arr->Get(2)->NumberValue();
     } else {
-        ptr->pos.x = args[1]->NumberValue();
-        ptr->pos.y = args[2]->NumberValue();
-        ptr->pos.z = args[3]->NumberValue();
+        ptr->pos.x = (f32)args[1]->NumberValue();
+        ptr->pos.y = (f32)args[2]->NumberValue();
+        ptr->pos.z = (f32)args[3]->NumberValue();
     }
-    OPcamUpdate(ptr);
+	ptr->Update();
 
     JS_RETURN_NULL;
 }
@@ -117,10 +117,10 @@ JS_RETURN_VAL _OPcamSetTargetSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPcam* ptr = JS_GET_PTR(args.This(), OPcam);
-    ptr->target.x = args[0]->NumberValue();
-    ptr->target.y = args[1]->NumberValue();
-    ptr->target.z = args[2]->NumberValue();
-    OPcamUpdate(ptr);
+    ptr->target.x = (f32)args[0]->NumberValue();
+    ptr->target.y = (f32)args[1]->NumberValue();
+    ptr->target.z = (f32)args[2]->NumberValue();
+	ptr->Update();
 
     JS_RETURN_NULL;
 }
@@ -129,10 +129,10 @@ JS_RETURN_VAL _OPcamSetTarget(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPcam* ptr = JS_GET_ARG_PTR(args, 0, OPcam);
-    ptr->target.x = args[1]->NumberValue();
-    ptr->target.y = args[2]->NumberValue();
-    ptr->target.z = args[3]->NumberValue();
-    OPcamUpdate(ptr);
+    ptr->target.x = (f32)args[1]->NumberValue();
+    ptr->target.y = (f32)args[2]->NumberValue();
+    ptr->target.z = (f32)args[3]->NumberValue();
+	ptr->Update();
 
     JS_RETURN_NULL;
 }
@@ -167,13 +167,13 @@ JS_RETURN_VAL _OPcamSetPerspective(const JS_ARGS& args) {
     OPcam* ptr = JS_GET_ARG_PTR(args, 0, OPcam);
     ptr->SetPerspective(
         OPvec3Create(
-            args[1]->NumberValue(),
-            args[2]->NumberValue(),
-            args[3]->NumberValue()
+		(f32)args[1]->NumberValue(),
+			(f32)args[2]->NumberValue(),
+			(f32)args[3]->NumberValue()
         ), OPvec3Create(
-            args[4]->NumberValue(),
-            args[5]->NumberValue(),
-            args[6]->NumberValue()
+		(f32)args[4]->NumberValue(),
+			(f32)args[5]->NumberValue(),
+			(f32)args[6]->NumberValue()
         ));
 
     JS_RETURN_NULL;
@@ -184,26 +184,26 @@ JS_RETURN_VAL _OPcamPersp(const JS_ARGS& args) {
 
     OPcam* ptr = (OPcam*)OPallocZero(sizeof(OPcam));
 
-    *ptr = OPcamPersp(
+    ptr->SetPerspective(
             OPvec3Create(
-                    args[0]->NumberValue(),
-                    args[1]->NumberValue(),
-                    args[2]->NumberValue()
+		(f32)args[0]->NumberValue(),
+				(f32)args[1]->NumberValue(),
+				(f32)args[2]->NumberValue()
             ),
             OPvec3Create(
-                    args[3]->NumberValue(),
-                    args[4]->NumberValue(),
-                    args[5]->NumberValue()
+		(f32)args[3]->NumberValue(),
+				(f32)args[4]->NumberValue(),
+				(f32)args[5]->NumberValue()
             ),
             OPvec3Create(
-                    args[6]->NumberValue(),
-                    args[7]->NumberValue(),
-                    args[8]->NumberValue()
+		(f32)args[6]->NumberValue(),
+				(f32)args[7]->NumberValue(),
+				(f32)args[8]->NumberValue()
             ),
-            args[9]->NumberValue(),
-            args[10]->NumberValue(),
-            args[11]->NumberValue(),
-            args[12]->NumberValue()
+			(f32)args[9]->NumberValue(),
+		(f32)args[10]->NumberValue(),
+		(f32)args[11]->NumberValue(),
+		(f32)args[12]->NumberValue()
     );
 
     Handle<Object> result = JS_NEW_OBJECT();
@@ -217,28 +217,28 @@ JS_RETURN_VAL _OPcamOrtho(const JS_ARGS& args) {
 
     OPcam* ptr = (OPcam*)OPallocZero(sizeof(OPcam));
 
-    *ptr = OPcamOrtho(
-            OPvec3Create(
-                    args[0]->NumberValue(),
-                    args[1]->NumberValue(),
-                    args[2]->NumberValue()
+    ptr->SetOrtho(
+		    OPvec3Create(
+				(f32)args[0]->NumberValue(),
+				(f32)args[1]->NumberValue(),
+				(f32)args[2]->NumberValue()
             ),
             OPvec3Create(
-                    args[3]->NumberValue(),
-                    args[4]->NumberValue(),
-                    args[5]->NumberValue()
+				(f32)args[3]->NumberValue(),
+				(f32)args[4]->NumberValue(),
+				(f32)args[5]->NumberValue()
             ),
             OPvec3Create(
-                    args[6]->NumberValue(),
-                    args[7]->NumberValue(),
-                    args[8]->NumberValue()
+				(f32)args[6]->NumberValue(),
+				(f32)args[7]->NumberValue(),
+				(f32)args[8]->NumberValue()
             ),
-            args[9]->NumberValue(),
-            args[10]->NumberValue(),
-            args[11]->IntegerValue(),
-            args[12]->IntegerValue(),
-            args[13]->IntegerValue(),
-            args[14]->IntegerValue()
+			(f32)args[9]->NumberValue(),
+			(f32)args[10]->NumberValue(),
+		(f32)args[11]->IntegerValue(),
+		(f32)args[12]->IntegerValue(),
+		(f32)args[13]->IntegerValue(),
+		(f32)args[14]->IntegerValue()
     );
 
     Handle<Object> result = JS_NEW_OBJECT();

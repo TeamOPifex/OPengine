@@ -1,6 +1,5 @@
 #include "./Data/include/OPlist.h"
 
-//-----------------------------------------------------------------------------
 OPint _oplNextExceedsCap(OPlist* list){
 	OPint eleSize = list->_elementSize;
 	if((list->_size + 1) * eleSize >= list->_capacity * eleSize)
@@ -9,98 +8,78 @@ OPint _oplNextExceedsCap(OPlist* list){
 		return 0;
 }
 
-//-----------------------------------------------------------------------------
-OPlist* OPlistCreate(OPint capacity, OPint elementSize){
-	OPlist* list = (OPlist*)OPalloc(sizeof(OPlist));
-
-	list->_capacity = capacity;
-	list->_elementSize = elementSize;
-	list->_indices = (ui8*)OPalloc(sizeof(ui8) * elementSize * capacity);
-	list->_size = 0;
-
-	return list;
+void OPlist::Init(OPuint capacity, OPuint elementSize) {
+	this->_capacity = capacity;
+	this->_elementSize = elementSize;
+	this->_size = 0;
+	this->_indices = (ui8*)OPalloc(sizeof(ui8) * elementSize * capacity);
 }
-//-----------------------------------------------------------------------------
-OPint OPlistDestroy(OPlist* list){
-	OPfree(list->_indices);
-	return 1;
-}
-//-----------------------------------------------------------------------------
-OPint OPlistPush(OPlist* list, ui8* value){
-	OPint eleSize = list->_elementSize;
 
-	if(_oplNextExceedsCap(list)){
-		list->_capacity *= 2;
-		list->_indices = (ui8*)OPrealloc(list->_indices, eleSize * list->_capacity);
+OPuint OPlist::Push(ui8* value){
+	OPint eleSize = _elementSize;
+
+	if(_oplNextExceedsCap(this)){
+		_capacity *= 2;
+		_indices = (ui8*)OPrealloc(_indices, eleSize * _capacity);
 	}
 
 	// copy bytes into the array
-	OPmemcpy((list->_indices + (list->_size * eleSize)), value, eleSize);
+	OPmemcpy((_indices + (_size * eleSize)), value, eleSize);
 
-	list->_size++;
+	_size++;
 
-	return list->_size - 1;
+	return _size - 1;
 }
 
-//-----------------------------------------------------------------------------
-ui8* OPlistPop(OPlist* list){
-	list->_size--;
-	return list->_indices + list->_size * list->_elementSize;
+ui8* OPlist::Pop(){
+	_size--;
+	return _indices + _size * _elementSize;
 }
 
-//-----------------------------------------------------------------------------
-ui8* OPlistPeek(OPlist* list) {
-	return list->_indices + (list->_size - 1) * list->_elementSize;
-}
-
-//-----------------------------------------------------------------------------
-OPint OPlistInsert(OPlist* list, ui8* value, OPuint index){
-	OPuint eleSize = list->_elementSize;
+bool OPlist::Insert(ui8* value, OPuint index){
+	OPuint eleSize = _elementSize;
 	OPuint i;
 
 	// expand the array if needed
-	if(_oplNextExceedsCap(list)){
-		list->_capacity *= 2;
-		list->_indices = (ui8*)OPrealloc(list->_indices, eleSize * list->_capacity);
+	if(_oplNextExceedsCap(this)){
+		_capacity *= 2;
+		_indices = (ui8*)OPrealloc(_indices, eleSize * _capacity);
 	}
-	list->_size++;
+	_size++;
 
 	// shift elements to the right one
-	for(i = list->_size; i > index; i--){
-		OPlistSet(list, i, OPlistGet(list, i - 1));
+	for(i = _size; i > index; i--){
+		Set(i, Get(i - 1));
 	}
 
 	// set the value
-	OPlistSet(list, index, value);
+	Set(index, value);
 
-	return 1;
+	return true;
 }
-//-----------------------------------------------------------------------------
-OPint OPlistRemoveAt(OPlist* list, OPuint index){
+
+bool OPlist::Remove(OPuint index){
 	OPuint i;
-	list->_size--;
+	_size--;
 
 	// shift all the elements to the left copying over the value at index
-	for(i = index; i < list->_size; i++){
-		OPlistSet(list, i, OPlistGet(list, i+1));
+	for(i = index; i < _size; i++){
+		Set(i, Get(i + 1));
 	}
-	return 1;
+
+	return true;
 }
-//-----------------------------------------------------------------------------
-ui8* OPlistGet(OPlist* list, OPuint index){
-	return list->_indices + (index * list->_elementSize);
-}
-//-----------------------------------------------------------------------------
-ui8* OPlistSet(OPlist* list, OPuint index, ui8* value){
-	OPint eleSize = list->_elementSize, i = 0;
+
+ui8* OPlist::Set(OPuint index, ui8* value){
+	OPint eleSize = _elementSize, i = 0;
 
 	// copy bytes into the array
 	for(i = eleSize; i--;)
-		list->_indices[index * eleSize + i] = value[i];
+		_indices[index * eleSize + i] = value[i];
 
-	return list->_indices + (index * list->_elementSize);
+	return _indices + (index * _elementSize);
 }
-//-----------------------------------------------------------------------------
-OPuint OPlistSize(OPlist* list){
-	return list->_size;
+
+void OPlist::Destroy() {
+	OPfree(_indices);
 }

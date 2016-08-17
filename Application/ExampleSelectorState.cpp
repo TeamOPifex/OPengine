@@ -19,7 +19,7 @@ typedef struct {
     OPint CurrentHierarchy;
     OPint HierarchyDepth[TotalEntries];
     OPint CurrentDepth;
-	OPtexture2D*Background;
+	OPtexture2DOLD*Background;
     OPgamePad* Controller;
 } ExampleSelector;
 
@@ -28,20 +28,22 @@ ExampleSelector* exampleSelectorPtr = &exampleSelector;
 
 void ExampleSelectorEnter(OPgameState* last) {
 
-	OPcmanLoad("Ubuntu.opf");
+
+	OPCMAN.Load("Ubuntu.opf");
 
 	OPfontSystemLoadEffects();
 
+
     // The background image to use
-	OPcmanLoadGet("subtle-irongrip.png");
-	exampleSelector.Background = OPtexture2DCreate((OPtexture*)OPcmanLoadGet("subtle-irongrip.png"), NULL, OPVEC2_ZERO, OPvec2(3, 3));
-	exampleSelector.Background->Scale = OPvec2(3,2);
+	OPCMAN.LoadGet("subtle-irongrip.png");
+	exampleSelector.Background = OPtexture2DCreate((OPtexture*)OPCMAN.LoadGet("subtle-irongrip.png"), NULL, OPVEC2_ZERO, OPvec2(3, 3));
+	exampleSelector.Background->Scale = OPvec2(5.0f,2.81f);
 
     if(!exampleSelector.Initialized) {
        // This ensures that our menu selections stay in place
        // And we don't re-initialize the examples array for no reason
        exampleSelector.Initialized = 1;
-       exampleSelector.Controller = OPgamePadGet(OPGAMEPAD_ONE);
+       exampleSelector.Controller = OPGAMEPADS[0];
        Example examples[TotalEntries] = {
            // Categories
            { "Basics", NULL, 1, -1 },
@@ -51,12 +53,14 @@ void ExampleSelectorEnter(OPgameState* last) {
 
            // Actual Examples
            // Basics
+		   { "Scene", &GS_EXAMPLE_SCENE, GS_EXAMPLE_SCENE_AVAILABLE, 0 },
            { "Audio", &GS_EXAMPLE_AUDIO, GS_EXAMPLE_AUDIO_AVAILABLE, 0 },
            { "FMOD", &GS_EXAMPLE_FMOD, GS_EXAMPLE_FMOD_AVAILABLE, 0 },
            { "Free Flight Camera", &GS_EXAMPLE_FREEFLIGHT, GS_EXAMPLE_FREEFLIGHT_AVAILABLE, 0 },
            { "Model", &GS_EXAMPLE_MODEL, GS_EXAMPLE_MODEL_AVAILABLE, 0 },
            { "Material", &GS_EXAMPLE_MATERIAL, GS_EXAMPLE_MATERIAL_AVAILABLE, 0 },
            { "Textured", &GS_EXAMPLE_TEXTURED, GS_EXAMPLE_TEXTURED_AVAILABLE, 0 },
+           { "Texture 2D", &GS_EXAMPLE_TEXTURE2D, GS_EXAMPLE_TEXTURE2D_AVAILABLE, 0 },
            { "Sprite", &GS_EXAMPLE_SPRITE, GS_EXAMPLE_SPRITE_AVAILABLE, 0 },
            { "Sprite System", &GS_EXAMPLE_SPRITESYSTEM, GS_EXAMPLE_SPRITESYSTEM_AVAILABLE, 0 },
            { "Cube Map", &GS_EXAMPLE_CUBE_MAP, GS_EXAMPLE_CUBE_MAP_AVAILABLE, 0 },
@@ -96,11 +100,12 @@ void ExampleSelectorEnter(OPgameState* last) {
        Names[i] = exampleSelector.Examples[i].name;
     }
 
-    exampleSelector.FontManager = OPfontManagerSetup("Ubuntu.opf", Names, TotalEntries);
-    //exampleSelector.FontManager->scale = 0.5;
+	//exampleSelector.FontManager = OPfontManagerSetup("Ubuntu.opf", Names, TotalEntries);
+	//OPfont* font = (OPfont*)OPCMAN.LoadGet("Ubuntu.opf");
+	exampleSelector.FontManager = OPfontManager::Create("Ubuntu.opf", NULL, 0);
+	exampleSelector.FontManager->scale = 0.5;
 
-	//OPcmanPurge();
-	OPlog("Entered Example Selector");
+	OPCMAN.Purge();
 }
 
 
@@ -115,10 +120,10 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
 
    // Move the current menu selection up and down
    // Automatically wrap around if it exceeds the bounds of options
-	if (OPkeyboardWasPressed(OPKEY_W) || OPkeyboardWasPressed(OPKEY_UP) || exampleSelector.Controller->LeftThumbNowUp() || exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_DPAD_UP)) {
+	if (OPKEYBOARD.WasPressed(OPkeyboardKey::W) || OPKEYBOARD.WasPressed(OPkeyboardKey::UP) || exampleSelector.Controller->LeftThumbNowUp() || exampleSelector.Controller->WasPressed(OPgamePadButton::DPAD_UP)) {
 		exampleSelector.Selected--;
 	}
-	if (OPkeyboardWasPressed(OPKEY_S) || OPkeyboardWasPressed(OPKEY_DOWN) || exampleSelector.Controller->LeftThumbNowDown() || exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_DPAD_DOWN)) {
+	if (OPKEYBOARD.WasPressed(OPkeyboardKey::S) || OPKEYBOARD.WasPressed(OPkeyboardKey::DOWN) || exampleSelector.Controller->LeftThumbNowDown() || exampleSelector.Controller->WasPressed(OPgamePadButton::DPAD_DOWN)) {
 		exampleSelector.Selected++;
 	}
    if (exampleSelector.Selected < 0) exampleSelector.Selected = currentCategoryCount - 1;
@@ -134,7 +139,7 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
    }
 
    // When an example is selected:
-	if (exampleSelector.Examples[actualSelected].available && (OPkeyboardWasPressed(OPKEY_SPACE) || OPkeyboardWasPressed(OPKEY_E)|| OPkeyboardWasPressed(OPKEY_D) || OPkeyboardWasPressed(OPKEY_ENTER)  || exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_A) || exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_DPAD_RIGHT))) {
+	if (exampleSelector.Examples[actualSelected].available && (OPKEYBOARD.WasPressed(OPkeyboardKey::SPACE) || OPKEYBOARD.WasPressed(OPkeyboardKey::E)|| OPKEYBOARD.WasPressed(OPkeyboardKey::D) || OPKEYBOARD.WasPressed(OPkeyboardKey::ENTER)  || exampleSelector.Controller->WasPressed(OPgamePadButton::A) || exampleSelector.Controller->WasPressed(OPgamePadButton::DPAD_RIGHT))) {
 
        // Hard coded to category [3] which is Exit
        if(actualSelected == 3) {
@@ -150,18 +155,18 @@ OPint ExampleSelectorUpdate(OPtimer* time) {
            exampleSelector.Selected = exampleSelector.HierarchyDepth[exampleSelector.CurrentHierarchy + 1];
        } else {
            // Otherwise it's an example, load it up.
-           OPgameStateChange(exampleSelector.Examples[actualSelected].state);
+           OPgameState::Change(exampleSelector.Examples[actualSelected].state);
            return 0;
        }
 	}
 
-   // Jump backwards in the hierarchy
-   if ((OPkeyboardWasPressed(OPKEY_BACKSPACE) || OPkeyboardWasPressed(OPKEY_A) || exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_BACK)|| exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_B) || exampleSelector.Controller->WasPressed(OPGAMEPADBUTTON_DPAD_LEFT))) {
-       exampleSelector.HierarchyDepth[exampleSelector.CurrentHierarchy + 1] = exampleSelector.Selected;
-       exampleSelector.CurrentHierarchy = -1;
-       exampleSelector.CurrentDepth--;
-       exampleSelector.Selected = exampleSelector.HierarchyDepth[exampleSelector.CurrentHierarchy + 1];
-   }
+	// Jump backwards in the hierarchy
+	if ((OPKEYBOARD.WasPressed(OPkeyboardKey::BACKSPACE) || OPKEYBOARD.WasPressed(OPkeyboardKey::A) || exampleSelector.Controller->WasPressed(OPgamePadButton::BACK)|| exampleSelector.Controller->WasPressed(OPgamePadButton::B) || exampleSelector.Controller->WasPressed(OPgamePadButton::DPAD_LEFT))) {
+		exampleSelector.HierarchyDepth[exampleSelector.CurrentHierarchy + 1] = exampleSelector.Selected;
+		exampleSelector.CurrentHierarchy = -1;
+		exampleSelector.CurrentDepth--;
+		exampleSelector.Selected = exampleSelector.HierarchyDepth[exampleSelector.CurrentHierarchy + 1];
+	}
 
 	return false;
 }
@@ -173,14 +178,14 @@ void ExampleSelectorRender(OPfloat delta) {
 	// RENDER
 	///////////////
 
-	OPrenderClear(1, 0, 0);
+	OPrenderClear(0.4f, 0.1f, 0.1f);
 	//
 	// // Render the background
 	OPtexture2DRender(exampleSelector.Background);
 
 
 	// Y coordinate to start drawing the text
-	OPfloat start = -(exampleSelector.Selected) * 40.0f + OPRENDER_SCALED_HEIGHT / 2.0f;
+	OPfloat start = -(exampleSelector.Selected) * 40.0f + OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height / 2.0f;
 
 
 	OPfontRenderBegin(exampleSelector.FontManager);
@@ -246,7 +251,9 @@ void ExampleSelectorRender(OPfloat delta) {
 		}
 	}
 
-	OPfontRenderEnd();
+	OPfontRenderEnd(); 
+	
+	OPVISUALDEBUGINFO.Render(delta);
 
 	OPrenderPresent();
 
@@ -254,8 +261,9 @@ void ExampleSelectorRender(OPfloat delta) {
 }
 
 OPint ExampleSelectorExit(OPgameState* next) {
-	OPeffectBind(NULL);
-	OPfontManagerDestroy(exampleSelector.FontManager);
+	exampleSelector.FontManager->Destroy();
+	OPfree(exampleSelector.FontManager);
+
 	OPtexture2DDestroy(exampleSelector.Background);
 	OPtexture2DUnloadGlobals();
 	OPfontSystemShutdownEffects();

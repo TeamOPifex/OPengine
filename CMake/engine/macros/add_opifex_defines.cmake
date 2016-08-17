@@ -46,7 +46,7 @@ macro(add_opifex_defines)
 		add_definitions(-DOPIFEX_OPTION_V8)
 	endif()
 
-	add_definitions(-DOPIFEX_${OPENGL_DESKTOP_TARGET})
+	add_definitions(-DOPIFEX_${RENDER_TARGET})
 	add_definitions(-D${OPIFEX_OS})
 
 	if(${OPIFEX_OPTION_RELEASE})

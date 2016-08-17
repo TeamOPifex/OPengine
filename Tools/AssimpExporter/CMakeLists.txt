@@ -8,6 +8,8 @@ if(${OPIFEX_TOOLS_ASSIMPEXPORTER})
 		../
 	)
 	add_opifex_includes()
+	add_external_opifex_includes()
+	add_opifex_assimp_include()
 
 	add_source_group(/ "${PROJECT_SOURCE_DIR}/Tools/AssimpExporter" ASSIMP_SRC)
 	set(ALL_LIBS

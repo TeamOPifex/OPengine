@@ -3,46 +3,36 @@
 
 OPeffect OPrenderSystemLoadTextured2D(ui32 vertexStride) {
 	OPshaderAttribute attribs[] = {
-		{ "aPosition", GL_FLOAT, 3 },
-		{ "aNormal", GL_FLOAT, 3 },
-		{ "aUV", GL_FLOAT, 2 }
+		{ "aPosition", OPshaderElementType::FLOAT, 3 },
+		{ "aNormal", OPshaderElementType::FLOAT, 3 },
+		{ "aUV", OPshaderElementType::FLOAT, 2 }
 	};
 
-	OPcmanLoad("Common/Texture2D.vert");
-	OPcmanLoad("Common/Texture.frag");
-	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture2D.vert");
-	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
-	OPeffect effect = OPeffectCreate(
-		*vert,
-		*frag,
-		attribs,
-		3,
-		"Textured Effect",
-		vertexStride
-		);
+	OPCMAN.Load("Common/Texture2D.vert");
+	OPCMAN.Load("Common/Texture.frag");
+	OPshader* vert = (OPshader*)OPCMAN.Get("Common/Texture2D.vert");
+	OPshader* frag = (OPshader*)OPCMAN.Get("Common/Texture.frag");
+
+	OPeffect effect;
+	effect.Init(vert, frag);
 
 	return effect;
 }
 
 OPeffect OPrenderSystemLoadTextured3D(ui32 vertexStride) {
 	OPshaderAttribute attribs[] = {
-		{ "aPosition", GL_FLOAT, 3 },
-		{ "aNormal", GL_FLOAT, 3 },
-		{ "aUV", GL_FLOAT, 2 }
+		{ "aPosition", OPshaderElementType::FLOAT, 3 },
+		{ "aNormal", OPshaderElementType::FLOAT, 3 },
+		{ "aUV", OPshaderElementType::FLOAT, 2 }
 	};
 
-	OPcmanLoad("Common/Texture3D.vert");
-	OPcmanLoad("Common/Texture.frag");
-	OPshader* vert = (OPshader*)OPcmanGet("Common/Texture3D.vert");
-	OPshader* frag = (OPshader*)OPcmanGet("Common/Texture.frag");
-	OPeffect effect = OPeffectCreate(
-		*vert,
-		*frag,
-		attribs,
-		3,
-		"Textured Effect",
-		vertexStride
-		);
+	OPCMAN.Load("Common/Texture3D.vert");
+	OPCMAN.Load("Common/Texture.frag");
+	OPshader* vert = (OPshader*)OPCMAN.Get("Common/Texture3D.vert");
+	OPshader* frag = (OPshader*)OPCMAN.Get("Common/Texture.frag");
+
+	OPeffect effect;
+	effect.Init(vert, frag);
 
 	return effect;
 }

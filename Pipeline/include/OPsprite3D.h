@@ -1,5 +1,4 @@
-#ifndef OPENGINE_PIPELINE_SPRITE3D
-#define OPENGINE_PIPELINE_SPRITE3D
+#pragma once
 
 #include "./Human/include/Rendering/Sprite/OPspriteSheet.h"
 #include "./Math/include/Vectors.h"
@@ -32,5 +31,3 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 void OPsprite3DRender(OPsprite3D* sprite, OPcam* camera);
 void OPsprite3DRenderOffsetRot(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfloat rotation);
 OPvec2 OPsprite3DSize(OPsprite3D* sprite);
-
-#endif

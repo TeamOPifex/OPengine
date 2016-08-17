@@ -34,7 +34,7 @@ JS_RETURN_VAL _OPvoxelsLoad(const JS_ARGS& args) {
 
     String::Utf8Value asset(args[0]->ToString());
 
-    OPvoxels* ptr = (OPvoxels*)OPcmanLoadGet(*asset);
+    OPvoxels* ptr = (OPvoxels*)OPCMAN.LoadGet(*asset);
     
     Handle<Object> result = JS_NEW_OBJECT();
     OPvoxelsWrapperCreate(result, ptr);

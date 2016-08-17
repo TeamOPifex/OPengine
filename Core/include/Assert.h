@@ -1,3 +1,5 @@
+#pragma once
+
 #include "./OPlog.h"
 #include "./OPcore.h"
 
@@ -9,14 +11,15 @@
 	#define ASSERT(condition, message) \
 	do {\
 	if (!(condition)) {\
-		OPlog("ASSERT: (%s:%d) %s", __FILE__, __LINE__, message); \
+		OPlogWarn("ASSERT: (%s:%d) [%s] %s", __FILE__, __LINE__, __FUNCTION__, message); \
 	} \
 	} while (0)
 #elif defined _DEBUG
-	#define ASSERT(condition, message) \
+	#include "stdlib.h"
+	#define ASSERT(condition, message, ...) \
 	do {\
 		if (!(condition)) {\
-			OPlog("ASSERT: (%s:%d) %s", __FILE__, __LINE__, message); \
+			OPlogErr("ASSERT: (%s:%d) [%s] %s", __FILE__, __LINE__, __FUNCTION__, message); \
 			exit(1);\
 		} \
 	} while (0)

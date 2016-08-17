@@ -11,18 +11,18 @@ void OPskeletonAnimationAddLoader() {
 		(OPint(*)(void*))OPloaderOPanimationUnload,
 		NULL
 	};
-	OPcmanAddLoader(&loader);
+	OPCMAN.AddLoader(&loader);
 }
 
 OPint OPloaderOPanimationLoad(OPstream* str, OPskeletonAnimation** animation) {
 	//OPstream* str = OPreadFile(filename);
 
-	i32 boneCount = OPreadi16(str);
+	i32 boneCount = str->I16();
 
 	ASSERT(boneCount < OPSKELETON_MAX_BONE_COUNT, "Joints cannot contain more than OPSKELETON_MAX_BONE_COUNT");
 
-	OPchar* name = OPreadstring(str);
-	OPint frameCount = OPreadui32(str);
+	OPchar* name = str->String();
+	OPint frameCount = str->UI32();
 	OPint totalFrames = boneCount * frameCount;
 
 	OPlog("Name: %s, Frames: %d", name, frameCount);
@@ -31,10 +31,10 @@ OPint OPloaderOPanimationLoad(OPstream* str, OPskeletonAnimation** animation) {
 
 	for (OPint j = 0; j < totalFrames; j++) {
 		for (i32 c = 0; c < 4; c++) {
-			frames[j][c][0] = OPreadf32(str);
-			frames[j][c][1] = OPreadf32(str);
-			frames[j][c][2] = OPreadf32(str);
-			frames[j][c][3] = OPreadf32(str);
+			frames[j][c][0] = str->F32();
+			frames[j][c][1] = str->F32();
+			frames[j][c][2] = str->F32();
+			frames[j][c][3] = str->F32();
 		}
 		frames[j] = OPmat4Transpose(frames[j]);
 	}

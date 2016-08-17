@@ -1,17 +1,17 @@
 #include "./Math/include/OPmat4.h"
 
 const OPmat4 OPMAT4_ZERO = {
-	0, 0, 0, 0,
-	0, 0, 0, 0,
-	0, 0, 0, 0,
-	0, 0, 0, 0
+	OPvec4(0, 0, 0, 0),
+	OPvec4(0, 0, 0, 0),
+	OPvec4(0, 0, 0, 0),
+	OPvec4(0, 0, 0, 0)
 };
 
 const OPmat4 OPMAT4_IDENTITY = {
-	1, 0, 0, 0,
-	0, 1, 0, 0,
-	0, 0, 1, 0,
-	0, 0, 0, 1
+	OPvec4(1, 0, 0, 0),
+	OPvec4(0, 1, 0, 0),
+	OPvec4(0, 0, 1, 0),
+	OPvec4(0, 0, 0, 1)
 };
 
 OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPfloat zNear, OPfloat zFar){
@@ -27,9 +27,9 @@ OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPf
 	////m[3][2] = -(zFar + zNear) / (zFar - zNear);
 	//m[3][2] = -((zNear) / (zFar - zNear));
 
-	m[0][0] = 2.0 / (right - left);
-	m[1][1] = 2.0 / (top - bottom);
-	m[2][2] = -2.0 / (zFar - zNear);
+	m[0][0] = 2.0f / (right - left);
+	m[1][1] = 2.0f / (top - bottom);
+	m[2][2] = -2.0f / (zFar - zNear);
 	m[3][0] = -(right + left) / (right - left);
 	m[3][1] = -(top + bottom) / (top - bottom);
 	m[3][2] = -(zFar + zNear) / (zFar - zNear);

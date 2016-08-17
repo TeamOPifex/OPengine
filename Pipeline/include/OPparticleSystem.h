@@ -1,5 +1,4 @@
-#ifndef OPENGINE_PIPELINE_PARTICLESYSTEM
-#define OPENGINE_PIPELINE_PARTICLESYSTEM
+#pragma once
 
 #include "./Human/include/Rendering/OPtexture.h"
 #include "./Human/include/Rendering/OPcam.h"
@@ -11,9 +10,6 @@
 #include "./Math/include/OPvec2.h"
 #include "./Core/include/OPtimer.h"
 
-#ifdef __cplusplus
-extern "C"{
-#endif
 
 //-----------------------------------------------------------------------------
 //   _____ _                   _
@@ -56,7 +52,7 @@ inline void OPparticleUpdate(OPparticle* p, OPtimer* timer){
 
 inline void OPparticleSysSpawn(OPparticleSys* sys, OPparticle particle){
 	OPint ind = -1;
-	OPentHeapActivate(sys->heap, &ind);
+	sys->heap->Activate(&ind);
 	if (ind >= 0){
 		OPparticle* p = &((OPparticle*)sys->heap->Entities)[ind];
 		OPmemcpy(p, &particle, sizeof(OPparticle));
@@ -68,10 +64,3 @@ OPparticleSys* OPparticleSysCreate(OPtexture* texture, ui16 count, OPeffect* eff
 void OPparticleSysUpdate(OPparticleSys* sys, OPtimer* timer);
 void OPparticleSysDestroy(OPparticleSys* sys);
 void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(OPparticle*, OPmat4*));
-
-#ifdef __cplusplus
-};
-#endif
-
-
-#endif

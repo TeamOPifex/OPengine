@@ -1,16 +1,14 @@
-#ifndef OPENGINE_HUMAN_INPUT_ENUMS_GAMEPADINDICES
-#define OPENGINE_HUMAN_INPUT_ENUMS_GAMEPADINDICES
+#pragma once
 
-#ifdef OPIFEX_ANDROID
-
-#endif
-
-enum OPgamePadIndex
+enum struct OPgamePadIndex
 {
-	OPGAMEPAD_ONE =  0,
-	OPGAMEPAD_TWO =  1,
-	OPGAMEPAD_THREE =2,
-	OPGAMEPAD_FOUR = 3,
+	ONE =  0,
+	TWO =  1,
+	THREE = 2,
+	FOUR = 3,
+	FIVE = 4,
+	SIX = 5,
+	SEVEN = 6,
+	EIGHT = 7,
+	_MAX
 };
-
-#endif

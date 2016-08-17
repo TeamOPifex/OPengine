@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_RENDERER_OPM_VERTEX
-#define OPENGINE_HUMAN_RENDERER_OPM_VERTEX
+#pragma once
 
 #include "./Math/include/Vectors.h"
 
@@ -13,7 +12,8 @@ enum OPMFeatures {
 	Skinning = 0x40,
 	Animations = 0x80,
 	Color = 0x100,
-	Meta = 0x200
+	Meta = 0x200,
+	BiTangent = 0x400
 };
 
 enum OPMKeyFeatures {
@@ -36,6 +36,7 @@ struct OPMvertex {
 	OPvec3 Position;
 	OPvec3 Normal;
 	OPvec3 Tangent;
+	OPvec3 BiTangent;
 	OPvec2 TexCoord;
 };
 
@@ -78,4 +79,3 @@ OPvertices* OPverticesCreate(OPuint count, ui32 features);
 void OPverticesWriteVec2(OPvertices* vertices, OPvec2* data, OPMFeatures feature);
 void OPverticesWriteVec3(OPvertices* vertices, OPvec3* data, OPMFeatures feature);
 void OPverticesWriteVec4(OPvertices* vertices, OPvec4* data, OPMFeatures feature);
-#endif

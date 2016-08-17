@@ -9,7 +9,7 @@
 JS_RETURN_VAL _OPtextureClearActive(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPtextureClearActive();
+    //OPtextureClearActive();
 
     JS_RETURN_NULL;
 }

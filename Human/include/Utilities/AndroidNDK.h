@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_UTILITIES_ANDROID_NDK
-#define OPENGINE_HUMAN_UTILITIES_ANDROID_NDK
+#pragma once
 
 #ifdef OPIFEX_ANDROID
 
@@ -16,7 +15,5 @@ jclass OPjniGetClassID(const char *className);
 bool OPjniGetMethodInfo(OPJniMethodInfo &methodInfo, const char *className, const char *methodName, const char *paramCode);
 
 bool OPjniGetStaticMethodInfo(OPJniMethodInfo &methodinfo, const char *className, const char *methodName, const char *paramCode);
-
-#endif
 
 #endif

@@ -3,8 +3,18 @@
 #include <stdio.h>
 #include <ostream>
 
+#ifndef OutputDebugString
+#define OutputDebugString(a)
+#endif
+
+#ifdef OPIFEX_WINDOWS
+HANDLE LogToHandle = NULL;
+#else
 i32 LogToHandle = 1;
-ui32 OP_LOG_LEVEL = 0;
+#endif
+
+ui32 OPLOGLEVEL = (ui32)OPlogLevel::ERRORS;
+
 void(*OPlogHandler)(ui32, const char*, const char*) = NULL;
 
 #ifdef OPIFEX_ANDROID
@@ -64,12 +74,17 @@ void OPlogErr(const char* message, ...) {
 #else
 
 
-
+#ifdef OPIFEX_WINDOWS
+void OPlogSetOutput(HANDLE handle) {
+	LogToHandle = handle;
+}
+#else
 void OPlogSetOutput(i32 handle) {
 	if(handle > 0) {
 		LogToHandle = handle;
 	}
 }
+#endif
 
 
 void OPvlog(ui32 level, const char* channel, const char* message, va_list args) {
@@ -80,7 +95,7 @@ void OPvlog(ui32 level, const char* channel, const char* message, va_list args) 
 		errno = 0;
 	}
 
-	if (level > OP_LOG_LEVEL) {
+	if (level > OPLOGLEVEL) {
 		return;
 	}
 
@@ -88,11 +103,19 @@ void OPvlog(ui32 level, const char* channel, const char* message, va_list args) 
 		vsnprintf(buffer, sizeof buffer, message, args);
 		OPlogHandler(level, channel, buffer);
 	} else {
-		sprintf(buffer2, "%s: %s\n", channel, message);
+        #ifdef OPIFEX_WINDOWS
+		      sprintf_s(buffer2, sizeof(buffer2), "%s: %s\n", channel, message);
+        #else
+		      sprintf(buffer2, "%s: %s\n", channel, message);
+        #endif
 		vsnprintf(buffer, sizeof buffer, buffer2, args);
+		OutputDebugString(buffer);
 #ifndef OPIFEX_IOS
 		printf(buffer);
-		// write(LogToHandle, buffer, strlen(buffer));
+		//if (LogToHandle) {
+		//	WriteFile(LogToHandle, buffer, strlen(buffer), 0, 0);
+		//}
+
 #else
         printf(buffer);
 #endif

@@ -13,26 +13,26 @@ typedef struct {
 AudioExample* audioExample;
 
 void ExampleAudioEnter(OPgameState* last) {
-	OPcmanLoad("step0.wav");
-	OPcmanLoad("background.ogg");
+	OPCMAN.Load("step0.wav");
+	OPCMAN.Load("background.ogg");
 
 	OPaudInit();
 	OPaudInitThread(10);
 
 	audioExample = (AudioExample*)OPalloc(sizeof(AudioExample));
 
-	audioExample->Sound = OPaudCreateEmitter((OPaudioSource*)OPcmanGet("step0.wav"), EMITTER_THREADED);
-	audioExample->BackgroundSound = OPaudCreateEmitter((OPaudioSource*)OPcmanGet("background.ogg"), EMITTER_THREADED);
+	audioExample->Sound = OPaudCreateEmitter((OPaudioSource*)OPCMAN.Get("step0.wav"), EMITTER_THREADED);
+	audioExample->BackgroundSound = OPaudCreateEmitter((OPaudioSource*)OPCMAN.Get("background.ogg"), EMITTER_THREADED);
 }
 
 OPint ExampleAudioUpdate(OPtimer* time) {
 	
-	if (OPkeyboardWasPressed(OPKEY_P) || OPgamePadGet(OPGAMEPAD_ONE)->WasPressed(OPGAMEPADBUTTON_A)) {
+	if (OPKEYBOARD.WasPressed(OPkeyboardKey::P) || OPGAMEPADS[0]->WasPressed(OPgamePadButton::A)) {
 		OPaudSetEmitter(audioExample->Sound);
 		OPaudVolume(audioExample->Sound, 1.0f);
 		OPaudPlay();
 	}
-	if (OPkeyboardWasPressed(OPKEY_B) || OPgamePadGet(OPGAMEPAD_ONE)->WasPressed(OPGAMEPADBUTTON_B)) {
+	if (OPKEYBOARD.WasPressed(OPkeyboardKey::B) || OPGAMEPADS[0]->WasPressed(OPgamePadButton::B)) {
 		OPaudSetEmitter(audioExample->BackgroundSound);
 		OPaudVolume(audioExample->BackgroundSound, 0.5f);
 		OPaudPlay();
@@ -47,7 +47,7 @@ void ExampleAudioRender(OPfloat delta) {
 
 OPint ExampleAudioExit(OPgameState* next) {
 	OPaudRecycleEmitter(audioExample->Sound);
-	OPcmanUnload("step0.wav");
+	OPCMAN.Unload("step0.wav");
 
 	OPfree(audioExample);
 	return 0;

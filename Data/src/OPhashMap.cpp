@@ -1,4 +1,5 @@
 #include "./Data/include/OPhashMap.h"
+
 #include "./Core/include/OPmemory.h"
 #include "./Data/include/OPstring.h"
 #include "./Core/include/OPlog.h"
@@ -11,7 +12,7 @@
 //|_____/ \__|_|   \__,_|\___|\__|___/
 //
 
-static KeyValuePair* get_pair(Bucket *bucket, const OPchar *key);
+static OPhashMapPair* get_pair(OPhashMapBucket *bucket, const OPchar *key);
 static ui64 hash(const OPchar* str);
 
 // ______                _   _
@@ -23,35 +24,20 @@ static ui64 hash(const OPchar* str);
 //
 
 
-void OPhashMapInit(OPhashMap* hashMap, OPuint capacity)
+void OPhashMap::Init(OPuint capacity)
 {
-	if (hashMap == NULL) return;
-
-	hashMap->count = capacity;
-	hashMap->buckets = (Bucket*)OPallocZero(hashMap->count * sizeof(Bucket));
-	if (hashMap->buckets == NULL) {
-		OPfree(hashMap);
-		return;
-	}
+	count = capacity;
+	buckets = (OPhashMapBucket*)OPallocZero(count * sizeof(OPhashMapBucket));
 }
 
-OPhashMap* OPhashMapCreate(OPuint capacity)
-{
-	OPhashMap* hashMap = (OPhashMap*)OPalloc(sizeof(OPhashMap));
-	OPhashMapInit(hashMap, capacity);
-	return hashMap;
-}
-
-void OPhashMapDestroy(OPhashMap* hashMap)
+void OPhashMap::Destroy()
 {
 	OPuint i, j, n, m;
-	Bucket *bucket;
-	KeyValuePair *pair;
+	OPhashMapBucket *bucket;
+	OPhashMapPair *pair;
 
-	if (hashMap == NULL) return;
-
-	n = hashMap->count;
-	bucket = hashMap->buckets;
+	n = count;
+	bucket = buckets;
 	i = 0;
 	while (i < n) {
 		m = bucket->count;
@@ -60,7 +46,6 @@ void OPhashMapDestroy(OPhashMap* hashMap)
 			j = 0;
 			while (j < m) {
 				OPfree(pair->key);
-				//OPfree(pair->value); // Hashmap shouldn't free the value inserted
 				pair++;
 				j++;
 			}
@@ -69,66 +54,81 @@ void OPhashMapDestroy(OPhashMap* hashMap)
 		bucket++;
 		i++;
 	}
-	OPfree(hashMap->buckets);
+	OPfree(buckets);
 }
 
-OPint OPhashMapGet(const OPhashMap* hashMap, const OPchar* key, void** dest)
+bool OPhashMap::Get(const OPchar* key, void** dest)
 {
 	OPuint index;
-	Bucket *bucket;
-	KeyValuePair *pair;
+	OPhashMapBucket *bucket;
+	OPhashMapPair *pair;
 
-	if (hashMap == NULL) return 0;
-	if (key == NULL) return 0;
+	if (key == NULL) return false;
 
-	index = hash(key) % hashMap->count;
-	bucket = &(hashMap->buckets[index]);
+	index = hash(key) % count;
+	bucket = &(buckets[index]);
 
 	pair = get_pair(bucket, key);
-	if (pair == NULL) return 0;
+	if (pair == NULL) return false;
 
 	(*dest) = pair->value;
 
-	return 1;
+	return true;
 }
 
-OPint OPhashMapExists(const OPhashMap *map, const OPchar *key)
+bool OPhashMap::Exists(const OPchar *key)
 {
 	OPuint index;
-	Bucket* bucket;
-	KeyValuePair* pair;
+	OPhashMapBucket* bucket;
+	OPhashMapPair* pair;
 
-	if (map == NULL) return 0;
-	if (key == NULL) return 0;
+	if (key == NULL) return false;
 
-	index = hash(key) % map->count;
+	index = hash(key) % count;
 
-
-	bucket = &(map->buckets[index]);
-
+	bucket = &(buckets[index]);
 
 	pair = get_pair(bucket, key);
 
+	if (pair == NULL) return false;
 
-	if (pair == NULL) return 0;
-
-	return 1;
+	return true;
 }
 
-OPint OPhashMapPut(OPhashMap *map, const OPchar* key, void* value)
+bool OPhashMap::Remove(const OPchar* key) {
+	OPuint index;
+	OPhashMapBucket* bucket;
+	OPhashMapPair* pair;
+
+	if (key == NULL) return false;
+
+	index = hash(key) % count;
+
+	bucket = &(buckets[index]);
+
+	pair = get_pair(bucket, key);
+
+	if (pair == NULL) return false;
+
+	pair->key = NULL;
+	pair->value = NULL;
+
+	return true;
+}
+
+OPint OPhashMap::Put(const OPchar* key, void* value)
 {
 	OPuint key_len, index;
-	Bucket* bucket;
-	KeyValuePair* tmp_pairs, *pair;
-	OPchar* new_key;
+	OPhashMapBucket* bucket;
+	OPhashMapPair* tmp_pairs, *pair;
 
-	if (map == NULL || key == NULL) return 0;
+	if (key == NULL) return 0;
 
 	key_len = (OPuint)strlen(key);
 
 	// Get the bucket the key points to
-	index = hash(key) % map->count;
-	bucket = &(map->buckets[index]);
+	index = hash(key) % count;
+	bucket = &(buckets[index]);
 
 	// Replace the value if the key already exists
 	if ((pair = get_pair(bucket, key)) != NULL) {
@@ -143,7 +143,7 @@ OPint OPhashMapPut(OPhashMap *map, const OPchar* key, void* value)
 
 	if (bucket->count == 0) {
 		// Create the first KeyValuePair in the bucket
-		bucket->pairs = (KeyValuePair*)OPalloc(sizeof(KeyValuePair));
+		bucket->pairs = OPNEW(OPhashMapPair());
 		if (bucket->pairs == NULL) {
 			//OPfree(new_key);
 			return 0;
@@ -152,7 +152,7 @@ OPint OPhashMapPut(OPhashMap *map, const OPchar* key, void* value)
 	}
 	else {
 		// Add to the array of pairs
-		tmp_pairs = (KeyValuePair*)OPrealloc(bucket->pairs, (bucket->count + 1) * sizeof(KeyValuePair));
+		tmp_pairs = (OPhashMapPair*)OPrealloc(bucket->pairs, (bucket->count + 1) * sizeof(OPhashMapPair));
 		if (tmp_pairs == NULL) {
 			//OPfree(new_key);
 			return 0;
@@ -162,7 +162,7 @@ OPint OPhashMapPut(OPhashMap *map, const OPchar* key, void* value)
 	}
 
 	pair = &(bucket->pairs[bucket->count - 1]);
-	pair->key = OPstringCreateMerged(key, "");
+	pair->key = OPstringCopy(key);
 	pair->value = value;
 
 	/* Copy the key into the key-value pair */
@@ -171,33 +171,29 @@ OPint OPhashMapPut(OPhashMap *map, const OPchar* key, void* value)
 	return 1;
 }
 
-OPint OPhashMapCount(const OPhashMap *map)
+OPint OPhashMap::Count()
 {
-	OPuint i, j, n, m;
-	OPuint count;
-	Bucket *bucket;
-	KeyValuePair *pair;
+	OPuint i, j, n, m, items;
+	OPhashMapBucket *bucket;
+	OPhashMapPair *pair;
 
-	if (map == NULL) {
-		return 0;
-	}
-	bucket = map->buckets;
-	n = map->count;
+	bucket = buckets;
+	n = count;
 	i = 0;
-	count = 0;
+	items = 0;
 	while (i < n) {
 		pair = bucket->pairs;
 		m = bucket->count;
 		j = 0;
 		while (j < m) {
-			count++;
+			items++;
 			pair++;
 			j++;
 		}
 		bucket++;
 		i++;
 	}
-	return count;
+	return items;
 }
 
 //    _____      _            _         ______                _   _
@@ -208,10 +204,10 @@ OPint OPhashMapCount(const OPhashMap *map)
 //   |_|   |_|  |_| \_/ \__,_|\__\___| |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //
 //
-static KeyValuePair * get_pair(Bucket *bucket, const OPchar *key)
+static OPhashMapPair* get_pair(OPhashMapBucket *bucket, const OPchar *key)
 {
 	OPuint i, n;
-	KeyValuePair *pair;
+	OPhashMapPair *pair;
 
 	n = bucket->count;
 	if (n == 0)	return NULL;

@@ -11,6 +11,7 @@ include_directories(
 	.
 	../
 	./Core/include/
+	./Core/include/Platform/
 )
 add_external_opifex_includes()
 
@@ -19,12 +20,14 @@ add_external_opifex_includes()
 #########################################
 add_source_group(/ "${PROJECT_SOURCE_DIR}/Core" CORE_SRC)
 add_source_group(include/ "${PROJECT_SOURCE_DIR}/Core/include" CORE_SRC)
+add_source_group(include/Platform "${PROJECT_SOURCE_DIR}/Core/include/Platform" CORE_SRC)
 
 
 #########################################
 # Source Files
 #########################################
 add_source_group(src/ "${PROJECT_SOURCE_DIR}/Core/src" CORE_SRC)
+add_source_group(src/Platform/ "${PROJECT_SOURCE_DIR}/Core/src/Platform" CORE_SRC)
 
 
 #########################################

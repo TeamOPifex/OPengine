@@ -1,5 +1,10 @@
-#ifndef OPENGINE_HUMAN_RENDERING_UI_IMGUI
-#define OPENGINE_HUMAN_RENDERING_UI_IMGUI
+#pragma once
+
+struct OPimgui;
+struct OPimguiVertex;
+
+typedef struct OPimgui OPimgui;
+typedef struct OPimguiVertex OPimguiVertex;
 
 #include "./Human/include/Rendering/Font/OPfontManager.h"
 #include "./Math/include/OPvec4.h"
@@ -8,10 +13,9 @@ struct OPimguiVertex {
 	OPvec3 Position;
 	OPvec4 Color;
 };
-typedef struct OPimguiVertex OPimguiVertex;
 
 struct OPimgui {
-	OPrenderBuffer buffer;
+	OPvertexBuffer buffer;
 	OPmat4 proj;
 
 	OPvec4 primaryColor;
@@ -27,7 +31,6 @@ struct OPimgui {
 	OPfontManager* fontManager;
 	OPeffect* effect;
 };
-typedef struct OPimgui OPimgui;
 
 extern OPimgui* OPIMGUI_ACTIVE;
 
@@ -60,5 +63,3 @@ inline OPint OPimguiButton(OPvec2 pos, const OPchar* text) {
 inline void OPimguiBind(OPimgui* imgui) {
 	OPIMGUI_ACTIVE = imgui;
 }
-
-#endif

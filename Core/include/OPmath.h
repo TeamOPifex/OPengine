@@ -1,6 +1,4 @@
 #pragma once
-#ifndef OPEngine_Core_MathHelpers
-#define OPEngine_Core_MathHelpers
 
 #include "OPtypes.h"
 
@@ -35,11 +33,7 @@
 * @return integer ceiling
 */
 __inline OPint OPceil(OPfloat f){
-#if defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_ANDROID)  || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) | defined(OPIFEX_IOS)// linux implementation
 	return (OPint)ceil(f);
-#elif defined(OPIFEX_WINDOWS) 	// windows implementation
-	return (OPint)ceil(f);
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -51,11 +45,7 @@ __inline OPint OPceil(OPfloat f){
 * @return integer floor
 */
 __inline OPint OPfloor(OPfloat f){
-#if defined(OPIFEX_UNIX) // linux implementation
 	return (OPint)floor(f);
-#elif defined(OPIFEX_WINDOWS) 	// windows implementation
-	return (OPint)floor(f);
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -81,11 +71,7 @@ __inline d64 OPabs(d64 f) {
 * @return absolute value
 */
 __inline OPfloat OPabsf(OPfloat f){
-#if defined(OPIFEX_UNIX) // linux implementation
 	return OPabs(f);
-#elif defined(OPIFEX_WINDOWS) 	// windows implementation
-	return OPabs(f);
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -96,11 +82,7 @@ __inline OPfloat OPabsf(OPfloat f){
 * @return absolute value
 */
 __inline OPint	OPabsi(OPint i){
-#if defined(OPIFEX_UNIX) // linux implementation
 	return (OPint)OPabs((OPfloat)i);
-#elif defined(OPIFEX_WINDOWS) 	// windows implementation
-	return (OPint)OPabs((OPfloat)i);
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -234,11 +216,7 @@ __inline OPfloat OPpow(OPfloat b, OPfloat exp){
 * @return square of f
 */
 __inline d64 OPsqrt(d64 f){
-#if defined(OPIFEX_UNIX) // linux implementation
 	return sqrt(f);
-#elif defined(OPIFEX_WINDOWS) 	// windows implementation
-	return sqrt(f);
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -329,5 +307,3 @@ OPfloat OPrandRange(OPfloat min, OPfloat max);
 
 #define OPMIN(a,b) (((a) < (b)) ? (a) : (b))
 #define OPMAX(a,b) (((a) > (b)) ? (a) : (b))
-
-#endif

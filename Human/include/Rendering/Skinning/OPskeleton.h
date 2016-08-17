@@ -1,5 +1,7 @@
-#ifndef OPIFEX_RENDERING_SKINNING_SKELETON
-#define OPIFEX_RENDERING_SKINNING_SKELETON
+#pragma once
+
+struct OPskeleton;
+typedef struct OPskeleton OPskeleton;
 
 #define NUM_JOINTS 4
 #define OPSKELETON_MAX_BONE_COUNT 62
@@ -16,7 +18,6 @@ struct OPskeleton {
 	OPmat4* localPoses;
 	OPmat4* skinned;
 };
-typedef struct OPskeleton OPskeleton;
 
 OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* pose, i32 count, OPchar** names);
 void OPskeletonUpdate(OPskeleton* skeleton);
@@ -26,6 +27,7 @@ void OPskeletonDestroy(OPskeleton* skeleton);
 inline OPskeleton* OPskeletonCopy(OPskeleton* source) {
 	return OPskeletonCreate(source->hierarchy, source->localPoses, source->hierarchyCount, source->jointNames);
 }
+
 inline OPmat4 OPskeletonLocal(OPskeleton* skeleton, const OPchar* name) {
 	i16 ind = OPskeletonGet(skeleton, name);
 	if (ind > -1)  {
@@ -42,9 +44,8 @@ inline OPvec3 OPskeletonLocalTranslate(OPskeleton* skeleton, i16 ind) {
 	}
 	return result;
 }
+
 inline OPvec3 OPskeletonLocalTranslate(OPskeleton* skeleton, const OPchar* name) {
 	i16 ind = OPskeletonGet(skeleton, name);
 	return OPskeletonLocalTranslate(skeleton, ind);
 }
-
-#endif

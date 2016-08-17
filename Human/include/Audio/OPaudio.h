@@ -1,5 +1,4 @@
-#ifndef OPENGINE_HUMAN_AUDIO
-#define OPENGINE_HUMAN_AUDIO
+#pragma once
 
 #include "./Core/include/OPtypes.h"
 
@@ -10,6 +9,7 @@
 #include "./Data/include/OPfile.h"
 #include "./Math/include/OPvec3.h"
 #include "./Performance/include/OPthread.h"
+#include "./Performance/include/OPmutex.h"
 
 #ifdef OPIFEX_OPTION_AUDIO
 #ifdef OPIFEX_ANDROID
@@ -103,6 +103,3 @@ OPint OPaudInit();
 OPvec3 OPaudEarPosition(OPvec3* pos);
 OPvec3 OPaudEarVelocity(OPvec3* pos);
 OPvec3 OPaudEarForwardUp(OPfloat* pos);
-
-
-#endif

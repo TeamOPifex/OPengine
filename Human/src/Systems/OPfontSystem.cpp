@@ -17,35 +17,35 @@ void OPfontSystemLoadEffects() {
 
 	OPint error;
 
-	if (!OPcmanIsLoaded(FontShaderVert)) {
-		error = OPcmanLoad(FontShaderVert);
+	if (!OPCMAN.IsLoaded(FontShaderVert)) {
+		error = OPCMAN.Load(FontShaderVert);
 		ASSERT(error, "Failed to load Vertex Shader for Font Effect");
 	}
 
-	if (!OPcmanIsLoaded(FontShaderFrag)) {
-		error = OPcmanLoad(FontShaderFrag);
+	if (!OPCMAN.IsLoaded(FontShaderFrag)) {
+		error = OPCMAN.Load(FontShaderFrag);
 		ASSERT(error, "Failed to load Fragment Shader for Font Effect");
 	}
 
-	OPshaderAttribute attribs[] = {
-		{ "aPosition", GL_FLOAT, 3 },
-		{ "aUV", GL_FLOAT, 2 }
-	};
+	//OPshaderAttribute attribs[] = {
+	//	{ "aPosition", OPshaderElementType::FLOAT, 3 },
+	//	{ "aUV", OPshaderElementType::FLOAT, 2 }
+	//};
 
 	OPFONTMANAGER_EFFECT_ACTIVE = (OPeffect*)OPalloc(sizeof(OPeffect));
-	*OPFONTMANAGER_EFFECT_ACTIVE = OPeffectCreate(
-		*(OPshader*)OPcmanGet(FontShaderVert),
-		*(OPshader*)OPcmanGet(FontShaderFrag),
-		attribs,
-		2,
-		"Common Font Effect"
-		);
+	OPFONTMANAGER_EFFECT_ACTIVE->Init((OPshader*)OPCMAN.Get(FontShaderVert), (OPshader*)OPCMAN.Get(FontShaderFrag));
 
+	//OPFONTMANAGER_EFFECT_ACTIVE->AddUniform("uColorTexture");
+	//OPFONTMANAGER_EFFECT_ACTIVE->AddUniform("uColor");
+	//OPFONTMANAGER_EFFECT_ACTIVE->AddUniform("uWorld");
+	//OPFONTMANAGER_EFFECT_ACTIVE->AddUniform("uView");
+	//OPFONTMANAGER_EFFECT_ACTIVE->AddUniform("uProj");
 }
 
 void OPfontSystemShutdownEffects() {
-	OPeffectUnload(OPFONTMANAGER_EFFECT_ACTIVE);
+	OPFONTMANAGER_EFFECT_ACTIVE->Destroy();
 	OPfree(OPFONTMANAGER_EFFECT_ACTIVE);
+	OPFONTMANAGER_EFFECT_ACTIVE = NULL;
 }
 // void OPfontSystemLoadScreenEffects() {
 
@@ -56,13 +56,13 @@ void OPfontSystemShutdownEffects() {
 
 // 	OPint error;
 
-// 	if (!OPcmanIsLoaded(FontShaderScreenVert)) {
-// 		error = OPcmanLoad(FontShaderScreenVert);
+// 	if (!OPCMAN.IsLoaded(FontShaderScreenVert)) {
+// 		error = OPCMAN.Load(FontShaderScreenVert);
 // 		ASSERT(error, "Failed to load Vertex Shader for Font Effect");
 // 	}
 
-// 	if (!OPcmanIsLoaded(FontShaderFrag)) {
-// 		error = OPcmanLoad(FontShaderFrag);
+// 	if (!OPCMAN.IsLoaded(FontShaderFrag)) {
+// 		error = OPCMAN.Load(FontShaderFrag);
 // 		ASSERT(error, "Failed to load Fragment Shader for Font Effect");
 // 	}
 
@@ -73,8 +73,8 @@ void OPfontSystemShutdownEffects() {
 
 // 	OPFONTMANAGER_EFFECT_ACTIVE = (OPeffect*)OPalloc(sizeof(OPeffect));
 // 	*OPFONTMANAGER_EFFECT_ACTIVE = OPeffectCreate(
-// 		*(OPshader*)OPcmanGet(FontShaderScreenVert),
-// 		*(OPshader*)OPcmanGet(FontShaderFrag),
+// 		*(OPshader*)OPCMAN.Get(FontShaderScreenVert),
+// 		*(OPshader*)OPCMAN.Get(FontShaderFrag),
 // 		attribs,
 // 		2,
 // 		"Common Font Effect"

@@ -1,5 +1,7 @@
-#ifndef OPENGINE_HUMAN_RENDERER_FONT_GLYPH
-#define OPENGINE_HUMAN_RENDERER_FONT_GLYPH
+#pragma once
+
+struct OPfontGlyph;
+typedef struct OPfontGlyph OPfontGlyph;
 
 #include "./Human/include/Rendering/Font/OPfontKerning.h"
 #include "./Math/include/OPvec4.h"
@@ -17,11 +19,14 @@ struct OPfontGlyph {
 	OPvector* kerning;
 	OPint outlineType;
 	OPfloat outlineThickness;
+
+	void Init();
+	OPfloat GetKerning(OPchar charcode);
+	void Destroy();
+
+	inline static OPfontGlyph* Create() {
+		OPfontGlyph* result = OPNEW(OPfontGlyph());
+		result->Init();
+		return result;
+	}
 };
-typedef struct OPfontGlyph OPfontGlyph;
-
-OPfontGlyph* OPfontGlyphCreate();
-void OPfontGlyphDestroy(OPfontGlyph* glyph);
-OPfloat OPfontGlyphGetKerning(OPfontGlyph* glyph, OPchar charcode);
-
-#endif

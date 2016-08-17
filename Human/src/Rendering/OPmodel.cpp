@@ -3,16 +3,16 @@
 void OPmodel::Bind(OPmaterial* material) {
 	mesh->Bind();
 	OPmaterialBind(material);
-	OPeffectParam("uWorld", world);
+	OPeffectSet("uWorld", &world);
 }
 
 void OPmodel::Bind(OPmaterial* material, OPcam* camera) {
 	Bind(material);
-	OPcamBind(camera);
+	camera->Bind();
 }
 
 void OPmodel::Draw(OPmaterial* material, OPcam* cam) {
 	Bind(material);
-	OPeffectParam(cam);
+	OPeffectSet(cam);
 	OPmeshRender();
 }

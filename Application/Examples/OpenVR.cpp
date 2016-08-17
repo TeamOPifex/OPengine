@@ -251,8 +251,8 @@ void ExampleOpenVREnter(OPgameState* last) {
 		{ "v2UVGreenIn", GL_FLOAT, 2 },
 		{ "v2UVblueIn", GL_FLOAT, 2 }
 	};
-	OPshader* vert = (OPshader*)OPcmanLoadGet("Common/OpenVR.vert");
-	OPshader* frag = (OPshader*)OPcmanLoadGet("Common/OpenVR.frag");
+	OPshader* vert = (OPshader*)OPCMAN.LoadGet("Common/OpenVR.vert");
+	OPshader* frag = (OPshader*)OPCMAN.LoadGet("Common/OpenVR.frag");
 	openVRExample.lensEffect = OPeffectCreate(
 		*vert,
 		*frag,
@@ -262,12 +262,12 @@ void ExampleOpenVREnter(OPgameState* last) {
 		sizeof(GL_FLOAT) * ( 4 + 2 + 2 + 2)
 	);
 
-	//openVRExample.mesh = (OPmesh*)OPcmanLoadGet("environment_04.opm");
-	//openVRExample.texture = (OPtexture*)OPcmanLoadGet("Environments.png");
-	//openVRExample.mesh = (OPmesh*)OPcmanLoadGet("ld35person.opm");
-	//openVRExample.texture = (OPtexture*)OPcmanLoadGet("Knight.png");
-	openVRExample.mesh = (OPmesh*)OPcmanLoadGet("wolf.opm");
-	openVRExample.texture = (OPtexture*)OPcmanLoadGet("wolf.png");
+	//openVRExample.mesh = (OPmesh*)OPCMAN.LoadGet("environment_04.opm");
+	//openVRExample.texture = (OPtexture*)OPCMAN.LoadGet("Environments.png");
+	//openVRExample.mesh = (OPmesh*)OPCMAN.LoadGet("ld35person.opm");
+	//openVRExample.texture = (OPtexture*)OPCMAN.LoadGet("Knight.png");
+	openVRExample.mesh = (OPmesh*)OPCMAN.LoadGet("wolf.opm");
+	openVRExample.texture = (OPtexture*)OPCMAN.LoadGet("wolf.png");
 
 	OPshaderAttribute attribs2[] = {
 		{ "aPosition", GL_FLOAT, 3 },
@@ -275,10 +275,10 @@ void ExampleOpenVREnter(OPgameState* last) {
 		{ "aUV", GL_FLOAT, 2 }
 	};
 
-	//vert = (OPshader*)OPcmanLoadGet("Common/Texture3DMVP.vert");
-	//frag = (OPshader*)OPcmanLoadGet("Common/Texture.frag");
-	vert = (OPshader*)OPcmanLoadGet("Common/TexturedShadowMVP.vert");
-	frag = (OPshader*)OPcmanLoadGet("Common/TexturedShadowMVP.frag");	
+	//vert = (OPshader*)OPCMAN.LoadGet("Common/Texture3DMVP.vert");
+	//frag = (OPshader*)OPCMAN.LoadGet("Common/Texture.frag");
+	vert = (OPshader*)OPCMAN.LoadGet("Common/TexturedShadowMVP.vert");
+	frag = (OPshader*)OPCMAN.LoadGet("Common/TexturedShadowMVP.frag");	
 	openVRExample.modelEffect = OPeffectCreate(
 		*vert,
 		*frag,

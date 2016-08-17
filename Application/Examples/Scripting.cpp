@@ -18,12 +18,16 @@ ScriptingExample scriptingExample;
 void ExampleScriptingEnter(OPgameState* last) {
 	OPjavaScriptV8Init();
 
-	scriptingExample.InitScript = (OPscript*)OPcmanLoadGet("init.js");
-	scriptingExample.UpdateScript = (OPscript*)OPcmanLoadGet("update.js");
-	scriptingExample.DestroyScript = (OPscript*)OPcmanLoadGet("exit.js");
-	OPjavaScriptV8Compile(&scriptingExample.InitCompiled, scriptingExample.InitScript);
-	OPjavaScriptV8Compile(&scriptingExample.UpdateCompiled, scriptingExample.UpdateScript);
-	OPjavaScriptV8Compile(&scriptingExample.DestroyCompiled, scriptingExample.DestroyScript);
+	scriptingExample.InitCompiled = OPjavaScriptV8Compiled("init.js");
+	scriptingExample.UpdateCompiled = OPjavaScriptV8Compiled("update.js");
+	scriptingExample.DestroyCompiled = OPjavaScriptV8Compiled("exit.js");
+
+	//scriptingExample.InitScript = (OPscript*)OPCMAN.LoadGet("init.js");
+	//scriptingExample.UpdateScript = (OPscript*)OPCMAN.LoadGet("update.js");
+	//scriptingExample.DestroyScript = (OPscript*)OPCMAN.LoadGet("exit.js");
+	//OPjavaScriptV8Compile(&scriptingExample.InitCompiled, scriptingExample.InitScript);
+	//OPjavaScriptV8Compile(&scriptingExample.UpdateCompiled, scriptingExample.UpdateScript);
+	//OPjavaScriptV8Compile(&scriptingExample.DestroyCompiled, scriptingExample.DestroyScript);
 
     OPjavaScriptV8Run(&scriptingExample.InitCompiled);
     OPjavaScriptV8Run(&scriptingExample.UpdateCompiled);

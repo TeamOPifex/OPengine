@@ -19,7 +19,7 @@ OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OP
 
 	OPphysXController* result = manager->createController(desc);
 	result->setContactOffset(0.02f);
-	OPuint shapesCount = result->getActor()->getNbShapes();
+	ui32 shapesCount = result->getActor()->getNbShapes();
 	OPlog("# of shapes: %d", shapesCount);
 	PxShape* shapes = NULL;
 	result->getActor()->getShapes(&shapes, shapesCount);
@@ -35,7 +35,7 @@ OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OP
 
 void OPphysXControllerMove(OPphysXController* controller, OPvec3 disp, OPtimer* timer) {
 	PxControllerFilters filters = PxControllerFilters(0);
-	controller->move(PxVec3(disp.x, disp.y, disp.z), 0.01f, timer->Elapsed, filters);
+	controller->move(PxVec3(disp.x, disp.y, disp.z), 0.01f, (f32)timer->Elapsed, filters);
 }
 
 void OPphysXControllerSetFootPos(OPphysXController* controller, OPvec3 disp) {
@@ -48,12 +48,12 @@ void OPphysXControllerSetPos(OPphysXController* controller, OPvec3 disp) {
 
 OPvec3 OPphysXControllerGetPos(OPphysXController* controller) {
 	PxExtendedVec3 pos = controller->getPosition();
-	return OPvec3Create(pos.x, pos.y, pos.z);
+	return OPvec3Create((OPfloat)pos.x, (OPfloat)pos.y, (OPfloat)pos.z);
 }
 
 OPvec3 OPphysXControllerGetFootPos(OPphysXController* controller) {
 	PxExtendedVec3 pos = controller->getFootPosition();
-	return OPvec3Create(pos.x, pos.y, pos.z);
+	return OPvec3Create((OPfloat)pos.x, (OPfloat)pos.y, (OPfloat)pos.z);
 }
 
 void OPphysXControllerRelease(OPphysXController* controller) {

@@ -10,7 +10,7 @@ JS_RETURN_VAL _OPcubeCreate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
-    *mesh = OPcubeCreate(OPvec3Create(args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue()));
+    *mesh = OPcubeCreate(OPvec3Create((f32)args[0]->NumberValue(), (f32)args[1]->NumberValue(), (f32)args[2]->NumberValue()));
 
     Handle<Object> result = JS_NEW_OBJECT();
     JS_SET_PTR(result, mesh);

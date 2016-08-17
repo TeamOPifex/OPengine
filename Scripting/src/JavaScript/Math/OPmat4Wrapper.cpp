@@ -9,9 +9,9 @@ JS_RETURN_VAL _OPmat4ScaleSelf(const JS_ARGS& args) {
 
     OPmat4* ptr = JS_GET_PTR(args.This(), OPmat4);
     if(args.Length() == 3) {
-        *ptr = OPmat4Scl(*ptr, args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue());
+        *ptr = OPmat4Scl(*ptr, (f32)args[0]->NumberValue(), (f32)args[1]->NumberValue(), (f32)args[2]->NumberValue());
     } else if(args.Length() == 1) {
-        *ptr = OPmat4Scl(*ptr, args[0]->NumberValue());
+        *ptr = OPmat4Scl(*ptr, (f32)args[0]->NumberValue());
     }
 
     JS_RETURN(args.This());
@@ -22,9 +22,9 @@ JS_RETURN_VAL _OPmat4Scale(const JS_ARGS& args) {
 
     OPmat4* ptr = JS_GET_ARG_PTR(args, 0, OPmat4);
     if(args.Length() == 3) {
-        *ptr = OPmat4Scl(*ptr, args[1]->NumberValue(), args[2]->NumberValue(), args[3]->NumberValue());
+        *ptr = OPmat4Scl(*ptr, (f32)args[1]->NumberValue(), (f32)args[2]->NumberValue(), (f32)args[3]->NumberValue());
     } else if(args.Length() == 1) {
-        *ptr = OPmat4Scl(*ptr, args[1]->NumberValue());
+        *ptr = OPmat4Scl(*ptr, (f32)args[1]->NumberValue());
     }
 
     JS_RETURN(args[0]);
@@ -35,9 +35,9 @@ JS_RETURN_VAL _OPmat4SetScaleSelf(const JS_ARGS& args) {
 
     OPmat4* ptr = JS_GET_PTR(args.This(), OPmat4);
     if(args.Length() == 3) {
-        *ptr = OPmat4Scl(args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue());
+        *ptr = OPmat4Scl((f32)args[0]->NumberValue(), (f32)args[1]->NumberValue(), (f32)args[2]->NumberValue());
     } else if(args.Length() == 1) {
-        *ptr = OPmat4Scl(args[0]->NumberValue());
+        *ptr = OPmat4Scl((f32)args[0]->NumberValue());
     }
 
     JS_RETURN(args.This());
@@ -48,9 +48,9 @@ JS_RETURN_VAL _OPmat4SetScale(const JS_ARGS& args) {
 
     OPmat4* ptr = JS_GET_ARG_PTR(args, 0, OPmat4);
     if(args.Length() == 4) {
-        *ptr = OPmat4Scl(args[1]->NumberValue(), args[2]->NumberValue(), args[3]->NumberValue());
+        *ptr = OPmat4Scl((f32)args[1]->NumberValue(), (f32)args[2]->NumberValue(), (f32)args[3]->NumberValue());
     } else if(args.Length() == 2) {
-        *ptr = OPmat4Scl(args[1]->NumberValue());
+        *ptr = OPmat4Scl((f32)args[1]->NumberValue());
     }
 
     JS_RETURN(args[0]);
@@ -60,7 +60,7 @@ JS_RETURN_VAL _OPmat4TranslateSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmat4* ptr = JS_GET_PTR(args.This(), OPmat4);
-    *ptr = OPmat4Translate(*ptr, args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue());
+    *ptr = OPmat4Translate(*ptr, (f32)args[0]->NumberValue(), (f32)args[1]->NumberValue(), (f32)args[2]->NumberValue());
 
     JS_RETURN(args.This());
 }
@@ -69,7 +69,7 @@ JS_RETURN_VAL _OPmat4Translate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmat4* ptr = JS_GET_ARG_PTR(args, 0, OPmat4);
-    *ptr = OPmat4Translate(*ptr, args[1]->NumberValue(), args[2]->NumberValue(), args[3]->NumberValue());
+    *ptr = OPmat4Translate(*ptr, (f32)args[1]->NumberValue(), (f32)args[2]->NumberValue(), (f32)args[3]->NumberValue());
 
     JS_RETURN(args[0]);
 }
@@ -78,7 +78,7 @@ JS_RETURN_VAL _OPmat4SetTranslateSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmat4* ptr = JS_GET_PTR(args.This(), OPmat4);
-    *ptr = OPmat4Translate(args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue());
+    *ptr = OPmat4Translate((f32)args[0]->NumberValue(), (f32)args[1]->NumberValue(), (f32)args[2]->NumberValue());
 
     JS_RETURN(args.This());
 }
@@ -87,7 +87,7 @@ JS_RETURN_VAL _OPmat4SetTranslate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmat4* ptr = JS_GET_ARG_PTR(args, 0, OPmat4);
-    *ptr = OPmat4Translate(args[1]->NumberValue(), args[2]->NumberValue(), args[3]->NumberValue());
+    *ptr = OPmat4Translate((f32)args[1]->NumberValue(), (f32)args[2]->NumberValue(), (f32)args[3]->NumberValue());
 
     JS_RETURN(args[0]);
 }
@@ -96,7 +96,7 @@ JS_RETURN_VAL _OPmat4RotXSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmat4* ptr = JS_GET_PTR(args.This(), OPmat4);
-    *ptr = OPmat4RotX(*ptr, args[0]->NumberValue());
+    *ptr = OPmat4RotX(*ptr, (f32)args[0]->NumberValue());
 
     JS_RETURN(args.This());
 }
@@ -105,7 +105,7 @@ JS_RETURN_VAL _OPmat4RotX(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmat4* ptr = JS_GET_ARG_PTR(args, 0, OPmat4);
-    *ptr = OPmat4RotX(*ptr, args[1]->NumberValue());
+    *ptr = OPmat4RotX(*ptr, (f32)args[1]->NumberValue());
 
     JS_RETURN(args[0]);
 }
@@ -114,7 +114,7 @@ JS_RETURN_VAL _OPmat4RotYSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmat4* ptr = JS_GET_PTR(args.This(), OPmat4);
-    *ptr = OPmat4RotY(*ptr, args[0]->NumberValue());
+    *ptr = OPmat4RotY(*ptr, (f32)args[0]->NumberValue());
 
     JS_RETURN(args.This());
 }
@@ -123,7 +123,7 @@ JS_RETURN_VAL _OPmat4RotY(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmat4* ptr = JS_GET_ARG_PTR(args, 0, OPmat4);
-    *ptr = OPmat4RotY(*ptr, args[1]->NumberValue());
+    *ptr = OPmat4RotY(*ptr, (f32)args[1]->NumberValue());
 
     JS_RETURN(args[0]);
 }
@@ -132,7 +132,7 @@ JS_RETURN_VAL _OPmat4RotZSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmat4* ptr = JS_GET_PTR(args.This(), OPmat4);
-    *ptr = OPmat4RotZ(*ptr, args[0]->NumberValue());
+    *ptr = OPmat4RotZ(*ptr, (f32)args[0]->NumberValue());
 
     JS_RETURN(args.This());
 }
@@ -141,7 +141,7 @@ JS_RETURN_VAL _OPmat4RotZ(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmat4* ptr = JS_GET_ARG_PTR(args, 0, OPmat4);
-    *ptr = OPmat4RotZ(*ptr, args[1]->NumberValue());
+    *ptr = OPmat4RotZ(*ptr, (f32)args[1]->NumberValue());
 
     JS_RETURN(args[0]);
 }

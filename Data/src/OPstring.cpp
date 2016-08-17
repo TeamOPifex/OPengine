@@ -54,8 +54,8 @@ OPchar* OPstringCopy(const OPchar* str) {
 	ui32 len, size;
 	OPchar* result = NULL;
 
-	OPlogInfo("copy string");
-	OPlogInfo("copying %s", str);
+	//OPlogInfo("copy string");
+	//OPlogInfo("copying %s", str);
 
 	len = (ui32)strlen(str);
 	size = (len + 1) * sizeof(OPchar);
@@ -99,7 +99,12 @@ OPchar* OPstringCreateMerged(const OPchar* str, const OPchar* add) {
 	#else
 	result = strcpy(result, str);
 	#endif
+
+	#ifdef OPIFEX_WINDOWS
+	strcat_s(result, lenA + lenB + 1, add);
+    #else
 	strcat(result, add);
+    #endif
 	return result;
 }
 
@@ -122,4 +127,8 @@ OPint OPstringContains(OPchar* str, const OPchar* cmp) {
 void OPstringToLower(OPchar* str) {
 	OPchar* p = str;
 	for ( ; *p; ++p) *p = tolower(*p);
+}
+
+void OPstringScan(OPchar* destination, const OPchar* format, ...) {
+
 }

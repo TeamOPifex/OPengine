@@ -13,9 +13,9 @@ SpriteExample spriteExample;
 
 void ExampleSpriteEnter(OPgameState* last) {
 	OPsprite2DInit(NULL);
-	OPcmanLoad("spriteExample.opss");
+	OPCMAN.Load("spriteExample.opss");
 
-	spriteExample.sprite = (OPsprite*)OPcmanGet("spriteExample/Bear");
+	spriteExample.sprite = (OPsprite*)OPCMAN.Get("spriteExample/Bear");
 	spriteExample.sprite2D = OPsprite2DCreate(&spriteExample.sprite, NULL);
 }
 
@@ -26,7 +26,7 @@ OPint ExampleSpriteUpdate(OPtimer* time) {
 	OPrenderClear(0,0,0);
 
 	OPsprite2DPrepRender(spriteExample.sprite2D);
-	OPtexturePixelate();
+	//OPtexturePixelate();
 	OPmeshRender();
 
 	OPrenderPresent();

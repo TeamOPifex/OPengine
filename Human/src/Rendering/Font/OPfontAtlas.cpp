@@ -2,63 +2,61 @@
 #include "./Human/include/Rendering/OPimage.h"
 #include "./Human/include/Utilities/OPimagePNG.h"
 
-OPfontAtlas* OPfontAtlasCreate(i32 width, i32 height, OPint depth) {
-	OPfontAtlas* self = (OPfontAtlas*)OPalloc(sizeof(OPfontAtlas));
+void OPfontAtlas::Init(i32 width, i32 height, OPint depth) {
 	OPfontAtlasNode node = { 1, 1 };
 	node.z = width - 2;
-	self->nodes = OPvectorCreate(sizeof(OPfontAtlasNode));
-	self->used = 0;
-	self->width = width;
-	self->height = height;
-	self->depth = depth;
-	OPvectorPush(self->nodes, (ui8*)&node);
-	self->data = (ui8*)OPalloc(width*height*depth*sizeof(ui8));
-	OPbzero(self->data, width*height*depth*sizeof(ui8));
-	return self;
+	nodes = OPvector::Create(sizeof(OPfontAtlasNode));
+	used = 0;
+	this->width = width;
+	this->height = height;
+	this->depth = depth;
+	nodes->Push((ui8*)&node);
+	data = (ui8*)OPalloc(width*height*depth*sizeof(ui8));
+	OPbzero(data, width*height*depth*sizeof(ui8));
 }
 
-void OPfontAtlasDestroy(OPfontAtlas* atlas){
-	OPvectorDestroy(atlas->nodes);
-	OPfree(atlas->nodes);
-	if (atlas->data){
-		OPfree(atlas->data);
+void OPfontAtlas::Destroy(){
+	nodes->Destroy();
+	OPfree(nodes);
+	if (data){
+		OPfree(data);
+		data = NULL;
 	}
-	OPfree(atlas);
 }
 
-void OPfontAtlasSetRegion(OPfontAtlas* atlas, OPint x, OPint y, OPint width, OPint height, ui8* data, OPint stride) {
+void OPfontAtlas::SetRegion(OPint x, OPint y, OPint width, OPint height, ui8* data, OPint stride) {
 	OPint i, depth, charsize;
 
-	depth = atlas->depth;
+	depth = this->depth;
 	charsize = sizeof(ui8);
 	for (i = 0; i < height; ++i){
-		OPmemcpy(atlas->data + ((y + i)*atlas->width + x) * charsize * depth,
+		OPmemcpy(this->data + ((y + i)*this->width + x) * charsize * depth,
 			data + (i * stride) * charsize, width * charsize * depth);
 	}
 }
 
-OPint OPfontAtlasFit(OPfontAtlas* atlas, OPint index, OPint width, OPint height){
+OPint OPfontAtlas::Fit(OPint index, OPint width, OPint height){
 	OPfontAtlasNode* node;
 	OPint x, y, width_left, i;
 
-	node = (OPfontAtlasNode*)(OPvectorGet(atlas->nodes, index));
+	node = (OPfontAtlasNode*)(this->nodes->Get(index));
 	x = node->x;
 	y = node->y;
 	width_left = width;
 	i = index;
 
-	if ((x + width) > (atlas->width - 1)) {
+	if ((x + width) > (this->width - 1)) {
 		return -1;
 	}
 
 	y = node->y;
 
 	while (width_left > 0) {
-		node = (OPfontAtlasNode*)(OPvectorGet(atlas->nodes, i));
+		node = (OPfontAtlasNode*)(this->nodes->Get(i));
 		if (node->y > y){
 			y = node->y;
 		}
-		if ((y + height) > atlas->height - 1){
+		if ((y + height) > this->height - 1){
 			return -1;
 		}
 		width_left -= node->z;
@@ -67,25 +65,25 @@ OPint OPfontAtlasFit(OPfontAtlas* atlas, OPint index, OPint width, OPint height)
 	return y;
 }
 
-void OPfontAtlasMerge(OPfontAtlas* atlas)
+void OPfontAtlas::Merge()
 {
 	OPfontAtlasNode *node, *next;
 	OPint i;
 	
-	for (i = 0; i < (int)(atlas->nodes->_size) - 1; ++i)
+	for (i = 0; i < (int)(this->nodes->_size) - 1; ++i)
 	{
-		node = (OPfontAtlasNode*)(OPvectorGet(atlas->nodes, i));
-		next = (OPfontAtlasNode*)(OPvectorGet(atlas->nodes, i + 1));
+		node = (OPfontAtlasNode*)(this->nodes->Get(i));
+		next = (OPfontAtlasNode*)(this->nodes->Get(i + 1));
 		if (node->y == next->y)
 		{
 			node->z += next->z;
-			OPvectorErase(atlas->nodes, i + 1);
+			this->nodes->Erase(i + 1);
 			--i;
 		}
 	}
 }
 
-OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, i32 width, i32 height)
+OPfontAtlasRegion OPfontAtlas::GetRegion(i32 width, i32 height)
 {
 	OPint y;
 	OPint best_height, best_width, best_index;
@@ -98,12 +96,12 @@ OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, i32 width, i32 height
 	best_index = -1;
 	best_width = maxInt;
 
-	for (i = 0; i < atlas->nodes->_size; ++i)
+	for (i = 0; i < this->nodes->_size; ++i)
 	{
-		y = OPfontAtlasFit(atlas, i, width, height);
+		y = Fit(i, width, height);
 		if (y >= 0)
 		{
-			node = (OPfontAtlasNode*)OPvectorGet(atlas->nodes, i);
+			node = (OPfontAtlasNode*)this->nodes->Get(i);
 			if (((y + height) < best_height) ||
 				(((y + height) == best_height) && (node->z < best_width)))
 			{
@@ -134,13 +132,13 @@ OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, i32 width, i32 height
 	node->x = region.x;
 	node->y = region.y + height;
 	node->z = width;
-	OPvectorInsert(atlas->nodes, best_index, (ui8*)node);
+	this->nodes->Insert(best_index, (ui8*)node);
 	OPfree(node);
 
-	for (i = best_index + 1; i < atlas->nodes->_size; ++i)
+	for (i = best_index + 1; i < this->nodes->_size; ++i)
 	{
-		node = (OPfontAtlasNode*)OPvectorGet(atlas->nodes, i);
-		prev = (OPfontAtlasNode*)OPvectorGet(atlas->nodes, i - 1);
+		node = (OPfontAtlasNode*)this->nodes->Get(i);
+		prev = (OPfontAtlasNode*)this->nodes->Get(i - 1);
 
 		if (node->x < (prev->x + prev->z))
 		{
@@ -149,7 +147,7 @@ OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, i32 width, i32 height
 			node->z -= shrink;
 			if (node->z <= 0)
 			{
-				OPvectorErase(atlas->nodes, i);
+				this->nodes->Erase(i);
 				--i;
 			}
 			else
@@ -162,57 +160,39 @@ OPfontAtlasRegion OPfontAtlasGetRegion(OPfontAtlas* atlas, i32 width, i32 height
 			break;
 		}
 	}
-	OPfontAtlasMerge(atlas);
-	atlas->used += width * height;
+	Merge();
+	this->used += width * height;
 	return region;
 }
 
-OPtexture OPfontAtlasTexture(OPfontAtlas* atlas) {
-	OPtextureDescription desc = { 
-		(ui16)atlas->width,
-		(ui16)atlas->height,
-		#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
-		GL_RED,
-		GL_RED,
-		#else
-		GL_RGB,
-		GL_RGB,
-		#endif
-		GL_UNSIGNED_BYTE,
-		GL_LINEAR, 
-		GL_LINEAR, 
-		GL_CLAMP_TO_EDGE, 
-		GL_CLAMP_TO_EDGE		
-	};
-	if (atlas->depth == 4) {
-		desc.InternalFormat = GL_RGBA;
-		desc.Format = GL_RGBA;
-		desc.DataType = GL_UNSIGNED_BYTE;
+OPtexture OPfontAtlas::Texture() {
+	OPtextureDesc desc;
+	desc.width = this->width;
+	desc.height = this->height;
+	desc.filter = OPtextureFilter::LINEAR;
+	desc.wrap = OPtextureWrap::CLAMP_TO_EDGE;
+	desc.format = OPtextureFormat::RGB;
+	if (this->depth == 4) {
+		desc.format = OPtextureFormat::RGBA;
 	}
-	if (atlas->depth == 3) {
-		desc.InternalFormat = GL_RGB;
-		desc.Format = GL_RGB;
-		desc.DataType = GL_UNSIGNED_BYTE;
-	}
-	OPtexture texture = OPtextureCreate(desc);
-	OPtextureBind(&texture);
-	OPtextureSetData(atlas->data);
-	return texture;
+	OPtexture result;
+	OPRENDERER_ACTIVE->Texture.Init(&result, desc, this->data);
+	return result;
 }
 
-void OPfontAtlasSavePNG(OPfontAtlas* atlas, OPchar* filename) {
-	if (atlas->depth == 1) {
-		ui8* data = (ui8*)OPalloc(atlas->width * atlas->height * 3);
-		for (OPint i = atlas->width * atlas->height; i--;) {
-			data[i * 3] = atlas->data[i];
-			data[i * 3 + 1] = atlas->data[i];
-			data[i * 3 + 2] = atlas->data[i];
+void OPfontAtlas::SavePNG(OPchar* filename) {
+	if (this->depth == 1) {
+		ui8* data = (ui8*)OPalloc(this->width * this->height * 3);
+		for (OPint i = this->width * this->height; i--;) {
+			data[i * 3] = this->data[i];
+			data[i * 3 + 1] = this->data[i];
+			data[i * 3 + 2] = this->data[i];
 		}
-		OPimagePNGCreate24(data, atlas->width, atlas->height, filename);
-	} else if (atlas->depth == 3) {
-		OPimagePNGCreate24(atlas->data, atlas->width, atlas->height, filename);
+		OPimagePNGCreate24(data, this->width, this->height, filename);
+	} else if (this->depth == 3) {
+		OPimagePNGCreate24(this->data, this->width, this->height, filename);
 	}
-	else if (atlas->depth == 4){
-		OPimagePNGCreate32(atlas->data, atlas->width, atlas->height, filename);
+	else if (this->depth == 4){
+		OPimagePNGCreate32(this->data, this->width, this->height, filename);
 	}
 }

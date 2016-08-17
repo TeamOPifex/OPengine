@@ -1,5 +1,4 @@
-#ifndef OPVOXEL_GENERATOR
-#define OPVOXEL_GENERATOR
+#pragma once
 
 #include "./OPengine.h"
 
@@ -23,7 +22,7 @@ enum VoxelFaces {
 
 struct OPvoxelGenerator {
 	OPuint Features;
-	OPuint VertexSize;
+	OPvertexLayout VertexSize;
 	ui32 IndexOffset;
 	OPuint HideFace[6];
 	OPfloat Scale;
@@ -50,8 +49,8 @@ struct OPvoxelGeneratorData {
 	OPfloat Size;
 };
 
-void OPvoxelGeneratorInit(struct OPvoxelGenerator* gen, OPuint features);
-struct OPvoxelGenerator* OPvoxelGeneratorCreate(OPuint features);
+void OPvoxelGeneratorInit(struct OPvoxelGenerator* gen, ui32 features);
+struct OPvoxelGenerator* OPvoxelGeneratorCreate(ui32 features);
 void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData, OPvec4 bones, OPvec4 weights, OPvec3 offset);
 OPmeshDesc OPvoxelGeneratorBuildDesc(struct OPvoxelGenerator* gen);
 OPmesh* OPvoxelGeneratorBuild(struct OPvoxelGenerator* gen);
@@ -68,5 +67,3 @@ inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, OPvoxels voxelData
 inline void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, OPvoxels voxelData, OPvec4 bones, OPvec4 weights) {
 	OPvoxelGeneratorAdd(gen, voxelData, bones, weights, OPVEC3_ZERO);
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef OP_ENGINE_CORE_LOG
-#define OP_ENGINE_CORE_LOG
+#pragma once
 
 #include "OPtypes.h"
 #include <stdarg.h>
@@ -10,12 +9,30 @@
 #include <stdio.h>
 #include <errno.h>
 
+#ifdef OPIFEX_WINDOWS
+extern HANDLE LogToHandle;
+#else
 extern i32 LogToHandle;
-extern ui32 OP_LOG_LEVEL;
+#endif
+
+enum struct OPlogLevel {
+	ERRORS = 0,
+	DEBUG = 10,
+	WARNINGS = 20,
+	INFO = 30,
+	VERBOSE = 3000,
+	MEMORY = 5000
+};
+
+extern ui32 OPLOGLEVEL;
 
 extern void(*OPlogHandler)(ui32, const char*, const char*);
 
+#ifdef OPIFEX_WINDOWS
+void OPlogSetOutput(HANDLE handle);
+#else
 void OPlogSetOutput(i32 handle);
+#endif
 
 // Prints out to the console, accepts variable arguments like sprintf
 void OPlg(const char* message, ...);
@@ -39,6 +56,3 @@ void OPlogWarn(const char* message, ...);
 
 // Level 0
 void OPlogErr(const char* message, ...);
-
-
-#endif

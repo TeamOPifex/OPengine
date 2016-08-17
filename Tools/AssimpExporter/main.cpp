@@ -17,6 +17,7 @@ enum ModelFeatures {
 	Model_Animations = 8,
 	Model_Skeletons = 9,
 	Model_Meta = 10,
+	Model_Bitangents = 11,
 	MAX_FEATURES
 };
 
@@ -25,25 +26,21 @@ int main(int argc, char **argv) {
 	i8* filename = NULL;
 	i8* output = NULL;	
 	OPint specified = 0;
-	OPint featureIn[9] = { 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 };
-	OPfloat scale = 1.0;
+	OPint featureIn[MAX_FEATURES] = { 0, 0, 0, 0, 0, 0 ,0 ,0 ,0, 0 ,0, 0 };
+	OPfloat scale = 0.01; // cm to meters
+
+	OPLOGLEVEL = (ui32)OPlogLevel::VERBOSE;
 
 	OPint animationCount = 0;
 	OPchar* animations[1024];
 	OPint animationFrames[2048];
 
 	if (argc <= 1) {
-		OPlog("AssimpExporter.exe [input]");
-		OPlog("\t-p");
-		OPlog("\t-n");
-		OPlog("\t-u");
-		OPlog("\t-i");
-		OPlog("\t-b");
-		OPlog("\t-s");
-		OPlog("\t-skin");
-		OPlog("\t-a");
-		OPlog("\t-m");
-		OPlog("\t-scl");
+		print_help();
+	}
+
+	if (argc == 2) {
+		filename = argv[1];
 	}
 
 	//
@@ -95,6 +92,14 @@ int main(int argc, char **argv) {
 			if (IsParam(argv, arg, "--uvs") || IsParam(argv, arg, "-u")) {
 				featureIn[Model_UVs] = specified = 1; continue;
 			}
+			
+			if (IsParam(argv, arg, "--tangents") || IsParam(argv, arg, "-t")) {
+				featureIn[Model_Tangents] = specified = 1; continue;
+			}
+
+			if (IsParam(argv, arg, "--bitangents") || IsParam(argv, arg, "-bi")) {
+				featureIn[Model_Bitangents] = specified = 1; continue;
+			}
 
 			if (IsParam(argv, arg, "--indices") || IsParam(argv, arg, "-i")) {
 				featureIn[Model_Indices] = specified = 1; continue;
@@ -130,7 +135,7 @@ int main(int argc, char **argv) {
 			}
 		}
 	}
-
+	specified = 0;
 
 	//
 	// Quit if no file was provided
@@ -144,8 +149,7 @@ int main(int argc, char **argv) {
 	// Quit if no output file was provided
 	//
 	if (output == NULL) {
-		print_help();
-		return -1;
+		output = filename;
 	}
 
 	const OPchar* pFile = filename;// "test.obj";
@@ -157,7 +161,7 @@ int main(int argc, char **argv) {
 		aiProcess_CalcTangentSpace |
 		aiProcess_Triangulate |
 		aiProcess_JoinIdenticalVertices |
-		aiProcess_SortByPType);
+		aiProcess_SortByPType | aiProcess_OptimizeMeshes | aiProcess_OptimizeGraph);
 
 	// If the import failed, report it
 	if (!scene)
@@ -177,27 +181,71 @@ int main(int argc, char **argv) {
 	// OPM File Format Version
 	writeU16(&myFile, 2);
 
+
+	ui32 features[MAX_FEATURES];
+	OPbzero(features, sizeof(ui32) * MAX_FEATURES);
+	features[Model_Positions] = specified ? featureIn[Model_Positions] : 1;
+	features[Model_Normals] = specified ? featureIn[Model_Normals] : 1;
+	features[Model_UVs] = specified ? featureIn[Model_UVs] : 1;
+	features[Model_Tangents] = specified ? featureIn[Model_Tangents] : 1;
+	features[Model_Bitangents] = specified ? featureIn[Model_Bitangents] : 1;
+	features[Model_Indices] = specified ? featureIn[Model_Indices] : 1;
+	features[Model_Bones] = specified ? featureIn[Model_Bones] : 0;
+	features[Model_Skinning] = specified ? featureIn[Model_Skinning] : 0;
+	features[Model_Skeletons] = specified ? featureIn[Model_Skeletons] : 0;
+	features[Model_Animations] = specified ? featureIn[Model_Animations] : 0;
+	features[Model_Meta] = specified ? featureIn[Model_Meta] : 0;
+
+
+
+	// Vertex Mode
+	// 1 == Vertex Stride ( Pos/Norm/Uv )[]
+	// 2 == Vertex Arrays ( Pos )[] ( Norm )[] ( Uv )[]
 	writeU32(&myFile, scene->mNumMeshes);
+
+	ui32 totalVerticesEntireModel = 0;
+	ui32 totalIndicesEntireModel = 0;
 
 	for (ui32 i = 0; i < scene->mNumMeshes; i++) {
 		aiMesh* mesh = scene->mMeshes[i];
+		ui32 stride = 0;
+		if (features[Model_Positions]) stride += 3 * sizeof(f32);
+		if (features[Model_Normals] && mesh->HasNormals()) stride += 3 * sizeof(f32);
+		if (features[Model_UVs] && mesh->HasTextureCoords(0)) stride += 3 * sizeof(f32);
+		if (features[Model_Tangents] && mesh->HasTangentsAndBitangents()) stride += 3 * sizeof(f32);
+		if (features[Model_Bitangents] && mesh->HasTangentsAndBitangents()) stride += 3 * sizeof(f32);
+		if (features[Model_Colors]) stride += 3 * sizeof(f32);
+		if (features[Model_Bones]) stride += 4 * sizeof(f32);
+		if (features[Model_Skinning]) stride += 4 * sizeof(f32);
 
-		ui32 features[MAX_FEATURES];
-		OPbzero(features, sizeof(ui32) * MAX_FEATURES);
-		features[Model_Positions] = specified ? featureIn[Model_Positions] : 1;
-		features[Model_Normals] = specified ? featureIn[Model_Normals] : 1;
-		features[Model_UVs] = specified ? featureIn[Model_UVs] : 1;
-		features[Model_Indices] = specified ? featureIn[Model_Indices] : 1;
-		features[Model_Bones] = specified ? featureIn[Model_Bones] : 1;
-		features[Model_Skinning] = specified ? featureIn[Model_Skinning] : 1;
-		features[Model_Skeletons] = specified ? featureIn[Model_Skeletons] : 1;
-		features[Model_Animations] = specified ? featureIn[Model_Animations] : 1;
-		features[Model_Meta] = specified ? featureIn[Model_Meta] : 1;
-		
+		for (ui32 j = 0; j < mesh->mNumFaces; j++) {
+			aiFace face = mesh->mFaces[j];
+			totalVerticesEntireModel += face.mNumIndices * stride;
+			if (face.mNumIndices == 3) {
+				totalIndicesEntireModel += 3;
+			}
+			else if (face.mNumIndices == 4) {
+				totalIndicesEntireModel += 6;
+			}
+		}
+	}
+
+	writeU32(&myFile, totalVerticesEntireModel);
+	writeU32(&myFile, totalIndicesEntireModel);
+
+	ui16 offset = 0;
+	for (ui32 i = 0; i < scene->mNumMeshes; i++) {
+		aiMesh* mesh = scene->mMeshes[i];
+
+		// Vertex Mode
+		writeU16(&myFile, 1);
+
 		ui32 feature = 0;
 		if (features[Model_Positions]) feature += 0x01;
-		if (features[Model_Normals]) feature += 0x02;
-		if (features[Model_UVs]) feature += 0x04;
+		if (features[Model_Normals] && mesh->HasNormals()) feature += 0x02;
+		if (features[Model_UVs] && mesh->HasTextureCoords(0)) feature += 0x04;
+		if (features[Model_Tangents] && mesh->HasTangentsAndBitangents()) feature += 0x08;
+		if (features[Model_Bitangents] && mesh->HasTangentsAndBitangents()) feature += 0x400;
 		if (features[Model_Colors]) feature += 0x100;
 		if (features[Model_Indices]) feature += 0x10;
 		if (features[Model_Bones]) feature += 0x20;
@@ -205,10 +253,6 @@ int main(int argc, char **argv) {
 		if (features[Model_Animations]) feature += 0x80;
 		if (features[Model_Meta]) feature += 0x200;
 
-		// Vertex Mode
-		// 1 == Vertex Stride ( Pos/Norm/Uv )[]
-		// 2 == Vertex Arrays ( Pos )[] ( Norm )[] ( Uv )[]
-		writeU16(&myFile, 1);
 		writeU32(&myFile, feature);
 
 		ui32 totalVertices = 0;
@@ -243,6 +287,7 @@ int main(int argc, char **argv) {
 			aiColor4D colors[4];
 			aiVector3D bitangents[4];
 			aiVector3D tangents[4];
+
 			for (ui32 k = 0; k < face.mNumIndices; k++) {
 				verts[k] = mesh->mVertices[face.mIndices[k]];
 				if (mesh->HasNormals()) {
@@ -260,15 +305,18 @@ int main(int argc, char **argv) {
 					bitangents[k] = mesh->mBitangents[face.mIndices[k]];
 					tangents[k] = mesh->mTangents[face.mIndices[k]];
 				}
+				if (mesh->HasBones()) {
+					//mesh->mBones[face.mIndices[k]]->
+				}
 			}
 
 			// Write each vertex
 			for (ui32 k = 0; k < face.mNumIndices; k++) {
 
 				// Position
-				writeF32(&myFile, verts[k].x); 
-				writeF32(&myFile, verts[k].y); 
-				writeF32(&myFile, verts[k].z);
+				writeF32(&myFile, verts[k].x * scale);
+				writeF32(&myFile, verts[k].y * scale);
+				writeF32(&myFile, verts[k].z * scale);
 
 				// Normal
 				if (mesh->HasNormals() && features[Model_Normals]) {
@@ -277,9 +325,25 @@ int main(int argc, char **argv) {
 					writeF32(&myFile, normals[k].z);
 				}
 
+				if (mesh->HasTangentsAndBitangents() && features[Model_Tangents]) {
+					writeF32(&myFile, tangents[k].x);
+					writeF32(&myFile, tangents[k].y);
+					writeF32(&myFile, tangents[k].z);
+				}
+
+				if (mesh->HasTangentsAndBitangents() && features[Model_Bitangents]) {
+					writeF32(&myFile, bitangents[k].x);
+					writeF32(&myFile, bitangents[k].y);
+					writeF32(&myFile, bitangents[k].z);
+				}
+
 				if (mesh->HasTextureCoords(0) && features[Model_UVs]) {
 					writeF32(&myFile, uvs[k].x);
 					writeF32(&myFile, uvs[k].y);
+				}
+
+				if (mesh->HasBones() && features[Model_Animations]) {
+					// TODO
 				}
 
 				if (mesh->HasVertexColors(0) && features[Model_Colors]) {
@@ -292,19 +356,9 @@ int main(int argc, char **argv) {
 					writeF32(&myFile, 0);
 					writeF32(&myFile, 0);
 				}
-
-				if (mesh->HasTangentsAndBitangents() && features[Model_Tangents]) {
-					writeF32(&myFile, bitangents[k].x);
-					writeF32(&myFile, bitangents[k].y);
-					writeF32(&myFile, bitangents[k].z);
-					writeF32(&myFile, tangents[k].x);
-					writeF32(&myFile, tangents[k].y);
-					writeF32(&myFile, tangents[k].z);
-				}
 			}
 		}
 
-		ui16 offset = 0;
 		for (ui32 j = 0; j < mesh->mNumFaces; j++) {
 			aiFace face = mesh->mFaces[j];
 			if (face.mNumIndices > 4) {
@@ -333,14 +387,10 @@ int main(int argc, char **argv) {
 	}
 
 	if (scene->HasAnimations()) {
-
+		//scene->mAnimations
 	}
 
 	if (scene->HasMaterials()) {
-
-	}
-
-	if (scene->HasMeshes()) {
 
 	}
 

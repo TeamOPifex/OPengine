@@ -1,14 +1,15 @@
-#ifndef OPENGINE_CORE_ALLOC
-#define OPENGINE_CORE_ALLOC
+#pragma once
+
+struct OPallocator;
+typedef struct OPallocator OPallocator;
 
 #include "OPtypes.h"
 
 struct OPallocator {
+	void* internalPtr;
 	void* data;
+
 	void*(*alloc)(void*, OPuint);
 	void(*free)(void*, void*);
 	void(*clear)(void*);
 };
-typedef struct OPallocator OPallocator;
-
-#endif

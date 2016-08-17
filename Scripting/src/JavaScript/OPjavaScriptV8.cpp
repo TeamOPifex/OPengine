@@ -63,8 +63,8 @@ void _OPscriptV8SetConsole(Handle<ObjectTemplate> objTemplate) {
 
 OPchar* _OPscriptV8GetDir(const OPchar* path) {
     OPchar* result = OPstringCopy("");
-    OPint pos = -1;
-    for(OPint i = 0; i < strlen(path); i++) {
+    i32 pos = -1;
+    for(i32 i = 0; i < strlen(path); i++) {
         if(path[i] == '/') {
             pos = i;
         }
@@ -128,7 +128,7 @@ OPint _OPjavaScriptRequire(OPchar* pathToLoad, Handle<Value>* result) {
 
     ASSERT(loadCount < CACHED_FILE_COUNT, "Too many cached files. Increase the CACHED_FILE_COUNT define in OPjavaScriptV8.cpp");
 
-    OPscript* scriptSource = (OPscript *) OPcmanLoadGet(pathToLoad);
+    OPscript* scriptSource = (OPscript *)OPCMAN.LoadGet(pathToLoad);
 
     OPchar *dir = _OPscriptV8GetDir(pathToLoad);
 
@@ -402,11 +402,10 @@ OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, 
 		return 0;
 	}
 
-    OPjavaScriptV8Compiled result = {
-		script,
-		Persistent<Script, CopyablePersistentTraits<Script> >(isolate, compiledV8),
-		Persistent<Context, CopyablePersistentTraits<Context> >(isolate, localContext),
-	};
+	OPjavaScriptV8Compiled result;
+	result.Source = script;
+	result.Script = Persistent<Script, CopyablePersistentTraits<Script> >(isolate, compiledV8),
+	result.Context = Persistent<Context, CopyablePersistentTraits<Context> >(isolate, localContext);
 
 	*compiled = result;
 	return 1;
@@ -466,7 +465,7 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
 
 }
 
-OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, const OPchar* name, OPuint count, void** args) {
+OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, const OPchar* name, ui32 count, void** args) {
     SCOPE_AND_ISOLATE;
 
     Handle<Context> context = Local<Context>::New(isolate, scriptCompiled->Context);
@@ -476,7 +475,7 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
     Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
 
     Handle<Value> values[10];
-    for (OPint i = 0; i < count; i++) {
+    for (ui32 i = 0; i < count; i++) {
 		Local<Object> obj = JS_NEW_OBJECT();
 		JS_SET_PTR(obj, args[i]);
         values[i] = obj;
@@ -496,7 +495,7 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
 void OPjavaScriptV8SetupRun(const OPchar* script) {
     OPjavaScriptV8Init();
     OPscript *result = NULL;
-	OPstream* str = OPreadFile(script);
+	OPstream* str = OPfile::ReadFromFile(script);
 	ASSERT(str != NULL, "File couldn't be found");
 	ASSERT(str->Source != NULL, "Filename wasn't set.");
 	OPlog("Script read");
@@ -508,5 +507,19 @@ void OPjavaScriptV8SetupRun(const OPchar* script) {
     OPjavaScriptV8Run(&compiled);
 	OPlog("Script run");
 }
+
+OPint OPjavaScriptV8Compiled::Compile(const OPchar* path) {
+	return OPjavaScriptV8Compile(this, path);
+}
+
+OPint OPjavaScriptV8Compiled::Execute() {
+	ScriptResult = OPjavaScriptV8Run(this);
+	return 1;
+}
+
+OPjavaScriptPersistentValue OPjavaScriptV8Compiled::Function(const OPchar* name, ui32 count, void** args) {
+	return OPjavaScriptV8Run(this, name, count, args);
+}
+
 
 #endif
