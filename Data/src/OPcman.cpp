@@ -65,8 +65,10 @@ void OPcman::Update(OPtimer* timer) {
 	#if defined(_DEBUG)
 		i32 i, j;
 		ui64 change;
-		OPhashMapBucket bucket;
+		OPhashMapBucket* bucket;
 		OPasset* asset;
+		OPuint n, m;
+		OPhashMapPair *pair;
 
 		lastChecked -= timer->Elapsed;
 		if (lastChecked > 0) return;
@@ -74,28 +76,35 @@ void OPcman::Update(OPtimer* timer) {
 		// Only check for file changes once per second
 		lastChecked = 1000;
 
-		for (i = 0; i < hashmap.Count(); i++) {
-			bucket = hashmap.buckets[i];
-			if (bucket.count == 0) continue;
 
-			for (j = 0; j < bucket.Count(); j++) {
-				asset = (OPasset*)bucket.pairs[j].value;
+		n = hashmap.count;
+		bucket = hashmap.buckets;
+		i = 0;
+		while (i < n) {
+			m = bucket->count;
+			pair = bucket->pairs;
+			j = 0;
+			while (j < m) {
+				asset = (OPasset*)pair->value;
+				if (asset != NULL && asset->Reload != NULL) {
+					change = OPfile::LastChange(asset->FullPath);
+					if (change != asset->LastChange) {
+						OPlogInfo("Reloading Asset: %s", asset->FullPath);
 
-				// Only check the file, if there's a reload function
-				if (asset == NULL || asset->Reload == NULL) continue;
-				
-				change = OPfile::LastChange(asset->FullPath);
-				if (change != asset->LastChange) {
-					OPlogInfo("Reloading Asset: %s", asset->FullPath);
-
-					OPstream* str = OPfile::ReadFromFile(asset->FullPath, 1024);
-					if (asset->Reload(str, &asset->Asset)) {
-						asset->LastChange = change;
+						OPstream* str = OPfile::ReadFromFile(asset->FullPath, 1024);
+						if (asset->Reload(str, &asset->Asset)) {
+							asset->LastChange = change;
+						}
+						str->Destroy();
+						OPfree(str);
 					}
-					str->Destroy();
-					OPfree(str);
 				}
+
+				pair++;
+				j++;
 			}
+			bucket++;
+			i++;
 		}
 	#endif
 }

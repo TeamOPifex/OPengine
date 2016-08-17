@@ -13,10 +13,12 @@ typedef struct {
 	OPrendererForward* renderer;
 	OPmodel model;
 	OPmodel model2;
+	OPmodel model3;
 	OPcamFreeFlight camera;
 	OPmaterialPBR materialPBR;
 	OPtextureCube environment;
 	OPmaterialPBRInstance* materialInstance;
+	OPmaterialPBRInstance* materialInstance2;
 } SceneExample;
 
 SceneExample sceneExample;
@@ -48,11 +50,20 @@ void ExampleSceneEnter(OPgameState* last) {
 	sceneExample.materialInstance->SetNormalMap("Dagger_Normals.png");
 	sceneExample.materialInstance->SetEnvironmentMap(&sceneExample.environment);
 
+	sceneExample.materialInstance2 = sceneExample.materialPBR.CreateInstance();
+	sceneExample.materialInstance2->SetAlbedoMap("cemetery_floor.png");
+	sceneExample.materialInstance2->SetSpecularMap("Default_Specular.png");
+	sceneExample.materialInstance2->SetGlossMap("Default_Gloss.png");
+	sceneExample.materialInstance2->SetNormalMap("Default_Normals.png");
+	sceneExample.materialInstance2->SetEnvironmentMap(&sceneExample.environment);
+
 	sceneExample.model.Init("daggerpbr.opm");
 	sceneExample.model2.Init("daggerpbr.opm");
+	sceneExample.model3.Init("ground_block_2x2x2.fbx.opm");
 
 	sceneExample.scene.Add(&sceneExample.model, &sceneExample.materialInstance->rootMaterialInstance);
 	sceneExample.scene.Add(&sceneExample.model2, &sceneExample.materialInstance->rootMaterialInstance);
+	sceneExample.scene.Add(&sceneExample.model3, &sceneExample.materialInstance2->rootMaterialInstance);
 }
 
 OPint ExampleSceneUpdate(OPtimer* time) {
@@ -60,6 +71,7 @@ OPint ExampleSceneUpdate(OPtimer* time) {
 	sceneExample.Rotation += time->Elapsed * 0.25f;
 	sceneExample.model.world.SetRotY(sceneExample.Rotation / 200.0f)->Scl(1.0f);
 	sceneExample.model2.world.SetScl(1.0f)->Translate(-45, 0, 0);
+	sceneExample.model3.world.SetScl(1.0f)->Translate(45, 0, 0);
 	return false;
 }
 

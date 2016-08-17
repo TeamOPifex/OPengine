@@ -49,5 +49,17 @@ i8* GetParameter(char** argv, ui16 argp, i8* arg, i8* shrt) {
 
 void print_help()
 {
-	OPlog("Usage: FBXtoOPM [--help]");
+	OPlog("AssimpExporter.exe -f [input] -o [output]");
+	OPlog("\t-p or --positions");
+	OPlog("\t-n or --normals");
+	OPlog("\t-u or --uvs");
+	OPlog("\t-i or --indices");
+	OPlog("\t-b or --bones");
+	OPlog("\t-t or --tangents");
+	OPlog("\t-bi or --bitangents");
+	OPlog("\t-s or --skeleton");
+	OPlog("\t-skin or --skinning");
+	OPlog("\t-a or --animations");
+	OPlog("\t-m or --meta");
+	OPlog("\t-scl or --scale #");
 }

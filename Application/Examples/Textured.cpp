@@ -24,8 +24,8 @@ void ExampleTexturedEnter(OPgameState* last) {
 	texturedExample = (TexturedExample*)OPalloc(sizeof(TexturedExample));
 
 	OPjson* meta = (OPjson*)OPCMAN.LoadGet("Models/adobe.opm.meta");
-	const OPchar* _model = meta->Get("model").String();
-	const OPchar* _texture = meta->Get("texture").String();
+	const OPchar* _model = "candles.opm";// meta->Get("model").String();
+	const OPchar* _texture = "cemetery.png";// meta->Get("texture").String();
 
 	texturedExample->Mesh = (OPmesh*)OPCMAN.LoadGet(_model);
 	texturedExample->Texture = (OPtexture*)OPCMAN.LoadGet(_texture);
@@ -71,6 +71,7 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 
 	OPmat4 world;
 	world = OPmat4RotY(texturedExample->Rotation / 100.0f);
+	world.Scl(0.1f);
 
 	OPeffectSet("uColorTexture", texturedExample->Texture, 0);
 

@@ -99,6 +99,18 @@ OPMData OPMloadDataV2(OPstream* str) {
 	// Already loaded version at this point
 	ui32 meshCount = str->UI32();
 
+	OPuint indexOffset = 0;
+	OPuint vertexOffset = 0;
+	ui32 totalVerticesCount = str->UI32();
+	ui32 totalIndicesCount = str->UI32();
+
+	result.vertexCount = 0;
+	result.indexCount = 0;
+
+	result.indexSize = OPindexSize::SHORT;// sizeof(ui16);
+	result.vertices = OPalloc(totalVerticesCount);
+	result.indices = OPalloc((ui16)result.indexSize * totalIndicesCount);
+
 	for (ui32 i = 0; i < meshCount; i++) {
 		ui16 vertexMode = str->UI16();
 
@@ -111,8 +123,8 @@ OPMData OPMloadDataV2(OPstream* str) {
 		ui32 verticesCount = str->UI32();
 		ui32 indicesCount = str->UI32();
 
-		result.vertexCount = verticesCount;
-		result.indexCount = indicesCount;
+		result.vertexCount += verticesCount;
+		result.indexCount += indicesCount;
 
 		OPvertexLayoutBuilder layout;
 		layout.Init();
@@ -123,6 +135,8 @@ OPMData OPMloadDataV2(OPstream* str) {
 			layout.Add(OPattributes::NORMAL);
 		if (OPMhasFeature(features, Tangent))
 			layout.Add(OPattributes::TANGENT);
+		if (OPMhasFeature(features, BiTangent))
+			layout.Add(OPattributes::BITANGENT);
 		if (OPMhasFeature(features, UV))
 			layout.Add(OPattributes::UV);
 		if (OPMhasFeature(features, Color))
@@ -130,20 +144,23 @@ OPMData OPMloadDataV2(OPstream* str) {
 		if (OPMhasFeature(features, Skinning))
 			layout.Add(OPattributes::BONES);
 
+		// TODO: (garrett) this doesn't support multi-mesh very well
 		result.vertexLayout = layout.Build();
-		result.indexSize = OPindexSize::SHORT;// sizeof(ui16);
-		result.indices = OPalloc((ui32)result.indexSize * indicesCount);
-		result.vertices = OPalloc(result.vertexLayout.stride * verticesCount);
+		//result.indices = OPalloc((ui32)result.indexSize * indicesCount);
+		//result.vertices = OPalloc(result.vertexLayout.stride * verticesCount);
 
-		f32* vertData = (f32*)result.vertices;
+		f32* vertData = &((f32*)result.vertices)[vertexOffset * (result.vertexLayout.stride / sizeof(f32))];
 		for (ui32 j = 0; j < verticesCount * (result.vertexLayout.stride / sizeof(f32)); j++) {
 			vertData[j] = str->F32();
 		}
 
-		ui16* indData = (ui16*)result.indices;
+		ui16* indData = &((ui16*)result.indices)[indexOffset];
 		for (ui32 j = 0; j < indicesCount; j++) {
 			indData[j] = str->UI16();
 		}
+
+		vertexOffset += result.vertexCount;
+		indexOffset += result.indexCount;
 	}
 
 	return result;
