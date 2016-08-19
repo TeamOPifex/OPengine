@@ -6,7 +6,7 @@
 #include "./Human/include/Systems/OPinputSystem.h"
 
 typedef struct {
-	OPmesh* Mesh;
+	OPmodel* Mesh;
 	OPeffect Effect;
 	OPcam Camera;
 	ui32 Rotation;
@@ -27,7 +27,7 @@ void ExampleTexturedEnter(OPgameState* last) {
 	const OPchar* _model = "candles.opm";// meta->Get("model").String();
 	const OPchar* _texture = "cemetery.png";// meta->Get("texture").String();
 
-	texturedExample->Mesh = (OPmesh*)OPCMAN.LoadGet(_model);
+	texturedExample->Mesh = (OPmodel*)OPCMAN.LoadGet(_model);
 	texturedExample->Texture = (OPtexture*)OPCMAN.LoadGet(_texture);
 	texturedExample->Rotation = 0;
 
@@ -82,7 +82,7 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 	//OPvec3 light = OPvec3Create(0, 1, 0);
 	//OPeffectSet("vLightDirection", &light);
 
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 
 	OPrenderPresent();
 	return false;

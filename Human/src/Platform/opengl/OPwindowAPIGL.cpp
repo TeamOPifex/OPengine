@@ -45,7 +45,8 @@ OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameter
 #endif
 	glfwWindowHint(GLFW_DECORATED, !windowParameters.borderless);
 	windowGL->Handle = glfwCreateWindow(windowParameters.width, windowParameters.height, windowParameters.title, display, NULL);
-
+	glfwSetWindowUserPointer(windowGL->Handle, window);
+		
 	//glfwSetCharCallback(window, glfwCharacterCallback);
 	//glfwSetDropCallback(window, glfwWindowDropCallback);
 
@@ -137,6 +138,21 @@ void OPwindowGLUnbind(OPwindow* window) {
 	OPRENDERER_ACTIVE->OPWINDOW_ACTIVE = NULL;
 }
 
+void OPwindowGLDrop(GLFWwindow* windowGLFW, int count, const char** names) {
+	void* windowPtr = glfwGetWindowUserPointer(windowGLFW);
+	if (windowPtr == NULL) return;
+	OPwindow* window = (OPwindow*)windowPtr;
+	OPwindowGL* windowGL = (OPwindowGL*)window->internalPtr;
+	if (windowGL->OPWINDOWDROPCALLBACK == NULL) return;
+	windowGL->OPWINDOWDROPCALLBACK(count, names);
+}
+
+void OPwindowGLSetDropCallback(OPwindow* window, void(*callback)(OPuint count, const OPchar**)) {
+	OPwindowGL* windowGL = (OPwindowGL*)window->internalPtr;
+	glfwSetDropCallback(windowGL->Handle, OPwindowGLDrop);
+	windowGL->OPWINDOWDROPCALLBACK = callback;
+}
+
 void OPwindowGLDestroy(OPwindow* window) {
 	OPwindowGL* windowGL = (OPwindowGL*)window->internalPtr;
 	OPwindowGLUnbind(window);
@@ -153,6 +169,7 @@ void OPwindowAPIGLInit(OPwindowAPI* window) {
 	window->SetPosition = OPwindowSetPositionGL;
 	window->Focus = OPwindowFocusGL;
 	window->Update = OPwindowGLUpdate;
+	window->SetDropCallback = OPwindowGLSetDropCallback;
 	window->GetCursorPos = OPwindowGLGetCursorPos;
 	window->GetButtonState = OPwindowGLGetButtonState;
 	window->GetKeyboardState = OPwindowGLGetKeyboardState;

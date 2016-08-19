@@ -9,8 +9,8 @@
 
 // Data for this Game State Example
 typedef struct {
-	OPmesh Mesh;			// The Mesh to render
-	OPmesh Mesh2;			// The Mesh to render
+	OPmodel Mesh;			// The Mesh to render
+	OPmodel Mesh2;			// The Mesh to render
 	OPeffect Effect;		// The Effect used to render the Mesh
 	OPcam Camera;			// The Camera to use in the Effect to render the Mesh
 	ui32 Rotation;			// The amount to rotate the Mesh
@@ -178,7 +178,7 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 	OPeffectSet("vLightDirection", &mouseIntersectExample.LightDirection);
 
 	// Renders to the screen the currently bound Mesh (modelExample->Mesh)
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 
 	OPbindMeshEffectWorldCam(
 		&mouseIntersectExample.Mesh,
@@ -186,7 +186,7 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 		&world2,
 		&mouseIntersectExample.Camera);
 	OPeffectSet("vLightDirection", &mouseIntersectExample.LightDirection);
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 
 	if(OPMOUSE.IsDown(OPmouseButton::LBUTTON)) {
 		OPbindMeshEffectWorldCam(
@@ -195,7 +195,7 @@ OPint ExampleMouseIntersectUpdate(OPtimer* time) {
 			&world3,
 			&mouseIntersectExample.Camera);
 		OPeffectSet("vLightDirection", &mouseIntersectExample.LightDirection);
-		OPmeshRender();
+		OPrenderDrawBufferIndexed(0);
 	}
 
 	OPfontRenderBegin(mouseIntersectExample.FontManager);

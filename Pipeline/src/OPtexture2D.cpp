@@ -4,7 +4,7 @@
 #include "./Human/include/Rendering/Primitives/OPquad.h"
 
 OPeffect* DEFAULT_TEXTURE2D_EFFECT = NULL;
-OPmesh* TEXTURE_2D_QUAD_MESH = NULL;
+OPmodel* TEXTURE_2D_QUAD_MESH = NULL;
 
 void LoadDefaultTexture2DEffect() {
 	if (DEFAULT_TEXTURE2D_EFFECT != NULL) return;
@@ -84,5 +84,5 @@ void OPtexture2DPrepRender(OPtexture2DOLD* tex2d) {
 
 void OPtexture2DRender(OPtexture2DOLD* tex2d) {
 	OPtexture2DPrepRender(tex2d);
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 }

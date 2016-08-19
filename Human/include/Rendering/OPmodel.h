@@ -3,9 +3,6 @@
 struct OPmodel;
 typedef struct OPmodel OPmodel;
 
-struct OPmodelTextured;
-typedef struct OPmodelTextured OPmodelTextured;
-
 #include "OPmesh.h"
 #include "OPeffect.h"
 #include "OPmaterial.h"
@@ -14,27 +11,29 @@ typedef struct OPmodelTextured OPmodelTextured;
 #include "./Data/include/OPcman.h"
 
 struct OPmodel {
-	OPmat4 world;
-	OPmesh* mesh;
+	OPmesh* meshes;
+	OPuint meshCount;	
 
-	void Init(const OPchar* mesh) {
-	    this->mesh = (OPmesh*)OPCMAN.LoadGet(mesh);
-		this->world = OPMAT4_IDENTITY;
-	}
+	OPvertexLayout vertexLayout;
+	OPvertexArray vertexArray;
+	OPvertexBuffer vertexBuffer;
+	OPindexBuffer indexBuffer;
 
-	void Bind(OPmaterial* material);
-	void Bind(OPmaterial* material, OPcam* camera);
-	void Draw(OPmaterial* material, OPcam* camera);
-};
+	OPmodel() { }
+	OPmodel(OPuint meshCount, OPvertexLayout vertexLayout) { Init(meshCount, vertexLayout); }
+	
+	void Init(OPuint meshCount, OPvertexLayout vertexLayout);
+	void Build(ui32 vertexCount, ui32 indexCount, OPindexSize indexSize, void* vertices, void* indices);
 
+	//inline void Init(OPmesh** meshes, OPuint count) {
+	//	this->meshes = meshes;
+	//	this->meshCount = count;
+	//}
+	void Bind();
+	void Draw(OPmat4* world, OPmaterial* material, OPcam* camera);
+	void Destroy();
 
-// TODO: (garrett) remove this
-struct OPmodelTextured {
-	OPmodel model;
-	OPtexture* texture;
-
-	void Init(const OPchar* modelAsset, const OPchar* textureAsset) {
-		model.Init(modelAsset);
-		texture = OPtextureLoad(textureAsset);
+	inline static OPmodel* Create(OPuint meshCount, OPvertexLayout vertexLayout) {
+		return OPNEW(OPmodel(meshCount, vertexLayout));
 	}
 };

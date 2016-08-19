@@ -9,7 +9,7 @@
 
 // Data for this Game State Example
 typedef struct {
-	OPmesh* Mesh;			// The Mesh to render
+	OPmodel* Mesh;			// The Mesh to render
 	OPeffect Effect;		// The Effect used to render the Mesh
 	OPcam Camera;			// The Camera to use in the Effect to render the Mesh
 	f32 Rotation;			// The amount to rotate the Mesh
@@ -30,7 +30,7 @@ void ExampleMyoEnter(OPgameState* last) {
 	// The OPCMAN.Load call ensures that this mesh has been loaded
 	// The OPCMAN.Get call returns a pointer to the resource (an OPmesh)
 	// that's contained in the Content Manager
-	myoExample->Mesh = (OPmesh*)OPCMAN.Get("cube.opm");
+	myoExample->Mesh = (OPmodel*)OPCMAN.Get("cube.opm");
 
 	// The effect that will be used to render the mesh
 	// The renderGenEffect is a simplified utility method
@@ -98,7 +98,7 @@ OPint ExampleMyoUpdate(OPtimer* time) {
 	OPeffectSet("vLightDirection", &myoExample->LightDirection);
 
 	// Renders to the screen the currently bound Mesh (myoExample->Mesh)
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 
 	// Swaps the back buffer
 	OPrenderPresent();

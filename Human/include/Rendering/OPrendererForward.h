@@ -24,7 +24,7 @@ struct OPrendererForward {
 	inline void SetMaterialEffect(OPeffect* effect, ui32 pass) { rendererRoot.SetMaterialEffect(effect, pass); }
 	inline OPmaterialInstance* CreateMaterialInstance(ui32 pass = 0) { return rendererRoot.CreateMaterialInstance(pass); }
 	inline void Begin() { rendererRoot.Begin(); }
-	inline void Submit(OPmodel* model, OPmaterialInstance* material) { rendererRoot.Submit(model, material); }
+	inline void Submit(OPmodel* model, OPmat4* world, OPmaterialInstance* material) { rendererRoot.Submit(model, world, material); }
 	inline void End() { rendererRoot.End(); }
 	inline void Present() { rendererRoot.Present(); }
 	void Destroy();

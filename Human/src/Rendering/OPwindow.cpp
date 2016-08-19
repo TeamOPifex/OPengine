@@ -13,6 +13,12 @@ LRESULT CALLBACK WindowProc(HWND hWnd,
 	WPARAM wParam,
 	LPARAM lParam);
 #endif
+
+
+void OPwindow::SetDropCallback(void(*callback)(OPuint count, const OPchar**)) {
+	OPRENDERER_ACTIVE->Window.SetDropCallback(this, callback);
+}
+
 //
 //void OPwindow::Init(OPmonitor* monitor, OPwindowParameters windowParameters) {
 //	OPRENDERER_ACTIVE->Window.Init(this, monitor, windowParameters);

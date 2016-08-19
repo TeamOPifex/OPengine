@@ -34,7 +34,7 @@ void OPscene::Render(OPfloat delta) {
 	renderer->Begin();
 
 	for (ui32 i = 0; i < index; i++) {
-		renderer->Submit(entities[i].model, entities[i].material);
+		renderer->Submit(entities[i].model, &entities[i].world, entities[i].material);
 	}
 
 	renderer->End();

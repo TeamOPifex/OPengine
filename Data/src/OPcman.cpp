@@ -126,6 +126,36 @@ bool OPcman::Purge() {
 	return false;
 }
 
+void* OPcman::LoadFromFile(const OPchar* path) {
+	const OPchar* ext = NULL;
+	OPint success = 0;
+
+	ext = strrchr(path, '.');
+	ASSERT(ext != NULL, "Finding extension failed");
+
+	for (OPint i = 0; i < assetLoaders.Size(); i++) {
+		OPassetLoader* loader = (OPassetLoader*)assetLoaders.Get(i);
+		if (!OPstringEquals(loader->Extension, ext)) {
+			continue;
+		}
+
+		OPstream* str = OPfile::ReadFromFile(path, 1024);
+
+		void* assetPtr = NULL;
+		OPint loadResult = loader->Load(str, &assetPtr);
+		str->Destroy();
+		OPfree(str);
+		if (loadResult <= 0) {
+			OPlogErr("Failed to load asset: %s", path);
+			return false;
+		}
+
+		return assetPtr;
+	}
+
+	return NULL;
+}
+
 bool OPcman::Load(const OPchar* assetKey) {
 	const OPchar* ext = NULL;
 	OPint success = 0;

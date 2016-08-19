@@ -11,6 +11,7 @@ typedef struct OPsceneEntity OPsceneEntity;
 #include "./Human/include/Rendering/OPrenderer.h"
 
 struct OPsceneEntity {
+	OPmat4 world;
 	OPmodel* model;
 	OPmaterialInstance* material;
 };

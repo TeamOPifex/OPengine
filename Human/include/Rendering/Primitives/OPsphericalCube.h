@@ -20,7 +20,7 @@ enum struct OPsphericalCubeSide
 #define OPSPHERICALCUBE_SCALE 1.0f
 #define OPSPHERICALCUBE_SCL 1
 
-#include "./Human/include/Rendering/OPmesh.h"
+#include "./Human/include/Rendering/OPmodel.h"
 #include "./Human/include/Rendering/OPimage.h"
 #include "./Math/include/OPvec2.h"
 #include "./Math/include/OPvec3.h"
@@ -32,7 +32,7 @@ struct OPsphericalCubeVertex {
 };
 
 struct OPsphericalCube {
-	OPmesh sides[(ui32)OPsphericalCubeSide::_MAX];
+	OPmodel sides[(ui32)OPsphericalCubeSide::_MAX];
 
 	OPsphericalCube() { }
 	OPsphericalCube(OPimage* faces) { Init(faces); }

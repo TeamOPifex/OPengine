@@ -4,7 +4,7 @@
 #include "./Human/include/Rendering/Primitives/OPquad.h"
 
 OPeffect* DEFAULT_TEXTURE3D_EFFECT = NULL;
-OPmesh* TEXTURE_3D_QUAD_MESH = NULL;
+OPmodel* TEXTURE_3D_QUAD_MESH = NULL;
 
 void LoadDefaultTexture3DEffect() {
 	if (DEFAULT_TEXTURE3D_EFFECT != NULL) return;
@@ -59,5 +59,5 @@ void OPtexture3DPrepRender(OPtexture3D* tex3d, OPcam* camera) {
 
 void OPtexture3DRender(OPtexture3D* tex3d, OPcam* camera) {
 	OPtexture3DPrepRender(tex3d, camera);
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 }

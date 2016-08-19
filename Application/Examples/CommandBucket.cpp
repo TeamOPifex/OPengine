@@ -11,8 +11,9 @@
 #include <string>
 
 struct CommandBucketExample {
-	OPmodel model;
-	OPmodel model2;
+	OPmodel* model;
+	OPmodel* model2;
+	OPmat4 world1, world2;
 	OPeffect effect;		// The Effect used to render the Mesh
 	OPmaterial material;
 	OPmaterialInstance materialInstance;
@@ -28,8 +29,8 @@ struct CommandBucketExample {
 		linearAllocator = OPallocatorLinear::Create(MB(4));
 		allocator = linearAllocator->GetAllocator();
 
-    	model.Init("output.opm");
-    	model2.Init("patrick.opm");
+		model = (OPmodel*)OPCMAN.LoadGet("output.opm");
+		model2 = (OPmodel*)OPCMAN.LoadGet("patrick.opm");
 
 		effect.Init("ColoredModel.vert", "ColoredModel.frag");
 
@@ -55,10 +56,10 @@ struct CommandBucketExample {
 	OPint Update(OPtimer* time) {
 	    if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { rotation++; }
 
-    	model.world.SetRotY(rotation / 100.0f);
-    	model.world.Scl(0.25f);
-    	model2.world = OPmat4Translate(1, 0, 0);
-    	model2.world.Scl(0.025f);
+    	world1.SetRotY(rotation / 100.0f);
+    	world1.Scl(0.25f);
+		world2 = OPmat4Translate(1, 0, 0);
+		world2.Scl(0.025f);
 
     	return false;
 	}
@@ -66,13 +67,8 @@ struct CommandBucketExample {
 	void Render(OPfloat delta) {
     	OPrenderClear(0.4f, 0.4f, 0.4f);
 
-    	OPrenderCommandDrawIndexed* dc = renderBucket.CreateDrawIndexed();
-    	dc->Set(&model2, &materialInstance);
-    	renderBucket.Submit(dc->key, dc->dispatch, dc);
-
-    	dc = renderBucket.CreateDrawIndexed();
-    	dc->Set(&model, &materialInstance);
-    	renderBucket.Submit(dc->key, dc->dispatch, dc);
+		renderBucket.Submit(model2, &world2, &materialInstance);
+		renderBucket.Submit(model, &world1, &materialInstance);
 
         renderBucket.Sort();
         renderBucket.Flush();

@@ -247,7 +247,11 @@ void OPvoxelGeneratorAdd(struct OPvoxelGenerator* gen, struct OPvoxels voxelData
 	}
 }
 
-OPmeshDesc OPvoxelGeneratorBuildDesc(struct OPvoxelGenerator* gen) {
+OPmodel* OPvoxelGeneratorBuild(struct OPvoxelGenerator* gen) {
+
+
+	//OPmeshDesc desc = OPvoxelGeneratorBuildDesc(gen);
+
 	ui32 verticeCount = (ui32)gen->Vertices->Size();
 	ui32 indiceCount = (ui32)gen->Indices->Size();
 
@@ -265,24 +269,8 @@ OPmeshDesc OPvoxelGeneratorBuildDesc(struct OPvoxelGenerator* gen) {
 		inds[i] = (*(ui32*)gen->Indices->Get(i));
 	}
 
-	OPmeshDesc result = {
-		verts,
-		gen->VertexSize,
-		verticeCount,
-		inds,
-		OPindexSize::INT,
-		indiceCount
-	};
-
-	return result;
-}
-
-OPmesh* OPvoxelGeneratorBuild(struct OPvoxelGenerator* gen) {
-
-
-	OPmeshDesc desc = OPvoxelGeneratorBuildDesc(gen);
-	OPmesh* mesh = OPmesh::Create(desc.VertexSize);
-	mesh->Build(desc.VertexSize, desc.IndexSize, desc.VertexCount, desc.IndexCount, desc.Vertices, desc.Indices);
+	OPmodel* mesh = OPmodel::Create(1, gen->VertexSize);
+	mesh->Build(verticeCount, indiceCount, OPindexSize::INT, verts, inds);
 
 	return mesh;
 }

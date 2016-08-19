@@ -9,7 +9,7 @@
 
 // Data for this Game State Example
 typedef struct {
-	OPmesh Mesh;			// The Mesh to render
+	OPmodel Mesh;			// The Mesh to render
 	OPeffect Effect;		// The Effect used to render the Mesh
 	OPcam Camera;			// The Camera to use in the Effect to render the Mesh
 	ui64 Rotation;			// The amount to rotate the Mesh
@@ -36,7 +36,7 @@ void ExampleModelEnter(OPgameState* last) {
 	// that's contained in the Content Manager
 	//modelExample->Mesh = OPcubeCreate(OPvec3Create(1,0,0));
 	//OPmesh* mesh = (OPmesh*)OPCMAN.LoadGet("Box.obj");
-	modelExample.Mesh = *(OPmesh*)OPCMAN.LoadGet("output.opm");
+	modelExample.Mesh = *(OPmodel*)OPCMAN.LoadGet("output.opm");
 
 	// Sets up the camera as a perpsective camera for rendering
 	modelExample.Camera.SetPerspective(OPVEC3_ONE * 2.0, OPVEC3_ZERO);
@@ -92,7 +92,7 @@ void ExampleModelRender(OPfloat delta) {
 	//OPeffectSet("vLightDirection", &modelExample->LightDirection);
 
 	// Renders to the screen the currently bound Mesh (modelExample->Mesh)
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 
 	// Swaps the back buffer
 	OPrenderPresent();
