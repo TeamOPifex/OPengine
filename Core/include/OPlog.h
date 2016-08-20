@@ -21,6 +21,7 @@ enum struct OPlogLevel {
 	WARNINGS = 20,
 	INFO = 30,
 	VERBOSE = 3000,
+	TIMING = 4000,
 	MEMORY = 5000
 };
 

@@ -16,7 +16,8 @@ struct OPrenderer {
 	void(*_SetMaterialEffect)(OPrenderer* renderer, OPeffect* effect, ui32 pass) = 0;
 	OPmaterialInstance*(*_CreateMaterialInstance)(OPrenderer* renderer, ui32 pass) = 0;
 	void(*_Begin)(OPrenderer* renderer) = 0;
-	void(*_Submit)(OPrenderer* renderer, OPmodel* model, OPmat4* world, OPmaterialInstance* material) = 0;
+	void(*_SubmitModel)(OPrenderer* renderer, OPmodel* model, OPmat4* world, OPmaterialInstance* material) = 0;
+	void(*_SubmitMesh)(OPrenderer* renderer, OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) = 0;
 	//void(*SubmitLightSetup)(const LightSetup& lightSetup) = 0;
 	void(*_End)(OPrenderer* renderer) = 0;
 	void(*_Present)(OPrenderer* renderer) = 0;
@@ -26,7 +27,8 @@ struct OPrenderer {
 	inline void SetMaterialEffect(OPeffect* effect, ui32 pass) { _SetMaterialEffect(this, effect, pass); }
 	inline OPmaterialInstance* CreateMaterialInstance(ui32 pass = 0) { return _CreateMaterialInstance(this, pass); }
 	inline void Begin() { _Begin(this); }
-	inline void Submit(OPmodel* model, OPmat4* world, OPmaterialInstance* material) { _Submit(this, model, world, material); }
+	inline void Submit(OPmodel* model, OPmat4* world, OPmaterialInstance* material) { _SubmitModel(this, model, world, material); }
+	inline void Submit(OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) { _SubmitMesh(this, mesh, world, material); }
 	//void(*SubmitLightSetup)(const LightSetup& lightSetup) = 0;
 	inline void End() { _End(this); }
 	inline void Present() { _Present(this); }

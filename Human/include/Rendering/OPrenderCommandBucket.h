@@ -72,6 +72,7 @@ struct OPrenderCommandBucket {
 	void Flush(bool keep);
 	void Render();
 	void Submit(OPmodel* model, OPmat4* world, OPmaterialInstance* material);
+	void Submit(OPmesh* mesh, OPmat4* world, OPmaterialInstance* material);
 	void Destroy();
 
 	// Helper draw commands already in the engine

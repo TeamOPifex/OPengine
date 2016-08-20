@@ -98,6 +98,7 @@ struct OPmesh {
 	OPuint count;
 	OPmaterial* material;
 	OPboundingBox3D boundingBox;
+	OPchar* name;
 
 	OPvertexArray* vertexArray;
 	OPvertexBuffer* vertexBuffer;

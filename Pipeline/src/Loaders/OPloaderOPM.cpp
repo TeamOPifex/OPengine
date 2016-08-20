@@ -23,7 +23,8 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 		return OPMloadDataV2(model, str);
 	}
 
-	// Read vertex layout
+	OPchar* modelName = str->String();
+	OPlogInfo("MODEL: %s", modelName);
 
 	ui32 meshCount = str->UI32(); // Number of meshes in this OPM
 
@@ -71,6 +72,9 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 	for (ui32 i = 0; i < meshCount; i++) {
 		OPmesh* mesh = &model->meshes[i];
 
+		OPchar* name = str->String();
+		OPlogInfo("SUBMESH: %s", name);
+
 		ui32 verticesCount = str->UI32();
 		ui32 indicesCount = str->UI32();
 
@@ -88,6 +92,7 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 
 		mesh->offset = indexOffset;
 		mesh->count = indicesCount;
+		mesh->name = name;
 
 		mesh->vertexArray = &model->vertexArray;
 		mesh->vertexBuffer = &model->vertexBuffer;
@@ -130,6 +135,7 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 		}
 	}
 
+	model->name = modelName;
 	model->Build(totalVertices, totalIndices, indexSize, vertices, indices);
 
 	return true;

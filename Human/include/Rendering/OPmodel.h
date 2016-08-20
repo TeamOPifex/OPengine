@@ -12,7 +12,8 @@ typedef struct OPmodel OPmodel;
 
 struct OPmodel {
 	OPmesh* meshes;
-	OPuint meshCount;	
+	OPuint meshCount;
+	OPchar* name;
 
 	OPvertexLayout vertexLayout;
 	OPvertexArray vertexArray;

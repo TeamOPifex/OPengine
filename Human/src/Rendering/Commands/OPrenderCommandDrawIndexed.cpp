@@ -43,3 +43,9 @@ void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OP
 		commandBucket->Submit(dc->key, dc->dispatch, dc);
 	}
 }
+
+void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) {
+	OPrenderCommandDrawIndexed* dc = commandBucket->CreateDrawIndexed();
+	dc->Set(mesh, world, material);
+	commandBucket->Submit(dc->key, dc->dispatch, dc);
+}

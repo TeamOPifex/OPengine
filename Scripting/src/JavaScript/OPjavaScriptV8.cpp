@@ -27,23 +27,8 @@ public:
 
 ArrayBufferAllocator allocator;
 
-void OPjavaScriptV8Init() {
-	if(isolate == NULL) {
-		bool result = v8::V8::InitializeICU();
-		ASSERT(result, "Make sure icudt.dll is available");
-		v8::Platform* platform = v8::platform::CreateDefaultPlatform();
-		v8::V8::InitializePlatform(platform);
-		result = v8::V8::Initialize();
-		ASSERT(result, "FAILED to initialize the V8 engine");
-
-		Isolate::CreateParams create_params;
-		create_params.array_buffer_allocator = &allocator;
-		isolate = Isolate::New(create_params);
-
-		OPlog("Javascript V8 engine Initialized");
-	}
-}
-
+Persistent<Context, CopyablePersistentTraits<Context>> V8CONTEXT;
+Persistent<ObjectTemplate, CopyablePersistentTraits<ObjectTemplate>> V8GLOBALTEMPLATE;
 
 
 void _OPscriptV8Log(const v8::FunctionCallbackInfo<v8::Value>& args) {
@@ -51,7 +36,7 @@ void _OPscriptV8Log(const v8::FunctionCallbackInfo<v8::Value>& args) {
         v8::HandleScope scope(args.GetIsolate());
         v8::String::Utf8Value str(args[i]);
         if (*str == NULL) return;
-        OPlog("%s", *str);
+		OPlogChannel(30, "SCRIPT", *str);
     }
 }
 
@@ -102,7 +87,7 @@ OPscript* loadedScripts[CACHED_FILE_COUNT];
 OPchar* stored[CACHED_FILE_COUNT];
 
 OPint _OPjavaScriptRequire(OPchar* pathToLoad, Handle<Value>* result) {
-    OPlog("Loading '%s' for Require", pathToLoad);
+    OPlog("Loading '%s' for require()", pathToLoad);
 
     for(OPint i = 0; i < loadCount; i++) {
         if(OPstringEquals(pathToLoad, stored[i])) {
@@ -180,7 +165,7 @@ Handle<Object> _OPscriptV8WrapEngine() {
         OPscriptNodeWrapperCommunication(OP);
         OPscriptNodeWrapperPipeline(OP);
 
-        OPlog("Wrapped the engine.");
+        //OPlog("Wrapped the engine.");
 
         //OPscript *result = NULL;
         //OPscriptLoad("Scripts/node_modules/OPengine/OPgameState.js", &result);
@@ -289,7 +274,7 @@ void _OPscriptV8Require(const v8::FunctionCallbackInfo<v8::Value>& args) {
 	v8::String::Utf8Value utf8(args[0]);
 	const char *arg0 = *utf8;
 
-	OPlog("Requiring: %s", arg0);
+	//OPlog("Requiring: %s", arg0);
 
 	if (OPstringEquals(arg0, "OP")) {
 		args.GetReturnValue().Set(_OPscriptV8WrapEngine());
@@ -327,7 +312,7 @@ void _OPscriptV8Load(const v8::FunctionCallbackInfo<v8::Value>& args) {
 	v8::String::Utf8Value utf8(args[0]);
 	const char *arg0 = *utf8;
 
-	OPlog("Load: %s", arg0);
+	//OPlog("Load: %s", arg0);
 
 	Handle<Object> currGlobal = args.Callee()->CreationContext()->Global();
 	Handle<Value> __dirname = currGlobal->Get(JS_NEW_STRING("__dirname"));
@@ -357,9 +342,11 @@ void _OPscriptV8SetImmediate(const v8::FunctionCallbackInfo<v8::Value>& args) {
     callback->Call(obj, 1, argv);
 }
 
-OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, const OPchar* dir) {
+OPint OPjavaScriptV8CompileOLD(OPjavaScriptV8Compiled* compiled, OPscript* script, const OPchar* dir) {
+	TIMED_BLOCK;
+
 	ASSERT(isolate != NULL, "V8 Engine must be initialized first.");
-	OPlog("compiling");
+	//OPlog("compiling");
 
 	SCOPE_AND_ISOLATE;
 
@@ -368,16 +355,74 @@ OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, 
 	global->Set(JS_NEW_STRING("global"), JS_NEW_OBJECT_TEMPLATE());
 	global->Set(JS_NEW_STRING("require"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8Require));
 	global->Set(JS_NEW_STRING("load"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8Load));
-    global->Set(JS_NEW_STRING("setImmediate"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8SetImmediate));
+	global->Set(JS_NEW_STRING("setImmediate"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8SetImmediate));
 	_OPscriptV8SetConsole(global);
 
-	OPlog("Wrapped the things");
+	//OPlog("Wrapped the things");
 
 	Handle<Context> localContext = Context::New(isolate, NULL, global);
 
 	v8::Context::Scope context_scope(localContext);
 
-	OPlog("Created the context");
+	//OPlog("Created the context");
+
+
+	Local<Object> globalSelf = localContext->Global();
+	if (dir == NULL) {
+		JS_SET_STRING(globalSelf, "__dirname", "");
+	}
+	else {
+		JS_SET_STRING(globalSelf, "__dirname", dir);
+	}
+
+	//OPlog("Now for the source");
+	//OPlog("%s", script->filename);
+	//OPlog("%s", script->data);
+
+	Handle<String> source = JS_NEW_STRING(script->data);
+
+	TryCatch trycatch;
+	v8::ScriptOrigin origin(JS_NEW_STRING(script->filename));
+	Local<Script> compiledV8 = v8::Script::Compile(source, &origin);
+	//OPlog("Compile was attempted");
+	if (compiledV8.IsEmpty()) {
+		ReportException(isolate, &trycatch);
+		return 0;
+	}
+
+	OPjavaScriptV8Compiled result;
+	result.Source = script;
+	result.Script = Persistent<Script, CopyablePersistentTraits<Script> >(isolate, compiledV8),
+		result.Context = Persistent<Context, CopyablePersistentTraits<Context> >(isolate, localContext);
+
+	*compiled = result;
+	return 1;
+}
+
+OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, const OPchar* dir) {
+	TIMED_BLOCK;
+
+	ASSERT(isolate != NULL, "V8 Engine must be initialized first.");
+	//OPlog("compiling");
+
+	SCOPE_AND_ISOLATE;
+
+	//Handle<ObjectTemplate> global = JS_NEW_OBJECT_TEMPLATE();
+	//global->Set(JS_NEW_STRING("module"), JS_NEW_OBJECT_TEMPLATE());
+	//global->Set(JS_NEW_STRING("global"), JS_NEW_OBJECT_TEMPLATE());
+	//global->Set(JS_NEW_STRING("require"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8Require));
+	//global->Set(JS_NEW_STRING("load"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8Load));
+ //   global->Set(JS_NEW_STRING("setImmediate"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8SetImmediate));
+	//_OPscriptV8SetConsole(global);
+
+	////OPlog("Wrapped the things");
+
+	//Handle<Context> localContext = Context::New(isolate, NULL, global);
+
+	Handle<Context> localContext = Local<Context>::New(isolate, V8CONTEXT);
+	v8::Context::Scope context_scope(localContext);
+
+	//OPlog("Created the context");
 
 
     Local<Object> globalSelf = localContext->Global();
@@ -387,8 +432,8 @@ OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, 
         JS_SET_STRING(globalSelf, "__dirname", dir);
     }
 
-	OPlog("Now for the source");
-	OPlog("%s", script->filename);
+	//OPlog("Now for the source");
+	//OPlog("%s", script->filename);
 	//OPlog("%s", script->data);
 
 	Handle<String> source = JS_NEW_STRING(script->data);
@@ -396,7 +441,7 @@ OPint OPjavaScriptV8Compile(OPjavaScriptV8Compiled* compiled, OPscript* script, 
 	TryCatch trycatch;
 	v8::ScriptOrigin origin(JS_NEW_STRING(script->filename));
 	Local<Script> compiledV8 = v8::Script::Compile(source, &origin);
-	OPlog("Compile was attempted");
+	//OPlog("Compile was attempted");
 	if (compiledV8.IsEmpty()) {
 		ReportException(isolate, &trycatch);
 		return 0;
@@ -498,14 +543,14 @@ void OPjavaScriptV8SetupRun(const OPchar* script) {
 	OPstream* str = OPfile::ReadFromFile(script);
 	ASSERT(str != NULL, "File couldn't be found");
 	ASSERT(str->Source != NULL, "Filename wasn't set.");
-	OPlog("Script read");
+	//OPlog("Script read");
 	OPscriptLoad(str, &result);
-	OPlog("Script loaded");
+	//OPlog("Script loaded");
     OPjavaScriptV8Compiled compiled;
     OPjavaScriptV8Compile(&compiled, result);
-	OPlog("Script compiled");
+	//OPlog("Script compiled");
     OPjavaScriptV8Run(&compiled);
-	OPlog("Script run");
+	//OPlog("Script run");
 }
 
 OPint OPjavaScriptV8Compiled::Compile(const OPchar* path) {
@@ -519,6 +564,42 @@ OPint OPjavaScriptV8Compiled::Execute() {
 
 OPjavaScriptPersistentValue OPjavaScriptV8Compiled::Function(const OPchar* name, ui32 count, void** args) {
 	return OPjavaScriptV8Run(this, name, count, args);
+}
+
+
+
+void OPjavaScriptV8Init() {
+	if (isolate == NULL) {
+		bool result = v8::V8::InitializeICU();
+		ASSERT(result, "Make sure icudt.dll is available");
+		v8::Platform* platform = v8::platform::CreateDefaultPlatform();
+		v8::V8::InitializePlatform(platform);
+		result = v8::V8::Initialize();
+		ASSERT(result, "FAILED to initialize the V8 engine");
+
+		Isolate::CreateParams create_params;
+		create_params.array_buffer_allocator = &allocator;
+		isolate = Isolate::New(create_params);
+
+		HandleScope scope(isolate);
+
+		Handle<ObjectTemplate> global = JS_NEW_OBJECT_TEMPLATE();
+		global->Set(JS_NEW_STRING("module"), JS_NEW_OBJECT_TEMPLATE());
+		global->Set(JS_NEW_STRING("global"), JS_NEW_OBJECT_TEMPLATE());
+		global->Set(JS_NEW_STRING("require"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8Require));
+		global->Set(JS_NEW_STRING("load"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8Load));
+		global->Set(JS_NEW_STRING("setImmediate"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8SetImmediate));
+		_OPscriptV8SetConsole(global);
+
+		V8GLOBALTEMPLATE = Persistent<ObjectTemplate, CopyablePersistentTraits<ObjectTemplate>>(isolate, global);
+
+		//OPlog("Wrapped the things");
+
+		Handle<Context> localContext = Context::New(isolate, NULL, global);
+		V8CONTEXT = Persistent<Context, CopyablePersistentTraits<Context>>(isolate, localContext);
+
+		OPlog("Javascript V8 engine Initialized");
+	}
 }
 
 

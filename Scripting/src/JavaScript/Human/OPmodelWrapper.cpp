@@ -27,7 +27,7 @@ JS_RETURN_VAL _OPmodelBind(const JS_ARGS& args) {
 
     OPmodel* model = JS_GET_ARG_PTR(args, 0, OPmodel);
     OPmaterial* material = JS_GET_ARG_PTR(args, 1, OPmaterial);
-	model->Bind(material);
+	//model->Bind(material);
 
     JS_RETURN_NULL;
 }
@@ -38,7 +38,7 @@ JS_RETURN_VAL _OPmodelBindSelf(const JS_ARGS& args) {
 
     OPmodel* model = JS_GET_PTR(args.This(), OPmodel);
     OPmaterial* material = JS_GET_ARG_PTR(args, 0, OPmaterial);
-	model->Bind(material);
+	//model->Bind(material);
 
     JS_RETURN_NULL;
 }
@@ -50,7 +50,7 @@ JS_RETURN_VAL _OPmodelDraw(const JS_ARGS& args) {
     OPmaterial* material = JS_GET_ARG_PTR(args, 1, OPmaterial);
     OPcam* camera = JS_GET_ARG_PTR(args, 2, OPcam);
 
-	model->Draw(material, camera);
+	//model->Draw(material, camera);
 
     JS_RETURN_NULL;
 }
@@ -62,7 +62,7 @@ JS_RETURN_VAL _OPmodelDrawSelf(const JS_ARGS& args) {
     OPmaterial* material = JS_GET_ARG_PTR(args, 0, OPmaterial);
     OPcam* camera = JS_GET_ARG_PTR(args, 1, OPcam);
 
-	model->Draw(material, camera);
+	//model->Draw(material, camera);
 
     JS_RETURN_NULL;
 }
@@ -73,7 +73,7 @@ JS_RETURN_VAL _OPmodelSetMesh(const JS_ARGS& args) {
     OPmodel* model = JS_GET_ARG_PTR(args, 0, OPmodel);
     OPmesh* mesh = JS_GET_ARG_PTR(args, 1, OPmesh);
 
-    model->mesh = mesh;
+    //model->mesh = mesh;
 
     JS_RETURN_NULL;
 }
@@ -84,7 +84,7 @@ JS_RETURN_VAL _OPmodelSetMeshSelf(const JS_ARGS& args) {
     OPmodel* model = JS_GET_PTR(args.This(), OPmodel);
     OPmesh* mesh = JS_GET_ARG_PTR(args, 0, OPmesh);
 
-    model->mesh = mesh;
+   // model->mesh = mesh;
 
     JS_RETURN_NULL;
 }
@@ -100,8 +100,8 @@ Handle<Object> OPmodelWrapperCreate(Handle<Object> result, OPmodel* model) {
     JS_SET_NUMBER(result, "size", sizeof(OPmodel));
 
     Handle<Object> world = JS_NEW_OBJECT();
-    OPmat4WrapperCreate(world, &((OPmodel*)model)->world);
-    JS_SET_OBJECT(result, "world", world);
+    //OPmat4WrapperCreate(world, &((OPmodel*)model)->world);
+    //JS_SET_OBJECT(result, "world", world);
 
     return result;
 }
@@ -111,12 +111,12 @@ JS_RETURN_VAL _OPmodelCreate(const JS_ARGS& args) {
 
     OPmesh* mesh = JS_GET_ARG_PTR(args, 0, OPmesh);
 
-    OPmodel* model = (OPmodel*)OPallocZero(sizeof(OPmodel));
-    model->mesh = mesh;
-    model->world = OPMAT4_IDENTITY;
+    //OPmodel* model = (OPmodel*)OPallocZero(sizeof(OPmodel));
+    //model->mesh = mesh;
+    //model->world = OPMAT4_IDENTITY;
 
     Handle<Object> result = JS_NEW_OBJECT();
-    OPmodelWrapperCreate(result, model);
+    //OPmodelWrapperCreate(result, model);
 
     JS_RETURN(result);
 }
@@ -133,13 +133,6 @@ void OPmodelWrapper(Handle<Object> exports) {
     JS_SET_NUMBER(model, "size", sizeof(OPmodel));
     JS_SET_OBJECT(exports, "model", model);
 
-}
-
-Handle<Object> OPmodelTexturedWrapper(Handle<Object> result, OPmodelTextured* model) {
-    SCOPE_AND_ISOLATE
-
-    JS_SET_OBJECT_PTR(result, "texture", model->texture);
-    return OPmodelWrapperCreate(result, &model->model);
 }
 
 #endif

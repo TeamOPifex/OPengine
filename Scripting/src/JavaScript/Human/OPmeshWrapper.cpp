@@ -9,7 +9,7 @@ Handle<Object> OPmeshWrapper(Handle<Object> result, OPmesh* mesh) {
     SCOPE_AND_ISOLATE
 
     JS_SET_PTR(result, mesh);
-    JS_SET_NUMBER(result, "VertexSize", mesh->vertexLayout.stride);
+    //JS_SET_NUMBER(result, "VertexSize", mesh->vertexLayout.stride);
 
 	return result;
 }
@@ -41,7 +41,7 @@ JS_RETURN_VAL _OPmeshDestroy(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmesh* mesh = JS_GET_ARG_PTR(args, 0, OPmesh);
-	mesh->Destroy();
+	//mesh->Destroy();
 
     JS_RETURN_NULL;
 }
@@ -74,7 +74,7 @@ JS_RETURN_VAL _OPmeshBind(const JS_ARGS& args) {
 JS_RETURN_VAL _OPmeshRender(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPmeshRender();
+    //OPmeshRender();
 
     JS_RETURN_NULL;
 }

@@ -31,7 +31,7 @@ void OPrendererForwardBegin(OPrenderer* renderer) {
 
 }
 
-void OPrendererForwardSubmit(OPrenderer* renderer, OPmodel* model, OPmat4* world, OPmaterialInstance* material) {
+void OPrendererForwardSubmitModel(OPrenderer* renderer, OPmodel* model, OPmat4* world, OPmaterialInstance* material) {
 	OPrendererForward* forwardRenderer = (OPrendererForward*)renderer->internalPtr;
 	for (ui32 i = 0; i < model->meshCount; i++) {
 		OPrenderCommandDrawIndexed* dc =
@@ -39,6 +39,14 @@ void OPrendererForwardSubmit(OPrenderer* renderer, OPmodel* model, OPmat4* world
 			Set(&model->meshes[i], world, material);
 		forwardRenderer->renderBucket[0].Submit(dc->key, dc->dispatch, dc);
 	}
+}
+
+void OPrendererForwardSubmitMesh(OPrenderer* renderer, OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) {
+	OPrendererForward* forwardRenderer = (OPrendererForward*)renderer->internalPtr;
+	OPrenderCommandDrawIndexed* dc =
+		forwardRenderer->renderBucket[0].CreateDrawIndexed()->
+		Set(mesh, world, material);
+	forwardRenderer->renderBucket[0].Submit(dc->key, dc->dispatch, dc);
 }
 
 void OPrendererForwardEnd(OPrenderer* renderer) {
@@ -57,7 +65,8 @@ OPrendererForward* OPrendererForward::Setup() {
 	rendererRoot._SetMaterial = OPrendererForwardSetMaterial;
 	rendererRoot._SetMaterialEffect = OPrendererForwardSetMaterialEffect;
 	rendererRoot._Begin = OPrendererForwardBegin;
-	rendererRoot._Submit = OPrendererForwardSubmit;
+	rendererRoot._SubmitModel = OPrendererForwardSubmitModel;
+	rendererRoot._SubmitMesh = OPrendererForwardSubmitMesh;
 	rendererRoot._End = OPrendererForwardEnd;
 	rendererRoot._Present = OPrendererForwardPresent;
 

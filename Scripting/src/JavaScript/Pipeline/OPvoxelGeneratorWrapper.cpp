@@ -27,10 +27,10 @@ JS_RETURN_VAL _OPvoxelGeneratorBuild(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvoxelGenerator* ptr = JS_GET_ARG_PTR(args, 0, OPvoxelGenerator);
-    OPmesh* mesh = OPvoxelGeneratorBuild(ptr);
+    OPmodel* mesh = OPvoxelGeneratorBuild(ptr);
 
     Handle<Object> result = JS_NEW_OBJECT();
-    OPmeshWrapper(result, mesh);
+    //OPmeshWrapper(result, mesh);
 
     JS_RETURN(result);
 }
@@ -39,10 +39,10 @@ JS_RETURN_VAL _OPvoxelGeneratorBuildSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPvoxelGenerator* ptr = JS_GET_PTR(args.This(), OPvoxelGenerator);
-    OPmesh* mesh = OPvoxelGeneratorBuild(ptr);
+	OPmodel* mesh = OPvoxelGeneratorBuild(ptr);
 
     Handle<Object> result = JS_NEW_OBJECT();
-    OPmeshWrapper(result, mesh);
+    //OPmeshWrapper(result, mesh);
 
     JS_RETURN(result);
 }

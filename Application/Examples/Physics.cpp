@@ -246,7 +246,7 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 		OPphysXGetTransform((OPphysXRigidActor*)physicsExample->boxes[i].physics, &scratch);
 		world = scratch * scale;
 		OPeffectSet("uWorld", &world);
-		OPmeshRender();
+		OPrenderDrawBufferIndexed(0);
 	}
 	OPeffectSet("uColorTexture", physicsExample->textureStatic, 0);
 	for (ui32 i = 0; i < physicsExample->boxStaticCount; i++) {
@@ -255,7 +255,7 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 		OPphysXGetTransform((OPphysXRigidActor*)physicsExample->boxesStatic[i].physics, &scratch);
 		world = scratch * scale;
 		OPeffectSet("uWorld", &world);
-		OPmeshRender();
+		OPrenderDrawBufferIndexed(0);
 	}
 
 	physicsExample->MeshSphere->Bind();
@@ -269,7 +269,7 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 	OPphysXGetTransform((OPphysXRigidActor*)physicsExample->spheres[0].physics, &scratch);
 	world = scratch * scale;
 	OPeffectSet("uWorld", &world);
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 
 	OPeffectSet("uColorTexture", physicsExample->textureSphere, 0);
 	for (ui32 i = 1; i < physicsExample->sphereCount; i++) {
@@ -277,7 +277,7 @@ OPint ExamplePhysicsUpdate(OPtimer* time) {
 		OPphysXGetTransform((OPphysXRigidActor*)physicsExample->spheres[i].physics, &scratch);
 		world = scratch * scale;
 		OPeffectSet("uWorld", 1, &world);
-		OPmeshRender();
+		OPrenderDrawBufferIndexed(0);
 	}
 
 	OPrenderPresent();
