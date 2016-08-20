@@ -511,21 +511,21 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
 }
 
 OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, const OPchar* name, ui32 count, void** args) {
-    SCOPE_AND_ISOLATE;
+	SCOPE_AND_ISOLATE;
 
-    Handle<Context> context = Local<Context>::New(isolate, scriptCompiled->Context);
-    v8::Context::Scope context_scope(context);
-    Handle<v8::Object> global = context->Global();
-    Handle<v8::Value> value = global->Get(JS_NEW_STRING(name));
-    Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
+	Handle<Context> context = Local<Context>::New(isolate, scriptCompiled->Context);
+	v8::Context::Scope context_scope(context);
+	Handle<v8::Object> global = context->Global();
+	Handle<v8::Value> value = global->Get(JS_NEW_STRING(name));
+	Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
 
-    Handle<Value> values[10];
-    for (ui32 i = 0; i < count; i++) {
+	Handle<Value> values[10];
+	for (ui32 i = 0; i < count; i++) {
 		Local<Object> obj = JS_NEW_OBJECT();
 		JS_SET_PTR(obj, args[i]);
-        values[i] = obj;
+		values[i] = obj;
 		// Local<Object>::New(isolate, args[i]);
-    }
+	}
 
 	TryCatch trycatch;
 	Handle<Value> result = func->Call(global, count, values);
@@ -534,7 +534,26 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
 		return Persistent<Value>(isolate, JS_NEW_NULL());
 	}
 
-    return Persistent<Value>(isolate, result);
+	return Persistent<Value>(isolate, result);
+}
+
+OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptCompiled, const OPchar* name, ui32 count, Handle<Value>* args) {
+	SCOPE_AND_ISOLATE;
+
+	Handle<Context> context = Local<Context>::New(isolate, scriptCompiled->Context);
+	v8::Context::Scope context_scope(context);
+	Handle<v8::Object> global = context->Global();
+	Handle<v8::Value> value = global->Get(JS_NEW_STRING(name));
+	Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
+	
+	TryCatch trycatch;
+	Handle<Value> result = func->Call(global, count, args);
+	if (result.IsEmpty()) {
+		ReportException(isolate, &trycatch);
+		return Persistent<Value>(isolate, JS_NEW_NULL());
+	}
+
+	return Persistent<Value>(isolate, result);
 }
 
 void OPjavaScriptV8SetupRun(const OPchar* script) {
@@ -566,7 +585,9 @@ OPjavaScriptPersistentValue OPjavaScriptV8Compiled::Function(const OPchar* name,
 	return OPjavaScriptV8Run(this, name, count, args);
 }
 
-
+OPjavaScriptPersistentValue OPjavaScriptV8Compiled::Function(const OPchar* name, ui32 count, Handle<Value>* args) {
+	return OPjavaScriptV8Run(this, name, count, args);
+}
 
 void OPjavaScriptV8Init() {
 	if (isolate == NULL) {
@@ -598,7 +619,7 @@ void OPjavaScriptV8Init() {
 		Handle<Context> localContext = Context::New(isolate, NULL, global);
 		V8CONTEXT = Persistent<Context, CopyablePersistentTraits<Context>>(isolate, localContext);
 
-		OPlog("Javascript V8 engine Initialized");
+		OPlogInfo("Javascript V8 engine Initialized");
 	}
 }
 
