@@ -32,7 +32,7 @@ GLenum OPcommonGLCheckError() {
 //	GLsizei lengths[10];
 //
 //	GLuint numFound = glGetDebugMessageLog(10, 255, &sources[0], &types[0], &ids[0], &severities[0], &lengths[0], &msgData[0]);
-//	
+//
 //	for (OPuint i = 0; i < numFound; i++) {
 //		OPlog((OPchar*)msgData[i]);
 //	}
@@ -43,7 +43,7 @@ bool OPcommonGLLog(const OPchar* function, const OPchar* file, i32 line) {
 	if (error != GL_NO_ERROR)
 	{
 		//GetFirstNMessages();
-		OPlogErr("OpenGL Error: [%d] %s, %s, %d", error, function, file, line);
+		OPlogErr("OpenGL Error: [%d] %s, %s:%d", error, function, file, line);
 		return false;
 	}
 	return true;

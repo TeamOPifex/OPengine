@@ -18,7 +18,7 @@ typedef struct {
 FrameBufferExample frameBufferExample;
 
 void ExampleFrameBufferEnter(OPgameState* last) {
-	OPtextureDesc textureDesc = OPtextureDesc(512, 512);
+	OPtextureDesc textureDesc = OPtextureDesc(512, 512, OPtextureFormat::RGBA, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST);
 	frameBufferExample.frameBuffer.Init(textureDesc);
 	frameBufferExample.texture2D = OPtexture2DCreate(&frameBufferExample.frameBuffer.texture);
 

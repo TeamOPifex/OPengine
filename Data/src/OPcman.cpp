@@ -18,7 +18,7 @@ bool OPcman::Init(const OPchar* dir) {
 	resourceFiles.Init(sizeof(OPresourceFile));
 	purgeList.Init();
 	hashmap.Init(OP_CMAN_CAP);
-	
+
 	if (dir) {
 		rootFolder = OPstringCopy(dir);
 	}
@@ -147,7 +147,7 @@ void* OPcman::LoadFromFile(const OPchar* path) {
 		OPfree(str);
 		if (loadResult <= 0) {
 			OPlogErr("Failed to load asset: %s", path);
-			return false;
+			return NULL;
 		}
 
 		return assetPtr;
@@ -163,7 +163,7 @@ bool OPcman::Load(const OPchar* assetKey) {
 	if(hashmap.Exists(assetKey)){
 		OPasset* existing = NULL;
 		hashmap.Get(assetKey, (void**)&existing);
-	
+
 		ASSERT(existing != NULL, "Hashmap falsely claimed asset existed");
 		return true;
 	}
@@ -207,30 +207,30 @@ bool OPcman::Load(const OPchar* assetKey) {
 bool OPcman::Unload(const OPchar* assetKey) {
 		void* value = NULL;
 		OPasset* asset = NULL;
-	
+
 		if(!hashmap.Exists(assetKey))
 			return false;
-	
+
 		if(!hashmap.Get(assetKey, &value))
 			return false;
 
 		ASSERT(value != NULL, "Hashmap failed to get asset value");
 
 		asset = (OPasset*)value;
-	
+
 		asset->Destroy();
 		OPfree(asset);
 		asset = NULL;
 
 		hashmap.Remove(assetKey);
-	
+
 		return 1;
 	return false;
 }
 
 void* OPcman::Get(const OPchar* assetKey) {
 	OPasset* bucket = NULL;
-	ASSERT(hashmap.Exists(assetKey), "Asset has not been loaded");	
+	ASSERT(hashmap.Exists(assetKey), "Asset has not been loaded");
 	hashmap.Get(assetKey, (void**)&bucket);
 	return bucket->Asset;
 }
@@ -282,37 +282,37 @@ void OPcman::LoadResourcePack(const OPchar* filename) {
 	// Grab the next OPresourceFile slot available
 	OPresourceFile* resource = OPNEW(OPresourceFile());
 	resourceFiles.Push((ui8*)resource);
-	
+
 	// Opens the File handle
 	// The file handle will stay open until the resourceFile is unloaded
 	resource->resourceFile.Init(filename);
-	
+
 	// Get the resourceFile version
 	ui8 version = resource->resourceFile.Readui8();
 	OPlogDebug("Version %d", version);
-	
+
 	// The number of resources in this pack
 	resource->resourceCount = resource->resourceFile.Readui16();
-	
+
 	// The total length of all names
 	// This is used to make a contiguous block of OPchar data so that
 	// the lookup of resources is faster
 	ui32 lengthOfNames = resource->resourceFile.Readui32();
-	
+
 	// Allocate the necessary data
 	// TODO: (garrett) allocate this into a single struct so that there's only 1 allocation
 	resource->resourceNames = (OPchar**)OPalloc(sizeof(OPchar*)* resource->resourceCount);
 	resource->resourceOffset = (ui32*)OPalloc(sizeof(ui32)* resource->resourceCount);
 	resource->resourceSize = (ui32*)OPalloc(sizeof(ui32)* resource->resourceCount);
-	
+
 	OPlogDebug("Resource Count %d", resource->resourceCount);
-	
+
 	for (ui16 i = 0; i < resource->resourceCount; i++) {
 		// TODO: (garrett) Read in the string into a contiguous block of OPchar data
 		resource->resourceNames[i] = resource->resourceFile.ReadString();
 		resource->resourceOffset[i] = resource->resourceFile.Readui32();
 		resource->resourceSize[i] = resource->resourceFile.Readui32();
-	
+
 		OPlogDebug("Resource %s", resource->resourceNames[i]);
 	}
 }
@@ -327,18 +327,18 @@ OPstream* OPcman::GetResource(const OPchar* resourceName) {
 			if (!OPstringEquals(resourceName, resource->resourceNames[j])) {
 				continue;
 			}
-	
+
 			// The resource was found in this pack
 			// Set the seek position into the file
 			// Then load it into an OPstream
 			ui32 offset = resource->resourceOffset[j];
 			ui32 size = resource->resourceSize[j];
-	
+
 			// TODO: (garrett) This should be done in a way that will support threading
 			resource->resourceFile.Seek(offset);
 			OPstream* stream = resource->resourceFile.Read(size);
 			stream->Source = resource->resourceNames[j];
-	
+
 			return stream;
 		}
 	}

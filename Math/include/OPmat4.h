@@ -542,7 +542,7 @@ inline OPfloat OPmat4GetCofactor(OPfloat m0, OPfloat m1, OPfloat m2,
 
 
 inline void OPmat4Log(const OPchar* msg, OPmat4 m) {
-	OPlog("%s:\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f",
+	OPlogInfo("%s:\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f",
 		msg,
 		m[0][0], m[1][0], m[2][0], m[3][0],
 		m[0][1], m[1][1], m[2][1], m[3][1],

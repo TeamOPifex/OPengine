@@ -1,9 +1,9 @@
 #include "./Human/include/Rendering/Primitives/OPquad.h"
 
 //-----------------------------------------------------------------------------
-//   _____ _       _           _     
-//  / ____| |     | |         | |    
-// | |  __| | ___ | |__   __ _| |___ 
+//   _____ _       _           _
+//  / ____| |     | |         | |
+// | |  __| | ___ | |__   __ _| |___
 // | | |_ | |/ _ \| '_ \ / _` | / __|
 // | |__| | | (_) | |_) | (_| | \__ \
 //  \_____|_|\___/|_.__/ \__,_|_|___/
@@ -24,7 +24,7 @@ OPfloat OPquadVertData[] = {
 
 OPfloat OPquadVertNormData[] = {
 	 1,  1, 0,
-	 0,  0, -1, 
+	 0,  0, -1,
 	 0,  1,
 
 	-1,  1, 0,
@@ -41,14 +41,14 @@ OPfloat OPquadVertNormData[] = {
 };
 
 ui16 OPquadIndexData[] = {
-	0, 1, 2, 
+	0, 1, 2,
 	0, 2, 3
 };
 
 //-----------------------------------------------------------------------------
-// ______                _   _                 
-//|  ____|              | | (_)                
-//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+// ______                _   _
+//|  ____|              | | (_)
+//| |__ _   _ _ __   ___| |_ _  ___  _ __  ___
 //|  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 //| |  | |_| | | | | (__| |_| | (_) | | | \__ \
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
@@ -106,7 +106,7 @@ OPmodel* OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texco
 
 	// 0.5, 0.0
 	// 1.0, 1.0
-	QuadPoint* verts = (QuadPoint*)OPalloc(sizeof(QuadPoint)* 4);
+	QuadPoint verts[4];
 	SetQuadPoint(&verts[0], offset.x + width, offset.y + height, 0, texcoordEnd.x, texcoordEnd.y);
 	SetQuadPoint(&verts[1], offset.x - width, offset.y + height, 0, texcoordStart.x, texcoordEnd.y);
 	SetQuadPoint(&verts[2], offset.x - width, offset.y - height, 0, texcoordStart.x, texcoordStart.y);
@@ -116,8 +116,6 @@ OPmodel* OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texco
 		4, 6, OPindexSize::SHORT,
 		verts, OPquadIndexData
 		);
-
-	OPfree(verts);
 
 	return mesh;
 }
@@ -167,7 +165,7 @@ OPmodel* OPquadNormCreate(){
 //}
 //-----------------------------------------------------------------------------
 void OPquadDestroy(OPmesh* quad){
-	
+
 }
 
 
@@ -200,7 +198,7 @@ OPmodel* OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, 
 		4, 6, OPindexSize::SHORT,
 		verts, indicies
 		);
-	
+
 	mesh->vertexLayout.stride = sizeof(OPfloat) * 5;
 
 	return mesh;
