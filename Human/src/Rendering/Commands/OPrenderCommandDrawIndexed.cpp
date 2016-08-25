@@ -4,7 +4,7 @@ void OPrenderCommandDrawIndex(void* data, OPcam* camera) {
 	OPrenderCommandDrawIndexed* dc = (OPrenderCommandDrawIndexed*)data;
 
 	dc->vertexArray->Bind();
-	dc->vertexBuffer->Bind();
+	//dc->vertexBuffer->Bind();
 	dc->indexBuffer->Bind();
 	dc->material->Bind();
 

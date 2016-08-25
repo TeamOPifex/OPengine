@@ -121,11 +121,12 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 			mesh->meshMeta = OPNEW(OPmeshMeta());
 			mesh->meshMeta->count = metaCount;
 			mesh->meshMeta->names = (OPchar**)OPALLOC(OPchar*, metaCount);
-			mesh->meshMeta->data = (OPstream*)OPALLOC(OPstream*, metaCount);
+			mesh->meshMeta->data = (OPstream*)OPALLOC(OPstream, metaCount);
 
 			for (ui32 j = 0; j < metaCount; j++) {
 				OPchar* name = str->String();
 				ui32 dataSize = str->UI32();
+				if (dataSize == 0) continue;
 				void* data = str->Read(dataSize);
 
 				mesh->meshMeta->names[j] = name;

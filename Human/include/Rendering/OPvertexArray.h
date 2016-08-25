@@ -8,6 +8,9 @@ typedef struct OPvertexArray OPvertexArray;
 
 struct OPvertexArray {
 	void* internalPtr;
+#ifdef _DEBUG
+	OPchar* attachedMeshName;
+#endif
 	//OPvertexLayout* vertexLayout;
 
 	inline OPvertexArray* Init(OPvertexLayout* vertexLayout) {

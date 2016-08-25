@@ -27,6 +27,9 @@ void OPmodel::Bind() {
 
 void OPmodel::Build(ui32 vertexCount, ui32 indexCount, OPindexSize indexSize, void* vertices, void* indices) {
 	vertexArray.Bind();
+#ifdef _DEBUG
+	vertexArray.attachedMeshName = name;
+#endif
 	vertexBuffer.SetData(vertexLayout.stride, vertexCount, vertices);
 	indexBuffer.SetData(indexSize, indexCount, indices);
 	this->vertexLayout = vertexLayout;

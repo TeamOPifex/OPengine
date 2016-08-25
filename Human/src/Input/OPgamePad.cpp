@@ -214,6 +214,7 @@ void __OPwinUpdateGamePad(OPgamePad* controller){
 
 		controller->axes[(ui32)OPgamePadAxis::RS_X] = controllerState.Gamepad.sThumbRX / (OPfloat)SHRT_MAX;
 		controller->axes[(ui32)OPgamePadAxis::RS_Y] = controllerState.Gamepad.sThumbRY / (OPfloat)SHRT_MAX;
+
 #pragma endregion
 
 #pragma region Button states
@@ -277,7 +278,7 @@ void OPgamePad::Update(){
 		OPmemcpy(
 			&prevAxes,
 			&axes,
-			sizeof(OPfloat) * (ui32)OPgamePadButton::_MAX);
+			sizeof(OPfloat) * (ui32)OPgamePadAxis::_MAX);
 	}
 
 #ifdef OPIFEX_ANDROID
