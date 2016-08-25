@@ -8,6 +8,7 @@ struct OPtexture2DOLD {
 	OPvec2 Position;
 	OPfloat Rotation;
 	OPvec2 Scale;
+	OPvec4 UVScale;
 	OPtexture* Texture;
 	OPeffect* Effect;
 };

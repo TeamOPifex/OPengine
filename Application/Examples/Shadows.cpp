@@ -196,7 +196,7 @@ typedef struct {
 		OPmaterialAddParam(&ModelMaterials[1], "uViewShadow", &ShadowCamera.view);
 		OPmaterialAddParam(&ModelMaterials[1], "uProjShadow", &ShadowCamera.proj);
 		OPmaterialAddParam(&ModelMaterials[1], "uColorTexture", ModelTexture, 0);
-		OPmaterialAddParam(&ModelMaterials[1], "uShadow", &ShadowFrameBuffer.Texture, 1);
+		OPmaterialAddParam(&ModelMaterials[1], "uShadow", &ShadowFrameBuffer.texture, 1);
 		OPmaterialAddParam(&ModelMaterials[1], "uLightPos", &ShadowCamera.pos);
 		OPmaterialAddParam(&ModelMaterials[1], "uViewPos", &Camera.Camera.pos);
 
@@ -204,7 +204,7 @@ typedef struct {
 		OPmaterialAddParam(&GroundMaterials[1], "uViewShadow", &ShadowCamera.view);
 		OPmaterialAddParam(&GroundMaterials[1], "uProjShadow", &ShadowCamera.proj);
 		OPmaterialAddParam(&GroundMaterials[1], "uColorTexture", ModelTexture, 0);
-		OPmaterialAddParam(&GroundMaterials[1], "uShadow", &ShadowFrameBuffer.Texture, 1);
+		OPmaterialAddParam(&GroundMaterials[1], "uShadow", &ShadowFrameBuffer.texture, 1);
 		OPmaterialAddParam(&GroundMaterials[1], "uLightPos", &ShadowCamera.pos);
 		OPmaterialAddParam(&GroundMaterials[1], "uViewPos", &Camera.Camera.pos);
 

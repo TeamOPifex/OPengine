@@ -74,6 +74,10 @@ inline void OPrenderShutdown() {
 	OPRENDERER_ACTIVE->Shutdown();
 }
 
+inline void  OPrenderClear(f32 r) {
+	OPrenderClear(r, r, r, 1.0f);
+}
+
 inline void  OPrenderClear(f32 r, f32 g, f32 b) {
 	OPrenderClear(r, g, b, 1.0f);
 }

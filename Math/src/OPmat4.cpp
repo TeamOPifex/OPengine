@@ -18,21 +18,14 @@ OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPf
 	OPmat4 m = OPMAT4_IDENTITY;
 	OPfloat w = (right - left);
 	OPfloat h = (top - bottom);
+	OPfloat z = (zFar - zNear);
 
-	//m[0][0] = 2.0f / w;
-	//m[1][1] = 2.0f / h;
-	//m[2][2] = 1.0f / (zFar - zNear);
-	//m[3][0] = -((right + left) / (right - left));
-	//m[3][1] = -((top + bottom) / (top - bottom));
-	////m[3][2] = -(zFar + zNear) / (zFar - zNear);
-	//m[3][2] = -((zNear) / (zFar - zNear));
-
-	m[0][0] = 2.0f / (right - left);
-	m[1][1] = 2.0f / (top - bottom);
-	m[2][2] = -2.0f / (zFar - zNear);
-	m[3][0] = -(right + left) / (right - left);
-	m[3][1] = -(top + bottom) / (top - bottom);
-	m[3][2] = -(zFar + zNear) / (zFar - zNear);
+	m[0][0] = 2.0f / w;
+	m[1][1] = 2.0f / h;
+	m[2][2] = -2.0f / z;
+	m[3][0] = -(right + left) / w;
+	m[3][1] = -(top + bottom) / h;
+	m[3][2] = -(zFar + zNear) / z;
 
 	return m;
 }

@@ -132,8 +132,7 @@ void OPrendererShutdownGL() {
 
 #include "./Human/include/Platform/opengl/OPcontextGL.h"
 #include "./Human/include/Platform/opengl/OPeffectAPIGL.h"
-#include "./Human/include/Platform/opengl/OPframeBuffer2DGL.h"
-#include "./Human/include/Platform/opengl/OPframeBufferDepthGL.h"
+#include "./Human/include/Platform/opengl/OPframeBufferAPIGL.h"
 #include "./Human/include/Platform/opengl/OPindexBufferGL.h"
 #include "./Human/include/Platform/opengl/OPmonitorAPIGL.h"
 #include "./Human/include/Platform/opengl/OPshaderAPIGL.h"
@@ -141,9 +140,7 @@ void OPrendererShutdownGL() {
 #include "./Human/include/Platform/opengl/OPshaderResourceGL.h"
 #include "./Human/include/Platform/opengl/OPshaderUniformAPIGL.h"
 #include "./Human/include/Platform/opengl/OPtextureAPIGL.h"
-#include "./Human/include/Platform/opengl/OPtexture2DGL.h"
 #include "./Human/include/Platform/opengl/OPtextureCubeAPIGL.h"
-#include "./Human/include/Platform/opengl/OPtextureDepthGL.h"
 #include "./Human/include/Platform/opengl/OPvertexArrayAPIGL.h"
 #include "./Human/include/Platform/opengl/OPvertexBufferAPIGL.h"
 #include "./Human/include/Platform/opengl/OPwindowAPIGL.h"
@@ -165,8 +162,7 @@ OPrenderAPI* OPrendererGL() {
 
 	OPcontextGLInit(&OPRENDERERGL.Context); 
 	OPeffectAPIGLInit(&OPRENDERERGL.Effect);
-	OPframeBuffer2DGLInit(&OPRENDERERGL.FrameBuffer2D);
-	OPframeBufferDepthGLInit(&OPRENDERERGL.FrameBufferDepth);
+	OPframeBufferAPIGLInit(&OPRENDERERGL.FrameBuffer);
 	OPindexBufferAPIGLInit(&OPRENDERERGL.IndexBuffer);
 	OPmonitorAPIGLInit(&OPRENDERERGL.Monitor);
 	OPshaderAPIGLInit(&OPRENDERERGL.Shader);
@@ -174,9 +170,7 @@ OPrenderAPI* OPrendererGL() {
 	OPshaderResourceGLInit(&OPRENDERERGL.ShaderResource);
 	OPshaderUniformAPIGLInit(&OPRENDERERGL.ShaderUniform);
 	OPtextureAPIGLInit(&OPRENDERERGL.Texture);
-	OPtexture2DGLInit(&OPRENDERERGL.Texture2D);
 	OPtextureCubeAPIGLInit(&OPRENDERERGL.TextureCube);
-	OPtextureDepthGLInit(&OPRENDERERGL.TextureDepth);
 	OPvertexArrayAPIGLInit(&OPRENDERERGL.VertexArray);
 	OPvertexBufferAPIGLInit(&OPRENDERERGL.VertexBuffer);
 	OPwindowAPIGLInit(&OPRENDERERGL.Window);

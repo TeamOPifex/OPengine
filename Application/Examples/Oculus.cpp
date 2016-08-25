@@ -77,7 +77,8 @@ OPint ExampleOculusUpdate(OPtimer* time) {
 	OPeffectSet("vLightDirection", &light);
 
 	OPrenderDrawBufferIndexed(0);
-	OPframeBufferUnbind();
+
+	//OPframeBufferUnbind();
 
 	OPrenderPresent();
 

@@ -9,10 +9,10 @@ typedef struct {
 	OPtexture Diffuse;
 	OPtexture Normal;
 	OPtexture Depth;
-	OPtexture2D* Position2D;
-	OPtexture2D* Diffuse2D;
-	OPtexture2D* Normal2D;
-	OPtexture2D* Depth2D;
+	OPtexture2DOLD* Position2D;
+	OPtexture2DOLD* Diffuse2D;
+	OPtexture2DOLD* Normal2D;
+	OPtexture2DOLD* Depth2D;
 } DeferredGBuffer;
 
 DeferredGBuffer* DeferredGBufferCreate() {

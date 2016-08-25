@@ -22,13 +22,13 @@ JS_RETURN_VAL _OPframeBufferCreateDepth(const JS_ARGS& args) {
 	//};
 	OPtextureDesc desc = OPtextureDesc();
 	OPframeBuffer* fb = (OPframeBuffer*)OPalloc(sizeof(OPframeBuffer));
-	*fb = OPframeBufferCreateDepth(desc);
+	//*fb = OPframeBufferCreateDepth(desc);
 
     Handle<Object> frameBuffer = JS_NEW_OBJECT();
 	JS_SET_PTR(frameBuffer, fb);
 
     Handle<Object> texture = JS_NEW_OBJECT();
-    JS_SET_PTR(texture, &fb->Texture);
+    JS_SET_PTR(texture, &fb->texture);
     JS_SET_OBJECT(frameBuffer, "Texture", texture);
 
     JS_RETURN(frameBuffer);
@@ -38,7 +38,7 @@ JS_RETURN_VAL _OPframeBufferBind(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
 	OPframeBuffer* obj = JS_GET_ARG_PTR(args, 0, OPframeBuffer);
-	OPframeBufferBind(obj);
+	//OPframeBufferBind(obj);
 
 	JS_RETURN_NULL;
 }
@@ -46,7 +46,7 @@ JS_RETURN_VAL _OPframeBufferBind(const JS_ARGS& args) {
 JS_RETURN_VAL _OPframeBufferUnbind(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPframeBufferUnbind();
+    //OPframeBufferUnbind();
 
 	JS_RETURN_NULL;
 }
