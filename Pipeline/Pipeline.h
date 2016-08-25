@@ -1,10 +1,10 @@
-#ifndef OPENGINE_PIPELINE
-#define OPENGINE_PIPELINE
+#pragma once
 
 #include "./Pipeline/include/DefaultLoaders.h"
 #include "./Pipeline/include/Loaders/OPloaderOPskeleton.h"
 #include "./Pipeline/include/Loaders/OPloaderOPanimation.h"
 #include "./Pipeline/include/Loaders/OPloaderVoxels.h"
+#include "./Pipeline/include/Loaders/OPloaderOPM.h"
 #include "./Pipeline/include/OPparticleSystem.h"
 #include "./Pipeline/include/Rendering.h"
 #include "./Pipeline/include/OPsprite2D.h"
@@ -17,5 +17,3 @@
 #include "./Pipeline/include/OPvoxelGenerator.h"
 #include "./Pipeline/include/OPmaterialPBR.h"
 #include "./Pipeline/include/OPvisualDebugInfo.h"
-
-#endif

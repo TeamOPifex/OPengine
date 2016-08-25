@@ -2,7 +2,7 @@
 #include "./Human/include/Rendering/Primitives/OPvertex.h"
 #include "./Human/include/Rendering/OPmeshBuilder.h"
 
-OPmesh OPcubeCreate(OPvec3 color) {
+OPmodel OPcubeCreate(OPvec3 color) {
 	OPmeshBuilder builder;
 	ui16 vertexSize = sizeof(OPvertexColor);
 	OPvertexColor verts[4];
@@ -63,7 +63,7 @@ OPmesh OPcubeCreate(OPvec3 color) {
 		builder.Add(&verts[0], &verts[1], &verts[2], &verts[3]);
 	}
 	
-	OPmesh result = builder.Build();
+	OPmodel result = builder.Build();
 	builder.Destroy();
 
 	return result;

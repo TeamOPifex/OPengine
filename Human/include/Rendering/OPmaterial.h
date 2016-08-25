@@ -40,6 +40,15 @@ struct OPmaterial {
 		Init(effect);
 	}
 
+	OPmaterialParam* GetParam(const OPchar* name) {
+		for (OPuint i = 0; i < paramIndex; i++) {
+			if (OPstringEquals(params[i].name, name)) {
+				return &params[i];
+			}
+		}
+		return NULL;
+	}
+
 	void SetDepth(bool val) {
 		depth = val;
 	}
@@ -191,8 +200,9 @@ inline void OPmaterialBind(OPmaterial* material) {
 	}
 }
 
+extern OPuint OPMATERIALINSTANCE_GLOBAL_ID;
 struct OPmaterialInstance {
-	OPmaterial* rootMaterial;
+	OPmaterial* rootMaterial = NULL;
 	OPmaterialParam params[OPMATERIAL_MAX_UNIFORMS];
 	OPuint paramIndex;
 	ui64 id;
@@ -205,6 +215,7 @@ struct OPmaterialInstance {
 	void Init(OPmaterial* material) {
 		rootMaterial = material;
 		paramIndex = 0;
+		id = OPMATERIALINSTANCE_GLOBAL_ID++;
 	}
 
 	inline void ClearParams(OPmaterial* material) {
@@ -215,6 +226,15 @@ struct OPmaterialInstance {
 		OPmaterialInstance* materialInstance = OPNEW(OPmaterialInstance());
 		materialInstance->Init(material);
 		return materialInstance;
+	}
+
+	inline OPmaterialParam* GetParam(const OPchar* name) {
+		for (OPuint i = 0; i < paramIndex; i++) {
+			if (OPstringEquals(params[i].name, name)) {
+				return &params[i];
+			}
+		}
+		return NULL;
 	}
 
 	inline void AddParam(OPmaterialParamType paramType, const OPchar* name, void* data, ui8 count) {

@@ -137,12 +137,12 @@ OPstream* OPfile::ReadFromFile(const char* path, ui32 expectedSize){
 			return str;
 		}
 		else {
-			OPlog("Failed to read file");
+			OPlogErr("Failed to read file");
 			return NULL;
 		}
 	}
 	else {
-		OPlog("%s does not exist\n", path);
+		OPlogErr("%s does not exist", path);
 	}
 #endif
 		return NULL;

@@ -120,6 +120,6 @@ void OPspriteSystemRender(OPspriteSystem* system, OPcam* cam) {
 		OPeffectSet("uOffset", &currentSprite->Frames[system->SystemSprites[i].CurrentFrame].Offset);
 		OPeffectSet("uSize", &currentSprite->Frames[system->SystemSprites[i].CurrentFrame].Size);
 
-		OPmeshRender();
+		OPrenderDrawBufferIndexed(0);
 	}
 }

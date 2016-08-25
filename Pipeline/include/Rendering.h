@@ -13,10 +13,10 @@ inline void OPmeshRender3D(OPmat4* world, OPcam* cam) {
 	OPeffectSet("uWorld", world);
 	OPeffectSet("uProj", &cam->proj);
 	OPeffectSet("uView", &cam->view);
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 }
 
-inline void OPbindMeshEffectWorldCam(OPmesh* mesh, OPeffect* effect, OPmat4* world, OPcam* camera) {
+inline void OPbindMeshEffectWorldCam(OPmodel* mesh, OPeffect* effect, OPmat4* world, OPcam* camera) {
 	effect->Bind();
 	OPeffectSet("uWorld", world);
 	OPeffectSet("uProj", &camera->proj);

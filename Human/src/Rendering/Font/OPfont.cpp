@@ -92,7 +92,7 @@ void OPfont::Init() {
 	builder.Add(OPattributes::POSITION);
 	builder.Add(OPattributes::UV);
 	vertexLayout = builder.Build();
-	dummyTextNode.mesh = OPmesh(vertexLayout);
+	dummyTextNode.mesh = OPmodel(1, vertexLayout);
 
 	ui32 vertexSize = sizeof(OPvertexTex);
 	ui32 indexSize = sizeof(ui16);
@@ -225,7 +225,7 @@ OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const O
 	return OPvec2(width, height);
 }
 
-OPmesh OPfont::CreateText(OPchar* text) {
+OPmodel OPfont::CreateText(OPchar* text) {
 	ui32 vertexSize = sizeof(OPvertexTex);
 	OPindexSize indexSize = OPindexSize::SHORT;// sizeof(ui16);
 	OPvector* vertices = OPvector::Create(vertexSize);
@@ -238,8 +238,8 @@ OPmesh OPfont::CreateText(OPchar* text) {
 	builder.Add(OPattributes::POSITION);
 	builder.Add(OPattributes::UV);
 	OPvertexLayout vertexLayout = builder.Build();
-	OPmesh mesh = OPmesh(vertexLayout);
-	mesh.Build(vertexLayout, indexSize, (ui32)vertices->_size, (ui32)indices->_size, vertices->items, indices->items);
+	OPmodel mesh = OPmodel(1, vertexLayout);
+	mesh.Build((ui32)vertices->_size, (ui32)indices->_size, indexSize, vertices->items, indices->items);
 	return mesh;
 }
 
@@ -300,7 +300,7 @@ OPfontUserTextNode OPfont::CreateUserText(const OPchar* text, float scale) {
 
 	dummyTextNode.Width = size.x;
 
-	dummyTextNode.mesh.Build(dummyTextNode.mesh.vertexLayout, OPindexSize::SHORT, (ui32)vertices->_size, (ui32)indices->_size, vertices->items, indices->items);
+	dummyTextNode.mesh.Build((ui32)vertices->_size, (ui32)indices->_size, OPindexSize::SHORT, vertices->items, indices->items);
 
 	return dummyTextNode;
 }

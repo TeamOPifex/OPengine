@@ -2,7 +2,7 @@
 #include "./Human/include/Rendering/OPMvertex.h"
 #include "./Data/include/OPlist.h"
 
-OPmesh* OPgeoCreateSphere(f32 radius, ui16 widthSegments, ui16 heightSegments) {
+OPmodel* OPgeoCreateSphere(f32 radius, ui16 widthSegments, ui16 heightSegments) {
 	f32 phiStart = 0;
 	f32 phiLength = OPpi * 2;
 	f32 thetaStart = 0;
@@ -128,9 +128,7 @@ OPmesh* OPgeoCreateSphere(f32 radius, ui16 widthSegments, ui16 heightSegments) {
 	OPvertices* verticesStructure = OPverticesCreate(count, Position | Normal);
 	OPverticesWriteVec3(verticesStructure, verts, Position);
 	OPverticesWriteVec3(verticesStructure, norms, Normal);
-
-	OPmesh* mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
-
+	
 	// TODO: (garrett) Fix this
 	OPvertexLayoutBuilder builder;
 	builder.Init();
@@ -138,12 +136,11 @@ OPmesh* OPgeoCreateSphere(f32 radius, ui16 widthSegments, ui16 heightSegments) {
 	builder.Add(OPattributes::NORMAL);
 	builder.Add(OPattributes::UV);
 	OPvertexLayout vertexLayout = builder.Build();
-	*mesh = OPmesh(vertexLayout);
+	OPmodel* mesh = OPNEW(OPmodel(1, vertexLayout));
 	mesh->Build(
-		vertexLayout,
+		count,
+		indCount,
 		OPindexSize::SHORT,
-		count, 
-		indCount, 
 		verticesStructure->data, 
 		inds);
 	

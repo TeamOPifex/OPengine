@@ -132,3 +132,22 @@ void OPstringToLower(OPchar* str) {
 void OPstringScan(OPchar* destination, const OPchar* format, ...) {
 
 }
+
+i32 OPstringCount(OPchar* str, OPchar lookFor) {
+	ui32 total = 0;
+	for (ui32 i = 0; i < strlen(str); i++) {
+		if (str[i] == lookFor) {
+			total++;
+		}
+	}
+	return total;
+}
+
+i32 OPstringFirst(OPchar* str, OPchar lookFor) {
+	for (ui32 i = 0; i < strlen(str); i++) {
+		if (str[i] == lookFor) {
+			return i;
+		}
+	}
+	return -1;
+}

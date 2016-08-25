@@ -60,8 +60,8 @@ OPvertexLayoutBuilder* OPvertexLayoutBuilder::Init(ui32 features) {
 	if ((features & (OPuint)OPattributes::TANGENT) > 0) Add(OPattributes::TANGENT);
 	if ((features & (OPuint)OPattributes::BITANGENT) > 0) Add(OPattributes::BITANGENT);
 	if((features & (OPuint)OPattributes::UV) > 0) Add(OPattributes::UV);
+	if ((features & (OPuint)OPattributes::COLOR) > 0) Add(OPattributes::COLOR);
 	if((features & (OPuint)OPattributes::BONES) > 0) Add(OPattributes::BONES);
-	if((features & (OPuint)OPattributes::COLOR) > 0) Add(OPattributes::COLOR);
 	return this;
 }
 

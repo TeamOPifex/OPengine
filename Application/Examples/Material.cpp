@@ -9,7 +9,8 @@
 
 // Data for this Game State Example
 typedef struct {
-	OPmodel Model;
+	OPmodel* Model;
+	OPmat4 World;
 	OPeffect Effect;		// The Effect used to render the Mesh
 	OPmaterial Material;
 	OPcam Camera;			// The Camera to use in the Effect to render the Mesh
@@ -21,7 +22,7 @@ MaterialExample materialExample;
 
 void ExampleMaterialEnter(OPgameState* last) {
 
-	materialExample.Model.mesh = (OPmesh*)OPCMAN.LoadGet("output.opm");
+	materialExample.Model = (OPmodel*)OPCMAN.LoadGet("output.opm");
 
 	materialExample.Effect.Init("ColoredModel.vert", "ColoredModel.frag");
 
@@ -49,8 +50,8 @@ OPint ExampleMaterialUpdate(OPtimer* time) {
 	if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { materialExample.Rotation++; }
 
 	// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
-	materialExample.Model.world = OPmat4RotY(materialExample.Rotation / 100.0f);
-	OPmat4Scl(&materialExample.Model.world, 0.25f, 0.25f, 0.25f);
+	materialExample.World = OPmat4RotY(materialExample.Rotation / 100.0f);
+	OPmat4Scl(&materialExample.World, 0.25f, 0.25f, 0.25f);
 
 	return false;
 
@@ -58,7 +59,7 @@ OPint ExampleMaterialUpdate(OPtimer* time) {
 
 void ExampleMaterialRender(OPfloat delta) {
 	OPrenderClear(0.4f, 0.4f, 0.4f);
-	materialExample.Model.Draw(&materialExample.Material, &materialExample.Camera);
+	materialExample.Model->Draw(&materialExample.World, &materialExample.Material, &materialExample.Camera);
 	OPrenderPresent();
 }
 

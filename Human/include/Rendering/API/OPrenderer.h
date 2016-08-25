@@ -5,8 +5,7 @@ typedef struct OPrenderAPI OPrenderAPI;
 
 #include "./Human/include/Rendering/API/OPcontext.h"
 #include "./Human/include/Rendering/API/OPeffectAPI.h"
-#include "./Human/include/Rendering/API/OPframeBuffer2D.h"
-#include "./Human/include/Rendering/API/OPframeBufferDepth.h"
+#include "./Human/include/Rendering/API/OPframeBufferAPI.h"
 #include "./Human/include/Rendering/API/OPindexBufferAPI.h"
 #include "./Human/include/Rendering/API/OPmonitorAPI.h"
 #include "./Human/include/Rendering/API/OPshaderAPI.h"
@@ -14,9 +13,7 @@ typedef struct OPrenderAPI OPrenderAPI;
 #include "./Human/include/Rendering/API/OPshaderResource.h"
 #include "./Human/include/Rendering/API/OPshaderUniformAPI.h"
 #include "./Human/include/Rendering/API/OPtextureAPI.h"
-#include "./Human/include/Rendering/API/OPtexture2D.h"
 #include "./Human/include/Rendering/API/OPtextureCubeAPI.h"
-#include "./Human/include/Rendering/API/OPtextureDepth.h"
 #include "./Human/include/Rendering/API/OPvertexArrayAPI.h"
 #include "./Human/include/Rendering/API/OPvertexBufferAPI.h"
 #include "./Human/include/Rendering/API/OPwindowAPI.h"
@@ -39,8 +36,7 @@ struct OPrenderAPI {
 
 	OPcontext Context;
 	OPeffectAPI Effect;
-	OPframeBuffer2D FrameBuffer2D;
-	OPframeBufferDepth FrameBufferDepth;
+	OPframeBufferAPI FrameBuffer;
 	OPindexBufferAPI IndexBuffer;
 	OPmonitorAPI Monitor;
 	OPshaderAPI Shader;
@@ -48,9 +44,7 @@ struct OPrenderAPI {
 	OPshaderResource ShaderResource;
 	OPshaderUniformAPI ShaderUniform;
 	OPtextureAPI Texture;
-	OPtexture2D Texture2D;
 	OPtextureCubeAPI TextureCube;
-	OPtextureDepth TextureDepth;
 	OPvertexArrayAPI VertexArray;
 	OPvertexBufferAPI VertexBuffer;
 	OPwindowAPI Window;

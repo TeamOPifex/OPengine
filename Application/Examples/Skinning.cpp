@@ -149,7 +149,7 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 
 	OPeffectSet("uColorTexture", skinningExample->texture, 0);
 
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 
 	OPrenderPresent();
 	return false;

@@ -57,7 +57,7 @@ struct OPfont {
 	void Destroy();
 
 	OPfontGlyph* GetGlyph(OPchar charcode);
-	OPmesh CreateText(OPchar* text);
+	OPmodel CreateText(OPchar* text);
 	OPfontBuiltTextNode CreatePackedText(const OPchar* text);
 	OPfontBuiltTextNode CreatePackedText(const OPchar* text, OPfloat scale);
 	OPfontUserTextNode CreateUserText(const OPchar* text);

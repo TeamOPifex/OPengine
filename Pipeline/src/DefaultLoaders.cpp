@@ -1,5 +1,5 @@
-#include "./Pipeline/include/Loaders/OPloaderOPM.h"
 #include "./Pipeline/include/DefaultLoaders.h"
+#include "./Pipeline/include/Loaders/OPloaderOPM.h"
 #include "./Human/include/Systems/OPaudioSystem.h"
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Human/include/Systems/OPfontSystem.h"
@@ -77,10 +77,10 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 	{
 		".opm",
 		"Models/",
-		sizeof(OPmesh),
-		(OPint(*)(OPstream*, void**))OPMload,
-		(OPint(*)(void*))OPMUnload,
-		(OPint(*)(OPstream*, void**))OPMReload
+		sizeof(OPmodel),
+		(OPint(*)(OPstream*, void**))OPMloader,
+		(OPint(*)(void*))OPMunload,
+		(OPint(*)(OPstream*, void**))OPMreload
 	},
 	{
 		".opf",

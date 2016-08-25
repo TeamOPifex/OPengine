@@ -32,6 +32,7 @@ struct OPcman {
 	bool Purge();
 	bool Add(const OPchar* assetKey, OPasset* asset);
 	bool Load(const OPchar* assetKey);
+	void* LoadFromFile(const OPchar* path);
 	bool Unload(const OPchar* assetKey);
 	void* Get(const OPchar* assetKey);
 	bool Delete(const OPchar* assetKey);

@@ -27,7 +27,7 @@ void OPfontRender(OPfontUserTextNode* node, OPmat4* world) {
 	OPFONTMANAGER_EFFECT_ACTIVE->Bind();
 	OPFONTMANAGER_EFFECT_ACTIVE->Set("uWorld", world);
 	node->mesh.Bind();
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 }
 
 void OPfontRender(OPfontBuiltTextNode* node, OPmat4* world) {

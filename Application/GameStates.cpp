@@ -30,12 +30,12 @@ ui16 indexData[] = {
 	2, 0, 1
 };
 
-OPmesh* quadMesh;
+OPmodel* quadMesh;
 
 OPmeshPacked quad;
 OPmeshPacker packer;
 OPmesh unPackedQuad;
-OPmesh* plane;
+OPmodel* plane;
 OPeffect tri, post, OPss;
 OPcam camera;
 OPtexture* tex, *spec, *norm;
@@ -43,7 +43,7 @@ OPframeBuffer rt;
 OPint PackerCreated = 0;
 OPeffect eftTexScreenSpriteSheet;
 OPtexture* spriteSheet;
-OPmesh fontText;
+OPmodel fontText;
 OPfont* font;
 OPtexture* fontTexture;
 OPfontManager* fontManager;
@@ -196,7 +196,7 @@ OPint State0Update(OPtimer* time){
 	//OPlog("X: %f, Y: %f", bg->Frames[0].Offset.x, bg->Frames[0].Offset.y);
 	OPeffectSet("uOffset", &bg->Frames[0].Offset);
 	OPeffectSet("uSize", &bg->Frames[0].Size);
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 
 	// Required
 	// OPfontRender(
@@ -245,7 +245,7 @@ void State1Enter(OPgameState* last){
 
 	OPCMAN.Purge();
 
-	plane = (OPmesh*)OPCMAN.Get("BiPlane.opm");
+	plane = (OPmodel*)OPCMAN.Get("BiPlane.opm");
 	tex  = (OPtexture*)OPCMAN.Get("steamPlaneSkin.png");
 	spec = (OPtexture*)OPCMAN.Get("steamPlaneSpec.png");
 	norm = (OPtexture*)OPCMAN.Get("noneNorm.png");
@@ -295,7 +295,7 @@ OPint State1Update(OPtimer* time){
 		OPrenderClear(1.0f, 1.0f, 1.0f);
 	}
 
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 	//OPframeBufferUnbind();
 	//
 	//	OPrenderClear(1.0f, 1.0f, 1.0f);

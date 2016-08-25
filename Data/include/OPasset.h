@@ -12,9 +12,9 @@ struct OPasset {
 	OPint Dirty;
 
 #if defined(_DEBUG)
-	OPint(*Reload)(OPstream* stream, void** assetOut);
-	OPchar* FullPath;
-	i64 LastChange;
+	OPint(*Reload)(OPstream* stream, void** assetOut) = NULL;
+	OPchar* FullPath = NULL;
+	i64 LastChange = 0;
 #endif
 
 	OPasset() { }

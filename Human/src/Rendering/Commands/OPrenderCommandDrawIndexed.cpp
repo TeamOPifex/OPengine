@@ -4,7 +4,7 @@ void OPrenderCommandDrawIndex(void* data, OPcam* camera) {
 	OPrenderCommandDrawIndexed* dc = (OPrenderCommandDrawIndexed*)data;
 
 	dc->vertexArray->Bind();
-	dc->vertexBuffer->Bind();
+	//dc->vertexBuffer->Bind();
 	dc->indexBuffer->Bind();
 	dc->material->Bind();
 
@@ -13,31 +13,39 @@ void OPrenderCommandDrawIndex(void* data, OPcam* camera) {
 	// Per mesh Shader Data
 	OPeffectSet("uWorld", dc->world);
 
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(dc->startIndex);
 }
 
-OPrenderCommandDrawIndexed* OPrenderCommandDrawIndexed::Set(OPmodel* model, OPmaterialInstance* material) {
+OPrenderCommandDrawIndexed* OPrenderCommandDrawIndexed::Set(OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) {
 
-	ui64 meshId = model->mesh->Id << 0;     // 00 - 06 bits
+	ui64 meshId = mesh->id << 0;     // 00 - 06 bits
 	ui64 materialId = material->id << 12;   // 13 - 19 bits
 	ui64 renderTarget = 0 << 18;            // 20 - 26 bits
 	key = meshId | materialId | renderTarget;
 
-	startIndex = 0;
-	baseVertex = 0;
+	this->startIndex = mesh->offset;
+	this->baseVertex = 0;
 	this->material = material;
-	indexCount = model->mesh->IndexCount;
-	vertexArray = &model->mesh->vertexArray;
-	vertexBuffer = &model->mesh->vertexBuffer;
-	indexBuffer = &model->mesh->indexBuffer;
-	world = &model->world;
-	dispatch = OPrenderCommandDrawIndex;
+	this->indexCount = mesh->count;
+	this->vertexArray = mesh->vertexArray;
+	this->vertexBuffer = mesh->vertexBuffer;
+	this->indexBuffer = mesh->indexBuffer;
+	this->world = world;
+	this->dispatch = OPrenderCommandDrawIndex;
 
 	return this;
 }
 
-void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmaterialInstance* material) {
+void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterialInstance* material) {
+	for (ui32 i = 0; i < model->meshCount; i++) {
+		OPrenderCommandDrawIndexed* dc = commandBucket->CreateDrawIndexed();
+		dc->Set(&model->meshes[i], world, material);
+		commandBucket->Submit(dc->key, dc->dispatch, dc);
+	}
+}
+
+void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) {
 	OPrenderCommandDrawIndexed* dc = commandBucket->CreateDrawIndexed();
-	dc->Set(model, material);
+	dc->Set(mesh, world, material);
 	commandBucket->Submit(dc->key, dc->dispatch, dc);
 }

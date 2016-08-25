@@ -34,10 +34,11 @@ JS_RETURN_VAL _OPcommandBucketCreateDrawIndexedSubmit(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
 	OPrenderCommandBucket* ptr = JS_GET_ARG_PTR(args, 0, OPrenderCommandBucket);
-    OPmodel* model = JS_GET_ARG_PTR(args, 1, OPmodel);
-    OPmaterialInstance* material = JS_GET_ARG_PTR(args, 2, OPmaterialInstance);
+	OPmodel* model = JS_GET_ARG_PTR(args, 1, OPmodel);
+	OPmat4* world = JS_GET_ARG_PTR(args, 2, OPmat4);
+    OPmaterialInstance* material = JS_GET_ARG_PTR(args, 3, OPmaterialInstance);
 
-    ptr->Submit(model, material);
+    ptr->Submit(model, world, material);
 
     JS_RETURN_NULL;
 }

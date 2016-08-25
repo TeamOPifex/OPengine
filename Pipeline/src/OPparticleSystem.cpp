@@ -6,7 +6,7 @@
 #include "./Data/include/OPcman.h"
 
 int PARTICLE_SYSTEM_INITIALIZED = 0;
-OPmesh* PARTICLE_SYSTEM_QUAD_MESH;
+OPmodel* PARTICLE_SYSTEM_QUAD_MESH;
 OPeffect* EFFECT_PARTICLE_SYSTEM;
 
 void OPparticleSysInit(OPeffect* effect) {
@@ -138,7 +138,7 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 
 			OPeffectSet("uTint", (OPvec4*)&p->Tint);
 			OPeffectSet("uWorld", 1, &world);
-			OPmeshRender();
+			OPrenderDrawBufferIndexed(0);
 		}
 	}
 	else {
@@ -154,7 +154,7 @@ void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(O
 
 			OPeffectSet("uTint", (OPvec4*)&p->Tint);
 			OPeffectSet("uWorld", 1, &world);
-			OPmeshRender();
+			OPrenderDrawBufferIndexed(0);
 		}
 	}
 

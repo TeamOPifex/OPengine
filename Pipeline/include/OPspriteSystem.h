@@ -27,7 +27,7 @@ struct OPspriteSystemSprite {
 };
 
 struct OPspriteSystem {
-	OPmesh* _mesh;
+	OPmodel* _mesh;
 	OPspriteSystemSprite* SystemSprites;
 	OPspriteSystemAlign Align;
 	OPuint Count;

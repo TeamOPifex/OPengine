@@ -3,7 +3,7 @@
 #include "./Human/include/Rendering/Primitives/OPquad.h"
 
 int SPRITE_3D_INITIALIZED = 0;
-OPmesh* SPRITE_3D_QUAD_MESH;
+OPmodel* SPRITE_3D_QUAD_MESH;
 OPeffect* EFFECT_SPRITE_3D;
 
 void OPsprite3DInit(OPeffect* effect) {
@@ -141,12 +141,12 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 
 void OPsprite3DRender(OPsprite3D* sprite, OPcam* camera) {
 	OPsprite3DPrepRender(sprite, camera, OPVEC3_ZERO, 0);
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 }
 
 void OPsprite3DRenderOffsetRot(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfloat rotation) {
 	OPsprite3DPrepRender(sprite, camera, offset, rotation);
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 }
 
 

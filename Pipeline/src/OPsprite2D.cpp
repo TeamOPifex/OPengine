@@ -4,7 +4,7 @@
 #include "./Human/include/Rendering/OPrender.h"
 
 int SPRITE_2D_PIPELINE_INITIALIZED = 0;
-OPmesh* SPRITE_2D_QUAD_MESH_PIPELINE;
+OPmodel* SPRITE_2D_QUAD_MESH_PIPELINE;
 OPeffect* EFFECT_SPRITE_2D_PIPELINE;
 
 void OPsprite2DInit(OPeffect* effect) {
@@ -92,7 +92,7 @@ void OPsprite2DPrepRender(OPsprite2D* sprite) {
 
 void OPsprite2DRender(OPsprite2D* sprite) {
 	OPsprite2DPrepRender(sprite);
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 }
 
 

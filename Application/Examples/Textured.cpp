@@ -6,7 +6,7 @@
 #include "./Human/include/Systems/OPinputSystem.h"
 
 typedef struct {
-	OPmesh* Mesh;
+	OPmodel* Mesh;
 	OPeffect Effect;
 	OPcam Camera;
 	ui32 Rotation;
@@ -24,10 +24,10 @@ void ExampleTexturedEnter(OPgameState* last) {
 	texturedExample = (TexturedExample*)OPalloc(sizeof(TexturedExample));
 
 	OPjson* meta = (OPjson*)OPCMAN.LoadGet("Models/adobe.opm.meta");
-	const OPchar* _model = meta->Get("model").String();
-	const OPchar* _texture = meta->Get("texture").String();
+	const OPchar* _model = "candles.opm";// meta->Get("model").String();
+	const OPchar* _texture = "cemetery.png";// meta->Get("texture").String();
 
-	texturedExample->Mesh = (OPmesh*)OPCMAN.LoadGet(_model);
+	texturedExample->Mesh = (OPmodel*)OPCMAN.LoadGet(_model);
 	texturedExample->Texture = (OPtexture*)OPCMAN.LoadGet(_texture);
 	texturedExample->Rotation = 0;
 
@@ -71,6 +71,7 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 
 	OPmat4 world;
 	world = OPmat4RotY(texturedExample->Rotation / 100.0f);
+	world.Scl(0.1f);
 
 	OPeffectSet("uColorTexture", texturedExample->Texture, 0);
 
@@ -81,7 +82,7 @@ OPint ExampleTexturedUpdate(OPtimer* time) {
 	//OPvec3 light = OPvec3Create(0, 1, 0);
 	//OPeffectSet("vLightDirection", &light);
 
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 
 	OPrenderPresent();
 	return false;

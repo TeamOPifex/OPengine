@@ -7,6 +7,7 @@ struct OPmaterialPBRInstance;
 
 struct OPmaterialPBR {
 	OPmaterial rootMaterial;
+	OPeffect* internalEffect = NULL;
 	OPvec4 lightColor;
 	OPvec3 lightDirection;
 	OPfloat lightIntensity;
@@ -17,13 +18,31 @@ struct OPmaterialPBR {
 		rootMaterial.AddParam("uPreintegratedFG", (OPtexture*)OPCMAN.LoadGet("PreintegratedFG.png"), 6);
 	}
 
+	inline OPmaterial* Base() { return &rootMaterial;  }
+
+	inline void SetCamera(OPcam* camera) {
+		rootMaterial.AddParam("uCamPos", &camera->pos);
+	}
+
 	void Init(OPeffect* effect);
+	inline void Init() {
+		internalEffect = OPNEW(OPeffect("Common/PBR.vert", "Common/PBR.frag"));
+		Init(internalEffect);
+	}
 	OPmaterialPBRInstance* CreateInstance();
+
+	inline void Destroy() {
+		if (internalEffect != NULL) {
+			internalEffect->Destroy();
+			OPfree(internalEffect);
+		}
+		rootMaterial.Destroy();
+	}
 };
 
 struct OPmaterialPBRInstance {
-	OPmaterialPBR* rootMaterial;
 	OPmaterialInstance rootMaterialInstance;
+	OPmaterialPBR* rootMaterial;
 
 	OPfloat albedoUsage;
 	OPfloat specularUsage;
@@ -38,8 +57,48 @@ struct OPmaterialPBRInstance {
 	OPmaterialPBRInstance(OPmaterialPBR* material) {
 		Init(material);
 	}
+	OPmaterialPBRInstance(OPmaterialPBRInstance* instance) {
+		Init(instance->rootMaterial);
+		albedoUsage = instance->albedoUsage;
+		specularUsage = instance->specularUsage;
+		glossUsage = instance->glossUsage;
+		normalUsage = instance->normalUsage;
+		albedoColor = instance->albedoColor;
+		specularColor = instance->specularColor;
+		glossColor = instance->glossColor;
+		normalColor = instance->normalColor;
+		OPmaterialParam* param = NULL;
+		param = instance->GetParam("uAlbedoMap");
+		if (param != NULL) {
+			rootMaterialInstance.params[rootMaterialInstance.paramIndex++] = *param;
+		}
+		param = instance->GetParam("uSpecularMap");
+		if (param != NULL) {
+			rootMaterialInstance.params[rootMaterialInstance.paramIndex++] = *param;
+		}
+		param = instance->GetParam("uGlossMap");
+		if (param != NULL) {
+			rootMaterialInstance.params[rootMaterialInstance.paramIndex++] = *param;
+		}
+		param = instance->GetParam("uNormalMap");
+		if (param != NULL) {
+			rootMaterialInstance.params[rootMaterialInstance.paramIndex++] = *param;
+		}
+		param = instance->GetParam("uEnvironmentMap");
+		if (param != NULL) {
+			rootMaterialInstance.params[rootMaterialInstance.paramIndex++] = *param;
+		}
+	}
 
 	void Init(OPmaterialPBR* material);
+
+	inline OPmaterialInstance* Base() {
+		return &rootMaterialInstance;
+	}
+
+	inline OPmaterialParam* GetParam(const OPchar* name) {
+		return rootMaterialInstance.GetParam(name);
+	}
 
 	inline void SetAlbedoMap(OPtexture* texture) {
 		rootMaterialInstance.AddParam("uAlbedoMap", texture, 0);
@@ -79,5 +138,9 @@ struct OPmaterialPBRInstance {
 
 	inline void SetEnvironmentMap(OPtextureCube* textureCube) {
 		rootMaterialInstance.AddParam("uEnvironmentMap", textureCube, 4);
+	}
+	
+	inline OPmaterialPBRInstance* Clone() {
+		return OPNEW(OPmaterialPBRInstance(this));
 	}
 };

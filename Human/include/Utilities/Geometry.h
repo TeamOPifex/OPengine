@@ -1,5 +1,5 @@
 #pragma once
 
-#include "./Human/include/Rendering/OPmesh.h"
+#include "./Human/include/Rendering/OPmodel.h"
 
-OPmesh* OPgeoCreateSphere(f32 radius, ui16 widthSegments, ui16 heightSegments);
+OPmodel* OPgeoCreateSphere(f32 radius, ui16 widthSegments, ui16 heightSegments);

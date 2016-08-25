@@ -23,6 +23,7 @@ struct OPwindowAPI {
 	void(*SetCursorPos)(OPwindow* window, OPvec2 pos) = 0;
 	bool(*GetButtonState)(OPwindow* window, OPmouseButton mouseButton) = 0;
 	bool(*GetKeyboardState)(OPwindow* window, OPkeyboardKey keyboardkey) = 0;
+	void(*SetDropCallback)(OPwindow* window, void(*callback)(OPuint count, const OPchar**)) = 0;
 	void(*Unbind)(OPwindow* window) = 0;
 	void(*Destroy)(OPwindow* window) = 0;
 

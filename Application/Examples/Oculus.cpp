@@ -76,8 +76,9 @@ OPint ExampleOculusUpdate(OPtimer* time) {
 	OPvec3 light = OPvec3Create(0, 1, 0);
 	OPeffectSet("vLightDirection", &light);
 
-	OPmeshRender();
-	OPframeBufferUnbind();
+	OPrenderDrawBufferIndexed(0);
+
+	//OPframeBufferUnbind();
 
 	OPrenderPresent();
 

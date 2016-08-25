@@ -9,36 +9,21 @@ typedef struct OPframeBuffer OPframeBuffer;
 
 extern OPframeBuffer* OPRENDER_CURR_FRAMEBUFFER;
 
-OPframeBuffer OPframeBufferCreateShadow(ui32 width, ui32 height);
-OPframeBuffer OPframeBufferCreateDepth(OPtextureDesc desc);
-OPframeBuffer OPframeBufferCreate(OPtextureDesc desc);
-OPframeBuffer OPframeBufferCreateVR(ui32 width, ui32 height);
-void OPframeBufferDestroy(OPframeBuffer* fb);
-void OPframeBufferAttach(OPtexture* texture, ui16 pos);
-void OPframeBufferBind(OPframeBuffer* fb);
-void OPframeBufferBindRead(OPframeBuffer* fb);
-void OPframeBufferSetReadBuffer(ui16 pos);
-void OPframeBufferSetReadBufferDepth();
-void OPframeBufferBindTex(OPframeBuffer* fb);
-void OPframeBufferUnbind();
-void OPframeBufferAttachDepth(OPtexture* texture);
-
 struct OPframeBuffer {
-	OPtextureDesc Description;
-	OPtexture Texture;
-	ui32 Handle;
+	void* internalPtr;
 
-	ui32 DepthBufferId;
-	ui32 RenderTextureId;
-	ui32 RenderFramebufferId;
-	ui32 ResolveTextureId;
-	ui32 ResolveFramebufferId;
+	OPtextureDesc textureDesc;
+	OPtexture texture;
 
-	void Bind() {
-		OPframeBufferBind(this);
+	inline void Init(OPtextureDesc textureDesc) {
+		OPRENDERER_ACTIVE->FrameBuffer._Init(this, textureDesc);
 	}
 
-	void Unbind() {
-		OPframeBufferUnbind();
+	inline void Bind() {
+		OPRENDERER_ACTIVE->FrameBuffer.Bind(this);
+	}
+
+	inline void Unbind() {
+		OPRENDERER_ACTIVE->FrameBuffer.Unbind(this);
 	}
 };

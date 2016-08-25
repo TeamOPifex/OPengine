@@ -36,8 +36,8 @@ void ExampleSelectorEnter(OPgameState* last) {
 
     // The background image to use
 	OPCMAN.LoadGet("subtle-irongrip.png");
-	exampleSelector.Background = OPtexture2DCreate((OPtexture*)OPCMAN.LoadGet("subtle-irongrip.png"), NULL, OPVEC2_ZERO, OPvec2(3, 3));
-	exampleSelector.Background->Scale = OPvec2(5.0f,2.81f);
+	exampleSelector.Background = OPtexture2DCreate((OPtexture*)OPCMAN.LoadGet("subtle-irongrip.png"), NULL, OPVEC2_ZERO, OPvec2(10.0f, 10.0f));
+	exampleSelector.Background->Scale = OPvec2(10.0f, 10.0f);
 
     if(!exampleSelector.Initialized) {
        // This ensures that our menu selections stay in place
@@ -66,6 +66,7 @@ void ExampleSelectorEnter(OPgameState* last) {
            { "Cube Map", &GS_EXAMPLE_CUBE_MAP, GS_EXAMPLE_CUBE_MAP_AVAILABLE, 0 },
 
            // Intermediate
+		   { "Frame Buffer", &GS_EXAMPLE_FRAMEBUFFER, GS_EXAMPLE_FRAMEBUFFER_AVAILABLE, 1 },
            { "Command Buckets", &GS_EXAMPLE_COMMAND_BUCKET, GS_EXAMPLE_COMMAND_BUCKET_AVAILABLE, 1 },
            { "Mesh Builder", &GS_EXAMPLE_MESH_BUILDER, GS_EXAMPLE_MESH_BUILDER_AVAILABLE, 1 },
            { "Particle System", &GS_EXAMPLE_PARTICLESYSTEM, GS_EXAMPLE_PARTICLESYSTEM_AVAILABLE, 1 },

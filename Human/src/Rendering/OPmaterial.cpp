@@ -1,6 +1,7 @@
 #include "./Human/include/Rendering/OPmaterial.h"
 
 ui64 OPMATERIAL_GLOBAL_ID = 1;
+OPuint OPMATERIALINSTANCE_GLOBAL_ID = 1;
 
 void OPmaterialInit(OPmaterial* material, OPeffect* effect) {
 	material->effect = effect;

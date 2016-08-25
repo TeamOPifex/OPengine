@@ -28,6 +28,8 @@ struct OPwindow {
 		OPRENDERER_ACTIVE->Window.Init(this);
 	}
 
+	void SetDropCallback(void(*callback)(OPuint count, const OPchar**));
+
 	OPint Update();
 	void Bind();
 	void Focus();

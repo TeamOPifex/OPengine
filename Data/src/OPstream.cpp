@@ -125,6 +125,7 @@ f32 OPstream::F32() {
 
 OPchar* OPstream::String() {
 	ui32 j = 0, length = UI32();
+	if (length == 0) return "";
 	OPchar* name = (OPchar*)OPalloc(length + 1);
 	for (; j < length; j++) {
 		name[j] = I8();

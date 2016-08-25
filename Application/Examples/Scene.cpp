@@ -11,12 +11,17 @@ typedef struct {
 	OPfloat Rotation;
 	OPscene scene;
 	OPrendererForward* renderer;
-	OPmodel model;
-	OPmodel model2;
+	OPmodel* model;
+	OPmodel* model2;
+	OPmodel* model3;
+	OPsceneEntity* model1Entity;
+	OPsceneEntity* model2Entity;
+	OPsceneEntity* model3Entity;
 	OPcamFreeFlight camera;
 	OPmaterialPBR materialPBR;
 	OPtextureCube environment;
 	OPmaterialPBRInstance* materialInstance;
+	OPmaterialPBRInstance* materialInstance2;
 } SceneExample;
 
 SceneExample sceneExample;
@@ -48,18 +53,28 @@ void ExampleSceneEnter(OPgameState* last) {
 	sceneExample.materialInstance->SetNormalMap("Dagger_Normals.png");
 	sceneExample.materialInstance->SetEnvironmentMap(&sceneExample.environment);
 
-	sceneExample.model.Init("daggerpbr.opm");
-	sceneExample.model2.Init("daggerpbr.opm");
+	sceneExample.materialInstance2 = sceneExample.materialPBR.CreateInstance();
+	sceneExample.materialInstance2->SetAlbedoMap("cemetery_floor.png");
+	sceneExample.materialInstance2->SetSpecularMap("Default_Specular.png");
+	sceneExample.materialInstance2->SetGlossMap("Default_Gloss.png");
+	sceneExample.materialInstance2->SetNormalMap("Default_Normals.png");
+	sceneExample.materialInstance2->SetEnvironmentMap(&sceneExample.environment);
 
-	sceneExample.scene.Add(&sceneExample.model, &sceneExample.materialInstance->rootMaterialInstance);
-	sceneExample.scene.Add(&sceneExample.model2, &sceneExample.materialInstance->rootMaterialInstance);
+	sceneExample.model = (OPmodel*)OPCMAN.LoadGet("daggerpbr.opm");
+	sceneExample.model2 = (OPmodel*)OPCMAN.LoadGet("daggerpbr.opm");
+	sceneExample.model3 = (OPmodel*)OPCMAN.LoadGet("ground_block_2x2x2.fbx.opm");
+
+	sceneExample.model1Entity = sceneExample.scene.Add(sceneExample.model, &sceneExample.materialInstance->rootMaterialInstance);
+	sceneExample.model2Entity = sceneExample.scene.Add(sceneExample.model2, &sceneExample.materialInstance->rootMaterialInstance);
+	sceneExample.model3Entity = sceneExample.scene.Add(sceneExample.model3, &sceneExample.materialInstance2->rootMaterialInstance);
 }
 
 OPint ExampleSceneUpdate(OPtimer* time) {
 	sceneExample.camera.Update(time);
 	sceneExample.Rotation += time->Elapsed * 0.25f;
-	sceneExample.model.world.SetRotY(sceneExample.Rotation / 200.0f)->Scl(1.0f);
-	sceneExample.model2.world.SetScl(1.0f)->Translate(-45, 0, 0);
+	sceneExample.model1Entity->world.SetRotY(sceneExample.Rotation / 200.0f)->Scl(1.0f);
+	sceneExample.model2Entity->world.SetScl(1.0f)->Translate(-45, 0, 0);
+	sceneExample.model3Entity->world.SetScl(1.0f)->Translate(45, 0, 0);
 	return false;
 }
 

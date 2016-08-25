@@ -31,11 +31,13 @@ ui16 _quadIndexData[] = {
 };
 
 typedef struct {
-	OPmodel Model;
-	OPmodel Ground;
+	OPmodel* Model;
+	OPmat4 ModelWorld;
+	OPmodel* Ground;
+	OPmat4 GroundWorld;
 	OPmaterial ModelMaterials[2];
 	OPmaterial GroundMaterials[2];
-	OPmesh GroundMesh;
+	OPmodel GroundMesh;
 	OPtexture* ModelTexture;
 	OPtexture* GroundTexture;
 	OPframeBuffer ShadowFrameBuffer;
@@ -58,25 +60,25 @@ typedef struct {
 		LightPosition = OPvec3Create(0, 10, 0);
 
 		// Load the model to be drawn
-		Model.mesh = (OPmesh*)OPCMAN.LoadGet("Sheep.opm");
-		Model.world = OPmat4Translate(0, 0, 0);
-		Model.world *= OPmat4Scl(8.0f);
+		Model = (OPmodel*)OPCMAN.LoadGet("Sheep.opm");
+		ModelWorld = OPmat4Translate(0, 0, 0);
+		ModelWorld *= OPmat4Scl(8.0f);
 
 		// Create the ground quad
 		OPvertexLayoutBuilder builder;
 		builder.Init((ui32)OPattributes::POSITION | (ui32)OPattributes::NORMAL | (ui32)OPattributes::UV);
 		OPvertexLayout vertexLayout = builder.Build();
-		GroundMesh = OPmesh(vertexLayout);
+		GroundMesh = OPmodel(1, vertexLayout);
 		GroundMesh.Build(
-			vertexLayout, OPindexSize::SHORT,
-			4, 6,
+			4, 6, OPindexSize::SHORT,
 			_quadVertNormData, _quadIndexData
 		);
 		GroundMesh.vertexLayout.stride = sizeof(OPfloat) * 8;
 
+
 		//GroundMesh = OPquadCreateZPlane(50, 50);// OPquadCreate(GROUND, GROUND, OPVEC2_ZERO, OPVEC2_ZERO, OPVEC2_ONE);
-		Ground.mesh = &GroundMesh;
-		Ground.world = OPmat4Scl(1.0);
+		//Ground = OPmodel(1, GroundMe->Init((OPmodel**)&GroundMesh, 1);
+		GroundWorld = OPmat4Scl(1.0);
 		//Ground.world.RotX(OPpi_2)->RotZ(OPpi);
 		//Ground.world.RotX(OPpi_2)->RotZ(OPpi);
 
@@ -194,7 +196,7 @@ typedef struct {
 		OPmaterialAddParam(&ModelMaterials[1], "uViewShadow", &ShadowCamera.view);
 		OPmaterialAddParam(&ModelMaterials[1], "uProjShadow", &ShadowCamera.proj);
 		OPmaterialAddParam(&ModelMaterials[1], "uColorTexture", ModelTexture, 0);
-		OPmaterialAddParam(&ModelMaterials[1], "uShadow", &ShadowFrameBuffer.Texture, 1);
+		OPmaterialAddParam(&ModelMaterials[1], "uShadow", &ShadowFrameBuffer.texture, 1);
 		OPmaterialAddParam(&ModelMaterials[1], "uLightPos", &ShadowCamera.pos);
 		OPmaterialAddParam(&ModelMaterials[1], "uViewPos", &Camera.Camera.pos);
 
@@ -202,7 +204,7 @@ typedef struct {
 		OPmaterialAddParam(&GroundMaterials[1], "uViewShadow", &ShadowCamera.view);
 		OPmaterialAddParam(&GroundMaterials[1], "uProjShadow", &ShadowCamera.proj);
 		OPmaterialAddParam(&GroundMaterials[1], "uColorTexture", ModelTexture, 0);
-		OPmaterialAddParam(&GroundMaterials[1], "uShadow", &ShadowFrameBuffer.Texture, 1);
+		OPmaterialAddParam(&GroundMaterials[1], "uShadow", &ShadowFrameBuffer.texture, 1);
 		OPmaterialAddParam(&GroundMaterials[1], "uLightPos", &ShadowCamera.pos);
 		OPmaterialAddParam(&GroundMaterials[1], "uViewPos", &Camera.Camera.pos);
 
@@ -237,7 +239,7 @@ typedef struct {
 
 			OPrenderClear(0, 0, 0);
 
-			Model.Draw(&ModelMaterials[0], &ShadowCamera);
+			Model->Draw(&ModelWorld, &ModelMaterials[0], &ShadowCamera);
 
 			//Ground.Draw(&GroundMaterials[0], &ShadowCamera);
 
@@ -247,11 +249,11 @@ typedef struct {
 		OPrenderClear(0.1f, 0.1f, 0.1f);
 
 		if (ViewFromLight) {
-			Model.Draw(&ModelMaterials[1], &ShadowCamera);
-			Ground.Draw(&ModelMaterials[1], &ShadowCamera);
+			Model->Draw(&ModelWorld, &ModelMaterials[1], &ShadowCamera);
+			GroundMesh.Draw(&GroundWorld, &ModelMaterials[1], &ShadowCamera);
 		} else {
-			Model.Draw(&ModelMaterials[1], &Camera.Camera);
-			Ground.Draw(&GroundMaterials[1], &Camera.Camera);
+			Model->Draw(&ModelWorld, &ModelMaterials[1], &Camera.Camera);
+			GroundMesh.Draw(&GroundWorld, &GroundMaterials[1], &Camera.Camera);
 		}
 
 		//OPtexture2DRender(shadow2D);

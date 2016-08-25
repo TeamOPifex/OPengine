@@ -89,7 +89,7 @@ OPint ExampleSphericalCubeUpdate(OPtimer* time) {
 		OPeffectSet("vLightDirection", &sphericalCubeExample->LightDirection);
 
 		// Renders to the screen the currently bound Mesh (sphericalCubeExample->Mesh)
-		OPmeshRender();
+		OPrenderDrawBufferIndexed(0);
 	}
 
 	// Swaps the back buffer

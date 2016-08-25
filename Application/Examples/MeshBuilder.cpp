@@ -9,7 +9,7 @@
 
 // Data for this Game State Example
 typedef struct {
-	OPmesh Mesh;			// The Mesh to render
+	OPmodel Mesh;			// The Mesh to render
 	OPeffect Effect;		// The Effect used to render the Mesh
 	OPcam Camera;			// The Camera to use in the Effect to render the Mesh
 	ui32 Rotation;			// The amount to rotate the Mesh
@@ -50,7 +50,7 @@ OPint ExampleMeshBuilderUpdate(OPtimer* time) {
 	OPrenderClear(0.4f, 0.4f, 0.4f);
 	OPbindMeshEffectWorldCam(&meshBuilderExample.Mesh, &meshBuilderExample.Effect, &world, &meshBuilderExample.Camera);
 
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 	OPrenderPresent();
 
 	return 0;
