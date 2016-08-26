@@ -1,10 +1,14 @@
 #include "./Human/include/Rendering/OPscene.h"
 
-void OPscene::Init(OPrenderer* renderer, ui32 maxEntities) {
+void OPscene::Init(OPrenderer* renderer, ui32 maxEntities, ui32 maxLights) {
 	
 	index = 0;
 	count = maxEntities;
 	entities = OPALLOC(OPsceneEntity, count);
+
+	lightIndex = 0;
+	lightCount = maxLights;
+	lights = OPALLOC(OPsceneLight, lightCount);
 
 	internalCamera.SetPerspective(OPvec3(2), OPvec3(0));
 	camera = &internalCamera;
@@ -25,6 +29,14 @@ OPsceneEntity* OPscene::Add(OPmodel* model) {
 	return &entities[index++];
 }
 
+OPsceneLight* OPscene::Add(OPlightSpot light) {
+	lights[lightIndex].light = light;
+	lights[lightIndex].world = OPMAT4_IDENTITY;
+	lights[lightIndex].world.Translate(light.position);
+	lights[lightIndex].world.Scl(light.radius);
+	return &lights[lightIndex++];
+}
+
 OPint OPscene::Update(OPtimer* timer) {
 	return 0;
 }
@@ -37,9 +49,14 @@ void OPscene::Render(OPfloat delta) {
 		renderer->Submit(entities[i].model, &entities[i].world, entities[i].material);
 	}
 
+	for (ui32 i = 0; i < lightIndex; i++) {
+		renderer->Submit(&lights[i].light, &lights[i].world);
+	}
+
 	renderer->End();
 
 	renderer->Present();
+
 }
 
 void OPscene::Destroy() {

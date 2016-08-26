@@ -15,21 +15,42 @@ ui32 OPtextureWrapToGL(OPtextureWrap textureWrap) {
 	return 0;
 }
 
+ui32 OPtextureInternalFormatToGL(OPtextureFormat textureFormat) {
+	switch (textureFormat)
+	{
+	case OPtextureFormat::RGBA: return GL_RGBA;
+	case OPtextureFormat::RGB: return GL_RGB;
+	case OPtextureFormat::LUMINANCE: return GL_LUMINANCE;
+	case OPtextureFormat::LUMINANCE_ALPHA: return GL_LUMINANCE_ALPHA;
+	case OPtextureFormat::RGB16F: return GL_RGB16F;
+	}
+	return 0;
+}
+
 ui32 OPtextureFormatToGL(OPtextureFormat textureFormat) {
 	switch (textureFormat)
 	{
-		case OPtextureFormat::RGBA: return GL_RGBA;
-		case OPtextureFormat::RGB: return GL_RGB;
-		case OPtextureFormat::LUMINANCE: return GL_LUMINANCE;
-		case OPtextureFormat::LUMINANCE_ALPHA: return GL_LUMINANCE_ALPHA;
+	case OPtextureFormat::RGBA: return GL_RGBA;
+	case OPtextureFormat::RGB: return GL_RGB;
+	case OPtextureFormat::LUMINANCE: return GL_LUMINANCE;
+	case OPtextureFormat::LUMINANCE_ALPHA: return GL_LUMINANCE_ALPHA;
+	case OPtextureFormat::RGB16F: return GL_RGB;
 	}
 	return 0;
 }
 
 ui32 OPtextureFilterToGL(OPtextureFilter textureFilter) {
 	switch (textureFilter) {
-		case OPtextureFilter::LINEAR: return GL_LINEAR;
-		case OPtextureFilter::NEAREST: return GL_NEAREST;
+	case OPtextureFilter::LINEAR: return GL_LINEAR;
+	case OPtextureFilter::NEAREST: return GL_NEAREST;
+	}
+	return 0;
+}
+
+ui32 OPtextureTypeToGL(OPtextureType textureType) {
+	switch (textureType) {
+	case OPtextureType::BYTE: return GL_UNSIGNED_BYTE;
+	case OPtextureType::FLOAT: return GL_FLOAT;
 	}
 	return 0;
 }
@@ -43,11 +64,13 @@ OPtexture* OPtextureGLInit(OPtexture* texture, OPtextureDesc textureDesc, const 
 	OPGLFN(glActiveTexture(GL_TEXTURE0 + 0));
 	OPGLFN(glBindTexture(GL_TEXTURE_2D, internalPtr->Handle));
 
+	ui32 textureInternalFormat = OPtextureInternalFormatToGL(textureDesc.format);
 	ui32 textureFormat = OPtextureFormatToGL(textureDesc.format);
 	ui32 textureFilter = OPtextureFilterToGL(textureDesc.filter);
 	ui32 textureWrap = OPtextureWrapToGL(textureDesc.wrap);
+	ui32 textureType = OPtextureTypeToGL(textureDesc.textureType);
 
-	OPGLFN(glTexImage2D(GL_TEXTURE_2D, 0, textureFormat, textureDesc.width, textureDesc.height, 0, textureFormat, GL_UNSIGNED_BYTE, pixelData));
+	OPGLFN(glTexImage2D(GL_TEXTURE_2D, 0, textureInternalFormat, textureDesc.width, textureDesc.height, 0, textureFormat, textureType, pixelData));
 	OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, textureFilter));
 	OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, textureFilter));
 	OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWrap));

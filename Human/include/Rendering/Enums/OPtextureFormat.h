@@ -7,5 +7,6 @@ enum struct OPtextureFormat
 	RGBA,
 	LUMINANCE,
 	LUMINANCE_ALPHA,
-	DEPTH
+	DEPTH,
+	RGB16F
 };

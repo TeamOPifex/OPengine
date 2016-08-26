@@ -8,6 +8,11 @@ void OPmodel::Init(OPuint meshCount, OPvertexLayout vertexLayout) {
 	vertexBuffer.Init()->Bind();
 	indexBuffer.Init()->Bind(); 
 	vertexArray.SetLayout(&vertexLayout);
+	for (ui32 i = 0; i < meshCount; i++) {
+		this->meshes[i].vertexArray = &vertexArray;
+		this->meshes[i].vertexBuffer = &vertexBuffer;
+		this->meshes[i].indexBuffer = &indexBuffer;
+	}
 }
 
 void OPmodel::Draw(OPmat4* world, OPmaterial* material, OPcam* cam) {
@@ -33,6 +38,8 @@ void OPmodel::Build(ui32 vertexCount, ui32 indexCount, OPindexSize indexSize, vo
 	vertexBuffer.SetData(vertexLayout.stride, vertexCount, vertices);
 	indexBuffer.SetData(indexSize, indexCount, indices);
 	this->vertexLayout = vertexLayout;
+	meshes[0].count = indexCount;
+	meshes[0].offset = 0;
 }
 
 void OPmodel::Destroy() {

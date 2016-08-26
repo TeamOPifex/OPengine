@@ -4,12 +4,13 @@
 #include "./Pipeline/include/Rendering.h"
 #include "./Human/include/Systems/OPinputSystem.h"
 #include "./Human/include/Systems/OPrenderSystem.h"
+#include "./Human/include/Rendering/Primitives/OPsphere.h"
 #include "./Data/include/OPcman.h"
 
 
 // Data for this Game State Example
 typedef struct {
-	OPmodel Mesh;			// The Mesh to render
+	OPmodel* Mesh;			// The Mesh to render
 	OPeffect Effect;		// The Effect used to render the Mesh
 	OPcam Camera;			// The Camera to use in the Effect to render the Mesh
 	ui64 Rotation;			// The amount to rotate the Mesh
@@ -36,7 +37,9 @@ void ExampleModelEnter(OPgameState* last) {
 	// that's contained in the Content Manager
 	//modelExample->Mesh = OPcubeCreate(OPvec3Create(1,0,0));
 	//OPmesh* mesh = (OPmesh*)OPCMAN.LoadGet("Box.obj");
-	modelExample.Mesh = *(OPmodel*)OPCMAN.LoadGet("output.opm");
+	//modelExample.Mesh = *(OPmodel*)OPCMAN.LoadGet("output.opm");
+	OPsphere::Color = OPvec3(0, 0, 1);
+	modelExample.Mesh = OPsphere::Create(2, ((ui32)OPattributes::POSITION | (ui32)OPattributes::COLOR | (ui32)OPattributes::NORMAL));
 
 	// Sets up the camera as a perpsective camera for rendering
 	modelExample.Camera.SetPerspective(OPVEC3_ONE * 2.0, OPVEC3_ZERO);
@@ -86,7 +89,7 @@ void ExampleModelRender(OPfloat delta) {
 
 	// A helper utility which binds the Mesh, Effect and the World, View and Projection Matrices
 	// For more granular control please take a look at the Textured Example
-	OPbindMeshEffectWorldCam(&modelExample.Mesh, &modelExample.Effect, &world, &modelExample.Camera);
+	OPbindMeshEffectWorldCam(modelExample.Mesh, &modelExample.Effect, &world, &modelExample.Camera);
 
 	// Sets the vLightDirection uniform on the Effect that is currently bound (modelExample->Effect)
 	//OPeffectSet("vLightDirection", &modelExample->LightDirection);

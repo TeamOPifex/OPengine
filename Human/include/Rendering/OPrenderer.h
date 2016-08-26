@@ -6,6 +6,7 @@ typedef struct OPrenderer OPrenderer;
 #include "./Human/include/Rendering/OPcam.h"
 #include "./Human/include/Rendering/OPmesh.h"
 #include "./Human/include/Rendering/OPrenderCommandBucket.h"
+#include "./Human/include/Rendering/OPlightSpot.h"
 
 struct OPrenderer {
 	void* internalPtr;
@@ -18,7 +19,7 @@ struct OPrenderer {
 	void(*_Begin)(OPrenderer* renderer) = 0;
 	void(*_SubmitModel)(OPrenderer* renderer, OPmodel* model, OPmat4* world, OPmaterialInstance* material) = 0;
 	void(*_SubmitMesh)(OPrenderer* renderer, OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) = 0;
-	//void(*SubmitLightSetup)(const LightSetup& lightSetup) = 0;
+	void(*_SubmitLight)(OPrenderer* renderer, OPlightSpot* light, OPmat4* world) = 0;
 	void(*_End)(OPrenderer* renderer) = 0;
 	void(*_Present)(OPrenderer* renderer) = 0;
 
@@ -29,7 +30,7 @@ struct OPrenderer {
 	inline void Begin() { _Begin(this); }
 	inline void Submit(OPmodel* model, OPmat4* world, OPmaterialInstance* material) { _SubmitModel(this, model, world, material); }
 	inline void Submit(OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) { _SubmitMesh(this, mesh, world, material); }
-	//void(*SubmitLightSetup)(const LightSetup& lightSetup) = 0;
+	inline void Submit(OPlightSpot* light, OPmat4* world) { _SubmitLight(this, light, world); }
 	inline void End() { _End(this); }
 	inline void Present() { _Present(this); }
 };

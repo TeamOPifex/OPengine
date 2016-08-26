@@ -67,6 +67,7 @@ void ExampleSelectorEnter(OPgameState* last) {
 
            // Intermediate
 		   { "Frame Buffer", &GS_EXAMPLE_FRAMEBUFFER, GS_EXAMPLE_FRAMEBUFFER_AVAILABLE, 1 },
+		   { "Deferred Scene", &GS_EXAMPLE_DEFERREDSCENE, GS_EXAMPLE_DEFERREDSCENE_AVAILABLE, 1 },
            { "Command Buckets", &GS_EXAMPLE_COMMAND_BUCKET, GS_EXAMPLE_COMMAND_BUCKET_AVAILABLE, 1 },
            { "Mesh Builder", &GS_EXAMPLE_MESH_BUILDER, GS_EXAMPLE_MESH_BUILDER_AVAILABLE, 1 },
            { "Particle System", &GS_EXAMPLE_PARTICLESYSTEM, GS_EXAMPLE_PARTICLESYSTEM_AVAILABLE, 1 },

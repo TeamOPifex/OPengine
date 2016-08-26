@@ -7,20 +7,57 @@
 OPframeBuffer* OPframeBufferAPIGLInit(OPframeBuffer* framebuffer, OPtextureDesc textureDesc) {
 	OPframeBufferGL* frameBufferGL = OPNEW(OPframeBufferGL());
 	framebuffer->internalPtr = frameBufferGL;
-	framebuffer->textureDesc = textureDesc;
+	framebuffer->count = 1;
 
 	OPGLFN(glGenFramebuffers(1, &frameBufferGL->Handle));
-	OPGLFN(glGenRenderbuffers(1, &frameBufferGL->DepthHandle));
 
-	OPRENDERER_ACTIVE->Texture.Init(&framebuffer->texture, textureDesc);
-
-	OPGLFN(glBindRenderbuffer(GL_RENDERBUFFER, frameBufferGL->DepthHandle));
-	OPGLFN(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, textureDesc.width, textureDesc.height));
-
-	OPtextureGL* textureGL = (OPtextureGL*)framebuffer->texture.internalPtr;
+	// Texture Buffer
+	framebuffer->texture = OPRENDERER_ACTIVE->Texture.Create(textureDesc);
+	OPtextureGL* textureGL = (OPtextureGL*)framebuffer->texture->internalPtr;
 	OPGLFN(glBindFramebuffer(GL_FRAMEBUFFER, frameBufferGL->Handle));
 	OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureGL->Handle, 0));
+
+	// Depth Buffer
+	OPGLFN(glGenRenderbuffers(1, &frameBufferGL->DepthHandle));
+	OPGLFN(glBindRenderbuffer(GL_RENDERBUFFER, frameBufferGL->DepthHandle));
+	OPGLFN(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, textureDesc.width, textureDesc.height));
 	OPGLFN(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, frameBufferGL->DepthHandle));
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		OPlogErr("Framebuffer not complete!");
+
+	OPGLFN(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+
+	return framebuffer;
+}
+
+OPframeBuffer* OPframeBufferAPIGLInitMulti(OPframeBuffer* framebuffer, OPtextureDesc* textureDesc, ui32 count) {
+	OPframeBufferGL* frameBufferGL = OPNEW(OPframeBufferGL());
+	framebuffer->internalPtr = frameBufferGL;
+	framebuffer->count = count;
+	framebuffer->texture = OPALLOC(OPtexture, count);
+
+	OPGLFN(glGenFramebuffers(1, &frameBufferGL->Handle));
+	OPGLFN(glBindFramebuffer(GL_FRAMEBUFFER, frameBufferGL->Handle));
+
+	for (ui32 i = 0; i < count; i++) {
+		OPRENDERER_ACTIVE->Texture.Init(&framebuffer->texture[i], textureDesc[i]);
+		OPtextureGL* textureGL = (OPtextureGL*)framebuffer->texture[i].internalPtr;
+		OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, textureGL->Handle, 0));
+	}
+
+	GLuint attachments[10] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4, GL_COLOR_ATTACHMENT5, GL_COLOR_ATTACHMENT6, GL_COLOR_ATTACHMENT7, GL_COLOR_ATTACHMENT8, GL_COLOR_ATTACHMENT9 };
+	OPGLFN(glDrawBuffers(count, attachments));	
+
+
+	OPGLFN(glGenRenderbuffers(1, &frameBufferGL->DepthHandle));
+	OPGLFN(glBindRenderbuffer(GL_RENDERBUFFER, frameBufferGL->DepthHandle));
+	OPGLFN(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, textureDesc[0].width, textureDesc[0].height)); //GL_DEPTH_COMPONENT
+	OPGLFN(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, frameBufferGL->DepthHandle));
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		OPlogErr("Framebuffer not complete!");
+
 	OPGLFN(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 
 	return framebuffer;
@@ -34,7 +71,7 @@ OPframeBuffer* OPframeBufferAPIGLCreate(OPtextureDesc textureDesc) {
 void OPframeBufferAPIGLBind(OPframeBuffer* ptr) {
 	OPframeBufferGL* frameBufferGL = (OPframeBufferGL*)ptr->internalPtr;
 	OPGLFN(glBindFramebuffer(GL_FRAMEBUFFER, frameBufferGL->Handle));
-	OPGLFN(glViewport(0, 0, ptr->textureDesc.width, ptr->textureDesc.height));
+	OPGLFN(glViewport(0, 0, ptr->texture[0].textureDesc.width, ptr->texture[0].textureDesc.height));
 }
 
 void OPframeBufferAPIGLUnbind(OPframeBuffer* ptr) {
@@ -55,4 +92,5 @@ void OPframeBufferAPIGLInit(OPframeBufferAPI* frameBuffer) {
 	frameBuffer->Unbind = OPframeBufferAPIGLUnbind;
 	frameBuffer->_Create = OPframeBufferAPIGLCreate;
 	frameBuffer->_Init = OPframeBufferAPIGLInit;
+	frameBuffer->_InitMulti = OPframeBufferAPIGLInitMulti;
 }

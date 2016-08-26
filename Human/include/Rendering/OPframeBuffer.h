@@ -12,11 +12,15 @@ extern OPframeBuffer* OPRENDER_CURR_FRAMEBUFFER;
 struct OPframeBuffer {
 	void* internalPtr;
 
-	OPtextureDesc textureDesc;
-	OPtexture texture;
+	OPtexture* texture;
+	ui32 count;
 
 	inline void Init(OPtextureDesc textureDesc) {
-		OPRENDERER_ACTIVE->FrameBuffer._Init(this, textureDesc);
+		OPRENDERER_ACTIVE->FrameBuffer.Init(this, textureDesc);
+	}
+
+	inline void Init(OPtextureDesc* textureDesc, ui32 count) {
+		OPRENDERER_ACTIVE->FrameBuffer.Init(this, textureDesc, count);
 	}
 
 	inline void Bind() {
@@ -25,5 +29,9 @@ struct OPframeBuffer {
 
 	inline void Unbind() {
 		OPRENDERER_ACTIVE->FrameBuffer.Unbind(this);
+	}
+
+	inline void Destroy() {
+		OPRENDERER_ACTIVE->FrameBuffer.Destroy(this);
 	}
 };
