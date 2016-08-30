@@ -190,12 +190,12 @@ void operator delete[](void* block, const char* file, ui32 line, const char* fun
 
 void* operator new(size_t size)
 {
-	return _OPalloc(size, NULL, 0, NULL);
+	return _OPalloc(size);
 }
 
 void* operator new[](size_t size)
 {
-	return _OPalloc(size, NULL, 0, NULL);
+	return _OPalloc(size);
 }
 
 void operator delete(void* block) noexcept

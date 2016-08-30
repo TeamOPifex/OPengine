@@ -32,6 +32,12 @@ OPfmodSound* OPfmodLoad(OPchar* name) {
     return result;
 }
 
+OPfmodSound* OPfmodLoadStream(OPchar* name) {
+	OPfmodSound* result = NULL;
+	CURRENT_FMOD->createStream(name, FMOD_DEFAULT, 0, &result);
+	return result;
+}
+
 OPfmodChannel* OPfmodPlay(OPfmodSound* sound) {
     OPfmodChannel* result = NULL;
 		CURRENT_FMOD->playSound(sound, 0, false, &result);

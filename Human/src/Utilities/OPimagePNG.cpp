@@ -79,7 +79,8 @@ OPimage OPimagePNGLoadData(const OPchar* filename) {
 	return result;	
 }
 
-i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
+
+i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image, OPtextureFilter filter) {
 	ui32 error;
 	ui8* data;
 	ui32 width, height;
@@ -100,7 +101,7 @@ i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
 	desc.height = h;
 	desc.format = OPtextureFormat::RGBA;
 	desc.wrap = OPtextureWrap::REPEAT;
-	desc.filter = OPtextureFilter::LINEAR;
+	desc.filter = filter;
 
 	OPRENDERER_ACTIVE->Texture.Init(tex, desc);
 	tex->SetData(data);
@@ -111,6 +112,11 @@ i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
 	*image = tex;
 
 
+	return 1;
+}
+
+i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
+	OPimagePNGLoadStream(str, offset, image, OPtextureFilter::NEAREST);
 	return 1;
 }
 

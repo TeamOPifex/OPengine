@@ -19,6 +19,7 @@ inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPvec3*
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPvec4* data);
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPmat4* data);
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, OPmat4* data, ui8 count);
+inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, bool* data);
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, f32* data);
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, f32* data, ui8 count);
 inline void OPmaterialBind(OPmaterial* material);
@@ -97,6 +98,10 @@ struct OPmaterial {
 		OPmaterialAddParam(this, name, data);
 	}
 
+	void AddParam(const OPchar* name, bool* data) {
+		OPmaterialAddParam(this, name, data);
+	}
+
 	void AddParam(const OPchar* name, f32* data, ui8 count) {
 		OPmaterialAddParam(this, name, data, count);
 	}
@@ -155,6 +160,10 @@ inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, f32* da
 	OPmaterialAddParam(material, OPmaterialParamType::FLOAT, name, (void*)data, 1);
 }
 
+inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, bool* data) {
+	OPmaterialAddParam(material, OPmaterialParamType::BOOL, name, (void*)data, 1);
+}
+
 inline void OPmaterialAddParam(OPmaterial* material, const OPchar* name, f32* data, ui8 count) {
 	OPmaterialAddParam(material, OPmaterialParamType::FLOAT, name, (void*)data, count);
 }
@@ -194,6 +203,10 @@ inline void OPmaterialBind(OPmaterial* material) {
 			}
 			case OPmaterialParamType::FLOAT: {
 				material->effect->Set(material->params[i].name, *(f32*)material->params[i].data);
+				break;
+			}
+			case OPmaterialParamType::BOOL: {
+				material->effect->Set(material->params[i].name, *(bool*)material->params[i].data);
 				break;
 			}
 		}

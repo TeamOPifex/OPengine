@@ -6,6 +6,7 @@ typedef struct OPrenderAPI OPrenderAPI;
 #include "./Human/include/Rendering/API/OPcontext.h"
 #include "./Human/include/Rendering/API/OPeffectAPI.h"
 #include "./Human/include/Rendering/API/OPframeBufferAPI.h"
+#include "./Human/include/Rendering/API/OPframeBufferDepthAPI.h"
 #include "./Human/include/Rendering/API/OPindexBufferAPI.h"
 #include "./Human/include/Rendering/API/OPmonitorAPI.h"
 #include "./Human/include/Rendering/API/OPshaderAPI.h"
@@ -23,6 +24,7 @@ typedef struct OPrenderAPI OPrenderAPI;
 struct OPrenderAPI {
 	i8(*Init)(OPwindow* window) = 0;
 	void(*_Clear)(OPvec4 color) = 0;
+	void(*ClearDepth)() = 0;
 	void(*Present)() = 0;
 	void(*SetDepthTesting)(bool state) = 0;
 	void(*SetDepthWrite)(bool state) = 0;
@@ -37,6 +39,7 @@ struct OPrenderAPI {
 	OPcontext Context;
 	OPeffectAPI Effect;
 	OPframeBufferAPI FrameBuffer;
+	OPframeBufferDepthAPI FrameBufferDepth;
 	OPindexBufferAPI IndexBuffer;
 	OPmonitorAPI Monitor;
 	OPshaderAPI Shader;

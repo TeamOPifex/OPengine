@@ -38,6 +38,11 @@ inline void  OPrenderClear(f32 r, f32 g, f32 b, f32 a) {
 	OPRENDERER_ACTIVE->Clear(r, g, b, a);
 }
 
+inline void  OPrenderClearDepth() {
+	OPRENDERER_ACTIVE->ClearDepth();
+}
+
+
 inline void OPrenderCull(bool state) {
 	OPRENDERER_ACTIVE->SetCull(state);
 }
@@ -81,7 +86,6 @@ inline void  OPrenderClear(f32 r) {
 inline void  OPrenderClear(f32 r, f32 g, f32 b) {
 	OPrenderClear(r, g, b, 1.0f);
 }
-
 inline void  OPrenderClear(OPvec3 color) {
 	OPrenderClear(color.x, color.y, color.z, 1.0f);
 }

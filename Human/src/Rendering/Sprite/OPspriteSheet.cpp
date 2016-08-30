@@ -188,7 +188,7 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 	}
 
 	// load the png image data
-	OPimagePNGLoadStream(str, str->_pointer, &temp);
+	OPimagePNGLoadStream(str, str->_pointer, &temp, OPtextureFilter::NEAREST);
 #ifdef _DEBUG
 	OPlog("Loaded PNG!");
 #endif

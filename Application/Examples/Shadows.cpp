@@ -40,7 +40,7 @@ typedef struct {
 	OPmodel GroundMesh;
 	OPtexture* ModelTexture;
 	OPtexture* GroundTexture;
-	OPframeBuffer ShadowFrameBuffer;
+	OPframeBufferDepth ShadowFrameBuffer;
 	OPeffect Effect;
 	OPeffect Effect2;
 	OPeffect ShadowEffect;
@@ -68,12 +68,12 @@ typedef struct {
 		OPvertexLayoutBuilder builder;
 		builder.Init((ui32)OPattributes::POSITION | (ui32)OPattributes::NORMAL | (ui32)OPattributes::UV);
 		OPvertexLayout vertexLayout = builder.Build();
-		GroundMesh = OPmodel(1, vertexLayout);
+		GroundMesh.Init(1, vertexLayout);
+		GroundMesh.vertexLayout.stride = sizeof(OPfloat) * 8;
 		GroundMesh.Build(
 			4, 6, OPindexSize::SHORT,
 			_quadVertNormData, _quadIndexData
 		);
-		GroundMesh.vertexLayout.stride = sizeof(OPfloat) * 8;
 
 
 		//GroundMesh = OPquadCreateZPlane(50, 50);// OPquadCreate(GROUND, GROUND, OPVEC2_ZERO, OPVEC2_ZERO, OPVEC2_ONE);
@@ -115,7 +115,7 @@ typedef struct {
 
 
 
-		//const GLuint SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+		const ui32 SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 		//GLuint depthMapFBO;
 		//glGenFramebuffers(1, &depthMapFBO);
 
@@ -136,8 +136,7 @@ typedef struct {
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-		//GLfloat borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
-		//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
 
 		//glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 		//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
@@ -146,6 +145,7 @@ typedef struct {
 		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
+		ShadowFrameBuffer.Init(OPtextureDesc(SHADOW_WIDTH, SHADOW_HEIGHT, OPtextureFormat::DEPTH, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST));
 
 		//ShadowFrameBuffer.Handle = depthMapFBO;
 		////ShadowFrameBuffer.Texture.Handle = depthMap;
@@ -166,9 +166,9 @@ typedef struct {
 		//	{ "aPosition", GL_FLOAT, 3 }
 		//};
 
-		//vert = (OPshader*)OPCMAN.LoadGet("Common/DepthRTT.vert");
-		//frag = (OPshader*)OPCMAN.LoadGet("Common/DepthRTT.frag");
-		//ShadowEffect.Init(vert, frag);
+		vert = (OPshader*)OPCMAN.LoadGet("Common/DepthRTT.vert");
+		frag = (OPshader*)OPCMAN.LoadGet("Common/DepthRTT.frag");
+		ShadowEffect.Init(vert, frag);
 
 		//// Create the camera used for the shadow. This is the position
 		//// and direction of the light being used for shadows.
@@ -196,7 +196,7 @@ typedef struct {
 		OPmaterialAddParam(&ModelMaterials[1], "uViewShadow", &ShadowCamera.view);
 		OPmaterialAddParam(&ModelMaterials[1], "uProjShadow", &ShadowCamera.proj);
 		OPmaterialAddParam(&ModelMaterials[1], "uColorTexture", ModelTexture, 0);
-		OPmaterialAddParam(&ModelMaterials[1], "uShadow", &ShadowFrameBuffer.texture[0], 1);
+		OPmaterialAddParam(&ModelMaterials[1], "uShadow", &ShadowFrameBuffer.texture, 1);
 		OPmaterialAddParam(&ModelMaterials[1], "uLightPos", &ShadowCamera.pos);
 		OPmaterialAddParam(&ModelMaterials[1], "uViewPos", &Camera.Camera.pos);
 
@@ -204,7 +204,7 @@ typedef struct {
 		OPmaterialAddParam(&GroundMaterials[1], "uViewShadow", &ShadowCamera.view);
 		OPmaterialAddParam(&GroundMaterials[1], "uProjShadow", &ShadowCamera.proj);
 		OPmaterialAddParam(&GroundMaterials[1], "uColorTexture", ModelTexture, 0);
-		OPmaterialAddParam(&GroundMaterials[1], "uShadow", &ShadowFrameBuffer.texture[0], 1);
+		OPmaterialAddParam(&GroundMaterials[1], "uShadow", &ShadowFrameBuffer.texture, 1);
 		OPmaterialAddParam(&GroundMaterials[1], "uLightPos", &ShadowCamera.pos);
 		OPmaterialAddParam(&GroundMaterials[1], "uViewPos", &Camera.Camera.pos);
 
@@ -237,7 +237,7 @@ typedef struct {
 		{
 			ShadowFrameBuffer.Bind();
 
-			OPrenderClear(0, 0, 0);
+			OPrenderClearDepth();
 
 			Model->Draw(&ModelWorld, &ModelMaterials[0], &ShadowCamera);
 

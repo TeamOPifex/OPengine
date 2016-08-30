@@ -1,6 +1,7 @@
 
 #include "./Pipeline/include/OPsprite3D.h"
 #include "./Human/include/Rendering/Primitives/OPquad.h"
+#include "./Human/include/Rendering/OPrender.h"
 
 int SPRITE_3D_INITIALIZED = 0;
 OPmodel* SPRITE_3D_QUAD_MESH;
@@ -30,6 +31,7 @@ OPsprite3D* OPsprite3DCreate(OPsprite** sprites, OPeffect* effect) {
 	sprite->Direction = 1;
 	sprite->FrameRate = 24.0f;
 	sprite->Loop = 1;
+	sprite->LoopsCompleted = 0;
 	sprite->Effect = effect;
 	if (effect == NULL) {
 		sprite->Effect = EFFECT_SPRITE_3D;
@@ -45,6 +47,7 @@ void OPsprite3DCreateFill(OPsprite3D* sprite, OPsprite** sprites, OPeffect* effe
 	sprite->Direction = 1;
 	sprite->FrameRate = 24.0f;
 	sprite->Loop = 1;
+	sprite->LoopsCompleted = 0;
 	sprite->Effect = effect;
 	if (effect == NULL) {
 		sprite->Effect = EFFECT_SPRITE_3D;
@@ -63,6 +66,7 @@ void OPsprite3DUpdate(OPsprite3D* sprite, ui64 elapsed) {
 		if (sprite->CurrentFrame >= sprite->CurrentSprite->FrameCount) {
 			if (sprite->Loop) {
 				sprite->CurrentFrame = 0;
+				sprite->LoopsCompleted++;
 			}
 			else  {
 				sprite->CurrentFrame--;
@@ -71,10 +75,12 @@ void OPsprite3DUpdate(OPsprite3D* sprite, ui64 elapsed) {
 	}
 }
 
-void OPsprite3DSetSprite(OPsprite3D* sprite, i32 index) {
+void OPsprite3DSetSprite(OPsprite3D* sprite, i32 index, bool force) {
+	if (sprite->CurrentSprite == sprite->Sprites[index] && !force) return;
 	sprite->CurrentSprite = sprite->Sprites[index];
 	sprite->CurrentFrame = 0;
 	sprite->CurrentElapsed = 0;
+	sprite->LoopsCompleted = 0;
 }
 
 void OPsprite3DPrepReRender(OPsprite3D* sprite, OPvec3 offset, OPfloat rotation) {
@@ -123,12 +129,12 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	OPmat4RotY(&world, sprite->Rotation.y);
 	OPvec3 scl = sprite->Scale / 2.0f;
 	scl.x *= sprite->Direction;
-	world = OPmat4Scl(world, scl.x, scl.y, 1.0);
-	world += offset + sprite->Position;
+	world = OPmat4Scl(world, scl.x * frameSize.x, scl.y * frameSize.y, 1.0);
+	world += offset + sprite->Position + OPvec3(0, sprite->Scale.y * (frameSize.y / 2.0), 0);
 
 	//OPtextureClearActive();
 	//ui32 bind = OPtextureBind(sprite->CurrentSprite->Sheet);
-
+	
 	//OPlog("SpriteSheet %d @ %x", bind, sprite->CurrentSprite->Sheet);
 	OPeffectSet("uColorTexture", sprite->CurrentSprite->Sheet, 0);
 	//OPeffectParamf("uAlpha", 1.0f);

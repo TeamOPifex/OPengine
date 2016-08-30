@@ -37,8 +37,12 @@ i8 OPrendererInitGL(OPwindow* window) {
 	return 0;
 }
 
-void OPrendererClearGL(OPvec4 color){
+void OPrendererClearGL(OPvec4 color) {
 	OPGLFN(glClearColor(color.x, color.y, color.z, color.w));
+	OPGLFN(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+}
+
+void OPrendererClearDepthGL() {
 	OPGLFN(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
@@ -58,7 +62,12 @@ void OPrendererSetDepthTestingGL(bool state) {
 }
 
 void OPrendererSetDepthWriteGL(bool state){
-	OPGLFN(glDepthMask(state ? GL_TRUE : GL_FALSE));
+	if (state) {
+		OPGLFN(glDepthMask(GL_TRUE));
+	}
+	else {
+		OPGLFN(glDepthMask(GL_FALSE));
+	}
 }
 
 void OPrendererSetCullGL(bool state) {
@@ -133,6 +142,7 @@ void OPrendererShutdownGL() {
 #include "./Human/include/Platform/opengl/OPcontextGL.h"
 #include "./Human/include/Platform/opengl/OPeffectAPIGL.h"
 #include "./Human/include/Platform/opengl/OPframeBufferAPIGL.h"
+#include "./Human/include/Platform/opengl/OPframeBufferDepthAPIGL.h"
 #include "./Human/include/Platform/opengl/OPindexBufferGL.h"
 #include "./Human/include/Platform/opengl/OPmonitorAPIGL.h"
 #include "./Human/include/Platform/opengl/OPshaderAPIGL.h"
@@ -149,6 +159,7 @@ OPrenderAPI OPRENDERERGL;
 OPrenderAPI* OPrendererGL() {
 	OPRENDERERGL.Init = OPrendererInitGL;
 	OPRENDERERGL._Clear = OPrendererClearGL;
+	OPRENDERERGL.ClearDepth = OPrendererClearDepthGL;
 	OPRENDERERGL.Present = OPrendererPresentGL;
 	OPRENDERERGL.SetDepthTesting = OPrendererSetDepthTestingGL;
 	OPRENDERERGL.SetDepthWrite = OPrendererSetDepthWriteGL;
@@ -163,6 +174,7 @@ OPrenderAPI* OPrendererGL() {
 	OPcontextGLInit(&OPRENDERERGL.Context); 
 	OPeffectAPIGLInit(&OPRENDERERGL.Effect);
 	OPframeBufferAPIGLInit(&OPRENDERERGL.FrameBuffer);
+	OPframeBufferDepthAPIGLInit(&OPRENDERERGL.FrameBufferDepth);
 	OPindexBufferAPIGLInit(&OPRENDERERGL.IndexBuffer);
 	OPmonitorAPIGLInit(&OPRENDERERGL.Monitor);
 	OPshaderAPIGLInit(&OPRENDERERGL.Shader);

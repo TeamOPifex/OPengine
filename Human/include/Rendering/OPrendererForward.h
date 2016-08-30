@@ -27,5 +27,6 @@ struct OPrendererForward {
 	inline void Submit(OPmodel* model, OPmat4* world, OPmaterialInstance* material) { rendererRoot.Submit(model, world, material); }
 	inline void End() { rendererRoot.End(); }
 	inline void Present() { rendererRoot.Present(); }
+	inline OPrenderer* GetBase() { return &rendererRoot; }
 	void Destroy();
 };

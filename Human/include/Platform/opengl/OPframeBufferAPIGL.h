@@ -1,7 +1,7 @@
 #pragma once
 
-struct OPframeBuffer2DGL;
-typedef struct OPframeBuffer2DGL OPframeBuffer2DGL;
+struct OPframeBufferGL;
+typedef struct OPframeBufferGL OPframeBufferGL;
 
 #include "./Human/include/Rendering/API/OPframeBufferAPI.h"
 

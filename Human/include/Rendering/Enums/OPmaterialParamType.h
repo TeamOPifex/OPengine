@@ -7,5 +7,6 @@ enum struct OPmaterialParamType {
 	VECTOR3,
 	VECTOR4,
 	FLOAT,
-	TEXTURE_CUBE
+	TEXTURE_CUBE,
+	BOOL
 };
