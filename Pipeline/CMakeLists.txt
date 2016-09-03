@@ -53,6 +53,9 @@ endif()
 if(${OPIFEX_OS_IOS})
 	set_xcode_property(7_Pipeline GCC_GENERATE_DEBUGGING_SYMBOLS YES)
 endif()
+
+add_marketplace_defines()
+
 add_opifex_defines()
 add_definitions(-DGLEW_STATIC)
 
@@ -75,11 +78,3 @@ add_opifex_fmod(7_Pipeline)
 # OUTPUT BINARIES
 #########################################
 output_library(7_Pipeline "Pipeline")
-
-message(STATUS "ADDING ${ADDON}")
-if(${OPIFEX_OPTION_RELEASE})
-  SET(BINARY_RELEASE_MODE "release")
-else()
-  SET(BINARY_RELEASE_MODE "debug")
-endif()
-add_marketplace_addons(7_Pipeline "Application/${BINARY_RELEASE_MODE}/")

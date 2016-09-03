@@ -18,6 +18,8 @@ struct OPcman {
 	OPlinkedList purgeList;
 	OPvector resourceFiles;
 	OPchar* rootFolder;
+	OPchar** assetDirectories = NULL;
+	ui32 assetDirectoriesCount;
 
 #ifdef _DEBUG
 	i64 lastChecked;

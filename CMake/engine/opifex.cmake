@@ -12,6 +12,11 @@ include(${CMAKE_CURRENT_LIST_DIR}/build.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/find_packages.cmake)
 
 
+if(${OPIFEX_OPTION_RELEASE})
+  SET(BINARY_RELEASE_MODE "release")
+else()
+  SET(BINARY_RELEASE_MODE "debug")
+endif()
 
 
 ### C/C++ Build Flags

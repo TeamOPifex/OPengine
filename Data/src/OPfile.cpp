@@ -9,6 +9,8 @@
 
 #if defined(OPIFEX_WINDOWS)
 #include <share.h>
+#include <stdio.h>
+#include <fstream>
 #endif
 
 #ifdef OPIFEX_UNIX
@@ -226,14 +228,18 @@ bool OPfile::Exists(const char* path){
 #if defined(OPIFEX_UNIX)
 	return access(path, F_OK) + 1;
 #elif defined(OPIFEX_WINDOWS)
-	FILE *istream = NULL;
-	fopen_s(&istream, path, "r");
-	if (istream != NULL)
-	{
-		fclose(istream);
+	if (std::ifstream(path)) {
 		return true;
 	}
 	return false;
+	//FILE *istream = NULL;
+	//fopen_s(&istream, path, "r");
+	//if (istream != NULL)
+	//{
+	//	fclose(istream);
+	//	return true;
+	//}
+	//return false;
 #endif
 }
 

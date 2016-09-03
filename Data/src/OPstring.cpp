@@ -151,3 +151,38 @@ i32 OPstringFirst(OPchar* str, OPchar lookFor) {
 	}
 	return -1;
 }
+
+
+i32 OPstringSplit(const OPchar* str, OPchar split, OPchar*** output) {
+	ui32 counts = 1;
+
+	// Find all split characters
+	for (ui32 i = 0; i < strlen(str); i++) {
+		if (str[i] == split) {
+			counts++;
+		}
+	}
+
+	(*output) = OPALLOC(OPchar*, counts);
+	OPchar* data = OPstringCopy(str);
+
+	// If there weren't any, return  just the string
+	if (counts == 1) {
+		(*output)[0] = data;
+		return 1;
+	}
+	
+
+	ui32 ind = 0;
+	ui32 strPos = 0;
+	for (ui32 i = 0; i < strlen(str); i++) {
+		if (str[i] == split) {
+			data[i] = NULL; // Replace the split char with NULL
+			(*output)[ind++] = &data[strPos];
+			strPos = i + 1;
+		}
+	}
+	(*output)[ind++] = &data[strPos];
+
+	return counts;
+}

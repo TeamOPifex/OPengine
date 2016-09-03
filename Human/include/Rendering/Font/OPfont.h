@@ -62,6 +62,7 @@ struct OPfont {
 	OPfontBuiltTextNode CreatePackedText(const OPchar* text, OPfloat scale);
 	OPfontUserTextNode CreateUserText(const OPchar* text);
 	OPfontUserTextNode CreateUserText(const OPchar* text, OPfloat scale);
+	OPfontUserTextNode CreateUserText(const OPchar* text, OPfloat scale, f32 maxWidth);
 	OPvec2 GetSize(const OPchar* text, OPfloat scale);
 };
 

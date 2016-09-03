@@ -9,10 +9,15 @@ void OPfontRenderEnd();
 
 void OPfontRender(const OPchar* text, OPmat4* world);
 void OPfontRender(const OPchar* text, OPmat4* world, ui8 useJustWorld);
+void OPfontRenderFill(const OPchar* text, OPmat4* world, f32 maxWidth);
 
 inline void OPfontRender(const OPchar* text, OPvec2 pos) {
 	OPmat4 world = OPmat4Translate(pos.x, pos.y, 0);
 	OPfontRender(text, &world);
+}
+inline void OPfontRender(const OPchar* text, OPvec2 pos, f32 maxWidth) {
+	OPmat4 world = OPmat4Translate(pos.x, pos.y, 0);
+	OPfontRenderFill(text, &world, maxWidth);
 }
 
 inline void OPfontColor(OPvec4 color) {

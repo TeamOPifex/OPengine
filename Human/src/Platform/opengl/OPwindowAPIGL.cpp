@@ -28,7 +28,6 @@ OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameter
 		display = monitorGL->Handle;
 	}
 
-
 	OPint result = glfwInit();
 	if (!result) {
 		OPlogErr("Failed to initialize GLFW");

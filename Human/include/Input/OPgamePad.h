@@ -21,11 +21,13 @@ struct OPgamePad {
 	OPfloat axes[(ui32)OPgamePadAxis::_MAX];
 	OPfloat prevAxes[(ui32)OPgamePadAxis::_MAX];
 	OPfloat deadzone;
+	i64 rumbleTime;
+	OPfloat rumble[2];
 	bool connected;
 	bool buttons[(ui32)OPgamePadButton::_MAX];
 	bool prevButtons[(ui32)OPgamePadButton::_MAX];
 
-	void Update();
+	void Update(OPtimer* timer);
 	void Reset();
 
 	OPvec2 LeftThumb();
@@ -37,6 +39,17 @@ struct OPgamePad {
 
 	void SetDeadzone(OPfloat deadzone) {
 		this->deadzone = deadzone;
+	}
+
+	void SetRumble(OPfloat left, OPfloat right, i64 time);
+	inline void SetRumble(OPfloat left, OPfloat right) {
+		SetRumble(left, right, MAXDWORD32);
+	}
+	inline void SetRumbleShort() {
+		SetRumble(1.0, 1.0, 200);
+	}
+	inline void SetRumbleLong() {
+		SetRumble(1.0, 1.0, 500);
 	}
 
 	// Buttons

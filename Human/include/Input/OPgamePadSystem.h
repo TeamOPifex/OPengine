@@ -8,7 +8,7 @@ typedef struct OPgamePadSystem OPgamePadSystem;
 struct OPgamePadSystem {
 	OPgamePad gamePads[(ui32)OPgamePadIndex::_MAX];
 
-	void Update();
+	void Update(OPtimer* timer);
 	void Reset();
 	void SetDeadzones(OPfloat deadzone);
 	OPgamePad* Get(OPgamePadIndex index);

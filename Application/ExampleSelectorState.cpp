@@ -113,6 +113,14 @@ void ExampleSelectorEnter(OPgameState* last) {
 
 OPint ExampleSelectorUpdate(OPtimer* time) {
 
+	if (OPGAMEPADS[0]->WasPressed(OPgamePadButton::Y)) {
+		//OPGAMEPADS[0]->SetRumbleLong();
+		OPGAMEPADS[0]->SetRumble(1, 1, 10000);
+	}
+	if (OPGAMEPADS[0]->WasPressed(OPgamePadButton::B)) {
+		OPGAMEPADS[0]->SetRumbleShort();
+	}
+
    // Get the number of available options in the current category
    i32 currentCategoryCount = 0;
    for (i32 i = 0; i < TotalEntries; i++) {
@@ -197,6 +205,7 @@ void ExampleSelectorRender(OPfloat delta) {
 	OPfontRender("OPengine v0.4.6", OPvec2(50, start - 60));
 
 	exampleSelector.FontManager->scale = 0.5;
+
 
 	OPint notTheCurrentlySelectedMenuItem = 0, isActiveCategory = 0;
 	f32 r, g, b;

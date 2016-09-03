@@ -18,12 +18,17 @@ bool OPcman::Init(const OPchar* dir) {
 	resourceFiles.Init(sizeof(OPresourceFile));
 	purgeList.Init();
 	hashmap.Init(OP_CMAN_CAP);
-
-	if (dir) {
-		rootFolder = OPstringCopy(dir);
+	
+	if (dir == NULL) {
+		assetDirectoriesCount = 0;
+		rootFolder = OPstringCreateMerged(OPEXECUTABLE_PATH, "assets/");
 	}
 	else {
-		rootFolder = OPstringCreateMerged(OPEXECUTABLE_PATH, "assets/"); // OPstringCopy("assets/");
+		assetDirectoriesCount = OPstringSplit(dir, '|', &assetDirectories);
+		for (ui32 i = 0; i < assetDirectoriesCount; i++) {
+			OPlogInfo("String Split: %s", assetDirectories[i]);
+		}
+		rootFolder = OPstringCopy(assetDirectories[0]);
 	}
 
 	i32 result;
@@ -177,8 +182,21 @@ bool OPcman::Load(const OPchar* assetKey) {
 			continue;
 		}
 
+		
 		// Found the correct loader for this asset extension type
 		OPchar* fullPathToAsset = OPstringCreateMerged(loader->AssetTypePath, assetKey);
+		if (!OPfile::Exists(fullPathToAsset)) {
+			for (ui32 j = 1; j < assetDirectoriesCount; j++) {
+				OPchar* absolutePath = OPstringCreateMerged(assetDirectories[j], fullPathToAsset);
+				if (OPfile::Exists(absolutePath)) {
+					OPfree(fullPathToAsset);
+					fullPathToAsset = absolutePath;
+					break;
+				} else {
+					OPfree(absolutePath);
+				}
+			}
+		}
 		OPstream* str = GetResource(fullPathToAsset);
 		if (str == NULL) {
 			str = OPfile::ReadFromFile(fullPathToAsset, 1024);

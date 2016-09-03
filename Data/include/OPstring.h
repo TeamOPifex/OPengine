@@ -15,3 +15,4 @@ void OPstringToLower(OPchar* str);
 void OPstringScan(OPchar* destination, const OPchar* format, ...);
 i32 OPstringCount(OPchar* str, OPchar lookFor);
 i32 OPstringFirst(OPchar* str, OPchar lookFor);
+i32 OPstringSplit(const OPchar* str, OPchar split, OPchar*** output);

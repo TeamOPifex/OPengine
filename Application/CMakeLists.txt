@@ -59,7 +59,9 @@ set_target_properties(9_Application PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(9_Application PROPERTIES OUTPUT_NAME "Application")
 
 add_opifex_targets(9_Application)
-add_opifex_defines()
+
+add_marketplace_addons(9_Application "Application/${BINARY_RELEASE_MODE}/" OPIFEX_ASSETS_ADDITIONAL)
+add_opifex_defines(OPIFEX_ASSETS_ADDITIONAL)
 
 #########################################
 # ADDITIONAL FEATURES
@@ -76,11 +78,3 @@ add_opifex_steam(9_Application)
 add_opifex_fmod(9_Application)
 add_opifex_xinput(9_Application)
 add_opifex_raknet(9_Application)
-
-message(STATUS "ADDING ${ADDON}")
-if(${OPIFEX_OPTION_RELEASE})
-  SET(BINARY_RELEASE_MODE "release")
-else()
-  SET(BINARY_RELEASE_MODE "debug")
-endif()
-add_marketplace_addons(9_Application "Application/${BINARY_RELEASE_MODE}/")

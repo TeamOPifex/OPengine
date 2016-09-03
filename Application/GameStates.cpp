@@ -151,7 +151,7 @@ OPint State0Update(OPtimer* time){
 
 	//OPwebServerQueue(server, "time", (i8*)&elapsed, sizeof(ui32));
 	t += 0.005f * time->Elapsed;
-	OPGAMEPADS.Update();
+	OPGAMEPADS.Update(time);
 	OPKEYBOARD.Update(time);
 
 	if (backgroundState == 2) {
@@ -283,7 +283,7 @@ OPint State1Update(OPtimer* time){
 	//OPframeBufferBind(&rt);
 	
 	OPgamePad* _gamePad = OPGAMEPADS[0];
-	_gamePad->Update();
+	_gamePad->Update(time);
 	
 	if(_gamePad->IsConnected()) {
 		if(_gamePad->IsDown(OPgamePadButton::A) || _gamePad->IsDown(OPgamePadButton::B) || _gamePad->IsDown(OPgamePadButton::X) || _gamePad->IsDown(OPgamePadButton::Y)) {
