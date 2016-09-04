@@ -5,6 +5,7 @@ typedef struct OPspriteSheet OPspriteSheet;
 
 #include "./Human/include/Rendering/Sprite/OPsprite.h"
 #include "./Data/include/OPstream.h"
+#include "./Data/include/OPcman.h"
 
 // Used to maintain and clean up sprites that
 // have been stored in the manager
@@ -19,3 +20,5 @@ struct OPspriteSheet {
 
 OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss);
 OPint OPspriteSheetUnload(void* ss);
+
+extern OPassetLoader OPASSETLOADER_OPSS;

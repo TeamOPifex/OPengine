@@ -697,3 +697,12 @@ bool OPMloadV1(OPmodel* model, OPstream* str) {
 
 	return true;
 }
+
+OPassetLoader OPASSETLOADER_OPM = {
+	".opm",
+	"Models/",
+	sizeof(OPmodel),
+	(OPint(*)(OPstream*, void**))OPMloader,
+	(OPint(*)(void*))OPMunload,
+	(OPint(*)(OPstream*, void**))OPMreload
+};

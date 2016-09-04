@@ -5,6 +5,7 @@ typedef struct OPjson OPjson;
 
 #include "./Data/include/OPjsonType.h"
 #include "./Data/include/OPstream.h"
+#include "./Data/include/OPcman.h"
 #include <jansson.h>
 
 struct OPjson {
@@ -31,3 +32,6 @@ struct OPjson {
 
 OPint OPjsonCmanLoad(OPstream* str, void** asset);
 OPint OPjsonCmanUnload(void* asset);
+
+extern OPassetLoader OPASSETLOADER_META;
+extern OPassetLoader OPASSETLOADER_JSON;

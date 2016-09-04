@@ -28,6 +28,7 @@ ExampleSelector* exampleSelectorPtr = &exampleSelector;
 
 void ExampleSelectorEnter(OPgameState* last) {
 
+	//OPCMAN.LoadGet("cemetery.tga");
 
 	OPCMAN.Load("Ubuntu.opf");
 
@@ -35,9 +36,10 @@ void ExampleSelectorEnter(OPgameState* last) {
 
 
     // The background image to use
-	OPCMAN.LoadGet("subtle-irongrip.png");
-	exampleSelector.Background = OPtexture2DCreate((OPtexture*)OPCMAN.LoadGet("subtle-irongrip.png"), NULL, OPVEC2_ZERO, OPvec2(10.0f, 10.0f));
-	exampleSelector.Background->Scale = OPvec2(10.0f, 10.0f);
+	const OPchar* bgTex = "test.bmp"; // "subtle-irongrip.png";
+	OPCMAN.Load(bgTex);
+	exampleSelector.Background = OPtexture2DCreate((OPtexture*)OPCMAN.Get(bgTex), NULL, OPVEC2_ZERO, OPvec2(10.0f, 10.0f));
+	exampleSelector.Background->Scale = OPvec2(1.0f, 1.0f);
 
     if(!exampleSelector.Initialized) {
        // This ensures that our menu selections stay in place

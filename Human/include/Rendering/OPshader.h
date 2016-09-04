@@ -8,6 +8,7 @@ typedef struct OPshaderAttribute OPshaderAttribute;
 
 #include "./Human/include/Rendering/Enums/OPshaderType.h"
 #include "./Data/include/OPstream.h"
+#include "./Data/include/OPcman.h"
 
 struct OPshader {
 	void* internalPtr;
@@ -26,4 +27,9 @@ struct OPshaderAttribute {
 
 OPint OPshaderLoadVertex(OPstream* str, OPshader** shader);
 OPint OPshaderLoadFragment(OPstream* str, OPshader** shader);
+OPint OPshaderReloadVertex(OPstream* str, OPshader** shader);
+OPint OPshaderReloadFragment(OPstream* str, OPshader** shader);
 OPint OPshaderUnload(OPshader* shader);
+
+extern OPassetLoader OPASSETLOADER_VERT;
+extern OPassetLoader OPASSETLOADER_FRAG;

@@ -13,6 +13,7 @@ struct OPtextureDesc {
 	ui32 width;
 	ui32 height;
 	OPtextureFormat format;
+	OPtextureFormat internalFormat;
 	OPtextureWrap wrap;
 	OPtextureFilter filter;
 	OPtextureType textureType;
@@ -21,6 +22,7 @@ struct OPtextureDesc {
 		width = 0;
 		height = 0;
 		this->format = OPtextureFormat::RGBA;
+		this->internalFormat = OPtextureFormat::RGBA;
 		this->wrap = OPtextureWrap::CLAMP;
 		this->filter = OPtextureFilter::LINEAR;
 		this->textureType = OPtextureType::BYTE;
@@ -29,6 +31,7 @@ struct OPtextureDesc {
 		this->width = width;
 		this->height = height;
 		this->format = OPtextureFormat::RGBA;
+		this->internalFormat = OPtextureFormat::RGBA;
 		this->wrap = OPtextureWrap::CLAMP;
 		this->filter = OPtextureFilter::LINEAR;
 		this->textureType = OPtextureType::BYTE;
@@ -37,6 +40,7 @@ struct OPtextureDesc {
 		this->width = width;
 		this->height = height;
 		this->format = format;
+		this->internalFormat = format;
 		this->wrap = wrap;
 		this->filter = filter;
 		this->textureType = OPtextureType::BYTE;
@@ -45,6 +49,16 @@ struct OPtextureDesc {
 		this->width = width;
 		this->height = height;
 		this->format = format;
+		this->internalFormat = format;
+		this->wrap = wrap;
+		this->filter = filter;
+		this->textureType = textureType;
+	}
+	OPtextureDesc(ui32 width, ui32 height, OPtextureFormat format, OPtextureFormat internalFormat, OPtextureWrap wrap, OPtextureFilter filter, OPtextureType textureType) {
+		this->width = width;
+		this->height = height;
+		this->format = format;
+		this->internalFormat = internalFormat;
 		this->wrap = wrap;
 		this->filter = filter;
 		this->textureType = textureType;
