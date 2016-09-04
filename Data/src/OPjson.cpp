@@ -206,3 +206,22 @@ OPint OPjsonCmanUnload(void* asset) {
 	OPfree(data);
 	return 1;
 }
+
+
+OPassetLoader OPASSETLOADER_META = {
+	".meta",
+	"",
+	sizeof(OPjson),
+	(OPint(*)(OPstream*, void**))OPjsonCmanLoad,
+	(OPint(*)(void*))OPjsonCmanUnload,
+	NULL
+};
+
+OPassetLoader OPASSETLOADER_JSON = {
+	".json",
+	"",
+	sizeof(OPjson),
+	(OPint(*)(OPstream*, void**))OPjsonCmanLoad,
+	(OPint(*)(void*))OPjsonCmanUnload,
+	NULL
+};

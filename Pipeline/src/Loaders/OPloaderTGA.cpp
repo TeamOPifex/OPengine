@@ -141,3 +141,13 @@ i32 OPimageTGAUnload(void* image) {
 	OPfree(tex);
 	return 1;
 }
+
+
+OPassetLoader OPASSETLOADER_TGA = {
+	".tga",
+	"Textures/",
+	sizeof(OPtexture),
+	(OPint(*)(OPstream*, void**))OPimageTGALoad,
+	(OPint(*)(void*))OPimageTGAUnload,
+	(OPint(*)(OPstream*, void**))OPimageTGAReload
+};

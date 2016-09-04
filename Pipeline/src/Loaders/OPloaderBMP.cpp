@@ -1,7 +1,7 @@
 #include "./Pipeline/include/Loaders/OPloaderBMP.h"
 #include "./Core/include/Assert.h"
 
-i32 OPimageBMPLoad(OPstream* str, OPtexture** image) {
+OPint OPimageBMPLoad(OPstream* str, OPtexture** image) {
 	ASSERT(str != NULL, "Image not found.");
 
 	ui8* data;
@@ -65,7 +65,7 @@ i32 OPimageBMPLoad(OPstream* str, OPtexture** image) {
 }
 
 
-i32 OPimageBMPReload(OPstream* str, OPtexture** image) {
+OPint OPimageBMPReload(OPstream* str, OPtexture** image) {
 	OPlog("Reload Image BMP");
 	//OPstream* str = OPreadFile(filename);
 	OPtexture* resultTex;
@@ -78,9 +78,17 @@ i32 OPimageBMPReload(OPstream* str, OPtexture** image) {
 	return result;
 }
 
-i32 OPimageBMPUnload(void* image) {
-	OPtexture* tex = (OPtexture*)image;
-	tex->Destroy();
-	OPfree(tex);
+OPint OPimageBMPUnload(OPtexture* image) {
+	image->Destroy();
+	OPfree(image);
 	return 1;
 }
+
+OPassetLoader OPASSETLOADER_BMP = {
+	".bmp",
+	"Textures/",
+	sizeof(OPtexture),
+	(OPint(*)(OPstream*, void**))OPimageBMPLoad,
+	(OPint(*)(void*))OPimageBMPUnload,
+	(OPint(*)(OPstream*, void**))OPimageBMPReload
+};

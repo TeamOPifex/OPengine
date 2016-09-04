@@ -239,3 +239,12 @@ OPint OPspriteSheetUnload(void* ss){
 
 	return 1;
 }
+
+OPassetLoader OPASSETLOADER_OPSS = {
+	".opss",
+	"Sprites/",
+	sizeof(OPspriteSheet),
+	(OPint(*)(OPstream*, void**))OPspriteSheetLoad,
+	(OPint(*)(void*))OPspriteSheetUnload,
+	NULL
+};
