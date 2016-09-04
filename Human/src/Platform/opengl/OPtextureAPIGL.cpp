@@ -15,24 +15,13 @@ ui32 OPtextureWrapToGL(OPtextureWrap textureWrap) {
 	return 0;
 }
 
-ui32 OPtextureInternalFormatToGL(OPtextureFormat textureFormat) {
-	switch (textureFormat)
-	{
-	case OPtextureFormat::RGBA: return GL_RGBA;
-	case OPtextureFormat::RGB: return GL_RGB;
-	case OPtextureFormat::LUMINANCE: return GL_LUMINANCE;
-	case OPtextureFormat::LUMINANCE_ALPHA: return GL_LUMINANCE_ALPHA;
-	case OPtextureFormat::RGB16F: return GL_RGB16F;
-	case OPtextureFormat::DEPTH: return GL_DEPTH_COMPONENT;
-	}
-	return 0;
-}
-
 ui32 OPtextureFormatToGL(OPtextureFormat textureFormat) {
 	switch (textureFormat)
 	{
 	case OPtextureFormat::RGBA: return GL_RGBA;
 	case OPtextureFormat::RGB: return GL_RGB;
+	case OPtextureFormat::BGRA: return GL_BGRA;
+	case OPtextureFormat::BGR: return GL_BGR;
 	case OPtextureFormat::LUMINANCE: return GL_LUMINANCE;
 	case OPtextureFormat::LUMINANCE_ALPHA: return GL_LUMINANCE_ALPHA;
 	case OPtextureFormat::RGB16F: return GL_RGB;
@@ -66,7 +55,7 @@ OPtexture* OPtextureGLInit(OPtexture* texture, OPtextureDesc textureDesc, const 
 	OPGLFN(glActiveTexture(GL_TEXTURE0 + 0));
 	OPGLFN(glBindTexture(GL_TEXTURE_2D, internalPtr->Handle));
 
-	ui32 textureInternalFormat = OPtextureInternalFormatToGL(textureDesc.format);
+	ui32 textureInternalFormat = OPtextureFormatToGL(textureDesc.internalFormat);
 	ui32 textureFormat = OPtextureFormatToGL(textureDesc.format);
 	ui32 textureFilter = OPtextureFilterToGL(textureDesc.filter);
 	ui32 textureWrap = OPtextureWrapToGL(textureDesc.wrap);

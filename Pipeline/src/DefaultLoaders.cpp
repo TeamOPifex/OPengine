@@ -1,5 +1,7 @@
 #include "./Pipeline/include/DefaultLoaders.h"
 #include "./Pipeline/include/Loaders/OPloaderOPM.h"
+#include "./Pipeline/include/Loaders/OPloaderTGA.h"
+#include "./Pipeline/include/Loaders/OPloaderBMP.h"
 #include "./Human/include/Systems/OPaudioSystem.h"
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Human/include/Systems/OPfontSystem.h"
@@ -15,8 +17,24 @@ OPassetLoader OP_DEFAULT_LOADERS[OP_DEFAULT_LOADER_COUNT] = {
 		"Textures/",
 		sizeof(OPtexture),
 		(OPint(*)(OPstream*, void**))OPimagePNGLoad,
-		(OPint (*)(void*))OPimagePNGUnload,
+		(OPint(*)(void*))OPimagePNGUnload,
 		(OPint(*)(OPstream*, void**))OPimagePNGReload
+	},
+	{
+		".tga",
+		"Textures/",
+		sizeof(OPtexture),
+		(OPint(*)(OPstream*, void**))OPimageTGALoad,
+		(OPint(*)(void*))OPimageTGAUnload,
+		(OPint(*)(OPstream*, void**))OPimageTGAReload
+	},
+	{
+		".bmp",
+		"Textures/",
+		sizeof(OPtexture),
+		(OPint(*)(OPstream*, void**))OPimageBMPLoad,
+		(OPint(*)(void*))OPimageBMPUnload,
+		(OPint(*)(OPstream*, void**))OPimageBMPReload
 	},
 	{
 		".vert",
