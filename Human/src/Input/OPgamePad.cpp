@@ -2,7 +2,7 @@
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
-#include "GLFW\glfw3.h"
+#include "GLFW/glfw3.h"
 
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS) && defined(OPIFEX_UNIX)
 	//#include <GLFW/glfw3.h>
@@ -194,82 +194,8 @@ void UpdateGamePadWithGLFW(OPgamePad* c) {
 #if defined(OPIFEX_UNIX) && !defined(OPIFEX_IOS)
 void __OPlnxUpdateGamePad(OPgamePad* c){
 
-	i32  axes = 0, buttons = 0;
-	const f32* axisData   = NULL;
-	const ui8* buttonData = NULL;
-
-	// make sure the gamepad is connected
-
-    // TODO: (garrett) implement API side
-	//if(!glfwJoystickPresent((i32)c->controllerIndex)){
-		//OPlog("Controller %d not connected", (i32)c->playerIndex);
-		c->connected = 0;
-		return;
-	//}
-
-	c->connected = true;
-
-	// get axis data, andmake sure the number of axes are expected
-
-    // TODO: (garrett) implement API side
-	// axisData = glfwGetJoystickAxes(c->controllerIndex, &axes);
-
-
-    //OPlog("Axes %d", axes);
-	// if(axes != 8){
-	// 	// game pads should have 8 axes
-	// 	// 2 for each stick, and 2 for the dpad
-	// 	c->connected = 0;
-	// 	return;
-	// }
-
-	// map left stick and trigger
-	c->axes[(ui32)OPgamePadAxis::LS_X] =  axisData[0];
-	c->axes[(ui32)OPgamePadAxis::LS_Y] = -axisData[1];
-
-	c->axes[(ui32)OPgamePadAxis::RS_X] =  axisData[2];
-	c->axes[(ui32)OPgamePadAxis::RS_Y] = -axisData[3];
-
-	c->axes[(ui32)OPgamePadAxis::L2]   =  (axisData[4] + 1.0f) / 2.0f;
-	c->axes[(ui32)OPgamePadAxis::R2]   =  (axisData[5] + 1.0f) / 2.0f;
-
-	// OPlog("L %f %f %f", c->axes[OPGAMEPADAXIS_LS_X], c->axes[OPGAMEPADAXIS_LS_Y], c->axes[OPGAMEPADAXIS_L2]);
-	// OPlog("R %f %f %f", c->axes[OPGAMEPADAXIS_RS_X], c->axes[OPGAMEPADAXIS_RS_Y], c->axes[OPGAMEPADAXIS_R2]);
-
-	// if(axes == 8) {
-	// 	// map right stick and trigger
-	// 	c->axes[OPGAMEPADAXIS_RS_X] =  axisData[3];
-	// 	c->axes[OPGAMEPADAXIS_RS_Y] = -axisData[4];
-	// 	c->axes[OPGAMEPADAXIS_R2]   =  (axisData[5] + 1.0f) / 2.0f;
-	// }
-
-
-	// get button data, make sure it's all kosher
-
-    // TODO: (garrett) implement gamepad API
-    //buttonData = glfwGetJoystickButtons(c->controllerIndex, &buttons);
-	if(buttons < 10){
-		// game pads should have 10 buttons
-		OPlog("GamePad had %d buttons but has to have at least %d buttons", buttons, 10);
-		c->connected = 0;
-		return;
-	}
-
-	c->buttons[(ui32)OPgamePadButton::DPAD_LEFT]  = buttonData[2];
-	c->buttons[(ui32)OPgamePadButton::DPAD_RIGHT] = buttonData[3];
-	c->buttons[(ui32)OPgamePadButton::DPAD_UP]    = buttonData[0];
-	c->buttons[(ui32)OPgamePadButton::DPAD_DOWN]  = buttonData[1];
-	// map buttons
-	c->buttons[(ui32)OPgamePadButton::A] = buttonData[11];
-	c->buttons[(ui32)OPgamePadButton::B] = buttonData[12];
-	c->buttons[(ui32)OPgamePadButton::X] = buttonData[13];
-	c->buttons[(ui32)OPgamePadButton::Y] = buttonData[14];
-	c->buttons[(ui32)OPgamePadButton::LEFT_SHOULDER]  = buttonData[8];
-	c->buttons[(ui32)OPgamePadButton::RIGHT_SHOULDER] = buttonData[9];
-	c->buttons[(ui32)OPgamePadButton::BACK]        = buttonData[5];
-	c->buttons[(ui32)OPgamePadButton::START]       = buttonData[4];
-	c->buttons[(ui32)OPgamePadButton::LEFT_THUMB]  = buttonData[6];
-	c->buttons[(ui32)OPgamePadButton::RIGHT_THUMB] = buttonData[7];
+	UpdateGamePadWithGLFW(c);
+	return;
 }
 #endif
 //-----------------------------------------------------------------------------
@@ -302,7 +228,6 @@ void __OPwinUpdateGamePad(OPgamePad* controller){
 
 		controller->axes[(ui32)OPgamePadAxis::RS_X] = controllerState.Gamepad.sThumbRX / (OPfloat)SHRT_MAX;
 		controller->axes[(ui32)OPgamePadAxis::RS_Y] = controllerState.Gamepad.sThumbRY / (OPfloat)SHRT_MAX;
-
 #pragma endregion
 
 #pragma region Button states
@@ -366,11 +291,12 @@ void OPgamePad::Update(OPtimer* timer){
 			rumble[0] = 0;
 			rumble[1] = 0;
 		}
-
+        #ifdef OPIFEX_WINDOWS
 		XINPUT_VIBRATION vibration;
 		vibration.wLeftMotorSpeed = rumble[0] * 65535;
 		vibration.wRightMotorSpeed = rumble[1] * 65535;
 		XInputSetState((DWORD)controllerIndex, &vibration);
+        #endif
 	}
 
 
