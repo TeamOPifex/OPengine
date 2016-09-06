@@ -54,17 +54,19 @@ ui16 OPquadIndexData[] = {
 //|_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 
 OPmodel* OPquadCreate(){
-	OPvertexLayoutBuilder builder;
-	builder.Init();
-	builder.Add(OPattributes::POSITION);
-	builder.Add(OPattributes::UV);
-	OPvertexLayout vertexLayout = builder.Build();
-	OPmodel* mesh = OPNEW(OPmodel(1, vertexLayout));
-	mesh->Build(
-		4, 6, OPindexSize::SHORT,
-		OPquadVertData, OPquadIndexData
-	);
-	return mesh;
+	// OPvertexLayoutBuilder builder;
+	// builder.Init();
+	// builder.Add(OPattributes::POSITION);
+	// builder.Add(OPattributes::UV);
+	// OPvertexLayout vertexLayout = builder.Build();
+	// OPmodel* mesh = OPNEW(OPmodel(1, vertexLayout));
+	// mesh->Build(
+	// 	4, 6, OPindexSize::SHORT,
+	// 	OPquadVertData, OPquadIndexData
+	// );
+	// return mesh;
+
+    return OPquadCreate(1.0f, 1.0f, OPVEC2_ZERO, OPVEC2_ZERO, OPVEC2_ONE);
 }
 
 struct QuadPoint {
@@ -80,14 +82,14 @@ void SetQuadPoint(QuadPoint* point, f32 x, f32 y, f32 z, f32 u, f32 v) {
 }
 
 OPmodel* OPquadCreate(OPfloat width, OPfloat height) {
-	return OPquadCreate(width, height, OPvec2(0, 0), OPvec2(0, 0), OPvec2(1, 1));
+	return OPquadCreate(width, height, OPVEC2_ZERO, OPVEC2_ZERO, OPVEC2_ONE);
 }
 
 OPmodel* OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset) {
-	return OPquadCreate(width, height, offset, OPvec2(0, 0), OPvec2(1, 1));
+	return OPquadCreate(width, height, offset, OPVEC2_ZERO, OPVEC2_ONE);
 }
 OPmodel* OPquadCreate(OPfloat width, OPfloat height, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
-	return OPquadCreate(width, height, OPvec2(0, 0), texcoordStart, texcoordEnd);
+	return OPquadCreate(width, height, OPVEC2_ZERO, texcoordStart, texcoordEnd);
 }
 
 OPmodel* OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
@@ -111,6 +113,12 @@ OPmodel* OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texco
 	SetQuadPoint(&verts[1], offset.x - width, offset.y + height, 0, texcoordStart.x, texcoordEnd.y);
 	SetQuadPoint(&verts[2], offset.x - width, offset.y - height, 0, texcoordStart.x, texcoordStart.y);
 	SetQuadPoint(&verts[3], offset.x + width, offset.y - height, 0, texcoordEnd.x, texcoordStart.y);
+
+    OPlogErr("OFFSET: %f, %f", offset.x, offset.y);
+    OPlogErr("QUAD: %f, %f", verts[0].x, verts[0].y);
+    OPlogErr("QUAD: %f, %f", verts[1].x, verts[1].y);
+    OPlogErr("QUAD: %f, %f", verts[2].x, verts[2].y);
+    OPlogErr("QUAD: %f, %f", verts[3].x, verts[3].y);
 
 	mesh->Build(
 		4, 6, OPindexSize::SHORT,

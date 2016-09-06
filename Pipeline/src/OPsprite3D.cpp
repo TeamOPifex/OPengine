@@ -122,7 +122,7 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	OPmat4 world;
 	SPRITE_3D_QUAD_MESH->Bind();
 	sprite->Effect->Bind();
-	
+
 	OPmat4Identity(&world);
 	world = OPmat4Scl(world, widthScale, heightScale, 1.0);
 	OPmat4RotZ(&world, rotation + sprite->Rotation.z);
@@ -134,15 +134,19 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 
 	//OPtextureClearActive();
 	//ui32 bind = OPtextureBind(sprite->CurrentSprite->Sheet);
-	
+
 	//OPlog("SpriteSheet %d @ %x", bind, sprite->CurrentSprite->Sheet);
 	OPeffectSet("uColorTexture", sprite->CurrentSprite->Sheet, 0);
 	//OPeffectParamf("uAlpha", 1.0f);
 	OPeffectSet("uWorld", &world);
 	OPeffectSet("uView", &camera->view);
 	OPeffectSet("uProj", &camera->proj);
-	OPeffectSet("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
-	OPeffectSet("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size);
+    OPvec2 frameOffsetScl = sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset;
+    OPvec2 frameSizeScl = sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size;
+    //frameOffsetScl = OPVEC2_ZERO;
+    //frameSizeScl = OPVEC2_ONE;
+	OPeffectSet("uOffset", &frameOffsetScl);
+	OPeffectSet("uSize", &frameSizeScl);
 }
 
 void OPsprite3DRender(OPsprite3D* sprite, OPcam* camera) {

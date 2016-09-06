@@ -19,19 +19,22 @@ void ExampleSpriteSystemEnter(OPgameState* last) {
 
 	spriteSystemExample.sprites[0] = (OPsprite*)OPCMAN.Get("spriteExample/Bear");
 	OPspriteSystemEffectDefault(&spriteSystemExample.spriteEffect);
-	OPspriteSystemInit(&spriteSystemExample.spriteSystem, spriteSystemExample.sprites, 5, &spriteSystemExample.spriteEffect, OPSPRITESYSTEMALIGN_BOTTOM_CENTER);
+	OPspriteSystemInit(&spriteSystemExample.spriteSystem, spriteSystemExample.sprites, 5, &spriteSystemExample.spriteEffect, OPSPRITESYSTEMALIGN_CENTER);
 	OPspriteSystemSprite* sp = OPspriteSystemAdd(&spriteSystemExample.spriteSystem);
 	sp->Scale = OPvec2(10, 10);
-	sp->Position = OPvec2(300, 100);
+	sp->Position = OPvec2(0, 0);
 
-	spriteSystemExample.camera.SetOrtho(OPvec3Create(0, 0, 10), OPVEC3_ZERO, OPVEC3_UP, 0.1f, 20.0f, 0, (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, 0, (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height);
+    OPfloat halfWidth = (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / 2.0;
+    OPfloat halfHeight = (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height / 2.0;
+	spriteSystemExample.camera.SetOrtho(OPvec3Create(0, 0, -1), OPvec3(0, 0, 0), OPvec3(0, 1, 0), 0.1f, 10.0f, -halfWidth, halfWidth, -halfHeight, halfHeight);
 }
 
 OPint ExampleSpriteSystemUpdate(OPtimer* time) {
 
 	OPspriteSystemUpdate(&spriteSystemExample.spriteSystem, time);
 
-	OPrenderClear(0, 0, 0);
+    OPrenderCull(false);
+	OPrenderClear(0.3);
 
 	OPspriteSystemRender(&spriteSystemExample.spriteSystem, &spriteSystemExample.camera);
 

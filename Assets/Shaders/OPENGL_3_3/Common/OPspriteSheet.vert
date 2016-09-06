@@ -1,7 +1,7 @@
 #version 330 core
 
-in vec3 aPosition;
-in vec2 aUV;
+layout(location = 0) in vec3 aPosition;
+layout(location = 1) in vec2 aUV;
 
 uniform mat4 uWorld;
 uniform mat4 uProj;
@@ -14,6 +14,10 @@ out vec2 vUV;
 void main() {
 	vec4 screenPos = uProj * uView * uWorld * vec4(aPosition,1);
 	gl_Position = screenPos;
-	
-	vUV = (aUV * vec2(1.0, -1.0) + vec2(0.0,1.0)) * uSize + uOffset; 
+
+    vec2 uv = vec2(aUV.x, 1.0 - aUV.y);
+
+	vUV = (uv * uSize) + uOffset;
+
+    vUV = aPosition.xy;
 }
