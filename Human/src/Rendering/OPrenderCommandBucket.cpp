@@ -118,6 +118,10 @@ void OPrenderCommandBucket::Submit(OPmesh* mesh, OPmat4* world, OPmaterialInstan
 	OPrenderCommandDrawIndexed::Submit(this, mesh, world, material);
 }
 
+void OPrenderCommandBucket::Submit(OPmodel* model, OPmat4* world, OPmaterialInstance** material) {
+
+	OPrenderCommandDrawIndexed::Submit(this, model, world, material);
+}
 
 
 

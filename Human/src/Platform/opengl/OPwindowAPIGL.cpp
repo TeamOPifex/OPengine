@@ -36,7 +36,8 @@ OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameter
 
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, OPIFEX_OPENGL_MAJOR);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPIFEX_OPENGL_MINOR);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPIFEX_OPENGL_MINOR); 
+	glfwWindowHint(GLFW_SAMPLES, 4);
 
 #ifdef OPIFEX_OSX
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -64,6 +65,10 @@ OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameter
 	window->Height = (ui32)(window->HeightScaled * window->WindowHeight);
 
     OPlogInfo("Window Scale: %f, %f", window->WidthScaled, window->HeightScaled);
+
+	glEnable(GL_MULTISAMPLE_ARB);
+	glEnable(GL_BLEND);
+	glEnable(GL_MULTISAMPLE);
 
 	return window;
 }

@@ -3,7 +3,10 @@
 #include "./Core/include/Assert.h"
 
 i32 OPimagePNGLoad(OPstream* str, OPtexture** image) {
-	ASSERT(str != NULL, "Image not found.");
+	if (str == NULL) {
+		OPlogErr("Image not found.");
+		return NULL;
+	}
 	return OPimagePNGLoadStream(str, 0, image);
 }
 

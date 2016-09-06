@@ -60,10 +60,12 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 	ui32 totalVertices = str->UI32();
 	ui32 totalIndices = str->UI32();
 
-	OPindexSize indexSize = OPindexSize::SHORT;
+	ui32 indSize = str->UI8();
+
+	OPindexSize indexSize = (OPindexSize)indSize;
 
 	void* vertices = OPalloc(totalVertices * vertexLayout.stride);
-	void* indices = OPalloc(totalIndices * (ui16)indexSize);
+	void* indices = OPalloc(totalIndices * (ui32)indexSize);
 	OPuint vertexOffset = 0;
 	OPuint indexOffset = 0;
 
@@ -71,6 +73,8 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 
 	for (ui32 i = 0; i < meshCount; i++) {
 		OPmesh* mesh = &model->meshes[i];
+		mesh->meshDesc = OPNEW(OPmeshDesc());
+		mesh->materialDesc = OPNEW(OPmeshMaterialDesc());
 
 		OPchar* name = str->String();
 		OPlogInfo("SUBMESH: %s", name);
@@ -80,14 +84,25 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 
 		ui32 floatsInStride = vertexLayout.stride / sizeof(f32);
 		ui32 vertexDataOffset = vertexOffset * floatsInStride;
+		//void* vertDataPos = &verticesData[vertexOffset * vertexLayout.stride];
 		f32* vertData = &verticesData[vertexDataOffset];
-		for (ui32 j = 0; j < verticesCount * floatsInStride; j++) {
+		ui32 totalFloatsInMesh = verticesCount * floatsInStride;
+		for (ui32 j = 0; j < totalFloatsInMesh; j++) {
 			vertData[j] = str->F32();
 		}
 
-		ui16* indData = &((ui16*)indices)[indexOffset];
-		for (ui32 j = 0; j < indicesCount; j++) {
-			indData[j] = str->UI16();
+		if (indexSize == OPindexSize::SHORT) {
+			ui16* indData = &((ui16*)indices)[indexOffset];
+			mesh->meshDesc->indices = indData;
+			for (ui32 j = 0; j < indicesCount; j++) {
+				indData[j] = str->UI16();
+			}
+		} else {
+			ui32* indData = &((ui32*)indices)[indexOffset];
+			mesh->meshDesc->indices = indData;
+			for (ui32 j = 0; j < indicesCount; j++) {
+				indData[j] = str->UI32();
+			}
 		}
 
 		mesh->offset = indexOffset;
@@ -97,9 +112,7 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 		mesh->vertexArray = &model->vertexArray;
 		mesh->vertexBuffer = &model->vertexBuffer;
 		mesh->indexBuffer = &model->indexBuffer;
-		mesh->meshDesc = OPNEW(OPmeshDesc());
 		mesh->meshDesc->vertices = vertData;
-		mesh->meshDesc->indices = indData;
 		mesh->meshDesc->vertexCount = verticesCount;
 		mesh->meshDesc->indexCount = indicesCount;
 		mesh->meshDesc->indexSize = indexSize;
@@ -120,24 +133,42 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 		if (metaCount > 0) {
 			mesh->meshMeta = OPNEW(OPmeshMeta());
 			mesh->meshMeta->count = metaCount;
-			mesh->meshMeta->names = (OPchar**)OPALLOC(OPchar*, metaCount);
+			mesh->meshMeta->metaType = (OPmeshMetaType*)OPALLOC(OPmeshMetaType, metaCount);
 			mesh->meshMeta->data = (OPstream*)OPALLOC(OPstream, metaCount);
 
 			for (ui32 j = 0; j < metaCount; j++) {
-				OPchar* name = str->String();
-				ui32 dataSize = str->UI32();
-				if (dataSize == 0) continue;
-				void* data = str->Read(dataSize);
-
-				mesh->meshMeta->names[j] = name;
-				mesh->meshMeta->data[j].Init(dataSize);
-				mesh->meshMeta->data[j].Write(data, dataSize);
+				mesh->meshMeta->metaType[j] = (OPmeshMetaType)str->UI32();
+				if (mesh->meshMeta->metaType[j] == OPmeshMetaType::USER_DEFINED) {
+					ui32 dataSize = str->UI32();
+					if (dataSize == 0) continue;
+					void* data = str->Read(dataSize);
+					mesh->meshMeta->data[j].Init(dataSize);
+					mesh->meshMeta->data[j].Write(data, dataSize);
+					mesh->meshMeta->data[j].Seek(0);
+				}
+				else {
+					switch (mesh->meshMeta->metaType[j]) {
+						case OPmeshMetaType::ALBEDO: {
+							OPchar* data = str->String();
+							mesh->meshMeta->data[j].Init(strlen(data) + 1 + sizeof(ui32));
+							mesh->meshMeta->data[j].WriteString(data);
+							mesh->meshMeta->data[j].Reset();
+							mesh->materialDesc->albedo = OPstringCopy(data);
+							break;
+						}
+					}
+				}
 			}
 		}
 	}
 
 	model->name = modelName;
-	model->Build(totalVertices, totalIndices, indexSize, vertices, indices);
+
+	model->vertexArray.Bind();
+	model->vertexBuffer.SetData(vertexLayout.stride, totalVertices, vertices);
+	model->indexBuffer.SetData(indexSize, totalIndices, indices);
+	model->vertexLayout = vertexLayout;
+	//model->Build(totalVertices, totalIndices, indexSize, vertices, indices);
 
 	return true;
 }

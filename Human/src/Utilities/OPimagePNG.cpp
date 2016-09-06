@@ -4,6 +4,7 @@
 #include "./Human/include/Rendering/OPimage.h"
 #include "./Human/include/Rendering/OPtexture.h"
 #include "./Data/include/OPfile.h"
+#include "./Data/include/OPstring.h"
 #include "./Core/include/OPlog.h"
 #include "./Core/include/Assert.h"
 #include "./Core/include/OPmemory.h"
@@ -99,6 +100,10 @@ i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image, OPtext
 	OPRENDERER_ACTIVE->Texture.Init(tex, desc);
 	tex->SetData(data);
 
+#ifdef _DEBUG
+	tex->source = OPstringCopy(str->Source);
+#endif
+
 	// clean up
 	free(data); // Clean up load png 
 
@@ -109,6 +114,6 @@ i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image, OPtext
 }
 
 i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
-	OPimagePNGLoadStream(str, offset, image, OPtextureFilter::NEAREST);
+	OPimagePNGLoadStream(str, offset, image, OPtextureFilter::LINEAR);
 	return 1;
 }

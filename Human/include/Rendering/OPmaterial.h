@@ -4,10 +4,14 @@
 struct OPmaterial;
 typedef struct OPmaterial OPmaterial;
 
+struct OPmaterialInstance;
+typedef struct OPmaterialInstance OPmaterialInstance;
+
 #define OPMATERIAL_MAX_UNIFORMS 20
 
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Rendering/OPmaterialParam.h"
+struct OPmodel;
 
 inline void OPmaterialClearParams(OPmaterial* material);
 void OPmaterialInit(OPmaterial* material, OPeffect* effect);
@@ -111,6 +115,8 @@ struct OPmaterial {
 	}
 
 	void Destroy();
+
+	OPmaterialInstance** CreateInstances(OPmodel* model);
 };
 
 inline void OPmaterialClearParams(OPmaterial* material) {
@@ -251,7 +257,7 @@ struct OPmaterialInstance {
 	}
 
 	inline void AddParam(OPmaterialParamType paramType, const OPchar* name, void* data, ui8 count) {
-		OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Name %s %p", name, data);
+		//OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Name %s %p", name, data);
 		params[paramIndex].type = paramType;
 		params[paramIndex].name = name;
 		params[paramIndex].data = data;

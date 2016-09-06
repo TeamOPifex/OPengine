@@ -105,7 +105,18 @@ struct OPstream {
 	*/
 	OPuint Seek(OPuint byte);
 
+	inline void Reset() {
+		Seek(0);
+	}
+
 	inline OPuint Write(f32* data) { return Write(data, sizeof(f32)); }
+
+	inline OPuint WriteString(const OPchar* data) {
+		ui32 len = strlen(data);
+		ui32 written = Write(&len, sizeof(ui32));
+		written += Write((void*)data, sizeof(OPchar) * (len + 1));
+		return written;
+	}
 
 	/**
 	* OPstreamCreate - Allocates a byte stream instance.

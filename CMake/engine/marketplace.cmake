@@ -44,15 +44,17 @@ macro(add_marketplace_addons APPLICATION_TARGET FOLDER ADDITIONAL)
     string(REPLACE "." ";" VERSION_LIST ${ADDON})
     list(GET VERSION_LIST 0 ADDON_NAME)
 
-    eval("ADDON_${ADDON_NAME}(APPLICATION_TARGET ${FOLDER})")
+    eval("ADDON_${ADDON_NAME}_INCLUDES()")
+    eval("ADDON_${ADDON_NAME}(${APPLICATION_TARGET} ${FOLDER})")
 
     SET(TEMP_RESULT "")
-
     eval("ADDON_${ADDON_NAME}_LINK(TEMP_RESULT)")
 
-    eval("target_link_libraries(${APPLICATION_TARGET} ${TEMP_RESULT})")
+    message(STATUS "LINK TO ${TEMP_RESULT}")
+    target_link_libraries(${APPLICATION_TARGET} ${TEMP_RESULT})
     add_definitions(-DADDON_${ADDON_NAME})
 
+    SET(TEMP_RESULT "")
     eval("ADDON_${ADDON_NAME}_DEFINES(TEMP_RESULT)")
     add_definitions(${TEMP_RESULT})
 
@@ -98,10 +100,11 @@ macro(add_marketplace_defines)
       string(REPLACE "." ";" VERSION_LIST ${ADDON})
       list(GET VERSION_LIST 0 ADDON_NAME)
 
-      eval("ADDON_${ADDON_NAME}(0)")
+      eval("ADDON_${ADDON_NAME}_INCLUDES()")
 
       add_definitions(-DADDON_${ADDON_NAME})
 
+      SET(TEMP_RESULT "")
       eval("ADDON_${ADDON_NAME}_DEFINES(TEMP_RESULT)")
       add_definitions(${TEMP_RESULT})
 

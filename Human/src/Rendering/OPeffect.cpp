@@ -3,8 +3,8 @@
 
 OPeffect* OPEFFECT_ACTIVE = NULL;
 
-void OPeffect::Init(OPshader* vert, OPshader* frag) {
-	OPRENDERER_ACTIVE->Effect.Init(this, vert, frag);
+void OPeffect::Init(OPshader* vert, OPshader* frag, OPvertexLayout* vertexLayout) {
+	OPRENDERER_ACTIVE->Effect.Init(this, vert, frag, vertexLayout);
 }
 
 OPshaderUniform* OPeffect::GetUniform(const OPchar* name) {

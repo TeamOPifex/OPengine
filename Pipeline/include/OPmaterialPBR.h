@@ -38,6 +38,10 @@ struct OPmaterialPBR {
 		}
 		rootMaterial.Destroy();
 	}
+
+
+
+	OPmaterialPBRInstance** CreateInstances(OPmodel* model, bool setMeta);
 };
 
 struct OPmaterialPBRInstance {

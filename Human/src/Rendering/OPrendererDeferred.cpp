@@ -53,6 +53,11 @@ OPmaterialInstance* OPrendererDeferredCreateMaterialInstance(OPrenderer* rendere
 	return result;
 }
 
+OPmaterial* OPrendererDeferredGetMaterial(OPrenderer* renderer, ui32 pass) {
+	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
+	return deferredRenderer->passes[pass];
+}
+
 void OPrendererDeferredSetMaterial(OPrenderer* renderer, OPmaterial* material, ui32 pass) {
 	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
 	deferredRenderer->passes[pass] = material;
@@ -69,17 +74,17 @@ void OPrendererDeferredBegin(OPrenderer* renderer) {
 	OPrenderClear(0, 0, 0);
 }
 
-void OPrendererDeferredSubmitModel(OPrenderer* renderer, OPmodel* model, OPmat4* world, OPmaterialInstance* material) {
+void OPrendererDeferredSubmitModel(OPrenderer* renderer, OPmodel* model, OPmat4* world, OPmaterialInstance** material) {
 	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
-	for (ui32 i = 0; i < model->meshCount; i++) {
-		OPrenderCommandDrawIndexed* dc =
-			deferredRenderer->renderBucket[0].CreateDrawIndexed()->
-			Set(&model->meshes[i], world, material);
-		deferredRenderer->renderBucket[0].Submit(dc->key, dc->dispatch, dc);
-	}
+	deferredRenderer->renderBucket[0].Submit(model, world, material);
 }
 
-void OPrendererDeferredSubmitMesh(OPrenderer* renderer, OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) {
+void OPrendererDeferredSubmitModelMaterial(OPrenderer* renderer, OPmodel* model, OPmat4* world, OPmaterialInstance* material) {
+	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
+	deferredRenderer->renderBucket[0].Submit(model, world, material);
+}
+
+void OPrendererDeferredSubmitMeshMaterial(OPrenderer* renderer, OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) {
 	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
 	deferredRenderer->renderBucket[0].Submit(mesh, world, material);
 }
@@ -120,11 +125,13 @@ void OPrendererDeferredPresent(OPrenderer* renderer) {
 OPrendererDeferred* OPrendererDeferred::Setup() {
 	rendererRoot._Init = OPrendererDeferredInit;
 	rendererRoot._CreateMaterialInstance = OPrendererDeferredCreateMaterialInstance;
+	rendererRoot._GetMaterial = OPrendererDeferredGetMaterial;
 	rendererRoot._SetMaterial = OPrendererDeferredSetMaterial;
 	rendererRoot._SetMaterialEffect = OPrendererDeferredSetMaterialEffect;
 	rendererRoot._Begin = OPrendererDeferredBegin;
 	rendererRoot._SubmitModel = OPrendererDeferredSubmitModel;
-	rendererRoot._SubmitMesh = OPrendererDeferredSubmitMesh;
+	rendererRoot._SubmitModelMaterial = OPrendererDeferredSubmitModelMaterial;
+	rendererRoot._SubmitMeshMaterial = OPrendererDeferredSubmitMeshMaterial;
 	rendererRoot._SubmitLight = OPrendererDeferredSubmitLight;
 	rendererRoot._End = OPrendererDeferredEnd;
 	rendererRoot._Present = OPrendererDeferredPresent;

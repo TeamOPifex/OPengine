@@ -17,6 +17,11 @@ OPmaterialInstance* OPrendererForwardCreateMaterialInstance(OPrenderer* renderer
 	return result;
 }
 
+OPmaterial* OPrendererForwardGetMaterial(OPrenderer* renderer, ui32 pass) {
+	OPrendererForward* forwardRenderer = (OPrendererForward*)renderer->internalPtr;
+	return forwardRenderer->passes[pass];
+}
+
 void OPrendererForwardSetMaterial(OPrenderer* renderer, OPmaterial* material, ui32 pass) {
 	OPrendererForward* forwardRenderer = (OPrendererForward*)renderer->internalPtr;
 	forwardRenderer->passes[pass] = material;
@@ -31,22 +36,19 @@ void OPrendererForwardBegin(OPrenderer* renderer) {
 
 }
 
-void OPrendererForwardSubmitModel(OPrenderer* renderer, OPmodel* model, OPmat4* world, OPmaterialInstance* material) {
+void OPrendererForwardSubmitModel(OPrenderer* renderer, OPmodel* model, OPmat4* world, OPmaterialInstance** material) {
 	OPrendererForward* forwardRenderer = (OPrendererForward*)renderer->internalPtr;
-	for (ui32 i = 0; i < model->meshCount; i++) {
-		OPrenderCommandDrawIndexed* dc =
-			forwardRenderer->renderBucket[0].CreateDrawIndexed()->
-			Set(&model->meshes[i], world, material);
-		forwardRenderer->renderBucket[0].Submit(dc->key, dc->dispatch, dc);
-	}
+	forwardRenderer->renderBucket[0].Submit(model, world, material);
 }
 
-void OPrendererForwardSubmitMesh(OPrenderer* renderer, OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) {
+void OPrendererForwardSubmitModelMaterial(OPrenderer* renderer, OPmodel* model, OPmat4* world, OPmaterialInstance* material) {
 	OPrendererForward* forwardRenderer = (OPrendererForward*)renderer->internalPtr;
-	OPrenderCommandDrawIndexed* dc =
-		forwardRenderer->renderBucket[0].CreateDrawIndexed()->
-		Set(mesh, world, material);
-	forwardRenderer->renderBucket[0].Submit(dc->key, dc->dispatch, dc);
+	forwardRenderer->renderBucket[0].Submit(model, world, material);
+}
+
+void OPrendererForwardSubmitMeshMaterial(OPrenderer* renderer, OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) {
+	OPrendererForward* forwardRenderer = (OPrendererForward*)renderer->internalPtr;
+	forwardRenderer->renderBucket[0].Submit(mesh, world, material);
 }
 
 void OPrendererForwardEnd(OPrenderer* renderer) {
@@ -62,11 +64,13 @@ void OPrendererForwardPresent(OPrenderer* renderer) {
 OPrendererForward* OPrendererForward::Setup() {
 	rendererRoot._Init = OPrendererForwardInit;
 	rendererRoot._CreateMaterialInstance = OPrendererForwardCreateMaterialInstance;
+	rendererRoot._GetMaterial = OPrendererForwardGetMaterial;
 	rendererRoot._SetMaterial = OPrendererForwardSetMaterial;
 	rendererRoot._SetMaterialEffect = OPrendererForwardSetMaterialEffect;
 	rendererRoot._Begin = OPrendererForwardBegin;
 	rendererRoot._SubmitModel = OPrendererForwardSubmitModel;
-	rendererRoot._SubmitMesh = OPrendererForwardSubmitMesh;
+	rendererRoot._SubmitModelMaterial = OPrendererForwardSubmitModelMaterial;
+	rendererRoot._SubmitMeshMaterial = OPrendererForwardSubmitMeshMaterial;
 	rendererRoot._End = OPrendererForwardEnd;
 	rendererRoot._Present = OPrendererForwardPresent;
 

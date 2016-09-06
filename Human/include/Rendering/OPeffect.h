@@ -27,13 +27,22 @@ struct OPeffect {
 	OPhashMap uniforms;
 
 	OPeffect() {}
-	OPeffect(OPshader* vert, OPshader* frag) { Init(vert, frag); }
-	OPeffect(const OPchar* vert, const OPchar* frag) { Init(vert, frag); }
+	OPeffect(OPshader* vert, OPshader* frag) { Init(vert, frag, NULL); }
+	OPeffect(const OPchar* vert, const OPchar* frag) { Init(vert, frag, NULL); }
+	OPeffect(OPshader* vert, OPshader* frag, OPvertexLayout* vertexLayout) { Init(vert, frag, vertexLayout); }
+	OPeffect(const OPchar* vert, const OPchar* frag, OPvertexLayout* vertexLayout) { Init(vert, frag, vertexLayout); }
 
-	void Init(OPshader* vert, OPshader* frag);
-	void Init(const OPchar* vert, const OPchar* frag) {
-		Init((OPshader*)OPCMAN.LoadGet(vert), (OPshader*)OPCMAN.LoadGet(frag));
+	void Init(OPshader* vert, OPshader* frag, OPvertexLayout* vertexLayout);
+	inline void Init(OPshader* vert, OPshader* frag) {
+		Init(vert, frag, NULL);
 	}
+	inline void Init(const OPchar* vert, const OPchar* frag, OPvertexLayout* vertexLayout) {
+		Init((OPshader*)OPCMAN.LoadGet(vert), (OPshader*)OPCMAN.LoadGet(frag), vertexLayout);
+	}
+	inline void Init(const OPchar* vert, const OPchar* frag) {
+		Init(vert, frag, NULL);
+	}
+
 	inline void Bind() { 
 		OPRENDERER_ACTIVE->Effect.Bind(this); 
 	}

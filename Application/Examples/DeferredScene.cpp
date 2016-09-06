@@ -34,8 +34,8 @@ void ExampleDeferredSceneEnter(OPgameState* last) {
 
 	deferredSceneExample.model1Entity = deferredSceneExample.scene.Add(deferredSceneExample.model);
 
-	deferredSceneExample.model1Entity->material->AddParam("uAlbedoMap", (OPtexture*)OPCMAN.LoadGet("Dagger_Albedo.png"), 0);
-	deferredSceneExample.model1Entity->material->AddParam("uSpecularMap", (OPtexture*)OPCMAN.LoadGet("Dagger_Albedo.png"), 1);
+	deferredSceneExample.model1Entity->material[0]->AddParam("uAlbedoMap", (OPtexture*)OPCMAN.LoadGet("Dagger_Albedo.png"), 0);
+	deferredSceneExample.model1Entity->material[0]->AddParam("uSpecularMap", (OPtexture*)OPCMAN.LoadGet("Dagger_Albedo.png"), 1);
 
 	//deferredSceneExample.texture = OPtexture2DCreate(&deferredSceneExample.renderer->gBuffer.texture[2]);
 }

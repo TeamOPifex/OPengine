@@ -7,7 +7,7 @@
 
 bool OPeffectGLAddUniform(OPeffect* effect, const OPchar* name);
 
-OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag) {
+OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag, OPvertexLayout* vertexLayout) {
 	OPeffectGL* effectGL = (OPeffectGL*)OPalloc(sizeof(OPeffectGL));
 
 	effect->uniforms.Init(32);
@@ -23,6 +23,12 @@ OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag) {
 
 	OPGLFN(glAttachShader(effectGL->Handle, vertGL->Handle));
 	OPGLFN(glAttachShader(effectGL->Handle, fragGL->Handle));
+
+	if (vertexLayout != NULL) {
+		for (ui32 i = 0; i < vertexLayout->count; i++) {
+			glBindAttribLocation(effectGL->Handle, i, vertexLayout->attributes[i].Name);
+		}
+	}
 
 	OPGLFN(glLinkProgram(effectGL->Handle));
 
@@ -70,9 +76,9 @@ OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag) {
 	return effect;
 }
 
-OPeffect* OPeffectGLCreate(OPshader* vert, OPshader* frag) {
+OPeffect* OPeffectGLCreate(OPshader* vert, OPshader* frag, OPvertexLayout* vertexLayot) {
 	OPeffect* effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	effect->Init(vert, frag);
+	effect->Init(vert, frag, vertexLayot);
 	return effect;
 }
 
@@ -146,8 +152,8 @@ void OPeffectGLDestroy(OPeffect* effect) {
 }
 
 void OPeffectAPIGLInit(OPeffectAPI* effect) {
-	effect->Init = OPeffectAPIGLInit;
-	effect->Create = OPeffectGLCreate;
+	effect->_Init = OPeffectAPIGLInit;
+	effect->_Create = OPeffectGLCreate;
 	effect->AddUniform = OPeffectGLAddUniform;
     effect->SetVertexLayout = OPeffectGLSetVertexLayout;
 	effect->Bind = OPeffectGLBind;

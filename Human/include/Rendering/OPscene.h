@@ -14,7 +14,7 @@ typedef struct OPsceneEntity OPsceneEntity;
 struct OPsceneEntity {
 	OPmat4 world;
 	OPmodel* model;
-	OPmaterialInstance* material;
+	OPmaterialInstance** material;
 };
 
 struct OPsceneLight {
@@ -35,7 +35,7 @@ struct OPscene {
 
 	void Init(OPrenderer* renderer, ui32 maxEntities, ui32 maxLights);
 	OPsceneEntity* Add(OPmodel* model);
-	OPsceneEntity* Add(OPmodel* model, OPmaterialInstance* material);
+	OPsceneEntity* Add(OPmodel* model, OPmaterialInstance** material);
 	OPsceneLight* Add(OPlightSpot light);
 	OPint Update(OPtimer* timer);
 	void Render(OPfloat delta);

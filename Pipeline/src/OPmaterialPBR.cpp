@@ -1,4 +1,5 @@
 #include "./Pipeline/include/OPmaterialPBR.h"
+#include "./Human/include/Rendering/OPmodel.h"
 
 void OPmaterialPBR::Init(OPeffect* effect) {
 	lightColor = OPvec4(1, 1, 1, 1);
@@ -40,4 +41,21 @@ inline void OPmaterialPBRInstance::Init(OPmaterialPBR* material) {
 	//entity->material->AddParam("uNormalColor", &sceneExample.normalColor);
 	rootMaterialInstance.AddParam("uGlossColor", &glossColor);
 	rootMaterialInstance.AddParam("uSpecularColor", &specularColor);
+}	
+
+OPmaterialPBRInstance** OPmaterialPBR::CreateInstances(OPmodel* model, bool setMeta) {
+	OPmaterialPBRInstance** result = OPALLOC(OPmaterialPBRInstance*, model->meshCount);
+
+	for (ui32 i = 0; i < model->meshCount; i++) {
+		result[i] = OPNEW(OPmaterialPBRInstance(this));
+
+		if (!setMeta) continue;
+
+		if (model->meshes[i].materialDesc != NULL) {
+			if (model->meshes[i].materialDesc->albedo != NULL) {
+				result[i]->SetAlbedoMap(model->meshes[i].materialDesc->albedo);
+			}
+		}
+	}
+	return result;
 }

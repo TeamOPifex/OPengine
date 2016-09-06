@@ -13,7 +13,10 @@ void OPrenderCommandDrawIndex(void* data, OPcam* camera) {
 	// Per mesh Shader Data
 	OPeffectSet("uWorld", dc->world);
 
-	OPrenderDrawBufferIndexed(dc->startIndex);
+	//OPrenderDrawBufferIndexed(dc->startIndex);
+
+	OPRENDERER_ACTIVE->VertexArray.DrawIndexed(OPRENDERER_ACTIVE->OPVERTEXARRAY_ACTIVE, dc->indexCount, dc->startIndex);
+	//glDrawElements(GL_TRIANGLES, (GLsizei)OPRENDER_CURR_IB->ElementCount, indType, (void*)(offset * sizeof(GLuint)));
 }
 
 OPrenderCommandDrawIndexed* OPrenderCommandDrawIndexed::Set(OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) {
@@ -34,6 +37,14 @@ OPrenderCommandDrawIndexed* OPrenderCommandDrawIndexed::Set(OPmesh* mesh, OPmat4
 	this->dispatch = OPrenderCommandDrawIndex;
 
 	return this;
+}
+
+void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterialInstance** material) {
+	for (ui32 i = 0; i < model->meshCount; i++) {
+		OPrenderCommandDrawIndexed* dc = commandBucket->CreateDrawIndexed();
+		dc->Set(&model->meshes[i], world, material[i]);
+		commandBucket->Submit(dc->key, dc->dispatch, dc);
+	}
 }
 
 void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterialInstance* material) {

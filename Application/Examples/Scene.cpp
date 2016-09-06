@@ -22,6 +22,9 @@ typedef struct {
 	OPtextureCube environment;
 	OPmaterialPBRInstance* materialInstance;
 	OPmaterialPBRInstance* materialInstance2;
+
+	OPmaterialInstance* materialInst1;
+	OPmaterialInstance* materialInst2;
 } SceneExample;
 
 SceneExample sceneExample;
@@ -64,9 +67,12 @@ void ExampleSceneEnter(OPgameState* last) {
 	sceneExample.model2 = (OPmodel*)OPCMAN.LoadGet("daggerpbr.opm");
 	sceneExample.model3 = (OPmodel*)OPCMAN.LoadGet("ground_block_2x2x2.fbx.opm");
 
-	sceneExample.model1Entity = sceneExample.scene.Add(sceneExample.model, &sceneExample.materialInstance->rootMaterialInstance);
-	sceneExample.model2Entity = sceneExample.scene.Add(sceneExample.model2, &sceneExample.materialInstance->rootMaterialInstance);
-	sceneExample.model3Entity = sceneExample.scene.Add(sceneExample.model3, &sceneExample.materialInstance2->rootMaterialInstance);
+	sceneExample.materialInst1 = &sceneExample.materialInstance->rootMaterialInstance;
+	sceneExample.materialInst2 = &sceneExample.materialInstance2->rootMaterialInstance;
+
+	sceneExample.model1Entity = sceneExample.scene.Add(sceneExample.model, &sceneExample.materialInst1);
+	sceneExample.model2Entity = sceneExample.scene.Add(sceneExample.model2, &sceneExample.materialInst1);
+	sceneExample.model3Entity = sceneExample.scene.Add(sceneExample.model3, &sceneExample.materialInst2);
 }
 
 OPint ExampleSceneUpdate(OPtimer* time) {

@@ -13,23 +13,27 @@ struct OPrenderer {
 	OPcam** camera;
 
 	void(*_Init)(OPrenderer* renderer, OPcam** camera, ui32 maxCalls, ui32 maxLights) = 0;
+	OPmaterial*(*_GetMaterial)(OPrenderer* renderer, ui32 pass) = 0;
 	void(*_SetMaterial)(OPrenderer* renderer, OPmaterial* material, ui32 pass) = 0;
 	void(*_SetMaterialEffect)(OPrenderer* renderer, OPeffect* effect, ui32 pass) = 0;
 	OPmaterialInstance*(*_CreateMaterialInstance)(OPrenderer* renderer, ui32 pass) = 0;
 	void(*_Begin)(OPrenderer* renderer) = 0;
-	void(*_SubmitModel)(OPrenderer* renderer, OPmodel* model, OPmat4* world, OPmaterialInstance* material) = 0;
-	void(*_SubmitMesh)(OPrenderer* renderer, OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) = 0;
+	void(*_SubmitModel)(OPrenderer* renderer, OPmodel* model, OPmat4* world, OPmaterialInstance** material) = 0;
+	void(*_SubmitModelMaterial)(OPrenderer* renderer, OPmodel* model, OPmat4* world, OPmaterialInstance* material) = 0;
+	void(*_SubmitMeshMaterial)(OPrenderer* renderer, OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) = 0;
 	void(*_SubmitLight)(OPrenderer* renderer, OPlightSpot* light, OPmat4* world) = 0;
 	void(*_End)(OPrenderer* renderer) = 0;
 	void(*_Present)(OPrenderer* renderer) = 0;
 
 	inline void Init(OPcam** camera, ui32 maxCalls, ui32 maxLights) { _Init(this, camera, maxCalls, maxLights); }
+	inline OPmaterial* GetMaterial(ui32 pass) { return _GetMaterial(this, pass); }
 	inline void SetMaterial(OPmaterial* material, ui32 pass) { _SetMaterial(this, material, pass); }
 	inline void SetMaterialEffect(OPeffect* effect, ui32 pass) { _SetMaterialEffect(this, effect, pass); }
 	inline OPmaterialInstance* CreateMaterialInstance(ui32 pass = 0) { return _CreateMaterialInstance(this, pass); }
 	inline void Begin() { _Begin(this); }
-	inline void Submit(OPmodel* model, OPmat4* world, OPmaterialInstance* material) { _SubmitModel(this, model, world, material); }
-	inline void Submit(OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) { _SubmitMesh(this, mesh, world, material); }
+	inline void Submit(OPmodel* model, OPmat4* world, OPmaterialInstance** material) { _SubmitModel(this, model, world, material); }
+	inline void Submit(OPmodel* model, OPmat4* world, OPmaterialInstance* material) { _SubmitModelMaterial(this, model, world, material); }
+	inline void Submit(OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) { _SubmitMeshMaterial(this, mesh, world, material); }
 	inline void Submit(OPlightSpot* light, OPmat4* world) { _SubmitLight(this, light, world); }
 	inline void End() { _End(this); }
 	inline void Present() { _Present(this); }

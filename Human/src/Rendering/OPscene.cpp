@@ -17,7 +17,7 @@ void OPscene::Init(OPrenderer* renderer, ui32 maxEntities, ui32 maxLights) {
 	this->renderer->Init(&camera, maxEntities, 1);
 }
 
-OPsceneEntity* OPscene::Add(OPmodel* model, OPmaterialInstance* material) {
+OPsceneEntity* OPscene::Add(OPmodel* model, OPmaterialInstance** material) {
 	entities[index].model = model;
 	entities[index].material = material;
 	return &entities[index++];
@@ -25,7 +25,7 @@ OPsceneEntity* OPscene::Add(OPmodel* model, OPmaterialInstance* material) {
 
 OPsceneEntity* OPscene::Add(OPmodel* model) {
 	entities[index].model = model;
-	entities[index].material = renderer->CreateMaterialInstance(0);
+	entities[index].material = renderer->GetMaterial(0)->CreateInstances(model);
 	return &entities[index++];
 }
 
