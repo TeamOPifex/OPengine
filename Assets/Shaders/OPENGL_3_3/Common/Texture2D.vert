@@ -13,7 +13,7 @@ void main() {
 
 	float width = uUVScale.z - uUVScale.x;
 	float height = uUVScale.w - uUVScale.y;
-	vUV = vec2(aUV.x * width, aUV.y * height);
+	vUV = vec2((1.0 - aUV.x) * width, (1.0 - aUV.y) * height);
 	//vUV = vec2(aUV.x, aUV.y);
     //vUV = vec2(aPosition.x * 2.0, aPosition.y * 2.0);
 

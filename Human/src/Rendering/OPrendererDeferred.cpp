@@ -14,36 +14,50 @@ void OPrendererDeferredInit(OPrenderer* renderer, OPcam** camera, ui32 maxCalls,
 	deferredRenderer->defaultLightingEffect = OPNEW(OPeffect("Common/DeferredLighting.vert", "Common/DeferredLighting.frag"));
 	deferredRenderer->defaultLightingMaterial = OPNEW(OPmaterial(deferredRenderer->defaultLightingEffect));
 	deferredRenderer->passes[1] = deferredRenderer->defaultLightingMaterial;
+	deferredRenderer->defaultLightingMaterial->depth = false;
+	deferredRenderer->defaultLightingMaterial->cull = false;
 
 	deferredRenderer->renderBucket[0].Init(maxCalls, renderer->camera);
 	deferredRenderer->renderBucket[1].Init(maxLights, renderer->camera);
 
 	OPtextureDesc gBufferDesc[3];
 	// Position
-	gBufferDesc[0] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGB16F, OPtextureFormat::RGB, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
+	//gBufferDesc[0] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGB16F, OPtextureFormat::RGB, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
+	gBufferDesc[0] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGBA, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST, OPtextureType::BYTE);
 	// Normal
-	gBufferDesc[1] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGB16F, OPtextureFormat::RGB, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
+	//gBufferDesc[1] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGB16F, OPtextureFormat::RGB, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
+	gBufferDesc[1] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGBA, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST, OPtextureType::BYTE);
 	// Specular
 	gBufferDesc[2] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGBA, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST, OPtextureType::BYTE);
 	deferredRenderer->gBuffer.Init(gBufferDesc, 3);
 
+	OPtextureDesc lightBufferDec = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGBA, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST, OPtextureType::BYTE);
+	deferredRenderer->lightBuffer.Init(lightBufferDec, &deferredRenderer->gBuffer.depthTexture);
 
+	// Directional light
 	deferredRenderer->defaultLightingMaterialInstance = OPNEW(OPmaterialInstance(deferredRenderer->defaultLightingMaterial));
-	deferredRenderer->defaultLightingMaterialInstance->AddParam("uGbufferPosition", &deferredRenderer->gBuffer.texture[0], 0);
-	deferredRenderer->defaultLightingMaterialInstance->AddParam("uGbufferNormal", &deferredRenderer->gBuffer.texture[1], 1);
-	deferredRenderer->defaultLightingMaterialInstance->AddParam("uGbufferAlbedoSpec", &deferredRenderer->gBuffer.texture[2], 2);
 
-
+	// Spot light
 	deferredRenderer->defaultLightingSpotEffect = OPNEW(OPeffect("Common/DeferredLightingSpot.vert", "Common/DeferredLightingSpot.frag"));
 	deferredRenderer->defaultLightingSpotMaterial = OPNEW(OPmaterial(deferredRenderer->defaultLightingSpotEffect));
+	deferredRenderer->defaultLightingSpotMaterial->depth = true;
 	deferredRenderer->defaultLightingSpotMaterialInstance = OPNEW(OPmaterialInstance(deferredRenderer->defaultLightingSpotMaterial));
-	deferredRenderer->defaultLightingSpotMaterialInstance->AddParam("uGbufferPosition", &deferredRenderer->gBuffer.texture[0], 0);
-	deferredRenderer->defaultLightingSpotMaterialInstance->AddParam("uGbufferNormal", &deferredRenderer->gBuffer.texture[1], 1);
-	deferredRenderer->defaultLightingSpotMaterialInstance->AddParam("uGbufferAlbedoSpec", &deferredRenderer->gBuffer.texture[2], 2);
-	//deferredRenderer->passes[1] = deferredRenderer->defaultLightingSpotMaterial;
+	deferredRenderer->defaultLightingSpotMaterialInstance->AddParam("uInvertViewProjection", &deferredRenderer->invertViewProjection);
+	deferredRenderer->defaultLightingSpotMaterialInstance->AddParam("uGbufferDepth", &deferredRenderer->gBuffer.depthTexture, 0);
+
+	// Combine Material
+	deferredRenderer->defaultCombineEffect = OPNEW(OPeffect("Common/DeferredCombine.vert", "Common/DeferredCombine.frag"));
+	deferredRenderer->defaultCombineMaterial = OPNEW(OPmaterial(deferredRenderer->defaultCombineEffect));
+	deferredRenderer->defaultCombineMaterial->AddParam("uGbufferPosition", &deferredRenderer->gBuffer.texture[0], 0);
+	deferredRenderer->defaultCombineMaterial->AddParam("uGbufferNormal", &deferredRenderer->gBuffer.texture[1], 1);
+	deferredRenderer->defaultCombineMaterial->AddParam("uGbufferAlbedoSpec", &deferredRenderer->gBuffer.texture[2], 2);
+	deferredRenderer->defaultCombineMaterial->AddParam("uLightBuffer", deferredRenderer->lightBuffer.texture, 3);
+	deferredRenderer->defaultCombineMaterial->depth = false;
+	deferredRenderer->defaultCombineMaterial->cull = false;
+
 
 	//deferredRenderer->sphereMesh = OPsphere::Create(2, ((ui32)OPattributes::POSITION | (ui32)OPattributes::UV));
-	deferredRenderer->quadMesh = OPquadCreate(-1.0f, 1.0f);
+	deferredRenderer->quadMesh = OPquadCreate(1.0f, 1.0f);
 	deferredRenderer->sphereMesh = (OPmodel*)OPCMAN.LoadGet("uvsphere20.opm");
 }
 
@@ -99,20 +113,42 @@ OPmat4 deferredWorld = OPMAT4_IDENTITY;
 void OPrendererDeferredEnd(OPrenderer* renderer) {
 	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
 
-	OPrenderBlend(false);
-	deferredRenderer->renderBucket[0].Sort();
-	deferredRenderer->renderBucket[0].Flush(false);
+	// DRAW SCENE 
+	{
+		OPrenderBlend(false);
+		deferredRenderer->renderBucket[0].Sort();
+		deferredRenderer->renderBucket[0].Flush(false);
 
-	deferredRenderer->gBuffer.Unbind();
+		deferredRenderer->gBuffer.Unbind();
+	}
 
-	OPrenderClear(0.3);
-	OPrenderCull(false);
 
-	// Geometry rendered now do the light pass
-	//OPrenderBlend(true);
-	deferredRenderer->renderBucket[1].Submit(deferredRenderer->quadMesh, &deferredWorld, deferredRenderer->defaultLightingMaterialInstance);
-	deferredRenderer->renderBucket[1].Sort();
-	deferredRenderer->renderBucket[1].Flush(false);
+	// DRAW LIGHTS
+	{
+		deferredRenderer->invertViewProjection = (*deferredRenderer->rendererRoot.camera)->view * (*deferredRenderer->rendererRoot.camera)->proj;
+		OPmat4Inverse(&deferredRenderer->invertViewProjection, deferredRenderer->invertViewProjection);
+
+		deferredRenderer->lightBuffer.Bind();
+		f32 ambient = 0.1;
+		OPrenderClearColor(ambient, ambient, ambient, 1);
+
+		OPrenderDepthWrite(false);
+		OPrenderDepth(true);
+		OPrenderBlend(true);
+		//OPrenderCullMode(2);
+
+
+		//OPrenderBlend(true);
+		//deferredRenderer->renderBucket[1].Submit(deferredRenderer->quadMesh, &deferredWorld, deferredRenderer->defaultLightingMaterialInstance);
+		deferredRenderer->renderBucket[1].Sort();
+		deferredRenderer->renderBucket[1].Flush(false);
+
+		deferredRenderer->lightBuffer.Unbind();
+
+		OPrenderCullMode(0);
+		OPrenderDepth(true);
+		OPrenderDepthWrite(true);
+	}
 
 }
 
@@ -120,6 +156,32 @@ void OPrendererDeferredPresent(OPrenderer* renderer) {
 	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
 	// Combine GBuffer and Lighting
 
+	// COMBINE
+	{
+		OPrenderClear(0,0,0,1);
+		OPrenderCullMode(0);
+		OPrenderDepth(false);
+		OPrenderDepthWrite(false);
+
+		// Draw fullscreen quad to combine
+		deferredRenderer->defaultCombineEffect->Bind();
+		deferredRenderer->quadMesh->Bind();
+		OPrenderDepth(0);
+		OPrenderCull(false);
+		OPmat4 world = OPMAT4_IDENTITY;
+
+		OPeffectSet("uGbufferPosition", &deferredRenderer->gBuffer.texture[0], 0);
+		OPeffectSet("uGbufferNormal", &deferredRenderer->gBuffer.texture[1], 1);
+		OPeffectSet("uGbufferAlbedoSpec", &deferredRenderer->gBuffer.texture[2], 2);
+		OPeffectSet("uLightBuffer", deferredRenderer->lightBuffer.texture, 3);
+		OPeffectSet("uWorld", 1, &world);
+
+		OPrenderDrawBufferIndexed(0);
+
+		OPrenderCullMode(0);
+		OPrenderDepth(true);
+		OPrenderDepthWrite(true);
+	}
 }
 
 OPrendererDeferred* OPrendererDeferred::Setup() {

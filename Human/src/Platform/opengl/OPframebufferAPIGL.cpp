@@ -4,7 +4,7 @@
 #include "./Human/include/Platform/opengl/OPtextureAPIGL.h"
 #include "./Human/include/Rendering/OPwindow.h"
 
-OPframeBuffer* OPframeBufferAPIGLInit(OPframeBuffer* framebuffer, OPtextureDesc textureDesc) {
+OPframeBuffer* OPframeBufferAPIGLInitDepth(OPframeBuffer* framebuffer, OPtextureDesc textureDesc, OPtexture* depthTexture) {
 	OPframeBufferGL* frameBufferGL = OPNEW(OPframeBufferGL());
 	framebuffer->internalPtr = frameBufferGL;
 	framebuffer->count = 1;
@@ -18,10 +18,10 @@ OPframeBuffer* OPframeBufferAPIGLInit(OPframeBuffer* framebuffer, OPtextureDesc 
 	OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureGL->Handle, 0));
 
 	// Depth Buffer
-	OPGLFN(glGenRenderbuffers(1, &frameBufferGL->DepthHandle));
-	OPGLFN(glBindRenderbuffer(GL_RENDERBUFFER, frameBufferGL->DepthHandle));
-	OPGLFN(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, textureDesc.width, textureDesc.height));
-	OPGLFN(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, frameBufferGL->DepthHandle));
+	framebuffer->depthTexture = *depthTexture;
+	OPtextureGL* depthTextureGL = (OPtextureGL*)framebuffer->depthTexture.internalPtr;
+	OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTextureGL->Handle, 0));
+
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		OPlogErr("Framebuffer not complete!");
@@ -31,7 +31,23 @@ OPframeBuffer* OPframeBufferAPIGLInit(OPframeBuffer* framebuffer, OPtextureDesc 
 	return framebuffer;
 }
 
-OPframeBuffer* OPframeBufferAPIGLInitMulti(OPframeBuffer* framebuffer, OPtextureDesc* textureDesc, ui32 count) {
+OPframeBuffer* OPframeBufferAPIGLInit(OPframeBuffer* framebuffer, OPtextureDesc textureDesc) {
+	OPtextureDesc depthDesc;
+	depthDesc.filter = OPtextureFilter::NEAREST;
+	depthDesc.format = OPtextureFormat::DEPTH;
+	depthDesc.internalFormat = OPtextureFormat::DEPTH32F;
+	depthDesc.width = textureDesc.width;
+	depthDesc.height = textureDesc.height;
+	depthDesc.textureType = OPtextureType::BYTE;
+
+	OPtexture depthTexture;
+	OPRENDERER_ACTIVE->Texture.Init(&depthTexture, depthDesc);
+
+	return OPframeBufferAPIGLInitDepth(framebuffer, textureDesc, &depthTexture);
+}
+
+OPframeBuffer* OPframeBufferAPIGLInitMultiDepth(OPframeBuffer* framebuffer, OPtextureDesc* textureDesc, ui32 count, OPtexture* depthTexture) {
+
 	OPframeBufferGL* frameBufferGL = OPNEW(OPframeBufferGL());
 	framebuffer->internalPtr = frameBufferGL;
 	framebuffer->count = count;
@@ -47,13 +63,12 @@ OPframeBuffer* OPframeBufferAPIGLInitMulti(OPframeBuffer* framebuffer, OPtexture
 	}
 
 	GLuint attachments[10] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4, GL_COLOR_ATTACHMENT5, GL_COLOR_ATTACHMENT6, GL_COLOR_ATTACHMENT7, GL_COLOR_ATTACHMENT8, GL_COLOR_ATTACHMENT9 };
-	OPGLFN(glDrawBuffers(count, attachments));	
+	OPGLFN(glDrawBuffers(count, attachments));
 
 
-	OPGLFN(glGenRenderbuffers(1, &frameBufferGL->DepthHandle));
-	OPGLFN(glBindRenderbuffer(GL_RENDERBUFFER, frameBufferGL->DepthHandle));
-	OPGLFN(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, textureDesc[0].width, textureDesc[0].height)); //GL_DEPTH_COMPONENT
-	OPGLFN(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, frameBufferGL->DepthHandle));
+	framebuffer->depthTexture = *depthTexture;
+	OPtextureGL* depthTextureGL = (OPtextureGL*)framebuffer->depthTexture.internalPtr;
+	OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTextureGL->Handle, 0));
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		OPlogErr("Framebuffer not complete!");
@@ -61,6 +76,21 @@ OPframeBuffer* OPframeBufferAPIGLInitMulti(OPframeBuffer* framebuffer, OPtexture
 	OPGLFN(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 
 	return framebuffer;
+}
+
+OPframeBuffer* OPframeBufferAPIGLInitMulti(OPframeBuffer* framebuffer, OPtextureDesc* textureDesc, ui32 count) {
+	OPtextureDesc depthDesc;
+	depthDesc.filter = OPtextureFilter::NEAREST;
+	depthDesc.format = OPtextureFormat::DEPTH;
+	depthDesc.internalFormat = OPtextureFormat::DEPTH32F;
+	depthDesc.width = textureDesc[0].width;
+	depthDesc.height = textureDesc[0].height;
+	depthDesc.textureType = OPtextureType::BYTE;
+
+	OPtexture depthTexture;
+	OPRENDERER_ACTIVE->Texture.Init(&depthTexture, depthDesc);
+
+	return OPframeBufferAPIGLInitMultiDepth(framebuffer, textureDesc, count, &depthTexture);
 }
 
 OPframeBuffer* OPframeBufferAPIGLCreate(OPtextureDesc textureDesc) {
@@ -93,4 +123,6 @@ void OPframeBufferAPIGLInit(OPframeBufferAPI* frameBuffer) {
 	frameBuffer->_Create = OPframeBufferAPIGLCreate;
 	frameBuffer->_Init = OPframeBufferAPIGLInit;
 	frameBuffer->_InitMulti = OPframeBufferAPIGLInitMulti;
+	frameBuffer->_InitDepth = OPframeBufferAPIGLInitDepth;
+	frameBuffer->_InitMultiDepth = OPframeBufferAPIGLInitMultiDepth;
 }

@@ -1,7 +1,10 @@
 #include "./Pipeline/include/Loaders/OPloaderTGA.h"
 #include "./Core/include/Assert.h"
 
+#include "./Core/include/OPdebug.h"
+
 i32 OPimageTGALoad(OPstream* str, OPtexture** image) {
+	TIMED_BLOCK;
 	ASSERT(str != NULL, "Image not found.");
 
 	ui8* data;
@@ -18,12 +21,29 @@ i32 OPimageTGALoad(OPstream* str, OPtexture** image) {
 
 	header = str->Read(sizeof(ui8) * 18);
 
+	OPlogInfo("TGA Type: %d", header[2]);
+	OPlogInfo("Headers 0, 1, 4: %d, %d, %d", header[0], header[1], header[4]);
+	ui32 skipover = header[0];
+	skipover += header[1] * header[4];
+	skipover += 12;
+	str->Read(skipover);
+	OPlogInfo("Skipped: %d", skipover);
+
 	if (!OPmemcmp(decompressed, header, sizeof(decompressed)))
 	{
 		components = header[16];
 		width = header[13] * 256 + header[12];
 		height = header[15] * 256 + header[14];
-		size = ((width * components + 31) / 32) * 4 * height;
+
+		//size = ((width * components + 31) / 32) * 4 * height;
+		ui32 bytesPerPixel = components / 8;
+		ui32 pixelCount = width * height;
+		size = pixelCount * bytesPerPixel * sizeof(ui8);
+
+		OPlogInfo("Components: %d", components);
+		OPlogInfo("BitsPerPixel: %d", bytesPerPixel);
+		OPlogInfo("Width: %d", width);
+		OPlogInfo("Height: %d", height);
 
 		if ((components != 24) && (components != 32))
 		{
@@ -32,7 +52,15 @@ i32 OPimageTGALoad(OPstream* str, OPtexture** image) {
 		}
 
 		compressed = false;
-		data = str->Read(size);
+
+		data = OPALLOC(ui8, sizeof(ui32) * bytesPerPixel * width * height);
+		ui32 p = 0;
+		for (ui32 i = 0; i < pixelCount; i++) {
+			for (ui32 j = 0; j < bytesPerPixel; j++) {
+				data[p++] = str->UI8();
+			}
+		}
+		//data = str->Read(size);
 	}
 	else if (!OPmemcmp(is_compressed, header, sizeof(is_compressed)))
 	{

@@ -26,6 +26,8 @@ ui32 OPtextureFormatToGL(OPtextureFormat textureFormat) {
 	case OPtextureFormat::LUMINANCE_ALPHA: return GL_LUMINANCE_ALPHA;
 	case OPtextureFormat::RGB16F: return GL_RGB;
 	case OPtextureFormat::DEPTH: return GL_DEPTH_COMPONENT;
+	case OPtextureFormat::DEPTH16F: return GL_DEPTH_COMPONENT16;
+	case OPtextureFormat::DEPTH32F: return GL_DEPTH_COMPONENT32F;
 	}
 	return 0;
 }

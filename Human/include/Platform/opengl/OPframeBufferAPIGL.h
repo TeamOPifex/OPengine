@@ -9,5 +9,4 @@ void OPframeBufferAPIGLInit(OPframeBufferAPI* frameBuffer);
 
 struct OPframeBufferGL {
 	ui32 Handle;
-	ui32 DepthHandle;
 };

@@ -38,6 +38,10 @@ inline void  OPrenderClear(f32 r, f32 g, f32 b, f32 a) {
 	OPRENDERER_ACTIVE->Clear(r, g, b, a);
 }
 
+inline void  OPrenderClearColor(f32 r, f32 g, f32 b, f32 a) {
+	OPRENDERER_ACTIVE->ClearColor(r, g, b, a);
+}
+
 inline void  OPrenderClearDepth() {
 	OPRENDERER_ACTIVE->ClearDepth();
 }

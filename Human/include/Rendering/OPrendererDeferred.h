@@ -11,6 +11,7 @@ struct OPrendererDeferred {
 	OPmaterial* passes[2];
 	OPrenderCommandBucket renderBucket[2];
 	OPframeBuffer gBuffer;
+	OPframeBuffer lightBuffer;
 	OPeffect* defaultGBufferEffect = NULL;
 	OPmaterial* defaultGBufferMaterial = NULL;
 	OPeffect* defaultLightingEffect = NULL;
@@ -19,8 +20,12 @@ struct OPrendererDeferred {
 	OPeffect* defaultLightingSpotEffect = NULL;
 	OPmaterial* defaultLightingSpotMaterial = NULL;
 	OPmaterialInstance* defaultLightingSpotMaterialInstance = NULL;
+	OPeffect* defaultCombineEffect = NULL;
+	OPmaterial* defaultCombineMaterial = NULL;
+	OPmaterialInstance* defaultCombineMaterialInstance = NULL;
 	OPmodel* sphereMesh = NULL;
 	OPmodel* quadMesh = NULL;
+	OPmat4 invertViewProjection;
 
 	OPrendererDeferred() { Setup(); }
 

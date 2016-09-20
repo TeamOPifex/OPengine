@@ -29,7 +29,7 @@ OPmaterialInstance** OPmaterial::CreateInstances(OPmodel* model) {
 		if (model->meshes[i].materialDesc != NULL) {
 			if (model->meshes[i].materialDesc->albedo != NULL) {
 				OPtexture* tex = (OPtexture*)OPCMAN.LoadGet(model->meshes[i].materialDesc->albedo);
-				result[i]->AddParam("uAlbedo", tex, 0);
+				result[i]->AddParam("uAlbedoMap", tex, 0);
 			}
 		}
 	}

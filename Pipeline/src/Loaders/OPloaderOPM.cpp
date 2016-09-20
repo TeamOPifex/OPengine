@@ -94,15 +94,21 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 		if (indexSize == OPindexSize::SHORT) {
 			ui16* indData = &((ui16*)indices)[indexOffset];
 			mesh->meshDesc->indices = indData;
-			for (ui32 j = 0; j < indicesCount; j++) {
-				indData[j] = str->UI16();
-			}
+			ui32 indDataSize = sizeof(ui16) * indicesCount;
+			ui8* data = str->Read(indDataSize);
+			OPmemcpy(indData, data, indDataSize);
+			//for (ui32 j = 0; j < indicesCount; j++) {
+			//	indData[j] = str->UI16();
+			//}
 		} else {
 			ui32* indData = &((ui32*)indices)[indexOffset];
 			mesh->meshDesc->indices = indData;
-			for (ui32 j = 0; j < indicesCount; j++) {
-				indData[j] = str->UI32();
-			}
+			ui32 indDataSize = sizeof(ui32) * indicesCount;
+			ui8* data = str->Read(indDataSize);
+			OPmemcpy(indData, data, indDataSize);
+			//for (ui32 j = 0; j < indicesCount; j++) {
+			//	indData[j] = str->UI32();
+			//}
 		}
 
 		mesh->offset = indexOffset;
@@ -134,7 +140,7 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 			mesh->meshMeta = OPNEW(OPmeshMeta());
 			mesh->meshMeta->count = metaCount;
 			mesh->meshMeta->metaType = (OPmeshMetaType*)OPALLOC(OPmeshMetaType, metaCount);
-			mesh->meshMeta->data = (OPstream*)OPALLOC(OPstream, metaCount);
+			mesh->meshMeta->data = OPNEW(OPstream*, metaCount);
 
 			for (ui32 j = 0; j < metaCount; j++) {
 				mesh->meshMeta->metaType[j] = (OPmeshMetaType)str->UI32();
@@ -142,17 +148,17 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 					ui32 dataSize = str->UI32();
 					if (dataSize == 0) continue;
 					void* data = str->Read(dataSize);
-					mesh->meshMeta->data[j].Init(dataSize);
-					mesh->meshMeta->data[j].Write(data, dataSize);
-					mesh->meshMeta->data[j].Seek(0);
+					mesh->meshMeta->data[j] = OPstream::Create(dataSize);
+					mesh->meshMeta->data[j]->Write(data, dataSize);
+					mesh->meshMeta->data[j]->Seek(0);
 				}
 				else {
 					switch (mesh->meshMeta->metaType[j]) {
 						case OPmeshMetaType::ALBEDO: {
 							OPchar* data = str->String();
-							mesh->meshMeta->data[j].Init(strlen(data) + 1 + sizeof(ui32));
-							mesh->meshMeta->data[j].WriteString(data);
-							mesh->meshMeta->data[j].Reset();
+							mesh->meshMeta->data[j] = OPstream::Create(strlen(data) + 1 + sizeof(ui32));
+							mesh->meshMeta->data[j]->WriteString(data);
+							mesh->meshMeta->data[j]->Reset();
 							mesh->materialDesc->albedo = OPstringCopy(data);
 							break;
 						}
