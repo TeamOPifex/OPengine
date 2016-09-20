@@ -9,7 +9,8 @@ layout (location = 2) in vec3 aTangent;
 layout (location = 3) in vec3 aBinormal;
 layout (location = 4) in vec2 aUV;
 
-//out vec2 vUV;
+out vec4 vPos;
+out mat4 vInvViewProj;
 
 uniform mat4 uWorld;
 uniform mat4 uView;
@@ -19,7 +20,9 @@ void main()
 {
     vec4 worldPos = uWorld * vec4(aPosition, 1.0f);
     gl_Position = uProj * uView * worldPos;
-	//gl_Position = uWorld * vec4(aPosition, 1.0f);
 
-    //vUV = vec2(gl_Position.x / gl_Position.w, gl_Position.y / gl_Position.w);
+	mat4 viewProj = uProj * uView;
+	vInvViewProj = inverse(viewProj);
+
+	vPos = gl_Position;
 }

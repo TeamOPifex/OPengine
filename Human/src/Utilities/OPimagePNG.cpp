@@ -73,8 +73,14 @@ OPimage OPimagePNGLoadData(const OPchar* filename) {
 	return result;	
 }
 
+#include "./Core/include/OPdebug.h"
 
 i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image, OPtextureFilter filter) {
+	TIMED_BLOCK;
+	if (str == NULL) {
+		return 0;
+	}
+
 	ui32 error;
 	ui8* data;
 	ui32 width, height;

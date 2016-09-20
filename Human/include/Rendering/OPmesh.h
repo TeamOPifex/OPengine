@@ -27,7 +27,7 @@ struct OPmeshDesc {
 struct OPmeshMeta {
 	ui16 count;
 	OPmeshMetaType* metaType;
-	OPstream* data;
+	OPstream** data;
 };
 
 struct OPmeshMaterialDesc {

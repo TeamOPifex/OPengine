@@ -42,6 +42,11 @@ void OPrendererClearGL(OPvec4 color) {
 	OPGLFN(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
+void OPrendererClearColorGL(OPvec4 color) {
+	OPGLFN(glClearColor(color.x, color.y, color.z, color.w));
+	OPGLFN(glClear(GL_COLOR_BUFFER_BIT));
+}
+
 void OPrendererClearDepthGL() {
 	OPGLFN(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
@@ -159,6 +164,7 @@ OPrenderAPI OPRENDERERGL;
 OPrenderAPI* OPrendererGL() {
 	OPRENDERERGL.Init = OPrendererInitGL;
 	OPRENDERERGL._Clear = OPrendererClearGL;
+	OPRENDERERGL._ClearColor = OPrendererClearColorGL;
 	OPRENDERERGL.ClearDepth = OPrendererClearDepthGL;
 	OPRENDERERGL.Present = OPrendererPresentGL;
 	OPRENDERERGL.SetDepthTesting = OPrendererSetDepthTestingGL;

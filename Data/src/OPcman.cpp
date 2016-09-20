@@ -213,6 +213,10 @@ bool OPcman::Load(const OPchar* assetKey) {
 		if (str == NULL) {
 			str = OPfile::ReadFromFile(fullPathToAsset, 1024);
 		}
+		if (str == NULL) {
+			OPlogErr("Failed to load asset: %s", fullPathToAsset);
+			return false;
+		}
 
 		void* assetPtr;
 		OPint loadResult = loader->Load(str, &assetPtr);

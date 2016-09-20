@@ -8,6 +8,8 @@ enum struct OPtextureFormat
 	LUMINANCE,
 	LUMINANCE_ALPHA,
 	DEPTH,
+	DEPTH16F,
+	DEPTH32F,
 	RGB16F,
 	BGRA,
 	BGR

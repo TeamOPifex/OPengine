@@ -24,6 +24,7 @@ typedef struct OPrenderAPI OPrenderAPI;
 struct OPrenderAPI {
 	i8(*Init)(OPwindow* window) = 0;
 	void(*_Clear)(OPvec4 color) = 0;
+	void(*_ClearColor)(OPvec4 color) = 0;
 	void(*ClearDepth)() = 0;
 	void(*Present)() = 0;
 	void(*SetDepthTesting)(bool state) = 0;
@@ -63,6 +64,12 @@ struct OPrenderAPI {
 	inline void Clear(OPfloat r, OPfloat g, OPfloat b) { _Clear(OPvec4(r, g, b, 1.0)); }
 	inline void Clear(OPfloat r, OPfloat g, OPfloat b, OPfloat a) { _Clear(OPvec4(r, g, b, a)); }
 	inline void Clear(OPvec3 v) { _Clear(OPvec4(v.x, v.y, v.z, 1.0)); }
+
+	inline void ClearColor(OPvec4 v) { _ClearColor(v); }
+	inline void ClearColor(OPfloat r) { _ClearColor(OPvec4(r)); }
+	inline void ClearColor(OPfloat r, OPfloat g, OPfloat b) { _ClearColor(OPvec4(r, g, b, 1.0)); }
+	inline void ClearColor(OPfloat r, OPfloat g, OPfloat b, OPfloat a) { _ClearColor(OPvec4(r, g, b, a)); }
+	inline void ClearColor(OPvec3 v) { _ClearColor(OPvec4(v.x, v.y, v.z, 1.0)); }
 
 	inline void SetBlendModeAlpha() {
 		SetBlendMode(OPblendFunction::SRC_ALPHA, OPblendFunction::ONE_MINUS_SRC_ALPHA);

@@ -4,6 +4,10 @@
 #include "./OPassimp.h"
 #endif
 
+#ifdef ADDON_libjpeg_turbo
+#include "OPlibjpegturbo.h"
+#endif
+
 //////////////////////////////////////
 // Application Methods
 //////////////////////////////////////
@@ -24,6 +28,10 @@ void ApplicationInit() {
 	SpineAddLoader();
 #ifdef ADDON_assimp
 	OPassimpAddLoaders();
+#endif
+
+#ifdef ADDON_libjpeg_turbo
+	OPCMAN.AddLoader(&OPASSETLOADER_JPG);
 #endif
 
 	OPoculusStartup();

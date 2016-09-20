@@ -1,7 +1,10 @@
 #include "./Pipeline/include/Loaders/OPloaderBMP.h"
 #include "./Core/include/Assert.h"
+#include "./Core/include/OPdebug.h"
 
 OPint OPimageBMPLoad(OPstream* str, OPtexture** image) {
+	TIMED_BLOCK;
+
 	ASSERT(str != NULL, "Image not found.");
 
 	ui8* data;

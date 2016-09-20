@@ -112,8 +112,8 @@ struct OPstream {
 	inline OPuint Write(f32* data) { return Write(data, sizeof(f32)); }
 
 	inline OPuint WriteString(const OPchar* data) {
-		ui32 len = strlen(data);
-		ui32 written = Write(&len, sizeof(ui32));
+		ui32 len = (ui32)strlen(data);
+		OPuint written = Write(&len, sizeof(ui32));
 		written += Write((void*)data, sizeof(OPchar) * (len + 1));
 		return written;
 	}
