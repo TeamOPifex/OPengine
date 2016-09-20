@@ -8,6 +8,7 @@
 #include "./Core/include/OPdir.h"
 #include "./Core/include/OPcore.h"
 #include "./Core/include/Assert.h"
+#include <ctype.h>
 
 OPcman OPCMAN;
 
@@ -18,7 +19,7 @@ bool OPcman::Init(const OPchar* dir) {
 	resourceFiles.Init(sizeof(OPresourceFile));
 	purgeList.Init();
 	hashmap.Init(OP_CMAN_CAP);
-	
+
 	if (dir == NULL) {
 		assetDirectoriesCount = 0;
 		rootFolder = OPstringCreateMerged(OPEXECUTABLE_PATH, "assets/");
@@ -193,7 +194,7 @@ bool OPcman::Load(const OPchar* assetKey) {
 			continue;
 		}
 
-		
+
 		// Found the correct loader for this asset extension type
 		OPchar* fullPathToAsset = OPstringCreateMerged(loader->AssetTypePath, assetKey);
 		if (!OPfile::Exists(fullPathToAsset)) {
