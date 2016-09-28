@@ -135,6 +135,21 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 		mesh->boundingBox.max.y = str->F32();
 		mesh->boundingBox.max.z = str->F32();
 
+		mesh->materialDesc->diffuse = str->String();
+		mesh->materialDesc->specular = str->String();
+		mesh->materialDesc->ambient = str->String();
+		mesh->materialDesc->emissive = str->String();
+		mesh->materialDesc->height = str->String();
+		mesh->materialDesc->normals = str->String();
+		mesh->materialDesc->shininess = str->String();
+		mesh->materialDesc->opacity = str->String();
+		mesh->materialDesc->displacement = str->String();
+		mesh->materialDesc->lightMap = str->String();
+		mesh->materialDesc->reflection = str->String();
+		mesh->materialDesc->other1 = str->String();
+		mesh->materialDesc->other2 = str->String();
+		mesh->materialDesc->other3 = str->String();
+
 		ui32 metaCount = str->UI32();
 		if (metaCount > 0) {
 			mesh->meshMeta = OPNEW(OPmeshMeta());
@@ -151,18 +166,6 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 					mesh->meshMeta->data[j] = OPstream::Create(dataSize);
 					mesh->meshMeta->data[j]->Write(data, dataSize);
 					mesh->meshMeta->data[j]->Seek(0);
-				}
-				else {
-					switch (mesh->meshMeta->metaType[j]) {
-						case OPmeshMetaType::ALBEDO: {
-							OPchar* data = str->String();
-							mesh->meshMeta->data[j] = OPstream::Create(strlen(data) + 1 + sizeof(ui32));
-							mesh->meshMeta->data[j]->WriteString(data);
-							mesh->meshMeta->data[j]->Reset();
-							mesh->materialDesc->albedo = OPstringCopy(data);
-							break;
-						}
-					}
 				}
 			}
 		}

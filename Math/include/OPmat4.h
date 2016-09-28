@@ -20,7 +20,7 @@ extern const OPmat4 OPMAT4_IDENTITY;
 
 // INLINE PRE DECLARATIONS
 inline OPmat4 OPmat4Mul(OPmat4 m1, OPmat4 m2);
-inline void OPmat4Mul(OPmat4* dst, OPmat4 m1, OPmat4 m2);
+void OPmat4Mul(OPmat4* dst, OPmat4 m1, OPmat4 m2);
 
 inline OPmat4 OPmat4RotX(OPfloat t);
 inline void OPmat4RotX(OPmat4* m, OPfloat x);
@@ -39,6 +39,7 @@ inline void OPmat4Scl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z);
 inline OPvec2 OPmat4Transform(OPvec2 a, OPmat4 b);
 inline OPvec3 OPmat4Transform(OPvec3 a, OPmat4 b);
 inline OPvec4 OPmat4Transform(OPvec4 a, OPmat4 b);
+OPmat4 OPmat4From(OPquat a);
 
 // STRUCT DEFINITIONS
 
@@ -182,6 +183,11 @@ struct OPmat4 {
 		return this;
 	}
 
+	inline OPmat4* Rot(OPquat val) {
+		OPmat4Mul(this, *this, OPmat4From(val));
+		return this;
+	}
+
 	inline OPmat4* Scl(f32 val) {
 		OPmat4Scl(this, val, val, val);
 		return this;
@@ -192,8 +198,8 @@ struct OPmat4 {
 		return this;
 	}
 
-	inline OPmat4* Scl(OPvec3 val) {
-	    OPmat4Scl(this, val.x, val.y, val.z);
+	inline OPmat4* Scl(OPvec3 scl) {
+		OPmat4Scl(this, scl.x, scl.y, scl.z);
 		return this;
 	}
 
@@ -207,15 +213,6 @@ struct OPmat4 {
 		return this;
 	}
 };
-
-// INLINE DEFINITIONS
-
-//    ___            _         _ _        _       _ _   _              _   _
-//   / __|_  _ _ __ | |__  ___| (_)__    /_\  _ _(_) |_| |_  _ __  ___| |_(_)__
-//   \__ \ || | '  \| '_ \/ _ \ | / _|  / _ \| '_| |  _| ' \| '  \/ -_)  _| / _|
-//   |___/\_, |_|_|_|_.__/\___/_|_\__| /_/ \_\_| |_|\__|_||_|_|_|_\___|\__|_\__|
-//        |__/
-
 
 
 inline OPmat4 OPmat4Create(
@@ -243,28 +240,7 @@ inline OPmat4 OPmat4Create(OPvec4 row0, OPvec4 row1, OPvec4 row2, OPvec4 row3) {
 		);
 }
 
-// NOTE(garrett): pretty sure this shouldn't be inlined because of code bloat, look into this later.
-inline void OPmat4Mul(OPmat4* dst, OPmat4 m1, OPmat4 m2)
-{
-	OPmat4 result;
-	result[0][0] = m1[0][0] * m2[0][0] + m1[1][0] * m2[0][1] + m1[2][0] * m2[0][2] + m1[3][0] * m2[0][3];
-	result[1][0] = m1[0][0] * m2[1][0] + m1[1][0] * m2[1][1] + m1[2][0] * m2[1][2] + m1[3][0] * m2[1][3];
-	result[2][0] = m1[0][0] * m2[2][0] + m1[1][0] * m2[2][1] + m1[2][0] * m2[2][2] + m1[3][0] * m2[2][3];
-	result[3][0] = m1[0][0] * m2[3][0] + m1[1][0] * m2[3][1] + m1[2][0] * m2[3][2] + m1[3][0] * m2[3][3];
-	result[0][1] = m1[0][1] * m2[0][0] + m1[1][1] * m2[0][1] + m1[2][1] * m2[0][2] + m1[3][1] * m2[0][3];
-	result[1][1] = m1[0][1] * m2[1][0] + m1[1][1] * m2[1][1] + m1[2][1] * m2[1][2] + m1[3][1] * m2[1][3];
-	result[2][1] = m1[0][1] * m2[2][0] + m1[1][1] * m2[2][1] + m1[2][1] * m2[2][2] + m1[3][1] * m2[2][3];
-	result[3][1] = m1[0][1] * m2[3][0] + m1[1][1] * m2[3][1] + m1[2][1] * m2[3][2] + m1[3][1] * m2[3][3];
-	result[0][2] = m1[0][2] * m2[0][0] + m1[1][2] * m2[0][1] + m1[2][2] * m2[0][2] + m1[3][2] * m2[0][3];
-	result[1][2] = m1[0][2] * m2[1][0] + m1[1][2] * m2[1][1] + m1[2][2] * m2[1][2] + m1[3][2] * m2[1][3];
-	result[2][2] = m1[0][2] * m2[2][0] + m1[1][2] * m2[2][1] + m1[2][2] * m2[2][2] + m1[3][2] * m2[2][3];
-	result[3][2] = m1[0][2] * m2[3][0] + m1[1][2] * m2[3][1] + m1[2][2] * m2[3][2] + m1[3][2] * m2[3][3];
-	result[0][3] = m1[0][3] * m2[0][0] + m1[1][3] * m2[0][1] + m1[2][3] * m2[0][2] + m1[3][3] * m2[0][3];
-	result[1][3] = m1[0][3] * m2[1][0] + m1[1][3] * m2[1][1] + m1[2][3] * m2[1][2] + m1[3][3] * m2[1][3];
-	result[2][3] = m1[0][3] * m2[2][0] + m1[1][3] * m2[2][1] + m1[2][3] * m2[2][2] + m1[3][3] * m2[2][3];
-	result[3][3] = m1[0][3] * m2[3][0] + m1[1][3] * m2[3][1] + m1[2][3] * m2[3][2] + m1[3][3] * m2[3][3];
-	*dst = result;
-};
+void OPmat4Mul(OPmat4* dst, OPmat4 m1, OPmat4 m2);
 
 inline void OPmat4Identity(OPmat4* m) {
 	*m = OPMAT4_IDENTITY;
@@ -456,118 +432,36 @@ inline OPvec4 OPmat4Transform(OPvec4 a, OPmat4 b) {
 	 OPmat4Mul(m, *m, tmp);
  }
 
- //    ___             _   _               _     _       _ _   _              _   _
- //   | __|  _ _ _  __| |_(_)___ _ _  __ _| |   /_\  _ _(_) |_| |_  _ __  ___| |_(_)__
- //   | _| || | ' \/ _|  _| / _ \ ' \/ _` | |  / _ \| '_| |  _| ' \| '  \/ -_)  _| / _|
- //   |_| \_,_|_||_\__|\__|_\___/_||_\__,_|_| /_/ \_\_| |_|\__|_||_|_|_|_\___|\__|_\__|
- //
-
-/* NOTE(garrett): Pretty sure this unneeded now that we have OPquat
-       (Kirk): I think we still need it, we can use a quat to compound
-               rotations, but we may still need to retrieve them as a matrix
-               for use with shaders
-*/
-inline void OPmat4BuildQuat(OPmat4* dst, OPquat* qtr){
-	f32 x = qtr->x;		f32 y = qtr->y;		f32 z = qtr->z;		f32 w = qtr->w;
-	f32 x2 = x + x;		f32 y2 = y + y;		f32 z2 = z + z;
-	f32 xx = x * x2;	f32 xy = x * y2;	f32 xz = x * z2;
-	f32 yy = y * y2;	f32 yz = y * z2;	f32 zz = z * z2;
-	f32 wx = w * x2;	f32 wy = w * y2;	f32 wz = w * z2;
-
-	dst->cols[0].x = 1 - (yy + zz);
-	dst->cols[0].y = xy - wz;
-	dst->cols[0].z = xz + wy;
-
-	dst->cols[1].x = xy + wz;
-	dst->cols[1].y = 1 - (xx + zz);
-	dst->cols[1].z = yz - wx;
-
-	dst->cols[2].x = xz - wy;
-	dst->cols[2].y = yz + wx;
-	dst->cols[2].z = 1 - (xx + yy);
-
-	dst->cols[3].x = 0;
-	dst->cols[3].y = 0;
-	dst->cols[3].z = 0;
-
-	dst->cols[0].w = 0;
-	dst->cols[1].w = 0;
-	dst->cols[2].w = 0;
-	dst->cols[3].w = 1;
-}
-
-/*
-inline void OPmat4quat(OPmat4* m, OPquat* qtr) {
-	OPmat4 temp = OPMAT4_ZERO;
-	OPmat4BuildQuat(&temp, qtr);
-	OPmat4Mul(m, m, &temp);
-}*/
 
 
-//inline OPmat4 OPmat4From(OPquat a) {
-//	OPmat4 result;
-//	result[0] = OPvec4Create(1.0f - 2.0f*a.z*a.z - 2.0f*a.w*a.w, 2.0f*a.y*a.z - 2.0f*a.w*a.x, 2.0f*a.y*a.w + 2.0f*a.z*a.x, 0.0f);
-//	result[1] = OPvec4Create(2*a.y*a.z + 2*a.w*a.x, 1-2*a.y*a.y-2*a.w*a.w, 2*a.z*a.w - 2*a.y*a.x, 0);
-//	result[2] = OPvec4Create(2*a.y*a.w - 2*a.z*a.x, 2*a.z*a.w + 2*a.y*a.x, 1-2*a.y*a.y-2*a.z*a.z, 0);
-//	result[3] = OPvec4Create(0,0,0,1);
-//	return result;
-//}
+OPmat4 OPmat4From(OPquat a);
 
-inline OPmat4 OPmat4From(OPquat a) {
-	OPmat4 result = OPMAT4_IDENTITY;
-	result[0][0] = 1.0f - 2.0f * a.y * a.y - 2.0f * a.z * a.z;
-	result[0][1] = 2.0f * a.x * a.y - 2.0f * a.w * a.z;
-	result[0][2] = 2.0f * a.x * a.z + 2.0f * a.w * a.y;
-	result[0][3] = 0.0f;
-	result[1][0] = 2.0f * a.x * a.y + 2.0f * a.w * a.z;
-	result[1][1] = 1.0f - 2.0f * a.x * a.x - 2.0f * a.z * a.z;
-	result[1][2] = 2.0f * a.y * a.z + 2.0f * a.w * a.x;
-	result[1][3] = 0;
-	result[2][0] = 2.0f * a.x * a.z - 2.0f * a.w * a.y;
-	result[2][1] = 2.0f * a.y * a.z - 2.0f * a.w * a.x;
-	result[2][2] = 1.0f - 2.0f * a.x * a.x - 2.0f * a.y * a.y;
-	result[2][3] = 0;
-	return result;
-}
+void OPmat4Log(const OPchar* msg, OPmat4 m);
+OPmat4 OPmat4Read(OPstream* str);
+void OPmat4Write(OPmat4 v, OPstream* str);
+
+OPmat4 OPmat4RemoveScale(OPmat4 a);
+OPvec3 OPmat4Eulor(OPmat4 a);
+
+OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPfloat zNear, OPfloat zFar);
+OPmat4 OPmat4LookAt(OPvec3 eye, OPvec3 at, OPvec3 up);
+OPmat4 OPmat4Perspective(OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal);
+OPint OPmat4Inverse(OPmat4* dst, OPmat4 a);
+OPmat4 OPmat4Interpolate(OPmat4 a, OPmat4 b, OPfloat percent);
+
 
 
 inline OPfloat OPmat4GetCofactor(OPfloat m0, OPfloat m1, OPfloat m2,
-	                           OPfloat m3, OPfloat m4, OPfloat m5,
-	                           OPfloat m6, OPfloat m7, OPfloat m8)
+	OPfloat m3, OPfloat m4, OPfloat m5,
+	OPfloat m6, OPfloat m7, OPfloat m8)
 {
-    return m0 * (m4 * m8 - m5 * m7) -
-           m1 * (m3 * m8 - m5 * m6) +
-           m2 * (m3 * m7 - m4 * m6);
+	return m0 * (m4 * m8 - m5 * m7) -
+		m1 * (m3 * m8 - m5 * m6) +
+		m2 * (m3 * m7 - m4 * m6);
 }
 
 
-inline void OPmat4Log(const OPchar* msg, OPmat4 m) {
-	OPlogInfo("%s:\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f",
-		msg,
-		m[0][0], m[1][0], m[2][0], m[3][0],
-		m[0][1], m[1][1], m[2][1], m[3][1],
-		m[0][2], m[1][2], m[2][2], m[3][2],
-		m[0][3], m[1][3], m[2][3], m[3][3]);
-}
-
-inline OPmat4 OPmat4Read(OPstream* str) {
-	OPmat4 temp = {
-		OPvec4Read(str),
-		OPvec4Read(str),
-		OPvec4Read(str),
-		OPvec4Read(str)
-	};
-	return temp;
-}
-
-inline void OPmat4Write(OPmat4 v, OPstream* str) {
-	OPvec4Write(v[0], str);
-	OPvec4Write(v[1], str);
-	OPvec4Write(v[2], str);
-	OPvec4Write(v[3], str);
-}
-
-
+// Test methods
 
 inline OPmat4 OPmat4RotationBetween(OPvec3 start, OPvec3 dest) {
 	start = OPvec3Norm(start);
@@ -575,7 +469,7 @@ inline OPmat4 OPmat4RotationBetween(OPvec3 start, OPvec3 dest) {
 
 	OPvec3 axis = OPvec3Cross(start, dest);
 	f32 len = OPvec3Len(axis);
-	if(len == 0) {
+	if (len == 0) {
 		return OPMAT4_IDENTITY;
 	}
 
@@ -624,63 +518,15 @@ inline OPmat4 OPmat4RotationNormal2(OPvec3 normal) {
 	f32 u = axis.x;
 	f32 v = axis.y;
 	f32 w = axis.z;
-	result[0][0] =      rcos + u*u*(1-rcos);
-	result[1][0] =  w * rsin + v*u*(1-rcos);
-	result[2][0] = -v * rsin + w*u*(1-rcos);
-	result[0][1] = -w * rsin + u*v*(1-rcos);
-	result[1][1] =      rcos + v*v*(1-rcos);
-	result[2][1] =  u * rsin + w*v*(1-rcos);
-	result[0][2] =  v * rsin + u*w*(1-rcos);
-	result[1][2] = -u * rsin + v*w*(1-rcos);
-	result[2][2] =      rcos + w*w*(1-rcos);
+	result[0][0] = rcos + u*u*(1 - rcos);
+	result[1][0] = w * rsin + v*u*(1 - rcos);
+	result[2][0] = -v * rsin + w*u*(1 - rcos);
+	result[0][1] = -w * rsin + u*v*(1 - rcos);
+	result[1][1] = rcos + v*v*(1 - rcos);
+	result[2][1] = u * rsin + w*v*(1 - rcos);
+	result[0][2] = v * rsin + u*w*(1 - rcos);
+	result[1][2] = -u * rsin + v*w*(1 - rcos);
+	result[2][2] = rcos + w*w*(1 - rcos);
 
 	return result;
 }
-
-inline OPmat4 OPmat4RemoveScale(OPmat4 a) {
-	OPvec3 r;
-	r = OPvec3Norm( OPvec3Create(a[0][0], a[0][1], a[0][2]) );
-	a[0][0] = r.x; a[0][1] = r.y; a[0][2] = r.z;
-
-	r = OPvec3Norm( OPvec3Create(a[1][0], a[1][1], a[1][2]) );
-	a[1][0] = r.x; a[1][1] = r.y; a[1][2] = r.z;
-
-	r = OPvec3Norm( OPvec3Create(a[2][0], a[2][1], a[2][2]) );
-	a[2][0] = r.x; a[2][1] = r.y; a[2][2] = r.z;
-
-	return a;
-}
-
-inline OPvec3 OPmat4Eulor( OPmat4 a)
-{
-	d64 sinPitch, cosPitch, sinRoll, cosRoll, sinYaw, cosYaw;
-
-	sinPitch = -a[2][0];
-	cosPitch = OPsqrt(1 - sinPitch*sinPitch);
-
-	if ( OPabs(cosPitch) > 0.0001)
-	{
-	sinRoll = a[2][1] / cosPitch;
-	cosRoll = a[2][2] / cosPitch;
-	sinYaw = a[1][0] / cosPitch;
-	cosYaw = a[0][0] / cosPitch;
-	}
-	else
-	{
-	sinRoll = -a[1][2];
-	cosRoll = a[1][1];
-	sinYaw = 0;
-	cosYaw = 1;
-	}
-
-	return OPvec3Create(
-			(OPfloat)(atan2(sinYaw, cosYaw) * 180 / OPpi),
-			(OPfloat)(atan2(sinPitch, cosPitch) * 180 / OPpi),
-			(OPfloat)(atan2(sinRoll, cosRoll) * 180 / OPpi));
-}
-
-OPmat4 OPmat4Ortho(OPfloat left, OPfloat right, OPfloat bottom, OPfloat top, OPfloat zNear, OPfloat zFar);
-OPmat4 OPmat4LookAt(OPvec3 eye, OPvec3 at, OPvec3 up);
-OPmat4 OPmat4Perspective(OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal);
-OPint OPmat4Inverse(OPmat4* dst, OPmat4 a);
-OPmat4 OPmat4Interpolate(OPmat4 a, OPmat4 b, OPfloat percent);

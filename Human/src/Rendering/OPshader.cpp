@@ -3,15 +3,22 @@
 #include "./Data/include/OPcman.h"
 #include "./Data/include/OPstream.h"
 #include "./Data/include/OPfile.h"
+#include "./Data/include/OPstring.h"
 #include "./Core/include/OPlog.h"
 
 OPint OPshaderLoadVertex(OPstream* source, OPshader** shader){	
 	*shader = OPRENDERER_ACTIVE->Shader.Create(OPshaderType::VERTEX, source);
+#ifdef _DEBUG
+	(*shader)->source = OPstringCopy(source->Source);
+#endif
 	return 1;
 }
 
 OPint OPshaderLoadFragment(OPstream* source, OPshader** shader){
 	*shader = OPRENDERER_ACTIVE->Shader.Create(OPshaderType::FRAGMENT, source);
+#ifdef _DEBUG
+	(*shader)->source = OPstringCopy(source->Source);
+#endif
 	return 1;
 }
 

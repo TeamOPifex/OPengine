@@ -4,7 +4,7 @@ void OPscene::Init(OPrenderer* renderer, ui32 maxEntities, ui32 maxLights) {
 	
 	index = 0;
 	count = maxEntities;
-	entities = OPALLOC(OPsceneEntity, count);
+	entities = OPALLOC(OPrendererEntity, count);
 
 	lightIndex = 0;
 	lightCount = maxLights;
@@ -17,23 +17,27 @@ void OPscene::Init(OPrenderer* renderer, ui32 maxEntities, ui32 maxLights) {
 	this->renderer->Init(&camera, maxEntities, 1);
 }
 
-OPsceneEntity* OPscene::Add(OPmodel* model, OPmaterialInstance** material) {
+OPrendererEntity* OPscene::Add(OPmodel* model, OPmaterialInstance** material, bool materialPerMesh) {
+	entities[index].world = OPMAT4_IDENTITY;
 	entities[index].model = model;
 	entities[index].material = material;
+	entities[index].shadowEmitter = true;
+	entities[index].shadowReceiver = true;
+	entities[index].materialPerMesh = materialPerMesh;
 	return &entities[index++];
 }
 
-OPsceneEntity* OPscene::Add(OPmodel* model) {
+OPrendererEntity* OPscene::Add(OPmodel* model, bool materialPerMesh) {
+	entities[index].world = OPMAT4_IDENTITY;
 	entities[index].model = model;
-	entities[index].material = renderer->GetMaterial(0)->CreateInstances(model);
+	entities[index].material = renderer->GetMaterial(1)->CreateInstances(model, materialPerMesh);
+	entities[index].shadowEmitter = true;
+	entities[index].shadowReceiver = true;
 	return &entities[index++];
 }
 
 OPsceneLight* OPscene::Add(OPlightSpot light) {
 	lights[lightIndex].light = light;
-	lights[lightIndex].world = OPMAT4_IDENTITY;
-	lights[lightIndex].world.Translate(light.position);
-	lights[lightIndex].world.Scl(light.radius);
 	return &lights[lightIndex++];
 }
 
@@ -46,11 +50,11 @@ void OPscene::Render(OPfloat delta) {
 	renderer->Begin();
 
 	for (ui32 i = 0; i < index; i++) {
-		renderer->Submit(entities[i].model, &entities[i].world, entities[i].material);
+		renderer->Submit(&entities[i]);
 	}
 
 	for (ui32 i = 0; i < lightIndex; i++) {
-		renderer->Submit(&lights[i].light, &lights[i].world);
+		renderer->Submit(&lights[i].light);
 	}
 
 	renderer->End();

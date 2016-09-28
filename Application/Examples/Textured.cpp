@@ -24,8 +24,9 @@ void ExampleTexturedEnter(OPgameState* last) {
 	texturedExample = (TexturedExample*)OPalloc(sizeof(TexturedExample));
 
 	OPjson* meta = (OPjson*)OPCMAN.LoadGet("Models/adobe.opm.meta");
-	const OPchar* _model = "candles.opm";// meta->Get("model").String();
-	const OPchar* _texture = "cemetery.png";// meta->Get("texture").String();
+	const OPchar* _model = "swordsman.opm";// meta->Get("model").String();
+	const OPchar* _texture = "swordsman.png";// meta->Get("texture").String();
+
 
 	texturedExample->Mesh = (OPmodel*)OPCMAN.LoadGet(_model);
 	texturedExample->Texture = (OPtexture*)OPCMAN.LoadGet(_texture);
@@ -50,7 +51,7 @@ void ExampleTexturedEnter(OPgameState* last) {
 	texturedExample->Mesh->vertexArray.SetLayout(&texturedExample->Mesh->vertexLayout);
 
 	texturedExample->Camera.SetPerspective(
-		OPVEC3_ONE * 10.0,
+		OPVEC3_ONE * 50.0,
 		OPvec3Create(0, 0, 0),
 		OPvec3Create(0, 1, 0),
 		0.1f,

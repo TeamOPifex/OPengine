@@ -10,21 +10,23 @@ typedef struct OPsceneEntity OPsceneEntity;
 #include "./Human/include/Rendering/OPrenderCommandBucket.h"
 #include "./Human/include/Rendering/OPrenderer.h"
 #include "./Human/include/Rendering/OPlightSpot.h"
+#include "./Human/include/Rendering/OPrendererEntity.h"
 
-struct OPsceneEntity {
-	OPmat4 world;
-	OPmodel* model;
-	OPmaterialInstance** material;
-};
+//struct OPsceneEntity {
+//	OPmat4 world;
+//	OPmodel* model;
+//	OPmaterialInstance** material;
+//	bool shadowEmitter;
+//	bool shadowReceiver;
+//};
 
 struct OPsceneLight {
-	OPmat4 world;
 	OPlightSpot light;
 };
 
 struct OPscene {
 	OPrenderer* renderer;
-	OPsceneEntity* entities;
+	OPrendererEntity* entities;
 	ui32 count;
 	ui32 index;
 	OPsceneLight* lights;
@@ -34,10 +36,14 @@ struct OPscene {
 	OPcam internalCamera;
 
 	void Init(OPrenderer* renderer, ui32 maxEntities, ui32 maxLights);
-	OPsceneEntity* Add(OPmodel* model);
-	OPsceneEntity* Add(OPmodel* model, OPmaterialInstance** material);
+	OPrendererEntity* Add(OPmodel* model, bool materialPerMesh);
+	OPrendererEntity* Add(OPmodel* model, OPmaterialInstance** material, bool materialPerMesh);
 	OPsceneLight* Add(OPlightSpot light);
 	OPint Update(OPtimer* timer);
 	void Render(OPfloat delta);
 	void Destroy();
+
+	inline OPrendererEntity* Add(OPmodel* model, OPmaterialInstance* material) {
+		return Add(model, (OPmaterialInstance**)material, false);
+	}
 };

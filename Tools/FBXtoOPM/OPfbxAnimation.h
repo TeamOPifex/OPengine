@@ -16,8 +16,8 @@ typedef struct {
 	OPfbxAnimationTrack* Animations;
 } OPfbxAnimation;
 
-OPfbxAnimation* OPfbxAnimationGet(OPfbxMeshData* meshData, OPfbxSkeleton* skeleton, OPfbxScene* scene, OPfloat scale) {
-	OPint deformerCount = meshData->Mesh->GetDeformerCount();
+OPfbxAnimation* OPfbxAnimationGet(OPfbxMeshData** meshData, OPuint meshDataCount, OPfbxSkeleton* skeleton, OPfbxScene* scene, OPfloat scale) {
+	OPint deformerCount = meshData[0]->Mesh->GetDeformerCount();
 	OPfbxAnimation* result = (OPfbxAnimation*)OPalloc(sizeof(OPfbxAnimation));
 	result->AnimationTrackCount = 1;
 	result->Animations = (OPfbxAnimationTrack*)OPallocZero(sizeof(OPfbxAnimationTrack)* result->AnimationTrackCount);
@@ -46,7 +46,7 @@ OPfbxAnimation* OPfbxAnimationGet(OPfbxMeshData* meshData, OPfbxSkeleton* skelet
 
 
 	for (OPint i = 0; i < deformerCount; i++) {
-		FbxSkin* skinDeformer = (FbxSkin*)meshData->Mesh->GetDeformer(i, FbxDeformer::eSkin);
+		FbxSkin* skinDeformer = (FbxSkin*)meshData[0]->Mesh->GetDeformer(i, FbxDeformer::eSkin);
 		OPint clusterCount = skinDeformer->GetClusterCount();
 		for (OPint j = 0; j < clusterCount; ++j) {
 			FbxCluster* cluster = skinDeformer->GetCluster(j);

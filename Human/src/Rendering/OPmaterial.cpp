@@ -21,17 +21,26 @@ void OPmaterialInstance::Destroy() {
 }
 
 
-OPmaterialInstance** OPmaterial::CreateInstances(OPmodel* model) {
-	OPmaterialInstance** result = OPALLOC(OPmaterialInstance*, model->meshCount);
-	for (ui32 i = 0; i < model->meshCount; i++) {
+OPmaterialInstance** OPmaterial::CreateInstances(OPmodel* model, bool materialPerMesh) {
+	ui32 count = model->meshCount;
+
+	if (!materialPerMesh) {
+		count = 1;
+	}
+
+	OPmaterialInstance** result = OPALLOC(OPmaterialInstance*, count);
+	for (ui32 i = 0; i < count; i++) {
 		result[i] = OPNEW(OPmaterialInstance(this));
 
 		if (model->meshes[i].materialDesc != NULL) {
-			if (model->meshes[i].materialDesc->albedo != NULL) {
-				OPtexture* tex = (OPtexture*)OPCMAN.LoadGet(model->meshes[i].materialDesc->albedo);
-				result[i]->AddParam("uAlbedoMap", tex, 0);
+			if (model->meshes[i].materialDesc->diffuse != NULL) {
+				OPtexture* tex = (OPtexture*)OPCMAN.LoadGet(model->meshes[i].materialDesc->diffuse);
+				if (tex != NULL) {
+					result[i]->AddParam("uAlbedoMap", tex, 0);
+				}
 			}
 		}
 	}
+
 	return result;
 }

@@ -1,6 +1,26 @@
 #include "./Human/include/Rendering/OPvertexLayout.h"
 #include "./Human/include/Rendering/OPeffect.h"
 
+OPshaderElementType GetOPShaderElementType(OPattributeTypes attribType) {
+	switch (attribType) {
+	case OPATTR_TYPE_UINT8: return OPshaderElementType::SHORT;
+	case OPATTR_TYPE_UINT10: return OPshaderElementType::SHORT;
+	case OPATTR_TYPE_INT16: return OPshaderElementType::SHORT;
+	case OPATTR_TYPE_HALF: return OPshaderElementType::SHORT;
+	case OPATTR_TYPE_FLOAT: return OPshaderElementType::FLOAT;
+	}
+}
+
+ui32 GetOPShaderElementSize(OPattributeTypes attribType) {
+	switch (attribType) {
+	case OPATTR_TYPE_UINT8: return sizeof(ui16);
+	case OPATTR_TYPE_UINT10: return sizeof(ui16);
+	case OPATTR_TYPE_INT16: return sizeof(ui16);
+	case OPATTR_TYPE_HALF: return sizeof(ui16);
+	case OPATTR_TYPE_FLOAT: return sizeof(f32);
+	}
+}
+
 void OPvertexLayout::Init(ui16 attributeCount, OPchar** names, OPattributeTypes* types, ui8* counts) {
 
 	count = attributeCount;
@@ -11,11 +31,11 @@ void OPvertexLayout::Init(ui16 attributeCount, OPchar** names, OPattributeTypes*
 	ui32 attributeSize;
 	for (ui16 i = 0; i < count; i++) {
 		attributes[i].Name = names[i];
-		attributes[i].Type = OPshaderElementType::FLOAT;// types[i];
+		attributes[i].Type = GetOPShaderElementType(types[i]);
 		attributes[i].Elements = counts[i];
 		attributes[i].Offset = offset;
 		attributes[i].Location = i;
-		attributeSize = counts[i] * sizeof(f32);
+		attributeSize = counts[i] * GetOPShaderElementSize(types[i]);
 		offset += attributeSize;
 		stride += attributeSize;
 	}
@@ -111,7 +131,7 @@ OPvertexLayoutBuilder* OPvertexLayoutBuilder::Add(OPattributes attribute) {
 		}
 		case OPattributes::BONES: {
 			names[index] = "aBones";
-			types[index] = OPATTR_TYPE_FLOAT;
+			types[index] = OPATTR_TYPE_FLOAT;// OPATTR_TYPE_INT16;
 			counts[index] = 4;
 			index++;
 			names[index] = "aWeights";

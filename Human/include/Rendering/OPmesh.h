@@ -31,10 +31,20 @@ struct OPmeshMeta {
 };
 
 struct OPmeshMaterialDesc {
-	OPchar* albedo = NULL;
+	OPchar* diffuse = NULL;
 	OPchar* specular = NULL;
-	OPchar* gloss = NULL;
-	OPchar* normal = NULL;
+	OPchar* ambient = NULL;
+	OPchar* emissive = NULL;
+	OPchar* height = NULL;
+	OPchar* normals = NULL;
+	OPchar* shininess = NULL;
+	OPchar* opacity = NULL;
+	OPchar* displacement = NULL;
+	OPchar* lightMap = NULL;
+	OPchar* reflection = NULL;
+	OPchar* other1 = NULL;
+	OPchar* other2 = NULL;
+	OPchar* other3 = NULL;
 };
 
 struct OPmesh {
@@ -49,8 +59,8 @@ struct OPmesh {
 	OPindexBuffer* indexBuffer;
 
 	OPmeshDesc* meshDesc;
-	OPmeshMeta* meshMeta;
 	OPmeshMaterialDesc* materialDesc;
+	OPmeshMeta* meshMeta;
 	
 	void Bind();
 	void Draw();

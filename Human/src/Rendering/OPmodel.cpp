@@ -18,6 +18,7 @@ void OPmodel::Init(OPuint meshCount, OPvertexLayout vertexLayout) {
 void OPmodel::Draw(OPmat4* world, OPmaterial* material, OPcam* cam) {
 	material->Bind();
 	OPeffectSet(cam);
+	OPeffectSet("uWorld", world);
 	for (ui32 i = 0; i < meshCount; i++) {
 		meshes[i].Bind();
 		meshes[i].Draw();

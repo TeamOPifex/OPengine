@@ -26,6 +26,8 @@ struct OPrendererDeferred {
 	OPmodel* sphereMesh = NULL;
 	OPmodel* quadMesh = NULL;
 	OPmat4 invertViewProjection;
+	OPlightSpot* spotLights;
+	ui32 spotLightsInd;
 
 	OPrendererDeferred() { Setup(); }
 
@@ -38,7 +40,7 @@ struct OPrendererDeferred {
 	inline void SetMaterialEffect(OPeffect* effect, ui32 pass) { rendererRoot.SetMaterialEffect(effect, pass); }
 	inline OPmaterialInstance* CreateMaterialInstance(ui32 pass = 0) { return rendererRoot.CreateMaterialInstance(pass); }
 	inline void Begin() { rendererRoot.Begin(); }
-	inline void Submit(OPmodel* model, OPmat4* world, OPmaterialInstance* material) { rendererRoot.Submit(model, world, material); }
+	inline void Submit(OPmodel* model, OPmat4* world, bool shadowed, OPmaterialInstance* material) { rendererRoot.Submit(model, world, shadowed, material); }
 	inline void End() { rendererRoot.End(); }
 	inline void Present() { rendererRoot.Present(); }
 	void Destroy();

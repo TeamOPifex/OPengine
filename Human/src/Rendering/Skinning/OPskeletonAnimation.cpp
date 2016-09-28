@@ -1,44 +1,56 @@
 #include "./Human/include/Rendering/Skinning/OPskeletonAnimation.h"
 #include "./Core/include/Assert.h"
 
-void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPmat4* frames, OPuint frameCount) {
+void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPanimationFrame* frames, OPuint frameCount) {
 	OPbzero(skelAnim, sizeof(OPskeletonAnimation));
 	skelAnim->FrameCount = frameCount;
 	skelAnim->Frame = 0;
 	skelAnim->Elapsed = 0;
-	skelAnim->FramesPer = 1000 / 24;
+	skelAnim->FramesPer = 1000.0 / 24.0; // 24 fps... roughly 41.66
 	skelAnim->Loop = 1;
 	skelAnim->LoopsCompleted = 0;
 
 	OPint totalSize = sizeof(OPmat4)* frameCount * boneCount;
-	skelAnim->JointFrames = (OPmat4*)OPalloc(totalSize);
-	OPmemcpy(skelAnim->JointFrames, frames, totalSize);
-	for (OPuint i = 0; i < frameCount * boneCount; i++) {
-		OPmat4SetTranslate(skelAnim->JointFrames[i], 0, 0, 0);
-	}
+	skelAnim->JointFrames = frames;
 
 	skelAnim->CurrentFrame = (OPmat4*)OPalloc(sizeof(OPmat4) * boneCount);
 	skelAnim->BoneCount = boneCount;
 }
 
-OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPmat4* frames, OPuint count) {
+OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPanimationFrame* frames, OPuint count) {
 	OPskeletonAnimation* result = (OPskeletonAnimation*)OPalloc(sizeof(OPskeletonAnimation));
 	OPskeletonAnimationInit(result, boneCount, frames, count);
 	return result;
 }
 
+inline OPanimationFrame GetInterpolatedFrame(OPanimationFrame frame1, OPanimationFrame frame2, OPfloat percentage) {
+	OPanimationFrame inbetweenFrame;
+	inbetweenFrame.Position = OPvec3Tween(frame1.Position, frame2.Position, percentage);
+	inbetweenFrame.Rotation = frame1.Rotation.Slerp(frame2.Rotation, percentage);
+	inbetweenFrame.Scale = OPvec3Tween(frame1.Scale, frame2.Scale, percentage);
+	return inbetweenFrame;
+}
+
+OPmat4 CalculateFrame(OPanimationFrame frame1) {
+	OPmat4 result = OPMAT4_IDENTITY;
+	result.Translate(frame1.Position);
+	result.Rot(frame1.Rotation);
+	result.Scl(frame1.Scale);
+	return result;
+}
+
+OPmat4 InterpolateFrames(OPanimationFrame frame1, OPanimationFrame frame2, OPfloat percentage) {
+	return CalculateFrame(GetInterpolatedFrame(frame1, frame2, percentage));
+}
 
 void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer, OPfloat timeScale) {
 	ASSERT(skelAnim->FramesPer != 0, "Must have at least 1 frame per second");
 
-	skelAnim->Elapsed += (ui64)(timer->Elapsed * timeScale);
+	skelAnim->Elapsed += timer->Elapsed * timeScale;
 	skelAnim->LastFrame = skelAnim->Frame;
 
+	// Move into the next frame(s)
 	while (skelAnim->Elapsed >= skelAnim->FramesPer) {
-		// OPlog("Elapsed %d, FP %d, Frame %d",
-		// 	skelAnim->Elapsed,
-		// 	skelAnim->FramesPer,
-		// 	skelAnim->Frame);
 		skelAnim->Elapsed -= skelAnim->FramesPer;
 		skelAnim->Frame++;
 		if (skelAnim->Frame >= skelAnim->FrameCount) {
@@ -46,6 +58,9 @@ void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer, OP
 				skelAnim->Frame = 0;
 				skelAnim->LoopsCompleted++;
 			} else {
+				// If it doesn't loop, set it to the last frame
+				// and set LoopsCompleted to 1 so we know not
+				// to keep playing the animation
 				skelAnim->Frame--;
 				skelAnim->LoopsCompleted = 1;
 			}
@@ -53,20 +68,19 @@ void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer, OP
 	}
 
 	OPint ind1, ind2;
-	OPfloat percent = skelAnim->Elapsed / (OPfloat)skelAnim->FramesPer;
+	OPfloat percent = skelAnim->Elapsed / skelAnim->FramesPer;
 
 	for (OPint i = 0; i < skelAnim->BoneCount; i++) {
 
-		ind1 = skelAnim->BoneCount * skelAnim->Frame + i;
-		ind2 = skelAnim->BoneCount * (skelAnim->Frame + 1) + i;
+		ind1 = skelAnim->FrameCount * i + skelAnim->Frame;
+		ind2 = skelAnim->FrameCount * i + (skelAnim->Frame + 1);
 
-		// Innefficient and poor interpolation scheme
 		// TODO(garrett): Fix - interpolate into the first frame if looping
 		if (skelAnim->Frame <= (skelAnim->FrameCount - 2)) {
-			skelAnim->CurrentFrame[i] = OPmat4Interpolate(skelAnim->JointFrames[ind1], skelAnim->JointFrames[ind2], percent);
+			skelAnim->CurrentFrame[i] = InterpolateFrames(skelAnim->JointFrames[ind1], skelAnim->JointFrames[ind2], percent);
 		}
 		else {
-			skelAnim->CurrentFrame[i] = skelAnim->JointFrames[ind1];
+			skelAnim->CurrentFrame[i] = CalculateFrame(skelAnim->JointFrames[ind1]);
 		}
 
 	}
@@ -141,6 +155,8 @@ void OPskeletonAnimationCombine(OPskeletonAnimation* skelAnim, OPskeletonAnimati
 
 void OPskeletonAnimationMerge(OPskeletonAnimation* skelAnim1, OPskeletonAnimation* skelAnim2, OPfloat merge) {
 	ASSERT(skelAnim1->BoneCount == skelAnim2->BoneCount, "Bone Count must match");
+	ASSERT(merge <= 1.0, "Can't merge passed the animation");
+	ASSERT(merge >= 0.0, "Can't merge before the animation");
 
 	OPint ind1, ind2, ind3, ind4;
 	OPfloat percent1 = skelAnim1->Elapsed / (OPfloat)skelAnim1->FramesPer;
@@ -148,45 +164,55 @@ void OPskeletonAnimationMerge(OPskeletonAnimation* skelAnim1, OPskeletonAnimatio
 
 	for (OPint i = 0; i < skelAnim1->BoneCount; i++) {
 
-		ind1 = skelAnim1->BoneCount * skelAnim1->Frame + i;
 
+		//ind1 = skelAnim->FrameCount * i + skelAnim->Frame;
+		//ind2 = skelAnim->FrameCount * i + (skelAnim->Frame + 1);
+
+
+		ind1 = skelAnim1->FrameCount * i + skelAnim1->Frame;
 		if (skelAnim1->Frame == skelAnim1->FrameCount - 1) {
 			if(skelAnim1->Loop) {
-				ind2 = skelAnim1->BoneCount * (0) + i;
+				ind2 = skelAnim1->FrameCount * i;
 			} else {
-				ind2 = skelAnim1->BoneCount * skelAnim1->Frame + i;
+				ind2 = skelAnim1->FrameCount * i + skelAnim1->Frame;
 			}
 		}
 		else {
-			ind2 = skelAnim1->BoneCount * (skelAnim1->Frame + 1) + i;
+			ind2 = skelAnim1->FrameCount * i + (skelAnim1->Frame + 1);
 		}
 
-		ind3 = skelAnim1->BoneCount * skelAnim2->Frame + i;
+
+		ind3 = skelAnim2->FrameCount * i + skelAnim2->Frame;
 		if (skelAnim2->Frame == skelAnim2->FrameCount - 1) {
-			ind4 = skelAnim1->BoneCount * (0) + i;
+			ind4 = skelAnim2->FrameCount * i;
 		}
 		else {
-			ind4 = skelAnim1->BoneCount * (skelAnim2->Frame + 1) + i;
+			ind4 = skelAnim2->FrameCount * i + (skelAnim2->Frame + 1);
 		}
 
 		// Innefficient and poor interpolation scheme
 		// TODO(garrett): Fix - interpolate into the first frame if looping
 
-		OPmat4 anim1 = OPmat4Interpolate(skelAnim1->JointFrames[ind1], skelAnim1->JointFrames[ind2], percent1);
-		OPmat4 anim2 = OPmat4Interpolate(skelAnim2->JointFrames[ind3], skelAnim2->JointFrames[ind4], percent2);
 
-		if (merge == 1.0) {
-			skelAnim1->CurrentFrame[i] = anim2;
-			skelAnim2->CurrentFrame[i] = anim2;
-		}
-		else if (merge == 0.0) {
-			skelAnim1->CurrentFrame[i] = anim1;
-			skelAnim2->CurrentFrame[i] = anim1;
-		}
-		else {
-			skelAnim1->CurrentFrame[i] = OPmat4Interpolate(anim1, anim2, merge);
+
+		//OPmat4 anim1 = InterpolateFrames(skelAnim1->JointFrames[ind1], skelAnim1->JointFrames[ind2], percent1);
+		//OPmat4 anim2 = InterpolateFrames(skelAnim2->JointFrames[ind3], skelAnim2->JointFrames[ind4], percent2);
+
+		OPanimationFrame inbetweenFrame1 = GetInterpolatedFrame(skelAnim1->JointFrames[ind1], skelAnim1->JointFrames[ind2], percent1);
+		OPanimationFrame inbetweenFrame2 = GetInterpolatedFrame(skelAnim2->JointFrames[ind3], skelAnim2->JointFrames[ind4], percent2);
+
+		//if (merge >= 1.0) {
+		//	skelAnim1->CurrentFrame[i] = CalculateFrame(inbetweenFrame2);
+		//	skelAnim2->CurrentFrame[i] = skelAnim1->CurrentFrame[i];
+		//}
+		//else if (merge <= 0.0) {
+		//	skelAnim1->CurrentFrame[i] = CalculateFrame(inbetweenFrame1);
+		//	skelAnim2->CurrentFrame[i] = skelAnim1->CurrentFrame[i];
+		//}
+		//else {
+			skelAnim1->CurrentFrame[i] = InterpolateFrames(inbetweenFrame1, inbetweenFrame2, merge); //OPmat4Interpolate(anim1, anim2, merge);
 			skelAnim2->CurrentFrame[i] = skelAnim1->CurrentFrame[i];
-		}
+		//}
 
 	}
 }

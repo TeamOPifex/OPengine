@@ -1,6 +1,7 @@
 #include "./Human/include/Rendering/API/OPrenderer.h"
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Platform/opengl/OPwindowAPIGL.h"
+#include "./Human/include/Rendering/Enums/OPcullFace.h"
 #include "./Human/include/Rendering/OPmonitor.h"
 #include "./Human/include/Rendering/OPwindow.h"
 #include "./Core/include/Assert.h"
@@ -77,20 +78,24 @@ void OPrendererSetDepthWriteGL(bool state){
 
 void OPrendererSetCullGL(bool state) {
 	if (state) {
-		OPGLFN(glEnable(GL_CULL_FACE));
+		OPGLFN(glEnable(GL_CULL_FACE)); 
 	}
 	else {
 		OPGLFN(glDisable(GL_CULL_FACE));
 	}
 }
 
-void OPrendererSetCullModeGL(i8 state) {
+void OPrendererSetWireframeGL(bool state) {
 	if (state) {
-		OPGLFN(glCullFace(GL_FRONT));
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 	else {
-		OPGLFN(glCullFace(GL_BACK));
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
+}
+
+void OPrendererSetCullModeGL(OPcullFace state) {
+	OPGLFN(glCullFace(state == OPcullFace::FRONT ? GL_FRONT : GL_BACK));
 }
 
 void OPrendererSetBlendGL(bool state){
@@ -171,6 +176,7 @@ OPrenderAPI* OPrendererGL() {
 	OPRENDERERGL.SetDepthWrite = OPrendererSetDepthWriteGL;
 	OPRENDERERGL.SetCull = OPrendererSetCullGL;
 	OPRENDERERGL.SetCullMode = OPrendererSetCullModeGL;
+	OPRENDERERGL.SetWireframe = OPrendererSetWireframeGL;
 	OPRENDERERGL.SetBlend = OPrendererSetBlendGL;
 	OPRENDERERGL.SetBlendMode = OPrendererSetBlendModeGL;
 	OPRENDERERGL.SetViewport = OPrenderSetViewportGL;

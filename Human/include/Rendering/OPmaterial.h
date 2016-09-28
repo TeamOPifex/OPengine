@@ -11,6 +11,7 @@ typedef struct OPmaterialInstance OPmaterialInstance;
 
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Rendering/OPmaterialParam.h"
+#include "./Human/include/Rendering/Enums/OPcullFace.h"
 struct OPmodel;
 
 inline void OPmaterialClearParams(OPmaterial* material);
@@ -34,7 +35,9 @@ struct OPmaterial {
 	OPuint paramIndex;
 	ui64 id;
 	bool depth;
-	bool cull;
+	bool cull = true;
+	OPcullFace cullFace = OPcullFace::BACK;
+	bool visible = true;
 	i8 alpha;
 
 	OPmaterial() {
@@ -116,7 +119,7 @@ struct OPmaterial {
 
 	void Destroy();
 
-	OPmaterialInstance** CreateInstances(OPmodel* model);
+	OPmaterialInstance** CreateInstances(OPmodel* model, bool materialPerMesh);
 };
 
 inline void OPmaterialClearParams(OPmaterial* material) {
@@ -179,6 +182,9 @@ inline void OPmaterialBind(OPmaterial* material) {
 
 	OPrenderDepth(material->depth);
 	OPrenderCull(material->cull);
+	if (material->cull) {
+		OPrenderCullMode(material->cullFace);
+	}
 
 	for(OPuint i = 0; i < material->paramIndex; i++) {
 
@@ -225,6 +231,7 @@ struct OPmaterialInstance {
 	OPmaterialParam params[OPMATERIAL_MAX_UNIFORMS];
 	OPuint paramIndex;
 	ui64 id;
+	bool visible;
 
 	OPmaterialInstance() { }
 	OPmaterialInstance(OPmaterial* material) {

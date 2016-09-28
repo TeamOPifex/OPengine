@@ -25,11 +25,6 @@ struct OPmodel {
 	
 	void Init(OPuint meshCount, OPvertexLayout vertexLayout);
 	void Build(ui32 vertexCount, ui32 indexCount, OPindexSize indexSize, void* vertices, void* indices);
-
-	//inline void Init(OPmesh** meshes, OPuint count) {
-	//	this->meshes = meshes;
-	//	this->meshCount = count;
-	//}
 	void Bind();
 	void Draw(OPmat4* world, OPmaterial* material, OPcam* camera);
 	void Destroy();

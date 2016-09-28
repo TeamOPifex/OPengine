@@ -19,6 +19,7 @@ typedef struct OPrenderAPI OPrenderAPI;
 #include "./Human/include/Rendering/API/OPvertexBufferAPI.h"
 #include "./Human/include/Rendering/API/OPwindowAPI.h"
 #include "./Human/include/Rendering/Enums/OPblendFunction.h"
+#include "./Human/include/Rendering/Enums/OPcullFace.h"
 #include "./Math/include/OPvec4.h"
 
 struct OPrenderAPI {
@@ -30,7 +31,8 @@ struct OPrenderAPI {
 	void(*SetDepthTesting)(bool state) = 0;
 	void(*SetDepthWrite)(bool state) = 0;
 	void(*SetCull)(bool state) = 0;
-	void(*SetCullMode)(i8 state) = 0;
+	void(*SetCullMode)(OPcullFace state) = 0;
+	void(*SetWireframe)(bool state) = 0;
 	void(*SetBlend)(bool state) = 0;
 	void(*SetBlendMode)(OPblendFunction src, OPblendFunction dst) = 0;
 	void(*SetViewport)(ui32 x, ui32 y, ui32 width, ui32 height) = 0;
