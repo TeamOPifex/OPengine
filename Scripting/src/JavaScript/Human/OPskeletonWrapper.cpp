@@ -158,8 +158,8 @@ JS_RETURN_VAL _OPskeletonCreate(const JS_ARGS& args) {
         names[i] = OPstringCopy(*name);
     }
 
-    OPskeleton* skeleton = OPskeletonCreate(hierarchy, pose, count, names);
-    OPskeletonWrapperCreate(result, skeleton);
+    //OPskeleton* skeleton = OPskeletonCreate(hierarchy, pose, count, names);
+    //OPskeletonWrapperCreate(result, skeleton);
 
     JS_RETURN(result);
 }

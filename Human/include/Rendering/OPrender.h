@@ -5,6 +5,7 @@
 extern OPrenderAPI* OPRENDERER_ACTIVE;
 
 #include "./Human/include/Rendering/Enums/OPrendererType.h"
+#include "./Human/include/Rendering/Enums/OPcullFace.h"
 #include "./Math/include/OPvec3.h"
 #include "./Math/include/OPvec4.h"
 #include "./Core/include/OPtypes.h"
@@ -51,7 +52,11 @@ inline void OPrenderCull(bool state) {
 	OPRENDERER_ACTIVE->SetCull(state);
 }
 
-inline void OPrenderCullMode(i8 state) {
+inline void OPrenderSetWireframe(bool state) {
+	OPRENDERER_ACTIVE->SetWireframe(state);
+}
+
+inline void OPrenderCullMode(OPcullFace state) {
 	OPRENDERER_ACTIVE->SetCullMode(state);
 }
 

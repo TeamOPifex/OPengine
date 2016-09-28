@@ -68,9 +68,17 @@ OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag, OP
 		for (i = 0; i < count; i++)
 		{
 			glGetActiveUniform(effectGL->Handle, (GLuint)i, bufSize, &length, &size, &type, name);
-			OPeffectGLAddUniform(effect, name);
+			if (OPstringEquals("uBones[0]", name)) {
+				//ui32 loc = glGetUniformLocation(effectGL->Handle, "uBones");
+				//OPlogInfo("Bone Location: %d", loc);
+				OPeffectGLAddUniform(effect, "uBones");
+			}
+			else {
+				OPeffectGLAddUniform(effect, name);
+			}
 			OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Uniform #%d Type: %u Name: %s", i, type, name);
 		}
+
 	}
 
 	return effect;

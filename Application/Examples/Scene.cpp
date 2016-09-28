@@ -14,9 +14,9 @@ typedef struct {
 	OPmodel* model;
 	OPmodel* model2;
 	OPmodel* model3;
-	OPsceneEntity* model1Entity;
-	OPsceneEntity* model2Entity;
-	OPsceneEntity* model3Entity;
+	OPrendererEntity* model1Entity;
+	OPrendererEntity* model2Entity;
+	OPrendererEntity* model3Entity;
 	OPcamFreeFlight camera;
 	OPmaterialPBR materialPBR;
 	OPtextureCube environment;

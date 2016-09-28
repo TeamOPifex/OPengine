@@ -13,6 +13,9 @@ typedef struct OPshaderAttribute OPshaderAttribute;
 struct OPshader {
 	void* internalPtr;
 	OPshaderType shaderType;
+#ifdef _DEBUG
+	OPchar* source;
+#endif
 };
 
 struct OPshaderAttribute {

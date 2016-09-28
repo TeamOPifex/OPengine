@@ -2,9 +2,11 @@
 
 struct OPskeletonAnimation;
 struct OPskeletonAnimationEvent;
+struct OPanimationFrame;
 
 typedef OPskeletonAnimation OPskeletonAnimation;
 typedef OPskeletonAnimationEvent OPskeletonAnimationEvent;
+typedef OPanimationFrame OPanimationFrame;
 
 #define OPSKELETONANIMATION_MAX_EVENTS 6
 
@@ -19,14 +21,21 @@ struct OPskeletonAnimationEvent
 	OPint OnFrameChange;
 };
 
+struct OPanimationFrame {
+	f32 Time;
+	OPvec3 Position;
+	OPquat Rotation;
+	OPvec3 Scale;
+};
+
 struct OPskeletonAnimation {
 	OPskeleton* Skeleton;
 
-	OPmat4* JointFrames;
+	OPanimationFrame* JointFrames;
 	OPuint FrameCount;
 	OPuint Frame;
-	ui64 Elapsed;
-	ui64 FramesPer;
+	OPfloat Elapsed;
+	OPfloat FramesPer;
 
 	OPmat4* CurrentFrame;
 	OPint BoneCount;
@@ -39,8 +48,8 @@ struct OPskeletonAnimation {
 };
 
 
-void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPmat4* frames, i32 count);
-OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPmat4* frames, OPuint count);
+void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPanimationFrame* frames, i32 count);
+OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPanimationFrame* frames, OPuint count);
 void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer, OPfloat timeScale);
 inline void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
 	OPskeletonAnimationUpdate(skelAnim, timer, 1.0f);

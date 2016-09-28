@@ -108,7 +108,7 @@ OPchar* OPstringCreateMerged(const OPchar* str, const OPchar* add) {
 	return result;
 }
 
-OPint OPstringContains(OPchar* str, const OPchar* cmp) {
+OPint OPstringContains(const OPchar* str, const OPchar* cmp) {
 	ui32 i, strLen, cmpLen;
 
 	strLen = (ui32)strlen(str);

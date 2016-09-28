@@ -101,7 +101,7 @@ int main(int argc, char * argv[]) {
 #else
 
 OP_MAIN_START
-	OPLOGLEVEL = (ui32)OPlogLevel::INFO;
+	OPLOGLEVEL = (ui32)OPlogLevel::VERBOSE;
 
 	#ifdef OPIFEX_OPTION_V8
 	// If the V8 engine is compiled in,

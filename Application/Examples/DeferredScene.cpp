@@ -16,48 +16,78 @@ typedef struct {
 	OPscene scene;
 	OPrendererDeferred* renderer;
 	OPmodel* model;
-	OPsceneEntity* model1Entity;
+	OPrendererEntity* model1Entity;
 	OPcamFreeFlight camera;
 	OPtexture2DOLD* texture0;
 	OPtexture2DOLD* texture1;
 	OPtexture2DOLD* texture2;
 	OPtexture2DOLD* texture3;
 	OPtexture2DOLD* texture4;
+	OPeffect DepthTextureEffect;
 	ui32 state;
 } DeferredSceneExample;
 
 DeferredSceneExample deferredSceneExample;
 
+OPsceneLight* light, *light2, *light3;
+
 void ExampleDeferredSceneEnter(OPgameState* last) {
 
 	deferredSceneExample.renderer = OPNEW(OPrendererDeferred());
 	deferredSceneExample.scene.Init(&deferredSceneExample.renderer->rendererRoot, 100, 100);
-	deferredSceneExample.camera.Init();
+	deferredSceneExample.camera.Init(1.0, 1.0, OPvec3(0, 5, 0));
 	deferredSceneExample.scene.camera = &deferredSceneExample.camera.Camera;
 
-	OPsceneLight* light = deferredSceneExample.scene.Add(OPlightSpot());
+	light = deferredSceneExample.scene.Add(OPlightSpot());
+	light->light.position = OPvec3(0, 0, 0);
+	light->light.color = OPvec3(1, 0, 0);
 	light->light.radius = 5.0f;
-	light->world.SetIdentity()->Scl(5.0f);
+
+	light2 = deferredSceneExample.scene.Add(OPlightSpot());
+	light2->light.position = OPvec3(0, 0, 0);
+	light2->light.color = OPvec3(0, 0, 1);
+	light2->light.radius = 5.0f;
+
+	light3 = deferredSceneExample.scene.Add(OPlightSpot());
+	light3->light.position = OPvec3(5, 0, -5);
+	light3->light.color = OPvec3(0, 1, 0);
+	light3->light.radius = 5.0f;
 
 	deferredSceneExample.model = (OPmodel*)OPCMAN.LoadGet("sponza.opm");
 
-	deferredSceneExample.model1Entity = deferredSceneExample.scene.Add(deferredSceneExample.model);
-	deferredSceneExample.model1Entity->material = deferredSceneExample.scene.renderer->GetMaterial(0)->CreateInstances(deferredSceneExample.model);
+	deferredSceneExample.model1Entity = deferredSceneExample.scene.Add(deferredSceneExample.model, true);
+	deferredSceneExample.model1Entity->material = deferredSceneExample.scene.renderer->GetMaterial(0)->CreateInstances(deferredSceneExample.model, true);
 
 	//deferredSceneExample.model1Entity->material[0]->AddParam("uAlbedoMap", (OPtexture*)OPCMAN.LoadGet("Dagger_Albedo.png"), 0);
 	deferredSceneExample.model1Entity->material[0]->AddParam("uSpecularMap", (OPtexture*)OPCMAN.LoadGet("Dagger_Albedo.png"), 1);
 
+	deferredSceneExample.DepthTextureEffect.Init("Common/Texture2D.vert", "Common/TextureDepth.frag");
+
 	deferredSceneExample.texture0 = OPtexture2DCreate(&deferredSceneExample.renderer->gBuffer.texture[0]);
 	deferredSceneExample.texture1 = OPtexture2DCreate(&deferredSceneExample.renderer->gBuffer.texture[1]);
 	deferredSceneExample.texture2 = OPtexture2DCreate(&deferredSceneExample.renderer->gBuffer.texture[2]);
-	deferredSceneExample.texture3 = OPtexture2DCreate(&deferredSceneExample.renderer->gBuffer.depthTexture);
+	deferredSceneExample.texture3 = OPtexture2DCreate(&deferredSceneExample.renderer->gBuffer.depthTexture, &deferredSceneExample.DepthTextureEffect);
 	deferredSceneExample.texture4 = OPtexture2DCreate(deferredSceneExample.renderer->lightBuffer.texture);
 
 	deferredSceneExample.state = 0;
 }
 
+bool dir = true;
+
 OPint ExampleDeferredSceneUpdate(OPtimer* time) {
 	deferredSceneExample.camera.Update(time);
+	if (dir) {
+		light->light.position.y += time->Elapsed * 0.01f;
+	}
+	else {
+		light->light.position.y -= time->Elapsed * 0.01f;
+	}
+
+	if (light->light.position.y > 10) dir = false;
+	if (light->light.position.y < 0) dir = true;
+
+	light3->light.position = OPvec3(OPsin(time->TotalGametime * 0.001f) * 5.0, 2.5f, OPcos(time->TotalGametime * 0.001f) * 5.0);
+
 	//deferredSceneExample.Rotation += time->Elapsed * 0.25f;
 	deferredSceneExample.model1Entity->world.SetScl(1.0f);// .SetRotY(deferredSceneExample.Rotation / 200.0f);
 	return false;
@@ -110,6 +140,8 @@ void ExampleDeferredSceneRender(OPfloat delta) {
 	if (ImGui::Button("Light")) {
 		deferredSceneExample.state = 5;
 	}
+	ImGui::ColorEdit3("Light Color", (float*)&light->light.color);
+	ImGui::SliderFloat("Radius", &light->light.radius, 0, 10);
 	ImGui::End();
 
 	ImGui::Render();

@@ -17,15 +17,18 @@ struct OPskeleton {
 	OPmat4* globalInvPoses;
 	OPmat4* localPoses;
 	OPmat4* skinned;
+	OPmat4* bindPoses;
+
+	OPmat4 globalInverse;
 };
 
-OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* pose, i32 count, OPchar** names);
+OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* bindPose, OPmat4* boneOffsets, OPmat4 invGlobalPose, i32 count, OPchar** names);
 void OPskeletonUpdate(OPskeleton* skeleton);
 i16 OPskeletonGet(OPskeleton* skeleton, const OPchar* name);
 void OPskeletonDestroy(OPskeleton* skeleton);
 
 inline OPskeleton* OPskeletonCopy(OPskeleton* source) {
-	return OPskeletonCreate(source->hierarchy, source->localPoses, source->hierarchyCount, source->jointNames);
+	return OPskeletonCreate(source->hierarchy, source->localPoses, source->bindPoses, source->globalInverse, source->hierarchyCount, source->jointNames);
 }
 
 inline OPmat4 OPskeletonLocal(OPskeleton* skeleton, const OPchar* name) {

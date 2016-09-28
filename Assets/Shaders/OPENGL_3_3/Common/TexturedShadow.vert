@@ -1,9 +1,11 @@
 #version 330 core
 
 // Input vertex data, different for all executions of this shader.
-in vec3 aPosition;
-in vec3 aNormal;
-in vec2 aUV;
+layout(location = 0) in vec3 aPosition;
+layout(location = 1) in vec3 aNormal;
+layout(location = 2) in vec3 aTangent;
+layout(location = 3) in vec3 aBinormal;
+layout(location = 4) in vec2 aUV;
 
 out VS_OUT {
     vec3 FragPos;
@@ -26,6 +28,6 @@ void main(){
 	
     vs_out.FragPos = vec3(uWorld * vec4(aPosition, 1.0));
     vs_out.Normal = transpose(inverse(mat3(uWorld))) * aNormal;
-    vs_out.TexCoords = aUV;
+    vs_out.TexCoords = vec2(aUV.x, 1.0 - aUV.y);
     vs_out.FragPosLightSpace = uProjShadow * uViewShadow * vec4(vs_out.FragPos, 1.0);
 }

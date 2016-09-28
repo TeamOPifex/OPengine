@@ -68,6 +68,7 @@ void ExampleSelectorEnter(OPgameState* last) {
            { "Cube Map", &GS_EXAMPLE_CUBE_MAP, GS_EXAMPLE_CUBE_MAP_AVAILABLE, 0 },
 
            // Intermediate
+		   { "Scene Shadowed", &GS_EXAMPLE_SCENE_SHADOWS, GS_EXAMPLE_SCENE_SHADOWS_AVAILABLE, 1 },
 		   { "Frame Buffer", &GS_EXAMPLE_FRAMEBUFFER, GS_EXAMPLE_FRAMEBUFFER_AVAILABLE, 1 },
 		   { "Deferred Scene", &GS_EXAMPLE_DEFERREDSCENE, GS_EXAMPLE_DEFERREDSCENE_AVAILABLE, 1 },
            { "Command Buckets", &GS_EXAMPLE_COMMAND_BUCKET, GS_EXAMPLE_COMMAND_BUCKET_AVAILABLE, 1 },

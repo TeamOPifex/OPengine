@@ -175,3 +175,109 @@ OPmat4 OPmat4Interpolate(OPmat4 a, OPmat4 b, OPfloat percent) {
 
 	return result;
 }
+
+void OPmat4Mul(OPmat4* dst, OPmat4 m1, OPmat4 m2)
+{
+	OPmat4 result;
+	result[0][0] = m1[0][0] * m2[0][0] + m1[1][0] * m2[0][1] + m1[2][0] * m2[0][2] + m1[3][0] * m2[0][3];
+	result[1][0] = m1[0][0] * m2[1][0] + m1[1][0] * m2[1][1] + m1[2][0] * m2[1][2] + m1[3][0] * m2[1][3];
+	result[2][0] = m1[0][0] * m2[2][0] + m1[1][0] * m2[2][1] + m1[2][0] * m2[2][2] + m1[3][0] * m2[2][3];
+	result[3][0] = m1[0][0] * m2[3][0] + m1[1][0] * m2[3][1] + m1[2][0] * m2[3][2] + m1[3][0] * m2[3][3];
+	result[0][1] = m1[0][1] * m2[0][0] + m1[1][1] * m2[0][1] + m1[2][1] * m2[0][2] + m1[3][1] * m2[0][3];
+	result[1][1] = m1[0][1] * m2[1][0] + m1[1][1] * m2[1][1] + m1[2][1] * m2[1][2] + m1[3][1] * m2[1][3];
+	result[2][1] = m1[0][1] * m2[2][0] + m1[1][1] * m2[2][1] + m1[2][1] * m2[2][2] + m1[3][1] * m2[2][3];
+	result[3][1] = m1[0][1] * m2[3][0] + m1[1][1] * m2[3][1] + m1[2][1] * m2[3][2] + m1[3][1] * m2[3][3];
+	result[0][2] = m1[0][2] * m2[0][0] + m1[1][2] * m2[0][1] + m1[2][2] * m2[0][2] + m1[3][2] * m2[0][3];
+	result[1][2] = m1[0][2] * m2[1][0] + m1[1][2] * m2[1][1] + m1[2][2] * m2[1][2] + m1[3][2] * m2[1][3];
+	result[2][2] = m1[0][2] * m2[2][0] + m1[1][2] * m2[2][1] + m1[2][2] * m2[2][2] + m1[3][2] * m2[2][3];
+	result[3][2] = m1[0][2] * m2[3][0] + m1[1][2] * m2[3][1] + m1[2][2] * m2[3][2] + m1[3][2] * m2[3][3];
+	result[0][3] = m1[0][3] * m2[0][0] + m1[1][3] * m2[0][1] + m1[2][3] * m2[0][2] + m1[3][3] * m2[0][3];
+	result[1][3] = m1[0][3] * m2[1][0] + m1[1][3] * m2[1][1] + m1[2][3] * m2[1][2] + m1[3][3] * m2[1][3];
+	result[2][3] = m1[0][3] * m2[2][0] + m1[1][3] * m2[2][1] + m1[2][3] * m2[2][2] + m1[3][3] * m2[2][3];
+	result[3][3] = m1[0][3] * m2[3][0] + m1[1][3] * m2[3][1] + m1[2][3] * m2[3][2] + m1[3][3] * m2[3][3];
+	*dst = result;
+};
+
+OPmat4 OPmat4From(OPquat a) {
+	OPmat4 result = OPMAT4_IDENTITY;
+	result[0][0] = 1.0f - 2.0f * (a.y * a.y + a.z * a.z);
+	result[0][1] = 2.0f * (a.x * a.y - a.w * a.z);
+	result[0][2] = 2.0f * (a.x * a.z + a.w * a.y);
+	result[1][0] = 2.0f * (a.x * a.y + a.w * a.z);
+	result[1][1] = 1.0f - 2.0f * (a.x * a.x + a.z * a.z);
+	result[1][2] = 2.0f * (a.y * a.z - a.w * a.x);
+	result[2][0] = 2.0f * (a.x * a.z - a.w * a.y);
+	result[2][1] = 2.0f * (a.y * a.z + a.w * a.x);
+	result[2][2] = 1.0f - 2.0f * (a.x * a.x + a.y * a.y);
+
+	result = OPmat4Transpose(result);
+	return result;
+}
+
+void OPmat4Log(const OPchar* msg, OPmat4 m) {
+	OPlogInfo("%s:\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f",
+		msg,
+		m[0][0], m[1][0], m[2][0], m[3][0],
+		m[0][1], m[1][1], m[2][1], m[3][1],
+		m[0][2], m[1][2], m[2][2], m[3][2],
+		m[0][3], m[1][3], m[2][3], m[3][3]);
+}
+
+OPmat4 OPmat4Read(OPstream* str) {
+	OPmat4 temp = {
+		OPvec4Read(str),
+		OPvec4Read(str),
+		OPvec4Read(str),
+		OPvec4Read(str)
+	};
+	return temp;
+}
+
+void OPmat4Write(OPmat4 v, OPstream* str) {
+	OPvec4Write(v[0], str);
+	OPvec4Write(v[1], str);
+	OPvec4Write(v[2], str);
+	OPvec4Write(v[3], str);
+}
+
+OPmat4 OPmat4RemoveScale(OPmat4 a) {
+	OPvec3 r;
+	r = OPvec3Norm(OPvec3Create(a[0][0], a[0][1], a[0][2]));
+	a[0][0] = r.x; a[0][1] = r.y; a[0][2] = r.z;
+
+	r = OPvec3Norm(OPvec3Create(a[1][0], a[1][1], a[1][2]));
+	a[1][0] = r.x; a[1][1] = r.y; a[1][2] = r.z;
+
+	r = OPvec3Norm(OPvec3Create(a[2][0], a[2][1], a[2][2]));
+	a[2][0] = r.x; a[2][1] = r.y; a[2][2] = r.z;
+
+	return a;
+}
+
+OPvec3 OPmat4Eulor(OPmat4 a)
+{
+	d64 sinPitch, cosPitch, sinRoll, cosRoll, sinYaw, cosYaw;
+
+	sinPitch = -a[2][0];
+	cosPitch = OPsqrt(1 - sinPitch*sinPitch);
+
+	if (OPabs(cosPitch) > 0.0001)
+	{
+		sinRoll = a[2][1] / cosPitch;
+		cosRoll = a[2][2] / cosPitch;
+		sinYaw = a[1][0] / cosPitch;
+		cosYaw = a[0][0] / cosPitch;
+	}
+	else
+	{
+		sinRoll = -a[1][2];
+		cosRoll = a[1][1];
+		sinYaw = 0;
+		cosYaw = 1;
+	}
+
+	return OPvec3Create(
+		(OPfloat)(atan2(sinYaw, cosYaw) * 180 / OPpi),
+		(OPfloat)(atan2(sinPitch, cosPitch) * 180 / OPpi),
+		(OPfloat)(atan2(sinRoll, cosRoll) * 180 / OPpi));
+}

@@ -64,7 +64,7 @@ JS_RETURN_VAL _OPrenderCull(const JS_ARGS& args) {
 JS_RETURN_VAL _OPrenderCullMode(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPrenderCullMode((i8)args[0]->IntegerValue());
+    OPrenderCullMode((OPcullFace)args[0]->IntegerValue());
 
     JS_RETURN_NULL;
 }

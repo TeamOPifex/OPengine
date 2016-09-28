@@ -1,5 +1,5 @@
 #version 330 core
-layout (location = 0) out vec4 gPosition;
+layout (location = 0) out vec3 gPosition;
 layout (location = 1) out vec4 gNormal;
 layout (location = 2) out vec4 gAlbedoSpec;
 
@@ -13,7 +13,7 @@ uniform sampler2D uSpecularMap;
 void main()
 {    
     // Store the fragment position vector in the first gbuffer texture
-    gPosition = vec4(vFragPos, 1.0);
+    gPosition = vFragPos;
     // Also store the per-fragment normals into the gbuffer
     gNormal = vec4(normalize(vNormal), 1.0);
     // And the diffuse per-fragment color

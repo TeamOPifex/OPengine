@@ -17,14 +17,18 @@ OPframeBufferDepth* OPframeBufferDepthAPIGLInit(OPframeBufferDepth* framebuffer,
 
 	// TODO: (garrett) move this into the OPtextureDesc
 	framebuffer->texture.Bind(0);
-	OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL));
-	OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE));
+	//OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL));
+	//OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE));
 
-	//GLfloat borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
-	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	OPGLFN(glBindFramebuffer(GL_FRAMEBUFFER, frameBufferGL->Handle));
+	GLfloat borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+	//GLfloat borderColor[] = { 0.0, 0.0, 0.0, 1.0 };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
-	OPGLFN(glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureGL->Handle, 0));
+	//OPGLFN(glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureGL->Handle, 0));
+	OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textureGL->Handle, 0));
 	OPGLFN(glDrawBuffer(GL_NONE));
+	OPGLFN(glReadBuffer(GL_NONE));
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		OPlogErr("Framebuffer not complete!");

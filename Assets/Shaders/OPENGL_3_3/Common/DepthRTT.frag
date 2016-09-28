@@ -3,6 +3,5 @@
 //out vec4 FragColor;
 
 void main(){
-	//FragColor.b = 1;
-	//FragColor.a = 1;
+	//FragColor = vec4(1, 0, 0, 1);
 }

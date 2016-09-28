@@ -52,8 +52,8 @@ OPmaterialPBRInstance** OPmaterialPBR::CreateInstances(OPmodel* model, bool setM
 		if (!setMeta) continue;
 
 		if (model->meshes[i].materialDesc != NULL) {
-			if (model->meshes[i].materialDesc->albedo != NULL) {
-				result[i]->SetAlbedoMap(model->meshes[i].materialDesc->albedo);
+			if (model->meshes[i].materialDesc->diffuse != NULL) {
+				result[i]->SetAlbedoMap(model->meshes[i].materialDesc->diffuse);
 			}
 		}
 	}
