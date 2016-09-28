@@ -4,7 +4,7 @@ void OPrenderCommandDrawIndex(void* data, OPcam* camera) {
 	OPrenderCommandDrawIndexed* dc = (OPrenderCommandDrawIndexed*)data;
 
 	dc->vertexArray->Bind();
-	dc->vertexBuffer->Bind();
+	//dc->vertexBuffer->Bind();
 	dc->indexBuffer->Bind();
 	dc->material->Bind();
 
@@ -40,7 +40,7 @@ OPrenderCommandDrawIndexed* OPrenderCommandDrawIndexed::Set(OPmesh* mesh, OPmat4
 
 void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterialInstance** material, bool materialPerMesh) {
 	if (!materialPerMesh) {
-		Submit(commandBucket, model, world, (OPmaterialInstance*)material);
+		Submit(commandBucket, model, world, material[0]);
 		return;
 	}
 

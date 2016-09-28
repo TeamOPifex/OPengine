@@ -7,6 +7,7 @@
 
 #include "./Human/include/Systems/OPinputSystem.h"
 #include "./Pipeline/include/Materials/OPmaterialSkinned.h"
+#include "./Pipeline/include/OPrendererFullForward.h"
 
 typedef struct {
 	OPmodel* Mesh;
@@ -21,7 +22,7 @@ typedef struct {
 	OPint heldDown = 0;
 	OPfloat scale = 100.0f;
 	OPscene scene;
-	OPrendererForward rendererForward;
+	OPrendererFullForward rendererForward;
 	OPmaterialSkinned materialSkinned;
 	OPmaterialSkinnedInstance* materialSkinnedInstance;
 } SkinningExample;
@@ -36,9 +37,9 @@ void ExampleSkinningEnter(OPgameState* last) {
 
 	
 	// Initializes a wrapper around the skinning animation material
-	skinningExample.materialSkinnedInstance = skinningExample.materialSkinned.Init(
-		skinningExample.rendererForward.passes[(ui32)OPrendererForwardPass::ANIMATED_MODEL])->
-		CreateInstance();
+	//skinningExample.materialSkinnedInstance = skinningExample.materialSkinned.Init(
+	//	skinningExample.rendererForward.passes[(ui32)OPrendererForwardPass::ANIMATED_MODEL])->
+	//	CreateInstance();
 
 
 	skinningExample.Mesh = (OPmodel*)OPCMAN.LoadGet("swordsman.opm");
@@ -47,13 +48,15 @@ void ExampleSkinningEnter(OPgameState* last) {
 	skinningExample.animation2 = (OPskeletonAnimation*)OPCMAN.LoadGet("swordsman.opm.run.anim");
 	skinningExample.animation3 = (OPskeletonAnimation*)OPCMAN.LoadGet("swordsman.opm.jump.anim");
 	skinningExample.animation4 = (OPskeletonAnimation*)OPCMAN.LoadGet("swordsman.opm.default attack.anim");
-	skinningExample.materialSkinnedInstance->SetAlbedoMap("swordsman.png");
+	//skinningExample.materialSkinnedInstance->SetAlbedoMap("swordsman.png");
 
 
-	skinningExample.materialSkinnedInstance->SetBones(skinningExample.skeleton);
-	OPrendererEntity* entity = skinningExample.scene.Add(skinningExample.Mesh, &skinningExample.materialSkinnedInstance->rootMaterialInstance);
-	entity->shadowMaterial = (OPmaterialInstance**)skinningExample.rendererForward.defaultShadowAnimatedMaterialInstance;
-	skinningExample.rendererForward.defaultShadowAnimatedMaterialInstance->AddParam("uBones", skinningExample.skeleton->skinned, skinningExample.skeleton->hierarchyCount);
+	//skinningExample.materialSkinnedInstance->SetBones(skinningExample.skeleton);
+	skinningExample.scene.Add(skinningExample.Mesh, skinningExample.skeleton, OPrendererEntityDesc(true, true, true, false));
+
+	//OPrendererEntity* entity = skinningExample.scene.Add(skinningExample.Mesh, &skinningExample.materialSkinnedInstance->rootMaterialInstance);
+	//entity->shadowMaterial = (OPmaterialInstance**)skinningExample.rendererForward.defaultShadowAnimatedMaterialInstance;
+	//skinningExample.rendererForward.defaultShadowAnimatedMaterialInstance->AddParam("uBones", skinningExample.skeleton->skinned, skinningExample.skeleton->hierarchyCount);
 }
 
 OPint ExampleSkinningUpdate(OPtimer* time) {

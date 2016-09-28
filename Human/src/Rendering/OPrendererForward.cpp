@@ -103,9 +103,9 @@ void OPrendererForwardSubmitMeshMaterial(OPrenderer* renderer, OPmesh* mesh, OPm
 
 void OPrendererForwardSubmitRendererEntity(OPrenderer* renderer, OPrendererEntity* rendererEntity) {
 	OPrendererForward* forwardRenderer = (OPrendererForward*)renderer->internalPtr;
-	forwardRenderer->renderBucket[1].Submit(rendererEntity->model, &rendererEntity->world, rendererEntity->material, rendererEntity->materialPerMesh);
-	if (rendererEntity->shadowEmitter) {
-		forwardRenderer->renderBucket[0].Submit(rendererEntity->model, &rendererEntity->world, rendererEntity->shadowMaterial, false);
+	forwardRenderer->renderBucket[1].Submit(rendererEntity->model, &rendererEntity->world, rendererEntity->material, rendererEntity->desc.materialPerMesh);
+	if (rendererEntity->desc.shadowEmitter) {
+		forwardRenderer->renderBucket[0].Submit(rendererEntity->model, &rendererEntity->world, rendererEntity->shadowMaterial == NULL ? rendererEntity->shadowMaterial : &forwardRenderer->defaultShadowMaterialInstance, false);
 	}
 }
 

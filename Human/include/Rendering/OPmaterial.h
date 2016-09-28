@@ -12,6 +12,7 @@ typedef struct OPmaterialInstance OPmaterialInstance;
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Rendering/OPmaterialParam.h"
 #include "./Human/include/Rendering/Enums/OPcullFace.h"
+#include "./Human/include/Rendering/Skinning/OPskeleton.h"
 struct OPmodel;
 
 inline void OPmaterialClearParams(OPmaterial* material);
@@ -298,6 +299,10 @@ struct OPmaterialInstance {
 
 	inline void AddParam(const OPchar* name, f32* data) {
 		AddParam(OPmaterialParamType::FLOAT, name, (void*)data, 1);
+	}
+
+	inline void AddBones(OPskeleton* skeleton) {
+		AddParam("uBones", skeleton->skinned, skeleton->hierarchyCount);
 	}
 
 	inline void Bind() {

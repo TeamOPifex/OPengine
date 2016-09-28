@@ -17,6 +17,8 @@ struct OPrenderer {
 	OPmaterial*(*_GetMaterial)(OPrenderer* renderer, ui32 pass) = 0;
 	void(*_SetMaterial)(OPrenderer* renderer, OPmaterial* material, ui32 pass) = 0;
 	void(*_SetMaterialEffect)(OPrenderer* renderer, OPeffect* effect, ui32 pass) = 0;
+	void(*_SetMaterials)(OPrenderer* renderer, OPrendererEntity* entity) = 0;
+	void(*_SetMaterialsSkeleton)(OPrenderer* renderer, OPrendererEntity* entity, OPskeleton* skeleton) = 0;
 	OPmaterialInstance*(*_CreateMaterialInstance)(OPrenderer* renderer, ui32 pass) = 0;
 	void(*_Begin)(OPrenderer* renderer) = 0;
 	void(*_SubmitModel)(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterialInstance** material) = 0;
@@ -31,6 +33,8 @@ struct OPrenderer {
 	inline OPmaterial* GetMaterial(ui32 pass) { return _GetMaterial(this, pass); }
 	inline void SetMaterial(OPmaterial* material, ui32 pass) { _SetMaterial(this, material, pass); }
 	inline void SetMaterialEffect(OPeffect* effect, ui32 pass) { _SetMaterialEffect(this, effect, pass); }
+	inline void SetMaterials(OPrendererEntity* entity) { _SetMaterials(this, entity); }
+	inline void SetMaterials(OPrendererEntity* entity, OPskeleton* skeleton) { _SetMaterialsSkeleton(this, entity, skeleton); }
 	inline OPmaterialInstance* CreateMaterialInstance(ui32 pass = 0) { return _CreateMaterialInstance(this, pass); }
 	inline void Begin() { _Begin(this); }
 	inline void Submit(OPmodel* model, OPmat4* world, bool shadowed, OPmaterialInstance** material) { _SubmitModel(this, model, world, shadowed, material); }

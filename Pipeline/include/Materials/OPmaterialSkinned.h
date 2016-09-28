@@ -7,18 +7,21 @@ struct OPmaterialSkinnedInstance;
 #include "./Human/include/Rendering/Skinning/OPskeleton.h"
 
 struct OPmaterialSkinned {
-	OPmaterial* rootMaterial;
+	OPmaterial rootMaterial;
 	OPvec3 lightPos;
 
 	OPmaterialSkinned() { }
 	OPmaterialSkinned(OPmaterial* material) {
 		Init(material);
 	}
+	OPmaterialSkinned(OPeffect* effect) {
+		Init(effect);
+	}
 
-	inline OPmaterial* Base() { return rootMaterial; }
+	inline OPmaterial* Base() { return &rootMaterial; }
 
 	inline void SetCamera(OPcam* camera) {
-		rootMaterial->AddParam("uCamPos", &camera->pos);
+		rootMaterial.AddParam("uCamPos", &camera->pos);
 	}
 
 	inline void SetLightPos(OPvec3 pos) {
@@ -26,8 +29,10 @@ struct OPmaterialSkinned {
 	}
 
 	OPmaterialSkinned* Init(OPmaterial* material);
+	OPmaterialSkinned* Init(OPeffect* effect);
 
 	OPmaterialSkinnedInstance* CreateInstance();
+	OPmaterialSkinnedInstance** CreateInstances(OPmodel* model, bool setMeta, bool materialPerMesh);
 };
 
 struct OPmaterialSkinnedInstance {

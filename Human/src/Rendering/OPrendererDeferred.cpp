@@ -108,7 +108,7 @@ void OPrendererDeferredSubmitMeshMaterial(OPrenderer* renderer, OPmesh* mesh, OP
 
 void OPrendererDeferredSubmitRendererEntity(OPrenderer* renderer, OPrendererEntity* rendererEntity) {
 	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
-	deferredRenderer->renderBucket[1].Submit(rendererEntity->model, &rendererEntity->world, rendererEntity->material, rendererEntity->materialPerMesh);
+	deferredRenderer->renderBucket[1].Submit(rendererEntity->model, &rendererEntity->world, rendererEntity->material, rendererEntity->desc.materialPerMesh);
 	//if (rendererEntity->shadowEmitter) {
 	//	deferredRenderer->renderBucket[0].Submit(rendererEntity->model, &rendererEntity->world, deferredRenderer->defaultShadowMaterialInstance);
 	//}

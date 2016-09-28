@@ -36,14 +36,16 @@ struct OPscene {
 	OPcam internalCamera;
 
 	void Init(OPrenderer* renderer, ui32 maxEntities, ui32 maxLights);
-	OPrendererEntity* Add(OPmodel* model, bool materialPerMesh);
-	OPrendererEntity* Add(OPmodel* model, OPmaterialInstance** material, bool materialPerMesh);
+	OPrendererEntity* Add(OPmodel* model, OPrendererEntityDesc desc);
+	OPrendererEntity* Add(OPmodel* model, OPmaterialInstance** material, OPrendererEntityDesc desc);
+	OPrendererEntity* Add(OPmodel* model, OPskeleton* skeleton, OPrendererEntityDesc desc);
 	OPsceneLight* Add(OPlightSpot light);
 	OPint Update(OPtimer* timer);
 	void Render(OPfloat delta);
 	void Destroy();
 
-	inline OPrendererEntity* Add(OPmodel* model, OPmaterialInstance* material) {
-		return Add(model, (OPmaterialInstance**)material, false);
+	inline OPrendererEntity* Add(OPmodel* model, OPmaterialInstance* material, OPrendererEntityDesc desc) {
+		desc.materialPerMesh = false;
+		return Add(model, (OPmaterialInstance**)material, desc);
 	}
 };

@@ -17,22 +17,28 @@ void OPscene::Init(OPrenderer* renderer, ui32 maxEntities, ui32 maxLights) {
 	this->renderer->Init(&camera, maxEntities, 1);
 }
 
-OPrendererEntity* OPscene::Add(OPmodel* model, OPmaterialInstance** material, bool materialPerMesh) {
+OPrendererEntity* OPscene::Add(OPmodel* model, OPmaterialInstance** material, OPrendererEntityDesc desc) {
 	entities[index].world = OPMAT4_IDENTITY;
 	entities[index].model = model;
 	entities[index].material = material;
-	entities[index].shadowEmitter = true;
-	entities[index].shadowReceiver = true;
-	entities[index].materialPerMesh = materialPerMesh;
+	entities[index].desc = desc;
 	return &entities[index++];
 }
 
-OPrendererEntity* OPscene::Add(OPmodel* model, bool materialPerMesh) {
+OPrendererEntity* OPscene::Add(OPmodel* model, OPrendererEntityDesc desc) {
 	entities[index].world = OPMAT4_IDENTITY;
 	entities[index].model = model;
-	entities[index].material = renderer->GetMaterial(1)->CreateInstances(model, materialPerMesh);
-	entities[index].shadowEmitter = true;
-	entities[index].shadowReceiver = true;
+	entities[index].desc = desc;
+	renderer->SetMaterials(&entities[index]);
+	return &entities[index++];
+}
+
+OPrendererEntity* OPscene::Add(OPmodel* model, OPskeleton* skeleton, OPrendererEntityDesc desc) {
+	desc.animated = true;
+	entities[index].world = OPMAT4_IDENTITY;
+	entities[index].model = model;
+	entities[index].desc = desc;
+	renderer->SetMaterials(&entities[index], skeleton);
 	return &entities[index++];
 }
 
