@@ -53,6 +53,9 @@ OPchar* OPstringGetNonConstant(const OPchar* str) {
 OPchar* OPstringCopy(const OPchar* str) {
 	ui32 len, size;
 	OPchar* result = NULL;
+	if (str == NULL) {
+		return "";
+	}
 
 	//OPlogInfo("copy string");
 	//OPlogInfo("copying %s", str);

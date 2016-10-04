@@ -35,6 +35,7 @@ OPint OPloaderOPskeletonLoad(OPstream* str, OPskeleton** skeleton) {
 			globalInverseBindPose[k][j] = str->F32();
 		}
 	}
+	globalInverseBindPose.SetIdentity();
 
 	for (i32 i = 0; i < boneCount; i++) {
 		hierarchy[i] = str->I16();
@@ -46,6 +47,7 @@ OPint OPloaderOPskeletonLoad(OPstream* str, OPskeleton** skeleton) {
 				pose[i][k][j] = str->F32();
 			}
 		}
+		//pose[i].SetIdentity();
 		// pose[i] = OPmat4Transpose(pose[i]);
 
 		for (ui32 j = 0; j < 4; j++) {
@@ -53,6 +55,7 @@ OPint OPloaderOPskeletonLoad(OPstream* str, OPskeleton** skeleton) {
 				offsets[i][k][j] = str->F32();
 			}
 		}
+		//offsets[i].SetIdentity();
 
 	}
 
