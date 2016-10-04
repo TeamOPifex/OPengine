@@ -1,5 +1,6 @@
 #include "./Pipeline/include/Loaders/OPloaderOPM.h"
 #include "./Human/include/Rendering/OPmodel.h"
+#include "./Core/include/OPmemory.h"
 
 struct OPmeshAnim {
 	OPchar* Name;
@@ -12,7 +13,7 @@ bool OPMloadDataV2(OPmodel* model, OPstream* str);
 
 bool _loadOPM(OPmodel* model, OPstream* str) {
 	ui16 version = str->UI16(); // OPM File Format Version
-	
+
 	if (version == 1) {
 		OPlogErr("No longer supporting OPM File Format Version 1");
 		return OPMloadV1(model, str);
@@ -31,7 +32,7 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 	ui32 features = str->UI32(); // Boolean Flag representation of OPM features
 	OPvertexLayoutBuilder vertexLayoutBuilder;// = OPvertexLayoutBuilder(features);
 	vertexLayoutBuilder.Init();
-	
+
 	if (OPMhasFeature(features, Position))
 		vertexLayoutBuilder.Add(OPattributes::POSITION);
 	if (OPMhasFeature(features, Normal))
@@ -56,7 +57,7 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 		OPlogErr("OPM Vertex Mode Version 2 not supported yet");
 		return false;
 	}
-	
+
 	ui32 totalVertices = str->UI32();
 	ui32 totalIndices = str->UI32();
 
@@ -155,7 +156,7 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 			mesh->meshMeta = OPNEW(OPmeshMeta());
 			mesh->meshMeta->count = metaCount;
 			mesh->meshMeta->metaType = (OPmeshMetaType*)OPALLOC(OPmeshMetaType, metaCount);
-			mesh->meshMeta->data = OPNEW(OPstream*, metaCount);
+			mesh->meshMeta->data = OPALLOC(OPstream*, metaCount);
 
 			for (ui32 j = 0; j < metaCount; j++) {
 				mesh->meshMeta->metaType[j] = (OPmeshMetaType)str->UI32();
@@ -305,7 +306,7 @@ bool OPMloadDataV2(OPmodel* model, OPstream* str) {
 
 // Even more out dated
 bool OPMloadV1(OPmodel* model, OPstream* str) {
-	
+
 	ui32 features = str->UI32();
 	ui32 verticeCount = str->UI32();
 
