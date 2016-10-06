@@ -46,4 +46,15 @@ struct OPrendererEntity {
 	OPmaterialInstance** material = NULL;
 	OPmaterialInstance** shadowMaterial = NULL;
 	OPrendererEntityDesc desc;
+
+	inline void SetAlbedoMap(const OPchar* texture) {
+		if (desc.materialPerMesh) {
+			for (ui32 i = 0; i < model->meshCount; i++) {
+				material[i]->AddParam("uAlbedoMap", (OPtexture*)OPCMAN.LoadGet(texture), 0);
+			}
+		}
+		else {
+			material[0]->AddParam("uAlbedoMap", (OPtexture*)OPCMAN.LoadGet(texture), 0);
+		}
+	}
 };

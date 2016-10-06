@@ -5,6 +5,7 @@ inline void OPskeletonUpdateGlobalPoses(OPskeleton* skeleton) {
 	skeleton->globalPoses[0] = skeleton->localPoses[0];
 	for (ui32 i = 1; i < skeleton->hierarchyCount; ++i) {
 		//OPlogInfo("Parent Joint: %s <-- Curr Joint: %s", skeleton->jointNames[skeleton->hierarchy[i]], skeleton->jointNames[i]);
+		//OPmat4Log("Local", skeleton->localPoses[i]);
 
 		skeleton->globalPoses[i] = skeleton->globalPoses[skeleton->hierarchy[i]] * skeleton->localPoses[i];
 		//skeleton->globalPoses[i] = skeleton->bindPoses[i] * skeleton->globalPoses[skeleton->hierarchy[i]]; // globalInvPoses is just Ident for now
@@ -49,7 +50,7 @@ OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* bindPose, OPmat4* boneOffse
 		OPlogInfo("Joint Name (%d): %s", i, skeleton->jointNames[i]);
 	}
 
-	OPskeletonUpdateGlobalPoses(skeleton);	
+	//OPskeletonUpdateGlobalPoses(skeleton);	
 	//for (OPint i = 0; i < skeleton->hierarchyCount; i++) {
 	//	OPmat4Inverse(&skeleton->globalInvPoses[i], skeleton->globalPoses[i]);
 	//}
@@ -64,8 +65,8 @@ OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* bindPose, OPmat4* boneOffse
 		//OPmat4Inverse(&skeleton->globalInvPoses[i], skeleton->globalPoses[i]);
 	//}
 
-
-
+	
+	OPskeletonUpdate(skeleton);
 
 	return skeleton;
 }
@@ -82,6 +83,8 @@ void OPskeletonUpdate(OPskeleton* skeleton) {
 
 	for (i32 i = 0; i < skeleton->hierarchyCount; i++) {
 		skeleton->skinned[i] = skeleton->globalPoses[i] * skeleton->bindPoses[i];
+		//OPmat4Log("Skinned", skeleton->skinned[i]);
+		//skeleton->skinned[i].SetIdentity();
 		//skeleton->skinned[i] = skeleton->localPoses[i] * skeleton->globalPoses[i];
 		//skeleton->skinned[i] = skeleton->localPoses[i] * skeleton->globalPoses[i];
 		//skeleton->skinned[i] = skeleton->globalPoses[i] * skeleton->globalInvPoses[i] * skeleton->localPoses[i];

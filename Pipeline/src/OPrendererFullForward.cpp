@@ -11,7 +11,7 @@ void OPrendererFullForward::_Init(OPcam** camera, ui32 maxCalls, ui32 maxLights)
 	shadowSkinnedMaterial.cullFace = OPcullFace::FRONT;
 	shadowSkinnedMaterial.cull = shadowMaterial.depth = true;
 
-	const ui32 SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+	const ui32 SHADOW_WIDTH = 4096, SHADOW_HEIGHT = 4096;
 	depthBuffer.Init(OPtextureDesc(SHADOW_WIDTH, SHADOW_HEIGHT, OPtextureFormat::DEPTH, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST, OPtextureType::FLOAT));
 
 	shadowCamera.SetOrtho(OPvec3(-120, 155, -1), OPVEC3_ZERO, OPVEC3_UP, 50.0f, 500.0f, -16, 16, -16, 16);

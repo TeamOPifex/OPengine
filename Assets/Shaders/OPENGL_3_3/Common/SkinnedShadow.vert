@@ -22,7 +22,7 @@ uniform mat4 uView;
 uniform mat4 uProj;
 uniform mat4 uViewShadow;
 uniform mat4 uProjShadow;
-uniform mat4 uBones[62];
+uniform mat4 uBones[100];
 
 void main(){
 
@@ -42,6 +42,8 @@ void main(){
 
     vec4 newPosition = BoneTransform * vec4(aPosition, 1.0);
     vec4 newNormal = BoneTransform * vec4(aNormal, 0.0);
+
+	//newPosition = vec4(aPosition, 1.0);
 
   	// Output position of the vertex, in clip space : uMVP * position
   	gl_Position = uProj * uView * uWorld * newPosition;

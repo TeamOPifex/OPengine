@@ -73,6 +73,15 @@ void OPrendererForwardSetMaterialEffect(OPrenderer* renderer, OPeffect* effect, 
 	forwardRenderer->passes[pass]->effect = effect;
 }
 
+void OPrendererForwardSetMaterials(OPrenderer* renderer, OPrendererEntity* entity) {
+	OPrendererForward* forwardRenderer = (OPrendererForward*)renderer->internalPtr;
+}
+
+void OPrendererForwardSetMaterialsSkeleton(OPrenderer* renderer, OPrendererEntity* entity, OPskeleton* skeleton) {
+	OPrendererForward* forwardRenderer = (OPrendererForward*)renderer->internalPtr;
+
+}
+
 void OPrendererForwardBegin(OPrenderer* renderer) {
 
 }
@@ -149,6 +158,8 @@ OPrendererForward* OPrendererForward::Setup() {
 	rendererRoot._GetMaterial = OPrendererForwardGetMaterial;
 	rendererRoot._SetMaterial = OPrendererForwardSetMaterial;
 	rendererRoot._SetMaterialEffect = OPrendererForwardSetMaterialEffect;
+	rendererRoot._SetMaterials = OPrendererForwardSetMaterials;
+	rendererRoot._SetMaterialsSkeleton = OPrendererForwardSetMaterialsSkeleton;
 	rendererRoot._Begin = OPrendererForwardBegin;
 	rendererRoot._SubmitModel = OPrendererForwardSubmitModel;
 	rendererRoot._SubmitModelMaterial = OPrendererForwardSubmitModelMaterial;

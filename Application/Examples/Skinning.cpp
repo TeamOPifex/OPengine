@@ -42,12 +42,26 @@ void ExampleSkinningEnter(OPgameState* last) {
 	//	CreateInstance();
 
 
-	skinningExample.Mesh = (OPmodel*)OPCMAN.LoadGet("swordsman.opm");
-	skinningExample.skeleton = (OPskeleton*)OPCMAN.LoadGet("swordsman.opm.skel");
-	skinningExample.animation = (OPskeletonAnimation*)OPCMAN.LoadGet("swordsman.opm.walk.anim");
-	skinningExample.animation2 = (OPskeletonAnimation*)OPCMAN.LoadGet("swordsman.opm.run.anim");
-	skinningExample.animation3 = (OPskeletonAnimation*)OPCMAN.LoadGet("swordsman.opm.jump.anim");
-	skinningExample.animation4 = (OPskeletonAnimation*)OPCMAN.LoadGet("swordsman.opm.default attack.anim");
+	//skinningExample.Mesh = (OPmodel*)OPCMAN.LoadGet("zombie.opm");
+	//skinningExample.skeleton = (OPskeleton*)OPCMAN.LoadGet("zombie.opm.skel");
+	//skinningExample.animation = (OPskeletonAnimation*)OPCMAN.LoadGet("zombie.opm.walk.anim");
+	//skinningExample.animation2 = (OPskeletonAnimation*)OPCMAN.LoadGet("zombie.opm.run.anim");
+	//skinningExample.animation3 = (OPskeletonAnimation*)OPCMAN.LoadGet("zombie.opm.jump.anim");
+	//skinningExample.animation4 = (OPskeletonAnimation*)OPCMAN.LoadGet("zombie.opm.default attack.anim");
+
+	//skinningExample.Mesh = (OPmodel*)OPCMAN.LoadGet("swordsman.opm");
+	//skinningExample.skeleton = (OPskeleton*)OPCMAN.LoadGet("swordsman.opm.skel");
+	//skinningExample.animation = (OPskeletonAnimation*)OPCMAN.LoadGet("swordsman.opm.walk.anim");
+	//skinningExample.animation2 = (OPskeletonAnimation*)OPCMAN.LoadGet("swordsman.opm.run.anim");
+	//skinningExample.animation3 = (OPskeletonAnimation*)OPCMAN.LoadGet("swordsman.opm.jump.anim");
+	//skinningExample.animation4 = (OPskeletonAnimation*)OPCMAN.LoadGet("swordsman.opm.default attack.anim");
+
+	skinningExample.Mesh = (OPmodel*)OPCMAN.LoadGet("archer.opm");
+	skinningExample.skeleton = (OPskeleton*)OPCMAN.LoadGet("archer.opm.skel");
+	skinningExample.animation = (OPskeletonAnimation*)OPCMAN.LoadGet("archer.opm.walk.anim");
+	skinningExample.animation2 = (OPskeletonAnimation*)OPCMAN.LoadGet("archer.opm.run.anim");
+	skinningExample.animation3 = (OPskeletonAnimation*)OPCMAN.LoadGet("archer.opm.jump.anim");
+	skinningExample.animation4 = (OPskeletonAnimation*)OPCMAN.LoadGet("archer.opm.attack.anim");
 	//skinningExample.materialSkinnedInstance->SetAlbedoMap("swordsman.png");
 
 
@@ -57,6 +71,7 @@ void ExampleSkinningEnter(OPgameState* last) {
 	//OPrendererEntity* entity = skinningExample.scene.Add(skinningExample.Mesh, &skinningExample.materialSkinnedInstance->rootMaterialInstance);
 	//entity->shadowMaterial = (OPmaterialInstance**)skinningExample.rendererForward.defaultShadowAnimatedMaterialInstance;
 	//skinningExample.rendererForward.defaultShadowAnimatedMaterialInstance->AddParam("uBones", skinningExample.skeleton->skinned, skinningExample.skeleton->hierarchyCount);
+
 }
 
 OPint ExampleSkinningUpdate(OPtimer* time) {
@@ -102,6 +117,7 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 		OPskeletonAnimationMerge(skinningExample.animation, skinningExample.animation2, skinningExample.heldDown / 500.0f);
 		OPskeletonAnimationApply(skinningExample.animation, skinningExample.skeleton);
 	}
+
 	OPskeletonUpdate(skinningExample.skeleton);
 
 	return false;

@@ -4,7 +4,7 @@ struct OPskeleton;
 typedef struct OPskeleton OPskeleton;
 
 #define NUM_JOINTS 4
-#define OPSKELETON_MAX_BONE_COUNT 62
+#define OPSKELETON_MAX_BONE_COUNT 100
 
 #include "./Math/include/OPmat4.h"
 #include "./Math/include/OPvec4.h"

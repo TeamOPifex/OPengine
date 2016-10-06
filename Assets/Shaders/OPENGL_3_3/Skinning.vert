@@ -45,7 +45,7 @@ void main() {
 	vec4 newPosition = BoneTransform * pos;
 	vec4 newNormal = BoneTransform * norm;
 
-	//newPosition = pos;
+	newPosition = pos;
 	
 	vec4 worldPos = uWorld * newPosition;
 	gl_Position = (uProj * uView) * worldPos; 
