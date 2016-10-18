@@ -232,7 +232,7 @@ struct OPmaterialInstance {
 	OPmaterialParam params[OPMATERIAL_MAX_UNIFORMS];
 	OPuint paramIndex;
 	ui64 id;
-	bool visible;
+	bool visible = true;
 
 	OPmaterialInstance() { }
 	OPmaterialInstance(OPmaterial* material) {
