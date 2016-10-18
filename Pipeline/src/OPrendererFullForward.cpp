@@ -165,7 +165,7 @@ void OPrendererFullForwardPresent(OPrenderer* renderer) {
 		forwardRenderer->depthBuffer.Bind();
 
 		OPrenderClearDepth();
-		
+
 		forwardRenderer->renderDepthBucket.Sort();
 		forwardRenderer->renderDepthBucket.Flush(false);
 

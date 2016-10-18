@@ -12,6 +12,7 @@ OPshaderUniform* OPeffect::GetUniform(const OPchar* name) {
 
 	bool found = this->uniforms.Get(name, (void**)&result);
 	if (!found) {
+		//OPlogErr("Shader Uniform not present: %s", name);
 		OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Shader Uniform not present: %s", name);
 	}
 	//ASSERT(found, "The uniform must be added first");

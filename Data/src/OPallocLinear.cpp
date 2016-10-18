@@ -44,6 +44,7 @@ void* OPallocatorLinearAlloc(OPallocator* alloc, OPuint sizeInBytes) {
 	    ASSERT(false, "NO MEMORY LEFT");
 		return NULL;
 	}
+
 	void* block = allocatorLinear->_currentPos;
 	allocatorLinear->_currentPos = (void*)((size_t)block + sizeInBytes);
 	allocatorLinear->_usedMemory += sizeInBytes;

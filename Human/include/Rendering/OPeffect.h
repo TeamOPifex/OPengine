@@ -91,7 +91,14 @@ struct OPeffect {
 	inline void Set(const OPchar* name, ui32 count, OPmat3* val) { OPRENDERER_ACTIVE->ShaderUniform.SetMat3v(GetUniform(name), count, val); }
 	inline void Set(const OPchar* name, OPmat4* val) { OPRENDERER_ACTIVE->ShaderUniform.SetMat4(GetUniform(name), val); }
 	inline void Set(const OPchar* name, ui32 count, OPmat4* val) { OPRENDERER_ACTIVE->ShaderUniform.SetMat4v(GetUniform(name), count, val); }
-	inline void Set(const OPchar* name, OPtexture* val, ui32 slot) { OPRENDERER_ACTIVE->ShaderUniform.SetTexture(GetUniform(name), val, slot); }
+	inline void Set(const OPchar* name, OPtexture* val, ui32 slot) { 
+		OPshaderUniform* uniform = GetUniform(name);
+		if (uniform == NULL) {
+			//OPlogErr("Shader Uniform %s not found", name);
+			return;
+		}
+		OPRENDERER_ACTIVE->ShaderUniform.SetTexture(uniform, val, slot);
+	}
 	inline void Set(const OPchar* name, ui32 count, OPtexture* val, ui32 slot) { OPRENDERER_ACTIVE->ShaderUniform.SetTexturev(GetUniform(name), count, val, slot); }
 	inline void Set(const OPchar* name, OPtextureCube* val, ui32 slot) { OPRENDERER_ACTIVE->ShaderUniform.SetTextureCube(GetUniform(name), val, slot); }
 	inline void Set(const OPchar* name, ui32 count, OPtextureCube* val, ui32 slot) { OPRENDERER_ACTIVE->ShaderUniform.SetTextureCubev(GetUniform(name), count, val, slot); }
