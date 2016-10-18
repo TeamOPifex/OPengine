@@ -85,7 +85,6 @@ void OPrenderCommandBucket::Sort() {
 
 void OPrenderCommandBucket::Flush(bool keep) {
 
-
 	for (ui64 i = 0; i < keyIndex; i++) {
 		keys[i].command->dispatch(keys[i].command->data, *camera);
 	}
@@ -103,6 +102,7 @@ void OPrenderCommandBucket::Render() {
 }
 
 void OPrenderCommandBucket::Submit(ui64 key, void(*dispatch)(void*, OPcam*), void* data, void* next) {
+	//OPlogErr("OPrenderCommandBucket::Submit %d", keyIndex);
 	commands[keyIndex].data = data;
 	commands[keyIndex].dispatch = dispatch;
 	commands[keyIndex].next = next;

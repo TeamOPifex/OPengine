@@ -52,8 +52,10 @@ void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OP
 	}
 
 	for (ui32 i = 0; i < model->meshCount; i++) {
-		if (!material[i]->rootMaterial->visible || !material[i]->visible) continue;
-
+		if (!material[i]->rootMaterial->visible || !material[i]->visible) {
+			OPlogErr("Invisible");
+			continue;
+		}
 		OPrenderCommandDrawIndexed* dc = commandBucket->CreateDrawIndexed();
 		dc->Set(&model->meshes[i], world, material[i]);
 		commandBucket->Submit(dc->key, dc->dispatch, dc);
@@ -61,7 +63,9 @@ void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OP
 }
 
 void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterialInstance* material) {
-	if (!material->rootMaterial->visible || !material->visible) return;
+	if (!material->rootMaterial->visible || !material->visible) {
+		return;
+	}
 	for (ui32 i = 0; i < model->meshCount; i++) {
 		OPrenderCommandDrawIndexed* dc = commandBucket->CreateDrawIndexed();
 		dc->Set(&model->meshes[i], world, material);
@@ -70,7 +74,9 @@ void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OP
 }
 
 void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) {
-	if (!material->rootMaterial->visible || !material->visible) return;
+	if (!material->rootMaterial->visible || !material->visible) {
+		return;
+	}
 	OPrenderCommandDrawIndexed* dc = commandBucket->CreateDrawIndexed();
 	dc->Set(mesh, world, material);
 	commandBucket->Submit(dc->key, dc->dispatch, dc);
