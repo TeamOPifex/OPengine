@@ -6,6 +6,7 @@
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/Assert.h"
 #include "physxvisualdebuggersdk/PvdConnection.h"
+#include "./Performance/include/OPphysXController.h"
 
 
 PxPhysics* OPphysXSDK = NULL;
@@ -219,15 +220,72 @@ i8 OPphysXOverlapping(OPphysXRigidActor* actor, OPphysXRigidActor* other) {
 	return collisionFound;
 }
 
+PxGeometry GetGeoByType(PxGeometryHolder geo) {
+	switch (geo.getType()) {
+	case PxGeometryType::eCAPSULE: {
+		return geo.capsule();
+	}
+	case PxGeometryType::eBOX: {
+		return geo.box();
+	}
+	}
+}
+
+// Stupidly, this has an issue when it converts the geometry back to the types.
+// Solution, for now, is to send the actual typed geometry to the overlap
+//i8 OPphysXOverlapping(OPphysXRigidActor* actor, PxShape* actorShape, OPphysXRigidActor* other, PxShape* otherShape) {
+//
+//	PxGeometry actorGeometry = GetGeoByType(actorShape->getGeometry());
+//	PxTransform actorTransform = PxShapeExt::getGlobalPose(*actorShape, *actor);
+//
+//	PxGeometry otherGeometry = GetGeoByType(otherShape->getGeometry());
+//	PxTransform otherTransform = PxShapeExt::getGlobalPose(*otherShape, *other);
+//
+//	return PxGeometryQuery::overlap(actorGeometry, actorTransform, otherGeometry, otherTransform);
+//}
+
 i8 OPphysXOverlapping(OPphysXRigidActor* actor, PxShape* actorShape, OPphysXRigidActor* other, PxShape* otherShape) {
 
-	PxGeometry actorGeometry = actorShape->getGeometry().any();
+	const PxCapsuleGeometry& capsuleGeom = static_cast<const PxCapsuleGeometry&>(actorShape->getGeometry().capsule());
+	const PxBoxGeometry& boxGeom = static_cast<const PxBoxGeometry&>(otherShape->getGeometry().box());
+
+	//PxGeometry actorGeometry = GetGeoByType(actorShape->getGeometry());
 	PxTransform actorTransform = PxShapeExt::getGlobalPose(*actorShape, *actor);
 
-	PxGeometry otherGeometry = otherShape->getGeometry().any();
+	//PxGeometry otherGeometry = GetGeoByType(otherShape->getGeometry());
 	PxTransform otherTransform = PxShapeExt::getGlobalPose(*otherShape, *other);
 
-	return PxGeometryQuery::overlap(actorGeometry, actorTransform, otherGeometry, otherTransform);
+	return PxGeometryQuery::overlap(capsuleGeom, actorTransform, boxGeom, otherTransform);
+}
+
+bool OPphysXOverlapping(OPphysXController* controller, PxShape* actorShape, OPphysXRigidActor* other, PxShape* otherShape) {
+	const PxCapsuleGeometry& capsuleGeom = static_cast<const PxCapsuleGeometry&>(actorShape->getGeometry().capsule());
+	const PxBoxGeometry& boxGeom = static_cast<const PxBoxGeometry&>(otherShape->getGeometry().box());
+
+	PxTransform actorTransform = PxShapeExt::getGlobalPose(*actorShape, *controller->getActor());
+	PxTransform otherTransform = PxShapeExt::getGlobalPose(*otherShape, *other);
+
+	return PxGeometryQuery::overlap(capsuleGeom, actorTransform, boxGeom, otherTransform);
+}
+
+bool OPphysXOverlappingSphere(OPphysXController* controller, PxShape* actorShape, OPphysXRigidActor* other, PxShape* otherShape) {
+	const PxCapsuleGeometry& capsuleGeom = static_cast<const PxCapsuleGeometry&>(actorShape->getGeometry().capsule());
+	const PxSphereGeometry& sphereGeom = static_cast<const PxSphereGeometry&>(otherShape->getGeometry().sphere());
+
+	PxTransform actorTransform = PxShapeExt::getGlobalPose(*actorShape, *controller->getActor());
+	PxTransform otherTransform = PxShapeExt::getGlobalPose(*otherShape, *other);
+
+	return PxGeometryQuery::overlap(capsuleGeom, actorTransform, sphereGeom, otherTransform);
+}
+
+
+
+bool OPphysXOverlappingSphere(OPphysXController* controller, PxShape* actorShape, PxTransform other, PxSphereGeometry sphereGeom) {
+	const PxCapsuleGeometry& capsuleGeom = static_cast<const PxCapsuleGeometry&>(actorShape->getGeometry().capsule());
+
+	PxTransform actorTransform = PxShapeExt::getGlobalPose(*actorShape, *controller->getActor());
+
+	return PxGeometryQuery::overlap(capsuleGeom, actorTransform, sphereGeom, other);
 }
 
 void OPphysXGetTransform(OPphysXRigidActor* actor, OPmat4* mat) {

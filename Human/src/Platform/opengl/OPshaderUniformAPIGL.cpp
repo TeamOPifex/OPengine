@@ -141,6 +141,11 @@ void OPshaderUniformSetMat4vGL(OPshaderUniform* shaderUniform, ui32 count, OPmat
 void OPshaderUniformSetTextureGL(OPshaderUniform* shaderUniform, OPtexture* val, ui32 slot) {
     #ifdef _DEBUG
         if(shaderUniform == NULL) return;
+	#else
+		if (shaderUniform == NULL) {
+			OPlogErr("Shader Uniform was NULL");
+			return;
+		}
     #endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	val->Bind(slot);

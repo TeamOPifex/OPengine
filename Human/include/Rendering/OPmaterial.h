@@ -302,7 +302,7 @@ struct OPmaterialInstance {
 	}
 
 	inline void AddBones(OPskeleton* skeleton) {
-		AddParam("uBones", skeleton->skinned, skeleton->hierarchyCount);
+		AddParam("uBones", skeleton->skinned, (ui8)skeleton->hierarchyCount);
 	}
 
 	inline void Bind() {

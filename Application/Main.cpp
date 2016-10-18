@@ -106,11 +106,11 @@ OP_MAIN_START
 	#ifdef OPIFEX_OPTION_V8
 	// If the V8 engine is compiled in,
 	// see if we have a script to run at startup
-	if(argc > 1) {
-		//chdir(OPIFEX_ASSETS);
-		OPjavaScriptV8SetupRun(args[2]);
-		return 0;
-	}
+	//if(argc > 1) {
+	//	//chdir(OPIFEX_ASSETS);
+	//	OPjavaScriptV8SetupRun(args[2]);
+	//	return 0;
+	//}
 	#endif
 
 	ApplicationSetup();

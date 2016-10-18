@@ -20,6 +20,10 @@ struct OPskeleton {
 	OPmat4* bindPoses;
 
 	OPmat4 globalInverse;
+
+	i16 JointIndex(const OPchar* joint);
+	OPmat4 JointMatrix(i32 joint);
+	OPvec3 JointPosition(i32 joint);
 };
 
 OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* bindPose, OPmat4* boneOffsets, OPmat4 invGlobalPose, i32 count, OPchar** names);

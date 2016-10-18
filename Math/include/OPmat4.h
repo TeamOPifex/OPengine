@@ -212,6 +212,14 @@ struct OPmat4 {
 		OPmat4Translate(this,val.x, val.y,val.z);
 		return this;
 	}
+
+	inline OPvec3 GetTranslation() {
+		return OPvec3(
+			cols[3][0],
+			cols[3][1],
+			cols[3][2]
+		);
+	}
 };
 
 
