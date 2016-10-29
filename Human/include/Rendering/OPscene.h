@@ -40,6 +40,7 @@ struct OPscene {
 	OPrendererEntity* Add(OPmodel* model, OPmaterialInstance** material, OPrendererEntityDesc desc);
 	OPrendererEntity* Add(OPmodel* model, OPskeleton* skeleton, OPrendererEntityDesc desc);
 	OPsceneLight* Add(OPlightSpot light);
+	void Remove(OPrendererEntity* entity);
 	OPint Update(OPtimer* timer);
 	void Render(OPfloat delta);
 	void Destroy();

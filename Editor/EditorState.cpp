@@ -6,7 +6,7 @@ struct Grid {
 	OPeffect effect;
 
 	void Init(ui32 width, ui32 depth) {
-		effect = OPeffectGen("Grid.vert", "Grid.frag", OPATTR_POSITION, "Grid Effect", sizeof(OPvec3));
+		//effect = OPeffectGen("Grid.vert", "Grid.frag", OPATTR_POSITION, "Grid Effect", sizeof(OPvec3));
 
 		ui32 totalVertices = width * depth;
 
@@ -41,9 +41,9 @@ struct Grid {
 			}
 		}
 
-		mesh = OPmeshCreate();
-		OPmeshBind(&mesh);
-		OPmeshBuild(sizeof(OPvec3), sizeof(ui16), totalVertices, totalIndices, vertices, indices);
+		//mesh = OPmeshCreate();
+		//OPmeshBind(&mesh);
+		//OPmeshBuild(sizeof(OPvec3), sizeof(ui16), totalVertices, totalIndices, vertices, indices);
 	}
 };
 
@@ -59,21 +59,22 @@ void EditorEnter(OPgameState* prev) {
 
 OPint EditorUpdate(OPtimer* timer) {
 	camera.Update(timer);
+	OPcefUpdate();
 	return 0;
 }
 
 void EditorRender(OPfloat delta) {
 	OPrenderClear(0.1, 0.1, 0.1);
 
-	OPmeshBind(&grid.mesh);
-	OPeffectBind(&grid.effect);
-	OPmeshBind(&grid.mesh);
-	OPeffectParamMat4("uWorld", &OPMAT4_IDENTITY);
-	OPeffectParamMat4("uView", camera.View());
-	OPeffectParamMat4("uProj", camera.Proj());
-	glDrawElements(GL_LINES, grid.mesh.IndexBuffer.ElementCount, GL_UNSIGNED_SHORT, 0);
+	//OPmeshBind(&grid.mesh);
+	//OPeffectBind(&grid.effect);
+	//OPmeshBind(&grid.mesh);
+	//OPeffectParamMat4("uWorld", &OPMAT4_IDENTITY);
+	//OPeffectParamMat4("uView", camera.View());
+	//OPeffectParamMat4("uProj", camera.Proj());
+	//glDrawElements(GL_LINES, grid.mesh.IndexBuffer.ElementCount, GL_UNSIGNED_SHORT, 0);
 
-	OPcefUpdate();
+	OPcefRender();
 
 	OPrenderPresent();
 }

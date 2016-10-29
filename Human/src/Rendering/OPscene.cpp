@@ -47,6 +47,23 @@ OPsceneLight* OPscene::Add(OPlightSpot light) {
 	return &lights[lightIndex++];
 }
 
+void OPscene::Remove(OPrendererEntity* entity) {
+	ui32 i = 0;
+	bool found = false;
+	for (; i < index; i++) {
+		if (&entities[i] == entity) {
+			found = true;
+			break;
+		}
+	}
+	if (found) {
+		if (i != index - 1) {
+			entities[i] = entities[index - 1];
+		}
+		index--;
+	}
+}
+
 OPint OPscene::Update(OPtimer* timer) {
 	return 0;
 }

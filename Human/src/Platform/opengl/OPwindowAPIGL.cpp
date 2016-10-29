@@ -3,6 +3,7 @@
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Rendering/OPwindow.h"
 #include "./Human/include/Rendering/API/OPrenderer.h"
+#include "./Human/include/Input/OPmouse.h"
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/Assert.h"
 
@@ -15,6 +16,10 @@ ui32 OPkeyboardMappingGL[(ui32)OPkeyboardKey::_MAX];
 #define OPIFEX_OPENGL_MAJOR 3
 #define OPIFEX_OPENGL_MINOR 3
 #endif
+
+void glfwScrollCollback(GLFWwindow* window, double x, double y) {
+	OPMOUSE.updatedWheel = y;
+}
 
 OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameters windowParameters) {
 	//ASSERT(windowParameters.fullscreen == false || (windowParameters.fullscreen && monitor != NULL), "To create a fullscreen window, a monitor must be declared");
@@ -49,6 +54,7 @@ OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameter
 		
 	//glfwSetCharCallback(window, glfwCharacterCallback);
 	//glfwSetDropCallback(window, glfwWindowDropCallback);
+	glfwSetScrollCallback(windowGL->Handle, glfwScrollCollback);
 
 	ASSERT(windowGL->Handle != NULL, "Unable to create the window.");
 
