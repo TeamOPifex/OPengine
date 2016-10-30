@@ -58,7 +58,9 @@ set_target_properties(9_Editor PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(9_Editor PROPERTIES OUTPUT_NAME "Editor")
 
 add_opifex_targets(9_Editor)
-add_opifex_defines()
+
+add_marketplace_addons(9_Editor "Application/${BINARY_RELEASE_MODE}/" OPIFEX_ASSETS_ADDITIONAL)
+add_opifex_defines(OPIFEX_ASSETS_ADDITIONAL)
 
 #########################################
 # ADDITIONAL FEATURES
@@ -75,11 +77,3 @@ add_opifex_steam(9_Editor)
 add_opifex_fmod(9_Editor)
 add_opifex_xinput(9_Editor)
 add_opifex_raknet(9_Editor)
-
-message(STATUS "ADDING ${ADDON}")
-if(${OPIFEX_OPTION_RELEASE})
-  SET(BINARY_RELEASE_MODE "release")
-else()
-  SET(BINARY_RELEASE_MODE "debug")
-endif()
-add_marketplace_addons(9_Editor "Editor/${BINARY_RELEASE_MODE}/")

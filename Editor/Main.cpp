@@ -5,7 +5,7 @@
 #include "./Pipeline/include/Loaders/OPloaderOPskeleton.h"
 #include "./Pipeline/include/Loaders/OPloaderOPanimation.h"
 #include "./Data/include/OPlogToFile.h"
-#include "./OPassimp.h"
+//#include "./OPassimp.h"
 #include "./OPcef.h"
 
 #include <bitset>
@@ -17,42 +17,47 @@
 //////////////////////////////////////
 /* forward refs */
 
+OPwindow mainWindow;
+
 void ApplicationInit() {
 	//OPallocator* allocator = OPallocatorLinearCreate(MB(128));
 	//OPDEFAULT_ALLOCATOR = *allocator;
 
-	OP_LOG_LEVEL = 2000;
-	
+	OPLOGLEVEL = 2000;
+
+	OPCMAN.Init(OPIFEX_ASSETS);
 	OPloadersAddDefault();
 	OPscriptAddLoader();
 	OPskeletonAddLoader();
 	OPskeletonAnimationAddLoader();
 	SpineAddLoader();
-	OPassimpAddLoaders();
-	OPlog("Assets %s", OPIFEX_ASSETS);
-	OPcmanInit(OPIFEX_ASSETS);
-
-	OPjson* ground = (OPjson*)OPcmanLoadGet("ground.meta");
-	OPjson model = OPjsonGet(*ground, "model");
-	OPlog("MODEL from JSON: %s", OPjsonString(model));
+	//OPassimpAddLoaders();
+	OPlogInfo("Assets %s", OPIFEX_ASSETS);
 
 	OPoculusStartup();
-	OPrenderInit();
-	OPgamePadSetDeadZones(0.2f);
+
+	OPrenderSetup();
+	OPwindowSystemInit();
+	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, 1920, 1080));
+	OPrenderInit(&mainWindow);
+	OPGAMEPADS.SetDeadzones(0.2f);
 
 	OPcefInit();
-	OPcefLoad("http://google.com");
+	OPcefLoad("http://threejs.org");
+	//OPcefLoad("about:blank");
+	//OPchar* baseDir = OPstringCreateMerged("file:///", OPIFEX_ASSETS);
+	//OPcefLoad(OPstringCreateMerged(baseDir, "index.html"));
+	//OPcefLoad("file:///Web/index.html");
 
-	OPgameStateChange(&GS_EDITOR);
+	OPgameState::Change(&GS_EDITOR);
 }
 
 OPint ApplicationUpdate(OPtimer* timer) {
-	OPrenderUpdate();
 
 	OPinputSystemUpdate(timer);
-	OPcmanUpdate(timer);
+	OPCMAN.Update(timer);
 
-	if (OPkeyboardWasReleased(OPKEY_ESCAPE)) return 1;
+	if (OPKEYBOARD.WasReleased(OPkeyboardKey::ESCAPE)) return 1;
 
 	return ActiveState->Update(timer);
 }
@@ -64,7 +69,7 @@ void ApplicationRender(OPfloat delta) {
 
 void ApplicationDestroy() {
 	ActiveState->Exit(ActiveState);
-	OPcmanDestroy();
+	OPCMAN.Destroy();
 }
 
 void ApplicationSetup() {
@@ -90,22 +95,23 @@ int main(int argc, char * argv[]) {
 
 #else
 
-OP_MAIN{
+OP_MAIN_START
+OPLOGLEVEL = (ui32)OPlogLevel::VERBOSE;
+
 #ifdef OPIFEX_OPTION_V8
-	// If the V8 engine is compiled in,
-	// see if we have a script to run at startup
-	if (argc > 1) {
-		//chdir(OPIFEX_ASSETS);
-		OPjavaScriptV8SetupRun(args[2]);
-		OP_MAIN_SUCCESS
-	}
+// If the V8 engine is compiled in,
+// see if we have a script to run at startup
+//if(argc > 1) {
+//	//chdir(OPIFEX_ASSETS);
+//	OPjavaScriptV8SetupRun(args[2]);
+//	return 0;
+//}
 #endif
 
 ApplicationSetup();
 
-//OP_MAIN_START
-OP_MAIN_START_STEPPED
+OP_MAIN_RUN
+//OP_MAIN_RUN_STEPPED
+
 OP_MAIN_END
-OP_MAIN_SUCCESS
-}
 #endif
