@@ -12,6 +12,8 @@ uniform sampler2D uShadow;
 
 uniform vec3 uLightPos;
 uniform vec3 uViewPos;
+uniform vec3 uColor;
+uniform float uColorAmount;
 
 // uniform bool uShadows;
 
@@ -90,5 +92,5 @@ void main()
 	//shadow = 0;
     vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;
 
-    FragColor = vec4(lighting, 1.0f);
+    FragColor = vec4((1.0 - uColorAmount) * lighting + (uColorAmount * uColor), 1.0f);
 }

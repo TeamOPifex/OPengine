@@ -16,7 +16,15 @@ OPvec3 OPvec3::operator*=(OPmat4 rhs)
 OPfloat OPvec3AngleToTarget(OPvec3 pos, OPvec3 facing, OPvec3 target) {
 	OPvec3 _toPos = target - pos;
 	OPvec3 _facing = OPvec3Norm(facing);
-	_toPos = OPvec3Norm(_toPos);	
-	
-	return OPacos(OPvec3Dot(_facing, _toPos));
+	_toPos.Norm();
+
+	OPvec3 C = OPvec3Cross(_facing, _toPos);
+	//f32 dir = OPvec3Dot(C, facing);
+	//
+	f32 dot = OPvec3Dot(_facing, _toPos);
+	////OPlogErr("Dot: %f", dot);
+	f32 angle = OPacos(dot);
+
+	if (C.y < 0) return -angle;
+	return angle;
 }
