@@ -248,6 +248,7 @@ inline OPfloat OPvec3DistSquare(OPvec3 a, OPvec3 b) {
 	return OPvec3Dot(dif, dif);
 }
 
+// TODO: (garrett) This doesn't seem to work, probably need to get rid of this
 inline OPfloat OPvec3Angle(OPvec3 a, OPvec3 b) {
 	OPfloat temp = 0;
 
