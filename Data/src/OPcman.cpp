@@ -60,7 +60,11 @@ bool OPcman::Init(const OPchar* dir) {
 }
 
 void OPcman::ResetCurrentDir() {
+#if defined(OPIFEX_WINDOWS)
+	SetCurrentDirectory(rootFolder);
+#else
     chdir(rootFolder);
+#endif
 }
 
 bool OPcman::Add(const OPchar* assetKey, OPasset* asset) {
