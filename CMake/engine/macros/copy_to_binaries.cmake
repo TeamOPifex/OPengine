@@ -6,6 +6,9 @@ function(copy_to_binaries FILE_TO_COPY)
 	if(${OPIFEX_OS_WINDOWS})
 		string(REPLACE "/" "\\" fileToCopyOver "${outputVar}")
 		string(REPLACE "/" "\\" dirToCopyTo "${COPY_DIR}")
+    else()
+        SET(fileToCopyOver "${outputVar}")
+        SET(dirToCopyTo "${COPY_DIR}")        
 	endif()
 
 	file(COPY

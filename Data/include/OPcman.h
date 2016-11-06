@@ -27,7 +27,7 @@ struct OPcman {
 
 	OPcman() { }
 	OPcman(const OPchar* dir) { Init(dir); }
-	
+
 	bool Init(const OPchar* dir);
 	void AddLoader(OPassetLoader* loader);
 	void Update(OPtimer* timer);
@@ -42,6 +42,7 @@ struct OPcman {
 	bool SetDir(OPchar* dir);
 	void LoadResourcePack(const OPchar* filename);
 	OPstream* GetResource(const OPchar* resourceName);
+    void ResetCurrentDir();
 
 	inline bool IsLoaded(const OPchar* asset) {
 		return hashmap.Exists(asset);
@@ -60,5 +61,5 @@ extern OPcman OPCMAN;
 #ifdef _DEBUG
 	#define OPCMAN_UPDATE(timer) OPCMAN.Update(timer);
 #else
-	#define OPCMAN_UPDATE(timer) 
+	#define OPCMAN_UPDATE(timer)
 #endif

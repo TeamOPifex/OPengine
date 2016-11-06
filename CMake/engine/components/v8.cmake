@@ -55,7 +55,39 @@ macro(add_opifex_v8_osx APPLICATION_TARGET)
 
 	if(${OPIFEX_OPTION_RELEASE})
 
-		message( FATAL_ERROR "V8 is not setup for release mode on OSX yet" )
+		SET(_V8_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/V8/lib/release/osx64/")
+		if(_V8_SOURCE)
+			SET(_V8_BINARY_LOCATION "${V8_PATH}/out/x64.release/")
+		endif()
+
+		message(STATUS "RELEASE V8: ${V8_PATH} ${_V8_SOURCE}")
+
+
+
+		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_base.a)
+		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_libbase.a)
+		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_libplatform.a)
+		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_nosnapshot.a)
+		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_libsampler.a)
+		#copy_to_binaries(${_V8_BINARY_LOCATION}libicudata.a)
+		copy_to_binaries(${_V8_BINARY_LOCATION}libicuuc.a)
+		copy_to_binaries(${_V8_BINARY_LOCATION}libicui18n.a)
+		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_external_snapshot.a)
+
+		if(${OPIFEX_OS_64})
+			link_from_binaries(${APPLICATION_TARGET}
+				libv8_nosnapshot.a
+				libv8_base.a
+				libv8_libbase.a
+				libv8_libplatform.a
+                libv8_libsampler.a
+				#libicudata.a
+				libicuuc.a
+				libicui18n.a
+                libv8_external_snapshot.a)
+		else()
+
+		endif()
 
 	else()
 
@@ -64,15 +96,17 @@ macro(add_opifex_v8_osx APPLICATION_TARGET)
 			SET(_V8_BINARY_LOCATION "${V8_PATH}/out/x64.debug/")
 		endif()
 
-		message("${V8_PATH} ${_V8_SOURCE}")
+		message(STATUS "DEBUG V8: ${V8_PATH} ${_V8_SOURCE}")
 
-		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_base.a)
+        copy_to_binaries(${_V8_BINARY_LOCATION}libv8_base.a)
 		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_libbase.a)
 		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_libplatform.a)
 		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_nosnapshot.a)
-		copy_to_binaries(${_V8_BINARY_LOCATION}libicudata.a)
+		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_libsampler.a)
+		#copy_to_binaries(${_V8_BINARY_LOCATION}libicudata.a)
 		copy_to_binaries(${_V8_BINARY_LOCATION}libicuuc.a)
 		copy_to_binaries(${_V8_BINARY_LOCATION}libicui18n.a)
+		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_external_snapshot.a)
 
 		if(${OPIFEX_OS_64})
 			link_from_binaries(${APPLICATION_TARGET}
@@ -80,11 +114,11 @@ macro(add_opifex_v8_osx APPLICATION_TARGET)
 				libv8_base.a
 				libv8_libbase.a
 				libv8_libplatform.a
-				libicudata.a
+                libv8_libsampler.a
+				#libicudata.a
 				libicuuc.a
-				libicui18n.a)
-
-			# message(STATUS "LIBV8")
+				libicui18n.a
+                libv8_external_snapshot.a)
 		else()
 
 		endif()

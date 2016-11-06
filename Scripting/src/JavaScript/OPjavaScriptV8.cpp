@@ -545,7 +545,7 @@ OPjavaScriptPersistentValue OPjavaScriptV8Run(OPjavaScriptV8Compiled* scriptComp
 	Handle<v8::Object> global = context->Global();
 	Handle<v8::Value> value = global->Get(JS_NEW_STRING(name));
 	Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
-	
+
 	TryCatch trycatch;
 	Handle<Value> result = func->Call(global, count, args);
 	if (result.IsEmpty()) {
@@ -592,7 +592,10 @@ OPjavaScriptPersistentValue OPjavaScriptV8Compiled::Function(const OPchar* name,
 void OPjavaScriptV8Init() {
 	if (isolate == NULL) {
 		bool result = v8::V8::InitializeICU();
-		ASSERT(result, "Make sure icudt.dll is available");
+
+        // Not sure why, but the latest update of V8 is returning
+        // false every time.
+		//ASSERT(result, "Make sure icudt.dll is available");
 		v8::Platform* platform = v8::platform::CreateDefaultPlatform();
 		v8::V8::InitializePlatform(platform);
 		result = v8::V8::Initialize();

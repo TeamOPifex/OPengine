@@ -22,6 +22,7 @@ bool OPcman::Init(const OPchar* dir) {
 
 	if (dir == NULL) {
 		assetDirectoriesCount = 0;
+        OPlogErr("Exec Path: %s", OPEXECUTABLE_PATH);
 		rootFolder = OPstringCreateMerged(OPEXECUTABLE_PATH, "assets/");
 	}
 	else {
@@ -48,14 +49,18 @@ bool OPcman::Init(const OPchar* dir) {
 	result = chdir(rootFolder);
 
 	if (result == 0) {
-		OPlog("Directory Changed to: %s", rootFolder);
+		OPlogErr("Directory Changed to: %s", rootFolder);
 	}
 	else {
-		OPlog("!Directory Change Failed: %s", rootFolder);
+		OPlogErr("!Directory Change Failed: %s", rootFolder);
 	}
 #endif
 
 	return true;
+}
+
+void OPcman::ResetCurrentDir() {
+    chdir(rootFolder);
 }
 
 bool OPcman::Add(const OPchar* assetKey, OPasset* asset) {

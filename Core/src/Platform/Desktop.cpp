@@ -15,6 +15,7 @@ void OPstart(int argc, char** args) {
 	// Initialize the engine and game
 	OPSTARTUP_PATH = OPdirCurrent();
 	OPEXECUTABLE_PATH = OPdirExecutable();
+    OPlogErr("Exec Path: %s", OPEXECUTABLE_PATH);
 	OPTIMER.Init();
 	OPENGINERUNNING = true;
 	OPinitialize();
