@@ -6,7 +6,7 @@
 
 typedef struct {
 	OPcam* Camera;
-	OPparticleSys* ParticleSystem;
+	OPparticleSystem* ParticleSystem;
 } ParticleSystemExample;
 
 ParticleSystemExample* particleSystemExample;
@@ -28,8 +28,8 @@ void ExampleParticleSystemEnter(OPgameState* last) {
 		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
-	OPparticleSysInit(NULL);
-	particleSystemExample->ParticleSystem = OPparticleSysCreate(NULL, 256, NULL);
+	OPparticleSystem::Startup();
+	particleSystemExample->ParticleSystem = OPparticleSystem::Create(NULL, 256, NULL);
 	particleSystemExample->ParticleSystem->fps = 10;
 }
 
@@ -37,31 +37,31 @@ OPint ExampleParticleSystemUpdate(OPtimer* time) {
 	OPsprite* sprite = (OPsprite*)OPCMAN.Get("Toys/Dust");
 	OPrenderDepth(0);
 	OPrenderClear(0, 0, 0);
-	
+
 	OPparticle p = {
 		OPvec3(),
 		OPvec3(0, 0.001f, 0),
 		0.01f,
 		-0.001f,
-		3000,
-		3000,
+		1000,
+		1000,
 		OPvec4(1.0, 1.0, 1.0f, 1.0f),
-		sprite
+		sprite,
+        0
 	};
-	OPparticleSysSpawn(particleSystemExample->ParticleSystem, p);
-	OPparticleSysUpdate(particleSystemExample->ParticleSystem, time);
-	OPparticleSysDraw(particleSystemExample->ParticleSystem, particleSystemExample->Camera, NULL);
+	particleSystemExample->ParticleSystem->Spawn(p);
+	particleSystemExample->ParticleSystem->Update(time);
+	particleSystemExample->ParticleSystem->Draw(particleSystemExample->Camera);
 
-	OPrenderPresent();
 	return false;
 }
 void ExampleParticleSystemRender(OPfloat delta) {
-
+	OPrenderPresent();
 }
 
 OPint ExampleParticleSystemExit(OPgameState* next) {
 	OPfree(particleSystemExample->Camera);
-	OPparticleSysDestroy(particleSystemExample->ParticleSystem);
+	particleSystemExample->ParticleSystem->Destroy();
 	OPfree(particleSystemExample);
 	return 0;
 }

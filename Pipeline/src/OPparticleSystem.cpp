@@ -5,57 +5,60 @@
 #include "./Human/include/Rendering/Primitives/OPquad.h"
 #include "./Data/include/OPcman.h"
 
-int PARTICLE_SYSTEM_INITIALIZED = 0;
-OPmodel* PARTICLE_SYSTEM_QUAD_MESH;
-OPeffect* EFFECT_PARTICLE_SYSTEM;
+bool OPPARTICLESYSTEM_SETUP = false;
+OPmodel* OPPARTICLESYSTEM_QUAD_MESH;
+OPeffect* OPPARTICLESYSTEM_EFFECT;
 
-void OPparticleSysInit(OPeffect* effect) {
-	PARTICLE_SYSTEM_QUAD_MESH = OPquadCreate();
+void OPparticleSystem::Startup() {
+    if(OPPARTICLESYSTEM_SETUP) return;
 
-	if (effect == NULL) {
-		EFFECT_PARTICLE_SYSTEM = (OPeffect*)OPalloc(sizeof(OPeffect));
-		EFFECT_PARTICLE_SYSTEM = OPRENDERER_ACTIVE->Effect.Create((OPshader*)OPCMAN.LoadGet("Common/OPparticleSystem.vert"), (OPshader*)OPCMAN.LoadGet("Common/OPparticleSystem.frag"));
-		//*EFFECT_PARTICLE_SYSTEM = OPeffectGen(
-		//	"Common/OPparticleSystem.vert",
-		//	"Common/OPparticleSystem.frag",
-		//	OPATTR_POSITION | OPATTR_UV,
-		//	"Particle System effect",
-		//	0
-		//	);
-		//OPlog("Particle system initialized with effect '%s'", EFFECT_PARTICLE_SYSTEM->Name);
-		PARTICLE_SYSTEM_INITIALIZED = 2;
-	}
-	else {
-		EFFECT_PARTICLE_SYSTEM = effect;
-		PARTICLE_SYSTEM_INITIALIZED = 1;
-	}
+    OPPARTICLESYSTEM_QUAD_MESH = OPquadCreate();
+
+    OPPARTICLESYSTEM_EFFECT = OPNEW(OPeffect);
+    OPPARTICLESYSTEM_EFFECT =
+        OPRENDERER_ACTIVE->Effect.Create(
+            (OPshader*)OPCMAN.LoadGet("Common/OPparticleSystem.vert"),
+            (OPshader*)OPCMAN.LoadGet("Common/OPparticleSystem.frag"));
+
+    OPPARTICLESYSTEM_SETUP = true;
 }
 
-OPparticleSys* OPparticleSysCreate(OPtexture* texture, ui16 count, OPeffect* effect) {
-	OPparticleSys* sys = (OPparticleSys*)OPalloc(sizeof(OPparticleSys));
-	sys->texture = texture;
+void OPparticleSystem::Shutdown() {
+
+}
+
+void OPparticleSystem::Init(OPtexture* texture, ui16 count) {
+    Startup();
+    Init(texture, count, OPPARTICLESYSTEM_EFFECT);
+}
+
+void OPparticleSystem::Init(OPtexture* texture, ui16 count, OPeffect* effect) {
+    Startup();
+
+    texture = texture;
 	OPuint entHeapSize = OPentHeap::Bytes(sizeof(OPparticle), count);
-	OPparticle* particles = (OPparticle*)OPalloc(entHeapSize);
-	sys->particles = particles;
-	sys->heap = OPentHeap::Create(particles, sizeof(OPparticle), count);
-	sys->uvScale.x = 0.2f;
-	sys->uvScale.y = 0.2f;
-	sys->fps = 0;
-	sys->timeElapsed = 0;
+	particles = (OPparticle*)OPalloc(entHeapSize);
+	heap = OPentHeap::Create(particles, sizeof(OPparticle), count);
+	uvScale.x = 0.2f;
+	uvScale.y = 0.2f;
+	fps = 0;
+	timeElapsed = 0;
 
-	ASSERT(effect != NULL || EFFECT_PARTICLE_SYSTEM != NULL, "No effect was provided to the Particle System and a default was not initialized.");
-	if (effect != NULL) {
-		sys->effect = effect;
+    if (effect != NULL) {
+		effect = effect;
+	} else {
+		effect = OPPARTICLESYSTEM_EFFECT;
 	}
-	else {
-		sys->effect = EFFECT_PARTICLE_SYSTEM;
-	}
-
-	return sys;
 }
 
-void OPparticleSysUpdate(OPparticleSys* sys, OPtimer* timer) {
-	OPint max = 0, i = sys->heap->MaxIndex;
+OPparticleSystem* OPparticleSystem::Create(OPtexture* texture, ui16 count, OPeffect* effect) {
+	OPparticleSystem* sys = (OPparticleSystem*)OPalloc(sizeof(OPparticleSystem));
+    sys->Init(texture, count, effect);
+    return sys;
+}
+
+void OPparticleSystem::Update(OPtimer* timer) {
+	OPint max = 0, i = heap->MaxIndex;
 	OPfloat dt = timer->Elapsed / 1000.0f;
 	if (i >= 0)
 	for (; i--;){
@@ -63,28 +66,28 @@ void OPparticleSysUpdate(OPparticleSys* sys, OPtimer* timer) {
 			i >= 0,
 			"Attempted to update a particle that was out of bounds"
 			);
-		OPparticle* p = &((OPparticle*)sys->heap->Entities)[i];
+		OPparticle* p = &((OPparticle*)heap->Entities)[i];
 		if (p->Life <= 0) continue;
 
-		OPparticleUpdate(p, timer);
+		Update(p, timer);
 
 		// kill the particle and add it back to the heap
 		// if it has lived it's full life
 		if (p->Life <= 0){
-			sys->heap->Kill(i);
+            OPlogErr("particle killed");
+			heap->Kill(i);
 		}
 	}
 
 	// track the time passed
-	sys->timeElapsed += dt;
+	timeElapsed += dt;
 }
 
-void OPparticleSysDestroy(OPparticleSys* sys) {
-	OPfree(sys->particles);
-	OPfree(sys);
+void OPparticleSystem::Destroy() {
+	OPfree(particles);
 }
 
-void _OPparticlePrepareFrame(OPparticleSys* sys, OPparticle* p, OPint frameChange){
+void PrepareFrame(OPparticle* p, OPint frameChange) {
 	ui8 frame = p->CurrentFrame;
 	if (p->Animation != NULL) {
 		if(frameChange){
@@ -104,61 +107,69 @@ void _OPparticlePrepareFrame(OPparticleSys* sys, OPparticle* p, OPint frameChang
 
 }
 
-void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(OPparticle*, OPmat4*)) {
-	OPmat4 world;
-	OPint frameChange = sys->fps && sys->timeElapsed > (1.0f / sys->fps);
-
-	PARTICLE_SYSTEM_QUAD_MESH->Bind();
-	EFFECT_PARTICLE_SYSTEM->Bind();
+void OPparticleSystem::_DrawPrep(OPcam* cam) {
+    OPPARTICLESYSTEM_QUAD_MESH->Bind();
+    OPPARTICLESYSTEM_EFFECT->Bind();
 
 	OPeffectSet("uView", 1, &cam->view);
 	OPeffectSet("uProj", 1, &cam->proj);
 
-	if(!sys->fps){
-		OPeffectSet("uTexCoordScale", &sys->uvScale);
-		OPeffectSet("uSpriteOffset", (OPvec2*)&OPVEC2_ZERO);
-		OPeffectSet("uColorTexture", sys->texture, 0);
-	}
+    if(!fps){
+        OPeffectSet("uTexCoordScale", &uvScale);
+        OPeffectSet("uSpriteOffset", (OPvec2*)&OPVEC2_ZERO);
+        OPeffectSet("uColorTexture", texture, 0);
+    }
+}
 
+void OPparticleSystem::Draw(OPcam* cam) {
+	OPmat4 world;
+	OPint frameChange = fps && timeElapsed > (1.0f / fps);
+    _DrawPrep(cam);
 
-	if (ParticleTransform != NULL) {
-		for (OPint i = sys->heap->MaxIndex; i--;){
-			OPparticle* p = &((OPparticle*)sys->heap->Entities)[i];
+    for (OPint i = heap->MaxIndex; i--;){
+        OPparticle* p = &((OPparticle*)heap->Entities)[i];
 
-			if (p->Life <= 0) continue;
+        if (p->Life <= 0) continue;
 
-			OPmat4Identity(&world);
-			OPmat4Scl(&world, 1, 1, 1);
-			OPmat4RotZ(&world, p->Angle);
-			OPmat4Translate(&world, p->Position.x, p->Position.y, p->Position.z);
-			
-			if(sys->fps){
-				_OPparticlePrepareFrame(sys, p, frameChange);
-			}
+        OPmat4Identity(&world);
+        OPmat4Scl(&world, 1, 1, 1);
+        OPmat4RotZ(&world, p->Angle);
+        OPmat4Translate(&world, p->Position.x, p->Position.y, p->Position.z);
 
-			OPeffectSet("uTint", (OPvec4*)&p->Tint);
-			OPeffectSet("uWorld", 1, &world);
-			OPrenderDrawBufferIndexed(0);
-		}
-	}
-	else {
+        if(fps){
+            PrepareFrame(p, frameChange);
+        }
 
-		for (OPint i = sys->heap->MaxIndex; i--;){
-			OPparticle* p = &((OPparticle*)sys->heap->Entities)[i];
-			if (p->Life <= 0) continue;
-			//ParticleTransform(p, &world);
-
-			if(sys->fps){
-				_OPparticlePrepareFrame(sys, p, frameChange);
-			}
-
-			OPeffectSet("uTint", (OPvec4*)&p->Tint);
-			OPeffectSet("uWorld", 1, &world);
-			OPrenderDrawBufferIndexed(0);
-		}
-	}
+        OPeffectSet("uTint", (OPvec4*)&p->Tint);
+        OPeffectSet("uWorld", 1, &world);
+        OPrenderDrawBufferIndexed(0);
+    }
 
 	if(frameChange){
-		sys->timeElapsed = 0;
+		timeElapsed = 0;
+	}
+}
+
+void OPparticleSystem::Draw(OPcam* cam, void(ParticleTransform)(OPparticle*, OPmat4*)) {
+	OPmat4 world;
+	OPint frameChange = fps && timeElapsed > (1.0f / fps);
+    _DrawPrep(cam);
+
+    for (OPint i = heap->MaxIndex; i--;){
+        OPparticle* p = &((OPparticle*)heap->Entities)[i];
+        if (p->Life <= 0) continue;
+        ParticleTransform(p, &world);
+
+        if(fps){
+            PrepareFrame(p, frameChange);
+        }
+
+        OPeffectSet("uTint", (OPvec4*)&p->Tint);
+        OPeffectSet("uWorld", 1, &world);
+        OPrenderDrawBufferIndexed(0);
+    }
+
+	if(frameChange){
+		timeElapsed = 0;
 	}
 }
