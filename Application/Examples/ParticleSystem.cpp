@@ -19,7 +19,7 @@ void ExampleParticleSystemEnter(OPgameState* last) {
 
 	particleSystemExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
 	particleSystemExample->Camera->SetPerspective(
-		OPVEC3_ONE * 10.0,
+		OPvec3(0, 10, 15),
 		OPVEC3_ZERO,
 		OPvec3Create(0, 1, 0),
 		0.1f,
@@ -29,8 +29,8 @@ void ExampleParticleSystemEnter(OPgameState* last) {
 		);
 
 	OPparticleSystem::Startup();
-	particleSystemExample->ParticleSystem = OPparticleSystem::Create(NULL, 256, NULL);
-	particleSystemExample->ParticleSystem->fps = 10;
+	particleSystemExample->ParticleSystem = OPparticleSystem::Create(NULL, 1024, NULL);
+	particleSystemExample->ParticleSystem->fps = 30;
 }
 
 OPint ExampleParticleSystemUpdate(OPtimer* time) {
@@ -39,17 +39,20 @@ OPint ExampleParticleSystemUpdate(OPtimer* time) {
 	OPrenderClear(0, 0, 0);
 
 	OPparticle p = {
-		OPvec3(),
-		OPvec3(0, 0.001f, 0),
-		0.01f,
-		-0.001f,
-		1000,
-		1000,
+		//OPvec3(-5.0f + OPrandom() * 10.0f, 0, -5.0f + OPrandom() * 10.0f),
+		OPVEC3_ZERO,
+		OPvec3(-0.0025 + OPrandom() * 0.005, 0.005f, -0.0025 + OPrandom() * 0.005),
+		0,//0.04f,
+		-0.004f,
+		3000,
+		3000,
 		OPvec4(1.0, 1.0, 1.0f, 1.0f),
 		sprite,
         0
 	};
-	particleSystemExample->ParticleSystem->Spawn(p);
+	//if (OPrandom() > 0.9) {
+		particleSystemExample->ParticleSystem->Spawn(p);
+	//}
 	particleSystemExample->ParticleSystem->Update(time);
 	particleSystemExample->ParticleSystem->Draw(particleSystemExample->Camera);
 

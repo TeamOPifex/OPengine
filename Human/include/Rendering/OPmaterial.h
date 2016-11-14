@@ -264,6 +264,16 @@ struct OPmaterialInstance {
 		return NULL;
 	}
 
+	inline bool SetParam(const OPchar* name, void* ptr) {
+		for (OPuint i = 0; i < paramIndex; i++) {
+			if (OPstringEquals(params[i].name, name)) {
+				params[i].data = ptr;
+				return true;
+			}
+		}
+		return false;
+	}
+
 	inline void AddParam(OPmaterialParamType paramType, const OPchar* name, void* data, ui8 count) {
 		//OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Name %s %p", name, data);
 		params[paramIndex].type = paramType;

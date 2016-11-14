@@ -15,8 +15,8 @@ struct OPparticle {
 	OPvec3    Velocity;     // 12 bytes
 	OPfloat   Angle;        // 4 bytes
 	OPfloat   AngularVelo;  // 4 bytes
-	ui64       Life;         // 4 bytes
-	ui64       MaxLife;      // 4 bytes
+	i64       Life;         // 4 bytes
+	i64       MaxLife;      // 4 bytes
 	OPvec4    Tint;         // 16 bytes
 	OPsprite* Animation;    // 4/8 bytes
 	ui8       CurrentFrame; // 1 byte

@@ -67,6 +67,6 @@ inline void OPskeletonAnimationReset(OPskeletonAnimation* skelAnim) {
 	skelAnim->LoopsCompleted = 0;
 }
 
-inline OPskeletonAnimation* OPskeletonAnimationCopy(OPskeletonAnimation* source, OPint boneCount) {
-	return OPskeletonAnimationCreate(boneCount, source->JointFrames, source->FrameCount);
+inline OPskeletonAnimation* OPskeletonAnimationCopy(OPskeletonAnimation* source) {
+	return OPskeletonAnimationCreate(source->BoneCount, source->JointFrames, source->FrameCount);
 }

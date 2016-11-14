@@ -68,13 +68,11 @@ void OPparticleSystem::Update(OPtimer* timer) {
 			);
 		OPparticle* p = &((OPparticle*)heap->Entities)[i];
 		if (p->Life <= 0) continue;
-
 		Update(p, timer);
 
 		// kill the particle and add it back to the heap
 		// if it has lived it's full life
 		if (p->Life <= 0){
-            OPlogErr("particle killed");
 			heap->Kill(i);
 		}
 	}

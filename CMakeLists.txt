@@ -104,8 +104,8 @@ add_subdirectory("${APPLICATION_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Application
 # Editor - Level 9
 #########################################
 # Will come back to this later
-set(EDITOR_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Editor")
-add_subdirectory("${EDITOR_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Editor)
+#set(EDITOR_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/Editor")
+#add_subdirectory("${EDITOR_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/Editor)
 
 
 #########################################

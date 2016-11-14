@@ -47,7 +47,7 @@ OPsceneLight* OPscene::Add(OPlightSpot light) {
 	return &lights[lightIndex++];
 }
 
-void OPscene::Remove(OPrendererEntity* entity) {
+OPrendererEntity* OPscene::Remove(OPrendererEntity* entity) {
 	ui32 i = 0;
 	bool found = false;
 	for (; i < index; i++) {
@@ -57,11 +57,14 @@ void OPscene::Remove(OPrendererEntity* entity) {
 		}
 	}
 	if (found) {
+		// TODO: (garrett) This won't work, because of the Ptr's
 		if (i != index - 1) {
 			entities[i] = entities[index - 1];
 		}
 		index--;
+		return &entities[i];
 	}
+	return NULL;
 }
 
 OPint OPscene::Update(OPtimer* timer) {
