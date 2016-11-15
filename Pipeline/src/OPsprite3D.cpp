@@ -95,13 +95,14 @@ void OPsprite3DPrepReRender(OPsprite3D* sprite, OPvec3 offset, OPfloat rotation)
 
 	OPmat4 world;
 	OPmat4Identity(&world);
-	world = OPmat4Scl(world, widthScale, heightScale, 1.0);
-	OPmat4RotZ(&world, rotation + sprite->Rotation.z);
-	OPmat4RotY(&world, sprite->Rotation.y);
-	OPvec3 scl = sprite->Scale / 2.0f;
-	scl.x *= sprite->Direction;
-	world = OPmat4Scl(world, scl.x, scl.y, 1.0);
-	world += offset + sprite->Position;
+	world.Translate(sprite->Position);
+	//world = OPmat4Scl(world, widthScale, heightScale, 1.0);
+	//OPmat4RotZ(&world, rotation + sprite->Rotation.z);
+	//OPmat4RotY(&world, sprite->Rotation.y);
+	//OPvec3 scl = sprite->Scale / 2.0f;
+	//scl.x *= sprite->Direction;
+	//world = OPmat4Scl(world, scl.x, scl.y, 1.0);
+	//world += offset + sprite->Position;
 
 	OPeffectSet("uWorld", &world);
 	OPeffectSet("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
@@ -124,13 +125,15 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	sprite->Effect->Bind();
 
 	OPmat4Identity(&world);
-	world = OPmat4Scl(world, widthScale, heightScale, 1.0);
-	OPmat4RotZ(&world, rotation + sprite->Rotation.z);
-	OPmat4RotY(&world, sprite->Rotation.y);
-	OPvec3 scl = sprite->Scale / 2.0f;
-	scl.x *= sprite->Direction;
-	world = OPmat4Scl(world, scl.x * frameSize.x, scl.y * frameSize.y, 1.0);
-	world += offset + sprite->Position + OPvec3(0, sprite->Scale.y * (frameSize.y / 2.0), 0);
+	world.Translate(sprite->Position);
+	world.Scl(sprite->Scale);
+	//world = OPmat4Scl(world, widthScale, heightScale, 1.0);
+	//OPmat4RotZ(&world, rotation + sprite->Rotation.z);
+	//OPmat4RotY(&world, sprite->Rotation.y);
+	//OPvec3 scl = sprite->Scale / 2.0f;
+	//scl.x *= sprite->Direction;
+	//world = OPmat4Scl(world, scl.x * frameSize.x, scl.y * frameSize.y, 1.0);
+	//world += offset + sprite->Position + OPvec3(0, sprite->Scale.y * (frameSize.y / 2.0), 0);
 
 	//OPtextureClearActive();
 	//ui32 bind = OPtextureBind(sprite->CurrentSprite->Sheet);
