@@ -22,12 +22,17 @@ struct OPmodel {
 
 	OPmodel() { }
 	OPmodel(OPuint meshCount, OPvertexLayout vertexLayout) { Init(meshCount, vertexLayout); }
-	
+
 	void Init(OPuint meshCount, OPvertexLayout vertexLayout);
 	void Build(ui32 vertexCount, ui32 indexCount, OPindexSize indexSize, void* vertices, void* indices);
 	void Bind();
 	void Draw(OPmat4* world, OPmaterial* material, OPcam* camera);
 	void Destroy();
+
+    inline void Free() {
+        Destroy();
+        OPfree(this);
+    }
 
 	inline static OPmodel* Create(OPuint meshCount, OPvertexLayout vertexLayout) {
 		return OPNEW(OPmodel(meshCount, vertexLayout));

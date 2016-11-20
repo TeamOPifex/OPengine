@@ -1,7 +1,7 @@
 #version 330 core
 
-in vec3 aPosition;
-in vec2 aUV;
+layout(location = 0) in vec3 aPosition;
+layout(location = 1) in vec2 aUV;
 
 uniform mat4 uWorld;
 uniform mat4 uView;

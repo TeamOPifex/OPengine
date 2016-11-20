@@ -43,15 +43,19 @@ struct OPeffect {
 		Init(vert, frag, NULL);
 	}
 
-	inline void Bind() { 
-		OPRENDERER_ACTIVE->Effect.Bind(this); 
+	inline void Bind() {
+		OPRENDERER_ACTIVE->Effect.Bind(this);
 	}
-	inline void Unbind() { 
-		OPRENDERER_ACTIVE->Effect.Unbind(this); 
+	inline void Unbind() {
+		OPRENDERER_ACTIVE->Effect.Unbind(this);
 	}
 	inline void Destroy() {
 		OPRENDERER_ACTIVE->Effect.Destroy(this);
 	}
+    inline void Free() {
+        Destroy();
+        OPfree(this);
+    }
 
 	inline bool AddUniform(const OPchar* name) { return OPRENDERER_ACTIVE->Effect.AddUniform(this, name); }
 
@@ -91,7 +95,7 @@ struct OPeffect {
 	inline void Set(const OPchar* name, ui32 count, OPmat3* val) { OPRENDERER_ACTIVE->ShaderUniform.SetMat3v(GetUniform(name), count, val); }
 	inline void Set(const OPchar* name, OPmat4* val) { OPRENDERER_ACTIVE->ShaderUniform.SetMat4(GetUniform(name), val); }
 	inline void Set(const OPchar* name, ui32 count, OPmat4* val) { OPRENDERER_ACTIVE->ShaderUniform.SetMat4v(GetUniform(name), count, val); }
-	inline void Set(const OPchar* name, OPtexture* val, ui32 slot) { 
+	inline void Set(const OPchar* name, OPtexture* val, ui32 slot) {
 		OPshaderUniform* uniform = GetUniform(name);
 		if (uniform == NULL) {
 			//OPlogErr("Shader Uniform %s not found", name);

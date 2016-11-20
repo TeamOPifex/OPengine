@@ -63,6 +63,7 @@ void ExampleSelectorEnter(OPgameState* last) {
            { "Material", &GS_EXAMPLE_MATERIAL, GS_EXAMPLE_MATERIAL_AVAILABLE, 0 },
            { "Textured", &GS_EXAMPLE_TEXTURED, GS_EXAMPLE_TEXTURED_AVAILABLE, 0 },
            { "Texture 2D", &GS_EXAMPLE_TEXTURE2D, GS_EXAMPLE_TEXTURE2D_AVAILABLE, 0 },
+           { "Texture 3D", &GS_EXAMPLE_TEXTURE3D, GS_EXAMPLE_TEXTURE3D_AVAILABLE, 0 },
            { "Sprite", &GS_EXAMPLE_SPRITE, GS_EXAMPLE_SPRITE_AVAILABLE, 0 },
            { "Sprite System", &GS_EXAMPLE_SPRITESYSTEM, GS_EXAMPLE_SPRITESYSTEM_AVAILABLE, 0 },
            { "Cube Map", &GS_EXAMPLE_CUBE_MAP, GS_EXAMPLE_CUBE_MAP_AVAILABLE, 0 },
@@ -265,8 +266,8 @@ void ExampleSelectorRender(OPfloat delta) {
 		}
 	}
 
-	OPfontRenderEnd(); 
-	
+	OPfontRenderEnd();
+
 	OPVISUALDEBUGINFO.Render(delta);
 
 	OPrenderPresent();

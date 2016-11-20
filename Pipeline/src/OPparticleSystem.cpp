@@ -99,6 +99,8 @@ void PrepareFrame(OPparticle* p, OPint frameChange) {
 		OPeffectSet("uTexCoordScale", &p->Animation->Frames[frame].Size);
 		OPeffectSet("uSpriteOffset", &p->Animation->Frames[frame].Offset);
 
+        //OPlogErr("Size: %f, %f", p->Animation->Frames[frame].Size.x, p->Animation->Frames[frame].Size.y);
+
 		//OPtextureClearActive();
 		OPeffectSet("uColorTexture", p->Animation->Sheet, 0);
 	}

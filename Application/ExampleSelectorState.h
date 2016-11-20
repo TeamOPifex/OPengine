@@ -2,7 +2,7 @@
 
 #include "./OPengine.h"
 
-#define ExampleCount 34
+#define ExampleCount 35
 
 extern OPgameState GS_EXAMPLE_SELECTOR;
 
@@ -20,6 +20,7 @@ extern OPint       GS_EXAMPLE_AUDIO_AVAILABLE,
                    GS_EXAMPLE_SPINE_AVAILABLE,
                    GS_EXAMPLE_TEXTURED_AVAILABLE,
                    GS_EXAMPLE_TEXTURE2D_AVAILABLE,
+                   GS_EXAMPLE_TEXTURE3D_AVAILABLE,
                    GS_EXAMPLE_SCRIPTING_AVAILABLE,
                    GS_EXAMPLE_SPHERICALCUBE_AVAILABLE,
                    GS_EXAMPLE_SPRITE_AVAILABLE,
@@ -57,6 +58,7 @@ extern OPgameState GS_EXAMPLE_AUDIO,
                    GS_EXAMPLE_SPINE,
                    GS_EXAMPLE_TEXTURED,
                    GS_EXAMPLE_TEXTURE2D,
+                   GS_EXAMPLE_TEXTURE3D,
                    GS_EXAMPLE_SCRIPTING,
                    GS_EXAMPLE_SPHERICALCUBE,
                    GS_EXAMPLE_SPRITE,
