@@ -17,26 +17,33 @@ void OPtexture3D_LoadDefaultEffect() {
 	DEFAULT_TEXTURE3D_EFFECT->Init("Common/Texture3D.vert", "Common/Texture.frag");
 }
 
-OPtexture3D* OPtexture3D::Create(OPtexture* texture, OPeffect* effect) {
-	OPtexture3D* tex3d = OPNEW(OPtexture3D);
+void OPtexture3D::Init(OPtexture* tex, OPeffect* eff) {
+	position = OPVEC3_ZERO;
+	rotation = OPVEC3_ZERO;
+	scale = OPVEC3_ONE;
+	texture = tex;
+	effect = eff;
 
-    tex3d->position = OPVEC3_ZERO;
-    tex3d->rotation = OPVEC3_ZERO;
-	tex3d->scale = OPVEC3_ONE;
-	tex3d->texture = texture;
-	tex3d->effect = effect;
-
-    // Ensures the 3D quad to be used has been created
+	// Ensures the 3D quad to be used has been created
 	if (TEXTURE_3D_QUAD_MESH == NULL) {
 		TEXTURE_3D_QUAD_MESH = OPquadCreate();
 	}
+}
 
+void OPtexture3D::Init(OPtexture* tex) {
+	OPtexture3D_LoadDefaultEffect();
+	Init(tex, DEFAULT_TEXTURE3D_EFFECT);
+}
+
+OPtexture3D* OPtexture3D::Create(OPtexture* tex, OPeffect* eff) {
+	OPtexture3D* tex3d = OPNEW(OPtexture3D);
+	tex3d->Init(tex, eff);
 	return tex3d;
 }
 
-OPtexture3D* OPtexture3D::Create(OPtexture* texture) {
+OPtexture3D* OPtexture3D::Create(OPtexture* tex) {
 	OPtexture3D_LoadDefaultEffect();
-    return OPtexture3D::Create(texture, DEFAULT_TEXTURE3D_EFFECT);
+    return OPtexture3D::Create(tex, DEFAULT_TEXTURE3D_EFFECT);
 }
 
 void OPtexture3D::Shutdown() {
@@ -59,8 +66,6 @@ void OPtexture3D::PrepRender(OPcam* camera) {
 	TEXTURE_3D_QUAD_MESH->Bind();
 
 	effect->Bind();
-
-	OPrenderDepth(0);
 
 	OPmat4 world = OPMAT4_IDENTITY;
     world.RotY(rotation.y);

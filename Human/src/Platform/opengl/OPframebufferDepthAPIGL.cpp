@@ -26,6 +26,8 @@ OPframeBufferDepth* OPframeBufferDepthAPIGLInit(OPframeBufferDepth* framebuffer,
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
 	//OPGLFN(glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureGL->Handle, 0));
+
+	//OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textureGL->Handle, 0));
 	OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textureGL->Handle, 0));
 	OPGLFN(glDrawBuffer(GL_NONE));
 	OPGLFN(glReadBuffer(GL_NONE));

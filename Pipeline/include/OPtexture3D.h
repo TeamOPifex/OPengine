@@ -12,6 +12,8 @@ struct OPtexture3D {
 	OPtexture* texture;
 	OPeffect* effect;
 
+	void Init(OPtexture* texture);
+	void Init(OPtexture* texture, OPeffect* effect);
     void PrepRender(OPcam* camera);
     void Render(OPcam* camera);
     void Destroy();

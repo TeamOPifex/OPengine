@@ -288,6 +288,10 @@ bool OPphysXOverlappingSphere(OPphysXController* controller, PxShape* actorShape
 	return PxGeometryQuery::overlap(capsuleGeom, actorTransform, sphereGeom, other);
 }
 
+bool OPphysXOverlappingSphere(OPphysXController* controller, PxShape* actorShape, OPvec3 pos, OPfloat size) {
+	return OPphysXOverlappingSphere(controller, actorShape, PxTransform(PxVec3(pos.x, pos.y, pos.z)), PxSphereGeometry(size));
+}
+
 void OPphysXGetTransform(OPphysXRigidActor* actor, OPmat4* mat) {
 	ui32 n = actor->getNbShapes();
 	PxShape** shapes = new PxShape*[n];
