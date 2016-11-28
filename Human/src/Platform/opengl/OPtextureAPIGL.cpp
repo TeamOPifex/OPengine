@@ -74,6 +74,8 @@ OPtexture* OPtextureGLInit(OPtexture* texture, OPtextureDesc textureDesc, const 
 	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
 
+	OPGLFN(glGenerateMipmap(GL_TEXTURE_2D));
+
 	return texture;
 }
 
