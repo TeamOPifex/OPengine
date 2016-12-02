@@ -13,7 +13,7 @@ typedef struct {
 Texture2DExample texture2DExample;
 
 void ExampleTexture2DEnter(OPgameState* last) {
-    OPtexture* tex = (OPtexture*)OPCMAN.LoadGet("cubeTex.png");
+    OPtexture* tex = (OPtexture*)OPCMAN.LoadGet("TetrisBlue.psd");
     texture2DExample.Tex = OPtexture2DCreate(tex, NULL);
 
     texture2DExample.Tex->Position.y = 250;

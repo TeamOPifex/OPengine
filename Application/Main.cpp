@@ -40,7 +40,7 @@ void ApplicationInit() {
 	OPwindowSystemInit();
 	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, 1920, 1080));
 	OPrenderInit(&mainWindow);
-	
+
 	OPGAMEPADS.SetDeadzones(0.2f);
 
 	OPVISUALDEBUGINFO.Init();
@@ -101,7 +101,7 @@ int main(int argc, char * argv[]) {
 #else
 
 OP_MAIN_START
-	OPLOGLEVEL = (ui32)OPlogLevel::VERBOSE;
+	OPLOGLEVEL = (ui32)OPlogLevel::TIMING;
 
 	#ifdef OPIFEX_OPTION_V8
 	// If the V8 engine is compiled in,

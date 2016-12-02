@@ -4,6 +4,7 @@
 #include "./Pipeline/include/Loaders/OPloaderBMP.h"
 #include "./Pipeline/include/Loaders/OPloaderPNG.h"
 #include "./Pipeline/include/Loaders/OPloaderOPF.h"
+#include "./Pipeline/include/Loaders/OPloaderTexture.h"
 #include "./Human/include/Systems/OPaudioSystem.h"
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Human/include/Systems/OPfontSystem.h"
@@ -16,9 +17,13 @@
 void OPloadersAddDefault() {
 	TIMED_BLOCK;
 
-	OPCMAN.AddLoader(&OPASSETLOADER_PNG);
-	OPCMAN.AddLoader(&OPASSETLOADER_TGA);
-	OPCMAN.AddLoader(&OPASSETLOADER_BMP);
+    OPCMAN.AddLoader(&OPASSETLOADER_TEXTURE_JPG);
+    OPCMAN.AddLoader(&OPASSETLOADER_TEXTURE_JPEG);
+	OPCMAN.AddLoader(&OPASSETLOADER_TEXTURE_PNG);
+	OPCMAN.AddLoader(&OPASSETLOADER_TEXTURE_TGA);
+	OPCMAN.AddLoader(&OPASSETLOADER_TEXTURE_BMP);
+	OPCMAN.AddLoader(&OPASSETLOADER_TEXTURE_PSD);
+	OPCMAN.AddLoader(&OPASSETLOADER_TEXTURE_GIF);
 	OPCMAN.AddLoader(&OPASSETLOADER_VERT);
 	OPCMAN.AddLoader(&OPASSETLOADER_FRAG);
 	OPCMAN.AddLoader(&OPASSETLOADER_OPM);
