@@ -7,18 +7,21 @@ typedef struct OPmodel OPmodel;
 #include "OPeffect.h"
 #include "OPmaterial.h"
 #include "./Math/include/OPmat4.h"
+#include "./Math/include/OPboundingBox3D.h"
 #include "./Human/include/Rendering/OPcam.h"
 #include "./Data/include/OPcman.h"
 
 struct OPmodel {
-	OPmesh* meshes;
-	OPuint meshCount;
-	OPchar* name;
+	OPmesh* meshes = NULL;
+	OPuint meshCount = 0;
+	OPchar* name = NULL;
 
 	OPvertexLayout vertexLayout;
 	OPvertexArray vertexArray;
 	OPvertexBuffer vertexBuffer;
 	OPindexBuffer indexBuffer;
+
+	OPboundingBox3D bounds;
 
 	OPmodel() { }
 	OPmodel(OPuint meshCount, OPvertexLayout vertexLayout) { Init(meshCount, vertexLayout); }

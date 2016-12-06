@@ -12,6 +12,8 @@ void OPcamFreeFlight::Init(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 positi
 
 	OPfloat angle = OPvec3Angle(OPVEC3_FORWARD, OPvec3Norm(position));
 	Rotation.x = -angle;
+	Rotation.y = OPvec3Angle(OPVEC3_LEFT, OPvec3Norm(position));
+	Rotation.z = OPvec3Angle(OPVEC3_UP, OPvec3Norm(position));
 
 	Camera.SetPerspective(
 		position,

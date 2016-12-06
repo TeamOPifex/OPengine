@@ -48,19 +48,19 @@ struct OPmeshMaterialDesc {
 };
 
 struct OPmesh {
-	ui64 id;
-	OPuint offset;
-	OPuint count;
+	ui64 id = 0;
+	OPuint offset = 0;
+	OPuint count = 0;
 	OPboundingBox3D boundingBox;
-	OPchar* name;
+	OPchar* name = NULL;
 
-	OPvertexArray* vertexArray;
-	OPvertexBuffer* vertexBuffer;
-	OPindexBuffer* indexBuffer;
+	OPvertexArray* vertexArray = NULL;
+	OPvertexBuffer* vertexBuffer = NULL;
+	OPindexBuffer* indexBuffer = NULL;
 
-	OPmeshDesc* meshDesc;
-	OPmeshMaterialDesc* materialDesc;
-	OPmeshMeta* meshMeta;
+	OPmeshDesc* meshDesc = NULL;
+	OPmeshMaterialDesc* materialDesc = NULL;
+	OPmeshMeta* meshMeta = NULL;
 	
 	void Bind();
 	void Draw();

@@ -41,6 +41,7 @@ void OPmodel::Build(ui32 vertexCount, ui32 indexCount, OPindexSize indexSize, vo
 	this->vertexLayout = vertexLayout;
 	meshes[0].count = indexCount;
 	meshes[0].offset = 0;
+	meshes[0].materialDesc = NULL;
 }
 
 void OPmodel::Destroy() {

@@ -192,8 +192,8 @@ OPmodel* OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, 
 		{ -width, 0, depth, texcoordEnd.x, texcoordStart.y }
 	};
 	ui16 indicies[6] = {
-		0, 1, 2,
-		0, 2, 3
+		2, 1, 0,
+		3, 2, 0
 	};
 
 	OPvertexLayoutBuilder builder;

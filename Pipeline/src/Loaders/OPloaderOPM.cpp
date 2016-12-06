@@ -28,6 +28,7 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 	OPlogInfo("MODEL: %s", modelName);
 
 	ui32 meshCount = str->UI32(); // Number of meshes in this OPM
+	OPlogInfo(" MESH COUNT: %d", meshCount);
 
 	ui32 features = str->UI32(); // Boolean Flag representation of OPM features
 	OPvertexLayoutBuilder vertexLayoutBuilder;// = OPvertexLayoutBuilder(features);
@@ -63,6 +64,8 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 
 	ui32 indSize = str->UI8();
 
+	OPlogInfo(" Vert/Ind/IndSize: %d/%d/%d", totalVertices, totalIndices, indSize);
+
 	OPindexSize indexSize = (OPindexSize)indSize;
 
 	void* vertices = OPalloc(totalVertices * vertexLayout.stride);
@@ -78,10 +81,12 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 		mesh->materialDesc = OPNEW(OPmeshMaterialDesc());
 
 		OPchar* name = str->String();
-		OPlogInfo("SUBMESH: %s", name);
+		OPlogInfo(" SUBMESH: %s", name);
 
 		ui32 verticesCount = str->UI32();
 		ui32 indicesCount = str->UI32();
+
+		OPlogInfo(" MESH[%d] Vert/Ind: %d/%d", i, verticesCount, indicesCount);
 
 		ui32 floatsInStride = vertexLayout.stride / sizeof(f32);
 		ui32 vertexDataOffset = vertexOffset * floatsInStride;
@@ -91,6 +96,7 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 		for (ui32 j = 0; j < totalFloatsInMesh; j++) {
 			vertData[j] = str->F32();
 		}
+		OPlogInfo(" Floats Read %d", totalFloatsInMesh);
 
 		if (indexSize == OPindexSize::SHORT) {
 			ui16* indData = &((ui16*)indices)[indexOffset];
@@ -115,6 +121,7 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 		mesh->offset = indexOffset;
 		mesh->count = indicesCount;
 		mesh->name = name;
+		OPlogInfo(" Index Offset/Indices Count: %d/%d", indexOffset, indicesCount);
 
 		mesh->vertexArray = &model->vertexArray;
 		mesh->vertexBuffer = &model->vertexBuffer;
@@ -124,10 +131,13 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 		mesh->meshDesc->indexCount = indicesCount;
 		mesh->meshDesc->indexSize = indexSize;
 
-
+		OPlogInfo(" vertexCount/indexCount/indexSize: %d/%d/%d", verticesCount, indicesCount, indexSize);
 
 		vertexOffset += verticesCount;
-		indexOffset += indicesCount;
+		indexOffset += indicesCount; 
+		
+		OPlogInfo(" vertexOffset/indexOffset: %d/%d", vertexOffset, indexOffset);
+
 
 		mesh->boundingBox.min.x = str->F32();
 		mesh->boundingBox.min.y = str->F32();
@@ -177,6 +187,7 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 	model->vertexArray.Bind();
 	model->vertexBuffer.SetData(vertexLayout.stride, totalVertices, vertices);
 	model->indexBuffer.SetData(indexSize, totalIndices, indices);
+	OPlogInfo(" totalIndices/totalVertices: %d/%d", totalIndices, totalVertices);
 	model->vertexLayout = vertexLayout;
 	//model->Build(totalVertices, totalIndices, indexSize, vertices, indices);
 
