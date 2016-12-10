@@ -30,6 +30,7 @@ struct OPanimationFrame {
 
 struct OPskeletonAnimation {
 	OPskeleton* Skeleton;
+	OPchar* Name;
 
 	OPanimationFrame* JointFrames;
 	OPuint FrameCount;
@@ -48,8 +49,8 @@ struct OPskeletonAnimation {
 };
 
 
-void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPanimationFrame* frames, i32 count);
-OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPanimationFrame* frames, OPuint count);
+void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPanimationFrame* frames, i32 count, OPchar* name);
+OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPanimationFrame* frames, OPuint count, OPchar* name);
 void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer, OPfloat timeScale);
 inline void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
 	OPskeletonAnimationUpdate(skelAnim, timer, 1.0f);
@@ -68,5 +69,5 @@ inline void OPskeletonAnimationReset(OPskeletonAnimation* skelAnim) {
 }
 
 inline OPskeletonAnimation* OPskeletonAnimationCopy(OPskeletonAnimation* source) {
-	return OPskeletonAnimationCreate(source->BoneCount, source->JointFrames, source->FrameCount);
+	return OPskeletonAnimationCreate(source->BoneCount, source->JointFrames, source->FrameCount, source->Name);
 }

@@ -33,7 +33,7 @@ OPstring::OPstring(const OPchar* data) {
 
 
 void OPstring::Init(OPchar* data) {
-	_data = data;
+	_data = _strCopy(data);
 	_len = _data == NULL ? 0 : strlen(_data);
 }
 
@@ -42,10 +42,19 @@ void OPstring::Init(const OPchar* data) {
 	_len = _data == NULL ? 0 : strlen(_data);
 }
 
+void OPstring::Clear() {
+	if (_data != NULL) {
+		OPfree(_data);
+	}
+	_data = NULL;
+	_len = 0;
+}
+
 OPstring::~OPstring() {
 	if (_data != NULL) {
 		OPfree(_data);
 	}
+	_data = NULL;
 }
 
 bool OPstring::Equals(OPstring* str) {
