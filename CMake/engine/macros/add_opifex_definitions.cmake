@@ -20,7 +20,7 @@ macro(add_opifex_definitions APPLICATION_TARGET APPLICATION_DIR_DEPTH )
 	if(${OPIFEX_OPTION_RELEASE})
 		if(${OPIFEX_OS_WINDOWS})
 			add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
-			target_link_libraries(${APPLICATION_TARGET}	libcpmtd0.lib)
+			target_link_libraries(${APPLICATION_TARGET}) #	libcpmtd0.lib
 		endif()
 	endif()
 

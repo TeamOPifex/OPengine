@@ -50,11 +50,11 @@ OPint OPloaderOPskeletonLoad(OPstream* str, OPskeleton** skeleton) {
 				//OPlogErr("%f", pose[i][k][j]);
 			}
 		}
-		OPmat4Log("Pose", bindPose[i]);
+		//OPmat4Log("Pose", bindPose[i]);
 		//pose[i].SetIdentity();
 		// pose[i] = OPmat4Transpose(pose[i]);
 
-		OPlogErr("Offset");
+		//OPlogErr("Offset");
 		for (ui32 j = 0; j < 4; j++) {
 			for (ui32 k = 0; k < 4; k++) {
 				offsets[i][k][j] = str->F32();
@@ -62,7 +62,7 @@ OPint OPloaderOPskeletonLoad(OPstream* str, OPskeleton** skeleton) {
 			}
 		}
 		//offsets[i].SetIdentity();
-		OPmat4Log("Offset", offsets[i]);
+		//OPmat4Log("Offset", offsets[i]);
 	}
 
 	*skeleton = OPskeletonCreate(hierarchy, bindPose, offsets, globalInverseBindPose, boneCount, jointNames);

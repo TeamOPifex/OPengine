@@ -166,11 +166,15 @@ void OPrendererFullForwardPresent(OPrenderer* renderer) {
 
 		OPrenderClearDepth();
 
+		OPrenderCullMode(OPcullFace::FRONT);
+
 		forwardRenderer->renderDepthBucket.Sort();
 		forwardRenderer->renderDepthBucket.Flush(false);
 
 		forwardRenderer->depthBuffer.Unbind();
 	}
+
+	OPrenderCullMode(OPcullFace::BACK);
 
 	// Render Pass 1
 	{ // Normal Forward Rendering with shadows

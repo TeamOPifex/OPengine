@@ -182,10 +182,10 @@ inline void OPmaterialBind(OPmaterial* material) {
 	material->effect->Bind();
 
 	OPrenderDepth(material->depth);
-	OPrenderCull(material->cull);
-	if (material->cull) {
-		OPrenderCullMode(material->cullFace);
-	}
+	//OPrenderCull(material->cull);
+	//if (material->cull) {
+	//	OPrenderCullMode(material->cullFace);
+	//}
 
 	for(OPuint i = 0; i < material->paramIndex; i++) {
 

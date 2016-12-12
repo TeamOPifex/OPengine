@@ -9,6 +9,8 @@ macro(add_source_group FILTER_NAME SOURCE_PATH TARGET_LIST)
 		"${SOURCE_PATH}/*.cc"
 		"${SOURCE_PATH}/*.mm"
 		"${SOURCE_PATH}/*.m"
+		"${SOURCE_PATH}/*.ico"
+		"${SOURCE_PATH}/*.rc"
 	)
 	source_group("${NEW_FILTER_NAME}" FILES ${TEMP_SRC})
 	list(APPEND ${TARGET_LIST} "${TEMP_SRC}")
@@ -27,7 +29,9 @@ macro(add_source_group_recurse ROOT_PATH SOURCE_PATH TARGET_LIST)
 			"${ROOT_PATH}/${SOURCE_PATH}/*.c"
 			"${ROOT_PATH}/${SOURCE_PATH}/*.cc"
 			"${ROOT_PATH}/${SOURCE_PATH}/*.mm"
-			"${ROOT_PATH}/${SOURCE_PATH}/*.m")
+			"${ROOT_PATH}/${SOURCE_PATH}/*.m"
+			"${ROOT_PATH}/${SOURCE_PATH}/*.ico"
+			"${ROOT_PATH}/${SOURCE_PATH}/*.rc")
     SET(dir_list "")
     FOREACH(file_path ${new_list})
         GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)
