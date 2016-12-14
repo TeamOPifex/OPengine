@@ -157,9 +157,6 @@ void OPwindow::Focus() {
 //#endif
 }
 
-
-
-
 // // These are all OPwindow calls now
 //
 // void glfwErrorCallback(int error, const char* desc){

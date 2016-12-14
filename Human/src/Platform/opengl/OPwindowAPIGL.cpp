@@ -17,8 +17,13 @@ ui32 OPkeyboardMappingGL[(ui32)OPkeyboardKey::_MAX];
 #define OPIFEX_OPENGL_MINOR 3
 #endif
 
-void glfwScrollCollback(GLFWwindow* window, double x, double y) {
+void glfwScrollCallback(GLFWwindow* window, double x, double y) {
 	OPMOUSE.updatedWheel = y;
+}
+
+void glfwWindowfocusCallback(GLFWwindow* glfwWindow, int focused) {
+	OPwindow* window = (OPwindow*)glfwGetWindowUserPointer(glfwWindow);
+	window->focused = focused == GLFW_TRUE;
 }
 
 OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameters windowParameters) {
@@ -50,10 +55,11 @@ OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameter
 	glfwWindowHint(GLFW_DECORATED, !windowParameters.borderless);
 	windowGL->Handle = glfwCreateWindow(windowParameters.width, windowParameters.height, windowParameters.title, display, NULL);
 	glfwSetWindowUserPointer(windowGL->Handle, window);
-		
+	
 	//glfwSetCharCallback(window, glfwCharacterCallback);
 	//glfwSetDropCallback(window, glfwWindowDropCallback);
-	glfwSetScrollCallback(windowGL->Handle, glfwScrollCollback);
+	glfwSetScrollCallback(windowGL->Handle, glfwScrollCallback);
+	glfwSetWindowFocusCallback(windowGL->Handle, glfwWindowfocusCallback);
 
 	ASSERT(windowGL->Handle != NULL, "Unable to create the window.");
 
@@ -64,12 +70,14 @@ OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameter
 
 	int w, h;
 	glfwGetFramebufferSize(windowGL->Handle, &w, &h);
-	window->WidthScaled = w / (f32)window->WindowWidth;
-	window->HeightScaled = h / (f32)window->WindowHeight;
-	window->Width = (ui32)(window->WidthScaled * window->WindowWidth);
-	window->Height = (ui32)(window->HeightScaled * window->WindowHeight);
+	window->WidthScale = w / (f32)window->WindowWidth;
+	window->HeightScale = h / (f32)window->WindowHeight;
+	window->Width = window->WindowWidth;
+	window->Height = window->WindowHeight;
+	window->WindowWidth *= window->WidthScale;
+	window->WindowHeight *= window->HeightScale;
 
-    OPlogInfo("Window Scale: %f, %f", window->WidthScaled, window->HeightScaled);
+    OPlogInfo("Window Scale: %f, %f", window->WidthScale, window->HeightScale);
 
 	glEnable(GL_MULTISAMPLE_ARB);
 	glEnable(GL_BLEND);

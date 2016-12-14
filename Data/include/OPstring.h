@@ -20,8 +20,8 @@ void OPstringRemoveFromStart(OPchar* str, i32 size);
 
 
 struct OPstring {
-	OPchar* _data;
-	ui32 _len;
+	OPchar* _data = NULL;
+	ui32 _len = 0;
 
 	OPstring() { _data = NULL; _len = 0; }
 	OPstring(const OPchar* data);
@@ -30,6 +30,7 @@ struct OPstring {
 	inline ui32 Length() { return _len; }
 	inline OPchar* C_Str() { return _data; }
 	
+	void Clear();
 	bool Equals(OPstring* str);
 	bool Equals(const OPchar* str);
 	bool StartsWith(OPstring* str);

@@ -15,15 +15,17 @@ struct OPskeleton {
 	OPchar** jointNames;
 	OPmat4* globalPoses;
 	OPmat4* globalInvPoses;
-	OPmat4* localPoses;
+	OPmat4* bindPose;
+	OPmat4* activePose;
 	OPmat4* skinned;
-	OPmat4* bindPoses;
+	OPmat4* boneOffsets;
 
 	OPmat4 globalInverse;
 
 	i16 JointIndex(const OPchar* joint);
 	OPmat4 JointMatrix(i32 joint);
 	OPvec3 JointPosition(i32 joint);
+	void Reset();
 };
 
 OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* bindPose, OPmat4* boneOffsets, OPmat4 invGlobalPose, i32 count, OPchar** names);
@@ -32,13 +34,13 @@ i16 OPskeletonGet(OPskeleton* skeleton, const OPchar* name);
 void OPskeletonDestroy(OPskeleton* skeleton);
 
 inline OPskeleton* OPskeletonCopy(OPskeleton* source) {
-	return OPskeletonCreate(source->hierarchy, source->localPoses, source->bindPoses, source->globalInverse, source->hierarchyCount, source->jointNames);
+	return OPskeletonCreate(source->hierarchy, source->activePose, source->boneOffsets, source->globalInverse, source->hierarchyCount, source->jointNames);
 }
 
 inline OPmat4 OPskeletonLocal(OPskeleton* skeleton, const OPchar* name) {
 	i16 ind = OPskeletonGet(skeleton, name);
 	if (ind > -1)  {
-		return skeleton->localPoses[ind];
+		return skeleton->activePose[ind];
 	}
 	return OPMAT4_IDENTITY;
 }
@@ -46,7 +48,7 @@ inline OPmat4 OPskeletonLocal(OPskeleton* skeleton, const OPchar* name) {
 inline OPvec3 OPskeletonLocalTranslate(OPskeleton* skeleton, i16 ind) {
 	OPvec3 result = OPVEC3_ZERO;
 	while (ind > -1) {
-		result += OPmat4GetTranslate(skeleton->localPoses[ind]);
+		result += OPmat4GetTranslate(skeleton->activePose[ind]);
 		ind = skeleton->hierarchy[ind];
 	}
 	return result;

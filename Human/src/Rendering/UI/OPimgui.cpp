@@ -174,12 +174,12 @@ OPint OPimguiTextbox(OPvec2 pos, const OPchar* text, const OPchar* placeholder, 
 
 	//p.y = (OPRENDER_SCREEN_HEIGHT * OPRENDER_SCREEN_HEIGHT_SCALE) - p.y - size.y;
 
-	OPint screenHeight = (OPint)(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScaled);
+	OPint screenHeight = (OPint)(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScale);
 	OPint x, y, z, w;
-	x = (OPint)(pos.x / OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScaled);
-	y = (OPint)(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height - (pos.y + size.y) / OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScaled);
-	z = (OPint)(400 / OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScaled);
-	w = (OPint)(size.y / OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScaled);
+	x = (OPint)(pos.x / OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScale);
+	y = (OPint)(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height - (pos.y + size.y) / OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScale);
+	z = (OPint)(400 / OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScale);
+	w = (OPint)(size.y / OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScale);
 	//OPlog("%d, Scissor %d,%d %dx%d", screenHeight, x,y,z,w);
 
     glScissor((GLint)x, (GLint)y, (GLsizei)z, (GLsizei)w);

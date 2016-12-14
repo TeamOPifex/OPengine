@@ -500,3 +500,56 @@ OPfileInformation OPfile::Create(const char* path) {
 
 	return result;
 }
+
+
+#include <windows.h>
+
+ui32 OPdirFilesCount(const OPchar* dir) {
+	ui32 total = 0;
+
+	WIN32_FIND_DATA fd;
+	HANDLE hFind = ::FindFirstFile(dir, &fd);
+	if (hFind != INVALID_HANDLE_VALUE) {
+		do {
+			// read all (real) files in current folder
+			// , delete '!' read other 2 default folder . and ..
+			if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+				total++;
+			}
+		} while (::FindNextFile(hFind, &fd));
+		::FindClose(hFind);
+	}
+
+	return total;
+}
+
+OPchar** OPfile::GetDirectoryFiles(OPchar* path, ui32* count) {
+	OPstring dirPath(path);
+	dirPath.Add("*");
+	//if (dirPath.EndsWith("\\")) {
+	//	dirPath._data[dirPath._len - 1] = NULL;
+	//}
+
+	ui32 total = OPdirFilesCount(dirPath.C_Str());
+	OPchar** result = OPALLOC(OPchar*, total);
+
+	*count = total;
+
+	ui32 index = 0;
+
+	WIN32_FIND_DATA fd;
+	HANDLE hFind = ::FindFirstFile(dirPath.C_Str(), &fd);
+
+	if (hFind != INVALID_HANDLE_VALUE) {
+		do {
+			// read all (real) files in current folder
+			// , delete '!' read other 2 default folder . and ..
+			if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+				result[index++] = OPstringCopy(fd.cFileName);
+			}
+		} while (::FindNextFile(hFind, &fd));
+		::FindClose(hFind);
+	}
+
+	return result;
+}

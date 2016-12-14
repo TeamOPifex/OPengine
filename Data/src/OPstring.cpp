@@ -33,7 +33,7 @@ OPstring::OPstring(const OPchar* data) {
 
 
 void OPstring::Init(OPchar* data) {
-	_data = data;
+	_data = _strCopy(data);
 	_len = _data == NULL ? 0 : strlen(_data);
 }
 
@@ -42,10 +42,19 @@ void OPstring::Init(const OPchar* data) {
 	_len = _data == NULL ? 0 : strlen(_data);
 }
 
+void OPstring::Clear() {
+	if (_data != NULL) {
+		OPfree(_data);
+	}
+	_data = NULL;
+	_len = 0;
+}
+
 OPstring::~OPstring() {
 	if (_data != NULL) {
 		OPfree(_data);
 	}
+	_data = NULL;
 }
 
 bool OPstring::Equals(OPstring* str) {
@@ -60,25 +69,25 @@ bool OPstring::Equals(const OPchar* str) {
 }
 
 bool OPstring::StartsWith(OPstring* str) {
-	if (str->_len < _len) return 0;
-	return OPmemcmp(str->_data, _data, _len) == 0;
+	if (_len < str->_len) return 0;
+	return OPmemcmp(str->_data, _data, str->_len) == 0;
 }
 
 bool OPstring::StartsWith(const OPchar* str) {
 	ui32 lenA = (ui32)strlen(str);
-	if (lenA < _len) return 0;
-	return OPmemcmp(str, _data, _len) == 0;
+	if (_len < lenA) return 0;
+	return OPmemcmp(str, _data, lenA) == 0;
 }
 
 bool OPstring::EndsWith(OPstring* str) {
-	if (str->_len < _len) return 0;
-	return OPmemcmp(&str[str->_len - _len], _data, _len) == 0;
+	if (_len < str->_len) return 0;
+	return OPmemcmp(&_data[_len - str->_len], str->_data, str->_len) == 0;
 }
 
 bool OPstring::EndsWith(const OPchar* str) {
 	ui32 lenA = (ui32)strlen(str);
-	if (lenA < _len) return 0;
-	return OPmemcmp(&str[lenA - _len], _data, _len) == 0;
+	if (_len < lenA) return 0;
+	return OPmemcmp(&_data[_len - lenA], str, lenA) == 0;
 }
 
 

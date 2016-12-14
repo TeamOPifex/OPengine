@@ -1,7 +1,8 @@
 #include "./Human/include/Rendering/Skinning/OPskeletonAnimation.h"
+#include "./Data/include/OPstring.h"
 #include "./Core/include/Assert.h"
 
-void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPanimationFrame* frames, OPuint frameCount) {
+void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPanimationFrame* frames, OPuint frameCount, OPchar* name) {
 	OPbzero(skelAnim, sizeof(OPskeletonAnimation));
 	skelAnim->FrameCount = frameCount;
 	skelAnim->Frame = 0;
@@ -9,6 +10,7 @@ void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPa
 	skelAnim->FramesPer = 1000.0 / 24.0; // 24 fps... roughly 41.66
 	skelAnim->Loop = 1;
 	skelAnim->LoopsCompleted = 0;
+	skelAnim->Name = OPstringCopy(name);
 
 	OPint totalSize = sizeof(OPmat4)* frameCount * boneCount;
 	skelAnim->JointFrames = frames;
@@ -17,9 +19,9 @@ void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPa
 	skelAnim->BoneCount = boneCount;
 }
 
-OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPanimationFrame* frames, OPuint count) {
+OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPanimationFrame* frames, OPuint count, OPchar* name) {
 	OPskeletonAnimation* result = (OPskeletonAnimation*)OPalloc(sizeof(OPskeletonAnimation));
-	OPskeletonAnimationInit(result, boneCount, frames, count);
+	OPskeletonAnimationInit(result, boneCount, frames, count, name);
 	return result;
 }
 
@@ -112,13 +114,13 @@ void OPskeletonAnimationApply(OPskeletonAnimation* skelAnim, OPskeleton* skeleto
 	ASSERT(skeleton->hierarchyCount == skelAnim->BoneCount, "This animation is not meant for this skeleton, Bone Count mismatch.");
 
 	for (OPint i = 0; i < skeleton->hierarchyCount; i++) {
-		skeleton->localPoses[i] = skelAnim->CurrentFrame[i];
+		skeleton->activePose[i] = skelAnim->CurrentFrame[i];
 	}
 }
 
 void OPskeletonAnimationApply(OPmat4* animationFrame, OPskeleton* skeleton) {
 	for (OPint i = 0; i < skeleton->hierarchyCount; i++) {
-		skeleton->localPoses[i] = animationFrame[i];
+		skeleton->activePose[i] = animationFrame[i];
 	}
 }
 
@@ -129,7 +131,7 @@ void OPskeletonAnimationApply(OPskeletonAnimation* skelAnim, OPskeleton* skeleto
 		if (i != fromJoint && skeleton->hierarchy[i] <= skeleton->hierarchy[fromJoint]) {
 			break;
 		}
-		skeleton->localPoses[i] = skelAnim->CurrentFrame[i];
+		skeleton->activePose[i] = skelAnim->CurrentFrame[i];
 	}
 }
 
@@ -138,7 +140,7 @@ void OPskeletonAnimationApply(OPmat4* animationFrame, OPskeleton* skeleton, i16 
 		if (i != fromJoint && skeleton->hierarchy[i] <= skeleton->hierarchy[fromJoint]) {
 			break;
 		}
-		skeleton->localPoses[i] = animationFrame[i];
+		skeleton->activePose[i] = animationFrame[i];
 	}
 }
 

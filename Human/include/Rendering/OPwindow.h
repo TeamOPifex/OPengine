@@ -13,8 +13,9 @@ struct OPwindow {
 	ui32 Height;
 	ui32 WindowWidth;
 	ui32 WindowHeight;
-	f32 WidthScaled;
-	f32 HeightScaled;
+	f32 WidthScale;
+	f32 HeightScale;
+	bool focused;
 
 	inline void Init(OPmonitor* monitor, OPwindowParameters windowParameters) {
 		OPRENDERER_ACTIVE->Window.Init(this, monitor, windowParameters);
@@ -33,6 +34,7 @@ struct OPwindow {
 	OPint Update();
 	void Bind();
 	void Focus();
+	inline bool HasFocus() { return focused; }
 	void SetPosition(i32 x, i32 y);
 	void Destroy();
 };
