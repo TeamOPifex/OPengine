@@ -95,17 +95,17 @@ OPstring* OPstring::Copy() {
 void OPstring::Add(OPstring* add) {
 
 	OPchar* result = (OPchar*)OPalloc(_len + add->_len + 1);
-	
+
 #ifdef OPIFEX_WINDOWS
 	strcpy_s(result, _len + 1, _data);
 #else
-	result = strcpy(result, str);
+	result = strcpy(result, _data);
 #endif
 
 #ifdef OPIFEX_WINDOWS
 	strcat_s(result, _len + add->_len + 1, add->_data);
 #else
-	strcat(result, add);
+	strcat(result, add->_data);
 #endif
 
 	if (_data != NULL) {
@@ -229,7 +229,7 @@ OPuint OPstring::Count(OPchar c) {
 
 i32 OPstring::Split(OPchar split, OPchar*** output) {
 	ui32 counts = 1 + Count(split);
-	
+
 	(*output) = OPALLOC(OPchar*, counts);
 	OPchar* data = _strCopy(_data);
 
@@ -425,7 +425,7 @@ i32 OPstringSplit(const OPchar* str, OPchar split, OPchar*** output) {
 		(*output)[0] = data;
 		return 1;
 	}
-	
+
 
 	ui32 ind = 0;
 	ui32 strPos = 0;
