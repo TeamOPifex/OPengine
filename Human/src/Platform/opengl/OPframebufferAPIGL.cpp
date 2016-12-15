@@ -106,7 +106,7 @@ void OPframeBufferAPIGLBind(OPframeBuffer* ptr) {
 
 void OPframeBufferAPIGLUnbind(OPframeBuffer* ptr) {
 	OPGLFN(glBindFramebuffer(GL_FRAMEBUFFER, 0));
-	OPGLFN(glViewport(0, 0, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height));
+	OPGLFN(glViewport(0, 0, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowHeight, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowHeight));
 }
 
 void OPframeBufferAPIGLDestroy(OPframeBuffer* ptr) {

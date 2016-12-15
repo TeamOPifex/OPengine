@@ -21,7 +21,7 @@ i8 OPrendererInitGL(OPwindow* window) {
 	OPlogInfo("Initializing OpenGL Renderer");
 
 	glfwSetErrorCallback(glfwErrorCallback);
-	
+
 	window->Bind();
 
 	glEnable(GL_MULTISAMPLE_ARB);
@@ -78,7 +78,7 @@ void OPrendererSetDepthWriteGL(bool state){
 
 void OPrendererSetCullGL(bool state) {
 	if (state) {
-		OPGLFN(glEnable(GL_CULL_FACE)); 
+		OPGLFN(glEnable(GL_CULL_FACE));
 	}
 	else {
 		OPGLFN(glDisable(GL_CULL_FACE));
@@ -131,10 +131,11 @@ ui32 OPblendFunctionToGL(OPblendFunction blendFunction) {
 }
 
 void OPrendererSetBlendModeGL(OPblendFunction src, OPblendFunction dst) {
-	OPGLFN(glBlendFunc(OPblendFunctionToGL(src), OPblendFunctionToGL(dst)));	
+	OPGLFN(glBlendFunc(OPblendFunctionToGL(src), OPblendFunctionToGL(dst)));
 }
 
 inline void OPrenderSetViewportGL(ui32 x, ui32 y, ui32 width, ui32 height) {
+    OPlogInfo("Set viewport %dx%d", width, height);
 	OPGLFN(glViewport(x, y, width, height));
 }
 
@@ -183,7 +184,7 @@ OPrenderAPI* OPrendererGL() {
 	OPRENDERERGL.SwapBuffer = OPrendererSwapBufferGL;
 	OPRENDERERGL.Shutdown = OPrendererShutdownGL;
 
-	OPcontextGLInit(&OPRENDERERGL.Context); 
+	OPcontextGLInit(&OPRENDERERGL.Context);
 	OPeffectAPIGLInit(&OPRENDERERGL.Effect);
 	OPframeBufferAPIGLInit(&OPRENDERERGL.FrameBuffer);
 	OPframeBufferDepthAPIGLInit(&OPRENDERERGL.FrameBufferDepth);

@@ -45,7 +45,7 @@ OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameter
 	}
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, OPIFEX_OPENGL_MAJOR);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPIFEX_OPENGL_MINOR); 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPIFEX_OPENGL_MINOR);
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
 #ifdef OPIFEX_OSX
@@ -55,7 +55,7 @@ OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameter
 	glfwWindowHint(GLFW_DECORATED, !windowParameters.borderless);
 	windowGL->Handle = glfwCreateWindow(windowParameters.width, windowParameters.height, windowParameters.title, display, NULL);
 	glfwSetWindowUserPointer(windowGL->Handle, window);
-	
+
 	//glfwSetCharCallback(window, glfwCharacterCallback);
 	//glfwSetDropCallback(window, glfwWindowDropCallback);
 	glfwSetScrollCallback(windowGL->Handle, glfwScrollCallback);
@@ -77,6 +77,8 @@ OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameter
 	window->WindowWidth *= window->WidthScale;
 	window->WindowHeight *= window->HeightScale;
 
+    OPlogInfo("Frame Size: %d, %d", window->Width, window->Height);
+    OPlogInfo("Window Size: %d, %d", window->WindowWidth, window->WindowHeight);
     OPlogInfo("Window Scale: %f, %f", window->WidthScale, window->HeightScale);
 
 	glEnable(GL_MULTISAMPLE_ARB);
@@ -99,7 +101,7 @@ void OPwindowGLBind(OPwindow* window) {
 	OPwindowGL* windowGL = (OPwindowGL*)window->internalPtr;
 	glfwMakeContextCurrent(windowGL->Handle);
 
-	OPrenderSetViewport(0, 0, (OPuint)window->Width, (OPuint)window->Height);
+	OPrenderSetViewport(0, 0, (OPuint)window->WindowWidth, (OPuint)window->WindowHeight);
 
 	OPRENDERER_ACTIVE->OPWINDOW_ACTIVE = window;
 	ASSERT(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE == window, "How can this even happen?");

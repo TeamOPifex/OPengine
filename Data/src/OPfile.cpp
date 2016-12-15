@@ -501,7 +501,7 @@ OPfileInformation OPfile::Create(const char* path) {
 	return result;
 }
 
-
+#ifdef OPIFEX_WINDOWS
 #include <windows.h>
 
 ui32 OPdirFilesCount(const OPchar* dir) {
@@ -553,3 +553,14 @@ OPchar** OPfile::GetDirectoryFiles(OPchar* path, ui32* count) {
 
 	return result;
 }
+#else
+
+ui32 OPdirFilesCount(const OPchar* dir) {
+	return 0;
+}
+
+OPchar** OPfile::GetDirectoryFiles(OPchar* path, ui32* count) {
+	(*count) = 0;
+	return NULL;
+}
+#endif

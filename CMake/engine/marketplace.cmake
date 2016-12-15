@@ -44,22 +44,22 @@ macro(add_marketplace_addons APPLICATION_TARGET FOLDER ADDITIONAL)
     string(REPLACE "." ";" VERSION_LIST ${ADDON})
     list(GET VERSION_LIST 0 ADDON_NAME)
 
-    eval("ADDON_${ADDON_NAME}_INCLUDES()")
-    eval("ADDON_${ADDON_NAME}(${APPLICATION_TARGET} ${FOLDER})")
+    eval("if(COMMAND ADDON_${ADDON_NAME}_INCLUDES)\nADDON_${ADDON_NAME}_INCLUDES()\n endif()")
+    eval("if(COMMAND ADDON_${ADDON_NAME})\nADDON_${ADDON_NAME}(${APPLICATION_TARGET} ${FOLDER})\nendif()")
 
     SET(TEMP_RESULT "")
-    eval("ADDON_${ADDON_NAME}_LINK(TEMP_RESULT)")
+    eval("if(COMMAND ADDON_${ADDON_NAME}_LINK)\nADDON_${ADDON_NAME}_LINK(TEMP_RESULT)\nendif()")
 
     message(STATUS "LINK TO ${TEMP_RESULT}")
     target_link_libraries(${APPLICATION_TARGET} ${TEMP_RESULT})
     add_definitions(-DADDON_${ADDON_NAME})
 
     SET(TEMP_RESULT "")
-    eval("ADDON_${ADDON_NAME}_DEFINES(TEMP_RESULT)")
+    eval("if(COMMAND ADDON_${ADDON_NAME}_DEFINES)\nADDON_${ADDON_NAME}_DEFINES(TEMP_RESULT)\nendif()")
     add_definitions(${TEMP_RESULT})
 
     SET(TEMP_RESULT "")
-    eval("ADDON_${ADDON_NAME}_ASSETS(TEMP_RESULT)")
+    eval("if(COMMAND ADDON_${ADDON_NAME}_ASSETS)\nADDON_${ADDON_NAME}_ASSETS(TEMP_RESULT)\nendif()")
     IF(TEMP_RESULT STREQUAL "")
     ELSE()
       SET(${ADDITIONAL} "${${ADDITIONAL}}|${TEMP_RESULT}")
@@ -80,7 +80,7 @@ macro(add_marketplace_assets ADDITIONAL)
       list(GET VERSION_LIST 0 ADDON_NAME)
 
       SET(TEMP_RESULT "")
-      eval("ADDON_${ADDON_NAME}_ASSETS(TEMP_RESULT)")
+      eval("if(COMMAND ADDON_${ADDON_NAME}_ASSETS)\nADDON_${ADDON_NAME}_ASSETS(TEMP_RESULT)\nendif()")
       IF(TEMP_RESULT STREQUAL "")
       ELSE()
         SET(${ADDITIONAL} "${${ADDITIONAL}}|${TEMP_RESULT}")
@@ -100,12 +100,12 @@ macro(add_marketplace_defines)
       string(REPLACE "." ";" VERSION_LIST ${ADDON})
       list(GET VERSION_LIST 0 ADDON_NAME)
 
-      eval("ADDON_${ADDON_NAME}_INCLUDES()")
+      eval("if(COMMAND ADDON_${ADDON_NAME}_INCLUDES)\nADDON_${ADDON_NAME}_INCLUDES()\nendif()")
 
       add_definitions(-DADDON_${ADDON_NAME})
 
       SET(TEMP_RESULT "")
-      eval("ADDON_${ADDON_NAME}_DEFINES(TEMP_RESULT)")
+      eval("if(COMMAND ADDON_${ADDON_NAME}_DEFINES)\nADDON_${ADDON_NAME}_DEFINES(TEMP_RESULT)\nendif()")
       add_definitions(${TEMP_RESULT})
 
     endforeach()
