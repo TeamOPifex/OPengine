@@ -4,7 +4,7 @@ void OPrenderCommandDrawIndex(void* data, OPcam* camera) {
 	OPrenderCommandDrawIndexed* dc = (OPrenderCommandDrawIndexed*)data;
 
 	dc->vertexArray->Bind();
-	dc->vertexBuffer->Bind();
+	//dc->vertexBuffer->Bind();
 	dc->indexBuffer->Bind();
 	dc->material->Bind();
 
@@ -22,7 +22,7 @@ void OPrenderCommandDrawIndex(void* data, OPcam* camera) {
 }
 
 OPrenderCommandDrawIndexed* OPrenderCommandDrawIndexed::Set(OPmesh* mesh, OPmat4* worldPtr, OPmaterialInstance* materialPtr) {
-	
+
 	ui64 meshId = 0;// mesh->id << 0;     // 00 - 06 bits
 	ui64 materialId = materialPtr->id << 12;   // 13 - 19 bits
 	ui64 renderTarget = 0 << 18;            // 20 - 26 bits
