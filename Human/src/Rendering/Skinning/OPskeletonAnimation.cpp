@@ -7,7 +7,7 @@ void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPa
 	skelAnim->FrameCount = frameCount;
 	skelAnim->Frame = 0;
 	skelAnim->Elapsed = 0;
-	skelAnim->FramesPer = 1000.0 / 24.0; // 24 fps... roughly 41.66
+	skelAnim->FramesPer = 1000.0 / 60.0;//  24.0; // 24 fps... roughly 41.66
 	skelAnim->Loop = 1;
 	skelAnim->LoopsCompleted = 0;
 	skelAnim->Name = OPstringCopy(name);

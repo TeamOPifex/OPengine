@@ -55,8 +55,9 @@ OPint OPloaderOPanimationLoad(OPstream* str, OPskeletonAnimation** animation) {
 	*animation = OPskeletonAnimationCreate(boneCount, frames, frameCount, name);
 
 	//OPfree(frames);
-
-	OPfree(name);
+	if (name != NULL) {
+		OPfree(name);
+	}
 
 	//OPstreamDestroy(str);
 
