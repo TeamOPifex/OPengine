@@ -11,6 +11,12 @@ struct OPtexture2DOLD {
 	OPvec4 UVScale;
 	OPtexture* Texture;
 	OPeffect* Effect;
+
+	void Destroy();
+	inline void Free() {
+		Destroy();
+		OPfree(this);
+	}
 };
 
 OPtexture2DOLD* OPtexture2DCreate(OPtexture* texture, OPeffect* effect, OPvec2 uvStart, OPvec2 uvEnd);

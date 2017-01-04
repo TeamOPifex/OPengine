@@ -183,8 +183,96 @@ OPmodel* OPquadCreateZPlane() {
 OPmodel* OPquadCreateZPlane(OPfloat width, OPfloat depth) {
 	return OPquadCreateZPlane(width, depth, OPvec2(0, 0), OPvec2(1, 1));
 }
-OPmodel* OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
 
+OPmodel* OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OPvec2 texcoordEnd, ui32 features) {
+	OPvertexLayoutBuilder builder;
+	builder.Init();
+	builder.Add(OPattributes::POSITION);
+	if ((features & (ui32)OPattributes::NORMAL) > 0) {
+		builder.Add(OPattributes::NORMAL);
+	}
+	if ((features & (ui32)OPattributes::TANGENT) > 0) {
+		builder.Add(OPattributes::TANGENT);
+	}
+	if ((features & (ui32)OPattributes::BITANGENT) > 0) {
+		builder.Add(OPattributes::BITANGENT);
+	}
+	if ((features & (ui32)OPattributes::UV) > 0) {
+		builder.Add(OPattributes::UV);
+	}
+	OPvertexLayout layout = builder.Build();
+	OPmodel* mesh = OPNEW(OPmodel(1, layout));
+	mesh->Bind();
+
+	f32* verts = (f32*)OPalloc(sizeof(f32) * layout.stride * 4);
+	ui32 offset = 0;
+
+	verts[offset++] = -width; verts[offset++] = 0; verts[offset++] = depth;
+	if ((features & (ui32)OPattributes::NORMAL) > 0) {
+		verts[offset++] = 0; verts[offset++] = 1; verts[offset++] = 0;
+	}
+	if ((features & (ui32)OPattributes::TANGENT) > 0) {
+		verts[offset++] = 0; verts[offset++] = 0; verts[offset++] = 1;
+	}
+	if ((features & (ui32)OPattributes::BITANGENT) > 0) {
+		verts[offset++] = 1; verts[offset++] = 0; verts[offset++] = 0;
+	}
+	if ((features & (ui32)OPattributes::UV) > 0) {
+		verts[offset++] = texcoordStart.x; verts[offset++] = texcoordStart.y;
+	}
+
+	verts[offset++] = width; verts[offset++] = 0; verts[offset++] = depth;
+	if ((features & (ui32)OPattributes::NORMAL) > 0) {
+		verts[offset++] = 0; verts[offset++] = 1; verts[offset++] = 0;
+	}
+	if ((features & (ui32)OPattributes::TANGENT) > 0) {
+		verts[offset++] = 0; verts[offset++] = 0; verts[offset++] = 1;
+	}
+	if ((features & (ui32)OPattributes::BITANGENT) > 0) {
+		verts[offset++] = 1; verts[offset++] = 0; verts[offset++] = 0;
+	}
+	if ((features & (ui32)OPattributes::UV) > 0) {
+		verts[offset++] = texcoordEnd.x; verts[offset++] = texcoordStart.y;
+	}
+
+	verts[offset++] = width; verts[offset++] = 0; verts[offset++] = -depth;
+	if ((features & (ui32)OPattributes::NORMAL) > 0) {
+		verts[offset++] = 0; verts[offset++] = 1; verts[offset++] = 0;
+	}
+	if ((features & (ui32)OPattributes::TANGENT) > 0) {
+		verts[offset++] = 0; verts[offset++] = 0; verts[offset++] = 1;
+	}
+	if ((features & (ui32)OPattributes::BITANGENT) > 0) {
+		verts[offset++] = 1; verts[offset++] = 0; verts[offset++] = 0;
+	}
+	if ((features & (ui32)OPattributes::UV) > 0) {
+		verts[offset++] = texcoordEnd.x; verts[offset++] = texcoordEnd.y;
+	}
+
+	verts[offset++] = -width; verts[offset++] = 0; verts[offset++] = -depth;
+	if ((features & (ui32)OPattributes::NORMAL) > 0) {
+		verts[offset++] = 0; verts[offset++] = 1; verts[offset++] = 0;
+	}
+	if ((features & (ui32)OPattributes::TANGENT) > 0) {
+		verts[offset++] = 0; verts[offset++] = 0; verts[offset++] = 1;
+	}
+	if ((features & (ui32)OPattributes::BITANGENT) > 0) {
+		verts[offset++] = 1; verts[offset++] = 0; verts[offset++] = 0;
+	}
+	if ((features & (ui32)OPattributes::UV) > 0) {
+		verts[offset++] = texcoordStart.x; verts[offset++] = texcoordEnd.y;
+	}
+
+	mesh->Build(
+		4, 6, OPindexSize::SHORT,
+		verts, OPquadIndexData
+	);
+
+	return mesh;
+}
+
+OPmodel* OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OPvec2 texcoordEnd) {
+/*
 	QuadPoint verts[4] = {
 		{ -width, 0, -depth, texcoordEnd.x, texcoordEnd.y },
 		{ width, 0, -depth, texcoordStart.x, texcoordEnd.y },
@@ -208,6 +296,37 @@ OPmodel* OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, 
 		);
 
 	mesh->vertexLayout.stride = sizeof(OPfloat) * 5;
+
+	return mesh;*/
+
+
+
+
+	OPvertexLayoutBuilder builder;
+	builder.Init();
+	builder.Add(OPattributes::POSITION);
+	builder.Add(OPattributes::UV);
+	OPvertexLayout layout = builder.Build();
+	OPmodel* mesh = OPNEW(OPmodel(1, layout));
+	mesh->Bind();
+
+	// 1, 1,
+	// 0, 1,
+	// 0, 0,
+	// 1, 0
+
+	// 0.5, 0.0
+	// 1.0, 1.0
+	QuadPoint verts[4];
+	SetQuadPoint(&verts[0], -width, 0, depth, texcoordStart.x, texcoordStart.y);
+	SetQuadPoint(&verts[1], width, 0, depth, texcoordEnd.x, texcoordStart.y);
+	SetQuadPoint(&verts[2], width, 0, -depth, texcoordEnd.x, texcoordEnd.y);
+	SetQuadPoint(&verts[3], -width, 0, -depth, texcoordStart.x, texcoordEnd.y);
+
+	mesh->Build(
+		4, 6, OPindexSize::SHORT,
+		verts, OPquadIndexData
+	);
 
 	return mesh;
 }

@@ -48,6 +48,10 @@ OPtexture2DOLD* OPtexture2DCreate(OPtexture* texture, OPeffect* effect, OPvec2 u
 	return tex2d;
 }
 
+void OPtexture2DOLD::Destroy() {
+
+}
+
 OPtexture2DOLD* OPtexture2DCreate(OPtexture* texture, OPeffect* effect) {
 	return OPtexture2DCreate(texture, effect, OPVEC2_ZERO, OPVEC2_ONE);
 }
