@@ -62,7 +62,7 @@ OPrendererEntity* OPscene::Remove(OPrendererEntity* entity) {
 			entities[i] = entities[index - 1];
 		}
 		index--;
-		return &entities[i];
+		return &entities[index];
 	}
 	return NULL;
 }

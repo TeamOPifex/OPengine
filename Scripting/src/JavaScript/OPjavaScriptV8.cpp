@@ -32,17 +32,27 @@ Persistent<ObjectTemplate, CopyablePersistentTraits<ObjectTemplate>> V8GLOBALTEM
 
 
 void _OPscriptV8Log(const v8::FunctionCallbackInfo<v8::Value>& args) {
-    for (int i = 0; i < args.Length(); i++) {
-        v8::HandleScope scope(args.GetIsolate());
-        v8::String::Utf8Value str(args[i]);
-        if (*str == NULL) return;
+	for (int i = 0; i < args.Length(); i++) {
+		v8::HandleScope scope(args.GetIsolate());
+		v8::String::Utf8Value str(args[i]);
+		if (*str == NULL) return;
 		OPlogChannel(30, "SCRIPT", *str);
-    }
+	}
+}
+
+void _OPscriptV8Error(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	for (int i = 0; i < args.Length(); i++) {
+		v8::HandleScope scope(args.GetIsolate());
+		v8::String::Utf8Value str(args[i]);
+		if (*str == NULL) return;
+		OPlogErr(*str);
+	}
 }
 
 void _OPscriptV8SetConsole(Handle<ObjectTemplate> objTemplate) {
     Handle<ObjectTemplate> console = JS_NEW_OBJECT_TEMPLATE();
-    console->Set(JS_NEW_STRING("log"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8Log));
+	console->Set(JS_NEW_STRING("log"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8Log));
+	console->Set(JS_NEW_STRING("error"), JS_NEW_FUNCTION_TEMPLATE(_OPscriptV8Error));
     objTemplate->Set(JS_NEW_STRING("console"), console);
 }
 
