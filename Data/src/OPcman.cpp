@@ -144,10 +144,13 @@ bool OPcman::Purge() {
 void* OPcman::LoadFromFile(const OPchar* path) {
 	const OPchar* ext = NULL;
 	OPint success = 0;
-	OPchar buffer[32];
+	OPchar buffer[1024];
 
 	ext = strrchr(path, '.');
-	ASSERT(ext != NULL, "Finding extension failed");
+	if (ext == NULL) {
+		return NULL;
+	}
+	//ASSERT(ext != NULL, "Finding extension failed");
 
 	ui32 i = 0;
 	for (; i < strlen(ext); i++) {
@@ -195,7 +198,10 @@ bool OPcman::Load(const OPchar* assetKey) {
 	}
 
 	ext = strrchr(assetKey, '.');
-	ASSERT(ext != NULL, "Finding extension failed");
+	if (ext == NULL) {
+		return NULL;
+	}
+	//ASSERT(ext != NULL, "Finding extension failed");
 
 	for (OPint i = 0; i < assetLoaders.Size(); i++) {
 		OPassetLoader* loader = (OPassetLoader*)assetLoaders.Get(i);
