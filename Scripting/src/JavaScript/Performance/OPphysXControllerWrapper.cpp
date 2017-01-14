@@ -37,7 +37,7 @@ JS_RETURN_VAL _OPphysXControllerCreate(const JS_ARGS& args) {
     OPphysXMaterial* material = JS_GET_ARG_PTR(args, 1, OPphysXMaterial);
     OPfloat height = (f32)args[2]->NumberValue();
     OPfloat radius = (f32)args[3]->NumberValue();
-	OPphysXController* ptr = OPphysXControllerCreate(manager, material, height, radius, OnShapeHit, OnControllerHit, OnObstacleHit);
+	OPphysXController* ptr = OPphysXControllerCreate(manager, material, height, radius, OnShapeHit, OnControllerHit, OnObstacleHit, NULL);
 
     ptr->setContactOffset(0);
 

@@ -201,7 +201,7 @@ void ExamplePhysicsCharacterEnter(OPgameState* last) {
 	OPphysXSceneAddActor(physicsCharacterExample->scene, physicsCharacterExample->physicsPlane);
 
 	physicsCharacterExample->manager = OPphysXControllerCreateManager(physicsCharacterExample->scene);
-	physicsCharacterExample->controller = OPphysXControllerCreate(physicsCharacterExample->manager, material, 0.5, 0.5, CharacterOnShapeHit, NULL, NULL);
+	physicsCharacterExample->controller = OPphysXControllerCreate(physicsCharacterExample->manager, material, 0.5, 0.5, CharacterOnShapeHit, NULL, NULL, NULL);
 }
 
 OPint ExamplePhysicsCharacterUpdate(OPtimer* time) {

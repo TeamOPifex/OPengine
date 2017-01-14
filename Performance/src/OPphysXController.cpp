@@ -1,5 +1,6 @@
 #include "./Performance/include/OPphysXController.h"
 #include "./Performance/include/OPphysXControllerHitReport.h"
+#include "./Performance/include/OPphysXControllerBehaviorReport.h"
 
 #ifdef OPIFEX_OPTION_PHYSX
 
@@ -10,12 +11,15 @@ OPphysXControllerManager* OPphysXControllerCreateManager(OPphysXScene* scene) {
 OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OPphysXMaterial* material, OPfloat height, OPfloat radius,
 		void(*onShapeHit)(PxControllerShapeHit),
 		void(*onControllerHit)(PxControllersHit),
-		void(*onObstacleHit)(PxControllerObstacleHit)) {
+		void(*onObstacleHit)(PxControllerObstacleHit),
+		PxControllerBehaviorFlags(*_onBehaviorShapeHit)(const PxShape&, const PxActor&)
+		) {
 	PxCapsuleControllerDesc desc = PxCapsuleControllerDesc();
 	desc.height = height;
 	desc.radius = radius;
 	desc.material = material;
 	desc.reportCallback = new OPphysXControllerHitReport(onShapeHit, onControllerHit, onObstacleHit);
+	desc.behaviorCallback = new OPphysXControllerBehaviorReport(_onBehaviorShapeHit);
 
 	OPphysXController* result = manager->createController(desc);
 	result->setContactOffset(0.02f);
@@ -30,7 +34,7 @@ OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OP
 	return result;
 }
 OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OPphysXMaterial* material, OPfloat height, OPfloat radius) {
-	return OPphysXControllerCreate(manager, material, height, radius, NULL, NULL, NULL);
+	return OPphysXControllerCreate(manager, material, height, radius, NULL, NULL, NULL, NULL);
 }
 
 void OPphysXControllerMove(OPphysXController* controller, OPvec3 disp, OPtimer* timer) {
