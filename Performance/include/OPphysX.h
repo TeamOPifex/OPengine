@@ -59,6 +59,7 @@ bool OPphysXOverlapping(OPphysXController* controller, PxShape* actorShape, OPph
 bool OPphysXOverlappingSphere(OPphysXController* controller, PxShape* actorShape, OPphysXRigidActor* other, PxShape* otherShape);
 bool OPphysXOverlappingSphere(OPphysXController* controller, PxShape* actorShape, PxTransform other, PxSphereGeometry sphereGeom);
 bool OPphysXOverlappingSphere(OPphysXController* controller, PxShape* actorShape, OPvec3 pos, OPfloat size);
+bool OPphysXOverlappingSphereSphere(OPphysXController* controller, PxShape* actorShape, OPphysXRigidActor* other, PxShape* otherShape);
 void OPphysXShutdown();
 PxTransform OPphysXMat4ToPx(OPmat4* mat);
 void OPphysXShapeSetPose(OPphysXShape* shape, OPmat4 transform);

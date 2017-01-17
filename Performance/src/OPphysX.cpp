@@ -279,6 +279,17 @@ bool OPphysXOverlappingSphere(OPphysXController* controller, PxShape* actorShape
 }
 
 
+bool OPphysXOverlappingSphereSphere(OPphysXController* controller, PxShape* actorShape, OPphysXRigidActor* other, PxShape* otherShape) {
+	const PxSphereGeometry& capsuleGeom = static_cast<const PxSphereGeometry&>(actorShape->getGeometry().sphere());
+	const PxSphereGeometry& sphereGeom = static_cast<const PxSphereGeometry&>(otherShape->getGeometry().sphere());
+
+	PxTransform actorTransform = PxShapeExt::getGlobalPose(*actorShape, *controller->getActor());
+	PxTransform otherTransform = PxShapeExt::getGlobalPose(*otherShape, *other);
+
+	return PxGeometryQuery::overlap(capsuleGeom, actorTransform, sphereGeom, otherTransform);
+}
+
+
 
 bool OPphysXOverlappingSphere(OPphysXController* controller, PxShape* actorShape, PxTransform other, PxSphereGeometry sphereGeom) {
 	const PxCapsuleGeometry& capsuleGeom = static_cast<const PxCapsuleGeometry&>(actorShape->getGeometry().capsule());
