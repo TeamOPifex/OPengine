@@ -11,7 +11,7 @@ JS_RETURN_VAL _OPphysXSceneInit(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
     OPphysXScene* scene = JS_GET_ARG_PTR(args, 0, OPphysXScene);
     OPvec3* gravity = JS_GET_ARG_PTR(args, 1, OPvec3);
-	OPphysXSceneInit(scene, *gravity, NULL, NULL);
+	OPphysXSceneInit(scene, *gravity, NULL, NULL, NULL);
 	JS_RETURN_NULL;
 }
 

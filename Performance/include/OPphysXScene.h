@@ -14,9 +14,10 @@ struct OPphysXScene {
 
 // FUNCTIONS
 
-void OPphysXSceneInit(OPphysXScene* scene, OPvec3 gravity, void(*onTrigger)(OPphysXTrigger), void(*onContact)(OPphysXContact));
+void OPphysXSceneInit(OPphysXScene* scene, OPvec3 gravity, void(*onTrigger)(OPphysXTrigger), void(*onContact)(OPphysXContact), PxSimulationFilterShader shader);
 OPphysXScene* OPphysXSceneCreate(OPvec3 gravity);
 OPphysXScene* OPphysXSceneCreate(OPvec3 gravity, void(*onTrigger)(OPphysXTrigger), void(*onContact)(OPphysXContact));
+OPphysXScene* OPphysXSceneCreate(OPvec3 gravity, void(*onTrigger)(OPphysXTrigger), void(*onContact)(OPphysXContact), PxSimulationFilterShader shader);
 OPphysXRigidDynamic* OPphysXSceneCreateDynamic(OPphysXScene* scene, OPvec3 position);
 OPphysXRigidDynamic* OPphysXSceneCreateDynamic(OPphysXScene* scene, PxTransform transform);
 OPphysXRigidStatic* OPphysXSceneCreateStatic(OPphysXScene* scene, OPvec3 position);

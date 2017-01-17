@@ -6,7 +6,7 @@ PxReal _timestep = 1.0f / 60.0f;
 // TODO: (garrett) this should be tied with the OPcore fixed timestep
 ui64 _physXTimeStep = 16;
 
-void OPphysXSceneInit(OPphysXScene* scene, OPvec3 gravity, void(*onTrigger)(OPphysXTrigger), void(*onContact)(OPphysXContact)) {
+void OPphysXSceneInit(OPphysXScene* scene, OPvec3 gravity, void(*onTrigger)(OPphysXTrigger), void(*onContact)(OPphysXContact), PxSimulationFilterShader shader) {
 
 	PxSceneDesc sceneDesc(OPphysXSDK->getTolerancesScale());
 
@@ -21,7 +21,9 @@ void OPphysXSceneInit(OPphysXScene* scene, OPvec3 gravity, void(*onTrigger)(OPph
 		sceneDesc.cpuDispatcher = mCpuDispatcher;
 	}
 
-	if (!sceneDesc.filterShader) {
+	if (shader) {
+		sceneDesc.filterShader = shader;
+	} else if (!sceneDesc.filterShader) {
 		sceneDesc.filterShader = OPphysXDefaultFilterShader;
 	}
 
@@ -31,13 +33,19 @@ void OPphysXSceneInit(OPphysXScene* scene, OPvec3 gravity, void(*onTrigger)(OPph
 
 OPphysXScene* OPphysXSceneCreate(OPvec3 gravity) {
 	OPphysXScene* scene = (OPphysXScene*)OPallocZero(sizeof(OPphysXScene));
-	OPphysXSceneInit(scene, gravity, NULL, NULL);
+	OPphysXSceneInit(scene, gravity, NULL, NULL, NULL);
 	return scene;
 }
 
 OPphysXScene* OPphysXSceneCreate(OPvec3 gravity, void(*onTrigger)(OPphysXTrigger), void(*onContact)(OPphysXContact)) {
 	OPphysXScene* scene = (OPphysXScene*)OPallocZero(sizeof(OPphysXScene));
-	OPphysXSceneInit(scene, gravity, onTrigger, onContact);
+	OPphysXSceneInit(scene, gravity, onTrigger, onContact, NULL);
+	return scene;
+}
+
+OPphysXScene* OPphysXSceneCreate(OPvec3 gravity, void(*onTrigger)(OPphysXTrigger), void(*onContact)(OPphysXContact), PxSimulationFilterShader shader) {
+	OPphysXScene* scene = (OPphysXScene*)OPallocZero(sizeof(OPphysXScene));
+	OPphysXSceneInit(scene, gravity, onTrigger, onContact, shader);
 	return scene;
 }
 
