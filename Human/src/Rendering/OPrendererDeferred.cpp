@@ -80,6 +80,27 @@ void OPrendererDeferredSetMaterial(OPrenderer* renderer, OPmaterial* material, u
 	deferredRenderer->passes[pass] = material;
 }
 
+void OPrendererDeferredSetMaterials(OPrenderer* renderer, OPrendererEntity* entity) {
+	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
+	//if (!entity->desc.animated) {
+		entity->material = (OPmaterialInstance**)OPNEW(OPmaterialInstance(deferredRenderer->passes[0]));
+		//entity->shadowMaterial = deferredRenderer->shadowMaterial.CreateInstances(entity->model, entity->desc.materialPerMesh);
+	//}
+	//else {
+	//	ui32 count = entity->model->meshCount;
+	//	if (!entity->desc.materialPerMesh) {
+	//		count = 1;
+	//	}
+	//	entity->material = OPALLOC(OPmaterialInstance*, count);
+
+	//	OPmaterialSkinnedInstance** instances = deferredRenderer->skinnedMaterial.CreateInstances(entity->model, true, entity->desc.materialPerMesh);
+	//	for (ui32 i = 0; i < count; i++) {
+	//		entity->material[i] = instances[i]->Base();
+	//	}
+	//	entity->shadowMaterial = deferredRenderer->shadowSkinnedMaterial.CreateInstances(entity->model, entity->desc.materialPerMesh);
+	//}
+}
+
 void OPrendererDeferredSetMaterialEffect(OPrenderer* renderer, OPeffect* effect, ui32 pass) {
 	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
 	deferredRenderer->passes[pass]->effect = effect;
@@ -108,7 +129,7 @@ void OPrendererDeferredSubmitMeshMaterial(OPrenderer* renderer, OPmesh* mesh, OP
 
 void OPrendererDeferredSubmitRendererEntity(OPrenderer* renderer, OPrendererEntity* rendererEntity) {
 	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
-	deferredRenderer->renderBucket[1].Submit(rendererEntity->model, &rendererEntity->world, rendererEntity->material, rendererEntity->desc.materialPerMesh);
+	deferredRenderer->renderBucket[0].Submit(rendererEntity->model, &rendererEntity->world, rendererEntity->material, rendererEntity->desc.materialPerMesh);
 	//if (rendererEntity->shadowEmitter) {
 	//	deferredRenderer->renderBucket[0].Submit(rendererEntity->model, &rendererEntity->world, deferredRenderer->defaultShadowMaterialInstance);
 	//}
@@ -120,14 +141,6 @@ void OPrendererDeferredSubmitLight(OPrenderer* renderer, OPlightSpot* light) {
 	//deferredRenderer->renderBucket[1].Submit(deferredRenderer->sphereMesh, world, deferredRenderer->defaultLightingSpotMaterialInstance);
 }
 
-OPmat4 deferredWorld = OPMAT4_IDENTITY;
-
-int cullMode = 0;
-bool culling = false;
-bool wireframe = true;
-bool depthTest = true;
-bool depthWrite = false;
-bool depthBlend = true;
 void OPrendererDeferredEnd(OPrenderer* renderer) {
 	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
 
@@ -230,9 +243,11 @@ OPrendererDeferred* OPrendererDeferred::Setup() {
 	rendererRoot._CreateMaterialInstance = OPrendererDeferredCreateMaterialInstance;
 	rendererRoot._GetMaterial = OPrendererDeferredGetMaterial;
 	rendererRoot._SetMaterial = OPrendererDeferredSetMaterial;
+	rendererRoot._SetMaterials = OPrendererDeferredSetMaterials;
 	rendererRoot._SetMaterialEffect = OPrendererDeferredSetMaterialEffect;
 	rendererRoot._Begin = OPrendererDeferredBegin;
 	rendererRoot._SubmitModel = OPrendererDeferredSubmitModel;
+	rendererRoot._SubmitRendererEntity = OPrendererDeferredSubmitRendererEntity;
 	rendererRoot._SubmitModelMaterial = OPrendererDeferredSubmitModelMaterial;
 	rendererRoot._SubmitMeshMaterial = OPrendererDeferredSubmitMeshMaterial;
 	rendererRoot._SubmitLight = OPrendererDeferredSubmitLight;
