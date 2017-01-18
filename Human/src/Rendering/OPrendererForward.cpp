@@ -10,7 +10,7 @@ void OPrendererForwardInit(OPrenderer* renderer, OPcam** camera, ui32 maxCalls, 
 	forwardRenderer->defaultShadowMaterial->cullFace = OPcullFace::FRONT;
 	forwardRenderer->defaultShadowMaterial->cull = true;
 	forwardRenderer->defaultShadowMaterial->depth = true;
-	forwardRenderer->defaultShadowMaterialInstance = OPNEW(OPmaterialInstance(forwardRenderer->defaultShadowMaterial));
+	forwardRenderer->defaultShadowMaterialInstance = OPNEW(OPmaterial(forwardRenderer->defaultShadowMaterial));
 	const ui32 SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 	forwardRenderer->depthBuffer.Init(OPtextureDesc(SHADOW_WIDTH, SHADOW_HEIGHT, OPtextureFormat::DEPTH, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST, OPtextureType::FLOAT));
 
@@ -19,7 +19,7 @@ void OPrendererForwardInit(OPrenderer* renderer, OPcam** camera, ui32 maxCalls, 
 	forwardRenderer->defaultShadowAnimatedMaterial->cullFace = OPcullFace::FRONT;
 	forwardRenderer->defaultShadowAnimatedMaterial->cull = true;
 	forwardRenderer->defaultShadowAnimatedMaterial->depth = true;
-	forwardRenderer->defaultShadowAnimatedMaterialInstance = OPNEW(OPmaterialInstance(forwardRenderer->defaultShadowAnimatedMaterial));
+	forwardRenderer->defaultShadowAnimatedMaterialInstance = OPNEW(OPmaterial(forwardRenderer->defaultShadowAnimatedMaterial));
 
 	//forwardRenderer->defaultEffect = OPNEW(OPeffect("Common/PBR.vert", "Common/PBR.frag"));
 	forwardRenderer->defaultEffect = OPNEW(OPeffect("Common/TexturedShadow.vert", "Common/TexturedShadow.frag"));
@@ -33,28 +33,28 @@ void OPrendererForwardInit(OPrenderer* renderer, OPcam** camera, ui32 maxCalls, 
 
 	// Static Model
 	forwardRenderer->passes[1] = forwardRenderer->defaultMaterial;
-	OPmaterialAddParam(forwardRenderer->defaultMaterial, "uViewShadow", &forwardRenderer->shadowCamera.view);
-	OPmaterialAddParam(forwardRenderer->defaultMaterial, "uProjShadow", &forwardRenderer->shadowCamera.proj);
-	OPmaterialAddParam(forwardRenderer->defaultMaterial, "uShadow", &forwardRenderer->depthBuffer.texture, 1);
-	OPmaterialAddParam(forwardRenderer->defaultMaterial, "uLightPos", &forwardRenderer->shadowCamera.pos);
-	OPmaterialAddParam(forwardRenderer->defaultMaterial, "uViewPos", &forwardRenderer->shadowCamera.pos);
+	forwardRenderer->defaultMaterial->AddParam("uViewShadow", &forwardRenderer->shadowCamera.view);
+	forwardRenderer->defaultMaterial->AddParam("uProjShadow", &forwardRenderer->shadowCamera.proj);
+	forwardRenderer->defaultMaterial->AddParam("uShadow", &forwardRenderer->depthBuffer.texture, 1);
+	forwardRenderer->defaultMaterial->AddParam("uLightPos", &forwardRenderer->shadowCamera.pos);
+	forwardRenderer->defaultMaterial->AddParam("uViewPos", &forwardRenderer->shadowCamera.pos);
 
 	// Animated Model
 	forwardRenderer->passes[2] = forwardRenderer->defaultAnimatedMaterial;
-	OPmaterialAddParam(forwardRenderer->defaultAnimatedMaterial, "uViewShadow", &forwardRenderer->shadowCamera.view);
-	OPmaterialAddParam(forwardRenderer->defaultAnimatedMaterial, "uProjShadow", &forwardRenderer->shadowCamera.proj);
-	OPmaterialAddParam(forwardRenderer->defaultAnimatedMaterial, "uShadow", &forwardRenderer->depthBuffer.texture, 1);
-	OPmaterialAddParam(forwardRenderer->defaultAnimatedMaterial, "uLightPos", &forwardRenderer->shadowCamera.pos);
-	OPmaterialAddParam(forwardRenderer->defaultAnimatedMaterial, "uViewPos", &forwardRenderer->shadowCamera.pos);
+	forwardRenderer->defaultAnimatedMaterial->AddParam("uViewShadow", &forwardRenderer->shadowCamera.view);
+	forwardRenderer->defaultAnimatedMaterial->AddParam("uProjShadow", &forwardRenderer->shadowCamera.proj);
+	forwardRenderer->defaultAnimatedMaterial->AddParam("uShadow", &forwardRenderer->depthBuffer.texture, 1);
+	forwardRenderer->defaultAnimatedMaterial->AddParam("uLightPos", &forwardRenderer->shadowCamera.pos);
+	forwardRenderer->defaultAnimatedMaterial->AddParam("uViewPos", &forwardRenderer->shadowCamera.pos);
 
 	forwardRenderer->renderBucket[1].Init(maxCalls, renderer->camera);		
 	//forwardRenderer->shadowCamera.SetPerspective(OPvec3(150, 150, 0), OPVEC3_ZERO, OPVEC3_UP, 1.0f, 500.0f, 45.0f, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height);
 	forwardRenderer->shadowCamera.SetOrtho(OPvec3(-120, 155, -1), OPVEC3_ZERO, OPVEC3_UP, 50.0f, 500.0f, -16, 16, -16, 16);
 }
 
-OPmaterialInstance* OPrendererForwardCreateMaterialInstance(OPrenderer* renderer, ui32 pass) {
+OPmaterial* OPrendererForwardCreateMaterial(OPrenderer* renderer, ui32 pass) {
 	OPrendererForward* forwardRenderer = (OPrendererForward*)renderer->internalPtr;
-	OPmaterialInstance* result = OPNEW(OPmaterialInstance(forwardRenderer->passes[0]));
+	OPmaterial* result = OPNEW(OPmaterial(forwardRenderer->passes[0]));
 	return result;
 }
 
@@ -86,7 +86,7 @@ void OPrendererForwardBegin(OPrenderer* renderer) {
 
 }
 
-void OPrendererForwardSubmitModel(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterialInstance** material) {
+void OPrendererForwardSubmitModel(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterial** material) {
 	OPrendererForward* forwardRenderer = (OPrendererForward*)renderer->internalPtr;
 	forwardRenderer->renderBucket[1].Submit(model, world, material, true);
 	if (shadowed) {
@@ -94,7 +94,7 @@ void OPrendererForwardSubmitModel(OPrenderer* renderer, OPmodel* model, OPmat4* 
 	}
 }
 
-void OPrendererForwardSubmitModelMaterial(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterialInstance* material) {
+void OPrendererForwardSubmitModelMaterial(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterial* material) {
 	OPrendererForward* forwardRenderer = (OPrendererForward*)renderer->internalPtr;
 	forwardRenderer->renderBucket[1].Submit(model, world, material);
 	if (shadowed) {
@@ -102,7 +102,7 @@ void OPrendererForwardSubmitModelMaterial(OPrenderer* renderer, OPmodel* model, 
 	}
 }
 
-void OPrendererForwardSubmitMeshMaterial(OPrenderer* renderer, OPmesh* mesh, OPmat4* world, bool shadowed, OPmaterialInstance* material) {
+void OPrendererForwardSubmitMeshMaterial(OPrenderer* renderer, OPmesh* mesh, OPmat4* world, bool shadowed, OPmaterial* material) {
 	OPrendererForward* forwardRenderer = (OPrendererForward*)renderer->internalPtr;
 	forwardRenderer->renderBucket[1].Submit(mesh, world, material);
 	if (shadowed) {
@@ -154,7 +154,7 @@ void OPrendererForwardPresent(OPrenderer* renderer) {
 
 OPrendererForward* OPrendererForward::Setup() {
 	rendererRoot._Init = OPrendererForwardInit;
-	rendererRoot._CreateMaterialInstance = OPrendererForwardCreateMaterialInstance;
+	rendererRoot._CreateMaterial = OPrendererForwardCreateMaterial;
 	rendererRoot._GetMaterial = OPrendererForwardGetMaterial;
 	rendererRoot._SetMaterial = OPrendererForwardSetMaterial;
 	rendererRoot._SetMaterialEffect = OPrendererForwardSetMaterialEffect;

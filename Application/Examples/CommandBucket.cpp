@@ -16,7 +16,7 @@ struct CommandBucketExample {
 	OPmat4 world1, world2;
 	OPeffect effect;		// The Effect used to render the Mesh
 	OPmaterial material;
-	OPmaterialInstance materialInstance;
+	OPmaterial materialInstance;
 	OPcam camera;			// The Camera to use in the Effect to render the Mesh
 	OPcam* cameraPtr;
 	ui32 rotation;			// The amount to rotate the Mesh

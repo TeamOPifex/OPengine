@@ -23,14 +23,14 @@ struct OPrenderCommandDrawIndexed
 	OPvertexArray* vertexArray;
 	OPvertexBuffer* vertexBuffer;
 	OPindexBuffer* indexBuffer;
-	OPmaterialInstance* material;
+	OPmaterial* material;
     
 	// Per Mesh Data
     OPmat4* world;
 
 	// Helper/Wrapper functions
-	OPrenderCommandDrawIndexed* Set(OPmesh* mesh, OPmat4* world, OPmaterialInstance* material);
-	static void Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterialInstance** material, bool materialPerMesh);
-	static void Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterialInstance* material);
-	static void Submit(OPrenderCommandBucket* commandBucket, OPmesh* mesh, OPmat4* world, OPmaterialInstance* material);
+	OPrenderCommandDrawIndexed* Set(OPmesh* mesh, OPmat4* world, OPmaterial* material);
+	static void Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterial** material, bool materialPerMesh);
+	static void Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterial* material);
+	static void Submit(OPrenderCommandBucket* commandBucket, OPmesh* mesh, OPmat4* world, OPmaterial* material);
 };

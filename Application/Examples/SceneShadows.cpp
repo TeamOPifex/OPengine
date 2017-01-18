@@ -16,11 +16,11 @@ typedef struct {
 	OPcamFreeFlight camera;
 	OPmaterialPBR materialPBR;
 	OPtextureCube environment;
-	OPmaterialPBRInstance* materialInstance;
-	OPmaterialPBRInstance* materialInstance2;
+	OPmaterialPBR* materialInstance;
+	OPmaterialPBR* materialInstance2;
 
-	OPmaterialInstance* materialInst1;
-	OPmaterialInstance* materialInst2;
+	OPmaterial* materialInst1;
+	OPmaterial* materialInst2;
 	OPeffect DepthTextureEffect;
 	OPtexture2DOLD* DepthTexture;
 } SceneShadowsExample;

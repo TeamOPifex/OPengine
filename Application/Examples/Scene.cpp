@@ -20,11 +20,11 @@ typedef struct {
 	OPcamFreeFlight camera;
 	OPmaterialPBR materialPBR;
 	OPtextureCube environment;
-	OPmaterialPBRInstance* materialInstance;
-	OPmaterialPBRInstance* materialInstance2;
+	OPmaterialPBR* materialInstance;
+	OPmaterialPBR* materialInstance2;
 
-	OPmaterialInstance* materialInst1;
-	OPmaterialInstance* materialInst2;
+	OPmaterial* materialInst1;
+	OPmaterial* materialInst2;
 } SceneExample;
 
 SceneExample sceneExample;
@@ -46,17 +46,17 @@ void ExampleSceneEnter(OPgameState* last) {
 	sceneExample.scene.camera = &sceneExample.camera.Camera;
 
 	sceneExample.materialPBR.Init(OPNEW(OPeffect("Common/PBR.vert", "Common/PBR.frag")));
-	sceneExample.materialPBR.rootMaterial.AddParam("uCamPos", &sceneExample.camera.Camera.pos);
-	sceneExample.renderer->SetMaterial(&sceneExample.materialPBR.rootMaterial, 0);
+	sceneExample.materialPBR.AddParam("uCamPos", &sceneExample.camera.Camera.pos);
+	sceneExample.renderer->SetMaterial(&sceneExample.materialPBR, 0);
 
-	sceneExample.materialInstance = sceneExample.materialPBR.CreateInstance();
+	sceneExample.materialInstance = OPNEW(OPmaterialPBR(sceneExample.materialPBR));
 	sceneExample.materialInstance->SetAlbedoMap("Dagger_Albedo.png");
 	sceneExample.materialInstance->SetSpecularMap("Dagger_Specular.png");
 	sceneExample.materialInstance->SetGlossMap("Dagger_Gloss.png");
 	sceneExample.materialInstance->SetNormalMap("Dagger_Normals.png");
 	sceneExample.materialInstance->SetEnvironmentMap(&sceneExample.environment);
 
-	sceneExample.materialInstance2 = sceneExample.materialPBR.CreateInstance();
+	sceneExample.materialInstance2 = OPNEW(OPmaterialPBR(sceneExample.materialPBR));
 	sceneExample.materialInstance2->SetAlbedoMap("cemetery_floor.png");
 	sceneExample.materialInstance2->SetSpecularMap("Default_Specular.png");
 	sceneExample.materialInstance2->SetGlossMap("Default_Gloss.png");
@@ -67,12 +67,12 @@ void ExampleSceneEnter(OPgameState* last) {
 	sceneExample.model2 = (OPmodel*)OPCMAN.LoadGet("daggerpbr.opm");
 	sceneExample.model3 = (OPmodel*)OPCMAN.LoadGet("ground_block_2x2x2.fbx.opm");
 
-	sceneExample.materialInst1 = &sceneExample.materialInstance->rootMaterialInstance;
-	sceneExample.materialInst2 = &sceneExample.materialInstance2->rootMaterialInstance;
+	//sceneExample.materialInst1 = &sceneExample.materialInstance;
+	//sceneExample.materialInst2 = &sceneExample.materialInstance2;
 
-	sceneExample.model1Entity = sceneExample.scene.Add(sceneExample.model, &sceneExample.materialInst1);
-	sceneExample.model2Entity = sceneExample.scene.Add(sceneExample.model2, &sceneExample.materialInst1);
-	sceneExample.model3Entity = sceneExample.scene.Add(sceneExample.model3, &sceneExample.materialInst2);
+	sceneExample.model1Entity = sceneExample.scene.Add(sceneExample.model, &sceneExample.materialInstance);
+	sceneExample.model2Entity = sceneExample.scene.Add(sceneExample.model2, &sceneExample.materialInstance);
+	sceneExample.model3Entity = sceneExample.scene.Add(sceneExample.model3, &sceneExample.materialInstance2);
 }
 
 OPint ExampleSceneUpdate(OPtimer* time) {
@@ -93,8 +93,8 @@ void ExampleSceneRender(OPfloat delta) {
 
 OPint ExampleSceneExit(OPgameState* next) {
 	OPfree(sceneExample.materialInstance);
-	sceneExample.materialPBR.rootMaterial.effect->Destroy();
-	OPfree(sceneExample.materialPBR.rootMaterial.effect);
+	sceneExample.materialPBR.effect->Destroy();
+	OPfree(sceneExample.materialPBR.effect);
 	sceneExample.scene.Destroy();
 	sceneExample.renderer->Destroy();
 	OPfree(sceneExample.renderer);

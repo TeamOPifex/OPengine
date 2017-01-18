@@ -43,8 +43,8 @@ struct OPrendererEntityDesc {
 struct OPrendererEntity {
 	OPmat4 world;
 	OPmodel* model;
-	OPmaterialInstance** material = NULL;
-	OPmaterialInstance** shadowMaterial = NULL;
+	OPmaterial** material = NULL;
+	OPmaterial** shadowMaterial = NULL;
 	OPrendererEntityDesc desc;
 
 	inline void SetAlbedoMap(const OPchar* texture) {

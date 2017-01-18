@@ -3,15 +3,14 @@
 void OPmaterialPhong::Init(OPeffect* effect) {
 	lightPos = OPvec3(1, 1, 1);
 
-	rootMaterial.Init(effect);
-	rootMaterial.AddParam("uLightPos", &lightPos);
+	rootMaterial->Init(effect);
+	rootMaterial->AddParam("uLightPos", &lightPos);
 }
 
-OPmaterialPhongInstance* OPmaterialPhong::CreateInstance() {
-	return OPNEW(OPmaterialPhongInstance(this));
+OPmaterialPhong* OPmaterialPhong::CreateInstance() {
+	return OPNEW(OPmaterialPhong(this));
 }
-
-inline void OPmaterialPhongInstance::Init(OPmaterialPhong* material) {
-	rootMaterial = material;
-	rootMaterialInstance.Init(&material->rootMaterial);
-}
+//
+//void OPmaterialPhong::Init(OPmaterialPhong* material) {
+//	rootMaterial->Init(&material->rootMaterial);
+//}

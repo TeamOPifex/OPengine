@@ -12,7 +12,7 @@ JS_RETURN_VAL _OPmaterialClearParams(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmaterial* material = JS_GET_ARG_PTR(args, 0, OPmaterial);
-    OPmaterialClearParams(material);
+	material->ClearParams();
 
     JS_RETURN_NULL;
 }
@@ -21,7 +21,7 @@ JS_RETURN_VAL _OPmaterialClearParamsSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmaterial* material = JS_GET_PTR(args.This(), OPmaterial);
-    OPmaterialClearParams(material);
+	material->ClearParams();
 
     JS_RETURN_NULL;
 }
@@ -31,7 +31,7 @@ JS_RETURN_VAL _OPmaterialInit(const JS_ARGS& args) {
 
     OPmaterial* material = JS_GET_ARG_PTR(args, 0, OPmaterial);
     OPeffect* effect = JS_GET_ARG_PTR(args, 1, OPeffect);
-    OPmaterialInit(material, effect);
+	material->Init(effect);
 
     JS_RETURN_NULL;
 }
@@ -51,7 +51,7 @@ JS_RETURN_VAL _OPmaterialAddParam(const JS_ARGS& args) {
 
     OPchar* c = OPstringCopy(*str);
 
-    OPmaterialAddParam(material, matParamType, c, data, count);
+    material->AddParam(matParamType, c, data, count);
 
     JS_RETURN_NULL;
 }
@@ -73,7 +73,7 @@ JS_RETURN_VAL _OPmaterialAddParamSelf(const JS_ARGS& args) {
 
     OPlog("DATA %p", data);
 
-    OPmaterialAddParam(material, matParamType, c, data, count);
+	material->AddParam(matParamType, c, data, count);
 
     JS_RETURN_NULL;
 }
@@ -82,7 +82,7 @@ JS_RETURN_VAL _OPmaterialBind(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmaterial* material = JS_GET_ARG_PTR(args, 0, OPmaterial);
-    OPmaterialBind(material);
+	material->Bind();
 
     JS_RETURN_NULL;
 }
@@ -91,7 +91,7 @@ JS_RETURN_VAL _OPmaterialBindSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPmaterial* material = JS_GET_ARG_PTR(args, 0, OPmaterial);
-    OPmaterialBind(material);
+	material->Bind();
 
     JS_RETURN_NULL;
 }
@@ -112,7 +112,7 @@ JS_RETURN_VAL _OPmaterialCreate(const JS_ARGS& args) {
 
     OPmaterial* material = (OPmaterial*)OPalloc(sizeof(OPmaterial));
     OPeffect* effect = JS_GET_ARG_PTR(args, 0, OPeffect);
-    OPmaterialInit(material, effect);
+    material->Init(effect);
 
     Handle<Object> result = JS_NEW_OBJECT();
     OPmaterialWrapperCreate(result, material);

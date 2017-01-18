@@ -38,8 +38,8 @@ void ExampleMaterialEnter(OPgameState* last) {
 
 	materialExample.LightDirection = OPVEC3_UP;
 
-    OPmaterialInit(&materialExample.Material, &materialExample.Effect);
-    OPmaterialAddParam(&materialExample.Material, "vLightDirection", &materialExample.LightDirection);
+    materialExample.Material.Init(&materialExample.Effect);
+    materialExample.Material.AddParam("vLightDirection", &materialExample.LightDirection);
 
 	OPrenderDepth(1);
 	OPrenderCull(0);

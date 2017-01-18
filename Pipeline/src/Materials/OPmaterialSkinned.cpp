@@ -2,35 +2,25 @@
 #include "./Human/include/Rendering/OPmodel.h"
 
 OPmaterialSkinned* OPmaterialSkinned::Init(OPmaterial* material) {
-	rootMaterial = *material;
+	rootMaterial = material;
 	return this;
 }
 
 OPmaterialSkinned* OPmaterialSkinned::Init(OPeffect* effect) {
-	rootMaterial.Init(effect);
+	rootMaterial->Init(effect);
 	return this;
 }
 
-OPmaterialSkinnedInstance* OPmaterialSkinned::CreateInstance() {
-	return OPNEW(OPmaterialSkinnedInstance(this));
-}
-
-inline void OPmaterialSkinnedInstance::Init(OPmaterialSkinned* material) {
-	rootMaterial = material;
-	rootMaterialInstance.Init(&material->rootMaterial);
-}
-
-
-OPmaterialSkinnedInstance** OPmaterialSkinned::CreateInstances(OPmodel* model, bool setMeta, bool materialPerMesh) {
+OPmaterialSkinned** OPmaterialSkinned::CreateInstances(OPmodel* model, bool setMeta, bool materialPerMesh) {
 	ui32 count = model->meshCount;
 	if (!materialPerMesh) {
 		count = 1;
 	}
 
-	OPmaterialSkinnedInstance** result = OPALLOC(OPmaterialSkinnedInstance*, count);
+	OPmaterialSkinned** result = OPALLOC(OPmaterialSkinned*, count);
 
 	for (ui32 i = 0; i < count; i++) {
-		result[i] = OPNEW(OPmaterialSkinnedInstance(this));
+		result[i] = OPNEW(OPmaterialSkinned(this));
 
 		if (!setMeta) continue;
 

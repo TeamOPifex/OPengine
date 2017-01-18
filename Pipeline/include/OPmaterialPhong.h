@@ -1,24 +1,23 @@
 #pragma once
 
-struct OPmaterialPhong;
-struct OPmaterialPhongInstance;
+class OPmaterialPhong;
 
 #include "./Human/include/Rendering/OPmaterial.h"
 
-struct OPmaterialPhong {
-	OPmaterial rootMaterial;
-	OPeffect* internalEffect = NULL;
+class OPmaterialPhong : public OPmaterial {
+public:
 	OPvec3 lightPos;
 
 	OPmaterialPhong() { }
+	OPmaterialPhong(OPmaterialPhong* material) : OPmaterial(material) { }
 	OPmaterialPhong(OPeffect* effect) {
 		Init(effect);
 	}
 
-	inline OPmaterial* Base() { return &rootMaterial; }
+	inline OPmaterial* Base() { return rootMaterial; }
 
 	inline void SetCamera(OPcam* camera) {
-		rootMaterial.AddParam("uCamPos", &camera->pos);
+		rootMaterial->AddParam("uCamPos", &camera->pos);
 	}	
 	
 	inline void SetLightPos(OPvec3 pos) {
@@ -27,57 +26,49 @@ struct OPmaterialPhong {
 
 	void Init(OPeffect* effect);
 	inline void Init() {
-		internalEffect = OPNEW(OPeffect("Common/Phong.vert", "Common/Phong.frag"));
-		Init(internalEffect);
+		Init(OPNEW(OPeffect("Common/Phong.vert", "Common/Phong.frag")));
 	}
-	OPmaterialPhongInstance* CreateInstance();
-
-	inline void Destroy() {
-		if (internalEffect != NULL) {
-			internalEffect->Destroy();
-			OPfree(internalEffect);
-		}
-		rootMaterial.Destroy();
-	}
+	OPmaterialPhong* CreateInstance();
 };
 
-struct OPmaterialPhongInstance {
-	OPmaterialInstance rootMaterialInstance;
-	OPmaterialPhong* rootMaterial;
-
-	OPmaterialPhongInstance() { }
-	OPmaterialPhongInstance(OPmaterialPhong* material) {
-		Init(material);
-	}
-	OPmaterialPhongInstance(OPmaterialPhongInstance* instance) {
-		Init(instance->rootMaterial);
-
-		OPmaterialParam* param = NULL;
-		param = instance->GetParam("uAlbedoMap");
-		if (param != NULL) {
-			rootMaterialInstance.params[rootMaterialInstance.paramIndex++] = *param;
-		}
-	}
-
-	void Init(OPmaterialPhong* material);
-
-	inline OPmaterialInstance* Base() {
-		return &rootMaterialInstance;
-	}
-
-	inline OPmaterialParam* GetParam(const OPchar* name) {
-		return rootMaterialInstance.GetParam(name);
-	}
-
-	inline void SetAlbedoMap(OPtexture* texture) {
-		rootMaterialInstance.AddParam("uAlbedoMap", texture, 0);
-	}
-
-	inline void SetAlbedoMap(const OPchar* texture) {
-		SetAlbedoMap((OPtexture*)OPCMAN.LoadGet(texture));
-	}
-	
-	inline OPmaterialPhongInstance* Clone() {
-		return OPNEW(OPmaterialPhongInstance(this));
-	}
-};
+//
+//struct OPmaterialPhongInstance {
+//	OPmaterialInstance rootMaterialInstance;
+//	OPmaterialPhong* rootMaterial;
+//
+//	OPmaterialPhongInstance() { }
+//	OPmaterialPhongInstance(OPmaterialPhong* material) {
+//		Init(material);
+//	}
+//	OPmaterialPhongInstance(OPmaterialPhongInstance* instance) {
+//		Init(instance->rootMaterial);
+//
+//		OPmaterialParam* param = NULL;
+//		param = instance->GetParam("uAlbedoMap");
+//		if (param != NULL) {
+//			rootMaterialInstance.params[rootMaterialInstance.paramIndex++] = *param;
+//		}
+//	}
+//
+//	void Init(OPmaterialPhong* material);
+//
+//	inline OPmaterialInstance* Base() {
+//		return &rootMaterialInstance;
+//	}
+//
+//	inline OPmaterialParam* GetParam(const OPchar* name) {
+//		return rootMaterialInstance.GetParam(name);
+//	}
+//
+//	inline void SetAlbedoMap(OPtexture* texture) {
+//		rootMaterialInstance.AddParam("uAlbedoMap", texture, 0);
+//	}
+//
+//	inline void SetAlbedoMap(const OPchar* texture) {
+//		SetAlbedoMap((OPtexture*)OPCMAN.LoadGet(texture));
+//	}
+//	
+//	inline OPmaterialPhongInstance* Clone() {
+//		return OPNEW(OPmaterialPhongInstance(this));
+//	}
+//};

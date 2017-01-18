@@ -21,7 +21,7 @@ void OPrenderCommandDrawIndex(void* data, OPcam* camera) {
 
 }
 
-OPrenderCommandDrawIndexed* OPrenderCommandDrawIndexed::Set(OPmesh* mesh, OPmat4* worldPtr, OPmaterialInstance* materialPtr) {
+OPrenderCommandDrawIndexed* OPrenderCommandDrawIndexed::Set(OPmesh* mesh, OPmat4* worldPtr, OPmaterial* materialPtr) {
 
 	ui64 meshId = 0;// mesh->id << 0;     // 00 - 06 bits
 	ui64 materialId = materialPtr->id << 12;   // 13 - 19 bits
@@ -44,7 +44,7 @@ OPrenderCommandDrawIndexed* OPrenderCommandDrawIndexed::Set(OPmesh* mesh, OPmat4
 	return this;
 }
 
-void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterialInstance** material, bool materialPerMesh) {
+void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterial** material, bool materialPerMesh) {
 
 	if (!materialPerMesh) {
 		Submit(commandBucket, model, world, material[0]);
@@ -62,7 +62,7 @@ void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OP
 	}
 }
 
-void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterialInstance* material) {
+void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterial* material) {
 	if (!material->rootMaterial->visible || !material->visible) {
 		return;
 	}
@@ -73,7 +73,7 @@ void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OP
 	}
 }
 
-void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmesh* mesh, OPmat4* world, OPmaterialInstance* material) {
+void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmesh* mesh, OPmat4* world, OPmaterial* material) {
 	if (!material->rootMaterial->visible || !material->visible) {
 		return;
 	}

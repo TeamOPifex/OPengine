@@ -22,17 +22,17 @@ void OPrendererFullForward::_Init(OPcam** camera, ui32 maxCalls, ui32 maxLights)
 	texturedMaterial.Init(OPNEW(OPeffect("Common/TexturedShadow.vert", "Common/TexturedShadow.frag")));
 	skinnedMaterial.Init(OPNEW(OPeffect("Common/SkinnedShadow.vert", "Common/TexturedShadow.frag")));
 
-	texturedMaterial.rootMaterial.AddParam("uViewShadow", &shadowCamera.view);
-	texturedMaterial.rootMaterial.AddParam("uProjShadow", &shadowCamera.proj);
-	texturedMaterial.rootMaterial.AddParam("uShadow", &depthBuffer.texture, 1);
-	texturedMaterial.rootMaterial.AddParam("uLightPos", &shadowCamera.pos);
-	texturedMaterial.rootMaterial.AddParam("uViewPos", &shadowCamera.pos);
+	texturedMaterial.AddParam("uViewShadow", &shadowCamera.view);
+	texturedMaterial.AddParam("uProjShadow", &shadowCamera.proj);
+	texturedMaterial.AddParam("uShadow", &depthBuffer.texture, 1);
+	texturedMaterial.AddParam("uLightPos", &shadowCamera.pos);
+	texturedMaterial.AddParam("uViewPos", &shadowCamera.pos);
 
-	skinnedMaterial.rootMaterial.AddParam("uViewShadow", &shadowCamera.view);
-	skinnedMaterial.rootMaterial.AddParam("uProjShadow", &shadowCamera.proj);
-	skinnedMaterial.rootMaterial.AddParam("uShadow", &depthBuffer.texture, 1);
-	skinnedMaterial.rootMaterial.AddParam("uLightPos", &shadowCamera.pos);
-	skinnedMaterial.rootMaterial.AddParam("uViewPos", &shadowCamera.pos);
+	skinnedMaterial.AddParam("uViewShadow", &shadowCamera.view);
+	skinnedMaterial.AddParam("uProjShadow", &shadowCamera.proj);
+	skinnedMaterial.AddParam("uShadow", &depthBuffer.texture, 1);
+	skinnedMaterial.AddParam("uLightPos", &shadowCamera.pos);
+	skinnedMaterial.AddParam("uViewPos", &shadowCamera.pos);
 
 }
 
@@ -41,7 +41,7 @@ void OPrendererFullForwardInit(OPrenderer* renderer, OPcam** camera, ui32 maxCal
 	forwardRenderer->_Init(camera, maxCalls, maxLights);
 }
 
-OPmaterialInstance* OPrendererFullForwardCreateMaterialInstance(OPrenderer* renderer, ui32 pass) {
+OPmaterial* OPrendererFullForwardCreateMaterial(OPrenderer* renderer, ui32 pass) {
 	OPrendererFullForward* forwardRenderer = (OPrendererFullForward*)renderer->internalPtr;
 	//OPmaterialInstance* result = OPNEW(OPmaterialInstance(forwardRenderer->passes[0]));
 	//return result;
@@ -84,9 +84,9 @@ void OPrendererFullForwardSetMaterials(OPrenderer* renderer, OPrendererEntity* e
 		if (!entity->desc.materialPerMesh) {
 			count = 1;
 		}
-		entity->material = OPALLOC(OPmaterialInstance*, count);
+		entity->material = OPALLOC(OPmaterial*, count);
 
-		OPmaterialSkinnedInstance** instances = forwardRenderer->skinnedMaterial.CreateInstances(entity->model, true, entity->desc.materialPerMesh);
+		OPmaterialSkinned** instances = forwardRenderer->skinnedMaterial.CreateInstances(entity->model, true, entity->desc.materialPerMesh);
 		for (ui32 i = 0; i < count; i++) {
 			entity->material[i] = instances[i]->Base();
 		}
@@ -101,27 +101,28 @@ void OPrendererFullForwardSetMaterialsSkeleton(OPrenderer* renderer, OPrendererE
 	if (!entity->desc.materialPerMesh) {
 		count = 1;
 	}
-	entity->material = OPALLOC(OPmaterialInstance*, count);
+	entity->material = OPALLOC(OPmaterial*, count);
 
-	OPmaterialSkinnedInstance** instances = forwardRenderer->skinnedMaterial.CreateInstances(entity->model, true, entity->desc.materialPerMesh);
+	OPmaterialSkinned** instances = forwardRenderer->skinnedMaterial.CreateInstances(entity->model, true, entity->desc.materialPerMesh);
 	for (ui32 i = 0; i < count; i++) {
 		entity->material[i] = instances[i]->Base();
 	}
 
-	entity->shadowMaterial = forwardRenderer->shadowSkinnedMaterial.CreateInstances(entity->model, false);
+	// TODO: (garrett) fix material 
+	//entity->shadowMaterial = forwardRenderer->shadowSkinnedMaterial.CreateInstances(entity->model, false);
 
 	if (entity->desc.materialPerMesh) {
 		for (ui32 i = 0; i < entity->model->meshCount; i++) {
-			entity->material[i]->AddBones(skeleton);
+			instances[i]->SetBones(skeleton);
 		}
 	}
 	else {
-		(*entity->material)->AddBones(skeleton);
+		(*instances)->SetBones(skeleton);
 	}
-	(*entity->shadowMaterial)->AddBones(skeleton);
+	//(*entity->shadowMaterial)->AddBones(skeleton);
 }
 
-void OPrendererFullForwardSubmitModel(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterialInstance** material) {
+void OPrendererFullForwardSubmitModel(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterial** material) {
 	OPrendererFullForward* forwardRenderer = (OPrendererFullForward*)renderer->internalPtr;
 	//forwardRenderer->renderBucket[1].Submit(model, world, material, true);
 	//if (shadowed) {
@@ -129,7 +130,7 @@ void OPrendererFullForwardSubmitModel(OPrenderer* renderer, OPmodel* model, OPma
 	//}
 }
 
-void OPrendererFullForwardSubmitModelMaterial(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterialInstance* material) {
+void OPrendererFullForwardSubmitModelMaterial(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterial* material) {
 	OPrendererFullForward* forwardRenderer = (OPrendererFullForward*)renderer->internalPtr;
 	//forwardRenderer->renderBucket[1].Submit(model, world, material);
 	//if (shadowed) {
@@ -137,7 +138,7 @@ void OPrendererFullForwardSubmitModelMaterial(OPrenderer* renderer, OPmodel* mod
 	//}
 }
 
-void OPrendererFullForwardSubmitMeshMaterial(OPrenderer* renderer, OPmesh* mesh, OPmat4* world, bool shadowed, OPmaterialInstance* material) {
+void OPrendererFullForwardSubmitMeshMaterial(OPrenderer* renderer, OPmesh* mesh, OPmat4* world, bool shadowed, OPmaterial* material) {
 	OPrendererFullForward* forwardRenderer = (OPrendererFullForward*)renderer->internalPtr;
 	//forwardRenderer->renderBucket[1].Submit(mesh, world, material);
 	//if (shadowed) {
@@ -185,7 +186,7 @@ void OPrendererFullForwardPresent(OPrenderer* renderer) {
 
 OPrendererFullForward* OPrendererFullForward::Setup() {
 	rendererRoot._Init = OPrendererFullForwardInit;
-	rendererRoot._CreateMaterialInstance = OPrendererFullForwardCreateMaterialInstance;
+	rendererRoot._CreateMaterial = OPrendererFullForwardCreateMaterial;
 	rendererRoot._GetMaterial = OPrendererFullForwardGetMaterial;
 	rendererRoot._SetMaterial = OPrendererFullForwardSetMaterial;
 	rendererRoot._SetMaterialEffect = OPrendererFullForwardSetMaterialEffect;

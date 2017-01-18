@@ -37,13 +37,13 @@ void OPrendererDeferredInit(OPrenderer* renderer, OPcam** camera, ui32 maxCalls,
 	deferredRenderer->lightBuffer.Init(lightBufferDec, &deferredRenderer->gBuffer.depthTexture);
 
 	// Directional light
-	deferredRenderer->defaultLightingMaterialInstance = OPNEW(OPmaterialInstance(deferredRenderer->defaultLightingMaterial));
+	deferredRenderer->defaultLightingMaterialInstance = OPNEW(OPmaterial(deferredRenderer->defaultLightingMaterial));
 
 	// Spot light
 	deferredRenderer->defaultLightingSpotEffect = OPNEW(OPeffect("Common/DeferredLightingSpot.vert", "Common/DeferredLightingSpot.frag"));
 	deferredRenderer->defaultLightingSpotMaterial = OPNEW(OPmaterial(deferredRenderer->defaultLightingSpotEffect));
 	deferredRenderer->defaultLightingSpotMaterial->depth = true;
-	deferredRenderer->defaultLightingSpotMaterialInstance = OPNEW(OPmaterialInstance(deferredRenderer->defaultLightingSpotMaterial));
+	deferredRenderer->defaultLightingSpotMaterialInstance = OPNEW(OPmaterial(deferredRenderer->defaultLightingSpotMaterial));
 	deferredRenderer->defaultLightingSpotMaterialInstance->AddParam("uInvertViewProjection", &deferredRenderer->invertViewProjection);
 	deferredRenderer->defaultLightingSpotMaterialInstance->AddParam("uGbufferDepth", &deferredRenderer->gBuffer.depthTexture, 0);
 	deferredRenderer->defaultLightingSpotMaterialInstance->AddParam("uGbufferPosition", &deferredRenderer->gBuffer.texture[0], 1);
@@ -64,9 +64,9 @@ void OPrendererDeferredInit(OPrenderer* renderer, OPcam** camera, ui32 maxCalls,
 	deferredRenderer->sphereMesh = (OPmodel*)OPCMAN.LoadGet("uvsphere20.opm");
 }
 
-OPmaterialInstance* OPrendererDeferredCreateMaterialInstance(OPrenderer* renderer, ui32 pass) {
+OPmaterial* OPrendererDeferredCreateMaterial(OPrenderer* renderer, ui32 pass) {
 	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
-	OPmaterialInstance* result = OPNEW(OPmaterialInstance(deferredRenderer->passes[0]));
+	OPmaterial* result = OPNEW(OPmaterial(deferredRenderer->passes[0]));
 	return result;
 }
 
@@ -83,7 +83,7 @@ void OPrendererDeferredSetMaterial(OPrenderer* renderer, OPmaterial* material, u
 void OPrendererDeferredSetMaterials(OPrenderer* renderer, OPrendererEntity* entity) {
 	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
 	//if (!entity->desc.animated) {
-		entity->material = (OPmaterialInstance**)OPNEW(OPmaterialInstance(deferredRenderer->passes[0]));
+		entity->material = (OPmaterial**)OPNEW(OPmaterial(deferredRenderer->passes[0]));
 		//entity->shadowMaterial = deferredRenderer->shadowMaterial.CreateInstances(entity->model, entity->desc.materialPerMesh);
 	//}
 	//else {
@@ -112,17 +112,17 @@ void OPrendererDeferredBegin(OPrenderer* renderer) {
 	OPrenderClear(0, 0, 0);
 }
 
-void OPrendererDeferredSubmitModel(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterialInstance** material) {
+void OPrendererDeferredSubmitModel(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterial** material) {
 	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
 	deferredRenderer->renderBucket[0].Submit(model, world, material, true);
 }
 
-void OPrendererDeferredSubmitModelMaterial(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterialInstance* material) {
+void OPrendererDeferredSubmitModelMaterial(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterial* material) {
 	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
 	deferredRenderer->renderBucket[0].Submit(model, world, material);
 }
 
-void OPrendererDeferredSubmitMeshMaterial(OPrenderer* renderer, OPmesh* mesh, OPmat4* world, bool shadowed, OPmaterialInstance* material) {
+void OPrendererDeferredSubmitMeshMaterial(OPrenderer* renderer, OPmesh* mesh, OPmat4* world, bool shadowed, OPmaterial* material) {
 	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
 	deferredRenderer->renderBucket[0].Submit(mesh, world, material);
 }
@@ -240,7 +240,7 @@ void OPrendererDeferredPresent(OPrenderer* renderer) {
 
 OPrendererDeferred* OPrendererDeferred::Setup() {
 	rendererRoot._Init = OPrendererDeferredInit;
-	rendererRoot._CreateMaterialInstance = OPrendererDeferredCreateMaterialInstance;
+	rendererRoot._CreateMaterial = OPrendererDeferredCreateMaterial;
 	rendererRoot._GetMaterial = OPrendererDeferredGetMaterial;
 	rendererRoot._SetMaterial = OPrendererDeferredSetMaterial;
 	rendererRoot._SetMaterials = OPrendererDeferredSetMaterials;

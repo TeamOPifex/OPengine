@@ -37,7 +37,7 @@ struct OPscene {
 
 	void Init(OPrenderer* renderer, ui32 maxEntities, ui32 maxLights);
 	OPrendererEntity* Add(OPmodel* model, OPrendererEntityDesc desc);
-	OPrendererEntity* Add(OPmodel* model, OPmaterialInstance** material, OPrendererEntityDesc desc);
+	OPrendererEntity* Add(OPmodel* model, OPmaterial** material, OPrendererEntityDesc desc);
 	OPrendererEntity* Add(OPmodel* model, OPskeleton* skeleton, OPrendererEntityDesc desc);
 	OPsceneLight* Add(OPlightSpot light);
 	OPrendererEntity* Remove(OPrendererEntity* entity);
@@ -45,8 +45,8 @@ struct OPscene {
 	void Render(OPfloat delta);
 	void Destroy();
 
-	inline OPrendererEntity* Add(OPmodel* model, OPmaterialInstance* material, OPrendererEntityDesc desc) {
+	inline OPrendererEntity* Add(OPmodel* model, OPmaterial* material, OPrendererEntityDesc desc) {
 		desc.materialPerMesh = false;
-		return Add(model, (OPmaterialInstance**)material, desc);
+		return Add(model, (OPmaterial**)material, desc);
 	}
 };

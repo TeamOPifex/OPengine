@@ -140,20 +140,20 @@ typedef struct {
 		GroundMaterials[0].Init(&ShadowEffect);
 
 		ModelMaterials[1].Init(&Effect);
-		OPmaterialAddParam(&ModelMaterials[1], "uViewShadow", &ShadowCamera.view);
-		OPmaterialAddParam(&ModelMaterials[1], "uProjShadow", &ShadowCamera.proj);
-		OPmaterialAddParam(&ModelMaterials[1], "uAlbedoMap", ModelTexture, 0);
-		OPmaterialAddParam(&ModelMaterials[1], "uShadow", &ShadowFrameBuffer.texture, 1);
-		OPmaterialAddParam(&ModelMaterials[1], "uLightPos", &ShadowCamera.pos);
-		OPmaterialAddParam(&ModelMaterials[1], "uViewPos", &Camera.Camera.pos);
+		ModelMaterials[1].AddParam("uViewShadow", &ShadowCamera.view);
+		ModelMaterials[1].AddParam("uProjShadow", &ShadowCamera.proj);
+		ModelMaterials[1].AddParam("uAlbedoMap", ModelTexture, 0);
+		ModelMaterials[1].AddParam("uShadow", &ShadowFrameBuffer.texture, 1);
+		ModelMaterials[1].AddParam("uLightPos", &ShadowCamera.pos);
+		ModelMaterials[1].AddParam("uViewPos", &Camera.Camera.pos);
 
-		OPmaterialInit(&GroundMaterials[1], &Effect2);
-		OPmaterialAddParam(&GroundMaterials[1], "uViewShadow", &ShadowCamera.view);
-		OPmaterialAddParam(&GroundMaterials[1], "uProjShadow", &ShadowCamera.proj);
-		OPmaterialAddParam(&GroundMaterials[1], "uAlbedoMap", ModelTexture, 0);
-		OPmaterialAddParam(&GroundMaterials[1], "uShadow", &ShadowFrameBuffer.texture, 1);
-		OPmaterialAddParam(&GroundMaterials[1], "uLightPos", &ShadowCamera.pos);
-		OPmaterialAddParam(&GroundMaterials[1], "uViewPos", &Camera.Camera.pos);
+		GroundMaterials[1].Init(&Effect2);
+		GroundMaterials[1].AddParam("uViewShadow", &ShadowCamera.view);
+		GroundMaterials[1].AddParam("uProjShadow", &ShadowCamera.proj);
+		GroundMaterials[1].AddParam("uAlbedoMap", ModelTexture, 0);
+		GroundMaterials[1].AddParam("uShadow", &ShadowFrameBuffer.texture, 1);
+		GroundMaterials[1].AddParam("uLightPos", &ShadowCamera.pos);
+		GroundMaterials[1].AddParam("uViewPos", &Camera.Camera.pos);
 
 		Camera.Init(3.0f, 3.0f, OPvec3(0, 5, 5), 0.01f, 50.0f);
 		//ShadowCamera.SetOrtho(OPvec3(-2, 5, -1), OPVEC3_ZERO, OPVEC3_UP, 0.1f, 1000.0f, -10, 10, -10, 10);

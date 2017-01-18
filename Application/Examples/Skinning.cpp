@@ -24,7 +24,7 @@ typedef struct {
 	OPscene scene;
 	OPrendererFullForward rendererForward;
 	OPmaterialSkinned materialSkinned;
-	OPmaterialSkinnedInstance* materialSkinnedInstance;
+	OPmaterialSkinned* materialSkinnedInstance;
 
 	OPvec3 color;
 	f32 colorAmount;

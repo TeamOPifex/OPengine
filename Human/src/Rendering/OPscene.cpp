@@ -17,7 +17,7 @@ void OPscene::Init(OPrenderer* renderer, ui32 maxEntities, ui32 maxLights) {
 	this->renderer->Init(&camera, maxEntities, 1);
 }
 
-OPrendererEntity* OPscene::Add(OPmodel* model, OPmaterialInstance** material, OPrendererEntityDesc desc) {
+OPrendererEntity* OPscene::Add(OPmodel* model, OPmaterial** material, OPrendererEntityDesc desc) {
 	entities[index].world = OPMAT4_IDENTITY;
 	entities[index].model = model;
 	entities[index].material = material;
