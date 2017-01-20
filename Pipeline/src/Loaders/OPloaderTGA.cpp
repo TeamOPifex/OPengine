@@ -134,7 +134,8 @@ i32 OPimageTGALoad(OPstream* str, OPtexture** image) {
 		desc.format = OPtextureFormat::RGBA;
 	}
 	desc.wrap = OPtextureWrap::REPEAT;
-	desc.filter = OPtextureFilter::LINEAR;
+	desc.minfilter = OPtextureFilter::LINEAR;
+	desc.magfilter = OPtextureFilter::LINEAR;
 
 	OPRENDERER_ACTIVE->Texture.Init(tex, desc);
 	tex->SetData(data);

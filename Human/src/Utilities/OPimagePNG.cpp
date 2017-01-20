@@ -101,7 +101,11 @@ i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image, OPtext
 	desc.height = h;
 	desc.format = OPtextureFormat::RGBA;
 	desc.wrap = OPtextureWrap::REPEAT;
-	desc.filter = filter;
+	desc.magfilter = filter;
+	desc.minfilter = filter;
+	//desc.minfilter = OPtextureFilter::LINEAR_MIPMAP;
+	//desc.mipmap = true;
+	//desc.multisampled = true;
 
 	OPRENDERER_ACTIVE->Texture.Init(tex, desc);
 	tex->SetData(data);

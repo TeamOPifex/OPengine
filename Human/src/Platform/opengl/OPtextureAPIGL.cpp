@@ -40,6 +40,7 @@ ui32 OPtextureFilterToGL(OPtextureFilter textureFilter) {
 	switch (textureFilter) {
 	case OPtextureFilter::LINEAR: return GL_LINEAR;
 	case OPtextureFilter::NEAREST: return GL_NEAREST;
+	case OPtextureFilter::LINEAR_MIPMAP: return GL_NEAREST_MIPMAP_LINEAR;
 	}
 	return 0;
 }
@@ -63,7 +64,8 @@ OPtexture* OPtextureGLInit(OPtexture* texture, OPtextureDesc textureDesc, const 
 
 	ui32 textureInternalFormat = OPtextureFormatToGL(textureDesc.internalFormat);
 	ui32 textureFormat = OPtextureFormatToGL(textureDesc.format);
-	ui32 textureFilter = OPtextureFilterToGL(textureDesc.filter);
+	ui32 textureMinFilter = OPtextureFilterToGL(textureDesc.minfilter);
+	ui32 textureMagFilter = OPtextureFilterToGL(textureDesc.magfilter);
 	ui32 textureWrap = OPtextureWrapToGL(textureDesc.wrap);
 	ui32 textureType = OPtextureTypeToGL(textureDesc.textureType);
 
@@ -71,27 +73,40 @@ OPtexture* OPtextureGLInit(OPtexture* texture, OPtextureDesc textureDesc, const 
 		OPGLFN(glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, internalPtr->Handle));
 
 		OPGLFN(glTexImage2D(GL_TEXTURE_2D_MULTISAMPLE, 0, textureInternalFormat, textureDesc.width, textureDesc.height, 0, textureFormat, textureType, pixelData));
-		//
-		//float aniso = 0.0f;
-		//glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
-		//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
+		
+		//OPGLFN(glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_WRAP_S, textureWrap));
+		//OPGLFN(glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_WRAP_T, textureWrap));
+		//OPGLFN(glTexImage2D(GL_TEXTURE_2D_MULTISAMPLE, 0, textureInternalFormat, textureDesc.width, textureDesc.height, 0, textureFormat, textureType, pixelData));
 
-		//OPGLFN(glGenerateMipmap(GL_TEXTURE_2D));
+		float aniso = 0.0f;
+		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
+		glTexParameterf(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
+
+		//OPGLFN(glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MIN_FILTER, textureMinFilter));
+		//OPGLFN(glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAG_FILTER, textureMagFilter));
+
+		if (textureDesc.mipmap) {
+			//OPGLFN(glGenerateMipmap(GL_TEXTURE_2D_MULTISAMPLE));
+		}
 	}
 	else {
 		OPGLFN(glBindTexture(GL_TEXTURE_2D, internalPtr->Handle));
 
-		OPGLFN(glTexImage2D(GL_TEXTURE_2D, 0, textureInternalFormat, textureDesc.width, textureDesc.height, 0, textureFormat, textureType, pixelData));
-		OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, textureFilter));
-		OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, textureFilter));
 		OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWrap));
 		OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWrap));
-
+		OPGLFN(glTexImage2D(GL_TEXTURE_2D, 0, textureInternalFormat, textureDesc.width, textureDesc.height, 0, textureFormat, textureType, pixelData));
+		
 		float aniso = 0.0f;
  		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
 
-		OPGLFN(glGenerateMipmap(GL_TEXTURE_2D));
+		OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, textureMinFilter));
+		OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, textureMagFilter));
+
+		if (textureDesc.mipmap) {
+			OPGLFN(glGenerateMipmap(GL_TEXTURE_2D));
+		}
+
 	}
 
 	return texture;
@@ -104,8 +119,14 @@ OPtexture* OPvertexBufferGLCreate(OPtextureDesc textureDesc, const void* pixelDa
 
 void OPtextureGLSetData(OPtexture* ptr, const void* pixelData) {
 	OPtextureGL* texture = (OPtextureGL*)ptr->internalPtr;
-	OPGLFN(glBindTexture(GL_TEXTURE_2D, texture->Handle));
-	OPGLFN(glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, ptr->textureDesc.width, ptr->textureDesc.height, OPtextureFormatToGL(ptr->textureDesc.format), GL_UNSIGNED_BYTE, pixelData));
+	if (ptr->textureDesc.multisampled) {
+		OPGLFN(glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture->Handle));
+		OPGLFN(glTexSubImage2D(GL_TEXTURE_2D_MULTISAMPLE, 0, 0, 0, ptr->textureDesc.width, ptr->textureDesc.height, OPtextureFormatToGL(ptr->textureDesc.format), GL_UNSIGNED_BYTE, pixelData));
+	}
+	else {
+		OPGLFN(glBindTexture(GL_TEXTURE_2D, texture->Handle));
+		OPGLFN(glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, ptr->textureDesc.width, ptr->textureDesc.height, OPtextureFormatToGL(ptr->textureDesc.format), GL_UNSIGNED_BYTE, pixelData));
+	}
 }
 
 void OPtextureGLDestroy(OPtexture* ptr) {

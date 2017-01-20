@@ -324,9 +324,9 @@ void OPrendererDeferred2::Init() {
 
 	OPtextureDesc gBufferDesc[3];
 	// Position
-	gBufferDesc[0] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGB, OPtextureFormat::RGBA16F, OPtextureWrap::CLAMP_TO_EDGE, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
+	gBufferDesc[0] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGBA, OPtextureFormat::RGBA32F, OPtextureWrap::CLAMP_TO_EDGE, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
 	// Normal
-	gBufferDesc[1] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGB, OPtextureFormat::RGB, OPtextureWrap::CLAMP_TO_EDGE, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
+	gBufferDesc[1] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGB, OPtextureFormat::RGB32F, OPtextureWrap::CLAMP_TO_EDGE, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
 	// Specular
 	gBufferDesc[2] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGB, OPtextureFormat::RGBA, OPtextureWrap::CLAMP_TO_EDGE, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
 	gBuffer.Init(gBufferDesc, 3);
@@ -380,6 +380,7 @@ void OPrendererDeferred2::Init() {
 	//defaultCombineMaterial->AddParam("uGbufferNormal", &gBuffer.texture[1], 1);
 	//defaultCombineMaterial->AddParam("uGbufferAlbedoSpec", &gBuffer.texture[2], 2);
 	//defaultCombineMaterial->AddParam("uLightBuffer", lightBuffer.texture, 3);
+	defaultCombineMaterial->AddParam("uUseSSAO", &useSSAO);
 	defaultCombineMaterial->depth = false;
 	defaultCombineMaterial->cull = false;
 
@@ -389,6 +390,7 @@ void OPrendererDeferred2::Init() {
 
 
 	defaultSSAOMaterial = OPNEW(OPmaterial(OPNEW(OPeffect("Common/ssao.vert", "Common/ssao.frag"))));
+	defaultSSAOMaterial->AddParam("radius", &radius);
 	//defaultSSAOMaterial->AddParam("uGbufferPosition", &gBuffer.texture[0], 0);
 	//defaultSSAOMaterial->AddParam("uGbufferNormal", &gBuffer.texture[1], 1);
 	//defaultSSAOMaterial->AddParam("uNoise", &noiseTexture, 2);
@@ -432,45 +434,48 @@ void OPrendererDeferred2::End() {
 
 
 		// SSAO pass
-		ssaoBuffer.Bind();
-		OPrenderCullMode(OPcullFace::FRONT);
-		OPrenderDepth(false);
-		OPrenderDepthWrite(false);
-		OPrenderClear(0, 0, 0, 1);
-		defaultSSAOMaterial->Bind();	
-		
-		OPeffectSet("uGbufferPosition", &gBuffer.texture[0], 0);
-		OPeffectSet("uGbufferNormal", &gBuffer.texture[1], 1);
-		OPeffectSet("uNoise", noiseTexture, 2);
-		char buffer[64];
-		for (ui32 i = 0; i < 64; i++) {
-			sprintf(buffer, "samples[%d]", i);
-			OPeffectSet(buffer, &ssaoKernel[i]);
+		if (useSSAO) {
+			ssaoBuffer.Bind();
+			OPrenderCullMode(OPcullFace::FRONT);
+			OPrenderDepth(false);
+			OPrenderDepthWrite(false);
+			OPrenderClear(0, 0, 0, 1);
+			defaultSSAOMaterial->Bind();
+
+			OPeffectSet("uGbufferPosition", &gBuffer.texture[0], 0);
+			OPeffectSet("uGbufferNormal", &gBuffer.texture[1], 1);
+			OPeffectSet("uNoise", noiseTexture, 2);
+			OPeffectSet("uGbufferDepth", &gBuffer.depthTexture, 3);
+			char buffer[64];
+			for (ui32 i = 0; i < 64; i++) {
+				sprintf(buffer, "samples[%d]", i);
+				OPeffectSet(buffer, &ssaoKernel[i]);
+			}
+
+			OPRENDERER_ACTIVE->ShaderUniform.SetMat4(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE->GetUniform("uProj"), &(*camera)->proj);
+			OPrenderDepth(0);
+			OPrenderCull(false);
+			quadMesh->Bind();
+			OPrenderDrawBufferIndexed(0);
+			ssaoBuffer.Unbind();
+
+
+			// Blur SSAO pass
+			ssaoBlurBuffer.Bind();
+			OPrenderCullMode(OPcullFace::FRONT);
+			OPrenderDepth(false);
+			OPrenderDepthWrite(false);
+			OPrenderClear(0, 0, 0, 1);
+			defaultSSAOBlurMaterial->Bind();
+
+			OPeffectSet("uSSAOBuffer", ssaoBuffer.texture, 0);
+
+			OPrenderDepth(0);
+			OPrenderCull(false);
+			quadMesh->Bind();
+			OPrenderDrawBufferIndexed(0);
+			ssaoBlurBuffer.Unbind();
 		}
-
-		OPRENDERER_ACTIVE->ShaderUniform.SetMat4(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE->GetUniform("uProj"), &(*camera)->proj);
-		OPrenderDepth(0);
-		OPrenderCull(false);
-		quadMesh->Bind();
-		OPrenderDrawBufferIndexed(0);
-		ssaoBuffer.Unbind();
-
-
-		// Blur SSAO pass
-		ssaoBlurBuffer.Bind();
-		OPrenderCullMode(OPcullFace::FRONT);
-		OPrenderDepth(false);
-		OPrenderDepthWrite(false);
-		OPrenderClear(0,0,0,1);
-		defaultSSAOBlurMaterial->Bind();
-
-		OPeffectSet("uSSAOBuffer", ssaoBuffer.texture, 0);
-
-		OPrenderDepth(0);
-		OPrenderCull(false);
-		quadMesh->Bind();
-		OPrenderDrawBufferIndexed(0);
-		ssaoBlurBuffer.Unbind();
 	}
 
 	// DRAW LIGHTS

@@ -4,5 +4,6 @@ enum struct OPtextureFilter
 {
 	NONE = 0,
 	LINEAR,
-	NEAREST
+	NEAREST,
+	LINEAR_MIPMAP
 };

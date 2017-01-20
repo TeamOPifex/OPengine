@@ -55,7 +55,8 @@ OPint OPimageBMPLoad(OPstream* str, OPtexture** image) {
 		desc.internalFormat = OPtextureFormat::RGBA;
 	}
 	desc.wrap = OPtextureWrap::REPEAT;
-	desc.filter = OPtextureFilter::LINEAR;
+	desc.minfilter = OPtextureFilter::LINEAR;
+	desc.magfilter = OPtextureFilter::LINEAR;
 
 	OPRENDERER_ACTIVE->Texture.Init(tex, desc);
 	tex->SetData(data);

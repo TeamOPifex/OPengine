@@ -27,7 +27,8 @@ OPint OPloaderTextureFromStreamOffset(OPstream* str, OPuint offset, OPtexture** 
 	desc.height = h;
 	desc.format = OPtextureFormat::RGBA;
 	desc.wrap = OPtextureWrap::REPEAT;
-	desc.filter = filter;
+	desc.minfilter = filter;
+	desc.magfilter = filter;
 
 	OPRENDERER_ACTIVE->Texture.Init(tex, desc);
 	tex->SetData(data);

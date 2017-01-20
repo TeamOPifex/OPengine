@@ -163,6 +163,10 @@ void ExampleDeferredSceneRender(OPfloat delta) {
 	if (ImGui::Button("SSAO Blur")) {
 		deferredSceneExample.state = 7;
 	}
+	if (ImGui::Button("Use SSAO")) {
+		deferredSceneExample.renderer2.useSSAO = !deferredSceneExample.renderer2.useSSAO;
+	}
+	ImGui::InputFloat("SSAO Radius", &deferredSceneExample.renderer2.radius, 0.1, 1.0);
 	ImGui::ColorEdit3("Light Color", (float*)&light->light.color);
 	ImGui::SliderFloat("Radius", &light->light.radius, 0, 10);
 	ImGui::End();

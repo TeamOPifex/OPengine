@@ -65,6 +65,8 @@ public:
 	OPmat4 invertViewProjection;
 	OPlightSpot* spotLights;
 	ui32 spotLightsInd;
+	bool useSSAO = true;
+	f32 radius = 1.0f;
 
 
 	void Init();

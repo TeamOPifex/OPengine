@@ -12,6 +12,8 @@ OPframeBuffer* OPframeBufferAPIGLInitDepth(OPframeBuffer* framebuffer, OPtexture
 	OPGLFN(glGenFramebuffers(1, &frameBufferGL->Handle));
 
 	// Texture Buffer
+	textureDesc.mipmap = false;
+	textureDesc.multisampled = false;
 	framebuffer->texture = OPRENDERER_ACTIVE->Texture.Create(textureDesc);
 	OPtextureGL* textureGL = (OPtextureGL*)framebuffer->texture->internalPtr;
 	OPGLFN(glBindFramebuffer(GL_FRAMEBUFFER, frameBufferGL->Handle));
@@ -32,13 +34,16 @@ OPframeBuffer* OPframeBufferAPIGLInitDepth(OPframeBuffer* framebuffer, OPtexture
 }
 
 OPframeBuffer* OPframeBufferAPIGLInit(OPframeBuffer* framebuffer, OPtextureDesc textureDesc) {
-	OPtextureDesc depthDesc;
-	depthDesc.filter = OPtextureFilter::NEAREST;
+	OPtextureDesc depthDesc = OPtextureDesc();
+	depthDesc.minfilter = OPtextureFilter::NEAREST;
+	depthDesc.magfilter = OPtextureFilter::NEAREST;
 	depthDesc.format = OPtextureFormat::DEPTH;
 	depthDesc.internalFormat = OPtextureFormat::DEPTH32F;
 	depthDesc.width = textureDesc.width;
 	depthDesc.height = textureDesc.height;
 	depthDesc.textureType = OPtextureType::BYTE;
+	depthDesc.multisampled = false;
+	depthDesc.mipmap = false;
 
 	OPtexture depthTexture;
 	OPRENDERER_ACTIVE->Texture.Init(&depthTexture, depthDesc);
@@ -81,13 +86,16 @@ OPframeBuffer* OPframeBufferAPIGLInitMultiDepth(OPframeBuffer* framebuffer, OPte
 }
 
 OPframeBuffer* OPframeBufferAPIGLInitMulti(OPframeBuffer* framebuffer, OPtextureDesc* textureDesc, ui32 count) {
-	OPtextureDesc depthDesc;
-	depthDesc.filter = OPtextureFilter::NEAREST;
+	OPtextureDesc depthDesc = OPtextureDesc();
+	depthDesc.minfilter = OPtextureFilter::NEAREST;
+	depthDesc.magfilter = OPtextureFilter::NEAREST;
 	depthDesc.format = OPtextureFormat::DEPTH;
 	depthDesc.internalFormat = OPtextureFormat::DEPTH32F;
 	depthDesc.width = textureDesc[0].width;
 	depthDesc.height = textureDesc[0].height;
 	depthDesc.textureType = OPtextureType::BYTE;
+	depthDesc.multisampled = false;
+	depthDesc.mipmap = false;
 
 	OPtexture depthTexture;
 	OPRENDERER_ACTIVE->Texture.Init(&depthTexture, depthDesc);
