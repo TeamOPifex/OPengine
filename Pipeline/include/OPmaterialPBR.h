@@ -26,13 +26,14 @@ public:
 		rootMaterial->AddParam("uPreintegratedFG", (OPtexture*)OPCMAN.LoadGet("PreintegratedFG.png"), 6);
 	}
 
-	void Init(OPeffect* effect);
+	OPmaterialPBR* Init(OPeffect* effect);
+	OPmaterialPBR* Init(OPmaterial* material);
 
 	inline void SetCamera(OPcam* camera) {
 		rootMaterial->AddParam("uCamPos", &camera->pos);
 	}
 
-	inline OPmaterialPBR** CreateInstances(OPmodel* model, bool materialPerMesh) {
+	inline OPmaterialPBR* CreateInstances(OPmodel* model, bool materialPerMesh) {
 		// TODO: (garrett) fill in
 		return NULL;
 	}

@@ -71,7 +71,7 @@ struct OPrenderCommandBucket {
 	void Sort();
 	void Flush(bool keep);
 	void Render();
-	void Submit(OPmodel* model, OPmat4* world, OPmaterial** material, bool materialPerMesh);
+	void Submit(OPmodel* model, OPmat4* world, OPmaterial* material, bool materialPerMesh);
 	void Submit(OPmodel* model, OPmat4* world, OPmaterial* material);
 	void Submit(OPmesh* mesh, OPmat4* world, OPmaterial* material);
 	void Destroy();

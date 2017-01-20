@@ -17,14 +17,15 @@ public:
 	inline OPmaterial* Base() { return rootMaterial; }
 
 	inline void SetCamera(OPcam* camera) {
-		rootMaterial->AddParam("uCamPos", &camera->pos);
+		AddParam("uCamPos", &camera->pos);
 	}	
 	
 	inline void SetLightPos(OPvec3 pos) {
 		lightPos = pos;
 	}
 
-	void Init(OPeffect* effect);
+	OPmaterialPhong* Init(OPeffect* effect);
+	OPmaterialPhong* Init(OPmaterial* material);
 	inline void Init() {
 		Init(OPNEW(OPeffect("Common/Phong.vert", "Common/Phong.frag")));
 	}

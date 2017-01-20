@@ -17,6 +17,13 @@ OPwindow mainWindow;
 void ApplicationInit() {
 	TIMED_BLOCK;
 
+	OPcam _camera;
+	_camera.SetPerspective(OPvec3(0, 0, 5), OPvec3(0, 0, 0), OPvec3(0, 1, 0), 0.1f, 50.0f, 45.0f, 1920.0f / 1080.0f);
+
+	OPmat4 _proj = _camera.proj;
+	OPmat4 _view = _camera.view;
+
+
 	//OPlogToFile("output.txt");
 
 	OPCMAN.Init(OPIFEX_ASSETS);
@@ -38,7 +45,7 @@ void ApplicationInit() {
 
 	OPrenderSetup();
 	OPwindowSystemInit();
-	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, 1280, 720));
+	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, 1920, 1080));
 	OPrenderInit(&mainWindow);
 
 	OPGAMEPADS.SetDeadzones(0.2f);

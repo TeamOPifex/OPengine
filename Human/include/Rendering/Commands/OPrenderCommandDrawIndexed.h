@@ -30,7 +30,7 @@ struct OPrenderCommandDrawIndexed
 
 	// Helper/Wrapper functions
 	OPrenderCommandDrawIndexed* Set(OPmesh* mesh, OPmat4* world, OPmaterial* material);
-	static void Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterial** material, bool materialPerMesh);
+	static void Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterial* material, bool materialPerMesh);
 	static void Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterial* material);
 	static void Submit(OPrenderCommandBucket* commandBucket, OPmesh* mesh, OPmat4* world, OPmaterial* material);
 };

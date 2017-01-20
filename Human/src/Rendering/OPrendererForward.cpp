@@ -86,7 +86,7 @@ void OPrendererForwardBegin(OPrenderer* renderer) {
 
 }
 
-void OPrendererForwardSubmitModel(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterial** material) {
+void OPrendererForwardSubmitModel(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterial* material) {
 	OPrendererForward* forwardRenderer = (OPrendererForward*)renderer->internalPtr;
 	forwardRenderer->renderBucket[1].Submit(model, world, material, true);
 	if (shadowed) {
@@ -114,7 +114,7 @@ void OPrendererForwardSubmitRendererEntity(OPrenderer* renderer, OPrendererEntit
 	OPrendererForward* forwardRenderer = (OPrendererForward*)renderer->internalPtr;
 	forwardRenderer->renderBucket[1].Submit(rendererEntity->model, &rendererEntity->world, rendererEntity->material, rendererEntity->desc.materialPerMesh);
 	if (rendererEntity->desc.shadowEmitter) {
-		forwardRenderer->renderBucket[0].Submit(rendererEntity->model, &rendererEntity->world, rendererEntity->shadowMaterial == NULL ? rendererEntity->shadowMaterial : &forwardRenderer->defaultShadowMaterialInstance, false);
+		forwardRenderer->renderBucket[0].Submit(rendererEntity->model, &rendererEntity->world, rendererEntity->shadowMaterial == NULL ? rendererEntity->shadowMaterial : forwardRenderer->defaultShadowMaterialInstance, false);
 	}
 }
 
@@ -134,7 +134,7 @@ void OPrendererForwardPresent(OPrenderer* renderer) {
 		OPrenderDepthWrite(true);
 
 		OPcam** start = forwardRenderer->renderBucket[0].camera;
-		OPcam* tmp = &forwardRenderer->shadowCamera;;
+		OPcam* tmp = &forwardRenderer->shadowCamera;
 		forwardRenderer->renderBucket[0].camera = &tmp;
 
 		forwardRenderer->renderBucket[0].Sort();

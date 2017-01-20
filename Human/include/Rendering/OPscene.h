@@ -25,7 +25,7 @@ struct OPsceneLight {
 };
 
 struct OPscene {
-	OPrenderer* renderer;
+	OPrenderer2* renderer;
 	OPrendererEntity* entities;
 	ui32 count;
 	ui32 index;
@@ -33,20 +33,17 @@ struct OPscene {
 	ui32 lightCount;
 	ui32 lightIndex;
 	OPcam* camera;
+	OPcam* shadowCamera;
 	OPcam internalCamera;
+	OPcam internalShadowCamera;
 
-	void Init(OPrenderer* renderer, ui32 maxEntities, ui32 maxLights);
+	void Init(OPrenderer2* renderer, ui32 maxEntities, ui32 maxLights);
 	OPrendererEntity* Add(OPmodel* model, OPrendererEntityDesc desc);
-	OPrendererEntity* Add(OPmodel* model, OPmaterial** material, OPrendererEntityDesc desc);
+	OPrendererEntity* Add(OPmodel* model, OPmaterial* material, OPrendererEntityDesc desc);
 	OPrendererEntity* Add(OPmodel* model, OPskeleton* skeleton, OPrendererEntityDesc desc);
 	OPsceneLight* Add(OPlightSpot light);
 	OPrendererEntity* Remove(OPrendererEntity* entity);
 	OPint Update(OPtimer* timer);
 	void Render(OPfloat delta);
 	void Destroy();
-
-	inline OPrendererEntity* Add(OPmodel* model, OPmaterial* material, OPrendererEntityDesc desc) {
-		desc.materialPerMesh = false;
-		return Add(model, (OPmaterial**)material, desc);
-	}
 };

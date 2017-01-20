@@ -83,7 +83,7 @@ void OPrendererDeferredSetMaterial(OPrenderer* renderer, OPmaterial* material, u
 void OPrendererDeferredSetMaterials(OPrenderer* renderer, OPrendererEntity* entity) {
 	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
 	//if (!entity->desc.animated) {
-		entity->material = (OPmaterial**)OPNEW(OPmaterial(deferredRenderer->passes[0]));
+		entity->material = (OPmaterial*)OPNEW(OPmaterial(deferredRenderer->passes[0]));
 		//entity->shadowMaterial = deferredRenderer->shadowMaterial.CreateInstances(entity->model, entity->desc.materialPerMesh);
 	//}
 	//else {
@@ -112,7 +112,7 @@ void OPrendererDeferredBegin(OPrenderer* renderer) {
 	OPrenderClear(0, 0, 0);
 }
 
-void OPrendererDeferredSubmitModel(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterial** material) {
+void OPrendererDeferredSubmitModel(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterial* material) {
 	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
 	deferredRenderer->renderBucket[0].Submit(model, world, material, true);
 }
@@ -144,7 +144,7 @@ void OPrendererDeferredSubmitLight(OPrenderer* renderer, OPlightSpot* light) {
 void OPrendererDeferredEnd(OPrenderer* renderer) {
 	OPrendererDeferred* deferredRenderer = (OPrendererDeferred*)renderer->internalPtr;
 
-	// DRAW SCENE 
+	// DRAW SCENE
 	{
 		OPrenderBlend(false);
 		deferredRenderer->renderBucket[0].Sort();
@@ -216,6 +216,7 @@ void OPrendererDeferredPresent(OPrenderer* renderer) {
 		OPrenderCullMode(OPcullFace::FRONT);
 		OPrenderDepth(false);
 		OPrenderDepthWrite(false);
+		//OPrenderResetViewport();
 
 		// Draw fullscreen quad to combine
 		deferredRenderer->defaultCombineEffect->Bind();
@@ -304,4 +305,232 @@ void OPrendererDeferred::Destroy() {
 
 	renderBucket[0].Destroy();
 	renderBucket[1].Destroy();
+}
+
+#include "./Math/include/OPtween.h"
+
+void OPrendererDeferred2::Init() {
+	defaultGBufferMaterial = OPNEW(OPmaterial(OPNEW(OPeffect("Common/GBuffer.vert", "Common/GBuffer.frag"))));
+	defaultLightingMaterial = OPNEW(OPmaterial(OPNEW(OPeffect("Common/DeferredLighting.vert", "Common/DeferredLighting.frag"))));
+	defaultLightingMaterial->depth = false;
+	defaultLightingMaterial->cull = false;
+
+	passes = OPNEW(OPrendererPass, 2);
+
+	passes[0].renderBucket.Init(1000, camera);
+	passes[0].defaultMaterial = defaultGBufferMaterial;
+	passes[1].renderBucket.Init(1000, shadowCamera);
+	passes[1].defaultMaterial = defaultGBufferMaterial;
+
+	OPtextureDesc gBufferDesc[3];
+	// Position
+	gBufferDesc[0] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGB, OPtextureFormat::RGBA16F, OPtextureWrap::CLAMP_TO_EDGE, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
+	// Normal
+	gBufferDesc[1] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGB, OPtextureFormat::RGB, OPtextureWrap::CLAMP_TO_EDGE, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
+	// Specular
+	gBufferDesc[2] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGB, OPtextureFormat::RGBA, OPtextureWrap::CLAMP_TO_EDGE, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
+	gBuffer.Init(gBufferDesc, 3);
+
+
+	OPtextureDesc ssaoDesc = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGB, OPtextureFormat::RED, OPtextureWrap::CLAMP_TO_EDGE, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
+	//OPtextureDesc ssaoDesc = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGB, OPtextureFormat::RGB32F, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
+	ssaoBuffer.Init(ssaoDesc);
+	//OPtextureDesc ssaoBlurDesc = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGB, OPtextureFormat::RED, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
+	ssaoBlurBuffer.Init(ssaoDesc);
+
+	// Sample Kernel
+	for (ui32 i = 0; i < 64; i++) {
+		OPvec3 sample = OPvec3(
+			OPrandom() * 2.0 - 1.0,
+			OPrandom() * 2.0 - 1.0,
+			OPrandom()
+		);
+
+		sample.Norm();
+		sample *= OPrandom();
+
+		OPfloat scale = i / 64.0f;
+		scale = 0.1 + (scale * scale) * 0.9f; // linear lerp
+		sample *= scale;
+		ssaoKernel[i] = sample;
+	}
+
+	OPvec3 ssaoNoise[16];
+	for (ui32 i = 0; i < 16; i++) {
+		OPvec3 noise = OPvec3(
+			OPrandom() * 2.0 - 1.0,
+			OPrandom() * 2.0 - 1.0,
+			0
+		);
+
+		ssaoNoise[i] = noise;
+	}
+
+	OPtextureDesc desc = OPtextureDesc(4,4, OPtextureFormat::RGB, OPtextureFormat::RGB16F, OPtextureWrap::REPEAT, OPtextureFilter::NEAREST, OPtextureType::FLOAT);	
+	//OPRENDERER_ACTIVE->Texture.Init(&noiseTexture, desc);
+	noiseTexture = OPRENDERER_ACTIVE->Texture.Create(desc, &ssaoNoise[0]);
+
+
+
+	OPtextureDesc lightBufferDec = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGBA, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST, OPtextureType::BYTE);
+	lightBuffer.Init(lightBufferDec, &gBuffer.depthTexture);
+
+	defaultCombineMaterial = OPNEW(OPmaterial(OPNEW(OPeffect("Common/DeferredCombine.vert", "Common/DeferredCombine.frag"))));
+	//defaultCombineMaterial->AddParam("uGbufferPosition", &gBuffer.texture[0], 0);
+	//defaultCombineMaterial->AddParam("uGbufferNormal", &gBuffer.texture[1], 1);
+	//defaultCombineMaterial->AddParam("uGbufferAlbedoSpec", &gBuffer.texture[2], 2);
+	//defaultCombineMaterial->AddParam("uLightBuffer", lightBuffer.texture, 3);
+	defaultCombineMaterial->depth = false;
+	defaultCombineMaterial->cull = false;
+
+	quadMesh = OPquadCreate(1.0f, 1.0f, OPvec2(0,1), OPvec2(1,0));
+	sphereMesh = (OPmodel*)OPCMAN.LoadGet("uvsphere20.opm");
+
+
+
+	defaultSSAOMaterial = OPNEW(OPmaterial(OPNEW(OPeffect("Common/ssao.vert", "Common/ssao.frag"))));
+	//defaultSSAOMaterial->AddParam("uGbufferPosition", &gBuffer.texture[0], 0);
+	//defaultSSAOMaterial->AddParam("uGbufferNormal", &gBuffer.texture[1], 1);
+	//defaultSSAOMaterial->AddParam("uNoise", &noiseTexture, 2);
+	//defaultSSAOMaterial->AddParam("uGbufferDepth", &gBuffer.depthTexture, 3);
+	//defaultSSAOMaterial->AddParam("samples[0]", &ssaoKernel[0]);
+	//defaultSSAOMaterial->AddParam(OPmaterialParamType::VECTOR3, "samples", &ssaoKernel, 64);
+	defaultSSAOBlurMaterial = OPNEW(OPmaterial(OPNEW(OPeffect("Common/ssao.vert", "Common/ssao_blur.frag"))));
+	//defaultSSAOBlurMaterial->AddParam("uSSAOBuffer", ssaoBuffer.texture, 0);
+
+	char buffer[64];
+	for (ui32 i = 0; i < 64; i++) {
+		sprintf(buffer, "samples[%d]", i);
+		OPRENDERER_ACTIVE->Effect.AddUniform(defaultSSAOMaterial->effect, buffer);
+	}
+}
+
+void OPrendererDeferred2::Begin() {
+	gBuffer.Bind();
+	OPrenderClear(0, 0, 0);
+}
+
+void OPrendererDeferred2::Submit(OPrendererEntity* rendererEntity) {
+	passes[0].renderBucket.Submit(rendererEntity->model, &rendererEntity->world, rendererEntity->material, rendererEntity->desc.materialPerMesh);
+}
+
+OPmaterial* OPrendererDeferred2::GetMaterial(ui32 pass) {
+	return passes[0].defaultMaterial;
+}
+
+void OPrendererDeferred2::End() {
+	// DRAW SCENE
+	{
+		OPrenderBlend(false);
+		// Geometry pass
+		passes[0].renderBucket.Sort();
+		passes[0].renderBucket.Flush(false);
+
+		gBuffer.Unbind();
+
+
+
+
+		// SSAO pass
+		ssaoBuffer.Bind();
+		OPrenderCullMode(OPcullFace::FRONT);
+		OPrenderDepth(false);
+		OPrenderDepthWrite(false);
+		OPrenderClear(0, 0, 0, 1);
+		defaultSSAOMaterial->Bind();	
+		
+		OPeffectSet("uGbufferPosition", &gBuffer.texture[0], 0);
+		OPeffectSet("uGbufferNormal", &gBuffer.texture[1], 1);
+		OPeffectSet("uNoise", noiseTexture, 2);
+		char buffer[64];
+		for (ui32 i = 0; i < 64; i++) {
+			sprintf(buffer, "samples[%d]", i);
+			OPeffectSet(buffer, &ssaoKernel[i]);
+		}
+
+		OPRENDERER_ACTIVE->ShaderUniform.SetMat4(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE->GetUniform("uProj"), &(*camera)->proj);
+		OPrenderDepth(0);
+		OPrenderCull(false);
+		quadMesh->Bind();
+		OPrenderDrawBufferIndexed(0);
+		ssaoBuffer.Unbind();
+
+
+		// Blur SSAO pass
+		ssaoBlurBuffer.Bind();
+		OPrenderCullMode(OPcullFace::FRONT);
+		OPrenderDepth(false);
+		OPrenderDepthWrite(false);
+		OPrenderClear(0,0,0,1);
+		defaultSSAOBlurMaterial->Bind();
+
+		OPeffectSet("uSSAOBuffer", ssaoBuffer.texture, 0);
+
+		OPrenderDepth(0);
+		OPrenderCull(false);
+		quadMesh->Bind();
+		OPrenderDrawBufferIndexed(0);
+		ssaoBlurBuffer.Unbind();
+	}
+
+	// DRAW LIGHTS
+	{
+		lightBuffer.Bind();
+		f32 ambient = 0.0;
+		OPrenderClearColor(ambient, ambient, ambient, 1.0);
+		lightBuffer.Unbind();
+
+	}
+}
+
+void OPrendererDeferred2::Present() {
+	OPrenderCullMode(OPcullFace::FRONT);
+	OPrenderDepth(false);
+	OPrenderDepthWrite(false);
+
+	defaultCombineMaterial->Bind();
+	quadMesh->Bind();
+	OPrenderDepth(0);
+	OPrenderCull(false);
+
+	OPmat4 world = OPMAT4_IDENTITY;
+
+	//OPeffectSet("uGbufferPosition", &gBuffer.texture[0], 0);
+	//OPeffectSet("uGbufferNormal", &gBuffer.texture[1], 1);
+	OPeffectSet("uGbufferAlbedoSpec", &gBuffer.texture[2], 2);
+	OPeffectSet("uLightBuffer", lightBuffer.texture, 3);
+	OPeffectSet("uSSAOBuffer", ssaoBlurBuffer.texture, 3);
+	OPeffectSet("uWorld", 1, &world);
+
+	OPrenderDrawBufferIndexed(0);
+
+	OPrenderCullMode(OPcullFace::FRONT);
+	OPrenderDepth(true);
+	OPrenderDepthWrite(true);
+}
+
+void OPrendererDeferred2::Destroy() {
+	defaultGBufferMaterial->effect->Free();
+	defaultGBufferMaterial->Destroy();
+	OPfree(defaultGBufferMaterial);
+	defaultLightingMaterial->effect->Free();
+	defaultLightingMaterial->Destroy();
+	OPfree(defaultLightingMaterial);
+	defaultLightingSpotMaterial->effect->Free();
+	defaultLightingSpotMaterial->Destroy();
+	OPfree(defaultLightingSpotMaterial);
+	defaultCombineMaterial->effect->Free();
+	defaultCombineMaterial->Destroy();
+	OPfree(defaultCombineMaterial);
+
+}
+
+void OPrendererDeferred2::SetCamera(OPcam** camera) {
+	SetCamera(camera, 0);
+	SetCamera(camera, 1);
+}
+
+void OPrendererDeferred2::SetCamera(OPcam** camera, ui32 pass) {
+	this->camera = camera;
+	passes[pass].renderBucket.camera = camera;
 }

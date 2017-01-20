@@ -10,6 +10,7 @@ class OPmaterial;
 #include "./Human/include/Rendering/Skinning/OPskeleton.h"
 #include "./Core/include/Assert.h"
 struct OPmodel;
+struct OPrendererEntity;
 
 
 extern OPuint OPMATERIAL_GLOBAL_ID;
@@ -37,13 +38,16 @@ public:
 		Init(effect);
 	}
 
-	void Init(OPeffect* effect);
-	void Init(OPmaterial* base);
-	void AddParam(OPmaterialParamType paramType, const OPchar* name, void* data, ui8 count);
-	void Bind(bool onlyParams = false);
-	OPmaterialParam* GetParam(const OPchar* name);
-	void Destroy();
-	OPmaterial** CreateInstances(OPmodel* model, bool materialPerMesh);
+	virtual OPmaterial* Init(OPeffect* effect);
+	virtual OPmaterial* Init(OPmaterial* base);
+	virtual void AddParam(OPmaterialParamType paramType, const OPchar* name, void* data, ui8 count);
+	virtual void Bind(bool onlyParams = false);
+	virtual OPmaterialParam* GetParam(const OPchar* name);
+	virtual bool SetParam(const OPchar* name, void* ptr);
+	virtual void Destroy();
+	virtual OPmaterial* CreateInstances(OPmodel* model, bool materialPerMesh);
+	virtual OPmaterial* CreateInstances(OPrendererEntity* model);
+	virtual void AddParam(OPskeleton* skeleton);
 
 	inline void SetDepth(bool val) {
 		depth = val;

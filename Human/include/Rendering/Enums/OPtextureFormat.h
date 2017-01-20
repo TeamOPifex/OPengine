@@ -12,6 +12,9 @@ enum struct OPtextureFormat
 	DEPTH32F,
 	RGB16F,
 	RGB32F,
+	RGBA16F,
+	RGBA32F,
 	BGRA,
-	BGR
+	BGR,
+	RED
 };

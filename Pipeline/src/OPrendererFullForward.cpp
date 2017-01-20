@@ -84,7 +84,7 @@ void OPrendererFullForwardSetMaterials(OPrenderer* renderer, OPrendererEntity* e
 		if (!entity->desc.materialPerMesh) {
 			count = 1;
 		}
-		entity->material = OPALLOC(OPmaterial*, count);
+		entity->material = OPALLOC(OPmaterial, count);
 
 		OPmaterialSkinned** instances = forwardRenderer->skinnedMaterial.CreateInstances(entity->model, true, entity->desc.materialPerMesh);
 		for (ui32 i = 0; i < count; i++) {
@@ -101,7 +101,7 @@ void OPrendererFullForwardSetMaterialsSkeleton(OPrenderer* renderer, OPrendererE
 	if (!entity->desc.materialPerMesh) {
 		count = 1;
 	}
-	entity->material = OPALLOC(OPmaterial*, count);
+	entity->material = OPALLOC(OPmaterial, count);
 
 	OPmaterialSkinned** instances = forwardRenderer->skinnedMaterial.CreateInstances(entity->model, true, entity->desc.materialPerMesh);
 	for (ui32 i = 0; i < count; i++) {
@@ -122,7 +122,7 @@ void OPrendererFullForwardSetMaterialsSkeleton(OPrenderer* renderer, OPrendererE
 	//(*entity->shadowMaterial)->AddBones(skeleton);
 }
 
-void OPrendererFullForwardSubmitModel(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterial** material) {
+void OPrendererFullForwardSubmitModel(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterial* material) {
 	OPrendererFullForward* forwardRenderer = (OPrendererFullForward*)renderer->internalPtr;
 	//forwardRenderer->renderBucket[1].Submit(model, world, material, true);
 	//if (shadowed) {

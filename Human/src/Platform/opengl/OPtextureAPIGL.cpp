@@ -26,9 +26,12 @@ ui32 OPtextureFormatToGL(OPtextureFormat textureFormat) {
 	case OPtextureFormat::LUMINANCE_ALPHA: return GL_LUMINANCE_ALPHA;
 	case OPtextureFormat::RGB16F: return GL_RGB16F;
 	case OPtextureFormat::RGB32F: return GL_RGB32F;
+	case OPtextureFormat::RGBA16F: return GL_RGBA16F;
+	case OPtextureFormat::RGBA32F: return GL_RGBA32F;
 	case OPtextureFormat::DEPTH: return GL_DEPTH_COMPONENT;
 	case OPtextureFormat::DEPTH16F: return GL_DEPTH_COMPONENT16;
 	case OPtextureFormat::DEPTH32F: return GL_DEPTH_COMPONENT32F;
+	case OPtextureFormat::RED: return GL_RED;
 	}
 	return 0;
 }
@@ -56,7 +59,7 @@ OPtexture* OPtextureGLInit(OPtexture* texture, OPtextureDesc textureDesc, const 
 
 	OPGLFN(glGenTextures(1, &internalPtr->Handle));
 	OPGLFN(glActiveTexture(GL_TEXTURE0 + 0));
-	OPGLFN(glBindTexture(GL_TEXTURE_2D, internalPtr->Handle));
+
 
 	ui32 textureInternalFormat = OPtextureFormatToGL(textureDesc.internalFormat);
 	ui32 textureFormat = OPtextureFormatToGL(textureDesc.format);
@@ -64,17 +67,32 @@ OPtexture* OPtextureGLInit(OPtexture* texture, OPtextureDesc textureDesc, const 
 	ui32 textureWrap = OPtextureWrapToGL(textureDesc.wrap);
 	ui32 textureType = OPtextureTypeToGL(textureDesc.textureType);
 
-	OPGLFN(glTexImage2D(GL_TEXTURE_2D, 0, textureInternalFormat, textureDesc.width, textureDesc.height, 0, textureFormat, textureType, pixelData));
-	OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, textureFilter));
-	OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, textureFilter));
-	OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWrap));
-	OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWrap));
+	if (textureDesc.multisampled) {
+		OPGLFN(glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, internalPtr->Handle));
 
-	float aniso = 0.0f;
-	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
+		OPGLFN(glTexImage2D(GL_TEXTURE_2D_MULTISAMPLE, 0, textureInternalFormat, textureDesc.width, textureDesc.height, 0, textureFormat, textureType, pixelData));
+		//
+		//float aniso = 0.0f;
+		//glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
+		//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
 
-	OPGLFN(glGenerateMipmap(GL_TEXTURE_2D));
+		//OPGLFN(glGenerateMipmap(GL_TEXTURE_2D));
+	}
+	else {
+		OPGLFN(glBindTexture(GL_TEXTURE_2D, internalPtr->Handle));
+
+		OPGLFN(glTexImage2D(GL_TEXTURE_2D, 0, textureInternalFormat, textureDesc.width, textureDesc.height, 0, textureFormat, textureType, pixelData));
+		OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, textureFilter));
+		OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, textureFilter));
+		OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWrap));
+		OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWrap));
+
+		float aniso = 0.0f;
+ 		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
+
+		OPGLFN(glGenerateMipmap(GL_TEXTURE_2D));
+	}
 
 	return texture;
 }
@@ -100,12 +118,23 @@ void OPtextureGLDestroy(OPtexture* ptr) {
 void OPtextureGLBind(OPtexture* ptr, ui32 slot) {
 	OPtextureGL* texture = (OPtextureGL*)ptr->internalPtr;
 	OPGLFN(glActiveTexture(GL_TEXTURE0 + slot));
-	OPGLFN(glBindTexture(GL_TEXTURE_2D, texture->Handle));
+	if (ptr->textureDesc.multisampled) {
+		OPGLFN(glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture->Handle));
+	}
+	else {
+		OPGLFN(glBindTexture(GL_TEXTURE_2D, texture->Handle));
+	}
 }
 
 void OPtextureGLUnbind(OPtexture* ptr, ui32 slot) {
+	OPtextureGL* texture = (OPtextureGL*)ptr->internalPtr;
 	OPGLFN(glActiveTexture(GL_TEXTURE0 + slot));
-	OPGLFN(glBindTexture(GL_TEXTURE_2D, 0));
+	if (ptr->textureDesc.multisampled) {
+		OPGLFN(glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0));
+	}
+	else {
+		OPGLFN(glBindTexture(GL_TEXTURE_2D, 0));
+	}
 }
 
 void OPtextureAPIGLInit(OPtextureAPI* texture) {

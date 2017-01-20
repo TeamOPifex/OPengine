@@ -21,7 +21,7 @@ struct OPrenderer {
 	void(*_SetMaterialsSkeleton)(OPrenderer* renderer, OPrendererEntity* entity, OPskeleton* skeleton) = 0;
 	OPmaterial*(*_CreateMaterial)(OPrenderer* renderer, ui32 pass) = 0;
 	void(*_Begin)(OPrenderer* renderer) = 0;
-	void(*_SubmitModel)(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterial** material) = 0;
+	void(*_SubmitModel)(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterial* material) = 0;
 	void(*_SubmitModelMaterial)(OPrenderer* renderer, OPmodel* model, OPmat4* world, bool shadowed, OPmaterial* material) = 0;
 	void(*_SubmitMeshMaterial)(OPrenderer* renderer, OPmesh* mesh, OPmat4* world, bool shadowed, OPmaterial* material) = 0;
 	void(*_SubmitRendererEntity)(OPrenderer* renderer, OPrendererEntity* rendererEntity) = 0;
@@ -37,7 +37,7 @@ struct OPrenderer {
 	inline void SetMaterials(OPrendererEntity* entity, OPskeleton* skeleton) { _SetMaterialsSkeleton(this, entity, skeleton); }
 	inline OPmaterial* CreateMaterial(ui32 pass = 0) { return _CreateMaterial(this, pass); }
 	inline void Begin() { _Begin(this); }
-	inline void Submit(OPmodel* model, OPmat4* world, bool shadowed, OPmaterial** material) { _SubmitModel(this, model, world, shadowed, material); }
+	//inline void Submit(OPmodel* model, OPmat4* world, bool shadowed, OPmaterial* material) { _SubmitModel(this, model, world, shadowed, material); }
 	inline void Submit(OPmodel* model, OPmat4* world, bool shadowed, OPmaterial* material) { _SubmitModelMaterial(this, model, world, shadowed, material); }
 	inline void Submit(OPmesh* mesh, OPmat4* world, bool shadowed, OPmaterial* material) { _SubmitMeshMaterial(this, mesh, world, shadowed, material); }
 	inline void Submit(OPrendererEntity* rendererEntity) { _SubmitRendererEntity(this, rendererEntity); }
@@ -47,12 +47,24 @@ struct OPrenderer {
 };
 
 class OPrendererPass {
-
+public:
+	OPmaterial* defaultMaterial;
+	OPrenderCommandBucket renderBucket;
 };
 
 class OPrenderer2 {
+public:
+	OPrendererPass* passes;
+	OPcam** camera;
+	OPcam** shadowCamera;
+
+	virtual void Init() = 0;
 	virtual void Begin() = 0;
 	virtual void Submit(OPrendererEntity* rendererEntity) = 0;
+	virtual OPmaterial* GetMaterial(ui32 pass = 0) = 0;
 	virtual void End() = 0;
 	virtual void Present() = 0;
+	virtual void Destroy() = 0;
+	virtual void SetCamera(OPcam** camera) = 0;
+	virtual void SetCamera(OPcam** camera, ui32 pass) = 0;
 };

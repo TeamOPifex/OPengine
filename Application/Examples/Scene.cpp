@@ -41,7 +41,7 @@ void ExampleSceneEnter(OPgameState* last) {
 	sceneExample.environment.Init(envImages);
 
 	sceneExample.renderer = OPNEW(OPrendererForward());
-	sceneExample.scene.Init(&sceneExample.renderer->rendererRoot, 100, 1);
+	//sceneExample.scene.Init(&sceneExample.renderer->rendererRoot, 100, 1);
 	sceneExample.camera.Init();
 	sceneExample.scene.camera = &sceneExample.camera.Camera;
 

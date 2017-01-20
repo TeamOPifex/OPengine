@@ -30,7 +30,7 @@ SceneShadowsExample sceneShadowsExample;
 void ExampleSceneShadowsEnter(OPgameState* last) {
 
 	sceneShadowsExample.renderer = OPNEW(OPrendererForward());
-	sceneShadowsExample.scene.Init(&sceneShadowsExample.renderer->rendererRoot, 100, 1);
+	//sceneShadowsExample.scene.Init(&sceneShadowsExample.renderer->rendererRoot, 100, 1);
 	sceneShadowsExample.camera.Init();
 	sceneShadowsExample.scene.camera = &sceneShadowsExample.camera.Camera;
 

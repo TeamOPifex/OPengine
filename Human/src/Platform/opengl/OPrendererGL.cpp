@@ -49,7 +49,7 @@ void OPrendererClearColorGL(OPvec4 color) {
 }
 
 void OPrendererClearDepthGL() {
-	OPGLFN(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+	OPGLFN(glClear(GL_DEPTH_BUFFER_BIT));
 }
 
 void OPrendererPresentGL() {

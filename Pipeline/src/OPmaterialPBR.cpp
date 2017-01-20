@@ -1,7 +1,23 @@
 #include "./Pipeline/include/OPmaterialPBR.h"
 #include "./Human/include/Rendering/OPmodel.h"
 
-void OPmaterialPBR::Init(OPeffect* effect) {
+OPmaterialPBR* OPmaterialPBR::Init(OPeffect* effect) {
+	OPmaterial::Init(effect);
+
+	lightColor = OPvec4(1, 1, 1, 1);
+	lightDirection = OPvec3(1, 1, 1);
+	lightDirection.Norm();
+	lightIntensity = 1.0;
+
+	AddParam("uLight.color", &lightColor);
+	AddParam("uLight.direction", &lightDirection);
+	AddParam("uLight.intensity", &lightIntensity);
+	return this;
+}
+
+OPmaterialPBR* OPmaterialPBR::Init(OPmaterial* material) {
+	rootMaterial = material;
+
 	lightColor = OPvec4(1, 1, 1, 1);
 	lightDirection = OPvec3(1, 1, 1);
 	lightDirection.Norm();
@@ -11,6 +27,7 @@ void OPmaterialPBR::Init(OPeffect* effect) {
 	rootMaterial->AddParam("uLight.color", &lightColor);
 	rootMaterial->AddParam("uLight.direction", &lightDirection);
 	rootMaterial->AddParam("uLight.intensity", &lightIntensity);
+	return this;
 }
 
 //OPmaterialPBRInstance* OPmaterialPBR::CreateInstance() {

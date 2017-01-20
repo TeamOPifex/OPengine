@@ -15,14 +15,18 @@ typedef struct {
 	OPfloat Rotation;
 	OPscene scene;
 	OPrendererDeferred* renderer;
+	OPrendererDeferred2 renderer2;
 	OPmodel* model;
 	OPrendererEntity* model1Entity;
 	OPcamFreeFlight camera;
+	OPcam camera2;
 	OPtexture2DOLD* texture0;
 	OPtexture2DOLD* texture1;
 	OPtexture2DOLD* texture2;
 	OPtexture2DOLD* texture3;
 	OPtexture2DOLD* texture4;
+	OPtexture2DOLD* texture5;
+	OPtexture2DOLD* texture6;
 	OPeffect DepthTextureEffect;
 	ui32 state;
 } DeferredSceneExample;
@@ -34,9 +38,13 @@ OPsceneLight* light, *light2, *light3;
 void ExampleDeferredSceneEnter(OPgameState* last) {
 
 	deferredSceneExample.renderer = OPNEW(OPrendererDeferred());
-	deferredSceneExample.scene.Init(&deferredSceneExample.renderer->rendererRoot, 100, 100);
-	deferredSceneExample.camera.Init(1.0, 1.0, OPvec3(0, 5, 0));
+	deferredSceneExample.scene.Init(&deferredSceneExample.renderer2, 100, 100);
+	deferredSceneExample.camera.Init(1.0, 1.0, OPvec3(0, 5, 0), 0.1f, 50.0f);
+	deferredSceneExample.camera2.SetPerspective(OPvec3(0, 1, 5), OPvec3(0, 1, 0));
 	deferredSceneExample.scene.camera = &deferredSceneExample.camera.Camera;
+	deferredSceneExample.renderer2.SetCamera(&deferredSceneExample.scene.camera);
+	//deferredSceneExample.scene.camera = &deferredSceneExample.camera2;
+	//deferredSceneExample.renderer2.SetCamera(&deferredSceneExample.scene.camera);
 
 	light = deferredSceneExample.scene.Add(OPlightSpot());
 	light->light.position = OPvec3(0, 0, 0);
@@ -56,18 +64,21 @@ void ExampleDeferredSceneEnter(OPgameState* last) {
 	deferredSceneExample.model = (OPmodel*)OPCMAN.LoadGet("sponza.opm");
 
 	deferredSceneExample.model1Entity = deferredSceneExample.scene.Add(deferredSceneExample.model, true);
-	deferredSceneExample.model1Entity->material = deferredSceneExample.scene.renderer->GetMaterial(0)->CreateInstances(deferredSceneExample.model, true);
+	deferredSceneExample.model1Entity->material = deferredSceneExample.scene.renderer->GetMaterial(0);
+	deferredSceneExample.model1Entity->material->CreateInstances(deferredSceneExample.model1Entity);
 
 	//deferredSceneExample.model1Entity->material[0]->AddParam("uAlbedoMap", (OPtexture*)OPCMAN.LoadGet("Dagger_Albedo.png"), 0);
-	deferredSceneExample.model1Entity->material[0]->AddParam("uSpecularMap", (OPtexture*)OPCMAN.LoadGet("Dagger_Albedo.png"), 1);
+	//deferredSceneExample.model1Entity->material[0].AddParam("uSpecularMap", (OPtexture*)OPCMAN.LoadGet("Dagger_Albedo.png"), 1);
 
 	deferredSceneExample.DepthTextureEffect.Init("Common/Texture2D.vert", "Common/TextureDepth.frag");
 
-	deferredSceneExample.texture0 = OPtexture2DCreate(&deferredSceneExample.renderer->gBuffer.texture[0]);
-	deferredSceneExample.texture1 = OPtexture2DCreate(&deferredSceneExample.renderer->gBuffer.texture[1]);
-	deferredSceneExample.texture2 = OPtexture2DCreate(&deferredSceneExample.renderer->gBuffer.texture[2]);
-	deferredSceneExample.texture3 = OPtexture2DCreate(&deferredSceneExample.renderer->gBuffer.depthTexture, &deferredSceneExample.DepthTextureEffect);
-	deferredSceneExample.texture4 = OPtexture2DCreate(deferredSceneExample.renderer->lightBuffer.texture);
+	deferredSceneExample.texture0 = OPtexture2DCreate(&deferredSceneExample.renderer2.gBuffer.texture[0]);
+	deferredSceneExample.texture1 = OPtexture2DCreate(&deferredSceneExample.renderer2.gBuffer.texture[1]);
+	deferredSceneExample.texture2 = OPtexture2DCreate(&deferredSceneExample.renderer2.gBuffer.texture[2]);
+	deferredSceneExample.texture3 = OPtexture2DCreate(&deferredSceneExample.renderer2.gBuffer.depthTexture, &deferredSceneExample.DepthTextureEffect);
+	deferredSceneExample.texture4 = OPtexture2DCreate(deferredSceneExample.renderer2.lightBuffer.texture);
+	deferredSceneExample.texture5 = OPtexture2DCreate(deferredSceneExample.renderer2.ssaoBuffer.texture);
+	deferredSceneExample.texture6 = OPtexture2DCreate(deferredSceneExample.renderer2.ssaoBlurBuffer.texture);
 
 	deferredSceneExample.state = 0;
 }
@@ -113,6 +124,12 @@ void ExampleDeferredSceneRender(OPfloat delta) {
 	else if (deferredSceneExample.state == 5) {
 		OPtexture2DRender(deferredSceneExample.texture4);
 	}
+	else if (deferredSceneExample.state == 6) {
+		OPtexture2DRender(deferredSceneExample.texture5);
+	}
+	else if (deferredSceneExample.state == 7) {
+		OPtexture2DRender(deferredSceneExample.texture6);
+	}
 
 #ifdef ADDON_imgui
 	OPVISUALDEBUGINFO.Begin();
@@ -139,6 +156,12 @@ void ExampleDeferredSceneRender(OPfloat delta) {
 	}
 	if (ImGui::Button("Light")) {
 		deferredSceneExample.state = 5;
+	}
+	if (ImGui::Button("SSAO")) {
+		deferredSceneExample.state = 6;
+	}
+	if (ImGui::Button("SSAO Blur")) {
+		deferredSceneExample.state = 7;
 	}
 	ImGui::ColorEdit3("Light Color", (float*)&light->light.color);
 	ImGui::SliderFloat("Radius", &light->light.radius, 0, 10);

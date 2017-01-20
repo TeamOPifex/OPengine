@@ -43,37 +43,37 @@ struct OPrendererEntityDesc {
 struct OPrendererEntity {
 	OPmat4 world;
 	OPmodel* model;
-	OPmaterial** material = NULL;
-	OPmaterial** shadowMaterial = NULL;
+	OPmaterial* material = NULL;
+	OPmaterial* shadowMaterial = NULL;
 	OPrendererEntityDesc desc;
 
 	inline void SetAlbedoMap(const OPchar* texture) {
 		if (desc.materialPerMesh) {
 			for (ui32 i = 0; i < model->meshCount; i++) {
-				material[i]->AddParam("uAlbedoMap", (OPtexture*)OPCMAN.LoadGet(texture), 0);
+				material[i].AddParam("uAlbedoMap", (OPtexture*)OPCMAN.LoadGet(texture), 0);
 			}
 		}
 		else {
-			material[0]->AddParam("uAlbedoMap", (OPtexture*)OPCMAN.LoadGet(texture), 0);
+			material[0].AddParam("uAlbedoMap", (OPtexture*)OPCMAN.LoadGet(texture), 0);
 		}
 	}
 
 	inline void SetAlbedoMap(OPtexture* texture) {
 		if (desc.materialPerMesh) {
 			for (ui32 i = 0; i < model->meshCount; i++) {
-				material[i]->AddParam("uAlbedoMap", texture, 0);
+				material[i].AddParam("uAlbedoMap", texture, 0);
 			}
 		}
 		else {
-			material[0]->AddParam("uAlbedoMap", texture, 0);
+			material[0].AddParam("uAlbedoMap", texture, 0);
 		}
 	}
 
 	inline void SetAlbedoMap(const OPchar* texture, ui32 ind) {
-		material[ind]->AddParam("uAlbedoMap", (OPtexture*)OPCMAN.LoadGet(texture), 0);
+		material[ind].AddParam("uAlbedoMap", (OPtexture*)OPCMAN.LoadGet(texture), 0);
 	}
 
 	inline void SetAlbedoMap(OPtexture* texture, ui32 ind) {
-		material[ind]->AddParam("uAlbedoMap", texture, 0);
+		material[ind].AddParam("uAlbedoMap", texture, 0);
 	}
 };

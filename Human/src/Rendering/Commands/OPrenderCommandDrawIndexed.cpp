@@ -44,20 +44,21 @@ OPrenderCommandDrawIndexed* OPrenderCommandDrawIndexed::Set(OPmesh* mesh, OPmat4
 	return this;
 }
 
-void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterial** material, bool materialPerMesh) {
+void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterial* material, bool materialPerMesh) {
 
 	if (!materialPerMesh) {
-		Submit(commandBucket, model, world, material[0]);
+		Submit(commandBucket, model, world, &material[0]);
 		return;
 	}
 
 	for (ui32 i = 0; i < model->meshCount; i++) {
-		if (!material[i]->rootMaterial->visible || !material[i]->visible) {
+		OPmaterial* mat = &material[i];
+		if (!mat->visible) {
 			OPlogErr("Invisible");
 			continue;
 		}
 		OPrenderCommandDrawIndexed* dc = commandBucket->CreateDrawIndexed();
-		dc->Set(&model->meshes[i], world, material[i]);
+		dc->Set(&model->meshes[i], world, mat);
 		commandBucket->Submit(dc->key, dc->dispatch, dc);
 	}
 }

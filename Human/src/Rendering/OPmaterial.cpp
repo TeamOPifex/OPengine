@@ -1,26 +1,30 @@
 #include "./Human/include/Rendering/OPmaterial.h"
 #include "./Human/include/Rendering/OPmodel.h"
+#include "./Human/include/Rendering/OPrendererEntity.h"
 
 ui64 OPMATERIAL_GLOBAL_ID = 1;
 OPuint OPMATERIALINSTANCE_GLOBAL_ID = 1;
 
-void OPmaterial::Init(OPeffect* effectIn) {
+OPmaterial* OPmaterial::Init(OPeffect* effectIn) {
 	effect = effectIn;
 	paramIndex = 0;
 	id = OPMATERIAL_GLOBAL_ID++;
 	depth = 1;
 	cull = 1;
+	return this;
 }
 
-void OPmaterial::Init(OPmaterial* base) {
+OPmaterial* OPmaterial::Init(OPmaterial* base) {
 	ASSERT(base != NULL, "Can't create amaterial based on a NULL material");
 	rootMaterial = base;
+	id = OPMATERIAL_GLOBAL_ID++;
 	depth = base->depth;
 	cull = base->cull;
 	visible = base->visible;
 	alpha = base->alpha;
 	cullFace = base->cullFace;
 	effect = base->effect;
+	return this;
 }
 
 OPmaterialParam* OPmaterial::GetParam(const OPchar* name) {
@@ -31,6 +35,16 @@ OPmaterialParam* OPmaterial::GetParam(const OPchar* name) {
 		}
 	}
 	return NULL;
+}
+
+bool OPmaterial::SetParam(const OPchar* name, void* ptr) {
+	for (OPuint i = 0; i < paramIndex; i++) {
+		if (OPstringEquals(params[i].name, name)) {
+			params[i].data = ptr;
+			return true;
+		}
+	}
+	return false;
 }
 
 void OPmaterial::Bind(bool onlyParams) {
@@ -99,32 +113,65 @@ void OPmaterial::AddParam(OPmaterialParamType paramType, const OPchar* name, voi
 	paramIndex++;
 }
 
+void OPmaterial::AddParam(OPskeleton* skeleton) {
+	AddParam("uBones", skeleton->skinned, (ui8)skeleton->hierarchyCount);
+}
+
 void OPmaterial::Destroy() {
 
 }
 
-OPmaterial** OPmaterial::CreateInstances(OPmodel* model, bool materialPerMesh) {
+OPmaterial* OPmaterial::CreateInstances(OPmodel* model, bool materialPerMesh) {
 	ui32 count = model->meshCount;
 
 	if (!materialPerMesh) {
 		count = 1;
 	}
+	
 
-	OPmaterial** result = OPALLOC(OPmaterial*, count);
+	OPmaterial* result = OPNEW(OPmaterial[count]);// OPALLOC(OPmaterial, count);
 	for (ui32 i = 0; i < count; i++) {
-		result[i] = OPNEW(OPmaterial(this));
+		OPmaterial* mat = &result[i];
+		mat->Init(this);
 
 		if (model->meshes[i].materialDesc != NULL) {
 			if (model->meshes[i].materialDesc->diffuse != NULL) {
 				OPtexture* tex = (OPtexture*)OPCMAN.LoadGet(model->meshes[i].materialDesc->diffuse);
 				if (tex != NULL) {
-					result[i]->AddParam("uAlbedoMap", tex, 0);
+					mat->AddParam("uAlbedoMap", tex, 0);
 				}
 			}
 		}
 	}
 
 	return result;
+}
+
+OPmaterial* OPmaterial::CreateInstances(OPrendererEntity* rendererEntity) {
+	ui32 count = rendererEntity->model->meshCount;
+	if (!rendererEntity->desc.materialPerMesh) {
+		count = 1;
+	}
+
+	rendererEntity->material = OPNEW(OPmaterial[count]);
+	for (ui32 i = 0; i < count; i++) {
+		OPmaterial* mat = &rendererEntity->material[i];
+		mat->Init(this);
+
+		if (rendererEntity->model->meshes[i].materialDesc != NULL) {
+
+			// Load Diffuse Texture from meta
+			if (rendererEntity->model->meshes[i].materialDesc->diffuse != NULL) {
+				OPtexture* tex = (OPtexture*)OPCMAN.LoadGet(rendererEntity->model->meshes[i].materialDesc->diffuse);
+				if (tex != NULL) {
+					mat->AddParam("uAlbedoMap", tex, 0);
+				}
+			}
+
+		}
+	}
+
+	return rendererEntity->material;
 }
 
 OPmaterial* OPmaterial::Create(OPeffect* effect) {

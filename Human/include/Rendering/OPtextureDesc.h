@@ -17,6 +17,7 @@ struct OPtextureDesc {
 	OPtextureWrap wrap;
 	OPtextureFilter filter;
 	OPtextureType textureType;
+	bool multisampled = false;
 
 	OPtextureDesc() {
 		width = 0;

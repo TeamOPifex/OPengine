@@ -35,7 +35,7 @@ SkinningExample skinningExample;
 void ExampleSkinningEnter(OPgameState* last) {
 	skinningExample.freeFlight.Init(25.0, 1.0, OPvec3(0, skinningExample.scale * 10, skinningExample.scale * 10));
 
-	skinningExample.scene.Init(&skinningExample.rendererForward.rendererRoot, 100, 100);
+	//skinningExample.scene.Init(&skinningExample.rendererForward.rendererRoot, 100, 100);
 	skinningExample.scene.camera = &skinningExample.freeFlight.Camera;
 
 	skinningExample.color = OPVEC3_ONE;
@@ -72,8 +72,8 @@ void ExampleSkinningEnter(OPgameState* last) {
 
 	//skinningExample.materialSkinnedInstance->SetBones(skinningExample.skeleton);
 	OPrendererEntity* entity = skinningExample.scene.Add(skinningExample.Mesh, skinningExample.skeleton, OPrendererEntityDesc(true, true, true, false));
-	(*entity->material)->AddParam("uColor", &skinningExample.color);
-	(*entity->material)->AddParam("uColorAmount", &skinningExample.colorAmount);
+	(*entity->material).AddParam("uColor", &skinningExample.color);
+	(*entity->material).AddParam("uColorAmount", &skinningExample.colorAmount);
 	//OPrendererEntity* entity = skinningExample.scene.Add(skinningExample.Mesh, &skinningExample.materialSkinnedInstance->rootMaterialInstance);
 	//entity->shadowMaterial = (OPmaterialInstance**)skinningExample.rendererForward.defaultShadowAnimatedMaterialInstance;
 	//skinningExample.rendererForward.defaultShadowAnimatedMaterialInstance->AddParam("uBones", skinningExample.skeleton->skinned, skinningExample.skeleton->hierarchyCount);

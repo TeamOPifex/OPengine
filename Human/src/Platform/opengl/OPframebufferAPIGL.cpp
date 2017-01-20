@@ -57,9 +57,11 @@ OPframeBuffer* OPframeBufferAPIGLInitMultiDepth(OPframeBuffer* framebuffer, OPte
 	OPGLFN(glBindFramebuffer(GL_FRAMEBUFFER, frameBufferGL->Handle));
 
 	for (ui32 i = 0; i < count; i++) {
+		//textureDesc[i].multisampled = true;
 		OPRENDERER_ACTIVE->Texture.Init(&framebuffer->texture[i], textureDesc[i]);
 		OPtextureGL* textureGL = (OPtextureGL*)framebuffer->texture[i].internalPtr;
 		OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, textureGL->Handle, 0));
+		//OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D_MULTISAMPLE, textureGL->Handle, 0));
 	}
 
 	GLuint attachments[10] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4, GL_COLOR_ATTACHMENT5, GL_COLOR_ATTACHMENT6, GL_COLOR_ATTACHMENT7, GL_COLOR_ATTACHMENT8, GL_COLOR_ATTACHMENT9 };
@@ -106,7 +108,7 @@ void OPframeBufferAPIGLBind(OPframeBuffer* ptr) {
 
 void OPframeBufferAPIGLUnbind(OPframeBuffer* ptr) {
 	OPGLFN(glBindFramebuffer(GL_FRAMEBUFFER, 0));
-	OPGLFN(glViewport(0, 0, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowHeight, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowHeight));
+	OPGLFN(glViewport(0, 0, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowWidth, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowHeight));
 }
 
 void OPframeBufferAPIGLDestroy(OPframeBuffer* ptr) {

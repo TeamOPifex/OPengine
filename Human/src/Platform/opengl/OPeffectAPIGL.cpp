@@ -10,7 +10,7 @@ bool OPeffectGLAddUniform(OPeffect* effect, const OPchar* name);
 OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag, OPvertexLayout* vertexLayout) {
 	OPeffectGL* effectGL = (OPeffectGL*)OPalloc(sizeof(OPeffectGL));
 
-	effect->uniforms.Init(32);
+	effect->uniforms.Init(128);
 
 	effect->internalPtr = effectGL;
 	effect->vertexShader = vert;

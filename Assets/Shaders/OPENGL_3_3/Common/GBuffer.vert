@@ -15,11 +15,12 @@ uniform mat4 uProj;
 
 void main()
 {
+    vec4 viewPos = uView * uWorld * vec4(aPosition, 1.0f);
     vec4 worldPos = uWorld * vec4(aPosition, 1.0f);
-    vFragPos = worldPos.xyz; 
-    gl_Position = uProj * uView * worldPos;
-    vUV = vec2(aUV.x, 1.0 - aUV.y);
+    vFragPos = viewPos.xyz; 
+    gl_Position = uProj * viewPos;
+    vUV = aUV;
     
-    mat3 normalMatrix = transpose(inverse(mat3(uWorld)));
+    mat3 normalMatrix = transpose(inverse(mat3(uView * uWorld)));
     vNormal = normalMatrix * aNormal;
 }

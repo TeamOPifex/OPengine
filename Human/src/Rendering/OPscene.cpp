@@ -1,6 +1,6 @@
 #include "./Human/include/Rendering/OPscene.h"
 
-void OPscene::Init(OPrenderer* renderer, ui32 maxEntities, ui32 maxLights) {
+void OPscene::Init(OPrenderer2* renderer, ui32 maxEntities, ui32 maxLights) {
 	
 	index = 0;
 	count = maxEntities;
@@ -11,13 +11,17 @@ void OPscene::Init(OPrenderer* renderer, ui32 maxEntities, ui32 maxLights) {
 	lights = OPALLOC(OPsceneLight, lightCount);
 
 	internalCamera.SetPerspective(OPvec3(2), OPvec3(0));
+	internalShadowCamera.SetPerspective(OPvec3(2), OPvec3(0));
 	camera = &internalCamera;
+	shadowCamera = &internalShadowCamera;
 
 	this->renderer = renderer;
-	this->renderer->Init(&camera, maxEntities, 1);
+	this->renderer->Init();// &camera, maxEntities, 1);
+	this->renderer->SetCamera(&camera);
+	this->renderer->shadowCamera = &shadowCamera;
 }
 
-OPrendererEntity* OPscene::Add(OPmodel* model, OPmaterial** material, OPrendererEntityDesc desc) {
+OPrendererEntity* OPscene::Add(OPmodel* model, OPmaterial* material, OPrendererEntityDesc desc) {
 	entities[index].world = OPMAT4_IDENTITY;
 	entities[index].model = model;
 	entities[index].material = material;
@@ -29,7 +33,7 @@ OPrendererEntity* OPscene::Add(OPmodel* model, OPrendererEntityDesc desc) {
 	entities[index].world = OPMAT4_IDENTITY;
 	entities[index].model = model;
 	entities[index].desc = desc;
-	renderer->SetMaterials(&entities[index]);
+	//renderer->SetMaterials(&entities[index]);
 	return &entities[index++];
 }
 
@@ -38,7 +42,10 @@ OPrendererEntity* OPscene::Add(OPmodel* model, OPskeleton* skeleton, OPrendererE
 	entities[index].world = OPMAT4_IDENTITY;
 	entities[index].model = model;
 	entities[index].desc = desc;
-	renderer->SetMaterials(&entities[index], skeleton);
+	renderer->GetMaterial()->CreateInstances(&entities[index]);
+	//entities[index].material = material->Create(material);
+
+	//renderer->SetMaterials(&entities[index], skeleton);
 	return &entities[index++];
 }
 
@@ -80,7 +87,7 @@ void OPscene::Render(OPfloat delta) {
 	}
 
 	for (ui32 i = 0; i < lightIndex; i++) {
-		renderer->Submit(&lights[i].light);
+		//renderer->Submit(&lights[i].light);
 	}
 
 	renderer->End();

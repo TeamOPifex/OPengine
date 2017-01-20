@@ -7,7 +7,7 @@ OPmaterialSkinned* OPmaterialSkinned::Init(OPmaterial* material) {
 }
 
 OPmaterialSkinned* OPmaterialSkinned::Init(OPeffect* effect) {
-	rootMaterial->Init(effect);
+	OPmaterial::Init(effect);
 	return this;
 }
 
