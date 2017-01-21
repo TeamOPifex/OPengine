@@ -11,11 +11,10 @@
 #include "OPimgui.h"
 #endif
 
-typedef struct {
+struct DeferredSceneExample {
 	OPfloat Rotation;
 	OPscene scene;
-	OPrendererDeferred* renderer;
-	OPrendererDeferred2 renderer2;
+	OPrendererDeferred renderer;
 	OPmodel* model;
 	OPrendererEntity* model1Entity;
 	OPcamFreeFlight camera;
@@ -29,20 +28,18 @@ typedef struct {
 	OPtexture2DOLD* texture6;
 	OPeffect DepthTextureEffect;
 	ui32 state;
-} DeferredSceneExample;
-
+};
 DeferredSceneExample deferredSceneExample;
 
 OPsceneLight* light, *light2, *light3;
 
 void ExampleDeferredSceneEnter(OPgameState* last) {
 
-	deferredSceneExample.renderer = OPNEW(OPrendererDeferred());
-	deferredSceneExample.scene.Init(&deferredSceneExample.renderer2, 100, 100);
+	deferredSceneExample.scene.Init(&deferredSceneExample.renderer, 100, 100);
 	deferredSceneExample.camera.Init(1.0, 1.0, OPvec3(0, 5, 0), 0.1f, 50.0f);
 	deferredSceneExample.camera2.SetPerspective(OPvec3(0, 1, 5), OPvec3(0, 1, 0));
 	deferredSceneExample.scene.camera = &deferredSceneExample.camera.Camera;
-	deferredSceneExample.renderer2.SetCamera(&deferredSceneExample.scene.camera);
+	deferredSceneExample.renderer.SetCamera(&deferredSceneExample.scene.camera);
 	//deferredSceneExample.scene.camera = &deferredSceneExample.camera2;
 	//deferredSceneExample.renderer2.SetCamera(&deferredSceneExample.scene.camera);
 
@@ -72,13 +69,13 @@ void ExampleDeferredSceneEnter(OPgameState* last) {
 
 	deferredSceneExample.DepthTextureEffect.Init("Common/Texture2D.vert", "Common/TextureDepth.frag");
 
-	deferredSceneExample.texture0 = OPtexture2DCreate(&deferredSceneExample.renderer2.gBuffer.texture[0]);
-	deferredSceneExample.texture1 = OPtexture2DCreate(&deferredSceneExample.renderer2.gBuffer.texture[1]);
-	deferredSceneExample.texture2 = OPtexture2DCreate(&deferredSceneExample.renderer2.gBuffer.texture[2]);
-	deferredSceneExample.texture3 = OPtexture2DCreate(&deferredSceneExample.renderer2.gBuffer.depthTexture, &deferredSceneExample.DepthTextureEffect);
-	deferredSceneExample.texture4 = OPtexture2DCreate(deferredSceneExample.renderer2.lightBuffer.texture);
-	deferredSceneExample.texture5 = OPtexture2DCreate(deferredSceneExample.renderer2.ssaoBuffer.texture);
-	deferredSceneExample.texture6 = OPtexture2DCreate(deferredSceneExample.renderer2.ssaoBlurBuffer.texture);
+	deferredSceneExample.texture0 = OPtexture2DCreate(&deferredSceneExample.renderer.GetGBuffer()->texture[0]);
+	deferredSceneExample.texture1 = OPtexture2DCreate(&deferredSceneExample.renderer.GetGBuffer()->texture[1]);
+	deferredSceneExample.texture2 = OPtexture2DCreate(&deferredSceneExample.renderer.GetGBuffer()->texture[2]);
+	deferredSceneExample.texture3 = OPtexture2DCreate(&deferredSceneExample.renderer.GetGBuffer()->depthTexture, &deferredSceneExample.DepthTextureEffect);
+	deferredSceneExample.texture4 = OPtexture2DCreate(deferredSceneExample.renderer.lightPass.lightBuffer.texture);
+	deferredSceneExample.texture5 = OPtexture2DCreate(deferredSceneExample.renderer.ssaoPass.ssaoBuffer.texture);
+	deferredSceneExample.texture6 = OPtexture2DCreate(deferredSceneExample.renderer.ssaoPass.ssaoBlurBuffer.texture);
 
 	deferredSceneExample.state = 0;
 }
@@ -164,9 +161,9 @@ void ExampleDeferredSceneRender(OPfloat delta) {
 		deferredSceneExample.state = 7;
 	}
 	if (ImGui::Button("Use SSAO")) {
-		deferredSceneExample.renderer2.useSSAO = !deferredSceneExample.renderer2.useSSAO;
+		deferredSceneExample.renderer.combinePass.useSSAO = !deferredSceneExample.renderer.combinePass.useSSAO;
 	}
-	ImGui::InputFloat("SSAO Radius", &deferredSceneExample.renderer2.radius, 0.1, 1.0);
+	ImGui::InputFloat("SSAO Radius", &deferredSceneExample.renderer.ssaoPass.radius, 0.1, 1.0);
 	ImGui::ColorEdit3("Light Color", (float*)&light->light.color);
 	ImGui::SliderFloat("Radius", &light->light.radius, 0, 10);
 	ImGui::End();
@@ -180,8 +177,6 @@ void ExampleDeferredSceneRender(OPfloat delta) {
 
 OPint ExampleDeferredSceneExit(OPgameState* next) {
 	deferredSceneExample.scene.Destroy();
-	deferredSceneExample.renderer->Destroy();
-	OPfree(deferredSceneExample.renderer);
 
 	return 0;
 }

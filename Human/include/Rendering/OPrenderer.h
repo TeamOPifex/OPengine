@@ -46,22 +46,44 @@ struct OPrenderer {
 	inline void Present() { _Present(this); }
 };
 
-class OPrendererPass {
-public:
-	OPmaterial* defaultMaterial;
-	OPrenderCommandBucket renderBucket;
+enum struct OPmaterialType {
+	DEFAULT = 0x01,
+	ANIMATED = 0x02,
+	SHADOWED = 0x04
 };
 
-class OPrenderer2 {
+class OPrendererPass {
 public:
-	OPrendererPass* passes;
+	OPmaterial* materials;
+	OPrenderCommandBucket renderBucket;
 	OPcam** camera;
 	OPcam** shadowCamera;
 
-	virtual void Init() = 0;
+public:
+	OPrendererPass() {  }
+	virtual void Init(OPcam** cam) {
+		camera = cam;
+	}
 	virtual void Begin() = 0;
 	virtual void Submit(OPrendererEntity* rendererEntity) = 0;
-	virtual OPmaterial* GetMaterial(ui32 pass = 0) = 0;
+	virtual void End() = 0;
+	virtual void Destroy() = 0;
+	virtual OPmaterial* GetMaterial(ui32 materialType) = 0;
+	void SetCamera(OPcam** cam) {
+		camera = cam;
+		renderBucket.camera = cam;
+	}
+};
+
+class OPrenderer2 {
+protected:
+	OPrendererPass** passes;
+
+public:
+	virtual void Init(OPcam** cam, OPcam** shadowCam) = 0;
+	virtual void Begin() = 0;
+	virtual void Submit(OPrendererEntity* rendererEntity) = 0;
+	virtual OPmaterial* GetMaterial(ui32 pass = 0, ui32 materialType = (ui32)OPmaterialType::DEFAULT) = 0;
 	virtual void End() = 0;
 	virtual void Present() = 0;
 	virtual void Destroy() = 0;

@@ -16,9 +16,9 @@ void OPscene::Init(OPrenderer2* renderer, ui32 maxEntities, ui32 maxLights) {
 	shadowCamera = &internalShadowCamera;
 
 	this->renderer = renderer;
-	this->renderer->Init();// &camera, maxEntities, 1);
-	this->renderer->SetCamera(&camera);
-	this->renderer->shadowCamera = &shadowCamera;
+	this->renderer->Init(&camera, &shadowCamera);// &camera, maxEntities, 1);
+	//this->renderer->SetCamera(&camera);
+	//this->renderer->shadowCamera = &shadowCamera;
 }
 
 OPrendererEntity* OPscene::Add(OPmodel* model, OPmaterial* material, OPrendererEntityDesc desc) {
