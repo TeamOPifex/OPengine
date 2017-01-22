@@ -65,7 +65,7 @@ OPint OPloaderOPskeletonLoad(OPstream* str, OPskeleton** skeleton) {
 		//OPmat4Log("Offset", offsets[i]);
 	}
 
-	*skeleton = OPskeletonCreate(hierarchy, bindPose, offsets, globalInverseBindPose, boneCount, jointNames);
+	*skeleton = OPskeleton::Create(hierarchy, bindPose, offsets, globalInverseBindPose, boneCount, jointNames);
 
 	//OPstreamDestroy(str);
 
@@ -73,6 +73,6 @@ OPint OPloaderOPskeletonLoad(OPstream* str, OPskeleton** skeleton) {
 }
 
 OPint OPloaderOPskeletonUnload(OPskeleton* skeleton) {
-	OPskeletonDestroy(skeleton);
+	skeleton->Destroy();
 	return 1;
 }

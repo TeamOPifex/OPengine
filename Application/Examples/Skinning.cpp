@@ -82,29 +82,29 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 	if (OPKEYBOARD.IsDown(OPkeyboardKey::N)) {
 		skinningExample.heldDown += time->Elapsed;
 		if (skinningExample.heldDown > 500) skinningExample.heldDown = 500;
-		OPskeletonAnimationUpdate(skinningExample.animation, time);
-		OPskeletonAnimationUpdate(skinningExample.animation2, time);
-		OPskeletonAnimationMerge(skinningExample.animation, skinningExample.animation2, skinningExample.heldDown / 500.0f);
-		OPskeletonAnimationApply(skinningExample.animation, skinningExample.skeleton);
+		skinningExample.animation->Update(time);
+		skinningExample.animation2->Update(time);
+		skinningExample.animation->Merge(skinningExample.animation2, skinningExample.heldDown / 500.0f);
+		skinningExample.animation->Apply(skinningExample.skeleton);
 	}
 	else if (OPKEYBOARD.IsDown(OPkeyboardKey::M)) {
-		OPskeletonAnimationUpdate(skinningExample.animation3, time);
-		OPskeletonAnimationApply(skinningExample.animation3, skinningExample.skeleton);
+		skinningExample.animation3->Update(time);
+		skinningExample.animation3->Apply(skinningExample.skeleton);
 	}
 	else if (OPKEYBOARD.IsDown(OPkeyboardKey::B)) {
-		OPskeletonAnimationUpdate(skinningExample.animation4, time);
-		OPskeletonAnimationApply(skinningExample.animation4, skinningExample.skeleton);
+		skinningExample.animation4->Update(time);
+		skinningExample.animation4->Apply(skinningExample.skeleton);
 	}
 	else {
 		skinningExample.heldDown -= time->Elapsed;
 		if (skinningExample.heldDown < 0) skinningExample.heldDown = 0;
-		OPskeletonAnimationUpdate(skinningExample.animation, time);
-		OPskeletonAnimationUpdate(skinningExample.animation2, time);
-		OPskeletonAnimationMerge(skinningExample.animation, skinningExample.animation2, skinningExample.heldDown / 500.0f);
-		OPskeletonAnimationApply(skinningExample.animation, skinningExample.skeleton);
+		skinningExample.animation->Update(time);
+		skinningExample.animation2->Update(time);
+		skinningExample.animation->Merge(skinningExample.animation2, skinningExample.heldDown / 500.0f);
+		skinningExample.animation->Apply(skinningExample.skeleton);
 	}
 
-	OPskeletonUpdate(skinningExample.skeleton);
+	skinningExample.skeleton->Update();
 
 	return false;
 }

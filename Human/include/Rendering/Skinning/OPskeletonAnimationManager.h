@@ -76,14 +76,14 @@ inline OPskeletonAnimationManager* OPskeletonAnimationManagerCreate(OPskeleton* 
 inline void OPskeletonAnimationManagerSet(OPskeletonAnimationManager* manager, OPskeletonAnimation* animation) {
 	manager->animations[0] = animation;
 	manager->animationIndex = 1;
-	OPskeletonAnimationReset(animation);
+	animation->Reset();
 }
 
 inline void OPskeletonAnimationManagerMix(OPskeletonAnimationManager* manager, OPskeletonAnimation* animation, i16 fromJoint) {
 	manager->animations[manager->animationIndex] = animation;
 	manager->animationJointMix[manager->animationIndex] = fromJoint;
 	manager->animationIndex++;
-	OPskeletonAnimationReset(animation);
+	animation->Reset();
 }
 
 inline void OPskeletonAnimationManagerUpdate(OPskeletonAnimationManager* manager, OPtimer* timer, OPfloat timeScale) {
@@ -114,20 +114,20 @@ inline void OPskeletonAnimationManagerUpdate(OPskeletonAnimationManager* manager
 	}
 
 	for(ui16 i = 0; i < manager->animationIndex; i++) {
-		OPskeletonAnimationUpdate(manager->animations[i], timer, timeScale);
+		manager->animations[i]->Update(timer, timeScale);
 	}
 
 	if(manager->transition.animation != NULL) {
-		OPskeletonAnimationUpdate(manager->transition.animation, timer, timeScale);
-		OPskeletonAnimationMerge(manager->animations[0], manager->transition.animation, percentage);
+		manager->transition.animation->Update(timer, timeScale);
+		manager->animations[0]->Merge(manager->transition.animation, percentage);
 	} else {
 		for(ui16 i = 1; i < manager->animationIndex; i++) {
-			OPskeletonAnimationCombine(manager->animations[0], manager->animations[i], manager->skeleton, manager->animationJointMix[i]);
+			manager->animations[0]->Combine(manager->animations[i], manager->skeleton, manager->animationJointMix[i]);
 		}
 	}
 
-	OPskeletonAnimationApply(manager->animations[0], manager->skeleton);
-	OPskeletonUpdate(manager->skeleton);
+	manager->animations[0]->Apply(manager->skeleton);
+	manager->skeleton->Update();
 }
 
 inline void OPskeletonAnimationManagerUpdate(OPskeletonAnimationManager* manager, OPtimer* timer) {

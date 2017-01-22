@@ -22,8 +22,8 @@ OPint OPskeletonAnimationTransitionUpdate(OPskeletonAnimationTransition* transit
 
 
 void OPskeletonAnimationTransitionApply(OPskeletonAnimationTransition* transition, OPskeleton* skeleton) {
-	OPskeletonAnimationMerge(transition->Start, transition->End, transition->Current / transition->Duration);
-	OPskeletonAnimationApply(transition->Start, skeleton);
+	transition->Start->Merge(transition->End, transition->Current / transition->Duration);
+	transition->Start->Apply(skeleton);
 }
 
 void OPskeletonAnimationTransitionReset(OPskeletonAnimationTransition* transition) {

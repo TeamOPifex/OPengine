@@ -13,7 +13,7 @@ JS_RETURN_VAL _OPskeletonAnimationUpdate(const JS_ARGS& args) {
 
     OPskeletonAnimation* skeletonAnimationPtr = JS_GET_ARG_PTR(args, 0, OPskeletonAnimation);
     OPtimer* timerPtr = JS_GET_ARG_PTR(args, 1, OPtimer);
-    OPskeletonAnimationUpdate(skeletonAnimationPtr, timerPtr);
+    skeletonAnimationPtr->Update(timerPtr);
 
     JS_RETURN_NULL;
 }
@@ -23,7 +23,7 @@ JS_RETURN_VAL _OPskeletonAnimationApply(const JS_ARGS& args) {
 
     OPskeletonAnimation* skeletonAnimationPtr = JS_GET_ARG_PTR(args, 0, OPskeletonAnimation);
     OPskeleton* skeletonPtr = JS_GET_ARG_PTR(args, 1, OPskeleton);
-    OPskeletonAnimationApply(skeletonAnimationPtr, skeletonPtr);
+    skeletonAnimationPtr->Apply(skeletonPtr);
 
     JS_RETURN_NULL;
 }

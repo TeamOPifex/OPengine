@@ -52,7 +52,7 @@ OPint OPloaderOPanimationLoad(OPstream* str, OPskeletonAnimation** animation) {
 	//	frames[j] = OPmat4Transpose(frames[j]);
 	//}
 
-	*animation = OPskeletonAnimationCreate(boneCount, frames, frameCount, name);
+	*animation = OPskeletonAnimation::Create(boneCount, frames, frameCount, name);
 
 	//OPfree(frames);
 	if (name != NULL) {

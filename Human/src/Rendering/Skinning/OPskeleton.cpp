@@ -8,7 +8,7 @@ inline void OPskeletonUpdateGlobalPoses(OPskeleton* skeleton) {
 	}
 }
 
-OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* bindPose, OPmat4* boneOffsets, OPmat4 invGlobalPose, i32 count, OPchar** names) {
+OPskeleton* OPskeleton::Create(i16* hierarchy, OPmat4* bindPose, OPmat4* boneOffsets, OPmat4 invGlobalPose, i32 count, OPchar** names) {
 	OPint sizeOfMatricesArray = sizeof(OPmat4)* count;
 	OPint sizeOfHierarchy = sizeof(i16)* count;
 	OPint sizeOfSkeleton = sizeof(OPskeleton);
@@ -39,7 +39,7 @@ OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* bindPose, OPmat4* boneOffse
 	}
 
 	
-	OPskeletonUpdate(skeleton);
+	skeleton->Update();
 
 	return skeleton;
 }
@@ -50,28 +50,28 @@ void OPskeleton::Reset() {
 	}
 }
 
-i16 OPskeletonGet(OPskeleton* skeleton, const OPchar* name) {
-	for (ui16 i = 0; i < skeleton->hierarchyCount; i++) {
-		if (OPstringEquals(name, skeleton->jointNames[i])) return i;
+i16 OPskeleton::Get(const OPchar* name) {
+	for (ui16 i = 0; i < hierarchyCount; i++) {
+		if (OPstringEquals(name, jointNames[i])) return i;
 	}
 	return -1;
 }
 
-void OPskeletonUpdate(OPskeleton* skeleton) {
-	OPskeletonUpdateGlobalPoses(skeleton);
+void OPskeleton::Update() {
+	OPskeletonUpdateGlobalPoses(this);
 
-	for (i32 i = 0; i < skeleton->hierarchyCount; i++) {
-		skeleton->skinned[i] = skeleton->globalInverse * skeleton->globalPoses[i] * skeleton->boneOffsets[i];
+	for (i32 i = 0; i < hierarchyCount; i++) {
+		skinned[i] = globalInverse * globalPoses[i] * boneOffsets[i];
 	}
 }
 
-void OPskeletonDestroy(OPskeleton* skeleton) {
-	OPfree(skeleton);
+void OPskeleton::Destroy() {
+
 }
 
 
 i16 OPskeleton::JointIndex(const OPchar* joint) {
-	return OPskeletonGet(this, joint);
+	return Get(joint);
 }
 
 
