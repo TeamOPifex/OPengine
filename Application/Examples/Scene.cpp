@@ -47,7 +47,7 @@ void ExampleSceneEnter(OPgameState* last) {
 
 	sceneExample.materialPBR.Init(OPNEW(OPeffect("Common/PBR.vert", "Common/PBR.frag")));
 	sceneExample.materialPBR.AddParam("uCamPos", &sceneExample.camera.Camera.pos);
-	sceneExample.renderer->SetMaterial(&sceneExample.materialPBR, 0);
+	//sceneExample.renderer->SetMaterial(&sceneExample.materialPBR, 0);
 
 	sceneExample.materialInstance = OPNEW(OPmaterialPBR(sceneExample.materialPBR));
 	sceneExample.materialInstance->SetAlbedoMap("Dagger_Albedo.png");

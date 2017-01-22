@@ -19,6 +19,7 @@ struct OPcam {
 	OPfloat farView;
 	OPmat4 proj;
 	OPmat4 view;
+	OPchar* _name;
 
 	void SetPerspective(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPfloat zFar, OPfloat fov, OPfloat aspect);
 	void SetOrtho(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat zNear, OPfloat zFar, OPfloat left, OPfloat right, OPfloat bottom, OPfloat top);

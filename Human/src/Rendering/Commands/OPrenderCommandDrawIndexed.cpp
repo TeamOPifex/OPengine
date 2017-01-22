@@ -47,7 +47,7 @@ OPrenderCommandDrawIndexed* OPrenderCommandDrawIndexed::Set(OPmesh* mesh, OPmat4
 void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterial* material, bool materialPerMesh) {
 
 	if (!materialPerMesh) {
-		Submit(commandBucket, model, world, &material[0]);
+		Submit(commandBucket, model, world, material);
 		return;
 	}
 

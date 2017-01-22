@@ -103,6 +103,7 @@ void OPrenderCommandBucket::Render() {
 
 void OPrenderCommandBucket::Submit(ui64 key, void(*dispatch)(void*, OPcam*), void* data, void* next) {
 	//OPlogErr("OPrenderCommandBucket::Submit %d", keyIndex);
+	ASSERT(keyIndex < bucketSize, "OPrenderCommandBucket is full");
 	commands[keyIndex].data = data;
 	commands[keyIndex].dispatch = dispatch;
 	commands[keyIndex].next = next;

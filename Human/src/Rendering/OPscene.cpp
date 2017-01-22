@@ -11,7 +11,8 @@ void OPscene::Init(OPrenderer2* renderer, ui32 maxEntities, ui32 maxLights) {
 	lights = OPALLOC(OPsceneLight, lightCount);
 
 	internalCamera.SetPerspective(OPvec3(2), OPvec3(0));
-	internalShadowCamera.SetPerspective(OPvec3(2), OPvec3(0));
+	OPfloat shadowCameraSize = 16.0f;
+	internalShadowCamera.SetOrtho(OPvec3(-20, 50, 10), OPVEC3_ZERO, OPVEC3_UP, 25.0f, 150.0f, -shadowCameraSize, shadowCameraSize, -shadowCameraSize, shadowCameraSize);
 	camera = &internalCamera;
 	shadowCamera = &internalShadowCamera;
 
@@ -19,6 +20,16 @@ void OPscene::Init(OPrenderer2* renderer, ui32 maxEntities, ui32 maxLights) {
 	this->renderer->Init(&camera, &shadowCamera);// &camera, maxEntities, 1);
 	//this->renderer->SetCamera(&camera);
 	//this->renderer->shadowCamera = &shadowCamera;
+}
+
+void OPscene::SetCamera(OPcam* cam) {
+	camera = cam;
+	renderer->SetCamera(&cam);
+}
+
+void OPscene::SetShadowCamera(OPcam* cam) {
+	shadowCamera = cam;
+	renderer->SetShadowCamera(&cam);
 }
 
 OPrendererEntity* OPscene::Add(OPmodel* model, OPmaterial* material, OPrendererEntityDesc desc) {
@@ -33,7 +44,8 @@ OPrendererEntity* OPscene::Add(OPmodel* model, OPrendererEntityDesc desc) {
 	entities[index].world = OPMAT4_IDENTITY;
 	entities[index].model = model;
 	entities[index].desc = desc;
-	//renderer->SetMaterials(&entities[index]);
+	renderer->SetMaterials(&entities[index]);
+	OPmaterial::SetMeta(&entities[index]);
 	return &entities[index++];
 }
 
@@ -42,10 +54,9 @@ OPrendererEntity* OPscene::Add(OPmodel* model, OPskeleton* skeleton, OPrendererE
 	entities[index].world = OPMAT4_IDENTITY;
 	entities[index].model = model;
 	entities[index].desc = desc;
-	renderer->GetMaterial()->CreateInstances(&entities[index]);
-	//entities[index].material = material->Create(material);
-
-	//renderer->SetMaterials(&entities[index], skeleton);
+	renderer->SetMaterials(&entities[index]);
+	OPmaterial::SetMeta(&entities[index]);
+	entities[index].material->AddParam(skeleton);
 	return &entities[index++];
 }
 

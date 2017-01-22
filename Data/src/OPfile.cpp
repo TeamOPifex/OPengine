@@ -228,10 +228,13 @@ bool OPfile::Exists(const char* path){
 #if defined(OPIFEX_UNIX)
 	return access(path, F_OK) + 1;
 #elif defined(OPIFEX_WINDOWS)
-	if (std::ifstream(path)) {
+	if (FILE *file = fopen(path, "r")) {
+		fclose(file);
 		return true;
 	}
-	return false;
+	else {
+		return false;
+	}
 	//FILE *istream = NULL;
 	//fopen_s(&istream, path, "r");
 	//if (istream != NULL)

@@ -7,7 +7,8 @@
 
 #include "./Human/include/Systems/OPinputSystem.h"
 #include "./Pipeline/include/Materials/OPmaterialSkinned.h"
-#include "./Pipeline/include/OPrendererFullForward.h"
+#include "./Pipeline/include/Renderers/OPrendererForward.h"
+#include "./Pipeline/include/Renderers/OPrendererDeferred.h"
 
 typedef struct {
 	OPmodel* Mesh;
@@ -22,9 +23,10 @@ typedef struct {
 	OPint heldDown = 0;
 	OPfloat scale = 100.0f;
 	OPscene scene;
-	OPrendererFullForward rendererForward;
+	OPrendererForward rendererForward;
 	OPmaterialSkinned materialSkinned;
 	OPmaterialSkinned* materialSkinnedInstance;
+	OPcam shadowCamera;
 
 	OPvec3 color;
 	f32 colorAmount;
@@ -35,49 +37,27 @@ SkinningExample skinningExample;
 void ExampleSkinningEnter(OPgameState* last) {
 	skinningExample.freeFlight.Init(25.0, 1.0, OPvec3(0, skinningExample.scale * 10, skinningExample.scale * 10));
 
-	//skinningExample.scene.Init(&skinningExample.rendererForward.rendererRoot, 100, 100);
-	skinningExample.scene.camera = &skinningExample.freeFlight.Camera;
+	skinningExample.scene.Init(&skinningExample.rendererForward, 100, 100);
+	skinningExample.scene.SetCamera(&skinningExample.freeFlight.Camera);
+
+	OPfloat shadowCameraSize = 16.0f;
+	skinningExample.shadowCamera.SetOrtho(OPvec3(-2, 5, 1), OPVEC3_ZERO, OPVEC3_UP, 25.0f, 150.0f, -shadowCameraSize, shadowCameraSize, -shadowCameraSize, shadowCameraSize);
+	skinningExample.scene.SetShadowCamera(&skinningExample.shadowCamera);
 
 	skinningExample.color = OPVEC3_ONE;
-	skinningExample.colorAmount = 0.5f;
+	skinningExample.colorAmount = 0.0f;
 	
-	// Initializes a wrapper around the skinning animation material
-	//skinningExample.materialSkinnedInstance = skinningExample.materialSkinned.Init(
-	//	skinningExample.rendererForward.passes[(ui32)OPrendererForwardPass::ANIMATED_MODEL])->
-	//	CreateInstance();
-
-
-	//skinningExample.Mesh = (OPmodel*)OPCMAN.LoadGet("zombie.opm");
-	//skinningExample.skeleton = (OPskeleton*)OPCMAN.LoadGet("zombie.opm.skel");
-	//skinningExample.animation = (OPskeletonAnimation*)OPCMAN.LoadGet("zombie.opm.walk.anim");
-	//skinningExample.animation2 = (OPskeletonAnimation*)OPCMAN.LoadGet("zombie.opm.run.anim");
-	//skinningExample.animation3 = (OPskeletonAnimation*)OPCMAN.LoadGet("zombie.opm.jump.anim");
-	//skinningExample.animation4 = (OPskeletonAnimation*)OPCMAN.LoadGet("zombie.opm.default attack.anim");
-
-	//skinningExample.Mesh = (OPmodel*)OPCMAN.LoadGet("swordsman.opm");
-	//skinningExample.skeleton = (OPskeleton*)OPCMAN.LoadGet("swordsman.opm.skel");
-	//skinningExample.animation = (OPskeletonAnimation*)OPCMAN.LoadGet("swordsman.opm.walk.anim");
-	//skinningExample.animation2 = (OPskeletonAnimation*)OPCMAN.LoadGet("swordsman.opm.run.anim");
-	//skinningExample.animation3 = (OPskeletonAnimation*)OPCMAN.LoadGet("swordsman.opm.jump.anim");
-	//skinningExample.animation4 = (OPskeletonAnimation*)OPCMAN.LoadGet("swordsman.opm.default attack.anim");
-
 	skinningExample.Mesh = (OPmodel*)OPCMAN.LoadGet("archer.opm");
 	skinningExample.skeleton = (OPskeleton*)OPCMAN.LoadGet("archer.opm.skel");
 	skinningExample.animation = (OPskeletonAnimation*)OPCMAN.LoadGet("archer.opm.walk.anim");
 	skinningExample.animation2 = (OPskeletonAnimation*)OPCMAN.LoadGet("archer.opm.run.anim");
 	skinningExample.animation3 = (OPskeletonAnimation*)OPCMAN.LoadGet("archer.opm.jump.anim");
 	skinningExample.animation4 = (OPskeletonAnimation*)OPCMAN.LoadGet("archer.opm.attack.anim");
-	//skinningExample.materialSkinnedInstance->SetAlbedoMap("swordsman.png");
 
-
-	//skinningExample.materialSkinnedInstance->SetBones(skinningExample.skeleton);
 	OPrendererEntity* entity = skinningExample.scene.Add(skinningExample.Mesh, skinningExample.skeleton, OPrendererEntityDesc(true, true, true, false));
-	(*entity->material).AddParam("uColor", &skinningExample.color);
-	(*entity->material).AddParam("uColorAmount", &skinningExample.colorAmount);
-	//OPrendererEntity* entity = skinningExample.scene.Add(skinningExample.Mesh, &skinningExample.materialSkinnedInstance->rootMaterialInstance);
-	//entity->shadowMaterial = (OPmaterialInstance**)skinningExample.rendererForward.defaultShadowAnimatedMaterialInstance;
-	//skinningExample.rendererForward.defaultShadowAnimatedMaterialInstance->AddParam("uBones", skinningExample.skeleton->skinned, skinningExample.skeleton->hierarchyCount);
-
+	//(*entity->material).AddParam("uColor", &skinningExample.color);
+	//(*entity->material).AddParam("uColorAmount", &skinningExample.colorAmount);
+	entity->world.SetScl(0.1);
 }
 
 OPint ExampleSkinningUpdate(OPtimer* time) {
@@ -130,33 +110,8 @@ OPint ExampleSkinningUpdate(OPtimer* time) {
 }
 
 void ExampleSkinningRender(OPfloat delta) {
-	///
-	// Render the actual skinned model
-	///
-	//OPrenderDepth(1);
 	OPrenderClear(0.1);
-
-	//skinningExample.Mesh->Bind();
-	//skinningExample.Effect.Bind();
-
-	//OPmat4 world;
-	//OPmat4Identity(&world);
-
-	//OPeffectSet("uWorld", &world);
-	//OPeffectSet("uView", &skinningExample.freeFlight.Camera.view);
-	//OPeffectSet("uProj", &skinningExample.freeFlight.Camera.proj);
-
-	//OPeffectSet("uBones", skinningExample.skeleton->hierarchyCount, skinningExample.skeleton->skinned);
-
-	//OPvec3 light = OPvec3Create(0, 10, 0);
-	//OPeffectSet("uLightPosition", &light);
-
-	//OPeffectSet("uColorTexture", skinningExample.texture, 0);
-
-	//OPrenderDrawBufferIndexed(0);
-
 	skinningExample.scene.Render(delta);
-
 	OPrenderPresent();
 }
 

@@ -230,6 +230,7 @@ bool OPcman::Load(const OPchar* assetKey) {
 		}
 		if (str == NULL) {
 			OPlogErr("Failed to load asset: %s", fullPathToAsset);
+			OPfree(fullPathToAsset);
 			return false;
 		}
 
@@ -376,6 +377,8 @@ OPstream* OPcman::GetResource(const OPchar* resourceName) {
 			if (!OPstringEquals(resourceName, resource->resourceNames[j])) {
 				continue;
 			}
+
+			OPlogErr("Found in resource pack %s", resourceName);
 
 			// The resource was found in this pack
 			// Set the seek position into the file

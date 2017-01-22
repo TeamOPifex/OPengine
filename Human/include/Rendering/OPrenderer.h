@@ -54,7 +54,6 @@ enum struct OPmaterialType {
 
 class OPrendererPass {
 public:
-	OPmaterial* materials;
 	OPrenderCommandBucket renderBucket;
 	OPcam** camera;
 	OPcam** shadowCamera;
@@ -69,7 +68,7 @@ public:
 	virtual void End() = 0;
 	virtual void Destroy() = 0;
 	virtual OPmaterial* GetMaterial(ui32 materialType) = 0;
-	void SetCamera(OPcam** cam) {
+	virtual void SetCamera(OPcam** cam) {
 		camera = cam;
 		renderBucket.camera = cam;
 	}
@@ -83,10 +82,11 @@ public:
 	virtual void Init(OPcam** cam, OPcam** shadowCam) = 0;
 	virtual void Begin() = 0;
 	virtual void Submit(OPrendererEntity* rendererEntity) = 0;
+	virtual void SetMaterials(OPrendererEntity* rendererEntity) = 0;
 	virtual OPmaterial* GetMaterial(ui32 pass = 0, ui32 materialType = (ui32)OPmaterialType::DEFAULT) = 0;
 	virtual void End() = 0;
 	virtual void Present() = 0;
 	virtual void Destroy() = 0;
 	virtual void SetCamera(OPcam** camera) = 0;
-	virtual void SetCamera(OPcam** camera, ui32 pass) = 0;
+	virtual void SetShadowCamera(OPcam** camera) = 0;
 };

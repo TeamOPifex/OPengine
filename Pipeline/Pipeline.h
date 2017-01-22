@@ -19,3 +19,4 @@
 #include "./Pipeline/include/OPmaterialPhong.h"
 #include "./Pipeline/include/OPvisualDebugInfo.h"
 #include "./Pipeline/include/Renderers/OPrendererDeferred.h"
+#include "./Pipeline/include/Renderers/OPrendererForward.h"

@@ -147,31 +147,43 @@ OPmaterial* OPmaterial::CreateInstances(OPmodel* model, bool materialPerMesh) {
 	return result;
 }
 
+void OPmaterial::SetMeta(OPrendererEntity* rendererEntity) {
+	ASSERT(rendererEntity->material != NULL, "Must have materials set first");
+
+	ui32 count = rendererEntity->model->meshCount;	
+	if (!rendererEntity->desc.materialPerMesh) {
+		count = 1;
+	}
+
+	for (ui32 i = 0; i < count; i++) {
+		OPmaterial* mat = &rendererEntity->material[i];
+
+		if (rendererEntity->model->meshes[i].materialDesc == NULL) continue;		
+
+		// Load Diffuse Texture from meta
+		if (rendererEntity->model->meshes[i].materialDesc->diffuse != NULL) {
+			OPtexture* tex = (OPtexture*)OPCMAN.LoadGet(rendererEntity->model->meshes[i].materialDesc->diffuse);
+			if (tex != NULL) {
+				mat->AddParam("uAlbedoMap", tex, 0);
+			}
+		}
+	}
+
+}
+
 OPmaterial* OPmaterial::CreateInstances(OPrendererEntity* rendererEntity) {
 	ui32 count = rendererEntity->model->meshCount;
 	if (!rendererEntity->desc.materialPerMesh) {
 		count = 1;
 	}
 
-	rendererEntity->material = OPNEW(OPmaterial[count]);
+	OPmaterial* result = OPNEW(OPmaterial[count]);
 	for (ui32 i = 0; i < count; i++) {
-		OPmaterial* mat = &rendererEntity->material[i];
+		OPmaterial* mat = &result[i];
 		mat->Init(this);
-
-		if (rendererEntity->model->meshes[i].materialDesc != NULL) {
-
-			// Load Diffuse Texture from meta
-			if (rendererEntity->model->meshes[i].materialDesc->diffuse != NULL) {
-				OPtexture* tex = (OPtexture*)OPCMAN.LoadGet(rendererEntity->model->meshes[i].materialDesc->diffuse);
-				if (tex != NULL) {
-					mat->AddParam("uAlbedoMap", tex, 0);
-				}
-			}
-
-		}
 	}
 
-	return rendererEntity->material;
+	return result;
 }
 
 OPmaterial* OPmaterial::Create(OPeffect* effect) {

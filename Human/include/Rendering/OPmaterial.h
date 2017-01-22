@@ -47,6 +47,7 @@ public:
 	virtual void Destroy();
 	virtual OPmaterial* CreateInstances(OPmodel* model, bool materialPerMesh);
 	virtual OPmaterial* CreateInstances(OPrendererEntity* model);
+	static void OPmaterial::SetMeta(OPrendererEntity* rendererEntity);
 	virtual void AddParam(OPskeleton* skeleton);
 
 	inline void SetDepth(bool val) {

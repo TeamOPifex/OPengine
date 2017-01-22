@@ -26,6 +26,7 @@ struct DeferredSceneExample {
 	OPtexture2DOLD* texture4;
 	OPtexture2DOLD* texture5;
 	OPtexture2DOLD* texture6;
+	OPtexture2DOLD* texture7;
 	OPeffect DepthTextureEffect;
 	ui32 state;
 };
@@ -60,9 +61,9 @@ void ExampleDeferredSceneEnter(OPgameState* last) {
 
 	deferredSceneExample.model = (OPmodel*)OPCMAN.LoadGet("sponza.opm");
 
-	deferredSceneExample.model1Entity = deferredSceneExample.scene.Add(deferredSceneExample.model, true);
-	deferredSceneExample.model1Entity->material = deferredSceneExample.scene.renderer->GetMaterial(0);
-	deferredSceneExample.model1Entity->material->CreateInstances(deferredSceneExample.model1Entity);
+	deferredSceneExample.model1Entity = deferredSceneExample.scene.Add(deferredSceneExample.model, OPrendererEntityDesc(true, true));
+	//deferredSceneExample.model1Entity->material = deferredSceneExample.scene.renderer->GetMaterial(0);
+	//deferredSceneExample.model1Entity->material->CreateInstances(deferredSceneExample.model1Entity);
 
 	//deferredSceneExample.model1Entity->material[0]->AddParam("uAlbedoMap", (OPtexture*)OPCMAN.LoadGet("Dagger_Albedo.png"), 0);
 	//deferredSceneExample.model1Entity->material[0].AddParam("uSpecularMap", (OPtexture*)OPCMAN.LoadGet("Dagger_Albedo.png"), 1);
@@ -76,6 +77,7 @@ void ExampleDeferredSceneEnter(OPgameState* last) {
 	deferredSceneExample.texture4 = OPtexture2DCreate(deferredSceneExample.renderer.lightPass.lightBuffer.texture);
 	deferredSceneExample.texture5 = OPtexture2DCreate(deferredSceneExample.renderer.ssaoPass.ssaoBuffer.texture);
 	deferredSceneExample.texture6 = OPtexture2DCreate(deferredSceneExample.renderer.ssaoPass.ssaoBlurBuffer.texture);
+	deferredSceneExample.texture7 = OPtexture2DCreate(&deferredSceneExample.renderer.shadowPass.depthBuffer.texture);
 
 	deferredSceneExample.state = 0;
 }
@@ -127,6 +129,9 @@ void ExampleDeferredSceneRender(OPfloat delta) {
 	else if (deferredSceneExample.state == 7) {
 		OPtexture2DRender(deferredSceneExample.texture6);
 	}
+	else if (deferredSceneExample.state == 8) {
+		OPtexture2DRender(deferredSceneExample.texture7);
+	}
 
 #ifdef ADDON_imgui
 	OPVISUALDEBUGINFO.Begin();
@@ -159,6 +164,9 @@ void ExampleDeferredSceneRender(OPfloat delta) {
 	}
 	if (ImGui::Button("SSAO Blur")) {
 		deferredSceneExample.state = 7;
+	}
+	if (ImGui::Button("Shadow")) {
+		deferredSceneExample.state = 8;
 	}
 	if (ImGui::Button("Use SSAO")) {
 		deferredSceneExample.renderer.combinePass.useSSAO = !deferredSceneExample.renderer.combinePass.useSSAO;

@@ -42,7 +42,7 @@ public:
 	OPmaterialSkinned* Init(OPeffect* effect);
 
 	//OPmaterialSkinnedInstance* CreateInstance();
-	OPmaterialSkinned** CreateInstances(OPmodel* model, bool setMeta, bool materialPerMesh);
+	//OPmaterialSkinned** CreateInstances(OPmodel* model, bool setMeta, bool materialPerMesh);
 };
 
 //

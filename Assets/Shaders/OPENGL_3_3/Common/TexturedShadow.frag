@@ -37,7 +37,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     // Calculate bias (based on depth map resolution and slope)
     vec3 normal = normalize(fs_in.Normal);
     vec3 lightDir = normalize(uLightPos - fs_in.FragPos);
-    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    float bias = max(0.0005 * (1.0 - dot(normal, lightDir)), 0.00005);
 
     // Check whether current frag pos is in shadow
     // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
@@ -61,10 +61,29 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     return shadow;
 }
 
+vec3 texColor(vec2 uv) {
+	vec3 result = texture(uAlbedoMap, uv).rgb;
+	float dist = 0.00025;
+	result += texture(uAlbedoMap, uv + vec2(0.0, dist)).rgb;
+	result += texture(uAlbedoMap, uv + vec2(0.0, -dist)).rgb;
+	result += texture(uAlbedoMap, uv + vec2(dist, 0.0)).rgb;
+	result += texture(uAlbedoMap, uv + vec2(-dist, 0.0)).rgb;
+	result += texture(uAlbedoMap, uv + vec2(-dist, -dist)).rgb;
+	result += texture(uAlbedoMap, uv + vec2(dist, dist)).rgb;
+	result += texture(uAlbedoMap, uv + vec2(-dist, dist)).rgb;
+	result += texture(uAlbedoMap, uv + vec2(dist, -dist)).rgb;
+	return result / 9.0;
+}
+
 void main()
 {
-    vec3 color = texture(uAlbedoMap, fs_in.TexCoords).rgb;
+    vec3 color = texColor(fs_in.TexCoords);// texture(uAlbedoMap, fs_in.TexCoords).rgb;
     vec3 normal = normalize(fs_in.Normal);
+
+	float belowY = 0;
+	if(fs_in.FragPos.y < 0) {
+		belowY = -1 * max(-1.0, fs_in.FragPos.y / 3.0);
+	}
 
     vec3 lightColor = vec3(1.0);
 
@@ -90,7 +109,9 @@ void main()
     //float shadow = shadows ? ShadowCalculation(fs_in.FragPosLightSpace) : 0.0;
     float shadow = ShadowCalculation(fs_in.FragPosLightSpace);
 	//shadow = 0;
-    vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;
+    vec3 lighting = (ambient + (1.0 - shadow * 0.75) * (diffuse + specular)) * color;
+	
+	vec3 finalColor = (1.0 - uColorAmount) * lighting + (uColorAmount * uColor);
 
-    FragColor = vec4((1.0 - uColorAmount) * lighting + (uColorAmount * uColor), 1.0f);
+    FragColor = vec4(finalColor, 1.0f) * (1.0 - belowY);
 }

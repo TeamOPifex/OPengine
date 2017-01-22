@@ -38,7 +38,7 @@ void ExampleSceneShadowsEnter(OPgameState* last) {
 
 	sceneShadowsExample.model1Entity = sceneShadowsExample.scene.Add(sceneShadowsExample.model, true);
 	sceneShadowsExample.DepthTextureEffect.Init("Common/Texture2D.vert", "Common/TextureDepth.frag");
-	sceneShadowsExample.DepthTexture = OPtexture2DCreate(&sceneShadowsExample.renderer->depthBuffer.texture, &sceneShadowsExample.DepthTextureEffect);
+	sceneShadowsExample.DepthTexture = OPtexture2DCreate(&sceneShadowsExample.renderer->shadowPass.depthBuffer.texture, &sceneShadowsExample.DepthTextureEffect);
 }
 
 OPint ExampleSceneShadowsUpdate(OPtimer* time) {
