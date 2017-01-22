@@ -71,6 +71,10 @@ struct OPskeletonAnimation {
 		return OPskeletonAnimation::Create(BoneCount, JointFrames, FrameCount, Name);
 	}
 
+	static inline OPskeletonAnimation* Load(const OPchar* name) {
+		return (OPskeletonAnimation*)OPCMAN.LoadGet(name);
+	}
+
 	static void Apply(OPmat4* animationFrame, OPskeleton* skeleton);
 	static OPskeletonAnimation* Create(OPint boneCount, OPanimationFrame* frames, OPuint count, OPchar* name);
 };

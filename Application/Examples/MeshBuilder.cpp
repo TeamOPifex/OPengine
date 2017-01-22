@@ -7,71 +7,70 @@
 #include "./Data/include/OPcman.h"
 
 
-// Data for this Game State Example
-typedef struct {
-	OPmodel Mesh;			// The Mesh to render
-	OPeffect Effect;		// The Effect used to render the Mesh
-	OPcam Camera;			// The Camera to use in the Effect to render the Mesh
-	ui32 Rotation;			// The amount to rotate the Mesh
-} MeshBuilderExample;
-
-MeshBuilderExample meshBuilderExample;
-
 struct MeshBuilderVert {
 	OPvec3 pos;
 	OPvec3 col;
 };
 
-void ExampleMeshBuilderEnter(OPgameState* last) {
-	OPvertexLayoutBuilder vertexLayoutBuilder = OPvertexLayoutBuilder((ui32)OPattributes::POSITION | (ui32)OPattributes::COLOR);
-	OPmeshBuilder builder = OPmeshBuilder(vertexLayoutBuilder.Build());
 
-	MeshBuilderVert one = { OPvec3(-1, 1, 0), OPvec3(1, 0, 0) };
-	MeshBuilderVert two = { OPvec3(1, 1, 0), OPvec3(1, 0, 0) };
-	MeshBuilderVert three = { OPvec3(1, -1, 0), OPvec3(1, 0, 0) };
-	MeshBuilderVert four = { OPvec3(-1, -1, 0), OPvec3(1, 0, 0) };
-	builder.Add(&one, &two, &three, &four);
+// Data for this Game State Example
+class MeshBuilderExample : public OPgameState {
+	OPmodel Mesh;			// The Mesh to render
+	OPeffect Effect;		// The Effect used to render the Mesh
+	OPcam Camera;			// The Camera to use in the Effect to render the Mesh
+	ui32 Rotation;			// The amount to rotate the Mesh
 
-	meshBuilderExample.Mesh = builder.BuildAndDestroy();
 
-	meshBuilderExample.Effect.Init("ColoredModel.vert", "ColoredModel.frag");
+	void Init(OPgameState* last) {
+		OPvertexLayoutBuilder vertexLayoutBuilder = OPvertexLayoutBuilder((ui32)OPattributes::POSITION | (ui32)OPattributes::COLOR);
+		OPmeshBuilder builder = OPmeshBuilder(vertexLayoutBuilder.Build());
 
-	meshBuilderExample.Camera.SetPerspective(OPVEC3_ONE * 2.0, OPVEC3_UP);
+		MeshBuilderVert one = { OPvec3(-1, 1, 0), OPvec3(1, 0, 0) };
+		MeshBuilderVert two = { OPvec3(1, 1, 0), OPvec3(1, 0, 0) };
+		MeshBuilderVert three = { OPvec3(1, -1, 0), OPvec3(1, 0, 0) };
+		MeshBuilderVert four = { OPvec3(-1, -1, 0), OPvec3(1, 0, 0) };
+		builder.Add(&one, &two, &three, &four);
 
-	OPrenderDepth(1);
-	OPrenderCull(0);
-}
+		Mesh = builder.BuildAndDestroy();
 
-OPint ExampleMeshBuilderUpdate(OPtimer* time) {
+		Effect.Init("ColoredModel.vert", "ColoredModel.frag");
 
-	if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { meshBuilderExample.Rotation++; }
-	OPmat4 world = OPmat4RotY(meshBuilderExample.Rotation / 100.0f);
+		Camera.SetPerspective(OPVEC3_ONE * 2.0, OPVEC3_UP);
 
-	OPrenderClear(0.4f, 0.4f, 0.4f);
-	OPbindMeshEffectWorldCam(&meshBuilderExample.Mesh, &meshBuilderExample.Effect, &world, &meshBuilderExample.Camera);
+		OPrenderDepth(1);
+		OPrenderCull(0);
+	}
 
-	OPrenderDrawBufferIndexed(0);
-	OPrenderPresent();
+	OPint Update(OPtimer* time) {
 
-	return 0;
-}
-void ExampleMeshBuilderRender(OPfloat delta) {
+		if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { Rotation++; }
+		OPmat4 world = OPmat4RotY(Rotation / 100.0f);
 
-}
+		OPrenderClear(0.4f, 0.4f, 0.4f);
+		OPbindMeshEffectWorldCam(&Mesh, &Effect, &world, &Camera);
 
-// The OPifex Engine will call this itself when you call OPgameStateChange
-OPint ExampleMeshBuilderExit(OPgameState* next) {
-	// Clean up phase for the Game State
-	meshBuilderExample.Effect.Destroy();
-	return 0;
-}
+		OPrenderDrawBufferIndexed(0);
+		OPrenderPresent();
+
+		return 0;
+	}
+
+	void Render(OPfloat delta) {
+
+	}
+
+	// The OPifex Engine will call this itself when you call OPgameStateChange
+	OPint Exit(OPgameState* next) {
+		// Clean up phase for the Game State
+		Effect.Destroy();
+		return 0;
+	}
+};
+
+
 
 OPint GS_EXAMPLE_MESH_BUILDER_AVAILABLE = 1;
 // This is the Game State for this MeshBuilderExample
 // Each entry is a function pointer for Initialize, Update, Destroy
-OPgameState GS_EXAMPLE_MESH_BUILDER = {
-	ExampleMeshBuilderEnter,
-	ExampleMeshBuilderUpdate,
-	ExampleMeshBuilderRender,
-	ExampleMeshBuilderExit
-};
+MeshBuilderExample _GS_EXAMPLE_MESH_BUILDER;
+OPgameState* GS_EXAMPLE_MESH_BUILDER = &_GS_EXAMPLE_MESH_BUILDER;

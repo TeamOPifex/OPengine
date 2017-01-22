@@ -7,7 +7,7 @@
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Data/include/OPcman.h"
 
-typedef struct {
+class SceneShadowsExample : public OPgameState {
 	OPfloat Rotation;
 	OPscene scene;
 	OPrendererForward* renderer;
@@ -23,49 +23,44 @@ typedef struct {
 	OPmaterial* materialInst2;
 	OPeffect DepthTextureEffect;
 	OPtexture2DOLD* DepthTexture;
-} SceneShadowsExample;
 
-SceneShadowsExample sceneShadowsExample;
+	void Init(OPgameState* last) {
 
-void ExampleSceneShadowsEnter(OPgameState* last) {
+		renderer = OPNEW(OPrendererForward());
+		//scene.Init(&renderer->rendererRoot, 100, 1);
+		camera.Init();
+		scene.camera = &camera.Camera;
 
-	sceneShadowsExample.renderer = OPNEW(OPrendererForward());
-	//sceneShadowsExample.scene.Init(&sceneShadowsExample.renderer->rendererRoot, 100, 1);
-	sceneShadowsExample.camera.Init();
-	sceneShadowsExample.scene.camera = &sceneShadowsExample.camera.Camera;
+		model = (OPmodel*)OPCMAN.LoadGet("sponza.opm");
 
-	sceneShadowsExample.model = (OPmodel*)OPCMAN.LoadGet("sponza.opm");
+		model1Entity = scene.Add(model, true);
+		DepthTextureEffect.Init("Common/Texture2D.vert", "Common/TextureDepth.frag");
+		DepthTexture = OPtexture2DCreate(&renderer->shadowPass.depthBuffer.texture, &DepthTextureEffect);
+	}
 
-	sceneShadowsExample.model1Entity = sceneShadowsExample.scene.Add(sceneShadowsExample.model, true);
-	sceneShadowsExample.DepthTextureEffect.Init("Common/Texture2D.vert", "Common/TextureDepth.frag");
-	sceneShadowsExample.DepthTexture = OPtexture2DCreate(&sceneShadowsExample.renderer->shadowPass.depthBuffer.texture, &sceneShadowsExample.DepthTextureEffect);
-}
+	OPint Update(OPtimer* time) {
+		camera.Update(time);
+		return false;
+	}
 
-OPint ExampleSceneShadowsUpdate(OPtimer* time) {
-	sceneShadowsExample.camera.Update(time);
-	return false;
-}
+	void Render(OPfloat delta) {
+		OPrenderCull(1);
+		OPrenderDepth(1);
 
-void ExampleSceneShadowsRender(OPfloat delta) {
-	OPrenderCull(1);
-	OPrenderDepth(1);
+		OPrenderClear(0.2f, 0.2f, 0.2f);
+		scene.Render(delta);
+		OPVISUALDEBUGINFO.Render(delta);
+		//OPtexture2DRender(DepthTexture);
+		OPrenderPresent();
+	}
 
-	OPrenderClear(0.2f, 0.2f, 0.2f);
-	sceneShadowsExample.scene.Render(delta);
-	OPVISUALDEBUGINFO.Render(delta);
-	//OPtexture2DRender(sceneShadowsExample.DepthTexture);
-	OPrenderPresent();
-}
+	OPint Exit(OPgameState* next) {
 
-OPint ExampleSceneShadowsExit(OPgameState* next) {
+		return 0;
+	}
+};
 
-	return 0;
-}
 
 OPint GS_EXAMPLE_SCENE_SHADOWS_AVAILABLE = 1;
-OPgameState GS_EXAMPLE_SCENE_SHADOWS = {
-	ExampleSceneShadowsEnter,
-	ExampleSceneShadowsUpdate,
-	ExampleSceneShadowsRender,
-	ExampleSceneShadowsExit
-};
+SceneShadowsExample _GS_EXAMPLE_SCENE_SHADOWS;
+OPgameState* GS_EXAMPLE_SCENE_SHADOWS = &_GS_EXAMPLE_SCENE_SHADOWS;

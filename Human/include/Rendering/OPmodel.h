@@ -40,4 +40,8 @@ struct OPmodel {
 	inline static OPmodel* Create(OPuint meshCount, OPvertexLayout vertexLayout) {
 		return OPNEW(OPmodel(meshCount, vertexLayout));
 	}
+
+	inline static OPmodel* Load(const OPchar* name) {
+		return (OPmodel*)OPCMAN.LoadGet(name);
+	}
 };

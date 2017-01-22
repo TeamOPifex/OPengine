@@ -6,38 +6,34 @@
 #include "./Human/include/Systems/OPinputSystem.h"
 #include "./Pipeline/include/OPtexture2D.h"
 
-typedef struct {
+class Texture2DExample : public OPgameState {
 	OPtexture2DOLD* Tex;
-} Texture2DExample;
 
-Texture2DExample texture2DExample;
 
-void ExampleTexture2DEnter(OPgameState* last) {
-    OPtexture* tex = (OPtexture*)OPCMAN.LoadGet("TetrisBlue.psd");
-    texture2DExample.Tex = OPtexture2DCreate(tex, NULL);
+	void Init(OPgameState* last) {
+		OPtexture* tex = (OPtexture*)OPCMAN.LoadGet("TetrisBlue.psd");
+		Tex = OPtexture2DCreate(tex, NULL);
 
-    texture2DExample.Tex->Position.y = 250;
-}
+		Tex->Position.y = 250;
+	}
 
-OPint ExampleTexture2DUpdate(OPtimer* time) {
-	return false;
-}
+	OPint Update(OPtimer* time) {
+		return false;
+	}
 
-void ExampleTexture2DRender(OPfloat delta) {
-	OPrenderClear(0, 0, 0);
-	OPtexture2DRender(texture2DExample.Tex);
-	OPrenderPresent();
-}
+	void Render(OPfloat delta) {
+		OPrenderClear(0, 0, 0);
+		OPtexture2DRender(Tex);
+		OPrenderPresent();
+	}
 
-OPint ExampleTexture2DExit(OPgameState* next) {
+	OPint Exit(OPgameState* next) {
 
-	return 0;
-}
+		return 0;
+	}
+} ;
+
 
 OPint GS_EXAMPLE_TEXTURE2D_AVAILABLE = 1;
-OPgameState GS_EXAMPLE_TEXTURE2D = {
-	ExampleTexture2DEnter,
-	ExampleTexture2DUpdate,
-	ExampleTexture2DRender,
-	ExampleTexture2DExit
-};
+Texture2DExample _GS_EXAMPLE_TEXTURE2D;
+OPgameState* GS_EXAMPLE_TEXTURE2D = &_GS_EXAMPLE_TEXTURE2D;

@@ -2,11 +2,11 @@
 
 #include "./Pipeline/include/OPtexture3D.h"
 
-typedef struct {
+class Texture3DExample : public OPgameState {
 	OPtexture3D* tex;
     OPcam camera;
 
-    void Init() {
+    void Init(OPgameState* state) {
         tex = OPtexture3D::Create((OPtexture*)OPCMAN.LoadGet("TetrisYellow.png"));
         camera.SetPerspective(OPvec3(0,5,5), OPVEC3_ZERO);
         tex->rotation.x = OPpi_2;
@@ -26,32 +26,13 @@ typedef struct {
         OPrenderPresent();
     }
 
-    OPint Exit() {
+    OPint Exit(OPgameState* state) {
         return 0;
     }
 
-} Texture3DExample;
-
-Texture3DExample texture3DExample;
-
-
-
-void ExampleTexture3DEnter(OPgameState* last) {
-    texture3DExample.Init();
-}
-OPint ExampleTexture3DUpdate(OPtimer* time) {
-    return texture3DExample.Update(time);
-}
-void ExampleTexture3DRender(OPfloat delta) {
-    texture3DExample.Render(delta);
-}
-OPint ExampleTexture3DExit(OPgameState* next) {
-    return texture3DExample.Exit();
-}
-OPint GS_EXAMPLE_TEXTURE3D_AVAILABLE = 1;
-OPgameState GS_EXAMPLE_TEXTURE3D = {
-	ExampleTexture3DEnter,
-	ExampleTexture3DUpdate,
-	ExampleTexture3DRender,
-	ExampleTexture3DExit
 };
+
+
+OPint GS_EXAMPLE_TEXTURE3D_AVAILABLE = 1;
+Texture3DExample _GS_EXAMPLE_TEXTURE3D;
+OPgameState* GS_EXAMPLE_TEXTURE3D = &_GS_EXAMPLE_TEXTURE3D;

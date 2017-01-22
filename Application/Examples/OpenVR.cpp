@@ -652,16 +652,11 @@ OPint ExampleOpenVRExit(OPgameState* next) {
 }
 
 #ifdef ADDON_openvr
-OPint GS_EXAMPLE_OPENVR_AVAILABLE = 1;
+OPint GS_EXAMPLE_OPENVR_AVAILABLE = 0;
 #else
 OPint GS_EXAMPLE_OPENVR_AVAILABLE = 0;
 #endif
 
 // This is the Game State for this IMGUIExample
 // Each entry is a function pointer for Initialize, Update, Destroy
-OPgameState GS_EXAMPLE_OPENVR = {
-	ExampleOpenVREnter,
-	ExampleOpenVRUpdate,
-	ExampleOpenVRRender,
-	ExampleOpenVRExit
-};
+OPgameState* GS_EXAMPLE_OPENVR = NULL;

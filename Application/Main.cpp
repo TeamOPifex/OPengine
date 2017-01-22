@@ -52,7 +52,7 @@ void ApplicationInit() {
 
 	OPVISUALDEBUGINFO.Init();
 
-	OPgameState::Change(&GS_EXAMPLE_SELECTOR);
+	OPgameState::Change(GS_EXAMPLE_SELECTOR);
 }
 
 OPint ApplicationUpdate(OPtimer* timer) {
@@ -65,8 +65,8 @@ OPint ApplicationUpdate(OPtimer* timer) {
 	OPCMAN_UPDATE(timer);
 
 	if (OPKEYBOARD.WasReleased(OPkeyboardKey::ESCAPE)) return 1;
-	if ((OPKEYBOARD.WasReleased(OPkeyboardKey::BACKSPACE) || OPGAMEPADS[0]->WasPressed(OPgamePadButton::BACK)) && ActiveState != &GS_EXAMPLE_SELECTOR) {
-		OPgameState::Change(&GS_EXAMPLE_SELECTOR);
+	if ((OPKEYBOARD.WasReleased(OPkeyboardKey::BACKSPACE) || OPGAMEPADS[0]->WasPressed(OPgamePadButton::BACK)) && ActiveState != GS_EXAMPLE_SELECTOR) {
+		OPgameState::Change(GS_EXAMPLE_SELECTOR);
 	}
 
 	return ActiveState->Update(timer);

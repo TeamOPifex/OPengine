@@ -31,7 +31,7 @@ ui16 _quadIndexData[] = {
 	3, 2, 0
 };
 
-typedef struct {
+class ShadowsExample : public OPgameState {
 	OPmodel* Model;
 	OPmat4 ModelWorld;
 	OPmodel* Ground;
@@ -58,7 +58,7 @@ typedef struct {
 
 	i8 ViewFromLight;
 
-	void Init() {
+	void Init(OPgameState* state) {
 		ViewFromLight = 0;
 
 		LightPosition = OPvec3Create(0, 10, 0);
@@ -216,34 +216,12 @@ typedef struct {
 		OPrenderPresent();
 	}
 
-	void Exit() {
-
+	OPint Exit(OPgameState* state) {
+		return 0;
 	}
-} ShadowsExample;
+};
 
-ShadowsExample shadowsExample;
-
-
-void ExampleShadowsEnter(OPgameState* last) {
-	shadowsExample.Init();
-}
-
-OPint ExampleShadowsUpdate(OPtimer* timer) {
-	return shadowsExample.Update(timer);
-}
-
-void ExampleShadowsRender(OPfloat delta) {
-	shadowsExample.Render(delta);
-}
-
-OPint ExampleShadowsExit(OPgameState* next) {
-	return 0;
-}
+ShadowsExample _GS_EXAMPLE_SHADOWS;
 
 OPint GS_EXAMPLE_SHADOWS_AVAILABLE = 1;
-OPgameState GS_EXAMPLE_SHADOWS = {
-	ExampleShadowsEnter,
-	ExampleShadowsUpdate,
-	ExampleShadowsRender,
-	ExampleShadowsExit
-};
+OPgameState* GS_EXAMPLE_SHADOWS = &_GS_EXAMPLE_SHADOWS;

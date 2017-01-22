@@ -5,7 +5,7 @@
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Data/include/OPcman.h"
 
-typedef struct {
+class FrameBufferExample : public OPgameState {
 	OPframeBuffer frameBuffer;
 	OPtexture2DOLD* texture2D;
 
@@ -13,56 +13,53 @@ typedef struct {
 	OPeffect Effect;		// The Effect used to render the Mesh
 	OPcam Camera;			// The Camera to use in the Effect to render the Mesh
 	ui64 Rotation;			// The amount to rotate the Mesh
-} FrameBufferExample;
-
-FrameBufferExample frameBufferExample;
-
-void ExampleFrameBufferEnter(OPgameState* last) {
-	OPtextureDesc textureDesc = OPtextureDesc(512, 512, OPtextureFormat::RGBA, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST);
-	frameBufferExample.frameBuffer.Init(textureDesc);
-	frameBufferExample.texture2D = OPtexture2DCreate(&frameBufferExample.frameBuffer.texture[0]);
 
 
-	frameBufferExample.Effect.Init("ColoredModel.vert", "ColoredModel.frag");
-	frameBufferExample.Mesh = *(OPmodel*)OPCMAN.LoadGet("daggerpbr.opm");
-	frameBufferExample.Camera.SetPerspective(OPVEC3_ONE * 20.0, OPVEC3_ZERO, OPVEC3_UP, 0.1f, 1000.0f, 45.0f, 1.0f);
-}
+	void Init(OPgameState* last) {
+		OPtextureDesc textureDesc = OPtextureDesc(512, 512, OPtextureFormat::RGBA, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST);
+		frameBuffer.Init(textureDesc);
+		texture2D = OPtexture2DCreate(&frameBuffer.texture[0]);
 
-OPint ExampleFrameBufferUpdate(OPtimer* time) {
 
-	if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { frameBufferExample.Rotation += time->Elapsed; }
+		Effect.Init("ColoredModel.vert", "ColoredModel.frag");
+		Mesh = *(OPmodel*)OPCMAN.LoadGet("daggerpbr.opm");
+		Camera.SetPerspective(OPVEC3_ONE * 20.0, OPVEC3_ZERO, OPVEC3_UP, 0.1f, 1000.0f, 45.0f, 1.0f);
+	}
 
-	frameBufferExample.frameBuffer.Bind();
-	OPrenderClear(0.0, 0, 0);
+	OPint Update(OPtimer* time) {
 
-	OPrenderDepth(1);
-	OPrenderCull(0);
+		if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { Rotation += time->Elapsed; }
 
-	OPmat4 world;
-	world.SetRotY(frameBufferExample.Rotation / 100.0f)->Scl(0.25f, 0.25f, 0.25f);
-	OPbindMeshEffectWorldCam(&frameBufferExample.Mesh, &frameBufferExample.Effect, &world, &frameBufferExample.Camera);
-	OPrenderDrawBufferIndexed(0);
-	frameBufferExample.frameBuffer.Unbind();
+		frameBuffer.Bind();
+		OPrenderClear(0.0, 0, 0);
 
-	return false;
-}
+		OPrenderDepth(1);
+		OPrenderCull(0);
 
-void ExampleFrameBufferRender(OPfloat delta) {
-	OPrenderClear(0.1);
-	OPtexture2DRender(frameBufferExample.texture2D);
-	OPrenderPresent();
-}
+		OPmat4 world;
+		world.SetRotY(Rotation / 100.0f)->Scl(0.25f, 0.25f, 0.25f);
+		OPbindMeshEffectWorldCam(&Mesh, &Effect, &world, &Camera);
+		OPrenderDrawBufferIndexed(0);
+		frameBuffer.Unbind();
 
-OPint ExampleFrameBufferExit(OPgameState* next) {
-	OPtexture2DUnloadGlobals();
-	frameBufferExample.Effect.Destroy();
-	return 0;
-}
+		return false;
+	}
+
+	void Render(OPfloat delta) {
+		OPrenderClear(0.1);
+		OPtexture2DRender(texture2D);
+		OPrenderPresent();
+	}
+
+	OPint Exit(OPgameState* next) {
+		OPtexture2DUnloadGlobals();
+		Effect.Destroy();
+		return 0;
+	}
+};
+
+
 
 OPint GS_EXAMPLE_FRAMEBUFFER_AVAILABLE = 1;
-OPgameState GS_EXAMPLE_FRAMEBUFFER = {
-	ExampleFrameBufferEnter,
-	ExampleFrameBufferUpdate,
-	ExampleFrameBufferRender,
-	ExampleFrameBufferExit
-};
+FrameBufferExample _GS_EXAMPLE_FRAMEBUFFER;
+OPgameState* GS_EXAMPLE_FRAMEBUFFER = &_GS_EXAMPLE_FRAMEBUFFER;

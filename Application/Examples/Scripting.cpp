@@ -4,72 +4,63 @@
 
 #ifdef OPIFEX_OPTION_V8
 
-typedef struct {
+class ScriptingExample : public OPgameState {
 	OPscript* InitScript;
 	OPscript* UpdateScript;
 	OPscript* DestroyScript;
 	OPjavaScriptV8Compiled InitCompiled;
 	OPjavaScriptV8Compiled UpdateCompiled;
 	OPjavaScriptV8Compiled DestroyCompiled;
-} ScriptingExample;
 
-ScriptingExample scriptingExample;
+	void Init(OPgameState* last) {
+		OPjavaScriptV8Init();
 
-void ExampleScriptingEnter(OPgameState* last) {
-	OPjavaScriptV8Init();
+		InitCompiled = OPjavaScriptV8Compiled("init.js");
+		UpdateCompiled = OPjavaScriptV8Compiled("update.js");
+		DestroyCompiled = OPjavaScriptV8Compiled("exit.js");
 
-	scriptingExample.InitCompiled = OPjavaScriptV8Compiled("init.js");
-	scriptingExample.UpdateCompiled = OPjavaScriptV8Compiled("update.js");
-	scriptingExample.DestroyCompiled = OPjavaScriptV8Compiled("exit.js");
+		//InitScript = (OPscript*)OPCMAN.LoadGet("init.js");
+		//UpdateScript = (OPscript*)OPCMAN.LoadGet("update.js");
+		//DestroyScript = (OPscript*)OPCMAN.LoadGet("exit.js");
+		//OPjavaScriptV8Compile(&InitCompiled, InitScript);
+		//OPjavaScriptV8Compile(&UpdateCompiled, UpdateScript);
+		//OPjavaScriptV8Compile(&DestroyCompiled, DestroyScript);
 
-	//scriptingExample.InitScript = (OPscript*)OPCMAN.LoadGet("init.js");
-	//scriptingExample.UpdateScript = (OPscript*)OPCMAN.LoadGet("update.js");
-	//scriptingExample.DestroyScript = (OPscript*)OPCMAN.LoadGet("exit.js");
-	//OPjavaScriptV8Compile(&scriptingExample.InitCompiled, scriptingExample.InitScript);
-	//OPjavaScriptV8Compile(&scriptingExample.UpdateCompiled, scriptingExample.UpdateScript);
-	//OPjavaScriptV8Compile(&scriptingExample.DestroyCompiled, scriptingExample.DestroyScript);
+		OPjavaScriptV8Run(&InitCompiled);
+		OPjavaScriptV8Run(&UpdateCompiled);
+	}
 
-    OPjavaScriptV8Run(&scriptingExample.InitCompiled);
-    OPjavaScriptV8Run(&scriptingExample.UpdateCompiled);
-}
+	OPint Update(OPtimer* time) {
 
-OPint ExampleScriptingUpdate(OPtimer* time) {
+		SCOPE_AND_ISOLATE;
 
-    SCOPE_AND_ISOLATE;
+		// OPjavaScriptPersistentValue args[1] = {
+		//         JS_CREATE_PERSISTENT(JS_NEW_NUMBER(0.5))
+		// };
+		// const OPchar* name = "Update";
+		// OPjavaScriptPersistentValue result = OPjavaScriptV8Run(&UpdateCompiled, name, 1, args);
+		//
+		// return JS_GET_PERSISTENT_NUMBER(result);
+		return 0;
+	}
 
-    // OPjavaScriptPersistentValue args[1] = {
-    //         JS_CREATE_PERSISTENT(JS_NEW_NUMBER(0.5))
-    // };
-	// const OPchar* name = "Update";
-    // OPjavaScriptPersistentValue result = OPjavaScriptV8Run(&scriptingExample.UpdateCompiled, name, 1, args);
-	//
-	// return JS_GET_PERSISTENT_NUMBER(result);
-	return 0;
-}
+	void Render(OPfloat delta) {
 
-void ExampleScriptingRender(OPfloat delta) {
+	}
 
-}
-
-OPint ExampleScriptingExit(OPgameState* next) {
-	OPjavaScriptV8Run(&scriptingExample.DestroyCompiled);
-	return 0;
-}
-
-OPgameState GS_EXAMPLE_SCRIPTING = {
-	ExampleScriptingEnter,
-	ExampleScriptingUpdate,
-	ExampleScriptingRender,
-	ExampleScriptingExit
+	OPint Exit(OPgameState* next) {
+		OPjavaScriptV8Run(&DestroyCompiled);
+		return 0;
+	}
 };
-#else
 
-OPgameState GS_EXAMPLE_SCRIPTING;
 
-#endif
-
-#ifndef OPIFEX_OPTION_V8
-OPint GS_EXAMPLE_SCRIPTING_AVAILABLE = 0;
-#else
 OPint GS_EXAMPLE_SCRIPTING_AVAILABLE = 1;
+ScriptingExample _GS_EXAMPLE_SCRIPTING;
+OPgameState* GS_EXAMPLE_SCRIPTING = &_GS_EXAMPLE_SCRIPTING;
+#else
+
+OPint GS_EXAMPLE_SCRIPTING_AVAILABLE = 0;
+OPgameState* GS_EXAMPLE_SCRIPTING = NULL;
+
 #endif

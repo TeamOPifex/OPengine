@@ -4,49 +4,45 @@
 #include "./OPengine.h"
 
 
-typedef struct {
+class SpriteExample : public OPgameState {
 	OPsprite* sprite;
 	OPsprite2D* sprite2D;
-} SpriteExample;
 
-SpriteExample spriteExample;
 
-void ExampleSpriteEnter(OPgameState* last) {
-	OPsprite2DInit(NULL);
-	OPCMAN.Load("spriteExample.opss");
+	void Init(OPgameState* last) {
+		OPsprite2DInit(NULL);
+		OPCMAN.Load("opss");
 
-	spriteExample.sprite = (OPsprite*)OPCMAN.Get("spriteExample/Bear");
-	spriteExample.sprite2D = OPsprite2DCreate(&spriteExample.sprite, NULL);
-}
+		sprite = (OPsprite*)OPCMAN.Get("spriteExample/Bear");
+		sprite2D = OPsprite2DCreate(&sprite, NULL);
+	}
 
-OPint ExampleSpriteUpdate(OPtimer* time) {
+	OPint Update(OPtimer* time) {
 
-	OPsprite2DUpdate(spriteExample.sprite2D, time);
+		OPsprite2DUpdate(sprite2D, time);
 
-	OPrenderClear(0,0,0);
+		OPrenderClear(0, 0, 0);
 
-	OPsprite2DPrepRender(spriteExample.sprite2D);
-	//OPtexturePixelate();
-	OPrenderDrawBufferIndexed(0);
+		OPsprite2DPrepRender(sprite2D);
+		//OPtexturePixelate();
+		OPrenderDrawBufferIndexed(0);
 
-	OPrenderPresent();
+		OPrenderPresent();
 
-	return false;
+		return false;
 
-}
-void ExampleSpriteRender(OPfloat delta) {
+	}
+	void Render(OPfloat delta) {
 
-}
-OPint ExampleSpriteExit(OPgameState* next) {
-	return 0;
-}
+	}
+	OPint Exit(OPgameState* next) {
+		return 0;
+	}
+};
+
 
 OPint GS_EXAMPLE_SPRITE_AVAILABLE = 1;
 // This is the Game State for this SpriteExample
 // Each entry is a function pointer for Initialize, Update, Destroy
-OPgameState GS_EXAMPLE_SPRITE = {
-	ExampleSpriteEnter,
-	ExampleSpriteUpdate,
-	ExampleSpriteRender,
-	ExampleSpriteExit
-};
+SpriteExample _GS_EXAMPLE_SPRITE;
+OPgameState* GS_EXAMPLE_SPRITE = &_GS_EXAMPLE_SPRITE;

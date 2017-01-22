@@ -8,6 +8,7 @@ typedef struct OPskeleton OPskeleton;
 
 #include "./Math/include/OPmat4.h"
 #include "./Math/include/OPvec4.h"
+#include "./Data/include/OPcman.h"
 
 struct OPskeleton {
 	ui16 hierarchyCount;
@@ -56,5 +57,9 @@ struct OPskeleton {
 
 	inline OPvec3 LocalTranslate(const OPchar* name) {
 		return LocalTranslate(Get(name));
+	}
+
+	static OPskeleton* Load(const OPchar* name) {
+		return (OPskeleton*)OPCMAN.LoadGet(name);
 	}
 };

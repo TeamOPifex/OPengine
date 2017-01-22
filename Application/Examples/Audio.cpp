@@ -5,62 +5,54 @@
 
 #include "./Data/include/OPcman.h"
 
-typedef struct {
+class AudioExample : public OPgameState {
 	OPaudioEmitter* Sound;
 	OPaudioEmitter* BackgroundSound;
-} AudioExample;
 
-AudioExample* audioExample;
 
-void ExampleAudioEnter(OPgameState* last) {
-	OPCMAN.Load("step0.wav");
-	OPCMAN.Load("background.ogg");
+	void Init(OPgameState* last) {
+		OPCMAN.Load("step0.wav");
+		OPCMAN.Load("background.ogg");
 
-	OPaudInit();
-	OPaudInitThread(10);
+		OPaudInit();
+		OPaudInitThread(10);
 
-	audioExample = (AudioExample*)OPalloc(sizeof(AudioExample));
-
-	audioExample->Sound = OPaudCreateEmitter((OPaudioSource*)OPCMAN.Get("step0.wav"), EMITTER_THREADED);
-	audioExample->BackgroundSound = OPaudCreateEmitter((OPaudioSource*)OPCMAN.Get("background.ogg"), EMITTER_THREADED);
-}
-
-OPint ExampleAudioUpdate(OPtimer* time) {
-	
-	if (OPKEYBOARD.WasPressed(OPkeyboardKey::P) || OPGAMEPADS[0]->WasPressed(OPgamePadButton::A)) {
-		OPaudSetEmitter(audioExample->Sound);
-		OPaudVolume(audioExample->Sound, 1.0f);
-		OPaudPlay();
+		Sound = OPaudCreateEmitter((OPaudioSource*)OPCMAN.Get("step0.wav"), EMITTER_THREADED);
+		BackgroundSound = OPaudCreateEmitter((OPaudioSource*)OPCMAN.Get("background.ogg"), EMITTER_THREADED);
 	}
-	if (OPKEYBOARD.WasPressed(OPkeyboardKey::B) || OPGAMEPADS[0]->WasPressed(OPgamePadButton::B)) {
-		OPaudSetEmitter(audioExample->BackgroundSound);
-		OPaudVolume(audioExample->BackgroundSound, 0.5f);
-		OPaudPlay();
+
+	OPint Update(OPtimer* time) {
+
+		if (OPKEYBOARD.WasPressed(OPkeyboardKey::P) || OPGAMEPADS[0]->WasPressed(OPgamePadButton::A)) {
+			OPaudSetEmitter(Sound);
+			OPaudVolume(Sound, 1.0f);
+			OPaudPlay();
+		}
+		if (OPKEYBOARD.WasPressed(OPkeyboardKey::B) || OPGAMEPADS[0]->WasPressed(OPgamePadButton::B)) {
+			OPaudSetEmitter(BackgroundSound);
+			OPaudVolume(BackgroundSound, 0.5f);
+			OPaudPlay();
+		}
+		return false;
 	}
-	return false;
-}
 
-void ExampleAudioRender(OPfloat delta) {
-	OPrenderClear(0, 0, 0);
-	OPrenderPresent();
-}
+	void Render(OPfloat delta) {
+		OPrenderClear(0, 0, 0);
+		OPrenderPresent();
+	}
 
-OPint ExampleAudioExit(OPgameState* next) {
-	OPaudRecycleEmitter(audioExample->Sound);
-	OPCMAN.Unload("step0.wav");
+	OPint Exit(OPgameState* next) {
+		OPaudRecycleEmitter(Sound);
+		OPCMAN.Unload("step0.wav");
+		return 0;
+	}
+};
 
-	OPfree(audioExample);
-	return 0;
-}
 
 #ifdef OPIFEX_OPTION_AUDIO
 OPint GS_EXAMPLE_AUDIO_AVAILABLE = 1;
 #else
 OPint GS_EXAMPLE_AUDIO_AVAILABLE = 0;
 #endif
-OPgameState GS_EXAMPLE_AUDIO = {
-	ExampleAudioEnter,
-	ExampleAudioUpdate,
-	ExampleAudioRender,
-	ExampleAudioExit
-};
+AudioExample _GS_EXAMPLE_AUDIO;
+OPgameState* GS_EXAMPLE_AUDIO = &_GS_EXAMPLE_AUDIO;

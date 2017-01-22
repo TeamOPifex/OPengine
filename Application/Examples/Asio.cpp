@@ -85,16 +85,11 @@ OPint ExampleAsioExit(OPgameState* next) {
 }
 
 #ifdef OPIFEX_OPTION_ASIO
-OPint GS_EXAMPLE_ASIO_AVAILABLE = 1;
+OPint GS_EXAMPLE_ASIO_AVAILABLE = 0;
 #else
 OPint GS_EXAMPLE_ASIO_AVAILABLE = 0;
 #endif
 
 // This is the Game State for this ModelExample
 // Each entry is a function pointer for Initialize, Update, Destroy
-OPgameState GS_EXAMPLE_ASIO = {
-	ExampleAsioEnter,
-	ExampleAsioUpdate,
-	ExampleAsioRender,
-	ExampleAsioExit
-};
+OPgameState* GS_EXAMPLE_ASIO = NULL;

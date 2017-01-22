@@ -10,7 +10,7 @@
 #include <bitset>
 #include <string>
 
-struct CommandBucketExample {
+class CommandBucketExample : public OPgameState {
 	OPmodel* model;
 	OPmodel* model2;
 	OPmat4 world1, world2;
@@ -81,29 +81,6 @@ struct CommandBucketExample {
     	return 0;
     }
 };
-
-// The actual game state state
-CommandBucketExample commandBucketExample;
-
-
-// Wrapping methods
-void ExampleCommandBucketEnter(OPgameState* last) {
-    commandBucketExample.Init(last);
-}
-OPint ExampleCommandBucketUpdate(OPtimer* time) {
-    return commandBucketExample.Update(time);
-}
-void ExampleCommandBucketRender(OPfloat delta) {
-    commandBucketExample.Render(delta);
-}
-OPint ExampleCommandBucketExit(OPgameState* next) {
-    return commandBucketExample.Exit(next);
-}
-
 OPint GS_EXAMPLE_COMMAND_BUCKET_AVAILABLE = 1;
-OPgameState GS_EXAMPLE_COMMAND_BUCKET = {
-	ExampleCommandBucketEnter,
-	ExampleCommandBucketUpdate,
-	ExampleCommandBucketRender,
-	ExampleCommandBucketExit
-};
+CommandBucketExample _GS_EXAMPLE_COMMAND_BUCKET;
+OPgameState* GS_EXAMPLE_COMMAND_BUCKET = &_GS_EXAMPLE_COMMAND_BUCKET;
