@@ -8,10 +8,18 @@
 
 #ifdef OPIFEX_WINDOWS
 	HINSTANCE OP_HINSTANCE;
+	#if defined(DEBUG) | defined(_DEBUG)
+		#include <crtdbg.h>
+	#endif
 #endif
 
 #ifdef OPIFEX_DESKTOP
 void OPstart(int argc, char** args) {
+#ifdef OPIFEX_WINDOWS
+#if defined(DEBUG) | defined(_DEBUG)
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_CHECK_CRT_DF);
+#endif 
+#endif 
 	// Initialize the engine and game
 	OPSTARTUP_PATH = OPdirCurrent();
 	OPEXECUTABLE_PATH = OPdirExecutable();
@@ -50,6 +58,11 @@ void OPstart(int argc, char** args) {
 
 
 void OPstartStepped(int argc, char** args) {
+#ifdef OPIFEX_WINDOWS
+	#if defined(DEBUG) | defined(_DEBUG)
+		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_CHECK_CRT_DF);
+	#endif 
+#endif 
 	OPtimer frameStepped;
 	ui64 accumlator = 0;
 	ui64 STEP = 16;

@@ -14,7 +14,7 @@ void OPrendererDeferred::Init(OPcam** cam, OPcam** shadowCam) {
 	lightPass.Init(cam, &gbufferPass, quadMesh);
 	combinePass.Init(cam, &gbufferPass, &ssaoPass, &lightPass, quadMesh);
 
-	passes = OPNEW(OPrendererPass*, 4);
+	passes = OPALLOC(OPrendererPass*, 4);
 	passes[0] = &gbufferPass;
 	passes[1] = &ssaoPass;
 	passes[2] = &lightPass;

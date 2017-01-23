@@ -35,14 +35,17 @@ class DeferredSceneExample : public OPgameState {
 	bool dir = true;
 
 	void Init(OPgameState* last) {
+		model = (OPmodel*)OPCMAN.LoadGet("sponza.opm");
 
 		scene.Init(&renderer, 100, 100);
+		model1Entity = scene.Add(model, OPrendererEntityDesc(true, true));
+		//scene.camera = &camera2;
+		//renderer2.SetCamera(&scene.camera);
+
 		camera.Init(1.0, 1.0, OPvec3(0, 5, 0), 0.1f, 50.0f);
 		camera2.SetPerspective(OPvec3(0, 1, 5), OPvec3(0, 1, 0));
 		scene.camera = &camera.Camera;
 		renderer.SetCamera(&scene.camera);
-		//scene.camera = &camera2;
-		//renderer2.SetCamera(&scene.camera);
 
 		light = scene.Add(OPlightSpot());
 		light->light.position = OPvec3(0, 0, 0);
@@ -59,9 +62,6 @@ class DeferredSceneExample : public OPgameState {
 		light3->light.color = OPvec3(0, 1, 0);
 		light3->light.radius = 5.0f;
 
-		model = (OPmodel*)OPCMAN.LoadGet("sponza.opm");
-
-		model1Entity = scene.Add(model, OPrendererEntityDesc(true, true));
 		//model1Entity->material = scene.renderer->GetMaterial(0);
 		//model1Entity->material->CreateInstances(model1Entity);
 

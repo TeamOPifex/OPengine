@@ -33,6 +33,7 @@ void OPscene::SetShadowCamera(OPcam* cam) {
 }
 
 OPrendererEntity* OPscene::Add(OPmodel* model, OPmaterial* material, OPrendererEntityDesc desc) {
+	ASSERT(index < count, "Hit Max Entities");
 	entities[index].world = OPMAT4_IDENTITY;
 	entities[index].model = model;
 	entities[index].material = material;
@@ -41,6 +42,7 @@ OPrendererEntity* OPscene::Add(OPmodel* model, OPmaterial* material, OPrendererE
 }
 
 OPrendererEntity* OPscene::Add(OPmodel* model, OPrendererEntityDesc desc) {
+	ASSERT(index < count, "Hit Max Entities");
 	entities[index].world = OPMAT4_IDENTITY;
 	entities[index].model = model;
 	entities[index].desc = desc;
@@ -50,6 +52,7 @@ OPrendererEntity* OPscene::Add(OPmodel* model, OPrendererEntityDesc desc) {
 }
 
 OPrendererEntity* OPscene::Add(OPmodel* model, OPskeleton* skeleton, OPrendererEntityDesc desc) {
+	ASSERT(index < count, "Hit Max Entities");
 	desc.animated = true;
 	entities[index].world = OPMAT4_IDENTITY;
 	entities[index].model = model;
