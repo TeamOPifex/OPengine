@@ -54,9 +54,13 @@ OPrendererEntity* OPscene::Add(OPmodel* model, OPskeleton* skeleton, OPrendererE
 	entities[index].world = OPMAT4_IDENTITY;
 	entities[index].model = model;
 	entities[index].desc = desc;
+	entities[index].shadowMaterial = NULL;
 	renderer->SetMaterials(&entities[index]);
 	OPmaterial::SetMeta(&entities[index]);
 	entities[index].material->AddParam(skeleton);
+	if (entities[index].shadowMaterial != NULL) {
+		entities[index].shadowMaterial->AddParam(skeleton);
+	}
 	return &entities[index++];
 }
 

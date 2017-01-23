@@ -8,7 +8,7 @@ void OPgameState::Change(OPgameState* targetState){
 
 	if(ActiveState != NULL && ActiveState->Exit(targetState)) {
 		return;
-	}
+	}	
 
 	lastState = ActiveState;
 	ActiveState = targetState;
