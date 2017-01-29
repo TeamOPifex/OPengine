@@ -90,6 +90,10 @@ public:
 		AddParam(OPmaterialParamType::FLOAT, name, (void*)data, 1);
 	}
 
+	inline void AddParam(const OPchar* name, i32* data) {
+		AddParam(OPmaterialParamType::INT, name, (void*)data, 1);
+	}
+
 	inline void AddParam(const OPchar* name, bool* data) {
 		AddParam(OPmaterialParamType::BOOL, name, (void*)data, 1);
 	}

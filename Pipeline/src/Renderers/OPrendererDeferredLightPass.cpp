@@ -1,5 +1,5 @@
 #include "./Pipeline/include/Renderers/OPrendererDeferredLightPass.h"
-
+#include "./Core/include/OPdebug.h"
 
 
 
@@ -25,68 +25,70 @@ void OPrendererDeferredLightPass::Begin() {
 }
 
 void OPrendererDeferredLightPass::End() {
+	TIMED_BLOCK
 
 	// DRAW LIGHTS
-	{
-		lightBuffer.Bind();
-		f32 ambient = 1.0;
-		OPrenderClear(ambient, ambient, ambient, 1.0);
+	
+	lightBuffer.Bind();
+	f32 ambient = 1.0;
+	OPrenderClear(ambient, ambient, ambient, 1.0);
 
 
 
-		//// DRAW LIGHTS
-		//{
-		//	deferredRenderer->invertViewProjection = (*deferredRenderer->rendererRoot.camera)->view * (*deferredRenderer->rendererRoot.camera)->proj;
-		//	OPmat4Inverse(&deferredRenderer->invertViewProjection, deferredRenderer->invertViewProjection);
+	//// DRAW LIGHTS
+	//{
+	//	deferredRenderer->invertViewProjection = (*deferredRenderer->rendererRoot.camera)->view * (*deferredRenderer->rendererRoot.camera)->proj;
+	//	OPmat4Inverse(&deferredRenderer->invertViewProjection, deferredRenderer->invertViewProjection);
 
-		//	deferredRenderer->lightBuffer.Bind();
-		//	f32 ambient = 0.25;
-		//	OPrenderClearColor(ambient, ambient, ambient, 1.0);
+	//	deferredRenderer->lightBuffer.Bind();
+	//	f32 ambient = 0.25;
+	//	OPrenderClearColor(ambient, ambient, ambient, 1.0);
 
-		//	OPrenderDepthWrite(false);
-		//	OPrenderDepth(false);
-		//	OPrenderBlend(true);
-		//	OPRENDERER_ACTIVE->SetBlendModeAdditive();
-		//	//OPrenderCullMode(2);
+	//	OPrenderDepthWrite(false);
+	//	OPrenderDepth(false);
+	//	OPrenderBlend(true);
+	//	OPRENDERER_ACTIVE->SetBlendModeAdditive();
+	//	//OPrenderCullMode(2);
 
-		//	deferredRenderer->defaultLightingSpotEffect->Bind();
-		//	deferredRenderer->sphereMesh->Bind();
-		//	OPmat4 world;
+	//	deferredRenderer->defaultLightingSpotEffect->Bind();
+	//	deferredRenderer->sphereMesh->Bind();
+	//	OPmat4 world;
 
-		//	//OPrenderSetWireframe(wireframe);
-		//	OPrenderCull(true);
-		//	OPrenderCullMode(OPcullFace::BACK);
-		//	for (ui32 i = 0; i < deferredRenderer->spotLightsInd; i++) {
-		//		world.SetScl(deferredRenderer->spotLights[i].radius)->Translate(deferredRenderer->spotLights[i].position);
-		//		OPeffectSet("uWorld", 1, &world);
-		//		OPeffectSet("uLightPos", &deferredRenderer->spotLights[i].position);
-		//		OPeffectSet("uLightColor", &deferredRenderer->spotLights[i].color);
-		//		OPeffectSet("uLightRadius", deferredRenderer->spotLights[i].radius);
-		//		OPeffectSet(*renderer->camera);
-		//		OPeffectSet("uGbufferDepth", &deferredRenderer->gBuffer.depthTexture, 0);
-		//		OPeffectSet("uGbufferPosition", &deferredRenderer->gBuffer.texture[0], 1);
-		//		OPrenderDrawBufferIndexed(0);
-		//	}
-		//	OPRENDERER_ACTIVE->SetBlendModeAlpha();
-		//	//OPrenderSetWireframe(false);
+	//	//OPrenderSetWireframe(wireframe);
+	//	OPrenderCull(true);
+	//	OPrenderCullMode(OPcullFace::BACK);
+	//	for (ui32 i = 0; i < deferredRenderer->spotLightsInd; i++) {
+	//		world.SetScl(deferredRenderer->spotLights[i].radius)->Translate(deferredRenderer->spotLights[i].position);
+	//		OPeffectSet("uWorld", 1, &world);
+	//		OPeffectSet("uLightPos", &deferredRenderer->spotLights[i].position);
+	//		OPeffectSet("uLightColor", &deferredRenderer->spotLights[i].color);
+	//		OPeffectSet("uLightRadius", deferredRenderer->spotLights[i].radius);
+	//		OPeffectSet(*renderer->camera);
+	//		OPeffectSet("uGbufferDepth", &deferredRenderer->gBuffer.depthTexture, 0);
+	//		OPeffectSet("uGbufferPosition", &deferredRenderer->gBuffer.texture[0], 1);
+	//		OPrenderDrawBufferIndexed(0);
+	//	}
+	//	OPRENDERER_ACTIVE->SetBlendModeAlpha();
+	//	//OPrenderSetWireframe(false);
 
-		//	//OPrenderBlend(true);
-		//	//deferredRenderer->renderBucket[1].Submit(deferredRenderer->quadMesh, &deferredWorld, deferredRenderer->defaultLightingMaterialInstance);
-		//	//deferredRenderer->renderBucket[1].Sort();
-		//	//deferredRenderer->renderBucket[1].Flush(false);
+	//	//OPrenderBlend(true);
+	//	//deferredRenderer->renderBucket[1].Submit(deferredRenderer->quadMesh, &deferredWorld, deferredRenderer->defaultLightingMaterialInstance);
+	//	//deferredRenderer->renderBucket[1].Sort();
+	//	//deferredRenderer->renderBucket[1].Flush(false);
 
-		//	deferredRenderer->lightBuffer.Unbind();
+	//	deferredRenderer->lightBuffer.Unbind();
 
-		//	OPrenderCullMode(OPcullFace::FRONT);
-		//	OPrenderDepth(true);
-		//	OPrenderDepthWrite(true);
+	//	OPrenderCullMode(OPcullFace::FRONT);
+	//	OPrenderDepth(true);
+	//	OPrenderDepthWrite(true);
 
-		//	deferredRenderer->spotLightsInd = 0;
-		//}
+	//	deferredRenderer->spotLightsInd = 0;
+	//}
 
-		lightBuffer.Unbind();
+	lightBuffer.Unbind();
+	OPlogInfo("================ LIGHT PASS");
 
-	}
+	
 }
 
 

@@ -1,35 +1,44 @@
 #version 330 core
 out float FragColor;
 in vec2 vUV;
+in vec2 vViewRay;
 
-uniform sampler2D uGbufferPosition;
+//uniform sampler2D uGbufferPosition;
 uniform sampler2D uGbufferNormal;
 uniform sampler2D uNoise;
 uniform sampler2D uGbufferDepth;
 
 uniform vec3 samples[64];
-
-// parameters (you'd probably want to use them as uniforms to more easily tweak the effect)
-int kernelSize = 64;
-uniform float radius = 1.0;
-
-// tile noise texture over screen based on screen dimensions divided by noise size
-const vec2 noiseScale = vec2(1920.0f/4.0f, 1200.0f/4.0f); 
-
 uniform mat4 uProj;
 
-const float NEAR = 0.01;
-const float FAR = 50.0f;
-float LinearizeDepth(float depth)
+uniform int kernelSize = 32;
+uniform float radius = 1.0;
+
+float bias = 0.025;
+
+// tile noise texture over screen based on screen dimensions divided by noise size
+const vec2 noiseScale = vec2(1920.0f/4.0f, 1200.0f/4.0f);
+
+float CalcViewZ(vec2 Coords)
 {
-    float z = depth * 2.0 - 1.0; // Back to NDC 
-    return (2.0 * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR));	
+    float Depth = texture(uGbufferDepth, Coords).x;
+    float ViewZ = uProj[3][2] / (2 * Depth -1 - uProj[2][2]);
+    return ViewZ;
 }
+
 void main()
 {
+
+    float ViewZ = CalcViewZ(vUV);
+
+    float ViewX = vViewRay.x * ViewZ;
+    float ViewY = vViewRay.y * ViewZ;
+
+    vec3 fragPos = vec3(ViewX, ViewY, ViewZ);
+
+    //vec3 fragPos = texture(uGbufferPosition, vUV).xyz; // in View Space
+
     // Get input for SSAO algorithm
-    vec3 fragPos = texture(uGbufferPosition, vUV).xyz; // in View Space
-    //float fragDepth = texture(uGbufferPosition, vUV).a;
     vec3 normal = texture(uGbufferNormal, vUV).rgb;
     vec3 randomVec = texture(uNoise, vUV * noiseScale).xyz;
 
@@ -53,16 +62,13 @@ void main()
         offset.xyz /= offset.w; // perspective divide
         offset.xyz = offset.xyz * 0.5 + 0.5; // transform to range 0.0 - 1.0
         
-        // get sample depth
-        float sampleDepth = texture(uGbufferPosition, offset.xy).z; // Get depth value of kernel sample
+        float sampleDepth = CalcViewZ(offset.xy); //texture(uGbufferPosition, offset.xy).z; // Get depth value of kernel sample
         
-        // range check & accumulate
-		float rangeCheck= abs(fragPos.z - sampleDepth) < radius ? 1.0 : 0.0;
-        //float rangeCheck = smoothstep(0.0, 1.0, radius / abs(fragPos.z - sampleDepth));
-        occlusion += (sampleDepth >= sample.z ? 1.0 : 0.0) * rangeCheck;           
+        float rangeCheck = smoothstep(0.0, 1.0, radius / abs(fragPos.z - sampleDepth));
+        occlusion += (sampleDepth >= sample.z + bias ? 1.0 : 0.0) * rangeCheck;
     }
-    occlusion = 1.0 - (occlusion / 64.0);
+
+    occlusion = 1.0 - (occlusion / kernelSize);
     
-	FragColor = occlusion;//pow(occlusion, 2);
-   // FragColor = occlusion;//(fragPos.x + fragPos.y + fragPos.z) / 3.0;//vec3(occlusion);//samples[1];// ;;
+	FragColor = occlusion;
 }
