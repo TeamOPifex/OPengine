@@ -65,7 +65,7 @@ void OPstart(int argc, char** args) {
 void _OPsteppedLooped() {
 
 	OPtimer frameStepped;
-	ui64 accumlator = 0;
+	d64 accumlator = 0;
 	ui64 STEP = 16;
 
 	frameStepped.Init();
@@ -81,11 +81,11 @@ void _OPsteppedLooped() {
 		// and then resumed. This will make sure that we don't try to
 		// update 15+ seconds at a time.
 		if (OPTIMER.Elapsed > 2000) {
-			OPTIMER.Elapsed = 16;
+			OPTIMER.Elapsed = STEP;
 		}
 #endif
 
-		accumlator += OPTIMER.Elapsed;
+		accumlator += OPTIMER.ElapsedHighRes;
 
 		while (accumlator >= STEP) {
 			frameStepped.TotalGametime += STEP;

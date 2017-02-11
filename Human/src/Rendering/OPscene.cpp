@@ -24,12 +24,12 @@ void OPscene::Init(OPrenderer2* renderer, ui32 maxEntities, ui32 maxLights) {
 
 void OPscene::SetCamera(OPcam* cam) {
 	camera = cam;
-	renderer->SetCamera(&cam);
+	renderer->SetCamera(&camera);
 }
 
 void OPscene::SetShadowCamera(OPcam* cam) {
 	shadowCamera = cam;
-	renderer->SetShadowCamera(&cam);
+	renderer->SetShadowCamera(&shadowCamera);
 }
 
 OPrendererEntity* OPscene::Add(OPmodel* model, OPmaterial* material, OPrendererEntityDesc desc) {

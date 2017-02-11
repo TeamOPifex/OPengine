@@ -76,11 +76,12 @@ void OPtexture2DPrepRender(OPtexture2DOLD* tex2d) {
     OPmat4 size = OPMAT4_IDENTITY;
     //size.Translate(tex2d->Position.x / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, tex2d->Position.y / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, 0);
     size.Scl(tex2d->Texture->textureDesc.width * tex2d->Scale.x, tex2d->Texture->textureDesc.height * tex2d->Scale.y, 1.0);
-    OPmat4 view = OPMAT4_IDENTITY;
-	OPfloat halfWidth = OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / 2.0f;
-	OPfloat halfHeight = OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height / 2.0f;
+	size.Translate(tex2d->Position.x, tex2d->Position.y, 0);
+ //   OPmat4 view = OPMAT4_IDENTITY;
+	//OPfloat halfWidth = OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / 2.0f;
+	//OPfloat halfHeight = OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height / 2.0f;
 
-    view = OPmat4Ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, -1.0f, 1.0f);
+ //   view = OPmat4Ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, -1.0f, 1.0f);
 
     //view.Scl(1.0f / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, 1.0f / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, 1.0f);
 
@@ -88,9 +89,9 @@ void OPtexture2DPrepRender(OPtexture2DOLD* tex2d) {
 
 
 	OPcam cam;
-	cam.SetOrtho(OPvec3(0, 0, -1), OPvec3(0), OPvec3(0, 1, 0), 0.1f, 10.0f, -halfWidth, halfWidth, -halfHeight, halfHeight);
+	cam.SetOrtho(OPvec3(0, 0, 1), OPvec3(0), OPvec3(0, 1, 0), 0.1f, 10.0f, 0, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, 0);
 
-	world = size * cam.view * cam.proj;
+	world = cam.proj * cam.view * size;
 
 	OPeffectSet("uColorTexture", tex2d->Texture, 0);
 	OPeffectSet("uUVScale", 1, &tex2d->UVScale);

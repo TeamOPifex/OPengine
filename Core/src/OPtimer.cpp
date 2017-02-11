@@ -45,11 +45,8 @@ void OPtimer::Tick() {
 	QueryPerformanceCounter(&StartingTime);
 
 	Elapsed = StartingTime.QuadPart - TimeLastTick.QuadPart;
-#ifdef _DEBUG
-	ElapsedHighRes = Elapsed;
-	ElapsedHighRes *= 1000.0f;
-	ElapsedHighRes /= Frequency.QuadPart; 
-#endif
+	ElapsedHighRes = Elapsed * 1000;
+	ElapsedHighRes /= (OPfloat)Frequency.QuadPart; 
 	Elapsed *= 1000; // to milliseconds
 	Elapsed /= Frequency.QuadPart;
 

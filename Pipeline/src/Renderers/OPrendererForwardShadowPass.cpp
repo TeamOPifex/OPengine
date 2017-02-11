@@ -39,11 +39,9 @@ void OPrendererForwardShadowPass::End() {
 		TIMED_BLOCK
 		renderBucket.Sort();
 		renderBucket.Flush(false);
-		OPlogInfo("================ Draw shadow objs");
 	}
 
 	depthBuffer.Unbind();
 
 	OPrenderCullMode(OPcullFace::BACK);
-	OPlogInfo("================ SHADOW PASS");
 }

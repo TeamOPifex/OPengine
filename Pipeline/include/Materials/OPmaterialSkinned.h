@@ -27,7 +27,7 @@ public:
 	}
 
 	inline void SetBones(OPskeleton* skeleton) {
-		AddParam("uBones", skeleton->skinned, skeleton->hierarchyCount);
+		AddParam("uBones", skeleton->skinned, (ui8)skeleton->hierarchyCount);
 	}
 
 	inline void SetAlbedoMap(OPtexture* texture) {
