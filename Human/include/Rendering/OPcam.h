@@ -30,7 +30,7 @@ struct OPcam {
 	void Bind();
 
 	inline void SetPerspective(OPvec3 position, OPvec3 target) {
-		SetPerspective(position, target, OPVEC3_UP, 0.1f, 1000.0f, 45.0f, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height);
+		SetPerspective(position, target, OPVEC3_UP, 0.1f, 50.0f, 45.0f, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height);
 	}
 
 	inline void SetOrtho(OPvec3 position, OPvec3 target, OPfloat size) {

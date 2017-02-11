@@ -316,7 +316,7 @@ OPfloat OPrandRange(OPfloat min, OPfloat max);
 * @return cos(f)
 */
 __inline OPfloat OPradians(OPfloat f) {
-	return f * OPradianConvert;
+	return (OPfloat)(f * OPradianConvert);
 }
 
 #define OPMIN(a,b) (((a) < (b)) ? (a) : (b))

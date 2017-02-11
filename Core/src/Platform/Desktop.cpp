@@ -8,28 +8,16 @@
 
 #ifdef OPIFEX_WINDOWS
 	HINSTANCE OP_HINSTANCE;
-	#if defined(DEBUG) | defined(_DEBUG)
-		#include <crtdbg.h>
-	#endif
+	//#if defined(DEBUG) | defined(_DEBUG)
+	//	#include <crtdbg.h>
+	//#endif
 #endif
 
 #ifdef OPIFEX_DESKTOP
-void OPstart(int argc, char** args) {
-#ifdef OPIFEX_WINDOWS
-#if defined(DEBUG) | defined(_DEBUG)
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_CHECK_CRT_DF);
-#endif 
-#endif 
-	// Initialize the engine and game
-	OPSTARTUP_PATH = OPdirCurrent();
-	OPEXECUTABLE_PATH = OPdirExecutable();
-    OPlogErr("Exec Path: %s", OPEXECUTABLE_PATH);
-	OPTIMER.Init();
-	OPENGINERUNNING = true;
-	OPinitialize();
 
+void _OPlooped() {
 	// main game loop
-	while(OPENGINERUNNING){
+	while (OPENGINERUNNING) {
 		// update the timer
 		OPTIMER.Tick();
 
@@ -39,10 +27,27 @@ void OPstart(int argc, char** args) {
 		// update the game
 		if (OPupdate(&OPTIMER)) {
 			OPENGINERUNNING = false;
-			break;
+			return;
 		}
 		OPrender(1.0f);
 	}
+}
+
+void OPstart(int argc, char** args) {
+//#ifdef OPIFEX_WINDOWS
+//#if defined(DEBUG) | defined(_DEBUG)
+//	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_CHECK_CRT_DF);
+//#endif 
+//#endif 
+	// Initialize the engine and game
+	OPSTARTUP_PATH = OPdirCurrent();
+	OPEXECUTABLE_PATH = OPdirExecutable();
+    OPlogErr("Exec Path: %s", OPEXECUTABLE_PATH);
+	OPTIMER.Init();
+	OPENGINERUNNING = true;
+	OPinitialize();
+
+	_OPlooped();
 
 	// game loop has finished, clean up
 	OPdestroy();
@@ -57,26 +62,14 @@ void OPstart(int argc, char** args) {
 }
 
 
-void OPstartStepped(int argc, char** args) {
-#ifdef OPIFEX_WINDOWS
-	#if defined(DEBUG) | defined(_DEBUG)
-		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_CHECK_CRT_DF);
-	#endif 
-#endif 
+void _OPsteppedLooped() {
+
 	OPtimer frameStepped;
-	ui64 accumlator = 0;
+	d64 accumlator = 0;
 	ui64 STEP = 16;
 
-	// Initialize the engine and game
-	OPSTARTUP_PATH = OPdirCurrent();
-	OPEXECUTABLE_PATH = OPdirExecutable();
-
-	OPTIMER.Init();
 	frameStepped.Init();
 	frameStepped.Elapsed = STEP;
-
-	OPENGINERUNNING = true;
-	OPinitialize();
 
 	// main game loop
 	while (OPENGINERUNNING) {
@@ -88,11 +81,11 @@ void OPstartStepped(int argc, char** args) {
 		// and then resumed. This will make sure that we don't try to
 		// update 15+ seconds at a time.
 		if (OPTIMER.Elapsed > 2000) {
-			OPTIMER.Elapsed = 16;
+			OPTIMER.Elapsed = STEP;
 		}
 #endif
 
-		accumlator += OPTIMER.Elapsed;
+		accumlator += OPTIMER.ElapsedHighRes;
 
 		while (accumlator >= STEP) {
 			frameStepped.TotalGametime += STEP;
@@ -101,15 +94,32 @@ void OPstartStepped(int argc, char** args) {
 			// The TotalGameTime is incremented by STEP
 			if (OPupdate(&frameStepped)) {
 				OPENGINERUNNING = false;
-				break;
+				return;
 			}
 			accumlator -= STEP;
 		}
 
-		if (OPENGINERUNNING) {
-			OPrender(accumlator / (OPfloat)STEP);
-		}
+		OPrender(accumlator / (OPfloat)STEP);
 	}
+}
+
+void OPstartStepped(int argc, char** args) {
+//#ifdef OPIFEX_WINDOWS
+//	#if defined(DEBUG) | defined(_DEBUG)
+//		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_CHECK_CRT_DF);
+//	#endif 
+//#endif 
+
+	// Initialize the engine and game
+	OPSTARTUP_PATH = OPdirCurrent();
+	OPEXECUTABLE_PATH = OPdirExecutable();
+
+	OPTIMER.Init();
+
+	OPENGINERUNNING = true;
+	OPinitialize();
+
+	_OPsteppedLooped();
 
 	// game loop has finished, clean up
 	OPdestroy();

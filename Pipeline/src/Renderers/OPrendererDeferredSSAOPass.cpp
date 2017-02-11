@@ -1,4 +1,5 @@
 #include "./Pipeline/include/Renderers/OPrendererDeferredSSAOPass.h"
+#include "./Core/include/OPdebug.h"
 
 
 void OPrendererDeferredSSAOPass::Init(OPcam** cam, OPrendererDeferredGBufferPass* pass, OPmodel* mesh) {
@@ -15,7 +16,7 @@ void OPrendererDeferredSSAOPass::Init(OPcam** cam, OPrendererDeferredGBufferPass
 
 
 	// Sample Kernel
-	for (ui32 i = 0; i < 64; i++) {
+	for (ui32 i = 0; i < MAX_SSAO_KERNEL_SIZE; i++) {
 		OPvec3 sample = OPvec3(
 			OPrandom() * 2.0 - 1.0,
 			OPrandom() * 2.0 - 1.0,
@@ -47,7 +48,14 @@ void OPrendererDeferredSSAOPass::Init(OPcam** cam, OPrendererDeferredGBufferPass
 	noiseTexture = OPRENDERER_ACTIVE->Texture.Create(desc, &ssaoNoise[0]);
 
 	defaultSSAOMaterial.Init(OPNEW(OPeffect("Common/ssao.vert", "Common/ssao.frag")));
+	defaultSSAOMaterial.AddParam("kernelSize", &kernelSize);
 	defaultSSAOMaterial.AddParam("radius", &radius);
+
+
+	aspectRatio = (*camera)->aspect;
+	tanHalfFOV = OPtan((*camera)->fov / 2.0f);
+	defaultSSAOMaterial.AddParam("uAspectRatio", &aspectRatio);
+	defaultSSAOMaterial.AddParam("uTanHalfFOV", &tanHalfFOV);
 
 	defaultSSAOBlurMaterial.Init(OPNEW(OPeffect("Common/ssao.vert", "Common/ssao_blur.frag")));
 
@@ -67,6 +75,11 @@ void OPrendererDeferredSSAOPass::Begin() {
 }
 
 void OPrendererDeferredSSAOPass::End() {
+	TIMED_BLOCK
+
+	aspectRatio = (*camera)->aspect;
+	tanHalfFOV = OPtan((*camera)->fov / 2.0f);
+
 	// SSAO pass
 	ssaoBuffer.Bind();
 	OPrenderCullMode(OPcullFace::FRONT);
@@ -75,10 +88,18 @@ void OPrendererDeferredSSAOPass::End() {
 	OPrenderClear(0, 0, 0, 1);
 	defaultSSAOMaterial.Bind();
 
-	OPeffectSet("uGbufferPosition", &gbufferPass->gBuffer.texture[0], 0);
+	//OPeffectSet("uGbufferPosition", &gbufferPass->gBuffer.texture[0], 0);
 	OPeffectSet("uGbufferNormal", &gbufferPass->gBuffer.texture[1], 1);
 	OPeffectSet("uNoise", noiseTexture, 2);
-	//OPeffectSet("uGbufferDepth", &gbufferPass->gBuffer.depthTexture, 3);
+	OPeffectSet("uGbufferDepth", &gbufferPass->gBuffer.depthTexture, 3);
+
+
+	//OPmat4 invProjView;
+	//OPmat4 projView = (*camera)->proj * (*camera)->view;
+	//OPmat4Inverse(&invProjView, projView);
+	//OPeffectSet("uInvProjView", &invProjView);
+	//OPeffectSet("uView", &(*camera)->view);
+
 	char buffer[64];
 	for (ui32 i = 0; i < 64; i++) {
 		sprintf(buffer, "samples[%d]", i);
@@ -109,4 +130,5 @@ void OPrendererDeferredSSAOPass::End() {
 	quadMesh->Bind();
 	OPrenderDrawBufferIndexed(0);
 	ssaoBlurBuffer.Unbind();
+	OPlogInfo("================ SSAO PASS");
 }

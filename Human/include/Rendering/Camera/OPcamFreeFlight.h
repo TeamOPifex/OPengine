@@ -31,7 +31,7 @@ struct OPcamFreeFlight {
 	}
 
 	inline void Init(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position) {
-		Init(moveSpeed, rotateSpeed, position, 0.1f, 1000.0f);
+		Init(moveSpeed, rotateSpeed, position, 0.1f, 50.0f);
 	}
 
 	inline OPmat4* View() { 

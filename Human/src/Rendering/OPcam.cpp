@@ -11,7 +11,7 @@ void OPcam::SetPerspective(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat ne
 	pos = position;
 	this->target = target;
 	this->up = up;
-	this->fov = fov;
+	this->fov = OPradians(fov);
 	this->aspect = aspect;
 	this->nearView = nearView;
 	this->farView = farView;
@@ -25,7 +25,7 @@ void OPcam::SetPerspective(OPvec3 position, OPvec3 target, OPvec3 up, OPfloat ne
 	front.z = OPsin(OPradians(-90.0f)) * OPcos(OPradians(0.0f));
 
 	// construct matricies
-	proj = OPmat4Perspective(fov, aspect, nearView, farView);
+	proj = OPmat4Perspective(this->fov, aspect, nearView, farView);
 	view = OPmat4LookAt(position, target, up);
 	//view = OPmat4LookAt(position, position + front, up);
 }

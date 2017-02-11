@@ -1,6 +1,7 @@
 #include "./Pipeline/include/Renderers/OPrendererDeferred.h"
 #include "./Human/include/Rendering/Primitives/OPsphere.h"
 #include "./Human/include/Rendering/Primitives/OPquad.h"
+#include "./Core/include/OPdebug.h"
 
 #include "./Math/include/OPtween.h"
 
@@ -49,31 +50,49 @@ OPmaterial* OPrendererDeferred::GetMaterial(ui32 pass, ui32 materialType) {
 }
 
 void OPrendererDeferred::End() {
+	TIMED_BLOCK
+
 	// DRAW SCENE
 	{
-
-		shadowPass.Begin();
-		shadowPass.End();
+		//
+		{ 
+			TIMED_BLOCK
+			shadowPass.Begin();
+			shadowPass.End();
+		}
 
 		OPrenderBlend(false);
 
 		// Geometry pass
-		gbufferPass.Begin();
-		gbufferPass.End();
-
+		{
+			TIMED_BLOCK
+			gbufferPass.Begin();
+			gbufferPass.End();
+		}
+		
+		// SSAO
 		if (combinePass.useSSAO) {
+			TIMED_BLOCK
 			ssaoPass.Begin();
 			ssaoPass.End();
 		}
 	}
 
-	lightPass.Begin();
-	lightPass.End();
+	{
+		TIMED_BLOCK
+		lightPass.Begin();
+		lightPass.End();
+	}
+
+	{
+		TIMED_BLOCK
+		combinePass.Begin();
+		combinePass.End();
+	}
+	OPlogInfo("================ FULL DEFERRED PASS");
 }
 
 void OPrendererDeferred::Present() {
-	combinePass.Begin();
-	combinePass.End();
 }
 
 void OPrendererDeferred::Destroy() {
@@ -82,6 +101,7 @@ void OPrendererDeferred::Destroy() {
 
 void OPrendererDeferred::SetCamera(OPcam** cam) {
 	gbufferPass.SetCamera(cam);
+	ssaoPass.SetCamera(cam);
 }
 
 void OPrendererDeferred::SetShadowCamera(OPcam** cam) {

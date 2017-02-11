@@ -1,4 +1,5 @@
 #include "./Pipeline/include/Renderers/OPrendererDeferredGBufferPass.h"
+#include "./Core/include/OPdebug.h"
 
 void OPrendererDeferredGBufferPass::Init(OPcam** cam, OPcam** shadowCam, OPrendererForwardShadowPass* pass) {
 	OPrendererPass::Init(cam);
@@ -15,13 +16,13 @@ void OPrendererDeferredGBufferPass::Init(OPcam** cam, OPcam** shadowCam, OPrende
 	materialTextured.AddParam("uProjShadow", &(*shadowCamera)->proj);
 	materialTextured.AddParam("uShadow", &shadowPass->depthBuffer.texture, 1);
 	materialTextured.AddParam("uLightPos", &(*shadowCamera)->pos);
-	materialTextured.AddParam("uViewPos", &(*cam)->pos);
+	//materialTextured.AddParam("uViewPos", &(*cam)->pos);
 
 	materialSkinned.AddParam("uViewShadow", &(*shadowCamera)->view);
 	materialSkinned.AddParam("uProjShadow", &(*shadowCamera)->proj);
 	materialSkinned.AddParam("uShadow", &shadowPass->depthBuffer.texture, 1);
 	materialSkinned.AddParam("uLightPos", &(*shadowCamera)->pos);
-	materialSkinned.AddParam("uViewPos", &(*cam)->pos);
+	//materialSkinned.AddParam("uViewPos", &(*cam)->pos);
 
 	OPtextureDesc gBufferDesc[3];
 	// Position
@@ -38,14 +39,16 @@ void OPrendererDeferredGBufferPass::Submit(OPrendererEntity* rendererEntity) {
 }
 
 void OPrendererDeferredGBufferPass::Begin() {
-	gBuffer.Bind();
-	OPrenderClear(0, 0, 0);
 }
 
 void OPrendererDeferredGBufferPass::End() {
+	TIMED_BLOCK
+	gBuffer.Bind();
+	OPrenderClear(0, 0, 0);
 	renderBucket.Sort();
 	renderBucket.Flush(false);
 	gBuffer.Unbind();
+	OPlogInfo("================ GBUFFER PASS");
 }
 
 void OPrendererDeferredGBufferPass::SetCamera(OPcam** cam) {

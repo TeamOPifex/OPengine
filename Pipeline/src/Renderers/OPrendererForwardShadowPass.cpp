@@ -1,4 +1,5 @@
 #include "./Pipeline/include/Renderers/OPrendererForwardShadowPass.h"
+#include "./Core/include/OPdebug.h"
 
 
 void OPrendererForwardShadowPass::Init(OPcam** cam) {
@@ -27,15 +28,18 @@ void OPrendererForwardShadowPass::Begin() {
 }
 
 void OPrendererForwardShadowPass::End() {
+	TIMED_BLOCK
 
 	depthBuffer.Bind();
 
 	OPrenderClearDepth();
 
 	OPrenderCullMode(OPcullFace::FRONT);
-
-	renderBucket.Sort();
-	renderBucket.Flush(false);
+	{
+		TIMED_BLOCK
+		renderBucket.Sort();
+		renderBucket.Flush(false);
+	}
 
 	depthBuffer.Unbind();
 

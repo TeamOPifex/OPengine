@@ -14,6 +14,9 @@ OPint OPtimer::Init(){
 	QueryPerformanceCounter(&TimeLastTick);
 	TotalGametime = 0;
 	Elapsed = 0;
+#ifdef _DEBUG
+	ElapsedHighRes = 0;
+#endif
 #endif
 
 	return 0;
@@ -42,6 +45,8 @@ void OPtimer::Tick() {
 	QueryPerformanceCounter(&StartingTime);
 
 	Elapsed = StartingTime.QuadPart - TimeLastTick.QuadPart;
+	ElapsedHighRes = Elapsed * 1000;
+	ElapsedHighRes /= (OPfloat)Frequency.QuadPart; 
 	Elapsed *= 1000; // to milliseconds
 	Elapsed /= Frequency.QuadPart;
 

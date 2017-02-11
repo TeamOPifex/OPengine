@@ -96,6 +96,10 @@ void OPmaterial::Bind(bool onlyParams) {
 			effect->Set(params[i].name, *(f32*)params[i].data);
 			break;
 		}
+		case OPmaterialParamType::INT: {
+			effect->Set(params[i].name, *(i32*)params[i].data);
+			break;
+		}
 		case OPmaterialParamType::BOOL: {
 			effect->Set(params[i].name, *(bool*)params[i].data);
 			break;

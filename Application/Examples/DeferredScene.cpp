@@ -27,7 +27,9 @@ class DeferredSceneExample : public OPgameState {
 	OPtexture2DOLD* texture5;
 	OPtexture2DOLD* texture6;
 	OPtexture2DOLD* texture7;
+	OPtexture2DOLD* texture8;
 	OPeffect DepthTextureEffect;
+	OPeffect PositionTextureEffect;
 	ui32 state;
 
 
@@ -69,6 +71,7 @@ class DeferredSceneExample : public OPgameState {
 		//model1Entity->material[0].AddParam("uSpecularMap", (OPtexture*)OPCMAN.LoadGet("Dagger_Albedo.png"), 1);
 
 		DepthTextureEffect.Init("Common/Texture2D.vert", "Common/TextureDepth.frag");
+		PositionTextureEffect.Init("TexPosition.vert", "TexPosition.frag");
 
 		texture0 = OPtexture2DCreate(&renderer.GetGBuffer()->texture[0]);
 		texture1 = OPtexture2DCreate(&renderer.GetGBuffer()->texture[1]);
@@ -78,7 +81,7 @@ class DeferredSceneExample : public OPgameState {
 		texture5 = OPtexture2DCreate(renderer.ssaoPass.ssaoBuffer.texture);
 		texture6 = OPtexture2DCreate(renderer.ssaoPass.ssaoBlurBuffer.texture);
 		texture7 = OPtexture2DCreate(&renderer.shadowPass.depthBuffer.texture);
-
+		texture8 = OPtexture2DCreate(&renderer.GetGBuffer()->depthTexture, &PositionTextureEffect);
 		state = 0;
 	}
 
@@ -104,8 +107,11 @@ class DeferredSceneExample : public OPgameState {
 
 	void Render(OPfloat delta) {
 		OPrenderClear(0.2f, 0.2f, 0.2f);
-
-		scene.Render(delta);
+		{
+			TIMED_BLOCK
+			scene.Render(delta);
+			OPlogInfo("================ Full scene.Render");
+		}
 
 		if (state == 1) {
 			OPtexture2DRender(texture0);
@@ -130,6 +136,15 @@ class DeferredSceneExample : public OPgameState {
 		}
 		else if (state == 8) {
 			OPtexture2DRender(texture7);
+		}
+		else if (state == 9) {
+			OPtexture2DPrepRender(texture8);
+			f32 aspectRatio = camera.Camera.aspect;
+			f32 tanHalfFOV = OPtan(camera.Camera.fov / 2.0f);
+			OPeffectSet("uAspectRatio", aspectRatio);
+			OPeffectSet("uTanHalfFOV", tanHalfFOV);
+			OPeffectSet("uProjScene", &camera.Camera.proj);
+			OPrenderDrawBufferIndexed(0);
 		}
 
 #ifdef ADDON_imgui
@@ -167,9 +182,13 @@ class DeferredSceneExample : public OPgameState {
 		if (ImGui::Button("Shadow")) {
 			state = 8;
 		}
+		if (ImGui::Button("Pos Recreate")) {
+			state = 9;
+		}
 		if (ImGui::Button("Use SSAO")) {
 			renderer.combinePass.useSSAO = !renderer.combinePass.useSSAO;
 		}
+		ImGui::SliderInt("SSAO Kernel", &renderer.ssaoPass.kernelSize, 2, 64);
 		ImGui::InputFloat("SSAO Radius", &renderer.ssaoPass.radius, 0.1, 1.0);
 		ImGui::ColorEdit3("Light Color", (float*)&light->light.color);
 		ImGui::SliderFloat("Radius", &light->light.radius, 0, 10);

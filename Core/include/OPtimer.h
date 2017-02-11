@@ -23,6 +23,7 @@ typedef struct OPtimer OPtimer;
 struct OPtimer{
 	ui64 TotalGametime;
 	ui64 Elapsed;
+	d64 ElapsedHighRes;
 #if defined(OPIFEX_WINDOWS)
 	LARGE_INTEGER TimeLastTick;
 	LARGE_INTEGER Frequency;

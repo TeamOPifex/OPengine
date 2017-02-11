@@ -85,6 +85,8 @@ OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameter
 	glEnable(GL_BLEND);
 	glEnable(GL_MULTISAMPLE);
 
+	glfwSwapInterval(0);
+
 	return window;
 }
 

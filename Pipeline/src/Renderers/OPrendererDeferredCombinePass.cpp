@@ -1,4 +1,5 @@
 #include "./Pipeline/include/Renderers/OPrendererDeferredCombinePass.h"
+#include "./Core/include/OPdebug.h"
 
 
 void OPrendererDeferredCombinePass::Init(OPcam** cam, OPrendererDeferredGBufferPass* pass, OPrendererDeferredSSAOPass* pass2, OPrendererDeferredLightPass* pass3, OPmodel* mesh) {
@@ -28,6 +29,7 @@ void OPrendererDeferredCombinePass::Begin() {
 }
 
 void OPrendererDeferredCombinePass::End() {
+	TIMED_BLOCK
 	OPrenderCullMode(OPcullFace::FRONT);
 	OPrenderDepth(false);
 	OPrenderDepthWrite(false);
@@ -42,7 +44,7 @@ void OPrendererDeferredCombinePass::End() {
 	OPeffectSet("uGbufferPosition", &gbufferPass->gBuffer.texture[0], 0);
 	OPeffectSet("uGbufferNormal", &gbufferPass->gBuffer.texture[1], 1);
 	OPeffectSet("uGbufferAlbedoSpec", &gbufferPass->gBuffer.texture[2], 2);
-	OPeffectSet("uLightBuffer", lightPass->lightBuffer.texture, 3);
+	//OPeffectSet("uLightBuffer", lightPass->lightBuffer.texture, 3);
 	OPeffectSet("uSSAOBuffer", ssaoPass->ssaoBlurBuffer.texture, 4);
 	OPeffectSet("uLightPos", &(*camera)->pos);
 	OPeffectSet("uWorld", 1, &world);
@@ -52,4 +54,5 @@ void OPrendererDeferredCombinePass::End() {
 	OPrenderCullMode(OPcullFace::FRONT);
 	OPrenderDepth(true);
 	OPrenderDepthWrite(true);
+	OPlogInfo("================ COMBINE PASS");
 }

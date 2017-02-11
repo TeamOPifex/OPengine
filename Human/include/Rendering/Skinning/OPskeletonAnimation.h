@@ -29,19 +29,19 @@ struct OPanimationFrame {
 };
 
 struct OPskeletonAnimation {
-	OPskeleton* Skeleton;
-	OPchar* Name;
-
-	OPanimationFrame* JointFrames;
+	OPint BoneCount;
 	OPuint FrameCount;
 	OPuint Frame;
 	OPfloat Elapsed;
 	OPfloat FramesPer;
 
-	OPmat4* CurrentFrame;
-	OPint BoneCount;
+	OPskeleton* Skeleton;
+	OPchar* Name;
 
-	OPint Loop;
+	OPanimationFrame* JointFrames;
+	OPmat4* CurrentFrame;
+
+	bool Loop;
 	OPuint LoopsCompleted;
 	OPuint LastFrame;
 	OPskeletonAnimationEvent* Events;
@@ -78,5 +78,3 @@ struct OPskeletonAnimation {
 	static void Apply(OPmat4* animationFrame, OPskeleton* skeleton);
 	static OPskeletonAnimation* Create(OPint boneCount, OPanimationFrame* frames, OPuint count, OPchar* name);
 };
-
-
