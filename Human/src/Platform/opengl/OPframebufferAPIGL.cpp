@@ -43,6 +43,7 @@ OPframeBuffer* OPframeBufferAPIGLInit(OPframeBuffer* framebuffer, OPtextureDesc 
 	depthDesc.height = textureDesc.height;
 	depthDesc.textureType = OPtextureType::BYTE;
 	depthDesc.multisampled = false;
+    depthDesc.wrap = OPtextureWrap::CLAMP_TO_BORDER;
 	depthDesc.mipmap = false;
 
 	OPtexture depthTexture;
@@ -95,6 +96,7 @@ OPframeBuffer* OPframeBufferAPIGLInitMulti(OPframeBuffer* framebuffer, OPtexture
 	depthDesc.height = textureDesc[0].height;
 	depthDesc.textureType = OPtextureType::BYTE;
 	depthDesc.multisampled = false;
+    depthDesc.wrap = OPtextureWrap::CLAMP_TO_BORDER;
 	depthDesc.mipmap = false;
 
 	OPtexture depthTexture;
