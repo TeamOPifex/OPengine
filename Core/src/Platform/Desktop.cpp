@@ -83,6 +83,9 @@ void _OPsteppedLooped() {
 		if (OPTIMER.Elapsed > 2000) {
 			OPTIMER.Elapsed = STEP;
 		}
+		if (OPTIMER.ElapsedHighRes > 2000) {
+			OPTIMER.ElapsedHighRes = STEP;
+		}
 #endif
 
 		accumlator += OPTIMER.ElapsedHighRes;

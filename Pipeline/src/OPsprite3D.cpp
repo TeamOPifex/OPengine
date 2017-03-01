@@ -126,7 +126,7 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 
 	OPmat4Identity(&world);
 	world.Translate(sprite->Position);
-	world.Scl(sprite->Scale);
+	world.Scl(sprite->Scale * OPvec3(widthScale, heightScale, 1.0));
 	//world = OPmat4Scl(world, widthScale, heightScale, 1.0);
 	//OPmat4RotZ(&world, rotation + sprite->Rotation.z);
 	//OPmat4RotY(&world, sprite->Rotation.y);

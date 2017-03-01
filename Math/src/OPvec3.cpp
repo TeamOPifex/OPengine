@@ -28,3 +28,59 @@ OPfloat OPvec3AngleToTarget(OPvec3 pos, OPvec3 facing, OPvec3 target) {
 	if (C.y < 0) return -angle;
 	return angle;
 }
+
+bool OPvec3InLineOfSight(OPvec3 position, OPvec3 looking, OPvec3 targetPosition, OPfloat sightFOVDegrees, OPfloat sightDistance) {
+
+	OPvec3 dir = targetPosition - position;
+
+	if (OPvec3Len(dir) > sightDistance) {
+		return false;
+	}
+
+	looking.Norm();
+	dir.Norm();
+
+	OPfloat dot = OPvec3Dot(looking, dir);
+	OPfloat deg = OPdegrees(OPacos(dot));
+
+	return deg < sightFOVDegrees;
+}
+
+bool OPvec3InLineOfSight(OPvec3 position, OPvec3 looking, OPvec3 targetPosition, OPfloat targetRadius, OPfloat sightFOVDegrees, OPfloat sightDistance) {
+
+	OPvec3 dir = targetPosition - position;
+
+	if (OPvec3Len(dir) - targetRadius > sightDistance) {
+		return false;
+	}
+
+	looking.Norm();
+	dir.Norm();
+
+	OPfloat dot = OPvec3Dot(looking, dir);
+	OPfloat deg = OPdegrees(OPacos(dot));
+
+	return deg < sightFOVDegrees;
+}
+
+bool OPvec3InLineOfSight(OPvec3 position, OPvec3 looking, OPfloat radius, OPvec3 targetPosition, OPfloat targetRadius, OPfloat sightFOVDegrees, OPfloat sightDistance) {
+
+	OPvec3 dir = targetPosition - position;
+
+	OPfloat dist = OPvec3Len(dir);
+	if (dist - targetRadius > sightDistance) {
+		return false;
+	}
+
+	if (dist - radius <= 0) {
+		return true;
+	}
+
+	looking.Norm();
+	dir.Norm();
+
+	OPfloat dot = OPvec3Dot(looking, dir);
+	OPfloat deg = OPdegrees(OPacos(dot));
+
+	return deg < sightFOVDegrees;
+}

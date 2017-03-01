@@ -28,6 +28,7 @@ public:
 	void Destroy();
 	void SetCamera(OPcam** camera);
 	void SetShadowCamera(OPcam** camera);
+	void RenderDebug();
 
 	OPframeBuffer* GetGBuffer() {
 		return &gbufferPass.gBuffer;

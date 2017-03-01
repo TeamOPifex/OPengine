@@ -25,7 +25,7 @@ public:
 	bool depth = true;
 	bool cull = true;
 	bool visible = true;
-	bool alpha = 1;
+	bool alpha = true;
 	OPcullFace cullFace = OPcullFace::BACK;
 
 	OPmaterial() { }

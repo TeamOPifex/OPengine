@@ -5,6 +5,10 @@
 
 #include "./Math/include/OPtween.h"
 
+#ifdef ADDON_imgui
+#include "OPimgui.h"
+#endif
+
 void OPrendererDeferred::Init(OPcam** cam, OPcam** shadowCam) {
 
 	quadMesh = OPquadCreate(1.0f, 1.0f, OPvec2(0, 1), OPvec2(1, 0));
@@ -90,6 +94,20 @@ void OPrendererDeferred::End() {
 		combinePass.End();
 	}
 	OPlogInfo("================ FULL DEFERRED PASS");
+}
+
+void OPrendererDeferred::RenderDebug() {
+#ifdef _DEBUG
+
+#ifdef ADDON_imgui
+	if (ImGui::Button("Use SSAO")) {
+		combinePass.useSSAO = !combinePass.useSSAO;
+	}
+	ImGui::SliderInt("SSAO Kernel", &ssaoPass.kernelSize, 2, 64);
+	ImGui::InputFloat("SSAO Radius", &ssaoPass.radius, 0.1, 1.0);
+#endif
+
+#endif
 }
 
 void OPrendererDeferred::Present() {

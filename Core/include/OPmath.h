@@ -310,14 +310,28 @@ OPfloat OPrandRange(OPfloat min, OPfloat max);
 
 //-----------------------------------------------------------------------------
 /**
-* OPcos - math helper
-*	Calculates the cosine of a floating point number.
+* OPradians - math helper
+*	Calculates the radians of degrees
 * @param f Floating point number.
-* @return cos(f)
+* @return radians
 */
 __inline OPfloat OPradians(OPfloat f) {
 	return (OPfloat)(f * OPradianConvert);
 }
+
+
+
+//-----------------------------------------------------------------------------
+/**
+* OPdegrees - math helper
+*	Calculates the degrees of radians
+* @param f Floating point number.
+* @return degrees
+*/
+__inline OPfloat OPdegrees(OPfloat f) {
+	return (OPfloat)(f * 180) / OPpi;
+}
+
 
 #define OPMIN(a,b) (((a) < (b)) ? (a) : (b))
 #define OPMAX(a,b) (((a) > (b)) ? (a) : (b))
