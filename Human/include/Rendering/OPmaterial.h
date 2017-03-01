@@ -47,7 +47,7 @@ public:
 	virtual void Destroy();
 	virtual OPmaterial* CreateInstances(OPmodel* model, bool materialPerMesh);
 	virtual OPmaterial* CreateInstances(OPrendererEntity* model);
-	static void OPmaterial::SetMeta(OPrendererEntity* rendererEntity);
+	static void SetMeta(OPrendererEntity* rendererEntity);
 	virtual void AddParam(OPskeleton* skeleton);
 
 	inline void SetDepth(bool val) {
@@ -57,7 +57,7 @@ public:
 	inline void SetCull(bool val) {
 		cull = val;
 	}
-	
+
 	inline void ClearParams() {
 		paramIndex = 0;
 	}
@@ -104,4 +104,3 @@ public:
 
 	static OPmaterial* Create(OPeffect* effect);
 };
-

@@ -11,7 +11,7 @@ void OPrendererDeferredGBufferPass::Init(OPcam** cam, OPcam** shadowCam, OPrende
 
 	materialTextured.Init(OPNEW(OPeffect("Common/GBuffer.vert", "Common/GBuffer.frag")));
 	materialSkinned.Init(OPNEW(OPeffect("Common/GBufferSkinned.vert", "Common/GBuffer.frag")));
-	
+
 	materialTextured.AddParam("uViewShadow", &(*shadowCamera)->view);
 	materialTextured.AddParam("uProjShadow", &(*shadowCamera)->proj);
 	materialTextured.AddParam("uShadow", &shadowPass->depthBuffer.texture, 1);
@@ -26,11 +26,11 @@ void OPrendererDeferredGBufferPass::Init(OPcam** cam, OPcam** shadowCam, OPrende
 
 	OPtextureDesc gBufferDesc[3];
 	// Position
-	gBufferDesc[0] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGBA, OPtextureFormat::RGBA32F, OPtextureWrap::CLAMP_TO_EDGE, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
+	gBufferDesc[0] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGBA, OPtextureFormat::RGBA32F, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
 	// Normal
-	gBufferDesc[1] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGBA, OPtextureFormat::RGBA32F, OPtextureWrap::CLAMP_TO_EDGE, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
+	gBufferDesc[1] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGBA, OPtextureFormat::RGBA32F, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST, OPtextureType::FLOAT);
 	// Specular
-	gBufferDesc[2] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGBA, OPtextureFormat::RGBA, OPtextureWrap::CLAMP_TO_EDGE, OPtextureFilter::NEAREST, OPtextureType::BYTE);
+	gBufferDesc[2] = OPtextureDesc(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, OPtextureFormat::RGBA, OPtextureFormat::RGBA, OPtextureWrap::CLAMP_TO_BORDER, OPtextureFilter::NEAREST, OPtextureType::BYTE);
 	gBuffer.Init(gBufferDesc, 3);
 }
 
