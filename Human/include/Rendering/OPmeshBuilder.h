@@ -24,11 +24,11 @@ struct OPmeshBuilder {
 	void Add(void* one, void* two, void* three);
 	void Add(void* one, void* two, void* three, void* four);
 	void Add(void** vertices, ui16 vertCount, ui16* indices, ui16 indCount);
-	OPmodel Build();
+	OPmodel* Build();
 	void Destroy();
 
-	inline OPmodel BuildAndDestroy() {
-		OPmodel result = Build();
+	inline OPmodel* BuildAndDestroy() {
+		OPmodel* result = Build();
 		Destroy();
 		return result;
 	}

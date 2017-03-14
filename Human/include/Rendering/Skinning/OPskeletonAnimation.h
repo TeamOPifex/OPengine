@@ -28,6 +28,24 @@ struct OPanimationFrame {
 	OPvec3 Scale;
 };
 
+struct OPanimationMask {
+	bool* mask = NULL;
+
+	void Init(OPskeleton* skeleton, bool val);
+	void Destroy();
+	void Set(i16 ind, bool val);
+	inline void Set(OPskeleton* skeleton, const OPchar* joint, bool val) {
+		Set(skeleton->JointIndex(joint), val);
+	}
+	void SetTree(OPskeleton* skeleton, i16 joint, bool val);
+	inline void SetTree(OPskeleton* skeleton, const OPchar* joint, bool val) {
+		SetTree(skeleton, skeleton->JointIndex(joint), val);
+	}
+	inline bool& operator[](i32 i) {
+		return mask[i];
+	}
+};
+
 struct OPskeletonAnimation {
 	OPint BoneCount;
 	OPuint FrameCount;
@@ -54,7 +72,7 @@ struct OPskeletonAnimation {
 	void Apply(OPskeleton* skeleton);
 	void Apply(OPskeleton* skeleton, i16 fromJoint);
 	void Apply(OPmat4* animationFrame, OPskeleton* skeleton, i16 fromJoint);
-	void Merge(OPskeletonAnimation* skelAnim2, OPfloat merge);
+	void Merge(OPskeletonAnimation* skelAnim2, OPfloat merge, OPanimationMask* mask);
 	void Combine(OPskeletonAnimation* skelAnim2, OPskeleton* skeleton, i16 fromJoint);
 	void SetEvents(OPuint frames, OPskeletonAnimationEvent* events);
 
@@ -69,6 +87,10 @@ struct OPskeletonAnimation {
 
 	inline OPskeletonAnimation* Clone() {
 		return OPskeletonAnimation::Create(BoneCount, JointFrames, FrameCount, Name);
+	}
+
+	inline void Merge(OPskeletonAnimation* skelAnim2, OPfloat merge) {
+		Merge(skelAnim2, merge, NULL);
 	}
 
 	static inline OPskeletonAnimation* Load(const OPchar* name) {

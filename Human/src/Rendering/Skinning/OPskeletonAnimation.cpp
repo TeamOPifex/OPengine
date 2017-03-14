@@ -155,7 +155,7 @@ void OPskeletonAnimation::Combine(OPskeletonAnimation* skelAnim2, OPskeleton* sk
 	}
 }
 
-void OPskeletonAnimation::Merge(OPskeletonAnimation* skelAnim2, OPfloat merge) {
+void OPskeletonAnimation::Merge(OPskeletonAnimation* skelAnim2, OPfloat merge, OPanimationMask* mask) {
 	ASSERT(BoneCount == skelAnim2->BoneCount, "Bone Count must match");
 	ASSERT(merge <= 1.0, "Can't merge passed the animation");
 	ASSERT(merge >= 0.0, "Can't merge before the animation");
@@ -165,18 +165,13 @@ void OPskeletonAnimation::Merge(OPskeletonAnimation* skelAnim2, OPfloat merge) {
 	OPfloat percent2 = skelAnim2->Elapsed / (OPfloat)skelAnim2->FramesPer;
 
 	for (OPint i = 0; i < BoneCount; i++) {
-
-
-		//ind1 = skelAnim->FrameCount * i + skelAnim->Frame;
-		//ind2 = skelAnim->FrameCount * i + (skelAnim->Frame + 1);
-
-
+		if (mask != NULL && !(*mask)[i]) continue;
+		
 		ind1 = FrameCount * i + Frame;
 		if (Frame == FrameCount - 1) {
-			if(Loop) {
-				ind2 = FrameCount * i;
-			} else {
-				ind2 = FrameCount * i + Frame;
+			ind2 = FrameCount * i;
+			if (!Loop) {
+				ind2 += Frame;
 			}
 		}
 		else {
@@ -192,29 +187,14 @@ void OPskeletonAnimation::Merge(OPskeletonAnimation* skelAnim2, OPfloat merge) {
 			ind4 = skelAnim2->FrameCount * i + (skelAnim2->Frame + 1);
 		}
 
-		// Innefficient and poor interpolation scheme
+
 		// TODO(garrett): Fix - interpolate into the first frame if looping
-
-
-
-		//OPmat4 anim1 = InterpolateFrames(skelAnim1->JointFrames[ind1], skelAnim1->JointFrames[ind2], percent1);
-		//OPmat4 anim2 = InterpolateFrames(skelAnim2->JointFrames[ind3], skelAnim2->JointFrames[ind4], percent2);
-
+				
 		OPanimationFrame inbetweenFrame1 = GetInterpolatedFrame(JointFrames[ind1], JointFrames[ind2], percent1);
 		OPanimationFrame inbetweenFrame2 = GetInterpolatedFrame(skelAnim2->JointFrames[ind3], skelAnim2->JointFrames[ind4], percent2);
 
-		//if (merge >= 1.0) {
-		//	skelAnim1->CurrentFrame[i] = CalculateFrame(inbetweenFrame2);
-		//	skelAnim2->CurrentFrame[i] = skelAnim1->CurrentFrame[i];
-		//}
-		//else if (merge <= 0.0) {
-		//	skelAnim1->CurrentFrame[i] = CalculateFrame(inbetweenFrame1);
-		//	skelAnim2->CurrentFrame[i] = skelAnim1->CurrentFrame[i];
-		//}
-		//else {
-			CurrentFrame[i] = InterpolateFrames(inbetweenFrame1, inbetweenFrame2, merge); //OPmat4Interpolate(anim1, anim2, merge);
-			skelAnim2->CurrentFrame[i] = CurrentFrame[i];
-		//}
+		CurrentFrame[i] = InterpolateFrames(inbetweenFrame1, inbetweenFrame2, merge);
+		skelAnim2->CurrentFrame[i] = CurrentFrame[i];
 
 	}
 }
@@ -222,4 +202,32 @@ void OPskeletonAnimation::Merge(OPskeletonAnimation* skelAnim2, OPfloat merge) {
 void OPskeletonAnimation::SetEvents(OPuint frames, OPskeletonAnimationEvent* events) {
 	Events = events;
 	EventCount = frames;
+}
+
+
+void OPanimationMask::Init(OPskeleton* skeleton, bool val) {
+	mask = (bool*)OPalloc(sizeof(bool) * skeleton->hierarchyCount);
+	for (ui32 i = 0; i < skeleton->hierarchyCount; i++) {
+		mask[i] = val;
+	}
+}
+
+void OPanimationMask::Destroy() {
+	ASSERT(mask != NULL, "Animation Mask was never initialized");
+	OPfree(mask);
+}
+
+void OPanimationMask::Set(i16 ind, bool val) {
+	mask[ind] = val;
+}
+
+
+void OPanimationMask::SetTree(OPskeleton* skeleton, i16 joint, bool val) {
+	i16 startingJoint = joint;
+	i16 parent = skeleton->hierarchy[joint];
+	mask[startingJoint] = val;
+
+	for (ui32 i = startingJoint + 1; i < skeleton->hierarchyCount && skeleton->hierarchy[i] >= startingJoint; i++) {
+		mask[i] = val;
+	}
 }

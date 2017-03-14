@@ -15,8 +15,8 @@ struct MouseIntersectVert {
 
 // Data for this Game State Example
 class MouseIntersectExample : public OPgameState {
-	OPmodel Mesh;			// The Mesh to render
-	OPmodel Mesh2;			// The Mesh to render
+	OPmodel* Mesh;			// The Mesh to render
+	OPmodel* Mesh2;			// The Mesh to render
 	OPeffect Effect;		// The Effect used to render the Mesh
 	OPcam Camera;			// The Camera to use in the Effect to render the Mesh
 	ui32 Rotation;			// The amount to rotate the Mesh
@@ -173,7 +173,7 @@ class MouseIntersectExample : public OPgameState {
 
 		// A helper utility which binds the Mesh, Effect and the World, View and Projection Matrices
 		// For more granular control please take a look at the Textured Example
-		OPbindMeshEffectWorldCam(&Mesh, &Effect, &world, &Camera);
+		OPbindMeshEffectWorldCam(Mesh, &Effect, &world, &Camera);
 
 		// Sets the vLightDirection uniform on the Effect that is currently bound (modelExample->Effect)
 		OPeffectSet("vLightDirection", &LightDirection);
@@ -182,7 +182,7 @@ class MouseIntersectExample : public OPgameState {
 		OPrenderDrawBufferIndexed(0);
 
 		OPbindMeshEffectWorldCam(
-			&Mesh,
+			Mesh,
 			&Effect,
 			&world2,
 			&Camera);
@@ -191,7 +191,7 @@ class MouseIntersectExample : public OPgameState {
 
 		if (OPMOUSE.IsDown(OPmouseButton::LBUTTON)) {
 			OPbindMeshEffectWorldCam(
-				&Mesh2,
+				Mesh2,
 				&Effect,
 				&world3,
 				&Camera);

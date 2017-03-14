@@ -430,9 +430,13 @@ inline OPvec4 OPmat4Transform(OPvec4 a, OPmat4 b) {
  }
 
  inline void OPmat4Translate(OPmat4* m, OPfloat x, OPfloat y, OPfloat z){
-	 m->cols[3].x += x;
-	 m->cols[3].y += y;
-	 m->cols[3].z += z;
+
+	 OPmat4 tmp = OPmat4Translate(x,y,z);
+	 OPmat4Mul(m, *m, tmp);
+
+	 //m->cols[3].x += x;
+	 //m->cols[3].y += y;
+	 //m->cols[3].z += z;
  }
 
  inline void OPmat4Scl(OPmat4* m, OPfloat x, OPfloat y, OPfloat z) {

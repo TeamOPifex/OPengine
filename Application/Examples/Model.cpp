@@ -76,8 +76,9 @@ class ModelExample : public OPgameState {
 		OPrenderCull(0);
 
 		// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
-		OPmat4 world;
-		world.SetRotY(Rotation / 100.0f)->Scl(0.25f, 0.25f, 0.25f);
+		OPmat4 world = OPMAT4_IDENTITY;
+		world.RotY(Rotation / 100.0f)->Scl(0.25f, 0.25f, 0.25f);
+		world.Translate(1, 0, 0);
 
 
 		////////////////////////

@@ -3,6 +3,7 @@
 macro(add_opifex_oggvorbis APPLICATION_TARGET )
 
 	if(${OPIFEX_OPTION_AUDIO})
+	message(STATUS "ADDING AUDIO")
 		if(${OPIFEX_OPTION_RELEASE})
 			if(${OPIFEX_WINDOWS})
 				add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)

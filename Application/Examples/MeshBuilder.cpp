@@ -15,7 +15,7 @@ struct MeshBuilderVert {
 
 // Data for this Game State Example
 class MeshBuilderExample : public OPgameState {
-	OPmodel Mesh;			// The Mesh to render
+	OPmodel* Mesh;			// The Mesh to render
 	OPeffect Effect;		// The Effect used to render the Mesh
 	OPcam Camera;			// The Camera to use in the Effect to render the Mesh
 	ui32 Rotation;			// The amount to rotate the Mesh
@@ -47,7 +47,7 @@ class MeshBuilderExample : public OPgameState {
 		OPmat4 world = OPmat4RotY(Rotation / 100.0f);
 
 		OPrenderClear(0.4f, 0.4f, 0.4f);
-		OPbindMeshEffectWorldCam(&Mesh, &Effect, &world, &Camera);
+		OPbindMeshEffectWorldCam(Mesh, &Effect, &world, &Camera);
 
 		OPrenderDrawBufferIndexed(0);
 		OPrenderPresent();
