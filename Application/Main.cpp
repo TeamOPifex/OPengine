@@ -8,6 +8,10 @@
 #include "OPlibjpegturbo.h"
 #endif
 
+#ifdef ADDON_socketio
+#include "OPsocketGamePadSystem.h"
+#endif
+
 //////////////////////////////////////
 // Application Methods
 //////////////////////////////////////
@@ -45,10 +49,15 @@ void ApplicationInit() {
 
 	OPrenderSetup();
 	OPwindowSystemInit();
-	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, 1920, 1080));
+	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, 1280, 720));
 	OPrenderInit(&mainWindow);
 
 	OPGAMEPADS.SetDeadzones(0.2f);
+
+#ifdef ADDON_socketio
+	OPSOCKETGAMEPADS.Init();
+	OPSOCKETGAMEPADS.SetDeadzones(0.2f);
+#endif
 
 	OPVISUALDEBUGINFO.Init();
 
@@ -62,12 +71,20 @@ OPint ApplicationUpdate(OPtimer* timer) {
 	OPVISUALDEBUGINFO.Update(timer);
 
 	OPinputSystemUpdate(timer);
+#ifdef ADDON_socketio
+	OPSOCKETGAMEPADS.Update(timer);
+#endif
 	OPCMAN_UPDATE(timer);
 
 	if (OPKEYBOARD.WasReleased(OPkeyboardKey::ESCAPE)) return 1;
 	if ((OPKEYBOARD.WasReleased(OPkeyboardKey::BACKSPACE) || OPGAMEPADS[0]->WasPressed(OPgamePadButton::BACK)) && ActiveState != GS_EXAMPLE_SELECTOR) {
 		OPgameState::Change(GS_EXAMPLE_SELECTOR);
 	}
+#ifdef ADDON_socketio
+	if ((OPSOCKETGAMEPADS[0]->WasPressed(OPgamePadButton::BACK)) && ActiveState != GS_EXAMPLE_SELECTOR) {
+		OPgameState::Change(GS_EXAMPLE_SELECTOR);
+	}
+#endif
 
 	return ActiveState->Update(timer);
 }

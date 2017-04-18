@@ -200,7 +200,7 @@ class MouseIntersectExample : public OPgameState {
 		}
 
 		OPfontRenderBegin(FontManager);
-		OPfontColor(OPvec4Create(1.0, 1.0, 1.0, 1));
+		OPfontColor(OPvec4(1.0, 1.0, 1.0, 1));
 		FontManager->scale = 0.75;
 		i8 buffer[256];
 #ifdef OPIFEX_WINDOWS

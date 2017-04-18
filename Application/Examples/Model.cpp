@@ -8,16 +8,24 @@
 #include "./Data/include/OPcman.h"
 
 
+#ifdef ADDON_socketio
+#include "OPsocketGamePadSystem.h"
+#endif
+
+
 // Data for this Game State Example
 class ModelExample : public OPgameState {
+public:
 	OPmodel* Mesh;			// The Mesh to render
 	OPeffect Effect;		// The Effect used to render the Mesh
 	OPcam Camera;			// The Camera to use in the Effect to render the Mesh
-	ui64 Rotation;			// The amount to rotate the Mesh
+	d64 Rotation;			// The amount to rotate the Mesh
+	d64 Y;
 	OPvec3 LightDirection;	// Where the Light Source is coming from
 
 
 	void Init(OPgameState* last) {
+
 
 		// The effect that will be used to render the mesh
 		// The renderGenEffect is a simplified utility method
@@ -63,7 +71,11 @@ class ModelExample : public OPgameState {
 		// If you need more granular control for when these update, please modify
 		// this application's main.cpp
 		if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { Rotation += time->Elapsed; }
-
+#ifdef ADDON_socketio
+		OPSOCKETGAMEPADS.Update(time);
+		Rotation += OPSOCKETGAMEPADS[0]->LeftThumbX() * 10;
+		Y -= OPSOCKETGAMEPADS[0]->LeftThumbY() / 10.0f;
+#endif
 
 		// Tells the engine to continue running
 		// Returning true will tell the engine to terminate
@@ -78,13 +90,22 @@ class ModelExample : public OPgameState {
 		// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
 		OPmat4 world = OPMAT4_IDENTITY;
 		world.RotY(Rotation / 100.0f)->Scl(0.25f, 0.25f, 0.25f);
-		world.Translate(1, 0, 0);
+		world.Translate(1, Y, 0);
 
 
 		////////////////////////
 		// Render
 		////////////////////////
-		OPrenderClear(0.4f, 0.4f, 0.4f);
+#ifdef ADDON_socketio
+		if (OPSOCKETGAMEPADS[0]->IsDown(OPgamePadButton::A)) {
+			OPrenderClear(0.4f, 0.0f, 0.0f);
+		}
+		else {
+			OPrenderClear(0.4f, 0.4f + OPSOCKETGAMEPADS[0]->LeftThumbY(), 0.4f);
+		}
+#else
+		OPrenderClear(0.4f, 0.0f, 0.0f);
+#endif
 
 		// A helper utility which binds the Mesh, Effect and the World, View and Projection Matrices
 		// For more granular control please take a look at the Textured Example

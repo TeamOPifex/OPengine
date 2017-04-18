@@ -225,19 +225,19 @@ void OPmat4Log(const OPchar* msg, OPmat4 m) {
 
 OPmat4 OPmat4Read(OPstream* str) {
 	OPmat4 temp = {
-		OPvec4Read(str),
-		OPvec4Read(str),
-		OPvec4Read(str),
-		OPvec4Read(str)
+		OPvec4::Read(str),
+		OPvec4::Read(str),
+		OPvec4::Read(str),
+		OPvec4::Read(str)
 	};
 	return temp;
 }
 
 void OPmat4Write(OPmat4 v, OPstream* str) {
-	OPvec4Write(v[0], str);
-	OPvec4Write(v[1], str);
-	OPvec4Write(v[2], str);
-	OPvec4Write(v[3], str);
+	v[0].Write(str);
+	v[1].Write(str);
+	v[2].Write(str);
+	v[3].Write(str);
 }
 
 OPmat4 OPmat4RemoveScale(OPmat4 a) {
@@ -280,4 +280,92 @@ OPvec3 OPmat4Eulor(OPmat4 a)
 		(OPfloat)(atan2(sinYaw, cosYaw) * 180 / OPpi),
 		(OPfloat)(atan2(sinPitch, cosPitch) * 180 / OPpi),
 		(OPfloat)(atan2(sinRoll, cosRoll) * 180 / OPpi));
+}
+
+
+OPvec3 OPmat4Transform(OPvec3 a, OPmat4 b) {
+	OPvec3 result;
+	result.x = b[0].x * a.x + b[1].x * a.y + b[2].x * a.z + b[3][0] * 1.0f;
+	result.y = b[0].y * a.x + b[1].y * a.y + b[2].y * a.z + b[3][1] * 1.0f;
+	result.z = b[0].z * a.x + b[1].z * a.y + b[2].z * a.z + b[3][2] * 1.0f;
+	return result;
+}
+
+OPvec4 OPmat4Transform(OPvec4 a, OPmat4 b) {
+	OPvec4 result;
+	result.x = b[0][0] * a.x + b[1][0] * a.y + b[2][0] * a.z + b[3][0] * a.w;
+	result.y = b[0][1] * a.x + b[1][1] * a.y + b[2][1] * a.z + b[3][1] * a.w;
+	result.z = b[0][2] * a.x + b[1][2] * a.y + b[2][2] * a.z + b[3][2] * a.w;
+	result.w = b[0][3] * a.x + b[1][3] * a.y + b[2][3] * a.z + b[3][3] * a.w;
+	return result;
+}
+
+// Test methods
+
+OPmat4 OPmat4RotationBetween(OPvec3 start, OPvec3 dest) {
+	start = OPvec3Norm(start);
+	dest = OPvec3Norm(dest);
+
+	OPvec3 axis = OPvec3Cross(start, dest);
+	f32 len = OPvec3Len(axis);
+	if (len == 0) {
+		return OPMAT4_IDENTITY;
+	}
+
+	f32 angle = OPasin(len);
+	axis *= 1 / len;
+
+	return OPmat4RotY(axis.y) * OPmat4RotZ(axis.z) * OPmat4RotX(axis.x);
+}
+
+OPmat4 OPmat4RotationNormal(OPvec3 normal) {
+	OPvec3 up = OPVEC3_UP;
+	normal = OPvec3Norm(normal);
+	OPvec3 axis = OPvec3Norm(OPvec3Cross(up, normal));
+
+	OPvec3 other = OPvec3Norm(OPvec3Cross(axis, normal));
+
+	OPmat4 result = OPMAT4_IDENTITY;
+
+	result[0][0] = axis.x;
+	result[1][0] = axis.y;
+	result[2][0] = axis.z;
+
+	result[0][1] = normal.x;
+	result[1][1] = normal.y;
+	result[2][1] = normal.z;
+
+	result[0][2] = other.x;
+	result[1][2] = other.y;
+	result[2][2] = other.z;
+
+	return result;
+}
+
+OPmat4 OPmat4RotationNormal2(OPvec3 normal) {
+	OPvec3 up = OPVEC3_UP;
+	normal = OPvec3Norm(normal);
+	OPvec3 axis = OPvec3Norm(OPvec3Cross(up, normal));
+
+	f32 dot = OPvec3Dot(OPVEC3_UP, normal);
+	f32 phi = OPacos(dot);
+
+	OPmat4 result = OPMAT4_IDENTITY;
+
+	f32 rcos = OPcos(phi);
+	f32 rsin = OPsin(phi);
+	f32 u = axis.x;
+	f32 v = axis.y;
+	f32 w = axis.z;
+	result[0][0] = rcos + u*u*(1 - rcos);
+	result[1][0] = w * rsin + v*u*(1 - rcos);
+	result[2][0] = -v * rsin + w*u*(1 - rcos);
+	result[0][1] = -w * rsin + u*v*(1 - rcos);
+	result[1][1] = rcos + v*v*(1 - rcos);
+	result[2][1] = u * rsin + w*v*(1 - rcos);
+	result[0][2] = v * rsin + u*w*(1 - rcos);
+	result[1][2] = -u * rsin + v*w*(1 - rcos);
+	result[2][2] = rcos + w*w*(1 - rcos);
+
+	return result;
 }

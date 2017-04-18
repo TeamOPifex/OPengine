@@ -160,6 +160,8 @@ void OPskeletonAnimation::Merge(OPskeletonAnimation* skelAnim2, OPfloat merge, O
 	ASSERT(merge <= 1.0, "Can't merge passed the animation");
 	ASSERT(merge >= 0.0, "Can't merge before the animation");
 
+	if (merge == 0) return;
+
 	OPint ind1, ind2, ind3, ind4;
 	OPfloat percent1 = Elapsed / (OPfloat)FramesPer;
 	OPfloat percent2 = skelAnim2->Elapsed / (OPfloat)skelAnim2->FramesPer;

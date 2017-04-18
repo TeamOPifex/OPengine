@@ -15,7 +15,7 @@ OPfontManager* OPfontManager::Init(OPfont* font) {
 	OPfontSystemLoadEffects();
 
 	_font = font;
-	_color = OPvec4Create(0.0f, 0.0f, 0.0f, 1.0f);
+	_color = OPvec4(0.0f, 0.0f, 0.0f, 1.0f);
 	_align = OPfontAlign::LEFT;
 
 	scale = 1.0f;
@@ -34,7 +34,7 @@ OPfontManager* OPfontManager::Init(const OPchar* font, const OPchar** text, ui16
 	Init(_font);
 
 	this->scale = 1.0;
-	this->_color = OPvec4Create(1,1,1,1);
+	this->_color = OPvec4(1,1,1,1);
 	this->Bind();
 	for (ui16 i = 0; i < count; i++) {
 		this->AddText(text[i]);

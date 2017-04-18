@@ -293,7 +293,7 @@ void OPimguiLabel(OPvec2 pos, const OPchar* text) {
 	OPvec2 paddedPosition = pos;
 	paddedPosition += 3;
 
-	OPvec4Log("Font Color", OPIMGUI_ACTIVE->primaryColor);
+	OPIMGUI_ACTIVE->primaryColor.Log("Font Color");
 	OPfontColor(OPIMGUI_ACTIVE->primaryColor);
 	OPfontRender(text, paddedPosition);
 }
@@ -325,7 +325,7 @@ void OPimguiLabel(
 	p.x += 3;
 	p.y += 3;
 	// Label
-	OPvec4Log("Font Color", color);
+	color.Log("Font Color");
 	OPfontColor(color);
 	OPfontRender(text, p);
 

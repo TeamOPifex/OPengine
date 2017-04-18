@@ -1,6 +1,11 @@
 #include "./ExampleSelectorState.h"
 #include "./Human/include/Input/OPinputRecord.h"
 
+
+#ifdef ADDON_socketio
+#include "OPsocketGamePadSystem.h"
+#endif
+
 #define TotalCategories 4
 #define TotalEntries (ExampleCount + TotalCategories)
 
@@ -20,7 +25,10 @@ class ExampleSelector : public OPgameState {
     OPint HierarchyDepth[TotalEntries];
     OPint CurrentDepth;
 	OPtexture2DOLD*Background;
-    OPgamePad* Controller;
+	OPgamePad* Controller;
+#ifdef ADDON_socketio
+	OPsocketGamePad* SocketController;
+#endif
 
 
 	void Init(OPgameState* last) {
@@ -43,6 +51,10 @@ class ExampleSelector : public OPgameState {
 			// And we don't re-initialize the examples array for no reason
 			Initialized = 1;
 			Controller = OPGAMEPADS[0];
+#ifdef ADDON_socketio
+			SocketController = OPSOCKETGAMEPADS[0];
+#endif
+
 			Example examples[TotalEntries] = {
 				// Categories
 				{ "Basics", NULL, 1, -1 },
@@ -130,10 +142,20 @@ class ExampleSelector : public OPgameState {
 
 		// Move the current menu selection up and down
 		// Automatically wrap around if it exceeds the bounds of options
-		if (OPKEYBOARD.WasPressed(OPkeyboardKey::W) || OPKEYBOARD.WasPressed(OPkeyboardKey::UP) || Controller->LeftThumbNowUp() || Controller->WasPressed(OPgamePadButton::DPAD_UP)) {
+		//OPlogErr("%f, %f", SocketController->LeftThumbX(), SocketController->LeftThumbY());
+
+		if (OPKEYBOARD.WasPressed(OPkeyboardKey::W) || OPKEYBOARD.WasPressed(OPkeyboardKey::UP) || Controller->LeftThumbNowUp() || Controller->WasPressed(OPgamePadButton::DPAD_UP)
+#ifdef ADDON_socketio
+			|| SocketController->LeftThumbNowUp() || SocketController->WasPressed(OPgamePadButton::DPAD_UP)
+#endif
+			) {
 			Selected--;
 		}
-		if (OPKEYBOARD.WasPressed(OPkeyboardKey::S) || OPKEYBOARD.WasPressed(OPkeyboardKey::DOWN) || Controller->LeftThumbNowDown() || Controller->WasPressed(OPgamePadButton::DPAD_DOWN)) {
+		if (OPKEYBOARD.WasPressed(OPkeyboardKey::S) || OPKEYBOARD.WasPressed(OPkeyboardKey::DOWN) || Controller->LeftThumbNowDown() || Controller->WasPressed(OPgamePadButton::DPAD_DOWN)
+#ifdef ADDON_socketio
+			|| SocketController->LeftThumbNowDown() || SocketController->WasPressed(OPgamePadButton::DPAD_DOWN)
+#endif
+			) {
 			Selected++;
 		}
 		if (Selected < 0) Selected = currentCategoryCount - 1;
@@ -149,7 +171,11 @@ class ExampleSelector : public OPgameState {
 		}
 
 		// When an example is selected:
-		if (Examples[actualSelected].available && (OPKEYBOARD.WasPressed(OPkeyboardKey::SPACE) || OPKEYBOARD.WasPressed(OPkeyboardKey::E) || OPKEYBOARD.WasPressed(OPkeyboardKey::D) || OPKEYBOARD.WasPressed(OPkeyboardKey::ENTER) || Controller->WasPressed(OPgamePadButton::A) || Controller->WasPressed(OPgamePadButton::DPAD_RIGHT))) {
+		if (Examples[actualSelected].available && (OPKEYBOARD.WasPressed(OPkeyboardKey::SPACE) || OPKEYBOARD.WasPressed(OPkeyboardKey::E) || OPKEYBOARD.WasPressed(OPkeyboardKey::D) || OPKEYBOARD.WasPressed(OPkeyboardKey::ENTER) || Controller->WasPressed(OPgamePadButton::A) || Controller->WasPressed(OPgamePadButton::DPAD_RIGHT)
+#ifdef ADDON_socketio
+			|| SocketController->WasPressed(OPgamePadButton::A) || SocketController->WasPressed(OPgamePadButton::DPAD_RIGHT)
+#endif
+			)) {
 
 			// Hard coded to category [3] which is Exit
 			if (actualSelected == 3) {
@@ -172,7 +198,11 @@ class ExampleSelector : public OPgameState {
 		}
 
 		// Jump backwards in the hierarchy
-		if ((OPKEYBOARD.WasPressed(OPkeyboardKey::BACKSPACE) || OPKEYBOARD.WasPressed(OPkeyboardKey::A) || Controller->WasPressed(OPgamePadButton::BACK) || Controller->WasPressed(OPgamePadButton::B) || Controller->WasPressed(OPgamePadButton::DPAD_LEFT))) {
+		if ((OPKEYBOARD.WasPressed(OPkeyboardKey::BACKSPACE) || OPKEYBOARD.WasPressed(OPkeyboardKey::A) || Controller->WasPressed(OPgamePadButton::BACK) || Controller->WasPressed(OPgamePadButton::B) || Controller->WasPressed(OPgamePadButton::DPAD_LEFT)
+#ifdef ADDON_socketio
+			|| SocketController->WasPressed(OPgamePadButton::B) || SocketController->WasPressed(OPgamePadButton::DPAD_LEFT)
+#endif
+			)) {
 			HierarchyDepth[CurrentHierarchy + 1] = Selected;
 			CurrentHierarchy = -1;
 			CurrentDepth--;
@@ -201,7 +231,7 @@ class ExampleSelector : public OPgameState {
 
 		OPfontRenderBegin(FontManager);
 
-		OPfontColor(OPvec4Create(1.0, 1.0, 1.0, 1));
+		OPfontColor(OPvec4(1.0, 1.0, 1.0, 1));
 		FontManager->scale = 0.75;
 		OPfontRender("OPengine v0.4.6", OPvec2(50, start - 60));
 
@@ -244,7 +274,7 @@ class ExampleSelector : public OPgameState {
 			}
 
 
-			OPfontColor(OPvec4Create(r, g, b, 1));
+			OPfontColor(OPvec4(r, g, b, 1));
 
 			// If it's a category it doesn't get pushed to the right
 			if (isActiveCategory) {

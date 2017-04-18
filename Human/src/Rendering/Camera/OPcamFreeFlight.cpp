@@ -4,6 +4,11 @@
 #include "./Human/include/Input/OPmouse.h"
 #include "./Human/include/Rendering/OPrender.h"
 
+
+#ifdef ADDON_socketio
+#include "OPsocketGamePadSystem.h"
+#endif
+
 void OPcamFreeFlight::Init(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position, OPfloat camNear, OPfloat camFar) {
 	RotationSpeed = rotateSpeed;
 	MoveSpeed = moveSpeed;
@@ -53,6 +58,13 @@ void OPcamFreeFlight::Update(OPtimer* timer) {
 
 	rot.y = OPKEYBOARD.IsDown(OPkeyboardKey::Q) - OPKEYBOARD.IsDown(OPkeyboardKey::E) - gamePad->RightThumbX();
 	rot.x = OPKEYBOARD.IsDown(OPkeyboardKey::Z) - OPKEYBOARD.IsDown(OPkeyboardKey::C) + gamePad->RightThumbY();
+
+#ifdef ADDON_socketio
+	Movement.z -= OPSOCKETGAMEPADS[0]->LeftThumbY();
+	Movement.x += OPSOCKETGAMEPADS[0]->LeftThumbX();
+	rot.y -= OPSOCKETGAMEPADS[0]->RightThumbX();
+	rot.x += OPSOCKETGAMEPADS[0]->RightThumbY();
+#endif
 	if (OPMOUSE.IsDown(OPmouseButton::RBUTTON)) {
 		rot.x += OPMOUSE.MovedY() / 10.0f;
 		rot.y += OPMOUSE.MovedX() / 10.0f;

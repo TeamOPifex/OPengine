@@ -9,6 +9,10 @@
 
 #include "./Data/include/OPcman.h"
 
+#ifdef ADDON_socketio
+#include "OPsocketGamePadSystem.h"
+#endif
+
 
 typedef struct {
 	PxRigidDynamic* physics;
@@ -193,7 +197,10 @@ public:
 		}
 
 		OPvec3 disp = OPvec3Create(0.0f, -0.98f * 0.25f, 0.0f);
-		OPvec2 leftThumb = OPGAMEPADS[0]->LeftThumb();
+		OPvec2 leftThumb = OPGAMEPADS[0]->LeftThumb(); 
+#ifdef ADDON_socketio
+		leftThumb += OPSOCKETGAMEPADS[0]->LeftThumb();
+#endif
 		disp.x += leftThumb.x * 0.5f;
 		disp.z -= leftThumb.y * 0.5f;
 

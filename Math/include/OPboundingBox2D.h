@@ -15,4 +15,3 @@ struct OPboundingBox2D {
 		this->max = max;
 	}
 };
-

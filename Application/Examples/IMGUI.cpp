@@ -35,10 +35,10 @@ public:
 
 		effect.Init("imgui.vert", "imgui.frag");
 		imgui = OPimguiCreate(&effect, FontManager);
-		imgui->primaryColor = OPvec4Create(1, 0, 0, 1);
-		imgui->secondaryColor = OPvec4Create(1, 1, 1, 1);
-		imgui->hoverColor = OPvec4Create(0.9f, 0.9f, 0.9f, 1);
-		imgui->padding = OPvec4Create(10, 10, 10, 10);
+		imgui->primaryColor = OPvec4(1, 0, 0, 1);
+		imgui->secondaryColor = OPvec4(1, 1, 1, 1);
+		imgui->hoverColor = OPvec4(0.9f, 0.9f, 0.9f, 1);
+		imgui->padding = OPvec4(10, 10, 10, 10);
 
 		OPimguiBind(imgui);
 	}

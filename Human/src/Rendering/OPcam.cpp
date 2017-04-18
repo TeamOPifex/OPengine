@@ -54,8 +54,8 @@ OPray3D OPcam::Unproject(i32 screenX, i32 screenY) {
 	OPfloat y = -(((OPfloat)screenY / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height) - 0.5f) * 2.0f;
 
 	// Start and End of ray
-	OPvec4 rayStart_nds = OPvec4Create(x, y, -1.0, 1.0);
-	OPvec4 rayEnd_nds = OPvec4Create(x, y, 0.0f, 1.0);
+	OPvec4 rayStart_nds = OPvec4(x, y, -1.0, 1.0);
+	OPvec4 rayEnd_nds = OPvec4(x, y, 0.0f, 1.0);
 
 
 	// TODO: (garrett) combine into inverseViewProj matrix

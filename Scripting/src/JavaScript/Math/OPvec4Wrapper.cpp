@@ -9,7 +9,7 @@ JS_RETURN_VAL _OPvec4LogSelf(const JS_ARGS& args) {
 
     OPvec4* ptr = JS_GET_PTR(args.This(), OPvec4);
     String::Utf8Value str(args[0]->ToString());
-    OPvec4Log(*str, *ptr);
+	ptr->Log(*str);
 
     JS_RETURN_NULL;
 }
@@ -19,7 +19,7 @@ JS_RETURN_VAL _OPvec4Log(const JS_ARGS& args) {
 
     OPvec4* ptr = JS_GET_ARG_PTR(args, 1, OPvec4);
     String::Utf8Value str(args[0]->ToString());
-    OPvec4Log(*str, *ptr);
+	ptr->Log(*str);
 
     JS_RETURN_NULL;
 }
@@ -86,9 +86,9 @@ JS_RETURN_VAL _OPvec4Create(const JS_ARGS& args) {
 
     OPvec4* ptr = (OPvec4*)OPalloc(sizeof(OPvec4));
     if(args.Length() == 4) {
-        *ptr = OPvec4Create((f32)args[0]->NumberValue(), (f32)args[1]->NumberValue(), (f32)args[2]->NumberValue(), (f32)args[3]->NumberValue());
+        *ptr = OPvec4((f32)args[0]->NumberValue(), (f32)args[1]->NumberValue(), (f32)args[2]->NumberValue(), (f32)args[3]->NumberValue());
     } else {
-        *ptr = OPvec4Create(0,0,0,0);
+        *ptr = OPvec4(0,0,0,0);
     }
 
     JS_RETURN(_OPvec4Setup(JS_NEW_OBJECT(), ptr));
