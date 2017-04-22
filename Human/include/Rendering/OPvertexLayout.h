@@ -43,6 +43,7 @@ struct OPvertexLayoutBuilder {
 
 	OPvertexLayoutBuilder* Init();
 	OPvertexLayoutBuilder* Init(ui32 features);
+	OPvertexLayoutBuilder* Add(const OPchar* name, OPattributeTypes attrType, ui32 count);
 	OPvertexLayoutBuilder* Add(OPattributes attribute);
 	OPvertexLayout Build();
 };

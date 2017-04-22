@@ -100,7 +100,7 @@ class ExampleSelector : public OPgameState {
 				{ "Scripting", GS_EXAMPLE_SCRIPTING, GS_EXAMPLE_SCRIPTING_AVAILABLE, 2 },
 				{ "Lua", GS_EXAMPLE_LUA, GS_EXAMPLE_LUA_AVAILABLE, 2 },
 				{ "Oculus", GS_EXAMPLE_OCULUS, GS_EXAMPLE_OCULUS_AVAILABLE, 2 },
-				{ "OpenVR", GS_EXAMPLE_OPENVR, GS_EXAMPLE_OPENVR_AVAILABLE, 2 },
+				{ "OpenVR", GS_EXAMPLE_OPENVR2, GS_EXAMPLE_OPENVR2_AVAILABLE, 2 },
 				{ "Server Client", GS_EXAMPLE_SERVER_CLIENT, GS_EXAMPLE_SERVER_CLIENT_AVAILABLE, 2 }
 			};
 			OPmemcpy(Examples, examples, sizeof(Example) * TotalEntries);

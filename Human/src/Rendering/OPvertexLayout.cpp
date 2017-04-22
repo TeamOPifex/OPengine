@@ -85,6 +85,14 @@ OPvertexLayoutBuilder* OPvertexLayoutBuilder::Init(ui32 features) {
 	return this;
 }
 
+OPvertexLayoutBuilder* OPvertexLayoutBuilder::Add(const OPchar* name, OPattributeTypes attrType, ui32 count) {
+	names[index] = "aPosition";
+	types[index] = OPATTR_TYPE_FLOAT;
+	counts[index] = 3;
+	index++;
+	return this;
+}
+
 OPvertexLayoutBuilder* OPvertexLayoutBuilder::Add(OPattributes attribute) {
 	switch (attribute) {
 	case OPattributes::POSITION: {
