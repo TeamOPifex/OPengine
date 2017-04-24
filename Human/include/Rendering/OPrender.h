@@ -76,6 +76,10 @@ inline void OPrenderDepth(bool state) {
 	OPRENDERER_ACTIVE->SetDepthTesting(state);
 }
 
+inline void OPrenderMultisample(bool state) {
+	OPRENDERER_ACTIVE->SetMultisample(state);
+}
+
 inline void OPrenderDepthWrite(bool state) {
 	OPRENDERER_ACTIVE->SetDepthWrite(state);
 }

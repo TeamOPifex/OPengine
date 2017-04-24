@@ -9,6 +9,8 @@ typedef struct OPframeBuffer OPframeBuffer;
 
 extern OPframeBuffer* OPRENDER_CURR_FRAMEBUFFER;
 
+
+
 struct OPframeBuffer {
 	void* internalPtr;
 
@@ -40,11 +42,19 @@ struct OPframeBuffer {
 		OPRENDERER_ACTIVE->FrameBuffer.Bind(this);
 	}
 
-	inline void Unbind() {
-		OPRENDERER_ACTIVE->FrameBuffer.Unbind(this);
+	inline void Bind(OPframeBufferMode mode) {
+		OPRENDERER_ACTIVE->FrameBuffer.Bind(mode, this);
 	}
 
 	inline void Destroy() {
 		OPRENDERER_ACTIVE->FrameBuffer.Destroy(this);
+	}
+
+	static inline void Unbind() {
+		OPRENDERER_ACTIVE->FrameBuffer.Unbind(OPframeBufferMode::BOTH);
+	}
+
+	static inline void Unbind(OPframeBufferMode mode) {
+		OPRENDERER_ACTIVE->FrameBuffer.Unbind(mode);
 	}
 };

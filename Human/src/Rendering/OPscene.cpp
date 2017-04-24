@@ -117,3 +117,72 @@ void OPscene::Render(OPfloat delta) {
 void OPscene::Destroy() {
 	OPfree(entities);
 }
+
+
+
+
+void OPsceneVR::Init(OPrenderer2* renderer, ui32 maxEntities, ui32 maxLights) {
+
+	OPscene::Init(renderer, maxEntities, maxLights);
+	internalCamera2.SetPerspective(OPvec3(2), OPvec3(0));
+	camera2 = &internalCamera;
+}
+
+void OPsceneVR::SetCamera2(OPcam* cam) {
+	camera2 = cam;
+	renderer->SetCamera(&camera);
+}
+
+void OPsceneVR::RenderLeft(OPfloat delta) {
+	renderer->SetCamera(&camera);
+	renderer->Begin();
+
+	for (ui32 i = 0; i < index; i++) {
+		renderer->Submit(&entities[i]);
+	}
+
+	for (ui32 i = 0; i < lightIndex; i++) {
+		//renderer->Submit(&lights[i].light);
+	}
+
+	renderer->End();
+
+	renderer->Present();
+
+}
+
+void OPsceneVR::RenderRight(OPfloat delta) {
+	renderer->SetCamera(&camera2);
+	renderer->Begin();
+
+	for (ui32 i = 0; i < index; i++) {
+		renderer->Submit(&entities[i]);
+	}
+
+	for (ui32 i = 0; i < lightIndex; i++) {
+		//renderer->Submit(&lights[i].light);
+	}
+
+	renderer->End();
+
+	renderer->Present();
+
+}
+
+void OPsceneVR::RenderWith(OPcam* cam, OPfloat delta) {
+	renderer->SetCamera(&cam);
+	renderer->Begin();
+
+	for (ui32 i = 0; i < index; i++) {
+		renderer->Submit(&entities[i]);
+	}
+
+	for (ui32 i = 0; i < lightIndex; i++) {
+		//renderer->Submit(&lights[i].light);
+	}
+
+	renderer->End();
+
+	renderer->Present();
+
+}

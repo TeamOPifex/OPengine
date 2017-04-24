@@ -85,6 +85,15 @@ void OPrendererSetCullGL(bool state) {
 	}
 }
 
+void OPrendererSetMultisampleGL(bool state) {
+	if (state) {
+		OPGLFN(glEnable(GL_MULTISAMPLE));
+	}
+	else {
+		OPGLFN(glDisable(GL_MULTISAMPLE));
+	}
+}
+
 void OPrendererSetWireframeGL(bool state) {
 	if (state) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -177,6 +186,7 @@ OPrenderAPI* OPrendererGL() {
 	OPRENDERERGL.SetDepthWrite = OPrendererSetDepthWriteGL;
 	OPRENDERERGL.SetCull = OPrendererSetCullGL;
 	OPRENDERERGL.SetCullMode = OPrendererSetCullModeGL;
+	OPRENDERERGL.SetMultisample = OPrendererSetMultisampleGL;
 	OPRENDERERGL.SetWireframe = OPrendererSetWireframeGL;
 	OPRENDERERGL.SetBlend = OPrendererSetBlendGL;
 	OPRENDERERGL.SetBlendMode = OPrendererSetBlendModeGL;

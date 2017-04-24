@@ -19,6 +19,7 @@ ui32 OPtextureFormatToGL(OPtextureFormat textureFormat) {
 	switch (textureFormat)
 	{
 	case OPtextureFormat::RGBA: return GL_RGBA;
+	case OPtextureFormat::RGBA8: return GL_RGBA8;
 	case OPtextureFormat::RGB: return GL_RGB;
 	case OPtextureFormat::BGRA: return GL_BGRA;
 	case OPtextureFormat::BGR: return GL_BGR;
@@ -72,15 +73,17 @@ OPtexture* OPtextureGLInit(OPtexture* texture, OPtextureDesc textureDesc, const 
 	if (textureDesc.multisampled) {
 		OPGLFN(glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, internalPtr->Handle));
 
-		OPGLFN(glTexImage2D(GL_TEXTURE_2D_MULTISAMPLE, 0, textureInternalFormat, textureDesc.width, textureDesc.height, 0, textureFormat, textureType, pixelData));
+		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, textureInternalFormat, textureDesc.width, textureDesc.height, true);
+
+		//OPGLFN(glTexImage2D(GL_TEXTURE_2D_MULTISAMPLE, 0, textureInternalFormat, textureDesc.width, textureDesc.height, 0, textureFormat, textureType, pixelData));
 		
 		//OPGLFN(glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_WRAP_S, textureWrap));
 		//OPGLFN(glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_WRAP_T, textureWrap));
 		//OPGLFN(glTexImage2D(GL_TEXTURE_2D_MULTISAMPLE, 0, textureInternalFormat, textureDesc.width, textureDesc.height, 0, textureFormat, textureType, pixelData));
 
-		float aniso = 0.0f;
-		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
-		glTexParameterf(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
+		//float aniso = 0.0f;
+		//glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
+		//glTexParameterf(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
 
 		//OPGLFN(glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MIN_FILTER, textureMinFilter));
 		//OPGLFN(glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAG_FILTER, textureMagFilter));

@@ -49,3 +49,15 @@ struct OPscene {
 	void Render(OPfloat delta);
 	void Destroy();
 };
+
+
+struct OPsceneVR : OPscene {
+	OPcam* camera2;
+	OPcam internalCamera2;
+
+	void Init(OPrenderer2* renderer, ui32 maxEntities, ui32 maxLights);
+	void SetCamera2(OPcam* cam);
+	void RenderLeft(OPfloat delta);
+	void RenderRight(OPfloat delta);
+	void RenderWith(OPcam* cam, OPfloat delta);
+};

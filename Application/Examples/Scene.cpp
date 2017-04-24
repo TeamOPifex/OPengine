@@ -39,7 +39,7 @@ class SceneExample : public OPgameState {
 		environment.Init(envImages);
 
 		renderer = OPNEW(OPrendererForward());
-		//scene.Init(&renderer->rendererRoot, 100, 1);
+		scene.Init(renderer, 100, 1);
 		camera.Init();
 		scene.camera = &camera.Camera;
 

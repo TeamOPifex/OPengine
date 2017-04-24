@@ -32,6 +32,7 @@ struct OPrenderAPI {
 	void(*SetDepthWrite)(bool state) = 0;
 	void(*SetCull)(bool state) = 0;
 	void(*SetCullMode)(OPcullFace state) = 0;
+	void(*SetMultisample)(bool state) = 0;
 	void(*SetWireframe)(bool state) = 0;
 	void(*SetBlend)(bool state) = 0;
 	void(*SetBlendMode)(OPblendFunction src, OPblendFunction dst) = 0;
@@ -60,6 +61,7 @@ struct OPrenderAPI {
 	OPvertexBuffer* OPVERTEXBUFFER_ACTIVE = 0;
 	OPindexBuffer* OPINDEXBUFFER_ACTIVE = 0;
 	OPeffect* OPEFFECT_ACTIVE = 0;
+	OPframeBuffer* OPFRAMEBUFFER_ACTIVE = 0;
 
 	inline void Clear(OPvec4 v) { _Clear(v); }
 	inline void Clear(OPfloat r) { _Clear(OPvec4(r)); }

@@ -14,18 +14,18 @@
 // Data for this Game State Example
 class OpenVR2Example : public OPgameState {
 	OPfloat Rotation;
-	OPscene scene;
+	OPsceneVR scene;
 	OPrendererForward* renderer;
 	OPmodel* model;
+	OPmodel* ground;
 	OPrendererEntity* model1Entity;
+	OPrendererEntity* model2Entity;
 	OPcamFreeFlight camera;
-	OPmaterialPBR materialPBR;
-	OPtextureCube environment;
-	OPmaterialPBR* materialInstance;
-	OPmaterialPBR* materialInstance2;
 
-	OPmaterial* materialInst1;
-	OPmaterial* materialInst2;
+	OPmodel* vrController;
+	OPrendererEntity* vrController1Entity;
+	OPrendererEntity* vrController2Entity;
+	OPopenVR openVR;
 
 	void Init(OPgameState* last) {
 
@@ -33,28 +33,77 @@ class OpenVR2Example : public OPgameState {
 		scene.Init(renderer, 100, 1);
 
 		camera.Init();
-		scene.camera = &camera.Camera;
+		scene.SetCamera(&openVR.leftEye);
+		//scene.camera = &camera.Camera;
+		scene.SetCamera2(&openVR.rightEye);
 
-		OPsphere::Color = OPvec3(0, 0, 1);
-		model = OPsphere::Create(2, ((ui32)OPattributes::POSITION | (ui32)OPattributes::COLOR | (ui32)OPattributes::NORMAL));
+		model = (OPmodel*)OPCMAN.LoadGet("ground_block_2x2x2.fbx.opm");
+		ground = OPquadCreateZPlane();
+		//model = (OPmodel*)OPCMAN.LoadGet("sponza.opm");
+		//OPsphere::Color = OPvec3(0, 0, 1);
+		//model = OPsphere::Create(2, ((ui32)OPattributes::POSITION | (ui32)OPattributes::COLOR | (ui32)OPattributes::NORMAL));
 
-		model1Entity = scene.Add(model, true);
+		OPrendererEntityDesc desc(false, false, false, false);
+		model1Entity = scene.Add(model, desc);
+		model1Entity->SetAlbedoMap("Knight.png");
+		model2Entity = scene.Add(ground, desc);
+		model2Entity->SetAlbedoMap("TetrisBase.png");
+
+		vrController = (OPmodel*)OPCMAN.LoadGet("vrcontrollervive.opm");
+		vrController1Entity = scene.Add(vrController, desc);
+		vrController2Entity = scene.Add(vrController, desc);
+		vrController1Entity->SetAlbedoMap("vrcontrollervive.png");
+		vrController2Entity->SetAlbedoMap("vrcontrollervive.png");
+
+		vrController1Entity->world = OPmat4Translate(0, 1, 0);
+		vrController2Entity->world = OPmat4Translate(1, 1, 0);
+
+		openVR.Init();
+		openVR.center.SetPerspective(OPVEC3_ONE, OPVEC3_ZERO);
 	}
 
 	OPint Update(OPtimer* time) {
 		camera.Update(time);
+		openVR.Update();
+		openVR.UpdateHMDMatrixPose();
 		return false;
 	}
 
 	void Render(OPfloat delta) {
 		OPrenderCull(1);
 		OPrenderDepth(1);
+		 
+		OPvec3 color = OPvec3(openVR.controller[1].axis2.x, openVR.controller[1].axis1.x, openVR.controller[1].axis1.y);
+		OPrenderClear(color);
 
-		OPrenderClear(0.2f, 0.2f, 0.2f);
-		scene.Render(delta);
-		OPVISUALDEBUGINFO.Render(delta);
+		model1Entity->world = OPmat4Scl(0.25);
+		vrController1Entity->world = openVR.GetTrackedDeviceMatrix(1);
+		vrController2Entity->world = openVR.GetTrackedDeviceMatrix(2);
 
-		OPrenderPresent();
+		//openVR.UpdateHMDMatrixPose();
+
+		// Left Eye
+		openVR.PrepRenderLeftEye();
+		OPrenderClear(color);
+		scene.RenderLeft(delta);
+		openVR.FinishRenderLeftEye();
+
+		// Right Eye
+		openVR.PrepRenderRightEye();
+		OPrenderClear(color);
+		scene.RenderRight(delta);
+		openVR.FinishRenderRightEye();
+
+		// Distort and Composite
+		//openVR.RenderDistortion();
+		openVR.Composite();
+
+
+		scene.RenderWith(&openVR.center, delta);// &camera.Camera, delta);
+
+		openVR.WaitForFinish();
+
+		//openVR.UpdateHMDMatrixPose();
 	}
 
 	OPint Exit(OPgameState* next) {
