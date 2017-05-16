@@ -42,8 +42,12 @@ void OPrendererForward::SetShadowCamera(OPcam** cam) {
 }
 
 void OPrendererForward::Present() {
+	OPframeBuffer* active = OPRENDERER_ACTIVE->OPFRAMEBUFFER_ACTIVE;
+
 	shadowPass.Begin();
 	shadowPass.End();
+
+	active->Bind();
 	renderPass.Begin();
 	renderPass.End();
 }

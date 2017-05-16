@@ -85,6 +85,15 @@ void OPrendererSetCullGL(bool state) {
 	}
 }
 
+void OPrendererSetMultisampleGL(bool state) {
+	if (state) {
+		OPGLFN(glEnable(GL_MULTISAMPLE));
+	}
+	else {
+		OPGLFN(glDisable(GL_MULTISAMPLE));
+	}
+}
+
 void OPrendererSetWireframeGL(bool state) {
 	if (state) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -135,7 +144,7 @@ void OPrendererSetBlendModeGL(OPblendFunction src, OPblendFunction dst) {
 }
 
 inline void OPrenderSetViewportGL(ui32 x, ui32 y, ui32 width, ui32 height) {
-    OPlogInfo("Set viewport %dx%d", width, height);
+   // OPlogInfo("Set viewport %dx%d", width, height);
 	OPGLFN(glViewport(x, y, width, height));
 }
 
@@ -177,6 +186,7 @@ OPrenderAPI* OPrendererGL() {
 	OPRENDERERGL.SetDepthWrite = OPrendererSetDepthWriteGL;
 	OPRENDERERGL.SetCull = OPrendererSetCullGL;
 	OPRENDERERGL.SetCullMode = OPrendererSetCullModeGL;
+	OPRENDERERGL.SetMultisample = OPrendererSetMultisampleGL;
 	OPRENDERERGL.SetWireframe = OPrendererSetWireframeGL;
 	OPRENDERERGL.SetBlend = OPrendererSetBlendGL;
 	OPRENDERERGL.SetBlendMode = OPrendererSetBlendModeGL;

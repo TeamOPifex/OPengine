@@ -1,7 +1,7 @@
 #include "./Scripting/include/JavaScript/OPjavaScriptHelper.h"
 #include "./Core/include/OPlog.h"
 
-OPuint _JS_ARGC = 0;
+i32 _JS_ARGC = 0;
 
 #ifdef OPIFEX_OPTION_V8
 

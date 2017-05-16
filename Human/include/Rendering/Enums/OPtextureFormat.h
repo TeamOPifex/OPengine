@@ -5,6 +5,7 @@ enum struct OPtextureFormat
 	NONE = 0,
 	RGB,
 	RGBA,
+	RGBA8,
 	LUMINANCE,
 	LUMINANCE_ALPHA,
 	DEPTH,

@@ -7,10 +7,7 @@
 #include "./Performance/include/OPphysX.h"
 #include "./Performance/include/OPphysXEventHandler.h"
 
-struct OPphysXScene {
-	PxScene* scene;
-	ui64 elapsed;
-};
+struct OPphysXScene;
 
 // FUNCTIONS
 
@@ -27,6 +24,15 @@ void OPphysXSceneUpdate(OPphysXScene* scene, ui64 timestep);
 void OPphysXSceneUpdate(OPphysXScene* scene, OPtimer* timer);
 i8 OPphysXShapeOverlapping(OPphysXRigidActor* actor, OPphysXShape* shape, PxGeometry* otherGeometry, PxTransform otherTransform);
 void OPphysXSceneAddWalls(OPphysXScene* scene, OPfloat left, OPfloat right, OPfloat forward, OPfloat backward, OPphysXMaterial* material, i8 addFloor);
+
+
+struct OPphysXScene {
+	PxScene* scene;
+	ui64 elapsed;
+	inline void Update(OPtimer* timer) {
+		OPphysXSceneUpdate(this, 16);
+	}
+};
 
 // INLINES
 
