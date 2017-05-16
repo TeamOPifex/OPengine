@@ -144,7 +144,7 @@ void OPrendererSetBlendModeGL(OPblendFunction src, OPblendFunction dst) {
 }
 
 inline void OPrenderSetViewportGL(ui32 x, ui32 y, ui32 width, ui32 height) {
-    OPlogInfo("Set viewport %dx%d", width, height);
+   // OPlogInfo("Set viewport %dx%d", width, height);
 	OPGLFN(glViewport(x, y, width, height));
 }
 

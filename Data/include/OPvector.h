@@ -16,14 +16,18 @@ struct OPvector {
 	OPvector(OPuint elementSize) { Init(elementSize); }
 
 	void Init(OPuint elementSize);
-	OPint Contains(ui8* item, OPint(*cmp)(ui8 *, ui8 *));
+	OPint Contains(void* item, OPint(*cmp)(void *, void *));
 	void EraseRange(OPuint indexFirst, OPuint indexLast);
-	void Insert(OPuint index, ui8* item);
+	void Insert(OPuint index, void* item);
 	void Reserve(OPuint size);
 	void Destroy();
 
 	inline ui8* Get(OPuint index) {
 		return (ui8*)items + index * _elementSize;
+	}
+
+	inline ui8* operator[](i32 i) {
+		return Get(i);
 	}
 
 	inline ui8* Front() {
@@ -50,7 +54,7 @@ struct OPvector {
 		_size = 0;
 	}
 
-	inline void Set(OPuint index, ui8* item) {
+	inline void Set(OPuint index, void* item) {
 		OPmemcpy((ui8*)(items) + index * _elementSize, item, _elementSize);
 	}
 
@@ -58,11 +62,11 @@ struct OPvector {
 		EraseRange(index, index + 1);
 	}
 
-	inline void Push(ui8* item) {
+	inline void Push(void* item) {
 		Insert(_size, item);
 	}
 
-	inline void Pop(ui8* item) {
+	inline void Pop(void* item) {
 		_size--;
 	}
 	

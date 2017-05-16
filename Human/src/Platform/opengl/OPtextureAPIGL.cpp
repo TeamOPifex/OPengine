@@ -140,6 +140,8 @@ void OPtextureGLDestroy(OPtexture* ptr) {
 }
 
 void OPtextureGLBind(OPtexture* ptr, ui32 slot) {
+	if (ptr == NULL) return;
+
 	OPtextureGL* texture = (OPtextureGL*)ptr->internalPtr;
 	OPGLFN(glActiveTexture(GL_TEXTURE0 + slot));
 	if (ptr->textureDesc.multisampled) {

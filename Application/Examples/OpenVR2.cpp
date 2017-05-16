@@ -25,7 +25,9 @@ class OpenVR2Example : public OPgameState {
 	OPmodel* vrController;
 	OPrendererEntity* vrController1Entity;
 	OPrendererEntity* vrController2Entity;
+#ifdef ADDON_openvr
 	OPopenVR openVR;
+#endif
 
 	void Init(OPgameState* last) {
 
@@ -33,9 +35,11 @@ class OpenVR2Example : public OPgameState {
 		scene.Init(renderer, 100, 1);
 
 		camera.Init();
+#ifdef ADDON_openvr
 		scene.SetCamera(&openVR.leftEye);
 		//scene.camera = &camera.Camera;
 		scene.SetCamera2(&openVR.rightEye);
+#endif
 
 		model = (OPmodel*)OPCMAN.LoadGet("ground_block_2x2x2.fbx.opm");
 		ground = OPquadCreateZPlane();
@@ -58,21 +62,27 @@ class OpenVR2Example : public OPgameState {
 		vrController1Entity->world = OPmat4Translate(0, 1, 0);
 		vrController2Entity->world = OPmat4Translate(1, 1, 0);
 
+#ifdef ADDON_openvr
 		openVR.Init();
 		openVR.center.SetPerspective(OPVEC3_ONE, OPVEC3_ZERO);
+#endif
 	}
 
 	OPint Update(OPtimer* time) {
 		camera.Update(time);
-		openVR.Update();
-		openVR.UpdateHMDMatrixPose();
 		return false;
 	}
 
 	void Render(OPfloat delta) {
+#ifdef ADDON_openvr
+		openVR.Update();
+		openVR.UpdateHMDMatrixPose();
+#endif
+
 		OPrenderCull(1);
 		OPrenderDepth(1);
-		 
+
+#ifdef ADDON_openvr
 		OPvec3 color = OPvec3(openVR.controller[1].axis2.x, openVR.controller[1].axis1.x, openVR.controller[1].axis1.y);
 		OPrenderClear(color);
 
@@ -104,6 +114,7 @@ class OpenVR2Example : public OPgameState {
 		openVR.WaitForFinish();
 
 		//openVR.UpdateHMDMatrixPose();
+#endif
 	}
 
 	OPint Exit(OPgameState* next) {

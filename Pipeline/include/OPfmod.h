@@ -14,8 +14,8 @@ typedef FMOD::Channel OPfmodChannel;
 extern OPfmod* CURRENT_FMOD;
 
 void OPfmodInit(); 
-OPfmodSound* OPfmodLoadStream(OPchar* name);
-OPfmodSound* OPfmodLoad(OPchar* name);
+OPfmodSound* OPfmodLoadStream(const OPchar* name);
+OPfmodSound* OPfmodLoad(const OPchar* name);
 OPfmodChannel* OPfmodPlay(OPfmodSound* sound);
 OPfmodChannelGroup* OPfmodCreateChannelGroup(const OPchar* name);
 OPfmodChannel* OPfmodPlay(OPfmodSound* sound, OPfmodChannelGroup* group);

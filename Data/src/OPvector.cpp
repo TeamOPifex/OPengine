@@ -11,7 +11,7 @@ void OPvector::Destroy() {
 	OPfree(items);
 }
 
-OPint OPvector::Contains(ui8* item, OPint(*cmp)(ui8 *, ui8 *)) {
+OPint OPvector::Contains(void* item, OPint(*cmp)(void *, void *)) {
 	OPuint i;
 	for (i = 0; i < _size; ++i){
 		if ((*cmp)(item, Get(i)) == 0) {
@@ -30,7 +30,7 @@ void OPvector::EraseRange(OPuint indexFirst, OPuint indexLast) {
 	_size -= (indexLast - indexFirst);
 }
 
-void OPvector::Insert(OPuint index, ui8* item) {
+void OPvector::Insert(OPuint index, void* item) {
 	if (_capacity <= _size) {
 		Reserve(2 * _capacity);
 	}
