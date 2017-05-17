@@ -12,7 +12,7 @@ Or build it yourself: [https://github.com/TeamOPifex/OPengine.Launcher](https://
 ## # Discord Channel
 ![Discord](http://imgur.com/vltXpws.png)
 
-Invite Link: [https://discord.gg/wMeFgqE](https://discord.gg/wMeFgqE)
+OPengine Discord Channel: [https://discord.gg/wMeFgqE](https://discord.gg/wMeFgqE)
 
 ## # Trello Board
 ![Trello](http://i.imgur.com/LXoKnoF.png)
