@@ -12,6 +12,11 @@ include(${CMAKE_CURRENT_LIST_DIR}/build.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/find_packages.cmake)
 
 
+if(${OPIFEX_OPTION_RELEASE})
+  SET(BINARY_RELEASE_MODE "release")
+else()
+  SET(BINARY_RELEASE_MODE "debug")
+endif()
 
 
 ### C/C++ Build Flags
@@ -23,11 +28,11 @@ else()
 	if(${OPIFEX_OS_WINDOWS})
 	else()
 		if(${OPIFEX_OS_32})
-			SET ( CMAKE_C_FLAGS "-stdlib=libstdc++ -m32" CACHE STRING "compile flags" FORCE)
-			SET ( CMAKE_CXX_FLAGS "-stdlib=libstdc++ -std=c++11 -m32" CACHE STRING "compile flags" FORCE)
+			SET ( CMAKE_C_FLAGS "-stdlib=libc++ -m32" CACHE STRING "compile flags" FORCE)
+			SET ( CMAKE_CXX_FLAGS "-stdlib=libc++ -std=c++14 -m32" CACHE STRING "compile flags" FORCE)
 		else()
-			SET ( CMAKE_C_FLAGS "-stdlib=libstdc++" CACHE STRING "compile flags" FORCE)
-			SET ( CMAKE_CXX_FLAGS "-stdlib=libstdc++ -std=c++11" CACHE STRING "compile flags" FORCE)
+			SET ( CMAKE_C_FLAGS "-stdlib=libc++" CACHE STRING "compile flags" FORCE)
+			SET ( CMAKE_CXX_FLAGS "-stdlib=libc++ -std=c++14" CACHE STRING "compile flags" FORCE)
 		endif()
 	endif()
 endif()

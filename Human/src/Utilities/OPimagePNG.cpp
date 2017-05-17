@@ -4,6 +4,7 @@
 #include "./Human/include/Rendering/OPimage.h"
 #include "./Human/include/Rendering/OPtexture.h"
 #include "./Data/include/OPfile.h"
+#include "./Data/include/OPstring.h"
 #include "./Core/include/OPlog.h"
 #include "./Core/include/Assert.h"
 #include "./Core/include/OPmemory.h"
@@ -48,13 +49,6 @@ void OPimagePNGCreate32(ui8* imageData, i32 width, i32 height, OPchar* filename)
 	lodepng_save_file(data, dataSize, filename);
 }
 
-i32 OPimagePNGLoad(OPstream* str, OPtexture** image){
-	//OPlog("OPimagePNGLoad image %s", str->Source);
-	//OPstream* str = OPreadFile(filename);
-	ASSERT(str != NULL, "Image not found.");
-	return OPimagePNGLoadStream(str, 0, image);
-}
-
 OPimage OPimagePNGLoadData(const OPchar* filename) {
 	ui32 error;
 	ui8* data;
@@ -79,7 +73,14 @@ OPimage OPimagePNGLoadData(const OPchar* filename) {
 	return result;	
 }
 
-i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
+#include "./Core/include/OPdebug.h"
+
+i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image, OPtextureFilter filter) {
+	TIMED_BLOCK;
+	if (str == NULL) {
+		return 0;
+	}
+
 	ui32 error;
 	ui8* data;
 	ui32 width, height;
@@ -100,10 +101,18 @@ i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
 	desc.height = h;
 	desc.format = OPtextureFormat::RGBA;
 	desc.wrap = OPtextureWrap::REPEAT;
-	desc.filter = OPtextureFilter::LINEAR;
+	desc.magfilter = filter;
+	desc.minfilter = filter;
+	//desc.minfilter = OPtextureFilter::LINEAR_MIPMAP;
+	//desc.mipmap = true;
+	//desc.multisampled = true;
 
 	OPRENDERER_ACTIVE->Texture.Init(tex, desc);
 	tex->SetData(data);
+
+#ifdef _DEBUG
+	tex->source = OPstringCopy(str->Source);
+#endif
 
 	// clean up
 	free(data); // Clean up load png 
@@ -114,22 +123,7 @@ i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
 	return 1;
 }
 
-i32 OPimagePNGReload(OPstream* str, OPtexture** image){
-	OPlog("Reload Image PNG");
-	//OPstream* str = OPreadFile(filename);
-	OPtexture* resultTex;
-	OPtexture* tex = (OPtexture*)(*image);
-	i32 result = OPimagePNGLoadStream(str, 0, &resultTex);
-	if (result) {
-		OPmemcpy(*image, resultTex, sizeof(OPtexture));
-		OPfree(resultTex);
-	}
-	return result;
-}
-
-i32 OPimagePNGUnload(void* image){
-	OPtexture* tex = (OPtexture*)image;
-	tex->Destroy();
-	OPfree(tex);
+i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image) {
+	OPimagePNGLoadStream(str, offset, image, OPtextureFilter::LINEAR);
 	return 1;
 }

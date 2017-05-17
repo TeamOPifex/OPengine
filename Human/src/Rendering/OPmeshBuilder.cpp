@@ -72,15 +72,15 @@ void OPmeshBuilder::Add(void** vertices, ui16 vertCount, ui16* indices, ui16 ind
 	}
 }
 
-OPmesh OPmeshBuilder::Build() {
+OPmodel* OPmeshBuilder::Build() {
 	void* verts = Vertices->items;
 	void* indicies = Indices->items;
 
-	OPmesh mesh;
-	mesh.Init(VertexLayout);
-	mesh.Build(
-		VertexLayout, OPindexSize::SHORT,
-		(ui32)Vertices->_size, (ui32)Indices->_size,
+	OPmodel* mesh = OPNEW(OPmodel(1, VertexLayout));
+	mesh->Build(
+		(ui32)Vertices->_size,
+		(ui32)Indices->_size, 
+		OPindexSize::SHORT,
 		verts, indicies
 		);
 	return mesh;

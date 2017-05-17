@@ -169,7 +169,8 @@ OPtexture OPfontAtlas::Texture() {
 	OPtextureDesc desc;
 	desc.width = this->width;
 	desc.height = this->height;
-	desc.filter = OPtextureFilter::LINEAR;
+	desc.minfilter = OPtextureFilter::LINEAR;
+	desc.magfilter = OPtextureFilter::LINEAR;
 	desc.wrap = OPtextureWrap::CLAMP_TO_EDGE;
 	desc.format = OPtextureFormat::RGB;
 	if (this->depth == 4) {

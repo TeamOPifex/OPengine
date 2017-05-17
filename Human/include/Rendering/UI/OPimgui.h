@@ -49,7 +49,7 @@ void OPimguiLabel(OPvec2 pos, const OPchar* text);
 void OPimguiLabel(OPvec2 pos, OPvec2 size, const OPchar* text, OPvec4 bg, OPvec4 color, OPint fill);
 
 inline void OPimguiLabel(OPvec2 pos, OPvec2 size, const OPchar* text, OPvec4 color) {
-	OPimguiLabel(pos, size, text, OPvec4Create(0), color, 0);
+	OPimguiLabel(pos, size, text, OPvec4(0), color, 0);
 }
 
 inline OPint OPimguiCheckbox(OPint state, OPvec2 pos, OPvec2 size) {

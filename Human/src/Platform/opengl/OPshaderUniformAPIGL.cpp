@@ -33,17 +33,24 @@ void OPshaderUniformGLDestroy(OPshaderUniform* shaderUniform) {
 	shaderUniform->internalPtr = NULL;
 }
 
+void OPshaderUniformSetBoolGL(OPshaderUniform* shaderUniform, bool val) {
+#ifdef _DEBUG
+	if (shaderUniform == NULL) return;
+#endif
+	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
+	glUniform1i(shaderUniformGL->Handle, val);
+}
 void OPshaderUniformSetFGL(OPshaderUniform* shaderUniform, f32 val) {
-    #ifdef _DEBUG
-        if(shaderUniform == NULL) return;
-    #endif
+#ifdef _DEBUG
+	if (shaderUniform == NULL) return;
+#endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	glUniform1f(shaderUniformGL->Handle, val);
 }
 void OPshaderUniformSetFvGL(OPshaderUniform* shaderUniform, ui32 count, f32* val) {
-    #ifdef _DEBUG
-        if(shaderUniform == NULL) return;
-    #endif
+#ifdef _DEBUG
+	if (shaderUniform == NULL) return;
+#endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	glUniform1fv(shaderUniformGL->Handle, count, val);
 }
@@ -134,6 +141,11 @@ void OPshaderUniformSetMat4vGL(OPshaderUniform* shaderUniform, ui32 count, OPmat
 void OPshaderUniformSetTextureGL(OPshaderUniform* shaderUniform, OPtexture* val, ui32 slot) {
     #ifdef _DEBUG
         if(shaderUniform == NULL) return;
+	#else
+		if (shaderUniform == NULL) {
+			OPlogErr("Shader Uniform was NULL");
+			return;
+		}
     #endif
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
 	val->Bind(slot);
@@ -160,6 +172,7 @@ void OPshaderUniformAPIGLInit(OPshaderUniformAPI* shaderUniform) {
 	shaderUniform->Init = OPshaderUniformGLInit;
 	shaderUniform->Destroy = OPshaderUniformGLDestroy;
 
+	shaderUniform->SetBool = OPshaderUniformSetBoolGL;
 	shaderUniform->SetF = OPshaderUniformSetFGL;
 	shaderUniform->SetFv = OPshaderUniformSetFvGL;
 	shaderUniform->SetI = OPshaderUniformSetIGL;

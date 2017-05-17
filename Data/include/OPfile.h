@@ -88,4 +88,6 @@ struct OPfile {
 	static bool Delete(const char* path);
 
 	static ui64 LastChange(const OPchar* path);
+
+	static OPchar** GetDirectoryFiles(OPchar* path, ui32* count);
 };

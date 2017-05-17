@@ -1,5 +1,8 @@
 #pragma once
 
+#ifdef OPIFEX_OPTION_RELEASE
+#define NDEBUG 1
+#endif
 #define NULL 0
 
 #if defined(OPIFEX_OSX64) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_LINUX32) || defined(OPIFEX_ANDROID) || defined(OPIFEX_IOS)

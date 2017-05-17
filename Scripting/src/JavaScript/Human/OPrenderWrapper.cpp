@@ -47,8 +47,8 @@ JS_RETURN_VAL _OPrenderSize(const JS_ARGS& args) {
     JS_SET_NUMBER(obj, "Height", OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height);
     JS_SET_NUMBER(obj, "ScreenWidth", OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowWidth);
     JS_SET_NUMBER(obj, "ScreenHeight", OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowHeight);
-    JS_SET_NUMBER(obj, "ScaledWidth", OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WidthScaled);
-    JS_SET_NUMBER(obj, "ScaledHeight", OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScaled);
+    JS_SET_NUMBER(obj, "ScaledWidth", OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WidthScale);
+    JS_SET_NUMBER(obj, "ScaledHeight", OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->HeightScale);
 
     JS_RETURN(obj);
 }
@@ -64,7 +64,7 @@ JS_RETURN_VAL _OPrenderCull(const JS_ARGS& args) {
 JS_RETURN_VAL _OPrenderCullMode(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPrenderCullMode((i8)args[0]->IntegerValue());
+    OPrenderCullMode((OPcullFace)args[0]->IntegerValue());
 
     JS_RETURN_NULL;
 }
@@ -169,7 +169,7 @@ JS_RETURN_VAL _OPrenderBlendAdditive(const JS_ARGS& args) {
 
 void OPrenderWrapper(Handle<Object> exports) {
     SCOPE_AND_ISOLATE;
-    
+
     Handle<Object> render = JS_NEW_OBJECT();
     JS_SET_METHOD(render, "Init", _OPrenderInit);
     JS_SET_METHOD(render, "Clear", _OPrenderClear);

@@ -37,6 +37,7 @@ typedef PxRigidStatic OPphysXRigidStatic;
 typedef PxRigidDynamic OPphysXRigidDynamic;
 typedef PxMaterial OPphysXMaterial;
 typedef PxShape OPphysXShape;
+typedef PxController OPphysXController;
 
 // FUNCTIONS
 
@@ -54,6 +55,12 @@ void OPphysXGetTransform(OPphysXRigidActor* actor, OPmat4* mat);
 i8 OPphysXOverlapping(OPphysXRigidActor* actor, OPphysXRigidActor* other);
 i8 OPphysXOverlapping(OPphysXRigidActor* actor, PxGeometry* otherGeometry, PxTransform otherTransform);
 i8 OPphysXOverlapping(OPphysXRigidActor* actor, PxShape* actorShape, OPphysXRigidActor* other, PxShape* otherShape);
+bool OPphysXOverlapping(OPphysXController* controller, PxShape* actorShape, OPphysXRigidActor* other, PxShape* otherShape);
+bool OPphysXOverlappingSphere(OPphysXController* controller, PxShape* actorShape, OPphysXRigidActor* other, PxShape* otherShape);
+bool OPphysXOverlappingSphere(OPphysXController* controller, PxShape* actorShape, PxTransform other, PxSphereGeometry sphereGeom);
+bool OPphysXOverlappingSphere(OPphysXController* controller, PxShape* actorShape, OPvec3 pos, OPfloat size);
+bool OPphysXOverlappingSphereSphere(OPphysXController* controller, PxShape* actorShape, OPphysXRigidActor* other, PxShape* otherShape);
+bool OPphysXOverlappingSphereBox(OPphysXController* controller, PxShape* actorShape, OPphysXRigidActor* other, PxShape* otherShape);
 void OPphysXShutdown();
 PxTransform OPphysXMat4ToPx(OPmat4* mat);
 void OPphysXShapeSetPose(OPphysXShape* shape, OPmat4 transform);

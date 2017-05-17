@@ -2,18 +2,19 @@
 
 
 OPrenderCommandDrawIndexed* OPrenderCommandBucket::CreateDrawIndexed() {
-	return (OPrenderCommandDrawIndexed*)allocator->alloc(allocator, sizeof(OPrenderCommandDrawIndexed));
+	void* result = allocator->alloc(allocator, sizeof(OPrenderCommandDrawIndexed));
+	return (OPrenderCommandDrawIndexed*)result;
 }
 
-void OPrenderCommandBucket::Init(OPuint bucketSize, OPcam** camera) {
-	internalAllocator = OPallocatorLinear::Create(KB(bucketSize));
-	Init(bucketSize, camera, internalAllocator->_rootAlloc);
+void OPrenderCommandBucket::Init(OPuint bucketSizeMax, OPcam** cameraPtr) {
+	internalAllocator = OPallocatorLinear::Create(KB(bucketSizeMax));
+	Init(bucketSizeMax, cameraPtr, internalAllocator->_rootAlloc);
 }
 
-void OPrenderCommandBucket::Init(OPuint bucketSize, OPcam** camera, OPallocator* allocator) {
+void OPrenderCommandBucket::Init(OPuint bucketSizeMax, OPcam** cameraPtr, OPallocator* allocatorPtr) {
 
-	this->bucketSize = bucketSize;
-	this->camera = camera;
+	bucketSize = bucketSizeMax;
+	camera = cameraPtr;
 
 	keys = (OPrenderCommandBucketKey*)OPalloc(sizeof(OPrenderCommandBucketKey) * bucketSize);
 	copykeys = (OPrenderCommandBucketKey*)OPalloc(sizeof(OPrenderCommandBucketKey) * bucketSize);
@@ -21,7 +22,7 @@ void OPrenderCommandBucket::Init(OPuint bucketSize, OPcam** camera, OPallocator*
 	commands = (OPrenderCommand*)OPalloc(sizeof(OPrenderCommand) * bucketSize);
 	keyIndex = 0;
 
-	this->allocator = allocator;
+	allocator = allocatorPtr;
 }
 
 void OPrenderCommandBucket::Destroy() {
@@ -40,15 +41,15 @@ void OPrenderCommandBucket::Destroy() {
 	}
 }
 
-OPrenderCommandBucket* OPrenderCommandBucket::Create(OPuint bucketSize, OPcam** camera, OPallocator* allocator) {
+OPrenderCommandBucket* OPrenderCommandBucket::Create(OPuint bucketSizeMax, OPcam** cameraPtr, OPallocator* allocatorPtr) {
 	OPrenderCommandBucket* result = (OPrenderCommandBucket*)OPalloc(sizeof(OPrenderCommandBucket));
-	result->Init(bucketSize, camera, allocator);
+	result->Init(bucketSizeMax, cameraPtr, allocatorPtr);
 	return result;
 }
 
-OPrenderCommandBucket* OPrenderCommandBucket::Create(OPuint bucketSize, OPcam** camera) {
+OPrenderCommandBucket* OPrenderCommandBucket::Create(OPuint bucketSizeMax, OPcam** cameraPtr) {
 	OPrenderCommandBucket* result = (OPrenderCommandBucket*)OPalloc(sizeof(OPrenderCommandBucket));
-	result->Init(bucketSize, camera);
+	result->Init(bucketSizeMax, cameraPtr);
 	return result;
 }
 
@@ -88,8 +89,10 @@ void OPrenderCommandBucket::Flush(bool keep) {
 		keys[i].command->dispatch(keys[i].command->data, *camera);
 	}
 
+
 	keyIndex = 0;
 	if (keep) return;
+
 	allocator->clear(allocator);
 }
 
@@ -99,6 +102,8 @@ void OPrenderCommandBucket::Render() {
 }
 
 void OPrenderCommandBucket::Submit(ui64 key, void(*dispatch)(void*, OPcam*), void* data, void* next) {
+	//OPlogErr("OPrenderCommandBucket::Submit %d", keyIndex);
+	ASSERT(keyIndex < bucketSize, "OPrenderCommandBucket is full");
 	commands[keyIndex].data = data;
 	commands[keyIndex].dispatch = dispatch;
 	commands[keyIndex].next = next;
@@ -108,11 +113,20 @@ void OPrenderCommandBucket::Submit(ui64 key, void(*dispatch)(void*, OPcam*), voi
 	keyIndex++;
 }
 
-void OPrenderCommandBucket::Submit(OPmodel* model, OPmaterialInstance* material) {
-	
-	OPrenderCommandDrawIndexed::Submit(this, model, material);
+void OPrenderCommandBucket::Submit(OPmodel* model, OPmat4* world, OPmaterial* material) {
+
+	OPrenderCommandDrawIndexed::Submit(this, model, world, material);
 }
 
+void OPrenderCommandBucket::Submit(OPmesh* mesh, OPmat4* world, OPmaterial* material) {
+
+	OPrenderCommandDrawIndexed::Submit(this, mesh, world, material);
+}
+
+void OPrenderCommandBucket::Submit(OPmodel* model, OPmat4* world, OPmaterial* material, bool materialPerMesh) {
+
+	OPrenderCommandDrawIndexed::Submit(this, model, world, material, materialPerMesh);
+}
 
 
 

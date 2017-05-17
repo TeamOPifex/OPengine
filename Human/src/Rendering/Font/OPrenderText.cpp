@@ -27,7 +27,7 @@ void OPfontRender(OPfontUserTextNode* node, OPmat4* world) {
 	OPFONTMANAGER_EFFECT_ACTIVE->Bind();
 	OPFONTMANAGER_EFFECT_ACTIVE->Set("uWorld", world);
 	node->mesh.Bind();
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 }
 
 void OPfontRender(OPfontBuiltTextNode* node, OPmat4* world) {
@@ -98,4 +98,11 @@ void OPfontRender(const OPchar* text, OPmat4* world, ui8 useJustWorld) {
 	else {
 		OPfontRender(node, world);
 	}
+}
+
+
+void OPfontRenderFill(const OPchar* text, OPmat4* world, f32 maxWidth) {
+
+	OPfontUserTextNode textNode = OPFONTMANAGER_ACTIVE->_font->CreateUserText(text, OPFONTMANAGER_ACTIVE->scale, maxWidth);
+	OPfontRender(&textNode, world);
 }

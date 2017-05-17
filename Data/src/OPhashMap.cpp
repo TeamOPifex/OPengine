@@ -143,27 +143,27 @@ OPint OPhashMap::Put(const OPchar* key, void* value)
 
 	if (bucket->count == 0) {
 		// Create the first KeyValuePair in the bucket
-		bucket->pairs = OPNEW(OPhashMapPair());
+		bucket->pairs = OPNEW(OPhashMapPair[32]);
 		if (bucket->pairs == NULL) {
 			//OPfree(new_key);
 			return 0;
 		}
-		bucket->count = 1;
+		bucket->max = 32;
 	}
-	else {
+	else if(bucket->count + 1 == bucket->max){
 		// Add to the array of pairs
-		tmp_pairs = (OPhashMapPair*)OPrealloc(bucket->pairs, (bucket->count + 1) * sizeof(OPhashMapPair));
+		tmp_pairs = (OPhashMapPair*)OPrealloc(bucket->pairs, (bucket->max * 2) * sizeof(OPhashMapPair));
 		if (tmp_pairs == NULL) {
 			//OPfree(new_key);
 			return 0;
 		}
 		bucket->pairs = tmp_pairs;
-		bucket->count++;
+		bucket->max = bucket->max * 2;
 	}
-
-	pair = &(bucket->pairs[bucket->count - 1]);
+	pair = &(bucket->pairs[bucket->count]);
 	pair->key = OPstringCopy(key);
 	pair->value = value;
+	bucket->count++;
 
 	/* Copy the key into the key-value pair */
 	//strcpy(pair->key, key);

@@ -57,11 +57,12 @@ struct OPfont {
 	void Destroy();
 
 	OPfontGlyph* GetGlyph(OPchar charcode);
-	OPmesh CreateText(OPchar* text);
+	OPmodel CreateText(OPchar* text);
 	OPfontBuiltTextNode CreatePackedText(const OPchar* text);
 	OPfontBuiltTextNode CreatePackedText(const OPchar* text, OPfloat scale);
 	OPfontUserTextNode CreateUserText(const OPchar* text);
 	OPfontUserTextNode CreateUserText(const OPchar* text, OPfloat scale);
+	OPfontUserTextNode CreateUserText(const OPchar* text, OPfloat scale, f32 maxWidth);
 	OPvec2 GetSize(const OPchar* text, OPfloat scale);
 };
 

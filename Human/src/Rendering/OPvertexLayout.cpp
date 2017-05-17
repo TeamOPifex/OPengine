@@ -1,6 +1,26 @@
 #include "./Human/include/Rendering/OPvertexLayout.h"
 #include "./Human/include/Rendering/OPeffect.h"
 
+OPshaderElementType GetOPShaderElementType(OPattributeTypes attribType) {
+	switch (attribType) {
+	case OPATTR_TYPE_UINT8: return OPshaderElementType::SHORT;
+	case OPATTR_TYPE_UINT10: return OPshaderElementType::SHORT;
+	case OPATTR_TYPE_INT16: return OPshaderElementType::SHORT;
+	case OPATTR_TYPE_HALF: return OPshaderElementType::SHORT;
+	case OPATTR_TYPE_FLOAT: return OPshaderElementType::FLOAT;
+	}
+}
+
+ui32 GetOPShaderElementSize(OPattributeTypes attribType) {
+	switch (attribType) {
+	case OPATTR_TYPE_UINT8: return sizeof(ui16);
+	case OPATTR_TYPE_UINT10: return sizeof(ui16);
+	case OPATTR_TYPE_INT16: return sizeof(ui16);
+	case OPATTR_TYPE_HALF: return sizeof(ui16);
+	case OPATTR_TYPE_FLOAT: return sizeof(f32);
+	}
+}
+
 void OPvertexLayout::Init(ui16 attributeCount, OPchar** names, OPattributeTypes* types, ui8* counts) {
 
 	count = attributeCount;
@@ -11,11 +31,11 @@ void OPvertexLayout::Init(ui16 attributeCount, OPchar** names, OPattributeTypes*
 	ui32 attributeSize;
 	for (ui16 i = 0; i < count; i++) {
 		attributes[i].Name = names[i];
-		attributes[i].Type = OPshaderElementType::FLOAT;// types[i];
+		attributes[i].Type = GetOPShaderElementType(types[i]);
 		attributes[i].Elements = counts[i];
 		attributes[i].Offset = offset;
 		attributes[i].Location = i;
-		attributeSize = counts[i] * sizeof(f32);
+		attributeSize = counts[i] * GetOPShaderElementSize(types[i]);
 		offset += attributeSize;
 		stride += attributeSize;
 	}
@@ -60,8 +80,16 @@ OPvertexLayoutBuilder* OPvertexLayoutBuilder::Init(ui32 features) {
 	if ((features & (OPuint)OPattributes::TANGENT) > 0) Add(OPattributes::TANGENT);
 	if ((features & (OPuint)OPattributes::BITANGENT) > 0) Add(OPattributes::BITANGENT);
 	if((features & (OPuint)OPattributes::UV) > 0) Add(OPattributes::UV);
+	if ((features & (OPuint)OPattributes::COLOR) > 0) Add(OPattributes::COLOR);
 	if((features & (OPuint)OPattributes::BONES) > 0) Add(OPattributes::BONES);
-	if((features & (OPuint)OPattributes::COLOR) > 0) Add(OPattributes::COLOR);
+	return this;
+}
+
+OPvertexLayoutBuilder* OPvertexLayoutBuilder::Add(const OPchar* name, OPattributeTypes attrType, ui32 count) {
+	names[index] = "aPosition";
+	types[index] = OPATTR_TYPE_FLOAT;
+	counts[index] = 3;
+	index++;
 	return this;
 }
 
@@ -111,7 +139,7 @@ OPvertexLayoutBuilder* OPvertexLayoutBuilder::Add(OPattributes attribute) {
 		}
 		case OPattributes::BONES: {
 			names[index] = "aBones";
-			types[index] = OPATTR_TYPE_FLOAT;
+			types[index] = OPATTR_TYPE_FLOAT;// OPATTR_TYPE_INT16;
 			counts[index] = 4;
 			index++;
 			names[index] = "aWeights";

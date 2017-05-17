@@ -204,33 +204,34 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 
 	if(${OPIFEX_OPTION_V8})
 
-			if(${OPIFEX_OS_WINDOWS})
+		if(${OPIFEX_OS_WINDOWS})
 
-				find_binary(LIBV8_BASE_0 "v8_base_0" false)
-				find_binary(LIBV8_BASE_1 "v8_base_1" false)
-				find_binary(LIBV8_BASE_2 "v8_base_2" false)
-				find_binary(LIBV8_BASE_3 "v8_base_3" false)
-				find_binary(LIBV8_LIBBASE "v8_libbase" false)
-				find_binary(LIBV8_LIBPLATFORM "v8_libplatform" false)
-				find_binary(LIBV8_EXTERNAL_SNAPSHOT "v8_external_snapshot" false)
-				find_binary(LIBV8_NOSNAPSHOT "v8_nosnapshot" false)
-				find_binary(LIBV8_ICUI18N "icui18n" false)
-				find_binary(LIBV8_ICUUC "icuuc" false)
-				#find_binary(LIBV8_MKSNAPSHOT "mksnapshot" false)
-			else()
-				find_binary(LIBV8 "v8_base" false)
-				find_binary(LIBV8_LIBBASE "v8_libbase" false)
-				find_binary(LIBV8_LIBPLATFORM "v8_libplatform" false)
-				find_binary(LIBV8_NOSHNAPSHOT "v8_nosnapshot" false)
-				find_binary(LIBV8_ICUDATA "icudata" false)
-				find_binary(LIBV8_ICUUC "icuuc" fa lse)
-				find_binary(LIBV8_ICUI18N "icui18n" false)
-
-			endif()
-
+			find_binary(LIBV8_BASE_0 "v8_base_0" false)
+			find_binary(LIBV8_BASE_1 "v8_base_1" false)
+			find_binary(LIBV8_BASE_2 "v8_base_2" false)
+			find_binary(LIBV8_BASE_3 "v8_base_3" false)
+			find_binary(LIBV8_LIBBASE "v8_libbase" false)
+			find_binary(LIBV8_LIBPLATFORM "v8_libplatform" false)
+			find_binary(LIBV8_EXTERNAL_SNAPSHOT "v8_external_snapshot" false)
+			find_binary(LIBV8_NOSNAPSHOT "v8_nosnapshot" false)
+			find_binary(LIBV8_ICUI18N "icui18n" false)
+			find_binary(LIBV8_ICUUC "icuuc" false)
+			#find_binary(LIBV8_MKSNAPSHOT "mksnapshot" false)
 			copy_from_binaries_on_build(${APPLICATION_TARGET} "icudt.dll" ${OPIFEX_OS_WINDOWS})
+		else()
+			find_binary(LIBV8 "v8_base" false)
+			find_binary(LIBV8_LIBBASE "v8_libbase" false)
+			find_binary(LIBV8_LIBPLATFORM "v8_libplatform" false)
+			find_binary(LIBV8_NOSHNAPSHOT "v8_nosnapshot" false)
+			find_binary(LIBV8_SAMPLER "v8_libsampler" false)
+			find_binary(LIBV8_ICUUC "icuuc" false)
+			find_binary(LIBV8_ICUI18N "icui18n" false)
+			#find_binary(LIBV8_EXTERNAL_SNAPSHOT "v8_external_snapshot" false)
 
-			add_definitions(-DOPIFEX_V8)
+		endif()
+
+
+		add_definitions(-DOPIFEX_V8)
 
 
 		if( ${OPIFEX_OS_WINDOWS} )
@@ -245,20 +246,31 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 					${LIBV8_LIBBASE}
 					${LIBV8_LIBPLATFORM}
 					#${LIBV8_EXTERNAL_SNAPSHOT}
-					${LIBV8_ICUI18N}
 					${LIBV8_ICUUC}
+					${LIBV8_ICUI18N}
 					#${LIBV8_MKSNAPSHOT}
 					${LIBV8_NOSNAPSHOT}
 					)
 		else()
+            message(STATUS "Linking V8")
+            message(STATUS "${LIBV8}")
+            message(STATUS "${LIBV8_LIBBASE}")
+            message(STATUS "${LIBV8_LIBPLATFORM}")
+            message(STATUS "${LIBV8_NOSHNAPSHOT}")
+            message(STATUS "${LIBV8_SAMPLER}")
+            message(STATUS "${LIBV8_ICUUC}")
+            message(STATUS "${LIBV8_ICUI18N}")
+            message(STATUS "${LIBV8_EXTERNAL_SNAPSHOT}")
 			target_link_libraries(${APPLICATION_TARGET}
 					${LIBV8}
 					${LIBV8_LIBBASE}
 					${LIBV8_LIBPLATFORM}
 					${LIBV8_NOSHNAPSHOT}
-					${LIBV8_ICUDATA}
+                    ${LIBV8_SAMPLER}
 					${LIBV8_ICUUC}
-					${LIBV8_ICUI18N})
+					${LIBV8_ICUI18N}
+                    #${LIBV8_EXTERNAL_SNAPSHOT}
+                )
 		endif()
 	endif()
 

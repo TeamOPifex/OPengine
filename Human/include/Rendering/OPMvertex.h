@@ -30,6 +30,12 @@ struct OPMmeta {
 	OPvec3 Position;
 	OPvec3 Rotation;
 	OPvec3 Scale;
+}; 
+
+struct OPmodelMeta {
+	OPchar* name;
+	ui32 dataSize;
+	void* data;
 };
 
 struct OPMvertex {

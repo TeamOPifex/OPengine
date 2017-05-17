@@ -2,9 +2,11 @@
 
 struct OPskeletonAnimation;
 struct OPskeletonAnimationEvent;
+struct OPanimationFrame;
 
 typedef OPskeletonAnimation OPskeletonAnimation;
 typedef OPskeletonAnimationEvent OPskeletonAnimationEvent;
+typedef OPanimationFrame OPanimationFrame;
 
 #define OPSKELETONANIMATION_MAX_EVENTS 6
 
@@ -19,45 +21,82 @@ struct OPskeletonAnimationEvent
 	OPint OnFrameChange;
 };
 
-struct OPskeletonAnimation {
-	OPskeleton* Skeleton;
+struct OPanimationFrame {
+	f32 Time;
+	OPvec3 Position;
+	OPquat Rotation;
+	OPvec3 Scale;
+};
 
-	OPmat4* JointFrames;
+struct OPanimationMask {
+	bool* mask = NULL;
+
+	void Init(OPskeleton* skeleton, bool val);
+	void Destroy();
+	void Set(i16 ind, bool val);
+	inline void Set(OPskeleton* skeleton, const OPchar* joint, bool val) {
+		Set(skeleton->JointIndex(joint), val);
+	}
+	void SetTree(OPskeleton* skeleton, i16 joint, bool val);
+	inline void SetTree(OPskeleton* skeleton, const OPchar* joint, bool val) {
+		SetTree(skeleton, skeleton->JointIndex(joint), val);
+	}
+	inline bool& operator[](i32 i) {
+		return mask[i];
+	}
+};
+
+struct OPskeletonAnimation {
+	OPint BoneCount;
 	OPuint FrameCount;
 	OPuint Frame;
-	ui64 Elapsed;
-	ui64 FramesPer;
+	OPfloat Elapsed;
+	OPfloat FramesPer;
 
+	OPskeleton* Skeleton;
+	OPchar* Name;
+
+	OPanimationFrame* JointFrames;
 	OPmat4* CurrentFrame;
-	OPint BoneCount;
 
-	OPint Loop;
+	bool Loop;
 	OPuint LoopsCompleted;
 	OPuint LastFrame;
 	OPskeletonAnimationEvent* Events;
 	OPuint EventCount;
+
+
+	void Init(OPint boneCount, OPanimationFrame* frames, OPuint count, OPchar* name);
+	void Update(OPtimer* timer, OPfloat timeScale);
+	void UpdateEvents(void* data);
+	void Apply(OPskeleton* skeleton);
+	void Apply(OPskeleton* skeleton, i16 fromJoint);
+	void Apply(OPmat4* animationFrame, OPskeleton* skeleton, i16 fromJoint);
+	void Merge(OPskeletonAnimation* skelAnim2, OPfloat merge, OPanimationMask* mask);
+	void Combine(OPskeletonAnimation* skelAnim2, OPskeleton* skeleton, i16 fromJoint);
+	void SetEvents(OPuint frames, OPskeletonAnimationEvent* events);
+
+	inline void Update(OPtimer* timer) {
+		Update(timer, 1.0f);
+	}
+
+	inline void Reset() {
+		Frame = 0;
+		LoopsCompleted = 0;
+	}
+
+	inline OPskeletonAnimation* Clone() {
+		return OPskeletonAnimation::Create(BoneCount, JointFrames, FrameCount, Name);
+	}
+
+	inline void Merge(OPskeletonAnimation* skelAnim2, OPfloat merge) {
+		Merge(skelAnim2, merge, NULL);
+	}
+
+	static inline OPskeletonAnimation* Load(const OPchar* name) {
+		return (OPskeletonAnimation*)OPCMAN.LoadGet(name);
+	}
+
+	static void Apply(OPmat4* animationFrame, OPskeleton* skeleton);
+	static OPskeletonAnimation* Create(OPint boneCount, OPanimationFrame* frames, OPuint count, OPchar* name);
 };
-
-
-void OPskeletonAnimationInit(OPskeletonAnimation* skelAnim, OPint boneCount, OPmat4* frames, i32 count);
-OPskeletonAnimation* OPskeletonAnimationCreate(OPint boneCount, OPmat4* frames, OPuint count);
-void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer, OPfloat timeScale);
-inline void OPskeletonAnimationUpdate(OPskeletonAnimation* skelAnim, OPtimer* timer) {
-	OPskeletonAnimationUpdate(skelAnim, timer, 1.0f);
-}
-void OPskeletonAnimationUpdateEvents(OPskeletonAnimation* skelAnim, void* data);
-void OPskeletonAnimationApply(OPskeletonAnimation* skelAnim, OPskeleton* skeleton);
-void OPskeletonAnimationApply(OPskeletonAnimation* skelAnim, OPskeleton* skeleton, i16 fromJoint);
-void OPskeletonAnimationApply(OPmat4* animationFrame, OPskeleton* skeleton);
-void OPskeletonAnimationApply(OPmat4* animationFrame, OPskeleton* skeleton, i16 fromJoint);
-void OPskeletonAnimationMerge(OPskeletonAnimation* skelAnim1, OPskeletonAnimation* skelAnim2, OPfloat merge);
-void OPskeletonAnimationCombine(OPskeletonAnimation* skelAnim, OPskeletonAnimation* skelAnim2, OPskeleton* skeleton, i16 fromJoint);
-void OPskeletonAnimationSetEvents(OPskeletonAnimation* skelAnim, OPuint frames, OPskeletonAnimationEvent* events);
-inline void OPskeletonAnimationReset(OPskeletonAnimation* skelAnim) {
-	skelAnim->Frame = 0;
-	skelAnim->LoopsCompleted = 0;
-}
-
-inline OPskeletonAnimation* OPskeletonAnimationCopy(OPskeletonAnimation* source, OPint boneCount) {
-	return OPskeletonAnimationCreate(boneCount, source->JointFrames, source->FrameCount);
-}

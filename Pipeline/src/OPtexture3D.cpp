@@ -4,60 +4,83 @@
 #include "./Human/include/Rendering/Primitives/OPquad.h"
 
 OPeffect* DEFAULT_TEXTURE3D_EFFECT = NULL;
-OPmesh* TEXTURE_3D_QUAD_MESH = NULL;
+OPmodel* TEXTURE_3D_QUAD_MESH = NULL;
 
-void LoadDefaultTexture3DEffect() {
+void OPtexture3D_LoadDefaultEffect() {
+    // If the default effect has already been loaded then return
 	if (DEFAULT_TEXTURE3D_EFFECT != NULL) return;
 
-	DEFAULT_TEXTURE3D_EFFECT = (OPeffect*)OPalloc(sizeof(OPeffect));
+    // TODO: (garrett) might want to turn this into a smart pointer
+    // so that we can auto-kill it when there are no OPtexture3D's
+    // that are using it
+	DEFAULT_TEXTURE3D_EFFECT = OPNEW(OPeffect);
 	DEFAULT_TEXTURE3D_EFFECT->Init("Common/Texture3D.vert", "Common/Texture.frag");
 }
 
-OPtexture3D* OPtexture3DCreate(OPtexture* texture, OPeffect* effect) {
-	OPtexture3D* tex3d = (OPtexture3D*)OPalloc(sizeof(OPtexture3D));
+void OPtexture3D::Init(OPtexture* tex, OPeffect* eff) {
+	position = OPVEC3_ZERO;
+	rotation = OPVEC3_ZERO;
+	scale = OPVEC3_ONE;
+	texture = tex;
+	effect = eff;
 
-	OPbzero(tex3d, sizeof(OPtexture3D));
-	tex3d->Scale = OPVEC3_ONE;
-	tex3d->Texture = texture;
-	tex3d->Effect = effect;
-
-	if (effect == NULL) {
-		LoadDefaultTexture3DEffect();
-		tex3d->Effect = DEFAULT_TEXTURE3D_EFFECT;
-	}
-
+	// Ensures the 3D quad to be used has been created
 	if (TEXTURE_3D_QUAD_MESH == NULL) {
 		TEXTURE_3D_QUAD_MESH = OPquadCreate();
 	}
+}
 
+void OPtexture3D::Init(OPtexture* tex) {
+	OPtexture3D_LoadDefaultEffect();
+	Init(tex, DEFAULT_TEXTURE3D_EFFECT);
+}
+
+OPtexture3D* OPtexture3D::Create(OPtexture* tex, OPeffect* eff) {
+	OPtexture3D* tex3d = OPNEW(OPtexture3D);
+	tex3d->Init(tex, eff);
 	return tex3d;
 }
 
-void OPtexture3DDestroy(OPtexture3D* tex3d) {
-	OPfree(tex3d);
+OPtexture3D* OPtexture3D::Create(OPtexture* tex) {
+	OPtexture3D_LoadDefaultEffect();
+    return OPtexture3D::Create(tex, DEFAULT_TEXTURE3D_EFFECT);
 }
 
-void OPtexture3DPrepRender(OPtexture3D* tex3d, OPcam* camera) {
+void OPtexture3D::Shutdown() {
+    if(DEFAULT_TEXTURE3D_EFFECT != NULL) {
+        // destroy the effect
+        DEFAULT_TEXTURE3D_EFFECT->Free();
+    }
+
+    if (TEXTURE_3D_QUAD_MESH != NULL) {
+        // destroy the mesh
+		TEXTURE_3D_QUAD_MESH->Free();
+	}
+}
+
+void OPtexture3D::Destroy() {
+
+}
+
+void OPtexture3D::PrepRender(OPcam* camera) {
 	TEXTURE_3D_QUAD_MESH->Bind();
-	tex3d->Effect->Bind();
 
-	OPrenderDepth(0);
+	effect->Bind();
 
-	OPmat4 world;
+	OPmat4 world = OPMAT4_IDENTITY;
+    world.RotY(rotation.y);
+    world.RotZ(rotation.z);
+    world.RotX(rotation.x);
+    world.Scl(scale.x, scale.y, 1.0);
+    world.Translate(position);
 
-
-	OPmat4Identity(&world);
-	OPmat4RotZ(&world, tex3d->Rotation.z); 
-	world = OPmat4Scl(world, tex3d->Scale.x, tex3d->Scale.y, 1.0);
-	world += tex3d->Position;
-
-	OPeffectSet("uColorTexture", tex3d->Texture, 0);
+	OPeffectSet("uColorTexture", texture, 0);
 	OPeffectSet("uWorld", 1, &world);
 	OPeffectSet("uProj", 1, &camera->proj);
 	OPeffectSet("uView", 1, &camera->view);
 }
 
-void OPtexture3DRender(OPtexture3D* tex3d, OPcam* camera) {
-	OPtexture3DPrepRender(tex3d, camera);
-	OPmeshRender();
+void OPtexture3D::Render(OPcam* camera) {
+	PrepRender(camera);
+	OPrenderDrawBufferIndexed(0);
 }

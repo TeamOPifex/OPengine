@@ -2,6 +2,18 @@
 #include "OPfbxSdk.h"
 
 typedef struct {
+	i32 c;
+	OPchar b1[256];
+	OPchar b2[256];
+	OPchar b3[256];
+	OPchar b4[256];
+	f32 w1;
+	f32 w2;
+	f32 w3;
+	f32 w4;
+} OPfbxSkinBlendWeight;
+
+typedef struct {
 	OPint Size;
 	OPint ControlPointIndex[4];
 	OPvec3 Position[4];
@@ -36,9 +48,13 @@ typedef struct {
 	OPint UVCount;
 	OPint NormalCount;
 	OPint TangentCount;
+	OPint BitangentCount;
+
+	OPfbxMeshPoly* Polys;
+	OPfbxSkinBlendWeight* BlendWeights;
 } OPfbxMeshData;
 
-OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData, OPfloat scale) {
+OPfbxMeshPoly* OPfbxMeshDataGetPolygons2(OPfbxMeshData* meshData, OPfloat scale) {
 
 	OPfbxMeshPoly* polys = (OPfbxMeshPoly*)OPalloc(sizeof(OPfbxMeshPoly)* meshData->PolyCount);
 
@@ -301,6 +317,12 @@ OPfbxMeshPoly* OPfbxMeshDataGetPolygons(OPfbxMeshData* meshData, OPfloat scale) 
 	}
 
 	return polys;
+}
+
+void OPfbxMeshDataGetPolygons(OPfbxMeshData** meshData, OPuint meshDataCount, OPfloat scale) {
+	for (ui32 i = 0; i < meshDataCount; i++) {
+		(*meshData)[i].Polys = OPfbxMeshDataGetPolygons2(&(*meshData)[i], scale);
+	}
 }
 
 OPint _meshVertexCount(FbxMesh* fbxMesh) {
@@ -716,7 +738,7 @@ OPchar* OPfbxMeshDataMetaType(FbxObject* pObject) {
 	return result;
 }
 
-OPint OPfbxMeshDataGet(OPfbxMeshData* meshData, OPfbxScene* scene) {
+OPint OPfbxMeshDataGet(OPfbxMeshData** meshData, OPfbxScene* scene) {
 
 	// Loop through each child in the root node of the scene until 
 	// we find the first available mesh (Only supporting 1 mesh)
@@ -725,6 +747,7 @@ OPint OPfbxMeshDataGet(OPfbxMeshData* meshData, OPfbxScene* scene) {
 	FbxNode* node;
 	OPint isMeta = 0;
 	OPuint totalMeta = 0;
+	OPuint totalMesh = 0;
 
 	// find all properties on all of the nodes
 	OPlog("Meta Data");
@@ -733,46 +756,54 @@ OPint OPfbxMeshDataGet(OPfbxMeshData* meshData, OPfbxScene* scene) {
 		if(OPfbxMeshDataIsMeta(node)) {
 			totalMeta++;
 		}
-	}
-
-	OPlog("Total Meta: %lld", totalMeta);
-
-	if(totalMeta > 0) {
-		meshData->Meta = (OPfbxMeshDataMeta*)OPalloc(sizeof(OPfbxMeshDataMeta) * totalMeta);
-		meshData->MetaCount = totalMeta;
-		OPint metaInd = 0;
-		for (int i = 0; i < scene->RootNode->GetChildCount(); i++) {
-			node = scene->RootNode->GetChild(i);
-			if(!OPfbxMeshDataIsMeta(node)) continue;
-
-			meshData->Meta[metaInd].Name = OPfbxMeshDataMetaName(node);
-			meshData->Meta[metaInd].Type = OPfbxMeshDataMetaType(node);
-			OPlog("META: %s -> %s", meshData->Meta[metaInd].Name, meshData->Meta[metaInd].Type);
-
-			FbxDouble3 pos = node->LclTranslation.Get();
-			OPlog("Pos: %f %f %f", pos[0], pos[1], pos[2]);
-			FbxDouble3 rot = node->LclRotation.Get();
-			OPlog("Rot: %f %f %f", rot[0], rot[1], rot[2]);
-			FbxDouble3 scl = node->LclScaling.Get();
-			OPlog("Scl: %f %f %f", scl[0], scl[1], scl[2]);
-
-			meshData->Meta[metaInd].Position[0] = pos[0];
-			meshData->Meta[metaInd].Position[1] = pos[1];
-			meshData->Meta[metaInd].Position[2] = pos[2];
-
-			meshData->Meta[metaInd].Rotation[0] = rot[0];
-			meshData->Meta[metaInd].Rotation[1] = rot[1];
-			meshData->Meta[metaInd].Rotation[2] = rot[2];
-
-			meshData->Meta[metaInd].Scale[0] = scl[0];
-			meshData->Meta[metaInd].Scale[1] = scl[1];
-			meshData->Meta[metaInd].Scale[2] = scl[2];
-
-			metaInd++;
+		else {
+			attributeType = node->GetNodeAttribute()->GetAttributeType();
+			if (attributeType == FbxNodeAttribute::eMesh) {
+				totalMesh++;
+			}
 		}
 	}
 
+	(*meshData) = OPALLOC(OPfbxMeshData, totalMesh);
 
+	OPlog("Total Meta: %lld", totalMeta);
+
+	//if(totalMeta > 0) {
+	//	meshData->Meta = (OPfbxMeshDataMeta*)OPalloc(sizeof(OPfbxMeshDataMeta) * totalMeta);
+	//	meshData->MetaCount = totalMeta;
+	//	OPint metaInd = 0;
+	//	for (int i = 0; i < scene->RootNode->GetChildCount(); i++) {
+	//		node = scene->RootNode->GetChild(i);
+	//		if(!OPfbxMeshDataIsMeta(node)) continue;
+
+	//		meshData->Meta[metaInd].Name = OPfbxMeshDataMetaName(node);
+	//		meshData->Meta[metaInd].Type = OPfbxMeshDataMetaType(node);
+	//		OPlog("META: %s -> %s", meshData->Meta[metaInd].Name, meshData->Meta[metaInd].Type);
+
+	//		FbxDouble3 pos = node->LclTranslation.Get();
+	//		OPlog("Pos: %f %f %f", pos[0], pos[1], pos[2]);
+	//		FbxDouble3 rot = node->LclRotation.Get();
+	//		OPlog("Rot: %f %f %f", rot[0], rot[1], rot[2]);
+	//		FbxDouble3 scl = node->LclScaling.Get();
+	//		OPlog("Scl: %f %f %f", scl[0], scl[1], scl[2]);
+
+	//		meshData->Meta[metaInd].Position[0] = pos[0];
+	//		meshData->Meta[metaInd].Position[1] = pos[1];
+	//		meshData->Meta[metaInd].Position[2] = pos[2];
+
+	//		meshData->Meta[metaInd].Rotation[0] = rot[0];
+	//		meshData->Meta[metaInd].Rotation[1] = rot[1];
+	//		meshData->Meta[metaInd].Rotation[2] = rot[2];
+
+	//		meshData->Meta[metaInd].Scale[0] = scl[0];
+	//		meshData->Meta[metaInd].Scale[1] = scl[1];
+	//		meshData->Meta[metaInd].Scale[2] = scl[2];
+
+	//		metaInd++;
+	//	}
+	//}
+
+	ui32 meshInd = 0;
 	for (int i = 0; i < scene->RootNode->GetChildCount(); i++) {
 		node = scene->RootNode->GetChild(i);
 		if(OPfbxMeshDataIsMeta(node)) {
@@ -784,33 +815,37 @@ OPint OPfbxMeshDataGet(OPfbxMeshData* meshData, OPfbxScene* scene) {
 		if(attributeType == FbxNodeAttribute::eMesh) {
 
 			OPlogDebug("Found Mesh");
-			meshData->Mesh = node->GetMesh();
-			meshData->Node = node;
+			(*meshData)[meshInd].Mesh = node->GetMesh();
+			(*meshData)[meshInd].Node = node;
 
-			meshData->PolyCount = meshData->Mesh->GetPolygonCount();
-			OPlogDebug("\tTotal Polys: %ld", (meshData->PolyCount));
+			(*meshData)[meshInd].PolyCount = (*meshData)[meshInd].Mesh->GetPolygonCount();
+			OPlogDebug("\tTotal Polys: %ld", ((*meshData)[meshInd].PolyCount));
 
-			OPint vertexCount = _meshVertexCount(meshData->Mesh);
-			OPint indexCount = _meshIndexCount(meshData->Mesh);
+			OPint vertexCount = _meshVertexCount((*meshData)[meshInd].Mesh);
+			OPint indexCount = _meshIndexCount((*meshData)[meshInd].Mesh);
 			OPlogDebug("\tVertex Count: %ld\n\tIndex Count: %ld", vertexCount, indexCount);
 
-			OPint colorCount = vertexCount * meshData->Mesh->GetElementVertexColorCount();
-			OPint uvCount = vertexCount * meshData->Mesh->GetElementUVCount();
-			OPint normalCount = vertexCount * meshData->Mesh->GetElementNormalCount();
-			OPint tangentCount = vertexCount * meshData->Mesh->GetElementTangentCount();
+			OPint colorCount = vertexCount * (*meshData)[meshInd].Mesh->GetElementVertexColorCount();
+			OPint uvCount = vertexCount * (*meshData)[meshInd].Mesh->GetElementUVCount();
+			OPint normalCount = vertexCount * (*meshData)[meshInd].Mesh->GetElementNormalCount();
+			OPint tangentCount = vertexCount * (*meshData)[meshInd].Mesh->GetElementTangentCount();
+			OPint bitangentCount = vertexCount * (*meshData)[meshInd].Mesh->GetElementBinormalCount();
 			OPlogDebug("\tColor Count: %ld\n\tUV Count: %ld\n\tNormal Count: %ld\n\tTangent Count: %ld", 
 				colorCount, uvCount, normalCount, tangentCount);
 
-			meshData->VertexCount = vertexCount;
-			meshData->IndexCount = indexCount;
-			meshData->ColorCount = colorCount;
-			meshData->UVCount = uvCount;
-			meshData->NormalCount = normalCount;
-			meshData->TangentCount = tangentCount;
-			return 0;
+			(*meshData)[meshInd].VertexCount = vertexCount;
+			(*meshData)[meshInd].IndexCount = indexCount;
+			(*meshData)[meshInd].ColorCount = colorCount;
+			(*meshData)[meshInd].UVCount = uvCount;
+			(*meshData)[meshInd].NormalCount = normalCount;
+			(*meshData)[meshInd].TangentCount = tangentCount;
+			(*meshData)[meshInd].BitangentCount = bitangentCount;
+
+			// No meta for now
+			(*meshData)[meshInd].MetaCount = 0;
+			meshInd++;
 		}
 	}
-	// Failed to find a mesh
-	OPlogDebug("Failed to find a mesh in the provided scene.");
-	return 1;
+
+	return meshInd;
 }

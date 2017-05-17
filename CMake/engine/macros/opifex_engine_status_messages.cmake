@@ -1,7 +1,7 @@
 
-function(opifex_engine_status_messages)
+macro(opifex_engine_status_messages)
 
-
+	add_marketplace_assets(OPIFEX_ASSETS_ADDITIONAL)
 	set_opifex_assets()
 
 	message(STATUS "\nOPengine CMake Success\n===================================\n
@@ -15,4 +15,4 @@ function(opifex_engine_status_messages)
 		PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}
 		OPIFEX_OPTION_RELEASE: ${OPIFEX_OPTION_RELEASE}\n")
 
-endfunction(opifex_engine_status_messages)
+endmacro(opifex_engine_status_messages)

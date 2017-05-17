@@ -1,5 +1,5 @@
 
-macro(add_opifex_assets )
+macro(add_opifex_assets)
 
 	set_opifex_assets()
 

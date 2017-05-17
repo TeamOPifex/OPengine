@@ -43,13 +43,13 @@ struct OPrenderCommandBucketKey {
 
 struct OPrenderCommandBucket {
 	// Number of draw calls this bucket can support
-	OPuint bucketSize;
+	OPuint bucketSize = 0;
 	// The linear allocator used for this creating Command data
 	OPallocator* allocator = NULL;
 	OPallocatorLinear* internalAllocator = NULL;
 
 	// The current count of commands/keys
-    ui32 keyIndex;
+    ui32 keyIndex = 0;
 	// The keys & ordering of the draw calls
     OPrenderCommandBucketKey* keys = NULL;
 	// A duplicate data segment used for sorting (Radix)
@@ -58,7 +58,7 @@ struct OPrenderCommandBucket {
 	OPrenderCommand* commands = NULL;
 
 	// The camera should not change for a command bucket
-    OPcam** camera;
+    OPcam** camera = NULL;
 	// The target framebuffers will not change for a command bucket
     OPframeBuffer* frameBuffer[4];
 
@@ -71,7 +71,9 @@ struct OPrenderCommandBucket {
 	void Sort();
 	void Flush(bool keep);
 	void Render();
-	void Submit(OPmodel* model, OPmaterialInstance* material);
+	void Submit(OPmodel* model, OPmat4* world, OPmaterial* material, bool materialPerMesh);
+	void Submit(OPmodel* model, OPmat4* world, OPmaterial* material);
+	void Submit(OPmesh* mesh, OPmat4* world, OPmaterial* material);
 	void Destroy();
 
 	// Helper draw commands already in the engine

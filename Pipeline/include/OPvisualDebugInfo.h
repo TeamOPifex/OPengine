@@ -12,6 +12,8 @@ struct OPvisualDebugInfo {
 	void Init();
     void PreInitSetup();
 	void Update(OPtimer* timer);
+	void Begin();
+	void DrawWindows(OPfloat delta);
 	void Render(OPfloat delta);
 	void Destroy();
 

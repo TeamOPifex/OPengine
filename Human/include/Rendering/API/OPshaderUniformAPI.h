@@ -16,6 +16,7 @@ struct OPshaderUniformAPI {
 	OPshaderUniform*(*Init)(OPshaderUniform* shaderUniform, OPeffect* effect, const OPchar* name) = 0;
 	void(*Destroy)(OPshaderUniform* shaderUniform) = 0;
 
+	void(*SetBool)(OPshaderUniform* shaderUniform, bool val);
 	void(*SetF)(OPshaderUniform* shaderUniform, f32 val);
 	void(*SetFv)(OPshaderUniform* shaderUniform, ui32 count, f32* val);
 	void(*SetI)(OPshaderUniform* shaderUniform, i32 val);
@@ -35,6 +36,7 @@ struct OPshaderUniformAPI {
 	void(*SetTextureCube)(OPshaderUniform* shaderUniform, OPtextureCube* val, ui32 slot);
 	void(*SetTextureCubev)(OPshaderUniform* shaderUniform, ui32 count, OPtextureCube* val, ui32 slot);
 
+	inline void Set(OPshaderUniform* shaderUniform, bool val) { SetBool(shaderUniform, val); }
 	inline void Set(OPshaderUniform* shaderUniform, f32 val) { SetF(shaderUniform, val); }
 	inline void Set(OPshaderUniform* shaderUniform, ui32 count, f32* val) { SetFv(shaderUniform, count, val); }
 	inline void Set(OPshaderUniform* shaderUniform, i32 val) { SetI(shaderUniform, val); }

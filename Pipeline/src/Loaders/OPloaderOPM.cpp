@@ -1,100 +1,223 @@
 #include "./Pipeline/include/Loaders/OPloaderOPM.h"
-#include "./Human/include/Rendering/Enums/OPattributes.h"
-#include "./Math/include/OPquat.h"
-#include "./Data/include/OPlist.h"
+#include "./Human/include/Rendering/OPmodel.h"
+#include "./Core/include/OPmemory.h"
 
-void OPCalculateTangents(OPMData* data) {
-	for (ui16 a = 0; a < data->indexCount; a+=3) {
-		ui16 i1 = ((ui16*)data->indices)[a + 0];
-        ui16 i2 = ((ui16*)data->indices)[a + 1];
-        ui16 i3 = ((ui16*)data->indices)[a + 2];
-
-		OPMvertex& v1 = ((OPMvertex*)data->vertices)[i1];
-        OPMvertex& v2 = ((OPMvertex*)data->vertices)[i2];
-        OPMvertex& v3 = ((OPMvertex*)data->vertices)[i3];
-
-		v1.Tangent.x = 0;
-		v1.Tangent.y = 0;
-		v1.Tangent.z = 0;
-		v2.Tangent.x = 0;
-		v2.Tangent.y = 0;
-		v2.Tangent.z = 0;
-		v3.Tangent.x = 0;
-		v3.Tangent.y = 0;
-		v3.Tangent.z = 0;
-	}
-
-	for (ui16 a = 0; a < data->indexCount; a+=3) {
-		ui16 i1 = ((ui16*)data->indices)[a + 0];
-        ui16 i2 = ((ui16*)data->indices)[a + 1];
-        ui16 i3 = ((ui16*)data->indices)[a + 2];
-
-		OPMvertex& v1 = ((OPMvertex*)data->vertices)[i1];
-        OPMvertex& v2 = ((OPMvertex*)data->vertices)[i2];
-        OPMvertex& v3 = ((OPMvertex*)data->vertices)[i3];
-
-		OPvec3 v2v1 = v2.Position - v1.Position;
-		OPvec3 v3v1 = v3.Position - v1.Position;
-
-		float c2c1t = v2.TexCoord.x - v1.TexCoord.x;
-		float c2c1b = v2.TexCoord.y - v1.TexCoord.y;
-
-		float c3c1t = v3.TexCoord.x - v1.TexCoord.x;
-		float c3c1b = v3.TexCoord.y - v1.TexCoord.y;
-
-		OPvec3 vecNormal = v1.Normal;
-
-		OPvec3 vecTangent;
-		vecTangent.x = c3c1b * v2v1.x - c2c1b * v3v1.x;
-		vecTangent.y = c3c1b * v2v1.y - c2c1b * v3v1.y;
-		vecTangent.z = c3c1b * v2v1.z - c2c1b * v3v1.z;
-
-		OPvec3 vecSmoothBitangent = OPvec3Cross(vecNormal, vecTangent);
-		vecSmoothBitangent = OPvec3Norm(vecSmoothBitangent);
-
-		OPvec3 vecSmoothTangent = {};
-		vecSmoothTangent = OPvec3Cross(vecSmoothBitangent, vecNormal);
-		vecSmoothTangent = OPvec3Norm(vecSmoothTangent);
-
-		v1.Tangent += vecSmoothTangent;
-		v2.Tangent += vecSmoothTangent;
-		v3.Tangent += vecSmoothTangent;
-		v1.Tangent = OPvec3Norm(v1.Tangent);
-		v2.Tangent = OPvec3Norm(v2.Tangent);
-		v3.Tangent = OPvec3Norm(v3.Tangent);
-
-		v1.BiTangent += vecSmoothBitangent;
-		v2.BiTangent += vecSmoothBitangent;
-		v3.BiTangent += vecSmoothBitangent;
-		v1.BiTangent = OPvec3Norm(v1.BiTangent);
-		v2.BiTangent = OPvec3Norm(v2.BiTangent);
-		v3.BiTangent = OPvec3Norm(v3.BiTangent);
-	}
-}
-
-void OPMgenerateTangent(OPvec3* tangent, OPMvertex* v1, OPMvertex* v2){
-	f32 dx = v1->Position.x - v2->Position.x;
-	f32 dy = v1->Position.y - v2->Position.y;
-	f32 dz = v1->Position.z - v2->Position.z;
-
-	OPvec3 diff = {dx, dy, dz};
-	*tangent = OPvec3Cross(v1->Normal, diff);
-	*tangent = OPvec3Norm(*tangent);
-}
-
-enum OPMFaceFeatures {
-	OPM_Face_IsNotTriangle = 0x01,
-	OPM_Face_HasMaterial = 0x02,
-	OPM_Face_HasFaceUVs = 0x04,
-	OPM_Face_HasVertexUvs = 0x08,
-	OPM_Face_HasFaceNormals = 0x10,
-	OPM_Face_HasVertexNormals = 0x20,
-	OPM_Face_HasFaceColors = 0x40,
-	OPM_Face_HasVertexColors = 0x80
+struct OPmeshAnim {
+	OPchar* Name;
+	OPuint FrameCount;
+	OPmat4* Frames; // Based on bone count * FrameCount
 };
 
-OPMData OPMloadDataV2(OPstream* str) {
-	OPMData result;
+bool OPMloadV1(OPmodel* model, OPstream* str);
+bool OPMloadDataV2(OPmodel* model, OPstream* str);
+
+bool _loadOPM(OPmodel* model, OPstream* str) {
+	ui16 version = str->UI16(); // OPM File Format Version
+
+	if (version == 1) {
+		OPlogErr("No longer supporting OPM File Format Version 1");
+		return OPMloadV1(model, str);
+	}
+
+	if (version == 2) {
+		OPlogErr("No longer supporting OPM File Format Version 2");
+		return OPMloadDataV2(model, str);
+	}
+
+	OPchar* modelName = str->String();
+	OPlogInfo("MODEL: %s", modelName);
+
+	ui32 meshCount = str->UI32(); // Number of meshes in this OPM
+	OPlogInfo(" MESH COUNT: %d", meshCount);
+
+	ui32 features = str->UI32(); // Boolean Flag representation of OPM features
+	OPvertexLayoutBuilder vertexLayoutBuilder;// = OPvertexLayoutBuilder(features);
+	vertexLayoutBuilder.Init();
+
+	if (OPMhasFeature(features, Position))
+		vertexLayoutBuilder.Add(OPattributes::POSITION);
+	if (OPMhasFeature(features, Normal))
+		vertexLayoutBuilder.Add(OPattributes::NORMAL);
+	if (OPMhasFeature(features, Tangent))
+		vertexLayoutBuilder.Add(OPattributes::TANGENT);
+	if (OPMhasFeature(features, BiTangent))
+		vertexLayoutBuilder.Add(OPattributes::BITANGENT);
+	if (OPMhasFeature(features, UV))
+		vertexLayoutBuilder.Add(OPattributes::UV);
+	if (OPMhasFeature(features, Color))
+		vertexLayoutBuilder.Add(OPattributes::COLOR);
+	if (OPMhasFeature(features, Skinning))
+		vertexLayoutBuilder.Add(OPattributes::BONES);
+
+	OPvertexLayout vertexLayout = vertexLayoutBuilder.Build();
+
+	model->Init(meshCount, vertexLayout);
+
+	ui16 vertexMode = str->UI16();
+	if (vertexMode == 2) {
+		OPlogErr("OPM Vertex Mode Version 2 not supported yet");
+		return false;
+	}
+
+	ui32 totalVertices = str->UI32();
+	ui32 totalIndices = str->UI32();
+
+	ui32 indSize = str->UI8();
+
+	OPlogInfo(" Vert/Ind/IndSize: %d/%d/%d", totalVertices, totalIndices, indSize);
+
+	OPindexSize indexSize = (OPindexSize)indSize;
+
+	void* vertices = OPalloc(totalVertices * vertexLayout.stride);
+	void* indices = OPalloc(totalIndices * (ui32)indexSize);
+	OPuint vertexOffset = 0;
+	OPuint indexOffset = 0;
+
+	f32* verticesData = (f32*)vertices;
+
+	for (ui32 i = 0; i < meshCount; i++) {
+		OPmesh* mesh = &model->meshes[i];
+		mesh->meshDesc = OPNEW(OPmeshDesc());
+		mesh->materialDesc = OPNEW(OPmeshMaterialDesc());
+
+		OPchar* name = str->String();
+		OPlogInfo(" SUBMESH: %s", name);
+
+		ui32 verticesCount = str->UI32();
+		ui32 indicesCount = str->UI32();
+
+		OPlogInfo(" MESH[%d] Vert/Ind: %d/%d", i, verticesCount, indicesCount);
+
+		ui32 floatsInStride = vertexLayout.stride / sizeof(f32);
+		ui32 vertexDataOffset = vertexOffset * floatsInStride;
+		//void* vertDataPos = &verticesData[vertexOffset * vertexLayout.stride];
+		f32* vertData = &verticesData[vertexDataOffset];
+		ui32 totalFloatsInMesh = verticesCount * floatsInStride;
+		for (ui32 j = 0; j < totalFloatsInMesh; j++) {
+			vertData[j] = str->F32();
+		}
+		OPlogInfo(" Floats Read %d", totalFloatsInMesh);
+
+		if (indexSize == OPindexSize::SHORT) {
+			ui16* indData = &((ui16*)indices)[indexOffset];
+			mesh->meshDesc->indices = indData;
+			ui32 indDataSize = sizeof(ui16) * indicesCount;
+			ui8* data = str->Read(indDataSize);
+			OPmemcpy(indData, data, indDataSize);
+			//for (ui32 j = 0; j < indicesCount; j++) {
+			//	indData[j] = str->UI16();
+			//}
+		} else {
+			ui32* indData = &((ui32*)indices)[indexOffset];
+			mesh->meshDesc->indices = indData;
+			ui32 indDataSize = sizeof(ui32) * indicesCount;
+			ui8* data = str->Read(indDataSize);
+			OPmemcpy(indData, data, indDataSize);
+			//for (ui32 j = 0; j < indicesCount; j++) {
+			//	indData[j] = str->UI32();
+			//}
+		}
+
+		mesh->offset = indexOffset;
+		mesh->count = indicesCount;
+		mesh->name = name;
+		OPlogInfo(" Index Offset/Indices Count: %d/%d", indexOffset, indicesCount);
+
+		mesh->vertexArray = &model->vertexArray;
+		mesh->vertexBuffer = &model->vertexBuffer;
+		mesh->indexBuffer = &model->indexBuffer;
+		mesh->meshDesc->vertices = vertData;
+		mesh->meshDesc->vertexCount = verticesCount;
+		mesh->meshDesc->indexCount = indicesCount;
+		mesh->meshDesc->indexSize = indexSize;
+
+		OPlogInfo(" vertexCount/indexCount/indexSize: %d/%d/%d", verticesCount, indicesCount, indexSize);
+
+		vertexOffset += verticesCount;
+		indexOffset += indicesCount; 
+		
+		OPlogInfo(" vertexOffset/indexOffset: %d/%d", vertexOffset, indexOffset);
+
+
+		mesh->boundingBox.min.x = str->F32();
+		mesh->boundingBox.min.y = str->F32();
+		mesh->boundingBox.min.z = str->F32();
+		mesh->boundingBox.max.x = str->F32();
+		mesh->boundingBox.max.y = str->F32();
+		mesh->boundingBox.max.z = str->F32();
+
+		mesh->materialDesc->diffuse = str->String();
+		mesh->materialDesc->specular = str->String();
+		mesh->materialDesc->ambient = str->String();
+		mesh->materialDesc->emissive = str->String();
+		mesh->materialDesc->height = str->String();
+		mesh->materialDesc->normals = str->String();
+		mesh->materialDesc->shininess = str->String();
+		mesh->materialDesc->opacity = str->String();
+		mesh->materialDesc->displacement = str->String();
+		mesh->materialDesc->lightMap = str->String();
+		mesh->materialDesc->reflection = str->String();
+		mesh->materialDesc->other1 = str->String();
+		mesh->materialDesc->other2 = str->String();
+		mesh->materialDesc->other3 = str->String();
+
+		ui32 metaCount = str->UI32();
+		if (metaCount > 0) {
+			mesh->meshMeta = OPNEW(OPmeshMeta());
+			mesh->meshMeta->count = metaCount;
+			mesh->meshMeta->metaType = (OPmeshMetaType*)OPALLOC(OPmeshMetaType, metaCount);
+			mesh->meshMeta->data = OPALLOC(OPstream*, metaCount);
+
+			for (ui32 j = 0; j < metaCount; j++) {
+				mesh->meshMeta->metaType[j] = (OPmeshMetaType)str->UI32();
+				if (mesh->meshMeta->metaType[j] == OPmeshMetaType::USER_DEFINED) {
+					ui32 dataSize = str->UI32();
+					if (dataSize == 0) continue;
+					void* data = str->Read(dataSize);
+					mesh->meshMeta->data[j] = OPstream::Create(dataSize);
+					mesh->meshMeta->data[j]->Write(data, dataSize);
+					mesh->meshMeta->data[j]->Seek(0);
+				}
+			}
+		}
+	}
+
+	model->name = modelName;
+
+	model->vertexArray.Bind();
+	model->vertexBuffer.SetData(vertexLayout.stride, totalVertices, vertices);
+	model->indexBuffer.SetData(indexSize, totalIndices, indices);
+	OPlogInfo(" totalIndices/totalVertices: %d/%d", totalIndices, totalVertices);
+	model->vertexLayout = vertexLayout;
+	//model->Build(totalVertices, totalIndices, indexSize, vertices, indices);
+
+	return true;
+}
+
+OPint OPMloader(OPstream* str, void** model) {
+	OPmodel** meshPtr = (OPmodel**)model;
+
+	*meshPtr = OPNEW(OPmodel());
+
+	if (_loadOPM(*meshPtr, str)) {
+		return 1;
+	}
+
+	return 0;
+}
+
+OPint OPMreload(OPstream* str, void** model) {
+	return 0;
+}
+
+OPint OPMunload(void* model) {
+	return 0;
+}
+
+
+
+// Outdated
+bool OPMloadDataV2(OPmodel* model, OPstream* str) {
 
 	// Already loaded version at this point
 	ui32 meshCount = str->UI32();
@@ -104,12 +227,14 @@ OPMData OPMloadDataV2(OPstream* str) {
 	ui32 totalVerticesCount = str->UI32();
 	ui32 totalIndicesCount = str->UI32();
 
-	result.vertexCount = 0;
-	result.indexCount = 0;
+	ui32 vertexCountTotal = 0;
+	ui32 indexCountTotal = 0;
 
-	result.indexSize = OPindexSize::SHORT;// sizeof(ui16);
-	result.vertices = OPalloc(totalVerticesCount);
-	result.indices = OPalloc((ui16)result.indexSize * totalIndicesCount);
+	OPvertexLayout vertexLayout;
+
+	OPindexSize indexSize = OPindexSize::SHORT;// sizeof(ui16);
+	void* vertices = OPalloc(totalVerticesCount);
+	void* indices = OPalloc((ui16)indexSize * totalIndicesCount);
 
 	for (ui32 i = 0; i < meshCount; i++) {
 		ui16 vertexMode = str->UI16();
@@ -123,8 +248,8 @@ OPMData OPMloadDataV2(OPstream* str) {
 		ui32 verticesCount = str->UI32();
 		ui32 indicesCount = str->UI32();
 
-		result.vertexCount += verticesCount;
-		result.indexCount += indicesCount;
+		vertexCountTotal += verticesCount;
+		indexCountTotal += indicesCount;
 
 		OPvertexLayoutBuilder layout;
 		layout.Init();
@@ -145,31 +270,53 @@ OPMData OPMloadDataV2(OPstream* str) {
 			layout.Add(OPattributes::BONES);
 
 		// TODO: (garrett) this doesn't support multi-mesh very well
-		result.vertexLayout = layout.Build();
+		vertexLayout = layout.Build();
 		//result.indices = OPalloc((ui32)result.indexSize * indicesCount);
 		//result.vertices = OPalloc(result.vertexLayout.stride * verticesCount);
 
-		f32* vertData = &((f32*)result.vertices)[vertexOffset * (result.vertexLayout.stride / sizeof(f32))];
-		for (ui32 j = 0; j < verticesCount * (result.vertexLayout.stride / sizeof(f32)); j++) {
+		f32* vertData = &((f32*)vertices)[vertexOffset * (vertexLayout.stride / sizeof(f32))];
+		for (ui32 j = 0; j < verticesCount * (vertexLayout.stride / sizeof(f32)); j++) {
 			vertData[j] = str->F32();
 		}
 
-		ui16* indData = &((ui16*)result.indices)[indexOffset];
+		ui16* indData = &((ui16*)indices)[indexOffset];
 		for (ui32 j = 0; j < indicesCount; j++) {
 			indData[j] = str->UI16();
 		}
 
-		vertexOffset += result.vertexCount;
-		indexOffset += result.indexCount;
+		vertexOffset += verticesCount;
+		indexOffset += indicesCount;
+
+		ui32 metaCount = str->UI32();
+		for (ui32 j = 0; j < metaCount; j++) {
+			OPchar* name = str->String();
+			ui32 dataSize = str->UI32();
+			void* data = str->Read(dataSize);
+		}
 	}
 
-	return result;
+	model->Init(meshCount, vertexLayout);
+	model->Build(vertexCountTotal, indexCountTotal, indexSize, vertices, indices);
+
+	OPmesh* mesh = &model->meshes[0];
+	mesh->offset = 0;
+	mesh->count = indexCountTotal;
+
+	mesh->vertexArray = &model->vertexArray;
+	mesh->vertexBuffer = &model->vertexBuffer;
+	mesh->indexBuffer = &model->indexBuffer;
+	mesh->meshDesc = OPNEW(OPmeshDesc());
+	mesh->meshDesc->vertices = vertices;
+	mesh->meshDesc->indices = indices;
+	mesh->meshDesc->vertexCount = vertexCountTotal;
+	mesh->meshDesc->indexCount = indexCountTotal;
+	mesh->meshDesc->indexSize = indexSize;
+
+	return true;
 }
 
-OPMData OPMloadData(OPstream* str) {
-	ui16 version = str->UI16();
-	//OPlog("Reading OPM Version: %d", version);
-	if (version == 2) return OPMloadDataV2(str);
+// Even more out dated
+bool OPMloadV1(OPmodel* model, OPstream* str) {
 
 	ui32 features = str->UI32();
 	ui32 verticeCount = str->UI32();
@@ -475,13 +622,13 @@ OPMData OPMloadData(OPstream* str) {
 
 
 
-	OPMData data = {};
 
-	data.vertexLayout = layout.Build();
-	data.indices = indices;
-	data.indexCount = indicesCount * 3;
-	data.indexSize = OPindexSize::SHORT;// sizeof(ui16);
-	data.vertexCount = verticeCount;
+
+	OPvertexLayout vertexLayout = layout.Build();
+	ui16* indicesData = indices;
+	ui32 indexCount = indicesCount * 3;
+	OPindexSize indexSize = OPindexSize::SHORT;// sizeof(ui16);
+	ui32 vertexCount = verticeCount;
 
 	OPvertices* vertices = OPverticesCreate(verticeCount, features);
 
@@ -538,12 +685,13 @@ OPMData OPMloadData(OPstream* str) {
 	//	}
 	//}
 
-	data.vertices = vertices->data;
+	void* vertsData = vertices->data;
 	OPfree(vertices);
 
 	//data.vertexSize = vertices->size * sizeof(f32);
 
-	data.bounds = OPboundingBox3D(min, max);
+	OPboundingBox3D bounds = OPboundingBox3D(min, max);
+
 	//data.hierarchy = hierarchy;
 	//data.pose = pose;
 	//data.hierarchyCount = hierarchyCount;
@@ -552,426 +700,61 @@ OPMData OPMloadData(OPstream* str) {
 
 
 
-	if (OPMhasFeature(features, Meta)) {
-		ui16 metaCount = str->UI16();
-		data.metaCount = metaCount;
+	//if (OPMhasFeature(features, Meta)) {
+	//	ui16 metaCount = str->UI16();
+	//	data.metaCount = metaCount;
 
-		if (metaCount > 0) {
-			//OPlog("Meta Count: %d", metaCount);
-			OPMmeta* meta = (OPMmeta*)OPalloc(sizeof(OPMmeta) * metaCount);
-			for (i32 i = 0; i < metaCount; i++) {
-				OPchar* metaName = str->String();
-				OPchar* metaType = str->String();
-				OPlog("Meta Name: %s (%s)", metaName, metaType);
-				f32 x = str->F32();
-				f32 y = str->F32();
-				f32 z = str->F32();
-				f32 rx = str->F32();
-				f32 ry = str->F32();
-				f32 rz = str->F32();
-				f32 sx = str->F32();
-				f32 sy = str->F32();
-				f32 sz = str->F32();
-				meta[i].Name = metaName;
-				meta[i].Type = metaType;
-				meta[i].Position = OPvec3Create(x, y, z);
-				meta[i].Rotation = OPvec3Create(rx, ry, rz);
-				meta[i].Scale = OPvec3Create(sx, sy, sz);
-			}
-			data.meta = meta;
-		}
-	}
-
-
-
-	return data;
-}
-
-OPMData OPMloadData(const OPchar * filename)
-{
-	OPstream* stream = OPfile::ReadFromFile(filename);
-	return OPMloadData(stream);
-}
-
-OPint OPMload(OPstream* str, OPmesh** mesh) {
-	//OPlog("Reading File Data");
-	//OPstream* str = OPreadFile(filename);
-	if (str == NULL) {
-		return 0;
-	}
-	//OPlog("Reading OPMloadData");
-	OPMData data = OPMloadData(str);
-	//OPlog("Loaded OPM");
-
-	//OPlog("Creating vertex and buffers");
-	// Create Vertex & Index Buffers for Mesh
-	OPmesh temp = OPmesh(data.vertexLayout);
-	OPMESH_ACTIVE = &temp;
-	temp.Build(
-		data.vertexLayout, data.indexSize,
-		data.vertexCount, data.indexCount,
-		data.vertices, data.indices
-	);
-	OPfree(data.vertices);
-	OPfree(data.indices);
-	temp.vertexLayout = data.vertexLayout;
-	temp.boundingBox = data.bounds;
-
-	//if (data.hierarchy != NULL) {
-	//	temp.Skeleton = OPskeletonCreate(data.hierarchy, data.pose, data.hierarchyCount);
-
-	//	if (data.tracks != NULL)
-	//		OPskeletonAnimationInit(&temp.SkeletonAnimation, temp.Skeleton, data.tracks[0].Frames, data.tracks[0].FrameCount);
+	//	if (metaCount > 0) {
+	//		//OPlog("Meta Count: %d", metaCount);
+	//		OPMmeta* meta = (OPMmeta*)OPalloc(sizeof(OPMmeta) * metaCount);
+	//		for (i32 i = 0; i < metaCount; i++) {
+	//			OPchar* metaName = str->String();
+	//			OPchar* metaType = str->String();
+	//			OPlog("Meta Name: %s (%s)", metaName, metaType);
+	//			f32 x = str->F32();
+	//			f32 y = str->F32();
+	//			f32 z = str->F32();
+	//			f32 rx = str->F32();
+	//			f32 ry = str->F32();
+	//			f32 rz = str->F32();
+	//			f32 sx = str->F32();
+	//			f32 sy = str->F32();
+	//			f32 sz = str->F32();
+	//			meta[i].Name = metaName;
+	//			meta[i].Type = metaType;
+	//			meta[i].Position = OPvec3Create(x, y, z);
+	//			meta[i].Rotation = OPvec3Create(rx, ry, rz);
+	//			meta[i].Scale = OPvec3Create(sx, sy, sz);
+	//		}
+	//		data.meta = meta;
+	//	}
 	//}
 
-	temp.MetaCount = data.metaCount;
-	temp.Meta = data.meta;
-	//temp.VertexSize = data.vertexLayout.stride;
-	temp.IndexSize = data.indexSize;
-	temp.VertexCount = data.vertexCount;
-	temp.IndexCount = data.indexCount;
+	model->Init(1, vertexLayout);
+	model->Build(vertexCount, indexCount, indexSize, vertsData, indicesData);
 
-	//OPlog("Disposing");
+	OPmesh* mesh = &model->meshes[0];
+	mesh->offset = 0;
+	mesh->count = indexCount;
 
-	// Dispose of allocated buffers
-	//OPfree(data.vertices);
-	//OPfree(data.indices);
-	//OPstreamDestroy(str);
+	mesh->vertexArray = &model->vertexArray;
+	mesh->vertexBuffer = &model->vertexBuffer;
+	mesh->indexBuffer = &model->indexBuffer;
+	mesh->meshDesc = OPNEW(OPmeshDesc());
+	mesh->meshDesc->vertices = vertsData;
+	mesh->meshDesc->indices = indices;
+	mesh->meshDesc->vertexCount = vertexCount;
+	mesh->meshDesc->indexCount = indexCount;
+	mesh->meshDesc->indexSize = indexSize;
 
-	*mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
-	OPmemcpy(*mesh, &temp, sizeof(OPmesh));
-
-	return 1;
+	return true;
 }
 
-
-OPint OPMReload(OPstream* str, OPmesh** mesh) {
-	OPlog("Reload Mesh OPM");
-	OPmesh* resultMesh;
-	OPmesh* tex = (OPmesh*)(*mesh);
-	OPint result = OPMload(str, &resultMesh);
-	if (result) {
-		tex->indexBuffer.Destroy();
-		tex->vertexBuffer.Destroy();
-		//OPrenderDelBuffer(&tex->IndexBuffer);
-		//OPrenderDelBuffer(&tex->VertexBuffer);
-		OPmemcpy(*mesh, resultMesh, sizeof(OPmesh));
-		OPfree(resultMesh);
-	}
-	return result;
-}
-
-OPint OPMUnload(void* mesh) {
-	OPmesh* m = (OPmesh*)mesh;
-	m->Destroy();
-	OPfree(m);
-	return 1;
-}
-
-OPhashMap* CreateTriangleTable(OPMData* data){
-	OPhashMap* triTable = OPhashMap::Create(data->indexCount / 3);
-	OPchar index[10];
-	OPint compCount = 4;
-
-	// for each triangle in the mesh
-	for(int i = (data->indexCount / 3); i--;){
-		int* tri;
-
-        #ifdef OPIFEX_WINDOWS
-		sprintf_s(index, 10, "%d", i * 3);
-        #else
-		sprintf(index, "%d", i * 3);
-        #endif
-		triTable->Get(index, (void**)&tri);
-
-		// if this vertex's tri has been stored, skip it
-		if(tri) continue;
-
-		tri = (int*)OPalloc(sizeof(int) * compCount);
-		tri[3] = 0;
-
-		// copy all the triangle's indices into an array
-		for(int j = 3; j--;){
-			tri[j] = i * 3 + j;
-
-			// store the triangle at this vertex's index
-            #ifdef OPIFEX_WINDOWS
-			sprintf_s(index, 10, "%d", i * 3 + j);
-            #else
-			sprintf(index, "%d", i * 3 + j);
-            #endif
-			triTable->Put(index, tri);
-		}
-	}
-
-	return triTable;
-}
-
-OPlinkedList* CreateVertexList(OPMData* data){
-	OPlinkedList* vertList = OPlinkedList::Create();
-	for (OPint i = data->vertexCount; i--;)
-		vertList->InsertLast((void*)i);
-
-	return vertList;
-}
-
-void UpdateBasis(OPvec3* axis, OPvec3* basis, OPvec3* position){
-	OPfloat pa = OPvec3Dot(*axis, *position);
-	OPfloat ba = OPvec3Dot(*axis, *basis);
-
-	if(OPabs(pa) > OPabs(ba)){
-		*basis = *position;
-	}
-}
-
-OPvec3 GetCenterOfMass(OPMData* data, OPlinkedList* vertList){
-	OPMvertex* vertices = (OPMvertex*)data->vertices;
-	OPvec3 com = {0};
-	OPlinkedListNode* node = vertList->First;
-	int verts = 0;
-
-	while(node){
-		com += vertices[(OPint)node->Data].Position;
-		node = node->Next;
-		++verts;
-	}
-	com /= (OPfloat)verts;
-
-	return com;
-}
-
-OPvec3 GetNormal(OPvec3 bX, OPvec3 bY, OPvec3 bZ){
-	OPvec3 out = {0};
-
-	OPfloat mX = OPvec3Len(bX);
-	OPfloat mY = OPvec3Len(bY);
-	OPfloat mZ = OPvec3Len(bZ);
-
-	if(mX > mZ && mY > mZ){
-		out = OPvec3Cross(bX, bY);
-	}
-	if(mX > mY && mZ > mY){
-		out = OPvec3Cross(bX, bZ);
-	}
-	if(mZ > mX && mY > mX){
-		out = OPvec3Cross(bY, bZ);
-	}
-
-	return out;
-}
-
-void ReorderVerts(OPMData* data, OPlinkedList** spaceA, OPlinkedList** spaceB){
-	OPMvertex* vertices = (OPMvertex*)data->vertices;
-	OPint i = 0, j = 0;
-	OPlinkedListNode* node = (*spaceA)->First;
-	OPlinkedList* tempA = OPlinkedList::Create();
-	OPlinkedList* tempB = OPlinkedList::Create();
-
-	// reorder spaceA
-	while(node){
-		OPMvertex temp = vertices[i];
-		vertices[i] = vertices[j = (OPint)node->Data];
-		vertices[j] = temp; // reinsert the displaced vert
-		tempA->InsertLast((void*)i);
-		++i;
-		node = node->Next;
-	}
-
-	// reorder spaceB
-	node = (*spaceB)->First;
-	while(node){
-		OPMvertex temp = vertices[i];
-		vertices[i] = vertices[j = (OPint)node->Data];
-		vertices[j] = temp; // reinsert the displaced vert
-		tempB->InsertLast((void*)i);
-		++i;
-		node = node->Next;
-	}
-
-	// destroy the old input lists
-	(*spaceA)->Destroy();
-	(*spaceB)->Destroy();
-
-	// set to the reorderd
-	*spaceA = tempA;
-	*spaceB = tempB;
-}
-
-OPlinkedList* CreateTriList(OPMData* data, OPhashMap* triTable, OPlinkedList* vertList, OPint atLeaf){
-	OPlinkedList* triList = OPlinkedList::Create();
-	OPlinkedListNode* node = vertList->First;
-	OPchar index[10];
-
-	while(node){
-		OPint* tri = NULL;
-
-#ifdef OPIFEX_WINDOWS
-			sprintf_s(index, 10, "%lld", (OPint)node->Data);
-#else
-			sprintf(index, "%d", (OPint)node->Data);
-#endif
-			triTable->Get(index, (void**)&tri);
-
-		// only add indices if this tri hasn't been visited
-		if(!tri[3]){
-			for(OPint i = 3; i--;){
-				triList->InsertLast((void*)tri[i]);
-			}
-			if(atLeaf) tri[3] = 1; // mark tri as visited
-		}
-		node = node->Next;
-	}
-
-	return triList;
-}
-
-OPMPartNode CreateOPMPartNode(OPlinkedList* triList){
-	OPlinkedListNode* node = triList->First;
-	OPuint min = (OPint)node->Data, max = (OPint)node->Data;
-
-	while(node){
-		OPuint i = (OPuint)node->Data;
-		min = min > i ? i : min;
-		max = max < i ? i : max;
-		node = node->Next;
-	}
-
-	OPMPartNode meshNode = {
-		min,
-		max,
-		0,
-		NULL
-	};
-
-	return meshNode;
-}
-
-OPMPartNode OPMPartition(OPMData* data, OPhashMap* triTable, OPlinkedList* vertList, OPint depth){
-	OPMvertex* vertices = (OPMvertex*)data->vertices;
-	OPlinkedList* spaceA = OPlinkedList::Create();
-	OPlinkedList* spaceB = OPlinkedList::Create();
-	OPlinkedListNode* node = vertList->First;
-
-	if(depth){
-		OPvec3 com = GetCenterOfMass(data, vertList);
-
-		OPvec3 X = {1, 0, 0};
-		OPvec3 Y = {0, 1, 0};
-		OPvec3 Z = {0, 0, 1};
-
-		// basis vectors
-		OPvec3 bX = {0}, bY = {0}, bZ = {0};
-
-		OPvec3 normal = {0};
-
-		// determine the basis vectors of this vertex ist
-		while(node){
-			OPint i = (OPint)node->Data;
-			UpdateBasis(&X, &bX, &vertices[i].Position);
-			UpdateBasis(&Y, &bY, &vertices[i].Position);
-			UpdateBasis(&Z, &bZ, &vertices[i].Position);
-			node = node->Next;
-		}
-
-		normal = GetNormal(bX, bY, bZ);
-
-		// split vertices
-		node = vertList->First;
-		while(node){
-			OPint i = (OPint)node->Data;
-			OPvec3 diff = vertices[i].Position - com;
-
-			if(OPvec3Dot(diff, normal) > 0){
-				spaceA->InsertLast((void*)i);
-			}
-			else{
-				spaceB->InsertLast((void*)i);
-			}
-			node = node->Next;
-		}
-
-		ReorderVerts(data, &spaceA, &spaceB);
-
-		// ALL DONE
-		OPlinkedList* trisA = CreateTriList(data, triTable, spaceA, !depth);
-		OPlinkedList* trisB = CreateTriList(data, triTable, spaceB, !depth);
-
-		// TODO call recusively
-		OPMPartNode* children = (OPMPartNode*)OPalloc(sizeof(OPMPartNode) * 2);
-		OPMPartNode nodeA = children[0] = OPMPartition(data, triTable, trisA, depth - 1);
-		OPMPartNode nodeB = children[1] = OPMPartition(data, triTable, trisB, depth - 1);
-
-		// Determine to and from using the two child nodes
-		OPuint From = nodeA.From < nodeB.From ? nodeA.From : nodeB.From;
-		OPuint To = nodeA.To > nodeB.To ? nodeA.To : nodeB.To;
-
-		OPMPartNode partNode = {
-			From,
-			To,
-			2,
-			children
-		};
-
-		// Free up stuff
-		spaceA->Destroy(); spaceB->Destroy();
-		trisA->Destroy(); trisB->Destroy();
-
-		return partNode;
-	}
-	else{
-		OPlinkedList* tris = CreateTriList(data, triTable, vertList, 1);
-		OPMPartNode partNode = CreateOPMPartNode(tris);
-		return partNode;
-	}
-}
-
-OPint OPMPartitionedLoad(const OPchar* filename, OPmesh** mesh){
-	OPlog("Reading File Data");
-	OPstream* str = OPfile::ReadFromFile(filename);
-	OPlog("Reading OPMloadData");
-	OPMData data = OPMloadData(str);
-
-	OPhashMap*      triTable = CreateTriangleTable(&data);
-	OPlinkedList* vertList = CreateVertexList(&data);
-
-	OPMPartition(&data, triTable, vertList, 1);
-
-	OPmesh temp = OPmesh(data.vertexLayout);
-	temp.Build(
-		data.vertexLayout, data.indexSize,
-		data.vertexCount, data.indexCount,
-		data.vertices, data.indices
-	);
-
-	OPlog("Disposing");
-	// Dispose of allocated buffers
-	OPfree(data.vertices);
-	OPfree(data.indices);
-	//OPstreamDestroy(str);
-
-	*mesh = (OPmesh*)OPalloc(sizeof(OPmesh));
-	OPmemcpy(*mesh, &temp, sizeof(OPmesh));
-
-	return 1;
-}
-
-OPint OPMloadPacked(const OPchar* filename, OPmeshPacked** mesh) {
-	OPstream* str = OPfile::ReadFromFile(filename);
-	OPMData data = OPMloadData(str);
-
-	OPmeshPacked temp = OPmeshPacked(
-		data.vertexLayout, data.indexSize,
-		data.vertexCount, data.indexCount,
-		data.vertices, data.indices
-	);
-
-	// Dispose of allocated buffers
-	OPfree(data.vertices);
-	OPfree(data.indices);
-	//OPstreamDestroy(str);
-
-	*mesh = (OPmeshPacked*)OPalloc(sizeof(OPmeshPacked));
-	OPmemcpy(*mesh, &temp, sizeof(OPmeshPacked));
-
-	return 1;
-}
+OPassetLoader OPASSETLOADER_OPM = {
+	".opm",
+	"Models/",
+	sizeof(OPmodel),
+	(OPint(*)(OPstream*, void**))OPMloader,
+	(OPint(*)(void*))OPMunload,
+	(OPint(*)(OPstream*, void**))OPMreload
+};

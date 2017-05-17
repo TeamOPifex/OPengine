@@ -10,12 +10,13 @@
 #include <bitset>
 #include <string>
 
-struct CommandBucketExample {
-	OPmodel model;
-	OPmodel model2;
+class CommandBucketExample : public OPgameState {
+	OPmodel* model;
+	OPmodel* model2;
+	OPmat4 world1, world2;
 	OPeffect effect;		// The Effect used to render the Mesh
 	OPmaterial material;
-	OPmaterialInstance materialInstance;
+	OPmaterial materialInstance;
 	OPcam camera;			// The Camera to use in the Effect to render the Mesh
 	OPcam* cameraPtr;
 	ui32 rotation;			// The amount to rotate the Mesh
@@ -28,8 +29,8 @@ struct CommandBucketExample {
 		linearAllocator = OPallocatorLinear::Create(MB(4));
 		allocator = linearAllocator->GetAllocator();
 
-    	model.Init("output.opm");
-    	model2.Init("patrick.opm");
+		model = (OPmodel*)OPCMAN.LoadGet("output.opm");
+		model2 = (OPmodel*)OPCMAN.LoadGet("patrick.opm");
 
 		effect.Init("ColoredModel.vert", "ColoredModel.frag");
 
@@ -55,10 +56,10 @@ struct CommandBucketExample {
 	OPint Update(OPtimer* time) {
 	    if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { rotation++; }
 
-    	model.world.SetRotY(rotation / 100.0f);
-    	model.world.Scl(0.25f);
-    	model2.world = OPmat4Translate(1, 0, 0);
-    	model2.world.Scl(0.025f);
+    	world1.SetRotY(rotation / 100.0f);
+    	world1.Scl(0.25f);
+		world2 = OPmat4Translate(1, 0, 0);
+		world2.Scl(0.025f);
 
     	return false;
 	}
@@ -66,13 +67,8 @@ struct CommandBucketExample {
 	void Render(OPfloat delta) {
     	OPrenderClear(0.4f, 0.4f, 0.4f);
 
-    	OPrenderCommandDrawIndexed* dc = renderBucket.CreateDrawIndexed();
-    	dc->Set(&model2, &materialInstance);
-    	renderBucket.Submit(dc->key, dc->dispatch, dc);
-
-    	dc = renderBucket.CreateDrawIndexed();
-    	dc->Set(&model, &materialInstance);
-    	renderBucket.Submit(dc->key, dc->dispatch, dc);
+		renderBucket.Submit(model2, &world2, &materialInstance);
+		renderBucket.Submit(model, &world1, &materialInstance);
 
         renderBucket.Sort();
         renderBucket.Flush();
@@ -85,29 +81,6 @@ struct CommandBucketExample {
     	return 0;
     }
 };
-
-// The actual game state state
-CommandBucketExample commandBucketExample;
-
-
-// Wrapping methods
-void ExampleCommandBucketEnter(OPgameState* last) {
-    commandBucketExample.Init(last);
-}
-OPint ExampleCommandBucketUpdate(OPtimer* time) {
-    return commandBucketExample.Update(time);
-}
-void ExampleCommandBucketRender(OPfloat delta) {
-    commandBucketExample.Render(delta);
-}
-OPint ExampleCommandBucketExit(OPgameState* next) {
-    return commandBucketExample.Exit(next);
-}
-
 OPint GS_EXAMPLE_COMMAND_BUCKET_AVAILABLE = 1;
-OPgameState GS_EXAMPLE_COMMAND_BUCKET = {
-	ExampleCommandBucketEnter,
-	ExampleCommandBucketUpdate,
-	ExampleCommandBucketRender,
-	ExampleCommandBucketExit
-};
+CommandBucketExample _GS_EXAMPLE_COMMAND_BUCKET;
+OPgameState* GS_EXAMPLE_COMMAND_BUCKET = &_GS_EXAMPLE_COMMAND_BUCKET;

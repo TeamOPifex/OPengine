@@ -9,37 +9,19 @@
 void __opSpriteScaleFrames(OPtexture* tex, OPspriteSheet* ss) {
 	ASSERT(tex, "__opSpriteScaleFrames() - texture null");
 	ASSERT(tex, "__opSpriteScaleFrames() - spritesheet null");
-	OPint i = 0;
-	OPvec2 size;
-	size.x = (f32)tex->textureDesc.width;
-	size.y = (f32)tex->textureDesc.height;
 
-	for (i = ss->Sprites; i--;){
+	OPvec2 size = OPvec2(
+        (f32)tex->textureDesc.width,
+        (f32)tex->textureDesc.height);
+
+	for (OPint i = ss->Sprites; i--;){
 		OPsprite* s = (OPsprite*)OPCMAN.Get(ss->Names[i]);
 		OPint j = s->FrameCount;
-
-#ifdef _DEBUG
-		OPlog("Resizing %s", ss->Names[i]);
-#endif
-
-			for (; j--;){
-
-#ifdef _DEBUG
-				OPlog("\t(%f,%f) (%f,%f)",
-					s->Frames[j].Offset.x, s->Frames[j].Offset.y,
-					s->Frames[j].Size.x, s->Frames[j].Size.y
-					);
-#endif
-
-				s->Frames[j].Offset.x /= size.x;
-				s->Frames[j].Offset.y /= size.y;
-				s->Frames[j].Size /= size;
-#ifdef _DEBUG
-			OPlog("\t(%f,%f) (%f,%f)",
-				s->Frames[j].Offset.x, s->Frames[j].Offset.y,
-				s->Frames[j].Size.x, s->Frames[j].Size.y
-				);
-#endif
+		for (; j--;){
+			s->Frames[j].Offset.x /= size.x;
+			s->Frames[j].Offset.y /= size.y;
+			s->Frames[j].Size.x /= size.x;
+			s->Frames[j].Size.y /= size.y;
 		}
 	}
 }
@@ -188,7 +170,7 @@ OPint OPspriteSheetLoad(OPstream* str, OPspriteSheet** ss){
 	}
 
 	// load the png image data
-	OPimagePNGLoadStream(str, str->_pointer, &temp);
+	OPimagePNGLoadStream(str, str->_pointer, &temp, OPtextureFilter::NEAREST);
 #ifdef _DEBUG
 	OPlog("Loaded PNG!");
 #endif
@@ -239,3 +221,12 @@ OPint OPspriteSheetUnload(void* ss){
 
 	return 1;
 }
+
+OPassetLoader OPASSETLOADER_OPSS = {
+	".opss",
+	"Sprites/",
+	sizeof(OPspriteSheet),
+	(OPint(*)(OPstream*, void**))OPspriteSheetLoad,
+	(OPint(*)(void*))OPspriteSheetUnload,
+	NULL
+};

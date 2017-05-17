@@ -19,6 +19,7 @@
 #define OPpi_2 1.57079632679f
 #define OPpi_4 0.78539816339f
 #define OPe    2.71828182846f
+#define OPradianConvert 0.01745329251994329576923690768489
 
 #define KB(bytes) (bytes * 1024)   // Kibibyte
 #define MB(bytes) KB(bytes) * 1024 // Mebibyte
@@ -304,6 +305,33 @@ OPfloat OPrandom();
 * @return Floating point value with the range(min, max)
 */
 OPfloat OPrandRange(OPfloat min, OPfloat max);
+
+
+
+//-----------------------------------------------------------------------------
+/**
+* OPradians - math helper
+*	Calculates the radians of degrees
+* @param f Floating point number.
+* @return radians
+*/
+__inline OPfloat OPradians(OPfloat f) {
+	return (OPfloat)(f * OPradianConvert);
+}
+
+
+
+//-----------------------------------------------------------------------------
+/**
+* OPdegrees - math helper
+*	Calculates the degrees of radians
+* @param f Floating point number.
+* @return degrees
+*/
+__inline OPfloat OPdegrees(OPfloat f) {
+	return (OPfloat)(f * 180) / OPpi;
+}
+
 
 #define OPMIN(a,b) (((a) < (b)) ? (a) : (b))
 #define OPMAX(a,b) (((a) > (b)) ? (a) : (b))

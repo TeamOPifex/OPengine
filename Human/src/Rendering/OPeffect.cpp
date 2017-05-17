@@ -3,15 +3,16 @@
 
 OPeffect* OPEFFECT_ACTIVE = NULL;
 
-void OPeffect::Init(OPshader* vert, OPshader* frag) {
-	OPRENDERER_ACTIVE->Effect.Init(this, vert, frag);
+void OPeffect::Init(OPshader* vert, OPshader* frag, OPvertexLayout* vertexLayout) {
+	OPRENDERER_ACTIVE->Effect.Init(this, vert, frag, vertexLayout);
 }
 
 OPshaderUniform* OPeffect::GetUniform(const OPchar* name) {
 	OPshaderUniform* result = NULL;
 
-	bool found = uniforms.Get(name, (void**)&result);
+	bool found = this->uniforms.Get(name, (void**)&result);
 	if (!found) {
+		//OPlogErr("Shader Uniform not present: %s", name);
 		OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Shader Uniform not present: %s", name);
 	}
 	//ASSERT(found, "The uniform must be added first");

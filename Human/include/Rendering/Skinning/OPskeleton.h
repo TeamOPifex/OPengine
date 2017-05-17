@@ -4,10 +4,11 @@ struct OPskeleton;
 typedef struct OPskeleton OPskeleton;
 
 #define NUM_JOINTS 4
-#define OPSKELETON_MAX_BONE_COUNT 62
+#define OPSKELETON_MAX_BONE_COUNT 100
 
 #include "./Math/include/OPmat4.h"
 #include "./Math/include/OPvec4.h"
+#include "./Data/include/OPcman.h"
 
 struct OPskeleton {
 	ui16 hierarchyCount;
@@ -15,37 +16,50 @@ struct OPskeleton {
 	OPchar** jointNames;
 	OPmat4* globalPoses;
 	OPmat4* globalInvPoses;
-	OPmat4* localPoses;
+	OPmat4* bindPose;
+	OPmat4* activePose;
 	OPmat4* skinned;
+	OPmat4* boneOffsets;
+
+	OPmat4 globalInverse;
+
+	i16 JointIndex(const OPchar* joint);
+	OPmat4 JointMatrix(i32 joint);
+	OPvec3 JointPosition(i32 joint);
+	void Reset();
+
+
+	static OPskeleton* Create(i16* hierarchy, OPmat4* bindPose, OPmat4* boneOffsets, OPmat4 invGlobalPose, i32 count, OPchar** names);
+	void Update();
+	i16 Get(const OPchar* name);
+	void Destroy();
+
+	inline OPskeleton* Copy() {
+		return OPskeleton::Create(hierarchy, activePose, boneOffsets, globalInverse, hierarchyCount, jointNames);
+	}
+
+	inline OPmat4 Local(const OPchar* name) {
+		i16 ind = Get(name);
+		if (ind > -1) {
+			return activePose[ind];
+		}
+		return OPMAT4_IDENTITY;
+	}
+
+	inline OPvec3 LocalTranslate(i16 ind) {
+		OPvec3 result = OPVEC3_ZERO;
+		while (ind > -1) {
+			result += OPmat4GetTranslate(activePose[ind]);
+			ind = hierarchy[ind];
+		}
+		return result;
+	}
+
+	inline OPvec3 LocalTranslate(const OPchar* name) {
+		return LocalTranslate(Get(name));
+	}
+
+	static OPskeleton* Load(const OPchar* name) {
+		return (OPskeleton*)OPCMAN.LoadGet(name);
+	}
 };
-
-OPskeleton* OPskeletonCreate(i16* hierarchy, OPmat4* pose, i32 count, OPchar** names);
-void OPskeletonUpdate(OPskeleton* skeleton);
-i16 OPskeletonGet(OPskeleton* skeleton, const OPchar* name);
-void OPskeletonDestroy(OPskeleton* skeleton);
-
-inline OPskeleton* OPskeletonCopy(OPskeleton* source) {
-	return OPskeletonCreate(source->hierarchy, source->localPoses, source->hierarchyCount, source->jointNames);
-}
-
-inline OPmat4 OPskeletonLocal(OPskeleton* skeleton, const OPchar* name) {
-	i16 ind = OPskeletonGet(skeleton, name);
-	if (ind > -1)  {
-		return skeleton->localPoses[ind];
-	}
-	return OPMAT4_IDENTITY;
-}
-
-inline OPvec3 OPskeletonLocalTranslate(OPskeleton* skeleton, i16 ind) {
-	OPvec3 result = OPVEC3_ZERO;
-	while (ind > -1) {
-		result += OPmat4GetTranslate(skeleton->localPoses[ind]);
-		ind = skeleton->hierarchy[ind];
-	}
-	return result;
-}
-
-inline OPvec3 OPskeletonLocalTranslate(OPskeleton* skeleton, const OPchar* name) {
-	i16 ind = OPskeletonGet(skeleton, name);
-	return OPskeletonLocalTranslate(skeleton, ind);
-}

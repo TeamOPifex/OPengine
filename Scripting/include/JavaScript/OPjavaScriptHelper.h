@@ -17,11 +17,13 @@ using namespace v8;
 
 #if defined(_DEBUG)
 #else
+#ifndef NDEBUG
 #define NDEBUG
+#endif
 #endif
 
 
-extern OPuint _JS_ARGC;
+extern i32 _JS_ARGC;
 #define JS_BEGIN_ARGS _JS_ARGC = 0;
 #define JS_BEGIN_ARGS_SELF _JS_ARGC = -1;
 
@@ -359,6 +361,6 @@ JS_HELPER_SELF_WRAPPER( JS_MAKE_WRAPPED_FN_NAME(t ## m) ) { \
 #define JS_NEXT_ARG_AS_NUMBER args[_JS_ARGC]->NumberValue(); _JS_ARGC++;
 #define JS_NEXT_ARG_AS_INTEGER args[_JS_ARGC]->IntegerValue(); _JS_ARGC++;
 #define JS_NEXT_ARG_AS_STRING(name) String::Utf8Value name ## string(args[_JS_ARGC]->ToString()); _JS_ARGC++; const OPchar* name = *(name ## string);
-
+#define JS_NEXT_ARG_AS_VEC3 OPvec3((OPfloat)args[_JS_ARGC]->NumberValue(), (OPfloat)args[_JS_ARGC + 1]->NumberValue(), (OPfloat)args[_JS_ARGC + 2]->NumberValue()); _JS_ARGC+= 3;
 
 #endif

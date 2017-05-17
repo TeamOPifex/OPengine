@@ -1,9 +1,10 @@
 
 #include "./Pipeline/include/OPsprite3D.h"
 #include "./Human/include/Rendering/Primitives/OPquad.h"
+#include "./Human/include/Rendering/OPrender.h"
 
 int SPRITE_3D_INITIALIZED = 0;
-OPmesh* SPRITE_3D_QUAD_MESH;
+OPmodel* SPRITE_3D_QUAD_MESH;
 OPeffect* EFFECT_SPRITE_3D;
 
 void OPsprite3DInit(OPeffect* effect) {
@@ -30,6 +31,7 @@ OPsprite3D* OPsprite3DCreate(OPsprite** sprites, OPeffect* effect) {
 	sprite->Direction = 1;
 	sprite->FrameRate = 24.0f;
 	sprite->Loop = 1;
+	sprite->LoopsCompleted = 0;
 	sprite->Effect = effect;
 	if (effect == NULL) {
 		sprite->Effect = EFFECT_SPRITE_3D;
@@ -45,6 +47,7 @@ void OPsprite3DCreateFill(OPsprite3D* sprite, OPsprite** sprites, OPeffect* effe
 	sprite->Direction = 1;
 	sprite->FrameRate = 24.0f;
 	sprite->Loop = 1;
+	sprite->LoopsCompleted = 0;
 	sprite->Effect = effect;
 	if (effect == NULL) {
 		sprite->Effect = EFFECT_SPRITE_3D;
@@ -63,6 +66,7 @@ void OPsprite3DUpdate(OPsprite3D* sprite, ui64 elapsed) {
 		if (sprite->CurrentFrame >= sprite->CurrentSprite->FrameCount) {
 			if (sprite->Loop) {
 				sprite->CurrentFrame = 0;
+				sprite->LoopsCompleted++;
 			}
 			else  {
 				sprite->CurrentFrame--;
@@ -71,10 +75,12 @@ void OPsprite3DUpdate(OPsprite3D* sprite, ui64 elapsed) {
 	}
 }
 
-void OPsprite3DSetSprite(OPsprite3D* sprite, i32 index) {
+void OPsprite3DSetSprite(OPsprite3D* sprite, i32 index, bool force) {
+	if (sprite->CurrentSprite == sprite->Sprites[index] && !force) return;
 	sprite->CurrentSprite = sprite->Sprites[index];
 	sprite->CurrentFrame = 0;
 	sprite->CurrentElapsed = 0;
+	sprite->LoopsCompleted = 0;
 }
 
 void OPsprite3DPrepReRender(OPsprite3D* sprite, OPvec3 offset, OPfloat rotation) {
@@ -89,13 +95,14 @@ void OPsprite3DPrepReRender(OPsprite3D* sprite, OPvec3 offset, OPfloat rotation)
 
 	OPmat4 world;
 	OPmat4Identity(&world);
-	world = OPmat4Scl(world, widthScale, heightScale, 1.0);
-	OPmat4RotZ(&world, rotation + sprite->Rotation.z);
-	OPmat4RotY(&world, sprite->Rotation.y);
-	OPvec3 scl = sprite->Scale / 2.0f;
-	scl.x *= sprite->Direction;
-	world = OPmat4Scl(world, scl.x, scl.y, 1.0);
-	world += offset + sprite->Position;
+	world.Translate(sprite->Position);
+	//world = OPmat4Scl(world, widthScale, heightScale, 1.0);
+	//OPmat4RotZ(&world, rotation + sprite->Rotation.z);
+	//OPmat4RotY(&world, sprite->Rotation.y);
+	//OPvec3 scl = sprite->Scale / 2.0f;
+	//scl.x *= sprite->Direction;
+	//world = OPmat4Scl(world, scl.x, scl.y, 1.0);
+	//world += offset + sprite->Position;
 
 	OPeffectSet("uWorld", &world);
 	OPeffectSet("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
@@ -116,15 +123,17 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	OPmat4 world;
 	SPRITE_3D_QUAD_MESH->Bind();
 	sprite->Effect->Bind();
-	
+
 	OPmat4Identity(&world);
-	world = OPmat4Scl(world, widthScale, heightScale, 1.0);
-	OPmat4RotZ(&world, rotation + sprite->Rotation.z);
-	OPmat4RotY(&world, sprite->Rotation.y);
-	OPvec3 scl = sprite->Scale / 2.0f;
-	scl.x *= sprite->Direction;
-	world = OPmat4Scl(world, scl.x, scl.y, 1.0);
-	world += offset + sprite->Position;
+	world.Translate(sprite->Position);
+	world.Scl(sprite->Scale * OPvec3(widthScale, heightScale, 1.0));
+	//world = OPmat4Scl(world, widthScale, heightScale, 1.0);
+	//OPmat4RotZ(&world, rotation + sprite->Rotation.z);
+	//OPmat4RotY(&world, sprite->Rotation.y);
+	//OPvec3 scl = sprite->Scale / 2.0f;
+	//scl.x *= sprite->Direction;
+	//world = OPmat4Scl(world, scl.x * frameSize.x, scl.y * frameSize.y, 1.0);
+	//world += offset + sprite->Position + OPvec3(0, sprite->Scale.y * (frameSize.y / 2.0), 0);
 
 	//OPtextureClearActive();
 	//ui32 bind = OPtextureBind(sprite->CurrentSprite->Sheet);
@@ -135,18 +144,22 @@ void OPsprite3DPrepRender(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfl
 	OPeffectSet("uWorld", &world);
 	OPeffectSet("uView", &camera->view);
 	OPeffectSet("uProj", &camera->proj);
-	OPeffectSet("uOffset", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset);
-	OPeffectSet("uSize", &sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size);
+    OPvec2 frameOffsetScl = sprite->CurrentSprite->Frames[sprite->CurrentFrame].Offset;
+    OPvec2 frameSizeScl = sprite->CurrentSprite->Frames[sprite->CurrentFrame].Size;
+    //frameOffsetScl = OPVEC2_ZERO;
+    //frameSizeScl = OPVEC2_ONE;
+	OPeffectSet("uOffset", &frameOffsetScl);
+	OPeffectSet("uSize", &frameSizeScl);
 }
 
 void OPsprite3DRender(OPsprite3D* sprite, OPcam* camera) {
 	OPsprite3DPrepRender(sprite, camera, OPVEC3_ZERO, 0);
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 }
 
 void OPsprite3DRenderOffsetRot(OPsprite3D* sprite, OPcam* camera, OPvec3 offset, OPfloat rotation) {
 	OPsprite3DPrepRender(sprite, camera, offset, rotation);
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 }
 
 

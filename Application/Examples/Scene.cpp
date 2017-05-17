@@ -7,97 +7,103 @@
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Data/include/OPcman.h"
 
-typedef struct {
+class SceneExample : public OPgameState {
 	OPfloat Rotation;
 	OPscene scene;
 	OPrendererForward* renderer;
-	OPmodel model;
-	OPmodel model2;
-	OPmodel model3;
+	OPmodel* model;
+	OPmodel* model2;
+	OPmodel* model3;
+	OPrendererEntity* model1Entity;
+	OPrendererEntity* model2Entity;
+	OPrendererEntity* model3Entity;
 	OPcamFreeFlight camera;
 	OPmaterialPBR materialPBR;
 	OPtextureCube environment;
-	OPmaterialPBRInstance* materialInstance;
-	OPmaterialPBRInstance* materialInstance2;
-} SceneExample;
+	OPmaterialPBR* materialInstance;
+	OPmaterialPBR* materialInstance2;
 
-SceneExample sceneExample;
+	OPmaterial* materialInst1;
+	OPmaterial* materialInst2;
 
-void ExampleSceneEnter(OPgameState* last) {
-	const OPchar* envImages[6] = {
-		"Textures/TetrisBroken.png",
-		"Textures/TetrisYellow.png",
-		"Textures/TetrisGreen.png",
-		"Textures/TetrisGray.png",
-		"Textures/TetrisOrange.png",
-		"Textures/TetrisRed.png"
-	};
-	sceneExample.environment.Init(envImages);
 
-	sceneExample.renderer = OPNEW(OPrendererForward());
-	sceneExample.scene.Init(&sceneExample.renderer->rendererRoot, 100);
-	sceneExample.camera.Init();
-	sceneExample.scene.camera = &sceneExample.camera.Camera;
+	void Init(OPgameState* last) {
+		const OPchar* envImages[6] = {
+			"Textures/TetrisBroken.png",
+			"Textures/TetrisYellow.png",
+			"Textures/TetrisGreen.png",
+			"Textures/TetrisGray.png",
+			"Textures/TetrisOrange.png",
+			"Textures/TetrisRed.png"
+		};
+		environment.Init(envImages);
 
-	sceneExample.materialPBR.Init(OPNEW(OPeffect("Common/PBR.vert", "Common/PBR.frag")));
-	sceneExample.materialPBR.rootMaterial.AddParam("uCamPos", &sceneExample.camera.Camera.pos);
-	sceneExample.renderer->SetMaterial(&sceneExample.materialPBR.rootMaterial, 0);
+		renderer = OPNEW(OPrendererForward());
+		scene.Init(renderer, 100, 1);
+		camera.Init();
+		scene.camera = &camera.Camera;
 
-	sceneExample.materialInstance = sceneExample.materialPBR.CreateInstance();
-	sceneExample.materialInstance->SetAlbedoMap("Dagger_Albedo.png");
-	sceneExample.materialInstance->SetSpecularMap("Dagger_Specular.png");
-	sceneExample.materialInstance->SetGlossMap("Dagger_Gloss.png");
-	sceneExample.materialInstance->SetNormalMap("Dagger_Normals.png");
-	sceneExample.materialInstance->SetEnvironmentMap(&sceneExample.environment);
+		materialPBR.Init(OPNEW(OPeffect("Common/PBR.vert", "Common/PBR.frag")));
+		materialPBR.AddParam("uCamPos", &camera.Camera.pos);
+		//renderer->SetMaterial(&materialPBR, 0);
 
-	sceneExample.materialInstance2 = sceneExample.materialPBR.CreateInstance();
-	sceneExample.materialInstance2->SetAlbedoMap("cemetery_floor.png");
-	sceneExample.materialInstance2->SetSpecularMap("Default_Specular.png");
-	sceneExample.materialInstance2->SetGlossMap("Default_Gloss.png");
-	sceneExample.materialInstance2->SetNormalMap("Default_Normals.png");
-	sceneExample.materialInstance2->SetEnvironmentMap(&sceneExample.environment);
+		materialInstance = OPNEW(OPmaterialPBR(materialPBR));
+		materialInstance->SetAlbedoMap("Dagger_Albedo.png");
+		materialInstance->SetSpecularMap("Dagger_Specular.png");
+		materialInstance->SetGlossMap("Dagger_Gloss.png");
+		materialInstance->SetNormalMap("Dagger_Normals.png");
+		materialInstance->SetEnvironmentMap(&environment);
 
-	sceneExample.model.Init("daggerpbr.opm");
-	sceneExample.model2.Init("daggerpbr.opm");
-	sceneExample.model3.Init("ground_block_2x2x2.fbx.opm");
+		materialInstance2 = OPNEW(OPmaterialPBR(materialPBR));
+		materialInstance2->SetAlbedoMap("cemetery_floor.png");
+		materialInstance2->SetSpecularMap("Default_Specular.png");
+		materialInstance2->SetGlossMap("Default_Gloss.png");
+		materialInstance2->SetNormalMap("Default_Normals.png");
+		materialInstance2->SetEnvironmentMap(&environment);
 
-	sceneExample.scene.Add(&sceneExample.model, &sceneExample.materialInstance->rootMaterialInstance);
-	sceneExample.scene.Add(&sceneExample.model2, &sceneExample.materialInstance->rootMaterialInstance);
-	sceneExample.scene.Add(&sceneExample.model3, &sceneExample.materialInstance2->rootMaterialInstance);
-}
+		model = (OPmodel*)OPCMAN.LoadGet("daggerpbr.opm");
+		model2 = (OPmodel*)OPCMAN.LoadGet("daggerpbr.opm");
+		model3 = (OPmodel*)OPCMAN.LoadGet("ground_block_2x2x2.fbx.opm");
 
-OPint ExampleSceneUpdate(OPtimer* time) {
-	sceneExample.camera.Update(time);
-	sceneExample.Rotation += time->Elapsed * 0.25f;
-	sceneExample.model.world.SetRotY(sceneExample.Rotation / 200.0f)->Scl(1.0f);
-	sceneExample.model2.world.SetScl(1.0f)->Translate(-45, 0, 0);
-	sceneExample.model3.world.SetScl(1.0f)->Translate(45, 0, 0);
-	return false;
-}
+		//materialInst1 = &materialInstance;
+		//materialInst2 = &materialInstance2;
 
-void ExampleSceneRender(OPfloat delta) {
-	OPrenderClear(0.2f, 0.2f, 0.2f);
-	sceneExample.scene.Render(delta);
-	OPVISUALDEBUGINFO.Render(delta);
-	OPrenderPresent();
-}
+		model1Entity = scene.Add(model, &materialInstance);
+		model2Entity = scene.Add(model2, &materialInstance);
+		model3Entity = scene.Add(model3, &materialInstance2);
+	}
 
-OPint ExampleSceneExit(OPgameState* next) {
-	OPfree(sceneExample.materialInstance);
-	sceneExample.materialPBR.rootMaterial.effect->Destroy();
-	OPfree(sceneExample.materialPBR.rootMaterial.effect);
-	sceneExample.scene.Destroy();
-	sceneExample.renderer->Destroy();
-	OPfree(sceneExample.renderer);
-	sceneExample.environment.Destroy();
+	OPint Update(OPtimer* time) {
+		camera.Update(time);
+		Rotation += time->Elapsed * 0.25f;
+		model1Entity->world.SetRotY(Rotation / 200.0f)->Scl(1.0f);
+		model2Entity->world.SetScl(1.0f)->Translate(-45, 0, 0);
+		model3Entity->world.SetScl(1.0f)->Translate(45, 0, 0);
+		return false;
+	}
 
-	return 0;
-}
+	void Render(OPfloat delta) {
+		OPrenderClear(0.2f, 0.2f, 0.2f);
+		scene.Render(delta);
+		OPVISUALDEBUGINFO.Render(delta);
+		OPrenderPresent();
+	}
+
+	OPint Exit(OPgameState* next) {
+		OPfree(materialInstance);
+		materialPBR.effect->Destroy();
+		OPfree(materialPBR.effect);
+		scene.Destroy();
+		renderer->Destroy();
+		OPfree(renderer);
+		environment.Destroy();
+
+		return 0;
+	}
+};
+
+
 
 OPint GS_EXAMPLE_SCENE_AVAILABLE = 1;
-OPgameState GS_EXAMPLE_SCENE = {
-	ExampleSceneEnter,
-	ExampleSceneUpdate,
-	ExampleSceneRender,
-	ExampleSceneExit
-};
+SceneExample _GS_EXAMPLE_SCENE;
+OPgameState* GS_EXAMPLE_SCENE = &_GS_EXAMPLE_SCENE;

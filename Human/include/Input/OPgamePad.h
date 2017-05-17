@@ -21,22 +21,35 @@ struct OPgamePad {
 	OPfloat axes[(ui32)OPgamePadAxis::_MAX];
 	OPfloat prevAxes[(ui32)OPgamePadAxis::_MAX];
 	OPfloat deadzone;
+	i64 rumbleTime;
+	OPfloat rumble[2];
 	bool connected;
 	bool buttons[(ui32)OPgamePadButton::_MAX];
 	bool prevButtons[(ui32)OPgamePadButton::_MAX];
 
-	void Update();
+	void Update(OPtimer* timer);
 	void Reset();
 
 	OPvec2 LeftThumb();
 	OPvec2 RightThumb();
-	
+
 	bool IsConnected() {
 		return connected;
 	}
 
 	void SetDeadzone(OPfloat deadzone) {
 		this->deadzone = deadzone;
+	}
+
+	void SetRumble(OPfloat left, OPfloat right, i64 time);
+	inline void SetRumble(OPfloat left, OPfloat right) {
+		SetRumble(left, right, 2147483647);
+	}
+	inline void SetRumbleShort() {
+		SetRumble(1.0, 1.0, 200);
+	}
+	inline void SetRumbleLong() {
+		SetRumble(1.0, 1.0, 500);
 	}
 
 	// Buttons
@@ -56,37 +69,37 @@ struct OPgamePad {
 
 	// Left Thumbstick
 
-	bool LeftThumbIsRight() { 
+	bool LeftThumbIsRight() {
 		return axes[(ui32)OPgamePadAxis::LS_X] > deadzone;
 	}
-	bool LeftThumbNowRight() { 
+	bool LeftThumbNowRight() {
 		return prevAxes[(ui32)OPgamePadAxis::LS_X] <= deadzone && axes[(ui32)OPgamePadAxis::LS_X] > deadzone;
 	}
-	bool LeftThumbWasRight() { 
+	bool LeftThumbWasRight() {
 		return prevAxes[(ui32)OPgamePadAxis::LS_X] > deadzone && axes[(ui32)OPgamePadAxis::LS_X] <= deadzone;
 	}
-	bool LeftThumbIsLeft() { 
+	bool LeftThumbIsLeft() {
 		return axes[(ui32)OPgamePadAxis::LS_X] < -deadzone;
 	}
-	bool LeftThumbNowLeft() { 
+	bool LeftThumbNowLeft() {
 		return prevAxes[(ui32)OPgamePadAxis::LS_X] >= -deadzone && axes[(ui32)OPgamePadAxis::LS_X] < -deadzone;
 	}
-	bool LeftThumbWasLeft() { 
+	bool LeftThumbWasLeft() {
 		return prevAxes[(ui32)OPgamePadAxis::LS_X] < -deadzone && axes[(ui32)OPgamePadAxis::LS_X] >= -deadzone;
 	}
-	bool LeftThumbIsUp() { 
+	bool LeftThumbIsUp() {
 		return axes[(ui32)OPgamePadAxis::LS_Y] > deadzone;
 	}
-	bool LeftThumbNowUp() { 
+	bool LeftThumbNowUp() {
 		return prevAxes[(ui32)OPgamePadAxis::LS_Y] <= deadzone && axes[(ui32)OPgamePadAxis::LS_Y] > deadzone;
 	}
-	bool LeftThumbWasUp() { 
+	bool LeftThumbWasUp() {
 		return prevAxes[(ui32)OPgamePadAxis::LS_Y] > deadzone && axes[(ui32)OPgamePadAxis::LS_Y] <= deadzone;
 	}
-	bool LeftThumbIsDown() { 
+	bool LeftThumbIsDown() {
 		return axes[(ui32)OPgamePadAxis::LS_Y] < -deadzone;
 	}
-	bool LeftThumbNowDown() { 
+	bool LeftThumbNowDown() {
 		return prevAxes[(ui32)OPgamePadAxis::LS_Y] >= -deadzone && axes[(ui32)OPgamePadAxis::LS_Y] < -deadzone;
 	}
 	bool LeftThumbWasDown() {
@@ -98,43 +111,43 @@ struct OPgamePad {
 	OPfloat LeftThumbY() {
 		return axes[(ui32)OPgamePadAxis::LS_Y];
 	}
-	
+
 	// Right Thumbstick
 
-	bool RightThumbIsRight() { 
+	bool RightThumbIsRight() {
 		return axes[(ui32)OPgamePadAxis::RS_X] > deadzone;
 	}
-	bool RightThumbNowRight() { 
+	bool RightThumbNowRight() {
 		return prevAxes[(ui32)OPgamePadAxis::RS_X] <= deadzone && axes[(ui32)OPgamePadAxis::RS_X] > deadzone;
 	}
-	bool RightThumbWasRight() { 
+	bool RightThumbWasRight() {
 		return prevAxes[(ui32)OPgamePadAxis::RS_X] > deadzone && axes[(ui32)OPgamePadAxis::RS_X] <= deadzone;
 	}
-	bool RightThumbIsLeft() { 
+	bool RightThumbIsLeft() {
 		return axes[(ui32)OPgamePadAxis::RS_X] < -deadzone;
 	}
-	bool RightThumbNowLeft() { 
+	bool RightThumbNowLeft() {
 		return prevAxes[(ui32)OPgamePadAxis::RS_X] >= -deadzone && axes[(ui32)OPgamePadAxis::RS_X] < -deadzone;
 	}
-	bool RightThumbWasLeft() { 
+	bool RightThumbWasLeft() {
 		return prevAxes[(ui32)OPgamePadAxis::RS_X] < -deadzone && axes[(ui32)OPgamePadAxis::RS_X] >= -deadzone;
 	}
-	bool RightThumbIsUp() { 
+	bool RightThumbIsUp() {
 		return axes[(ui32)OPgamePadAxis::RS_Y] > deadzone;
 	}
-	bool RightThumbNowUp() { 
+	bool RightThumbNowUp() {
 		return prevAxes[(ui32)OPgamePadAxis::RS_Y] <= deadzone && axes[(ui32)OPgamePadAxis::RS_Y] > deadzone;
 	}
-	bool RightThumbWasUp() { 
+	bool RightThumbWasUp() {
 		return prevAxes[(ui32)OPgamePadAxis::RS_Y] > deadzone && axes[(ui32)OPgamePadAxis::RS_Y] <= deadzone;
 	}
-	bool RightThumbIsDown() { 
+	bool RightThumbIsDown() {
 		return axes[(ui32)OPgamePadAxis::RS_Y] < -deadzone;
 	}
-	bool RightThumbNowDown() { 
+	bool RightThumbNowDown() {
 		return prevAxes[(ui32)OPgamePadAxis::RS_Y] >= -deadzone && axes[(ui32)OPgamePadAxis::RS_Y] < -deadzone;
 	}
-	bool RightThumbWasDown() { 
+	bool RightThumbWasDown() {
 		return prevAxes[(ui32)OPgamePadAxis::RS_Y] < -deadzone && axes[(ui32)OPgamePadAxis::RS_Y] >= -deadzone;
 	}
 	OPfloat RightThumbX() {
@@ -149,16 +162,16 @@ struct OPgamePad {
 	OPfloat LeftTrigger() {
 		return axes[(ui32)OPgamePadAxis::L2];
 	}
-	bool LeftTriggerWasPressed() { 
+	bool LeftTriggerWasPressed() {
 		return axes[(ui32)OPgamePadAxis::L2] > 0 && prevAxes[(ui32)OPgamePadAxis::L2] <= 0;
 	}
-	bool LeftTriggerWasReleased() { 
+	bool LeftTriggerWasReleased() {
 		return axes[(ui32)OPgamePadAxis::L2] <= 0 && prevAxes[(ui32)OPgamePadAxis::L2] > 0;
 	}
-	bool LeftTriggerIsDown() { 
+	bool LeftTriggerIsDown() {
 		return axes[(ui32)OPgamePadAxis::L2] > 0;
 	}
-	bool LeftTriggerIsUp() { 
+	bool LeftTriggerIsUp() {
 		return axes[(ui32)OPgamePadAxis::L2] <= 0;
 	}
 
@@ -167,23 +180,23 @@ struct OPgamePad {
 	OPfloat RightTrigger() {
 		return axes[(ui32)OPgamePadAxis::R2];
 	}
-	bool RightTriggerWasPressed() { 
+	bool RightTriggerWasPressed() {
 		return axes[(ui32)OPgamePadAxis::R2] > 0 && prevAxes[(ui32)OPgamePadAxis::R2] <= 0;
 	}
-	bool RightTriggerWasReleased() { 
+	bool RightTriggerWasReleased() {
 		return axes[(ui32)OPgamePadAxis::R2] <= 0 && prevAxes[(ui32)OPgamePadAxis::R2] > 0;
 	}
-	bool RightTriggerIsDown() { 
+	bool RightTriggerIsDown() {
 		return axes[(ui32)OPgamePadAxis::R2] > 0;
 	}
-	bool RightTriggerIsUp() { 
-		return axes[(ui32)OPgamePadAxis::R2] <= 0; 
+	bool RightTriggerIsUp() {
+		return axes[(ui32)OPgamePadAxis::R2] <= 0;
 	}
 
 	bool AnyPrevInputIsDown();
 	bool AnyPrevInputIsUp() {
 		return !AnyPrevInputIsDown();
-	}	
+	}
 	bool AnyInputIsDown();
 	bool AnyInputIsUp() {
 		return !AnyInputIsDown();

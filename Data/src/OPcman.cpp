@@ -8,6 +8,7 @@
 #include "./Core/include/OPdir.h"
 #include "./Core/include/OPcore.h"
 #include "./Core/include/Assert.h"
+#include <ctype.h>
 
 OPcman OPCMAN;
 
@@ -18,12 +19,18 @@ bool OPcman::Init(const OPchar* dir) {
 	resourceFiles.Init(sizeof(OPresourceFile));
 	purgeList.Init();
 	hashmap.Init(OP_CMAN_CAP);
-	
-	if (dir) {
-		rootFolder = OPstringCopy(dir);
+
+	if (dir == NULL) {
+		assetDirectoriesCount = 0;
+        OPlogErr("Exec Path: %s", OPEXECUTABLE_PATH);
+		rootFolder = OPstringCreateMerged(OPEXECUTABLE_PATH, "assets/");
 	}
 	else {
-		rootFolder = OPstringCreateMerged(OPEXECUTABLE_PATH, "assets/"); // OPstringCopy("assets/");
+		assetDirectoriesCount = OPstringSplit(dir, '|', &assetDirectories);
+		for (ui32 i = 0; i < assetDirectoriesCount; i++) {
+			OPlogInfo("String Split: %s", assetDirectories[i]);
+		}
+		rootFolder = OPstringCopy(assetDirectories[0]);
 	}
 
 	i32 result;
@@ -42,14 +49,22 @@ bool OPcman::Init(const OPchar* dir) {
 	result = chdir(rootFolder);
 
 	if (result == 0) {
-		OPlog("Directory Changed to: %s", rootFolder);
+		OPlogErr("Directory Changed to: %s", rootFolder);
 	}
 	else {
-		OPlog("!Directory Change Failed: %s", rootFolder);
+		OPlogErr("!Directory Change Failed: %s", rootFolder);
 	}
 #endif
 
 	return true;
+}
+
+void OPcman::ResetCurrentDir() {
+#if defined(OPIFEX_WINDOWS)
+	SetCurrentDirectory(rootFolder);
+#else
+    chdir(rootFolder);
+#endif
 }
 
 bool OPcman::Add(const OPchar* assetKey, OPasset* asset) {
@@ -126,6 +141,50 @@ bool OPcman::Purge() {
 	return false;
 }
 
+void* OPcman::LoadFromFile(const OPchar* path) {
+	const OPchar* ext = NULL;
+	OPint success = 0;
+	OPchar buffer[1024];
+
+	ext = strrchr(path, '.');
+	if (ext == NULL) {
+		return NULL;
+	}
+	//ASSERT(ext != NULL, "Finding extension failed");
+
+	ui32 i = 0;
+	for (; i < strlen(ext); i++) {
+		buffer[i] = tolower(ext[i]);
+	}
+	buffer[i] = NULL;
+
+
+	for (OPint i = 0; i < assetLoaders.Size(); i++) {
+		OPassetLoader* loader = (OPassetLoader*)assetLoaders.Get(i);
+		if (!OPstringEquals(loader->Extension, buffer)) {
+			continue;
+		}
+
+		OPstream* str = OPfile::ReadFromFile(path, 1024);
+		if (str == NULL) {
+			continue;
+		}
+
+		void* assetPtr = NULL;
+		OPint loadResult = loader->Load(str, &assetPtr);
+		str->Destroy();
+		OPfree(str);
+		if (loadResult <= 0) {
+			OPlogErr("Failed to load asset: %s", path);
+			return NULL;
+		}
+
+		return assetPtr;
+	}
+
+	return NULL;
+}
+
 bool OPcman::Load(const OPchar* assetKey) {
 	const OPchar* ext = NULL;
 	OPint success = 0;
@@ -133,13 +192,16 @@ bool OPcman::Load(const OPchar* assetKey) {
 	if(hashmap.Exists(assetKey)){
 		OPasset* existing = NULL;
 		hashmap.Get(assetKey, (void**)&existing);
-	
+
 		ASSERT(existing != NULL, "Hashmap falsely claimed asset existed");
 		return true;
 	}
 
 	ext = strrchr(assetKey, '.');
-	ASSERT(ext != NULL, "Finding extension failed");
+	if (ext == NULL) {
+		return NULL;
+	}
+	//ASSERT(ext != NULL, "Finding extension failed");
 
 	for (OPint i = 0; i < assetLoaders.Size(); i++) {
 		OPassetLoader* loader = (OPassetLoader*)assetLoaders.Get(i);
@@ -147,11 +209,29 @@ bool OPcman::Load(const OPchar* assetKey) {
 			continue;
 		}
 
+
 		// Found the correct loader for this asset extension type
 		OPchar* fullPathToAsset = OPstringCreateMerged(loader->AssetTypePath, assetKey);
+		if (!OPfile::Exists(fullPathToAsset)) {
+			for (ui32 j = 1; j < assetDirectoriesCount; j++) {
+				OPchar* absolutePath = OPstringCreateMerged(assetDirectories[j], fullPathToAsset);
+				if (OPfile::Exists(absolutePath)) {
+					OPfree(fullPathToAsset);
+					fullPathToAsset = absolutePath;
+					break;
+				} else {
+					OPfree(absolutePath);
+				}
+			}
+		}
 		OPstream* str = GetResource(fullPathToAsset);
 		if (str == NULL) {
 			str = OPfile::ReadFromFile(fullPathToAsset, 1024);
+		}
+		if (str == NULL) {
+			OPlogErr("Failed to load asset: %s", fullPathToAsset);
+			OPfree(fullPathToAsset);
+			return false;
 		}
 
 		void* assetPtr;
@@ -177,30 +257,30 @@ bool OPcman::Load(const OPchar* assetKey) {
 bool OPcman::Unload(const OPchar* assetKey) {
 		void* value = NULL;
 		OPasset* asset = NULL;
-	
+
 		if(!hashmap.Exists(assetKey))
 			return false;
-	
+
 		if(!hashmap.Get(assetKey, &value))
 			return false;
 
 		ASSERT(value != NULL, "Hashmap failed to get asset value");
 
 		asset = (OPasset*)value;
-	
+
 		asset->Destroy();
 		OPfree(asset);
 		asset = NULL;
 
 		hashmap.Remove(assetKey);
-	
+
 		return 1;
 	return false;
 }
 
 void* OPcman::Get(const OPchar* assetKey) {
 	OPasset* bucket = NULL;
-	ASSERT(hashmap.Exists(assetKey), "Asset has not been loaded");	
+	ASSERT(hashmap.Exists(assetKey), "Asset has not been loaded");
 	hashmap.Get(assetKey, (void**)&bucket);
 	return bucket->Asset;
 }
@@ -252,37 +332,37 @@ void OPcman::LoadResourcePack(const OPchar* filename) {
 	// Grab the next OPresourceFile slot available
 	OPresourceFile* resource = OPNEW(OPresourceFile());
 	resourceFiles.Push((ui8*)resource);
-	
+
 	// Opens the File handle
 	// The file handle will stay open until the resourceFile is unloaded
 	resource->resourceFile.Init(filename);
-	
+
 	// Get the resourceFile version
 	ui8 version = resource->resourceFile.Readui8();
 	OPlogDebug("Version %d", version);
-	
+
 	// The number of resources in this pack
 	resource->resourceCount = resource->resourceFile.Readui16();
-	
+
 	// The total length of all names
 	// This is used to make a contiguous block of OPchar data so that
 	// the lookup of resources is faster
 	ui32 lengthOfNames = resource->resourceFile.Readui32();
-	
+
 	// Allocate the necessary data
 	// TODO: (garrett) allocate this into a single struct so that there's only 1 allocation
 	resource->resourceNames = (OPchar**)OPalloc(sizeof(OPchar*)* resource->resourceCount);
 	resource->resourceOffset = (ui32*)OPalloc(sizeof(ui32)* resource->resourceCount);
 	resource->resourceSize = (ui32*)OPalloc(sizeof(ui32)* resource->resourceCount);
-	
+
 	OPlogDebug("Resource Count %d", resource->resourceCount);
-	
+
 	for (ui16 i = 0; i < resource->resourceCount; i++) {
 		// TODO: (garrett) Read in the string into a contiguous block of OPchar data
 		resource->resourceNames[i] = resource->resourceFile.ReadString();
 		resource->resourceOffset[i] = resource->resourceFile.Readui32();
 		resource->resourceSize[i] = resource->resourceFile.Readui32();
-	
+
 		OPlogDebug("Resource %s", resource->resourceNames[i]);
 	}
 }
@@ -297,18 +377,20 @@ OPstream* OPcman::GetResource(const OPchar* resourceName) {
 			if (!OPstringEquals(resourceName, resource->resourceNames[j])) {
 				continue;
 			}
-	
+
+			OPlogErr("Found in resource pack %s", resourceName);
+
 			// The resource was found in this pack
 			// Set the seek position into the file
 			// Then load it into an OPstream
 			ui32 offset = resource->resourceOffset[j];
 			ui32 size = resource->resourceSize[j];
-	
+
 			// TODO: (garrett) This should be done in a way that will support threading
 			resource->resourceFile.Seek(offset);
 			OPstream* stream = resource->resourceFile.Read(size);
 			stream->Source = resource->resourceNames[j];
-	
+
 			return stream;
 		}
 	}

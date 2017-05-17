@@ -10,4 +10,6 @@ void OPwindowAPIGLInit(OPwindowAPI* window);
 
 struct OPwindowGL {
 	GLFWwindow* Handle;
+
+	void(*OPWINDOWDROPCALLBACK)(OPuint count, const OPchar**) = NULL;
 };

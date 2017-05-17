@@ -6,7 +6,7 @@ struct OPvertexLayoutBuilder;
 typedef struct OPvertexLayout OPvertexLayout;
 typedef struct OPvertexLayoutBuilder OPvertexLayoutBuilder;
 
-// Assuming we'll never need more than 32 attributes in a vertex layout
+// Assuming we'll never need more than 32 attributes in a vertex layout, if you do, make it larger
 #define OPVERTEX_LAYOUT_BUILDER_MAX 32
 
 #include "./Human/include/Rendering/OPshader.h"
@@ -43,6 +43,7 @@ struct OPvertexLayoutBuilder {
 
 	OPvertexLayoutBuilder* Init();
 	OPvertexLayoutBuilder* Init(ui32 features);
+	OPvertexLayoutBuilder* Add(const OPchar* name, OPattributeTypes attrType, ui32 count);
 	OPvertexLayoutBuilder* Add(OPattributes attribute);
 	OPvertexLayout Build();
 };

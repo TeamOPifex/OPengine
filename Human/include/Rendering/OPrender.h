@@ -5,6 +5,7 @@
 extern OPrenderAPI* OPRENDERER_ACTIVE;
 
 #include "./Human/include/Rendering/Enums/OPrendererType.h"
+#include "./Human/include/Rendering/Enums/OPcullFace.h"
 #include "./Math/include/OPvec3.h"
 #include "./Math/include/OPvec4.h"
 #include "./Core/include/OPtypes.h"
@@ -38,11 +39,24 @@ inline void  OPrenderClear(f32 r, f32 g, f32 b, f32 a) {
 	OPRENDERER_ACTIVE->Clear(r, g, b, a);
 }
 
+inline void  OPrenderClearColor(f32 r, f32 g, f32 b, f32 a) {
+	OPRENDERER_ACTIVE->ClearColor(r, g, b, a);
+}
+
+inline void  OPrenderClearDepth() {
+	OPRENDERER_ACTIVE->ClearDepth();
+}
+
+
 inline void OPrenderCull(bool state) {
 	OPRENDERER_ACTIVE->SetCull(state);
 }
 
-inline void OPrenderCullMode(i8 state) {
+inline void OPrenderSetWireframe(bool state) {
+	OPRENDERER_ACTIVE->SetWireframe(state);
+}
+
+inline void OPrenderCullMode(OPcullFace state) {
 	OPRENDERER_ACTIVE->SetCullMode(state);
 }
 
@@ -62,6 +76,10 @@ inline void OPrenderDepth(bool state) {
 	OPRENDERER_ACTIVE->SetDepthTesting(state);
 }
 
+inline void OPrenderMultisample(bool state) {
+	OPRENDERER_ACTIVE->SetMultisample(state);
+}
+
 inline void OPrenderDepthWrite(bool state) {
 	OPRENDERER_ACTIVE->SetDepthWrite(state);
 }
@@ -74,10 +92,13 @@ inline void OPrenderShutdown() {
 	OPRENDERER_ACTIVE->Shutdown();
 }
 
+inline void  OPrenderClear(f32 r) {
+	OPrenderClear(r, r, r, 1.0f);
+}
+
 inline void  OPrenderClear(f32 r, f32 g, f32 b) {
 	OPrenderClear(r, g, b, 1.0f);
 }
-
 inline void  OPrenderClear(OPvec3 color) {
 	OPrenderClear(color.x, color.y, color.z, 1.0f);
 }

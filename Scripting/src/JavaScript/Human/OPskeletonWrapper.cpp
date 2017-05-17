@@ -13,7 +13,7 @@ JS_RETURN_VAL _OPskeletonUpdate(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPskeleton* skeletonPtr = JS_GET_ARG_PTR(args, 0, OPskeleton);
-    OPskeletonUpdate(skeletonPtr);
+    skeletonPtr->Update();
 
     JS_RETURN_NULL;
 }
@@ -22,7 +22,7 @@ JS_RETURN_VAL _OPskeletonUpdateSelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPskeleton* skeletonPtr = JS_GET_PTR(args.This(), OPskeleton);
-    OPskeletonUpdate(skeletonPtr);
+    skeletonPtr->Update();
 
     JS_RETURN_NULL;
 }
@@ -34,7 +34,7 @@ JS_RETURN_VAL _OPskeletonGet(const JS_ARGS& args) {
 
     OPskeleton* skeletonPtr = JS_GET_ARG_PTR(args, 0, OPskeleton);
     String::Utf8Value str(args[1]->ToString());
-    i16 result = OPskeletonGet(skeletonPtr, *str);
+    i16 result = skeletonPtr->Get(*str);
 
     JS_RETURN(JS_NEW_NUMBER(result));
 }
@@ -47,7 +47,7 @@ JS_RETURN_VAL _OPskeletonGetSelf(const JS_ARGS& args) {
     OPskeleton* skeletonPtr = JS_GET_PTR(args.This(), OPskeleton);
     String::Utf8Value str(args[0]->ToString());
     // OPlog("Find bone %s", *str);
-    i16 result = OPskeletonGet(skeletonPtr, *str);
+    i16 result = skeletonPtr->Get(*str);
 
     JS_RETURN(JS_NEW_NUMBER(result));
 }
@@ -59,7 +59,7 @@ JS_RETURN_VAL _OPskeletonLocalTranslate(const JS_ARGS& args) {
 
     OPskeleton* skeletonPtr = JS_GET_ARG_PTR(args, 0, OPskeleton);
     i16 index = (i16)args[1]->IntegerValue();
-    OPvec3 pos = OPskeletonLocalTranslate(skeletonPtr, index);
+    OPvec3 pos = skeletonPtr->LocalTranslate(index);
 
     OPvec3* ptr = (OPvec3*)OPalloc(sizeof(OPvec3));
     *ptr = pos;
@@ -76,7 +76,7 @@ JS_RETURN_VAL _OPskeletonLocalTranslateSelf(const JS_ARGS& args) {
 
     OPskeleton* skeletonPtr = JS_GET_PTR(args.This(), OPskeleton);
     i16 index = (i16)args[0]->IntegerValue();
-    OPvec3 pos = OPskeletonLocalTranslate(skeletonPtr, index);
+    OPvec3 pos = skeletonPtr->LocalTranslate(index);
 
     OPvec3* ptr = (OPvec3*)OPalloc(sizeof(OPvec3));
     *ptr = pos;
@@ -90,7 +90,7 @@ JS_RETURN_VAL _OPskeletonDestroy(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPskeleton* skeletonPtr = JS_GET_PTR(args.This(), OPskeleton);
-    OPskeletonDestroy(skeletonPtr);
+    skeletonPtr->Destroy();
 
     JS_RETURN_NULL;
 }
@@ -99,7 +99,7 @@ JS_RETURN_VAL _OPskeletonDestroySelf(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
     OPskeleton* skeletonPtr = JS_GET_ARG_PTR(args, 0, OPskeleton);
-    OPskeletonDestroy(skeletonPtr);
+    skeletonPtr->Destroy();
 
     JS_RETURN_NULL;
 }
@@ -158,8 +158,8 @@ JS_RETURN_VAL _OPskeletonCreate(const JS_ARGS& args) {
         names[i] = OPstringCopy(*name);
     }
 
-    OPskeleton* skeleton = OPskeletonCreate(hierarchy, pose, count, names);
-    OPskeletonWrapperCreate(result, skeleton);
+    //OPskeleton* skeleton = OPskeletonCreate(hierarchy, pose, count, names);
+    //OPskeletonWrapperCreate(result, skeleton);
 
     JS_RETURN(result);
 }

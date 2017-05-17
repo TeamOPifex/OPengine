@@ -15,11 +15,11 @@ OPgamePad* OPgamePadSystem::Get(OPgamePadIndex index) {
 	return &gamePads[(ui32)index];
 }
 
-void OPgamePadSystem::Update()
+void OPgamePadSystem::Update(OPtimer* timer)
 {
 	for (OPint i = (ui32)OPgamePadIndex::_MAX; i--; )
 	{
-		gamePads[i].Update();
+		gamePads[i].Update(timer);
 	}
 }
 

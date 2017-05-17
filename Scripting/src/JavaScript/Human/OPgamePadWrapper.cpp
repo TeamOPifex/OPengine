@@ -204,7 +204,8 @@ JS_RETURN_VAL _OPgamePadLeftTriggerIsDownSelf(const JS_ARGS& args) {
 }
 
 JS_RETURN_VAL _OPgamePadUpdate(const JS_ARGS& args) {
-	OPGAMEPADS.Update();
+	OPtimer* ptr = JS_GET_PTR(args[0]->ToObject(), OPtimer);
+	OPGAMEPADS.Update(ptr);
     JS_RETURN_NULL;
 }
 

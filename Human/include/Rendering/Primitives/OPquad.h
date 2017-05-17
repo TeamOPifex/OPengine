@@ -4,7 +4,7 @@ struct OPquad;
 typedef struct OPquad OPquad;
 
 #include "./Human/include/Rendering/OPrenderBuffer.h"
-#include "./Human/include/Rendering/OPmesh.h"
+#include "./Human/include/Rendering/OPmodel.h"
 #include "./Human/include/Rendering/OPmeshPacker.h"
 #include "./Human/include/Rendering/OPmeshPacked.h"
 #include "./Math/include/OPvec2.h"
@@ -14,15 +14,16 @@ struct OPquad {
 };
 
 // OPmesh       OPquadCreate(OPint features, OPvec2 size);
-OPmesh*       OPquadCreate();
-OPmesh*       OPquadCreate(OPfloat width, OPfloat height);
-OPmesh*       OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset);
-OPmesh*		 OPquadCreate(OPfloat width, OPfloat height, OPvec2 texcoordStart, OPvec2 texcoordEnd);
-OPmesh*       OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd);
-OPmesh*       OPquadCreateZPlane();
-OPmesh*       OPquadCreateZPlane(OPfloat width, OPfloat depth);
-OPmesh*       OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OPvec2 texcoordEnd);
-OPmeshPacked OPquadCreatePacked();
-OPmesh*       OPquadNormCreate();
-OPmeshPacked OPquadNormCreatePacked();
+OPmodel*       OPquadCreate();
+OPmodel*       OPquadCreate(OPfloat width, OPfloat height);
+OPmodel*       OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset);
+OPmodel*		 OPquadCreate(OPfloat width, OPfloat height, OPvec2 texcoordStart, OPvec2 texcoordEnd);
+OPmodel*       OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texcoordStart, OPvec2 texcoordEnd);
+OPmodel*       OPquadCreateZPlane();
+OPmodel*       OPquadCreateZPlane(OPfloat width, OPfloat depth);
+OPmodel*       OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OPvec2 texcoordEnd);
+OPmodel*       OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OPvec2 texcoordEnd, ui32 features);
+//OPmeshPacked OPquadCreatePacked();
+OPmodel*       OPquadNormCreate();
+//OPmeshPacked OPquadNormCreatePacked();
 void         OPquadDestroy(OPmesh* quad);

@@ -21,26 +21,51 @@ OPint OPloaderOPskeletonLoad(OPstream* str, OPskeleton** skeleton) {
 
 	ASSERT(boneCount < OPSKELETON_MAX_BONE_COUNT, "Skeleton cannot contain more than OPSKELETON_MAX_BONE_COUNT");
 
+
+
 	i16 hierarchy[OPSKELETON_MAX_BONE_COUNT];
 	OPchar* jointNames[OPSKELETON_MAX_BONE_COUNT];
-	OPmat4 pose[OPSKELETON_MAX_BONE_COUNT];
+	OPmat4 bindPose[OPSKELETON_MAX_BONE_COUNT];
+	OPmat4 offsets[OPSKELETON_MAX_BONE_COUNT];
+
+
+	OPmat4 globalInverseBindPose = OPMAT4_IDENTITY;
+	for (ui32 j = 0; j < 4; j++) {
+		for (ui32 k = 0; k < 4; k++) {
+			globalInverseBindPose[k][j] = str->F32();
+		}
+	}
+	//globalInverseBindPose.SetIdentity();
 
 	for (i32 i = 0; i < boneCount; i++) {
 		hierarchy[i] = str->I16();
+		//OPlogErr("hier: %d", hierarchy[i]);
 		jointNames[i] = str->String();
-		OPlog(jointNames[i]);
+		//OPlog(jointNames[i]);
 
-		for (i32 c = 0; c < 4; c++) {
-			pose[i][c][0] = str->F32();
-			pose[i][c][1] = str->F32();
-			pose[i][c][2] = str->F32();
-			pose[i][c][3] = str->F32();
+		//OPlogErr("Pose");
+		for (ui32 j = 0; j < 4; j++) {
+			for (ui32 k = 0; k < 4; k++) {
+				bindPose[i][k][j] = str->F32();
+				//OPlogErr("%f", pose[i][k][j]);
+			}
 		}
+		//OPmat4Log("Pose", bindPose[i]);
+		//pose[i].SetIdentity();
+		// pose[i] = OPmat4Transpose(pose[i]);
 
-		pose[i] = OPmat4Transpose(pose[i]);
+		//OPlogErr("Offset");
+		for (ui32 j = 0; j < 4; j++) {
+			for (ui32 k = 0; k < 4; k++) {
+				offsets[i][k][j] = str->F32();
+				//OPlogErr("%f", offsets[i][k][j]);
+			}
+		}
+		//offsets[i].SetIdentity();
+		//OPmat4Log("Offset", offsets[i]);
 	}
 
-	*skeleton = OPskeletonCreate(hierarchy, pose, boneCount, jointNames);
+	*skeleton = OPskeleton::Create(hierarchy, bindPose, offsets, globalInverseBindPose, boneCount, jointNames);
 
 	//OPstreamDestroy(str);
 
@@ -48,6 +73,6 @@ OPint OPloaderOPskeletonLoad(OPstream* str, OPskeleton** skeleton) {
 }
 
 OPint OPloaderOPskeletonUnload(OPskeleton* skeleton) {
-	OPskeletonDestroy(skeleton);
+	skeleton->Destroy();
 	return 1;
 }

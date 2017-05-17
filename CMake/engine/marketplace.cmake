@@ -1,5 +1,3 @@
-#!/usr/bin/cmake -P
-
 macro(temp_name fname)
   if(${ARGC} GREATER 1) # Have to escape ARGC to correctly compare
     set(_base ${ARGV1})
@@ -23,9 +21,12 @@ macro(eval expr)
   file(REMOVE ${_fname})
 endmacro(eval)
 
+# Add the project itself to the list of projects to be built
+# This is done for every addon but might not have a project to add
+# the addon will determine that.
 function(add_marketplace_addons_projects)
   foreach(ADDON ${OPENGINE_ADDONS})
-    message(STATUS "************ Addon: ${ADDON}")
+    message("Addon: ${ADDON}")
     include(${OPIFEX_MARKETPLACE}/${ADDON}/addon.cmake)
     string(REPLACE "." ";" VERSION_LIST ${ADDON})
     list(GET VERSION_LIST 0 ADDON_NAME)
@@ -33,62 +34,80 @@ function(add_marketplace_addons_projects)
   endforeach()
 endfunction(add_marketplace_addons_projects)
 
-function(add_marketplace_addons APPLICATION_TARGET FOLDER)
+
+macro(add_marketplace_addons APPLICATION_TARGET FOLDER ADDITIONAL)
 
   foreach(ADDON ${OPENGINE_ADDONS})
-
-    message(STATUS "************ Addon: ${ADDON}")
 
     include(${OPIFEX_MARKETPLACE}/${ADDON}/addon.cmake)
 
     string(REPLACE "." ";" VERSION_LIST ${ADDON})
     list(GET VERSION_LIST 0 ADDON_NAME)
 
-    eval("ADDON_${ADDON_NAME}(APPLICATION_TARGET ${FOLDER})")
+    eval("if(COMMAND ADDON_${ADDON_NAME}_INCLUDES)\nADDON_${ADDON_NAME}_INCLUDES()\n endif()")
+    eval("if(COMMAND ADDON_${ADDON_NAME})\nADDON_${ADDON_NAME}(${APPLICATION_TARGET} ${FOLDER})\nendif()")
 
     SET(TEMP_RESULT "")
+    eval("if(COMMAND ADDON_${ADDON_NAME}_LINK)\nADDON_${ADDON_NAME}_LINK(TEMP_RESULT)\nendif()")
 
-    eval("ADDON_${ADDON_NAME}_LINK(TEMP_RESULT)")
-
-    message(STATUS "************ Result: ${ADDON_NAME} ${TEMP_RESULT}")
-
-    eval("target_link_libraries(${APPLICATION_TARGET} ${TEMP_RESULT})")
+    message(STATUS "LINK TO ${TEMP_RESULT}")
+    target_link_libraries(${APPLICATION_TARGET} ${TEMP_RESULT})
     add_definitions(-DADDON_${ADDON_NAME})
 
-    eval("ADDON_${ADDON_NAME}_DEFINES(TEMP_RESULT)")
+    SET(TEMP_RESULT "")
+    eval("if(COMMAND ADDON_${ADDON_NAME}_DEFINES)\nADDON_${ADDON_NAME}_DEFINES(TEMP_RESULT)\nendif()")
     add_definitions(${TEMP_RESULT})
+
+    SET(TEMP_RESULT "")
+    eval("if(COMMAND ADDON_${ADDON_NAME}_ASSETS)\nADDON_${ADDON_NAME}_ASSETS(TEMP_RESULT)\nendif()")
+    IF(TEMP_RESULT STREQUAL "")
+    ELSE()
+      SET(${ADDITIONAL} "${${ADDITIONAL}}|${TEMP_RESULT}")
+    ENDIF()
 
   endforeach()
 
-endfunction(add_marketplace_addons)
+endmacro(add_marketplace_addons)
 
-function(add_marketplace_defines APPLICATION_TARGET FOLDER)
+# Add only the defines for each addon
+macro(add_marketplace_assets ADDITIONAL)
 
     foreach(ADDON ${OPENGINE_ADDONS})
-
-      message(STATUS "************ Addon: ${ADDON}")
 
       include(${OPIFEX_MARKETPLACE}/${ADDON}/addon.cmake)
 
       string(REPLACE "." ";" VERSION_LIST ${ADDON})
       list(GET VERSION_LIST 0 ADDON_NAME)
 
-      eval("ADDON_${ADDON_NAME}(APPLICATION_TARGET ${FOLDER})")
-
       SET(TEMP_RESULT "")
+      eval("if(COMMAND ADDON_${ADDON_NAME}_ASSETS)\nADDON_${ADDON_NAME}_ASSETS(TEMP_RESULT)\nendif()")
+      IF(TEMP_RESULT STREQUAL "")
+      ELSE()
+        SET(${ADDITIONAL} "${${ADDITIONAL}}|${TEMP_RESULT}")
+      ENDIF()
 
-      eval("ADDON_${ADDON_NAME}_LINK(TEMP_RESULT)")
+    endforeach()
 
-      message(STATUS "************ Result: ${ADDON_NAME} ${TEMP_RESULT}")
+endmacro(add_marketplace_assets)
 
-      eval("target_link_libraries(${APPLICATION_TARGET} ${TEMP_RESULT})")
+# Add only the defines for each addon
+macro(add_marketplace_defines)
+
+    foreach(ADDON ${OPENGINE_ADDONS})
+
+      include(${OPIFEX_MARKETPLACE}/${ADDON}/addon.cmake)
+
+      string(REPLACE "." ";" VERSION_LIST ${ADDON})
+      list(GET VERSION_LIST 0 ADDON_NAME)
+
+      eval("if(COMMAND ADDON_${ADDON_NAME}_INCLUDES)\nADDON_${ADDON_NAME}_INCLUDES()\nendif()")
+
       add_definitions(-DADDON_${ADDON_NAME})
 
-      eval("ADDON_${ADDON_NAME}_DEFINES(TEMP_RESULT)")
+      SET(TEMP_RESULT "")
+      eval("if(COMMAND ADDON_${ADDON_NAME}_DEFINES)\nADDON_${ADDON_NAME}_DEFINES(TEMP_RESULT)\nendif()")
       add_definitions(${TEMP_RESULT})
 
     endforeach()
 
-endfunction(add_marketplace_defines)
-
-message(STATUS "ADDED add_marketplace_addons FUNCTION")
+endmacro(add_marketplace_defines)

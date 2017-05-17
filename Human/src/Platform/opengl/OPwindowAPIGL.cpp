@@ -3,6 +3,7 @@
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Rendering/OPwindow.h"
 #include "./Human/include/Rendering/API/OPrenderer.h"
+#include "./Human/include/Input/OPmouse.h"
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/Assert.h"
 
@@ -16,6 +17,15 @@ ui32 OPkeyboardMappingGL[(ui32)OPkeyboardKey::_MAX];
 #define OPIFEX_OPENGL_MINOR 3
 #endif
 
+void glfwScrollCallback(GLFWwindow* window, double x, double y) {
+	OPMOUSE.updatedWheel = y;
+}
+
+void glfwWindowfocusCallback(GLFWwindow* glfwWindow, int focused) {
+	OPwindow* window = (OPwindow*)glfwGetWindowUserPointer(glfwWindow);
+	window->focused = focused == GLFW_TRUE;
+}
+
 OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameters windowParameters) {
 	//ASSERT(windowParameters.fullscreen == false || (windowParameters.fullscreen && monitor != NULL), "To create a fullscreen window, a monitor must be declared");
 
@@ -28,16 +38,15 @@ OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameter
 		display = monitorGL->Handle;
 	}
 
-
 	OPint result = glfwInit();
 	if (!result) {
 		OPlogErr("Failed to initialize GLFW");
 		return NULL;
 	}
 
-	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, OPIFEX_OPENGL_MAJOR);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPIFEX_OPENGL_MINOR);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 
 #ifdef OPIFEX_OSX
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -45,9 +54,12 @@ OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameter
 #endif
 	glfwWindowHint(GLFW_DECORATED, !windowParameters.borderless);
 	windowGL->Handle = glfwCreateWindow(windowParameters.width, windowParameters.height, windowParameters.title, display, NULL);
+	glfwSetWindowUserPointer(windowGL->Handle, window);
 
 	//glfwSetCharCallback(window, glfwCharacterCallback);
 	//glfwSetDropCallback(window, glfwWindowDropCallback);
+	glfwSetScrollCallback(windowGL->Handle, glfwScrollCallback);
+	glfwSetWindowFocusCallback(windowGL->Handle, glfwWindowfocusCallback);
 
 	ASSERT(windowGL->Handle != NULL, "Unable to create the window.");
 
@@ -58,12 +70,22 @@ OPwindow* OPwindowGLInit(OPwindow* window, OPmonitor* monitor, OPwindowParameter
 
 	int w, h;
 	glfwGetFramebufferSize(windowGL->Handle, &w, &h);
-	window->WidthScaled = w / (f32)window->WindowWidth;
-	window->HeightScaled = h / (f32)window->WindowHeight;
-	window->Width = (ui32)(window->WidthScaled * window->WindowWidth);
-	window->Height = (ui32)(window->HeightScaled * window->WindowHeight);
+	window->WidthScale = w / (f32)window->WindowWidth;
+	window->HeightScale = h / (f32)window->WindowHeight;
+	window->Width = window->WindowWidth;
+	window->Height = window->WindowHeight;
+	window->WindowWidth *= window->WidthScale;
+	window->WindowHeight *= window->HeightScale;
 
-    OPlogInfo("Window Scale: %f, %f", window->WidthScaled, window->HeightScaled);
+    OPlogInfo("Frame Size: %d, %d", window->Width, window->Height);
+    OPlogInfo("Window Size: %d, %d", window->WindowWidth, window->WindowHeight);
+    OPlogInfo("Window Scale: %f, %f", window->WidthScale, window->HeightScale);
+
+	glEnable(GL_MULTISAMPLE_ARB);
+	glEnable(GL_BLEND);
+	glEnable(GL_MULTISAMPLE);
+
+	glfwSwapInterval(0);
 
 	return window;
 }
@@ -81,7 +103,7 @@ void OPwindowGLBind(OPwindow* window) {
 	OPwindowGL* windowGL = (OPwindowGL*)window->internalPtr;
 	glfwMakeContextCurrent(windowGL->Handle);
 
-	OPrenderSetViewport(0, 0, (OPuint)window->Width, (OPuint)window->Height);
+	OPrenderSetViewport(0, 0, (OPuint)window->WindowWidth, (OPuint)window->WindowHeight);
 
 	OPRENDERER_ACTIVE->OPWINDOW_ACTIVE = window;
 	ASSERT(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE == window, "How can this even happen?");
@@ -137,6 +159,21 @@ void OPwindowGLUnbind(OPwindow* window) {
 	OPRENDERER_ACTIVE->OPWINDOW_ACTIVE = NULL;
 }
 
+void OPwindowGLDrop(GLFWwindow* windowGLFW, int count, const char** names) {
+	void* windowPtr = glfwGetWindowUserPointer(windowGLFW);
+	if (windowPtr == NULL) return;
+	OPwindow* window = (OPwindow*)windowPtr;
+	OPwindowGL* windowGL = (OPwindowGL*)window->internalPtr;
+	if (windowGL->OPWINDOWDROPCALLBACK == NULL) return;
+	windowGL->OPWINDOWDROPCALLBACK(count, names);
+}
+
+void OPwindowGLSetDropCallback(OPwindow* window, void(*callback)(OPuint count, const OPchar**)) {
+	OPwindowGL* windowGL = (OPwindowGL*)window->internalPtr;
+	glfwSetDropCallback(windowGL->Handle, OPwindowGLDrop);
+	windowGL->OPWINDOWDROPCALLBACK = callback;
+}
+
 void OPwindowGLDestroy(OPwindow* window) {
 	OPwindowGL* windowGL = (OPwindowGL*)window->internalPtr;
 	OPwindowGLUnbind(window);
@@ -153,6 +190,7 @@ void OPwindowAPIGLInit(OPwindowAPI* window) {
 	window->SetPosition = OPwindowSetPositionGL;
 	window->Focus = OPwindowFocusGL;
 	window->Update = OPwindowGLUpdate;
+	window->SetDropCallback = OPwindowGLSetDropCallback;
 	window->GetCursorPos = OPwindowGLGetCursorPos;
 	window->GetButtonState = OPwindowGLGetButtonState;
 	window->GetKeyboardState = OPwindowGLGetKeyboardState;

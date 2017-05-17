@@ -1,15 +1,15 @@
 #pragma once
 
-struct OPgameState;
-typedef struct OPgameState OPgameState;
+class OPgameState;
 
 #include "./Core/include/OPtimer.h"
 
-struct OPgameState {
-	void (*Init)(OPgameState*);
-	OPint(*Update)(struct OPtimer*);
-	void(*Render)(OPfloat);
-	OPint (*Exit)(OPgameState*);
+class OPgameState {
+public:
+	virtual void Init(OPgameState*) = 0;
+	virtual OPint Update(struct OPtimer*) = 0;
+	virtual void Render(OPfloat) = 0;
+	virtual OPint Exit(OPgameState*) = 0;
 	void* Data;
 
 
@@ -24,7 +24,7 @@ struct OPgameState {
 	* @param exit The Exit function for the game state
 	* @return A new OPgameState
 	*/
-	static OPgameState* Create(void(*init)(OPgameState*), OPint(*update)(struct OPtimer*), OPint(*exit)(OPgameState*));
+	//static OPgameState* Create(void(*init)(OPgameState*), OPint(*update)(struct OPtimer*), OPint(*exit)(OPgameState*));
 
 	/* Destroys an OPgameState by deallocating the memory
 	* @param state The game state to destroy

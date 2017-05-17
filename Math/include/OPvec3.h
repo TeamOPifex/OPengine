@@ -248,6 +248,7 @@ inline OPfloat OPvec3DistSquare(OPvec3 a, OPvec3 b) {
 	return OPvec3Dot(dif, dif);
 }
 
+// TODO: (garrett) This doesn't seem to work, probably need to get rid of this
 inline OPfloat OPvec3Angle(OPvec3 a, OPvec3 b) {
 	OPfloat temp = 0;
 
@@ -313,3 +314,18 @@ inline OPvec3 OPvec3Tween(OPvec3 a, OPvec3 b, OPfloat delta) {
 		a.z + (b.z - a.z) * delta
 		);
 }
+
+///
+/// Determines if a position point is in a target field of view (cone shape)
+///
+bool OPvec3InLineOfSight(OPvec3 position, OPvec3 looking, OPvec3 targetPosition, OPfloat sightFOVDegrees, OPfloat sightDistance);
+
+///
+/// Determines if a position sphere is in a target field of view (cone shape)
+///
+bool OPvec3InLineOfSight(OPvec3 position, OPvec3 looking, OPvec3 targetPosition, OPfloat targetRadius, OPfloat sightFOVDegrees, OPfloat sightDistance);
+
+///
+/// Determines if a position sphere is in a target field of view (cone shape) or radius
+///
+bool OPvec3InLineOfSight(OPvec3 position, OPvec3 looking, OPfloat radius, OPvec3 targetPosition, OPfloat targetRadius, OPfloat sightFOVDegrees, OPfloat sightDistance);

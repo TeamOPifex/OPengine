@@ -5,103 +5,96 @@
 #include "./Human/include/Rendering/OPMvertex.h"
 #include "./Human/include/Systems/OPinputSystem.h"
 
-typedef struct {
-	OPmesh* Mesh;
+class TexturedExample : public OPgameState {
+	OPmodel* Mesh;
 	OPeffect Effect;
 	OPcam Camera;
 	ui32 Rotation;
 	OPtexture* Texture;
-} TexturedExample;
 
-TexturedExample* texturedExample;
+	void Init(OPgameState* last) {
+		// OPCMAN.Load("adobe.opm");
+		// OPCMAN.Load("adobe.png");
+		OPCMAN.Load("Common/Texture.frag");
+		OPCMAN.Load("Common/Texture3D.vert");
+		
+		OPjson* meta = (OPjson*)OPCMAN.LoadGet("Models/adobe.opm.meta");
+		const OPchar* _model = "swordsman.opm";// meta->Get("model").String();
+		const OPchar* _texture = "swordsman.png";// meta->Get("texture").String();
 
-void ExampleTexturedEnter(OPgameState* last) {
-	// OPCMAN.Load("adobe.opm");
-	// OPCMAN.Load("adobe.png");
-	OPCMAN.Load("Common/Texture.frag");
-	OPCMAN.Load("Common/Texture3D.vert");
 
-	texturedExample = (TexturedExample*)OPalloc(sizeof(TexturedExample));
+		Mesh = (OPmodel*)OPCMAN.LoadGet(_model);
+		Texture = (OPtexture*)OPCMAN.LoadGet(_texture);
+		Rotation = 0;
 
-	OPjson* meta = (OPjson*)OPCMAN.LoadGet("Models/adobe.opm.meta");
-	const OPchar* _model = "candles.opm";// meta->Get("model").String();
-	const OPchar* _texture = "cemetery.png";// meta->Get("texture").String();
+		//OPshaderAttribute attribs[] = {
+		//	{ "aPosition", GL_FLOAT, 3 },
+		//	{ "aNormal", GL_FLOAT, 3 },
+		//	{ "aUV", GL_FLOAT, 2 }
+		//};
 
-	texturedExample->Mesh = (OPmesh*)OPCMAN.LoadGet(_model);
-	texturedExample->Texture = (OPtexture*)OPCMAN.LoadGet(_texture);
-	texturedExample->Rotation = 0;
+		OPshader* vert = (OPshader*)OPCMAN.Get("Common/Texture3D.vert");
+		OPshader* frag = (OPshader*)OPCMAN.Get("Common/Texture.frag");
+		Effect.Init(vert, frag);
+		Effect.AddUniform("uColorTexture");
+		//Effect->AddUniform("vLightDirection");
+		Effect.AddUniform("uWorld");
+		Effect.AddUniform("uProj");
+		Effect.AddUniform("uView");
 
-	//OPshaderAttribute attribs[] = {
-	//	{ "aPosition", GL_FLOAT, 3 },
-	//	{ "aNormal", GL_FLOAT, 3 },
-	//	{ "aUV", GL_FLOAT, 2 }
-	//};
+		Mesh->vertexLayout.SetOffsets(&Effect);
+		Mesh->vertexArray.SetLayout(&Mesh->vertexLayout);
 
-	OPshader* vert = (OPshader*)OPCMAN.Get("Common/Texture3D.vert");
-	OPshader* frag = (OPshader*)OPCMAN.Get("Common/Texture.frag");
-	texturedExample->Effect.Init(vert, frag);
-	texturedExample->Effect.AddUniform("uColorTexture");
-	//texturedExample->Effect->AddUniform("vLightDirection");
-	texturedExample->Effect.AddUniform("uWorld");
-	texturedExample->Effect.AddUniform("uProj");
-	texturedExample->Effect.AddUniform("uView");
-
-	texturedExample->Mesh->vertexLayout.SetOffsets(&texturedExample->Effect);
-	texturedExample->Mesh->vertexArray.SetLayout(&texturedExample->Mesh->vertexLayout);
-
-	texturedExample->Camera.SetPerspective(
-		OPVEC3_ONE * 10.0,
-		OPvec3Create(0, 0, 0),
-		OPvec3Create(0, 1, 0),
-		0.1f,
-		1000.0f,
-		45.0f,
-		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
+		Camera.SetPerspective(
+			OPVEC3_ONE * 50.0,
+			OPvec3Create(0, 0, 0),
+			OPvec3Create(0, 1, 0),
+			0.1f,
+			1000.0f,
+			45.0f,
+			OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
-	OPrenderDepth(1);
-}
+		OPrenderDepth(1);
+	}
 
-OPint ExampleTexturedUpdate(OPtimer* time) {
-	OPrenderClear(0, 0, 0);
+	OPint Update(OPtimer* time) {
+		OPrenderClear(0, 0, 0);
 
-	if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { texturedExample->Rotation++; }
+		if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { Rotation++; }
 
-	texturedExample->Effect.Bind();
-	texturedExample->Mesh->Bind();
+		Effect.Bind();
+		Mesh->Bind();
 
-	OPmat4 world;
-	world = OPmat4RotY(texturedExample->Rotation / 100.0f);
-	world.Scl(0.1f);
+		OPmat4 world;
+		world = OPmat4RotY(Rotation / 100.0f);
+		world.Scl(0.1f);
 
-	OPeffectSet("uColorTexture", texturedExample->Texture, 0);
+		OPeffectSet("uColorTexture", Texture, 0);
 
-	OPeffectSet("uWorld", &world);
-	OPeffectSet("uProj", &texturedExample->Camera.proj);
-	OPeffectSet("uView", &texturedExample->Camera.view);
+		OPeffectSet("uWorld", &world);
+		OPeffectSet("uProj", &Camera.proj);
+		OPeffectSet("uView", &Camera.view);
 
-	//OPvec3 light = OPvec3Create(0, 1, 0);
-	//OPeffectSet("vLightDirection", &light);
+		//OPvec3 light = OPvec3Create(0, 1, 0);
+		//OPeffectSet("vLightDirection", &light);
 
-	OPmeshRender();
+		OPrenderDrawBufferIndexed(0);
 
-	OPrenderPresent();
-	return false;
-}
-void ExampleTexturedRender(OPfloat delta) {
+		OPrenderPresent();
+		return false;
+	}
+	void Render(OPfloat delta) {
 
-}
-OPint ExampleTexturedExit(OPgameState* next) {
-	texturedExample->Effect.Destroy();
+	}
+	OPint Exit(OPgameState* next) {
+		Effect.Destroy();
+		
+		return 0;
+	}
+};
 
-	OPfree(texturedExample);
 
-	return 0;
-}
 
 OPint GS_EXAMPLE_TEXTURED_AVAILABLE = 1;
-OPgameState GS_EXAMPLE_TEXTURED = {
-	ExampleTexturedEnter,
-	ExampleTexturedUpdate,
-	ExampleTexturedRender,
-	ExampleTexturedExit
-};
+TexturedExample _GS_EXAMPLE_TEXTURED;
+OPgameState* GS_EXAMPLE_TEXTURED = &_GS_EXAMPLE_TEXTURED;

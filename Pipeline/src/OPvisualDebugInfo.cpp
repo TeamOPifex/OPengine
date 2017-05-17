@@ -96,7 +96,9 @@ OPvisualDebugInfo OPVISUALDEBUGINFO;
 
 void OPvisualDebugInfo::PreInitSetup() {
 #ifdef ADDON_imgui
-    OPALLOCATIONTRACKER = _memoryTrackerFunc;
+	#ifdef _DEBUG
+		OPALLOCATIONTRACKER = _memoryTrackerFunc;
+	#endif
 #endif
 }
 
@@ -118,16 +120,21 @@ void OPvisualDebugInfo::Update(OPtimer* timer) {
 #endif
 }
 
-void OPvisualDebugInfo::Render(OPfloat delta) {
+void OPvisualDebugInfo::Begin() {
+#ifdef ADDON_imgui
+	OPimguiNewFrame();
+#endif
+}
+
+void OPvisualDebugInfo::DrawWindows(OPfloat delta) {
 
 #ifdef ADDON_imgui
+
 	// Add Debug Info Here
 	if (!openDebugInfo) return;
 
 	f32 bytesInKB = 1024;
 	f32 bytesInMB = bytesInKB * 1024;
-
-	OPimguiNewFrame();
 
 	ImGui::SetNextWindowPos(ImVec2(10, 10));
 	if (!ImGui::Begin("Example: Fixed Overlay", &openDebugInfo, ImVec2(0, 0), 0.3f, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings))
@@ -142,6 +149,7 @@ void OPvisualDebugInfo::Render(OPfloat delta) {
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::Separator();
 
+#ifdef _DEBUG
 	if (OPallocationBytes > bytesInMB) {
 		ImGui::Text("Bytes Allocated: %.2f MB", OPallocationBytes / (f32)bytesInMB);
 	}
@@ -175,6 +183,7 @@ void OPvisualDebugInfo::Render(OPfloat delta) {
 
 	ImGui::Text("Total Allocations: %d", OPallocations);
 	ImGui::Text("Total Deallocations: %d", OPdeallocations);
+#endif
 	ImGui::Separator();
 
 	arr[ind] = ImGui::GetIO().Framerate;
@@ -280,7 +289,13 @@ void OPvisualDebugInfo::Render(OPfloat delta) {
 	}
 
 	//ImGui::ShowTestWindow();
+#endif
+}
 
+void OPvisualDebugInfo::Render(OPfloat delta) {
+#ifdef ADDON_imgui
+	Begin();
+	DrawWindows(delta);
 	ImGui::Render();
 #endif
 }

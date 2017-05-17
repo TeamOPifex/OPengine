@@ -6,22 +6,6 @@
 #include "./Data/include/OPlist.h"
 #include "./Core/include/OPlog.h"
 
-enum ModelFeatures {
-	Model_Positions = 0,
-	Model_Normals = 1,
-	Model_UVs = 2,
-	Model_Colors = 3,
-	Model_Indices = 4,
-	Model_Tangents = 5,
-	Model_Bones = 6,
-	Model_Skinning = 7,
-	Model_Animations = 8,
-	Model_Skeletons = 9,
-	Model_Meta = 10,
-	Model_BiTangents = 11,
-	MAX_FEATURES
-};
-
 
 #include <iostream>
 #include <fstream>
@@ -39,6 +23,9 @@ void writeF32(ofstream* stream, f32 val) {
 void writeI16(ofstream* stream, i16 val) {
 	write(stream, &val, sizeof(i16));
 }
+void writeU8(ofstream* stream, ui8 val) {
+	write(stream, &val, sizeof(ui8));
+}
 void writeU16(ofstream* stream, ui16 val) {
 	write(stream, &val, sizeof(ui16));
 }
@@ -47,6 +34,17 @@ void writeI32(ofstream* stream, i32 val) {
 }
 void writeU32(ofstream* stream, ui32 val) {
 	write(stream, &val, sizeof(ui32));
+}
+void writeString(ofstream* stream, const OPchar* val) {
+	if (val == NULL) {
+		writeU32(stream, 0);
+		return;
+	}
+
+	ui32 len = strlen(val);
+	writeU32(stream, len);
+	if (len == 0) return;
+	write(stream, (void*)val, len * sizeof(OPchar));
 }
 
 OPint IsParam(char** argv, ui16 pos, i8* arg) {

@@ -30,7 +30,7 @@ OPchar* OPdirCurrent() {
 
 	cCurrentPath[sizeof(cCurrentPath) - 1] = '\0'; /* not really required */
 
-	OPlogInfo("Working Directory: %s", cCurrentPath);
+	OPlogErr("Working Directory: %s", cCurrentPath);
 
 	len = (ui32)strlen(cCurrentPath) + 2;
 	result = (OPchar*)OPalloc(sizeof(OPchar) * len);
@@ -79,6 +79,15 @@ OPchar* OPdirExecutable() {
 		len = _NSGetExecutablePath(ownPth, &len);
 		realpath(ownPth, tmpPth);
 
+        int ret;
+        pid_t pid;
+        char pathbuf[PROC_PIDPATHINFO_MAXSIZE];
+
+        pid = getpid();
+        ret = proc_pidpath (pid, pathbuf, sizeof(pathbuf));
+        OPlogErr("Other %s", pathbuf);
+		realpath(pathbuf, tmpPth);
+
 		len = strlen(tmpPth);
 		for(ui32 i = 0; i < len; i++) {
 			if(tmpPth[i] == '/') {
@@ -88,11 +97,15 @@ OPchar* OPdirExecutable() {
 		if(lastSlash > -1) {
 			tmpPth[lastSlash + 1] = '\0';
 		}
-		OPlog("The executable directory is \n%s\n%s", ownPth, tmpPth);
+		OPlogErr("The executable directory is \n%s\n%s", pathbuf, tmpPth);
 
-		len = strlen(tmpPth);
+        len = strlen(tmpPth);
 		result = (OPchar*)OPalloc(sizeof(OPchar)* len);
 		OPmemcpy(result, tmpPth, sizeof(OPchar)* len);
+        //result[len] = '/';
+		// len = strlen(tmpPth);
+		// result = (OPchar*)OPalloc(sizeof(OPchar)* len);
+		// OPmemcpy(result, tmpPth, sizeof(OPchar)* len);
 		result[len] = '\0';
 
 		return result;

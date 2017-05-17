@@ -9,14 +9,16 @@ macro(add_source_group FILTER_NAME SOURCE_PATH TARGET_LIST)
 		"${SOURCE_PATH}/*.cc"
 		"${SOURCE_PATH}/*.mm"
 		"${SOURCE_PATH}/*.m"
+		"${SOURCE_PATH}/*.ico"
+		"${SOURCE_PATH}/*.rc"
 	)
 	source_group("${NEW_FILTER_NAME}" FILES ${TEMP_SRC})
 	list(APPEND ${TARGET_LIST} "${TEMP_SRC}")
 
-	message(STATUS "GLOBBED for ${FILTER_NAME}")
-  FOREACH(path ${TEMP_SRC})
-		message(STATUS "   PATH: ${path}")
-	ENDFOREACH()
+	#message(STATUS "GLOBBED for ${FILTER_NAME}")
+  #FOREACH(path ${TEMP_SRC})
+		#message(STATUS "   PATH: ${path}")
+	#ENDFOREACH()
 
 endmacro(add_source_group)
 
@@ -27,7 +29,9 @@ macro(add_source_group_recurse ROOT_PATH SOURCE_PATH TARGET_LIST)
 			"${ROOT_PATH}/${SOURCE_PATH}/*.c"
 			"${ROOT_PATH}/${SOURCE_PATH}/*.cc"
 			"${ROOT_PATH}/${SOURCE_PATH}/*.mm"
-			"${ROOT_PATH}/${SOURCE_PATH}/*.m")
+			"${ROOT_PATH}/${SOURCE_PATH}/*.m"
+			"${ROOT_PATH}/${SOURCE_PATH}/*.ico"
+			"${ROOT_PATH}/${SOURCE_PATH}/*.rc")
     SET(dir_list "")
     FOREACH(file_path ${new_list})
         GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)
@@ -46,12 +50,12 @@ macro(add_source_group_recurse ROOT_PATH SOURCE_PATH TARGET_LIST)
         #else()
             string(LENGTH ${ROOT_PATH} source_path_len)
             string(LENGTH ${dir_path} dir_path_len)
-				message(STATUS "lens: ${source_path_len}, ${dir_path_len}")
+				#message(STATUS "lens: ${source_path_len}, ${dir_path_len}")
 
             # math(EXPR len "${dir_path_len} - ${source_path_len}")
             string(SUBSTRING ${dir_path} ${source_path_len} ${dir_path_len} trunc_dir_path)
 
-						message(STATUS "Substring: ${dir_path} ${source_path_len} ${dir_path_len} == ${trunc_dir_path}")
+						#message(STATUS "Substring: ${dir_path} ${source_path_len} ${dir_path_len} == ${trunc_dir_path}")
             # string(SUBSTRING ${trunc_dir_path} 1 -1 trunc_dir_path)
 						SET(EMPTY_STR "")
 						if(trunc_dir_path STREQUAL EMPTY_STR)

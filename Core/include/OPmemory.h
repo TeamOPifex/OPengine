@@ -124,3 +124,4 @@ void OPsysFree(void* ptr);
 #endif
 
 #define OPALLOC(x,c) (x*)OPalloc(sizeof(x) * c)
+#define OPALLOC0(x,c) (x*)OPallocZero(sizeof(x) * c)

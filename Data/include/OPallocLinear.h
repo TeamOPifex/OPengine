@@ -5,6 +5,7 @@ typedef struct OPallocatorLinear OPallocatorLinear;
 
 #include "./Core/include/OPallocator.h"
 #include "./Core/include/OPmemory.h"
+#include "./Core/include/OPlog.h"
 
 /**
  * Linear Memory Block
@@ -46,6 +47,7 @@ struct OPallocatorLinear {
 	}
 
 	inline static OPallocatorLinear* Create(OPuint sizeInBytes) {
+		OPlogErr("Allocating %d Linear Allocator", sizeInBytes);
 		return OPNEW(OPallocatorLinear(sizeInBytes));
 	}
 };

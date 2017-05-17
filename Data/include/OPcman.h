@@ -18,6 +18,8 @@ struct OPcman {
 	OPlinkedList purgeList;
 	OPvector resourceFiles;
 	OPchar* rootFolder;
+	OPchar** assetDirectories = NULL;
+	ui32 assetDirectoriesCount;
 
 #ifdef _DEBUG
 	i64 lastChecked;
@@ -25,13 +27,14 @@ struct OPcman {
 
 	OPcman() { }
 	OPcman(const OPchar* dir) { Init(dir); }
-	
+
 	bool Init(const OPchar* dir);
 	void AddLoader(OPassetLoader* loader);
 	void Update(OPtimer* timer);
 	bool Purge();
 	bool Add(const OPchar* assetKey, OPasset* asset);
 	bool Load(const OPchar* assetKey);
+	void* LoadFromFile(const OPchar* path);
 	bool Unload(const OPchar* assetKey);
 	void* Get(const OPchar* assetKey);
 	bool Delete(const OPchar* assetKey);
@@ -39,6 +42,7 @@ struct OPcman {
 	bool SetDir(OPchar* dir);
 	void LoadResourcePack(const OPchar* filename);
 	OPstream* GetResource(const OPchar* resourceName);
+    void ResetCurrentDir();
 
 	inline bool IsLoaded(const OPchar* asset) {
 		return hashmap.Exists(asset);
@@ -57,5 +61,5 @@ extern OPcman OPCMAN;
 #ifdef _DEBUG
 	#define OPCMAN_UPDATE(timer) OPCMAN.Update(timer);
 #else
-	#define OPCMAN_UPDATE(timer) 
+	#define OPCMAN_UPDATE(timer)
 #endif

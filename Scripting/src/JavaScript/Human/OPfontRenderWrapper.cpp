@@ -19,7 +19,7 @@ JS_RETURN_VAL _OPfontRenderBegin(const JS_ARGS& args) {
 JS_RETURN_VAL _OPfontRenderColor(const JS_ARGS& args) {
     SCOPE_AND_ISOLATE;
 
-    OPfontColor(OPvec4Create((f32)args[0]->NumberValue(), (f32)args[1]->NumberValue(), (f32)args[2]->NumberValue(), 1.0f));
+    OPfontColor(OPvec4((f32)args[0]->NumberValue(), (f32)args[1]->NumberValue(), (f32)args[2]->NumberValue(), 1.0f));
 
     JS_RETURN_NULL;
 }

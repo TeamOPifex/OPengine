@@ -7,6 +7,7 @@ typedef struct OPhashMapBucket OPhashMapBucket;
 
 struct OPhashMapBucket {
 	OPuint count;
+	OPuint max;
 	OPhashMapPair *pairs;
 
 	inline OPuint Count() { return count; }

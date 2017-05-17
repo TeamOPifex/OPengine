@@ -1,9 +1,10 @@
 #include "./Scripting/include/OPloaderOPS.h"
 #include "./Data/include/OPfile.h"
-#include "./Core/include/OPmemory.h"
 #include "./Data/include/OPcman.h"
-#include "./Core/include/OPlog.h"
 #include "./Data/include/OPstring.h"
+#include "./Core/include/OPmemory.h"
+#include "./Core/include/OPlog.h"
+#include "./Core/include/OPdebug.h"
 
 void OPscriptAddLoader() {
 
@@ -31,15 +32,15 @@ void OPscriptAddLoader() {
 
 OPint OPscriptLoad(OPstream* str, OPscript** script) {
 	*script = (OPscript*)OPalloc(sizeof(OPscript));
-	OPlog("allocated script");
+	//OPlog("allocated script");
 	(*script)->data = (OPchar*)OPalloc(str->Length);
-	OPlog("allocated data");
+	//OPlog("allocated data");
 
 	OPmemcpy((*script)->data, str->Data, str->Length);
-	OPlog("copied memory");
-	OPlog("mem %s", str->Source);
+	//OPlog("copied memory");
+	//OPlog("mem %s", str->Source);
 	(*script)->filename = OPstringCopy(str->Source);
-	OPlog("copied filename");
+	//OPlog("copied filename");
 
 #ifdef _DEBUG
 	(*script)->changed = 0;

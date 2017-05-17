@@ -10,27 +10,19 @@
 #include "./Math/include/OPvec2.h"
 #include "./Core/include/OPtimer.h"
 
-
-//-----------------------------------------------------------------------------
-//   _____ _                   _
-//  / ____| |                 | |
-// | (___ | |_ _ __ _   _  ___| |_ ___
-//  \___ \| __| '__| | | |/ __| __/ __|
-//  ____) | |_| |  | |_| | (__| |_\__ \
-// |_____/ \__|_|   \__,_|\___|\__|___/
 struct OPparticle {
 	OPvec3    Position;     // 12 bytes
 	OPvec3    Velocity;     // 12 bytes
 	OPfloat   Angle;        // 4 bytes
 	OPfloat   AngularVelo;  // 4 bytes
-	ui64       Life;         // 4 bytes
-	ui64       MaxLife;      // 4 bytes
+	i64       Life;         // 4 bytes
+	i64       MaxLife;      // 4 bytes
 	OPvec4    Tint;         // 16 bytes
 	OPsprite* Animation;    // 4/8 bytes
 	ui8       CurrentFrame; // 1 byte
 };
 
-struct OPparticleSys {
+struct OPparticleSystem {
 	OPentHeap* heap;
 	OPparticle* particles;
 	OPtexture* texture;
@@ -38,29 +30,37 @@ struct OPparticleSys {
 	OPvec2 uvScale;
 	OPfloat fps;
 	OPfloat timeElapsed;
+
+    void Init(OPtexture* texture, ui16 count);
+    void Init(OPtexture* texture, ui16 count, OPeffect* effect);
+    void Update(OPtimer* timer);
+    void Destroy();
+    void _DrawPrep(OPcam* cam);
+    void Draw(OPcam* cam);
+    void Draw(OPcam* cam, void(ParticleTransform)(OPparticle*, OPmat4*));
+
+    inline void Update(OPparticle* p, OPtimer* timer){
+    	OPvec3 vel = p->Velocity;
+    	OPfloat dr = p->AngularVelo * timer->Elapsed;
+    	vel *= (OPfloat)timer->Elapsed;
+    	p->Position += vel;
+
+    	p->Angle += dr;
+    	p->Life -= timer->Elapsed;
+    }
+
+    inline void Spawn(OPparticle particle){
+    	OPint ind = -1;
+    	heap->Activate(&ind);
+    	if (ind >= 0){
+    		OPparticle* p = &((OPparticle*)heap->Entities)[ind];
+    		OPmemcpy(p, &particle, sizeof(OPparticle));
+    	}
+    }
+
+    static OPparticleSystem* Create(OPtexture* texture, ui16 count, OPeffect* effect);
+
+    // Setup the Particle System defaults
+    static void Startup();
+    static void Shutdown();
 };
-
-inline void OPparticleUpdate(OPparticle* p, OPtimer* timer){
-	OPvec3 vel = p->Velocity;
-	OPfloat dr = p->AngularVelo * timer->Elapsed;
-	vel *= (OPfloat)timer->Elapsed;
-	p->Position += vel;
-
-	p->Angle += dr;
-	p->Life -= timer->Elapsed;
-}
-
-inline void OPparticleSysSpawn(OPparticleSys* sys, OPparticle particle){
-	OPint ind = -1;
-	sys->heap->Activate(&ind);
-	if (ind >= 0){
-		OPparticle* p = &((OPparticle*)sys->heap->Entities)[ind];
-		OPmemcpy(p, &particle, sizeof(OPparticle));
-	}
-}
-
-void OPparticleSysInit(OPeffect* effect);
-OPparticleSys* OPparticleSysCreate(OPtexture* texture, ui16 count, OPeffect* effect);
-void OPparticleSysUpdate(OPparticleSys* sys, OPtimer* timer);
-void OPparticleSysDestroy(OPparticleSys* sys);
-void OPparticleSysDraw(OPparticleSys* sys, OPcam* cam, void(ParticleTransform)(OPparticle*, OPmat4*));

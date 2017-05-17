@@ -105,7 +105,35 @@ struct OPstream {
 	*/
 	OPuint Seek(OPuint byte);
 
+	inline void Reset() {
+		Seek(0);
+	}
+
 	inline OPuint Write(f32* data) { return Write(data, sizeof(f32)); }
+	inline OPuint Write(f32 data) { return Write(&data, sizeof(f32)); }
+	inline OPuint Write(ui32 data) { return Write(&data, sizeof(ui32)); }
+	inline OPuint Write(ui16 data) { return Write(&data, sizeof(ui16)); }
+	inline OPuint Write(ui8 data) { return Write(&data, sizeof(ui8)); }
+	inline OPuint Write(i8 data) { return Write(&data, sizeof(i8)); }
+	inline OPuint Write(i16 data) { return Write(&data, sizeof(i16)); }
+	inline OPuint Write(i32 data) { return Write(&data, sizeof(i32)); }
+
+	inline OPuint I8(i8 data) { return Write(&data, sizeof(i8)); }
+	inline OPuint I16(i16 data) { return Write(&data, sizeof(i16)); }
+	inline OPuint I32(i32 data) { return Write(&data, sizeof(i32)); }
+	inline OPuint UI8(ui8 data) { return Write(&data, sizeof(ui8)); }
+	inline OPuint UI16(ui16 data) { return Write(&data, sizeof(ui16)); }
+	inline OPuint UI32(ui32 data) { return Write(&data, sizeof(ui32)); }
+	inline OPuint F32(f32 data) { return Write(&data, sizeof(f32)); }
+
+	inline OPuint WriteString(const OPchar* data) {
+		ui32 len = (ui32)strlen(data);
+		OPuint written = UI32(len);
+		if (len != 0) {
+			written += Write((void*)data, sizeof(OPchar) * len);
+		}
+		return written;
+	}
 
 	/**
 	* OPstreamCreate - Allocates a byte stream instance.

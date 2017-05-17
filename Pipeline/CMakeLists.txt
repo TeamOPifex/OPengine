@@ -19,6 +19,8 @@ add_external_opifex_includes()
 #########################################
 add_source_group(include/ "${PROJECT_SOURCE_DIR}/Pipeline/include" PIPELINE_SRC)
 add_source_group(include/Loaders/ "${PROJECT_SOURCE_DIR}/Pipeline/include/Loaders" PIPELINE_SRC)
+add_source_group(include/Materials/ "${PROJECT_SOURCE_DIR}/Pipeline/include/Materials" PIPELINE_SRC)
+add_source_group(include/Renderers/ "${PROJECT_SOURCE_DIR}/Pipeline/include/Renderers" PIPELINE_SRC)
 
 
 #########################################
@@ -27,6 +29,8 @@ add_source_group(include/Loaders/ "${PROJECT_SOURCE_DIR}/Pipeline/include/Loader
 add_source_group(/ "${PROJECT_SOURCE_DIR}/Pipeline" PIPELINE_SRC)
 add_source_group(src/ "${PROJECT_SOURCE_DIR}/Pipeline/src" PIPELINE_SRC)
 add_source_group(src/Loaders "${PROJECT_SOURCE_DIR}/Pipeline/src/Loaders" PIPELINE_SRC)
+add_source_group(src/Materials "${PROJECT_SOURCE_DIR}/Pipeline/src/Materials" PIPELINE_SRC)
+add_source_group(src/Renderers "${PROJECT_SOURCE_DIR}/Pipeline/src/Renderers" PIPELINE_SRC)
 
 
 #########################################
@@ -53,6 +57,9 @@ endif()
 if(${OPIFEX_OS_IOS})
 	set_xcode_property(7_Pipeline GCC_GENERATE_DEBUGGING_SYMBOLS YES)
 endif()
+
+add_marketplace_defines()
+
 add_opifex_defines()
 add_definitions(-DGLEW_STATIC)
 
@@ -75,11 +82,3 @@ add_opifex_fmod(7_Pipeline)
 # OUTPUT BINARIES
 #########################################
 output_library(7_Pipeline "Pipeline")
-
-message(STATUS "ADDING ${ADDON}")
-if(${OPIFEX_OPTION_RELEASE})
-  SET(BINARY_RELEASE_MODE "release")
-else()
-  SET(BINARY_RELEASE_MODE "debug")
-endif()
-add_marketplace_addons(7_Pipeline "Application/${BINARY_RELEASE_MODE}/")

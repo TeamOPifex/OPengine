@@ -55,7 +55,39 @@ macro(add_opifex_v8_osx APPLICATION_TARGET)
 
 	if(${OPIFEX_OPTION_RELEASE})
 
-		message( FATAL_ERROR "V8 is not setup for release mode on OSX yet" )
+		SET(_V8_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/V8/lib/release/osx64/")
+		if(_V8_SOURCE)
+			SET(_V8_BINARY_LOCATION "${V8_PATH}/out/x64.release/")
+		endif()
+
+		message(STATUS "RELEASE V8: ${V8_PATH} ${_V8_SOURCE}")
+
+
+
+		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_base.a)
+		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_libbase.a)
+		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_libplatform.a)
+		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_nosnapshot.a)
+		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_libsampler.a)
+		#copy_to_binaries(${_V8_BINARY_LOCATION}libicudata.a)
+		copy_to_binaries(${_V8_BINARY_LOCATION}libicuuc.a)
+		copy_to_binaries(${_V8_BINARY_LOCATION}libicui18n.a)
+		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_external_snapshot.a)
+
+		if(${OPIFEX_OS_64})
+			link_from_binaries(${APPLICATION_TARGET}
+				libv8_nosnapshot.a
+				libv8_base.a
+				libv8_libbase.a
+				libv8_libplatform.a
+                libv8_libsampler.a
+				#libicudata.a
+				libicuuc.a
+				libicui18n.a
+                libv8_external_snapshot.a)
+		else()
+
+		endif()
 
 	else()
 
@@ -64,15 +96,17 @@ macro(add_opifex_v8_osx APPLICATION_TARGET)
 			SET(_V8_BINARY_LOCATION "${V8_PATH}/out/x64.debug/")
 		endif()
 
-		message("${V8_PATH} ${_V8_SOURCE}")
+		message(STATUS "DEBUG V8: ${V8_PATH} ${_V8_SOURCE}")
 
-		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_base.a)
+        copy_to_binaries(${_V8_BINARY_LOCATION}libv8_base.a)
 		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_libbase.a)
 		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_libplatform.a)
 		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_nosnapshot.a)
-		copy_to_binaries(${_V8_BINARY_LOCATION}libicudata.a)
+		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_libsampler.a)
+		#copy_to_binaries(${_V8_BINARY_LOCATION}libicudata.a)
 		copy_to_binaries(${_V8_BINARY_LOCATION}libicuuc.a)
 		copy_to_binaries(${_V8_BINARY_LOCATION}libicui18n.a)
+		copy_to_binaries(${_V8_BINARY_LOCATION}libv8_external_snapshot.a)
 
 		if(${OPIFEX_OS_64})
 			link_from_binaries(${APPLICATION_TARGET}
@@ -80,11 +114,11 @@ macro(add_opifex_v8_osx APPLICATION_TARGET)
 				libv8_base.a
 				libv8_libbase.a
 				libv8_libplatform.a
-				libicudata.a
+                libv8_libsampler.a
+				#libicudata.a
 				libicuuc.a
-				libicui18n.a)
-
-			# message(STATUS "LIBV8")
+				libicui18n.a
+                libv8_external_snapshot.a)
 		else()
 
 		endif()
@@ -104,7 +138,41 @@ macro(add_opifex_v8_windows APPLICATION_TARGET)
 
 	if(${OPIFEX_OS_64})
 		if(${OPIFEX_OPTION_RELEASE})
-			link_from_binaries(${APPLICATION_TARGET} v8.lib)
+
+			SET(_V8_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/V8/lib/release/win64/")
+			SET(_V8_DLL_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/V8/lib/release/win64/")
+			if(_V8_SOURCE)
+				SET(_V8_BINARY_LOCATION "${V8_PATH}\\build\\Release\\lib\\")
+				SET(_V8_DLL_LOCATION "${V8_PATH}\\build\\Release\\")
+			endif()
+
+			copy_to_binaries(${_V8_DLL_LOCATION}icudt.dll)
+
+			copy_to_binaries(${_V8_BINARY_LOCATION}icuuc.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}icui18n.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_libbase.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_libplatform.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_nosnapshot.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_base_0.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_base_1.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_base_2.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_base_3.lib)
+			copy_to_binaries(${_V8_BINARY_LOCATION}v8_external_snapshot.lib)
+
+			link_from_binaries(${APPLICATION_TARGET}
+				icuuc.lib
+				icui18n.lib
+				v8_libbase.lib
+				v8_libplatform.lib
+				v8_nosnapshot.lib
+				v8_base_0.lib
+				v8_base_1.lib
+				v8_base_2.lib
+				v8_base_3.lib
+				)
+
+			copy_from_binaries(${APPLICATION_TARGET} "icudt.dll" "/Application/Release/")
+
 		else()
 
 			SET(_V8_BINARY_LOCATION "${OPIFEX_ENGINE_REPOSITORY}/External/V8/lib/debug/win64/")

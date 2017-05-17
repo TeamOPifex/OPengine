@@ -9,36 +9,52 @@ typedef struct OPframeBuffer OPframeBuffer;
 
 extern OPframeBuffer* OPRENDER_CURR_FRAMEBUFFER;
 
-OPframeBuffer OPframeBufferCreateShadow(ui32 width, ui32 height);
-OPframeBuffer OPframeBufferCreateDepth(OPtextureDesc desc);
-OPframeBuffer OPframeBufferCreate(OPtextureDesc desc);
-OPframeBuffer OPframeBufferCreateVR(ui32 width, ui32 height);
-void OPframeBufferDestroy(OPframeBuffer* fb);
-void OPframeBufferAttach(OPtexture* texture, ui16 pos);
-void OPframeBufferBind(OPframeBuffer* fb);
-void OPframeBufferBindRead(OPframeBuffer* fb);
-void OPframeBufferSetReadBuffer(ui16 pos);
-void OPframeBufferSetReadBufferDepth();
-void OPframeBufferBindTex(OPframeBuffer* fb);
-void OPframeBufferUnbind();
-void OPframeBufferAttachDepth(OPtexture* texture);
+
 
 struct OPframeBuffer {
-	OPtextureDesc Description;
-	OPtexture Texture;
-	ui32 Handle;
+	void* internalPtr;
 
-	ui32 DepthBufferId;
-	ui32 RenderTextureId;
-	ui32 RenderFramebufferId;
-	ui32 ResolveTextureId;
-	ui32 ResolveFramebufferId;
+	OPtexture* texture;
+	ui32 count;
+	OPtexture depthTexture;
 
-	void Bind() {
-		OPframeBufferBind(this);
+	inline void Init(OPtextureDesc textureDesc) {
+		OPRENDERER_ACTIVE->FrameBuffer.Init(this, textureDesc);
 	}
 
-	void Unbind() {
-		OPframeBufferUnbind();
+	inline void Init(OPtextureDesc textureDesc, OPtextureDesc depthDesc) {
+		OPRENDERER_ACTIVE->FrameBuffer.Init(this, textureDesc, depthDesc);
+	}
+
+	inline void Init(OPtextureDesc* textureDesc, ui32 count) {
+		OPRENDERER_ACTIVE->FrameBuffer.Init(this, textureDesc, count);
+	}
+
+	inline void Init(OPtextureDesc textureDesc, OPtexture* depthTexture) {
+		OPRENDERER_ACTIVE->FrameBuffer.Init(this, textureDesc, depthTexture);
+	}
+
+	inline void Init(OPtextureDesc* textureDesc, ui32 count, OPtexture* depthTexture) {
+		OPRENDERER_ACTIVE->FrameBuffer.Init(this, textureDesc, count, depthTexture);
+	}
+
+	inline void Bind() {
+		OPRENDERER_ACTIVE->FrameBuffer.Bind(this);
+	}
+
+	inline void Bind(OPframeBufferMode mode) {
+		OPRENDERER_ACTIVE->FrameBuffer.Bind(mode, this);
+	}
+
+	inline void Destroy() {
+		OPRENDERER_ACTIVE->FrameBuffer.Destroy(this);
+	}
+
+	static inline void Unbind() {
+		OPRENDERER_ACTIVE->FrameBuffer.Unbind(OPframeBufferMode::BOTH);
+	}
+
+	static inline void Unbind(OPframeBufferMode mode) {
+		OPRENDERER_ACTIVE->FrameBuffer.Unbind(mode);
 	}
 };

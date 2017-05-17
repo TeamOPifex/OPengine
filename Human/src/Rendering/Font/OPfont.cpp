@@ -9,82 +9,6 @@
 #include "./Core/include/Assert.h"
 #include "./Core/include/OPmath.h"
 
-OPint OPfontLoad(OPstream* str, OPfont** data) {
-	OPfont* font = OPNEW(OPfont());
-
-	*data = font;
-
-	i16 version;
-	//OPstream* str = OPreadFile(filename);
-
-	version = str->I16();
-	font->size = str->F32();
-	font->hinting = str->I32();
-	font->outlineType = str->I32();
-	font->outlineThickness = str->F32();
-	font->filtering = str->I32();
-	font->lcdWeights[0] = str->I8();
-	font->lcdWeights[1] = str->I8();
-	font->lcdWeights[2] = str->I8();
-	font->lcdWeights[3] = str->I8();
-	font->lcdWeights[4] = str->I8();
-	font->kerning = str->I32();
-	font->height = str->F32();
-	font->lineGap = str->F32();
-	font->ascender = str->F32();
-	font->descender = str->F32();
-	font->underlinePosition = str->F32();
-	font->underlineThickness = str->F32();
-
-	i16 glyphCount;
-	glyphCount = str->I16();
-	font->glyphs = OPvector::Create(sizeof(OPfontGlyph));
-
-	for (i16 i = glyphCount; i--;) {
-		OPfontGlyph* glyph = OPNEW(OPfontGlyph());
-		glyph->Init();
-
-		glyph->charcode = str->I8();
-		glyph->width = str->I32();
-		glyph->height = str->I32();
-		glyph->offsetX = str->I32();
-		glyph->offsetY = str->I32();
-		glyph->advanceX = str->F32();
-		glyph->advanceY = str->F32();
-		glyph->textureCoordinates.x = str->F32();
-		glyph->textureCoordinates.y = str->F32();
-		glyph->textureCoordinates.z = str->F32();
-		glyph->textureCoordinates.w = str->F32();
-
-		i16 kerningCount;
-		kerningCount = str->I16();
-		for (i16 j = kerningCount; j--;) {
-			OPfontKerning kerning;
-
-			kerning.charcode = str->I8();
-			kerning.kerning = str->F32();
-			glyph->kerning->Push((ui8*)&kerning);
-		}
-
-		glyph->outlineType = str->I32();
-		glyph->outlineThickness = str->F32();
-
-		font->glyphs->Push((ui8*)&glyph);
-	}
-
-	OPimagePNGLoadStream(str, str->_pointer, &font->texture);
-
-	font->Init();
-
-	return 1;
-}
-
-OPint OPfontUnload(OPfont* font)
-{
-	font->Destroy();
-	OPfree(font);
-	return 1;
-}
 
 void OPfont::Init() {
 	OPvertexLayoutBuilder builder;
@@ -92,7 +16,7 @@ void OPfont::Init() {
 	builder.Add(OPattributes::POSITION);
 	builder.Add(OPattributes::UV);
 	vertexLayout = builder.Build();
-	dummyTextNode.mesh = OPmesh(vertexLayout);
+	dummyTextNode.mesh = OPmodel(1, vertexLayout);
 
 	ui32 vertexSize = sizeof(OPvertexTex);
 	ui32 indexSize = sizeof(ui16);
@@ -113,8 +37,6 @@ void OPfont::Destroy() {
 
 	glyphs->Destroy();
 	OPfree(glyphs);
-
-	OPimagePNGUnload(texture);
 
 	dummyTextNode.mesh.Destroy();
 
@@ -173,10 +95,105 @@ OPfontGlyph* OPfont::GetGlyph(OPchar charcode)
 	return NULL;
 }
 
-OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const OPchar* text, OPfloat scale) {
+struct OPfontBuildWordResult {
+	ui32 count;
+	f32 width;
+};
+
+OPfontBuildWordResult _OPfontBuildWord(OPfont* font, const char* text, OPfloat scale) {
+	OPfontBuildWordResult result;
+	result.count = 0;
+	result.width = 0;
+	for (ui32 i = 0; i < strlen(text); i++) {
+		result.count++;
+		if (text[i] == ' ') {
+			break;
+		}
+
+		OPfontGlyph* glyph = font->GetGlyph(text[i]);
+		if (glyph != NULL)
+		{
+			OPfloat kerning = 0;
+			if (i > 0)
+			{
+				kerning = glyph->GetKerning(text[i - 1]);
+			}
+			result.width += kerning * scale;
+			result.width += glyph->advanceX * scale;
+		}
+	}
+
+	return result;
+}
+
+OPvec2 _OPfontBuildSep(OPvector* vertices, OPvector* indices, OPfont* font, const OPchar* text, OPfloat scale, f32 maxWidth) {
+	OPfloat width = 0;
+	OPfloat height = 0;
+	size_t i = 0;
+	OPfontBuildWordResult word = _OPfontBuildWord(font, text, scale);
+	while (word.count > 0) {
+
+		// Split it up by word
+		if (maxWidth > 0 && width + word.width > maxWidth) {
+			width = 0;
+			height += font->height * scale;
+		}
+
+		for (ui32 j = 0; j < word.count; j++) {
+			OPfontGlyph* glyph = font->GetGlyph(text[i]);
+			if (glyph != NULL)
+			{
+				OPfloat kerning = 0;
+				if (i > 0)
+				{
+					kerning = glyph->GetKerning(text[i - 1]);
+				}
+				width += kerning * scale;
+
+				int x0 = (int)(width + glyph->offsetX * scale);
+				int x1 = (int)(x0 + glyph->width * scale);
+				f32 fontHeight = (font->height * scale - font->size * scale);
+				int y0 = (int)(height + font->size * scale - (int)(glyph->offsetY * scale) - fontHeight);
+				int y1 = (int)(height + font->size * scale - (int)(glyph->offsetY * scale - glyph->height * scale) - fontHeight);
+
+				float s0 = glyph->textureCoordinates.x;
+				float t0 = glyph->textureCoordinates.y;
+				float s1 = glyph->textureCoordinates.z;
+				float t1 = glyph->textureCoordinates.w;
+
+				ui16 offset = (ui16)vertices->_size;
+				ui16 inds[6];
+				inds[0] = offset; inds[1] = offset + 1; inds[2] = offset + 2;
+				inds[3] = offset; inds[4] = offset + 2; inds[5] = offset + 3;
+				OPvertexTex verts[4] = {
+					{ OPvec3((f32)x0, (f32)y0, 0.0f), OPvec2(s0, t0) },
+					{ OPvec3((f32)x0, (f32)y1, 0.0f), OPvec2(s0, t1) },
+					{ OPvec3((f32)x1, (f32)y1, 0.0f), OPvec2(s1, t1) },
+					{ OPvec3((f32)x1, (f32)y0, 0.0f), OPvec2(s1, t0) } };
+
+				for (OPint i = 0; i < 4; i++) {
+					vertices->Push((ui8*)&verts[i]);
+				}
+				for (OPint i = 0; i < 6; i++)
+					indices->Push((ui8*)&inds[i]);
+
+				width += glyph->advanceX * scale;
+			}
+			i++;
+		}
+
+		word = _OPfontBuildWord(font, &text[i], scale);
+	}
+
+	height += font->height * scale;
+
+	return OPvec2(width, height);
+}
+
+OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const OPchar* text, OPfloat scale, f32 maxWidth) {
 
 	OPfloat width = 0;
-	OPfloat height = font->height;
+	OPfloat height = 0;// font->height;
 
 	size_t i;
 
@@ -192,10 +209,17 @@ OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const O
 			}
 			width += kerning * scale;
 
+			if (maxWidth > 0 && width > maxWidth && text[i] == ' ') {
+				width = 0;
+				height += font->height;
+				continue;
+			}
+
 			int x0 = (int)(width + glyph->offsetX * scale);
 			int x1 = (int)(x0 + glyph->width * scale);
-			int y0 = (int)(font->size * scale-(int)(glyph->offsetY * scale) - (font->height * scale - font->size * scale));
-			int y1 = (int)(font->size * scale-(int)(glyph->offsetY * scale - glyph->height * scale) - (font->height * scale - font->size * scale));
+			f32 fontHeight = (font->height * scale - font->size * scale);
+			int y0 = (int)(height + font->size * scale - (int)(glyph->offsetY * scale) - fontHeight);
+			int y1 = (int)(height + font->size * scale - (int)(glyph->offsetY * scale - glyph->height * scale) - fontHeight);
 
 			float s0 = glyph->textureCoordinates.x;
 			float t0 = glyph->textureCoordinates.y;
@@ -221,25 +245,26 @@ OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const O
 			width += glyph->advanceX * scale;
 		}
 	}
+	height += font->height;
 
 	return OPvec2(width, height);
 }
 
-OPmesh OPfont::CreateText(OPchar* text) {
+OPmodel OPfont::CreateText(OPchar* text) {
 	ui32 vertexSize = sizeof(OPvertexTex);
 	OPindexSize indexSize = OPindexSize::SHORT;// sizeof(ui16);
 	OPvector* vertices = OPvector::Create(vertexSize);
 	OPvector* indices = OPvector::Create((ui32)indexSize);
 
-	_OPfontBuild(vertices, indices, this, text, 1);
+	_OPfontBuild(vertices, indices, this, text, 1, 0);
 
 	OPvertexLayoutBuilder builder;
 	builder.Init();
 	builder.Add(OPattributes::POSITION);
 	builder.Add(OPattributes::UV);
 	OPvertexLayout vertexLayout = builder.Build();
-	OPmesh mesh = OPmesh(vertexLayout);
-	mesh.Build(vertexLayout, indexSize, (ui32)vertices->_size, (ui32)indices->_size, vertices->items, indices->items);
+	OPmodel mesh = OPmodel(1, vertexLayout);
+	mesh.Build((ui32)vertices->_size, (ui32)indices->_size, indexSize, vertices->items, indices->items);
 	return mesh;
 }
 
@@ -255,7 +280,7 @@ OPfontBuiltTextNode OPfont::CreatePackedText(const OPchar* text, OPfloat scale) 
 	OPvector* vertices = OPvector::Create(vertexSize);
 	OPvector* indices = OPvector::Create((ui32)indexSize);
 
-	OPvec2 size = _OPfontBuild(vertices, indices, this, text, scale);
+	OPvec2 size = _OPfontBuild(vertices, indices, this, text, scale, 0);
 
 	OPfontBuiltTextNode node;
 	node.Width = size.x;
@@ -296,11 +321,26 @@ OPfontUserTextNode OPfont::CreateUserText(const OPchar* text, float scale) {
 	vertices->Clear();
 	indices->Clear();
 
-	OPvec2 size = _OPfontBuild(vertices, indices, this, text, scale);
+	OPvec2 size = _OPfontBuild(vertices, indices, this, text, scale, 0);
 
 	dummyTextNode.Width = size.x;
 
-	dummyTextNode.mesh.Build(dummyTextNode.mesh.vertexLayout, OPindexSize::SHORT, (ui32)vertices->_size, (ui32)indices->_size, vertices->items, indices->items);
+	dummyTextNode.mesh.Build((ui32)vertices->_size, (ui32)indices->_size, OPindexSize::SHORT, vertices->items, indices->items);
+
+	return dummyTextNode;
+}
+
+
+OPfontUserTextNode OPfont::CreateUserText(const OPchar* text, float scale, f32 maxWidth) {
+
+	vertices->Clear();
+	indices->Clear();
+
+	OPvec2 size = _OPfontBuildSep(vertices, indices, this, text, scale, maxWidth);
+
+	dummyTextNode.Width = size.x;
+
+	dummyTextNode.mesh.Build((ui32)vertices->_size, (ui32)indices->_size, OPindexSize::SHORT, vertices->items, indices->items);
 
 	return dummyTextNode;
 }

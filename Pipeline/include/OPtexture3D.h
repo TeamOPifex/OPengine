@@ -6,14 +6,24 @@
 #include "./Human/include/Rendering/OPcam.h"
 
 struct OPtexture3D {
-	OPvec3 Position;
-	OPvec3 Rotation;
-	OPvec3 Scale;
-	OPtexture* Texture;
-	OPeffect* Effect;
-};
+	OPvec3 position;
+	OPvec3 rotation;
+	OPvec3 scale;
+	OPtexture* texture;
+	OPeffect* effect;
 
-OPtexture3D* OPtexture3DCreate(OPtexture* texture, OPeffect* effect);
-void OPtexture3DDestroy(OPtexture3D* character);
-void OPtexture3DPrepRender(OPtexture3D* tex3d, OPcam* camera);
-void OPtexture3DRender(OPtexture3D* tex3d, OPcam* camera);
+	void Init(OPtexture* texture);
+	void Init(OPtexture* texture, OPeffect* effect);
+    void PrepRender(OPcam* camera);
+    void Render(OPcam* camera);
+    void Destroy();
+
+    static OPtexture3D* Create(OPtexture* texture);
+    static OPtexture3D* Create(OPtexture* texture, OPeffect* effect);
+    static void Shutdown();
+
+    inline void Free() {
+        Destroy();
+        OPfree(this);
+    }
+};

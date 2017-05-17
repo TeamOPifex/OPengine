@@ -1,6 +1,7 @@
 #include "./Human/include/Rendering/API/OPrenderer.h"
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Platform/opengl/OPwindowAPIGL.h"
+#include "./Human/include/Rendering/Enums/OPcullFace.h"
 #include "./Human/include/Rendering/OPmonitor.h"
 #include "./Human/include/Rendering/OPwindow.h"
 #include "./Core/include/Assert.h"
@@ -20,7 +21,7 @@ i8 OPrendererInitGL(OPwindow* window) {
 	OPlogInfo("Initializing OpenGL Renderer");
 
 	glfwSetErrorCallback(glfwErrorCallback);
-	
+
 	window->Bind();
 
 	glEnable(GL_MULTISAMPLE_ARB);
@@ -37,9 +38,18 @@ i8 OPrendererInitGL(OPwindow* window) {
 	return 0;
 }
 
-void OPrendererClearGL(OPvec4 color){
+void OPrendererClearGL(OPvec4 color) {
 	OPGLFN(glClearColor(color.x, color.y, color.z, color.w));
 	OPGLFN(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+}
+
+void OPrendererClearColorGL(OPvec4 color) {
+	OPGLFN(glClearColor(color.x, color.y, color.z, color.w));
+	OPGLFN(glClear(GL_COLOR_BUFFER_BIT));
+}
+
+void OPrendererClearDepthGL() {
+	OPGLFN(glClear(GL_DEPTH_BUFFER_BIT));
 }
 
 void OPrendererPresentGL() {
@@ -58,7 +68,12 @@ void OPrendererSetDepthTestingGL(bool state) {
 }
 
 void OPrendererSetDepthWriteGL(bool state){
-	OPGLFN(glDepthMask(state ? GL_TRUE : GL_FALSE));
+	if (state) {
+		OPGLFN(glDepthMask(GL_TRUE));
+	}
+	else {
+		OPGLFN(glDepthMask(GL_FALSE));
+	}
 }
 
 void OPrendererSetCullGL(bool state) {
@@ -70,13 +85,26 @@ void OPrendererSetCullGL(bool state) {
 	}
 }
 
-void OPrendererSetCullModeGL(i8 state) {
+void OPrendererSetMultisampleGL(bool state) {
 	if (state) {
-		OPGLFN(glCullFace(GL_FRONT));
+		OPGLFN(glEnable(GL_MULTISAMPLE));
 	}
 	else {
-		OPGLFN(glCullFace(GL_BACK));
+		OPGLFN(glDisable(GL_MULTISAMPLE));
 	}
+}
+
+void OPrendererSetWireframeGL(bool state) {
+	if (state) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+}
+
+void OPrendererSetCullModeGL(OPcullFace state) {
+	OPGLFN(glCullFace(state == OPcullFace::FRONT ? GL_FRONT : GL_BACK));
 }
 
 void OPrendererSetBlendGL(bool state){
@@ -112,10 +140,11 @@ ui32 OPblendFunctionToGL(OPblendFunction blendFunction) {
 }
 
 void OPrendererSetBlendModeGL(OPblendFunction src, OPblendFunction dst) {
-	OPGLFN(glBlendFunc(OPblendFunctionToGL(src), OPblendFunctionToGL(dst)));	
+	OPGLFN(glBlendFunc(OPblendFunctionToGL(src), OPblendFunctionToGL(dst)));
 }
 
 inline void OPrenderSetViewportGL(ui32 x, ui32 y, ui32 width, ui32 height) {
+   // OPlogInfo("Set viewport %dx%d", width, height);
 	OPGLFN(glViewport(x, y, width, height));
 }
 
@@ -132,8 +161,8 @@ void OPrendererShutdownGL() {
 
 #include "./Human/include/Platform/opengl/OPcontextGL.h"
 #include "./Human/include/Platform/opengl/OPeffectAPIGL.h"
-#include "./Human/include/Platform/opengl/OPframeBuffer2DGL.h"
-#include "./Human/include/Platform/opengl/OPframeBufferDepthGL.h"
+#include "./Human/include/Platform/opengl/OPframeBufferAPIGL.h"
+#include "./Human/include/Platform/opengl/OPframeBufferDepthAPIGL.h"
 #include "./Human/include/Platform/opengl/OPindexBufferGL.h"
 #include "./Human/include/Platform/opengl/OPmonitorAPIGL.h"
 #include "./Human/include/Platform/opengl/OPshaderAPIGL.h"
@@ -141,9 +170,7 @@ void OPrendererShutdownGL() {
 #include "./Human/include/Platform/opengl/OPshaderResourceGL.h"
 #include "./Human/include/Platform/opengl/OPshaderUniformAPIGL.h"
 #include "./Human/include/Platform/opengl/OPtextureAPIGL.h"
-#include "./Human/include/Platform/opengl/OPtexture2DGL.h"
 #include "./Human/include/Platform/opengl/OPtextureCubeAPIGL.h"
-#include "./Human/include/Platform/opengl/OPtextureDepthGL.h"
 #include "./Human/include/Platform/opengl/OPvertexArrayAPIGL.h"
 #include "./Human/include/Platform/opengl/OPvertexBufferAPIGL.h"
 #include "./Human/include/Platform/opengl/OPwindowAPIGL.h"
@@ -152,21 +179,25 @@ OPrenderAPI OPRENDERERGL;
 OPrenderAPI* OPrendererGL() {
 	OPRENDERERGL.Init = OPrendererInitGL;
 	OPRENDERERGL._Clear = OPrendererClearGL;
+	OPRENDERERGL._ClearColor = OPrendererClearColorGL;
+	OPRENDERERGL.ClearDepth = OPrendererClearDepthGL;
 	OPRENDERERGL.Present = OPrendererPresentGL;
 	OPRENDERERGL.SetDepthTesting = OPrendererSetDepthTestingGL;
 	OPRENDERERGL.SetDepthWrite = OPrendererSetDepthWriteGL;
 	OPRENDERERGL.SetCull = OPrendererSetCullGL;
 	OPRENDERERGL.SetCullMode = OPrendererSetCullModeGL;
+	OPRENDERERGL.SetMultisample = OPrendererSetMultisampleGL;
+	OPRENDERERGL.SetWireframe = OPrendererSetWireframeGL;
 	OPRENDERERGL.SetBlend = OPrendererSetBlendGL;
 	OPRENDERERGL.SetBlendMode = OPrendererSetBlendModeGL;
 	OPRENDERERGL.SetViewport = OPrenderSetViewportGL;
 	OPRENDERERGL.SwapBuffer = OPrendererSwapBufferGL;
 	OPRENDERERGL.Shutdown = OPrendererShutdownGL;
 
-	OPcontextGLInit(&OPRENDERERGL.Context); 
+	OPcontextGLInit(&OPRENDERERGL.Context);
 	OPeffectAPIGLInit(&OPRENDERERGL.Effect);
-	OPframeBuffer2DGLInit(&OPRENDERERGL.FrameBuffer2D);
-	OPframeBufferDepthGLInit(&OPRENDERERGL.FrameBufferDepth);
+	OPframeBufferAPIGLInit(&OPRENDERERGL.FrameBuffer);
+	OPframeBufferDepthAPIGLInit(&OPRENDERERGL.FrameBufferDepth);
 	OPindexBufferAPIGLInit(&OPRENDERERGL.IndexBuffer);
 	OPmonitorAPIGLInit(&OPRENDERERGL.Monitor);
 	OPshaderAPIGLInit(&OPRENDERERGL.Shader);
@@ -174,9 +205,7 @@ OPrenderAPI* OPrendererGL() {
 	OPshaderResourceGLInit(&OPRENDERERGL.ShaderResource);
 	OPshaderUniformAPIGLInit(&OPRENDERERGL.ShaderUniform);
 	OPtextureAPIGLInit(&OPRENDERERGL.Texture);
-	OPtexture2DGLInit(&OPRENDERERGL.Texture2D);
 	OPtextureCubeAPIGLInit(&OPRENDERERGL.TextureCube);
-	OPtextureDepthGLInit(&OPRENDERERGL.TextureDepth);
 	OPvertexArrayAPIGLInit(&OPRENDERERGL.VertexArray);
 	OPvertexBufferAPIGLInit(&OPRENDERERGL.VertexBuffer);
 	OPwindowAPIGLInit(&OPRENDERERGL.Window);

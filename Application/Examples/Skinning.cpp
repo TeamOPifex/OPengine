@@ -6,168 +6,120 @@
 #include "./Human/include/Rendering/Skinning/OPskeleton.h"
 
 #include "./Human/include/Systems/OPinputSystem.h"
+#include "./Pipeline/include/Materials/OPmaterialSkinned.h"
+#include "./Pipeline/include/Renderers/OPrendererForward.h"
+#include "./Pipeline/include/Renderers/OPrendererDeferred.h"
 
-typedef struct {
-	OPmesh* Mesh;
-	OPeffect* Effect;
-	OPcam* Camera;
-	ui32 pos;
+class SkinningExample : public OPgameState {
+	OPmodel* Mesh;
+	OPeffect Effect;
 	OPtexture* texture;
 	OPskeleton* skeleton;
 	OPskeletonAnimation* animation;
 	OPskeletonAnimation* animation2;
 	OPskeletonAnimation* animation3;
 	OPskeletonAnimation* animation4;
-} SkinningExample;
+	OPcamFreeFlight freeFlight;
+	OPint heldDown = 0;
+	OPfloat scale = 100.0f;
+	OPscene scene;
+	OPrendererForward rendererForward;
+	OPmaterialSkinned materialSkinned;
+	OPmaterialSkinned* materialSkinnedInstance;
+	OPcam shadowCamera;
 
-SkinningExample* skinningExample;
-
-#define SCALE 1
-
-void ExampleSkinningEnter(OPgameState* last) {
-
-	OPCMAN.Load("Skinning.frag");
-	OPCMAN.Load("Skinning.vert");
-	skinningExample = (SkinningExample*)OPalloc(sizeof(SkinningExample));
-
-	skinningExample->skeleton = (OPskeleton*)OPCMAN.LoadGet("ld35person.opm.skel");
-	skinningExample->animation = (OPskeletonAnimation*)OPCMAN.LoadGet("ld35person.opm.Take 001.anim");
-	skinningExample->animation2 = (OPskeletonAnimation*)OPCMAN.LoadGet("ld35person.opm.Take 001.anim");
-	skinningExample->animation3 = (OPskeletonAnimation*)OPCMAN.LoadGet("person.opm.Walk.anim");
-	skinningExample->animation4 = (OPskeletonAnimation*)OPCMAN.LoadGet("person.opm.Walk.anim");
+	OPvec3 color;
+	f32 colorAmount;
 
 
-	OPCMAN.Load("Skinning.frag");
-	OPCMAN.Load("Skinning.vert");
+	void Init(OPgameState* last) {
+		freeFlight.Init(25.0, 1.0, OPvec3(0, scale * 10, scale * 10));
 
-	skinningExample->pos = 0;
-	skinningExample->Mesh = (OPmesh*)OPCMAN.LoadGet("ld35person.opm");
+		scene.Init(&rendererForward, 100, 100);
+		scene.SetCamera(&freeFlight.Camera);
 
-	OPshaderAttribute attribs[] = {
-		{ "aPosition", OPshaderElementType::FLOAT, 3 },
-		{ "aNormal", OPshaderElementType::FLOAT, 3 },
-		//{ "aTangent", OPshaderElementType::FLOAT, 3 },
-		{ "aUV", OPshaderElementType::FLOAT, 2 },
-		{ "aBlendIndices", OPshaderElementType::FLOAT, 4 },
-		{ "aBlendWeights", OPshaderElementType::FLOAT, 4 }
-	};
+		OPfloat shadowCameraSize = 16.0f;
+		shadowCamera.SetOrtho(OPvec3(-2, 5, 1), OPVEC3_ZERO, OPVEC3_UP, 25.0f, 150.0f, -shadowCameraSize, shadowCameraSize, -shadowCameraSize, shadowCameraSize);
+		scene.SetShadowCamera(&shadowCamera);
 
-	skinningExample->Effect = (OPeffect*)OPalloc(sizeof(OPeffect));
-	OPshader* vert = (OPshader*)OPCMAN.Get("Skinning.vert");
-	OPshader* frag = (OPshader*)OPCMAN.Get("Skinning.frag");
-	skinningExample->Effect->Init(vert, frag);
+		color = OPVEC3_ONE;
+		colorAmount = 0.0f;
 
-	skinningExample->Camera = (OPcam*)OPalloc(sizeof(OPcam));
-	f32 pos = 10 * SCALE;
-	skinningExample->Camera->SetPerspective(
-		OPvec3Create(pos, pos, pos),
-		OPvec3Create(0, pos / 4.0f, 0),
-		OPvec3Create(0, 1, 0),
-		0.1f,
-		500.0f,
-		45.0f,
-		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
-		);
+		Mesh = OPmodel::Load("archer.opm");
+		skeleton = OPskeleton::Load("archer.opm.skel");
+		animation = OPskeletonAnimation::Load("archer.opm.walk.anim");
+		animation2 = OPskeletonAnimation::Load("archer.opm.run.anim");
+		animation3 = OPskeletonAnimation::Load("archer.opm.jump.anim");
+		animation4 = OPskeletonAnimation::Load("archer.opm.attack.anim");
 
-		skinningExample->texture = (OPtexture*)OPCMAN.LoadGet("Knight.png");
-}
-
-OPint heldDown = 0;
-
-OPint ExampleSkinningUpdate(OPtimer* time) {
-	OPrenderDepth(1);
-	OPrenderClear(0, 0, 0);
-
-	if (OPKEYBOARD.WasPressed(OPkeyboardKey::P)) { skinningExample->pos++; }
-	if (OPKEYBOARD.WasPressed(OPkeyboardKey::O)) { skinningExample->pos--; }
-
-	//if (OPkeyboardWasPressed(OPkeyboardKey::M)) { skinningExample->Mesh->SkeletonAnimation.Frame++; }
-	//if (OPkeyboardWasPressed(OPkeyboardKey::N)) { skinningExample->Mesh->SkeletonAnimation.Frame--; }
-
-	if (OPKEYBOARD.IsDown(OPkeyboardKey::UP)) { skinningExample->Camera->pos.y += (OPfloat)(0.1 * SCALE); }
-	if (OPKEYBOARD.IsDown(OPkeyboardKey::DOWN)) { skinningExample->Camera->pos.y -= (OPfloat)(0.1 * SCALE); }
-	if (OPKEYBOARD.IsDown(OPkeyboardKey::LEFT)) { skinningExample->Camera->pos.x -= (OPfloat)(0.1 * SCALE); }
-	if (OPKEYBOARD.IsDown(OPkeyboardKey::RIGHT)) { skinningExample->Camera->pos.x += (OPfloat)(0.1 * SCALE); }
-
-	skinningExample->Camera->Update();
-	skinningExample->Camera->UpdateView();
-
-	if (OPKEYBOARD.WasPressed(OPkeyboardKey::N)) {
-		skinningExample->animation2->Elapsed = skinningExample->animation2->Frame = 0;
-	}
-	if (OPKEYBOARD.WasPressed(OPkeyboardKey::M)) {
-		skinningExample->animation3->Elapsed = skinningExample->animation3->Frame = 0;
-	}
-	if (OPKEYBOARD.WasPressed(OPkeyboardKey::B)) {
-		skinningExample->animation4->Elapsed = skinningExample->animation4->Frame = 0;
+		OPrendererEntity* entity = scene.Add(Mesh, skeleton, OPrendererEntityDesc(true, true, true, false));
+		//(*entity->material).AddParam("uColor", &color);
+		//(*entity->material).AddParam("uColorAmount", &colorAmount);
+		entity->world.SetScl(0.1);
 	}
 
-	if (OPKEYBOARD.IsDown(OPkeyboardKey::N)) {
-		heldDown += time->Elapsed;
-		if (heldDown > 500) heldDown = 500;
-		OPskeletonAnimationUpdate(skinningExample->animation, time);
-		OPskeletonAnimationUpdate(skinningExample->animation2, time);
-		OPskeletonAnimationMerge(skinningExample->animation, skinningExample->animation2, heldDown / 500.0f);
-		OPskeletonAnimationApply(skinningExample->animation, skinningExample->skeleton);
+	OPint Update(OPtimer* time) {
+
+
+		// Update the camera
+		freeFlight.Update(time);
+
+		///
+		// Update the Skinning Animation data
+		///
+		if (OPKEYBOARD.WasPressed(OPkeyboardKey::N)) {
+			animation2->Elapsed = animation2->Frame = 0;
+		}
+		if (OPKEYBOARD.WasPressed(OPkeyboardKey::M)) {
+			animation3->Elapsed = animation3->Frame = 0;
+		}
+		if (OPKEYBOARD.WasPressed(OPkeyboardKey::B)) {
+			animation4->Elapsed = animation4->Frame = 0;
+		}
+
+		if (OPKEYBOARD.IsDown(OPkeyboardKey::N)) {
+			heldDown += time->Elapsed;
+			if (heldDown > 500) heldDown = 500;
+			animation->Update(time);
+			animation2->Update(time);
+			animation->Merge(animation2, heldDown / 500.0f);
+			animation->Apply(skeleton);
+		}
+		else if (OPKEYBOARD.IsDown(OPkeyboardKey::M)) {
+			animation3->Update(time);
+			animation3->Apply(skeleton);
+		}
+		else if (OPKEYBOARD.IsDown(OPkeyboardKey::B)) {
+			animation4->Update(time);
+			animation4->Apply(skeleton);
+		}
+		else {
+			heldDown -= time->Elapsed;
+			if (heldDown < 0) heldDown = 0;
+			animation->Update(time);
+			animation2->Update(time);
+			animation->Merge(animation2, heldDown / 500.0f);
+			animation->Apply(skeleton);
+		}
+
+		skeleton->Update();
+
+		return false;
 	}
-	else if (OPKEYBOARD.IsDown(OPkeyboardKey::M)) {
-		OPskeletonAnimationUpdate(skinningExample->animation3, time);
-		OPskeletonAnimationApply(skinningExample->animation3, skinningExample->skeleton);
+
+	void Render(OPfloat delta) {
+		OPrenderClear(0.1);
+		scene.Render(delta);
+		OPrenderPresent();
 	}
-	else if (OPKEYBOARD.IsDown(OPkeyboardKey::B)) {
-		OPskeletonAnimationUpdate(skinningExample->animation4, time);
-		OPskeletonAnimationApply(skinningExample->animation4, skinningExample->skeleton);
+
+	OPint Exit(OPgameState* next) {
+		//Effect.Destroy();
+		return 0;
 	}
-	else {
-		heldDown -= time->Elapsed;
-		if (heldDown < 0) heldDown = 0;
-		OPskeletonAnimationUpdate(skinningExample->animation, time);
-		OPskeletonAnimationUpdate(skinningExample->animation2, time);
-		OPskeletonAnimationMerge(skinningExample->animation, skinningExample->animation2, heldDown / 500.0f);
-		OPskeletonAnimationApply(skinningExample->animation, skinningExample->skeleton);
-	}
-	//OPmat4Translate(&mesh->Skeleton->localPoses[pos], time->Elapsed / 1000.0f, 0, 0);
-	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], (i32)OPKEYBOARD.IsDown(OPkeyboardKey::W) / 100.0f);
-	OPmat4RotZ(&skinningExample->skeleton->localPoses[skinningExample->pos], (i32)OPKEYBOARD.IsDown(OPkeyboardKey::S) / -100.0f);
-	OPskeletonUpdate(skinningExample->skeleton);
+};
 
-	skinningExample->Mesh->Bind();
-	skinningExample->Effect->Bind();
-
-	OPmat4 world;
-	OPmat4Identity(&world);
-	//OPmat4BuildRotX(&world,- OPpi / 2.0);
-
-	OPeffectSet("uWorld", &world);
-	OPeffectSet("uView", &skinningExample->Camera->view);
-	OPeffectSet("uProj", &skinningExample->Camera->proj);
-
-	OPeffectSet("uBones", skinningExample->skeleton->hierarchyCount, skinningExample->skeleton->skinned);
-
-	OPvec3 light = OPvec3Create(0, 10, 0);
-	OPeffectSet("uLightPosition", &light);
-
-	OPeffectSet("uColorTexture", skinningExample->texture, 0);
-
-	OPmeshRender();
-
-	OPrenderPresent();
-	return false;
-}
-void ExampleSkinningRender(OPfloat delta) {
-
-}
-OPint ExampleSkinningExit(OPgameState* next) {
-	skinningExample->Effect->Destroy();
-	OPfree(skinningExample->Effect);
-	OPfree(skinningExample->Camera);
-	return 0;
-}
 
 OPint GS_EXAMPLE_SKINNING_AVAILABLE = 1;
-OPgameState GS_EXAMPLE_SKINNING = {
-	ExampleSkinningEnter,
-	ExampleSkinningUpdate,
-	ExampleSkinningRender,
-	ExampleSkinningExit
-};
+SkinningExample _GS_EXAMPLE_SKINNING;
+OPgameState* GS_EXAMPLE_SKINNING = &_GS_EXAMPLE_SKINNING;

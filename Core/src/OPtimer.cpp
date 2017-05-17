@@ -14,6 +14,9 @@ OPint OPtimer::Init(){
 	QueryPerformanceCounter(&TimeLastTick);
 	TotalGametime = 0;
 	Elapsed = 0;
+#ifdef _DEBUG
+	ElapsedHighRes = 0;
+#endif
 #endif
 
 	return 0;
@@ -23,12 +26,17 @@ void OPtimer::Tick() {
 #if defined(OPIFEX_UNIX)
 	struct timeval time;
 	ui64 elapsed;
+    d64 highResElapsed;
 
 	gettimeofday(&time, NULL);
 	elapsed = ((time.tv_sec - TimeLastTick.tv_sec) * 1000000 +
 		(time.tv_usec - TimeLastTick.tv_usec)) / 1000;
 
+	highResElapsed = ((time.tv_sec - TimeLastTick.tv_sec) * 1000000.0 +
+		(time.tv_usec - TimeLastTick.tv_usec)) / 1000.0;
+
 	TotalGametime += elapsed;
+	ElapsedHighRes = highResElapsed;
 	Elapsed = elapsed;
 	if (Elapsed != 0) {
 		// We want to keep adding up until at least 1 ms has elapsed
@@ -42,6 +50,8 @@ void OPtimer::Tick() {
 	QueryPerformanceCounter(&StartingTime);
 
 	Elapsed = StartingTime.QuadPart - TimeLastTick.QuadPart;
+	ElapsedHighRes = Elapsed * 1000;
+	ElapsedHighRes /= (OPfloat)Frequency.QuadPart;
 	Elapsed *= 1000; // to milliseconds
 	Elapsed /= Frequency.QuadPart;
 

@@ -4,7 +4,7 @@
 #include "./Human/include/Rendering/Primitives/OPquad.h"
 
 OPeffect* DEFAULT_TEXTURE2D_EFFECT = NULL;
-OPmesh* TEXTURE_2D_QUAD_MESH = NULL;
+OPmodel* TEXTURE_2D_QUAD_MESH = NULL;
 
 void LoadDefaultTexture2DEffect() {
 	if (DEFAULT_TEXTURE2D_EFFECT != NULL) return;
@@ -32,6 +32,7 @@ OPtexture2DOLD* OPtexture2DCreate(OPtexture* texture, OPeffect* effect, OPvec2 u
 	tex2d->Scale = OPVEC2_ONE;
 	tex2d->Texture = texture;
 	tex2d->Effect = effect;
+	tex2d->UVScale = OPvec4(uvStart.x, uvStart.y, uvEnd.x, uvEnd.y);
 
 	if (effect == NULL) {
 		LoadDefaultTexture2DEffect();
@@ -41,10 +42,14 @@ OPtexture2DOLD* OPtexture2DCreate(OPtexture* texture, OPeffect* effect, OPvec2 u
 	tex2d->Effect->Bind();
 
 	if (TEXTURE_2D_QUAD_MESH == NULL) {
-		TEXTURE_2D_QUAD_MESH = OPquadCreate(1, 1, uvStart, uvEnd);
+		TEXTURE_2D_QUAD_MESH = OPquadCreate(0.5f, 0.5f, OPVEC2_ZERO, OPVEC2_ONE);
 	}
 
 	return tex2d;
+}
+
+void OPtexture2DOLD::Destroy() {
+
 }
 
 OPtexture2DOLD* OPtexture2DCreate(OPtexture* texture, OPeffect* effect) {
@@ -70,19 +75,30 @@ void OPtexture2DPrepRender(OPtexture2DOLD* tex2d) {
     OPmat4 world = OPMAT4_IDENTITY;
     OPmat4 size = OPMAT4_IDENTITY;
     //size.Translate(tex2d->Position.x / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, tex2d->Position.y / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, 0);
-    //size.Scl(tex2d->Texture->textureDesc.width * tex2d->Scale.x, tex2d->Texture->textureDesc.height * tex2d->Scale.y, 1.0);
-    OPmat4 view = OPMAT4_IDENTITY;
-    //view = OPmat4Ortho(0, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, 0, -1, 1);
+    size.Scl(tex2d->Texture->textureDesc.width * tex2d->Scale.x, tex2d->Texture->textureDesc.height * tex2d->Scale.y, 1.0);
+	size.Translate(tex2d->Position.x, tex2d->Position.y, 0);
+ //   OPmat4 view = OPMAT4_IDENTITY;
+	//OPfloat halfWidth = OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / 2.0f;
+	//OPfloat halfHeight = OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height / 2.0f;
+
+ //   view = OPmat4Ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, -1.0f, 1.0f);
 
     //view.Scl(1.0f / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, 1.0f / (OPfloat)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, 1.0f);
 
-    //world = view * size;
+    //world = size * view;
+
+
+	OPcam cam;
+	cam.SetOrtho(OPvec3(0, 0, 1), OPvec3(0), OPvec3(0, 1, 0), 0.1f, 10.0f, 0, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height, 0);
+
+	world = cam.proj * cam.view * size;
 
 	OPeffectSet("uColorTexture", tex2d->Texture, 0);
+	OPeffectSet("uUVScale", 1, &tex2d->UVScale);
 	OPeffectSet("uWorld", 1, &world);
 }
 
 void OPtexture2DRender(OPtexture2DOLD* tex2d) {
 	OPtexture2DPrepRender(tex2d);
-	OPmeshRender();
+	OPrenderDrawBufferIndexed(0);
 }

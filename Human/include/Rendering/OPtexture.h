@@ -11,6 +11,9 @@ struct OPtexture {
 	void* internalPtr;
 	OPuint guid;
 	OPtextureDesc textureDesc;
+#ifdef _DEBUG
+	OPchar* source;
+#endif
 
 	inline void SetData(const void* pixelData) {
 		OPRENDERER_ACTIVE->Texture.SetData(this, pixelData);

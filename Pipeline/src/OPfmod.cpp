@@ -26,10 +26,16 @@ void OPfmodInit() {
 		result = CURRENT_FMOD->init(32, FMOD_INIT_NORMAL, 0);
 }
 
-OPfmodSound* OPfmodLoad(OPchar* name) {
+OPfmodSound* OPfmodLoad(const OPchar* name) {
 	OPfmodSound* result = NULL;
 	CURRENT_FMOD->createSound(name, FMOD_DEFAULT, 0, &result);
     return result;
+}
+
+OPfmodSound* OPfmodLoadStream(const OPchar* name) {
+	OPfmodSound* result = NULL;
+	CURRENT_FMOD->createStream(name, FMOD_DEFAULT, 0, &result);
+	return result;
 }
 
 OPfmodChannel* OPfmodPlay(OPfmodSound* sound) {

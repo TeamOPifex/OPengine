@@ -3,18 +3,6 @@
 #include "OPfbxMeshData.h"
 
 typedef struct {
-	i32 c;
-	OPchar b1[256];
-	OPchar b2[256];
-	OPchar b3[256];
-	OPchar b4[256];
-	f32 w1;
-	f32 w2;
-	f32 w3;
-	f32 w4;
-} OPfbxSkinBlendWeight;
-
-typedef struct {
 	OPint* BoneIndices;
 	f32* BoneWeights;
 } OPfbxSkin;
@@ -43,7 +31,7 @@ void _fbxmat4Log(const OPchar* msg, FbxAMatrix* mat) {
 		lRow3[0], lRow3[1], lRow3[2], lRow3[3]);
 }
 
-OPfbxSkinBlendWeight* _skinBlendWeights(OPfbxMeshData* meshData, OPfbxSkeleton* skeleton, OPfbxScene* scene) {
+OPfbxSkinBlendWeight* _skinBlendWeights2(OPfbxMeshData* meshData, OPfbxSkeleton* skeleton, OPfbxScene* scene) {
 	FbxAMatrix geometryTransform = _getGeometryTransformation(meshData->Node);
 
 
@@ -198,6 +186,12 @@ OPfbxSkinBlendWeight* _skinBlendWeights(OPfbxMeshData* meshData, OPfbxSkeleton* 
 	return result;
 }
 
+
+void _skinBlendWeights(OPfbxMeshData** meshData, OPuint meshDataCount, OPfbxSkeleton* skeleton, OPfbxScene* scene) {
+	for (ui32 i = 0; i < meshDataCount; i++) {
+		(*meshData)[i].BlendWeights = _skinBlendWeights2(&(*meshData)[i], skeleton, scene);
+	}
+}
 
 
 //OPint OPfbxSkinGet(OPfbxSkin* skin, OPfbxMeshData* meshData, OPfbxSkeleton* skeleton) {

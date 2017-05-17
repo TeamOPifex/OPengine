@@ -3,9 +3,9 @@
 struct OPfontUserTextNode;
 typedef struct OPfontUserTextNode OPfontUserTextNode;
 
-#include "./Human/include/Rendering/OPmesh.h"
+#include "./Human/include/Rendering/OPmodel.h"
 
 struct OPfontUserTextNode {
-	OPmesh mesh;
+	OPmodel mesh;
 	OPfloat Width;
 };

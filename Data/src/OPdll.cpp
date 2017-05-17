@@ -23,11 +23,15 @@ void OPdll::Init(const OPchar* path) {
 	}
 
 	path = pathMerge;
+    #if _DEBUG
 	lastModified = OPfile::LastChange(pathMerge);
+    #endif
 #endif
 }
 
 OPint OPdll::Update() {
+
+    #if _DEBUG
 #if defined(OPIFEX_WINDOWS)
 #else
 	ui64 lastChange = OPfile::LastChange(path);
@@ -43,6 +47,7 @@ OPint OPdll::Update() {
 			OPlogErr("FAILED TO LOAD LIBRARY");
 		}
 	}
+#endif
 #endif
 	return 1;
 }
