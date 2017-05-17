@@ -20,4 +20,4 @@ OPengine Discord Channel: [https://discord.gg/wMeFgqE](https://discord.gg/wMeFgq
 View the roadmap here: [https://trello.com/b/TeRMlNOE/opengine](https://trello.com/b/TeRMlNOE/opengine)
 
 ## # License
-View the [License.md](https://github.com/TeamOPifex/OPengine/blob/master/License.md)
+View the [License](https://github.com/TeamOPifex/OPengine/blob/master/LICENSE)
