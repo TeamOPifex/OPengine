@@ -10,7 +10,7 @@ Download at [http://opengine.io](http://opengine.io)
 Or build it yourself: [https://github.com/TeamOPifex/OPengine.Launcher](https://github.com/TeamOPifex/OPengine.Launcher)
 
 ## # Discord Channel
-![Discord](https://discordapp.com/assets/fc0b01fe10a0b8c602fb0106d8189d9b.png)
+![Discord](http://imgur.com/vltXpws.png)
 
 Invite Link: [https://discord.gg/wMeFgqE](https://discord.gg/wMeFgqE)
 
