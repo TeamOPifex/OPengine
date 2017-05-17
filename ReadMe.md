@@ -9,12 +9,10 @@ Download at [http://opengine.io](http://opengine.io)
 
 Or build it yourself: [https://github.com/TeamOPifex/OPengine.Launcher](https://github.com/TeamOPifex/OPengine.Launcher)
 
-## # Slack Channel
-![Slack](http://i.imgur.com/zIHioUX.png)
+## # Discord Channel
+![Discord](https://discordapp.com/assets/fc0b01fe10a0b8c602fb0106d8189d9b.png)
 
-Get an invite: [http://slackin-opifex.herokuapp.com](http://slackin-opifex.herokuapp.com)
-
-Then join: [https://opifex.slack.com/](https://opifex.slack.com/)
+Invite Link: [https://discord.gg/wMeFgqE](https://discord.gg/wMeFgqE)
 
 ## # Trello Board
 ![Trello](http://i.imgur.com/LXoKnoF.png)
