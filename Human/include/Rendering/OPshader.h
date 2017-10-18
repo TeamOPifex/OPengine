@@ -19,7 +19,7 @@ struct OPshader {
 };
 
 struct OPshaderAttribute {
-	OPchar* Name;
+	const OPchar* Name;
 	OPshaderElementType Type;
 	ui32 Elements;
 	OPuint Offset;

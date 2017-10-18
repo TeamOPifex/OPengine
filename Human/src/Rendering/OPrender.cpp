@@ -28,7 +28,11 @@ OPint OPrenderSetup(OPrendererType renderer) {
 		case OPrendererType::OPENGL: {
 			OPRENDERER_ACTIVE = OPrendererGL();
 			break;
-		}
+        }
+        case OPrendererType::DIRECTX: {
+            OPlogErr("No DirectX Renderer Yet");
+            break;
+        }
 	}
 
     return 0;

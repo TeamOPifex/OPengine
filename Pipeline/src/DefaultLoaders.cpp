@@ -10,7 +10,7 @@
 #include "./Human/include/Systems/OPfontSystem.h"
 #include "./Human/include/Rendering/Sprite/OPspriteSheet.h"
 #include "./Human/include/Utilities/OPimagePNG.h"
-#include "./Data/include/OPjson.h"
+//#include "./Data/include/OPjson.h"
 #include "./Core/include/OPdebug.h"
 
 
@@ -29,6 +29,6 @@ void OPloadersAddDefault() {
 	OPCMAN.AddLoader(&OPASSETLOADER_OPM);
 	OPCMAN.AddLoader(&OPASSETLOADER_OPF);
 	OPCMAN.AddLoader(&OPASSETLOADER_OPSS);
-	OPCMAN.AddLoader(&OPASSETLOADER_META);
-	OPCMAN.AddLoader(&OPASSETLOADER_JSON);
+	//OPCMAN.AddLoader(&OPASSETLOADER_META);
+	//OPCMAN.AddLoader(&OPASSETLOADER_JSON);
 }

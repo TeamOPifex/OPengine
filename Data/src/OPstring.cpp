@@ -314,11 +314,8 @@ OPchar* OPstringCopy(const OPchar* str) {
 	ui32 len, size;
 	OPchar* result = NULL;
 	if (str == NULL) {
-		return "";
+		return NULL;
 	}
-
-	//OPlogInfo("copy string");
-	//OPlogInfo("copying %s", str);
 
 	len = (ui32)strlen(str);
 	size = (len + 1) * sizeof(OPchar);

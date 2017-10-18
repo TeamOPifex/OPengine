@@ -85,8 +85,8 @@ struct OPnetwork {
 };
 
 OPnetwork* OPnetworkCreate(OPnetworkType networkType, OPnetworkPrototcol protocol);
-i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPchar* port);
-i32 OPnetworkServerStart(OPnetwork* network, OPchar* port);
+i32 OPnetworkClientConnect(OPnetwork* network, const OPchar* address, const OPchar* port);
+i32 OPnetworkServerStart(OPnetwork* network, const OPchar* port);
 OPnetwork* OPnetworkAcceptClient(OPnetwork* network);
 i32 OPnetworkReceive(OPnetwork* network, void* state);
 i32 OPnetworkSend(OPnetwork* network, i8* data, i32 size);

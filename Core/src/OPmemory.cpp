@@ -10,13 +10,18 @@ OPuint OPdeallocationBytes = 0;
 void(*OPALLOCATIONTRACKER)(const OPchar*, ui64, const OPchar*, ui64) = NULL;
 #endif
 
-#if defined(OPIFEX_OSX)
-#include <malloc/malloc.h>
-#define OPMALLOC_SIZE(p) malloc_size(p)
-#elif defined(OPIFEX_WINDOWS)
-#define OPMALLOC_SIZE(p) _msize(p)
+#ifdef OPIFEX_OPTION_EMSCRIPTEN
+	#define OPMALLOC_SIZE(p) 0
 #else
-#define OPMALLOC_SIZE(p) 0
+
+	#if defined(OPIFEX_OSX)
+	#include <malloc/malloc.h>
+	#define OPMALLOC_SIZE(p) malloc_size(p)
+	#elif defined(OPIFEX_WINDOWS)
+	#define OPMALLOC_SIZE(p) _msize(p)
+	#else
+	#define OPMALLOC_SIZE(p) 0
+	#endif
 #endif
 
 OPchar OPSCRATCHBUFFER[OPSCRATCHBUFFER_SIZE];

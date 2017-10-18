@@ -222,12 +222,15 @@ i8 OPphysXOverlapping(OPphysXRigidActor* actor, OPphysXRigidActor* other) {
 
 PxGeometry GetGeoByType(PxGeometryHolder geo) {
 	switch (geo.getType()) {
-	case PxGeometryType::eCAPSULE: {
-		return geo.capsule();
-	}
-	case PxGeometryType::eBOX: {
-		return geo.box();
-	}
+		case PxGeometryType::eCAPSULE: {
+			return geo.capsule();
+		}
+		case PxGeometryType::eBOX: {
+			return geo.box();
+		}
+		default: {
+			return geo.box();
+		}
 	}
 }
 

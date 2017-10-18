@@ -46,6 +46,10 @@ macro(add_opifex_defines)
 		add_definitions(-DOPIFEX_OPTION_V8)
 	endif()
 
+	if(${OPIFEX_OPTION_EMSCRIPTEN})
+		add_definitions(-DOPIFEX_OPTION_EMSCRIPTEN)
+	endif()
+
 	add_definitions(-DOPIFEX_${RENDER_TARGET})
 	add_definitions(-D${OPIFEX_OS})
 

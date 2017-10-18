@@ -43,7 +43,7 @@ struct OPnetworkAddress {
 	i32 iResult;
 };
 
-ui64 OPnetworkLookupAddress(OPchar *kpAddress, OPchar** resolved)
+ui64 OPnetworkLookupAddress(const OPchar *kpAddress, OPchar** resolved)
  {
  	ui64 a;
 	*resolved = NULL;
@@ -93,7 +93,7 @@ OPnetwork* OPnetworkCreate(OPnetworkType networkType, OPnetworkPrototcol protoco
  	return network;
 }
 
-i32 OPnetworkGetAddress(OPchar* address, OPchar* port, OPnetworkAddress* networkAddress, OPnetworkPrototcol protocol) {
+i32 OPnetworkGetAddress(const OPchar* address, const OPchar* port, OPnetworkAddress* networkAddress, OPnetworkPrototcol protocol) {
 	struct addrinfo hints;
 
 	OPbzero(&hints, sizeof(hints));
@@ -155,7 +155,7 @@ i32 OPnetworkStartup() {
 	return 0;
 }
 
-void OPnetworkLogError(OPchar* message) {
+void OPnetworkLogError(const OPchar* message) {
 #ifdef OPIFEX_WINDOWS
 	OPlogDebug("%s: %ld", message, WSAGetLastError());
 #else
@@ -163,14 +163,14 @@ void OPnetworkLogError(OPchar* message) {
 #endif
 }
 
-i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPchar* port) {
+i32 OPnetworkClientConnect(OPnetwork* network, const OPchar* address, const OPchar* port) {
 
 	// On Windows the network has to be initialized
 	// Doesn't actually do anything on Unix based systems
 	if (OPnetworkStartup() != 0) {
 		return -1;
 	}
-	 
+
 
 	// Get the address to use, if it's a computer name, url, it will DNS it
 	OPnetworkAddress networkAddress;
@@ -180,8 +180,8 @@ i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPchar* port) {
 		NETWORK_CLEANUP();
 		return -2;
 	}
-	
-	
+
+
 	// Create the actual socket
  	network->ConnectSocket = (i32)socket(networkAddress.result->ai_family, networkAddress.result->ai_socktype, networkAddress.result->ai_protocol);
  	if (network->ConnectSocket == INVALID_SOCKET) {
@@ -208,10 +208,10 @@ i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPchar* port) {
 			continue;
 		}
 		// setsockopt(network->ConnectSocket, SOL_SOCKET, SO_REUSEADDR, yes, sizeof(i32));
-	
+
 		if (connect(network->ConnectSocket, p->ai_addr, (int)p->ai_addrlen) == -1) {
 			OPnetworkLogError("Error at connect()");
-	
+
 			CLOSESOCKET(network->ConnectSocket);
 			OPlog("error client: connect");
 			continue;
@@ -230,7 +230,7 @@ i32 OPnetworkClientConnect(OPnetwork* network, OPchar* address, OPchar* port) {
 
 i32 OPnetworkServerStartTCP(OPnetwork* network) {
 
-	 // listen() is only for TCP not UDP	
+	 // listen() is only for TCP not UDP
 	 if(listen(network->ConnectSocket, 64)){
 	 	const OPchar* errMsg = "No Error";
 	 	switch(errno){
@@ -262,7 +262,7 @@ i32 OPnetworkServerStartUDP(OPnetwork* network) {
 	return 0;
 }
 
- i32 OPnetworkServerStart(OPnetwork* network, OPchar* port) {
+ i32 OPnetworkServerStart(OPnetwork* network, const OPchar* port) {
 
 	// On Windows the network has to be initialized
 	// Doesn't actually do anything on Unix based systems
@@ -538,7 +538,7 @@ i32 OPnetworkServerStartUDP(OPnetwork* network) {
 		 }
 
 		 for (i = 0; i <= network->Data.fdmax; i++) {
-			 if (network->ConnectionType == OPNETWORK_TCP) {
+			 if (network->ConnectionProtocol == OPNETWORK_TCP) {
 				 if (!FD_ISSET(i, &network->Data.read_fds)) {
 					 continue;
 				 }

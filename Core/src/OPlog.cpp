@@ -111,11 +111,10 @@ void OPvlog(ui32 level, const char* channel, const char* message, va_list args) 
 		vsnprintf(buffer, sizeof buffer, buffer2, args);
 		OutputDebugString(buffer);
 #ifndef OPIFEX_IOS
-		printf(buffer);
+		printf("%s", buffer);
 		//if (LogToHandle) {
 		//	WriteFile(LogToHandle, buffer, strlen(buffer), 0, 0);
 		//}
-
 #else
         printf(buffer);
 #endif

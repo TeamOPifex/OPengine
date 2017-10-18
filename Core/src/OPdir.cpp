@@ -3,6 +3,10 @@
 #include "./Core/include/OPmemory.h"
 
 #include <stdio.h>  /* defines FILENAME_MAX */
+
+#ifdef OPIFEX_OPTION_EMSCRIPTEN
+#else
+
 #ifdef OPIFEX_WINDOWS
 	#include <direct.h>
 	#define GetCurrentDir _getcwd
@@ -114,3 +118,5 @@ OPchar* OPdirExecutable() {
 	#endif
 	return NULL;
 }
+
+#endif
