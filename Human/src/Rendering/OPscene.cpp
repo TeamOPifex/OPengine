@@ -5,6 +5,10 @@ void OPscene::Init(OPrenderer2* renderer, ui32 maxEntities, ui32 maxLights) {
 	index = 0;
 	count = maxEntities;
 	entities = OPALLOC(OPrendererEntity, count);
+	entitiesState = OPALLOC(bool, count);
+	for (ui32 i = 0; i < count; i++) {
+		entitiesState[i] = false;
+	}
 
 	lightIndex = 0;
 	lightCount = maxLights;
@@ -32,39 +36,56 @@ void OPscene::SetShadowCamera(OPcam* cam) {
 	renderer->SetShadowCamera(&shadowCamera);
 }
 
+
+OPrendererEntity* OPscene::NextEntity() {
+	for (ui32 i = 0; i < count; i++) {
+		if (entitiesState[i] == false) {
+			if (i >= index) {
+				index = i + 1;
+			}
+			entitiesState[i] = true;
+			return &entities[i];
+		}
+	}
+	return NULL;
+}
+
 OPrendererEntity* OPscene::Add(OPmodel* model, OPmaterial* material, OPrendererEntityDesc desc) {
 	ASSERT(index < count, "Hit Max Entities");
-	entities[index].world = OPMAT4_IDENTITY;
-	entities[index].model = model;
-	entities[index].material = material;
-	entities[index].desc = desc;
-	return &entities[index++];
+	OPrendererEntity* entity = NextEntity();
+	entity->world = OPMAT4_IDENTITY;
+	entity->model = model;
+	entity->material = material;
+	entity->desc = desc;
+	return entity;
 }
 
 OPrendererEntity* OPscene::Add(OPmodel* model, OPrendererEntityDesc desc) {
 	ASSERT(index < count, "Hit Max Entities");
-	entities[index].world = OPMAT4_IDENTITY;
-	entities[index].model = model;
-	entities[index].desc = desc;
-	renderer->SetMaterials(&entities[index]);
-	OPmaterial::SetMeta(&entities[index]);
-	return &entities[index++];
+	OPrendererEntity* entity = NextEntity();
+	entity->world = OPMAT4_IDENTITY;
+	entity->model = model;
+	entity->desc = desc;
+	renderer->SetMaterials(entity);
+	OPmaterial::SetMeta(entity);
+	return entity;
 }
 
 OPrendererEntity* OPscene::Add(OPmodel* model, OPskeleton* skeleton, OPrendererEntityDesc desc) {
 	ASSERT(index < count, "Hit Max Entities");
+	OPrendererEntity* entity = NextEntity();
 	desc.animated = true;
-	entities[index].world = OPMAT4_IDENTITY;
-	entities[index].model = model;
-	entities[index].desc = desc;
-	entities[index].shadowMaterial = NULL;
-	renderer->SetMaterials(&entities[index]);
-	OPmaterial::SetMeta(&entities[index]);
-	entities[index].material->AddParam(skeleton);
-	if (entities[index].shadowMaterial != NULL) {
-		entities[index].shadowMaterial->AddParam(skeleton);
+	entity->world = OPMAT4_IDENTITY;
+	entity->model = model;
+	entity->desc = desc;
+	entity->shadowMaterial = NULL;
+	renderer->SetMaterials(entity);
+	OPmaterial::SetMeta(entity);
+	entity->material->AddParam(skeleton);
+	if (entity->shadowMaterial != NULL) {
+		entity->shadowMaterial->AddParam(skeleton);
 	}
-	return &entities[index++];
+	return entity;
 }
 
 OPsceneLight* OPscene::Add(OPlightSpot light) {
@@ -77,18 +98,19 @@ OPrendererEntity* OPscene::Remove(OPrendererEntity* entity) {
 	bool found = false;
 	for (; i < index; i++) {
 		if (&entities[i] == entity) {
+			entitiesState[i] = false;
 			found = true;
 			break;
 		}
 	}
-	if (found) {
-		// TODO: (garrett) This won't work, because of the Ptr's
-		if (i != index - 1) {
-			entities[i] = entities[index - 1];
-		}
-		index--;
-		return &entities[index];
-	}
+	//if (found) {
+	//	// TODO: (garrett) This won't work, because of the Ptr's
+	//	if (i != index - 1) {
+	//		entities[i] = entities[index - 1];
+	//	}
+	//	index--;
+	//	return &entities[index];
+	//}
 	return NULL;
 }
 
@@ -101,7 +123,8 @@ void OPscene::Render(OPfloat delta) {
 	renderer->Begin();
 
 	for (ui32 i = 0; i < index; i++) {
-		renderer->Submit(&entities[i]);
+		if(entitiesState[i])
+			renderer->Submit(&entities[i]);
 	}
 
 	for (ui32 i = 0; i < lightIndex; i++) {

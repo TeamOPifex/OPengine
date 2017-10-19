@@ -37,6 +37,11 @@ OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OP
 	return OPphysXControllerCreate(manager, material, height, radius, NULL, NULL, NULL, NULL);
 }
 
+void OPphysXControllerMove(OPphysXController* controller, OPvec3 disp, ui64 delta) {
+	PxControllerFilters filters = PxControllerFilters(0);
+	controller->move(PxVec3(disp.x, disp.y, disp.z), 0.01f, (f32)delta, filters);
+}
+
 void OPphysXControllerMove(OPphysXController* controller, OPvec3 disp, OPtimer* timer) {
 	PxControllerFilters filters = PxControllerFilters(0);
 	controller->move(PxVec3(disp.x, disp.y, disp.z), 0.01f, (f32)timer->Elapsed, filters);

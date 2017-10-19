@@ -12,6 +12,10 @@
 #include "OPsocketGamePadSystem.h"
 #endif
 
+#ifdef ADDON_mono
+#include "OPmono.h"
+#endif
+
 //////////////////////////////////////
 // Application Methods
 //////////////////////////////////////
