@@ -7,7 +7,7 @@ void OPskeletonAnimation::Init(OPint boneCount, OPanimationFrame* frames, OPuint
 	FrameCount = frameCount;
 	Frame = 0;
 	Elapsed = 0;
-	FramesPer = 1000.0 / 60.0;//  24.0; // 24 fps... roughly 41.66
+	FramesPer = 1000.0f / 60.0f;//  24.0; // 24 fps... roughly 41.66
 	Loop = 1;
 	LoopsCompleted = 0;
 	Name = OPstringCopy(name);
@@ -45,10 +45,10 @@ OPmat4 InterpolateFrames(OPanimationFrame frame1, OPanimationFrame frame2, OPflo
 	return CalculateFrame(GetInterpolatedFrame(frame1, frame2, percentage));
 }
 
-void OPskeletonAnimation::Update(OPtimer* timer, OPfloat timeScale) {
+void OPskeletonAnimation::Update(OPfloat dt, OPfloat timeScale) {
 	ASSERT(FramesPer != 0, "Must have at least 1 frame per second");
 
-	Elapsed += timer->Elapsed * timeScale;
+	Elapsed += dt * timeScale;
 	LastFrame = Frame;
 
 	// Move into the next frame(s)
@@ -56,10 +56,11 @@ void OPskeletonAnimation::Update(OPtimer* timer, OPfloat timeScale) {
 		Elapsed -= FramesPer;
 		Frame++;
 		if (Frame >= FrameCount) {
-			if(Loop) {
+			if (Loop) {
 				Frame = 0;
 				LoopsCompleted++;
-			} else {
+			}
+			else {
 				// If it doesn't loop, set it to the last frame
 				// and set LoopsCompleted to 1 so we know not
 				// to keep playing the animation

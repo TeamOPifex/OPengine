@@ -159,7 +159,7 @@ void OPstring::Resize(OPuint size, bool realloc) {
 }
 
 OPstring* OPstring::Substr(OPuint start, OPuint end) {
-	ui32 subLen;
+	OPuint subLen;
 
 	subLen = end - start;
 
@@ -175,10 +175,10 @@ OPstring* OPstring::Substr(OPuint start, OPuint end) {
 }
 
 OPint OPstring::Contains(OPstring* str) {
-	ui32 i, strLen, cmpLen;
+	OPuint i;
 
 	if (str->_len < _len) {
-		for (i = 0; i < strLen; i++) {
+		for (i = 0; i < str->_len; i++) {
 			if (OPmemcmp(&_data[i], str->_data, str->_len) == 0) {
 				return i;
 			}
@@ -189,8 +189,8 @@ OPint OPstring::Contains(OPstring* str) {
 }
 
 OPint OPstring::Contains(const OPchar* cmp) {
-	ui32 i, cmpLen;
-	cmpLen = (ui32)strlen(cmp);
+	OPuint i, cmpLen;
+	cmpLen = strlen(cmp);
 	if (cmpLen < _len) {
 		for (i = 0; i < _len; i++) {
 			if (OPmemcmp(&_data[i], cmp, cmpLen) == 0) {
@@ -218,9 +218,9 @@ OPint OPstring::IndexOf(OPchar c) {
 
 OPint OPstring::IndexOfLast(OPchar c) {
 	OPint result = -1;
-	for (OPint i = 0; i < _len; i++) {
+	for (OPuint i = 0; i < _len; i++) {
 		if (_data[i] == c) {
-			result = i;
+			result = (OPint)i;
 		}
 	}
 	return result;
@@ -236,8 +236,8 @@ OPuint OPstring::Count(OPchar c) {
 	return total;
 }
 
-i32 OPstring::Split(OPchar split, OPchar*** output) {
-	ui32 counts = 1 + Count(split);
+OPuint OPstring::Split(OPchar split, OPchar*** output) {
+	OPuint counts = 1 + Count(split);
 
 	(*output) = OPALLOC(OPchar*, counts);
 	OPchar* data = _strCopy(_data);

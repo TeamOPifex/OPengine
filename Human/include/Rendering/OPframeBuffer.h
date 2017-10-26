@@ -31,7 +31,7 @@ struct OPframeBuffer {
 	}
 
 	inline void Init(OPtextureDesc textureDesc, OPtexture* depthTexture) {
-		OPRENDERER_ACTIVE->FrameBuffer.Init(this, textureDesc, depthTexture);
+		OPRENDERER_ACTIVE->FrameBuffer.Init(this, &textureDesc, 1, depthTexture);
 	}
 
 	inline void Init(OPtextureDesc* textureDesc, ui32 count, OPtexture* depthTexture) {

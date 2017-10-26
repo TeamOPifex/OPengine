@@ -8,16 +8,16 @@ class OPphysXControllerBehaviorReport : public PxControllerBehaviorCallback {
 
 public:
 	virtual PxControllerBehaviorFlags getBehaviorFlags(const PxShape& shape, const PxActor& actor) {
-		if (_onShapeHit == NULL) return PxControllerBehaviorFlag::eCCT_SLIDE;
+		if (_onShapeHit == NULL) return PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT;
 		return _onShapeHit(shape, actor);
 	}
 
 	virtual PxControllerBehaviorFlags getBehaviorFlags(const PxController& controller) {
-		return PxControllerBehaviorFlag::eCCT_SLIDE;
+		return PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT;
 	}
 
 	virtual PxControllerBehaviorFlags getBehaviorFlags(const PxObstacle& obstacle) {
-		return PxControllerBehaviorFlag::eCCT_SLIDE;
+		return PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT;
 	}
 
 	OPphysXControllerBehaviorReport(

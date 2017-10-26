@@ -153,6 +153,11 @@ struct OPmat4 {
 		return this;
 	}
 
+	inline OPmat4* SetScl(OPvec3 scl) {
+		*this = OPmat4Scl(scl.x, scl.y, scl.z);
+		return this;
+	}
+
 	inline OPmat4* SetTranslate(OPvec3 val) {
 		*this = OPmat4Translate(val.x, val.y, val.z);
 		return this;
