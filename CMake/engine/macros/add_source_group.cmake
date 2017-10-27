@@ -2,16 +2,27 @@
 macro(add_source_group FILTER_NAME SOURCE_PATH TARGET_LIST)
 
 	file(TO_NATIVE_PATH "${FILTER_NAME}" NEW_FILTER_NAME)
-	file(GLOB TEMP_SRC
-		"${SOURCE_PATH}/*.h"
-		"${SOURCE_PATH}/*.cpp"
-		"${SOURCE_PATH}/*.c"
-		"${SOURCE_PATH}/*.cc"
-		"${SOURCE_PATH}/*.mm"
-		"${SOURCE_PATH}/*.m"
-		"${SOURCE_PATH}/*.ico"
-		"${SOURCE_PATH}/*.rc"
-	)
+	if(${OPIFEX_OS_LINUX})
+		file(GLOB TEMP_SRC
+			"${SOURCE_PATH}/*.h"
+			"${SOURCE_PATH}/*.cpp"
+			"${SOURCE_PATH}/*.c"
+			"${SOURCE_PATH}/*.cc"
+			"${SOURCE_PATH}/*.ico"
+			"${SOURCE_PATH}/*.rc"
+		)
+	else()
+		file(GLOB TEMP_SRC
+			"${SOURCE_PATH}/*.h"
+			"${SOURCE_PATH}/*.cpp"
+			"${SOURCE_PATH}/*.c"
+			"${SOURCE_PATH}/*.cc"
+			"${SOURCE_PATH}/*.mm"
+			"${SOURCE_PATH}/*.m"
+			"${SOURCE_PATH}/*.ico"
+			"${SOURCE_PATH}/*.rc"
+		)
+	endif()
 	source_group("${NEW_FILTER_NAME}" FILES ${TEMP_SRC})
 	list(APPEND ${TARGET_LIST} "${TEMP_SRC}")
 
@@ -23,7 +34,16 @@ macro(add_source_group FILTER_NAME SOURCE_PATH TARGET_LIST)
 endmacro(add_source_group)
 
 macro(add_source_group_recurse ROOT_PATH SOURCE_PATH TARGET_LIST)
-    FILE(GLOB_RECURSE new_list
+	if(${OPIFEX_OS_LINUX})
+		FILE(GLOB_RECURSE new_list
+			"${ROOT_PATH}/${SOURCE_PATH}/*.h"
+			"${ROOT_PATH}/${SOURCE_PATH}/*.cpp"
+			"${ROOT_PATH}/${SOURCE_PATH}/*.c"
+			"${ROOT_PATH}/${SOURCE_PATH}/*.cc"
+			"${ROOT_PATH}/${SOURCE_PATH}/*.ico"
+			"${ROOT_PATH}/${SOURCE_PATH}/*.rc")
+	else()
+		FILE(GLOB_RECURSE new_list
 			"${ROOT_PATH}/${SOURCE_PATH}/*.h"
 			"${ROOT_PATH}/${SOURCE_PATH}/*.cpp"
 			"${ROOT_PATH}/${SOURCE_PATH}/*.c"
@@ -32,6 +52,7 @@ macro(add_source_group_recurse ROOT_PATH SOURCE_PATH TARGET_LIST)
 			"${ROOT_PATH}/${SOURCE_PATH}/*.m"
 			"${ROOT_PATH}/${SOURCE_PATH}/*.ico"
 			"${ROOT_PATH}/${SOURCE_PATH}/*.rc")
+	endif()
     SET(dir_list "")
     FOREACH(file_path ${new_list})
         GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)
