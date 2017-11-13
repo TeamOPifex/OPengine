@@ -44,6 +44,7 @@ OPrendererEntity* OPscene::NextEntity() {
 				index = i + 1;
 			}
 			entitiesState[i] = true;
+			entities[i].alive = true;
 			return &entities[i];
 		}
 	}
@@ -94,15 +95,16 @@ OPsceneLight* OPscene::Add(OPlightSpot light) {
 }
 
 OPrendererEntity* OPscene::Remove(OPrendererEntity* entity) {
-	ui32 i = 0;
-	bool found = false;
-	for (; i < index; i++) {
-		if (&entities[i] == entity) {
-			entitiesState[i] = false;
-			found = true;
-			break;
-		}
-	}
+	entity->alive = false;
+	//ui32 i = 0;
+	//bool found = false;
+	//for (; i < index; i++) {
+	//	if (&entities[i] == entity) {
+	//		entitiesState[i] = false;
+	//		found = true;
+	//		break;
+	//	}
+	//}
 	//if (found) {
 	//	// TODO: (garrett) This won't work, because of the Ptr's
 	//	if (i != index - 1) {
@@ -123,7 +125,7 @@ void OPscene::Render(OPfloat delta) {
 	renderer->Begin();
 
 	for (ui32 i = 0; i < index; i++) {
-		if(entitiesState[i])
+		if(entities[i].alive)
 			renderer->Submit(&entities[i]);
 	}
 
@@ -161,7 +163,8 @@ void OPsceneVR::RenderLeft(OPfloat delta) {
 	renderer->Begin();
 
 	for (ui32 i = 0; i < index; i++) {
-		renderer->Submit(&entities[i]);
+		if (entities[i].alive)
+			renderer->Submit(&entities[i]);
 	}
 
 	for (ui32 i = 0; i < lightIndex; i++) {
@@ -179,7 +182,8 @@ void OPsceneVR::RenderRight(OPfloat delta) {
 	renderer->Begin();
 
 	for (ui32 i = 0; i < index; i++) {
-		renderer->Submit(&entities[i]);
+		if (entities[i].alive)
+			renderer->Submit(&entities[i]);
 	}
 
 	for (ui32 i = 0; i < lightIndex; i++) {
@@ -197,7 +201,8 @@ void OPsceneVR::RenderWith(OPcam* cam, OPfloat delta) {
 	renderer->Begin();
 
 	for (ui32 i = 0; i < index; i++) {
-		renderer->Submit(&entities[i]);
+		if (entities[i].alive)
+			renderer->Submit(&entities[i]);
 	}
 
 	for (ui32 i = 0; i < lightIndex; i++) {

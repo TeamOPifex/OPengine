@@ -46,6 +46,7 @@ struct OPrendererEntity {
 	OPmaterial* material = NULL;
 	OPmaterial* shadowMaterial = NULL;
 	OPrendererEntityDesc desc;
+	bool alive = false;
 
 	inline void SetAlbedoMap(const OPchar* texture) {
 		if (desc.materialPerMesh) {

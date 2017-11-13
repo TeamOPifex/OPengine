@@ -71,8 +71,8 @@ void OPtexture3D::PrepRender(OPcam* camera) {
     world.RotY(rotation.y);
     world.RotZ(rotation.z);
     world.RotX(rotation.x);
+	world.Translate(position);
     world.Scl(scale.x, scale.y, 1.0);
-    world.Translate(position);
 
 	OPeffectSet("uColorTexture", texture, 0);
 	OPeffectSet("uWorld", 1, &world);
