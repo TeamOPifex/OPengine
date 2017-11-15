@@ -38,6 +38,7 @@ struct OPcman {
 	bool Unload(const OPchar* assetKey);
 	void* Get(const OPchar* assetKey);
 	bool Delete(const OPchar* assetKey);
+	bool DeleteAll();
 	void Destroy();
 	bool SetDir(OPchar* dir);
 	void LoadResourcePack(const OPchar* filename);

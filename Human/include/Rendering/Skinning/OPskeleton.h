@@ -33,6 +33,7 @@ struct OPskeleton {
 	void Update();
 	i16 Get(const OPchar* name);
 	void Destroy();
+	void Log();
 
 	inline OPskeleton* Copy() {
 		return OPskeleton::Create(hierarchy, activePose, boneOffsets, globalInverse, hierarchyCount, jointNames);

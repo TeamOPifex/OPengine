@@ -139,7 +139,13 @@ void OPlg(const char* message, ...){
 		perror("SYSTEM ERROR");
 		errno = 0;
 	}
-	//write(LogToHandle, buffer, strlen(buffer));
+
+#ifdef OPIFEX_WINDOWS
+	sprintf_s(buffer, sizeof(buffer), "%s", message);
+#else
+	sprintf(buffer, "%s", message);
+#endif
+
     va_end(args);
 }
 
