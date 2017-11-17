@@ -29,6 +29,7 @@ void OPphysXSceneAddWalls(OPphysXScene* scene, OPfloat left, OPfloat right, OPfl
 struct OPphysXScene {
 	PxScene* scene;
 	ui64 elapsed;
+	PxSceneDesc desc;
 	inline void Update(OPtimer* timer) {
 		OPphysXSceneUpdate(this, 16);
 	}
@@ -46,6 +47,7 @@ inline void OPphysXSceneRemove(OPphysXScene* scene, OPphysXRigidActor* actor) {
 
 inline void OPphysXSceneDestroy(OPphysXScene* scene) {
 	scene->scene->release();
+	OPfree(scene->desc.simulationEventCallback);
 }
 
 #endif

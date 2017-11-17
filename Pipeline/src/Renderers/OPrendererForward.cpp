@@ -7,6 +7,11 @@ void OPrendererForward::Init(OPcam** cam, OPcam** shadowCam) {
 	renderPass.Init(cam, shadowCam, &shadowPass);
 }
 
+void OPrendererForward::Destroy() {
+	shadowPass.Destroy();
+	renderPass.Destroy();
+}
+
 void OPrendererForward::Submit(OPrendererEntity* rendererEntity) {
 	ASSERT(rendererEntity != NULL, "Null rendererEntity?");
 	if (rendererEntity->desc.shadowEmitter) {

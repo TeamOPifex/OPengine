@@ -96,6 +96,24 @@ OPsceneLight* OPscene::Add(OPlightSpot light) {
 
 OPrendererEntity* OPscene::Remove(OPrendererEntity* entity) {
 	entity->alive = false;
+	if (entity->desc.materialPerMesh) {
+		for (ui32 i = 0; i < entity->model->meshCount; i++) {
+			if (entity->desc.shadowEmitter) {
+				entity->shadowMaterial[i].Destroy();
+				OPfree(&entity->shadowMaterial[i]);
+			}
+			entity->material[i].Destroy();
+			OPfree(&entity->material[i]);
+		}
+	}
+	else {
+		if (entity->desc.shadowEmitter) {
+			entity->shadowMaterial->Destroy();
+			OPfree(entity->shadowMaterial);
+		}
+		entity->material->Destroy();
+		OPfree(entity->material);
+	}
 	//ui32 i = 0;
 	//bool found = false;
 	//for (; i < index; i++) {
@@ -140,7 +158,15 @@ void OPscene::Render(OPfloat delta) {
 }
 
 void OPscene::Destroy() {
+	for (ui32 i = 0; i < index; i++) {
+		if (entities[i].alive) {
+			Remove(&entities[i]);
+		}
+	}
+	renderer->Destroy();
 	OPfree(entities);
+	OPfree(entitiesState);
+	OPfree(lights);
 }
 
 

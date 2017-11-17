@@ -66,7 +66,12 @@ void OPskeleton::Update() {
 }
 
 void OPskeleton::Destroy() {
-
+	for (ui32 i = 0; i < hierarchyCount; i++) {
+		OPfree(jointNames[i]);
+	}
+	OPfree(jointNames);
+	OPfree(bindPose);
+	OPfree(boneOffsets);
 }
 
 

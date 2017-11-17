@@ -58,6 +58,7 @@ void OPframeBufferDepthAPIGLUnbind(OPframeBufferDepth* ptr) {
 
 void OPframeBufferDepthAPIGLDestroy(OPframeBufferDepth* ptr) {
 	OPframeBufferDepthGL* frameBufferGL = (OPframeBufferDepthGL*)ptr->internalPtr;
+	ptr->texture.Destroy();
 	OPGLFN(glDeleteFramebuffers(1, &frameBufferGL->Handle));
 	OPfree(frameBufferGL);
 	ptr->internalPtr = NULL;

@@ -67,6 +67,7 @@ struct OPskeletonAnimation {
 
 
 	void Init(OPint boneCount, OPanimationFrame* frames, OPuint count, OPchar* name);
+	void Destroy();
 	void Update(OPfloat delta, OPfloat timeScale);
 	void UpdateEvents(void* data);
 	void Apply(OPskeleton* skeleton);

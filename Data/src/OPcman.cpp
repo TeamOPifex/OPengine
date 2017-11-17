@@ -302,6 +302,10 @@ void OPcman::Destroy() {
 	resourceFiles.Destroy();
 	hashmap.Destroy();
 	purgeList.Destroy();
+	for (ui32 i = 0; i < assetDirectoriesCount; i++) {
+		OPfree(assetDirectories[i]);
+	}
+	OPfree(assetDirectories);
 	OPfree(rootFolder);
 }
 

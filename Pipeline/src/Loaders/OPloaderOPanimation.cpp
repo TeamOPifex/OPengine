@@ -65,5 +65,8 @@ OPint OPloaderOPanimationLoad(OPstream* str, OPskeletonAnimation** animation) {
 }
 
 OPint OPloaderOPanimationUnload(OPskeletonAnimation* animation) {
+	animation->Destroy();
+	OPfree(animation->JointFrames);
+	OPfree(animation);
 	return 1;
 }

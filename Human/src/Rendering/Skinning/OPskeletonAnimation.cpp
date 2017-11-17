@@ -19,6 +19,11 @@ void OPskeletonAnimation::Init(OPint boneCount, OPanimationFrame* frames, OPuint
 	BoneCount = boneCount;
 }
 
+void OPskeletonAnimation::Destroy() {
+	OPfree(CurrentFrame);
+	OPfree(Name);
+}
+
 OPskeletonAnimation* OPskeletonAnimation::Create(OPint boneCount, OPanimationFrame* frames, OPuint count, OPchar* name) {
 	OPskeletonAnimation* result = (OPskeletonAnimation*)OPalloc(sizeof(OPskeletonAnimation));
 	result->Init(boneCount, frames, count, name);

@@ -424,13 +424,14 @@ i32 OPstringSplit(const OPchar* str, OPchar split, OPchar*** output) {
 	}
 
 	(*output) = OPALLOC(OPchar*, counts);
-	OPchar* data = OPstringCopy(str);
 
 	// If there weren't any, return  just the string
 	if (counts == 1) {
-		(*output)[0] = data;
+		(*output)[0] = OPstringCopy(str);
 		return 1;
 	}
+
+	OPchar* data = OPstringCopy(str);
 
 
 	ui32 ind = 0;
@@ -443,6 +444,8 @@ i32 OPstringSplit(const OPchar* str, OPchar split, OPchar*** output) {
 		}
 	}
 	(*output)[ind++] = &data[strPos];
+
+	OPfree(data);
 
 	return counts;
 }
