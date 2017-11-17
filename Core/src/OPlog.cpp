@@ -111,11 +111,10 @@ void OPvlog(ui32 level, const char* channel, const char* message, va_list args) 
 		vsnprintf(buffer, sizeof buffer, buffer2, args);
 		OutputDebugString(buffer);
 #ifndef OPIFEX_IOS
-		printf(buffer);
+		printf("%s", buffer);
 		//if (LogToHandle) {
 		//	WriteFile(LogToHandle, buffer, strlen(buffer), 0, 0);
 		//}
-
 #else
         printf(buffer);
 #endif
@@ -140,7 +139,13 @@ void OPlg(const char* message, ...){
 		perror("SYSTEM ERROR");
 		errno = 0;
 	}
-	//write(LogToHandle, buffer, strlen(buffer));
+
+#ifdef OPIFEX_WINDOWS
+	sprintf_s(buffer, sizeof(buffer), "%s", message);
+#else
+	sprintf(buffer, "%s", message);
+#endif
+
     va_end(args);
 }
 

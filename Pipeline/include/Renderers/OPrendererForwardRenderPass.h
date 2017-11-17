@@ -17,7 +17,7 @@ public:
 	void Begin();
 	void Submit(OPrendererEntity* rendererEntity);
 	void End();
-	void Destroy() {}
+	void Destroy();
 	OPmaterial* GetMaterial(ui32 materialType) { return &texturedMaterial; }
 	void SetCamera(OPcam** cam);
 	void SetShadowCamera(OPcam** cam);

@@ -19,7 +19,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/architecture/default_os.cmake)
 ### Setup default options
 
 set(OPIFEX_OS ${OPIFEX_DEFAULT_OS} CACHE STRING "Operating system to build for.")
-set(RENDER_TARGET "OPENGL_2_0" CACHE STRING "The OpenGL Version to Target")
+set(RENDER_TARGET "OPENGL_3_3" CACHE STRING "The OpenGL Version to Target")
 set(OPIFEX_NODE_VERSION "0_10" CACHE STRING "The NodeJS Version to Build for")
 
 set_property(CACHE OPIFEX_OS PROPERTY STRINGS OPIFEX_WIN32 OPIFEX_WIN64 OPIFEX_LINUX32 OPIFEX_LINUX64 OPIFEX_IOS OPIFEX_ANDROID OPIFEX_OSX32 OPIFEX_OSX64)

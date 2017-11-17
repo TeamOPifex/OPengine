@@ -13,10 +13,10 @@ OPfloat OPquadVertData[] = {
 	 1,  1,
 
 	-1,  1, 0,
-	 0,  1,
+	 0,  0,
 
 	-1, -1, 0,
-	 0,  0,
+	 0,  1,
 
 	 1, -1, 0,
 	 1,  0
@@ -327,6 +327,74 @@ OPmodel* OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, 
 		4, 6, OPindexSize::SHORT,
 		verts, OPquadIndexData
 	);
+
+	return mesh;
+}
+
+
+OPmodel* OPquadCreate(OPfloat width, OPfloat depth, ui32 segmentsWidth, ui32 segmentsDepth) {
+	if (segmentsWidth == 0 || segmentsDepth == 0) {
+		return NULL;
+	}
+
+	OPvertexLayoutBuilder builder;
+	builder.Init();
+	builder.Add(OPattributes::POSITION);
+	builder.Add(OPattributes::UV);
+	OPvertexLayout layout = builder.Build();
+	OPmodel* mesh = OPNEW(OPmodel(1, layout));
+	mesh->Bind();
+	
+
+	ui32 totalVertices = (segmentsWidth + 1) * (segmentsDepth + 1);
+	QuadPoint* vertices = OPALLOC(QuadPoint, totalVertices);
+
+	f32 halfWidth = width / 2.0f;
+	f32 halfDepth = depth / 2.0f;
+
+	OPfloat w = segmentsWidth;
+	OPfloat d = segmentsDepth;
+
+	for (ui32 i = 0; i < segmentsWidth + 1; i++) {
+		for (ui32 j = 0; j < segmentsDepth + 1; j++) {
+
+			ui64 offset = j * segmentsWidth + i;
+			QuadPoint* qp = &vertices[offset];
+			
+			qp->x = -halfWidth + ((j / (OPfloat)segmentsWidth) * width);
+			qp->y = 0;
+			qp->z = -halfDepth + ((i / (OPfloat)segmentsDepth) * depth);
+
+			qp->u = (OPfloat)j / d;
+			qp->v = (OPfloat)i / w;
+		}
+	}
+
+	ui32 totalIndices = (segmentsWidth) * (segmentsDepth) * 6;
+	ui16* indices = (ui16*)OPalloc(sizeof(ui16) * totalIndices);
+
+	ui32 off = 0;
+	for (ui32 i = 0; i < segmentsWidth; i++) {
+		for (ui32 j = 0; j < segmentsDepth; j++) {
+
+			indices[off++] = (j + 1) * (segmentsDepth) + i + 1;
+			indices[off++] = (j + 1) * (segmentsDepth) + i + 0;
+			indices[off++] = j * (segmentsDepth) + i + 0;
+
+
+			indices[off++] = j * (segmentsDepth) + i + 1;
+			indices[off++] = (j + 1) * (segmentsDepth) + i + 1;
+			indices[off++] = j * (segmentsDepth) + i + 0;
+		}
+	}
+
+	mesh->Build(
+		totalVertices, totalIndices, OPindexSize::SHORT,
+		vertices, indices
+	);
+
+	OPfree(vertices);
+	OPfree(indices);
 
 	return mesh;
 }

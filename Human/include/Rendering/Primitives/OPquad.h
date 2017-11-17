@@ -23,6 +23,7 @@ OPmodel*       OPquadCreateZPlane();
 OPmodel*       OPquadCreateZPlane(OPfloat width, OPfloat depth);
 OPmodel*       OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OPvec2 texcoordEnd);
 OPmodel*       OPquadCreateZPlane(OPfloat width, OPfloat depth, OPvec2 texcoordStart, OPvec2 texcoordEnd, ui32 features);
+OPmodel* OPquadCreate(OPfloat width, OPfloat depth, ui32 segmentsWidth, ui32 segmentsDepth);
 //OPmeshPacked OPquadCreatePacked();
 OPmodel*       OPquadNormCreate();
 //OPmeshPacked OPquadNormCreatePacked();

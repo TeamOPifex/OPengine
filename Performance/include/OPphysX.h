@@ -23,7 +23,6 @@
 #include <foundation/PxMat33.h>
 
 using namespace physx;
-using namespace std;
 
 // EXTERNS
 

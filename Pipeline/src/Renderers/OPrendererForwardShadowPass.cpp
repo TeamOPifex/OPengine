@@ -20,6 +20,20 @@ void OPrendererForwardShadowPass::Init(OPcam** cam) {
 	shadowSkinnedMaterial.cull = shadowMaterial.depth = true;
 }
 
+void OPrendererForwardShadowPass::Destroy() {
+	shadowMaterial.effect->Destroy();
+	OPfree(shadowMaterial.effect);
+	shadowMaterial.Destroy();
+
+	shadowSkinnedMaterial.effect->Destroy();
+	OPfree(shadowSkinnedMaterial.effect);
+	shadowSkinnedMaterial.Destroy();
+
+	depthBuffer.Destroy();
+
+	renderBucket.Destroy();
+}
+
 void OPrendererForwardShadowPass::Submit(OPrendererEntity* rendererEntity) {
 	renderBucket.Submit(rendererEntity->model, &rendererEntity->world, rendererEntity->shadowMaterial, rendererEntity->desc.materialPerMesh);
 }

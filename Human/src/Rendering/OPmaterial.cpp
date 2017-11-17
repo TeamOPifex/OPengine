@@ -109,6 +109,11 @@ void OPmaterial::Bind(bool onlyParams) {
 }
 
 void OPmaterial::AddParam(OPmaterialParamType paramType, const OPchar* name, void* data, ui8 count) {
+	OPshaderUniform* uniform = effect->GetUniform(name);
+	if (uniform == NULL) {
+		OPlogErr("Uniform was not present: %s", name);
+		return;
+	}
 	OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Name %s %p", name, data);
 	params[paramIndex].type = paramType;
 	params[paramIndex].name = name;

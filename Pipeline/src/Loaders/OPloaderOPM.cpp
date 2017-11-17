@@ -180,6 +180,9 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 				}
 			}
 		}
+		else {
+			mesh->meshMeta = NULL;
+		}
 	}
 
 	model->name = modelName;
@@ -210,7 +213,56 @@ OPint OPMreload(OPstream* str, void** model) {
 	return 0;
 }
 
-OPint OPMunload(void* model) {
+void UnloadMesh(OPmesh mesh) {
+	if (mesh.meshDesc != NULL) {
+		OPfree(mesh.meshDesc->vertices);
+		OPfree(mesh.meshDesc->indices);
+		OPfree(mesh.meshDesc);
+	}
+	if (mesh.materialDesc != NULL) {
+
+		if (mesh.materialDesc->diffuse != NULL) OPfree(mesh.materialDesc->diffuse);
+		if (mesh.materialDesc->specular != NULL) OPfree(mesh.materialDesc->specular);
+		if (mesh.materialDesc->ambient != NULL) OPfree(mesh.materialDesc->ambient);
+		if (mesh.materialDesc->emissive != NULL) OPfree(mesh.materialDesc->emissive);
+		if (mesh.materialDesc->height != NULL) OPfree(mesh.materialDesc->height);
+		if (mesh.materialDesc->normals != NULL) OPfree(mesh.materialDesc->normals);
+		if (mesh.materialDesc->shininess != NULL) OPfree(mesh.materialDesc->shininess);
+		if (mesh.materialDesc->opacity != NULL) OPfree(mesh.materialDesc->opacity);
+		if (mesh.materialDesc->displacement != NULL) OPfree(mesh.materialDesc->displacement);
+		if (mesh.materialDesc->lightMap != NULL) OPfree(mesh.materialDesc->lightMap);
+		if (mesh.materialDesc->reflection != NULL) OPfree(mesh.materialDesc->reflection);
+		if (mesh.materialDesc->other1 != NULL) OPfree(mesh.materialDesc->other1);
+		if (mesh.materialDesc->other2 != NULL) OPfree(mesh.materialDesc->other2);
+		if (mesh.materialDesc->other3 != NULL) OPfree(mesh.materialDesc->other3);
+
+		OPfree(mesh.materialDesc);
+	}
+
+	if (mesh.meshMeta != NULL) {
+		for (ui32 i = 0; i < mesh.meshMeta->count; i++) {
+			mesh.meshMeta->data[i]->Destroy();
+			OPfree(mesh.meshMeta->data[i]);
+		}
+		OPfree(mesh.meshMeta->data);
+		OPfree(mesh.meshMeta->metaType);
+		OPfree(mesh.meshMeta);
+	}
+
+	if (mesh.name != NULL) {
+		OPfree(mesh.name);
+	}
+}
+
+OPint OPMunload(OPmodel* model) {
+	for (ui32 i = 0; i < model->meshCount; i++) {
+		UnloadMesh(model->meshes[i]);
+	}
+	if (model->name != NULL) {
+		OPfree(model->name);
+	}
+	model->Destroy();
+	OPfree(model);
 	return 0;
 }
 
@@ -292,6 +344,10 @@ bool OPMloadDataV2(OPmodel* model, OPstream* str) {
 			OPchar* name = str->String();
 			ui32 dataSize = str->UI32();
 			void* data = str->Read(dataSize);
+
+			if (name != NULL) {
+				OPfree(name);
+			}
 		}
 	}
 

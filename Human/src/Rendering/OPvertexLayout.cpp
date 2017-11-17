@@ -21,7 +21,7 @@ ui32 GetOPShaderElementSize(OPattributeTypes attribType) {
 	}
 }
 
-void OPvertexLayout::Init(ui16 attributeCount, OPchar** names, OPattributeTypes* types, ui8* counts) {
+void OPvertexLayout::Init(ui16 attributeCount, const OPchar** names, OPattributeTypes* types, ui8* counts) {
 
 	count = attributeCount;
 	//attributes = (OPshaderAttribute*)OPalloc(sizeof(OPshaderAttribute) * attributeCount);

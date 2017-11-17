@@ -6,8 +6,8 @@ typedef struct OPassetLoader OPassetLoader;
 #include "./Data/include/OPstream.h"
 
 struct OPassetLoader {
-	OPchar* Extension;
-	OPchar* AssetTypePath;
+	const OPchar* Extension;
+	const OPchar* AssetTypePath;
 	OPint AssetSize;
 	OPint(*Load)(OPstream* stream, void** assetOut);
 	OPint(*Unload)(void* assetIn);

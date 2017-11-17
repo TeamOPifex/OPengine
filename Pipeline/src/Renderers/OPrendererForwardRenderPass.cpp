@@ -24,6 +24,18 @@ void OPrendererForwardRenderPass::Init(OPcam** cam, OPcam** shadowCam, OPrendere
 	skinnedMaterial.AddParam("uViewPos", &(*cam)->pos);
 }
 
+void OPrendererForwardRenderPass::Destroy() {
+	texturedMaterial.effect->Destroy();
+	OPfree(texturedMaterial.effect);
+	texturedMaterial.Destroy();
+
+	skinnedMaterial.effect->Destroy();
+	OPfree(skinnedMaterial.effect);
+	skinnedMaterial.Destroy();
+
+	renderBucket.Destroy();
+}
+
 void OPrendererForwardRenderPass::Submit(OPrendererEntity* rendererEntity) {
 	renderBucket.Submit(rendererEntity->model, &rendererEntity->world, rendererEntity->material, rendererEntity->desc.materialPerMesh);
 }

@@ -20,7 +20,7 @@ struct OPvertexLayout {
 	OPshaderAttribute attributes[OPVERTEX_LAYOUT_BUILDER_MAX];
 	ui32 stride;
 
-	void Init(ui16 attributeCount, OPchar** names, OPattributeTypes* types, ui8* counts);
+	void Init(ui16 attributeCount, const OPchar** names, OPattributeTypes* types, ui8* counts);
 	//void Init(OPshaderAttribute* attributes, ui8 count);
 	void SetOffsets(OPeffect* effect);
 	void Log();
@@ -30,7 +30,7 @@ struct OPvertexLayout {
 
 struct OPvertexLayoutBuilder {
     ui32 index;
-    OPchar* names[OPVERTEX_LAYOUT_BUILDER_MAX];
+    const OPchar* names[OPVERTEX_LAYOUT_BUILDER_MAX];
 	OPattributeTypes types[OPVERTEX_LAYOUT_BUILDER_MAX];
 	ui8 counts[OPVERTEX_LAYOUT_BUILDER_MAX];
 

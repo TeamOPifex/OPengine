@@ -14,6 +14,7 @@ typedef PxController OPphysXController;
 OPphysXControllerManager* OPphysXControllerCreateManager(OPphysXScene* scene);
 OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OPphysXMaterial* material, OPfloat height, OPfloat radius, void(*onShapeHit)(PxControllerShapeHit), void(*onControllerHit)(PxControllersHit), void(*onObstacleHit)(PxControllerObstacleHit), PxControllerBehaviorFlags(*_onBehaviorShapeHit)(const PxShape&, const PxActor&));
 OPphysXController* OPphysXControllerCreate(OPphysXControllerManager* manager, OPphysXMaterial* material, OPfloat height, OPfloat radius);
+void OPphysXControllerMove(OPphysXController* controller, OPvec3 disp, ui64 delta);
 void OPphysXControllerMove(OPphysXController* controller, OPvec3 displacement, OPtimer* timer);
 void OPphysXControllerMove(OPphysXController* controller, OPvec3 displacement, OPtimer* timer, PxControllerFilters filters);
 OPvec3 OPphysXControllerGetPos(OPphysXController* controller);

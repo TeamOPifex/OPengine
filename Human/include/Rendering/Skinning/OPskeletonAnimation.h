@@ -67,7 +67,8 @@ struct OPskeletonAnimation {
 
 
 	void Init(OPint boneCount, OPanimationFrame* frames, OPuint count, OPchar* name);
-	void Update(OPtimer* timer, OPfloat timeScale);
+	void Destroy();
+	void Update(OPfloat delta, OPfloat timeScale);
 	void UpdateEvents(void* data);
 	void Apply(OPskeleton* skeleton);
 	void Apply(OPskeleton* skeleton, i16 fromJoint);
@@ -75,6 +76,10 @@ struct OPskeletonAnimation {
 	void Merge(OPskeletonAnimation* skelAnim2, OPfloat merge, OPanimationMask* mask);
 	void Combine(OPskeletonAnimation* skelAnim2, OPskeleton* skeleton, i16 fromJoint);
 	void SetEvents(OPuint frames, OPskeletonAnimationEvent* events);
+
+	inline void Update(OPtimer* timer, OPfloat timeScale) {
+		Update(timer->Elapsed, 1.0f);
+	}
 
 	inline void Update(OPtimer* timer) {
 		Update(timer, 1.0f);

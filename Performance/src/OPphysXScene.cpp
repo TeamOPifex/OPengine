@@ -28,6 +28,7 @@ void OPphysXSceneInit(OPphysXScene* scene, OPvec3 gravity, void(*onTrigger)(OPph
 	}
 
 	scene->scene = OPphysXSDK->createScene(sceneDesc);
+	scene->desc = sceneDesc;
 	scene->elapsed = 0;
 }
 

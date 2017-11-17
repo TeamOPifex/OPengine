@@ -48,6 +48,9 @@ OPint OPshaderReloadFragment(OPstream* str, OPshader** shader) {
 }
 
 OPint OPshaderUnload(OPshader* shader) {
+#ifdef _DEBUG
+	OPfree(shader->source);
+#endif
 	OPRENDERER_ACTIVE->Shader.Destroy(shader);
 	OPfree(shader); // free up the integer
 	return 1;

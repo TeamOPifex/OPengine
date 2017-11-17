@@ -20,7 +20,6 @@ OPshaderUniform* OPeffect::GetUniform(const OPchar* name) {
 	return result;
 }
 
-
 void OPeffect::UpdateVertexLayout(OPvertexLayout* vertexLayout) {
 	OPRENDERER_ACTIVE->Effect.SetVertexLayout(this, vertexLayout);
 }

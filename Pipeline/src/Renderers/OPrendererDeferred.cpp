@@ -34,7 +34,9 @@ void OPrendererDeferred::Begin() {
 }
 
 void OPrendererDeferred::Submit(OPrendererEntity* rendererEntity) {
-	shadowPass.Submit(rendererEntity); 
+	if (rendererEntity->desc.shadowEmitter) {
+		shadowPass.Submit(rendererEntity);
+	}
 	gbufferPass.Submit(rendererEntity);
 }
 

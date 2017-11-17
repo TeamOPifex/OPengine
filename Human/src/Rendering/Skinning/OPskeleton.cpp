@@ -66,7 +66,12 @@ void OPskeleton::Update() {
 }
 
 void OPskeleton::Destroy() {
-
+	for (ui32 i = 0; i < hierarchyCount; i++) {
+		OPfree(jointNames[i]);
+	}
+	OPfree(jointNames);
+	OPfree(bindPose);
+	OPfree(boneOffsets);
 }
 
 
@@ -81,4 +86,25 @@ OPmat4 OPskeleton::JointMatrix(i32 joint) {
 
 OPvec3 OPskeleton::JointPosition(i32 joint) {
 	return globalPoses[joint].GetTranslation();
+}
+
+
+ui32 OPskeletonTabCount(OPskeleton* skel, ui16 ind) {
+	i32 parent = skel->hierarchy[ind];
+	ui32 count = 0;
+	while (parent > -1) {
+		count++;
+		parent = skel->hierarchy[parent];
+	}
+	return count;
+}
+
+void OPskeleton::Log() {
+	for (ui32 i = 0; i < hierarchyCount; i++) {
+		ui32 tabs = OPskeletonTabCount(this, i);
+		for (ui32 j = 0; j < tabs; j++) {
+			OPlg("   ");
+		}
+		OPlogInfo("%s", jointNames[i]);
+	}
 }

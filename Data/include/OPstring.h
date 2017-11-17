@@ -21,13 +21,13 @@ void OPstringRemoveFromStart(OPchar* str, i32 size);
 
 struct OPstring {
 	OPchar* _data = NULL;
-	ui32 _len = 0;
+	OPuint _len = 0;
 
 	OPstring() { _data = NULL; _len = 0; }
 	OPstring(const OPchar* data);
 	~OPstring();
 
-	inline ui32 Length() { return _len; }
+	inline OPuint Length() { return _len; }
 	inline OPchar* C_Str() { return _data; }
 	
 	void Clear();
@@ -47,7 +47,7 @@ struct OPstring {
 	OPint IndexOf(OPchar c);
 	OPint IndexOfLast(OPchar c);
 	OPuint Count(OPchar c);
-	i32 Split(OPchar split, OPchar*** output);
+	OPuint Split(OPchar split, OPchar*** output);
 	void Resize(OPuint size, bool realloc);
 	inline void Resize(OPuint size) { Resize(size, false); }
 

@@ -24,7 +24,7 @@ public:
 	OPmaterial* GetMaterial(ui32 pass = 0, ui32 materialType = (ui32)OPmaterialType::DEFAULT);
 	void End() {}
 	void Present();
-	void Destroy() {}
+	void Destroy();
 	void SetCamera(OPcam** camera); 
 	void SetShadowCamera(OPcam** camera);
 

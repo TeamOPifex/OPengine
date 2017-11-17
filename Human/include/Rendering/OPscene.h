@@ -27,6 +27,7 @@ struct OPsceneLight {
 struct OPscene {
 	OPrenderer2* renderer;
 	OPrendererEntity* entities;
+	bool* entitiesState;
 	ui32 count;
 	ui32 index;
 	OPsceneLight* lights;
@@ -48,6 +49,8 @@ struct OPscene {
 	OPint Update(OPtimer* timer);
 	void Render(OPfloat delta);
 	void Destroy();
+
+	OPrendererEntity* NextEntity();
 };
 
 

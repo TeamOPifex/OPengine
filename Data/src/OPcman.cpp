@@ -294,26 +294,7 @@ bool OPcman::Delete(const OPchar* assetKey) {
 }
 
 void OPcman::Destroy() {
-	OPhashMapBucket* bucket;
-	OPuint i, j, n, m;
-	OPhashMapPair *pair;
-
-	n = hashmap.count;
-	bucket = hashmap.buckets;
-	i = 0;
-	while (i < n) {
-		m = bucket->count;
-		pair = bucket->pairs;
-		j = 0;
-		while (j < m) {
-			// mark asset for removal
-			Delete(pair->key);
-			pair++;
-			j++;
-		}
-		bucket++;
-		i++;
-	}
+	DeleteAll();
 	// Unload all of the assets
 	Purge();
 
@@ -321,6 +302,10 @@ void OPcman::Destroy() {
 	resourceFiles.Destroy();
 	hashmap.Destroy();
 	purgeList.Destroy();
+	for (ui32 i = 0; i < assetDirectoriesCount; i++) {
+		OPfree(assetDirectories[i]);
+	}
+	OPfree(assetDirectories);
 	OPfree(rootFolder);
 }
 
@@ -395,6 +380,32 @@ OPstream* OPcman::GetResource(const OPchar* resourceName) {
 		}
 	}
 	return NULL;
+}
+
+bool OPcman::DeleteAll() {
+
+	OPhashMapBucket* bucket;
+	OPuint i, j, n, m;
+	OPhashMapPair *pair;
+
+	n = hashmap.count;
+	bucket = hashmap.buckets;
+	i = 0;
+	while (i < n) {
+		m = bucket->count;
+		pair = bucket->pairs;
+		j = 0;
+		while (j < m) {
+			// mark asset for removal
+			Delete(pair->key);
+			pair++;
+			j++;
+		}
+		bucket++;
+		i++;
+	}
+
+	return false;
 }
 
 

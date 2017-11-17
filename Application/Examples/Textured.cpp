@@ -17,8 +17,8 @@ class TexturedExample : public OPgameState {
 		// OPCMAN.Load("adobe.png");
 		OPCMAN.Load("Common/Texture.frag");
 		OPCMAN.Load("Common/Texture3D.vert");
-		
-		OPjson* meta = (OPjson*)OPCMAN.LoadGet("Models/adobe.opm.meta");
+
+		//OPjson* meta = (OPjson*)OPCMAN.LoadGet("Models/adobe.opm.meta");
 		const OPchar* _model = "swordsman.opm";// meta->Get("model").String();
 		const OPchar* _texture = "swordsman.png";// meta->Get("texture").String();
 
@@ -88,7 +88,7 @@ class TexturedExample : public OPgameState {
 	}
 	OPint Exit(OPgameState* next) {
 		Effect.Destroy();
-		
+
 		return 0;
 	}
 };

@@ -32,10 +32,10 @@ struct OPjavaScriptV8Compiled {
 	OPjavaScriptPersistentValue Function(const OPchar* name, ui32 count, Handle<Value>* args);
 
 	inline OPjavaScriptPersistentValue Function(const OPchar* name) {
-		Function(name, 0, (void**)NULL);
+		return Function(name, 0, (void**)NULL);
 	}
 	inline OPjavaScriptPersistentValue Function(const OPchar* name, void* arg) {
-		Function(name, 1, (void**)arg);
+		return Function(name, 1, (void**)arg);
 	}
 
 	inline OPint CompileAndExecute(const OPchar* file) {

@@ -14,9 +14,9 @@ class SceneExample : public OPgameState {
 	OPmodel* model;
 	OPmodel* model2;
 	OPmodel* model3;
-	OPrendererEntity* model1Entity;
-	OPrendererEntity* model2Entity;
-	OPrendererEntity* model3Entity;
+	OPrendererEntity* model1Entity = NULL;
+	OPrendererEntity* model2Entity = NULL;
+	OPrendererEntity* model3Entity = NULL;
 	OPcamFreeFlight camera;
 	OPmaterialPBR materialPBR;
 	OPtextureCube environment;
@@ -68,9 +68,9 @@ class SceneExample : public OPgameState {
 		//materialInst1 = &materialInstance;
 		//materialInst2 = &materialInstance2;
 
-		model1Entity = scene.Add(model, &materialInstance);
-		model2Entity = scene.Add(model2, &materialInstance);
-		model3Entity = scene.Add(model3, &materialInstance2);
+		model1Entity = scene.Add(model, materialInstance);
+		model2Entity = scene.Add(model2, materialInstance);
+		model3Entity = scene.Add(model3, materialInstance2);
 	}
 
 	OPint Update(OPtimer* time) {

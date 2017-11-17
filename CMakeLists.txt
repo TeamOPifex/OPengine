@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-project(OPifexEngine)
-
+project(OPifexEngine C CXX)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 
 SET(OPIFEX_ENGINE_REPOSITORY ${PROJECT_SOURCE_DIR})
 
