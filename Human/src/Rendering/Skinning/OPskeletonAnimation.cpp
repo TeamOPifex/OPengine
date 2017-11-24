@@ -17,6 +17,15 @@ void OPskeletonAnimation::Init(OPint boneCount, OPanimationFrame* frames, OPuint
 
 	CurrentFrame = (OPmat4*)OPalloc(sizeof(OPmat4) * boneCount);
 	BoneCount = boneCount;
+	
+}
+
+void OPskeletonAnimation::SetNoTranslate(OPuint jointIndex) {
+	for (OPint i = 0; i < FrameCount; i++) {
+		// Set root joint to zero
+		ui32 ind1 = FrameCount * jointIndex + i;
+		JointFrames[ind1].Position = OPVEC3_ZERO;
+	}
 }
 
 void OPskeletonAnimation::Destroy() {

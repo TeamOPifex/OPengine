@@ -77,6 +77,8 @@ struct OPskeletonAnimation {
 	void Combine(OPskeletonAnimation* skelAnim2, OPskeleton* skeleton, i16 fromJoint);
 	void SetEvents(OPuint frames, OPskeletonAnimationEvent* events);
 
+	void SetNoTranslate(OPuint jointIndex);
+
 	inline void Update(OPtimer* timer, OPfloat timeScale) {
 		Update(timer->Elapsed, 1.0f);
 	}
