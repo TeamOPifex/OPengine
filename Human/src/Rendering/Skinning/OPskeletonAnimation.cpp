@@ -15,20 +15,31 @@ void OPskeletonAnimation::Init(OPint boneCount, OPanimationFrame* frames, OPuint
 	OPint totalSize = sizeof(OPmat4)* frameCount * boneCount;
 	JointFrames = frames;
 
+	Translated = (OPvec3*)OPalloc(sizeof(OPvec3) * boneCount);
+	PrevTranslated = (OPvec3*)OPalloc(sizeof(OPvec3) * boneCount);
+	
 	CurrentFrame = (OPmat4*)OPalloc(sizeof(OPmat4) * boneCount);
+	TranslateMask = OPALLOC(bool, boneCount);
+	for(ui32 i = 0; i < boneCount; i++) {
+		TranslateMask[i] = true;
+	}
 	BoneCount = boneCount;
 	
 }
 
 void OPskeletonAnimation::SetNoTranslate(OPuint jointIndex) {
-	for (OPint i = 0; i < FrameCount; i++) {
-		// Set root joint to zero
-		ui32 ind1 = FrameCount * jointIndex + i;
-		JointFrames[ind1].Position = OPVEC3_ZERO;
-	}
+	TranslateMask[jointIndex] = false;
+	// for (OPint i = 0; i < FrameCount; i++) {
+	// 	// Set root joint to zero
+	// 	ui32 ind1 = FrameCount * jointIndex + i;
+	// 	JointFrames[ind1].Position = OPVEC3_ZERO;
+	// }
 }
 
 void OPskeletonAnimation::Destroy() {
+	OPfree(TranslateMask);
+	OPfree(Translated);
+	OPfree(PrevTranslated);
 	OPfree(CurrentFrame);
 	OPfree(Name);
 }
@@ -98,6 +109,19 @@ void OPskeletonAnimation::Update(OPfloat dt, OPfloat timeScale) {
 		}
 		else {
 			CurrentFrame[i] = CalculateFrame(JointFrames[ind1]);
+		}
+
+		PrevTranslated[i] = Translated[i];
+		Translated[i] = OPvec3(
+			CurrentFrame[i][3][0],
+			CurrentFrame[i][3][1],
+			CurrentFrame[i][3][2]
+		);
+
+		if(!TranslateMask[i]) {
+			CurrentFrame[i][3][0] = 0;
+			CurrentFrame[i][3][1] = 0;
+			CurrentFrame[i][3][2] = 0;
 		}
 
 	}
@@ -211,6 +235,20 @@ void OPskeletonAnimation::Merge(OPskeletonAnimation* skelAnim2, OPfloat merge, O
 		OPanimationFrame inbetweenFrame2 = GetInterpolatedFrame(skelAnim2->JointFrames[ind3], skelAnim2->JointFrames[ind4], percent2);
 
 		CurrentFrame[i] = InterpolateFrames(inbetweenFrame1, inbetweenFrame2, merge);
+
+		// PrevTranslated[i] = Translated[i];
+		// Translated[i] = OPvec3(
+		// 	CurrentFrame[i][0][3],
+		// 	CurrentFrame[i][1][3],
+		// 	CurrentFrame[i][2][3]
+		// );
+
+		if(!TranslateMask[i]) {
+			CurrentFrame[i][3][0] = 0;
+			CurrentFrame[i][3][1] = 0;
+			CurrentFrame[i][3][2] = 0;
+		}
+
 		skelAnim2->CurrentFrame[i] = CurrentFrame[i];
 
 	}

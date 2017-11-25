@@ -58,6 +58,9 @@ struct OPskeletonAnimation {
 
 	OPanimationFrame* JointFrames;
 	OPmat4* CurrentFrame;
+	OPvec3* Translated;
+	OPvec3* PrevTranslated;
+	bool* TranslateMask;
 
 	bool Loop;
 	OPuint LoopsCompleted;

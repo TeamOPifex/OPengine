@@ -3,7 +3,12 @@
 #include "./OPlog.h"
 #include "./OPcore.h"
 
-#include <intrin.h>
+#if _MSC_VER && !__INTEL_COMPILER
+	#include <intrin.h>
+	#define IDE_BREAK() __debugbreak();
+#else
+	#define IDE_BREAK() 
+#endif
 
 // A Standard ASSERT call, if it evaluates to true, 
 // If in DEBUG mode it exits the program
@@ -22,8 +27,7 @@
 	do {\
 		if (!(condition)) {\
 			OPlogErr("ASSERT: (%s:%d) [%s] %s", __FILE__, __LINE__, __FUNCTION__, message); \
-			__debugbreak();\
-			exit(1);\
+			IDE_BREAK();\
 		} \
 	} while (0)
 #else
