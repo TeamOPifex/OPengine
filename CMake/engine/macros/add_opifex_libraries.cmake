@@ -96,12 +96,6 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		find_binary(LIBCOMMUNICATION "Communication" true)
 		find_binary(LIBPIPELINE "Pipeline")
 		find_binary(LIBHUMAN "Human")
-		find_binary(LIBGLEW_158 "GLEW_158")
-		find_binary(LIBGLFW "glfw3")
-		target_link_libraries(${APPLICATION_TARGET}
-			${LIBGLFW}
-			${LIBGLEW_158}
-		)
 	elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_IOS")
 		# message(STATUS "HEY WE'RE IOS, SHOULD BE GOOD")
 		find_binary(LIBLODEPNG "LodePNG" false)

@@ -7,37 +7,6 @@ endif()
 
 if( ${OPIFEX_OS_ANDROID} )
 
-	set(OP_ASSETS_TARGET "${PROJECT_BINARY_DIR}/assets")
-
-	file(COPY ${PROJECT_SOURCE_DIR}/Android/Make/AndroidManifest.xml DESTINATION ${PROJECT_BINARY_DIR}/)
-	file(COPY ${PROJECT_SOURCE_DIR}/Android/Make/build.xml DESTINATION ${PROJECT_BINARY_DIR}/)
-	file(COPY ${PROJECT_SOURCE_DIR}/Android/Make/Install.bat DESTINATION ${PROJECT_BINARY_DIR}/)
-
-	file(COPY ${PROJECT_SOURCE_DIR}/Android/Libs/ouya-sdk.jar DESTINATION ${PROJECT_BINARY_DIR}/libs/)
-
-	configure_file(		${PROJECT_SOURCE_DIR}/Android/Make/Android.mk		${PROJECT_BINARY_DIR}/jni/Android.mk	)
-	configure_file(		${PROJECT_SOURCE_DIR}/Android/Make/Application.mk		${PROJECT_BINARY_DIR}/jni/Application.mk	)
-	configure_file(		${PROJECT_SOURCE_DIR}/Android/Make/strings.xml		${PROJECT_BINARY_DIR}/res/values/strings.xml	)
-
-
-	file(COPY ${PROJECT_SOURCE_DIR}/External/Ogg/lib/debug/android/libogg.a DESTINATION ${PROJECT_BINARY_DIR}/Binaries/android)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/Vorbis/lib/debug/android/libvorbis.a DESTINATION ${PROJECT_BINARY_DIR}/Binaries/android)
-
-	file(COPY ${PROJECT_SOURCE_DIR}/External/PhysX/Lib/release/android/libPhysX3Common.a 	DESTINATION 	${PROJECT_BINARY_DIR}/Binaries/android)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/PhysX/Lib/release/android/libPvdRuntime.a 	DESTINATION 	${PROJECT_BINARY_DIR}/Binaries/android)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/PhysX/Lib/release/android/libSimulationController.a 	DESTINATION 	${PROJECT_BINARY_DIR}/Binaries/android)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/PhysX/Lib/release/android/libSceneQuery.a 	DESTINATION 	${PROJECT_BINARY_DIR}/Binaries/android)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/PhysX/Lib/release/android/libLowLevel.a 	DESTINATION 	${PROJECT_BINARY_DIR}/Binaries/android)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/PhysX/Lib/release/android/libLowLevelCloth.a 	DESTINATION 	${PROJECT_BINARY_DIR}/Binaries/android)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/PhysX/Lib/release/android/libPhysX3.a 	DESTINATION 	${PROJECT_BINARY_DIR}/Binaries/android)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/PhysX/Lib/release/android/libPhysX3Vehicle.a 	DESTINATION 	${PROJECT_BINARY_DIR}/Binaries/android)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/PhysX/Lib/release/android/libPhysX3Cooking.a 	DESTINATION 	${PROJECT_BINARY_DIR}/Binaries/android)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/PhysX/Lib/release/android/libPhysX3Extensions.a 	DESTINATION 	${PROJECT_BINARY_DIR}/Binaries/android)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/PhysX/Lib/release/android/libPhysX3CharacterKinematic.a 	DESTINATION 	${PROJECT_BINARY_DIR}/Binaries/android)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/PhysX/Lib/release/android/libPhysXProfileSDK.a 	DESTINATION 	${PROJECT_BINARY_DIR}/Binaries/android)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/PhysX/Lib/release/android/libPxTask.a 	DESTINATION 	${PROJECT_BINARY_DIR}/Binaries/android)
-	file(COPY ${PROJECT_SOURCE_DIR}/External/PhysX/Lib/release/android/libPhysXVisualDebuggerSDK.a 	DESTINATION 	${PROJECT_BINARY_DIR}/Binaries/android)
-
 else()
 	if(${OPIFEX_OPTION_NODEJS})
 		message(STATUS "BINDING.GYP")
@@ -57,7 +26,7 @@ endif()
 
 # Only copy assets if we're in release mode
 # It pulls from the Repository otherwise
-if(${OPIFEX_OPTION_RELEASE} OR ${OPIFEX_OS_ANDROID})
+if(${OPIFEX_OPTION_RELEASE})
 
 	if( ${OPIFEX_OS_WINDOWS})
 		set(OP_ASSETS_TARGET "${PROJECT_BINARY_DIR}/Application/Release/assets")

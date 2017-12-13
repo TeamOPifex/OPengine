@@ -26,57 +26,57 @@
 ### GLFW
 # SET(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "Build GLFW_BUILD_EXAMPLES" FORCE)
 # SET(GLFW_INSTALL OFF CACHE BOOL "Build GLFW_BUILD_EXAMPLES" FORCE)
-if(${OPIFEX_OS_IOS})
-	message(STATUS "IOS Device, no glfw")
+if(${OPIFEX_OS_IOS} OR ${OPIFEX_OS_ANDROID})
+	message(STATUS "IOS or Android Device, no glfw")
 else()
-if(${OPIFEX_OPTION_SHARED})
-	SET(BUILD_SHARED_LIBS ON CACHE BOOL "Build BUILD_SHARED_LIBS" FORCE)
-else()
-	SET(BUILD_SHARED_LIBS OFF CACHE BOOL "Build BUILD_SHARED_LIBS" FORCE)
-endif()
-SET( GLFW_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/External/glfw" )
-add_subdirectory("${GLFW_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/GLFW)
-set_property(TARGET glfw PROPERTY FOLDER "External")
-add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS)
+	if(${OPIFEX_OPTION_SHARED})
+		SET(BUILD_SHARED_LIBS ON CACHE BOOL "Build BUILD_SHARED_LIBS" FORCE)
+	else()
+		SET(BUILD_SHARED_LIBS OFF CACHE BOOL "Build BUILD_SHARED_LIBS" FORCE)
+	endif()
+	SET( GLFW_LIBRARY_PATH "${PROJECT_SOURCE_DIR}/External/glfw" )
+	add_subdirectory("${GLFW_LIBRARY_PATH}" ${PROJECT_BINARY_DIR}/GLFW)
+	set_property(TARGET glfw PROPERTY FOLDER "External")
+	add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS)
 
-# output_library_from(glfw "/GLFW/src" "glfw3")
+	# output_library_from(glfw "/GLFW/src" "glfw3")
 
-### GLEW
+	### GLEW
 
-#########################################
-# Include Directories
-#########################################
-include_directories(glew-1.9.0/include/)
-
-
-#########################################
-# Source Files
-#########################################
-set(GLEW_SOURCE	glew-1.9.0/src/glew.c)
+	#########################################
+	# Include Directories
+	#########################################
+	include_directories(glew-1.9.0/include/)
 
 
-#########################################
-# BUILD
-#########################################
+	#########################################
+	# Source Files
+	#########################################
+	set(GLEW_SOURCE	glew-1.9.0/src/glew.c)
 
-if(${OPIFEX_OPTION_SHARED})
-	add_library( GLEW_158 SHARED
-		${GLEW_SOURCE}
-		${GLEW_INCLUDE}
-	)
-else()
-	add_library( GLEW_158 STATIC
-		${GLEW_SOURCE}
-		${GLEW_INCLUDE}
-	)
-endif()
 
-target_link_libraries(GLEW_158 ${OPENGL_LIBRARY})
-set_property(TARGET GLEW_158 PROPERTY FOLDER "External")
+	#########################################
+	# BUILD
+	#########################################
 
-populate_binary_directory()
+	if(${OPIFEX_OPTION_SHARED})
+		add_library( GLEW_158 SHARED
+			${GLEW_SOURCE}
+			${GLEW_INCLUDE}
+		)
+	else()
+		add_library( GLEW_158 STATIC
+			${GLEW_SOURCE}
+			${GLEW_INCLUDE}
+		)
+	endif()
 
-output_library_from(GLEW_158 "/External" "GLEW_158")
+	target_link_libraries(GLEW_158 ${OPENGL_LIBRARY})
+	set_property(TARGET GLEW_158 PROPERTY FOLDER "External")
+
+	populate_binary_directory()
+
+	output_library_from(GLEW_158 "/External" "GLEW_158")
 
 
 endif()

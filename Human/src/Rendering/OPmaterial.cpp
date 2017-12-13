@@ -2,7 +2,7 @@
 #include "./Human/include/Rendering/OPmodel.h"
 #include "./Human/include/Rendering/OPrendererEntity.h"
 
-ui64 OPMATERIAL_GLOBAL_ID = 1;
+OPuint OPMATERIAL_GLOBAL_ID = 1;
 OPuint OPMATERIALINSTANCE_GLOBAL_ID = 1;
 
 OPmaterial* OPmaterial::Init(OPeffect* effectIn) {

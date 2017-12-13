@@ -1,4 +1,6 @@
+
 #include "./Human/include/Platform/opengl/OPshaderUniformAPIGL.h"
+#ifndef OPIFEX_OPENGL_ES_2
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Platform/opengl/OPeffectAPIGL.h"
 #include "./Human/include/Rendering/OPeffect.h"
@@ -193,3 +195,31 @@ void OPshaderUniformAPIGLInit(OPshaderUniformAPI* shaderUniform) {
 	shaderUniform->SetTextureCubev = OPshaderUniformSetTextureCubevGL;
 
 }
+#else
+void OPshaderUniformAPIGLInit(OPshaderUniformAPI* shaderUniform) {
+	// shaderUniform->Create = OPshaderUniformGLCreate;
+	// shaderUniform->Init = OPshaderUniformGLInit;
+	// shaderUniform->Destroy = OPshaderUniformGLDestroy;
+
+	// shaderUniform->SetBool = OPshaderUniformSetBoolGL;
+	// shaderUniform->SetF = OPshaderUniformSetFGL;
+	// shaderUniform->SetFv = OPshaderUniformSetFvGL;
+	// shaderUniform->SetI = OPshaderUniformSetIGL;
+	// shaderUniform->SetIv = OPshaderUniformSetIvGL;
+	// shaderUniform->SetVec2 = OPshaderUniformSetVec2GL;
+	// shaderUniform->SetVec2v = OPshaderUniformSetVec2vGL;
+	// shaderUniform->SetVec3 = OPshaderUniformSetVec3GL;
+	// shaderUniform->SetVec3v = OPshaderUniformSetVec3vGL;
+	// shaderUniform->SetVec4 = OPshaderUniformSetVec4GL;
+	// shaderUniform->SetVec4v = OPshaderUniformSetVec4vGL;
+	// shaderUniform->SetMat3 = OPshaderUniformSetMat3GL;
+	// shaderUniform->SetMat3v = OPshaderUniformSetMat3vGL;
+	// shaderUniform->SetMat4 = OPshaderUniformSetMat4GL;
+	// shaderUniform->SetMat4v = OPshaderUniformSetMat4vGL;
+	// shaderUniform->SetTexture = OPshaderUniformSetTextureGL;
+	// shaderUniform->SetTexturev = OPshaderUniformSetTexturevGL;
+	// shaderUniform->SetTextureCube = OPshaderUniformSetTextureCubeGL;
+	// shaderUniform->SetTextureCubev = OPshaderUniformSetTextureCubevGL;
+
+}
+#endif

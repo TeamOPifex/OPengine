@@ -1,4 +1,6 @@
+
 #include "./Human/include/Platform/opengl/OPtextureCubeAPIGL.h"
+#ifndef OPIFEX_OPENGL_ES_2
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Rendering/OPtextureCube.h"
 
@@ -62,3 +64,12 @@ void OPtextureCubeAPIGLInit(OPtextureCubeAPI* textureCube) {
 	textureCube->_Create = OPtextureCubeGLCreate;
 	textureCube->_Init = OPtextureCubeGLInit;
 }
+#else
+void OPtextureCubeAPIGLInit(OPtextureCubeAPI* textureCube) {
+	// textureCube->Bind = OPtextureCubeGLBind;
+	// textureCube->Destroy = OPtextureCubeGLDestroy;
+	// textureCube->Unbind = OPtextureCubeGLUnbind;
+	// textureCube->_Create = OPtextureCubeGLCreate;
+	// textureCube->_Init = OPtextureCubeGLInit;
+}
+#endif

@@ -92,13 +92,13 @@ ui8* OPstream::Read(OPuint size){
 }
 
 void _fillBuffer(OPstream* stream) {
-	const i8* buffer = (i8*)(stream->Data + stream->_pointer);
+	OPchar* buffer = (OPchar*)(stream->Data + stream->_pointer);
 #ifdef OPIFEX_WINDOWS
 	sscanf_s(buffer, "%s", stream->Buffer, 128);
 #else
 	sscanf(buffer, "%s", stream->Buffer);
 #endif
-	stream->_pointer += strlen(stream->Buffer) + 1;
+	stream->_pointer += strlen((OPchar*)stream->Buffer) + 1;
 }
 
 i8 OPstream::I8() {

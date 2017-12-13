@@ -1,4 +1,6 @@
+
 #include "./Human/include/Platform/opengl/OPvertexArrayAPIGL.h"
+#ifndef OPIFEX_OPENGL_ES_2
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Rendering/API/OPrenderer.h"
 #include "./Human/include/Rendering/OPrender.h"
@@ -108,3 +110,15 @@ void OPvertexArrayAPIGLInit(OPvertexArrayAPI* vertexArray) {
 	vertexArray->Unbind = OPvertexArrayGLUnbind;
 	vertexArray->Destroy = OPvertexArrayGLDestroy;
 }
+#else
+void OPvertexArrayAPIGLInit(OPvertexArrayAPI* vertexArray) {
+	// vertexArray->Init = OPvertexArrayGLInit;
+	// vertexArray->Create = OPvertexArrayGLCreate;
+	// vertexArray->Bind = OPvertexArrayGLBind;
+	// vertexArray->SetLayout = OPvertexArrayGLSetLayout;
+	// vertexArray->_Draw = OPvertexArrayGLDraw;
+	// vertexArray->_DrawIndexed = OPvertexArrayGLDrawIndexed;
+	// vertexArray->Unbind = OPvertexArrayGLUnbind;
+	// vertexArray->Destroy = OPvertexArrayGLDestroy;
+}
+#endif

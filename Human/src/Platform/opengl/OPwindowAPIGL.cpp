@@ -1,4 +1,6 @@
+
 #include "./Human/include/Platform/opengl/OPwindowAPIGL.h"
+#ifndef OPIFEX_OPENGL_ES_2
 #include "./Human/include/Platform/opengl/OPmonitorAPIGL.h"
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Rendering/OPwindow.h"
@@ -298,3 +300,8 @@ void OPwindowAPIGLInit(OPwindowAPI* window) {
 	OPkeyboardMappingGL[(ui32)OPkeyboardKey::NUMPAD8] = GLFW_KEY_KP_8;
 	OPkeyboardMappingGL[(ui32)OPkeyboardKey::NUMPAD9] = GLFW_KEY_KP_9;
 }
+#else
+void OPwindowAPIGLInit(OPwindowAPI* window) {
+	
+}
+#endif

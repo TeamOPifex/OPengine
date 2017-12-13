@@ -128,23 +128,26 @@ int main(int argc, char * argv[]) {
 
 #else
 
-OP_MAIN_START
-	OPLOGLEVEL = (ui32)OPlogLevel::ERRORS;
+	#ifdef OPIFEX_ANDROID
+	#else
+	OP_MAIN_START
+		OPLOGLEVEL = (ui32)OPlogLevel::ERRORS;
 
-	#ifdef OPIFEX_OPTION_V8
-	// If the V8 engine is compiled in,
-	// see if we have a script to run at startup
-	//if(argc > 1) {
-	//	//chdir(OPIFEX_ASSETS);
-	//	OPjavaScriptV8SetupRun(args[2]);
-	//	return 0;
-	//}
+		#ifdef OPIFEX_OPTION_V8
+		// If the V8 engine is compiled in,
+		// see if we have a script to run at startup
+		//if(argc > 1) {
+		//	//chdir(OPIFEX_ASSETS);
+		//	OPjavaScriptV8SetupRun(args[2]);
+		//	return 0;
+		//}
+		#endif
+
+		ApplicationSetup();
+
+		//OP_MAIN_RUN
+		OP_MAIN_RUN_STEPPED
+
+	OP_MAIN_END
 	#endif
-
-	ApplicationSetup();
-
-	//OP_MAIN_RUN
-	OP_MAIN_RUN_STEPPED
-
-OP_MAIN_END
 #endif

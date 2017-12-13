@@ -1,4 +1,7 @@
+
 #include "./Human/include/Platform/opengl/OPshaderAPIGL.h"
+
+#ifndef OPIFEX_OPENGL_ES_2
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Rendering/OPshader.h"
 #include "./Core/include/OPmemory.h"
@@ -76,3 +79,10 @@ void OPshaderAPIGLInit(OPshaderAPI* shader) {
 	shader->_Create = OPshaderGLCreate;
 	shader->Destroy = OPshaderGLDestroy;
 }
+#else
+void OPshaderAPIGLInit(OPshaderAPI* shader) {
+	// shader->_Init = OPshaderGLInit;
+	// shader->_Create = OPshaderGLCreate;
+	// shader->Destroy = OPshaderGLDestroy;
+}
+#endif

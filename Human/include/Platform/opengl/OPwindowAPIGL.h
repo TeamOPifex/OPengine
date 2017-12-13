@@ -9,7 +9,9 @@ typedef struct OPwindowGL OPwindowGL;
 void OPwindowAPIGLInit(OPwindowAPI* window);
 
 struct OPwindowGL {
+#ifndef OPIFEX_OPENGL_ES_2
 	GLFWwindow* Handle;
+#endif
 
 	void(*OPWINDOWDROPCALLBACK)(OPuint count, const OPchar**) = NULL;
 };

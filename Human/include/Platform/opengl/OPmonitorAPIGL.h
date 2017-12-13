@@ -9,5 +9,7 @@ typedef struct OPmonitorGL OPmonitorGL;
 void OPmonitorAPIGLInit(OPmonitorAPI* monitor);
 
 struct OPmonitorGL {
+#ifndef OPIFEX_ANDROID
 	GLFWmonitor* Handle;
+#endif
 };

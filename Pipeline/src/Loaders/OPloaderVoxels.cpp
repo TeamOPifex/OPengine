@@ -6,7 +6,7 @@ OPchar* readMatrixName(OPstream* str) {
 	i8* name = (i8*)OPalloc(len + 1);
 	OPmemcpy(name, str->Read(len), len);
 	name[len] = '\0';
-	return name;
+	return (OPchar*)name;
 }
 
 struct OPvecInt3 readVoxelVec3(OPstream* str) {

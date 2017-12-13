@@ -1,4 +1,6 @@
+
 #include "./Human/include/Platform/opengl/OPindexBufferGL.h"
+#ifndef OPIFEX_OPENGL_ES_2
 #include "./Human/include/Rendering/OPindexBuffer.h"
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Core/include/OPmemory.h"
@@ -52,3 +54,13 @@ void OPindexBufferAPIGLInit(OPindexBufferAPI* indexBuffer) {
 	indexBuffer->Unbind = OPindexBufferGLUnbind;
 	indexBuffer->Destroy = OPindexBufferGLDestroy;
 }
+#else
+void OPindexBufferAPIGLInit(OPindexBufferAPI* indexBuffer) {
+	// indexBuffer->Init = OPindexBufferGLInit;
+	// indexBuffer->Create = OPindexBufferGLCreate;
+	// indexBuffer->SetData = OPindexBufferGLSetData;
+	// indexBuffer->Bind = OPindexBufferGLBind;
+	// indexBuffer->Unbind = OPindexBufferGLUnbind;
+	// indexBuffer->Destroy = OPindexBufferGLDestroy;
+}
+#endif

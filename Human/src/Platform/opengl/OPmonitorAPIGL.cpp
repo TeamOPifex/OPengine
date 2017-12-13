@@ -1,3 +1,4 @@
+#ifndef OPIFEX_OPENGL_ES_2
 #include "./Human/include/Platform/opengl/OPmonitorAPIGL.h"
 #include "./Human/include/Rendering/OPmonitor.h"
 #include "./Core/include/OPmemory.h"
@@ -58,3 +59,21 @@ OPmonitorResult OPmonitorGLGetAll() {
 void OPmonitorAPIGLInit(OPmonitorAPI* monitor) {
 	monitor->GetAll = OPmonitorGLGetAll;
 }
+#else
+#include "./Human/include/Platform/opengl/OPmonitorAPIGL.h"
+#include "./Human/include/Rendering/OPmonitor.h"
+#include "./Core/include/OPmemory.h"
+
+OPmonitorResult OPmonitorGLGetAll() {
+	OPmonitorResult result;
+
+	result.count = 0;
+	result.monitors = NULL;
+
+	return result;
+}
+
+void OPmonitorAPIGLInit(OPmonitorAPI* monitor) {
+	monitor->GetAll = OPmonitorGLGetAll;
+}
+#endif

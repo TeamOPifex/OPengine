@@ -20,10 +20,10 @@ void OPfileInformation::Init(const OPchar* path) {
 	}
 	ASSERT(myFile, "File not loaded");
 	fseek(myFile, _start, SEEK_SET);
-	file.file = myFile;
-	file.start = _start;
-	file.length = _length;
-	file.fileDescriptor = fd;
+	file = myFile;
+	start = _start;
+	length = _length;
+	fileDescriptor = fd;
 #else
 
 #ifdef OPIFEX_WINDOWS
@@ -31,6 +31,7 @@ void OPfileInformation::Init(const OPchar* path) {
 #else
 	file = fopen(path, "rb");
 #endif
+
 	ASSERT(file != NULL, "File not loaded");
 
 	fseek(file, 0, SEEK_END);

@@ -1,4 +1,6 @@
+
 #include "./Human/include/Platform/opengl/OPframeBufferAPIGL.h"
+#ifndef OPIFEX_OPENGL_ES_2
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Rendering/OPframeBuffer.h"
 #include "./Human/include/Platform/opengl/OPtextureAPIGL.h"
@@ -208,3 +210,18 @@ void OPframeBufferAPIGLInit(OPframeBufferAPI* frameBuffer) {
 	frameBuffer->_InitDepth = OPframeBufferAPIGLInitializeDepth;
 	frameBuffer->_InitMultiDepth = OPframeBufferAPIGLInitMultiDepth;
 }
+
+#else
+
+void OPframeBufferAPIGLInit(OPframeBufferAPI* frameBuffer) {
+	// frameBuffer->_Bind = OPframeBufferAPIGLBind;
+	// frameBuffer->Destroy = OPframeBufferAPIGLDestroy;
+	// frameBuffer->_Unbind = OPframeBufferAPIGLUnbind;
+	// frameBuffer->_Create = OPframeBufferAPIGLCreate;
+	// frameBuffer->_Init = OPframeBufferAPIGLInitialize;
+	// frameBuffer->_InitMulti = OPframeBufferAPIGLInitMulti;
+	// frameBuffer->_InitDepth = OPframeBufferAPIGLInitializeDepth;
+	// frameBuffer->_InitMultiDepth = OPframeBufferAPIGLInitMultiDepth;
+}
+
+#endif

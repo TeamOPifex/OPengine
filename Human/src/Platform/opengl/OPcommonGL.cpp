@@ -4,6 +4,7 @@
 bool glewInitialized = 0;
 
 bool OPglewInit() {
+#ifndef OPIFEX_ANDROID
 	if (glewInitialized) return true;
 	glewExperimental = GL_TRUE;
 	GLenum result = glewInit();
@@ -12,6 +13,7 @@ bool OPglewInit() {
 		return false;
 	}
 	glewInitialized = true;
+#endif
 	return true;
 }
 

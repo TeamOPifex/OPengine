@@ -1,4 +1,7 @@
+
 #include "./Human/include/Platform/opengl/OPeffectAPIGL.h"
+#ifndef OPIFEX_OPENGL_ES_2
+
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Platform/opengl/OPshaderAPIGL.h"
 #include "./Human/include/Rendering/OPshaderUniform.h"
@@ -168,3 +171,15 @@ void OPeffectAPIGLInit(OPeffectAPI* effect) {
 	effect->Unbind = OPeffectGLUnbind;
 	effect->Destroy = OPeffectGLDestroy;
 }
+
+#else 
+void OPeffectAPIGLInit(OPeffectAPI* effect) {
+	// effect->_Init = OPeffectAPIGLInit;
+	// effect->_Create = OPeffectGLCreate;
+	// effect->AddUniform = OPeffectGLAddUniform;
+    // effect->SetVertexLayout = OPeffectGLSetVertexLayout;
+	// effect->Bind = OPeffectGLBind;
+	// effect->Unbind = OPeffectGLUnbind;
+	// effect->Destroy = OPeffectGLDestroy;
+}
+#endif

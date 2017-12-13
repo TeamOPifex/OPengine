@@ -1,4 +1,6 @@
+
 #include "./Human/include/Platform/opengl/OPtextureAPIGL.h"
+#ifndef OPIFEX_OPENGL_ES_2
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Rendering/OPtexture.h"
 #include "./Core/include/OPmemory.h"
@@ -171,3 +173,13 @@ void OPtextureAPIGLInit(OPtextureAPI* texture) {
 	texture->Unbind = OPtextureGLUnbind;
 	texture->Destroy = OPtextureGLDestroy;
 }
+#else
+void OPtextureAPIGLInit(OPtextureAPI* texture) {
+	// texture->_Init = OPtextureGLInit;
+	// texture->_Create = OPvertexBufferGLCreate;
+	// texture->SetData = OPtextureGLSetData;
+	// texture->Bind = OPtextureGLBind;
+	// texture->Unbind = OPtextureGLUnbind;
+	// texture->Destroy = OPtextureGLDestroy;
+}
+#endif
