@@ -127,6 +127,23 @@ void OPskeletonAnimation::Update(OPfloat dt, OPfloat timeScale) {
 	}
 }
 
+void OPskeletonAnimation::Reset() {
+	Frame = 0;
+	LoopsCompleted = 0;
+
+	for (OPint i = 0; i < BoneCount; i++) {
+		ui32 ind1 = FrameCount * i + Frame;
+
+		CurrentFrame[i] = CalculateFrame(JointFrames[ind1]);
+		Translated[i] = OPvec3(
+			CurrentFrame[i][3][0],
+			CurrentFrame[i][3][1],
+			CurrentFrame[i][3][2]
+		);
+		PrevTranslated[i] = Translated[i];
+	}
+}
+
 void OPskeletonAnimation::UpdateEvents(void* data) {
 	if(LastFrame != Frame) {
 		for(OPuint i = 0; i < EventCount; i++) {

@@ -15,6 +15,7 @@ struct OPasset {
 	OPint(*Reload)(OPstream* stream, void** assetOut) = NULL;
 	OPchar* FullPath = NULL;
 	i64 LastChange = 0;
+	const OPchar* Name;
 #endif
 
 	OPasset() { }

@@ -12,9 +12,11 @@ typedef struct OPspriteSheet OPspriteSheet;
 struct OPspriteSheet {
 	OPint      Width;
 	OPint      Height;
-	OPint      Sprites;
+	OPint      SpriteCount;
 	OPchar**   Names;
-	OPtexture* Sheet;
+	OPtexture* Texture;
+	OPspriteFrame* frameData;
+	OPsprite** Sprites;
 };
 
 

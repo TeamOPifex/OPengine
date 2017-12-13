@@ -99,7 +99,7 @@ void OPspriteSystemRender(OPspriteSystem* system, OPcam* cam) {
 	//OPtexturePixelate();
 
 	//OPtextureClearActive();
-	OPeffectSet("uColorTexture", system->Sprites[0]->Sheet, 0);
+	OPeffectSet("uColorTexture", system->Sprites[0]->SpriteSheet->Texture, 0);
 	OPeffectSet("uProj", &cam->proj);
 	OPeffectSet("uView", &cam->view);
 

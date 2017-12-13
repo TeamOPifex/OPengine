@@ -53,6 +53,7 @@ struct OPstring {
 
 	void Init(OPchar* data);
 	void Init(const OPchar* data);
+	void Destroy();
 
 	static OPstring* Create(const OPchar* data);
 };

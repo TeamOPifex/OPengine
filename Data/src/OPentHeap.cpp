@@ -14,7 +14,6 @@ OPuint OPentHeap::Bytes(OPint entsize, OPint count){
 
 void OPentHeap::Init(void* segPtr, OPint entSize, OPint count) {
 	OPuint off = 0, i = count;
-	OPminHeap free = OPminHeap(count);
 	OPentHeap* heapPtr = NULL;
 
 	Entities = NULL;
@@ -23,7 +22,8 @@ void OPentHeap::Init(void* segPtr, OPint entSize, OPint count) {
 	MaxIndex = 0;
 	Size = NULL;
 	Capacity = count;
-	Free = free;
+	Free._capacity = count;
+	Free._size = 0;
 
 	// leave space for entity data
 	off += entSize * count;
@@ -52,6 +52,10 @@ void OPentHeap::Init(void* segPtr, OPint entSize, OPint count) {
 	// redirect the Size pointer so that it maps to the final
 	// resting place of the internal size variable
 	heapPtr->Size = &(heapPtr->Free._size);
+}
+
+void OPentHeap::Destroy() {
+	// Free.Destroy();
 }
 
 void OPentHeap::Activate(OPint* i) {

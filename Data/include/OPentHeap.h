@@ -20,6 +20,7 @@ struct OPentHeap {
 	OPentHeap(void* segPtr, OPint entSize, OPint count) { Init(segPtr, entSize, count); }
 
 	void Init(void* segPtr, OPint entSize, OPint count);
+	void Destroy();
 
 	/* Fills the pointer i with the index of the activated entity in the EntHeap
 	* @param i Pointer to an OPint, it will contain the activated entity

@@ -42,6 +42,12 @@ void OPstring::Init(const OPchar* data) {
 	_len = _data == NULL ? 0 : strlen(_data);
 }
 
+void OPstring::Destroy() {
+	if (_data != NULL) {
+		OPfree(_data);
+	}
+}
+
 void OPstring::Clear() {
 	if (_data != NULL) {
 		OPfree(_data);
@@ -144,7 +150,8 @@ void OPstring::Add(const OPchar* add) {
 		OPfree(_data);
 	}
 
-	Init(result);
+	_data = result;
+	_len = _data == NULL ? 0 : strlen(_data);
 }
 
 

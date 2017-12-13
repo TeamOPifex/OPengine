@@ -67,9 +67,15 @@ void OPcman::ResetCurrentDir() {
 #endif
 }
 
-bool OPcman::Add(const OPchar* assetKey, OPasset* asset) {
-	hashmap.Put(assetKey, asset);
-	return true;
+bool OPcman::Add(const OPchar* assetKey, void* assetPtr, OPassetLoader* assetLoader, OPchar* pathToAsset) {
+	OPasset* asset = OPNEW(OPasset(assetPtr, assetLoader, pathToAsset));
+	if (hashmap.Put(assetKey, asset) > 0) {
+#ifdef _DEBUG
+		asset->Name = assetKey;
+#endif
+		return true;
+	}
+	return false;
 }
 
 void OPcman::AddLoader(OPassetLoader* loader) {
@@ -129,6 +135,9 @@ bool OPcman::Purge() {
 		while (n){
 			OPasset* asset = (OPasset*)n->Data;
 			if(asset->Dirty){
+#ifdef _DEBUG
+				//OPlogErr("Destroying: %s, %s", asset->Name, asset->FullPath);
+#endif
 				asset->Destroy();
 				OPfree(asset);
 				n->Data = NULL;
@@ -243,12 +252,11 @@ bool OPcman::Load(const OPchar* assetKey) {
 			return false;
 		}
 
-		OPasset* asset = OPNEW(OPasset(assetPtr, loader, fullPathToAsset));
-		OPfree(fullPathToAsset);
-
-		if (hashmap.Put(assetKey, asset) > 0) {
+		if (Add(assetKey, assetPtr, loader, fullPathToAsset)) {
+			OPfree(fullPathToAsset);
 			return true;
 		}
+		OPfree(fullPathToAsset);
 	}
 
 	return false;

@@ -79,7 +79,7 @@ struct OPskeletonAnimation {
 	void Merge(OPskeletonAnimation* skelAnim2, OPfloat merge, OPanimationMask* mask);
 	void Combine(OPskeletonAnimation* skelAnim2, OPskeleton* skeleton, i16 fromJoint);
 	void SetEvents(OPuint frames, OPskeletonAnimationEvent* events);
-
+	void Reset();
 	void SetNoTranslate(OPuint jointIndex);
 
 	inline void Update(OPtimer* timer, OPfloat timeScale) {
@@ -88,11 +88,6 @@ struct OPskeletonAnimation {
 
 	inline void Update(OPtimer* timer) {
 		Update(timer, 1.0f);
-	}
-
-	inline void Reset() {
-		Frame = 0;
-		LoopsCompleted = 0;
 	}
 
 	inline OPskeletonAnimation* Clone() {

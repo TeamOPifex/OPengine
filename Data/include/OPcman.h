@@ -32,7 +32,7 @@ struct OPcman {
 	void AddLoader(OPassetLoader* loader);
 	void Update(OPtimer* timer);
 	bool Purge();
-	bool Add(const OPchar* assetKey, OPasset* asset);
+	bool Add(const OPchar* assetKey, void* assetPtr, OPassetLoader* assetLoader, OPchar* pathToAsset);
 	bool Load(const OPchar* assetKey);
 	void* LoadFromFile(const OPchar* path);
 	bool Unload(const OPchar* assetKey);

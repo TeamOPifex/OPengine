@@ -6,12 +6,12 @@
 
 class ParticleSystemExample : public OPgameState {
 	OPcam* Camera;
-	OPparticleSystem* ParticleSystem;
+	OPparticleSystem ParticleSystem;
 
 
 	void Init(OPgameState* last) {
 		OPCMAN.Load("particleSheet.png");
-		OPCMAN.Load("Toys.opss");
+		OPspriteSheet* ss = (OPspriteSheet*)OPCMAN.LoadGet("Toys.opss");
 
 		Camera = (OPcam*)OPalloc(sizeof(OPcam));
 		Camera->SetPerspective(
@@ -25,8 +25,8 @@ class ParticleSystemExample : public OPgameState {
 		);
 
 		OPparticleSystem::Startup();
-		ParticleSystem = OPparticleSystem::Create(NULL, 1024, NULL);
-		ParticleSystem->fps = 30;
+		ParticleSystem.Init(ss, 1024);
+		ParticleSystem.framesPerSecond = 1000.0f / 30.0f;
 	}
 
 	OPint Update(OPtimer* time) {
@@ -34,23 +34,26 @@ class ParticleSystemExample : public OPgameState {
 		OPrenderDepth(0);
 		OPrenderClear(0, 0, 0);
 
-		OPparticle p = {
-			//OPvec3(-5.0f + OPrandom() * 10.0f, 0, -5.0f + OPrandom() * 10.0f),
-			OPVEC3_ZERO,
-			OPvec3(-0.0025 + OPrandom() * 0.005, 0.005f, -0.0025 + OPrandom() * 0.005),
-			0,//0.04f,
-			-0.004f,
-			3000,
-			3000,
-			OPvec4(1.0, 1.0, 1.0f, 1.0f),
-			sprite,
-			0
-		};
-		//if (OPrandom() > 0.9) {
-		ParticleSystem->Spawn(p);
-		//}
-		ParticleSystem->Update(time);
-		ParticleSystem->Draw(Camera);
+		//OPparticle p = {
+		//	//OPvec3(-5.0f + OPrandom() * 10.0f, 0, -5.0f + OPrandom() * 10.0f),
+		//	OPVEC3_ZERO,
+		//	OPvec3(-0.0025 + OPrandom() * 0.005, 0.005f, -0.0025 + OPrandom() * 0.005),
+		//	0,//0.04f,
+		//	-0.004f,
+		//	3000,
+		//	3000,
+		//	OPvec4(1.0, 1.0, 1.0f, 1.0f),
+		//	sprite,
+		//	0
+		//};
+
+		OPparticle* p = ParticleSystem.Spawn(sprite);
+		p->Velocity = OPvec3(-0.0025 + OPrandom() * 0.005, 0.005f, -0.0025 + OPrandom() * 0.005);
+		p->AngularVelo = -0.004f;
+		p->MaxLife = 3000;
+
+		ParticleSystem.Update(time);
+		ParticleSystem.Render(Camera);
 
 		return false;
 	}
@@ -60,7 +63,7 @@ class ParticleSystemExample : public OPgameState {
 
 	OPint Exit(OPgameState* next) {
 		OPfree(Camera);
-		ParticleSystem->Destroy();
+		ParticleSystem.Destroy();
 		return 0;
 	}
 };
