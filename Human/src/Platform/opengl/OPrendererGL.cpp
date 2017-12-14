@@ -1,3 +1,8 @@
+
+#include "./Human/include/Platform/opengl/OPrendererGL.h"
+
+#ifdef OPIFEX_OPENGL
+
 #include "./Human/include/Rendering/API/OPrenderer.h"
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Platform/opengl/OPwindowAPIGL.h"
@@ -8,19 +13,10 @@
 
 // TODO: (garrett) CMake should be generating these variables and we'll check for just OPIFEX_OPENGL and use the OPIFEX_OPENGL_MAJOR and OPIFEX_OPENGL_MINOR
 #if defined(OPIFEX_OPENGL_3_3)
-#define OPIFEX_OPENGL 1
 #define OPIFEX_OPENGL_MAJOR 3
 #define OPIFEX_OPENGL_MINOR 3
 #endif
 
-#ifdef OPIFEX_OPENGL_ES_2
-	#define OPIFEX_OPENGL 1
-	#define OPIFEX_OPENGL_MAJOR 2
-	#define OPIFEX_OPENGL_MINOR 0
-
-	#include <GLES2/gl2.h>
-
-#endif
 
 void glfwErrorCallback(int error, const char* desc) {
 	OPlogErr("GLFW ERROR: %s", desc);
@@ -29,17 +25,13 @@ void glfwErrorCallback(int error, const char* desc) {
 i8 OPrendererInitGL(OPwindow* window) {
 	OPlogInfo("Initializing OpenGL Renderer");
 
-#ifndef OPIFEX_OPENGL_ES_2
 	glfwSetErrorCallback(glfwErrorCallback);
-#endif
 
 	window->Bind();
 
-#ifndef OPIFEX_OPENGL_ES_2
 	glEnable(GL_MULTISAMPLE_ARB);
 	glEnable(GL_BLEND);
 	glEnable(GL_MULTISAMPLE);
-#endif
 
 	if (!OPglewInit()) {
 		OPlogErr("Failed to initialize GLEW");
@@ -69,9 +61,7 @@ void OPrendererPresentGL() {
 	ASSERT(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE != NULL, "There must be an active window");
 	OPwindowGL* windowGL = (OPwindowGL*)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->internalPtr;
 
-#ifndef OPIFEX_OPENGL_ES_2
 	OPGLFN(glfwSwapBuffers(windowGL->Handle));
-#endif
 }
 
 void OPrendererSetDepthTestingGL(bool state) {
@@ -102,25 +92,21 @@ void OPrendererSetCullGL(bool state) {
 }
 
 void OPrendererSetMultisampleGL(bool state) {
-#ifndef OPIFEX_OPENGL_ES_2
 	if (state) {
 		OPGLFN(glEnable(GL_MULTISAMPLE));
 	}
 	else {
 		OPGLFN(glDisable(GL_MULTISAMPLE));
 	}
-#endif
 }
 
 void OPrendererSetWireframeGL(bool state) {
-#ifndef OPIFEX_OPENGL_ES_2
 	if (state) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 	else {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
-#endif
 }
 
 void OPrendererSetCullModeGL(OPcullFace state) {
@@ -171,15 +157,11 @@ inline void OPrenderSetViewportGL(ui32 x, ui32 y, ui32 width, ui32 height) {
 void OPrendererSwapBufferGL() {
 	ASSERT(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE != NULL, "There must be an active window");
 	OPwindowGL* windowGL = (OPwindowGL*)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->internalPtr;
-#ifndef OPIFEX_OPENGL_ES_2
 	OPGLFN(glfwSwapBuffers(windowGL->Handle));
-#endif
 }
 
 void OPrendererShutdownGL() {
-#ifndef OPIFEX_OPENGL_ES_2
 	glfwTerminate();
-#endif
 }
 
 
@@ -234,5 +216,9 @@ OPrenderAPI* OPrendererGL() {
 	OPvertexBufferAPIGLInit(&OPRENDERERGL.VertexBuffer);
 	OPwindowAPIGLInit(&OPRENDERERGL.Window);
 
+	OPlogErr("Renderer Setup");
+
 	return &OPRENDERERGL;
 }
+
+#endif

@@ -3,7 +3,6 @@
 OPrenderAPI* OPRENDERER_ACTIVE = NULL;
 
 #if defined(OPIFEX_OPENGL_3_3)
-#define OPIFEX_OPENGL 1
 #define OPIFEX_OPENGL_MAJOR 3
 #define OPIFEX_OPENGL_MINOR 3
 #endif
@@ -12,23 +11,35 @@ OPrenderAPI* OPRENDERER_ACTIVE = NULL;
 #include "./Human/include/Rendering/OPmonitor.h"
 #include "./Human/include/Rendering/OPwindow.h"
 #include "./Human/include/Platform/opengl/OPrendererGL.h"
+#include "./Human/include/Platform/opengles/OPrendererGLES.h"
 #include "./Core/include/Assert.h"
 
 
 OPint OPrenderSetup() {
 #ifdef OPIFEX_OPENGL
 	OPRENDERER_ACTIVE = OPrendererGL();
+#elif defined(OPIFEX_OPENGL_ES)
+    OPRENDERER_ACTIVE = OPrendererGLES();
 #else
+    OPlogErr("No renderer setup");
 #endif
 	return 0;
 }
 
 OPint OPrenderSetup(OPrendererType::Enum renderer) {
 	switch (renderer) {
+#ifdef OPIFEX_OPENGL
 		case OPrendererType::OPENGL: {
 			OPRENDERER_ACTIVE = OPrendererGL();
 			break;
         }
+#endif
+#ifdef OPIFEX_OPENGL_ES
+        case OPrendererType::OPENGLES: {
+			OPRENDERER_ACTIVE = OPrendererGLES();
+			break;
+        }
+#endif
         case OPrendererType::DIRECTX: {
             OPlogErr("No DirectX Renderer Yet");
             break;

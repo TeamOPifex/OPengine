@@ -3,6 +3,7 @@
 struct OPrendererType {
 	enum Enum {
 		OPENGL,
+		OPENGLES,
 		DIRECTX
 	};
 };

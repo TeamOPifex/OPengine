@@ -1,10 +1,12 @@
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
+
+#ifdef OPIFEX_OPENGL
+
 #include "./Core/include/OPlog.h"
 
 bool glewInitialized = 0;
 
 bool OPglewInit() {
-#ifndef OPIFEX_ANDROID
 	if (glewInitialized) return true;
 	glewExperimental = GL_TRUE;
 	GLenum result = glewInit();
@@ -13,16 +15,11 @@ bool OPglewInit() {
 		return false;
 	}
 	glewInitialized = true;
-#endif
 	return true;
 }
 
 GLenum OPcommonGLCheckError() {
-#ifndef OPIFEX_ANDROID
 	return glGetError();
-#else
-    return 0;
-#endif
 }
 
 //void GetFirstNMessages()
@@ -54,3 +51,5 @@ bool OPcommonGLLog(const OPchar* function, const OPchar* file, i32 line) {
 	}
 	return true;
 }
+
+#endif

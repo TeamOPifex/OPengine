@@ -1,5 +1,9 @@
 #pragma once
 
+#include "./Human/include/Platform/OPrendererDefines.h"
+
+#ifdef OPIFEX_OPENGL
+
 struct OPindexBufferAPIGL;
 typedef struct OPindexBufferAPIGL OPindexBufferAPIGL;
 
@@ -10,3 +14,5 @@ void OPindexBufferAPIGLInit(OPindexBufferAPI* indexBuffer);
 struct OPindexBufferAPIGL {
 	ui32 Handle;
 };
+
+#endif

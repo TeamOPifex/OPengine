@@ -37,6 +37,7 @@ add_source_group(include/Systems "${PROJECT_SOURCE_DIR}/Human/include/Systems" H
 add_source_group(include/Utilities "${PROJECT_SOURCE_DIR}/Human/include/Utilities" HUMAN_SRC)
 add_source_group(include/Platform "${PROJECT_SOURCE_DIR}/Human/include/Platform" HUMAN_SRC)
 add_source_group(include/Platform/opengl "${PROJECT_SOURCE_DIR}/Human/include/Platform/opengl" HUMAN_SRC)
+add_source_group(include/Platform/opengles "${PROJECT_SOURCE_DIR}/Human/include/Platform/opengles" HUMAN_SRC)
 add_source_group(include/Platform/directx "${PROJECT_SOURCE_DIR}/Human/include/Platform/directx" HUMAN_SRC)
 
 
@@ -61,6 +62,7 @@ add_source_group(src/Systems "${PROJECT_SOURCE_DIR}/Human/src/Systems" HUMAN_SRC
 add_source_group(src/Utilities "${PROJECT_SOURCE_DIR}/Human/src/Utilities" HUMAN_SRC)
 add_source_group(src/Platform "${PROJECT_SOURCE_DIR}/Human/src/Platform" HUMAN_SRC)
 add_source_group(src/Platform/opengl "${PROJECT_SOURCE_DIR}/Human/src/Platform/opengl" HUMAN_SRC)
+add_source_group(src/Platform/opengles "${PROJECT_SOURCE_DIR}/Human/src/Platform/opengles" HUMAN_SRC)
 add_source_group(src/Platform/directx "${PROJECT_SOURCE_DIR}/Human/src/Platform/directx" HUMAN_SRC)
 
 

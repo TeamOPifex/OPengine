@@ -1,5 +1,9 @@
 #pragma once
 
+#include "./Human/include/Platform/OPrendererDefines.h"
+
+#ifdef OPIFEX_OPENGL
+
 struct OPmonitorGL;
 typedef struct OPmonitorGL OPmonitorGL;
 
@@ -13,3 +17,5 @@ struct OPmonitorGL {
 	GLFWmonitor* Handle;
 #endif
 };
+
+#endif

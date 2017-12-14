@@ -49,12 +49,20 @@ void ApplicationInit() {
 	OPCMAN.AddLoader(&OPASSETLOADER_JPG);
 #endif
 
+	OPlogErr("Loaders added");
+
 	OPoculusStartup();
 
+
+	OPlogErr("OPrenderSetup");
 	OPrenderSetup();
+	OPlogErr("OPrenderSetup Finished");
 	OPwindowSystemInit();
+	OPlogErr("OPwindowSystemInit Finished");
 	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, 1280, 720));
+	OPlogErr("mainWindow.Init Finished");
 	OPrenderInit(&mainWindow);
+	OPlogErr("OPrenderInit Finished");
 
 	OPGAMEPADS.SetDeadzones(0.2f);
 
@@ -129,7 +137,9 @@ int main(int argc, char * argv[]) {
 #else
 
 	OP_MAIN_START
-		OPLOGLEVEL = (ui32)OPlogLevel::ERRORS;
+		OPLOGLEVEL = (ui32)OPlogLevel::VERBOSE;
+
+		OPlogErr("Started!");
 
 		#ifdef OPIFEX_OPTION_V8
 		// If the V8 engine is compiled in,

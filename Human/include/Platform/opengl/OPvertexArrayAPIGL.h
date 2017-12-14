@@ -1,5 +1,9 @@
 #pragma once
 
+#include "./Human/include/Platform/OPrendererDefines.h"
+
+#ifdef OPIFEX_OPENGL
+
 struct OPvertexArrayGL;
 typedef struct OPvertexArrayGL OPvertexArrayGL;
 
@@ -10,3 +14,5 @@ void OPvertexArrayAPIGLInit(OPvertexArrayAPI* vertexArray);
 struct OPvertexArrayGL {
 	ui32 Handle;
 };
+
+#endif

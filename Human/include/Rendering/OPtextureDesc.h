@@ -12,12 +12,12 @@ typedef struct OPtextureDesc OPtextureDesc;
 struct OPtextureDesc {
 	ui32 width;
 	ui32 height;
-	OPtextureFormat format;
-	OPtextureFormat internalFormat;
-	OPtextureWrap wrap;
-	OPtextureFilter minfilter = OPtextureFilter::LINEAR;
-	OPtextureFilter magfilter = OPtextureFilter::LINEAR;
-	OPtextureType textureType;
+	OPtextureFormat::Enum format;
+	OPtextureFormat::Enum internalFormat;
+	OPtextureWrap::Enum wrap;
+	OPtextureFilter::Enum minfilter = OPtextureFilter::LINEAR;
+	OPtextureFilter::Enum magfilter = OPtextureFilter::LINEAR;
+	OPtextureType::Enum textureType;
 	bool multisampled = false;
 	bool mipmap = false;
 
@@ -45,7 +45,7 @@ struct OPtextureDesc {
 		multisampled = false;
 		mipmap = false;
 	}
-	OPtextureDesc(ui32 width, ui32 height, OPtextureFormat format, OPtextureWrap wrap, OPtextureFilter filter) {
+	OPtextureDesc(ui32 width, ui32 height, OPtextureFormat::Enum format, OPtextureWrap::Enum wrap, OPtextureFilter::Enum filter) {
 		this->width = width;
 		this->height = height;
 		this->format = format;
@@ -57,7 +57,7 @@ struct OPtextureDesc {
 		multisampled = false;
 		mipmap = false;
 	}
-	OPtextureDesc(ui32 width, ui32 height, OPtextureFormat format, OPtextureWrap wrap, OPtextureFilter filter, OPtextureType textureType) {
+	OPtextureDesc(ui32 width, ui32 height, OPtextureFormat::Enum format, OPtextureWrap::Enum wrap, OPtextureFilter::Enum filter, OPtextureType::Enum textureType) {
 		this->width = width;
 		this->height = height;
 		this->format = format;
@@ -69,7 +69,7 @@ struct OPtextureDesc {
 		multisampled = false;
 		mipmap = false;
 	}
-	OPtextureDesc(ui32 width, ui32 height, OPtextureFormat format, OPtextureFormat internalFormat, OPtextureWrap wrap, OPtextureFilter filter, OPtextureType textureType) {
+	OPtextureDesc(ui32 width, ui32 height, OPtextureFormat::Enum format, OPtextureFormat::Enum internalFormat, OPtextureWrap::Enum wrap, OPtextureFilter::Enum filter, OPtextureType::Enum textureType) {
 		this->width = width;
 		this->height = height;
 		this->format = format;

@@ -1,5 +1,9 @@
 #pragma once
 
+#include "./Human/include/Platform/OPrendererDefines.h"
+
+#ifdef OPIFEX_OPENGL
+
 struct OPshaderGL;
 typedef struct OPshaderGL OPshaderGL;
 
@@ -11,3 +15,5 @@ struct OPshaderGL {
 	ui32 Handle;
 	bool Compiled;
 };
+
+#endif

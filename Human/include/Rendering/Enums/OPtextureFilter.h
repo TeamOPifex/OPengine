@@ -1,9 +1,11 @@
 #pragma once
 
-enum struct OPtextureFilter
+struct OPtextureFilter
 {
-	NONE = 0,
-	LINEAR,
-	NEAREST,
-	LINEAR_MIPMAP
+	enum Enum {
+		NONE = 0,
+		LINEAR,
+		NEAREST,
+		LINEAR_MIPMAP
+	};
 };

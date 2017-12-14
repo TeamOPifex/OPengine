@@ -1,6 +1,8 @@
 
 #include "./Human/include/Platform/opengl/OPshaderAttributeAPIGL.h"
-#ifndef OPIFEX_OPENGL_ES_2
+
+#ifdef OPIFEX_OPENGL
+
 #include "./Human/include/Platform/opengl/OPeffectAPIGL.h"
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Rendering/OPeffect.h"
@@ -14,8 +16,5 @@ void OPshaderAttributeGLSetOffset(OPshaderAttribute* shaderAttribute, OPeffect* 
 void OPshaderAttributeAPIGLInit(OPshaderAttributeAPI* shaderAttribute) {
 	shaderAttribute->SetOffset = OPshaderAttributeGLSetOffset;
 }
-#else
-void OPshaderAttributeAPIGLInit(OPshaderAttributeAPI* shaderAttribute) {
-	//shaderAttribute->SetOffset = OPshaderAttributeGLSetOffset;
-}
+
 #endif

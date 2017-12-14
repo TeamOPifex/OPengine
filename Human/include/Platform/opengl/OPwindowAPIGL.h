@@ -1,5 +1,9 @@
 #pragma once
 
+#include "./Human/include/Platform/OPrendererDefines.h"
+
+#ifdef OPIFEX_OPENGL
+
 struct OPwindowGL;
 typedef struct OPwindowGL OPwindowGL;
 
@@ -9,9 +13,9 @@ typedef struct OPwindowGL OPwindowGL;
 void OPwindowAPIGLInit(OPwindowAPI* window);
 
 struct OPwindowGL {
-#ifndef OPIFEX_OPENGL_ES_2
 	GLFWwindow* Handle;
-#endif
 
 	void(*OPWINDOWDROPCALLBACK)(OPuint count, const OPchar**) = NULL;
 };
+
+#endif

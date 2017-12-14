@@ -1,6 +1,7 @@
 #include "./Human/include/Platform/opengl/OPframeBufferDepthAPIGL.h"
 
-#ifndef OPIFEX_OPENGL_ES_2
+#ifdef OPIFEX_OPENGL
+
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Rendering/OPframeBufferDepth.h"
 #include "./Human/include/Platform/opengl/OPtextureAPIGL.h"
@@ -73,13 +74,5 @@ void OPframeBufferDepthAPIGLInit(OPframeBufferDepthAPI* frameBuffer) {
 	frameBuffer->_Create = OPframeBufferDepthAPIGLCreate;
 	frameBuffer->_Init = OPframeBufferDepthAPIGLInit;
 }
-#else
 
-void OPframeBufferDepthAPIGLInit(OPframeBufferDepthAPI* frameBuffer) {
-	// frameBuffer->Bind = OPframeBufferDepthAPIGLBind;
-	// frameBuffer->Destroy = OPframeBufferDepthAPIGLDestroy;
-	// frameBuffer->Unbind = OPframeBufferDepthAPIGLUnbind;
-	// frameBuffer->_Create = OPframeBufferDepthAPIGLCreate;
-	// frameBuffer->_Init = OPframeBufferDepthAPIGLInit;
-}
 #endif
