@@ -28,7 +28,7 @@ OPframeBuffer* _OPframeBufferAPIGLESInit(OPframeBuffer* framebuffer, OPtextureDe
 	}
 	else {
 
-		OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, textureGL->Handle, 0));
+		// OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, textureGL->Handle, 0));
 	}
 
 
@@ -66,12 +66,12 @@ OPframeBuffer* _OPframeBufferAPIGLESInit(OPframeBuffer* framebuffer, OPtextureDe
 	}
 	else {
 
-		OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, textureGL->Handle, 0));
+		//OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, textureGL->Handle, 0));
 
 		// Depth Buffer
 		OPGLFN(glGenRenderbuffers(1, &frameBufferGL->DepthHandle));
 		OPGLFN(glBindRenderbuffer(GL_RENDERBUFFER, frameBufferGL->DepthHandle));
-		OPGLFN(glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT, textureDesc.width, textureDesc.height));
+		//OPGLFN(glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT, textureDesc.width, textureDesc.height));
 		OPGLFN(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, frameBufferGL->DepthHandle));
 	}
 
@@ -128,8 +128,8 @@ OPframeBuffer* OPframeBufferAPIGLESInitMultiDepth(OPframeBuffer* framebuffer, OP
 		//OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D_MULTISAMPLE, textureGL->Handle, 0));
 	}
 
-	GLuint attachments[10] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4, GL_COLOR_ATTACHMENT5, GL_COLOR_ATTACHMENT6, GL_COLOR_ATTACHMENT7, GL_COLOR_ATTACHMENT8, GL_COLOR_ATTACHMENT9 };
-	OPGLFN(glDrawBuffers(count, attachments));
+	GLuint attachments[10] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT0 + 1, GL_COLOR_ATTACHMENT0 + 2, GL_COLOR_ATTACHMENT0 + 3, GL_COLOR_ATTACHMENT0 + 4, GL_COLOR_ATTACHMENT0 + 5, GL_COLOR_ATTACHMENT0 + 6, GL_COLOR_ATTACHMENT0 + 7, GL_COLOR_ATTACHMENT0 + 8, GL_COLOR_ATTACHMENT0 + 9 };
+	//OPGLFN(glDrawBuffers(count, attachments));
 
 
 	framebuffer->depthTexture = *depthTexture;
@@ -168,27 +168,27 @@ OPframeBuffer* OPframeBufferAPIGLESCreate(OPtextureDesc textureDesc) {
 	return OPframeBufferAPIGLESInitialize(frameBuffer, textureDesc);
 }
 
-ui32 OPframeBufferModeToGLES(OPframeBufferMode mode) {
-	switch (mode)
-	{
-	case OPframeBufferMode::BOTH: return GL_FRAMEBUFFER;
-	case OPframeBufferMode::READ: return GL_READ_FRAMEBUFFER;
-	case OPframeBufferMode::DRAW: return GL_DRAW_FRAMEBUFFER;
-	}
+ui32 OPframeBufferModeToGLES(OPframeBufferMode::Enum mode) {
+//	switch (mode)
+//	{
+//	case OPframeBufferMode::BOTH: return GL_FRAMEBUFFER;
+//	case OPframeBufferMode::READ: return GL_READ_FRAMEBUFFER;
+//	case OPframeBufferMode::DRAW: return GL_DRAW_FRAMEBUFFER;
+//	}
 	return 0;
 }
 
-void OPframeBufferAPIGLESUnbind(OPframeBufferMode mode) {
+void OPframeBufferAPIGLESUnbind(OPframeBufferMode::Enum mode) {
 	OPGLFN(glBindFramebuffer(OPframeBufferModeToGLES(mode), 0));
 	OPGLFN(glViewport(0, 0, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowWidth, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowHeight));
 	OPRENDERER_ACTIVE->OPFRAMEBUFFER_ACTIVE = NULL;
 }
 
-void OPframeBufferAPIGLESBind(OPframeBufferMode mode, OPframeBuffer* ptr) {
+void OPframeBufferAPIGLESBind(OPframeBufferMode::Enum mode, OPframeBuffer* ptr) {
 	if (ptr == NULL) {
 		return OPframeBufferAPIGLESUnbind(mode);
 	}
-	OPframeBufferGL* frameBufferGL = (OPframeBufferGL*)ptr->internalPtr;
+	OPframeBufferGLES* frameBufferGL = (OPframeBufferGLES*)ptr->internalPtr;
 	OPGLFN(glBindFramebuffer(OPframeBufferModeToGLES(mode), frameBufferGL->Handle));
 	OPGLFN(glViewport(0, 0, ptr->texture[0].textureDesc.width, ptr->texture[0].textureDesc.height));
 	OPRENDERER_ACTIVE->OPFRAMEBUFFER_ACTIVE = ptr;

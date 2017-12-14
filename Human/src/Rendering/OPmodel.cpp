@@ -31,7 +31,7 @@ void OPmodel::Bind() {
 	indexBuffer.Bind();
 }
 
-void OPmodel::Build(ui32 vertexCount, ui32 indexCount, OPindexSize indexSize, void* vertices, void* indices) {
+void OPmodel::Build(ui32 vertexCount, ui32 indexCount, OPindexSize::Enum indexSize, void* vertices, void* indices) {
 	vertexArray.Bind();
 #ifdef _DEBUG
 	vertexArray.attachedMeshName = name;

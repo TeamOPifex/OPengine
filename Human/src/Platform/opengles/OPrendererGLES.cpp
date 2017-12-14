@@ -136,7 +136,7 @@ inline void OPrenderSetViewportGLES(ui32 x, ui32 y, ui32 width, ui32 height) {
 
 void OPrendererSwapBufferGLES() {
 	ASSERT(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE != NULL, "There must be an active window");
-	OPwindowGL* windowGL = (OPwindowGL*)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->internalPtr;
+	OPwindowGLES* windowGL = (OPwindowGLES*)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->internalPtr;
 	//OPGLFN(glfwSwapBuffers(windowGL->Handle));
 }
 

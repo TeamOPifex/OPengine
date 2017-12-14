@@ -18,7 +18,7 @@ OPindexBuffer* OPindexBufferGLESCreate() {
 	return OPindexBufferGLESInit(indexBuffer);
 }
 
-void OPindexBufferGLESSetData(OPindexBuffer* indexBuffer, OPindexSize size, ui32 count, const void* data) {
+void OPindexBufferGLESSetData(OPindexBuffer* indexBuffer, OPindexSize::Enum size, ui32 count, const void* data) {
 	OPindexBufferAPIGLES* buffer = (OPindexBufferAPIGLES*)indexBuffer->internalPointer;
 	OPGLFN(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->Handle));
 	indexBuffer->ElementSize = size;
@@ -41,7 +41,7 @@ void OPindexBufferGLESUnbind(OPindexBuffer* indexBuffer) {
 
 void OPindexBufferGLESDestroy(OPindexBuffer* indexBuffer) {
 	OPindexBufferAPIGLES* buffer = (OPindexBufferAPIGLES*)indexBuffer->internalPointer;
-	OPindexBufferGLUnbind(indexBuffer);
+	OPindexBufferGLESUnbind(indexBuffer);
 	OPGLFN(glDeleteBuffers(1, &buffer->Handle));
 	OPfree(buffer);
 	indexBuffer->internalPointer = NULL;

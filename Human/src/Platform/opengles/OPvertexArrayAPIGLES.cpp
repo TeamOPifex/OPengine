@@ -14,7 +14,7 @@
 void OPvertexArrayGLESBind(OPvertexArray* vertexArray);
 void OPvertexArrayGLESUnbind(OPvertexArray* ptr);
 
-GLint OPshaderElementTypeToGLES(OPshaderElementType shaderElementType) {
+GLint OPshaderElementTypeToGLES(OPshaderElementType::Enum shaderElementType) {
 	switch (shaderElementType) {
 	case OPshaderElementType::FLOAT: return GL_FLOAT;
 	case OPshaderElementType::INT: return GL_INT;
@@ -27,7 +27,7 @@ OPvertexArray* OPvertexArrayGLESInit(OPvertexArray* vertexArray, OPvertexLayout*
 	OPvertexArrayGLES* vertexArrayGL = (OPvertexArrayGLES*)OPalloc(sizeof(OPvertexArrayGLES));
 	vertexArray->internalPtr = vertexArrayGL;
 	//vertexArray->vertexLayout = vertexLayout;
-	OPGLFN(glGenVertexArrays(1, &vertexArrayGL->Handle));
+	//OPGLFN(glGenVertexArrays(1, &vertexArrayGL->Handle));
 
 	return vertexArray;
 }
@@ -39,7 +39,7 @@ OPvertexArray* OPvertexArrayGLESCreate(OPvertexLayout* vertexLayout) {
 
 void OPvertexArrayGLESBind(OPvertexArray* vertexArray) {
 	OPvertexArrayGLES* vertexArrayGL = (OPvertexArrayGLES*)vertexArray->internalPtr;
-	OPGLFN(glBindVertexArray(vertexArrayGL->Handle));
+	//OPGLFN(glBindVertexArray(vertexArrayGL->Handle));
 	OPRENDERER_ACTIVE->OPVERTEXARRAY_ACTIVE = vertexArray;
 }
 
@@ -66,7 +66,7 @@ void OPvertexArrayGLESSetLayout(OPvertexArray* vertexArray, OPvertexLayout* vert
 		//OPGLFN(OPint loc = glGetAttribLocation(effectGL->Handle, shaderAttribute.Name));
 
 		OPGLFN(glEnableVertexAttribArray((GLuint)shaderAttribute.Location));
-		OPGLFN(glVertexAttribPointer((GLuint)shaderAttribute.Location, shaderAttribute.Elements, OPshaderElementTypeToGL(shaderAttribute.Type), GL_FALSE, vertexLayout->stride, (const void*)shaderAttribute.Offset));
+		OPGLFN(glVertexAttribPointer((GLuint)shaderAttribute.Location, shaderAttribute.Elements, OPshaderElementTypeToGLES(shaderAttribute.Type), GL_FALSE, vertexLayout->stride, (const void*)shaderAttribute.Offset));
 	}
 }
 
@@ -75,7 +75,7 @@ void OPvertexArrayGLESDraw(OPvertexArray* vertexArray, OPuint count, OPuint offs
 	OPGLFN(glDrawArrays(GL_TRIANGLES, (GLint)offset, (GLsizei)count));
 }
 
-ui32 OPindexSizeToGLES(OPindexSize indexSize) {
+ui32 OPindexSizeToGLES(OPindexSize::Enum indexSize) {
 	switch (indexSize) {
 		case OPindexSize::BYTE: return GL_UNSIGNED_BYTE;
 		case OPindexSize::SHORT: return GL_UNSIGNED_SHORT;
@@ -85,19 +85,19 @@ ui32 OPindexSizeToGLES(OPindexSize indexSize) {
 }
 
 #include "./Human/include/Rendering/OPindexBuffer.h"
-void OPvertexArrayGLDrawIndexed(OPvertexArray* vertexArray, OPuint count, OPuint offset) {
+void OPvertexArrayGLESDrawIndexed(OPvertexArray* vertexArray, OPuint count, OPuint offset) {
 	OPvertexArrayGLES* vertexArrayGL = (OPvertexArrayGLES*)vertexArray->internalPtr;	
-	OPGLFN(glDrawElements(GL_TRIANGLES, (GLint)count, OPindexSizeToGL(OPRENDERER_ACTIVE->OPINDEXBUFFER_ACTIVE->ElementSize), (void*)(offset * sizeof(GLuint))));
+	OPGLFN(glDrawElements(GL_TRIANGLES, (GLint)count, OPindexSizeToGLES(OPRENDERER_ACTIVE->OPINDEXBUFFER_ACTIVE->ElementSize), (void*)(offset * sizeof(GLuint))));
 }
 
 void OPvertexArrayGLESUnbind(OPvertexArray* ptr) {
-	OPGLFN(glBindVertexArray(0));
+	//OPGLFN(glBindVertexArray(0));
 	OPRENDERER_ACTIVE->OPVERTEXARRAY_ACTIVE = NULL;
 }
 
 void OPvertexArrayGLESDestroy(OPvertexArray* vertexArray) {
 	OPvertexArrayGLES* vertexArrayGL = (OPvertexArrayGLES*)vertexArray->internalPtr;
-	OPGLFN(glDeleteVertexArrays(1, &vertexArrayGL->Handle));
+	//OPGLFN(glDeleteVertexArrays(1, &vertexArrayGL->Handle));
 	OPfree(vertexArrayGL);
 	vertexArray->internalPtr = NULL;
 }

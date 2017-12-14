@@ -4,7 +4,7 @@
 
 #include "./Core/include/OPlog.h"
 
-GLenum OPcommonGLCheckError() {
+GLenum OPcommonGLESCheckError() {
     return 0;
 }
 
@@ -28,7 +28,7 @@ GLenum OPcommonGLCheckError() {
 //}
 
 bool OPcommonGLESLog(const OPchar* function, const OPchar* file, i32 line) {
-	GLenum error = OPcommonGLCheckError();
+	GLenum error = OPcommonGLESCheckError();
 	if (error != GL_NO_ERROR)
 	{
 		//GetFirstNMessages();

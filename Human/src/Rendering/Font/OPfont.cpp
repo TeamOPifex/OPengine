@@ -252,7 +252,7 @@ OPvec2 _OPfontBuild(OPvector* vertices, OPvector* indices, OPfont* font, const O
 
 OPmodel OPfont::CreateText(OPchar* text) {
 	ui32 vertexSize = sizeof(OPvertexTex);
-	OPindexSize indexSize = OPindexSize::SHORT;// sizeof(ui16);
+	OPindexSize::Enum indexSize = OPindexSize::SHORT;// sizeof(ui16);
 	OPvector* vertices = OPvector::Create(vertexSize);
 	OPvector* indices = OPvector::Create((ui32)indexSize);
 
@@ -276,7 +276,7 @@ OPfontBuiltTextNode OPfont::CreatePackedText(const OPchar* text, OPfloat scale) 
 	ASSERT(OPMESHPACKER_ACTIVE != NULL, "No mesh packer bound.");
 
 	ui32 vertexSize = sizeof(OPvertexTex);
-	OPindexSize indexSize = OPindexSize::SHORT;// sizeof(ui16);
+	OPindexSize::Enum indexSize = OPindexSize::SHORT;// sizeof(ui16);
 	OPvector* vertices = OPvector::Create(vertexSize);
 	OPvector* indices = OPvector::Create((ui32)indexSize);
 

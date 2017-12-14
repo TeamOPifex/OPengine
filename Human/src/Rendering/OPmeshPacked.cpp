@@ -11,7 +11,7 @@
 //-----------------------------------------------------------------------------
 
 OPmeshPacked* OPmeshPacked::Init(
-			OPvertexLayout vertexLayout, OPindexSize indSize,
+			OPvertexLayout vertexLayout, OPindexSize::Enum indSize,
 			OPuint vertCount, OPuint indCount,
 			void* vertices, void* indices){
 
@@ -30,7 +30,7 @@ OPmeshPacked* OPmeshPacked::Init(
 	return this;
 }
 
-OPmeshPacked* OPmeshPacked::Create(OPvertexLayout vertexLayout, OPindexSize indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices) {
+OPmeshPacked* OPmeshPacked::Create(OPvertexLayout vertexLayout, OPindexSize::Enum indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices) {
 	OPmeshPacked* result = (OPmeshPacked*)OPalloc(sizeof(OPmeshPacked));
 	result->Init(vertexLayout, indSize, vertCount, indCount, vertices, indices);
 	return result;

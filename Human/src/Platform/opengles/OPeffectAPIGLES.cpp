@@ -75,10 +75,10 @@ OPeffect* OPeffectAPIGLESInit(OPeffect* effect, OPshader* vert, OPshader* frag, 
 			if (OPstringEquals("uBones[0]", name)) {
 				//ui32 loc = glGetUniformLocation(effectGL->Handle, "uBones");
 				//OPlogInfo("Bone Location: %d", loc);
-				OPeffectGLAddUniform(effect, "uBones");
+				OPeffectGLESAddUniform(effect, "uBones");
 			}
 			else {
-				OPeffectGLAddUniform(effect, name);
+				OPeffectGLESAddUniform(effect, name);
 			}
 			OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Uniform #%d Type: %u Name: %s", i, type, name);
 		}
@@ -95,7 +95,7 @@ OPeffect* OPeffectGLESCreate(OPshader* vert, OPshader* frag, OPvertexLayout* ver
 }
 
 void OPeffectGLESSetVertexLayout(OPeffect* effect, OPvertexLayout* vertexLayout) {
-	OPeffectGL* effectGL = (OPeffectGL*)effect->internalPtr;
+	OPeffectGLES* effectGL = (OPeffectGLES*)effect->internalPtr;
 	//OPvertexLayoutGL* vertexLayoutGL = (OPvertexLayoutGL*)vertexLayout->internalPtr;
 
 	ui32 i = 0;

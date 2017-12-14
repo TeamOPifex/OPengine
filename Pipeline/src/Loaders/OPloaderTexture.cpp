@@ -5,7 +5,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "./Human/include/Utilities/stb_image.h"
 
-OPint OPloaderTextureFromStreamOffset(OPstream* str, OPuint offset, OPtexture** image, OPtextureFilter filter) {
+OPint OPloaderTextureFromStreamOffset(OPstream* str, OPuint offset, OPtexture** image, OPtextureFilter::Enum filter) {
 	TIMED_BLOCK;
 
 	ASSERT(str != NULL, "Image not found.");

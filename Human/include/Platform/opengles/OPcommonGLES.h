@@ -1,17 +1,17 @@
 #pragma once
 
-#include "./Core/include/OPtypes.h"
 #include "./Human/include/Platform/OPrendererDefines.h"
 
 #ifdef OPIFEX_OPENGL_ES
 	#ifdef OPIFEX_IOS
 		#include <OpenGLES/ES2/gl.h>
 	#endif
-	#ifdef OPIFEX_ANDROID
+	//#ifdef OPIFEX_ANDROID
 		#include <EGL/egl.h> 
+		#include <GLES/gl.h>
 		#include <GLES2/gl2.h>
 		#include <GLES2/gl2ext.h>
-	#endif
+	//#endif
 
 	GLenum OPcommonGLESCheckError();
 	bool OPcommonGLESLog(const OPchar* function, const OPchar* file, i32 line);

@@ -9,8 +9,8 @@
 #include "./Human/include/Rendering/OPshaderUniform.h"
 #include "./Core/include/Assert.h"
 
-OPshaderUniform* OPshaderUniformGLESESInit(OPshaderUniform* shaderUniform, OPeffect* effect, const OPchar* name) {
-	OPshaderUniformGLESES* shaderUniformGL = (OPshaderUniformGLESES*)OPalloc(sizeof(OPshaderUniformGLESES));;
+OPshaderUniform* OPshaderUniformGLESInit(OPshaderUniform* shaderUniform, OPeffect* effect, const OPchar* name) {
+	OPshaderUniformGLES* shaderUniformGL = (OPshaderUniformGLES*)OPalloc(sizeof(OPshaderUniformGLES));;
 	shaderUniform->internalPtr = shaderUniformGL;
 
 	OPeffectGLES* effectGL = (OPeffectGLES*)effect->internalPtr;
@@ -26,13 +26,13 @@ OPshaderUniform* OPshaderUniformGLESESInit(OPshaderUniform* shaderUniform, OPeff
 	return shaderUniform;
 }
 
-OPshaderUniform* OPshaderUniformGLESESCreate(OPeffect* effect, const OPchar* name) {
+OPshaderUniform* OPshaderUniformGLESCreate(OPeffect* effect, const OPchar* name) {
 	OPshaderUniform* shaderUniform = (OPshaderUniform*)OPalloc(sizeof(OPshaderUniform));
-	return OPshaderUniformGLESESInit(shaderUniform, effect, name);
+	return OPshaderUniformGLESInit(shaderUniform, effect, name);
 }
 
-void OPshaderUniformGLESESDestroy(OPshaderUniform* shaderUniform) {
-	OPshaderUniformGLESES* shaderUniformGL = (OPshaderUniformGLESES*)shaderUniform->internalPtr;
+void OPshaderUniformGLESDestroy(OPshaderUniform* shaderUniform) {
+	OPshaderUniformGLES* shaderUniformGL = (OPshaderUniformGLES*)shaderUniform->internalPtr;
 	OPfree(shaderUniformGL);
 	shaderUniform->internalPtr = NULL;
 }
@@ -41,21 +41,21 @@ void OPshaderUniformSetBoolGLES(OPshaderUniform* shaderUniform, bool val) {
 #ifdef _DEBUG
 	if (shaderUniform == NULL) return;
 #endif
-	OPshaderUniformGLESES* shaderUniformGL = (OPshaderUniformGLESES*)shaderUniform->internalPtr;
+	OPshaderUniformGLES* shaderUniformGL = (OPshaderUniformGLES*)shaderUniform->internalPtr;
 	glUniform1i(shaderUniformGL->Handle, val);
 }
 void OPshaderUniformSetFGLES(OPshaderUniform* shaderUniform, f32 val) {
 #ifdef _DEBUG
 	if (shaderUniform == NULL) return;
 #endif
-	OPshaderUniformGLESES* shaderUniformGL = (OPshaderUniformGLESES*)shaderUniform->internalPtr;
+	OPshaderUniformGLES* shaderUniformGL = (OPshaderUniformGLES*)shaderUniform->internalPtr;
 	glUniform1f(shaderUniformGL->Handle, val);
 }
 void OPshaderUniformSetFvGLES(OPshaderUniform* shaderUniform, ui32 count, f32* val) {
 #ifdef _DEBUG
 	if (shaderUniform == NULL) return;
 #endif
-	OPshaderUniformGLESES* shaderUniformGL = (OPshaderUniformGLESES*)shaderUniform->internalPtr;
+	OPshaderUniformGLES* shaderUniformGL = (OPshaderUniformGLES*)shaderUniform->internalPtr;
 	glUniform1fv(shaderUniformGL->Handle, count, val);
 }
 void OPshaderUniformSetIGLES(OPshaderUniform* shaderUniform, i32 val) {

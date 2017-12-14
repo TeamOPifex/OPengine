@@ -58,7 +58,7 @@ OPuint OPmeshPacker::AddVertexBuffer(ui32 vertexSize, void* verticesData, OPuint
 }
 
 //-----------------------------------------------------------------------------
-OPuint OPmeshPacker::AddIndexBuffer(OPindexSize indexSize, void* indicesData, OPuint indexCount){
+OPuint OPmeshPacker::AddIndexBuffer(OPindexSize::Enum indexSize, void* indicesData, OPuint indexCount){
 	OPmeshPacker* packer = OPMESHPACKER_ACTIVE;
 	OPuint dataStartPos = packer->vertexOffset;
 	OPuint indexBufferSize = (ui32)indexSize * indexCount;
