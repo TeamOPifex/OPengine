@@ -18,6 +18,8 @@
 i8 OPrendererInitGLES(OPwindow* window) {
 	OPlogInfo("Initializing OpenGL Renderer");
 	
+	window->Bind();
+	
 	OPRENDERER_ACTIVE->SetBlendModeAlpha();
 
 	return 0;
@@ -41,7 +43,7 @@ void OPrendererPresentGLES() {
 	ASSERT(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE != NULL, "There must be an active window");
 	OPwindowGLES* windowGL = (OPwindowGLES*)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->internalPtr;
 
-	// OPGLFN(glfwSwapBuffers(windowGL->Handle));
+    OPGLFN(eglSwapBuffers(windowGL->display, windowGL->surface));
 }
 
 void OPrendererSetDepthTestingGLES(bool state) {
@@ -138,6 +140,7 @@ void OPrendererSwapBufferGLES() {
 	ASSERT(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE != NULL, "There must be an active window");
 	OPwindowGLES* windowGL = (OPwindowGLES*)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->internalPtr;
 	//OPGLFN(glfwSwapBuffers(windowGL->Handle));
+    OPGLFN(eglSwapBuffers(windowGL->display, windowGL->surface));
 }
 
 void OPrendererShutdownGLES() {

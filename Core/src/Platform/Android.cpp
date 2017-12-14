@@ -62,6 +62,16 @@ jint JNIHeight() { return _JNIHeight; }
 OPint _OPengineRendering = 0;
 OPint _OPengineInitialize = 0;
 
+void OPAndroidIntialize() {
+	if (_OPengineInitialize) {
+		_OPengineInitialize = 0;
+		OPlog("Initialize Engine");
+		OPTIMER.Init();
+		OPinitialize();
+		_OPengineRendering = 1;
+	}
+}
+
 static void engine_handle_cmd(struct android_app* app, int32_t cmd) {
 	//struct engine* engine = (struct engine*)app->userData;
 	switch (cmd) {
@@ -77,6 +87,7 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd) {
 		if (OPAndroidState->window != NULL) {
 			OPlog("Window is not null");
 			_OPengineInitialize = 1;
+			OPAndroidIntialize();
 			_OPengineRendering = 1;
 		}
 		break;
@@ -109,6 +120,23 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd) {
 	}
 }
 
+void OPAndroidEventHandling() {	
+	int ident;
+	int events;
+	struct android_poll_source* source;
+
+	while ((ident = ALooper_pollAll(_OPengineRendering ? 0 : -1, NULL, &events, (void**)&source)) > 0) {
+		if (source != NULL) {
+			source->process(OPAndroidState, source);
+		}
+		if (OPAndroidState->destroyRequested != 0) {
+			OPENGINERUNNING = 0;
+			_OPengineRendering = 0;
+			break;
+		}
+	}
+}
+
 void OPstart(struct android_app* state) {
 	// Make sure glue isn't stripped.
 	// This is for the Android NDK Native Activity
@@ -122,36 +150,20 @@ void OPstart(struct android_app* state) {
 
 	while (OPENGINERUNNING) {
 
-		int ident;
-		int events;
-		struct android_poll_source* source;
-
-		while ((ident = ALooper_pollAll(_OPengineRendering ? 0 : -1, NULL, &events, (void**)&source)) > 0) {
-			if (source != NULL) {
-				source->process(state, source);
-			}
-			if (OPAndroidState->destroyRequested != 0) {
-				OPENGINERUNNING = 0;
-				_OPengineRendering = 0;
-				break;
-			}
-		}
-
-		if (_OPengineInitialize) {
-			_OPengineInitialize = 0;
-			OPlog("Initialize Engine");
-			OPTIMER.Init();
-			OPinitialize();
-			_OPengineRendering = 1;
-		}
+		OPAndroidEventHandling();
 
 		if (_OPengineRendering) {
 			OPTIMER.Tick();
-
+	
+			// Make sure that at least 1 ms has passed
+			if (OPTIMER.Elapsed == 0) continue;
+	
 			// update the game
 			if (OPupdate(&OPTIMER)) {
-				OPENGINERUNNING = 0;
+				OPENGINERUNNING = false;
+				return;
 			}
+			OPrender(1.0f);
 		}
 	}
 

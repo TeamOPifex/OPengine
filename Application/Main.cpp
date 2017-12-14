@@ -71,46 +71,50 @@ void ApplicationInit() {
 	OPSOCKETGAMEPADS.SetDeadzones(0.2f);
 #endif
 
-	OPVISUALDEBUGINFO.Init();
+	//OPVISUALDEBUGINFO.Init();
 
-	OPgameState::Change(GS_EXAMPLE_SELECTOR);
+	//OPgameState::Change(GS_EXAMPLE_SELECTOR);
 }
 
 OPint ApplicationUpdate(OPtimer* timer) {
-	if (mainWindow.Update()) {
-		return 1;
-	}
-	OPVISUALDEBUGINFO.Update(timer);
+	return 0;
+// 	if (mainWindow.Update()) {
+// 		return 1;
+// 	}
+// 	OPVISUALDEBUGINFO.Update(timer);
 
-	OPinputSystemUpdate(timer);
-#ifdef ADDON_socketio
-	OPSOCKETGAMEPADS.Update(timer);
-#endif
-	OPCMAN_UPDATE(timer);
+// 	OPinputSystemUpdate(timer);
+// #ifdef ADDON_socketio
+// 	OPSOCKETGAMEPADS.Update(timer);
+// #endif
+// 	OPCMAN_UPDATE(timer);
 
-	if (OPKEYBOARD.WasReleased(OPkeyboardKey::ESCAPE)) return 1;
-	if ((OPKEYBOARD.WasReleased(OPkeyboardKey::BACKSPACE) || OPGAMEPADS[0]->WasPressed(OPgamePadButton::BACK)) && ActiveState != GS_EXAMPLE_SELECTOR) {
-		OPgameState::Change(GS_EXAMPLE_SELECTOR);
-	}
-#ifdef ADDON_socketio
-	if ((OPSOCKETGAMEPADS[0]->WasPressed(OPgamePadButton::BACK)) && ActiveState != GS_EXAMPLE_SELECTOR) {
-		OPgameState::Change(GS_EXAMPLE_SELECTOR);
-	}
-#endif
+// 	if (OPKEYBOARD.WasReleased(OPkeyboardKey::ESCAPE)) return 1;
+// 	if ((OPKEYBOARD.WasReleased(OPkeyboardKey::BACKSPACE) || OPGAMEPADS[0]->WasPressed(OPgamePadButton::BACK)) && ActiveState != GS_EXAMPLE_SELECTOR) {
+// 		OPgameState::Change(GS_EXAMPLE_SELECTOR);
+// 	}
+// #ifdef ADDON_socketio
+// 	if ((OPSOCKETGAMEPADS[0]->WasPressed(OPgamePadButton::BACK)) && ActiveState != GS_EXAMPLE_SELECTOR) {
+// 		OPgameState::Change(GS_EXAMPLE_SELECTOR);
+// 	}
+// #endif
 
-	return ActiveState->Update(timer);
+// 	return ActiveState->Update(timer);
 }
 
 void ApplicationRender(OPfloat delta) {
-	ActiveState->Render(delta);
+	//ActiveState->Render(delta);
+	
+	OPrenderClear(1,0,0);
+	OPrenderPresent();
 }
 
 void ApplicationDestroy() {
-	ActiveState->Exit(ActiveState);
-	OPVISUALDEBUGINFO.Destroy();
-	OPCMAN.Destroy();
-	OPlogToFileClose();
-	mainWindow.Destroy();
+	// ActiveState->Exit(ActiveState);
+	// OPVISUALDEBUGINFO.Destroy();
+	// OPCMAN.Destroy();
+	// OPlogToFileClose();
+	// mainWindow.Destroy();
 }
 
 void ApplicationSetup() {
