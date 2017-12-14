@@ -35,7 +35,7 @@ struct OPrenderAPI {
 	void(*SetMultisample)(bool state) = 0;
 	void(*SetWireframe)(bool state) = 0;
 	void(*SetBlend)(bool state) = 0;
-	void(*SetBlendMode)(OPblendFunction src, OPblendFunction dst) = 0;
+	void(*SetBlendMode)(OPblendFunction::Enum src, OPblendFunction::Enum dst) = 0;
 	void(*SetViewport)(ui32 x, ui32 y, ui32 width, ui32 height) = 0;
 	void(*SwapBuffer)() = 0;
 	void(*Shutdown)() = 0;

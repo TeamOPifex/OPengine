@@ -57,6 +57,7 @@ if( ${OPIFEX_OS_ANDROID} )
 	#add_library(native_app_glue STATIC ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c)
 	#target_include_directories(1_Core PRIVATE ${ANDROID_NDK}/sources/android/native_app_glue)
 	#target_link_libraries(1_Core native_app_glue)
+	target_link_libraries(1_Core log)
 endif()
 
 # install (TARGETS 1_Core DESTINATION ../../Binaries/ios/debug)

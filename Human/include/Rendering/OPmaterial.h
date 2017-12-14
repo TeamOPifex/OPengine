@@ -40,7 +40,7 @@ public:
 
 	virtual OPmaterial* Init(OPeffect* effect);
 	virtual OPmaterial* Init(OPmaterial* base);
-	virtual void AddParam(OPmaterialParamType paramType, const OPchar* name, void* data, ui8 count);
+	virtual void AddParam(OPmaterialParamType::Enum paramType, const OPchar* name, void* data, ui8 count);
 	virtual void Bind(bool onlyParams = false);
 	virtual OPmaterialParam* GetParam(const OPchar* name);
 	virtual bool SetParam(const OPchar* name, void* ptr);

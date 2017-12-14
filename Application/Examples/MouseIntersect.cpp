@@ -105,7 +105,7 @@ class MouseIntersectExample : public OPgameState {
 
 
 		OPray3D ray = { OPvec3(0, 0, 0), OPvec3(0, 0, 0) };
-		OPvec3 positionHit = { 0, 0, 0 };
+		OPvec3 positionHit = OPvec3(0, 0, 0);
 		OPint intersecting = 0;
 		if (OPMOUSE.IsDown(OPmouseButton::LBUTTON)) {
 

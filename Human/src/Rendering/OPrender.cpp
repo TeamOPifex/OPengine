@@ -23,7 +23,7 @@ OPint OPrenderSetup() {
 	return 0;
 }
 
-OPint OPrenderSetup(OPrendererType renderer) {
+OPint OPrenderSetup(OPrendererType::Enum renderer) {
 	switch (renderer) {
 		case OPrendererType::OPENGL: {
 			OPRENDERER_ACTIVE = OPrendererGL();

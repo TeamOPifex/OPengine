@@ -18,71 +18,71 @@
 #endif
 
 #ifdef OPIFEX_ANDROID
-
-	#define CONTROLLER_CLASS_NAME "tv/ouya/console/api/OuyaController"
-
-	jobject OPjniGetControllerByPlayer(OPint playerNum) {
-		OPJniMethodInfo methodInfo;
-		if (!OPjniGetStaticMethodInfo(methodInfo,
-			CONTROLLER_CLASS_NAME, "getControllerByPlayer",
-			"(I)Ltv/ouya/console/api/OuyaController;")) {
-				return 0;
-		}
-		return methodInfo.env->CallStaticObjectMethod(methodInfo.classID,
-			methodInfo.methodID, playerNum);
-	}
-
-
-	OPint OPjniGetControllerButton(jobject controller, OPint button) {
-
-		OPJniMethodInfo methodInfo2;
-		if (!OPjniGetMethodInfo(methodInfo2,
-			CONTROLLER_CLASS_NAME, "getButton", "(I)Z")) {
-				OPlog("Class method not found");
-				return false;
-		}
-
-		JNIEnvironment()->DeleteLocalRef(methodInfo2.classID);
-
-		OPint result = JNIEnvironment()->CallBooleanMethod(controller, methodInfo2.methodID, button);
-
-		if(result) {
-			OPlog("Button Pressed: %d", button);
-		} else {
-
-		}
-
-		return result;
-	}
-
-	OPfloat OPjniGetAxisValue( jobject controller, OPint ouyaAxis ) {
-
-		OPJniMethodInfo methodInfo;
-
-		if (!OPjniGetMethodInfo(methodInfo, CONTROLLER_CLASS_NAME, "getAxisValue", "(I)F"))
-		{
-			return 0;
-		}
-
-		jfloat f = methodInfo.env->CallFloatMethod(controller, methodInfo.methodID, ouyaAxis);
-
-		methodInfo.env->DeleteLocalRef(methodInfo.classID);
-
-		return f;
-	}
+//
+//	#define CONTROLLER_CLASS_NAME "tv/ouya/console/api/OuyaController"
+//
+//	jobject OPjniGetControllerByPlayer(OPint playerNum) {
+//		OPJniMethodInfo methodInfo;
+//		if (!OPjniGetStaticMethodInfo(methodInfo,
+//			CONTROLLER_CLASS_NAME, "getControllerByPlayer",
+//			"(I)Ltv/ouya/console/api/OuyaController;")) {
+//				return 0;
+//		}
+//		return methodInfo.env->CallStaticObjectMethod(methodInfo.classID,
+//			methodInfo.methodID, playerNum);
+//	}
+//
+//
+//	OPint OPjniGetControllerButton(jobject controller, OPint button) {
+//
+//		OPJniMethodInfo methodInfo2;
+//		if (!OPjniGetMethodInfo(methodInfo2,
+//			CONTROLLER_CLASS_NAME, "getButton", "(I)Z")) {
+//				OPlog("Class method not found");
+//				return false;
+//		}
+//
+//		JNIEnvironment()->DeleteLocalRef(methodInfo2.classID);
+//
+//		OPint result = JNIEnvironment()->CallBooleanMethod(controller, methodInfo2.methodID, button);
+//
+//		if(result) {
+//			OPlog("Button Pressed: %d", button);
+//		} else {
+//
+//		}
+//
+//		return result;
+//	}
+//
+//	OPfloat OPjniGetAxisValue( jobject controller, OPint ouyaAxis ) {
+//
+//		OPJniMethodInfo methodInfo;
+//
+//		if (!OPjniGetMethodInfo(methodInfo, CONTROLLER_CLASS_NAME, "getAxisValue", "(I)F"))
+//		{
+//			return 0;
+//		}
+//
+//		jfloat f = methodInfo.env->CallFloatMethod(controller, methodInfo.methodID, ouyaAxis);
+//
+//		methodInfo.env->DeleteLocalRef(methodInfo.classID);
+//
+//		return f;
+//	}
 
 #endif
 
 
 #ifdef OPIFEX_ANDROID
 void __OPandUpdateGamePad(OPgamePad* controller){
-	jobject jcontroller = OPjniGetControllerByPlayer(controller->controllerIndex);
+	//jobject jcontroller = OPjniGetControllerByPlayer(controller->controllerIndex);
 
-	if(jcontroller == 0) {
-		return;
-	}
+//	if(jcontroller == 0) {
+//		return;
+//	}
 
-	controller->connected = true;
+	//controller->connected = true;
 
 	// controller->buttons[(ui32)OPgamePadButton::A] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_O);
 	// controller->buttons[OPGAMEPADBUTTON_X] = OPjniGetControllerButton(jcontroller, OUYA_BUTTON_U);

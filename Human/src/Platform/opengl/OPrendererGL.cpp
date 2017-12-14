@@ -17,6 +17,9 @@
 	#define OPIFEX_OPENGL 1
 	#define OPIFEX_OPENGL_MAJOR 2
 	#define OPIFEX_OPENGL_MINOR 0
+
+	#include <GLES2/gl2.h>
+
 #endif
 
 void glfwErrorCallback(int error, const char* desc) {
@@ -134,7 +137,7 @@ void OPrendererSetBlendGL(bool state){
 }
 
 
-ui32 OPblendFunctionToGL(OPblendFunction blendFunction) {
+ui32 OPblendFunctionToGL(OPblendFunction::Enum blendFunction) {
 	switch (blendFunction)
 	{
 		case OPblendFunction::CONSTANT_ALPHA: return GL_CONSTANT_ALPHA;
@@ -156,7 +159,7 @@ ui32 OPblendFunctionToGL(OPblendFunction blendFunction) {
 	return 0;
 }
 
-void OPrendererSetBlendModeGL(OPblendFunction src, OPblendFunction dst) {
+void OPrendererSetBlendModeGL(OPblendFunction::Enum src, OPblendFunction::Enum dst) {
 	OPGLFN(glBlendFunc(OPblendFunctionToGL(src), OPblendFunctionToGL(dst)));
 }
 

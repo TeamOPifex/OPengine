@@ -58,5 +58,10 @@
 			#define OP_MAIN_RUN_STEPPED OPstartStepped(0, NULL);
 		#endif
 	#endif
+	
+	#define OP_MAIN_END \
+			OPend(); \
+			return 0; \
+			}
 
 #endif

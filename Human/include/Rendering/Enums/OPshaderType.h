@@ -2,18 +2,22 @@
 
 #include "./Core/include/OPtypes.h"
 
-enum struct OPshaderType {
-	VERTEX = 0,
-	FRAGMENT
+struct OPshaderType {
+	enum Enum {
+		VERTEX = 0,
+		FRAGMENT
+	};
 };
 
-enum struct OPshaderElementType {
-	SHORT = 0,
-	INT,
-	FLOAT
+struct OPshaderElementType {
+	enum Enum {
+		SHORT = 0,
+		INT,
+		FLOAT
+	};
 };
 
-inline const OPchar* OPshaderElementTypeToStr(OPshaderElementType shaderElementType) {
+inline const OPchar* OPshaderElementTypeToStr(OPshaderElementType::Enum shaderElementType) {
 	switch (shaderElementType) {
 		case OPshaderElementType::SHORT: return "SHORT";
 		case OPshaderElementType::INT: return "INT";

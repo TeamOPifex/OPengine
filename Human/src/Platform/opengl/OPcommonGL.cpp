@@ -18,7 +18,11 @@ bool OPglewInit() {
 }
 
 GLenum OPcommonGLCheckError() {
+#ifndef OPIFEX_ANDROID
 	return glGetError();
+#else
+    return 0;
+#endif
 }
 
 //void GetFirstNMessages()

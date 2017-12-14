@@ -113,7 +113,7 @@ void OPstart(struct android_app* state) {
 	// Make sure glue isn't stripped.
 	// This is for the Android NDK Native Activity
 	// DO NOT REMOVE
-	app_dummy();
+	// app_dummy();
 
 	OPAndroidState = state;
 	OPAndroidState->onAppCmd = engine_handle_cmd;
@@ -126,16 +126,16 @@ void OPstart(struct android_app* state) {
 		int events;
 		struct android_poll_source* source;
 
-		while ((ident = ALooper_pollAll(_OPengineRendering ? 0 : -1, NULL, &events, (void**)&source)) > 0) {
-			if (source != NULL) {
-				source->process(state, source);
-			}
-			if (OPAndroidState->destroyRequested != 0) {
-				OPENGINERUNNING = 0;
-				_OPengineRendering = 0;
-				break;
-			}
-		}
+		// while ((ident = ALooper_pollAll(_OPengineRendering ? 0 : -1, NULL, &events, (void**)&source)) > 0) {
+		// 	if (source != NULL) {
+		// 		source->process(state, source);
+		// 	}
+		// 	if (OPAndroidState->destroyRequested != 0) {
+		// 		OPENGINERUNNING = 0;
+		// 		_OPengineRendering = 0;
+		// 		break;
+		// 	}
+		// }
 
 		if (_OPengineInitialize) {
 			_OPengineInitialize = 0;

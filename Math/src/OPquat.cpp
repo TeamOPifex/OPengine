@@ -1,6 +1,6 @@
 #include "./Math/include/OPquat.h"
 
-const OPquat OPQUAT_IDENTITY = { 0, 0, 0, 1 };
+const OPquat OPQUAT_IDENTITY = OPquat(0, 0, 0, 1 );
 
 OPquat OPquat::operator*(OPquat rhs) {
 	OPfloat dot = x * rhs.x + y * rhs.y + z * rhs.z;
@@ -28,12 +28,12 @@ OPquat OPquat::CreateRot(OPvec3 axis, OPfloat angle) {
 	OPvec3 n = OPvec3Norm((OPvec3)axis);
 	OPvec3 v = n * s;
 
-	OPquat out = {
+	OPquat out = OPquat(
 		v.x,
 		v.y,
 		v.z,
 		c
-	};
+    );
 
 	return out;
 }

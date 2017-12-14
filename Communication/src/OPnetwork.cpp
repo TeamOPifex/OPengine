@@ -641,5 +641,15 @@ i32 OPnetworkServerStartUDP(OPnetwork* network) {
  void OPnetworkDestroy(OPnetwork* network) {
  	OPfree(network);
  }
+#else
+
+OPnetwork* OPnetworkCreate(OPnetworkType networkType, OPnetworkPrototcol protocol) { return NULL; }
+i32 OPnetworkClientConnect(OPnetwork* network, const OPchar* address, const OPchar* port) { return 0; }
+i32 OPnetworkServerStart(OPnetwork* network, const OPchar* port) { return 0; }
+OPnetwork* OPnetworkAcceptClient(OPnetwork* network) { return NULL; }
+i32 OPnetworkReceive(OPnetwork* network, void* state) { return 0; }
+i32 OPnetworkSend(OPnetwork* network, i8* data, i32 size) { return 0; }
+i32 OPnetworkShutdown(OPnetwork* network) { return 0; }
+void OPnetworkDestroy(OPnetwork* network) { }
 
  #endif

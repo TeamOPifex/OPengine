@@ -1,13 +1,17 @@
 #pragma once
 
-enum struct OPrendererType {
-	OPENGL,
-	DIRECTX
+struct OPrendererType {
+	enum Enum {
+		OPENGL,
+		DIRECTX
+	};
 };
 
 // TODO: (garrett) move to its own file
-enum struct OPframeBufferMode {
-	BOTH,
-	READ,
-	DRAW
+struct OPframeBufferMode {
+	enum Enum {
+		BOTH,
+		READ,
+		DRAW
+	};
 };

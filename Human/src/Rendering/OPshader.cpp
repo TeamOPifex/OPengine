@@ -7,7 +7,7 @@
 #include "./Core/include/OPlog.h"
 
 OPint OPshaderLoadVertex(OPstream* source, OPshader** shader){	
-	*shader = OPRENDERER_ACTIVE->Shader.Create(OPshaderType::VERTEX, source);
+	*shader = OPRENDERER_ACTIVE->Shader.Create(OPshaderType::Enum::VERTEX, source);
 #ifdef _DEBUG
 	(*shader)->source = OPstringCopy(source->Source);
 #endif
@@ -15,7 +15,7 @@ OPint OPshaderLoadVertex(OPstream* source, OPshader** shader){
 }
 
 OPint OPshaderLoadFragment(OPstream* source, OPshader** shader){
-	*shader = OPRENDERER_ACTIVE->Shader.Create(OPshaderType::FRAGMENT, source);
+	*shader = OPRENDERER_ACTIVE->Shader.Create(OPshaderType::Enum::FRAGMENT, source);
 #ifdef _DEBUG
 	(*shader)->source = OPstringCopy(source->Source);
 #endif

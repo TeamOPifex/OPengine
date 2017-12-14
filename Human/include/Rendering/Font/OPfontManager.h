@@ -19,7 +19,7 @@ struct OPfontManager {
 	OPfontUserTextNode dummyMesh;
 	OPfont* _font;
 	OPvec4 _color;
-	OPfontAlign _align;
+	OPfontAlign::Enum _align;
 
 	OPvector* currNodes;
 	bool isBuilt;
@@ -61,7 +61,7 @@ struct OPfontManager {
 		SetColor(r, g, b, 1.0);
 	}
 	
-	inline void SetAlign(OPfontAlign align) {
+	inline void SetAlign(OPfontAlign::Enum align) {
 		_align = align;
 	}
 

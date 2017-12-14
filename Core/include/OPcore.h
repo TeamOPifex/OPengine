@@ -18,8 +18,3 @@ extern bool OPENGINERUNNING;
  *	data.
  */
 void OPend();
-
-#define OP_MAIN_END \
-		OPend(); \
-		return 0; \
-		}

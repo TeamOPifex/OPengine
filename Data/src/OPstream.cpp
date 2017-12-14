@@ -51,7 +51,11 @@ OPuint OPstream::Write(void* data, OPuint size){
 
 		if(errno == ENOMEM){
 			OPlog("OPrealloc at %x failed to resize to %u bytes.",
-				(OPuint)D,
+#ifdef OPIFEX_ANDROID
+				0,
+#else
+					(OPuint)D,
+#endif
 				(sizeof(ui8) * len) << 1
 			);
 			return -1;

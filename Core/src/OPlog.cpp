@@ -71,6 +71,14 @@ void OPlogErr(const char* message, ...) {
 	__android_log_vprint(ANDROID_LOG_ERROR, "OPIFEX", message, args);
 }
 
+void OPlogChannel(ui32 level, const char* channel, const char* message, ...) {
+	va_list args;
+	va_start(args, message);
+
+	__android_log_vprint(ANDROID_LOG_WARN, channel, message, args);
+
+	va_end(args);
+}
 #else
 
 
@@ -149,7 +157,7 @@ void OPlg(const char* message, ...){
     va_end(args);
 }
 
-void OPlogChannel(i32 level, const char* channel, const char* message, ...) {
+void OPlogChannel(ui32 level, const char* channel, const char* message, ...) {
 	va_list args;
 	va_start(args, message);
 

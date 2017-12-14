@@ -44,7 +44,7 @@ void OPcamFreeFlight::Update() {
 
 void OPcamFreeFlight::Update(OPtimer* timer) {
 	OPfloat dt = timer->Elapsed / 1000.0f;
-	OPvec3 rot = { 0, 0, 0 };
+	OPvec3 rot = OPvec3( 0, 0, 0 );
 
 	OPgamePad* gamePad = OPGAMEPADS[0];
 	OPfloat triggerDifference = 1.0f + gamePad->RightTrigger() - (gamePad->LeftTrigger() * 0.9f);

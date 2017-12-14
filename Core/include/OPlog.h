@@ -44,7 +44,7 @@ void OPlog(const char* message, ...);
 
 void OPvlog(ui32 level, const char* channel, const char* message, va_list args);
 
-void OPlogChannel(i32 level, const char* channel, const char* message, ...);
+void OPlogChannel(ui32 level, const char* channel, const char* message, ...);
 
 // Level 10
 void OPlogDebug(const char* message, ...);

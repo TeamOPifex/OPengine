@@ -6,10 +6,6 @@
 #include "./Core/include/OPlog.h"
 #include "./Core/include/Assert.h"
 
-#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
-	//#include <GLFW/glfw3.h>
-#endif
-
 OPkeyboard OPKEYBOARD;
 
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
@@ -40,12 +36,13 @@ bool OPkeyboard::AnyInputIsDown() {
 
 void (*OPKEYBOARD_STREAM)(OPchar);
 
-void OPkeyboardUpdate(OPtimer* timer) {
+void OPkeyboard::Update(OPtimer* timer) {
 
 }
 
-void OPkeyboardUpdatePost(OPtimer* timer) {
+void OPkeyboard::UpdatePost(OPtimer* timer) {
 
 }
+
 
 #endif

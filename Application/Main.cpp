@@ -128,8 +128,6 @@ int main(int argc, char * argv[]) {
 
 #else
 
-	#ifdef OPIFEX_ANDROID
-	#else
 	OP_MAIN_START
 		OPLOGLEVEL = (ui32)OPlogLevel::ERRORS;
 
@@ -145,9 +143,8 @@ int main(int argc, char * argv[]) {
 
 		ApplicationSetup();
 
-		//OP_MAIN_RUN
-		OP_MAIN_RUN_STEPPED
+		OP_MAIN_RUN
+		//OP_MAIN_RUN_STEPPED
 
 	OP_MAIN_END
-	#endif
 #endif

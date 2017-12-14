@@ -7,7 +7,7 @@ typedef struct OPmaterialParam OPmaterialParam;
 #include "./Core/include/OPtypes.h"
 
 struct OPmaterialParam {
-	OPmaterialParamType  type;
+	OPmaterialParamType::Enum  type;
 	const OPchar*        name;
 	void*                data;
 	ui8                  count;
