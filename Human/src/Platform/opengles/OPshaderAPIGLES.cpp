@@ -21,28 +21,41 @@ const OPchar* OPshaderTypeToString(OPshaderType::Enum shaderType) {
 }
 
 OPshader* OPshaderGLESInit(OPshader* shader, OPshaderType::Enum shaderType, const OPchar* source, OPuint sourceLen) {
-	OPshaderGLES* shaderGL = (OPshaderGLES*)OPalloc(sizeof(OPshaderGLES));
-	shader->internalPtr = shaderGL;
-	shader->shaderType = shaderType;
+	OPshaderGLES* shaderGL = OPNEW(OPshaderGLES);
+
 
 	// Set the Shader Type
-	switch (shaderType) {
-		case OPshaderType::VERTEX: {
-			OPGLFN(shaderGL->Handle = glCreateShader(GL_VERTEX_SHADER));
-			break;
-		}
-		case OPshaderType::FRAGMENT: {
-			OPGLFN(shaderGL->Handle = glCreateShader(GL_FRAGMENT_SHADER));
-			break;
-		}
+	if(shaderType == OPshaderType::VERTEX) {
+		OPlogErr("Create Vertex");
+		ui32 handle = glCreateShader(GL_VERTEX_SHADER);
+		OPlogErr("Setting Vertex");
+		shaderGL->Handle = handle;
+	} else {
+		OPlogErr("Setting to Fragment");
+		shaderGL->Handle = glCreateShader(GL_FRAGMENT_SHADER);
 	}
+
+	OPlogErr("Shader Type Created");
+	shader->internalPtr = shaderGL;
+	shader->shaderType = shaderType;
+	
+	OPlogErr("Shader Set");
+
+	
+
+	OPlogInfo("Shader (%d) %s", sourceLen, source);
 
 	// Add the shader source to the shader
 	i32 length = (i32)sourceLen;
 	OPGLFN(glShaderSource(shaderGL->Handle, 1, &source, &length));
 
+	
+	OPlogErr("Source Added");
+
 	// Attempt to compile the shader code
 	OPGLFN(glCompileShader(shaderGL->Handle));
+
+	OPlogErr("Source Compiled");
 
 	// Make sure that the shader compiled successfully
 	GLint compileResult = 0;
@@ -60,11 +73,13 @@ OPshader* OPshaderGLESInit(OPshader* shader, OPshaderType::Enum shaderType, cons
 		shaderGL->Compiled = true;
 	}
 
+	OPlogErr("Shader Compiled");
+
 	return shader;
 }
 
 OPshader* OPshaderGLESCreate(OPshaderType::Enum shaderType, const OPchar* source, OPuint sourceLen) {
-	OPshader* shader = (OPshader*)OPalloc(sizeof(OPshader));
+	OPshader* shader = OPNEW(OPshader);
 	return OPshaderGLESInit(shader, shaderType, source, sourceLen);
 }
 

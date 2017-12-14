@@ -76,6 +76,9 @@ OPwindow* OPwindowGLESInit(OPwindow* window, OPmonitor* monitor, OPwindowParamet
 	if (i == numConfigs) {
 		config = supportedConfigs[0];
 	}
+	EGLint contextAttrs[] = {
+        EGL_CONTEXT_CLIENT_VERSION,2,EGL_NONE, EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT 
+	};
 
 	/* EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
 	* guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
@@ -83,7 +86,7 @@ OPwindow* OPwindowGLESInit(OPwindow* window, OPmonitor* monitor, OPwindowParamet
 	* ANativeWindow buffers to match, using EGL_NATIVE_VISUAL_ID. */
 	eglGetConfigAttrib(display, config, EGL_NATIVE_VISUAL_ID, &format);
 	surface = eglCreateWindowSurface(display, config, OPAndroidState->window, NULL);
-	context = eglCreateContext(display, config, NULL, NULL);
+	context = eglCreateContext(display, config, NULL, contextAttrs);
 
 	if (eglMakeCurrent(display, surface, surface, context) == EGL_FALSE) {
 		OPlogErr("Unable to eglMakeCurrent");

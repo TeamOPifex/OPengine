@@ -70,12 +70,14 @@ OPstream* OPfile::ReadFromFile(const char* path, ui32 expectedSize){
 	OPstream* str = OPstream::Create(length);
 	str->Source = OPstringCopy(path);
 
+	OPlogInfo("  LOADED FILE %s was size %d", path, length);
+
 	// write the entire file into a stream
-	ui8* byte = (ui8*)OPalloc(sizeof(ui8) * length);
-	while(fread(byte, sizeof(ui8), length, myFile)){
-	    str->Write(byte, length);
-	}
-	str->Data[length] = 0;
+	ui8* byte = (ui8*)OPalloc(sizeof(ui8) * length);	
+	fread(byte, sizeof(ui8), length, myFile);
+	str->Write(byte, length);
+	//str->Data[length] = '\0';
+	OPlogInfo("  LOADED FILE reported size %d", str->Length);
 
 	fclose(myFile);
 	str->Seek(0);

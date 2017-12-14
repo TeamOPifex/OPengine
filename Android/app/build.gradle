@@ -30,6 +30,10 @@ android {
             path "../../CMakeLists.txt"
         }
     }
+
+    aaptOptions {
+        noCompress 'png', 'dds', 'obj', 'opf' , 'opm', 'vert', 'frag', 'js', 'ops'
+    }
 }
 
 dependencies {

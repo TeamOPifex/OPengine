@@ -6,7 +6,7 @@ if( ${OPIFEX_OS_WINDOWS})
 endif()
 
 if( ${OPIFEX_OS_ANDROID} )
-
+ 
 else()
 	if(${OPIFEX_OPTION_NODEJS})
 		message(STATUS "BINDING.GYP")
