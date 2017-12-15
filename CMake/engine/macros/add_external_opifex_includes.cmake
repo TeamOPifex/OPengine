@@ -15,11 +15,11 @@ macro(add_external_opifex_includes)
 		${BINARY_FOLDER}
 	)
 
-	if($OPIFEX_OS_DESKTOP})
-	include_directories(
-		${OPIFEX_ENGINE_REPOSITORY}/External/glfw/include/
-		${OPIFEX_ENGINE_REPOSITORY}/External/glew-1.9.0/include/
-	)
+	if(${OPIFEX_OS_DESKTOP})
+		include_directories(
+			${OPIFEX_ENGINE_REPOSITORY}/External/glfw/include/
+			${OPIFEX_ENGINE_REPOSITORY}/External/glew-1.9.0/include/
+		)
 	endif()
 
 	if(${OPIFEX_OS_ANDROID})

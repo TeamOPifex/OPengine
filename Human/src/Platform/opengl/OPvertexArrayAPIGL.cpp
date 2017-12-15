@@ -14,7 +14,7 @@
 void OPvertexArrayGLBind(OPvertexArray* vertexArray);
 void OPvertexArrayGLUnbind(OPvertexArray* ptr);
 
-GLint OPshaderElementTypeToGL(OPshaderElementType shaderElementType) {
+GLint OPshaderElementTypeToGL(OPshaderElementType::Enum shaderElementType) {
 	switch (shaderElementType) {
 	case OPshaderElementType::FLOAT: return GL_FLOAT;
 	case OPshaderElementType::INT: return GL_INT;
@@ -26,7 +26,7 @@ GLint OPshaderElementTypeToGL(OPshaderElementType shaderElementType) {
 OPvertexArray* OPvertexArrayGLInit(OPvertexArray* vertexArray, OPvertexLayout* vertexLayout) {
 	OPvertexArrayGL* vertexArrayGL = (OPvertexArrayGL*)OPalloc(sizeof(OPvertexArrayGL));
 	vertexArray->internalPtr = vertexArrayGL;
-	vertexArray->vertexLayout = vertexLayout;
+	//vertexArray->vertexLayout = vertexLayout;
 	OPGLFN(glGenVertexArrays(1, &vertexArrayGL->Handle));
 
 	return vertexArray;
@@ -76,7 +76,7 @@ void OPvertexArrayGLDraw(OPvertexArray* vertexArray, OPuint count, OPuint offset
 	OPGLFN(glDrawArrays(GL_TRIANGLES, (GLint)offset, (GLsizei)count));
 }
 
-ui32 OPindexSizeToGL(OPindexSize indexSize) {
+ui32 OPindexSizeToGL(OPindexSize::Enum indexSize) {
 	switch (indexSize) {
 		case OPindexSize::BYTE: return GL_UNSIGNED_BYTE;
 		case OPindexSize::SHORT: return GL_UNSIGNED_SHORT;

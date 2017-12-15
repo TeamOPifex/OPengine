@@ -19,7 +19,7 @@ OPindexBuffer* OPindexBufferGLCreate() {
 	return OPindexBufferGLInit(indexBuffer);
 }
 
-void OPindexBufferGLSetData(OPindexBuffer* indexBuffer, OPindexSize size, ui32 count, const void* data) {
+void OPindexBufferGLSetData(OPindexBuffer* indexBuffer, OPindexSize::Enum size, ui32 count, const void* data) {
 	OPindexBufferAPIGL* buffer = (OPindexBufferAPIGL*)indexBuffer->internalPointer;
 	OPGLFN(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->Handle));
 	indexBuffer->ElementSize = size;

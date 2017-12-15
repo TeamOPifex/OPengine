@@ -6,10 +6,8 @@
 #if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
 	#include "GLFW/glfw3.h"
 #endif
-
-#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS) && defined(OPIFEX_UNIX)
-	//#include <GLFW/glfw3.h>
-#elif defined(OPIFEX_WINDOWS)
+ 
+#if defined(OPIFEX_WINDOWS)
 	#include <Xinput.h>
 	#pragma comment(lib, "XInput.lib")
 #elif defined(OPIFEX_ANDROID)

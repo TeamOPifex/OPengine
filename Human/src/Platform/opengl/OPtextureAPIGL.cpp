@@ -8,7 +8,7 @@
 #include "./Core/include/OPmemory.h"
 
 
-ui32 OPtextureWrapToGL(OPtextureWrap textureWrap) {
+ui32 OPtextureWrapToGL(OPtextureWrap::Enum textureWrap) {
 	switch (textureWrap) {
 		case OPtextureWrap::CLAMP: return GL_CLAMP;
 		case OPtextureWrap::CLAMP_TO_BORDER: return GL_CLAMP_TO_BORDER;
@@ -19,7 +19,7 @@ ui32 OPtextureWrapToGL(OPtextureWrap textureWrap) {
 	return 0;
 }
 
-ui32 OPtextureFormatToGL(OPtextureFormat textureFormat) {
+ui32 OPtextureFormatToGL(OPtextureFormat::Enum textureFormat) {
 	switch (textureFormat)
 	{
 	case OPtextureFormat::RGBA: return GL_RGBA;
@@ -41,7 +41,7 @@ ui32 OPtextureFormatToGL(OPtextureFormat textureFormat) {
 	return 0;
 }
 
-ui32 OPtextureFilterToGL(OPtextureFilter textureFilter) {
+ui32 OPtextureFilterToGL(OPtextureFilter::Enum textureFilter) {
 	switch (textureFilter) {
 	case OPtextureFilter::LINEAR: return GL_LINEAR;
 	case OPtextureFilter::NEAREST: return GL_NEAREST;
@@ -50,7 +50,7 @@ ui32 OPtextureFilterToGL(OPtextureFilter textureFilter) {
 	return 0;
 }
 
-ui32 OPtextureTypeToGL(OPtextureType textureType) {
+ui32 OPtextureTypeToGL(OPtextureType::Enum textureType) {
 	switch (textureType) {
 	case OPtextureType::BYTE: return GL_UNSIGNED_BYTE;
 	case OPtextureType::FLOAT: return GL_FLOAT;

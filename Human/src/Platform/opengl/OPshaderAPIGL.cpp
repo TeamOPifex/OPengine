@@ -8,7 +8,7 @@
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
 
-const OPchar* OPshaderTypeToString(OPshaderType shaderType) {
+const OPchar* OPshaderTypeToString(OPshaderType::Enum shaderType) {
 	switch (shaderType) {
 		case OPshaderType::VERTEX: {
 			return "Vertex";
@@ -20,7 +20,7 @@ const OPchar* OPshaderTypeToString(OPshaderType shaderType) {
 	return "";
 }
 
-OPshader* OPshaderGLInit(OPshader* shader, OPshaderType shaderType, const OPchar* source, OPuint sourceLen) {
+OPshader* OPshaderGLInit(OPshader* shader, OPshaderType::Enum shaderType, const OPchar* source, OPuint sourceLen) {
 	OPshaderGL* shaderGL = (OPshaderGL*)OPalloc(sizeof(OPshaderGL));
 	shader->internalPtr = shaderGL;
 	shader->shaderType = shaderType;
@@ -63,7 +63,7 @@ OPshader* OPshaderGLInit(OPshader* shader, OPshaderType shaderType, const OPchar
 	return shader;
 }
 
-OPshader* OPshaderGLCreate(OPshaderType shaderType, const OPchar* source, OPuint sourceLen) {
+OPshader* OPshaderGLCreate(OPshaderType::Enum shaderType, const OPchar* source, OPuint sourceLen) {
 	OPshader* shader = (OPshader*)OPalloc(sizeof(OPshader));
 	return OPshaderGLInit(shader, shaderType, source, sourceLen);
 }
