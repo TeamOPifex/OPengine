@@ -11,4 +11,5 @@ inline void OPinputSystemUpdate(OPtimer* timer) {
 	OPKEYBOARD.Update(timer);
 	OPMOUSE.Update();
 	OPGAMEPADS.Update(timer);
+	OPTOUCH.Update();
 }

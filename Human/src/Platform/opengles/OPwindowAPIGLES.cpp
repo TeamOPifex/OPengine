@@ -67,7 +67,7 @@ OPwindow* OPwindowGLESInit(OPwindow* window, OPmonitor* monitor, OPwindowParamet
 			eglGetConfigAttrib(display, cfg, EGL_GREEN_SIZE, &g) &&
 			eglGetConfigAttrib(display, cfg, EGL_BLUE_SIZE, &b)  &&
 			eglGetConfigAttrib(display, cfg, EGL_DEPTH_SIZE, &d) &&
-			r == 8 && g == 8 && b == 8 && d == 0 ) {
+			r == 8 && g == 8 && b == 8 && d == 24 ) {
 
 			config = supportedConfigs[i];
 			break;

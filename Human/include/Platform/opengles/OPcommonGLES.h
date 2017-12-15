@@ -8,6 +8,7 @@
 	#endif
 	//#ifdef OPIFEX_ANDROID
 		//#include "./Human/include/Platform/opengles/gl3stub.h"
+		#include <GLES/gl.h>
 		#include <GLES3/gl3.h>
 		#include <GLES3/gl3ext.h>
 		#include <EGL/egl.h> 

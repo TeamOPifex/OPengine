@@ -23,6 +23,10 @@ i8 OPrendererInitGLES(OPwindow* window) {
 
 	OPRENDERER_ACTIVE->SetBlendModeAlpha();
 
+	OPGLFN(glEnable( GL_DEPTH_TEST ));
+	OPGLFN(glDepthFunc(GL_LEQUAL));
+	OPGLFN(glDepthMask(true));
+
 	return 0;
 }
 

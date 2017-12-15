@@ -65,6 +65,7 @@ void ApplicationInit() {
 	OPlogErr("OPrenderInit Finished");
 
 	OPGAMEPADS.SetDeadzones(0.2f);
+	OPtouch::Init();
 
 #ifdef ADDON_socketio
 	OPSOCKETGAMEPADS.Init();
@@ -75,8 +76,8 @@ void ApplicationInit() {
 
 	//OPVISUALDEBUGINFO.Init();
 	
-	//GS_EXAMPLE_SELECTOR
-	OPgameState::Change(GS_EXAMPLE_MODEL);
+	//GS_EXAMPLE_MODEL
+	OPgameState::Change(GS_EXAMPLE_TEXTURED);
 }
 
 OPint ApplicationUpdate(OPtimer* timer) {

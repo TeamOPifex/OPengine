@@ -2,12 +2,7 @@
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
 
-#if !defined(OPIFEX_ANDROID) && !defined(OPIFEX_IOS)
-	//#include <GLFW/glfw3.h>
-#endif
-
-
-OPtouchState Touch = {
+OPtouch OPTOUCH = {
 	false,
 	false,
 	false,
@@ -17,113 +12,73 @@ OPtouchState Touch = {
 	0.0
 };
 
-
-
 #ifndef OPIFEX_ANDROID
 
-void OPtouchUpdate() {
+void OPtouch::Init() {
+	
 }
 
-f32 OPtouchPositionX() {
-	return Touch.positionX;
+void OPtouch::Update() {
+
 }
 
-f32 OPtouchPositionY() {
-	return 0;
-}
-
-f32 OPtouchPositionMovedX() {
-	return 0;
-}
-
-f32 OPtouchPositionMovedY() {
-	return 0;
-}
-
-OPint OPtouchIsDown() {
-	return false;
-}
-
-OPint OPtouchIsUp() {
-	return true;
-}
-
-OPint OPtouchWasPressed() {
-	return false;
-}
-
-OPint OPtouchWasReleased() {
-	return false;
-}
-
-OPint OPtouchAnyInputIsDown() {
-	return false;
-}
 #else
 
-#include <android/sensor.h>
-ASensorManager* sensorManager;
-const ASensor* accelerometerSensor;
+#include "./Core/include/Platform/Android.h"
 
-void SetupSensorManager() {
-	sensorManager = ASensorManager_getInstance();
-	accelerometerSensor = ASensorManager_getDefaultSensor(sensorManager, ASENSOR_TYPE_ACCELEROMETER);
-}
+f32 lastKnownTouchX = 0;
+f32 lastKnownTouchY = 0;
+bool lastKnownTapping = false;
 
-JNIEXPORT void JNICALL Java_com_opifex_GL2JNILib_touch(JNIEnv * env, jobject obj,  jint evt, jfloat x, jfloat y){
-	Touch.updated = true;
-	if(evt == 1) {
-		Touch.tapping = true;
-	} else {
-		Touch.tapping = false;
+/**
+ * Process the next input event.
+ */
+ static int32_t engine_handle_input(struct android_app* app, AInputEvent* event) {
+
+	if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) {
+
+		
+		switch(AInputEvent_getSource(event)){
+			case AINPUT_SOURCE_TOUCHSCREEN:
+                OPfloat x = AMotionEvent_getX(event, 0);
+                OPfloat y = AMotionEvent_getX(event, 0);
+				lastKnownTouchX = x;
+				lastKnownTouchY = y;
+				int action = AKeyEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK;
+				switch(action){
+					case AMOTION_EVENT_ACTION_DOWN:
+					lastKnownTapping = true;
+					OPTOUCH.positionX = x;
+					OPTOUCH.positionY = y;
+					break;
+					case AMOTION_EVENT_ACTION_UP:
+					lastKnownTapping = false;
+					break;
+					case AMOTION_EVENT_ACTION_MOVE:
+					
+					break;
+				}
+			break;
+		} // end switch
+		return 1;
 	}
-	Touch.positionX = x;
-	Touch.positionY = y;
-	OPlog("Event! %d %f %f : Prev %f %f : Diff: %f %f", evt, Touch.positionX, Touch.positionY, Touch.prevPositionX, Touch.prevPositionY, OPtouchPositionMovedX(), OPtouchPositionMovedY());
+
+	return 0;
 }
 
-
-void OPtouchUpdate() {
-	if(Touch.updated) {
-		Touch.prevPositionX = Touch.positionX;
-		Touch.prevPositionY = Touch.positionY;
-		Touch.prevTapping = Touch.tapping;
-		Touch.updated = false;
-	}
+void OPtouch::Init() {
+    OPAndroidState->onInputEvent = engine_handle_input;
 }
+ 
 
-f32 OPtouchPositionX() {
-	return Touch.positionX;
-}
-
-f32 OPtouchPositionY() {
-	return Touch.positionY;
+void OPtouch::Update() {
+    prevPositionX = positionX;
+    prevPositionY = positionY;
+	positionX = lastKnownTouchX;
+	positionY = lastKnownTouchY;
+	prevTapping = tapping;
+	tapping = lastKnownTapping;
+    updated = false;
 }
 
-f32 OPtouchPositionMovedX() {
-	return Touch.prevPositionX - Touch.positionX;
-}
-
-f32 OPtouchPositionMovedY() {
-	return Touch.prevPositionY - Touch.positionY;
-}
-
-OPint OPtouchIsDown() {
-	return Touch.tapping;
-}
-
-OPint OPtouchIsUp() {
-	return !Touch.tapping;
-}
-
-OPint OPtouchWasPressed() {
-	return Touch.tapping && !Touch.prevTapping;
-}
-
-OPint OPtouchWasReleased() {
-	return !Touch.tapping && Touch.prevTapping;
-}
-OPint OPtouchAnyInputIsDown() {
-	return Touch.tapping;
-}
 #endif

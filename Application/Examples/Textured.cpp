@@ -4,12 +4,13 @@
 #include "./Data/include/OPcman.h"
 #include "./Human/include/Rendering/OPMvertex.h"
 #include "./Human/include/Systems/OPinputSystem.h"
+#include "./Human/include/Rendering/Enums/OPcullFace.h"
 
 class TexturedExample : public OPgameState {
 	OPmodel* Mesh;
 	OPeffect Effect;
 	OPcam Camera;
-	ui32 Rotation;
+	i32 Rotation;
 	OPtexture* Texture;
 
 	void Init(OPgameState* last) {
@@ -60,7 +61,13 @@ class TexturedExample : public OPgameState {
 	OPint Update(OPtimer* time) {
 		OPrenderClear(0, 0, 0);
 
-		if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { Rotation++; }
+		//if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { 
+			//Rotation+=5; 
+		//}
+
+		f32 xAmnt = OPTOUCH.PositionMovedX();
+		OPlogErr("Adding %f", xAmnt);
+		Rotation -= xAmnt;
 
 		Effect.Bind();
 		Mesh->Bind();
@@ -78,6 +85,9 @@ class TexturedExample : public OPgameState {
 		//OPvec3 light = OPvec3Create(0, 1, 0);
 		//OPeffectSet("vLightDirection", &light);
 
+		OPrenderCullMode(OPcullFace::BACK);
+		OPrenderDepth(true);
+		OPrenderDepthWrite(true);
 		OPrenderDrawBufferIndexed(0);
 
 		OPrenderPresent();
