@@ -8,6 +8,8 @@
 #include "./Core/include/OPmemory.h"
 #include "./Core/include/OPlog.h"
 
+#include <GLES3/gl3.h>
+
 const OPchar* OPshaderTypeToString(OPshaderType::Enum shaderType) {
 	switch (shaderType) {
 		case OPshaderType::VERTEX: {

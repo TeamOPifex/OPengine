@@ -70,7 +70,9 @@ public:
 		// The application root is set to update the Keyboard, Mouse and GamePads
 		// If you need more granular control for when these update, please modify
 		// this application's main.cpp
-		if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { Rotation += time->Elapsed; }
+		//if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { 
+			Rotation += time->Elapsed;
+		// }
 #ifdef ADDON_socketio
 		OPSOCKETGAMEPADS.Update(time);
 		Rotation += OPSOCKETGAMEPADS[0]->LeftThumbX() * 10;

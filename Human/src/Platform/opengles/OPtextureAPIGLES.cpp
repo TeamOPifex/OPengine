@@ -1,5 +1,4 @@
 
-#include <External/GLES2/GLES2/gl2.h>
 #include "./Human/include/Platform/opengles/OPtextureAPIGLES.h"
 
 #ifdef OPIFEX_OPENGL_ES_2
@@ -103,9 +102,9 @@ OPtexture* OPtextureGLESInit(OPtexture* texture, OPtextureDesc textureDesc, cons
 		OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWrap));
 		OPGLFN(glTexImage2D(GL_TEXTURE_2D, 0, textureInternalFormat, textureDesc.width, textureDesc.height, 0, textureFormat, textureType, pixelData));
 		
-		float aniso = 0.0f;
- 		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
+		//float aniso = 0.0f;
+ 		//glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
+		//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
 
 		OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, textureMinFilter));
 		OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, textureMagFilter));

@@ -7,10 +7,10 @@
 		#include <OpenGLES/ES2/gl.h>
 	#endif
 	//#ifdef OPIFEX_ANDROID
+		//#include "./Human/include/Platform/opengles/gl3stub.h"
+		#include <GLES3/gl3.h>
+		#include <GLES3/gl3ext.h>
 		#include <EGL/egl.h> 
-		#include <GLES/gl.h>
-		#include <GLES2/gl2.h>
-		#include <GLES2/gl2ext.h>
 	//#endif
 
 	GLenum OPcommonGLESCheckError();

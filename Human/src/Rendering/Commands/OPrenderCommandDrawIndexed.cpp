@@ -1,10 +1,15 @@
 #include "./Human/include/Rendering/Commands/OPrenderCommandDrawIndexed.h"
 
+//#define OPRENDER_VERTEX_ARRAY_METHOD
+
 void OPrenderCommandDrawIndex(void* data, OPcam* camera) {
 	OPrenderCommandDrawIndexed* dc = (OPrenderCommandDrawIndexed*)data;
 
+//#ifdef OPRENDER_VERTEX_ARRAY_METHOD
 	dc->vertexArray->Bind();
+//#else
 	//dc->vertexBuffer->Bind();
+//#endif
 	dc->indexBuffer->Bind();
 	dc->material->Bind();
 

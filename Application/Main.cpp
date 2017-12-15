@@ -74,8 +74,9 @@ void ApplicationInit() {
 	OPCMAN.LoadGet("cemetery.png");
 
 	//OPVISUALDEBUGINFO.Init();
-
-	OPgameState::Change(GS_EXAMPLE_SELECTOR);
+	
+	//GS_EXAMPLE_SELECTOR
+	OPgameState::Change(GS_EXAMPLE_MODEL);
 }
 
 OPint ApplicationUpdate(OPtimer* timer) {

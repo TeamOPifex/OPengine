@@ -1,10 +1,14 @@
 apply plugin: 'com.android.application'
 
+// def platformVersion = 24      // openGLES 3.2 min api level
+def platformVersion = 18    //openGLES 3 min api level
+// def platformVersion = 12    //openGLES 2 min api level
+
 android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "io.opengine.opengine"
-        minSdkVersion 15
+        minSdkVersion "${platformVersion}"
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -12,7 +16,7 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags ""
-                arguments "-DOPIFEX_OS=OPIFEX_ANDROID", "-DRENDER_TARGET=OPENGL_ES_2", '-DANDROID_TOOLCHAIN=clang'
+                arguments "-DOPIFEX_OS=OPIFEX_ANDROID", "-DRENDER_TARGET=OPENGL_ES_2", "-DANDROID_PLATFORM_LEVEL=${platformVersion}", '-DANDROID_TOOLCHAIN=clang', '-DANDROID_STL=gnustl_static'
             }
         }
         ndk {

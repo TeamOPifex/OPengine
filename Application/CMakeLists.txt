@@ -68,7 +68,7 @@ else()
         #target_include_directories(9_Application PRIVATE ${ANDROID_NDK}/sources/android/native_app_glue)
 
         # add lib dependencies
-        target_link_libraries(9_Application native_app_glue)
+        target_link_libraries(9_Application native_app_glue GLESv3)
 
 
     else()

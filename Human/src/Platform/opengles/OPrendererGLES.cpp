@@ -12,14 +12,15 @@
 #define OPIFEX_OPENGL_MAJOR 2
 #define OPIFEX_OPENGL_MINOR 0
 
-#include <GLES2/gl2.h>
-
-
 i8 OPrendererInitGLES(OPwindow* window) {
 	OPlogInfo("Initializing OpenGL Renderer");
 	
 	window->Bind();
 	
+	//glEnable(GL_MULTISAMPLE_ARB);
+	glEnable(GL_BLEND);
+	//glEnable(GL_MULTISAMPLE);
+
 	OPRENDERER_ACTIVE->SetBlendModeAlpha();
 
 	return 0;
@@ -74,21 +75,21 @@ void OPrendererSetCullGLES(bool state) {
 }
 
 void OPrendererSetMultisampleGLES(bool state) {
-	// if (state) {
-	// 	OPGLFN(glEnable(GL_MULTISAMPLE));
-	// }
-	// else {
-	// 	OPGLFN(glDisable(GL_MULTISAMPLE));
-	// }
+	if (state) {
+		//OPGLFN(glEnable(GL_MULTISAMPLE));
+	}
+	else {
+		//OPGLFN(glDisable(GL_MULTISAMPLE));
+	}
 }
 
 void OPrendererSetWireframeGLES(bool state) {
-	// if (state) {
-	// 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	// }
-	// else {
-	// 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	// }
+	if (state) {
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else {
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 }
 
 void OPrendererSetCullModeGLES(OPcullFace state) {
@@ -139,7 +140,7 @@ inline void OPrenderSetViewportGLES(ui32 x, ui32 y, ui32 width, ui32 height) {
 void OPrendererSwapBufferGLES() {
 	ASSERT(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE != NULL, "There must be an active window");
 	OPwindowGLES* windowGL = (OPwindowGLES*)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->internalPtr;
-	//OPGLFN(glfwSwapBuffers(windowGL->Handle));
+	
     OPGLFN(eglSwapBuffers(windowGL->display, windowGL->surface));
 }
 

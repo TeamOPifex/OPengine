@@ -91,12 +91,13 @@ endif()
 if(${OPIFEX_OS_IOS})
 	set_xcode_property(5_Human GCC_GENERATE_DEBUGGING_SYMBOLS YES)
 endif()
+
 add_opifex_defines()
 add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS)
 
 target_link_libraries(5_Human ${ALL_LIBS})
 if(${OPIFEX_OS_ANDROID})
-	target_link_libraries(5_Human GLESv2 EGL)
+	target_link_libraries(5_Human log android EGL GLESv3)
 endif()
 
 set_target_properties(5_Human PROPERTIES LINKER_LANGUAGE CXX)

@@ -77,8 +77,8 @@ OPwindow* OPwindowGLESInit(OPwindow* window, OPmonitor* monitor, OPwindowParamet
 		config = supportedConfigs[0];
 	}
 	EGLint contextAttrs[] = {
-        EGL_CONTEXT_CLIENT_VERSION,2,EGL_NONE, EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT 
-	};
+        EGL_CONTEXT_CLIENT_VERSION,3,EGL_NONE
+	}; // , EGL_RENDERABLE_TYPE, EGL_OPENGL_ES3_BIT
 
 	/* EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
 	* guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
@@ -105,6 +105,18 @@ OPwindow* OPwindowGLESInit(OPwindow* window, OPmonitor* monitor, OPwindowParamet
 	// engine->height = h;
 	// engine->state.angle = 0;
 
+	window->WindowWidth = w;
+	window->WindowHeight = h;
+
+	//int w2, h2;
+	//glfwGetFramebufferSize(windowGL->Handle, &w2, &h2);
+	window->WidthScale = w / (f32)window->WindowWidth;
+	window->HeightScale = h / (f32)window->WindowHeight;
+	window->Width = window->WindowWidth;
+	window->Height = window->WindowHeight;
+	window->WindowWidth *= window->WidthScale;
+	window->WindowHeight *= window->HeightScale;
+
 	// Check openGL on the system
 	ui32 opengl_info[4] = {GL_VENDOR, GL_RENDERER, GL_VERSION, GL_EXTENSIONS};
 	for (auto name : opengl_info) {
@@ -112,7 +124,7 @@ OPwindow* OPwindowGLESInit(OPwindow* window, OPmonitor* monitor, OPwindowParamet
 		OPlogInfo("OpenGL Info: %s", info);
 	}
 	// Initialize GL state.
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+	//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 	glEnable(GL_CULL_FACE);
 	//glShadeModel(GL_SMOOTH);
 	glDisable(GL_DEPTH_TEST);

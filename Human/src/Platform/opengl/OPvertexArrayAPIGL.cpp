@@ -26,7 +26,7 @@ GLint OPshaderElementTypeToGL(OPshaderElementType shaderElementType) {
 OPvertexArray* OPvertexArrayGLInit(OPvertexArray* vertexArray, OPvertexLayout* vertexLayout) {
 	OPvertexArrayGL* vertexArrayGL = (OPvertexArrayGL*)OPalloc(sizeof(OPvertexArrayGL));
 	vertexArray->internalPtr = vertexArrayGL;
-	//vertexArray->vertexLayout = vertexLayout;
+	vertexArray->vertexLayout = vertexLayout;
 	OPGLFN(glGenVertexArrays(1, &vertexArrayGL->Handle));
 
 	return vertexArray;
@@ -46,10 +46,11 @@ void OPvertexArrayGLBind(OPvertexArray* vertexArray) {
 #include "./Human/include/Platform/opengl/OPeffectAPIGL.h"
 void OPvertexArrayGLSetLayout(OPvertexArray* vertexArray, OPvertexLayout* vertexLayout) {
 	OPvertexArrayGLBind(vertexArray);
-	
+
 	ui32 i = 0;
 	for (; i < vertexLayout->count; i++)
 	{
+		OPlogErr("Vertex Array +");
 		OPshaderAttribute shaderAttribute = vertexLayout->attributes[i];
 		if (shaderAttribute.Location < 0) {
 			if (OPRENDERER_ACTIVE->OPEFFECT_ACTIVE != NULL) {
@@ -62,8 +63,8 @@ void OPvertexArrayGLSetLayout(OPvertexArray* vertexArray, OPvertexLayout* vertex
 				continue;
 			}
 		}
-		//OPshaderAttributeGL* shaderAttributeGL = (OPshaderAttributeGL*)shaderAttribute.internalPtr;		
-		//OPGLFN(OPint loc = glGetAttribLocation(effectGL->Handle, shaderAttribute.Name));
+		// OPshaderAttributeGL* shaderAttributeGL = (OPshaderAttributeGL*)shaderAttribute.internalPtr;		
+		// OPGLFN(OPint loc = glGetAttribLocation(effectGL->Handle, shaderAttribute.Name));
 
 		OPGLFN(glEnableVertexAttribArray((GLuint)shaderAttribute.Location));
 		OPGLFN(glVertexAttribPointer((GLuint)shaderAttribute.Location, shaderAttribute.Elements, OPshaderElementTypeToGL(shaderAttribute.Type), GL_FALSE, vertexLayout->stride, (const void*)shaderAttribute.Offset));
