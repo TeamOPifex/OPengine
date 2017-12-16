@@ -1,7 +1,5 @@
 option(OPIFEX_ANDROID_SETUP "Setup Android Project" OFF)
 
-add_android_native_glue()
-
 if(${OPIFEX_ANDROID_SETUP})
 
 
@@ -31,4 +29,8 @@ configure_file( ${PROJECT_SOURCE_DIR}/Android/app/build.gradle.in ${PROJECT_BINA
 
 copy_source_group( "${PROJECT_SOURCE_DIR}/Assets/" ${PROJECT_BINARY_DIR}/Android/app/src/main/assets/ )
 
+else()
+	if(${OPIFEX_ANDROID})
+		add_android_native_glue()
+	endif()
 endif()
