@@ -1,4 +1,12 @@
+option(OPIFEX_ANDROID_SETUP "Setup Android Project" OFF)
+
 if(${OPIFEX_ANDROID_SETUP})
+
+STRING(REGEX REPLACE "\\\\" "/" OPIFEX_ENGINE_REPOSITORY ${OPIFEX_ENGINE_REPOSITORY})
+if(${OPIFEX_BINARIES} STREQUAL "")
+else()
+	STRING(REGEX REPLACE "\\\\" "/" OPIFEX_BINARIES ${OPIFEX_BINARIES}) 
+endif()
 
 # Copy Android Studio sln to build directory
 

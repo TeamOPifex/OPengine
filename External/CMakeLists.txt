@@ -99,11 +99,12 @@ add_source_group(src/ "${PROJECT_SOURCE_DIR}/External/LodePNG/src" LODEPNG_SRC)
 #########################################
 # BUILD
 #########################################
-#if(${OPIFEX_OPTION_SHARED})
-#add_library( LODEPNG SHARED	${LODEPNG_SRC})
-#else()
-add_library( LODEPNG STATIC	${LODEPNG_SRC})
-#endif()
+if(${OPIFEX_OPTION_SHARED})
+	add_library( LODEPNG SHARED	${LODEPNG_SRC})
+else()
+	add_library( LODEPNG STATIC ${LODEPNG_SRC})
+endif()
+set_target_properties(LODEPNG PROPERTIES LINKER_LANGUAGE CXX)
 
 set_property(TARGET LODEPNG PROPERTY FOLDER "External")
 set_target_properties(LODEPNG PROPERTIES OUTPUT_NAME "LodePNG")

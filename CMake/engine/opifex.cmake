@@ -57,7 +57,6 @@ endif()
 ### Output location for binaries
 set_binary_output(BINARY_FOLDER)
 
-
 ### CleanUp
 mark_as_advanced(CMAKE_CONFIGURATION_TYPES)
 mark_as_advanced(CMAKE_INSTALL_PREFIX)

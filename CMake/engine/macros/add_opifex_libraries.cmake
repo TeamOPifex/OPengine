@@ -87,15 +87,15 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	mark_as_advanced(LIBSIMULATION_CONTROLLER_DEBUG)
 
 	if( ${OPIFEX_OS_ANDROID} )
-		find_binary(LIBLODEPNG "LodePNG")
-		find_binary(LIBCORE "opifex-core")
-		find_binary(LIBDATA "opifex-data")
-		find_binary(LIBMATH "Math")
-		find_binary(LIBPERFORMANCE "Performance")
-		find_binary(LIBSCRIPTING "Scripting")
+		find_binary(LIBLODEPNG "LodePNG" true)
+		find_binary(LIBCORE "Core" true)
+		find_binary(LIBDATA "Data" true)
+		find_binary(LIBMATH "Math" true)
+		find_binary(LIBPERFORMANCE "Performance" true)
+		find_binary(LIBSCRIPTING "Scripting" true)
 		find_binary(LIBCOMMUNICATION "Communication" true)
-		find_binary(LIBPIPELINE "Pipeline")
-		find_binary(LIBHUMAN "Human")
+		find_binary(LIBPIPELINE "Pipeline" true)
+		find_binary(LIBHUMAN "Human" true)
 	elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_IOS")
 		# message(STATUS "HEY WE'RE IOS, SHOULD BE GOOD")
 		find_binary(LIBLODEPNG "LodePNG" false)
@@ -121,7 +121,7 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		find_binary(LIBGLEW_158 "GLEW_158" false)
 		find_binary(LIBGLFW "glfw3" false)
 		if(${OPIFEX_OPTION_RELEASE})
-				find_binary(LIBJANSSON "jansson" false)
+			find_binary(LIBJANSSON "jansson" false)
 		else()
             if(${OPIFEX_OS_WINDOWS})
 				find_binary(LIBJANSSON "jansson_d" false)
@@ -138,8 +138,6 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 	endif()
 
 	target_link_libraries(${APPLICATION_TARGET}
-		${OPENGL_LIBRARY}
-		${LIBLODEPNG}
 		${LIBCORE}
 		${LIBDATA}
 		${LIBMATH}
@@ -148,9 +146,11 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		${LIBSCRIPTING}
 		${LIBCOMMUNICATION}
 		${LIBPIPELINE}
+		${LIBLODEPNG}
 		${LIBGLFW}
 		${LIBGLEW_158}
 		${OPENAL_LIBRARY}
+		${OPENGL_LIBRARY}
 		${OpenGL}
 	)
 
