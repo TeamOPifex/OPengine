@@ -3,6 +3,8 @@
 #########################################
 cmake_minimum_required(VERSION 2.8)
 
+SET(OPIFEX_APPNAME "Application")
+
 if(${OPIFEX_OS_ANDROID})
     # build native_app_glue as a static lib
     set(${CMAKE_C_FLAGS}, "${CMAKE_C_FLAGS}")

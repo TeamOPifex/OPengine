@@ -96,6 +96,9 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		find_binary(LIBCOMMUNICATION "Communication" true)
 		find_binary(LIBPIPELINE "Pipeline" true)
 		find_binary(LIBHUMAN "Human" true)
+		
+		target_link_libraries(${APPLICATION_TARGET} native_app_glue GLESv3 log android EGL GLESv3)
+		
 	elseif("${OPIFEX_OS}" STREQUAL "OPIFEX_IOS")
 		# message(STATUS "HEY WE'RE IOS, SHOULD BE GOOD")
 		find_binary(LIBLODEPNG "LodePNG" false)
