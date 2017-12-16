@@ -66,7 +66,7 @@ class TexturedExample : public OPgameState {
 		//}
 
 		f32 xAmnt = OPTOUCH.PositionMovedX();
-		OPlogErr("Adding %f", xAmnt);
+
 		Rotation -= xAmnt;
 
 		Effect.Bind();

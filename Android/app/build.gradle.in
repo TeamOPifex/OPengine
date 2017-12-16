@@ -8,7 +8,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "io.opengine.opengine"
-        minSdkVersion "${platformVersion}"
+        minSdkVersion "${PLATFORM_VERSION_STRING}"
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -16,11 +16,8 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags ""
-                arguments "-DOPIFEX_OS=OPIFEX_ANDROID", "-DRENDER_TARGET=OPENGL_ES_2", "-DANDROID_PLATFORM_LEVEL=${platformVersion}", '-DANDROID_TOOLCHAIN=clang', '-DANDROID_STL=gnustl_static'
+                arguments "-DOPIFEX_OS=OPIFEX_ANDROID", "-DRENDER_TARGET=${RENDER_TARGET}", "-DANDROID_PLATFORM_LEVEL=${PLATFORM_VERSION_STRING}", '-DANDROID_TOOLCHAIN=clang', '-DANDROID_STL=gnustl_static'
             }
-        }
-        ndk {
-            abiFilters 'x86'
         }
     }
     buildTypes {
@@ -31,7 +28,7 @@ android {
     }
     externalNativeBuild {
         cmake {
-            path "../../CMakeLists.txt"
+            path "${PROJECT_SOURCE_DIR}/CMakeLists.txt"
         }
     }
 
