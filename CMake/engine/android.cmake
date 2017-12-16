@@ -20,7 +20,6 @@ configure_file( "${PROJECT_SOURCE_DIR}/Android/app/src/main/AndroidManifest.xml.
 
 configure_file( "${PROJECT_SOURCE_DIR}/Android/app/proguard-rules.pro" "${PROJECT_BINARY_DIR}/Android/app/proguard-rules.pro" )
 
-configure_file( "${PROJECT_SOURCE_DIR}/Android/Android.iml" "${PROJECT_BINARY_DIR}/Android/Android.iml" COPYONLY )
 configure_file( "${PROJECT_SOURCE_DIR}/Android/build.gradle" "${PROJECT_BINARY_DIR}/Android/build.gradle" COPYONLY )
 configure_file( "${PROJECT_SOURCE_DIR}/Android/gradle.properties" "${PROJECT_BINARY_DIR}/Android/gradle.properties" COPYONLY )
 configure_file( "${PROJECT_SOURCE_DIR}/Android/gradlew" "${PROJECT_BINARY_DIR}/Android/gradlew" COPYONLY )
