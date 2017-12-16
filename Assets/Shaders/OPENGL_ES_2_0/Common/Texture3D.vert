@@ -11,5 +11,5 @@ void main() {
 	vec4 worldPos = uWorld * vec4(aPosition,1);
 	gl_Position = (uProj * uView) * worldPos; 
 	
-	vUV = aUV; //(aUV * vec2(1.0, -1.0) + vec2(0.0,1.0)); 
+	vUV = aUV * vec2(1.0, -1.0); //( + vec2(0.0,1.0));
 }

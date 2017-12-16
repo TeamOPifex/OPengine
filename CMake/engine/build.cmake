@@ -102,4 +102,6 @@ if(${OPIFEX_OS_ANDROID})
 	else()
 		include_directories(${ANDROID_SYSROOT}/usr/include/arm-linux-androideabi)
 	endif()
+
+	SET(OPIFEX_PROJECT_BINARY_DIR ${OPIFEX_ANDROID_PROJECT_BINARY_DIR})
 endif()

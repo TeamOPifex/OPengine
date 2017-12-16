@@ -16,7 +16,7 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags ""
-                arguments "-DOPIFEX_OS=OPIFEX_ANDROID", "-DRENDER_TARGET=${RENDER_TARGET}", "-DANDROID_PLATFORM_LEVEL=${PLATFORM_VERSION_STRING}", '-DANDROID_TOOLCHAIN=clang', '-DANDROID_STL=gnustl_static'
+                arguments "-DOPIFEX_OS=OPIFEX_ANDROID", "-DRENDER_TARGET=${RENDER_TARGET}", "-DANDROID_PLATFORM_LEVEL=${PLATFORM_VERSION_STRING}", '-DANDROID_TOOLCHAIN=clang', '-DANDROID_STL=gnustl_static', '-DOPIFEX_ANDROID_PROJECT_BINARY_DIR=${OPIFEX_PROJECT_BINARY_DIR}'
             }
         }
     }
