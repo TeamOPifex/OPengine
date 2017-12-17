@@ -6,7 +6,9 @@
 if(OPIFEX_BINARIES)
 	set_binary_output(OPIFEX_BINARIES_ABS)
 	#get_filename_component(OPIFEX_BINARIES_ABS ${OPIFEX_BINARIES_ABS} REALPATH)
-	include(${OPIFEX_BINARIES_ABS}/OPengineDefines.cmake)
+	if(NOT ${OPIFEX_ANDROID_SETUP})
+		include(${OPIFEX_BINARIES_ABS}/OPengineDefines.cmake)
+	endif()
 endif()
 
 
