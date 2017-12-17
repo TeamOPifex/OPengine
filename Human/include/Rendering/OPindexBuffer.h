@@ -10,13 +10,13 @@ typedef struct OPindexBuffer OPindexBuffer;
 struct OPindexBuffer {
 	void* internalPointer;
 	OPuint ElementCount;
-	OPindexSize ElementSize;
+	OPindexSize::Enum ElementSize;
 
 	inline OPindexBuffer* Init() {
 		return OPRENDERER_ACTIVE->IndexBuffer.Init(this);
 	}
 
-	inline void SetData(OPindexSize elementSize, OPuint count, const void* data) {
+	inline void SetData(OPindexSize::Enum elementSize, OPuint count, const void* data) {
 		OPRENDERER_ACTIVE->IndexBuffer.SetData(this, elementSize, (ui32)count, data);
 	}
 

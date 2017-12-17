@@ -1,4 +1,7 @@
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
+
+#ifdef OPIFEX_OPENGL
+
 #include "./Core/include/OPlog.h"
 
 bool glewInitialized = 0;
@@ -48,3 +51,5 @@ bool OPcommonGLLog(const OPchar* function, const OPchar* file, i32 line) {
 	}
 	return true;
 }
+
+#endif

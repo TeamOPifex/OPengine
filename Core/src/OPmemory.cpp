@@ -181,12 +181,12 @@ void* operator new[](size_t size, const char* file, ui32 line, const char* funct
 }
 
 
-void operator delete(void* block, const char* file, ui32 line, const char* function) noexcept
+void operator delete(void* block, const char* file, ui32 line, const char* function)
 {
 	_OPfree(block, file, line, function);
 }
 
-void operator delete[](void* block, const char* file, ui32 line, const char* function) noexcept
+void operator delete[](void* block, const char* file, ui32 line, const char* function)
 {
 	_OPfree(block, file, line, function);
 }

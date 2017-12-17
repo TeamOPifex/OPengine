@@ -1,7 +1,9 @@
 #pragma once
 
-enum struct OPtextureType
+struct OPtextureType
 {
-	BYTE,
-	FLOAT
+	enum Enum {
+		BYTE,
+		FLOAT
+	};
 };

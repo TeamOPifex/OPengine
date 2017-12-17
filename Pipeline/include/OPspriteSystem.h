@@ -54,9 +54,9 @@ inline OPsprite* OPspriteSystemCurrent(OPspriteSystem* system, OPspriteSystemSpr
 inline OPboundingBox3D OPspriteSystemBoundingBox3D(OPspriteSystem* system, OPspriteSystemSprite* sprite) {
 	OPsprite* curr = OPspriteSystemCurrent(system, sprite);
 	OPvec2 frameSize = curr->FrameSize();
-	OPboundingBox3D playerBox = {
+	OPboundingBox3D playerBox = OPboundingBox3D(
 		OPvec3Create(sprite->Position.x - frameSize.x / 4.0f, sprite->Position.y, 0),
 		OPvec3Create(sprite->Position.x + frameSize.x / 4.0f, sprite->Position.y + frameSize.y / 2.0f, 1)
-	};
+	);
 	return playerBox;
 }

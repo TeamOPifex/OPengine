@@ -1,4 +1,8 @@
+
 #include "./Human/include/Platform/opengl/OPshaderUniformAPIGL.h"
+
+#ifdef OPIFEX_OPENGL
+
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Platform/opengl/OPeffectAPIGL.h"
 #include "./Human/include/Rendering/OPeffect.h"
@@ -193,3 +197,5 @@ void OPshaderUniformAPIGLInit(OPshaderUniformAPI* shaderUniform) {
 	shaderUniform->SetTextureCubev = OPshaderUniformSetTextureCubevGL;
 
 }
+
+#endif

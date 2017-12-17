@@ -67,18 +67,20 @@ OPstream* OPfile::ReadFromFile(const char* path, ui32 expectedSize){
     FILE* myFile = fdopen(dup(fd), "rb");
 	fseek(myFile, start, SEEK_SET);
 
-	OPstream* str = OPstreamCreate(length);
+	OPstream* str = OPstream::Create(length);
 	str->Source = OPstringCopy(path);
 
+	OPlogInfo("  LOADED FILE %s was size %d", path, length);
+
 	// write the entire file into a stream
-	ui8* byte = OPalloc(sizeof(ui8) * length);
-	while(fread(byte, sizeof(ui8), length, myFile)){
-		OPwrite(str, byte, length);
-	}
-	str->Data[length] = 0;
+	ui8* byte = (ui8*)OPalloc(sizeof(ui8) * length);	
+	fread(byte, sizeof(ui8), length, myFile);
+	str->Write(byte, length);
+	//str->Data[length] = '\0';
+	OPlogInfo("  LOADED FILE reported size %d", str->Length);
 
 	fclose(myFile);
-	OPseek(str, 0);
+	str->Seek(0);
 	return str;
 
 #elif defined(OPIFEX_LINUX32) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_OSX64) || defined(OPIFEX_IOS)
@@ -154,31 +156,34 @@ OPstream* OPfile::ReadFromFile(const char* path, ui32 expectedSize){
 OPstream* OPfile::Read(ui32 size){
 
 #ifdef OPIFEX_ANDROID
-	//AAsset* asset = AAssetManager_open(OPAndroidState->activity->assetManager, path, AASSET_MODE_UNKNOWN);
+
+	AAsset* asset = AAssetManager_open(OPAndroidState->activity->assetManager, path, AASSET_MODE_UNKNOWN);
 	//
 	//if (asset == NULL){
 	//	OPlog("OPreadFile: Asset man creation failed.\n");
 	//	return 0;
 	//}
 
-	//off_t start, length;
-	//int fd = AAsset_openFileDescriptor(asset, &start, &length);
 
-	//FILE* myFile = fdopen(dup(fd), "rb");
-	//fseek(myFile, start, SEEK_SET);
-
-	FILE* myFile = _handle;
+	off_t start, length;
+	int fd = AAsset_openFileDescriptor(asset, &start, &length);
 
 	OPstream* str = OPstream::Create(size);
 
+	FILE* myFile = fdopen(dup(fd), "rb");
+	fseek(myFile, start, SEEK_SET);
+
+	//FILE* myFile = _handle;
+
+
 	// write the entire file into a stream
-	ui8* byte = OPalloc(sizeof(ui8)* size);
+	ui8* byte = (ui8*)OPalloc(sizeof(ui8)* size);
 	while (fread(byte, sizeof(ui8), size, myFile)){
-		OPwrite(str, byte, size);
+		str->Write(byte, size);
 	}
 	str->Data[size] = 0;
 
-	OPseek(str, 0);
+    str->Seek(0);
 
 	str->Source = OPstringCopy(path);
 	return str;

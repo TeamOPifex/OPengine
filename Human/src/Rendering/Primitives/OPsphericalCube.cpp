@@ -458,7 +458,7 @@ void OPsphericalCube::Init(ui16 size) {
 	OPfree(indicesMem);
 }
 
-OPvec2 OPsphericalCube::PlanePositionSide(const OPvec3 pos, OPsphericalCubeSide side) {
+OPvec2 OPsphericalCube::PlanePositionSide(const OPvec3 pos, OPsphericalCubeSide::Enum side) {
 
 	OPvec3 position = OPVEC3_ZERO;
 	OPray3D ray = { OPvec3Create(0,0,0), pos };
@@ -523,7 +523,7 @@ OPvec2 OPsphericalCube::PlanePositionSide(const OPvec3 pos, OPsphericalCubeSide 
 	return OPVEC2_ZERO;
 }
 
-OPvec2 OPsphericalCube::PlanePosition(const OPvec3 pos, OPsphericalCubeSide* side) {
+OPvec2 OPsphericalCube::PlanePosition(const OPvec3 pos, OPsphericalCubeSide::Enum * side) {
 
 	//ASSERT(pos != OPVEC3_ZERO, "Cannot get position of zero");
 
@@ -608,7 +608,7 @@ OPvec2 OPsphericalCube::PlanePosition(const OPvec3 pos, OPsphericalCubeSide* sid
 	return OPVEC2_ZERO;
 }
 
-OPvec3 OPsphericalCube::Position(OPvec3 pos, OPsphericalCubeSide* side)
+OPvec3 OPsphericalCube::Position(OPvec3 pos, OPsphericalCubeSide::Enum * side)
 {
 	OPvec3 position = pos;
 

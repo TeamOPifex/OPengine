@@ -75,7 +75,7 @@ OPimage OPimagePNGLoadData(const OPchar* filename) {
 
 #include "./Core/include/OPdebug.h"
 
-i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image, OPtextureFilter filter) {
+i32 OPimagePNGLoadStream(OPstream* str, OPuint offset, OPtexture** image, OPtextureFilter::Enum filter) {
 	TIMED_BLOCK;
 	if (str == NULL) {
 		return 0;

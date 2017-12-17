@@ -42,7 +42,7 @@ struct OPframeBuffer {
 		OPRENDERER_ACTIVE->FrameBuffer.Bind(this);
 	}
 
-	inline void Bind(OPframeBufferMode mode) {
+	inline void Bind(OPframeBufferMode::Enum mode) {
 		OPRENDERER_ACTIVE->FrameBuffer.Bind(mode, this);
 	}
 
@@ -54,7 +54,7 @@ struct OPframeBuffer {
 		OPRENDERER_ACTIVE->FrameBuffer.Unbind(OPframeBufferMode::BOTH);
 	}
 
-	static inline void Unbind(OPframeBufferMode mode) {
+	static inline void Unbind(OPframeBufferMode::Enum mode) {
 		OPRENDERER_ACTIVE->FrameBuffer.Unbind(mode);
 	}
 };

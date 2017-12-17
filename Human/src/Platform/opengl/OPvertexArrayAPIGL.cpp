@@ -1,4 +1,8 @@
+
 #include "./Human/include/Platform/opengl/OPvertexArrayAPIGL.h"
+
+#ifdef OPIFEX_OPENGL
+
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Rendering/API/OPrenderer.h"
 #include "./Human/include/Rendering/OPrender.h"
@@ -10,7 +14,7 @@
 void OPvertexArrayGLBind(OPvertexArray* vertexArray);
 void OPvertexArrayGLUnbind(OPvertexArray* ptr);
 
-GLint OPshaderElementTypeToGL(OPshaderElementType shaderElementType) {
+GLint OPshaderElementTypeToGL(OPshaderElementType::Enum shaderElementType) {
 	switch (shaderElementType) {
 	case OPshaderElementType::FLOAT: return GL_FLOAT;
 	case OPshaderElementType::INT: return GL_INT;
@@ -42,10 +46,11 @@ void OPvertexArrayGLBind(OPvertexArray* vertexArray) {
 #include "./Human/include/Platform/opengl/OPeffectAPIGL.h"
 void OPvertexArrayGLSetLayout(OPvertexArray* vertexArray, OPvertexLayout* vertexLayout) {
 	OPvertexArrayGLBind(vertexArray);
-	
+
 	ui32 i = 0;
 	for (; i < vertexLayout->count; i++)
 	{
+		OPlogErr("Vertex Array +");
 		OPshaderAttribute shaderAttribute = vertexLayout->attributes[i];
 		if (shaderAttribute.Location < 0) {
 			if (OPRENDERER_ACTIVE->OPEFFECT_ACTIVE != NULL) {
@@ -58,8 +63,8 @@ void OPvertexArrayGLSetLayout(OPvertexArray* vertexArray, OPvertexLayout* vertex
 				continue;
 			}
 		}
-		//OPshaderAttributeGL* shaderAttributeGL = (OPshaderAttributeGL*)shaderAttribute.internalPtr;		
-		//OPGLFN(OPint loc = glGetAttribLocation(effectGL->Handle, shaderAttribute.Name));
+		// OPshaderAttributeGL* shaderAttributeGL = (OPshaderAttributeGL*)shaderAttribute.internalPtr;		
+		// OPGLFN(OPint loc = glGetAttribLocation(effectGL->Handle, shaderAttribute.Name));
 
 		OPGLFN(glEnableVertexAttribArray((GLuint)shaderAttribute.Location));
 		OPGLFN(glVertexAttribPointer((GLuint)shaderAttribute.Location, shaderAttribute.Elements, OPshaderElementTypeToGL(shaderAttribute.Type), GL_FALSE, vertexLayout->stride, (const void*)shaderAttribute.Offset));
@@ -71,7 +76,7 @@ void OPvertexArrayGLDraw(OPvertexArray* vertexArray, OPuint count, OPuint offset
 	OPGLFN(glDrawArrays(GL_TRIANGLES, (GLint)offset, (GLsizei)count));
 }
 
-ui32 OPindexSizeToGL(OPindexSize indexSize) {
+ui32 OPindexSizeToGL(OPindexSize::Enum indexSize) {
 	switch (indexSize) {
 		case OPindexSize::BYTE: return GL_UNSIGNED_BYTE;
 		case OPindexSize::SHORT: return GL_UNSIGNED_SHORT;
@@ -108,3 +113,5 @@ void OPvertexArrayAPIGLInit(OPvertexArrayAPI* vertexArray) {
 	vertexArray->Unbind = OPvertexArrayGLUnbind;
 	vertexArray->Destroy = OPvertexArrayGLDestroy;
 }
+
+#endif

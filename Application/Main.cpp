@@ -49,26 +49,39 @@ void ApplicationInit() {
 	OPCMAN.AddLoader(&OPASSETLOADER_JPG);
 #endif
 
+	OPlogErr("Loaders added");
+
 	OPoculusStartup();
 
+
+	OPlogErr("OPrenderSetup");
 	OPrenderSetup();
+	OPlogErr("OPrenderSetup Finished");
 	OPwindowSystemInit();
+	OPlogErr("OPwindowSystemInit Finished");
 	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, 1280, 720));
+	OPlogErr("mainWindow.Init Finished");
 	OPrenderInit(&mainWindow);
+	OPlogErr("OPrenderInit Finished");
 
 	OPGAMEPADS.SetDeadzones(0.2f);
+	OPtouch::Init();
 
 #ifdef ADDON_socketio
 	OPSOCKETGAMEPADS.Init();
 	OPSOCKETGAMEPADS.SetDeadzones(0.2f);
 #endif
 
-	OPVISUALDEBUGINFO.Init();
+	OPCMAN.LoadGet("cemetery.png");
 
-	OPgameState::Change(GS_EXAMPLE_SELECTOR);
+	//OPVISUALDEBUGINFO.Init();
+	
+	//GS_EXAMPLE_MODEL
+	OPgameState::Change(GS_EXAMPLE_TEXTURED);
 }
 
 OPint ApplicationUpdate(OPtimer* timer) {
+	//return 0;
 	if (mainWindow.Update()) {
 		return 1;
 	}
@@ -95,14 +108,17 @@ OPint ApplicationUpdate(OPtimer* timer) {
 
 void ApplicationRender(OPfloat delta) {
 	ActiveState->Render(delta);
+	
+	// OPrenderClear(1,0,0);
+	// OPrenderPresent();
 }
 
 void ApplicationDestroy() {
-	ActiveState->Exit(ActiveState);
-	OPVISUALDEBUGINFO.Destroy();
-	OPCMAN.Destroy();
-	OPlogToFileClose();
-	mainWindow.Destroy();
+	// ActiveState->Exit(ActiveState);
+	// OPVISUALDEBUGINFO.Destroy();
+	// OPCMAN.Destroy();
+	// OPlogToFileClose();
+	// mainWindow.Destroy();
 }
 
 void ApplicationSetup() {
@@ -128,23 +144,25 @@ int main(int argc, char * argv[]) {
 
 #else
 
-OP_MAIN_START
-	OPLOGLEVEL = (ui32)OPlogLevel::ERRORS;
+	OP_MAIN_START
+		OPLOGLEVEL = (ui32)OPlogLevel::VERBOSE;
 
-	#ifdef OPIFEX_OPTION_V8
-	// If the V8 engine is compiled in,
-	// see if we have a script to run at startup
-	//if(argc > 1) {
-	//	//chdir(OPIFEX_ASSETS);
-	//	OPjavaScriptV8SetupRun(args[2]);
-	//	return 0;
-	//}
-	#endif
+		OPlogErr("Started!");
 
-	ApplicationSetup();
+		#ifdef OPIFEX_OPTION_V8
+		// If the V8 engine is compiled in,
+		// see if we have a script to run at startup
+		//if(argc > 1) {
+		//	//chdir(OPIFEX_ASSETS);
+		//	OPjavaScriptV8SetupRun(args[2]);
+		//	return 0;
+		//}
+		#endif
 
-	//OP_MAIN_RUN
-	OP_MAIN_RUN_STEPPED
+		ApplicationSetup();
 
-OP_MAIN_END
+		OP_MAIN_RUN
+		//OP_MAIN_RUN_STEPPED
+
+	OP_MAIN_END
 #endif

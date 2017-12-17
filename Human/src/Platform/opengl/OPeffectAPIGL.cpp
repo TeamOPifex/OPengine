@@ -1,4 +1,8 @@
+
 #include "./Human/include/Platform/opengl/OPeffectAPIGL.h"
+
+#ifdef OPIFEX_OPENGL
+
 #include "./Human/include/Rendering/OPeffect.h"
 #include "./Human/include/Platform/opengl/OPshaderAPIGL.h"
 #include "./Human/include/Rendering/OPshaderUniform.h"
@@ -168,3 +172,5 @@ void OPeffectAPIGLInit(OPeffectAPI* effect) {
 	effect->Unbind = OPeffectGLUnbind;
 	effect->Destroy = OPeffectGLDestroy;
 }
+
+#endif

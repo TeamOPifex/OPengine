@@ -113,13 +113,13 @@ class ShadowsExample : public OPgameState {
 		// Create the Frame Buffer that the shadow depth will be
 		// rendered to.
 		ui16 shadowFrameBufferSize = 1024;
-		OPtextureDesc desc = {
+		OPtextureDesc desc = OPtextureDesc(
 			1024,
 			1024,
 			OPtextureFormat::RGBA,
 			OPtextureWrap::CLAMP_TO_BORDER,
 			OPtextureFilter::NEAREST
-		};
+        );
 
 
 		const ui32 SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;

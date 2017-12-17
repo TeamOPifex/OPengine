@@ -1,4 +1,8 @@
+
 #include "./Human/include/Platform/opengl/OPvertexBufferAPIGL.h"
+
+#ifdef OPIFEX_OPENGL
+
 #include "./Human/include/Platform/opengl/OPeffectAPIGL.h"
 #include "./Human/include/Platform/opengl/OPshaderAttributeAPIGL.h"
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
@@ -56,3 +60,5 @@ void OPvertexBufferAPIGLInit(OPvertexBufferAPI* vertexBuffer) {
 	vertexBuffer->Unbind = OPvertexBufferGLUnbind;
 	vertexBuffer->Destroy = OPvertexBufferGLDestroy;
 }
+
+#endif

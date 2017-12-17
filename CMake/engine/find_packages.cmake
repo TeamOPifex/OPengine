@@ -4,7 +4,8 @@
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
 
-if(${OPIFEX_OS_IOS})
+
+if(${OPIFEX_OS_IOS} OR ${OPIFEX_OS_ANDROID})
 
 else()
 

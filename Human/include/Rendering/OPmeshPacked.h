@@ -18,11 +18,11 @@ struct OPmeshPacked {
 
 	}
 
-	OPmeshPacked(OPvertexLayout vertexLayout, OPindexSize indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices) {
+	OPmeshPacked(OPvertexLayout vertexLayout, OPindexSize::Enum indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices) {
 		Init(vertexLayout, indSize, vertCount, indCount, vertices, indices);
 	}
-	OPmeshPacked* Init(OPvertexLayout vertexLayout, OPindexSize indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
-	static OPmeshPacked* Create(OPvertexLayout vertexLayout, OPindexSize indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
+	OPmeshPacked* Init(OPvertexLayout vertexLayout, OPindexSize::Enum indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
+	static OPmeshPacked* Create(OPvertexLayout vertexLayout, OPindexSize::Enum indSize, OPuint vertCount, OPuint indCount, void* vertices, void* indices);
 	void Render();
 	void Destroy();
 };

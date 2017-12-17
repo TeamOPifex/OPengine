@@ -50,6 +50,9 @@ endif()
 
 add_opifex_defines()
 target_link_libraries(2_Data ${ALL_LIBS})
+if( ${OPIFEX_OS_ANDROID} )
+	target_link_libraries(2_Data android)
+endif()
 
 set_target_properties(2_Data PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(2_Data PROPERTIES OUTPUT_NAME "Data")

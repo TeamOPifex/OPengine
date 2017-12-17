@@ -6,15 +6,17 @@ struct OPsphericalCubeVertex;
 typedef struct OPsphericalCube OPsphericalCube;
 typedef struct OPsphericalCubeVertex OPsphericalCubeVertex;
 
-enum struct OPsphericalCubeSide
+struct OPsphericalCubeSide
 {
-	TOP = 0,
-	BOTTOM = 1,
-	LEFT = 2,
-	RIGHT = 3,
-	FRONT = 4,
-	BACK = 5,
-	_MAX
+	enum Enum {
+		TOP = 0,
+		BOTTOM = 1,
+		LEFT = 2,
+		RIGHT = 3,
+		FRONT = 4,
+		BACK = 5,
+		_MAX
+	};
 };
 
 #define OPSPHERICALCUBE_SCALE 1.0f
@@ -42,9 +44,9 @@ struct OPsphericalCube {
 	void Init(ui16 size);
 	void Destroy();
 
-	static OPvec3 Position(OPvec3 pos, OPsphericalCubeSide* side);
-	static OPvec2 PlanePositionSide(const OPvec3 pos, OPsphericalCubeSide side);
-	static OPvec2 PlanePosition(const OPvec3 pos, OPsphericalCubeSide* side);
+	static OPvec3 Position(OPvec3 pos, OPsphericalCubeSide::Enum * side);
+	static OPvec2 PlanePositionSide(const OPvec3 pos, OPsphericalCubeSide::Enum side);
+	static OPvec2 PlanePosition(const OPvec3 pos, OPsphericalCubeSide::Enum * side);
 
 	inline static OPsphericalCube* Create(OPimage* faces) { return OPNEW(OPsphericalCube(faces)); }
 	inline static OPsphericalCube* Create(ui16 size) { return OPNEW(OPsphericalCube(size)); }

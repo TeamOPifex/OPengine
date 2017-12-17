@@ -37,6 +37,7 @@ add_source_group(include/Systems "${PROJECT_SOURCE_DIR}/Human/include/Systems" H
 add_source_group(include/Utilities "${PROJECT_SOURCE_DIR}/Human/include/Utilities" HUMAN_SRC)
 add_source_group(include/Platform "${PROJECT_SOURCE_DIR}/Human/include/Platform" HUMAN_SRC)
 add_source_group(include/Platform/opengl "${PROJECT_SOURCE_DIR}/Human/include/Platform/opengl" HUMAN_SRC)
+add_source_group(include/Platform/opengles "${PROJECT_SOURCE_DIR}/Human/include/Platform/opengles" HUMAN_SRC)
 add_source_group(include/Platform/directx "${PROJECT_SOURCE_DIR}/Human/include/Platform/directx" HUMAN_SRC)
 
 
@@ -61,6 +62,7 @@ add_source_group(src/Systems "${PROJECT_SOURCE_DIR}/Human/src/Systems" HUMAN_SRC
 add_source_group(src/Utilities "${PROJECT_SOURCE_DIR}/Human/src/Utilities" HUMAN_SRC)
 add_source_group(src/Platform "${PROJECT_SOURCE_DIR}/Human/src/Platform" HUMAN_SRC)
 add_source_group(src/Platform/opengl "${PROJECT_SOURCE_DIR}/Human/src/Platform/opengl" HUMAN_SRC)
+add_source_group(src/Platform/opengles "${PROJECT_SOURCE_DIR}/Human/src/Platform/opengles" HUMAN_SRC)
 add_source_group(src/Platform/directx "${PROJECT_SOURCE_DIR}/Human/src/Platform/directx" HUMAN_SRC)
 
 
@@ -74,8 +76,6 @@ set(ALL_LIBS
 	2_Data
 	3_Math
 	4_Performance
-	GLEW_158
-	glfw
 )
 
 
@@ -91,10 +91,16 @@ endif()
 if(${OPIFEX_OS_IOS})
 	set_xcode_property(5_Human GCC_GENERATE_DEBUGGING_SYMBOLS YES)
 endif()
+
 add_opifex_defines()
 add_definitions(-DGLEW_STATIC -D_CRT_SECURE_NO_WARNINGS)
 
 target_link_libraries(5_Human ${ALL_LIBS})
+if(${OPIFEX_OS_ANDROID})
+	target_link_libraries(5_Human log android EGL GLESv3)
+else()
+	target_link_libraries(5_Human glfw GLEW_158)
+endif()
 
 set_target_properties(5_Human PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(5_Human PROPERTIES OUTPUT_NAME "Human")

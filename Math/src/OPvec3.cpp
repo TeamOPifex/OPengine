@@ -1,12 +1,12 @@
 #include "./Math/include/OPvec3.h"
 #include "./Math/include/OPmat4.h"
 
-const OPvec3 OPVEC3_ZERO    = { 0, 0, 0 };
-const OPvec3 OPVEC3_ONE     = { 1, 1, 1 };
-const OPvec3 OPVEC3_UP      = { 0, 1, 0 };
-const OPvec3 OPVEC3_LEFT = { 1, 0, 0 };
-const OPvec3 OPVEC3_FORWARD = { 0, 0, 1 };
-const OPvec3 OPVEC3_BACKWARD = { 0, 0, -1 };
+const OPvec3 OPVEC3_ZERO    = OPvec3(0, 0, 0 );
+const OPvec3 OPVEC3_ONE     = OPvec3(1, 1, 1 );
+const OPvec3 OPVEC3_UP      = OPvec3(0, 1, 0 );
+const OPvec3 OPVEC3_LEFT = OPvec3(1, 0, 0 );
+const OPvec3 OPVEC3_FORWARD = OPvec3(0, 0, 1 );
+const OPvec3 OPVEC3_BACKWARD = OPvec3(0, 0, -1 );
 
 OPvec3 OPvec3::operator*=(OPmat4 rhs) 
 {

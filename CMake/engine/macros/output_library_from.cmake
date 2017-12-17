@@ -7,12 +7,7 @@ macro(output_library_from APPLICATION_TARGET RELATIVE_PATH LIBRARY_NAME )
 		SET(BINARY_RELEASE_MODE "debug")
 	endif()
 
-	if( "${OPIFEX_OS}" STREQUAL "${OPIFEX_ANDROID}" )
-
-	else()
-		populate_binary_directory()
-		SET(COPY_BINARY_RELATIVE_DIRECTORY "${RELATIVE_PATH}/")
-		SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.a")
+	if( "${OPIFEX_OS}" STREQUAL "${OPIFEX_IOS}" )
 
 
 		if(${IOS_PLATFORM})
@@ -25,6 +20,11 @@ macro(output_library_from APPLICATION_TARGET RELATIVE_PATH LIBRARY_NAME )
 			endif()
 		endif()
 
+	else()
+		populate_binary_directory()
+		SET(COPY_BINARY_RELATIVE_DIRECTORY "${RELATIVE_PATH}/")
+		SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.a")
+
 
 		if("${OPIFEX_OS}" STREQUAL "OPIFEX_WIN32" OR "${OPIFEX_OS}" STREQUAL "OPIFEX_WIN64")
 			if(${OPIFEX_OPTION_RELEASE})
@@ -36,6 +36,15 @@ macro(output_library_from APPLICATION_TARGET RELATIVE_PATH LIBRARY_NAME )
 				SET(COPY_BINARY_LIBRARY "${LIBRARY_NAME}.dll")
 			else()
 				SET(COPY_BINARY_LIBRARY "${LIBRARY_NAME}.lib")
+			endif()
+		endif()
+		
+		if(${OPIFEX_OS_ANDROID})
+			SET(COPY_BINARY_LIBRARY "lib${LIBRARY_NAME}.a")
+			if(${OPIFEX_OPTION_RELEASE})
+				SET(COPY_BINARY_RELATIVE_DIRECTORY "/Android/app/.externalNativeBuild/cmake/release/${ANDROID_ABI}/${RELATIVE_PATH}/")
+			else()
+				SET(COPY_BINARY_RELATIVE_DIRECTORY "/Android/app/.externalNativeBuild/cmake/debug/${ANDROID_ABI}/${RELATIVE_PATH}/")
 			endif()
 		endif()
 

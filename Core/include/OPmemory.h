@@ -112,8 +112,8 @@ void OPsysFree(void* ptr);
 #ifdef _DEBUG
     void* operator new(size_t size, const char* file, ui32 line, const char* function);
     void* operator new[](size_t size, const char* file, ui32 line, const char* function);
-    void operator delete(void* block, const char* file, ui32 line, const char* function) noexcept;
-    void operator delete[](void* block, const char* file, ui32 line, const char* function) noexcept;
+    void operator delete(void* block, const char* file, ui32 line, const char* function);
+    void operator delete[](void* block, const char* file, ui32 line, const char* function);
     #define OPNEW(x) new(__FILE__, __LINE__, __FUNCTION__) x
 #else
     void* operator new(size_t size);

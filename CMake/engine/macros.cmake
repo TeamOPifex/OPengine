@@ -8,6 +8,7 @@ else()
 	SET(BINARY_RELEASE_MODE "debug")
 endif()
 
+include(${CMAKE_CURRENT_LIST_DIR}/macros/add_android_native_glue.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/macros/set_opifex_assets.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/macros/link_binary.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/macros/add_opifex_executable.cmake)

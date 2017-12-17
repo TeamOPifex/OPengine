@@ -37,14 +37,20 @@ class ExampleSelector : public OPgameState {
 
 		OPCMAN.Load("Ubuntu.opf");
 
+		OPlogErr("Loading Font Effects");
 		OPfontSystemLoadEffects();
+		OPlogErr("Loaded Font Effects");
 
 
 		// The background image to use
-		const OPchar* bgTex = "test.bmp"; // "subtle-irongrip.png";
+		const OPchar* bgTex = "TetrisYellow.png";
 		OPCMAN.Load(bgTex);
+		OPlogErr("Loaded bmp");
+
 		Background = OPtexture2DCreate((OPtexture*)OPCMAN.Get(bgTex), NULL, OPVEC2_ZERO, OPvec2(10.0f, 10.0f));
 		Background->Scale = OPvec2(1.0f, 1.0f);
+
+		OPlogErr("Created tex2D");
 
 		if (!Initialized) {
 			// This ensures that our menu selections stay in place
@@ -114,12 +120,15 @@ class ExampleSelector : public OPgameState {
 			Names[i] = Examples[i].name;
 		}
 
+		OPlogErr("Created Font Manager");
 		//FontManager = OPfontManagerSetup("Ubuntu.opf", Names, TotalEntries);
 		//OPfont* font = (OPfont*)OPCMAN.LoadGet("Ubuntu.opf");
 		FontManager = OPfontManager::Create("Ubuntu.opf", NULL, 0);
 		FontManager->scale = 0.5;
 
+		OPlogErr("All good now purge OPCMAN");
 		OPCMAN.Purge();
+		OPlogErr("Initialized!");
 	}
 
 

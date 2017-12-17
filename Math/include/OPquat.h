@@ -82,12 +82,12 @@ struct OPquat {
 	}
 
 	inline OPquat Conj() {
-		OPquat out = {
+		OPquat out = OPquat(
 			-x,
 			-y,
 			-z,
 			w
-		};
+		);
 
 		return out;
 	}

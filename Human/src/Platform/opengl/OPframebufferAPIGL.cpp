@@ -1,4 +1,8 @@
+
 #include "./Human/include/Platform/opengl/OPframeBufferAPIGL.h"
+
+#ifdef OPIFEX_OPENGL
+
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Rendering/OPframeBuffer.h"
 #include "./Human/include/Platform/opengl/OPtextureAPIGL.h"
@@ -165,7 +169,7 @@ OPframeBuffer* OPframeBufferAPIGLCreate(OPtextureDesc textureDesc) {
 	return OPframeBufferAPIGLInitialize(frameBuffer, textureDesc);
 }
 
-ui32 OPframeBufferModeToGL(OPframeBufferMode mode) {
+ui32 OPframeBufferModeToGL(OPframeBufferMode::Enum mode) {
 	switch (mode)
 	{
 	case OPframeBufferMode::BOTH: return GL_FRAMEBUFFER;
@@ -175,13 +179,13 @@ ui32 OPframeBufferModeToGL(OPframeBufferMode mode) {
 	return 0;
 }
 
-void OPframeBufferAPIGLUnbind(OPframeBufferMode mode) {
+void OPframeBufferAPIGLUnbind(OPframeBufferMode::Enum mode) {
 	OPGLFN(glBindFramebuffer(OPframeBufferModeToGL(mode), 0));
 	OPGLFN(glViewport(0, 0, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowWidth, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowHeight));
 	OPRENDERER_ACTIVE->OPFRAMEBUFFER_ACTIVE = NULL;
 }
 
-void OPframeBufferAPIGLBind(OPframeBufferMode mode, OPframeBuffer* ptr) {
+void OPframeBufferAPIGLBind(OPframeBufferMode::Enum mode, OPframeBuffer* ptr) {
 	if (ptr == NULL) {
 		return OPframeBufferAPIGLUnbind(mode);
 	}
@@ -208,3 +212,5 @@ void OPframeBufferAPIGLInit(OPframeBufferAPI* frameBuffer) {
 	frameBuffer->_InitDepth = OPframeBufferAPIGLInitializeDepth;
 	frameBuffer->_InitMultiDepth = OPframeBufferAPIGLInitMultiDepth;
 }
+
+#endif

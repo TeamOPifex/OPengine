@@ -1,6 +1,6 @@
 macro(add_opifex_targets APPLICATION_TARGET)
 
-	if(NOT ${OPIFEX_OS_IOS})
+	if(${OPIFEX_OS_DESKTOP})
 		target_link_libraries(${APPLICATION_TARGET}	${OPENGL_LIBRARY} glfw ${GLFW_LIBRARIES} GLEW_158)
 	endif()
 

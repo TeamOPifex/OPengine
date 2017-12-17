@@ -2,7 +2,7 @@
 #include "./Human/include/Rendering/OPmodel.h"
 #include "./Human/include/Rendering/OPrendererEntity.h"
 
-ui64 OPMATERIAL_GLOBAL_ID = 1;
+OPuint OPMATERIAL_GLOBAL_ID = 1;
 OPuint OPMATERIALINSTANCE_GLOBAL_ID = 1;
 
 OPmaterial* OPmaterial::Init(OPeffect* effectIn) {
@@ -108,7 +108,7 @@ void OPmaterial::Bind(bool onlyParams) {
 	}
 }
 
-void OPmaterial::AddParam(OPmaterialParamType paramType, const OPchar* name, void* data, ui8 count) {
+void OPmaterial::AddParam(OPmaterialParamType::Enum paramType, const OPchar* name, void* data, ui8 count) {
 	OPshaderUniform* uniform = effect->GetUniform(name);
 	if (uniform == NULL) {
 		OPlogErr("Uniform was not present: %s", name);

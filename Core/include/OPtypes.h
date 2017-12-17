@@ -5,6 +5,10 @@
 #endif
 #define NULL 0
 
+#if defined(OPIFEX_ANDROID32) || defined(OPIFEX_ANDROID64)
+#define OPIFEX_ANDROID
+#endif
+
 #if defined(OPIFEX_OSX64) || defined(OPIFEX_LINUX64) || defined(OPIFEX_OSX32) || defined(OPIFEX_LINUX32) || defined(OPIFEX_ANDROID) || defined(OPIFEX_IOS)
 	#define OPIFEX_UNIX
 #endif
@@ -21,7 +25,7 @@
 	#define OPIFEX_WINDOWS
 #endif
 
-#if defined(OPIFEX_OSX64) || defined(OPIFEX_LINUX64) || defined(OPIFEX_WIN64) || defined(OPIFEX_IOS)
+#if defined(OPIFEX_OSX64) || defined(OPIFEX_LINUX64) || defined(OPIFEX_WIN64) || defined(OPIFEX_IOS) || defined(OPIFEX_ANDROID64)
 #define OPIFEX_OS64
 #else
 #define OPIFEX_OS32
@@ -65,6 +69,7 @@ typedef jboolean            ui8;  //byte type
 // android floating point types
 typedef jfloat  f32; //float type
 typedef jdouble d64; //double type
+
 #else
 
 // PC integer types

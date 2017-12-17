@@ -1,18 +1,13 @@
 #pragma once
 
 #include "./Core/include/OPtypes.h"
+#include "./Human/include/Platform/OPrendererDefines.h"
 
-#ifdef OPIFEX_OPENGL_ES_2
-	#ifdef OPIFEX_IOS
-		#include <OpenGLES/ES2/gl.h>
-	#else
-		#include <GLES2/gl2.h>
-		#include <GLES2/gl2ext.h>
-	#endif
-#else
-	#include <GL/glew.h>
-	#include <GLFW/glfw3.h>
-#endif
+#ifdef OPIFEX_OPENGL
+
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 
 #ifndef OPIFEX_WINDOWS
 	#define __debugbreak __builtin_trap
@@ -32,4 +27,6 @@ bool OPcommonGLLog(const OPchar* function, const OPchar* file, i32 line);
         }
 #else
 	#define OPGLFN(x) x
+#endif
+
 #endif

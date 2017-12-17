@@ -38,7 +38,7 @@ void OPfontRender(OPfontBuiltTextNode* node, OPmat4* world) {
 	node->packedMesh->Render();
 }
 
-void OPfontRenderSetAlign(OPmat4* world, OPfloat width, OPfontAlign align){
+void OPfontRenderSetAlign(OPmat4* world, OPfloat width, OPfontAlign::Enum align){
 	switch (align) {
 	case OPfontAlign::LEFT:
 			*world = OPmat4Translate(0, 0, 0.0f);

@@ -15,8 +15,8 @@ struct OPframeBufferAPI {
 	OPframeBuffer*(*_InitMulti)(OPframeBuffer* framebuffer, OPtextureDesc* textureDesc, ui32 count) = 0;
 	OPframeBuffer*(*_InitDepth)(OPframeBuffer* framebuffer, OPtextureDesc textureDesc, OPtextureDesc depthDesc) = 0;
 	OPframeBuffer*(*_InitMultiDepth)(OPframeBuffer* framebuffer, OPtextureDesc* textureDesc, ui32 count, OPtexture* depthTexture) = 0;
-	void(*_Bind)(OPframeBufferMode mode, OPframeBuffer* ptr) = 0;
-	void(*_Unbind)(OPframeBufferMode mode) = 0;
+	void(*_Bind)(OPframeBufferMode::Enum mode, OPframeBuffer* ptr) = 0;
+	void(*_Unbind)(OPframeBufferMode::Enum mode) = 0;
 	void(*Destroy)(OPframeBuffer* ptr) = 0;
 
 	inline OPframeBuffer* Init(OPframeBuffer* frameBuffer, OPtextureDesc textureDesc, bool depth = true) {
@@ -39,7 +39,7 @@ struct OPframeBufferAPI {
 		_Bind(OPframeBufferMode::BOTH, ptr);
 	}
 
-	inline void Bind(OPframeBufferMode mode, OPframeBuffer* ptr) {
+	inline void Bind(OPframeBufferMode::Enum mode, OPframeBuffer* ptr) {
 		_Bind(mode, ptr);
 	}
 
@@ -47,7 +47,7 @@ struct OPframeBufferAPI {
 		_Unbind(OPframeBufferMode::BOTH);
 	}
 
-	inline void Unbind(OPframeBufferMode mode) {
+	inline void Unbind(OPframeBufferMode::Enum mode) {
 		_Unbind(mode);
 	}
 };

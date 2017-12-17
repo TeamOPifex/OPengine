@@ -18,17 +18,16 @@
 	jobject JNIAssetManager();
 	jint JNIWidth();
 	jint JNIHeight();
-#endif
 
-#ifdef OPIFEX_ANDROID
 	void OPstart(struct android_app* state);
 	void OPstartStepped(struct android_app* state);
-#endif
+
 
 // Helper methods to create a more cross-platform code structure for the entry point of your main
-#ifdef OPIFEX_ANDROID
-	#define OP_MAIN void android_main(struct android_app* state) {
+
+	#define OP_MAIN_START void android_main(struct android_app* state) {
 	#define OP_MAIN_SUCCESS return;
-	#define OP_MAIN_START OPstart(state);
-	#define OP_MAIN_END OPend();
+	#define OP_MAIN_RUN OPstart(state);
+	#define OP_MAIN_RUN_STEPPED OPstartStepped(state);
+	#define OP_MAIN_END OPend(); }
 #endif

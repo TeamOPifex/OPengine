@@ -12,7 +12,7 @@ typedef struct OPshaderAttribute OPshaderAttribute;
 
 struct OPshader {
 	void* internalPtr;
-	OPshaderType shaderType;
+	OPshaderType::Enum shaderType;
 #ifdef _DEBUG
 	OPchar* source;
 #endif
@@ -20,7 +20,7 @@ struct OPshader {
 
 struct OPshaderAttribute {
 	const OPchar* Name;
-	OPshaderElementType Type;
+	OPshaderElementType::Enum Type;
 	ui32 Elements;
 	OPuint Offset;
 	OPint Location;

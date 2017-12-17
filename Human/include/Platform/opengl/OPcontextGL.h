@@ -1,5 +1,9 @@
 #pragma once
 
+#include "./Human/include/Platform/OPrendererDefines.h"
+
+#ifdef OPIFEX_OPENGL
+
 struct OPcontextGL;
 typedef struct OPcontextGL OPcontextGL;
 
@@ -10,3 +14,5 @@ void OPcontextGLInit(OPcontext* context);
 struct OPcontextGL {
 
 };
+
+#endif

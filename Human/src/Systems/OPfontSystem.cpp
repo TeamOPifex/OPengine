@@ -18,12 +18,16 @@ void OPfontSystemLoadEffects() {
 	OPint error;
 
 	if (!OPCMAN.IsLoaded(FontShaderVert)) {
+		OPlogErr("Load Vertex Shader");
 		error = OPCMAN.Load(FontShaderVert);
+		OPlogErr("Loaded Vertex Shader");
 		ASSERT(error, "Failed to load Vertex Shader for Font Effect");
 	}
 
 	if (!OPCMAN.IsLoaded(FontShaderFrag)) {
+		OPlogErr("Load Fragment Shader");
 		error = OPCMAN.Load(FontShaderFrag);
+		OPlogErr("Loaded Fragment Shader");
 		ASSERT(error, "Failed to load Fragment Shader for Font Effect");
 	}
 

@@ -1,27 +1,27 @@
 #include "./Human/include/Rendering/OPvertexLayout.h"
 #include "./Human/include/Rendering/OPeffect.h"
 
-OPshaderElementType GetOPShaderElementType(OPattributeTypes attribType) {
+OPshaderElementType::Enum GetOPShaderElementType(OPattributeTypes::Enum attribType) {
 	switch (attribType) {
-	case OPATTR_TYPE_UINT8: return OPshaderElementType::SHORT;
-	case OPATTR_TYPE_UINT10: return OPshaderElementType::SHORT;
-	case OPATTR_TYPE_INT16: return OPshaderElementType::SHORT;
-	case OPATTR_TYPE_HALF: return OPshaderElementType::SHORT;
-	case OPATTR_TYPE_FLOAT: return OPshaderElementType::FLOAT;
+        case OPattributeTypes::OPATTR_TYPE_UINT8: return OPshaderElementType::SHORT;
+	case OPattributeTypes::OPATTR_TYPE_UINT10: return OPshaderElementType::SHORT;
+	case OPattributeTypes::OPATTR_TYPE_INT16: return OPshaderElementType::SHORT;
+	case OPattributeTypes::OPATTR_TYPE_HALF: return OPshaderElementType::SHORT;
+	case OPattributeTypes::OPATTR_TYPE_FLOAT: return OPshaderElementType::FLOAT;
 	}
 }
 
-ui32 GetOPShaderElementSize(OPattributeTypes attribType) {
+ui32 GetOPShaderElementSize(OPattributeTypes::Enum attribType) {
 	switch (attribType) {
-	case OPATTR_TYPE_UINT8: return sizeof(ui16);
-	case OPATTR_TYPE_UINT10: return sizeof(ui16);
-	case OPATTR_TYPE_INT16: return sizeof(ui16);
-	case OPATTR_TYPE_HALF: return sizeof(ui16);
-	case OPATTR_TYPE_FLOAT: return sizeof(f32);
+	case OPattributeTypes::OPATTR_TYPE_UINT8: return sizeof(ui16);
+	case OPattributeTypes::OPATTR_TYPE_UINT10: return sizeof(ui16);
+	case OPattributeTypes::OPATTR_TYPE_INT16: return sizeof(ui16);
+	case OPattributeTypes::OPATTR_TYPE_HALF: return sizeof(ui16);
+	case OPattributeTypes::OPATTR_TYPE_FLOAT: return sizeof(f32);
 	}
 }
 
-void OPvertexLayout::Init(ui16 attributeCount, const OPchar** names, OPattributeTypes* types, ui8* counts) {
+void OPvertexLayout::Init(ui16 attributeCount, const OPchar** names, OPattributeTypes::Enum * types, ui8* counts) {
 
 	count = attributeCount;
 	//attributes = (OPshaderAttribute*)OPalloc(sizeof(OPshaderAttribute) * attributeCount);
@@ -85,65 +85,65 @@ OPvertexLayoutBuilder* OPvertexLayoutBuilder::Init(ui32 features) {
 	return this;
 }
 
-OPvertexLayoutBuilder* OPvertexLayoutBuilder::Add(const OPchar* name, OPattributeTypes attrType, ui32 count) {
+OPvertexLayoutBuilder* OPvertexLayoutBuilder::Add(const OPchar* name, OPattributeTypes::Enum attrType, ui32 count) {
 	names[index] = "aPosition";
-	types[index] = OPATTR_TYPE_FLOAT;
+	types[index] = OPattributeTypes::OPATTR_TYPE_FLOAT;
 	counts[index] = 3;
 	index++;
 	return this;
 }
 
-OPvertexLayoutBuilder* OPvertexLayoutBuilder::Add(OPattributes attribute) {
+OPvertexLayoutBuilder* OPvertexLayoutBuilder::Add(OPattributes::Enum attribute) {
 	switch (attribute) {
 	case OPattributes::POSITION: {
 			names[index] = "aPosition";
-			types[index] = OPATTR_TYPE_FLOAT;
+			types[index] = OPattributeTypes::OPATTR_TYPE_FLOAT;
 			counts[index] = 3;
 			index++;
 			break;
 		}
 		case OPattributes::NORMAL: {
 			names[index] = "aNormal";
-			types[index] = OPATTR_TYPE_FLOAT;
+			types[index] = OPattributeTypes::OPATTR_TYPE_FLOAT;
 			counts[index] = 3;
 			index++;
 			break;
 		}
 		case OPattributes::TANGENT: {
 			names[index] = "aTangent";
-			types[index] = OPATTR_TYPE_FLOAT;
+			types[index] = OPattributeTypes::OPATTR_TYPE_FLOAT;
 			counts[index] = 3;
 			index++;
 			break;
 		}
 		case OPattributes::BITANGENT: {
 			names[index] = "aBinormal";
-			types[index] = OPATTR_TYPE_FLOAT;
+			types[index] = OPattributeTypes::OPATTR_TYPE_FLOAT;
 			counts[index] = 3;
 			index++;
 			break;
 		}
 		case OPattributes::COLOR: {
 			names[index] = "aColor";
-			types[index] = OPATTR_TYPE_FLOAT;
+			types[index] = OPattributeTypes::OPATTR_TYPE_FLOAT;
 			counts[index] = 3;
 			index++;
 			break;
 		}
 		case OPattributes::UV: {
 			names[index] = "aUV";
-			types[index] = OPATTR_TYPE_FLOAT;
+			types[index] = OPattributeTypes::OPATTR_TYPE_FLOAT;
 			counts[index] = 2;
 			index++;
 			break;
 		}
 		case OPattributes::BONES: {
 			names[index] = "aBones";
-			types[index] = OPATTR_TYPE_FLOAT;// OPATTR_TYPE_INT16;
+			types[index] = OPattributeTypes::OPATTR_TYPE_FLOAT;// OPATTR_TYPE_INT16;
 			counts[index] = 4;
 			index++;
 			names[index] = "aWeights";
-			types[index] = OPATTR_TYPE_FLOAT;
+			types[index] = OPattributeTypes::OPATTR_TYPE_FLOAT;
 			counts[index] = 4;
 			index++;
 			break;

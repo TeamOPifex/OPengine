@@ -66,7 +66,7 @@ bool _loadOPM(OPmodel* model, OPstream* str) {
 
 	OPlogInfo(" Vert/Ind/IndSize: %d/%d/%d", totalVertices, totalIndices, indSize);
 
-	OPindexSize indexSize = (OPindexSize)indSize;
+	OPindexSize::Enum indexSize = (OPindexSize::Enum)indSize;
 
 	void* vertices = OPalloc(totalVertices * vertexLayout.stride);
 	void* indices = OPalloc(totalIndices * (ui32)indexSize);
@@ -284,7 +284,7 @@ bool OPMloadDataV2(OPmodel* model, OPstream* str) {
 
 	OPvertexLayout vertexLayout;
 
-	OPindexSize indexSize = OPindexSize::SHORT;// sizeof(ui16);
+	OPindexSize::Enum indexSize = OPindexSize::SHORT;// sizeof(ui16);
 	void* vertices = OPalloc(totalVerticesCount);
 	void* indices = OPalloc((ui16)indexSize * totalIndicesCount);
 
@@ -683,7 +683,7 @@ bool OPMloadV1(OPmodel* model, OPstream* str) {
 	OPvertexLayout vertexLayout = layout.Build();
 	ui16* indicesData = indices;
 	ui32 indexCount = indicesCount * 3;
-	OPindexSize indexSize = OPindexSize::SHORT;// sizeof(ui16);
+	OPindexSize::Enum indexSize = OPindexSize::SHORT;// sizeof(ui16);
 	ui32 vertexCount = verticeCount;
 
 	OPvertices* vertices = OPverticesCreate(verticeCount, features);

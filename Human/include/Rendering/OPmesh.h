@@ -21,7 +21,7 @@ struct OPmeshDesc {
 	ui32 vertexCount;
 	ui32 indexCount;
 
-	OPindexSize indexSize;
+	OPindexSize::Enum indexSize;
 };
 
 struct OPmeshMeta {

@@ -1,5 +1,9 @@
 #pragma once
 
+#include "./Human/include/Platform/OPrendererDefines.h"
+
+#ifdef OPIFEX_OPENGL
+
 struct OPshaderResourceGL;
 typedef struct OPshaderResourceGL OPshaderResourceGL;
 
@@ -10,3 +14,5 @@ void OPshaderResourceGLInit(OPshaderResource* shaderResource);
 struct OPshaderResourceGL {
 
 };
+
+#endif

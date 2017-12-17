@@ -5,8 +5,6 @@ macro(add_external_opifex_includes)
 
 	include_directories(
 		${OPIFEX_ENGINE_REPOSITORY}
-		${OPIFEX_ENGINE_REPOSITORY}/External/glfw/include/
-		${OPIFEX_ENGINE_REPOSITORY}/External/glew-1.9.0/include/
 		${OPIFEX_ENGINE_REPOSITORY}/External/glm-0.9.5/
 		${OPIFEX_ENGINE_REPOSITORY}/External/GLES2/
 		${OPIFEX_ENGINE_REPOSITORY}/External/OpenAL/
@@ -16,6 +14,19 @@ macro(add_external_opifex_includes)
 		${OPIFEX_ENGINE_REPOSITORY}/External/Spine/include/
 		${BINARY_FOLDER}
 	)
+
+	if(${OPIFEX_OS_DESKTOP})
+		include_directories(
+			${OPIFEX_ENGINE_REPOSITORY}/External/glfw/include/
+			${OPIFEX_ENGINE_REPOSITORY}/External/glew-1.9.0/include/
+		)
+	endif()
+
+	if(${OPIFEX_OS_ANDROID})
+		include_directories(
+			${ANDROID_NDK}/sources/android/native_app_glue/
+		)
+	endif()
 
     #message(STATUS "@@@@@ @@@@@ INCLUDING HEADERS ${JANSSON_HDR_PUBLIC}")
     #message(STATUS "@@@@@ @@@@@ FROM ${BINARY_FOLDER}")

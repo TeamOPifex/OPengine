@@ -1,5 +1,9 @@
 #pragma once
 
+#include "./Human/include/Platform/OPrendererDefines.h"
+
+#ifdef OPIFEX_OPENGL
+
 struct OPframeBufferDepthGL;
 typedef struct OPframeBufferDepthGL OPframeBufferDepthGL;
 
@@ -10,3 +14,5 @@ void OPframeBufferDepthAPIGLInit(OPframeBufferDepthAPI* frameBuffer);
 struct OPframeBufferDepthGL {
 	ui32 Handle;
 };
+
+#endif

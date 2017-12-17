@@ -105,7 +105,7 @@ class MouseIntersectExample : public OPgameState {
 
 
 		OPray3D ray = { OPvec3(0, 0, 0), OPvec3(0, 0, 0) };
-		OPvec3 positionHit = { 0, 0, 0 };
+		OPvec3 positionHit = OPvec3(0, 0, 0);
 		OPint intersecting = 0;
 		if (OPMOUSE.IsDown(OPmouseButton::LBUTTON)) {
 
@@ -202,7 +202,7 @@ class MouseIntersectExample : public OPgameState {
 		OPfontRenderBegin(FontManager);
 		OPfontColor(OPvec4(1.0, 1.0, 1.0, 1));
 		FontManager->scale = 0.75;
-		i8 buffer[256];
+		OPchar buffer[256];
 #ifdef OPIFEX_WINDOWS
 		sprintf_s(buffer, 256, "%d, %d", OPMOUSE.X(), OPMOUSE.Y());
 #else

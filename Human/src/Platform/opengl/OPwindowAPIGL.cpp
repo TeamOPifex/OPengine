@@ -1,4 +1,8 @@
+
 #include "./Human/include/Platform/opengl/OPwindowAPIGL.h"
+
+#ifdef OPIFEX_OPENGL
+
 #include "./Human/include/Platform/opengl/OPmonitorAPIGL.h"
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Rendering/OPwindow.h"
@@ -12,7 +16,6 @@ ui32 OPkeyboardMappingGL[(ui32)OPkeyboardKey::_MAX];
 
 // TODO: (garrett) CMake should be generating these variables and we'll check for just OPIFEX_OPENGL and use the OPIFEX_OPENGL_MAJOR and OPIFEX_OPENGL_MINOR
 #if defined(OPIFEX_OPENGL_3_3)
-#define OPIFEX_OPENGL 1
 #define OPIFEX_OPENGL_MAJOR 3
 #define OPIFEX_OPENGL_MINOR 3
 #endif
@@ -298,3 +301,5 @@ void OPwindowAPIGLInit(OPwindowAPI* window) {
 	OPkeyboardMappingGL[(ui32)OPkeyboardKey::NUMPAD8] = GLFW_KEY_KP_8;
 	OPkeyboardMappingGL[(ui32)OPkeyboardKey::NUMPAD9] = GLFW_KEY_KP_9;
 }
+
+#endif

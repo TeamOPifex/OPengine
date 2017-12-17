@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+SET(OPIFEX_APPNAME "Application")
+
 project(OPifexEngine C CXX)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -14,8 +16,10 @@ add_marketplace_addons_projects()
 string(REPLACE "\\" "/" _PHYSX_PATH "${PHYSX_PATH}")
 string(REPLACE "\\" "/" _V8_PATH "${V8_PATH}")
 string(REPLACE "\\" "/" _FMOD_PATH "${FMOD_PATH}")
-#configure_file("OPengineDefines.h.in" "${BINARY_FOLDER}/OPengineDefines.h")
-configure_file("OPengineDefines.cmake.in" "${BINARY_FOLDER}/OPengineDefines.cmake")
+if(NOT ${OPIFEX_ANDROID_SETUP})
+	#configure_file("OPengineDefines.h.in" "${BINARY_FOLDER}/OPengineDefines.h")
+	configure_file("OPengineDefines.cmake.in" "${BINARY_FOLDER}/OPengineDefines.cmake")
+endif()
 
 ### Project Setup
 #########################################

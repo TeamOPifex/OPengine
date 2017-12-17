@@ -1,5 +1,9 @@
 #pragma once
 
+#include "./Human/include/Platform/OPrendererDefines.h"
+
+#ifdef OPIFEX_OPENGL
+
 struct OPtextureCubeGL;
 typedef struct OPtextureCubeGL OPtextureCubeGL;
 
@@ -10,3 +14,5 @@ void OPtextureCubeAPIGLInit(OPtextureCubeAPI* textureCube);
 struct OPtextureCubeGL {
 	ui32 Handle;
 };
+
+#endif

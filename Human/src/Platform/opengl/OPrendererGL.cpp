@@ -1,3 +1,8 @@
+
+#include "./Human/include/Platform/opengl/OPrendererGL.h"
+
+#ifdef OPIFEX_OPENGL
+
 #include "./Human/include/Rendering/API/OPrenderer.h"
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Platform/opengl/OPwindowAPIGL.h"
@@ -8,10 +13,10 @@
 
 // TODO: (garrett) CMake should be generating these variables and we'll check for just OPIFEX_OPENGL and use the OPIFEX_OPENGL_MAJOR and OPIFEX_OPENGL_MINOR
 #if defined(OPIFEX_OPENGL_3_3)
-#define OPIFEX_OPENGL 1
 #define OPIFEX_OPENGL_MAJOR 3
 #define OPIFEX_OPENGL_MINOR 3
 #endif
+
 
 void glfwErrorCallback(int error, const char* desc) {
 	OPlogErr("GLFW ERROR: %s", desc);
@@ -55,6 +60,7 @@ void OPrendererClearDepthGL() {
 void OPrendererPresentGL() {
 	ASSERT(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE != NULL, "There must be an active window");
 	OPwindowGL* windowGL = (OPwindowGL*)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->internalPtr;
+
 	OPGLFN(glfwSwapBuffers(windowGL->Handle));
 }
 
@@ -117,7 +123,7 @@ void OPrendererSetBlendGL(bool state){
 }
 
 
-ui32 OPblendFunctionToGL(OPblendFunction blendFunction) {
+ui32 OPblendFunctionToGL(OPblendFunction::Enum blendFunction) {
 	switch (blendFunction)
 	{
 		case OPblendFunction::CONSTANT_ALPHA: return GL_CONSTANT_ALPHA;
@@ -139,7 +145,7 @@ ui32 OPblendFunctionToGL(OPblendFunction blendFunction) {
 	return 0;
 }
 
-void OPrendererSetBlendModeGL(OPblendFunction src, OPblendFunction dst) {
+void OPrendererSetBlendModeGL(OPblendFunction::Enum src, OPblendFunction::Enum dst) {
 	OPGLFN(glBlendFunc(OPblendFunctionToGL(src), OPblendFunctionToGL(dst)));
 }
 
@@ -210,5 +216,9 @@ OPrenderAPI* OPrendererGL() {
 	OPvertexBufferAPIGLInit(&OPRENDERERGL.VertexBuffer);
 	OPwindowAPIGLInit(&OPRENDERERGL.Window);
 
+	OPlogErr("Renderer Setup");
+
 	return &OPRENDERERGL;
 }
+
+#endif

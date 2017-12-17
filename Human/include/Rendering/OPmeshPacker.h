@@ -23,7 +23,7 @@ struct OPmeshPacker{
 	static OPmeshPacker* Create();
 	OPmeshPacker* Init(); 
 	OPuint AddVertexBuffer(ui32 vertexSize, void* verticesData, OPuint vertexCount);
-	OPuint AddIndexBuffer(OPindexSize indexSize, void* indicesData, OPuint indexCount);
+	OPuint AddIndexBuffer(OPindexSize::Enum indexSize, void* indicesData, OPuint indexCount);
 	void Build();
 	void Bind();
 	OPint Destroy();

@@ -16,7 +16,7 @@ macro(set_binary_output BINARY_OUTPUT_VARIABLE )
 		SET(BINARY_RELEASE_MODE "debug")
 	endif()
 
-	if( "${OPIFEX_OS}" STREQUAL "${OPIFEX_ANDROID}" )
+	if( "${OPIFEX_OS}" STREQUAL "${OPIFEX_IOS}" )
 
 	else()
 		populate_binary_directory()
