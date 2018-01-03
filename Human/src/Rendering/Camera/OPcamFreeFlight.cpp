@@ -2,6 +2,7 @@
 #include "./Human/include/Input/OPkeyboard.h"
 #include "./Human/include/Input/OPgamePadSystem.h"
 #include "./Human/include/Input/OPmouse.h"
+#include "./Human/include/Input/OPtouch.h"
 #include "./Human/include/Rendering/OPrender.h"
 
 
@@ -69,6 +70,9 @@ void OPcamFreeFlight::Update(OPtimer* timer) {
 		rot.x += OPMOUSE.MovedY() / 10.0f;
 		rot.y += OPMOUSE.MovedX() / 10.0f;
 	}
+	rot.x += OPTOUCH.PositionMovedY() / 100.0f;
+	rot.y += OPTOUCH.PositionMovedX() / 100.0f;
+
 	rot *= rotSpeed;
 	Rotation += rot;
 	//OPmouseButton

@@ -41,7 +41,7 @@ bool lastKnownTapping = false;
 		switch(AInputEvent_getSource(event)){
 			case AINPUT_SOURCE_TOUCHSCREEN:
                 OPfloat x = AMotionEvent_getX(event, 0);
-                OPfloat y = AMotionEvent_getX(event, 0);
+                OPfloat y = AMotionEvent_getY(event, 0);
 				lastKnownTouchX = x;
 				lastKnownTouchY = y;
 				int action = AKeyEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK;

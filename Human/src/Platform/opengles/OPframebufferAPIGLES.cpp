@@ -129,7 +129,7 @@ OPframeBuffer* OPframeBufferAPIGLESInitMultiDepth(OPframeBuffer* framebuffer, OP
 	}
 
 	GLuint attachments[10] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT0 + 1, GL_COLOR_ATTACHMENT0 + 2, GL_COLOR_ATTACHMENT0 + 3, GL_COLOR_ATTACHMENT0 + 4, GL_COLOR_ATTACHMENT0 + 5, GL_COLOR_ATTACHMENT0 + 6, GL_COLOR_ATTACHMENT0 + 7, GL_COLOR_ATTACHMENT0 + 8, GL_COLOR_ATTACHMENT0 + 9 };
-	//OPGLFN(glDrawBuffers(count, attachments));
+	OPGLFN(glDrawBuffers(count, attachments));
 
 
 	framebuffer->depthTexture = *depthTexture;
@@ -169,12 +169,12 @@ OPframeBuffer* OPframeBufferAPIGLESCreate(OPtextureDesc textureDesc) {
 }
 
 ui32 OPframeBufferModeToGLES(OPframeBufferMode::Enum mode) {
-//	switch (mode)
-//	{
-//	case OPframeBufferMode::BOTH: return GL_FRAMEBUFFER;
-//	case OPframeBufferMode::READ: return GL_READ_FRAMEBUFFER;
-//	case OPframeBufferMode::DRAW: return GL_DRAW_FRAMEBUFFER;
-//	}
+	switch (mode)
+	{
+	case OPframeBufferMode::BOTH: return GL_FRAMEBUFFER;
+	case OPframeBufferMode::READ: return GL_READ_FRAMEBUFFER;
+	case OPframeBufferMode::DRAW: return GL_DRAW_FRAMEBUFFER;
+	}
 	return 0;
 }
 

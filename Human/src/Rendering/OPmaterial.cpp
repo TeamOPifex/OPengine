@@ -196,7 +196,7 @@ OPmaterial* OPmaterial::CreateInstances(OPrendererEntity* rendererEntity) {
 }
 
 OPmaterial* OPmaterial::Create(OPeffect* effect) {
-	OPmaterial* material = (OPmaterial*)OPalloc(sizeof(OPmaterial));
+	OPmaterial* material = OPNEW(OPmaterial());
 	material->Init(effect);
 	return material;
 }

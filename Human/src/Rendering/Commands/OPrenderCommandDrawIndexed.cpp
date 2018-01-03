@@ -69,7 +69,7 @@ void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OP
 }
 
 void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmodel* model, OPmat4* world, OPmaterial* material) {
-	if (!material->rootMaterial->visible || !material->visible) {
+	if (!material->visible) {
 		return;
 	}
 	for (ui32 i = 0; i < model->meshCount; i++) {
@@ -80,7 +80,7 @@ void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OP
 }
 
 void OPrenderCommandDrawIndexed::Submit(OPrenderCommandBucket* commandBucket, OPmesh* mesh, OPmat4* world, OPmaterial* material) {
-	if (!material->rootMaterial->visible || !material->visible) {
+	if (!material->visible) {
 		return;
 	}
 	OPrenderCommandDrawIndexed* dc = commandBucket->CreateDrawIndexed();

@@ -16,6 +16,10 @@ struct OPshader {
 #ifdef _DEBUG
 	OPchar* source;
 #endif
+
+	inline static OPshader* Load(const OPchar* asset) {
+		return (OPshader*)OPCMAN.LoadGet(asset);
+	}
 };
 
 struct OPshaderAttribute {

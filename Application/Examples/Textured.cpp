@@ -62,7 +62,7 @@ class TexturedExample : public OPgameState {
 		OPrenderClear(0, 0, 0);
 
 		//if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { 
-			//Rotation+=5; 
+			Rotation+=5;
 		//}
 
 		f32 xAmnt = OPTOUCH.PositionMovedX();
