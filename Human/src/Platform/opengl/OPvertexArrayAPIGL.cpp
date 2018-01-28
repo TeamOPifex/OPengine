@@ -87,7 +87,8 @@ ui32 OPindexSizeToGL(OPindexSize::Enum indexSize) {
 
 #include "./Human/include/Rendering/OPindexBuffer.h"
 void OPvertexArrayGLDrawIndexed(OPvertexArray* vertexArray, OPuint count, OPuint offset) {
-	OPvertexArrayGL* vertexArrayGL = (OPvertexArrayGL*)vertexArray->internalPtr;	
+	OPvertexArrayGL* vertexArrayGL = (OPvertexArrayGL*)vertexArray->internalPtr;
+
 	OPGLFN(glDrawElements(GL_TRIANGLES, (GLint)count, OPindexSizeToGL(OPRENDERER_ACTIVE->OPINDEXBUFFER_ACTIVE->ElementSize), (void*)(offset * sizeof(GLuint))));
 }
 

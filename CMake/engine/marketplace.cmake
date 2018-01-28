@@ -44,6 +44,8 @@ macro(add_marketplace_addons APPLICATION_TARGET FOLDER ADDITIONAL)
     string(REPLACE "." ";" VERSION_LIST ${ADDON})
     list(GET VERSION_LIST 0 ADDON_NAME)
 
+    message(STATUS "Adding includes for ${ADDON_NAME}")
+    
     eval("if(COMMAND ADDON_${ADDON_NAME}_INCLUDES)\nADDON_${ADDON_NAME}_INCLUDES()\n endif()")
     eval("if(COMMAND ADDON_${ADDON_NAME})\nADDON_${ADDON_NAME}(${APPLICATION_TARGET} ${FOLDER})\nendif()")
 

@@ -27,6 +27,7 @@ struct OPcam {
 	void UpdateView();
 	void UpdateProj(); 
 	OPray3D Unproject(i32 x, i32 y);
+	OPvec2 Unproject(OPvec3 pos);
 	void Bind();
 
 	inline void SetPerspective(OPvec3 position, OPvec3 target) {

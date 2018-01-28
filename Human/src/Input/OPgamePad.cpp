@@ -129,14 +129,14 @@ void UpdateGamePadWithGLFW(OPgamePad* c) {
 
 	c->connected = true;
 	const i8* name = glfwGetJoystickName(GLFW_JOYSTICK_1 + c->controllerIndex);
-	OPlog("Controller: %s", name);
+	// OPlog("Controller: %s", name);
 
 	// get axis data, andmake sure the number of axes are expected
 
 	axisData = glfwGetJoystickAxes(c->controllerIndex, &axes);
 
 
-	OPlog("Axes %d", axes);
+	// OPlog("Axes %d", axes);
 	 //if(axes != 8){
 	 //	// game pads should have 8 axes
 	 //	// 2 for each stick, and 2 for the dpad

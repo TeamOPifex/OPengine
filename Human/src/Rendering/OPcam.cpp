@@ -87,6 +87,18 @@ OPray3D OPcam::Unproject(i32 screenX, i32 screenY) {
 
 }
 
+OPvec2 OPcam::Unproject(OPvec3 pos) {
+	
+    pos = OPmat4Transform(pos, view);
+    pos = OPmat4Transform(pos, proj);
+    pos.x /= pos.z;
+    pos.y /= pos.z;
+    pos.x = (pos.x + 1) * (OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / 2.0f);
+    pos.y = (pos.y + 1) * (OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height / 2.0f);
+
+    return OPvec2(pos.x, pos.y);
+}
+
 void OPcam::UpdateView() {
 	view = OPmat4LookAt(
 		pos,

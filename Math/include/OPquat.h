@@ -3,6 +3,8 @@
 struct OPquat;
 typedef struct OPquat OPquat;
 
+struct OPmat4;
+
 extern const OPquat OPQUAT_IDENTITY;
 
 #include "./Math/include/OPvec3.h"
@@ -41,6 +43,7 @@ struct OPquat {
 	static OPquat CreateRot(OPvec3 axis, OPfloat angle);
 	static OPquat CreateLookAt(OPvec3 eye, OPvec3 target);
 	static OPvec3 Orthogonal(OPvec3 v);
+	static OPquat From(OPmat4 m);
 
 	OPquat operator=(OPquat vhs) {
 		OPmemcpy(this, &vhs, sizeof(OPquat)); return *this;
