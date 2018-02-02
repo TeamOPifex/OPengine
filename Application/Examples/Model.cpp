@@ -111,7 +111,17 @@ public:
 
 		// A helper utility which binds the Mesh, Effect and the World, View and Projection Matrices
 		// For more granular control please take a look at the Textured Example
-		OPbindMeshEffectWorldCam(Mesh, &Effect, &world, &Camera);
+		// OPbindMeshEffectWorldCam(Mesh, &Effect, &world, &Camera);
+
+
+		//MatrixBlock
+		Effect.Bind();
+		OPshaderUniformBuffer* ubo = Effect.GetUniformBuffer("MatrixBlock");
+		Effect.Set(ubo, "uWorld", &world);
+		Effect.Set(ubo, "uProj", &Camera.proj);
+		Effect.Set(ubo, "uView", &Camera.view);
+		OPRENDERER_ACTIVE->ShaderUniformBuffer.Bind(ubo);
+		Mesh->Bind();
 
 		// Sets the vLightDirection uniform on the Effect that is currently bound (modelExample->Effect)
 		//OPeffectSet("vLightDirection", &modelExample->LightDirection);
@@ -127,6 +137,8 @@ public:
 	OPint Exit(OPgameState* next) {
 		// Clean up phase for the Game State
 		Effect.Destroy();
+		Mesh->Destroy();
+		OPfree(Mesh);
 		return 0;
 	}
 };

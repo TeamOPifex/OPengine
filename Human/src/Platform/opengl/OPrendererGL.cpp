@@ -175,6 +175,7 @@ void OPrendererShutdownGL() {
 #include "./Human/include/Platform/opengl/OPshaderAttributeAPIGL.h"
 #include "./Human/include/Platform/opengl/OPshaderResourceGL.h"
 #include "./Human/include/Platform/opengl/OPshaderUniformAPIGL.h"
+#include "./Human/include/Platform/opengl/OPshaderUniformBufferAPIGL.h"
 #include "./Human/include/Platform/opengl/OPtextureAPIGL.h"
 #include "./Human/include/Platform/opengl/OPtextureCubeAPIGL.h"
 #include "./Human/include/Platform/opengl/OPvertexArrayAPIGL.h"
@@ -210,6 +211,7 @@ OPrenderAPI* OPrendererGL() {
 	OPshaderAttributeAPIGLInit(&OPRENDERERGL.ShaderAttribute);
 	OPshaderResourceGLInit(&OPRENDERERGL.ShaderResource);
 	OPshaderUniformAPIGLInit(&OPRENDERERGL.ShaderUniform);
+	OPshaderUniformBufferAPIGLInit(&OPRENDERERGL.ShaderUniformBuffer);
 	OPtextureAPIGLInit(&OPRENDERERGL.Texture);
 	OPtextureCubeAPIGLInit(&OPRENDERERGL.TextureCube);
 	OPvertexArrayAPIGLInit(&OPRENDERERGL.VertexArray);

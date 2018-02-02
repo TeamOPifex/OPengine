@@ -12,7 +12,7 @@ struct OPlinkedList {
 	OPlinkedListNode* First;
 	OPlinkedListNode* Last;
 
-	OPlinkedList() { Init(); }
+	OPlinkedList() { }
 
 	void Init();
 

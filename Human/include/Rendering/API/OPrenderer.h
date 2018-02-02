@@ -13,6 +13,7 @@ typedef struct OPrenderAPI OPrenderAPI;
 #include "./Human/include/Rendering/API/OPshaderAttributeAPI.h"
 #include "./Human/include/Rendering/API/OPshaderResource.h"
 #include "./Human/include/Rendering/API/OPshaderUniformAPI.h"
+#include "./Human/include/Rendering/API/OPshaderUniformBufferAPI.h"
 #include "./Human/include/Rendering/API/OPtextureAPI.h"
 #include "./Human/include/Rendering/API/OPtextureCubeAPI.h"
 #include "./Human/include/Rendering/API/OPvertexArrayAPI.h"
@@ -50,6 +51,7 @@ struct OPrenderAPI {
 	OPshaderAttributeAPI ShaderAttribute;
 	OPshaderResource ShaderResource;
 	OPshaderUniformAPI ShaderUniform;
+	OPshaderUniformBufferAPI ShaderUniformBuffer;
 	OPtextureAPI Texture;
 	OPtextureCubeAPI TextureCube;
 	OPvertexArrayAPI VertexArray;

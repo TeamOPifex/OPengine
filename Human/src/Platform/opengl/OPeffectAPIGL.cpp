@@ -8,13 +8,18 @@
 #include "./Human/include/Rendering/OPshaderUniform.h"
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Core/include/OPmemory.h"
+#include "./Core/include/Assert.h"
 
 bool OPeffectGLAddUniform(OPeffect* effect, const OPchar* name);
 
 OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag, OPvertexLayout* vertexLayout) {
 	OPeffectGL* effectGL = (OPeffectGL*)OPalloc(sizeof(OPeffectGL));
 
-	effect->uniforms.Init(128);
+	effect->uniforms = NULL;// .Init(128);
+	effect->uniformCount = 0;
+
+	effect->uniformBuffers = NULL;// .Init();
+	effect->uniformBufferCount = 0;
 
 	effect->internalPtr = effectGL;
 	effect->vertexShader = vert;
@@ -51,7 +56,7 @@ OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag, OP
 		GLint size; // size of the variable
 		GLenum type; // type of the variable (float, vec3 or mat4, etc)
 
-		const GLsizei bufSize = 32; // maximum name length
+		const GLsizei bufSize = 64; // maximum name length
 		GLchar name[bufSize]; // variable name in GLSL
 		GLsizei length; // name length
 
@@ -69,6 +74,7 @@ OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag, OP
 		glGetProgramiv(effectGL->Handle, GL_ACTIVE_UNIFORMS, &count);
 		OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Active Uniforms: %d", count);
 
+		effect->uniforms = OPALLOC(OPshaderUniform, count);
 		for (i = 0; i < count; i++)
 		{
 			glGetActiveUniform(effectGL->Handle, (GLuint)i, bufSize, &length, &size, &type, name);
@@ -81,6 +87,18 @@ OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag, OP
 				OPeffectGLAddUniform(effect, name);
 			}
 			OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Uniform #%d Type: %u Name: %s", i, type, name);
+		}
+
+		GLint numUniformBlocks;
+		glGetProgramiv(effectGL->Handle, GL_ACTIVE_UNIFORM_BLOCKS, &numUniformBlocks);
+		OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Active Uniform Blocks: %d", numUniformBlocks);
+
+		effect->uniformBuffers = OPALLOC(OPshaderUniformBuffer, numUniformBlocks);
+
+		// get information about each uniform block
+		for (ui32 uniformBlock = 0; uniformBlock < numUniformBlocks; uniformBlock++)
+		{
+			OPRENDERER_ACTIVE->ShaderUniformBuffer.Init(&effect->uniformBuffers[effect->uniformBufferCount++], effect, uniformBlock);
 		}
 
 	}
@@ -107,11 +125,12 @@ void OPeffectGLSetVertexLayout(OPeffect* effect, OPvertexLayout* vertexLayout) {
 }
 
 bool OPeffectGLAddUniform(OPeffect* effect, const OPchar* name) {
-	OPshaderUniform* shaderUniform = OPRENDERER_ACTIVE->ShaderUniform.Create(effect, name);
+	OPshaderUniform* shaderUniform = OPRENDERER_ACTIVE->ShaderUniform.Init(&effect->uniforms[effect->uniformCount++], effect, name);
 	if (!shaderUniform->Found) {
+		OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Shader Uniform not present: %s", name);
 		return false;
 	}
-	effect->uniforms.Put(name, shaderUniform);
+
 	return true;
 }
 
@@ -131,31 +150,6 @@ void OPeffectGLUnbind(OPeffect* effect) {
 
 void OPeffectGLDestroy(OPeffect* effect) {
 	OPeffectGL* effectGL = (OPeffectGL*)effect->internalPtr;
-
-	OPhashMapBucket* bucket;
-	OPuint i, j, n, m;
-	OPhashMapPair *pair;
-
-	n = effect->uniforms.count;
-	bucket = effect->uniforms.buckets;
-	i = 0;
-	while (i < n) {
-		m = bucket->count;
-		pair = bucket->pairs;
-		j = 0;
-		while (j < m) {
-			// mark asset for removal
-			OPshaderUniform* shaderUniform = (OPshaderUniform*)pair->value;
-			shaderUniform->Destroy();
-			OPfree(shaderUniform);
-			pair++;
-			j++;
-		}
-		bucket++;
-		i++;
-	}
-
-	effect->uniforms.Destroy();
 
 	OPeffectGLUnbind(effect);
 	OPGLFN(glDeleteProgram(effectGL->Handle));

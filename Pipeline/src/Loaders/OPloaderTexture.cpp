@@ -71,9 +71,6 @@ OPint OPloaderTextureReload(OPstream* str, OPtexture** image) {
 
 OPint OPloaderTextureUnload(OPtexture* image) {
 	image->Destroy();
-#ifdef _DEBUG
-	OPfree(image->source);
-#endif
 	OPfree(image);
 	return 1;
 }

@@ -27,23 +27,45 @@ OPmaterial* OPmaterial::Init(OPmaterial* base) {
 	return this;
 }
 
+
 OPmaterialParam* OPmaterial::GetParam(const OPchar* name) {
-	// This faster for the cpu than a dictionary lookup despite this being O(n)
 	for (OPuint i = 0; i < paramIndex; i++) {
-		if (OPstringEquals(params[i].name, name)) {
+		if (OPstringEquals(params[i].uniform->name, name)) {
 			return &params[i];
 		}
 	}
+
 	return NULL;
 }
 
-bool OPmaterial::SetParam(const OPchar* name, void* ptr) {
-	for (OPuint i = 0; i < paramIndex; i++) {
-		if (OPstringEquals(params[i].name, name)) {
-			params[i].data = ptr;
+OPmaterialUniformBufferParam* OPmaterial::GetParam(const OPchar* ubo, const OPchar* name) {
+	for (OPuint i = 0; i < paramUniformBufferIndex; i++) {
+		if (OPstringEquals(paramsUnformBuffer[i].ubo->name, ubo) && OPstringEquals(paramsUnformBuffer[i].uniform->name, name)) {
+			return &paramsUnformBuffer[i];
+		}
+	}
+
+	return NULL;
+}
+
+bool OPmaterial::SetParam(const OPchar* ubo, const OPchar* name, void* ptr, ui32 loc) {
+	if (ubo == NULL) {
+		OPmaterialParam* p = GetParam(name);
+		if (p != NULL) {
+			p->data = ptr;
+			p->loc = loc;
 			return true;
 		}
 	}
+	else {
+		OPmaterialUniformBufferParam* p = GetParam(ubo, name);
+		if (p != NULL) {
+			p->data = ptr;
+			p->loc = loc;
+			return true;
+		}
+	}
+
 	return false;
 }
 
@@ -65,61 +87,99 @@ void OPmaterial::Bind(bool onlyParams) {
 		}
 	}
 
-	for (OPuint i = 0; i < paramIndex; i++) {
+	for (OPuint i = 0; i < paramUniformBufferIndex; i++) {
+		effect->Set(paramsUnformBuffer[i].ubo, paramsUnformBuffer[i].uniform, paramsUnformBuffer[i].data, paramsUnformBuffer[i].loc);
+	}
 
-		switch (params[i].type) {
-		case OPmaterialParamType::TEXTURE: {
-			effect->Set(params[i].name, (OPtexture*)params[i].data, params[i].count);
-			break;
-		}
-		case OPmaterialParamType::TEXTURE_CUBE: {
-			effect->Set(params[i].name, (OPtextureCube*)params[i].data, params[i].count);
-			break;
-		}
-		case OPmaterialParamType::VECTOR3: {
-			effect->Set(params[i].name, (OPvec3*)params[i].data);
-			break;
-		}
-		case OPmaterialParamType::VECTOR4: {
-			effect->Set(params[i].name, (OPvec4*)params[i].data);
-			break;
-		}
-		case OPmaterialParamType::MATRIX4: {
-			effect->Set(params[i].name, (OPmat4*)params[i].data);
-			break;
-		}
-		case OPmaterialParamType::MATRIX4V: {
-			effect->Set(params[i].name, params[i].count, (OPmat4*)params[i].data);
-			break;
-		}
-		case OPmaterialParamType::FLOAT: {
-			effect->Set(params[i].name, *(f32*)params[i].data);
-			break;
-		}
-		case OPmaterialParamType::INT: {
-			effect->Set(params[i].name, *(i32*)params[i].data);
-			break;
-		}
-		case OPmaterialParamType::BOOL: {
-			effect->Set(params[i].name, *(bool*)params[i].data);
-			break;
-		}
-		}
+	for (OPuint i = 0; i < effect->uniformBufferCount; i++) {
+		effect->uniformBuffers[i].Bind();
+	}
+
+	for (OPuint i = 0; i < paramIndex; i++) {
+		effect->Set(params[i].uniform, params[i].data, params[i].loc);
+
+		//if (params[i].ubo != NULL) {
+		//	// Uniform in a Uniform Buffer Object
+		//	effect->Set()
+		//}
+		//else {
+		//	// Normal Uniform
+		//	switch (params[i].type) {
+		//		case OPmaterialParamType::TEXTURE: {
+		//			effect->Set(params[i].name, (OPtexture*)params[i].data, params[i].count);
+		//			break;
+		//		}
+		//		case OPmaterialParamType::TEXTURE_CUBE: {
+		//			effect->Set(params[i].name, (OPtextureCube*)params[i].data, params[i].count);
+		//			break;
+		//		}
+		//		case OPmaterialParamType::VECTOR3: {
+		//			effect->Set(params[i].name, (OPvec3*)params[i].data);
+		//			break;
+		//		}
+		//		case OPmaterialParamType::VECTOR4: {
+		//			effect->Set(params[i].name, (OPvec4*)params[i].data);
+		//			break;
+		//		}
+		//		case OPmaterialParamType::MATRIX4: {
+		//			effect->Set(params[i].name, (OPmat4*)params[i].data);
+		//			break;
+		//		}
+		//		case OPmaterialParamType::MATRIX4V: {
+		//			effect->Set(params[i].name, params[i].count, (OPmat4*)params[i].data);
+		//			break;
+		//		}
+		//		case OPmaterialParamType::FLOAT: {
+		//			effect->Set(params[i].name, *(f32*)params[i].data);
+		//			break;
+		//		}
+		//		case OPmaterialParamType::INT: {
+		//			effect->Set(params[i].name, *(i32*)params[i].data);
+		//			break;
+		//		}
+		//		case OPmaterialParamType::BOOL: {
+		//			effect->Set(params[i].name, *(bool*)params[i].data);
+		//			break;
+		//		}
+		//	}
+		//}
 	}
 }
 
-void OPmaterial::AddParam(OPmaterialParamType::Enum paramType, const OPchar* name, void* data, ui8 count) {
-	OPshaderUniform* uniform = effect->GetUniform(name);
-	if (uniform == NULL) {
-		OPlogErr("Uniform was not present: %s", name);
-		return;
+void OPmaterial::AddParam(const OPchar* ubo, const OPchar* name, void* data, ui32 loc) {
+
+	if (ubo == NULL) {
+		OPshaderUniform* uniform = effect->GetUniform(name);
+		if (uniform == NULL) {
+			OPlogErr("Uniform was not present: %s", name);
+			return;
+		}
+		OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Name %s %p", name, data);
+		params[paramIndex].uniform = uniform;
+		params[paramIndex].data = data;
+		params[paramIndex].loc = loc;
+		paramIndex++;
 	}
-	OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Name %s %p", name, data);
-	params[paramIndex].type = paramType;
-	params[paramIndex].name = name;
-	params[paramIndex].data = data;
-	params[paramIndex].count = count;
-	paramIndex++;
+	else {
+		OPshaderUniformBuffer* uniformBuffer = effect->GetUniformBuffer(ubo);
+		if (uniformBuffer == NULL) {
+			OPlogErr("Uniform Buffer was not present: %s", ubo);
+			return;
+		}
+
+		OPshaderUniformBufferUniform* uniformBufferUniform = effect->GetUniformBufferUniform(uniformBuffer, name);
+		if (uniformBuffer == NULL) {
+			OPlogErr("Uniform Buffer Uniform was not present: %s in %s", name, ubo);
+			return;
+		}
+
+		OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Name %s %p", name, data);
+		paramsUnformBuffer[paramUniformBufferIndex].ubo = uniformBuffer;
+		paramsUnformBuffer[paramUniformBufferIndex].uniform = uniformBufferUniform;
+		paramsUnformBuffer[paramUniformBufferIndex].data = data;
+		paramsUnformBuffer[paramUniformBufferIndex].loc = loc;
+		paramUniformBufferIndex++;
+	}
 }
 
 void OPmaterial::AddParam(OPskeleton* skeleton) {

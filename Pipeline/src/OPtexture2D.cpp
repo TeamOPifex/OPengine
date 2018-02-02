@@ -94,8 +94,16 @@ void OPtexture2DPrepRender(OPtexture2DOLD* tex2d) {
 	world = cam.proj * cam.view * size;
 
 	OPeffectSet("uColorTexture", tex2d->Texture, 0);
-	OPeffectSet("uUVScale", 1, &tex2d->UVScale);
-	OPeffectSet("uWorld", 1, &world);
+	//OPeffectSet("uUVScale", 1, &tex2d->UVScale);
+	//OPeffectSet("uWorld", 1, &world);
+
+	OPshaderUniformBuffer* ubo = tex2d->Effect->GetUniformBuffer("testUniformBlock");
+	OPshaderUniformBufferUniform* uUVScale = tex2d->Effect->GetUniformBufferUniform(ubo, "uUVScale");
+	OPshaderUniformBufferUniform* uWorld = tex2d->Effect->GetUniformBufferUniform(ubo, "uWorld");
+
+	tex2d->Effect->Set(ubo, uWorld, (void*)&world, 0);
+	tex2d->Effect->Set(ubo, uUVScale, (void*)&tex2d->UVScale, 0);
+	OPRENDERER_ACTIVE->ShaderUniformBuffer.Bind(ubo);
 }
 
 void OPtexture2DRender(OPtexture2DOLD* tex2d) {

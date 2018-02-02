@@ -16,7 +16,8 @@ struct OPfontGlyph {
 	OPfloat advanceX;
 	OPfloat advanceY;
 	OPvec4 textureCoordinates;
-	OPvector* kerning;
+	OPfontKerning* kerning;
+	ui32 kerningCount = 0;
 	OPint outlineType;
 	OPfloat outlineThickness;
 

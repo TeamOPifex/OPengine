@@ -67,9 +67,13 @@ OPallocator OPDEFAULT_ALLOCATOR = {
 */
 void* _OPalloc(OPuint bytes, const OPchar* file, ui32 line, const OPchar* function){
 	OPlogChannel((ui32)OPlogLevel::MEMORY, "MEMORY", "NEW: %s:%d (%s) %d bytes", file, line, function, bytes);
+
+#ifndef OPIFEX_OPTION_RELEASE
 	if (OPALLOCATIONTRACKER != NULL) {
 		OPALLOCATIONTRACKER(function, line, file, line);
 	}
+#endif
+
 	return OPDEFAULT_ALLOCATOR.alloc(&OPDEFAULT_ALLOCATOR, bytes);
 }
 
@@ -83,9 +87,11 @@ void* _OPalloc(OPuint bytes, const OPchar* file, ui32 line, const OPchar* functi
 void* _OPallocZero(OPuint bytes, const OPchar* file, ui32 line, const OPchar* function){
 	void* result;
 	OPlogChannel((ui32)OPlogLevel::MEMORY, "MEMORY", "NEW: %s:%d (%s) %d bytes", file, line, function, bytes);
+#ifndef OPIFEX_OPTION_RELEASE
 	if (OPALLOCATIONTRACKER != NULL) {
 		OPALLOCATIONTRACKER(function, line, file, line);
 	}
+#endif
 	result = OPDEFAULT_ALLOCATOR.alloc(&OPDEFAULT_ALLOCATOR, bytes);
  	OPbzero(result, bytes);
  	return result;

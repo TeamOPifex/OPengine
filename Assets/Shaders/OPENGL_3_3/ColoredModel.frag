@@ -1,8 +1,8 @@
-#version 330 core
+#version 310 es
 
-in vec3 vColor;
+layout(location = 0) in highp vec3 vColor;
 
-out vec4 FragColor;
+layout(location = 0) out highp vec4 FragColor;
 
 void main() {
 	FragColor = vec4(vColor, 1);

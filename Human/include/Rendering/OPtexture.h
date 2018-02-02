@@ -12,7 +12,7 @@ struct OPtexture {
 	OPuint guid;
 	OPtextureDesc textureDesc;
 #ifdef _DEBUG
-	OPchar* source;
+	OPchar* source = NULL;
 #endif
 
 	inline void SetData(const void* pixelData) {
@@ -29,6 +29,12 @@ struct OPtexture {
 
 	inline void Destroy() {
 		OPRENDERER_ACTIVE->Texture.Destroy(this);
+
+#ifdef _DEBUG
+		if (source != NULL) {
+			OPfree(source);
+		}
+#endif
 	}
 };
 

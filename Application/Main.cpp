@@ -16,6 +16,10 @@
 #include "OPmono.h"
 #endif
 
+#ifdef ADDON_spirv
+#include "OPspirv.h"
+#endif
+
 //////////////////////////////////////
 // Application Methods
 //////////////////////////////////////
@@ -49,6 +53,11 @@ void ApplicationInit() {
 	OPCMAN.AddLoader(&OPASSETLOADER_JPG);
 #endif
 
+#ifdef ADDON_spirv
+	OPsprivAddLoader();
+#endif
+
+
 	OPlogErr("Loaders added");
 
 	OPoculusStartup();
@@ -74,10 +83,10 @@ void ApplicationInit() {
 
 	OPCMAN.LoadGet("cemetery.png");
 
-	//OPVISUALDEBUGINFO.Init();
+	OPVISUALDEBUGINFO.Init();
 	
 	//GS_EXAMPLE_MODEL
-	OPgameState::Change(GS_EXAMPLE_TEXTURED);
+	OPgameState::Change(GS_EXAMPLE_SELECTOR);
 }
 
 OPint ApplicationUpdate(OPtimer* timer) {
@@ -114,11 +123,11 @@ void ApplicationRender(OPfloat delta) {
 }
 
 void ApplicationDestroy() {
-	// ActiveState->Exit(ActiveState);
-	// OPVISUALDEBUGINFO.Destroy();
-	// OPCMAN.Destroy();
-	// OPlogToFileClose();
-	// mainWindow.Destroy();
+	 ActiveState->Exit(ActiveState);
+	 OPVISUALDEBUGINFO.Destroy();
+	 OPCMAN.Destroy();
+	 OPlogToFileClose();
+	 mainWindow.Destroy();
 }
 
 void ApplicationSetup() {

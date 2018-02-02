@@ -28,14 +28,10 @@ void OPfont::Destroy() {
 	OPint i;
 	OPfontGlyph* glyph;
 
-	for (i = 0; i< glyphs->Size(); i++)
+	for (i = 0; i< glyphCount; i++)
 	{
-		glyph = *(OPfontGlyph**)glyphs->Get(i);
-		glyph->Destroy();
-		OPfree(glyph);
+		glyphs[i].Destroy();
 	}
-
-	glyphs->Destroy();
 	OPfree(glyphs);
 
 	dummyTextNode.mesh.Destroy();
@@ -53,9 +49,9 @@ OPfontGlyph* OPfont::GetGlyph(OPchar charcode)
 	OPfontGlyph* glyph;
 
 	/* Check if charcode has been already loaded */
-	for (i = 0; i< glyphs->_size; ++i)
+	for (i = 0; i< glyphCount; ++i)
 	{
-		glyph = *(OPfontGlyph**)glyphs->Get(i);
+		glyph = &glyphs[i];// *(OPfontGlyph**)glyphs->Get(i);
 		// If charcode is -1, we don't care about outline type or thickness
 		if ((glyph->charcode == charcode) &&
 			((charcode == (wchar_t)(-1)) ||
@@ -66,31 +62,31 @@ OPfontGlyph* OPfont::GetGlyph(OPchar charcode)
 		}
 	}
 
-	/* charcode -1 is special : it is used for line drawing (overline,
-	* underline, strikethrough) and background.
-	*/
-	if (charcode == (OPchar)(-1))
-	{
-		size_t width = atlas->width;
-		size_t height = atlas->height;
-		OPfontAtlasRegion region = atlas->GetRegion(5, 5);
-		OPfontGlyph * glyph = OPfontGlyph::Create();
-		static ui8 data[4 * 4 * 3] = { };
-		if (region.x < 0)
-		{
-			fprintf(stderr, "Texture atlas is full (line %d)\n", __LINE__);
-			return NULL;
-		}
+	///* charcode -1 is special : it is used for line drawing (overline,
+	//* underline, strikethrough) and background.
+	//*/
+	//if (charcode == (OPchar)(-1))
+	//{
+	//	size_t width = atlas->width;
+	//	size_t height = atlas->height;
+	//	OPfontAtlasRegion region = atlas->GetRegion(5, 5);
+	//	OPfontGlyph * glyph = OPfontGlyph::Create();
+	//	static ui8 data[4 * 4 * 3] = { };
+	//	if (region.x < 0)
+	//	{
+	//		fprintf(stderr, "Texture atlas is full (line %d)\n", __LINE__);
+	//		return NULL;
+	//	}
 
-		atlas->SetRegion(region.x, region.y, 4, 4, data, 0);
-		glyph->charcode = (OPchar)(-1);
-		glyph->textureCoordinates.x = (region.x + 2) / (float)width;
-		glyph->textureCoordinates.y = (region.y + 2) / (float)height;
-		glyph->textureCoordinates.z = (region.x + 3) / (float)width;
-		glyph->textureCoordinates.w = (region.y + 3) / (float)height;
-		glyphs->Push((ui8*)&glyph);
-		return glyph;
-	}
+	//	atlas->SetRegion(region.x, region.y, 4, 4, data, 0);
+	//	glyph->charcode = (OPchar)(-1);
+	//	glyph->textureCoordinates.x = (region.x + 2) / (float)width;
+	//	glyph->textureCoordinates.y = (region.y + 2) / (float)height;
+	//	glyph->textureCoordinates.z = (region.x + 3) / (float)width;
+	//	glyph->textureCoordinates.w = (region.y + 3) / (float)height;
+	//	glyphs->Push((ui8*)&glyph);
+	//	return glyph;
+	//}
 
 	return NULL;
 }

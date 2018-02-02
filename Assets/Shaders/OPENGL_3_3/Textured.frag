@@ -1,21 +1,29 @@
-#version 330 core
-#define PI 3.14159
-#define SAMP 8.0
+#version 310 es
 
-varying lowp vec2 vUV; 
+layout(location = 0) in highp vec2 vUV;
 uniform sampler2D uTexture; 
 
+layout(location = 0) out highp vec4 FragColor;
+
 void main() {
-	lowp float d = 0.005;
+	highp float PI = 3.14159;
+	lowp float SAMP = 8.0;
+
+	highp float d = 0.005;
 	lowp vec4 color = vec4(0.0);
 	int samples = 0;
 
-	float dt = (2 * PI) / SAMP; 
-	for(int i = 0; i < int(SAMP); i++){
-		lowp vec2 off = vec2(cos(dt * i), sin(dt * i));
-		color += texture2D(uTexture, vUV + (off * d));
+	highp float dt = ((2.0 * PI) / SAMP); 
+	for(int i = 0; i < int(SAMP); i++) {
+		highp float v = dt * float(i);
+		highp vec2 off = vec2(
+			cos(v), 
+			sin(v));
+
+		highp vec2 uv = vUV + (off * d);
+		color += texture(uTexture, uv);
 	}
 
 	color /= SAMP;
-	gl_FragColor = color;
+	FragColor  = color;
 }

@@ -1,13 +1,16 @@
-#version 330 core
+#version 310 es
 
 layout(location = 0) in vec3 aPosition;
 layout(location = 1) in vec3 aColor;
 
-uniform mat4 uWorld;
-uniform mat4 uView;
-uniform mat4 uProj;
+layout (std140) uniform MatrixBlock
+{
+	mat4 uWorld;
+	mat4 uView;
+	mat4 uProj;
+};
 
-out vec3 vColor;
+layout(location = 0) out vec3 vColor;
 
 void main() {
 

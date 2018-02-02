@@ -4,6 +4,7 @@
 #include "./Pipeline/include/Rendering.h"
 #include "./Human/include/Systems/OPinputSystem.h"
 #include "./Human/include/Systems/OPrenderSystem.h"
+#include "./Human/include/Rendering/Primitives/OPsphere.h"
 #include "./Data/include/OPcman.h"
 
 
@@ -20,23 +21,20 @@ class MaterialExample : public OPgameState {
 
 	void Init(OPgameState* last) {
 
-		Model = (OPmodel*)OPCMAN.LoadGet("output.opm");
+		OPsphere::Color = OPvec3(0, 0, 1);
+		Model = OPsphere::Create(2, ((ui32)OPattributes::POSITION | (ui32)OPattributes::COLOR | (ui32)OPattributes::NORMAL));
 
-		Effect.Init("ColoredModel.vert", "ColoredModel.frag");
+		
+		Effect.Init("ColoredModel.vertspv", "ColoredModel.fragspv");
 
-		Camera.SetPerspective(
-			OPVEC3_ONE * 2.0,
-			OPVEC3_UP,
-			OPVEC3_UP,
-			0.1f,
-			1000.0f,
-			45.0f,
-			OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
-		);
+		Camera.SetPerspective(OPVEC3_ONE * 2.0, OPVEC3_ZERO);
 
 		LightDirection = OPVEC3_UP;
 
 		Material.Init(&Effect);
+		Material.AddParam("MatrixBlock", "MatrixBlock.uWorld", &World, 0);
+		Material.AddParam("MatrixBlock", "MatrixBlock.uView", &Camera.view, 0);
+		Material.AddParam("MatrixBlock", "MatrixBlock.uProj", &Camera.proj, 0);
 		Material.AddParam("vLightDirection", &LightDirection);
 
 		OPrenderDepth(1);
@@ -48,8 +46,8 @@ class MaterialExample : public OPgameState {
 		if (OPKEYBOARD.IsDown(OPkeyboardKey::SPACE)) { Rotation++; }
 
 		// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
-		World = OPmat4RotY(Rotation / 100.0f);
-		OPmat4Scl(&World, 0.25f, 0.25f, 0.25f);
+		World.SetRotY(Rotation / 100.0f)->Scl(0.25f, 0.25f, 0.25f);
+		World.Translate(1, 0, 0);
 
 		return false;
 
@@ -57,7 +55,15 @@ class MaterialExample : public OPgameState {
 
 	void Render(OPfloat delta) {
 		OPrenderClear(0.4f, 0.4f, 0.4f);
-		Model->Draw(&World, &Material, &Camera);
+
+		Material.Bind();
+
+		for (ui32 i = 0; i < Model->meshCount; i++) {
+			Model->meshes[i].Bind();
+			Model->meshes[i].Draw();
+		}
+
+		// Model->Draw(&World, &Material, &Camera);
 		OPrenderPresent();
 	}
 
@@ -65,6 +71,9 @@ class MaterialExample : public OPgameState {
 	OPint Exit(OPgameState* next) {
 		// Clean up phase for the Game State
 		Effect.Destroy();
+		Model->Destroy();
+		OPfree(Model);
+		Material.Destroy();
 		return 0;
 	}
 };

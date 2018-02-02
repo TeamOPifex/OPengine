@@ -13,7 +13,8 @@ typedef struct OPfont OPfont;
 #include "./Human/include/Rendering/OPMvertex.h"
 
 struct OPfont {
-	OPvector* glyphs;
+	OPfontGlyph* glyphs;
+	ui32 glyphCount = 0;
 	OPfontAtlas* atlas;
 	OPtexture* texture;
 

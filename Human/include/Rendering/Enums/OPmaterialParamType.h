@@ -1,15 +1,35 @@
 #pragma once
 
-struct OPmaterialParamType {
+struct OPshaderUniformType {
 	enum Enum {
+		MATRIX2,
+		MATRIX3,
 		MATRIX4,
 		MATRIX4V,
+		MATRIX2X3,
+		MATRIX2X4,
+		MATRIX3X2,
+		MATRIX3X4,
+		MATRIX4X2,
+		MATRIX4X3,
 		TEXTURE,
+		VECTOR2,
 		VECTOR3,
 		VECTOR4,
+		VECTOR2I,
+		VECTOR3I,
+		VECTOR4I,
+		VECTOR2UI,
+		VECTOR3UI,
+		VECTOR4UI,
+		VECTOR2B,
+		VECTOR3B,
+		VECTOR4B,
 		FLOAT,
 		INT,
 		TEXTURE_CUBE,
-		BOOL
+		BOOL,
+		UINT,
+		UNKNOWN
 	};
 };

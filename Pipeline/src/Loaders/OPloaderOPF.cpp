@@ -29,12 +29,11 @@ OPint OPfontLoad(OPstream* str, OPfont** data) {
 	font->underlinePosition = str->F32();
 	font->underlineThickness = str->F32();
 
-	i16 glyphCount;
-	glyphCount = str->I16();
-	font->glyphs = OPvector::Create(sizeof(OPfontGlyph));
-
-	for (i16 i = glyphCount; i--;) {
-		OPfontGlyph* glyph = OPNEW(OPfontGlyph());
+	font->glyphCount = str->I16();
+	font->glyphs = OPALLOC(OPfontGlyph, font->glyphCount);// OPvector::Create(sizeof(OPfontGlyph));
+	
+	for (i16 i = font->glyphCount; i--;) {
+		OPfontGlyph* glyph = &font->glyphs[i];
 		glyph->Init();
 
 		glyph->charcode = str->I8();
@@ -50,19 +49,21 @@ OPint OPfontLoad(OPstream* str, OPfont** data) {
 		glyph->textureCoordinates.w = str->F32();
 
 		i16 kerningCount;
-		kerningCount = str->I16();
-		for (i16 j = kerningCount; j--;) {
-			OPfontKerning kerning;
-
-			kerning.charcode = str->I8();
-			kerning.kerning = str->F32();
-			glyph->kerning->Push((ui8*)&kerning);
+		glyph->kerningCount = str->I16();
+		// TODO: (garrett) in the file header, inform total kerningCount
+		// so that we can pre-allocate the correct amount and then use a
+		// pointer that's offset in the main array
+		glyph->kerning = OPALLOC(OPfontKerning, glyph->kerningCount);
+		for (i16 j = glyph->kerningCount; j--;) {\
+			glyph->kerning[j].charcode = str->I8();
+			glyph->kerning[j].kerning = str->F32();
+			//glyph->kerning->Push((ui8*)&kerning);
 		}
 
 		glyph->outlineType = str->I32();
 		glyph->outlineThickness = str->F32();
 
-		font->glyphs->Push((ui8*)&glyph);
+		// font->glyphs->Push((ui8*)&glyph);
 	}
 
 	OPimagePNGLoadStream(str, str->_pointer, &font->texture);

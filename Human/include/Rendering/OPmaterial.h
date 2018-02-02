@@ -19,9 +19,11 @@ class OPmaterial {
 public:
 	ui64 id = 0;
 	OPmaterialParam params[OPMATERIAL_MAX_UNIFORMS];
+	OPuint paramIndex = 0;
+	OPmaterialUniformBufferParam paramsUnformBuffer[OPMATERIAL_MAX_UNIFORMS];
+	OPuint paramUniformBufferIndex = 0;
 	OPeffect* effect = NULL;
 	OPmaterial* rootMaterial = NULL;
-	OPuint paramIndex = 0;
 	bool depth = true;
 	bool cull = true;
 	bool visible = true;
@@ -40,15 +42,25 @@ public:
 
 	virtual OPmaterial* Init(OPeffect* effect);
 	virtual OPmaterial* Init(OPmaterial* base);
-	virtual void AddParam(OPmaterialParamType::Enum paramType, const OPchar* name, void* data, ui8 count);
-	virtual void Bind(bool onlyParams = false);
+	virtual void AddParam(const OPchar* ubo, const OPchar* name, void* data, ui32 loc);
+	virtual void AddParam(OPskeleton* skeleton);
+
+	virtual void Bind(bool onlyParams = false); 
 	virtual OPmaterialParam* GetParam(const OPchar* name);
-	virtual bool SetParam(const OPchar* name, void* ptr);
+	virtual OPmaterialUniformBufferParam* GetParam(const OPchar* ubo, const OPchar* name);
+	virtual bool SetParam(const OPchar* ubo, const OPchar* name, void* ptr, ui32 loc);
 	virtual void Destroy();
 	virtual OPmaterial* CreateInstances(OPmodel* model, bool materialPerMesh);
 	virtual OPmaterial* CreateInstances(OPrendererEntity* model);
 	static void SetMeta(OPrendererEntity* rendererEntity);
-	virtual void AddParam(OPskeleton* skeleton);
+
+
+	inline void AddParam(const OPchar* name, void* data) {
+		AddParam(NULL, name, data, 0);
+	}
+	inline bool SetParam(const OPchar* name, void* ptr) {
+		return SetParam(NULL, name, ptr, 0);
+	}
 
 	inline void SetDepth(bool val) {
 		depth = val;
@@ -63,43 +75,39 @@ public:
 	}
 
 	inline void AddParam(const OPchar* name, OPtexture* data, ui32 slot) {
-		AddParam(OPmaterialParamType::TEXTURE, name, (void*)data, slot);
+		AddParam(NULL, name, (void*)data, slot);
 	}
 
 	inline void AddParam(const OPchar* name, OPtextureCube* data, ui32 slot) {
-		AddParam(OPmaterialParamType::TEXTURE_CUBE, name, (void*)data, slot);
+		AddParam(NULL, name, (void*)data, slot);
 	}
 
 	inline void AddParam(const OPchar* name, OPvec3* data) {
-		AddParam(OPmaterialParamType::VECTOR3, name, (void*)data, 1);
+		AddParam(NULL, name, (void*)data, 0);
 	}
 
 	inline void AddParam(const OPchar* name, OPvec4* data) {
-		AddParam(OPmaterialParamType::VECTOR4, name, (void*)data, 1);
+		AddParam(NULL, name, (void*)data, 0);
 	}
 
 	inline void AddParam(const OPchar* name, OPmat4* data) {
-		AddParam(OPmaterialParamType::MATRIX4, name, (void*)data, 1);
+		AddParam(NULL, name, (void*)data, 0);
 	}
 
 	inline void AddParam(const OPchar* name, OPmat4* data, ui8 count) {
-		AddParam(OPmaterialParamType::MATRIX4V, name, (void*)data, count);
+		AddParam(NULL, name, (void*)data, 0);
 	}
 
 	inline void AddParam(const OPchar* name, f32* data) {
-		AddParam(OPmaterialParamType::FLOAT, name, (void*)data, 1);
+		AddParam(NULL, name, (void*)data, 0);
 	}
 
 	inline void AddParam(const OPchar* name, i32* data) {
-		AddParam(OPmaterialParamType::INT, name, (void*)data, 1);
+		AddParam(NULL, name, (void*)data, 0);
 	}
 
 	inline void AddParam(const OPchar* name, bool* data) {
-		AddParam(OPmaterialParamType::BOOL, name, (void*)data, 1);
-	}
-
-	inline void AddParam(const OPchar* name, f32* data, ui8 count) {
-		AddParam(OPmaterialParamType::FLOAT, name, (void*)data, count);
+		AddParam(NULL, name, (void*)data, 0);
 	}
 
 	static OPmaterial* Create(OPeffect* effect);

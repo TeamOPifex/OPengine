@@ -22,6 +22,7 @@ OPshaderUniform* OPshaderUniformGLInit(OPshaderUniform* shaderUniform, OPeffect*
 	}
 
 	shaderUniform->Found = result > -1;
+	shaderUniform->name = OPstringCopy(name);
 
 	return shaderUniform;
 }

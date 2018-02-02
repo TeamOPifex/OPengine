@@ -10,6 +10,7 @@ typedef struct OPeffect OPeffect;
 #include "./Human/include/Rendering/OPtexture.h"
 #include "./Human/include/Rendering/OPcam.h"
 #include "./Human/include/Rendering/OPtextureCube.h"
+#include "./Human/include/Rendering/OPshaderUniform.h"
 #include "./Math/include/Vectors.h"
 #include "./Math/include/OPmat4.h"
 #include "./Data/include/OPhashMap.h"
@@ -19,12 +20,63 @@ typedef struct OPeffect OPeffect;
 #include "./Core/include/OPtypes.h"
 #include "./Core/include/OPlog.h"
 #include "./Core/include/OPmemory.h"
+#include "./Human/include/Rendering/Enums/OPmaterialParamType.h"
+
+struct OPshaderUniformBufferUniform {
+	OPchar* name = NULL;
+	OPshaderUniformType::Enum type;
+	ui32 size;
+	ui32 offset;
+	ui32 arrayStride;
+	ui32 matrixStride;
+
+	inline void Destroy() {
+		if (name != NULL) {
+			OPfree(name);
+		}
+	}
+};
+
+struct OPshaderUniformBuffer {
+	void* internalPtr;
+
+	OPchar* name = NULL;
+	OPshaderUniformBufferUniform* uniforms = NULL;
+	ui32 uniformCount = 0;
+	ui32 size;
+	void* data = NULL;
+
+	inline void Bind() {
+		OPRENDERER_ACTIVE->ShaderUniformBuffer.Bind(this);
+	}
+
+	inline void Destroy() {
+		OPRENDERER_ACTIVE->ShaderUniformBuffer.Destroy(this);
+		if (name != NULL) {
+			OPfree(name);
+		}
+
+		if (uniforms != NULL) {
+			for (ui32 i = 0; i < uniformCount; i++) {
+				uniforms[i].Destroy();
+			}
+			OPfree(uniforms);
+		}
+
+		if (data != NULL) {
+			OPfree(data);
+		}
+	}
+};
 
 struct OPeffect {
 	void* internalPtr;
 	OPshader* vertexShader;
 	OPshader* fragmentShader;
-	OPhashMap uniforms;
+	OPshaderUniform* uniforms;
+	OPshaderUniformBuffer* uniformBuffers;
+	ui8 uniformCount = 0;
+	ui8 uniformBufferCount = 0;
 
 	OPeffect() {}
 	OPeffect(OPshader* vert, OPshader* frag) { Init(vert, frag, NULL); }
@@ -46,18 +98,60 @@ struct OPeffect {
 	inline void Bind() {
 		OPRENDERER_ACTIVE->Effect.Bind(this);
 	}
+
 	inline void Unbind() {
 		OPRENDERER_ACTIVE->Effect.Unbind(this);
 	}
+
 	inline void Destroy() {
+
+		for (ui32 i = 0; i < uniformCount; i++) {
+			uniforms[i].Destroy();
+		}
+		OPfree(uniforms);
+
+
+		for (ui32 i = 0; i < uniformBufferCount; i++) {
+			uniformBuffers[i].Destroy();
+		}
+		OPfree(uniformBuffers);
+
 		OPRENDERER_ACTIVE->Effect.Destroy(this);
 	}
+
     inline void Free() {
         Destroy();
         OPfree(this);
     }
 
-	inline bool AddUniform(const OPchar* name) { return OPRENDERER_ACTIVE->Effect.AddUniform(this, name); }
+	inline bool AddUniform(const OPchar* name) { 
+		return OPRENDERER_ACTIVE->Effect.AddUniform(this, name); 
+	}
+
+	OPshaderUniform* GetUniform(const OPchar* name);
+	OPshaderUniformBuffer* GetUniformBuffer(const OPchar* name);
+	OPshaderUniformBufferUniform* GetUniformBufferUniform(OPshaderUniformBuffer* ubo, const OPchar* name);
+
+	inline void Set(OPshaderUniformBuffer* ubo, OPshaderUniformBufferUniform* shaderUniform, void* data, ui32 loc) {
+		OPRENDERER_ACTIVE->ShaderUniformBuffer.Set(ubo, shaderUniform, data, loc);
+	}
+
+	inline void Set(OPshaderUniform* shaderUniform, void* data, ui32 loc) {
+		OPRENDERER_ACTIVE->ShaderUniform.Set(shaderUniform, data, loc); 
+	}
+
+
+	inline void Set(OPshaderUniformBuffer* ubo, const OPchar* shaderUniformName, void* data) {
+		OPshaderUniformBufferUniform* shaderUniform = GetUniformBufferUniform(ubo, shaderUniformName);
+		OPRENDERER_ACTIVE->ShaderUniformBuffer.Set(ubo, shaderUniform, data, 0);
+	}
+
+	inline void Set(const OPchar* uboName, const OPchar* shaderUniformName, void* data) {
+		OPshaderUniformBuffer* ubo = GetUniformBuffer(uboName);
+		Set(ubo, shaderUniformName, data);
+	}
+
+
 
 	inline void Set(OPshaderUniform* shaderUniform, f32 val) { OPRENDERER_ACTIVE->ShaderUniform.SetF(shaderUniform, val); }
 	inline void Set(OPshaderUniform* shaderUniform, ui32 count, f32* val) { OPRENDERER_ACTIVE->ShaderUniform.SetFv(shaderUniform, count, val); }
@@ -79,7 +173,6 @@ struct OPeffect {
 	inline void Set(OPshaderUniform* shaderUniform, OPtextureCube* val, ui32 slot) { OPRENDERER_ACTIVE->ShaderUniform.SetTextureCube(shaderUniform, val, slot); }
 	inline void Set(OPshaderUniform* shaderUniform, ui32 count, OPtextureCube* val, ui32 slot) { OPRENDERER_ACTIVE->ShaderUniform.SetTextureCubev(shaderUniform, count, val, slot); }
 
-	OPshaderUniform* GetUniform(const OPchar* name);
 	inline void Set(const OPchar* name, f32 val) { OPRENDERER_ACTIVE->ShaderUniform.SetF(GetUniform(name), val); }
 	inline void Set(const OPchar* name, ui32 count, f32* val) { OPRENDERER_ACTIVE->ShaderUniform.SetFv(GetUniform(name), count, val); }
 	inline void Set(const OPchar* name, bool val) { OPRENDERER_ACTIVE->ShaderUniform.SetF(GetUniform(name), val); }
