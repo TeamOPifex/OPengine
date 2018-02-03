@@ -29,11 +29,11 @@ class SceneShadowsExample : public OPgameState {
 		renderer = OPNEW(OPrendererForward());
 		scene.Init(renderer, 100, 1);
 		camera.Init();
-		scene.camera = &camera.Camera;
+		scene.SetCamera(&camera.Camera);
 
 		model = (OPmodel*)OPCMAN.LoadGet("sponza.opm");
 
-		model1Entity = scene.Add(model, true);
+		model1Entity = scene.Add(model, OPrendererEntityDesc(false, true, true, true));
 		DepthTextureEffect.Init("Common/Texture2D.vert", "Common/TextureDepth.frag");
 		DepthTexture = OPtexture2DCreate(&renderer->shadowPass.depthBuffer.texture, &DepthTextureEffect);
 	}

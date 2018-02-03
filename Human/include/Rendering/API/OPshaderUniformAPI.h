@@ -12,8 +12,8 @@ struct OPtexture;
 struct OPtextureCube;
 
 struct OPshaderUniformAPI {
-	OPshaderUniform*(*Create)(OPeffect* effect, const OPchar* name) = 0;
-	OPshaderUniform*(*Init)(OPshaderUniform* shaderUniform, OPeffect* effect, const OPchar* name) = 0;
+	OPshaderUniform*(*Create)(OPeffect* effect, ui32 loc) = 0;
+	OPshaderUniform*(*Init)(OPshaderUniform* shaderUniform, OPeffect* effect, ui32 ind) = 0;
 	void(*Destroy)(OPshaderUniform* shaderUniform) = 0;
 
 	void(*SetData)(OPshaderUniform* shaderUniform, void* data, ui32 loc);

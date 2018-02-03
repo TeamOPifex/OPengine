@@ -18,17 +18,31 @@ extern OPuint OPMATERIAL_GLOBAL_ID;
 class OPmaterial {
 public:
 	ui64 id = 0;
-	OPmaterialParam params[OPMATERIAL_MAX_UNIFORMS];
-	OPuint paramIndex = 0;
-	OPmaterialUniformBufferParam paramsUnformBuffer[OPMATERIAL_MAX_UNIFORMS];
-	OPuint paramUniformBufferIndex = 0;
+
 	OPeffect* effect = NULL;
+	OPmaterialParam params[OPMATERIAL_MAX_UNIFORMS];
+	OPmaterialUniformBufferParam paramsUnformBuffer[OPMATERIAL_MAX_UNIFORMS];
+	OPuint paramIndex = 0;
+	OPuint paramUniformBufferIndex = 0;
+	ui8 textureSlot = 0;
+
 	OPmaterial* rootMaterial = NULL;
+
 	bool depth = true;
 	bool cull = true;
 	bool visible = true;
 	bool alpha = true;
 	OPcullFace cullFace = OPcullFace::BACK;
+
+	OPshaderUniform* worldUniform = NULL;
+	OPshaderUniform* viewUniform = NULL;
+	OPshaderUniform* projUniform = NULL;
+
+	OPshaderUniformBuffer* worldBuffer = NULL;
+	OPshaderUniformBufferUniform* worldBufferUniform = NULL;
+	OPshaderUniformBuffer* viewProjBuffer = NULL;
+	OPshaderUniformBufferUniform* viewBufferUniform = NULL;
+	OPshaderUniformBufferUniform* projBufferUniform = NULL;
 
 	OPmaterial() { }
 
@@ -42,9 +56,13 @@ public:
 
 	virtual OPmaterial* Init(OPeffect* effect);
 	virtual OPmaterial* Init(OPmaterial* base);
+	void SetupWVP();
 	virtual void AddParam(const OPchar* ubo, const OPchar* name, void* data, ui32 loc);
 	virtual void AddParam(OPskeleton* skeleton);
-
+	ui32 NextTextureSlot();
+		
+	virtual void SetWorld(OPmat4* world);
+	virtual void SetCamera(OPcam* camera);
 	virtual void Bind(bool onlyParams = false); 
 	virtual OPmaterialParam* GetParam(const OPchar* name);
 	virtual OPmaterialUniformBufferParam* GetParam(const OPchar* ubo, const OPchar* name);

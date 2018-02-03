@@ -29,7 +29,7 @@ public:
 	OPmaterialPBR* Init(OPeffect* effect);
 	OPmaterialPBR* Init(OPmaterial* material);
 
-	inline void SetCamera(OPcam* camera) {
+	inline void SetCameraPos(OPcam* camera) {
 		rootMaterial->AddParam("uCamPos", &camera->pos);
 	}
 

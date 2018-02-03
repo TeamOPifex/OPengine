@@ -52,4 +52,43 @@ bool OPcommonGLLog(const OPchar* function, const OPchar* file, i32 line) {
 	return true;
 }
 
+OPshaderUniformType::Enum UniformTypeToOPshaderUniformType(GLint type)
+{
+	const OPchar* s;
+	switch (type)
+	{
+	case GL_FLOAT: return OPshaderUniformType::FLOAT;
+	case GL_FLOAT_VEC2: return OPshaderUniformType::VECTOR2;
+	case GL_FLOAT_VEC3: return OPshaderUniformType::VECTOR3;
+	case GL_FLOAT_VEC4: return OPshaderUniformType::VECTOR4;
+	case GL_INT: return OPshaderUniformType::INT;
+	case GL_INT_VEC2: return OPshaderUniformType::VECTOR2I;
+	case GL_INT_VEC3: return OPshaderUniformType::VECTOR3I;
+	case GL_INT_VEC4: return OPshaderUniformType::VECTOR4I;
+	case GL_UNSIGNED_INT: return OPshaderUniformType::UINT;
+	case GL_UNSIGNED_INT_VEC2: return OPshaderUniformType::VECTOR2UI;
+	case GL_UNSIGNED_INT_VEC3: return OPshaderUniformType::VECTOR3UI;
+	case GL_UNSIGNED_INT_VEC4: return OPshaderUniformType::VECTOR4UI;
+	case GL_BOOL: return OPshaderUniformType::BOOL;
+	case GL_BOOL_VEC2: return OPshaderUniformType::VECTOR2B;
+	case GL_BOOL_VEC3: return OPshaderUniformType::VECTOR3B;
+	case GL_BOOL_VEC4: return OPshaderUniformType::VECTOR4B;
+	case GL_FLOAT_MAT2: return OPshaderUniformType::MATRIX2;
+	case GL_FLOAT_MAT3: return OPshaderUniformType::MATRIX3;
+	case GL_FLOAT_MAT4: return OPshaderUniformType::MATRIX4;
+	case GL_FLOAT_MAT2x3: return OPshaderUniformType::MATRIX2X3;
+	case GL_FLOAT_MAT2x4: return OPshaderUniformType::MATRIX2X4;
+	case GL_FLOAT_MAT3x2: return OPshaderUniformType::MATRIX3X2;
+	case GL_FLOAT_MAT3x4: return OPshaderUniformType::MATRIX3X4;
+	case GL_FLOAT_MAT4x2: return OPshaderUniformType::MATRIX4X2;
+	case GL_FLOAT_MAT4x3: return OPshaderUniformType::MATRIX4X3;
+	case GL_SAMPLER_1D: return OPshaderUniformType::TEXTURE;
+	case GL_SAMPLER_2D: return OPshaderUniformType::TEXTURE;
+	case GL_SAMPLER_3D: return OPshaderUniformType::TEXTURE;
+	case GL_SAMPLER_CUBE: return OPshaderUniformType::TEXTURE_CUBE;
+	default: return OPshaderUniformType::UNKNOWN;
+	}
+	return OPshaderUniformType::UNKNOWN;
+}
+
 #endif

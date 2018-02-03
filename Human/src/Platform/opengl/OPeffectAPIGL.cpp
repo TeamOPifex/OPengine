@@ -68,7 +68,7 @@ OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag, OP
 			glGetActiveAttrib(effectGL->Handle, (GLuint)i, bufSize, &length, &size, &type, name);
 			i32 result = glGetAttribLocation(effectGL->Handle, name);
 
-			OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Attribute #%d Type: %u Name: %s, Loc: %d", i, type, name, result);
+			OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "   Attribute #%d Type: %u Name: %s, Loc: %d", i, type, name, result);
 		}
 
 		glGetProgramiv(effectGL->Handle, GL_ACTIVE_UNIFORMS, &count);
@@ -77,16 +77,18 @@ OPeffect* OPeffectAPIGLInit(OPeffect* effect, OPshader* vert, OPshader* frag, OP
 		effect->uniforms = OPALLOC(OPshaderUniform, count);
 		for (i = 0; i < count; i++)
 		{
-			glGetActiveUniform(effectGL->Handle, (GLuint)i, bufSize, &length, &size, &type, name);
-			if (OPstringEquals("uBones[0]", name)) {
-				//ui32 loc = glGetUniformLocation(effectGL->Handle, "uBones");
-				//OPlogInfo("Bone Location: %d", loc);
-				OPeffectGLAddUniform(effect, "uBones");
-			}
-			else {
-				OPeffectGLAddUniform(effect, name);
-			}
-			OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Uniform #%d Type: %u Name: %s", i, type, name);
+			OPshaderUniform* shaderUniform = OPRENDERER_ACTIVE->ShaderUniform.Init(&effect->uniforms[effect->uniformCount++], effect, i);
+
+			//glGetActiveUniform(effectGL->Handle, (GLuint)i, bufSize, &length, &size, &type, name);
+			//if (OPstringEquals("uBones[0]", name)) {
+			//	//ui32 loc = glGetUniformLocation(effectGL->Handle, "uBones");
+			//	//OPlogInfo("Bone Location: %d", loc);
+			//	OPeffectGLAddUniform(effect, "uBones");
+			//}
+			//else {
+			//	OPeffectGLAddUniform(effect, name);
+			//}
+			//OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Uniform #%d Type: %u Name: %s", i, type, name);
 		}
 
 		GLint numUniformBlocks;
@@ -125,13 +127,14 @@ void OPeffectGLSetVertexLayout(OPeffect* effect, OPvertexLayout* vertexLayout) {
 }
 
 bool OPeffectGLAddUniform(OPeffect* effect, const OPchar* name) {
-	OPshaderUniform* shaderUniform = OPRENDERER_ACTIVE->ShaderUniform.Init(&effect->uniforms[effect->uniformCount++], effect, name);
-	if (!shaderUniform->Found) {
-		OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Shader Uniform not present: %s", name);
-		return false;
-	}
+	//OPshaderUniform* shaderUniform = OPRENDERER_ACTIVE->ShaderUniform.Init(&effect->uniforms[effect->uniformCount++], effect, name);
+	//if (!shaderUniform->Found) {
+	//	OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "Shader Uniform not present: %s", name);
+	//	return false;
+	//}
 
-	return true;
+	//return true;
+	return false;
 }
 
 void OPeffectGLBind(OPeffect* effect) {

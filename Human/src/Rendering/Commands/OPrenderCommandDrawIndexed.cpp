@@ -8,21 +8,20 @@ void OPrenderCommandDrawIndex(void* data, OPcam* camera) {
 //#ifdef OPRENDER_VERTEX_ARRAY_METHOD
 	dc->vertexArray->Bind();
 //#else
-	//dc->vertexBuffer->Bind();
+	dc->vertexBuffer->Bind();
 //#endif
 	dc->indexBuffer->Bind();
+
 	dc->material->Bind();
 
-
-	OPeffectSet(camera);
+	//OPeffectSet(camera);
+	dc->material->SetCamera(camera);
 
 	// Per mesh Shader Data
-	OPeffectSet("uWorld", dc->world);
-
-	//OPrenderDrawBufferIndexed(dc->startIndex);
+	dc->material->SetWorld(dc->world);
+	//OPeffectSet("uWorld", dc->world);
 
 	OPRENDERER_ACTIVE->VertexArray.DrawIndexed(OPRENDERER_ACTIVE->OPVERTEXARRAY_ACTIVE, dc->indexCount, dc->startIndex);
-	//glDrawElements(GL_TRIANGLES, (GLsizei)OPRENDER_CURR_IB->ElementCount, indType, (void*)(offset * sizeof(GLuint)));
 
 }
 

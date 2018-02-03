@@ -18,7 +18,7 @@ class ModelExample : public OPgameState {
 public:
 	OPmodel* Mesh;			// The Mesh to render
 	OPeffect Effect;		// The Effect used to render the Mesh
-	OPcam Camera;			// The Camera to use in the Effect to render the Mesh
+	OPcamFreeFlight Camera;			// The Camera to use in the Effect to render the Mesh
 	d64 Rotation;			// The amount to rotate the Mesh
 	d64 Y;
 	OPvec3 LightDirection;	// Where the Light Source is coming from
@@ -48,7 +48,7 @@ public:
 		Mesh = OPsphere::Create(2, ((ui32)OPattributes::POSITION | (ui32)OPattributes::COLOR | (ui32)OPattributes::NORMAL));
 
 		// Sets up the camera as a perpsective camera for rendering
-		Camera.SetPerspective(OPVEC3_ONE * 2.0, OPVEC3_ZERO);
+		Camera.Init();// .SetPerspective(OPVEC3_ONE * 2.0, OPVEC3_ZERO);
 
 		// A default light direction used in the effect
 		LightDirection = OPVEC3_UP;
@@ -66,6 +66,8 @@ public:
 		////////////////////////
 		// Update
 		////////////////////////
+
+		Camera.Update(time);
 
 		// The application root is set to update the Keyboard, Mouse and GamePads
 		// If you need more granular control for when these update, please modify
@@ -91,8 +93,8 @@ public:
 
 		// Generates an OPmat4 (Matrix 4x4) which is rotated on the Y axis
 		OPmat4 world = OPMAT4_IDENTITY;
-		world.RotY(Rotation / 100.0f)->Scl(0.25f, 0.25f, 0.25f);
-		world.Translate(1, Y, 0);
+		//world.RotY(Rotation / 100.0f)->Scl(0.25f, 0.25f, 0.25f);
+		//world.Translate(1, Y, 0);
 
 
 		////////////////////////
@@ -118,8 +120,8 @@ public:
 		Effect.Bind();
 		OPshaderUniformBuffer* ubo = Effect.GetUniformBuffer("MatrixBlock");
 		Effect.Set(ubo, "uWorld", &world);
-		Effect.Set(ubo, "uProj", &Camera.proj);
-		Effect.Set(ubo, "uView", &Camera.view);
+		Effect.Set(ubo, "uProj", &Camera.Camera.proj);
+		Effect.Set(ubo, "uView", &Camera.Camera.view);
 		OPRENDERER_ACTIVE->ShaderUniformBuffer.Bind(ubo);
 		Mesh->Bind();
 

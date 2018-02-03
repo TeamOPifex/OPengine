@@ -18,7 +18,7 @@ public:
 
 	inline OPmaterial* Base() { return rootMaterial; }
 
-	inline void SetCamera(OPcam* camera) {
+	inline void SetCameraPos(OPcam* camera) {
 		rootMaterial->AddParam("uCamPos", &camera->pos);
 	}
 

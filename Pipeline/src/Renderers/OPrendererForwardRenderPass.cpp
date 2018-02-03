@@ -13,13 +13,13 @@ void OPrendererForwardRenderPass::Init(OPcam** cam, OPcam** shadowCam, OPrendere
 
 	texturedMaterial.AddParam("uViewShadow", &(*shadowCam)->view);
 	texturedMaterial.AddParam("uProjShadow", &(*shadowCam)->proj);
-	texturedMaterial.AddParam("uShadow", &pass->depthBuffer.texture, 1);
+	texturedMaterial.AddParam("uShadow", &pass->depthBuffer.texture, 0);
 	texturedMaterial.AddParam("uLightPos", &(*shadowCam)->pos);
 	texturedMaterial.AddParam("uViewPos", &(*cam)->pos);
 
 	skinnedMaterial.AddParam("uViewShadow", &(*shadowCam)->view);
 	skinnedMaterial.AddParam("uProjShadow", &(*shadowCam)->proj);
-	skinnedMaterial.AddParam("uShadow", &pass->depthBuffer.texture, 1);
+	skinnedMaterial.AddParam("uShadow", &pass->depthBuffer.texture, 0);
 	skinnedMaterial.AddParam("uLightPos", &(*shadowCam)->pos);
 	skinnedMaterial.AddParam("uViewPos", &(*cam)->pos);
 }

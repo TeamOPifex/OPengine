@@ -6,13 +6,16 @@ OPuint OPMATERIAL_GLOBAL_ID = 1;
 OPuint OPMATERIALINSTANCE_GLOBAL_ID = 1;
 
 OPmaterial* OPmaterial::Init(OPeffect* effectIn) {
+	rootMaterial = NULL;
 	effect = effectIn;
 	paramIndex = 0;
 	id = OPMATERIAL_GLOBAL_ID++;
 	depth = 1;
 	cull = 1;
+	SetupWVP();
 	return this;
 }
+
 
 OPmaterial* OPmaterial::Init(OPmaterial* base) {
 	ASSERT(base != NULL, "Can't create amaterial based on a NULL material");
@@ -24,7 +27,32 @@ OPmaterial* OPmaterial::Init(OPmaterial* base) {
 	alpha = base->alpha;
 	cullFace = base->cullFace;
 	effect = base->effect;
+	SetupWVP();
 	return this;
+}
+
+void OPmaterial::SetupWVP() {
+
+	if (rootMaterial == NULL) {
+		// locate world, view, proj
+		worldUniform = effect->GetUniform("uWorld");
+		if (worldUniform == NULL) {
+			worldBuffer = effect->GetUniformBuffer("ModelBuffer");
+			if (worldBuffer != NULL) {
+				worldBufferUniform = effect->GetUniformBufferUniform(worldBuffer, "uWorld");
+			}
+		}
+
+		viewUniform = effect->GetUniform("uView");
+		projUniform = effect->GetUniform("uProj");
+		if (viewUniform == NULL || projUniform == NULL) {
+			viewProjBuffer = effect->GetUniformBuffer("CameraBuffer");
+			if (viewProjBuffer != NULL) {
+				viewBufferUniform = effect->GetUniformBufferUniform(viewProjBuffer, "uView");
+				projBufferUniform = effect->GetUniformBufferUniform(viewProjBuffer, "uProj");
+			}
+		}
+	}
 }
 
 
@@ -67,6 +95,44 @@ bool OPmaterial::SetParam(const OPchar* ubo, const OPchar* name, void* ptr, ui32
 	}
 
 	return false;
+}
+
+void OPmaterial::SetWorld(OPmat4* world) {
+	if (rootMaterial != NULL) {
+		rootMaterial->SetWorld(world);
+	}
+	else {
+		if (worldUniform != NULL) {
+			// set world
+			effect->Set(worldUniform, world, 0);
+		}
+		else if (worldBuffer != NULL && worldBufferUniform != NULL) {
+			effect->Set(worldBuffer, worldBufferUniform, world, 0);
+		}
+	}
+}
+
+void OPmaterial::SetCamera(OPcam* camera) {
+	if (rootMaterial != NULL) {
+		rootMaterial->SetCamera(camera);
+	}
+	else {
+		if (viewUniform != NULL) {
+			// set world
+			effect->Set(viewUniform, &camera->view, 0);
+		}
+		else if (viewProjBuffer != NULL && viewBufferUniform != NULL) {
+			effect->Set(viewProjBuffer, viewBufferUniform, &camera->view, 0);
+		}
+
+		if (projUniform != NULL) {
+			// set world
+			effect->Set(projUniform, &camera->proj, 0);
+		}
+		else if (viewProjBuffer != NULL && viewBufferUniform != NULL) {
+			effect->Set(viewProjBuffer, projBufferUniform, &camera->proj, 0);
+		}
+	}
 }
 
 void OPmaterial::Bind(bool onlyParams) {
@@ -146,6 +212,15 @@ void OPmaterial::Bind(bool onlyParams) {
 	}
 }
 
+ui32 OPmaterial::NextTextureSlot() {
+	if (rootMaterial != NULL) {
+		return rootMaterial->NextTextureSlot();
+	}
+	else {
+		return textureSlot++;
+	}
+}
+
 void OPmaterial::AddParam(const OPchar* ubo, const OPchar* name, void* data, ui32 loc) {
 
 	if (ubo == NULL) {
@@ -158,6 +233,9 @@ void OPmaterial::AddParam(const OPchar* ubo, const OPchar* name, void* data, ui3
 		params[paramIndex].uniform = uniform;
 		params[paramIndex].data = data;
 		params[paramIndex].loc = loc;
+		if (uniform->type == OPshaderUniformType::TEXTURE) {
+			params[paramIndex].loc = NextTextureSlot();
+		}
 		paramIndex++;
 	}
 	else {

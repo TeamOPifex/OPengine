@@ -5,6 +5,7 @@
 #include "./Pipeline/include/OPmaterialPBR.h"
 #include "./Human/include/Systems/OPinputSystem.h"
 #include "./Human/include/Systems/OPrenderSystem.h"
+#include "./Human/include/Rendering/Primitives/OPsphere.h"
 #include "./Data/include/OPcman.h"
 
 class SceneExample : public OPgameState {
@@ -25,65 +26,72 @@ class SceneExample : public OPgameState {
 
 	OPmaterial* materialInst1;
 	OPmaterial* materialInst2;
-
+	OPmodel* Mesh;
 
 	void Init(OPgameState* last) {
-		const OPchar* envImages[6] = {
-			"Textures/TetrisBroken.png",
-			"Textures/TetrisYellow.png",
-			"Textures/TetrisGreen.png",
-			"Textures/TetrisGray.png",
-			"Textures/TetrisOrange.png",
-			"Textures/TetrisRed.png"
-		};
-		environment.Init(envImages);
+		//const OPchar* envImages[6] = {
+		//	"Textures/TetrisBroken.png",
+		//	"Textures/TetrisYellow.png",
+		//	"Textures/TetrisGreen.png",
+		//	"Textures/TetrisGray.png",
+		//	"Textures/TetrisOrange.png",
+		//	"Textures/TetrisRed.png"
+		//};
+		//environment.Init(envImages);
 
 		renderer = OPNEW(OPrendererForward());
 		scene.Init(renderer, 100, 1);
 		camera.Init();
 		scene.camera = &camera.Camera;
 
-		materialPBR.Init(OPNEW(OPeffect("Common/PBR.vert", "Common/PBR.frag")));
-		materialPBR.AddParam("uCamPos", &camera.Camera.pos);
-		//renderer->SetMaterial(&materialPBR, 0);
+		//OPsphere::Color = OPvec3(0, 0, 1);
+		//Mesh = OPsphere::Create(2, ((ui32)OPattributes::POSITION | (ui32)OPattributes::COLOR | (ui32)OPattributes::NORMAL));
+		//scene.Add(Mesh, OPrendererEntityDesc(false));
 
-		materialInstance = OPNEW(OPmaterialPBR(materialPBR));
-		materialInstance->SetAlbedoMap("Dagger_Albedo.png");
-		materialInstance->SetSpecularMap("Dagger_Specular.png");
-		materialInstance->SetGlossMap("Dagger_Gloss.png");
-		materialInstance->SetNormalMap("Dagger_Normals.png");
-		materialInstance->SetEnvironmentMap(&environment);
+		Mesh = (OPmodel*)OPCMAN.LoadGet("sponza.opm");
+		scene.Add(Mesh, OPrendererEntityDesc(false, true, true, true))->world = OPMAT4_IDENTITY;
 
-		materialInstance2 = OPNEW(OPmaterialPBR(materialPBR));
-		materialInstance2->SetAlbedoMap("cemetery_floor.png");
-		materialInstance2->SetSpecularMap("Default_Specular.png");
-		materialInstance2->SetGlossMap("Default_Gloss.png");
-		materialInstance2->SetNormalMap("Default_Normals.png");
-		materialInstance2->SetEnvironmentMap(&environment);
+		//materialPBR.Init(OPNEW(OPeffect("Common/PBR.vert", "Common/PBR.frag")));
+		//materialPBR.AddParam("uCamPos", &camera.Camera.pos);
+		////renderer->SetMaterial(&materialPBR, 0);
 
-		model = (OPmodel*)OPCMAN.LoadGet("daggerpbr.opm");
-		model2 = (OPmodel*)OPCMAN.LoadGet("daggerpbr.opm");
-		model3 = (OPmodel*)OPCMAN.LoadGet("ground_block_2x2x2.fbx.opm");
+		//materialInstance = OPNEW(OPmaterialPBR(materialPBR));
+		//materialInstance->SetAlbedoMap("Dagger_Albedo.png");
+		//materialInstance->SetSpecularMap("Dagger_Specular.png");
+		//materialInstance->SetGlossMap("Dagger_Gloss.png");
+		//materialInstance->SetNormalMap("Dagger_Normals.png");
+		//materialInstance->SetEnvironmentMap(&environment);
 
-		//materialInst1 = &materialInstance;
-		//materialInst2 = &materialInstance2;
+		//materialInstance2 = OPNEW(OPmaterialPBR(materialPBR));
+		//materialInstance2->SetAlbedoMap("cemetery_floor.png");
+		//materialInstance2->SetSpecularMap("Default_Specular.png");
+		//materialInstance2->SetGlossMap("Default_Gloss.png");
+		//materialInstance2->SetNormalMap("Default_Normals.png");
+		//materialInstance2->SetEnvironmentMap(&environment);
 
-		model1Entity = scene.Add(model, materialInstance);
-		model2Entity = scene.Add(model2, materialInstance);
-		model3Entity = scene.Add(model3, materialInstance2);
+		//model = (OPmodel*)OPCMAN.LoadGet("daggerpbr.opm");
+		//model2 = (OPmodel*)OPCMAN.LoadGet("daggerpbr.opm");
+		//model3 = (OPmodel*)OPCMAN.LoadGet("ground_block_2x2x2.fbx.opm");
+
+		////materialInst1 = &materialInstance;
+		////materialInst2 = &materialInstance2;
+
+		//model1Entity = scene.Add(Mesh, materialInstance);
+		//model2Entity = scene.Add(model2, materialInstance);
+		//model3Entity = scene.Add(model3, materialInstance2);
 	}
 
 	OPint Update(OPtimer* time) {
 		camera.Update(time);
-		Rotation += time->Elapsed * 0.25f;
-		model1Entity->world.SetRotY(Rotation / 200.0f)->Scl(1.0f);
-		model2Entity->world.SetScl(1.0f)->Translate(-45, 0, 0);
-		model3Entity->world.SetScl(1.0f)->Translate(45, 0, 0);
+		//Rotation += time->Elapsed * 0.25f;
+		//model1Entity->world.SetRotY(Rotation / 200.0f)->Scl(1.0f);
+		//model2Entity->world.SetScl(1.0f)->Translate(-45, 0, 0);
+		//model3Entity->world.SetScl(1.0f)->Translate(45, 0, 0);
 		return false;
 	}
 
 	void Render(OPfloat delta) {
-		OPrenderClear(0.2f, 0.2f, 0.2f);
+		OPrenderClear(0.4f, 0.0f, 0.0f);
 		scene.Render(delta);
 		OPVISUALDEBUGINFO.Render(delta);
 		OPrenderPresent();

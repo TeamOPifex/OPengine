@@ -59,11 +59,12 @@ void OPrendererDeferredSSAOPass::Init(OPcam** cam, OPrendererDeferredGBufferPass
 
 	defaultSSAOBlurMaterial.Init(OPNEW(OPeffect("Common/ssao.vert", "Common/ssao_blur.frag")));
 
-	char buffer[64];
-	for (ui32 i = 0; i < 64; i++) {
-		sprintf(buffer, "samples[%d]", i);
-		OPRENDERER_ACTIVE->Effect.AddUniform(defaultSSAOMaterial.effect, buffer);
-	}
+	defaultSSAOBlurMaterial.AddParam("samples[0]", &ssaoKernel[0]);
+	//char buffer[64];
+	//for (ui32 i = 0; i < 64; i++) {
+	//	sprintf(buffer, "samples[%d]", i);
+	//	OPRENDERER_ACTIVE->Effect.AddUniform(defaultSSAOMaterial.effect, buffer);
+	//}
 }
 
 void OPrendererDeferredSSAOPass::Submit(OPrendererEntity* rendererEntity) {
@@ -100,11 +101,11 @@ void OPrendererDeferredSSAOPass::End() {
 	//OPeffectSet("uInvProjView", &invProjView);
 	//OPeffectSet("uView", &(*camera)->view);
 
-	char buffer[64];
-	for (ui32 i = 0; i < 64; i++) {
-		sprintf(buffer, "samples[%d]", i);
-		OPeffectSet(buffer, &ssaoKernel[i]);
-	}
+	//char buffer[64];
+	//for (ui32 i = 0; i < 64; i++) {
+	//	sprintf(buffer, "samples[%d]", i);
+	//	OPeffectSet(buffer, &ssaoKernel[i]);
+	//}
 
 	OPcam* cam = *(gbufferPass->camera);
 	OPRENDERER_ACTIVE->ShaderUniform.SetMat4(OPRENDERER_ACTIVE->OPEFFECT_ACTIVE->GetUniform("uProj"), &cam->proj);

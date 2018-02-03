@@ -2,6 +2,7 @@
 
 #include "./Core/include/OPtypes.h"
 #include "./Human/include/Platform/OPrendererDefines.h"
+#include "./Human/include/Rendering/Enums/OPmaterialParamType.h"
 
 #ifdef OPIFEX_OPENGL
 
@@ -28,5 +29,7 @@ bool OPcommonGLLog(const OPchar* function, const OPchar* file, i32 line);
 #else
 	#define OPGLFN(x) x
 #endif
+
+OPshaderUniformType::Enum UniformTypeToOPshaderUniformType(GLint type);
 
 #endif

@@ -9,11 +9,24 @@
 #include "./Human/include/Rendering/OPshaderUniform.h"
 #include "./Core/include/Assert.h"
 
-OPshaderUniform* OPshaderUniformGLInit(OPshaderUniform* shaderUniform, OPeffect* effect, const OPchar* name) {
+OPshaderUniform* OPshaderUniformGLInit(OPshaderUniform* shaderUniform, OPeffect* effect, ui32 ind) {
 	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)OPalloc(sizeof(OPshaderUniformGL));;
 	shaderUniform->internalPtr = shaderUniformGL;
 
 	OPeffectGL* effectGL = (OPeffectGL*)effect->internalPtr;
+
+
+	GLint i;
+	GLint size; // size of the variable
+	GLenum type; // type of the variable (float, vec3 or mat4, etc)
+
+	const GLsizei bufSize = 64; // maximum name length
+	GLchar name[bufSize]; // variable name in GLSL
+	GLsizei length; // name length
+	glGetActiveUniform(effectGL->Handle, (GLuint)ind, bufSize, &length, &size, &type, name);
+
+	OPlogChannel((ui32)OPlogLevel::VERBOSE, "SHADER", "   Uniform #%d Type: %u Name: %s", ind, type, name);
+
 
 
 	GLint result = glGetUniformLocation(effectGL->Handle, name);
@@ -23,13 +36,15 @@ OPshaderUniform* OPshaderUniformGLInit(OPshaderUniform* shaderUniform, OPeffect*
 
 	shaderUniform->Found = result > -1;
 	shaderUniform->name = OPstringCopy(name);
+	shaderUniform->count = size;
+	shaderUniform->type = UniformTypeToOPshaderUniformType(type);
 
 	return shaderUniform;
 }
 
-OPshaderUniform* OPshaderUniformGLCreate(OPeffect* effect, const OPchar* name) {
+OPshaderUniform* OPshaderUniformGLCreate(OPeffect* effect, ui32 loc) {
 	OPshaderUniform* shaderUniform = (OPshaderUniform*)OPalloc(sizeof(OPshaderUniform));
-	return OPshaderUniformGLInit(shaderUniform, effect, name);
+	return OPshaderUniformGLInit(shaderUniform, effect, loc);
 }
 
 void OPshaderUniformGLDestroy(OPshaderUniform* shaderUniform) {
@@ -172,11 +187,71 @@ void OPshaderUniformSetTextureCubevGL(OPshaderUniform* shaderUniform, ui32 count
 	ASSERT(true, "NOT SUPPORTED YET");
 }
 
+
+
+
+void OPshaderUniformSetDataGL(OPshaderUniform* shaderUniform, void* data, ui32 loc) {
+#ifdef _DEBUG
+	if (shaderUniform == NULL) return;
+#endif
+	OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
+
+	switch (shaderUniform->type) {
+		case OPshaderUniformType::BOOL: {
+			glUniform1i(shaderUniformGL->Handle, *(bool*)data);
+			break;
+		}
+		case OPshaderUniformType::FLOAT: {
+			glUniform1fv(shaderUniformGL->Handle, shaderUniform->count, (f32*)data);
+			break;
+		}
+		case OPshaderUniformType::INT: {
+			glUniform1iv(shaderUniformGL->Handle, shaderUniform->count, (i32*)data);
+			break;
+		}
+		case OPshaderUniformType::VECTOR2: {
+			glUniform2fv(shaderUniformGL->Handle, shaderUniform->count, (OPfloat*)data);
+			break;
+		}
+		case OPshaderUniformType::VECTOR3: {
+			glUniform3fv(shaderUniformGL->Handle, shaderUniform->count, (OPfloat*)data);
+			break;
+		}
+		case OPshaderUniformType::VECTOR4: {
+			glUniform4fv(shaderUniformGL->Handle, shaderUniform->count, (OPfloat*)data);
+			break;
+		}
+		case OPshaderUniformType::MATRIX2: {
+			glUniformMatrix2fv(shaderUniformGL->Handle, shaderUniform->count, GL_FALSE, (f32*)data);
+			break;
+		}
+		case OPshaderUniformType::MATRIX3: {
+			glUniformMatrix3fv(shaderUniformGL->Handle, shaderUniform->count, GL_FALSE, (f32*)data);
+			break;
+		}
+		case OPshaderUniformType::MATRIX4: {
+			glUniformMatrix4fv(shaderUniformGL->Handle, shaderUniform->count, GL_FALSE, (f32*)data);
+			break;
+		}
+		case OPshaderUniformType::TEXTURE: {	
+			OPtexture* val = (OPtexture*)data;
+			OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
+			val->Bind(loc);
+			glUniform1i(shaderUniformGL->Handle, loc);
+			break;
+		}
+		default:
+			OPlogErr("No type for %s", shaderUniform->name);
+			break;
+	}
+}
+
 void OPshaderUniformAPIGLInit(OPshaderUniformAPI* shaderUniform) {
 	shaderUniform->Create = OPshaderUniformGLCreate;
 	shaderUniform->Init = OPshaderUniformGLInit;
 	shaderUniform->Destroy = OPshaderUniformGLDestroy;
-
+	
+	shaderUniform->SetData = OPshaderUniformSetDataGL;
 	shaderUniform->SetBool = OPshaderUniformSetBoolGL;
 	shaderUniform->SetF = OPshaderUniformSetFGL;
 	shaderUniform->SetFv = OPshaderUniformSetFvGL;
