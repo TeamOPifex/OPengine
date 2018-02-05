@@ -131,5 +131,5 @@ void OPrendererDeferredSSAOPass::End() {
 	quadMesh->Bind();
 	OPrenderDrawBufferIndexed(0);
 	ssaoBlurBuffer.Unbind();
-	OPlogInfo("================ SSAO PASS");
+	//OPlogInfo("================ SSAO PASS");
 }

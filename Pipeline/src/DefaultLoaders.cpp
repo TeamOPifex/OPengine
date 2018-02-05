@@ -3,6 +3,7 @@
 #include "./Pipeline/include/Loaders/OPloaderTGA.h"
 #include "./Pipeline/include/Loaders/OPloaderBMP.h"
 #include "./Pipeline/include/Loaders/OPloaderPNG.h"
+#include "./Pipeline/include/Loaders/OPloaderHDR.h"
 #include "./Pipeline/include/Loaders/OPloaderOPF.h"
 #include "./Pipeline/include/Loaders/OPloaderTexture.h"
 #include "./Human/include/Systems/OPaudioSystem.h"
@@ -24,6 +25,7 @@ void OPloadersAddDefault() {
 	OPCMAN.AddLoader(&OPASSETLOADER_TEXTURE_BMP);
 	OPCMAN.AddLoader(&OPASSETLOADER_TEXTURE_PSD);
 	OPCMAN.AddLoader(&OPASSETLOADER_TEXTURE_GIF);
+	OPCMAN.AddLoader(&OPASSETLOADER_HDR);
 	OPCMAN.AddLoader(&OPASSETLOADER_VERT);
 	OPCMAN.AddLoader(&OPASSETLOADER_FRAG);
 	OPCMAN.AddLoader(&OPASSETLOADER_OPM);

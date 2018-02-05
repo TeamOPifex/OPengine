@@ -32,6 +32,7 @@ i8 OPrendererInitGL(OPwindow* window) {
 	glEnable(GL_MULTISAMPLE_ARB);
 	glEnable(GL_BLEND);
 	glEnable(GL_MULTISAMPLE);
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
 	if (!OPglewInit()) {
 		OPlogErr("Failed to initialize GLEW");
@@ -62,6 +63,25 @@ void OPrendererPresentGL() {
 	OPwindowGL* windowGL = (OPwindowGL*)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->internalPtr;
 
 	OPGLFN(glfwSwapBuffers(windowGL->Handle));
+}
+
+ui32 OPdepthFunctionToGL(OPdepthFunction::Enum depthFunction) {
+	switch (depthFunction)
+	{
+		case OPdepthFunction::LESS: return GL_LESS;
+		case OPdepthFunction::NEVER: return GL_NEVER;
+		case OPdepthFunction::EQUAL: return GL_EQUAL;
+		case OPdepthFunction::LEQUAL: return GL_LEQUAL;
+		case OPdepthFunction::GREATER: return GL_GREATER;
+		case OPdepthFunction::NOTEQUAL: return GL_NOTEQUAL;
+		case OPdepthFunction::GEQUAL: return GL_GEQUAL;
+		case OPdepthFunction::ALWAYS: return GL_ALWAYS;
+	}
+	return 0;
+}
+
+void OPrendererSetDepthFuncGL(OPdepthFunction::Enum fn) {
+	OPGLFN(glDepthFunc(OPdepthFunctionToGL(fn)));
 }
 
 void OPrendererSetDepthTestingGL(bool state) {
@@ -189,6 +209,7 @@ OPrenderAPI* OPrendererGL() {
 	OPRENDERERGL._ClearColor = OPrendererClearColorGL;
 	OPRENDERERGL.ClearDepth = OPrendererClearDepthGL;
 	OPRENDERERGL.Present = OPrendererPresentGL;
+	OPRENDERERGL.SetDepthFunc = OPrendererSetDepthFuncGL;
 	OPRENDERERGL.SetDepthTesting = OPrendererSetDepthTestingGL;
 	OPRENDERERGL.SetDepthWrite = OPrendererSetDepthWriteGL;
 	OPRENDERERGL.SetCull = OPrendererSetCullGL;

@@ -27,7 +27,7 @@ struct OPcamFreeFlight {
 	void Destroy();
 
 	inline void Init() {
-		Init(5.0f, 1.0f, OPvec3Create(0, 0, -5));
+		Init(1.0f, 1.0f, OPvec3Create(0, 5, 5));
 	}
 
 	inline void Init(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position) {

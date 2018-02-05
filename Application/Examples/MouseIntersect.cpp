@@ -46,8 +46,8 @@ class MouseIntersectExample : public OPgameState {
 		// Mesh = OPmeshBuilderGen(builder);
 		// OPmeshBuilderDestroy(builder);
 
-		Mesh = OPcubeCreate(OPvec3Create(1, 0, 0));
-		Mesh2 = OPcubeCreate(OPvec3Create(0.8f, 0.8f, 0.8f));
+		Mesh = OPcubeCreate();
+		Mesh2 = OPcubeCreate();
 
 		// The effect that will be used to render the mesh
 		// The renderGenEffect is a simplified utility method

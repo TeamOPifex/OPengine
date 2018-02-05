@@ -11,7 +11,7 @@
 
 void OPrendererDeferred::Init(OPcam** cam, OPcam** shadowCam) {
 
-	quadMesh = OPquadCreate(1.0f, 1.0f, OPvec2(0, 1), OPvec2(1, 0));
+	quadMesh = OPquadCreate(1.0f, 1.0f, OPvec2(0, 0), OPvec2(1, 1));
 
 	shadowPass.Init(shadowCam);
 	gbufferPass.Init(cam, shadowCam, &shadowPass);
@@ -95,7 +95,7 @@ void OPrendererDeferred::End() {
 		combinePass.Begin();
 		combinePass.End();
 	}
-	OPlogInfo("================ FULL DEFERRED PASS");
+	//OPlogInfo("================ FULL DEFERRED PASS");
 }
 
 void OPrendererDeferred::RenderDebug() {

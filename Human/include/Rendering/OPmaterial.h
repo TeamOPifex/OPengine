@@ -60,6 +60,7 @@ public:
 	virtual void AddParam(const OPchar* ubo, const OPchar* name, void* data, ui32 loc);
 	virtual void AddParam(OPskeleton* skeleton);
 	ui32 NextTextureSlot();
+	ui32 TextureOffset();
 		
 	virtual void SetWorld(OPmat4* world);
 	virtual void SetCamera(OPcam* camera);
@@ -72,6 +73,14 @@ public:
 	virtual OPmaterial* CreateInstances(OPrendererEntity* model);
 	static void SetMeta(OPrendererEntity* rendererEntity);
 
+
+	inline void SetMap(const OPchar* paramName, OPtexture* texture) {
+		AddParam(paramName, texture, 0);
+	}
+
+	inline void SetMap(const OPchar* paramName, const OPchar* texture) {
+		SetMap(paramName, (OPtexture*)OPCMAN.LoadGet(texture));
+	}
 
 	inline void AddParam(const OPchar* name, void* data) {
 		AddParam(NULL, name, data, 0);

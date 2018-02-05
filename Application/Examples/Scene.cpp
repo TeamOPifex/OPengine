@@ -19,7 +19,7 @@ class SceneExample : public OPgameState {
 	OPrendererEntity* model2Entity = NULL;
 	OPrendererEntity* model3Entity = NULL;
 	OPcamFreeFlight camera;
-	OPmaterialPBR materialPBR;
+	OPmaterialPBROLD materialPBR;
 	OPtextureCube environment;
 	OPmaterialPBR* materialInstance;
 	OPmaterialPBR* materialInstance2;

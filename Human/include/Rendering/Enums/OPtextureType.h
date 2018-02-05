@@ -4,6 +4,8 @@ struct OPtextureType
 {
 	enum Enum {
 		BYTE,
-		FLOAT
+		UBYTE,
+		FLOAT,
+		HALF_FLOAT
 	};
 };

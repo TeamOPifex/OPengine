@@ -86,7 +86,7 @@ void OPrendererDeferredLightPass::End() {
 	//}
 
 	lightBuffer.Unbind();
-	OPlogInfo("================ LIGHT PASS");
+	//OPlogInfo("================ LIGHT PASS");
 
 	
 }

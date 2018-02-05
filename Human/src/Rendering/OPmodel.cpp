@@ -28,7 +28,9 @@ void OPmodel::Draw(OPmat4* world, OPmaterial* material, OPcam* cam) {
 void OPmodel::Bind() {
 	vertexArray.Bind();
 	vertexBuffer.Bind();
-	indexBuffer.Bind();
+	if (indexed) {
+		indexBuffer.Bind();
+	}
 }
 
 void OPmodel::Build(ui32 vertexCount, ui32 indexCount, OPindexSize::Enum indexSize, void* vertices, void* indices) {
@@ -43,6 +45,19 @@ void OPmodel::Build(ui32 vertexCount, ui32 indexCount, OPindexSize::Enum indexSi
 	meshes[0].offset = 0;
 	meshes[0].materialDesc = NULL;
 }
+
+void OPmodel::Build(ui32 vertexCount, void* vertices) {
+	indexed = false;
+	vertexArray.Bind();
+#ifdef _DEBUG
+	vertexArray.attachedMeshName = name;
+#endif
+	vertexBuffer.SetData(vertexLayout.stride, vertexCount, vertices);
+	this->vertexLayout = vertexLayout;
+	meshes[0].offset = 0;
+	meshes[0].materialDesc = NULL;
+}
+
 
 void OPmodel::Destroy() {
 	indexBuffer.Destroy();

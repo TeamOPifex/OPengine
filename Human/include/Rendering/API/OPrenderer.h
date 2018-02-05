@@ -21,6 +21,7 @@ typedef struct OPrenderAPI OPrenderAPI;
 #include "./Human/include/Rendering/API/OPwindowAPI.h"
 #include "./Human/include/Rendering/Enums/OPblendFunction.h"
 #include "./Human/include/Rendering/Enums/OPcullFace.h"
+#include "./Human/include/Rendering/Enums/OPdepthFunction.h"
 #include "./Math/include/OPvec4.h"
 
 struct OPrenderAPI {
@@ -29,6 +30,7 @@ struct OPrenderAPI {
 	void(*_ClearColor)(OPvec4 color) = 0;
 	void(*ClearDepth)() = 0;
 	void(*Present)() = 0;
+	void(*SetDepthFunc)(OPdepthFunction::Enum fn) = 0;
 	void(*SetDepthTesting)(bool state) = 0;
 	void(*SetDepthWrite)(bool state) = 0;
 	void(*SetCull)(bool state) = 0;

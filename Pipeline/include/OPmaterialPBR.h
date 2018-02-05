@@ -4,7 +4,7 @@ class OPmaterialPBR;
 
 #include "./Human/include/Rendering/OPmaterial.h"
 
-class OPmaterialPBR : public OPmaterial {
+class OPmaterialPBROLD : public OPmaterial {
 public:
 	OPeffect* internalEffect = NULL;
 	OPvec4 lightColor;
@@ -20,20 +20,20 @@ public:
 	OPfloat glossColor;
 	OPvec3 normalColor;
 
-	OPmaterialPBR() : OPmaterial() {  }
-	OPmaterialPBR(OPeffect* effect) : OPmaterial(effect) {
+	OPmaterialPBROLD() : OPmaterial() {  }
+	OPmaterialPBROLD(OPeffect* effect) : OPmaterial(effect) {
 		Init(effect);
 		rootMaterial->AddParam("uPreintegratedFG", (OPtexture*)OPCMAN.LoadGet("PreintegratedFG.png"), 6);
 	}
 
-	OPmaterialPBR* Init(OPeffect* effect);
-	OPmaterialPBR* Init(OPmaterial* material);
+	OPmaterialPBROLD* Init(OPeffect* effect);
+	OPmaterialPBROLD* Init(OPmaterial* material);
 
 	inline void SetCameraPos(OPcam* camera) {
 		rootMaterial->AddParam("uCamPos", &camera->pos);
 	}
 
-	inline OPmaterialPBR* CreateInstances(OPmodel* model, bool materialPerMesh) {
+	inline OPmaterialPBROLD* CreateInstances(OPmodel* model, bool materialPerMesh) {
 		// TODO: (garrett) fill in
 		return NULL;
 	}

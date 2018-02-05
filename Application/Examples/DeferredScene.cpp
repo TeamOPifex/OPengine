@@ -110,7 +110,7 @@ class DeferredSceneExample : public OPgameState {
 		{
 			TIMED_BLOCK
 			scene.Render(delta);
-			OPlogInfo("================ Full scene.Render");
+			//OPlogInfo("================ Full scene.Render");
 		}
 
 		if (state == 1) {

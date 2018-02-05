@@ -48,7 +48,7 @@ void OPrendererDeferredGBufferPass::End() {
 	renderBucket.Sort();
 	renderBucket.Flush(false);
 	gBuffer.Unbind();
-	OPlogInfo("================ GBUFFER PASS");
+	//OPlogInfo("================ GBUFFER PASS");
 }
 
 void OPrendererDeferredGBufferPass::SetCamera(OPcam** cam) {

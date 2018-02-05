@@ -15,6 +15,7 @@ public:
 	OPmodel* quadMesh;
 	OPmaterial* defaultCombineMaterial = NULL;
 	bool useSSAO = true;
+	OPvec2 screenSize;
 
 	OPrendererDeferredCombinePass() { }
 	void Init(OPcam** cam,

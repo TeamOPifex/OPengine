@@ -8,7 +8,7 @@ struct OPvertexColorNormal {
 	OPvec2 UV;
 };
 
-OPmodel* OPcubeCreate(OPvec3 color) {
+OPmodel* OPcubeCreate() {
 	OPmeshBuilder builder;
 	ui16 vertexSize = sizeof(OPvertexColorNormal);
 	OPvertexColorNormal verts[4];
@@ -26,56 +26,58 @@ OPmodel* OPcubeCreate(OPvec3 color) {
 	vertexLayoutBuilder.Init()->Add(OPattributes::POSITION)->Add(OPattributes::COLOR)->Add(OPattributes::NORMAL)->Add(OPattributes::UV);
 	builder.Init(vertexLayoutBuilder.Build());
 
+	f32 size = 1.0;
+
 	{ // Back
-		verts[0].Position = OPvec3Create(0.5, 0.5, -0.5);
-		verts[1].Position = OPvec3Create(-0.5, 0.5, -0.5);
-		verts[2].Position = OPvec3Create(-0.5, -0.5, -0.5);
-		verts[3].Position = OPvec3Create(0.5, -0.5, -0.5);
+		verts[0].Position = OPvec3Create(size, size, -size);
+		verts[1].Position = OPvec3Create(-size, size, -size);
+		verts[2].Position = OPvec3Create(-size, -size, -size);
+		verts[3].Position = OPvec3Create(size, -size, -size);
 		for (ui32 i = 0; i < 4; i++) verts[i].Normal = OPvec3(0, 0, -1);
 		builder.Add(&verts[0], &verts[1], &verts[2], &verts[3]);
 	}
 
 	{ // Front
-		verts[0].Position = OPvec3Create(-0.5, 0.5, 0.5);
-		verts[1].Position = OPvec3Create(0.5, 0.5, 0.5);
-		verts[2].Position = OPvec3Create(0.5, -0.5, 0.5);
-		verts[3].Position = OPvec3Create(-0.5, -0.5, 0.5);
+		verts[0].Position = OPvec3Create(-size, size, size);
+		verts[1].Position = OPvec3Create(size, size, size);
+		verts[2].Position = OPvec3Create(size, -size, size);
+		verts[3].Position = OPvec3Create(-size, -size, size);
 		for (ui32 i = 0; i < 4; i++) verts[i].Normal = OPvec3(0, 0, 1);
 		builder.Add(&verts[0], &verts[1], &verts[2], &verts[3]);
 	}
 
 	{ // Top
-		verts[0].Position = OPvec3Create(-0.5, 0.5, 0.5);
-		verts[1].Position = OPvec3Create(0.5, 0.5, 0.5);
-		verts[2].Position = OPvec3Create(0.5, 0.5, -0.5);
-		verts[3].Position = OPvec3Create(-0.5, 0.5, -0.5);
+		verts[0].Position = OPvec3Create(-size, size, size);
+		verts[1].Position = OPvec3Create(size, size, size);
+		verts[2].Position = OPvec3Create(size, size, -size);
+		verts[3].Position = OPvec3Create(-size, size, -size);
 		for (ui32 i = 0; i < 4; i++) verts[i].Normal = OPvec3(0, 1, 0);
 		builder.Add(&verts[0], &verts[1], &verts[2], &verts[3]);
 	}
 
 	{ // Bottom
-		verts[0].Position = OPvec3Create(0.5, -0.5, -0.5);
-		verts[1].Position = OPvec3Create(-0.5, -0.5, -0.5);
-		verts[2].Position = OPvec3Create(-0.5, -0.5, 0.5);
-		verts[3].Position = OPvec3Create(0.5, -0.5, 0.5);
+		verts[0].Position = OPvec3Create(size, -size, -size);
+		verts[1].Position = OPvec3Create(-size, -size, -size);
+		verts[2].Position = OPvec3Create(-size, -size, size);
+		verts[3].Position = OPvec3Create(size, -size, size);
 		for (ui32 i = 0; i < 4; i++) verts[i].Normal = OPvec3(0, -1, 0);
 		builder.Add(&verts[0], &verts[1], &verts[2], &verts[3]);
 	}
 
 	{ // Left
-		verts[0].Position = OPvec3Create(-0.5, 0.5, -0.5);
-		verts[1].Position = OPvec3Create(-0.5, 0.5, 0.5);
-		verts[2].Position = OPvec3Create(-0.5, -0.5, 0.5);
-		verts[3].Position = OPvec3Create(-0.5, -0.5, -0.5);
+		verts[0].Position = OPvec3Create(-size, size, -size);
+		verts[1].Position = OPvec3Create(-size, size, size);
+		verts[2].Position = OPvec3Create(-size, -size, size);
+		verts[3].Position = OPvec3Create(-size, -size, -size);
 		for (ui32 i = 0; i < 4; i++) verts[i].Normal = OPvec3(-1, 0, 0);
 		builder.Add(&verts[0], &verts[1], &verts[2], &verts[3]);
 	}
 
 	{ // Right
-		verts[0].Position = OPvec3Create(0.5, 0.5, 0.5);
-		verts[1].Position = OPvec3Create(0.5, 0.5, -0.5);
-		verts[2].Position = OPvec3Create(0.5, -0.5, -0.5);
-		verts[3].Position = OPvec3Create(0.5, -0.5, 0.5);
+		verts[0].Position = OPvec3Create(size, size, size);
+		verts[1].Position = OPvec3Create(size, size, -size);
+		verts[2].Position = OPvec3Create(size, -size, -size);
+		verts[3].Position = OPvec3Create(size, -size, size);
 		for (ui32 i = 0; i < 4; i++) verts[i].Normal = OPvec3(1, 0, 0);
 		builder.Add(&verts[0], &verts[1], &verts[2], &verts[3]);
 	}

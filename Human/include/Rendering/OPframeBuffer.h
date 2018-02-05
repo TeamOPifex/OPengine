@@ -17,9 +17,10 @@ struct OPframeBuffer {
 	OPtexture* texture;
 	ui32 count;
 	OPtexture depthTexture;
+	OPtextureDesc desc;
 
-	inline void Init(OPtextureDesc textureDesc) {
-		OPRENDERER_ACTIVE->FrameBuffer.Init(this, textureDesc);
+	inline void Init(OPtextureDesc textureDesc, bool depth = true) {
+		OPRENDERER_ACTIVE->FrameBuffer.Init(this, textureDesc, depth);
 	}
 
 	inline void Init(OPtextureDesc textureDesc, OPtextureDesc depthDesc) {
@@ -38,8 +39,12 @@ struct OPframeBuffer {
 		OPRENDERER_ACTIVE->FrameBuffer.Init(this, textureDesc, count, depthTexture);
 	}
 
-	inline void Bind() {
-		OPRENDERER_ACTIVE->FrameBuffer.Bind(this);
+	inline void SetAttachment(ui32 ind, OPtexture* texture) {
+		OPRENDERER_ACTIVE->FrameBuffer.SetAttachment(this, ind, texture);
+	}
+
+	inline void Bind(ui32 mip = 0) {
+		OPRENDERER_ACTIVE->FrameBuffer.Bind(this, mip);
 	}
 
 	inline void Bind(OPframeBufferMode::Enum mode) {

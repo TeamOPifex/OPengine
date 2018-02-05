@@ -87,7 +87,7 @@ OPmat4 OPmat4LookAt(OPvec3 eye, OPvec3 center, OPvec3 up) {
 }
 
 OPmat4 OPmat4Perspective(OPfloat fovy, OPfloat aspect, OPfloat nearVal, OPfloat farVal) {
-	OPmat4 m = OPMAT4_IDENTITY;
+	OPmat4 m = OPMAT4_ZERO;
 
 	OPfloat tanHalfFovy = OPtan(fovy / 2.0f);
 	m[0][0] = 1.0f / ( aspect * tanHalfFovy);
@@ -217,10 +217,10 @@ OPmat4 OPmat4From(OPquat a) {
 void OPmat4Log(const OPchar* msg, OPmat4 m) {
 	OPlogInfo("%s:\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f\n\t%f,\t%f,\t%f,\t%f",
 		msg,
-		m[0][0], m[1][0], m[2][0], m[3][0],
-		m[0][1], m[1][1], m[2][1], m[3][1],
-		m[0][2], m[1][2], m[2][2], m[3][2],
-		m[0][3], m[1][3], m[2][3], m[3][3]);
+		m[0][0], m[0][1], m[0][2], m[0][3],
+		m[1][0], m[1][1], m[1][2], m[1][3],
+		m[2][0], m[2][1], m[2][2], m[2][3],
+		m[3][0], m[3][1], m[3][2], m[3][3]);
 }
 
 OPmat4 OPmat4Read(OPstream* str) {

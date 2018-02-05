@@ -91,4 +91,58 @@ OPshaderUniformType::Enum UniformTypeToOPshaderUniformType(GLint type)
 	return OPshaderUniformType::UNKNOWN;
 }
 
+ui32 OPtextureWrapToGL(OPtextureWrap::Enum textureWrap) {
+	switch (textureWrap) {
+	case OPtextureWrap::CLAMP: return GL_CLAMP;
+	case OPtextureWrap::CLAMP_TO_BORDER: return GL_CLAMP_TO_BORDER;
+	case OPtextureWrap::CLAMP_TO_EDGE: return GL_CLAMP_TO_EDGE;
+	case OPtextureWrap::REPEAT: return GL_REPEAT;
+	case OPtextureWrap::MIRRORED_REPEAT: return GL_MIRRORED_REPEAT;
+	}
+	return 0;
+}
+
+ui32 OPtextureFormatToGL(OPtextureFormat::Enum textureFormat) {
+	switch (textureFormat)
+	{
+	case OPtextureFormat::RGBA: return GL_RGBA;
+	case OPtextureFormat::RGBA8: return GL_RGBA8;
+	case OPtextureFormat::RGB: return GL_RGB;
+	case OPtextureFormat::BGRA: return GL_BGRA;
+	case OPtextureFormat::BGR: return GL_BGR;
+	case OPtextureFormat::LUMINANCE: return GL_LUMINANCE;
+	case OPtextureFormat::LUMINANCE_ALPHA: return GL_LUMINANCE_ALPHA;
+	case OPtextureFormat::RGB16F: return GL_RGB16F;
+	case OPtextureFormat::RGB32F: return GL_RGB32F;
+	case OPtextureFormat::RGBA16F: return GL_RGBA16F;
+	case OPtextureFormat::RGBA32F: return GL_RGBA32F;
+	case OPtextureFormat::DEPTH: return GL_DEPTH_COMPONENT;
+	case OPtextureFormat::DEPTH16F: return GL_DEPTH_COMPONENT16;
+	case OPtextureFormat::DEPTH32F: return GL_DEPTH_COMPONENT32F;
+	case OPtextureFormat::RED: return GL_RED;
+	case OPtextureFormat::RG: return GL_RG;
+	case OPtextureFormat::RG16F: return GL_RG16F;
+	}
+	return 0;
+}
+
+ui32 OPtextureFilterToGL(OPtextureFilter::Enum textureFilter) {
+	switch (textureFilter) {
+	case OPtextureFilter::LINEAR: return GL_LINEAR;
+	case OPtextureFilter::NEAREST: return GL_NEAREST;
+	case OPtextureFilter::LINEAR_MIPMAP: return GL_LINEAR_MIPMAP_LINEAR;
+	}
+	return 0;
+}
+
+ui32 OPtextureTypeToGL(OPtextureType::Enum textureType) {
+	switch (textureType) {
+	case OPtextureType::BYTE: return GL_UNSIGNED_BYTE;
+	case OPtextureType::UBYTE: return GL_UNSIGNED_BYTE;
+	case OPtextureType::FLOAT: return GL_FLOAT;
+	case OPtextureType::HALF_FLOAT: return GL_HALF_FLOAT;
+	}
+	return 0;
+}
+
 #endif

@@ -14,10 +14,10 @@ class SceneShadowsExample : public OPgameState {
 	OPmodel* model;
 	OPrendererEntity* model1Entity;
 	OPcamFreeFlight camera;
-	OPmaterialPBR materialPBR;
+	OPmaterialPBROLD materialPBR;
 	OPtextureCube environment;
-	OPmaterialPBR* materialInstance;
-	OPmaterialPBR* materialInstance2;
+	OPmaterialPBROLD* materialInstance;
+	OPmaterialPBROLD* materialInstance2;
 
 	OPmaterial* materialInst1;
 	OPmaterial* materialInst2;

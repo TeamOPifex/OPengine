@@ -1,7 +1,7 @@
 #include "./Pipeline/include/OPmaterialPBR.h"
 #include "./Human/include/Rendering/OPmodel.h"
 
-OPmaterialPBR* OPmaterialPBR::Init(OPeffect* effect) {
+OPmaterialPBROLD* OPmaterialPBROLD::Init(OPeffect* effect) {
 	OPmaterial::Init(effect);
 
 	lightColor = OPvec4(1, 1, 1, 1);
@@ -15,7 +15,7 @@ OPmaterialPBR* OPmaterialPBR::Init(OPeffect* effect) {
 	return this;
 }
 
-OPmaterialPBR* OPmaterialPBR::Init(OPmaterial* material) {
+OPmaterialPBROLD* OPmaterialPBROLD::Init(OPmaterial* material) {
 	rootMaterial = material;
 
 	lightColor = OPvec4(1, 1, 1, 1);

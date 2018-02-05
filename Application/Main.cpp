@@ -20,6 +20,7 @@
 #include "OPspirv.h"
 #endif
 
+
 //////////////////////////////////////
 // Application Methods
 //////////////////////////////////////
@@ -68,7 +69,7 @@ void ApplicationInit() {
 	OPlogErr("OPrenderSetup Finished");
 	OPwindowSystemInit();
 	OPlogErr("OPwindowSystemInit Finished");
-	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, 1280, 720));
+	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, 1920, 1080));
 	OPlogErr("mainWindow.Init Finished");
 	OPrenderInit(&mainWindow);
 	OPlogErr("OPrenderInit Finished");
@@ -82,6 +83,7 @@ void ApplicationInit() {
 #endif
 
 	OPCMAN.LoadGet("cemetery.png");
+	//OPCMAN.LoadGet("Factory_Catwalk_Env.hdr");
 
 	OPVISUALDEBUGINFO.Init();
 	

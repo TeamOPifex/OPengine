@@ -44,6 +44,12 @@ struct OPstream {
 	*          no allocation performed.
 	*/
 	ui8* Read(OPuint size);
+	void ReadInto(ui8* buffer, OPuint size);
+	ui8* Peek(OPuint size);
+
+	inline bool EndOfStream() {
+		return _pointer >= Length;
+	}
 
 	i8 I8();
 	i16 I16();
@@ -52,6 +58,15 @@ struct OPstream {
 	ui16 UI16();
 	ui32 UI32();
 	f32 F32();
+
+
+	i8 I8Peek();
+	i16 I16Peek();
+	i32 I32Peek();
+	ui8 UI8Peek();
+	ui16 UI16Peek();
+	ui32 UI32Peek();
+	f32 F32Peek();
 
 	/* Reads the first string it finds in the stream
 	* Defined by a separated space.
@@ -104,6 +119,7 @@ struct OPstream {
 	*	@return Returns 0 if not in bounds and 1 if Seeking was successful
 	*/
 	OPuint Seek(OPuint byte);
+	OPuint Offset(OPuint byte);
 
 	inline void Reset() {
 		Seek(0);

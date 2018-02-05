@@ -233,9 +233,14 @@ void OPshaderUniformSetDataGL(OPshaderUniform* shaderUniform, void* data, ui32 l
 			glUniformMatrix4fv(shaderUniformGL->Handle, shaderUniform->count, GL_FALSE, (f32*)data);
 			break;
 		}
-		case OPshaderUniformType::TEXTURE: {	
+		case OPshaderUniformType::TEXTURE: {
 			OPtexture* val = (OPtexture*)data;
-			OPshaderUniformGL* shaderUniformGL = (OPshaderUniformGL*)shaderUniform->internalPtr;
+			val->Bind(loc);
+			glUniform1i(shaderUniformGL->Handle, loc);
+			break;
+		}
+		case OPshaderUniformType::TEXTURE_CUBE: {
+			OPtextureCube* val = (OPtextureCube*)data;
 			val->Bind(loc);
 			glUniform1i(shaderUniformGL->Handle, loc);
 			break;

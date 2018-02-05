@@ -6,6 +6,7 @@ typedef struct OPtexture OPtexture;
 #include "./Human/include/Rendering/OPtextureDesc.h"
 #include "./Human/include/Rendering/OPrender.h"
 #include "./Math/include/OPvec4.h"
+#include "./Data/include/OPcman.h"
 
 struct OPtexture {
 	void* internalPtr;
@@ -17,6 +18,10 @@ struct OPtexture {
 
 	inline void SetData(const void* pixelData) {
 		OPRENDERER_ACTIVE->Texture.SetData(this, pixelData);
+	}
+
+	inline void Init(OPtextureDesc desc) {
+		OPRENDERER_ACTIVE->Texture.Init(this, desc);
 	}
 
 	inline void Bind(ui32 slot) {
@@ -36,6 +41,12 @@ struct OPtexture {
 		}
 #endif
 	}
+
+	inline static OPtexture* Load(const OPchar* asset) {
+		return (OPtexture*)OPCMAN.LoadGet(asset);
+	}
+
+	static void GenerateBRDF(OPtexture* texture, ui32 size);
 };
 
 OPtexture* OPtextureLoad(const OPchar* asset);

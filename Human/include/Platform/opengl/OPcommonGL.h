@@ -3,6 +3,10 @@
 #include "./Core/include/OPtypes.h"
 #include "./Human/include/Platform/OPrendererDefines.h"
 #include "./Human/include/Rendering/Enums/OPmaterialParamType.h"
+#include "./Human/include/Rendering/Enums/OPtextureWrap.h"
+#include "./Human/include/Rendering/Enums/OPtextureFilter.h"
+#include "./Human/include/Rendering/Enums/OPtextureFormat.h"
+#include "./Human/include/Rendering/Enums/OPtextureType.h"
 
 #ifdef OPIFEX_OPENGL
 
@@ -31,5 +35,9 @@ bool OPcommonGLLog(const OPchar* function, const OPchar* file, i32 line);
 #endif
 
 OPshaderUniformType::Enum UniformTypeToOPshaderUniformType(GLint type);
+ui32 OPtextureWrapToGL(OPtextureWrap::Enum textureWrap);
+ui32 OPtextureFormatToGL(OPtextureFormat::Enum textureFormat);
+ui32 OPtextureFilterToGL(OPtextureFilter::Enum textureFilter);
+ui32 OPtextureTypeToGL(OPtextureType::Enum textureType);
 
 #endif

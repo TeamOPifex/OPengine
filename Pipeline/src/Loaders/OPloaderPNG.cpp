@@ -2,11 +2,49 @@
 #include "./Human/include/Utilities/OPimagePNG.h"
 #include "./Core/include/Assert.h"
 
+
+#include "./Pipeline/include/Loaders/stb_image.h"
+
 i32 OPimagePNGLoad(OPstream* str, OPtexture** image) {
 	if (str == NULL) {
 		OPlogErr("Image not found.");
 		return NULL;
 	}
+
+
+	int width, height, nrComponents;
+	unsigned char *data = stbi_load_from_memory(str->Data, str->Length, &width, &height, &nrComponents, 0);
+	if (data == NULL) {
+		OPlogErr("Image failed to load.");
+		return NULL;
+	}
+
+
+	OPtexture* tex = OPNEW(OPtexture());
+
+	OPtextureDesc desc;
+	desc.width = width;
+	desc.height = height;
+
+	if (nrComponents == 1) {
+		desc.format = desc.internalFormat = OPtextureFormat::RED;
+	}
+	else if (nrComponents == 3) {
+		desc.format = desc.internalFormat = OPtextureFormat::RGB;
+	}
+	else if (nrComponents == 4) {
+		desc.format = desc.internalFormat =OPtextureFormat::RGBA;
+	}
+	desc.textureType = OPtextureType::BYTE;
+
+	OPRENDERER_ACTIVE->Texture.Init(tex, desc, data);
+
+	stbi_image_free(data);
+
+	*image = tex;
+
+
+
 	return OPimagePNGLoadStream(str, 0, image);
 }
 

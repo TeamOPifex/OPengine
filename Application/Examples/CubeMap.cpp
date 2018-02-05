@@ -29,7 +29,7 @@ class CubeMapExample : public OPgameState {
 		faces2[4] = OPimagePNGLoadData("Textures/cubeTex.png");
 		faces2[5] = OPimagePNGLoadData("Textures/cubeTex.png");
 
-		Mesh = OPcubeCreate(OPvec3Create(1, 0, 0));
+		Mesh = OPcubeCreate();
 		SphericalCube.Init(faces2);
 
 		Effect.Init("CubeMap.vert", "CubeMap.frag");

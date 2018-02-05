@@ -32,6 +32,10 @@ enum struct OPtextureCubeFace {
 struct OPtextureCube {
 	void* internalPtr;
 
+	inline OPtextureCube* Init(OPtextureDesc desc) {
+		return OPRENDERER_ACTIVE->TextureCube.Init(this, desc);
+	}
+
 	inline OPtextureCube* Init(OPimage* images) {
 		return OPRENDERER_ACTIVE->TextureCube.Init(this, images);
 	}
@@ -52,9 +56,29 @@ struct OPtextureCube {
 		OPRENDERER_ACTIVE->TextureCube.Bind(this, slot);
 	}
 
+	inline void Bind(ui32 side, ui32 slot) {
+		OPRENDERER_ACTIVE->TextureCube.BindSide(this, side, 0, slot);
+	}
+
+	inline void Bind(ui32 side, ui32 mip, ui32 slot) {
+		OPRENDERER_ACTIVE->TextureCube.BindSide(this, side, mip, slot);
+	}
+
+	inline void GenMipMaps() {
+		OPRENDERER_ACTIVE->TextureCube.GenMipMaps(this);
+	}
+
 	inline void Destroy() {
 		OPRENDERER_ACTIVE->TextureCube.Destroy(this);
 	}
+
+	static void Process(OPtextureCube* textureCube, OPeffect* effect, OPtexture* texture, const OPchar* param, ui32 size);
+	static void Process(OPtextureCube* textureCube, OPeffect* effect, OPtextureCube* texture, const OPchar* param, ui32 size);
+	static void ProcessRoughness(OPtextureCube* textureCube, OPeffect* effect, OPtextureCube* texture, const OPchar* param, ui32 size);
+	static void FromEquirectangular(OPtextureCube* textureCube, OPtexture* texture, ui32 size);
+	static void Convolute(OPtextureCube* textureCube, OPtextureCube* texture, ui32 size);
+	static void RoughnessMap(OPtextureCube* textureCube, OPtextureCube* texture, ui32 size);
+
 };
 
 //-----------------------------------------------------------------------------

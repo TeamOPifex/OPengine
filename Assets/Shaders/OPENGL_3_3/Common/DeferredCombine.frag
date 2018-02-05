@@ -11,13 +11,14 @@ uniform sampler2D uSSAOBuffer;
 
 //uniform vec3 viewPos;
 uniform bool uUseSSAO;
+uniform vec2 uScreenSize;
 
 uniform vec3 uLightPos;
 
 void main()
 {             
 
-	vec2 tex_coord = gl_FragCoord.xy/vec2(1920, 1080);
+	vec2 tex_coord = gl_FragCoord.xy / uScreenSize;//vec2(1280, 720);
 
     // Retrieve data from gbuffer
     vec3 FragPos = texture(uGbufferPosition, tex_coord).rgb;
@@ -49,7 +50,7 @@ void main()
    // else if(draw_mode == 3)
     //    FragColor = vec4(Normal, 1.0);
     //else if(draw_mode == 4)
-    //    FragColor = vec4(Diffuse, 1.0);
+       // FragColor = vec4(Diffuse, 1.0);
     //else if(draw_mode == 5)
     //	   FragColor = vec4(vec3(Specular), 1.0);
 

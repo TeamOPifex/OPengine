@@ -18,6 +18,8 @@ struct OPtextureFormat
 		RGBA32F,
 		BGRA,
 		BGR,
-		RED
+		RED,
+		RG,
+		RG16F
 	};
 };

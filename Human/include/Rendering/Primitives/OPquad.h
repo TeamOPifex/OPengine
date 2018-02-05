@@ -28,3 +28,5 @@ OPmodel* OPquadCreate(OPfloat width, OPfloat depth, ui32 segmentsWidth, ui32 seg
 OPmodel*       OPquadNormCreate();
 //OPmeshPacked OPquadNormCreatePacked();
 void         OPquadDestroy(OPmesh* quad);
+
+OPmodel* OPscreenQuad();

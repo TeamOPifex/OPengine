@@ -109,10 +109,10 @@ OPmodel* OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texco
 	// 0.5, 0.0
 	// 1.0, 1.0
 	QuadPoint verts[4];
-	SetQuadPoint(&verts[0], offset.x - width, offset.y + height, 0, texcoordStart.x, texcoordStart.y);
-	SetQuadPoint(&verts[1], offset.x + width, offset.y + height, 0, texcoordEnd.x, texcoordStart.y);
-	SetQuadPoint(&verts[2], offset.x + width, offset.y - height, 0, texcoordEnd.x, texcoordEnd.y);
-	SetQuadPoint(&verts[3], offset.x - width, offset.y - height, 0, texcoordStart.x, texcoordEnd.y);
+	SetQuadPoint(&verts[0], offset.x - width, offset.y + height, 0, texcoordStart.x, texcoordEnd.y);
+	SetQuadPoint(&verts[1], offset.x + width, offset.y + height, 0, texcoordEnd.x, texcoordEnd.y);
+	SetQuadPoint(&verts[2], offset.x + width, offset.y - height, 0, texcoordEnd.x, texcoordStart.y);
+	SetQuadPoint(&verts[3], offset.x - width, offset.y - height, 0, texcoordStart.x, texcoordStart.y);
 
     OPlogErr("OFFSET: %f, %f", offset.x, offset.y);
     OPlogErr("QUAD: %f, %f", verts[0].x, verts[0].y);
@@ -126,6 +126,30 @@ OPmodel* OPquadCreate(OPfloat width, OPfloat height, OPvec2 offset, OPvec2 texco
 		);
 
 	return mesh;
+}
+
+
+OPmodel* OPscreenQuad() {
+	float quadVertices[] = {
+		// positions        // texture Coords
+		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+		1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+	};	
+	
+	OPvertexLayoutBuilder builder;
+	builder.Init();
+	builder.Add(OPattributes::POSITION);
+	builder.Add(OPattributes::UV);
+	OPvertexLayout layout = builder.Build();
+	OPmodel* mesh = OPNEW(OPmodel(1, layout));
+	mesh->Bind();
+
+	mesh->Build( 4, quadVertices );
+
+	return mesh;
+
 }
 
 //-----------------------------------------------------------------------------

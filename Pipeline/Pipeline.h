@@ -5,6 +5,7 @@
 #include "./Pipeline/include/Loaders/OPloaderOPanimation.h"
 #include "./Pipeline/include/Loaders/OPloaderVoxels.h"
 #include "./Pipeline/include/Loaders/OPloaderOPM.h"
+#include "./Pipeline/include/Loaders/OPloaderHDR.h"
 #include "./Pipeline/include/OPparticleSystem.h"
 #include "./Pipeline/include/Rendering.h"
 #include "./Pipeline/include/OPsprite2D.h"

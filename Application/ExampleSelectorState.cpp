@@ -43,12 +43,13 @@ class ExampleSelector : public OPgameState {
 
 
 		// The background image to use
-		const OPchar* bgTex = "TetrisYellow.png";
+		const OPchar* bgTex = "test.png";
 		OPCMAN.Load(bgTex);
 		OPlogErr("Loaded bmp");
 
-		Background = OPtexture2DCreate((OPtexture*)OPCMAN.Get(bgTex), NULL, OPVEC2_ZERO, OPvec2(10.0f, 10.0f));
+		Background = OPtexture2DCreate((OPtexture*)OPCMAN.Get(bgTex), NULL, OPVEC2_ZERO, OPvec2(1.0f, 1.0f));
 		Background->Scale = OPvec2(1.0f, 1.0f);
+		Background->Position = OPvec2(0.5f, 0.5f);
 
 		OPlogErr("Created tex2D");
 
@@ -71,6 +72,7 @@ class ExampleSelector : public OPgameState {
 				// Actual Examples
 				// Basics
 				{ "Scene", GS_EXAMPLE_SCENE, GS_EXAMPLE_SCENE_AVAILABLE, 0 },
+				{ "Scene PBR", GS_EXAMPLE_PBR, GS_EXAMPLE_PBR_AVAILABLE, 0 },
 				{ "Audio", GS_EXAMPLE_AUDIO, GS_EXAMPLE_AUDIO_AVAILABLE, 0 },
 				{ "FMOD", GS_EXAMPLE_FMOD, GS_EXAMPLE_FMOD_AVAILABLE, 0 },
 				{ "Free Flight Camera", GS_EXAMPLE_FREEFLIGHT, GS_EXAMPLE_FREEFLIGHT_AVAILABLE, 0 },

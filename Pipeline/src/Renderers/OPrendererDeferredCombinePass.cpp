@@ -9,8 +9,11 @@ void OPrendererDeferredCombinePass::Init(OPcam** cam, OPrendererDeferredGBufferP
 	lightPass = pass3;
 	quadMesh = mesh;
 
+	screenSize = OPvec2(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height);
+
 	defaultCombineMaterial = OPNEW(OPmaterial(OPNEW(OPeffect("Common/DeferredCombine.vert", "Common/DeferredCombine.frag"))));
 	defaultCombineMaterial->AddParam("uUseSSAO", &useSSAO);
+	defaultCombineMaterial->AddParam("uScreenSize", &screenSize);
 	defaultCombineMaterial->depth = false;
 	defaultCombineMaterial->cull = false;
 
@@ -54,5 +57,5 @@ void OPrendererDeferredCombinePass::End() {
 	OPrenderCullMode(OPcullFace::FRONT);
 	OPrenderDepth(true);
 	OPrenderDepthWrite(true);
-	OPlogInfo("================ COMBINE PASS");
+	//OPlogInfo("================ COMBINE PASS");
 }

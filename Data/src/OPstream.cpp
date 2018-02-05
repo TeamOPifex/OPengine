@@ -95,6 +95,28 @@ ui8* OPstream::Read(OPuint size){
 	return data;
 }
 
+void OPstream::ReadInto(ui8* buffer, OPuint size) {
+	// retrieve data and pointer
+	OPuint ptr = _pointer;
+	ui8* data = Data + ptr;
+
+	for (ui32 i = 0; i < size; i++) {
+		buffer[i] = *data;
+		data++;
+	}
+
+	_pointer += size; // update pointer location
+	return;
+}
+
+//-----------------------------------------------------------------------------
+ui8* OPstream::Peek(OPuint size) {
+	// retrieve data and pointer
+	OPuint ptr = _pointer;
+	ui8* data = Data + ptr;
+	return data;
+}
+
 void _fillBuffer(OPstream* stream) {
 	OPchar* buffer = (OPchar*)(stream->Data + stream->_pointer);
 #ifdef OPIFEX_WINDOWS
@@ -125,6 +147,29 @@ ui32 OPstream::UI32() {
 }
 f32 OPstream::F32() {
 	return *((f32*)Read(sizeof(f32)));
+}
+
+
+i8 OPstream::I8Peek() {
+	return *((i8*)Peek(sizeof(i8)));
+}
+i16 OPstream::I16Peek() {
+	return *((i16*)Peek(sizeof(i16)));
+}
+i32 OPstream::I32Peek() {
+	return *((i32*)Peek(sizeof(i32)));
+}
+ui8 OPstream::UI8Peek() {
+	return *((ui8*)Peek(sizeof(ui8)));
+}
+ui16 OPstream::UI16Peek() {
+	return *((ui16*)Peek(sizeof(ui16)));
+}
+ui32 OPstream::UI32Peek() {
+	return *((ui32*)Peek(sizeof(ui32)));
+}
+f32 OPstream::F32Peek() {
+	return *((f32*)Peek(sizeof(f32)));
 }
 
 OPchar* OPstream::String() {
@@ -239,6 +284,14 @@ OPuint OPstream::Copy(void* dest, OPuint size){
 OPuint OPstream::Seek(OPuint byte){
 	if(byte < Length){
 		_pointer = byte;
+		return 1;
+	}
+	return 0;
+}
+
+OPuint OPstream::Offset(OPuint byte) {
+	if (_pointer + byte < Length) {
+		_pointer += byte;
 		return 1;
 	}
 	return 0;

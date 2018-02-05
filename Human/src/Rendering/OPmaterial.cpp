@@ -10,8 +10,9 @@ OPmaterial* OPmaterial::Init(OPeffect* effectIn) {
 	effect = effectIn;
 	paramIndex = 0;
 	id = OPMATERIAL_GLOBAL_ID++;
-	depth = 1;
-	cull = 1;
+	depth = true;
+	cull = true;
+	cullFace = OPcullFace::BACK;
 	SetupWVP();
 	return this;
 }
@@ -81,7 +82,6 @@ bool OPmaterial::SetParam(const OPchar* ubo, const OPchar* name, void* ptr, ui32
 		OPmaterialParam* p = GetParam(name);
 		if (p != NULL) {
 			p->data = ptr;
-			p->loc = loc;
 			return true;
 		}
 	}
@@ -89,7 +89,6 @@ bool OPmaterial::SetParam(const OPchar* ubo, const OPchar* name, void* ptr, ui32
 		OPmaterialUniformBufferParam* p = GetParam(ubo, name);
 		if (p != NULL) {
 			p->data = ptr;
-			p->loc = loc;
 			return true;
 		}
 	}
@@ -147,10 +146,10 @@ void OPmaterial::Bind(bool onlyParams) {
 		// We'll use the top most version
 		OPrenderDepth(depth);
 
-		if (cull) {
-			OPrenderCull(cull);
-			OPrenderCullMode(cullFace);
-		}
+		//OPrenderCull(cull);
+		//if (cull) {
+		//	OPrenderCullMode(cullFace);
+		//}
 	}
 
 	for (OPuint i = 0; i < paramUniformBufferIndex; i++) {
@@ -163,62 +162,23 @@ void OPmaterial::Bind(bool onlyParams) {
 
 	for (OPuint i = 0; i < paramIndex; i++) {
 		effect->Set(params[i].uniform, params[i].data, params[i].loc);
-
-		//if (params[i].ubo != NULL) {
-		//	// Uniform in a Uniform Buffer Object
-		//	effect->Set()
-		//}
-		//else {
-		//	// Normal Uniform
-		//	switch (params[i].type) {
-		//		case OPmaterialParamType::TEXTURE: {
-		//			effect->Set(params[i].name, (OPtexture*)params[i].data, params[i].count);
-		//			break;
-		//		}
-		//		case OPmaterialParamType::TEXTURE_CUBE: {
-		//			effect->Set(params[i].name, (OPtextureCube*)params[i].data, params[i].count);
-		//			break;
-		//		}
-		//		case OPmaterialParamType::VECTOR3: {
-		//			effect->Set(params[i].name, (OPvec3*)params[i].data);
-		//			break;
-		//		}
-		//		case OPmaterialParamType::VECTOR4: {
-		//			effect->Set(params[i].name, (OPvec4*)params[i].data);
-		//			break;
-		//		}
-		//		case OPmaterialParamType::MATRIX4: {
-		//			effect->Set(params[i].name, (OPmat4*)params[i].data);
-		//			break;
-		//		}
-		//		case OPmaterialParamType::MATRIX4V: {
-		//			effect->Set(params[i].name, params[i].count, (OPmat4*)params[i].data);
-		//			break;
-		//		}
-		//		case OPmaterialParamType::FLOAT: {
-		//			effect->Set(params[i].name, *(f32*)params[i].data);
-		//			break;
-		//		}
-		//		case OPmaterialParamType::INT: {
-		//			effect->Set(params[i].name, *(i32*)params[i].data);
-		//			break;
-		//		}
-		//		case OPmaterialParamType::BOOL: {
-		//			effect->Set(params[i].name, *(bool*)params[i].data);
-		//			break;
-		//		}
-		//	}
-		//}
 	}
 }
 
-ui32 OPmaterial::NextTextureSlot() {
+ui32 OPmaterial::TextureOffset() {
 	if (rootMaterial != NULL) {
-		return rootMaterial->NextTextureSlot();
+		return textureSlot + rootMaterial->TextureOffset();
 	}
-	else {
-		return textureSlot++;
+	return textureSlot;
+}
+
+ui32 OPmaterial::NextTextureSlot() {
+	ui32 offset = 0;
+	if (rootMaterial != NULL) {
+		offset = rootMaterial->TextureOffset();
 	}
+	
+	return offset + (textureSlot++);
 }
 
 void OPmaterial::AddParam(const OPchar* ubo, const OPchar* name, void* data, ui32 loc) {
@@ -233,7 +193,7 @@ void OPmaterial::AddParam(const OPchar* ubo, const OPchar* name, void* data, ui3
 		params[paramIndex].uniform = uniform;
 		params[paramIndex].data = data;
 		params[paramIndex].loc = loc;
-		if (uniform->type == OPshaderUniformType::TEXTURE) {
+		if (uniform->type == OPshaderUniformType::TEXTURE || uniform->type == OPshaderUniformType::TEXTURE_CUBE) {
 			params[paramIndex].loc = NextTextureSlot();
 		}
 		paramIndex++;

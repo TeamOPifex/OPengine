@@ -17,7 +17,7 @@ struct OPtextureDesc {
 	OPtextureWrap::Enum wrap;
 	OPtextureFilter::Enum minfilter = OPtextureFilter::LINEAR;
 	OPtextureFilter::Enum magfilter = OPtextureFilter::LINEAR;
-	OPtextureType::Enum textureType;
+	OPtextureType::Enum textureType = OPtextureType::BYTE;
 	bool multisampled = false;
 	bool mipmap = false;
 

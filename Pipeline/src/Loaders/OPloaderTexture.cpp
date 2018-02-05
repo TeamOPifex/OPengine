@@ -2,8 +2,9 @@
 #include "./Core/include/Assert.h"
 #include "./Core/include/OPdebug.h"
 #include "./Data/include/OPstring.h"
-#define STB_IMAGE_IMPLEMENTATION
-#include "./Human/include/Utilities/stb_image.h"
+
+#include "./Pipeline/include/Loaders/stb_image.h"
+
 
 OPint OPloaderTextureFromStreamOffset(OPstream* str, OPuint offset, OPtexture** image, OPtextureFilter::Enum filter) {
 	TIMED_BLOCK;
@@ -13,7 +14,7 @@ OPint OPloaderTextureFromStreamOffset(OPstream* str, OPuint offset, OPtexture** 
 	ui8* data;
 	i32 width, height, components;
 
-    data = stbi_load_from_memory(str->Data + offset, str->Size - offset, &width, &height, &components, 4);
+	data = stbi_load_from_memory(str->Data + offset, str->Size - offset, &width, &height, &components, 0);
     if(data == NULL) {
         OPlogErr("STBI Error %d", str->Size);
     	return 0;
@@ -25,7 +26,19 @@ OPint OPloaderTextureFromStreamOffset(OPstream* str, OPuint offset, OPtexture** 
 	OPtextureDesc desc;
 	desc.width = w;
 	desc.height = h;
-	desc.format = OPtextureFormat::RGBA;
+
+	if (components == 1) {
+		desc.format = desc.internalFormat = OPtextureFormat::RED;
+	}
+	else if (components == 2) {
+		desc.format = desc.internalFormat = OPtextureFormat::RG;
+	}
+	else if (components == 3) {
+		desc.format = desc.internalFormat = OPtextureFormat::RGB;
+	}
+	else if (components == 4) {
+		desc.format = desc.internalFormat = OPtextureFormat::RGBA;
+	}
 	desc.wrap = OPtextureWrap::REPEAT;
 	desc.minfilter = filter;
 	desc.magfilter = filter;
