@@ -69,8 +69,13 @@ void ApplicationInit() {
 	OPlogErr("OPrenderSetup Finished");
 	OPwindowSystemInit();
 	OPlogErr("OPwindowSystemInit Finished");
-	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, 1920, 1080));
+
+
+	OPmonitorResult result = OPmonitor::GetAll();
+	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, result.primary.VideoModeCurrent.Width, result.primary.VideoModeCurrent.Height));
+	//mainWindow.Init(&result.primary, OPwindowParameters("Main Window", false, result.primary.VideoModeCurrent.Width, result.primary.VideoModeCurrent.Height));
 	OPlogErr("mainWindow.Init Finished");
+
 	OPrenderInit(&mainWindow);
 	OPlogErr("OPrenderInit Finished");
 

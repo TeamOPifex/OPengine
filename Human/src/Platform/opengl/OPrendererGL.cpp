@@ -187,6 +187,7 @@ void OPrendererShutdownGL() {
 
 #include "./Human/include/Platform/opengl/OPcontextGL.h"
 #include "./Human/include/Platform/opengl/OPeffectAPIGL.h"
+#include "./Human/include/Platform/opengl/OPrenderBufferAPIGL.h"
 #include "./Human/include/Platform/opengl/OPframeBufferAPIGL.h"
 #include "./Human/include/Platform/opengl/OPframeBufferDepthAPIGL.h"
 #include "./Human/include/Platform/opengl/OPindexBufferGL.h"
@@ -224,6 +225,7 @@ OPrenderAPI* OPrendererGL() {
 
 	OPcontextGLInit(&OPRENDERERGL.Context);
 	OPeffectAPIGLInit(&OPRENDERERGL.Effect);
+	OPrenderBufferAPIGLInit(&OPRENDERERGL.RenderBuffer);
 	OPframeBufferAPIGLInit(&OPRENDERERGL.FrameBuffer);
 	OPframeBufferDepthAPIGLInit(&OPRENDERERGL.FrameBufferDepth);
 	OPindexBufferAPIGLInit(&OPRENDERERGL.IndexBuffer);
