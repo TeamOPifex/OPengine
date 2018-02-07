@@ -93,9 +93,9 @@ OPshaderUniformType::Enum UniformTypeToOPshaderUniformType(GLint type)
 
 ui32 OPtextureWrapToGL(OPtextureWrap::Enum textureWrap) {
 	switch (textureWrap) {
-	case OPtextureWrap::CLAMP: return GL_CLAMP;
-	case OPtextureWrap::CLAMP_TO_BORDER: return GL_CLAMP_TO_BORDER;
+	case OPtextureWrap::CLAMP: return GL_CLAMP_TO_EDGE;
 	case OPtextureWrap::CLAMP_TO_EDGE: return GL_CLAMP_TO_EDGE;
+	case OPtextureWrap::CLAMP_TO_BORDER: return GL_CLAMP_TO_BORDER;
 	case OPtextureWrap::REPEAT: return GL_REPEAT;
 	case OPtextureWrap::MIRRORED_REPEAT: return GL_MIRRORED_REPEAT;
 	}
