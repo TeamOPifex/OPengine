@@ -6,17 +6,9 @@
 #include "./Human/include/Platform/opengl/OPcommonGL.h"
 #include "./Human/include/Rendering/OPframeBuffer.h"
 #include "./Human/include/Platform/opengl/OPtextureAPIGL.h"
+#include "./Human/include/Platform/opengl/OPrenderBufferAPIGL.h"
 #include "./Human/include/Rendering/OPwindow.h"
 
-void OPframeBufferAPIGLSetAttachment(OPframeBuffer* frameBuffer, ui32 ind, OPtexture* texture) {
-	OPtextureGL* textureGL = (OPtextureGL*)texture->internalPtr;
-	OPframeBufferGL* frameBufferGL = (OPframeBufferGL*)frameBuffer->internalPtr;
-
-	OPGLFN(glBindFramebuffer(GL_FRAMEBUFFER, frameBufferGL->Handle));
-	OPGLFN(glBindRenderbuffer(GL_RENDERBUFFER, frameBufferGL->CaptureHandle));
-	OPGLFN(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, texture->textureDesc.width, texture->textureDesc.height));
-	OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + ind, GL_TEXTURE_2D, textureGL->Handle, 0));
-}
 
 
 OPframeBuffer* _OPframeBufferAPIGLInit(OPframeBuffer* framebuffer, OPtextureDesc textureDesc) {
@@ -25,28 +17,19 @@ OPframeBuffer* _OPframeBufferAPIGLInit(OPframeBuffer* framebuffer, OPtextureDesc
 	framebuffer->count = 1;
 	framebuffer->desc = textureDesc;
 
+
 	OPGLFN(glGenFramebuffers(1, &frameBufferGL->Handle));
 	OPGLFN(glBindFramebuffer(GL_FRAMEBUFFER, frameBufferGL->Handle));
+
+	framebuffer->renderBuffer = OPRENDERER_ACTIVE->RenderBuffer.Create();
+	framebuffer->renderBuffer->Bind();
+	
 
 	//framebuffer->texture = OPRENDERER_ACTIVE->Texture.Create(textureDesc);
 	//OPtextureGL* textureGL = (OPtextureGL*)framebuffer->texture->internalPtr;
 
 	// Texture Buffer
 	textureDesc.mipmap = false;
-
-
-	if (!textureDesc.multisampled) {
-		// OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureGL->Handle, 0));
-
-		glGenRenderbuffers(1, &frameBufferGL->CaptureHandle);
-		glBindRenderbuffer(GL_RENDERBUFFER, frameBufferGL->CaptureHandle);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, textureDesc.width, textureDesc.height);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, frameBufferGL->CaptureHandle);
-	}
-	else {
-
-		// OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, textureGL->Handle, 0));
-	}
 
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -195,35 +178,89 @@ ui32 OPframeBufferModeToGL(OPframeBufferMode::Enum mode) {
 	return 0;
 }
 
-void OPframeBufferAPIGLUnbind(OPframeBufferMode::Enum mode) {
-	OPGLFN(glBindFramebuffer(OPframeBufferModeToGL(mode), 0));
+void OPframeBufferAPIGLUnbind() {
+	OPGLFN(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 	OPGLFN(glViewport(0, 0, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowWidth, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowHeight));
 	OPRENDERER_ACTIVE->OPFRAMEBUFFER_ACTIVE = NULL;
 }
 
-void OPframeBufferAPIGLBind(OPframeBufferMode::Enum mode, ui32 mip, OPframeBuffer* ptr) {
+void OPframeBufferAPIGLUnbindReadOnly() {
+	OPGLFN(glBindFramebuffer(GL_READ_FRAMEBUFFER, 0));
+	OPGLFN(glViewport(0, 0, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowWidth, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowHeight));
+	OPRENDERER_ACTIVE->OPFRAMEBUFFER_ACTIVE = NULL;
+}
+
+void OPframeBufferAPIGLUnbindWriteOnly() {
+	OPGLFN(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
+	OPGLFN(glViewport(0, 0, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowWidth, OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->WindowHeight));
+	OPRENDERER_ACTIVE->OPFRAMEBUFFER_ACTIVE = NULL;
+}
+
+void _OPframeBufferAPIGLBind(ui32 mode, OPframeBuffer* ptr, ui32 mip) {
 	if (ptr == NULL) {
-		return OPframeBufferAPIGLUnbind(mode);
+		return OPframeBufferAPIGLUnbind();
 	}
+
 	OPframeBufferGL* frameBufferGL = (OPframeBufferGL*)ptr->internalPtr;
 
-	OPGLFN(glBindFramebuffer(OPframeBufferModeToGL(mode), frameBufferGL->Handle));
-	OPGLFN(glBindRenderbuffer(GL_RENDERBUFFER, frameBufferGL->CaptureHandle));
+	OPGLFN(glBindFramebuffer(mode, frameBufferGL->Handle));
+	if (ptr->renderBuffer != NULL) {
+		ptr->renderBuffer->Bind();
+	}
 
 	if (mip == 0) {
 		OPGLFN(glViewport(0, 0, ptr->desc.width, ptr->desc.height));
 	}
 	else {
-		ui32 mipWidth = ptr->desc.width * OPpow(0.5, mip);
-		ui32 mipHeight = ptr->desc.height * OPpow(0.5, mip);
-
-		glBindRenderbuffer(GL_RENDERBUFFER, frameBufferGL->CaptureHandle);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipWidth, mipHeight);
-
-		OPGLFN(glViewport(0, 0, mipWidth, mipHeight));
+		if (ptr->renderBuffer != NULL) {
+			// Adjust depth buffer & viewport to mip map size
+			ui32 mipWidth = ptr->desc.width * OPpow(0.5, mip);
+			ui32 mipHeight = ptr->desc.height * OPpow(0.5, mip);
+			ptr->renderBuffer->SetSize(mipWidth, mipHeight);
+			OPGLFN(glViewport(0, 0, mipWidth, mipHeight));
+		}
 	}
 
 	OPRENDERER_ACTIVE->OPFRAMEBUFFER_ACTIVE = ptr;
+}
+
+void OPframeBufferAPIGLBind(OPframeBuffer* ptr, ui32 mip) {
+	_OPframeBufferAPIGLBind(GL_FRAMEBUFFER, ptr, mip);
+}
+
+void OPframeBufferAPIGLBindReadOnly(OPframeBuffer* ptr, ui32 mip) {
+	_OPframeBufferAPIGLBind(GL_READ_FRAMEBUFFER, ptr, mip);
+}
+
+void OPframeBufferAPIGLBindWriteOnly(OPframeBuffer* ptr, ui32 mip) {
+	_OPframeBufferAPIGLBind(GL_DRAW_FRAMEBUFFER, ptr, mip);
+}
+
+void OPframeBufferAPIGLSetAttachmentDepthTexture(OPframeBuffer* frameBuffer, OPtexture* texture) {
+	OPtextureGL* textureGL = (OPtextureGL*)texture->internalPtr;
+	OPframeBufferGL* frameBufferGL = (OPframeBufferGL*)frameBuffer->internalPtr;
+
+	OPframeBufferAPIGLBind(frameBuffer, 0);
+
+	OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textureGL->Handle, 0));
+}
+
+void OPframeBufferAPIGLSetAttachmentTexture(OPframeBuffer* frameBuffer, ui32 ind, OPtexture* texture) {
+	OPtextureGL* textureGL = (OPtextureGL*)texture->internalPtr;
+	OPframeBufferGL* frameBufferGL = (OPframeBufferGL*)frameBuffer->internalPtr;
+	
+	OPframeBufferAPIGLBind(frameBuffer, 0);
+	frameBuffer->renderBuffer->Bind();
+	frameBuffer->renderBuffer->SetSize(texture->textureDesc.width, texture->textureDesc.height);
+
+	OPGLFN(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + ind, GL_TEXTURE_2D, textureGL->Handle, 0));
+}
+
+void OPframeBufferAPIGLSetAttachmentRenderBuffer(OPframeBuffer* frameBuffer, OPrenderBuffer* renderBuffer) {
+	OPframeBufferAPIGLBind(frameBuffer, 0);
+	OPrenderBufferGL* renderBufferGL = (OPrenderBufferGL*)renderBuffer->internalPtr;
+
+	OPGLFN(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBufferGL->Handle));
 }
 
 void OPframeBufferAPIGLDestroy(OPframeBuffer* ptr) {
@@ -235,9 +272,15 @@ void OPframeBufferAPIGLDestroy(OPframeBuffer* ptr) {
 
 void OPframeBufferAPIGLInit(OPframeBufferAPI* frameBuffer) {
 	frameBuffer->_Bind = OPframeBufferAPIGLBind;
-	frameBuffer->SetAttachment = OPframeBufferAPIGLSetAttachment;
+	frameBuffer->BindReadOnly = OPframeBufferAPIGLBindReadOnly;
+	frameBuffer->BindWriteOnly = OPframeBufferAPIGLBindWriteOnly;
+	frameBuffer->SetAttachmentDepthTexture = OPframeBufferAPIGLSetAttachmentDepthTexture;
+	frameBuffer->SetAttachmentTexture = OPframeBufferAPIGLSetAttachmentTexture;
+	frameBuffer->SetAttachmentRenderBuffer = OPframeBufferAPIGLSetAttachmentRenderBuffer;
 	frameBuffer->Destroy = OPframeBufferAPIGLDestroy;
-	frameBuffer->_Unbind = OPframeBufferAPIGLUnbind;
+	frameBuffer->Unbind = OPframeBufferAPIGLUnbind;
+	frameBuffer->UnbindReadOnly = OPframeBufferAPIGLUnbindReadOnly;
+	frameBuffer->UnbindWriteOnly = OPframeBufferAPIGLUnbindWriteOnly;
 	frameBuffer->_Create = OPframeBufferAPIGLCreate;
 	frameBuffer->_Init = OPframeBufferAPIGLInitialize;
 	frameBuffer->_InitMulti = OPframeBufferAPIGLInitMulti;

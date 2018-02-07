@@ -82,7 +82,7 @@ void OPtextureCube::Process(OPtextureCube* textureCube, OPeffect* effect, OPtext
 	textureCubeDesc.format = OPtextureFormat::RGB;
 	textureCubeDesc.textureType = OPtextureType::FLOAT;
 	textureCubeDesc.wrap = OPtextureWrap::CLAMP_TO_EDGE;
-	textureCubeDesc.minfilter = OPtextureFilter::LINEAR;
+	textureCubeDesc.minfilter = OPtextureFilter::LINEAR_MIPMAP;
 	textureCubeDesc.magfilter = OPtextureFilter::LINEAR;
 	textureCubeDesc.mipmap = true;
 	textureCube->Init(textureCubeDesc);

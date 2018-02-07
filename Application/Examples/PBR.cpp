@@ -30,7 +30,7 @@ class PBRExample : public OPgameState {
 	OPrendererPBR renderer;
 	OPmodel* Mesh;
 	OPmodel* Mesh2;
-	PBRStates pbrState = PBRStates::PBR_EFFECT;// PBR_DEFAULT;
+	PBRStates pbrState = PBRStates::PBR_DEFAULT;// PBR_DEFAULT;
 
 	// PBR_EQUIRECTANGULAR
 	OPmodel* cubeMesh;
@@ -111,7 +111,7 @@ class PBRExample : public OPgameState {
 			SetupModels();
 
 			for (ui32 i = 0; i < PBREXAMPLE_MODELCOUNT; i++) {
-				OPrendererEntity* entity = scene.Add(pbrModels[i].model, OPrendererEntityDesc(false, true, true, false));
+				OPrendererEntity* entity = scene.Add( pbrModels[i].model , OPrendererEntityDesc(false, true, true, false));
 				entity->material->SetMap("uAlbedoMap", pbrModels[i].albedoTex);
 				entity->material->SetMap("uNormalMap", pbrModels[i].normalTex);
 				entity->material->SetMap("uMetallicMap", pbrModels[i].metallicTex);
@@ -119,7 +119,6 @@ class PBRExample : public OPgameState {
 				entity->material->SetMap("uAOMap", pbrModels[i].aoTex);
 				entity->world = pbrModels[i].world;
 			}
-
 
 		}
 		else if (pbrState == PBRStates::PBR_EQUIRECTANGULAR) {
@@ -184,16 +183,12 @@ class PBRExample : public OPgameState {
 		else if (pbrState == PBRStates::PBR_EFFECT) {
 			cubeMesh = OPcubeCreate();
 			
-			Equirectangular = OPtexture::Load("newport_loft.hdr");
-			OPtextureCube::FromEquirectangular(&textureCube, Equirectangular, 512);
-			OPtextureCube::Convolute(&convoluteCube, &textureCube, 32);
+			SetEnv("newport_loft.hdr");
+			OPtexture::GenerateBRDF(&brdfTexture, 512);
 
 			SkyboxEffect.Init("skybox.vert", "skybox.frag");
 			pbrEffect.Init("Common/OPpbr.vert", "Common/OPpbr.frag");
 
-
-			OPtextureCube::RoughnessMap(&hdrRoughnessFilteredCube, &textureCube, 128);
-			OPtexture::GenerateBRDF(&brdfTexture, 512);
 
 
 			basePBRMaterial.Init();
@@ -227,7 +222,7 @@ class PBRExample : public OPgameState {
 		pbrModels[model].metallicTex = OPtexture::Load("Cerberus_M.png");
 		pbrModels[model].roughnessTex = OPtexture::Load("Cerberus_R.png");
 		pbrModels[model].aoTex = OPtexture::Load("EmptyAO.png");
-		pbrModels[model].world.SetRotX(-OPpi_2)->Scl(0.1f);
+		pbrModels[model].world.SetTranslate(-10, 0, 0)->RotX(-OPpi_2)->Scl(0.1f);
 		model++;
 
 
@@ -294,8 +289,8 @@ class PBRExample : public OPgameState {
 		else {
 			Equirectangular = OPtexture::Load(t);
 			OPtextureCube::FromEquirectangular(&textureCube, Equirectangular, 1024);
-			OPtextureCube::Convolute(&convoluteCube, &textureCube, 32);
-			OPtextureCube::RoughnessMap(&hdrRoughnessFilteredCube, &textureCube, 128);
+			OPtextureCube::Convolute(&convoluteCube, &textureCube, 64);
+			OPtextureCube::RoughnessMap(&hdrRoughnessFilteredCube, &textureCube, 256);
 		}
 	}
 
@@ -327,6 +322,9 @@ class PBRExample : public OPgameState {
 		}
 		if (OPKEYBOARD.WasPressed(OPkeyboardKey::N4)) {
 			SetEnv("Theatre-Center_2k.hdr");
+		}
+		if (OPKEYBOARD.WasPressed(OPkeyboardKey::N5)) {
+			SetEnv("HDR_112_River_Road_2_Ref.hdr");
 		}
 		return false;
 	}
@@ -445,6 +443,10 @@ class PBRExample : public OPgameState {
 		else if (pbrState == PBRStates::PBR_EFFECT) {
 
 			OPRENDERER_ACTIVE->SetDepthFunc(OPdepthFunction::LEQUAL);
+
+			if (PBREXAMPLE_MODELCOUNT > 0) {
+				pbrModels[0].world.RotZ(0.01f);
+			}
 
 			for (ui32 i = 0; i < PBREXAMPLE_MODELCOUNT; i++) {
 				pbrModels[i].material->Bind();

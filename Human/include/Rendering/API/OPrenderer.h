@@ -5,6 +5,7 @@ typedef struct OPrenderAPI OPrenderAPI;
 
 #include "./Human/include/Rendering/API/OPcontext.h"
 #include "./Human/include/Rendering/API/OPeffectAPI.h"
+#include "./Human/include/Rendering/API/OPrenderBufferAPI.h"
 #include "./Human/include/Rendering/API/OPframeBufferAPI.h"
 #include "./Human/include/Rendering/API/OPframeBufferDepthAPI.h"
 #include "./Human/include/Rendering/API/OPindexBufferAPI.h"
@@ -45,6 +46,7 @@ struct OPrenderAPI {
 
 	OPcontext Context;
 	OPeffectAPI Effect;
+	OPrenderBufferAPI RenderBuffer;
 	OPframeBufferAPI FrameBuffer;
 	OPframeBufferDepthAPI FrameBufferDepth;
 	OPindexBufferAPI IndexBuffer;

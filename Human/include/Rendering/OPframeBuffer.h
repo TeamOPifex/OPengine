@@ -6,6 +6,7 @@ typedef struct OPframeBuffer OPframeBuffer;
 #include "./Human/include/Rendering/OPtexture.h"
 #include "OPrender.h"
 #include "./Core/include/OPtypes.h"
+#include "./Human/include/Rendering/OPrenderBuffer.h"
 
 extern OPframeBuffer* OPRENDER_CURR_FRAMEBUFFER;
 
@@ -13,6 +14,8 @@ extern OPframeBuffer* OPRENDER_CURR_FRAMEBUFFER;
 
 struct OPframeBuffer {
 	void* internalPtr;
+
+	OPrenderBuffer* renderBuffer = NULL;
 
 	OPtexture* texture;
 	ui32 count;
@@ -43,12 +46,16 @@ struct OPframeBuffer {
 		OPRENDERER_ACTIVE->FrameBuffer.SetAttachment(this, ind, texture);
 	}
 
-	inline void Bind(ui32 mip = 0) {
-		OPRENDERER_ACTIVE->FrameBuffer.Bind(this, mip);
+	inline void Bind(ui32 mips = 0) {
+		OPRENDERER_ACTIVE->FrameBuffer.Bind(this, mips);
 	}
 
-	inline void Bind(OPframeBufferMode::Enum mode) {
-		OPRENDERER_ACTIVE->FrameBuffer.Bind(mode, this);
+	inline void BindReadOnly(ui32 mips = 0) {
+		OPRENDERER_ACTIVE->FrameBuffer.BindReadOnly(this, mips);
+	}
+
+	inline void BindWriteOnly(ui32 mips = 0) {
+		OPRENDERER_ACTIVE->FrameBuffer.BindWriteOnly(this, mips);
 	}
 
 	inline void Destroy() {
@@ -56,10 +63,14 @@ struct OPframeBuffer {
 	}
 
 	static inline void Unbind() {
-		OPRENDERER_ACTIVE->FrameBuffer.Unbind(OPframeBufferMode::BOTH);
+		OPRENDERER_ACTIVE->FrameBuffer.Unbind();
 	}
 
-	static inline void Unbind(OPframeBufferMode::Enum mode) {
-		OPRENDERER_ACTIVE->FrameBuffer.Unbind(mode);
+	static inline void UnbindReadOnly() {
+		OPRENDERER_ACTIVE->FrameBuffer.UnbindReadOnly();
+	}
+
+	static inline void UnbindWriteOnly() {
+		OPRENDERER_ACTIVE->FrameBuffer.UnbindWriteOnly();
 	}
 };

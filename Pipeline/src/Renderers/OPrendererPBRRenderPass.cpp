@@ -64,15 +64,12 @@ void OPrendererPBRRenderPass::Init(OPcam** cam, OPcam** shadowCam, OPrendererFor
 }
 
 void OPrendererPBRRenderPass::SetEnv(const OPchar* env) {
+	// TODO: (garrett) destroy previous texture versions
 
 	OPtexture* envHDRTexture = OPtexture::Load(env);
 	OPtextureCube::FromEquirectangular(&envHDRTextureCube, envHDRTexture, 512);
 	OPtextureCube::Convolute(&convoluteCube, &envHDRTextureCube, 32);
 	OPtextureCube::RoughnessMap(&hdrRoughnessFilteredCube, &envHDRTextureCube, 128);
-
-	//texturedMaterial.SetParam("uIrradianceMap", &convoluteCube);
-	//texturedMaterial.SetParam("uPrefilterMap", &hdrRoughnessFilteredCube);
-	//texturedMaterial.SetParam("uBRDFLUT", &brdfTexture);
 }
 
 void OPrendererPBRRenderPass::Destroy() {
