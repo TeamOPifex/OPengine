@@ -6,10 +6,9 @@ void Connected(OPnetworkProtocolSimple* state, i32 index);
 void Disconnected(OPnetworkProtocolSimple* state, i32 index);
 void Receive(OPnetworkProtocolSimple* state, i32 len, i32 index, i8* data);
 
-OPnetworkProtocolSimple* OPnetworkProtocolSimpleCreate(OPnetworkType networkType) {
-
+OPnetworkProtocolSimple* OPnetworkProtocolSimpleCreate(OPnetworkType::Enum networkType) {
 	OPnetworkProtocolSimple* protocol = (OPnetworkProtocolSimple*)OPalloc(sizeof(OPnetworkProtocolSimple));
-	protocol->Network = OPnetworkCreate(networkType, OPNETWORK_UDP);
+	protocol->Network = OPnetwork::Create(networkType, OPnetworkProtocol::OPNETWORK_UDP);
 	protocol->Network->receive = (void(*)(void*, i32, i32, OPchar*))Receive;
 	protocol->Network->connected = (void(*)(void*, i32))Connected;
 	protocol->Network->disconnected = (void(*)(void*, i32))Disconnected;
@@ -27,14 +26,14 @@ void Disconnected(OPnetworkProtocolSimple* state, i32 index) {
 void Receive(OPnetworkProtocolSimple* state, i32 index, i32 len, i8* data) {
 	OPprotocolSimpleMessage message = *(OPprotocolSimpleMessage*)data;
 
-	if (state->Network->ConnectionType == OPNETWORK_CLIENT || state->LastReceived[index] < message.TimeStamp) {
+	if (state->Network->networkType == OPnetworkType::OPNETWORK_CLIENT || state->LastReceived[index] < message.TimeStamp) {
 
 		OPlog("packed received: %s", (data + sizeof(OPprotocolSimpleMessage)));
 		message.Data = (i8*)OPalloc(message.DataLength);
 		OPmemcpy(message.Data, (i8*)(data + sizeof(OPprotocolSimpleMessage)), message.DataLength);
 
 		state->Receive(message);
-		if (state->Network->ConnectionType == OPNETWORK_SERVER) {
+		if (state->Network->networkType == OPnetworkType::OPNETWORK_SERVER) {
 			state->LastReceived[index] = message.TimeStamp;
 		}
 	}
@@ -45,7 +44,7 @@ void Receive(OPnetworkProtocolSimple* state, i32 index, i32 len, i8* data) {
 
 i32 OPnetworkProtocolSimpleReceive(OPnetworkProtocolSimple* protocol, void(*receive)(OPprotocolSimpleMessage)) {
 	protocol->Receive = receive;
-	return OPnetworkReceive(protocol->Network, (void*)protocol);
+	return protocol->Network->Receive((void*)protocol);
 }
 
 i32 OPnetworkProtocolSimpleSend(OPnetworkProtocolSimple* protocol, OPtimer* timer, i8* data, i32 size) {
@@ -61,13 +60,13 @@ i32 OPnetworkProtocolSimpleSend(OPnetworkProtocolSimple* protocol, OPtimer* time
 	// OPlog("message data: %s", message->Data);
 	// OPlog("packed data: %s", (packedData + sizeof(OPprotocolSimpleMessage)));
 
-	i32 result = OPnetworkSend(protocol->Network, packedData, totalSize);
+	i32 result = protocol->Network->Send(packedData, totalSize);
 	OPlog("Send Result %d", result);
 	OPfree(message);
 	return result;
 }
 
 void OPnetworkProtocolSimpleDestroy(OPnetworkProtocolSimple* protocol) {
-	OPnetworkDestroy(protocol->Network);
+	protocol->Network->Destroy();
 	OPfree(protocol);
 }

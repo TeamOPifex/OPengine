@@ -20,6 +20,9 @@
 #include "OPspirv.h"
 #endif
 
+#ifdef ADDON_imgui
+#include "./OPimgui.h"
+#endif
 
 //////////////////////////////////////
 // Application Methods
@@ -91,6 +94,10 @@ void ApplicationInit() {
 	//OPCMAN.LoadGet("Factory_Catwalk_Env.hdr");
 
 	OPVISUALDEBUGINFO.Init();
+
+#ifdef ADDON_imgui
+	OPimguiInit(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE, true);
+#endif
 	
 	//GS_EXAMPLE_MODEL
 	OPgameState::Change(GS_EXAMPLE_SELECTOR);
@@ -109,8 +116,8 @@ OPint ApplicationUpdate(OPtimer* timer) {
 #endif
 	OPCMAN_UPDATE(timer);
 
-	if (OPKEYBOARD.WasReleased(OPkeyboardKey::ESCAPE)) return 1;
-	if ((OPKEYBOARD.WasReleased(OPkeyboardKey::BACKSPACE) || OPGAMEPADS[0]->WasPressed(OPgamePadButton::BACK)) && ActiveState != GS_EXAMPLE_SELECTOR) {
+	// if (OPKEYBOARD.WasReleased(OPkeyboardKey::ESCAPE)) return 1;
+	if ((OPKEYBOARD.WasReleased(OPkeyboardKey::ESCAPE) || OPGAMEPADS[0]->WasPressed(OPgamePadButton::BACK)) && ActiveState != GS_EXAMPLE_SELECTOR) {
 		OPgameState::Change(GS_EXAMPLE_SELECTOR);
 	}
 #ifdef ADDON_socketio
@@ -161,7 +168,7 @@ int main(int argc, char * argv[]) {
 #else
 
 	OP_MAIN_START
-		OPLOGLEVEL = (ui32)OPlogLevel::VERBOSE;
+		OPLOGLEVEL = (ui32)OPlogLevel::TIMING;
 
 		OPlogErr("Started!");
 

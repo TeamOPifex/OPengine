@@ -30,7 +30,7 @@ class PBRExample : public OPgameState {
 	OPrendererPBR renderer;
 	OPmodel* Mesh;
 	OPmodel* Mesh2;
-	PBRStates pbrState = PBRStates::PBR_DEFAULT;// PBR_DEFAULT;
+	PBRStates pbrState = PBRStates::PBR_EFFECT;// PBR_DEFAULT;
 
 	// PBR_EQUIRECTANGULAR
 	OPmodel* cubeMesh;
@@ -187,8 +187,7 @@ class PBRExample : public OPgameState {
 			OPtexture::GenerateBRDF(&brdfTexture, 512);
 
 			SkyboxEffect.Init("skybox.vert", "skybox.frag");
-			pbrEffect.Init("Common/OPpbr.vert", "Common/OPpbr.frag");
-
+			pbrEffect.Init("Common/OPpbr.vert", "Common/OPpbrIBL.frag");
 
 
 			basePBRMaterial.Init();
@@ -216,11 +215,20 @@ class PBRExample : public OPgameState {
 
 		ui32 model = 0;
 
-		pbrModels[model].model = (OPmodel*)OPCMAN.LoadGet("Cerberus.opm");
-		pbrModels[model].albedoTex = OPtexture::Load("Cerberus_A.png");
-		pbrModels[model].normalTex = OPtexture::Load("Cerberus_N.png");
-		pbrModels[model].metallicTex = OPtexture::Load("Cerberus_M.png");
-		pbrModels[model].roughnessTex = OPtexture::Load("Cerberus_R.png");
+		// pbrModels[model].model = (OPmodel*)OPCMAN.LoadGet("Cerberus.opm");
+		// pbrModels[model].albedoTex = OPtexture::Load("Cerberus_A.png");
+		// pbrModels[model].normalTex = OPtexture::Load("Cerberus_N.png");
+		// pbrModels[model].metallicTex = OPtexture::Load("Cerberus_M.png");
+		// pbrModels[model].roughnessTex = OPtexture::Load("Cerberus_R.png");
+		// pbrModels[model].aoTex = OPtexture::Load("EmptyAO.png");
+		// pbrModels[model].world.SetTranslate(-10, 0, 0)->RotX(-OPpi_2)->Scl(0.1f);
+		// model++;
+
+		pbrModels[model].model = (OPmodel*)OPCMAN.LoadGet("bug.opm");
+		pbrModels[model].albedoTex = OPtexture::Load("bug_albedo.png");
+		pbrModels[model].normalTex = OPtexture::Load("bug_normal.png");
+		pbrModels[model].metallicTex = OPtexture::Load("bug_metallic.png");
+		pbrModels[model].roughnessTex = OPtexture::Load("bug_roughness.png");
 		pbrModels[model].aoTex = OPtexture::Load("EmptyAO.png");
 		pbrModels[model].world.SetTranslate(-10, 0, 0)->RotX(-OPpi_2)->Scl(0.1f);
 		model++;
@@ -448,24 +456,36 @@ class PBRExample : public OPgameState {
 				pbrModels[0].world.RotZ(0.01f);
 			}
 
-			for (ui32 i = 0; i < PBREXAMPLE_MODELCOUNT; i++) {
-				pbrModels[i].material->Bind();
-				pbrModels[i].material->SetWorld(&pbrModels[i].world);
-				pbrModels[i].material->SetCamera(&camera.Camera);
-				pbrModels[i].model->Bind();
+			{
+				TIMED_BLOCK;
+
+				for (ui32 i = 0; i < PBREXAMPLE_MODELCOUNT; i++) {
+					pbrModels[i].material->Bind();
+					pbrModels[i].material->SetWorld(&pbrModels[i].world);
+					pbrModels[i].material->SetCamera(&camera.Camera);
+					pbrModels[i].model->Bind();
+					OPrenderDrawBufferIndexed(0);
+				}
+
+			}
+
+			{
+				TIMED_BLOCK;
+				SkyboxEffect.Bind();
+				SkyboxEffect.Set("uEnvironmentMap", &textureCube, 0);
+				SkyboxEffect.Set("uProj", &camera.Camera.proj);
+				SkyboxEffect.Set("uView", &camera.Camera.view);
+				cubeMesh->Bind();
 				OPrenderDrawBufferIndexed(0);
 			}
 
-			SkyboxEffect.Bind();
-			SkyboxEffect.Set("uEnvironmentMap", &textureCube, 0);
-			SkyboxEffect.Set("uProj", &camera.Camera.proj);
-			SkyboxEffect.Set("uView", &camera.Camera.view);
-			cubeMesh->Bind();
-			OPrenderDrawBufferIndexed(0);
-
 		}
 		OPVISUALDEBUGINFO.Render(delta);
-		OPrenderPresent();
+		
+		{
+			TIMED_BLOCK;
+			OPrenderPresent();
+		}
 	}
 
 	OPint Exit(OPgameState* next) {
