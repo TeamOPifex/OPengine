@@ -1,0 +1,53 @@
+#include "./Communication/include/OPnetwork.h"
+#include "./Core/include/OPlog.h"
+#include "./Core/include/OPmemory.h"
+#include "./Data/include/OPstring.h"
+
+
+#include "./Communication/include/OPnetworkPlatform.h"
+
+OPnetwork* OPnetwork::Create(OPnetworkType::Enum networkType, OPnetworkProtocol::Enum protocol) {
+ 	OPnetwork* network = (OPnetwork*)OPalloc(sizeof(OPnetwork));
+ 	network->connectedSocket = (i32)INVALID_SOCKET;
+ 	network->networkType = networkType;
+	network->networkProtocol = protocol;
+	network->networkData.clientIndex = 0;
+ 	return network;
+}
+
+
+
+
+
+
+
+
+i32 OPnetwork::ServerStartTCP(OPnetwork* network) {
+
+	 // listen() is only for TCP not UDP
+	 if(listen(network->connectedSocket, 64)){
+	 	const OPchar* errMsg = "No Error";
+	 	switch(errno){
+	 		case EACCES:
+	 			errMsg = "The current process has insufficient privileges.";
+	 			break;
+	 		case EBADF:
+	 			errMsg = "The argument socket is not a valid file descriptor.";
+	 			break;
+	 		case EDESTADDRREQ:
+	 			errMsg = "The socket is not bound to a local address and the protocol does not support listening on an unbound socket.";
+	 			break;
+	 		case EINVAL:
+	 			errMsg = "socket is already connected.";
+	 			break;
+	 		case ENOTSOCK:
+	 			errMsg = "The argument socket does not reference a socket.";
+	 			break;
+	 		case EOPNOTSUPP:
+	 			errMsg = "The socket is not of a type that supports the operation listen().";
+	 			break;
+	 	}
+	 	OPlog("Error on listen()\n\t- %s", errMsg);
+	 }
+	return 0;
+}

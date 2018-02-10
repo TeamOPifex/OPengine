@@ -19,6 +19,7 @@
 #endif
 
 #ifdef OPIFEX_WINDOWS
+    #define _WINSOCK_DEPRECATED_NO_WARNINGS
 	#include <Windows.h>
 	#include <winsock2.h>
 	#include <ws2tcpip.h>

@@ -21,7 +21,7 @@ public:
 	i8 Mode;
 	i8 HeldDown;
 	OPnetworkProtocolSimple* Protocol;
-	// OPnetwork* network;
+	OPnetwork* network;
 	OPchar port[6];
 	OPchar serverPort[6];
 	OPchar server[200];
@@ -152,7 +152,7 @@ public:
 				Protocol = OPnetworkProtocolSimpleCreate(
 					OPnetworkType::OPNETWORK_SERVER
 				);
-				Protocol->Network->ServerStart(port);
+				//Protocol->Network->ServerStart(port);
 			}
 			ImGui::End();
 
@@ -166,7 +166,7 @@ public:
 				Protocol = OPnetworkProtocolSimpleCreate(
 					OPnetworkType::OPNETWORK_CLIENT
 				);
-				Protocol->Network->ClientConnect(server, serverPort);
+				// Protocol->Network->ClientConnect(server, serverPort);
 			}
 			ImGui::End();
 		}
