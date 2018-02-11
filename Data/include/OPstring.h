@@ -2,6 +2,10 @@
 
 #include "./Core/include/OPtypes.h"
 
+i32 OPstringToNumber(const OPchar* str);
+const OPchar* OPstringFrom(ui32 val);
+void OPstringCopyInto(const OPchar* source, OPchar* dest);
+
 OPint OPstringEquals(const OPchar* str, const OPchar* cmp);
 OPint OPstringStartsWith(OPchar* str, const OPchar* cmp);
 OPint OPstringEndsWith(OPchar* str, const OPchar* cmp);

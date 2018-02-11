@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <errno.h>
 
+
 #ifdef OPIFEX_UNIX
 	#include <netdb.h>
 	#include <unistd.h>
@@ -16,6 +17,7 @@
 	#define NETWORK_CLEANUP(){ }
 	#define SD_SEND SHUT_WR
 	#define CLOSESOCKET(socket) close(socket);
+	#define SOCKET i32
 #endif
 
 #ifdef OPIFEX_WINDOWS

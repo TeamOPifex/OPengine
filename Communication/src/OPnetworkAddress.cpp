@@ -2,71 +2,68 @@
 #include "./Communication/include/OPnetworkPlatform.h"
 #include "./Core/include/OPlog.h"
 #include "./Core/include/OPmemory.h"
+#include "./Data/include/OPstring.h"
 
 ui64 LookupAddress(const OPchar *kpAddress, OPchar** resolved);
 
-/**
- * C++ version 0.4 char* style "itoa":
- * Written by Lukás Chmela
- * Released under GPLv3.
 
-	*/
-char* itoa(int value, char* result, int base) {
-	// check that the base if valid
-	if (base < 2 || base > 36) { *result = '\0'; return result; }
+void OPnetworkAddress::Init(sockaddr_in* sockaddr_in) {
+    networkAddress = inet_ntoa(sockaddr_in->sin_addr);
+    networkPort = ntohs(sockaddr_in->sin_port);
+	networkFamily = OPnetworkFamily::INET;// TODO: sockaddr_in->sin_family;
+	OPstringCopyInto(OPstringFrom(networkPort), networkPortStr);
 
-	char* ptr = result, *ptr1 = result, tmp_char;
-	int tmp_value;
+	sockAddr = *(sockaddr*)sockaddr_in;
 
-	do {
-		tmp_value = value;
-		value /= base;
-		*ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz" [35 + (tmp_value - value * base)];
-	} while ( value );
-
-	// Apply negative sign
-	if (tmp_value < 0) *ptr++ = '-';
-	*ptr-- = '\0';
-	while(ptr1 < ptr) {
-		tmp_char = *ptr;
-		*ptr--= *ptr1;
-		*ptr1++ = tmp_char;
-	}
-	return result;
+	valid = true;
 }
 
-void OPnetworkAddress::Init(const OPchar* address, ui32 port, OPnetworkSocketType::Enum socketType) {
-	i8 portStr[6];
-	itoa(port, portStr, 10);
-	Init(address, portStr, socketType);
+void OPnetworkAddress::Init(ui32 port, OPnetworkFamily::Enum family) {
+    networkAddress = "127.0.0.1";
+    networkPort = port;
+	networkFamily = family;
+	OPstringCopyInto(OPstringFrom(networkPort), networkPortStr);
+
+
+	OPbzero(&sockAddr, sizeof(sockAddr));
+	SockAddrIn()->sin_family = AF_INET;
+	SockAddrIn()->sin_addr.s_addr = htonl(INADDR_ANY);
+	SockAddrIn()->sin_port = htons(port);
+
+	valid = true;
+
 }
 
-void OPnetworkAddress::Init(const OPchar* address, const OPchar* port, OPnetworkSocketType::Enum socketType) {
+void OPnetworkAddress::Init(const OPchar* address, ui32 port, OPnetworkFamily::Enum family) {
     networkAddress = address;
     networkPort = port;
-	networkPortNum = atoi(port);
-    networkSocketType = socketType;
+	networkFamily = family;
+    //networkSocketType = socketType;
     valid = false;
+	OPstringCopyInto(OPstringFrom(networkPort), networkPortStr);
+	
 
 
     struct addrinfo hints;
-
 	OPbzero(&hints, sizeof(hints));
-	hints.ai_family = AF_UNSPEC;
-	hints.ai_socktype = socketType == OPnetworkSocketType::TCP ? SOCK_STREAM : SOCK_DGRAM;
-	hints.ai_protocol = IPPROTO_UDP;
+	hints.ai_family = OPnetworkFamilyTypeToCode(family);
+	// hints.ai_socktype = socketType == OPnetworkSocketType::TCP ? SOCK_STREAM : SOCK_DGRAM;
+	// hints.ai_protocol = IPPROTO_UDP;
 
 
-	OPchar* addr = NULL;
-	ui64 r = LookupAddress(address, &addr);
-	OPlogDebug("Address %d:%s", r, port);
 
-    
-    i32 iResult = getaddrinfo(addr == NULL ? address : addr, port, &hints, &result);
+	// OPchar* addr = NULL;
+	// ui64 r = LookupAddress(address, &addr);
+	// OPlogDebug("Address %d:%s", r, port);
 
-	if (addr != NULL) {
-		OPfree(addr);
-	}
+    addrinfo* result;
+    //i32 iResult = getaddrinfo(addr == NULL ? address : addr, port, &hints, &result);
+	result = NULL;
+    i32 iResult = getaddrinfo(address, networkPortStr, &hints, &result);
+
+	// if (addr != NULL) {
+	// 	OPfree(addr);
+	// }
 
 	if (iResult != 0) {
 		OPlog("getaddrinfo failed: %d", iResult);
@@ -92,6 +89,20 @@ void OPnetworkAddress::Init(const OPchar* address, const OPchar* port, OPnetwork
 		}
 #endif
 	} else {
+
+		while(!result->ai_addr && result->ai_next) {
+			result = result->ai_next;
+		}
+
+		if(!result->ai_addr) {
+        	freeaddrinfo(result);
+			result = NULL;
+			valid = false;
+			return;
+		}
+
+		// Copy necessary values out of result before freeing
+
         if(result->ai_family == AF_INET) {
             networkFamily = OPnetworkFamily::INET;
         } else if(result->ai_family == AF_INET6) {
@@ -101,12 +112,16 @@ void OPnetworkAddress::Init(const OPchar* address, const OPchar* port, OPnetwork
         }
 
         if(result->ai_socktype == SOCK_STREAM) {
-            networkSocketType = OPnetworkSocketType::TCP;
+            networkSocketType = OPnetworkSocketType::STREAM;
         } else {
-            networkSocketType = OPnetworkSocketType::UDP;
+            networkSocketType = OPnetworkSocketType::DGRAM;
         }
 
+		sockAddr = *result->ai_addr;
+		
         freeaddrinfo(result);
+
+
         valid = true;
     }
 }

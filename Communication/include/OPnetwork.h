@@ -1,8 +1,9 @@
 #pragma once
 
 #include "./Core/include/OPtypes.h"
-#include "./Communication/include/Enums/OPnetworkType.h"
+#include "./Communication/include/Enums/OPnetworkFamily.h"
 #include "./Communication/include/Enums/OPnetworkSocketType.h"
+#include "./Communication/include/Enums/OPnetworkProtocolType.h"
 #include "./Communication/include/Enums/OPnetworkOperation.h"
 #include "./Communication/include/OPnetworkAddress.h"
 #include "./Communication/include/OPnetworkData.h"
@@ -34,7 +35,7 @@ struct OPnetwork {
 		static i32 Initialize();
 		static i32 Shutdown();
 
-		static OPnetwork* Create(OPnetworkType::Enum networkType, OPnetworkSocketType::Enum socketType);
+		static OPnetwork* Create(OPnetworkFamily::Enum networkFamily, OPnetworkSocketType::Enum socketType);
 		
 		static ui64 LookupAddress(const OPchar *kpAddress, OPchar** resolved);
 		static void LogError(const OPchar* message);

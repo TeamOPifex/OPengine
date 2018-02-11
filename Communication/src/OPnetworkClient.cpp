@@ -2,7 +2,7 @@
 #include "./Communication/include/OPnetworkPlatform.h"
 #include "./Core/include/OPlog.h"
 
-void OPnetworkClient::Init(OPnetworkSocketType::Enum socketType, const OPchar* address, const OPchar* port) {
+void OPnetworkClient::Init(OPnetworkProtocolType::Enum protocolType, const OPchar* address, ui32 port) {
 
 	// On Windows the network has to be initialized
 	// Doesn't actually do anything on Unix based systems
@@ -13,7 +13,7 @@ void OPnetworkClient::Init(OPnetworkSocketType::Enum socketType, const OPchar* a
 
 	// Get the address to use, if it's a computer name, url, it will DNS it
 	OPnetworkAddress networkAddress;
-    networkAddress.Init(address, port, socketType);
+    networkAddress.Init(address, port, OPnetworkFamily::INET);
     if(!networkAddress.valid) {
 		network.LogError("Error getting address");
 		NETWORK_CLEANUP();
@@ -32,7 +32,7 @@ void OPnetworkClient::Init(OPnetworkSocketType::Enum socketType, const OPchar* a
 	// FD_SET(socket.connectedSocket, &network.networkData.master);
 	// network.networkData.fdmax = socket.connectedSocket;
 
- 	OPlogInfo("Client connected to %s on port %s", address, port);
+ 	OPlogInfo("Client connected to %s on port %d", address, port);
 
  	return;
 }
@@ -82,7 +82,14 @@ void OPnetworkClient::Update() {
 }
 
 bool OPnetworkClient::Send(void* data, ui32 size) {
-	return socket.Send(data, size);
+	i32 sent = socket.Send(data, size);
+	if(sent == size) {
+		OPlogInfo("Message sent");
+		return true;
+	} else if(sent == -1) {
+		OPlogInfo("Message err, something happened");
+		return false;
+	}
 }
 
 void OPnetworkClient::Destroy() {

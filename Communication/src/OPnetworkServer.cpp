@@ -3,7 +3,7 @@
 #include "./Core/include/OPlog.h"
 #include "./Core/include/OPmemory.h"
 
-void OPnetworkServer::Init(OPnetworkSocketType::Enum socketType, const OPchar* port) {
+void OPnetworkServer::Init(OPnetworkProtocolType::Enum protocolType, ui32 port) {
 	// On Windows the network has to be initialized
 	// Doesn't actually do anything on Unix based systems
 	if (OPnetwork::Initialize() != 0) {
@@ -11,16 +11,21 @@ void OPnetworkServer::Init(OPnetworkSocketType::Enum socketType, const OPchar* p
 		return;
 	}
 
-    OPnetworkAddress local = OPnetworkAddress("127.0.0.1", port, socketType);
+    //OPnetworkAddress local = OPnetworkAddress("127.0.0.1", port, OPnetworkFamily::INET);
+    OPnetworkAddress local = OPnetworkAddress(port, OPnetworkFamily::INET);
     if(!local.valid) {
         OPlogErr("couldn't locate loopback address for port %s", port);
         return;
     }
 
+    OPlogInfo("Loopback Address created for port %d", port);
+
     serverSocket = OPnetworkSocket(local);
     if(!serverSocket.valid) {
         return;
     }
+
+    OPlogInfo("Socket created for loopback on port %d", port);
 
     if(!serverSocket.Bind()) {
 		OPlogErr("Failed to bind socket");
@@ -28,7 +33,7 @@ void OPnetworkServer::Init(OPnetworkSocketType::Enum socketType, const OPchar* p
         return;
     }
 
-	OPlogInfo("Server started on port %s", port);
+	OPlogInfo("Server started on port %d", port);
 
 }
 
@@ -135,7 +140,7 @@ int OPnetworkServer::HandleNewConnection()
     char client_ipv4_str[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, &client_addr.sin_addr, client_ipv4_str, INET_ADDRSTRLEN);
 
-    OPnetworkAddress clientAddress = OPnetworkAddress(client_ipv4_str, client_addr.sin_port, OPnetworkSocketType::UDP);
+    OPnetworkAddress clientAddress = OPnetworkAddress(client_ipv4_str, client_addr.sin_port, OPnetworkFamily::INET);
     
     OPlogInfo("Incoming connection from %s:%d.\n", client_ipv4_str, client_addr.sin_port);
     
@@ -213,9 +218,9 @@ void OPnetworkServer::UpdateUDP() {
             }
 
             if (FD_ISSET(clients[i].connectedSocket, &read_fds)) {
-                if(clients[i].Receive() != 0) {
-                    clients[i].Destroy();
-                }
+                // if(clients[i].Receive() != 0) {
+                //     clients[i].Destroy();
+                // }
             }
     
             if (FD_ISSET(clients[i].connectedSocket, &write_fds)) {
@@ -300,23 +305,129 @@ void OPnetworkServer::UpdateUDP() {
 	// }
 }
 
+fd_set* OPnetworkServerFill(OPnetworkServer* networkServer, fd_set& outSet) {
+    FD_ZERO(&outSet);
+    // for(ui32 i = 0; i < networkServer->clientIndex; i++) {
+    //     FD_SET(networkServer->clients[i].connectedSocket, &outSet);
+    // }
+    return &outSet;
+}
+
+void OPnetworkServerFillSet(OPnetworkServer* networkServer, OPnetworkSocket** outSockets, ui32* index, fd_set& inSet ) {
+    *index = 0;
+
+    if(FD_ISSET(networkServer->serverSocket.connectedSocket, &inSet)) {
+        OPlogInfo("Set server socket as out read");
+        outSockets[(*index)++] = &networkServer->serverSocket;
+    }
+    // for(ui32 i = 0; i < networkServer->clientIndex; i++) {
+    //     if(FD_ISSET(networkServer->clients[i].connectedSocket, &inSet)) {
+    //         outSockets[(*index)++] = &networkServer->clients[i];
+    //     }
+    // }
+}
+
+int OPnetworkServer::Select() {
+    fd_set read, write, except;
+
+	struct timeval timeout;
+	timeout.tv_sec = 0;
+	timeout.tv_usec = 1000;
+
+    fd_set* readPtr = OPnetworkServerFill(this, read);
+        FD_SET(serverSocket.connectedSocket, &read);
+    fd_set* writePtr = OPnetworkServerFill(this, write);
+    fd_set* exceptPtr = OPnetworkServerFill(this, except);
+
+    i32 highest = serverSocket.connectedSocket;
+    for(ui32 i = 0; i < clientIndex; i++) {
+        if(highest < clients[i].connectedSocket) {
+            highest = clients[i].connectedSocket;
+        }
+    }
+
+    int toRet = select(highest + 1, readPtr, writePtr, exceptPtr, &timeout);
+
+    if(toRet > 0) {
+        // process sockets
+        // OPlogInfo("toRet: %d", toRet);
+        OPnetworkServerFillSet(this, clientsToRead, &clientsToReadIndex, read);
+        // OPnetworkServerFillSet(this, clientsToWrite, &clientsToWriteIndex, write);
+        // OPnetworkServerFillSet(this, clientsToExcept, &clientsToExceptIndex, except);
+    }
+
+    return toRet;
+}
+
 void OPnetworkServer::Update() {
 
+    i8 buffer[1024];
+    
 
-	// networkData.read_fds = networkData.master;
+    if(Select()) {
+        // OPlogInfo("Select finished");
+        
+        i8 rcvbuffer[1024];
 
+        sockaddr sockAddr;
+        int bytesReceived = serverSocket.Receive(buffer, 1024, &sockAddr);
+        if(bytesReceived > 0) {
+            OPlogInfo("Message %s", buffer);
+        }
 
-    if (serverSocket.networkAddress.networkSocketType == OPnetworkSocketType::TCP) {
-        UpdateTCP();
-    } else {
-        UpdateUDP();
+        sockaddr_in* sockAddrIn = (sockaddr_in*)&sockAddr;
+        // OPlogInfo("Received packet from %s:%d", inet_ntoa(sockAddrIn->sin_addr), ntohs(sockAddrIn->sin_port));
+        
+
+        // Look for existing client
+        bool found = false;
+        for(ui32 i = 0; i < clientIndex; i++) {
+            if(clients[i].networkAddress.SockAddrIn()->sin_addr.s_addr == sockAddrIn->sin_addr.s_addr &&
+                clients[i].networkAddress.SockAddrIn()->sin_port == sockAddrIn->sin_port) {
+                // found the client
+                found = true;
+                break;
+            }
+        }
+
+        if(!found) {
+            // add the client
+            OPlogInfo("A new client has been found");
+            OPnetworkAddress address = OPnetworkAddress(sockAddrIn);
+            clients[clientIndex].Init(address);
+            clientIndex++;
+        }
+        
+
+        // if (recvfrom(s, rcvbuffer, 1024, 0, (struct sockaddr*)&sa_in, sizeof(sa_in)) >= 0)
+        // {
+        // for(ui32 i = 0; i < clientsToReadIndex; i++) {
+        //     if(clientsToRead[i]->connectedSocket == serverSocket.connectedSocket) {
+        //         // this is a new connection
+        //         OPlogInfo("A new connection was made to the server");
+        //         // Create new connection
+        //         if(serverSocket.Accept(&clients[clientIndex])) {
+        //             clientIndex++;
+        //         }
+                
+        //     } else {
+        //         // normal message, process it
+        //         int bytesReceived = clientsToRead[i]->Receive(buffer, 1024);
+        //         if(bytesReceived > 0) {
+        //             OPlogInfo("Message %s", buffer);
+        //         }
+
+        //     }
+        // }
     }
+
 }
+
 
 bool OPnetworkServer::Send(void* data, ui32 size) {
 	int j;
 
-	if (serverSocket.networkAddress.networkSocketType == OPnetworkSocketType::TCP) {
+	if (serverSocket.networkAddress.networkSocketType == OPnetworkSocketType::STREAM) {
         // TODO: (garrett) TCP Network Send
 		// for (j = 0; j <= networkData.fdmax; j++) {
 		// 	// send to everyone!

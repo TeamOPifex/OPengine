@@ -8,13 +8,12 @@
 #define MAX_SEND_SIZE 1024
 
 struct OPnetworkSocket {
-    i32 connectedSocket;
+    SOCKET connectedSocket;
     OPnetworkAddress networkAddress;
-    bool valid;
+    bool valid = false;
     i8 receiveBuffer[OPNETWORKSOCKET_BUFFER_SIZE];
     i32 receiveBufferInd = 0;
     struct addrinfo* addrInfo;
-    struct sockaddr_in* sockAddr;
 
     OPnetworkSocket() {}
     OPnetworkSocket(OPnetworkAddress address) {
@@ -22,9 +21,10 @@ struct OPnetworkSocket {
     }
     void Init(OPnetworkAddress address);
     void Init(i32 socket, OPnetworkAddress address);
-    bool Send(void* data, ui32 size);
+    i32 Send(void* data, ui32 size);
+    i32 Receive(void* data, ui32 size, sockaddr* sockAddr);
     i32 Update();
-    i32 Receive();
+    bool Accept(OPnetworkSocket* networkSocket);
     bool Bind();
     void Destroy();
 };

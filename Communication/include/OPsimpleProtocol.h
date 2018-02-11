@@ -16,7 +16,7 @@ struct OPnetworkProtocolSimple {
 	void(*Receive)(OPprotocolSimpleMessage);
 };
 
-OPnetworkProtocolSimple* OPnetworkProtocolSimpleCreate(OPnetworkType::Enum networkType);
+OPnetworkProtocolSimple* OPnetworkProtocolSimpleCreate(OPnetworkSocketType::Enum networkType);
 i32 OPnetworkProtocolSimpleReceive(OPnetworkProtocolSimple* protocol, void(*receive)(OPprotocolSimpleMessage));
 i32 OPnetworkProtocolSimpleSend(OPnetworkProtocolSimple* protocol, OPtimer* timer, i8* data, i32 size);
 void OPnetworkProtocolSimpleDestroy(OPnetworkProtocolSimple* protocol);

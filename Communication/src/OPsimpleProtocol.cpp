@@ -6,7 +6,7 @@ void Connected(OPnetworkProtocolSimple* state, i32 index);
 void Disconnected(OPnetworkProtocolSimple* state, i32 index);
 void Receive(OPnetworkProtocolSimple* state, i32 len, i32 index, i8* data);
 
-OPnetworkProtocolSimple* OPnetworkProtocolSimpleCreate(OPnetworkType::Enum networkType) {
+OPnetworkProtocolSimple* OPnetworkProtocolSimpleCreate(OPnetworkSocketType::Enum networkType) {
 	OPnetworkProtocolSimple* protocol = (OPnetworkProtocolSimple*)OPalloc(sizeof(OPnetworkProtocolSimple));
 	// protocol->Network = OPnetwork::Create(networkType, OPnetworkProtocol::OPNETWORK_UDP);
 	// protocol->Network->receive = (void(*)(void*, i32, i32, OPchar*))Receive;
