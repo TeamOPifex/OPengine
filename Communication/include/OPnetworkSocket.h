@@ -21,7 +21,8 @@ struct OPnetworkSocket {
     }
     void Init(OPnetworkAddress address);
     void Init(i32 socket, OPnetworkAddress address);
-    i32 Send(void* data, ui32 size);
+	i32 Send(void* data, ui32 size);
+	i32 Send(OPnetworkSocket* client, void* data, ui32 size);
     i32 Receive(void* data, ui32 size, sockaddr* sockAddr);
     i32 Update();
     bool Accept(OPnetworkSocket* networkSocket);

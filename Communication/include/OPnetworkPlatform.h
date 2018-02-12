@@ -18,6 +18,8 @@
 	#define SD_SEND SHUT_WR
 	#define CLOSESOCKET(socket) close(socket);
 	#define SOCKET i32
+	#define INVALID_SOCKET -1
+	#define SOCKET_ERROR -1
 #endif
 
 #ifdef OPIFEX_WINDOWS
@@ -33,7 +35,3 @@
 #endif
  
 #define BUFSIZE 2048
-#define SOCKET_ERROR -1
-#ifndef INVALID_SOCKET
-	#define INVALID_SOCKET -1
-#endif

@@ -117,7 +117,8 @@ void OPnetworkSocket::Init(i32 socket, OPnetworkAddress address) {
 
 i32 OPnetworkSocket::Send(void* data, ui32 size) {
 
-	i32 byteSentCount = sendto(connectedSocket, data, size, 0, &networkAddress.sockAddr, sizeof(networkAddress.sockAddr));
+	i32 byteSentCount = sendto(connectedSocket, (i8*)data, size, 0, &networkAddress.sockAddr, sizeof(networkAddress.sockAddr));
+	//i32 byteSentCount = send(connectedSocket, (i8*)data, size, 0);
     if(byteSentCount >= 0) {
         return byteSentCount;
     }
@@ -125,11 +126,26 @@ i32 OPnetworkSocket::Send(void* data, ui32 size) {
     return -1;
 }
 
-i32 OPnetworkSocket::Receive(void* data, ui32 size, sockaddr* sockAddr) {
-    ui32 fromLength = sizeof(*sockAddr);
+i32 OPnetworkSocket::Send(OPnetworkSocket* client, void* data, ui32 size) {
 
-    int bytesRead = recv(connectedSocket, data, size, MSG_DONTWAIT);
-    //int bytesRead = recvfrom(connectedSocket, data, size, 0, sockAddr, &fromLength);
+	i32 byteSentCount = send(connectedSocket, (i8*)data, size, 0);
+	//i32 byteSentCount = sendto(connectedSocket, (i8*)data, size, 0, &client->networkAddress.sockAddr, sizeof(client->networkAddress.sockAddr));
+	if (byteSentCount >= 0) {
+		return byteSentCount;
+	}
+	OPlogErr("send error");
+	return -1;
+}
+
+i32 OPnetworkSocket::Receive(void* data, ui32 size, sockaddr* sockAddr) {
+    i32 fromLength = sizeof(*sockAddr);
+
+#ifdef OPIFEX_WINDOWS
+    //int bytesRead = recv(connectedSocket, (i8*)data, size, 0);
+	int bytesRead = recvfrom(connectedSocket, (i8*)data, size, 0, sockAddr, &fromLength);
+#else
+	int bytesRead = recv(connectedSocket, (i8*)data, size, MSG_DONTWAIT);
+#endif
     if(bytesRead >= 0) {
         return bytesRead;
     } else {

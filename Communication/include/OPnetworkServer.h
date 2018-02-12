@@ -4,6 +4,8 @@
 #include "./Communication/include/OPnetworkSocket.h"
 #include "./Communication/include/Enums/OPnetworkProtocolType.h"
 
+typedef void(*OPnetworkServerReceiveCallback)(OPnetworkSocket*, void*, ui32);
+
 struct OPnetworkServer {
 	OPnetwork network;
 	OPnetworkSocket serverSocket;
@@ -17,6 +19,9 @@ struct OPnetworkServer {
 	OPnetworkSocket* clientsToExcept[MAX_CLIENTS];
 	ui32 clientsToExceptIndex = 0;
 
+	OPnetworkServerReceiveCallback receiveCallback = NULL;
+	OPnetworkClientConnectedCallback clientConnectedCallback = NULL;
+	OPnetworkClientDisconnectedCallback clientDisconnectedCallback = NULL;
 
 	void Init(OPnetworkProtocolType::Enum protocolType, ui32 port);
 	void Update();
@@ -26,5 +31,17 @@ struct OPnetworkServer {
     void UpdateUDP();
 	int HandleNewConnection();
 	int Select();
+
+	inline void SetReceiveCallback(OPnetworkServerReceiveCallback cb) {
+		receiveCallback = cb;
+	}
+
+	inline void SetClientConnectedCallback(OPnetworkClientConnectedCallback cb) {
+		clientConnectedCallback = cb;
+	}
+
+	inline void SetClientDisconnectedCallback(OPnetworkClientDisconnectedCallback cb) {
+		clientDisconnectedCallback = cb;
+	}
 
 };

@@ -2,6 +2,7 @@
 #include "./Communication/include/OPnetworkSocket.h"
 #include "./Core/include/OPlog.h"
 #include "./Core/include/OPmemory.h"
+#include "./Data/include/OPstring.h"
 
 void OPnetworkServer::Init(OPnetworkProtocolType::Enum protocolType, ui32 port) {
 	// On Windows the network has to be initialized
@@ -104,7 +105,7 @@ int BuildFDSets(OPnetworkServer* networkServer, OPnetworkSocket serverSocket, fd
     int i;
 
     FD_ZERO(read_fds);
-    FD_SET(STDIN_FILENO, read_fds);
+    //FD_SET(STDIN_FILENO, read_fds);
     FD_SET(serverSocket.connectedSocket, read_fds);
     for (i = 0; i < MAX_CLIENTS; ++i)
         if (networkServer->clients[i].connectedSocket != INVALID_SOCKET)
@@ -116,7 +117,7 @@ int BuildFDSets(OPnetworkServer* networkServer, OPnetworkSocket serverSocket, fd
             FD_SET(networkServer->clients[i].connectedSocket, write_fds);
 
     FD_ZERO(except_fds);
-    FD_SET(STDIN_FILENO, except_fds);
+    //FD_SET(STDIN_FILENO, except_fds);
     FD_SET(serverSocket.connectedSocket, except_fds);
     for (i = 0; i < MAX_CLIENTS; ++i)
         if (networkServer->clients[i].connectedSocket != INVALID_SOCKET)
@@ -127,38 +128,38 @@ int BuildFDSets(OPnetworkServer* networkServer, OPnetworkSocket serverSocket, fd
 
 int OPnetworkServer::HandleNewConnection()
 {
-    struct sockaddr_in client_addr;
-    memset(&client_addr, 0, sizeof(client_addr));
-    socklen_t client_len = sizeof(client_addr);
+    //struct sockaddr_in client_addr;
+    //memset(&client_addr, 0, sizeof(client_addr));
+    //socklen_t client_len = sizeof(client_addr);
 
-    int new_client_sock = accept(serverSocket.connectedSocket, (struct sockaddr *)&client_addr, &client_len);
-    if (new_client_sock < 0) {
-        OPlogErr("accept()");
-        return -1;
-    }
-    
-    char client_ipv4_str[INET_ADDRSTRLEN];
-    inet_ntop(AF_INET, &client_addr.sin_addr, client_ipv4_str, INET_ADDRSTRLEN);
+    //int new_client_sock = accept(serverSocket.connectedSocket, (struct sockaddr *)&client_addr, &client_len);
+    //if (new_client_sock < 0) {
+    //    OPlogErr("accept()");
+    //    return -1;
+    //}
+    //
+    //char client_ipv4_str[INET_ADDRSTRLEN];
+    //inet_ntop(AF_INET, &client_addr.sin_addr, client_ipv4_str, INET_ADDRSTRLEN);
 
-    OPnetworkAddress clientAddress = OPnetworkAddress(client_ipv4_str, client_addr.sin_port, OPnetworkFamily::INET);
-    
-    OPlogInfo("Incoming connection from %s:%d.\n", client_ipv4_str, client_addr.sin_port);
-    
-    int i;
-    for (i = 0; i < MAX_CLIENTS; ++i) {
-        if (clients[i].connectedSocket == INVALID_SOCKET) {
-            clients[i].Init(new_client_sock, clientAddress);
+    //OPnetworkAddress clientAddress = OPnetworkAddress(client_ipv4_str, client_addr.sin_port, OPnetworkFamily::INET);
+    //
+    //OPlogInfo("Incoming connection from %s:%d.\n", client_ipv4_str, client_addr.sin_port);
+    //
+    //int i;
+    //for (i = 0; i < MAX_CLIENTS; ++i) {
+    //    if (clients[i].connectedSocket == INVALID_SOCKET) {
+    //        clients[i].Init(new_client_sock, clientAddress);
 
-            // clients[i].connectedSocket = new_client_sock;
-            // connection_list[i].addres = client_addr;
-            // connection_list[i].current_sending_byte   = -1;
-            // connection_list[i].current_receiving_byte = 0;
-            return 0;
-        }
-    }
-    
-    printf("There is too much connections. Close new connection %s:%d.\n", client_ipv4_str, client_addr.sin_port);
-    close(new_client_sock);
+    //        // clients[i].connectedSocket = new_client_sock;
+    //        // connection_list[i].addres = client_addr;
+    //        // connection_list[i].current_sending_byte   = -1;
+    //        // connection_list[i].current_receiving_byte = 0;
+    //        return 0;
+    //    }
+    //}
+    //
+    //printf("There is too much connections. Close new connection %s:%d.\n", client_ipv4_str, client_addr.sin_port);
+    //close(new_client_sock);
     return -1;
 }
 
@@ -337,6 +338,7 @@ int OPnetworkServer::Select() {
     fd_set* readPtr = OPnetworkServerFill(this, read);
         FD_SET(serverSocket.connectedSocket, &read);
     fd_set* writePtr = OPnetworkServerFill(this, write);
+		//FD_SET(serverSocket.connectedSocket, &write);
     fd_set* exceptPtr = OPnetworkServerFill(this, except);
 
     i32 highest = serverSocket.connectedSocket;
@@ -380,24 +382,47 @@ void OPnetworkServer::Update() {
         
 
         // Look for existing client
-        bool found = false;
+		OPnetworkSocket* client = NULL;
         for(ui32 i = 0; i < clientIndex; i++) {
             if(clients[i].networkAddress.SockAddrIn()->sin_addr.s_addr == sockAddrIn->sin_addr.s_addr &&
                 clients[i].networkAddress.SockAddrIn()->sin_port == sockAddrIn->sin_port) {
                 // found the client
-                found = true;
+				client = &clients[i];
                 break;
             }
         }
 
-        if(!found) {
-            // add the client
-            OPlogInfo("A new client has been found");
-            OPnetworkAddress address = OPnetworkAddress(sockAddrIn);
-            clients[clientIndex].Init(address);
-            clientIndex++;
-        }
-        
+		const OPchar* connectMessage = "CONNECT";
+        if(client == NULL) {
+
+			if (OPstringEquals(connectMessage, buffer)) {
+				// add the client
+				OPlogInfo("A new client has been found");
+				const OPchar* addr = inet_ntoa(sockAddrIn->sin_addr);
+				ui32 port = ntohs(sockAddrIn->sin_port);
+				OPnetworkAddress address = OPnetworkAddress(addr, port, OPnetworkFamily::INET);
+				clients[clientIndex].Init(address);
+				client = &clients[clientIndex];
+				clientIndex++;
+
+				if (clientConnectedCallback != NULL && client != NULL) {
+					clientConnectedCallback(client);
+				}
+
+
+
+				client->Send((void*)connectMessage, strlen(connectMessage) + 1);
+			}
+			else {
+				OPlogErr("Client shouldn't be connecting?");
+			}
+		}
+		else {
+			if (receiveCallback != NULL && client != NULL) {
+				receiveCallback(client, buffer, bytesReceived);
+			}
+		}
+
 
         // if (recvfrom(s, rcvbuffer, 1024, 0, (struct sockaddr*)&sa_in, sizeof(sa_in)) >= 0)
         // {
@@ -442,9 +467,13 @@ bool OPnetworkServer::Send(void* data, ui32 size) {
 		// }
 	}
 	else {
-		socklen_t peer_addr_len = sizeof(struct sockaddr_storage);
 		for (i32 i = 0; i < clientIndex; i++) {
-            clients[i].Send(data, size);
+			//if (serverSocket.Send(&clients[i], data, size) < 0) {
+			//	OPnetwork::LogError("Send Err");
+			//}
+			if (clients[i].Send(data, size) < 0) {
+				OPnetwork::LogError("Send Err");
+			}
 		}
 	}
     

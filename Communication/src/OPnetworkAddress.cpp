@@ -13,7 +13,10 @@ void OPnetworkAddress::Init(sockaddr_in* sockaddr_in) {
 	networkFamily = OPnetworkFamily::INET;// TODO: sockaddr_in->sin_family;
 	OPstringCopyInto(OPstringFrom(networkPort), networkPortStr);
 
-	sockAddr = *(sockaddr*)sockaddr_in;
+	OPbzero(&sockAddr, sizeof(sockAddr));
+	SockAddrIn()->sin_family = AF_INET;
+	SockAddrIn()->sin_addr.s_addr = sockaddr_in->sin_addr.s_addr;
+	SockAddrIn()->sin_port = htons(networkPort);
 
 	valid = true;
 }

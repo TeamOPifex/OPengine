@@ -11,9 +11,10 @@
 #include "./OPimgui.h"
 #endif
 
-
-void ClientReceive(OPprotocolSimpleMessage message);
-void ServerReceive(OPprotocolSimpleMessage message);
+void MessageReceivedHandler(OPnetworkSocket* socket, void* data, ui32 size);
+void MessageClientReceivedHandler(void* data, ui32 size);
+void ClientConnectedHandler(OPnetworkSocket* socket);
+void ClientDisconnectedHandler(OPnetworkSocket* socket);
 
 // Data for this Game State Example
 class ServerClientExample : public OPgameState {
@@ -23,10 +24,14 @@ public:
 	
 	OPnetworkClient networkClient;
 	OPnetworkServer networkServer;
+	
+	OPchar* messageQueue[1024];
+	ui32 messageQueueIndex = 0;
 
 	OPchar port[6];
 	OPchar serverPort[6];
 	OPchar server[200];
+	OPchar message[128];
 	bool sendClick;
 
 
@@ -34,6 +39,7 @@ public:
 		Mode = 0;
 		HeldDown = 0;
 		sendClick = false;
+		message[0] = NULL;
 		OPmemcpy(port, "1337", 5);
 		OPmemcpy(server, "127.0.0.1", 10);
 		OPmemcpy(serverPort, "1337", 5);
@@ -74,7 +80,7 @@ public:
 		}
 
 		if (Mode == 2) {
-			
+			networkClient.Update();
 		}
 
 		return false;
@@ -112,6 +118,7 @@ public:
 		}
 #endif
 
+#ifdef ADDON_imgui
 		OPimguiNewFrame();
 
 		bool always = true;
@@ -124,6 +131,9 @@ public:
 			if(ImGui::Button("Start Server")) {
 				Mode = 1;
 				networkServer.Init(OPnetworkProtocolType::UDP, OPstringToNumber(port));
+				networkServer.SetReceiveCallback(MessageReceivedHandler);
+				networkServer.SetClientConnectedCallback(ClientConnectedHandler);
+				networkServer.SetClientDisconnectedCallback(ClientDisconnectedHandler);
 			}
 			ImGui::End();
 
@@ -135,6 +145,7 @@ public:
 			if(ImGui::Button("Connect")) {
 				Mode = 2;
 				networkClient.Init(OPnetworkProtocolType::UDP, server, OPstringToNumber(serverPort));
+				networkClient.SetReceiveCallback(MessageClientReceivedHandler);
 			}
 			ImGui::End();
 		}
@@ -142,10 +153,12 @@ public:
 		if (Mode == 1) { // Server
 			ImGui::SetNextWindowPos(ImVec2(10, 30), ImGuiSetCond_::ImGuiSetCond_FirstUseEver);
 			ImGui::Begin("Server Controls", &always, ImVec2(250, 475), -1.0F, ImGuiWindowFlags_NoResize);
+			ImGui::InputText("Message", message, 128);
 		
-			if(ImGui::Button("Click")) {			
+			if(ImGui::Button("Send")) {			
 				HeldDown = 0;
 				sendClick = true;
+				networkServer.Send((void*)message, strlen(message) + 1);
 			}
 
 			ImGui::End();
@@ -155,18 +168,32 @@ public:
 		if (Mode == 2) { // Server
 			ImGui::SetNextWindowPos(ImVec2(10, 30), ImGuiSetCond_::ImGuiSetCond_FirstUseEver);
 			ImGui::Begin("Client Controls", &always, ImVec2(250, 475), -1.0F, ImGuiWindowFlags_NoResize);
+			ImGui::InputText("Message", message, 128);
 		
-			if(ImGui::Button("Click")) {
+			if(ImGui::Button("Send")) {
 				HeldDown = 0;
 				sendClick = true;
-				const OPchar* hello = "hello";
-				networkClient.Send((void*)hello, 6);
+				networkClient.Send((void*)message, strlen(message) + 1);
 			}
 
 			ImGui::End();
 		}
 
+		if (Mode == 1 || Mode == 2) {
+			ImGui::SetNextWindowPos(ImVec2(260, 30), ImGuiSetCond_::ImGuiSetCond_FirstUseEver);
+			ImGui::Begin("Messages", &always, ImVec2(250, 475), -1.0F, ImGuiWindowFlags_NoResize);
+
+			for (ui32 i = messageQueueIndex; i--; i >= 0) {
+				ImGui::Text(messageQueue[i]);
+			}
+
+			ImGui::End();
+		}
+
+
+
 		ImGui::Render();
+#endif
 
 		// Swaps the back buffer
 		OPrenderPresent();
@@ -182,23 +209,23 @@ public:
 
 ServerClientExample _GS_EXAMPLE_SERVER_CLIENT;
 
-void ClientReceive(OPprotocolSimpleMessage message) {
-	OPlog("CLIENT RECEIVED MESSAGE");
-	_GS_EXAMPLE_SERVER_CLIENT.HeldDown = *message.Data;
+void MessageReceivedHandler(OPnetworkSocket* socket, void* data, ui32 size) {
+	OPlogInfo("Message %s", (i8*)data);
+	_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = OPstringCopy((i8*)data);
 }
 
-void ServerReceive(OPprotocolSimpleMessage message) {
-	OPlog("SERVER RECEIVED MESSAGE");
-	_GS_EXAMPLE_SERVER_CLIENT.HeldDown = *message.Data;
-	// OPnetworkProtocolSimpleSend(
-	// 	_GS_EXAMPLE_SERVER_CLIENT.Protocol,
-	// 	NULL,
-	// 	(i8*)&_GS_EXAMPLE_SERVER_CLIENT.HeldDown,
-	// 	sizeof(i8)
-	// 	);
+void MessageClientReceivedHandler(void* data, ui32 size) {
+	OPlogInfo("Message %s", (i8*)data);
+	_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = OPstringCopy((i8*)data);
 }
 
+void ClientConnectedHandler(OPnetworkSocket* socket) {
 
+}
+
+void ClientDisconnectedHandler(OPnetworkSocket* socket) {
+
+}
 
 // This is for the Example Selector only
 OPint GS_EXAMPLE_SERVER_CLIENT_AVAILABLE = 1;
