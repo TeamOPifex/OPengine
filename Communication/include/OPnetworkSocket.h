@@ -23,9 +23,14 @@ struct OPnetworkSocket {
     void Init(i32 socket, OPnetworkAddress address);
 	i32 Send(void* data, ui32 size);
 	i32 Send(OPnetworkSocket* client, void* data, ui32 size);
-    i32 Receive(void* data, ui32 size, sockaddr* sockAddr);
+    i32 Receive(void* data, ui32 size);
+    i32 ReceiveFrom(void* data, ui32 size, OPnetworkAddress* address);
     i32 Update();
     bool Accept(OPnetworkSocket* networkSocket);
     bool Bind();
+    bool Listen();
+    bool Connect();
     void Destroy();
+
+    static void Select(fd_set* read, fd_set* write, fd_set* except);
 };

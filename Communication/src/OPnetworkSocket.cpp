@@ -44,14 +44,13 @@ void OPnetworkSocket::Init(OPnetworkAddress address) {
 
     OPlogInfo("socket was created");
 
-
-    OPlogInfo("getting network info for %s at port %s", address.networkAddress, address.networkPortStr);
+    OPlogInfo("getting network info for %s at port %s", address.networkAddressStr, address.networkPortStr);
 	struct addrinfo hints, *p;
 	int rv;
 	memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = networkSocketType;
-	if ((rv = getaddrinfo(address.networkAddress, address.networkPortStr, &hints, &addrInfo)) != 0) {
+	if ((rv = getaddrinfo(address.networkAddressStr, address.networkPortStr, &hints, &addrInfo)) != 0) {
 		OPlogErr("getaddrinfo: %s\n", gai_strerror(rv));
 		NETWORK_CLEANUP();
 		return;
@@ -59,29 +58,58 @@ void OPnetworkSocket::Init(OPnetworkAddress address) {
 
     OPlogInfo("beginning connection");
 
-
-
-    // memset(&sockAddr, 0, sizeof(sockAddr));
-    // sockAddr->sin_family = AF_UNSPEC;
-    // sockAddr->sin_addr.s_addr = inet_addr(address.networkAddress);
-    // sockAddr->sin_port = address.networkPort;
-    
-    
-    // if (connect(connectedSocket, (struct sockaddr *)&sockAddr, sizeof(struct sockaddr)) != 0) {
-    //     OPlogErr("Error at connect()");
-    //     CLOSESOCKET(connectedSocket);
-    //     return;
-    // }
-
-
-
-	// for(p = servinfo; p != NULL; p = p->ai_next) {
-	// 	if ((connectedSocket = (i32)socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
-	// 		OPlogErr("Error at socket()");
-	// 		continue;
-	// 	}
+    if(networkAddress.networkSocketType == OPnetworkSocketType::STREAM){
+        Connect();
+    }
 
     valid = true;
+}
+
+bool OPnetworkSocket::Bind() {
+
+    // lose the pesky "Address already in use" error message
+    int yes = 1;
+    if (setsockopt(connectedSocket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes) == -1) {
+        OPlogErr("setsockopt");
+    } 
+
+
+	OPlogDebug("Bind Socket");
+	i32 bindResult = bind(connectedSocket, networkAddress.addressInfo->ai_addr, networkAddress.addressInfo->ai_addrlen);
+
+	if (bindResult == SOCKET_ERROR) {
+        OPlogErr("socket failed to bind");
+        return false;
+    }
+
+    OPlogInfo("socket has been bound");
+
+    return true;
+}
+
+bool OPnetworkSocket::Connect() {
+    if(networkAddress.networkSocketType == OPnetworkSocketType::STREAM) {    
+        i32 result = connect(connectedSocket, networkAddress.addressInfo->ai_addr, networkAddress.addressInfo->ai_addrlen); 
+        if(result > 0) {
+            return true;
+        }
+
+        OPlogErr("Failed to connect");
+    }
+
+    return false;
+}
+
+bool OPnetworkSocket::Listen() {
+    if(networkAddress.networkSocketType == OPnetworkSocketType::STREAM) {
+        i32 result = listen(connectedSocket, 10);
+        if(result < 0) {
+            OPlogErr("Failed to begin listen()");
+            return false;
+        } 
+        return true;
+    }
+    return false;
 }
 
 bool OPnetworkSocket::Accept(OPnetworkSocket* networkSocket) {
@@ -103,7 +131,8 @@ bool OPnetworkSocket::Accept(OPnetworkSocket* networkSocket) {
 
     OPlogInfo("New connection");// , socket fd is %d , ip is : %s , port : %d \n" , newSocket , inet_ntoa(address.sin_addr) , ntohs(address.sin_port));
  
-    // networkSocket->Init(newSocket, &address);
+    OPnetworkAddress networkAddress = OPnetworkAddress(&address, networkAddress.networkSocketType == OPnetworkSocketType::STREAM ? OPnetworkProtocolType::TCP : OPnetworkProtocolType::UDP );
+    networkSocket->Init(newSocket, networkAddress);
 
     return true;
 }
@@ -116,55 +145,79 @@ void OPnetworkSocket::Init(i32 socket, OPnetworkAddress address) {
 }
 
 i32 OPnetworkSocket::Send(void* data, ui32 size) {
+    i32 byteSentCount;
 
-	i32 byteSentCount = sendto(connectedSocket, (i8*)data, size, 0, &networkAddress.sockAddr, sizeof(networkAddress.sockAddr));
-	//i32 byteSentCount = send(connectedSocket, (i8*)data, size, 0);
+    if(networkAddress.networkSocketType == OPnetworkSocketType::STREAM) {
+        byteSentCount = send(connectedSocket, (i8*)data, size, 0);
+    } else {
+        byteSentCount = sendto(connectedSocket, (i8*)data, size, 0, networkAddress.addressInfo->ai_addr, networkAddress.addressInfo->ai_addrlen);
+    }
+
     if(byteSentCount >= 0) {
         return byteSentCount;
     }
+
     OPlogErr("send error");
     return -1;
 }
 
 i32 OPnetworkSocket::Send(OPnetworkSocket* client, void* data, ui32 size) {
+    i32 byteSentCount = 0;
 
-	i32 byteSentCount = send(connectedSocket, (i8*)data, size, 0);
-	//i32 byteSentCount = sendto(connectedSocket, (i8*)data, size, 0, &client->networkAddress.sockAddr, sizeof(client->networkAddress.sockAddr));
+    struct sockaddr_in* inAddr = (struct sockaddr_in*)&client->networkAddress.addr;
+
+    if(networkAddress.networkSocketType == OPnetworkSocketType::STREAM) {
+	    byteSentCount = send(connectedSocket, (i8*)data, size, 0);
+    } else {
+	    byteSentCount = sendto(connectedSocket, (i8*)data, size, 0, &client->networkAddress.addr, sizeof(*inAddr));
+    }
+
 	if (byteSentCount >= 0) {
 		return byteSentCount;
 	}
-	OPlogErr("send error");
+	OPlogErr("send to error: %d", errno);
 	return -1;
 }
 
-i32 OPnetworkSocket::Receive(void* data, ui32 size, sockaddr* sockAddr) {
-    i32 fromLength = sizeof(*sockAddr);
+i32 OPnetworkSocket::Receive(void* data, ui32 size) {
+    i32 bytesRead = -1;
 
-#ifdef OPIFEX_WINDOWS
-    //int bytesRead = recv(connectedSocket, (i8*)data, size, 0);
-	int bytesRead = recvfrom(connectedSocket, (i8*)data, size, 0, sockAddr, &fromLength);
-#else
-	int bytesRead = recv(connectedSocket, (i8*)data, size, MSG_DONTWAIT);
-#endif
+    #ifdef OPIFEX_WINDOWS
+        bytesRead = recv(connectedSocket, (i8*)data, size, 0);
+    #else
+        bytesRead = recv(connectedSocket, (i8*)data, size, MSG_DONTWAIT);
+    #endif
+
     if(bytesRead >= 0) {
         return bytesRead;
-    } else {
-        // OPlogErr("Failed ro receive");
     }
+    
+    OPlogErr("receive error");
+    return -1;
 }
 
-bool OPnetworkSocket::Bind() {
-	OPlogDebug("Bind Socket");
-	i32 bindResult = bind(connectedSocket, &networkAddress.sockAddr, sizeof(networkAddress.sockAddr));
-	// freeaddrinfo(addrInfo);
+i32 OPnetworkSocket::ReceiveFrom(void* data, ui32 size, OPnetworkAddress* address) {
 
-	if (bindResult == SOCKET_ERROR) {
-        return false;
+    socklen_t sockaddrSize = sizeof(struct sockaddr);
+    struct sockaddr_in clientSocketAddress;
+
+    i32 bytesRead = -1;
+    #ifdef OPIFEX_WINDOWS
+        bytesRead = recvfrom(connectedSocket, (i8*)data, size, 0, (struct sockaddr *)&clientSocketAddress, &sockaddrSize);
+    #else
+        bytesRead = recvfrom(connectedSocket, data, size, 0, (struct sockaddr *)&clientSocketAddress, &sockaddrSize);
+    #endif
+
+    
+    address->Init((struct sockaddr *)&clientSocketAddress, networkAddress.networkSocketType == OPnetworkSocketType::STREAM ? OPnetworkProtocolType::TCP : OPnetworkProtocolType::UDP);
+    //addr, port, );
+
+    if(bytesRead >= 0) {
+        return bytesRead;
     }
-
-    OPlogInfo("socket has been bound");
-
-    return true;
+    
+    OPlogErr("receive from error");
+    return -1;
 }
 
 i32 OPnetworkSocket::Update() {
@@ -186,53 +239,6 @@ i32 OPnetworkSocket::Update() {
     return selectResult;
 }
 
-// i32 OPnetworkSocket::Receive() {
-
-//     size_t len_to_receive = 0;
-//     ssize_t received_count = 0;
-//     size_t received_total = 0;
-
-//     do {
-//         // Is completely received?
-//         if (receiveBufferInd >= sizeof(receiveBuffer)) {
-//             // message_handler(&peer->receiving_buffer);
-//             OPlogInfo("Message from socket: %s", receiveBuffer);
-//             receiveBufferInd = 0;
-//         }
-
-//         // Count bytes to send.
-//         len_to_receive = sizeof(receiveBuffer) - receiveBufferInd;
-//         if (len_to_receive > MAX_SEND_SIZE)
-//             len_to_receive = MAX_SEND_SIZE;
-
-//         printf("Let's try to recv() %zd bytes... ", len_to_receive);
-
-//         received_count = recv(connectedSocket, (char *)&receiveBuffer + receiveBufferInd, len_to_receive, MSG_DONTWAIT);
-//         if (received_count < 0) {
-//             if (errno == EAGAIN || errno == EWOULDBLOCK) {
-//                 OPlogInfo("peer is not ready right now, try again later.\n");
-//             }
-//             else {
-//                 OPlogErr("recv() from peer error");
-//                 return -1;
-//             }
-//         }
-//         else if (received_count == 0) {
-//             OPlogInfo("recv() 0 bytes. Peer gracefully shutdown.\n");
-//             return -1;
-//         }
-//         else if (received_count > 0) {
-//             receiveBufferInd += received_count;
-//             received_total += received_count;
-//             printf("recv() %zd bytes\n", received_count);
-//         }
-
-//     } while (received_count > 0);
-  
-//     printf("Total recv()'ed %zu bytes.\n", received_total);
-//     return 0;
-// }
-
 void OPnetworkSocket::Destroy() {
     if(!valid) return;
 
@@ -243,4 +249,15 @@ void OPnetworkSocket::Destroy() {
     }
 
     CLOSESOCKET(connectedSocket);
+}
+
+
+void SetZero(fd_set* read, fd_set* write, fd_set* except) {
+	FD_ZERO(read);
+	FD_ZERO(write);
+	FD_ZERO(except);
+}
+
+void SetRead(fd_set* read, fd_set* write, fd_set* except) {
+    
 }

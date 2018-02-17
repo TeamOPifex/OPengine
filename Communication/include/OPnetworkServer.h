@@ -2,15 +2,18 @@
 
 #include "./Communication/include/OPnetwork.h"
 #include "./Communication/include/OPnetworkSocket.h"
+#include "./Communication/include/OPnetworkSelect.h"
 #include "./Communication/include/Enums/OPnetworkProtocolType.h"
 
 typedef void(*OPnetworkServerReceiveCallback)(OPnetworkSocket*, void*, ui32);
 
 struct OPnetworkServer {
 	OPnetwork network;
+	OPnetworkProtocolType::Enum protocolType;
 	OPnetworkSocket serverSocket;
 	OPnetworkSocket clients[MAX_CLIENTS];
 	ui32 clientIndex = 0;
+	OPnetworkSelect select;
 
 	OPnetworkSocket* clientsToRead[MAX_CLIENTS];
 	ui32 clientsToReadIndex = 0;

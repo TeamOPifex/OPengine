@@ -60,10 +60,16 @@ public:
 		if (Mode == 0 && OPKEYBOARD.WasReleased(OPkeyboardKey::S)) {
 			// Server Mode
 			Mode = 1;
+			networkServer.Init(OPnetworkProtocolType::UDP, OPstringToNumber(port));
+			networkServer.SetReceiveCallback(MessageReceivedHandler);
+			networkServer.SetClientConnectedCallback(ClientConnectedHandler);
+			networkServer.SetClientDisconnectedCallback(ClientDisconnectedHandler);
 		}
 		if (Mode == 0 && OPKEYBOARD.WasReleased(OPkeyboardKey::C)) {
 			// Client Mode
 			Mode = 2;
+			networkClient.Init(OPnetworkProtocolType::UDP, server, OPstringToNumber(serverPort));
+			networkClient.SetReceiveCallback(MessageClientReceivedHandler);
 		}
 
 		if (Mode != 0 && OPMOUSE.WasReleased(OPmouseButton::LBUTTON)) {

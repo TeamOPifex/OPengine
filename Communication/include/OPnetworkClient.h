@@ -2,12 +2,14 @@
 
 #include "./Communication/include/OPnetwork.h"
 #include "./Communication/include/OPnetworkSocket.h"
+#include "./Communication/include/OPnetworkSelect.h"
 
 typedef void(*OPnetworkClientReceiveCallback)(void*, ui32);
 
 struct OPnetworkClient {
 	OPnetwork network;
 	OPnetworkSocket socket;
+	OPnetworkSelect select;
 
 	OPnetworkClientReceiveCallback receiveCallback = NULL;
 
