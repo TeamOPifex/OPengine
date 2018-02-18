@@ -15,15 +15,15 @@ void OPnetworkServer::Init(OPnetworkProtocolType::Enum protocol, ui32 port) {
 		return;
 	}
 
-    OPnetworkAddress local = OPnetworkAddress(port, protocolType);
+    // Gets the Loopback address on port
+    OPnetworkAddress local = OPnetworkAddress(port);
     if(!local.valid) {
         OPlogErr("couldn't locate loopback address for port %d", port);
         return;
     }
 
     OPlogInfo("Loopback Address created for port %d", port);
-
-    serverSocket = OPnetworkSocket(local);
+    serverSocket = OPnetworkSocket(local, protocolType);
     if(!serverSocket.valid) {
         return;
     }
@@ -53,7 +53,7 @@ void OPnetworkServer::Update() {
         select.SetRead(&clients[i]);
     }
 
-    if(serverSocket.networkAddress.networkSocketType == OPnetworkSocketType::STREAM) {
+    if(serverSocket.networkSocketType == OPnetworkSocketType::STREAM) {
         // listen for other connected sockets (only when TCP)
         for(ui32 i = 0; i < clientIndex; i++) {
             select.SetRead(&clients[i]);
@@ -64,7 +64,7 @@ void OPnetworkServer::Update() {
 
         // Handle New Connection
         if(select.IsReadSet(&serverSocket)) {
-            if(serverSocket.networkAddress.networkSocketType == OPnetworkSocketType::STREAM) {
+            if(serverSocket.networkSocketType == OPnetworkSocketType::STREAM) {
                 // Handle TCP Connection
                 // new connection
                 if(!serverSocket.Accept(&clients[clientIndex])) {
@@ -99,7 +99,7 @@ void OPnetworkServer::Update() {
                         // it's their first time, add them
                         if (OPstringEquals(connectMessage, buffer)) {
                             // Send messages back to this address
-                            clients[clientIndex].Init(addressFrom);
+                            clients[clientIndex].Init(addressFrom, serverSocket.networkSocketType == OPnetworkSocketType::STREAM ? OPnetworkProtocolType::TCP : OPnetworkProtocolType::UDP);
                             client = &clients[clientIndex];
                             clientIndex++;
 
@@ -126,7 +126,7 @@ void OPnetworkServer::Update() {
             }
         }
 
-        if(serverSocket.networkAddress.networkSocketType == OPnetworkSocketType::STREAM) {
+        if(serverSocket.networkSocketType == OPnetworkSocketType::STREAM) {
             for(ui32 i = 0; i < clientIndex; i++) {
                 if(select.IsReadSet(&clients[i])) {
                     // This socket sent something, read it

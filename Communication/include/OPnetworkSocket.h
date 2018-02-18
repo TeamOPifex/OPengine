@@ -10,17 +10,18 @@
 struct OPnetworkSocket {
     SOCKET connectedSocket;
     OPnetworkAddress networkAddress;
+    OPnetworkSocketType::Enum networkSocketType;
     bool valid = false;
     i8 receiveBuffer[OPNETWORKSOCKET_BUFFER_SIZE];
     i32 receiveBufferInd = 0;
     struct addrinfo* addrInfo;
 
     OPnetworkSocket() {}
-    OPnetworkSocket(OPnetworkAddress address) {
-        Init(address);
+    OPnetworkSocket(OPnetworkAddress address, OPnetworkProtocolType::Enum protocol) {
+        Init(address, protocol);
     }
-    void Init(OPnetworkAddress address);
-    void Init(i32 socket, OPnetworkAddress address);
+    void Init(OPnetworkAddress address, OPnetworkProtocolType::Enum protocol);
+    void Init(i32 socket, OPnetworkAddress address, OPnetworkProtocolType::Enum protocol);
 	i32 Send(void* data, ui32 size);
 	i32 Send(OPnetworkSocket* client, void* data, ui32 size);
     i32 Receive(void* data, ui32 size);

@@ -14,26 +14,25 @@ struct OPnetworkAddress {
     ui32 networkAddress = 0;
     ui32 networkPort = 0;
     OPchar networkPortStr[6];
-    OPnetworkSocketType::Enum networkSocketType;
     OPnetworkFamily::Enum networkFamily;
     
 	bool valid;
 
     OPnetworkAddress() { }
-    OPnetworkAddress(const OPchar* address, ui32 port, OPnetworkProtocolType::Enum protocol) {
-        Init(address, port, protocol);
+    OPnetworkAddress(const OPchar* address, ui32 port) {
+        Init(address, port);
     }
-    OPnetworkAddress(ui32 port, OPnetworkProtocolType::Enum protocol) {
-        Init(port, protocol);
-    }
-
-    OPnetworkAddress(sockaddr_in* sockaddr, OPnetworkProtocolType::Enum protocol) {
-        Init(sockaddr, protocol);
+    OPnetworkAddress(ui32 port) {
+        Init(port);
     }
 
-    void Init(sockaddr_in* sockaddr, OPnetworkProtocolType::Enum protocol);
-    void Init(ui32 port, OPnetworkProtocolType::Enum protocol);
-    void Init(const OPchar* address, ui32 port, OPnetworkProtocolType::Enum protocol);
+    OPnetworkAddress(sockaddr_in* sockaddr) {
+        Init(sockaddr);
+    }
+
+    void Init(sockaddr_in* sockaddr);
+    void Init(ui32 port);
+    void Init(const OPchar* address, ui32 port);
 
     bool Match(sockaddr_storage* addr);
     void Destroy();

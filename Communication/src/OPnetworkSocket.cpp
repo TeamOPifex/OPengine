@@ -21,19 +21,30 @@ i32 OPnetworkSocketTypeToCode(OPnetworkSocketType::Enum networkSocketType) {
     return SOCK_DGRAM;
 }
 
-void OPnetworkSocket::Init(OPnetworkAddress address) {
+void OPnetworkSocket::Init(i32 socket, OPnetworkAddress address, OPnetworkProtocolType::Enum protocol) {
+    connectedSocket = socket;
+    networkAddress = address;    
+	networkSocketType = protocol == OPnetworkProtocolType::TCP ? OPnetworkSocketType::STREAM : OPnetworkSocketType::DGRAM;
+    
+    valid = true;
+}
+
+void OPnetworkSocket::Init(OPnetworkAddress address, OPnetworkProtocolType::Enum protocol) {
     networkAddress = address;
     valid = false;
 
+    networkSocketType = protocol == OPnetworkProtocolType::TCP ? OPnetworkSocketType::STREAM : OPnetworkSocketType::DGRAM;
+
+
     ui32 networkFamily = OPnetworkFamilyTypeToCode(networkAddress.networkFamily);
-    ui32 networkSocketType = OPnetworkSocketTypeToCode(networkAddress.networkSocketType);
+    ui32 networkSocketTypeCode = OPnetworkSocketTypeToCode(networkSocketType);
     ui32 networkProtocolType = 0;
     
     OPlogInfo("creating socket %d, %d, %d", networkFamily, networkSocketType, networkProtocolType);
 
     connectedSocket = (i32)socket(
          networkFamily, 
-         networkSocketType, 
+         networkSocketTypeCode, 
          networkProtocolType);
 
  	if (connectedSocket == INVALID_SOCKET) {
@@ -58,7 +69,7 @@ void OPnetworkSocket::Init(OPnetworkAddress address) {
 
     OPlogInfo("beginning connection");
 
-    if(networkAddress.networkSocketType == OPnetworkSocketType::STREAM){
+    if(networkSocketType == OPnetworkSocketType::STREAM){
         Connect();
     }
 
@@ -88,7 +99,7 @@ bool OPnetworkSocket::Bind() {
 }
 
 bool OPnetworkSocket::Connect() {
-    if(networkAddress.networkSocketType == OPnetworkSocketType::STREAM) {    
+    if(networkSocketType == OPnetworkSocketType::STREAM) {    
         i32 result = connect(connectedSocket, networkAddress.addressInfo->ai_addr, networkAddress.addressInfo->ai_addrlen); 
         if(result > 0) {
             return true;
@@ -101,7 +112,7 @@ bool OPnetworkSocket::Connect() {
 }
 
 bool OPnetworkSocket::Listen() {
-    if(networkAddress.networkSocketType == OPnetworkSocketType::STREAM) {
+    if(networkSocketType == OPnetworkSocketType::STREAM) {
         i32 result = listen(connectedSocket, 10);
         if(result < 0) {
             OPlogErr("Failed to begin listen()");
@@ -113,8 +124,6 @@ bool OPnetworkSocket::Listen() {
 }
 
 bool OPnetworkSocket::Accept(OPnetworkSocket* networkSocket) {
-
-
     (*networkSocket) = OPnetworkSocket();
     // OPbzero(&networkAddress.sockAddr);
 
@@ -132,23 +141,16 @@ bool OPnetworkSocket::Accept(OPnetworkSocket* networkSocket) {
     OPlogInfo("New connection");// , socket fd is %d , ip is : %s , port : %d \n" , newSocket , inet_ntoa(address.sin_addr) , ntohs(address.sin_port));
  
     struct sockaddr_in* addrIn = (struct sockaddr_in*)&address;
-    OPnetworkAddress networkAddress = OPnetworkAddress(addrIn, networkAddress.networkSocketType == OPnetworkSocketType::STREAM ? OPnetworkProtocolType::TCP : OPnetworkProtocolType::UDP );
-    networkSocket->Init(newSocket, networkAddress);
+    OPnetworkAddress networkAddress = OPnetworkAddress(addrIn);
+    networkSocket->Init(newSocket, networkAddress, networkSocketType == OPnetworkSocketType::STREAM ? OPnetworkProtocolType::TCP : OPnetworkProtocolType::UDP);
 
     return true;
-}
-
-void OPnetworkSocket::Init(i32 socket, OPnetworkAddress address) {
-    connectedSocket = socket;
-    networkAddress = address;
-    
-    valid = true;
 }
 
 i32 OPnetworkSocket::Send(void* data, ui32 size) {
     i32 byteSentCount;
 
-    if(networkAddress.networkSocketType == OPnetworkSocketType::STREAM) {
+    if(networkSocketType == OPnetworkSocketType::STREAM) {
         byteSentCount = send(connectedSocket, (i8*)data, size, 0);
     } else {
         byteSentCount = sendto(connectedSocket, (i8*)data, size, 0, networkAddress.addressInfo->ai_addr, networkAddress.addressInfo->ai_addrlen);
@@ -166,7 +168,7 @@ i32 OPnetworkSocket::Send(OPnetworkSocket* client, void* data, ui32 size) {
     i32 byteSentCount = 0;
     struct sockaddr* sendTo = (struct sockaddr*)&client->networkAddress.addr;
 
-    if(networkAddress.networkSocketType == OPnetworkSocketType::STREAM) {
+    if(networkSocketType == OPnetworkSocketType::STREAM) {
 	    byteSentCount = send(connectedSocket, (i8*)data, size, 0);
     } else {
 	    byteSentCount = sendto(connectedSocket, (i8*)data, size, 0, sendTo, sizeof(client->networkAddress.addr));
@@ -218,7 +220,7 @@ i32 OPnetworkSocket::ReceiveFrom(void* data, ui32 size, OPnetworkAddress* addres
     #endif
 
     
-    address->Init(&clientSocketAddress, networkAddress.networkSocketType == OPnetworkSocketType::STREAM ? OPnetworkProtocolType::TCP : OPnetworkProtocolType::UDP);
+    address->Init(&clientSocketAddress);
     //addr, port, );
 
     if(bytesRead >= 0) {

@@ -15,14 +15,14 @@ void OPnetworkClient::Init(OPnetworkProtocolType::Enum protocolType, const OPcha
 
 	// Get the address to use, if it's a computer name, url, it will DNS it
 	OPnetworkAddress networkAddress;
-    networkAddress.Init(address, port, protocolType);
+    networkAddress.Init(address, port);
     if(!networkAddress.valid) {
 		network.LogError("Error getting address");
 		NETWORK_CLEANUP();
 		return;
 	}
 
-    socket.Init(networkAddress);
+    socket.Init(networkAddress, protocolType);
     if(!socket.valid) {
 		network.LogError("Error at socket()");
 		NETWORK_CLEANUP();

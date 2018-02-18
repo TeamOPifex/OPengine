@@ -48,12 +48,6 @@ bool FillFromAddr(OPnetworkAddress* networkAddress) {
 		OPstringCopyInto(buffer, networkAddress->networkAddressStr);
 	}
 
-	if(addressInfo->ai_socktype == SOCK_STREAM) {
-		networkAddress->networkSocketType = OPnetworkSocketType::STREAM;
-	} else {
-		networkAddress->networkSocketType = OPnetworkSocketType::DGRAM;
-	}
-
 	return true;
 }
 
@@ -93,7 +87,7 @@ bool OPnetworkAddress::Match(sockaddr_storage* addr) {
 	return false;
 }
 
-void OPnetworkAddress::Init(sockaddr_in* sockaddr, OPnetworkProtocolType::Enum protocol) {
+void OPnetworkAddress::Init(sockaddr_in* sockaddr) {
 
 	addr = *sockaddr;
 
@@ -105,8 +99,6 @@ void OPnetworkAddress::Init(sockaddr_in* sockaddr, OPnetworkProtocolType::Enum p
 	OPstringCopyInto(addr, networkAddressStr);
 	networkPort = port;
 	OPstringCopyInto(OPstringFrom(networkPort), networkPortStr);
-
-	networkSocketType = protocol == OPnetworkProtocolType::TCP ? OPnetworkSocketType::STREAM : OPnetworkSocketType::DGRAM;
 	
 	if(sockaddr->sin_family == AF_INET) {
 		networkFamily = OPnetworkFamily::INET;
@@ -127,17 +119,16 @@ void OPnetworkAddress::Init(sockaddr_in* sockaddr, OPnetworkProtocolType::Enum p
 	valid = true;
 }
 
-void OPnetworkAddress::Init(ui32 port, OPnetworkProtocolType::Enum protocol) {
+void OPnetworkAddress::Init(ui32 port) {
     networkPort = port;
 	networkFamily = OPnetworkFamily::INET;
-	networkSocketType = protocol == OPnetworkProtocolType::TCP ? OPnetworkSocketType::STREAM : OPnetworkSocketType::DGRAM;
 	OPstringCopyInto(OPstringFrom(networkPort), networkPortStr);
 
 
     struct addrinfo hints;
 	OPbzero(&hints, sizeof(hints));
 	hints.ai_family = AF_INET;// Use IPv4 // AF_UNSPEC;  // use IPv4 or IPv6, whichever
-	hints.ai_socktype = protocol == OPnetworkProtocolType::TCP ? SOCK_STREAM : SOCK_DGRAM;
+	// hints.ai_socktype = protocol == OPnetworkProtocolType::TCP ? SOCK_STREAM : SOCK_DGRAM;
 	hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
 
     addressInfo = NULL;
@@ -164,10 +155,8 @@ void OPnetworkAddress::Init(ui32 port, OPnetworkProtocolType::Enum protocol) {
 }
 
 
-void OPnetworkAddress::Init(const OPchar* address, ui32 port, OPnetworkProtocolType::Enum protocol) {
+void OPnetworkAddress::Init(const OPchar* address, ui32 port) {
     networkPort = port;
-	networkSocketType = protocol == OPnetworkProtocolType::TCP ? OPnetworkSocketType::STREAM : OPnetworkSocketType::DGRAM;
-    //networkSocketType = socketType;
     valid = false;
 	OPstringCopyInto(OPstringFrom(networkPort), networkPortStr);
 	
@@ -176,13 +165,9 @@ void OPnetworkAddress::Init(const OPchar* address, ui32 port, OPnetworkProtocolT
     struct addrinfo hints;
 	OPbzero(&hints, sizeof(hints));
 	hints.ai_family = AF_UNSPEC;//OPnetworkFamilyTypeToCode(networkFamily);
-	hints.ai_socktype = protocol == OPnetworkProtocolType::TCP ? SOCK_STREAM : SOCK_DGRAM;
 	hints.ai_flags = AI_PASSIVE; // fill in my IP for me
 
 
-	// OPchar* addr = NULL;
-	// ui64 r = LookupAddress(address, &addr);
-	// OPlogDebug("Address %d:%s", r, port);
 
 	addressInfo = NULL;
     i32 iResult = getaddrinfo(address, networkPortStr, &hints, &addressInfo);
@@ -224,46 +209,46 @@ void OPnetworkAddress::Init(const OPchar* address, ui32 port, OPnetworkProtocolT
 
 
 
-ui64 LookupAddress(const OPchar *address, OPchar** resolved)
-{
- 	ui64 a;
-	*resolved = NULL;
+// ui64 LookupAddress(const OPchar *address, OPchar** resolved)
+// {
+//  	ui64 a;
+// 	*resolved = NULL;
 
- 	OPlogInfo("OPnetworkLookupAddress() - Resolving '%s'", address);
+//  	OPlogInfo("OPnetworkLookupAddress() - Resolving '%s'", address);
 
- 	if ((a = inet_addr(address)) == INADDR_NONE)
- 	{
- 		hostent* pHE = gethostbyname(address);
+//  	if ((a = inet_addr(address)) == INADDR_NONE)
+//  	{
+//  		hostent* pHE = gethostbyname(address);
 
- 		if (pHE == 0)
- 		{
- 			OPlogErr("FAILED TO RESOLVE ADDRESS");
- 			// Failed to resolve the address
- 			return INADDR_NONE;
- 		}
+//  		if (pHE == 0)
+//  		{
+//  			OPlogErr("FAILED TO RESOLVE ADDRESS");
+//  			// Failed to resolve the address
+//  			return INADDR_NONE;
+//  		}
 
- 		i32 i = 0;
- 		struct in_addr addr;
+//  		i32 i = 0;
+//  		struct in_addr addr;
 
- 		OPlogInfo("Network: %s\n", pHE->h_name);
- 		if (pHE->h_addrtype == AF_INET)
- 		{
- 			while (pHE->h_addr_list[i] != 0) {
- 				addr.s_addr = *(u_long *)pHE->h_addr_list[i++];
+//  		OPlogInfo("Network: %s\n", pHE->h_name);
+//  		if (pHE->h_addrtype == AF_INET)
+//  		{
+//  			while (pHE->h_addr_list[i] != 0) {
+//  				addr.s_addr = *(u_long *)pHE->h_addr_list[i++];
 
- 				OPchar* ad = inet_ntoa(addr);
- 				ui32 len = (ui32)strlen(ad);
- 				*resolved = (OPchar*)OPalloc(len + 1);
- 				OPmemcpy(*resolved, ad, len);
- 				(*resolved)[len] = NULL;
+//  				OPchar* ad = inet_ntoa(addr);
+//  				ui32 len = (ui32)strlen(ad);
+//  				*resolved = (OPchar*)OPalloc(len + 1);
+//  				OPmemcpy(*resolved, ad, len);
+//  				(*resolved)[len] = NULL;
 
- 				OPlogInfo("IP Address %s\n", ad);
- 			}
- 		}
-	}
+//  				OPlogInfo("IP Address %s\n", ad);
+//  			}
+//  		}
+// 	}
 
- 	return a;
-}
+//  	return a;
+// }
 
 void OPnetworkAddress::Destroy() {
 	freeaddrinfo(addressInfo);
