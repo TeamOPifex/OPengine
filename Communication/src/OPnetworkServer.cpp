@@ -78,13 +78,6 @@ void OPnetworkServer::Update() {
                     OPlogInfo("Message From %s: %s", addressFrom.networkAddressStr, buffer);
 
                     // Look for existing client
-                
-                    OPchar bufferAddr[128];
-                    inet_ntop(addr.ss_family, &addr, bufferAddr, 128);
-
-                    OPlogInfo("LOOKING FOR %s\n", bufferAddr);
-
-                    // Look for existing client
                     OPnetworkSocket* client = NULL;
                     for(ui32 i = 0; i < clientIndex; i++) {
 
@@ -105,13 +98,6 @@ void OPnetworkServer::Update() {
                         // if the message was CONNECT
                         // it's their first time, add them
                         if (OPstringEquals(connectMessage, buffer)) {
-                            // add the client
-                            // OPlogInfo("A new client has been found");
-                            // const OPchar* addr = inet_ntoa(sockAddrIn->sin_addr);
-                            // ui32 port = ntohs(sockAddrIn->sin_port);
-                            // OPnetworkAddress address = OPnetworkAddress(bufferAddr, port, protocolType);
-                            // OPlogInfo("NEW CLIENT: %s:%d", address.networkAddressStr, address.networkPort);
-
                             // Send messages back to this address
                             clients[clientIndex].Init(addressFrom);
                             client = &clients[clientIndex];
@@ -121,7 +107,7 @@ void OPnetworkServer::Update() {
                                 clientConnectedCallback(client);
                             }
                             
-                            if(!client->Send((void*)connectMessage, strlen(connectMessage) + 1)) {
+                            if(!serverSocket.Send(client, (void*)connectMessage, strlen(connectMessage) + 1)) {
                                 OPlogErr("Failed to send CONNECT msg");
                             }
                         }

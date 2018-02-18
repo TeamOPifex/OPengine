@@ -123,7 +123,7 @@ bool OPnetworkSocket::Accept(OPnetworkSocket* networkSocket) {
 
     // OPbzero(&addr);
     
-    i32 newSocket = accept(connectedSocket, (struct sockaddr *)&address, (socklen_t*)&addrlen);
+    i32 newSocket = accept(connectedSocket, &address, (socklen_t*)&addrlen);
     if(newSocket < 0) {
         OPlogErr("Failed to accept connection");
         return false;
@@ -131,7 +131,8 @@ bool OPnetworkSocket::Accept(OPnetworkSocket* networkSocket) {
 
     OPlogInfo("New connection");// , socket fd is %d , ip is : %s , port : %d \n" , newSocket , inet_ntoa(address.sin_addr) , ntohs(address.sin_port));
  
-    OPnetworkAddress networkAddress = OPnetworkAddress(&address, networkAddress.networkSocketType == OPnetworkSocketType::STREAM ? OPnetworkProtocolType::TCP : OPnetworkProtocolType::UDP );
+    struct sockaddr_in* addrIn = (struct sockaddr_in*)&address;
+    OPnetworkAddress networkAddress = OPnetworkAddress(addrIn, networkAddress.networkSocketType == OPnetworkSocketType::STREAM ? OPnetworkProtocolType::TCP : OPnetworkProtocolType::UDP );
     networkSocket->Init(newSocket, networkAddress);
 
     return true;
@@ -163,13 +164,12 @@ i32 OPnetworkSocket::Send(void* data, ui32 size) {
 
 i32 OPnetworkSocket::Send(OPnetworkSocket* client, void* data, ui32 size) {
     i32 byteSentCount = 0;
-
-    struct sockaddr_in* inAddr = (struct sockaddr_in*)&client->networkAddress.addr;
+    struct sockaddr* sendTo = (struct sockaddr*)&client->networkAddress.addr;
 
     if(networkAddress.networkSocketType == OPnetworkSocketType::STREAM) {
 	    byteSentCount = send(connectedSocket, (i8*)data, size, 0);
     } else {
-	    byteSentCount = sendto(connectedSocket, (i8*)data, size, 0, &client->networkAddress.addr, sizeof(*inAddr));
+	    byteSentCount = sendto(connectedSocket, (i8*)data, size, 0, sendTo, sizeof(client->networkAddress.addr));
     }
 
 	if (byteSentCount >= 0) {
@@ -206,10 +206,19 @@ i32 OPnetworkSocket::ReceiveFrom(void* data, ui32 size, OPnetworkAddress* addres
         bytesRead = recvfrom(connectedSocket, (i8*)data, size, 0, (struct sockaddr *)&clientSocketAddress, &sockaddrSize);
     #else
         bytesRead = recvfrom(connectedSocket, data, size, 0, (struct sockaddr *)&clientSocketAddress, &sockaddrSize);
+    
+
+
+        i32 bytesSent = sendto(connectedSocket, data, bytesRead, 0, (struct sockaddr*)&clientSocketAddress, sockaddrSize);
+        if(bytesSent <= 0) {
+            OPlogErr("Still failed to send");
+        } else {
+            OPlogInfo("Send this time");
+        }
     #endif
 
     
-    address->Init((struct sockaddr *)&clientSocketAddress, networkAddress.networkSocketType == OPnetworkSocketType::STREAM ? OPnetworkProtocolType::TCP : OPnetworkProtocolType::UDP);
+    address->Init(&clientSocketAddress, networkAddress.networkSocketType == OPnetworkSocketType::STREAM ? OPnetworkProtocolType::TCP : OPnetworkProtocolType::UDP);
     //addr, port, );
 
     if(bytesRead >= 0) {

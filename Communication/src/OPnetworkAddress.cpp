@@ -93,14 +93,14 @@ bool OPnetworkAddress::Match(sockaddr_storage* addr) {
 	return false;
 }
 
-void OPnetworkAddress::Init(sockaddr* sockaddr, OPnetworkProtocolType::Enum protocol) {
+void OPnetworkAddress::Init(sockaddr_in* sockaddr, OPnetworkProtocolType::Enum protocol) {
 
 	addr = *sockaddr;
 
-	sockaddr_in* clientSocketAddress = (sockaddr_in*)sockaddr;
+	// sockaddr_in* clientSocketAddress = (sockaddr_in*)sockaddr;
 
-	OPchar* addr = inet_ntoa(clientSocketAddress->sin_addr);
-    ui16 port = ntohs(clientSocketAddress->sin_port);
+	OPchar* addr = inet_ntoa(sockaddr->sin_addr);
+    ui16 port = ntohs(sockaddr->sin_port);
 	
 	OPstringCopyInto(addr, networkAddressStr);
 	networkPort = port;
@@ -108,7 +108,7 @@ void OPnetworkAddress::Init(sockaddr* sockaddr, OPnetworkProtocolType::Enum prot
 
 	networkSocketType = protocol == OPnetworkProtocolType::TCP ? OPnetworkSocketType::STREAM : OPnetworkSocketType::DGRAM;
 	
-	if(sockaddr->sa_family == AF_INET) {
+	if(sockaddr->sin_family == AF_INET) {
 		networkFamily = OPnetworkFamily::INET;
 	} else {
 		networkFamily = OPnetworkFamily::INET6;
@@ -136,7 +136,7 @@ void OPnetworkAddress::Init(ui32 port, OPnetworkProtocolType::Enum protocol) {
 
     struct addrinfo hints;
 	OPbzero(&hints, sizeof(hints));
-	hints.ai_family = AF_UNSPEC;  // use IPv4 or IPv6, whichever
+	hints.ai_family = AF_INET;// Use IPv4 // AF_UNSPEC;  // use IPv4 or IPv6, whichever
 	hints.ai_socktype = protocol == OPnetworkProtocolType::TCP ? SOCK_STREAM : SOCK_DGRAM;
 	hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
 
