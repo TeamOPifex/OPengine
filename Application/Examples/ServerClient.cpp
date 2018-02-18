@@ -11,6 +11,73 @@
 #include "./OPimgui.h"
 #endif
 
+
+
+/* Examples
+
+* Lobby Protocol
+* In Game Protocol
+
+*/
+
+class OPgameNetworkProtocol : public OPnetworkState {
+	
+	OPint Init(OPnetworkState* prev) {
+
+	}
+
+	void ClientConnected(OPnetworkSocket* socket) {
+
+	}
+
+	void ClientDisconnected(OPnetworkSocket* socket) {
+		
+	}
+
+	void OnMessage(OPnetworkSocket* socket, OPnetworkPacket* packet) {
+		
+	}
+
+	OPint Exit(OPnetworkState* prev) {
+
+	}
+};
+
+OPgameNetworkProtocol GAME_PROTOCOL;
+class OPlobbyNetworkProtocol : public OPnetworkState {
+	bool quitGame = false;
+
+	OPint Init(OPnetworkState* prev) {
+
+	}
+
+	void ClientConnected(OPnetworkSocket* socket) {
+
+	}
+
+	void ClientDisconnected(OPnetworkSocket* socket) {
+		
+	}
+
+	void OnMessage(OPnetworkSocket* socket, OPnetworkPacket* packet) {
+		char packetHeader = packet->I8();
+		if(packetHeader == '0') {
+			// finished with protocol
+			quitGame = true;
+		} else if(packetHeader == '1') {
+			// start the game;
+			OPnetworkState::Change(&GAME_PROTOCOL);
+		}
+	}
+
+	OPint Exit(OPnetworkState* prev) {
+
+	}
+};
+OPlobbyNetworkProtocol LOBBY_PROTOCOL;
+
+
+
 void MessageReceivedHandler(OPnetworkSocket* socket, void* data, ui32 size);
 void MessageClientReceivedHandler(void* data, ui32 size);
 void ClientConnectedHandler(OPnetworkSocket* socket);
@@ -43,6 +110,8 @@ public:
 		OPmemcpy(port, "1337", 5);
 		OPmemcpy(server, "127.0.0.1", 10);
 		OPmemcpy(serverPort, "1337", 5);
+
+		OPnetworkState::Change(&LOBBY_PROTOCOL);
 	}
 
 
@@ -239,3 +308,5 @@ OPint GS_EXAMPLE_SERVER_CLIENT_AVAILABLE = 1;
 // This is the Game State for this ModelExample
 // Each entry is a function pointer for Initialize, Update, Destroy
 OPgameState* GS_EXAMPLE_SERVER_CLIENT = &_GS_EXAMPLE_SERVER_CLIENT;
+
+
