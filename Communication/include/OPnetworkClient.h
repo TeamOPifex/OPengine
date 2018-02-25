@@ -6,10 +6,21 @@
 
 typedef void(*OPnetworkClientReceiveCallback)(void*, ui32);
 
+#define MAX_LINE 80
+
 struct OPnetworkClient {
 	OPnetwork network;
-	OPnetworkSocket socket;
-	OPnetworkSelect select;
+	OPnetworkSocket clientSocket;
+	OPnetworkSelect selector;
+
+
+	struct sockaddr_in sin, cin;
+	socklen_t addr_len;
+
+	int sockfd, maxfdp;
+	char *msg = "client";
+	char buf[MAX_LINE];
+
 
 	OPnetworkClientReceiveCallback receiveCallback = NULL;
 

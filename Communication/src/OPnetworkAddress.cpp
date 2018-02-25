@@ -87,33 +87,39 @@ bool OPnetworkAddress::Match(sockaddr_storage* addr) {
 	return false;
 }
 
-void OPnetworkAddress::Init(sockaddr_in* sockaddr) {
+void OPnetworkAddress::Init(sockaddr_storage* sockaddr) {
 
 	addr = *sockaddr;
-
-	// sockaddr_in* clientSocketAddress = (sockaddr_in*)sockaddr;
-
-	OPchar* addr = inet_ntoa(sockaddr->sin_addr);
-    ui16 port = ntohs(sockaddr->sin_port);
 	
-	OPstringCopyInto(addr, networkAddressStr);
-	networkPort = port;
-	OPstringCopyInto(OPstringFrom(networkPort), networkPortStr);
 	
-	if(sockaddr->sin_family == AF_INET) {
+	if(sockaddr->ss_family == AF_INET) {
 		networkFamily = OPnetworkFamily::INET;
+
+		struct sockaddr_in* ip4 = (sockaddr_in*)&addr;
+
+		OPchar* addr = inet_ntoa(ip4->sin_addr);
+		OPstringCopyInto(addr, networkAddressStr);
+
+		ui16 port = ntohs(ip4->sin_port);
+		networkPort = port;
+		OPstringCopyInto(OPstringFrom(networkPort), networkPortStr);
+
+
 	} else {
 		networkFamily = OPnetworkFamily::INET6;
-	}
 
-    struct addrinfo hints;
-	OPbzero(&hints, sizeof(hints));
-	hints.ai_family = AF_UNSPEC;  // use IPv4 or IPv6, whichever
+		struct sockaddr_in6* ip6 = (sockaddr_in6*)&addr;
 
-    i32 iResult = getaddrinfo(networkAddressStr, networkPortStr, &hints, &addressInfo);
-	if(iResult < 0) {
-		OPlogErr("Failed to create address");
-		return;
+		inet_ntop(AF_INET6, &ip6->sin6_addr.s6_addr, networkAddressStr, 32);
+
+		//OPmemcpy(ip6->sin6_addr.s6_addr, networkAddressStr, 16);
+
+		OPlogInfo("Address: %s", networkAddressStr);
+
+		ui16 port = ntohs(ip6->sin6_port);
+		networkPort = port;
+		OPstringCopyInto(OPstringFrom(networkPort), networkPortStr);
+
 	}
 
 	valid = true;
@@ -127,7 +133,7 @@ void OPnetworkAddress::Init(ui32 port) {
 
     struct addrinfo hints;
 	OPbzero(&hints, sizeof(hints));
-	hints.ai_family = AF_INET;// Use IPv4 // AF_UNSPEC;  // use IPv4 or IPv6, whichever
+	hints.ai_family = AF_UNSPEC;//AF_INET;// Use IPv4 // AF_UNSPEC;  // use IPv4 or IPv6, whichever
 	// hints.ai_socktype = protocol == OPnetworkProtocolType::TCP ? SOCK_STREAM : SOCK_DGRAM;
 	hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
 
