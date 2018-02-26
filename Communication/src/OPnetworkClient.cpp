@@ -31,11 +31,12 @@ void OPnetworkClient::Init(OPnetworkProtocolType::Enum protocolType, const OPcha
 
 	if(clientSocket.Connect()) {
  		OPlogInfo("Client connected to %s on port %d", address, port);	
-		
-		// const i8* connectMessage = "CONNECT";
-		// if (socket.Send((void*)connectMessage, strlen(connectMessage) + 1) < 0) {
-		// 	network.LogError("Error sending connect message");
-		// }
+
+		clientSocket.verified = false;
+		OPnetworkPacket packetConnect;
+		packetConnect.Str("CONNECT");
+		clientSocket.Send(&packetConnect);
+		OPlogInfo("Client Sent CONNECT");
 	}
 
 }
@@ -53,8 +54,14 @@ void OPnetworkClient::Update() {
 				OPlogErr("fail to receive.");
 			}
 			else {
-				if(ActiveNetworkState != NULL) {
-					ActiveNetworkState->Message(&clientSocket, &packet);
+				if(!clientSocket.verified) {
+					clientSocket.verified = true;
+					clientSocket.Send(&packet);
+					OPlogInfo("Client Verified");
+				} else {
+					if(ActiveNetworkState != NULL) {
+						ActiveNetworkState->Message(&clientSocket, &packet);
+					}
 				}
 			}
 		}

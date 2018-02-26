@@ -14,6 +14,8 @@
 OPclientProtocol CLIENT_PROTOCOL;
 OPserverProtocol SERVER_PROTOCOL;
 
+OPnetworkProtocolType::Enum protocolType = OPnetworkProtocolType::UDP;
+
 // Data for this Game State Example
 class ServerClientExample : public OPgameState {
 public:
@@ -58,12 +60,12 @@ public:
 		if (Mode == 0 && OPKEYBOARD.WasReleased(OPkeyboardKey::S)) {
 			// Server Mode
 			Mode = 1;
-			networkServer.Init(OPnetworkProtocolType::TCP, OPstringToNumber(port));
+			networkServer.Init(protocolType, OPstringToNumber(port));
 		}
 		if (Mode == 0 && OPKEYBOARD.WasReleased(OPkeyboardKey::C)) {
 			// Client Mode
 			Mode = 2;
-			networkClient.Init(OPnetworkProtocolType::TCP, server, OPstringToNumber(serverPort));
+			networkClient.Init(protocolType, server, OPstringToNumber(serverPort));
 		}
 
 		if (Mode != 0 && OPMOUSE.WasReleased(OPmouseButton::LBUTTON)) {
@@ -130,7 +132,7 @@ public:
 			ImGui::InputText("Port", port, 6);
 			if(ImGui::Button("Start Server")) {
 				Mode = 1;
-				networkServer.Init(OPnetworkProtocolType::TCP, OPstringToNumber(port));
+				networkServer.Init(protocolType, OPstringToNumber(port));
 				OPnetworkState::Change(&SERVER_PROTOCOL);
 			}
 			ImGui::End();
@@ -142,7 +144,7 @@ public:
 			ImGui::InputText("Port", serverPort, 6);
 			if(ImGui::Button("Connect")) {
 				Mode = 2;
-				networkClient.Init(OPnetworkProtocolType::TCP, server, OPstringToNumber(serverPort));
+				networkClient.Init(protocolType, server, OPstringToNumber(serverPort));
 				OPnetworkState::Change(&CLIENT_PROTOCOL);
 			}
 			ImGui::End();

@@ -15,6 +15,7 @@ struct OPnetworkPacket {
 	}
 
 	inline void I8(i8 c) {
+		size++;
 		buffer[pos++] = c;
 	}
 	
@@ -29,6 +30,7 @@ struct OPnetworkPacket {
 		i16 val = htons(s);
 		*(i16*)&buffer[pos] = val;
 		pos += 2;
+		size += 2;
 	}
 
 	void Str(const OPchar* str);

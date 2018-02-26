@@ -18,6 +18,8 @@ struct OPnetworkSocket {
     OPnetworkSocketType::Enum networkSocketType;
     bool valid = false;
     ui32 networkID;
+    ui8 code = 0;
+    bool verified = false;
 
     OPnetworkSocket() {}
     OPnetworkSocket(OPnetworkAddress address, OPnetworkProtocolType::Enum protocol) {

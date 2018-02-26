@@ -2,6 +2,7 @@
 #include "./Communication/include/OPnetworkSocket.h"
 #include "./Core/include/OPlog.h"
 #include "./Core/include/OPmemory.h"
+#include "./Core/include/OPmath.h"
 #include "./Data/include/OPstring.h"
 #include "./Communication/include/OPnetworkState.h"
 
@@ -78,16 +79,36 @@ void OPnetworkServer::Update() {
                     }
                 }
 
-                if(existingClient == NULL) {
+                if(existingClient == NULL && OPstringEquals("CONNECT", packet.buffer)) {
                     OPlogInfo("New Client Found!");
                     existingClient = &clients[clientIndex];
                     existingClient->networkID = (OPNETWORK_ID++);
+                    existingClient->verified = false;
+                    existingClient->code = (ui8)(OPrandom() * (f32)sizeof(ui8));
+
+                    // Send client their code to verify they are who they say there
+                    OPnetworkPacket packetCode;
+                    packetCode.I8(existingClient->code);
+                    serverSocket.Send(existingClient, &packetCode);
+					OPlogInfo("Server sent Code '%d' to Client to Verify", existingClient->code);
+
                     clientIndex++;
+                } else if(existingClient != NULL) {
+                    if(!existingClient->verified) {
+                        if(existingClient->code == packet.buffer[0]) {
+                            existingClient->verified = true;
+                            OPlogInfo("Server Verified the client");
+                            if(ActiveNetworkState != NULL) {
+                                ActiveNetworkState->Connected(existingClient);
+                            }
+                        } else {
+                            OPlogErr("Failed to verify client '%d'", existingClient->code);
+                        }
+                    } else if(ActiveNetworkState != NULL) {
+                        ActiveNetworkState->Message(existingClient, &packet);
+                    }                
                 }
 
-                if(ActiveNetworkState != NULL) {
-                    ActiveNetworkState->Message(existingClient, &packet);
-                }
             }
         }
 
