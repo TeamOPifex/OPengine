@@ -35,7 +35,6 @@ void OPnetworkSocket::Init(OPnetworkAddress address, OPnetworkProtocolType::Enum
 
     networkSocketType = protocol == OPnetworkProtocolType::TCP ? OPnetworkSocketType::STREAM : OPnetworkSocketType::DGRAM;
 
-
     ui32 networkFamily = OPnetworkFamilyTypeToCode(networkAddress.networkFamily);
     ui32 networkSocketTypeCode = OPnetworkSocketTypeToCode(networkSocketType);
     ui32 networkProtocolType = 0;
@@ -53,24 +52,23 @@ void OPnetworkSocket::Init(OPnetworkAddress address, OPnetworkProtocolType::Enum
  		return;
  	}
 
-    OPlogInfo("socket was created");
-
-    // OPlogInfo("getting network info for %s at port %s", address.networkAddressStr, address.networkPortStr);
-	// struct addrinfo hints, *p;
-	// int rv;
-	// memset(&hints, 0, sizeof hints);
-	// hints.ai_family = AF_UNSPEC;
-	// hints.ai_socktype = networkSocketType;
-	// if ((rv = getaddrinfo(address.networkAddressStr, address.networkPortStr, &hints, &addrInfo)) != 0) {
-	// 	OPlogErr("getaddrinfo: %s\n", gai_strerror(rv));
-	// 	NETWORK_CLEANUP();
-	// 	return;
-	// }
-
-    if(networkSocketType == OPnetworkSocketType::STREAM){
-        OPlogInfo("beginning connection");
-        Connect();
+    bzero(&sockAddr, sizeof(sockAddr));
+    if(networkAddress.networkFamily == OPnetworkFamily::INET6) {
+        struct sockaddr_in6* sin = (struct sockaddr_in6*)&sockAddr;
+        sin->sin6_family = AF_INET6;
+        inet_pton(AF_INET6, networkAddress.networkAddressStr, &sin->sin6_addr);
+        sin->sin6_port = htons(networkAddress.networkPort);
+        sockAddrLen = sizeof(struct sockaddr_in6);
+    } else {
+        struct sockaddr_in* sin = (struct sockaddr_in*)&sockAddr;
+        sin->sin_family = AF_INET;
+        inet_pton(AF_INET, networkAddress.networkAddressStr, &sin->sin_addr);
+        sin->sin_port = htons(networkAddress.networkPort);
+        sockAddrLen = sizeof(struct sockaddr_in);
     }
+    
+
+    OPlogInfo("socket was created");
 
     valid = true;
 }
@@ -129,14 +127,14 @@ bool OPnetworkSocket::Bind() {
 }
 
 bool OPnetworkSocket::Connect() {
-    if(networkSocketType == OPnetworkSocketType::STREAM) {    
-        i32 result = connect(connectedSocket, networkAddress.addressInfo->ai_addr, networkAddress.addressInfo->ai_addrlen); 
-        if(result > 0) {
-            return true;
-        }
+    // if(networkSocketType == OPnetworkSocketType::STREAM) {    
+    //     i32 result = connect(connectedSocket, networkAddress.addressInfo->ai_addr, networkAddress.addressInfo->ai_addrlen); 
+    //     if(result > 0) {
+    //         return true;
+    //     }
 
-        OPlogErr("Failed to connect");
-    }
+    //     OPlogErr("Failed to connect");
+    // }
 
     return false;
 }
@@ -154,25 +152,25 @@ bool OPnetworkSocket::Listen() {
 }
 
 bool OPnetworkSocket::Accept(OPnetworkSocket* networkSocket) {
-    (*networkSocket) = OPnetworkSocket();
-    // OPbzero(&networkAddress.sockAddr);
+    // (*networkSocket) = OPnetworkSocket();
+    // // OPbzero(&networkAddress.sockAddr);
 
-    struct sockaddr address;
-    int addrlen = sizeof(address);
+    // struct sockaddr address;
+    // int addrlen = sizeof(address);
 
-    // OPbzero(&addr);
+    // // OPbzero(&addr);
     
-    i32 newSocket = accept(connectedSocket, &address, (socklen_t*)&addrlen);
-    if(newSocket < 0) {
-        OPlogErr("Failed to accept connection");
-        return false;
-    }
+    // i32 newSocket = accept(connectedSocket, &address, (socklen_t*)&addrlen);
+    // if(newSocket < 0) {
+    //     OPlogErr("Failed to accept connection");
+    //     return false;
+    // }
 
-    OPlogInfo("New connection");// , socket fd is %d , ip is : %s , port : %d \n" , newSocket , inet_ntoa(address.sin_addr) , ntohs(address.sin_port));
+    // OPlogInfo("New connection");// , socket fd is %d , ip is : %s , port : %d \n" , newSocket , inet_ntoa(address.sin_addr) , ntohs(address.sin_port));
  
-    struct sockaddr_storage* addrIn = (struct sockaddr_storage*)&address;
-    OPnetworkAddress networkAddress = OPnetworkAddress(addrIn);
-    networkSocket->Init(newSocket, networkAddress, networkSocketType == OPnetworkSocketType::STREAM ? OPnetworkProtocolType::TCP : OPnetworkProtocolType::UDP);
+    // struct sockaddr_storage* addrIn = (struct sockaddr_storage*)&address;
+    // OPnetworkAddress networkAddress = OPnetworkAddress(addrIn);
+    // networkSocket->Init(newSocket, networkAddress, networkSocketType == OPnetworkSocketType::STREAM ? OPnetworkProtocolType::TCP : OPnetworkProtocolType::UDP);
 
     return true;
 }
@@ -180,95 +178,29 @@ bool OPnetworkSocket::Accept(OPnetworkSocket* networkSocket) {
 #include "./Core/include/OPmemory.h"
 
 i32 OPnetworkSocket::Send(void* data, ui32 size) {
-    i32 byteSentCount;
-
-    if(networkSocketType == OPnetworkSocketType::STREAM) {
-        byteSentCount = send(connectedSocket, (i8*)data, size, 0);
-    } else {
-
-        if(networkAddress.networkFamily == OPnetworkFamily::INET6) {
-	        struct sockaddr_in6 sin;
-            bzero(&sin, sizeof(sin));
-            sin.sin6_family = AF_INET6;
-            sin.sin6_port = htons(networkAddress.networkPort);
-            inet_pton(AF_INET6, networkAddress.networkAddressStr, &sin.sin6_addr.s6_addr);
-            // OPmemcpy(networkAddress.networkAddressStr, sin.sin6_addr.s6_addr, 16);
-            //inet_pton(AF_INET, "127.0.0.1", &sin.sin6_addr);
-
-            //struct sockaddr* sendTo = (struct sockaddr*)&networkAddress.addr;
-            //size_t s = networkAddress.networkFamily == OPnetworkFamily::INET ? sizeof(sockaddr_in) :sizeof(sockaddr_in6);
-
-            byteSentCount = sendto(connectedSocket, (i8*)data, size, 0, (struct sockaddr*)&sin, sizeof(sin));
-        } else {
-            struct sockaddr_in sin;
-            bzero(&sin, sizeof(sin));
-            sin.sin_family = AF_INET;
-            inet_pton(AF_INET, networkAddress.networkAddressStr, &sin.sin_addr);
-            sin.sin_port = htons(networkAddress.networkPort);
-
-            //struct sockaddr* sendTo = (struct sockaddr*)&networkAddress.addr;
-            //size_t s = networkAddress.networkFamily == OPnetworkFamily::INET ? sizeof(sockaddr_in) :sizeof(sockaddr_in6);
-
-            byteSentCount = sendto(connectedSocket, (i8*)data, size, 0, (struct sockaddr*)&sin, sizeof(sin));
-        }
+    
+    i32 bytesSent = sendto(connectedSocket, data, size, 0, (struct sockaddr*)&sockAddr, sockAddrLen);
+    if(bytesSent < 0) {
+        OPlogErr("Send error");
     }
-
-    if(byteSentCount >= 0) {
-        return byteSentCount;
-    }
-
-    OPlogErr("send error");
-    return -1;
+    return bytesSent;
 }
 
 i32 OPnetworkSocket::Send(OPnetworkSocket* client, void* data, ui32 size) {
-    i32 byteSentCount = 0;
 
-    if(networkSocketType == OPnetworkSocketType::STREAM) {
-	    byteSentCount = send(connectedSocket, (i8*)data, size, 0);
-    } else {
-
-        if(client->networkAddress.networkFamily == OPnetworkFamily::INET6) {
-
-	        struct sockaddr_in6 sin;
-            bzero(&sin, sizeof(sin));
-            sin.sin6_family = AF_INET6;
-            sin.sin6_port = htons(client->networkAddress.networkPort);
-            //OPmemcpy(sin.sin6_addr.s6_addr, client->networkAddress.networkAddressStr, 16);
-            inet_pton(AF_INET6, client->networkAddress.networkAddressStr, &sin.sin6_addr.s6_addr);
-
-            OPlogInfo("Sending message (ipv6) to %s:%d", client->networkAddress.networkAddressStr, client->networkAddress.networkPort);
-            
-            byteSentCount = sendto(connectedSocket, (i8*)data, size, 0, (struct sockaddr*)&sin, sizeof(sin));
-
-        } else {
-            struct sockaddr_in sin;
-            bzero(&sin, sizeof(sin));
-            sin.sin_family = AF_INET;
-            inet_pton(AF_INET, client->networkAddress.networkAddressStr, &sin.sin_addr);
-            sin.sin_port = htons(client->networkAddress.networkPort);
-
-            OPlogInfo("Sending message (ipv4) to %s:%d", client->networkAddress.networkAddressStr, client->networkAddress.networkPort);
-            
-            byteSentCount = sendto(connectedSocket, (i8*)data, size, 0, (struct sockaddr*)&sin, sizeof(sin));
-        }
-
-        
-        // struct sockaddr* sendTo = (struct sockaddr*)&client->networkAddress.addr;
-        // size_t s = client->networkAddress.networkFamily == OPnetworkFamily::INET ? sizeof(sockaddr_in) :sizeof(sockaddr_in6);
-
-	    // byteSentCount = sendto(connectedSocket, (i8*)data, size, 0, sendTo, s );
+    i32 bytesSent = sendto(connectedSocket, data, size, 0, (struct sockaddr*)&client->sockAddr, client->sockAddrLen);
+    if(bytesSent < 0) {
+        OPlogErr("Send to error");
     }
-
-	if (byteSentCount >= 0) {
-		return byteSentCount;
-	}
-	OPlogErr("send to error: %d", errno);
-	return -1;
+    return bytesSent;
 }
 
 i32 OPnetworkSocket::Receive(void* data, ui32 size) {
     i32 bytesRead = -1;
+
+
+    // recvfrom(clientSocket.connectedSocket, buf, MAX_LINE, 0, (struct sockaddr *)&cin, &addr_len);
+
 
     #ifdef OPIFEX_WINDOWS
         bytesRead = recv(connectedSocket, (i8*)data, size, 0);
@@ -284,33 +216,11 @@ i32 OPnetworkSocket::Receive(void* data, ui32 size) {
     return -1;
 }
 
-i32 OPnetworkSocket::ReceiveFrom(void* data, ui32 size, OPnetworkAddress* address) {
+i32 OPnetworkSocket::ReceiveFrom(void* data, ui32 size, OPnetworkSocket* networkSocket) {
 
-    socklen_t sockaddrSize = sizeof(struct sockaddr);
-    struct sockaddr_storage clientSocketAddress;
-
-    i32 bytesRead = -1;
-
-    
-    #ifdef OPIFEX_WINDOWS
-        bytesRead = recvfrom(connectedSocket, (i8*)data, size, 0, (struct sockaddr *)&clientSocketAddress, &sockaddrSize);
-    #else
-        bytesRead = recvfrom(connectedSocket, data, size, 0, (struct sockaddr *)&clientSocketAddress, &sockaddrSize);
-    
-
-
-        i32 bytesSent = sendto(connectedSocket, data, bytesRead, 0, (struct sockaddr*)&clientSocketAddress, sockaddrSize);
-        if(bytesSent <= 0) {
-            OPlogErr("Still failed to send");
-        } else {
-            OPlogInfo("Send this time");
-        }
-    #endif
-
-    
-    address->Init(&clientSocketAddress);
-    //addr, port, );
-
+    bzero(&networkSocket->sockAddr, sizeof(networkSocket->sockAddr));
+    networkSocket->sockAddrLen = sizeof(networkSocket->sockAddr);
+    ui32 bytesRead = recvfrom(connectedSocket, data, size, 0, (struct sockaddr*)&networkSocket->sockAddr, &networkSocket->sockAddrLen);
     if(bytesRead >= 0) {
         return bytesRead;
     }
@@ -348,6 +258,34 @@ void OPnetworkSocket::Destroy() {
     }
 
     CLOSESOCKET(connectedSocket);
+}
+
+bool OPnetworkSocket::Match(OPnetworkSocket* socket) {
+    if(sockAddr.ss_family == AF_INET6 && socket->sockAddr.ss_family == AF_INET6) {
+        sockaddr_in6* ipv6existing = (sockaddr_in6*)&sockAddr;
+        sockaddr_in6* ipv6new = (sockaddr_in6*)&socket->sockAddr;
+
+
+        int r = memcmp(ipv6existing->sin6_addr.s6_addr, ipv6new->sin6_addr.s6_addr, sizeof(ipv6existing->sin6_addr.s6_addr));
+
+        if(ipv6existing->sin6_port == ipv6new->sin6_port && 
+            r == 0) {
+                OPlogInfo("Existing IPv6 Client Found!");
+                return true;
+        }
+
+    } else if(sockAddr.ss_family == AF_INET && socket->sockAddr.ss_family == AF_INET) {
+        sockaddr_in* ipv4existing = (sockaddr_in*)&sockAddr;
+        sockaddr_in* ipv4new = (sockaddr_in*)&socket->sockAddr;
+
+        if(ipv4existing->sin_port == ipv4new->sin_port && 
+            ipv4existing->sin_addr.s_addr == ipv4new->sin_addr.s_addr) {
+                OPlogInfo("Existing IPv4 Client Found!");
+                return true;
+        }
+    }
+
+    return false;
 }
 
 

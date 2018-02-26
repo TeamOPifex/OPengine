@@ -9,33 +9,13 @@ typedef void(*OPnetworkServerReceiveCallback)(OPnetworkSocket*, void*, ui32);
 
 #define MAX_LINE 80
 
-struct OPnetworkServer {
-	OPnetwork network;
-	OPnetworkProtocolType::Enum protocolType;
+struct OPnetworkServer {	
 	OPnetworkSocket serverSocket;
-	// OPnetworkSocket clients[MAX_CLIENTS];
-	// ui32 clientIndex = 0;
 	OPnetworkSelect selector;
 
-	OPnetworkSocket* clientsToRead[MAX_CLIENTS];
-	ui32 clientsToReadIndex = 0;
-	OPnetworkSocket* clientsToWrite[MAX_CLIENTS];
-	ui32 clientsToWriteIndex = 0;
-	OPnetworkSocket* clientsToExcept[MAX_CLIENTS];
-	ui32 clientsToExceptIndex = 0;
-
-
-
-	struct sockaddr_storage clients[MAX_CLIENTS];
+	OPnetworkSocket clients[MAX_CLIENTS];
 	ui32 clientIndex = 0;
 
-
-    struct sockaddr_in6 sin, cin;
-	socklen_t addr_len;
-
-
-	int sockfd, n, maxfdp;
-	char *msg = "server";
 	char buf[MAX_LINE];
 
 	OPnetworkServerReceiveCallback receiveCallback = NULL;

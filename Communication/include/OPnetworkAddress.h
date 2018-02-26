@@ -7,11 +7,7 @@
 #include "./Communication/include/OPnetworkPlatform.h"
 
 struct OPnetworkAddress {
-    sockaddr_storage addr;
-    addrinfo* addressInfo;
-
     OPchar networkAddressStr[128];
-    ui32 networkAddress = 0;
     ui32 networkPort = 0;
     OPchar networkPortStr[6];
     OPnetworkFamily::Enum networkFamily;
@@ -25,15 +21,8 @@ struct OPnetworkAddress {
     OPnetworkAddress(ui32 port) {
         Init(port);
     }
-
-    OPnetworkAddress(sockaddr_storage* sockaddr) {
-        Init(sockaddr);
-    }
-
-    void Init(sockaddr_storage* sockaddr);
+    
     void Init(ui32 port);
     void Init(const OPchar* address, ui32 port);
-
-    bool Match(sockaddr_storage* addr);
     void Destroy();
 };
