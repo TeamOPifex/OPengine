@@ -57,7 +57,7 @@ void OPnetworkSocket::Init(OPnetworkAddress address, OPnetworkProtocolType::Enum
  	}
 
     OPbzero(&sockAddr, sizeof(sockAddr));
-	if (networkAddress[0] == NULL) {
+	if (networkAddress.networkAddressStr[0] == NULL) {
 		// if network address is null we're going to use the connection
 		// as a local connection and bind it to all available ips
 		struct sockaddr_in6* sin = (struct sockaddr_in6*)&sockAddr;
