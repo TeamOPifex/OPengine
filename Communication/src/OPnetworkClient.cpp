@@ -43,13 +43,16 @@ void OPnetworkClient::Update() {
 	i32 selectResult = selector.Select();
 	if(selectResult > 0) {
 		if(selector.IsReadSet(&clientSocket)) {
-			i32 bytes = clientSocket.Receive(buf, MAX_LINE);
+			OPnetworkPacket packet;
+			i32 bytes = clientSocket.Receive(&packet);
 			if (bytes < 0) {
 				OPlogErr("fail to receive.");
 			}
 			else {
-				printf("receive from server: %s.\n", buf);
-				receiveCallback(buf, bytes);
+				printf("receive from server: %s.\n", packet.buffer);
+				if(receiveCallback != NULL) {
+					receiveCallback(packet.buffer, packet.size);
+				}
 			}
 		}
 	} else if(selectResult < 0) {
@@ -57,8 +60,8 @@ void OPnetworkClient::Update() {
 	}
 }
 
-bool OPnetworkClient::Send(void* data, ui32 size) {
-	clientSocket.Send(data, size);
+bool OPnetworkClient::Send(OPnetworkPacket* packet) {
+	clientSocket.Send(packet);
 	return true;
 }
 

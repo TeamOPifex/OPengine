@@ -3,6 +3,7 @@
 #include "./Core/include/OPlog.h"
 #include "./Core/include/OPmemory.h"
 #include "./Data/include/OPstring.h"
+#include "./Communication/include/OPnetworkState.h"
 
 void OPnetworkServer::Init(OPnetworkProtocolType::Enum protocol, ui32 port) {
 
@@ -47,7 +48,9 @@ void OPnetworkServer::Update() {
     if(selectResult > 0) {
 
         if(selector.IsReadSet(&serverSocket)) {
-            ui32 bytes = serverSocket.ReceiveFrom(buf, MAX_LINE, &clients[clientIndex]);
+            OPnetworkPacket packet;
+
+            ui32 bytes = serverSocket.ReceiveFrom(&packet, &clients[clientIndex]);
 
             // Look for an existing client socket
             OPnetworkSocket* existingClient = NULL;
@@ -60,19 +63,26 @@ void OPnetworkServer::Update() {
 
             if(existingClient == NULL) {
                 OPlogInfo("New Client Found!");
+                existingClient = &clients[clientIndex];
                 clientIndex++;
             }
 
-            receiveCallback(NULL, buf, bytes);
+            if(ActiveNetworkState != NULL) {
+                ActiveNetworkState->OnMessage(existingClient, &packet);
+            }
+
+            if(receiveCallback != NULL) {
+                receiveCallback(existingClient, packet.buffer, packet.size);
+            }
         }
     } else if(selectResult == -1) {
         OPlogErr("Failed to select");
     }
 }
 
-bool OPnetworkServer::Send(void* data, ui32 size) {
+bool OPnetworkServer::Send(OPnetworkPacket* packet) {
     for(ui32 i = 0; i < clientIndex; i++) {
-        serverSocket.Send(&clients[i], data, size);
+        serverSocket.Send(&clients[i], packet);
     }
 	return true;
 }

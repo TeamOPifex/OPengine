@@ -24,7 +24,7 @@ struct OPnetworkServer {
 
 	void Init(OPnetworkProtocolType::Enum protocolType, ui32 port);
 	void Update();
-	bool Send(void* data, ui32 size);
+	bool Send(OPnetworkPacket* packet);
 	void Destroy();
     void UpdateTCP();
     void UpdateUDP();

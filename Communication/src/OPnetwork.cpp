@@ -11,7 +11,6 @@ void OPnetwork::LogError(const OPchar* message) {
 #endif
 }
 
-
 i32 OPnetwork::Initialize() {
 #ifdef OPIFEX_WINDOWS
 	WSADATA wsaData;

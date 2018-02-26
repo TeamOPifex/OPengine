@@ -3,10 +3,12 @@
 #include "./Core/include/OPtypes.h"
 #include "./Communication/include/OPnetworkPlatform.h"
 
+#define MAX_PACKET_SIZE 1024
+
 struct OPnetworkPacket {
-	i8 buffer[1024];
-	ui16 size;
-	ui16 pos;
+	i8 buffer[MAX_PACKET_SIZE];
+	ui16 size = 0;
+	ui16 pos = 0;
 	
 	inline i8 I8() {
 		return buffer[pos++];
@@ -28,4 +30,6 @@ struct OPnetworkPacket {
 		*(i16*)&buffer[pos] = val;
 		pos += 2;
 	}
+
+	void Str(const OPchar* str);
 };

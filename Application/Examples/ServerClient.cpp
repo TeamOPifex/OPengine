@@ -35,7 +35,7 @@ class OPgameNetworkProtocol : public OPnetworkState {
 	}
 
 	void OnMessage(OPnetworkSocket* socket, OPnetworkPacket* packet) {
-		
+		OPlogInfo("Received Message: %s", packet->buffer);
 	}
 
 	OPint Exit(OPnetworkState* prev) {
@@ -44,38 +44,6 @@ class OPgameNetworkProtocol : public OPnetworkState {
 };
 
 OPgameNetworkProtocol GAME_PROTOCOL;
-class OPlobbyNetworkProtocol : public OPnetworkState {
-	bool quitGame = false;
-
-	OPint Init(OPnetworkState* prev) {
-
-	}
-
-	void ClientConnected(OPnetworkSocket* socket) {
-
-	}
-
-	void ClientDisconnected(OPnetworkSocket* socket) {
-		
-	}
-
-	void OnMessage(OPnetworkSocket* socket, OPnetworkPacket* packet) {
-		char packetHeader = packet->I8();
-		if(packetHeader == '0') {
-			// finished with protocol
-			quitGame = true;
-		} else if(packetHeader == '1') {
-			// start the game;
-			OPnetworkState::Change(&GAME_PROTOCOL);
-		}
-	}
-
-	OPint Exit(OPnetworkState* prev) {
-
-	}
-};
-OPlobbyNetworkProtocol LOBBY_PROTOCOL;
-
 
 
 void MessageReceivedHandler(OPnetworkSocket* socket, void* data, ui32 size);
@@ -111,7 +79,7 @@ public:
 		OPmemcpy(server, "127.0.0.1", 10);
 		OPmemcpy(serverPort, "1337", 5);
 
-		OPnetworkState::Change(&LOBBY_PROTOCOL);
+		OPnetworkState::Change(&GAME_PROTOCOL);
 	}
 
 
@@ -233,14 +201,16 @@ public:
 			if(ImGui::Button("Send")) {			
 				HeldDown = 0;
 				sendClick = true;
-				networkServer.Send((void*)message, strlen(message) + 1);
+				OPnetworkPacket packet;
+				packet.Str(message);
+				networkServer.Send(&packet);
 			}
 
 			ImGui::End();
 		}
 
 
-		if (Mode == 2) { // Server
+		if (Mode == 2) { // Client
 			ImGui::SetNextWindowPos(ImVec2(10, 30), ImGuiSetCond_::ImGuiSetCond_FirstUseEver);
 			ImGui::Begin("Client Controls", &always, ImVec2(250, 475), -1.0F, ImGuiWindowFlags_NoResize);
 			ImGui::InputText("Message", message, 128);
@@ -248,7 +218,9 @@ public:
 			if(ImGui::Button("Send")) {
 				HeldDown = 0;
 				sendClick = true;
-				networkClient.Send((void*)message, strlen(message) + 1);
+				OPnetworkPacket packet;
+				packet.Str(message);
+				networkClient.Send(&packet);
 			}
 
 			ImGui::End();
@@ -308,5 +280,4 @@ OPint GS_EXAMPLE_SERVER_CLIENT_AVAILABLE = 1;
 // This is the Game State for this ModelExample
 // Each entry is a function pointer for Initialize, Update, Destroy
 OPgameState* GS_EXAMPLE_SERVER_CLIENT = &_GS_EXAMPLE_SERVER_CLIENT;
-
 

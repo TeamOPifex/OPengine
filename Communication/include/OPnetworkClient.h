@@ -17,7 +17,7 @@ struct OPnetworkClient {
 
 	void Init(OPnetworkProtocolType::Enum protocolType, const OPchar* address, ui32 port);
 	void Update();
-	bool Send(void* data, ui32 size);
+	bool Send(OPnetworkPacket* packet);
     void Destroy();
 	i32 Select(fd_set* read, fd_set* write, fd_set* except);
 
