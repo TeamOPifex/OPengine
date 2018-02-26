@@ -96,6 +96,45 @@ void OPnetworkAddress::Init(const OPchar* address, ui32 port) {
     valid = true;
 }
 
+
+void OPnetworkAddress::Init(struct sockaddr_storage* sockAddr) {
+	valid = false;
+
+	if(sockAddr->ss_family == AF_INET6) {
+		struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)sockAddr;
+
+		// Network Address
+		OPchar buffer[128];
+		inet_ntop(AF_INET6, &ipv6->sin6_addr, buffer, 128);
+		OPstringCopyInto(buffer, networkAddressStr);
+			
+		// Netowrk Port
+		networkPort = ipv6->sin6_port;
+		OPstringCopyInto(OPstringFrom(networkPort), networkPortStr);
+
+		// Netowrk Family
+		networkFamily = OPnetworkFamily::INET6;
+
+		valid = true;
+	} else {
+		struct sockaddr_in *ipv4 = (struct sockaddr_in *)sockAddr;
+
+		// Network Address
+		OPchar buffer[128];
+		inet_ntop(AF_INET, &ipv4->sin_addr, buffer, 128);
+		OPstringCopyInto(buffer, networkAddressStr);
+
+		// Netowrk Port
+		networkPort = ipv4->sin_port;
+		OPstringCopyInto(OPstringFrom(networkPort), networkPortStr);
+
+		// Netowrk Family
+		networkFamily = OPnetworkFamily::INET;
+
+		valid = true;
+	}
+}
+
 void OPnetworkAddress::Destroy() {
 	
 }

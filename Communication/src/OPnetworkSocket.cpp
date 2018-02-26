@@ -121,16 +121,18 @@ bool OPnetworkSocket::Bind() {
 }
 
 bool OPnetworkSocket::Connect() {
-    // if(networkSocketType == OPnetworkSocketType::STREAM) {    
-    //     i32 result = connect(connectedSocket, networkAddress.addressInfo->ai_addr, networkAddress.addressInfo->ai_addrlen); 
-    //     if(result > 0) {
-    //         return true;
-    //     }
+    if(networkSocketType == OPnetworkSocketType::STREAM) {    
+        i32 result = connect(connectedSocket, (struct sockaddr*)&sockAddr, sockAddrLen); 
+        if(result == 0) {
+            OPlogInfo("Connected to TCP server");
+            return true;
+        }
 
-    //     OPlogErr("Failed to connect");
-    // }
+        OPlogErr("Failed to connect");
+        return false;
+    }
 
-    return false;
+    return true;
 }
 
 bool OPnetworkSocket::Listen() {
@@ -146,26 +148,21 @@ bool OPnetworkSocket::Listen() {
 }
 
 bool OPnetworkSocket::Accept(OPnetworkSocket* networkSocket) {
-    // (*networkSocket) = OPnetworkSocket();
-    // // OPbzero(&networkAddress.sockAddr);
 
-    // struct sockaddr address;
-    // int addrlen = sizeof(address);
-
-    // // OPbzero(&addr);
+    OPbzero(&networkSocket->sockAddr, sizeof(networkSocket->sockAddr));    
+    networkSocket->sockAddrLen = sizeof(networkSocket->sockAddr);
     
-    // i32 newSocket = accept(connectedSocket, &address, (socklen_t*)&addrlen);
-    // if(newSocket < 0) {
-    //     OPlogErr("Failed to accept connection");
-    //     return false;
-    // }
+    i32 newSocket = accept(connectedSocket, (struct sockaddr*)&networkSocket->sockAddr, &networkSocket->sockAddrLen);
+    if(newSocket < 0) {
+        OPlogErr("Failed to accept connection");
+        return false;
+    }
 
-    // OPlogInfo("New connection");// , socket fd is %d , ip is : %s , port : %d \n" , newSocket , inet_ntoa(address.sin_addr) , ntohs(address.sin_port));
+    networkSocket->connectedSocket = newSocket;
+    networkSocket->networkAddress = OPnetworkAddress(&networkSocket->sockAddr);
+
+    OPlogInfo("New connection %s:%d", networkSocket->networkAddress.networkAddressStr, networkSocket->networkAddress.networkPort);
  
-    // struct sockaddr_storage* addrIn = (struct sockaddr_storage*)&address;
-    // OPnetworkAddress networkAddress = OPnetworkAddress(addrIn);
-    // networkSocket->Init(newSocket, networkAddress, networkSocketType == OPnetworkSocketType::STREAM ? OPnetworkProtocolType::TCP : OPnetworkProtocolType::UDP);
-
     return true;
 }
 
@@ -192,7 +189,12 @@ i32 OPnetworkSocket::Send(OPnetworkSocket* client, OPnetworkPacket* packet) {
     i32 totalSent = 0;
     while(totalSent < packet->size) {
 
-        bytesSent = sendto(connectedSocket, &packet->buffer[totalSent], packet->size - totalSent, 0, (struct sockaddr*)&client->sockAddr, client->sockAddrLen);
+        // if(networkSocketType == OPnetworkSocketType::STREAM) {
+        //     bytesSent = send(connectedSocket, &packet->buffer[totalSent], packet->size - totalSent, 0);
+        // } else {
+            bytesSent = sendto(connectedSocket, &packet->buffer[totalSent], packet->size - totalSent, 0, (struct sockaddr*)&client->sockAddr, client->sockAddrLen);
+        //}
+
         if(bytesSent < 0) {
             OPlogErr("Send to error");
             return bytesSent;

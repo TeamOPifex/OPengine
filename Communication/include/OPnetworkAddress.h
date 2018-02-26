@@ -22,7 +22,12 @@ struct OPnetworkAddress {
         Init(port);
     }
     
+    OPnetworkAddress(struct sockaddr_storage* sockAddr) {
+        Init(sockAddr);
+    }
+    
     void Init(ui32 port);
+    void Init(struct sockaddr_storage* sockAddr);
     void Init(const OPchar* address, ui32 port);
     void Destroy();
 };

@@ -28,13 +28,16 @@ void OPnetworkClient::Init(OPnetworkProtocolType::Enum protocolType, const OPcha
 		NETWORK_CLEANUP();
  		return;
  	}
-	
-	// const i8* connectMessage = "CONNECT";
-	// if (socket.Send((void*)connectMessage, strlen(connectMessage) + 1) < 0) {
-	// 	network.LogError("Error sending connect message");
-	// }
 
- 	OPlogInfo("Client connected to %s on port %d", address, port);	
+	if(clientSocket.Connect()) {
+ 		OPlogInfo("Client connected to %s on port %d", address, port);	
+		
+		// const i8* connectMessage = "CONNECT";
+		// if (socket.Send((void*)connectMessage, strlen(connectMessage) + 1) < 0) {
+		// 	network.LogError("Error sending connect message");
+		// }
+	}
+
 }
 
 void OPnetworkClient::Update() {

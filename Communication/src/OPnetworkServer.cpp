@@ -44,32 +44,72 @@ void OPnetworkServer::Update() {
     selector.Zero();
     selector.SetRead(&serverSocket);
 
+    if(serverSocket.networkSocketType == OPnetworkSocketType::STREAM) {
+        for(ui32 i = 0; i < clientIndex; i++) {
+            selector.SetRead(&clients[i]);
+        }
+    }
+
     i32 selectResult = selector.Select();
     if(selectResult > 0) {
 
         if(selector.IsReadSet(&serverSocket)) {
-            OPnetworkPacket packet;
 
-            ui32 bytes = serverSocket.ReceiveFrom(&packet, &clients[clientIndex]);
+            if(serverSocket.networkSocketType == OPnetworkSocketType::STREAM) {
+                // New Connection
+                OPlogInfo("Handling new TCP connection");
+                if(serverSocket.Accept(&clients[clientIndex])) {
+                    if(ActiveNetworkState != NULL) {
+                        ActiveNetworkState->Connected(&clients[clientIndex]);
+                    }
+                    clientIndex++;
+                }
+            } else {
+                OPnetworkPacket packet;
 
-            // Look for an existing client socket
-            OPnetworkSocket* existingClient = NULL;
-            for(ui32 i = 0; i < clientIndex; i++) {
-                if(clients[i].Match(&clients[clientIndex])) {
-                    existingClient = &clients[i];
-                    break;
+                i32 bytes = serverSocket.ReceiveFrom(&packet, &clients[clientIndex]);
+
+                // Look for an existing client socket
+                OPnetworkSocket* existingClient = NULL;
+                for(ui32 i = 0; i < clientIndex; i++) {
+                    if(clients[i].Match(&clients[clientIndex])) {
+                        existingClient = &clients[i];
+                        break;
+                    }
+                }
+
+                if(existingClient == NULL) {
+                    OPlogInfo("New Client Found!");
+                    existingClient = &clients[clientIndex];
+                    existingClient->networkID = (OPNETWORK_ID++);
+                    clientIndex++;
+                }
+
+                if(ActiveNetworkState != NULL) {
+                    ActiveNetworkState->Message(existingClient, &packet);
                 }
             }
+        }
 
-            if(existingClient == NULL) {
-                OPlogInfo("New Client Found!");
-                existingClient = &clients[clientIndex];
-                existingClient->networkID = (OPNETWORK_ID++);
-                clientIndex++;
-            }
+        if(serverSocket.networkSocketType == OPnetworkSocketType::STREAM) {
+            for(ui32 i = 0; i < clientIndex; i++) {
+                if(selector.IsReadSet(&clients[i])) {
+                    OPnetworkPacket packet;
+                    i32 bytes = clients[i].Receive(&packet);
+                    if(bytes == 0) {
+                        if(ActiveNetworkState != NULL) {
+                            ActiveNetworkState->Disconnected(&clients[i]);
+                        }
 
-            if(ActiveNetworkState != NULL) {
-                ActiveNetworkState->Message(existingClient, &packet);
+                        if(i != clientIndex - 1) {
+                            clients[i] = clients[clientIndex - 1];
+                            i--;
+                        }
+                        clientIndex--;
+                    } else if(ActiveNetworkState != NULL) {
+                        ActiveNetworkState->Message(&clients[i], &packet);
+                    }
+                }
             }
         }
     } else if(selectResult == -1) {
@@ -78,8 +118,15 @@ void OPnetworkServer::Update() {
 }
 
 bool OPnetworkServer::Send(OPnetworkPacket* packet) {
-    for(ui32 i = 0; i < clientIndex; i++) {
-        serverSocket.Send(&clients[i], packet);
+
+    if(serverSocket.networkSocketType == OPnetworkSocketType::STREAM) {
+        for(ui32 i = 0; i < clientIndex; i++) {
+            clients[i].Send(packet);
+        }
+    } else {
+        for(ui32 i = 0; i < clientIndex; i++) {
+            serverSocket.Send(&clients[i], packet);
+        }
     }
 	return true;
 }
