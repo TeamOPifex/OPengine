@@ -6,9 +6,9 @@
 class OPnetworkState {
 public:
 	virtual OPint Init(OPnetworkState*) = 0;
-	virtual void ClientConnected(OPnetworkSocket* socket) = 0;
-	virtual void ClientDisconnected(OPnetworkSocket* socket) = 0;
-	virtual void OnMessage(OPnetworkSocket* socket, OPnetworkPacket* packet) = 0;
+	virtual void Connected(OPnetworkSocket* socket) = 0;
+	virtual void Disconnected(OPnetworkSocket* socket) = 0;
+	virtual void Message(OPnetworkSocket* socket, OPnetworkPacket* packet) = 0;
 	virtual OPint Exit(OPnetworkState*) = 0;
 	void* Data;
 	

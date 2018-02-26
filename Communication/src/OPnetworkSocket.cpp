@@ -3,6 +3,8 @@
 #include "./Core/include/OPlog.h"
 #include "./Core/include/OPmemory.h"
 
+ui32 OPNETWORK_ID = 0;
+
 i32 OPnetworkSocketTypeToCode(OPnetworkSocketType::Enum networkSocketType) {
     switch(networkSocketType) {
         case OPnetworkSocketType::STREAM:
@@ -32,6 +34,7 @@ void OPnetworkSocket::Init(i32 socket, OPnetworkAddress address, OPnetworkProtoc
 void OPnetworkSocket::Init(OPnetworkAddress address, OPnetworkProtocolType::Enum protocol) {
     networkAddress = address;
     valid = false;
+    networkID = (OPNETWORK_ID++);
 
     networkSocketType = protocol == OPnetworkProtocolType::TCP ? OPnetworkSocketType::STREAM : OPnetworkSocketType::DGRAM;
 

@@ -5,51 +5,14 @@
 #include "./Human/include/Systems/OPinputSystem.h"
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Data/include/OPcman.h"
-#include "./Communication/include/OPsimpleProtocol.h"
 
 #ifdef ADDON_imgui
 #include "./OPimgui.h"
 #endif
 
-
-
-/* Examples
-
-* Lobby Protocol
-* In Game Protocol
-
-*/
-
-class OPgameNetworkProtocol : public OPnetworkState {
-	
-	OPint Init(OPnetworkState* prev) {
-
-	}
-
-	void ClientConnected(OPnetworkSocket* socket) {
-
-	}
-
-	void ClientDisconnected(OPnetworkSocket* socket) {
-		
-	}
-
-	void OnMessage(OPnetworkSocket* socket, OPnetworkPacket* packet) {
-		OPlogInfo("Received Message: %s", packet->buffer);
-	}
-
-	OPint Exit(OPnetworkState* prev) {
-
-	}
-};
-
-OPgameNetworkProtocol GAME_PROTOCOL;
-
-
-void MessageReceivedHandler(OPnetworkSocket* socket, void* data, ui32 size);
-void MessageClientReceivedHandler(void* data, ui32 size);
-void ClientConnectedHandler(OPnetworkSocket* socket);
-void ClientDisconnectedHandler(OPnetworkSocket* socket);
+#include "ServerClient.h"
+OPclientProtocol CLIENT_PROTOCOL;
+OPserverProtocol SERVER_PROTOCOL;
 
 // Data for this Game State Example
 class ServerClientExample : public OPgameState {
@@ -78,8 +41,6 @@ public:
 		OPmemcpy(port, "1337", 5);
 		OPmemcpy(server, "127.0.0.1", 10);
 		OPmemcpy(serverPort, "1337", 5);
-
-		OPnetworkState::Change(&GAME_PROTOCOL);
 	}
 
 
@@ -98,15 +59,11 @@ public:
 			// Server Mode
 			Mode = 1;
 			networkServer.Init(OPnetworkProtocolType::UDP, OPstringToNumber(port));
-			networkServer.SetReceiveCallback(MessageReceivedHandler);
-			networkServer.SetClientConnectedCallback(ClientConnectedHandler);
-			networkServer.SetClientDisconnectedCallback(ClientDisconnectedHandler);
 		}
 		if (Mode == 0 && OPKEYBOARD.WasReleased(OPkeyboardKey::C)) {
 			// Client Mode
 			Mode = 2;
 			networkClient.Init(OPnetworkProtocolType::UDP, server, OPstringToNumber(serverPort));
-			networkClient.SetReceiveCallback(MessageClientReceivedHandler);
 		}
 
 		if (Mode != 0 && OPMOUSE.WasReleased(OPmouseButton::LBUTTON)) {
@@ -174,9 +131,7 @@ public:
 			if(ImGui::Button("Start Server")) {
 				Mode = 1;
 				networkServer.Init(OPnetworkProtocolType::UDP, OPstringToNumber(port));
-				networkServer.SetReceiveCallback(MessageReceivedHandler);
-				networkServer.SetClientConnectedCallback(ClientConnectedHandler);
-				networkServer.SetClientDisconnectedCallback(ClientDisconnectedHandler);
+				OPnetworkState::Change(&SERVER_PROTOCOL);
 			}
 			ImGui::End();
 
@@ -188,7 +143,7 @@ public:
 			if(ImGui::Button("Connect")) {
 				Mode = 2;
 				networkClient.Init(OPnetworkProtocolType::UDP, server, OPstringToNumber(serverPort));
-				networkClient.SetReceiveCallback(MessageClientReceivedHandler);
+				OPnetworkState::Change(&CLIENT_PROTOCOL);
 			}
 			ImGui::End();
 		}
@@ -256,24 +211,6 @@ public:
 
 ServerClientExample _GS_EXAMPLE_SERVER_CLIENT;
 
-void MessageReceivedHandler(OPnetworkSocket* socket, void* data, ui32 size) {
-	OPlogInfo("Message %s", (i8*)data);
-	_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = OPstringCopy((i8*)data);
-}
-
-void MessageClientReceivedHandler(void* data, ui32 size) {
-	OPlogInfo("Message %s", (i8*)data);
-	_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = OPstringCopy((i8*)data);
-}
-
-void ClientConnectedHandler(OPnetworkSocket* socket) {
-
-}
-
-void ClientDisconnectedHandler(OPnetworkSocket* socket) {
-
-}
-
 // This is for the Example Selector only
 OPint GS_EXAMPLE_SERVER_CLIENT_AVAILABLE = 1;
 
@@ -281,3 +218,23 @@ OPint GS_EXAMPLE_SERVER_CLIENT_AVAILABLE = 1;
 // Each entry is a function pointer for Initialize, Update, Destroy
 OPgameState* GS_EXAMPLE_SERVER_CLIENT = &_GS_EXAMPLE_SERVER_CLIENT;
 
+
+
+OPint OPserverProtocol::Init(OPnetworkState* prev) { return 1; }
+void OPserverProtocol::Connected(OPnetworkSocket* socket) {}
+void OPserverProtocol::Disconnected(OPnetworkSocket* socket) {}
+void OPserverProtocol::Message(OPnetworkSocket* socket, OPnetworkPacket* packet) {
+	OPlogInfo("Server Received from %d: %s", socket->networkID, packet->buffer);
+	_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = OPstringCopy(packet->buffer);
+}
+OPint OPserverProtocol::Exit(OPnetworkState* prev) { return 1; }
+
+
+OPint OPclientProtocol::Init(OPnetworkState* prev) { return 1; }
+void OPclientProtocol::Connected(OPnetworkSocket* socket) {}
+void OPclientProtocol::Disconnected(OPnetworkSocket* socket) {}
+void OPclientProtocol::Message(OPnetworkSocket* socket, OPnetworkPacket* packet) {
+	OPlogInfo("Client Received from %d: %s", socket->networkID, packet->buffer);
+	_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = OPstringCopy(packet->buffer);
+}
+OPint OPclientProtocol::Exit(OPnetworkState* prev) { return 1; }

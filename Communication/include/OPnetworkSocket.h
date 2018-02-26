@@ -8,6 +8,8 @@
 #define OPNETWORKSOCKET_BUFFER_SIZE 1024
 #define MAX_SEND_SIZE 1024
 
+extern ui32 OPNETWORK_ID;
+
 struct OPnetworkSocket {
     struct sockaddr_storage sockAddr;
     socklen_t sockAddrLen;
@@ -15,6 +17,7 @@ struct OPnetworkSocket {
     OPnetworkAddress networkAddress;
     OPnetworkSocketType::Enum networkSocketType;
     bool valid = false;
+    ui32 networkID;
 
     OPnetworkSocket() {}
     OPnetworkSocket(OPnetworkAddress address, OPnetworkProtocolType::Enum protocol) {

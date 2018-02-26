@@ -2,6 +2,7 @@
 #include "./Communication/include/OPnetworkPlatform.h"
 #include "./Core/include/OPlog.h"
 #include "./Data/include/OPstring.h"
+#include "./Communication/include/OPnetworkState.h"
 
 void OPnetworkClient::Init(OPnetworkProtocolType::Enum protocolType, const OPchar* address, ui32 port) {
 
@@ -49,9 +50,8 @@ void OPnetworkClient::Update() {
 				OPlogErr("fail to receive.");
 			}
 			else {
-				printf("receive from server: %s.\n", packet.buffer);
-				if(receiveCallback != NULL) {
-					receiveCallback(packet.buffer, packet.size);
+				if(ActiveNetworkState != NULL) {
+					ActiveNetworkState->Message(&clientSocket, &packet);
 				}
 			}
 		}

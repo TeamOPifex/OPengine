@@ -13,15 +13,8 @@ struct OPnetworkClient {
 	OPnetworkSelect selector;
 	char buf[MAX_LINE];
 
-	OPnetworkClientReceiveCallback receiveCallback = NULL;
-
 	void Init(OPnetworkProtocolType::Enum protocolType, const OPchar* address, ui32 port);
 	void Update();
 	bool Send(OPnetworkPacket* packet);
     void Destroy();
-	i32 Select(fd_set* read, fd_set* write, fd_set* except);
-
-	inline void SetReceiveCallback(OPnetworkClientReceiveCallback cb) {
-		receiveCallback = cb;
-	}
 };

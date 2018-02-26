@@ -64,15 +64,12 @@ void OPnetworkServer::Update() {
             if(existingClient == NULL) {
                 OPlogInfo("New Client Found!");
                 existingClient = &clients[clientIndex];
+                existingClient->networkID = (OPNETWORK_ID++);
                 clientIndex++;
             }
 
             if(ActiveNetworkState != NULL) {
-                ActiveNetworkState->OnMessage(existingClient, &packet);
-            }
-
-            if(receiveCallback != NULL) {
-                receiveCallback(existingClient, packet.buffer, packet.size);
+                ActiveNetworkState->Message(existingClient, &packet);
             }
         }
     } else if(selectResult == -1) {
