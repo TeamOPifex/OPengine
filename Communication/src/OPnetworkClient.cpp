@@ -58,6 +58,11 @@ void OPnetworkClient::Update() {
 					clientSocket.verified = true;
 					clientSocket.Send(&packet);
 					OPlogInfo("Client Verified");
+					
+					if(ActiveNetworkState != NULL) {
+						ActiveNetworkState->Connected(&clientSocket);
+					}
+
 				} else {
 					if(ActiveNetworkState != NULL) {
 						ActiveNetworkState->Message(&clientSocket, &packet);

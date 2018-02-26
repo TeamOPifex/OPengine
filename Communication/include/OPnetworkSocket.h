@@ -20,6 +20,7 @@ struct OPnetworkSocket {
     ui32 networkID;
     ui8 code = 0;
     bool verified = false;
+    i64 verifyTimer = 0;
 
     OPnetworkSocket() {}
     OPnetworkSocket(OPnetworkAddress address, OPnetworkProtocolType::Enum protocol) {
@@ -38,6 +39,8 @@ struct OPnetworkSocket {
     bool Bind();
     bool Listen();    
     bool Connect();
+    bool Verify(ui8 code);
+    bool GenCode();
 
     void Destroy();
 };

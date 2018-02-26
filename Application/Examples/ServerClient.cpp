@@ -15,6 +15,7 @@ OPclientProtocol CLIENT_PROTOCOL;
 OPserverProtocol SERVER_PROTOCOL;
 
 OPnetworkProtocolType::Enum protocolType = OPnetworkProtocolType::UDP;
+//OPnetworkProtocolType::Enum protocolType = OPnetworkProtocolType::TCP;
 
 // Data for this Game State Example
 class ServerClientExample : public OPgameState {
@@ -115,7 +116,7 @@ public:
 		}
 
 		if (Mode == 1) {
-			networkServer.Update();
+			networkServer.Update(time->Elapsed);
 		}
 
 		if (Mode == 2) {
@@ -125,19 +126,19 @@ public:
 		bool sendPos = false;
 		if (Mode == 1 || Mode == 2) {
 			if(OPKEYBOARD.IsDown(OPkeyboardKey::W)) {
-				pos.y++;
+				pos.y+=0.5f;
 				sendPos = true;
 			}
 			if(OPKEYBOARD.IsDown(OPkeyboardKey::S)) {
-				pos.y--;
+				pos.y-=0.5f;
 				sendPos = true;
 			}
 			if(OPKEYBOARD.IsDown(OPkeyboardKey::D)) {
-				pos.x++;
+				pos.x+=0.5f;
 				sendPos = true;
 			}
 			if(OPKEYBOARD.IsDown(OPkeyboardKey::A)) {
-				pos.x--;
+				pos.x-=0.5f;
 				sendPos = true;
 			}
 		}
@@ -145,9 +146,9 @@ public:
 		if(sendPos) {
 			OPnetworkPacket packet;
 			packet.I8(1); // pos update
-			packet.I32( (i32)pos.x );
-			packet.I32( (i32)pos.y );
-			packet.I32( (i32)pos.z );
+			packet.F32( pos.x );
+			packet.F32( pos.y );
+			packet.F32( pos.z );
 			if (Mode == 1) {
 				networkServer.Send(&packet);
 			} else {
@@ -322,8 +323,12 @@ OPgameState* GS_EXAMPLE_SERVER_CLIENT = &_GS_EXAMPLE_SERVER_CLIENT;
 
 
 OPint OPserverProtocol::Init(OPnetworkState* prev) { return 1; }
-void OPserverProtocol::Connected(OPnetworkSocket* socket) {}
-void OPserverProtocol::Disconnected(OPnetworkSocket* socket) {}
+void OPserverProtocol::Connected(OPnetworkSocket* socket) {
+	_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = "[Client Connected]";
+}
+void OPserverProtocol::Disconnected(OPnetworkSocket* socket) {
+	_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = "[Client Disconnected]";
+}
 void OPserverProtocol::Message(OPnetworkSocket* socket, OPnetworkPacket* packet) {
 	i8 c = packet->I8();
 	if(c == 2) {
@@ -332,9 +337,9 @@ void OPserverProtocol::Message(OPnetworkSocket* socket, OPnetworkPacket* packet)
 		_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = OPstringCopy(str);
 	} else if(c == 1) {
 		_GS_EXAMPLE_SERVER_CLIENT.pos = OPvec3(
-			packet->I32(),
-			packet->I32(),
-			packet->I32()
+			packet->F32(),
+			packet->F32(),
+			packet->F32()
 		);
 	}
 }
@@ -342,8 +347,12 @@ OPint OPserverProtocol::Exit(OPnetworkState* prev) { return 1; }
 
 
 OPint OPclientProtocol::Init(OPnetworkState* prev) { return 1; }
-void OPclientProtocol::Connected(OPnetworkSocket* socket) {}
-void OPclientProtocol::Disconnected(OPnetworkSocket* socket) {}
+void OPclientProtocol::Connected(OPnetworkSocket* socket) {
+	_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = "[Connected]";
+}
+void OPclientProtocol::Disconnected(OPnetworkSocket* socket) {
+	_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = "[Disconnected]";
+}
 void OPclientProtocol::Message(OPnetworkSocket* socket, OPnetworkPacket* packet) {
 	i8 c = packet->I8();
 	if(c == 2) {
@@ -352,9 +361,9 @@ void OPclientProtocol::Message(OPnetworkSocket* socket, OPnetworkPacket* packet)
 		_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = OPstringCopy(str);
 	} else if(c == 1) {
 		_GS_EXAMPLE_SERVER_CLIENT.pos = OPvec3(
-			packet->I32(),
-			packet->I32(),
-			packet->I32()
+			packet->F32(),
+			packet->F32(),
+			packet->F32()
 		);
 	}
 }

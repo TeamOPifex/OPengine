@@ -2,7 +2,6 @@
 #include "./Communication/include/OPnetworkSocket.h"
 #include "./Core/include/OPlog.h"
 #include "./Core/include/OPmemory.h"
-#include "./Core/include/OPmath.h"
 #include "./Data/include/OPstring.h"
 #include "./Communication/include/OPnetworkState.h"
 
@@ -41,7 +40,24 @@ void OPnetworkServer::Init(OPnetworkProtocolType::Enum protocol, ui32 port) {
     printf("listening\n");
 }
 
-void OPnetworkServer::Update() {
+void OPnetworkServer::Update(ui64 elapsed) {
+
+    for(ui32 i = 0; i < clientIndex; i++) {
+        if(clients[i].verified) {
+            continue;
+        }
+
+        clients[i].verifyTimer -= elapsed;
+        if(clients[i].verifyTimer <= 0) {
+            // failed to verify in time
+            if(i < clientIndex - 1) {
+                clients[i] = clients[clientIndex - 1];
+                i--;
+            }
+            clientIndex--;
+        }
+    }
+
     selector.Zero();
     selector.SetRead(&serverSocket);
 
@@ -57,15 +73,22 @@ void OPnetworkServer::Update() {
         if(selector.IsReadSet(&serverSocket)) {
 
             if(serverSocket.networkSocketType == OPnetworkSocketType::STREAM) {
-                // New Connection
+                // New TCP Connection
+
                 OPlogInfo("Handling new TCP connection");
                 if(serverSocket.Accept(&clients[clientIndex])) {
-                    if(ActiveNetworkState != NULL) {
-                        ActiveNetworkState->Connected(&clients[clientIndex]);
-                    }
+                    clients[clientIndex].GenCode();
+
+                    OPnetworkPacket packetCode;
+                    packetCode.I8(clients[clientIndex].code);
+                    clients[clientIndex].Send(&packetCode);
+
                     clientIndex++;
                 }
             } else {
+
+                // Handle UDP Communication
+
                 OPnetworkPacket packet;
 
                 i32 bytes = serverSocket.ReceiveFrom(&packet, &clients[clientIndex]);
@@ -79,24 +102,23 @@ void OPnetworkServer::Update() {
                     }
                 }
 
+                // If no existing client could be found and the message received was CONNECT
                 if(existingClient == NULL && OPstringEquals("CONNECT", packet.buffer)) {
                     OPlogInfo("New Client Found!");
+
                     existingClient = &clients[clientIndex];
-                    existingClient->networkID = (OPNETWORK_ID++);
-                    existingClient->verified = false;
-                    existingClient->code = (ui8)(OPrandom() * (f32)sizeof(ui8));
+                    existingClient->GenCode();
 
                     // Send client their code to verify they are who they say there
                     OPnetworkPacket packetCode;
                     packetCode.I8(existingClient->code);
                     serverSocket.Send(existingClient, &packetCode);
-					OPlogInfo("Server sent Code '%d' to Client to Verify", existingClient->code);
+					OPlogInfo("Server sent Code to Client to Verify");
 
                     clientIndex++;
                 } else if(existingClient != NULL) {
                     if(!existingClient->verified) {
-                        if(existingClient->code == packet.buffer[0]) {
-                            existingClient->verified = true;
+                        if(existingClient->Verify(packet.buffer[0])) {
                             OPlogInfo("Server Verified the client");
                             if(ActiveNetworkState != NULL) {
                                 ActiveNetworkState->Connected(existingClient);
@@ -127,8 +149,19 @@ void OPnetworkServer::Update() {
                             i--;
                         }
                         clientIndex--;
-                    } else if(ActiveNetworkState != NULL) {
-                        ActiveNetworkState->Message(&clients[i], &packet);
+                    } else {
+                        if(!clients[i].verified) {
+                            if(clients[i].Verify(packet.buffer[0])) {
+                                OPlogInfo("Server Verified the client");
+                                if(ActiveNetworkState != NULL) {
+                                    ActiveNetworkState->Connected(&clients[i]);
+                                }
+                            } else {
+                                OPlogErr("Failed to verify client '%d'", clients[i].code);
+                            }
+                        } else if(ActiveNetworkState != NULL) {
+                            ActiveNetworkState->Message(&clients[i], &packet);
+                        }
                     }
                 }
             }

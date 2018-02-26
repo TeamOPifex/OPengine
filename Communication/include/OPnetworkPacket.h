@@ -47,6 +47,44 @@ struct OPnetworkPacket {
 		size += 4;
 	}
 
+	inline ui32 UI32() {
+		return (ui32)I32();
+	}
+
+	inline void UI32(ui32 s) {
+		ui32 val = htonl(s);
+		*((ui32*)(&buffer[pos])) = val;
+		pos += 4;
+		size += 4;
+	}
+
 	void Str(const OPchar* str);
 	OPchar* Str();
+
+	inline void F32(f32 v) {
+		ui32 bits = pack754(v, 32, 8);
+		*((ui32*)(&buffer[pos])) = bits;
+		pos += 4;
+		size += 4;
+	}
+
+	inline f32 F32() {
+		ui32 bits = *(ui32*)&buffer[pos];
+		pos += 4;
+		return unpack754(bits, 32, 8);
+	}
+
+	// inline void D64(d64 v) {
+	// 	ui64 bits = pack754(v, 64, 11);
+	// 	UI64(bits);
+	// }
+
+	// inline d64 D64() {
+	// 	ui64 bits = *(ui64*)&buffer[pos];
+	// 	pos += 8;
+	// 	return unpack754(bits, 64, 11);
+	// }
+	
+	uint64_t pack754(long double f, unsigned bits, unsigned expbits);
+	long double unpack754(uint64_t i, unsigned bits, unsigned expbits);
 };

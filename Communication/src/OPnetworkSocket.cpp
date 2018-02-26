@@ -2,6 +2,7 @@
 #include "./Communication/include/OPnetworkPlatform.h"
 #include "./Core/include/OPlog.h"
 #include "./Core/include/OPmemory.h"
+#include "./Core/include/OPmath.h"
 
 ui32 OPNETWORK_ID = 0;
 
@@ -258,7 +259,7 @@ bool OPnetworkSocket::Match(OPnetworkSocket* socket) {
 
         if(ipv6existing->sin6_port == ipv6new->sin6_port && 
             r == 0) {
-                OPlogInfo("Existing IPv6 Client Found!");
+                // OPlogInfo("Existing IPv6 Client Found!");
                 return true;
         }
 
@@ -268,10 +269,26 @@ bool OPnetworkSocket::Match(OPnetworkSocket* socket) {
 
         if(ipv4existing->sin_port == ipv4new->sin_port && 
             ipv4existing->sin_addr.s_addr == ipv4new->sin_addr.s_addr) {
-                OPlogInfo("Existing IPv4 Client Found!");
+                // OPlogInfo("Existing IPv4 Client Found!");
                 return true;
         }
     }
 
     return false;
+}
+
+
+bool OPnetworkSocket::Verify(ui8 c) {
+    if(c == code) {
+        verified = true;
+        networkID = (OPNETWORK_ID++);
+        return true;
+    }
+    return false;
+}
+
+bool OPnetworkSocket::GenCode() {
+    verified = false;
+    code = (ui8)(OPrandom() * (f32)sizeof(ui8));
+    verifyTimer = 1000; // 1 second to verify
 }

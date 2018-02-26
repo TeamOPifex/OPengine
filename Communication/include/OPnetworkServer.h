@@ -19,7 +19,7 @@ struct OPnetworkServer {
 	char buf[MAX_LINE];
 
 	void Init(OPnetworkProtocolType::Enum protocolType, ui32 port);
-	void Update();
+	void Update(ui64 elapsed);
 	bool Send(OPnetworkPacket* packet);
 	void Destroy();
 };
