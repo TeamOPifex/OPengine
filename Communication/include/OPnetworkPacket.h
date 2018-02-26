@@ -84,7 +84,7 @@ struct OPnetworkPacket {
 	// 	pos += 8;
 	// 	return unpack754(bits, 64, 11);
 	// }
-	
-	uint64_t pack754(long double f, unsigned bits, unsigned expbits);
-	long double unpack754(uint64_t i, unsigned bits, unsigned expbits);
+private:
+	ui64 pack754(double long f, ui64 bits, ui64 expbits);
+	double long unpack754(ui64 i, ui64 bits, ui64 expbits);
 };

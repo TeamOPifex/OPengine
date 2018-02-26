@@ -336,11 +336,10 @@ void OPserverProtocol::Message(OPnetworkSocket* socket, OPnetworkPacket* packet)
 		OPlogInfo("Server Received from %d: %s", socket->networkID, str);
 		_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = OPstringCopy(str);
 	} else if(c == 1) {
-		_GS_EXAMPLE_SERVER_CLIENT.pos = OPvec3(
-			packet->F32(),
-			packet->F32(),
-			packet->F32()
-		);
+		f32 x = packet->F32();
+		f32 y = packet->F32();
+		f32 z = packet->F32();
+		_GS_EXAMPLE_SERVER_CLIENT.pos = OPvec3(x,y,z);
 	}
 }
 OPint OPserverProtocol::Exit(OPnetworkState* prev) { return 1; }
@@ -360,11 +359,10 @@ void OPclientProtocol::Message(OPnetworkSocket* socket, OPnetworkPacket* packet)
 		OPlogInfo("Client Received from %d: %s", socket->networkID, str);
 		_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = OPstringCopy(str);
 	} else if(c == 1) {
-		_GS_EXAMPLE_SERVER_CLIENT.pos = OPvec3(
-			packet->F32(),
-			packet->F32(),
-			packet->F32()
-		);
+		f32 x = packet->F32();
+		f32 y = packet->F32();
+		f32 z = packet->F32();
+		_GS_EXAMPLE_SERVER_CLIENT.pos = OPvec3(x, y, z);
 	}
 }
 OPint OPclientProtocol::Exit(OPnetworkState* prev) { return 1; }
