@@ -34,6 +34,12 @@ public:
 	OPchar message[128];
 	bool sendClick;
 
+	OPvec3 pos = OPVEC3_ZERO;
+	OPmodel* Mesh;
+	OPeffect Effect;
+	OPcam Camera;
+	OPtexture* Texture;
+
 
 	void Init(OPgameState* last) {
 		Mode = 0;
@@ -43,6 +49,37 @@ public:
 		OPmemcpy(port, "1337", 5);
 		OPmemcpy(server, "127.0.0.1", 10);
 		OPmemcpy(serverPort, "1337", 5);
+
+
+		OPCMAN.Load("Common/Texture.frag");
+		OPCMAN.Load("Common/Texture3D.vert");
+		const OPchar* _model = "swordsman.opm";
+		const OPchar* _texture = "swordsman.png";
+		Mesh = (OPmodel*)OPCMAN.LoadGet(_model);
+		Texture = (OPtexture*)OPCMAN.LoadGet(_texture);
+		
+		OPshader* vert = (OPshader*)OPCMAN.Get("Common/Texture3D.vert");
+		OPshader* frag = (OPshader*)OPCMAN.Get("Common/Texture.frag");
+		Effect.Init(vert, frag);
+		Effect.AddUniform("uColorTexture");
+		//Effect->AddUniform("vLightDirection");
+		Effect.AddUniform("uWorld");
+		Effect.AddUniform("uProj");
+		Effect.AddUniform("uView");
+
+		Mesh->vertexLayout.SetOffsets(&Effect);
+		Mesh->vertexArray.SetLayout(&Mesh->vertexLayout);
+
+		Camera.SetPerspective(
+			OPVEC3_ONE * 50.0,
+			OPvec3Create(0, 0, 0),
+			OPvec3Create(0, 1, 0),
+			0.1f,
+			1000.0f,
+			45.0f,
+			OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
+		);
+		OPrenderDepth(1);
 	}
 
 
@@ -85,6 +122,39 @@ public:
 			networkClient.Update();
 		}
 
+		bool sendPos = false;
+		if (Mode == 1 || Mode == 2) {
+			if(OPKEYBOARD.IsDown(OPkeyboardKey::W)) {
+				pos.y++;
+				sendPos = true;
+			}
+			if(OPKEYBOARD.IsDown(OPkeyboardKey::S)) {
+				pos.y--;
+				sendPos = true;
+			}
+			if(OPKEYBOARD.IsDown(OPkeyboardKey::D)) {
+				pos.x++;
+				sendPos = true;
+			}
+			if(OPKEYBOARD.IsDown(OPkeyboardKey::A)) {
+				pos.x--;
+				sendPos = true;
+			}
+		}
+
+		if(sendPos) {
+			OPnetworkPacket packet;
+			packet.I8(1); // pos update
+			packet.I32( (i32)pos.x );
+			packet.I32( (i32)pos.y );
+			packet.I32( (i32)pos.z );
+			if (Mode == 1) {
+				networkServer.Send(&packet);
+			} else {
+				networkClient.Send(&packet);
+			}
+		}
+
 		return false;
 
 	}
@@ -119,6 +189,31 @@ public:
 			OPrenderClear(0.0, 0.0, 1.0);
 		}
 #endif
+		
+		if (Mode == 1 || Mode == 2) {
+			
+			Effect.Bind();
+			Mesh->Bind();
+
+			OPmat4 world;
+			world.SetTranslate(pos);
+			world.Scl(0.1f);
+
+			OPeffectSet("uColorTexture", Texture, 0);
+
+			OPeffectSet("uWorld", &world);
+			OPeffectSet("uProj", &Camera.proj);
+			OPeffectSet("uView", &Camera.view);
+
+			//OPvec3 light = OPvec3Create(0, 1, 0);
+			//OPeffectSet("vLightDirection", &light);
+
+			OPrenderCullMode(OPcullFace::BACK);
+			OPrenderDepth(true);
+			OPrenderDepthWrite(true);
+			OPrenderDrawBufferIndexed(0);
+			
+		}
 
 #ifdef ADDON_imgui
 		OPimguiNewFrame();
@@ -154,11 +249,13 @@ public:
 			ImGui::SetNextWindowPos(ImVec2(10, 30), ImGuiSetCond_::ImGuiSetCond_FirstUseEver);
 			ImGui::Begin("Server Controls", &always, ImVec2(250, 475), -1.0F, ImGuiWindowFlags_NoResize);
 			ImGui::InputText("Message", message, 128);
+			ImGui::InputFloat3("Pos", (f32*)&pos);
 		
 			if(ImGui::Button("Send")) {			
 				HeldDown = 0;
 				sendClick = true;
 				OPnetworkPacket packet;
+				packet.I8(2);
 				packet.Str(message);
 				networkServer.Send(&packet);
 			}
@@ -171,11 +268,13 @@ public:
 			ImGui::SetNextWindowPos(ImVec2(10, 30), ImGuiSetCond_::ImGuiSetCond_FirstUseEver);
 			ImGui::Begin("Client Controls", &always, ImVec2(250, 475), -1.0F, ImGuiWindowFlags_NoResize);
 			ImGui::InputText("Message", message, 128);
+			ImGui::InputFloat3("Pos", (f32*)&pos);
 		
 			if(ImGui::Button("Send")) {
 				HeldDown = 0;
 				sendClick = true;
 				OPnetworkPacket packet;
+				packet.I8(2);
 				packet.Str(message);
 				networkClient.Send(&packet);
 			}
@@ -226,8 +325,18 @@ OPint OPserverProtocol::Init(OPnetworkState* prev) { return 1; }
 void OPserverProtocol::Connected(OPnetworkSocket* socket) {}
 void OPserverProtocol::Disconnected(OPnetworkSocket* socket) {}
 void OPserverProtocol::Message(OPnetworkSocket* socket, OPnetworkPacket* packet) {
-	OPlogInfo("Server Received from %d: %s", socket->networkID, packet->buffer);
-	_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = OPstringCopy(packet->buffer);
+	i8 c = packet->I8();
+	if(c == 2) {
+		i8* str = packet->Str();
+		OPlogInfo("Server Received from %d: %s", socket->networkID, str);
+		_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = OPstringCopy(str);
+	} else if(c == 1) {
+		_GS_EXAMPLE_SERVER_CLIENT.pos = OPvec3(
+			packet->I32(),
+			packet->I32(),
+			packet->I32()
+		);
+	}
 }
 OPint OPserverProtocol::Exit(OPnetworkState* prev) { return 1; }
 
@@ -236,7 +345,17 @@ OPint OPclientProtocol::Init(OPnetworkState* prev) { return 1; }
 void OPclientProtocol::Connected(OPnetworkSocket* socket) {}
 void OPclientProtocol::Disconnected(OPnetworkSocket* socket) {}
 void OPclientProtocol::Message(OPnetworkSocket* socket, OPnetworkPacket* packet) {
-	OPlogInfo("Client Received from %d: %s", socket->networkID, packet->buffer);
-	_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = OPstringCopy(packet->buffer);
+	i8 c = packet->I8();
+	if(c == 2) {
+		i8* str = packet->Str();
+		OPlogInfo("Client Received from %d: %s", socket->networkID, str);
+		_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = OPstringCopy(str);
+	} else if(c == 1) {
+		_GS_EXAMPLE_SERVER_CLIENT.pos = OPvec3(
+			packet->I32(),
+			packet->I32(),
+			packet->I32()
+		);
+	}
 }
 OPint OPclientProtocol::Exit(OPnetworkState* prev) { return 1; }

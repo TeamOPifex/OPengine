@@ -8,4 +8,10 @@
     OPmemcpy(&buffer[pos], str, s);
     size += s;
     pos += s;
+}	
+
+OPchar* OPnetworkPacket::Str() {
+    i8* b = &buffer[pos];
+    pos += strlen(b) + 1;
+    return b;
 }

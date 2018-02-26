@@ -32,6 +32,21 @@ struct OPnetworkPacket {
 		pos += 2;
 		size += 2;
 	}
+	
+	inline i32 I32() {
+		i32 val = *(i32*)&buffer[pos];
+		i32 result = ntohl(val);
+		pos += 4;
+		return result;
+	}
+
+	inline void I32(i32 s) {
+		i32 val = htonl(s);
+		*((i32*)(&buffer[pos])) = val;
+		pos += 4;
+		size += 4;
+	}
 
 	void Str(const OPchar* str);
+	OPchar* Str();
 };
