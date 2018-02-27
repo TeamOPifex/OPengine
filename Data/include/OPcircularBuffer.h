@@ -84,6 +84,7 @@ struct OPcircularBuffer {
         Write(&v, 4);
     }
 
+    // Writes a buffer into the circular buffer
     inline void Write(void* data, ui32 toWrite) {
         ui32 sizeToEnd = capacity - pos;
 
@@ -104,6 +105,9 @@ struct OPcircularBuffer {
         size += toWrite;
     }
 
+    // Read the circular buffer into a buffer
+    // Max can either be the size to read, or the max
+    // amount to pull out (ex size of a buffer)
     inline void Read(void* data, ui32 max) {
         ui32 sizeToEnd = capacity - pos;
         ui32 toRead = size;
@@ -126,6 +130,8 @@ struct OPcircularBuffer {
         size -= toRead;
     }
 
+    // Resets the position to the beginning of the known data set
+    // this way we can read back out of the buffer
     inline void Rewind() {
         posAtRewind = pos;
         sizeAtRewind = size;
@@ -135,6 +141,13 @@ struct OPcircularBuffer {
         }
     }
 
+    // Network packets use this after reading the packet
+    // and finding not enough data was present yet
+    inline void Unread() {
+        size = sizeAtRewind;
+    }
+
+    // Repositions the circular buffer at the end of the known data
     inline void FastForward() {
         pos = posAtRewind;
     }
