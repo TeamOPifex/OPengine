@@ -22,6 +22,7 @@ struct OPnetworkSocket {
     bool verified = false;
     i64 verifyTimer = 0;
 	OPnetworkPacket networkPacket;
+    void* userData = NULL;
 
 	OPnetworkSocket() {
         

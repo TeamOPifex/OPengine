@@ -10,12 +10,22 @@
 #include "./OPimgui.h"
 #endif
 
+struct MessageType {
+	enum Enum {
+		PositionUpdate = 1,
+		Message = 2,
+		PlayerIndex = 3
+	};
+};
+
 #include "ServerClient.h"
 OPclientProtocol CLIENT_PROTOCOL;
 OPserverProtocol SERVER_PROTOCOL;
 
 OPnetworkProtocolType::Enum protocolType = OPnetworkProtocolType::UDP;
 //OPnetworkProtocolType::Enum protocolType = OPnetworkProtocolType::TCP;
+
+#define SERVER_CLIENT_PLAYER_MAX 10
 
 // Data for this Game State Example
 class ServerClientExample : public OPgameState {
@@ -35,7 +45,9 @@ public:
 	OPchar message[128];
 	bool sendClick;
 
-	OPvec3 pos = OPVEC3_ZERO;
+	i8 myPlayerInd = -1;
+	ui32 playerInd = 0;
+	OPvec3 positions[SERVER_CLIENT_PLAYER_MAX];
 	OPmodel* Mesh;
 	OPeffect Effect;
 	OPcam Camera;
@@ -50,6 +62,10 @@ public:
 		OPmemcpy(port, "1337", 5);
 		OPmemcpy(server, "127.0.0.1", 10);
 		OPmemcpy(serverPort, "1337", 5);
+
+		for(ui32 i = 0; i < SERVER_CLIENT_PLAYER_MAX; i++) {
+			positions[i] = OPVEC3_ZERO;
+		}
 
 
 		OPCMAN.Load("Common/Texture.frag");
@@ -124,35 +140,37 @@ public:
 		}
 
 		bool sendPos = false;
-		if (Mode == 1 || Mode == 2) {
-			if(OPKEYBOARD.IsDown(OPkeyboardKey::W)) {
-				pos.y+=0.5f;
-				sendPos = true;
+		if(myPlayerInd > -1) {
+			if (Mode == 1 || Mode == 2) {
+				if(OPKEYBOARD.IsDown(OPkeyboardKey::W)) {
+					positions[myPlayerInd].y+=0.5f;
+					sendPos = true;
+				}
+				if(OPKEYBOARD.IsDown(OPkeyboardKey::S)) {
+					positions[myPlayerInd].y-=0.5f;
+					sendPos = true;
+				}
+				if(OPKEYBOARD.IsDown(OPkeyboardKey::D)) {
+					positions[myPlayerInd].x+=0.5f;
+					sendPos = true;
+				}
+				if(OPKEYBOARD.IsDown(OPkeyboardKey::A)) {
+					positions[myPlayerInd].x-=0.5f;
+					sendPos = true;
+				}
 			}
-			if(OPKEYBOARD.IsDown(OPkeyboardKey::S)) {
-				pos.y-=0.5f;
-				sendPos = true;
-			}
-			if(OPKEYBOARD.IsDown(OPkeyboardKey::D)) {
-				pos.x+=0.5f;
-				sendPos = true;
-			}
-			if(OPKEYBOARD.IsDown(OPkeyboardKey::A)) {
-				pos.x-=0.5f;
-				sendPos = true;
-			}
-		}
 
-		if(sendPos) {
-			OPnetworkPacket packet;
-			packet.I8(1); // pos update
-			packet.F32( pos.x );
-			packet.F32( pos.y );
-			packet.F32( pos.z );
-			if (Mode == 1) {
-				networkServer.Send(&packet);
-			} else {
-				networkClient.Send(&packet);
+			if(sendPos) {
+				OPnetworkPacket packet;
+				packet.I8(1); // pos update
+				packet.F32( positions[myPlayerInd].x );
+				packet.F32( positions[myPlayerInd].y );
+				packet.F32( positions[myPlayerInd].z );
+				if (Mode == 1) {
+					networkServer.Send(&packet);
+				} else {
+					networkClient.Send(&packet);
+				}
 			}
 		}
 
@@ -195,24 +213,20 @@ public:
 			
 			Effect.Bind();
 			Mesh->Bind();
-
-			OPmat4 world;
-			world.SetTranslate(pos);
-			world.Scl(0.1f);
-
 			OPeffectSet("uColorTexture", Texture, 0);
-
-			OPeffectSet("uWorld", &world);
 			OPeffectSet("uProj", &Camera.proj);
 			OPeffectSet("uView", &Camera.view);
-
-			//OPvec3 light = OPvec3Create(0, 1, 0);
-			//OPeffectSet("vLightDirection", &light);
-
 			OPrenderCullMode(OPcullFace::BACK);
 			OPrenderDepth(true);
 			OPrenderDepthWrite(true);
-			OPrenderDrawBufferIndexed(0);
+
+			for(ui32 i = 0; i < playerInd; i++) {
+				OPmat4 world;
+				world.SetTranslate(positions[i]);
+				world.Scl(0.1f);
+				OPeffectSet("uWorld", &world);
+				OPrenderDrawBufferIndexed(0);
+			}
 			
 		}
 
@@ -250,13 +264,15 @@ public:
 			ImGui::SetNextWindowPos(ImVec2(10, 30), ImGuiSetCond_::ImGuiSetCond_FirstUseEver);
 			ImGui::Begin("Server Controls", &always, ImVec2(250, 475), -1.0F, ImGuiWindowFlags_NoResize);
 			ImGui::InputText("Message", message, 128);
-			ImGui::InputFloat3("Pos", (f32*)&pos);
+			for(ui32 i = 0; i < playerInd; i++) {
+				ImGui::InputFloat3("Pos", (f32*)&positions[i]);
+			}
 		
 			if(ImGui::Button("Send")) {			
 				HeldDown = 0;
 				sendClick = true;
 				OPnetworkPacket packet;
-				packet.I8(2);
+				packet.I8((i8)MessageType::Message);
 				packet.Str(message);
 				networkServer.Send(&packet);
 			}
@@ -269,13 +285,15 @@ public:
 			ImGui::SetNextWindowPos(ImVec2(10, 30), ImGuiSetCond_::ImGuiSetCond_FirstUseEver);
 			ImGui::Begin("Client Controls", &always, ImVec2(250, 475), -1.0F, ImGuiWindowFlags_NoResize);
 			ImGui::InputText("Message", message, 128);
-			ImGui::InputFloat3("Pos", (f32*)&pos);
+			for(ui32 i = 0; i < playerInd; i++) {
+				ImGui::InputFloat3("Pos", (f32*)&positions[i]);
+			}
 		
 			if(ImGui::Button("Send")) {
 				HeldDown = 0;
 				sendClick = true;
 				OPnetworkPacket packet;
-				packet.I8(2);
+				packet.I8((i8)MessageType::Message);
 				packet.Str(message);
 				networkClient.Send(&packet);
 			}
@@ -322,27 +340,65 @@ OPgameState* GS_EXAMPLE_SERVER_CLIENT = &_GS_EXAMPLE_SERVER_CLIENT;
 
 
 
+
 OPint OPserverProtocol::Init(OPnetworkState* prev) { return 1; }
 void OPserverProtocol::Connected(OPnetworkSocket* socket) {
+	OPuint playerInd = _GS_EXAMPLE_SERVER_CLIENT.playerInd;
+
+	socket->userData = (void*)playerInd;
+	_GS_EXAMPLE_SERVER_CLIENT.playerInd++;
 	_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = "[Client Connected]";
+
+	{
+		// Tell client what their ID is
+		OPnetworkPacket packet;
+		packet.I8((i8)MessageType::PlayerIndex);
+		packet.I8(playerInd);
+		_GS_EXAMPLE_SERVER_CLIENT.networkServer.Send(socket, &packet);
+		OPlogInfo("Sent Client their Player Index: %d", playerInd);
+	}
+
+	// send everyone's position
+	for(ui32 i = 0; i < playerInd; i++) {
+		OPnetworkPacket packet;
+		packet.I8((i8)MessageType::PositionUpdate);
+		packet.I8(i);
+		packet.F32(_GS_EXAMPLE_SERVER_CLIENT.positions[i].x);
+		packet.F32(_GS_EXAMPLE_SERVER_CLIENT.positions[i].y);
+		packet.F32(_GS_EXAMPLE_SERVER_CLIENT.positions[i].z);
+		_GS_EXAMPLE_SERVER_CLIENT.networkServer.Send(socket, &packet);
+	}
 }
+
 void OPserverProtocol::Disconnected(OPnetworkSocket* socket) {
 	_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = "[Client Disconnected]";
 }
 void OPserverProtocol::Message(OPnetworkSocket* socket, OPnetworkPacket* packet) {
 	i8 c = packet->I8();
-	if(c == 2) {
+	if(c == (i8)MessageType::Message) {
 		i8* str = packet->Str();
 		OPlogInfo("Server Received from %d: %s", socket->networkID, str);
 		_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = OPstringCopy(str);
-	} else if(c == 1) {
+	} else if(c == 1) { // position update
+		i8 ind = (OPuint)socket->userData;
 		f32 x = packet->F32();
 		f32 y = packet->F32();
 		f32 z = packet->F32();
-		_GS_EXAMPLE_SERVER_CLIENT.pos = OPvec3(x,y,z);
+		_GS_EXAMPLE_SERVER_CLIENT.positions[ind] = OPvec3(x,y,z);
+		// tell everyone about this position update
+
+		OPnetworkPacket packet;
+		packet.I8((i8)MessageType::PositionUpdate);
+		packet.I8(ind);
+		packet.F32(x);
+		packet.F32(y);
+		packet.F32(z);
+		_GS_EXAMPLE_SERVER_CLIENT.networkServer.Send(&packet);
 	}
 }
 OPint OPserverProtocol::Exit(OPnetworkState* prev) { return 1; }
+
+
 
 
 OPint OPclientProtocol::Init(OPnetworkState* prev) { return 1; }
@@ -354,15 +410,28 @@ void OPclientProtocol::Disconnected(OPnetworkSocket* socket) {
 }
 void OPclientProtocol::Message(OPnetworkSocket* socket, OPnetworkPacket* packet) {
 	i8 c = packet->I8();
-	if(c == 2) {
+	// OPlogInfo("Received a packet of type: %d", c);
+	if(c == (i8)MessageType::PlayerIndex) { // Player ID
+		_GS_EXAMPLE_SERVER_CLIENT.myPlayerInd = packet->I8();
+		_GS_EXAMPLE_SERVER_CLIENT.playerInd = _GS_EXAMPLE_SERVER_CLIENT.myPlayerInd + 1;
+		OPlogInfo("Received Player Index: %d", _GS_EXAMPLE_SERVER_CLIENT.myPlayerInd);
+	} else if(c == (i8)MessageType::Message) {
 		i8* str = packet->Str();
 		OPlogInfo("Client Received from %d: %s", socket->networkID, str);
 		_GS_EXAMPLE_SERVER_CLIENT.messageQueue[_GS_EXAMPLE_SERVER_CLIENT.messageQueueIndex++] = OPstringCopy(str);
-	} else if(c == 1) {
+	} else if(c == (i8)MessageType::PositionUpdate) {
+		i8 ind = packet->I8();
+		if(ind >= _GS_EXAMPLE_SERVER_CLIENT.playerInd) {
+			_GS_EXAMPLE_SERVER_CLIENT.playerInd = ind + 1;
+			OPlogInfo("Max Players updated to %d", _GS_EXAMPLE_SERVER_CLIENT.playerInd);
+		}
 		f32 x = packet->F32();
 		f32 y = packet->F32();
 		f32 z = packet->F32();
-		_GS_EXAMPLE_SERVER_CLIENT.pos = OPvec3(x, y, z);
+		if(ind != _GS_EXAMPLE_SERVER_CLIENT.myPlayerInd) {
+			// don't bother updating "my" pos, it's probably already udpated past this
+			_GS_EXAMPLE_SERVER_CLIENT.positions[ind] = OPvec3(x, y, z);
+		}
 	}
 }
 OPint OPclientProtocol::Exit(OPnetworkState* prev) { return 1; }

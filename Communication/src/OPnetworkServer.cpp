@@ -221,6 +221,16 @@ bool OPnetworkServer::Send(OPnetworkPacket* packet) {
 	return true;
 }
 
+bool OPnetworkServer::Send(OPnetworkSocket* client, OPnetworkPacket* packet) {
+    if(!client->verified) return false;
+
+    if(protocolType == OPnetworkProtocolType::TCP) {
+        client->Send(packet);
+    } else {
+        serverSocket4.Send(client, packet);
+    }
+}
+
 void OPnetworkServer::Destroy() {
 
 }

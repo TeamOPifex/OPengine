@@ -23,6 +23,7 @@ struct OPnetworkServer {
 	void Init(OPnetworkProtocolType::Enum protocol, ui32 port);
 	void Update(ui64 elapsed);
 	bool Send(OPnetworkPacket* packet);
+	bool Send(OPnetworkSocket* client, OPnetworkPacket* packet);
 	void Destroy();
 private: 
 	void HandleServerReceive(OPnetworkSocket* serverSocket);
