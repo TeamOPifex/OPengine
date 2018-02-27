@@ -10,16 +10,20 @@ typedef void(*OPnetworkServerReceiveCallback)(OPnetworkSocket*, void*, ui32);
 #define MAX_LINE 80
 
 struct OPnetworkServer {	
-	OPnetworkSocket serverSocket;
+	OPnetworkSocket serverSocket4;
+	OPnetworkSocket serverSocket6;
 	OPnetworkSelect selector;
+	OPnetworkProtocolType::Enum protocolType;
 
 	OPnetworkSocket clients[MAX_CLIENTS];
 	ui32 clientIndex = 0;
 
 	char buf[MAX_LINE];
 
-	void Init(OPnetworkProtocolType::Enum protocolType, ui32 port);
+	void Init(OPnetworkProtocolType::Enum protocol, ui32 port);
 	void Update(ui64 elapsed);
 	bool Send(OPnetworkPacket* packet);
 	void Destroy();
+private: 
+	void HandleServerReceive(OPnetworkSocket* serverSocket);
 };

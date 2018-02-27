@@ -42,10 +42,10 @@ void OPnetworkSocket::Init(OPnetworkAddress address, OPnetworkProtocolType::Enum
     ui32 networkFamily = OPnetworkFamilyTypeToCode(networkAddress.networkFamily);
 
 
-	if (networkAddress.networkAddressStr[0] == NULL) {
-        // networkFamily = AF_INET6;
-        networkFamily = AF_INET;
-    }
+	// if (networkAddress.networkAddressStr[0] == NULL) {
+    //     // networkFamily = AF_INET6;
+    //     networkFamily = AF_INET;
+    // }
     ui32 networkSocketTypeCode = OPnetworkSocketTypeToCode(networkSocketType);
     ui32 networkProtocolType = 0;
     
@@ -64,7 +64,7 @@ void OPnetworkSocket::Init(OPnetworkAddress address, OPnetworkProtocolType::Enum
 
     OPbzero(&sockAddr, sizeof(sockAddr));
 	if (networkAddress.networkAddressStr[0] == NULL) {
-        networkAddress.networkFamily = OPnetworkFamily::INET;
+        // networkAddress.networkFamily = OPnetworkFamily::INET;
         if (networkAddress.networkFamily == OPnetworkFamily::INET6) {
             // if network address is null we're going to use the connection
             // as a local connection and bind it to all available ips

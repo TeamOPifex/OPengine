@@ -4,12 +4,13 @@
 #include "./Core/include/OPmemory.h"
 #include "./Data/include/OPstring.h"
 
-void OPnetworkAddress::Init(ui32 port) {
+void OPnetworkAddress::Init(ui32 port, OPnetworkFamily::Enum family) {
     networkPort = port;
 	OPstringCopyInto(OPstringFrom(networkPort), networkPortStr);
 	valid = false;
 	networkAddressStr[0] = NULL;
 	valid = true;
+	networkFamily = family;
 }
 
 void OPnetworkAddress::Init(const OPchar* address, ui32 port) {
