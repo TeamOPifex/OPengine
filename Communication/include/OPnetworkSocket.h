@@ -49,5 +49,7 @@ struct OPnetworkSocket {
     bool Verify(ui8 code);
     bool GenCode();
 
+	bool CanBindIP4OnIP6();
+
     void Destroy();
 };

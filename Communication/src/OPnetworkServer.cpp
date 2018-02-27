@@ -14,7 +14,8 @@ void OPnetworkServer::Init(OPnetworkProtocolType::Enum protocol, ui32 port) {
 		return;
 	}
 
-    // // Gets the Loopback address on port
+    // Gets the Loopback address on port
+	// TODO: (garrett) Bind to all local addresses
     OPnetworkAddress local = OPnetworkAddress(port);
     if(!local.valid) {
         OPlogErr("couldn't locate loopback address for port %d", port);
@@ -31,7 +32,7 @@ void OPnetworkServer::Init(OPnetworkProtocolType::Enum protocol, ui32 port) {
     serverSocket.Bind();
 
     for(ui32 i = 0; i < MAX_CLIENTS; i++) {
-	    bzero(&clients[i], sizeof(clients[i]));
+	    OPbzero(&clients[i], sizeof(clients[i]));
     }
     
     // Only does the full listen if TCP

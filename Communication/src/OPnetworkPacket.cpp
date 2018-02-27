@@ -16,7 +16,7 @@ OPchar* OPnetworkPacket::Str() {
     return b;
 }
 
-uint64_t OPnetworkPacket::pack754(long double f, unsigned bits, unsigned expbits)
+ui64 OPnetworkPacket::pack754(double long f, ui64 bits, ui64 expbits)
 {
     long double fnorm;
     int shift;
@@ -45,7 +45,7 @@ uint64_t OPnetworkPacket::pack754(long double f, unsigned bits, unsigned expbits
     return (sign<<(bits-1)) | (exp<<(bits-expbits-1)) | significand;
 }
 
-long double OPnetworkPacket::unpack754(uint64_t i, unsigned bits, unsigned expbits)
+double long OPnetworkPacket::unpack754(ui64 i, ui64 bits, ui64 expbits)
 {
     long double result;
     long long shift;
