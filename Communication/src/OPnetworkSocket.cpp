@@ -39,7 +39,13 @@ void OPnetworkSocket::Init(OPnetworkAddress address, OPnetworkProtocolType::Enum
 
     networkSocketType = protocol == OPnetworkProtocolType::TCP ? OPnetworkSocketType::STREAM : OPnetworkSocketType::DGRAM;
 
-	ui32 networkFamily = AF_INET6; // OPnetworkFamilyTypeToCode(networkAddress.networkFamily);
+    ui32 networkFamily = OPnetworkFamilyTypeToCode(networkAddress.networkFamily);
+
+
+	if (networkAddress.networkAddressStr[0] == NULL) {
+        // networkFamily = AF_INET6;
+        networkFamily = AF_INET;
+    }
     ui32 networkSocketTypeCode = OPnetworkSocketTypeToCode(networkSocketType);
     ui32 networkProtocolType = 0;
     
@@ -58,14 +64,26 @@ void OPnetworkSocket::Init(OPnetworkAddress address, OPnetworkProtocolType::Enum
 
     OPbzero(&sockAddr, sizeof(sockAddr));
 	if (networkAddress.networkAddressStr[0] == NULL) {
-		// if network address is null we're going to use the connection
-		// as a local connection and bind it to all available ips
-		struct sockaddr_in6* sin = (struct sockaddr_in6*)&sockAddr;
-		OPbzero(sin, sizeof(struct sockaddr_in6));
-		sin->sin6_family = AF_INET6;
-		sin->sin6_addr = in6addr_any;
-		sin->sin6_port = htons(networkAddress.networkPort);
-		sockAddrLen = sizeof(struct sockaddr_in6);
+        networkAddress.networkFamily = OPnetworkFamily::INET;
+        if (networkAddress.networkFamily == OPnetworkFamily::INET6) {
+            // if network address is null we're going to use the connection
+            // as a local connection and bind it to all available ips
+            struct sockaddr_in6* sin = (struct sockaddr_in6*)&sockAddr;
+            OPbzero(sin, sizeof(struct sockaddr_in6));
+            sin->sin6_family = AF_INET6;
+            sin->sin6_addr = in6addr_any;
+            sin->sin6_port = htons(networkAddress.networkPort);
+            sockAddrLen = sizeof(struct sockaddr_in6);
+        } else {
+            // if network address is null we're going to use the connection
+            // as a local connection and bind it to all available ips
+            struct sockaddr_in* sin = (struct sockaddr_in*)&sockAddr;
+            OPbzero(sin, sizeof(struct sockaddr_in));
+            sin->sin_family = AF_INET;
+            sin->sin_addr.s_addr = INADDR_ANY;
+            sin->sin_port = htons(networkAddress.networkPort);
+            sockAddrLen = sizeof(struct sockaddr_in);
+        }
 	}
 	else {
 		if(networkAddress.networkFamily == OPnetworkFamily::INET6) {
@@ -93,19 +111,20 @@ void OPnetworkSocket::Init(OPnetworkAddress address, OPnetworkProtocolType::Enum
 
 bool OPnetworkSocket::CanBindIP4OnIP6() {
 
-#ifdef OPIFEX_WINDOWS
-	char yes = 1;
-#else
-	int yes = 1;
-#endif
-	yes = 0;
-	i32 sizeofopt = sizeof(yes);
-	if (getsockopt(connectedSocket, IPPROTO_IPV6, IPV6_V6ONLY, &yes, &sizeofopt) == -1) {
-		OPlogErr("Failed to get whether ipv4 on ipv6 is supported");
-		return false;
-	}
+// #ifdef OPIFEX_WINDOWS
+// 	char yes = 1;
+// #else
+// 	int yes = 1;
+// #endif
+// 	yes = 0;
+// 	i32 sizeofopt = sizeof(yes);
+// 	if (getsockopt(connectedSocket, IPPROTO_IPV6, IPV6_V6ONLY, &yes, &sizeofopt) == -1) {
+// 		OPlogErr("Failed to get whether ipv4 on ipv6 is supported");
+// 		return false;
+// 	}
 
-	return yes == 1;
+// 	return yes == 1;
+return true;
 }
 
 bool OPnetworkSocket::Bind() {
@@ -120,16 +139,14 @@ bool OPnetworkSocket::Bind() {
 		OPlogErr("setsockopt");
 	}
 
-	yes = 0;
-	if (setsockopt(connectedSocket, IPPROTO_IPV6, IPV6_V6ONLY, &yes, sizeof yes) == -1) {
-		OPlogErr("Failed to set ipv4 on ipv6 is support");
-	}
+    if(networkAddress.networkFamily == OPnetworkFamily::INET6) {
+        yes = 0;
+        if (setsockopt(connectedSocket, IPPROTO_IPV6, IPV6_V6ONLY, &yes, sizeof yes) == -1) {
+            OPlogErr("Failed to set ipv4 on ipv6 is support");
+        }
+    }
 
-    struct sockaddr_in6* sin = (struct sockaddr_in6*)&sockAddr;
-
-    OPlogInfo("Binding ipv6 to %s:%d", networkAddress.networkAddressStr, networkAddress.networkPort);
-
-    i32 bindResult = bind(connectedSocket, (struct sockaddr*)sin, sockAddrLen);
+    i32 bindResult = bind(connectedSocket, (struct sockaddr*)&sockAddr, sockAddrLen);
 
     if (bindResult == SOCKET_ERROR) {
         OPlogErr("socket failed to bind");
@@ -192,8 +209,8 @@ bool OPnetworkSocket::Accept(OPnetworkSocket* networkSocket) {
 i32 OPnetworkSocket::Send(OPnetworkPacket* packet) {
     i32 bytesSent = 0;
     i32 totalSent = 0;    
-    while(totalSent < packet->size) {
-        bytesSent = sendto(connectedSocket, &packet->buffer[totalSent], packet->size - totalSent, 0, (struct sockaddr*)&sockAddr, sockAddrLen);
+    while(totalSent < packet->buffer.size) {
+        bytesSent = sendto(connectedSocket, &packet->internal_buffer[totalSent], packet->buffer.size - totalSent, 0, (struct sockaddr*)&sockAddr, sockAddrLen);
         if(bytesSent < 0) {
             OPlogErr("Send error");
             return bytesSent;
@@ -208,12 +225,12 @@ i32 OPnetworkSocket::Send(OPnetworkPacket* packet) {
 i32 OPnetworkSocket::Send(OPnetworkSocket* client, OPnetworkPacket* packet) {
     i32 bytesSent = 0;
     i32 totalSent = 0;
-    while(totalSent < packet->size) {
+    while(totalSent < packet->buffer.size) {
 
         // if(networkSocketType == OPnetworkSocketType::STREAM) {
         //     bytesSent = send(connectedSocket, &packet->buffer[totalSent], packet->size - totalSent, 0);
         // } else {
-            bytesSent = sendto(connectedSocket, &packet->buffer[totalSent], packet->size - totalSent, 0, (struct sockaddr*)&client->sockAddr, client->sockAddrLen);
+            bytesSent = sendto(connectedSocket, &packet->internal_buffer[totalSent], packet->buffer.size - totalSent, 0, (struct sockaddr*)&client->sockAddr, client->sockAddrLen);
         //}
 
         if(bytesSent < 0) {
@@ -226,17 +243,19 @@ i32 OPnetworkSocket::Send(OPnetworkSocket* client, OPnetworkPacket* packet) {
     return bytesSent;
 }
 
-i32 OPnetworkSocket::Receive(OPnetworkPacket* packet) {
+i32 OPnetworkSocket::Receive() {
     i32 bytesRead = -1;
 
+    i8 buf[MAX_PACKET_SIZE];
+
     #ifdef OPIFEX_WINDOWS
-        bytesRead = recv(connectedSocket, (i8*)packet->buffer, MAX_PACKET_SIZE, 0);
+        bytesRead = recv(connectedSocket, (i8*)buf, MAX_PACKET_SIZE, 0);
     #else
-        bytesRead = recv(connectedSocket, (i8*)packet->buffer, MAX_PACKET_SIZE, MSG_DONTWAIT);
+        bytesRead = recv(connectedSocket, (i8*)buf, MAX_PACKET_SIZE, MSG_DONTWAIT);
     #endif
 
     if(bytesRead >= 0) {
-        packet->size = bytesRead;
+        networkPacket.buffer.Write(buf, bytesRead);
         return bytesRead;
     }
     
@@ -244,13 +263,16 @@ i32 OPnetworkSocket::Receive(OPnetworkPacket* packet) {
     return -1;
 }
 
-i32 OPnetworkSocket::ReceiveFrom(OPnetworkPacket* packet, OPnetworkSocket* networkSocket) {
+i32 OPnetworkSocket::ReceiveFrom(OPnetworkSocket* networkSocket) {
 
     OPbzero(&networkSocket->sockAddr, sizeof(networkSocket->sockAddr));
     networkSocket->sockAddrLen = sizeof(networkSocket->sockAddr);
-    ui32 bytesRead = recvfrom(connectedSocket, packet->buffer, MAX_PACKET_SIZE, 0, (struct sockaddr*)&networkSocket->sockAddr, &networkSocket->sockAddrLen);
+
+    i8 buf[MAX_PACKET_SIZE];
+
+    ui32 bytesRead = recvfrom(connectedSocket, buf, MAX_PACKET_SIZE, 0, (struct sockaddr*)&networkSocket->sockAddr, &networkSocket->sockAddrLen);
     if(bytesRead >= 0) {
-        packet->size = bytesRead;
+        networkSocket->networkPacket.buffer.Write(buf, bytesRead);
         return bytesRead;
     }
     

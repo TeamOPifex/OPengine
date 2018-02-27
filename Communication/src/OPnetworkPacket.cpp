@@ -3,17 +3,16 @@
 #include "./Core/include/OPmemory.h"
 #include <string>
 
- void OPnetworkPacket::Str(const OPchar* str) {
-    ui32 s = strlen(str) + 1;
-    OPmemcpy(&buffer[pos], str, s);
-    size += s;
-    pos += s;
+ void OPnetworkPacket::Str(OPchar* str) {
+    ui8 size = strlen(str) + 1;
+    buffer.I8(size);
+    buffer.Write(str, size);
 }	
 
 OPchar* OPnetworkPacket::Str() {
-    i8* b = &buffer[pos];
-    pos += strlen(b) + 1;
-    return b;
+    ui8 size = buffer.I8();
+    buffer.Read(strBuffer, size);
+    return strBuffer;
 }
 
 ui64 OPnetworkPacket::pack754(double long f, ui64 bits, ui64 expbits)

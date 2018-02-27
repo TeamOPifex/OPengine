@@ -7,7 +7,9 @@ struct OPcircularBuffer {
     i8* buffer = NULL;
     i32 pos = 0;
     i32 capacity = 0;
-    i32 written = 0;
+    i32 size = 0;
+    ui32 posAtRewind = 0;
+    ui32 sizeAtRewind = 0;
 
     inline void Init(void* b, ui32 s) {
         buffer = (i8*)b;
@@ -17,7 +19,7 @@ struct OPcircularBuffer {
     inline i8 I8() {
         i8 result = buffer[pos];
         pos++;
-        written++;
+        size--;
         if(pos > capacity) {
             pos = 0;
         }
@@ -27,49 +29,138 @@ struct OPcircularBuffer {
     inline void I8(i8 v) {
         buffer[pos] = v;
         pos++;
-        written++;
+        size++;
         if(pos > capacity) {
             pos = 0;
         }
     }
 
-    inline void Write(void* data, ui32 c) {
-        ui32 sizeToEnd = capacity - pos;
-        if(sizeToEnd < c) {
-            // write first half
-            ui32 toWrite = sizeToEnd - c;
-            OPmemcpy(&buffer[pos], data, toWrite);
-            c -= toWrite;
+    inline ui8 UI8() {
+        ui8 result = ((ui8*)buffer)[pos];
+        pos++;
+        size--;
+        if(pos > capacity) {
             pos = 0;
-            OPmemcpy(&buffer[pos], data, c);
-        } else {
-            OPmemcpy(&buffer[pos], data, c);
         }
-        written += c;
+        return result;
+    }
+
+    inline void UI8(ui8 v) {
+        ((ui8*)buffer)[pos] = v;
+        pos++;
+        size++;
+        if(pos > capacity) {
+            pos = 0;
+        }
+    }
+
+    inline i16 I16() {
+        i16 data;
+        Read(&data, 2);
+        return data;
+    }
+
+    inline void I16(i16 v) {
+        Write(&v, 2);
+    }
+
+    inline i32 I32() {
+        i32 data;
+        Read(&data, 4);
+        return data;
+    }
+
+    inline void I32(i32 v) {
+        Write(&v, 4);
+    }
+
+    inline ui32 UI32() {
+        ui32 data;
+        Read(&data, 4);
+        return data;
+    }
+
+    inline void UI32(ui32 v) {
+        Write(&v, 4);
+    }
+
+    inline void Write(void* data, ui32 toWrite) {
+        ui32 sizeToEnd = capacity - pos;
+
+        if(toWrite < sizeToEnd) {
+            OPmemcpy(&buffer[pos], data, toWrite);
+            pos += toWrite;
+        } else {
+            // write first half
+            OPmemcpy(&((i8*)buffer)[pos], data, sizeToEnd);
+
+            // write second half
+            ui32 remaining = toWrite - sizeToEnd;
+            OPmemcpy(&((i8*)buffer)[0], &((i8*)data)[sizeToEnd], remaining);
+
+            pos = remaining;
+        }
+
+        size += toWrite;
     }
 
     inline void Read(void* data, ui32 max) {
-        // read from beginning
-        i32 beginning = pos - written;
-        if(beginning < 0) {
-            beginning += capacity;
-        }
-
-        ui32 sizeToEnd = capacity - beginning;
-        ui32 toRead = written;
-        if(written > max) {
+        ui32 sizeToEnd = capacity - pos;
+        ui32 toRead = size;
+        if(size > max) {
             toRead = max;
         }
 
         if(toRead < sizeToEnd) {
-            OPmemcpy(data, &buffer[beginning], toRead);
+            OPmemcpy(data, &((i8*)buffer)[pos], toRead);
+            pos += toRead;
+            size -= toRead;
             return;
         }
 
-        OPmemcpy(data, &buffer[beginning], sizeToEnd);
-        beginning = 0;
-        toRead -= sizeToEnd;
-        OPmemcpy(data, &buffer[beginning], toRead);
+        // memcpy 1st half
+        OPmemcpy(data, &((i8*)buffer)[pos], sizeToEnd);
+        ui32 remaining = toRead - sizeToEnd; // remaining to copy
+        OPmemcpy(&((i8*)data)[sizeToEnd], &((i8*)buffer)[0], remaining);
+        pos = remaining;
+        size -= toRead;
     }
 
+    inline void Rewind() {
+        posAtRewind = pos;
+        sizeAtRewind = size;
+        pos -= size;
+        if(pos < 0) {
+            pos += capacity;
+        }
+    }
+
+    inline void FastForward() {
+        pos = posAtRewind;
+    }
+
+    inline void ReadPast(ui32 s) {
+        pos += s;
+        size -= s;
+    }
+
+    inline void Zero() {
+        pos = 0;
+        size = 0;
+    }
+
+    inline void Write(OPcircularBuffer* buf) {
+        ui32 s = buf->size;
+        ui32 sizeToEnd = capacity - pos;
+        if(s < sizeToEnd) {
+            buf->Read(&((i8*)buffer)[pos], s);
+            pos += s;
+        } else {
+            buf->Read(&((i8*)buffer)[pos], sizeToEnd);
+            ui32 remaining = s - sizeToEnd;
+            buf->Read(&((i8*)buffer)[0], remaining);
+            pos = remaining;
+        }
+        size += s;
+    }
 };

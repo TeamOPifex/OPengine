@@ -48,15 +48,21 @@ void OPnetworkClient::Update() {
 	i32 selectResult = selector.Select();
 	if(selectResult > 0) {
 		if(selector.IsReadSet(&clientSocket)) {
-			OPnetworkPacket packet;
-			i32 bytes = clientSocket.Receive(&packet);
+
+			i32 bytes = clientSocket.Receive();
+			clientSocket.networkPacket.buffer.Rewind();
+
 			if (bytes < 0) {
 				OPlogErr("fail to receive.");
 			}
 			else {
 				if(!clientSocket.verified) {
 					clientSocket.verified = true;
-					clientSocket.Send(&packet);
+
+					OPnetworkPacket packetVerify;
+					packetVerify.I8(clientSocket.networkPacket.I8());
+					clientSocket.Send(&packetVerify);
+					
 					OPlogInfo("Client Verified");
 					
 					if(ActiveNetworkState != NULL) {
@@ -65,7 +71,8 @@ void OPnetworkClient::Update() {
 
 				} else {
 					if(ActiveNetworkState != NULL) {
-						ActiveNetworkState->Message(&clientSocket, &packet);
+						ActiveNetworkState->Message(&clientSocket, &clientSocket.networkPacket);
+						clientSocket.networkPacket.buffer.FastForward();
 					}
 				}
 			}

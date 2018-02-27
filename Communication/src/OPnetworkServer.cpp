@@ -32,7 +32,8 @@ void OPnetworkServer::Init(OPnetworkProtocolType::Enum protocol, ui32 port) {
     serverSocket.Bind();
 
     for(ui32 i = 0; i < MAX_CLIENTS; i++) {
-	    OPbzero(&clients[i], sizeof(clients[i]));
+	    //OPbzero(&clients[i], sizeof(clients[i]));
+        clients[i] = OPnetworkSocket();
     }
     
     // Only does the full listen if TCP
@@ -90,21 +91,24 @@ void OPnetworkServer::Update(ui64 elapsed) {
 
                 // Handle UDP Communication
 
-                OPnetworkPacket packet;
-
-                i32 bytes = serverSocket.ReceiveFrom(&packet, &clients[clientIndex]);
+                clients[clientIndex].networkPacket.buffer.Zero();
+                i32 bytes = serverSocket.ReceiveFrom(&clients[clientIndex]);
+                clients[clientIndex].networkPacket.buffer.Rewind();
 
                 // Look for an existing client socket
                 OPnetworkSocket* existingClient = NULL;
                 for(ui32 i = 0; i < clientIndex; i++) {
                     if(clients[i].Match(&clients[clientIndex])) {
                         existingClient = &clients[i];
+                        // write networkPacket buffer into existing
+                        existingClient->networkPacket.buffer.Write(&clients[clientIndex].networkPacket.buffer);
+                        existingClient->networkPacket.buffer.Rewind();
                         break;
                     }
                 }
 
                 // If no existing client could be found and the message received was CONNECT
-                if(existingClient == NULL && OPstringEquals("CONNECT", packet.buffer)) {
+                if(existingClient == NULL && OPstringEquals("CONNECT", clients[clientIndex].networkPacket.Str())) {
                     OPlogInfo("New Client Found!");
 
                     existingClient = &clients[clientIndex];
@@ -119,7 +123,7 @@ void OPnetworkServer::Update(ui64 elapsed) {
                     clientIndex++;
                 } else if(existingClient != NULL) {
                     if(!existingClient->verified) {
-                        if(existingClient->Verify(packet.buffer[0])) {
+                        if(existingClient->Verify(existingClient->networkPacket.UI8())) {
                             OPlogInfo("Server Verified the client");
                             if(ActiveNetworkState != NULL) {
                                 ActiveNetworkState->Connected(existingClient);
@@ -128,8 +132,9 @@ void OPnetworkServer::Update(ui64 elapsed) {
                             OPlogErr("Failed to verify client '%d'", existingClient->code);
                         }
                     } else if(ActiveNetworkState != NULL) {
-                        ActiveNetworkState->Message(existingClient, &packet);
-                    }                
+                        ActiveNetworkState->Message(existingClient, &existingClient->networkPacket);
+                        existingClient->networkPacket.buffer.FastForward();
+                    }
                 }
 
             }
@@ -138,8 +143,9 @@ void OPnetworkServer::Update(ui64 elapsed) {
         if(serverSocket.networkSocketType == OPnetworkSocketType::STREAM) {
             for(ui32 i = 0; i < clientIndex; i++) {
                 if(selector.IsReadSet(&clients[i])) {
-                    OPnetworkPacket packet;
-                    i32 bytes = clients[i].Receive(&packet);
+                    i32 bytes = clients[i].Receive();
+                    clients[i].networkPacket.buffer.Rewind();
+
                     if(bytes == 0) {
                         if(ActiveNetworkState != NULL) {
                             ActiveNetworkState->Disconnected(&clients[i]);
@@ -152,7 +158,7 @@ void OPnetworkServer::Update(ui64 elapsed) {
                         clientIndex--;
                     } else {
                         if(!clients[i].verified) {
-                            if(clients[i].Verify(packet.buffer[0])) {
+                            if(clients[i].Verify(clients[i].networkPacket.UI8())) {
                                 OPlogInfo("Server Verified the client");
                                 if(ActiveNetworkState != NULL) {
                                     ActiveNetworkState->Connected(&clients[i]);
@@ -161,7 +167,9 @@ void OPnetworkServer::Update(ui64 elapsed) {
                                 OPlogErr("Failed to verify client '%d'", clients[i].code);
                             }
                         } else if(ActiveNetworkState != NULL) {
-                            ActiveNetworkState->Message(&clients[i], &packet);
+                            OPlogInfo("Received client message");
+                            ActiveNetworkState->Message(&clients[i], &clients[i].networkPacket);
+                            clients[i].networkPacket.buffer.FastForward();
                         }
                     }
                 }
@@ -176,11 +184,13 @@ bool OPnetworkServer::Send(OPnetworkPacket* packet) {
 
     if(serverSocket.networkSocketType == OPnetworkSocketType::STREAM) {
         for(ui32 i = 0; i < clientIndex; i++) {
-            clients[i].Send(packet);
+            if(clients[i].verified)
+                clients[i].Send(packet);
         }
     } else {
         for(ui32 i = 0; i < clientIndex; i++) {
-            serverSocket.Send(&clients[i], packet);
+            if(clients[i].verified)
+                serverSocket.Send(&clients[i], packet);
         }
     }
 	return true;

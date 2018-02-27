@@ -2,49 +2,54 @@
 
 #include "./Core/include/OPtypes.h"
 #include "./Communication/include/OPnetworkPlatform.h"
+#include "./Data/include/OPcircularBuffer.h"
 
 #define MAX_PACKET_SIZE 1024
+#define MAX_PACKET_SIZE_DOUBLE 2048
 
 struct OPnetworkPacket {
-	i8 buffer[MAX_PACKET_SIZE];
-	ui16 size = 0;
-	ui16 pos = 0;
+	i8 internal_buffer[MAX_PACKET_SIZE_DOUBLE];
+	OPcircularBuffer buffer;
+	OPchar strBuffer[256];
+
+	OPnetworkPacket() {
+		buffer.Init(&internal_buffer, MAX_PACKET_SIZE_DOUBLE);
+	}
 	
 	inline i8 I8() {
-		return buffer[pos++];
+		return buffer.I8();
 	}
 
 	inline void I8(i8 c) {
-		size++;
-		buffer[pos++] = c;
+		buffer.I8(c);
+	}
+	
+	inline ui8 UI8() {
+		return buffer.UI8();
+	}
+
+	inline void UI8(ui8 c) {
+		buffer.UI8(c);
 	}
 	
 	inline i16 I16() {
-		i16 val = *(i16*)&buffer[pos];
-		i16 result = ntohs(val);
-		pos += 2;
-		return result;
+		i16 val = buffer.I16();
+		return ntohs(val);
 	}
 
 	inline void I16(i16 s) {
 		i16 val = htons(s);
-		*(i16*)&buffer[pos] = val;
-		pos += 2;
-		size += 2;
+		buffer.I16(val);
 	}
 	
 	inline i32 I32() {
-		i32 val = *(i32*)&buffer[pos];
-		i32 result = ntohl(val);
-		pos += 4;
-		return result;
+		i32 val = buffer.I32();
+		return ntohl(val);
 	}
 
 	inline void I32(i32 s) {
 		i32 val = htonl(s);
-		*((i32*)(&buffer[pos])) = val;
-		pos += 4;
-		size += 4;
+		buffer.I32(val);
 	}
 
 	inline ui32 UI32() {
@@ -53,24 +58,19 @@ struct OPnetworkPacket {
 
 	inline void UI32(ui32 s) {
 		ui32 val = htonl(s);
-		*((ui32*)(&buffer[pos])) = val;
-		pos += 4;
-		size += 4;
+		buffer.UI32(val);
 	}
 
-	void Str(const OPchar* str);
+	void Str(OPchar* str);
 	OPchar* Str();
 
 	inline void F32(f32 v) {
 		ui32 bits = pack754(v, 32, 8);
-		*((ui32*)(&buffer[pos])) = bits;
-		pos += 4;
-		size += 4;
+		buffer.UI32(bits);
 	}
 
 	inline f32 F32() {
-		ui32 bits = *(ui32*)&buffer[pos];
-		pos += 4;
+		ui32 bits = buffer.UI32();
 		return unpack754(bits, 32, 8);
 	}
 
