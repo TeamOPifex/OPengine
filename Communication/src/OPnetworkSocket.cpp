@@ -140,9 +140,9 @@ bool OPnetworkSocket::Bind() {
 	}
 
     if(networkAddress.networkFamily == OPnetworkFamily::INET6) {
-        yes = 0;
+        yes = 1;
         if (setsockopt(connectedSocket, IPPROTO_IPV6, IPV6_V6ONLY, &yes, sizeof yes) == -1) {
-            OPlogErr("Failed to set ipv4 on ipv6 is support");
+            OPlogErr("Failed to set ipv6 only support");
         }
     }
 
