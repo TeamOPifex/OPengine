@@ -4,6 +4,7 @@
 #include "./Communication/include/Enums/OPnetworkSocketType.h"
 #include "./Communication/include/OPnetworkAddress.h"
 #include "./Communication/include/OPnetworkPacket.h"
+#include "./Data/include/OPcircularBuffer.h"
 
 #define OPNETWORKSOCKET_BUFFER_SIZE 1024
 #define MAX_SEND_SIZE 1024
@@ -21,9 +22,15 @@ struct OPnetworkSocket {
     ui8 code = 0;
     bool verified = false;
     i64 verifyTimer = 0;
+	i8 internalBuffer[1024];
+	OPcircularBuffer buffer;
 
-    OPnetworkSocket() {}
+	OPnetworkSocket() {
+		buffer.Init(internalBuffer, 1024);
+	}
+
     OPnetworkSocket(OPnetworkAddress address, OPnetworkProtocolType::Enum protocol) {
+		buffer.Init(internalBuffer, 1024);
         Init(address, protocol);
     }
     void Init(OPnetworkAddress address, OPnetworkProtocolType::Enum protocol);
