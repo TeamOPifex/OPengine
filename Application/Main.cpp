@@ -33,11 +33,6 @@ OPwindow mainWindow;
 void ApplicationInit() {
 	TIMED_BLOCK;
 
-	OPnetwork::Initialize();
-	OPnetworkAddress addr;
-	addr.Init("127.0.0.1", "1337", OPnetworkSocketType::UDP);
-
-
 	OPcam _camera;
 	_camera.SetPerspective(OPvec3(0, 0, 5), OPvec3(0, 0, 0), OPvec3(0, 1, 0), 0.1f, 50.0f, 45.0f, 1920.0f / 1080.0f);
 
@@ -80,7 +75,8 @@ void ApplicationInit() {
 
 
 	OPmonitorResult result = OPmonitor::GetAll();
-	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, result.primary.VideoModeCurrent.Width, result.primary.VideoModeCurrent.Height));
+	//mainWindow.Init(NULL, OPwindowParameters("Main Window", false, result.primary.VideoModeCurrent.Width, result.primary.VideoModeCurrent.Height));
+	mainWindow.Init(NULL, OPwindowParameters("Main Window", false, 600, 600));
 	//mainWindow.Init(&result.primary, OPwindowParameters("Main Window", false, result.primary.VideoModeCurrent.Width, result.primary.VideoModeCurrent.Height));
 	OPlogErr("mainWindow.Init Finished");
 

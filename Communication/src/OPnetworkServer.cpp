@@ -117,7 +117,16 @@ void OPnetworkServer::HandleServerReceive(OPnetworkSocket* serverSocket) {
                     OPlogErr("Failed to verify client '%d'", existingClient->code);
                 }
             } else if(ActiveNetworkState != NULL) {
-                ActiveNetworkState->Message(existingClient, &existingClient->networkPacket);
+                existingClient->timeoutTimer = 0; // reset timeout
+                i8 header = existingClient->networkPacket.buffer.PeekI8();
+                if(header == 0) {
+                    // ping/pong ignore
+                    existingClient->networkPacket.buffer.I8(); // read forward
+                    OPlogInfo("Received ping/pong back");
+                } else {
+                    ActiveNetworkState->Message(existingClient, &existingClient->networkPacket);
+                }
+
                 existingClient->networkPacket.buffer.FastForward();
             }
         }
@@ -125,10 +134,35 @@ void OPnetworkServer::HandleServerReceive(OPnetworkSocket* serverSocket) {
     }
 }
 
+void OPnetworkServer::SendPingPacket(OPnetworkSocket* networkSocket) {
+    OPnetworkPacket packet = OPnetworkPacket();
+    packet.I8(0); // ping/pong message
+    Send(networkSocket, &packet);
+}
+
 void OPnetworkServer::Update(ui64 elapsed) {
 
     for(ui32 i = 0; i < clientIndex; i++) {
         if(clients[i].verified) {
+            clients[i].timeoutTimer += elapsed;
+            if(clients[i].timeoutTimer > 5000) {
+                // client hasn't sent anything in 5 seconds
+                // they've timed out at this point
+                if(ActiveNetworkState != NULL) {
+                    ActiveNetworkState->Disconnected(&clients[i]);
+                }
+                if(i < clientIndex - 1) {
+                    clients[i] = clients[clientIndex - 1];
+                }
+                clientIndex--;
+                i--;
+                 OPlogInfo("Client timed out");
+            } else if(clients[i].timeoutTimer > 2500) {
+                 // client is timing out, send ping/pong to keep alive
+                 SendPingPacket(&clients[i]);
+                 OPlogInfo("Client timing out sending ping/pong");
+            }
+
             continue;
         }
 
@@ -193,7 +227,16 @@ void OPnetworkServer::Update(ui64 elapsed) {
                             }
                         } else if(ActiveNetworkState != NULL) {
                             OPlogInfo("Received client message");
-                            ActiveNetworkState->Message(&clients[i], &clients[i].networkPacket);
+                            clients[i].timeoutTimer = 0; // reset timeout
+                            if(clients[i].networkPacket.buffer.PeekI8() == 0) {
+                                // ping/pong ignore
+                                clients[i].networkPacket.buffer.I8(); // read forward
+							    OPlogInfo("Received ping/pong back");
+                            } else {
+                                // pass message along
+                                ActiveNetworkState->Message(&clients[i], &clients[i].networkPacket);
+                            }
+
                             clients[i].networkPacket.buffer.FastForward();
                         }
                     }

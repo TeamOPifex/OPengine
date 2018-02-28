@@ -16,7 +16,11 @@ struct OPcircularBuffer {
     i8 I8();
     void I8(i8 v);
     ui8 UI8();
-    void UI8(ui8 v);
+    void UI8(ui8 v);    
+    
+    inline i8 PeekI8() {
+        return buffer[pos];
+    }
 
     inline i16 I16() {
         i16 data;

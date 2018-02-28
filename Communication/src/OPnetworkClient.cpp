@@ -38,7 +38,6 @@ void OPnetworkClient::Init(OPnetworkProtocolType::Enum protocolType, const OPcha
 		clientSocket.Send(&packetConnect);
 		OPlogInfo("Client Sent CONNECT");
 	}
-
 }
 
 void OPnetworkClient::Update() {
@@ -71,7 +70,17 @@ void OPnetworkClient::Update() {
 
 				} else {
 					if(ActiveNetworkState != NULL) {
-						ActiveNetworkState->Message(&clientSocket, &clientSocket.networkPacket);
+						
+						if(clientSocket.networkPacket.buffer.PeekI8() == 0) {
+							// ping/pong packet, send back a 0
+							clientSocket.networkPacket.buffer.I8();
+							OPnetworkPacket packet;
+							packet.I8(0);
+							// Send(&packet);
+							OPlogInfo("Sending ping/pong back");
+						} else {
+							ActiveNetworkState->Message(&clientSocket, &clientSocket.networkPacket);
+						}
 						clientSocket.networkPacket.buffer.FastForward();
 					}
 				}

@@ -26,5 +26,6 @@ struct OPnetworkServer {
 	bool Send(OPnetworkSocket* client, OPnetworkPacket* packet);
 	void Destroy();
 private: 
+	void SendPingPacket(OPnetworkSocket* networkSocket);
 	void HandleServerReceive(OPnetworkSocket* serverSocket);
 };

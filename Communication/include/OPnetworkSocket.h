@@ -21,6 +21,7 @@ struct OPnetworkSocket {
     ui8 code = 0;
     bool verified = false;
     i64 verifyTimer = 0;
+    i64 timeoutTimer = 0;
 	OPnetworkPacket networkPacket;
     void* userData = NULL;
 
