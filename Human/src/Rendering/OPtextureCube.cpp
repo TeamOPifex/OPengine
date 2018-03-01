@@ -72,6 +72,8 @@ void OPtextureCubeClearActive() {
 
 void OPtextureCube::Process(OPtextureCube* textureCube, OPeffect* effect, OPtexture* texture, const OPchar* param, ui32 size) {
 
+
+
 	OPrenderDepth(false);
 	OPrenderCull(false);
 
@@ -87,6 +89,9 @@ void OPtextureCube::Process(OPtextureCube* textureCube, OPeffect* effect, OPtext
 	textureCubeDesc.mipmap = true;
 	textureCube->Init(textureCubeDesc);
 
+
+	OPint currAlloc = OPallocations;
+	OPint currDealloc = OPdeallocations;
 
 	// TODO: (garrett) create a non allocating OPmodel version of OPcubeCreate
 	OPmodel* cubeMesh = OPcubeCreate();
@@ -131,6 +136,14 @@ void OPtextureCube::Process(OPtextureCube* textureCube, OPeffect* effect, OPtext
 
 	cubeMesh->Destroy();
 	OPfree(cubeMesh);
+
+
+	OPint currAlloc2 = OPallocations;
+	OPint currDealloc2 = OPdeallocations;
+
+	if ((currAlloc2 - currAlloc) != (currDealloc2 - currDealloc)) {
+		OPlogInfo("Didn't free everything");
+	}
 
 }
 

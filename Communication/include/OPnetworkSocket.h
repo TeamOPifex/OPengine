@@ -22,11 +22,11 @@ struct OPnetworkSocket {
     bool verified = false;
     i64 verifyTimer = 0;
     i64 timeoutTimer = 0;
-	OPnetworkPacket networkPacket;
+	OPnetworkPacket networkPacket = OPnetworkPacket();
     void* userData = NULL;
 
 	OPnetworkSocket() {
-        
+
 	}
 
     OPnetworkSocket(OPnetworkAddress address, OPnetworkProtocolType::Enum protocol) {

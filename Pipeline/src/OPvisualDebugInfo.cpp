@@ -8,8 +8,15 @@
 #include "OPimgui.h"
 static float arr[1000];
 static int ind = 0;
+static float arr2[250];
+static int ind2 = 0;
+static float arr3[250];
+static int ind3 = 0;
+static float arr4[100];
+static int ind4 = 0;
 static bool openDebugInfo = false;
 static bool openDebugInfoMemory = false;
+static bool PAUSED = false;
 
 struct _memoryBlock {
 	const OPchar* _func;
@@ -106,6 +113,9 @@ void OPvisualDebugInfo::Init() {
 #ifdef ADDON_imgui
     PreInitSetup();
 	OPimguiInit(OPRENDERER_ACTIVE->OPWINDOW_ACTIVE, true);
+	arr[0] = 0;
+	arr2[0] = 0;
+	arr3[0] = 0;
 #endif
 }
 
@@ -117,6 +127,15 @@ void OPvisualDebugInfo::Update(OPtimer* timer) {
 	if (OPKEYBOARD.WasPressed(OPkeyboardKey::F2)) {
 		openDebugInfoMemory = !openDebugInfoMemory;
 	}
+	if (OPKEYBOARD.WasPressed(OPkeyboardKey::F3)) {
+		PAUSED = !PAUSED;
+	}
+
+	arr2[ind2] += timer->Elapsed;
+
+	ind3++;
+	ind3 = ind3 % 250;
+	arr3[ind3] = 0;
 #endif
 }
 
@@ -186,10 +205,30 @@ void OPvisualDebugInfo::DrawWindows(OPfloat delta) {
 #endif
 	ImGui::Separator();
 
-	arr[ind] = ImGui::GetIO().Framerate;
-	ind++;
-	ind = ind % 1000;
+
+	if (!PAUSED) {
+
+		arr[ind] = ImGui::GetIO().Framerate;
+		ind++;
+		ind = ind % 1000;
+
+		ind2++;
+		ind2 = ind2 % 250;
+		arr2[ind2] = 0;
+
+		arr3[ind3]++;
+
+		arr4[ind4] = delta;
+		ind4++;
+		ind4 = ind4 % 100;
+	}
+
+
 	ImGui::PlotHistogram("FPS", arr, 1000, ind, "", 0, 200, ImVec2(0, 80));
+	ImGui::PlotHistogram("Elapsed", arr2, 250, ind2, "", 0, 32, ImVec2(0, 80));
+	ImGui::PlotHistogram("Frames Per Update", arr3, 250, ind3, "", 0, 3, ImVec2(0, 80));
+	ImGui::PlotHistogram("Delta", arr4, 100, ind4, "", 0, 1, ImVec2(0, 80));
+
 
 	ImGui::End();
 

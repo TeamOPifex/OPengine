@@ -3,8 +3,8 @@
 #include "./Core/include/OPlog.h"
 
 
-void OPcircularBuffer::Init(void* b, ui32 s) {
-    buffer = (i8*)b;
+void OPcircularBuffer::Init(i8* b, ui32 s) {
+    buffer = b;
     capacity = s;
 }
 
@@ -79,6 +79,8 @@ void OPcircularBuffer::Read(i8* data, ui32 max) {
     }
 
     if(toRead < sizeToEnd) {
+		OPlogInfo("Mem copy into %p at pos %d of %d", data, pos, toRead);
+		OPlogInfo("My buffer %p", &buffer[pos]);
         OPmemcpy(data, &buffer[pos], toRead);
         pos += toRead;
         size -= toRead;
@@ -112,7 +114,11 @@ void OPcircularBuffer::Write(OPcircularBuffer* buf) {
     ui32 s = buf->size;
     ui32 sizeToEnd = capacity - pos;
     if(s < sizeToEnd) {
-        buf->Read(&buffer[pos], s);
+		i8* bufInto = &buffer[pos];
+		OPlogInfo("Buffer to read into %p", bufInto);
+
+        buf->Read(bufInto, s);
+
         pos += s;
     } else {
         ui32 firstHalf = sizeToEnd - 1;

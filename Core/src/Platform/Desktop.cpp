@@ -82,8 +82,6 @@ void _OPsteppedLooped() {
 		// update 15+ seconds at a time.
 		if (OPTIMER.Elapsed > 2000) {
 			OPTIMER.Elapsed = STEP;
-		}
-		if (OPTIMER.ElapsedHighRes > 2000) {
 			OPTIMER.ElapsedHighRes = STEP;
 		}
 #endif

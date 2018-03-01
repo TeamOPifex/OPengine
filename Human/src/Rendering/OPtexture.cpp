@@ -23,12 +23,16 @@ void OPtexture::GenerateBRDF(OPtexture* texture, ui32 size) {
 	desc.textureType = OPtextureType::FLOAT;
 	texture->Init(desc);
 
+
+
 	OPmodel* quad = OPquadCreate(1.0, 1.0);
 
 
 	OPframeBuffer captureFB;
 	OPtextureDesc captureFBDesc = OPtextureDesc(size, size);
 	captureFB.Init(captureFBDesc, false);
+
+
 
 	OPeffect BRDFEffect;
 	BRDFEffect.Init("BRDF.vert", "BRDF.frag");
@@ -43,8 +47,10 @@ void OPtexture::GenerateBRDF(OPtexture* texture, ui32 size) {
 	OPrenderDrawBufferIndexed(0);
 
 	captureFB.Unbind();
+	captureFB.Destroy();
 
+	BRDFEffect.Destroy();
+	
 	quad->Destroy();
 	OPfree(quad);
-
 }

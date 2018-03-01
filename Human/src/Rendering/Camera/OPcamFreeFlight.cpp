@@ -20,6 +20,7 @@ void OPcamFreeFlight::Init(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 positi
 	Rotation.x = -angle;
 	Rotation.y = OPvec3Angle(OPVEC3_LEFT, OPvec3Norm(position));
 	Rotation.z = OPvec3Angle(OPVEC3_UP, OPvec3Norm(position));
+	prevRotation = Rotation;
 
 	Camera.SetPerspective(
 		position,
@@ -30,16 +31,22 @@ void OPcamFreeFlight::Init(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 positi
 		OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Width / (f32)OPRENDERER_ACTIVE->OPWINDOW_ACTIVE->Height
 		);
 
+	prevPos = pos = Camera.pos;
 
 	Update();
 }
 
 void OPcamFreeFlight::Update() {
+	prevRotation = Rotation;
+
 	OPmat4 rotation = OPmat4RotY(Rotation.y) * OPmat4RotX(Rotation.x);
 	OPvec3 target = OPmat4Transform(OPVEC3_BACKWARD, rotation);
 
-	Camera.pos += OPmat4Transform(Movement, rotation);
-	Camera.target = Camera.pos + target;
+	prevPos = pos;
+	pos += OPmat4Transform(Movement, rotation);
+
+	Camera.pos = pos;
+	Camera.target = pos + target;
 	Camera.Update();
 }
 
@@ -77,6 +84,19 @@ void OPcamFreeFlight::Update(OPtimer* timer) {
 	Rotation += rot;
 	//OPmouseButton
 	Update();
+}
+
+
+void OPcamFreeFlight::UpdateFixed(f32 delta) {
+	OPvec3 frameRotation = OPvec3Tween(prevRotation, Rotation, delta);
+
+	OPmat4 rotation = OPmat4RotY(frameRotation.y) * OPmat4RotX(frameRotation.x);
+	OPvec3 target = OPmat4Transform(OPVEC3_BACKWARD, rotation);
+	
+	OPvec3 framePos = OPvec3Tween(prevPos, pos, delta);
+	Camera.pos = framePos;
+	Camera.target = framePos + target;
+	Camera.Update();
 }
 
 void OPcamFreeFlight::Destroy() {

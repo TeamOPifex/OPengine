@@ -25,4 +25,8 @@ struct OPrenderBuffer {
 	inline void SetSize(ui32 width, ui32 height) {
 		OPRENDERER_ACTIVE->RenderBuffer.SetSize(this, width, height);
 	}
+
+	inline void Destroy() {
+		OPRENDERER_ACTIVE->RenderBuffer.Destroy(this);
+	}
 };

@@ -123,20 +123,20 @@ macro(add_opifex_libraries APPLICATION_TARGET )
 		find_binary(LIBHUMAN "Human" true)
 		find_binary(LIBGLEW_158 "GLEW_158" false)
 		find_binary(LIBGLFW "glfw3" false)
-		if(${OPIFEX_OPTION_RELEASE})
-			find_binary(LIBJANSSON "jansson" false)
-		else()
-            if(${OPIFEX_OS_WINDOWS})
-				find_binary(LIBJANSSON "jansson_d" false)
-            else()
-				find_binary(LIBJANSSON "jansson" false)
-            endif()
-		endif()
+		#if(${OPIFEX_OPTION_RELEASE})
+		#	find_binary(LIBJANSSON "jansson" false)
+		#else()
+        #    if(${OPIFEX_OS_WINDOWS})
+		#		find_binary(LIBJANSSON "jansson_d" false)
+        #    else()
+		#		find_binary(LIBJANSSON "jansson" false)
+        #    endif()
+		#endif()
 
 		target_link_libraries(${APPLICATION_TARGET}
 			${LIBGLFW}
 			${LIBGLEW_158}
-			${LIBJANSSON}
+			#${LIBJANSSON}
 		)
 	endif()
 

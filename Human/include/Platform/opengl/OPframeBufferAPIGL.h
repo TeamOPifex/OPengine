@@ -12,9 +12,9 @@ typedef struct OPframeBufferGL OPframeBufferGL;
 void OPframeBufferAPIGLInit(OPframeBufferAPI* frameBuffer);
 
 struct OPframeBufferGL {
-	ui32 Handle;
-	ui32 DepthHandle;
-	ui32 CaptureHandle;
+	ui32 Handle = 0;
+	ui32 DepthHandle = 0;
+	ui32 CaptureHandle = 0;
 };
 
 #endif

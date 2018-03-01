@@ -76,6 +76,7 @@ void OPnetworkServer::HandleServerReceive(OPnetworkSocket* serverSocket) {
 
         // Handle UDP Communication
 
+		clients[clientIndex].networkPacket.buffer.Init(clients[clientIndex].networkPacket.internal_buffer, MAX_PACKET_SIZE_DOUBLE);
         clients[clientIndex].networkPacket.buffer.Zero();
         i32 bytes = serverSocket->ReceiveFrom(&clients[clientIndex]);
         clients[clientIndex].networkPacket.buffer.Rewind();
@@ -144,24 +145,24 @@ void OPnetworkServer::Update(ui64 elapsed) {
 
     for(ui32 i = 0; i < clientIndex; i++) {
         if(clients[i].verified) {
-            clients[i].timeoutTimer += elapsed;
-            if(clients[i].timeoutTimer > 5000) {
-                // client hasn't sent anything in 5 seconds
-                // they've timed out at this point
-                if(ActiveNetworkState != NULL) {
-                    ActiveNetworkState->Disconnected(&clients[i]);
-                }
-                if(i < clientIndex - 1) {
-                    clients[i] = clients[clientIndex - 1];
-                }
-                clientIndex--;
-                i--;
-                 OPlogInfo("Client timed out");
-            } else if(clients[i].timeoutTimer > 2500) {
-                 // client is timing out, send ping/pong to keep alive
-                 SendPingPacket(&clients[i]);
-                 OPlogInfo("Client timing out sending ping/pong");
-            }
+            //clients[i].timeoutTimer += elapsed;
+            //if(clients[i].timeoutTimer > 5000) {
+            //    // client hasn't sent anything in 5 seconds
+            //    // they've timed out at this point
+            //    if(ActiveNetworkState != NULL) {
+            //        ActiveNetworkState->Disconnected(&clients[i]);
+            //    }
+            //    if(i < clientIndex - 1) {
+            //        clients[i] = clients[clientIndex - 1];
+            //    }
+            //    clientIndex--;
+            //    i--;
+            //     OPlogInfo("Client timed out");
+            //} else if(clients[i].timeoutTimer > 2500) {
+            //     // client is timing out, send ping/pong to keep alive
+            //     SendPingPacket(&clients[i]);
+            //     OPlogInfo("Client timing out sending ping/pong");
+            //}
 
             continue;
         }

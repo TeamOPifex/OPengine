@@ -13,7 +13,7 @@ struct OPnetworkPacket {
 	OPchar strBuffer[256];
 
 	OPnetworkPacket() {
-		buffer.Init(&internal_buffer, MAX_PACKET_SIZE_DOUBLE);
+		buffer.Init(&internal_buffer[0], MAX_PACKET_SIZE_DOUBLE);
 	}
 	
 	inline i8 I8() {

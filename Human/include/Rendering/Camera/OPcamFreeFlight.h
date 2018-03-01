@@ -9,8 +9,10 @@ typedef struct OPcamFreeFlight OPcamFreeFlight;
 // Free Flight Camera
 struct OPcamFreeFlight {
 	OPcam Camera;
-	OPvec3 Rotation, Movement;
+	OPvec3 Rotation, prevRotation, Movement;
 	OPfloat RotationSpeed, MoveSpeed;
+
+	OPvec3 prevPos, pos;
 
 	OPcamFreeFlight() { }
 	OPcamFreeFlight(OPfloat moveSpeed, OPfloat rotateSpeed, OPvec3 position) {
@@ -24,6 +26,7 @@ struct OPcamFreeFlight {
 
 	void Update();
 	void Update(OPtimer* timer);
+	void UpdateFixed(f32 delta);
 	void Destroy();
 
 	inline void Init() {

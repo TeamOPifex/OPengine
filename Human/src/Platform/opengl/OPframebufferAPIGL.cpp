@@ -265,6 +265,17 @@ void OPframeBufferAPIGLSetAttachmentRenderBuffer(OPframeBuffer* frameBuffer, OPr
 
 void OPframeBufferAPIGLDestroy(OPframeBuffer* ptr) {
 	OPframeBufferGL* frameBufferGL = (OPframeBufferGL*)ptr->internalPtr;
+	if (frameBufferGL->DepthHandle > 0) {
+		ptr->depthTexture.Destroy();
+	}
+	if (ptr->renderBuffer != NULL) {
+		ptr->renderBuffer->Destroy();
+		OPfree(ptr->renderBuffer);
+	}
+	//for (ui32 i = 0; i < ptr->count; i++) {
+	//	ptr->texture[i].Destroy();
+	//}
+
 	OPGLFN(glDeleteFramebuffers(1, &frameBufferGL->Handle));
 	OPfree(frameBufferGL);
 	ptr->internalPtr = NULL;

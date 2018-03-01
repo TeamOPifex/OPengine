@@ -43,7 +43,7 @@ void OPrendererPBRRenderPass::Init(OPcam** cam, OPcam** shadowCam, OPrendererFor
 	texturedMaterial.AddParam("uLightColors[0]", &lightColors);
 	texturedMaterial.AddParam("uCamPos", &(*cam)->pos);
 	texturedMaterial.AddParam("uIrradianceMap", &convoluteCube);
-	texturedMaterial.AddParam("uPrefilterMap", &hdrRoughnessFilteredCube);
+	//texturedMaterial.AddParam("uPrefilterMap", &hdrRoughnessFilteredCube);
 	texturedMaterial.AddParam("uBRDFLUT", &brdfTexture);
 
 	//texturedMaterial.AddParam("uViewShadow", &(*shadowCam)->view);
@@ -73,13 +73,24 @@ void OPrendererPBRRenderPass::SetEnv(const OPchar* env) {
 }
 
 void OPrendererPBRRenderPass::Destroy() {
-	texturedMaterial.effect->Destroy();
-	OPfree(texturedMaterial.effect);
-	texturedMaterial.Destroy();
 
 	skinnedMaterial.effect->Destroy();
 	OPfree(skinnedMaterial.effect);
 	skinnedMaterial.Destroy();
+
+	texturedMaterial.effect->Destroy();
+	OPfree(texturedMaterial.effect);
+	texturedMaterial.Destroy();
+
+	cubeMesh->Destroy();
+	OPfree(cubeMesh);
+
+	skyboxEffect.Destroy();
+
+	envHDRTextureCube.Destroy();
+	convoluteCube.Destroy();
+	hdrRoughnessFilteredCube.Destroy();
+	brdfTexture.Destroy();
 
 	renderBucket.Destroy();
 }
@@ -99,7 +110,7 @@ void OPrendererPBRRenderPass::End() {
 	// Render Skybox
 	OPRENDERER_ACTIVE->SetDepthFunc(OPdepthFunction::LEQUAL);
 	skyboxEffect.Bind();
-	skyboxEffect.Set("uEnvironmentMap", &envHDRTextureCube, 0);
+	// skyboxEffect.Set("uEnvironmentMap", &envHDRTextureCube, 0);
 	skyboxEffect.Set("uProj", &(*activeCamera)->proj);
 	skyboxEffect.Set("uView", &(*activeCamera)->view);
 	cubeMesh->Bind();

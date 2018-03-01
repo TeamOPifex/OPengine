@@ -47,7 +47,9 @@ inline void OPphysXSceneRemove(OPphysXScene* scene, OPphysXRigidActor* actor) {
 
 inline void OPphysXSceneDestroy(OPphysXScene* scene) {
 	scene->scene->release();
-	OPfree(scene->desc.simulationEventCallback);
+	if (scene->desc.simulationEventCallback != NULL) {
+		OPfree(scene->desc.simulationEventCallback);
+	}
 }
 
 #endif

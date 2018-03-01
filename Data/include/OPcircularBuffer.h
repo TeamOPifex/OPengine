@@ -11,7 +11,7 @@ struct OPcircularBuffer {
     ui32 posAtRewind = 0;
     ui32 sizeAtRewind = 0;
 
-    void Init(void* b, ui32 s);
+    void Init(i8* b, ui32 s);
 
     i8 I8();
     void I8(i8 v);
