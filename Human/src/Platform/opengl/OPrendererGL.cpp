@@ -184,6 +184,23 @@ void OPrendererShutdownGL() {
 	glfwTerminate();
 }
 
+void OPrendererSetDrawModeGL(OPdrawMode::Enum mode) {
+	switch(mode) {
+		case OPdrawMode::Polygons: {
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			break;
+		}
+		case OPdrawMode::Lines: {
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			break;
+		}
+		case OPdrawMode::Points: {
+			glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+			break;
+		}
+	}
+}
+
 
 #include "./Human/include/Platform/opengl/OPcontextGL.h"
 #include "./Human/include/Platform/opengl/OPeffectAPIGL.h"
@@ -222,6 +239,7 @@ OPrenderAPI* OPrendererGL() {
 	OPRENDERERGL.SetViewport = OPrenderSetViewportGL;
 	OPRENDERERGL.SwapBuffer = OPrendererSwapBufferGL;
 	OPRENDERERGL.Shutdown = OPrendererShutdownGL;
+	OPRENDERERGL.SetDrawMode = OPrendererSetDrawModeGL;
 
 	OPcontextGLInit(&OPRENDERERGL.Context);
 	OPeffectAPIGLInit(&OPRENDERERGL.Effect);

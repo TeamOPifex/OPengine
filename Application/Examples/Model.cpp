@@ -6,7 +6,7 @@
 #include "./Human/include/Systems/OPrenderSystem.h"
 #include "./Human/include/Rendering/Primitives/OPsphere.h"
 #include "./Data/include/OPcman.h"
-
+#include "./Human/include/Rendering/Primitives/OPline.h"
 
 #ifdef ADDON_socketio
 #include "OPsocketGamePadSystem.h"
@@ -23,6 +23,7 @@ public:
 	d64 Y;
 	OPvec3 LightDirection;	// Where the Light Source is coming from
 
+	OPline line;
 
 	void Init(OPgameState* last) {
 
@@ -58,6 +59,34 @@ public:
 		// to turn the Depth Buffer on and continue
 		OPrenderDepth(1);
 		OPrenderCull(0);
+
+		OPvec3 points[6] = {
+			OPvec3(0, 0, 0),
+			OPvec3(0, 1, 0),
+			OPvec3(50, 0, 50),
+			OPvec3(0, 1, 0),
+			OPvec3(50, 0, 50),
+			OPvec3(0, 1, 0)
+		};
+		line.Init(points, 3);
+
+		
+
+		OPvec3 points2[12] = {
+			OPvec3(0, 0, 0),
+			OPvec3(0, 1, 0),
+			OPvec3(50, 0, 50),
+			OPvec3(0, 1, 0),
+			OPvec3(50, 0, 50),
+			OPvec3(0, 1, 0),
+			OPvec3(50, 0, 50),
+			OPvec3(0, 1, 0),
+			OPvec3(100, 0, 0),
+			OPvec3(0, 1, 0),
+			OPvec3(100, 0, 0),
+			OPvec3(0, 1, 0)
+		};
+		line.Update(points2, 6);
 	}
 
 	OPint Update(OPtimer* time) {
@@ -131,6 +160,8 @@ public:
 		// Renders to the screen the currently bound Mesh (modelExample->Mesh)
 		OPrenderDrawBufferIndexed(0);
 
+		line.Draw();
+		
 		// Swaps the back buffer
 		OPrenderPresent();
 	}

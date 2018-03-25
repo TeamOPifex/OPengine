@@ -118,6 +118,18 @@ void OPtextureGLUnbind(OPtexture* ptr, ui32 slot) {
 	}
 }
 
+void OPtextureGLSetMinFilter(OPtexture* ptr, OPtextureFilter::Enum filter) {
+	OPtextureGLBind(ptr, 0);
+	ui32 filterGL = OPtextureFilterToGL(filter);
+	OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterGL));
+}
+
+void OPtextureGLSetMagFilter(OPtexture* ptr, OPtextureFilter::Enum filter) {
+	OPtextureGLBind(ptr, 0);
+	ui32 filterGL = OPtextureFilterToGL(filter);
+	OPGLFN(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterGL));
+}
+
 void OPtextureAPIGLInit(OPtextureAPI* texture) {
 	texture->_Init = OPtextureGLInit;
 	texture->_Create = OPvertexBufferGLCreate;
@@ -125,6 +137,8 @@ void OPtextureAPIGLInit(OPtextureAPI* texture) {
 	texture->Bind = OPtextureGLBind;
 	texture->Unbind = OPtextureGLUnbind;
 	texture->Destroy = OPtextureGLDestroy;
+	texture->SetMinFilter = OPtextureGLSetMinFilter;
+	texture->SetMagFilter = OPtextureGLSetMagFilter;
 }
 
 #endif

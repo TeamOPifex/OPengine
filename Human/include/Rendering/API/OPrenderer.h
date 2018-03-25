@@ -23,6 +23,7 @@ typedef struct OPrenderAPI OPrenderAPI;
 #include "./Human/include/Rendering/Enums/OPblendFunction.h"
 #include "./Human/include/Rendering/Enums/OPcullFace.h"
 #include "./Human/include/Rendering/Enums/OPdepthFunction.h"
+#include "./Human/include/Rendering/Enums/OPdrawMode.h"
 #include "./Math/include/OPvec4.h"
 
 struct OPrenderAPI {
@@ -39,6 +40,7 @@ struct OPrenderAPI {
 	void(*SetMultisample)(bool state) = 0;
 	void(*SetWireframe)(bool state) = 0;
 	void(*SetBlend)(bool state) = 0;
+	void(*SetDrawMode)(OPdrawMode::Enum mode) = 0;
 	void(*SetBlendMode)(OPblendFunction::Enum src, OPblendFunction::Enum dst) = 0;
 	void(*SetViewport)(ui32 x, ui32 y, ui32 width, ui32 height) = 0;
 	void(*SwapBuffer)() = 0;

@@ -33,6 +33,7 @@ struct OPmodel {
 	void Bind();
 	void Draw(OPmat4* world, OPmaterial* material, OPcam* camera);
 	void Destroy();
+	void Update(ui32 vertexCount, void* vertices);
 
     inline void Free() {
         Destroy();

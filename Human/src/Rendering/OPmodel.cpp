@@ -58,6 +58,9 @@ void OPmodel::Build(ui32 vertexCount, void* vertices) {
 	meshes[0].materialDesc = NULL;
 }
 
+void OPmodel::Update(ui32 vertexCount, void* vertices) {
+	vertexBuffer.SetData(vertexLayout.stride, vertexCount, vertices);
+}
 
 void OPmodel::Destroy() {
 	indexBuffer.Destroy();
