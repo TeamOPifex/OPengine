@@ -26,6 +26,7 @@ class ExampleSelector : public OPgameState {
     OPint CurrentDepth;
 	OPtexture2DOLD*Background;
 	OPgamePad* Controller;
+
 #ifdef ADDON_socketio
 	OPsocketGamePad* SocketController;
 #endif
@@ -84,6 +85,7 @@ class ExampleSelector : public OPgameState {
 				{ "Sprite", GS_EXAMPLE_SPRITE, GS_EXAMPLE_SPRITE_AVAILABLE, 0 },
 				{ "Sprite System", GS_EXAMPLE_SPRITESYSTEM, GS_EXAMPLE_SPRITESYSTEM_AVAILABLE, 0 },
 				{ "Cube Map", GS_EXAMPLE_CUBE_MAP, GS_EXAMPLE_CUBE_MAP_AVAILABLE, 0 },
+				{ "Tiled", GS_EXAMPLE_TILED, GS_EXAMPLE_TILED_AVAILABLE, 0 },
 
 				// Intermediate
 				{ "Scene Shadowed", GS_EXAMPLE_SCENE_SHADOWS, GS_EXAMPLE_SCENE_SHADOWS_AVAILABLE, 1 },
@@ -127,6 +129,7 @@ class ExampleSelector : public OPgameState {
 		//OPfont* font = (OPfont*)OPCMAN.LoadGet("Ubuntu.opf");
 		FontManager = OPfontManager::Create("Ubuntu.opf", NULL, 0);
 		FontManager->scale = 0.5;
+
 
 		OPlogErr("All good now purge OPCMAN");
 		OPCMAN.Purge();
@@ -233,7 +236,7 @@ class ExampleSelector : public OPgameState {
 		OPrenderClear(0.4f, 0.1f, 0.1f);
 		//
 		// // Render the background
-		OPtexture2DRender(Background);
+		// OPtexture2DRender(Background);
 
 
 		// Y coordinate to start drawing the text

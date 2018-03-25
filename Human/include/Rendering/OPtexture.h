@@ -32,6 +32,14 @@ struct OPtexture {
 		OPRENDERER_ACTIVE->Texture.Unbind(this, slot);
 	}
 
+	inline void SetMinFilter(OPtextureFilter::Enum filter) {
+		OPRENDERER_ACTIVE->Texture.SetMinFilter(this, filter);
+	}
+
+	inline void SetMagFilter(OPtextureFilter::Enum filter) {
+		OPRENDERER_ACTIVE->Texture.SetMagFilter(this, filter);
+	}
+
 	inline void Destroy() {
 		OPRENDERER_ACTIVE->Texture.Destroy(this);
 
@@ -44,6 +52,10 @@ struct OPtexture {
 
 	inline static OPtexture* Load(const OPchar* asset) {
 		return (OPtexture*)OPCMAN.LoadGet(asset);
+	}
+
+	inline static OPtexture* FromFile(const OPchar* asset) {
+		return (OPtexture*)OPCMAN.LoadFromFile(asset);
 	}
 
 	static void GenerateBRDF(OPtexture* texture, ui32 size);

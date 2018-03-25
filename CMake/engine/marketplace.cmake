@@ -106,6 +106,8 @@ macro(add_marketplace_defines)
 
       add_definitions(-DADDON_${ADDON_NAME})
 
+        message(STATUS "  Addon Define Added -DADDON_${ADDON_NAME}")
+
       SET(TEMP_RESULT "")
       eval("if(COMMAND ADDON_${ADDON_NAME}_DEFINES)\nADDON_${ADDON_NAME}_DEFINES(TEMP_RESULT)\nendif()")
       add_definitions(${TEMP_RESULT})
