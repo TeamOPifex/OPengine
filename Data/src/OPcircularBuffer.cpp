@@ -79,8 +79,8 @@ void OPcircularBuffer::Read(i8* data, ui32 max) {
     }
 
     if(toRead < sizeToEnd) {
-		OPlogInfo("Mem copy into %p at pos %d of %d", data, pos, toRead);
-		OPlogInfo("My buffer %p", &buffer[pos]);
+		//OPlogInfo("Mem copy into %p at pos %d of %d", data, pos, toRead);
+		//OPlogInfo("My buffer %p", &buffer[pos]);
         OPmemcpy(data, &buffer[pos], toRead);
         pos += toRead;
         size -= toRead;
@@ -115,7 +115,7 @@ void OPcircularBuffer::Write(OPcircularBuffer* buf) {
     ui32 sizeToEnd = capacity - pos;
     if(s < sizeToEnd) {
 		i8* bufInto = &buffer[pos];
-		OPlogInfo("Buffer to read into %p", bufInto);
+		//OPlogInfo("Buffer to read into %p", bufInto);
 
         buf->Read(bufInto, s);
 

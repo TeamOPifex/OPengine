@@ -12,6 +12,6 @@ OPmaterialPBR* OPmaterialPBR::Init(OPeffect* effect) {
 }
 
 OPmaterialPBR* OPmaterialPBR::Init() {
-	Init(OPNEW(OPeffect("Common/OPpbr.vert", "Common/OPpbr.frag")));
+	Init(OPNEW(OPeffect("Common/OPpbr.vert", "Common/OPpbrIBL.frag")));
 	return this;
 }

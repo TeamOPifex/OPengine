@@ -3,17 +3,17 @@
 
 OPnetworkState* ActiveNetworkState = NULL;
 
-void OPnetworkState::Change(OPnetworkState* targetState){
-	OPnetworkState* lastState;
-
-	if(ActiveNetworkState != NULL && ActiveNetworkState->Exit(targetState)) {
-		return;
-	}	
-
-	lastState = ActiveNetworkState;
-	ActiveNetworkState = targetState;
-	ActiveNetworkState->Init(lastState);
-}
+//void OPnetworkState::Change(OPnetworkState* targetState){
+//	OPnetworkState* lastState;
+//
+//	if(ActiveNetworkState != NULL && ActiveNetworkState->Exit(targetState)) {
+//		return;
+//	}	
+//
+//	lastState = ActiveNetworkState;
+//	ActiveNetworkState = targetState;
+//	ActiveNetworkState->Init(lastState);
+//}
 
 OPint OPnetworkState::Destroy(OPnetworkState* state){
 	OPfree(state);

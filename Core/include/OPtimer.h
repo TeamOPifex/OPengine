@@ -24,8 +24,11 @@ struct OPtimer{
 	ui64 TotalGametime;
 	ui64 Elapsed;
 	d64 ElapsedHighRes;
+	d64 TotalGametimeHighRes;
 #if defined(OPIFEX_WINDOWS)
 	LARGE_INTEGER TimeLastTick;
+	LARGE_INTEGER TimeLastTickHighRes;
+	LARGE_INTEGER TimeInit;
 	LARGE_INTEGER Frequency;
 #elif defined(OPIFEX_UNIX)
 	struct timeval TimeLastTick;

@@ -66,10 +66,11 @@ void _OPsteppedLooped() {
 
 	OPtimer frameStepped;
 	d64 accumlator = 0;
+	ui64 SIMULATE_STEP = 16;
 	ui64 STEP = 16;
 
 	frameStepped.Init();
-	frameStepped.Elapsed = STEP;
+	frameStepped.Elapsed = SIMULATE_STEP;
 
 	// main game loop
 	while (OPENGINERUNNING) {
@@ -80,16 +81,16 @@ void _OPsteppedLooped() {
 		// This will usually only happen if we stopped at a breakpoint
 		// and then resumed. This will make sure that we don't try to
 		// update 15+ seconds at a time.
-		if (OPTIMER.Elapsed > 2000) {
-			OPTIMER.Elapsed = STEP;
-			OPTIMER.ElapsedHighRes = STEP;
-		}
+		//if (OPTIMER.Elapsed > 2000) {
+		//	OPTIMER.Elapsed = STEP;
+		//	OPTIMER.ElapsedHighRes = STEP;
+		//}
 #endif
 
 		accumlator += OPTIMER.ElapsedHighRes;
 
 		while (accumlator >= STEP) {
-			frameStepped.TotalGametime += STEP;
+			frameStepped.TotalGametime += SIMULATE_STEP;
 			// The Elapsed time is always set to the STEP
 			// at initialization of the OPtimer
 			// The TotalGameTime is incremented by STEP

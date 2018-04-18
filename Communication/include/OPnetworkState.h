@@ -12,8 +12,5 @@ public:
 	virtual OPint Exit(OPnetworkState*) = 0;
 	void* Data;
 	
-	static void Change(OPnetworkState* targetState);
 	static OPint Destroy(OPnetworkState* state);
 };
-
-extern OPnetworkState* ActiveNetworkState;

@@ -9,9 +9,7 @@ in vec3 vNormal;
 // material parameters
 uniform sampler2D uAlbedoMap;
 uniform sampler2D uNormalMap;
-uniform sampler2D uMetallicMap;
-uniform sampler2D uRoughnessMap;
-uniform sampler2D uAOMap;
+uniform sampler2D uMetallicRoughnessAOMap;
 
 // lights
 uniform vec3 uLightPositions[4];
@@ -83,9 +81,9 @@ vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness) {
 void main() {
     // material properties
     vec3 uAlbedo = pow(texture(uAlbedoMap, vUV).rgb, vec3(2.2));
-    float uMetallic = texture(uMetallicMap, vUV).r;
-    float uRoughness = texture(uRoughnessMap, vUV).r;
-    float uAmbientOcclusion = texture(uAOMap, vUV).r;
+    float uMetallic = texture(uMetallicRoughnessAOMap, vUV).b;
+    float uRoughness = texture(uMetallicRoughnessAOMap, vUV).g;
+    float uAmbientOcclusion = texture(uMetallicRoughnessAOMap, vUV).r;
     // input lighting data
     vec3 N = getvNormalFromMap();
 

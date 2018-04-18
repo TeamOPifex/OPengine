@@ -1,15 +1,16 @@
 #version 330 core
+
 out vec4 FragColor;
+
 in vec2 vUV;
 in vec3 vWorldPos;
 in vec3 vNormal;
+in vec4 vFragPosLightSpace;
 
 // material parameters
 uniform sampler2D uAlbedoMap;
 uniform sampler2D uNormalMap;
-uniform sampler2D uMetallicMap;
-uniform sampler2D uRoughnessMap;
-uniform sampler2D uAOMap;
+uniform sampler2D uMetallicRoughnessAOMap;
 
 // IBL
 uniform samplerCube uIrradianceMap;
@@ -17,12 +18,56 @@ uniform samplerCube uPrefilterMap;
 uniform sampler2D uBRDFLUT;
 
 // lights
+uniform vec3 uLightPos;
 uniform vec3 uLightPositions[4];
 uniform vec3 uLightColors[4];
 
+uniform sampler2D uShadow;
 uniform vec3 uCamPos;
 
 const float PI = 3.14159265359;
+
+float ShadowCalculation(vec4 fragPosLightSpace, vec3 normal)
+{
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+
+    // Transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+
+    // Get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(uShadow, projCoords.xy).r;
+
+    // Get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
+
+    // Calculate bias (based on depth map resolution and slope)
+    // vec3 normal = normalize(vNormal);
+    vec3 lightDir = normalize(uLightPos - vWorldPos);
+    float bias = max(0.00005 * (1.0 - dot(normal, lightDir)), 0.000005);
+
+    // Check whether current frag pos is in shadow
+    // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+    // PCF
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(uShadow, 0);
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(uShadow, projCoords.xy + vec2(x, y) * texelSize).r;
+            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
+        }
+    }
+    shadow /= 9.0;
+
+    // Keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
+    if(projCoords.z > 1.0)
+        shadow = 0.0;
+
+    return shadow;
+}
+
 // ----------------------------------------------------------------------------
 // Easy trick to get tangent-vNormals to world-space to keep PBR code simplified.
 // Don't worry if you don't get what's going on; you generally want to do vNormal 
@@ -100,10 +145,12 @@ void main()
 {		
     // material properties
     vec3 albedo = pow(texture(uAlbedoMap, vUV).rgb, vec3(2.2));
-    float metallic = texture(uMetallicMap, vUV).r;
-    float roughness = texture(uRoughnessMap, vUV).r;
-    float ao = texture(uAOMap, vUV).r;
-       
+	vec3 mra = texture(uMetallicRoughnessAOMap, vUV).rgb;
+
+    float ao = mra.r;
+    float roughness = mra.g;
+    float metallic = mra.b;
+	       
     // input lighting data
     vec3 N = getvNormalFromMap();
     vec3 V = normalize(uCamPos - vWorldPos);
@@ -167,10 +214,15 @@ void main()
     vec3 prefilteredColor = textureLod(uPrefilterMap, R,  roughness * MAX_REFLECTION_LOD).rgb;    
     vec2 brdf  = texture(uBRDFLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
     vec3 specular = prefilteredColor * (F * brdf.x + brdf.y);
+	
+    float shadow = ShadowCalculation(vFragPosLightSpace, N);
 
-    vec3 ambient = (kD * diffuse + specular) * ao;
+    vec3 ambient = (kD * (diffuse * shadow) + specular) * ao;
     
     vec3 color = ambient + Lo;
+
+	
+
 
     // HDR tonemapping
     color = color / (color + vec3(1.0));

@@ -321,6 +321,8 @@ bool OPnetworkSocket::Match(OPnetworkSocket* socket) {
 
 
 bool OPnetworkSocket::Verify(ui8 c) {
+
+	OPlogInfo("Verifying client: %d vs %d", c, code);
     if(c == code) {
         verified = true;
         networkID = (OPNETWORK_ID++);
@@ -331,7 +333,7 @@ bool OPnetworkSocket::Verify(ui8 c) {
 
 bool OPnetworkSocket::GenCode() {
     verified = false;
-    code = (ui8)(OPrandom() * (f32)sizeof(ui8));
+    code = (ui8)(OPrandom() * 256);
     verifyTimer = 1000; // 1 second to verify
 	return true;
 }

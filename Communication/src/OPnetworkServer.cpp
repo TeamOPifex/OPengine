@@ -1,5 +1,6 @@
 #include "./Communication/include/OPnetworkServer.h"
 #include "./Communication/include/OPnetworkSocket.h"
+#include "./Core/include/OPmath.h"
 #include "./Core/include/OPlog.h"
 #include "./Core/include/OPmemory.h"
 #include "./Data/include/OPstring.h"
@@ -12,7 +13,7 @@ void OPnetworkServer::Init(OPnetworkProtocolType::Enum protocol, ui32 port) {
 	// On Windows the network has to be initialized
 	// Doesn't actually do anything on Unix based systems
 	if (OPnetwork::Initialize() != 0) {
-        OPlogErr("Network could not be initialized");
+        OPlogErr("[SERVER] Network could not be initialized");
 		return;
 	}
 
@@ -21,13 +22,13 @@ void OPnetworkServer::Init(OPnetworkProtocolType::Enum protocol, ui32 port) {
     // Gets the Loopback address on port
     OPnetworkAddress local4 = OPnetworkAddress(port, OPnetworkFamily::INET);
     if(!local4.valid) {
-        OPlogErr("couldn't locate loopback address for port %d", port);
+        OPlogErr("[SERVER] couldn't locate loopback address for port %d", port);
         return;
     }
 
     OPnetworkAddress local6 = OPnetworkAddress(port, OPnetworkFamily::INET6);
     if(!local6.valid) {
-        OPlogErr("couldn't locate loopback address for port %d", port);
+        OPlogErr("[SERVER] couldn't locate loopback address for port %d", port);
         return;
     }
 
@@ -41,7 +42,7 @@ void OPnetworkServer::Init(OPnetworkProtocolType::Enum protocol, ui32 port) {
         return;
     }
 
-    OPlogInfo("Socket created for loopback on port %d", port);
+    OPlogInfo("[SERVER] Socket created for loopback on port %d", port);
 
     serverSocket4.Bind();
     serverSocket6.Bind();
@@ -55,14 +56,14 @@ void OPnetworkServer::Init(OPnetworkProtocolType::Enum protocol, ui32 port) {
     serverSocket4.Listen();
     serverSocket6.Listen();
 
-    printf("listening\n");
+    printf("[SERVER] listening\n");
 }
 
 void OPnetworkServer::HandleServerReceive(OPnetworkSocket* serverSocket) {
     if(protocolType == OPnetworkProtocolType::TCP) {
         // New TCP Connection
 
-        OPlogInfo("Handling new TCP connection");
+        OPlogInfo("[SERVER] Handling new TCP connection");
         if(serverSocket->Accept(&clients[clientIndex])) {
             clients[clientIndex].GenCode();
 
@@ -95,7 +96,7 @@ void OPnetworkServer::HandleServerReceive(OPnetworkSocket* serverSocket) {
 
         // If no existing client could be found and the message received was CONNECT
         if(existingClient == NULL && OPstringEquals("CONNECT", clients[clientIndex].networkPacket.Str())) {
-            OPlogInfo("New Client Found!");
+            OPlogInfo("[SERVER] New Client Found!");
 
             existingClient = &clients[clientIndex];
             existingClient->GenCode();
@@ -103,19 +104,35 @@ void OPnetworkServer::HandleServerReceive(OPnetworkSocket* serverSocket) {
             // Send client their code to verify they are who they say there
             OPnetworkPacket packetCode;
             packetCode.I8(existingClient->code);
+#ifdef _DEBUG
+			if (simulatedLag) {
+				Sleep(simulatedLag + OPrandom() * simulatedJitter);
+			}
+#endif
             serverSocket->Send(existingClient, &packetCode);
-            OPlogInfo("Server sent Code to Client to Verify");
+            OPlogInfo("[SERVER] Sent Code '%d' to Client to Verify", existingClient->code);
 
             clientIndex++;
         } else if(existingClient != NULL) {
             if(!existingClient->verified) {
+				// ui8 code = existingClient->networkPacket.buffer.PeekI8();
+#ifdef _DEBUG
+				//if (simulatedLag) {
+				//	Sleep(simulatedLag + OPrandom() * simulatedJitter);
+				//}
+
+				//if (OPrandom() < simulatedPacketLossPercent) {
+				//	OPlogErr("[SERVER] (SIMULATED) Packet Loss");
+				//	return;
+				//}
+#endif
                 if(existingClient->Verify(existingClient->networkPacket.UI8())) {
-                    OPlogInfo("Server Verified the client");
+                    OPlogInfo("[SERVER] Server Verified the client");
                     if(ActiveNetworkState != NULL) {
                         ActiveNetworkState->Connected(existingClient);
                     }
                 } else {
-                    OPlogErr("Failed to verify client '%d'", existingClient->code);
+                    OPlogErr("[SERVER] Failed to verify client '%d'", existingClient->code);
                 }
             } else if(ActiveNetworkState != NULL) {
                 existingClient->timeoutTimer = 0; // reset timeout
@@ -123,8 +140,20 @@ void OPnetworkServer::HandleServerReceive(OPnetworkSocket* serverSocket) {
                 if(header == 0) {
                     // ping/pong ignore
                     existingClient->networkPacket.buffer.I8(); // read forward
-                    OPlogInfo("Received ping/pong back");
+                    OPlogInfo("[SERVER] Received ping/pong back");
                 } else {
+#ifdef _DEBUG
+					//if (simulatedLag) {
+					//	Sleep(simulatedLag + OPrandom() * simulatedJitter);
+					//}
+
+					//if (OPrandom() < simulatedPacketLossPercent) {
+					//	// OPlogErr("[SERVER] (SIMULATED) Packet Loss");
+					//	OPlg("*");
+					//	existingClient->networkPacket.buffer.FastForward();
+					//	return;
+					//}
+#endif
                     ActiveNetworkState->Message(existingClient, &existingClient->networkPacket);
                 }
 
@@ -219,20 +248,20 @@ void OPnetworkServer::Update(ui64 elapsed) {
                     } else {
                         if(!clients[i].verified) {
                             if(clients[i].Verify(clients[i].networkPacket.UI8())) {
-                                OPlogInfo("Server Verified the client");
+                                OPlogInfo("[SERVER] Server Verified the client");
                                 if(ActiveNetworkState != NULL) {
                                     ActiveNetworkState->Connected(&clients[i]);
                                 }
                             } else {
-                                OPlogErr("Failed to verify client '%d'", clients[i].code);
+                                OPlogErr("[SERVER] Failed to verify client '%d'", clients[i].code);
                             }
                         } else if(ActiveNetworkState != NULL) {
-                            OPlogInfo("Received client message");
+                            OPlogInfo("[SERVER] Received client message");
                             clients[i].timeoutTimer = 0; // reset timeout
                             if(clients[i].networkPacket.buffer.PeekI8() == 0) {
                                 // ping/pong ignore
                                 clients[i].networkPacket.buffer.I8(); // read forward
-							    OPlogInfo("Received ping/pong back");
+							    OPlogInfo("[SERVER] Received ping/pong back");
                             } else {
                                 // pass message along
                                 ActiveNetworkState->Message(&clients[i], &clients[i].networkPacket);

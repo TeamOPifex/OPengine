@@ -20,7 +20,7 @@ enum PBRStates {
 	PBR_EFFECT
 };
 
-#define PBREXAMPLE_MODELCOUNT 7
+#define PBREXAMPLE_MODELCOUNT 1
 
 class PBRExample : public OPgameState {
 	OPcamFreeFlight camera;
@@ -30,7 +30,7 @@ class PBRExample : public OPgameState {
 	OPrendererPBR renderer;
 	OPmodel* Mesh;
 	OPmodel* Mesh2;
-	PBRStates pbrState = PBRStates::PBR_EFFECT;// PBR_DEFAULT;
+	PBRStates pbrState = PBRStates::PBR_DEFAULT;// PBR_DEFAULT;
 
 	// PBR_EQUIRECTANGULAR
 	OPmodel* cubeMesh;
@@ -114,9 +114,10 @@ class PBRExample : public OPgameState {
 				OPrendererEntity* entity = scene.Add( pbrModels[i].model , OPrendererEntityDesc(false, true, true, false));
 				entity->material->SetMap("uAlbedoMap", pbrModels[i].albedoTex);
 				entity->material->SetMap("uNormalMap", pbrModels[i].normalTex);
-				entity->material->SetMap("uMetallicMap", pbrModels[i].metallicTex);
-				entity->material->SetMap("uRoughnessMap", pbrModels[i].roughnessTex);
-				entity->material->SetMap("uAOMap", pbrModels[i].aoTex);
+				entity->material->SetMap("uMetallicRoughnessAOMap", pbrModels[i].metallicTex);
+				//entity->material->SetMap("uMetallicMap", pbrModels[i].metallicTex);
+				//entity->material->SetMap("uRoughnessMap", pbrModels[i].roughnessTex);
+				//entity->material->SetMap("uAOMap", pbrModels[i].aoTex);
 				entity->world = pbrModels[i].world;
 			}
 
@@ -203,9 +204,10 @@ class PBRExample : public OPgameState {
 				pbrModels[i].material = basePBRMaterial.CreateInstances(pbrModels[i].model, false);
 				pbrModels[i].material->SetMap("uAlbedoMap", pbrModels[i].albedoTex);
 				pbrModels[i].material->SetMap("uNormalMap", pbrModels[i].normalTex);
-				pbrModels[i].material->SetMap("uMetallicMap", pbrModels[i].metallicTex);
-				pbrModels[i].material->SetMap("uRoughnessMap", pbrModels[i].roughnessTex);
-				pbrModels[i].material->SetMap("uAOMap", pbrModels[i].aoTex);
+				pbrModels[i].material->SetMap("uMetallicRoughnessAOMap", pbrModels[i].metallicTex);
+				//pbrModels[i].material->SetMap("uMetallicMap", pbrModels[i].metallicTex);
+				//pbrModels[i].material->SetMap("uRoughnessMap", pbrModels[i].roughnessTex);
+				//pbrModels[i].material->SetMap("uAOMap", pbrModels[i].aoTex);
 			}
 		}
 
@@ -225,15 +227,15 @@ class PBRExample : public OPgameState {
 		// model++;
 
 		pbrModels[model].model = (OPmodel*)OPCMAN.LoadGet("bug.opm");
-		pbrModels[model].albedoTex = OPtexture::Load("bug_albedo.png");
-		pbrModels[model].normalTex = OPtexture::Load("bug_normal.png");
-		pbrModels[model].metallicTex = OPtexture::Load("bug_metallic.png");
-		pbrModels[model].roughnessTex = OPtexture::Load("bug_roughness.png");
-		pbrModels[model].aoTex = OPtexture::Load("EmptyAO.png");
+		pbrModels[model].albedoTex = OPtexture::Load("Low_bug_03_-_Default_BaseColor.png");
+		pbrModels[model].normalTex = OPtexture::Load("Low_bug_03_-_Default_Normal.png");
+		pbrModels[model].metallicTex = OPtexture::Load("Low_bug_03_-_Default_OcclusionRoughnessMetallic.png");
+		//pbrModels[model].roughnessTex = OPtexture::Load("bug_roughness.png");
+		//pbrModels[model].aoTex = OPtexture::Load("EmptyAO.png");
 		pbrModels[model].world.SetTranslate(-10, 0, 0)->RotX(-OPpi_2)->Scl(0.1f);
 		model++;
 
-
+/*
 		pbrModels[model].model = (OPmodel*)OPCMAN.LoadGet("uvsphere20.opm");
 		pbrModels[model].albedoTex = OPtexture::Load("gold/albedo.png");
 		pbrModels[model].normalTex = OPtexture::Load("gold/normal.png");
@@ -286,7 +288,7 @@ class PBRExample : public OPgameState {
 		pbrModels[model].roughnessTex = OPtexture::Load("materialball/roughness.png");
 		pbrModels[model].aoTex = OPtexture::Load("materialball/ao.png");
 		pbrModels[model].world.SetTranslate(10, 0, 10)->Scl(0.5f);
-		model++;
+		model++;*/
 		
 	}
 

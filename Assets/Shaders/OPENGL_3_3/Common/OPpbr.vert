@@ -9,10 +9,13 @@ layout(location = 4) in vec2 aUV;
 out vec2 vUV;
 out vec3 vWorldPos;
 out vec3 vNormal;
+out vec4 vFragPosLightSpace;
 
 uniform mat4 uWorld;
 uniform mat4 uView;
 uniform mat4 uProj;
+uniform mat4 uViewShadow;
+uniform mat4 uProjShadow;
 
 void main()
 {
@@ -21,4 +24,6 @@ void main()
     vNormal = mat3(uWorld) * aNormal;   
 
     gl_Position =  uProj * uView * vec4(vWorldPos, 1.0);
+
+	vFragPosLightSpace = uProjShadow * uViewShadow * vec4(vWorldPos, 1.0);
 }

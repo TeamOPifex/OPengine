@@ -31,7 +31,7 @@ struct OPnetworkPacket {
 	inline void UI8(ui8 c) {
 		buffer.UI8(c);
 	}
-	
+
 	inline i16 I16() {
 		i16 val = buffer.I16();
 		return ntohs(val);
@@ -40,6 +40,16 @@ struct OPnetworkPacket {
 	inline void I16(i16 s) {
 		i16 val = htons(s);
 		buffer.I16(val);
+	}
+
+	inline ui16 UI16() {
+		ui16 val = buffer.UI16();
+		return ntohs(val);
+	}
+
+	inline void UI16(i16 s) {
+		ui16 val = (ui16)htons(s);
+		buffer.UI16(val);
 	}
 	
 	inline i32 I32() {
@@ -60,6 +70,15 @@ struct OPnetworkPacket {
 		ui32 val = htonl(s);
 		buffer.UI32(val);
 	}
+
+	//inline ui64 UI64() {
+	//	return (ui64)I64();
+	//}
+
+	//inline void UI64(ui64 s) {
+	//	ui64 val = htonll(s);
+	//	buffer.UI64(val);
+	//}
 
 	void Str(OPchar* str);
 	OPchar* Str();
@@ -85,6 +104,8 @@ struct OPnetworkPacket {
 	// 	return unpack754(bits, 64, 11);
 	// }
 private:
+
+	ui64 htonll(ui64 value);
 	ui64 pack754(double long f, ui64 bits, ui64 expbits);
 	double long unpack754(ui64 i, ui64 bits, ui64 expbits);
 };

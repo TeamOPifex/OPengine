@@ -1,6 +1,7 @@
 #include "./Communication/include/OPnetworkClient.h"
 #include "./Communication/include/OPnetworkPlatform.h"
 #include "./Core/include/OPlog.h"
+#include "./Core/include/OPmath.h"
 #include "./Data/include/OPstring.h"
 #include "./Communication/include/OPnetworkState.h"
 
@@ -59,10 +60,23 @@ void OPnetworkClient::Update() {
 					clientSocket.verified = true;
 
 					OPnetworkPacket packetVerify;
-					packetVerify.I8(clientSocket.networkPacket.I8());
+					ui8 code = clientSocket.networkPacket.UI8();
+					OPlogInfo("Sending back code %d", code);
+					packetVerify.UI8(code);
+#ifdef _DEBUG
+					if (simulatedLag) {
+						Sleep(simulatedLag + OPrandom() * simulatedJitter);
+					}
+
+					//if (OPrandom() < simulatedPacketLossPercent) {
+					//	OPlogErr("[SERVER] (SIMULATED) Packet Loss");
+					//	return;
+					//}
+#endif
 					clientSocket.Send(&packetVerify);
 					
 					OPlogInfo("Client Verified");
+					verified = true;
 					
 					if(ActiveNetworkState != NULL) {
 						ActiveNetworkState->Connected(&clientSocket);
@@ -79,6 +93,18 @@ void OPnetworkClient::Update() {
 							// Send(&packet);
 							OPlogInfo("Sending ping/pong back");
 						} else {
+#ifdef _DEBUG
+							//if (simulatedLag) {
+							//	Sleep(simulatedLag + OPrandom() * simulatedJitter);
+							//}
+
+							//if (OPrandom() < simulatedPacketLossPercent) {
+							//	// OPlogErr("[SERVER] (SIMULATED) Packet Loss");
+							//	OPlg("*");
+							//	clientSocket.networkPacket.buffer.FastForward();
+							//	return;
+							//}
+#endif
 							ActiveNetworkState->Message(&clientSocket, &clientSocket.networkPacket);
 						}
 						clientSocket.networkPacket.buffer.FastForward();

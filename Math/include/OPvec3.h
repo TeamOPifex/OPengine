@@ -113,6 +113,10 @@ struct OPvec3 {
 	//	OPvec3Div(&temp, &vhs, this);
 	//	return temp;
 	//}
+	
+	inline bool operator!=(const OPvec3& vhs) {
+		return this->x != vhs.x || this->y != vhs.y || this->z != vhs.z;
+	}
 
 	inline bool operator==(const OPvec3& vhs) {
 		return this->x == vhs.x && this->y == vhs.y && this->z == vhs.z;

@@ -24,11 +24,11 @@ bool OPcommonGLLog(const OPchar* function, const OPchar* file, i32 line);
 
 //OPlog("%s, %s, %d", #x, __FILE__, __LINE__);
 
+// __debugbreak();
 #ifdef _DEBUG
 #define OPGLFN(x) OPcommonGLCheckError();\
 		x; \
 		if (!OPcommonGLLog(#x, __FILE__, __LINE__)) { \
-            __debugbreak(); \
         }
 #else
 	#define OPGLFN(x) x

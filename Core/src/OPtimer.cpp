@@ -12,7 +12,10 @@ OPint OPtimer::Init(){
 	// Windows specific values for time
 	QueryPerformanceFrequency(&Frequency);
 	QueryPerformanceCounter(&TimeLastTick);
+	QueryPerformanceCounter(&TimeLastTickHighRes);
+	QueryPerformanceCounter(&TimeInit);
 	TotalGametime = 0;
+	TotalGametimeHighRes = 0;
 	Elapsed = 0;
 #ifdef _DEBUG
 	ElapsedHighRes = 0;
@@ -50,12 +53,16 @@ void OPtimer::Tick() {
 	QueryPerformanceCounter(&StartingTime);
 
 	Elapsed = StartingTime.QuadPart - TimeLastTick.QuadPart;
-	ElapsedHighRes = Elapsed * 1000;
-	ElapsedHighRes /= (OPfloat)Frequency.QuadPart;
 	Elapsed *= 1000; // to milliseconds
 	Elapsed /= Frequency.QuadPart;
-
 	TotalGametime += Elapsed;
+
+	ElapsedHighRes = StartingTime.QuadPart - TimeLastTickHighRes.QuadPart;
+	ElapsedHighRes *= 1000;
+	ElapsedHighRes /= (d64)Frequency.QuadPart;
+	TotalGametimeHighRes += ElapsedHighRes;
+
+	TimeLastTickHighRes = StartingTime;
 	if (Elapsed != 0) {
 		// We want to keep adding up until at least 1 ms has elapsed
 		TimeLastTick = StartingTime;

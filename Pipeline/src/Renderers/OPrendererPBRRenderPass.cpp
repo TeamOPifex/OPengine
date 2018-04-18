@@ -10,7 +10,7 @@ void OPrendererPBRRenderPass::Init(OPcam** cam, OPcam** shadowCam, OPrendererFor
 
 	renderBucket.Init(1000, cam);
 
-	SetEnv("newport_loft.hdr");
+	SetEnv("mars.hdr");
 	OPtexture::GenerateBRDF(&brdfTexture, 512);
 
 
@@ -43,13 +43,13 @@ void OPrendererPBRRenderPass::Init(OPcam** cam, OPcam** shadowCam, OPrendererFor
 	texturedMaterial.AddParam("uLightColors[0]", &lightColors);
 	texturedMaterial.AddParam("uCamPos", &(*cam)->pos);
 	texturedMaterial.AddParam("uIrradianceMap", &convoluteCube);
-	//texturedMaterial.AddParam("uPrefilterMap", &hdrRoughnessFilteredCube);
+	texturedMaterial.AddParam("uPrefilterMap", &hdrRoughnessFilteredCube);
 	texturedMaterial.AddParam("uBRDFLUT", &brdfTexture);
 
-	//texturedMaterial.AddParam("uViewShadow", &(*shadowCam)->view);
-	//texturedMaterial.AddParam("uProjShadow", &(*shadowCam)->proj);
-	//texturedMaterial.AddParam("uShadow", &pass->depthBuffer.texture, 0);
-	//texturedMaterial.AddParam("uLightPos", &(*shadowCam)->pos);
+	texturedMaterial.AddParam("uViewShadow", &(*shadowCam)->view);
+	texturedMaterial.AddParam("uProjShadow", &(*shadowCam)->proj);
+	texturedMaterial.AddParam("uShadow", &pass->depthBuffer.texture, 0);
+	texturedMaterial.AddParam("uLightPos", &(*shadowCam)->pos);
 	//texturedMaterial.AddParam("uViewPos", &(*cam)->pos);
 
 	skinnedMaterial.AddParam("uViewShadow", &(*shadowCam)->view);
@@ -110,7 +110,7 @@ void OPrendererPBRRenderPass::End() {
 	// Render Skybox
 	OPRENDERER_ACTIVE->SetDepthFunc(OPdepthFunction::LEQUAL);
 	skyboxEffect.Bind();
-	// skyboxEffect.Set("uEnvironmentMap", &envHDRTextureCube, 0);
+	skyboxEffect.Set("uEnvironmentMap", &envHDRTextureCube, 0);
 	skyboxEffect.Set("uProj", &(*activeCamera)->proj);
 	skyboxEffect.Set("uView", &(*activeCamera)->view);
 	cubeMesh->Bind();

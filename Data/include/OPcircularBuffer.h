@@ -22,15 +22,25 @@ struct OPcircularBuffer {
         return buffer[pos];
     }
 
-    inline i16 I16() {
-        i16 data;
-        Read((i8*)&data, 2);
-        return data;
-    }
+	inline i16 I16() {
+		i16 data;
+		Read((i8*)&data, 2);
+		return data;
+	}
 
-    inline void I16(i16 v) {
-        Write((i8*)&v, 2);
-    }
+	inline void I16(i16 v) {
+		Write((i8*)&v, 2);
+	}
+
+	inline ui16 UI16() {
+		ui16 data;
+		Read((i8*)&data, 2);
+		return data;
+	}
+
+	inline void UI16(ui16 v) {
+		Write((i8*)&v, 2);
+	}
 
     inline i32 I32() {
         i32 data;
@@ -42,15 +52,25 @@ struct OPcircularBuffer {
         Write((i8*)&v, 4);
     }
 
-    inline ui32 UI32() {
-        ui32 data;
-        Read((i8*)&data, 4);
-        return data;
-    }
+	inline ui32 UI32() {
+		ui32 data;
+		Read((i8*)&data, 4);
+		return data;
+	}
 
-    inline void UI32(ui32 v) {
-        Write((i8*)&v, 4);
-    }
+	inline void UI32(ui32 v) {
+		Write((i8*)&v, 4);
+	}
+
+	inline ui32 UI64() {
+		ui32 data;
+		Read((i8*)&data, 8);
+		return data;
+	}
+
+	inline void UI64(ui64 v) {
+		Write((i8*)&v, 8);
+	}
 
     // Writes a buffer into the circular buffer
     void Write(i8* data, ui32 toWrite);

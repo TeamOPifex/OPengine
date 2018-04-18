@@ -243,7 +243,7 @@ public:
 			if(ImGui::Button("Start Server")) {
 				Mode = 1;
 				networkServer.Init(protocolType, OPstringToNumber(port));
-				OPnetworkState::Change(&SERVER_PROTOCOL);
+				networkServer.ActiveNetworkState = &SERVER_PROTOCOL;
 			}
 			ImGui::End();
 
@@ -255,7 +255,7 @@ public:
 			if(ImGui::Button("Connect")) {
 				Mode = 2;
 				networkClient.Init(protocolType, server, OPstringToNumber(serverPort));
-				OPnetworkState::Change(&CLIENT_PROTOCOL);
+				networkClient.ActiveNetworkState = &CLIENT_PROTOCOL;
 			}
 			ImGui::End();
 		}
