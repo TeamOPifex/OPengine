@@ -106,7 +106,7 @@ void OPnetworkServer::HandleServerReceive(OPnetworkSocket* serverSocket) {
             packetCode.I8(existingClient->code);
 #ifdef _DEBUG
 			if (simulatedLag) {
-				Sleep(simulatedLag + OPrandom() * simulatedJitter);
+				// Sleep(simulatedLag + OPrandom() * simulatedJitter);
 			}
 #endif
             serverSocket->Send(existingClient, &packetCode);

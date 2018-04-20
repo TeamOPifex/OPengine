@@ -105,7 +105,7 @@ struct OPnetworkPacket {
 	// }
 private:
 
-	ui64 htonll(ui64 value);
+	// ui64 htonll(ui64 value);
 	ui64 pack754(double long f, ui64 bits, ui64 expbits);
 	double long unpack754(ui64 i, ui64 bits, ui64 expbits);
 };

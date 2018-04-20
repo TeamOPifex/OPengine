@@ -65,7 +65,7 @@ void OPnetworkClient::Update() {
 					packetVerify.UI8(code);
 #ifdef _DEBUG
 					if (simulatedLag) {
-						Sleep(simulatedLag + OPrandom() * simulatedJitter);
+						// Sleep(simulatedLag + OPrandom() * simulatedJitter);
 					}
 
 					//if (OPrandom() < simulatedPacketLossPercent) {
