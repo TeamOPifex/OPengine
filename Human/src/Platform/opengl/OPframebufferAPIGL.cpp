@@ -44,12 +44,16 @@ OPframeBuffer* _OPframeBufferAPIGLInit(OPframeBuffer* framebuffer, OPtextureDesc
 	OPframeBufferGL* frameBufferGL = OPNEW(OPframeBufferGL());
 	framebuffer->internalPtr = frameBufferGL;
 	framebuffer->count = 1;
+	framebuffer->desc = textureDesc;
 
 	OPGLFN(glGenFramebuffers(1, &frameBufferGL->Handle));
 	OPGLFN(glBindFramebuffer(GL_FRAMEBUFFER, frameBufferGL->Handle));
 
 	framebuffer->texture = OPRENDERER_ACTIVE->Texture.Create(textureDesc);
 	OPtextureGL* textureGL = (OPtextureGL*)framebuffer->texture->internalPtr;
+
+	framebuffer->renderBuffer = OPRENDERER_ACTIVE->RenderBuffer.Create();
+	framebuffer->renderBuffer->Bind();
 
 	// Texture Buffer
 	textureDesc.mipmap = false;
